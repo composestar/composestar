@@ -201,7 +201,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     }
                     catch (ILWeaverException ex)
                     {
+                        //Log.LogErrorFromException(ex, true); 
                         string errorMessage = ex.Message;
+                        string stackTrace = ex.StackTrace;
+
                         Exception innerException = ex.InnerException;
                         while (innerException != null)
                         {
@@ -209,9 +212,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
                             innerException = innerException.InnerException; 
                         }
                         Log.LogErrorFromResources("WeaverException", errorMessage);
+
                         // Only show stacktrace when debugging is enabled
                         if (weaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
-                            Log.LogErrorFromResources("WeaverExceptionStackTrace", ex.StackTrace.ToString()); 
+                            Log.LogErrorFromResources("WeaverExceptionStackTrace", stackTrace); 
                     }
                     catch (ArgumentException ex)
                     {
@@ -221,7 +225,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     {
                         Log.LogErrorFromException(ex, false);
                     }
-
                 }
             }
             finally

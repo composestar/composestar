@@ -863,9 +863,9 @@ namespace Composestar.StarLight.ILWeaver
                         // Load the ordinal
                         Instructions.Add(Worker.Create(OpCodes.Ldc_I4, ordinal));
 
-                        //// Determine type
-                        //Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
-                        //Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle)));
+                        // Determine type
+                        Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
+                        Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle)));
 
                         // Determine the parameter direction
                         ArgumentAttributes attr = ConvertAttributes(param.Attributes);
@@ -907,9 +907,9 @@ namespace Composestar.StarLight.ILWeaver
                         // Load the ordinal
                         Instructions.Add(Worker.Create(OpCodes.Ldc_I4, ordinal));
 
-                        //// Determine type
-                        //Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
-                        //Instructions.Add(Worker.Create(OpCodes.Call,CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle )));
+                        // Determine type
+                        Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
+                        Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle)));
 
                         // Determine the parameter direction
                         ArgumentAttributes attr = ConvertAttributes(param.Attributes); 

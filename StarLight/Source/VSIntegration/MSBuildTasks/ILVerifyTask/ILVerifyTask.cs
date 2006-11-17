@@ -80,7 +80,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardError = false;
 
             IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance; 
 
@@ -99,8 +99,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
  
                     Log.LogMessageFromResources("VerifyingAssembly", assembly.FileName);
 
-                    process.StartInfo.Arguments = String.Format(CultureInfo.InvariantCulture,  "{0} /IL /MD /NOLOGO", assembly.FileName);
-
+                    string arguments = String.Format(CultureInfo.InvariantCulture,  "{0} /IL /MD /NOLOGO", assembly.FileName);
+                    process.StartInfo.Arguments = arguments;   
                     process.Start();
                  
                     process.WaitForExit(8000);

@@ -99,20 +99,23 @@ namespace Composestar.StarLight.ContextInfo.UnitTests
         public void ArgumentsTest()
         {
             global::Composestar.StarLight.ContextInfo.JoinPointContext target = new global::Composestar.StarLight.ContextInfo.JoinPointContext();
-            target.AddArgument(0, "ss");
+            target.AddArgument(0, typeof(string), "ss");
 
+            Assert.AreEqual(typeof(string), target.GetArgumentType(0), "Could not retrieve argumenttype");
             Assert.AreEqual("ss", (string) target.GetArgumentValue(0), "Could not retrieve argumentvalue");
             Assert.IsNotNull(target.GetArgumentInfo(0), "Could not retrieve ArgumentInfo");
             Assert.AreEqual("ss", target.GetGenericArgumentValue<string>(0), "Could not retrieve generic argumentvalue");
 
-            global::Composestar.StarLight.ContextInfo.JoinPointContext.AddArgument("ss", 1, Composestar.StarLight.ContextInfo.ArgumentAttributes.In , target);
+            global::Composestar.StarLight.ContextInfo.JoinPointContext.AddArgument("ss", 1, typeof(string), Composestar.StarLight.ContextInfo.ArgumentAttributes.In , target);
   
+            Assert.AreEqual(typeof(string), target.GetArgumentType(1), "Could not retrieve argumenttype");
             Assert.AreEqual("ss", (string) target.GetArgumentValue(1), "Could not retrieve argumentvalue");
             Assert.IsNotNull(target.GetArgumentInfo(1), "Could not retrieve ArgumentInfo");
             Assert.AreEqual("ss", target.GetGenericArgumentValue<string>(1), "Could not retrieve generic argumentvalue");
 
-            global::Composestar.StarLight.ContextInfo.JoinPointContext.AddArgument("ss", 2, target);
+            global::Composestar.StarLight.ContextInfo.JoinPointContext.AddArgument("ss", 2, typeof(string), target);
 
+            Assert.AreEqual(typeof(string), target.GetArgumentType(2), "Could not retrieve argumenttype");
             Assert.AreEqual("ss", (string)target.GetArgumentValue(2), "Could not retrieve argumentvalue");
             Assert.IsNotNull(target.GetArgumentInfo(2), "Could not retrieve ArgumentInfo");
             Assert.AreEqual("ss", target.GetGenericArgumentValue<string>(2), "Could not retrieve generic argumentvalue");
@@ -170,15 +173,37 @@ namespace Composestar.StarLight.ContextInfo.UnitTests
 
             short ordinal = 1; 
 
-        
+            global::System.Type argumentType = typeof(string);
+
             object value = "123"; 
 
-            target.AddArgument(ordinal, value);
+            target.AddArgument(ordinal, argumentType, value);
 
+            Assert.AreEqual(argumentType, target.GetArgumentType(ordinal));
             Assert.AreEqual(value, target.GetArgumentValue(ordinal));            
         }
 
-       
+        /// <summary>
+        ///A test for GetArgumentType (short)
+        ///</summary>
+        [TestMethod()]
+        public void GetArgumentTypeTest()
+        {
+            global::Composestar.StarLight.ContextInfo.JoinPointContext target = new global::Composestar.StarLight.ContextInfo.JoinPointContext();
+
+            short ordinal = 0; 
+            global::System.Type expected = typeof(int);
+            global::System.Type actual;
+
+            target.AddArgument(ordinal, expected, null); 
+
+            actual = target.GetArgumentType(ordinal);
+
+            Assert.AreEqual(expected, actual, "Composestar.StarLight.ContextInfo.JoinPointContext.GetArgumentType did not return" +
+                    " the expected value.");           
+
+            Assert.IsNull(target.GetArgumentType(3), "Should return null for ordinals not found"); 
+        }
 
         /// <summary>
         ///A test for GetArgumentValue (short)
@@ -193,7 +218,7 @@ namespace Composestar.StarLight.ContextInfo.UnitTests
             object expected = "123";
             object actual;
 
-            target.AddArgument(ordinal, expected); 
+            target.AddArgument(ordinal, typeof(short), expected); 
             actual = target.GetArgumentValue(ordinal);
 
             Assert.AreEqual(expected, actual, "Composestar.StarLight.ContextInfo.JoinPointContext.GetArgumentValue did not return the expected value.");
@@ -245,6 +270,22 @@ namespace Composestar.StarLight.ContextInfo.UnitTests
 
 
             Assert.AreEqual(val, target.ReturnType, "Composestar.StarLight.ContextInfo.JoinPointContext.ReturnType was not set correctly.");            
+        }
+
+        /// <summary>
+        ///A test for ReturnValue
+        ///</summary>
+        [TestMethod()]
+        [ExpectedException(typeof(ArgumentNullException)) ]
+        public void ReturnValueMustRaiseExceptionWhenNoTypeHasBeenSet()
+        {
+            global::Composestar.StarLight.ContextInfo.JoinPointContext target = new global::Composestar.StarLight.ContextInfo.JoinPointContext();
+
+            object val = "234"; 
+
+            target.ReturnValue = val;
+            
+            
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ public class ScoreIncreaser
 			int points = Integer.parseInt(context.GetArgumentValue((short) 0).toString());
 			points = Game.getLevel() * points;
 			System.Int32 newPoints = (System.Int32) points;
-			context.AddArgument((short) 0, newPoints);
+			context.AddArgument((short) 0, context.GetArgumentType((short) 0), newPoints);
 		}
 		else 
 		{

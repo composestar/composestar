@@ -30,8 +30,7 @@ namespace Composestar.StarLight.ContextInfo
         private string _currentSelector;
         private object _substitutionTarget;
         private string _substitutionSelector;
-        private Object _returnValue;
-        private Type _returnType;
+        private ArgumentInfo _returnValue;
         private bool _hasReturnValueSet;
 
         #endregion
@@ -130,63 +129,65 @@ namespace Composestar.StarLight.ContextInfo
         /// Adds the argument of a method to the list of arguments.
         /// </summary>
         /// <param name="ordinal">The ordinal of the argument.</param>
+        /// <param name="argumentType">Type of the argument.</param>
         /// <param name="value">The value of the argument.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void AddArgument(short ordinal,object value)
+        public void AddArgument(short ordinal, Type argumentType, object value)
         {
             if (_arguments.ContainsKey(ordinal))
-                _arguments[ordinal] = new ArgumentInfo(value);
+                _arguments[ordinal] = new ArgumentInfo(argumentType, value);
             else
-                _arguments.Add(ordinal, new ArgumentInfo(value));
+                _arguments.Add(ordinal, new ArgumentInfo(argumentType, value));
         }
 
         /// <summary>
         /// Adds the argument of a method to the list of arguments.
         /// </summary>
         /// <param name="ordinal">The ordinal.</param>
+        /// <param name="argumentType">Type of the argument.</param>
         /// <param name="argumentAttributes">The argument attributes.</param>
         /// <param name="value">The value.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void AddArgument(short ordinal, ArgumentAttributes argumentAttributes, object value )
+        public void AddArgument(short ordinal, Type argumentType, ArgumentAttributes argumentAttributes, object value )
         {
             if (_arguments.ContainsKey(ordinal))
-                _arguments[ordinal] = new ArgumentInfo(value, argumentAttributes);
+                _arguments[ordinal] = new ArgumentInfo(argumentType, value, argumentAttributes);
             else
-                _arguments.Add(ordinal, new ArgumentInfo(value, argumentAttributes));
+                _arguments.Add(ordinal, new ArgumentInfo(argumentType, value, argumentAttributes));
         }
-
-
 
         /// <summary>
         /// Adds the argument of a method to the list of arguments in the given JoinPointContext.
-        /// This static method is usefull to add an argument that is on the stack, because we cannot
+        /// This static method is usefull to add an argument that is on the stack, because we cannot 
         /// directly place the JoinPointContext object before it on the stack.
         /// </summary>
         /// <param name="value">The value of the argument.</param>
         /// <param name="ordinal">The ordinal of the argument.</param>
+        /// <param name="argumentType">Type of the argument.</param>
         /// <param name="context">The JoinPointContext to which the argument needs to be added</param>
-        public static void AddArgument(object value, short ordinal, JoinPointContext context)
+        public static void AddArgument(object value, short ordinal, Type argumentType, JoinPointContext context)
         {
             if(context != null)
             {
-                context.AddArgument(ordinal, value);
+                context.AddArgument(ordinal, argumentType, value);
             }
         }
 
         /// <summary>
         /// Adds the argument of a method to the list of arguments in the given JoinPointContext.
-        /// This static method is usefull to add an argument that is on the stack, because we cannot
+        /// This static method is usefull to add an argument that is on the stack, because we cannot 
         /// directly place the JoinPointContext object before it on the stack.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="ordinal">The ordinal.</param>
+        /// <param name="argumentType">Type of the argument.</param>
         /// <param name="argumentAttributes">The argument attributes.</param>
         /// <param name="context">The context.</param>
-        public static void AddArgument(object value, short ordinal, ArgumentAttributes argumentAttributes, JoinPointContext context)
+        public static void AddArgument(object value, short ordinal, Type argumentType, ArgumentAttributes argumentAttributes, JoinPointContext context)
         {
             if (context != null)
             {
-                context.AddArgument(ordinal, argumentAttributes, value);
+                context.AddArgument(ordinal, argumentType, argumentAttributes, value);
             }
         }
 
@@ -299,7 +300,21 @@ namespace Composestar.StarLight.ContextInfo
             else
                 return default(T);
         }
-        
+
+        /// <summary>
+        /// Gets the type of the argument.
+        /// </summary>
+        /// <param name="ordinal">The ordinal.</param>
+        /// <returns>The type of the argument, or a <see langword="null"/> when the type could not be found.</returns>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public Type GetArgumentType(short ordinal)
+        {
+            ArgumentInfo ai;
+            if (_arguments.TryGetValue(ordinal, out ai))
+                return ai.Type;
+            else
+                return null;
+        }
 
         /// <summary>
         /// Property to get the number of arguments
@@ -373,14 +388,17 @@ namespace Composestar.StarLight.ContextInfo
         {
             get
             {
-                if (_returnType != null)
-                    return _returnType;
+                if (_returnValue != null)
+                    return _returnValue.Type;
                 else
                     return null;
             }
             set
             {
-                _returnType = value;                
+                if (_returnValue == null)
+                    _returnValue = new ArgumentInfo(value, null);
+                else
+                    _returnValue.Type = value;
             }
         }
 
@@ -396,14 +414,19 @@ namespace Composestar.StarLight.ContextInfo
             get
             {
                 if (HasReturnValue)
-                    return _returnValue;
+                    return _returnValue.Value;
                 else
                     return null;
             }
             set
             {
-                _returnValue = value;
-                _hasReturnValueSet = true;
+                if (_returnValue == null)
+                    throw new ArgumentNullException("returnType");
+                else
+                {
+                    _returnValue.Value = value;
+                    _hasReturnValueSet = true;
+                } // else
             }
         }
 
@@ -557,22 +580,38 @@ namespace Composestar.StarLight.ContextInfo
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Composestar.StarLight.ContextInfo.ArgumentInfo"/> class.
         /// </summary>
+        /// <param name="type">The type.</param>
         /// <param name="value">The value.</param>
-        internal ArgumentInfo(Object value)
-        {            
+        internal ArgumentInfo(Type type, Object value)
+        {
+            _type = type;
             _value = value;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Composestar.StarLight.ContextInfo.ArgumentInfo"/> class.
         /// </summary>
+        /// <param name="type">The type.</param>
         /// <param name="value">The value.</param>
         /// <param name="argumentAttributes">The argument attributes.</param>
-        internal ArgumentInfo(Object value, ArgumentAttributes argumentAttributes)
-        {        
+        internal ArgumentInfo(Type type, Object value, ArgumentAttributes argumentAttributes)
+        {
+            _type = type;
             _value = value;
             _argumentAttributes = argumentAttributes;
-        } 
+        }
+
+        private Type _type;
+
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        public Type Type
+        {
+            get { return _type; }
+            set { _type = value; }
+        }
 
         private object _value;
 

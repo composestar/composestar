@@ -31,7 +31,7 @@ namespace BasicTests
 			{
 				int arg = (int) context.GetArgumentValue(0);
 				arg = arg + 1;
-				context.AddArgument(0, arg);
+				context.AddArgument(0, arg.GetType() , arg);
 			}
 			else if (context.StartSelector.Equals("func7"))
 			{
