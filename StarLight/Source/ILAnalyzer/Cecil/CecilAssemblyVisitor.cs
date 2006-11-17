@@ -892,7 +892,7 @@ namespace Composestar.StarLight.ILAnalyzer
                     if (ca.ConstructorParameters[i] == null)
                         ave.Value = null;
                     else
-                        ave.Value = ca.ConstructorParameters[i].ToString(); 
+                        ave.Value = ca.ConstructorParameters[i].ToString().Replace("\0", ""); 
                     ae.Values.Add(ave);  
                 }
 
