@@ -37,7 +37,8 @@ concern FilterTestsConcern in BasicTests
 	{
 		selectors
 			baseClass = { C | isClassWithName(C, 'BasicTests.FilterTests') };
-			baseStaticClass = { C | isClass(C), isClassWithName(C, P), matchPattern(P, 'BasicTests.StaticFilterTests.*') };
+			baseStaticClass = { C | isClassWithName(C, 'BasicTests.StaticFilterTests`1') };
+			//{ C | isClass(C), isClassWithName(C, P), matchPattern(P, 'BasicTests.StaticFilterTests.*') };
  		filtermodules
 			baseClass <- FM1;
 			baseStaticClass <- FM2;
