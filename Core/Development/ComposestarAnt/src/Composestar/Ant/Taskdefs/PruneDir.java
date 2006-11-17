@@ -21,7 +21,7 @@ public class PruneDir extends Task
 	protected int keep = 1;
 
 	protected DirSet dirSet;
-	
+
 	public void setKeep(int inval)
 	{
 		keep = inval;
@@ -41,20 +41,28 @@ public class PruneDir extends Task
 		CompareAge ca = new CompareAge();
 		ca.basedir = ds.getBasedir();
 		Arrays.sort(dirs, ca);
-		for (int i = 0; i < dirs.length-keep; i++)
+		for (int i = 0; i < dirs.length - keep; i++)
 		{
 			File pdir = new File(ds.getBasedir(), dirs[i]);
-			log("Pruning dir "+pdir.getAbsolutePath(), Project.MSG_INFO);
-			Delete dt = (Delete) getProject().createTask("delete");
+			log("Pruning dir " + pdir.getAbsolutePath(), Project.MSG_INFO);
+			Delete dt = new Delete();
+			// impersonate this task
+			dt.setProject(getProject());
+			dt.setOwningTarget(getOwningTarget());
+			dt.setTaskName(getTaskName());
+			dt.setDescription(getDescription());
+			dt.setLocation(getLocation());
+			dt.setTaskType(getTaskType());
+
 			dt.setDir(pdir);
 			dt.execute();
-		}	
+		}
 	}
-	
+
 	class CompareAge implements Comparator
 	{
 		public File basedir;
-		
+
 		public int compare(Object o1, Object o2)
 		{
 			File f1 = new File(basedir, (String) o1);

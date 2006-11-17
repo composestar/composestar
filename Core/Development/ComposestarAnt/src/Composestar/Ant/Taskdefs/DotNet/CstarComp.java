@@ -170,7 +170,14 @@ public class CstarComp extends BaseTask
 				oldLog.renameTo(new File(projectDir, "buildlog.old.txt"));
 			}
 
-			Java java = (Java) getProject().createTask("java");
+			Java java = new Java();
+			java.setProject(getProject());
+			java.setOwningTarget(getOwningTarget());
+			java.setTaskName(getTaskName());
+			java.setDescription(getDescription());
+			java.setLocation(getLocation());
+			java.setTaskType(getTaskType());
+			
 			java.init();
 			java.setDir(projectDir);
 			java.setClassname(master);
