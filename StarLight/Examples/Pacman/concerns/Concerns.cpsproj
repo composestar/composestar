@@ -15,7 +15,9 @@
     <VerifyIL>False</VerifyIL>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <IncludeDebugInformation>false</IncludeDebugInformation>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
     <OutputPath>bin\Release\</OutputPath>
     <DebugLevel>1</DebugLevel>
     <VerifyIL>False</VerifyIL>
