@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Name>"PacmanTwo"</Name>
@@ -24,7 +24,9 @@
     <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <IncludeDebugInformation>false</IncludeDebugInformation>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
     <OutputPath>bin\Release\</OutputPath>
     <DebugLevel>1</DebugLevel>
     <VerifyIL>True</VerifyIL>

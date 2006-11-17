@@ -267,7 +267,7 @@ Common routines. Always include this file in every build.xml file
 		</macrodef>
 		
 		<!-- register additional libraries -->
-		<path id="lib.core">	  
+		<path id="lib.core">
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries" includes="*/*.jar"/>
 		</path>
 		
@@ -371,7 +371,7 @@ Common routines. Always include this file in every build.xml file
 					<include name="**/*.java" />
 					<include name="**/*.cs" />
 					<include name="**/*.jsl" />
-				</fileset>				
+				</fileset>
 			</keywordsadd>
 		</svn>
 	</target>
