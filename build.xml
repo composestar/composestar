@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/Core/Compiletime" default="build">
-	
-	<import file="../common.xml"/>
+<project name="ComposeStar/Core/Compiletime" default="build" xmlns:cs="antlib:Composestar">
+
+	<property name="build.core" location=".."/>
+	<import file="${build.core}/common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The Compose* Core Compiletime. This is the core of the Compose* compiler.</description>
@@ -42,12 +43,12 @@
 	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file"/>
 	
 	<target name="antlr">
-		<antlr target="src/Composestar/Core/COPPER/grammar/cps.g" outputdirectory="src/Composestar/Core/COPPER">
-			<classpath refid="lib.core"/>
-		</antlr>
-		<antlr target="src/Composestar/Core/COPPER/grammar/cpsw.g" outputdirectory="src/Composestar/Core/COPPER">
-			<classpath refid="lib.core"/>
-		</antlr>
+		<cs:antlr target="src/Composestar/Core/COPPER/grammar/cps.g" 
+		          outputdirectory="src/Composestar/Core/COPPER"
+		          classpathref="lib.core"/>
+		<cs:antlr target="src/Composestar/Core/COPPER/grammar/cpsw.g"
+		          outputdirectory="src/Composestar/Core/COPPER"
+		          classpathref="lib.core"/>
 	</target>
 	
 	<target name="compile" depends="local_init,antlr">
