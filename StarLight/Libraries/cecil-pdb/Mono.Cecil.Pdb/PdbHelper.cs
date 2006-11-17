@@ -72,6 +72,35 @@ namespace Mono.Cecil.Pdb {
 			return reader;
 		}
 
+        public static ISymbolReader CreateReader(string filename, byte[] binaryFile)
+        {
+            SymBinder binder = new SymBinder();
+            object objDispenser, objImporter;
+            CoCreateInstance(ref s_dispenserClassID, null, 1, ref s_dispenserIID, out objDispenser);
+            
+            IntPtr filePtr = Marshal.AllocHGlobal(binaryFile.Length);
+            Marshal.Copy(binaryFile, 0, filePtr, binaryFile.Length);
+
+            IMetaDataDispenserEx dispenser = (IMetaDataDispenserEx)objDispenser;
+            dispenser.OpenScopeOnMemory(filePtr, (uint)binaryFile.Length, 0, ref s_importerIID, out objImporter);
+
+            IntPtr importerPtr = IntPtr.Zero;
+            ISymbolReader reader;
+            try
+            {
+                importerPtr = Marshal.GetComInterfaceForObject(objImporter, typeof(IMetadataImport));
+
+                reader = binder.GetReader(importerPtr, filename, null);
+            }
+            finally
+            {
+                if (importerPtr != IntPtr.Zero)
+                    Marshal.Release(importerPtr);
+            }
+
+            return reader;
+        }
+
 		public static ISymbolWriter CreateWriter (string assembly, string pdb)
 		{
 			SymWriter writer = new SymWriter (false);

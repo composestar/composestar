@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Mono.Cecil.Pdb\AssemblyInfo.cs" />
     <Compile Include="Mono.Cecil.Pdb\IMetadataDispenser.cs" />
+    <Compile Include="Mono.Cecil.Pdb\IMetadataDispenserEx.cs" />
     <Compile Include="Mono.Cecil.Pdb\IMetadataImport.cs" />
     <Compile Include="Mono.Cecil.Pdb\PdbFactory.cs" />
     <Compile Include="Mono.Cecil.Pdb\PdbReader.cs" />
