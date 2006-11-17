@@ -17,6 +17,12 @@
 			<!-- used by the reporting interface -->
 			<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
 		</listeners>
+				
+		<bootstrappers>
+			<!-- update Ant and CruiseControl before doing anything else -->
+			<svnbootstrapper localWorkingCopy="${composestar.path}\Core\Development\Ant" />
+			<svnbootstrapper localWorkingCopy="${composestar.path}\Core\Development\CruiseControl" />
+		</bootstrappers>
 
 		<!-- wait 5 minutes after the last commit before continuing -->
 		<modificationset quietperiod="300">			
