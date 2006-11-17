@@ -30,6 +30,11 @@ public class CstarComp extends BaseTask
 	 * If true fail on the first build that failed to compile
 	 */
 	protected boolean failOnFirstError = false;
+	
+	/**
+	 * If true send error output to the ant output instead of build.txt
+	 */
+	protected boolean logError = true;
 
 	/**
 	 * The location of ComposeStar; assumes the jar files are in
@@ -80,6 +85,11 @@ public class CstarComp extends BaseTask
 	public void setFailOnFirstError(boolean failOnFirstError)
 	{
 		this.failOnFirstError = failOnFirstError;
+	}
+	
+	public void setLogError(boolean inval)
+	{
+		this.logError = inval;
 	}
 
 	public void setMaster(String master)
@@ -153,17 +163,28 @@ public class CstarComp extends BaseTask
 		try
 		{
 			if (!buildXML.exists()) throw new Exception(buildXML.getName() + " does not exist.");
+			
+			File oldLog = new File(projectDir, "buildlog.txt");
+			if (oldLog.exists())
+			{
+				oldLog.renameTo(new File(projectDir, "buildlog.old.txt"));
+			}
 
 			Java java = (Java) getProject().createTask("java");
 			java.init();
 			java.setDir(projectDir);
 			java.setClassname(master);
-
+			
 			Argument arg = java.createArg();
+			arg.setValue("-d4"); // set compile debug output to DEBUG
+
+			arg = java.createArg();
 			arg.setValue(buildXML.toString());
 
 			Path cpath = java.createClasspath();
 			cpath.addFileset(cstarJars);
+			
+			java.setLogError(logError);			
 
 			java.setFork(true);
 			java.setOutput(new File(projectDir, "buildlog.txt"));
