@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="CruiseControl/Extras">
+<project name="CruiseControl/Extras" xmlns:cs="antlib:Composestar">
 	<description>Extra tasks for cruise control</description>
 	
 	<!-- register environment variables -->
@@ -8,8 +8,16 @@
 	<target name="onsuccess" depends="clean-artifacts" />
 	
 	<target name="clean-artifacts" description="cleans the artifacts directory" if="env.CCDIR">
+	
+		<cs:pruneDir keep="10"><!-- delete all but the last X artifact sets -->
+			<dirset dir="${env.CCDIR}${file.separator}artifacts${file.separator}${projectname}">
+				<include name="*" />
+			</dirset>
+		</cs:pruneDir>
+	
+		<!--
 		<tstamp>
-			<!-- delete artifacts from the last 3 days -->
+			<!- - delete artifacts from the last 3 days - - >
 			<format property="time.lastweek" offset="-3" unit="day" pattern="MM/dd/yyyy hh:mm aa" />
 		</tstamp>
 		<delete includeemptydirs="true">
@@ -17,7 +25,8 @@
 				<date datetime="${time.lastweek}" when="before" />
 			</fileset>
 		</delete>
-		<mkdir dir="${env.CCDIR}/artifacts/${projectname}" />	
+		<mkdir dir="${env.CCDIR}/artifacts/${projectname}" />
+		-->
 	</target>
 
 </project>

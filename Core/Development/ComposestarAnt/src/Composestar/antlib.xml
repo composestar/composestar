@@ -3,6 +3,7 @@
 	<!-- general -->
 	<taskdef name="extractBuildNumber"	classname="Composestar.Ant.Taskdefs.BuildNumberExtractor" />
 	<taskdef name="test"				classname="Composestar.Ant.Taskdefs.CstarTest"/>
+	<taskdef name="pruneDir"			classname="Composestar.Ant.Taskdefs.PruneDir"/>
 	<taskdef name="antlr"				classname="Composestar.Ant.Taskdefs.Antlr"/>
 	
 	<!-- dotnet -->
