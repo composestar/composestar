@@ -276,7 +276,8 @@ namespace Composestar.StarLight.ILWeaver
                 // Get the pdb
                 if (File.Exists(_configuration.DebugImagePath))
                 {
-                    pdbReader = new PdbFactory().CreateReader(targetAssembly.MainModule, _configuration.InputImagePath);
+                    //pdbReader = new PdbFactory().CreateReader(targetAssembly.MainModule, _configuration.InputImagePath);
+                    pdbReader = new PdbFactory().CreateReader(targetAssembly.MainModule,_configuration.InputImagePath, binaryFile);
                     targetAssembly.MainModule.LoadSymbols(pdbReader);
                 }
 
