@@ -201,9 +201,17 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     }
                     catch (ILWeaverException ex)
                     {
-                        Log.LogErrorFromException(ex, false);
-                        if (ex.InnerException != null)
-                            Log.LogErrorFromException(ex.InnerException, true);
+                        string errorMessage = ex.Message;
+                        Exception innerException = ex.InnerException;
+                        while (innerException != null)
+                        {
+                            errorMessage = String.Format(CultureInfo.CurrentCulture, "{0}; {1}", errorMessage, innerException.Message);
+                            innerException = innerException.InnerException; 
+                        }
+                        Log.LogErrorFromResources("WeaverException", errorMessage);
+                        // Only show stacktrace when debugging is enabled
+                        if (weaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
+                            Log.LogErrorFromResources("WeaverExceptionStackTrace", ex.StackTrace.ToString()); 
                     }
                     catch (ArgumentException ex)
                     {
@@ -211,7 +219,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     }
                     catch (BadImageFormatException ex)
                     {
-                        Log.LogErrorFromException(ex, true);
+                        Log.LogErrorFromException(ex, false);
                     }
 
                 }

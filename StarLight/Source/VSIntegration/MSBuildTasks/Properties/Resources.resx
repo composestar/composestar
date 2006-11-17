@@ -259,4 +259,11 @@ Weaved in {13:0.0000} sec.: {9} internal(s), {10} external(s)
   <data name="WeavingTimingLogSaved" xml:space="preserve">
     <value>Weaving timing log file saved to '{0}'.</value>
   </data>
+  <data name="WeaverException" xml:space="preserve">
+    <value>The IL Weaver detected the following exception "{0}".</value>
+  </data>
+  <data name="WeaverExceptionStackTrace" xml:space="preserve">
+    <value>The following stack trace can indicate the location of the above exception message:
+    {0}</value>
+  </data>
 </root>

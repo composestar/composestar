@@ -599,17 +599,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Getting the first instruction of the current method
             Instruction ins = method.Body.Instructions[0];
- 
-            //Console.WriteLine("Method {0}", method.ToString());
-
-            //foreach (Instruction instruct in method.Body.Instructions)
-            //{
-            //    if (instruct.SequencePoint != null)
-            //        Console.WriteLine(" {5}: {0}:{1}-{2}:{3}:{4} ", instruct.SequencePoint.StartLine, instruct.SequencePoint.StartColumn, instruct.SequencePoint.EndLine, instruct.SequencePoint.EndColumn, Path.GetFileName (instruct.SequencePoint.Document.Url), instruct.OpCode.ToString());
-    
-            //}
-            //Console.WriteLine("");
-            
+                                  
             // Add filters using the visitor
             CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
             visitor.Method = method;
@@ -651,16 +641,6 @@ namespace Composestar.StarLight.ILWeaver
             // What follows are the original instructions
             //
 
-
-            //Console.WriteLine("New sequence points for Method {0}", method.ToString());
-
-            //foreach (Instruction instruct in method.Body.Instructions)
-            //{
-            //    if (instruct.SequencePoint != null)
-            //        Console.WriteLine(" {5}: {0}:{1}-{2}:{3}:{4} ", instruct.SequencePoint.StartLine, instruct.SequencePoint.StartColumn, instruct.SequencePoint.EndLine, instruct.SequencePoint.EndColumn, Path.GetFileName(instruct.SequencePoint.Document.Url), instruct.OpCode.ToString());
-
-            //}
-            //Console.WriteLine("");
         }
 
         /// <summary>
@@ -795,7 +775,27 @@ namespace Composestar.StarLight.ILWeaver
         #endregion
 
         #region Helper functions
-             
+
+        /// <summary>
+        /// Writes the sequence points to the console.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        private static void DisplaySequencePoints(MethodDefinition method)
+        {
+            Console.WriteLine("Method {0}", method.ToString());
+
+            foreach (Instruction instruction in method.Body.Instructions)
+            {
+                if (instruction.SequencePoint != null)
+                    Console.WriteLine(" {5}: {0}:{1}-{2}:{3}:{4} ", instruction.SequencePoint.StartLine,
+                        instruction.SequencePoint.StartColumn, instruction.SequencePoint.EndLine,
+                        instruction.SequencePoint.EndColumn, Path.GetFileName(instruction.SequencePoint.Document.Url),
+                        instruction.OpCode.ToString());
+
+            }
+            Console.WriteLine("");
+        }
+
         /// <summary>
         /// Inserts the instruction list before the start instruction.
         /// </summary>

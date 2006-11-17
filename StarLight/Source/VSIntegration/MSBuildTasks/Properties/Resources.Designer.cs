@@ -421,6 +421,25 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The IL Weaver detected the following exception &quot;{0}&quot;..
+        /// </summary>
+        internal static string WeaverException {
+            get {
+                return ResourceManager.GetString("WeaverException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following stack trace can indicate the location of the above exception message:
+        ///    {0}.
+        /// </summary>
+        internal static string WeaverExceptionStackTrace {
+            get {
+                return ResourceManager.GetString("WeaverExceptionStackTrace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Weaving completed in {0:0.0000} seconds..
         /// </summary>
         internal static string WeavingCompleted {
