@@ -3,6 +3,7 @@
 	<!-- general -->
 	<taskdef name="extractBuildNumber"	classname="Composestar.Ant.Taskdefs.BuildNumberExtractor" />
 	<taskdef name="test"				classname="Composestar.Ant.Taskdefs.CstarTest"/>
+	<taskdef name="antlr"				classname="Composestar.Ant.Taskdefs.Antlr"/>
 	
 	<!-- dotnet -->
 	<taskdef name="dn_convert"			classname="Composestar.Ant.Taskdefs.DotNet.CstarConvert"/>

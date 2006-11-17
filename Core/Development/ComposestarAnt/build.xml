@@ -1,28 +1,22 @@
 <project name="ComposestarAnt" default="install">
 
 	<description>Builds the tasks used by AntSystemTest.</description>
-
-	
-	<condition property="build.core" value="${basedir}/../..">
-		<and>
-			<not><isset property="build.core"/></not>
-			<available file="${basedir}/../../common.xml"/>
-		</and>
-	</condition>	
-	
-	<!--
-	<import file="${build.core}/common.xml"/>
-	-->
 	
 	<target name="init_local">
+		<property name="build.core"  location="${basedir}/../.."/>
+		
 		<property name="ant.base"    location="${build.core}/Development/Ant"/>
 		<property name="ant.lib"     location="${ant.base}/lib"/>
+		
+		<property name="antlr.lib"   location="${build.core}/Compiletime/binaries/antlr"/>
+		
 		<property name="tasks.base"  location="${basedir}"/>
 		<property name="tasks.src"   location="${tasks.base}/src"/>
 		<property name="tasks.build" location="${tasks.base}/build"/>
 		<property name="tasks.dist"  location="${tasks.base}/dist"/>
 		
 		<property name="ant.jar"     location="${ant.lib}/ant.jar"/>
+		<property name="antlr.jar"   location="${antlr.lib}/antlr.jar"/>
 		<property name="tasks.jar"   location="${tasks.dist}/ComposestarAnt.jar"/>
 	</target>
 	
@@ -34,7 +28,10 @@
 	<target name="build" depends="init_local">
 		<mkdir dir="${tasks.build}"/>
 		<mkdir dir="${tasks.dist}"/>
-		<javac srcdir="${tasks.src}" destdir="${tasks.build}" classpath="${ant.jar}" source="1.4" target="1.4" />
+		<javac srcdir="${tasks.src}" 
+		       destdir="${tasks.build}" 
+		       classpath="${ant.jar};${antlr.jar}"
+		       source="1.4" target="1.4"/>
 		<copy todir="${tasks.build}">
 			<fileset dir="${tasks.src}">
 				<include name="Composestar/antlib.xml" />
