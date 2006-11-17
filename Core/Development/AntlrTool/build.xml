@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="AAT" default="install">
+
+	<description>Builds the Alternative Antlr Tool</description>
+	
+	<target name="init_local">
+		<property name="src"         location="${basedir}/src"/>
+		<property name="build"       location="${basedir}/build"/>
+		<property name="dist"        location="${basedir}/dist"/>
+		
+		<property name="build.core"  location="${basedir}/../.."/>
+		<property name="antlr.lib"   location="${build.core}/Compiletime/binaries/antlr"/>
+		
+		<property name="antlr.jar"   location="${antlr.lib}/antlr.jar"/>
+		<property name="aat.jar"     location="${dist}/aat.jar"/>
+	</target>
+
+	<target name="build" depends="init_local">
+		<mkdir dir="${build}"/>
+		<mkdir dir="${dist}"/>
+		<javac srcdir="${src}"
+		       destdir="${build}" 
+		       classpath="${antlr.jar}"
+		       source="1.4" target="1.4"/>
+		<jar destfile="${aat.jar}" basedir="${build}"/> 
+	</target>
+	
+	<target name="install" depends="build">
+		<copy todir="${antlr.lib}" file="${aat.jar}"/>
+	</target>
+
+</project>
