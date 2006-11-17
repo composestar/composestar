@@ -180,7 +180,7 @@ public final class INCRE implements CTCommonModule
 
 		String projectBase = ps.getPath("Base");
 		String cps = ps.getPath("Composestar");
-		String filename = config.getModuleProperty(MODULE_NAME, "config", "INCREconfig.XML");
+		String filename = config.getModuleProperty(MODULE_NAME, "config", "INCREconfig.xml");
 
 		File file = new File(projectBase, filename);
 		if (file.exists())
