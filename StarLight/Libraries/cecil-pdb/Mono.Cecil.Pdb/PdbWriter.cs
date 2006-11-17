@@ -71,13 +71,13 @@ namespace Mono.Cecil.Pdb {
 				m_writer.OpenNamespace (body.Method.DeclaringType.Namespace);
 
 				int start = body.Instructions.IndexOf (s.Start);
-				int end = s.End == body.Instructions.Outside ?
+    			int end = s.End == body.Instructions.Outside ?
 					body.Instructions.Count - 1 :
 					body.Instructions.IndexOf (s.End);
 
 				ArrayList instructions = new ArrayList();
-				for (int i = start; i <= end; i++)
-					if (body.Instructions [i].SequencePoint != null)
+                for (int i = start; i <= end; i++)
+                    if (i>0 && body.Instructions[i] != null && body.Instructions[i].SequencePoint != null)
 						instructions.Add (body.Instructions [i]);
 
 				Document doc = null;
@@ -104,9 +104,13 @@ namespace Mono.Cecil.Pdb {
 				m_writer.DefineSequencePoints (GetDocument (doc),
 					offsets, startRows, startCols, endRows, endCols);
 
+                // Cecil PDB writer does not yet write the variable names.
+                // This is not yet implemented.
+                // TODO local variable support
+
 				//CreateLocalVariable (s, startOffset, endOffset);
 
-				CreateScopes (body, s.Scopes);
+				//CreateScopes (body, s.Scopes);
 				m_writer.CloseNamespace ();
 
 				m_writer.CloseScope (endOffset);
