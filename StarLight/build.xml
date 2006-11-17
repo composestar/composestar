@@ -66,13 +66,22 @@
 
 	<target name="deploy" depends="init" description="Deploy the StarLight implementation of Compose*">
 		<antcall target="deploy_compiletime"/>
+		<antcall target="deploy_ce"/>
+		<antcall target="deploy_ws"/>
 		<antcall target="deploy_msbuild"/>
 		<antcall target="deploy_vs"/>
-		<antcall target="deploy_ws"/>
 	</target>
 
 	<target name="deploy_compiletime" description="Deploy Compose* StarLight Compiletime">
 		<ant target="deploy" dir="Source/Compiletime" />
+	</target>
+
+	<target name="deploy_ce" description="Deploy Compose* StarLight CoreElements">
+		<ant target="deploy" dir="Source/StarLight.Weaving"/>
+	</target>
+
+	<target name="deploy_ws" description="Deploy Compose* StarLight WeaveStrategy">
+		<ant target="deploy" dir="Source/StarLight.Weaving.BuildIn" />
 	</target>
 
 	<target name="deploy_msbuild" description="Deploy Compose* StarLight MSBuild tasks">
@@ -83,9 +92,9 @@
 		<ant target="deploy" dir="Source/VSIntegration/VisualStudio.Project" />
 	</target>
 
-	<target name="deploy_ws" description="Deploy Compose* StarLight WeaveStrategy">
-		<ant target="deploy" dir="Source/StarLight.Weaving.BuildIn" />
-	</target>
+	<!-- Composestar.StarLight.Weaving.dll:     Composestar.StarLight.Weaving -->
+	<!-- Composestar.StarLight.ContextInfo.dll: Composestar.StarLight.Weaving -->
+	<!-- Composestar.StarLight.Filters.dll:     StarLight.Filters -->
 
 	<!-- QA -->
 
@@ -138,7 +147,7 @@
 	<target name="documentation.init" depends="init" unless="available.hhc">
 		<!-- 
 			Output a warning if the hhc executable is not found in the 'C:\Program Files\HTML Help Workshop' folder,
-			it might be found by Sandcastle in an other folder however, so no fail...
+			it might be found by Sandcastle in another folder however, so don't fail...
 		-->
 		<echo level="warning">HTML Help Compiler (hhc.exe) not found, CHM file may not be created!</echo>
 	</target>

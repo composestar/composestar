@@ -63,6 +63,10 @@
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StarLight.Filters\StarLight.Filters.csproj">
+      <Project>{2E8080B8-CD6E-4AFC-AB32-6032ED9F99C5}</Project>
+      <Name>StarLight.Filters</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StarLightEntities\StarLightEntities.csproj">
       <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
       <Name>StarLightEntities</Name>
@@ -80,11 +84,26 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+	<Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+
+  <Target Name="Deploy" DependsOnTargets="Build">
+    <Message Text="Deploying..." />
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight" ValueName="StarLightInstallFolder">
+      <Output TaskParameter="Value" PropertyName="StarLightInstallFolder"/>
+    </RegistryRead>
+    <CreateProperty Value="$(StarLightInstallFolder)\CoreElements">
+      <Output TaskParameter="Value" PropertyName="DeployDestination"/>
+    </CreateProperty>
+    <CreateItem Include="$(OutputPath)\Composestar.StarLight.ContextInfo.dll" AdditionalMetadata="Visible=false">
+      <Output TaskParameter="Include" ItemName="DeployFiles" />
+    </CreateItem>
+    <CreateItem Include="$(OutputPath)\Composestar.StarLight.Filters.dll" AdditionalMetadata="Visible=false">
+      <Output TaskParameter="Include" ItemName="DeployFiles" />
+    </CreateItem>
+    <CreateItem Include="$(OutputPath)\Composestar.StarLight.Weaving.dll" AdditionalMetadata="Visible=false">
+      <Output TaskParameter="Include" ItemName="DeployFiles" />
+    </CreateItem>
+    <Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(DeployDestination)"/>
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
