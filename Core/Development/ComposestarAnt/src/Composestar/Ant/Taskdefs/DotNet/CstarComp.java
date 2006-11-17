@@ -13,6 +13,7 @@ import org.apache.tools.ant.types.Commandline.Argument;
 import org.apache.tools.ant.types.PatternSet.NameEntry;
 
 import Composestar.Ant.Taskdefs.BaseTask;
+import Composestar.Ant.Taskdefs.SupJava;
 
 /**
  * Compiles Compose* projects.
@@ -170,13 +171,7 @@ public class CstarComp extends BaseTask
 				oldLog.renameTo(new File(projectDir, "buildlog.old.txt"));
 			}
 
-			Java java = new Java();
-			java.setProject(getProject());
-			java.setOwningTarget(getOwningTarget());
-			java.setTaskName(getTaskName());
-			java.setDescription(getDescription());
-			java.setLocation(getLocation());
-			java.setTaskType(getTaskType());
+			Java java = new SupJava(this);
 			
 			java.init();
 			java.setDir(projectDir);
