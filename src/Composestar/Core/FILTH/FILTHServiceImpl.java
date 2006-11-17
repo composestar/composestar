@@ -70,7 +70,8 @@ public class FILTHServiceImpl extends FILTHService
 			if(file.isDirectory())
 			{
 				//System.out.println("Found and Dir: "+file.getAbsolutePath());
-				filename = file.getAbsolutePath()+"\\FILTH_"+c.getName()+".html";
+				filename = file.getAbsolutePath()+"\\FILTH_"+java.net.URLEncoder.encode(c.getName(), "UTF-8")+".html";
+				
 				FILTHService.setLog(new PrintStream(new FileOutputStream(filename)));
 				cssFile = "file://"+Configuration.instance().getPathSettings().getPath("base") + "SECRET.css";
 				if( !(new File(cssFile).exists()))
