@@ -268,6 +268,5 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             return serviceContainer;
         }
-
     }
 }

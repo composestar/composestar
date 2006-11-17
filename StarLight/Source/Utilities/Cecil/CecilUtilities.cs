@@ -222,6 +222,7 @@ namespace Composestar.StarLight.Utilities
             AddMethodToCache(CachedMethodDefinition.HasMoreStoredActions, typeof(FilterContext).GetMethod("HasMoreStoredActions", new Type[] { }));
             AddMethodToCache(CachedMethodDefinition.NextStoredAction, typeof(FilterContext).GetMethod("NextStoredAction", new Type[] { }));
             AddMethodToCache(CachedMethodDefinition.ExceptionConstructor, typeof(Exception).GetConstructors()[0]);
+            AddMethodToCache(CachedMethodDefinition.GetMethodFromHandle, typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle", new Type[] { typeof(System.RuntimeMethodHandle) }));
 
 
         } // AddDefaultMethodsToCache()
@@ -965,7 +966,11 @@ namespace Composestar.StarLight.Utilities
         /// <summary>
         /// Create an exception by calling its constructor.
         /// </summary>
-        ExceptionConstructor
+        ExceptionConstructor,
+        /// <summary>
+        /// Calls the GetMethodFromHandle function in the System.Reflection.MethodBase type.
+        /// </summary>
+        GetMethodFromHandle
     } // enum CachedMethodDefinition
 
 

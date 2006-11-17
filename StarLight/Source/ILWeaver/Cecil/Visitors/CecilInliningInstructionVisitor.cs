@@ -956,6 +956,18 @@ namespace Composestar.StarLight.ILWeaver
             }
 
             //
+            // Load the current method base. This is a trick in IL (.NET2) to get the MethodBase using lightweight reflection.
+            // See for more information: http://www.interact-sw.co.uk/iangblog/2005/08/31/methodinfofromtoken
+            // In IL code:
+            // ldtoken method void SomeClass::SomeMethod()
+            // call class [mscorlib]System.Reflection.MethodBase [mscorlib]System.Reflection.MethodBase::GetMethodFromHandle(valuetype [mscorlib]System.RuntimeMethodHandle)
+            //
+            // Watch out with generics!
+            //Instructions.Add(Worker.Create(OpCodes.Ldtoken, TargetAssemblyDefinition.MainModule.Import(CalledMethod)));
+            //Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetMethodFromHandle)));
+            //Instructions.Add(Worker.Create(OpCodes.Pop));  // remove it for now since we do not assign it.
+  
+            //
             // Set the selector
             //
 
