@@ -433,7 +433,13 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 			if (typeElement.getNamespace() != null && typeElement.getName() != null)
 			{
-				type.setFullName(typeElement.getNamespace() + '.' + typeElement.getName());
+				if (typeElement.getNamespace().endsWith("+"))
+				{
+					type.setFullName(typeElement.getNamespace() + typeElement.getName());
+				}
+				else {
+					type.setFullName(typeElement.getNamespace() + '.' + typeElement.getName());
+				}
 			}
 			else
 			{
@@ -619,7 +625,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			// storeTimer.start();
 			DotNETParameterInfo parameter = new DotNETParameterInfo();
 			// storeTimer.stop();
-
+			
 			if (storedParameter.getName() != null)
 			{
 				parameter.setName(storedParameter.getName());
