@@ -32,7 +32,7 @@
 	<!--Maybe recompiling grammar files is needed-->
 	<target name="compile_c" depends="init_local">
 		<echo> Compile_C </echo>
-		<javac srcdir="src" destdir="${build.c}/Compiletime/Output" classpathref="lib.java" classpath="${build.c}\ComposestarEclipsePlugin\binaries\antlr.jar;${build.core}\Compiletime\dist\ComposestarCORE.jar" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}"> <!--source="${build.c.version}" target="${build.c.version}" debug="${build.debug}" deprecation="${build.deprecation}" -->
+		<javac srcdir="src" destdir="${build.c}/Compiletime/Output" classpathref="lib.core" classpath="${build.c}\ComposestarEclipsePlugin\binaries\antlr.jar;${build.core}\Compiletime\dist\ComposestarCORE.jar" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}"> <!--source="${build.c.version}" target="${build.c.version}" debug="${build.debug}" deprecation="${build.deprecation}" -->
 		</javac>
 		<echo> Compiled_C </echo>
 	</target>
