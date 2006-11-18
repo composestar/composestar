@@ -23,6 +23,8 @@ import Composestar.Utils.StringUtils;
  */
 public class DotNETSemTexRunner implements CTCommonModule
 {
+	public static final String MODULE_NAME = "SEMTEX";
+	
 	public DotNETSemTexRunner()
 	{}
 
@@ -52,16 +54,16 @@ public class DotNETSemTexRunner implements CTCommonModule
 			cmdList.add("/plugin:" + FileUtils.quote(cpsPath + "binaries/SemanticComposestarPlugins.dll"));
 			cmdList.add("/exportFilename:" + FileUtils.quote(projectPath + "obj/semtex.xml"));
 
-			Debug.out(Debug.MODE_DEBUG, "SEMTEX", "Command for DotNet SemTex: " + StringUtils.join(cmdList));
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Command for .NET SemTex: " + StringUtils.join(cmdList));
 
 			CommandLineExecutor cle = new CommandLineExecutor();
 			int result = cle.exec(cmdList);
 			if (result != 0)
 			{
-				throw new ModuleException("SemTex Analyzer failed with error: " + cle.outputError(), "SEMTEX");
+				throw new ModuleException("SemTex Analyzer failed with error: " + cle.outputError(), MODULE_NAME);
 			}
 
-			Debug.out(Debug.MODE_DEBUG, "SEMTEX", "SemTex Analyzer completed.");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "SemTex Analyzer completed.");
 		}
 	}
 
@@ -77,13 +79,10 @@ public class DotNETSemTexRunner implements CTCommonModule
 		}
 		else
 		{
-			Debug.out(Debug.MODE_WARNING, "SEMTEX", "SemTex Analyzer not found on it's expected location: " + exe
-					+ ". Semantic Analyzing will be skipped.");
-			Debug
-					.out(
-							Debug.MODE_INFORMATION,
-							"SEMTEX",
-							"Semantic Analyzer cannot be executed because of missing files. See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");
+			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, 
+					"SemTex Analyzer not found on its expected location: " + exe + ". Semantic Analyzing will be skipped. " +
+					"See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");
+
 			return null;
 		}
 	}

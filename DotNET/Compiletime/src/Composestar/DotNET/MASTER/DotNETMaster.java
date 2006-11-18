@@ -44,7 +44,6 @@ public class DotNETMaster extends Master
 	 */
 	public void run()
 	{
-		// This is the 'hardcoded' version
 		try
 		{
 			long beginTime = System.currentTimeMillis();
@@ -87,21 +86,23 @@ public class DotNETMaster extends Master
 			}
 		}
 		catch (ModuleException e)
-		{ // MasterStopException
+		{
 			String error = e.getMessage();
+			String filename = e.getErrorLocationFilename();
+			int line = e.getErrorLocationLineNumber();
+			
 			if (error == null || "null".equals(error))
 			{
 				error = e.toString();
 			}
 
-			if ((e.getErrorLocationFilename() != null) && !e.getErrorLocationFilename().equals(""))
+			if (filename == null || "".equals(filename))
 			{
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e
-						.getErrorLocationLineNumber());
+				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
 			}
 			else
 			{
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
+				Debug.out(Debug.MODE_ERROR, e.getModule(), error, filename, line);
 			}
 
 			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + Debug.stackTrace(e));
@@ -171,11 +172,9 @@ public class DotNETMaster extends Master
 	}
 
 	/**
-	 * Compose* main function. Creates the Master object. Adds the desired
-	 * modules and then calls run on each of them in the order that they where
-	 * added.
+	 * Compose* main function. Creates the Master object and invokes the run method.
 	 * 
-	 * @param args
+	 * @param args The command line arguments.
 	 */
 	public static void main(String[] args)
 	{
@@ -185,7 +184,8 @@ public class DotNETMaster extends Master
 			return;
 		}
 
-		if (args[0].equals("-V") || args[0].equals("--version"))
+		String arg = args[0].toLowerCase();
+		if (arg.equals("-v") || arg.equals("--version"))
 		{
 			Version.reportVersion(System.out);
 			return;
@@ -201,6 +201,7 @@ public class DotNETMaster extends Master
 			System.out.println(e.getMessage());
 			System.exit(ECONFIG);
 		}
+
 		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, Version.getTitle() + " " + Version.getVersionString());
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Compiled on "+Version.getCompileDate().toString());
 		master.run();

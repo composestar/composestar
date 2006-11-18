@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * @see Composestar.Utils.StringUtilsTest
+ */
 public final class StringUtils
 {
 	/**
@@ -64,5 +67,15 @@ public final class StringUtils
 		String[] result = new String[parts.size()];
 		parts.toArray(result);
 		return result;
+	}
+
+	public static String capitalize(String s)
+	{
+		if (s == null || "".equals(s)) return s;
+		
+		char[] chars = s.toCharArray();
+		chars[0] = Character.toUpperCase(chars[0]);
+		
+		return new String(chars);
 	}
 }
