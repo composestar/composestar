@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.1"?>
+<plugin>
+   <extension point="org.eclipse.ui.actionSets">
+     <actionSet
+     		id="actionset"
+           	label="Compose*"
+           	visible="true">
+        <menu
+        	id="composestar"
+       		label="Compose*">
+        	<separator name="slot1"/>
+        	<separator name="slot2"/>
+        </menu>   
+       	<action
+       		id="clean"
+            label="Clean"
+            menubarPath="composestar/slot1">
+            <enablement>
+            	<systemProperty
+            		name="NonExistingProperty"
+            		value="SomeValue">
+            	</systemProperty>
+            </enablement>
+        </action>
+        <action
+        	id="debug"
+            label="Debug"
+            menubarPath="composestar/slot1"
+            icon="icons/debug_exc.gif">
+            <enablement>
+            	<systemProperty
+            		name="NonExistingProperty"
+            		value="SomeValue">
+            	</systemProperty>
+            </enablement>
+         </action>
+         <action
+         	id="run"
+            label="Run"
+            menubarPath="composestar/slot1"
+            icon="icons/run_exc.gif">
+            <enablement>
+            	<systemProperty
+            		name="NonExistingProperty"
+            		value="SomeValue">
+            	</systemProperty>
+            </enablement>
+        </action>
+        <action
+            id="build"
+            label="Build"
+            menubarPath="composestar/slot1"
+            class="composestarEclipsePlugin.actions.BuildAction">
+        </action>
+        <action
+        	id="settings"	
+            label="Settings"
+            menubarPath="composestar/slot2"
+            class="composestarEclipsePlugin.actions.SettingsAction">
+            </action>
+      </actionSet>
+	</extension>
+	<extension
+		id="headlessCEPTest"
+		point="org.eclipse.core.runtime.applications">
+		<application>
+			<run class="composestarEclipsePlugin.PlatformRunnable"/>
+		</application>
+	</extension>	 
+ 
+</plugin>

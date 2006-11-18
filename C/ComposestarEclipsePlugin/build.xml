@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/C/ComposestarEclipsePlugin" default="build">
+
+	<condition property="build.core" value="../../../Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="../../../Core/common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}${file.separator}common.xml" />
+	
+	<echo>Processing: ${ant.project.name} ...</echo>
+	
+	<description>
+	The Compose* Eclipse C Plugin
+	</description>
+	
+	<target name="init_local" depends="init">
+		<echo> Installing Composestar Eclipse Plugin for C: init_local </echo>
+		<mkdir dir="${out.build}"/>
+		<mkdir dir="${out.dist}"/>
+		<mkdir dir="${eclipse.home}/plugins/ComposestarEclipsePlugin"/>
+	</target>
+	
+	<!-- clean -->
+	<target name="clean" depends="init">
+		<delete dir="${out.build}"/>
+		<delete dir="${out.dist}"/>
+		<delete dir="${eclipse.home}/plugins/ComposestarEclipsePlugin"/>
+		<delete>
+			<FileSet dir="${build.c}/ComposestarEclipsePlugin">
+				<include name="ComposestarEclipsePlugin.jar"/>
+			</FileSet>
+		</delete>	
+		
+	</target>
+
+	<!-- build -->	
+	<target name="build" depends="init_local,compile,jar" description="compile the eclipse plugin">
+		<echo> Installing Composestar Eclipse Plugin for C:build </echo>
+	</target>
+		
+	
+	<!-- compile -->
+	<target name="compile" depends="init_local" >
+		<echo> Installing Composestar Eclipse Plugin for C: compile </echo>
+		<javac srcdir="src" destdir="${out.build}" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+			<classpath refid="lib.eclipseC" />
+		</javac>
+	</target>
+	
+	<!-- create jar -->
+	<target name="jar">
+		<echo> Installing Composestar Eclipse Plugin for C:jar </echo>
+		<jar destfile="ComposestarEclipsePlugin.jar">
+			<fileset dir="${out.build}" />
+		</jar>
+	</target>
+	
+	<!-- install -->	
+	<target name="install" depends="init_local,build" description="install the eclipse plugin">
+		<echo> Installing Composestar Eclipse Plugin for C: install </echo>
+		<!-- classes 
+		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin">
+			<fileset dir="${out.dist}"/>
+		</copy>-->
+		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
+			<fileset dir="${build.c}/Compiletime/Output">
+				<include name="ComposestarC.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
+			<fileset dir="${build.core}/Compiletime/dist"/>
+		</copy>
+		
+		<!-- plugin files -->
+		<echo> Installing Composestar Eclipse Plugin for C: install . </echo>
+			
+		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin">
+			<fileset dir=".">
+				<include name="**/*.*"/>
+			</fileset> 
+		</copy>
+	
+	</target>
+	
+</project>

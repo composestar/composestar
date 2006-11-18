@@ -1,0 +1,21 @@
+concern Logging
+{
+	filtermodule Log
+	{	
+		externals
+			stack:StackFunctions; 
+		conditions	
+			stackFull:Error.stackFull();
+		inputfilters
+			log : Error = { stackFull=>[stack.*]} 
+	}
+	superimposition
+	{
+			
+		selectors
+			loggableClasses={Class|isClassWithName(Class,'StackFunctions')};			
+		filtermodules
+			loggableClasses <- Log;
+		
+	}
+}

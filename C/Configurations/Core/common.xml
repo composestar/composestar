@@ -1,0 +1,412 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+Common routines. Always include this file in every build.xml file
+
+-->
+<project name="ComposeStarCommon">
+
+	<target name="init" unless="build.initialized">
+		<property name="build.initialized" value="false"/>
+		<tstamp/>
+
+		<!-- figure out the directory where common.xml is located -->
+		<dirname property="build.core.init" file="${ant.file.ComposeStarCommon}"/>
+
+		<!-- load build.ini (if available) -->
+		<!-- all properties can be overridden in this file -->
+		<property file="${build.core.init}/build.ini"/>
+	
+		<!-- build label, passed by CruiseControl as "build.<number>", could be used in the version numbers -->
+		<property name="label" value="build.0"/>
+		
+		<!-- just the build number -->	
+		<taskdef name="extractBuildNumber" classname="Composestar.Ant.Taskdefs.BuildNumberExtractor"/>
+		<extractBuildNumber label="${label}" property="version.build" syntax="build.#"/>
+	
+		<!-- version numbers, used in installers e.a. Note: must be: [major].[minor].[release] -->
+		<property name="version.core"   value="0.6.1"/>
+		<property name="version.dotnet" value="${version.core}"/>
+		<property name="version.java"   value="${version.core}"/>
+		<property name="version.c"      value="${version.core}"/>
+		<property name="version.starlight" value="0.1.0"/>
+		
+		<!-- various config items -->
+		<property name="out.build" value="build"/>
+		<property name="out.dist"  value="dist"/>
+		<property name="out.qa"    value="qa"/>
+		
+		<property name="out.jar.core"      value="${out.dist}${file.separator}ComposestarCORE.jar"/>
+		<property name="out.jar.c"	   value="${out.dist}${file.separator}ComposestarC.jar"/>
+		<property name="out.jar.dotnet"    value="${out.dist}${file.separator}ComposestarDotNET.jar"/>
+		<property name="out.jar.java"      value="${out.dist}${file.separator}ComposestarJava.jar"/>
+		<property name="out.jar.starlight" value="${out.dist}${file.separator}StarLight.jar"/>
+		
+		<!-- options for javac -->
+		<property name="build.java.version" value="1.4"/>
+		<property name="build.debug"        value="true"/>
+		<property name="build.deprecation"  value="false"/>
+
+		<!-- options for msbuild -->
+		<condition property="msbuild.config" value="debug" else="release">
+			<istrue value="${build.debug}"/>
+		</condition>
+
+		<!-- register environment variables -->
+		<property environment="env"/>
+		<property name="env.PATH" value="${env.Path}"/>
+	
+		<!-- set the core path -->
+		<property name="build.core" value="${build.core.init}"/>
+		
+		<!-- set the root path -->
+		<dirname property="build.root" file="${build.core}"/>
+		
+		<!-- set platform paths -->
+		<property name="build.dotnet"    value="${build.root}${file.separator}DotNET"/>
+		<property name="build.starlight" value="${build.root}${file.separator}StarLight"/>
+		<property name="build.java"      value="${build.root}${file.separator}Java"/>
+		<property name="build.c"         value="${build.root}${file.separator}C"/>
+		
+		<!-- check which platforms are available -->
+		<available file="${build.dotnet}${file.separator}build.xml"    property="available.dotnet"/>
+		<available file="${build.starlight}${file.separator}build.xml" property="available.starlight"/>
+		<available file="${build.java}${file.separator}build.xml"      property="available.java"/>
+		<available file="${build.c}${file.separator}build.xml"         property="available.c"/>
+
+		<!-- set default values of ignore properties for all platforms -->
+		<property name="ignore.dotnet"    value="false"/>
+		<property name="ignore.starlight" value="false"/>
+		<property name="ignore.java"      value="false"/>
+		<property name="ignore.c"         value="false"/>
+
+		<!-- set the enabled properties for all platforms based on available and ignore -->
+		<condition property="enabled.dotnet" value="true">
+			<and>
+				<istrue  value="${available.dotnet}"/>
+				<isfalse value="${ignore.dotnet}"/>
+			</and>
+		</condition>
+
+		<condition property="enabled.starlight" value="true">
+			<and>
+				<istrue  value="${available.starlight}"/>
+				<isfalse value="${ignore.starlight}"/>
+			</and>
+		</condition>
+
+		<condition property="enabled.java" value="true">
+			<and>
+				<istrue  value="${available.java}"/>
+				<isfalse value="${ignore.java}"/>
+			</and>
+		</condition>
+
+		<condition property="enabled.c" value="true">
+			<and>
+				<istrue  value="${available.c}"/>
+				<isfalse value="${ignore.c}"/>
+			</and>
+		</condition>
+		
+		<!-- resolve system variables -->	
+		<!-- Windows XP -->	
+		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper.exe" failifexecutionfails="false" os="Windows XP">
+			<arg value="getsystemproperties"/>
+			<arg value="${build.core}${file.separator}Development${file.separator}system.properties"/>
+		</exec>
+		<!-- Windows 2003 -->
+		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper.exe" failifexecutionfails="false" os="Windows 2003">
+			<arg value="getsystemproperties"/>
+			<arg value="${build.core}${file.separator}Development${file.separator}system.properties"/>
+		</exec>
+		
+		<property file="${build.core}${file.separator}Development${file.separator}system.properties"/>
+		
+		<!-- location of the Compose* installation -->
+		<condition property="composestar.installdir" value="C:${file.separator}Program Files${file.separator}ComposeStar">
+			<os family="windows" />
+		</condition>
+		
+		<!-- final fallback -->
+		<property name="composestar.installdir" value="${user.home}${file.separator}ComposeStar"/>
+		
+		<!-- location of Eclipse pluginsfolder -->
+		<property name="eclipse.pluginsdir" value="${env.ECLIPSE_HOME}${file.separator}plugins"/>
+		
+		<!-- make macro -->
+		<macrodef name="make">
+			<attribute name="target" default=""/>
+			<sequential>
+				<condition property="bin.make" value="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}make${file.separator}make" else="make">
+					<os family="windows"/>
+				</condition>
+				<exec executable="${bin.make}" searchpath="true">
+					<env key="PATH" path="${env.PATH};${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}make${file.separator}"/>
+					<arg value="@{target}"/>
+				</exec>
+			</sequential>
+		</macrodef>
+		
+		<!-- msbuild macro -->
+		<macrodef name="msbuild">
+			
+			<attribute name="solution"/>
+			<attribute name="config" default="Release"/>
+			<attribute name="target" default="rebuild"/>
+					
+			<sequential>
+				<exec executable="msbuild" failonerror="true">
+					<arg value="@{solution}"/>
+					<arg value="/nologo"/>
+					<arg value="/v:quiet"/>
+					<arg value="/t:@{target}"/>
+					<arg value="/p:Configuration=@{config}"/>
+				</exec>
+			</sequential>
+
+		</macrodef>
+
+		<!-- NSIS path -->
+		<available file="makensis.exe" filepath="${env.PATH}${path.separator}C:${file.separator}Program Files${file.separator}NSIS" property="available.nsis"/>
+		<!-- <available file="makensis.exe" filepath="${env.PATH}" property="available.nsis.path"/> -->
+		<condition property="bin.nsis" value="C:${file.separator}Program Files${file.separator}NSIS" else="">
+			<not><isset property="available.nsis.path"/></not>
+		</condition>
+		
+		<!-- Inno setup -->
+		<available file="iscc.exe" filepath="${env.PATH}${path.separator}C:${file.separator}Program Files${file.separator}Inno Setup 5" property="available.innosetup"/>
+		<available file="iscc.exe" filepath="${env.PATH}" property="available.innosetup.path"/>
+		<condition property="bin.innosetup" value="C:${file.separator}Program Files${file.separator}Inno Setup 5${file.separator}iscc.exe" else="iscc.exe">
+			<not><isset property="available.innosetup.path"/></not>
+		</condition>
+
+		<!-- devenv macro -->
+		<available file="devenv.com" filepath="${env.PATH}${path.separator}C:${file.separator}Program Files${file.separator}Microsoft Visual Studio .NET 2003${file.separator}Common7${file.separator}IDE${file.separator}" property="available.devenv"/>
+		<available file="devenv.com" filepath="${env.PATH}" property="available.devenv.path"/>				
+		<condition property="bin.devenv" value="C:${file.separator}Program Files${file.separator}Microsoft Visual Studio .NET 2003${file.separator}Common7${file.separator}IDE${file.separator}devenv.com" else="devenv.com">
+			<not><isset property="available.devenv.path"/></not>
+		</condition>
+		
+		<!-- FxCop -->
+		<available file="FxCopCmd.exe" filepath="${build.core}${file.separator}Development${file.separator}fxcop${file.separator}" property="available.fxcop"/>
+		<available file="FxCopCmd.exe" filepath="${env.PATH}" property="available.fxcop.path"/>				
+		<condition property="bin.fxcop" value="${build.core}${file.separator}Development${file.separator}fxcop${file.separator}FxCopCmd.exe" else="FxCopCmd.exe">
+			<not><isset property="available.fxcop.path"/></not>
+		</condition>
+		
+		<!-- HTML Help Compiler -->
+		<available file="hhc.exe" filepath="C:${file.separator}Program Files${file.separator}HTML Help Workshop${file.separator}" property="available.hhc"/>
+
+		<!-- Sandcastle -->
+		<property name="bin.sandcastle" value="${build.core}${file.separator}Development${file.separator}Sandcastle${file.separator}Help File Builder${file.separator}SandcastleBuilderConsole.exe"/>
+
+		<!-- WIX -->
+		<property name="path.wix" value="${build.core}${file.separator}Development${file.separator}Wix${file.separator}"/>
+
+		<!-- NUnit -->
+		<property name="path.nunit" value="${build.core}${file.separator}Development${file.separator}NUnit${file.separator}"/>
+
+		<!-- NTime -->
+		<property name="path.ntime" value="${build.core}${file.separator}Development${file.separator}NTime${file.separator}"/>
+
+		<!-- FxCop macro -->
+		<macrodef name="fxcop">
+			
+			<attribute name="files"/>
+			<attribute name="reportfile"/>
+								
+			<sequential>
+				<echo message="Running FxCop" level="info"/>
+				<exec executable="${bin.fxcop}" failonerror="false">
+					<arg value="/f:@{files}"/>					
+					<arg value="/o:@{reportfile}"/>			
+				<!--	<arg value="/sf" />		-->
+					<arg value="/q" />
+					<arg value="/summary" />
+					<arg value="/outxsl:${build.core}${file.separator}Development${file.separator}fxcop${file.separator}xml${file.separator}FxCopRichConsoleOutput.xsl"/>
+				</exec>
+			</sequential>
+
+		</macrodef>
+		
+		<macrodef name="devenv">
+			<attribute name="solution"/>
+			<attribute name="target" default="Release"/>
+			<attribute name="action" default="rebuild"/>
+			<sequential>
+				<echo message="Running devenv [@{action}] for solution @{solution} (@{target})" level="info"/>
+				<exec executable="${bin.devenv}" failonerror="true">
+					<arg value="@{solution}"/>
+					<arg value="/@{action}"/>
+					<arg value="@{target}"/>
+				</exec>
+			</sequential>
+		</macrodef>
+
+		<!-- registerAssembly macro -->
+		<macrodef name="registerAssembly">
+			<attribute name="dll"/>
+			<sequential>
+				<exec executable="regasm.exe" failifexecutionfails="false">
+					<arg value="@{dll}"/>
+					<arg value="/silent"/>
+					<arg value="/codebase"/>
+				</exec>
+			</sequential>
+		</macrodef>
+		
+		<!-- unregisterAssembly macro -->
+		<macrodef name="unregisterAssembly">
+			<attribute name="dll"/>
+			<sequential>
+				<exec executable="regasm.exe" failifexecutionfails="false">
+					<arg value="@{dll}"/>
+					<arg value="/silent"/>
+					<arg value="/unregister"/>
+				</exec>
+			</sequential>
+		</macrodef>
+		
+		<!-- register additional libraries -->
+		<path id="lib.core">	  
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries" includes="*/*.jar"/>
+		</path>
+		
+		<path id="lib.dotnet">
+			<path refid="lib.core"/>
+			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
+		</path>
+		
+		<path id="lib.java">
+			<path refid="lib.core"/>
+			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
+			<fileset dir="${build.java}${file.separator}Compiletime${file.separator}binaries" includes="*/*.jar"/>
+		</path>
+		
+		<path id="lib.starlight">
+			<path refid="lib.core"/>
+			<fileset dir="${build.core}/Compiletime"    includes="${out.jar.core}"/>
+			<fileset dir="${build.starlight}/Libraries" includes="**/*.jar"/>
+			<fileset dir="${build.starlight}/Source/Compiletime/lib" includes="*.jar" />
+		</path>
+		
+		<!-- eclipse libraries -->
+		<path id="lib.eclipse">
+			<fileset dir="${env.ECLIPSE_HOME}${file.separator}plugins" includes="*.jar"/>
+		</path>
+			
+
+		<path id="lib.eclipseC">
+			<fileset dir="${eclipse.home}${file.separator}plugins" includes="*.jar"/>
+		</path>
+		
+		<!-- findbugs jars -->
+		<path id="lib.findbugs">	  
+			<fileset dir="${build.core}${file.separator}Development${file.separator}findbugs${file.separator}lib" includes="*.jar"/>
+		</path>
+		
+		<!-- register findbugs task -->
+		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="lib.findbugs"/>
+		
+		<condition property="bin.findbugs" value="${build.core}${file.separator}Development${file.separator}findbugs">
+			<not><isset property="bin.findbugs"/></not>
+		</condition>
+		
+		<condition property="findbugs.jvmargs" value="-Xms64M -Xmx256M">
+			<not><isset property="findbugs.jvmargs"/></not>
+		</condition>
+		
+		<condition property="findbugs.style" value="${bin.findbugs}${file.separator}src${file.separator}xsl${file.separator}fancy.xsl">
+			<not><isset property="findbugs.style"/></not>
+		</condition>
+		
+		<condition property="findbugs.effort" value="max">
+			<not><isset property="findbugs.effort"/></not>
+		</condition>
+		
+		<condition property="findbugs.reportLevel" value="medium">
+			<not><isset property="findbugs.reportLevel"/></not>
+		</condition>
+		
+		<!-- checkstyle jars -->
+		<path id="lib.checkstyle">	  
+			<fileset dir="${build.core}${file.separator}Development${file.separator}checkstyle${file.separator}lib" includes="*.jar"/>
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}antlr" includes="*.jar"/>
+		</path>
+		
+		<!-- register checkstyle task -->
+		<taskdef resource="checkstyletask.properties" classpathref="lib.checkstyle"/>
+		
+		<condition property="bin.checkstyle" value="${build.core}${file.separator}Development${file.separator}checkstyle">
+			<not><isset property="bin.checkstyle"/></not>
+		</condition>
+		
+		<condition property="checkstyle.style" value="${bin.checkstyle}${file.separator}checkstyle.xsl">
+			<not><isset property="checkstyle.style"/></not>
+		</condition>
+
+		<!-- register QAlab; just to make you depressive over time -->
+		<!--
+		<path id="lib.qalab">	  
+			<fileset dir="${build.core}/Development/qalab/lib" includes="*.jar"/>
+		</path>
+		<taskdef name="mergestat" classname="net.objectlab.qalab.ant.BuildStatMergeTask" classpathref="lib.qalab"/>
+		-->
+		
+		<!-- svn task -->
+		<path id="lib.svnant">	  
+			<fileset dir="${build.core}${file.separator}Development${file.separator}svnant${file.separator}lib" includes="*.jar"/>
+		</path>
+		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="lib.svnant"/>
+		
+	</target>
+	
+	<!-- generic target to rebuild all -->
+	<target name="rebuild" depends="init,clean,build" description="Clean and then compile"/>
+	
+	<target name="svn-update" depends="init" description="Update the sources from the SVN repository">
+		<svn>
+			<update dir="${basedir}" />
+		</svn>
+	</target>
+	
+	<target name="svn-fix-keywords" depends="init" description="Set the appropiate svn:keywords">
+		<svn>
+			<keywordsadd keywords="HeadURL Id LastChangedBy LastChangedDate LastChangedRevision">
+				<fileset dir="${basedir}">
+					<include name="**/*.java" />
+					<include name="**/*.cs" />
+					<include name="**/*.jsl" />
+				</fileset>				
+			</keywordsadd>
+		</svn>
+	</target>
+
+	<target name="report" depends="init" description="Report on the status of each platform">
+		
+		<condition property="status.dotnet" value="enabled" else="disabled">
+			<isset property="enabled.dotnet"/>
+		</condition>
+
+		<condition property="status.starlight" value="enabled" else="disabled">
+			<isset property="enabled.starlight"/>
+		</condition>
+
+		<condition property="status.java" value="enabled" else="disabled">
+			<isset property="enabled.java"/>
+		</condition>
+
+		<condition property="status.c" value="enabled" else="disabled">
+			<isset property="enabled.c"/>
+		</condition>
+
+		<echo message="Status of Compose* ports:"/>
+		<echo message="  DotNET:    ${status.dotnet}"/>
+		<echo message="  StarLight: ${status.starlight}"/>
+		<echo message="  Java:      ${status.java}"/>
+		<echo message="  C:         ${status.c}"/>		
+
+	</target>
+
+</project>

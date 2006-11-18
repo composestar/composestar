@@ -1,0 +1,78 @@
+<project name="Composestar/C/Testing" default="test">
+
+	<description>
+	Run the Compose* SystemTest for C
+	</description>
+
+	<condition property="build.core" value="${basedir}/../../Core">
+		<and>
+			<not><isset property="build.core"/></not>
+			<available file="${basedir}/../../Core/common.xml"/>
+		</and>
+	</condition>
+	
+	<import file="${build.core}/common.xml"/>
+
+	<target name="init_local" depends="init">
+		<taskdef name="cstarTest"     classname="Composestar.Ant.Taskdefs.C.CstarTest"/>
+		<taskdef name="cstarComp"     classname="Composestar.Ant.Taskdefs.C.CstarComp"/>
+	</target>
+
+	<target name="clean" depends="init">
+		<!-- delete generated files in /bin -->
+		<delete>
+			<FileSet dir="${build.c}/Examples">
+				<include name="**/bin/*.exe"/>
+			</FileSet>
+		</delete>
+		<delete>
+			<FileSet dir="${build.c}/Examples">
+				<include name="**/*.ccc"/>
+			</FileSet>
+		</delete>
+		<delete>
+			<FileSet dir="${build.c}/Examples">
+				<include name="**/*.cccout"/>
+			</FileSet>
+		</delete>
+		<delete>
+			<FileSet dir="${build.c}/Examples">
+				<include name="**/buildconfiguration.xml"/>
+			</FileSet>
+		</delete>
+		<delete>
+			<FileSet dir="${build.c}/Examples">
+				<include name="**/makefile"/>
+			</FileSet>
+		</delete>	
+		
+		
+		<!-- delete /analyses dir -->
+		<delete includeEmptyDirs="true">
+			<FileSet dir="${build.c}/Examples">
+				<include name="**/analyses/"/>
+			</FileSet>
+		</delete>
+	</target>
+	
+	<target name="build"/>
+
+	<target name="test" depends="test_exec" description="Execute the C system test."/>
+	<target name="test_comp" depends="init_local">
+		<cstarComp workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar ${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar">
+			<DirSet dir="${build.c}/Examples">
+				<include name="EncryptionExample"/> 
+			</DirSet>
+		</cstarComp>
+	</target>	
+
+	<!-- execute tests -->
+	<target name="test_exec" depends="init_local">
+		<cstarTest workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar ${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar">
+			<DirSet dir="${build.c}/Examples">
+				<include name="EncryptionExample"/> 
+			</DirSet>
+		</cstarTest>
+	</target>
+
+</project>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/C/Compiletime" default="build">
+
+	<condition property="build.core" value="../../Core">
+		<and>
+			<not><isset property="build.core"/></not>
+			<available file="../../Core/common.xml"/>
+		</and>
+	</condition>
+	
+	<import file="${build.core}/common.xml"/>
+
+	<echo>Processing: ${ant.project.name} ...</echo>	
+	<description>The Compose* C Compiletime</description>
+
+	<target name="clean" depends="init" description="clean the compilation results">
+		<delete dir="${out.build}"/>
+		<delete dir="${out.dist}"/>
+		<delete dir="Output"/>
+	</target>
+
+	<target name="init_local" depends="init">
+		<!--<path id="${build.c}/ComposestarEclipsePlugin/binaries/antlr.jar">
+		</path>-->
+		<mkdir dir="${out.build}"/>
+		<mkdir dir="${out.dist}"/>
+		<mkdir dir="${build.c}/Compiletime/Output"/>
+	</target>
+	
+	<target name="build" depends="init_local,compile_c,jar" description="build the C compiletime"/>
+	
+	<!--Maybe recompiling grammar files is needed-->
+	<target name="compile_c" depends="init_local">
+		<echo> Compile_C </echo>
+		<javac srcdir="src" destdir="${build.c}/Compiletime/Output" classpathref="lib.java" classpath="${build.c}\ComposestarEclipsePlugin\binaries\antlr.jar;${build.core}\Compiletime\dist\ComposestarCORE.jar" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}"> <!--source="${build.c.version}" target="${build.c.version}" debug="${build.debug}" deprecation="${build.deprecation}" -->
+		</javac>
+		<echo> Compiled_C </echo>
+	</target>
+			
+	<target name="jar" depends="compile_c">
+		<jar destfile="${out.dist}/ComposestarC.jar" basedir="${build.c}/Compiletime/Output"/> <!--"${out.build}" -->
+	</target>
+	
+	<target name="install" depends="build" description="Install the C compiletime">
+		<!-- jar files -->
+		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
+			<fileset dir="${out.dist}/ComposestarC.jar"/>
+		</copy>
+	</target>
+
+</project>

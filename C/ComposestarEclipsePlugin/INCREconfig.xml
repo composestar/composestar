@@ -1,0 +1,238 @@
+<modules>
+	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="java.lang.String" enabled="true" incremental="true" summary="Parsing concerns...">
+		<dependencies>
+			<dependency type="FILE" name="cpsfile"></dependency>
+		</dependencies>
+	</module>
+	<module name="EMBEX" fulltype="Composestar.Core.EMBEX.EMBEX" phase="one" enabled="true" incremental="false" summary="Extracting embedded sources...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="wrapper" fulltype="Composestar.C.wrapper.CWrapper" phase="one" enabled="true" incremental="false" summary="Treeparser......">
+		<dependencies></dependencies>	
+	</module>
+	<module name="REXREF" fulltype="Composestar.C.REXREF.Main" phase="one" enabled="true" incremental="false" summary="Resolving references...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="LOLA" fulltype="Composestar.C.LOLA.CLOLA" phase="one" enabled="true" incremental="true" summary="Evaluating predicate selectors...">
+		<dependencies></dependencies>
+		<comparisons>
+			<type fullname="Composestar.Core.CpsProgramRepository.PrimitiveConcern">
+				<field name="platformRepr"></field>
+			</type>
+			<type fullname="Composestar.Core.LOLA.metamodel.UnitResult">
+				<field name="multiRes"></field>
+				<field name="singleRes"></field>
+			</type>
+		</comparisons>		
+	</module>
+	<module name="CHKREP" fulltype="Composestar.Core.CHKREP.Main" phase="one" enabled="true" incremental="false" summary="Checking repository...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" phase="one" enabled="true" incremental="false" summary="Resolving superimpositions...">
+		<dependencies></dependencies>	
+	</module>
+	
+	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="one" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
+		<dependencies>
+			<dependency type="OBJECT" name="fmodules">
+				<path>
+					<node type="DYNAMIC" nodevalue="superImpInfo"></node>
+					<node type="FIELD" nodevalue="theFmSIinfo"></node>
+				</path>
+			</dependency>	
+		</dependencies>	
+		<comparisons>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+				<field name="name"></field>
+			</type>
+		</comparisons>
+	</module>
+	<module name="FIRE" fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" enabled="true" incremental="false" summary="FIRE Preprocessing...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="CORE" fulltype="Composestar.Core.CORE2.Core" enabled="true" incremental="false" summary="Detecting conflicts...">
+		<dependencies></dependencies>	
+	</module>
+	
+
+	<module name="SIGN" fulltype="Composestar.Core.SIGN2.Sign" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="one" enabled="true" incremental="true" summary="Computing full signatures..." >
+		<dependencies>
+			<dependency type="OBJECT" name="signature" store="true" lookup="true">
+				<path>
+					<node type="FIELD" nodevalue="platformRepr"></node>
+					<node type="FIELD" nodevalue="Methods"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="zmodules" store="true" lookup="true">
+				<path>
+					<node type="DYNAMIC" nodevalue="superImpInfo"></node>
+					<node type="FIELD" nodevalue="theFmSIinfo"></node>
+				</path>
+			</dependency>
+		</dependencies>
+		<comparisons>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+				<field name="name"></field>
+				<field name="ref"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
+				<field name="internals"></field>
+				<field name="externals"></field>
+				<field name="inputFilters"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal">
+				<path>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getType"></method>
+					<method name="getQualifiedName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External">
+				<path>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getType"></method>
+					<method name="getQualifiedName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
+				<field name="filterElements"></field>
+				<path>
+					<field name="type"></field>
+					<method name="getType"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
+				<field name="conditionPart"></field>
+				<field name="enableOperatorType"></field>
+				<field name="matchingPatterns"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
+				<field name="left"></field>
+				<field name="right"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
+				<field name="matchType"></field>
+				<path>
+					<method name="getTarget"></method>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getSelector"></method>
+					<method name="getName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
+				<path>
+					<method name="getTarget"></method>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getSelector"></method>
+					<method name="getName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.C.LAMA.CFunction">
+				<field name="Name"></field>
+				<field name="ReturnTypeString"></field>
+				<field name="Parameters"></field>
+			</type>
+			<type fullname="Composestar.C.LAMA.CMethodInfo">
+				<field name="Name"></field>
+				<field name="ReturnTypeString"></field>
+				<field name="Parameters"></field>
+			</type>
+			<type fullname="Composestar.C.LAMA.CParameterInfo">
+				<field name="Name"></field>
+				<field name="ParameterTypeString"></field>
+			</type>
+		</comparisons>
+	</module>
+<module name="CKRET" fulltype="Composestar.Core.CKRET.CKRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
+		<dependencies>
+			<dependency type="FILE" name="CKRETConfigFile" isAdded="false">
+				<path>
+					<node type="CONFIG" nodevalue="CKRETConfigFile"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="SECRETMode" store="true" lookup="true">
+				<path>
+					<node type="CONFIG" nodevalue="SECRETMode"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="semantics" store="true" lookup="true">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.Core.CKRET.CKRET.getSemanticAnnotations"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="filtermoduleorders">
+				<path>
+					<node type="DYNAMIC" nodevalue="FilterModuleOrders"></node>
+				</path>		
+			</dependency>
+		</dependencies>	
+		<comparisons>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+				<field name="name"></field>
+				<field name="ref"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
+				<field name="inputFilters"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
+				<field name="filterElements"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
+				<field name="conditionPart"></field>
+				<field name="matchingPatterns"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral">
+				<path>
+					<method name="getCondition"></method>
+					<method name="getRef"></method>
+					<method name="getQualifiedName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
+				<field name="left"></field>
+				<field name="right"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
+				<path>
+					<method name="getTarget"></method>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getSelector"></method>
+					<method name="getName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
+				<path>
+					<method name="getTarget"></method>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getSelector"></method>
+					<method name="getName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector">
+				<field name="typeList"></field>
+			</type>
+			<type fullname="Composestar.DotNET.LAMA.DotNETAttribute">
+				<field name="value"></field>
+				<field name="target"></field>
+			</type>
+			<type fullname="Composestar.DotNET.LAMA.DotNETMethodInfo">
+				<field name="Name"></field>
+			</type>
+		</comparisons>
+	</module>
+	<module name="CONE" fulltype="Composestar.C.CONE.CCONE" phase="one" enabled="true" incremental="false" summary="">
+		<dependencies></dependencies>	
+	</module>
+</modules>

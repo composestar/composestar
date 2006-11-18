@@ -1,0 +1,1275 @@
+!SESSION 2006-11-18 13:29:12.494 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 13:29:25.352
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 13:29:25.372
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 13:29:25.402
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:29:25.402
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:29:25.402
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 13:29:26.734
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 13:29:26.744
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:29:26.744
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:29:26.744
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 13:31:55.879 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 13:31:59.895
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 13:32:02.538
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 13:32:02.548
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 13:32:02.578
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:32:02.578
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:32:02.578
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 13:38:00.463 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 13:38:04.569
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 13:38:07.423
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 13:38:07.443
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 13:38:07.453
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:38:07.453
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:38:07.453
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 13:39:36.361 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 13:39:41.038
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 13:39:43.721
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 13:39:43.741
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 13:39:43.751
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:39:43.751
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:39:43.751
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 13:44:03.485 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 13:44:07.501
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 13:44:10.185
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 13:44:10.205
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 13:44:10.235
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:44:10.235
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:44:10.235
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 13:46:42.173 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 13:46:46.269
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 13:46:48.813
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 13:46:48.823
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 13:46:48.863
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:46:48.863
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:46:48.863
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 13:51:25.190 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 13:51:29.647
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 13:51:32.260
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 13:51:32.290
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 13:51:32.300
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:51:32.300
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:51:32.300
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 13:57:20.151 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 13:57:24.286
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 13:57:27.040
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 13:57:27.070
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 13:57:27.091
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:57:27.091
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:57:27.091
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 13:59:18.411 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 13:59:22.526
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 13:59:25.290
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 13:59:25.300
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 13:59:25.321
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:59:25.321
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 13:59:25.321
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 14:07:30.088 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 14:07:34.153
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 14:07:36.697
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 14:07:36.717
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 14:07:36.747
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:07:36.747
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:07:36.747
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 14:11:37.894 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 14:11:41.960
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 14:11:44.634
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 14:11:44.654
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 14:11:44.674
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:11:44.674
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:11:44.674
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 14:14:24.884 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 14:14:26.637
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 14:14:29.661
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 14:14:29.701
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 14:14:29.711
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:14:29.721
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:14:29.721
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 14:16:47.619 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 14:16:51.735
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 14:16:54.429
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 14:16:54.449
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 14:16:54.459
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:16:54.459
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:16:54.459
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 14:24:39.568 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 14:24:43.694
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 14:24:46.298
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 14:24:46.318
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 14:24:46.358
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:24:46.358
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:24:46.358
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-11-18 14:26:42.425 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.5.0_09
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=nl_NL
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\trunk\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-11-18 14:26:46.571
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.cdt.core 4 4 2006-11-18 14:26:49.214
+!MESSAGE Error
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.internal.core.scannerconfig.ScannerInfoConsoleParserFactory.getMakeBuilderOutputSniffer(ScannerInfoConsoleParserFactory.java:100)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:202)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 4 2 2006-11-18 14:26:49.224
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.resources 2 75 2006-11-18 14:26:49.244
+!MESSAGE Errors during build.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:26:49.244
+!MESSAGE Errors running builder "Scanner Configuration Builder" on project EncryptionExample.
+!SUBENTRY 1 org.eclipse.cdt.make.core 2 75 2006-11-18 14:26:49.244
+!MESSAGE java.lang.NullPointerException encountered while running Scanner Configuration Builder.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.load(ScannerConfigInfoFactory2.java:445)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2$BuildProperty.<init>(ScannerConfigInfoFactory2.java:433)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigInfoFactory2.create(ScannerConfigInfoFactory2.java:933)
+	at org.eclipse.cdt.make.internal.core.scannerconfig2.ScannerConfigProfileManager.createScannerConfigBuildInfo2(ScannerConfigProfileManager.java:163)
+	at org.eclipse.cdt.make.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:58)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)

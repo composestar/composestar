@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="CustomFiltersSrc/Parametercheck"/>
+	<classpathentry kind="src" path="CustomFiltersSrc/Timing"/>
+	<classpathentry kind="src" path="CustomFiltersSrc/Tracing"/>
+	<classpathentry kind="lib" path="CustomFilters/Parametercheck.jar"/>
+	<classpathentry kind="lib" path="CustomFilters/Timing.jar"/>
+	<classpathentry kind="lib" path="CustomFilters/Tracing.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="CustomFiltersSrc/Tracing"/>
+</classpath>

@@ -1,0 +1,29 @@
+<Platforms>
+  <Platform name="C" mainClass="Composestar.C.MASTER.CMaster" classPath="C:\local\Johan\ComposeStarCVS\composestarcore\src;C:\local\Johan\ComposeStarCVS\composestarc\src;C:\Program Files\ComposeStar\binaries\antlr.jar;C:\Program Files\ComposeStar\binaries\prolog\prolog.jar" options="">
+    <Languages defaultLanguage="C">
+      <Language name="C">
+        <Compiler name="CCompiler" executable="gcc" options="" implementedBy="Composestar.C.COMP.JavaCompiler">
+          <Actions>
+            <Action name="Compile" argument="{OPTIONS} {SOURCES}" />
+          </Actions>
+          <Converters />
+        </Compiler>
+        <DummyGeneration emitter="Composestar.C.DUMMER.CDummyEmitter" />
+        <FileExtensions>
+          <FileExtension extension=".c" />
+        </FileExtensions>
+	</Language>
+    </Languages>
+    <RequiredFiles>
+      <RequiredFile fileName="AntlrDotNet.dll" />
+      <RequiredFile fileName="ComposestarCore.dll" />
+      <RequiredFile fileName="ComposestarCoreDotNET.dll" />
+      <RequiredFile fileName="ComposeStarDotNETRuntimeInterpreter.dll" />
+      <RequiredFile fileName="ComposeStarDotNETUtilities.dll" />
+      <RequiredFile fileName="ComposeStarFilterDebugger.dll" />
+      <RequiredFile fileName="ComposeStarRuntimeInterpreter.dll" />
+      <RequiredFile fileName="ComposeStarUtilities.dll" />
+      <RequiredFile fileName="DotNETPlatformInterface.dll" />
+    </RequiredFiles>
+  </Platform>
+</Platforms>
