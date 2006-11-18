@@ -14,44 +14,36 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.CKRET.CKRET;
 import Composestar.Core.CKRET.Repository;
 import Composestar.Utils.Debug;
 
 public class ConfigParser extends DefaultHandler
 {
-	// boolean inDocument = false;
 	private Repository repository;
 
 	public FiltersHandler theCkretFiltersXMLHandler;
 
-	XMLReader parser;
+	private XMLReader parser;
 
-	/**
-	 * @param filename
-	 * @param sr
-	 * @roseuid 405026C60063
-	 * @param repository
-	 */
 	public void parse(String filename, Repository inrepository)
 	{
 		try
 		{
 			repository = inrepository;
-			/*
-			 * Now handled in Master
-			 * System.setProperty("org.xml.sax.driver","org.apache.crimson.parser.XMLReaderImpl");
-			 */
+
 			parser = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
 			parser.setContentHandler(this);
 			parser.parse(filename);
 		}
-		catch (SAXException se)
+		catch (SAXException e)
 		{
-			Debug.out(Debug.MODE_WARNING, "CKRET", "Error parsing " + filename + ": " + se.getMessage());
+			Debug.out(Debug.MODE_WARNING, CKRET.MODULE_NAME, "Error parsing " + filename + ": " + e.getMessage());
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			Debug.out(Debug.MODE_WARNING, CKRET.MODULE_NAME, "Error parsing " + filename + ": " + e.getMessage());
+			Debug.out(Debug.MODE_DEBUG,   CKRET.MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
 		}
 	}
 
@@ -100,7 +92,6 @@ public class ConfigParser extends DefaultHandler
 	 */
 	public void endElement(String uri, String local_name, String raw_name) throws SAXException
 	{
-
 	}
 
 	/**
@@ -108,7 +99,6 @@ public class ConfigParser extends DefaultHandler
 	 */
 	public void startDocument()
 	{
-
 	}
 
 	/**
@@ -116,6 +106,5 @@ public class ConfigParser extends DefaultHandler
 	 */
 	public void endDocument()
 	{
-
 	}
 }

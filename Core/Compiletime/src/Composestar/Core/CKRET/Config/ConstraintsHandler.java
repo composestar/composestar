@@ -20,20 +20,10 @@ import Composestar.Core.FIRE2.util.regex.PatternParseException;
 
 public class ConstraintsHandler extends DefaultHandler
 {
-
 	private Repository repository;
+	private ConfigParser returnhandler;
+	private XMLReader parser;
 
-	ConfigParser returnhandler;
-
-	XMLReader parser;
-
-	/**
-	 * @param handler
-	 * @param parser
-	 * @param sr
-	 * @roseuid 405026C7011E
-	 * @param repository
-	 */
 	public ConstraintsHandler(ConfigParser handler, XMLReader inparser, Repository inrepository)
 	{
 		returnhandler = handler;
@@ -51,35 +41,28 @@ public class ConstraintsHandler extends DefaultHandler
 	 */
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
-		if (local_name.equalsIgnoreCase("conflict"))
+		try
 		{
-			String resource = amap.getValue("resource");
-			String pattern = amap.getValue("pattern");
-			String message = amap.getValue("message");
-			try
+			if (local_name.equalsIgnoreCase("conflict"))
 			{
+				String resource = amap.getValue("resource");
+				String pattern = amap.getValue("pattern");
+				String message = amap.getValue("message");
+	
 				repository.addConstraint(new Constraint(resource, pattern, message, Constraint.CONFLICT));
 			}
-			catch (PatternParseException e)
+			else if (local_name.equalsIgnoreCase("require"))
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else if (local_name.equalsIgnoreCase("require"))
-		{
-			String resource = amap.getValue("resource");
-			String pattern = amap.getValue("pattern");
-			String message = amap.getValue("message");
-			try
-			{
+				String resource = amap.getValue("resource");
+				String pattern = amap.getValue("pattern");
+				String message = amap.getValue("message");
+
 				repository.addConstraint(new Constraint(resource, pattern, message, Constraint.REQUIREMENT));
 			}
-			catch (PatternParseException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		}
+		catch (PatternParseException e)
+		{
+			throw new SAXException("Error in " + local_name + " pattern: " + e.getMessage());
 		}
 	}
 
