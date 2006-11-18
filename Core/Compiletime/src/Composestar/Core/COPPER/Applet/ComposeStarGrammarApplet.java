@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
+import Composestar.Core.COPPER.CpsAST;
 import Composestar.Core.COPPER.CpsParser;
 import Composestar.Core.COPPER.CpsPosLexer;
 import antlr.ANTLRException;
@@ -35,9 +36,7 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 	public void init()
 	{
 		this.showStatus("Compose* grammar applet is active...");
-
 		this.getContentPane().setLayout(new BorderLayout());
-
 		this.initColors();
 
 		textpane = new JEditorPane("text", "Please insert text!");
@@ -58,7 +57,6 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 		button.addActionListener(this);
 
 		this.getContentPane().add(button, BorderLayout.SOUTH);
-
 		this.getRootPane().setDefaultButton(button);
 	}
 
@@ -68,7 +66,7 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 		{
 			src = textpane.getText();
 			setErrorLine(-1);
-			msgpane.setText("Invoking parser...\n");
+
 			if (src.trim().length() == 0)
 			{
 				msgpane.append("Please insert text!");
@@ -77,17 +75,21 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 			{
 				try
 				{
+					msgpane.append("Invoking parser...\n");
+
 					StringReader sr = new StringReader(src);
 					CpsPosLexer lexer = new CpsPosLexer(sr);
 					CpsParser parser = new CpsParser(lexer);
+					parser.getASTFactory().setASTNodeClass(CpsAST.class);
 					parser.concern();
 
 					msgpane.append("Parsing successful!\n");
+					msgpane.append(parser.getAST().toStringTree() + "\n\n");
 				}
 				catch (ANTLRException exp)
 				{
 					String tmp = exp.toString();
-					msgpane.append("Syntax error occurred: " + tmp + '\n');
+					msgpane.append("Syntax error occurred: " + tmp + "\n");
 					if (tmp.indexOf("line") >= 0)
 					{
 						int startline = tmp.indexOf("line ") + 5;
@@ -103,7 +105,6 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 						}
 						this.showStatus("Syntax error occurred on line: " + line);
 						this.textpane.repaint();
-						System.out.println("Line: " + errline + "");
 					}
 				}
 			}
@@ -116,7 +117,8 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 	}
 
 	public void keyPressed(KeyEvent e)
-	{}
+	{
+	}
 
 	public void keyReleased(KeyEvent e)
 	{
@@ -170,9 +172,9 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 		ColorView.keywords = keys;
 	}
 
-	public static void setErrorLine(int inval)
+	public static void setErrorLine(int line)
 	{
-		errline = inval;
+		errline = line;
 	}
 
 	public static int getErrorLine()
