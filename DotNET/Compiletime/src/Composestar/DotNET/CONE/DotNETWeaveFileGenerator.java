@@ -52,14 +52,10 @@ import Composestar.Utils.FileUtils;
 public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 {
 	private final static String MODULE_NAME = "CONE-IS";
-
-	private final static String REPOSITORY = "repository.xml";
+	private final static String REPOSITORY = "repository.xml";	
 
 	private Configuration config;
-
 	private PrintWriter out = null;
-
-	private int debugLevel = 0;
 
 	public DotNETWeaveFileGenerator()
 	{
@@ -70,10 +66,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 	{
 		File destination = new File(config.getPathSettings().getPath("Base"), "weavespec.xml");
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing weave specifications to file '" + destination.getName()
-				+ "'...");
-
-		debugLevel = config.getProjects().getRunDebugLevel();
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing weave specifications to file '" + destination.getName() + "'...");
 
 		try
 		{
@@ -97,9 +90,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			throw new ModuleException("Unhandled exception: " + e.getClass().toString() + " : " + e.getMessage(),
-					MODULE_NAME);
+			throw new ModuleException("Unhandled exception: " + e.getClass() + ": " + e.getMessage(), MODULE_NAME);
 		}
 		finally
 		{
@@ -121,8 +112,8 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			int dot = applicationStart.lastIndexOf('.');
 			entryAssembly = applicationStart.substring(0, dot);
 
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The entry assembly could not be reliably determined. Using '"
-					+ entryAssembly + "'.");
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, 
+					"The entry assembly could not be reliably determined. Using '" + entryAssembly + "'.");
 		}
 		else
 		{
@@ -161,8 +152,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 				Dependency dependency = (Dependency) depIt.next();
 				String dep = dependency.getFileName();
 
-				// Do not add the dependency when it is a .NET assembly or a
-				// composestar assembly
+				// Do not add the dependency when it is a .NET or Composestar assembly
 				if (DotNETBACO.isSystemAssembly(dep))
 				{
 					continue;
@@ -188,15 +178,14 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		{
 			String cfName = (String) cfNames.nextElement();
 			String cfPath = resources.CustomFilters.getProperty(cfName);
-			// cfPath = System.getProperty("user.dir")+File.separator+cfName;
 
 			try
 			{
 				File file = new File(cfPath);
 				if (file == null)
 				{
-					Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Cannot create file handle for referenced DLL '"
-							+ cfPath + "'.");
+					Debug.out(Debug.MODE_WARNING, MODULE_NAME, 
+							"Cannot create file handle for referenced DLL '" + cfPath + "'.");
 				}
 				else
 				{
@@ -208,8 +197,8 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 					}
 					else
 					{
-						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Referenced DLL '" + file.getAbsolutePath()
-								+ "' does not exist.");
+						Debug.out(Debug.MODE_WARNING, MODULE_NAME, 
+								"Referenced DLL '" + file.getAbsolutePath() + "' does not exist.");
 					}
 				}
 			}
@@ -218,7 +207,8 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 				Debug.out(Debug.MODE_ERROR, MODULE_NAME,
 						"An exception occurred while creating file handle for referenced DLL '" + cfPath + "': "
 								+ e.getMessage());
-				throw new ModuleException("Unhandled exception: " + e.getClass().toString() + ";" + e.getMessage(),
+				
+				throw new ModuleException("Unhandled exception: " + e.getClass() + ": " + e.getMessage(),
 						MODULE_NAME);
 			}
 		}
@@ -246,25 +236,24 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 	{
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing method definitions block...");
 		out.println("<methods>");
+		
+		int debugLevel = config.getProjects().getRunDebugLevel();
 
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Inserting method definition for 'handleApplicationStart'.");
-		out
-				.println("<method id=\"application_start\" assembly=\"ComposeStarDotNETRuntimeInterpreter\" class=\"Composestar.RuntimeDotNET.FLIRT.DotNETMessageHandlingFacility\" name=\"handleDotNETApplicationStart\">");
+		out.println("<method id=\"application_start\" assembly=\"ComposeStarDotNETRuntimeInterpreter\" class=\"Composestar.RuntimeDotNET.FLIRT.DotNETMessageHandlingFacility\" name=\"handleDotNETApplicationStart\">");
 		out.println("<argument value=\"" + REPOSITORY + "\" type=\"string\"/>");
 		out.println("<argument value=\"" + debugLevel + "\" type=\"int\"/>");
 		out.println("</method>");
 
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Inserting method definition for 'handleInstanceCreation'.");
-		out
-				.println("<method id=\"after_instantiation\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.MessageHandlingFacility\" name=\"handleInstanceCreation\">");
+		out.println("<method id=\"after_instantiation\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.MessageHandlingFacility\" name=\"handleInstanceCreation\">");
 		out.println("<argument value=\"%senderobject\"/>");
 		out.println("<argument value=\"%createdobject\"/>");
 		out.println("<argument value=\"%originalparameters\"/>");
 		out.println("</method>");
 
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Inserting method definition for 'handleVoidMethodCall'.");
-		out
-				.println("<method id=\"invocation_void\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.MessageHandlingFacility\" name=\"handleVoidMethodCall\">");
+		out.println("<method id=\"invocation_void\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.MessageHandlingFacility\" name=\"handleVoidMethodCall\">");
 		out.println("<argument value=\"%senderobject\"/>");
 		out.println("<argument value=\"%targetobject\"/>");
 		out.println("<argument value=\"%targetmethod\"/>");
@@ -272,8 +261,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		out.println("</method>");
 
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Inserting method definition for 'handleReturnMethodCall'.");
-		out
-				.println("<method id=\"invocation_with_return\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.MessageHandlingFacility\" name=\"handleReturnMethodCall\" returnType=\"object\">");
+		out.println("<method id=\"invocation_with_return\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.MessageHandlingFacility\" name=\"handleReturnMethodCall\" returnType=\"object\">");
 		out.println("<argument value=\"%senderobject\"/>");
 		out.println("<argument value=\"%targetobject\"/>");
 		out.println("<argument value=\"%targetmethod\"/>");
@@ -281,8 +269,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		out.println("</method>");
 
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Inserting method definition for 'handleCast'.");
-		out
-				.println("<method id=\"cast\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.CastingFacility\" name=\"handleCast\" returnType=\"object\">");
+		out.println("<method id=\"cast\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.CastingFacility\" name=\"handleCast\" returnType=\"object\">");
 		out.println("<argument value=\"%targetobject\"/>");
 		out.println("<argument value=\"%casttarget\"/>");
 		out.println("</method>");
@@ -305,8 +292,8 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			if (className != null)
 			{
 				result.add(className);
-				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Adding interception for instantiation of class '" + className
-						+ "' to our internal list.");
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+						"Adding interception for instantiation of class '" + className + "' to our internal list.");
 			}
 		}
 
@@ -527,9 +514,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			String className = (String) iterClasses.next();
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing definition for class '" + className + "'...");
 			writeAfterInstantiationRecord(className);
-			Debug
-					.out(Debug.MODE_DEBUG, MODULE_NAME, "Class definition for class '" + className
-							+ "' has been written.");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Class definition for class '" + className + "' has been written.");
 		}
 	}
 
