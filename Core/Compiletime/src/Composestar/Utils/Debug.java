@@ -6,25 +6,17 @@ import java.util.StringTokenizer;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
-/**
- * Summary description for Debug.
- */
 public final class Debug
 {
 	public static final int MODE_ERROR = 0;
-
 	public static final int MODE_CRUCIAL = 1;
-
 	public static final int MODE_WARNING = 2;
-
 	public static final int MODE_INFORMATION = 3;
-
 	public static final int MODE_DEBUG = 4;
-
 	public static final int MODE_DEFAULTMODE = MODE_INFORMATION;
 
 	private static int currentMode = MODE_DEFAULTMODE;
-
+	private static int errThreshold = -1;
 	private static int warnings;
 
 	/**
@@ -32,7 +24,9 @@ public final class Debug
 	 * repository for some reason.
 	 */
 	public Debug()
-	{}
+	{
+		//throw new UnsupportedOperationException();
+	}
 
 	public static void setMode(int mode)
 	{
@@ -44,58 +38,126 @@ public final class Debug
 		return currentMode;
 	}
 	
+	public static void setErrThreshold(int et)
+	{
+		errThreshold = et;
+	}
+	
 	/**
 	 * Return true if this message will be logged with Debug.out(...) is called
-	 * @param mode
-	 * @return
 	 */
 	public static boolean willLog(int mode)
 	{
 		return currentMode >= mode;
 	}
 
+	/**
+	 * Returns whether a message with the specified mode should be printed to System.out. 
+	 */
+	private static boolean printToOut(int mode)
+	{
+		return true;
+	}
+	
+	/**
+	 * Returns whether a message with the specified mode should be printed to System.err. 
+	 */
+	private static boolean printToErr(int mode)
+	{
+		if (mode == MODE_CRUCIAL)
+			return false;
+		
+		return (mode <= errThreshold);
+	}
+	
+	/**
+	 * Returns the description for the specified mode.
+	 */
+	private static String getModeDescription(int mode)
+	{
+		switch (mode)
+		{
+			case MODE_ERROR:
+				return "error";
+
+			case MODE_CRUCIAL:
+				return "crucial";
+
+			case MODE_WARNING:
+				return "warning";
+
+			case MODE_INFORMATION:
+				return "information";
+
+			case MODE_DEBUG:
+				return "debug";
+
+			default:
+				return "unknown";
+		}
+	}
+
+	/**
+	 * Returns the mode level that correspondends to the specified description.
+	 */
+	private static int getModeLevel(String description)
+	{
+		if ("error".equals(description))
+		{
+			return MODE_ERROR;
+		}
+		else if ("crucial".equals(description))
+		{
+			return MODE_CRUCIAL;
+		}
+		else if ("warning".equals(description))
+		{
+			return MODE_WARNING;
+		}
+		else if ("information".equals(description))
+		{
+			return MODE_INFORMATION;
+		}
+		else if ("debug".equals(description))
+		{
+			return MODE_DEBUG;
+		}
+		else
+		{
+			return MODE_CRUCIAL;
+		}
+	}
+
 	public static void out(int mode, String module, String msg, String filename, int line)
 	{
 		if (currentMode >= mode)
 		{
-			String modeDescription;
-
-			switch (mode)
+			String modeDescription = getModeDescription(mode);
+			
+			if (mode == MODE_WARNING)
 			{
-				case MODE_ERROR:
-					modeDescription = "error";
-					break;
-
-				case MODE_CRUCIAL:
-					modeDescription = "crucial";
-					break;
-
-				case MODE_WARNING:
-					warnings++;
-					modeDescription = "warning";
-					break;
-
-				case MODE_INFORMATION:
-					modeDescription = "information";
-					break;
-
-				case MODE_DEBUG:
-					modeDescription = "debug";
-					break;
-
-				default:
-					modeDescription = "unknown";
-					break;
+				warnings++;
 			}
-
+			
 			if (filename == null)
 			{
 				filename = "";
 			}
-			System.out.println(module + '~' + modeDescription + '~' + filename + '~' + line + '~' + msg);
+			
+			if (printToOut(mode))
+			{
+				String full = module + '~' + modeDescription + '~' + filename + '~' + line + '~' + msg;
+				System.out.println(full);
+			}
+			
+			if (printToErr(mode))
+			{
+				String full = StringUtils.capitalize(modeDescription) + ": " + msg;
+				System.err.println(full);
+			}
 		}
 	}
-
+	
 	public static void out(int mode, String module, String msg, String filename)
 	{
 		out(mode, module, msg, filename, 0);
@@ -135,34 +197,6 @@ public final class Debug
 			{
 				Debug.out(Debug.MODE_ERROR, "DEBUG", "Wrong log line: '" + line + "'");
 			}
-		}
-	}
-
-	private static int getModeLevel(String mode)
-	{
-		if ("error".equals(mode))
-		{
-			return MODE_ERROR;
-		}
-		else if ("crucial".equals(mode))
-		{
-			return MODE_CRUCIAL;
-		}
-		else if ("warning".equals(mode))
-		{
-			return MODE_WARNING;
-		}
-		else if ("information".equals(mode))
-		{
-			return MODE_INFORMATION;
-		}
-		else if ("debug".equals(mode))
-		{
-			return MODE_DEBUG;
-		}
-		else
-		{
-			return MODE_CRUCIAL;
 		}
 	}
 

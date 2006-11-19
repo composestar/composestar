@@ -63,17 +63,25 @@ public abstract class Master
 	{
 		for (int i = 0; i < args.length; i++)
 		{
-			if (args[i].startsWith("-d"))
+			String arg = args[i];
+			if (arg.startsWith("-d"))
 			{
-				debugOverride = Integer.parseInt(args[i].substring(2));
+				debugOverride = Integer.parseInt(arg.substring(2));
 				Debug.setMode(debugOverride);
-				continue;
 			}
-			// assume it's the last argument
+			else if (arg.startsWith("-t"))
+			{
+				int et = Integer.parseInt(arg.substring(2));
+				Debug.setErrThreshold(et);
+			}
+			else if (arg.startsWith("-"))
+			{
+				System.out.println("Unknown option " + arg);
+			}
 			else
 			{
+				// assume it's the config file
 				configfile = args[i];
-				break;
 			}
 		}
 	}

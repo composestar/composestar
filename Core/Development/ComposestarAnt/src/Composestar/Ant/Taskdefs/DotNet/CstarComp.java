@@ -88,9 +88,9 @@ public class CstarComp extends BaseTask
 		this.failOnFirstError = failOnFirstError;
 	}
 	
-	public void setLogError(boolean inval)
+	public void setLogError(boolean logError)
 	{
-		this.logError = inval;
+		this.logError = logError;
 	}
 
 	public void setMaster(String master)
@@ -179,22 +179,25 @@ public class CstarComp extends BaseTask
 			
 			Argument arg = java.createArg();
 			arg.setValue("-d4"); // set compile debug output to DEBUG
-
+			
+			arg = java.createArg();
+			arg.setValue("-t2"); // set error threshold to WARNING
+			
 			arg = java.createArg();
 			arg.setValue(buildXML.toString());
-
+			
 			Path cpath = java.createClasspath();
 			cpath.addFileset(cstarJars);
 			
-			java.setLogError(logError);			
-
+			java.setLogError(logError);
+			
 			java.setFork(true);
 			java.setOutput(new File(projectDir, "buildlog.txt"));
 
 			int err = java.executeJava();
 			if (err != 0)
 			{
-				throw new Exception("Exit code is not zero: "+err);
+				throw new Exception("Exit code is not zero: " + err);
 			}
 
 			cntSuccess++;
