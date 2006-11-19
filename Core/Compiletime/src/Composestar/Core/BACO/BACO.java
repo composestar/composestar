@@ -20,7 +20,7 @@ import Composestar.Utils.Logger;
 public abstract class BACO implements CTCommonModule
 {
 	public static final String MODULE_NAME = "BACO";
-	private final static Logger logger = Logger.getLogger(MODULE_NAME);
+	private static final Logger logger = Logger.getLogger(MODULE_NAME);
 
 	public BACO()
 	{}

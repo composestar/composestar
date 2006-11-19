@@ -12,7 +12,7 @@ import Composestar.Utils.Logger;
 
 public class DotNETBACO extends BACO
 {
-	private final static Logger logger = Logger.getLogger(MODULE_NAME);
+	private static final Logger logger = Logger.getLogger(MODULE_NAME);
 
 	// TODO: find a better spot for this
 	// FIXME: assumption about .NET installation
