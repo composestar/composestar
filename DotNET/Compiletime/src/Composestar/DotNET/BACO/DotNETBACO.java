@@ -7,11 +7,13 @@ import java.util.Set;
 import Composestar.Core.BACO.BACO;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logger;
 
 public class DotNETBACO extends BACO
 {
+	private final static Logger logger = Logger.getLogger(MODULE_NAME);
+
 	// TODO: find a better spot for this
 	// FIXME: assumption about .NET installation
 	public static boolean isSystemAssembly(String filename)
@@ -35,7 +37,7 @@ public class DotNETBACO extends BACO
 			String dll = (String) it.next();
 			String pdb = FileUtils.replaceExtension(dll, "pdb");
 
-			Debug.out(Debug.MODE_DEBUG, "BACO", "Adding built library PDB: '" + pdb + "'");
+			logger.debug("Adding built library PDB: '" + pdb + "'");
 			filesToCopy.add(pdb);
 		}
 
