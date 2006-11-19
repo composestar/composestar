@@ -92,8 +92,12 @@
 	</target>
 			
 	<target name="compile_dotnet">
-		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\ACTING\" destfile="${out.dist}\AttributeHarvester.exe"/>
-		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\TYM\TypeHarvester\" destfile="${out.dist}\TypeHarvester.exe"/>
+		<csc targettype="exe" debug="false" destfile="${out.dist}\AttributeHarvester.exe">
+			<src dir="src\Composestar\DotNET\TYM\TypeHarvester" includes="AttributeHarvester.cs"/>
+		</csc>
+		<csc targettype="exe" debug="false" destfile="${out.dist}\TypeHarvester.exe">
+			<src dir="src\Composestar\DotNET\TYM\TypeHarvester" includes="TypeHarvester.cs"/>
+		</csc>
 		<antcall target="compile_dotnet_devenv"/>
 		<antcall target="compile_dotnet_msbuild"/>
 	</target>
