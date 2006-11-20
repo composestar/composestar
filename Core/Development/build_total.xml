@@ -266,10 +266,12 @@
 		<ant target="test" dir="${build.integration.starlight}" />
 	</target>
 
-  <target name="integration_publish_starlight">
+  <target name="integration_publish_starlight">    
     <ant target="fxcop" dir="${build.integration.starlight}" />
     <ant target="findbugs" dir="${build.integration.starlight}" />
-    <ant target="checkstyle" dir="${build.integration.starlight}" /> 
+    <ant target="checkstyle" dir="${build.integration.starlight}" />
+    <antcall target="findbugs_core" />
+    <antcall target="checkstyle_core" />
   </target>
   
 	<target name="integration_publish">
