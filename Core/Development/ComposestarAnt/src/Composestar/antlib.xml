@@ -11,4 +11,8 @@
 	<taskdef name="dn_bgen"				classname="Composestar.Ant.Taskdefs.DotNet.CstarBuildGen"/>
 	<taskdef name="dn_comp"				classname="Composestar.Ant.Taskdefs.DotNet.CstarComp"/>	
 	<taskdef name="dn_msbatch"			classname="Composestar.Ant.Taskdefs.DotNet.MSBatchBuild"/>
+	
+	<!-- java -->
+	<taskdef name="j_comp"				classname="Composestar.Ant.Taskdefs.Java.CstarComp"/>
+	<taskdef name="j_test"				classname="Composestar.Ant.Taskdefs.Java.CstarTest"/>
 </antlib>
