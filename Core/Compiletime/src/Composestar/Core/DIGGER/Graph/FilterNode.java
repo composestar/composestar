@@ -20,6 +20,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernRefere
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.DIGGER.DIGGER;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 import Composestar.Utils.Debug;
 
@@ -202,5 +203,10 @@ public abstract class FilterNode extends Node
 	{
 		// owners: FilterChainNode -> ConcernNode
 		return (ConcernNode) getOwner().getOwner();
+	}
+	
+	public RepositoryEntity getRepositoryEntity()
+	{
+		return filter;
 	}
 }

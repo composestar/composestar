@@ -105,7 +105,7 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
                           : #(FILTERELEM_ {f = null; namev.clear();} ( fec=orExpr f:FILTER_OP)? 
                              {
                                if(f!=null) b.addFilterElement(f.getText(),f.getLine(),fec); 
-                               else b.addFilterElement(null,0,fec);
+                               else b.addFilterElement(null,#filterElement.getLine(),fec);
                              } messagePatternSet);
 
               orExpr returns [ConditionExpression r=null]

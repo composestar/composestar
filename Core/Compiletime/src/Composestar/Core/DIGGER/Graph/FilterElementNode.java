@@ -10,6 +10,7 @@
 package Composestar.Core.DIGGER.Graph;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * @author Michiel Hendriks
@@ -26,5 +27,10 @@ public class FilterElementNode extends Node
 	{
 		super(inGraph, "");
 		element = inElement;
+	}
+	
+	public RepositoryEntity getRepositoryEntity()
+	{
+		return element;
 	}
 }

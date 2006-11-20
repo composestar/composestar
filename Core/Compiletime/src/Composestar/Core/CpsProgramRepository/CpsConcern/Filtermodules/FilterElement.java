@@ -46,6 +46,8 @@ public class FilterElement extends ContextRepositoryEntity
 	public FilterElement(FilterElementAST ast)
 	{
 		filterElementAST = ast;
+		descriptionFileName = ast.getDescriptionFileName();
+		descriptionLineNumber = ast.getDescriptionLineNumber();
 
 		if (filterElementAST.getMatchingPattern() != null)
 		{

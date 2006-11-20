@@ -20,6 +20,8 @@ public class ParameterizedMessageSelector extends MessageSelector
 	public ParameterizedMessageSelector(MessageSelectorAST amsAST)
 	{
 		super(amsAST);
+		descriptionFileName = amsAST.getDescriptionFileName();
+		descriptionLineNumber = amsAST.getDescriptionLineNumber();
 	}
 
 	public String getParameter()

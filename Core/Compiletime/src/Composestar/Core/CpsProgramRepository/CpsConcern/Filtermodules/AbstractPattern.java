@@ -32,7 +32,8 @@ public abstract class AbstractPattern extends ContextRepositoryEntity
 	{
 		super();
 		apAST = anapAST;
-
+		descriptionFileName = apAST.getDescriptionFileName();
+		descriptionLineNumber = apAST.getDescriptionLineNumber();
 		selector = new MessageSelector(anapAST.getSelector());
 	}
 

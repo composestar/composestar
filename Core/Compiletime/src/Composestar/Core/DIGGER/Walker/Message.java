@@ -23,6 +23,7 @@ import Composestar.Core.DIGGER.Graph.CondMatchEdge;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 
 /**
@@ -51,6 +52,11 @@ public class Message
 	protected boolean recursive;
 	
 	/**
+	 * Will be set
+	 */
+	protected RepositoryEntity re;
+	
+	/**
 	 * Don't call this constructor directly. Use MessageGenerator.getMessageFor()
 	 * 
 	 * @param inConcernNode
@@ -72,6 +78,7 @@ public class Message
 		concernNode = base.getConcernNode();
 		selector = base.getSelector();
 		certenty = base.getCertenty();
+		re = base.getRE();
 	}
 	
 	public AbstractConcernNode getConcernNode()
@@ -117,6 +124,16 @@ public class Message
 	public void setRecursive(boolean inval)
 	{
 		recursive = inval;
+	}
+	
+	public void setRE(RepositoryEntity inRe)
+	{
+		re = inRe;
+	}
+	
+	public RepositoryEntity getRE()
+	{
+		return re;
 	}
 	
 	/**

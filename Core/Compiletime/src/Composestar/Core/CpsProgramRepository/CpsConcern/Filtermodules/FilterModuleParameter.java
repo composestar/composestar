@@ -25,6 +25,8 @@ public class FilterModuleParameter extends DeclaredRepositoryEntity
 	{
 		super();
 		fmpAst = fmp;
+		descriptionFileName = fmpAst.getDescriptionFileName();
+		descriptionLineNumber = fmpAst.getDescriptionLineNumber();
 		name = fmpAst.getName();
 		value = ((FilterModuleParameter) aValue).getValue();
 		uniqueNumber = number;

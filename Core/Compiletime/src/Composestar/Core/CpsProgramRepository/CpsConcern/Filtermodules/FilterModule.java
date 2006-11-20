@@ -63,9 +63,10 @@ public class FilterModule extends DeclaredRepositoryEntity
 	public FilterModule(FilterModuleAST inFmAst, Vector args, int number)
 	{
 		super();
-		descriptionLineNumber = 0;
 		uniqueNumber = number;
 		fmAst = inFmAst;
+		descriptionFileName = fmAst.getDescriptionFileName();
+		descriptionLineNumber = fmAst.getDescriptionLineNumber();
 		setParent(fmAst.getParent());
 		setName(fmAst.getName());
 		int counter = 1;

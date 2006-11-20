@@ -18,12 +18,14 @@ public class ParameterizedInternal extends Internal
 		super();
 	}
 
-	public ParameterizedInternal(ParameterizedInternalAST par_ast)
+	public ParameterizedInternal(ParameterizedInternalAST parAst)
 	{
 		super();
-		pinAst = par_ast;
+		pinAst = parAst;
 		name = pinAst.getName();
 		parameter = pinAst.getParameter();
+		descriptionFileName = pinAst.getDescriptionFileName();
+		descriptionLineNumber = pinAst.getDescriptionLineNumber();
 	}
 
 	public void setParameter(String aParameter)

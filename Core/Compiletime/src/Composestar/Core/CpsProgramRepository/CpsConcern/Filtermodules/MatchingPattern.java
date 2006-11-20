@@ -44,6 +44,8 @@ public class MatchingPattern extends ContextRepositoryEntity
 	{
 		super();
 		mpa = mpAST;
+		descriptionFileName = mpa.getDescriptionFileName();
+		descriptionLineNumber = mpa.getDescriptionLineNumber();
 		matchingParts = new Vector();
 		substitutionParts = new Vector();
 

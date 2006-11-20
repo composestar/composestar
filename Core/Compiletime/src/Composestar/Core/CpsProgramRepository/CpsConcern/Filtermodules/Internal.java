@@ -46,6 +46,8 @@ public class Internal extends TypedDeclaration
 		super();
 		valueExpressions = new Vector();
 		internalAst = parentInternal;
+		descriptionFileName = internalAst.getDescriptionFileName();
+		descriptionLineNumber = internalAst.getDescriptionLineNumber();
 		name = internalAst.getName();
 		type = parentInternal.getType();
 	}

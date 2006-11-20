@@ -32,6 +32,8 @@ public class MatchingPart extends AbstractPattern
 	{
 		super(abstr);
 		mpa = abstr;
+		descriptionFileName = mpa.getDescriptionFileName();
+		descriptionLineNumber = mpa.getDescriptionLineNumber();
 		target = mpa.getTarget();
 		MessageSelectorAST msAST = mpa.getSelector();
 		if (msAST instanceof ParameterizedMessageSelectorAST)

@@ -29,6 +29,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Logger;
 
@@ -183,6 +184,7 @@ public class NOBBIN
 				{
 					trace.add(msg);
 					msg = gen.xform(msg, (SubstitutionEdge) e);
+					msg.setRE(origNode.getRepositoryEntity());
 					node = e.getDestination();
 
 					// only check for recursion when the destination is a
@@ -191,15 +193,7 @@ public class NOBBIN
 					{
 						if (trace.contains(msg))
 						{
-							msg.setRecursive(true);
-							if (msg.getCertenty() == ConditionExpression.RESULT_TRUE)
-							{
-								logger.error(origNode + "... is infinite recursive!!!");
-							}
-							else
-							{
-								logger.warn(origNode + "... might be infinite recursive!!");
-							}
+							reportRecursion(msg, trace);
 							return result;
 						}
 					}
@@ -216,5 +210,49 @@ public class NOBBIN
 			result.add(msg);
 		}
 		return result;
+	}
+
+	protected void reportRecursion(Message msg, List trace)
+	{
+		msg.setRecursive(true);
+		StringBuffer sb = new StringBuffer();
+		int certenty = msg.getCertenty();
+
+		List res = new ArrayList();
+		int idx = trace.indexOf(msg);
+		Iterator it = trace.iterator();
+		while (idx > 0)
+		{
+			--idx;
+			it.next();
+		}
+		while (it.hasNext())
+		{
+			if (sb.length() > 0) sb.append(" -> ");
+			Message m = (Message) it.next();
+			certenty += m.getCertenty();
+			m.setRecursive(true);
+			if (m.getRE() != null) res.add(m.getRE());
+
+			sb.append(m.getConcern().getName());
+			sb.append(".");
+			sb.append(m.getSelector());
+		}
+		
+		if (msg.getRE() != null) res.add(msg.getRE());
+		
+		if (certenty == ConditionExpression.RESULT_TRUE)
+		{
+			logger.error(sb.toString() + " is infinitie recursive");
+			it = res.iterator();
+			while (it.hasNext())
+			{
+				Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Recursive filter definition", (RepositoryEntity) it.next());
+			}
+		}
+		else
+		{
+			logger.warn(sb.toString() + " might be infinite recursive (depended on " + certenty + " conditionals)");
+		}
 	}
 }
