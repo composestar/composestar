@@ -157,7 +157,7 @@
 			</htmlemail>
 			<onsuccess>
 				<antpublisher 
-					target="integration_publish" 
+					target="integration_publish_starlight" 
 					buildfile="${starlight.path}\Core\Development\build_total.xml" 
 					uselogger="true" 
 					anthome="${composestar.ant}" 
