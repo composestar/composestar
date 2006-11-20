@@ -18,8 +18,11 @@
             <h1 class="heading">
                 Example ProfilingFilter</h1>
             <p>
-                The <i>Profiling</i> filtertype:</p>
-            <table border="1">
+                The <i>Profiling</i> filter type adds timing profiling support to you application.
+                First define a new filter type. in this example we use the <strong>typeof</strong>
+                method instead of a string to specify the filter actions. This is a type safe way
+                to specify filter actions.</p>
+            <table border="1" width="95%">
                 <tr>
                     <td>
                         <code><span style="color: blue">using</span> Composestar.StarLight.Filters.FilterTypes;<br />
@@ -45,8 +48,9 @@
                 </tr>
             </table>
             <p>
-                <a name="filteractions">The filter actions for the <i>Tracing</i> filtertype:</a></p>
-            <table border="1">
+                <a name="filteractions">The following filter actions for the <i>Tracing</i> filtertype
+                    show how profiling can be implemented. Other timing solutions are possible.</a>&nbsp;</p>
+            <table border="1" width="95%">
                 <tr>
                     <td>
                         <code><span style="color: blue">using</span> System;<br />
@@ -117,7 +121,7 @@
                 </tr>
             </table>
             <br />
-            <table border="1">
+            <table border="1" width="95%">
                 <tr>
                     <td>
                         <code><span style="color: blue">using</span> System;<br />
@@ -252,7 +256,7 @@
             </table>
             <p>
                 Using the EmptyFilter in a concern</p>
-            <table border="1">
+            <table border="1" width="95%">
                 <tr>
                     <td>
                         <code><span style="color: blue">inputfilters</span><br />

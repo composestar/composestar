@@ -18,8 +18,11 @@
             <h1 class="heading">
                 Example EmptyFilter</h1>
             <p>
-                The <i>Empty</i> filtertype:</p>
-            <table border="1">
+                The <i>Empty</i> filtertype shows the minimal elements you have to add to create
+                a new filter action. This action does not do anything, the implementation is up
+                to the developer.</p>
+            <p>First, the Filter Type. Create a new class with the following code:</p>
+            <table border="1" width="95%">
                 <tr>
                     <td>
                         <code><span style="color: blue">using</span> Composestar.StarLight.Filters.FilterTypes;<br />
@@ -41,8 +44,11 @@
                 </tr>
             </table>
             <p>
-            <a name="filteractions">The filter actions for the <i>Empty</i> filtertype:</a></p>
-            <table border="1">
+                Second, create the new filter action with the same name (in the attribute, the class
+                name can be different) as specified in the filter type. Two filter types are defined
+                here, a <em>Start</em> and a <em>Stop</em> action. Supply your own implementation
+                in the <strong>Execute</strong> method.</p>
+            <table border="1" width="95%">
                 <tr>
                     <td>
                         <code><span style="color: blue">using</span> Composestar.StarLight.ContextInfo;<br />
@@ -70,7 +76,7 @@
                 </tr>
             </table>
             <br />
-            <table border="1">
+            <table border="1" width="95%">
                 <tr>
                     <td>
                         <code><span style="color: blue">using</span> Composestar.StarLight.ContextInfo;<br />
@@ -98,8 +104,9 @@
                 </tr>
             </table>
             <p>
-                Using the EmptyFilter in a concern</p>
-            <table border="1">
+                When you want to use this filter type in a concern, use the name of the filter,
+                in this case <strong>Empty</strong> in a concern.</p>
+            <table border="1" width="95%">
                 <tr>
                     <td>
                         <code><span style="color: blue">inputfilters</span><br />

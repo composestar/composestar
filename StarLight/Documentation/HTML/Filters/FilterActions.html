@@ -18,11 +18,25 @@
             <h1 class="heading">
                 Filter Actions</h1>
             <p>
-                TODO generate FA help
+                A filter action specifies the actual action executed by the filter at a certain
+                point in the execution. A <a href="FilterTypes.html">Filter Type</a> defines four
+                filter actions to be used for a before/after accept and a before/after reject. The
+                <b>Execute</b> method of the filter action will be called and a
+                <see cref="T:Composestar.StarLight.ContextInfo.JoinPointContext">JoinPointContext</see>
+                object is passed as the only argument. In this JoinPointContext object, all the information
+                about the join point is available.
             </p>
-            <h3 class="subHeading">Build-in Filter Actions</h3>
-            <p>The following build-in filter actions are available:</p>
-             <table class="members" id="tasks">
+            <p>
+                Besides the <b>Execute</b> method, it is also possible to directly inject IL code
+                into a method. This is possible by defining your own <a href="../Weaving/CreateOwnWeavingStrategy.html">
+                    weaving strategy</a>. If no weaving strategy is available for a Filter Action,
+                then a call to the <b>Execute</b> method of the Filter Action is injected into the
+                code.</p>
+            <h3 class="subHeading">
+                Build-in Filter Actions</h3>
+            <p>
+                The following build-in filter actions are available:</p>
+            <table class="members" id="tasks">
                 <tr>
                     <th class="nameColumn">
                         Filter Name</th>
@@ -34,7 +48,10 @@
                         <b><span class="nolink">AdviceAction</span></b></td>
                     <td>
                         <div class="summary">
-                           Calls the substitution-message with the JoinPointContext as an argument and then continues in the filterset. Can be used for example to implement certain advicebehaviour before or after a dispatch.      </div>
+                            Calls the substitution-message with the JoinPointContext as an argument and then
+                            continues in the filterset. Can be used for example to implement certain advicebehaviour
+                            before or after a dispatch.
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -42,16 +59,16 @@
                         <b><span class="nolink">ContinueAction</span></b></td>
                     <td>
                         <div class="summary">
-                           Does nothing.
+                            Does nothing.
                         </div>
                     </td>
                 </tr>
-                 <tr>
+                <tr>
                     <td>
                         <b><span class="nolink">DispatchAction</span></b></td>
                     <td>
                         <div class="summary">
-                           Dispatches to the substitution-message and returns afterwards.
+                            Dispatches to the substitution-message and returns afterwards.
                         </div>
                     </td>
                 </tr>
@@ -64,15 +81,16 @@
                         </div>
                     </td>
                 </tr>
-                  <tr>
+                <tr>
                     <td>
                         <b><span class="nolink">SubstitutionAction</span></b></td>
                     <td>
                         <div class="summary">
-                           Has only filterbehaviour (empty execute method); substitutes the message with the substitutionmessage and continues.
+                            Has only filterbehaviour (empty execute method); substitutes the message with the
+                            substitutionmessage and continues.
                         </div>
                     </td>
-                </tr>                
+                </tr>
             </table>
             <h3 class="subHeading">
                 Defining new filter actions</h3>
@@ -87,6 +105,7 @@
                 object. The filter action class should also contain a custom attribute
                 <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute">FilterActionAttribute</see>
                 , containing the following information needed by the compiletime:
+            </p>
                 <ul>
                     <li>The unique name of the filter action.</li>
                     <li>The Flow behaviour in the filterset.</li>
@@ -96,12 +115,16 @@
                         is true, but disabling this can give a slight increase in performance, at the cost
                         of not having the JPC information available in the execute method.</li>
                 </ul>
-            </p>
-            <p>Examples:</p>
+                     <h3 class="subHeading">
+                Examples</h3>
+            <p>
+                For a number of examples of filter types and action, take a look at the following pages.</p>
             <ul>
-            <li><a href="Example EmptyFilter.html#filteractions">Filter actions</a> for the <i>EmptyFilter</i></li>
-            <li><a href="Example TracingFilter.html#filteractions">Filter actions</a> for the <i>TracingFilter</i></li>
-            <li><a href="Example ProfilingFilter.html#filteractions">Filter actions</a> for the <i>ProflingFilter</i></li>
+                <li><a href="Example EmptyFilter.html#filteractions">Filter actions</a> for the <i>EmptyFilter</i></li>
+                <li><a href="Example TracingFilter.html#filteractions">Filter actions</a> for the <i>
+                    TracingFilter</i></li>
+                <li><a href="Example ProfilingFilter.html#filteractions">Filter actions</a> for the
+                    <i>ProflingFilter</i></li>
             </ul>
         </div>
     </div>

@@ -82,7 +82,7 @@
                 Normally, you build the concern project. This will build all the dependent projects
                 and perform the weaving. This will leave the original project untouched. If you
                 want to build the concern project when you are building your original source project,
-                then you have to edit your project file to build the concern file.</p>
+                then you have to edit your project file to build the concern project.</p>
             <p>
                 For example; you have a source project called <b>S</b> and a concern project called
                 <b>C</b>. Normally, you build project <b>S</b> so you get a version without weaved
@@ -98,10 +98,10 @@
                 want to change the runnable file to a runnable file with weaved filters.
             </p>
             <p>
-                <b>Note:</b>&nbsp;the compilation performed by the concern project is incremental,
+                <b>Note:</b>&nbsp;The compilation performed by the concern project is incremental,
                 so the source will not be recompiled.</p>
             <p>
-                <b>Note:</b>&nbsp;you can add a condition to the <em>AfterBuild</em> target. Use
+                <b>Note:</b>&nbsp;You can add a condition to the <em>AfterBuild</em> target. Use
                 for instance the <em>Configuration</em> value and define new configurations like
                 <em>ConcernsDebug</em> and <em>ConcernsRelease</em> in addition to the existing
                 <em>Debug</em> and <em>Release</em> configurations. The concern project can make

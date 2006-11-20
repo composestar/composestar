@@ -19,18 +19,18 @@
                 Weaving</h1>
             <p>
                 The StarLight IL weaver performs code injection at the IL level. The weaver adds
-                IL instructions, the filter actions and some management functions, at the start
-                of a method and it can replace calls with outputfilters. Besides the methods, it
+                IL instructions, the filter actions, and some management functions, at the start
+                of a method and it can replace calls to other methods with outputfilters. Besides the methods, it
                 adds internals and externals to a type.
             </p>
             <p>
                 Code injection is only performed when the analysis tools indicate that the weaver
                 has to generate code for a certain type or method. Methods with no filter actions
-                are left untouchted by the StarLight weaver.</p>
+                are left untouched by the StarLight weaver.</p>
             <p>
                 The IL Weaver uses the weave specification file to determine where and what to weave
                 in a given assembly. The filter code is an abstract model and the weaver uses an
-                internal visitor to visit each element in the model so IL code can be generated.</p>
+                internal visitor to visit each element in the model to generate the specific IL code.</p>
             <p>
                 Code generation for <a href="../Filters/FilterActions.html">Filter Actions</a>
                 is handled by <a href="weavingstrategies.html">weaving strategies</a> and it is
@@ -40,4 +40,4 @@
     </div>
 </body>
 </html>
-<!-- @SortOrder 3 -->
+<!-- @SortOrder 6 -->

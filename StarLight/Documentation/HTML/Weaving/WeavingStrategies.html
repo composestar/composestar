@@ -19,9 +19,9 @@
                 Weaving Strategies</h1>
             <p>
                 The weaving model determines, at a high level, what type of code has to be generated.
-                The IL weaver is reponsible for generation the correct IL statements like creating
+                The IL weaver is reponsible for generating the correct IL statements, like creating
                 branches, jumps, conditions, calls, and so on. A visitor design pattern is used
-                to accomplish this.
+                to accomplish this task.
             </p>
             <p>
                 Filter Action code however is handled by dedicated weaving strategies. The default
@@ -30,14 +30,15 @@
                 These buildin weaving strategies can be found in the <strong><em>StarLight installation
                     folder</em>/WeaveStrategies</strong> folder.</p>
             <p>
-                If there is no weaving strategy for a Filter Action, the
+                If there is no weaving strategy for a filter action, the
                 <see cref="M:Composestar.StarLight.Filters.FilterTypes.FilterAction.Execute(Composestar.StarLight.ContextInfo.JoinPointContext)">Execute</see>
-                method will be used.
-            </p>
-            <p>
-                If you have created your own Filter Action and do not want to use the
+                method of the filter action will be used.
+                            If you have created your own filter action and do not want to use the
                 <see cref="M:Composestar.StarLight.Filters.FilterTypes.FilterAction.Execute(Composestar.StarLight.ContextInfo.JoinPointContext)">Execute</see>
-                method, you can <a href="createownweavingstrategy.html">create your own weaving strategy</a>.</p>
+                method, you can <a href="createownweavingstrategy.html">create your own weaving strategy</a>.
+                Since it is harder to create IL code than C# or VB.NET code, only use this method
+                when you have knowledge about IL and can create more optimized solutions by injecting
+                direct IL.</p>
         </div>
     </div>
 </body>

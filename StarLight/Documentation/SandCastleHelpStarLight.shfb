@@ -24,6 +24,8 @@ The FilterContext is used internally by the StarLight compiler to include runtim
     <additionalContent>
         <contentItem sourcePath="HTML\images\*.*" destPath="images\" />
         <contentItem sourcePath="HTML\welcome.html" destPath="" />
+        <contentItem sourcePath="HTML\requirements.html" destPath="" />
+        <contentItem sourcePath="HTML\license.html" destPath="" />
         <contentItem sourcePath="HTML\Visual Studio Integration\*.*" destPath="Visual Studio Integration\" />
         <contentItem sourcePath="HTML\styles.css" destPath="" />
         <contentItem sourcePath="HTML\MSBuild\*.*" destPath="MSBuild\" />

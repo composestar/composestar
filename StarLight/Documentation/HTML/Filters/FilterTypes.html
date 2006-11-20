@@ -18,7 +18,9 @@
             <h1 class="heading">
                 Filter Types</h1>
             <p>
-                TODO Add filter type info
+                The type of a filter specifies how a filter behaves for an accept and a reject of the condition and the
+matching part. This includes the specification of how to execute the substitution part. There are
+currently a number of predefined filter types and it is possible to create custom filter types. 
             </p>
             <h3 class="subHeading">
                 Build-in Filter Types</h3>
@@ -83,8 +85,7 @@
                 <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterType">FilterType</see>
                 . No method needs to be implemented for a filter type, although it should contain
                 a custom attribute
-                <see cref="TComposestar.StarLight.Filters.FilterTypes.FilterTypeAttribute">FilterTypeAttribute</see>
-                , containing the following information:
+                <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterTypeAttribute">FilterTypeAttribute</see>, containing the following information:
                 <ul>
                     <li>The unique name of the filter type.</li>
                     <li>The names of the four different filter actions.</li>
@@ -92,8 +93,10 @@
             </p>
             <p>
                 <strong>Note</strong>&nbsp;The filter type class is only used at compiletime.</p>
+             <h3 class="subHeading">
+               Examples</h3>
             <p>
-                Examples:</p>
+                For a number of example filter types and actions, see the following pages:</p>
             <ul>
                 <li><a href="Example EmptyFilter.html">EmptyFilter</a></li>
                 <li><a href="Example TracingFilter.html">TracingFilter</a></li>
