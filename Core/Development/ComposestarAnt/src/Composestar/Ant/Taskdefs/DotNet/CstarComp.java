@@ -146,7 +146,7 @@ public class CstarComp extends BaseTask
 				"; success: " + cntSuccess +
 				"; failed: " + cntFail +
 				"; ratio: " + (cntSuccess * 100 / cntTotal) + "%", 
-				(cntFail == 0)?Project.MSG_INFO:Project.MSG_WARN );
+				(cntFail == 0 ? Project.MSG_INFO : Project.MSG_WARN));
 			
 		if (cntFail > 0)
 		{

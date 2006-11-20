@@ -21,6 +21,7 @@ public final class MSBatchBuild extends BaseTask
 	private final static String EXECUTABLE = "msbuild";
 	
 	private String target;
+	private boolean failFast = false;
 	private boolean failOnError = false;
 	
 	public MSBatchBuild()
@@ -31,6 +32,11 @@ public final class MSBatchBuild extends BaseTask
 	public void setTarget(String target)
 	{
 		this.target = target;
+	}
+	
+	public void setFailFast(boolean failFast)
+	{
+		this.failFast = failFast;
 	}
 	
 	public void setFailOnError(boolean failOnError)
@@ -50,8 +56,11 @@ public final class MSBatchBuild extends BaseTask
 		try
 		{
 			List inputs = collectInputs();
+			int totalCount = inputs.size();
+			int failCount = 0; 
+			failList.clear();
 
-			log("Building " + inputs.size() + " projects/solutions", Project.MSG_INFO);
+			log("Executing target '" + target + "' on " + totalCount + " projects/solutions", Project.MSG_INFO);
 
 			Iterator it = inputs.iterator();		
 			while (it.hasNext())
@@ -65,11 +74,23 @@ public final class MSBatchBuild extends BaseTask
 				int result = exec.execute();			
 				if (Execute.isFailure(result))
 				{
-					if (failOnError)
-						throw new BuildException("MSBuild failed. Exitcode is " + result);
+					String msg = "! Failed ! Exitcode is " + result;
+					if (failFast)
+						throw new BuildException(msg);
 					else
-						log("! Failed ! Exitcode is " + result, Project.MSG_INFO);
+					{
+						failCount++;
+						failList.add(buildFile.getAbsolutePath());
+						log(msg, Project.MSG_INFO);
+					}
 				}
+			}
+			
+			reportResults(totalCount, failCount);
+			
+			if (failOnError && failCount > 0)
+			{
+				throw new BuildException("" + failCount + " failures.");
 			}
 		}
 		catch (IOException e)
@@ -94,5 +115,20 @@ public final class MSBatchBuild extends BaseTask
 		cmd[4] = "/nologo";
 		
 		return cmd;
+	}
+
+	private void reportResults(int total, int fail)
+	{
+		log("" +
+				"total: " + total + 
+				"; success: " + (total - fail) +
+				"; failed: " + fail + ".",
+				(fail == 0 ? Project.MSG_INFO : Project.MSG_WARN));
+			
+		if (fail > 0)
+		{
+			log("Compilation of the following projects failed:", Project.MSG_ERR);		
+			reportFailures();
+		}
 	}
 }

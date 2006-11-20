@@ -64,7 +64,7 @@ public abstract class BaseTask extends Task
 		Iterator it = failList.iterator();
 		while (it.hasNext())
 		{
-			String failed = (String)it.next();
+			String failed = it.next().toString();
 			log(failed, Project.MSG_ERR);
 		}
 	}
