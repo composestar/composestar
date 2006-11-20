@@ -260,8 +260,13 @@
 		</exec>
 	</target>
 
-	<target name="systemtest" depends="init" description="Runs the system test">
+	<target name="systemtest" description="Runs the system test">
+		<antcall target="systemtest_build"/>
+		<antcall target="systemtest_exec"/>
+	</target>
 
+	<target name="systemtest_build" depends="init">
+		
 		<fileset id="systemtest.solutions" dir="${build.starlight}/Examples">
 			<include name="Testing/Concerns.sln"/>
 			<include name="iTextSharp/iTextSharp.sln"/>
@@ -278,7 +283,18 @@
 		<cs:dn_msbatch failOnError="true">
 			<fileset refid="systemtest.solutions"/>
 		</cs:dn_msbatch>
+		
+	</target>
 
+	<target name="systemtest_exec" depends="init">
+		
+		<echo level="info">Running tests</echo>
+		<cs:test>
+			<fileset dir="${build.starlight}/Examples">
+				<include name="**/systemtest.bat"/>
+			</fileset>
+		</cs:test>
+		
 	</target>
 
 	<!-- fancy menu -->
