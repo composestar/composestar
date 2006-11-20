@@ -28,7 +28,7 @@ Common routines. Always include this file in every build.xml file
 		<property name="version.dotnet" value="${version.core}"/>
 		<property name="version.java"   value="${version.core}"/>
 		<property name="version.c"      value="${version.core}"/>
-		<property name="version.starlight" value="0.1.0"/>
+		<property name="version.starlight" value="0.2.0"/>
 		
 		<!-- various config items -->
 		<property name="out.build" value="build"/>
