@@ -213,7 +213,9 @@
 		<antcall target="test_ntime" /> 
 		Disabled, because the tests do not work correctly
 		-->
-		<antcall target="systemtest"/>
+		<!--<antcall target="systemtest"/> 
+    Disabled, the Build server does not have J# installed
+    -->
 	</target>
 
 	<target name="init_test" >
