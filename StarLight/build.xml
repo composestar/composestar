@@ -223,14 +223,14 @@
 	</target>
 
 	<target name="init_nunit" depends="init" description="Build the NUnit projects">
-		<echo>Compiling .NET NUnit projects</echo>
-		<msbuild solution="${path.nunitprojects}TestContextInfo${file.separator}ContextInfo.Tests.NUnit.csproj" target="build" config="debug" />
-		<msbuild solution="${path.nunitprojects}TestCpsFileParser${file.separator}CpsFileParser.Tests.NUnit.csproj" target="build" config="debug" />
-		<msbuild solution="${path.nunitprojects}TestRepository${file.separator}Repository.Tests.NUnit.csproj" target="build" config="debug" />
-	</target>
+    <echo level="info">Compiling .NET NUnit projects</echo>
+    <msbuild solution="${path.nunitprojects}TestContextInfo${file.separator}ContextInfo.Tests.NUnit.csproj" target="build" config="debug" />
+    <msbuild solution="${path.nunitprojects}TestCpsFileParser${file.separator}CpsFileParser.Tests.NUnit.csproj" target="build" config="debug" />
+    <msbuild solution="${path.nunitprojects}TestRepository${file.separator}Repository.Tests.NUnit.csproj" target="build" config="debug" />
+  </target>
 
-	<target name="test_nunit" depends="init_nunit" description="Run the NUnit tests">
-		<echo>Running NUnit</echo>
+  <target name="test_nunit" depends="init_nunit" description="Run the NUnit tests">
+    <echo level="info">Running NUnit</echo>
 		<exec executable="${path.nunit}nunit-console.exe" failonerror="true">
 			<arg value="${path.nunitprojects}TestContextInfo${file.separator}bin${file.separator}debug${file.separator}Composestar.StarLight.ContextInfo.UnitTests.dll" />
 			<arg value="/xml=${out.nunit}${file.separator}UnitTestContextInfo-Results.xml" />
@@ -249,12 +249,12 @@
 	</target>
 
 	<target name="init_ntime" depends="init" description="Build the NTime projects">
-		<echo>Compiling .NET NTime projects</echo>
-		<msbuild solution="${path.ntimeprojects}AllPerformanceTests${file.separator}AllPerformanceTests.csproj" target="build" config="debug" />
-	</target>
+    <echo level="info">Compiling .NET NTime projects</echo>
+    <msbuild solution="${path.ntimeprojects}AllPerformanceTests${file.separator}AllPerformanceTests.csproj" target="build" config="debug" />
+  </target>
 
-	<target name="test_ntime" depends="init_ntime" description="Run the NTime tests">
-		<echo>Running NTime</echo>
+  <target name="test_ntime" depends="init_ntime" description="Run the NTime tests">
+    <echo level="info">Running NTime</echo>
 		<exec executable="${path.ntime}ntime.exe" failonerror="true">
 			<arg value="${path.ntimeprojects}AllPerformanceTests${file.separator}bin${file.separator}debug${file.separator}Composestar.StarLight.CpsParser.PerformanceTests.dll" />
 			<arg value="${path.ntimeprojects}AllPerformanceTests${file.separator}bin${file.separator}debug${file.separator}Composestar.StarLight.ILAnalyzer.PerformanceTests.dll" />
