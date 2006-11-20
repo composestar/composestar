@@ -14,51 +14,49 @@
 			<accept action="meta"/>
 			<reject action="continue"/>
 		</filter>
-    <filter type="Substitute">
-      <accept action="substitute"/>
-      <reject action="continue"/>
-    </filter>
-    <filter type="Wait">
-      <accept action="continue"/>
-      <reject action="wait"/>
-     </filter>
+		<filter type="Substitute">
+			<accept action="substitute"/>
+			<reject action="continue"/>
+		</filter>
+		<filter type="Wait">
+			<accept action="continue"/>
+			<reject action="wait"/>
+		</filter>
 	</filters>
 	
 	<actions>
-    <action name="continue"/>
-		
-		<action name="meta">
-		</action>
+		<action name="continue"/>		
+		<action name="meta"/>
 		
 		<action name="error" endofset="true">
-      			<operation name="c" resource="args"/>
-      			<operation name="e" resource="message"/>
-      			<operation name="return" resource="message"/>
+			<operation name="c" resource="args"/>
+			<operation name="e" resource="message"/>
+			<operation name="return" resource="message"/>
 		</action>
 		
 		<action name="dispatch" endofset="true">
-		  <operation name="d" resource="message"/>
-		  <operation name="w" resource="target"/>
-		  <operation name="w" resource="selector"/>
-		  <operation name="r" resource="args"/>
-		  <operation name="return" resource="message"/> 
+			<operation name="d" resource="message"/>
+			<operation name="w" resource="target"/>
+			<operation name="w" resource="selector"/>
+			<operation name="r" resource="args"/>
+			<operation name="return" resource="message"/> 
 		</action>
-		  
+			
 		<action name="substitute">
 			<operation name="w" resource="target"/>
 			<operation name="w" resource="selector"/>
 		</action>
 		
 		<action name="wait">
-		  <operation name="w" resource="timing"/>
+			<operation name="w" resource="timing"/>
 		</action>
 		
 	</actions>
 	
 	<constraints>
-	  	<conflict pattern="[rR]+(.*)e" resource="message" message="Message is returned before it could error.."/>
-		<conflict pattern="l[rw]+" resource="args" message="Locked resources can not be written."/>
-		<conflict pattern="[rw]+(.*)c" resource="*" message="Resource has been used where it's required untouched."/>
+		<conflict pattern="[rR][rR]*.*e" resource="message" message="Message is returned before it could error.."/>
+		<conflict pattern="l[rw][rw]*" resource="args" message="Locked resources can not be written."/>
+		<conflict pattern="[rw][rw]*.*c" resource="*" message="Resource has been used where it's required untouched."/>
 		<conflict pattern="rd" resource="args" message="Arguments should be decrypted before logging!" />
 		<conflict pattern="Er" resource="args" message="Arguments should be encrypted after logging!" />
 	</constraints>

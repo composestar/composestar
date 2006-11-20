@@ -14,44 +14,44 @@
 			<accept action="meta"/>
 			<reject action="continue"/>
 		</filter>
-    <filter type="Substitute">
-      <accept action="substitute"/>
-      <reject action="continue"/>
-    </filter>
-    <filter type="Wait">
-      <accept action="continue"/>
-      <reject action="wait"/>
-     </filter>
+		<filter type="Substitute">
+			<accept action="substitute"/>
+			<reject action="continue"/>
+		</filter>
+		<filter type="Wait">
+			<accept action="continue"/>
+			<reject action="wait"/>
+		</filter>
 	</filters>
 	
 	<actions>
-    <action name="continue"/>
+		<action name="continue"/>
 		
 		<action name="error" endofset="true">
-      <operation name="w" resource="error"/>
-      <operation name="return" resource="message"/> <!-- return operation -->
+			<operation name="w" resource="error"/>
+			<operation name="return" resource="message"/> <!-- return operation -->
 		</action>
 		
 		<action name="dispatch" endofset="true">
-		  <operation name="w" resource="target"/>
-		  <operation name="w" resource="selector"/>
-		  <operation name="return" resource="message"/> <!-- return operation -->
+			<operation name="w" resource="target"/>
+			<operation name="w" resource="selector"/>
+			<operation name="return" resource="message"/> <!-- return operation -->
 		</action>
-		  
+			
 		<action name="substitute">
 			<operation name="w" resource="target"/>
 			<operation name="w" resource="selector"/>
 		</action>
 		
 		<action name="wait">
-		  <operation name="w" resource="timing"/>
+			<operation name="w" resource="timing"/>
 		</action>
 		
 	</actions>
 	
 	<constraints>
-		<conflict pattern="l[rw]+" resource="*" message="Locked resources can not be written."/>
-		<conflict pattern="w+.*c" resource="*" message="Resource is written where it's required untouched."/>
+		<conflict pattern="l[rw][rw]*" resource="*" message="Locked resources can not be written."/>
+		<conflict pattern="ww*.*c" resource="*" message="Resource is written where it's required untouched."/>
 		<conflict pattern=".*" resource="message" message="Message is replied more then once..."/>
 		<conflict pattern="w.*w" resource="target" message="The target is written more then once."/>
 		<conflict pattern="w.*w" resource="selector" message="The selector is written more then once."/>

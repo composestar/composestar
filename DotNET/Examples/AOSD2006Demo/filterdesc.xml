@@ -14,13 +14,13 @@
 			<accept action="meta"/>
 			<reject action="continue"/>
 		</filter>
-    		<filter type="Substitute">
-      			<accept action="substitute"/>
-      			<reject action="continue"/>
-    		</filter>
-    		<filter type="Wait">
-      			<accept action="continue"/>
-      			<reject action="wait"/>
+		<filter type="Substitute">
+			<accept action="substitute"/>
+			<reject action="continue"/>
+		</filter>
+		<filter type="Wait">
+			<accept action="continue"/>
+			<reject action="wait"/>
 		</filter>
 		<filter type="Encryption">
 			<accept action="encrypt"/>
@@ -33,32 +33,31 @@
 	</filters>
 	
 	<actions>
-    		<action name="continue"/>
-		
-		<action name="meta">
-		</action>
+		<action name="continue"/>
+		<action name="meta"/>
 		
 		<action name="error" endofset="true">
-      			<operation name="discard" resource="args"/>
-      			<operation name="error" resource="message"/>
-      			<operation name="return" resource="message"/>
+			<operation name="discard" resource="args"/>
+			<operation name="error" resource="message"/>
+			<operation name="return" resource="message"/>
 		</action>
 		
 		<action name="dispatch" endofset="true">
-	  		<operation name="dispatch" resource="message"/>
-	  		<operation name="write" resource="target"/>
-	  		<operation name="write" resource="selector"/>
-	  		<operation name="return" resource="message"/> 
+			<operation name="dispatch" resource="message"/>
+			<operation name="write" resource="target"/>
+			<operation name="write" resource="selector"/>
+			<operation name="return" resource="message"/> 
 		</action>
-	  
+		
 		<action name="substitute">
 			<operation name="write" resource="target"/>
 			<operation name="write" resource="selector"/>
 		</action>
 	
 		<action name="wait">
-	  		<operation name="write" resource="timing"/>
+			<operation name="write" resource="timing"/>
 		</action>
+
 		<action name="encrypt">
 			<operation name="encrypt" resource="args"/>
 		</action>
@@ -69,8 +68,8 @@
 	</actions>
 	
 	<constraints>
-	  	<conflict pattern="[(return)(reply)]+(.*)(error)" resource="message" message="Message is returned before it could error.."/>
-		<conflict pattern="(discard)[(read)(write)]+" resource="args" message="Discarded resources should not be read or written."/>
+		<conflict pattern="[(return)(reply)][(return)(reply)]*.*(error)" resource="message" message="Message is returned before it could error.."/>
+		<conflict pattern="(discard)[(read)(write)][(read)(write)]*" resource="args" message="Discarded resources should not be read or written."/>
 		<conflict pattern="(read)(decrypt)" resource="args" message="Arguments should be decrypted before logging!" />
 		<conflict pattern="(encrypt)(read)" resource="args" message="Arguments should be encrypted after logging!" />
 	</constraints>
