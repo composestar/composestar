@@ -120,7 +120,7 @@ public class CstarTest extends BaseTask
 			"; timeouts: " + cntTimeout +
 			"; failed: " + cntFail +
 			"; ratio: " + (cntSuccess * 100 / cntTotal) + "%", 
-			(cntFail == 0)?Project.MSG_INFO:Project.MSG_WARN);
+			(cntFail == 0 ? Project.MSG_INFO : Project.MSG_WARN));
 		
 		if (cntFail > 0)
 		{
@@ -134,7 +134,7 @@ public class CstarTest extends BaseTask
 		if (tests.size() == 0)
 			throw new BuildException("No tests to run");
 		
-		log("Testing " + tests.size() + " Compose* programs", Project.MSG_INFO);
+		log("Testing " + tests.size() + " program(s)", Project.MSG_INFO);
 
 		Iterator it = tests.iterator();
 		while (it.hasNext())
