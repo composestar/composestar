@@ -619,7 +619,7 @@ namespace Composestar.StarLight.ILWeaver
             }
             catch (Exception ex)
             {
-                // Close the database and throw the error wrapped in an ILWeaverException                 
+                // T the error wrapped in an ILWeaverException                 
                 throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, 
                                             _configuration.OutputImagePath, ex);
             }

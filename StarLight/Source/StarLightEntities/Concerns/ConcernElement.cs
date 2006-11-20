@@ -20,8 +20,27 @@ namespace Composestar.StarLight.Entities.Concerns
 		private string _pathName;
 		private bool _hasOutputFilters;
 		private bool _hasEmbeddedCode;
+        private List<String> _types = new List<string> ();
 
-		/// <summary>
+        /// <summary>
+        /// Gets or sets the types used in the internals or externals.
+        /// </summary>
+        /// <value>The types.</value>
+        [XmlArray("Types")]
+        [XmlArrayItem("Type")]
+        public List<String> ReferencedTypes
+        {
+            get
+            {
+                return _types;
+            }
+            set
+            {
+                _types = value;
+            }
+        }
+
+        /// <summary>
 		/// Gets or sets the name of the file.
 		/// </summary>
 		/// <value>The name of the file.</value>

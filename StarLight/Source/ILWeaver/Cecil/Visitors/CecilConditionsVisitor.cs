@@ -248,7 +248,7 @@ namespace Composestar.StarLight.ILWeaver
                     con.Reference.Selector, WeaveType.Name,
                     con.Reference.Assembly, "");
             }
-            else if(isInternal(con.Reference.Target) || isExternal(con.Reference.Target))
+            else if(IsInternal(con.Reference.Target) || IsExternal(con.Reference.Target))
             {
                 if(!Method.HasThis)
                 {
@@ -341,7 +341,14 @@ namespace Composestar.StarLight.ILWeaver
 
         }
 
-        private bool isInternal(string target)
+        /// <summary>
+        /// Determines whether the specified target is internal.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified target is internal; otherwise, <c>false</c>.
+        /// </returns>
+        private bool IsInternal(string target)
         {
             foreach(Internal i in _visitor.WeaveType.Internals)
             {
@@ -354,8 +361,15 @@ namespace Composestar.StarLight.ILWeaver
             return false;
         }
 
-        
-        private bool isExternal(string target)
+
+        /// <summary>
+        /// Determines whether the specified target is external.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified target is external; otherwise, <c>false</c>.
+        /// </returns>
+        private bool IsExternal(string target)
         {
             foreach(External e in _visitor.WeaveType.Externals)
             {

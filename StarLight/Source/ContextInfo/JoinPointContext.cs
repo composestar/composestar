@@ -1,4 +1,5 @@
 #region Using directives
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -6,6 +7,8 @@ using System.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;  
 using System.ComponentModel;
+using System.Reflection;
+
 #endregion
 
 namespace Composestar.StarLight.ContextInfo
@@ -32,10 +35,27 @@ namespace Composestar.StarLight.ContextInfo
         private string _substitutionSelector;
         private ArgumentInfo _returnValue;
         private bool _hasReturnValueSet;
+        private MethodBase _methodInformation; 
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the current method information. 
+        /// </summary>
+        /// <value>The method information as a <see cref="T:System.Reflection.MethodBase"></see> object.</value>
+        public MethodBase MethodInformation
+        {
+            get
+            {
+                return _methodInformation;
+            }
+            set
+            {
+                _methodInformation = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the sender.
@@ -43,8 +63,14 @@ namespace Composestar.StarLight.ContextInfo
         /// <value>The sender.</value>
         public object Sender
         {
-            get { return _sender; }
-            set { _sender = value; }
+            get 
+            { 
+                return _sender; 
+            }
+            set 
+            { 
+                _sender = value; 
+            }
         }
         /// <summary>
         /// Gets or sets the start-target.
@@ -52,8 +78,14 @@ namespace Composestar.StarLight.ContextInfo
         /// <value>The start-target.</value>
         public object StartTarget
         {
-            get { return _startTarget; }
-            set { _startTarget = value; }
+            get 
+            { 
+                return _startTarget; 
+            }
+            set 
+            { 
+                _startTarget = value; 
+            }
         }
 
         /// <summary>
@@ -62,8 +94,14 @@ namespace Composestar.StarLight.ContextInfo
         /// <value>The start-selector.</value>
         public string StartSelector
         {
-            get { return _startSelector; }
-            set { _startSelector = value; }
+            get 
+            { 
+                return _startSelector; 
+            }
+            set 
+            { 
+                _startSelector = value;
+            }
         }
 
         /// <summary>
@@ -72,8 +110,14 @@ namespace Composestar.StarLight.ContextInfo
         /// <value>The current-target.</value>
         public object CurrentTarget
         {
-            get { return _currentTarget; }
-            set { _currentTarget = value; }
+            get 
+            { 
+                return _currentTarget;
+            }
+            set 
+            { 
+                _currentTarget = value;
+            }
         }
 
         /// <summary>
@@ -82,8 +126,14 @@ namespace Composestar.StarLight.ContextInfo
         /// <value>The current-selector.</value>
         public string CurrentSelector
         {
-            get { return _currentSelector; }
-            set { _currentSelector = value; }
+            get 
+            { 
+                return _currentSelector;
+            }
+            set 
+            {
+                _currentSelector = value; 
+            }
         }
 
         /// <summary>
@@ -92,8 +142,14 @@ namespace Composestar.StarLight.ContextInfo
         /// <value>The substitution-target.</value>
         public object SubstitutionTarget
         {
-            get { return _substitutionTarget; }
-            set { _substitutionTarget = value; }
+            get 
+            { 
+                return _substitutionTarget; 
+            }
+            set 
+            { 
+                _substitutionTarget = value; 
+            }
         }
 
         /// <summary>
@@ -102,8 +158,14 @@ namespace Composestar.StarLight.ContextInfo
         /// <value>The substitution-selector.</value>
         public string SubstitutionSelector
         {
-            get { return _substitutionSelector; }
-            set { _substitutionSelector = value; }
+            get 
+            { 
+                return _substitutionSelector; 
+            }
+            set 
+            { 
+                _substitutionSelector = value; 
+            }
         }
 
         #endregion

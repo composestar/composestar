@@ -6,7 +6,7 @@ using System.Text;
 
 using Composestar.StarLight.Entities.Concerns;
 using Composestar.StarLight.Entities.LanguageModel;
-using Composestar.StarLight.Entities.Configuration; 
+using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
@@ -42,11 +42,11 @@ namespace Composestar.StarLight.ILWeaver
 
         private const int FilterContextJumpId = 9999;
         private const int BranchLabelOffSet = 100000;
-        
+
         #endregion
 
         #region Private variables
-        
+
         private IList<Instruction> _instructions = new List<Instruction>();
         private CilWorker _worker;
         private int _numberOfBranches;
@@ -58,9 +58,9 @@ namespace Composestar.StarLight.ILWeaver
         private IEntitiesAccessor _entitiesAccessor;
         private ConfigurationContainer _weaveConfiguration;
         private WeaveType _weaveType;
-        
+
         #endregion
-             
+
         #region Properties
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Composestar.StarLight.ILWeaver
                 _filterType = value;
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the entities accessor.
         /// </summary>
@@ -219,7 +219,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </remarks> 
         /// <param name="expr">The expr.</param>
         private void CreateContextExpression(ContextExpression expr)
-        {           
+        {
 
             // Get an actionstore local
             VariableDefinition asVar = CreateActionStoreLocal();
@@ -251,7 +251,7 @@ namespace Composestar.StarLight.ILWeaver
         {
             ArgumentAttributes attr = ArgumentAttributes.In;
 
-            if ((attrMono & Mono.Cecil.ParameterAttributes.Out) != Mono.Cecil.ParameterAttributes.Out) 
+            if ((attrMono & Mono.Cecil.ParameterAttributes.Out) != Mono.Cecil.ParameterAttributes.Out)
                 attr = attr | ArgumentAttributes.In;
             else
                 attr &= ~ArgumentAttributes.In;
@@ -259,7 +259,7 @@ namespace Composestar.StarLight.ILWeaver
             if ((attrMono & Mono.Cecil.ParameterAttributes.Optional) == Mono.Cecil.ParameterAttributes.Optional) attr = attr | ArgumentAttributes.Optional;
             if ((attrMono & Mono.Cecil.ParameterAttributes.HasDefault) == Mono.Cecil.ParameterAttributes.HasDefault) attr = attr | ArgumentAttributes.HasDefault;
             if ((attrMono & Mono.Cecil.ParameterAttributes.HasFieldMarshal) == Mono.Cecil.ParameterAttributes.HasFieldMarshal) attr = attr | ArgumentAttributes.HasFieldMarshal;
-  
+
             return attr;
         }
 
@@ -302,23 +302,23 @@ namespace Composestar.StarLight.ILWeaver
         public VariableDefinition CreateLocalVariable(TypeReference type)
         {
             if (type == null)
-                throw new ArgumentNullException("type"); 
+                throw new ArgumentNullException("type");
 
             VariableDefinition var = new VariableDefinition(type);
             var.Name = type.ToString();
-            Method.Body.InitLocals = true; 
+            Method.Body.InitLocals = true;
             Method.Body.Variables.Add(var);
 
             return var;
         }
 
-       
+
 
         // Because we need local vars to store the object and type of arguments in, we have to add these local vars.
         // But only once, so these functions make sure we only have one of this variables
-        private VariableDefinition m_JpcLocal;  
+        private VariableDefinition m_JpcLocal;
         private VariableDefinition m_ActionStoreLocal;
-           
+
         /// <summary>
         /// Creates the action store local.
         /// </summary>
@@ -332,7 +332,7 @@ namespace Composestar.StarLight.ILWeaver
 
             return m_ActionStoreLocal;
         }
-        
+
         /// <summary>
         /// Creates the join point context variable.
         /// </summary>
@@ -340,12 +340,12 @@ namespace Composestar.StarLight.ILWeaver
         {
             if (m_JpcLocal == null)
             {
-                m_JpcLocal = CreateLocalVariable(typeof(JoinPointContext));              
+                m_JpcLocal = CreateLocalVariable(typeof(JoinPointContext));
             }
 
             return m_JpcLocal;
         }
-    
+
         #endregion
 
         #region Inlining Instructions Visitor Handlers
@@ -377,7 +377,7 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Ret));
         }
 
-        
+
 
         #region Inner Call handlers
 
@@ -467,7 +467,7 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #endregion
-              
+
 
         /// <summary>
         /// Visits the filter action. Uses Strategypattern to weave a specific instruction.
@@ -476,7 +476,7 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitFilterAction(FilterAction filterAction)
         {
             if (filterAction == null)
-                throw new ArgumentNullException("filterAction"); 
+                throw new ArgumentNullException("filterAction");
 
             FilterActionWeaveStrategy strategy = FilterActionStrategyDispatcher.GetFilterActionWeaveStrategy(filterAction.Type);
 
@@ -548,7 +548,7 @@ namespace Composestar.StarLight.ILWeaver
             // Add condition code
             CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor(this);
             ((Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
-                        
+
             // Add branch code
             branch.Label = BranchLabelOffSet + _numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
             _numberOfBranches = _numberOfBranches + 2;
@@ -789,8 +789,8 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Create new joinpointcontext object
             //
-            Instructions.Add(Worker.Create(OpCodes.Newobj, 
-                CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextConstructor )));
+            Instructions.Add(Worker.Create(OpCodes.Newobj,
+                CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextConstructor)));
 
             // Store the just created joinpointcontext object
             Instructions.Add(Worker.Create(OpCodes.Stloc, jpcVar));
@@ -799,7 +799,7 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Store sender (only for outputfilters)
             //
-            if(FilterType == FilterType.OutputFilter  &&  Method.HasThis)
+            if (FilterType == FilterType.OutputFilter && Method.HasThis)
             {
                 // Load joinpointcontext object
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
@@ -820,11 +820,11 @@ namespace Composestar.StarLight.ILWeaver
 
             // Determine type
             Instructions.Add(Worker.Create(OpCodes.Ldtoken, CalledMethod.ReturnType.ReturnType));
-            Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle))); 
+            Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle)));
 
             // Call set_ReturnType in JoinPointContext
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetReturnType)));
-                        
+
             //
             // Add the arguments, these are stored at the top of the stack
             //
@@ -833,15 +833,15 @@ namespace Composestar.StarLight.ILWeaver
                 case FilterType.None:
                     break;
                 case FilterType.InputFilter:
-                    foreach(ParameterDefinition param in CalledMethod.Parameters)
+                    foreach (ParameterDefinition param in CalledMethod.Parameters)
                     {
-                        if((param.Attributes & Mono.Cecil.ParameterAttributes.Out) != Mono.Cecil.ParameterAttributes.Out)
+                        if ((param.Attributes & Mono.Cecil.ParameterAttributes.Out) != Mono.Cecil.ParameterAttributes.Out)
                         {
                             // Load the argument
                             Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
 
                             // Check for reference parameter
-                            if(param.ParameterType.FullName.EndsWith("&"))
+                            if (param.ParameterType.FullName.EndsWith("&"))
                             {
                                 Instructions.Add(Worker.Create(OpCodes.Ldobj, param.ParameterType));
                             }
@@ -870,7 +870,7 @@ namespace Composestar.StarLight.ILWeaver
                         // Determine the parameter direction
                         ArgumentAttributes attr = ConvertAttributes(param.Attributes);
 
-                        Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int) attr));
+                        Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int)attr));
 
                         // Load jpc
                         Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
@@ -893,7 +893,7 @@ namespace Composestar.StarLight.ILWeaver
                         int ordinal = param.Sequence - (CalledMethod.HasThis ? 1 : 0);
 
                         // Check for reference parameter
-                        if(param.ParameterType.FullName.EndsWith("&"))
+                        if (param.ParameterType.FullName.EndsWith("&"))
                         {
                             Instructions.Add(Worker.Create(OpCodes.Ldobj, param.ParameterType));
                         }
@@ -912,39 +912,39 @@ namespace Composestar.StarLight.ILWeaver
                         Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle)));
 
                         // Determine the parameter direction
-                        ArgumentAttributes attr = ConvertAttributes(param.Attributes); 
-                        
+                        ArgumentAttributes attr = ConvertAttributes(param.Attributes);
+
                         Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int)attr));
-             
+
                         // Load jpc
                         Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                         // Call the AddArgument function statically
-                        Instructions.Add(Worker.Create(OpCodes.Call,CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextAddArgument)));
+                        Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextAddArgument)));
                     }
                     break;
                 default:
                     break;
             }
-           
+
             //
             // Set the target
             //
 
-            if(FilterType == FilterType.InputFilter)
+            if (FilterType == FilterType.InputFilter)
             {
                 // Load the joinpointcontext object
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                 // Load the this pointer
-                if(Method.HasThis)
+                if (Method.HasThis)
                     Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
                 else
                     Instructions.Add(Worker.Create(OpCodes.Ldnull));
 
                 // Assign to the Target property
                 Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetStartTarget)));
-                    
+
             }
             else
             {
@@ -962,11 +962,18 @@ namespace Composestar.StarLight.ILWeaver
             // ldtoken method void SomeClass::SomeMethod()
             // call class [mscorlib]System.Reflection.MethodBase [mscorlib]System.Reflection.MethodBase::GetMethodFromHandle(valuetype [mscorlib]System.RuntimeMethodHandle)
             //
-            // Watch out with generics!
-            //Instructions.Add(Worker.Create(OpCodes.Ldtoken, TargetAssemblyDefinition.MainModule.Import(CalledMethod)));
-            //Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetMethodFromHandle)));
-            //Instructions.Add(Worker.Create(OpCodes.Pop));  // remove it for now since we do not assign it.
-  
+
+            // Load joinpointcontext first
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+            
+            Instructions.Add(Worker.Create(OpCodes.Ldtoken, TargetAssemblyDefinition.MainModule.Import(CalledMethod)));
+            Instructions.Add(Worker.Create(OpCodes.Ldtoken, TargetAssemblyDefinition.MainModule.Import(CalledMethod.DeclaringType)));
+            Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetMethodFromHandle)));
+          //  Instructions.Add(Worker.Create(OpCodes.Pop));  // remove it for now since we do not assign it.
+
+            // Assign name to MethodInformation
+            Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetMethodInformation)));
+
             //
             // Set the selector
             //
@@ -979,7 +986,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Assign name to MethodName
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetStartSelector)));
-                
+
         }
 
         /// <summary>
@@ -995,14 +1002,14 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Restore out/ref parameters
             //
-            switch(FilterType)
+            switch (FilterType)
             {
                 case FilterType.None:
                     break;
                 case FilterType.InputFilter:
-                    foreach(ParameterDefinition param in CalledMethod.Parameters)
+                    foreach (ParameterDefinition param in CalledMethod.Parameters)
                     {
-                        if(param.ParameterType.FullName.EndsWith("&"))
+                        if (param.ParameterType.FullName.EndsWith("&"))
                         {
                             // Load the argument
                             Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
@@ -1046,14 +1053,14 @@ namespace Composestar.StarLight.ILWeaver
             }
 
             // Retrieve returnvalue
-            if(!CalledMethod.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
+            if (!CalledMethod.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
             {
                 // Load JoinPointContext
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                 // Get returnvalue
                 Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetReturnValue)));
-                 
+
                 // Check if returnvalue is value type, then unbox, else cast
                 if (CalledMethod.ReturnType.ReturnType.IsValueType || CalledMethod.ReturnType.ReturnType is GenericParameter)
                 {

@@ -105,12 +105,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		public override bool Execute()
 		{
 			List<string> refTypes = new List<string>();
-			Stopwatch sw = new Stopwatch();
+			Stopwatch sw = Stopwatch.StartNew();
 
 			try
 			{
-				sw.Start();
-
+				
 				// Open DB
 				Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFileName);
 				IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance; 
@@ -149,7 +148,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						newConcern = true;
 					}
 
-					// Do a time check
+					// Do a time check, if new or change, run the parser and store the data
 					if (newConcern || File.GetLastWriteTime(concernFile).Ticks > ce.Timestamp)
 					{
 						Log.LogMessageFromResources("ParsingConcernFile", concernFile);
@@ -161,16 +160,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						// Parse the concern file
 						parser.Parse();
 
-						// indicate if there are any outputfilters
+						// Indicate if there are any outputfilters
 						ce.HasOutputFilters = parser.HasOutputFilters;
 
-						// indicate if there is embedded code
+						// Indicate if there is embedded code
 						ce.HasEmbeddedCode = parser.HasEmbeddedCode;
 
 						// Add the referenced types
-						// TODO Should we also save this info in the ConcernElement?
-						// Or is the assembly analyzed in a earlier, non-incremental, run?
-						refTypes.AddRange(parser.ReferencedTypes);
+                        ce.ReferencedTypes.AddRange(parser.ReferencedTypes);  						
 
 						// Indicate that the concerns are most likely dirty
 						ConcernsDirty = true;
@@ -181,7 +178,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 					}
 
 					// If this concern has output filters, then enable (do not override a previously set true value)
-					HasOutputFilters |= ce.HasOutputFilters;            
+					HasOutputFilters |= ce.HasOutputFilters;
+
+                    refTypes.AddRange(ce.ReferencedTypes);
 
 					concernsToAdd.Add(ce);
 				}
@@ -199,7 +198,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 					{
 						ReferencedTypes[index] = new TaskItem(type);
 						index++;
-					}
+					}                    
 				}
 
 				// Save the configContainer
@@ -216,7 +215,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			}
 				
 			return !Log.HasLoggedErrors;
-		} // Execute()
+		} 
 
 		/// <summary>
 		/// Creates the services container.

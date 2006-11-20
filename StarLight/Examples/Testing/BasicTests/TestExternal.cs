@@ -43,7 +43,7 @@ namespace BasicTests
 		public void after(JoinPointContext context)
 		{
 			report("after " + context.StartSelector);
-
+          
 			if (context.StartSelector.Equals("func4"))
 			{
 				String ret = (String)context.ReturnValue;
