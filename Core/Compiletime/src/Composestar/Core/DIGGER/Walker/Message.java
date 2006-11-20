@@ -10,9 +10,7 @@
 
 package Composestar.Core.DIGGER.Walker;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
@@ -41,13 +39,6 @@ public class Message
 	protected String selector;
 
 	/**
-	 * Where did this message come from. Will be NULL in case of initial
-	 * messages. But can be set in a later stage when this message is
-	 * encountered again.
-	 */
-	protected List messageTrace;
-
-	/**
 	 * Indication of the certenty of the message. < 0 message will probably
 	 * never be executed. = 0 message will be executed. > 0 this number of
 	 * conditions must be valid.
@@ -59,20 +50,28 @@ public class Message
 	 */
 	protected boolean recursive;
 	
+	/**
+	 * Don't call this constructor directly. Use MessageGenerator.getMessageFor()
+	 * 
+	 * @param inConcernNode
+	 * @param inSelector
+	 */
 	public Message(AbstractConcernNode inConcernNode, String inSelector)
 	{
 		concernNode = inConcernNode;
 		selector = inSelector;
-		messageTrace = new ArrayList();
 	}
 	
+	/**
+	 * Don't call this constructor directly. Use MessageGenerator.cloneMessage()
+	 * 
+	 * @param base
+	 */
 	public Message(Message base)
 	{
 		concernNode = base.getConcernNode();
 		selector = base.getSelector();
 		certenty = base.getCertenty();
-		messageTrace = new ArrayList();
-		messageTrace.addAll(base.getMessageTrace());
 	}
 	
 	public AbstractConcernNode getConcernNode()
@@ -108,16 +107,6 @@ public class Message
 	public int getCertenty()
 	{
 		return certenty;
-	}
-		
-	public List getMessageTrace()
-	{
-		return messageTrace;
-	}
-	
-	public void addTrace(Message msg)
-	{
-		messageTrace.add(msg);
 	}
 	
 	public boolean isRecursive()
@@ -229,24 +218,21 @@ public class Message
 		return false;
 	}
 	
-	public void checkRecursion()
-	{
-		if (recursive) return;
-		// TODO: easier to check if the same message is listed
-		Iterator it = messageTrace.iterator();
-		while (it.hasNext())
-		{
-			Message msg = (Message) it.next();
-			if ((msg.getConcernNode() == concernNode) && (msg.getSelector().equals(selector)))
-			{
-				recursive = true;
-				return;
-			}
-		}
-	}
-	
 	public String toString()
 	{
 		return concernNode.getLabel()+"->"+selector+" ["+certenty+"]";
+	}
+	
+	public int hashCode()
+	{
+		return concernNode.hashCode()+selector.hashCode();
+	}
+	
+	public boolean equals(Object obj)
+	{
+		if (obj == null) return false;
+		if (!(obj instanceof Message)) return false;
+		Message msg = (Message) obj;
+		return (msg.getConcernNode() == concernNode) && msg.getSelector().equals(selector);
 	}
 }

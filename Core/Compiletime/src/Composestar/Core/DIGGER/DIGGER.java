@@ -29,6 +29,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
+import Composestar.Utils.Logger;
 
 /**
  * DIGGER - DIspatch Graph GEneratoR
@@ -38,6 +39,8 @@ import Composestar.Utils.Debug;
 public class DIGGER implements CTCommonModule
 {
 	public static final String MODULE_NAME = "DIGGER";
+
+	protected static final Logger logger = Logger.getLogger(MODULE_NAME);
 
 	/**
 	 * The key for the dispatch graph in repository
@@ -94,8 +97,7 @@ public class DIGGER implements CTCommonModule
 			{
 				if (Debug.willLog(Debug.MODE_INFORMATION))
 				{
-					Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Generating dispatch graph for: "
-							+ concern.getQualifiedName());
+					logger.info("Generating dispatch graph for: " + concern.getQualifiedName());
 				}
 
 				ConcernNode concernNode = (ConcernNode) graph.getConcernNode(concern);
@@ -112,7 +114,7 @@ public class DIGGER implements CTCommonModule
 					FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) filterModules.next());
 					if (Debug.willLog(Debug.MODE_DEBUG))
 					{
-						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing FilterModule: " + fm.getQualifiedName());
+						logger.debug("Processing FilterModule: " + fm.getQualifiedName());
 					}
 					digFilterChain(fm.getInputFilterIterator(), concernNode.getInputFilters());
 					digFilterChain(fm.getOutputFilterIterator(), concernNode.getOutputFilters());
@@ -136,7 +138,7 @@ public class DIGGER implements CTCommonModule
 			Filter filter = (Filter) filterChain.next();
 			if (Debug.willLog(Debug.MODE_DEBUG))
 			{
-				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing Filter: " + filter.getQualifiedName());
+				logger.debug("Processing Filter: " + filter.getQualifiedName());
 			}
 			FilterNode filterNode = FilterNodeFactory.createFilterNode(graph, filter, chainNode.getDirection());
 			chainNode.appendFilter(filterNode);

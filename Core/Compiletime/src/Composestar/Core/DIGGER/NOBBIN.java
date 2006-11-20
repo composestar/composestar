@@ -30,6 +30,7 @@ import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Utils.Debug;
+import Composestar.Utils.Logger;
 
 /**
  * A NOBBIN will walk the paths created by DIGGER in order to produce a set of
@@ -41,6 +42,8 @@ import Composestar.Utils.Debug;
 public class NOBBIN
 {
 	public static final String MODULE_NAME = "NOBBIN";
+
+	protected static final Logger logger = Logger.getLogger(MODULE_NAME);
 
 	protected Graph graph;
 
@@ -88,7 +91,7 @@ public class NOBBIN
 	{
 		if (Debug.willLog(Debug.MODE_DEBUG))
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Walking concern " + concernNode.getLabel());
+			logger.debug("Walking concern " + concernNode.getLabel());
 		}
 		/*
 		 * Walk through the graph from the concernNode and spawn a new Message
@@ -102,38 +105,43 @@ public class NOBBIN
 		while (it.hasNext())
 		{
 			Message inMsg = (Message) it.next();
-			List outMsgs = walk(concernNode.getInputFilters(), inMsg, 0);
+			List outMsgs = walk(concernNode.getInputFilters(), inMsg, new ArrayList());
 			if (outMsgs.size() > 0)
 			{
 				if (Debug.willLog(Debug.MODE_DEBUG))
 				{
-					Debug.out(Debug.MODE_DEBUG, MODULE_NAME, inMsg + " resulted in:");
+					logger.debug(inMsg + " resulted in:");
 					Iterator msgit = outMsgs.iterator();
 					while (msgit.hasNext())
 					{
-						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, ": " + ((Message) msgit.next()));
+						logger.debug(": " + msgit.next());
 					}
 				}
 			}
 		}
 	}
 
-	public List walk(Node node, Message msg, int curDepth) throws ModuleException
+	public List walk(Node node, Message msg, List trace) throws ModuleException
 	{
 		List result = new ArrayList();
+		if (msg.isRecursive())
+		{
+			// skip recursive messages
+			logger.info("Message is recursive, skippping. " + msg.toString());
+			return result;
+		}
 		while (node != null)
 		{
-			if (curDepth >= maxDepth)
+			if (trace.size() >= maxDepth)
 			{
-				Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Reached maximum walking at " + node + " (label:"
-						+ node.getLabel() + ") at depth " + curDepth);
+				logger.info("Reached maximum walking at " + node + " (label:" + node.getLabel() + ") at depth "
+						+ trace.size());
 				break;
 			}
 
-			if (Debug.willLog(Debug.MODE_DEBUG) && false)
+			if (Debug.willLog(Debug.MODE_DEBUG))
 			{
-				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Walking node " + node + " (label:" + node.getLabel()
-						+ ") at depth " + curDepth);
+				logger.debug("Walking node " + node + " (label:" + node.getLabel() + ") at depth " + trace.size());
 			}
 			Iterator edges = node.getOutgoingEdges();
 			Node origNode = node;
@@ -158,9 +166,10 @@ public class NOBBIN
 					if (expr > ConditionExpression.RESULT_TRUE)
 					{
 						// branch
-						Message newMsg = new Message(msg);
+						Message newMsg = gen.cloneMessage(msg);
 						newMsg.setCertenty(expr);
-						result.addAll(walk(e.getDestination(), newMsg, curDepth));
+						List newTrace = new ArrayList(trace);
+						result.addAll(walk(e.getDestination(), newMsg, newTrace));
 						continue;
 					}
 					else
@@ -172,24 +181,28 @@ public class NOBBIN
 				}
 				else if (e instanceof SubstitutionEdge)
 				{
+					trace.add(msg);
 					msg = gen.xform(msg, (SubstitutionEdge) e);
-					if (msg.isRecursive())
-					{
-						if (msg.getCertenty() == ConditionExpression.RESULT_TRUE)
-						{
-							Debug.out(Debug.MODE_ERROR, MODULE_NAME, origNode+"... is infinite recursive");
-						}
-						else
-						{
-							Debug.out(Debug.MODE_WARNING, MODULE_NAME, origNode+"... might be infinite recursive");
-						}
-						break;
-					}
-					// subsitue a message
 					node = e.getDestination();
-					curDepth++;
-					// TODO: can result in duplicate messages in case of `inner
-					// node` of the default dispatch
+
+					// only check for recursion when the destination is a
+					// concern
+					if (node instanceof AbstractConcernNode)
+					{
+						if (trace.contains(msg))
+						{
+							msg.setRecursive(true);
+							if (msg.getCertenty() == ConditionExpression.RESULT_TRUE)
+							{
+								logger.error(origNode + "... is infinite recursive!!!");
+							}
+							else
+							{
+								logger.warn(origNode + "... might be infinite recursive!!");
+							}
+							return result;
+						}
+					}
 					break;
 				}
 				else if (e instanceof LambdaEdge)
@@ -198,7 +211,7 @@ public class NOBBIN
 				}
 			}
 		}
-		if (msg != null) 
+		if (msg != null)
 		{
 			result.add(msg);
 		}

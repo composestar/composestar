@@ -11,59 +11,77 @@
 package Composestar.Core.DIGGER.Walker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
+import Composestar.Core.DIGGER.NOBBIN;
 import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
 import Composestar.Core.DIGGER.Graph.ConcernNode;
-import Composestar.Core.DIGGER.Graph.CondMatchEdge;
 import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
+import Composestar.Utils.Logger;
 
 /**
  * Creates and manages messages for certain concerns + selectors.
  * 
- *
  * @author Michiel Hendriks
  */
 public class MessageGenerator
 {
+	protected static final Logger logger = Logger.getLogger(NOBBIN.MODULE_NAME);
+	
+	protected Map msgCache;
+
 	/**
 	 * 
 	 */
 	public MessageGenerator()
 	{
+		msgCache = new HashMap();
+	}
 
-	}
-	
-	//TODO: this sucks
-	public List create(CondMatchEdge edge)
+	/**
+	 * Creates or gets a message based on the given input.
+	 * 
+	 * @param concernNode
+	 * @param selector
+	 * @return
+	 */
+	public Message getMessageFor(ConcernNode concernNode, String selector)
 	{
-		List lst = new ArrayList();
-		if (!edge.getEnabler())
+		String hashKey = concernNode.getLabel() + "\037" + selector;
+		if (msgCache.containsKey(hashKey))
 		{
-			// can't do much with that (yet)
-			return lst;
-		}			
-		Iterator it = edge.getMatchingParts();
-		while (it.hasNext())
-		{
-			MatchingPart mp = (MatchingPart) it.next();
-			if (mp.getSelector().equals("*"))
-			{
-				// we can't create a selector for that (yet)
-				continue;
-			}
-			Message msg = new Message(null, mp.getSelector().toString());
-			lst.add(msg);
-		}		
-		return lst; 
+			logger.debug("Return cached message for " + hashKey);
+			return (Message) msgCache.get(hashKey);
+		}
+		Message msg = new Message(concernNode, selector);
+		msgCache.put(hashKey, msg);
+		return msg;
 	}
-	
+
+	/**
+	 * Publicates a given message
+	 * 
+	 * @param base
+	 * @return
+	 */
+	public Message cloneMessage(Message base)
+	{
+		return new Message(base);
+	}
+
+	/**
+	 * Create a list of messages based on the methods in a concern
+	 * 
+	 * @param concernNode
+	 * @return
+	 */
 	public List create(ConcernNode concernNode)
 	{
 		List lst = new ArrayList();
@@ -73,12 +91,12 @@ public class MessageGenerator
 		while (it.hasNext())
 		{
 			MethodInfo mi = (MethodInfo) it.next();
-			Message msg = new Message(concernNode, mi.name());
+			Message msg = getMessageFor(concernNode, mi.name());
 			lst.add(msg);
 		}
 		return lst;
 	}
-	
+
 	/**
 	 * Create a new message based an an existing message and a substitution rule
 	 * 
@@ -88,21 +106,16 @@ public class MessageGenerator
 	 */
 	public Message xform(Message base, SubstitutionEdge edge)
 	{
-		Message msg = new Message(base);
-		msg.addTrace(base);
+		Message msg = cloneMessage(base);
 		SubstitutionPart sp = edge.getSubstitutionPart();
 		String sel = sp.getSelector().getName().toString();
 		if (!sel.equals("*"))
 		{
 			msg.setSelector(sel);
 		}
-//		TODO: take care about error node and inner nodes
 		if (edge.getDestination() instanceof AbstractConcernNode)
 		{
 			msg.setConcernNode((AbstractConcernNode) edge.getDestination());
-			
-			// only check for recursion when the new destination is a concern node
-			msg.checkRecursion();
 		}
 		return msg;
 	}
