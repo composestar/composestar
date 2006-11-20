@@ -89,7 +89,7 @@
 	</target>
 	
 	<target name="test_bgen_2005" depends="init_local,test_convert" if="test.mode.2005">
-		<cs:dn_msbatch>
+		<cs:dn_msbatch target="ComposeStarGen">
 			<FileSet dir="${build.dotnet}/Examples">
 				<include name="**/*.cpsproj"/>
 				<exclude name="AOSD2006Demo/EncryptionFilter/*"/>
