@@ -268,7 +268,17 @@
 	</target>
 
 	<target name="systemtest" depends="init" description="Runs the system test">
-		<cs:dn_msbatch target="Rebuild" failOnError="false">
+		<echo level="info">Cleaning tests</echo>
+		<cs:dn_msbatch target="Clean">
+			<fileset dir="${build.starlight}/Examples">
+				<include name="Testing/Concerns.sln"/>
+				<include name="iTextSharp/iTextSharp.sln"/>
+				<include name="Pacman/Pacman.sln"/>
+				<include name="PacmanTwo/PacmanTwo.sln"/>
+			</fileset>
+		</cs:dn_msbatch>
+		<echo level="info">Building tests</echo>
+		<cs:dn_msbatch>
 			<fileset dir="${build.starlight}/Examples">
 				<include name="Testing/Concerns.sln"/>
 				<include name="iTextSharp/iTextSharp.sln"/>

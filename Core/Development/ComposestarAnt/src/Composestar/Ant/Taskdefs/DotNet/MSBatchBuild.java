@@ -2,6 +2,7 @@ package Composestar.Ant.Taskdefs.DotNet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import Composestar.Ant.Taskdefs.BaseTask;
 public final class MSBatchBuild extends BaseTask
 {
 	private final static String EXECUTABLE = "msbuild";
+	private final static int BUILDFILE_INDEX = 1;
 	
 	private String target;
 	private boolean failFast = false;
@@ -60,13 +62,14 @@ public final class MSBatchBuild extends BaseTask
 			int failCount = 0; 
 			failList.clear();
 
-			log("Executing target '" + target + "' on " + totalCount + " projects/solutions", Project.MSG_INFO);
+			String targetName = (target == null ? "default target" : "target '" + target + "'");
+			log("Executing " + targetName + " on " + totalCount + " projects/solutions", Project.MSG_INFO);
 
 			Iterator it = inputs.iterator();		
 			while (it.hasNext())
 			{
 				File buildFile = (File)it.next();
-				cmd[1] = buildFile.getAbsolutePath();
+				cmd[BUILDFILE_INDEX] = buildFile.getAbsolutePath();
 				exec.setCommandline(cmd);
 				
 				log(buildFile.getAbsolutePath(), Project.MSG_INFO);
@@ -101,20 +104,24 @@ public final class MSBatchBuild extends BaseTask
 	
 	private void validateAttributes() throws BuildException
 	{
-		if (target == null)
-			throw new BuildException("target attribute is required");		
 	}
 	
 	private String[] createCommand()
 	{
-		String cmd[] = new String[5];
-		cmd[0] = EXECUTABLE;
-		cmd[1] = "<buildfile>";
-		cmd[2] = "/t:" + target;
-		cmd[3] = "/v:q";
-		cmd[4] = "/nologo";
+		List cmd = new ArrayList();
+		cmd.add(EXECUTABLE);
+		cmd.add("<buildfile>");
 		
-		return cmd;
+		if (target != null)
+			cmd.add("/t:" + target);
+		
+		cmd.add("/v:q");
+		cmd.add("/nologo");
+		
+		String[] cmdArray = new String[cmd.size()];
+		cmd.toArray(cmdArray);
+		
+		return cmdArray;
 	}
 
 	private void reportResults(int total, int fail)
@@ -127,7 +134,7 @@ public final class MSBatchBuild extends BaseTask
 			
 		if (fail > 0)
 		{
-			log("Compilation of the following projects failed:", Project.MSG_ERR);		
+			log("Failed to build the following projects:", Project.MSG_ERR);		
 			reportFailures();
 		}
 	}
