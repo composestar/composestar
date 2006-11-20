@@ -1,0 +1,91 @@
+BasicTests.TypeTests.ctor()
+Bool:		False
+Byte:		0
+Int:		0
+UInt64:		0
+Float:		0
+Double:		0
+String:		
+Interface:	
+
+Default value for CustomAttributes.MyProperty is 'Gigabytes', default value is correct? True
+Value for CustomAttributes.MyProperty set to 'Kilobytes', value now is 'Kilobytes' (check passed: True)
+
+BasicTests.TestInternal.ctor()
+BasicTests.TestExternal.ctor()
+BasicTests.FilterTestsHelper.ctor()
+BasicTests.FilterTests.ctor()
+Log : cur sel:func1, cur method: func1 (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.TestExternal.externalMe()
+Log : cur sel:func2, cur method: func2 (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.TestInternal.internalMe()
+Log : cur sel:func3, cur method: func3 (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.FilterTests.func1()
+Log : cur sel:func4, cur method: func4 (declaring type BasicTests.FilterTests).
+Local variables: 6
+BasicTests.TestExternal.before func4()
+BasicTests.FilterTests.func4: 4()
+BasicTests.TestExternal.after func4()
+4 #After#
+Log : cur sel:func6, cur method: func6 (declaring type BasicTests.FilterTests).
+Local variables: 2
+Log : cur sel:func4, cur method: func4 (declaring type BasicTests.FilterTests).
+Local variables: 6
+BasicTests.TestExternal.before func4()
+BasicTests.FilterTests.func4: 2()
+BasicTests.TestExternal.after func4()
+func4 returns: 2 #After#
+Log : cur sel:func4, cur method: func4 (declaring type BasicTests.FilterTests).
+Local variables: 6
+BasicTests.TestExternal.before func4()
+BasicTests.FilterTests.func4: 3()
+BasicTests.TestExternal.after func4()
+second call to func4 returns: 3 #After#
+Log : cur sel:func4, cur method: func4 (declaring type BasicTests.FilterTests).
+Local variables: 6
+BasicTests.TestExternal.before func4()
+BasicTests.FilterTests.func4: 4()
+BasicTests.TestExternal.after func4()
+third call to func4 returns: 4 #After#
+Log : cur sel:func4, cur method: func4 (declaring type BasicTests.FilterTests).
+Local variables: 6
+BasicTests.TestExternal.before func4()
+BasicTests.FilterTests.func4: 5()
+BasicTests.TestExternal.after func4()
+fourth call to func4 returns: 5 #After#
+Log : cur sel:func7, cur method: func7 (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.TestExternal.before func7()
+	arg='foo'
+BasicTests.FilterTests.func7: s='foo'()
+Log : cur sel:func8, cur method: func8 (declaring type BasicTests.FilterTests).
+Local variables: 3
+BasicTests.FilterTests.func8: generic.ToString() = 'non-static generic method'()
+Log : cur sel:func1, cur method: func1 (declaring type BasicTests.StaticFilterTests`1).
+Local variables: 2
+Log : cur sel:askForHelp, cur method: askForHelp (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.FilterTestsHelper.helpMe()
+Log : cur sel:doStuff, cur method: doStuff (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.FilterTests.doStuff()
+Log : cur sel:makeError, cur method: makeError (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.FilterTests.makeError()
+Log : cur sel:setProduceError, cur method: setProduceError (declaring type BasicTests.FilterTests).
+Local variables: 2
+Log : cur sel:makeError, cur method: makeError (declaring type BasicTests.FilterTests).
+Local variables: 2
+A NotImplementedException was raised.
+Log : cur sel:setProduceError, cur method: setProduceError (declaring type BasicTests.FilterTests).
+Local variables: 2
+Log : cur sel:makeTrip, cur method: makeTrip (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.FilterTests.makeTrip()
+Log : cur sel:makeOutsideTrip, cur method: makeOutsideTrip (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.FilterTests.makeOutsideTrip()
+BasicTests.FilterTestsHelper.makeTrip()

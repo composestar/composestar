@@ -92,10 +92,6 @@
 		<ant target="deploy" dir="Source/VSIntegration/VisualStudio.Project" />
 	</target>
 
-	<!-- Composestar.StarLight.Weaving.dll:     Composestar.StarLight.Weaving -->
-	<!-- Composestar.StarLight.ContextInfo.dll: Composestar.StarLight.Weaving -->
-	<!-- Composestar.StarLight.Filters.dll:     StarLight.Filters -->
-
 	<!-- QA -->
 
 	<target name="init_qa" depends="init">
@@ -217,10 +213,7 @@
 		<antcall target="test_ntime" /> 
 		Disabled, because the tests do not work correctly
 		-->
-		<!--
 		<antcall target="systemtest"/>
-		Disabled for now
-		-->
 	</target>
 
 	<target name="init_test" >
@@ -282,7 +275,7 @@
 		</cs:dn_msbatch>
 		
 		<echo level="info">Building tests</echo>
-		<cs:dn_msbatch>
+		<cs:dn_msbatch failOnError="true">
 			<fileset refid="systemtest.solutions"/>
 		</cs:dn_msbatch>
 
@@ -291,6 +284,7 @@
 	<!-- fancy menu -->
 
 	<target name="clean_deploy" depends="clean,deploy"></target>
+	<target name="clean_deploy_test" depends="clean,deploy,test"></target>
 
 	<target name="select" depends="init">
 		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar"/>
@@ -321,6 +315,7 @@
 					<antMenuItem name="All"           target="test"/>
 					<antMenuItem name="NUnit"         target="test_nunit"/>
 					<antMenuItem name="NTime"         target="test_ntime"/>
+					<antMenuItem name="Systemtest"    target="systemtest"/>
 				</antMenuItem>
 				<antMenuItem name="QA">
 					<antMenuItem name="All"           target="qa"/>
@@ -334,9 +329,9 @@
 			</antMenuItem>
 
 			<link label="Build" target="build"/>
-			<link label="Clean deploy" target="clean_deploy"/>
+			<link label="Clean, deploy" target="clean_deploy"/>
+			<link label="Clean, deploy, test" target="clean_deploy_test"/>
 			<link label="Quality Assurance" target="qa"/>
-			<link label="Testing" target="test"/>
 			<link label="Documentation" target="documentation"/>
 			<separator/>
 			<link label="Cancel" target="cancel"/>
