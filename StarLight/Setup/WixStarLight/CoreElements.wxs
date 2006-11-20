@@ -57,17 +57,19 @@
       </Directory>
       <Directory Id ='Binaries' Name='Binaries' />
       <Component Id='Registry' Guid ='0F390058-3D07-496a-8AA3-EF1DC4C64B13'>
-        <Registry Id='RegInstallDir' Root='HKLM' Key='Software\Composestar\StarLight' Name='StarLightInstallFolder'
+        <Registry Id='RegCurrentVersion' Root='HKLM' Key='Software\ComposeStar\StarLight' Name='CurrentVersion'
+  Action='write' Type='string' Value='$(var.ProductVersionText)' />
+        <Registry Id='RegInstallDir' Root='HKLM' Key='Software\ComposeStar\StarLight\$(var.ProductVersionText)' Name='StarLightInstallFolder'
   Action='write' Type='string' Value='[INSTALLDIR]' />
-        <Registry Id='RegMainClass' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaMainClass'
+        <Registry Id='RegMainClass' Root='HKLM' Key='Software\ComposeStar\StarLight\$(var.ProductVersionText)' Name='JavaMainClass'
    Action='write' Type='string' Value='Composestar.DotNET.MASTER.StarLightMaster' />
-        <Registry Id='RegJavaOptions' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaOptions'
+        <Registry Id='RegJavaOptions' Root='HKLM' Key='Software\ComposeStar\StarLight\$(var.ProductVersionText)' Name='JavaOptions'
    Action='write' Type='string' Value='-Xmx512M' />
-        <Registry Id='RegJavaFolder' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaFolder'
+        <Registry Id='RegJavaFolder' Root='HKLM' Key='Software\ComposeStar\StarLight\$(var.ProductVersionText)' Name='JavaFolder'
   Action='write' Type='string' Value='[JAVALOC]\bin\' />
-        <Registry Id='RegWeaveStrategies' Root='HKLM' Key='Software\Composestar\StarLight' Name='WeaveStrategiesFolder'
+        <Registry Id='RegWeaveStrategies' Root='HKLM' Key='Software\ComposeStar\StarLight\$(var.ProductVersionText)' Name='WeaveStrategiesFolder'
   Action='write' Type='string' Value='[WeaveStrategies]' />
-        <Registry Id='RegJavaClassPath' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaClassPath'
+        <Registry Id='RegJavaClassPath' Root='HKLM' Key='Software\ComposeStar\StarLight\$(var.ProductVersionText)' Name='JavaClassPath'
   Action='write' Type='string' Value='[CompileTime]ComposestarCore.jar;[CompileTime]Starlight.jar;[CompileTime]xmltypes.jar;[AntlrFolder]antlr.jar;[PrologFolder]prolog.jar;[XmlBeansFolder]jsr173_1.0_api.jar;[XmlBeansFolder]resolver.jar;[XmlBeansFolder]xbean.jar;[XmlBeansFolder]xbean_xpath.jar;[XmlBeansFolder]xmlpublic.jar;[GrooveFolder]groove-1_2_0.jar;[GrooveFolder]castor-0_9_5_2-xml.jar;[GrooveFolder]xerces-2_6_0-xml-apis.jar;[GrooveFolder]xerces-2_6_0-xercesImpl.jar;[GrooveFolder]jgraph.jar' />
       </Component>
     </DirectoryRef>

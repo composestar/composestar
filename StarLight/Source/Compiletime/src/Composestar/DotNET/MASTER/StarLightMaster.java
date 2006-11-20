@@ -41,7 +41,7 @@ public class StarLightMaster extends Master
 {
 	private static final String MODULENAME = "MASTER";
 
-	private static String version = "0.1 beta";
+	private static String version = "0.2 beta";
 	private static String author = "University of Twente";
 	private static String title = "ComposeStar StarLight";
 

@@ -20,7 +20,7 @@ public class StarLightServer {
 	
 	}
 		
-	public void StartServer()
+	public void startServer()
 	{
 		while (true)
 		{
@@ -37,6 +37,6 @@ public class StarLightServer {
 	public static void main(String[] args) 
 	{
 		StarLightServer server = new StarLightServer();
-		server.StartServer(); 	
+		server.startServer(); 	
 	}
 }

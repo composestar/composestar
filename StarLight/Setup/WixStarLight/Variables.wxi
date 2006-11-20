@@ -3,10 +3,10 @@
   
   <!-- General settings -->
   <?define ProductShortName = "StarLight" ?>
-  <?define ProductVersion = "0.1.0" ?>
-  <?define ProductVersionText = "0.1" ?>
+  <?define ProductVersion = "0.2.0" ?>
+  <?define ProductVersionText = "0.2" ?>
   <?define Manufacturer = "University of Twente" ?>
-  <?define UpgradeCode = "697DC119-E7E0-4b83-930D-706366AC1382" ?>
+  <?define UpgradeCode = "D7A4BED9-24C4-42f8-9C20-4CB905F54488" ?>
   <?define LICENSE_TYPE = "commercial" ?>
   
   <!-- GUIDs for the components -->

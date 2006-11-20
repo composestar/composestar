@@ -24,10 +24,10 @@
     <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
-      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.1\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.2\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -40,5 +40,5 @@
   <!-- Import the CSharp targets -->
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
   <!--Import the StarLight targets-->
-  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.1\StarLight.targets" />  
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.2\StarLight.targets" />  
 </Project>

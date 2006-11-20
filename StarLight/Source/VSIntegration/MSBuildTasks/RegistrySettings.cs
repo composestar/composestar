@@ -78,11 +78,29 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// Reads the settings.
         /// </summary>
         [RegistryPermissionAttribute(System.Security.Permissions.SecurityAction.Demand,
-              Read = "HKEY_LOCAL_MACHINE\\Software\\Composestar\\StarLight")]
+              Read = "HKEY_LOCAL_MACHINE\\Software\\ComposeStar\\StarLight")]
         public bool ReadSettings()
         {
           
-            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"Software\Composestar\StarLight");
+            // Get the current version
+            RegistryKey regKeyVersion = Registry.LocalMachine.OpenSubKey(@"Software\ComposeStar\StarLight");
+
+            string currentversion;
+
+            if (regKeyVersion != null)
+            {
+                currentversion = (string)regKeyVersion.GetValue("CurrentVersion", "");                
+            }
+            else
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(currentversion))
+                return false;
+
+            // Open the hive with the correct version specific settings
+            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"Software\ComposeStar\StarLight\" + currentversion);
 
             if (regKey != null)
             {
@@ -112,7 +130,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <returns></returns>
         [SuppressMessage("Microsoft.Naming", "CA1705")]
         [RegistryPermissionAttribute(System.Security.Permissions.SecurityAction.Demand,
-          Read = "HKEY_LOCAL_MACHINE\\Software\\Composestar\\StarLight")]
+        Read = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\.NETFramework")]
         public static string RetrieveNetSDKLocation()
         {
             RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework");

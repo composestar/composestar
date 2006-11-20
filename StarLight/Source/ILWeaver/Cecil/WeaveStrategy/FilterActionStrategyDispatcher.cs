@@ -132,11 +132,28 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
         /// </summary>
         /// <returns>String</returns>
         [RegistryPermissionAttribute(System.Security.Permissions.SecurityAction.Demand,
-            Read = "HKEY_LOCAL_MACHINE\\Software\\Composestar\\StarLight")]
+            Read = "HKEY_LOCAL_MACHINE\\Software\\ComposeStar\\StarLight")]
         private static string GetWeaveStrategiesLocation()
         {
-            
-            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"Software\Composestar\StarLight");
+
+            // Get the current version
+            RegistryKey regKeyVersion = Registry.LocalMachine.OpenSubKey(@"Software\ComposeStar\StarLight");
+
+            string currentversion;
+
+            if (regKeyVersion != null)
+            {
+                currentversion = (string)regKeyVersion.GetValue("CurrentVersion", "");
+            }
+            else
+            {
+                return string.Empty ;
+            }
+
+            if (string.IsNullOrEmpty(currentversion))
+                return string.Empty;
+
+            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"Software\ComposeStar\StarLight\" + currentversion);
 
             if (regKey != null)
             {

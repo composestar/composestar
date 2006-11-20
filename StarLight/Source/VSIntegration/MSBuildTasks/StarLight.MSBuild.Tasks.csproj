@@ -53,9 +53,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Target Files\StarLight\1.0\StarLight.targets">
-      <Link>Target\StarLight.targets</Link>
-    </None>
     <Compile Include="CpsParserTask\BuilderConfigurator.cs" />
     <Compile Include="CpsParserTask\CpsParserTask.cs" />
     <Compile Include="DummiesTask\DummiesTask.cs" />
@@ -65,6 +62,9 @@
     <Compile Include="ILVerifyTask\ILVerifyTask.cs" />
     <Compile Include="ILWeaverTask\BuilderConfigurator.cs" />
     <Compile Include="ILWeaverTask\ILWeaverTask.cs" />
+    <None Include="..\Target Files\StarLight\0.2\StarLight.targets">
+      <Link>Target\StarLight.targets</Link>
+    </None>
     <None Include="MasterCallerTask\JavaServerTask.cs" />
     <Compile Include="MasterCallerTask\MasterCallerTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

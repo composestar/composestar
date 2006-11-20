@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='Windows-1252'?>
 <!-- 
 
-  Setup script for ComposeStar StarLight version 0.1.0
+  Setup script for ComposeStar StarLight version 0.2.0
 
 -->
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
   <?include $(var.VariablesFile)?>
-  <Product Id='390B533D-4CFA-4ff3-A240-CC7BA2A49CE7' UpgradeCode="$(var.UpgradeCode)" 
+  <Product Id='9D831271-7BBA-4ac5-80C3-8B5499B29D4D' UpgradeCode="$(var.UpgradeCode)" 
   Name="$(var.ProductShortName) $(var.ProductVersionText)" Version="$(var.ProductVersion)" Language="1033" Manufacturer="$(var.Manufacturer)">
 
-    <Package Id='78441E26-4E03-4d8d-80AA-865E5B06BE57' Keywords='Installer'
+    <Package Id='3154DC67-F092-44eb-B1C7-44FCDF24D205' Keywords='Installer'
              Compressed="yes" Description="$(var.ProductShortName) $(var.ProductVersionText) ($(var.ProductVersion))" 
              InstallerVersion="200" ShortNames="no" Manufacturer="$(var.Manufacturer)" Platforms="Intel"
       Comments='ComposeStar StarLight is a project of the University of Twente.' Languages='1033' />
@@ -19,7 +19,7 @@
     <!-- Major upgrade -->
     <Upgrade Id="$(var.UpgradeCode)">
       <UpgradeVersion Minimum="$(var.ProductVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
-      <UpgradeVersion Minimum="0.0.0" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED" />
+      <UpgradeVersion Minimum="0.1.0" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED" />
     </Upgrade>
 
     <!-- Properties -->

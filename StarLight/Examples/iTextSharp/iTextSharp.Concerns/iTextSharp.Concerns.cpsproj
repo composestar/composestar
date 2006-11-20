@@ -24,10 +24,10 @@
     <VerifyIL>False</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
-      <HintPath>C:\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>C:\Program Files\MSBuild\StarLight\0.2\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
@@ -67,7 +67,7 @@
   <!-- Import the CSharp targets -->
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!--Import the StarLight targets-->
-  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.1\StarLight.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.2\StarLight.targets" />
   <Target Name="AfterWeave">
     <Message Text="Re-signing the iTextSharp assembly." />
     <Exec Command="sn -R $(OutDir)iTextSharp.dll ..\iTextSharp\itextsharp.snk" />

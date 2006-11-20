@@ -23,13 +23,13 @@
     <VerifyIL>False</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
       <HintPath>C:\Program Files\ComposeStar\StarLight 0.1\CoreElements\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Composestar.StarLight.Filters, Version=1.0.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+    <Reference Include="Composestar.StarLight.Filters, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
       <Name>Composestar.StarLight.Filters</Name>
       <AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>
       <HintPath>C:\Program Files\ComposeStar\StarLight 0.1\CoreElements\Composestar.StarLight.Filters.dll</HintPath>
@@ -66,5 +66,5 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.1\StarLight.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.2\StarLight.targets" />
 </Project>

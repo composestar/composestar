@@ -12,7 +12,7 @@
         <Directory Id="Dir_MSBuildMSStarLight" Name="STARLGHT" LongName="StarLight">
           <Directory Id="Dir_MSBuildStarLight10" Name="$(var.ProductVersionText)">
             <Component Id="Comp_MSBuild" DiskId="1" Guid="$(var.Comp_MSBuild_Guid)">
-              <File Id="File_Targets" Name="TARGETS" LongName="StarLight.targets" src="..\..\Source\VSIntegration\Target Files\StarLight\1.0\" />
+              <File Id="File_Targets" Name="TARGETS" LongName="StarLight.targets" src="..\..\Source\VSIntegration\Target Files\StarLight\$(var.ProductVersionText)\" />
               <File Id="File_Tasks" Name="TASKS" LongName="Composestar.StarLight.MSBuild.Tasks.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks2" Name="TASKS2" LongName="Composestar.StarLight.Entities.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks3" Name="TASKS3" LongName="Composestar.StarLight.ContextInfo.dll" src="$(var.IntegrationTasksPath)\" />
