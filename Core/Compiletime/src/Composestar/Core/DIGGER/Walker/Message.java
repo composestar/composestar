@@ -10,7 +10,9 @@
 
 package Composestar.Core.DIGGER.Walker;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
@@ -52,9 +54,14 @@ public class Message
 	protected boolean recursive;
 	
 	/**
-	 * Will be set
+	 * Will be set during substitution to the FilterElement
 	 */
 	protected RepositoryEntity re;
+	
+	/**
+	 * List of cloned messages
+	 */
+	protected List clones;
 	
 	/**
 	 * Don't call this constructor directly. Use MessageGenerator.getMessageFor()
@@ -66,6 +73,7 @@ public class Message
 	{
 		concernNode = inConcernNode;
 		selector = inSelector;
+		clones = new ArrayList();
 	}
 	
 	/**
@@ -79,6 +87,7 @@ public class Message
 		selector = base.getSelector();
 		certenty = base.getCertenty();
 		re = base.getRE();
+		clones = new ArrayList();
 	}
 	
 	public AbstractConcernNode getConcernNode()
@@ -134,6 +143,16 @@ public class Message
 	public RepositoryEntity getRE()
 	{
 		return re;
+	}
+	
+	public void addClone(Message clone)
+	{
+		clones.add(clone);
+	}
+	
+	public Iterator getClones()
+	{
+		return clones.iterator();
 	}
 	
 	/**

@@ -167,6 +167,10 @@ public class NOBBIN
 					if (expr > ConditionExpression.RESULT_TRUE)
 					{
 						// branch
+						if (Debug.willLog(Debug.MODE_DEBUG))
+						{
+							logger.debug("Branch");
+						}
 						Message newMsg = gen.cloneMessage(msg);
 						newMsg.setCertenty(expr);
 						List newTrace = new ArrayList(trace);
@@ -183,21 +187,30 @@ public class NOBBIN
 				else if (e instanceof SubstitutionEdge)
 				{
 					trace.add(msg);
-					msg = gen.xform(msg, (SubstitutionEdge) e);
-					msg.setRE(origNode.getRepositoryEntity());
-					node = e.getDestination();
+					Message newMsg = gen.xform(msg, (SubstitutionEdge) e);
+					logger.debug(msg+" substituted for "+newMsg);
+					
+					newMsg.setRE(origNode.getRepositoryEntity());
+					Node snode = e.getDestination();
 
 					// only check for recursion when the destination is a
 					// concern
-					if (node instanceof AbstractConcernNode)
+					if (snode instanceof AbstractConcernNode)
 					{
-						if (trace.contains(msg))
+						if (trace.contains(newMsg))
 						{
-							reportRecursion(msg, trace);
+							reportRecursion(newMsg, trace);
 							return result;
 						}
 					}
+					// TODO: fork? because of possible append\prepend?
+					msg = newMsg;
+					node = snode;
 					break;
+					
+					//List newTrace = new ArrayList(trace);
+					//result.addAll(walk(snode, newMsg, newTrace));
+					//continue;
 				}
 				else if (e instanceof LambdaEdge)
 				{
