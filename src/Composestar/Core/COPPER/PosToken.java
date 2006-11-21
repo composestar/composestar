@@ -74,9 +74,9 @@ public class PosToken extends CommonToken {
 
 
   /**
-   * Sets the position in the line this token is found
+   * Sets the byte position in the file this token is found at
    *
-   * @param c position in the line
+   * @param c position in the file
    */
   public void setBytePos(int c) {
     bytePos = c;
@@ -84,9 +84,9 @@ public class PosToken extends CommonToken {
 
 
   /**
-   * Gets the position in a line that is this token is found at
+   * Gets the byte position in the file that this token is found at
    *
-   * @return position in a line
+   * @return position in the file
    */
   public int getBytePos() {
     return bytePos;
