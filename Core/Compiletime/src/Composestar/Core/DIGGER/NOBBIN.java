@@ -31,7 +31,7 @@ import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
-import Composestar.Utils.Logger;
+import Composestar.Utils.CPSLogger;
 
 /**
  * A NOBBIN will walk the paths created by DIGGER in order to produce a set of
@@ -44,7 +44,7 @@ public class NOBBIN
 {
 	public static final String MODULE_NAME = "NOBBIN";
 
-	protected static final Logger logger = Logger.getLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	protected Graph graph;
 

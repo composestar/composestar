@@ -1,10 +1,10 @@
 package Composestar.Utils;
 
-public class Logger
+public class CPSLogger
 {
 	private final String name;
 	
-	protected Logger(String name)
+	protected CPSLogger(String name)
 	{
 		this.name = name;
 	}
@@ -34,8 +34,8 @@ public class Logger
 		Debug.out(Debug.MODE_DEBUG, name, msg);
 	}
 
-	public static Logger getLogger(String name)
+	public static CPSLogger getCPSLogger(String name)
 	{
-		return new Logger(name);
+		return new CPSLogger(name);
 	}
 }

@@ -29,7 +29,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
-import Composestar.Utils.Logger;
+import Composestar.Utils.CPSLogger;
 
 /**
  * DIGGER - DIspatch Graph GEneratoR
@@ -40,7 +40,7 @@ public class DIGGER implements CTCommonModule
 {
 	public static final String MODULE_NAME = "DIGGER";
 
-	protected static final Logger logger = Logger.getLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	/**
 	 * The key for the dispatch graph in repository

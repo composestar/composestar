@@ -24,7 +24,7 @@ import Composestar.Core.DIGGER.Graph.ConcernNode;
 import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
-import Composestar.Utils.Logger;
+import Composestar.Utils.CPSLogger;
 
 /**
  * Creates and manages messages for certain concerns + selectors.
@@ -33,7 +33,7 @@ import Composestar.Utils.Logger;
  */
 public class MessageGenerator
 {
-	protected static final Logger logger = Logger.getLogger(NOBBIN.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(NOBBIN.MODULE_NAME);
 	
 	protected Map msgCache;
 

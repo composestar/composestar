@@ -42,7 +42,7 @@ import Composestar.Core.DIGGER.Graph.SimpleConcernNode;
 import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Utils.Logger;
+import Composestar.Utils.CPSLogger;
 
 /**
  * Exports the generated dispatch graph to an XML file
@@ -51,7 +51,7 @@ import Composestar.Utils.Logger;
  */
 public class XmlExporter
 {
-	protected static final Logger logger = Logger.getLogger(DIGGER.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DIGGER.MODULE_NAME);
 	
 	/**
 	 * If true add comments

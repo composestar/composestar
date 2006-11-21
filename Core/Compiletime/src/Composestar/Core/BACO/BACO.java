@@ -15,12 +15,12 @@ import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.FileUtils;
-import Composestar.Utils.Logger;
+import Composestar.Utils.CPSLogger;
 
 public abstract class BACO implements CTCommonModule
 {
 	public static final String MODULE_NAME = "BACO";
-	private static final Logger logger = Logger.getLogger(MODULE_NAME);
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	public BACO()
 	{}
