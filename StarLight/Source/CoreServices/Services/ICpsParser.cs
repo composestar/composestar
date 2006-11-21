@@ -1,7 +1,7 @@
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace Composestar.StarLight.CoreServices
 {
@@ -30,11 +30,18 @@ namespace Composestar.StarLight.CoreServices
 		/// <value>
 		/// 	<c>true</c> if the input had embedded code; otherwise, <c>false</c>.
 		/// </value>
-		bool HasEmbeddedCode { get; }
+		EmbeddedCode EmbeddedCode { get; }
 
 		/// <summary>
 		/// Parses the input.
 		/// </summary>
 		void Parse();
+	}
+
+	public class EmbeddedCode
+	{
+		public string language;
+		public string filename;
+		public string code;
 	}
 }

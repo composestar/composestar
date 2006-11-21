@@ -28,6 +28,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		private string _repositoryFileName;
 		private ITaskItem[] _concernFiles;
 		private ITaskItem[] _referencedTypes;
+		private IList<ITaskItem> _extraSources;
 		private bool _hasOutputFilters;
 		private bool _concernsDirty;
 
@@ -38,6 +39,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </summary>
 		public CpsParserTask() : base(Properties.Resources.ResourceManager)
 		{
+			_extraSources = new List<ITaskItem>();
 		}
 		#endregion
 
@@ -47,10 +49,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Gets or sets the repository filename.
 		/// </summary>
 		/// <value>The repository filename.</value>
-		[Required()]
+		[Required]
 		public string RepositoryFileName
 		{
-			get { return _repositoryFileName; }
 			set { _repositoryFileName = value; }
 		}
 
@@ -58,10 +59,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Gets or sets the concern files.
 		/// </summary>
 		/// <value>The concern files.</value>
-		[Required()]
+		[Required]
 		public ITaskItem[] ConcernFiles
 		{
-			get { return _concernFiles; }
 			set { _concernFiles = value; }
 		}
 
@@ -69,18 +69,22 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Gets or sets the referenced types.
 		/// </summary>
 		/// <value>The referenced types.</value>
-		[Output()]
+		[Output]
 		public ITaskItem[] ReferencedTypes
 		{
 			get { return _referencedTypes; }
-			set { _referencedTypes = value; }
 		}
 
-		[Output()]
+		[Output]
+		public ITaskItem[] ExtraSources
+		{
+			get { return ToArray(_extraSources); }
+		}
+
+		[Output]
 		public bool HasOutputFilters
 		{
 			get { return _hasOutputFilters; }
-			set { _hasOutputFilters = value; }
 		}
 
 		/// <summary>
@@ -91,7 +95,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		public bool ConcernsDirty
 		{
 			get { return _concernsDirty; }
-			set { _concernsDirty = value; }
 		}
 	
 		#endregion
@@ -109,44 +112,21 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 			try
 			{
-				
 				// Open DB
-				Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFileName);
+				Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", _repositoryFileName);
 				IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance; 
+				ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(_repositoryFileName);               
 
-				ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);               
-
-				// Create a list with all current concerns
-				List<ConcernElement> concernsInConfig = configContainer.Concerns;   
-				
 				// Create a list with the new concerns
 				List<ConcernElement> concernsToAdd = new List<ConcernElement>(); 
 
 				// Parse all concern files and add to the database
-				foreach (ITaskItem item in ConcernFiles)
+				foreach (ITaskItem item in _concernFiles)
 				{
-					String concernFile = item.ToString();
-					string path = Path.GetDirectoryName(concernFile);
-					string filename = Path.GetFileName(concernFile);
-					string fullPath = Path.Combine(path, filename);
-				
-					// Find the concernElement
-					ConcernElement ce = concernsInConfig.Find(delegate(ConcernElement e)
-					{
-						return e.FullPath.Equals(fullPath);
-					});
-
-					bool newConcern = false;
-					if (ce == null)
-					{
-						// create a new ConcernElement
-						ce = new ConcernElement();
-						ce.PathName = path;
-						ce.FileName = filename;
-						ce.Timestamp = File.GetLastWriteTime(concernFile).Ticks;
-						ConcernsDirty = true;
-						newConcern = true;
-					}
+					string concernFile = item.ToString();
+					bool newConcern;
+					
+					ConcernElement ce = FindConcernElement(configContainer, concernFile, out newConcern);
 
 					// Do a time check, if new or change, run the parser and store the data
 					if (newConcern || File.GetLastWriteTime(concernFile).Ticks > ce.Timestamp)
@@ -163,47 +143,46 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						// Indicate if there are any outputfilters
 						ce.HasOutputFilters = parser.HasOutputFilters;
 
-						// Indicate if there is embedded code
-						ce.HasEmbeddedCode = parser.HasEmbeddedCode;
+						// Store the embedded code (if any)
+						StoreEmbeddedCode(parser.EmbeddedCode);
 
 						// Add the referenced types
-                        ce.ReferencedTypes.AddRange(parser.ReferencedTypes);  						
+						ce.ReferencedTypes.AddRange(parser.ReferencedTypes);
 
 						// Indicate that the concerns are most likely dirty
-						ConcernsDirty = true;
+						_concernsDirty = true;
 					}
 					else
 					{
 						Log.LogMessageFromResources("AddingConcernFile", concernFile);
 					}
 
-					// If this concern has output filters, then enable (do not override a previously set true value)
-					HasOutputFilters |= ce.HasOutputFilters;
+					_hasOutputFilters |= ce.HasOutputFilters;
 
-                    refTypes.AddRange(ce.ReferencedTypes);
+					refTypes.AddRange(ce.ReferencedTypes);
 
 					concernsToAdd.Add(ce);
 				}
 
 				sw.Stop();
 
-				Log.LogMessageFromResources("FoundReferenceType", refTypes.Count, ConcernFiles.Length, sw.Elapsed.TotalSeconds);
+				Log.LogMessageFromResources("FoundReferenceType", refTypes.Count, _concernFiles.Length, sw.Elapsed.TotalSeconds);
 
 				// Pass all the referenced types back to msbuild
 				if (refTypes != null && refTypes.Count > 0)
 				{
 					int index = 0;
-					ReferencedTypes = new ITaskItem[refTypes.Count];
+					_referencedTypes = new ITaskItem[refTypes.Count];
 					foreach (String type in refTypes)
 					{
-						ReferencedTypes[index] = new TaskItem(type);
+						_referencedTypes[index] = new TaskItem(type);
 						index++;
-					}                    
+					}
 				}
 
 				// Save the configContainer
 				configContainer.Concerns = concernsToAdd;  
-				entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer); 
+				entitiesAccessor.SaveConfiguration(_repositoryFileName, configContainer); 
 			}
 			catch (CpsParserException ex)
 			{
@@ -215,7 +194,57 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			}
 				
 			return !Log.HasLoggedErrors;
-		} 
+		}
+
+		private ConcernElement FindConcernElement(ConfigurationContainer cc, string concernFile, 
+			out bool newConcern)
+		{
+			string basePath = Path.GetDirectoryName(concernFile);
+			string filename = Path.GetFileName(concernFile);
+			string fullPath = Path.Combine(basePath, filename);
+
+			ConcernElement ce = cc.Concerns.Find(delegate(ConcernElement e)
+			{
+				return e.FullPath.Equals(fullPath);
+			});
+
+			if (ce == null)
+			{
+				// create a new ConcernElement
+				ce = new ConcernElement();
+				ce.PathName = basePath;
+				ce.FileName = filename;
+				ce.Timestamp = File.GetLastWriteTime(concernFile).Ticks;
+				_concernsDirty = true;
+				newConcern = true;
+			}
+			else
+				newConcern = false;
+
+			return ce;
+		}
+
+		/// <summary>
+		/// Writes the specified embedded code to a file.
+		/// </summary>
+		private void StoreEmbeddedCode(EmbeddedCode ec)
+		{
+			if (ec == null) return;
+
+			string filename = Path.Combine("c:\\", ec.filename);
+			using (StreamWriter sw = File.CreateText(filename))
+			{
+				sw.Write(ec.code);
+				_extraSources.Add(new TaskItem(filename));
+			}
+		}
+
+		private ITaskItem[] ToArray(IList<ITaskItem> items)
+		{
+			ITaskItem[] arr = new ITaskItem[_extraSources.Count];
+			_extraSources.CopyTo(arr, 0);
+			return arr;
+		}
 
 		/// <summary>
 		/// Creates the services container.

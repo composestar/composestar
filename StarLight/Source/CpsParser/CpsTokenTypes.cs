@@ -1,6 +1,17 @@
-// $ANTLR 2.7.6 (2005-12-22): "cps.g" -> "CpsLexer.cs"$
+// $ANTLR 2.7.6 (2005-12-22): "cps-csharp.g" -> "CpsLexer.cs"$
 
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id: cps.g 2772 2006-11-15 15:56:35Z arjanderoo $
+ */
 
+//package Composestar.Core.COPPER;
+using StringBuffer = System.Text.StringBuilder;
 
 namespace Composestar.StarLight.CpsParser
 {
@@ -55,63 +66,63 @@ namespace Composestar.StarLight.CpsParser
 		public const int TYPE_ = 48;
 		public const int VAR_ = 49;
 		public const int APS_ = 50;
-		public const int LITERAL_concern = 51;
-		public const int NAME = 52;
-		public const int LPARENTHESIS = 53;
-		public const int RPARENTHESIS = 54;
-		public const int LITERAL_in = 55;
-		public const int SEMICOLON = 56;
-		public const int COMMA = 57;
-		public const int COLON = 58;
-		public const int DOT = 59;
-		public const int LCURLY = 60;
-		public const int RCURLY = 61;
-		public const int LITERAL_filtermodule = 62;
-		public const int PARAMETER_NAME = 63;
-		public const int PARAMETERLIST_NAME = 64;
-		public const int LITERAL_internals = 65;
-		public const int LITERAL_externals = 66;
-		public const int EQUALS = 67;
-		public const int DOUBLE_COLON = 68;
-		public const int STAR = 69;
-		public const int LITERAL_conditions = 70;
-		public const int LITERAL_inputfilters = 71;
-		public const int FILTER_OP = 72;
-		public const int OR = 73;
-		public const int AND = 74;
-		public const int NOT = 75;
-		public const int HASH = 76;
-		public const int LSQUARE = 77;
-		public const int RSQUARE = 78;
-		public const int LANGLE = 79;
-		public const int RANGLE = 80;
-		public const int SINGLEQUOTE = 81;
+		public const int PROLOG_EXPRESSION = 51;
+		public const int LITERAL_concern = 52;
+		public const int NAME = 53;
+		public const int LPARENTHESIS = 54;
+		public const int RPARENTHESIS = 55;
+		public const int LITERAL_in = 56;
+		public const int SEMICOLON = 57;
+		public const int COMMA = 58;
+		public const int COLON = 59;
+		public const int DOT = 60;
+		public const int LCURLY = 61;
+		public const int RCURLY = 62;
+		public const int LITERAL_filtermodule = 63;
+		public const int PARAMETER_NAME = 64;
+		public const int PARAMETERLIST_NAME = 65;
+		public const int LITERAL_internals = 66;
+		public const int LITERAL_externals = 67;
+		public const int EQUALS = 68;
+		public const int DOUBLE_COLON = 69;
+		public const int STAR = 70;
+		public const int LITERAL_conditions = 71;
+		public const int LITERAL_inputfilters = 72;
+		public const int FILTER_OP = 73;
+		public const int OR = 74;
+		public const int AND = 75;
+		public const int NOT = 76;
+		public const int HASH = 77;
+		public const int LSQUARE = 78;
+		public const int RSQUARE = 79;
+		public const int LANGLE = 80;
+		public const int RANGLE = 81;
 		public const int LITERAL_outputfilters = 82;
 		public const int LITERAL_superimposition = 83;
 		public const int LITERAL_selectors = 84;
-		public const int PROLOG_EXPRESSION = 85;
-		public const int ARROW_LEFT = 86;
-		public const int LITERAL_filtermodules = 87;
-		public const int LITERAL_annotations = 88;
-		public const int LITERAL_constraints = 89;
-		public const int LITERAL_presoft = 90;
-		public const int LITERAL_pre = 91;
-		public const int LITERAL_prehard = 92;
-		public const int LITERAL_implementation = 93;
-		public const int LITERAL_by = 94;
-		public const int LITERAL_as = 95;
-		public const int FILENAME = 96;
-		public const int QUESTIONMARK = 97;
-		public const int DIGIT = 98;
-		public const int FILE_SPECIAL = 99;
-		public const int LETTER = 100;
-		public const int NEWLINE = 101;
-		public const int SPECIAL = 102;
-		public const int QUOTE = 103;
-		public const int COMMENTITEMS = 104;
-		public const int COMMENT = 105;
-		public const int WS = 106;
-		public const int PROLOG_SUB_EXPRESSION = 107;
+		public const int ARROW_LEFT = 85;
+		public const int LITERAL_filtermodules = 86;
+		public const int LITERAL_annotations = 87;
+		public const int LITERAL_constraints = 88;
+		public const int LITERAL_presoft = 89;
+		public const int LITERAL_pre = 90;
+		public const int LITERAL_prehard = 91;
+		public const int LITERAL_implementation = 92;
+		public const int LITERAL_by = 93;
+		public const int LITERAL_as = 94;
+		public const int FILENAME = 95;
+		public const int QUESTIONMARK = 96;
+		public const int DIGIT = 97;
+		public const int FILE_SPECIAL = 98;
+		public const int LETTER = 99;
+		public const int NEWLINE = 100;
+		public const int SPECIAL = 101;
+		public const int QUOTE = 102;
+		public const int SINGLEQUOTE = 103;
+		public const int PROLOG_STRING = 104;
+		public const int COMMENTITEMS = 105;
+		public const int COMMENT = 106;
+		public const int WS = 107;
 		
 	}
 }

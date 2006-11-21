@@ -1,6 +1,17 @@
-// $ANTLR 2.7.6 (2005-12-22): "cps.g" -> "CpsLexer.cs"$
+// $ANTLR 2.7.6 (2005-12-22): "cps-csharp.g" -> "CpsLexer.cs"$
 
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id: cps.g 2772 2006-11-15 15:56:35Z arjanderoo $
+ */
 
+//package Composestar.Core.COPPER;
+using StringBuffer = System.Text.StringBuilder;
 
 namespace Composestar.StarLight.CpsParser
 {
@@ -83,63 +94,63 @@ namespace Composestar.StarLight.CpsParser
 		public const int TYPE_ = 48;
 		public const int VAR_ = 49;
 		public const int APS_ = 50;
-		public const int LITERAL_concern = 51;
-		public const int NAME = 52;
-		public const int LPARENTHESIS = 53;
-		public const int RPARENTHESIS = 54;
-		public const int LITERAL_in = 55;
-		public const int SEMICOLON = 56;
-		public const int COMMA = 57;
-		public const int COLON = 58;
-		public const int DOT = 59;
-		public const int LCURLY = 60;
-		public const int RCURLY = 61;
-		public const int LITERAL_filtermodule = 62;
-		public const int PARAMETER_NAME = 63;
-		public const int PARAMETERLIST_NAME = 64;
-		public const int LITERAL_internals = 65;
-		public const int LITERAL_externals = 66;
-		public const int EQUALS = 67;
-		public const int DOUBLE_COLON = 68;
-		public const int STAR = 69;
-		public const int LITERAL_conditions = 70;
-		public const int LITERAL_inputfilters = 71;
-		public const int FILTER_OP = 72;
-		public const int OR = 73;
-		public const int AND = 74;
-		public const int NOT = 75;
-		public const int HASH = 76;
-		public const int LSQUARE = 77;
-		public const int RSQUARE = 78;
-		public const int LANGLE = 79;
-		public const int RANGLE = 80;
-		public const int SINGLEQUOTE = 81;
+		public const int PROLOG_EXPRESSION = 51;
+		public const int LITERAL_concern = 52;
+		public const int NAME = 53;
+		public const int LPARENTHESIS = 54;
+		public const int RPARENTHESIS = 55;
+		public const int LITERAL_in = 56;
+		public const int SEMICOLON = 57;
+		public const int COMMA = 58;
+		public const int COLON = 59;
+		public const int DOT = 60;
+		public const int LCURLY = 61;
+		public const int RCURLY = 62;
+		public const int LITERAL_filtermodule = 63;
+		public const int PARAMETER_NAME = 64;
+		public const int PARAMETERLIST_NAME = 65;
+		public const int LITERAL_internals = 66;
+		public const int LITERAL_externals = 67;
+		public const int EQUALS = 68;
+		public const int DOUBLE_COLON = 69;
+		public const int STAR = 70;
+		public const int LITERAL_conditions = 71;
+		public const int LITERAL_inputfilters = 72;
+		public const int FILTER_OP = 73;
+		public const int OR = 74;
+		public const int AND = 75;
+		public const int NOT = 76;
+		public const int HASH = 77;
+		public const int LSQUARE = 78;
+		public const int RSQUARE = 79;
+		public const int LANGLE = 80;
+		public const int RANGLE = 81;
 		public const int LITERAL_outputfilters = 82;
 		public const int LITERAL_superimposition = 83;
 		public const int LITERAL_selectors = 84;
-		public const int PROLOG_EXPRESSION = 85;
-		public const int ARROW_LEFT = 86;
-		public const int LITERAL_filtermodules = 87;
-		public const int LITERAL_annotations = 88;
-		public const int LITERAL_constraints = 89;
-		public const int LITERAL_presoft = 90;
-		public const int LITERAL_pre = 91;
-		public const int LITERAL_prehard = 92;
-		public const int LITERAL_implementation = 93;
-		public const int LITERAL_by = 94;
-		public const int LITERAL_as = 95;
-		public const int FILENAME = 96;
-		public const int QUESTIONMARK = 97;
-		public const int DIGIT = 98;
-		public const int FILE_SPECIAL = 99;
-		public const int LETTER = 100;
-		public const int NEWLINE = 101;
-		public const int SPECIAL = 102;
-		public const int QUOTE = 103;
-		public const int COMMENTITEMS = 104;
-		public const int COMMENT = 105;
-		public const int WS = 106;
-		public const int PROLOG_SUB_EXPRESSION = 107;
+		public const int ARROW_LEFT = 85;
+		public const int LITERAL_filtermodules = 86;
+		public const int LITERAL_annotations = 87;
+		public const int LITERAL_constraints = 88;
+		public const int LITERAL_presoft = 89;
+		public const int LITERAL_pre = 90;
+		public const int LITERAL_prehard = 91;
+		public const int LITERAL_implementation = 92;
+		public const int LITERAL_by = 93;
+		public const int LITERAL_as = 94;
+		public const int FILENAME = 95;
+		public const int QUESTIONMARK = 96;
+		public const int DIGIT = 97;
+		public const int FILE_SPECIAL = 98;
+		public const int LETTER = 99;
+		public const int NEWLINE = 100;
+		public const int SPECIAL = 101;
+		public const int QUOTE = 102;
+		public const int SINGLEQUOTE = 103;
+		public const int PROLOG_STRING = 104;
+		public const int COMMENTITEMS = 105;
+		public const int COMMENT = 106;
+		public const int WS = 107;
 		
 		public CpsLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
@@ -157,39 +168,30 @@ namespace Composestar.StarLight.CpsParser
 		{
 			initialize();
 		}
-
-        public override void tab()
-        {
-            int t = 4;
-            int c = getColumn();
-            int nc = (((c - 1) / t) + 1) * t + 1;
-            setColumn(nc);
-        }
-
 		private void initialize()
 		{
 			caseSensitiveLiterals = true;
 			setCaseSensitive(true);
 			literals = new Hashtable(100, (float) 0.4, null, Comparer.Default);
-			literals.Add("internals", 65);
+			literals.Add("internals", 66);
 			literals.Add("selectors", 84);
-			literals.Add("constraints", 89);
+			literals.Add("constraints", 88);
 			literals.Add("superimposition", 83);
-			literals.Add("inputfilters", 71);
-			literals.Add("conditions", 70);
+			literals.Add("inputfilters", 72);
+			literals.Add("conditions", 71);
 			literals.Add("outputfilters", 82);
-			literals.Add("pre", 91);
-			literals.Add("in", 55);
-			literals.Add("externals", 66);
-			literals.Add("prehard", 92);
-			literals.Add("annotations", 88);
-			literals.Add("filtermodules", 87);
-			literals.Add("presoft", 90);
-			literals.Add("implementation", 93);
-			literals.Add("concern", 51);
-			literals.Add("filtermodule", 62);
-			literals.Add("by", 94);
-			literals.Add("as", 95);
+			literals.Add("pre", 90);
+			literals.Add("in", 56);
+			literals.Add("externals", 67);
+			literals.Add("prehard", 91);
+			literals.Add("annotations", 87);
+			literals.Add("filtermodules", 86);
+			literals.Add("presoft", 89);
+			literals.Add("implementation", 92);
+			literals.Add("concern", 52);
+			literals.Add("filtermodule", 63);
+			literals.Add("by", 93);
+			literals.Add("as", 94);
 		}
 		
 		override public IToken nextToken()			//throws TokenStreamException
@@ -255,6 +257,12 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
+						case '|':
+						{
+							mOR(true);
+							theRetToken = returnToken_;
+							break;
+						}
 						case '>':
 						{
 							mRANGLE(true);
@@ -293,7 +301,7 @@ tryAgain:
 						}
 						case '\'':
 						{
-							mSINGLEQUOTE(true);
+							mPROLOG_STRING(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -331,7 +339,7 @@ tryAgain:
 						case '\t':  case '\n':  case '\u000c':  case '\r':
 						case ' ':
 						{
-							mWS(false);
+							mWS(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -357,10 +365,6 @@ tryAgain:
 								mPARAMETER_NAME(true);
 								theRetToken = returnToken_;
 							}
-							else if ((cached_LA1=='|') && ((cached_LA2 >= '\u0000' && cached_LA2 <= '\u007f'))) {
-								mPROLOG_EXPRESSION(true);
-								theRetToken = returnToken_;
-							}
 							else if ((cached_LA1==':') && (true)) {
 								mCOLON(true);
 								theRetToken = returnToken_;
@@ -371,10 +375,6 @@ tryAgain:
 							}
 							else if ((cached_LA1=='<') && (true)) {
 								mLANGLE(true);
-								theRetToken = returnToken_;
-							}
-							else if ((cached_LA1=='|') && (true)) {
-								mOR(true);
 								theRetToken = returnToken_;
 							}
 							else if ((cached_LA1=='?') && (true)) {
@@ -718,20 +718,6 @@ tryAgain:
 		returnToken_ = _token;
 	}
 	
-	public void mSINGLEQUOTE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
-{
-		int _ttype; IToken _token=null; int _begin=text.Length;
-		_ttype = SINGLEQUOTE;
-		
-		match('\'');
-		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
-		{
-			_token = makeToken(_ttype);
-			_token.setText(text.ToString(_begin, text.Length-_begin));
-		}
-		returnToken_ = _token;
-	}
-	
 	public void mQUESTIONMARK(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; IToken _token=null; int _begin=text.Length;
@@ -930,16 +916,62 @@ tryAgain:
 		returnToken_ = _token;
 	}
 	
+	protected void mSINGLEQUOTE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; IToken _token=null; int _begin=text.Length;
+		_ttype = SINGLEQUOTE;
+		
+		match('\'');
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
+	public void mPROLOG_STRING(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; IToken _token=null; int _begin=text.Length;
+		_ttype = PROLOG_STRING;
+		
+		mSINGLEQUOTE(false);
+		{    // ( ... )*
+			for (;;)
+			{
+				if ((tokenSet_1_.member(cached_LA1)))
+				{
+					{
+						match(tokenSet_1_);
+					}
+				}
+				else
+				{
+					goto _loop266_breakloop;
+				}
+				
+			}
+_loop266_breakloop:			;
+		}    // ( ... )*
+		mSINGLEQUOTE(false);
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
 	protected void mCOMMENTITEMS(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; IToken _token=null; int _begin=text.Length;
 		_ttype = COMMENTITEMS;
 		
-		bool synPredMatched264 = false;
+		bool synPredMatched269 = false;
 		if (((cached_LA1=='*') && (cached_LA2=='/')))
 		{
-			int _m264 = mark();
-			synPredMatched264 = true;
+			int _m269 = mark();
+			synPredMatched269 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -948,19 +980,19 @@ tryAgain:
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched264 = false;
+				synPredMatched269 = false;
 			}
-			rewind(_m264);
+			rewind(_m269);
 			inputState.guessing--;
 		}
-		if ( synPredMatched264 )
+		if ( synPredMatched269 )
 		{
 			match("*/");
 		}
-		else if ((tokenSet_1_.member(cached_LA1)) && ((cached_LA2 >= '\u0000' && cached_LA2 <= '\u007f'))) {
+		else if ((tokenSet_2_.member(cached_LA1)) && ((cached_LA2 >= '\u0000' && cached_LA2 <= '\u007f'))) {
 			{
 				{
-					match(tokenSet_1_);
+					match(tokenSet_2_);
 				}
 			}
 			mCOMMENTITEMS(false);
@@ -994,19 +1026,19 @@ tryAgain:
 				{    // ( ... )*
 					for (;;)
 					{
-						if ((tokenSet_1_.member(cached_LA1)))
+						if ((tokenSet_2_.member(cached_LA1)))
 						{
 							{
-								match(tokenSet_1_);
+								match(tokenSet_2_);
 							}
 						}
 						else
 						{
-							goto _loop271_breakloop;
+							goto _loop276_breakloop;
 						}
 						
 					}
-_loop271_breakloop:					;
+_loop276_breakloop:					;
 				}    // ( ... )*
 			}
 			else if ((cached_LA1=='/') && (cached_LA2=='*')) {
@@ -1036,17 +1068,17 @@ _loop271_breakloop:					;
 		int _ttype; IToken _token=null; int _begin=text.Length;
 		_ttype = FILENAME;
 		
-		bool synPredMatched276 = false;
-		if (((cached_LA1=='"') && (tokenSet_2_.member(cached_LA2))))
+		bool synPredMatched281 = false;
+		if (((cached_LA1=='"') && (tokenSet_3_.member(cached_LA2))))
 		{
-			int _m276 = mark();
-			synPredMatched276 = true;
+			int _m281 = mark();
+			synPredMatched281 = true;
 			inputState.guessing++;
 			try {
 				{
 					mQUOTE(false);
 					{ // ( ... )+
-						int _cnt275=0;
+						int _cnt280=0;
 						for (;;)
 						{
 							switch ( cached_LA1 )
@@ -1088,31 +1120,31 @@ _loop271_breakloop:					;
 							}
 							default:
 							{
-								if (_cnt275 >= 1) { goto _loop275_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
+								if (_cnt280 >= 1) { goto _loop280_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
 							}
 							break; }
-							_cnt275++;
+							_cnt280++;
 						}
-_loop275_breakloop:						;
+_loop280_breakloop:						;
 					}    // ( ... )+
 					mQUOTE(false);
 				}
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched276 = false;
+				synPredMatched281 = false;
 			}
-			rewind(_m276);
+			rewind(_m281);
 			inputState.guessing--;
 		}
-		if ( synPredMatched276 )
+		if ( synPredMatched281 )
 		{
 			int _saveIndex = 0;
 			_saveIndex = text.Length;
 			mQUOTE(false);
 			text.Length = _saveIndex;
 			{ // ( ... )+
-				int _cnt278=0;
+				int _cnt283=0;
 				for (;;)
 				{
 					switch ( cached_LA1 )
@@ -1154,12 +1186,12 @@ _loop275_breakloop:						;
 					}
 					default:
 					{
-						if (_cnt278 >= 1) { goto _loop278_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
+						if (_cnt283 >= 1) { goto _loop283_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
 					}
 					break; }
-					_cnt278++;
+					_cnt283++;
 				}
-_loop278_breakloop:				;
+_loop283_breakloop:				;
 			}    // ( ... )+
 			_saveIndex = text.Length;
 			mQUOTE(false);
@@ -1257,11 +1289,11 @@ _loop278_breakloop:				;
 				}
 				default:
 				{
-					goto _loop282_breakloop;
+					goto _loop287_breakloop;
 				}
 				 }
 			}
-_loop282_breakloop:			;
+_loop287_breakloop:			;
 		}    // ( ... )*
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -1344,126 +1376,10 @@ _loop282_breakloop:			;
 				}
 				 }
 			}
-			break;
-		}
-		default:
-		{
-			throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());
-		}
-		 }
-		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
-		{
-			_token = makeToken(_ttype);
-			_token.setText(text.ToString(_begin, text.Length-_begin));
-		}
-		returnToken_ = _token;
-	}
-	
-	public void mPROLOG_EXPRESSION(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
-{
-		int _ttype; IToken _token=null; int _begin=text.Length;
-		_ttype = PROLOG_EXPRESSION;
-		
-		match('|');
-		{    // ( ... )*
-			for (;;)
+			if (0==inputState.guessing)
 			{
-				if ((tokenSet_3_.member(cached_LA1)))
-				{
-					mPROLOG_SUB_EXPRESSION(false);
-				}
-				else
-				{
-					goto _loop291_breakloop;
-				}
-				
+				_ttype = Token.SKIP;
 			}
-_loop291_breakloop:			;
-		}    // ( ... )*
-		int _saveIndex = 0;
-		_saveIndex = text.Length;
-		mRCURLY(false);
-		text.Length = _saveIndex;
-		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
-		{
-			_token = makeToken(_ttype);
-			_token.setText(text.ToString(_begin, text.Length-_begin));
-		}
-		returnToken_ = _token;
-	}
-	
-	protected void mPROLOG_SUB_EXPRESSION(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
-{
-		int _ttype; IToken _token=null; int _begin=text.Length;
-		_ttype = PROLOG_SUB_EXPRESSION;
-		
-		switch ( cached_LA1 )
-		{
-		case '\u0000':  case '\u0001':  case '\u0002':  case '\u0003':
-		case '\u0004':  case '\u0005':  case '\u0006':  case '\u0007':
-		case '\u0008':  case '\t':  case '\u000b':  case '\u000c':
-		case '\u000e':  case '\u000f':  case '\u0010':  case '\u0011':
-		case '\u0012':  case '\u0013':  case '\u0014':  case '\u0015':
-		case '\u0016':  case '\u0017':  case '\u0018':  case '\u0019':
-		case '\u001a':  case '\u001b':  case '\u001c':  case '\u001d':
-		case '\u001e':  case '\u001f':  case ' ':  case '!':
-		case '"':  case '#':  case '$':  case '%':
-		case '&':  case '\'':  case '(':  case ')':
-		case '*':  case '+':  case ',':  case '-':
-		case '.':  case '/':  case '0':  case '1':
-		case '2':  case '3':  case '4':  case '5':
-		case '6':  case '7':  case '8':  case '9':
-		case ':':  case ';':  case '<':  case '=':
-		case '>':  case '?':  case '@':  case 'A':
-		case 'B':  case 'C':  case 'D':  case 'E':
-		case 'F':  case 'G':  case 'H':  case 'I':
-		case 'J':  case 'K':  case 'L':  case 'M':
-		case 'N':  case 'O':  case 'P':  case 'Q':
-		case 'R':  case 'S':  case 'T':  case 'U':
-		case 'V':  case 'W':  case 'X':  case 'Y':
-		case 'Z':  case '[':  case '\\':  case ']':
-		case '^':  case '_':  case '`':  case 'a':
-		case 'b':  case 'c':  case 'd':  case 'e':
-		case 'f':  case 'g':  case 'h':  case 'i':
-		case 'j':  case 'k':  case 'l':  case 'm':
-		case 'n':  case 'o':  case 'p':  case 'q':
-		case 'r':  case 's':  case 't':  case 'u':
-		case 'v':  case 'w':  case 'x':  case 'y':
-		case 'z':  case '|':  case '~':  case '\u007f':
-		{
-			{
-				{
-					match(tokenSet_4_);
-				}
-			}
-			break;
-		}
-		case '{':
-		{
-			{
-				mLCURLY(false);
-				{    // ( ... )*
-					for (;;)
-					{
-						if ((tokenSet_3_.member(cached_LA1)))
-						{
-							mPROLOG_SUB_EXPRESSION(false);
-						}
-						else
-						{
-							goto _loop297_breakloop;
-						}
-						
-					}
-_loop297_breakloop:					;
-				}    // ( ... )*
-				mRCURLY(false);
-			}
-			break;
-		}
-		case '\n':  case '\r':
-		{
-			mNEWLINE(false);
 			break;
 		}
 		default:
@@ -1488,28 +1404,22 @@ _loop297_breakloop:					;
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
 	private static long[] mk_tokenSet_1_()
 	{
-		long[] data = { -9217L, -1L, 0L, 0L};
+		long[] data = { -549755813889L, -1L, 0L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_1_ = new BitSet(mk_tokenSet_1_());
 	private static long[] mk_tokenSet_2_()
 	{
-		long[] data = { 576390387854213120L, 576460746263625726L, 0L, 0L};
+		long[] data = { -9217L, -1L, 0L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_2_ = new BitSet(mk_tokenSet_2_());
 	private static long[] mk_tokenSet_3_()
 	{
-		long[] data = { -1L, -2305843009213693953L, 0L, 0L};
+		long[] data = { 576390387854213120L, 576460746263625726L, 0L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_3_ = new BitSet(mk_tokenSet_3_());
-	private static long[] mk_tokenSet_4_()
-	{
-		long[] data = { -9217L, -2882303761517117441L, 0L, 0L};
-		return data;
-	}
-	public static readonly BitSet tokenSet_4_ = new BitSet(mk_tokenSet_4_());
 	
 }
 }

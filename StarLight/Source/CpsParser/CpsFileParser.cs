@@ -21,8 +21,8 @@ namespace Composestar.StarLight.CpsParser
 	{
 		private CpsParserConfiguration _configuration;
 		private IList<string> types = new List<string>();
+		private EmbeddedCode _embeddedCode = null;
 		private bool _hasOutputFilters = false;
-		private bool _hasEmbeddedCode = false;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:CpsFileParser"/> class.
@@ -55,6 +55,14 @@ namespace Composestar.StarLight.CpsParser
 		}
 
 		/// <summary>
+		/// Gets the embedded code from the parsed input or null if there was none.
+		/// </summary>
+		public EmbeddedCode EmbeddedCode
+		{
+			get { return _embeddedCode; }
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether the input parsed had output filters.
 		/// </summary>
 		/// <value>
@@ -63,17 +71,6 @@ namespace Composestar.StarLight.CpsParser
 		public bool HasOutputFilters
 		{
 			get { return _hasOutputFilters; }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether the input parsed had embedded code.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if the input had embedded code; otherwise, <c>false</c>.
-		/// </value>
-		public bool HasEmbeddedCode
-		{
-			get { return _hasEmbeddedCode; }
 		}
 
 		/// <summary>
@@ -86,13 +83,24 @@ namespace Composestar.StarLight.CpsParser
 				using (FileStream inputStream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read))
 				{
 					// Create a new ANTLR Lexer for the filestream
-					CpsLexer lexer = new CpsLexer(inputStream);
+					CpsLexer lexer = new CpsPosLexer(inputStream);
 
 					// Create a new ANTLR Parser for the ANTLR Lexer
 					CpsParser parser = new CpsParser(lexer);
 
 					// Parse the file
 					parser.concern();
+
+					// embedded code?
+					if (parser.startPos == -1)
+						_embeddedCode = null;
+					else
+					{
+						_embeddedCode = new EmbeddedCode();
+						_embeddedCode.language = parser.sourceLang;
+						_embeddedCode.filename = parser.sourceFile;
+						_embeddedCode.code = ExtractEmbeddedSource(FileName, parser.startPos);
+					}
 
 					if (parser.getAST() != null)
 					{
@@ -115,6 +123,31 @@ namespace Composestar.StarLight.CpsParser
 				throw new CpsParserException(String.Format(CultureInfo.CurrentCulture,
 					Properties.Resources.UnableToParseConcern, FileName, ex.Message), FileName, ex);
 			}
+		}
+
+		/// <summary>
+		/// Extracts the embedded source from the concern file.
+		/// </summary>
+		/// <param name="filename">The cps file that contains the embedded code</param>
+		/// <param name="start">The byte position that indicates the start of the embedded code</param>
+		/// <returns></returns>
+		private string ExtractEmbeddedSource(string filename, int start)
+		{
+			string content = File.ReadAllText(filename);
+
+			// find second-last index of '}'
+			int end = content.LastIndexOf('}'); // Closing tag of concern
+			if (end > 0)
+			{
+				end = content.LastIndexOf('}', end - 1); // Closing tag of implementation by
+			}
+			if (end <= 0)
+			{
+				throw new CpsParserException("Expecting closing '}' after embedded source");
+			}
+
+			int length = end - start;
+			return content.Substring(start, length);
 		}
 
 		/// <summary>

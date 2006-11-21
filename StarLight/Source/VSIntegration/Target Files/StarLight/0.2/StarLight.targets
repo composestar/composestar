@@ -19,7 +19,6 @@ Copyright (C) University of Twente, 2006
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.CpsParserTask"    AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.DummiesTask"      AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ExbedTask"        AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILAnalyzerTask"   AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
@@ -200,7 +199,7 @@ This target will be called whenever the Clean target is invoked.
       ResolveReferences;
       PrepareResources;
       ResolveKeySource;
-      ExtractCode;
+      CpsParserRunner;
       Compile;
       GenerateSerializationAssemblies;
       CreateSatelliteAssemblies;
@@ -212,7 +211,7 @@ This target will be called whenever the Clean target is invoked.
   <Target
       Name="CompileCode"
       DependsOnTargets="$(CompileCodeDependsOn)"
-      Condition ="'$(CodeLanguage)'=='CSharp' or '$(CodeLanguage)'=='VB' or '$(CodeLanguage)'=='JSharp'" >
+      Condition ="'$(CodeLanguage)'!=''" >
     <OnError ExecuteTargets="_TimeStampAfterCompile;PostBuildEvent" Condition="'$(RunPostBuildEvent)'=='Always' or '$(RunPostBuildEvent)'=='OnOutputUpdated'"/>
     <OnError ExecuteTargets="_CleanRecordFileWrites"/>
   </Target>
@@ -232,7 +231,6 @@ This target will be called whenever the Clean target is invoked.
       BuildOnlySettings;
       PrepareForBuild;
       ResolveReferences;
-      GenerateDummies;
       CpsParserRunner;
       GetTargetPath;
       CopyFilesToOutputDirectory;
@@ -280,8 +278,7 @@ This target will be called whenever the Clean target is invoked.
         SourceFiles="@(IntermediateAssembly)"
         DestinationFolder="$(OutDir)"
         SkipUnchangedFiles="true"
-        Condition="'$(CodeLanguage)'=='CSharp' or '$(CodeLanguage)'=='VB' or '$(CodeLanguage)'=='JSharp'"
-        >
+        Condition="'$(CodeLanguage)'!=''">
 
       <Output TaskParameter="DestinationFiles" ItemName="MainAssembly"/>
       <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
@@ -386,20 +383,13 @@ This target will be called whenever the Clean target is invoked.
   <Target Name="CpsParserRunner">
     <Message Text="Collecting and parsing concern files." />
     <CpsParserTask ConcernFiles="@(Concern->'%(FullPath)')" RepositoryFilename="$(RepositoryFilename)">
-      <Output TaskParameter="ReferencedTypes" ItemName="ReferencedTypes"/>
-      <Output TaskParameter="HasOutputFilters" PropertyName="HasOutputFilters"/>
       <Output TaskParameter="ConcernsDirty" PropertyName="ConcernsDirty"/>
+      <Output TaskParameter="HasOutputFilters" PropertyName="HasOutputFilters"/>
+      <Output TaskParameter="ReferencedTypes" ItemName="ReferencedTypes"/>
+      <Output TaskParameter="ExtraSources" ItemName="Compile"/>
     </CpsParserTask>
   </Target>
   
-  <!-- ExtractCode target -->
-  <Target Name="ExtractCode">
-    <Message Text="Extracting embedded code." />
-    <ExbedTask ConcernFiles="@(Concern->'%(FullPath)')">
-      <Output TaskParameter="ExtraSources" ItemName="Compile"/>
-    </ExbedTask>
-  </Target>
-
   <!--ILAnalyzerRunner target -->
   <Target Name="ILAnalyzerRunner">
     <Message Text="Collecting and analyzing assemblies."/>
