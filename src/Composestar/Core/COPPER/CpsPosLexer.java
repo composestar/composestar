@@ -60,12 +60,10 @@ public class CpsPosLexer extends CpsLexer {
    * Consumes a character from the input
    */
   public void consume() throws CharStreamException {
-    {
-      super.consume();
-      if (inputState.guessing == 0) {
-        col++;
-        charPos++;
-      }
+    super.consume();
+    if (inputState.guessing == 0) {
+      col++;
+      charPos++;
     }
   }
 
