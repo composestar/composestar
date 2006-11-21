@@ -8,7 +8,7 @@ import Composestar.Core.BACO.BACO;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.FileUtils;
-import Composestar.Utils.CPSLogger;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class DotNETBACO extends BACO
 {
