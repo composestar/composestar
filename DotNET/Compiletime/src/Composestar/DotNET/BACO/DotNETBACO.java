@@ -8,11 +8,11 @@ import Composestar.Core.BACO.BACO;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.FileUtils;
-import Composestar.Utils.Logger;
+import Composestar.Utils.CPSLogger;
 
 public class DotNETBACO extends BACO
 {
-	private static final Logger logger = Logger.getLogger(MODULE_NAME);
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	// TODO: find a better spot for this
 	// FIXME: assumption about .NET installation
