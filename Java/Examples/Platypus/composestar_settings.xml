@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Compose*">
+	<item key="classpath" value="C:/Program Files/ComposeStar/binaries/ComposestarCORE.jar;C:/Program Files/ComposeStar/binaries/ComposestarJava.jar;C:/Program Files/ComposeStar/binaries/antlr.jar;C:/Program Files/ComposeStar/binaries/prolog/prolog.jar;C:/Program Files/ComposeStar/binaries/groove/castor-0_9_5_2-xml.jar;C:/Program Files/ComposeStar/binaries/groove/groove-1_2_0.jar;C:/Program Files/ComposeStar/binaries/groove/jgraph.jar;C:/Program Files/ComposeStar/binaries/groove/xerces-2_6_0-xercesImpl.jar;C:/Program Files/ComposeStar/binaries/groove/xerces-2_6_0-xml-apis.jar;C:/Program Files/ComposeStar/binaries/javassist.jar"/>
+	<item key="incremental" value="False"/>
+	<item key="runDebugLevel" value="1"/>
+	<item key="mainClass" value="PlatypusExample.Main"/>
+	<item key="filterModuleOrder" value=""/>
+	<item key="secretMode" value="NotSet"/>
+	<item key="buildDebugLevel" value="4"/>
+</section>
