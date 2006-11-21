@@ -1,21 +1,11 @@
 package Composestar.Java.MASTER;
 
-import java.io.*;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Properties;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Version;
@@ -26,96 +16,9 @@ import Composestar.Utils.Version;
  */
 public class JavaMaster extends Master
 {
-	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
-
-	private CommonResources resources;
-
-	private String configfile;
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param configurationFile
-	 * @throws Composestar.core.Exception.ModuleException
-	 */
-	public JavaMaster(String configurationFile) throws ModuleException
+	public JavaMaster(String[] args)
 	{
-
-		configfile = configurationFile;
-		Debug.setMode(3);
-		resources = new CommonResources();
-
-		// create the repository
-		DataStore ds = DataStore.instance();
-
-		ds.addObject(RESOURCES_KEY, resources);
-
-		// init the project configuration file
-		resources.CustomFilters = new Properties();
-
-		try
-		{
-			Debug.out(Debug.MODE_DEBUG, "Master", "Reading build configuration from: " + configurationFile);
-			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-			SAXParser saxParser = saxParserFactory.newSAXParser();
-			XMLReader parser = saxParser.getXMLReader();
-			BuildConfigHandler handler = new BuildConfigHandler(parser);
-			parser.setContentHandler(handler);
-			parser.parse(new InputSource(configurationFile));
-		}
-		catch (Exception e)
-		{
-			throw new ModuleException("An error occured while reading the build configuration file: "
-					+ configurationFile + ", reason: " + e.getMessage(), "Master");
-		}
-
-		ds.addObject(Master.RESOURCES_KEY, resources);
-
-		// Set debug level
-		try
-		{
-			Debug.setMode(Integer.parseInt(Configuration.instance().getProperty("buildDebugLevel")));
-		}
-		catch (NumberFormatException e)
-		{
-			Debug.setMode(1);
-		}
-	}
-
-	/**
-	 * Compose* main function. Creates the Master object. Adds the desired
-	 * modules and then calls run on each of them in the order that they where
-	 * added.
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args)
-	{
-
-		if (args.length == 0)
-		{
-			System.out.println("Usage: java -jar ComposestarJava.jar <config file>");
-			return;
-		}
-		
-		if (args[0].equalsIgnoreCase("-V") || args[0].equalsIgnoreCase("--version"))
-		{
-			Version.reportVersion(System.out);
-			return;
-		}
-
-		try
-		{
-			Master master = new JavaMaster(args[0]);
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, Version.getTitle() + " " + Version.getVersionString());
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Compiled on "+Version.getCompileDate().toString());
-			master.run();
-		}
-		catch (ModuleException e)
-		{
-			System.out.println("Could not open configuration file '" + args[0] + "': " + e.getMessage());
-			System.exit(-1); 
-		}
+		super(args);
 	}
 
 	/**
@@ -123,26 +26,23 @@ public class JavaMaster extends Master
 	 */
 	public void run()
 	{
-		// This is the 'hardcoded' version
-
 		try
 		{
-
-			Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());
+			long beginTime = System.currentTimeMillis();
 
 			// Apache XML driver is moved to a different package in Java 5
 			if (System.getProperty("java.version").substring(0, 3).equals("1.5"))
 			{
 				System.setProperty("org.xml.sax.driver", "com.sun.org.apache.xerces.internal.parsers.SAXParser");
-				Debug.out(Debug.MODE_DEBUG, "Master", "Selecting SAXParser XML SAX Driver");
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Selecting SAXParser XML SAX Driver");
 			}
 			else
 			{
 				System.setProperty("org.xml.sax.driver", "org.apache.crimson.parser.XMLReaderImpl");
-				Debug.out(Debug.MODE_DEBUG, "Master", "Selecting XMLReaderImpl XML SAX Driver");
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Selecting XMLReaderImpl XML SAX Driver");
 			}
 
-			Debug.out(Debug.MODE_DEBUG, "Master", "Creating datastore...");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Creating datastore...");
 			DataStore.instance();
 
 			// initialize INCRE
@@ -158,100 +58,87 @@ public class JavaMaster extends Master
 			}
 
 			incre.getReporter().close();
-			if (Debug.getMode() >= Debug.MODE_WARNING) Debug.outWarnings();
+			if (Debug.willLog(Debug.MODE_WARNING))
+			{
+				Debug.outWarnings();
+			}
+			if (Debug.willLog(Debug.MODE_DEBUG))
+			{
+				System.out.println("Total time: "+(System.currentTimeMillis()-beginTime)+"ms");
+			}
 
 		}
 		catch (ModuleException e)
 		{ 
-			// MasterStopException
 			String error = e.getMessage();
-			if (error == null || "null".equals(error)) // great information
+			String filename = e.getErrorLocationFilename();
+			int line = e.getErrorLocationLineNumber();
+			
+			if (error == null || "null".equals(error))
 			{
 				error = e.toString();
 			}
 
-			if ((e.getErrorLocationFilename() != null) && !e.getErrorLocationFilename().equals("")) 
+			if (filename == null || "".equals(filename))
 			{
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e.getErrorLocationLineNumber());
-			}	
-			else 
-			{	
 				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
 			}
-			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + printStackTrace(e));
-			System.exit(1);
+			else
+			{
+				Debug.out(Debug.MODE_ERROR, e.getModule(), error, filename, line);
+			}
+
+			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + Debug.stackTrace(e));
+			System.exit(ECOMPILE);
 		}
 		catch (Exception e)
 		{
 			String error = e.getMessage();
-			if (error == null || "null".equals(error)) // great information
+			if (error == null || "null".equals(error))
 			{
 				error = e.toString();
 			}
-			Debug.out(Debug.MODE_ERROR, "Master", "Internal compiler error: " + error);
-			Debug.out(Debug.MODE_ERROR, "Master", "StackTrace: " + printStackTrace(e));
+
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Internal compiler error: " + error);
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
+			System.exit(EFAIL);
 		}
 	}
 
-	public String printStackTrace(Exception e)
+	/**
+	 * Compose* main function. Creates the Master object and invokes the run method.
+	 * 
+	 * @param args The command line arguments.
+	 */
+	public static void main(String[] args)
 	{
+
+		if (args.length == 0)
+		{
+			System.out.println("Usage: java -jar ComposestarJava.jar <config file>");
+			return;
+		}
+		
+		if (args[0].equals("-v") || args[0].equals("--version"))
+		{
+			Version.reportVersion(System.out);
+			return;
+		}
+
+		Master master = new JavaMaster(args);
 		try
 		{
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			return sw.toString();
+			master.loadConfiguration();
 		}
-		catch (Exception e2)
+		catch (Exception e)
 		{
-			return "Stack Trace Failed";
+			System.out.println(e.getMessage());
+			System.exit(ECONFIG);
 		}
+		
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, Version.getTitle() + " " + Version.getVersionString());
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Compiled on "+Version.getCompileDate().toString());
+		master.run();
 	}
 
-	public void SaveModifiedConfigurationKeys(CommonResources resources)
-	{
-		ArrayList builtAssemblies = (ArrayList) resources.getResource("BuiltAssemblies");
-		java.util.ArrayList configlines = new java.util.ArrayList();
-
-		try
-		{
-			BufferedReader br = new BufferedReader(new FileReader(configfile));
-			String line = br.readLine();
-			while (line != null)
-			{
-				if (line.startsWith("BuiltAssemblies="))
-				{
-					line = "BuiltAssemblies=" + builtAssemblies.size();
-					configlines.add(line);
-					for (int i = 0; i < builtAssemblies.size(); i++)
-					{
-						Object temp = builtAssemblies.get(i);
-						if (temp != null)
-						{
-							configlines.add("BuiltAssembly" + i + "=" + temp.toString());
-						}
-					}
-				}
-				else
-				{
-					configlines.add(line);
-				}
-				line = br.readLine();
-			}
-			br.close();
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(configfile));
-			Iterator iterLines = configlines.iterator();
-			while (iterLines.hasNext())
-			{
-				line = (String) iterLines.next();
-				bw.write(line + "\n");
-			}
-			bw.close();
-		}
-		catch (IOException e)
-		{
-			Debug.out(Debug.MODE_WARNING, "Master", "Unable to update configuration file '" + configfile + "'!");
-		}
-	}
 }
