@@ -1,15 +1,20 @@
 package Composestar.Java.WEAVER;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.FILTH.FILTHService;
+import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
@@ -128,25 +133,44 @@ public class JavaWeaver implements WEAVER
 
 	public void getCastInterceptions()
 	{
-	/*
-	 * DataStore ds = DataStore.instance(); HookDictionary hd =
-	 * HookDictionary.instance(); Set qns = new HashSet(); Iterator iterConcerns =
-	 * ds.getAllInstancesOf(Concern.class); while (iterConcerns.hasNext()) {
-	 * Concern c = (Concern) iterConcerns.next(); boolean castConcern = false;
-	 * if (c.getDynObject("SingleOrder") != null) { FilterModuleOrder fmo =
-	 * (FilterModuleOrder) c.getDynObject("SingleOrder"); Iterator
-	 * iterFilterModules = fmo.orderAsList().iterator(); while
-	 * (iterFilterModules.hasNext()) { String fmn = (String)
-	 * iterFilterModules.next(); FilterModule fm = (FilterModule)
-	 * ds.getObjectByID(fmn); Iterator iterInternals = fm.getInternalIterator();
-	 * while (iterInternals.hasNext()) { Internal internal = (Internal)
-	 * iterInternals.next(); String internalQN =
-	 * internal.getType().getQualifiedName(); castConcern = true; if
-	 * (!qns.contains(internalQN)) { qns.add(internalQN);
-	 * hd.addCastInterception(internalQN); } } } } if (castConcern &&
-	 * !qns.contains(c.getQualifiedName())) { qns.add(c.getQualifiedName());
-	 * hd.addCastInterception(c.getQualifiedName()); } }
-	 */
+
+		DataStore ds = DataStore.instance();
+		HookDictionary hd = HookDictionary.instance();
+		Set qns = new HashSet();
+		Iterator iterConcerns = ds.getAllInstancesOf(Concern.class);
+		while (iterConcerns.hasNext())
+		{
+			Concern c = (Concern) iterConcerns.next();
+			boolean castConcern = false;
+			if (c.getDynObject("SingleOrder") != null)
+			{
+				FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject("SingleOrder");
+				Iterator iterFilterModules = fmo.orderAsList().iterator();
+				while (iterFilterModules.hasNext())
+				{
+					String fmn = (String) iterFilterModules.next();
+					FilterModule fm = (FilterModule) ds.getObjectByID(fmn);
+					Iterator iterInternals = fm.getInternalIterator();
+					while (iterInternals.hasNext())
+					{
+						Internal internal = (Internal) iterInternals.next();
+						String internalQN = internal.getType().getQualifiedName();
+						castConcern = true;
+						if (!qns.contains(internalQN))
+						{
+							qns.add(internalQN);
+							hd.addCastInterception(internalQN);
+						}
+					}
+				}
+			}
+			if (castConcern && !qns.contains(c.getQualifiedName()))
+			{
+				qns.add(c.getQualifiedName());
+				hd.addCastInterception(c.getQualifiedName());
+			}
+		}
+
 	}
 
 	public void getMethodInterceptions(CommonResources resources)
@@ -165,10 +189,5 @@ public class JavaWeaver implements WEAVER
 				HookDictionary.instance().addMethodInterception(c.getQualifiedName());
 			}
 		}
-	}
-
-	public void main(String[] args)
-	{
-
 	}
 }

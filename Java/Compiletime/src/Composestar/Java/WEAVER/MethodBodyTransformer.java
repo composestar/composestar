@@ -51,7 +51,19 @@ public class MethodBodyTransformer extends ExprEditor
 	 */
 	public void edit(Cast c) throws CannotCompileException
 	{
-
+		HookDictionary hd = HookDictionary.instance();
+		try
+		{
+			if(hd.isCastInterception(c.getType().getName()))
+			{
+				c.replace("$_ = $proceed(Composestar.RuntimeCore.FLIRT.CastingFacility.handleCast($1" + 
+						", " + '"' + c.getType().getName() + '"' + "));");
+			}
+		}
+		catch (NotFoundException nfe)
+		{
+			Debug.out(Debug.MODE_DEBUG, "WEAVER", "Class not found: " + nfe.getMessage());
+		}
 	}
 
 	/**
@@ -123,7 +135,7 @@ public class MethodBodyTransformer extends ExprEditor
 		}
 		catch (NotFoundException nfe)
 		{
-			Debug.out(Debug.MODE_DEBUG, "WEAVER", "Method not found: " + nfe.getMessage()+ " "+m.getSignature());
+			Debug.out(Debug.MODE_DEBUG, "WEAVER", "Method not found: " + nfe.getMessage());
 		}
 	}
 
