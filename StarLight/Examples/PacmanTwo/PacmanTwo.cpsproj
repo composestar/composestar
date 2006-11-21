@@ -1,4 +1,4 @@
-<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Name>"PacmanTwo"</Name>
@@ -128,7 +128,7 @@
     <Concern Include="Concerns\DynamicStrategy.cps" />
     <Concern Include="Concerns\Levels.cps" />
     <Concern Include="Concerns\Scoring.cps" />
-    <None Include="Concerns\Sounds.cps" />
+    <Concern Include="Concerns\Sounds.cps" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Concerns" />
