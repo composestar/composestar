@@ -301,8 +301,9 @@
 
 	<!-- fancy menu -->
 
-	<target name="clean_deploy" depends="clean,deploy"></target>
-	<target name="clean_deploy_test" depends="clean,deploy,test"></target>
+	<target name="test_all" depends="test,systemtest"/>
+	<target name="clean_deploy" depends="clean,deploy"/>
+	<target name="clean_deploy_test" depends="clean,deploy,test_all"/>
 
 	<target name="select" depends="init">
 		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar"/>
@@ -330,7 +331,7 @@
 				</antMenuItem>
 				-->
 				<antMenuItem name="Run tests">
-					<antMenuItem name="All"           target="test"/>
+					<antMenuItem name="All"           target="test_all"/>
 					<antMenuItem name="NUnit"         target="test_nunit"/>
 					<antMenuItem name="NTime"         target="test_ntime"/>
 					<antMenuItem name="Systemtest"    target="systemtest"/>
