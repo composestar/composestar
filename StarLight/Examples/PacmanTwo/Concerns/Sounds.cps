@@ -59,7 +59,7 @@ concern Sounds in PacmanTwo
 				if(soundOn) beep( 1000, 10 );
 			}
 
-			public void eatPowerPill(JoinPointContext jpc
+			public void eatPowerPill(JoinPointContext jpc)
 			{
 				if(soundOn) 
 				{
