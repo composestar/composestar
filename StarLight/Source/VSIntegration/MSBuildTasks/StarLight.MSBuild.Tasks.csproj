@@ -118,10 +118,10 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <Deploy>true</Deploy>
-    <DeployDestination>$(MSBuildExtensionsPath)\StarLight\0.1\</DeployDestination>
+    <DeployDestination>$(MSBuildExtensionsPath)\StarLight\0.2\</DeployDestination>
   </PropertyGroup>
   <ItemGroup>
-    <DeployFiles Include="..\Target Files\StarLight\1.0\StarLight.targets">
+    <DeployFiles Include="..\Target Files\StarLight\0.2\StarLight.targets">
       <Visible>false</Visible>
     </DeployFiles>
   </ItemGroup>
