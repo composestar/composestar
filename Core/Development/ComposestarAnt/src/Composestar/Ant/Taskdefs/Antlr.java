@@ -12,7 +12,6 @@
 package Composestar.Ant.Taskdefs;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Method;
@@ -58,9 +57,6 @@ public class Antlr extends Task
 
 	/** optional flag to add trace methods to the tree walker only */
 	private boolean traceTreeWalker;
-
-	/** captures ANTLR's output */
-	private ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
 	/** The debug attribute */
 	private boolean debug;
@@ -177,14 +173,7 @@ public class Antlr extends Task
 		
 		if (targetIsOutOfDate || superGrammarIsOutOfDate)
 		{
-			if (targetIsOutOfDate)
-			{
-				log("Compiling " + target + " as it is newer than " + generatedFile, Project.MSG_VERBOSE);
-			}
-			else if (superGrammarIsOutOfDate)
-			{
-				log("Compiling " + target + " as " + superGrammar + " is newer than " + generatedFile, Project.MSG_VERBOSE);
-			}
+			log("Compiling " + target + ".", Project.MSG_INFO);
 			
 			// create arguments
 			List args = new ArrayList();			
@@ -197,18 +186,10 @@ public class Antlr extends Task
 			{
 				throw new BuildException("ANTLR returned: " + err, getLocation());
 			}
-			else
-			{
-				String output = bos.toString();
-				if (output.indexOf("error:") > -1)
-				{
-					throw new BuildException("ANTLR signaled an error: " + output, getLocation());
-				}
-			}
 		}
 		else
 		{
-			log("Skipped grammar file. Generated file " + generatedFile + " is newer.", Project.MSG_VERBOSE);
+			log("Skipped " + target + ".", Project.MSG_INFO);
 		}
 	}
 	
