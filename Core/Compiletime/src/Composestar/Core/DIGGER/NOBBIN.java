@@ -31,7 +31,7 @@ import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
-import Composestar.Utils.CPSLogger;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * A NOBBIN will walk the paths created by DIGGER in order to produce a set of

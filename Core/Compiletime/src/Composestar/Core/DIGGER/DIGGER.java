@@ -29,7 +29,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
-import Composestar.Utils.CPSLogger;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * DIGGER - DIspatch Graph GEneratoR

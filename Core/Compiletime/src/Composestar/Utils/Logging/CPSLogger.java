@@ -1,4 +1,6 @@
-package Composestar.Utils;
+package Composestar.Utils.Logging;
+
+import Composestar.Utils.Debug;
 
 public class CPSLogger
 {

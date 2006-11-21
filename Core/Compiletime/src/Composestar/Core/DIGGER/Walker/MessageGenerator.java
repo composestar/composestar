@@ -24,7 +24,7 @@ import Composestar.Core.DIGGER.Graph.ConcernNode;
 import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
-import Composestar.Utils.CPSLogger;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Creates and manages messages for certain concerns + selectors.

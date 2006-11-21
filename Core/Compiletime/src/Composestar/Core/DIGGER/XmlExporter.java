@@ -42,7 +42,7 @@ import Composestar.Core.DIGGER.Graph.SimpleConcernNode;
 import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Utils.CPSLogger;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Exports the generated dispatch graph to an XML file
