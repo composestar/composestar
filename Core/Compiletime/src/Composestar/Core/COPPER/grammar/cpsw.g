@@ -143,10 +143,10 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
                                     (substitutionPart)?
                                   );
                 
-                matchingPart : #(MPART_ {h = null;} (h:HASH)? singleTargetSelector ((SEMICOLON | COMMA) singleTargetSelector)* )
+                matchingPart : #(MPART_ {h = null;} (h:HASH)? (singleTargetSelector)+ )
                              { b.setMessagePatternList(h != null); };
                 
-                substitutionPart : #(SPART_ {h = null;} (h:HASH)? targetSelector2 (SEMICOLON targetSelector2)* )
+                substitutionPart : #(SPART_ {h = null;} (h:HASH)? (targetSelector2)+ )
                                  { b.setMessagePatternList(h != null); };
                 
                 singleTargetSelector :

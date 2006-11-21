@@ -209,7 +209,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                                   // matching list
                                   LCURLY! singleTargetSelector (COMMA! singleTargetSelector)* RCURLY!
                                   // matching sequence for multiple message
-                                | HASH LPARENTHESIS! singleTargetSelector (SEMICOLON singleTargetSelector)* RPARENTHESIS!
+                                | HASH LPARENTHESIS! singleTargetSelector (SEMICOLON! singleTargetSelector)* RPARENTHESIS!
                                   // normal
                                 | singleTargetSelector
                                 )
@@ -217,7 +217,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                                 ;
                 
                  substitutionPart : ( 
-                                      HASH LPARENTHESIS! targetSelector (SEMICOLON targetSelector)* RPARENTHESIS!
+                                      HASH LPARENTHESIS! targetSelector (SEMICOLON! targetSelector)* RPARENTHESIS!
                                     | targetSelector
                                     )
                                     { #substitutionPart = #([SPART_, "substitutionPart"], #substitutionPart);}

@@ -1,9 +1,18 @@
 package Composestar.Utils.Logging;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import Composestar.Utils.Debug;
 
+
+/**
+ * More or less a placeholder class for log4j style logging
+ */
 public class CPSLogger
 {
+	private static final Map loggers = new HashMap(); 
+	
 	private final String name;
 	
 	protected CPSLogger(String name)
@@ -38,6 +47,12 @@ public class CPSLogger
 
 	public static CPSLogger getCPSLogger(String name)
 	{
-		return new CPSLogger(name);
+		if (loggers.containsKey(name))
+		{
+			return (CPSLogger) loggers.get(name);
+		}
+		CPSLogger logger = new CPSLogger(name);
+		loggers.put(name, logger);
+		return logger;
 	}
 }
