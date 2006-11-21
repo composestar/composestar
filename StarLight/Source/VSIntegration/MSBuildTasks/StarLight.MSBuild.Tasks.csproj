@@ -56,7 +56,6 @@
     <Compile Include="CpsParserTask\BuilderConfigurator.cs" />
     <Compile Include="CpsParserTask\CpsParserTask.cs" />
     <Compile Include="DummiesTask\DummiesTask.cs" />
-    <Compile Include="ExbedTask\ExbedTask.cs" />
     <Compile Include="ILAnalyzerTask\BuilderConfigurator.cs" />
     <Compile Include="ILAnalyzerTask\ILAnalyzerTask.cs" />
     <Compile Include="ILVerifyTask\ILVerifyTask.cs" />
