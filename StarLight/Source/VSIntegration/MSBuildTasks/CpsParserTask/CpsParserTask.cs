@@ -25,6 +25,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// </summary>
 	public class CpsParserTask : Task
 	{
+		private string _baseDir;
 		private string _repositoryFileName;
 		private ITaskItem[] _concernFiles;
 		private ITaskItem[] _referencedTypes;
@@ -46,9 +47,17 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		#region Properties
 
 		/// <summary>
-		/// Gets or sets the repository filename.
+		/// Sets the project base directory.
 		/// </summary>
-		/// <value>The repository filename.</value>
+		[Required]
+		public string BaseDir
+		{
+			set { _baseDir = value; }
+		}
+
+		/// <summary>
+		/// Sets the repository filename.
+		/// </summary>
 		[Required]
 		public string RepositoryFileName
 		{
@@ -56,9 +65,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets the concern files.
+		/// Sets the concern files to be parsed.
 		/// </summary>
-		/// <value>The concern files.</value>
 		[Required]
 		public ITaskItem[] ConcernFiles
 		{
@@ -66,21 +74,26 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets the referenced types.
+		/// Gets a list of referenced types from the parsed concerns.
 		/// </summary>
-		/// <value>The referenced types.</value>
 		[Output]
 		public ITaskItem[] ReferencedTypes
 		{
 			get { return _referencedTypes; }
 		}
 
+		/// <summary>
+		/// Gets a list of filenames that were extracted from embedded code.
+		/// </summary>
 		[Output]
 		public ITaskItem[] ExtraSources
 		{
 			get { return ToArray(_extraSources); }
 		}
 
+		/// <summary>
+		/// Indicates whether the parsed concerns contain output filters.
+		/// </summary>
 		[Output]
 		public bool HasOutputFilters
 		{
@@ -88,9 +101,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether oen or more concern files are changed.
+		/// Indicates whether one or more concern files have been changed since the last build.
 		/// </summary>
-		/// <value><c>true</c> if concerns dirty; otherwise, <c>false</c>.</value>
 		[Output]
 		public bool ConcernsDirty
 		{
@@ -188,11 +200,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			{
 				Log.LogErrorFromException(ex, false);
 			}
-			catch (System.IO.FileNotFoundException ex)
+			catch (FileNotFoundException ex)
 			{
 				Log.LogErrorFromException(ex, false);
 			}
-				
+
 			return !Log.HasLoggedErrors;
 		}
 
@@ -231,9 +243,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		{
 			if (ec == null) return;
 
-			string filename = Path.Combine("c:\\", ec.filename);
+			string embeddedDir = Path.Combine(_baseDir, "embedded");
+			if (!Directory.Exists(embeddedDir)) Directory.CreateDirectory(embeddedDir);
+			
+			string filename = Path.Combine(embeddedDir, ec.filename);
 			using (StreamWriter sw = File.CreateText(filename))
 			{
+				Log.LogMessage("Writing embedded code to '{0}'", filename);
+
 				sw.Write(ec.code);
 				_extraSources.Add(new TaskItem(filename));
 			}

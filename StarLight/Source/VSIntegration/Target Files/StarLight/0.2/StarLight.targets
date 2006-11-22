@@ -24,7 +24,7 @@ Copyright (C) University of Twente, 2006
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
 
   <PropertyGroup>
-    <StarLightFolder>StarLight</StarLightFolder>
+    <StarLightFolder>$(ProjectDir)$(BaseIntermediateOutputPath)StarLight</StarLightFolder>
     <DefaultLanguageSourceExtension>.cps</DefaultLanguageSourceExtension>
     <Language>StarLight</Language>
     <!-- Provide a facility to override UseHostCompilerIfAvailable-->
@@ -107,7 +107,7 @@ This target will be called whenever the Clean target is invoked.
       <Output TaskParameter="Include" ItemName="TempBackupWeave"/>
     </CreateItem>
     <Delete Files="@(TempBackupWeave)"/>
-    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)/*.xml;$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)/*.xml.gzip">
+    <CreateItem Include="$(StarLightFolder)/*.xml;$(StarLightFolder)/*.xml.gzip">
       <Output TaskParameter="Include" ItemName="TempXmlFiles"/>
     </CreateItem>
     <Delete Files="@(TempXmlFiles)"/>
@@ -116,10 +116,8 @@ This target will be called whenever the Clean target is invoked.
     </CreateItem>
     <Delete Files="@(tempAnalyses)"/>
     <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)analyses" ContinueOnError="true" />
-    <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)" ContinueOnError="true" />
+    <RemoveDir Directories="$(StarLightFolder)" ContinueOnError="true" />
   </Target>
-
-
 
   <!--
     ============================================================
@@ -354,7 +352,7 @@ This target will be called whenever the Clean target is invoked.
   </Target>
 
   <Target Name="CreateStarLightFolder" >
-    <MakeDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)" />
+    <MakeDir Directories="$(StarLightFolder)" />
   </Target>
 
   <Target Name ="BackupFiles">
@@ -382,7 +380,7 @@ This target will be called whenever the Clean target is invoked.
   <!-- CpsParserRunner target -->
   <Target Name="CpsParserRunner">
     <Message Text="Collecting and parsing concern files." />
-    <CpsParserTask ConcernFiles="@(Concern->'%(FullPath)')" RepositoryFilename="$(RepositoryFilename)">
+    <CpsParserTask BaseDir="$(StarLightFolder)" ConcernFiles="@(Concern->'%(FullPath)')" RepositoryFilename="$(RepositoryFilename)">
       <Output TaskParameter="ConcernsDirty" PropertyName="ConcernsDirty"/>
       <Output TaskParameter="HasOutputFilters" PropertyName="HasOutputFilters"/>
       <Output TaskParameter="ReferencedTypes" ItemName="ReferencedTypes"/>
@@ -409,7 +407,7 @@ This target will be called whenever the Clean target is invoked.
       RepositoryFilename="$(RepositoryFilename)"
       BinFolder="$(ProjectDir)$(OutDir)"
       DoMethodCallAnalysis="$(HasOutputFilters)"
-      IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)">
+      IntermediateOutputPath="$(StarLightFolder)">
       <Output TaskParameter="AssembliesDirty" PropertyName="AssembliesDirty"/>
     </IlAnalyzerTask>
   </Target>
