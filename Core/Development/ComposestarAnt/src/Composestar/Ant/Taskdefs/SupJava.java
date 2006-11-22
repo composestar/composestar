@@ -35,4 +35,9 @@ public class SupJava extends Java
 			super.log(msg, msgLevel);
 		}
 	}
+	
+	public void addArg(String value)
+	{
+		createArg().setValue(value);
+	}
 }

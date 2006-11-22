@@ -6,11 +6,7 @@ import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Commandline.Argument;
-import org.apache.tools.ant.types.PatternSet.NameEntry;
 
 import Composestar.Ant.Taskdefs.BaseTask;
 import Composestar.Ant.Taskdefs.SupJava;
@@ -46,12 +42,7 @@ public class CstarComp extends BaseTask
 	/**
 	 * The master to execute
 	 */
-	protected String master = "Composestar.DotNET.MASTER.DotNETMaster";
-
-	/**
-	 * Classpath for Compose*; required to build the project
-	 */
-	protected FileSet cstarJars;
+	protected String mainJar = "ComposestarDotNET.jar";
 
 	/**
 	 * Total projects examined
@@ -93,9 +84,9 @@ public class CstarComp extends BaseTask
 		this.logError = logError;
 	}
 
-	public void setMaster(String master)
+	public void setMainJar(String mainJar)
 	{
-		this.master = master;
+		this.mainJar = mainJar;
 	}
 
 	public void setComposestarBase(String composestarBase)
@@ -110,11 +101,6 @@ public class CstarComp extends BaseTask
 
 	public void execute() throws BuildException
 	{
-		cstarJars = new FileSet();
-		cstarJars.setDir(new File(composestarBase, "Binaries"));
-		NameEntry inc = cstarJars.createInclude();
-		inc.setName("*.jar");
-
 		List projects = collectInputs();
 		cntTotal = projects.size();
 		cntSuccess = 0;
@@ -171,23 +157,19 @@ public class CstarComp extends BaseTask
 				oldLog.renameTo(new File(projectDir, "buildlog.old.txt"));
 			}
 
-			Java java = new SupJava(this);
+			SupJava java = new SupJava(this);
 			
 			java.init();
 			java.setDir(projectDir);
-			java.setClassname(master);
+
+			// set jar file to execute
+			File binaries = new File(composestarBase, "binaries");
+			java.setJar(new File(binaries, mainJar));
 			
-			Argument arg = java.createArg();
-			arg.setValue("-d4"); // set compile debug output to DEBUG
-			
-			arg = java.createArg();
-			arg.setValue("-t2"); // set error threshold to WARNING
-			
-			arg = java.createArg();
-			arg.setValue(buildXML.toString());
-			
-			Path cpath = java.createClasspath();
-			cpath.addFileset(cstarJars);
+			// add arguments
+			java.addArg("-d4"); // set compile debug output to DEBUG
+			java.addArg("-t2"); // set error threshold to WARNING
+			java.addArg(buildXML.toString()); // set build file
 			
 			java.setLogError(logError);
 			
