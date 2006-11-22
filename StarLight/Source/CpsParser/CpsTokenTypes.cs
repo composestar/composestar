@@ -1,4 +1,4 @@
-// $ANTLR 2.7.6 (2005-12-22): "cps-csharp.g" -> "CpsLexer.cs"$
+// $ANTLR : "cps-csharp.g" -> "CpsLexer.cs"$
 
 /*
  * This file is part of Composestar project [http://composestar.sf.net].

@@ -1,4 +1,4 @@
-// $ANTLR 2.7.6 (2005-12-22): cps-csharp.g -> CpsTokenTypes.txt$
+// $ANTLR : cps-csharp.g -> CpsTokenTypes.txt$
 Cps    // output token vocab name
 ANDEXPR_=4
 ANNOTELEM_=5

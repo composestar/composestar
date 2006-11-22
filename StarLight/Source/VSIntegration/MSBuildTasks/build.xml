@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight/MSBuild" default="build">
 
-	<condition property="build.core" value="${basedir}/../../../..">
-		<and>
-			<not><isset property="build.core" /></not>
-			<available file="${basedir}/../../../../common.xml" />
-		</and>
-	</condition>
+	<property name="build.core" location="../../../../Core"/>
 	<import file="${build.core}/common.xml" />
 
 	<echo>Processing: ${ant.project.name} ...</echo>
@@ -24,6 +19,10 @@
 
 	<target name="deploy" depends="init" description="Deploy the Tasks project">
 		<msbuild solution="${buildfile}" target="deploy" config="${msbuild.config}" />
+	</target>
+
+	<target name="antlr">
+		<ant dir="${build.core}/Compiletime/grammar" target="antlr_dotnet"/>
 	</target>
 
 </project>
