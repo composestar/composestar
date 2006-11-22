@@ -86,7 +86,7 @@
 	</target>
 	
 	<target name="jar">
-		<jar destfile="${starlight.jar}" basedir="${out.build}" manifest="src/Composestar/MANIFEST.MF"/>
+		<jar destfile="${starlight.jar}" basedir="${out.build}" manifest="src/MANIFEST.MF"/>
 	</target>
 
 	<!-- deploy -->

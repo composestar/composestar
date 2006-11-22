@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: Composestar.DotNET.MASTER.StarLightMaster
-Class-Path: ComposestarCORE.jar antlr.jar prolog\prolog.jar groove\castor-0_9_5_2-xml.jar groove\groove-1_2_0.jar groove\jgraph.jar groove\xerces-2_6_0-xml-apis.jar groove\xerces-2_6_0-xercesImpl.jar db4o\db4o-5.7-java1.2.jar db4o\db4o-5.7-nqopt.jar db4o\bloat-1.0.jar
