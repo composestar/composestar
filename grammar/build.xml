@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Compose* grammar" xmlns:cs="antlib:Composestar">
+
+	<property name="build.core" location="../.."/>
+	<import file="${build.core}/common.xml"/>
+
+	<target name="init_local" depends="init">
+		<property name="grammar.dir"   location="${basedir}"/>
+		<property name="copper.dir"    location="${build.core}/Compiletime/src/Composestar/Core/COPPER"/>
+		<property name="CpsParser.dir" location="${build.starlight}/Source/CpsParser"/>
+		
+		<!-- TODO: move cps.g and cpsw.g to ${basedir} after StarLight branch of Core is merged into the trunk -->
+		<property name="cps.g"         location="${copper.dir}/grammar/cps.g"/>
+		<property name="cpsw.g"        location="${copper.dir}/grammar/cpsw.g"/>
+		<property name="cps-java.g"    location="${basedir}/cps-java.g"/>
+		<property name="cps-csharp.g"  location="${basedir}/cps-csharp.g"/>
+
+		<property name="warning" value="This file was generated from ${cps.g}. Do not modify!"/>
+	</target>
+
+	<target name="antlr_java" depends="init_local" description="Generates the Java version of the grammar">
+		<copy file="${cps.g}" tofile="${cps-java.g}"/>
+
+		<replace file="${cps-java.g}">
+			<replacefilter token="$W"  value="${warning}"/>
+			<replacefilter token="$J:" value=""/>
+			<replacefilter token="$C:" value="//"/>
+		</replace>
+		
+		<cs:antlr target="${cps-java.g}" 
+		          outputdirectory="${copper.dir}"
+		          classpathref="lib.core"/>
+		
+		<cs:antlr target="${cpsw.g}"
+		          outputdirectory="${copper.dir}"
+		          classpathref="lib.core"/>
+	
+	</target>
+
+	<target name="antlr_dotnet" depends="init_local" description="Generates the C# version of the grammar">
+		<copy file="${cps.g}" tofile="${cps-csharp.g}"/>
+
+		<replace file="${cps-csharp.g}">
+			<replacefilter token="$W"  value="${warning}"/>
+			<replacefilter token="$C:" value=""/>
+			<replacefilter token="$J:" value="//"/>
+		</replace>
+
+		<cs:antlr target="${cps-csharp.g}" 
+		          outputdirectory="${CpsParser.dir}"
+		          classpathref="lib.core"/>
+		
+	</target>
+
+	<!-- dummy tasks -->
+	<target name="build"/>
+	<target name="clean"/>
+
+</project>

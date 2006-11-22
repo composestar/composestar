@@ -1,3 +1,4 @@
+//$W
 ///////////////////////////////////////////////////////////////////////////
 // Parser for Cps files
 ///////////////////////////////////////////////////////////////////////////
@@ -13,81 +14,90 @@ header {
  * $Id$
  */
 
-/**
- * Parser / lexer class for .cps files
- */
-package Composestar.Core.COPPER;
+$J:package Composestar.Core.COPPER;
+$C:using StringBuffer = System.Text.StringBuilder;
+}
 
+options {
+$C:	language  = CSharp;
+$C:	namespace = "Composestar.StarLight.CpsParser";
 }
 
 class CpsParser extends Parser;
 options {
-        buildAST = true;
-        exportVocab = Cps;
-        k = 1;
-	ASTLabelType = "CpsAST";  
-	defaultErrorHandler = false;
+	k = 1;
+	buildAST = true;
+	exportVocab = Cps;
+$J:	ASTLabelType = "CpsAST";
+$J:	defaultErrorHandler = false;
 }
 
-tokens {                                //extra tokens used in constructing the tree
-        ANDEXPR_;
-        ANNOTELEM_;
-        ANNOTSET_;
-        ANNOT_;
-        ARGUMENT_;
-        DECLAREDARGUMENT_;
-        DECLAREDPARAMETER_;
-        FPMSET_;
-        FPMDEF_;
-        FPMSTYPE_;
-        FPMDEFTYPE_;
-        CONDITION_;
-        CONDNAMESET_;
-        CONDNAME_;
-        EXTERNAL_;
-        FILTERELEM_;
-        FILTERMODULEPARAMETERS_;
-        FILTERSET_;
-        FMELEM_;
-        FMSET_;
-        FM_;
-        IFILTER_;
-        INTERNAL_;
-        METHOD2_;
-        METHODNAMESET_;
-        METHODNAME_;
-        METHOD_;
-        NOTEXPR_;
-        MPSET_;
-        MP_;
-        MPART_;
-        OCL_;
-        OFILTER_;
-        OREXPR_;
-        PARAMETER_;
-        PARAMETERLIST_;
-        SELEC2_;
-        SELEC_;
-        SELEXP_;
-        SOURCE_;
-        SPART_;
-        TSSET_;
-        TARGET_;
-        TYPELIST_;
-        TYPE_;
-        VAR_;
-        APS_;
-        PROLOG_EXPRESSION;
+//extra tokens used in constructing the tree
+tokens {
+	ANDEXPR_;
+	ANNOTELEM_;
+	ANNOTSET_;
+	ANNOT_;
+	ARGUMENT_;
+	DECLAREDARGUMENT_;
+	DECLAREDPARAMETER_;
+	FPMSET_;
+	FPMDEF_;
+	FPMSTYPE_;
+	FPMDEFTYPE_;
+	CONDITION_;
+	CONDNAMESET_;
+	CONDNAME_;
+	EXTERNAL_;
+	FILTERELEM_;
+	FILTERMODULEPARAMETERS_;
+	FILTERSET_;
+	FMELEM_;
+	FMSET_;
+	FM_;
+	IFILTER_;
+	INTERNAL_;
+	METHOD2_;
+	METHODNAMESET_;
+	METHODNAME_;
+	METHOD_;
+	NOTEXPR_;
+	MPSET_;
+	MP_;
+	MPART_;
+	OCL_;
+	OFILTER_;
+	OREXPR_;
+	PARAMETER_;
+	PARAMETERLIST_;
+	SELEC2_;
+	SELEC_;
+	SELEXP_;
+	SOURCE_;
+	SPART_;
+	TSSET_;
+	TARGET_;
+	TYPELIST_;
+	TYPE_;
+	VAR_;
+	APS_;
+	PROLOG_EXPRESSION;
 }
 {
-  public boolean sourceIncluded = false;        //source included in Cps file?
-  public int startPos = 0;                      //starting position of embedded source (in bytes)
-  public String sourceLang = null;              //source language
-  public String sourceFile = null;              //source filename
-  public int skipsize = 0;                      //how much to skip at the end when using an embedded implementation
+	public String sourceLang = null;              //source language
+	public String sourceFile = null;              //source filename
+	public int startPos = -1;                     //starting position of embedded source (in bytes)
+
+$J:	private void addEmbeddedSource(Token lang, Token fn, Token start)
+$C:	private void addEmbeddedSource(IToken lang, IToken fn, IToken start)
+	{
+		sourceLang = lang.getText();
+		sourceFile = fn.getText();
+		startPos = ((PosToken)start).getBytePos() + 1;
+	}
 }
 
-concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"! namespace)? concernBlock;
+concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"! ns)? concernBlock;
 
   formalParameters : formalParameterDef (SEMICOLON! formalParameterDef)*
   { #formalParameters = #([FPMSET_, "formal parameters"], #formalParameters);} ;
@@ -95,9 +105,9 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
     formalParameterDef : NAME (COMMA! NAME)* COLON!type
     { #formalParameterDef = #([FPMDEF_, "formal parameter definition"], #formalParameterDef);} ;
 
-  namespace : NAME (DOT! NAME)*;
+  ns : NAME (DOT! NAME)*;
 
-  concernBlock : LCURLY! (filterModule)* (superImposition)? concernEnd;   																																	
+  concernBlock : LCURLY! (filterModule)* (superImposition)? concernEnd;
 
 //don't bother parsing the closing end / curly if implementation is used
 //(because of possible embedded source code, which stops the parsing at that point)
@@ -189,20 +199,6 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                           | messagePatternSet)
                           { #filterElement = #([FILTERELEM_, "filterelement"], #filterElement);} ;
 
-// old --
-/*
-              orExpr : andExpr (OR andExpr)*
-                     { #orExpr = #([OREXPR_, "orExpression"], #orExpr);};
-
-                andExpr : notExpr (AND notExpr)*
-                        { #andExpr = #([ANDEXPR_, "andExpression"], #andExpr);};
-
-                  //changed it from fmElemReferenceCond to NAME, since reuse must be done in the conditions block
-                  notExpr : (NOT)? ( NAME )
-                          { #notExpr = #([NOTEXPR_, "notExpression"], #notExpr);};
-*/
-// -- old                          
-// new --
               orExpr : andExpr (OR^ orExpr)?;
                      
                 andExpr : unaryExpr (AND^ andExpr)?;
@@ -212,7 +208,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                     operandExpr : LPARENTHESIS! orExpr RPARENTHESIS!
                                 | NAME // name is either a literal or identifier
                                 ;
-// -- new
+
               messagePatternSet : messagePattern
                                 { #messagePatternSet = #([MPSET_, "messagePatternSet"], #messagePatternSet);} ;
 
@@ -283,17 +279,19 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
         { #oldSelExpression = #([SELEXP_, "selectorexpression"], #oldSelExpression);} ;
         
 
-	   predSelExpression : NAME OR! prologExpression RCURLY!;
-	  
-	     prologExpression 
-	     { StringBuffer sb = new StringBuffer(); }
-	     :	(	x:~(RCURLY)
-	     		{ sb.append(x.getText()); }
-	     	)*
-	     	{ #prologExpression = #([PROLOG_EXPRESSION, sb.toString()]); }
-	     ;
-	                     
-	   
+       predSelExpression : NAME OR! prologExpression RCURLY!;
+      
+         prologExpression 
+         { StringBuffer sb = new StringBuffer(); }
+         :   (   x:~(RCURLY)
+                 $J:{ sb.append(x.getText()); }
+                 $C:{ sb.Append(x.getText()); }
+             )*
+             $J:{ #prologExpression = #([PROLOG_EXPRESSION, sb.toString()]); }
+             $C:{ #prologExpression = #([PROLOG_EXPRESSION, sb.ToString()]); }
+         ;
+                         
+       
 
     /*---------------------------------------------------------------------------*/
     commonBindingPart : selectorRef weaveOperation;
@@ -311,21 +309,22 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                    { #singleFmBind = #([FM_, "filtermodule"], #singleFmBind);} ;
 
         filterModuleSet : ( LCURLY! filterModuleElement (COMMA! filterModuleElement)* RCURLY!
-                          | filterModuleElement (COMMA! filterModuleElement)*)
+                          | filterModuleElement (COMMA! filterModuleElement)*
+                          )
                           { #filterModuleSet = #([FMSET_, "filtermodule set"], #filterModuleSet);} ;
 
           filterModuleElement : concernElemReference (fmBindingArguments)?
           					 { #filterModuleElement = #([FMELEM_, "filtermodule element"], #filterModuleElement);} ;
           fmBindingArguments : LPARENTHESIS! (argument (COMMA! argument)*)? RPARENTHESIS!
-          				     {#fmBindingArguments = #([DECLAREDARGUMENT_, "declaredargument"], #fmBindingArguments);};
+          				     { #fmBindingArguments = #([DECLAREDARGUMENT_, "declaredargument"], #fmBindingArguments);};
           argument : fqn
-          		   {#argument = #([ARGUMENT_, "argument"], #argument);}
-          		    | LCURLY! fqn (COMMA! fqn)* RCURLY!
-          		   {#argument = #([ARGUMENT_, "argument"], #argument);};
+                     { #argument = #([ARGUMENT_, "argument"], #argument);}
+                   | LCURLY! fqn (COMMA! fqn)* RCURLY!
+                     { #argument = #([ARGUMENT_, "argument"], #argument);};
 
     /*---------------------------------------------------------------------------*/
-	annotationBind : "annotations"^ (singleAnnotBind)* ;
-	
+    annotationBind : "annotations"^ (singleAnnotBind)* ;
+
       singleAnnotBind : selectorRef ARROW_LEFT! annotationSet SEMICOLON!
                    { #singleAnnotBind = #([ANNOT_, "annotation"], #singleAnnotBind);} ;
 
@@ -355,9 +354,9 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
   //////////////////////////////////////////////////////////////////////////
   implementation : "implementation"^ implementationInner;
 
-	implementationInner : "in"! l2:NAME "by"! fqn "as"! f2:FILENAME lcurly:LCURLY! { sourceLang=l2.getText(); sourceFile=f2.getText(); sourceIncluded=true; if(lcurly != null) startPos=((PosToken)lcurly).getBytePos() + 1;}
-                      	| "by"! fqn SEMICOLON;   //assemblyname
-
+    implementationInner : "in"! lang:NAME "by"! fqn "as"! fn:FILENAME start:LCURLY!
+                          { addEmbeddedSource(lang, fn, start); }
+                        | "by"! fqn SEMICOLON;   //assemblyname
 
 ///////////////////////////////////////////////////////////////////////////
 // Lexer for Cps files
@@ -369,68 +368,60 @@ options {
         exportVocab = Cps;
 }
 
-AND                     : '&';
+AND                     : '&'  ;
 ARROW_LEFT              : "<-" ;
-COLON                   : ':' ;
-COMMA                   : ',' ;
-DOT                     : '.' ;
+COLON                   : ':'  ;
+COMMA                   : ','  ;
+DOT                     : '.'  ;
 DOUBLE_COLON            : "::" ;
-EQUALS                  : '=' ;
+EQUALS                  : '='  ;
 FILTER_OP               : "=>" | "~>" ;
 HASH                    : '#' ;
 LANGLE                  : '<' ;
 LCURLY                  : '{' ;
-LPARENTHESIS            : '(';
+LPARENTHESIS            : '(' ;
 LSQUARE                 : '[' ;
-NOT                     : '!';
-OR                      : '|';
-RANGLE                  : '>' ;         //right angle bracket
+NOT                     : '!' ;
+OR                      : '|' ;
+RANGLE                  : '>' ;
 RCURLY                  : '}' ;
-RPARENTHESIS            : ')';
+RPARENTHESIS            : ')' ;
 RSQUARE                 : ']' ;
 SEMICOLON               : ';' ;
 STAR                    : '*' ;
-QUESTIONMARK			: '?';
+QUESTIONMARK            : '?' ;
 
 protected DIGIT         : '0'..'9' ;
 protected FILE_SPECIAL  : '\\' | '/' | COLON!| ' ' | DOT;     //special items only allowed in filenames
 protected LETTER        : 'a'..'z'|'A'..'Z' ;
 protected NEWLINE       : (("\r\n") => "\r\n"           //DOS
                           | '\r'                        //Macintosh
-                          | '\n'){newline();};          //Unix
+                          | '\n'                        //Unix
+                          ) {newline();};
 
 protected SPECIAL       : '_';
 protected QUOTE         : '"';
 protected SINGLEQUOTE   : '\'';
 
 // used for prolog expressions
-PROLOG_STRING			: SINGLEQUOTE ( ~('\'') )* SINGLEQUOTE;
+PROLOG_STRING           : SINGLEQUOTE ( ~('\'') )* SINGLEQUOTE;
 
 protected COMMENTITEMS  : NEWLINE COMMENTITEMS
-				  | ("*/") => "*/"
-				  | (~ ('\n'|'\r')) COMMENTITEMS;
+                        | ("*/") => "*/"
+                        | (~ ('\n'|'\r')) COMMENTITEMS;
 
 COMMENT                 : ("//" (~('\n'|'\r'))*
-			        | "/*" COMMENTITEMS) { $setType(Token.SKIP); };
+                        | "/*" COMMENTITEMS) { $setType(Token.SKIP); };
 
 FILENAME                : (QUOTE (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE) => QUOTE! (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE! //fixme: also allow paths?
                           | QUOTE {$setType(QUOTE);};
 
 NAME                    : (LETTER | SPECIAL) (LETTER | DIGIT | SPECIAL)*;
 
-PARAMETERLIST_NAME		: QUESTIONMARK QUESTIONMARK NAME;
+PARAMETERLIST_NAME      : QUESTIONMARK QUESTIONMARK NAME;
 
 PARAMETER_NAME          : QUESTIONMARK NAME;
 
 // NEWLINE and WS.... you can combine those
 WS                      : (NEWLINE) => NEWLINE { /*newline();*/ $setType(Token.SKIP);}
                           | (' ' | '\t' | '\f') { $setType(Token.SKIP); } ;
-
-/*
-PROLOG_EXPRESSION       :   '|' (PROLOG_SUB_EXPRESSION)* RCURLY!;
-
-protected PROLOG_SUB_EXPRESSION : (~ ('{'|'}'|'\n'|'\r'))
-					| (LCURLY (PROLOG_SUB_EXPRESSION)* RCURLY)
-					| NEWLINE
-					;
-*/
