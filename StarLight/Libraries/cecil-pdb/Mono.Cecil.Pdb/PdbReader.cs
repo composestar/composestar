@@ -139,7 +139,13 @@ namespace Mono.Cecil.Pdb {
 		public void Dispose ()
 		{
 			m_reader = null;
+         
+            // ISymWrapper/System.Diagnostics.SymbolStore.SymReader locks the assembly, this reader can only be disposed
+            // by an explicit call to the garbage collector. The clean-up is _only_ done in the Finalize method.
+            // TODO: implement a better way to release the file lock on the assembly, can't call dtor/finalizer explicitly,
+            //       and Microsoft doesn't implement IDisposable
             System.GC.Collect();
-		}
+            System.GC.WaitForPendingFinalizers();
+        }
 	}
 }
