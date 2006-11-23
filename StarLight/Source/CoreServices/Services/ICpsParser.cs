@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Composestar.StarLight.Entities.Concerns;   
 
 namespace Composestar.StarLight.CoreServices
 {
@@ -36,12 +37,5 @@ namespace Composestar.StarLight.CoreServices
 		/// Parses the input.
 		/// </summary>
 		void Parse();
-	}
-
-	public class EmbeddedCode
-	{
-		public string language;
-		public string filename;
-		public string code;
 	}
 }

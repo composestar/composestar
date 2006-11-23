@@ -25,6 +25,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// </summary>
 	public class CpsParserTask : Task
 	{
+        private const string EmbeddedFolderName = "Embedded";
+
 		private string _baseDir;
 		private string _repositoryFileName;
 		private ITaskItem[] _concernFiles;
@@ -208,6 +210,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			return !Log.HasLoggedErrors;
 		}
 
+        /// <summary>
+        /// Finds the concern element.
+        /// </summary>
+        /// <param name="cc">The cc.</param>
+        /// <param name="concernFile">The concern file.</param>
+        /// <param name="newConcern">if set to <c>true</c> [new concern].</param>
+        /// <returns></returns>
 		private ConcernElement FindConcernElement(ConfigurationContainer cc, string concernFile, 
 			out bool newConcern)
 		{
@@ -236,26 +245,35 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			return ce;
 		}
 
-		/// <summary>
-		/// Writes the specified embedded code to a file.
-		/// </summary>
+        /// <summary>
+        /// Writes the specified embedded code to a file.
+        /// </summary>
+        /// <param name="ec">The embedded code.</param>
 		private void StoreEmbeddedCode(EmbeddedCode ec)
 		{
-			if (ec == null) return;
+			if (ec == null) 
+                return;
 
-			string embeddedDir = Path.Combine(_baseDir, "embedded");
-			if (!Directory.Exists(embeddedDir)) Directory.CreateDirectory(embeddedDir);
+			string embeddedDir = Path.Combine(_baseDir, EmbeddedFolderName);
 			
-			string filename = Path.Combine(embeddedDir, ec.filename);
+            if (!Directory.Exists(embeddedDir)) 
+                Directory.CreateDirectory(embeddedDir);
+			
+			string filename = Path.Combine(embeddedDir, ec.FileName);
 			using (StreamWriter sw = File.CreateText(filename))
 			{
-				Log.LogMessage("Writing embedded code to '{0}'", filename);
+                Log.LogMessageFromResources("WritingEmbeddedCode", filename);
 
-				sw.Write(ec.code);
+				sw.Write(ec.Code);
 				_extraSources.Add(new TaskItem(filename));
 			}
 		}
 
+        /// <summary>
+        /// Convert to an array.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <returns>Returns an ITaskItem array.</returns>
 		private ITaskItem[] ToArray(IList<ITaskItem> items)
 		{
 			ITaskItem[] arr = new ITaskItem[_extraSources.Count];

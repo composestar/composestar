@@ -266,4 +266,7 @@ Weaved in {13:0.0000} sec.: {9} internal(s), {10} external(s)
     <value>The following stack trace can indicate the location of the above exception message:
     {0}</value>
   </data>
+  <data name="WritingEmbeddedCode" xml:space="preserve">
+    <value>Writing embedded code to '{0}'.</value>
+  </data>
 </root>

@@ -496,5 +496,14 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
                 return ResourceManager.GetString("WeavingTimingLogSaved", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing embedded code to &apos;{0}&apos;..
+        /// </summary>
+        internal static string WritingEmbeddedCode {
+            get {
+                return ResourceManager.GetString("WritingEmbeddedCode", resourceCulture);
+            }
+        }
     }
 }

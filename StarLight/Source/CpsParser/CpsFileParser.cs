@@ -9,6 +9,7 @@ using System.Globalization;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.Entities.Concerns;  
 using antlr.collections;
 #endregion
 
@@ -21,8 +22,8 @@ namespace Composestar.StarLight.CpsParser
 	{
 		private CpsParserConfiguration _configuration;
 		private IList<string> types = new List<string>();
-		private EmbeddedCode _embeddedCode = null;
-		private bool _hasOutputFilters = false;
+		private EmbeddedCode _embeddedCode;
+		private bool _hasOutputFilters;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:CpsFileParser"/> class.
@@ -55,7 +56,7 @@ namespace Composestar.StarLight.CpsParser
 		}
 
 		/// <summary>
-		/// Gets the embedded code from the parsed input or null if there was none.
+        /// Gets the embedded code from the parsed input or <see langword="null" /> if there was none.
 		/// </summary>
 		public EmbeddedCode EmbeddedCode
 		{
@@ -66,7 +67,7 @@ namespace Composestar.StarLight.CpsParser
 		/// Gets a value indicating whether the input parsed had output filters.
 		/// </summary>
 		/// <value>
-		/// 	<c>true</c> if the input had output filters; otherwise, <c>false</c>.
+        /// 	<see langword="true" /> if the input had output filters; otherwise, <see langword="false" />.
 		/// </value>
 		public bool HasOutputFilters
 		{
@@ -97,9 +98,9 @@ namespace Composestar.StarLight.CpsParser
 					else
 					{
 						_embeddedCode = new EmbeddedCode();
-						_embeddedCode.language = parser.sourceLang;
-						_embeddedCode.filename = parser.sourceFile;
-						_embeddedCode.code = ExtractEmbeddedSource(FileName, parser.startPos);
+						_embeddedCode.Language = parser.sourceLang;
+						_embeddedCode.FileName  = parser.sourceFile;
+						_embeddedCode.Code = ExtractEmbeddedSource(FileName, parser.startPos);
 					}
 
 					if (parser.getAST() != null)
@@ -131,9 +132,9 @@ namespace Composestar.StarLight.CpsParser
 		/// <param name="filename">The cps file that contains the embedded code</param>
 		/// <param name="start">The byte position that indicates the start of the embedded code</param>
 		/// <returns></returns>
-		private string ExtractEmbeddedSource(string filename, int start)
+		private string ExtractEmbeddedSource(string fileName, int start)
 		{
-			string content = File.ReadAllText(filename);
+			string content = File.ReadAllText(fileName);
 
 			// find second-last index of '}'
 			int end = content.LastIndexOf('}'); // Closing tag of concern
@@ -143,7 +144,7 @@ namespace Composestar.StarLight.CpsParser
 			}
 			if (end <= 0)
 			{
-				throw new CpsParserException("Expecting closing '}' after embedded source");
+				throw new CpsParserException("Expecting closing '}' after embedded source.");
 			}
 
 			int length = end - start;
