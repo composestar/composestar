@@ -42,6 +42,8 @@ public class UnitDictionary
   // the name is guaranteed to be unique (Namespaces, Classes, Types, Interfaces), or a hashset
   // of objects if they don't have to be unique (fields, operations, methods, constructors).
   private Hashtable unitsByName; 
+  
+  private Hashtable duplicateUniqueUnits;
 
   public UnitDictionary()
   {
@@ -52,6 +54,7 @@ public class UnitDictionary
   {
     this.unitsByType = new Hashtable();
     this.unitsByName = new Hashtable();
+    this.duplicateUniqueUnits = new Hashtable();
     this.langModel = langModel;
   }
   
@@ -88,11 +91,20 @@ public class UnitDictionary
   	  
         if (nameTypeTable.containsKey(name)) // In this case the unit will *NOT* have been added anywhere!
         {
-        	Debug.out(Debug.MODE_WARNING,"LOLA","Duplicate key for unit with unique name: "+name);
+        	// Add warning suppression for duplicate class names within different assemblies
+        	if (unit.getUnitType().equalsIgnoreCase("class"))
+        	{       
+        		duplicateUniqueUnits.put(name, unit);
+        		nameTypeTable.remove(name);
+        	}
+        	
+        	Debug.out(Debug.MODE_WARNING,"LOLA","Duplicate key for unit with unique name: "+name+" (type '"+unit.getUnitType()+"')");
         	return;
         	//throw new ModelClashException("Duplicate key for unit with unique name");
         }
           
+        if (duplicateUniqueUnits.containsKey(name)) return;
+        
         nameTypeTable.put(name, unit);
       }
       else // The unit might not have a unique name
