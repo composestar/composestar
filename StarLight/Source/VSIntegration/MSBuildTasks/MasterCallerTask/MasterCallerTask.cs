@@ -101,7 +101,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </returns>
 		public override bool Execute()
 		{
-			Stopwatch sw = new System.Diagnostics.Stopwatch();
+			Stopwatch sw = new Stopwatch();
 			sw.Start();
 
 			// Open DB
@@ -149,8 +149,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			
 			// Save common config
 			entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer);
-																 
-			// Start java                  
+			
+			// Start java
 			Process process = new Process();
 
 			// Determine executable filename
@@ -189,7 +189,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 					return !Log.HasLoggedErrors;
 				}
 				else
-				{                  
+				{
 					Log.LogMessagesFromStream(process.StandardError, MessageImportance.High); 
 					Log.LogErrorFromResources("MasterRunFailed", process.ExitCode);                 
 					return false;
@@ -208,7 +208,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				else
 				{
 					Log.LogErrorFromResources("ExecutionException", e.ToString());
-				}             
+				}
 				return false;
 			}
 			finally
@@ -290,13 +290,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				switch (debugMode)
 				{
 					case DebugMode.Error:
-						Log.LogError(module, "", "", filename, line, 0, line + 1, 0, message);
+						Log.LogError(module, "", "", filename, line, 0, 0, 0, message);
+						break;
+					case DebugMode.Warning:
+						Log.LogWarning(module, "", "", filename, line, 0, 0, 0, message);
 						break;
 					case DebugMode.Crucial:
 						Log.LogMessage(MessageImportance.Normal, fm);
-						break;
-					case DebugMode.Warning:                     
-						Log.LogWarning(module, "", "", filename, line, 0, line + 1, 0, message);
 						break;
 					case DebugMode.Information:
 						Log.LogMessage(MessageImportance.Normal, fm);
