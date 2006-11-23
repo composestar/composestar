@@ -28,8 +28,8 @@ options {
 	k = 1;
 	buildAST = true;
 	exportVocab = Cps;
+	defaultErrorHandler = false;
 $J:	ASTLabelType = "CpsAST";
-$J:	defaultErrorHandler = false;
 }
 
 //extra tokens used in constructing the tree
@@ -290,8 +290,6 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
              $J:{ #prologExpression = #([PROLOG_EXPRESSION, sb.toString()]); }
              $C:{ #prologExpression = #([PROLOG_EXPRESSION, sb.ToString()]); }
          ;
-                         
-       
 
     /*---------------------------------------------------------------------------*/
     commonBindingPart : selectorRef weaveOperation;
@@ -354,9 +352,10 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
   //////////////////////////////////////////////////////////////////////////
   implementation : "implementation"^ implementationInner;
 
-    implementationInner : "in"! lang:NAME "by"! fqn "as"! fn:FILENAME start:LCURLY!
+    implementationInner : "in"! lang:NAME "by"! tn:fqn "as"! fn:FILENAME start:LCURLY!
                           { addEmbeddedSource(lang, fn, start); }
-                        | "by"! fqn SEMICOLON;   //assemblyname
+                        | "by"! asm:fqn SEMICOLON
+                        ; 
 
 ///////////////////////////////////////////////////////////////////////////
 // Lexer for Cps files
