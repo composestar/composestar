@@ -1,4 +1,4 @@
-Welcome to the 'M.C. Escher' 0.6 maintance release of Compose*.NET.
+Welcome to the 'M.C. Escher' 0.6 release of Compose*.NET.
 
 Please visit [http://composestar.sourceforge.net/] for more information.
 
@@ -14,7 +14,6 @@ New in Compose*.NET 0.6
 !!!Important!!!
 * You should be at least a Windows Power User on your system in order to install Compose*.
 * Compose* is not (yet) compatible with Visual Studio 2005 or the Microsoft .NET framework 2.
-* There are some localization issues, i.e. Compose* will NOT run on a German localized version of Visual Studio.
 
 This Compose*.NET requires:
  * Java Runtime Environment 1.4.2 or higher [http://java.sun.com/]
