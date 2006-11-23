@@ -12,7 +12,26 @@ namespace CustomFilters
     {
 
         private bool disposed = false;
-        private static Queue<string> _lines = new Queue<string>();
+        private static TraceBuffer buffer = null;
+        private Queue<string> _lines = new Queue<string>();
+
+        private TraceBuffer()
+        {
+        }
+
+        public static TraceBuffer Instance
+        {
+            get
+            {
+                if (buffer == null) buffer = new TraceBuffer();
+                return buffer;
+            }
+        }
+
+        private void WriteTraceLine(String line, params Object[] args)
+        {
+            _lines.Enqueue(String.Format(line, args));
+        }
 
         /// <summary>
         /// Writes the line to the queue.
@@ -21,7 +40,16 @@ namespace CustomFilters
         /// <param name="args">The args.</param>
         public static void WriteLine(String line, params Object[] args)
         {
-            _lines.Enqueue(String.Format(line, args));
+            TraceBuffer.Instance.WriteTraceLine(line, args);
+        }
+
+        private void FlushBuffer()
+        {
+            while (_lines.Count > 0)
+            {
+                TraceFile.WriteLine(_lines.Dequeue());
+            } // while
+            TraceFile.Flush();
         }
 
         /// <summary>
@@ -29,11 +57,12 @@ namespace CustomFilters
         /// </summary>
         public static void Flush()
         {
-            while (_lines.Count > 0)
-            {
-                TraceFile.WriteLine(_lines.Dequeue());  
-            } // while
-            TraceFile.Flush();
+            TraceBuffer.Instance.FlushBuffer();
+        }
+
+        ~TraceBuffer()
+        {
+            FlushBuffer();
         }
 
         #region IDisposable
@@ -57,8 +86,7 @@ namespace CustomFilters
                 if (disposeManagedResources)
                 {
 
-                    TraceBuffer.Flush();
-
+                    FlushBuffer();
                 }
 
                 disposed = true;

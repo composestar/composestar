@@ -35,14 +35,14 @@ namespace CustomFilters
             // Out arguments
             if (context.ArgumentCount > 0)
             {
-                for (short i = 1; i <= context.ArgumentCount; i++)
+                for (short i = 0; i < context.ArgumentCount; i++)
                 {
                     ArgumentInfo argumentInfo = context.GetArgumentInfo(i);
-                    if (argumentInfo.IsOut())
+                    if (argumentInfo != null && argumentInfo.IsOut())
                     {
                         if (argumentInfo.Value == null)
                         {
-                            TraceBuffer.WriteLine("  argument {0} (out) -> {1} = null", i, context.GetArgumentValue(i).GetType().FullName);
+                            TraceBuffer.WriteLine("  argument {0} (out) -> {1} = null", i, context.GetArgumentType(i).Name);
                             continue;
                         }
 
@@ -54,7 +54,7 @@ namespace CustomFilters
                         catch(Exception){
                             argvalue = "<exception>";
                         }
-                        TraceBuffer.WriteLine("  argument {0} (out) -> {1} = {2}", i, context.GetArgumentValue(i).GetType().FullName, argvalue);
+                        TraceBuffer.WriteLine("  argument {0} (out) -> {1} = {2}", i, context.GetArgumentType(i).Name, argvalue);
                     }
                 }
             }

@@ -32,10 +32,16 @@ namespace CustomFilters
 
             if (context.ArgumentCount > 0)
             {
-                for (short i=1; i <= context.ArgumentCount; i++)
+                for (short i=0; i < context.ArgumentCount; i++)
                 {
                     ArgumentInfo argumentInfo = context.GetArgumentInfo(i);
                     
+                    if (argumentInfo == null)
+                    {
+                        TraceBuffer.WriteLine("  argument {0} -> no argument info available", i);
+                        continue;
+                    }
+
                     string argdirection = "-";
                     if ((argumentInfo.Attributes & ArgumentAttributes.In) == ArgumentAttributes.In)
                         argdirection = "input";
@@ -46,7 +52,7 @@ namespace CustomFilters
                     
                     if (argumentInfo.Value == null)
                     {
-                        TraceBuffer.WriteLine("  argument {0} ({2}) -> {1} = null", i, context.GetArgumentValue(i), argdirection);
+                        TraceBuffer.WriteLine("  argument {0} ({2}) -> {1} = null", i, context.GetArgumentType(i).Name, argdirection);
                         continue;
                     }
                     String argvalue;
@@ -58,7 +64,7 @@ namespace CustomFilters
                     {
                         argvalue = "<exception>";
                     }
-                    TraceBuffer.WriteLine("  argument {0} ({3}) -> {1} = {2}", i, context.GetArgumentValue(i).GetType().FullName, argvalue, argdirection);
+                    TraceBuffer.WriteLine("  argument {0} ({3}) -> {1} = {2}", i, context.GetArgumentType(i).Name, argvalue, argdirection);
                 }
             }
 
