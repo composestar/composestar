@@ -9,7 +9,7 @@ using System.Globalization;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.StarLight.Entities.Concerns;  
+using Composestar.StarLight.Entities.Concerns;
 using antlr.collections;
 #endregion
 
@@ -56,7 +56,7 @@ namespace Composestar.StarLight.CpsParser
 		}
 
 		/// <summary>
-        /// Gets the embedded code from the parsed input or <see langword="null" /> if there was none.
+		/// Gets the embedded code from the parsed input or <see langword="null" /> if there was none.
 		/// </summary>
 		public EmbeddedCode EmbeddedCode
 		{
@@ -67,7 +67,7 @@ namespace Composestar.StarLight.CpsParser
 		/// Gets a value indicating whether the input parsed had output filters.
 		/// </summary>
 		/// <value>
-        /// 	<see langword="true" /> if the input had output filters; otherwise, <see langword="false" />.
+		/// 	<see langword="true" /> if the input had output filters; otherwise, <see langword="false" />.
 		/// </value>
 		public bool HasOutputFilters
 		{

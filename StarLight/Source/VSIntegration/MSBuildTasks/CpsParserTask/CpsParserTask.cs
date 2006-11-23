@@ -13,7 +13,7 @@ using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.CpsParser;
 using Composestar.StarLight.Entities.Concerns;
-using Composestar.StarLight.Entities.Configuration;   
+using Composestar.StarLight.Entities.Configuration;
 using Composestar.Repository;
 
 #endregion
@@ -25,7 +25,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// </summary>
 	public class CpsParserTask : Task
 	{
-        private const string EmbeddedFolderName = "Embedded";
+		private const string EmbeddedFolderName = "Embedded";
 
 		private string _baseDir;
 		private string _repositoryFileName;
@@ -40,7 +40,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:CpsParserTask"/> class.
 		/// </summary>
-		public CpsParserTask() : base(Properties.Resources.ResourceManager)
+		public CpsParserTask()
+			: base(Properties.Resources.ResourceManager)
 		{
 			_extraSources = new List<ITaskItem>();
 		}
@@ -110,7 +111,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		{
 			get { return _concernsDirty; }
 		}
-	
+
 		#endregion
 
 		/// <summary>
@@ -128,18 +129,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			{
 				// Open DB
 				Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", _repositoryFileName);
-				IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance; 
-				ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(_repositoryFileName);               
+				IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
+				ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(_repositoryFileName);
 
 				// Create a list with the new concerns
-				List<ConcernElement> concernsToAdd = new List<ConcernElement>(); 
+				List<ConcernElement> concernsToAdd = new List<ConcernElement>();
 
 				// Parse all concern files and add to the database
 				foreach (ITaskItem item in _concernFiles)
 				{
 					string concernFile = item.ToString();
 					bool newConcern;
-					
+
 					ConcernElement ce = FindConcernElement(configContainer, concernFile, out newConcern);
 
 					// Do a time check, if new or change, run the parser and store the data
@@ -195,8 +196,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				}
 
 				// Save the configContainer
-				configContainer.Concerns = concernsToAdd;  
-				entitiesAccessor.SaveConfiguration(_repositoryFileName, configContainer); 
+				configContainer.Concerns = concernsToAdd;
+				entitiesAccessor.SaveConfiguration(_repositoryFileName, configContainer);
 			}
 			catch (CpsParserException ex)
 			{
@@ -210,14 +211,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			return !Log.HasLoggedErrors;
 		}
 
-        /// <summary>
-        /// Finds the concern element.
-        /// </summary>
-        /// <param name="cc">The cc.</param>
-        /// <param name="concernFile">The concern file.</param>
-        /// <param name="newConcern">if set to <c>true</c> [new concern].</param>
-        /// <returns></returns>
-		private ConcernElement FindConcernElement(ConfigurationContainer cc, string concernFile, 
+		/// <summary>
+		/// Finds the concern element with the specified path.
+		/// </summary>
+		/// <param name="cc">The cc.</param>
+		/// <param name="concernFile">The full path of the concern to find.</param>
+		/// <param name="newConcern">if set to <see langword="true"/> then the concern is new since the last build.</param>
+		/// <returns></returns>
+		private ConcernElement FindConcernElement(ConfigurationContainer cc, string concernFile,
 			out bool newConcern)
 		{
 			string basePath = Path.GetDirectoryName(concernFile);
@@ -245,35 +246,35 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			return ce;
 		}
 
-        /// <summary>
-        /// Writes the specified embedded code to a file.
-        /// </summary>
-        /// <param name="ec">The embedded code.</param>
+		/// <summary>
+		/// Writes the specified embedded code to a file.
+		/// </summary>
+		/// <param name="ec">The embedded code.</param>
 		private void StoreEmbeddedCode(EmbeddedCode ec)
 		{
-			if (ec == null) 
-                return;
+			if (ec == null)
+				return;
 
 			string embeddedDir = Path.Combine(_baseDir, EmbeddedFolderName);
-			
-            if (!Directory.Exists(embeddedDir)) 
-                Directory.CreateDirectory(embeddedDir);
-			
+
+			if (!Directory.Exists(embeddedDir))
+				Directory.CreateDirectory(embeddedDir);
+
 			string filename = Path.Combine(embeddedDir, ec.FileName);
 			using (StreamWriter sw = File.CreateText(filename))
 			{
-                Log.LogMessageFromResources("WritingEmbeddedCode", filename);
+				Log.LogMessageFromResources("WritingEmbeddedCode", filename);
 
 				sw.Write(ec.Code);
 				_extraSources.Add(new TaskItem(filename));
 			}
 		}
 
-        /// <summary>
-        /// Convert to an array.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        /// <returns>Returns an ITaskItem array.</returns>
+		/// <summary>
+		/// Converts a list of taskitems to an array.
+		/// </summary>
+		/// <param name="items">The list of items.</param>
+		/// <returns>Returns an ITaskItem array.</returns>
 		private ITaskItem[] ToArray(IList<ITaskItem> items)
 		{
 			ITaskItem[] arr = new ITaskItem[_extraSources.Count];
