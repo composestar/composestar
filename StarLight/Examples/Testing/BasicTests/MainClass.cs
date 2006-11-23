@@ -25,6 +25,11 @@ namespace BasicTests
 
             Console.Out.WriteLine("");
 
+            MyValueType v = new MyValueType(1, 10);
+            Console.Out.WriteLine("ValueType Test: minimum={0} (correct={1}), maximum={2} (correct={3})", v.Minimum, v.Minimum == 1, v.Maximum, v.Maximum == 10);
+
+            Console.Out.WriteLine("");
+
 			FilterTests filtTests = new FilterTests();
 			filtTests.func1();
 			filtTests.func2();

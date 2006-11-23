@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomAttributes.cs" />
+    <Compile Include="MyValueType.cs" />
     <Compile Include="NotImplementedFilterType.cs" />
     <Compile Include="NotImplementedAction.cs" />
     <Compile Include="FilterTests.cs">

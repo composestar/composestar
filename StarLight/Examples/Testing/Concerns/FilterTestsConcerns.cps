@@ -38,9 +38,11 @@ concern FilterTestsConcern in BasicTests
 		selectors
 			baseClass = { C | isClassWithName(C, 'BasicTests.FilterTests') };
 			baseStaticClass = { C | isClassWithName(C, 'BasicTests.StaticFilterTests`1') };
+			valuetypeClass = { C | isClassWithName(C, 'BasicTests.MyValueType') };
 			//{ C | isClass(C), isClassWithName(C, P), matchPattern(P, 'BasicTests.StaticFilterTests.*') };
  		filtermodules
 			baseClass <- FM1;
 			baseStaticClass <- FM2;
+			valuetypeClass <- FM2;
 	}
 }

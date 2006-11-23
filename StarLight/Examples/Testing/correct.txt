@@ -11,6 +11,8 @@ Interface:
 Default value for CustomAttributes.MyProperty is 'Gigabytes', default value is correct? True
 Value for CustomAttributes.MyProperty set to 'Kilobytes', value now is 'Kilobytes' (check passed: True)
 
+ValueType Test: minimum=1 (correct=True), maximum=10 (correct=True)
+
 BasicTests.TestInternal.ctor()
 BasicTests.TestExternal.ctor()
 BasicTests.FilterTestsHelper.ctor()
