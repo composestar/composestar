@@ -12,6 +12,21 @@ isFileWithNameInList(Unit, [Name|Ns]) :-
 
 fileHasAnnotationWithName(Unit, AnnotName) :-
   classHasAnnotationWithName(Unit, AnnotName).
+
+isModule(Unit) :-
+  isClass(Unit).
+
+isModuleWithName(Unit, Name) :-
+  isClassWithName(Unit, Name).
+
+isModuleWithAttribute(Unit, Attr) :-
+  isClassWithAttribute(Unit, Attr).
+
+isModuleWithNameInList(Unit, [Name|Ns]) :-
+  isClassWithNameInList(Unit, [Name|Ns]).
+
+moduleHasAnnotationWithName(Unit, AnnotName) :-
+  classHasAnnotationWithName(Unit, AnnotName).
   
 isDirectory(Unit) :-
   isNamespace(Unit).
