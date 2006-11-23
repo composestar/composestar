@@ -1,15 +1,17 @@
 #region Using directives
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Globalization;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.CpsParser.Properties;
 using Composestar.StarLight.Entities.Concerns;
+
 using antlr.collections;
 #endregion
 
@@ -92,16 +94,8 @@ namespace Composestar.StarLight.CpsParser
 					// Parse the file
 					parser.concern();
 
-					// embedded code?
-					if (parser.startPos == -1)
-						_embeddedCode = null;
-					else
-					{
-						_embeddedCode = new EmbeddedCode();
-						_embeddedCode.Language = parser.sourceLang;
-						_embeddedCode.FileName  = parser.sourceFile;
-						_embeddedCode.Code = ExtractEmbeddedSource(FileName, parser.startPos);
-					}
+					// Embedded code?
+					_embeddedCode = ExtractEmbeddedCode(parser);
 
 					if (parser.getAST() != null)
 					{
@@ -117,13 +111,31 @@ namespace Composestar.StarLight.CpsParser
 			catch (IOException ex)
 			{
 				throw new CpsParserException(String.Format(CultureInfo.CurrentCulture,
-					Properties.Resources.ConcernNotFound, FileName), FileName, ex);
+					Resources.ConcernNotFound, FileName), FileName, ex);
 			}
 			catch (antlr.ANTLRException ex)
 			{
 				throw new CpsParserException(String.Format(CultureInfo.CurrentCulture,
-					Properties.Resources.UnableToParseConcern, FileName, ex.Message), FileName, ex);
+					Resources.UnableToParseConcern, FileName, ex.Message), FileName, ex);
 			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="parser"></param>
+		/// <returns></returns>
+		private EmbeddedCode ExtractEmbeddedCode(CpsParser parser)
+		{
+			if (parser.startPos == -1)
+				return null;
+
+			EmbeddedCode ec = new EmbeddedCode();
+			ec.Language = parser.sourceLang;
+			ec.FileName = parser.sourceFile;
+			ec.Code = ExtractEmbeddedSource(FileName, parser.startPos);
+			
+			return ec;
 		}
 
 		/// <summary>
@@ -144,7 +156,11 @@ namespace Composestar.StarLight.CpsParser
 			}
 			if (end <= 0)
 			{
-				throw new CpsParserException("Expecting closing '}' after embedded source.");
+				// this is actually incorrect since it will only occur if 
+				// there are less than two two closing tags in the embedded code.
+
+				throw new CpsParserException(String.Format(
+					Resources.ClosingTagExpected, FileName), FileName);
 			}
 
 			int length = end - start;

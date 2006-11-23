@@ -61,6 +61,15 @@ namespace Composestar.StarLight.CpsParser.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expecting closing &apos;}&apos; after embedded source in &apos;{0}&apos;..
+        /// </summary>
+        internal static string ClosingTagExpected {
+            get {
+                return ResourceManager.GetString("ClosingTagExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Concern &apos;{0}&apos; not found..
         /// </summary>
         internal static string ConcernNotFound {
@@ -70,7 +79,7 @@ namespace Composestar.StarLight.CpsParser.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to parse concern &apos;{0}&apos;; {1}.
+        ///   Looks up a localized string similar to Unable to parse concern &apos;{0}&apos;: {1}..
         /// </summary>
         internal static string UnableToParseConcern {
             get {
