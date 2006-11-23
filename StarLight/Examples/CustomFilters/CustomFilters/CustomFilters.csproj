@@ -33,11 +33,11 @@
   <ItemGroup>
     <Reference Include="Composestar.StarLight.ContextInfo, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\MSBuild\StarLight\0.2\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.2\Composestar.StarLight.ContextInfo.dll</HintPath>
     </Reference>
     <Reference Include="Composestar.StarLight.Filters, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\MSBuild\StarLight\0.2\Composestar.StarLight.Filters.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.2\Composestar.StarLight.Filters.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -61,11 +61,4 @@
     <Compile Include="TracingOutAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

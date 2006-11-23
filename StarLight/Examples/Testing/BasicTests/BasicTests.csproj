@@ -75,11 +75,11 @@
   <ItemGroup>
     <Reference Include="Composestar.StarLight.ContextInfo, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\MSBuild\StarLight\0.2\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.2\Composestar.StarLight.ContextInfo.dll</HintPath>
     </Reference>
     <Reference Include="Composestar.StarLight.Filters, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\MSBuild\StarLight\0.2\Composestar.StarLight.Filters.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.2\Composestar.StarLight.Filters.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
