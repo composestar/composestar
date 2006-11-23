@@ -2,27 +2,24 @@
 
 package Composestar.Core.SANE;
 
+import java.util.Iterator;
 import java.util.Vector;
 
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
-import Composestar.Core.CpsProgramRepository.*;
-
-import Composestar.Utils.*;
+import Composestar.Utils.CPSIterator;
 
 
 /**
  * [this aggregate is necessary to enable the inclusion of alternatives]
  */
-public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity {
-	
-	public static final String DATAMAP_KEY = "superImpInfo";
-	
-  /**
-	 * 
-	 */
-	private static final long serialVersionUID = -5485428622848735525L;
-public Vector theFmSIinfo = new Vector();
+public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity
+{
+  public static final String DATAMAP_KEY = "superImpInfo";	
+  private static final long serialVersionUID = -5485428622848735525L;
+
+  public Vector theFmSIinfo = new Vector();
   public Vector theMethodSIinfo = new Vector();
   public Vector theConditionSIinfo = new Vector();
 
@@ -129,28 +126,25 @@ public Vector theFmSIinfo = new Vector();
   public CPSIterator getConditionSIAltsIter() {
     return new CPSIterator(theConditionSIinfo);
   }
-
-
+  
   /**
    * @param fms
    * @param index
    * @roseuid 405A5EE500FC
    */
-  public void addFMsAt(java.util.Iterator fms, int index)
-    throws Exception {
-    FilterModSIinfo fmSIinfo;   // holds Filter Module s.i. information
-
+  public void addFMsAt(Iterator fms, int index)
+  {
     // get (create if necessary) the FilterModSIinfo instance
-    if (this.getFilterModSIAlts().isEmpty()) {
+    FilterModSIinfo fmSIinfo;
+    if (theFmSIinfo.isEmpty())
+    {
       // always add one alternative
       fmSIinfo = new FilterModSIinfo();
-      this.getFilterModSIAlts().addElement(fmSIinfo);
-    } else {
-      try {
-        fmSIinfo = (FilterModSIinfo) this.getFilterModSIAlts().elementAt(index);
-      } catch (ArrayIndexOutOfBoundsException aioobe) {
-        throw new Exception();// but what to do now?
-      }
+      theFmSIinfo.addElement(fmSIinfo);
+    }
+    else
+    {
+      fmSIinfo = (FilterModSIinfo)theFmSIinfo.get(index);
     }
     fmSIinfo.addFMs(fms);
   }
@@ -161,7 +155,7 @@ public Vector theFmSIinfo = new Vector();
    * @param index
    * @roseuid 405A5F1101AA
    */
-  public void addMethodsAt(java.util.Iterator fms, int index) {
+  public void addMethodsAt(Iterator fms, int index) {
 
   }
 
@@ -171,16 +165,8 @@ public Vector theFmSIinfo = new Vector();
    * @param index
    * @roseuid 405A5F200129
    */
-  public void addCondsAt(java.util.Iterator fms, int index) {
+  public void addCondsAt(Iterator fms, int index) {
 
   }
 }
 
-/**
- * Vector SIinfo.mySelectors(){
- * return null;
- * }
- * void SIinfo.opname(){
- *
- * }
- */
