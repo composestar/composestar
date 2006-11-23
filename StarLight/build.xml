@@ -41,8 +41,8 @@
 	<target name="build" depends="init" description="Build the StarLight implementation of Compose*">
 		<antcall target="build_compiletime"/>
 		<antcall target="build_msbuild"/>
-		<antcall target="build_vs"/>
 		<antcall target="build_ws"/>
+		<antcall target="build_vs"/>
 	</target>
 
 	<target name="build_compiletime" depends="init" description="Build Compose* StarLight Compiletime">
@@ -54,26 +54,30 @@
 		<ant target="build" dir="Source/VSIntegration/MSBuildTasks" />
 	</target>
 
-	<target name="build_vs" description="Build Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
-		<ant target="build" dir="Source/VSIntegration/VisualStudio.Project" />
-	</target>
-
 	<target name="build_ws" description="Build Compose* StarLight WeaveStrategy">
 		<ant target="build" dir="Source/StarLight.Weaving.BuildIn" />
+	</target>
+
+	<target name="build_vs" description="Build Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
+		<ant target="build" dir="Source/VSIntegration/VisualStudio.Project" />
 	</target>
 
 	<!-- deploy -->
 
 	<target name="deploy" depends="init" description="Deploy the StarLight implementation of Compose*">
 		<antcall target="deploy_compiletime"/>
+		<antcall target="deploy_msbuild"/>
 		<antcall target="deploy_ce"/>
 		<antcall target="deploy_ws"/>
-		<antcall target="deploy_msbuild"/>
 		<antcall target="deploy_vs"/>
 	</target>
 
 	<target name="deploy_compiletime" description="Deploy Compose* StarLight Compiletime">
 		<ant target="deploy" dir="Source/Compiletime" />
+	</target>
+
+	<target name="deploy_msbuild" description="Deploy Compose* StarLight MSBuild tasks">
+		<ant target="deploy" dir="Source/VSIntegration/MSBuildTasks" />
 	</target>
 
 	<target name="deploy_ce" description="Deploy Compose* StarLight CoreElements">
@@ -82,10 +86,6 @@
 
 	<target name="deploy_ws" description="Deploy Compose* StarLight WeaveStrategy">
 		<ant target="deploy" dir="Source/StarLight.Weaving.BuildIn" />
-	</target>
-
-	<target name="deploy_msbuild" description="Deploy Compose* StarLight MSBuild tasks">
-		<ant target="deploy" dir="Source/VSIntegration/MSBuildTasks" />
 	</target>
 
 	<target name="deploy_vs" description="Deploy Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
@@ -313,18 +313,23 @@
 					<antMenuItem name="Rebuild all"   target="rebuild"/>
 					<antMenuItem name="Compiletime"   target="build_compiletime"/>
 					<antMenuItem name="MSBuildTasks"  target="build_msbuild"/>
-					<antMenuItem name="VSIntegration" target="build_vs"/>
 					<antMenuItem name="WeaveStrategy" target="build_ws"/>
+					<antMenuItem name="VSIntegration" target="build_vs"/>
 					<antMenuItem name="Installer"     target="build_installer"/>
 				</antMenuItem>
 				<antMenuItem name="Deployment">
-					<antMenuItem name="Deploy"        target="deploy"/>
-					<antMenuItem name="Install"       target="install_starlight"/>
-					<antMenuItem name="Uninstall"     target="uninstall_starlight"/>
+					<antMenuItem name="Deploy all"    target="deploy"/>
+					<antMenuItem name="Compiletime"   target="deploy_compiletime"/>
+					<antMenuItem name="MSBuildTasks"  target="deploy_msbuild"/>
+					<antMenuItem name="CoreElements"  target="deploy_ce"/>
+					<antMenuItem name="WeaveStrategy" target="deploy_ws"/>
+					<antMenuItem name="VSIntegration" target="deploy_vs"/>
 				</antMenuItem>
 				<!--
 				<antMenuItem name="Publish">
 					<antMenuItem name="Create Installer" target="build_installer"/>
+					<antMenuItem name="Install"       target="install_starlight"/>
+					<antMenuItem name="Uninstall"     target="uninstall_starlight"/>
 				</antMenuItem>
 				-->
 				<antMenuItem name="Run tests">
