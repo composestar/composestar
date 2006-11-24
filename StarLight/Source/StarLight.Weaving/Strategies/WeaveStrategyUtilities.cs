@@ -57,9 +57,11 @@ namespace Composestar.StarLight.Weaving.Strategies
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));               
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, 
-                    CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetStartTarget)));         
+                    CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, 
+					CachedMethodDefinition.JoinPointContextGetStartTarget)));         
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, 
-                    CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetCurrentTarget)));
+                    CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
+					CachedMethodDefinition.JoinPointContextSetCurrentTarget)));
             }
             else if(visitor.Method.HasThis)
             {
@@ -392,6 +394,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             {
                 // Load this
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
+			
             }
             else
             {

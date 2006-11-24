@@ -401,10 +401,12 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitCheckInnerCall(ContextInstruction contextInstruction)
         {
             // Load the this parameter
-            if (!Method.HasThis)
-                Instructions.Add(Worker.Create(OpCodes.Ldnull));
-            else
-                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+			if (!Method.HasThis || Method.DeclaringType.IsValueType)
+				Instructions.Add(Worker.Create(OpCodes.Ldnull));
+			else
+			{		
+				Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+			}
 
             // Load the methodId
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
@@ -433,10 +435,12 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitSetInnerCall(ContextInstruction contextInstruction)
         {
             // Load the this parameter
-            if (!Method.HasThis)
-                Instructions.Add(Worker.Create(OpCodes.Ldnull));
-            else
-                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+			if (!Method.HasThis || Method.DeclaringType.IsValueType)
+				Instructions.Add(Worker.Create(OpCodes.Ldnull));
+			else
+			{
+				Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));			
+			}
 
             // Load the methodId
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
@@ -937,10 +941,10 @@ namespace Composestar.StarLight.ILWeaver
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                 // Load the this pointer
-                if (Method.HasThis)
-                    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-                else
-                    Instructions.Add(Worker.Create(OpCodes.Ldnull));
+				if (!Method.HasThis || Method.DeclaringType.IsValueType)
+					Instructions.Add(Worker.Create(OpCodes.Ldnull));
+				else
+					Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
 
                 // Assign to the Target property
                 Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetStartTarget)));
