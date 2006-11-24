@@ -14,6 +14,7 @@
     <DebugLevel>Debug</DebugLevel>
     <WeaveDebugLevel>Detailed</WeaveDebugLevel>
     <VerifyIL>True</VerifyIL>
+    <FILTHOutput>False</FILTHOutput>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>

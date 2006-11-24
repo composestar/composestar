@@ -196,7 +196,7 @@ public class StarLightMaster extends Master
 		ModuleSettings filthSettings = new ModuleSettings();
 		filthSettings.setName("FILTH");
 		filthSettings.addProperty("input", getSettingValue(configContainer.getSettings(),"SpecificationFILTH"));
-		filthSettings.addProperty("enabled",getSettingValue(configContainer.getSettings(),"OutputEnabledFILTH"));
+		filthSettings.addProperty("outputEnabled",getSettingValue(configContainer.getSettings(),"OutputEnabledFILTH"));
 		Configuration.instance().getModuleSettings().addModule("FILTH", filthSettings);
 
 		Debug.out(Debug.MODE_INFORMATION,"Master","Master initialized.");
