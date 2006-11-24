@@ -115,7 +115,6 @@ namespace Composestar.Repository.UnitTests
             string filename = "config.xml";
 
             ConfigurationContainer cc = new ConfigurationContainer();
-            cc.InstallFolder = "ss";
             ConfigurationContainer actual;
 
             Assert.IsTrue(target.SaveConfiguration(filename, cc), "Save function for SaveConfiguration did not return true");
@@ -124,8 +123,7 @@ namespace Composestar.Repository.UnitTests
             actual = target.LoadConfiguration(filename);
 
             Assert.IsNotNull(actual, "Could not read file {0}.", filename); 
-            Assert.AreEqual(cc.InstallFolder , actual.InstallFolder , "Composestar.Repository.EntitiesAccessor.LoadConfiguration did not return the expected value.");
-           
+              
         }
 
         /// <summary>
