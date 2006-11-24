@@ -28,8 +28,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// <summary>
     /// MSBuild tasks to start the analyzer.
     /// </summary>
-    [LoadInSeparateAppDomain()]
-    public class ILAnalyzerTask : AppDomainIsolatedTask
+    public class ILAnalyzerTask : Task
     {
 
         // The analyzer removes the Composestar.StarLight dlls from the list

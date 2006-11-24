@@ -124,7 +124,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to convert the debug level &apos;{0}&apos; to an integer value..
+        ///   Looks up a localized string similar to Unable to convert the debug level &apos;{0}&apos;..
         /// </summary>
         internal static string CouldNotConvertDebugLevel {
             get {
@@ -331,7 +331,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Storing debug level {0} in the repository..
+        ///   Looks up a localized string similar to Storing debug level &apos;{0}&apos; in the repository..
         /// </summary>
         internal static string StoreDebugLevel {
             get {

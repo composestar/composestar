@@ -416,7 +416,13 @@ This target will be called whenever the Clean target is invoked.
   <Target
        Name="MasterCaller" Condition="'$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False'">
     <Message Text="Executing Composestar Master." />
-    <MasterCallerTask RepositoryFilename="$(ProjectDir)$(RepositoryFilename)" ConcernFiles="@(Concern->'%(FullPath)')" DebugLevel="$(DebugLevel)" IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" />
+    <MasterCallerTask 
+      RepositoryFilename="$(ProjectDir)$(RepositoryFilename)" 
+      ConcernFiles="@(Concern->'%(FullPath)')" 
+      JavaDebugLevel="$(DebugLevel)" 
+      IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" 
+      FILTHOutput="$(FILTHOutput)"
+      />
   </Target>
 
   <!--ILWeaverRunner target -->

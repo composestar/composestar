@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Permissions;  
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -37,6 +38,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: AssemblyFileVersion("0.2.0.0")]
 
 [assembly: CLSCompliant(true)]
+
 
 // Globale FXCop suppressions
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.CoreServices.Exceptions")]

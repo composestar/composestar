@@ -9,8 +9,11 @@ using Microsoft.Build.Utilities;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.CoreServices.Settings;   
+
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.Configuration;
+
 using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -63,7 +66,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             sw.Start();
 
             // Get the location of PEVerify
-            PEVerifyLocation = RegistrySettings.RetrieveNetSDKLocation();
+			PEVerifyLocation = StarLightSettings.Instance.DotNETSDKLocation;
 
             if (String.IsNullOrEmpty(PEVerifyLocation) || !File.Exists(Path.Combine(PEVerifyLocation, PEVerifyExecutable)))
             {

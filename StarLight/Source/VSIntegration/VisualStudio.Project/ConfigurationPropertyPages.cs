@@ -50,12 +50,14 @@ namespace Composestar.StarLight.VisualStudio.Project
             DebugLevel,
             WeaveDebugLevel,
             VerifyIL,
+			FILTHOutput,
         }
         
         #region fields
         private DebugLevel debugLevel = DebugLevel.Information;
         private WeaveDebug weaveDebugLevel = WeaveDebug.None;
         private bool verifyIL = true;
+		private bool filthOutput = false;
         #endregion
 
         /// <summary>
@@ -114,6 +116,10 @@ namespace Composestar.StarLight.VisualStudio.Project
             bool verifyILTemp = false;
             if (Boolean.TryParse(this.GetConfigProperty(ConfigurationPropertyPageTag.VerifyIL.ToString()), out verifyILTemp ))
                 verifyIL = verifyILTemp;
+
+			bool filthOutputTemp = false;
+			if (Boolean.TryParse(this.GetConfigProperty(ConfigurationPropertyPageTag.FILTHOutput.ToString()), out filthOutputTemp))
+				filthOutput = filthOutputTemp;
         }
 
         /// <summary>
@@ -128,9 +134,10 @@ namespace Composestar.StarLight.VisualStudio.Project
                 return VSConstants.E_INVALIDARG;
             }
 
-            SetConfigProperty(ConfigurationPropertyPageTag.DebugLevel.ToString(), ((int)this.debugLevel).ToString() );
+            SetConfigProperty(ConfigurationPropertyPageTag.DebugLevel.ToString(), this.debugLevel.ToString());
             SetConfigProperty(ConfigurationPropertyPageTag.WeaveDebugLevel.ToString(), this.weaveDebugLevel.ToString());
             SetConfigProperty(ConfigurationPropertyPageTag.VerifyIL.ToString(), verifyIL.ToString() );
+			SetConfigProperty(ConfigurationPropertyPageTag.FILTHOutput.ToString(), filthOutput.ToString());
 
             this.IsDirty = false;
 
@@ -168,6 +175,15 @@ namespace Composestar.StarLight.VisualStudio.Project
             get { return this.verifyIL; }
             set { this.verifyIL = value; this.IsDirty = true; }
         }
+
+		[SRCategoryAttribute(SR.Application)]
+		[LocDisplayName(SR.FilthOutput)]
+		[SRDescriptionAttribute(SR.FilthOutputDescription)]
+		public bool FILTHOutout
+		{
+			get { return this.filthOutput ; }
+			set { this.filthOutput = value; this.IsDirty = true; }
+		}
        #endregion
 
     }

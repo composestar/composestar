@@ -17,13 +17,24 @@ namespace Composestar.StarLight.Entities.Configuration
 	public class ConfigurationContainer
 	{
 		private List<ConcernElement> _concerns = new List<ConcernElement>();
-		private string _intermediateOutputPath;
-		private string _specificationFILTH;
-		private string _installFolder;
-		private short _compiletimeDebugLevel;
 		private List<AssemblyConfig> _assemblies = new List<AssemblyConfig>();
+		private List<KeyValueSetting> _settings = new List<KeyValueSetting>();
 		private List<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
 		private List<FilterActionElement> _filterActions = new List<FilterActionElement>();
+
+		/// <summary>
+		/// Gets the version.
+		/// </summary>
+		/// <value>The version.</value>
+		[XmlAttribute]
+		public string Version
+		{
+			get
+			{
+				return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();      
+			}
+			set { }
+		}
 
 		/// <summary>
 		/// Gets or sets the concerns.
@@ -39,51 +50,6 @@ namespace Composestar.StarLight.Entities.Configuration
 		}
 
 		/// <summary>
-		/// Gets or sets the intermediate output path.
-		/// </summary>
-		/// <value>The intermediate output path.</value>
-		[XmlAttribute]
-		public string IntermediateOutputPath
-		{
-			get { return _intermediateOutputPath; }
-			set { _intermediateOutputPath = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the specification FILTH.
-		/// </summary>
-		/// <value>The specification FILTH.</value>
-		[XmlAttribute]
-		[SuppressMessage("Microsoft.Naming", "CA1705:LongAcronymsShouldBePascalCased")]
-		public string SpecificationFILTH
-		{
-			get { return _specificationFILTH; }
-			set { _specificationFILTH = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the install folder.
-		/// </summary>
-		/// <value>The install folder.</value>
-		[XmlAttribute]
-		public string InstallFolder
-		{
-			get { return _installFolder; }
-			set { _installFolder = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the compiletime debug level.
-		/// </summary>
-		/// <value>The compiletime debug level.</value>
-		[XmlAttribute]
-		public short CompiletimeDebugLevel
-		{
-			get { return _compiletimeDebugLevel; }
-			set { _compiletimeDebugLevel = value; }
-		}
-
-		/// <summary>
 		/// Gets or sets the assemblies.
 		/// </summary>
 		/// <value>The assemblies.</value>
@@ -94,6 +60,19 @@ namespace Composestar.StarLight.Entities.Configuration
 		{
 			get { return _assemblies; }
 			set { _assemblies = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the settings.
+		/// </summary>
+		/// <value>The settings.</value>
+		[XmlArray("Settings")]
+		[XmlArrayItem("Setting")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		public List<KeyValueSetting> Settings
+		{
+			get { return _settings; }
+			set { _settings = value; }
 		}
 
 		/// <summary>
@@ -121,5 +100,31 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _filterActions; }
 			set { _filterActions = value; }
 		}
+
+		/// <summary>
+		/// Adds a setting to the list.
+		/// </summary>
+		/// <param name="setting">The setting.</param>
+		public void AddSetting(KeyValueSetting setting)
+		{
+			if (setting == null)
+				throw new ArgumentNullException("setting");
+
+			_settings.Add(setting); 
+		}
+
+		/// <summary>
+		/// Create a new setting and add it to the list.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value.</param>
+		public void AddSetting(string key, string value)
+		{
+			if (string.IsNullOrEmpty(key))
+				throw new ArgumentNullException("key");
+
+			AddSetting(new KeyValueSetting(key, value)); 
+		}
+
 	}
 }

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CouldNotConvertDebugLevel" xml:space="preserve">
-    <value>Unable to convert the debug level '{0}' to an integer value.</value>
+    <value>Unable to convert the debug level '{0}'.</value>
   </data>
   <data name="CouldNotReadRegistryValues" xml:space="preserve">
     <value>Unable to read the requested registry values. Make sure the registry contains the correct settings by running the setup application.</value>
@@ -202,7 +202,7 @@
     <value>Searching in local database for {0} unresolved types.</value>
   </data>
   <data name="StoreDebugLevel" xml:space="preserve">
-    <value>Storing debug level {0} in the repository.</value>
+    <value>Storing debug level '{0}' in the repository.</value>
   </data>
   <data name="StoreInDatabase" xml:space="preserve">
     <value>Saving {0} assemblies to disk.</value>

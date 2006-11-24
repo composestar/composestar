@@ -29,6 +29,8 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 import composestar.dotNET.tym.entities.ArrayOfConcernElement;
+import composestar.dotNET.tym.entities.ArrayOfKeyValueSetting;
+import composestar.dotNET.tym.entities.KeyValueSetting; 
 import composestar.dotNET.tym.entities.ConcernElement;
 import composestar.dotNET.tym.entities.ConfigurationContainer;
 import composestar.dotNET.tym.entities.ConfigurationContainerDocument;
@@ -84,6 +86,24 @@ public class StarLightMaster extends Master
 		return configContainer;
 	}
 
+	/**
+	 * Searches the settings array for a specific key and return the value for that key.
+	 * @param settings
+	 * @param key
+	 * @return
+	 */
+	private String getSettingValue(ArrayOfKeyValueSetting settings, String key)
+	{
+		for (int i = 0; i < settings.sizeOfSettingArray(); i++)
+		{
+			KeyValueSetting kv = settings.getSettingArray(i);
+			if (kv.getKey().equalsIgnoreCase(key))
+				return kv.getValue(); 
+		}
+		
+		return "";
+	}
+	
 	/**
 	 * Compose* StarLight main function.
 	 * @param args
@@ -146,7 +166,7 @@ public class StarLightMaster extends Master
 		configContainer = configDocument.getConfigurationContainer();
 
 		// Set the debugmode
-		Debug.setMode(configContainer.getCompiletimeDebugLevel());
+		Debug.setMode(Integer.parseInt(getSettingValue(configContainer.getSettings(), "CompiletimeDebugLevel")));
 		//Debug.setMode(Debug.MODE_WARNING);
 
 		// Apache XML driver is moved to a different package in Java 5
@@ -161,10 +181,10 @@ public class StarLightMaster extends Master
 		DataStore.instance();
 
 		// Set the paths
-		if (configContainer.getIntermediateOutputPath() != null) {
-			Configuration.instance().getPathSettings().addPath("Base", configContainer.getIntermediateOutputPath());
+		if (getSettingValue(configContainer.getSettings(),"IntermediateOutputPath").length() > 0) {
+			Configuration.instance().getPathSettings().addPath("Base", getSettingValue(configContainer.getSettings(),"IntermediateOutputPath"));
 		}
-		Configuration.instance().getPathSettings().addPath("Composestar", configContainer.getInstallFolder() + "\\" );
+		Configuration.instance().getPathSettings().addPath("Composestar", getSettingValue(configContainer.getSettings(),"InstallFolder") + "\\" );
 
 		// Enable INCRE
 		ModuleSettings increSettings = new ModuleSettings();
@@ -175,7 +195,8 @@ public class StarLightMaster extends Master
 		// Set FILTH input file
 		ModuleSettings filthSettings = new ModuleSettings();
 		filthSettings.setName("FILTH");
-		filthSettings.addProperty("input", configContainer.getSpecificationFILTH());
+		filthSettings.addProperty("input", getSettingValue(configContainer.getSettings(),"SpecificationFILTH"));
+		filthSettings.addProperty("enabled",getSettingValue(configContainer.getSettings(),"OutputEnabledFILTH"));
 		Configuration.instance().getModuleSettings().addModule("FILTH", filthSettings);
 
 		Debug.out(Debug.MODE_INFORMATION,"Master","Master initialized.");
@@ -265,4 +286,6 @@ public class StarLightMaster extends Master
 		// Successfull exit
 		System.exit(0);
 	}
+	
+	
 }

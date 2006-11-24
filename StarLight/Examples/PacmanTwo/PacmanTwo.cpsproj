@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>queue</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DebugLevel>4</DebugLevel>
+    <DebugLevel>Debug</DebugLevel>
     <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -28,7 +28,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <OutputPath>bin\Release\</OutputPath>
-    <DebugLevel>1</DebugLevel>
+    <DebugLevel>Debug</DebugLevel>
     <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <ItemGroup>

@@ -124,7 +124,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		{
 			List<string> refTypes = new List<string>();
 			Stopwatch sw = Stopwatch.StartNew();
-
+		
 			try
 			{
 				// Open DB
