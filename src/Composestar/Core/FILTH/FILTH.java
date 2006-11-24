@@ -7,6 +7,7 @@ import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.SIinfo;
 
@@ -31,6 +32,14 @@ public class FILTH implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException 
 	{
+		
+		// If the module is disabled in the settings, then skip it.
+		if (!Configuration.instance().getModuleProperty("FILTH", "enabled", true))
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FILTH", "FILTH is disabled, skipping execution of this module.");
+			return;
+		}
+		
 		/* get a INCRE instance */
 		INCRE incre = INCRE.instance();
 		
