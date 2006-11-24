@@ -78,8 +78,8 @@ namespace Composestar.StarLight.VisualStudio.Project
         internal const string WeaveDebugLevelDescription = "WeaveDebugLevelDescription";
         internal const string VerifyIL = "VerifyIL";
         internal const string VerifyILDescription = "VerifyILDescription";
-		internal const string FilthOutout = "FilthOutout";
-		internal const string FilthOutoutDescription = "FilthOutoutDescription";
+		internal const string FilthOutput = "FilthOutput";
+		internal const string FilthOutputDescription = "FilthOutputDescription";
         internal const string GeneralCaption = "GeneralCaption";
         internal const string BuildCaption = "BuildCaption";
         internal const string Project = "Project";
