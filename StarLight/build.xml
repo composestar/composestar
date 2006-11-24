@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight" default="build" xmlns:dn="antlib:org.apache.ant.dotnet" xmlns:cs="antlib:Composestar">
 
-	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}Core">
-		<and>
-			<not>
-				<isset property="build.core" />
-			</not>
-			<available file="${basedir}${file.separator}..${file.separator}Core${file.separator}common.xml" />
-		</and>
-	</condition>
-	<import file="${build.core}${file.separator}common.xml" />
+	<property name="build.core" location="${basedir}/../Core"/>
+	<import file="${build.core}/common.xml"/>
 
 	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The StarLight implementation of Compose*</description>
@@ -304,9 +297,9 @@
 
 	<target name="select" depends="init">
 		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar"/>
-		<antmenu image="images${file.separator}logos${file.separator}logofull.png">
+		<antmenu image="images/logos/logofull.png">
 
-			<antMenuItem name="Advanced" >
+			<antMenuItem name="Advanced">
 				<antMenuItem name="Clean"  target="clean"/>
 				<antMenuItem name="Build">
 					<antMenuItem name="Build all"     target="build"/>
