@@ -261,12 +261,10 @@
 	  <property name="build.integration.starlight" value="c:\starlight\starlight" />
 		<antcall target="svn-update-core" />
 		<antcall target="svn-update-starlight" />
-		<ant target="build_msbuild" dir="${build.integration.starlight}" />
-		<ant target="build_ws" dir="${build.integration.starlight}" />		
-		<ant target="test" dir="${build.integration.starlight}" />
+		<ant target="clean_deploy_test" dir="${build.integration.starlight}" />
 	</target>
 
-  <target name="integration_publish_starlight">    
+  <target name="integration_publish_starlight">
     <ant target="fxcop" dir="${build.integration.starlight}" />
     <ant target="findbugs" dir="${build.integration.starlight}" />
     <ant target="checkstyle" dir="${build.integration.starlight}" />
