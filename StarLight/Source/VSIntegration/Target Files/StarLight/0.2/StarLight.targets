@@ -111,11 +111,11 @@ This target will be called whenever the Clean target is invoked.
       <Output TaskParameter="Include" ItemName="TempXmlFiles"/>
     </CreateItem>
     <Delete Files="@(TempXmlFiles)"/>
-    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)analyses/*.*">
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)Analyses/*.*">
       <Output TaskParameter="Include" ItemName="tempAnalyses"/>
     </CreateItem>
     <Delete Files="@(tempAnalyses)"/>
-    <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)analyses" ContinueOnError="true" />
+    <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)Analyses" ContinueOnError="true" />
     <RemoveDir Directories="$(StarLightFolder)" ContinueOnError="true" />
   </Target>
 
@@ -380,7 +380,8 @@ This target will be called whenever the Clean target is invoked.
   <!-- CpsParserRunner target -->
   <Target Name="CpsParserRunner">
     <Message Text="Collecting and parsing concern files." />
-    <CpsParserTask BaseDir="$(StarLightFolder)"
+    <CpsParserTask ContinueOnError="false"
+                   BaseDir="$(StarLightFolder)"
                    RepositoryFilename="$(RepositoryFilename)"
                    CodeLanguage="$(CodeLanguage)"
                    ConcernFiles="@(Concern->'%(FullPath)')">
@@ -392,12 +393,14 @@ This target will be called whenever the Clean target is invoked.
     <CreateItem Include="@(ExtraSources)">
       <Output TaskParameter="Include" ItemName="Compile"/>
     </CreateItem>
+    <OnError ExecuteTargets="CleanBackup" />
   </Target>
   
   <!--ILAnalyzerRunner target -->
   <Target Name="ILAnalyzerRunner">
     <Message Text="Collecting and analyzing assemblies."/>
 
+    <!-- Collect the files to analyze and weave on -->
     <CreateItem Include="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')">
       <Output TaskParameter="Include" ItemName="WeavableAssemblyFiles"/>
     </CreateItem>
@@ -407,6 +410,7 @@ This target will be called whenever the Clean target is invoked.
     </CreateItem>
 
     <IlAnalyzerTask
+      ContinueOnError="false"
       ReferencedAssemblies="@(ReferencePath)"
       ReferencedTypes="@(ReferencedTypes)"
       AssemblyFiles="@(WeavableAssemblyFiles)"
@@ -416,6 +420,7 @@ This target will be called whenever the Clean target is invoked.
       IntermediateOutputPath="$(StarLightFolder)">
       <Output TaskParameter="AssembliesDirty" PropertyName="AssembliesDirty"/>
     </IlAnalyzerTask>
+    <OnError ExecuteTargets="CleanBackup" />
   </Target>
 
   <!--MasterCaller target -->
@@ -423,12 +428,14 @@ This target will be called whenever the Clean target is invoked.
        Name="MasterCaller" Condition="'$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False'">
     <Message Text="Executing Composestar Master." />
     <MasterCallerTask 
+      ContinueOnError="false"
       RepositoryFilename="$(ProjectDir)$(RepositoryFilename)" 
       ConcernFiles="@(Concern->'%(FullPath)')" 
       JavaDebugLevel="$(DebugLevel)" 
       IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" 
       FILTHOutput="$(FILTHOutput)"
       />
+    <OnError ExecuteTargets="CleanBackup" />
   </Target>
 
   <!--ILWeaverRunner target -->
