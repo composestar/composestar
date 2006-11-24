@@ -32,14 +32,7 @@ public class FILTH implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException 
 	{
-		
-		// If the module is disabled in the settings, then skip it.
-		if (!Configuration.instance().getModuleProperty("FILTH", "enabled", true))
-		{
-			Debug.out(Debug.MODE_INFORMATION, "FILTH", "FILTH is disabled, skipping execution of this module.");
-			return;
-		}
-		
+				
 		/* get a INCRE instance */
 		INCRE incre = INCRE.instance();
 		

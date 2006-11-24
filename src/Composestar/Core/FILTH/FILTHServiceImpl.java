@@ -57,22 +57,33 @@ public class FILTHServiceImpl extends FILTHService
 	
 	public List getMultipleOrder(Concern c)
 	{ 
+		
+		// Filth output enabled
+		boolean filthOutput = Configuration.instance().getModuleProperty("FILTH", "outputEnabled", true);
+		
+		
 		String filename = "";
 		String cssFile = "";
 		try
 		{
 			String basedir = Configuration.instance().getPathSettings().getPath("Base");
-			File file = new File(basedir+"analyses/");
+			File file = new File(basedir + "Analyses/");
 			if(!file.exists())
 			{
 				file.mkdir();
 			}
 			if(file.isDirectory())
-			{
-				//System.out.println("Found and Dir: "+file.getAbsolutePath());
+			{				
 				filename = file.getAbsolutePath()+"\\FILTH_"+java.net.URLEncoder.encode(c.getName(), "UTF-8")+".html";
 				
-				FILTHService.setLog(new PrintStream(new FileOutputStream(filename)));
+				if (filthOutput)
+				{
+					FILTHService.setLog(new PrintStream(new FileOutputStream(filename)));
+				}
+				else
+				{
+					FILTHService.setLog(new PrintStream(new DevNullOutputStream()));			
+				}
 				cssFile = "file://"+Configuration.instance().getPathSettings().getPath("base") + "SECRET.css";
 				if( !(new File(cssFile).exists()))
 				{
@@ -86,7 +97,7 @@ public class FILTHServiceImpl extends FILTHService
 			//throw new ModuleException("SECRET","FILTH report file creation failed (" + filename + "), with reason: " + e.getMessage());
 			Debug.out(Debug.MODE_INFORMATION,"FILTH","FILTH report file creation failed (" + filename + "), with reason: " + e.getMessage());
 		}
-			 
+			
 		//String composestarpath = props.getProperty("ComposestarPath");
 		//FILTHService.log.println("<html><head><title>SECRET Report</title><link rel=\"stylesheet\" href=\"" + cssFile + "\" type=\"text/css\"></head><body><H1>FILTH Report</h1><h3>");
 		StringBuffer buffer = new StringBuffer("");
@@ -104,12 +115,15 @@ public class FILTHServiceImpl extends FILTHService
 		
 		FILTHService.log.print("<h4>Analyzing Filter Module Orders for shared join point: <u>"+c.getName()+"</u></h4>\n");
 		
+		
 		LinkedList forders = new LinkedList();
 		
 		LinkedList modulrefs;
 		
-		Graph g=new Graph(); g.setRoot(new Node("root"));
+		Graph g=new Graph(); 
+		g.setRoot(new Node("root"));
 
+	
 		FILTHService.log.print("<h4>Superimposed Filter Modules: </h4>\n");
 		FILTHService.log.print("<ul>\n");
 		modulrefs = processModules(c,g);
