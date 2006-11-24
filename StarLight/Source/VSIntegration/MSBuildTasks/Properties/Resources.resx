@@ -269,4 +269,10 @@ Weaved in {13:0.0000} sec.: {9} internal(s), {10} external(s)
   <data name="WritingEmbeddedCode" xml:space="preserve">
     <value>Writing embedded code to '{0}'.</value>
   </data>
+  <data name="EmbeddedCodeLanguageWrong" xml:space="preserve">
+    <value>This project does not support embedded code in language {1} since CodeLanguage is set to {2}. Embedded code in '{0}' will be ignored.</value>
+  </data>
+  <data name="EmbeddedCodeNotSupported" xml:space="preserve">
+    <value>This project does not support embedded code since CodeLanguage has not been set. Embedded code in '{0}' will be ignored.</value>
+  </data>
 </root>

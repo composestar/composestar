@@ -27,9 +27,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	{
 		private const string EmbeddedFolderName = "Embedded";
 
+		// inputs
 		private string _baseDir;
 		private string _repositoryFileName;
 		private ITaskItem[] _concernFiles;
+		private string _codeLanguage;
+
+		// outputs
 		private ITaskItem[] _referencedTypes;
 		private IList<ITaskItem> _extraSources;
 		private bool _hasOutputFilters;
@@ -74,6 +78,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		public ITaskItem[] ConcernFiles
 		{
 			set { _concernFiles = value; }
+		}
+
+		/// <summary>
+		/// Sets the CodeLanguage of the project that contain the concerns to be parsed.
+		/// Any embedded code must be the same language. A <ref langword="null"/> value, 
+		/// which is the default, indicates that embedded code is disallowed. 
+		/// </summary>
+		public string CodeLanguage
+		{
+			set { _codeLanguage = value; }
 		}
 
 		/// <summary>
@@ -159,7 +173,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						ce.HasOutputFilters = parser.HasOutputFilters;
 
 						// Store the embedded code (if any)
-						StoreEmbeddedCode(parser.EmbeddedCode);
+						StoreEmbeddedCode(concernFile, parser.EmbeddedCode);
 
 						// Add the referenced types
 						ce.ReferencedTypes.AddRange(parser.ReferencedTypes);
@@ -250,10 +264,22 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Writes the specified embedded code to a file.
 		/// </summary>
 		/// <param name="ec">The embedded code.</param>
-		private void StoreEmbeddedCode(EmbeddedCode ec)
+		private void StoreEmbeddedCode(string concern, EmbeddedCode ec)
 		{
 			if (ec == null)
 				return;
+
+			if (_codeLanguage == null)
+			{
+				Log.LogWarningFromResources("EmbeddedCodeNotSupported", concern);
+				return;
+			}
+
+			if (!_codeLanguage.Equals(ec.Language))
+			{
+				Log.LogWarningFromResources("EmbeddedCodeLanguageWrong", concern, ec.Language, _codeLanguage);
+				return;
+			}
 
 			string embeddedDir = Path.Combine(_baseDir, EmbeddedFolderName);
 

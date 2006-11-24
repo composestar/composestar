@@ -151,6 +151,24 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This project does not support embedded code in language {1} since CodeLanguage is set to {2}. Embedded code in &apos;{0}&apos; will be ignored..
+        /// </summary>
+        internal static string EmbeddedCodeLanguageWrong {
+            get {
+                return ResourceManager.GetString("EmbeddedCodeLanguageWrong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This project does not support embedded code since CodeLanguage has not been set. Embedded code in &apos;{0}&apos; will be ignored..
+        /// </summary>
+        internal static string EmbeddedCodeNotSupported {
+            get {
+                return ResourceManager.GetString("EmbeddedCodeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An exception occurred while executing Java. The message is &apos;{0}&apos;..
         /// </summary>
         internal static string ExecutionException {

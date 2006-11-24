@@ -381,15 +381,14 @@ This target will be called whenever the Clean target is invoked.
   <Target Name="CpsParserRunner">
     <Message Text="Collecting and parsing concern files." />
     <CpsParserTask BaseDir="$(StarLightFolder)"
-                   ConcernFiles="@(Concern->'%(FullPath)')" 
-                   RepositoryFilename="$(RepositoryFilename)">
+                   RepositoryFilename="$(RepositoryFilename)"
+                   CodeLanguage="$(CodeLanguage)"
+                   ConcernFiles="@(Concern->'%(FullPath)')">
       <Output TaskParameter="ConcernsDirty" PropertyName="ConcernsDirty"/>
       <Output TaskParameter="HasOutputFilters" PropertyName="HasOutputFilters"/>
       <Output TaskParameter="ReferencedTypes" ItemName="ReferencedTypes"/>
       <Output TaskParameter="ExtraSources" ItemName="ExtraSources"/>
     </CpsParserTask>
-    <Warning Text="Project '$(Name)' does not support embedded code since CodeLanguage has not been set."
-             Condition="'$(CodeLanguage)'=='' and '@(ExtraSources)'!=''"/>
     <CreateItem Include="@(ExtraSources)">
       <Output TaskParameter="Include" ItemName="Compile"/>
     </CreateItem>
