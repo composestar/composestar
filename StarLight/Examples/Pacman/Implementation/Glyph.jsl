@@ -140,7 +140,9 @@ public class Glyph
     			this.vy = 0;
     			this.vx = 1;
     			break;
-    	}    
+			default:
+				throw new IllegalArgumentException("direction");
+    	}
    }
    
    /**
