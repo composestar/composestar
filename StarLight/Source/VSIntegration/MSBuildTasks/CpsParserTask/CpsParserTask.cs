@@ -306,8 +306,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <returns>Returns an ITaskItem array.</returns>
 		private ITaskItem[] ToArray(IList<ITaskItem> items)
 		{
-			ITaskItem[] arr = new ITaskItem[_extraSources.Count];
-			_extraSources.CopyTo(arr, 0);
+			ITaskItem[] arr = new ITaskItem[items.Count];
+			items.CopyTo(arr, 0);
 			return arr;
 		}
 
