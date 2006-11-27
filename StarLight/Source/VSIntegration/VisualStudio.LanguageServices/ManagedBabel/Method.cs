@@ -14,12 +14,18 @@ using System.Collections.Generic;
 
 namespace Composestar.StarLight.VisualStudio.Babel
 {
-	public struct Method
+	public struct Method : IComparable 
 	{
 		public string Name;
 		public string Description;
 		public string Type;
 		public IList<Parameter> Parameters;
+
+		public int CompareTo(object obj)
+		{
+			Method temp = (Method)obj;
+			return temp.Name.CompareTo(this.Name);
+		}
 	}
 
 	public struct Parameter

@@ -31,11 +31,19 @@
     }
     internal void StartName(LexLocation lh)
     {
-		DefineStartName("s", MkTSpan(lh));
+		DefineStartName("", MkTSpan(lh));
+    }
+    internal void StartName(LexLocation lh, string name)
+    {
+		DefineStartName(name, MkTSpan(lh));
     }
     internal void QualifyName(LexLocation lh, LexLocation rh)
     {
-		DefineQualifyName("q", MkTSpan(lh), MkTSpan(rh));
+		DefineQualifyName("", MkTSpan(lh), MkTSpan(rh));
+    }
+    internal void QualifyName(LexLocation lh, LexLocation rh, string name)
+    {
+		DefineQualifyName(name, MkTSpan(lh), MkTSpan(rh));
     }
     internal void StartParam(LexLocation lh)
     {
@@ -197,14 +205,15 @@ IdentifierList
     | IdentifierList ',' IDENTIFIER;
     
 Type 
-    : IDENTIFIER   { StartName(@1); }
-	| Type DOT IDENTIFIER		    { QualifyName( @2, @3 ); }	
-    | Type DOT error              { QualifyName( @2, @2 ); }
+    : IDENTIFIER   { StartName(@1, ""); }
+	| Type DOT IDENTIFIER		    { QualifyName( @2, @3, "" ); }	
+    | Type DOT error              { QualifyName( @2, @2,"" ); }
 	;
     
 ConcernReference
 	: ConcernName
 	| ConcernName DOT ConcernReference
+	| KWINNER DOT ConcernReference
     ;
         
 PackageReference
@@ -222,7 +231,7 @@ Conditions
     | KWCONDITIONS ConditionDecls;
     
 ConditionDecls
-    : /*  */
+    : ConditionDecl
     | ConditionDecls ConditionDecl
     ;
     
@@ -490,7 +499,7 @@ PrologFun
    ;
    
 PrologFunction
-   : IDENTIFIER   { StartName(@1); }
+   : KWPROLOGFUN  { StartName(@1, "prologfunction"); }
    ;
    
 StartArg
@@ -534,8 +543,8 @@ ListElems
    ;
    
 ListElems2
-   : BAR PrologList
-   | BAR PrologVar
+   : BAR PrologList { StartName(@1, "prologfunction"); }
+   | BAR PrologVar { StartName(@1, "prologfunction"); }
    ;  
    
 /* Common Binding Information */

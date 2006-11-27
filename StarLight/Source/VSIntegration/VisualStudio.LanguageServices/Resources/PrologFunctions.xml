@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  Based on the selector language description in 
+  "On the Design of Aspect-Oriented Composition Models for Software Evolution"
+  by Istvan Nagy
+  
+  Page 221 - 226
+  -->
+<PrologFunctions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://trese.cs.utwente.nl/ComposeStar/PrologFunctions">
+  <Functions>
+    <!-- .NET Language units -->
+    <Function FunctionName="isNamespace" Description="">
+      <Parameters>
+        <Parameter Name="Namespace" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isInterface" Description="">
+      <Parameters>
+        <Parameter Name="Interface" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isClass" Description="">
+      <Parameters>
+        <Parameter Name="Class" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isAnnotation" Description="">
+      <Parameters>
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isField" Description="">
+      <Parameters>
+        <Parameter Name="Field" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isParameter" Description="">
+      <Parameters>
+        <Parameter Name="Parameter" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isType" Description="">
+      <Parameters>
+        <Parameter Name="Type" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isConcern" Description="">
+      <Parameters>
+        <Parameter Name="Concern" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isFilterModule" Description="">
+      <Parameters>
+        <Parameter Name="FilterModule" Description="" />
+      </Parameters>
+    </Function>
+    <!-- Properties of program elements -->
+    <Function FunctionName="isNamespaceWithName" Description="">
+      <Parameters>
+        <Parameter Name="Interface" Description="" />
+        <Parameter Name="InterfaceName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isInterfaceWithName" Description="">
+      <Parameters>
+        <Parameter Name="Interface" Description="" />
+        <Parameter Name="InterfaceName" Description="" />
+      </Parameters>
+    </Function>
+     <Function FunctionName="isInterfaceWithAttribute" Description="">
+      <Parameters>
+        <Parameter Name="Interface" Description="" />
+        <Parameter Name="AttributeName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isClassWithName" Description="The Class must have the ClassName">
+      <Parameters>
+        <Parameter Name="Class" Description="" />
+        <Parameter Name="ClassName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isClassWithAttribute" Description="">
+      <Parameters>
+        <Parameter Name="Class" Description="" />
+        <Parameter Name="ClassAttribute" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isAnnotationWithName" Description="">
+      <Parameters>
+        <Parameter Name="Annotation" Description="" />
+        <Parameter Name="AnnotationName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isAnnotationWithAttribute" Description="">
+      <Parameters>
+        <Parameter Name="Annotation" Description="" />
+        <Parameter Name="AnnotationAttribute" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isFieldWithName" Description="">
+      <Parameters>
+        <Parameter Name="Field" Description="" />
+        <Parameter Name="FieldName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isFieldWithAttribute" Description="">
+      <Parameters>
+        <Parameter Name="Field" Description="" />
+        <Parameter Name="FieldAttribute" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isMethodWithName" Description="">
+      <Parameters>
+        <Parameter Name="Method" Description="" />
+        <Parameter Name="MethodName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isMethodWithAttribute" Description="">
+      <Parameters>
+        <Parameter Name="Method" Description="" />
+        <Parameter Name="MethodAttribute" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isParameterWithName" Description="">
+      <Parameters>
+        <Parameter Name="Parameter" Description="" />
+        <Parameter Name="ParameterName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isParameterWithAttribute" Description="">
+      <Parameters>
+        <Parameter Name="Parameter" Description="" />
+        <Parameter Name="ParameterAttribute" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isTypeWithName" Description="">
+      <Parameters>
+        <Parameter Name="Type" Description="" />
+        <Parameter Name="TypeName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isTypeWithAttribute" Description="">
+      <Parameters>
+        <Parameter Name="Type" Description="" />
+        <Parameter Name="TypeAttribute" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isConcernWithName" Description="">
+      <Parameters>
+        <Parameter Name="Concern" Description="" />
+        <Parameter Name="ConcernName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isFilterModuleWithName" Description="">
+      <Parameters>
+        <Parameter Name="FilterModule" Description="" />
+        <Parameter Name="FilterModuleName" Description="" />
+      </Parameters>
+    </Function>
+    <!-- Namespace relations -->
+    <Function FunctionName="namespaceHasInterface" Description="Namespace contains Interface">
+      <Parameters>
+        <Parameter Name="Namespace" Description="" />
+        <Parameter Name="Interface" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="namespaceHasClass" Description="Namespace contains Class">
+      <Parameters>
+        <Parameter Name="Namespace" Description="" />
+        <Parameter Name="Class" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="namespaceHasType" Description="Namespace contains Type">
+      <Parameters>
+        <Parameter Name="Namespace" Description="" />
+        <Parameter Name="Type" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isParentNamespace" Description="ParentNS is the parent namespace of ChildNS">
+      <Parameters>
+        <Parameter Name="ParentNS" Description="" />
+        <Parameter Name="ChildNS" Description="" />
+      </Parameters>
+    </Function>
+    <!-- Type relations -->
+    <Function FunctionName="typeHasAnnotation" Description="Type has annotation attached">
+      <Parameters>
+        <Parameter Name="Type" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="typeHasAnnotationWithName" Description="Type has an annotation with the specified name attached">
+      <Parameters>
+        <Parameter Name="Type" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isSuperType" Description="SubType directly inherits from SuperType">
+      <Parameters>
+        <Parameter Name="SuperType" Description="" />
+        <Parameter Name="SubType" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="typeHasMethod" Description="Declaration Type contains Method">
+      <Parameters>
+        <Parameter Name="Type" Description="" />
+        <Parameter Name="Method" Description="" />
+      </Parameters>
+    </Function>
+    <!-- Class relations -->
+    <Function FunctionName="classHasAnnotation" Description="Class has annotation attached">
+      <Parameters>
+        <Parameter Name="Class" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="classHasAnnotationWithName" Description="Class has an annotation with the specified name attached">
+      <Parameters>
+        <Parameter Name="Class" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>   
+    <Function FunctionName="classHasMethod" Description="Class contains Method">
+      <Parameters>
+        <Parameter Name="Class" Description="" />
+        <Parameter Name="Method" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="classHasField" Description="Class contains Field">
+      <Parameters>
+        <Parameter Name="Class" Description="" />
+        <Parameter Name="Field" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="isSuperClass" Description="The SubClass directly inherits from SuperClass">
+      <Parameters>
+        <Parameter Name="SuperClass" Description="" />
+        <Parameter Name="SubClass" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="classImplementsInterface" Description="Class implements Interface">
+      <Parameters>
+        <Parameter Name="Class" Description="" />
+        <Parameter Name="Interface" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="inherits" Description="Child is in the inheritance tree of Parent">
+      <Parameters>
+        <Parameter Name="Parent" Description="" />
+        <Parameter Name="Child" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="inheritsOrSelf" Description="Child is in the inheritance tree of Parent or Parent is Child">
+      <Parameters>
+        <Parameter Name="Parent" Description="" />
+        <Parameter Name="Child" Description="" />
+      </Parameters>
+    </Function>
+    <!-- Interface relations -->
+    <!-- TODO -->
+    <!-- Method relations -->
+    <!-- TODO -->
+    <!-- Field relations -->
+    <!-- TODO -->
+    <!-- Parameter relations -->
+    <!-- TODO -->
+    <!-- Concern and FilterModule relations -->
+    <Function FunctionName="concernHasAnnotation" Description="Concern has Annotation attached">
+      <Parameters>
+        <Parameter Name="Concern" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="concernHasAnnotationWithName" Description="Concern has an annotation with the specified name attached">
+      <Parameters>
+        <Parameter Name="Concern" Description="" />
+        <Parameter Name="AnnotName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="filterModuleHasAnnotation" Description="FilterModule has Annotation attached">
+      <Parameters>
+        <Parameter Name="FilterModule" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="filterModuleHasAnnotationWithName" Description="FilterModule has an annotation with the specified name attached">
+      <Parameters>
+        <Parameter Name="FilterModule" Description="" />
+        <Parameter Name="AnnotName" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="concernHasFilterModule" Description="Concern has FilterModule">
+      <Parameters>
+        <Parameter Name="Concern" Description="" />
+        <Parameter Name="FilterModule" Description="" />
+      </Parameters>
+    </Function>
+  </Functions>
+</PrologFunctions>

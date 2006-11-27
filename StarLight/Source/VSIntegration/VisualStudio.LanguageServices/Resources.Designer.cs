@@ -116,6 +116,15 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string PrologFunctions {
+            get {
+                return ResourceManager.GetString("PrologFunctions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Surround With....
         /// </summary>
         internal static string SurroundWith {

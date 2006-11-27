@@ -17,7 +17,7 @@ using Microsoft.VisualStudio.Package;
 
 namespace Composestar.StarLight.VisualStudio.Babel
 {
-	public class Methods : Microsoft.VisualStudio.Package.Methods
+	public class Methods : Microsoft.VisualStudio.Package.Methods 
 	{
 		IList<Method> methods;
 		public Methods(IList<Method> methods)
@@ -57,5 +57,7 @@ namespace Composestar.StarLight.VisualStudio.Babel
 			display = parameter.Display;
 			description = parameter.Description;
 		}
+
+		
 	}
 }

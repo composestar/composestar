@@ -38,7 +38,9 @@
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComposeStarLangServ.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="ManagedBabel\ShiftReduceParser.cs" />
     <Compile Include="ManagedBabel\Source.cs" />
     <Compile Include="ManagedBabel\State.cs" />
+    <Compile Include="PrologFunctions\PrologFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ComposeStarPackage.cs" />
     <Compile Include="ComposeStarConstants.cs" />
@@ -90,6 +93,7 @@
     <Content Include="CodeSnippets\Snippets\concern.snippet">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\PrologFunctions.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="key.snk" />

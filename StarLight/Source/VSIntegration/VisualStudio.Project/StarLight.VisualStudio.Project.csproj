@@ -1,338 +1,334 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<PropertyGroup>
-		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-		<ProductVersion>8.0.50727</ProductVersion>
-		<SchemaVersion>2.0</SchemaVersion>
-		<ProjectGuid>{6F6C0C53-6489-439D-A92F-2EBA93D8A889}</ProjectGuid>
-		<OutputType>Library</OutputType>
-		<AppDesignerFolder>Properties</AppDesignerFolder>
-		<RootNamespace>Composestar.StarLight.VisualStudio.Project</RootNamespace>
-		<AssemblyName>Composestar.StarLight.VisualStudio.Project</AssemblyName>
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>starlight.snk</AssemblyOriginatorKeyFile>
-		<GacOutput>true</GacOutput>
-		<GacDeploy>true</GacDeploy>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<DebugSymbols>true</DebugSymbols>
-		<DebugType>full</DebugType>
-		<Optimize>false</Optimize>
-		<OutputPath>bin\Debug\</OutputPath>
-		<DefineConstants>DEBUG;TRACE</DefineConstants>
-		<ErrorReport>prompt</ErrorReport>
-		<WarningLevel>4</WarningLevel>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<DebugType>pdbonly</DebugType>
-		<Optimize>true</Optimize>
-		<OutputPath>bin\Release\</OutputPath>
-		<DefineConstants>TRACE</DefineConstants>
-		<ErrorReport>prompt</ErrorReport>
-		<WarningLevel>4</WarningLevel>
-	</PropertyGroup>
-	<ItemGroup>
-		<Reference Include="Microsoft.Build.Engine">
-			<HintPath>Microsoft.Build.Engine.dll</HintPath>
-			<Name>Microsoft.Build.Engine</Name>
-			<SpecificVersion>False</SpecificVersion>
-			<Aliases>global</Aliases>
-		</Reference>
-		<Reference Include="Microsoft.Build.Framework">
-			<HintPath>Microsoft.Build.Framework.dll</HintPath>
-			<Name>Microsoft.Build.Framework</Name>
-			<SpecificVersion>False</SpecificVersion>
-			<Aliases>global</Aliases>
-		</Reference>
-		<Reference Include="Microsoft.Build.Utilities">
-			<HintPath>Microsoft.Build.Utilities.dll</HintPath>
-			<Name>Microsoft.Build.Utilities</Name>
-			<SpecificVersion>False</SpecificVersion>
-			<Aliases>global</Aliases>
-		</Reference>
-		<Reference Include="Microsoft.VisualStudio.ProjectAggregator, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-		<Reference Include="Microsoft.VisualStudio.VSHelp">
-			<HintPath>Microsoft.VisualStudio.VSHelp.dll</HintPath>
-		</Reference>
-		<Reference Include="VsLangProj" />
-		<Reference Include="System.Design">
-			<HintPath>System.Design.dll</HintPath>
-			<Name>System.Design</Name>
-			<SpecificVersion>False</SpecificVersion>
-			<Aliases>global</Aliases>
-		</Reference>
-		<Reference Include="Microsoft.VisualStudio.Designer.Interfaces, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-		<Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-		<Reference Include="Microsoft.VisualStudio.Package.LanguageService, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-		<Reference Include="Microsoft.VisualStudio.Shell, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-		<Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-		<Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-		<Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-		<Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-		<Reference Include="Microsoft.VisualStudio.Web.Application" />
-		<Reference Include="Microsoft.VisualStudio.VSHelp">
-			<HintPath>Microsoft.VisualStudio.VSHelp.dll</HintPath>
-		</Reference>
-		<Reference Include="Microsoft.VisualStudio.Shell.Design" />
-		<Reference Include="System.Web" />
-		<Reference Include="Microsoft.VisualStudio.ProjectAggregator" />
-		<Reference Include="Microsoft.VisualStudio.Web.Application" />
-		<Reference Include="VsLangProj" />
-		<Reference Include="System.Design">
-			<HintPath>System.Design.dll</HintPath>
-			<Name>System.Design</Name>
-			<SpecificVersion>False</SpecificVersion>
-			<Aliases>global</Aliases>
-		</Reference>
-		<Reference Include="System" />
-		<Reference Include="System.Data" />
-		<Reference Include="System.Drawing" />
-		<Reference Include="System.Windows.Forms" />
-		<Reference Include="System.Xml" />
-		<Reference Include="EnvDTE" />
-		<Reference Include="EnvDTE80" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Include="Automation.cs" />
-		<Compile Include="ConfigurationPropertyPages.cs" />
-		<Compile Include="EditorFactory.cs" />
-		<Compile Include="ComposeStarFileNode.cs" />
-		<Compile Include="ComposeStarFileNodeProperties.cs" />
-		<Compile Include="ComposeStarConfigProvider.cs" />
-		<Compile Include="Project\AggregatableProjectInterops.cs" />
-		<Compile Include="Project\AssemblyReferenceNode.cs" />
-		<Compile Include="Project\Attributes.cs" />
-		<Compile Include="Project\Automation\OAFileItem.cs" />
-		<Compile Include="Project\Automation\OAFolderItem.cs" />
-		<Compile Include="Project\Automation\OANavigableProjectItems.cs" />
-		<Compile Include="Project\Automation\OANestedProjectItem.cs" />
-		<Compile Include="Project\Automation\OANullProperty.cs" />
-		<Compile Include="Project\Automation\OAProject.cs" />
-		<Compile Include="Project\Automation\OAProjectItem.cs" />
-		<Compile Include="Project\Automation\OAProjectItems.cs" />
-		<Compile Include="Project\Automation\OAProperties.cs" />
-		<Compile Include="Project\Automation\OAProperty.cs" />
-		<Compile Include="Project\Automation\OAReferenceFolderItem.cs" />
-		<Compile Include="Project\Automation\OAReferenceItem.cs" />
-		<Compile Include="Project\Automation\OASolutionFolder.cs" />
-		<Compile Include="Project\Automation\VSProject\OAAssemblyReference.cs" />
-		<Compile Include="Project\Automation\VSProject\OABuildManager.cs" />
-		<Compile Include="Project\Automation\VSProject\OAComReference.cs" />
-		<Compile Include="Project\Automation\VSProject\OAProjectReference.cs" />
-		<Compile Include="Project\Automation\VSProject\OAReferenceBase.cs" />
-		<Compile Include="Project\Automation\VSProject\OAReferences.cs" />
-		<Compile Include="Project\Automation\VSProject\OAVSProject.cs" />
-		<Compile Include="Project\Automation\VSProject\OAVSProjectItem.cs" />
-		<Compile Include="Project\BuildDependency.cs" />
-		<Compile Include="Project\BuildPropertyPage.cs" />
-		<Compile Include="Project\ComReferenceNode.cs" />
-		<Compile Include="Project\ConfigProvider.cs" />
-		<Compile Include="Project\ConfigurationProperties.cs" />
-		<Compile Include="Project\DataObject.cs" />
-		<Compile Include="Project\DependentFileNode.cs" />
-		<Compile Include="Project\DesignPropertyDescriptor.cs" />
-		<Compile Include="Project\DocumentManager.cs" />
-		<Compile Include="Project\EnumDependencies.cs" />
-		<Compile Include="Project\FileChangeManager.cs" />
-		<Compile Include="Project\FileDocumentManager.cs" />
-		<Compile Include="Project\FileNode.cs" />
-		<Compile Include="Project\FlavoredProjectBase.cs" />
-		<Compile Include="Project\FlavoredProjectFactoryBase.cs" />
-		<Compile Include="Project\FolderNode.cs" />
-		<Compile Include="Project\HierarchyNode.cs" />
-		<Compile Include="Project\IDEBuildLogger.cs" />
-		<Compile Include="Project\Interfaces.cs" />
-		<Compile Include="Project\LocalizableProperties.cs" />
-		<Compile Include="Project\Microsoft.VisualStudio.Package.Project.cs" />
-		<Compile Include="Project\Misc\ConnectionPointContainer.cs" />
-		<Compile Include="Project\Misc\ExternDll.cs" />
-		<Compile Include="Project\Misc\NativeMethods.cs" />
-		<Compile Include="Project\Misc\SafeNativeMethods.cs" />
-		<Compile Include="Project\Misc\UnsafeNativeMethods.cs" />
-		<Compile Include="Project\NestedProjectBuildDependency.cs" />
-		<Compile Include="Project\NestedProjectNode.cs" />
-		<Compile Include="Project\NodeProperties.cs" />
-		<Compile Include="Project\OleServiceProvider.cs" />
-		<Compile Include="Project\Output.cs" />
-		<Compile Include="Project\OutputGroup.cs" />
-		<Compile Include="Project\ProjectAggregator2Interops.cs" />
-		<Compile Include="Project\ProjectConfig.cs" />
-		<Compile Include="Project\ProjectContainerNode.cs" />
-		<Compile Include="Project\ProjectDesignerDocumentManager.cs" />
-		<Compile Include="Project\ProjectDocumentsListener.cs" />
-		<Compile Include="Project\ProjectElement.cs" />
-		<Compile Include="Project\ProjectFactory.cs" />
-		<Compile Include="Project\ProjectFileConstants.cs" />
-		<Compile Include="Project\ProjectNode.CopyPaste.cs" />
-		<Compile Include="Project\ProjectNode.cs" />
-		<Compile Include="Project\ProjectOptions.cs" />
-		<Compile Include="Project\ProjectPackage.cs" />
-		<Compile Include="Project\ProjectReferenceNode.cs" />
-		<Compile Include="Project\PropertiesEditorLauncher.cs" />
-		<Compile Include="Project\ReferenceContainerNode.cs" />
-		<Compile Include="Project\ReferenceNode.cs" />
-		<Compile Include="Project\RegisteredProjectType.cs" />
-		<Compile Include="Project\SelectionListener.cs" />
-		<Compile Include="Project\SettingsPage.cs" />
-		<Compile Include="Project\SolutionListener.cs" />
-		<Compile Include="Project\SolutionListenerForBuildDependencyUpdate.cs" />
-		<Compile Include="Project\SolutionListenerForProjectEvents.cs" />
-		<Compile Include="Project\SolutionListenerForProjectOpen.cs" />
-		<Compile Include="Project\SolutionListenerForProjectReferenceUpdate.cs" />
-		<Compile Include="Project\StructuresEnums.cs" />
-		<Compile Include="Project\SuspendFileChanges.cs" />
-		<Compile Include="Project\TokenProcessor.cs" />
-		<Compile Include="Project\Tracing.cs" />
-		<Compile Include="Project\TrackDocumentsHelper.cs" />
-		<Compile Include="Project\TypeConverters.cs" />
-		<Compile Include="Project\Url.cs" />
-		<Compile Include="Project\Utilities.cs" />
-		<Compile Include="Project\VsCommands.cs" />
-		<Compile Include="Project\VSMDCodeDomProvider.cs" />
-		<Compile Include="Project\VSShellUtilities.cs" />
-		<Compile Include="Project\Web\CodeBehindCodeGenerator.cs" />
-		<Compile Include="Project\Web\FieldData.cs" />
-		<Compile Include="Project\Web\LockedDocData.cs" />
-		<Compile Include="Project\Web\VsHierarchyItem.cs" />
-		<Compile Include="Project\Web\WAUtilities.cs" />
-		<Compile Include="PropertyPages.cs" />
-		<Compile Include="ComposeStarProjectNodeProperties.cs" />
-		<Compile Include="ComposeStarMenus.cs" />
-		<Compile Include="RegistrationAttributes\SingleFileGeneratorSupportRegistrationAttribute.cs" />
-		<Compile Include="Resources.cs" />
-		<Compile Include="SelectionElementValueChangedListener.cs" />
-		<Compile Include="VSMDComposeStarProvider.cs" />
-		<Compile Include="VsPkg.cs" />
-		<Compile Include="Properties\AssemblyInfo.cs" />
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="Resources.resx">
-			<MergeWithCTO>true</MergeWithCTO>
-			<SubType>Designer</SubType>
-			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="key.snk" />
-	</ItemGroup>
-	<ItemGroup>
-		<CtcFile Include="CtcComponents\PkgCmd.ctc">
-			<ResourceName>1000</ResourceName>
-		</CtcFile>
-		<None Include="CtcComponents\Guids.h" />
-		<None Include="CtcComponents\PkgCmdID.h" />
-		<None Include="Project\Diagrams\AutomationClasses.cd" />
-		<None Include="Project\Diagrams\ConfigurationClasses.cd" />
-		<None Include="Project\Diagrams\DocumentManagerClasses.cd" />
-		<None Include="Project\Diagrams\HierarchyClasses.cd" />
-		<None Include="Project\Diagrams\PropertiesClasses.cd" />
-		<None Include="Project\Diagrams\ReferenceClasses.cd" />
-		<ZipProject Include="Templates\Projects\JSharpConcernProject\StarLightProject.cpsproj" />
-		<ZipProject Include="Templates\Projects\JSharpConcernProject\Concern.cps" />
-		<ZipProject Include="Templates\Projects\VBConcernProject\StarLightProject.cpsproj" />
-		<ZipProject Include="Templates\Projects\VBConcernProject\Concern.cps" />
-		<ZipProject Include="Templates\Projects\CSharpConcernProject\StarLightProject.cpsproj" />
-		<ZipProject Include="Templates\Projects\CSharpConcernProject\Concern.cps" />
-	</ItemGroup>
-	<ItemGroup>
-		<ZipItem Include="Templates\ProjectItems\Concern\Concern.cps" />
-		<ZipItem Include="Templates\ProjectItems\Concern\Concern.vstemplate" />
-		<ZipItem Include="Templates\ProjectItems\Concern\__TemplateIcon.ico" />
-		<ZipItem Include="Templates\ProjectItems\Text\TextFile.txt" />
-		<ZipItem Include="Templates\ProjectItems\Text\TextFile.vstemplate" />
-		<ZipItem Include="Templates\ProjectItems\Text\Text.ico" />
-		<ZipProject Include="Templates\Projects\ConcernProject\Concern.cps" />
-		<ZipProject Include="Templates\Projects\ConcernProject\__TemplateIcon.ico" />
-		<ZipProject Include="Templates\Projects\ConcernProject\ConcernProject.vstemplate" />
-		<ZipProject Include="Templates\Projects\ConcernProject\StarLightProject.cpsproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\VisualStudio.LanguageServices\StarLight.VisualStudio.LanguageServices.csproj">
-			<Project>{74788B39-49AB-4708-AD96-B5558AF48C7A}</Project>
-			<Name>StarLight.VisualStudio.LanguageServices</Name>
-		</ProjectReference>
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="Project\Microsoft.VisualStudio.Package.Project.resx">
-			<Visible>true</Visible>
-			<LogicalName>Microsoft.VisualStudio.Package.Project.resources</LogicalName>
-			<SubType>Designer</SubType>
-			<DependentUpon>Microsoft.VisualStudio.Package.Project.cs</DependentUpon>
-		</EmbeddedResource>
-	</ItemGroup>
-	<ItemGroup>
-		<Content Include="Project\Resources\imagelis.bmp" />
-		<Content Include="Resources\GenericPackage.bmp" />
-		<Content Include="Resources\GenericPackage.ico" />
-		<ZipItem Include="Templates\ProjectItems\JSharpClass\Class.java" />
-		<ZipItem Include="Templates\ProjectItems\JSharpClass\JSharpClass.vstemplate" />
-		<ZipItem Include="Templates\ProjectItems\JSharpClass\__TemplateIcon.ico" />
-		<ZipItem Include="Templates\ProjectItems\CSharpClass\__TemplateIcon.ico" />
-		<ZipItem Include="Templates\ProjectItems\CSharpClass\CSharpClass.vstemplate" />
-		<ZipItem Include="Templates\ProjectItems\CSharpClass\Class.cs" />
-		<ZipItem Include="Templates\ProjectItems\VBClass\__TemplateIcon.ico" />
-		<ZipItem Include="Templates\ProjectItems\VBClass\VBClass.vstemplate" />
-		<ZipItem Include="Templates\ProjectItems\VBClass\Class.vb" />
-		<ZipProject Include="Templates\Projects\JSharpConcernProject\JSharpConcernProject.vstemplate" />
-		<ZipProject Include="Templates\Projects\JSharpConcernProject\__TemplateIcon.ico" />
-		<ZipProject Include="Templates\Projects\JSharpConcernProject\Class1.java" />
-		<ZipProject Include="Templates\Projects\VBConcernProject\Class1.vb" />
-		<ZipProject Include="Templates\Projects\VBConcernProject\VBConcernProject.vstemplate" />
-		<ZipProject Include="Templates\Projects\VBConcernProject\__TemplateIcon.ico" />
-		<ZipProject Include="Templates\Projects\CSharpConcernProject\CSharpConcernProject.vstemplate" />
-		<ZipProject Include="Templates\Projects\CSharpConcernProject\__TemplateIcon.ico" />
-		<ZipProject Include="Templates\Projects\CSharpConcernProject\Class1.cs" />
-		<EmbeddedResource Include="Resources\imagelis.bmp" />
-		<None Include="Project\ProjectBase.files" />
-		<None Include="Resources\Resources.resx">
-			<SubType>Designer</SubType>
-		</None>
-		<None Include="starlight.snk" />
-		<EmbeddedResource Include="Resources\StarLightImageList.bmp" />
-	</ItemGroup>
-	<ItemGroup>
-		<Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
-	</ItemGroup>
-	<PropertyGroup>
-		<TargetRegistryRoot>Software\Microsoft\VisualStudio\8.0Exp</TargetRegistryRoot>
-		<RegisterOutputPackage>true</RegisterOutputPackage>
-		<RegisterWithCodebase>true</RegisterWithCodebase>
-		<VsTemplateLanguage>StarLight</VsTemplateLanguage>
-	</PropertyGroup>
-	<PropertyGroup>
-		<ProjectBasePath>Project</ProjectBasePath>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugVSIntegration|AnyCPU' ">
-		<DebugSymbols>true</DebugSymbols>
-		<OutputPath>bin\DebugVSIntegration\</OutputPath>
-		<DefineConstants>DEBUG;TRACE</DefineConstants>
-		<DebugType>full</DebugType>
-		<PlatformTarget>AnyCPU</PlatformTarget>
-		<CodeAnalysisRuleAssemblies>D:\development\Microsoft Visual Studio 8\Team Tools\Static Analysis Tools\FxCop\\rules</CodeAnalysisRuleAssemblies>
-		<CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-		<CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-		<ErrorReport>prompt</ErrorReport>
-	</PropertyGroup>
-
-	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-	<Import Project="$(MSBuildExtensionsPath)\Microsoft\Visual Studio SDK\Microsoft.VsSDK.targets" />
-	<Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
-
-	<Target Name="Deploy" DependsOnTargets="Build">
-		<Message Text="Deploying..." />
-		<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight" ValueName="StarLightInstallFolder">
-			<Output TaskParameter="Value" PropertyName="StarLightInstallFolder"/>
-		</RegistryRead>
-		<CreateProperty Value="$(StarLightInstallFolder)\VSIntegration">
-			<Output TaskParameter="Value" PropertyName="DeployDestination"/>
-		</CreateProperty>
-		<CreateItem Include="$(OutputPath)\Composestar.StarLight.VisualStudio.*.dll" AdditionalMetadata="Visible=false">
-			<Output TaskParameter="Include" ItemName="DeployFiles" />
-		</CreateItem>
-		<CreateItem Include="$(OutputPath)\Composestar.StarLight.VisualStudio.*.pdb" AdditionalMetadata="Visible=false">
-			<Output TaskParameter="Include" ItemName="DeployFiles" />
-		</CreateItem>
-		<Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(DeployDestination)"/>
-	</Target>
-
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6F6C0C53-6489-439D-A92F-2EBA93D8A889}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Composestar.StarLight.VisualStudio.Project</RootNamespace>
+    <AssemblyName>Composestar.StarLight.VisualStudio.Project</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>starlight.snk</AssemblyOriginatorKeyFile>
+    <GacOutput>true</GacOutput>
+    <GacDeploy>true</GacDeploy>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Engine">
+      <HintPath>Microsoft.Build.Engine.dll</HintPath>
+      <Name>Microsoft.Build.Engine</Name>
+      <SpecificVersion>False</SpecificVersion>
+      <Aliases>global</Aliases>
+    </Reference>
+    <Reference Include="Microsoft.Build.Framework">
+      <HintPath>Microsoft.Build.Framework.dll</HintPath>
+      <Name>Microsoft.Build.Framework</Name>
+      <SpecificVersion>False</SpecificVersion>
+      <Aliases>global</Aliases>
+    </Reference>
+    <Reference Include="Microsoft.Build.Utilities">
+      <HintPath>Microsoft.Build.Utilities.dll</HintPath>
+      <Name>Microsoft.Build.Utilities</Name>
+      <SpecificVersion>False</SpecificVersion>
+      <Aliases>global</Aliases>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.ProjectAggregator, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.VSHelp">
+      <HintPath>Microsoft.VisualStudio.VSHelp.dll</HintPath>
+    </Reference>
+    <Reference Include="VsLangProj" />
+    <Reference Include="System.Design">
+      <HintPath>System.Design.dll</HintPath>
+      <Name>System.Design</Name>
+      <SpecificVersion>False</SpecificVersion>
+      <Aliases>global</Aliases>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Designer.Interfaces, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Package.LanguageService, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Web.Application" />
+    <Reference Include="Microsoft.VisualStudio.VSHelp">
+      <HintPath>Microsoft.VisualStudio.VSHelp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Design" />
+    <Reference Include="System.Web" />
+    <Reference Include="Microsoft.VisualStudio.ProjectAggregator" />
+    <Reference Include="Microsoft.VisualStudio.Web.Application" />
+    <Reference Include="VsLangProj" />
+    <Reference Include="System.Design">
+      <HintPath>System.Design.dll</HintPath>
+      <Name>System.Design</Name>
+      <SpecificVersion>False</SpecificVersion>
+      <Aliases>global</Aliases>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="EnvDTE" />
+    <Reference Include="EnvDTE80" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Automation.cs" />
+    <Compile Include="ConfigurationPropertyPages.cs" />
+    <Compile Include="ComposeStarFileNode.cs" />
+    <Compile Include="ComposeStarFileNodeProperties.cs" />
+    <Compile Include="ComposeStarConfigProvider.cs" />
+    <Compile Include="Project\AggregatableProjectInterops.cs" />
+    <Compile Include="Project\AssemblyReferenceNode.cs" />
+    <Compile Include="Project\Attributes.cs" />
+    <Compile Include="Project\Automation\OAFileItem.cs" />
+    <Compile Include="Project\Automation\OAFolderItem.cs" />
+    <Compile Include="Project\Automation\OANavigableProjectItems.cs" />
+    <Compile Include="Project\Automation\OANestedProjectItem.cs" />
+    <Compile Include="Project\Automation\OANullProperty.cs" />
+    <Compile Include="Project\Automation\OAProject.cs" />
+    <Compile Include="Project\Automation\OAProjectItem.cs" />
+    <Compile Include="Project\Automation\OAProjectItems.cs" />
+    <Compile Include="Project\Automation\OAProperties.cs" />
+    <Compile Include="Project\Automation\OAProperty.cs" />
+    <Compile Include="Project\Automation\OAReferenceFolderItem.cs" />
+    <Compile Include="Project\Automation\OAReferenceItem.cs" />
+    <Compile Include="Project\Automation\OASolutionFolder.cs" />
+    <Compile Include="Project\Automation\VSProject\OAAssemblyReference.cs" />
+    <Compile Include="Project\Automation\VSProject\OABuildManager.cs" />
+    <Compile Include="Project\Automation\VSProject\OAComReference.cs" />
+    <Compile Include="Project\Automation\VSProject\OAProjectReference.cs" />
+    <Compile Include="Project\Automation\VSProject\OAReferenceBase.cs" />
+    <Compile Include="Project\Automation\VSProject\OAReferences.cs" />
+    <Compile Include="Project\Automation\VSProject\OAVSProject.cs" />
+    <Compile Include="Project\Automation\VSProject\OAVSProjectItem.cs" />
+    <Compile Include="Project\BuildDependency.cs" />
+    <Compile Include="Project\BuildPropertyPage.cs" />
+    <Compile Include="Project\ComReferenceNode.cs" />
+    <Compile Include="Project\ConfigProvider.cs" />
+    <Compile Include="Project\ConfigurationProperties.cs" />
+    <Compile Include="Project\DataObject.cs" />
+    <Compile Include="Project\DependentFileNode.cs" />
+    <Compile Include="Project\DesignPropertyDescriptor.cs" />
+    <Compile Include="Project\DocumentManager.cs" />
+    <Compile Include="Project\EnumDependencies.cs" />
+    <Compile Include="Project\FileChangeManager.cs" />
+    <Compile Include="Project\FileDocumentManager.cs" />
+    <Compile Include="Project\FileNode.cs" />
+    <Compile Include="Project\FlavoredProjectBase.cs" />
+    <Compile Include="Project\FlavoredProjectFactoryBase.cs" />
+    <Compile Include="Project\FolderNode.cs" />
+    <Compile Include="Project\HierarchyNode.cs" />
+    <Compile Include="Project\IDEBuildLogger.cs" />
+    <Compile Include="Project\Interfaces.cs" />
+    <Compile Include="Project\LocalizableProperties.cs" />
+    <Compile Include="Project\Microsoft.VisualStudio.Package.Project.cs" />
+    <Compile Include="Project\Misc\ConnectionPointContainer.cs" />
+    <Compile Include="Project\Misc\ExternDll.cs" />
+    <Compile Include="Project\Misc\NativeMethods.cs" />
+    <Compile Include="Project\Misc\SafeNativeMethods.cs" />
+    <Compile Include="Project\Misc\UnsafeNativeMethods.cs" />
+    <Compile Include="Project\NestedProjectBuildDependency.cs" />
+    <Compile Include="Project\NestedProjectNode.cs" />
+    <Compile Include="Project\NodeProperties.cs" />
+    <Compile Include="Project\OleServiceProvider.cs" />
+    <Compile Include="Project\Output.cs" />
+    <Compile Include="Project\OutputGroup.cs" />
+    <Compile Include="Project\ProjectAggregator2Interops.cs" />
+    <Compile Include="Project\ProjectConfig.cs" />
+    <Compile Include="Project\ProjectContainerNode.cs" />
+    <Compile Include="Project\ProjectDesignerDocumentManager.cs" />
+    <Compile Include="Project\ProjectDocumentsListener.cs" />
+    <Compile Include="Project\ProjectElement.cs" />
+    <Compile Include="Project\ProjectFactory.cs" />
+    <Compile Include="Project\ProjectFileConstants.cs" />
+    <Compile Include="Project\ProjectNode.CopyPaste.cs" />
+    <Compile Include="Project\ProjectNode.cs" />
+    <Compile Include="Project\ProjectOptions.cs" />
+    <Compile Include="Project\ProjectPackage.cs" />
+    <Compile Include="Project\ProjectReferenceNode.cs" />
+    <Compile Include="Project\PropertiesEditorLauncher.cs" />
+    <Compile Include="Project\ReferenceContainerNode.cs" />
+    <Compile Include="Project\ReferenceNode.cs" />
+    <Compile Include="Project\RegisteredProjectType.cs" />
+    <Compile Include="Project\SelectionListener.cs" />
+    <Compile Include="Project\SettingsPage.cs" />
+    <Compile Include="Project\SolutionListener.cs" />
+    <Compile Include="Project\SolutionListenerForBuildDependencyUpdate.cs" />
+    <Compile Include="Project\SolutionListenerForProjectEvents.cs" />
+    <Compile Include="Project\SolutionListenerForProjectOpen.cs" />
+    <Compile Include="Project\SolutionListenerForProjectReferenceUpdate.cs" />
+    <Compile Include="Project\StructuresEnums.cs" />
+    <Compile Include="Project\SuspendFileChanges.cs" />
+    <Compile Include="Project\TokenProcessor.cs" />
+    <Compile Include="Project\Tracing.cs" />
+    <Compile Include="Project\TrackDocumentsHelper.cs" />
+    <Compile Include="Project\TypeConverters.cs" />
+    <Compile Include="Project\Url.cs" />
+    <Compile Include="Project\Utilities.cs" />
+    <Compile Include="Project\VsCommands.cs" />
+    <Compile Include="Project\VSMDCodeDomProvider.cs" />
+    <Compile Include="Project\VSShellUtilities.cs" />
+    <Compile Include="Project\Web\CodeBehindCodeGenerator.cs" />
+    <Compile Include="Project\Web\FieldData.cs" />
+    <Compile Include="Project\Web\LockedDocData.cs" />
+    <Compile Include="Project\Web\VsHierarchyItem.cs" />
+    <Compile Include="Project\Web\WAUtilities.cs" />
+    <Compile Include="PropertyPages.cs" />
+    <Compile Include="ComposeStarProjectNodeProperties.cs" />
+    <Compile Include="ComposeStarMenus.cs" />
+    <Compile Include="RegistrationAttributes\SingleFileGeneratorSupportRegistrationAttribute.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="SelectionElementValueChangedListener.cs" />
+    <Compile Include="VSMDComposeStarProvider.cs" />
+    <Compile Include="VsPkg.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <MergeWithCTO>true</MergeWithCTO>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="key.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <CtcFile Include="CtcComponents\PkgCmd.ctc">
+      <ResourceName>1000</ResourceName>
+    </CtcFile>
+    <None Include="CtcComponents\Guids.h" />
+    <None Include="CtcComponents\PkgCmdID.h" />
+    <None Include="Project\Diagrams\AutomationClasses.cd" />
+    <None Include="Project\Diagrams\ConfigurationClasses.cd" />
+    <None Include="Project\Diagrams\DocumentManagerClasses.cd" />
+    <None Include="Project\Diagrams\HierarchyClasses.cd" />
+    <None Include="Project\Diagrams\PropertiesClasses.cd" />
+    <None Include="Project\Diagrams\ReferenceClasses.cd" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\StarLightProject.cpsproj" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\Concern.cps" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\StarLightProject.cpsproj" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\Concern.cps" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\StarLightProject.cpsproj" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\Concern.cps" />
+  </ItemGroup>
+  <ItemGroup>
+    <ZipItem Include="Templates\ProjectItems\Concern\Concern.cps" />
+    <ZipItem Include="Templates\ProjectItems\Concern\Concern.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\Concern\__TemplateIcon.ico" />
+    <ZipItem Include="Templates\ProjectItems\Text\TextFile.txt" />
+    <ZipItem Include="Templates\ProjectItems\Text\TextFile.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\Text\Text.ico" />
+    <ZipProject Include="Templates\Projects\ConcernProject\Concern.cps" />
+    <ZipProject Include="Templates\Projects\ConcernProject\__TemplateIcon.ico" />
+    <ZipProject Include="Templates\Projects\ConcernProject\ConcernProject.vstemplate" />
+    <ZipProject Include="Templates\Projects\ConcernProject\StarLightProject.cpsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VisualStudio.LanguageServices\StarLight.VisualStudio.LanguageServices.csproj">
+      <Project>{74788B39-49AB-4708-AD96-B5558AF48C7A}</Project>
+      <Name>StarLight.VisualStudio.LanguageServices</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Project\Microsoft.VisualStudio.Package.Project.resx">
+      <Visible>true</Visible>
+      <LogicalName>Microsoft.VisualStudio.Package.Project.resources</LogicalName>
+      <SubType>Designer</SubType>
+      <DependentUpon>Microsoft.VisualStudio.Package.Project.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Project\Resources\imagelis.bmp" />
+    <Content Include="Resources\GenericPackage.bmp" />
+    <Content Include="Resources\GenericPackage.ico" />
+    <ZipItem Include="Templates\ProjectItems\JSharpClass\Class.java" />
+    <ZipItem Include="Templates\ProjectItems\JSharpClass\JSharpClass.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\JSharpClass\__TemplateIcon.ico" />
+    <ZipItem Include="Templates\ProjectItems\CSharpClass\__TemplateIcon.ico" />
+    <ZipItem Include="Templates\ProjectItems\CSharpClass\CSharpClass.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\CSharpClass\Class.cs" />
+    <ZipItem Include="Templates\ProjectItems\VBClass\__TemplateIcon.ico" />
+    <ZipItem Include="Templates\ProjectItems\VBClass\VBClass.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\VBClass\Class.vb" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\JSharpConcernProject.vstemplate" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\__TemplateIcon.ico" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\Class1.java" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\Class1.vb" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\VBConcernProject.vstemplate" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\__TemplateIcon.ico" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\CSharpConcernProject.vstemplate" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\__TemplateIcon.ico" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\Class1.cs" />
+    <EmbeddedResource Include="Resources\imagelis.bmp" />
+    <None Include="Project\ProjectBase.files" />
+    <None Include="Resources\Resources.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="starlight.snk" />
+    <EmbeddedResource Include="Resources\StarLightImageList.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <TargetRegistryRoot>Software\Microsoft\VisualStudio\8.0Exp</TargetRegistryRoot>
+    <RegisterOutputPackage>true</RegisterOutputPackage>
+    <RegisterWithCodebase>true</RegisterWithCodebase>
+    <VsTemplateLanguage>StarLight</VsTemplateLanguage>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectBasePath>Project</ProjectBasePath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugVSIntegration|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugVSIntegration\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>D:\development\Microsoft Visual Studio 8\Team Tools\Static Analysis Tools\FxCop\\rules</CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Visual Studio SDK\Microsoft.VsSDK.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <Target Name="Deploy" DependsOnTargets="Build">
+    <Message Text="Deploying..." />
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight" ValueName="StarLightInstallFolder">
+      <Output TaskParameter="Value" PropertyName="StarLightInstallFolder" />
+    </RegistryRead>
+    <CreateProperty Value="$(StarLightInstallFolder)\VSIntegration">
+      <Output TaskParameter="Value" PropertyName="DeployDestination" />
+    </CreateProperty>
+    <CreateItem Include="$(OutputPath)\Composestar.StarLight.VisualStudio.*.dll" AdditionalMetadata="Visible=false">
+      <Output TaskParameter="Include" ItemName="DeployFiles" />
+    </CreateItem>
+    <CreateItem Include="$(OutputPath)\Composestar.StarLight.VisualStudio.*.pdb" AdditionalMetadata="Visible=false">
+      <Output TaskParameter="Include" ItemName="DeployFiles" />
+    </CreateItem>
+    <Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(DeployDestination)" />
+  </Target>
 </Project>

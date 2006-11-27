@@ -17,7 +17,7 @@ using Microsoft.VisualStudio.Package;
 
 namespace Babel.ParserGenerator
 {
-    class EmptyClass { }
+	class EmptyClass { }
 }
 
 namespace Composestar.StarLight.VisualStudio.Babel.Parser
@@ -30,14 +30,14 @@ namespace Composestar.StarLight.VisualStudio.Babel.Parser
 			braces = new List<TextSpan[]>();
 		}
 
-        private string _completionType;
+		private string _completionType;
 
-        public string CompletionType
-        {
-            get { return _completionType; }
-            set { _completionType = value; }
-        }
-	
+		public string CompletionType
+		{
+			get { return _completionType; }
+			set { _completionType = value; }
+		}
+
 
 		ParseRequest request;
 		IList<TextSpan[]> braces;
@@ -59,7 +59,7 @@ namespace Composestar.StarLight.VisualStudio.Babel.Parser
 
 		// brace matching, pairs and triples
 		public void DefineMatch(int priority, params TextSpan[] locations)
-		{			
+		{
 			if (locations.Length == 2)
 				braces.Add(new TextSpan[] { locations[0], 
 					locations[1]});
@@ -68,9 +68,8 @@ namespace Composestar.StarLight.VisualStudio.Babel.Parser
 				braces.Add(new TextSpan[] { locations[0], 
 					locations[1],
 					locations[2]});
- 
-		}
 
+		}
 
 		public void DefineMatch(params TextSpan[] locations)
 		{
@@ -83,34 +82,34 @@ namespace Composestar.StarLight.VisualStudio.Babel.Parser
 			Sink.AddHiddenRegion(span);
 		}
 
-        public void DefineStartName(string name, TextSpan location)
-        {
-            CompletionType = name;
-            Sink.StartName(location, name); 
-        }
+		public void DefineStartName(string name, TextSpan location)
+		{
+			CompletionType = name;
+			Sink.StartName(location, name);
+		}
 
-        public void DefineQualifyName(string name, params TextSpan[] locations)
-        {
-            CompletionType = name;
-            Sink.QualifyName(locations[0], locations[1],  name);
-        }
+		public void DefineQualifyName(string name, params TextSpan[] locations)
+		{
+			CompletionType = name;
+			Sink.QualifyName(locations[0], locations[1], name);
+		}
 
-        public void GotoNextParameter(TextSpan location)
-        {
-            Sink.NextParameter(location);
-        }
+		public void GotoNextParameter(TextSpan location)
+		{
+			Sink.NextParameter(location);
+		}
 
-        public void StartParameters(TextSpan location)
-        {
-            Sink.StartParameters(location);
-        }
+		public void StartParameters(TextSpan location)
+		{
+			Sink.StartParameters(location);
+		}
 
-        public void EndParameters(TextSpan location)
-        {
-            Sink.EndParameters(location);
-        }
+		public void EndParameters(TextSpan location)
+		{
+			Sink.EndParameters(location);
+		}
 
-    
+
 		// auto hidden?
 		// public void DefineHiddenRegion
 		// etc. see NewHiddenRegion structure

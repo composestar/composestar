@@ -59,8 +59,8 @@
                     break;
             }
          				
-			//if (txt.Equals("isClassWithName"))
-			//	return (int)Tokens.KWPROLOGFUN;         				
+			if (Composestar.StarLight.VisualStudio.Babel.Resolver.IsPrologFunction(txt))
+				return (int)Tokens.KWPROLOGFUN;         				
          				
             return (int)Tokens.IDENTIFIER;
        }
@@ -89,11 +89,11 @@ ABStar       [^\*\n]*
 
 %%
 
-[a-zA-Z_][a-zA-Z0-9_]*    { return GetIdToken(yytext); }
+[a-zA-Z_][a-zA-Z0-9_`]*  { return GetIdToken(yytext); }
 [a-z]*					  { return (int)Tokens.LOWERCASESTRING; }
 [A-Z]*					  { return (int)Tokens.UPPERCASESTRING; }
 {UpLow}                   { return (int)Tokens.UPLOWSTRING; }
-[a-z](?:[a-zA-Z]|[0-9]|_)*|\'[a-zA-Z0-9_]*\'  { return (int)Tokens.CONSTSTRING; }
+[a-z](?:[a-zA-Z]|[0-9]|_)*|\'[a-zA-Z0-9_`]*\'  { return (int)Tokens.CONSTSTRING; }
 
 [0-9]+                    { return (int)Tokens.NUMBER; }
 -?\d+(\x2E\d+)?  { return (int)Tokens.CONSTNUM; }

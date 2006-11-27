@@ -231,10 +231,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <summary>
 		/// Finds the concern element with the specified path.
 		/// </summary>
-		/// <param name="cc">The cc.</param>
+		/// <param name="cc">The configcontainer with all the concerns.</param>
 		/// <param name="concernFile">The full path of the concern to find.</param>
 		/// <param name="newConcern">if set to <see langword="true"/> then the concern is new since the last build.</param>
-		/// <returns></returns>
+		/// <returns>returns <see langword="null"/> when the concern is not in the list or a <see cref="T:ConcernElement">ConcernElement</see> for the concern file.</returns>
 		private ConcernElement FindConcernElement(ConfigurationContainer cc, string concernFile,
 			out bool newConcern)
 		{

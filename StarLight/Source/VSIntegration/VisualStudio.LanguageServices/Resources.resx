@@ -139,4 +139,8 @@
   <data name="150" xml:space="preserve">
     <value>HTJDRJJKE1KAIMPHQDECA0IZR3QAJ2EMK0DCK9HHC1M8CKZAQPK0DCZJCMEDDQD1MRD9A1EPHIZPZHDZC3DDPTM0J3H0IQJDMDJAC2HPK1D0KTC3P3REK8J9JAEDMAHR</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="PrologFunctions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\PrologFunctions.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
 </root>

@@ -14,8 +14,12 @@ using System.Collections.Generic;
 
 namespace Composestar.StarLight.VisualStudio.Babel
 {
-	public struct Declaration
+	public struct Declaration : IComparable
 	{
+		public const int SnippetGlyph = 205;
+		public const int ClassGlyph = 0;
+		public const int FunctionGlyph = 72;
+
 		public Declaration(string description, string displayText, int glyph, string name)
 		{
 			this.Description = description;
@@ -28,5 +32,61 @@ namespace Composestar.StarLight.VisualStudio.Babel
 		public string DisplayText;
 		public int Glyph;
 		public string Name;
+
+		public int CompareTo(object obj)
+		{
+			Declaration temp = (Declaration)obj;
+			return temp.Name.CompareTo(this.Name);
+		}
+	}
+
+	public enum Accessibility
+	{
+		Public = 0,
+		Internal = 1,
+		Friend = 2,
+		Protected = 3,
+		Private = 4,
+		Shortcut = 5,
+	}
+
+	public enum Element
+	{
+		Class = 0,
+		Constant = 1,
+		Delegate = 2,
+		Enum = 3,
+		Enummember = 4,
+		Event = 5,
+		Exception = 6,
+		Field = 7,
+		Interface = 8,
+		Macro = 9,
+		Map = 10,
+		Mapitem = 11,
+		Method = 12,
+		Overload = 13,
+		Module = 14,
+		Namespace = 15,
+		Operator = 16,
+		Property = 17,
+		Struct = 18,
+		Template = 19,
+		Typedef = 20,
+		Type = 21,
+		Union = 22,
+		Variable = 23,
+		Valuetype = 24,
+		Intrinsic = 25,
+
+	}
+	
+	public class CompletionGlyph
+	{
+
+		public static int GetIndexFor(Accessibility accessibility, Element element)
+		{
+			return (int)accessibility + (int)element * 6;
+		}
 	}
 }
