@@ -178,6 +178,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						// Add the referenced types
 						ce.ReferencedTypes.AddRange(parser.ReferencedTypes);
 
+						// Update timestamp
+						ce.Timestamp = File.GetLastWriteTime(concernFile).Ticks;
+
 						// Indicate that the concerns are most likely dirty
 						_concernsDirty = true;
 					}
