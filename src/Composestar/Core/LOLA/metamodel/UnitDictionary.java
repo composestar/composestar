@@ -80,7 +80,6 @@ public class UnitDictionary
       String type = unit.getUnitType();
       LanguageUnitType unitInfo = langModel.getLanguageUnitType(type);
       
-      
       // Step 1: Add the unit to the namebased index
       if (!unitsByName.containsKey(type)) // Might be the first unit of this type
         unitsByName.put(type, new Hashtable()); // If yes, create the table for this type  	    
@@ -229,7 +228,7 @@ public class UnitDictionary
     if (unitsByType.containsKey(type)){
       return new UnitResult((HashSet)unitsByType.get(type));
     }else{
-      Debug.out(Debug.MODE_DEBUG, "LOLA", "UnitDictionary warning: request for non-existing unit type");
+      Debug.out(Debug.MODE_DEBUG, "LOLA", "UnitDictionary warning: request for non-existing unit type '"+type+"'");
       return null;
     }
   }
