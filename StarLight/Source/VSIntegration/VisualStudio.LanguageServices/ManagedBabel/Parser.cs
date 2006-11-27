@@ -84,6 +84,11 @@ namespace Composestar.StarLight.VisualStudio.Babel.Parser
 
 		public void DefineStartName(string name, TextSpan location)
 		{
+			if (string.IsNullOrEmpty(name) )
+			{
+				this.Request.View.GetTextStream(location.iStartLine, location.iStartIndex, location.iEndLine, location.iEndIndex, out name);
+			}
+
 			CompletionType = name;
 			Sink.StartName(location, name);
 		}

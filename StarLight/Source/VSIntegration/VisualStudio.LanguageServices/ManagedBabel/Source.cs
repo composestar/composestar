@@ -38,27 +38,10 @@ namespace Composestar.StarLight.VisualStudio.Babel
 			set { braces = value; }
 		}
 
-        public override CommentInfo GetCommentFormat()
-        {
-             return Configuration.MyCInfo;
-        }
+		public override CommentInfo GetCommentFormat()
+		{
+			return Configuration.MyCInfo;
+		}
 
-        public override void Completion(IVsTextView textView, TokenInfo info, ParseReason reason)
-        {
-            
-            base.Completion(textView, info, reason);
-        }
-
-        public override int GetTipText(IVsHiddenRegion region, string[] result)
-        {
-            return base.GetTipText(region, result);
-        }
-
-        public override void MethodTip(IVsTextView textView, int line, int index, TokenInfo info)
-        {
-            base.MethodTip(textView, line, index, info);
-        }
-
-        
 	}
 }

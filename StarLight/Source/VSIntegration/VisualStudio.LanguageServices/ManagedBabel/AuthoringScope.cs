@@ -45,7 +45,7 @@ namespace Composestar.StarLight.VisualStudio.Babel
 		{
 			IList<Declaration> declarations;
 			switch (reason)
-			{					  
+			{					   
 				case ParseReason.CompleteWord:
 					declarations = resolver.FindCompletions(parseResult, line, col);
 					break;

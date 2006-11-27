@@ -53,6 +53,14 @@ namespace Composestar.StarLight.VisualStudio.Babel
 			return null;
 		}
 
+		/// <summary>
+		/// Adds the declaration.
+		/// </summary>
+		/// <param name="decl">The decl.</param>
+		public void AddDeclaration(Declaration decl)
+		{
+			declarations.Add(decl); 
+		}
         
 	}
 }

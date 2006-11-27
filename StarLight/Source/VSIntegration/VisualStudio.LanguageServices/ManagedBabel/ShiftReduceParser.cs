@@ -204,7 +204,11 @@ namespace Composestar.StarLight.VisualStudio.Babel.ParserGenerator
 		public void ReportError()
 		{
             StringBuilder errorMsg = new StringBuilder();
-            errorMsg.AppendFormat("syntax error, unexpected {0}", TerminalToString(next));
+			string t = TerminalToString(next);
+
+			if (t.StartsWith("KW", StringComparison.Ordinal))
+				t = string.Format("'{0}'", t.Substring(2).ToLower());
+            errorMsg.AppendFormat("syntax error, unexpected {0}", t);
 
             if (current_state.parser_table.Count < 7)
             {
@@ -216,7 +220,12 @@ namespace Composestar.StarLight.VisualStudio.Babel.ParserGenerator
                     else
                         errorMsg.Append(", or ");
 
-                    errorMsg.Append(TerminalToString(terminal));
+					t = TerminalToString(terminal);
+
+					if (t.StartsWith("KW", StringComparison.Ordinal))
+						t = string.Format("'{0}'", t.Substring(2).ToLower());  
+
+                    errorMsg.Append(t);
                     first = false;
                 }
             }

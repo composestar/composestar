@@ -5,13 +5,13 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 
-using Composestar.StarLight.VisualStudio.Babel;    
+using Composestar.StarLight.VisualStudio.Babel;
 
 namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 {
 
 	[Serializable]
-	public class PrologFunction : IComparable 
+	public class PrologFunction : IComparable
 	{
 		private string _functionName;
 
@@ -82,8 +82,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		public int CompareTo(object obj)
 		{
 			PrologFunction temp = (PrologFunction)obj;
-			return temp.FunctionName.CompareTo(this.FunctionName);   
-		} 
+			return temp.FunctionName.CompareTo(this.FunctionName);
+		}
 
 	}
 
@@ -149,7 +149,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 			if (string.IsNullOrEmpty(functionName))
 				return false;
 
-			foreach (PrologFunction  function in _functions)
+			foreach (PrologFunction function in _functions)
 			{
 				if (function.FunctionName.Equals(functionName))
 					return true;
@@ -161,19 +161,49 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		private List<Babel.Method> _babelMethods;
 
 		/// <summary>
-		/// Gets the get functions.
+		/// Retrieves the functions.
 		/// </summary>
-		/// <value>The get functions.</value>
-		[XmlIgnore]
-		public List<Babel.Method> GetFunctions
+		/// <param name="startsWith">The starts with.</param>
+		/// <returns></returns>
+		public List<Babel.Method> RetrieveFunctions(string startsWith)
 		{
-			get
-			{
-				if (_babelMethods == null)
-				{
-					_babelMethods =new List<Babel.Method>();
 
-					foreach (PrologFunction function in _functions)
+			if (_babelMethods == null && string.IsNullOrEmpty(startsWith))
+			{
+				_babelMethods = new List<Babel.Method>();
+
+				foreach (PrologFunction function in _functions)
+				{
+					Babel.Method meth = new Composestar.StarLight.VisualStudio.Babel.Method();
+
+					meth.Description = function.Description;
+					meth.Name = function.FunctionName;
+					meth.Type = "PrologFunction";
+					meth.Parameters = new List<Babel.Parameter>();
+
+					foreach (PrologParameter param in function.Parameters)
+					{
+						Babel.Parameter item = new Parameter();
+						item.Description = param.Description;
+						item.Display = param.Name;
+						item.Name = param.Name;
+
+						meth.Parameters.Add(item);
+					}
+
+					_babelMethods.Add(meth);
+				}
+
+				_babelMethods.Sort();
+				return _babelMethods;
+			}
+			else
+			{
+				List<Babel.Method> babelMethods = new List<Babel.Method>();
+
+				foreach (PrologFunction function in _functions)
+				{
+					if (function.FunctionName.StartsWith(startsWith))
 					{
 						Babel.Method meth = new Composestar.StarLight.VisualStudio.Babel.Method();
 
@@ -181,24 +211,57 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 						meth.Name = function.FunctionName;
 						meth.Type = "PrologFunction";
 						meth.Parameters = new List<Babel.Parameter>();
- 
-						foreach (PrologParameter  param in function.Parameters)
+
+						foreach (PrologParameter param in function.Parameters)
 						{
 							Babel.Parameter item = new Parameter();
 							item.Description = param.Description;
 							item.Display = param.Name;
 							item.Name = param.Name;
- 
-							meth.Parameters.Add(item); 
-						}
-												
-						_babelMethods.Add(meth); 
-					}
 
-					_babelMethods.Sort(); 
+							meth.Parameters.Add(item);
+						}
+
+						babelMethods.Add(meth);
+					}
 				}
-				return _babelMethods;
+
+				babelMethods.Sort();
+				return babelMethods;
 			}
+
+
+		}
+
+		private List<Babel.Declaration> _babelCompletions;
+
+
+
+		/// <summary>
+		/// Retrieves the completions.
+		/// </summary>
+		/// <returns></returns>
+		public List<Babel.Declaration> RetrieveCompletions()
+		{
+
+			if (_babelCompletions == null)
+			{
+				_babelCompletions = new List<Babel.Declaration>();
+
+				foreach (PrologFunction function in _functions)
+				{
+					Declaration decl = new Declaration();
+					 
+					decl.Description = String.Format("Prolog function: {0}", function.Description);
+					decl.DisplayText = function.FunctionName;
+					decl.Name = function.FunctionName;
+					decl.Glyph = CompletionGlyph.GetIndexFor(Accessibility.Public, Element.Module);
+
+					_babelCompletions.Add(decl);
+				}
+
+			}
+			return _babelCompletions;
 		}
 
 		/// <summary>
@@ -223,7 +286,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		/// Initializes a new instance of the <see cref="T:PrologFunctions"/> class.
 		/// </summary>
 		public PrologFunctions()
-		{						
+		{
 		}
 
 		/// <summary>
@@ -233,11 +296,11 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		{
 			Type[] extraTypes = null;
 			XmlSerializer xmlSerializer = CreateXmlSerializer(extraTypes);
-						
+
 			MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(Resources.PrologFunctions));
 
 			return xmlSerializer.Deserialize(stream) as PrologFunctions;
-		}		
+		}
 
 		/// <summary>
 		/// Creates the XML serializer.

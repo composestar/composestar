@@ -499,7 +499,7 @@ PrologFun
    ;
    
 PrologFunction
-   : KWPROLOGFUN  { StartName(@1, "prologfunction"); }
+   : KWPROLOGFUN  { StartName(@1); }
    ;
    
 StartArg
@@ -543,8 +543,8 @@ ListElems
    ;
    
 ListElems2
-   : BAR PrologList { StartName(@1, "prologfunction"); }
-   | BAR PrologVar { StartName(@1, "prologfunction"); }
+   : BAR PrologList { StartName(@1); }
+   | BAR PrologVar { StartName(@1); }
    ;  
    
 /* Common Binding Information */

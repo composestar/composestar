@@ -11,6 +11,8 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 using System;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.TextManager.Interop;
+
 
 namespace Composestar.StarLight.VisualStudio.Babel
 {
@@ -28,6 +30,14 @@ namespace Composestar.StarLight.VisualStudio.Babel
 			this.Name = name;
 		}
 
+		public Declaration(VsExpansion expansion)
+		{
+			this.Glyph = CompletionGlyph.GetSnippetId();
+			this.DisplayText = expansion.shortcut;
+			this.Name = expansion.title;
+			this.Description = expansion.description;
+		}
+
 		public string Description;
 		public string DisplayText;
 		public int Glyph;
@@ -36,7 +46,7 @@ namespace Composestar.StarLight.VisualStudio.Babel
 		public int CompareTo(object obj)
 		{
 			Declaration temp = (Declaration)obj;
-			return temp.Name.CompareTo(this.Name);
+			return this.Name.CompareTo(temp.Name);
 		}
 	}
 
@@ -88,5 +98,11 @@ namespace Composestar.StarLight.VisualStudio.Babel
 		{
 			return (int)accessibility + (int)element * 6;
 		}
+
+		public static int GetSnippetId()
+		{
+			return 205;
+		}
+		
 	}
 }
