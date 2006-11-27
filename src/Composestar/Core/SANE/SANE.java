@@ -19,6 +19,7 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.CPSIterator;
+import Composestar.Utils.Debug;
 
 /**
  * This is a Facade for the SANE module; this is the module that traverses all the
@@ -67,6 +68,7 @@ public class SANE implements CTCommonModule
 		while (cpsConcernIter.hasNext())
 		{
 			CpsConcern c = (CpsConcern)cpsConcernIter.next();
+			Debug.out(Debug.MODE_DEBUG, "SANE", "Resolving bindings for concern '"+c.getName()+"'"); 
 			bindFilterModules(c);
 			bindMethods(c);
 			bindConditions(c);
