@@ -74,7 +74,23 @@ public class FILTHServiceImpl extends FILTHService
 			}
 			if(file.isDirectory())
 			{				
-				filename = file.getAbsolutePath()+"\\FILTH_"+java.net.URLEncoder.encode(c.getName(), "UTF-8")+".html";
+				if (c.getName().indexOf("<") >= 0) {
+					filename = c.getName().substring(0, c.getName().indexOf("<"));
+					
+					int count = 1, fromIndex = 0, foundIndex = 0;
+					do {
+						foundIndex = c.getName().indexOf(",", fromIndex);
+						if (foundIndex >= 0) {
+							count++;
+							fromIndex = foundIndex + 1;
+						}
+					} while (foundIndex >= 0);
+					
+					filename = filename + "`" + count;
+				}
+				else
+					filename = c.getName();
+				filename = file.getAbsolutePath()+"\\FILTH_"+java.net.URLEncoder.encode(filename, "UTF-8")+".html";
 				
 				if (filthOutput)
 				{
