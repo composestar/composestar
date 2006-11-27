@@ -41,11 +41,10 @@ import composestar.dotNET.tym.entities.ConfigurationContainerDocument;
  */
 public class StarLightMaster extends Master
 {
-	private static final String MODULENAME = "MASTER";
-
-	private static String version = "0.2 beta";
-	private static String author = "University of Twente";
-	private static String title = "ComposeStar StarLight";
+	private static final String MODULE_NAME = "MASTER";
+	private static final String VERSION = "0.2 beta";
+	private static final String AUTHOR = "University of Twente";
+	private static final String TITLE = "ComposeStar StarLight";
 
 	private static String configFileName;
 	private static ConfigurationContainerDocument configDocument;
@@ -92,8 +91,9 @@ public class StarLightMaster extends Master
 	 * @param key
 	 * @return
 	 */
-	private String getSettingValue(ArrayOfKeyValueSetting settings, String key)
+	private String getSettingValue(String key)
 	{
+		ArrayOfKeyValueSetting settings = configContainer.getSettings();
 		for (int i = 0; i < settings.sizeOfSettingArray(); i++)
 		{
 			KeyValueSetting kv = settings.getSettingArray(i);
@@ -105,46 +105,6 @@ public class StarLightMaster extends Master
 	}
 	
 	/**
-	 * Compose* StarLight main function.
-	 * @param args
-	 */
-	public static void main(String[] args)
-	{
-		if(args.length == 0)
-		{
-			System.out.println("Usage: java [classpath values] Composestar.DotNET.MASTER.StarLightMaster <config file>");
-			System.exit(0);
-		}
-
-		StarLightMaster master = null;
-
-		if(args[0].equalsIgnoreCase("-v"))
-		{
-			System.out.println(title);
-			System.out.println(author);
-			System.exit(0);
-		}
-
-		// Create new master
-		master = new StarLightMaster(args[0]);
-
-		try
-		{ 
-			// Initialize
-			master.initialize();    
-
-			//    Run the master process
-			master.run();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			Debug.out(Debug.MODE_ERROR,MODULENAME, "Could not open configuration file: " + args[0]);            
-			System.exit(-1);
-		}
-	}
-
-	/**
 	 * Initialize the StarLight master.
 	 * @throws IOException 
 	 * @throws XmlException 
@@ -152,21 +112,21 @@ public class StarLightMaster extends Master
 	private void initialize() throws XmlException, IOException
 	{
 		timer = System.currentTimeMillis();
-		Debug.out(Debug.MODE_INFORMATION,MODULENAME,"Master initializing.");
+		Debug.out(Debug.MODE_INFORMATION,MODULE_NAME,"Master initializing.");
 
 		File configFile = new File(configFileName);
 		if (!configFile.exists())
 		{
-			Debug.out(Debug.MODE_CRUCIAL,MODULENAME,"Configuration file '" + configFileName + " not found!");
+			Debug.out(Debug.MODE_CRUCIAL,MODULE_NAME,"Configuration file '" + configFileName + " not found!");
 			System.exit(-1);
 		}
 
-		Debug.out(Debug.MODE_DEBUG,MODULENAME,"Using configuration file '" + configFileName + "'");
+		Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Using configuration file '" + configFileName + "'");
 		configDocument = ConfigurationContainerDocument.Factory.parse(configFile);
 		configContainer = configDocument.getConfigurationContainer();
 
 		// Set the debugmode
-		Debug.setMode(Integer.parseInt(getSettingValue(configContainer.getSettings(), "CompiletimeDebugLevel")));
+		Debug.setMode(Integer.parseInt(getSettingValue("CompiletimeDebugLevel")));
 		//Debug.setMode(Debug.MODE_WARNING);
 
 		// Apache XML driver is moved to a different package in Java 5
@@ -181,10 +141,10 @@ public class StarLightMaster extends Master
 		DataStore.instance();
 
 		// Set the paths
-		if (getSettingValue(configContainer.getSettings(),"IntermediateOutputPath").length() > 0) {
-			Configuration.instance().getPathSettings().addPath("Base", getSettingValue(configContainer.getSettings(),"IntermediateOutputPath"));
+		if (getSettingValue("IntermediateOutputPath").length() > 0) {
+			Configuration.instance().getPathSettings().addPath("Base", getSettingValue("IntermediateOutputPath"));
 		}
-		Configuration.instance().getPathSettings().addPath("Composestar", getSettingValue(configContainer.getSettings(),"InstallFolder") + "\\" );
+		Configuration.instance().getPathSettings().addPath("Composestar", getSettingValue("InstallFolder") + "\\" );
 
 		// Enable INCRE
 		ModuleSettings increSettings = new ModuleSettings();
@@ -195,8 +155,8 @@ public class StarLightMaster extends Master
 		// Set FILTH input file
 		ModuleSettings filthSettings = new ModuleSettings();
 		filthSettings.setName("FILTH");
-		filthSettings.addProperty("input", getSettingValue(configContainer.getSettings(),"SpecificationFILTH"));
-		filthSettings.addProperty("outputEnabled",getSettingValue(configContainer.getSettings(),"OutputEnabledFILTH"));
+		filthSettings.addProperty("input", getSettingValue("SpecificationFILTH"));
+		filthSettings.addProperty("outputEnabled",getSettingValue("OutputEnabledFILTH"));
 		Configuration.instance().getModuleSettings().addModule("FILTH", filthSettings);
 
 		Debug.out(Debug.MODE_INFORMATION,"Master","Master initialized.");
@@ -209,12 +169,12 @@ public class StarLightMaster extends Master
 	{
 		try
 		{
-			Debug.out(Debug.MODE_INFORMATION, MODULENAME, StarLightMaster.title + " " + StarLightMaster.version);
+			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, StarLightMaster.TITLE + " " + StarLightMaster.VERSION);
 
-			Debug.out(Debug.MODE_DEBUG, MODULENAME, "Creating DataStore");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Creating DataStore");
 			DataStore.instance();
 
-			Debug.out(Debug.MODE_DEBUG, MODULENAME, "Reading configuration");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Reading configuration");
 
 			ArrayOfConcernElement concerns = configContainer.getConcerns();
 			for (int i = 0; i < concerns.sizeOfConcernArray(); i++)
@@ -228,13 +188,13 @@ public class StarLightMaster extends Master
 			}
 
 			// Initialize INCRE
-			Debug.out(Debug.MODE_DEBUG, MODULENAME, "Initializing INCRE");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Initializing INCRE");
 			INCRE incre = INCRE.instance();
 			incre.run(resources);
 
-			Debug.out(Debug.MODE_DEBUG, MODULENAME, "Starting INCRE to process modules");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Starting INCRE to process modules");
 			Iterator modulesIter = incre.getModules();
-			while(modulesIter.hasNext())
+			while (modulesIter.hasNext())
 			{
 				// Execute enabled modules one by one
 				Module m = (Module)modulesIter.next();
@@ -250,7 +210,7 @@ public class StarLightMaster extends Master
 		catch (ModuleException e)
 		{
 			String error = e.getMessage();
-			if(error == null || error.equals("null")) //great information
+			if (error == null || error.equals("null")) //great information
 			{
 				error = e.toString();
 			}
@@ -265,11 +225,10 @@ public class StarLightMaster extends Master
 		} 
 		catch (Exception ex)
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULENAME, Debug.stackTrace(ex));
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, Debug.stackTrace(ex));
 			System.exit(1);
 		}
 	}
-
 
 	private void shutdown() throws IOException
 	{		
@@ -287,5 +246,41 @@ public class StarLightMaster extends Master
 		System.exit(0);
 	}
 	
-	
+	/**
+	 * Compose* StarLight main function.
+	 * @param args
+	 */
+	public static void main(String[] args)
+	{
+		if(args.length == 0)
+		{
+			System.out.println("Usage: java -jar StarLight.jar <config file>");
+			System.exit(0);
+		}
+
+		if(args[0].equalsIgnoreCase("-v"))
+		{
+			System.out.println(TITLE);
+			System.out.println(AUTHOR);
+			System.exit(0);
+		}
+
+		// Create new master
+		StarLightMaster master = new StarLightMaster(args[0]);
+
+		try
+		{ 
+			// Initialize
+			master.initialize();    
+
+			// Run the master process
+			master.run();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			Debug.out(Debug.MODE_ERROR,MODULE_NAME, "Could not open configuration file: " + args[0]);            
+			System.exit(-1);
+		}
+	}
 }

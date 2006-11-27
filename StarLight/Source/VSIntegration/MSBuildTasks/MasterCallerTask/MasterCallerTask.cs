@@ -21,7 +21,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// </summary>
 	public class MasterCallerTask : Task
 	{
-
 		#region Constructor
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:MasterCallerTask"/> class.
@@ -125,7 +124,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 		#endregion
 
-	    /// <summary>
+		/// <summary>
 		/// When overridden in a derived class, executes the task.
 		/// </summary>
 		/// <returns>
@@ -133,7 +132,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </returns>
 		public override bool Execute()
 		{
-			Stopwatch sw = Stopwatch.StartNew(); 
+			Stopwatch sw = Stopwatch.StartNew();
 		
 			// Open DB
 			Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFileName);
@@ -147,13 +146,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				return !Log.HasLoggedErrors;
 			}
 
-			Log.LogMessageFromResources("MasterStartText");			
+			Log.LogMessageFromResources("MasterStartText");
 
 			// Place debuglevel
 			Log.LogMessageFromResources("StoreDebugLevel", JavaDebugLevel);
 
 			// Set the Common Configuration
-			short debugLevelValue =-1;
+			short debugLevelValue = -1;
 			if (!String.IsNullOrEmpty(JavaDebugLevel))
 			{
 				try
@@ -184,7 +183,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			// Save common config
 			entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer);
 
-			// Start java                  
+			// Start java
 			Process process = new Process();
 
 			// Determine filename
@@ -254,7 +253,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			{
 				if (sw.IsRunning) sw.Stop();
 			}
-
 		}
 
 		#region Parse Master Output and Logger helper functions
@@ -265,8 +263,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <param name="message">The message.</param>
 		private void ParseMasterOutput(string message)
 		{
-
-			if (message == null) 
+			if (message == null)
 				return;
 
 			// Parse the message
