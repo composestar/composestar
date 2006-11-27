@@ -63,6 +63,7 @@
 		<antcall target="deploy_ce"/>
 		<antcall target="deploy_ws"/>
 		<antcall target="deploy_vs"/>
+		<antcall target="deploy_misc"/>
 	</target>
 
 	<target name="deploy_compiletime" description="Deploy Compose* StarLight Compiletime">
@@ -83,6 +84,15 @@
 
 	<target name="deploy_vs" description="Deploy Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
 		<ant target="deploy" dir="Source/VSIntegration/VisualStudio.Project" />
+	</target>
+
+	<target name="deploy_misc" depends="init"  description="Deploy misc files">
+		<copy todir="${starlight.installdir}">
+			<fileset dir="Setup/installed">
+				<include name="*.xml"/>
+				<include name="*.css"/>
+			</fileset>
+		</copy>
 	</target>
 
 	<!-- QA -->

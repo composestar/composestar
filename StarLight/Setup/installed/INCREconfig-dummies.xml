@@ -1,4 +1,4 @@
-<!-- INCRE configuration for StarLight -->
+<!-- INCRE configuration for StarLight (with dummy support) -->
 <modules>
 	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.RepositoryCollector.StarLightCollectorRunner" enabled="true" incremental="false" summary="Harvesting type information...">
 		<dependencies></dependencies>
