@@ -5,6 +5,8 @@
   by Istvan Nagy
   
   Page 221 - 226
+  
+  This embedded resource file is read by the PrologFunctions class and used for IntelliSense.
   -->
 <PrologFunctions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://trese.cs.utwente.nl/ComposeStar/PrologFunctions">
   <Functions>
@@ -67,7 +69,7 @@
         <Parameter Name="InterfaceName" Description="" />
       </Parameters>
     </Function>
-     <Function FunctionName="isInterfaceWithAttribute" Description="">
+    <Function FunctionName="isInterfaceWithAttribute" Description="">
       <Parameters>
         <Parameter Name="Interface" Description="" />
         <Parameter Name="AttributeName" Description="" />
@@ -219,7 +221,7 @@
         <Parameter Name="Class" Description="" />
         <Parameter Name="Annotation" Description="" />
       </Parameters>
-    </Function>   
+    </Function>
     <Function FunctionName="classHasMethod" Description="Class contains Method">
       <Parameters>
         <Parameter Name="Class" Description="" />
@@ -257,13 +259,129 @@
       </Parameters>
     </Function>
     <!-- Interface relations -->
-    <!-- TODO -->
+    <Function FunctionName="isSuperInterface" Description="The SubInterface directly inherits from SuperInterface">
+      <Parameters>
+        <Parameter Name="SuperInterface" Description="" />
+        <Parameter Name="SubInterface" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="interfaceHasAnnotation" Description="Interface has annotation attached">
+      <Parameters>
+        <Parameter Name="Interface" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="interfaceHasAnnotationWithName" Description="Interface has an annotation with the specified name attached">
+      <Parameters>
+        <Parameter Name="Interface" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="interfaceHasMethod" Description="Interface contains Method">
+      <Parameters>
+        <Parameter Name="Interface" Description="" />
+        <Parameter Name="Method" Description="" />
+      </Parameters>
+    </Function>
     <!-- Method relations -->
-    <!-- TODO -->
+    <Function FunctionName="methodReturnClass" Description="The Method returns a result of type Class">
+      <Parameters>
+        <Parameter Name="Method" Description="" />
+        <Parameter Name="Class" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="methodReturnInterface" Description="The Method returns a result of type Interface">
+      <Parameters>
+        <Parameter Name="Method" Description="" />
+        <Parameter Name="Interface" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="methodReturnType" Description="The Method returns a result of type Type">
+      <Parameters>
+        <Parameter Name="Method" Description="" />
+        <Parameter Name="Type" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="methodHasParameter" Description="The Method has the specified Parameter">
+      <Parameters>
+        <Parameter Name="Method" Description="" />
+        <Parameter Name="Parameter" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="methodHasAnnotation" Description="The Method has the specified Annotation">
+      <Parameters>
+        <Parameter Name="Method" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="methodHasAnnotationWithName" Description="The Method has an annotation with the specified name attached">
+      <Parameters>
+        <Parameter Name="Method" Description="" />
+        <Parameter Name="AnnotName" Description="" />
+      </Parameters>
+    </Function>
     <!-- Field relations -->
-    <!-- TODO -->
+    <Function FunctionName="fieldClass" Description="The class (type) of a Field">
+      <Parameters>
+        <Parameter Name="Field" Description="" />
+        <Parameter Name="Class" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="fieldInterface" Description="The Interface (type) of a Field">
+      <Parameters>
+        <Parameter Name="Field" Description="" />
+        <Parameter Name="Interface" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="fieldType" Description="The Type of a Field">
+      <Parameters>
+        <Parameter Name="Field" Description="" />
+        <Parameter Name="Type" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="fieldHasAnnotation" Description="The Field has the specified Annotation">
+      <Parameters>
+        <Parameter Name="Field" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="fieldHasAnnotationWithName" Description="The Field has an annotation with the specified name attached">
+      <Parameters>
+        <Parameter Name="Field" Description="" />
+        <Parameter Name="AnnotName" Description="" />
+      </Parameters>
+    </Function>
     <!-- Parameter relations -->
-    <!-- TODO -->
+    <Function FunctionName="parameterClass" Description="The class (type) of a Parameter">
+      <Parameters>
+        <Parameter Name="Parameter" Description="" />
+        <Parameter Name="Class" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="parameterInterface" Description="The Interface (type) of a Parameter">
+      <Parameters>
+        <Parameter Name="Parameter" Description="" />
+        <Parameter Name="Interface" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="parameterType" Description="The Type of a Parameter">
+      <Parameters>
+        <Parameter Name="Parameter" Description="" />
+        <Parameter Name="Type" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="parameterHasAnnotation" Description="The Parameter has the specified Annotation">
+      <Parameters>
+        <Parameter Name="Parameter" Description="" />
+        <Parameter Name="Annotation" Description="" />
+      </Parameters>
+    </Function>
+    <Function FunctionName="parameterHasAnnotationWithName" Description="The Parameter has an annotation with the specified name attached">
+      <Parameters>
+        <Parameter Name="Parameter" Description="" />
+        <Parameter Name="AnnotName" Description="" />
+      </Parameters>
+    </Function>
     <!-- Concern and FilterModule relations -->
     <Function FunctionName="concernHasAnnotation" Description="Concern has Annotation attached">
       <Parameters>
