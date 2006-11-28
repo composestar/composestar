@@ -29,6 +29,13 @@
 				<include name="*/langmap.pro" />			
 				<include name="*/obj/**" />
 			</FileSet>
+			<FileSet dir="${basedir}/TestCases" >
+				<include name="*/BuildConfiguration.xml" />
+				<include name="*/repository.dat" />
+				<include name="*/buildlog.txt" />
+				<include name="*/langmap.pro" />			
+				<include name="*/obj/**" />
+			</FileSet>
 		</delete>
 	</target>
 
