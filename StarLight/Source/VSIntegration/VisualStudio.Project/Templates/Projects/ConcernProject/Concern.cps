@@ -1,20 +1,15 @@
 concern $safeitemname$
 {
-  filtermodule 
-  {
-    externals
-	 
-    conditions
-	  
-    inputfilters
-		
-  }
-  
-  superimposition
-  {
-	selectors
-	
-	filtermodules
-		
-  }
+	filtermodule FilterModuleName
+	{
+		internals
+		conditions
+		inputfilters
+	}
+
+	superimposition
+	{
+		selectors
+		filtermodules
+	}
 }

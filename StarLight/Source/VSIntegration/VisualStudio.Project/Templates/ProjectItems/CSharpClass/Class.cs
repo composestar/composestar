@@ -14,12 +14,11 @@ using Composestar.StarLight.ContextInfo;
 
 namespace $rootnamespace$
 {
-    public class $safeitemname$
-    {
+	public class $safeitemname$
+	{
+		public $safeitemname$()
+		{
 
-        public $safeitemname$()
-	    {
-
-	    }
-    }
+		}
+	}
 }
