@@ -1,18 +1,52 @@
-#region Using directives
-using System;
-using System.IO;
-using System.Text;
-using System.Globalization;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+#region License
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * ComposeStar StarLight [http://janus.cs.utwente.nl:8000/twiki/bin/view/StarLight/WebHome]
+ * Copyright (C) 2003, University of Twente.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification,are permitted provided that the following conditions
+ * are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the University of Twente nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+*/
+#endregion
 
+#region Using directives
+using antlr.collections;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.CpsParser.Properties;
 using Composestar.StarLight.Entities.Concerns;
-
-using antlr.collections;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.IO;
+using System.Text;
 #endregion
 
 namespace Composestar.StarLight.CpsParser
@@ -22,9 +56,21 @@ namespace Composestar.StarLight.CpsParser
 	/// </summary>
 	public class CpsFileParser : ICpsParser
 	{
+		/// <summary>
+		/// _configuration
+		/// </summary>
 		private CpsParserConfiguration _configuration;
+		/// <summary>
+		/// Types
+		/// </summary>
 		private IList<string> types = new List<string>();
+		/// <summary>
+		/// _embedded code
+		/// </summary>
 		private EmbeddedCode _embeddedCode;
+		/// <summary>
+		/// _has output filters
+		/// </summary>
 		private bool _hasOutputFilters;
 
 		/// <summary>
@@ -49,7 +95,7 @@ namespace Composestar.StarLight.CpsParser
 		}
 
 		/// <summary>
-		/// Gets the typenames that are referenced from the parsed input.
+		/// Gets the type names that are referenced from the parsed input.
 		/// </summary>
 		/// <value>A read-only list with the names of referenced types.</value>
 		public ReadOnlyCollection<string> ReferencedTypes
@@ -176,13 +222,13 @@ namespace Composestar.StarLight.CpsParser
 		/// <returns>full type name parsed</returns>
 		private String Walk(AST tree, bool doType, String parsingType)
 		{
-			// Add the value of a name token to the parsingType string, seperate parts with a dot
+			// Add the value of a name token to the parsingType string, separate parts with a dot
 			if (!string.IsNullOrEmpty(parsingType))
 				parsingType = parsingType + ".";
 			if (parsingType != null)
 				parsingType = parsingType + tree.getText();
 
-			// We are only interested in the type nodes contained in ithe definition of internals and externals
+			// We are only interested in the type nodes contained in in the definition of internals and externals
 			if (tree.Type == CpsTokenTypes.INTERNAL_ || tree.Type == CpsTokenTypes.EXTERNAL_)
 			{
 				doType = true;
@@ -206,7 +252,7 @@ namespace Composestar.StarLight.CpsParser
 				parsingType = Walk(tree.getFirstChild(), doType, parsingType);
 			}
 
-			// Iteration over child nodes completed, we can npw add the full type name in 'parsingType' to the types list
+			// Iteration over child nodes completed, we can now add the full type name in 'parsingType' to the types list
 			if (doType && tree.Type == CpsTokenTypes.TYPE_)
 			{
 				types.Add(parsingType);
