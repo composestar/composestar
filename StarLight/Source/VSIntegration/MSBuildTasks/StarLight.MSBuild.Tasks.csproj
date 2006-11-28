@@ -93,6 +93,10 @@
       <Project>{4684F559-E4BA-466E-8EED-962987B34363}</Project>
       <Name>CpsParser %28Source\CpsParser\CpsParser%29</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Dummies\CSharp\CSharpDummyGenerator.csproj">
+      <Project>{B0A1577D-951D-4886-8726-9388FB15CFF4}</Project>
+      <Name>CSharpDummyGenerator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ILAnalyzer\ILAnalyzer.csproj">
       <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
       <Name>ILAnalyzer</Name>

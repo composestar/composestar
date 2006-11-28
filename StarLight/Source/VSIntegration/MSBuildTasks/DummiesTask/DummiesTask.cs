@@ -35,11 +35,15 @@
 #endregion
 
 #region Using directives
+using System;
+using System.IO;
+using System.Text;
+using System.Collections.Generic;
+
+using DDW.CSharpUI;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 #endregion
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -49,35 +53,83 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// </summary>
 	public class DummiesTask : Task
 	{
-		/// <summary>
-		/// M _sources
-		/// </summary>
-		private ITaskItem[] m_sources;
+		private const string DummiesFolderName = "Dummies";
 
+		// inputs
+		private string _baseDir;
+		private ITaskItem[] _sources;
+
+		// outputs
+		private IList<ITaskItem> _dummies;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:DummiesTask"/> class.
+		/// </summary>
 		public DummiesTask()
 		{
+			_dummies = new List<ITaskItem>();
 		}
 
 		/// <summary>
-		/// Sources
+		/// Sets the project base directory.
+		/// </summary>
+		[Required]
+		public string BaseDir
+		{
+			set { _baseDir = value; }
+		}
+
+		/// <summary>
+		/// Sets the list of sources.
 		/// </summary>
 		[Required]
 		public ITaskItem[] Sources
 		{
-			set { m_sources = value; }
+			set { _sources = value; }
 		}
 
 		/// <summary>
-		/// Execute
+		/// Gets a list of generated dummy sources.
 		/// </summary>
-		/// <returns>Bool</returns>
+		[Output]
+		public ITaskItem[] Dummies
+		{
+			get { return ToArray(_dummies); }
+		}
+
+		/// <summary>
+		/// Executes this task.
+		/// </summary>
+		/// <returns>true if the task successfully executed; otherwise, false.</returns>
 		public override bool Execute()
 		{
-			foreach (ITaskItem source in m_sources)
+			string dummiesDir = Path.Combine(_baseDir, DummiesFolderName);
+
+			if (!Directory.Exists(dummiesDir))
+				Directory.CreateDirectory(dummiesDir);
+
+			foreach (ITaskItem source in _sources)
 			{
-				Log.LogMessage("-{0}", source.ToString());
+				string input = source.ToString();
+				string output = Path.Combine(dummiesDir, Path.GetFileName(input));
+
+				_dummies.Add(new TaskItem(output));
+				
+				CSharpDummyGenerator.GenerateDummy(input, output);
 			}
 			return true;
+		}
+
+		/// <summary>
+		/// Converts a list of taskitems to an array.
+		/// </summary>
+		/// <param name="items">The list of items.</param>
+		/// <returns>Returns an ITaskItem array.</returns>
+		private ITaskItem[] ToArray(IList<ITaskItem> items)
+		{
+			ITaskItem[] arr = new ITaskItem[items.Count];
+			items.CopyTo(arr, 0);
+			return arr;
 		}
 	}
 }
