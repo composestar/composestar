@@ -83,6 +83,7 @@ public class EMBEX implements CTCommonModule
 				ts.setName(sourceCode.getClassName());
 
 				Project prj = getProject(language);
+				source.setIsEmbedded(true);
 				prj.addSource(source);
 				prj.addTypeSource(ts);
 
