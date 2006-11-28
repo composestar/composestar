@@ -65,15 +65,23 @@ namespace AntHelper
 
 		private static void writeStarlightDir(TextWriter writer)
 		{
-			string path = getRegistryString("Software\\Composestar\\Starlight", "StarLightInstallFolder");
-			if (path != null)
+			string version = getRegistryString("Software\\Composestar\\Starlight", "CurrentVersion");
+			if (version == null)
 			{
-				path = strReplace(path.Substring(0, path.LastIndexOf("\\")), "\\", "/");
-				writer.WriteLine("starlight.installdir={0}", path);
+				writer.WriteLine("# Unable to retrieve the StarLight version");
 			}
 			else
 			{
-				writer.WriteLine("# Unable to retrieve the StarLight install directory");
+				string path = getRegistryString("Software\\Composestar\\Starlight\\" + version, "StarLightInstallFolder");
+				if (path == null)
+				{
+					writer.WriteLine("# Unable to retrieve the StarLight install directory for version " + version);
+				}
+				else
+				{
+					path = strReplace(path.Substring(0, path.LastIndexOf("\\")), "\\", "/");
+					writer.WriteLine("starlight.installdir={0}", path);
+				}
 			}
 		}
 
