@@ -112,8 +112,18 @@ public class ClassModifier
 					parameters[i] = clazz;
 				}
 			}
-			CtMethod method = ct.getDeclaredMethod(m.name(), parameters);
-			ct.removeMethod(method);
+			
+			try 
+			{
+				CtMethod method = ct.getDeclaredMethod(m.name(),parameters);
+				ct.removeMethod(method);
+			}
+			catch(Exception e)
+			{
+				// swallow not found exception: can occur when method
+				// should be removed which is not declared in the class
+				// but inherited from superclass
+			}
 		}
 	}
 
