@@ -101,11 +101,20 @@
                 <b>Note:</b>&nbsp;The compilation performed by the concern project is incremental,
                 so the source will not be recompiled.</p>
             <p>
-                <b>Note:</b>&nbsp;You can add a condition to the <em>AfterBuild</em> target. Use,
+                <b>Tip:</b>&nbsp;You can add a condition to the <em>AfterBuild</em> target. Use,
                 for instance, the <em>Configuration</em> value and define new configurations like
                 <em>ConcernsDebug</em> and <em>ConcernsRelease</em> in addition to the existing
                 <em>Debug</em> and <em>Release</em> configurations. The concern project can make
                 use of these configuration values to perform certain operations in specific cases.</p>
+            <p>
+                <b>Tip:</b>&nbsp;The StarLight target file will call MSBuild on all the references
+                projects. if you have a large number of projects or are sure the output of your
+                references projects is always
+                up to date, then you can replace this task with a special copy task to save compilation time. Override
+                the <i>CopyFilesToOutputDirectory</i> target with your own copy target in the cpsproj
+                file or change the <b>StarLight.target</b> file. Make sure the <em>WeavableAssemblyFiles</em>
+                property is set with the files to analyze and weave on. See the <strong>StarLight.target</strong>
+                for more information.</p>
         </div>
     </div>
 </body>

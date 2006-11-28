@@ -91,7 +91,9 @@
         <Directory Id="Dir_ItemTemplatesRoot" Name="ITEMTMPL" LongName="ItemTemplates" />
       </Directory>
       <Directory Id="ProgramMenuFolder" Name="PMenu" LongName="Programs">
-        <Directory Id="ProgramMenuDir" Name='StrLght1.0' LongName="$(var.ProductShortName) $(var.ProductVersionText)" />
+        <Directory Id='ComposeStarMenuFolder' Name='CmpseStr' LongName ='ComposeStar'>
+          <Directory Id="ProgramMenuDir" Name='StrLght1.0' LongName="$(var.ProductShortName) $(var.ProductVersionText)" />
+        </Directory>
       </Directory>
 
       <Directory Id="DesktopFolder" Name="Desktop" />
@@ -119,9 +121,9 @@
       <Feature Id='Documentation' Title ='Documentation' Description ='StarLight specific and general composition filters documentation.' Level ='1'>
         <ComponentRef Id='ChmCoreElements'/>
       </Feature>
-      <Feature Id='Examples' Title ='StarLight Examples' Description ='Source code examples.' Level ='1'>
+      <!--<Feature Id='Examples' Title ='StarLight Examples' Description ='Source code examples.' Level ='1'>
 
-      </Feature>
+      </Feature>-->
     </Feature>
 
 
