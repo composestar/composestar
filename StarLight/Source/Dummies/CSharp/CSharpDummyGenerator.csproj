@@ -1,0 +1,152 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B0A1577D-951D-4886-8726-9388FB15CFF4}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>CSharpDummyGenerator</AssemblyName>
+    <AssemblyOriginatorKeyFile>starlight.snk</AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DDW.CSharp</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="antlr.runtime, Version=2.7.6.2, Culture=neutral, PublicKeyToken=b6c5325c9dec2040, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Libraries\Antlr\antlr.runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CSharpDummyGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Gen\CSharpGen.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Gen\LineWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\CodeGraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\Collections.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\SymbolCollections.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graph\SymbolTables.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parse\Attribution.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parse\CSharpAST.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parse\CSharpLexer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parse\CSharpParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parse\CSharpTokenTypes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parse\LineNumberAST.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Walk\GraphParserBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Walk\PropertyWalker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Walk\PropertyWalkerBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Walk\PropertyWalkerTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="Parse\csharp.g" />
+    <None Include="starlight.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
