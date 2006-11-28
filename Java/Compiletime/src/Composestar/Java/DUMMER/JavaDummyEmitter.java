@@ -9,6 +9,7 @@ import java.util.Iterator;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.DUMMER.*;
 import Composestar.Core.Master.Config.*;
+import Composestar.Core.TYM.TypeLocations;
 import Composestar.Utils.FileUtils;
 
 /**
@@ -65,6 +66,27 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 */
 	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException
 	{
+		if(source.isEmbedded())
+		{
+			Configuration config = Configuration.instance();
+			String dummyPath = config.getPathSettings().getPath("Dummy");
+			String basePath = project.getBasePath();
+			outputFilename = basePath + "obj/" + dummyPath;
+			
+			// change outputFilename
+			TypeLocations types = TypeLocations.instance();
+			Iterator embeddedTypes = types.getTypesBySource(source.getFileName()).iterator();
+			while(embeddedTypes.hasNext())
+			{
+				String type = (String)embeddedTypes.next();
+				outputFilename += type;
+				outputFilename = outputFilename.replace('.','/');
+				outputFilename += ".java";
+				source.setDummy(outputFilename);
+				source.setFileName(FileUtils.normalizeFilename(source.getFileName()));
+			}
+		}
+		
 		currentSource = source;
 		packageName = "";
 		packages = new ArrayList();

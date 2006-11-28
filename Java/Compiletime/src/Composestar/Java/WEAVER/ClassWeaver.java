@@ -12,7 +12,9 @@ import javassist.NotFoundException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.Config.Source;
 import Composestar.Core.Master.Config.TypeSource;
+import Composestar.Core.TYM.TypeLocations;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.FileUtils;
 
@@ -97,24 +99,53 @@ public class ClassWeaver
 
 		// write applicationStart
 		writeApplicationStart();
-
+		
+		// FIXME: this is added because somehow javassist prunes and frozens
+		// types from embedded sources. So temporarily disabled weaving on embedded types.
+		boolean isEmbeddedType = false;
+		TypeLocations types = TypeLocations.instance();
+		
 		Iterator typeIt = p.getTypeSources().iterator();
 		while (typeIt.hasNext())
 		{
 			type = (TypeSource) typeIt.next();
 			name = type.getName();
-
+			
+			// FIXME: this is added because somehow javassist prunes and frozens
+			// types from embedded sources. So temporarily disabled weaving on embedded types.
+			String s = FileUtils.normalizeFilename(types.getSourceByType(name));
+			Iterator sourceIt = p.getSources().iterator();
+			while(sourceIt.hasNext())
+			{
+				Source source = (Source)sourceIt.next();
+				if(s.equals(source.getFileName()))
+				{
+					if(source.isEmbedded())
+					{
+						isEmbeddedType = true;
+					}
+				}
+			}
+			
 			// create outputFile
-			outputDir = p.getProperty("basePath");
+			outputDir = p.getBasePath();
 			outputDir += "obj/weaver/";
 
 			// weave the class and write to disk
 			try
 			{
 				CtClass clazz = classpool.get(name);
-				clazz.instrument(new MethodBodyTransformer(classpool));
-				clazz.writeFile(outputDir);
-				weavedClasses.add(getOutputFile(outputDir,clazz));
+				if(!isEmbeddedType) // FIXME: enable weaving on embedded types
+				{
+					clazz.instrument(new MethodBodyTransformer(classpool));
+					clazz.writeFile(outputDir);
+					weavedClasses.add(getOutputFile(outputDir,clazz));
+				}
+				else
+				{
+					weavedClasses.add(getOutputFile(p.getBasePath() + "obj/",clazz));
+					isEmbeddedType = false;
+				}
 			}
 			catch (Exception e)
 			{

@@ -51,10 +51,20 @@ public class JavaBACO extends BACO
 	{
 		String dest;
 		Configuration config = Configuration.instance();
-		String weavedPath = config.getPathSettings().getPath("Base") + "obj/weaver/";
+		String objPath = config.getPathSettings().getPath("Base") + "obj/";
+		String weavedPath = objPath + "weaver/";
 		if(source.startsWith(weavedPath))
 		{
 			dest = outputPath + source.substring(weavedPath.length());
+			if (!FileUtils.createFullPath(FileUtils.getDirectoryPart(dest)))
+			{
+				throw new ModuleException("Unable to create destination directory: '" + FileUtils.getDirectoryPart(dest) + "'", "BACO");
+			}
+		}
+		else if(source.startsWith(objPath))
+		{
+			// FIXME: temp special case added for embbedded sources
+			dest = outputPath + source.substring(objPath.length());
 			if (!FileUtils.createFullPath(FileUtils.getDirectoryPart(dest)))
 			{
 				throw new ModuleException("Unable to create destination directory: '" + FileUtils.getDirectoryPart(dest) + "'", "BACO");
@@ -64,6 +74,7 @@ public class JavaBACO extends BACO
 		{
 			dest = outputPath + FileUtils.getFilenamePart(source);
 		}
+		
 		try 
 		{
 			Debug.out(Debug.MODE_DEBUG,"BACO","Copying '" + source + "' to '" + dest + "'");
