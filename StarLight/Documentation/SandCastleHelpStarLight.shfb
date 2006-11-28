@@ -41,6 +41,7 @@ The FilterContext is used internally by the StarLight compiler to include runtim
         <dependencyItem depPath="..\Source\CoreServices\bin\Release\Composestar.StarLight.CoreServices.dll" />
         <dependencyItem depPath="..\Source\Repository\bin\Release\Composestar.StarLight.DataStore.dll" />
         <dependencyItem depPath="..\Source\StarLightEntities\bin\Release\Composestar.StarLight.Entities.dll" />
+        <dependencyItem depPath="GAC:System.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     </dependencies>
     <projectSummary>ComposeStar StarLight Core Elements contain the StarLight classes to be used by the concern developer.</projectSummary>
     <sandcastlePath>..\..\Core\Development\Sandcastle\</sandcastlePath>
