@@ -1,4 +1,9 @@
 package Composestar.Patterns.Visitor;
 
-public class BinaryTreeElement{}
+/**
+ * Abstract base class of BinaryTreeNode and BinaryTreeLeaf.
+ */
+public abstract class BinaryTreeElement
+{
+}
 	
