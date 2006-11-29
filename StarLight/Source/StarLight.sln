@@ -118,7 +118,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{AB6F61
 		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpDummyGenerator", "Dummies\CSharp\CSharpDummyGenerator.csproj", "{B0A1577D-951D-4886-8726-9388FB15CFF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Composestar.StarLight.Dummies", "Dummies\CSharp\Composestar.StarLight.Dummies.csproj", "{B0A1577D-951D-4886-8726-9388FB15CFF4}"
 EndProject
 Global
 	GlobalSection(TextTemplating) = postSolution

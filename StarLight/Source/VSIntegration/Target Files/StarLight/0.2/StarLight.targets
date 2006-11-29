@@ -197,6 +197,7 @@ This target will be called whenever the Clean target is invoked.
       ResolveReferences;
       PrepareResources;
       ResolveKeySource;
+      GenerateDummies;
       CpsParserRunner;
       Compile;
       GenerateSerializationAssemblies;
@@ -229,6 +230,7 @@ This target will be called whenever the Clean target is invoked.
       BuildOnlySettings;
       PrepareForBuild;
       ResolveReferences;
+      GenerateDummies;
       CpsParserRunner;
       GetTargetPath;
       CopyFilesToOutputDirectory;
@@ -374,7 +376,10 @@ This target will be called whenever the Clean target is invoked.
   <!-- GenerateDummies target -->
   <Target Name="GenerateDummies">
     <Message Text="Generating dummies." />
-    <DummiesTask Sources="@(Compile->'%(FullPath)')"/>
+    <DummiesTask BaseDir="$(StarLightFolder)"
+                 Sources="@(Compile->'%(FullPath)')">
+      <Output TaskParameter="Dummies" ItemName="Dummies"/>
+    </DummiesTask>
   </Target>
 
   <!-- CpsParserRunner target -->
