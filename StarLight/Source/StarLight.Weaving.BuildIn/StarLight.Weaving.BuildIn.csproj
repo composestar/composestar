@@ -91,7 +91,10 @@
 
   <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying..." />
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight" ValueName="WeaveStrategiesFolder">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion">
+      <Output TaskParameter="Value" PropertyName="StarLightVersion"/>
+    </RegistryRead>
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarLightVersion)" ValueName="WeaveStrategiesFolder">
       <Output TaskParameter="Value" PropertyName="WeaveStrategiesFolder"/>
     </RegistryRead>
     <CreateProperty Value="$(WeaveStrategiesFolder)">

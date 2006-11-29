@@ -312,12 +312,17 @@
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+	
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Visual Studio SDK\Microsoft.VsSDK.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+	
   <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying..." />
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight" ValueName="StarLightInstallFolder">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion">
+      <Output TaskParameter="Value" PropertyName="StarLightVersion"/>
+    </RegistryRead>
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(StarLightVersion)" ValueName="StarLightInstallFolder">
       <Output TaskParameter="Value" PropertyName="StarLightInstallFolder" />
     </RegistryRead>
     <CreateProperty Value="$(StarLightInstallFolder)\VSIntegration">
@@ -331,4 +336,5 @@
     </CreateItem>
     <Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(DeployDestination)" />
   </Target>
+	
 </Project>
