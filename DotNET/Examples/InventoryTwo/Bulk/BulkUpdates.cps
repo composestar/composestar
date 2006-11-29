@@ -5,8 +5,8 @@ concern BulkUpdates in InventoryTwo
 		internals
 			bulk: InventoryTwo.BulkUpdater;
 		inputfilters
-			addproducts:    Dispatch = { [*.AddProducts] bulk.AddProducts };
-			removeproducts: Dispatch = { [*.RemoveProducts] bulk.RemoveProducts }
+			add: Dispatch = { [*.AddProducts] bulk.AddProducts };
+			rem: Dispatch = { [*.RemoveProducts] bulk.RemoveProducts }
 	}
 
 	superimposition

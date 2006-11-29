@@ -5,9 +5,9 @@ concern InventoryObserver in InventoryTwo
 		internals
 			subject: InventoryTwo.Subject;
 		inputfilters
-			s: Dispatch = { [*.Attach] subject.Attach, 
-			                [*.Detach] subject.Detach };
-			c:     Meta = { [*.??m] subject.Notify }
+			ad: Dispatch = { [*.Attach] subject.Attach, 
+			                 [*.Detach] subject.Detach };
+			notify: Meta = { [*.??m]    subject.Notify }
 	}
 
 	superimposition
@@ -20,6 +20,6 @@ concern InventoryObserver in InventoryTwo
 	*/
 		filtermodules
 			subjects <- SubjectInventoryFilter({AddProduct, RemoveProduct});
-		//	subjects <- SubjectInventoryFilter(observed);
+	//		subjects <- SubjectInventoryFilter(observed);
 	}
 }
