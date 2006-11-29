@@ -126,7 +126,7 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 		settings.put("buildDebugLevel", buildDebugLevel.indexOf(buildDebugLevel.getText()));
 		settings.put("incremental", incremental.getText());
 		settings.put("runDebugLevel", runDebugLevel.indexOf(runDebugLevel.getText()));
-		settings.put("secretMode", secretMode.getText());
+		settings.put("secretMode", secretMode.indexOf(secretMode.getText()) - 1);
 		settings.put("classpath", classpathText.getText());
 		plugin.saveDialogSettings("");
 	}
@@ -136,7 +136,7 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 		buildDebugLevel.select(settings.getInt("buildDebugLevel"));
 		incremental.select(incremental.indexOf(settings.get("incremental")));
 		runDebugLevel.select(settings.getInt("runDebugLevel"));
-		secretMode.select(secretMode.indexOf(settings.get("secretMode")));
+		secretMode.select(settings.getInt("secretMode")+1);
 		classpathText.setText(settings.get("classpath"));
 	
 	}
