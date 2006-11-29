@@ -57,9 +57,17 @@
 			<fileset dir="../../Compiletime/dist/"/>
 		</copy>
 		
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin">
+			<fileset dir="../../Compiletime/src/Composestar/Core/CKRET/">
+				<include name="CKRET.css"/>
+				<include name="filterdesc.xml"/>
+			</fileset>
+		</copy>
+				
 		<!-- prolog ( apparently this is needed at runtime ) -->
 		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/binaries/prolog">
 			<fileset dir="../../Compiletime/binaries/prolog/" excludes="prolog-src.jar"/>
 		</copy>
+		
 	</target>
 </project>
