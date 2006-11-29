@@ -1,16 +1,10 @@
-<project name="Composestar/DotNET/testing" default="test" xmlns:cs="antlib:Composestar">
+<project name="Composestar/DotNET/Testing" default="test" xmlns:cs="antlib:Composestar">
 
 	<description>
 	Run the Compose* SystemTest for DotNET
 	</description>
 
-	<condition property="build.core" value="${basedir}/../../Core">
-		<and>
-			<not><isset property="build.core"/></not>
-			<available file="${basedir}/../../Core/common.xml"/>
-		</and>
-	</condition>
-	
+	<property name="build.core" location="../../Core"/>
 	<import file="${build.core}/common.xml"/>
 
 	<target name="init_local" depends="init">
@@ -132,6 +126,8 @@
 				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe"/>
 				<include name="Wedding/bin/wedding.Wedding.exe"/>
 				<include name="Inventory/bin/ExampleAOP.Example.exe"/>
+				<include name="InventoryTwo/bin/InventoryTwo.Example.exe"/>
+				
 				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Builder/bin/Composestar.Patterns.Builder.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Decorator/bin/Composestar.Patterns.Decorator.Main.exe"/>
