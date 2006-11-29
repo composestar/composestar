@@ -31,17 +31,15 @@ import Composestar.Core.LOLA.metamodel.RelationPredicate;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
 
 /**
- * @author havingaw This class implements builtin predicates used by the
- *         composestar Prolog metamodel
+ * This class implements builtin predicates used by the Composestar Prolog metamodel.
+ * 
+ * @author havingaw 
  */
 public class ComposestarBuiltins extends HashDict
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8404927622993344626L;
 
-	/* Public for convenience - should be readable by builtin-classes */
+	// Public for convenience - should be readable by builtin-classes
 	public static UnitDictionary langUnits;
 
 	public static PredicateSelector currentSelector;
@@ -56,6 +54,7 @@ public class ComposestarBuiltins extends HashDict
 	public ComposestarBuiltins(LanguageModel langModel)
 	{
 		super();
+
 		/* Register the unitTypeBuiltin and unitNameBuiltin predicates */
 		register(new isUnitTypeBuiltin());
 		register(new isUnitNameBuiltin());
@@ -74,7 +73,6 @@ public class ComposestarBuiltins extends HashDict
 		}
 
 		currentLangModel = langModel;
-
 	}
 
 	/**
@@ -128,11 +126,8 @@ class isUnitTypeBuiltin extends FunBuiltin
 			return unit.getUnitType().equals(type) ? 1 : 0;
 		}
 		else
-		/*
-		 * Unit not specified, so we return a source containing the list of
-		 * units
-		 */
 		{
+			// Unit not specified, so we return a source containing the list of units
 			UnitResult unitsOfThisType = ComposestarBuiltins.langUnits.getByType(type);
 			if (null == unitsOfThisType) // Type does not exist!
 			{
@@ -554,11 +549,8 @@ class hasAttributeBuiltin extends FunBuiltin
 		String type = "";
 		if (!(tType instanceof Const))
 		{
-			ComposestarBuiltins.currentSelector.setToBeCheckedByINCRE(false);// too
-			// many
-			// cases
-			knownType = false; // Unit can be of any type; lookup will be
-			// slower
+			ComposestarBuiltins.currentSelector.setToBeCheckedByINCRE(false);// too many cases
+			knownType = false; // Unit can be of any type; lookup will be slower
 		}
 		else
 		{
@@ -567,8 +559,7 @@ class hasAttributeBuiltin extends FunBuiltin
 
 		Term tUnit = getArg(0);
 		Term tAttr = getArg(1);
-		if (tAttr instanceof Const) // Attribute is bound - lookup units with
-		// this attr
+		if (tAttr instanceof Const) // Attribute is bound - lookup units with this attr
 		{
 			String attr = ((Const) tAttr).name();
 			UnitResult result;
