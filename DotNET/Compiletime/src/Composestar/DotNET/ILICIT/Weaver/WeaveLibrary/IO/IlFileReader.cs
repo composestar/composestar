@@ -43,6 +43,11 @@ namespace Weavers.IO
 		private ExternalAssemblyBlock GetExternalAssemblyBlock(string header, StreamReader srIn)
 		{
 			string assemblyName = header.Remove(0, ".assembly extern ".Length);
+			
+			// remove 'as <alias>'
+			int asIndex = assemblyName.IndexOf(" as ");
+			if (asIndex != -1) assemblyName = assemblyName.Substring(0, asIndex);
+			
 			ExternalAssemblyBlock result = new ExternalAssemblyBlock(assemblyName);
 
 			ArrayList block = ReadBlock(srIn);

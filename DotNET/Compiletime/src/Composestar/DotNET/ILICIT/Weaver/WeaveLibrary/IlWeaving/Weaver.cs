@@ -1514,6 +1514,21 @@ namespace Weavers.IlWeaving
 			}
 
 			if (firstExternalAssembly == -1) firstExternalAssembly = 0; 
+
+			if (debug)
+			{
+				Console.WriteLine("Used external assemblies:");
+				foreach (ExternalAssemblyBlock asm in usedExternalAssemblyBlocks)
+				{
+					Console.WriteLine(" - " + asm.Name);
+				}
+				Console.WriteLine("New external assemblies:");
+				foreach (ExternalAssemblyBlock asm in newExternalAssemblies)
+				{
+					Console.WriteLine(" - " + asm.Name);
+				}
+			}
+			
 			IlCode.InsertRange(firstExternalAssembly, usedExternalAssemblyBlocks);
 			IlCode.InsertRange(firstExternalAssembly + usedExternalAssemblies.Count, newExternalAssemblies);
 
