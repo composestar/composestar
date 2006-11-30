@@ -198,7 +198,7 @@ This target will be called whenever the Clean target is invoked.
       PrepareResources;
       ResolveKeySource;
       GenerateDummies;
-      CpsParserRunner;
+      ParseConcerns;
       Compile;
       GenerateSerializationAssemblies;
       CreateSatelliteAssemblies;
@@ -231,13 +231,13 @@ This target will be called whenever the Clean target is invoked.
       PrepareForBuild;
       ResolveReferences;
       GenerateDummies;
-      CpsParserRunner;
+      ParseConcerns;
       GetTargetPath;
       CopyFilesToOutputDirectory;
-      ILAnalyzerRunner;
+      AnalyzeAssemblies;
       MasterCaller;
       ILWeaverRunner;
-      ILVerifyRunner;
+      VerifyAssemblies;
       CleanBackup;
       IncrementalClean;
     </CoreWeaveDependsOn>
@@ -382,8 +382,8 @@ This target will be called whenever the Clean target is invoked.
     </DummiesTask>
   </Target>
 
-  <!-- CpsParserRunner target -->
-  <Target Name="CpsParserRunner">
+  <!-- ParseConcerns target -->
+  <Target Name="ParseConcerns">
     <Message Text="Collecting and parsing concern files." />
     <CpsParserTask ContinueOnError="false"
                    BaseDir="$(StarLightFolder)"
@@ -401,8 +401,8 @@ This target will be called whenever the Clean target is invoked.
     <OnError ExecuteTargets="CleanBackup" />
   </Target>
   
-  <!--ILAnalyzerRunner target -->
-  <Target Name="ILAnalyzerRunner">
+  <!--AnalyzeAssemblies target -->
+  <Target Name="AnalyzeAssemblies">
     <Message Text="Collecting and analyzing assemblies."/>
 
     <!-- Collect the files to analyze and weave on -->
@@ -450,8 +450,8 @@ This target will be called whenever the Clean target is invoked.
     <ILWeaverTask RepositoryFilename="$(RepositoryFilename)" WeaveDebug="$(WeaveDebugLevel)" BinFolder="$(ProjectDir)$(OutDir)" ConcernsDirty="$(ConcernsDirty)" />
   </Target>
 
-  <Target Name ="ILVerifyRunner" Condition="'$(VerifyIL)'=='True' And ('$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False')">
-    <Message Text ="Verifying generated IL code." />
+  <Target Name ="VerifyAssemblies" Condition="'$(VerifyIL)'=='True' And ('$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False')">
+    <Message Text ="Verifying generated assemblies." />
     <ILVerifyTask RepositoryFilename="$(RepositoryFilename)" />
   </Target>
 
