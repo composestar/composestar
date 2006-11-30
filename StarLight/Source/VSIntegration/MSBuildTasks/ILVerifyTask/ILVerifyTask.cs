@@ -57,6 +57,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// </summary>
 	public class ILVerifyTask : Task
 	{
+		private const string PEVerifyExecutable = "bin\\PEVerify.exe";
 
 		private const int ErrorFileNotFound = 2;
 		private const int ErrorAccessDenied = 5;
@@ -100,14 +101,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </returns>
 		public override bool Execute()
 		{
-			string PEVerifyLocation;
-			string PEVerifyExecutable = "bin\\PEVerify.exe";
-
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
+			Stopwatch sw = Stopwatch.StartNew();
 
 			// Get the location of PEVerify
-			PEVerifyLocation = StarLightSettings.Instance.DotNETSDKLocation;
+			string PEVerifyLocation = StarLightSettings.Instance.DotNETSDKLocation;
 
 			if (String.IsNullOrEmpty(PEVerifyLocation) || !File.Exists(Path.Combine(PEVerifyLocation, PEVerifyExecutable)))
 			{
@@ -130,7 +127,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 			ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);
 
-			UInt16 filesVerified = 0;
+			ushort filesVerified = 0;
 
 			// Execute PEVerify for each file
 			foreach (AssemblyConfig assembly in configContainer.Assemblies)
