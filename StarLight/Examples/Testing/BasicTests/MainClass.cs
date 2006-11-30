@@ -40,6 +40,16 @@ namespace BasicTests
             filtTests.func8("non-static generic method");
             StaticFilterTests<string>.func1("static generic method");
 
+            Console.Out.WriteLine("");
+            int x;
+            filtTests.func9(out x);
+            Console.Out.WriteLine("value of X after calling func9:" + x);
+            Console.Out.WriteLine("");
+
+            filtTests.func10(ref x);
+            Console.Out.WriteLine("value of X after calling func10:" + x);
+            Console.Out.WriteLine("");
+
 			filtTests.askForHelp();
 			filtTests.doStuff();
 

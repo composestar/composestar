@@ -33,11 +33,18 @@ namespace BasicTests
 				arg = arg + 1;
 				context.AddArgument(0, arg.GetType() , arg);
 			}
-			else if (context.StartSelector.Equals("func7"))
+			else if (context.StartSelector.Equals("func9"))
 			{
-				string arg = (string)context.GetArgumentValue(0);
+				object arg = context.GetArgumentValue(0);
 				Console.WriteLine("\targ=" + (arg == null ? "null" : "'" + arg + "'"));
 			}
+            else if (context.StartSelector.Equals("func10"))
+            {
+                int arg = (int)context.GetArgumentValue(0);
+                Console.WriteLine("BEFORE: Value of x before func10: " + arg + ". Add one to value.");
+                arg = arg + 1;
+                context.SetArgumentValue(0, arg);
+            }
 		}
 
 		public void after(JoinPointContext context)
@@ -50,6 +57,20 @@ namespace BasicTests
 				ret = ret + " #After#";
 				context.ReturnValue = ret;
 			}
+            else if (context.StartSelector.Equals("func9"))
+            {
+                int arg = (int)context.GetArgumentValue(0);
+                Console.WriteLine("AFTER: Value of x after func9: " + arg + ". Add one to value.");
+                arg = arg + 1;
+                context.SetArgumentValue(0, arg);
+            }
+            else if (context.StartSelector.Equals("func10"))
+            {
+                int arg = (int)context.GetArgumentValue(0);
+                Console.WriteLine("AFTER: Value of x after func10: " + arg + ". Add one to value.");
+                arg = arg + 1;
+                context.SetArgumentValue(0, arg);
+            }
 		}
 
 		public void after2(JoinPointContext context)

@@ -69,13 +69,31 @@ fourth call to func4 returns: 5 #After#
 Log : cur sel:func7, cur method: func7 (declaring type BasicTests.FilterTests).
 Local variables: 2
 BasicTests.TestExternal.before func7()
-	arg='foo'
 BasicTests.FilterTests.func7: s='foo'()
 Log : cur sel:func8, cur method: func8 (declaring type BasicTests.FilterTests).
 Local variables: 3
 BasicTests.FilterTests.func8: generic.ToString() = 'non-static generic method'()
 Log : cur sel:func1, cur method: func1 (declaring type BasicTests.StaticFilterTests`1).
 Local variables: 2
+
+Log : cur sel:func9, cur method: func9 (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.TestExternal.before func9()
+	arg=null
+Func9: set value of x to 3
+BasicTests.TestExternal.after func9()
+AFTER: Value of x after func9: 3. Add one to value.
+value of X after calling func9:4
+
+Log : cur sel:func10, cur method: func10 (declaring type BasicTests.FilterTests).
+Local variables: 2
+BasicTests.TestExternal.before func10()
+BEFORE: Value of x before func10: 4. Add one to value.
+Func10: current value of x: 5 Add two to value.
+BasicTests.TestExternal.after func10()
+AFTER: Value of x after func10: 7. Add one to value.
+value of X after calling func10:8
+
 Log : cur sel:askForHelp, cur method: askForHelp (declaring type BasicTests.FilterTests).
 Local variables: 2
 BasicTests.FilterTestsHelper.helpMe()

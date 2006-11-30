@@ -89,6 +89,20 @@ namespace BasicTests
             return value;
         }
 
+        public void func9(out int x)
+        {
+            Console.WriteLine("Func9: set value of x to 3");
+            x = 3;
+        }
+
+        public void func10(ref int x)
+        {
+            Console.WriteLine("Func10: current value of x: " + x + " Add two to value.");
+            x = x + 2;
+        }
+
+        
+
 		public void askForHelp()
 		{
 			helper.helpMe();
