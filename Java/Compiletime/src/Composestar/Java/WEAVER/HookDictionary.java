@@ -2,7 +2,6 @@ package Composestar.Java.WEAVER;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -24,7 +23,9 @@ public class HookDictionary
 
 	private List castInterceptions = new ArrayList();
 
-	private Hashtable methodInterceptions = new Hashtable();
+	private Hashtable incomingMethodInterceptions = new Hashtable();
+	
+	private Hashtable outgoingMethodInterceptions = new Hashtable();
 
 	private static HookDictionary Instance = null;
 
@@ -48,7 +49,7 @@ public class HookDictionary
 	}
 
 	/**
-	 * Adds an instantation interception.
+	 * Adds an instantation interception to Dictionary.
 	 * 
 	 * @param aClass the fully gualified name of the class that is being
 	 *            instantiated.
@@ -62,7 +63,7 @@ public class HookDictionary
 	}
 
 	/**
-	 * Adds a cast interception
+	 * Adds a cast interception to Dictionary.
 	 * 
 	 * @param aClass the fully qualified name of the resulting class of the
 	 *            cast.
@@ -76,15 +77,28 @@ public class HookDictionary
 	}
 
 	/**
-	 * Adds <b>all</b> method calls of a target class.
+	 * Adds <b>all</b> incoming method calls to a target class to Dictionary.
 	 * 
 	 * @param className the fully qualified name of the target class.
 	 */
-	public void addMethodInterception(String className)
+	public void addIncomingMethodInterception(String className)
 	{
-		if (methodInterceptions.get(className) == null)
+		if (incomingMethodInterceptions.get(className) == null)
 		{
-			methodInterceptions.put(className, new Hashtable());
+			incomingMethodInterceptions.put(className, new Hashtable());
+		}
+	}
+	
+	/**
+	 * Adds <b>all</b> outgoing method calls from a target class to Dictionary.
+	 * 
+	 * @param className the fully qualified name of the target class.
+	 */
+	public void addOutgoingMethodInterception(String className)
+	{
+		if (outgoingMethodInterceptions.get(className) == null)
+		{
+			outgoingMethodInterceptions.put(className, new Hashtable());
 		}
 	}
 
@@ -95,7 +109,7 @@ public class HookDictionary
 	 * @param methodName the method name.
 	 * @param params the method parameters.
 	 */
-	public void addMethodInterception(String className, String methodName, List params)
+	/*public void addMethodInterception(String className, String methodName, List params)
 	{
 		Hashtable methods;
 		List parameters;
@@ -123,7 +137,7 @@ public class HookDictionary
 			methods.put(methodName, params);
 			methodInterceptions.put(className, methods);
 		}
-	}
+	}*/
 
 	/**
 	 * Returns true if an instantiation of the specified class should be
@@ -151,12 +165,16 @@ public class HookDictionary
 	}
 
 	/**
-	 * Returns true if a method call to the specified class should be
+	 * Returns true if a method call to the specified target or from the specified caller should be
 	 * intercepted.
 	 */
-	public boolean isMethodInterception(String className)
+	public boolean isMethodInterception(String target, String caller)
 	{
-		if (methodInterceptions.containsKey(className))
+		if (incomingMethodInterceptions.containsKey(target))
+		{
+			return true;
+		}
+		if (outgoingMethodInterceptions.containsKey(caller))
 		{
 			return true;
 		}
@@ -171,7 +189,7 @@ public class HookDictionary
 	 * @param methodName the name of the method.
 	 * @param params the method parameters.
 	 */
-	public boolean isMethodInterception(String className, String methodName, List params)
+	/*public boolean isMethodInterception(String className, String methodName, List params)
 	{
 		if (methodInterceptions.containsKey(className))
 		{
@@ -186,7 +204,7 @@ public class HookDictionary
 			}
 		}
 		return false;
-	}
+	}*/
 
 	/**
 	 * Helper method. Compares two list of parameters. Returns true if the lists
@@ -195,7 +213,7 @@ public class HookDictionary
 	 * @param params1 - list of parameters
 	 * @param params2 - a second list of parameters
 	 */
-	public boolean compareParameters(List params1, List params2)
+	/*public boolean compareParameters(List params1, List params2)
 	{
 		// check the size
 		if (params1.size() != params2.size())
@@ -216,5 +234,5 @@ public class HookDictionary
 			}
 		}
 		return true;
-	}
+	}*/
 }

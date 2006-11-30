@@ -117,9 +117,10 @@ public class MethodBodyTransformer extends ExprEditor
 		HookDictionary hd = HookDictionary.instance();
 		try
 		{
-			String classname = m.getClassName();
+			String target = m.getClassName();
+			String caller = m.where().getDeclaringClass().getName();
 				
-			if (hd.isMethodInterception(classname))
+			if (hd.isMethodInterception(target,caller))
 			{
 				String signature = m.getSignature();
 				CtClass returnType = Descriptor.getReturnType(signature, classpool);

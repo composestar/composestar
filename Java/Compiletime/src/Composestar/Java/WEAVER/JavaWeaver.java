@@ -175,6 +175,7 @@ public class JavaWeaver implements WEAVER
 
 	public void getMethodInterceptions(CommonResources resources)
 	{
+		
 		FILTHService filthservice = FILTHService.getInstance(resources);
 
 		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
@@ -184,10 +185,48 @@ public class JavaWeaver implements WEAVER
 			List list = filthservice.getOrder(c);
 			if (!list.isEmpty())
 			{
-				Debug.out(Debug.MODE_DEBUG, "WEAVER", " method calls to " + c.getQualifiedName()
+				Iterator iterFilterModules = list.iterator();
+				if(hasInputFilters(iterFilterModules))
+				{
+					Debug.out(Debug.MODE_DEBUG, "WEAVER", " method calls to " + c.getQualifiedName()
 						+ " added to hook dictionary...");
-				HookDictionary.instance().addMethodInterception(c.getQualifiedName());
+					HookDictionary.instance().addIncomingMethodInterception(c.getQualifiedName());
+				}
+				if(hasOutputFilters(iterFilterModules))
+				{
+					Debug.out(Debug.MODE_DEBUG, "WEAVER", " method calls from " + c.getQualifiedName()
+							+ " added to hook dictionary...");
+						HookDictionary.instance().addOutgoingMethodInterception(c.getQualifiedName());
+				}
 			}
 		}
+	}
+	
+	private boolean hasInputFilters(Iterator iterFilterModules)
+	{
+		while (iterFilterModules.hasNext())
+		{
+			FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) iterFilterModules.next());
+
+			if (fm.getInputFilterIterator().hasNext())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean hasOutputFilters(Iterator iterFilterModules)
+	{
+		while (iterFilterModules.hasNext())
+		{
+			FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) iterFilterModules.next());
+
+			if (!fm.getOutputFilters().isEmpty())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
