@@ -1026,7 +1026,8 @@ namespace Composestar.StarLight.ILWeaver
                             Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                             // Load the ordinal
-                            Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+							int ordinal = param.Sequence - (CalledMethod.HasThis ? 1 : 0);
+                            Instructions.Add(Worker.Create(OpCodes.Ldc_I4, ordinal));
 
                             // Call the GetArgumentValue function
                             Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetArgumentValue)));
