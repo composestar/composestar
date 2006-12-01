@@ -337,7 +337,9 @@ namespace Composestar.StarLight.ILWeaver
 					}
 					catch (Exception)
 					{
-						_configuration.AssemblyConfiguration.DebugFileMode = AssemblyConfig.PdbMode.None;  							
+						_configuration.AssemblyConfiguration.DebugFileMode = AssemblyConfig.PdbMode.None;  	
+						
+						// TODO log this error
 					}					
 				}
 
