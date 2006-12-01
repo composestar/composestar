@@ -321,6 +321,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 					assembly = analyzer.ExtractAllTypes(item);
 
+					sw.Stop();
+					sw.Reset();
+					
 					if (assembly != null && !IsFilterFile(Path.GetFileName(item)))
 					{
 						// Create a new AssemblyConfig object
@@ -339,12 +342,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 						assembliesToStore.Add(asmConfig);
 						assemblies.Add(assembly);
+
+						Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
 					}
-
-					sw.Stop();
-					sw.Reset();
-
-					Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
+					else
+					{
+						Log.LogMessageFromResources("AssemblyAnalyzedSkipped");
+					}								
+					
 				}
 				catch (ILAnalyzerException ex)
 				{

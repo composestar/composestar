@@ -34,46 +34,69 @@
 */
 #endregion
 
-#region Using directives
-using Composestar.StarLight.Entities.Concerns;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
-#endregion
 
-namespace Composestar.StarLight.CoreServices
+namespace Composestar.StarLight
 {
 	/// <summary>
-	/// Interface for the CpsParser
+	/// Place this custom attribute before elements you want to exclude from the weaving process. 
+	/// Put it at assembly level to exclude the complete assembly from being weaved on.
 	/// </summary>
-	public interface ICpsParser : IDisposable
+	/// <remarks>
+	/// The analyzer will skip elements with this attribute applied to them.
+	/// If you have defined filters in the assembly, then they will not be collected.
+	/// </remarks>
+	/// <example>
+	/// To exclude a complete assembly for weaving, add the following to your AssemblyInfo file:
+	/// <code>
+	/// [assembly: Composestar.StarLight.SkipWeaving()]
+	/// </code>
+	/// Or to exclude a class or method:
+	/// <code>
+	/// [Composestar.StarLight.SkipWeaving()]
+	/// public class SkippedClass
+	/// {
+	///    [Composestar.StarLight.SkipWeaving()]
+	///    public void Method()
+	///    {
+	/// 
+	///    }
+	/// } 
+	/// </code>
+	/// </example> 
+	[AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Constructor | AttributeTargets.Field , AllowMultiple=false)]
+	public sealed class SkipWeavingAttribute : Attribute 
 	{
-		/// <summary>
-		/// Gets the type names that are referenced from the parsed input.
-		/// </summary>
-		/// <value>A read-only list with the names of referenced types.</value>
-		ReadOnlyCollection<string> ReferencedTypes { get; }
+		private bool _enabled = true;
 
 		/// <summary>
-		/// Gets a value indicating whether the input parsed had output filters.
+		/// Gets or sets a value indicating whether this <see cref="T:SkipWeavingAttribute"/> is enabled. Default value is <see langword="true"/>.
 		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if the input had output filters; otherwise, <c>false</c>.
-		/// </value>
-		bool HasOutputFilters { get; }
+		/// <value><c>true</c> if enabled; otherwise, <c>false</c>. Default value is <see langword="true"/>.</value>
+		public bool Enabled
+		{
+			get { return _enabled; }
+			set { _enabled = value; }
+		}
 
 		/// <summary>
-		/// Gets a value indicating whether the input parsed had embedded code.
+		/// Initializes a new instance of the <see cref="T:SkipWeavingAttribute"/> class. Weaving is then skipped.
 		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if the input had embedded code; otherwise, <c>false</c>.
-		/// </value>
-		EmbeddedCode EmbeddedCode { get; }
+		public SkipWeavingAttribute()
+		{
+			_enabled = true; 
+		}
 
 		/// <summary>
-		/// Parses the input.
+		/// Initializes a new instance of the <see cref="T:SkipWeavingAttribute"/> class.
 		/// </summary>
-		void Parse();
+		/// <param name="enabled">if set to <c>true</c> then the element where this attribute is applied on is skipped.</param>
+		public SkipWeavingAttribute(Boolean enabled)
+		{
+			_enabled = enabled;
+		}
+
 	}
 }

@@ -57,15 +57,13 @@ namespace Composestar.StarLight.CoreServices
 		/// Gets the unresolved assemblies.
 		/// </summary>
 		/// <value>The unresolved assemblies.</value>
-		[SuppressMessage("Microsoft.Design", "CA1002")]
-		IList<string> UnresolvedAssemblies { get; }
+		ReadOnlyCollection<string> UnresolvedAssemblies { get; }
 
 		/// <summary>
 		/// Gets the resolved assemblies.
 		/// </summary>
-		/// <value>The resolved assemblies.</value>
-		[SuppressMessage("Microsoft.Design", "CA1002")]
-		IList<string> ResolvedAssemblies { get; }
+		/// <value>The resolved assemblies.</value>	
+		ReadOnlyCollection<string> ResolvedAssemblies { get; }
 
 		/// <summary>
 		/// Gets or sets the unresolved types.
@@ -85,8 +83,7 @@ namespace Composestar.StarLight.CoreServices
 		/// Resolves the assembly locations.
 		/// </summary>
 		/// <returns></returns>
-		[SuppressMessage("Microsoft.Design", "CA1002")]
-		IList<String> ResolveAssemblyLocations();
+		Collection<String> ResolveAssemblyLocations();
 
 		/// <summary>
 		/// Extracts all types.

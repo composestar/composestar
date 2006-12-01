@@ -275,4 +275,7 @@ Weaved in {13:0.0000} sec.: {9} internal(s), {10} external(s)
   <data name="EmbeddedCodeNotSupported" xml:space="preserve">
     <value>This project does not support embedded code since CodeLanguage has not been set. Embedded code in '{0}' will be ignored.</value>
   </data>
+  <data name="AssemblyAnalyzedSkipped" xml:space="preserve">
+    <value>The assembly is not analyzed. Either it is a StarLight specific assembly, the assembly has already been weaved on, or a SkipWeave attribute has been set at assembly level.</value>
+  </data>
 </root>

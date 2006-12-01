@@ -115,6 +115,15 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The assembly is not analyzed. Either it is a StarLight specific assembly, the assembly has already been weaved on, or a SkipWeave attribute has been set at assembly level..
+        /// </summary>
+        internal static string AssemblyAnalyzedSkipped {
+            get {
+                return ResourceManager.GetString("AssemblyAnalyzedSkipped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assembly &apos;{0}&apos; has not been modified, analysis of this file is skipped..
         /// </summary>
         internal static string AssemblyNotModified {

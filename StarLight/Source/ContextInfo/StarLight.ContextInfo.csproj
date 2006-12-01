@@ -34,8 +34,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\ProcessPropertiesAttribute.cs" />
+    <Compile Include="Attributes\SkipWeavingAttribute.cs" />
     <Compile Include="FilterContext.cs" />
     <Compile Include="JoinPointContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -57,9 +61,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Attributes\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

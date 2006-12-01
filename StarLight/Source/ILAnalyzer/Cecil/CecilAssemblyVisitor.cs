@@ -71,6 +71,9 @@ namespace Composestar.StarLight.ILAnalyzer
 
 		private const string ModuleName = "<Module>";
 
+		private string _skipWeavingAttribute = typeof(SkipWeavingAttribute).FullName;
+		private string _processPropertiesAttribute = typeof(ProcessPropertiesAttribute).FullName;
+ 
 		#endregion
 
 		#region Private variables
@@ -117,6 +120,7 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// _process method body
 		/// </summary>
 		private bool _processMethodBody = true;
+		private bool _processProperties;
 		private bool _processAttributes;
 		private bool _includeFields = true;
 		private bool _extractUnresolvedOnly;
@@ -128,6 +132,22 @@ namespace Composestar.StarLight.ILAnalyzer
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// Gets or sets a value indicating whether to process and extract properties.
+		/// </summary>
+		/// <value><c>true</c> if to process properties; otherwise, <c>false</c>.</value>
+		public bool ProcessProperties
+		{
+			get
+			{
+				return _processProperties;
+			}
+			set
+			{
+				_processProperties = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [extract unresolved only].
@@ -367,12 +387,23 @@ namespace Composestar.StarLight.ILAnalyzer
 			_assemblyElement.Name = _assembly.Name.ToString();
 			_assemblyElement.FileName = assemblyFileName;
 
+			// Check assembly attributes
+			if (SkipWeaving(_assembly.CustomAttributes))
+				return null;
+
+			if (HasEnabledProcessPropertiesAttribute(_assembly.CustomAttributes))
+				// override the ProcessProperties setting
+				ProcessProperties = true;
+
 			// Get all the types defined in the main module. Typically you won't need
 			// to worry that your assembly contains more than one module
 			foreach (TypeDefinition type in _assembly.MainModule.Types)
 			{
 				if (type.Name.Equals(ModuleName))
 					continue;
+
+				if (SkipWeaving(type.CustomAttributes))
+					continue; 
 
 				type.Accept(this);
 			}
@@ -404,6 +435,8 @@ namespace Composestar.StarLight.ILAnalyzer
 		{
 			// Create a new typeElement
 			TypeElement typeElement = new TypeElement();
+
+			bool processPropertiesInThisType = HasEnabledProcessPropertiesAttribute(type.CustomAttributes);
 
 			//
 			// Fill the properties
@@ -472,15 +505,48 @@ namespace Composestar.StarLight.ILAnalyzer
 				typeElement.Attributes.AddRange(ExtractCustomAttributes(type.CustomAttributes));
 
 				_currentType = typeElement;
+				
+				// Properties
+				if (ProcessProperties | processPropertiesInThisType)
+					foreach (PropertyDefinition property in type.Properties)
+					{
+						if (SkipWeaving(property.CustomAttributes))
+							continue;
+
+						if (property.SetMethod != null)
+							property.SetMethod.Accept(this);
+
+						if (property.GetMethod != null)
+							property.GetMethod.Accept(this);
+
+					}
+				
 				// Visit methods
 				foreach (MethodDefinition method in type.Methods)
 				{
+					// check if we have to skip this method
+					if (SkipWeaving(method.CustomAttributes))
+						continue;
+
+					// skip unmanaged code
+					if (method.ImplAttributes == Mono.Cecil.MethodImplAttributes.Unmanaged)
+						continue;
+
+					// properties are handled elsewhere
+					if (method.SemanticsAttributes == MethodSemanticsAttributes.Getter || 
+						method.SemanticsAttributes == MethodSemanticsAttributes.Setter)
+						continue;
+
 					method.Accept(this);
 				}
 
+				
 				// Visit fields
 				foreach (FieldDefinition field in type.Fields)
 				{
+					if (SkipWeaving(field.CustomAttributes))
+						continue; 
+
 					field.Accept(this);
 				}
 
@@ -512,12 +578,7 @@ namespace Composestar.StarLight.ILAnalyzer
 			MethodElement me = new MethodElement();
 			me.Signature = method.ToString();
 			me.Name = method.Name;
-			me.ReturnType = method.ReturnType.ReturnType.FullName;
-
-			// If the return type has not yet been resolved, add it to the list of unresolved types   
-			// if (!method.ReturnType.ReturnType.FullName.Equals("System.Void")  )
-			//     AddUnresolvedAssemblyList(method.ReturnType.ReturnType);
-
+			me.ReturnType = method.ReturnType.ReturnType.FullName;			
 			me.IsAbstract = method.IsAbstract;
 			me.IsConstructor = method.IsConstructor;
 			me.IsPrivate = method.Attributes == Mono.Cecil.MethodAttributes.Private;
@@ -582,8 +643,6 @@ namespace Composestar.StarLight.ILAnalyzer
 			_currentType.Methods.Add(me);
 		}
 
-
-
 		/// <summary>
 		/// Visits the field definition.
 		/// </summary>
@@ -601,8 +660,6 @@ namespace Composestar.StarLight.ILAnalyzer
 			fe.IsPrivate = field.Attributes == Mono.Cecil.FieldAttributes.Private;
 			fe.IsPublic = field.Attributes == Mono.Cecil.FieldAttributes.Public;
 			fe.IsStatic = field.IsStatic;
-
-			//AddUnresolvedAssemblyList(field.FieldType);
 
 			_currentType.Fields.Add(fe);
 		}
@@ -1028,6 +1085,64 @@ namespace Composestar.StarLight.ILAnalyzer
 			}
 
 			return "NULL";
+		}
+
+		/// <summary>
+		/// Skip weaving based on the SkipWeavingAttribute specified in the CustomAttributeCollection.
+		/// </summary>
+		/// <param name="attributes">The Custom Attribute Collection of an element.</param>
+		/// <returns>Return <see langword="true"/> when one of the custom attributes indicates it should not be weaved on.</returns>
+		private bool SkipWeaving(CustomAttributeCollection attributes)
+		{
+			if (attributes == null || attributes.Count == 0)
+				return false;
+
+			foreach (CustomAttribute  attribute in attributes)
+			{
+				if (attribute.Constructor.DeclaringType.FullName.Equals(_skipWeavingAttribute))
+				{
+					
+					if (attribute.ConstructorParameters.Count == 1 && attribute.ConstructorParameters[0] != null)
+						return (Convert.ToBoolean(attribute.ConstructorParameters[0]));
+
+					if (attribute.Properties["Enabled"] != null)
+						return Convert.ToBoolean(attribute.Properties["Enabled"]);
+
+					return true;	
+				}
+			}
+
+			return false; 
+		}
+
+		/// <summary>
+		/// Determines whether the custom attribute collection has an enabled process properties attribute.
+		/// </summary>
+		/// <param name="attributes">The attributes.</param>
+		/// <returns>
+		/// 	<c>true</c> if the custom attribute collection has an enabled process properties attribute; otherwise, <c>false</c>.
+		/// </returns>
+		private bool HasEnabledProcessPropertiesAttribute(CustomAttributeCollection attributes)
+		{
+			if (attributes == null || attributes.Count == 0)
+				return false;
+
+			foreach (CustomAttribute attribute in attributes)
+			{
+				if (attribute.Constructor.DeclaringType.FullName.Equals(_processPropertiesAttribute))
+				{
+
+					if (attribute.ConstructorParameters.Count == 1 && attribute.ConstructorParameters[0] != null)
+						return (Convert.ToBoolean(attribute.ConstructorParameters[0]));
+
+					if (attribute.Properties["Enabled"] != null)
+						return Convert.ToBoolean(attribute.Properties["Enabled"]);
+
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		#endregion

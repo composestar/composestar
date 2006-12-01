@@ -35,35 +35,30 @@
 #endregion
 
 #region Using directives
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Globalization;
-using System.Diagnostics.CodeAnalysis;
-
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.CoreServices.ILWeaver;
+using Composestar.StarLight.Entities.Configuration;
+using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.WeaveSpec;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+using Composestar.StarLight.Utilities;
+using Composestar.StarLight.Utilities.Interfaces;
 using Mono.Cecil;
 using Mono.Cecil.Binary;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
-using Mono.Cecil.Signatures;
 using Mono.Cecil.Pdb;
-
-using Composestar.StarLight.Entities.WeaveSpec;
-using Composestar.StarLight.Entities.WeaveSpec.Instructions;
-using Composestar.StarLight.Entities.LanguageModel;
-
-using Composestar.StarLight.CoreServices;
-using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.StarLight.CoreServices.ILWeaver;
-
-using Composestar.StarLight.Utilities;
-using Composestar.StarLight.Utilities.Interfaces;
-using Composestar.StarLight.Entities.Configuration;
-
+using Mono.Cecil.Signatures;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Text;
 #endregion
 
 namespace Composestar.StarLight.ILWeaver
@@ -77,9 +72,21 @@ namespace Composestar.StarLight.ILWeaver
 
 		#region Private variables
 
+		/// <summary>
+		/// _configuration
+		/// </summary>
 		private CecilWeaverConfiguration _configuration;
+		/// <summary>
+		/// _entities accessor
+		/// </summary>
 		private IEntitiesAccessor _entitiesAccessor;
+		/// <summary>
+		/// _type changed
+		/// </summary>
 		private bool _typeChanged;
+		/// <summary>
+		/// _weave stats
+		/// </summary>
 		private WeaveStatistics _weaveStats;
 
 		#endregion
@@ -253,15 +260,20 @@ namespace Composestar.StarLight.ILWeaver
 				}
 				swType.Reset();
 
-			} // foreach  (typeElement)
+			}
 
 			// Save the modified assembly only if it is changed.
 			if (_weaveStats.InputFiltersAdded > 0 || _weaveStats.OutputFiltersAdded > 0 || _weaveStats.InternalsAdded > 0 || _weaveStats.ExternalsAdded > 0)
 			{
+				// Add the SkipWeave attribute to indicate we have already weaved on this assembly
+				StoreTimeStamp(sw.Elapsed, "Applying SkipWeave attribute");
+				CustomAttribute skipWeave = new CustomAttribute(CecilUtilities.CreateMethodReference(targetAssembly, CachedMethodDefinition.SkipWeaveConstructor)); 
+				targetAssembly.CustomAttributes.Add(skipWeave);   
+
 				StoreTimeStamp(sw.Elapsed, "Saving assembly");
 				SaveAssembly(targetAssembly, pdbReader);
 				StoreTimeStamp(sw.Elapsed, "Saved assembly");
-			} // if
+			} 
 
 			// Stop timing
 			sw.Stop();
@@ -291,7 +303,7 @@ namespace Composestar.StarLight.ILWeaver
 					fileStream = new FileStream(_configuration.InputImagePath, FileMode.Open);
 					binaryFile = CecilUtilities.ReadFileStream(fileStream, -1);
 
-				} // try
+				}
 				catch (Exception ex)
 				{
 					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
@@ -299,12 +311,12 @@ namespace Composestar.StarLight.ILWeaver
 						_configuration.InputImagePath, ex.Message),
 						ex);
 
-				} // catch
+				}
 				finally
 				{
 					if (fileStream != null) fileStream.Close();
 
-				} // finally
+				}
 
 				// We use a byte array to read the file, so we can close it after reading and can write to it again.
 				// targetAssembly = AssemblyFactory.GetAssembly(_configuration.InputImagePath);
@@ -600,13 +612,13 @@ namespace Composestar.StarLight.ILWeaver
 			if (weaveMethod.HasInputFilters)
 			{
 				WeaveInputFilters(targetAssembly, method, weaveMethod, weaveType);
-			} // if
+			}
 
 			// Add the outputfilters
 			if (weaveMethod.HasOutputFilters)
 			{
 				WeaveOutputFilters(targetAssembly, method, weaveMethod, weaveType);
-			} // if
+			}
 		}
 
 		/// <summary>
@@ -821,6 +833,9 @@ namespace Composestar.StarLight.ILWeaver
 			m_disposed = true;
 		}
 
+		/// <summary>
+		/// M _disposed
+		/// </summary>
 		private bool m_disposed;
 
 		#endregion

@@ -283,7 +283,7 @@ namespace Composestar.StarLight.Utilities
 			AddMethodToCache(CachedMethodDefinition.GetMethodFromHandle, typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle", new Type[] { typeof(System.RuntimeMethodHandle) }));
 			AddMethodToCache(CachedMethodDefinition.GetMethodFromHandleExt, typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle", new Type[] { typeof(System.RuntimeMethodHandle), typeof(System.RuntimeTypeHandle) }));
 			AddMethodToCache(CachedMethodDefinition.JoinPointContextSetMethodInformation, typeof(JoinPointContext).GetMethod("set_MethodInformation", new Type[] { typeof(System.Reflection.MethodBase) }));
-
+			AddMethodToCache(CachedMethodDefinition.SkipWeaveConstructor, typeof(SkipWeavingAttribute).GetConstructors()[0]);
 
 		}
 
@@ -1040,7 +1040,11 @@ namespace Composestar.StarLight.Utilities
 		/// <summary>
 		/// Calls the JoinPointContext.MethodInformation setter.
 		/// </summary>
-		JoinPointContextSetMethodInformation
+		JoinPointContextSetMethodInformation,
+		/// <summary>
+		/// Create a new SkipWeave attribute.
+		/// </summary>
+		SkipWeaveConstructor
 	}
 
 

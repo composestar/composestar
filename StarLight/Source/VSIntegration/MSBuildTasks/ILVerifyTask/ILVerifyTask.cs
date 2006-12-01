@@ -121,7 +121,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			process.StartInfo.CreateNoWindow = true;
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.RedirectStandardError = false;
+			process.StartInfo.RedirectStandardError = true;
 
 			IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
 
@@ -154,6 +154,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						while (!process.StandardOutput.EndOfStream)
 						{
 							ParseOutput(process.StandardOutput.ReadLine(), assembly.FileName);
+						}
+						while (!process.StandardError.EndOfStream)
+						{
+							ParseOutput(process.StandardError.ReadLine(), assembly.FileName);
 						}
 					}
 					filesVerified++;

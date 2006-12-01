@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace BasicTests
 {
+	//[Composestar.StarLight.SkipWeaving()]
 	public class FilterTests: TestsBase
 	{
 		protected FilterTestsHelper helper = new FilterTestsHelper();

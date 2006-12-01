@@ -152,10 +152,10 @@ namespace Composestar.StarLight.ILAnalyzer
 						if (_dar == null)
 						{
 							_dar = new StarLightAssemblyResolver(_configuration.BinFolder);
-						} // if
-					} // lock
+						} 
+					} 
 
-				} // if
+				} 
 				return _dar;
 			}
 		}
@@ -165,18 +165,18 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// Gets the unresolved assemblies.
 		/// </summary>
 		/// <value>The unresolved assemblies.</value>
-		public IList<String> UnresolvedAssemblies
+		public ReadOnlyCollection<String> UnresolvedAssemblies
 		{
-			get { return _unresolvedAssemblies; }
+			get { return new ReadOnlyCollection<string>(_unresolvedAssemblies); }
 		}
 
 		/// <summary>
 		/// Gets the resolved assemblies.
 		/// </summary>
 		/// <value>The resolved assemblies.</value>
-		public IList<String> ResolvedAssemblies
+		public ReadOnlyCollection<String> ResolvedAssemblies
 		{
-			get { return _resolvedAssemblies; }
+			get { return new ReadOnlyCollection<string>(_resolvedAssemblies); }
 		}
 
 		/// <summary>
@@ -250,6 +250,7 @@ namespace Composestar.StarLight.ILAnalyzer
 			visitor.ProcessMethodBody = _configuration.DoMethodCallAnalysis;
 			visitor.IncludeFields = _configuration.DoFieldAnalysis;
 			visitor.ExtractUnresolvedOnly = _configuration.ExtractUnresolvedOnly;
+			visitor.ProcessProperties = _configuration.ProcessProperties; 
 			visitor.SaveInnerType = true;
 			visitor.SaveType = true;
 			visitor.ResolvedAssemblies = _resolvedAssemblies;
@@ -281,7 +282,7 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// Resolve assembly locations
 		/// </summary>
 		/// <returns>List</returns>
-		public IList<String> ResolveAssemblyLocations()
+		public Collection<String> ResolveAssemblyLocations()
 		{
 			IList<string> ret = new List<string>();
 
@@ -307,7 +308,7 @@ namespace Composestar.StarLight.ILAnalyzer
 				} 
 			} 
 
-			return ret;
+			return new Collection<string>(ret);
 		} 
 
 		#endregion

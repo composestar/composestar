@@ -55,12 +55,9 @@ namespace Composestar.StarLight.ILAnalyzer
 	{
 
 		/// <summary>
-		/// _repository file name
+		/// Repository file name
 		/// </summary>
 		private readonly string _repositoryFileName;
-		/// <summary>
-		/// _do field analysis
-		/// </summary>
 		private bool _doFieldAnalysis = true;
 		private bool _doMethodCallAnalysis = true;
 		private bool _extractUnresolvedOnly;
@@ -134,6 +131,15 @@ namespace Composestar.StarLight.ILAnalyzer
 				_binFolder = value;
 			}
 		}
+
+		private bool _processProperties;
+
+		public bool ProcessProperties
+		{
+			get { return _processProperties; }
+			set { _processProperties = value; }
+		}
+	
 
 		/// <summary>
 		/// Creates the default configuration.

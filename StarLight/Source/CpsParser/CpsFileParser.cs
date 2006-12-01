@@ -180,7 +180,7 @@ namespace Composestar.StarLight.CpsParser
 			ec.Language = parser.sourceLang;
 			ec.FileName = parser.sourceFile;
 			ec.Code = ExtractEmbeddedSource(FileName, parser.startPos);
-			
+
 			return ec;
 		}
 
@@ -274,5 +274,40 @@ namespace Composestar.StarLight.CpsParser
 
 			return parsingType;
 		}
+
+		#region IDisposable
+
+		/// <summary>
+		/// Cleans up any resources associated with this instance.
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);  // Finalization is now unnecessary
+		}
+
+		/// <summary>
+		/// Disposes the object.
+		/// </summary>
+		/// <param name="disposing">if set to <c>true</c> then the managed resources are disposed.</param>
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!m_disposed)
+			{
+				if (disposing)
+				{
+					// Dispose managed resources
+				}
+
+				// Dispose unmanaged resources
+			}
+
+			m_disposed = true;
+		}
+
+		private bool m_disposed = false;
+
+		#endregion
+
 	}
 }
