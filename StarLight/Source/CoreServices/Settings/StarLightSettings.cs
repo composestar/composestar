@@ -161,25 +161,7 @@ namespace Composestar.StarLight.CoreServices.Settings
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets the dot NETSDK location.
-		/// </summary>
-		/// <value>The dot NETSDK location.</value>
-		/// <returns>String</returns>
-		[SuppressMessage("Microsoft.Naming", "CA1705", Justification = "SDK")]
-		[ApplicationScopedSetting(), SettingsSerializeAs(SettingsSerializeAs.String)]
-		public string DotNETSDKLocation
-		{
-			get
-			{
-				return ((String)this["DotNETSDKLocation"]);
-			}
-			set
-			{
-				this["DotNETSDKLocation"] = value;
-			}
-		}
-
+	
 		/// <summary>
 		/// Gets or sets the weave strategies folder location.
 		/// </summary>

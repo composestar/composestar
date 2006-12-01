@@ -57,7 +57,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// </summary>
 	public class ILVerifyTask : Task
 	{
-		private const string PEVerifyExecutable = "bin\\PEVerify.exe";
+		private const string PEVerifyExecutable = "PEVerify.exe";
 
 		private const int ErrorFileNotFound = 2;
 		private const int ErrorAccessDenied = 5;
@@ -104,9 +104,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			Stopwatch sw = Stopwatch.StartNew();
 
 			// Get the location of PEVerify
-			string PEVerifyLocation = StarLightSettings.Instance.DotNETSDKLocation;
+			string PEVerifyLocation = ToolLocationHelper.GetPathToDotNetFrameworkSdkFile(PEVerifyExecutable, TargetDotNetFrameworkVersion.Version20);
 
-			if (String.IsNullOrEmpty(PEVerifyLocation) || !File.Exists(Path.Combine(PEVerifyLocation, PEVerifyExecutable)))
+			if (String.IsNullOrEmpty(PEVerifyLocation) || !File.Exists(PEVerifyLocation))
 			{
 				Log.LogWarningFromResources("PEVerifyExecutableNotFound", "PEVerify.exe");
 				return true;
@@ -116,7 +116,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			Process process = new Process();
 
 			// Determine filename
-			process.StartInfo.FileName = Path.Combine(PEVerifyLocation, PEVerifyExecutable);
+			process.StartInfo.FileName = PEVerifyLocation;
 
 			process.StartInfo.CreateNoWindow = true;
 			process.StartInfo.RedirectStandardOutput = true;

@@ -280,7 +280,8 @@ namespace Composestar.StarLight.Utilities
 			AddMethodToCache(CachedMethodDefinition.HasMoreStoredActions, typeof(FilterContext).GetMethod("HasMoreStoredActions", new Type[] { }));
 			AddMethodToCache(CachedMethodDefinition.NextStoredAction, typeof(FilterContext).GetMethod("NextStoredAction", new Type[] { }));
 			AddMethodToCache(CachedMethodDefinition.ExceptionConstructor, typeof(Exception).GetConstructors()[0]);
-			AddMethodToCache(CachedMethodDefinition.GetMethodFromHandle, typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle", new Type[] { typeof(System.RuntimeMethodHandle), typeof(System.RuntimeTypeHandle) }));
+			AddMethodToCache(CachedMethodDefinition.GetMethodFromHandle, typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle", new Type[] { typeof(System.RuntimeMethodHandle) }));
+			AddMethodToCache(CachedMethodDefinition.GetMethodFromHandleExt, typeof(System.Reflection.MethodBase).GetMethod("GetMethodFromHandle", new Type[] { typeof(System.RuntimeMethodHandle), typeof(System.RuntimeTypeHandle) }));
 			AddMethodToCache(CachedMethodDefinition.JoinPointContextSetMethodInformation, typeof(JoinPointContext).GetMethod("set_MethodInformation", new Type[] { typeof(System.Reflection.MethodBase) }));
 
 
@@ -1032,6 +1033,10 @@ namespace Composestar.StarLight.Utilities
 		/// Calls the GetMethodFromHandle function in the System.Reflection.MethodBase type.
 		/// </summary>
 		GetMethodFromHandle,
+		/// <summary>
+		/// Calls the GetMethodFromHandle function in the System.Reflection.MethodBase type. Also pass the declaring type token as needed when resolving generic methods.
+		/// </summary>
+		GetMethodFromHandleExt,
 		/// <summary>
 		/// Calls the JoinPointContext.MethodInformation setter.
 		/// </summary>

@@ -177,5 +177,36 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _isReference; }
 			set { _isReference = value; }
 		}
+
+		private  PdbMode _debugFileMode = PdbMode.HideFilters;
+
+		/// <summary>
+		/// Gets or sets the debug file mode.
+		/// </summary>
+		/// <value>The debug file mode.</value>
+		[XmlAttribute]
+		public PdbMode DebugFileMode
+		{
+			get { return _debugFileMode; }
+			set { _debugFileMode = value; }
+		}
+
+		/// <summary>
+		/// Pdb debug file mode
+		/// </summary>
+		public enum PdbMode
+		{
+			/// <summary>
+			/// Perform no actions on the PDB file.
+			/// </summary>
+			None,
+			/// <summary>
+			/// Hide the injected filter code for the developer.
+			/// </summary>
+			HideFilters,
+		}
+	
 	}
+
+
 }

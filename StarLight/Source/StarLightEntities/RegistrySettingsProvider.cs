@@ -154,16 +154,7 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 				foreach (SettingsProperty setting in collection)
 				{
 					value = new SettingsPropertyValue(setting);
-
-					if (value.Name.Equals("DotNETSDKLocation"))
-						/// <summary>
-						/// Retrieve net SDK location
-						/// </summary>
-						/// <returns>String</returns>
-						value.SerializedValue = this.RetrieveNetSDKLocation();
-					else
-						value.SerializedValue = (string)regKey.GetValue(value.Name, setting.DefaultValue);
-
+					value.SerializedValue = (string)regKey.GetValue(value.Name, setting.DefaultValue);
 					value.IsDirty = false;
 
 					values.Add(value);
