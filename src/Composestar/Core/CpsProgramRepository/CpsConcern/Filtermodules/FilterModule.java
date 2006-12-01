@@ -31,7 +31,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
     public Vector inputFilters;
     public Vector outputFilters;
     
-    public int uniqueNumber;
+    public String uniqueID;
     
     /**
      * @modelguid {04F87A00-10B0-476E-8C87-A6BD604DEF19}
@@ -51,10 +51,10 @@ public class FilterModule extends DeclaredRepositoryEntity {
     outputFilters = new Vector();
   }
     
-    public FilterModule(FilterModuleAST fmAst, Vector args, int number){
+    public FilterModule(FilterModuleAST fmAst, Vector args, String id){
     super();
     descriptionLineNumber = 0;
-    uniqueNumber = number;
+    uniqueID = id;
     fm_ast = fmAst;
     setParent(fm_ast.getParent());
     setName(fm_ast.getName());
@@ -600,16 +600,16 @@ public FilterModuleAST getFm_ast() {
 	return fm_ast;
 }
 
-public int getUniqueNumber() {
-	return uniqueNumber;
+public String getUniqueNumber() {
+	return this.uniqueID;
 }
 
-public void setUniqueNumber(int uniqueNumber) {
-	this.uniqueNumber = uniqueNumber;
+public void setUniqueNumber(String uniqueID) {
+	this.uniqueID = uniqueID;
 }
 
 public String getName() {
-	return (name + '!' + uniqueNumber);
+	return (name + '!' + this.uniqueID);
 }
 
 public String getOriginalName() {

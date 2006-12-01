@@ -70,7 +70,7 @@ public class InnerDispatcher {
 		DataStore.instance().addObject(fm);
 
 		//create the instances
-		FilterModule fmInstance = new FilterModule(fm, new Vector(), 0);
+		FilterModule fmInstance = new FilterModule(fm, new Vector(), "0");
 		DataStore.instance().addObject(fmInstance);
 		
 		// return the filtermodule

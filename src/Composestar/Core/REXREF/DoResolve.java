@@ -32,6 +32,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterReferen
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.LabeledConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.MethodReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.SelectorReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.FilterModuleBinding;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -136,7 +137,7 @@ public class DoResolve {
      * Instead of using a nice Singlton construct, I just use int counters, more because
      * this is the only method that actually creates all the instantances of FilterModules, Internals, etc.
      */
-	int fmCounter = 1;
+	//int fmCounter = 1;
 	  
 	//for (Iterator it = ds.getAllInstancesOf(FilterModuleReference.class); it.hasNext();) {
     Iterator it = ds.getAllInstancesOf(FilterModuleReference.class);
@@ -144,9 +145,33 @@ public class DoResolve {
       FilterModuleReference ref = (FilterModuleReference) it.next();
       FilterModuleAST fm_ast = (FilterModuleAST) ds.getObjectByID(ref.getQualifiedName());
       if (fm_ast != null) {
-    	FilterModule fm = new FilterModule(fm_ast, ref.getArgs(),fmCounter);
-    	fmCounter++;
-        CpsConcern concern = (CpsConcern) fm.getParent();
+    	String uniqueID = "0";
+    	  
+    	// Create an unique ID for this FM instance, based on the SelectorReference for the FilterModuleReference
+    	CpsConcern concern = (CpsConcern) fm_ast.getParent();
+		if (concern.getSuperImposition() != null)
+		{
+			Iterator fmBindingIter = concern.getSuperImposition().getFilterModuleBindingIterator();
+			while (fmBindingIter.hasNext())
+			{
+				FilterModuleBinding fmBinding = (FilterModuleBinding)fmBindingIter.next();
+				SelectorReference selRef = fmBinding.getSelector();
+				
+				Iterator fmIter = fmBinding.getFilterModuleIterator();
+				while (fmIter.hasNext())
+				{
+					FilterModuleReference fm_bound = (FilterModuleReference)fmIter.next();
+					if (ref == fm_bound) {
+						uniqueID = selRef.getName();
+						break;
+					}
+				}
+			}
+		}
+    	  
+    	FilterModule fm = new FilterModule(fm_ast, ref.getArgs(), uniqueID);
+        concern = (CpsConcern) fm.getParent();
+        
         concern.addFilterModule(fm);
         ds.addObject(fm);
         
