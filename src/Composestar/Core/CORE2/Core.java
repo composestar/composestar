@@ -69,19 +69,20 @@ public class Core implements CTCommonModule{
         HashSet visitedTransitions = new HashSet();
         Hashtable filterContinueTable = new Hashtable();
         
+        //Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:   o/ ");
+        if ( concern == null )
+        	return;
+        
+        Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern '" + concern.getName()+"'");
+        
+		//Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:  / \\ ");        
+        
         FireModel fireModel = new FireModel( concern, modules, true );
         ExecutionModel execModel = fireModel.getExecutionModel();
         ExecutionStateIterator iterator = new ExecutionStateIterator( execModel );
         
         Enumeration enumer;
         
-        Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:   o/ ");
-        if ( concern != null ){
-            Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:  /|   ... " + 
-                    concern.getName()+ " ...");
-        }
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:  / \\ ");
-		
         while( iterator.hasNext() ){
             state = (ExecutionState) iterator.next();
             flowNode = state.getFlowNode();
