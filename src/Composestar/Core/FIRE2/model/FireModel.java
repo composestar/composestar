@@ -26,6 +26,7 @@ import Composestar.Core.FIRE2.preprocessing.Preprocessor;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 /**
  * 
@@ -56,13 +57,13 @@ public class FireModel {
         this.concern = concern;
         
         Vector v = order._order;
-        
         FilterModule[] modules = new FilterModule[ v.size() ];
         for (int i=0; i<v.size(); i++){
             String ref = (String) v.elementAt( i );
-            
-            modules[i] = 
-                (FilterModule) DataStore.instance().getObjectByID(ref);
+            FilterModule fm = (FilterModule)DataStore.instance().getObjectByID(ref);
+            if (fm == null)
+            	Debug.out(Debug.MODE_WARNING, "FIRE", "Unable to resolve Filter Module '"+ref+"'");
+            modules[i] = (FilterModule) fm;
         }
         
         initialize( modules, inputFilters );
