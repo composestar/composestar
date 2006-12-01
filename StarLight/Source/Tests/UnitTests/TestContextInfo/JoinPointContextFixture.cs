@@ -96,7 +96,7 @@ namespace Composestar.StarLight.ContextInfo.UnitTests
         /// Argumentses the test.
         /// </summary>
         [TestMethod ]
-        public void ArgumentsTest()
+	    public void ArgumentsTest()
         {
             global::Composestar.StarLight.ContextInfo.JoinPointContext target = new global::Composestar.StarLight.ContextInfo.JoinPointContext();
             target.AddArgument(0, typeof(string), "ss");
@@ -187,6 +187,7 @@ namespace Composestar.StarLight.ContextInfo.UnitTests
         ///A test for GetArgumentType (short)
         ///</summary>
         [TestMethod()]
+		[ExpectedExceptionAttribute(typeof(System.ArgumentOutOfRangeException))]
         public void GetArgumentTypeTest()
         {
             global::Composestar.StarLight.ContextInfo.JoinPointContext target = new global::Composestar.StarLight.ContextInfo.JoinPointContext();
@@ -200,15 +201,16 @@ namespace Composestar.StarLight.ContextInfo.UnitTests
             actual = target.GetArgumentType(ordinal);
 
             Assert.AreEqual(expected, actual, "Composestar.StarLight.ContextInfo.JoinPointContext.GetArgumentType did not return" +
-                    " the expected value.");           
-
-            Assert.IsNull(target.GetArgumentType(3), "Should return null for ordinals not found"); 
+                    " the expected value.");
+			actual = target.GetArgumentType(10);
+            Assert.Fail("Should return null for ordinals not found"); 
         }
 
         /// <summary>
         ///A test for GetArgumentValue (short)
         ///</summary>
         [TestMethod()]
+		[ExpectedExceptionAttribute(typeof(System.ArgumentOutOfRangeException))]
         public void GetArgumentValueTest()
         {
             global::Composestar.StarLight.ContextInfo.JoinPointContext target = new global::Composestar.StarLight.ContextInfo.JoinPointContext();
@@ -222,7 +224,9 @@ namespace Composestar.StarLight.ContextInfo.UnitTests
             actual = target.GetArgumentValue(ordinal);
 
             Assert.AreEqual(expected, actual, "Composestar.StarLight.ContextInfo.JoinPointContext.GetArgumentValue did not return the expected value.");
-            Assert.IsNull(target.GetArgumentValue(3), "Should return null for ordinals not found");
+
+			actual = target.GetArgumentValue(1);
+			Assert.Fail( "Should return null for ordinals not found");
         }
 
         /// <summary>
