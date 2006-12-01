@@ -413,5 +413,12 @@
         <Parameter Name="FilterModule" Description="" />
       </Parameters>
     </Function>
+    <!-- Additional functions -->
+    <Function FunctionName="matchPattern" Description="Matches a regular expression">
+      <Parameters>
+        <Parameter Name="Identifier" Description="The identifier to check" />
+        <Parameter Name="Expression" Description="The regular expression" />
+      </Parameters>
+    </Function>
   </Functions>
 </PrologFunctions>
