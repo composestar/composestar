@@ -40,7 +40,9 @@ namespace CustomFilters
         /// <param name="args">The args.</param>
         public static void WriteLine(String line, params Object[] args)
         {
-            TraceBuffer.Instance.WriteTraceLine(line, args);
+            //TraceBuffer.Instance.WriteTraceLine(line, args);
+            // No buffering implementation, as buffer isn't always flushed on application shutdown
+            TraceFile.WriteLine(line, args);
         }
 
         private void FlushBuffer()

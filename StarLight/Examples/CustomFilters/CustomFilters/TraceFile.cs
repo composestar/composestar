@@ -18,7 +18,7 @@ namespace CustomFilters
         /// </summary>
         private static void Open()
         {
-            _tracefile = new FileStream("tracelog.txt", FileMode.Create);
+            _tracefile = new FileStream(String.Format("tracelog_{0}.txt", AppDomain.CurrentDomain.FriendlyName), FileMode.Create);
             _tracefileWriter = new StreamWriter(_tracefile);
         }
 
