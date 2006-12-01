@@ -12,6 +12,7 @@ import java.util.zip.*;
 
 import org.apache.xmlbeans.XmlException;
 
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
@@ -45,6 +46,7 @@ import composestar.dotNET.tym.entities.ArrayOfFilterTypeElement;
 import composestar.dotNET.tym.entities.ArrayOfMethodElement;
 import composestar.dotNET.tym.entities.ArrayOfParameterElement;
 import composestar.dotNET.tym.entities.ArrayOfTypeElement;
+import composestar.dotNET.tym.entities.AssemblyConfig;
 import composestar.dotNET.tym.entities.AssemblyDocument;
 import composestar.dotNET.tym.entities.AssemblyElement;
 import composestar.dotNET.tym.entities.CallElement;
@@ -86,10 +88,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 	private INCRETimer timer4 = INCRE.instance().getReporter().openProcess("COLLECTOR", "timer4",
 			INCRETimer.TYPE_NORMAL);
 
+	long starttime = 0;
+	
 	public void run(CommonResources resources) throws ModuleException
 	{
-		long starttime = 0;
-
 		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
 
 		ConfigurationContainer configContainer = StarLightMaster.getConfigContainer();
@@ -97,134 +99,31 @@ public class StarLightCollectorRunner implements CollectorRunner
 		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Repository initialized in "
 				+ (System.currentTimeMillis() - starttime) + " ms.");
 
-		// Construct field hashmap
-		// if (Debug.getMode() == Debug.MODE_DEBUG) starttime =
-		// System.currentTimeMillis();
-		// List allfields = repository.getFieldElements();
-		// ListIterator fieldIterator = allfields.listIterator();
-		// while (fieldIterator.hasNext())
-		// {
-		// FieldElement fe = (FieldElement)fieldIterator.next();
-		//			
-		// List fieldElements = null;
-		// if (fieldMap.containsKey(fe.get_ParentTypeId()))
-		// {
-		// fieldElements = (List)fieldMap.get(fe.get_ParentTypeId());
-		// }
-		// else {
-		// fieldElements = new ArrayList();
-		// }
-		// fieldElements.add(fe);
-		//			
-		// fieldMap.put(fe.get_ParentTypeId(), fieldElements);
-		// }
-		// Debug.out(Debug.MODE_DEBUG, "COLLECTOR", allfields.size() + " fields
-		// read from database and cached in " + (System.currentTimeMillis() -
-		// starttime) + " ms.");
-
-		// Construct method hashmap
-		// if (Debug.getMode() == Debug.MODE_DEBUG) starttime =
-		// System.currentTimeMillis();
-		// List allmethods = repository.getMethodElements();
-		// ListIterator methodIterator = allmethods.listIterator();
-		// while (methodIterator.hasNext())
-		// {
-		// MethodElement me = (MethodElement)methodIterator.next();
-		//			
-		// List methodElements = null;
-		// if (methodMap.containsKey(me.get_ParentTypeId()))
-		// {
-		// methodElements = (List)methodMap.get(me.get_ParentTypeId());
-		// }
-		// else {
-		// methodElements = new ArrayList();
-		// }
-		// methodElements.add(me);
-		//			
-		// methodMap.put(me.get_ParentTypeId(), methodElements);
-		// }
-		// Debug.out(Debug.MODE_DEBUG, "COLLECTOR", allmethods.size() + "
-		// methods read from database and cached in " +
-		// (System.currentTimeMillis() - starttime) + " ms.");
-
-		// Construct parameter hashmap
-		// if (Debug.getMode() == Debug.MODE_DEBUG) starttime =
-		// System.currentTimeMillis();
-		// List allparameters = repository.getParameterElements();
-		// ListIterator parameterIterator = allparameters.listIterator();
-		// while (parameterIterator.hasNext())
-		// {
-		// ParameterElement pe = (ParameterElement)parameterIterator.next();
-		//			
-		// List parameterElements = null;
-		// if (parameterMap.containsKey(pe.get_ParentMethodId()))
-		// {
-		// parameterElements = (List)parameterMap.get(pe.get_ParentMethodId());
-		// }
-		// else {
-		// parameterElements = new ArrayList();
-		// }
-		// parameterElements.add(pe);
-		//			
-		// parameterMap.put(pe.get_ParentMethodId(), parameterElements);
-		// }
-		// Debug.out(Debug.MODE_DEBUG, "COLLECTOR", allparameters.size() + "
-		// parameters read from database and cached in " +
-		// (System.currentTimeMillis() - starttime) + " ms.");
-
-		// Construct call hashmap
-		// if (Debug.getMode() == Debug.MODE_DEBUG) starttime =
-		// System.currentTimeMillis();
-		// List allcalls = repository.getCallElements();
-		// ListIterator callIterator = allcalls.listIterator();
-		// while (callIterator.hasNext())
-		// {
-		// CallElement ce = (CallElement)callIterator.next();
-		//			
-		// List callElements = null;
-		// if (callsMap.containsKey(ce.get_ParentMethodBodyId()))
-		// {
-		// callElements = (List)callsMap.get(ce.get_ParentMethodBodyId());
-		// }
-		// else {
-		// callElements = new ArrayList();
-		// }
-		// callElements.add(ce);
-		//			
-		// callsMap.put(ce.get_ParentMethodBodyId(), callElements);
-		// }
-		// Debug.out(Debug.MODE_DEBUG, "COLLECTOR", allcalls.size() + " calls
-		// read from database and cached in " + (System.currentTimeMillis() -
-		// starttime) + " ms.");
-
 		// Collect all filtertypes and filteractions:
 		collectFilterTypesAndActions(configContainer);
 
+		// Get INCRE instance
+		INCRE incre = INCRE.instance();
+		
 		// Collect all types from the persistent repository
 		ArrayOfAssemblyConfig assemblies = configContainer.getAssemblies();
 		for (int i = 0; i < assemblies.sizeOfAssemblyConfigArray(); i++)
 		{
-			AssemblyDocument doc;
-			try
+			AssemblyConfig ac = assemblies.getAssemblyConfigArray(i);
+			
+			if(incre.isProcessedByModule(ac,"COLLECTOR"))
 			{
-				String name = assemblies.getAssemblyConfigArray(i).getSerializedFilename();
-				deserializeTimer.start();
-				GZIPInputStream inputStream = new GZIPInputStream(new FileInputStream(name));
-				doc = AssemblyDocument.Factory.parse(inputStream);
-				inputStream.close(); 
-				deserializeTimer.stop();
+				INCRETimer collectorcopy = incre.getReporter().openProcess("COLLECTOR",ac.getName(),INCRETimer.TYPE_INCREMENTAL);
+				copyOperation(ac.getName());
+				collectorcopy.stop();
 			}
-			catch (XmlException e)
-			{
-				throw new ModuleException("CollectorRunner: XmlException while parsing "
-						+ assemblies.getAssemblyConfigArray(i).getSerializedFilename(), "TYM");
+			else {
+				INCRETimer collectorrun = incre.getReporter().openProcess("COLLECTOR",ac.getName(),INCRETimer.TYPE_NORMAL);
+				collectOperation(ac);
+				collectorrun.stop();
 			}
-			catch (IOException e)
-			{
-				throw new ModuleException("CollectorRunner: IOException while parsing "
-						+ assemblies.getAssemblyConfigArray(i).getFilename(), "TYM");
-			}
-			collectTypes(doc.getAssembly());
+			
+
 		}
 
 		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Processing cps concerns...");
@@ -314,8 +213,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
 			dataStore.addObject(type.fullName(), pc);
-			// Debug.out(Debug.MODE_DEBUG,"TYM","Adding primitive concern
-			// '"+type.fullName()+"'");
+			//Debug.out(Debug.MODE_DEBUG,"TYM","Adding primitive concern '"+type.fullName()+"'");
 		}
 		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", typeMap.size() + " primitive concerns added in "
 				+ (System.currentTimeMillis() - starttime) + " ms.");
@@ -328,7 +226,72 @@ public class StarLightCollectorRunner implements CollectorRunner
 				+ (System.currentTimeMillis() - starttime) + " ms.");
 
 	}
+	
+	public void collectOperation(AssemblyConfig assembly) throws ModuleException
+	{
+		AssemblyDocument doc;
+		try
+		{
+			String name = assembly.getSerializedFilename();
+			deserializeTimer.start();
+			GZIPInputStream inputStream = new GZIPInputStream(new FileInputStream(name));
+			doc = AssemblyDocument.Factory.parse(inputStream);
+			inputStream.close(); 
+			deserializeTimer.stop();
+		}
+		catch (XmlException e)
+		{
+			throw new ModuleException("CollectorRunner: XmlException while parsing "
+					+ assembly.getSerializedFilename(), "TYM");
+		}
+		catch (IOException e)
+		{
+			throw new ModuleException("CollectorRunner: IOException while parsing "
+					+ assembly.getFilename(), "TYM");
+		}
+		collectTypes(doc.getAssembly());
+	}
+	
+    public void copyOperation(String assemblyName) throws ModuleException
+	{
+    	Debug.out(Debug.MODE_DEBUG, "COLLECTOR [INCRE]", "Restoring types from '"+assemblyName+"'");
+    	INCRE inc = INCRE.instance();
+    	DataStore ds = DataStore.instance();
+    	
+    	int typecount = 0;
+    	
+    	  /* collect and iterate over all objects from previous compilation runs */
+    	  Iterator it = inc.history.getIterator();
+    	  while (it.hasNext())
+    	  {
+    	  	  Object obj = it.next();
+    	  	  
+    	  	  // Only restore PrimitiveConcerns and CpsConcerns
+    	  	  if (obj instanceof PrimitiveConcern || obj instanceof CpsConcern) 
+    	  	  {
+    	  		  Concern c = (Concern)obj;
+    	  		  
+    	  		  // Get the .NET platform representation for this concern
+    	  		  DotNETType t = (DotNETType)c.getPlatformRepresentation();
 
+    	  		  // Add to datastore if type belongs to the assembly we are restoring
+    	  		  if (t != null && t.fromDLL.equals(assemblyName))   	  		  
+    	  		  {
+    	  			  // Register the type with LAMA
+    	  			  t.setParentConcern(null);
+    	  			  Composestar.Core.LAMA.UnitRegister.instance().registerLanguageUnit(t);
+    	  			  
+    	  			  // Add the type to the TypeMap
+    	  			  TypeMap.instance().addType(t.fullName(), t);
+
+    	  			  typecount++;
+    	  		  }
+    	  	  }
+    	  }
+    	  
+    	  Debug.out(Debug.MODE_DEBUG, "COLLECTOR [INCRE]", typecount + " types restored");
+	}
+    
 	private void collectFilterTypesAndActions(ConfigurationContainer config) throws ModuleException
 	{
 		long starttime = System.currentTimeMillis();

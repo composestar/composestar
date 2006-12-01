@@ -366,6 +366,7 @@ public class DotNETMethodInfo extends MethodInfo {
 		IsStatic = in.readBoolean();
 		IsVirtual = in.readBoolean();
 		IsDeclaredHere = in.readBoolean();
+		methodElement = (MethodElement)in.readObject();
 	}
 	 
 	/**
@@ -384,5 +385,6 @@ public class DotNETMethodInfo extends MethodInfo {
 		out.writeBoolean(IsStatic);
 		out.writeBoolean(IsVirtual);
 		out.writeBoolean(IsDeclaredHere);
+		out.writeObject(methodElement);
 	}
 }

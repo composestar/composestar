@@ -1,7 +1,13 @@
 <!-- INCRE configuration for StarLight -->
 <modules>
-	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.RepositoryCollector.StarLightCollectorRunner" enabled="true" incremental="false" summary="Harvesting type information...">
-		<dependencies></dependencies>
+  <module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.RepositoryCollector.StarLightCollectorRunner" input="composestar.dotNET.tym.entities.AssemblyConfig" enabled="true" incremental="true" summary="Harvesting type information...">
+		<dependencies>
+			<dependency type="FILE" name="xmlfile" isAdded="false">
+			<path>
+				<node type="METHOD" nodevalue="getSerializedFilename"></node>
+			</path>
+			</dependency>	
+		</dependencies>	
 	</module>
 	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true" summary="Parsing concerns...">
 		<dependencies>

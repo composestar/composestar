@@ -731,6 +731,7 @@ public class DotNETType extends Type {
     /*** Extra method for adding links to child types of this type */
     public void addChildType(ProgramElement childType)
     {
+    	if (this.childTypes == null) childTypes = new HashSet();
 	    this.childTypes.add(childType);
 	}
 
@@ -903,6 +904,7 @@ public class DotNETType extends Type {
 			BaseTypeString = null;
 		fromDLL = in.readUTF();
 		annotationInstances = (ArrayList)in.readObject();
+		typeElement = (TypeElement)in.readObject();
 	}
 	 
 	/**
@@ -955,5 +957,7 @@ public class DotNETType extends Type {
 			out.writeUTF("");
 		
 		out.writeObject(annotationInstances);
+		
+		out.writeObject(typeElement);
 	}
 }
