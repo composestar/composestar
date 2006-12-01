@@ -310,6 +310,9 @@ namespace Composestar.StarLight.ContextInfo
 		/// int value = (int) o;
 		/// </code>
 		/// </example> 
+		/// <exception cref="T:System.ArgumentOutOfRangeException">
+		/// Thrown when the ordinal could not be found.
+		/// </exception>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public object GetArgumentValue(short ordinal)
 		{
@@ -317,7 +320,7 @@ namespace Composestar.StarLight.ContextInfo
 			if (_arguments.TryGetValue(ordinal, out ai))
 				return ai.Value;
 			else
-				return null;
+				throw new ArgumentOutOfRangeException("ordinal", Properties.Resources.OrdinalCouldNotBeFound);
 		}
 
 		/// <summary>
@@ -334,6 +337,9 @@ namespace Composestar.StarLight.ContextInfo
 		/// jpc.SetArgumentValue(1, o);
 		/// </code>
 		/// </example> 
+		/// <exception cref="T:System.ArgumentOutOfRangeException">
+		/// Thrown when the ordinal could not be found.
+		/// </exception>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void SetArgumentValue(short ordinal, object value)
 		{
@@ -342,6 +348,8 @@ namespace Composestar.StarLight.ContextInfo
 			{
 				ai.Value = value;
 			}
+			else
+				throw new ArgumentOutOfRangeException("ordinal", Properties.Resources.OrdinalCouldNotBeFound);
 		}
 
 		/// <summary>
@@ -349,7 +357,7 @@ namespace Composestar.StarLight.ContextInfo
 		/// </summary>
 		/// <param name="ordinal">The ordinal.</param>
 		/// <returns>Returns a <see cref="T:ArgumentAttributes"/> object containing the attributes for the specified <paramref name="ordinal"/>.</returns>
-		/// <exception cref="ArgumentNullException">
+		/// <exception cref="T:System.ArgumentOutOfRangeException">
 		/// This exception will be raised when the ordinal could not be found in the list of arguments.
 		/// </exception>
 		[MethodImpl(MethodImplOptions.Synchronized)]
@@ -359,7 +367,7 @@ namespace Composestar.StarLight.ContextInfo
 			if (_arguments.TryGetValue(ordinal, out ai))
 				return ai.Attributes;
 			else
-				throw new ArgumentNullException("ordinal");
+				throw new ArgumentOutOfRangeException("ordinal", Properties.Resources.OrdinalCouldNotBeFound);
 		}
 
 		/// <summary>
@@ -407,7 +415,10 @@ namespace Composestar.StarLight.ContextInfo
 		/// Gets the type of the argument.
 		/// </summary>
 		/// <param name="ordinal">The ordinal.</param>
-		/// <returns>The type of the argument, or a <see langword="null"/> when the type could not be found.</returns>
+		/// <returns>The type of the argument, or an exception when the type could not be found.</returns>
+		/// <exception cref="T:System.ArgumentOutOfRangeException">
+		/// This exception will be raised when the ordinal could not be found in the list of arguments.
+		/// </exception>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public Type GetArgumentType(short ordinal)
 		{
@@ -415,7 +426,7 @@ namespace Composestar.StarLight.ContextInfo
 			if (_arguments.TryGetValue(ordinal, out ai))
 				return ai.Type;
 			else
-				return null;
+				throw new ArgumentOutOfRangeException("ordinal", Properties.Resources.OrdinalCouldNotBeFound);
 		}
 
 		/// <summary>

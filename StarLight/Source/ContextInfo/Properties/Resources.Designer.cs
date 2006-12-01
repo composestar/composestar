@@ -59,5 +59,14 @@ namespace Composestar.StarLight.ContextInfo.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The requested ordinal could not be found in the list of arguments..
+        /// </summary>
+        internal static string OrdinalCouldNotBeFound {
+            get {
+                return ResourceManager.GetString("OrdinalCouldNotBeFound", resourceCulture);
+            }
+        }
     }
 }
