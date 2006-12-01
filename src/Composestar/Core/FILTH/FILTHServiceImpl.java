@@ -316,6 +316,8 @@ public class FILTHServiceImpl extends FILTHService
 		c.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY,forders);
 		FilterModuleOrder fmorder = new FilterModuleOrder( (LinkedList)forders.getFirst());
 		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY,fmorder);
+		
+		Debug.out(Debug.MODE_DEBUG, "FILTH [INCRE]", "Restored " + forders.size() + " Filter Module Order(s) for concern " + c.getName() );
 	}
 	/* 
 	public List getOrder(CpsConcern c){
