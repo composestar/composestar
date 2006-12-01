@@ -67,7 +67,7 @@ namespace CustomFilters
             String args = "";
             if (context.ArgumentCount > 0)
             {
-                for (short i = 1; i <= context.ArgumentCount; i++)
+                for (short i = 0; i < context.ArgumentCount; i++)
                 {
                     if (context.GetArgumentValue(i) != null)
                     {
