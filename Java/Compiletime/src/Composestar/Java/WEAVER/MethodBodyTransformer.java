@@ -115,11 +115,21 @@ public class MethodBodyTransformer extends ExprEditor
 	public void edit(MethodCall m) throws CannotCompileException
 	{
 		HookDictionary hd = HookDictionary.instance();
+		
+		String target;
+		String caller = m.where().getDeclaringClass().getName();
+		
 		try
 		{
-			String target = m.getClassName();
-			String caller = m.where().getDeclaringClass().getName();
-				
+			target = m.getMethod().getDeclaringClass().getName();
+		}
+		catch (NotFoundException nfe)
+		{
+			target = m.getClassName();
+		}
+		
+		try
+		{
 			if (hd.isMethodInterception(target,caller))
 			{
 				String signature = m.getSignature();
