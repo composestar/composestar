@@ -34,17 +34,6 @@
 */
 #endregion
 
-/***************************************************************************
-
-Copyright (c) Microsoft Corporation. All rights reserved.
-This code is licensed under the Visual Studio SDK license terms.
-THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-
-***************************************************************************/
-
 #region Using directives
 using Composestar.StarLight.VisualStudio.Babel;
 using Composestar.StarLight.VisualStudio.LanguageServices;
@@ -54,7 +43,9 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel; 
 using System.Reflection;
+using System.Globalization; 
 using System.Text;
 using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 using VSConstants = Microsoft.VisualStudio.VSConstants;
@@ -71,9 +62,8 @@ namespace Composestar.StarLight.VisualStudio.Babel
 		/// <summary>
 		/// _prolog functions
 		/// </summary>
-		private static PrologFunctions _prologFunctions = PrologFunctions.LoadFunctions(); 
-
-
+		private static PrologFunctions _prologFunctions = PrologFunctions.LoadFunctions();
+		private ReadOnlyCollection<string> _keywords;
 		#region IASTResolver Members
 
 		/// <summary>
@@ -105,6 +95,34 @@ namespace Composestar.StarLight.VisualStudio.Babel
 			 //{
 			 //    GetSnippets();
 			 //}
+
+			// Add keywords
+			IList<String> keywords = new List<String>();
+			keywords.Add("concern");
+			keywords.Add("filtermodule");
+			keywords.Add("superimposition");
+			keywords.Add("implementation");
+			keywords.Add("internals");
+			keywords.Add("externals");
+			keywords.Add("conditions");
+			keywords.Add("inputfilters");
+			keywords.Add("outputfilters");
+			keywords.Add("inner");
+			keywords.Add("selectors");
+			keywords.Add("filtermodules");
+			keywords.Add("annotations");
+			keywords.Add("constraints");
+			keywords.Add("pre");
+			keywords.Add("presoft");
+			keywords.Add("prehard");
+			keywords.Add("as");
+			keywords.Add("by");
+			keywords.Add("in");
+			keywords.Add("true");
+			keywords.Add("false");
+			keywords.Add("not");
+ 
+			 _keywords = new ReadOnlyCollection<string>(keywords);
 		}
 
 		private List<VsExpansion> expansionsList;
@@ -167,7 +185,7 @@ namespace Composestar.StarLight.VisualStudio.Babel
 			if (result != null)
 				System.Diagnostics.Trace.WriteLine(result.ToString());
 
-			// Add prologfunctions
+			// Add prolog functions
 			List<Babel.Declaration> members = new List<Babel.Declaration>();
 
 			members.AddRange(_prologFunctions.RetrieveCompletions() );
@@ -196,6 +214,21 @@ namespace Composestar.StarLight.VisualStudio.Babel
 				}
 			}
 			
+			// Add keywords
+			foreach (string keyword in _keywords)
+			{
+				Declaration decl = new Declaration();
+
+				decl.Description = String.Format(CultureInfo.CurrentCulture, "Keyword: {0}", keyword);
+				decl.DisplayText = keyword;
+
+				decl.Glyph = CompletionGlyph.GetKeywordId();
+				
+				decl.Name = keyword;
+
+				members.Add(decl);
+			}
+
 			members.Sort();
 
 			return members;

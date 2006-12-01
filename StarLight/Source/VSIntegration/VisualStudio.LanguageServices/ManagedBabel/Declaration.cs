@@ -103,6 +103,10 @@ namespace Composestar.StarLight.VisualStudio.Babel
 		{
 			return 205;
 		}
-		
+
+		public static int GetKeywordId()
+		{
+			return (6 * 31) + 20;
+		}
 	}
 }
