@@ -555,6 +555,22 @@ public class DoResolve {
 	                    }
 	                  }
 	                }
+	                
+	                // No filtermodule found, maybe the filtermodule is never referenced and we can ignore this entity
+	                if (!ref.getResolved())
+	                {
+	                	Iterator fm_astIter = cpsconcern.getFilterModuleASTIterator();
+	                	while (fm_astIter.hasNext())
+	                	{
+	                		FilterModuleAST fm_ast = (FilterModuleAST)fm_astIter.next();
+	                		if (fm_ast.getName().equals(ref.getFilterModule()))
+	                		{
+	                			// The FM AST does exist, but no FM instance for this entity, ignore this entity
+	                			// NOT SUPPORTED: ds.removeObject(ref);
+	                			ref.setResolved(true);
+	                		}
+	                	}
+	                }
 	              }
 	            }
 	          }
