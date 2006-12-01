@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class ProgramElement extends PlatformRepresentation implements SerializableRepositoryEntity {
-
-	/*
+public abstract class ProgramElement extends PlatformRepresentation implements SerializableRepositoryEntity
+{
+	  /**
 	   * @return the name of this program element
 	   */
 	  public abstract String getUnitName();
