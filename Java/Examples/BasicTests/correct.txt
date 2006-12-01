@@ -1,0 +1,42 @@
+BasicTests.TypeTests.ctor()
+Bool:		true
+Byte:		123
+Char:		c
+Int:		12345
+Short:		-31876
+Long:		1031079605060
+Float:		1234.5
+Double:		1234.5
+String:		12345
+Interface:	c
+
+BasicTests.FilterTests.ctor()
+BasicTests.FilterTestsHelper.ctor()
+BasicTests.FilterTestsHelper.ctor()
+BasicTests.FilterTests.func3()
+BasicTests.FilterTestsHelper.helped()
+BasicTests.FilterTestsHelper.doStuffAround::before()
+BasicTests.FilterTests.doStuff()
+BasicTests.FilterTestsHelper.doStuffAround::after()
+BasicTests.FilterTests.makeError()
+An exception was raised.
+Visit 1
+Visit 2
+Visit 3
+Visit 4
+Visit 5
+BasicTests.FilterTests.makeTrip()
+BasicTests.FilterTests.makeOutsideTrip()
+It's raining, staying home 1 time(s)
+BasicTests.FilterTests.makeOutsideTrip()
+It's raining, staying home 2 time(s)
+BasicTests.FilterTests.makeOutsideTrip()
+It's raining, staying home 3 time(s)
+BasicTests.FilterTests.makeOutsideTrip()
+It's raining, staying home 4 time(s)
+BasicTests.FilterTests.makeOutsideTrip()
+It's raining, staying home 5 time(s)
+BasicTests.FilterTests.makeOutsideTrip()
+BasicTests.FilterTestsHelper.makeTrip()
+BasicTests.FooBarQuux.ctor()
+BasicTests.FooBarQuux.success()
