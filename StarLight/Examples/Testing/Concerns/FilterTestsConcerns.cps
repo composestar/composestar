@@ -12,6 +12,7 @@ concern FilterTestsConcern in BasicTests
 		conditions
 			doError : inner.getProduceError();
 		inputfilters
+		    proderrdisp : Dispatch = { True => [*.getProduceError] };
 			logging		: Logging = { True => [*.*] };
 			profiling	: Profiling = { True => [*.*] };
 			error1		: NotImplemented = { doError ~> [*.makeError], !doError => [*.*] };
