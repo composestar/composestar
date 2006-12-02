@@ -59,10 +59,16 @@ namespace Composestar.StarLight.Weaving.Strategies
             {
                 throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
                         Properties.Resources.AdviceMethodNotFound, filterAction.SubstitutionSelector, filterAction.SubstitutionTarget));
-            }             
+            }
 
             // Set JoinPointContext
             WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
+
+			// Check if it is an innercall and set innercall context:
+			if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget))
+			{
+				WeaveStrategyUtilities.SetInnerCall(visitor, methodToCall);
+			}
 
             // Do the advice-call
             AdviceActionWeaveStrategy.CallAdvice(visitor, filterAction, parentType, methodToCall, jpcVar);

@@ -53,6 +53,20 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 	[XmlRoot("WeaveMethod", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public class WeaveMethod
 	{
+		/// <summary>
+		/// Method id, unique within the assembly
+		/// </summary>
+		private int _id;
+
+		/// <summary>
+		/// Gets or sets the id of the method. This id is unique within the assembly.
+		/// </summary>
+		[XmlAttribute]
+		public int Id
+		{
+			get { return _id; }
+			set { _id = value; }
+		}
 
 		/// <summary>
 		/// _signature
@@ -70,6 +84,19 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 			get { return _signature; }
 			set { _signature = value; }
 		}
+
+		//private int _inputFilterId;
+
+		///// <summary>
+		///// Gets or sets the input filter id. This is the id of the abstract inputfiltercode to be used
+		///// for this method.
+		///// </summary>
+		///// <value>The input filter id.</value>
+		//public int InputFilterId
+		//{
+		//    get { return _inputFilterId; }
+		//    set { _inputFilterId = value; }
+		//}
 
 		/// <summary>
 		/// _input filter

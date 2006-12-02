@@ -83,7 +83,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
 	EndProjectSection
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "C:\...\HTML\", "..\Documentation\HTML", "{C4CA2E94-9E2B-41FC-BF25-6A32849B1E6D}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "D:\...\HTML\", "..\Documentation\HTML\", "{C4CA2E94-9E2B-41FC-BF25-6A32849B1E6D}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.VirtualPath = "/HTML"
 		Debug.AspNetCompiler.PhysicalPath = "..\Documentation\HTML\"
@@ -99,7 +99,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "C:\...\HTML\", "..\Document
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "2642"
+		VWDPort = "1648"
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil", "..\Libraries\cecil\Mono.Cecil.csproj", "{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}"

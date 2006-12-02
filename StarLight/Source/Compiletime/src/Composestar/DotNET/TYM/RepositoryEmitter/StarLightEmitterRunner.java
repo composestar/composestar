@@ -34,16 +34,11 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INLINE.lowlevel.ModelBuilder;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
-import Composestar.Core.INLINE.model.Case;
-import Composestar.Core.INLINE.model.ContextExpression;
-import Composestar.Core.INLINE.model.ContextInstruction;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
-import Composestar.Core.INLINE.model.Switch;
 import Composestar.Core.INLINE.model.Visitor;
-import Composestar.Core.INLINE.model.While;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
@@ -59,22 +54,18 @@ import Composestar.Utils.FileUtils;
 import composestar.dotNET.tym.entities.AndCondition;
 import composestar.dotNET.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET.tym.entities.AssemblyConfig;
-import composestar.dotNET.tym.entities.CaseInstruction;
-import composestar.dotNET.tym.entities.ContextType;
 import composestar.dotNET.tym.entities.FalseCondition;
 import composestar.dotNET.tym.entities.InlineInstruction;
 import composestar.dotNET.tym.entities.JumpInstruction;
 import composestar.dotNET.tym.entities.NotCondition;
 import composestar.dotNET.tym.entities.OrCondition;
 import composestar.dotNET.tym.entities.Reference;
-import composestar.dotNET.tym.entities.SwitchInstruction;
 import composestar.dotNET.tym.entities.TrueCondition;
 import composestar.dotNET.tym.entities.WeaveCall;
 import composestar.dotNET.tym.entities.WeaveMethod;
 import composestar.dotNET.tym.entities.WeaveSpecification;
 import composestar.dotNET.tym.entities.WeaveSpecificationDocument;
 import composestar.dotNET.tym.entities.WeaveType;
-import composestar.dotNET.tym.entities.WhileInstruction;
 
 public class StarLightEmitterRunner implements CTCommonModule
 {
@@ -517,59 +508,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			return weaveBranch;
 		}
 
-		/**
-		 * @see Composestar.Core.INLINE.model.Visitor#visitContextInstruction(Composestar.Core.INLINE.model.ContextInstruction)
-		 */
-		public Object visitContextInstruction(ContextInstruction contextInstruction)
-		{
-			composestar.dotNET.tym.entities.ContextInstruction weaveInstr = composestar.dotNET.tym.entities.ContextInstruction.Factory
-					.newInstance();
-
-			setLabel(contextInstruction, weaveInstr);
-
-			switch (contextInstruction.getType())
-			{
-				case ContextInstruction.CHECK_INNER_CALL:
-					weaveInstr.setType(ContextType.CHECK_INNER_CALL);
-					break;
-				case ContextInstruction.CREATE_ACTION_STORE:
-					weaveInstr.setType(ContextType.CREATE_ACTION_STORE);
-					break;
-				case ContextInstruction.CREATE_JOIN_POINT_CONTEXT:
-					weaveInstr.setType(ContextType.CREATE_JPC);
-					break;
-				case ContextInstruction.REMOVED:
-					weaveInstr.setType(ContextType.REMOVED);
-					break;
-				case ContextInstruction.RESET_INNER_CALL:
-					weaveInstr.setType(ContextType.RESET_INNER_CALL);
-					break;
-				case ContextInstruction.RESTORE_JOIN_POINT_CONTEXT:
-					weaveInstr.setType(ContextType.RESTORE_JPC);
-					break;
-				case ContextInstruction.RETURN_ACTION:
-					weaveInstr.setType(ContextType.RETURN_ACTION);
-					break;
-				case ContextInstruction.SET_INNER_CALL:
-					weaveInstr.setType(ContextType.SET_INNER_CALL);
-					break;
-				case ContextInstruction.STORE_ACTION:
-					weaveInstr.setType(ContextType.STORE_ACTION);
-					break;
-				default:
-					throw new RuntimeException("Unknown contextinstruction");
-			}
-
-			weaveInstr.setCode(contextInstruction.getCode());
-
-			if (contextInstruction.getInstruction() != null)
-			{
-				weaveInstr.setInnerBlock((composestar.dotNET.tym.entities.Block) contextInstruction.getInstruction()
-						.accept(this));
-			}
-
-			return weaveInstr;
-		}
+		
 
 		/**
 		 * @see Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core.INLINE.model.FilterAction)
@@ -590,6 +529,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 			weaveAction.setSubstitutionSelector(filterAction.getSubstitutedMessage().getSelector());
 			weaveAction.setSubstitutionTarget(filterAction.getSubstitutedMessage().getTarget().getName());
+			
+			weaveAction.setOnCall(filterAction.isOnCall());
+			weaveAction.setReturning(filterAction.isReturning());
 
 			return weaveAction;
 		}
@@ -608,64 +550,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			return weaveJump;
 		}
 
-		/**
-		 * @see Composestar.Core.INLINE.model.Visitor#visitCase(Composestar.Core.INLINE.model.Case)
-		 */
-		public Object visitCase(Case caseInstruction)
-		{
-			CaseInstruction weaveCase = CaseInstruction.Factory.newInstance();
-
-			setLabel(caseInstruction, weaveCase);
-
-			weaveCase.setCheckConstant(caseInstruction.getCheckConstant());
-
-			weaveCase.setInstructions((composestar.dotNET.tym.entities.Block) caseInstruction.getInstructions().accept(
-					this));
-
-			return weaveCase;
-		}
-
-		/**
-		 * @see Composestar.Core.INLINE.model.Visitor#visitSwitch(Composestar.Core.INLINE.model.Switch)
-		 */
-		public Object visitSwitch(Switch switchInstruction)
-		{
-			SwitchInstruction weaveSwitch = SwitchInstruction.Factory
-					.newInstance();
-			weaveSwitch.addNewCases();
-
-			setLabel(switchInstruction, weaveSwitch);
-
-			weaveSwitch.setExpression(getContextExpression(switchInstruction.getExpression()));
-
-			Vector weaveCases = new Vector();
-			Case[] cases = switchInstruction.getCases();
-			for (int i = 0; i < cases.length; i++)
-			{
-				weaveCases.add(cases[i].accept(this));
-			}
-			weaveSwitch.getCases().setCaseInstructionArray(
-					(CaseInstruction[]) weaveCases.toArray(new CaseInstruction[0]));
-
-			return weaveSwitch;
-		}
-
-		/**
-		 * @see Composestar.Core.INLINE.model.Visitor#visitWhile(Composestar.Core.INLINE.model.While)
-		 */
-		public Object visitWhile(While whileInstruction)
-		{
-			WhileInstruction weaveWhile = WhileInstruction.Factory.newInstance();
-			
-			setLabel(whileInstruction, weaveWhile);
-
-			weaveWhile.setExpression(getContextExpression(whileInstruction.getExpression()));
-
-			weaveWhile.setInstructions((composestar.dotNET.tym.entities.Block) whileInstruction.getInstructions()
-					.accept(this));
-
-			return weaveWhile;
-		}
+		
 
 		private composestar.dotNET.tym.entities.ConditionExpression translateConditionExpression(
 				ConditionExpression expression)
@@ -726,22 +611,6 @@ public class StarLightEmitterRunner implements CTCommonModule
 			else
 			{
 				throw new RuntimeException("Unknown ConditionExpression");
-			}
-		}
-
-		private composestar.dotNET.tym.entities.ContextExpression.Enum getContextExpression(ContextExpression expression)
-		{
-			composestar.dotNET.tym.entities.ContextExpression weaveExpression 
-				= composestar.dotNET.tym.entities.ContextExpression.Factory.newInstance();
-
-			switch (expression.getType())
-			{
-				case ContextExpression.HAS_MORE_ACTIONS:
-					return composestar.dotNET.tym.entities.ContextExpression.HAS_MORE_ACTIONS;
-				case ContextExpression.RETRIEVE_ACTION:
-					return composestar.dotNET.tym.entities.ContextExpression.RETRIEVE_ACTION;
-				default:
-					throw new RuntimeException("Unknown contextexpression");
 			}
 		}
 

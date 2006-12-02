@@ -446,5 +446,48 @@ namespace Composestar.StarLight.Weaving.Strategies
 				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Castclass, visitor.CalledMethod.DeclaringType));
 			}
 		}
+
+
+		public static void SetInnerCall(ICecilInliningInstructionVisitor visitor, MethodReference method)
+		{
+			MethodDefinition methodDef = CecilUtilities.ResolveMethod(
+				visitor.Method.DeclaringType, method.Name, method);
+
+			// Get the weaveMethod to which the innercall is directed
+			WeaveMethod weaveMethod = visitor.WeaveType.GetMethod(methodDef.ToString());
+
+			//if(weaveMethod == null)
+			//{
+			//    // if using MethodReference failed, try using the MethodDefinition (in some cases the ToString
+			//    // leads to different signatures).
+			//    MethodDefinition methodDef = CecilUtilities.ResolveMethodDefinition(method);
+			//    if(methodDef != null)
+			//    {
+			//        weaveMethod = visitor.WeaveType.GetMethod(method.ToString());
+			//    }
+
+			if (weaveMethod == null)
+			{
+				throw new ILWeaverException(
+					String.Format(CultureInfo.CurrentCulture,
+					Properties.Resources.SetInnerCallFailed,
+					visitor.Method.ToString(),
+					method.ToString())
+				);
+			}
+			//}
+
+			// Load the this parameter
+			if (!visitor.Method.HasThis || visitor.Method.DeclaringType.IsValueType)
+				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));
+			else
+				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
+
+			// Load the methodId
+			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, weaveMethod.Id));
+
+			// Call the SetInnerCall
+			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.SetInnerCall)));
+		}
 	}
 }

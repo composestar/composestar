@@ -69,15 +69,30 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 			set { _methodName = value; }
 		}
 
+		//private int _outputFilterId;
+
+		///// <summary>
+		///// Gets or sets the output filter id. This is the id of the abstract inputfiltercode to be used
+		///// for this method.
+		///// </summary>
+		///// <value>The output filter id.</value>
+		//public int OutputFilterId
+		//{
+		//    get { return _outputFilterId; }
+		//    set { _outputFilterId = value; }
+		//}
+
+
 		/// <summary>
 		/// _output filter
 		/// </summary>
 		private InlineInstruction _outputFilter;
 
 		/// <summary>
-		/// Gets or sets the output filter.
+		/// Gets or sets the output filter id. This is the id of the abstract inputfiltercode to be used
+		/// for this method.
 		/// </summary>
-		/// <value>The output filter.</value>
+		/// <value>The output filter id.</value>
 		public InlineInstruction OutputFilter
 		{
 			get { return _outputFilter; }

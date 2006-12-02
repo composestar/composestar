@@ -43,6 +43,8 @@ using System.Xml.Serialization;
 using System.Diagnostics.CodeAnalysis;
 #endregion
 
+using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+
 namespace Composestar.StarLight.Entities.WeaveSpec
 {
 	/// <summary>
@@ -100,6 +102,21 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 				return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 			}
 			set { }
+		}
+
+		private List<InlineInstruction> _generalizedAIMs;
+
+		/// <summary>
+		/// Gets or sets the generalized abstract instruction models, referenced by WeaveMethod and WeaveCall
+		/// </summary>
+		/// <value>The generalized abstract instruction models</value>
+		[XmlArray("GeneralizedAIMs")]
+		[XmlArrayItem("GeneralizedAIM")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		public List<InlineInstruction> GeneralizedAIMs
+		{
+			get { return _generalizedAIMs; }
+			set { _generalizedAIMs = value; }
 		}
 	}
 }

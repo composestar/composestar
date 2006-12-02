@@ -128,7 +128,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// </summary>
 		WeaveStatistics IILWeaver.DoWeave()
 		{
-			// Check for the existents of the file
+			// Check for the existence of the file
 			if (!File.Exists(_configuration.InputImagePath))
 			{
 				throw new FileNotFoundException(string.Format(CultureInfo.CurrentCulture, 
@@ -647,10 +647,11 @@ namespace Composestar.StarLight.ILWeaver
 				return;
 
 			// If the methodbody is null, then return
-			if (weaveMethod.InputFilter == null)
+			if (!weaveMethod.HasInputFilters)
 				return;
 
 			// Get the input filter
+			//InlineInstruction inputFilter = _currentWeaveSpec.GeneralizedAIMs[weaveMethod.InputFilterId];
 			InlineInstruction inputFilter = weaveMethod.InputFilter;
 
 			// Only proceed when we have an inputfilter
@@ -675,18 +676,27 @@ namespace Composestar.StarLight.ILWeaver
 			visitor.EntitiesAccessor = _entitiesAccessor;
 			visitor.WeaveConfiguration = _configuration.WeaveConfiguration;
 			visitor.WeaveType = weaveType;
+			List<Instruction> instructions = new List<Instruction>();
+			visitor.Instructions = instructions;
+
+			// Weave the innercall check task:
+			Instruction resetInstruction = WeaveCheckInnerCall(targetAssembly, method, weaveMethod, worker, instructions);
 
 			// Visit the elements in the block
 			try
 			{
-				((Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor.IVisitable)inputFilter).Accept(visitor);
+				visitor.DoWeave(inputFilter);
+				//((Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor.IVisitable)inputFilter).Accept(visitor);
 			}
 			catch (Exception ex)
 			{
-				// T the error wrapped in an ILWeaverException                 
+				// The error wrapped in an ILWeaverException
 				throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException,
 											_configuration.OutputImagePath, ex);
 			}
+
+			// Add the reset instruction:
+			instructions.Add(resetInstruction);
 
 			// Only add instructions if we have instructions
 			if (visitor.Instructions.Count > 0)
@@ -706,6 +716,48 @@ namespace Composestar.StarLight.ILWeaver
 			// What follows are the original instructions
 			//
 
+		}
+
+		/// <summary>
+		/// Generates the filter context is inner call check.
+		/// </summary>
+		/// <param name="weaveMethod">The weavespec of the method that is currently weaved</param>
+		/// <param name="instructions">The instructionlist to add the instructions to</param>
+		/// <returns>The reset instruction</returns>
+		/// <example>
+		/// Generate the following code:
+		/// <code>
+		/// if (!FilterContext.IsInnerCall(this, methodName))
+		/// {
+		/// <b>filtercode</b>
+		/// }
+		/// FilterContext.ResetInnerCall();
+		/// </code>
+		/// The <b>filtercode</b> are the inputfilters added to the method.
+		/// </example>
+		private Instruction WeaveCheckInnerCall(AssemblyDefinition targetAssembly, MethodDefinition method,
+			WeaveMethod weaveMethod, CilWorker worker, List<Instruction> instructions)
+		{
+			// Load the this parameter
+			if (!method.HasThis || method.DeclaringType.IsValueType)
+				instructions.Add(worker.Create(OpCodes.Ldnull));
+			else
+				instructions.Add(worker.Create(OpCodes.Ldarg, method.This));
+
+			// Load the methodId
+			instructions.Add(worker.Create(OpCodes.Ldc_I4, weaveMethod.Id));
+
+			// Call the IsInnerCall
+			instructions.Add(worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(targetAssembly, CachedMethodDefinition.IsInnerCall)));
+
+			// Create the call instruction
+			Instruction resetInstruction = worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(targetAssembly, CachedMethodDefinition.ResetInnerCall));
+
+			// Result is placed on the stack, so use it to branch to the skipFiltersInstruction
+			instructions.Add(worker.Create(OpCodes.Brtrue, resetInstruction));
+
+			// Return the reset instruction
+			return resetInstruction;
 		}
 
 		/// <summary>

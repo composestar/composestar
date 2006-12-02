@@ -18,176 +18,184 @@ using Composestar.StarLight.Utilities.Interfaces;
 
 namespace Composestar.StarLight.Weaving.Strategies
 {
-    /// <summary>
-    /// Dispatches to the substitution-message and returns afterwards. 
-    /// </summary>
-    [WeaveStrategyAttribute("DispatchAction")]
-    [CLSCompliant(false)]
-    public class DispatchActionWeaveStrategy : FilterActionWeaveStrategy
-    {
-       
-        /// <summary>
-        /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
-        /// </summary>
-        /// <param name="visitor">The visitor.</param>
-        /// <param name="filterAction">The filter action.</param>
-        /// <param name="originalCall">The original call.</param>
-        public override void Weave(ICecilInliningInstructionVisitor visitor, FilterAction filterAction,
-            MethodDefinition originalCall)
-        {
-            // Get JoinPointContext
-            VariableDefinition jpcVar = visitor.CreateJoinPointContextLocal();
+	/// <summary>
+	/// Dispatches to the substitution-message and returns afterwards. 
+	/// </summary>
+	[WeaveStrategyAttribute("DispatchAction")]
+	[CLSCompliant(false)]
+	public class DispatchActionWeaveStrategy : FilterActionWeaveStrategy
+	{
 
-            FieldDefinition target = null;
-         
-            // Get the methodReference
-            MethodReference methodReference = null;
+		/// <summary>
+		/// Generate the code which has to be inserted at the place of the filter specified by the visitor.
+		/// </summary>
+		/// <param name="visitor">The visitor.</param>
+		/// <param name="filterAction">The filter action.</param>
+		/// <param name="originalCall">The original call.</param>
+		public override void Weave(ICecilInliningInstructionVisitor visitor, FilterAction filterAction,
+			MethodDefinition originalCall)
+		{
+			// Get JoinPointContext
+			VariableDefinition jpcVar = visitor.CreateJoinPointContextLocal();
 
-            TypeDefinition parentTypeDefinition = (TypeDefinition)(visitor.Method.DeclaringType);
-            TypeReference parentTypeReference = visitor.Method.DeclaringType;
+			FieldDefinition target = null;
 
-            if (parentTypeReference.GenericParameters.Count > 0)
-            {
-                GenericInstanceType git = new GenericInstanceType(visitor.Method.DeclaringType);
+			// Get the methodReference
+			MethodReference methodReference = null;
 
-                foreach (GenericParameter gp in originalCall.DeclaringType.GenericParameters)
-                {
-                    git.GenericArguments.Add(gp);
-                }
-               
-                parentTypeReference = git; 
-            }
+			TypeDefinition parentTypeDefinition = (TypeDefinition) (visitor.Method.DeclaringType);
+			TypeReference parentTypeReference = visitor.Method.DeclaringType;
 
-            // Get the called method
-            if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
-                filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
-            {
-                if(filterAction.SubstitutionSelector.Equals(originalCall.Name))
-                {
-                    if (parentTypeReference is GenericInstanceType)
-                    {
-                        methodReference = new MethodReference(originalCall.Name,
-                            parentTypeReference, originalCall.ReturnType.ReturnType,
-                            originalCall.HasThis, originalCall.ExplicitThis,
-                            originalCall.CallingConvention);
-                        methodReference.DeclaringType = parentTypeReference;
+			if(parentTypeReference.GenericParameters.Count > 0)
+			{
+				GenericInstanceType git = new GenericInstanceType(visitor.Method.DeclaringType);
 
-                        foreach (ParameterDefinition param in originalCall.Parameters)
-                        {
-                            methodReference.Parameters.Add(param);
-                        }
+				foreach(GenericParameter gp in originalCall.DeclaringType.GenericParameters)
+				{
+					git.GenericArguments.Add(gp);
+				}
 
-                        methodReference = visitor.TargetAssemblyDefinition.MainModule.Import(methodReference, parentTypeDefinition);
-                          
-                        /* This piece of code must solve the following problem:
-                         *
-                         * class<T> Test 
-                         * {
-                         *    void Func(T a)
-                         *    {
-                         *       // inner call
-                         *       Test<T>.Func(a);
-                         *    } 
-                         * }
-                         * 
-                         * Resolving Test<T> to a GenericInstanceType is no problem
-                         * The methodReference must use the GenericInstanceType as its base type                         
-                         * Import the new methodReference before use.
-                         */
-                    }
-                    else
-                        methodReference = originalCall;                     
-                }
-                else
-                {
-                    methodReference = CecilUtilities.ResolveMethod(parentTypeDefinition,
-                        filterAction.SubstitutionSelector, originalCall);
-                    
-                }
-            }
-            else
-            {
-                target = parentTypeDefinition.Fields.GetField(filterAction.SubstitutionTarget);
-                if(target == null)
-                {
-                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                        Properties.Resources.FieldNotFound, filterAction.SubstitutionTarget));
-                }
+				parentTypeReference = git;
+			}
 
-                TypeDefinition fieldType = CecilUtilities.ResolveTypeDefinition(target.FieldType);
-                MethodDefinition md = CecilUtilities.ResolveMethod(fieldType,
-                    filterAction.SubstitutionSelector, originalCall);
+			// Get the called method
+			if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
+				filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
+			{
+				if(filterAction.SubstitutionSelector.Equals(originalCall.Name))
+				{
+					if(parentTypeReference is GenericInstanceType)
+					{
+						methodReference = new MethodReference(originalCall.Name,
+							parentTypeReference, originalCall.ReturnType.ReturnType,
+							originalCall.HasThis, originalCall.ExplicitThis,
+							originalCall.CallingConvention);
+						methodReference.DeclaringType = parentTypeReference;
 
-                methodReference = visitor.TargetAssemblyDefinition.MainModule.Import(md);
-            }
+						foreach(ParameterDefinition param in originalCall.Parameters)
+						{
+							methodReference.Parameters.Add(param);
+						}
 
-            // If there is no method reference, then we cannot dispatch. Raise an exception.
-            if(methodReference == null)
-            {
-                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                                            Properties.Resources.MethodNotFound, parentTypeReference.ToString(), filterAction.SubstitutionSelector));
-            }
+						methodReference = visitor.TargetAssemblyDefinition.MainModule.Import(methodReference, parentTypeDefinition);
 
-            // Generic arguments; add the generic parameters as generic argument to a GenericInstanceMethod
-            if (originalCall.GenericParameters.Count > 0)   
-            {
-                // Original call has generics, so add to the new memberreference
-                GenericInstanceMethod gim = new GenericInstanceMethod(methodReference);                
-                foreach (GenericParameter gp in originalCall.GenericParameters)
-                {
-                    gim.GenericArguments.Add(gp);    
-                }
-                methodReference = gim;
-            }
+						/* This piece of code must solve the following problem:
+						 *
+						 * class<T> Test 
+						 * {
+						 *    void Func(T a)
+						 *    {
+						 *       // inner call
+						 *       Test<T>.Func(a);
+						 *    } 
+						 * }
+						 * 
+						 * Resolving Test<T> to a GenericInstanceType is no problem
+						 * The methodReference must use the GenericInstanceType as its base type                         
+						 * Import the new methodReference before use.
+						 */
+					}
+					else
+						methodReference = originalCall;
+				}
+				else
+				{
+					methodReference = CecilUtilities.ResolveMethod(parentTypeDefinition,
+						filterAction.SubstitutionSelector, originalCall);
 
-            // Place the arguments on the stack first
+				}
+			}
+			else
+			{
+				target = parentTypeDefinition.Fields.GetField(filterAction.SubstitutionTarget);
+				if(target == null)
+				{
+					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+						Properties.Resources.FieldNotFound, filterAction.SubstitutionTarget));
+				}
 
-            // Place target on the stack
-            if(methodReference.HasThis)
-            {
-                if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
-                    filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
-                {
-                    WeaveStrategyUtilities.LoadSelfObject(visitor, jpcVar);
-                }
-                else
-                {
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldfld, target));
-                }
-            }
+				TypeDefinition fieldType = CecilUtilities.ResolveTypeDefinition(target.FieldType);
+				MethodDefinition md = CecilUtilities.ResolveMethod(fieldType,
+					filterAction.SubstitutionSelector, originalCall);
 
-            // Place arguments on the stack
-            WeaveStrategyUtilities.LoadArguments(visitor, originalCall, jpcVar);
+				methodReference = visitor.TargetAssemblyDefinition.MainModule.Import(md);
+			}
 
-            // Call the method         
-            if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) &&
-                filterAction.SubstitutionSelector.Equals(originalCall.Name))
-            {
-                // Because it is an inner call targeting the method itself, we must call the method
-                // in the class itself. Therefore we do a Call instead of a Callvirt, to prevent that
-                // the call is dispatched to an overriding method in a subclass.
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, methodReference));
-            }
-            else if(visitor.CalledMethod.HasThis)
-            {
-                // Because we dispatch to another method than the original called method, we do a Callvirt
-                // so that an overriding method in a subclass may be called.
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodReference));
-            }
-            else
-            {
-                // static method cannot be called with Callvirt.
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, methodReference));
-            }
+			// If there is no method reference, then we cannot dispatch. Raise an exception.
+			if(methodReference == null)
+			{
+				throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+											Properties.Resources.MethodNotFound, parentTypeReference.ToString(), filterAction.SubstitutionSelector));
+			}
 
-            // Store the return value:
-            WeaveStrategyUtilities.StoreReturnValue(visitor, originalCall, jpcVar);
 
-            // Restore arguments:
-            WeaveStrategyUtilities.RestoreArguments(visitor, originalCall, jpcVar);
-        }        
+			// Check if it is an innercall and set innercall context:
+			if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget))
+			{
+				WeaveStrategyUtilities.SetInnerCall(visitor, methodReference);
+			}
 
-    }
+
+			// Generic arguments; add the generic parameters as generic argument to a GenericInstanceMethod
+			if(originalCall.GenericParameters.Count > 0)
+			{
+				// Original call has generics, so add to the new memberreference
+				GenericInstanceMethod gim = new GenericInstanceMethod(methodReference);
+				foreach(GenericParameter gp in originalCall.GenericParameters)
+				{
+					gim.GenericArguments.Add(gp);
+				}
+				methodReference = gim;
+			}
+
+			// Place the arguments on the stack first
+
+			// Place target on the stack
+			if(methodReference.HasThis)
+			{
+				if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
+					filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
+				{
+					WeaveStrategyUtilities.LoadSelfObject(visitor, jpcVar);
+				}
+				else
+				{
+					visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
+					visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldfld, target));
+				}
+			}
+
+			// Place arguments on the stack
+			WeaveStrategyUtilities.LoadArguments(visitor, originalCall, jpcVar);
+
+			// Call the method         
+			if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) &&
+				filterAction.SubstitutionSelector.Equals(originalCall.Name))
+			{
+				// Because it is an inner call targeting the method itself, we must call the method
+				// in the class itself. Therefore we do a Call instead of a Callvirt, to prevent that
+				// the call is dispatched to an overriding method in a subclass.
+				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, methodReference));
+			}
+			else if(visitor.CalledMethod.HasThis)
+			{
+				// Because we dispatch to another method than the original called method, we do a Callvirt
+				// so that an overriding method in a subclass may be called.
+				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodReference));
+			}
+			else
+			{
+				// static method cannot be called with Callvirt.
+				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, methodReference));
+			}
+
+			// Store the return value:
+			WeaveStrategyUtilities.StoreReturnValue(visitor, originalCall, jpcVar);
+
+			// Restore arguments:
+			WeaveStrategyUtilities.RestoreArguments(visitor, originalCall, jpcVar);
+		}
+
+	}
 
 }

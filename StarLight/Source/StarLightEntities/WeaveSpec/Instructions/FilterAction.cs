@@ -78,6 +78,16 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		private string _substitutionSelector;
 		private string _substitutionTarget;
 
+		/// <summary>
+		/// Indicates whether this filter action instruction should be executed on call or on return.
+		/// </summary>
+		private bool _onCall;
+
+		/// <summary>
+		/// Indicates whether this filter action instruction returns the flow (only when it is on call).
+		/// </summary>
+		private bool _returning;
+
 		#endregion
 
 		#region Constants
@@ -93,6 +103,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 
 		public const String InnerTarget = "inner";
 		public const String SelfTarget = "self";
+
+		private const String GeneralizeSelector = "_";
 
 		#endregion
 
@@ -169,6 +181,25 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 				_type = value;
 			}
 		}
+		/// <summary>
+		/// Indicates whether this filter action instruction should be executed on call or on return.
+		/// </summary>
+		[XmlAttribute]
+		public bool OnCall
+		{
+			get { return _onCall; }
+			set { _onCall = value; }
+		}
+
+		/// <summary>
+		/// Indicates whether this filter action instruction returns the flow (only when it is on call).
+		/// </summary>
+		[XmlAttribute]
+		public bool Returning
+		{
+			get { return _returning; }
+			set { _returning = value; }
+		}
 
 		#endregion
 
@@ -211,7 +242,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// Accepts the specified visitor.
 		/// </summary>
 		/// <param name="visitor">The visitor.</param>
-		public new void Accept(IVisitor visitor)
+		public override void Accept(IVisitor visitor)
 		{
 			if (visitor == null)
 				throw new ArgumentNullException("visitor");
@@ -223,5 +254,36 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 
 		#endregion
 
+		public FilterAction GetClone(String selector)
+		{
+			FilterAction fa = new FilterAction();
+			fa.Type = this.Type;
+			fa.FullName = this.FullName;
+
+			fa.Target = this.Target;
+			if (this.Selector.Equals(GeneralizeSelector))
+			{
+				fa.Selector = selector;
+			}
+			else
+			{
+				fa.Selector = this.Selector;
+			}
+
+			fa.SubstitutionTarget = this.SubstitutionTarget;
+			if (this.SubstitutionSelector.Equals(GeneralizeSelector))
+			{
+				fa.SubstitutionSelector = selector;
+			}
+			else
+			{
+				fa.SubstitutionSelector = this.SubstitutionSelector;
+			}
+
+			fa.OnCall = this.OnCall;
+			fa.Returning = this.Returning;
+
+			return fa;
+		}
 	}
 }

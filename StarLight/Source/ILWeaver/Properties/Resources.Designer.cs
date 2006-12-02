@@ -260,6 +260,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not set inner call context for method &apos;{0}&apos; calling method &apos;{1}&apos;.
+        /// </summary>
+        internal static string SetInnerCallFailed {
+            get {
+                return ResourceManager.GetString("SetInnerCallFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trying to reference an internal or external from the static method named &apos;{0}&apos;  in type &apos;{1}&apos;.
         /// </summary>
         internal static string StaticReferenceInternalExternal {

@@ -88,6 +88,15 @@ namespace Composestar.StarLight.Weaving.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not set inner call context for method &apos;{0}&apos; calling method &apos;{1}&apos;.
+        /// </summary>
+        internal static string SetInnerCallFailed {
+            get {
+                return ResourceManager.GetString("SetInnerCallFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The type {0} could not be found..
         /// </summary>
         internal static string TypeNotFound {

@@ -202,4 +202,7 @@
   <data name="NoWeavingStrategiesFound" xml:space="preserve">
     <value>The weaver could not find any weaving strategies. At least the default strategies (like dispatch, advice, error, and so on) are expected. Make sure the build-in weaving strategies assembly is located in the WeaveStrategiesFolder '{0}'.</value>
   </data>
+  <data name="SetInnerCallFailed" xml:space="preserve">
+    <value>Could not set inner call context for method '{0}' calling method '{1}'</value>
+  </data>
 </root>

@@ -94,7 +94,7 @@ namespace Composestar.Repository
 		#endregion
 
 		private Dictionary<string, AssemblyElement> _assemblyFileCache = new Dictionary<string, AssemblyElement>();
-	
+
 		#region Configuration
 
 		/// <summary>
@@ -112,11 +112,11 @@ namespace Composestar.Repository
 			if (File.Exists(fileName))
 			{
 				configContainer = ObjectXMLSerializer<ConfigurationContainer>.Load(fileName, SerializedFormat.Document);
-			} 
+			}
 			else
 			{
 				configContainer = new ConfigurationContainer();
-			} 
+			}
 
 
 			return configContainer;
@@ -163,12 +163,12 @@ namespace Composestar.Repository
 				{
 					assemblyElement = ObjectXMLSerializer<AssemblyElement>.Load(fileName, SerializedFormat.DocumentCompressed);
 					_assemblyFileCache.Add(fileName, assemblyElement);
-				} 
+				}
 				else
 				{
 					throw new FileNotFoundException(fileName);
-				} 
-			} 
+				}
+			}
 
 			return assemblyElement;
 		}
@@ -233,7 +233,7 @@ namespace Composestar.Repository
 			get
 			{
 				if (_extraTypes == null)
-					_extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(CaseInstruction), typeof(JumpInstruction), typeof(SwitchInstruction), typeof(WhileInstruction), typeof(ContextInstruction),
+					_extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(JumpInstruction),
                     typeof(AndCondition), typeof(ConditionExpression), typeof(ConditionLiteral), typeof(FalseCondition), typeof(NotCondition), typeof(OrCondition), typeof(TrueCondition) };
 				return _extraTypes;
 			}

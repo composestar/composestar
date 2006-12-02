@@ -126,6 +126,9 @@
   <data name="FieldNotFound" xml:space="preserve">
     <value>The field {0} could not be found.</value>
   </data>
+  <data name="SetInnerCallFailed" xml:space="preserve">
+    <value>Could not set inner call context for method '{0}' calling method '{1}'</value>
+  </data>
   <data name="TypeNotFound" xml:space="preserve">
     <value>The type {0} could not be found.</value>
   </data>

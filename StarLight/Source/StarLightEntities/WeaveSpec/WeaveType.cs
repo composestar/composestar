@@ -158,6 +158,18 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		}
 
 		private List<WeaveMethod> _methods = new List<WeaveMethod>();
+		public WeaveMethod GetMethod(String signature)
+		{
+			foreach(WeaveMethod weaveMethod in Methods)
+			{
+				if(weaveMethod.Signature.Equals(signature))
+				{
+					return weaveMethod;
+				}
+			}
+
+			return null;
+		}
 
 		/// <summary>
 		/// Gets or sets the methods with instructions to weave.

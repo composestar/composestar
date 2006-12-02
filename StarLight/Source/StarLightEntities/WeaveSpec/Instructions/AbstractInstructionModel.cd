@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="Composestar.StarLight.Entities.WeaveSpec.Instructions.Block">
+    <Position X="3.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>WeaveSpec\Instructions\Block.cs</FileName>
+      <HashCode>AIAAAAAAAAAAAAAAAABAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Composestar.StarLight.Entities.WeaveSpec.Instructions.Branch">
+    <Position X="8" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>WeaveSpec\Instructions\Branch.cs</FileName>
+      <HashCode>AIAAAAAAAAAAgAACAAAAAAAEAAAAAgACAAAAIAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Composestar.StarLight.Entities.WeaveSpec.Instructions.InlineInstruction">
+    <Position X="6.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>WeaveSpec\Instructions\InlineInstruction.cs</FileName>
+      <HashCode>AIAAAAAAEAAAAAAEABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Composestar.StarLight.Entities.WeaveSpec.Instructions.JumpInstruction">
+    <Position X="10.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>WeaveSpec\Instructions\Jump.cs</FileName>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAACAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Composestar.StarLight.Entities.WeaveSpec.Instructions.FilterAction">
+    <Position X="5.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>WeaveSpec\Instructions\FilterAction.cs</FileName>
+      <HashCode>EMQAAAAAAAAQAIQCACEAAGIiQAAEAQQABQAQAAECYBI=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <Lollipop Position="0.2" />
+  </Class>
+</ClassDiagram>

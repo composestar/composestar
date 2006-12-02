@@ -63,27 +63,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor
 		void VisitBranchEnd(Branch branch);
 
 		/// <summary>
-		/// Visits the check inner call.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		void VisitCheckInnerCall(ContextInstruction contextInstruction);
-		/// <summary>
-		/// Visits the set inner call.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		void VisitSetInnerCall(ContextInstruction contextInstruction);
-		/// <summary>
-		/// Visits the reset inner call.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		void VisitResetInnerCall(ContextInstruction contextInstruction);
-		/// <summary>
-		/// Visits the return action.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		void VisitReturnAction(ContextInstruction contextInstruction);
-
-		/// <summary>
 		/// Visits the filter action.
 		/// </summary>
 		/// <param name="filterAction">The filter action.</param>
@@ -99,59 +78,5 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor
 		/// </summary>
 		/// <param name="inlineInstruction">The inline instruction.</param>
 		void VisitInlineInstruction(InlineInstruction inlineInstruction);
-
-		/// <summary>
-		/// Visits the while.
-		/// </summary>
-		/// <param name="whileInstruction">The while instruction.</param>
-		void VisitWhile(WhileInstruction whileInstruction);
-		/// <summary>
-		/// Visits the while end.
-		/// </summary>
-		/// <param name="whileInstruction">The while instruction.</param>
-		void VisitWhileEnd(WhileInstruction whileInstruction);
-
-		/// <summary>
-		/// Visits the switch.
-		/// </summary>
-		/// <param name="switchInstruction">The switch instruction.</param>
-		void VisitSwitch(SwitchInstruction switchInstruction);
-		/// <summary>
-		/// Visits the case.
-		/// </summary>
-		/// <param name="caseInstruction">The case instruction.</param>
-		void VisitCase(CaseInstruction caseInstruction);
-		/// <summary>
-		/// Visits the case end.
-		/// </summary>
-		/// <param name="switchInstruction">The switch instruction.</param>
-		void VisitCaseEnd(SwitchInstruction switchInstruction);
-		/// <summary>
-		/// Visits the switch end.
-		/// </summary>
-		/// <param name="switchInstruction">The switch instruction.</param>
-		void VisitSwitchEnd(SwitchInstruction switchInstruction);
-
-		/// <summary>
-		/// Visits the create action store.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		void VisitCreateActionStore(ContextInstruction contextInstruction);
-		/// <summary>
-		/// Visits the store action.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		void VisitStoreAction(ContextInstruction contextInstruction);
-
-		/// <summary>
-		/// Visits the create join point context.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		void VisitCreateJoinPointContext(ContextInstruction contextInstruction);
-		/// <summary>
-		/// Visits the restore join point context.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		void VisitRestoreJoinPointContext(ContextInstruction contextInstruction);
 	}
 }

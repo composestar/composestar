@@ -60,6 +60,7 @@
     <None Include="Configuration\Config.cd" />
     <None Include="Concerns\Concerns.cd" />
     <None Include="LanguageModel\Language Model.cd" />
+    <None Include="WeaveSpec\Instructions\AbstractInstructionModel.cd" />
     <None Include="WeaveSpec\WeaveSpec.cd" />
   </ItemGroup>
   <ItemGroup>
@@ -75,19 +76,7 @@
     <Compile Include="WeaveSpec\Instructions\Block.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WeaveSpec\Instructions\While.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="WeaveSpec\Instructions\Branch.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="WeaveSpec\Instructions\Case.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="WeaveSpec\Instructions\ContextExpression.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="WeaveSpec\Instructions\ContextInstruction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="WeaveSpec\Instructions\FilterAction.cs" />
@@ -100,10 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="WeaveSpec\Instructions\Label.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="WeaveSpec\Instructions\ContextType.cs" />
-    <Compile Include="WeaveSpec\Instructions\Switch.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="WeaveSpec\ConditionExpressions\And.cs" />

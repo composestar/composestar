@@ -74,7 +74,6 @@ namespace Composestar.StarLight.ILWeaver
 
 		#region Constant values
 
-		private const int FilterContextJumpId = 9999;
 		private const int BranchLabelOffSet = 100000;
 
 		#endregion
@@ -119,6 +118,8 @@ namespace Composestar.StarLight.ILWeaver
 		private IEntitiesAccessor _entitiesAccessor;
 		private ConfigurationContainer _weaveConfiguration;
 		private WeaveType _weaveType;
+		private List<FilterAction> _returnActions = new List<FilterAction>();
+		private Instruction _returnInstruction;
 
 		#endregion
 
@@ -272,36 +273,7 @@ namespace Composestar.StarLight.ILWeaver
 
 		#region Helper functions
 
-		/// <summary>
-		/// Creates the context expression.
-		/// </summary>
-		/// <remarks>
-		/// The ActionStore object has to be used before (as in created by the CreateActionStore visitor).
-		/// </remarks> 
-		/// <param name="expr">The expr.</param>
-		private void CreateContextExpression(ContextExpression expr)
-		{
 
-			// Get an actionstore local
-			VariableDefinition asVar = CreateActionStoreLocal();
-
-			// Load the local
-			Instructions.Add(Worker.Create(OpCodes.Ldloc, asVar));
-
-			switch (expr)
-			{
-				case ContextExpression.HasMoreActions:
-					// Call the HasMoreStoredActions method
-					Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.HasMoreStoredActions)));
-					break;
-				case ContextExpression.RetrieveAction:
-					// Call the NextStoredAction method
-					Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.NextStoredAction)));
-					break;
-
-			}
-
-		}
 
 		/// <summary>
 		/// Converts the mono attributes to JPC attributes.
@@ -332,7 +304,7 @@ namespace Composestar.StarLight.ILWeaver
 		private Instruction GetJumpLabel(int labelId)
 		{
 			if (labelId < 0)
-				return null;
+				return _returnInstruction;
 
 			Instruction jumpNopInstruction;
 			if (!_jumpInstructions.TryGetValue(labelId, out jumpNopInstruction))
@@ -394,6 +366,8 @@ namespace Composestar.StarLight.ILWeaver
 			return m_ActionStoreLocal;
 		}
 
+		#region JoinPointContext
+
 		/// <summary>
 		/// Creates the join point context variable.
 		/// </summary>
@@ -407,7 +381,139 @@ namespace Composestar.StarLight.ILWeaver
 			return m_JpcLocal;
 		}
 
+
+
 		#endregion
+
+
+
+
+		#endregion
+
+		public void DoWeave(InlineInstruction instructionSet)
+		{
+			// Store the current index in the Instructions to use it later to insert the create action store.
+			int currentIndex = Instructions.Count;
+
+			// Create returnInstruction, to be used to jump to when returning.
+			_returnInstruction = Worker.Create(OpCodes.Nop);
+
+			// Create the join point context
+			CreateJoinPointContext();
+
+			// Generate the filterset instructions
+			instructionSet.Accept(this);
+
+			// Add return jumpto instruction
+			Instructions.Add(_returnInstruction);
+
+			// Weave the create action store command and the return actions
+			if (_returnActions.Count > 0)
+			{
+				// Insert the create action store command:
+				CreateActionStore(currentIndex);
+
+				// Weave the return actions:
+				WeaveReturnActions();
+			}
+
+			// Restore the join point context
+			RestoreJoinPointContext();
+
+			// If inputfilters are weaved, do a return
+			if (FilterType == FilterType.InputFilter)
+			{
+				// Generate a return instruction
+				Instructions.Add(Worker.Create(OpCodes.Ret));
+			}
+		}
+
+		private void WeaveReturnActions()
+		{
+			if (_returnActions.Count == 0)
+			{
+				return;
+			}
+
+			//
+			// While Expression:
+			//
+
+			// Get an actionstore local
+			VariableDefinition asVar = CreateActionStoreLocal();
+
+			// Load the local
+			Instruction whileStart = Worker.Create(OpCodes.Ldloc, asVar);
+			Instructions.Add(whileStart);
+
+			// Call the HasMoreStoredActions method
+			Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.HasMoreStoredActions)));
+
+			// Add branch code
+			Instruction whileEnd = Worker.Create(OpCodes.Nop);
+			Instructions.Add(Worker.Create(OpCodes.Brfalse, whileEnd));
+
+
+
+			//
+			// Switch expression
+			//
+
+			// Load the actionstore local
+			Instructions.Add(Worker.Create(OpCodes.Ldloc, asVar));
+
+			// Call the NextStoredAction method
+			Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.NextStoredAction)));
+
+			// The switch statement
+			Instruction[] caseStarts = new Instruction[_returnActions.Count];
+			Instructions.Add(Worker.Create(OpCodes.Switch, caseStarts));
+
+			// Default: jump to the end
+			Instruction switchEnd = Worker.Create(OpCodes.Nop);
+			Instructions.Add(Worker.Create(OpCodes.Br, switchEnd));
+
+
+			//
+			// Cases
+			//
+			for (int i = 0; i < _returnActions.Count; i++)
+			{
+				int lastInstructionIndex = Instructions.Count - 1;
+
+				// weave filteraction
+				FilterAction returnAction = _returnActions[i];
+				WeaveFilterAction(returnAction);
+
+				// Add a jump to the end of the switch
+				Instructions.Add(Worker.Create(OpCodes.Br, switchEnd));
+
+				// Set switch jumptable entry for this case to the first instruction of the case
+				caseStarts[i] = Instructions[lastInstructionIndex + 1];
+			}
+
+
+
+
+			//
+			// Switch end
+			//
+
+			// Emit the end instruction
+			Instructions.Add(switchEnd);
+
+
+
+			//
+			// While Loop
+			//
+
+			// Add the branch back to condition part
+			Instructions.Add(Worker.Create(OpCodes.Br, whileStart));
+
+			// Place the end label
+			Instructions.Add(whileEnd);
+		}
 
 		#region Inlining Instructions Visitor Handlers
 
@@ -428,111 +534,6 @@ namespace Composestar.StarLight.ILWeaver
 			}
 		}
 
-		/// <summary>
-		/// Visits the return action.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		public void VisitReturnAction(ContextInstruction contextInstruction)
-		{
-			// Generate a return instruction
-			Instructions.Add(Worker.Create(OpCodes.Ret));
-		}
-
-
-
-		#region Inner Call handlers
-
-		/// <summary>
-		/// Generates the filter context is inner call check.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		/// <example>
-		/// Generate the following code:
-		/// <code>
-		/// if (!FilterContext.IsInnerCall(this, methodName))
-		/// {
-		/// <b>filtercode</b>
-		/// }
-		/// </code>
-		/// The <b>filtercode</b> are the inputfilters added to the method.
-		/// </example>
-		/// <remarks>
-		/// A call to a Label instruction is needed to place the branchToInstruction at the correct place.
-		/// </remarks>
-		public void VisitCheckInnerCall(ContextInstruction contextInstruction)
-		{
-			// Load the this parameter
-			if (!Method.HasThis || Method.DeclaringType.IsValueType)
-				Instructions.Add(Worker.Create(OpCodes.Ldnull));
-			else
-			{
-				Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-			}
-
-			// Load the methodId
-			Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
-
-			// Call the IsInnerCall
-			Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.IsInnerCall)));
-
-			// Create the call instruction
-			Instruction branchToInstruction = GetJumpLabel(FilterContextJumpId);
-
-			// Result is placed on the stack, so use it to branch to the skipFiltersInstruction
-			Instructions.Add(Worker.Create(OpCodes.Brtrue, branchToInstruction));
-		}
-
-		/// <summary>
-		/// Generate the SetInnerCall code.
-		/// </summary>
-		/// <param name="contextInstruction"></param>
-		/// <example>
-		/// Generate the following code:
-		/// <code>        
-		/// FilterContext.SetInnerCall(this, methodId);
-		/// this.calledMethod();
-		/// </code>       
-		/// </example> 
-		public void VisitSetInnerCall(ContextInstruction contextInstruction)
-		{
-			// Load the this parameter
-			if (!Method.HasThis || Method.DeclaringType.IsValueType)
-				Instructions.Add(Worker.Create(OpCodes.Ldnull));
-			else
-			{
-				Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-			}
-
-			// Load the methodId
-			Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
-
-			// Call the SetInnerCall
-			Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.SetInnerCall)));
-
-		}
-
-		/// <summary>
-		/// Generates the ResetInnerCall code.
-		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		/// <example>
-		/// Generate the following code:
-		/// <code>        
-		/// FilterContext.ResetInnerCall();        
-		/// </code>
-		/// A LABEL instruction has to proceed this call.
-		/// </example> 
-		/// <remarks>
-		/// There must be a call the the IsInnerCall to generate the jump instruction.
-		/// </remarks> 
-		public void VisitResetInnerCall(ContextInstruction contextInstruction)
-		{
-			// Call the reset inner call function
-			Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.ResetInnerCall)));
-		}
-
-		#endregion
-
 
 		/// <summary>
 		/// Visits the filter action. Uses Strategypattern to weave a specific instruction.
@@ -540,13 +541,38 @@ namespace Composestar.StarLight.ILWeaver
 		/// <param name="filterAction">The filter action.</param>
 		public void VisitFilterAction(FilterAction filterAction)
 		{
+			if (filterAction.OnCall)
+			{
+				WeaveFilterAction(filterAction);
+				if (filterAction.Returning)
+				{
+					Instructions.Add(Worker.Create(OpCodes.Br, _returnInstruction));
+				}
+			}
+			else
+			{
+				StoreAction(filterAction);
+			}
+		}
+
+
+		/// <summary>
+		/// Weaves the filter action. Uses strategy pattern.
+		/// </summary>
+		/// <param name="filterAction"></param>
+		private void WeaveFilterAction(FilterAction filterAction)
+		{
 			if (filterAction == null)
 				throw new ArgumentNullException("filterAction");
+
+			// Create clone with current selector applied to the possible generalized selector in the filteraction
+			filterAction = filterAction.GetClone(CalledMethod.Name);
 
 			FilterActionWeaveStrategy strategy = FilterActionStrategyDispatcher.GetFilterActionWeaveStrategy(filterAction.Type);
 
 			strategy.Weave(this, filterAction, CalledMethod);
 		}
+
 
 		/// <summary>
 		/// Add a jump to another block
@@ -562,23 +588,7 @@ namespace Composestar.StarLight.ILWeaver
 			Instructions.Add(Worker.Create(OpCodes.Br, jumpToInstruction));
 		}
 
-		/// <summary>
-		/// Visits the skip action. No code is needed for this action.
-		/// </summary>
-		/// <param name="filterAction">The filter action.</param>
-		public void VisitSkipAction(FilterAction filterAction)
-		{
-			// No code needed
-		}
 
-		/// <summary>
-		/// Visits the substitution action. No code is needed for this action.
-		/// </summary>
-		/// <param name="filterAction">The filter action.</param>
-		public void VisitSubstitutionAction(FilterAction filterAction)
-		{
-			// No code needed
-		}
 
 		#region Branching
 
@@ -612,7 +622,7 @@ namespace Composestar.StarLight.ILWeaver
 		{
 			// Add condition code
 			CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor(this);
-			((Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
+			((Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor.IVisitable) branch.ConditionExpression).Accept(conditionsVisitor);
 
 			// Add branch code
 			branch.Label = BranchLabelOffSet + _numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
@@ -648,150 +658,20 @@ namespace Composestar.StarLight.ILWeaver
 
 		#endregion
 
-		#region While construction
-
-		/// <summary>
-		/// While loop visitor.
-		/// </summary>
-		/// <remarks>
-		/// Should generate the following code:
-		/// <code>
-		/// l2:
-		/// condition
-		/// brfalse l1:
-		/// // code
-		/// br l2:
-		/// l1:
-		/// </code>
-		/// </remarks> 
-		/// <param name="whileInstr"></param>
-		public void VisitWhile(WhileInstruction whileInstruction)
-		{
-			// Create a start label
-			whileInstruction.Label = BranchLabelOffSet + _numberOfBranches;
-			_numberOfBranches = _numberOfBranches + 2;
-			Instructions.Add(GetJumpLabel(whileInstruction.Label));
-
-			// Context instruction
-			CreateContextExpression(whileInstruction.Expression);
-
-			// Add branch code
-			Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(whileInstruction.Label + 1)));
-		}
-
-		/// <summary>
-		/// Visits the while end.
-		/// </summary>
-		/// <remarks>
-		/// <code>
-		/// while(condition)
-		/// {
-		///   // Block
-		/// }
-		/// </code>
-		/// In IL we need:
-		/// <code>
-		/// l2: condition
-		/// brfalse l1
-		/// block
-		/// br l2
-		/// l1: nop
-		/// </code>
-		/// </remarks> 
-		/// <param name="whileInstr">The while instruction.</param>
-		public void VisitWhileEnd(WhileInstruction whileInstruction)
-		{
-			// Add the branch back to condition part
-			Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(whileInstruction.Label)));
-
-			// Place the end label
-			Instructions.Add(GetJumpLabel(whileInstruction.Label + 1));
-
-			// Reset label
-			whileInstruction.Label = -1;
-		}
-
-		#endregion
-
-		#region Switch construction
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="switchInstr"></param>
-		public void VisitSwitch(SwitchInstruction switchInstruction)
-		{
-
-			// Context instruction
-			CreateContextExpression(switchInstruction.Expression);
-
-			// The labels to jump to
-			List<Instruction> caseLabels = new List<Instruction>();
-			foreach (CaseInstruction caseElement in switchInstruction.Cases)
-			{
-				caseLabels.Add(GetJumpLabel(caseElement.CheckConstant + 10000));
-			}
-
-			// The switch statement
-			Instructions.Add(Worker.Create(OpCodes.Switch, caseLabels.ToArray()));
-
-			// Jump to the end
-			switchInstruction.Label = BranchLabelOffSet + _numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
-			_numberOfBranches = _numberOfBranches + 1;
-			Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstruction.Label)));
-		}
-
-		/// <summary>
-		/// Visits the switch end.
-		/// </summary>
-		/// <param name="switchInstr">The switch instr.</param>
-		public void VisitSwitchEnd(SwitchInstruction switchInstruction)
-		{
-			// Emit a label to jump to.
-			Instructions.Add(GetJumpLabel(switchInstruction.Label));
-
-			// Reset label
-			switchInstruction.Label = -1;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="caseInstr"></param>
-		public void VisitCase(CaseInstruction caseInstruction)
-		{
-			// Add the label
-			Instructions.Add(GetJumpLabel(caseInstruction.CheckConstant + 10000));
-		}
-
-		/// <summary>
-		/// Visits the case end.
-		/// </summary>
-		/// <param name="switchInstr">The switch instr.</param>
-		public void VisitCaseEnd(SwitchInstruction switchInstruction)
-		{
-			// Add a jump to the end of the switch
-			Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstruction.Label)));
-		}
-
-		#endregion
-
 		#region Action store
 
+
+
 		/// <summary>
-		/// This ContextInstruction indicates that an actionstore needs to be created. 
+		/// Generates the instructions that create an action store.
 		/// We use the FilterContext object as the actionstore, so when this contextinstruction is encountered, 
 		/// a new instance of the FilterContext object needs to be created:
 		/// <code>
 		/// FilterContext actionStore = new FilterContext();
 		/// </code> 
+		/// <param name="index">The index in Instructions where these instructions need to be inserted</param>
 		/// </summary>
-		/// <remarks>
-		/// This ContextInstruction only occurs when there might actually be an action that needs to be stored. 
-		/// When no action will ever be stored in the filtercode, this ContextInstruction is not present.
-		/// </remarks> 
-		/// <param name="contextInstruction">The context instruction.</param>
-		public void VisitCreateActionStore(ContextInstruction contextInstruction)
+		public void CreateActionStore(int index)
 		{
 			// Get an actionstore local
 			VariableDefinition asVar = CreateActionStoreLocal();
@@ -801,25 +681,29 @@ namespace Composestar.StarLight.ILWeaver
 			//
 
 			// Call the constructor
-			Instructions.Add(Worker.Create(OpCodes.Newobj, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.FilterContextConstructor)));
+			Instructions.Insert(index, Worker.Create(OpCodes.Newobj, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.FilterContextConstructor)));
 
 			// Store the local
-			Instructions.Add(Worker.Create(OpCodes.Stloc, asVar));
+			Instructions.Insert(index + 1, Worker.Create(OpCodes.Stloc, asVar));
 		}
 
 		/// <summary>
-		/// This ContextInstruction indicates that an action needs to be stored. 
+		/// Gemerates the instructions that store an action. 
 		/// The action that needs to be stored is represented by an integer id, 
 		/// so actually only this id needs to be stored. 
-		/// This id is present in the code-field of ContextInstruction. 
+		/// This id is on compiletime the index in the returnActions list of the action to be stored. 
 		/// So the code that needs to be created for this instructions is:
 		/// <code>
-		/// actionStore.storeAction( contextinstruction.Code );
+		/// actionStore.storeAction( index );
 		/// </code>
 		/// </summary>
-		/// <param name="contextInstruction">The context instruction.</param>
-		public void VisitStoreAction(ContextInstruction contextInstruction)
+		/// <param name="filterAction">The filter action to be stored.</param>
+		public void StoreAction(FilterAction filterAction)
 		{
+			// Add the filteraction to the returnActions:
+			_returnActions.Add(filterAction);
+			int index = _returnActions.Count - 1;
+
 			// Get an actionstore local
 			VariableDefinition asVar = CreateActionStoreLocal();
 
@@ -827,7 +711,7 @@ namespace Composestar.StarLight.ILWeaver
 			Instructions.Add(Worker.Create(OpCodes.Ldloc, asVar));
 
 			// Load the id onto the stack
-			Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
+			Instructions.Add(Worker.Create(OpCodes.Ldc_I4, index));
 
 			// Call the StoreAction method
 			Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.StoreAction)));
@@ -837,7 +721,6 @@ namespace Composestar.StarLight.ILWeaver
 
 		#endregion
 
-		#region JoinPointContext
 
 		/// <summary>
 		/// This method creates and initializes the JoinPointContext. This always happens at the beginning
@@ -845,8 +728,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// return-value, and not use for example the LdParam opcode, because this value might not be up to date
 		/// or might be entirely wrong, because the action is in an outputfilter.
 		/// </summary>
-		/// <param name="contextInstruction"></param>
-		public void VisitCreateJoinPointContext(ContextInstruction contextInstruction)
+		public void CreateJoinPointContext()
 		{
 			// Create a new or use an existing local variable for the JoinPointContext
 			VariableDefinition jpcVar = CreateJoinPointContextLocal();
@@ -935,7 +817,7 @@ namespace Composestar.StarLight.ILWeaver
 						// Determine the parameter direction
 						ArgumentAttributes attr = ConvertAttributes(param.Attributes);
 
-						Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int)attr));
+						Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int) attr));
 
 						// Load jpc
 						Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
@@ -979,7 +861,7 @@ namespace Composestar.StarLight.ILWeaver
 						// Determine the parameter direction
 						ArgumentAttributes attr = ConvertAttributes(param.Attributes);
 
-						Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int)attr));
+						Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int) attr));
 
 						// Load jpc
 						Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
@@ -1002,10 +884,20 @@ namespace Composestar.StarLight.ILWeaver
 				Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
 				// Load the this pointer
-				if (!Method.HasThis || Method.DeclaringType.IsValueType)
-					Instructions.Add(Worker.Create(OpCodes.Ldnull));
-				else
+				if (Method.HasThis && !Method.DeclaringType.IsValueType)
+				{
 					Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+				}
+				else if (Method.DeclaringType.IsValueType)
+				{
+					Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+					Instructions.Add(Worker.Create(OpCodes.Ldobj, Method.DeclaringType));
+					Instructions.Add(Worker.Create(OpCodes.Box, Method.DeclaringType));
+				}
+				else
+				{
+					Instructions.Add(Worker.Create(OpCodes.Ldnull));
+				}
 
 				// Assign to the Target property
 				Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetStartTarget)));
@@ -1041,7 +933,7 @@ namespace Composestar.StarLight.ILWeaver
 			}
 			else
 				Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetMethodFromHandle)));
-			
+
 			// Assign name to MethodInformation
 			Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetMethodInformation)));
 
@@ -1064,8 +956,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// Restores the JoinPointContext at the end of the filtercode. It puts for example the returnvalue on the
 		/// stack.
 		/// </summary>
-		/// <param name="contextInstruction"></param>
-		public void VisitRestoreJoinPointContext(ContextInstruction contextInstruction)
+		public void RestoreJoinPointContext()
 		{
 			// Get JoinPointContext
 			VariableDefinition jpcVar = CreateJoinPointContextLocal();
@@ -1144,8 +1035,6 @@ namespace Composestar.StarLight.ILWeaver
 				}
 			}
 		}
-
-		#endregion
 
 		#endregion
 

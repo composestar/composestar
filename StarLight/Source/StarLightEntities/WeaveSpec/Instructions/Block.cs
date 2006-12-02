@@ -92,7 +92,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// Accepts the specified visitor.
 		/// </summary>
 		/// <param name="visitor">The visitor.</param>
-		public new void Accept(IVisitor visitor)
+		public override void Accept(IVisitor visitor)
 		{
 			base.Accept(visitor);
 
