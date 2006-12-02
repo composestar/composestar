@@ -5,7 +5,6 @@
 package Composestar.Core.INLINE.lowlevel;
 
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Stack;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -19,17 +18,11 @@ import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
-import Composestar.Core.INLINE.model.Case;
-import Composestar.Core.INLINE.model.ContextExpression;
-import Composestar.Core.INLINE.model.ContextInstruction;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
-import Composestar.Core.INLINE.model.Switch;
-import Composestar.Core.INLINE.model.While;
 import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.ParameterInfo;
 
 public class ModelBuilderStrategy implements LowLevelInlineStrategy
 {
@@ -83,23 +76,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private static int lastMethodId;
 
-	/**
-	 * Id of the last processed on-return action
-	 */
-	private int nextReturnActionId;
-
-	/**
-	 * Switch containing cases for each on-return action
-	 */
-	private Switch onReturnInstructions;
-
-	/**
-	 * The CreateActionStore ContextInstruction. Is globally maintained, so that
-	 * it can be set to removed if it isn't needed.
-	 */
-	private ContextInstruction createActionStoreInstruction;
-
-	private Label returnLabel;
 
 	/**
 	 * Indicates whether the instructionset of the current inline is empty or
@@ -119,11 +95,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private int currentLabelId;
 
-	/**
-	 * Indicates that the next jump to end should be ignored (for error action).
-	 * FIXME replace this with conceptual change in FIRE
-	 */
-	private boolean noJumpEnd;
+	private Label endLabel = new Label(-1);
 
 	/**
 	 * The constructor
@@ -192,28 +164,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		labelTable = new Hashtable();
 		currentLabelId = -1;
 
-		nextReturnActionId = 0;
-		onReturnInstructions = new Switch(new ContextExpression(ContextExpression.RETRIEVE_ACTION));
-		returnLabel = new Label(9997);
-
 		empty = true;
 
-		// create checkinnercall context instruction:
-		Block block = new Block();
-
-		ContextInstruction checkInnercall = new ContextInstruction(ContextInstruction.CHECK_INNER_CALL,
-				getMethodId(method), block);
-		inlineBlock.addInstruction(checkInnercall);
-
-		// create CreateJoinPointContext instruction:
-		block.addInstruction(new ContextInstruction(ContextInstruction.CREATE_JOIN_POINT_CONTEXT));
-
-		// create CreateActionStore instruction:
-		createActionStoreInstruction = new ContextInstruction(ContextInstruction.CREATE_ACTION_STORE);
-		block.addInstruction(createActionStoreInstruction);
-
-		// set current block to inner block of checkInnercall instruction:
-		currentBlock = block;
+		// set current block to inlineblock
+		currentBlock = inlineBlock;
 	}
 
 	/**
@@ -232,20 +186,9 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		labelTable = new Hashtable();
 		currentLabelId = -1;
 
-		nextReturnActionId = 0;
-		onReturnInstructions = new Switch(new ContextExpression(ContextExpression.RETRIEVE_ACTION));
-		returnLabel = new Label(9997);
-
 		empty = true;
 
-		// create CreateJoinPointContext instruction:
-		inlineBlock.addInstruction(new ContextInstruction(ContextInstruction.CREATE_JOIN_POINT_CONTEXT));
-
-		// create CreateActionStore instruction:
-		createActionStoreInstruction = new ContextInstruction(ContextInstruction.CREATE_ACTION_STORE);
-		inlineBlock.addInstruction(createActionStoreInstruction);
-
-		// set current block to inner block of checkInnercall instruction:
+		// set current block to inlineblock
 		currentBlock = inlineBlock;
 	}
 
@@ -269,40 +212,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private void endInlineIF()
 	{
-		// check whether there are on return actions:
-		if (!onReturnInstructions.hasCases())
-		{
-			// remove createActionStore instruction:
-			createActionStoreInstruction.setType(ContextInstruction.REMOVED);
-
-			// set jumpLabel of onReturnJump to end:
-			returnLabel.setId(9998);
-		}
-		else
-		{
-			// add onReturnActions:
-			Block block = new Block();
-			block.addInstruction(onReturnInstructions);
-
-			While whileInstruction = new While(new ContextExpression(ContextExpression.HAS_MORE_ACTIONS), block);
-			whileInstruction.setLabel(returnLabel);
-
-			currentBlock.addInstruction(whileInstruction);
-		}
-
-		// create RestoreJoinPointContext instruction:
-		ContextInstruction restoreInstruction = new ContextInstruction(ContextInstruction.RESTORE_JOIN_POINT_CONTEXT);
-		restoreInstruction.setLabel(new Label(9998));
-		currentBlock.addInstruction(restoreInstruction);
-
-		// create Return action:
-		ContextInstruction returnInstruction = new ContextInstruction(ContextInstruction.RETURN_ACTION);
-		currentBlock.addInstruction(returnInstruction);
-
-		// create resetInnercall context instruction:
-		ContextInstruction resetInnercall = new ContextInstruction(ContextInstruction.RESET_INNER_CALL);
-		resetInnercall.setLabel(getLabel(9999));
-		inlineBlock.addInstruction(resetInnercall);
 	}
 
 	/**
@@ -310,31 +219,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private void endInlineOF()
 	{
-		// check whether there are on return actions:
-		if (!onReturnInstructions.hasCases())
-		{
-			// remove createActionStore instruction:
-			createActionStoreInstruction.setType(ContextInstruction.REMOVED);
-
-			// set jumpLabel of onReturnJump to end:
-			returnLabel.setId(9998);
-		}
-		else
-		{
-			// add onReturnActions:
-			Block block = new Block();
-			block.addInstruction(onReturnInstructions);
-
-			While whileInstruction = new While(new ContextExpression(ContextExpression.HAS_MORE_ACTIONS), block);
-			whileInstruction.setLabel(returnLabel);
-
-			currentBlock.addInstruction(whileInstruction);
-		}
-
-		// create RestoreJoinPointContext instruction:
-		ContextInstruction restoreInstruction = new ContextInstruction(ContextInstruction.RESTORE_JOIN_POINT_CONTEXT);
-		restoreInstruction.setLabel(new Label(9998));
-		currentBlock.addInstruction(restoreInstruction);
 	}
 
 	/**
@@ -419,13 +303,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		Label label;
 		if (labelId == -1)
 		{
-			label = returnLabel;
-
-			if (noJumpEnd)
-			{
-				noJumpEnd = false;
-				return;
-			}
+			label = endLabel;
 		}
 		else if (labelId != currentLabelId + 1)
 		{
@@ -472,10 +350,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			jump(-1);
 			return;
 		}
-		else if (node.containsName("AdviceAction"))
-		{
-			generateAdviceAction(state);
-		}
 		else if (node.containsName(FlowChartNames.ACCEPT_CALL_ACTION_NODE))
 		{
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
@@ -511,7 +385,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private void generateCallAction(ExecutionState state,
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action)
 	{
-		Instruction instruction = new FilterAction(action.getName(), state.getMessage(), getSubstitutedMessage(state));
+		Instruction instruction = new FilterAction(
+				action.getName(),
+				state.getMessage(),
+				getSubstitutedMessage(state),
+				true,
+				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
+		
 		empty = false;
 		currentBlock.addInstruction(instruction);
 	}
@@ -525,23 +405,20 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private void generateReturnAction(ExecutionState state,
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action)
 	{
-		int actionId = nextReturnActionId++;
-		ContextInstruction storeInstruction = new ContextInstruction(ContextInstruction.STORE_ACTION, actionId);
-		currentBlock.addInstruction(storeInstruction);
-
-		Block block = new Block();
-
-		Instruction instruction = new FilterAction(action.getName(), state.getMessage(), getSubstitutedMessage(state));
+		Instruction instruction = new FilterAction(
+				action.getName(),
+				state.getMessage(),
+				getSubstitutedMessage(state),
+				false,
+				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
+		
 		empty = false;
-		block.addInstruction(instruction);
-
-		Case caseInstruction = new Case(actionId, block);
-		onReturnInstructions.addCase(caseInstruction);
-
+		currentBlock.addInstruction(instruction);
 	}
 
 	/**
-	 * Generates a dispatch action
+	 * Generates the dispatch action. This action is treated seperately, because if only a dispatch is done to
+	 * the inner method, the filtercode can be ignored.
 	 * 
 	 * @param state The state corresponding with the action
 	 */
@@ -549,13 +426,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	{
 		Message callMessage = getSubstitutedMessage(state);
 
-		ContextInstruction innerCallContext = setInnerCallContext(callMessage);
-		if (innerCallContext != null)
-		{
-			currentBlock.addInstruction(innerCallContext);
-		}
-
-		FilterAction action = new FilterAction("DispatchAction", state.getMessage(), callMessage);
+		FilterAction action = new FilterAction("DispatchAction", state.getMessage(), callMessage, true, true);
 		currentBlock.addInstruction(action);
 
 		Target target = callMessage.getTarget();
@@ -567,128 +438,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 	}
 
-	/**
-	 * Generates an advice action, either before or after
-	 * 
-	 * @param state The state corresponding with the action
-	 */
-	private void generateAdviceAction(ExecutionState state)
-	{
-		FlowNode flowNode = state.getFlowNode();
-		if (flowNode.containsName(FlowChartNames.ACCEPT_CALL_ACTION_NODE)
-				|| flowNode.containsName(FlowChartNames.REJECT_CALL_ACTION_NODE))
-		{
-			generateBeforeAction(state);
-		}
-		else
-		{
-			generateAfterAction(state);
-		}
-	}
-
-	/**
-	 * Generates a before action
-	 * 
-	 * @param state The state corresponding with the action
-	 */
-	private void generateBeforeAction(ExecutionState state)
-	{
-		Message callMessage = getSubstitutedMessage(state);
-
-		ContextInstruction innerCallContext = setInnerCallContext(callMessage);
-		if (innerCallContext != null)
-		{
-			currentBlock.addInstruction(innerCallContext);
-		}
-
-		FilterAction action = new FilterAction("AdviceAction", state.getMessage(), callMessage);
-		currentBlock.addInstruction(action);
-
-		empty = false;
-	}
-
-	/**
-	 * Generates an after action
-	 * 
-	 * @param state The state corresponding with the action
-	 */
-	private void generateAfterAction(ExecutionState state)
-	{
-		Message callMessage = getSubstitutedMessage(state);
-
-		int actionId = nextReturnActionId++;
-		ContextInstruction storeInstruction = new ContextInstruction(ContextInstruction.STORE_ACTION, actionId);
-		currentBlock.addInstruction(storeInstruction);
-
-		Block block = new Block();
-
-		ContextInstruction innerCallContext = setInnerCallContext(callMessage);
-		if (innerCallContext != null)
-		{
-			block.addInstruction(innerCallContext);
-		}
-
-		FilterAction action = new FilterAction("AdviceAction", state.getMessage(), callMessage);
-		block.addInstruction(action);
-
-		Case caseInstruction = new Case(actionId, block);
-		onReturnInstructions.addCase(caseInstruction);
-
-		empty = false;
-	}
-
-	/**
-	 * Checks whether the call is an innercall and whether the called method has
-	 * inlined filters. Then the innercall filtercontext needs to be set.
-	 * 
-	 * @param state
-	 */
-	private ContextInstruction setInnerCallContext(Message callMessage)
-	{
-		if (filterSetType != INPUT_FILTERS)
-		{
-			return null;
-		}
-
-		if (Message.checkEquals(callMessage.getTarget(), Message.INNER_TARGET))
-		{
-			MethodInfo calledMethod;
-
-			if (callMessage.getSelector().equals(currentMethod.name()))
-			{
-				calledMethod = currentMethod;
-			}
-			else
-			{
-				List parameterList = currentMethod.getParameters();
-				String[] parameters = new String[parameterList.size()];
-				for (int i = 0; i < parameterList.size(); i++)
-				{
-					ParameterInfo parameter = (ParameterInfo) parameterList.get(i);
-					parameters[i] = parameter.parameterType().fullName();
-				}
-
-				calledMethod = currentMethod.parent().getMethod(callMessage.getSelector(), parameters);
-			}
-
-			// it is possible that a called method could not be found, SIGN
-			// already has given a warning
-			// or error for this
-			if (calledMethod == null)
-			{
-				return null;
-			}
-
-			ContextInstruction contextInstruction = new ContextInstruction(ContextInstruction.SET_INNER_CALL,
-					getMethodId(calledMethod));
-			builder.addInnerCallCheckTask(contextInstruction);
-			return contextInstruction;
-		}
-		else
-		{
-			return null;
-		}
-	}
+	
 
 	/**
 	 * Pushes an instruction block to the block stack (change to inner scope).

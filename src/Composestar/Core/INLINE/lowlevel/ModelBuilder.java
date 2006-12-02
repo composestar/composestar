@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
@@ -17,7 +16,6 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.INLINE.model.Block;
-import Composestar.Core.INLINE.model.ContextInstruction;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
@@ -60,11 +58,6 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	private HashSet inlinedMethodSet;
 
-	/**
-	 * Contains all setInnerCall ContextInstructions that need to be checked
-	 * whether they are really necessary.
-	 */
-	private Vector innerCallCheckTasks = new Vector();
 
 	/**
 	 * All filtermodules in the filterset.
@@ -209,7 +202,6 @@ public class ModelBuilder implements CTCommonModule
 		Debug.out(Debug.MODE_DEBUG, "INLINER", "Processing concern " + concern.getName());
 
 		// initialize:
-		innerCallCheckTasks = new Vector();
 		inlinedMethodSet = new HashSet();
 
 		// get filtermodules:
@@ -237,16 +229,6 @@ public class ModelBuilder implements CTCommonModule
 
 			long time = System.currentTimeMillis();
 			processMethod(method);
-		}
-
-		// do innercall checks:
-		for (int i = 0; i < innerCallCheckTasks.size(); i++)
-		{
-			ContextInstruction instruction = (ContextInstruction) innerCallCheckTasks.elementAt(i);
-			if (!inlinedMethodSet.contains(new Integer(instruction.getCode())))
-			{
-				instruction.setType(ContextInstruction.REMOVED);
-			}
 		}
 	}
 
@@ -321,17 +303,6 @@ public class ModelBuilder implements CTCommonModule
 		}
 	}
 
-	/**
-	 * Adds a SetInnerCall ContextInstruction to the set of SetInnerCall
-	 * ContextInstructions, that are checked after processing whether they are
-	 * really needed.
-	 * 
-	 * @param innerCallAction
-	 */
-	protected void addInnerCallCheckTask(ContextInstruction innerCallAction)
-	{
-		innerCallCheckTasks.add(innerCallAction);
-	}
 
 	/**
 	 * @return The current selector being processed.

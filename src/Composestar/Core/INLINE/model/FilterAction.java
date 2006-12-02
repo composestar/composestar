@@ -28,6 +28,16 @@ public class FilterAction extends Instruction
 	 * message).
 	 */
 	private Message substitutedMessage;
+	
+	/**
+	 * Indicates whether the action is on call (true) or on return (false)
+	 */
+	private boolean onCall;
+	
+	/**
+	 * Indicates whether the action returns the flow (only when the action is on call).
+	 */
+	private boolean returning;
 
 	/**
 	 * The constructor
@@ -36,12 +46,16 @@ public class FilterAction extends Instruction
 	 * @param message The current message.
 	 * @param substitutedMessage The substituted message (substitutionpart
 	 *            applied on the current message).
+	 * @param onCall Indicates whether the action is on call (true) or on return (false)
+	 * @param returning Indicates whether the action returns the flow (only when the action is on call).
 	 */
-	public FilterAction(String type, Message message, Message substitutedMessage)
+	public FilterAction(String type, Message message, Message substitutedMessage, boolean onCall, boolean returning)
 	{
 		this.type = type;
 		this.message = message;
 		this.substitutedMessage = substitutedMessage;
+		this.onCall = onCall;
+		this.returning = returning;
 	}
 
 	/**
@@ -66,6 +80,22 @@ public class FilterAction extends Instruction
 	public String getType()
 	{
 		return type;
+	}
+	
+	/**
+	 * @return the onCall
+	 */
+	public boolean isOnCall()
+	{
+		return onCall;
+	}
+
+	/**
+	 * @return the returning
+	 */
+	public boolean isReturning()
+	{
+		return returning;
 	}
 
 	/**
