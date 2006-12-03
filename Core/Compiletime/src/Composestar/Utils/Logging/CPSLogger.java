@@ -35,6 +35,11 @@ public class CPSLogger
 		Debug.out(Debug.MODE_WARNING, name, msg);
 	}
 
+	public void warn(String msg, LocationProvider lp)
+	{
+		Debug.out(Debug.MODE_WARNING, name, msg, lp);
+	}
+
 	public void info(String msg)
 	{
 		Debug.out(Debug.MODE_INFORMATION, name, msg);
@@ -51,8 +56,11 @@ public class CPSLogger
 		{
 			return (CPSLogger) loggers.get(name);
 		}
-		CPSLogger logger = new CPSLogger(name);
-		loggers.put(name, logger);
-		return logger;
+		else
+		{
+			CPSLogger logger = new CPSLogger(name);
+			loggers.put(name, logger);
+			return logger;
+		}
 	}
 }
