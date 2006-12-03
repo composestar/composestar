@@ -18,17 +18,17 @@ namespace BasicTests
 
 			Console.Out.WriteLine("");
 
-            CustomAttributes ca = new CustomAttributes();
-            Console.Out.WriteLine("Default value for CustomAttributes.MyProperty is '{0}', default value is correct? {1}", ca.MyProperty, ca.MyProperty == MyEnumeration.Gigabytes);
-            ca.MyProperty = MyEnumeration.Kilobytes;
-            Console.Out.WriteLine("Value for CustomAttributes.MyProperty set to '"+MyEnumeration.Kilobytes+"', value now is '{0}' (check passed: {1})", ca.MyProperty, ca.MyProperty == MyEnumeration.Kilobytes);
+			CustomAttributes ca = new CustomAttributes();
+			Console.Out.WriteLine("Default value for CustomAttributes.MyProperty is '{0}', default value is correct? {1}", ca.MyProperty, ca.MyProperty == MyEnumeration.Gigabytes);
+			ca.MyProperty = MyEnumeration.Kilobytes;
+			Console.Out.WriteLine("Value for CustomAttributes.MyProperty set to '"+MyEnumeration.Kilobytes+"', value now is '{0}' (check passed: {1})", ca.MyProperty, ca.MyProperty == MyEnumeration.Kilobytes);
 
-            Console.Out.WriteLine("");
+			Console.Out.WriteLine("");
 
-            MyValueType v = new MyValueType(1, 10);
-            Console.Out.WriteLine("ValueType Test: minimum={0} (correct={1}), maximum={2} (correct={3})", v.Minimum, v.Minimum == 1, v.Maximum, v.Maximum == 10);
+			MyValueType v = new MyValueType(1, 10);
+			Console.Out.WriteLine("ValueType Test: minimum={0} (correct={1}), maximum={2} (correct={3})", v.Minimum, v.Minimum == 1, v.Maximum, v.Maximum == 10);
 
-            Console.Out.WriteLine("");
+			Console.Out.WriteLine("");
 
 			FilterTests filtTests = new FilterTests();
 			filtTests.func1();
@@ -37,18 +37,18 @@ namespace BasicTests
 			Console.Out.WriteLine( filtTests.func4(3) );
 			filtTests.func6();
 			filtTests.func7("foo");
-            filtTests.func8("non-static generic method");
-            StaticFilterTests<string>.func1("static generic method");
+			filtTests.func8("non-static generic method");
+			StaticFilterTests<string>.func1("static generic method");
 
-            Console.Out.WriteLine("");
-            int x;
-            filtTests.func9(out x);
-            Console.Out.WriteLine("value of X after calling func9:" + x);
-            Console.Out.WriteLine("");
+			Console.Out.WriteLine("");
+			int x;
+			filtTests.func9(out x);
+			Console.Out.WriteLine("value of X after calling func9:" + x);
+			Console.Out.WriteLine("");
 
-            filtTests.func10(ref x);
-            Console.Out.WriteLine("value of X after calling func10:" + x);
-            Console.Out.WriteLine("");
+			filtTests.func10(ref x);
+			Console.Out.WriteLine("value of X after calling func10:" + x);
+			Console.Out.WriteLine("");
 
 			filtTests.askForHelp();
 			filtTests.doStuff();

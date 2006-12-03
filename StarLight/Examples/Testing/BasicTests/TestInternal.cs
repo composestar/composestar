@@ -1,6 +1,5 @@
 using System;
 
-
 namespace BasicTests
 {
 	public class TestInternal : TestsBase
@@ -13,7 +12,5 @@ namespace BasicTests
 		{
 			report("internalMe");
 		}
-
-        
 	}
 }

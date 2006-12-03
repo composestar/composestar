@@ -7,8 +7,8 @@ using Composestar.StarLight.Filters.FilterTypes;
 
 namespace BasicTests
 {
-    [FilterTypeAttribute("Logging", "LoggingAction", FilterAction.ContinueAction, FilterAction.ContinueAction,FilterAction.ContinueAction)]
-    class LoggingFilterType : FilterType
-    {
-    }
+	[FilterTypeAttribute("Logging", "LoggingAction", FilterAction.ContinueAction, FilterAction.ContinueAction,FilterAction.ContinueAction)]
+	class LoggingFilterType : FilterType
+	{
+	}
 }

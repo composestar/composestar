@@ -83,26 +83,24 @@ namespace BasicTests
 			report("func7: s='" + s + "'");
 		}
 
-        public T func8<T>(T value)
-        {
-            report("func8: generic.ToString() = '" + value.ToString() + "'");
+		public T func8<T>(T value)
+		{
+			report("func8: generic.ToString() = '" + value.ToString() + "'");
 
-            return value;
-        }
+			return value;
+		}
 
-        public void func9(out int x)
-        {
-            Console.WriteLine("Func9: set value of x to 3");
-            x = 3;
-        }
+		public void func9(out int x)
+		{
+			Console.WriteLine("Func9: set value of x to 3");
+			x = 3;
+		}
 
-        public void func10(ref int x)
-        {
-            Console.WriteLine("Func10: current value of x: " + x + " Add two to value.");
-            x = x + 2;
-        }
-
-        
+		public void func10(ref int x)
+		{
+			Console.WriteLine("Func10: current value of x: " + x + " Add two to value.");
+			x = x + 2;
+		}
 
 		public void askForHelp()
 		{

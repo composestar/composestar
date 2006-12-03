@@ -12,7 +12,7 @@ concern FilterTestsConcern in BasicTests
 		conditions
 			doError : inner.getProduceError();
 		inputfilters
-		    proderrdisp : Dispatch = { True => [*.getProduceError] };
+			proderrdisp : Dispatch = { True => [*.getProduceError] };
 			logging		: Logging = { True => [*.*] };
 			profiling	: Profiling = { True => [*.*] };
 			error1		: NotImplemented = { doError ~> [*.makeError], !doError => [*.*] };
@@ -42,7 +42,7 @@ concern FilterTestsConcern in BasicTests
 			baseStaticClass = { C | isClassWithName(C, 'BasicTests.StaticFilterTests`1') };
 			valuetypeClass = { C | isClassWithName(C, 'BasicTests.MyValueType') };
 			//{ C | isClass(C), isClassWithName(C, P), matchPattern(P, 'BasicTests.StaticFilterTests.*') };
- 		filtermodules
+		filtermodules
 			baseClass <- FM1;
 			baseStaticClass <- FM2;
 			valuetypeClass <- FM2;
