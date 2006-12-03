@@ -160,19 +160,19 @@ public class CKRET implements CTCommonModule
 
 			switch (CKRET.mode)
 			{
-				case NORMAL: // NORMAL
+				case NORMAL:
 					if (!ca.checkOrder(singleOrder, true))
 					{
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Semantic conflict(s) detected on concern "
-								+ concern.getQualifiedName(), reportFile);
+								+ concern.getQualifiedName(), reportFile, 0);
 					}
 					break;
 
-				case REDUNDANT: // REDUNDANT
+				case REDUNDANT:
 					if (!ca.checkOrder(singleOrder, true))
 					{
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Semantic conflict(s) detected on concern "
-								+ concern.getQualifiedName(), reportFile);
+								+ concern.getQualifiedName(), reportFile, 0);
 					}
 					for (Iterator fmoit = fmolist.iterator(); fmoit.hasNext();)
 					{
@@ -186,7 +186,7 @@ public class CKRET implements CTCommonModule
 					}
 					break;
 
-				case PROGRESSIVE: // PROGRESSIVE
+				case PROGRESSIVE:
 					boolean foundGoodOrder = ca.checkOrder(singleOrder, true);
 
 					for (Iterator fmoit = fmolist.iterator(); fmoit.hasNext();)

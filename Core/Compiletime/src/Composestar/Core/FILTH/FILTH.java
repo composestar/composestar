@@ -32,7 +32,6 @@ public class FILTH implements CTCommonModule
 	 */
 	public FILTH()
 	{
-	/* empty constructor */
 	}
 
 	/**
@@ -74,8 +73,7 @@ public class FILTH implements CTCommonModule
 				else
 				{
 					/* Calculate FilterModuleOrders */
-					INCRETimer filthrun = incre.getReporter().openProcess("FILTH", c.getUniqueID(),
-							INCRETimer.TYPE_NORMAL);
+					INCRETimer filthrun = incre.getReporter().openProcess("FILTH", c.getUniqueID(), INCRETimer.TYPE_NORMAL);
 					list = filthservice.getMultipleOrder(c);
 					filthrun.stop();
 				}
@@ -83,27 +81,24 @@ public class FILTH implements CTCommonModule
 				if (list.size() > 1)
 				{
 					Debug.out(Debug.MODE_INFORMATION, "FILTH",
-							"Encountered shared join point: " + c.getQualifiedName(), c.getDescriptionFileName());
-					FilterModuleOrder singleOrder = (FilterModuleOrder) c
-							.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-					String tmpstr = "";
+							"Encountered shared join point: " + c.getQualifiedName(), c);
+					
+					FilterModuleOrder singleOrder = 
+						(FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+					
+					StringBuffer sb = new StringBuffer();
 					if (singleOrder != null)
 					{
 						List tmplist = singleOrder.orderAsList();
+						int last = tmplist.size() - 1;
 						for (int i = 0; i < tmplist.size(); i++)
 						{
 							String fmr = (String) tmplist.get(i);
-							if (i != (tmplist.size() - 1))
-							{
-								tmpstr += fmr + " --> ";
-							}
-							else
-							{
-								tmpstr += fmr;
-							}
+							sb.append(fmr);
+							if (i != last) sb.append(" --> ");
 						}
 					}
-					Debug.out(Debug.MODE_DEBUG, "FILTH", "Selecting filter module order: " + tmpstr);
+					Debug.out(Debug.MODE_DEBUG, "FILTH", "Selecting filter module order: " + sb);
 				}
 			}
 		}

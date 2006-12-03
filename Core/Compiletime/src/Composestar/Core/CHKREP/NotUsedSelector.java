@@ -23,17 +23,17 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * @author DoornenbalD Checks if a Selector which is declared in Selectors is
- *         used in the FilterModuleBinding. Since every selector also has a
- *         standard selector self, this one is standard filterd out
+ * Checks if a Selector which is declared in selectors is used in the 
+ * FilterModuleBinding. Since every selector also has a standard selector 
+ * self, this one is filtered out by default.
+ *
+ * @author DoornenbalD 
  */
 public class NotUsedSelector implements BaseChecker
 {
 	private DataStore ds;
 
 	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.CHKREP.BaseChecker#performCheck() Chnaged the check
 	 *      to check in all four bindings instead of one, code might be more
 	 *      compact, whether it is doubtfull whether we would gain much when we
@@ -109,8 +109,7 @@ public class NotUsedSelector implements BaseChecker
 			 */
 			if (!isUsed && !selDef.getName().equals("self"))
 			{
-				Debug.out(Debug.MODE_WARNING, "CHKREP", "Selector " + selDef.getName() + " is declared but never used",
-						selDef.getDescriptionFileName(), selDef.getDescriptionLineNumber());
+				Debug.out(Debug.MODE_WARNING, "CHKREP", "Selector " + selDef.getName() + " is declared but never used", selDef);
 			}
 		}
 		return false;

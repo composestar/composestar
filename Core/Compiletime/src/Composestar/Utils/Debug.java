@@ -158,6 +158,9 @@ public final class Debug
 		}
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public static void out(int mode, String module, String msg, String filename)
 	{
 		out(mode, module, msg, filename, 0);

@@ -19,14 +19,15 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * @author DoornenbalD ExistFiltermodule checks whether the filtermodules used
- *         at the filtermodulebinding do exist. In the future it might be
- *         necessary to extend this to the filtermodules stated in the externals
- *         (maybe internals). Since these are not yet implemented.
+ * ExistFiltermodule checks whether the filtermodules used
+ * at the filtermodulebinding do exist. In the future it might be
+ * necessary to extend this to the filtermodules stated in the externals
+ * (maybe internals). Since these are not yet implemented.
+ *         
+ * @author DoornenbalD
  */
 public class ExistFilterModule implements BaseChecker
 {
-
 	private DataStore ds;
 
 	private boolean checkFilterMethodBinding()
@@ -64,8 +65,7 @@ public class ExistFilterModule implements BaseChecker
 				}
 				if (!filterModuleReferenceExists)
 				{
-					Debug.out(Debug.MODE_ERROR, "CHKREP", "FilterModule " + filterModuleName + " is not declared", fmb
-							.getDescriptionFileName(), fmb.getDescriptionLineNumber());
+					Debug.out(Debug.MODE_ERROR, "CHKREP", "FilterModule " + filterModuleName + " is not declared", fmb);
 					nonFatal = true;
 				}
 			}
@@ -73,11 +73,6 @@ public class ExistFilterModule implements BaseChecker
 		return nonFatal;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CHKREP.BaseChecker#performCheck()
-	 */
 	public boolean performCheck()
 	{
 		boolean nonFatal;
@@ -85,11 +80,6 @@ public class ExistFilterModule implements BaseChecker
 		return nonFatal;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CHKREP.BaseChecker#check(Composestar.Core.RepositoryImplementation.DataStore)
-	 */
 	public void check(DataStore newDs) throws ModuleException
 	{
 		ds = newDs;

@@ -88,13 +88,11 @@ public class CPSFileParser
 		}
 		catch (RecognitionException e)
 		{
-			Debug.out(Debug.MODE_ERROR, COPPER.MODULE_NAME, "Syntax Error: " + e.getMessage(), file, e.getLine());
-			throw new ModuleException("Syntax error in cps file: " + e, COPPER.MODULE_NAME);
+			throw new ModuleException("Syntax error in concern file: " + e, COPPER.MODULE_NAME, file, e.getLine());
 		}
 		catch (ANTLRException e)
 		{
-			Debug.out(Debug.MODE_ERROR, COPPER.MODULE_NAME, "Syntax Error: " + e.getMessage(), file, 0);
-			throw new ModuleException("Syntax error in cps file: " + e, COPPER.MODULE_NAME);
+			throw new ModuleException("Syntax error in concern file: " + e, COPPER.MODULE_NAME, file, 0);
 		}
 	}
 }

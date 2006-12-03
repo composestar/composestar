@@ -25,7 +25,9 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * @author DoornenbalD Checks on not used Externals.
+ * Checks on unused Externals.
+ * 
+ * @author DoornenbalD 
  */
 public class NotUsedExternals implements BaseChecker
 {
@@ -150,8 +152,7 @@ public class NotUsedExternals implements BaseChecker
 				 */
 				if (!isExternalUsed)
 				{
-					Debug.out(Debug.MODE_WARNING, "CHKREP", "External " + externalID + " is declared but never used",
-							external.getDescriptionFileName(), external.getDescriptionLineNumber());
+					Debug.out(Debug.MODE_WARNING, "CHKREP", "External " + externalID + " is declared but never used", external);
 				}
 			}
 		}
