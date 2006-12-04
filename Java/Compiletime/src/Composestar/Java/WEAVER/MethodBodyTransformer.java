@@ -116,17 +116,8 @@ public class MethodBodyTransformer extends ExprEditor
 	{
 		HookDictionary hd = HookDictionary.instance();
 		
-		String target;
+		String target = m.getClassName();
 		String caller = m.where().getDeclaringClass().getName();
-		
-		try
-		{
-			target = m.getMethod().getDeclaringClass().getName();
-		}
-		catch (NotFoundException nfe)
-		{
-			target = m.getClassName();
-		}
 		
 		try
 		{
