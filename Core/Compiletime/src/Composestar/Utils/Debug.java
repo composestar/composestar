@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.util.StringTokenizer;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Utils.Logging.LocationProvider;
 
 public final class Debug
 {
@@ -171,6 +172,13 @@ public final class Debug
 		String filename = re.getDescriptionFileName();
 		int linenumber = re.getDescriptionLineNumber();
 		out(mode, module, msg, filename, linenumber);
+	}
+
+	public static void out(int mode, String module, String msg, LocationProvider loc)
+	{
+		String filename = loc.getFilename();
+		int lineNumber = loc.getLineNumber();
+		out(mode, module, msg, filename, lineNumber);
 	}
 
 	public static void out(int mode, String module, String msg)
