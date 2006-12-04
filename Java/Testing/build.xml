@@ -46,7 +46,7 @@
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>
 				<include name="ConditionTests"/>
-				<!-- <include name="ErrorFilterTest"/> -->
+				<include name="ErrorFilterTest"/>
 				<include name="Pacman"/>
 				<include name="Platypus"/>
 				<include name="VenusFlyTrap"/> 
@@ -63,7 +63,7 @@
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>
 				<include name="ConditionTests"/>
-				<!-- <include name="ErrorFilterTest"/> -->
+				<include name="ErrorFilterTest"/>
 				<include name="Platypus"/>
 				<include name="VenusFlyTrap"/>
 				<exclude name="**/.svn/"/>
