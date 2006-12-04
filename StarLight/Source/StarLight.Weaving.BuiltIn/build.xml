@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/StarLight/BuiltInWeaveStrategies" default="build">
+
+	<property name="build.core" location="${basedir}/../../../Core"/>
+	<import file="${build.core}/common.xml"/>
+
+	<echo>Processing: ${ant.project.name} ...</echo>
+	<description>The Compose* StarLight Weaving Strategies.</description>
+
+	<property name="buildfile" value="StarLight.Weaving.BuiltIn.csproj"/>
+
+	<target name="clean" depends="init" description="Clean compile results">
+		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}"/>
+	</target>
+
+	<target name="build" depends="init" description="Build the Weaving Strategies">
+		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}"/>
+	</target>
+
+	<target name="deploy" depends="init" description="Deploy the Weaving Strategies">
+		<msbuild solution="${buildfile}" target="deploy" config="${msbuild.config}"/>
+	</target>
+
+</project>
