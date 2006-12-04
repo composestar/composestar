@@ -368,7 +368,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			DotNETMethodInfo method = (DotNETMethodInfo) methodIter.next();
 			WeaveMethod weaveMethod = WeaveMethod.Factory.newInstance();
 			weaveMethod.addNewWeaveCalls();
-			weaveMethod.setSignature(method.getMethodElement().getSignature());
+			weaveMethod.setSignature(method.getSignature());
 
 			// get the block containing the filterinstructions:
 			Block filterInstructions = ModelBuilder.getInputFilterCode(method);

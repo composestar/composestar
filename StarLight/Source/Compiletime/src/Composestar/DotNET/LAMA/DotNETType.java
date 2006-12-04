@@ -857,22 +857,6 @@ public class DotNETType extends Type {
 	}
 
 	/**
-	 * @return the typeElement
-	 */
-	public TypeElement getTypeElement()
-	{
-		return typeElement;
-	}
-
-	/**
-	 * @param typeElement the typeElement to set
-	 */
-	public void setTypeElement(TypeElement typeElement)
-	{
-		this.typeElement = typeElement;
-	}
-
-	/**
 	 * Custom deserialization of this object
 	 */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
@@ -904,7 +888,6 @@ public class DotNETType extends Type {
 			BaseTypeString = null;
 		fromDLL = in.readUTF();
 		annotationInstances = (ArrayList)in.readObject();
-		typeElement = (TypeElement)in.readObject();
 	}
 	 
 	/**
@@ -957,7 +940,5 @@ public class DotNETType extends Type {
 			out.writeUTF("");
 		
 		out.writeObject(annotationInstances);
-		
-		out.writeObject(typeElement);
 	}
 }

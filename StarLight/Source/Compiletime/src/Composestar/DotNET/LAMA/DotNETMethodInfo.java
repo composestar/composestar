@@ -47,7 +47,7 @@ public class DotNETMethodInfo extends MethodInfo {
     private boolean IsVirtual;
     private boolean IsDeclaredHere;
     
-    public MethodElement methodElement;
+    public String signature;
     
     /**
      * @roseuid 401B84CF0212
@@ -335,19 +335,19 @@ public class DotNETMethodInfo extends MethodInfo {
     
     
 	/**
-	 * @return the methodElement
+	 * @return the method signature
 	 */
-	public MethodElement getMethodElement()
+	public String getSignature()
 	{
-		return methodElement;
+		return signature;
 	}
 
 	/**
-	 * @param methodElement the methodElement to set
+	 * @param sig, the signature to set
 	 */
-	public void setMethodElement(MethodElement methodElement)
+	public void setSignature(String sig)
 	{
-		this.methodElement = methodElement;
+		this.signature = sig;
 	}
 
 	/**
@@ -366,7 +366,7 @@ public class DotNETMethodInfo extends MethodInfo {
 		IsStatic = in.readBoolean();
 		IsVirtual = in.readBoolean();
 		IsDeclaredHere = in.readBoolean();
-		methodElement = (MethodElement)in.readObject();
+		signature = in.readUTF();
 	}
 	 
 	/**
@@ -385,6 +385,6 @@ public class DotNETMethodInfo extends MethodInfo {
 		out.writeBoolean(IsStatic);
 		out.writeBoolean(IsVirtual);
 		out.writeBoolean(IsDeclaredHere);
-		out.writeObject(methodElement);
+		out.writeUTF(signature);
 	}
 }

@@ -391,7 +391,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 			// storeTimer.start();
 			DotNETType type = new DotNETType();
 			// storeTimer.stop();
-			type.setTypeElement(typeElement);
 			type.setName(typeElement.getName());
 
 			if (typeElement.getNamespace() != null && typeElement.getName() != null)
@@ -518,7 +517,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 			timer1.start();
 			DotNETMethodInfo method = new DotNETMethodInfo();
-			method.setMethodElement(storedMethod);
 			timer1.stop();
 			timer2.start();
 			if (storedMethod.getName() != null)
@@ -556,6 +554,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			// -- methodInfo.setIsDeclaredHere( Boolean.valueOf( lastCharData
 			// ).booleanValue() );
 			// - Ignored: MethodAttrributes
+			method.setSignature(storedMethod.getSignature());
 			timer3.stop();
 			timer4.start();
 
