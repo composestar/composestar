@@ -4,7 +4,7 @@ using System.Text;
 
 using Composestar.StarLight.ContextInfo;
 using Composestar.StarLight.Filters.FilterTypes;
-using Composestar.StarLight.Filters.BuildIn;
+using Composestar.StarLight.Filters.BuiltIn;
 
 namespace CustomFilters
 {

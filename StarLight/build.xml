@@ -25,7 +25,7 @@
 		<delete file="Documentation\LastBuild.log" />
 <!--
 		<ant target="clean" dir="Source/Compiletime" />
-		<ant target="clean" dir="Source/StarLight.Weaving.BuildIn" />
+		<ant target="clean" dir="Source/StarLight.Weaving.BuiltIn" />
 		<ant target="clean" dir="Source/VSIntegration/MSBuildTasks" />
 		<ant target="clean" dir="Source/VSIntegration/VisualStudio.Project" />
 -->
@@ -55,7 +55,7 @@
 	</target>
 
 	<target name="build_ws" description="Build Compose* StarLight WeaveStrategy">
-		<ant target="build" dir="Source/StarLight.Weaving.BuildIn" />
+		<ant target="build" dir="Source/StarLight.Weaving.BuiltIn" />
 	</target>
 
 	<target name="build_vs" description="Build Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
@@ -86,7 +86,7 @@
 	</target>
 
 	<target name="deploy_ws" description="Deploy Compose* StarLight WeaveStrategy">
-		<ant target="deploy" dir="Source/StarLight.Weaving.BuildIn" />
+		<ant target="deploy" dir="Source/StarLight.Weaving.BuiltIn" />
 	</target>
 
 	<target name="deploy_vs" description="Deploy Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
@@ -144,7 +144,7 @@
 	</target>
 
 	<target name="fxcop" depends="build_codeanalysis,fxcop_init"  description="Build all the outputs and run fxcop">
-		<fxcop reportfile="${out.fxcop.starlight}/fxcop.txt" 
+		<fxcop reportfile="${out.fxcop.starlight}/fxcop.html" 
 		       files="${MSBuildTasks.dir}/Bin/Debug/Composestar*.dll"/>
 	</target>
 
