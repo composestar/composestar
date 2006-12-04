@@ -222,7 +222,7 @@ Common routines. Always include this file in every build.xml file
 				<!--	<arg value="/sf" />		-->
 					<arg value="/q" />
 					<arg value="/summary" />
-					<arg value="/outxsl:${build.core}${file.separator}Development${file.separator}fxcop${file.separator}xml${file.separator}FxCopRichConsoleOutput.xsl"/>
+					<arg value="/outxsl:${build.core}${file.separator}Development${file.separator}fxcop${file.separator}xml${file.separator}FxCopReport.xsl"/>
 				</exec>
 			</sequential>
 

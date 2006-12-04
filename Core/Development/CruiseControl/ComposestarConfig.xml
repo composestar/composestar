@@ -148,7 +148,7 @@
 				reportsuccess="fixes" 
 				skipusers="true"
 				returnname="Continuous Integration Server"
-				returnaddress="mivano@users.sourceforge.net"
+				returnaddress="pascal_durr@users.sourceforge.net"
 			>
 				<always address="composestar-starlight@lists.sourceforge.net" />
 				
