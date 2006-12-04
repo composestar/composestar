@@ -887,6 +887,10 @@ public class INCRE implements CTCommonModule
 		// FIXME: this should really be done by DataStore itself.
 		ObjectOutputStream oos = null;
 		try {
+			// Add timing for saving of history to total time elapsed
+			INCRETimer total = this.getReporter().openProcess(MODULE_NAME,MODULE_NAME,INCRETimer.TYPE_ALL);	
+			INCRETimer savehistory = this.getReporter().openProcess(MODULE_NAME,"Saving history",INCRETimer.TYPE_OVERHEAD);	
+
 			FileOutputStream fos = new FileOutputStream(this.historyfile);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			oos = new ObjectOutputStream(bos);
@@ -919,6 +923,9 @@ public class INCRE implements CTCommonModule
 					stored++;
 				}
 			}
+			
+			savehistory.stop();
+			total.stop();
 			
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "" + stored + " objects have been stored");
 		}
