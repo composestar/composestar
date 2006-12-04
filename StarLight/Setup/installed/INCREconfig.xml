@@ -39,7 +39,7 @@
 	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" enabled="true" incremental="false" summary="Resolving superimpositions...">
 		<dependencies></dependencies>
 	</module>
-	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
+	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="false" summary="Determining order of filter modules at shared join points...">
 		<dependencies>
 			<dependency type="FILE" name="specfile">
 				<path>
