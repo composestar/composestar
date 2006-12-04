@@ -39,6 +39,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;  
 
 using DDW.CSharpUI;
 
@@ -72,6 +73,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Sets the project base directory.
 		/// </summary>
 		[Required]
+		[SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly")]
 		public string TargetDir
 		{
 			set { _targetDir = value; }
@@ -81,6 +83,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Sets the list of sources.
 		/// </summary>
 		[Required]
+		[SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly")]
 		public ITaskItem[] Sources
 		{
 			set { _sources = value; }
@@ -121,7 +124,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </summary>
 		/// <param name="items">The list of items.</param>
 		/// <returns>Returns an ITaskItem array.</returns>
-		private ITaskItem[] ToArray(IList<ITaskItem> items)
+		private static ITaskItem[] ToArray(IList<ITaskItem> items)
 		{
 			ITaskItem[] arr = new ITaskItem[items.Count];
 			items.CopyTo(arr, 0);

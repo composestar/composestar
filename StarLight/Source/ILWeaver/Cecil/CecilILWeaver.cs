@@ -733,7 +733,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// </code>
 		/// The <b>filtercode</b> are the inputfilters added to the method.
 		/// </example>
-		private Instruction WeaveCheckInnerCall(AssemblyDefinition targetAssembly, MethodDefinition method,
+		private static Instruction WeaveCheckInnerCall(AssemblyDefinition targetAssembly, MethodDefinition method,
 			WeaveMethod weaveMethod, CilWorker worker, List<Instruction> instructions)
 		{
 			// Load the this parameter

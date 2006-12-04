@@ -116,7 +116,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLight.Filters", "StarLi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLight.Weaving", "StarLight.Weaving\StarLight.Weaving.csproj", "{B393DAD9-0D9F-441A-B269-5D23EF444410}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLight.Weaving.BuildIn", "StarLight.Weaving.BuildIn\StarLight.Weaving.BuildIn.csproj", "{76AFCDB4-119F-4881-99AB-C750832DE0C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLight.Weaving.BuiltIn", "StarLight.Weaving.BuiltIn\StarLight.Weaving.BuiltIn.csproj", "{76AFCDB4-119F-4881-99AB-C750832DE0C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{CCC92ACB-FD44-4592-B099-8021832D1A4B}"
 	ProjectSection(FolderStartupServices) = postProject

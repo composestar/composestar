@@ -142,7 +142,7 @@
     <value>The PEVerify executable '{0}' could not be found. Make sure you have installed the .NET SDK. IL verification will be skipped.</value>
   </data>
   <data name="PEVerifyExecutionException" xml:space="preserve">
-    <value>An exception occured while executing PEVerify. The message is '{0}'.</value>
+    <value>An exception occurred while executing PEVerify. The message is '{0}'.</value>
   </data>
   <data name="VerifySuccess" xml:space="preserve">
     <value>File '{0}' has correct IL code.</value>

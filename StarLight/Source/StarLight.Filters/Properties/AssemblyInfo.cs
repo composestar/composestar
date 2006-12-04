@@ -39,7 +39,7 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: Composestar.StarLight.SkipWeaving()]
 
-[module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "namespace", Target = "Composestar.StarLight.Filters.BuildIn", MessageId = "StarLight")]
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", Target = "Composestar.StarLight.Filters.BuildIn", MessageId = "Composestar")]
+[module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "namespace", Target = "Composestar.StarLight.Filters.BuiltIn", MessageId = "StarLight")]
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", Target = "Composestar.StarLight.Filters.BuiltIn", MessageId = "Composestar")]
 [module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "namespace", Target = "Composestar.StarLight.Filters.FilterTypes", MessageId = "StarLight")]
 [module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", Target = "Composestar.StarLight.Filters.FilterTypes", MessageId = "Composestar")]

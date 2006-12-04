@@ -1108,10 +1108,10 @@ namespace Composestar.StarLight.ILAnalyzer
 				{
 					
 					if (attribute.ConstructorParameters.Count == 1 && attribute.ConstructorParameters[0] != null)
-						return (Convert.ToBoolean(attribute.ConstructorParameters[0]));
+						return (Convert.ToBoolean(attribute.ConstructorParameters[0], CultureInfo.InvariantCulture));
 
 					if (attribute.Properties["Enabled"] != null)
-						return Convert.ToBoolean(attribute.Properties["Enabled"]);
+						return Convert.ToBoolean(attribute.Properties["Enabled"], CultureInfo.InvariantCulture);
 
 					return true;	
 				}
@@ -1138,10 +1138,10 @@ namespace Composestar.StarLight.ILAnalyzer
 				{
 
 					if (attribute.ConstructorParameters.Count == 1 && attribute.ConstructorParameters[0] != null)
-						return (Convert.ToBoolean(attribute.ConstructorParameters[0]));
+						return (Convert.ToBoolean(attribute.ConstructorParameters[0], CultureInfo.InvariantCulture));
 
 					if (attribute.Properties["Enabled"] != null)
-						return Convert.ToBoolean(attribute.Properties["Enabled"]);
+						return Convert.ToBoolean(attribute.Properties["Enabled"], CultureInfo.InvariantCulture);
 
 					return true;
 				}

@@ -322,7 +322,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An exception occured while executing PEVerify. The message is &apos;{0}&apos;..
+        ///   Looks up a localized string similar to An exception occurred while executing PEVerify. The message is &apos;{0}&apos;..
         /// </summary>
         internal static string PEVerifyExecutionException {
             get {

@@ -73,13 +73,12 @@ namespace Composestar.StarLight
 		private bool _enabled = true;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="T:SkipWeavingAttribute"/> is enabled. Default value is <see langword="true"/>.
+		/// Gets a value indicating whether this <see cref="T:SkipWeavingAttribute"/> is enabled. Default value is <see langword="true"/>.
 		/// </summary>
 		/// <value><c>true</c> if enabled; otherwise, <c>false</c>. Default value is <see langword="true"/>.</value>
 		public bool Enabled
 		{
 			get { return _enabled; }
-			set { _enabled = value; }
 		}
 
 		/// <summary>

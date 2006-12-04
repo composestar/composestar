@@ -220,7 +220,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				}
 			}
 
-			configContainer.AddSetting("CompiletimeDebugLevel", debugLevelValue.ToString());
+			configContainer.AddSetting("CompiletimeDebugLevel", debugLevelValue.ToString(CultureInfo.InvariantCulture));
 			configContainer.AddSetting("IntermediateOutputPath", IntermediateOutputPath);
 			configContainer.AddSetting("InstallFolder", StarLightSettings.Instance.StarLightInstallFolder);
 
@@ -231,7 +231,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				filthFile = Path.Combine(StarLightSettings.Instance.StarLightInstallFolder, filthFile);
 			}
 			configContainer.AddSetting("SpecificationFILTH", filthFile);
-			configContainer.AddSetting("OutputEnabledFILTH", FILTHOutput.ToString());
+			configContainer.AddSetting("OutputEnabledFILTH", FILTHOutput.ToString(CultureInfo.InvariantCulture));
 
 			// Save common config
 			entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer);
@@ -419,7 +419,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </summary>
 		/// <param name="mode">The mode.</param>
 		/// <returns></returns>
-		private string GetModeDescription(DebugMode mode)
+		private static string GetModeDescription(DebugMode mode)
 		{
 			switch (mode)
 			{

@@ -36,16 +36,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Argument.cs" />
-    <Compile Include="BuildIn\AdviceAction.cs" />
-    <Compile Include="BuildIn\AfterFilterType.cs" />
-    <Compile Include="BuildIn\BeforeFilterType.cs" />
-    <Compile Include="BuildIn\ContinueAction.cs" />
-    <Compile Include="BuildIn\DispatchAction.cs" />
-    <Compile Include="BuildIn\DispatchFilterType.cs" />
-    <Compile Include="BuildIn\ErrorAction.cs" />
-    <Compile Include="BuildIn\ErrorFilterType.cs" />
-    <Compile Include="BuildIn\SubstitutionAction.cs" />
-    <Compile Include="BuildIn\SubstitutionFilterType.cs" />
+    <Compile Include="BuiltIn\AdviceAction.cs" />
+    <Compile Include="BuiltIn\AfterFilterType.cs" />
+    <Compile Include="BuiltIn\BeforeFilterType.cs" />
+    <Compile Include="BuiltIn\ContinueAction.cs" />
+    <Compile Include="BuiltIn\DispatchAction.cs" />
+    <Compile Include="BuiltIn\DispatchFilterType.cs" />
+    <Compile Include="BuiltIn\ErrorAction.cs" />
+    <Compile Include="BuiltIn\ErrorFilterType.cs" />
+    <Compile Include="BuiltIn\SubstitutionAction.cs" />
+    <Compile Include="BuiltIn\SubstitutionFilterType.cs" />
     <Compile Include="FilterAction.cs" />
     <Compile Include="FilterActionAttribute.cs" />
     <Compile Include="FilterType.cs" />

@@ -62,7 +62,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
 	public abstract class FilterType
 	{
 
-		#region BuildIn FilterTypes
+		#region BuiltIn FilterTypes
 
 		/// <summary>
 		/// Specifies an After filter type.

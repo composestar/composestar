@@ -109,7 +109,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
 		/// <see cref="Composestar.StarLight.ContextInfo.JoinPointContext"/>.</remarks>
 		public abstract void Execute(JoinPointContext context);
 
-		#region BuildIn FilterActions
+		#region BuiltIn FilterActions
 
 		/// <summary>
 		/// Advice action constant value.

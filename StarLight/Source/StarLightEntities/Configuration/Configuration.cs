@@ -77,13 +77,12 @@ namespace Composestar.StarLight.Entities.Configuration
 		/// </summary>
 		/// <value>The version.</value>
 		[XmlAttribute]
-		public string Version
+		public static string Version
 		{
 			get
 			{
 				return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();      
 			}
-			set { }
 		}
 
 		/// <summary>

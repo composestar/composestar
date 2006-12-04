@@ -48,6 +48,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;  
 using System.IO;
 #endregion
 
@@ -112,6 +113,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Sets the project base directory.
 		/// </summary>
 		[Required]
+		[SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly")]
 		public string BaseDir
 		{
 			set { _baseDir = value; }
@@ -121,6 +123,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Sets the repository filename.
 		/// </summary>
 		[Required]
+		[SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly")]
 		public string RepositoryFileName
 		{
 			set { _repositoryFileName = value; }
@@ -130,6 +133,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Sets the concern files to be parsed.
 		/// </summary>
 		[Required]
+		[SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly")]
 		public ITaskItem[] ConcernFiles
 		{
 			set { _concernFiles = value; }
@@ -140,6 +144,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Any embedded code must be the same language. A <ref langword="null"/> value, 
 		/// which is the default, indicates that embedded code is disallowed. 
 		/// </summary>
+		[SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly")]
 		public string CodeLanguage
 		{
 			set { _codeLanguage = value; }
@@ -359,7 +364,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </summary>
 		/// <param name="items">The list of items.</param>
 		/// <returns>Returns an ITaskItem array.</returns>
-		private ITaskItem[] ToArray(IList<ITaskItem> items)
+		private static ITaskItem[] ToArray(IList<ITaskItem> items)
 		{
 			ITaskItem[] arr = new ITaskItem[items.Count];
 			items.CopyTo(arr, 0);

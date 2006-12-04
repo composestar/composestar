@@ -137,11 +137,14 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 			SettingsPropertyValueCollection values;
 			SettingsPropertyValue value;
 
+			if (collection == null)
+				throw new ArgumentNullException("collection");
+			
 			// First, create a place to put all the properties and their values.
 			values = new SettingsPropertyValueCollection();
 
 			// Get the path to the current version
-			string registryPath = this.RetrieveCurrentVersionPath();
+			string registryPath = RetrieveCurrentVersionPath();
 
 			if (string.IsNullOrEmpty(registryPath))
 				throw new ConfigurationErrorsException(Composestar.StarLight.Entities.Properties.Resources.CouldNotReadRegistryValues);
@@ -179,35 +182,13 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 			throw new NotImplementedException("Saving to the registry is currently not implemented.");
 		}
 
-
-		/// <summary>
-		/// Gets the NETSDK location.
-		/// </summary>
-		/// <returns></returns>
-		[SuppressMessage("Microsoft.Naming", "CA1705")]
-		[RegistryPermissionAttribute(SecurityAction.Demand, Read = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\.NETFramework")]
-		private string RetrieveNetSDKLocation()
-		{
-			RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework");
-
-			if (regKey != null)
-			{
-				return (string)regKey.GetValue("sdkInstallRootv2.0", "");
-
-			}
-			else
-			{
-				return "";
-			}
-		}
-
 		///// <summary>
 		///// Retrieves the current version of starlight and creates a full path to that registry hive.
 		///// </summary>
 		///// <returns></returns>
 		/// <returns>String</returns>
 		[RegistryPermissionAttribute(SecurityAction.Demand, Read = "HKEY_LOCAL_MACHINE\\Software\\ComposeStar\\StarLight")]
-		private string RetrieveCurrentVersionPath()
+		private static string RetrieveCurrentVersionPath()
 		{
 			RegistryKey regKeyVersion = Registry.LocalMachine.OpenSubKey(@"Software\ComposeStar\StarLight");
 
