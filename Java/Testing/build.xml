@@ -45,6 +45,8 @@
 		<cs:j_comp workspace="${build.java}/Examples" eclipseHome="${env.ECLIPSE_HOME}" application="ComposestarEclipsePlugin.testbuild">
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>
+				<include name="ConditionTests"/>
+				<!-- <include name="ErrorFilterTest"/> -->
 				<include name="Pacman"/>
 				<include name="Platypus"/>
 				<include name="VenusFlyTrap"/> 
@@ -60,6 +62,8 @@
 		<cs:j_test workspace="${build.java}/Examples" eclipseHome="${env.ECLIPSE_HOME}" application="ComposestarEclipsePlugin.testrun">
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>
+				<include name="ConditionTests"/>
+				<!-- <include name="ErrorFilterTest"/> -->
 				<include name="Platypus"/>
 				<include name="VenusFlyTrap"/>
 				<exclude name="**/.svn/"/>
