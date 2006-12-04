@@ -25,15 +25,16 @@ import Composestar.Core.Master.Master;
 import Composestar.Core.Master.Config.ConcernSource;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.ModuleSettings;
+import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 import composestar.dotNET.tym.entities.ArrayOfConcernElement;
 import composestar.dotNET.tym.entities.ArrayOfKeyValueSetting;
-import composestar.dotNET.tym.entities.KeyValueSetting; 
 import composestar.dotNET.tym.entities.ConcernElement;
 import composestar.dotNET.tym.entities.ConfigurationContainer;
 import composestar.dotNET.tym.entities.ConfigurationContainerDocument;
+import composestar.dotNET.tym.entities.KeyValueSetting;
 
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules
@@ -87,9 +88,7 @@ public class StarLightMaster extends Master
 
 	/**
 	 * Searches the settings array for a specific key and return the value for that key.
-	 * @param settings
-	 * @param key
-	 * @return
+	 * @return the value for the specified key if it exists; null otherwise.
 	 */
 	private String getSettingValue(String key)
 	{
@@ -101,9 +100,16 @@ public class StarLightMaster extends Master
 				return kv.getValue(); 
 		}
 		
-		return "";
+		return null;
 	}
 	
+	private int getSettingValue(String key, int def)
+	{
+		String value = getSettingValue(key);
+		if (value == null) return def;
+		else return Integer.parseInt(value);
+	}
+
 	/**
 	 * Initialize the StarLight master.
 	 * @throws IOException 
@@ -126,40 +132,52 @@ public class StarLightMaster extends Master
 		configContainer = configDocument.getConfigurationContainer();
 
 		// Set the debugmode
-		Debug.setMode(Integer.parseInt(getSettingValue("CompiletimeDebugLevel")));
-		//Debug.setMode(Debug.MODE_WARNING);
+		Debug.setMode(getSettingValue("CompiletimeDebugLevel", Debug.MODE_DEFAULTMODE));
 
-		// Apache XML driver is moved to a different package in Java 5
-		if (System.getProperty("java.version").substring(0, 3).equals("1.5")) {
-			System.setProperty("org.xml.sax.driver","com.sun.org.apache.xerces.internal.parsers.SAXParser");            
-		}
-		else {
-			System.setProperty("org.xml.sax.driver","org.apache.crimson.parser.XMLReaderImpl");            
-		}
+		configureXmlDriver();
 
 		// Create the repository
 		DataStore.instance();
-
+		
 		// Set the paths
-		if (getSettingValue("IntermediateOutputPath").length() > 0) {
-			Configuration.instance().getPathSettings().addPath("Base", getSettingValue("IntermediateOutputPath"));
-		}
-		Configuration.instance().getPathSettings().addPath("Composestar", getSettingValue("InstallFolder") + "\\" );
+		Configuration config = Configuration.instance();
+		PathSettings ps = config.getPathSettings();
 
-		// Enable INCRE
+		if (getSettingValue("IntermediateOutputPath") != null) {
+			ps.addPath("Base", getSettingValue("IntermediateOutputPath"));
+		}
+		ps.addPath("Composestar", getSettingValue("InstallFolder") + "\\" );
+
+		// Enable INCRE and set config file
 		ModuleSettings increSettings = new ModuleSettings();
 		increSettings.setName("INCRE");
 		increSettings.addProperty("enabled", "true");
-		Configuration.instance().getModuleSettings().addModule("INCRE", increSettings);
+	//	increSettings.addProperty("config", "INCREconfig-dummies.xml");
+		config.getModuleSettings().addModule("INCRE", increSettings);
 		
 		// Set FILTH input file
 		ModuleSettings filthSettings = new ModuleSettings();
 		filthSettings.setName("FILTH");
 		filthSettings.addProperty("input", getSettingValue("SpecificationFILTH"));
 		filthSettings.addProperty("outputEnabled",getSettingValue("OutputEnabledFILTH"));
-		Configuration.instance().getModuleSettings().addModule("FILTH", filthSettings);
+		config.getModuleSettings().addModule("FILTH", filthSettings);
 
 		Debug.out(Debug.MODE_INFORMATION,"Master","Master initialized.");
+	}
+
+	private void configureXmlDriver()
+	{
+		// Apache XML driver is moved to a different package in Java 5
+		if (System.getProperty("java.version").substring(0, 3).equals("1.5"))
+		{
+			System.setProperty("org.xml.sax.driver", "com.sun.org.apache.xerces.internal.parsers.SAXParser");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Selecting SAXParser XML SAX Driver");
+		}
+		else
+		{
+			System.setProperty("org.xml.sax.driver", "org.apache.crimson.parser.XMLReaderImpl");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Selecting XMLReaderImpl XML SAX Driver");
+		}
 	}
 
 	/**
@@ -192,11 +210,12 @@ public class StarLightMaster extends Master
 			INCRE incre = INCRE.instance();
 			incre.run(resources);
 
+			// Execute enabled modules one by one
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Starting INCRE to process modules");
+
 			Iterator modulesIter = incre.getModules();
 			while (modulesIter.hasNext())
 			{
-				// Execute enabled modules one by one
 				Module m = (Module)modulesIter.next();
 				m.execute(resources);
 				Debug.out(Debug.MODE_DEBUG, "INCRE", m.getName() + " executed in " + incre.getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL) + " ms");

@@ -23,10 +23,17 @@
 		<delete dir="${out.nunit}" />
 		<delete file="Documentation\ComposeStar-StarLight.chm" />
 		<delete file="Documentation\LastBuild.log" />
+<!--
 		<ant target="clean" dir="Source/Compiletime" />
 		<ant target="clean" dir="Source/StarLight.Weaving.BuildIn" />
 		<ant target="clean" dir="Source/VSIntegration/MSBuildTasks" />
 		<ant target="clean" dir="Source/VSIntegration/VisualStudio.Project" />
+-->
+		<cs:dn_msbatch target="clean">
+			<fileset dir="Source">
+				<include name="**/*.csproj"/>
+			</fileset>
+		</cs:dn_msbatch>
 	</target>
 
 	<!-- build -->
