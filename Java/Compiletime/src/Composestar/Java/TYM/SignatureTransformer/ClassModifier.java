@@ -170,12 +170,6 @@ public class ClassModifier
 			{
 				addMethods(methods, ct);
 			}
-
-			methods = signature.getMethods(MethodWrapper.REMOVED);
-			if (methods.size() > 0)
-			{
-				deleteMethods(methods, ct);
-			}
 		}
 
 		byte[] bytecode = ct.toBytecode();
