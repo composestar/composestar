@@ -113,11 +113,6 @@ namespace Composestar.StarLight.Utilities.Interfaces
 		/// <value>The type of the filter.</value>
 		FilterType FilterType { get;set;}
 		/// <summary>
-		/// Gets or sets the entities accessor.
-		/// </summary>
-		/// <value>The entities accessor.</value>
-		IEntitiesAccessor EntitiesAccessor { get;set;}
-		/// <summary>
 		/// Weave configuration
 		/// </summary>
 		/// <returns>Configuration container</returns>

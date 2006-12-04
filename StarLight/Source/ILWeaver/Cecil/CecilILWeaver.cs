@@ -673,7 +673,6 @@ namespace Composestar.StarLight.ILWeaver
 			visitor.Worker = worker;
 			visitor.FilterType = FilterType.InputFilter;
 			visitor.TargetAssemblyDefinition = targetAssembly;
-			visitor.EntitiesAccessor = _entitiesAccessor;
 			visitor.WeaveConfiguration = _configuration.WeaveConfiguration;
 			visitor.WeaveType = weaveType;
 			List<Instruction> instructions = new List<Instruction>();
@@ -686,7 +685,6 @@ namespace Composestar.StarLight.ILWeaver
 			try
 			{
 				visitor.DoWeave(inputFilter);
-				//((Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor.IVisitable)inputFilter).Accept(visitor);
 			}
 			catch (Exception ex)
 			{

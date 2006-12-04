@@ -35,3 +35,5 @@ using System;
 [assembly: AssemblyVersion("0.2.0.0")]
 [assembly: AssemblyFileVersion("0.2.0.0")]
 [assembly: CLSCompliant(true)]
+
+[assembly: Composestar.StarLight.SkipWeaving()]

@@ -113,12 +113,23 @@ namespace Composestar.StarLight.ILWeaver
 		/// </summary>
 		private Dictionary<int, Instruction> _jumpInstructions = new Dictionary<int, Instruction>();
 		/// <summary>
-		/// _entities accessor
+		/// _weave configuration
 		/// </summary>
-		private IEntitiesAccessor _entitiesAccessor;
 		private ConfigurationContainer _weaveConfiguration;
+
+		/// <summary>
+		/// _weave type
+		/// </summary>
 		private WeaveType _weaveType;
+
+		/// <summary>
+		/// _return actions
+		/// </summary>
 		private List<FilterAction> _returnActions = new List<FilterAction>();
+
+		/// <summary>
+		/// _return instruction
+		/// </summary>
 		private Instruction _returnInstruction;
 
 		#endregion
@@ -154,22 +165,6 @@ namespace Composestar.StarLight.ILWeaver
 			set
 			{
 				_filterType = value;
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the entities accessor.
-		/// </summary>
-		/// <value>The entities accessor.</value>
-		public IEntitiesAccessor EntitiesAccessor
-		{
-			get
-			{
-				return _entitiesAccessor;
-			}
-			set
-			{
-				_entitiesAccessor = value;
 			}
 		}
 
@@ -273,8 +268,6 @@ namespace Composestar.StarLight.ILWeaver
 
 		#region Helper functions
 
-
-
 		/// <summary>
 		/// Converts the mono attributes to JPC attributes.
 		/// </summary>
@@ -345,11 +338,14 @@ namespace Composestar.StarLight.ILWeaver
 			return var;
 		}
 
-
-
-		// Because we need local vars to store the object and type of arguments in, we have to add these local vars.
-		// But only once, so these functions make sure we only have one of this variables
+		/// <summary>
+		/// Because we need local vars to store the object and type of arguments in, we have to add these local vars.
+		/// But only once, so these functions make sure we only have one of this variables
+		/// </summary>
 		private VariableDefinition m_JpcLocal;
+		/// <summary>
+		/// The action store local used to store all the after actions.
+		/// </summary>
 		private VariableDefinition m_ActionStoreLocal;
 
 		/// <summary>
@@ -380,16 +376,15 @@ namespace Composestar.StarLight.ILWeaver
 
 			return m_JpcLocal;
 		}
-
-
+		
+		#endregion
 
 		#endregion
 
-
-
-
-		#endregion
-
+		/// <summary>
+		/// Performs the weaving of the current instruction set.
+		/// </summary>
+		/// <param name="instructionSet">The instruction set.</param>
 		public void DoWeave(InlineInstruction instructionSet)
 		{
 			// Store the current index in the Instructions to use it later to insert the create action store.
@@ -428,6 +423,9 @@ namespace Composestar.StarLight.ILWeaver
 			}
 		}
 
+		/// <summary>
+		/// Weave return actions
+		/// </summary>
 		private void WeaveReturnActions()
 		{
 			if (_returnActions.Count == 0)
@@ -447,14 +445,14 @@ namespace Composestar.StarLight.ILWeaver
 			Instructions.Add(whileStart);
 
 			// Call the HasMoreStoredActions method
-			Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.HasMoreStoredActions)));
+			Instructions.Add(Worker.Create(OpCodes.Callvirt, 
+				CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, 
+				CachedMethodDefinition.HasMoreStoredActions)));
 
 			// Add branch code
 			Instruction whileEnd = Worker.Create(OpCodes.Nop);
 			Instructions.Add(Worker.Create(OpCodes.Brfalse, whileEnd));
-
-
-
+			
 			//
 			// Switch expression
 			//
@@ -463,7 +461,9 @@ namespace Composestar.StarLight.ILWeaver
 			Instructions.Add(Worker.Create(OpCodes.Ldloc, asVar));
 
 			// Call the NextStoredAction method
-			Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.NextStoredAction)));
+			Instructions.Add(Worker.Create(OpCodes.Callvirt, 
+				CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, 
+				CachedMethodDefinition.NextStoredAction)));
 
 			// The switch statement
 			Instruction[] caseStarts = new Instruction[_returnActions.Count];
@@ -472,8 +472,7 @@ namespace Composestar.StarLight.ILWeaver
 			// Default: jump to the end
 			Instruction switchEnd = Worker.Create(OpCodes.Nop);
 			Instructions.Add(Worker.Create(OpCodes.Br, switchEnd));
-
-
+			
 			//
 			// Cases
 			//
@@ -492,17 +491,12 @@ namespace Composestar.StarLight.ILWeaver
 				caseStarts[i] = Instructions[lastInstructionIndex + 1];
 			}
 
-
-
-
 			//
 			// Switch end
 			//
 
 			// Emit the end instruction
 			Instructions.Add(switchEnd);
-
-
 
 			//
 			// While Loop
@@ -533,8 +527,7 @@ namespace Composestar.StarLight.ILWeaver
 				Instructions.Add(GetJumpLabel(inlineInstruction.Label));
 			}
 		}
-
-
+		
 		/// <summary>
 		/// Visits the filter action. Uses Strategypattern to weave a specific instruction.
 		/// </summary>
@@ -554,8 +547,7 @@ namespace Composestar.StarLight.ILWeaver
 				StoreAction(filterAction);
 			}
 		}
-
-
+		
 		/// <summary>
 		/// Weaves the filter action. Uses strategy pattern.
 		/// </summary>
@@ -573,7 +565,6 @@ namespace Composestar.StarLight.ILWeaver
 			strategy.Weave(this, filterAction, CalledMethod);
 		}
 
-
 		/// <summary>
 		/// Add a jump to another block
 		/// </summary>
@@ -587,9 +578,7 @@ namespace Composestar.StarLight.ILWeaver
 			// Add an unconditional branch instruction
 			Instructions.Add(Worker.Create(OpCodes.Br, jumpToInstruction));
 		}
-
-
-
+		
 		#region Branching
 
 		/// <summary>
@@ -688,15 +677,17 @@ namespace Composestar.StarLight.ILWeaver
 		}
 
 		/// <summary>
-		/// Gemerates the instructions that store an action. 
+		/// Generates the instructions that store an action. 
 		/// The action that needs to be stored is represented by an integer id, 
 		/// so actually only this id needs to be stored. 
+		/// </summary>
+		/// <example>
 		/// This id is on compiletime the index in the returnActions list of the action to be stored. 
 		/// So the code that needs to be created for this instructions is:
 		/// <code>
 		/// actionStore.storeAction( index );
 		/// </code>
-		/// </summary>
+		/// </example> 
 		/// <param name="filterAction">The filter action to be stored.</param>
 		public void StoreAction(FilterAction filterAction)
 		{
@@ -717,11 +708,9 @@ namespace Composestar.StarLight.ILWeaver
 			Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.StoreAction)));
 
 		}
-
-
+		
 		#endregion
-
-
+		
 		/// <summary>
 		/// This method creates and initializes the JoinPointContext. This always happens at the beginning
 		/// of the filtercode. All FilterActions should use the JoinPointContext to access parameter values and
@@ -737,12 +726,12 @@ namespace Composestar.StarLight.ILWeaver
 			// Create new joinpointcontext object
 			//
 			Instructions.Add(Worker.Create(OpCodes.Newobj,
-				CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextConstructor)));
+				CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, 
+				CachedMethodDefinition.JoinPointContextConstructor)));
 
 			// Store the just created joinpointcontext object
 			Instructions.Add(Worker.Create(OpCodes.Stloc, jpcVar));
-
-
+			
 			//
 			// Store sender (only for outputfilters)
 			//
@@ -755,7 +744,9 @@ namespace Composestar.StarLight.ILWeaver
 				Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
 
 				// Call set_Sender
-				Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetSender)));
+				Instructions.Add(Worker.Create(OpCodes.Callvirt, 
+					CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, 
+					CachedMethodDefinition.JoinPointContextSetSender)));
 			}
 
 			//
@@ -953,7 +944,7 @@ namespace Composestar.StarLight.ILWeaver
 		}
 
 		/// <summary>
-		/// Restores the JoinPointContext at the end of the filtercode. It puts for example the returnvalue on the
+		/// Restores the JoinPointContext at the end of the filtercode. It puts, for example, the returnvalue on the
 		/// stack.
 		/// </summary>
 		public void RestoreJoinPointContext()

@@ -254,6 +254,11 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 
 		#endregion
 
+		/// <summary>
+		/// Gets the clone.
+		/// </summary>
+		/// <param name="selector">The selector.</param>
+		/// <returns>A cloned FilterAction.</returns>
 		public FilterAction GetClone(String selector)
 		{
 			FilterAction fa = new FilterAction();

@@ -171,6 +171,12 @@
   <data name="FilthOutputDescription" xml:space="preserve">
     <value>Enable or disable the output of the FILTH module.</value>
   </data>
+  <data name="SecretEnabled" xml:space="preserve">
+    <value>Semantic reasoning enabled</value>
+  </data>
+  <data name="SecretEnabledDescription" xml:space="preserve">
+    <value>Enable or disable the semantic reasoning module.</value>
+  </data>
   <data name="ProjectFileExtensionFilter" xml:space="preserve">
     <value>ComposeStar Project File (*.cpsproj){0}*.cpsproj{1}</value>
   </data>

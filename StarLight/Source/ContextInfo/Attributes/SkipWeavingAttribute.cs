@@ -34,9 +34,11 @@
 */
 #endregion
 
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Text;
+#endregion
 
 namespace Composestar.StarLight
 {
@@ -44,10 +46,6 @@ namespace Composestar.StarLight
 	/// Place this custom attribute before elements you want to exclude from the weaving process. 
 	/// Put it at assembly level to exclude the complete assembly from being weaved on.
 	/// </summary>
-	/// <remarks>
-	/// The analyzer will skip elements with this attribute applied to them.
-	/// If you have defined filters in the assembly, then they will not be collected.
-	/// </remarks>
 	/// <example>
 	/// To exclude a complete assembly for weaving, add the following to your AssemblyInfo file:
 	/// <code>
@@ -69,6 +67,9 @@ namespace Composestar.StarLight
 	[AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Constructor | AttributeTargets.Field , AllowMultiple=false)]
 	public sealed class SkipWeavingAttribute : Attribute 
 	{
+		/// <summary>
+		/// _enabled
+		/// </summary>
 		private bool _enabled = true;
 
 		/// <summary>
@@ -82,7 +83,7 @@ namespace Composestar.StarLight
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:SkipWeavingAttribute"/> class. Weaving is then skipped.
+		/// Initializes a new instance of the <see cref="T:SkipWeavingAttribute"/> class. There will be no weaving on the elements this attributes applies to.
 		/// </summary>
 		public SkipWeavingAttribute()
 		{

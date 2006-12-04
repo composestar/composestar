@@ -448,6 +448,12 @@ namespace Composestar.StarLight.Weaving.Strategies
 		}
 
 
+		/// <summary>
+		/// Sets the inner call.
+		/// </summary>
+		/// <param name="visitor">The visitor.</param>
+		/// <param name="method">The method.</param>
+		[CLSCompliant(false)]
 		public static void SetInnerCall(ICecilInliningInstructionVisitor visitor, MethodReference method)
 		{
 			MethodDefinition methodDef = CecilUtilities.ResolveMethod(

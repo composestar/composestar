@@ -37,4 +37,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: AssemblyFileVersion("0.2.0.0")]
 [assembly: CLSCompliant(true)]
 
+[assembly: Composestar.StarLight.SkipWeaving()]
+
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.Weaving.Strategies")]

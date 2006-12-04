@@ -387,13 +387,11 @@ namespace Composestar.StarLight.ILAnalyzer
 			_assemblyElement.Name = _assembly.Name.ToString();
 			_assemblyElement.FileName = assemblyFileName;
 
-			// Check assembly attributes
-			if (SkipWeaving(_assembly.CustomAttributes))
-				return null;
-
 			if (HasEnabledProcessPropertiesAttribute(_assembly.CustomAttributes))
+			{
 				// override the ProcessProperties setting
 				ProcessProperties = true;
+			}
 
 			// Get all the types defined in the main module. Typically you won't need
 			// to worry that your assembly contains more than one module
@@ -401,9 +399,6 @@ namespace Composestar.StarLight.ILAnalyzer
 			{
 				if (type.Name.Equals(ModuleName))
 					continue;
-
-				if (SkipWeaving(type.CustomAttributes))
-					continue; 
 
 				type.Accept(this);
 			}
@@ -417,6 +412,11 @@ namespace Composestar.StarLight.ILAnalyzer
 					UnresolvedTypes.Remove(type);
 				}
 			}
+
+			// Check assembly attributes. 
+			// We do this here, because we still want to seach for FilterTypes and FilterActions
+			if (SkipWeaving(_assembly.CustomAttributes))
+				return null;
 
 			// Return the assembly element
 			return _assemblyElement;
@@ -499,64 +499,69 @@ namespace Composestar.StarLight.ILAnalyzer
 
 			}
 
-			if (!ExtractUnresolvedOnly || (ExtractUnresolvedOnly && _unresolvedTypes.Contains(CreateTypeName(type))))
-			{
-				// Get custom attributes
-				typeElement.Attributes.AddRange(ExtractCustomAttributes(type.CustomAttributes));
+			// Check if a SkipWeaving attribute is set. 
+			// The FilterTypes and FilterActions are collected, but the type is not saved.
+			if (!SkipWeaving(type.CustomAttributes))
+			{				
+				if (!ExtractUnresolvedOnly || (ExtractUnresolvedOnly && _unresolvedTypes.Contains(CreateTypeName(type))))
+				{
+					// Get custom attributes
+					typeElement.Attributes.AddRange(ExtractCustomAttributes(type.CustomAttributes));
 
-				_currentType = typeElement;
-				
-				// Properties
-				if (ProcessProperties | processPropertiesInThisType)
-					foreach (PropertyDefinition property in type.Properties)
+					_currentType = typeElement;
+
+					// Properties
+					if (ProcessProperties | processPropertiesInThisType)
+						foreach (PropertyDefinition property in type.Properties)
+						{
+							if (SkipWeaving(property.CustomAttributes))
+								continue;
+
+							if (property.SetMethod != null)
+								property.SetMethod.Accept(this);
+
+							if (property.GetMethod != null)
+								property.GetMethod.Accept(this);
+
+						}
+
+					// Visit methods
+					foreach (MethodDefinition method in type.Methods)
 					{
-						if (SkipWeaving(property.CustomAttributes))
+						// check if we have to skip this method
+						if (SkipWeaving(method.CustomAttributes))
 							continue;
 
-						if (property.SetMethod != null)
-							property.SetMethod.Accept(this);
+						// skip unmanaged code
+						if (method.ImplAttributes == Mono.Cecil.MethodImplAttributes.Unmanaged)
+							continue;
 
-						if (property.GetMethod != null)
-							property.GetMethod.Accept(this);
+						// properties are handled elsewhere
+						if (method.SemanticsAttributes == MethodSemanticsAttributes.Getter ||
+							method.SemanticsAttributes == MethodSemanticsAttributes.Setter)
+							continue;
 
+						method.Accept(this);
 					}
-				
-				// Visit methods
-				foreach (MethodDefinition method in type.Methods)
-				{
-					// check if we have to skip this method
-					if (SkipWeaving(method.CustomAttributes))
-						continue;
 
-					// skip unmanaged code
-					if (method.ImplAttributes == Mono.Cecil.MethodImplAttributes.Unmanaged)
-						continue;
 
-					// properties are handled elsewhere
-					if (method.SemanticsAttributes == MethodSemanticsAttributes.Getter || 
-						method.SemanticsAttributes == MethodSemanticsAttributes.Setter)
-						continue;
+					// Visit fields
+					foreach (FieldDefinition field in type.Fields)
+					{
+						if (SkipWeaving(field.CustomAttributes))
+							continue;
 
-					method.Accept(this);
+						field.Accept(this);
+					}
+
+					_assemblyElement.Types.Add(_currentType);
+
+					// Add this type to the resolved types
+					AddResolvedType(type);
+
+					// Remove from unresolved
+					_unresolvedTypes.Remove(CreateTypeName(type));
 				}
-
-				
-				// Visit fields
-				foreach (FieldDefinition field in type.Fields)
-				{
-					if (SkipWeaving(field.CustomAttributes))
-						continue; 
-
-					field.Accept(this);
-				}
-
-				_assemblyElement.Types.Add(_currentType);
-
-				// Add this type to the resolved types
-				AddResolvedType(type);
-
-				// Remove from unresolved
-				_unresolvedTypes.Remove(CreateTypeName(type));
 			}
 		}
 

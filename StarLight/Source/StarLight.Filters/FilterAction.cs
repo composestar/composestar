@@ -106,7 +106,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
 		/// <param name="context">Join Point Context information.</param>
 		/// <remarks>If the developer has set the CreateJoinPointContext to <see langword="false"/> 
 		/// in the <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute"/>, then the weaver injects <see langword="null"/> instead of a 
-		/// <see cref="Composestar.StarLight.ContextInfo.JoinPointContext"/></remarks>
+		/// <see cref="Composestar.StarLight.ContextInfo.JoinPointContext"/>.</remarks>
 		public abstract void Execute(JoinPointContext context);
 
 		#region BuildIn FilterActions

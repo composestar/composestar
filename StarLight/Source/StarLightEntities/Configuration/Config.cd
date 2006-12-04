@@ -5,33 +5,41 @@
     <Position X="6.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>Configuration\Configuration.cs</FileName>
-      <HashCode>UAAAACAgAAAAAgADAAEAAAQABAAIAAQAEAgAgABAAAA=</HashCode>
+      <HashCode>cAAAACAAAAAAAgABgAAAAAAAAAAoAAAAgAgAAABAAAA=</HashCode>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Concerns" />
       <Property Name="Assemblies" />
-      <Property Name="FilterActions" />
       <Property Name="FilterTypes" />
+      <Property Name="FilterActions" />
+      <Property Name="Settings" />
     </ShowAsCollectionAssociation>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
   <Class Name="Composestar.StarLight.Entities.Configuration.AssemblyConfig">
-    <Position X="6.5" Y="0.5" Width="1.5" />
+    <Position X="9" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>Configuration\AssemblyConfig.cs</FileName>
-      <HashCode>EAAAIAAAEAAAQAQAAAACAAQAAAAAAIACAAAAAQCAAAA=</HashCode>
+      <HashCode>EACAIAAAEAAAAAQABAECAAQAAAkAAIACAAAAAQDAAAA=</HashCode>
     </TypeIdentifier>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
+    <NestedTypes>
+      <Enum Name="Composestar.StarLight.Entities.Configuration.AssemblyConfig.PdbMode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Configuration\AssemblyConfig.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
   </Class>
   <Class Name="Composestar.StarLight.Entities.Concerns.ConcernElement">
     <Position X="6.5" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>Concerns\ConcernElement.cs</FileName>
-      <HashCode>GAAAAEAAAAAAAAQAAAACCAIAAAAAAAAAAAAAAABAAAg=</HashCode>
+      <HashCode>GAAAAEAAAAAAAEQAIAACCAIAAAEAAAAAAAAAAABAAAg=</HashCode>
     </TypeIdentifier>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -41,7 +49,7 @@
     <Position X="9.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>Configuration\FilterActionElement.cs</FileName>
-      <HashCode>AIAEIAAAAAAgAIAAgAgAAAYAIACIAACAAAAAAAAQAAA=</HashCode>
+      <HashCode>AIAEIAAAEAAgEIAAgAgAAEYAIACIAICAAAAAAAAQAAA=</HashCode>
     </TypeIdentifier>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -52,6 +60,16 @@
     <TypeIdentifier>
       <FileName>Configuration\FilterTypeElement.cs</FileName>
       <HashCode>AAAAIACAAACAAAAAAAAgAAQACACAACIAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.Entities.Configuration.KeyValueSetting">
+    <Position X="4.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\KeyValueSetting.cs</FileName>
+      <HashCode>ABAAAAAAAAAAAAQAAACAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
     </TypeIdentifier>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />

@@ -352,14 +352,14 @@ namespace Composestar.StarLight.Utilities
 		/// <summary>
 		/// Resolves the type using a <paramref name="typeRef">type reference</paramref>.
 		/// </summary>
+		/// <param name="typeRef">The type reference.</param>
+		/// <returns>
+		/// A <see cref="T:Mono.Cecil.TypeReference"></see> or <see langword="null"></see> when the type could not be found.
+		/// </returns>
 		/// <remarks>This function uses an internal cache for quick lookup of types.</remarks>
-		/// <param name="typeRef">The type reference.</param>
 		/// <example>
-		/// <param name="typeRef">The type reference.</param>
-		/// <returns>Type definition</returns>
-		/// <code>TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);</code>
+		/// 	<code>TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);</code>
 		/// </example>
-		/// <returns>A <see cref="T:Mono.Cecil.TypeReference"></see> or <see langword="null"></see> when the type could not be found.</returns>
 		/// <exception cref="ArgumentNullException">Thrown when the <paramref name="typeRef"/> is <see langword="null"></see>.</exception>
 		[CLSCompliant(false)]
 		public static TypeDefinition ResolveTypeDefinition(TypeReference typeRef)

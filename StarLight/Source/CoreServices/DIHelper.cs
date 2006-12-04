@@ -134,11 +134,6 @@ namespace Composestar.StarLight.CoreServices
 			/// <returns></returns>
 			public override bool Remove(object key)
 			{
-				/// <summary>
-				/// Get type from key
-				/// </summary>
-				/// <param name="key">Key</param>
-				/// <returns>Type</returns>
 				Type serviceType = GetTypeFromKey(key);
 				_serviceContainer.RemoveService(serviceType);
 

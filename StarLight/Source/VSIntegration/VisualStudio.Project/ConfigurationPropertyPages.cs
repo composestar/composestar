@@ -51,6 +51,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             WeaveDebugLevel,
             VerifyIL,
 			FILTHOutput,
+			SecretEnabled
         }
         
         #region fields
@@ -58,6 +59,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         private WeaveDebug weaveDebugLevel = WeaveDebug.None;
         private bool verifyIL = true;
 		private bool filthOutput = false;
+		private bool secretEnabled;
         #endregion
 
         /// <summary>
@@ -120,6 +122,10 @@ namespace Composestar.StarLight.VisualStudio.Project
 			bool filthOutputTemp = false;
 			if (Boolean.TryParse(this.GetConfigProperty(ConfigurationPropertyPageTag.FILTHOutput.ToString()), out filthOutputTemp))
 				filthOutput = filthOutputTemp;
+
+			bool secretEnabledTemp = false;
+			if (Boolean.TryParse(this.GetConfigProperty(ConfigurationPropertyPageTag.SecretEnabled.ToString()), out secretEnabledTemp))
+				secretEnabled = secretEnabledTemp;
         }
 
         /// <summary>
@@ -138,6 +144,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             SetConfigProperty(ConfigurationPropertyPageTag.WeaveDebugLevel.ToString(), this.weaveDebugLevel.ToString());
             SetConfigProperty(ConfigurationPropertyPageTag.VerifyIL.ToString(), verifyIL.ToString() );
 			SetConfigProperty(ConfigurationPropertyPageTag.FILTHOutput.ToString(), filthOutput.ToString());
+			SetConfigProperty(ConfigurationPropertyPageTag.SecretEnabled.ToString(), secretEnabled.ToString());
 
             this.IsDirty = false;
 
@@ -184,6 +191,16 @@ namespace Composestar.StarLight.VisualStudio.Project
 			get { return this.filthOutput ; }
 			set { this.filthOutput = value; this.IsDirty = true; }
 		}
+
+		[SRCategoryAttribute(SR.Application)]
+		[LocDisplayName(SR.SecretEnabled)]
+		[SRDescriptionAttribute(SR.SecretEnabledDescription)]
+		public bool SecretEnabled
+		{
+			get { return this.secretEnabled ; }
+			set { this.secretEnabled  = value; this.IsDirty = true; }
+		}
+
        #endregion
 
     }

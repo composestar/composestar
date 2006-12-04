@@ -72,6 +72,8 @@ namespace Composestar.StarLight.VisualStudio.Project
         internal const string DefaultNamespaceDescription = "DefaultNamespaceDescription";
         internal const string OutputType = "OutputType";
         internal const string OutputTypeDescription = "OutputTypeDescription";
+		internal const string SecretEnabled = "SecretEnabled";
+		internal const string SecretEnabledDescription = "SecretEnabledDescription";
         internal const string DebugLevel = "DebugLevel";
         internal const string DebugLevelDescription = "DebugLevelDescription";
         internal const string WeaveDebugLevel = "WeaveDebugLevel";
@@ -90,7 +92,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         internal const string ProjectFolderDescription = "ProjectFolderDescription";
 
 
-        static SR loader = null;
+        private static SR loader = null;
         ResourceManager resources;
 
         private static Object s_InternalSyncObject;

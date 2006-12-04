@@ -7,6 +7,9 @@
       <FileName>WeaveSpec\Instructions\Block.cs</FileName>
       <HashCode>AIAAAAAAAAAAAAAAAABAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Instructions" />
+    </ShowAsCollectionAssociation>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -18,6 +21,10 @@
       <FileName>WeaveSpec\Instructions\Branch.cs</FileName>
       <HashCode>AIAAAAAAAAAAgAACAAAAAAAEAAAAAgACAAAAIAAAAAA=</HashCode>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FalseBlock" />
+      <Property Name="TrueBlock" />
+    </ShowAsAssociation>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
