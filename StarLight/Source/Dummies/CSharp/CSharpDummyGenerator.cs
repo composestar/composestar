@@ -20,52 +20,6 @@ namespace DDW.CSharpUI
 {
 	public class CSharpDummyGenerator
 	{
-		[STAThread]
-		public static int Main(string[] args) 
-		{
-			if (args.Length < 1)
-			{
-				Console.WriteLine("Usage: CSharpDummyGenerator <attribute-xml-filename>");
-				return 2; // Failure
-			}
-
-			try 
-			{	
-				string input;
-				while ((input = Console.ReadLine()) != null)
-				{
-					currentFilename = input;
-
-					// next line is the target filename.
-					string output = Console.ReadLine();
-
-					if (output == null || output.Length == 0)
-						throw new Exception("No target filename specified for input '" + input + "'");
-
-					GenerateDummy(input, output);
-				}
-
-				String attributeFile = args[0];
-				AttributeWriter.Instance.writeXML(attributeFile);
-
-				return 0; // Success
-			}
-			catch (RecognitionException re)
-			{
-				Console.WriteLine();
-				Console.WriteLine("DUMMER~error~" + re.getFilename() + "~" + re.getLine() + "~" + re.Message);
-
-				return 1; // Failure!
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine();
-				Console.WriteLine("DUMMER~error~~0~" + e.Message);
-
-				return 1; // Failure!
-			}
-		}
-
 		public static void GenerateDummy(string input, string output)
 		{
 			IGraph graph = GetGraph(input);
@@ -113,12 +67,6 @@ namespace DDW.CSharpUI
 				csg.Parse(graph);
 				csg.Close();
 			}
-		}
-
-		private static string currentFilename;
-		public static string getCurrentFilename()
-		{
-			return currentFilename;
 		}
 	}
 }

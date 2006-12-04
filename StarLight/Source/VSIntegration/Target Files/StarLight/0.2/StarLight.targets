@@ -47,6 +47,11 @@ Copyright (C) University of Twente, 2006
       CoreWeave;
       AfterWeave
     </WeaveDependsOn>
+    <WeaveDependsOn Condition="'$(UseDummies)' == 'True'">
+      BeforeWeave;
+      CoreWeaveDummies;
+      AfterWeave
+    </WeaveDependsOn>
   </PropertyGroup>
   <Target
       Name="Weave"
@@ -141,7 +146,6 @@ This target will be called whenever the Clean target is invoked.
       $(MSBuildProjectDefaultTargets);
       AfterReweave;
     </ReweaveDependsOn>
-
     <ReweaveDependsOn Condition=" '$(MSBuildProjectDefaultTargets)' == 'Rebuild' " >
       BeforeRebuild;
       Clean;
@@ -197,7 +201,6 @@ This target will be called whenever the Clean target is invoked.
       ResolveReferences;
       PrepareResources;
       ResolveKeySource;
-      GenerateDummies;
       ParseConcerns;
       Compile;
       GenerateSerializationAssemblies;
@@ -230,7 +233,6 @@ This target will be called whenever the Clean target is invoked.
       BuildOnlySettings;
       PrepareForBuild;
       ResolveReferences;
-      GenerateDummies;
       ParseConcerns;
       GetTargetPath;
       CopyFilesToOutputDirectory;
@@ -248,7 +250,37 @@ This target will be called whenever the Clean target is invoked.
     <OnError ExecuteTargets="_TimeStampAfterCompile;PostBuildEvent" Condition="'$(RunPostBuildEvent)'=='Always' or '$(RunPostBuildEvent)'=='OnOutputUpdated'"/>
     <OnError ExecuteTargets="_CleanRecordFileWrites"/>
   </Target>
+
+  <!--
+    ============================================================
+                          CoreWeaveDummies
+    ============================================================
+    -->
+  <PropertyGroup>
+    <CoreWeaveDummiesDependsOn>
+      BackupFiles;
+      CreateStarLightFolder;
+      BuildOnlySettings;
+      PrepareForBuild;
+      ResolveReferences;
+      ParseConcerns;
+      GenerateDummies;
+      CompileDummies;
+      AnalyzeDummies;
+      MasterCaller;
+    </CoreWeaveDummiesDependsOn>
+  </PropertyGroup>
+  <Target
+    Name="CoreWeaveDummies"
+    DependsOnTargets="$(CoreWeaveDummiesDependsOn)">
+    <OnError ExecuteTargets="_TimeStampAfterCompile;PostBuildEvent" Condition="'$(RunPostBuildEvent)'=='Always' or '$(RunPostBuildEvent)'=='OnOutputUpdated'"/>
+    <OnError ExecuteTargets="_CleanRecordFileWrites"/>
+  </Target>
  
+  <!--
+    ============================================================
+  -->
+  
   <PropertyGroup>
     <!-- "None" is not technically a valid DebugType, so we can't pass it in as such
              to the compiler.  So here, we modify the properties so they make sense. -->
@@ -373,15 +405,6 @@ This target will be called whenever the Clean target is invoked.
     <Delete Files="@(BackupFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension).weaved')" ContinueOnError="true" />
   </Target>
 
-  <!-- GenerateDummies target -->
-  <Target Name="GenerateDummies">
-    <Message Text="Generating dummies." />
-    <DummiesTask BaseDir="$(StarLightFolder)"
-                 Sources="@(Compile->'%(FullPath)')">
-      <Output TaskParameter="Dummies" ItemName="Dummies"/>
-    </DummiesTask>
-  </Target>
-
   <!-- ParseConcerns target -->
   <Target Name="ParseConcerns">
     <Message Text="Collecting and parsing concern files." />
@@ -401,6 +424,53 @@ This target will be called whenever the Clean target is invoked.
     <OnError ExecuteTargets="CleanBackup" />
   </Target>
   
+  <!-- GenerateDummies target -->
+  <Target Name="GenerateDummies">
+    <Message Text="Generating dummies." />
+    
+    <CreateProperty Value="$(StarLightFolder)/Dummies">
+      <Output TaskParameter="Value" PropertyName="DummiesFolder"/>
+    </CreateProperty>
+    
+    <DummiesTask TargetDir="$(DummiesFolder)"
+                 Sources="@(Compile->'%(FullPath)')">
+      <Output TaskParameter="Dummies" ItemName="Dummies"/>
+    </DummiesTask>
+  </Target>
+
+  <!-- CompileDummies target -->
+  <Target Name="CompileDummies" Condition="'@(Dummies)' != ''">
+    <Message Text="Compiling dummies."/>
+
+    <CreateProperty Value="$(DummiesFolder)/$(AssemblyName).Dummies.dll">
+      <Output TaskParameter="Value" PropertyName="DummyAssembly"/>
+    </CreateProperty>
+
+    <Csc Sources="@(Dummies)" TargetType="Library" OutputAssembly="$(DummyAssembly)"
+         DisabledWarnings="169,649"/>
+  </Target>
+
+  <!-- AnalyzeDummies target -->
+  <Target Name="AnalyzeDummies" Condition="'@(Dummies)' != ''">
+    <Message Text="Analyzing dummies."/>
+
+    <CreateItem Include="$(DummyAssembly)" Condition="'@(Dummies)' != ''">
+      <Output TaskParameter="Include" ItemName="WeavableAssemblyFiles"/>
+    </CreateItem>
+
+    <IlAnalyzerTask
+      ContinueOnError="false"
+      ReferencedAssemblies="@(ReferencePath)"
+      ReferencedTypes="@(ReferencedTypes)"
+      AssemblyFiles="@(WeavableAssemblyFiles)"
+      RepositoryFilename="$(RepositoryFilename)"
+      BinFolder="$(ProjectDir)$(OutDir)"
+      DoMethodCallAnalysis="$(HasOutputFilters)"
+      IntermediateOutputPath="$(StarLightFolder)">
+      <Output TaskParameter="AssembliesDirty" PropertyName="AssembliesDirty"/>
+    </IlAnalyzerTask>    
+  </Target>
+
   <!--AnalyzeAssemblies target -->
   <Target Name="AnalyzeAssemblies">
     <Message Text="Collecting and analyzing assemblies."/>
@@ -444,8 +514,7 @@ This target will be called whenever the Clean target is invoked.
   </Target>
 
   <!--ILWeaverRunner target -->
-  <Target
-       Name="ILWeaverRunner">
+  <Target Name="ILWeaverRunner">
     <Message Text="Performing IL weaving." />
     <ILWeaverTask RepositoryFilename="$(RepositoryFilename)" WeaveDebug="$(WeaveDebugLevel)" BinFolder="$(ProjectDir)$(OutDir)" ConcernsDirty="$(ConcernsDirty)" />
   </Target>

@@ -53,10 +53,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// </summary>
 	public class DummiesTask : Task
 	{
-		private const string DummiesFolderName = "Dummies";
-
 		// inputs
-		private string _baseDir;
+		private string _targetDir;
 		private ITaskItem[] _sources;
 
 		// outputs
@@ -74,9 +72,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Sets the project base directory.
 		/// </summary>
 		[Required]
-		public string BaseDir
+		public string TargetDir
 		{
-			set { _baseDir = value; }
+			set { _targetDir = value; }
 		}
 
 		/// <summary>
@@ -103,15 +101,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <returns>true if the task successfully executed; otherwise, false.</returns>
 		public override bool Execute()
 		{
-			string dummiesDir = Path.Combine(_baseDir, DummiesFolderName);
-
-			if (!Directory.Exists(dummiesDir))
-				Directory.CreateDirectory(dummiesDir);
+			if (!Directory.Exists(_targetDir))
+				Directory.CreateDirectory(_targetDir);
 
 			foreach (ITaskItem source in _sources)
 			{
 				string input = source.ToString();
-				string output = Path.Combine(dummiesDir, Path.GetFileName(input));
+				string output = Path.Combine(_targetDir, Path.GetFileName(input));
 
 				_dummies.Add(new TaskItem(output));
 				

@@ -460,11 +460,6 @@ namespace DDW.CSharp.Gen
 			Parse(gr.CustomAttributes);
 			ParseElement(gr.Attributes);
 			sb.Write("class " + gr.Name +" ");
-			// Match class - store TypeLocation information
-			// Store Current filename?
-			Console.WriteLine("TypeLocation");
-			Console.WriteLine(CSharpUI.CSharpDummyGenerator.getCurrentFilename());
-			Console.WriteLine(AttributeState.Target);
 
 			Parse(gr.BaseTypes);
 			OpenBlock();
@@ -480,12 +475,6 @@ namespace DDW.CSharp.Gen
 			Parse(gr.CustomAttributes);
 			ParseElement(gr.Attributes);
 			sb.Write("interface " + gr.Name +" ");
-
-			// Match interface - store TypeLocation information
-			// Store Current filename?
-			Console.WriteLine("TypeLocation");
-			Console.WriteLine(CSharpUI.CSharpDummyGenerator.getCurrentFilename());
-			Console.WriteLine(AttributeState.Target);
 
 			Parse(gr.BaseTypes);
 			OpenBlock();
@@ -542,7 +531,6 @@ namespace DDW.CSharp.Gen
 			//OpenBlock();
 			//Parse(gr.Members); //delegate has no members
 			//CloseBlock();
-
 		}
 		#endregion
 
