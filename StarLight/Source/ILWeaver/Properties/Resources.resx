@@ -208,4 +208,7 @@
   <data name="ErrorReadingPdb" xml:space="preserve">
     <value>Could not open pdb debug file '{0}'. Disabling debug generation for this assembly.</value>
   </data>
+  <data name="NonStaticContextInStaticMethod" xml:space="preserve">
+    <value>Unable to add inputfilters to static method '{1}' in class '{0}', usage of non-static internal, external or condition.</value>
+  </data>
 </root>

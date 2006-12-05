@@ -251,6 +251,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to add inputfilters to static method &apos;{1}&apos; in class &apos;{0}&apos;, usage of non-static internal, external or condition..
+        /// </summary>
+        internal static string NonStaticContextInStaticMethod {
+            get {
+                return ResourceManager.GetString("NonStaticContextInStaticMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The weaver could not find any weaving strategies. At least the default strategies (like dispatch, advice, error, and so on) are expected. Make sure the build-in weaving strategies assembly is located in the WeaveStrategiesFolder &apos;{0}&apos;..
         /// </summary>
         internal static string NoWeavingStrategiesFound {

@@ -102,6 +102,11 @@ namespace BasicTests
 			x = x + 2;
 		}
 
+        public static void DoNotWeaveMe()
+        {
+            // The condition cannot be woven into a static method, so this method should throw a weave warning and no filter code should be inlined
+        }
+
 		public void askForHelp()
 		{
 			helper.helpMe();

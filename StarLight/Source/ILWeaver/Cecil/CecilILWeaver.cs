@@ -611,6 +611,25 @@ namespace Composestar.StarLight.ILWeaver
 
 			#endregion
 
+            // Do not add filter code to static methods when internals, externals or non-static conditions are used 
+            bool hasNonStaticConditions = false;
+            if (weaveType.HasConditions) {
+                foreach (Condition c in weaveType.Conditions)
+                {
+                    if (c.Reference.Target.Equals(Reference.InnerTarget))
+                    {
+                        hasNonStaticConditions = true;
+                        break;
+                    }
+                }
+            }
+            if (method.IsStatic && weaveMethod.HasInputFilters && 
+                (weaveType.HasInternals || weaveType.HasExternals || hasNonStaticConditions))
+            {
+                _weaveResults.AddLogItem(new LogItem(LogOriginName, String.Format(Properties.Resources.NonStaticContextInStaticMethod, weaveType.Name, method.Name), LogItem.LogCategory.Warning));
+                return;
+            }
+            
 			// Add the inputfilters
 			if (weaveMethod.HasInputFilters)
 				WeaveInputFilters(targetAssembly, method, weaveMethod, weaveType);
@@ -654,6 +673,8 @@ namespace Composestar.StarLight.ILWeaver
 			// Only proceed when we have an inputfilter
 			if (inputFilter == null)
 				return;
+
+
 
 			#endregion
 
