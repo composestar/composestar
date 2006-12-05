@@ -35,7 +35,6 @@ import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
@@ -1003,7 +1002,7 @@ public class Sign implements CTCommonModule
                     MethodInfo m = (MethodInfo) methods.get(i);
                     if (m.name().equals(targetMethod.name())) {
                         Debug.out( Debug.MODE_WARNING, MODULE_NAME,
-                                "The methodcall to method " + methodInfoString(method)
+                                "The call to method " + methodInfoString(method)
                                 + " in concern " + concern.name
                                 + " might be dispatched to method " + m.name()
                                 + " in inner with the wrong parameters "
@@ -1220,26 +1219,22 @@ public class Sign implements CTCommonModule
                     if (mw.getRelationType() == MethodWrapper.NORMAL)
                         relation = "kept";
 
-                    // TODO: remove this, needed for demo!
-                    if (!Configuration.instance().getPlatformName().equalsIgnoreCase("c"))
-                    {
-                        MethodInfo mi = mw.getMethodInfo();
-                        String returntype = mi.getReturnTypeString();
+                    MethodInfo mi = mw.getMethodInfo();
+                    String returntype = mi.getReturnTypeString();
 
-                        List paramNames = new ArrayList();
-                        Iterator piIt = mi.getParameters().iterator();
-                        while (piIt.hasNext())
-                        {
-                            ParameterInfo pi = (ParameterInfo)piIt.next();
-                            paramNames.add(pi.name());
-                        }
-                        
-                        Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, 
-                                "\t[ " + relation + " ] " +
-                                "(" + returntype + ") " +
-                                mi.name() + 
-                                "(" + StringUtils.join(paramNames, ", ") + ")");
+                    List paramNames = new ArrayList();
+                    Iterator piIt = mi.getParameters().iterator();
+                    while (piIt.hasNext())
+                    {
+                        ParameterInfo pi = (ParameterInfo)piIt.next();
+                        paramNames.add(pi.name());
                     }
+                    
+                    Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, 
+                            "\t[ " + relation + " ] " +
+                            "(" + returntype + ") " +
+                            mi.name() + 
+                            "(" + StringUtils.join(paramNames, ", ") + ")");
                 }
             }
         }

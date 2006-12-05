@@ -191,6 +191,11 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	{
 		Parent = parent;
 	}
+	
+	public String returnTypeName()
+	{
+		return ReturnTypeString;
+	}
 
 	public Type returnType()
 	{
@@ -198,7 +203,11 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 		{
 			TypeMap map = TypeMap.instance();
 			ReturnType = map.getType(ReturnTypeString);
+			
+			if (ReturnType == null)
+				throw new RuntimeException("Unable to find type specification for '" + ReturnTypeString + "'");
 		}
+		
 		return ReturnType;
 	}
 

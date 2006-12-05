@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class Signature implements SerializableRepositoryEntity
 {
-	
   // Cannot use HashMap because these are not serialized.
   public DataMap methodByKey = null;
   public DataMap methodByName = null;
@@ -183,28 +182,33 @@ public class Signature implements SerializableRepositoryEntity
     	
     	return mw.getRelationType(); 
     }
-    
-    
-    
-    /**
-     * @return 
-     * Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method
-     * @roseuid 404C47840369
-     */
-    public MethodInfo getNamedMethod() {
-     return null;
-    }
-    
+	
+	public MethodInfo getNamedMethod()
+	{
+		return null;
+	}
+
+	private String hashKey = null;
 	public String getHashKey(MethodInfo methodInfo)
 	{
-		String key = methodInfo.name() + '%';
-		List parameter = methodInfo.getParameters();
-		for (int i = 0; i < parameter.size(); i++)
-			key += ((ParameterInfo) parameter.get(i)).ParameterTypeString + '%';
+		if (hashKey == null)
+		{
+			StringBuffer sb = new StringBuffer();
+			
+			sb.append(methodInfo.name()).append('%');
+			sb.append(methodInfo.returnTypeName()).append('%');
+			
+			List pars = methodInfo.getParameters();
+			for (int i = 0; i < pars.size(); i++)
+			{
+				ParameterInfo pi = (ParameterInfo) pars.get(i);
+				sb.append(pi.ParameterTypeString).append('%');
+			}
+			
+			hashKey = sb.toString();
+		}
 		
-		key += methodInfo.returnType();
-		
-		return key;
+		return hashKey;
 	}
 	
 	public void setStatus(int _status) { status = _status; }
