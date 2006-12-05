@@ -90,8 +90,6 @@ public class StarLightEmitterRunner implements CTCommonModule
 	{
 		DataStore dataStore = DataStore.instance();
 
-		WeaveSpecification weaveSpec;
-
 		Iterator concernIterator = dataStore.getAllInstancesOf(Concern.class);
 		while (concernIterator.hasNext())
 		{
@@ -103,7 +101,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			if (concern.getDynObject("superImpInfo") != null)
 			{
 				// get weavespec:
-				weaveSpec = getWeaveSpec(type.getFromDLL());
+				WeaveSpecification weaveSpec = getWeaveSpec(type.getFromDLL());
 
 				// get filtermodules:
 				FilterModuleOrder order = (FilterModuleOrder) concern.getDynObject("SingleOrder");
@@ -249,7 +247,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			AssemblyConfig config = assemblies.getAssemblyConfigArray(i);
 			if (weaveSpecs.containsKey(config.getName()))
 			{
-				weaveSpec = (WeaveSpecification) weaveSpecs.get(config.getName());
+				WeaveSpecification weaveSpec = (WeaveSpecification) weaveSpecs.get(config.getName());
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
 
