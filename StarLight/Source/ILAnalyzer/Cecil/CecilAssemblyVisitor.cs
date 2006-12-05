@@ -37,6 +37,8 @@
 #region Using directives
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.CoreServices.Analyzer;
+using Composestar.StarLight.CoreServices.Logger;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Filters.FilterTypes;
@@ -70,6 +72,8 @@ namespace Composestar.StarLight.ILAnalyzer
 		#region Constants
 
 		private const string ModuleName = "<Module>";
+		private const string LogSubCategory = "visitor";
+		private const string AnalyzerOrigin = "analyzer";
 
 		private string _skipWeavingAttribute = typeof(SkipWeavingAttribute).FullName;
 		private string _processPropertiesAttribute = typeof(ProcessPropertiesAttribute).FullName;
@@ -77,6 +81,8 @@ namespace Composestar.StarLight.ILAnalyzer
 		#endregion
 
 		#region Private variables
+
+		private IAnalyzerResults _results;
 
 		/// <summary>
 		/// _assembly element
@@ -132,6 +138,22 @@ namespace Composestar.StarLight.ILAnalyzer
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// Gets or sets the results. Can be used to log.
+		/// </summary>
+		/// <value>The results.</value>
+		public IAnalyzerResults Results
+		{
+			get
+			{
+				return _results;
+			}
+			set
+			{
+				_results = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to process and extract properties.
@@ -391,6 +413,8 @@ namespace Composestar.StarLight.ILAnalyzer
 			{
 				// override the ProcessProperties setting
 				ProcessProperties = true;
+				// Log this occurrence
+				Results.AddLogItem(new LogItem(AnalyzerOrigin, Properties.Resources.ProcessPropertiesEnabled, LogItem.LogCategory.Information, LogSubCategory, "P0001")); 
 			}
 
 			// Get all the types defined in the main module. Typically you won't need

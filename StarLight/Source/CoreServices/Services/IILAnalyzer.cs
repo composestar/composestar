@@ -93,15 +93,5 @@ namespace Composestar.StarLight.CoreServices
 		/// <returns></returns>
 		IAnalyzerResults ExtractAllTypes(String fileName);
 
-		/// <summary>
-		/// Gets all encountered FilterTypes
-		/// </summary>
-		ReadOnlyCollection<FilterTypeElement> FilterTypes { get; }
-
-		/// <summary>
-		/// Gets all encountered FilterActions
-		/// </summary>
-		ReadOnlyCollection<FilterActionElement> FilterActions { get; }
-
 	}
 }

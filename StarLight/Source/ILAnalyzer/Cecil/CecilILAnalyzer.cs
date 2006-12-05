@@ -83,10 +83,7 @@ namespace Composestar.StarLight.ILAnalyzer
 		private CecilAnalyzerConfiguration _configuration;
 		private StarLightAssemblyResolver _dar;
 
-		private List<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
-		private List<FilterActionElement> _filterActions = new List<FilterActionElement>();
-
-		private IAnalyzerResults _analyzerResults; 
+		private GenericAnalyzerResults _analyzerResults; 
 
 		#endregion
 
@@ -192,30 +189,6 @@ namespace Composestar.StarLight.ILAnalyzer
 			get { return _cachedTypes; }
 		}
 
-		/// <summary>
-		/// Gets all encountered FilterTypes
-		/// </summary>
-		/// <value></value>
-		public ReadOnlyCollection<FilterTypeElement> FilterTypes
-		{
-			get
-			{
-				return new ReadOnlyCollection<FilterTypeElement>(_filterTypes);
-			}
-		}
-
-		/// <summary>
-		/// Gets all encountered FilterActions
-		/// </summary>
-		/// <value></value>
-		public ReadOnlyCollection<FilterActionElement> FilterActions
-		{
-			get
-			{
-				return new ReadOnlyCollection<FilterActionElement>(_filterActions);
-			}
-		}
-
 		#endregion
 
 		#region IILAnalyzer Implementation
@@ -252,7 +225,8 @@ namespace Composestar.StarLight.ILAnalyzer
 			visitor.ProcessMethodBody = _configuration.DoMethodCallAnalysis;
 			visitor.IncludeFields = _configuration.DoFieldAnalysis;
 			visitor.ExtractUnresolvedOnly = _configuration.ExtractUnresolvedOnly;
-			visitor.ProcessProperties = _configuration.ProcessProperties; 
+			visitor.ProcessProperties = _configuration.ProcessProperties;
+			visitor.Results = _analyzerResults; 
 			visitor.SaveInnerType = true;
 			visitor.SaveType = true;
 			visitor.ResolvedAssemblies = _resolvedAssemblies;
@@ -261,7 +235,7 @@ namespace Composestar.StarLight.ILAnalyzer
 			visitor.ResolvedTypes = _resolvedTypes;
 
 			// Start the visitor
-			((GenericAnalyzerResults)_analyzerResults).Assembly = visitor.Analyze(fileName);
+			_analyzerResults.Assembly = visitor.Analyze(fileName);
 
 			// Update the unresolved types
 			_unresolvedAssemblies = visitor.UnresolvedAssemblies;
@@ -270,8 +244,8 @@ namespace Composestar.StarLight.ILAnalyzer
 			_resolvedTypes = visitor.ResolvedTypes;
 
 			// Update the filtertypes
-			_filterTypes.AddRange(visitor.FilterTypes);
-			_filterActions.AddRange(visitor.FilterActions);
+			_analyzerResults.AddFilterType(visitor.FilterTypes);
+			_analyzerResults.AddFilterAction(visitor.FilterActions);
 
 			// Stop the timer
 			sw.Stop();

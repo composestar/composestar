@@ -98,5 +98,27 @@ namespace Composestar.StarLight.CoreServices.Weaver
 			_logItems.Add(item);  
 		}
 
+		private WeaveResult _weaveResult = WeaveResult.Error;  
+
+		/// <summary>
+		/// Set weave result
+		/// </summary>
+		/// <param name="result">Result</param>
+		public void SetWeaveResult(WeaveResult result)
+		{
+			_weaveResult = result;
+		}
+
+		/// <summary>
+		/// Result
+		/// </summary>
+		/// <returns>Weave result</returns>
+		public WeaveResult Result
+		{
+			get 
+			{
+				return _weaveResult;
+			}
+		}
 	}
 }

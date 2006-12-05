@@ -36,12 +36,13 @@
 
 #region Using directives
 using Composestar.StarLight.CoreServices.Logger;
+using Composestar.StarLight.Entities.Configuration;
+using Composestar.StarLight.Entities.LanguageModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using Composestar.StarLight.Entities.LanguageModel; 
 #endregion
 
 namespace Composestar.StarLight.CoreServices.Analyzer
@@ -53,14 +54,18 @@ namespace Composestar.StarLight.CoreServices.Analyzer
 	public class GenericAnalyzerResults : IAnalyzerResults  
 	{
 
-		private IList<LogItem> _logItems; 
+		private IList<LogItem> _logItems;
+		private IList<FilterTypeElement> _filterTypes;
+		private IList<FilterActionElement> _filterActions;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:GenericAnalyzerResults"/> class.
 		/// </summary>
 		public GenericAnalyzerResults()
 		{
-			_logItems = new List<LogItem>(); 
+			_logItems = new List<LogItem>();
+			_filterTypes = new List<FilterTypeElement>();
+			_filterActions = new List<FilterActionElement>(); 
 		}
 
 		private AssemblyElement _assembly;
@@ -106,5 +111,86 @@ namespace Composestar.StarLight.CoreServices.Analyzer
 			_logItems.Add(item);  
 		}
 
+		/// <summary>
+		/// Gets the filter actions.
+		/// </summary>
+		/// <value>The filter actions.</value>
+		public ReadOnlyCollection<FilterActionElement> FilterActions 
+		{
+			get
+			{
+				return new ReadOnlyCollection<FilterActionElement>(_filterActions); 
+			}
+		}
+
+		/// <summary>
+		/// Gets the filter types.
+		/// </summary>
+		/// <value>The filter types.</value>
+		public ReadOnlyCollection<FilterTypeElement> FilterTypes
+		{
+			get
+			{
+				return new ReadOnlyCollection<FilterTypeElement>(_filterTypes);
+			}
+		}
+
+		/// <summary>
+		/// Add filter type
+		/// </summary>
+		/// <param name="filterType">Filter type</param>
+		public void AddFilterType(FilterTypeElement filterType)
+		{
+			if (filterType == null)
+				throw new ArgumentNullException("filterType");
+
+			_filterTypes.Add(filterType); 
+
+		}
+
+		/// <summary>
+		/// Adds the type of the filter.
+		/// </summary>
+		/// <param name="filterTypes">The filter types.</param>
+		public void AddFilterType(IList<FilterTypeElement> filterTypes)
+		{
+			if (filterTypes == null)
+				throw new ArgumentNullException("filterTypes");
+
+			foreach (FilterTypeElement filterType in filterTypes)
+			{
+				AddFilterType(filterType); 
+			}
+			
+		}
+
+		/// <summary>
+		/// Adds the filter action.
+		/// </summary>
+		/// <param name="filterAction">The filter action.</param>
+		public void AddFilterAction(FilterActionElement filterAction)
+		{
+			if (filterAction == null)
+				throw new ArgumentNullException("filterAction");
+
+			_filterActions.Add(filterAction);
+
+		}
+
+		/// <summary>
+		/// Adds the filter action.
+		/// </summary>
+		/// <param name="filterActions">The filter actions.</param>
+		public void AddFilterAction(IList<FilterActionElement> filterActions)
+		{
+			if (filterActions == null)
+				throw new ArgumentNullException("filterActions");
+
+			foreach (FilterActionElement filterAction in filterActions)
+			{
+				AddFilterAction(filterAction);
+			}
+
+		}
 	}
 }

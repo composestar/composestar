@@ -278,6 +278,52 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
+		/// Stores the filters.
+		/// </summary>
+		/// <param name="results">The results.</param>
+		private void StoreFilters(IAnalyzerResults results)
+		{
+			if (results.FilterTypes.Count > 0 || results.FilterActions.Count > 0)
+			{
+				// Add FilterTypes
+				foreach (FilterTypeElement ft in results.FilterTypes)
+				{
+					bool canAdd = true;
+					foreach (FilterTypeElement ftConfig in filterTypes)
+					{
+						if (ft.Name.Equals(ftConfig.Name))
+						{
+							canAdd = false;
+							continue;
+						}
+					}
+					if (canAdd)
+						filterTypes.Add(ft);
+				}
+
+				// Add FilterActions
+				foreach (FilterActionElement fa in results.FilterActions)
+				{
+					bool canAdd = true;
+					foreach (FilterActionElement faConfig in filterActions)
+					{
+						if (fa.Name.Equals(faConfig.Name))
+						{
+							canAdd = false;
+							continue;
+						}
+					}
+					if (canAdd)
+						filterActions.Add(fa);
+				}
+
+				// TODO: we miss a cleanup of the filtertypes and actions no longer in the assemblies. User has to use a rebuild.
+
+				Log.LogMessageFromResources("FiltersAnalyzed", results.FilterTypes.Count, results.FilterActions.Count);
+			}
+		}
+
+		/// <summary>
 		/// Analyzes all assemblies in output folder.
 		/// </summary>
 		/// <param name="analyzer">The analyzer.</param>
@@ -327,7 +373,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 					ShowLogItems(results.LogItems); 
 
+					// Get the assembly from the results.
 					assembly = results.Assembly;
+
+					// Store the filters
+					StoreFilters(results);
 
 					sw.Stop();
 					sw.Reset();
@@ -377,45 +427,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				}
 
 			}
-
-			if (analyzer.FilterTypes.Count > 0 && analyzer.FilterActions.Count > 0)
-			{
-				// Add FilterTypes
-				foreach (FilterTypeElement ft in analyzer.FilterTypes)
-				{
-					bool canAdd = true;
-					foreach (FilterTypeElement ftConfig in filterTypes)
-					{
-						if (ft.Name.Equals(ftConfig.Name))
-						{
-							canAdd = false;
-							continue;
-						}
-					}
-					if (canAdd)
-						filterTypes.Add(ft);
-				}
-
-				// Add FilterActions
-				foreach (FilterActionElement fa in analyzer.FilterActions)
-				{
-					bool canAdd = true;
-					foreach (FilterActionElement faConfig in filterActions)
-					{
-						if (fa.Name.Equals(faConfig.Name))
-						{
-							canAdd = false;
-							continue;
-						}
-					}
-					if (canAdd)
-						filterActions.Add(fa);
-				}
-
-				// TODO: we miss a cleanup of the filtertypes and actions no longer in the assemblies. User has to use a rebuild.
-
-				Log.LogMessageFromResources("FiltersAnalyzed", analyzer.FilterTypes.Count, analyzer.FilterActions.Count);
-			}
+					
 
 			return assemblyChanged;
 		}
@@ -505,7 +517,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
 							results = analyzer.ExtractAllTypes(item);
 							ShowLogItems(results.LogItems);
 
-							AssemblyElement assembly = results.Assembly; 
+							AssemblyElement assembly = results.Assembly;
+
+							// Update the filteractions
+							filterActions.AddRange(results.FilterActions);
+							// Update the filterTypes
+							filterTypes.AddRange(results.FilterTypes); 
 
 							if (assembly != null)
 							{
@@ -529,22 +546,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 							Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
 
-							sw.Reset();
-
-							sw.Start();
-
-							// Add FilterTypes
-							filterTypes.AddRange(analyzer.FilterTypes);
-
-							// Add FilterActions
-							filterActions.AddRange(analyzer.FilterActions);
-
-							sw.Stop();
-
-							if (analyzer.FilterTypes.Count > 0 && analyzer.FilterActions.Count > 0)
-							{
-								Log.LogMessageFromResources("FiltersAnalyzed", analyzer.FilterTypes.Count, analyzer.FilterActions.Count, sw.Elapsed.TotalSeconds);
-							}
+							StoreFilters(results);
+						
 						}
 						catch (ILAnalyzerException ex)
 						{

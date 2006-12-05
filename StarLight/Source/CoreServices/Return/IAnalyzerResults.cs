@@ -39,7 +39,8 @@ using System.Collections.Generic;
 using System.Text;
 using Composestar.StarLight.CoreServices.Logger;
 using System.Collections.ObjectModel;
-using Composestar.StarLight.Entities.LanguageModel;  
+using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.Configuration; 
   
 namespace Composestar.StarLight.CoreServices.Analyzer
 {
@@ -60,6 +61,18 @@ namespace Composestar.StarLight.CoreServices.Analyzer
 		/// </summary>
 		/// <value>The log items.</value>
 		ReadOnlyCollection<LogItem> LogItems { get; }
+
+		/// <summary>
+		/// Gets the filter types.
+		/// </summary>
+		/// <value>The filter types.</value>
+		ReadOnlyCollection<FilterTypeElement> FilterTypes { get; }
+
+		/// <summary>
+		/// Gets the filter actions.
+		/// </summary>
+		/// <value>The filter actions.</value>
+		ReadOnlyCollection<FilterActionElement> FilterActions { get; }
 
 		/// <summary>
 		/// Adds the log item.

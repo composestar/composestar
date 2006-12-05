@@ -34,11 +34,13 @@
 */
 #endregion
 
+#region Using directives
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Text;
+#endregion
   
 namespace Composestar.StarLight.CoreServices.Logger
 {
@@ -176,7 +178,9 @@ namespace Composestar.StarLight.CoreServices.Logger
 		}
 		#endregion
 
-		private String _code;
+		#region Properties
+
+		private String _code = string.Empty;
 
 		/// <summary>
 		/// Code identifies an application specific error code / warning code. 
@@ -188,7 +192,7 @@ namespace Composestar.StarLight.CoreServices.Logger
 			get { return _code; }
 			set { _code = value; }
 		}
-	
+
 		private string _origin;
 
 		/// <summary>
@@ -206,8 +210,8 @@ namespace Composestar.StarLight.CoreServices.Logger
 			get { return _origin; }
 			set { _origin = value; }
 		}
-	
-		private string _text;
+
+		private string _text = string.Empty;
 
 		/// <summary>
 		/// User friendly text that explains the error, and *must* be localized if you cater to multiple locales.
@@ -217,7 +221,6 @@ namespace Composestar.StarLight.CoreServices.Logger
 			get { return _text; }
 			set { _text = value; }
 		}
-	
 
 		private LogCategory _category;
 
@@ -242,8 +245,9 @@ namespace Composestar.StarLight.CoreServices.Logger
 			get { return _subcategory; }
 			set { _subcategory = value; }
 		}
-	
 
+		#endregion
+	
 		/// <summary>
 		/// Log type
 		/// </summary>
@@ -264,6 +268,25 @@ namespace Composestar.StarLight.CoreServices.Logger
 		}
 
 		/// <summary>
+		/// Formats the file name. If a line number or columnnumber is supplied (not -1), then it will add the line/column number.
+		/// </summary>
+		/// <param name="fileName">Name of the file.</param>
+		/// <param name="lineNumber">Line number</param>
+		/// <param name="columnNumber">Column number</param>
+		public void FormatFileName(string fileName, int lineNumber, int columnNumber)
+		{
+			if (string.IsNullOrEmpty(fileName))
+				throw new ArgumentNullException("fileName"); 
+
+			if (lineNumber == -1)
+				_origin = String.Format(CultureInfo.InvariantCulture, "{0}", fileName);
+			else if (columnNumber == -1)
+				_origin = String.Format(CultureInfo.InvariantCulture, "{0}({1})", fileName, lineNumber.ToString(CultureInfo.InvariantCulture));
+			else
+				_origin = String.Format(CultureInfo.InvariantCulture, "{0}({1},{2})", fileName, lineNumber.ToString(CultureInfo.InvariantCulture), columnNumber.ToString(CultureInfo.InvariantCulture));
+		}
+
+		/// <summary>
 		/// Formatted string conforms the MSBuild output string
 		/// </summary>
 		/// <remarks>
@@ -272,7 +295,7 @@ namespace Composestar.StarLight.CoreServices.Logger
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return String.Format(CultureInfo.CurrentCulture, "{0}:{1} {2} {3}:{4}", Origin, Subcategory, Category.ToString(), Code, Text);
+			return String.Format(CultureInfo.CurrentCulture, "{0} : {1} {2} {3} : {4}", Origin, Subcategory, Category.ToString(), Code, Text);
 		}
 	}
 }

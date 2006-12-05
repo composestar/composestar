@@ -39,7 +39,7 @@ using System.Collections.Generic;
 using System.Text;
 using Composestar.StarLight.CoreServices.Logger;
 using System.Collections.ObjectModel;
-  
+
 namespace Composestar.StarLight.CoreServices.Weaver
 {
 	/// <summary>
@@ -64,5 +64,38 @@ namespace Composestar.StarLight.CoreServices.Weaver
 		/// </summary>
 		/// <param name="item">The item.</param>
 		void AddLogItem(LogItem item);
+
+		/// <summary>
+		/// Gets the result.
+		/// </summary>
+		/// <value>The result.</value>
+		WeaveResult Result { get; }
+
+		/// <summary>
+		/// Sets the weave result.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		void SetWeaveResult(WeaveResult result);
+
+
+	}
+
+	/// <summary>
+	/// Weave result
+	/// </summary>
+	public enum WeaveResult
+	{
+		/// <summary>
+		/// Successful weaving.
+		/// </summary>
+		Success,
+		/// <summary>
+		/// One or more errors.
+		/// </summary>
+		Error,
+		/// <summary>
+		/// The assembly is skipped.
+		/// </summary>
+		Skipped
 	}
 }

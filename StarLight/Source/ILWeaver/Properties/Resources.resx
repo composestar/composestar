@@ -124,7 +124,7 @@
     <value>The constructor .ctor() for the type {0} could not be found.</value>
   </data>
   <data name="CouldNotSaveAssembly" xml:space="preserve">
-    <value>Could not write the assembly to file '{0}'. Check if the file is not in use and has the correct access permissions.</value>
+    <value>Could not write the assembly to file '{0}'. Check if the file is not in use and has the correct access permissions. Exception message was {1}.</value>
   </data>
   <data name="FileNameNullOrEmpty" xml:space="preserve">
     <value>The supplied filename is null or empty.</value>
@@ -191,7 +191,7 @@
     <value>The weaving strategy '{0}' is already in the list of strategies. make sure you have unique weaving strategy names.</value>
   </data>
   <data name="CouldNotSavePdb" xml:space="preserve">
-    <value>Could not write the debug information to file '{0}'. Check if the file is not in use and has the correct access permissions. See the inner exception for more information.</value>
+    <value>Could not write the debug information to file '{0}'. Check if the file is not in use and has the correct access permissions. Exception message was '{1}'.</value>
   </data>
   <data name="MethodNotFound2" xml:space="preserve">
     <value>Could not create a method reference for method named '{0}' in internal/external '{1}' of type '{2}'.</value>

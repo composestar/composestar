@@ -115,6 +115,15 @@ namespace Composestar.StarLight.ILAnalyzer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Process Properties has been enabled for this assembly..
+        /// </summary>
+        internal static string ProcessPropertiesEnabled {
+            get {
+                return ResourceManager.GetString("ProcessPropertiesEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The config collection did not contain a valid filename to the repository file..
         /// </summary>
         internal static string RepositoryFilenameNotSpecified {

@@ -142,7 +142,7 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not write the assembly to file &apos;{0}&apos;. Check if the file is not in use and has the correct access permissions..
+        ///   Looks up a localized string similar to Could not write the assembly to file &apos;{0}&apos;. Check if the file is not in use and has the correct access permissions. Exception message was {1}..
         /// </summary>
         internal static string CouldNotSaveAssembly {
             get {
@@ -151,7 +151,7 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not write the debug information to file &apos;{0}&apos;. Check if the file is not in use and has the correct access permissions. See the inner exception for more information..
+        ///   Looks up a localized string similar to Could not write the debug information to file &apos;{0}&apos;. Check if the file is not in use and has the correct access permissions. Exception message was &apos;{1}&apos;..
         /// </summary>
         internal static string CouldNotSavePdb {
             get {
