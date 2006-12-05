@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.StringTokenizer;
 
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
@@ -63,6 +62,7 @@ public class DotNETType extends Type {
     public DotNETType theDotNETType;
     public DotNETModule Assembly;
     public String NameSpace;
+    public String AssemblyName;
     public String AssemblyQualifiedName;
     private DotNETType BaseType;
     public DotNETModule Module;
@@ -112,6 +112,10 @@ public class DotNETType extends Type {
      */
     public void setAssemblyQualifedName(String name) {
         AssemblyQualifiedName = name;     
+    }
+    
+    public void setAssemblyName(String name) {
+    	AssemblyName = name;
     }
     
     /**
@@ -491,21 +495,9 @@ public class DotNETType extends Type {
      * @roseuid 40FD2B88026A
      */
     public String assemblyName() {
-		String name = this.assemblyQualifiedName();
-		StringTokenizer st = new StringTokenizer(name,",",false);
-		//System.out.println("Name: "+st.countTokens());
-		if(st.hasMoreTokens())
-		{
-			if(st.countTokens() == 6) // Really ugly hack for this case: System.Int16[,] this throws of the assemblyname resulting in errors during assembly transformer
-			{
-				st.nextToken();
-			}
-			if(st.hasMoreTokens())
-				st.nextToken();
-			if(st.hasMoreTokens())
-				name = st.nextToken();
-		}
-		return name;   
+    	int comma = AssemblyName.indexOf(',');
+    	if (comma == -1) return AssemblyName;
+    	return AssemblyName.substring(0, comma);
     } 
     
     
@@ -569,7 +561,7 @@ public class DotNETType extends Type {
 		else if (fullName.equals("System.String")) 
 			return "string" + arrayPart;
 		else
-			return "class [" + this.assemblyName() + "]"+ fullName + arrayPart; 
+			return "class [" + this.assemblyName() + "]" + fullName + arrayPart; 
     }
     
     /** Stuff for LOLA **/

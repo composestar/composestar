@@ -152,6 +152,7 @@ public class StarLightMaster extends Master
 		ModuleSettings increSettings = new ModuleSettings();
 		increSettings.setName("INCRE");
 		increSettings.addProperty("enabled", "true");
+	//	increSettings.addProperty("enabled", "false");
 	//	increSettings.addProperty("config", "INCREconfig-dummies.xml");
 		config.getModuleSettings().addModule("INCRE", increSettings);
 		

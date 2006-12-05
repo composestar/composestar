@@ -103,14 +103,8 @@ namespace Composestar.StarLight.Entities.Configuration
 		[XmlAttribute("SerializedFilename")]
 		public string SerializedFileName
 		{
-			get
-			{
-				return _serializedFileName;
-			}
-			set
-			{
-				_serializedFileName = value;
-			}
+			get { return _serializedFileName; }
+			set { _serializedFileName = value; }
 		}
 
 		private AssemblyElement _assembly;
@@ -122,14 +116,8 @@ namespace Composestar.StarLight.Entities.Configuration
 		[XmlIgnore]
 		public AssemblyElement Assembly
 		{
-			get
-			{
-				return _assembly;
-			}
-			set
-			{
-				_assembly = value;
-			}
+			get { return _assembly; }
+			set { _assembly = value; }
 		}
 
 		/// <summary>

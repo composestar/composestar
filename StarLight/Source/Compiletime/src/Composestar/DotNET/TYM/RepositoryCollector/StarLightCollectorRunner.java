@@ -8,7 +8,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.zip.*;
+import java.util.zip.GZIPInputStream;
 import java.util.HashSet;
 
 import org.apache.xmlbeans.XmlException;
@@ -122,13 +122,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 				copyOperation(ac.getName());
 				collectorcopy.stop();
 			}
-			else {
+			else
+			{
 				INCRETimer collectorrun = incre.getReporter().openProcess("COLLECTOR",ac.getName(),INCRETimer.TYPE_NORMAL);
 				collectOperation(ac);
 				collectorrun.stop();
 			}
-			
-
 		}
 
 		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Processing cps concerns...");
@@ -335,7 +334,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 	{
     	Debug.out(Debug.MODE_DEBUG, "COLLECTOR [INCRE]", "Restoring types from '"+assemblyName+"'");
     	INCRE inc = INCRE.instance();
-    	DataStore ds = DataStore.instance();
     	
     	int typecount = 0;
     	
@@ -376,8 +374,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 		long starttime = System.currentTimeMillis();
 
 		// create mapping from strings to filteractions, to use later to resolve
-		// the actions in
-		// a filtertype
+		// the actions in a filtertype
 		Hashtable actionMapping = new Hashtable();
 
 		// get FilterActions
@@ -464,13 +461,11 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			TypeElement typeElement = types.getTypeArray(i);
 
-			// Debug.out(Debug.MODE_DEBUG,"TYM","Retrieving type
-			// '"+storedType.get_FullName()+"'");
+			// Debug.out(Debug.MODE_DEBUG,"TYM","Retrieving type '"+storedType.get_FullName()+"'");
 
-			// storeTimer.start();
 			DotNETType type = new DotNETType();
-			// storeTimer.stop();
 			type.setName(typeElement.getName());
+			type.setAssemblyName(assembly.getName());
 
 			if (typeElement.getNamespace() != null && typeElement.getName() != null)
 			{
@@ -478,7 +473,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 				{
 					type.setFullName(typeElement.getNamespace() + typeElement.getName());
 				}
-				else {
+				else
+				{
 					type.setFullName(typeElement.getNamespace() + '.' + typeElement.getName());
 				}
 			}
