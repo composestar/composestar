@@ -227,7 +227,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						IWeaveResults weaveResults = weaver.DoWeave();
 
 						// Output the logitems
-						foreach (LogItem item in weaveResults.LogItems)
+						foreach (LogItem item in weaveResults.Log.LogItems)
 						{
 							Log.LogMessageFromText(item.ToString(), MessageImportance.Normal);
 						}

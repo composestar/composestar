@@ -136,7 +136,7 @@
     <value>The analyzer has not yet been initialized. Call the Initialize function first.</value>
   </data>
   <data name="ProcessPropertiesEnabled" xml:space="preserve">
-    <value>Process Properties has been enabled for this assembly.</value>
+    <value>Process Properties has been enabled for assembly '{0}'.</value>
   </data>
   <data name="RepositoryFilenameNotSpecified" xml:space="preserve">
     <value>The config collection did not contain a valid filename to the repository file.</value>

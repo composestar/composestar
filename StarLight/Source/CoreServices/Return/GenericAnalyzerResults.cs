@@ -54,16 +54,17 @@ namespace Composestar.StarLight.CoreServices.Analyzer
 	public class GenericAnalyzerResults : IAnalyzerResults  
 	{
 
-		private IList<LogItem> _logItems;
+
 		private IList<FilterTypeElement> _filterTypes;
 		private IList<FilterActionElement> _filterActions;
+		private LogHelper _logger;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:GenericAnalyzerResults"/> class.
 		/// </summary>
 		public GenericAnalyzerResults()
 		{
-			_logItems = new List<LogItem>();
+			_logger = new LogHelper();
 			_filterTypes = new List<FilterTypeElement>();
 			_filterActions = new List<FilterActionElement>(); 
 		}
@@ -88,27 +89,15 @@ namespace Composestar.StarLight.CoreServices.Analyzer
 		}
 
 		/// <summary>
-		/// Gets the log items.
+		/// Gets the logger.
 		/// </summary>
-		/// <value>The log items.</value>
-		public ReadOnlyCollection<LogItem> LogItems 
+		/// <value>The logger.</value>
+		public LogHelper Log
 		{
 			get
 			{
-				return new ReadOnlyCollection<LogItem>(_logItems); 
+				return _logger;
 			}
-		}
-
-		/// <summary>
-		/// Adds the log item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		public void AddLogItem(LogItem item)
-		{
-			if (item == null)
-				throw new ArgumentNullException("item");
- 
-			_logItems.Add(item);  
 		}
 
 		/// <summary>

@@ -57,10 +57,10 @@ namespace Composestar.StarLight.CoreServices.Analyzer
 		AssemblyElement Assembly { get; }
 
 		/// <summary>
-		/// Gets the log items.
+		/// Gets the logger.
 		/// </summary>
-		/// <value>The log items.</value>
-		ReadOnlyCollection<LogItem> LogItems { get; }
+		/// <value>The logger.</value>
+		LogHelper Log { get; }
 
 		/// <summary>
 		/// Gets the filter types.
@@ -74,10 +74,5 @@ namespace Composestar.StarLight.CoreServices.Analyzer
 		/// <value>The filter actions.</value>
 		ReadOnlyCollection<FilterActionElement> FilterActions { get; }
 
-		/// <summary>
-		/// Adds the log item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		void AddLogItem(LogItem item);
 	}
 }

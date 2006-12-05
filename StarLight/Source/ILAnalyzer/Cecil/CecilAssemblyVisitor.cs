@@ -414,7 +414,7 @@ namespace Composestar.StarLight.ILAnalyzer
 				// override the ProcessProperties setting
 				ProcessProperties = true;
 				// Log this occurrence
-				Results.AddLogItem(new LogItem(AnalyzerOrigin, Properties.Resources.ProcessPropertiesEnabled, LogItem.LogCategory.Information, LogSubCategory, "P0001")); 
+				Results.Log.LogWarning(AnalyzerOrigin, Properties.Resources.ProcessPropertiesEnabled, LogSubCategory, "C00010", _assembly.Name); 
 			}
 
 			// Get all the types defined in the main module. Typically you won't need

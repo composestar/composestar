@@ -371,7 +371,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 					results = analyzer.ExtractAllTypes(item);
 
-					ShowLogItems(results.LogItems); 
+					ShowLogItems(results.Log.LogItems); 
 
 					// Get the assembly from the results.
 					assembly = results.Assembly;
@@ -428,7 +428,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 			}
 					
-
 			return assemblyChanged;
 		}
 
@@ -515,14 +514,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
 							Stopwatch sw = Stopwatch.StartNew();
 							IAnalyzerResults results;
 							results = analyzer.ExtractAllTypes(item);
-							ShowLogItems(results.LogItems);
+							ShowLogItems(results.Log.LogItems);
 
 							AssemblyElement assembly = results.Assembly;
 
-							// Update the filteractions
-							filterActions.AddRange(results.FilterActions);
-							// Update the filterTypes
-							filterTypes.AddRange(results.FilterTypes); 
+							// Store the filters
+							StoreFilters(results);
 
 							if (assembly != null)
 							{

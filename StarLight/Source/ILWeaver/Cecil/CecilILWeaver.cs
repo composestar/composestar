@@ -153,7 +153,7 @@ namespace Composestar.StarLight.ILWeaver
 			// Check for the existence of the file
 			if (!File.Exists(_configuration.InputImagePath))
 			{
-				_weaveResults.AddLogItem(new LogItem(LogOriginName, Properties.Resources.InputImageNotFound, LogItem.LogCategory.Error, PreProcessingSubCategory, FileNotFoundCode, _configuration.InputImagePath));
+				_weaveResults.Log.LogError(LogOriginName, Properties.Resources.InputImageNotFound, PreProcessingSubCategory, FileNotFoundCode, _configuration.InputImagePath);
 				_weaveResults.SetWeaveResult(WeaveResult.Error);
 				return _weaveResults; 
 			}
@@ -176,9 +176,9 @@ namespace Composestar.StarLight.ILWeaver
 
 			if (weaveSpec == null)
 			{
-				_weaveResults.AddLogItem(new LogItem(LogOriginName, Properties.Resources.WeavingSpecNotFound, LogItem.LogCategory.Error, PreProcessingSubCategory, WeaveSpecNotFound,
+				_weaveResults.Log.LogError(LogOriginName, Properties.Resources.WeavingSpecNotFound, PreProcessingSubCategory, WeaveSpecNotFound,
 					_configuration.AssemblyConfiguration.WeaveSpecificationFile,
-					_configuration.AssemblyConfiguration.Name));
+					_configuration.AssemblyConfiguration.Name);
 				_weaveResults.SetWeaveResult(WeaveResult.Error);
 				return _weaveResults; 				
 			}
@@ -338,8 +338,8 @@ namespace Composestar.StarLight.ILWeaver
 				}
 				catch (Exception ex)
 				{
-					_weaveResults.AddLogItem(new LogItem(LogOriginName, Properties.Resources.CouldNotLoadAssembly, LogItem.LogCategory.Error, AssemblySubCategory, CouldNotLoadAssemblyCode,
-											_configuration.InputImagePath, ex.Message));
+					_weaveResults.Log.LogError(LogOriginName, Properties.Resources.CouldNotLoadAssembly, AssemblySubCategory, CouldNotLoadAssemblyCode,
+											_configuration.InputImagePath, ex.Message);
 					return null;
 
 				}
@@ -370,7 +370,7 @@ namespace Composestar.StarLight.ILWeaver
 					catch (Exception)
 					{
 						_configuration.AssemblyConfiguration.DebugFileMode = AssemblyConfig.PdbMode.None;
-						_weaveResults.AddLogItem(new LogItem(LogOriginName, Properties.Resources.ErrorReadingPdb, LogItem.LogCategory.Warning, DebuggerSubcategoryName, ErrorReadingPdbCode, _configuration.DebugImagePath));
+						_weaveResults.Log.LogWarning(LogOriginName, Properties.Resources.ErrorReadingPdb, DebuggerSubcategoryName, ErrorReadingPdbCode, _configuration.DebugImagePath);
 					}
 				}
 
@@ -379,8 +379,8 @@ namespace Composestar.StarLight.ILWeaver
 			}
 			catch (EndOfStreamException)
 			{
-				_weaveResults.AddLogItem(new LogItem(LogOriginName, Properties.Resources.ImageIsBad, LogItem.LogCategory.Error, AssemblySubCategory, ImageIsBadCode,
-											_configuration.InputImagePath));
+				_weaveResults.Log.LogError(LogOriginName, Properties.Resources.ImageIsBad, AssemblySubCategory, ImageIsBadCode,
+											_configuration.InputImagePath);
 				return null;
 				
 			}
@@ -412,8 +412,8 @@ namespace Composestar.StarLight.ILWeaver
 			}
 			catch (Exception ex)
 			{
-				_weaveResults.AddLogItem(new LogItem(LogOriginName, Properties.Resources.CouldNotSavePdb, LogItem.LogCategory.Error, AssemblySubCategory, CouldNotSavePdbCode,
-											_configuration.DebugImagePath, ex.ToString() ));
+				_weaveResults.Log.LogError(LogOriginName, Properties.Resources.CouldNotSavePdb, AssemblySubCategory, CouldNotSavePdbCode,
+											_configuration.DebugImagePath, ex.ToString() );
 				_weaveResults.SetWeaveResult(WeaveResult.Error);
 			}
 
@@ -424,8 +424,8 @@ namespace Composestar.StarLight.ILWeaver
 			}
 			catch (Exception ex)
 			{
-				_weaveResults.AddLogItem(new LogItem(LogOriginName, Properties.Resources.CouldNotSaveAssembly, LogItem.LogCategory.Error, AssemblySubCategory, CouldNotSaveAssemblyCode,
-											_configuration.OutputImagePath, ex.ToString()));
+				_weaveResults.Log.LogError(LogOriginName, Properties.Resources.CouldNotSaveAssembly, AssemblySubCategory, CouldNotSaveAssemblyCode,
+											_configuration.OutputImagePath, ex.ToString());
 				_weaveResults.SetWeaveResult(WeaveResult.Error);
 			}
 		}
@@ -650,7 +650,8 @@ namespace Composestar.StarLight.ILWeaver
             if (method.IsStatic && weaveMethod.HasInputFilters && 
                 (weaveType.HasInternals || weaveType.HasExternals || hasNonStaticConditions))
             {
-				_weaveResults.AddLogItem(new LogItem(LogOriginName, Properties.Resources.NonStaticContextInStaticMethod, LogItem.LogCategory.Warning,CheckerSubCategory, StaticConCode, weaveType.Name, method.Name));
+				_weaveResults.Log.LogWarning(LogOriginName, Properties.Resources.NonStaticContextInStaticMethod, CheckerSubCategory, StaticConCode, 
+					weaveType.Name, method.Name);
                 return;
             }
             
@@ -864,7 +865,7 @@ namespace Composestar.StarLight.ILWeaver
 						outputFilter.Accept(visitor);
 					}
 					catch (Exception ex)
-					{
+					{						
 						throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputImagePath, ex);
 					}
 

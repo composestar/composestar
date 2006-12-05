@@ -115,7 +115,7 @@ namespace Composestar.StarLight.ILAnalyzer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Process Properties has been enabled for this assembly..
+        ///   Looks up a localized string similar to Process Properties has been enabled for assembly &apos;{0}&apos;..
         /// </summary>
         internal static string ProcessPropertiesEnabled {
             get {

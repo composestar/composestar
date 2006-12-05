@@ -53,7 +53,8 @@ namespace Composestar.StarLight.CoreServices.Weaver
 	{
 
 		private WeaveStatistics _weaveStatistics;
-		private IList<LogItem> _logItems; 
+		private IList<LogItem> _logItems;
+		private LogHelper _logger;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:GenericWeaveResults"/> class.
@@ -61,7 +62,20 @@ namespace Composestar.StarLight.CoreServices.Weaver
 		public GenericWeaveResults()
 		{
 			_weaveStatistics = new WeaveStatistics();
-			_logItems = new List<LogItem>(); 
+			_logger = new LogHelper();
+		}
+
+
+		/// <summary>
+		/// Gets the logger.
+		/// </summary>
+		/// <value>The logger.</value>
+		public LogHelper Log
+		{
+			get
+			{
+				return _logger;
+			}
 		}
 
 		/// <summary>
@@ -70,34 +84,12 @@ namespace Composestar.StarLight.CoreServices.Weaver
 		/// <value>The weave statistics.</value>
 		public WeaveStatistics WeaveStatistics
 		{
-			get { return _weaveStatistics; }
-			set { _weaveStatistics = value; }
-		}
-
-		/// <summary>
-		/// Gets the log items.
-		/// </summary>
-		/// <value>The log items.</value>
-		public ReadOnlyCollection<LogItem> LogItems 
-		{
-			get
-			{
-				return new ReadOnlyCollection<LogItem>(_logItems); 
+			get 
+			{ 
+				return _weaveStatistics;
 			}
 		}
-
-		/// <summary>
-		/// Adds the log item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		public void AddLogItem(LogItem item)
-		{
-			if (item == null)
-				throw new ArgumentNullException("item");
- 
-			_logItems.Add(item);  
-		}
-
+		
 		private WeaveResult _weaveResult = WeaveResult.Error;  
 
 		/// <summary>

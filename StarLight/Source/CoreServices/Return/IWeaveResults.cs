@@ -51,19 +51,13 @@ namespace Composestar.StarLight.CoreServices.Weaver
 		/// Gets or sets the weave statistics.
 		/// </summary>
 		/// <value>The weave statistics.</value>
-		WeaveStatistics WeaveStatistics { get; set;}
+		WeaveStatistics WeaveStatistics { get; }
 
 		/// <summary>
-		/// Gets the log items.
+		/// Gets the logger.
 		/// </summary>
-		/// <value>The log items.</value>
-		ReadOnlyCollection<LogItem> LogItems { get; }
-
-		/// <summary>
-		/// Adds the log item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		void AddLogItem(LogItem item);
+		/// <value>The logger.</value>
+		LogHelper Log { get; }
 
 		/// <summary>
 		/// Gets the result.
