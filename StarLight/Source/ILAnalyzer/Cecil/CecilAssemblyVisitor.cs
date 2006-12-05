@@ -506,7 +506,8 @@ namespace Composestar.StarLight.ILAnalyzer
 				if (!ExtractUnresolvedOnly || (ExtractUnresolvedOnly && _unresolvedTypes.Contains(CreateTypeName(type))))
 				{
 					// Get custom attributes
-					typeElement.Attributes.AddRange(ExtractCustomAttributes(type.CustomAttributes));
+					if (!ExtractUnresolvedOnly)
+						typeElement.Attributes.AddRange(ExtractCustomAttributes(type.CustomAttributes));
 
 					_currentType = typeElement;
 
@@ -609,6 +610,8 @@ namespace Composestar.StarLight.ILAnalyzer
 				if ((param.Attributes & Mono.Cecil.ParameterAttributes.Optional) == Mono.Cecil.ParameterAttributes.Optional)
 					pe.ParameterOption = pe.ParameterOption | ParameterOptions.Optional;
 
+				// Remark; we do not harvest custom attributes here. 
+				
 				me.Parameters.Add(pe);
 			}
 
@@ -665,6 +668,9 @@ namespace Composestar.StarLight.ILAnalyzer
 			fe.IsPrivate = field.Attributes == Mono.Cecil.FieldAttributes.Private;
 			fe.IsPublic = field.Attributes == Mono.Cecil.FieldAttributes.Public;
 			fe.IsStatic = field.IsStatic;
+
+			// Custom attributes
+			fe.Attributes.AddRange(ExtractCustomAttributes(field.CustomAttributes));
 
 			_currentType.Fields.Add(fe);
 		}

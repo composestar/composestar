@@ -41,7 +41,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-
+using System.Diagnostics.CodeAnalysis;  
 #endregion
 
 namespace Composestar.StarLight.Entities.LanguageModel
@@ -51,7 +51,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// </summary>
 	[Serializable]
 	[XmlRoot("Field", Namespace = "Entities.TYM.DotNET.Composestar")]
-	public sealed class FieldElement
+	public sealed class FieldElement : ICustomAttributes 
 	{
 		private string _name;
 
@@ -117,5 +117,45 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			get { return _isStatic; }
 			set { _isStatic = value; }
 		}
+
+		#region ICustomAttributes
+
+		/// <summary>
+		/// Gets a value indicating whether this instance has attributes.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance has attributes; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasAttributes
+		{
+			get
+			{
+				return _attributes.Count > 0;
+			}
+		}
+
+		private List<AttributeElement> _attributes = new List<AttributeElement>();
+
+		/// <summary>
+		/// Gets or sets the attributes.
+		/// </summary>
+		/// <value>The attributes.</value>
+		[XmlArray("Attributes")]
+		[XmlArrayItem("Attribute")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		public List<AttributeElement> Attributes
+		{
+			get
+			{
+				return _attributes;
+			}
+			set
+			{
+				_attributes = value;
+			}
+		}
+
+		#endregion
+
 	}
 }

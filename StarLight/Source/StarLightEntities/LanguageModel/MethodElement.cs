@@ -40,6 +40,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Composestar.StarLight.Entities.LanguageModel
@@ -49,7 +50,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// </summary>
 	[Serializable]
 	[XmlRoot("Method", Namespace = "Entities.TYM.DotNET.Composestar")]
-	public sealed class MethodElement
+	public sealed class MethodElement : ICustomAttributes 
 	{
 		/// <summary>
 		/// _name
@@ -249,7 +250,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		/// <value>The attributes.</value>
 		[XmlArray("Attributes")]
 		[XmlArrayItem("Attribute")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
 		public List<AttributeElement> Attributes
 		{
 			get

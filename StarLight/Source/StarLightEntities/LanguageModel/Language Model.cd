@@ -5,7 +5,7 @@
     <Position X="9.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\AssemblyElement.cs</FileName>
-      <HashCode>EgAAIAAAAAAAAAQAAAACAAQAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <HashCode>AgAAIAAAAAAAAAQAAAAAAAQAAAAAAAAAAAAAAABAAAA=</HashCode>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Types" />
@@ -18,7 +18,7 @@
     <Position X="9.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\TypeElement.cs</FileName>
-      <HashCode>AAQgIQAACBQAgIAAAIDCAAZAADAAIECqAAAAAUAAmME=</HashCode>
+      <HashCode>AAQgIQAACBQAgIACAIDCAARQADAAIECqAAAAAUAAmME=</HashCode>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Methods" />
@@ -27,12 +27,13 @@
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Composestar.StarLight.Entities.LanguageModel.MethodElement">
     <Position X="6.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\MethodElement.cs</FileName>
-      <HashCode>AAAAIAAAQBAEAAAQECABAAQIAiAAAGAAAIMAAABEFAE=</HashCode>
+      <HashCode>AAAAIAAAQBAEAAASECABAAQYAiAAAGACAIMAAABEFAE=</HashCode>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Body" />
@@ -43,6 +44,7 @@
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Composestar.StarLight.Entities.LanguageModel.ParameterElement">
     <Position X="3.5" Y="4.5" Width="1.5" />
@@ -61,11 +63,12 @@
     <Position X="12.5" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\FieldElement.cs</FileName>
-      <HashCode>AAAAIAAAQAAAAAQAAAAAAAQIACAAAEAAAQAAAAAAFAA=</HashCode>
+      <HashCode>AAAAIAAAQAAAAAQCAAAAAAQYACAAAEACAQAAAAAAFAA=</HashCode>
     </TypeIdentifier>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Composestar.StarLight.Entities.LanguageModel.MethodBody">
     <Position X="6.5" Y="2.75" Width="1.5" />
@@ -83,6 +86,9 @@
       <FileName>LanguageModel\CallElement.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAIAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
   </Class>
   <Enum Name="Composestar.StarLight.Entities.LanguageModel.ParameterOptions">
     <Position X="0.5" Y="4.5" Width="1.5" />
