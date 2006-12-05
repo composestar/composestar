@@ -5,6 +5,6 @@
 	<item key="runDebugLevel" value="1"/>
 	<item key="mainClass" value="VenusFlyTrapExample.LivingBeing"/>
 	<item key="filterModuleOrder" value=""/>
-	<item key="secretMode" value="NotSet"/>
+	<item key="secretMode" value="-1"/>
 	<item key="buildDebugLevel" value="4"/>
 </section>
