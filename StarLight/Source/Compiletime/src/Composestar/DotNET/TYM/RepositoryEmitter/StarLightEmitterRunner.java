@@ -6,6 +6,7 @@ package Composestar.DotNET.TYM.RepositoryEmitter;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -69,11 +70,12 @@ import composestar.dotNET.tym.entities.WeaveType;
 
 public class StarLightEmitterRunner implements CTCommonModule
 {
+	public static final String MODULE_NAME = "EMITTER";
+	
 	private Map weaveSpecs = new HashMap();
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-
 		// Emit all types to persistent repository
 		try
 		{
@@ -82,7 +84,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		catch (NullPointerException exc)
 		{
 			exc.printStackTrace();
-			throw new ModuleException("NullPointerException in emitter", "EMITTER");
+			throw new ModuleException("NullPointerException in emitter", MODULE_NAME);
 		}
 	}
 
@@ -253,18 +255,21 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 				String filename = FileUtils.removeExtension(config.getSerializedFilename());
 				filename = filename + "_weavespec.xml.gzip";
-				GZIPOutputStream outputStream = null;
+				
+				OutputStream outputStream = null;
 				try
 				{
 					outputStream = new GZIPOutputStream(new FileOutputStream(filename));					
 					doc.save(outputStream);
-					outputStream.close();		
 				}
 				catch (IOException e)
 				{
-					throw new ModuleException("IOException while writing weavespecfile " + filename, "EMITTER");
+					throw new ModuleException("IOException while writing weavespecfile " + filename, MODULE_NAME);
 				}
-				
+				finally
+				{
+					FileUtils.close(outputStream);
+				}
 				
 				config.setWeaveSpecificationFile(filename);
 			}
@@ -356,7 +361,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		boolean hasFilters;
 		Vector methods = new Vector();
 
-		Debug.out(Debug.MODE_DEBUG, "Emitter", "Emit type: " + type.fullName());
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Emit type: " + type.fullName());
 
 		Iterator methodIter = type.getMethods().iterator();
 
@@ -414,7 +419,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				// set filtercode
 				weaveCall.setOutputFilter(translateInstruction(code));
 
-				Debug.out(Debug.MODE_DEBUG, "Emitter", "Storing call" + weaveCall.toString());
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Storing call" + weaveCall.toString());
 
 				// set hasfilters to true to indicate that the method has
 				// filters
