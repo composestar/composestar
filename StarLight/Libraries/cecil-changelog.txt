@@ -1,0 +1,195 @@
+Listed below are the changes made to the Cecil code, modification of the Cecil svn trunk by the author is still pending:
+
+1) PdbReader locks the pdb files
+Add the following code to the Dispose method of the  Mono.Cecil.Pdb.PdbReader
+		public void Dispose ()
+		{
+			m_reader = null;
+         
+      // ISymWrapper/System.Diagnostics.SymbolStore.SymReader locks the assembly, this reader can only be disposed
+      // by an explicit call to the garbage collector. The clean-up is _only_ done in the Finalize method.
+      System.GC.Collect();
+      System.GC.WaitForPendingFinalizers();
+    }
+   
+    
+ 2) NotImplementedException in the ReflectionWriter when using enums in custom attributes
+ Make modifications to the following three classes, diffs listed below
+ 
+ Index: CustomAttrib.cs
+===================================================================
+--- CustomAttrib.cs	(revision 2686)
++++ CustomAttrib.cs	(working copy)
+@@ -60,6 +60,7 @@
+ 			public bool String;
+ 			public bool Type;
+ 			public bool BoxedValueType;
++            public bool Enum;
+ 
+ 			public ElementType FieldOrPropType;
+ 			public object Value;
+
+
+Index: SignatureWriter.cs
+===================================================================
+--- SignatureWriter.cs	(revision 2686)
++++ SignatureWriter.cs	(working copy)
+@@ -366,7 +366,7 @@
+ 
+ 			writer.Write (ca.NumNamed);
+ 
+-			for (int i = 0; i < ca.NumNamed; i++)
++			for (int i = ca.NumNamed-1; i >=0; i--)
+ 				Write (ca.NamedArgs [i], writer);
+ 		}
+ 
+@@ -391,26 +391,34 @@
+ 			if (na.FixedArg.SzArray)
+ 				writer.Write ((byte) ElementType.SzArray);
+ 
+-			writer.Write ((byte) na.FieldOrPropType);
+-
+-			if (na.FieldOrPropType == ElementType.Enum)
++            if (na.FieldOrPropType == ElementType.Class)
++                writer.Write((byte)ElementType.Boxed); // Enum support, mark the FieldOrPropType of the NamedArg as boxed
++            else
++                writer.Write((byte)na.FieldOrPropType);
++            
++  			if (na.FieldOrPropType == ElementType.Enum)
+ 				Write (na.FixedArg.Elems [0].ElemType.FullName);
+ 
+-			Write (na.FieldOrPropName);
+-
++            Write (na.FieldOrPropName);
++            
+ 			Write (na.FixedArg, writer);
+ 		}
+ 
+ 		void Write (CustomAttrib.Elem elem, MemoryBinaryWriter writer) // TODO
+ 		{
+-			if (elem.String)
+-				elem.FieldOrPropType = ElementType.String;
+-			else if (elem.Type)
+-				elem.FieldOrPropType = ElementType.Type;
+-			else if (elem.BoxedValueType)
+-				Write (elem.FieldOrPropType);
+-
+-			switch (elem.FieldOrPropType) {
++            if (elem.String)
++                elem.FieldOrPropType = ElementType.String;
++            else if (elem.Type)
++                elem.FieldOrPropType = ElementType.Type;
++            else if (elem.BoxedValueType)
++                Write(elem.FieldOrPropType);
++            else if (elem.Enum)
++            {         
++                Write(ElementType.Enum);  // Write the FieldOrPropType of the Elem as enum
++                Write(elem.ElemType.FullName);   // Write the FullName of the Enum type
++            }
++            
++            switch (elem.FieldOrPropType) {
+ 			case ElementType.Boolean :
+ 				writer.Write ((byte) ((bool) elem.Value ? 1 : 0));
+ 				break;
+
+
+Index: ReflectionWriter.cs
+===================================================================
+--- ReflectionWriter.cs	(revision 2686)
++++ ReflectionWriter.cs	(working copy)
+@@ -1270,10 +1270,13 @@
+ 			elem.ElemType = type;
+ 			elem.FieldOrPropType = GetCorrespondingType (type.FullName);
+ 
+-			if (elem.FieldOrPropType == ElementType.Class)
+-				throw new NotImplementedException ("Writing enums");
++            
++            //if (elem.FieldOrPropType == ElementType.Class)
++            //{
++                //throw new NotImplementedException ("Writing enums; enum type is "+type.FullName+", enum value is "+value.ToString());
++            //}
+ 
+-			switch (elem.FieldOrPropType) {
++            switch (elem.FieldOrPropType) {
+ 			case ElementType.Boolean :
+ 			case ElementType.Char :
+ 			case ElementType.R4 :
+@@ -1302,6 +1305,14 @@
+ 					elem.FieldOrPropType = GetCorrespondingType (
+ 						GetObjectTypeName (value));
+ 				break;
++            case ElementType.Class:
++                // Handle enums
++                elem.Enum = true;
++
++                // Get the underlying type of the enum (int16, uint16, int32, uint32, etc)
++                elem.FieldOrPropType = GetCorrespondingType(
++                    GetObjectTypeName(value));
++                break;
+ 			}
+ 
+ 			return elem;
+
+
+3) Some assemblies are locked by the PdbReader
+Added a way to open the metadata container on a memorystream by using the IMetadataDispenserEx interface.
+See IMetadataDispenserEx.cs, and the following changes to the PdbFactory and the PdbHelper classes, diffs below
+
+Index: PdbFactory.cs
+===================================================================
+--- PdbFactory.cs	(revision 2775)
++++ PdbFactory.cs	(working copy)
+@@ -37,6 +37,11 @@
+ 			return new PdbReader (PdbHelper.CreateReader (assembly));
+ 		}
+ 
++        public ISymbolReader CreateReader(ModuleDefinition module, string assembly, byte[] binary)
++        {
++            return new PdbReader(PdbHelper.CreateReader(assembly, binary));
++        }
++
+ 		public ISymbolWriter CreateWriter (ModuleDefinition module, string assembly)
+ 		{
+ 			string pdb = string.Concat(assembly.Substring(0, assembly.LastIndexOf(".")), ".pdb");
+
+
+Index: PdbHelper.cs
+===================================================================
+--- PdbHelper.cs	(revision 2775)
++++ PdbHelper.cs	(working copy)
+@@ -72,6 +72,35 @@
+ 			return reader;
+ 		}
+ 
++        public static ISymbolReader CreateReader(string filename, byte[] binaryFile)
++        {
++            SymBinder binder = new SymBinder();
++            object objDispenser, objImporter;
++            CoCreateInstance(ref s_dispenserClassID, null, 1, ref s_dispenserIID, out objDispenser);
++            
++            IntPtr filePtr = Marshal.AllocHGlobal(binaryFile.Length);
++            Marshal.Copy(binaryFile, 0, filePtr, binaryFile.Length);
++
++            IMetaDataDispenserEx dispenser = (IMetaDataDispenserEx)objDispenser;
++            dispenser.OpenScopeOnMemory(filePtr, (uint)binaryFile.Length, 0, ref s_importerIID, out objImporter);
++
++            IntPtr importerPtr = IntPtr.Zero;
++            ISymbolReader reader;
++            try
++            {
++                importerPtr = Marshal.GetComInterfaceForObject(objImporter, typeof(IMetadataImport));
++
++                reader = binder.GetReader(importerPtr, filename, null);
++            }
++            finally
++            {
++                if (importerPtr != IntPtr.Zero)
++                    Marshal.Release(importerPtr);
++            }
++
++            return reader;
++        }
++
+ 		public static ISymbolWriter CreateWriter (string assembly, string pdb)
+ 		{
+ 			SymWriter writer = new SymWriter (false);
