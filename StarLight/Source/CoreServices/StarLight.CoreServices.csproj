@@ -46,7 +46,7 @@
     <Compile Include="Exceptions\ILAnalyzerException.cs" />
     <Compile Include="Exceptions\ILWeaverException.cs" />
     <Compile Include="Exceptions\StarLightException.cs" />
-    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Logger\LogHelper.cs" />
     <Compile Include="Logger\LogItem.cs" />
     <Compile Include="ObjectBuilderConfiguratorBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
