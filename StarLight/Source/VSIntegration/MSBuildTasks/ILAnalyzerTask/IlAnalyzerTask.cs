@@ -37,7 +37,9 @@
 #region Using directives
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Analyzer;
 using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.CoreServices.Logger;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.ILAnalyzer;
@@ -46,6 +48,7 @@ using Microsoft.Build.Utilities;
 using Microsoft.Practices.ObjectBuilder;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel; 
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -313,13 +316,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
 					// Either we could not find the assembly in the config or it was changed.
 
 					AssemblyElement assembly = null;
+					IAnalyzerResults results;
 					Stopwatch sw = new Stopwatch();
 
 					Log.LogMessageFromResources("AnalyzingFile", item);
 
 					sw.Start();
 
-					assembly = analyzer.ExtractAllTypes(item);
+					results = analyzer.ExtractAllTypes(item);
+
+					ShowLogItems(results.LogItems); 
+
+					assembly = results.Assembly;
 
 					sw.Stop();
 					sw.Reset();
@@ -493,8 +501,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 							Log.LogMessageFromResources("AnalyzingFile", item);
 
 							Stopwatch sw = Stopwatch.StartNew();
+							IAnalyzerResults results;
+							results = analyzer.ExtractAllTypes(item);
+							ShowLogItems(results.LogItems);
 
-							AssemblyElement assembly = analyzer.ExtractAllTypes(item);
+							AssemblyElement assembly = results.Assembly; 
 
 							if (assembly != null)
 							{
@@ -618,6 +629,21 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			}
 		}
 
+		/// <summary>
+		/// Show log items
+		/// </summary>
+		/// <param name="items">Items</param>
+		private void ShowLogItems(ReadOnlyCollection<LogItem> items)
+		{
+			if (items == null || items.Count == 0)
+				return;
+
+			// Output the logitems
+			foreach (LogItem item in items)
+			{
+				Log.LogMessageFromText(item.ToString(), MessageImportance.Normal);
+			}
+		}
 		#endregion
 			 
 		/// <summary>

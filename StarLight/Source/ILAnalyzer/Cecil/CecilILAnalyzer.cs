@@ -56,6 +56,8 @@ using Mono.Cecil.Signatures;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.CoreServices.Analyzer;
+using Composestar.StarLight.CoreServices.Logger;
 using Composestar.StarLight.Entities.Configuration;
 
 using Composestar.StarLight.Filters.FilterTypes;
@@ -83,6 +85,8 @@ namespace Composestar.StarLight.ILAnalyzer
 
 		private List<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
 		private List<FilterActionElement> _filterActions = new List<FilterActionElement>();
+
+		private IAnalyzerResults _analyzerResults; 
 
 		#endregion
 
@@ -223,8 +227,10 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// <returns></returns>
 		/// <exception cref="ArgumentException">If the filename is not specified this exception is thrown.</exception>
 		/// <exception cref="FileNotFoundException">If the source file cannot be found, this exception will be thrown.</exception>
-		public AssemblyElement ExtractAllTypes(String fileName)
+		public IAnalyzerResults ExtractAllTypes(String fileName)
 		{
+
+			_analyzerResults = new GenericAnalyzerResults(); 
 
 			#region Checks for null and file exists
 
@@ -232,14 +238,10 @@ namespace Composestar.StarLight.ILAnalyzer
 				throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.FileNameNullOrEmpty));
 
 			if (!File.Exists(fileName))
-			{
 				throw new FileNotFoundException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.FileNotFound, fileName));
-			}
 
 			#endregion
-
-			AssemblyElement result = null;
-
+						
 			// Create a stopwatch for timing
 			Stopwatch sw = new Stopwatch();
 
@@ -259,7 +261,7 @@ namespace Composestar.StarLight.ILAnalyzer
 			visitor.ResolvedTypes = _resolvedTypes;
 
 			// Start the visitor
-			result = visitor.Analyze(fileName);
+			((GenericAnalyzerResults)_analyzerResults).Assembly = visitor.Analyze(fileName);
 
 			// Update the unresolved types
 			_unresolvedAssemblies = visitor.UnresolvedAssemblies;
@@ -275,7 +277,7 @@ namespace Composestar.StarLight.ILAnalyzer
 			sw.Stop();
 
 			// Return the result
-			return result;
+			return _analyzerResults;
 		}
 
 		/// <summary>

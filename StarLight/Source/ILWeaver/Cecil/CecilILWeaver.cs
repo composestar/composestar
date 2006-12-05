@@ -71,6 +71,14 @@ namespace Composestar.StarLight.ILWeaver
 	public sealed class CecilILWeaver : IILWeaver
 	{
 
+		#region Constant values
+
+		private const string LogOriginName = "weaver";
+		private const string DebuggerSubcategoryName = "debugger";
+		private const string ErrorReadingPdbCode = "D1000";
+
+		#endregion
+
 		#region Private variables
 
 		/// <summary>
@@ -132,7 +140,7 @@ namespace Composestar.StarLight.ILWeaver
 			// Check for the existence of the file
 			if (!File.Exists(_configuration.InputImagePath))
 			{
-				throw new FileNotFoundException(string.Format(CultureInfo.CurrentCulture, 
+				throw new FileNotFoundException(string.Format(CultureInfo.CurrentCulture,
 					Properties.Resources.InputImageNotFound, _configuration.InputImagePath));
 			}
 
@@ -172,7 +180,7 @@ namespace Composestar.StarLight.ILWeaver
 
 				// Stop the execution
 				return _weaveResults;
-			} 
+			}
 
 			// Load the file
 			AssemblyDefinition targetAssembly;
@@ -186,7 +194,7 @@ namespace Composestar.StarLight.ILWeaver
 
 			// Check if the _targetAssemblyDefinition is available
 			if (targetAssembly == null)
-				throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);							
+				throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);
 
 			// Get only the types we have info for
 			foreach (WeaveType weaveType in weaveSpec.WeaveTypes)
@@ -239,8 +247,8 @@ namespace Composestar.StarLight.ILWeaver
 
 						swMethod.Reset();
 
-					} 
-				} 
+					}
+				}
 
 				// Import the changed type into the AssemblyDefinition
 				if (_typeChanged)
@@ -268,13 +276,13 @@ namespace Composestar.StarLight.ILWeaver
 			{
 				// Add the SkipWeave attribute to indicate we have already weaved on this assembly
 				StoreTimeStamp(sw.Elapsed, "Applying SkipWeave attribute");
-				CustomAttribute skipWeave = new CustomAttribute(CecilUtilities.CreateMethodReference(targetAssembly, CachedMethodDefinition.SkipWeaveConstructor)); 
-				targetAssembly.CustomAttributes.Add(skipWeave);   
+				CustomAttribute skipWeave = new CustomAttribute(CecilUtilities.CreateMethodReference(targetAssembly, CachedMethodDefinition.SkipWeaveConstructor));
+				targetAssembly.CustomAttributes.Add(skipWeave);
 
 				StoreTimeStamp(sw.Elapsed, "Saving assembly");
 				SaveAssembly(targetAssembly, pdbReader);
 				StoreTimeStamp(sw.Elapsed, "Saved assembly");
-			} 
+			}
 
 			// Stop timing
 			sw.Stop();
@@ -325,7 +333,7 @@ namespace Composestar.StarLight.ILWeaver
 				targetAssembly = AssemblyFactory.GetAssembly(binaryFile);
 
 				// Get the pdb
-				if (_configuration.AssemblyConfiguration.DebugFileMode != AssemblyConfig.PdbMode.None &&  
+				if (_configuration.AssemblyConfiguration.DebugFileMode != AssemblyConfig.PdbMode.None &&
 					File.Exists(_configuration.DebugImagePath))
 				{
 					// pdbReader = new PdbFactory().CreateReader(targetAssembly.MainModule, _configuration.InputImagePath);
@@ -339,8 +347,8 @@ namespace Composestar.StarLight.ILWeaver
 					catch (Exception)
 					{
 						_configuration.AssemblyConfiguration.DebugFileMode = AssemblyConfig.PdbMode.None;
-						_weaveResults.AddLogItem(new LogItem("weaver", "Could not open pdb debug file '{0}'. Disabling debug generation for this assembly.", LogItem.LogCategory.Warning, "DEBUGGER", "D1000", _configuration.DebugImagePath)); 
-					}					
+						_weaveResults.AddLogItem(new LogItem(LogOriginName, Properties.Resources.ErrorReadingPdb, LogItem.LogCategory.Warning, DebuggerSubcategoryName, ErrorReadingPdbCode, _configuration.DebugImagePath));
+					}
 				}
 
 				binaryFile = null;
@@ -366,7 +374,7 @@ namespace Composestar.StarLight.ILWeaver
 			// Save debug
 			try
 			{
-				if (_configuration.AssemblyConfiguration.DebugFileMode != AssemblyConfig.PdbMode.None &&  
+				if (_configuration.AssemblyConfiguration.DebugFileMode != AssemblyConfig.PdbMode.None &&
 					File.Exists(_configuration.DebugImagePath))
 				{
 					if (pdbReader != null)
@@ -395,12 +403,12 @@ namespace Composestar.StarLight.ILWeaver
 				throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
 					Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath),
 					_configuration.OutputImagePath, ex);
-			} 
+			}
 		}
 
 
 		#endregion
-		
+
 		/// <summary>
 		/// Weaves the internals.
 		/// </summary>
@@ -465,9 +473,7 @@ namespace Composestar.StarLight.ILWeaver
 
 					// Initialize internal in every constructor of the parent type
 					foreach (MethodDefinition constructor in type.Constructors)
-					{
 						if (constructor.HasBody && !constructor.IsStatic && !constructor.ExplicitThis)
-						{
 							if (constructor.Body.Instructions.Count >= 1)
 							{
 								// Gets the CilWorker of the method for working with CIL instructions
@@ -485,8 +491,6 @@ namespace Composestar.StarLight.ILWeaver
 								// Log
 								StoreInstructionLog(instructions, "Internal code added to {0} for internal {1}", constructor.ToString(), internalDef.ToString());
 							}
-						}
-					}
 				}
 			}
 
@@ -560,9 +564,7 @@ namespace Composestar.StarLight.ILWeaver
 
 				// Initialize external in every constructor of the parent type
 				foreach (MethodDefinition constructor in type.Constructors)
-				{
 					if (constructor.HasBody && !constructor.IsStatic && !constructor.ExplicitThis)
-					{
 						if (constructor.Body.Instructions.Count >= 1)
 						{
 							// Gets the CilWorker of the method for working with CIL instructions
@@ -580,8 +582,6 @@ namespace Composestar.StarLight.ILWeaver
 							// Log
 							StoreInstructionLog(instructions, "External code added to {0} for external {1}", constructor.ToString(), externalDef.ToString());
 						}
-					}
-				}
 			}
 
 		}
@@ -613,15 +613,11 @@ namespace Composestar.StarLight.ILWeaver
 
 			// Add the inputfilters
 			if (weaveMethod.HasInputFilters)
-			{
 				WeaveInputFilters(targetAssembly, method, weaveMethod, weaveType);
-			}
 
 			// Add the outputfilters
 			if (weaveMethod.HasOutputFilters)
-			{
 				WeaveOutputFilters(targetAssembly, method, weaveMethod, weaveType);
-			}
 		}
 
 		/// <summary>
@@ -793,13 +789,9 @@ namespace Composestar.StarLight.ILWeaver
 			// Loop through all the instructions
 			List<Instruction> callInstructions = new List<Instruction>();
 			foreach (Instruction instruction in method.Body.Instructions)
-			{
 				// Check for a call instruction
 				if (IsCallInstruction(instruction))
-				{
 					callInstructions.Add(instruction);
-				}
-			}
 
 			foreach (Instruction instruction in callInstructions)
 			{

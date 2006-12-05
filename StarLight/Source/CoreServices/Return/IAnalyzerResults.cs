@@ -34,74 +34,37 @@
 */
 #endregion
 
-#region Using directives
-using Composestar.StarLight.Entities.Configuration;
-using Composestar.StarLight.Entities.LanguageModel;
-using Composestar.StarLight.CoreServices.Analyzer;   
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
-#endregion
-
-namespace Composestar.StarLight.CoreServices
+using Composestar.StarLight.CoreServices.Logger;
+using System.Collections.ObjectModel;
+using Composestar.StarLight.Entities.LanguageModel;  
+  
+namespace Composestar.StarLight.CoreServices.Analyzer
 {
-
 	/// <summary>
-	/// Interface for the IL analyzer
+	/// Interface for the analyzer results
 	/// </summary>
-	public interface IILAnalyzer : IDisposable
+	public interface IAnalyzerResults
 	{
 
 		/// <summary>
-		/// Gets the unresolved assemblies.
+		/// Gets the assembly.
 		/// </summary>
-		/// <value>The unresolved assemblies.</value>
-		ReadOnlyCollection<string> UnresolvedAssemblies { get; }
+		/// <value>The assembly.</value>
+		AssemblyElement Assembly { get; }
 
 		/// <summary>
-		/// Gets the resolved assemblies.
+		/// Gets the log items.
 		/// </summary>
-		/// <value>The resolved assemblies.</value>	
-		ReadOnlyCollection<string> ResolvedAssemblies { get; }
+		/// <value>The log items.</value>
+		ReadOnlyCollection<LogItem> LogItems { get; }
 
 		/// <summary>
-		/// Gets or sets the unresolved types.
+		/// Adds the log item.
 		/// </summary>
-		/// <value>The unresolved types.</value>
-		[SuppressMessage("Microsoft.Usage", "CA2227")]
-		List<string> UnresolvedTypes { get; set; }
-
-		/// <summary>
-		/// Gets the resolved types.
-		/// </summary>
-		/// <value>The resolved types.</value>
-		[SuppressMessage("Microsoft.Design", "CA1002")]
-		IList<string> ResolvedTypes { get; }
-
-		/// <summary>
-		/// Resolves the assembly locations.
-		/// </summary>
-		/// <returns></returns>
-		Collection<String> ResolveAssemblyLocations();
-
-		/// <summary>
-		/// Extracts all types.
-		/// </summary>
-		/// <param name="fileName">Name of the file.</param>
-		/// <returns></returns>
-		IAnalyzerResults ExtractAllTypes(String fileName);
-
-		/// <summary>
-		/// Gets all encountered FilterTypes
-		/// </summary>
-		ReadOnlyCollection<FilterTypeElement> FilterTypes { get; }
-
-		/// <summary>
-		/// Gets all encountered FilterActions
-		/// </summary>
-		ReadOnlyCollection<FilterActionElement> FilterActions { get; }
-
+		/// <param name="item">The item.</param>
+		void AddLogItem(LogItem item);
 	}
 }

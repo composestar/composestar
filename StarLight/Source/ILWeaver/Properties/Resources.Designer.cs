@@ -160,6 +160,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not open pdb debug file &apos;{0}&apos;. Disabling debug generation for this assembly..
+        /// </summary>
+        internal static string ErrorReadingPdb {
+            get {
+                return ResourceManager.GetString("ErrorReadingPdb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The field {0} could not be found..
         /// </summary>
         internal static string FieldNotFound {

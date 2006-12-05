@@ -205,4 +205,7 @@
   <data name="SetInnerCallFailed" xml:space="preserve">
     <value>Could not set inner call context for method '{0}' calling method '{1}'</value>
   </data>
+  <data name="ErrorReadingPdb" xml:space="preserve">
+    <value>Could not open pdb debug file '{0}'. Disabling debug generation for this assembly.</value>
+  </data>
 </root>

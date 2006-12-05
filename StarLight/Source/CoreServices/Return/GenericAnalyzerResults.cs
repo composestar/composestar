@@ -35,73 +35,76 @@
 #endregion
 
 #region Using directives
-using Composestar.StarLight.Entities.Configuration;
-using Composestar.StarLight.Entities.LanguageModel;
-using Composestar.StarLight.CoreServices.Analyzer;   
+using Composestar.StarLight.CoreServices.Logger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Composestar.StarLight.Entities.LanguageModel; 
 #endregion
 
-namespace Composestar.StarLight.CoreServices
+namespace Composestar.StarLight.CoreServices.Analyzer
 {
-
 	/// <summary>
-	/// Interface for the IL analyzer
+	/// The analyzer results class is returned from the analyzer.
 	/// </summary>
-	public interface IILAnalyzer : IDisposable
+	[Serializable]
+	public class GenericAnalyzerResults : IAnalyzerResults  
 	{
 
-		/// <summary>
-		/// Gets the unresolved assemblies.
-		/// </summary>
-		/// <value>The unresolved assemblies.</value>
-		ReadOnlyCollection<string> UnresolvedAssemblies { get; }
+		private IList<LogItem> _logItems; 
 
 		/// <summary>
-		/// Gets the resolved assemblies.
+		/// Initializes a new instance of the <see cref="T:GenericAnalyzerResults"/> class.
 		/// </summary>
-		/// <value>The resolved assemblies.</value>	
-		ReadOnlyCollection<string> ResolvedAssemblies { get; }
+		public GenericAnalyzerResults()
+		{
+			_logItems = new List<LogItem>(); 
+		}
+
+		private AssemblyElement _assembly;
+
 
 		/// <summary>
-		/// Gets or sets the unresolved types.
+		/// Gets or sets the assembly.
 		/// </summary>
-		/// <value>The unresolved types.</value>
-		[SuppressMessage("Microsoft.Usage", "CA2227")]
-		List<string> UnresolvedTypes { get; set; }
+		/// <value>The assembly.</value>
+		public AssemblyElement Assembly
+		{
+			get
+			{
+				return _assembly;
+			}
+			set
+			{
+				_assembly = value;
+			}
+		}
 
 		/// <summary>
-		/// Gets the resolved types.
+		/// Gets the log items.
 		/// </summary>
-		/// <value>The resolved types.</value>
-		[SuppressMessage("Microsoft.Design", "CA1002")]
-		IList<string> ResolvedTypes { get; }
+		/// <value>The log items.</value>
+		public ReadOnlyCollection<LogItem> LogItems 
+		{
+			get
+			{
+				return new ReadOnlyCollection<LogItem>(_logItems); 
+			}
+		}
 
 		/// <summary>
-		/// Resolves the assembly locations.
+		/// Adds the log item.
 		/// </summary>
-		/// <returns></returns>
-		Collection<String> ResolveAssemblyLocations();
-
-		/// <summary>
-		/// Extracts all types.
-		/// </summary>
-		/// <param name="fileName">Name of the file.</param>
-		/// <returns></returns>
-		IAnalyzerResults ExtractAllTypes(String fileName);
-
-		/// <summary>
-		/// Gets all encountered FilterTypes
-		/// </summary>
-		ReadOnlyCollection<FilterTypeElement> FilterTypes { get; }
-
-		/// <summary>
-		/// Gets all encountered FilterActions
-		/// </summary>
-		ReadOnlyCollection<FilterActionElement> FilterActions { get; }
+		/// <param name="item">The item.</param>
+		public void AddLogItem(LogItem item)
+		{
+			if (item == null)
+				throw new ArgumentNullException("item");
+ 
+			_logItems.Add(item);  
+		}
 
 	}
 }

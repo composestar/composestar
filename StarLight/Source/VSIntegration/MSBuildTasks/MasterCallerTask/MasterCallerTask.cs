@@ -38,6 +38,8 @@
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Settings;
+using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.CoreServices.Logger;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.LanguageModel;
 using Microsoft.Build.Framework;

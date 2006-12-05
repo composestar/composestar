@@ -54,6 +54,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Return\GenericAnalyzerResults.cs" />
+    <Compile Include="Return\IAnalyzerResults.cs" />
     <Compile Include="Return\IWeaveResults.cs" />
     <Compile Include="Return\WeaveStatistics.cs" />
     <Compile Include="Services\ICpsParser.cs" />
