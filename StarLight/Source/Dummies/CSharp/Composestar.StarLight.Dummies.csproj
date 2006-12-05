@@ -10,7 +10,7 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>CSharpDummyGenerator</AssemblyName>
+    <AssemblyName>Composestar.StarLight.Dummies</AssemblyName>
     <AssemblyOriginatorKeyFile>starlight.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
