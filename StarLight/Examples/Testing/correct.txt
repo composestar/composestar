@@ -11,15 +11,9 @@ Interface:
 Default value for CustomAttributes.MyProperty is 'Gigabytes', default value is correct? True
 Value for CustomAttributes.MyProperty set to 'Kilobytes', value now is 'Kilobytes' (check passed: True)
 
-Log : cur sel:get_Minimum, cur method: get_Minimum (declaring type BasicTests.MyValueType).
-Local variables: 2
-Log : cur sel:get_Minimum, cur method: get_Minimum (declaring type BasicTests.MyValueType).
-Local variables: 2
-Log : cur sel:get_Maximum, cur method: get_Maximum (declaring type BasicTests.MyValueType).
-Local variables: 2
-Log : cur sel:get_Maximum, cur method: get_Maximum (declaring type BasicTests.MyValueType).
-Local variables: 2
 ValueType Test: minimum=1 (correct=True), maximum=10 (correct=True)
+
+Argument tests for static and non-static method, see tracelog
 
 BasicTests.TestInternal.ctor()
 BasicTests.TestExternal.ctor()
@@ -73,8 +67,6 @@ BasicTests.FilterTests.func7: s='foo'()
 Log : cur sel:func8, cur method: func8 (declaring type BasicTests.FilterTests).
 Local variables: 3
 BasicTests.FilterTests.func8: generic.ToString() = 'non-static generic method'()
-Log : cur sel:func1, cur method: func1 (declaring type BasicTests.StaticFilterTests`1).
-Local variables: 2
 
 Log : cur sel:func9, cur method: func9 (declaring type BasicTests.FilterTests).
 Local variables: 2

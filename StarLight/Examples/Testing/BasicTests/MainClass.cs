@@ -30,6 +30,14 @@ namespace BasicTests
 
 			Console.Out.WriteLine("");
 
+            Console.Out.WriteLine("Argument tests for static and non-static method, see tracelog");
+            MyLogger.GetInstance().Write("arg1");
+            MyLogger.GetInstance().Write("arg1", 2);
+            MyLogger.WriteLine("arg1");
+            MyLogger.WriteLine("arg1", 2);
+
+            Console.Out.WriteLine("");
+
 			FilterTests filtTests = new FilterTests();
 			filtTests.func1();
 			filtTests.func2();

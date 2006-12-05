@@ -32,7 +32,7 @@ concern FilterTestsConcern in BasicTests
 	filtermodule FM2
 	{
 		inputfilters
-			logging     : Logging = { True => [*.*] }
+			logging     : Tracing = { True => [*.*] }
 	}
 
 	superimposition
@@ -41,10 +41,12 @@ concern FilterTestsConcern in BasicTests
 			baseClass = { C | isClassWithName(C, 'BasicTests.FilterTests') };
 			baseStaticClass = { C | isClassWithName(C, 'BasicTests.StaticFilterTests`1') };
 			valuetypeClass = { C | isClassWithName(C, 'BasicTests.MyValueType') };
+			singletonClass = { C | isClassWithName(C, 'BasicTests.MyLogger') };
 			//{ C | isClass(C), isClassWithName(C, P), matchPattern(P, 'BasicTests.StaticFilterTests.*') };
 		filtermodules
 			baseClass <- FM1;
 			baseStaticClass <- FM2;
 			valuetypeClass <- FM2;
+			singletonClass <- FM2;
 	}
 }
