@@ -120,4 +120,7 @@
   <data name="CouldNotReadRegistryValues" xml:space="preserve">
     <value>Unable to read the requested registry values. Make sure the registry contains the correct settings by running the setup application.</value>
   </data>
+  <data name="SavingNotImplemented" xml:space="preserve">
+    <value>Saving to the registry is currently not implemented.</value>
+  </data>
 </root>

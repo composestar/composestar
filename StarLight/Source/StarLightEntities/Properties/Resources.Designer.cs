@@ -68,5 +68,14 @@ namespace Composestar.StarLight.Entities.Properties {
                 return ResourceManager.GetString("CouldNotReadRegistryValues", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving to the registry is currently not implemented..
+        /// </summary>
+        internal static string SavingNotImplemented {
+            get {
+                return ResourceManager.GetString("SavingNotImplemented", resourceCulture);
+            }
+        }
     }
 }

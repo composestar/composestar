@@ -141,6 +141,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Gets or sets a value indicating whether FILTH output is enabled.
 		/// </summary>
 		/// <value><c>true</c> if FILTH output is enabled; otherwise, <c>false</c>.</value>
+		[SuppressMessage("Microsoft.Naming", "CA1705")]
 		public Boolean FILTHOutput
 		{
 			get
@@ -213,7 +214,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 					CurrentDebugMode = (DebugMode)Enum.Parse(typeof(DebugMode), JavaDebugLevel);
 					debugLevelValue = (short)CurrentDebugMode;
 				}
-				catch
+				catch (ArgumentException ex)
 				{
 					Log.LogErrorFromResources("CouldNotConvertDebugLevel", JavaDebugLevel);
 					return false;

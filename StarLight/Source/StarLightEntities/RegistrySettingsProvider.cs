@@ -46,6 +46,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading;
 using System.Xml.Serialization;
+using Composestar.StarLight.Entities.Properties;
 #endregion
 
 // Technically; this is not an entity. It is used in the CoreServices for the StarLightSettings class.
@@ -73,6 +74,8 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 	/// </remarks>
 	public class RegistrySettingsProvider : SettingsProvider   
 	{
+		private const string ProviderDescription = "StarLight Registry Settings Provider";
+		private const string ProviderApplicationName = "StarLight RegistrySettingsProvider";
 
 		public RegistrySettingsProvider()
 		{
@@ -101,7 +104,7 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 		{
 			get
 			{
-				return "StarLight Registry Settings Provider";
+				return ProviderDescription;
 			}
 		}
 
@@ -114,7 +117,7 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 		{
 			get
 			{
-				return "StarLight RegistrySettingsProvider";
+				return ProviderApplicationName;
 			}
 			set
 			{
@@ -147,7 +150,7 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 			string registryPath = RetrieveCurrentVersionPath();
 
 			if (string.IsNullOrEmpty(registryPath))
-				throw new ConfigurationErrorsException(Composestar.StarLight.Entities.Properties.Resources.CouldNotReadRegistryValues);
+				throw new ConfigurationErrorsException(Resources.CouldNotReadRegistryValues);
 
 			// Open the hive with the correct version specific settings
 			RegistryKey regKey = Registry.LocalMachine.OpenSubKey(registryPath);
@@ -165,7 +168,7 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 			}
 			else
 			{
-				throw new ConfigurationErrorsException(Composestar.StarLight.Entities.Properties.Resources.CouldNotReadRegistryValues);
+				throw new ConfigurationErrorsException(Resources.CouldNotReadRegistryValues);
 			}
 
 			return values;
@@ -179,7 +182,7 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 		/// <param name="collection">A <see cref="T:System.Configuration.SettingsPropertyValueCollection"></see> representing the group of property settings to set.</param>
 		public override void SetPropertyValues(SettingsContext context, SettingsPropertyValueCollection collection)
 		{
-			throw new NotImplementedException("Saving to the registry is currently not implemented.");
+			throw new NotImplementedException(Resources.SavingNotImplemented);
 		}
 
 		///// <summary>
