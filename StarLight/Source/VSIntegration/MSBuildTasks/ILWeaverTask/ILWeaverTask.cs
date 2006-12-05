@@ -38,7 +38,8 @@
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.StarLight.CoreServices.ILWeaver;
+using Composestar.StarLight.CoreServices.Weaver;
+using Composestar.StarLight.CoreServices.Logger;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.ILWeaver;
@@ -223,26 +224,32 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(entitiesAccessor, configuration));
 
 						// Perform weaving
-						WeaveStatistics weaveStats = weaver.DoWeave();
+						IWeaveResults weaveResults = weaver.DoWeave();
+
+						// Output the logitems
+						foreach (LogItem item in weaveResults.LogItems)
+						{
+							Log.LogMessageFromText(item.ToString(), MessageImportance.Normal);
+						}
 
 						// Show information about weaving
-						Log.LogMessageFromResources("WeavingCompleted", weaveStats.TotalWeaveTime.TotalSeconds);
+						Log.LogMessageFromResources("WeavingCompleted", weaveResults.WeaveStatistics.TotalWeaveTime.TotalSeconds);
 						switch (configuration.WeaveDebugLevel)
 						{
 							case CecilWeaverConfiguration.WeaveDebug.None:
 								break;
 							case CecilWeaverConfiguration.WeaveDebug.Statistics:
-								ShowWeavingStats(assembly, weaveStats);
+								ShowWeavingStats(assembly, weaveResults.WeaveStatistics);
 								break;
 							case CecilWeaverConfiguration.WeaveDebug.Detailed:
-								ShowWeavingStats(assembly, weaveStats);
+								ShowWeavingStats(assembly, weaveResults.WeaveStatistics);
 
 								// Save instruction log
 								string logFilename = assembly.FileName + ".weavelog.txt";
 								string timingFilename = assembly.FileName + ".weavetiming.txt";
 
-								weaveStats.SaveInstructionsLog(logFilename);
-								weaveStats.SaveTimingLog(timingFilename);
+								weaveResults.WeaveStatistics.SaveInstructionsLog(logFilename);
+								weaveResults.WeaveStatistics.SaveTimingLog(timingFilename);
 
 								Log.LogMessageFromResources("WeavingInstructionsLogSaved", logFilename);
 								Log.LogMessageFromResources("WeavingTimingLogSaved", timingFilename);

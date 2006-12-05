@@ -37,7 +37,8 @@
 #region Using directives
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.StarLight.CoreServices.ILWeaver;
+using Composestar.StarLight.CoreServices.Weaver;
+using Composestar.StarLight.CoreServices.Logger;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
@@ -85,9 +86,9 @@ namespace Composestar.StarLight.ILWeaver
 		/// </summary>
 		private bool _typeChanged;
 		/// <summary>
-		/// _weave stats
+		/// Stores the weave results.
 		/// </summary>
-		private WeaveStatistics _weaveStats;
+		private IWeaveResults _weaveResults;
 
 		#endregion
 
@@ -126,7 +127,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// <summary>
 		/// Perform the weaving actions.
 		/// </summary>
-		WeaveStatistics IILWeaver.DoWeave()
+		IWeaveResults IILWeaver.DoWeave()
 		{
 			// Check for the existence of the file
 			if (!File.Exists(_configuration.InputImagePath))
@@ -135,8 +136,8 @@ namespace Composestar.StarLight.ILWeaver
 					Properties.Resources.InputImageNotFound, _configuration.InputImagePath));
 			}
 
-			// Reset statistics
-			_weaveStats = new WeaveStatistics();
+			// Create new weave results
+			_weaveResults = new GenericWeaveResults();
 
 			// Start timing
 			Stopwatch sw = new Stopwatch();
@@ -167,10 +168,10 @@ namespace Composestar.StarLight.ILWeaver
 			{
 				// Stop timing
 				sw.Stop();
-				_weaveStats.TotalWeaveTime = sw.Elapsed;
+				_weaveResults.WeaveStatistics.TotalWeaveTime = sw.Elapsed;
 
 				// Stop the execution
-				return _weaveStats;
+				return _weaveResults;
 			} 
 
 			// Load the file
@@ -231,9 +232,9 @@ namespace Composestar.StarLight.ILWeaver
 						// Update stats
 						if (_configuration.WeaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
 						{
-							_weaveStats.MethodsProcessed++;
-							_weaveStats.TotalMethodWeaveTime = _weaveStats.TotalMethodWeaveTime.Add(swMethod.Elapsed);
-							_weaveStats.MaxWeaveTimePerMethod = TimeSpan.FromTicks(Math.Max(_weaveStats.MaxWeaveTimePerMethod.Ticks, swMethod.Elapsed.Ticks));
+							_weaveResults.WeaveStatistics.MethodsProcessed++;
+							_weaveResults.WeaveStatistics.TotalMethodWeaveTime = _weaveResults.WeaveStatistics.TotalMethodWeaveTime.Add(swMethod.Elapsed);
+							_weaveResults.WeaveStatistics.MaxWeaveTimePerMethod = TimeSpan.FromTicks(Math.Max(_weaveResults.WeaveStatistics.MaxWeaveTimePerMethod.Ticks, swMethod.Elapsed.Ticks));
 						}
 
 						swMethod.Reset();
@@ -254,16 +255,16 @@ namespace Composestar.StarLight.ILWeaver
 				// Update stats
 				if (_configuration.WeaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
 				{
-					_weaveStats.TypesProcessed++;
-					_weaveStats.TotalTypeWeaveTime = _weaveStats.TotalTypeWeaveTime.Add(swType.Elapsed);
-					_weaveStats.MaxWeaveTimePerType = TimeSpan.FromTicks(Math.Max(_weaveStats.MaxWeaveTimePerType.Ticks, swType.Elapsed.Ticks));
+					_weaveResults.WeaveStatistics.TypesProcessed++;
+					_weaveResults.WeaveStatistics.TotalTypeWeaveTime = _weaveResults.WeaveStatistics.TotalTypeWeaveTime.Add(swType.Elapsed);
+					_weaveResults.WeaveStatistics.MaxWeaveTimePerType = TimeSpan.FromTicks(Math.Max(_weaveResults.WeaveStatistics.MaxWeaveTimePerType.Ticks, swType.Elapsed.Ticks));
 				}
 				swType.Reset();
 
 			}
 
 			// Save the modified assembly only if it is changed.
-			if (_weaveStats.InputFiltersAdded > 0 || _weaveStats.OutputFiltersAdded > 0 || _weaveStats.InternalsAdded > 0 || _weaveStats.ExternalsAdded > 0)
+			if (_weaveResults.WeaveStatistics.InputFiltersAdded > 0 || _weaveResults.WeaveStatistics.OutputFiltersAdded > 0 || _weaveResults.WeaveStatistics.InternalsAdded > 0 || _weaveResults.WeaveStatistics.ExternalsAdded > 0)
 			{
 				// Add the SkipWeave attribute to indicate we have already weaved on this assembly
 				StoreTimeStamp(sw.Elapsed, "Applying SkipWeave attribute");
@@ -279,9 +280,9 @@ namespace Composestar.StarLight.ILWeaver
 			sw.Stop();
 
 			StoreTimeStamp(sw.Elapsed, "Weaving completed");
-			_weaveStats.TotalWeaveTime = sw.Elapsed;
+			_weaveResults.WeaveStatistics.TotalWeaveTime = sw.Elapsed;
 
-			return _weaveStats;
+			return _weaveResults;
 		}
 
 		#region Loading and Saving of assembly
@@ -337,9 +338,8 @@ namespace Composestar.StarLight.ILWeaver
 					}
 					catch (Exception)
 					{
-						_configuration.AssemblyConfiguration.DebugFileMode = AssemblyConfig.PdbMode.None;  	
-						
-						// TODO log this error
+						_configuration.AssemblyConfiguration.DebugFileMode = AssemblyConfig.PdbMode.None;
+						_weaveResults.AddLogItem(new LogItem("weaver", "Could not open pdb debug file '{0}'. Disabling debug generation for this assembly.", LogItem.LogCategory.Warning, "DEBUGGER", "D1000", _configuration.DebugImagePath)); 
 					}					
 				}
 
@@ -400,6 +400,7 @@ namespace Composestar.StarLight.ILWeaver
 
 
 		#endregion
+		
 		/// <summary>
 		/// Weaves the internals.
 		/// </summary>
@@ -451,7 +452,7 @@ namespace Composestar.StarLight.ILWeaver
 				type.Fields.Add(internalDef);
 
 				// Increase the number of internals
-				_weaveStats.InternalsAdded++;
+				_weaveResults.WeaveStatistics.InternalsAdded++;
 
 				// Add initialization code to type constructor(s)
 				if (!internalTypeRef.IsValueType && internalTypeRef.Name != "String" && internalTypeRef.Name != "Array")
@@ -541,7 +542,7 @@ namespace Composestar.StarLight.ILWeaver
 				type.Fields.Add(externalDef);
 
 				// Increase the number of externals
-				_weaveStats.ExternalsAdded++;
+				_weaveResults.WeaveStatistics.ExternalsAdded++;
 
 				// Get the method referenced by the external
 				MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector,
@@ -707,7 +708,7 @@ namespace Composestar.StarLight.ILWeaver
 				StoreInstructionLog(visitor.Instructions, "Input filters for {0}", method.ToString());
 
 				// Increase the number of inputfilters added
-				_weaveStats.InputFiltersAdded++;
+				_weaveResults.WeaveStatistics.InputFiltersAdded++;
 			}
 
 			//
@@ -844,10 +845,10 @@ namespace Composestar.StarLight.ILWeaver
 						instructionsCount += ReplaceAndInsertInstructionList(ref worker, instruction, visitor.Instructions);
 
 						// Log
-						StoreInstructionLog(visitor.Instructions, "Output filters({2}) for {0} call {1}", method.ToString(), md.ToString(), _weaveStats.OutputFiltersAdded);
+						StoreInstructionLog(visitor.Instructions, "Output filters({2}) for {0} call {1}", method.ToString(), md.ToString(), _weaveResults.WeaveStatistics.OutputFiltersAdded);
 
 						// Increase the number of output filters added
-						_weaveStats.OutputFiltersAdded++;
+						_weaveResults.WeaveStatistics.OutputFiltersAdded++;
 					}
 				}
 
@@ -1052,7 +1053,7 @@ namespace Composestar.StarLight.ILWeaver
 				}
 
 				// Add the log
-				_weaveStats.InstructionsLog.Add(caption, formattedList);
+				_weaveResults.WeaveStatistics.InstructionsLog.Add(caption, formattedList);
 			}
 		}
 
@@ -1068,7 +1069,7 @@ namespace Composestar.StarLight.ILWeaver
 			{
 				string item = String.Format(CultureInfo.CurrentCulture, caption, arguments);
 				item = String.Format(CultureInfo.CurrentCulture, "{0}^{1}", item, ts.TotalMilliseconds);
-				_weaveStats.TimingStack.Enqueue(item);
+				_weaveResults.WeaveStatistics.TimingStack.Enqueue(item);
 			}
 		}
 		#endregion

@@ -39,7 +39,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
 
-using Composestar.StarLight.CoreServices.ILWeaver;
+using Composestar.StarLight.CoreServices.Weaver;
 
 namespace Composestar.StarLight.CoreServices
 {
@@ -51,7 +51,7 @@ namespace Composestar.StarLight.CoreServices
 		/// <summary>
 		/// Does the actual weaving.
 		/// </summary>
-		WeaveStatistics DoWeave();
+		IWeaveResults DoWeave();
 
 	}
 }
