@@ -48,7 +48,8 @@ namespace CustomFilters
                 Open();
             }
 
-            _tracefileWriter.WriteLine(line, args);            
+            _tracefileWriter.WriteLine(line, args);
+            _tracefileWriter.Flush();
         }
 
         public static void Flush()
