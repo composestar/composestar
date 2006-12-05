@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.*;
+import java.util.HashSet;
 
 import org.apache.xmlbeans.XmlException;
 
@@ -27,9 +28,11 @@ import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
+import Composestar.DotNET.LAMA.DotNETAttribute;
 import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
 import Composestar.DotNET.LAMA.DotNETFieldInfo;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
@@ -38,6 +41,7 @@ import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.DotNET.MASTER.StarLightMaster;
 import Composestar.Utils.Debug;
 
+import composestar.dotNET.tym.entities.ArrayOfAttributeElement;
 import composestar.dotNET.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET.tym.entities.ArrayOfCallElement;
 import composestar.dotNET.tym.entities.ArrayOfFieldElement;
@@ -46,6 +50,7 @@ import composestar.dotNET.tym.entities.ArrayOfFilterTypeElement;
 import composestar.dotNET.tym.entities.ArrayOfMethodElement;
 import composestar.dotNET.tym.entities.ArrayOfParameterElement;
 import composestar.dotNET.tym.entities.ArrayOfTypeElement;
+import composestar.dotNET.tym.entities.AttributeElement;
 import composestar.dotNET.tym.entities.AssemblyConfig;
 import composestar.dotNET.tym.entities.AssemblyDocument;
 import composestar.dotNET.tym.entities.AssemblyElement;
@@ -140,74 +145,111 @@ public class StarLightCollectorRunner implements CollectorRunner
 		 */
 		// loop through all current concerns, fetch implementation and remove
 		// from types map.
-		Iterator repIt = dataStore.getIterator();
-		while (repIt.hasNext())
-		{
-			Object next = repIt.next();
-			if (next instanceof CpsConcern)
-			{
-				CpsConcern concern = (CpsConcern) next;
-				Debug.out(Debug.MODE_DEBUG, "TYM", "Processing concern '" + concern.name + "'");
-				// fetch implementation name
-				Object impl = concern.getImplementation();
-				String className = "";
-				if (impl == null)
-				{
-					continue;
-				}
-				else if (impl instanceof Source)
-				{
-					// fixes the problem with the embedded code not being in the
-					// type map at all.
-					continue;
-					// Source source = (Source)impl;
-					// className = source.getClassName();
-				}
-				else if (impl instanceof SourceFile)
-				{
-					// TO DO: remove this?
-					SourceFile source = (SourceFile) impl;
-					String sourceFile = source.getSourceFile();
-					className = sourceFile.replaceAll("\\.\\w+", "");
-				}
-				else if (impl instanceof CompiledImplementation)
-				{
-					className = ((CompiledImplementation) impl).getClassName();
-				}
-				else
-				{
-					throw new ModuleException(
-							"CollectorRunner: Can only handle concerns with source file implementations or direct class links.",
-							"TYM");
-				}
-
-				// transform source name into assembly name blaat.java -->
-				// blaat.dll
-				if (!typeMap.containsKey(className))
-				{
-					throw new ModuleException("Implementation: " + className + " for concern: " + concern.getName()
-							+ " not found!", "TYM");
-
-				}
-				Debug.out(Debug.MODE_DEBUG, "TYM", "Processing type " + className);
-				DotNETType type = (DotNETType) typeMap.get(className);
-				concern.setPlatformRepresentation(type);
-				type.setParentConcern(concern);
-				typeMap.remove(className);
-				count++;
-			}
-		}
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", count + " cps concerns added in "
-				+ (System.currentTimeMillis() - starttime) + " ms.");
+//		Iterator repIt = dataStore.getIterator();
+//		while (repIt.hasNext())
+//		{
+//			Object next = repIt.next();
+//			if (next instanceof CpsConcern)
+//			{
+//				CpsConcern concern = (CpsConcern) next;
+//				Debug.out(Debug.MODE_DEBUG, "TYM", "Processing concern '" + concern.name + "'");
+//				// fetch implementation name
+//				Object impl = concern.getImplementation();
+//				String className = "";
+//				if (impl == null)
+//				{
+//					continue;
+//				}
+//				else if (impl instanceof Source)
+//				{
+//					// fixes the problem with the embedded code not being in the
+//					// type map at all.
+//					continue;
+//					// Source source = (Source)impl;
+//					// className = source.getClassName();
+//				}
+//				else if (impl instanceof SourceFile)
+//				{
+//					// TO DO: remove this?
+//					SourceFile source = (SourceFile) impl;
+//					String sourceFile = source.getSourceFile();
+//					className = sourceFile.replaceAll("\\.\\w+", "");
+//				}
+//				else if (impl instanceof CompiledImplementation)
+//				{
+//					className = ((CompiledImplementation) impl).getClassName();
+//				}
+//				else
+//				{
+//					throw new ModuleException(
+//							"CollectorRunner: Can only handle concerns with source file implementations or direct class links.",
+//							"TYM");
+//				}
+//
+//				// transform source name into assembly name blaat.java -->
+//				// blaat.dll
+//				if (!typeMap.containsKey(className))
+//				{
+//					throw new ModuleException("Implementation: " + className + " for concern: " + concern.getName()
+//							+ " not found!", "TYM");
+//
+//				}
+//				Debug.out(Debug.MODE_DEBUG, "TYM", "Processing type " + className);
+//				DotNETType type = (DotNETType) typeMap.get(className);
+//				concern.setPlatformRepresentation(type);
+//				type.setParentConcern(concern);
+//				typeMap.remove(className);
+//				count++;
+//			}
+//		}
+//		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", count + " cps concerns added in "
+//				+ (System.currentTimeMillis() - starttime) + " ms.");
 
 		// loop through rest of the concerns and add to the repository in the
 		// form of primitive concerns
 		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Processing primitive concerns...");
 		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
+		
+		HashSet unresolvedAttributeTypes = new HashSet();
+		
 		Iterator it = typeMap.values().iterator();
 		while (it.hasNext())
 		{
 			DotNETType type = (DotNETType) it.next();
+			
+			// Collect type attributes
+			if (type.getAnnotations() != null && type.getAnnotations().size() > 0)
+			{
+				for (int i=0; i < type.getAnnotations().size(); i++) {
+					unresolvedAttributeTypes.add(type.getAnnotations().get(i));
+				}
+			}
+			
+			// Collect field attributes
+			Iterator fieldIter = type.getFields().iterator();
+			while (fieldIter.hasNext()) {
+				DotNETFieldInfo field = (DotNETFieldInfo)fieldIter.next();
+				if (field.getAnnotations() != null && field.getAnnotations().size() > 0)
+				{
+					for (int i=0; i < field.getAnnotations().size(); i++) {
+						unresolvedAttributeTypes.add(field.getAnnotations().get(i));
+					}				
+				}
+			}
+			
+			// Collect method attributes
+			Iterator methodIter = type.getMethods().iterator();
+			while (methodIter.hasNext()) {
+				DotNETMethodInfo method = (DotNETMethodInfo)methodIter.next();
+				if (method.getAnnotations() != null && method.getAnnotations().size() > 0)
+				{
+					for (int i=0; i < method.getAnnotations().size(); i++) {
+						unresolvedAttributeTypes.add(method.getAnnotations().get(i));
+					}				
+				}
+			}
+			
+			// Add type to repository as primitive concern
 			PrimitiveConcern pc = new PrimitiveConcern();
 			pc.setName(type.fullName());
 			pc.setPlatformRepresentation(type);
@@ -217,7 +259,44 @@ public class StarLightCollectorRunner implements CollectorRunner
 		}
 		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", typeMap.size() + " primitive concerns added in "
 				+ (System.currentTimeMillis() - starttime) + " ms.");
-
+		
+		
+		// Resolve attribute types
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Resolving "+unresolvedAttributeTypes.size()+" attribute types...");
+		HashMap newAttributeTypes = new HashMap();
+		Iterator unresolvedAttributeTypeIter = unresolvedAttributeTypes.iterator();
+		while (unresolvedAttributeTypeIter.hasNext())
+		{
+			DotNETAttribute attribute = (DotNETAttribute)unresolvedAttributeTypeIter.next();
+		
+			if (typeMap.containsKey(attribute.getTypeName())) {
+				// Attribute type has been resolved by the analyzer
+				attribute.setType((Type)typeMap.get(attribute.getTypeName()));
+			}
+			else if (newAttributeTypes.containsKey(attribute.getTypeName())) {
+				// Attribute type has been encountered before, use previously created type
+				attribute.setType((Type)newAttributeTypes.get(attribute.getTypeName()));
+			}
+			else {
+				// Create a new DotNETType element
+				DotNETType attributeType = new DotNETType();
+				attributeType.setFullName(attribute.getTypeName());
+				
+				// Add this attribute type to the repository as a primitive concern
+				PrimitiveConcern pc_attribute = new PrimitiveConcern();
+				pc_attribute.setName(attributeType.fullName());
+				pc_attribute.setPlatformRepresentation(attributeType);
+				attributeType.setParentConcern(pc_attribute);
+				dataStore.addObject(attributeType.fullName(), pc_attribute);
+				
+				// Add this attribute type to the list of added types
+				newAttributeTypes.put(attributeType.fullName(), attributeType);
+			}
+		}
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Attribute types resolved in "
+				+ (System.currentTimeMillis() - starttime) + " ms.");
+		
+		
 		// resolve the MethodInfo reference in the calls within a method:
 		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Resolving method references for calls withing a method...");
 		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
@@ -410,8 +489,13 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 			
 			type.setBaseType(typeElement.getBaseType());
-			//type.addImplementedInterface( )
-			// TODO: type.addImplementedInterface( lastCharData );
+			
+			// Set the implemented interfaces
+			String[] implementedInterfaces = typeElement.getImplementedInterfaces().split(";");
+			for (int j=0; j < implementedInterfaces.length; j++) {
+				if (!implementedInterfaces[j].equals("")) type.addImplementedInterface(implementedInterfaces[j]);
+			}
+			
 			type.setIsAbstract(typeElement.getIsAbstract());
 			// --type.setIsAnsiClass( Boolean.valueOf( lastCharData
 			// ).booleanValue() );
@@ -460,6 +544,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 			// --type.setunderlyingSystemType( lastCharData );
 			// --type.setHashCode( Integer.parseInt( lastCharData ) );
 			type.setFromDLL(assembly.getName());
+			
+			//Set the attributes for this type
+			DotNETAttribute[] attributes = CollectAttributes(typeElement.getAttributes());
+			for (int j=0; j < attributes.length; j++) {
+				type.addAnnotation(attributes[j]);
+			}
 
 			collectFields(typeElement, type);
 			storeTimer.start();
@@ -474,6 +564,31 @@ public class StarLightCollectorRunner implements CollectorRunner
 		}
 		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Language model generated in "
 				+ (System.currentTimeMillis() - starttime) + " ms.");
+	}
+	
+	private DotNETAttribute[] CollectAttributes(ArrayOfAttributeElement attributes)
+	{
+		if (attributes == null) return new DotNETAttribute[0];
+		
+		DotNETAttribute[] result = new DotNETAttribute[attributes.sizeOfAttributeArray()];
+		
+		for (int i = 0; i < attributes.sizeOfAttributeArray(); i++)
+		{
+			AttributeElement ae = attributes.getAttributeArray(i);
+			
+			// Create a new attribute
+			DotNETAttribute attribute = new DotNETAttribute();
+			
+			// Set the type element for this attribute
+			attribute.setTypeName(ae.getAttributeType());	
+			
+			// Set value for this attribute			
+			if (ae.getValues().sizeOfValueArray() >= 1) attribute.setValue(ae.getValues().getValueArray(0).getValue());
+
+			result[i] = attribute;
+		}
+	
+		return result;
 	}
 
 	private void collectFields(TypeElement storedType, DotNETType type) throws ModuleException
@@ -497,6 +612,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 			field.setIsPublic(storedField.getIsPublic());
 			field.setIsStatic(storedField.getIsStatic());
 
+			//Set the attributes for this field
+			DotNETAttribute[] attributes = CollectAttributes(storedField.getAttributes());
+			for (int j=0; j < attributes.length; j++) {
+				field.addAnnotation(attributes[j]);
+			}
+			
 			type.addField(field);
 		}
 	}
@@ -562,6 +683,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 			// if (storedMethod.isSetBody())
 			// collectMethodBody(storedMethod.getBody(), method);
 
+			//Set the attributes for this method
+			DotNETAttribute[] attributes = CollectAttributes(storedMethod.getAttributes());
+			for (int j=0; j < attributes.length; j++) {
+				method.addAnnotation(attributes[j]);
+			}
+			
 			type.addMethod(method);
 			timer4.stop();
 		}
