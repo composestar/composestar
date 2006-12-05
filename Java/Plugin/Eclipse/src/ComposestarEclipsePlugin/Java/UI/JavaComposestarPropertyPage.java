@@ -18,10 +18,11 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.internal.debug.ui.launcher.MainMethodSearchEngine;
-import org.eclipse.jdt.internal.debug.ui.launcher.MainTypeSelectionDialog;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
@@ -269,10 +270,23 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 			return;
 		}
 		
-		Shell shell = getShell();
-		SelectionDialog dialog = new MainTypeSelectionDialog(shell, types); 
-		//dialog.setTitle(LauncherMessages.getString("JavaMainTab.Choose_Main_Type_11")); //$NON-NLS-1$
-		//dialog.setMessage(LauncherMessages.getString("JavaMainTab.Choose_a_main_&type_to_launch__12")); //$NON-NLS-1$
+		SelectionDialog dialog = null;
+		try {
+			dialog = JavaUI.createTypeDialog(
+						getShell(),
+						this,
+						SearchEngine.createJavaSearchScope(types),
+						IJavaElementSearchConstants.CONSIDER_CLASSES, 
+						false,
+						"**"); 
+		} 
+		catch (JavaModelException e) 
+		{
+			setErrorMessage(e.getMessage());
+			return;
+		}
+
+		
 		if (dialog.open() == Window.CANCEL) {
 			return;
 		}
