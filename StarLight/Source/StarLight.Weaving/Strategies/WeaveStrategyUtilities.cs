@@ -192,9 +192,9 @@ namespace Composestar.StarLight.Weaving.Strategies
 		{
 			foreach (ParameterDefinition param in originalMethod.Parameters)
 			{
-				int ordinal = param.Sequence - (originalMethod.HasThis ? 1 : 0);
+                int ordinal = param.Sequence-1;// -(originalMethod.HasThis ? 1 : 0);
 
-				//check for reference:
+                //check for reference:
 				if (param.ParameterType.FullName.EndsWith("&"))
 				{
 
@@ -344,7 +344,7 @@ namespace Composestar.StarLight.Weaving.Strategies
 		{
 			foreach (ParameterDefinition param in originalMethod.Parameters)
 			{
-				int ordinal = param.Sequence - (originalMethod.HasThis ? 1 : 0);
+                int ordinal = param.Sequence - 1;// (originalMethod.HasThis ? 1 : 0);
 
 				//check for reference:
 				if (param.ParameterType.FullName.EndsWith("&"))
