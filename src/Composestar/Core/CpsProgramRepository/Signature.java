@@ -65,15 +65,14 @@ public class Signature implements SerializableRepositoryEntity
     	MethodWrapper mw = new MethodWrapper (type, methodInfo);
     	String key = getHashKey(methodInfo);
     	
-	if (!methodByKey.containsKey(key)) 
-	{ 
-		methodByKey.put(key, mw);
-		methodByName.put(methodInfo.name(), mw);
-		
-		return true;
-	}
+    	if (!methodByKey.containsKey(key)) 
+    	{ 
+    		methodByKey.put(key, mw);
+    		methodByName.put(methodInfo.name(), mw);
+    		return true;
+    	}
 	
-	return false;
+    	return false;
     }
     
     /*
@@ -188,27 +187,22 @@ public class Signature implements SerializableRepositoryEntity
 		return null;
 	}
 
-	private String hashKey = null;
+	// FIXME: move to MethodInfo
 	public String getHashKey(MethodInfo methodInfo)
 	{
-		if (hashKey == null)
-		{
-			StringBuffer sb = new StringBuffer();
-			
-			sb.append(methodInfo.name()).append('%');
-			sb.append(methodInfo.returnTypeName()).append('%');
-			
-			List pars = methodInfo.getParameters();
-			for (int i = 0; i < pars.size(); i++)
-			{
-				ParameterInfo pi = (ParameterInfo) pars.get(i);
-				sb.append(pi.ParameterTypeString).append('%');
-			}
-			
-			hashKey = sb.toString();
-		}
+		StringBuffer sb = new StringBuffer();
 		
-		return hashKey;
+		sb.append(methodInfo.name()).append('%');
+		sb.append(methodInfo.returnTypeName()).append('%');
+		
+		List pars = methodInfo.getParameters();
+		for (int i = 0; i < pars.size(); i++)
+		{
+			ParameterInfo pi = (ParameterInfo) pars.get(i);
+			sb.append(pi.ParameterTypeString).append('%');
+		}
+			
+		return sb.toString();
 	}
 	
 	public void setStatus(int _status) { status = _status; }
