@@ -39,8 +39,8 @@ import composestar.dotNET.tym.entities.TypeElement;
  * note that the name may be redundant, but should be consistent with the name of 
  * the concern.
  */
-public class DotNETType extends Type {
-    
+public class DotNETType extends Type
+{
 	private static final long serialVersionUID = 5652622506200113401L;
 	
 	public int HashCode;
@@ -829,9 +829,6 @@ public class DotNETType extends Type {
 		}
 	}
 	
-	
-	
-
 	/**
 	 * @return the fromDLL
 	 */
@@ -846,6 +843,14 @@ public class DotNETType extends Type {
 	public void setFromDLL(String fromDLL)
 	{
 		this.fromDLL = fromDLL;
+	}
+	
+	/**
+	 * Returns a string representation of this object.
+	 */
+	public String toString()
+	{
+		return m_fullName;
 	}
 
 	/**
