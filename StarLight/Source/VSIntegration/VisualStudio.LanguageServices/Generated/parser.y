@@ -68,7 +68,7 @@
 // %token '+' '-' '*' '/' '!' '&' '^'
 
 %token EQ NEQ GT GTE LT LTE AMPAMP BARBAR TRUECON FALSECON QUOTE SINGLEQUOTE WEAVEOPERATION ANNOTATION 
-%token BAR AND NOT
+%token BAR AND NOT STAR
 %token maxParseToken 
 %token LEX_WHITE LEX_COMMENT LEX_ERROR UPLOWSTRING UPPERCASESTRING LOWERCASESTRING CONSTSTRING CONSTNUM 
 
@@ -206,8 +206,8 @@ IdentifierList
     
 Type 
     : IDENTIFIER   { StartName(@1, ""); }
-	| Type DOT IDENTIFIER		    { QualifyName( @2, @3, "" ); }	
-    | Type DOT error              { QualifyName( @2, @2,"" ); }
+	| Type DOT IDENTIFIER		    { QualifyName( @1, @3, "" ); }	
+    | Type DOT error              { QualifyName( @1, @2,"" ); }
 	;
     
 ConcernReference
@@ -470,12 +470,18 @@ SelectorDefinitions
    ;
    
 SelectorDef
-   : SelectorName EQ '{' VarName BAR PrologBody '}' ';' { Match(@3, @7); }
-   | SelectorName EQ '{' VarName BAR PrologBody '}' error { CallHdlr("Missing ';'", @8); }
+   : SelectorName EQ '{' SelectorInternal '}' ';' { Match(@3, @5); }   
+   | SelectorName EQ '{' SelectorInternal '}' error { CallHdlr("Missing ';'", @6); }
    ;
  
+SelectorInternal
+   : VarName BAR PrologBody
+   | STAR EQ Type  /*  old style selector */
+   ; 
+ 
 SelectorName
-   : IDENTIFIER;
+   : IDENTIFIER
+   ;
    
 SelectorRef
    : ConcernElementReference; 

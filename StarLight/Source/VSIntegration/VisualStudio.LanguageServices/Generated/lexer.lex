@@ -103,6 +103,7 @@ ABStar       [^\*\n]*
 ;                         { return (int)';';    }
 :                         { return (int)Tokens.COLON;    }
 ,                         { return (int)Tokens.COMMA;    }
+\*                        { return (int)Tokens.STAR;    }
 \(                        { return (int)'(';    }
 \)                        { return (int)')';    }
 \{                        { return (int)'{';    }
@@ -112,7 +113,6 @@ ABStar       [^\*\n]*
 \^                        { return (int)'^';    }
 \+                        { return (int)'+';    }
 \-                        { return (int)'-';    }
-\*                        { return (int)'*';    }
 \/                        { return (int)'/';    }
 \!                        { return (int)Tokens.NOT;    }
 =                         { return (int)Tokens.EQ;    }
