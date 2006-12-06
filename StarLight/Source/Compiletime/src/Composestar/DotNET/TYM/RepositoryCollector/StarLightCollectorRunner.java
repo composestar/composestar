@@ -2,14 +2,17 @@ package Composestar.DotNET.TYM.RepositoryCollector;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Enumeration;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
-import java.util.HashSet;
 
 import org.apache.xmlbeans.XmlException;
 
@@ -18,132 +21,104 @@ import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCREReporter;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
-import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.DotNET.LAMA.DotNETAttribute;
-import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
 import Composestar.DotNET.LAMA.DotNETFieldInfo;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETParameterInfo;
 import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.DotNET.MASTER.StarLightMaster;
 import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 
-import composestar.dotNET.tym.entities.ArrayOfAttributeElement;
 import composestar.dotNET.tym.entities.ArrayOfAssemblyConfig;
-import composestar.dotNET.tym.entities.ArrayOfCallElement;
+import composestar.dotNET.tym.entities.ArrayOfAttributeElement;
 import composestar.dotNET.tym.entities.ArrayOfFieldElement;
 import composestar.dotNET.tym.entities.ArrayOfFilterActionElement;
 import composestar.dotNET.tym.entities.ArrayOfFilterTypeElement;
 import composestar.dotNET.tym.entities.ArrayOfMethodElement;
 import composestar.dotNET.tym.entities.ArrayOfParameterElement;
-import composestar.dotNET.tym.entities.ArrayOfTypeElement;
-import composestar.dotNET.tym.entities.AttributeElement;
 import composestar.dotNET.tym.entities.AssemblyConfig;
 import composestar.dotNET.tym.entities.AssemblyDocument;
 import composestar.dotNET.tym.entities.AssemblyElement;
-import composestar.dotNET.tym.entities.CallElement;
+import composestar.dotNET.tym.entities.AttributeElement;
 import composestar.dotNET.tym.entities.ConfigurationContainer;
 import composestar.dotNET.tym.entities.FieldElement;
 import composestar.dotNET.tym.entities.FilterActionElement;
 import composestar.dotNET.tym.entities.FilterTypeElement;
-import composestar.dotNET.tym.entities.MethodBody;
 import composestar.dotNET.tym.entities.MethodElement;
 import composestar.dotNET.tym.entities.ParameterElement;
 import composestar.dotNET.tym.entities.TypeElement;
 
 public class StarLightCollectorRunner implements CollectorRunner
 {
-	private Vector callsToOtherMethods = new Vector();
+	public static final String MODULE_NAME = "COLLECTOR";
+	
+	private List callsToOtherMethods = new Vector();
 
-	// private HashMap fieldMap = new HashMap();
-	private HashMap methodMap = new HashMap();
+//	private HashMap fieldMap = new HashMap();
+//	private HashMap methodMap = new HashMap();
+//	private HashMap parameterMap = new HashMap();
+//	private HashMap callsMap = new HashMap();
 
-	private HashMap parameterMap = new HashMap();
+	private INCREReporter reporter = INCRE.instance().getReporter();
+	private INCRETimer deserializeTimer = reporter.openProcess(MODULE_NAME, "xml deserialize", INCRETimer.TYPE_NORMAL);
+//	private INCRETimer storeTimer = reporter.openProcess(MODULE_NAME, "storing in repository", INCRETimer.TYPE_NORMAL);
+//	private INCRETimer timer1 = reporter.openProcess(MODULE_NAME, "timer1", INCRETimer.TYPE_NORMAL);
+//	private INCRETimer timer2 = reporter.openProcess(MODULE_NAME, "timer2", INCRETimer.TYPE_NORMAL);
+//	private INCRETimer timer3 = reporter.openProcess(MODULE_NAME, "timer3", INCRETimer.TYPE_NORMAL);
+//	private INCRETimer timer4 = reporter.openProcess(MODULE_NAME, "timer4", INCRETimer.TYPE_NORMAL);
 
-	private HashMap callsMap = new HashMap();
-
-	private INCRETimer deserializeTimer = INCRE.instance().getReporter().openProcess("COLLECTOR", "xml deserialize",
-			INCRETimer.TYPE_NORMAL);
-
-	private INCRETimer storeTimer = INCRE.instance().getReporter().openProcess("COLLECTOR", "storing in repository",
-			INCRETimer.TYPE_NORMAL);
-
-	private INCRETimer timer1 = INCRE.instance().getReporter().openProcess("COLLECTOR", "timer1",
-			INCRETimer.TYPE_NORMAL);
-
-	private INCRETimer timer2 = INCRE.instance().getReporter().openProcess("COLLECTOR", "timer2",
-			INCRETimer.TYPE_NORMAL);
-
-	private INCRETimer timer3 = INCRE.instance().getReporter().openProcess("COLLECTOR", "timer3",
-			INCRETimer.TYPE_NORMAL);
-
-	private INCRETimer timer4 = INCRE.instance().getReporter().openProcess("COLLECTOR", "timer4",
-			INCRETimer.TYPE_NORMAL);
-
-	long starttime = 0;
+	private long starttime = 0;
 	
 	public void run(CommonResources resources) throws ModuleException
 	{
-		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
-
+		INCRE incre = INCRE.instance();
+		DataStore dataStore = DataStore.instance();
+		Map typeMap = TypeMap.instance().map();
 		ConfigurationContainer configContainer = StarLightMaster.getConfigContainer();
-
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Repository initialized in "
-				+ (System.currentTimeMillis() - starttime) + " ms.");
 
 		// Collect all filtertypes and filteractions:
 		collectFilterTypesAndActions(configContainer);
-
-		// Get INCRE instance
-		INCRE incre = INCRE.instance();
 		
 		// Collect all types from the persistent repository
 		ArrayOfAssemblyConfig assemblies = configContainer.getAssemblies();
 		for (int i = 0; i < assemblies.sizeOfAssemblyConfigArray(); i++)
 		{
 			AssemblyConfig ac = assemblies.getAssemblyConfigArray(i);
+			String assemblyName = ac.getName();
 			
-			if(incre.isProcessedByModule(ac,"COLLECTOR"))
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing assembly '" + assemblyName + "'...");
+			
+			if (incre.isProcessedByModule(ac,MODULE_NAME))
 			{
-				INCRETimer collectorcopy = incre.getReporter().openProcess("COLLECTOR",ac.getName(),INCRETimer.TYPE_INCREMENTAL);
-				copyOperation(ac.getName());
-				collectorcopy.stop();
+				INCRETimer copyTimer = reporter.openProcess(MODULE_NAME,assemblyName,INCRETimer.TYPE_INCREMENTAL);
+				copyOperation(assemblyName);
+				copyTimer.stop();
 			}
 			else
 			{
-				INCRETimer collectorrun = incre.getReporter().openProcess("COLLECTOR",ac.getName(),INCRETimer.TYPE_NORMAL);
+				INCRETimer runTimer = incre.getReporter().openProcess(MODULE_NAME,assemblyName,INCRETimer.TYPE_NORMAL);
 				collectOperation(ac);
-				collectorrun.stop();
+				runTimer.stop();
 			}
 		}
 
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Processing cps concerns...");
-		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
-		int count = 0;
-		DataStore dataStore = DataStore.instance();
-		HashMap typeMap = TypeMap.instance().map();
-		/*
-		 * TODO : The only types of embedded code are the imported dll's like in
-		 * the VenusFlytrap Therefore: 1) embedded code that it fully
-		 * programmed, like the Sound concern of Pacman must be ignored in this
-		 * part of code; 2) embedded code from dll's do need to pass this part
-		 * of code (Like VenusFlyTrap)
-		 */
 		// loop through all current concerns, fetch implementation and remove
 		// from types map.
+//		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing cps concerns...");
+//		starttime = System.currentTimeMillis();
+
 //		Iterator repIt = dataStore.getIterator();
 //		while (repIt.hasNext())
 //		{
@@ -151,7 +126,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 //			if (next instanceof CpsConcern)
 //			{
 //				CpsConcern concern = (CpsConcern) next;
-//				Debug.out(Debug.MODE_DEBUG, "TYM", "Processing concern '" + concern.name + "'");
+//				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing concern '" + concern.name + "'");
 //				// fetch implementation name
 //				Object impl = concern.getImplementation();
 //				String className = "";
@@ -182,18 +157,17 @@ public class StarLightCollectorRunner implements CollectorRunner
 //				{
 //					throw new ModuleException(
 //							"CollectorRunner: Can only handle concerns with source file implementations or direct class links.",
-//							"TYM");
+//							MODULE_NAME);
 //				}
 //
-//				// transform source name into assembly name blaat.java -->
-//				// blaat.dll
+//				// transform source name into assembly name blaat.java -->  blaat.dll
 //				if (!typeMap.containsKey(className))
 //				{
 //					throw new ModuleException("Implementation: " + className + " for concern: " + concern.getName()
-//							+ " not found!", "TYM");
+//							+ " not found!", MODULE_NAME);
 //
 //				}
-//				Debug.out(Debug.MODE_DEBUG, "TYM", "Processing type " + className);
+//				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing type " + className);
 //				DotNETType type = (DotNETType) typeMap.get(className);
 //				concern.setPlatformRepresentation(type);
 //				type.setParentConcern(concern);
@@ -201,15 +175,15 @@ public class StarLightCollectorRunner implements CollectorRunner
 //				count++;
 //			}
 //		}
-//		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", count + " cps concerns added in "
+//		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, count + " cps concerns added in "
 //				+ (System.currentTimeMillis() - starttime) + " ms.");
 
 		// loop through rest of the concerns and add to the repository in the
 		// form of primitive concerns
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Processing primitive concerns...");
-		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing primitive concerns...");
+		starttime = System.currentTimeMillis();
 		
-		HashSet unresolvedAttributeTypes = new HashSet();
+		Set unresolvedAttributeTypes = new HashSet();
 		
 		Iterator it = typeMap.values().iterator();
 		while (it.hasNext())
@@ -217,34 +191,36 @@ public class StarLightCollectorRunner implements CollectorRunner
 			DotNETType type = (DotNETType) it.next();
 			
 			// Collect type attributes
-			if (type.getAnnotations() != null && type.getAnnotations().size() > 0)
+			List typeAnnos = type.getAnnotations();
+			if (typeAnnos != null)
 			{
-				for (int i=0; i < type.getAnnotations().size(); i++) {
-					unresolvedAttributeTypes.add(type.getAnnotations().get(i));
-				}
+				for (int i = 0; i < typeAnnos.size(); i++)
+					unresolvedAttributeTypes.add(typeAnnos.get(i));
 			}
 			
 			// Collect field attributes
 			Iterator fieldIter = type.getFields().iterator();
-			while (fieldIter.hasNext()) {
+			while (fieldIter.hasNext()) 
+			{
 				DotNETFieldInfo field = (DotNETFieldInfo)fieldIter.next();
-				if (field.getAnnotations() != null && field.getAnnotations().size() > 0)
+				List fieldAnnos = field.getAnnotations();
+				if (fieldAnnos != null)
 				{
-					for (int i=0; i < field.getAnnotations().size(); i++) {
-						unresolvedAttributeTypes.add(field.getAnnotations().get(i));
-					}				
+					for (int i = 0; i < fieldAnnos.size(); i++)
+						unresolvedAttributeTypes.add(fieldAnnos.get(i));
 				}
 			}
 			
 			// Collect method attributes
 			Iterator methodIter = type.getMethods().iterator();
-			while (methodIter.hasNext()) {
+			while (methodIter.hasNext())
+			{
 				DotNETMethodInfo method = (DotNETMethodInfo)methodIter.next();
-				if (method.getAnnotations() != null && method.getAnnotations().size() > 0)
+				List methodAnnos = method.getAnnotations();
+				if (methodAnnos != null)
 				{
-					for (int i=0; i < method.getAnnotations().size(); i++) {
-						unresolvedAttributeTypes.add(method.getAnnotations().get(i));
-					}				
+					for (int i = 0; i < methodAnnos.size(); i++)
+						unresolvedAttributeTypes.add(methodAnnos.get(i));
 				}
 			}
 			
@@ -254,29 +230,35 @@ public class StarLightCollectorRunner implements CollectorRunner
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
 			dataStore.addObject(type.fullName(), pc);
-			//Debug.out(Debug.MODE_DEBUG,"TYM","Adding primitive concern '"+type.fullName()+"'");
+			
+		//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Adding primitive concern '" + pc.getName() + "'");
 		}
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", typeMap.size() + " primitive concerns added in "
+		
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, typeMap.size() + " primitive concerns added in "
 				+ (System.currentTimeMillis() - starttime) + " ms.");
 		
-		
 		// Resolve attribute types
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Resolving "+unresolvedAttributeTypes.size()+" attribute types...");
-		HashMap newAttributeTypes = new HashMap();
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolving " + unresolvedAttributeTypes.size() + " attribute types...");
+		starttime = System.currentTimeMillis();
+		
+		Map newAttributeTypes = new HashMap();
 		Iterator unresolvedAttributeTypeIter = unresolvedAttributeTypes.iterator();
 		while (unresolvedAttributeTypeIter.hasNext())
 		{
 			DotNETAttribute attribute = (DotNETAttribute)unresolvedAttributeTypeIter.next();
 		
-			if (typeMap.containsKey(attribute.getTypeName())) {
+			if (typeMap.containsKey(attribute.getTypeName()))
+			{
 				// Attribute type has been resolved by the analyzer
 				attribute.setType((Type)typeMap.get(attribute.getTypeName()));
 			}
-			else if (newAttributeTypes.containsKey(attribute.getTypeName())) {
+			else if (newAttributeTypes.containsKey(attribute.getTypeName()))
+			{
 				// Attribute type has been encountered before, use previously created type
 				attribute.setType((Type)newAttributeTypes.get(attribute.getTypeName()));
 			}
-			else {
+			else
+			{
 				// Create a new DotNETType element
 				DotNETType attributeType = new DotNETType();
 				attributeType.setFullName(attribute.getTypeName());
@@ -292,53 +274,61 @@ public class StarLightCollectorRunner implements CollectorRunner
 				newAttributeTypes.put(attributeType.fullName(), attributeType);
 			}
 		}
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Attribute types resolved in "
-				+ (System.currentTimeMillis() - starttime) + " ms.");
 		
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Attribute types resolved in "
+				+ (System.currentTimeMillis() - starttime) + " ms.");
 		
 		// resolve the MethodInfo reference in the calls within a method:
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Resolving method references for calls withing a method...");
-		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolving method references for calls withing a method...");
+		starttime = System.currentTimeMillis();
+		
 		resolveCallsToOtherMethods();
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Method references resolved in "
+		
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Method references resolved in "
 				+ (System.currentTimeMillis() - starttime) + " ms.");
-
 	}
 	
 	public void collectOperation(AssemblyConfig assembly) throws ModuleException
 	{
-		AssemblyDocument doc;
+		String name = assembly.getSerializedFilename();
+
+		InputStream is = null;
 		try
 		{
-			String name = assembly.getSerializedFilename();
 			deserializeTimer.start();
-			GZIPInputStream inputStream = new GZIPInputStream(new FileInputStream(name));
-			doc = AssemblyDocument.Factory.parse(inputStream);
-			inputStream.close(); 
+			is = new GZIPInputStream(new FileInputStream(name));
+			AssemblyDocument doc = AssemblyDocument.Factory.parse(is);
 			deserializeTimer.stop();
+			
+			collectTypes(doc.getAssembly());
 		}
 		catch (XmlException e)
 		{
-			throw new ModuleException("CollectorRunner: XmlException while parsing "
-					+ assembly.getSerializedFilename(), "TYM");
+			throw new ModuleException(
+					"CollectorRunner: XmlException while parsing " + name +
+					": " + e.getMessage(), MODULE_NAME);
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("CollectorRunner: IOException while parsing "
-					+ assembly.getFilename(), "TYM");
+			throw new ModuleException(
+					"CollectorRunner: IOException while parsing " + name + 
+					": " + e.getMessage(), MODULE_NAME);
 		}
-		collectTypes(doc.getAssembly());
+		finally
+		{
+			FileUtils.close(is);
+		}
 	}
 	
     public void copyOperation(String assemblyName) throws ModuleException
 	{
     	Debug.out(Debug.MODE_DEBUG, "COLLECTOR [INCRE]", "Restoring types from '"+assemblyName+"'");
-    	INCRE inc = INCRE.instance();
+    	INCRE incre = INCRE.instance();
     	
     	int typecount = 0;
     	
     	  /* collect and iterate over all objects from previous compilation runs */
-    	  Iterator it = inc.history.getIterator();
+    	  Iterator it = incre.history.getIterator();
     	  while (it.hasNext())
     	  {
     	  	  Object obj = it.next();
@@ -406,7 +396,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			if (acceptCallAction == null)
 			{
 				throw new ModuleException("AcceptCallAction '" + storedType.getAcceptCallAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", "TYM");
+						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
 			}
 			filterType.setAcceptCallAction(acceptCallAction);
 
@@ -415,7 +405,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			if (rejectCallAction == null)
 			{
 				throw new ModuleException("RejectCallAction '" + storedType.getRejectCallAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", "TYM");
+						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
 			}
 			filterType.setRejectCallAction(rejectCallAction);
 
@@ -424,7 +414,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			if (acceptReturnAction == null)
 			{
 				throw new ModuleException("AcceptReturnAction '" + storedType.getAcceptReturnAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", "TYM");
+						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
 			}
 			filterType.setAcceptReturnAction(acceptReturnAction);
 
@@ -433,136 +423,112 @@ public class StarLightCollectorRunner implements CollectorRunner
 			if (rejectReturnAction == null)
 			{
 				throw new ModuleException("RejectReturnAction '" + storedType.getRejectReturnAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", "TYM");
+						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
 			}
 			filterType.setRejectReturnAction(rejectReturnAction);
 		}
 
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", storedFilters.sizeOfFilterTypeArray() + " filters with "
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, storedFilters.sizeOfFilterTypeArray() + " filters with "
 				+ actionMapping.size() + " filter actions read from database in "
 				+ (System.currentTimeMillis() - starttime) + " ms.");
+	}
+	
+	private String getFullName(TypeElement te) throws ModuleException
+	{
+		String name = te.getName();
+		String ns = te.getNamespace();
+
+		if (te.getName() == null)
+			throw new ModuleException("Type must have a name attribute", MODULE_NAME);
+		
+		// see rev. 2806
+		return (ns.endsWith("+") ? (ns + name) : (ns + "." + name));
 	}
 
 	private void collectTypes(AssemblyElement assembly) throws ModuleException
 	{
-		long starttime = System.currentTimeMillis();
-
-		ArrayOfTypeElement types = assembly.getTypes();
-
-		// Get all types from repository
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", types.sizeOfTypeArray() + " types read from database in "
-				+ (System.currentTimeMillis() - starttime) + " ms.");
+		TypeElement[] types = assembly.getTypes().getTypeArray();
 
 		// Process all types, i.e. map them to LAMA
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Generating language model with " + types.sizeOfTypeArray()
-				+ " types...");
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Generating language model with " + types.length + " types...");
+		
 		starttime = System.currentTimeMillis();
-		for (int i = 0; i < types.sizeOfTypeArray(); i++)
+		for (int i = 0; i < types.length; i++)
 		{
-			TypeElement typeElement = types.getTypeArray(i);
+			TypeElement te = types[i];
+			String fullName = getFullName(te);
 
-			// Debug.out(Debug.MODE_DEBUG,"TYM","Retrieving type '"+storedType.get_FullName()+"'");
+		//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing type '" + fullName + "'...");
 
-			DotNETType type = new DotNETType();
-			type.setName(typeElement.getName());
-			type.setAssemblyName(assembly.getName());
-
-			if (typeElement.getNamespace() != null && typeElement.getName() != null)
-			{
-				if (typeElement.getNamespace().endsWith("+"))
-				{
-					type.setFullName(typeElement.getNamespace() + typeElement.getName());
-				}
-				else
-				{
-					type.setFullName(typeElement.getNamespace() + '.' + typeElement.getName());
-				}
-			}
-			else
-			{
-				throw new ModuleException("Type must have a name attribute", "TYM");
-			}
-
-			
-			type.setBaseType(typeElement.getBaseType());
+			DotNETType dnt = new DotNETType();
+			dnt.setName(te.getName());
+			dnt.setNamespace(te.getNamespace());
+			dnt.setFullName(fullName);
+			dnt.setAssemblyName(assembly.getName());
+			dnt.setBaseType(te.getBaseType());
 			
 			// Set the implemented interfaces
-			String[] implementedInterfaces = typeElement.getImplementedInterfaces().split(";");
-			for (int j=0; j < implementedInterfaces.length; j++) {
-				if (!implementedInterfaces[j].equals("")) type.addImplementedInterface(implementedInterfaces[j]);
+			String[] implementedInterfaces = te.getImplementedInterfaces().split(";");
+			for (int j = 0; j < implementedInterfaces.length; j++)
+			{
+				String ii = implementedInterfaces[j];
+				if (!"".equals(ii)) 
+					dnt.addImplementedInterface(ii);
 			}
 			
-			type.setIsAbstract(typeElement.getIsAbstract());
-			// --type.setIsAnsiClass( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			//type.setIsArray( typeElement..get_IsArray() );
-			// --type.setIsAutoClass( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			// --type.setIsAutoLayout( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			// --type.setIsByRef( Boolean.valueOf( lastCharData ).booleanValue()
-			// );
-			type.setIsClass(typeElement.getIsClass());
-			// --type.setIsContextful( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			type.setIsEnum(typeElement.getIsEnum());
-			// --type.setIsImport( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			type.setIsInterface(typeElement.getIsInterface());
-			// --type.setIsMarshalByRef( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			// TODO: Missing Type.setIsNestedFamAndAssem( Boolean.valueOf(
-			// LastCharData ).booleanValue() );
-			// --type.setIsNestedAssembly( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			// --type.setIsNestedFamOrAssem( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			// --type.setIsNestedPrivate( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			// --type.setIsNestedPublic( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			type.setIsNotPublic(typeElement.getIsNotPublic());
-			// --type.setIsPointer( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			type.setIsPrimitive(typeElement.getIsPrimitive());
-			type.setIsPublic(typeElement.getIsPublic());
-			type.setIsSealed(typeElement.getIsSealed());
-			type.setIsSerializable(typeElement.getIsSerializable());
-			type.setIsValueType(typeElement.getIsValueType());
+			dnt.setIsAbstract(te.getIsAbstract());
+			// type.setIsAnsiClass( ... );
+			// type.setIsArray( typeElement.get_IsArray() );
+			// type.setIsAutoClass( Boolean.valueOf( lastCharData ).booleanValue() );
+			// type.setIsAutoLayout( ... );
+			// type.setIsByRef( ... );
+			dnt.setIsClass(te.getIsClass());
+			// type.setIsContextful( ... );
+			dnt.setIsEnum(te.getIsEnum());
+			// type.setIsImport( ... );
+			dnt.setIsInterface(te.getIsInterface());
+			// type.setIsMarshalByRef( ... );
+			// type.setIsNestedFamAndAssem( ... );
+			// type.setIsNestedAssembly( ... );
+			// type.setIsNestedFamOrAssem( ... );
+			// type.setIsNestedPrivate( ... );
+			// type.setIsNestedPublic( ... );
+			dnt.setIsNotPublic(te.getIsNotPublic());
+			// type.setIsPointer( ... );
+			dnt.setIsPrimitive(te.getIsPrimitive());
+			dnt.setIsPublic(te.getIsPublic());
+			dnt.setIsSealed(te.getIsSealed());
+			dnt.setIsSerializable(te.getIsSerializable());
+			dnt.setIsValueType(te.getIsValueType());
 
-			// TODO: Name
 			// TODO: create system in DotNETModule to avoid duplicates
 			// DotNETModule mod = new DotNETModule();
-			// mod.setFullyQualifiedName( lastCharData );
+			// mod.setFullyQualifiedName( ... );
 			// type.setModule( mod );
 
-			type.setNamespace(typeElement.getNamespace());
-			// --type.setunderlyingSystemType( lastCharData );
-			// --type.setHashCode( Integer.parseInt( lastCharData ) );
-			type.setFromDLL(assembly.getName());
+			// type.setunderlyingSystemType( ... );
+			// type.setHashCode( Integer.parseInt( ... ) );
+			dnt.setFromDLL(assembly.getName());
 			
 			//Set the attributes for this type
-			DotNETAttribute[] attributes = CollectAttributes(typeElement.getAttributes());
-			for (int j=0; j < attributes.length; j++) {
-				type.addAnnotation(attributes[j]);
+			DotNETAttribute[] attributes = collectAttributes(te.getAttributes());
+			for (int j = 0; j < attributes.length; j++)
+			{
+				dnt.addAnnotation(attributes[j]);
 			}
 
-			collectFields(typeElement, type);
-			storeTimer.start();
-			collectMethods(typeElement, type);
-			storeTimer.stop();
+			collectFields(te, dnt);
+			collectMethods(te, dnt);
 
 			// Add the DotNETType to the TypeMap
-			// storeTimer.start();
-			//Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Adding type: " + type.fullName());
-			TypeMap.instance().addType(type.fullName(), type);
-			// storeTimer.stop();
+			TypeMap.instance().addType(dnt.fullName(), dnt);
 		}
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Language model generated in "
+		
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Language model generated in "
 				+ (System.currentTimeMillis() - starttime) + " ms.");
 	}
 	
-	private DotNETAttribute[] CollectAttributes(ArrayOfAttributeElement attributes)
+	private DotNETAttribute[] collectAttributes(ArrayOfAttributeElement attributes)
 	{
 		if (attributes == null) return new DotNETAttribute[0];
 		
@@ -572,14 +538,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			AttributeElement ae = attributes.getAttributeArray(i);
 			
-			// Create a new attribute
 			DotNETAttribute attribute = new DotNETAttribute();
-			
-			// Set the type element for this attribute
 			attribute.setTypeName(ae.getAttributeType());	
 			
 			// Set value for this attribute			
-			if (ae.getValues().sizeOfValueArray() >= 1) attribute.setValue(ae.getValues().getValueArray(0).getValue());
+			if (ae.getValues().sizeOfValueArray() >= 1) 
+				attribute.setValue(ae.getValues().getValueArray(0).getValue());
 
 			result[i] = attribute;
 		}
@@ -597,11 +561,11 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			FieldElement storedField = fields.getFieldArray(i);
 
-			// Debug.out(Debug.MODE_DEBUG,"TYM"," Retrieving field
+			// Debug.out(Debug.MODE_DEBUG,MODULE_NAME," Retrieving field
 			// '"+storedField.get_Name()+"'");
 
 			DotNETFieldInfo field = new DotNETFieldInfo();
-
+		//	field.setIsDeclaredHere(true);
 			field.setName(storedField.getName());
 			field.setFieldType(storedField.getType());
 			field.setIsPrivate(storedField.getIsPrivate());
@@ -609,10 +573,9 @@ public class StarLightCollectorRunner implements CollectorRunner
 			field.setIsStatic(storedField.getIsStatic());
 
 			//Set the attributes for this field
-			DotNETAttribute[] attributes = CollectAttributes(storedField.getAttributes());
-			for (int j=0; j < attributes.length; j++) {
+			DotNETAttribute[] attributes = collectAttributes(storedField.getAttributes());
+			for (int j=0; j < attributes.length; j++)
 				field.addAnnotation(attributes[j]);
-			}
 			
 			type.addField(field);
 		}
@@ -620,79 +583,53 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 	private void collectMethods(TypeElement storedType, DotNETType type) throws ModuleException
 	{
-
-		// Get all methods for the type 'storedType'
 		ArrayOfMethodElement methods = storedType.getMethods();
 
-		// Process all methods
 		for (int i = 0; i < methods.sizeOfMethodArray(); i++)
 		{
 			MethodElement storedMethod = methods.getMethodArray(i);
+			String name = storedMethod.getName();
 
-			// Debug.out(Debug.MODE_DEBUG,"TYM"," Retrieving method
-			// '"+storedMethod.get_Signature()+"'");
+		//	Debug.out(Debug.MODE_DEBUG,MODULE_NAME, "Processing method '" + name + "'...");
 
-			timer1.start();
+			if (name == null)
+				throw new ModuleException("Method must have a name attribute", MODULE_NAME);
+
 			DotNETMethodInfo method = new DotNETMethodInfo();
-			timer1.stop();
-			timer2.start();
-			if (storedMethod.getName() != null)
-			{
-				method.setName(storedMethod.getName());
-			}
-			else
-			{
-				throw new ModuleException("MethodInfo must have a name attribute", "TYM");
-			}
-			timer2.stop();
-			timer3.start();
-			// --methodInfo.setCallingConvention( Integer.parseInt( lastCharData
-			// ) );
+		//	method.setIsDeclaredHere(true);
+			method.setName(storedMethod.getName());
+			// methodInfo.setCallingConvention( ... );
 			method.setIsAbstract(storedMethod.getIsAbstract());
-			// --methodInfo.setIsAssembly( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
+			// methodInfo.setIsAssembly( Boolean.valueOf( ... );
 			method.setIsConstructor(storedMethod.getIsConstructor());
-			// --methodInfo.setIsFamily( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			// --methodInfo.setIsFamilyAndAssembly( Boolean.valueOf(
-			// lastCharData ).booleanValue() );
-			// --methodInfo.setIsFamilyOrAssembly( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			// --methodInfo.setIsFinal( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			// --methodInfo.setIsHideBySig( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
+			// methodInfo.setIsFamily( Boolean.valueOf( ... );
+			// methodInfo.setIsFamilyAndAssembly( ... );
+			// methodInfo.setIsFamilyOrAssembly( ... );
+			// methodInfo.setIsFinal( ... );
+			// methodInfo.setIsHideBySig( ... );
 			method.setIsPrivate(storedMethod.getIsPrivate());
 			method.setIsPublic(storedMethod.getIsPublic());
 			method.setIsStatic(storedMethod.getIsStatic());
 			method.setIsVirtual(storedMethod.getIsVirtual());
-			// --methodInfo.setHashCode( Integer.parseInt( lastCharData ) );
+			// methodInfo.setHashCode( ... );
 			method.setReturnType(storedMethod.getReturnType());
-			// -- methodInfo.setIsDeclaredHere( Boolean.valueOf( lastCharData
-			// ).booleanValue() );
-			// - Ignored: MethodAttrributes
 			method.setSignature(storedMethod.getSignature());
-			timer3.stop();
-			timer4.start();
 
 			collectParameters(storedMethod, method);
-			// if (storedMethod.isSetBody())
-			// collectMethodBody(storedMethod.getBody(), method);
+		//	if (storedMethod.isSetBody())
+		//		collectMethodBody(storedMethod.getBody(), method);
 
 			//Set the attributes for this method
-			DotNETAttribute[] attributes = CollectAttributes(storedMethod.getAttributes());
-			for (int j=0; j < attributes.length; j++) {
+			DotNETAttribute[] attributes = collectAttributes(storedMethod.getAttributes());
+			for (int j = 0; j < attributes.length; j++)
 				method.addAnnotation(attributes[j]);
-			}
 			
 			type.addMethod(method);
-			timer4.stop();
 		}
 	}
 
 	private void collectParameters(MethodElement storedMethod, DotNETMethodInfo method) throws ModuleException
 	{
-
 		// Get all parameters for the method 'storedmethod'
 		ArrayOfParameterElement storedParameters = storedMethod.getParameters();
 
@@ -702,68 +639,54 @@ public class StarLightCollectorRunner implements CollectorRunner
 		for (int i = 0; i < storedParameters.sizeOfParameterArray(); i++)
 		{
 			ParameterElement storedParameter = storedParameters.getParameterArray(i);
+			String name = storedParameter.getName();
 
-			// Debug.out(Debug.MODE_DEBUG,"TYM"," Retrieving parameter
-			// '"+storedParameter.get_Name()+"'
-			// ("+storedParameter.get_ParameterType()+")");
-
-			// storeTimer.start();
-			DotNETParameterInfo parameter = new DotNETParameterInfo();
-			// storeTimer.stop();
+		//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Retrieving parameter '" + name + "'");
 			
-			if (storedParameter.getName() != null)
-			{
-				parameter.setName(storedParameter.getName());
-			}
-			else
-			{
-				throw new ModuleException("ParameterInfo must have a name attribute.", "TYM");
-			}
+			if (name == null)
+				throw new ModuleException("ParameterInfo must have a name attribute.", MODULE_NAME);
 
+			DotNETParameterInfo parameter = new DotNETParameterInfo();
+			parameter.setName(name);
 			parameter.setPosition(storedParameter.getOrdinal());
 			parameter.setParameterType(storedParameter.getType());
 
-			/*
-			 * TODO parameter.setIsln(storedParameter.getIsIn());
-			 * parameter.setIsOptional(storedParameter.getIsOptional());
-			 * parameter.setIsOut(storedParameter.getIsOut());
-			 * parameter.setIsRetVal(storedParameter.getIsRetVal());
-			 */
-
-			// --ParamInfo.setIsLcid( Boolean.valueOf( LastCharData
-			// ).booleanValue() );
-			// --ParamInfo.setHashCode( Integer.parseInt( LastCharData ) );
+			//parameter.setIsln(storedParameter.getIsIn());
+			//parameter.setIsOptional(storedParameter.getIsOptional());
+			//parameter.setIsOut(storedParameter.getIsOut());
+			//parameter.setIsRetVal(storedParameter.getIsRetVal());
+			// parameter.setIsLcid( Boolean.valueOf( LastCharData ).booleanValue() );
+			// parameter.setHashCode( Integer.parseInt( LastCharData ) );
+			
 			parameters[parameter.position() - 1] = parameter;
 		}
 
 		for (int i = 0; i < parameters.length; i++)
 		{
-			// storeTimer.start();
 			method.addParameter(parameters[i]);
-			// storeTimer.stop();
 		}
 	}
 
-	private void collectMethodBody(MethodBody storedMethodBody, DotNETMethodInfo method)
-	{
-		// Get the call elements for this method body
-		ArrayOfCallElement storedCalls = storedMethodBody.getCalls();
-
-		for (int i = 0; i < storedCalls.sizeOfCallArray(); i++)
-		{
-			CallElement storedCall = storedCalls.getCallArray(i);
-
-			DotNETCallToOtherMethod call = new DotNETCallToOtherMethod();
-			call.setCallElement(storedCall);
-
-			// TODO: this mapping correct ?
-			call.OperationName = storedCall.getMethodReference();
-
-			method.getCallsToOtherMethods().add(call);
-
-			callsToOtherMethods.add(call);
-		}
-	}
+//	private void collectMethodBody(MethodBody storedMethodBody, DotNETMethodInfo method)
+//	{
+//		// Get the call elements for this method body
+//		ArrayOfCallElement storedCalls = storedMethodBody.getCalls();
+//
+//		for (int i = 0; i < storedCalls.sizeOfCallArray(); i++)
+//		{
+//			CallElement storedCall = storedCalls.getCallArray(i);
+//
+//			DotNETCallToOtherMethod call = new DotNETCallToOtherMethod();
+//			call.setCallElement(storedCall);
+//
+//			// TODO: is this mapping correct ?
+//			call.OperationName = storedCall.getMethodReference();
+//
+//			method.getCallsToOtherMethods().add(call);
+//
+//			callsToOtherMethods.add(call);
+//		}
+//	}
 
 	/**
 	 * Resolve the MethodInfo of the called method for all calls to other
@@ -771,13 +694,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 	 */
 	private void resolveCallsToOtherMethods()
 	{
-		CallToOtherMethod call;
-
-		Enumeration calls = callsToOtherMethods.elements();
-		while (calls.hasMoreElements())
+		Iterator it = callsToOtherMethods.iterator();
+		while (it.hasNext())
 		{
-			call = (CallToOtherMethod) calls.nextElement();
-
+			CallToOtherMethod call = (CallToOtherMethod) it.next();
 			call.setCalledMethod(getMethodInfo(call));
 		}
 	}
@@ -788,7 +708,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 		// separate returntype part:
 		int pos1 = operation.indexOf(' ');
-		String returnType = operation.substring(0, pos1);
+	//	String returnType = operation.substring(0, pos1);
 
 		// separate type:
 		int pos2 = operation.indexOf(':');
@@ -810,7 +730,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			argTypes[i] = tokenizer.nextToken();
 		}
 
-		// get Methodinfo:
+		// get method info:
 		Type type = TypeMap.instance().getType(typeName);
 		MethodInfo methodInfo = null;
 		if (type != null)
@@ -822,5 +742,4 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 		return methodInfo;
 	}
-
 }
