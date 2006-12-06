@@ -6,13 +6,11 @@ using Composestar.StarLight.Entities.Configuration;
  
 namespace Composestar.StarLight.ILWeaver
 {
-
     /// <summary>
     /// Container to hold and manage the configuration for the Cecil IL weaver.
     /// </summary>
     public sealed class CecilWeaverConfiguration
     {
-
         /// <summary>
         /// Indicated the level of debug information collected by the weaver.
         /// </summary>
@@ -56,10 +54,10 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ArgumentNullException("inputImagePath");
 
             _binfolder = System.IO.Path.GetDirectoryName(inputImagePath); 
-              _assemblyConfig = assemblyConfig; 
-             _outputImagePath = outputImagePath;
+            _assemblyConfig = assemblyConfig; 
+            _outputImagePath = outputImagePath;
             _inputImagePath = inputImagePath;
-               _weaveConfiguration = weaveConfiguration;
+            _weaveConfiguration = weaveConfiguration;
         }
 
         /// <summary>
@@ -91,9 +89,7 @@ namespace Composestar.StarLight.ILWeaver
         public CecilWeaverConfiguration(AssemblyConfig assemblyConfig, ConfigurationContainer weaveConfiguration)
             : this(assemblyConfig, weaveConfiguration, WeaveDebug.Statistics)
         {
-           
         }
-
       
         /// <summary>
         /// Gets or sets the weave debug level.
@@ -101,14 +97,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <value>The weave debug level.</value>
         public WeaveDebug WeaveDebugLevel
         {
-            get
-            {
-                return _weaveDebugLevel;
-            }
-            set
-            {
-                _weaveDebugLevel = value;
-            }
+            get { return _weaveDebugLevel; }
+            set { _weaveDebugLevel = value; }
         }
 
         /// <summary>
@@ -118,11 +108,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns>Configuration container</returns>
         public ConfigurationContainer WeaveConfiguration
         {
-            get 
-            { 
-                return _weaveConfiguration; 
-            }
-        } // WeaveConfiguration
+            get { return _weaveConfiguration; }
+        }
 
         /// <summary>
         /// Assembly configuration
@@ -130,11 +117,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns>Assembly config</returns>
         public AssemblyConfig AssemblyConfiguration
         {
-            get
-            {
-                return _assemblyConfig;
-            } 
-        } // AssemblyConfiguration
+            get { return _assemblyConfig; } 
+        }
 
         /// <summary>
         /// Gets or sets the binfolder.
@@ -142,26 +126,17 @@ namespace Composestar.StarLight.ILWeaver
         /// <value>The binfolder.</value>
         public string BinFolder
         {
-            get
-            {
-                return _binfolder;
-            }
-            set
-            {
-                _binfolder = value;
-            }
+            get { return _binfolder; }
+            set { _binfolder = value; }
         }
 
-               /// <summary>
+        /// <summary>
         /// Gets the output image path.
         /// </summary>
         /// <value>The output image path.</value>
         public string OutputImagePath
         {
-            get 
-            { 
-                return _outputImagePath;
-            }
+            get { return _outputImagePath; }
         }
 
         /// <summary>
@@ -170,10 +145,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <value>The input image path.</value>
         public string InputImagePath
         {
-            get
-            { 
-                return _inputImagePath;
-            }
+            get { return _inputImagePath; }
         }
 
         /// <summary>
@@ -190,7 +162,6 @@ namespace Composestar.StarLight.ILWeaver
             }
         }
                
-
         /// <summary>
         /// Creates the default configuration.
         /// </summary>
@@ -222,6 +193,5 @@ namespace Composestar.StarLight.ILWeaver
         {
             return new CecilWeaverConfiguration(assemblyConfig, weaveConfiguration);
         }
-           
     }
 }
