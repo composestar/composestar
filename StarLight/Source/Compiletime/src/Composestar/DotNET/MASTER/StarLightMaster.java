@@ -163,7 +163,7 @@ public class StarLightMaster extends Master
 		filthSettings.addProperty("outputEnabled",getSettingValue("OutputEnabledFILTH"));
 		config.getModuleSettings().addModule("FILTH", filthSettings);
 
-		Debug.out(Debug.MODE_INFORMATION,"Master","Master initialized.");
+		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Master initialized.");
 	}
 
 	private void configureXmlDriver()
