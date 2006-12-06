@@ -205,7 +205,8 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 			ReturnType = map.getType(ReturnTypeString);
 			
 			if (ReturnType == null)
-				throw new RuntimeException("Unable to find type specification for '" + ReturnTypeString + "'");
+				return null;
+				//throw new RuntimeException("Unable to find type specification for '" + ReturnTypeString + "'");
 		}
 		
 		return ReturnType;
