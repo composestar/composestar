@@ -565,7 +565,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			// '"+storedField.get_Name()+"'");
 
 			DotNETFieldInfo field = new DotNETFieldInfo();
-		//	field.setIsDeclaredHere(true);
+			field.setIsDeclaredHere(true);
 			field.setName(storedField.getName());
 			field.setFieldType(storedField.getType());
 			field.setIsPrivate(storedField.getIsPrivate());
@@ -596,7 +596,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 				throw new ModuleException("Method must have a name attribute", MODULE_NAME);
 
 			DotNETMethodInfo method = new DotNETMethodInfo();
-		//	method.setIsDeclaredHere(true);
+			method.setIsDeclaredHere(true);
 			method.setName(storedMethod.getName());
 			// methodInfo.setCallingConvention( ... );
 			method.setIsAbstract(storedMethod.getIsAbstract());
