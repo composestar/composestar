@@ -252,5 +252,10 @@ public class CpsConcern extends Concern
 
 		return newObject;
 	}
+	
+	public String toString()
+	{
+		return "CpsConcern[" + qualifiedName + "]";
+	}
 }
 
