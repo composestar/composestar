@@ -324,18 +324,11 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
     /*---------------------------------------------------------------------------*/
     constraints : "constraints"^ (constraint SEMICOLON!)*; 
       
-      constraint : preSoftConstraint 
-                   | preConstraint 
-                   | preHardConstraint;
-
-        preSoftConstraint : "presoft"^ LPARENTHESIS! filterModuleRef COMMA filterModuleRef RPARENTHESIS!;
+      constraint : preConstraint;
 
             filterModuleRef : concernElemReference;
 
         preConstraint : "pre"^ LPARENTHESIS! filterModuleRef COMMA filterModuleRef RPARENTHESIS!;
-
-        preHardConstraint : "prehard"^ LPARENTHESIS! filterModuleRef COMMA filterModuleRef RPARENTHESIS!;
-
 
   //////////////////////////////////////////////////////////////////////////
   implementation : "implementation"^ implementationInner;

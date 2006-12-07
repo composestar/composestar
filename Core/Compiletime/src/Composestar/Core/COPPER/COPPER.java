@@ -240,7 +240,7 @@ public class COPPER implements CTCommonModule
 
 	public static void main(String[] args)
 	{
-		Debug.setMode(Debug.MODE_WARNING);
+		Debug.setMode(Debug.MODE_DEBUG);
 		System.out.println("Welcome to COPPER...");
 		
 		COPPER copper = new COPPER();

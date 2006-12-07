@@ -9,9 +9,13 @@
  */
 package Composestar.Core.COPPER;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import Composestar.Core.FILTH.FILTH;
+import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
@@ -71,6 +75,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImp
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClass;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClassAndSubClasses;
+import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
@@ -119,6 +124,8 @@ public class CpsRepositoryBuilder
 	private SuperImposition si;
 
 	private Target ta;
+	
+	private HashMap orderingconstraints = new HashMap();
 
 	// stuff in the right place
 
@@ -1438,6 +1445,21 @@ public class CpsRepositoryBuilder
 			this.addToRepository(fmp);
 		}
 	}
+	
+	public void addFMOrderingConstraint(String fm, String fm1)
+	{
+		SyntacticOrderingConstraint constraint = (SyntacticOrderingConstraint)this.orderingconstraints.get(fm);
+		if(constraint == null) // First constraint 
+		{
+			constraint = new SyntacticOrderingConstraint(fm);
+			constraint.addRightFilterModule(fm1);
+			this.orderingconstraints.put(fm, constraint);
+		}
+		else
+		{
+			constraint.addRightFilterModule(fm1);;
+		}
+	}
 
 	/**
 	 * Creates a new AnnotationBinding
@@ -1732,6 +1754,8 @@ public class CpsRepositoryBuilder
 		completeInputFilters();
 		completeOutputFilters();
 		completeFilterElements();
+		
+		this.ds.addObject(FILTH.FILTER_ORDERING_SPEC, this.orderingconstraints);
 	}
 
 	/**

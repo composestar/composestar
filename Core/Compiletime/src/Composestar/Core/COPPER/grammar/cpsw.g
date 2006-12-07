@@ -224,17 +224,11 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
     /*---------------------------------------------------------------------------*/
     constraints : #("constraints" (constraint)*);
 
-      constraint : preSoftConstraint 
-                   | preConstraint 
-                   | preHardConstraint;
-
-        preSoftConstraint : #("presoft" filterModuleRef (COMMA filterModuleRef)*);
+      constraint : preConstraint;
 
             filterModuleRef : (NAME)+;
 
-        preConstraint : #("pre" filterModuleRef (COMMA filterModuleRef)*);
-
-        preHardConstraint : #("prehard" filterModuleRef (COMMA filterModuleRef)*);
+        preConstraint : #("pre" fm:filterModuleRef COMMA fm1:filterModuleRef {b.addFMOrderingConstraint(fm.getText(),fm1.getText());} );
 
   //////////////////////////////////////////////////////////////////////////
 //  implementation : #("implementation" (f:FILENAME | (n:NAME f2:FILENAME (sem:SEMICOLON)?))
