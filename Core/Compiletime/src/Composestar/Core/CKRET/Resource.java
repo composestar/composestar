@@ -26,7 +26,7 @@ public class Resource
 
 	public Resource(String inname)
 	{
-		name = name;
+		this.name = inname;
 		// this.history = new StringBuffer();
 		// this.fancyhistory = new StringBuffer();
 	}
