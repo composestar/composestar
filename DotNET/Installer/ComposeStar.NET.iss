@@ -298,6 +298,9 @@ begin
       kwadd(keylist, 'prepend');
       kwadd(keylist, 'append');
 
+      kwadd(keylist, 'constraints');
+      kwadd(keylist, 'pre');
+
       keylist.SaveToFile(cfg+'\usertype.dat');
       keylist.Free;
   end;
