@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,10 +31,13 @@ import Composestar.Core.FILTH.Core.Action;
 import Composestar.Core.FILTH.Core.Graph;
 import Composestar.Core.FILTH.Core.Node;
 import Composestar.Core.FILTH.Core.OrderTraverser;
+import Composestar.Core.FILTH.Core.Rule;
+import Composestar.Core.FILTH.Core.SoftPreRule;
 import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
@@ -124,17 +128,22 @@ public class FILTHServiceImpl extends FILTHService
 
 		Graph g = new Graph();
 		g.setRoot(new Node("root"));
-
+		
 		FILTHService.log.print("<h4>Superimposed Filter Modules: </h4>\n");
 		FILTHService.log.print("<ul>\n");
 		modulrefs = processModules(c, g);
 		FILTHService.log.print("</ul>\n");
 
+		this.processOrderingSpecifications(g);
+		
 		FILTHService.log.print("<h4>Ordering constraints: </h4>\n");
 		FILTHService.log.print("<ul>\n");
-		processXML(c, g);
+		
+		this.printOrderingSpecifications();
+		this.processXML(c,g);
+		
 		FILTHService.log.print("</ul>\n");
-
+		
 		// FILTHService.print("FILTH::generating alternatives\n");
 		OrderTraverser ot = new OrderTraverser();
 		LinkedList orders = ot.multiTraverse(g);
@@ -271,6 +280,82 @@ public class FILTHServiceImpl extends FILTHService
 		return modulerefs;
 	}
 
+	private void processOrderingSpecifications(Graph g)
+	{
+		HashMap map = (HashMap)DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
+		Debug.out(Debug.MODE_INFORMATION, "FILTH", "FilterModule ordering constraints: "+map);
+		
+		String left, right;
+		Iterator it = map.values().iterator();
+		while(it.hasNext())
+		{
+			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint)it.next();
+			left = soc.getLeft();
+			Iterator socit = soc.getRightFilterModules();
+			while(socit.hasNext())
+			{
+				right = (String)socit.next();
+				this.processRule(left,right,g);
+			}
+		}
+	}
+	
+	private void printOrderingSpecifications()
+	{
+		HashMap map = (HashMap)DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
+		Iterator it = map.values().iterator();
+		
+		while(it.hasNext())
+		{
+			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint)it.next();
+			FILTHService.log.print("<li><i>" + soc.toString() + "</i></li>\n");
+		}
+	}
+	
+	private void processRule(String left, String right, Graph graph)
+	{
+		Action l, r;
+		Node nl, nr;
+
+		nl = Action.lookupByName(left, graph);
+
+		if (nl != null)
+		{
+			l = (Action) nl.getElement();
+		}
+		else
+		{
+			/*
+			 * l=new Action(_left,new Boolean(true),true);
+			 * Action.insert(l,_graph); System.out.println("Action "+l+"
+			 * added");
+			 */
+			l = null;
+		}
+
+		nr = Action.lookupByName(right, graph);
+		if (nr != null)
+		{
+			r = (Action) nr.getElement();
+		}
+		else
+		{
+			/*
+			 * r=new Action(_right,new Boolean(true),true);
+			 * Action.insert(r,_graph); System.out.println("Action "+r+"
+			 * added");
+			 */
+			r = null;
+		}
+		
+		/* we add a rule only if both arguments are active */
+		if ((l != null) && (r != null))
+		{
+			Rule rule = new SoftPreRule(l, r);
+			rule.insert(graph);
+		}
+	}
+	
 	private void processXML(Concern c, Graph g)
 	{
 		/* process XML specification, build the rules into the graph */

@@ -27,6 +27,8 @@ import Composestar.Utils.Debug;
  */
 public class FILTH implements CTCommonModule
 {
+	public static final String FILTER_ORDERING_SPEC = "FILTER_ORDERING_SPEC";
+	
 	/**
 	 * Calculates orders of the superimposed filtermodules
 	 */
