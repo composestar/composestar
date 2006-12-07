@@ -32,7 +32,7 @@ concern Foo in GrammarTest
 		annotations
 		  sel <- GrammarTest.Translate;
 		constraints
-		  prehard (Filtermodule, Filtermodule2);
+		  pre (Filtermodule, Filtermodule2);
   }
   
   implementation in CSharp by Foo as "Foo.cs"

@@ -10,7 +10,7 @@ concern Translate in GrammarTest{
 		filtermodules
 			sel <-  translate;
 		constraints
-		  prehard (translate, Foo);
+		  pre (translate, Foo);
   }
   
   implementation in CSharp by Translate as "Translate.cs"
