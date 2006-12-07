@@ -1,0 +1,55 @@
+=Adding A=
+Number of products in Inventory: 1
+List of products in Inventory:
+A
+=Adding P=
+Number of products in Inventory: 2
+List of products in Inventory:
+A
+P
+=Adding Z=
+Number of products in Inventory: 3
+List of products in Inventory:
+A
+P
+Z
+=Removing P=
+Number of products in Inventory: 2
+List of products in Inventory:
+A
+Z
+=Adding L1, L2, L3=
+Number of products in Inventory: 3
+List of products in Inventory:
+A
+Z
+L1
+Number of products in Inventory: 4
+List of products in Inventory:
+A
+Z
+L1
+L2
+Number of products in Inventory: 5
+List of products in Inventory:
+A
+Z
+L1
+L2
+L3
+=Removing L1, L2, L3=
+Number of products in Inventory: 4
+List of products in Inventory:
+A
+Z
+L2
+L3
+Number of products in Inventory: 3
+List of products in Inventory:
+A
+Z
+L3
+Number of products in Inventory: 2
+List of products in Inventory:
+A
+Z
