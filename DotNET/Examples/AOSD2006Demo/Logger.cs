@@ -8,7 +8,7 @@ namespace EncryptionExample
 	{
 		public Logger() { }
 
-		[Semantics("args.read")]
+		[Composestar.RuntimeDotNET.Semantics("args.read")]
 		public void log(ReifiedMessage rm)
 		{
 			string tmp = (string)rm.getArg(0);
