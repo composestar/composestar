@@ -142,6 +142,7 @@
 				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe"/>
 				
 				<include name="TestCases/GrammarTest/bin/GrammarTest.Class1.exe"/>
+				<include name="TestCases/FilterModuleOrderingConstraints/bin/FilterModuleOrderingConstraints.MainRunner.exe"/>
 				<include name="TestCases/BasicTests/bin/BasicTests.MainClass.exe"/>
 				<include name="TestCases/ConditionTests/bin/ConditionTests.MainClass.exe"/>
 				<include name="TestCases/SECRETTesting/bin/SECRETTesting.MainRunner.exe"/>
