@@ -37,15 +37,49 @@
 #region Using directives
 using System;
 using System.Text;
+using System.Collections.Generic;
+
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
+using Composestar.StarLight.Entities.LanguageModel;
 #endregion
 
 namespace Composestar.StarLight.SigExpander
 {
-	public class SigExpanderException : Exception
+	public class TypeExpander
 	{
-		public SigExpanderException(string m)
-			: base(m)
+		private TypeDefinition _type;
+		private TypeResolver _resolver;
+
+		public TypeExpander(TypeDefinition type, TypeResolver resolver)
 		{
+			_type = type;
+			_resolver = resolver;
+		}
+
+		public void AddDummyMethod(MethodElement me)
+		{
+			Console.WriteLine("\t" + me.Name);
+
+			TypeReference returnType = _resolver.ForceResolve(me.ReturnType);
+			MethodDefinition newMethod = new MethodDefinition(me.Name, MethodAttributes.Public, returnType);
+
+			foreach (ParameterElement pe in me.Parameters)
+			{
+				TypeReference paramType = _resolver.ForceResolve(pe.Type);
+				ParameterDefinition param = new ParameterDefinition(paramType);
+				param.Name = pe.Name;
+
+				Console.WriteLine("\t\t" + param.Name + " :: " + param.ParameterType);
+
+				newMethod.Parameters.Add(param);
+			}
+
+			CilWorker worker = newMethod.Body.CilWorker;
+			worker.Append(worker.Create(OpCodes.Ret));
+
+			_type.Methods.Add(newMethod);
 		}
 	}
 }

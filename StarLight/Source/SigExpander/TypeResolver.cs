@@ -36,16 +36,72 @@
 
 #region Using directives
 using System;
+using System.Collections.Generic;
 using System.Text;
+using Mono.Cecil;
 #endregion
 
 namespace Composestar.StarLight.SigExpander
 {
-	public class SigExpanderException : Exception
+	public class TypeResolver
 	{
-		public SigExpanderException(string m)
-			: base(m)
+		private ModuleDefinition _mainModule;
+		private IList<ModuleDefinition> _references;
+		private IDictionary<string, TypeReference> _cache;
+
+		public TypeResolver(AssemblyDefinition assembly)
 		{
+			_mainModule = assembly.MainModule;
+			_references = new List<ModuleDefinition>();
+			_cache = new Dictionary<string, TypeReference>();
+
+			foreach (AssemblyNameReference anr in assembly.MainModule.AssemblyReferences)
+			{
+				AssemblyDefinition asm = assembly.Resolver.Resolve(anr);
+				_references.Add(asm.MainModule);
+			}
+		}
+
+		public TypeReference ForceResolve(string name)
+		{
+			TypeReference tr = Resolve(name);
+
+			if (tr == null)
+				throw new SigExpanderException("Could not resolve type '" + name + "'");
+
+			return tr;
+		}
+
+		public TypeReference Resolve(string name)
+		{
+			TypeReference tr = null;
+			if (!_cache.TryGetValue(name, out tr))
+			{
+				tr = InnerResolve(name);
+				_cache[name] = tr;
+			}
+
+			return tr;
+		}
+
+		private TypeReference InnerResolve(string name)
+		{
+			// try main module
+			TypeReference tr = _mainModule.Types[name];
+			if (tr != null) 
+				return tr;
+
+			// try referenced modules
+			foreach (ModuleDefinition module in _references)
+			{
+				tr = module.Types[name];
+
+				if (tr != null)
+					return _mainModule.Import(tr);
+			}
+
+			// not found
+			return null;
 		}
 	}
 }

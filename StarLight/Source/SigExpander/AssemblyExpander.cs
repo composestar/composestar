@@ -37,15 +37,80 @@
 #region Using directives
 using System;
 using System.Text;
+using System.Collections.Generic;
+
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
+using Composestar.Repository;
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.SigExpander.Properties;
+using Composestar.StarLight.Entities.LanguageModel;
 #endregion
 
 namespace Composestar.StarLight.SigExpander
 {
-	public class SigExpanderException : Exception
+	public class AssemblyExpander
 	{
-		public SigExpanderException(string m)
-			: base(m)
+		private string _spec;
+		private string _assembly;
+
+		public AssemblyExpander(string spec, string assembly)
 		{
+			_spec = spec;
+			_assembly = assembly;
+		}
+
+		public void Start()
+		{
+			Signatures sigs = EntitiesAccessor.Instance.LoadSignatureSpecification(_spec);
+
+			AssemblyDefinition ad = AssemblyFactory.GetAssembly(_assembly);
+			ProcessAssembly(ad, sigs);
+
+			AssemblyFactory.SaveAssembly(ad, "foo.dll");
+		}
+
+		private void ProcessAssembly(AssemblyDefinition ad, Signatures sigs)
+		{
+			TypeResolver resolver = new TypeResolver(ad);
+			ModuleDefinition module = ad.MainModule;
+
+			foreach (ExpandedType et in sigs.ExpandedTypes)
+			{
+				TypeDefinition type = module.Types[et.Name];
+				TypeExpander expander = new TypeExpander(type, resolver);
+
+				Console.WriteLine(type.FullName);
+
+				foreach (MethodElement me in et.ExtraMethods)
+				{
+					expander.AddDummyMethod(me);
+				}
+			}
+		}
+
+		public static void Main(string[] args)
+		{
+			if (args.Length != 2)
+			{
+				Console.WriteLine("Usage: Composestar.StarLight.SigExpander <spec> <assembly>");
+				Environment.Exit(1);
+			}
+
+			string spec = args[0];
+			string assembly = args[1];
+
+			try
+			{
+				AssemblyExpander program = new AssemblyExpander(spec, assembly);
+				program.Start();
+			}
+			catch (SigExpanderException e)
+			{
+				Console.WriteLine(e.Message);
+				Environment.Exit(2);
+			}
 		}
 	}
 }
