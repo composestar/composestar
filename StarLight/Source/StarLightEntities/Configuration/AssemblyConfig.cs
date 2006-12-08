@@ -135,8 +135,7 @@ namespace Composestar.StarLight.Entities.Configuration
 				name = name.Replace("PublicKeyToken=", "");
 				_serializedFileName = Path.Combine(objectFolder, string.Format(CultureInfo.CurrentCulture, "{0}.xml.gzip", name));
 			}
-
-		} // GenerateSerializedFilename()
+		}
 
 		private String _weaveSpec;
 
@@ -166,6 +165,21 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _isReference = value; }
 		}
 
+		private bool _isDummy;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this is a dummy assembly.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this is a dummy assembly; otherwise, <c>false</c>.
+		/// </value>
+		[XmlAttribute]
+		public bool IsDummy
+		{
+			get { return _isDummy; }
+			set { _isDummy = value; }
+		}
+
 		private  PdbMode _debugFileMode = PdbMode.HideFilters;
 
 		/// <summary>
@@ -193,8 +207,5 @@ namespace Composestar.StarLight.Entities.Configuration
 			/// </summary>
 			HideFilters,
 		}
-	
 	}
-
-
 }
