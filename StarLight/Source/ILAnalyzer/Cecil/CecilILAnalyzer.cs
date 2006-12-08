@@ -71,40 +71,18 @@ namespace Composestar.StarLight.ILAnalyzer
 	/// </summary>
 	public class CecilILAnalyzer : IILAnalyzer
 	{
-
 		#region Private Variables
 
-		private IList<String> _resolvedAssemblies = new List<String>();
-		private IList<String> _unresolvedAssemblies = new List<String>();
-		private IList<String> _resolvedTypes = new List<String>();
-		private List<String> _unresolvedTypes = new List<String>();
-		private IList<String> _cachedTypes = new List<String>();
+		private IList<string> _resolvedAssemblies = new List<string>();
+		private IList<string> _unresolvedAssemblies = new List<string>();
+		private IList<string> _resolvedTypes = new List<string>();
+		private List<string> _unresolvedTypes = new List<string>();
+		private IList<string> _cachedTypes = new List<string>();
 
 		private CecilAnalyzerConfiguration _configuration;
 		private StarLightAssemblyResolver _dar;
 
 		private GenericAnalyzerResults _analyzerResults; 
-
-		#endregion
-
-		#region ctor
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:CecilILAnalyzer"/> class.
-		/// </summary>
-		/// <param name="configuration">The configuration.</param>
-		/// <param name="languageModelAccessor">The language model accessor.</param>
-		public CecilILAnalyzer(CecilAnalyzerConfiguration configuration, IEntitiesAccessor entitiesAccessor)
-		{
-			#region Check for null values
-
-			if (configuration == null) throw new ArgumentNullException("configuration");
-
-			#endregion
-
-			_configuration = configuration;
-
-		}
 
 		#endregion
 
@@ -114,28 +92,19 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// Gets or sets the resolved types.
 		/// </summary>
 		/// <value>The resolved types.</value>
-		public IList<String> ResolvedTypes
+		public IList<string> ResolvedTypes
 		{
-			get
-			{
-				return _resolvedTypes;
-			}
+			get { return _resolvedTypes; }
 		}
 
 		/// <summary>
 		/// Gets or sets the unresolved types.
 		/// </summary>
 		/// <value>The unresolved types.</value>
-		public List<String> UnresolvedTypes
+		public List<string> UnresolvedTypes
 		{
-			get
-			{
-				return _unresolvedTypes;
-			}
-			set
-			{
-				_unresolvedTypes = value;
-			}
+			get { return _unresolvedTypes; }
+			set { _unresolvedTypes = value; }
 		}
 
 		/// <summary>
@@ -166,7 +135,7 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// Gets the unresolved assemblies.
 		/// </summary>
 		/// <value>The unresolved assemblies.</value>
-		public ReadOnlyCollection<String> UnresolvedAssemblies
+		public ReadOnlyCollection<string> UnresolvedAssemblies
 		{
 			get { return new ReadOnlyCollection<string>(_unresolvedAssemblies); }
 		}
@@ -175,7 +144,7 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// Gets the resolved assemblies.
 		/// </summary>
 		/// <value>The resolved assemblies.</value>
-		public ReadOnlyCollection<String> ResolvedAssemblies
+		public ReadOnlyCollection<string> ResolvedAssemblies
 		{
 			get { return new ReadOnlyCollection<string>(_resolvedAssemblies); }
 		}
@@ -184,9 +153,30 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// Gets the cached types.
 		/// </summary>
 		/// <value>The cached types.</value>
-		public IList<String> CachedTypes
+		public IList<string> CachedTypes
 		{
 			get { return _cachedTypes; }
+		}
+
+		#endregion
+
+		#region ctor
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:CecilILAnalyzer"/> class.
+		/// </summary>
+		/// <param name="configuration">The configuration.</param>
+		/// <param name="languageModelAccessor">The language model accessor.</param>
+		public CecilILAnalyzer(CecilAnalyzerConfiguration configuration, IEntitiesAccessor entitiesAccessor)
+		{
+			#region Check for null values
+
+			if (configuration == null) throw new ArgumentNullException("configuration");
+
+			#endregion
+
+			_configuration = configuration;
+
 		}
 
 		#endregion
@@ -200,14 +190,13 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// <returns></returns>
 		/// <exception cref="ArgumentException">If the filename is not specified this exception is thrown.</exception>
 		/// <exception cref="FileNotFoundException">If the source file cannot be found, this exception will be thrown.</exception>
-		public IAnalyzerResults ExtractAllTypes(String fileName)
+		public IAnalyzerResults ExtractAllTypes(string fileName)
 		{
-
 			_analyzerResults = new GenericAnalyzerResults(); 
 
 			#region Checks for null and file exists
 
-			if (String.IsNullOrEmpty(fileName))
+			if (string.IsNullOrEmpty(fileName))
 				throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.FileNameNullOrEmpty));
 
 			if (!File.Exists(fileName))
@@ -216,7 +205,7 @@ namespace Composestar.StarLight.ILAnalyzer
 			#endregion
 						
 			// Create a stopwatch for timing
-			Stopwatch sw = new Stopwatch();
+			Stopwatch sw = Stopwatch.StartNew();
 
 			// Create the visitor
 			CecilAssemblyVisitor visitor = new CecilAssemblyVisitor();
@@ -258,33 +247,29 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// Resolve assembly locations
 		/// </summary>
 		/// <returns>List</returns>
-		public Collection<String> ResolveAssemblyLocations()
+		public ICollection<string> ResolveAssemblyLocations()
 		{
 			IList<string> ret = new List<string>();
 
 			// Go through each assembly name
-			foreach (String assemblyName in _unresolvedAssemblies)
+			foreach (string assemblyName in _unresolvedAssemblies)
 			{
 				try
 				{
 					AssemblyDefinition ad = AssemblyResolver.Resolve(assemblyName);
 
-					if (ad != null)
-					{
-						ret.Add(ad.MainModule.Image.FileInformation.FullName);
-					} 
-					else
-					{
-						throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName);
-					} 
+					if (ad == null)
+						throw new ILAnalyzerException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName);
+
+					ret.Add(ad.MainModule.Image.FileInformation.FullName);
 				} 
 				catch (Exception ex)
 				{
-					throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName, ex);
+					throw new ILAnalyzerException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName, ex);
 				} 
 			} 
 
-			return new Collection<string>(ret);
+			return ret;
 		} 
 
 		#endregion
@@ -326,10 +311,10 @@ namespace Composestar.StarLight.ILAnalyzer
 		#endregion
 
 		/// <summary>
-		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// Returns a string that represents the current object.
 		/// </summary>
 		/// <returns>
-		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// A string that represents the current object.
 		/// </returns>
 		public override string ToString()
 		{

@@ -35,25 +35,24 @@
 #endregion
 
 #region Using directives
-using Composestar.StarLight.Entities.Configuration;
-using Composestar.StarLight.Entities.LanguageModel;
-using Composestar.StarLight.CoreServices.Analyzer;   
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
+
+using Composestar.StarLight.Entities.Configuration;
+using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.CoreServices.Analyzer;
 #endregion
 
 namespace Composestar.StarLight.CoreServices
 {
-
 	/// <summary>
 	/// Interface for the IL analyzer
 	/// </summary>
 	public interface IILAnalyzer : IDisposable
 	{
-
 		/// <summary>
 		/// Gets the unresolved assemblies.
 		/// </summary>
@@ -84,14 +83,13 @@ namespace Composestar.StarLight.CoreServices
 		/// Resolves the assembly locations.
 		/// </summary>
 		/// <returns></returns>
-		Collection<String> ResolveAssemblyLocations();
+		ICollection<string> ResolveAssemblyLocations();
 
 		/// <summary>
 		/// Extracts all types.
 		/// </summary>
 		/// <param name="fileName">Name of the file.</param>
 		/// <returns></returns>
-		IAnalyzerResults ExtractAllTypes(String fileName);
-
+		IAnalyzerResults ExtractAllTypes(string fileName);
 	}
 }
