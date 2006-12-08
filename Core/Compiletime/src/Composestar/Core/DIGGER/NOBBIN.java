@@ -53,7 +53,7 @@ public class NOBBIN
 	 */
 	protected int maxDepth = 5;
 
-	MessageGenerator gen = new MessageGenerator();
+	protected MessageGenerator gen = new MessageGenerator();
 
 	public NOBBIN(Graph inGraph)
 	{
@@ -94,13 +94,7 @@ public class NOBBIN
 		{
 			logger.debug("Walking concern " + concernNode.getLabel());
 		}
-		/*
-		 * Walk through the graph from the concernNode and spawn a new Message
-		 * for each FilterElement then walk the whole graph using that message.
-		 * Creating new messages on the fly.
-		 */
 
-		// walk(concernNode.getOutputFilters(), null, 0);
 		List messages = gen.create(concernNode);
 		Iterator it = messages.iterator();
 		while (it.hasNext())
@@ -111,17 +105,31 @@ public class NOBBIN
 			{
 				if (Debug.willLog(Debug.MODE_DEBUG))
 				{
-					logger.debug(inMsg + " resulted in:");
+					logger.debug("[RESULT] " + inMsg + " :");
 					Iterator msgit = outMsgs.iterator();
 					while (msgit.hasNext())
 					{
-						logger.debug(": " + msgit.next());
+						logger.debug("[RESULT] + " + msgit.next());
 					}
 				}
 			}
 		}
 	}
 
+	/**
+	 * Walk the the graph from a given node. This will actually more or less
+	 * simulate the filter execution. The result is a list of Messages that
+	 * might be the result. The entries of the result list will be in order, the
+	 * first entry will be the first message that might be the result. The list
+	 * contains multiple entries in case Messages depend on variable conditions.
+	 * In case of multiple messages the entry will be another list???
+	 * 
+	 * @param node
+	 * @param msg
+	 * @param trace
+	 * @return
+	 * @throws ModuleException
+	 */
 	public List walk(Node node, Message msg, List trace) throws ModuleException
 	{
 		List result = new ArrayList();
@@ -142,7 +150,7 @@ public class NOBBIN
 
 			if (Debug.willLog(Debug.MODE_DEBUG))
 			{
-				logger.debug("Walking node " + node + " (label:" + node.getLabel() + ") at depth " + trace.size());
+				logger.debug("[WALKING] " + node + " (label:" + node.getLabel() + ") at depth " + trace.size());
 			}
 			Iterator edges = node.getOutgoingEdges();
 			Node origNode = node;
@@ -156,7 +164,7 @@ public class NOBBIN
 					int expr = cme.getExpression().simulateResult();
 					if (expr == ConditionExpression.RESULT_FALSE)
 					{
-						// will never be run
+						// will never be executed
 						continue;
 					}
 					if (!msg.matches(cme))
@@ -188,8 +196,8 @@ public class NOBBIN
 				{
 					trace.add(msg);
 					Message newMsg = gen.xform(msg, (SubstitutionEdge) e);
-					logger.debug(msg+" substituted for "+newMsg);
-					
+					logger.debug("[SUBST]" + msg + " => " + newMsg);
+
 					newMsg.setRE(origNode.getRepositoryEntity());
 					Node snode = e.getDestination();
 
@@ -203,18 +211,26 @@ public class NOBBIN
 							return result;
 						}
 					}
-					// TODO: fork? because of possible append\prepend?
+					// TODO: fork? because of possible inline append\prepend?
 					msg = newMsg;
 					node = snode;
 					break;
-					
-					//List newTrace = new ArrayList(trace);
-					//result.addAll(walk(snode, newMsg, newTrace));
-					//continue;
+
+					// List newTrace = new ArrayList(trace);
+					// result.addAll(walk(snode, newMsg, newTrace));
+					// continue;
 				}
 				else if (e instanceof LambdaEdge)
 				{
+					// always traverse LambdaEdges
+					// a node should only have a single lambda edge and it
+					// should also be the last edge in the list.
 					node = e.getDestination();
+					if (edges.hasNext())
+					{
+						throw new ModuleException("LambdaEdge " + e + " is not the last edge", MODULE_NAME);
+					}
+					break;
 				}
 			}
 		}
@@ -225,20 +241,30 @@ public class NOBBIN
 		return result;
 	}
 
+	/**
+	 * Will be called in case of a recursive dispatch
+	 * 
+	 * @param msg
+	 * @param trace
+	 */
 	protected void reportRecursion(Message msg, List trace)
 	{
 		msg.setRecursive(true);
 		StringBuffer sb = new StringBuffer();
 		int certenty = msg.getCertenty();
 
+		// list of repositoryentries that caused the recursive behavior
 		List res = new ArrayList();
+		// start of the recursion
 		int idx = trace.indexOf(msg);
 		Iterator it = trace.iterator();
-		while (idx > 0)
+		while (idx > 0) // skip to start of recursion
 		{
 			--idx;
 			it.next();
 		}
+		// construct list of affecting repositoryentries and create a "friendly"
+		// message with trace
 		while (it.hasNext())
 		{
 			if (sb.length() > 0) sb.append(" -> ");
@@ -254,18 +280,22 @@ public class NOBBIN
 		
 		if (msg.getRE() != null) res.add(msg.getRE());
 		
+		sb.append(" -> ");
+		sb.append(msg.getConcern().getName());
+		sb.append(".");
+		sb.append(msg.getSelector());
+
 		if (certenty == ConditionExpression.RESULT_TRUE)
 		{
-			logger.error(sb.toString() + " is infinitie recursive");
+			//logger.error(sb.toString() + " is infinitie recursive");
 			it = res.iterator();
-			while (it.hasNext())
-			{
-				Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Recursive filter definition", (RepositoryEntity) it.next());
-			}
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Infinite recursive filter definition: "+sb.toString(), (RepositoryEntity) it.next());
 		}
 		else
 		{
-			logger.warn(sb.toString() + " might be infinite recursive (depended on " + certenty + " conditionals)");
+			//logger.warn(sb.toString() + " might be infinite recursive (depended on ~" + certenty + " conditionals)");
+			it = res.iterator();
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Possibly infitite recursive filter definition (depended on ~" + certenty + " conditionals): "+sb.toString(), (RepositoryEntity) it.next());
 		}
 	}
 }

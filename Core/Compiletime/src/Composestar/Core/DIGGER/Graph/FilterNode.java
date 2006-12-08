@@ -136,7 +136,8 @@ public abstract class FilterNode extends Node
 			}
 			else
 			{
-				Debug.out(Debug.MODE_WARNING, DIGGER.MODULE_NAME, "Unknown substitution target: " + subst.getTarget());
+				Debug.out(Debug.MODE_WARNING, DIGGER.MODULE_NAME, "Unresolved substitution target: "
+						+ subst.getTarget().getName(), subst);
 			}
 		}
 	}
@@ -204,7 +205,7 @@ public abstract class FilterNode extends Node
 		// owners: FilterChainNode -> ConcernNode
 		return (ConcernNode) getOwner().getOwner();
 	}
-	
+
 	public RepositoryEntity getRepositoryEntity()
 	{
 		return filter;

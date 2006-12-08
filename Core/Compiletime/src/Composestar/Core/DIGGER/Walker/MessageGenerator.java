@@ -57,7 +57,7 @@ public class MessageGenerator
 		String hashKey = concernNode.getLabel() + " " + selector;
 		if (msgCache.containsKey(hashKey))
 		{
-			logger.debug("Return cached message for '" + hashKey + "'");
+			logger.debug("[MSGGEN] Return cached message for '" + hashKey + "'");
 			return (Message) msgCache.get(hashKey);
 		}
 		Message msg = new Message(concernNode, selector);

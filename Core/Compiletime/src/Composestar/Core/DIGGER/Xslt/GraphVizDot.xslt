@@ -169,14 +169,7 @@ $Id$
 	<xsl:template match="filterelement">
 		<xsl:text>&#9;&#9;</xsl:text>
 		<xsl:value-of select="@id" />
-		<xsl:text> [label = "element"];&#10;</xsl:text>	
-		<xsl:apply-templates select="matchingpattern" />		
+		<xsl:text> [label = "subst"];&#10;</xsl:text>		
 	</xsl:template>
-	
-	<xsl:template match="matchingpattern">
-		<xsl:text>&#9;&#9;</xsl:text>
-		<xsl:value-of select="@id" />
-		<xsl:text> [label = "pattern"];&#10;</xsl:text>
-	</xsl:template>	
 	
 </xsl:stylesheet>

@@ -35,7 +35,8 @@ import Composestar.Core.RepositoryImplementation.TypedDeclaration;
  */
 public class Message
 {
-	protected AbstractConcernNode concernNode; 
+	protected AbstractConcernNode concernNode;
+
 	/**
 	 * The selector of the message
 	 */
@@ -47,24 +48,31 @@ public class Message
 	 * conditions must be valid.
 	 */
 	protected int certenty;
-	
+
 	/**
 	 * If true this message is recursive
 	 */
 	protected boolean recursive;
-	
+
 	/**
 	 * Will be set during substitution to the FilterElement
 	 */
 	protected RepositoryEntity re;
-	
+
 	/**
 	 * List of cloned messages
 	 */
 	protected List clones;
-	
+
 	/**
-	 * Don't call this constructor directly. Use MessageGenerator.getMessageFor()
+	 * List of resulting messages. Is usually one except when a message list or
+	 * alike is created.
+	 */
+	protected List results;
+
+	/**
+	 * Don't call this constructor directly. Use
+	 * MessageGenerator.getMessageFor()
 	 * 
 	 * @param inConcernNode
 	 * @param inSelector
@@ -74,8 +82,9 @@ public class Message
 		concernNode = inConcernNode;
 		selector = inSelector;
 		clones = new ArrayList();
+		results = new ArrayList();
 	}
-	
+
 	/**
 	 * Don't call this constructor directly. Use MessageGenerator.cloneMessage()
 	 * 
@@ -88,75 +97,77 @@ public class Message
 		certenty = base.getCertenty();
 		re = base.getRE();
 		clones = new ArrayList();
+		results = new ArrayList();
 	}
-	
+
 	public AbstractConcernNode getConcernNode()
 	{
 		return concernNode;
 	}
-	
+
 	public Concern getConcern()
 	{
 		return concernNode.getConcern();
 	}
-	
+
 	public void setConcernNode(AbstractConcernNode innode)
 	{
-		concernNode = innode;		
+		concernNode = innode;
 	}
-	
+
 	public String getSelector()
 	{
 		return selector;
 	}
-	
+
 	public void setSelector(String inval)
 	{
 		selector = inval;
 	}
-	
+
 	public void setCertenty(int inval)
 	{
 		certenty = inval;
 	}
-	
+
 	public int getCertenty()
 	{
 		return certenty;
 	}
-	
+
 	public boolean isRecursive()
 	{
 		return recursive;
 	}
-	
+
 	public void setRecursive(boolean inval)
 	{
 		recursive = inval;
 	}
-	
+
 	public void setRE(RepositoryEntity inRe)
 	{
 		re = inRe;
 	}
-	
+
 	public RepositoryEntity getRE()
 	{
 		return re;
 	}
-	
+
 	public void addClone(Message clone)
 	{
 		clones.add(clone);
 	}
-	
+
 	public Iterator getClones()
 	{
 		return clones.iterator();
 	}
-	
+
 	/**
 	 * Returns true when this message matches
+	 * 
 	 * @param edge
 	 * @return
 	 */
@@ -168,8 +179,8 @@ public class Message
 			Iterator it = edge.getMatchingParts();
 			while (it.hasNext())
 			{
-				MatchingPart mp = (MatchingPart) it.next();				
-				
+				MatchingPart mp = (MatchingPart) it.next();
+
 				if (mp.getMatchType() instanceof SignatureMatchingType)
 				{
 					if (matchesSignature(mp))
@@ -178,7 +189,8 @@ public class Message
 						break;
 					}
 				}
-				else if (matchesName(mp)) {
+				else if (matchesName(mp))
+				{
 					res = true;
 					break;
 				}
@@ -186,7 +198,7 @@ public class Message
 		}
 		else
 		{
-			//TODO: ...
+			// TODO: ...
 		}
 		if (edge.getEnabler())
 		{
@@ -197,9 +209,10 @@ public class Message
 			return !res;
 		}
 	}
-	
+
 	/**
 	 * Check for a normal name match
+	 * 
 	 * @param mp
 	 * @return
 	 */
@@ -208,9 +221,10 @@ public class Message
 		String mpselector = mp.getSelector().getName();
 		return mpselector.equals(selector) || mpselector.equals("*");
 	}
-	
+
 	/**
 	 * Check for signature matching
+	 * 
 	 * @param mp
 	 * @return
 	 */
@@ -228,7 +242,7 @@ public class Message
 		{
 			type = (Type) concernNode.getConcern().getPlatformRepresentation();
 		}
-		else 
+		else
 		{
 			DeclaredObjectReference ref = (DeclaredObjectReference) mp.getTarget().getRef();
 			if ((ref != null) && ref.getResolved())
@@ -239,7 +253,8 @@ public class Message
 			}
 			else
 			{
-				throw new ModuleException("Unresolved internal/external: " + mp.getTarget().getName(), NOBBIN.MODULE_NAME);
+				throw new ModuleException("Unresolved internal/external: " + mp.getTarget().getName(),
+						NOBBIN.MODULE_NAME);
 			}
 		}
 		Iterator it = type.getMethods().iterator();
@@ -253,17 +268,17 @@ public class Message
 		}
 		return false;
 	}
-	
+
 	public String toString()
 	{
-		return concernNode.getLabel()+"->"+selector+" ["+certenty+"]";
+		return concernNode.getLabel() + "->" + selector + " [" + certenty + "]";
 	}
-	
+
 	public int hashCode()
 	{
-		return concernNode.hashCode()+selector.hashCode();
+		return concernNode.hashCode() + selector.hashCode();
 	}
-	
+
 	public boolean equals(Object obj)
 	{
 		if (obj == null) return false;

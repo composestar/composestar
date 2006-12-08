@@ -153,7 +153,7 @@ public final class Debug
 			
 			if (printToErr(mode))
 			{
-				String full = StringUtils.capitalize(modeDescription) + ": " + msg;
+				String full = "["+module+"] "+ StringUtils.capitalize(modeDescription) + ": " + msg;
 				System.err.println(full);
 			}
 		}
