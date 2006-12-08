@@ -122,6 +122,7 @@
     <Compile Include="Configuration\KeyValueSetting.cs" />
     <Compile Include="LanguageModel\AttributeElement.cs" />
     <Compile Include="LanguageModel\ICustomAttributes.cs" />
+    <Compile Include="LanguageModel\Signatures.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -130,6 +131,7 @@
     <Compile Include="RegistrySettingsProvider.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LanguageModel\ExpandedType.cs" />
     <Compile Include="WeaveSpec\Condition.cs" />
     <Compile Include="WeaveSpec\Reference.cs" />
     <Compile Include="WeaveSpec\WeaveCall.cs" />
