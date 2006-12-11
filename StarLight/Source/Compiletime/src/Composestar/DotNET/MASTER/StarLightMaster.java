@@ -48,26 +48,41 @@ public class StarLightMaster extends Master
 	private static final String TITLE = "ComposeStar StarLight";
 
 	private static String configFileName;
+	private static String increConfig = "INCREconfig.xml";
+	
 	private static ConfigurationContainerDocument configDocument;
 	private static ConfigurationContainer configContainer;
 
-	private CommonResources resources;
-	private long timer;
+	private long startTime;
 
 	/**
 	 * Default ctor.
 	 * @param configurationFile
 	 */
-	public StarLightMaster(String configurationFile)
+	public StarLightMaster(String[] args)
 	{
-		// Store the config filename 
-		configFileName = configurationFile;
+		processCmdArgs(args);
+	}
 
-		// Init new resources
-		resources = new CommonResources();
-
-		// Set the default debug mode
-		Debug.setMode(Debug.MODE_DEFAULTMODE);
+	private void processCmdArgs(String[] args)
+	{
+		for (int i = 0; i < args.length; i++)
+		{
+			String arg = args[i];
+			if (arg.startsWith("-i"))
+			{
+				increConfig = arg.substring(2).trim();
+			}
+			else if (arg.startsWith("-"))
+			{
+				System.out.println("Unknown option " + arg);
+			}
+			else
+			{
+				// assume it's the config file
+				configFileName = args[i];
+			}
+		}
 	}
 
 	/**
@@ -117,17 +132,17 @@ public class StarLightMaster extends Master
 	 */
 	private void initialize() throws XmlException, IOException
 	{
-		timer = System.currentTimeMillis();
+		startTime = System.currentTimeMillis();
 		Debug.out(Debug.MODE_INFORMATION,MODULE_NAME,"Master initializing.");
 
 		File configFile = new File(configFileName);
 		if (!configFile.exists())
 		{
-			Debug.out(Debug.MODE_CRUCIAL,MODULE_NAME,"Configuration file '" + configFileName + " not found!");
+			Debug.out(Debug.MODE_ERROR,MODULE_NAME,"Configuration file '" + configFileName + " not found!");
 			System.exit(-1);
 		}
 
-		Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Using configuration file '" + configFileName + "'");
+		Debug.out(Debug.MODE_INFORMATION,MODULE_NAME,"Using configuration file '" + configFileName + "'");
 		configDocument = ConfigurationContainerDocument.Factory.parse(configFile);
 		configContainer = configDocument.getConfigurationContainer();
 
@@ -151,9 +166,9 @@ public class StarLightMaster extends Master
 		// Enable INCRE and set config file
 		ModuleSettings increSettings = new ModuleSettings();
 		increSettings.setName("INCRE");
-		increSettings.addProperty("enabled", "true");
-	//	increSettings.addProperty("enabled", "false");
-	//	increSettings.addProperty("config", "INCREconfig-dummies.xml");
+	//	increSettings.addProperty("enabled", "true");
+		increSettings.addProperty("enabled", "false");
+		increSettings.addProperty("config", increConfig);
 		config.getModuleSettings().addModule("INCRE", increSettings);
 		
 		// Set FILTH input file
@@ -206,6 +221,9 @@ public class StarLightMaster extends Master
 				Configuration.instance().getProjects().addConcernSource(concern);                
 			}
 
+			// Init new resources
+			CommonResources resources = new CommonResources();
+
 			// Initialize INCRE
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Initializing INCRE");
 			INCRE incre = INCRE.instance();
@@ -224,8 +242,18 @@ public class StarLightMaster extends Master
 			
 			incre.storeHistory();
 
-			// Shutdown
-			shutdown();
+			// write config file:
+			File file = new File(configFileName);
+			configDocument.save(file);
+
+			long elapsed = System.currentTimeMillis() - startTime;
+			System.out.println("total elapsed time: "  + elapsed + " ms");
+
+			// Close INCRE
+			INCRE.instance().getReporter().close();
+
+			// Successfull exit
+			System.exit(0);
 		}
 		catch (ModuleException e)
 		{
@@ -250,43 +278,27 @@ public class StarLightMaster extends Master
 		}
 	}
 
-	private void shutdown() throws IOException
-	{		
-		//write config file:
-		File file = new File(configFileName);
-		configDocument.save(file);
-
-		long elapsed = System.currentTimeMillis() - timer;
-		System.out.println("total elapsed time: "  + elapsed + " ms");
-
-		// Close INCRE
-		INCRE.instance().getReporter().close();
-
-		// Successfull exit
-		System.exit(0);
-	}
-	
 	/**
 	 * Compose* StarLight main function.
 	 * @param args
 	 */
 	public static void main(String[] args)
 	{
-		if(args.length == 0)
+		if (args.length == 0)
 		{
 			System.out.println("Usage: java -jar StarLight.jar <config file>");
 			System.exit(0);
 		}
 
-		if(args[0].equalsIgnoreCase("-v"))
+		if (args[0].equalsIgnoreCase("-v"))
 		{
 			System.out.println(TITLE);
 			System.out.println(AUTHOR);
 			System.exit(0);
 		}
-
+		
 		// Create new master
-		StarLightMaster master = new StarLightMaster(args[0]);
+		StarLightMaster master = new StarLightMaster(args);
 
 		try
 		{ 
