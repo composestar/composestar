@@ -193,24 +193,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		#endregion
 
 		/// <summary>
-		/// When overridden in a derived class, executes the task.
+		/// Executes the ILAnalyser task.
 		/// </summary>
 		/// <returns>
-		/// true if the task successfully executed; otherwise, false.
+		///	<c>true</c> if the task successfully executed; otherwise, <c>false</c>.
 		/// </returns>
 		public override bool Execute()
 		{
-			// Show start text
 			Log.LogMessageFromResources("AnalyzerStartText");
 
 			//
 			// Setup of configuration and lists
 			//
-			CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(_repositoryFileName);
 			IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
-			Boolean assemblyChanged = false;
-
-			// Set configuration settings
+			CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(_repositoryFileName);
 			configuration.BinFolder = _binFolder;
 			configuration.DoMethodCallAnalysis = _doMethodCallAnalysis;
 
@@ -225,8 +221,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 				_filterActions = _configContainer.FilterActions;
 				_filterTypes = _configContainer.FilterTypes;
-
-				// Get the assemblies in the config file
 				_assembliesInConfig = _configContainer.Assemblies;
 
 				// Create a new list to store all the assemblies we have to save
@@ -235,11 +229,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				//
 				// Find the assemblies to analyze
 				//
-				List<string> assemblyFileList;
-				Dictionary<string, string> refAssemblies;
-
-				// Get the lists of the assemblies we have to analyze
-				FindAssembliesToAnalyze(out assemblyFileList, out refAssemblies);
+				List<string> assemblyFileList = FindAssembliesToAnalyze();
+				Dictionary<string, string> refAssemblies = FindReferencedAssemblies();
 
 				// Add all the unresolved types (used in the concern files) to the analyser
 				AddAllUnresolvedTypes(analyzer);
@@ -247,7 +238,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				//
 				// Analyze the assemblies in the output folder
 				//
-				assemblyChanged = AnalyzeAllAssembliesInOutputFolder(analyzer, assemblies, assemblyFileList);
+				bool assemblyChanged = AnalyzeAllAssembliesInOutputFolder(analyzer, assemblies, assemblyFileList);
 
 				//
 				// Analyze the assemblies referenced to this project or subprojects
@@ -290,10 +281,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </summary>
 		/// <param name="assemblyFileList">The assembly file list.</param>
 		/// <param name="refAssemblies">The ref assemblies.</param>
-		private void FindAssembliesToAnalyze(out List<string> assemblyFileList, out Dictionary<string, string> refAssemblies)
+		private List<string> FindAssembliesToAnalyze()
 		{
 			// Create a list of all the referenced assemblies (complete list is supplied by the msbuild file)
-			assemblyFileList = new List<string>();
+			List<string> assemblyFiles = new List<string>();
 
 			foreach (ITaskItem item in _weavableAssemblies)
 			{
@@ -307,13 +298,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				string extension = Path.GetExtension(item.ToString()).ToLower(CultureInfo.InvariantCulture);
 				if (extension.Equals(".dll") || extension.Equals(".exe"))
 				{
-					assemblyFileList.Add(item.ToString());
+					assemblyFiles.Add(item.ToString());
 				}
 			}
 
+			return assemblyFiles;
+		}
+
+		private Dictionary<string, string> FindReferencedAssemblies()
+		{
 			// Create a list of all the referenced assemblies, which are not copied local for complete analysis
 			// We cannot weave on these files, so we only use them for lookup of base types etc.
-			refAssemblies = new Dictionary<string, string>();
+			Dictionary<string, string> refAssemblies = new Dictionary<string, string>();
 
 			foreach (ITaskItem item in _referencedAssemblies)
 			{
@@ -323,6 +319,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				}
 			}
 
+			return refAssemblies;
 		}
 
 		/// <summary>
