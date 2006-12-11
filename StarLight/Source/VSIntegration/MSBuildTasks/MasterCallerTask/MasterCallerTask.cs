@@ -223,8 +223,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			// Save common config
 			entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer);
 
-			// Start java
+			// Create a process to execute the StarLight Master.
 			Process process = new Process();
+			process.StartInfo.CreateNoWindow = true;
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.RedirectStandardError = true;
 
 			// Determine filename
 			if (!string.IsNullOrEmpty(StarLightSettings.Instance.JavaLocation))
@@ -244,28 +248,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			args.Add(Quote(_repositoryFileName));
 
 			process.StartInfo.Arguments = Join(args, " ");
-			/*
-			string.Format(CultureInfo.InvariantCulture,
-				"{0} -jar \"{1}\" \"{2}\"", 
-				StarLightSettings.Instance.JavaOptions, 
-				jar, 
-				RepositoryFileName);
-			*/
 			Log.LogMessageFromResources("JavaStartMessage", process.StartInfo.Arguments);
 
-			process.StartInfo.CreateNoWindow = true;
-			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.RedirectStandardError = true;
-
+			// Start the process
 			try
 			{
 				process.Start();
 
-				StreamReader outputReader = process.StandardOutput;
-				while (!outputReader.EndOfStream)
+				using (StreamReader outputReader = process.StandardOutput)
 				{
-					ParseMasterOutput(outputReader.ReadLine());
+					while (!outputReader.EndOfStream)
+					{
+						ParseMasterOutput(outputReader.ReadLine());
+					}
 				}
 
 				process.WaitForExit();
@@ -306,11 +301,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 		#region Helper functions
 
+		/// <summary>
+		/// Surrounds the specified string with quotes.
+		/// </summary>
 		private string Quote(string value)
 		{
 			return '"' + value + '"';
 		}
 
+		/// <summary>
+		/// Returns a string that contains the values in the specified list of strings
+		/// separated by some other string.
+		/// </summary>
+		/// <param name="items">The list of values.</param>
+		/// <param name="glue">The glue that is used to combine the values.</param>
 		private string Join(IList<string> items, string glue)
 		{
 			StringBuilder sb = new StringBuilder();

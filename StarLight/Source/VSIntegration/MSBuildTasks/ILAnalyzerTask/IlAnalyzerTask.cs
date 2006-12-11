@@ -104,7 +104,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		private bool _assembliesDirty;
 
 		/// <summary>
-		/// Gets or sets the repository filename.
+		/// Sets the repository filename.
 		/// </summary>
 		/// <value>The repository filename.</value>
 		[Required]
@@ -114,7 +114,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets the assembly files to analyze.
+		/// Sets the assembly files to analyze.
 		/// </summary>
 		/// <value>The assembly files.</value>
 		[Required]
@@ -124,7 +124,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets a list of assemblies that are referenced from the project.
+		/// Sets a list of assemblies that are referenced from the project.
 		/// </summary>
 		[Required]
 		public ITaskItem[] ReferencedAssemblies
@@ -133,7 +133,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets a list of types that are referenced from the project.
+		/// Sets a list of types that are referenced from the project.
 		/// </summary>
 		[Required]
 		public ITaskItem[] ReferencedTypes
@@ -142,7 +142,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets whether to do method call analysis.
+		/// Sets whether to do method call analysis.
 		/// </summary>
 		public bool DoMethodCallAnalysis
 		{
@@ -150,7 +150,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets the bin folder.
+		/// Sets the bin folder.
 		/// </summary>
 		/// <value>The bin folder.</value>
 		public string BinFolder
@@ -159,7 +159,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets the intermediate output path.
+		/// Sets the intermediate output path.
 		/// </summary>
 		/// <value>The intermediate output path.</value>
 		[Required]
@@ -169,7 +169,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether one or more assemblies are dirty.
+		/// Gets a value indicating whether one or more assemblies are dirty.
 		/// </summary>
 		/// <value><c>true</c> if dirty assemblies were found; otherwise, <c>false</c>.</value>
 		[Output]
