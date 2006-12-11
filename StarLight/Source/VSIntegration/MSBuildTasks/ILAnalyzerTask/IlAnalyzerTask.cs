@@ -220,9 +220,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			// Create the analyzer using the object builder
 			using (IILAnalyzer analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration)))
 			{
-				//
 				// Find the assemblies to analyze
-				//
 				List<string> assemblyFiles = FindAssembliesToAnalyze();
 				Dictionary<string, string> refAssemblies = FindReferencedAssemblies();
 
@@ -268,49 +266,49 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Finds the assemblies to analyze.
+		/// Creates a list of assemblies to analyze.
 		/// </summary>
-		/// <param name="assemblyFileList">The assembly file list.</param>
-		/// <param name="refAssemblies">The ref assemblies.</param>
 		private List<string> FindAssembliesToAnalyze()
 		{
-			// Create a list of all the referenced assemblies (complete list is supplied by the msbuild file)
-			List<string> assemblyFiles = new List<string>();
+			List<string> result = new List<string>();
 
 			foreach (ITaskItem item in _weavableAssemblies)
 			{
-				// Skip composestar files
 				string filename = Path.GetFileNameWithoutExtension(item.ToString());
+				string extension = Path.GetExtension(item.ToString()).ToLower(CultureInfo.InvariantCulture);
 
+				// We are only interested in assembly files.
+				if (!".dll".Equals(extension) && !".exe".Equals(extension))
+					continue;
+
+				// Skip composestar files
 				if (filename.StartsWith(ComposeStarDlls) && !IsFilterFile(filename))
 					continue;
 
-				// We are only interested in assembly files.
-				string extension = Path.GetExtension(item.ToString()).ToLower(CultureInfo.InvariantCulture);
-				if (extension.Equals(".dll") || extension.Equals(".exe"))
-				{
-					assemblyFiles.Add(item.ToString());
-				}
+				result.Add(item.ToString());
 			}
 
-			return assemblyFiles;
+			return result;
 		}
 
+		/// <summary>
+		/// Creates a dictionary of all referenced assemblies which are not copied local for complete analysis.
+		/// We cannot weave on these files, so we only use them for lookup of base types etc.
+		/// The dictionary maps the assemblies' FusionName to Identity.
+		/// </summary>
 		private Dictionary<string, string> FindReferencedAssemblies()
 		{
-			// Create a list of all the referenced assemblies, which are not copied local for complete analysis
-			// We cannot weave on these files, so we only use them for lookup of base types etc.
-			Dictionary<string, string> refAssemblies = new Dictionary<string, string>();
+			Dictionary<string, string> result = new Dictionary<string, string>();
 
 			foreach (ITaskItem item in _referencedAssemblies)
 			{
 				if (item.GetMetadata("CopyLocal") == "false")
 				{
-					refAssemblies.Add(item.GetMetadata("FusionName"), item.GetMetadata("Identity"));
+					result.Add(item.GetMetadata("FusionName"), item.GetMetadata("Identity"));
 				}
 			}
 
-			return refAssemblies;
+			return result;
 		}
 
 		/// <summary>
@@ -363,80 +361,17 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Analyzes all assemblies in output folder.
 		/// </summary>
 		/// <param name="analyzer">The analyzer.</param>
-		/// <param name="assemblies">The assemblies.</param>
 		/// <param name="assemblyFileList">The assembly file list.</param>
-		/// <returns><see langword="true"/> when one or more assemblies are changed.</returns>
+		/// <param name="assemblies">The assemblies.</param>
 		private void AnalyzeWeavableAssemblies(IILAnalyzer analyzer, List<string> assemblyFiles, List<AssemblyElement> assemblies)
 		{
-			// Analyze all assemblies in the output folder
 			foreach (string item in assemblyFiles)
 			{
 				try
 				{
-					// See if we already have this assembly in the list
-					AssemblyConfig asmConfig = _assembliesInConfig.Find(delegate(AssemblyConfig ac)
-					{
-						return ac.FileName.Equals(item);
-					});
+					AssemblyElement assembly = AnalyzeAssembly(analyzer, item);
 
-					if (asmConfig != null && File.Exists(asmConfig.SerializedFileName))
-					{
-						// Already in the config. Check the last modification date.
-						if (asmConfig.Timestamp == File.GetLastWriteTime(item).Ticks)
-						{
-							// Assembly has not been modified, skipping analysis
-							Log.LogMessageFromResources("AssemblyNotModified", asmConfig.Name);
-
-							// We still have to store this assembly, but we do not analyze it
-							_assembliesToStore.Add(asmConfig);
-							continue;
-						}
-					}
-
-					// Either we could not find the assembly in the config or it was changed.
-
-					AssemblyElement assembly = null;
-					IAnalyzerResults results;
-					Stopwatch sw = new Stopwatch();
-
-					Log.LogMessageFromResources("AnalyzingFile", item);
-
-					sw.Start();
-
-					results = analyzer.ExtractAllTypes(item);
-
-					ShowLogItems(results.Log.LogItems);
-
-					// Get the assembly from the results.
-					assembly = results.Assembly;
-
-					// Store the filters
-					StoreFilters(results);
-
-					if (assembly != null && !IsFilterFile(Path.GetFileName(item)))
-					{
-						// Create a new AssemblyConfig object
-						asmConfig = new AssemblyConfig();
-
-						asmConfig.FileName = item;
-						asmConfig.Name = assembly.Name;
-						asmConfig.Timestamp = File.GetLastWriteTime(item).Ticks;
-						asmConfig.Assembly = assembly;
-
-						// Generate a unique filename
-						asmConfig.GenerateSerializedFileName(_intermediateOutputPath);
-
-						_assembliesDirty = true;
-						_assembliesToStore.Add(asmConfig);
-						assemblies.Add(assembly);
-
-						sw.Stop();
-						Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
-					}
-					else
-					{
-						Log.LogMessageFromResources("AssemblyAnalyzedSkipped");
-					}
+					if (assembly != null) assemblies.Add(assembly);
 				}
 				catch (ILAnalyzerException ex)
 				{
@@ -454,18 +389,76 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				{
 					Log.LogErrorFromException(ex, false);
 				}
-
 			}
+		}
+
+		private AssemblyElement AnalyzeAssembly(IILAnalyzer analyzer, string filename)
+		{
+			// See if we already have this assembly in the list
+			AssemblyConfig asmConfig = _assembliesInConfig.Find(delegate(AssemblyConfig ac)
+			{
+				return ac.FileName.Equals(filename);
+			});
+
+			if (asmConfig != null && File.Exists(asmConfig.SerializedFileName))
+			{
+				// Already in the config. Check the last modification date.
+				if (asmConfig.Timestamp == File.GetLastWriteTime(filename).Ticks)
+				{
+					// Assembly has not been modified, skipping analysis
+					Log.LogMessageFromResources("AssemblyNotModified", asmConfig.Name);
+
+					// We still have to store this assembly, but we do not analyze it
+					_assembliesToStore.Add(asmConfig);
+					return null;
+				}
+			}
+
+			// Either we could not find the assembly in the config or it was changed.
+			Log.LogMessageFromResources("AnalyzingFile", filename);
+			Stopwatch sw = Stopwatch.StartNew();
+
+			IAnalyzerResults results = analyzer.ExtractAllTypes(filename);
+			
+			ShowLogItems(results.Log.LogItems);
+
+			// Store the filters
+			StoreFilters(results);
+
+			// Get the assembly from the results.
+			AssemblyElement assembly = results.Assembly;
+			if (assembly == null || IsFilterFile(Path.GetFileName(filename)))
+			{
+				Log.LogMessageFromResources("AssemblyAnalyzedSkipped");
+				return null;
+			}
+
+			// Create a new AssemblyConfig object
+			asmConfig = new AssemblyConfig();
+
+			asmConfig.FileName = filename;
+			asmConfig.Name = assembly.Name;
+			asmConfig.Timestamp = File.GetLastWriteTime(filename).Ticks;
+			asmConfig.Assembly = assembly;
+
+			// Generate a unique filename
+			asmConfig.GenerateSerializedFileName(_intermediateOutputPath);
+
+			_assembliesDirty = true;
+			_assembliesToStore.Add(asmConfig);
+
+			sw.Stop();
+			Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
+
+			return assembly;
 		}
 
 		/// <summary>
 		/// Analyzes the referenced assemblies.
 		/// </summary>
 		/// <param name="analyzer">The analyzer.</param>
-		/// <param name="assemblyChanged">if set to <c>true</c> one or more assemblies are changed.</param>
-		/// <param name="refAssemblies">The ref assemblies.</param>
-		/// <param name="assemblies">The assemblies.</param>
-		/// <param name="assemblyFileList">The assembly file list.</param>
+		/// <param name="refAssemblies">The referenced assemblies.</param>
+		/// <param name="assemblies">The list to put the information about the analyzed assemblies in.</param>
 		private void AnalyzeReferencedAssemblies(IILAnalyzer analyzer, Dictionary<string, string> refAssemblies, List<AssemblyElement> assemblies)
 		{
 			// Only if we have unresolved types
