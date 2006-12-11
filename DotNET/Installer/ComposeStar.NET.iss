@@ -63,7 +63,8 @@ Source: build\binaries\*; DestDir: {app}\binaries; Flags: ignoreversion recurses
 Source: build\ComposestarVSAddin\*; DestDir: {app}\ComposestarVSAddin; Flags: ignoreversion; Excludes: .svn; Components: core\addin; AfterInstall: RegAsm
 Source: build\examplesDotNET\*; DestDir: {app}\examplesDotNET; Flags: ignoreversion recursesubdirs; Excludes: .svn,build.xml,TestCases; Components: examples
 
-Source: vjssupuilib.exe; DestDir: {app}; Flags: ignoreversion deleteafterinstall
+;Source: vjssupuilib.exe; DestDir: {app}; Flags: ignoreversion deleteafterinstall
+Source: VJSSupUILibSetup.msi; DestDir: {app}; Flags: ignoreversion deleteafterinstall
 Source: {#SPLASH_IMAGE}; DestDir: {tmp}; DestName: splash.bmp; Flags: ignoreversion dontcopy noencryption
 
 [INI]
@@ -76,7 +77,8 @@ Name: {group}\MessageAPI Documentation; Filename: {app}\documentation\MessageAPI
 Name: {group}\{cm:UninstallProgram,{#SAFE_NAME}}; Filename: {uninstallexe}
 
 [Run]
-Filename: {app}\vjssupuilib.exe; parameters: "/C:""installer /qb"""; Components: core; StatusMsg: Installing J# UI supplemental; Flags: waituntilterminated; Check: IsAdminLoggedOn
+;Filename: {app}\vjssupuilib.exe; parameters: "/C:""installer /qb"""; Components: core; StatusMsg: Installing J# UI supplemental; Flags: waituntilterminated; Check: IsAdminLoggedOn
+Filename: msiexec.exe; parameters: "/qb /i ""{app}\VJSSupUILibSetup.msi"""; Components: core; StatusMsg: Installing J# UI supplemental; Flags: waituntilterminated; Check: IsAdminLoggedOn
 
 [UninstallDelete]
 Type: files; Name: {app}\{#SAFE_NAME} Homepage.url
@@ -156,6 +158,10 @@ var
     version: String;
 begin
   Result := RegQueryStringValue(HKLM, 'SOFTWARE\JavaSoft\Java Runtime Environment', 'CurrentVersion', version);
+  if not Result then begin
+    Result := RegQueryStringValue(HKLM, 'SOFTWARE\JavaSoft\Java Development Kit', 'CurrentVersion', version);
+  end;
+  
   if Result then begin
     Result := CompareText(version, '1.4') >= 0;
   end;
