@@ -233,12 +233,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				// Analyze the assemblies in the output folder
 				//
 				List<AssemblyElement> assemblies = new List<AssemblyElement>();
-				bool assemblyChanged = AnalyzeAllAssembliesInOutputFolder(analyzer, assemblies, assemblyFiles);
+				AnalyzeAllAssembliesInOutputFolder(analyzer, assemblies, assemblyFiles);
 
 				//
 				// Analyze the assemblies referenced to this project or subprojects
 				//
-				AnalyzeReferencedAssemblies(analyzer, assemblyChanged, refAssemblies, assemblies, assemblyFiles);
+				AnalyzeReferencedAssemblies(analyzer, refAssemblies, assemblies, assemblyFiles);
 
 				//
 				// Store the found assemblies in the configuration container
@@ -370,10 +370,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <param name="assemblies">The assemblies.</param>
 		/// <param name="assemblyFileList">The assembly file list.</param>
 		/// <returns><see langword="true"/> when one or more assemblies are changed.</returns>
-		private bool AnalyzeAllAssembliesInOutputFolder(IILAnalyzer analyzer, List<AssemblyElement> assemblies, List<string> assemblyFileList)
+		private void AnalyzeAllAssembliesInOutputFolder(IILAnalyzer analyzer, List<AssemblyElement> assemblies, List<string> assemblyFileList)
 		{
-			bool assemblyChanged = false;
-
 			// Analyze all assemblies in the output folder
 			foreach (string item in assemblyFileList)
 			{
@@ -435,9 +433,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						// Generate a unique filename
 						asmConfig.GenerateSerializedFileName(_intermediateOutputPath);
 
-						assemblyChanged = true;
 						_assembliesDirty = true;
-
 						_assembliesToStore.Add(asmConfig);
 						assemblies.Add(assembly);
 
@@ -447,7 +443,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 					{
 						Log.LogMessageFromResources("AssemblyAnalyzedSkipped");
 					}
-
 				}
 				catch (ILAnalyzerException ex)
 				{
@@ -467,8 +462,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				}
 
 			}
-
-			return assemblyChanged;
 		}
 
 		/// <summary>
@@ -479,7 +472,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <param name="refAssemblies">The ref assemblies.</param>
 		/// <param name="assemblies">The assemblies.</param>
 		/// <param name="assemblyFileList">The assembly file list.</param>
-		private void AnalyzeReferencedAssemblies(IILAnalyzer analyzer, bool assemblyChanged, Dictionary<string, string> refAssemblies, List<AssemblyElement> assemblies, List<string> assemblyFileList)
+		private void AnalyzeReferencedAssemblies(IILAnalyzer analyzer, Dictionary<string, string> refAssemblies, List<AssemblyElement> assemblies, List<string> assemblyFiles)
 		{
 			// Only if we have unresolved types
 			if (analyzer.UnresolvedTypes.Count == 0)
@@ -487,10 +480,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 			Log.LogMessageFromResources("NumberOfReferencesToResolve", analyzer.UnresolvedTypes.Count);
 
-			assemblyFileList.Clear();
+			assemblyFiles.Clear();
 
 			// The previous step could introduce new assemblies. So add those to the list
-			assemblyFileList.AddRange(analyzer.ResolveAssemblyLocations());
+			assemblyFiles.AddRange(analyzer.ResolveAssemblyLocations());
 
 			// Create new config
 			CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(_repositoryFileName);
@@ -514,15 +507,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			// Add the assemblies to analyze.
 			foreach (string al in refAssemblies.Values)
 			{
-				if (!assemblyFileList.Contains(al))
-					assemblyFileList.Add(al);
+				if (!assemblyFiles.Contains(al))
+					assemblyFiles.Add(al);
 			}
 
 			// Try to resolve all the references.
 			do
 			{
 				// Loop through all the referenced assemblies.
-				foreach (string item in assemblyFileList)
+				foreach (string item in assemblyFiles)
 				{
 					try
 					{
@@ -535,7 +528,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						// If a source assembly has changed, then new unresolved types can be introduced.
 						// So we must rescan the library based on the value of assemblyChanged.
 						// TODO: can this be optimized?
-						if (!assemblyChanged && asmConfig != null && File.Exists(asmConfig.SerializedFileName))
+						if (!_assembliesDirty && asmConfig != null && File.Exists(asmConfig.SerializedFileName))
 						{
 							// Already in the config. Check the last modification date.
 							if (asmConfig.Timestamp == File.GetLastWriteTime(item).Ticks)
@@ -551,20 +544,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						// Either we could not find the assembly in the config or it was changed.
 
 						Log.LogMessageFromResources("AnalyzingFile", item);
-
 						Stopwatch sw = Stopwatch.StartNew();
-						IAnalyzerResults results;
-						results = analyzer.ExtractAllTypes(item);
+						
+						IAnalyzerResults results = analyzer.ExtractAllTypes(item);
 						ShowLogItems(results.Log.LogItems);
-
-						AssemblyElement assembly = results.Assembly;
 
 						// Store the filters
 						StoreFilters(results);
 
+						// Create a new AssemblyConfig object
+						AssemblyElement assembly = results.Assembly;
 						if (assembly != null)
 						{
-							// Create a new AssemblyConfig object
 							asmConfig = new AssemblyConfig();
 
 							asmConfig.FileName = item;
@@ -581,11 +572,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						}
 
 						sw.Stop();
-
 						Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
 
 						StoreFilters(results);
-
 					}
 					catch (ILAnalyzerException ex)
 					{
@@ -606,12 +595,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				}
 
 				// Clear the already analyzed assemblies
-				assemblyFileList.Clear();
+				assemblyFiles.Clear();
 
 				// Get the unresolved
-				assemblyFileList.AddRange(analyzer.ResolveAssemblyLocations());
+				assemblyFiles.AddRange(analyzer.ResolveAssemblyLocations());
 			}
-			while (analyzer.UnresolvedTypes.Count > 0 && assemblyFileList.Count > 0);
+			while (analyzer.UnresolvedTypes.Count > 0 && assemblyFiles.Count > 0);
 		}
 
 		/// <summary>
@@ -625,7 +614,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				return;
 
 			Log.LogMessageFromResources("StoreInDatabase", assemblies.Count);
-
 			Stopwatch sw = Stopwatch.StartNew();
 
 			// Check if we have to save the assembly data
@@ -647,7 +635,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			EntitiesAccessor.Instance.SaveConfiguration(_repositoryFileName, _configContainer);
 
 			sw.Stop();
-
 			Log.LogMessageFromResources("StoreInDatabaseCompleted", assemblies.Count, analyzer.ResolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
 		}
 

@@ -514,8 +514,6 @@ This target will be called whenever the Clean target is invoked.
       <Output TaskParameter="Value" PropertyName="IncreConfig"/>
     </CreateProperty>
 
-    <Message Text="UseDummies=$(UseDummies). IncreConfig=$(IncreConfig)"/>
-    
     <MasterCallerTask 
       ContinueOnError="false"
       RepositoryFilename="$(ProjectDir)$(RepositoryFilename)" 
