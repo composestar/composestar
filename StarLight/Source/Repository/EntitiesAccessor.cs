@@ -85,10 +85,7 @@ namespace Composestar.Repository
 		/// <value>The instance.</value>
 		public static EntitiesAccessor Instance
 		{
-			get
-			{
-				return m_Instance;
-			}
+			get { return m_Instance; }
 		}
 
 		#endregion
@@ -209,18 +206,14 @@ namespace Composestar.Repository
 			if (string.IsNullOrEmpty(fileName))
 				throw new ArgumentNullException("fileName");
 
-			WeaveSpecification weaveSpecification;
-
 			if (File.Exists(fileName))
 			{
-				weaveSpecification = ObjectXMLSerializer<WeaveSpecification>.Load(fileName, SerializedFormat.DocumentCompressed, ExtraTypes);
-			} // if
+				return ObjectXMLSerializer<WeaveSpecification>.Load(fileName, SerializedFormat.DocumentCompressed, ExtraTypes);
+			}
 			else
 			{
 				return null;
-			} // else
-
-			return weaveSpecification;
+			}
 		}
 
 		private Type[] _extraTypes;
@@ -233,8 +226,13 @@ namespace Composestar.Repository
 			get
 			{
 				if (_extraTypes == null)
-					_extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(JumpInstruction),
-                    typeof(AndCondition), typeof(ConditionExpression), typeof(ConditionLiteral), typeof(FalseCondition), typeof(NotCondition), typeof(OrCondition), typeof(TrueCondition) };
+				{
+					_extraTypes = new Type[] { 
+						typeof(FilterAction), typeof(Block), typeof(Branch), typeof(JumpInstruction),
+						typeof(AndCondition), typeof(ConditionExpression), typeof(ConditionLiteral), 
+						typeof(FalseCondition), typeof(NotCondition), typeof(OrCondition), typeof(TrueCondition) 
+					};
+				}
 				return _extraTypes;
 			}
 		}
@@ -260,5 +258,24 @@ namespace Composestar.Repository
 
 		#endregion
 
+		#region Signatures
+
+		/// <summary>
+		/// Loads the signature expansion specification.
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <returns></returns>
+		public Signatures LoadSignatureSpecification(string fileName)
+		{
+			if (string.IsNullOrEmpty(fileName))
+				throw new ArgumentNullException("fileName");
+
+			if (!File.Exists(fileName))
+				throw new FileNotFoundException(fileName);
+
+			return ObjectXMLSerializer<Signatures>.Load(fileName, SerializedFormat.Document);
+		}
+
+		#endregion
 	}
 }

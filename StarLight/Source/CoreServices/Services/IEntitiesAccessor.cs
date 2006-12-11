@@ -49,9 +49,9 @@ namespace Composestar.StarLight.CoreServices
 	/// <summary>
 	/// Combines the interfaces for the entities.
 	/// </summary>
-	public interface IEntitiesAccessor : IConfigurationAccessors, IAssemblyAccessors, IWeaveSpecAccessors
+	public interface IEntitiesAccessor 
+		: IConfigurationAccessors, IAssemblyAccessors, IWeaveSpecAccessors, ISignatureSpecAccessors
 	{
-
 	}
 
 	/// <summary>
@@ -59,7 +59,6 @@ namespace Composestar.StarLight.CoreServices
 	/// </summary>
 	public interface IConfigurationAccessors
 	{
-
 		/// <summary>
 		/// Loads the configuration.
 		/// </summary>
@@ -74,7 +73,6 @@ namespace Composestar.StarLight.CoreServices
 		/// <param name="configContainer">The config container.</param>
 		/// <returns></returns>
 		bool SaveConfiguration(string fileName, ConfigurationContainer configContainer);
-
 	}
 
 	/// <summary>
@@ -82,7 +80,6 @@ namespace Composestar.StarLight.CoreServices
 	/// </summary>
 	public interface IAssemblyAccessors
 	{
-
 		/// <summary>
 		/// Loads the assembly element.
 		/// </summary>
@@ -97,7 +94,6 @@ namespace Composestar.StarLight.CoreServices
 		/// <param name="assemblyElement">The assembly element.</param>
 		/// <returns></returns>
 		bool SaveAssemblyElement(string fileName, AssemblyElement assemblyElement);
-
 	}
 
 	/// <summary>
@@ -119,7 +115,10 @@ namespace Composestar.StarLight.CoreServices
 		/// <param name="weaveSpecification">The weave specification.</param>
 		/// <returns></returns>
 		bool SaveWeaveSpecification(string fileName, WeaveSpecification weaveSpecification);
-
 	}
 
+	public interface ISignatureSpecAccessors
+	{
+		Signatures LoadSignatureSpecification(string fileName);
+	}
 }
