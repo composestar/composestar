@@ -229,20 +229,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				// Add all the unresolved types (used in the concern files) to the analyser
 				AddUnresolvedTypes(analyzer);
 
-				//
-				// Analyze the assemblies in the output folder
-				//
+				// Create a list to store information about analyzed assemblies in
 				List<AssemblyElement> assemblies = new List<AssemblyElement>();
-				AnalyzeAllAssembliesInOutputFolder(analyzer, assemblies, assemblyFiles);
 
-				//
+				// Analyze the assemblies in the output folder
+				AnalyzeWeavableAssemblies(analyzer, assemblyFiles, assemblies);
+
 				// Analyze the assemblies referenced to this project or subprojects
-				//
-				AnalyzeReferencedAssemblies(analyzer, refAssemblies, assemblies, assemblyFiles);
+				AnalyzeReferencedAssemblies(analyzer, refAssemblies, assemblies);
 
-				//
 				// Store the found assemblies in the configuration container
-				//
 				StoreAssemblies(analyzer, assemblies);
 			}
 
@@ -370,10 +366,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <param name="assemblies">The assemblies.</param>
 		/// <param name="assemblyFileList">The assembly file list.</param>
 		/// <returns><see langword="true"/> when one or more assemblies are changed.</returns>
-		private void AnalyzeAllAssembliesInOutputFolder(IILAnalyzer analyzer, List<AssemblyElement> assemblies, List<string> assemblyFileList)
+		private void AnalyzeWeavableAssemblies(IILAnalyzer analyzer, List<string> assemblyFiles, List<AssemblyElement> assemblies)
 		{
 			// Analyze all assemblies in the output folder
-			foreach (string item in assemblyFileList)
+			foreach (string item in assemblyFiles)
 			{
 				try
 				{
@@ -417,9 +413,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 					// Store the filters
 					StoreFilters(results);
 
-					sw.Stop();
-					sw.Reset();
-
 					if (assembly != null && !IsFilterFile(Path.GetFileName(item)))
 					{
 						// Create a new AssemblyConfig object
@@ -437,6 +430,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						_assembliesToStore.Add(asmConfig);
 						assemblies.Add(assembly);
 
+						sw.Stop();
 						Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
 					}
 					else
@@ -472,7 +466,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <param name="refAssemblies">The ref assemblies.</param>
 		/// <param name="assemblies">The assemblies.</param>
 		/// <param name="assemblyFileList">The assembly file list.</param>
-		private void AnalyzeReferencedAssemblies(IILAnalyzer analyzer, Dictionary<string, string> refAssemblies, List<AssemblyElement> assemblies, List<string> assemblyFiles)
+		private void AnalyzeReferencedAssemblies(IILAnalyzer analyzer, Dictionary<string, string> refAssemblies, List<AssemblyElement> assemblies)
 		{
 			// Only if we have unresolved types
 			if (analyzer.UnresolvedTypes.Count == 0)
@@ -480,9 +474,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 			Log.LogMessageFromResources("NumberOfReferencesToResolve", analyzer.UnresolvedTypes.Count);
 
-			assemblyFiles.Clear();
-
-			// The previous step could introduce new assemblies. So add those to the list
+			// The previous step could introduce new assemblies, so add those to the list.
+			List<string> assemblyFiles = new List<string>();
 			assemblyFiles.AddRange(analyzer.ResolveAssemblyLocations());
 
 			// Create new config
