@@ -50,6 +50,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Text;
+using System.Collections.Generic;
 #endregion
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -67,19 +69,21 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 		#endregion
 
-		#region Properties
+		#region Task properties
 
-		/// <summary>
-		/// _repository file name
-		/// </summary>
 		private string _repositoryFileName;
+		private ITaskItem[] _concernFiles;
+		private string _debugLevel;
+		private string _intermediateOutputPath;
+		private string _increConfig;
+		private bool _filthOutput = true;
 
 		/// <summary>
 		/// Gets or sets the repository filename.
 		/// </summary>
 		/// <value>The repository filename.</value>
-		/// <returns>String</returns>
-		[Required()]
+		/// <returns>string</returns>
+		[Required]
 		public string RepositoryFileName
 		{
 			get { return _repositoryFileName; }
@@ -87,15 +91,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// _concern files
-		/// </summary>
-		private ITaskItem[] _concernFiles;
-
-		/// <summary>
 		/// Gets or sets the concern files.
 		/// </summary>
 		/// <value>The concern files.</value>
-		[Required()]
+		[Required]
 		public ITaskItem[] ConcernFiles
 		{
 			get { return _concernFiles; }
@@ -103,57 +102,43 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Debug level
-		/// </summary>
-		private string debugLevel;
-
-		/// <summary>
 		/// Gets or sets the debug level.
 		/// </summary>
 		/// <value>The debug level.</value>
 		public string JavaDebugLevel
 		{
-			get { return debugLevel; }
-			set { debugLevel = value; }
+			get { return _debugLevel; }
+			set { _debugLevel = value; }
 		}
-
-		/// <summary>
-		/// _intermediate output path
-		/// </summary>
-		private String _intermediateOutputPath;
 
 		/// <summary>
 		/// Gets or sets the intermediate output path.
 		/// </summary>
 		/// <value>The intermediate output path.</value>
-		/// <returns>String</returns>
-		[Required()]
-		public String IntermediateOutputPath
+		/// <returns>string</returns>
+		[Required]
+		public string IntermediateOutputPath
 		{
 			get { return _intermediateOutputPath; }
 			set { _intermediateOutputPath = value; }
 		}
 
 		/// <summary>
-		/// _FI LTH output
+		/// Sets the name of the configuration file for INCRE.
 		/// </summary>
-		private Boolean _FILTHOutput = true;
+		public string IncreConfig
+		{
+			set { _increConfig = value; }
+		}
 
 		/// <summary>
 		/// Gets or sets a value indicating whether FILTH output is enabled.
 		/// </summary>
 		/// <value><c>true</c> if FILTH output is enabled; otherwise, <c>false</c>.</value>
-		[SuppressMessage("Microsoft.Naming", "CA1705")]
-		public Boolean FILTHOutput
+		public bool FilthOutput
 		{
-			get
-			{
-				return _FILTHOutput;
-			}
-			set
-			{
-				_FILTHOutput = value;
-			}
+			get { return _filthOutput; }
+			set { _filthOutput = value; }
 		}
 		#endregion
 
@@ -168,7 +153,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		private const int ErrorFileNotFound = 2;
 		private const int ErrorAccessDenied = 5;
 
-	
 		public enum DebugMode
 		{
 			NotSet = -1,
@@ -209,14 +193,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 			// Set the Common Configuration
 			short debugLevelValue = -1;
-			if (!String.IsNullOrEmpty(JavaDebugLevel))
+			if (!string.IsNullOrEmpty(JavaDebugLevel))
 			{
 				try
 				{
 					CurrentDebugMode = (DebugMode)Enum.Parse(typeof(DebugMode), JavaDebugLevel);
 					debugLevelValue = (short)CurrentDebugMode;
 				}
-				catch (ArgumentException ex)
+				catch (ArgumentException)
 				{
 					Log.LogErrorFromResources("CouldNotConvertDebugLevel", JavaDebugLevel);
 					return false;
@@ -228,13 +212,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			configContainer.AddSetting("InstallFolder", StarLightSettings.Instance.StarLightInstallFolder);
 
 			// Set FILTH Specification
-			String filthFile = "FILTH.xml";
+			string filthFile = "FILTH.xml";
 			if (!File.Exists(filthFile))
 			{
 				filthFile = Path.Combine(StarLightSettings.Instance.StarLightInstallFolder, filthFile);
 			}
 			configContainer.AddSetting("SpecificationFILTH", filthFile);
-			configContainer.AddSetting("OutputEnabledFILTH", FILTHOutput.ToString(CultureInfo.InvariantCulture));
+			configContainer.AddSetting("OutputEnabledFILTH", FilthOutput.ToString(CultureInfo.InvariantCulture));
 
 			// Save common config
 			entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer);
@@ -250,14 +234,23 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			else
 				process.StartInfo.FileName = JavaExecutable; // In path
 
-			string jar = Path.Combine(StarLightSettings.Instance.StarLightInstallFolder, StarLightJar);
-			
-			process.StartInfo.Arguments = String.Format(CultureInfo.InvariantCulture,
+			// Create command line
+			string jarFile = Path.Combine(StarLightSettings.Instance.StarLightInstallFolder, StarLightJar);
+
+			IList<string> args = new List<string>();
+			args.Add(StarLightSettings.Instance.JavaOptions);
+			args.Add("-jar " + Quote(jarFile));
+			if (_increConfig != null) args.Add("-i" + _increConfig);
+			args.Add(Quote(_repositoryFileName));
+
+			process.StartInfo.Arguments = Join(args, " ");
+			/*
+			string.Format(CultureInfo.InvariantCulture,
 				"{0} -jar \"{1}\" \"{2}\"", 
 				StarLightSettings.Instance.JavaOptions, 
 				jar, 
 				RepositoryFileName);
-			 
+			*/
 			Log.LogMessageFromResources("JavaStartMessage", process.StartInfo.Arguments);
 
 			process.StartInfo.CreateNoWindow = true;
@@ -311,7 +304,25 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			}
 		}
 
-		#region Parse Master Output and Logger helper functions
+		#region Helper functions
+
+		private string Quote(string value)
+		{
+			return '"' + value + '"';
+		}
+
+		private string Join(IList<string> items, string glue)
+		{
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < items.Count; i++)
+			{
+				sb.Append(items[i]);
+				
+				if (i < items.Count - 1) 
+					sb.Append(glue);
+			}
+			return sb.ToString();
+		}
 
 		/// <summary>
 		/// Parses the master output.
@@ -358,7 +369,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				int linenumber = 0;
 				int.TryParse(line, out linenumber);
 
-				if (BuildErrorsEncountered && String.IsNullOrEmpty(message))
+				if (BuildErrorsEncountered && string.IsNullOrEmpty(message))
 				{
 					BuildErrorsEncountered = false;
 				}
@@ -384,7 +395,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			if (CurrentDebugMode >= debugMode)
 			{
 				string modeDescription = GetModeDescription(debugMode);
-				string fm = String.Format(CultureInfo.CurrentCulture, "{0} ({1}): {2}", module, modeDescription, message);
+				string fm = string.Format(CultureInfo.CurrentCulture, "{0} ({1}): {2}", module, modeDescription, message);
 
 				switch (debugMode)
 				{

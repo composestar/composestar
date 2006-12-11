@@ -506,18 +506,26 @@ This target will be called whenever the Clean target is invoked.
     <OnError ExecuteTargets="CleanBackup" />
   </Target>
 
-  <!--MasterCaller target -->
-  <Target
-       Name="MasterCaller" Condition="'$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False'">
+  <!--MasterCaller target -->  
+  <Target Name="MasterCaller" Condition="'$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False'">
     <Message Text="Executing Composestar Master." />
+    
+    <CreateProperty Value="INCREconfig-dummies.xml" Condition="'$(UseDummies)' == 'True'">
+      <Output TaskParameter="Value" PropertyName="IncreConfig"/>
+    </CreateProperty>
+
+    <Message Text="UseDummies=$(UseDummies). IncreConfig=$(IncreConfig)"/>
+    
     <MasterCallerTask 
       ContinueOnError="false"
       RepositoryFilename="$(ProjectDir)$(RepositoryFilename)" 
       ConcernFiles="@(Concern->'%(FullPath)')" 
       JavaDebugLevel="$(DebugLevel)" 
       IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" 
-      FILTHOutput="$(FILTHOutput)">
+      IncreConfig="$(IncreConfig)" 
+      FilthOutput="$(FILTHOutput)">
     </MasterCallerTask>
+    
     <OnError ExecuteTargets="CleanBackup" />
   </Target>
 
