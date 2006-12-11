@@ -35,6 +35,19 @@
 #endregion
 
 #region Using directives
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+using Microsoft.Practices.ObjectBuilder;
+
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Analyzer;
@@ -43,17 +56,6 @@ using Composestar.StarLight.CoreServices.Logger;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.ILAnalyzer;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
-using Microsoft.Practices.ObjectBuilder;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel; 
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.IO;
 #endregion
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -91,7 +93,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 		// inputs:
 		private string _repositoryFileName;
-		private ITaskItem[] _assemblyFiles;
+		private ITaskItem[] _weavableAssemblies;
 		private ITaskItem[] _referencedAssemblies;
 		private ITaskItem[] _referencedTypes;
 		private bool _doMethodCallAnalysis = true;
@@ -116,9 +118,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </summary>
 		/// <value>The assembly files.</value>
 		[Required]
-		public ITaskItem[] AssemblyFiles
+		public ITaskItem[] WeavableAssemblies
 		{
-			set { _assemblyFiles = value; }
+			set { _weavableAssemblies = value; }
 		}
 
 		/// <summary>
@@ -293,7 +295,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			// Create a list of all the referenced assemblies (complete list is supplied by the msbuild file)
 			assemblyFileList = new List<string>();
 
-			foreach (ITaskItem item in _assemblyFiles)
+			foreach (ITaskItem item in _weavableAssemblies)
 			{
 				// Skip composestar files
 				string filename = Path.GetFileNameWithoutExtension(item.ToString());

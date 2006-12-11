@@ -454,16 +454,24 @@ This target will be called whenever the Clean target is invoked.
   <Target Name="AnalyzeDummies" Condition="'@(Dummies)' != ''">
     <Message Text="Analyzing dummies."/>
 
-    <CreateItem Include="$(DummyAssembly)" Condition="'@(Dummies)' != ''">
-      <Output TaskParameter="Include" ItemName="WeavableAssemblyFiles"/>
+    <CreateItem Include="@(ReferenceCopyLocalPaths)">
+      <Output TaskParameter="Include" ItemName="WeavableAssemblies"/>
     </CreateItem>
 
+    <CreateItem Include="$(DummyAssembly)" AdditionalMetadata="IsDummy=true">
+      <Output TaskParameter="Include" ItemName="WeavableAssemblies"/>
+    </CreateItem>
+<!--
+    <Message Text="WeavableAssemblies=@(WeavableAssemblies)"/>
+    <Message Text="ReferenceCopyLocalPaths=@(ReferenceCopyLocalPaths)"/>
+    <Message Text="ReferenceDependencyPaths=@(ReferenceDependencyPaths)"/>
+-->
     <IlAnalyzerTask
       ContinueOnError="false"
+      RepositoryFilename="$(RepositoryFilename)"
+      WeavableAssemblies="@(WeavableAssemblies)"
       ReferencedAssemblies="@(ReferencePath)"
       ReferencedTypes="@(ReferencedTypes)"
-      AssemblyFiles="@(WeavableAssemblyFiles)"
-      RepositoryFilename="$(RepositoryFilename)"
       BinFolder="$(ProjectDir)$(OutDir)"
       DoMethodCallAnalysis="$(HasOutputFilters)"
       IntermediateOutputPath="$(StarLightFolder)">
@@ -477,19 +485,19 @@ This target will be called whenever the Clean target is invoked.
 
     <!-- Collect the files to analyze and weave on -->
     <CreateItem Include="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')">
-      <Output TaskParameter="Include" ItemName="WeavableAssemblyFiles"/>
+      <Output TaskParameter="Include" ItemName="WeavableAssemblies"/>
     </CreateItem>
 
     <CreateItem Include="@(MainAssembly)" Condition=" '$(CodeLanguage)' != '' ">
-      <Output TaskParameter="Include" ItemName="WeavableAssemblyFiles"/>
+      <Output TaskParameter="Include" ItemName="WeavableAssemblies"/>
     </CreateItem>
 
     <IlAnalyzerTask
       ContinueOnError="false"
+      RepositoryFilename="$(RepositoryFilename)"
+      WeavableAssemblies="@(WeavableAssemblies)"
       ReferencedAssemblies="@(ReferencePath)"
       ReferencedTypes="@(ReferencedTypes)"
-      AssemblyFiles="@(WeavableAssemblyFiles)"
-      RepositoryFilename="$(RepositoryFilename)"
       BinFolder="$(ProjectDir)$(OutDir)"
       DoMethodCallAnalysis="$(HasOutputFilters)"
       IntermediateOutputPath="$(StarLightFolder)">
@@ -508,8 +516,8 @@ This target will be called whenever the Clean target is invoked.
       ConcernFiles="@(Concern->'%(FullPath)')" 
       JavaDebugLevel="$(DebugLevel)" 
       IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" 
-      FILTHOutput="$(FILTHOutput)"
-      />
+      FILTHOutput="$(FILTHOutput)">
+    </MasterCallerTask>
     <OnError ExecuteTargets="CleanBackup" />
   </Target>
 

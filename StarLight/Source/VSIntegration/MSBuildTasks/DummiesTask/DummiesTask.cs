@@ -41,10 +41,14 @@ using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;  
 
-using DDW.CSharpUI;
-
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
+using Composestar.Repository;
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.Entities.Configuration;
+
+using DDW.CSharpUI;
 #endregion
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -116,6 +120,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				
 				CSharpDummyGenerator.GenerateDummy(input, output);
 			}
+
 			return true;
 		}
 

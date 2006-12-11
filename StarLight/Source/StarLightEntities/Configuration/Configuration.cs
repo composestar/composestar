@@ -55,21 +55,24 @@ namespace Composestar.StarLight.Entities.Configuration
 	public class ConfigurationContainer
 	{
 		/// <summary>
-		/// _concerns
+		/// List of concerns.
 		/// </summary>
 		private List<ConcernElement> _concerns = new List<ConcernElement>();
 		/// <summary>
-		/// _assemblies
+		/// List of assembly configurations.
 		/// </summary>
 		private List<AssemblyConfig> _assemblies = new List<AssemblyConfig>();
 		/// <summary>
-		/// _settings
+		/// List of settings.
 		/// </summary>
 		private List<KeyValueSetting> _settings = new List<KeyValueSetting>();
 		/// <summary>
-		/// _filter types
+		/// List of filter types.
 		/// </summary>
 		private List<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
+		/// <summary>
+		/// List of filter actions.
+		/// </summary>
 		private List<FilterActionElement> _filterActions = new List<FilterActionElement>();
 
 		/// <summary>
@@ -79,10 +82,7 @@ namespace Composestar.StarLight.Entities.Configuration
 		[XmlAttribute]
 		public static string Version
 		{
-			get
-			{
-				return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();      
-			}
+			get { return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
 		}
 
 		/// <summary>
@@ -174,6 +174,5 @@ namespace Composestar.StarLight.Entities.Configuration
 
 			AddSetting(new KeyValueSetting(key, value)); 
 		}
-
 	}
 }
