@@ -51,6 +51,21 @@
       </objectContribution>
     </extension>
     
+    <extension point="org.eclipse.ui.newWizards"> 
+      <category 
+        id="composestareclipseplugin.category.wizards" 
+        name="Compose*"> 
+      </category> 
+      <wizard 
+          id="composestareclipseplugin.wizards.project" 
+          name="Compose* Java Project" 
+          category="composestareclipseplugin.category.wizards" 
+          class="ComposestarEclipsePlugin.Java.UI.Wizards.ComposestarProjectWizard"
+          project="true"> 
+      </wizard> 
+   </extension> 
+    
+    
     -------------------------------------------------
 					Headless Mode
 	------------------------------------------------- 
