@@ -140,7 +140,7 @@
 			</xsl:variable>
 			<xsl:choose>
 				<xsl:when test="$buildresultsurl">
-					<xsl:variable name="logfile" select="substring-before(info/property[@name='logfile']/@value, '.')" />
+					<xsl:variable name="logfile" select="substring-before(info/property[@name='logfile']/@value, '.xml')" />
 					<a href="{$buildresultsurl}?log={$logfile}"><xsl:value-of select="$builddate" /></a>
 				</xsl:when>
 				<xsl:otherwise>
@@ -164,7 +164,7 @@
 			<dt class="key">Last change</dt>
 			<dd>
 			by <em><xsl:value-of select="modifications/modification[position()=last()]/user" /></em> on <xsl:value-of select="modifications/modification[position()=last()]/date" />:<br />
-			<span class="withws"><xsl:value-of select="modifications/modification[position()=last()]/comment" /></span>
+			<xsl:call-template name="nl-to-br"><xsl:with-param name="str"><xsl:value-of select="modifications/modification[position()=last()]/comment" /></xsl:with-param></xsl:call-template>
 			</dd>
 		</dl>
 		
@@ -281,7 +281,11 @@
 			<td class="asis"><a href="http://composestar.svn.sourceforge.net/viewvc/composestar?view=rev&amp;revision={$revid}"><xsl:value-of select="$revid" /></a></td>
 			<td nowrap="nowrap"><xsl:value-of select="//modification[revision=$revid]/user" /></td>	
 			<td nowrap="nowrap"><xsl:value-of select="//modification[revision=$revid]/date" /></td>		
-			<td colspan="2" class="withws"><xsl:value-of select="//modification[revision=$revid]/comment" /></td>
+			<td colspan="2">
+			<xsl:call-template name="nl-to-br">
+				<xsl:with-param name="str"><xsl:value-of select="//modification[revision=$revid]/comment" /></xsl:with-param>
+			</xsl:call-template>
+			</td>
 		</tr>
 		
 		<xsl:call-template name="svn-revision-mods">
@@ -375,5 +379,22 @@
 		<xsl:text>:</xsl:text>
 		<xsl:value-of select="substring($ts, 13, 2)" />
 	</xsl:template>
-	
+
+	<!-- change newline to br -->
+	<xsl:template name="nl-to-br">
+		<xsl:param name="str"/>
+		<xsl:choose>
+			<xsl:when test="contains($str, '&#xA;')">
+				<xsl:value-of select="substring-before($str, '&#xA;')"/>
+				<br />
+				<xsl:call-template name="nl-to-br">
+					<xsl:with-param name="str" select="substring-after($str, '&#xA;')" />
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$str"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 </xsl:stylesheet>
