@@ -54,23 +54,18 @@ namespace Composestar.StarLight.SigExpander
 	public class AssemblyExpander
 	{
 		private string _spec;
-		private string _assembly;
+		private IList<string> _assemblies;
 
-		public AssemblyExpander(string spec, string assembly)
+		public AssemblyExpander(string spec, IList<string> assemblies)
 		{
 			_spec = spec;
-			_assembly = assembly;
+			_assemblies = assemblies;
 		}
 
 		public void Start()
 		{
 			Signatures sigs = EntitiesAccessor.Instance.LoadSignatureSpecification(_spec);
-
-			AssemblyDefinition ad = AssemblyFactory.GetAssembly(_assembly);
-			ProcessAssembly(ad, sigs);
-
-			string target = GetTargetFileName(_assembly);
-			AssemblyFactory.SaveAssembly(ad, target);
+			ProcessAssemblies(sigs, _assemblies);
 		}
 
 		private string GetTargetFileName(string input)
@@ -81,7 +76,19 @@ namespace Composestar.StarLight.SigExpander
 			return Path.Combine(dir, noext + ".expanded" + ext);
 		}
 
-		private void ProcessAssembly(AssemblyDefinition ad, Signatures sigs)
+		private void ProcessAssemblies(Signatures sigs, IList<string> assemblies)
+		{
+			foreach (string assembly in assemblies)
+			{
+				AssemblyDefinition ad = AssemblyFactory.GetAssembly(assembly);
+				ProcessAssembly(sigs, ad);
+
+				string target = GetTargetFileName(assembly);
+				AssemblyFactory.SaveAssembly(ad, target);
+			}
+		}
+
+		private void ProcessAssembly(Signatures sigs, AssemblyDefinition ad)
 		{
 			TypeResolver resolver = new TypeResolver(ad);
 			ModuleDefinition module = ad.MainModule;
@@ -91,7 +98,7 @@ namespace Composestar.StarLight.SigExpander
 				TypeDefinition type = module.Types[et.Name];
 				TypeExpander expander = new TypeExpander(type, resolver);
 
-				Console.WriteLine(type.FullName);
+			//	Console.WriteLine(type.FullName);
 
 				foreach (MethodElement me in et.ExtraMethods)
 				{
@@ -102,21 +109,24 @@ namespace Composestar.StarLight.SigExpander
 
 		public static void Main(string[] args)
 		{
-			if (args.Length != 2)
+			if (args.Length < 2)
 			{
-				Console.WriteLine("Usage: Composestar.StarLight.SigExpander <spec> <assembly>");
+				Console.WriteLine("Usage: Composestar.StarLight.SigExpander <spec> <assemblies>");
 				Environment.Exit(1);
 			}
 
 			string spec = args[0];
-			string assembly = args[1];
+
+			IList<string> assemblies = new List<string>();
+			for (int i = 1; i < args.Length; i++)
+				assemblies.Add(args[i]);
 
 			try
 			{
-				AssemblyExpander program = new AssemblyExpander(spec, assembly);
+				AssemblyExpander program = new AssemblyExpander(spec, assemblies);
 				program.Start();
 			}
-			catch (SigExpanderException e)
+			catch (Exception e)
 			{
 				Console.WriteLine(e.Message);
 				Environment.Exit(2);

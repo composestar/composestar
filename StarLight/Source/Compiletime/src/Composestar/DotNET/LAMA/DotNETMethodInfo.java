@@ -22,19 +22,16 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 
-import composestar.dotNET.tym.entities.MethodElement;
-
 /**
  * Corresponds to the MethodInfo class in the .NET framework. For more information 
  * on the methods and their meaning please refer to the microsoft documentation:
  * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
  * fsystemreflectionmethodinfoclasstopic.asp
  */
-public class DotNETMethodInfo extends MethodInfo {
-    /**
-	 * 
-	 */
+public class DotNETMethodInfo extends MethodInfo 
+{
 	private static final long serialVersionUID = -1303615818393508196L;
+
 	public int CallingConvention;
     private int HashCode;
     private boolean IsAbstract;

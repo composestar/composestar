@@ -60,7 +60,7 @@ namespace Composestar.StarLight.SigExpander
 
 		public void AddDummyMethod(MethodElement me)
 		{
-			Console.WriteLine("\t" + me.Name);
+		//	Console.WriteLine("\t" + me.Name);
 
 			TypeReference returnType = _resolver.ForceResolve(me.ReturnType);
 			MethodDefinition newMethod = new MethodDefinition(me.Name, MethodAttributes.Public, returnType);
@@ -71,7 +71,7 @@ namespace Composestar.StarLight.SigExpander
 				ParameterDefinition param = new ParameterDefinition(paramType);
 				param.Name = pe.Name;
 
-				Console.WriteLine("\t\t" + param.Name + " :: " + param.ParameterType);
+			//	Console.WriteLine("\t\t" + param.Name + " :: " + param.ParameterType);
 
 				newMethod.Parameters.Add(param);
 			}

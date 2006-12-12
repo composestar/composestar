@@ -63,6 +63,7 @@ import composestar.dotNET.tym.entities.TypeElement;
 public class StarLightCollectorRunner implements CollectorRunner
 {
 	public static final String MODULE_NAME = "COLLECTOR";
+	public static final String MODULE_NAME_INCRE = "COLLECTOR";
 	
 	private List callsToOtherMethods = new Vector();
 
@@ -290,7 +291,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	
 	public void copyOperation(String assemblyName) throws ModuleException
 	{
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR [INCRE]", "Restoring types from '" + assemblyName + "'");
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME_INCRE, "Restoring types from '" + assemblyName + "'");
 		INCRE incre = INCRE.instance();
 
 		int typecount = 0;
@@ -325,18 +326,18 @@ public class StarLightCollectorRunner implements CollectorRunner
 			}
 		}
 
-		Debug.out(Debug.MODE_DEBUG, "COLLECTOR [INCRE]", typecount + " types restored");
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME_INCRE, typecount + " types restored");
 	}
     
 	public void collectOperation(AssemblyConfig assembly) throws ModuleException
 	{
-		String name = assembly.getSerializedFilename();
+		String serializedFilename = assembly.getSerializedFilename();
 
 		InputStream is = null;
 		try
 		{
 			deserializeTimer.start();
-			is = new GZIPInputStream(new FileInputStream(name));
+			is = new GZIPInputStream(new FileInputStream(serializedFilename));
 			AssemblyDocument doc = AssemblyDocument.Factory.parse(is);
 			deserializeTimer.stop();
 			
@@ -345,13 +346,13 @@ public class StarLightCollectorRunner implements CollectorRunner
 		catch (XmlException e)
 		{
 			throw new ModuleException(
-					"CollectorRunner: XmlException while parsing " + name +
+					"CollectorRunner: XmlException while parsing " + serializedFilename +
 					": " + e.getMessage(), MODULE_NAME);
 		}
 		catch (IOException e)
 		{
 			throw new ModuleException(
-					"CollectorRunner: IOException while parsing " + name + 
+					"CollectorRunner: IOException while parsing " + serializedFilename + 
 					": " + e.getMessage(), MODULE_NAME);
 		}
 		finally
