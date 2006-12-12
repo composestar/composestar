@@ -288,6 +288,46 @@ public class StarLightCollectorRunner implements CollectorRunner
 				+ (System.currentTimeMillis() - starttime) + " ms.");
 	}
 	
+	public void copyOperation(String assemblyName) throws ModuleException
+	{
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR [INCRE]", "Restoring types from '" + assemblyName + "'");
+		INCRE incre = INCRE.instance();
+
+		int typecount = 0;
+
+		/* collect and iterate over all objects from previous compilation runs */
+		Iterator it = incre.history.getIterator();
+		while (it.hasNext())
+		{
+			Object obj = it.next();
+
+			// Only restore PrimitiveConcerns and CpsConcerns
+			if (obj instanceof PrimitiveConcern || obj instanceof CpsConcern)
+			{
+				Concern c = (Concern)obj;
+
+				// Get the .NET platform representation for this concern
+				DotNETType t = (DotNETType)c.getPlatformRepresentation();
+
+				// Add to datastore if type belongs to the assembly we are
+				// restoring
+				if (t != null && t.fromDLL.equals(assemblyName))
+				{
+					// Register the type with LAMA
+					t.setParentConcern(null);
+					Composestar.Core.LAMA.UnitRegister.instance().registerLanguageUnit(t);
+
+					// Add the type to the TypeMap
+					TypeMap.instance().addType(t.fullName(), t);
+
+					typecount++;
+				}
+			}
+		}
+
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR [INCRE]", typecount + " types restored");
+	}
+    
 	public void collectOperation(AssemblyConfig assembly) throws ModuleException
 	{
 		String name = assembly.getSerializedFilename();
@@ -320,45 +360,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 		}
 	}
 	
-    public void copyOperation(String assemblyName) throws ModuleException
-	{
-    	Debug.out(Debug.MODE_DEBUG, "COLLECTOR [INCRE]", "Restoring types from '"+assemblyName+"'");
-    	INCRE incre = INCRE.instance();
-    	
-    	int typecount = 0;
-    	
-    	  /* collect and iterate over all objects from previous compilation runs */
-    	  Iterator it = incre.history.getIterator();
-    	  while (it.hasNext())
-    	  {
-    	  	  Object obj = it.next();
-    	  	  
-    	  	  // Only restore PrimitiveConcerns and CpsConcerns
-    	  	  if (obj instanceof PrimitiveConcern || obj instanceof CpsConcern) 
-    	  	  {
-    	  		  Concern c = (Concern)obj;
-    	  		  
-    	  		  // Get the .NET platform representation for this concern
-    	  		  DotNETType t = (DotNETType)c.getPlatformRepresentation();
-
-    	  		  // Add to datastore if type belongs to the assembly we are restoring
-    	  		  if (t != null && t.fromDLL.equals(assemblyName))   	  		  
-    	  		  {
-    	  			  // Register the type with LAMA
-    	  			  t.setParentConcern(null);
-    	  			  Composestar.Core.LAMA.UnitRegister.instance().registerLanguageUnit(t);
-    	  			  
-    	  			  // Add the type to the TypeMap
-    	  			  TypeMap.instance().addType(t.fullName(), t);
-
-    	  			  typecount++;
-    	  		  }
-    	  	  }
-    	  }
-    	  
-    	  Debug.out(Debug.MODE_DEBUG, "COLLECTOR [INCRE]", typecount + " types restored");
-	}
-    
 	private void collectFilterTypesAndActions(ConfigurationContainer config) throws ModuleException
 	{
 		long starttime = System.currentTimeMillis();
