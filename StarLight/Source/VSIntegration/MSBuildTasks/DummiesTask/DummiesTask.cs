@@ -39,7 +39,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;  
+using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;

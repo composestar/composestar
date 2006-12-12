@@ -35,17 +35,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="AssemblyExpander.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SigExpanderException.cs" />
+    <Compile Include="TypeExpander.cs" />
+    <Compile Include="TypeResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\cecil\Mono.Cecil.csproj">
       <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CoreServices\StarLight.CoreServices.csproj">
+      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
+      <Name>StarLight.CoreServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repository\DataStoreContainer.csproj">
+      <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>
+      <Name>DataStoreContainer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StarLightEntities\StarLightEntities.csproj">
+      <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
+      <Name>StarLightEntities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

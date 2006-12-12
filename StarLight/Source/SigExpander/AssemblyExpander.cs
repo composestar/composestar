@@ -36,6 +36,7 @@
 
 #region Using directives
 using System;
+using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
@@ -68,7 +69,16 @@ namespace Composestar.StarLight.SigExpander
 			AssemblyDefinition ad = AssemblyFactory.GetAssembly(_assembly);
 			ProcessAssembly(ad, sigs);
 
-			AssemblyFactory.SaveAssembly(ad, "foo.dll");
+			string target = GetTargetFileName(_assembly);
+			AssemblyFactory.SaveAssembly(ad, target);
+		}
+
+		private string GetTargetFileName(string input)
+		{
+			string ext = Path.GetExtension(input);
+			string noext = Path.GetFileNameWithoutExtension(input);
+			string dir = Path.GetDirectoryName(input);
+			return Path.Combine(dir, noext + ".expanded" + ext);
 		}
 
 		private void ProcessAssembly(AssemblyDefinition ad, Signatures sigs)

@@ -273,7 +273,7 @@ namespace Composestar.Repository
 			if (!File.Exists(fileName))
 				throw new FileNotFoundException(fileName);
 
-			return ObjectXMLSerializer<Signatures>.Load(fileName, SerializedFormat.Document);
+			return ObjectXMLSerializer<Signatures>.Load(fileName, SerializedFormat.DocumentCompressed);
 		}
 
 		#endregion
