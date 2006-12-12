@@ -76,6 +76,11 @@ public class XmlExporter
 
 		exportGraphTo(filename);
 	}
+	
+	public Document getXmlDocument()
+	{
+		return xmlDoc;
+	}
 
 	protected void exportGraphTo(File filename) throws ModuleException
 	{

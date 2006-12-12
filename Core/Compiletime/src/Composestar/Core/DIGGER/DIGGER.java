@@ -67,10 +67,24 @@ public class DIGGER implements CTCommonModule
 		if (Configuration.instance().getModuleProperty(MODULE_NAME, "exportToXML", true))
 		{
 			filthinit = incre.getReporter().openProcess(MODULE_NAME, "Exporting to XML", INCRETimer.TYPE_NORMAL);
-			new XmlExporter(graph, new File(Configuration.instance().getPathSettings().getPath("Base") + File.separator
-					+ Configuration.instance().getPathSettings().getPath("Analysis", "analyses") + File.separator
-					+ "DispatchGraph.xml"));
+			XmlExporter exporter = new XmlExporter(graph, new File(Configuration.instance().getPathSettings().getPath(
+					"Base")
+					+ File.separator
+					+ Configuration.instance().getPathSettings().getPath("Analyses", "analyses")
+					+ File.separator + "DispatchGraph.xml"));
 			filthinit.stop();
+
+			if (Configuration.instance().getModuleProperty(MODULE_NAME, "runGraphViz", true))
+			{
+				filthinit = incre.getReporter().openProcess(MODULE_NAME, "Exporting to PNG", INCRETimer.TYPE_NORMAL);
+				GraphVizRunner gvr = new GraphVizRunner(exporter.getXmlDocument(), new File(Configuration.instance()
+						.getPathSettings().getPath("Base")
+						+ File.separator
+						+ Configuration.instance().getPathSettings().getPath("Analyses", "analyses")
+						+ File.separator + "DispatchGraph.png"));
+				gvr.run();
+				filthinit.stop();
+			}
 		}
 
 		NOBBIN nobbin = new NOBBIN(graph);

@@ -43,11 +43,11 @@ public class Message
 	protected String selector;
 
 	/**
-	 * Indication of the certenty of the message. < 0 message will probably
+	 * Indication of the certainty of the message. < 0 message will probably
 	 * never be executed. = 0 message will be executed. > 0 this number of
 	 * conditions must be valid.
 	 */
-	protected int certenty;
+	protected int certainty;
 
 	/**
 	 * If true this message is recursive
@@ -94,7 +94,7 @@ public class Message
 	{
 		concernNode = base.getConcernNode();
 		selector = base.getSelector();
-		certenty = base.getCertenty();
+		certainty = base.getCertainty();
 		re = base.getRE();
 		clones = new ArrayList();
 		results = new ArrayList();
@@ -125,14 +125,14 @@ public class Message
 		selector = inval;
 	}
 
-	public void setCertenty(int inval)
+	public void setCertainty(int inval)
 	{
-		certenty = inval;
+		certainty = inval;
 	}
 
-	public int getCertenty()
+	public int getCertainty()
 	{
-		return certenty;
+		return certainty;
 	}
 
 	public boolean isRecursive()
@@ -271,7 +271,7 @@ public class Message
 
 	public String toString()
 	{
-		return concernNode.getLabel() + "->" + selector + " [" + certenty + "]";
+		return concernNode.getLabel() + "->" + selector + " [" + certainty + "]";
 	}
 
 	public int hashCode()
@@ -281,8 +281,14 @@ public class Message
 
 	public boolean equals(Object obj)
 	{
-		if (obj == null) return false;
-		if (!(obj instanceof Message)) return false;
+		if (obj == null)
+		{
+			return false;
+		}
+		if (!(obj instanceof Message))
+		{
+			return false;
+		}
 		Message msg = (Message) obj;
 		return (msg.getConcernNode() == concernNode) && msg.getSelector().equals(selector);
 	}

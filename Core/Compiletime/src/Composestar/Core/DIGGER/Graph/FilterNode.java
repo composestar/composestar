@@ -79,6 +79,16 @@ public abstract class FilterNode extends Node
 	{
 		return filter.getFilterType().getType();
 	}
+	
+	/**
+	 * Adds the edge to the next filter in the filter chain.
+	 * 
+	 * @param inFilter
+	 */
+	public void addNextFilter(FilterNode inFilter)
+	{
+		addOutgoingEdge(new LambdaEdge(inFilter));
+	}
 
 	/**
 	 * Add a filter element node to this filter node
@@ -86,7 +96,7 @@ public abstract class FilterNode extends Node
 	 * @param inElement
 	 * @param inCondition
 	 */
-	public void appendFilterElement(FilterElementNode inElement, FilterElement fe)
+	protected void appendFilterElement(FilterElementNode inElement, FilterElement fe)
 	{
 		inElement.setOwner(this);
 		addOutgoingEdge(new CondMatchEdge(inElement, fe));

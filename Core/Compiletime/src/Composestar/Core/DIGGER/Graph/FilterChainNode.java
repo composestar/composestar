@@ -57,7 +57,7 @@ public class FilterChainNode extends Node
 		}
 		else
 		{
-			lastFilter.addOutgoingEdge(new LambdaEdge(inFilter));
+			lastFilter.addNextFilter(inFilter);
 		}
 		lastFilter = inFilter;
 	}

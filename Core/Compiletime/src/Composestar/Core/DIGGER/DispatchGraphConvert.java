@@ -30,7 +30,7 @@ import javax.xml.transform.stream.StreamSource;
  */
 public class DispatchGraphConvert
 {
-	protected static final String XSLT_PATH = "Xslt" + File.separator;
+	protected static final String XSLT_PATH = "Xslt";
 
 	/**
 	 * USe the custom output format (Xslt file in provided on the commandline)
@@ -93,23 +93,28 @@ public class DispatchGraphConvert
 		os = inOs;
 	}
 
+	public void setFormat(int inFormat)
+	{
+		format = inFormat;
+	}
+	
 	public void setFormat(String inFormat)
 	{
 		if (inFormat.equals("dot"))
 		{
-			format = FORMAT_DOT;
+			setFormat(FORMAT_DOT);
 		}
 		else if (inFormat.equals("graphml"))
 		{
-			format = FORMAT_GRAPHML;
+			setFormat(FORMAT_GRAPHML);
 		}
 		else if (inFormat.equals("gxl"))
 		{
-			format = FORMAT_GXL;
+			setFormat(FORMAT_GXL);
 		}
 		else
 		{
-			format = FORMAT_CUSTOM;
+			setFormat(FORMAT_CUSTOM);
 			customXslt = new File(inFormat);
 		}
 	}
@@ -121,16 +126,16 @@ public class DispatchGraphConvert
 	 * @return
 	 * @throws Exception
 	 */
-	protected String getXsltForFormat(int inFormat) throws Exception
+	public String getXsltForFormat(int inFormat) throws Exception
 	{
 		switch (inFormat)
 		{
 			case FORMAT_DOT:
-				return DispatchGraphConvert.class.getResource(XSLT_PATH) + "GraphVizDot.xslt";
+				return DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator + "GraphVizDot.xslt";
 			case FORMAT_GRAPHML:
-				return DispatchGraphConvert.class.getResource(XSLT_PATH) + "GraphML.xslt";
+				return DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator + "GraphML.xslt";
 			case FORMAT_GXL:
-				return DispatchGraphConvert.class.getResource(XSLT_PATH) + "GXL.xslt";
+				return DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator + "GXL.xslt";
 			case FORMAT_CUSTOM:
 				if ((customXslt != null) && (customXslt.exists()))
 				{
@@ -140,6 +145,22 @@ public class DispatchGraphConvert
 
 			default:
 				throw new Exception("Unsupported format: " + inFormat);
+		}
+	}
+	
+	public static Source getXslt(int inFormat)
+	{
+		switch (inFormat)
+		{
+			case FORMAT_DOT:
+				return new StreamSource(DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator + "GraphVizDot.xslt");
+			case FORMAT_GRAPHML:
+				return new StreamSource(DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator + "GraphML.xslt");
+			case FORMAT_GXL:
+				return new StreamSource(DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator + "GXL.xslt");
+			case FORMAT_CUSTOM:				
+			default:
+				return null;
 		}
 	}
 

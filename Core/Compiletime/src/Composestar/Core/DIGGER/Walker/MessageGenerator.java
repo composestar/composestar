@@ -21,6 +21,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Substituti
 import Composestar.Core.DIGGER.NOBBIN;
 import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
 import Composestar.Core.DIGGER.Graph.ConcernNode;
+import Composestar.Core.DIGGER.Graph.Node;
 import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
@@ -121,11 +122,11 @@ public class MessageGenerator
 		{
 			selector = sel;
 		}
-		if (edge.getDestination() instanceof AbstractConcernNode)
+		Node dest = edge.getDestination();
+		if (dest instanceof AbstractConcernNode)
 		{
 			acn = (AbstractConcernNode) edge.getDestination();
 		}
-		Message msg = getMessageFor(acn, selector);
-		return msg;
+		return getMessageFor(acn, selector);
 	}
 }

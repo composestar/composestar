@@ -10,6 +10,7 @@
 
 package Composestar.Core.DIGGER;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,13 +24,15 @@ import Composestar.Core.DIGGER.Graph.Graph;
 import Composestar.Core.DIGGER.Graph.LambdaEdge;
 import Composestar.Core.DIGGER.Graph.Node;
 import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
+import Composestar.Core.DIGGER.Graph.SpecialNodes.ExceptionNode;
+import Composestar.Core.DIGGER.Graph.SpecialNodes.InnerNode;
+import Composestar.Core.DIGGER.Walker.ExceptionMessage;
 import Composestar.Core.DIGGER.Walker.Message;
 import Composestar.Core.DIGGER.Walker.MessageGenerator;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -53,12 +56,18 @@ public class NOBBIN
 	 */
 	protected int maxDepth = 5;
 
+	protected boolean exportMessages = true;
+
 	protected MessageGenerator gen = new MessageGenerator();
+
+	protected NobbinExporter exporter;
 
 	public NOBBIN(Graph inGraph)
 	{
 		graph = inGraph;
 		maxDepth = Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "maxdepth", maxDepth);
+		exportMessages = Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "exportMessages",
+				exportMessages);
 	}
 
 	/**
@@ -70,6 +79,10 @@ public class NOBBIN
 	{
 		INCRETimer filthinit = INCRE.instance().getReporter().openProcess(DIGGER.MODULE_NAME, "Walking dispatch graph",
 				INCRETimer.TYPE_NORMAL);
+		if (exportMessages)
+		{
+			exporter = new NobbinXmlExporter();
+		}
 		Iterator concerns = graph.getConcernNodes();
 		while (concerns.hasNext())
 		{
@@ -78,6 +91,12 @@ public class NOBBIN
 			{
 				walk((ConcernNode) concernNode);
 			}
+		}
+		if (exportMessages)
+		{
+			exporter.store(Configuration.instance().getPathSettings().getPath("Base") + File.separator
+					+ Configuration.instance().getPathSettings().getPath("Analyses", "analyses") + File.separator
+					+ "NobbinResults");
 		}
 		filthinit.stop();
 	}
@@ -101,6 +120,13 @@ public class NOBBIN
 		{
 			Message inMsg = (Message) it.next();
 			List outMsgs = walk(concernNode.getInputFilters(), inMsg, new ArrayList());
+			if (exporter != null)
+			{
+				if ((outMsgs.size() != 1) || (!outMsgs.get(0).equals(inMsg)))
+				{
+					exporter.addResult(inMsg, outMsgs);
+				}
+			}
 			if (outMsgs.size() > 0)
 			{
 				if (Debug.willLog(Debug.MODE_DEBUG))
@@ -180,14 +206,14 @@ public class NOBBIN
 							logger.debug("Branch");
 						}
 						Message newMsg = gen.cloneMessage(msg);
-						newMsg.setCertenty(expr);
+						newMsg.setCertainty(expr);
 						List newTrace = new ArrayList(trace);
 						result.addAll(walk(e.getDestination(), newMsg, newTrace));
 						continue;
 					}
 					else
 					{
-						msg.setCertenty(expr);
+						msg.setCertainty(expr);
 						node = e.getDestination();
 						break;
 					}
@@ -230,6 +256,14 @@ public class NOBBIN
 					{
 						throw new ModuleException("LambdaEdge " + e + " is not the last edge", MODULE_NAME);
 					}
+					if (node instanceof ExceptionNode)
+					{
+						msg = ExceptionMessage.getExceptionMessage();
+					}
+					else if (node instanceof InnerNode)
+					{
+						// signal message to be final
+					}
 					break;
 				}
 			}
@@ -251,7 +285,7 @@ public class NOBBIN
 	{
 		msg.setRecursive(true);
 		StringBuffer sb = new StringBuffer();
-		int certenty = msg.getCertenty();
+		int certenty = msg.getCertainty();
 
 		// list of repositoryentries that caused the recursive behavior
 		List res = new ArrayList();
@@ -267,19 +301,28 @@ public class NOBBIN
 		// message with trace
 		while (it.hasNext())
 		{
-			if (sb.length() > 0) sb.append(" -> ");
+			if (sb.length() > 0)
+			{
+				sb.append(" -> ");
+			}
 			Message m = (Message) it.next();
-			certenty += m.getCertenty();
+			certenty += m.getCertainty();
 			m.setRecursive(true);
-			if (m.getRE() != null) res.add(m.getRE());
+			if (m.getRE() != null)
+			{
+				res.add(m.getRE());
+			}
 
 			sb.append(m.getConcern().getName());
 			sb.append(".");
 			sb.append(m.getSelector());
 		}
-		
-		if (msg.getRE() != null) res.add(msg.getRE());
-		
+
+		if (msg.getRE() != null)
+		{
+			res.add(msg.getRE());
+		}
+
 		sb.append(" -> ");
 		sb.append(msg.getConcern().getName());
 		sb.append(".");
@@ -287,15 +330,13 @@ public class NOBBIN
 
 		if (certenty == ConditionExpression.RESULT_TRUE)
 		{
-			//logger.error(sb.toString() + " is infinitie recursive");
-			it = res.iterator();
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Infinite recursive filter definition: "+sb.toString(), (RepositoryEntity) it.next());
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Infinite recursive filter definition: " + sb.toString(), msg
+					.getRE());
 		}
 		else
 		{
-			//logger.warn(sb.toString() + " might be infinite recursive (depended on ~" + certenty + " conditionals)");
-			it = res.iterator();
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Possibly infitite recursive filter definition (depended on ~" + certenty + " conditionals): "+sb.toString(), (RepositoryEntity) it.next());
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Possibly infitite recursive filter definition (depended on ~"
+					+ certenty + " conditionals): " + sb.toString(), msg.getRE());
 		}
 	}
 }
