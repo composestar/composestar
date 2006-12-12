@@ -55,7 +55,7 @@ namespace Composestar.StarLight.SigExpander
 			_references = new List<ModuleDefinition>();
 			_cache = new Dictionary<string, TypeReference>();
 
-			foreach (AssemblyNameReference anr in assembly.MainModule.AssemblyReferences)
+			foreach (AssemblyNameReference anr in _mainModule.AssemblyReferences)
 			{
 				AssemblyDefinition asm = assembly.Resolver.Resolve(anr);
 				_references.Add(asm.MainModule);

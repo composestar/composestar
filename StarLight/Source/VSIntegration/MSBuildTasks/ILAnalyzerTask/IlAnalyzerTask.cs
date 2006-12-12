@@ -312,49 +312,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Stores the filters.
+		/// Adds all unresolved types from the concern files to the analyzer.
 		/// </summary>
-		/// <param name="results">The results.</param>
-		private void StoreFilters(IAnalyzerResults results)
+		/// <param name="analyzer">The analyzer.</param>
+		private void AddUnresolvedTypes(IILAnalyzer analyzer)
 		{
-			if (results.FilterTypes.Count == 0 && results.FilterActions.Count == 0)
+			if (_referencedTypes.Length == 0)
 				return;
 
-			// Add FilterTypes
-			foreach (FilterTypeElement ft in results.FilterTypes)
+			Log.LogMessageFromResources(MessageImportance.Low, "NumberOfReferencesToResolve", _referencedTypes.Length);
+			foreach (ITaskItem item in _referencedTypes)
 			{
-				bool canAdd = true;
-				foreach (FilterTypeElement ftConfig in _filterTypes)
-				{
-					if (ft.Name.Equals(ftConfig.Name))
-					{
-						canAdd = false;
-						continue;
-					}
-				}
-				if (canAdd)
-					_filterTypes.Add(ft);
+				analyzer.UnresolvedTypes.Add(item.ToString());
 			}
-
-			// Add FilterActions
-			foreach (FilterActionElement fa in results.FilterActions)
-			{
-				bool canAdd = true;
-				foreach (FilterActionElement faConfig in _filterActions)
-				{
-					if (fa.Name.Equals(faConfig.Name))
-					{
-						canAdd = false;
-						continue;
-					}
-				}
-				if (canAdd)
-					_filterActions.Add(fa);
-			}
-
-			// TODO: we miss a cleanup of the filtertypes and actions no longer in the assemblies. User has to use a rebuild.
-
-			Log.LogMessageFromResources("FiltersAnalyzed", results.FilterTypes.Count, results.FilterActions.Count);
 		}
 
 		/// <summary>
@@ -440,12 +410,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			asmConfig.Name = assembly.Name;
 			asmConfig.Timestamp = File.GetLastWriteTime(filename).Ticks;
 			asmConfig.Assembly = assembly;
+			asmConfig.IsReference = false;
+			asmConfig.IsDummy = false;
 
 			// Generate a unique filename
 			asmConfig.GenerateSerializedFileName(_intermediateOutputPath);
 
-			_assembliesDirty = true;
 			_assembliesToStore.Add(asmConfig);
+			_assembliesDirty = true;
 
 			sw.Stop();
 			Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
@@ -473,8 +445,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 			// Create new config
 			CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(_repositoryFileName);
-
-			// Disable some options
 			configuration.DoFieldAnalysis = false;
 			configuration.DoMethodCallAnalysis = false;
 			configuration.ExtractUnresolvedOnly = true;
@@ -501,14 +471,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			do
 			{
 				// Loop through all the referenced assemblies.
-				foreach (string item in assemblyFiles)
+				foreach (string filename in assemblyFiles)
 				{
 					try
 					{
 						// See if we already have this assembly in the list
 						AssemblyConfig asmConfig = _assembliesInConfig.Find(delegate(AssemblyConfig ac)
 						{
-							return ac.FileName.Equals(item);
+							return ac.FileName.Equals(filename);
 						});
 
 						// If a source assembly has changed, then new unresolved types can be introduced.
@@ -517,7 +487,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						if (!_assembliesDirty && asmConfig != null && File.Exists(asmConfig.SerializedFileName))
 						{
 							// Already in the config. Check the last modification date.
-							if (asmConfig.Timestamp == File.GetLastWriteTime(item).Ticks)
+							if (asmConfig.Timestamp == File.GetLastWriteTime(filename).Ticks)
 							{
 								// Assembly has not been modified, skipping analysis
 								Log.LogMessageFromResources("AssemblyNotModified", asmConfig.Name);
@@ -529,10 +499,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 						// Either we could not find the assembly in the config or it was changed.
 
-						Log.LogMessageFromResources("AnalyzingFile", item);
+						Log.LogMessageFromResources("AnalyzingFile", filename);
 						Stopwatch sw = Stopwatch.StartNew();
 						
-						IAnalyzerResults results = analyzer.ExtractAllTypes(item);
+						IAnalyzerResults results = analyzer.ExtractAllTypes(filename);
 						ShowLogItems(results.Log.LogItems);
 
 						// Store the filters
@@ -544,11 +514,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						{
 							asmConfig = new AssemblyConfig();
 
-							asmConfig.FileName = item;
+							asmConfig.FileName = filename;
 							asmConfig.Name = assembly.Name;
-							asmConfig.Timestamp = File.GetLastWriteTime(item).Ticks;
+							asmConfig.Timestamp = File.GetLastWriteTime(filename).Ticks;
 							asmConfig.Assembly = assembly;
 							asmConfig.IsReference = true;
+							asmConfig.IsDummy = false;
 
 							// Generate a unique filename
 							asmConfig.GenerateSerializedFileName(_intermediateOutputPath);
@@ -559,8 +530,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 						sw.Stop();
 						Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
-
-						StoreFilters(results);
 					}
 					catch (ILAnalyzerException ex)
 					{
@@ -587,6 +556,52 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				assemblyFiles.AddRange(analyzer.ResolveAssemblyLocations());
 			}
 			while (analyzer.UnresolvedTypes.Count > 0 && assemblyFiles.Count > 0);
+		}
+
+		/// <summary>
+		/// Stores the filters.
+		/// </summary>
+		/// <param name="results">The results.</param>
+		private void StoreFilters(IAnalyzerResults results)
+		{
+			if (results.FilterTypes.Count == 0 && results.FilterActions.Count == 0)
+				return;
+
+			// Add FilterTypes
+			foreach (FilterTypeElement ft in results.FilterTypes)
+			{
+				bool canAdd = true;
+				foreach (FilterTypeElement ftConfig in _filterTypes)
+				{
+					if (ft.Name.Equals(ftConfig.Name))
+					{
+						canAdd = false;
+						continue;
+					}
+				}
+				if (canAdd)
+					_filterTypes.Add(ft);
+			}
+
+			// Add FilterActions
+			foreach (FilterActionElement fa in results.FilterActions)
+			{
+				bool canAdd = true;
+				foreach (FilterActionElement faConfig in _filterActions)
+				{
+					if (fa.Name.Equals(faConfig.Name))
+					{
+						canAdd = false;
+						continue;
+					}
+				}
+				if (canAdd)
+					_filterActions.Add(fa);
+			}
+
+			// TODO: we miss a cleanup of the filtertypes and actions no longer in the assemblies. User has to use a rebuild.
+
+			Log.LogMessageFromResources("FiltersAnalyzed", results.FilterTypes.Count, results.FilterActions.Count);
 		}
 
 		/// <summary>
@@ -622,22 +637,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 			sw.Stop();
 			Log.LogMessageFromResources("StoreInDatabaseCompleted", assemblies.Count, analyzer.ResolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
-		}
-
-		/// <summary>
-		/// Adds all unresolved types from the concern files to the analyzer.
-		/// </summary>
-		/// <param name="analyzer">The analyzer.</param>
-		private void AddUnresolvedTypes(IILAnalyzer analyzer)
-		{
-			if (_referencedTypes.Length == 0)
-				return;
-
-			Log.LogMessageFromResources(MessageImportance.Low, "NumberOfReferencesToResolve", _referencedTypes.Length);
-			foreach (ITaskItem item in _referencedTypes)
-			{
-				analyzer.UnresolvedTypes.Add(item.ToString());
-			}
 		}
 
 		/// <summary>
