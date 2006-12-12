@@ -221,8 +221,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			using (IILAnalyzer analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration)))
 			{
 				// Find the assemblies to analyze
-				List<string> assemblyFiles = FindAssembliesToAnalyze();
-				Dictionary<string, string> refAssemblies = FindReferencedAssemblies();
+				List<ITaskItem> weavableAssemblies = FindAssembliesToAnalyze();
+				List<ITaskItem> refAssemblies = FindReferencedAssemblies();
 
 				// Add all the unresolved types (used in the concern files) to the analyser
 				AddUnresolvedTypes(analyzer);
@@ -231,7 +231,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				List<AssemblyElement> assemblies = new List<AssemblyElement>();
 
 				// Analyze the assemblies in the output folder
-				AnalyzeWeavableAssemblies(analyzer, assemblyFiles, assemblies);
+				AnalyzeWeavableAssemblies(analyzer, weavableAssemblies, assemblies);
 
 				// Analyze the assemblies referenced to this project or subprojects
 				AnalyzeReferencedAssemblies(analyzer, refAssemblies, assemblies);
@@ -268,9 +268,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <summary>
 		/// Creates a list of assemblies to analyze.
 		/// </summary>
-		private List<string> FindAssembliesToAnalyze()
+		private List<ITaskItem> FindAssembliesToAnalyze()
 		{
-			List<string> result = new List<string>();
+			List<ITaskItem> result = new List<ITaskItem>();
 
 			foreach (ITaskItem item in _weavableAssemblies)
 			{
@@ -285,26 +285,25 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				if (filename.StartsWith(ComposeStarDlls) && !IsFilterFile(filename))
 					continue;
 
-				result.Add(item.ToString());
+				result.Add(item);
 			}
 
 			return result;
 		}
 
 		/// <summary>
-		/// Creates a dictionary of all referenced assemblies which are not copied local for complete analysis.
+		/// Creates a list of referenced assemblies which are not copied local for analysis.
 		/// We cannot weave on these files, so we only use them for lookup of base types etc.
-		/// The dictionary maps the assemblies' FusionName to Identity.
 		/// </summary>
-		private Dictionary<string, string> FindReferencedAssemblies()
+		private List<ITaskItem> FindReferencedAssemblies()
 		{
-			Dictionary<string, string> result = new Dictionary<string, string>();
+			List<ITaskItem> result = new List<ITaskItem>();
 
 			foreach (ITaskItem item in _referencedAssemblies)
 			{
 				if (item.GetMetadata("CopyLocal") == "false")
 				{
-					result.Add(item.GetMetadata("FusionName"), item.GetMetadata("Identity"));
+					result.Add(item);
 				}
 			}
 
@@ -333,9 +332,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <param name="analyzer">The analyzer.</param>
 		/// <param name="assemblyFileList">The assembly file list.</param>
 		/// <param name="assemblies">The assemblies.</param>
-		private void AnalyzeWeavableAssemblies(IILAnalyzer analyzer, List<string> assemblyFiles, List<AssemblyElement> assemblies)
+		private void AnalyzeWeavableAssemblies(IILAnalyzer analyzer, List<ITaskItem> weavableAssemblies, List<AssemblyElement> assemblies)
 		{
-			foreach (string item in assemblyFiles)
+			foreach (ITaskItem item in weavableAssemblies)
 			{
 				try
 				{
@@ -362,8 +361,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			}
 		}
 
-		private AssemblyElement AnalyzeAssembly(IILAnalyzer analyzer, string filename)
+		private AssemblyElement AnalyzeAssembly(IILAnalyzer analyzer, ITaskItem item)
 		{
+			string filename = item.ToString();
+
 			// See if we already have this assembly in the list
 			AssemblyConfig asmConfig = _assembliesInConfig.Find(delegate(AssemblyConfig ac)
 			{
@@ -411,7 +412,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			asmConfig.Timestamp = File.GetLastWriteTime(filename).Ticks;
 			asmConfig.Assembly = assembly;
 			asmConfig.IsReference = false;
-			asmConfig.IsDummy = false;
+			asmConfig.IsDummy = "true".Equals(item.GetMetadata("IsDummy"));
 
 			// Generate a unique filename
 			asmConfig.GenerateSerializedFileName(_intermediateOutputPath);
@@ -431,7 +432,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <param name="analyzer">The analyzer.</param>
 		/// <param name="refAssemblies">The referenced assemblies.</param>
 		/// <param name="assemblies">The list to put the information about the analyzed assemblies in.</param>
-		private void AnalyzeReferencedAssemblies(IILAnalyzer analyzer, Dictionary<string, string> refAssemblies, List<AssemblyElement> assemblies)
+		private void AnalyzeReferencedAssemblies(IILAnalyzer analyzer, List<ITaskItem> refAssemblies, List<AssemblyElement> assemblies)
 		{
 			// Only if we have unresolved types
 			if (analyzer.UnresolvedTypes.Count == 0)
@@ -443,7 +444,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			List<string> assemblyFiles = new List<string>();
 			assemblyFiles.AddRange(analyzer.ResolveAssemblyLocations());
 
-			// Create new config
+			// Create analyzer new config
 			CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(_repositoryFileName);
 			configuration.DoFieldAnalysis = false;
 			configuration.DoMethodCallAnalysis = false;
@@ -453,7 +454,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			// Store before reinit
 			List<string> tempUnresolvedTypes = analyzer.UnresolvedTypes;
 
-			// Create the analyzer using the object builder
+			// Create a new analyzer using the object builder
 			IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
 			analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration));
 
@@ -461,10 +462,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			analyzer.UnresolvedTypes.AddRange(tempUnresolvedTypes);
 
 			// Add the assemblies to analyze.
-			foreach (string al in refAssemblies.Values)
+			foreach (ITaskItem item in refAssemblies)
 			{
-				if (!assemblyFiles.Contains(al))
-					assemblyFiles.Add(al);
+				string filename = item.ToString();
+				if (!assemblyFiles.Contains(filename))
+					assemblyFiles.Add(filename);
 			}
 
 			// Try to resolve all the references.

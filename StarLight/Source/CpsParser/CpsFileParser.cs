@@ -63,7 +63,7 @@ namespace Composestar.StarLight.CpsParser
 		/// <summary>
 		/// Types
 		/// </summary>
-		private IList<string> types = new List<string>();
+		private IList<string> _types = new List<string>();
 		/// <summary>
 		/// _embedded code
 		/// </summary>
@@ -100,7 +100,7 @@ namespace Composestar.StarLight.CpsParser
 		/// <value>A read-only list with the names of referenced types.</value>
 		public ReadOnlyCollection<string> ReferencedTypes
 		{
-			get { return new ReadOnlyCollection<string>(types); }
+			get { return new ReadOnlyCollection<string>(_types); }
 		}
 
 		/// <summary>
@@ -255,7 +255,7 @@ namespace Composestar.StarLight.CpsParser
 			// Iteration over child nodes completed, we can now add the full type name in 'parsingType' to the types list
 			if (doType && tree.Type == CpsTokenTypes.TYPE_)
 			{
-				types.Add(parsingType);
+				_types.Add(parsingType);
 				parsingType = null;
 			}
 
