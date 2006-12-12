@@ -59,7 +59,8 @@
       <wizard 
           id="composestareclipseplugin.wizards.project" 
           name="Compose* Java Project" 
-          category="composestareclipseplugin.category.wizards" 
+          category="composestareclipseplugin.category.wizards"
+          icon="./icons/logo.gif" 
           class="ComposestarEclipsePlugin.Java.UI.Wizards.ComposestarProjectWizard"
           project="true"> 
       </wizard> 
