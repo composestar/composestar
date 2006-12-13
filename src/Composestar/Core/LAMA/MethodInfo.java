@@ -1,14 +1,14 @@
 package Composestar.Core.LAMA;
 
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-import Composestar.Utils.StringUtils;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashSet;
+import java.util.List;
+
+import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
+import Composestar.Utils.StringUtils;
 
 public abstract class MethodInfo extends ProgramElement implements SerializableRepositoryEntity
 {
