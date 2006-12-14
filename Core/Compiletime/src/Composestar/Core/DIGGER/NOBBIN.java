@@ -222,6 +222,7 @@ public class NOBBIN
 				{
 					trace.add(msg);
 					Message newMsg = gen.xform(msg, (SubstitutionEdge) e);
+					msg.addResult(newMsg);
 					logger.debug("[SUBST]" + msg + " => " + newMsg);
 
 					newMsg.setRE(origNode.getRepositoryEntity());

@@ -21,10 +21,6 @@ import Composestar.Core.Master.CommonResources;
 
 public abstract class FILTHService
 {
-	// static{
-	// System.setProperty("org.xml.sax.driver","org.apache.crimson.parser.XMLReaderImpl");
-	// }
-
 	public static PrintStream log = System.out;
 
 	public static int printMode = FILTHService.HTML;

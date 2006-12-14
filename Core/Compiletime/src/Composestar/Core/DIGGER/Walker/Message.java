@@ -164,6 +164,17 @@ public class Message
 	{
 		return clones.iterator();
 	}
+	
+	public void addResult(Message res)
+	{
+		// to filter out duplicated
+		if (!results.contains(res))	results.add(res);
+	}
+
+	public Iterator getResults()
+	{
+		return results.iterator();
+	}
 
 	/**
 	 * Returns true when this message matches
@@ -198,7 +209,7 @@ public class Message
 		}
 		else
 		{
-			// TODO: ...
+			// TODO: check for message list matching?
 		}
 		if (edge.getEnabler())
 		{
