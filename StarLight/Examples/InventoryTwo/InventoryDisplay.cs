@@ -15,7 +15,8 @@ namespace InventoryTwo
 			inventory = i;
 		}
 
-		public void Update(Subject s)
+	//	public void Update(Subject s)
+		public void Update()
 		{
 			Console.WriteLine("List of products in Inventory:");
 			foreach (Product p in inventory.GetProducts())

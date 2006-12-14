@@ -15,7 +15,8 @@ namespace InventoryTwo
 			inventory = i;
 		}
 
-		public void Update(Subject s)
+	//	public void Update(Subject s)
+		public void Update()
 		{
 			int count = 0;
 			foreach (Product p in inventory.GetProducts())
