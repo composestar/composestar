@@ -58,6 +58,17 @@ namespace BasicTests
 			Console.Out.WriteLine("value of X after calling func10:" + x);
 			Console.Out.WriteLine("");
 
+
+			Console.Out.WriteLine("");
+			int y;
+			StaticFilterTests<string>.func11(out y);
+			Console.Out.WriteLine("value of Y after calling func11:" + y);
+			Console.Out.WriteLine("");
+
+			StaticFilterTests<string>.func12(ref y);
+			Console.Out.WriteLine("value of Y after calling func12:" + y);
+			Console.Out.WriteLine("");
+
 			filtTests.askForHelp();
 			filtTests.doStuff();
 

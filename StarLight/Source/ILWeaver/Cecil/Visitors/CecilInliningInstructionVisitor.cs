@@ -828,7 +828,7 @@ namespace Composestar.StarLight.ILWeaver
 					{
 						ParameterDefinition param = parameters[i];
 
-						int ordinal = param.Sequence - (CalledMethod.HasThis ? 1 : 0);
+						int ordinal = param.Sequence - 1;// (CalledMethod.HasThis ? 1 : 0);
 
 						// Check for reference parameter
 						if (param.ParameterType.FullName.EndsWith("&"))
@@ -975,7 +975,7 @@ namespace Composestar.StarLight.ILWeaver
 							Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
 							// Load the ordinal
-							int ordinal = param.Sequence - (CalledMethod.HasThis ? 1 : 0);
+							int ordinal = param.Sequence - 1;// (CalledMethod.HasThis ? 1 : 0);
 							Instructions.Add(Worker.Create(OpCodes.Ldc_I4, ordinal));
 
 							// Call the GetArgumentValue function

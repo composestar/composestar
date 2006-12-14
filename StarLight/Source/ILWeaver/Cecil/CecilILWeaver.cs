@@ -647,13 +647,14 @@ namespace Composestar.StarLight.ILWeaver
                     }
                 }
             }
-            if (method.IsStatic && weaveMethod.HasInputFilters && 
-                (weaveType.HasInternals || weaveType.HasExternals || hasNonStaticConditions))
-            {
-				_weaveResults.Log.LogWarning(LogOriginName, Properties.Resources.NonStaticContextInStaticMethod, CheckerSubCategory, StaticConCode, 
+
+			if (method.IsStatic && weaveMethod.HasInputFilters &&
+				(weaveType.HasInternals || weaveType.HasExternals || hasNonStaticConditions))
+			{
+				_weaveResults.Log.LogWarning(LogOriginName, Properties.Resources.NonStaticContextInStaticMethod, CheckerSubCategory, StaticConCode,
 					weaveType.Name, method.Name);
-                return;
-            }
+				return;
+			}
             
 			// Add the inputfilters
 			if (weaveMethod.HasInputFilters)
@@ -663,6 +664,8 @@ namespace Composestar.StarLight.ILWeaver
 			if (weaveMethod.HasOutputFilters)
 				WeaveOutputFilters(targetAssembly, method, weaveMethod, weaveType);
 		}
+
+		
 
 		/// <summary>
 		/// Weaves the input filters.

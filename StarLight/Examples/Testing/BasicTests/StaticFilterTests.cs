@@ -11,6 +11,18 @@ namespace BasicTests
 
 			return value;
 		}
+
+		public static void func11(out int x)
+		{
+			Console.WriteLine("Func11: set value of x to 3");
+			x = 3;
+		}
+
+		public static void func12(ref int x)
+		{
+			Console.WriteLine("Func12: current value of x: " + x + " Add two to value.");
+			x = x + 2;
+		}
 	}
 
     public class MyLogger

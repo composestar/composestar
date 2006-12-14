@@ -32,6 +32,7 @@ concern FilterTestsConcern in BasicTests
 	filtermodule FM2
 	{
 		inputfilters
+			dispstatic  : Dispatch = { True => [*.func11], True => [*.func12] };
 			logging     : Tracing = { True => [*.*] }
 	}
 

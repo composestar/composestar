@@ -86,6 +86,13 @@ BasicTests.TestExternal.after func10()
 AFTER: Value of x after func10: 7. Add one to value.
 value of X after calling func10:8
 
+
+Func11: set value of x to 3
+value of Y after calling func11:3
+
+Func12: current value of x: 3 Add two to value.
+value of Y after calling func12:5
+
 Log : cur sel:askForHelp, cur method: askForHelp (declaring type BasicTests.FilterTests).
 Local variables: 2
 BasicTests.FilterTestsHelper.helpMe()
