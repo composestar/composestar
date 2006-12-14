@@ -48,8 +48,6 @@ public class DotNETMaster extends Master
 		{
 			long beginTime = System.currentTimeMillis();
 			
-			configureXmlDriver();
-			
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Creating datastore...");
 			DataStore.instance();
 
@@ -111,21 +109,6 @@ public class DotNETMaster extends Master
 			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Internal compiler error: " + error);
 			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
 			System.exit(EFAIL);
-		}
-	}
-	
-	private void configureXmlDriver()
-	{
-		// Apache XML driver is moved to a different package in Java 5
-		if (System.getProperty("java.version").substring(0, 3).equals("1.5"))
-		{
-			System.setProperty("org.xml.sax.driver", "com.sun.org.apache.xerces.internal.parsers.SAXParser");
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Selecting SAXParser XML SAX Driver");
-		}
-		else
-		{
-			System.setProperty("org.xml.sax.driver", "org.apache.crimson.parser.XMLReaderImpl");
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Selecting XMLReaderImpl XML SAX Driver");
 		}
 	}
 
