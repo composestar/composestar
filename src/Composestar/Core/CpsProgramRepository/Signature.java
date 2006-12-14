@@ -9,14 +9,15 @@
  */
 package Composestar.Core.CpsProgramRepository;
 
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-import Composestar.Core.RepositoryImplementation.DataMap;
-import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.ParameterInfo;
-
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.RepositoryImplementation.DataMap;
+import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 /**
  * This class holds the methods forming the real signature of a concern. If a
@@ -84,12 +85,12 @@ public class Signature implements SerializableRepositoryEntity
     // TODO: Optimize: use LinkedHashSet
     public List getMethods(int type) 
     {
-    	List typeOnlyList = new LinkedList();
+    	List typeOnlyList = new ArrayList();
     	Iterator itr = methodByKey.values().iterator();
     	while (itr.hasNext())
     	{
     		MethodWrapper mw = (MethodWrapper)itr.next();
-    		if (mw.getRelationType() == type)
+    		if ((mw.getRelationType() & type) != 0)
     		{
     			typeOnlyList.add(mw.getMethodInfo());
     		}
