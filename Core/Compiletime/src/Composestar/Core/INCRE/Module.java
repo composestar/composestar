@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
@@ -100,32 +101,28 @@ public class Module
 
 	public void addComparableObjects(HashMap map)
 	{
-		Iterator keys = map.keySet().iterator();
-		while (keys.hasNext())
+		Iterator entries = map.entrySet().iterator();
+		while (entries.hasNext())
 		{
-			String key = (String) keys.next();
-			HashMap tyminfo = (HashMap) map.get(key);
-			Iterator objItr = tyminfo.values().iterator();
+			Entry entry = (Entry) entries.next();
+			Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
 			while (objItr.hasNext())
 			{
-				Object obj = objItr.next();
-				addComparableObject(key, obj);
+				addComparableObject((String) entry.getKey(), objItr.next());
 			}
 		}
 	}
 
 	public void removeComparableObjects(HashMap map)
 	{
-		Iterator keys = map.keySet().iterator();
-		while (keys.hasNext())
+		Iterator entries = map.entrySet().iterator();
+		while (entries.hasNext())
 		{
-			String key = (String) keys.next();
-			HashMap tyminfo = (HashMap) map.get(key);
-			Iterator objItr = tyminfo.values().iterator();
+			Entry entry = (Entry) entries.next();
+			Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
 			while (objItr.hasNext())
 			{
-				Object obj = objItr.next();
-				removeComparableObject(key, obj);
+				removeComparableObject((String) entry.getKey(), objItr.next());
 			}
 		}
 	}
