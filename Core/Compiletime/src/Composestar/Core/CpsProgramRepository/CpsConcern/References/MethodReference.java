@@ -106,7 +106,7 @@ public class MethodReference extends FilterModuleElementReference
 	 * 
 	 * @param in
 	 */
-	public void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 	// nothing yet
 	}
@@ -116,7 +116,7 @@ public class MethodReference extends FilterModuleElementReference
 	 * 
 	 * @param out
 	 */
-	public void writeObject(ObjectOutputStream out) throws IOException
+	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 	// nothing yet
 	}

@@ -567,11 +567,6 @@ public class FilterModule extends DeclaredRepositoryEntity
 		return outputFilters;
 	}
 
-	public Object clone() throws CloneNotSupportedException
-	{
-		return fmAst.clone();
-	}
-
 	public int getDescriptionLineNumber()
 	{
 		return fmAst.getDescriptionLineNumber();

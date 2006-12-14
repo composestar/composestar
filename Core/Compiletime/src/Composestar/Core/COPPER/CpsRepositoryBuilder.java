@@ -9,13 +9,10 @@
  */
 package Composestar.Core.COPPER;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import Composestar.Core.FILTH.FILTH;
-import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
@@ -75,6 +72,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImp
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClass;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClassAndSubClasses;
+import Composestar.Core.FILTH.FILTH;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
@@ -376,18 +374,19 @@ public class CpsRepositoryBuilder
 					Vector v = new Vector();
 					if (init.size() >= 2)
 					{
-						String target = "";
+						StringBuffer sb = new StringBuffer();
 						String selector = (String) init.get(init.size() - 1);
 						for (int i = 0; i < (init.size() - 1); i++)
 						{
 							// System.out.println("Hello:
 							// "+(String)init.get(i));
-							target += (String) init.get(i) + '.';
+							if (i > 0) sb.append('.');
+							sb.append((String) init.get(i));
 							v.add(init.get(i));
 						}
 						// System.out.println("Hello: "+selector);
 						ecref.setInitSelector(selector);
-						ecref.setInitTarget(target.substring(0, target.length() - 1));
+						ecref.setInitTarget(sb.toString());
 					}
 					split.splitConcernReference(v);
 					ecref.setPackage(split.getPack());

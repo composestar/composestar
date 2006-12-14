@@ -66,7 +66,6 @@ public class SyntacticSugarExpander
 						Debug.out(Debug.MODE_DEBUG, "COPPER[EmpSuperImpResolver]",
 								"Creating self superimposition for: " + concern.getQualifiedName());
 						SuperImposition si = new SuperImposition();
-						si = new SuperImposition();
 						si.setParent(concern);
 						concern.setSuperImposition(si);
 						ds.addObject(si);

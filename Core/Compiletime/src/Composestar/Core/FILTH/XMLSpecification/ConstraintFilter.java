@@ -116,7 +116,7 @@ public class ConstraintFilter extends ArgumentFilter
 
 					// FILTHService.print("FILTH::adding rule> "+value+"( "+l+"
 					// , "+r+" )\n");
-					FILTHService.log.print("<li><i>" + value + "( " + l + " , " + r + ")</i></li>\n");
+					FILTHService.getLog().print("<li><i>" + value + "( " + l + " , " + r + ")</i></li>\n");
 				}
 			}
 

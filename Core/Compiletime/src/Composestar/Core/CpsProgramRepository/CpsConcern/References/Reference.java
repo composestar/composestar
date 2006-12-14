@@ -123,13 +123,14 @@ public abstract class Reference extends RepositoryEntity
 
 	public String getQualifiedName()
 	{
-		String fname = "";
+		StringBuffer fname = new StringBuffer();
 		for (int i = 0; i < pack.size(); i++)
 		{
-			fname += pack.elementAt(i) + ".";
+			fname.append(pack.elementAt(i));
+			fname.append(".");
 		}
-		fname += name;
-		return fname;
+		fname.append(name);
+		return fname.toString();
 	}
 
 }

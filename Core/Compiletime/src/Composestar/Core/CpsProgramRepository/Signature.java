@@ -210,16 +210,16 @@ public class Signature implements SerializableRepositoryEntity
 
 	public String getHashKey(MethodInfo methodInfo)
 	{
-		String key = methodInfo.name() + '%';
+		StringBuffer key = new StringBuffer(methodInfo.name() + '%');
 		List parameter = methodInfo.getParameters();
 		for (int i = 0; i < parameter.size(); i++)
 		{
-			key += ((ParameterInfo) parameter.get(i)).ParameterTypeString + '%';
+			key.append(((ParameterInfo) parameter.get(i)).ParameterTypeString + '%');
 		}
 
-		key += methodInfo.returnType();
+		key.append(methodInfo.returnType());
 
-		return key;
+		return key.toString();
 	}
 
 	public void setStatus(int instatus)

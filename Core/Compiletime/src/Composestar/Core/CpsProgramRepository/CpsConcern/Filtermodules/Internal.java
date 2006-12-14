@@ -114,11 +114,6 @@ public class Internal extends TypedDeclaration
 	 * internal_ast.getQualifiedName(); }
 	 */
 
-	public Object clone() throws CloneNotSupportedException
-	{
-		return internalAst.clone();
-	}
-
 	public int getDescriptionLineNumber()
 	{
 		return internalAst.getDescriptionLineNumber();

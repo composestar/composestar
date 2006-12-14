@@ -77,6 +77,11 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 	{
 		return order.iterator();
 	}
+	
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
 
 	public boolean equals(Object o)
 	{
@@ -91,16 +96,16 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 
 	public String toString()
 	{
-		String retval = "";
+		StringBuffer retval = new StringBuffer();
 		List modules = orderAsList();
 		for (int i = 0; i < modules.size() - 1; i++)
 		{
-			retval += (String) modules.get(i);
+			retval.append((String) modules.get(i));
 			if (i < modules.size() - 2)
 			{
-				retval += " + ";
+				retval.append(" + ");
 			}
 		}
-		return retval;
+		return retval.toString();
 	}
 }

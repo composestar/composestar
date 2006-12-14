@@ -117,7 +117,7 @@ public class MessageGenerator
 		String selector = base.getSelector();
 		AbstractConcernNode acn = base.getConcernNode();
 		SubstitutionPart sp = edge.getSubstitutionPart();
-		String sel = sp.getSelector().getName().toString();
+		String sel = sp.getSelector().getName();
 		if (!sel.equals("*"))
 		{
 			selector = sel;

@@ -21,9 +21,9 @@ import Composestar.Core.Master.CommonResources;
 
 public abstract class FILTHService
 {
-	public static PrintStream log = System.out;
+	protected static PrintStream log = System.out;
 
-	public static int printMode = FILTHService.HTML;
+	protected static int printMode = FILTHService.HTML;
 
 	public static final int HTML = 1;
 
@@ -37,6 +37,11 @@ public abstract class FILTHService
 	public static void setLog(String out) throws Exception
 	{
 		log = new PrintStream(new java.io.FileOutputStream(out));
+	}
+	
+	public static PrintStream getLog()
+	{
+		return log;
 	}
 
 	public static FILTHService getInstance(CommonResources cr)
@@ -58,25 +63,25 @@ public abstract class FILTHService
 
 	public static void printTab(int n, String mesg)
 	{
-		String s = "";
+		StringBuffer s = new StringBuffer();
 		for (int i = 0; i < n; i++)
 		{
 			if (printMode == FILTHService.HTML)
 			{
-				s += "&nbsp;";
+				s.append("&nbsp;");
 			}
 			else
 			{
-				s += " ";
+				s.append(" ");
 			}
 		}
 		if (printMode == FILTHService.HTML)
 		{
-			log.print(s + mesg + "<br>");
+			log.print(s.toString() + mesg + "<br>");
 		}
 		else
 		{
-			log.print(s + mesg);
+			log.print(s.toString() + mesg);
 		}
 	}
 

@@ -19,12 +19,12 @@ public class ExecutionManager
 {
 	LinkedList order;
 
-	Graph graph;
+	//Graph graph;
 
 	public ExecutionManager(LinkedList inorder, Graph g)
 	{
 		order = inorder;
-		graph = g;
+		//graph = g;
 	}
 
 	public void execute()

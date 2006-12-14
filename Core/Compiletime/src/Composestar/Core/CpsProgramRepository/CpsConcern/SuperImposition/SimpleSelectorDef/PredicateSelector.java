@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import tarau.jinni.Clause;
 import tarau.jinni.Const;
@@ -104,7 +105,7 @@ public class PredicateSelector extends SimpleSelExpression
 		INCRETimer executequery = incre.getReporter().openProcess("LOLA", query, INCRETimer.TYPE_NORMAL);
 
 		// tell ComposestarBuiltins that we are executing this selector
-		ComposestarBuiltins.currentSelector = this;
+		ComposestarBuiltins.setCurrentSelector(this);
 
 		// Debug.out(Debug.MODE_DEBUG, "LOLA", "Interpret a predicate selector("
 		// + outputVar + ", " + query + ")");
@@ -330,12 +331,11 @@ public class PredicateSelector extends SimpleSelExpression
 				HashMap relations = ComposestarBuiltins.currentLangModel.getPathOfUnitRelations(classType, keyType);
 				if (relations != null)
 				{
-					Iterator keys = relations.keySet().iterator();
-					while (keys.hasNext())
+					Iterator entries = relations.entrySet().iterator();
+					while (entries.hasNext())
 					{
-						String key = (String) keys.next();
-						Object obj = relations.get(key);
-						addTYMInfo(key, (MethodNode) obj);
+						Entry entry = (Entry) entries.next();
+						addTYMInfo((String) entry.getKey(), (MethodNode) entry.getValue());
 					}
 				}
 				else

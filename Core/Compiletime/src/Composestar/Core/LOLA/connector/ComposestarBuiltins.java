@@ -85,6 +85,11 @@ public class ComposestarBuiltins extends HashDict
 		String key = proto.name() + '/' + proto.getArity();
 		put(key, proto);
 	}
+	
+	public static void setCurrentSelector(PredicateSelector inSelector)
+	{
+		currentSelector = inSelector;
+	}
 }
 
 /**
