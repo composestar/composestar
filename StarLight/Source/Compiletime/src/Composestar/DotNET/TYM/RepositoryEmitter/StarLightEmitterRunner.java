@@ -7,15 +7,19 @@ package Composestar.DotNET.TYM.RepositoryEmitter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.MethodWrapper;
+import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -229,16 +233,19 @@ public class StarLightEmitterRunner implements CTCommonModule
 							throw new RuntimeException("Unknown reference type");
 						}
 
-						Reference reference = createReference(type, refType.getFromDLL(), condition.getShortref()
-								.getPackage(), condition.getShortref().getName(), (String) condition
-								.getDynObject("selector"));
+						Reference reference = createReference(
+								type, 
+								refType.getFromDLL(), 
+								condition.getShortref().getPackage(), 
+								condition.getShortref().getName(), 
+								(String) condition.getDynObject("selector"));
 
 						storedCondition.setReference(reference);
 					}
 				}
 
 				// emit methods:
-				emitMethods(type, weaveType);
+				emitMethods(concern, weaveType);
 			}
 		}
 
@@ -356,15 +363,17 @@ public class StarLightEmitterRunner implements CTCommonModule
 		return storedRef;
 	}
 
-	private void emitMethods(Type type, WeaveType weaveType) throws ModuleException
+	private void emitMethods(Concern concern, WeaveType weaveType) throws ModuleException
 	{
+		Signature sig = concern.getSignature();		
+		List methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
+		
 		boolean hasFilters;
-		Vector methods = new Vector();
+		List weaveMethods = new ArrayList();
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Emit type: " + type.fullName());
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Emit type: " + concern);
 
-		Iterator methodIter = type.getMethods().iterator();
-
+		Iterator methodIter = methods.iterator();
 		while (methodIter.hasNext())
 		{
 			hasFilters = false;
@@ -390,12 +399,15 @@ public class StarLightEmitterRunner implements CTCommonModule
 			// add method if it has filters inlined:
 			if (hasFilters)
 			{
-				methods.add(weaveMethod);
+				weaveMethods.add(weaveMethod);
 			}
 		}
 
 		// add inlined methods to type:
-		weaveType.getMethods().setWeaveMethodArray((WeaveMethod[]) methods.toArray(new WeaveMethod[0]));
+		WeaveMethod[] wma = new WeaveMethod[weaveMethods.size()];
+		weaveMethods.toArray(wma);
+		
+		weaveType.getMethods().setWeaveMethodArray(wma);
 	}
 
 	private boolean emitCalls(MethodInfo method, WeaveMethod weaveMethod)
