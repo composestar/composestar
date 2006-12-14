@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.MethodWrapper;
+import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
@@ -18,7 +20,6 @@ import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -32,6 +33,7 @@ import Composestar.Utils.Debug;
  */
 public class ModelBuilder implements CTCommonModule
 {
+	private static final String MODULE_NAME = "INLINE";
 	/**
 	 * The LowLevelInliner used to translate an inputfilterset to code.
 	 */
@@ -220,14 +222,15 @@ public class ModelBuilder implements CTCommonModule
 		}
 
 		// iterate methods:
-		Type type = (Type) concern.getPlatformRepresentation();
-		List list = type.getMethods();
-		Iterator iter = list.iterator();
+		Signature sig = concern.getSignature();
+		List methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
+
+		Iterator iter = methods.iterator();
 		while (iter.hasNext())
 		{
 			MethodInfo method = (MethodInfo) iter.next();
-
-			long time = System.currentTimeMillis();
+			
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing " + method);
 			processMethod(method);
 		}
 	}
