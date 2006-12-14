@@ -77,6 +77,8 @@ public class DotNETMethodInfo extends MethodInfo
     	mi.IsPublic = this.IsPublic;
     	mi.IsStatic = this.IsStatic;
     	mi.IsVirtual = this.IsVirtual;
+    	
+    	mi.signature = this.signature;
     	return mi;
     }
 
