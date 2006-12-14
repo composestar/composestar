@@ -64,8 +64,53 @@
           class="ComposestarEclipsePlugin.Java.UI.Wizards.ComposestarProjectWizard"
           project="true"> 
       </wizard> 
-   </extension> 
+   	</extension> 
     
+    <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            type="composestar.java.launching.application"
+            helpContextId="org.eclipse.jdt.debug.ui.launchConfigHelpContext.local_java_application"
+            class="ComposestarEclipsePlugin.Java.UI.ComposestarJavaApplicationTabGroup"
+            id="ComposestarEclipsePlugin.launchConfigurationTabGroup.ComposestarJavaApplication">
+            <launchMode
+                  mode="run"
+                  description="Run a Compose* Java application">
+            </launchMode>
+      </launchConfigurationTabGroup>
+    </extension>
+    
+    <!-- <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+    	<launchConfigurationTypeImage
+        	icon="icons/logo.gif"
+        	configTypeID="composestar.java.launching.application"
+        	id="composestareclipseplugin.launchConfigurationTypeImage.composestarJavaApplication">
+    	</launchConfigurationTypeImage>
+	</extension> -->
+
+	-------------------------------------------------
+				Launch Configuration
+	------------------------------------------------- 
+	
+	<extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.eclipse.jdt.launching.JavaLaunchDelegate"
+            id="composestar.java.launching.application"
+            migrationDelegate="org.eclipse.jdt.internal.launching.JavaMigrationDelegate"
+            modes="run"
+            name="Compose* Java Application"
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
+      </launchConfigurationType>
+    </extension>
+    
+    <extension point="org.eclipse.jdt.launching.classpathProviders">
+  		<classpathProvider
+   			class="ComposestarEclipsePlugin.Java.ComposestarClasspathProvider"
+   			id="composestar.runtime.libraries">
+  		</classpathProvider>
+ 	</extension>
     
     -------------------------------------------------
 					Headless Mode
