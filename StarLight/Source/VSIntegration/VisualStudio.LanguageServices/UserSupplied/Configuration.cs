@@ -137,7 +137,6 @@ namespace Composestar.StarLight.VisualStudio.Babel
 			// Extra token values internal to the scanner
 			ColorToken((int)Tokens.LEX_ERROR, TokenType.Text, error, TokenTriggers.None);
 			ColorToken((int)Tokens.LEX_COMMENT, TokenType.Text, TokenColor.Comment, TokenTriggers.None);
-
 		}
 	}
 }

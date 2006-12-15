@@ -81,6 +81,12 @@
         <Parameter Name="ClassName" Description="" />
       </Parameters>
     </Function>
+    <Function FunctionName="isClassWithNameInList" Description="">
+      <Parameters>
+        <Parameter Name="Class" Description="" />
+        <Parameter Name="ClassList" Description="" />
+      </Parameters>
+    </Function>
     <Function FunctionName="isClassWithAttribute" Description="">
       <Parameters>
         <Parameter Name="Class" Description="" />

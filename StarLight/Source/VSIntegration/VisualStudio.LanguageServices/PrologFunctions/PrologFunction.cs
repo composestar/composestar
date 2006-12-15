@@ -46,14 +46,12 @@ using System.Xml.Serialization;
 
 namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 {
-
 	[Serializable]
 	public class PrologFunction : IComparable
 	{
-		/// <summary>
-		/// _function name
-		/// </summary>
 		private string _functionName;
+		private string _description;
+		private List<PrologParameter> _parameters = new List<PrologParameter>();
 
 		/// <summary>
 		/// Gets or sets the name of the function.
@@ -63,20 +61,9 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		[XmlAttribute]
 		public string FunctionName
 		{
-			get
-			{
-				return _functionName;
-			}
-			set
-			{
-				_functionName = value;
-			}
+			get { return _functionName; }
+			set { _functionName = value; }
 		}
-
-		/// <summary>
-		/// _description
-		/// </summary>
-		private string _description;
 
 		/// <summary>
 		/// Gets or sets the description.
@@ -86,20 +73,9 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		[XmlAttribute]
 		public string Description
 		{
-			get
-			{
-				return _description;
-			}
-			set
-			{
-				_description = value;
-			}
+			get { return _description; }
+			set { _description = value; }
 		}
-
-		/// <summary>
-		/// _parameters
-		/// </summary>
-		private List<PrologParameter> _parameters = new List<PrologParameter>();
 
 		/// <summary>
 		/// Gets or sets the parameters.
@@ -109,14 +85,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		[XmlArrayItem("Parameter")]
 		public List<PrologParameter> Parameters
 		{
-			get
-			{
-				return _parameters;
-			}
-			set
-			{
-				_parameters = value;
-			}
+			get { return _parameters; }
+			set { _parameters = value; }
 		}
 
 		/// <summary>
@@ -132,14 +102,13 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 			PrologFunction temp = (PrologFunction)obj;
 			return temp.FunctionName.CompareTo(this.FunctionName);
 		}
-
 	}
 
 	[Serializable]
 	public class PrologParameter
 	{
-
 		private string _name;
+		private string _description;
 
 		/// <summary>
 		/// Gets or sets the name of the parameter.
@@ -148,17 +117,9 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		[XmlAttribute]
 		public string Name
 		{
-			get
-			{
-				return _name;
-			}
-			set
-			{
-				_name = value;
-			}
+			get { return _name; }
+			set { _name = value; }
 		}
-
-		private string _description;
 
 		/// <summary>
 		/// Gets or sets the description.
@@ -167,14 +128,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		[XmlAttribute]
 		public string Description
 		{
-			get
-			{
-				return _description;
-			}
-			set
-			{
-				_description = value;
-			}
+			get { return _description; }
+			set { _description = value; }
 		}
 	}
 
@@ -182,8 +137,9 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 	[XmlRoot("PrologFunctions", Namespace = "http://trese.cs.utwente.nl/ComposeStar/PrologFunctions")]
 	public class PrologFunctions
 	{
-
 		private List<PrologFunction> _functions = new List<PrologFunction>();
+		private List<Babel.Method> _babelMethods;
+		private List<Babel.Declaration> _babelCompletions;
 
 		/// <summary>
 		/// Determines whether the specified function name is contained in the list of functions.
@@ -206,8 +162,6 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 			return false;
 		}
 
-		private List<Babel.Method> _babelMethods;
-
 		/// <summary>
 		/// Retrieves the functions.
 		/// </summary>
@@ -215,7 +169,6 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		/// <returns></returns>
 		public List<Babel.Method> RetrieveFunctions(string startsWith)
 		{
-
 			if (_babelMethods == null && string.IsNullOrEmpty(startsWith))
 			{
 				_babelMethods = new List<Babel.Method>();
@@ -277,13 +230,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 				babelMethods.Sort();
 				return babelMethods;
 			}
-
-
 		}
-
-		private List<Babel.Declaration> _babelCompletions;
-
-
 
 		/// <summary>
 		/// Retrieves the completions.
@@ -291,7 +238,6 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		/// <returns></returns>
 		public List<Babel.Declaration> RetrieveCompletions()
 		{
-
 			if (_babelCompletions == null)
 			{
 				_babelCompletions = new List<Babel.Declaration>();
@@ -320,14 +266,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		[XmlArrayItem("Function")]
 		public List<PrologFunction> Functions
 		{
-			get
-			{
-				return _functions;
-			}
-			set
-			{
-				_functions = value;
-			}
+			get { return _functions; }
+			set { _functions = value; }
 		}
 
 		/// <summary>
