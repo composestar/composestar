@@ -44,9 +44,6 @@
     <Compile Include="Bonus\BonusView.java">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ConcernImplementations\LevelGenerator.java">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Controller.java">
       <SubType>Code</SubType>
     </Compile>
@@ -132,7 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Concerns" />
-    <Folder Include="ConcernImplementations" />
     <Folder Include="Bonus" />
     <Folder Include="GUI" />
     <Folder Include="Strategy" />

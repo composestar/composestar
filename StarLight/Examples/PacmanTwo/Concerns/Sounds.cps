@@ -6,15 +6,6 @@ concern Sounds in PacmanTwo
 			beeper : PacmanTwo.ConcernImplementations.Beeper;
 		inputfilters
 			beep_filter : After = { [*.died] beeper.pawnDied }
-		/*
-		// these may not be used because Pacman uses super.method()
-		outputfilters
-			pillEater : Send =
-				{
-					[*.eatPill] beeper.eatPill,
-					[*.eatPowerPill] beeper.eatPowerPill
-				}
-		*/
 	}
 
 	filtermodule beepSoundLevel
