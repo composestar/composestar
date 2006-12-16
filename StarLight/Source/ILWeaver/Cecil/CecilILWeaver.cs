@@ -497,24 +497,26 @@ namespace Composestar.StarLight.ILWeaver
 
 					// Initialize internal in every constructor of the parent type
 					foreach (MethodDefinition constructor in type.Constructors)
-						if (constructor.HasBody && !constructor.IsStatic && !constructor.ExplicitThis)
-							if (constructor.Body.Instructions.Count >= 1)
-							{
-								// Gets the CilWorker of the method for working with CIL instructions
-								CilWorker worker = constructor.Body.CilWorker;
+					{
+						if (constructor.HasBody && constructor.Body.Instructions.Count > 0
+							&& !constructor.IsStatic && !constructor.ExplicitThis)
+						{
+							// Gets the CilWorker of the method for working with CIL instructions
+							CilWorker worker = constructor.Body.CilWorker;
 
-								// Create instructions
-								IList<Instruction> instructions = new List<Instruction>();
-								instructions.Add(worker.Create(OpCodes.Ldarg_0));
-								instructions.Add(worker.Create(OpCodes.Newobj, targetAssembly.MainModule.Import(internalConstructor)));
-								instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
+							// Create instructions for invoking the constructor of the internal
+							IList<Instruction> instructions = new List<Instruction>();
+							instructions.Add(worker.Create(OpCodes.Ldarg_0));
+							instructions.Add(worker.Create(OpCodes.Newobj, targetAssembly.MainModule.Import(internalConstructor)));
+							instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
 
-								// Add the instructions
-								InsertBeforeInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
+							// Add the instructions
+							InsertBeforeInstructionList(worker, constructor.Body.Instructions[0], instructions);
 
-								// Log
-								StoreInstructionLog(instructions, "Internal code added to {0} for internal {1}", constructor.ToString(), internalDef.ToString());
-							}
+							// Log
+							StoreInstructionLog(instructions, "Internal code added to {0} for internal {1}", constructor.ToString(), internalDef.ToString());
+						}
+					}
 				}
 			}
 
@@ -588,24 +590,26 @@ namespace Composestar.StarLight.ILWeaver
 
 				// Initialize external in every constructor of the parent type
 				foreach (MethodDefinition constructor in type.Constructors)
-					if (constructor.HasBody && !constructor.IsStatic && !constructor.ExplicitThis)
-						if (constructor.Body.Instructions.Count >= 1)
-						{
-							// Gets the CilWorker of the method for working with CIL instructions
-							CilWorker worker = constructor.Body.CilWorker;
+				{
+					if (constructor.HasBody && constructor.Body.Instructions.Count > 0
+						&& !constructor.IsStatic && !constructor.ExplicitThis)
+					{
+						// Gets the CilWorker of the method for working with CIL instructions
+						CilWorker worker = constructor.Body.CilWorker;
 
-							// Create instructions
-							IList<Instruction> instructions = new List<Instruction>();
-							instructions.Add(worker.Create(OpCodes.Ldarg_0));
-							instructions.Add(worker.Create(OpCodes.Call, initMethodRef));
-							instructions.Add(worker.Create(OpCodes.Stfld, externalDef));
+						// Create instructions
+						IList<Instruction> instructions = new List<Instruction>();
+						instructions.Add(worker.Create(OpCodes.Ldarg_0));
+						instructions.Add(worker.Create(OpCodes.Call, initMethodRef));
+						instructions.Add(worker.Create(OpCodes.Stfld, externalDef));
 
-							// Add the instructions
-							InsertBeforeInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
+						// Add the instructions
+						InsertBeforeInstructionList(worker, constructor.Body.Instructions[0], instructions);
 
-							// Log
-							StoreInstructionLog(instructions, "External code added to {0} for external {1}", constructor.ToString(), externalDef.ToString());
-						}
+						// Log
+						StoreInstructionLog(instructions, "External code added to {0} for external {1}", constructor.ToString(), externalDef.ToString());
+					}
+				}
 			}
 
 		}
@@ -747,7 +751,7 @@ namespace Composestar.StarLight.ILWeaver
 			{
 				// Add the instructions
 				int instructionsCount = 0;
-				instructionsCount += InsertBeforeInstructionList(ref worker, ins, visitor.Instructions);
+				instructionsCount += InsertBeforeInstructionList(worker, ins, visitor.Instructions);
 
 				// Log
 				StoreInstructionLog(visitor.Instructions, "Input filters for {0}", method.ToString());
@@ -868,7 +872,7 @@ namespace Composestar.StarLight.ILWeaver
 						outputFilter.Accept(visitor);
 					}
 					catch (Exception ex)
-					{						
+					{
 						throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputImagePath, ex);
 					}
 
@@ -883,7 +887,7 @@ namespace Composestar.StarLight.ILWeaver
 
 						int instructionsCount = 0;
 						// Add the instructions
-						instructionsCount += ReplaceAndInsertInstructionList(ref worker, instruction, visitor.Instructions);
+						instructionsCount += ReplaceAndInsertInstructionList(worker, instruction, visitor.Instructions);
 
 						// Log
 						StoreInstructionLog(visitor.Instructions, "Output filters({2}) for {0} call {1}", method.ToString(), md.ToString(), _weaveResults.WeaveStatistics.OutputFiltersAdded);
@@ -963,7 +967,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// <param name="startInstruction">The start instruction.</param>
 		/// <param name="instructionsToAdd">The instructions to add.</param>
 		/// <returns></returns>
-		private static int InsertBeforeInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+		private static int InsertBeforeInstructionList(CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
 		{
 			foreach (Instruction instr in instructionsToAdd)
 			{
@@ -981,7 +985,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// <param name="instructionsToAdd">The instructions to add.</param>
 		/// <returns>The number of instructions inserted.</returns>
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Might be used in the future.")]
-		private static int InsertInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+		private static int InsertInstructionList(CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
 		{
 			foreach (Instruction instr in instructionsToAdd)
 			{
@@ -999,7 +1003,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// <param name="startInstruction">The start instruction.</param>
 		/// <param name="instructionsToAdd">The instructions to add.</param>
 		/// <returns></returns>
-		private static int ReplaceAndInsertInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+		private static int ReplaceAndInsertInstructionList(CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
 		{
 			bool first = true;
 			foreach (Instruction instr in instructionsToAdd)
@@ -1114,6 +1118,5 @@ namespace Composestar.StarLight.ILWeaver
 			}
 		}
 		#endregion
-
 	}
 }
