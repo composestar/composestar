@@ -58,7 +58,7 @@ public class ASTRA2 implements CTCommonModule
 		}
 				
 		PathSettings ps = Configuration.instance().getPathSettings();		
-		File baseDir = new File(ps.getPath("Base"));
+		File baseDir = new File(ps.getPath("Base"), "StarLight");
 		File signatures = new File(baseDir, "signatures.xml.gzip");
 		
 		storeSignaturesDocument(signatures);
@@ -101,7 +101,8 @@ public class ASTRA2 implements CTCommonModule
 	{
 	//	PathSettings ps = Configuration.instance().getPathSettings();		
 	//	File baseDir = new File(ps.getPath("Composestar"), "CoreElements");
-		File cps = new File("C:\\Program Files\\MSBuild\\StarLight\\0.2");
+	//	File cps = new File("C:\\Program Files\\MSBuild\\StarLight\\0.2");
+		File cps = new File("C:\\CPS\\StarLight\\Source\\SigExpander\\bin\\Debug");
 		File exe = new File(cps, "Composestar.StarLight.SigExpander.exe");
 		
 		if (! exe.exists())
