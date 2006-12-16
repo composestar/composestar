@@ -32,11 +32,15 @@
 	</target>
 	
 	<target name="init_local" depends="init">
-		<property name="core.jar"      location="${build.core}/Compiletime/${out.jar.core}"/>
-		<property name="starlight.jar" location="${out.jar.starlight}"/>
-		<property name="xmltypes.jar"  location="lib/xmltypes.jar"/>
+		
+		<property name="core.jar"         location="${build.core}/Compiletime/${out.jar.core}"/>
+		<property name="starlight.jar"    location="${out.jar.starlight}"/>
+		<property name="xmltypes.jar"     location="lib/xmltypes.jar"/>
+		<property name="xmltypes-src.zip" location="lib/xmltypes-src.zip"/>
+		
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
+	
 	</target>
 
 	<!-- build -->
@@ -74,7 +78,13 @@
 		         classname="org.apache.xmlbeans.impl.tool.XMLBean"
 		         classpathref="lib.xmlbeans"/>
 
-		<xmlbean schema="../StarLightEntities/obj/schema0.xsd" destfile="${xmltypes.jar}" classpathref="lib.xmlbeans"/>
+		<xmlbean classpathref="lib.xmlbeans"
+		         schema="../StarLightEntities/obj/schema0.xsd" 
+		         destfile="${xmltypes.jar}" 
+		         srcgendir="../StarLightEntities/obj/xmltypes"/>
+
+		<zip destfile="${xmltypes-src.zip}"
+		     basedir="../StarLightEntities/obj/xmltypes"/>
 
 	</target>
 	
