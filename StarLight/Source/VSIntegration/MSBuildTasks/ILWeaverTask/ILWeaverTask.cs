@@ -151,10 +151,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		{
 			Log.LogMessageFromResources("WeavingStartText");
 
-			IILWeaver weaver = null;
-			IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
-
 			// Get the configuration container
+			IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
 			ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);
 
 			// Set the weave debug level
@@ -174,55 +172,52 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				}
 			}
 
-			try
+			// For each assembly in the config
+			foreach (AssemblyConfig assembly in configContainer.Assemblies)
 			{
-				// For each assembly in the config
-				foreach (AssemblyConfig assembly in configContainer.Assemblies)
+				// Exclude StarLight ContextInfo assembly from the weaving process
+				if (assembly.FileName.EndsWith(ContextInfoFileName))
+					continue;
+
+				// Exclude references
+				if (assembly.IsReference)
+					continue;
+
+				// If there is no weaving spec file, then skip
+				if (string.IsNullOrEmpty(assembly.WeaveSpecificationFile))
 				{
+					Log.LogMessageFromResources("SkippedWeavingFile", assembly.FileName);
+					continue;
+				}
 
-					// Exclude StarLight ContextInfo assembly from the weaving process
-					if (assembly.FileName.EndsWith(ContextInfoFileName))
-						continue;
-
-					// Exclude references
-					if (assembly.IsReference)
-						continue;
-
-					// If there is no weaving spec file, then skip
-					if (String.IsNullOrEmpty(assembly.WeaveSpecificationFile))
+				// Check for modification
+				if (!ConcernsDirty && File.GetLastWriteTime(assembly.FileName).Ticks <= assembly.Timestamp)
+				{
+					// we beter copy the backuped file
+					string backupWeavefile = string.Concat(assembly.FileName, ".weaved");
+					if (File.Exists(backupWeavefile))
 					{
-						Log.LogMessageFromResources("SkippedWeavingFile", assembly.FileName);
+						File.Copy(backupWeavefile, assembly.FileName, true);
+						Log.LogMessageFromResources("UsingBackupWeaveFile", assembly.FileName);
 						continue;
 					}
+				}
 
-					// Check for modification
-					if (!ConcernsDirty && File.GetLastWriteTime(assembly.FileName).Ticks <= assembly.Timestamp)
+				Log.LogMessageFromResources("WeavingFile", assembly.FileName);
+
+				// Preparing config
+				CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(assembly, configContainer, weaveDebugLevel);
+
+				if (!String.IsNullOrEmpty(BinFolder))
+				{
+					configuration.BinFolder = BinFolder;
+				}
+
+				try
+				{
+					// Retrieve a weaver instance from the ObjectManager
+					using (IILWeaver weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(entitiesAccessor, configuration)))
 					{
-						// we beter copy the backuped file
-						String backupWeavefile = string.Format(CultureInfo.InvariantCulture, "{0}.weaved", assembly.FileName);
-						if (File.Exists(backupWeavefile))
-						{
-							File.Copy(backupWeavefile, assembly.FileName, true);
-							Log.LogMessageFromResources("UsingBackupWeaveFile", assembly.FileName);
-							continue;
-						}
-					}
-
-					Log.LogMessageFromResources("WeavingFile", assembly.FileName);
-
-					// Preparing config
-					CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(assembly, configContainer, weaveDebugLevel);
-
-					if (!String.IsNullOrEmpty(BinFolder))
-					{
-						configuration.BinFolder = BinFolder;
-					}
-
-					try
-					{
-						// Retrieve a weaver instance from the ObjectManager
-						weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(entitiesAccessor, configuration));
-
 						// Perform weaving
 						IWeaveResults weaveResults = weaver.DoWeave();
 
@@ -257,41 +252,34 @@ namespace Composestar.StarLight.MSBuild.Tasks
 							default:
 								break;
 						}
-
-					}
-					catch (ILWeaverException ex)
-					{
-						//Log.LogErrorFromException(ex, true); 
-						string errorMessage = ex.Message;
-						string stackTrace = ex.StackTrace;
-
-						Exception innerException = ex.InnerException;
-						while (innerException != null)
-						{
-							errorMessage = String.Format(CultureInfo.CurrentCulture, "{0}; {1}", errorMessage, innerException.Message);
-							innerException = innerException.InnerException;
-						}
-						Log.LogErrorFromResources("WeaverException", errorMessage);
-
-						// Only show stacktrace when debugging is enabled
-						if (weaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
-							Log.LogErrorFromResources("WeaverExceptionStackTrace", stackTrace);
-					}
-					catch (ArgumentException ex)
-					{
-						Log.LogErrorFromException(ex, true);
-					}
-					catch (BadImageFormatException ex)
-					{
-						Log.LogErrorFromException(ex, false);
 					}
 				}
-			}
-			finally
-			{
-				// Close the weaver, so it closes the database, performs cleanups etc
-				if (weaver != null)
-					weaver.Dispose();
+				catch (ILWeaverException ex)
+				{
+					//Log.LogErrorFromException(ex, true); 
+					string errorMessage = ex.Message;
+					string stackTrace = ex.StackTrace;
+
+					Exception innerException = ex.InnerException;
+					while (innerException != null)
+					{
+						errorMessage = string.Concat(errorMessage, "; ", innerException.Message);
+						innerException = innerException.InnerException;
+					}
+					Log.LogErrorFromResources("WeaverException", errorMessage);
+
+					// Only show stacktrace when debugging is enabled
+					if (weaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
+						Log.LogErrorFromResources("WeaverExceptionStackTrace", stackTrace);
+				}
+				catch (ArgumentException ex)
+				{
+					Log.LogErrorFromException(ex, true);
+				}
+				catch (BadImageFormatException ex)
+				{
+					Log.LogErrorFromException(ex, false);
+				}
 			}
 
 			return !Log.HasLoggedErrors;
