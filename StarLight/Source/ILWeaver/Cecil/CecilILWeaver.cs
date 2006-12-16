@@ -70,7 +70,6 @@ namespace Composestar.StarLight.ILWeaver
 	/// </summary>
 	public sealed class CecilILWeaver : IILWeaver
 	{
-
 		#region Constant values
 
 		private const string LogOriginName = "weaver";
@@ -128,7 +127,6 @@ namespace Composestar.StarLight.ILWeaver
 			_entitiesAccessor = entitiesAccessor;
 
 			CecilUtilities.BinFolder = _configuration.BinFolder;
-
 		}
 
 		/// <summary>
@@ -159,68 +157,61 @@ namespace Composestar.StarLight.ILWeaver
 			}
 			
 			// Start timing
-			Stopwatch sw = new Stopwatch();
-			Stopwatch swType = new Stopwatch();
-			Stopwatch swMethod = new Stopwatch();
-
-			sw.Start();
-
-			StoreTimeStamp(sw.Elapsed, "Starting weaver");
-
-			// Prepare the data for this assembly 
-			WeaveSpecification weaveSpec;
+			Stopwatch swTotal = Stopwatch.StartNew();
+			StoreTimeStamp(swTotal.Elapsed, "Starting weaver");
 
 			// Get the weave specification
-			StoreTimeStamp(sw.Elapsed, "Loading weave specification");
-			weaveSpec = _entitiesAccessor.LoadWeaveSpecification(_configuration.AssemblyConfiguration.WeaveSpecificationFile);
+			StoreTimeStamp(swTotal.Elapsed, "Loading weave specification");
+			WeaveSpecification weaveSpec = _entitiesAccessor.LoadWeaveSpecification(_configuration.AssemblyConfiguration.WeaveSpecificationFile);
 
 			if (weaveSpec == null)
 			{
-				_weaveResults.Log.LogError(LogOriginName, Properties.Resources.WeavingSpecNotFound, PreProcessingSubCategory, WeaveSpecNotFound,
+				_weaveResults.SetWeaveResult(WeaveResult.Error);
+				_weaveResults.Log.LogError(LogOriginName, Properties.Resources.WeavingSpecNotFound, 
+					PreProcessingSubCategory, 
+					WeaveSpecNotFound,
 					_configuration.AssemblyConfiguration.WeaveSpecificationFile,
 					_configuration.AssemblyConfiguration.Name);
-				_weaveResults.SetWeaveResult(WeaveResult.Error);
+
 				return _weaveResults; 				
 			}
 
-			StoreTimeStamp(sw.Elapsed, "Loaded weave specification");
+			StoreTimeStamp(swTotal.Elapsed, "Loaded weave specification");
 
 			// If empty, we can quit
 			if (weaveSpec.WeaveTypes.Count == 0)
 			{
 				// Stop timing
-				sw.Stop();
-				_weaveResults.WeaveStatistics.TotalWeaveTime = sw.Elapsed;
+				swTotal.Stop();
+				_weaveResults.WeaveStatistics.TotalWeaveTime = swTotal.Elapsed;
 
 				// Stop the execution
 				return _weaveResults;
 			}
 
 			// Load the file
-			AssemblyDefinition targetAssembly;
+			StoreTimeStamp(swTotal.Elapsed, "Loading assembly");
+
 			ISymbolReader pdbReader = null;
-
-			StoreTimeStamp(sw.Elapsed, "Loading assembly");
-
-			targetAssembly = LoadAssembly(ref pdbReader);
+			AssemblyDefinition targetAssembly = LoadAssembly(ref pdbReader);
 
 			if (targetAssembly == null)
 			{
 				// Stop timing
-				sw.Stop();
-				_weaveResults.WeaveStatistics.TotalWeaveTime = sw.Elapsed;
+				swTotal.Stop();
+				_weaveResults.WeaveStatistics.TotalWeaveTime = swTotal.Elapsed;
 				_weaveResults.SetWeaveResult(WeaveResult.Error);
 
 				// Stop the execution
 				return _weaveResults;
 			}
 
-			StoreTimeStamp(sw.Elapsed, "Loaded assembly");
+			StoreTimeStamp(swTotal.Elapsed, "Loaded assembly");
 					
 			// Get only the types we have info for
 			foreach (WeaveType weaveType in weaveSpec.WeaveTypes)
 			{
-				StoreTimeStamp(sw.Elapsed, "Retrieving type '{0}'", weaveType.Name);
+				StoreTimeStamp(swTotal.Elapsed, "Retrieving type '{0}'", weaveType.Name);
 
 				TypeDefinition type = targetAssembly.MainModule.Types[weaveType.Name];
 				if (type == null)
@@ -228,15 +219,15 @@ namespace Composestar.StarLight.ILWeaver
 
 				_typeChanged = false;
 
-				swType.Start();
+				Stopwatch swType = Stopwatch.StartNew();
 
 				// Get and add the externals for this type
-				StoreTimeStamp(sw.Elapsed, "Externals for type '{0}'", weaveType.Name);
+				StoreTimeStamp(swTotal.Elapsed, "Externals for type '{0}'", weaveType.Name);
 				if (weaveType.Externals.Count > 0)
 					WeaveExternals(targetAssembly, type, weaveType);
 
 				// Get and add the internals for this type
-				StoreTimeStamp(sw.Elapsed, "Internals for type '{0}'", weaveType.Name);
+				StoreTimeStamp(swTotal.Elapsed, "Internals for type '{0}'", weaveType.Name);
 				if (weaveType.Internals.Count > 0)
 					WeaveInternals(targetAssembly, type, weaveType);
 
@@ -245,7 +236,8 @@ namespace Composestar.StarLight.ILWeaver
 					// Loop through all the methods
 					foreach (MethodDefinition method in type.Methods)
 					{
-						StoreTimeStamp(sw.Elapsed, "Retrieving method '{0}'", method.ToString());
+						StoreTimeStamp(swTotal.Elapsed, "Retrieving method '{0}'", method.ToString());
+
 						// Get the methodinfo based on the signature
 						WeaveMethod weaveMethod = GetMethodFromList(weaveType.Methods, method.ToString());
 
@@ -253,9 +245,9 @@ namespace Composestar.StarLight.ILWeaver
 						if (weaveMethod == null)
 							continue;
 
-						swMethod.Start();
+						Stopwatch swMethod = Stopwatch.StartNew();
 
-						StoreTimeStamp(sw.Elapsed, "Weaving method '{0}'", method.ToString());
+						StoreTimeStamp(swTotal.Elapsed, "Weaving method '{0}'", method.ToString());
 						WeaveMethod(targetAssembly, method, weaveMethod, weaveType);
 
 						// Update stats
@@ -265,16 +257,13 @@ namespace Composestar.StarLight.ILWeaver
 							_weaveResults.WeaveStatistics.TotalMethodWeaveTime = _weaveResults.WeaveStatistics.TotalMethodWeaveTime.Add(swMethod.Elapsed);
 							_weaveResults.WeaveStatistics.MaxWeaveTimePerMethod = TimeSpan.FromTicks(Math.Max(_weaveResults.WeaveStatistics.MaxWeaveTimePerMethod.Ticks, swMethod.Elapsed.Ticks));
 						}
-
-						swMethod.Reset();
-
 					}
 				}
 
 				// Import the changed type into the AssemblyDefinition
 				if (_typeChanged)
 				{
-					StoreTimeStamp(sw.Elapsed, "Importing type '{0}' into assembly", weaveType.Name);
+					StoreTimeStamp(swTotal.Elapsed, "Importing type '{0}' into assembly", weaveType.Name);
 
 					targetAssembly.MainModule.Import(type);
 				}
@@ -288,30 +277,27 @@ namespace Composestar.StarLight.ILWeaver
 					_weaveResults.WeaveStatistics.TotalTypeWeaveTime = _weaveResults.WeaveStatistics.TotalTypeWeaveTime.Add(swType.Elapsed);
 					_weaveResults.WeaveStatistics.MaxWeaveTimePerType = TimeSpan.FromTicks(Math.Max(_weaveResults.WeaveStatistics.MaxWeaveTimePerType.Ticks, swType.Elapsed.Ticks));
 				}
-				swType.Reset();
-
 			}
 
 			// Save the modified assembly only if it is changed.
 			if (_weaveResults.WeaveStatistics.InputFiltersAdded > 0 || _weaveResults.WeaveStatistics.OutputFiltersAdded > 0 || _weaveResults.WeaveStatistics.InternalsAdded > 0 || _weaveResults.WeaveStatistics.ExternalsAdded > 0)
 			{
 				// Add the SkipWeave attribute to indicate we have already weaved on this assembly
-				StoreTimeStamp(sw.Elapsed, "Applying SkipWeave attribute");
+				StoreTimeStamp(swTotal.Elapsed, "Applying SkipWeave attribute");
 				CustomAttribute skipWeave = new CustomAttribute(CecilUtilities.CreateMethodReference(targetAssembly, CachedMethodDefinition.SkipWeaveConstructor));
 				targetAssembly.CustomAttributes.Add(skipWeave);
 
 				_weaveResults.SetWeaveResult(WeaveResult.Success);
 
-				StoreTimeStamp(sw.Elapsed, "Saving assembly");
+				StoreTimeStamp(swTotal.Elapsed, "Saving assembly");
 				SaveAssembly(targetAssembly, pdbReader);
-				StoreTimeStamp(sw.Elapsed, "Saved assembly");
+				StoreTimeStamp(swTotal.Elapsed, "Saved assembly");
 			}
 
 			// Stop timing
-			sw.Stop();
-
-			StoreTimeStamp(sw.Elapsed, "Weaving completed");
-			_weaveResults.WeaveStatistics.TotalWeaveTime = sw.Elapsed;
+			swTotal.Stop();
+			StoreTimeStamp(swTotal.Elapsed, "Weaving completed");
+			_weaveResults.WeaveStatistics.TotalWeaveTime = swTotal.Elapsed;
 
 			return _weaveResults;
 		}
@@ -461,24 +447,19 @@ namespace Composestar.StarLight.ILWeaver
 
 			#endregion
 
-			FieldDefinition internalDef;
-			TypeReference internalTypeRef;
-			Mono.Cecil.FieldAttributes internalAttrs;
-
 			foreach (Internal inter in weaveType.Internals)
 			{
-				String internalTypeString = String.Format(CultureInfo.InvariantCulture, "{0}.{1}", inter.Namespace, inter.Type);
+				string internalTypeString = string.Concat(inter.Namespace, ".", inter.Type);
 
-				internalTypeRef = CecilUtilities.ResolveType(internalTypeString, inter.Assembly, "");
+				TypeReference internalTypeRef = CecilUtilities.ResolveType(internalTypeString, inter.Assembly, "");
 				if (internalTypeRef == null)
 					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 2)"));
-
-				internalAttrs = Mono.Cecil.FieldAttributes.Private;
 
 				internalTypeRef = targetAssembly.MainModule.Import(internalTypeRef);
 
 				// Create the field
-				internalDef = new FieldDefinition(inter.Name, internalTypeRef, internalAttrs);
+				Mono.Cecil.FieldAttributes internalAttrs = Mono.Cecil.FieldAttributes.Private;
+				FieldDefinition internalDef = new FieldDefinition(inter.Name, internalTypeRef, internalAttrs);
 
 				// Add the field
 				type.Fields.Add(internalDef);
@@ -550,23 +531,18 @@ namespace Composestar.StarLight.ILWeaver
 
 			#endregion
 
-			FieldDefinition externalDef;
-			TypeReference externalTypeRef;
-			Mono.Cecil.FieldAttributes externalAttrs;
-
 			foreach (External external in weaveType.Externals)
 			{
-				externalTypeRef = CecilUtilities.ResolveType(external.Type, external.Assembly, "");
+				TypeReference externalTypeRef = CecilUtilities.ResolveType(external.Type, external.Assembly, "");
 				if (externalTypeRef == null)
 					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
 						Properties.Resources.TypeNotFound, external.Type));
 
-				externalAttrs = Mono.Cecil.FieldAttributes.Private;
-
 				externalTypeRef = targetAssembly.MainModule.Import(externalTypeRef);
 
 				// Create the field
-				externalDef = new FieldDefinition(external.Name, externalTypeRef, externalAttrs);
+				Mono.Cecil.FieldAttributes externalAttrs = Mono.Cecil.FieldAttributes.Private;
+				FieldDefinition externalDef = new FieldDefinition(external.Name, externalTypeRef, externalAttrs);
 
 				// Add the field
 				type.Fields.Add(externalDef);
@@ -576,7 +552,7 @@ namespace Composestar.StarLight.ILWeaver
 
 				// Get the method referenced by the external
 				MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector,
-					String.Format(CultureInfo.InvariantCulture, "{0}.{1}", external.Reference.Namespace, external.Reference.Target),
+					string.Concat(external.Reference.Namespace, ".", external.Reference.Target),
 					external.Assembly, "");
 
 				if (initMethodDef == null)
@@ -623,7 +599,6 @@ namespace Composestar.StarLight.ILWeaver
 		/// <param name="weaveType">Type of the weave.</param>
 		private void WeaveMethod(AssemblyDefinition targetAssembly, MethodDefinition method, WeaveMethod weaveMethod, WeaveType weaveType)
 		{
-
 			#region Check for null
 			if (targetAssembly == null)
 				throw new ArgumentNullException("targetAssembly");
@@ -641,7 +616,8 @@ namespace Composestar.StarLight.ILWeaver
 
             // Do not add filter code to static methods when internals, externals or non-static conditions are used 
             bool hasNonStaticConditions = false;
-            if (weaveType.HasConditions) {
+            if (weaveType.HasConditions)
+			{
                 foreach (Condition c in weaveType.Conditions)
                 {
                     if (c.Reference.Target.Equals(Reference.InnerTarget))
@@ -669,8 +645,6 @@ namespace Composestar.StarLight.ILWeaver
 				WeaveOutputFilters(targetAssembly, method, weaveMethod, weaveType);
 		}
 
-		
-
 		/// <summary>
 		/// Weaves the input filters.
 		/// </summary>
@@ -684,7 +658,6 @@ namespace Composestar.StarLight.ILWeaver
 		/// </remarks>
 		private void WeaveInputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, WeaveMethod weaveMethod, WeaveType weaveType)
 		{
-
 			#region Check for null and retrieve inputFilter
 
 			if (targetAssembly == null)
@@ -699,14 +672,11 @@ namespace Composestar.StarLight.ILWeaver
 				return;
 
 			// Get the input filter
-			//InlineInstruction inputFilter = _currentWeaveSpec.GeneralizedAIMs[weaveMethod.InputFilterId];
 			InlineInstruction inputFilter = weaveMethod.InputFilter;
 
 			// Only proceed when we have an inputfilter
 			if (inputFilter == null)
 				return;
-
-
 
 			#endregion
 
@@ -763,7 +733,6 @@ namespace Composestar.StarLight.ILWeaver
 			//
 			// What follows are the original instructions
 			//
-
 		}
 
 		/// <summary>
@@ -821,7 +790,6 @@ namespace Composestar.StarLight.ILWeaver
 		/// </remarks>
 		private void WeaveOutputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, WeaveMethod weaveMethod, WeaveType weaveType)
 		{
-
 			#region Check for null
 
 			if (targetAssembly == null)
@@ -951,13 +919,15 @@ namespace Composestar.StarLight.ILWeaver
 			foreach (Instruction instruction in method.Body.Instructions)
 			{
 				if (instruction.SequencePoint != null)
-					Console.WriteLine(" {5}: {0}:{1}-{2}:{3}:{4} ", instruction.SequencePoint.StartLine,
-						instruction.SequencePoint.StartColumn, instruction.SequencePoint.EndLine,
-						instruction.SequencePoint.EndColumn, Path.GetFileName(instruction.SequencePoint.Document.Url),
+					Console.WriteLine(" {5}: {0}:{1}-{2}:{3}:{4} ", 
+						instruction.SequencePoint.StartLine,
+						instruction.SequencePoint.StartColumn, 
+						instruction.SequencePoint.EndLine,
+						instruction.SequencePoint.EndColumn, 
+						Path.GetFileName(instruction.SequencePoint.Document.Url),
 						instruction.OpCode.ToString());
-
 			}
-			Console.WriteLine("");
+			Console.WriteLine();
 		}
 
 		/// <summary>
@@ -1069,7 +1039,6 @@ namespace Composestar.StarLight.ILWeaver
 					instruction.OpCode == OpCodes.Calli |
 					instruction.OpCode == OpCodes.Callvirt);
 		}
-
 
 		/// <summary>
 		/// Stores the instruction log.
