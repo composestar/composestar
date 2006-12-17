@@ -18,7 +18,7 @@
 	The .NET implementation of Compose*
 	</description>
 
-	<target name="clean" depends="init" description="Cleanup the result of compilations">
+	<target name="clean" depends="init" description="Cleanup the result of compilations" unless="ignore.dotnet">
 		<delete dir="${out.qa}" />
 		<ant target="clean" dir="Compiletime" />
 		<ant target="clean" dir="Runtime" />
@@ -27,26 +27,26 @@
 		<ant target="clean" dir="Installer" />
 	</target>	
 	
-	<target name="build" description="Build the .Net implementation of Compose*">
+	<target name="build" description="Build the .Net implementation of Compose*" unless="ignore.dotnet">
 		<ant target="build" dir="Compiletime" />
 		<ant target="build" dir="Runtime" />
 	</target>
 	
-	<target name="plugin" description="Build the plugin for the IDE">
+	<target name="plugin" description="Build the plugin for the IDE"  unless="ignore.dotnet">
 		<ant target="build" dir="Plugin" />
 	</target>
 	
-	<target name="test" description="Execute system tests">
-		<ant target="test" dir="Testing" />
+	<target name="test" description="Execute system tests" unless="ignore.dotnet">
+		<ant target="test" dir="Testing"/>
 	</target>
 	
-	<target name="install" description="Install the result">
+	<target name="install" description="Install the result"  unless="ignore.dotnet">
 		<ant target="install" dir="Compiletime" />
 		<ant target="install" dir="Runtime" />
 		<ant target="install" dir="Plugin" />
 	</target>
 	
-	<target name="uninstall" description="Clean up and installation">
+	<target name="uninstall" description="Clean up and installation"  unless="ignore.dotnet">
 		<!--<ant target="uninstall" dir="Compiletime" />-->
 		<ant target="uninstall" dir="Runtime" />
 		<!--<ant target="uninstall" dir="Plugin" />-->
