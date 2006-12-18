@@ -393,13 +393,28 @@ Common routines. Always include this file in every build.xml file
 		<condition property="status.c" value="enabled" else="disabled">
 			<isset property="enabled.c"/>
 		</condition>
-
+		
+		<echo message="Settings:"/>
+		<echo message="  build.java.version:     ${build.java.version}"/>
+		<echo message="  build.debug:            ${build.debug}"/>
+		<echo message="  build.deprecation:      ${build.deprecation}"/>
+		<echo></echo>
+		<echo message="  build.core:             ${build.core}"/>
+		<echo message="  build.dotnet:           ${build.dotnet}"/>
+		<echo message="  build.starlight:        ${build.starlight}"/>
+		<echo message="  build.java:             ${build.java}"/>
+		<echo message="  build.c:                ${build.c}"/>
+		<echo></echo>
+		<echo message="	 composestar.installdir: ${composestar.installdir}"/>
+		<echo message="	 eclipse.pluginsdir:     ${eclipse.pluginsdir}"/>
+		<echo></echo>
 		<echo message="Status of Compose* ports:"/>
-		<echo message="  DotNET:    ${status.dotnet}"/>
-		<echo message="  StarLight: ${status.starlight}"/>
-		<echo message="  Java:      ${status.java}"/>
-		<echo message="  C:         ${status.c}"/>		
-
+		<echo message="  DotNET:    ${status.dotnet}	(version ${version.dotnet})"/>
+		<echo message="  StarLight: ${status.starlight}	(version ${version.starlight})"/>
+		<echo message="  Java:      ${status.java}	(version ${version.java})"/>
+		<echo message="  C:         ${status.c}	(version ${version.c})"/>		
+		<echo></echo>
+		<input message="Press enter to continue..." />
 	</target>
 
 </project>
