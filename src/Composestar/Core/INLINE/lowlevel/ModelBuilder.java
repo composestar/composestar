@@ -228,9 +228,7 @@ public class ModelBuilder implements CTCommonModule
 		Iterator iter = methods.iterator();
 		while (iter.hasNext())
 		{
-			MethodInfo method = (MethodInfo) iter.next();
-			
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing " + method);
+			MethodInfo method = (MethodInfo) iter.next();			
 			processMethod(method);
 		}
 	}
@@ -242,6 +240,8 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	private void processMethod(MethodInfo methodInfo)
 	{
+	//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing " + methodInfo);
+
 		// set current selector:
 		this.currentSelector = methodInfo.name();
 
