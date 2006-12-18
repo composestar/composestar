@@ -468,13 +468,19 @@ namespace Composestar.StarLight.ILWeaver
 				_weaveResults.WeaveStatistics.InternalsAdded++;
 
 				// Add initialization code to type constructor(s)
+				// FIXME: arrays and strings can't and/or shouldn't be used as internals, 
+				//        so why check for these special cases?
 				if (!internalTypeRef.IsValueType && internalTypeRef.Name != "String" && internalTypeRef.Name != "Array")
 				{
 					// Get the .ctor() constructor for the internal type
 					TypeDefinition internalTypeDef = CecilUtilities.ResolveTypeDefinition(internalTypeRef);
-					MethodDefinition internalConstructor = internalTypeDef.Constructors.GetConstructor(false, new Type[0]);
+					MethodDefinition internalConstructor = FindInternalConstructor(type, internalTypeDef);
+
 					if (internalConstructor == null)
-						throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ConstructorNotFound, internalTypeString));
+					{
+						throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
+							Properties.Resources.NoSuitableInternalConstructor, internalTypeString));
+					}
 
 					// Initialize internal in every constructor of the parent type
 					foreach (MethodDefinition constructor in type.Constructors)
@@ -501,6 +507,25 @@ namespace Composestar.StarLight.ILWeaver
 				}
 			}
 
+		}
+
+		/// <summary>
+		/// Finds a suitable constructor in the internal for use in the inner.
+		/// </summary>
+		/// <param name="innerType">The type of the inner that the internal will be used in.</param>
+		/// <param name="internalType">The type of the internal that will be added to the inner.</param>
+		/// <returns>A suitable constructor definition.</returns>
+		private static MethodDefinition FindInternalConstructor(TypeDefinition innerType, TypeDefinition internalType)
+		{
+			MethodDefinition constructor = null;
+		/*
+			constructor = internalType.Constructors.GetConstructor(false, new TypeReference[] { innerType });
+			if (constructor != null) return constructor;
+		*/
+			constructor = internalType.Constructors.GetConstructor(false, new TypeReference[] { });
+			if (constructor != null) return constructor;
+
+			return null;
 		}
 
 		/// <summary>

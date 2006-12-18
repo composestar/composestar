@@ -211,4 +211,7 @@
   <data name="NonStaticContextInStaticMethod" xml:space="preserve">
     <value>Unable to add inputfilters to static method '{1}' in class '{0}', usage of non-static internal, external or condition.</value>
   </data>
+  <data name="NoSuitableInternalConstructor" xml:space="preserve">
+    <value>Could not find a suitable constructor for internal {0}.</value>
+  </data>
 </root>

@@ -260,6 +260,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find a suitable constructor for internal {0}..
+        /// </summary>
+        internal static string NoSuitableInternalConstructor {
+            get {
+                return ResourceManager.GetString("NoSuitableInternalConstructor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The weaver could not find any weaving strategies. At least the default strategies (like dispatch, advice, error, and so on) are expected. Make sure the build-in weaving strategies assembly is located in the WeaveStrategiesFolder &apos;{0}&apos;..
         /// </summary>
         internal static string NoWeavingStrategiesFound {
