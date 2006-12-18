@@ -16,9 +16,10 @@ import java.io.FileReader;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import Composestar.Core.FILTH.Core.Action;
 import Composestar.Core.FILTH.Core.ExecutionManager;
@@ -388,7 +389,7 @@ public class Run
 		/* process XML specification */
 		try
 		{
-			XMLReader xr = XMLReaderFactory.createXMLReader();
+			XMLReader xr = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 			ConstraintFilter of = new ConstraintFilter(g);
 			of.setParent(xr);
 			FileReader r = new FileReader("XMLTest.xml");

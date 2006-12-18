@@ -9,6 +9,8 @@
  */
 package Composestar.Core.CKRET.Config;
 
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -32,7 +34,7 @@ public class ConfigParser extends DefaultHandler
 		{
 			repository = inrepository;
 
-			parser = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
+			parser = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 			parser.setContentHandler(this);
 			parser.parse(filename);
 		}

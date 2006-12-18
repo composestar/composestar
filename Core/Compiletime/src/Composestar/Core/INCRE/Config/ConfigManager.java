@@ -3,6 +3,9 @@ package Composestar.Core.INCRE.Config;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.XMLReader;
 
 import Composestar.Core.INCRE.Module;
@@ -30,9 +33,9 @@ public class ConfigManager
 		this.xmlreader = null;
 	}
 
-	public void parseXML(String filename) throws java.io.IOException, org.xml.sax.SAXException
+	public void parseXML(String filename) throws java.io.IOException, org.xml.sax.SAXException, ParserConfigurationException
 	{
-		xmlreader = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
+		xmlreader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 		xmlreader.setContentHandler(this.xmlparser);
 
 		Debug.out(Debug.MODE_DEBUG, "INCRE", "Parsing configuration file '" + filename + "'...");

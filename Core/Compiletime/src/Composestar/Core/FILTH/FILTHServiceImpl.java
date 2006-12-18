@@ -20,10 +20,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
@@ -361,7 +362,7 @@ public class FILTHServiceImpl extends FILTHService
 		/* process XML specification, build the rules into the graph */
 		try
 		{
-			XMLReader xr = XMLReaderFactory.createXMLReader();
+			XMLReader xr = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 			ConstraintFilter of = new ConstraintFilter(g);
 			of.setParent(xr);
 
