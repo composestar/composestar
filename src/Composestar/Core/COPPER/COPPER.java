@@ -54,9 +54,9 @@ public class COPPER implements CTCommonModule
 	  if(phase == ALL_PHASES)
 	  {
 	  	  //2.source extraction
-		  Debug.out(Debug.MODE_DEBUG,"COPPER","Source extraction phase");
-		  SourceExtractor se = new SourceExtractor();
-		  se.extractSource();
+		  //Debug.out(Debug.MODE_DEBUG,"COPPER","Source extraction phase");
+		  //SourceExtractor se = new SourceExtractor();
+		  //se.extractSource();
 		  
 		  //3. create first version of objects
 		  Debug.out(Debug.MODE_DEBUG,"COPPER","Parse building phase");
