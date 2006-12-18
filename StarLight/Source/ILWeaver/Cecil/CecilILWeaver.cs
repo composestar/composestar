@@ -457,52 +457,58 @@ namespace Composestar.StarLight.ILWeaver
 
 				internalTypeRef = targetAssembly.MainModule.Import(internalTypeRef);
 
-				// Create the field
+				// Create and add the field
 				Mono.Cecil.FieldAttributes internalAttrs = Mono.Cecil.FieldAttributes.Private;
 				FieldDefinition internalDef = new FieldDefinition(inter.Name, internalTypeRef, internalAttrs);
-
-				// Add the field
 				type.Fields.Add(internalDef);
 
 				// Increase the number of internals
 				_weaveResults.WeaveStatistics.InternalsAdded++;
 
-				// Add initialization code to type constructor(s)
+				// FIXME: shouldn't this throw an exception?
 				// FIXME: arrays and strings can't and/or shouldn't be used as internals, 
 				//        so why check for these special cases?
-				if (!internalTypeRef.IsValueType && internalTypeRef.Name != "String" && internalTypeRef.Name != "Array")
+				if (internalTypeRef.IsValueType || internalTypeRef.Name == "String" || internalTypeRef.Name == "Array")
 				{
-					// Get the .ctor() constructor for the internal type
-					TypeDefinition internalTypeDef = CecilUtilities.ResolveTypeDefinition(internalTypeRef);
-					MethodDefinition internalConstructor = FindInternalConstructor(type, internalTypeDef);
+					return;
+				}
 
-					if (internalConstructor == null)
+				// Add initialization code to type constructor(s)
+				// Get the .ctor() constructor for the internal type
+				TypeDefinition internalTypeDef = CecilUtilities.ResolveTypeDefinition(internalTypeRef);
+				MethodDefinition internalConstructor = FindInternalConstructor(type, internalTypeDef);
+
+				if (internalConstructor == null)
+				{
+					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
+						Properties.Resources.NoSuitableInternalConstructor, internalTypeString));
+				}
+
+				// Initialize internal in every constructor of the inner type 
+				// that does not call another constructor in the same type (ExplicitThis),
+				// ensuring we do not initialize the internal twice.
+				foreach (MethodDefinition constructor in type.Constructors)
+				{
+					if (constructor.HasBody && constructor.Body.Instructions.Count > 0
+						&& !constructor.IsStatic && !constructor.ExplicitThis)
 					{
-						throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
-							Properties.Resources.NoSuitableInternalConstructor, internalTypeString));
-					}
+						// Gets the CilWorker of the method for working with CIL instructions
+						CilWorker worker = constructor.Body.CilWorker;
 
-					// Initialize internal in every constructor of the parent type
-					foreach (MethodDefinition constructor in type.Constructors)
-					{
-						if (constructor.HasBody && constructor.Body.Instructions.Count > 0
-							&& !constructor.IsStatic && !constructor.ExplicitThis)
-						{
-							// Gets the CilWorker of the method for working with CIL instructions
-							CilWorker worker = constructor.Body.CilWorker;
+						// Create instructions for invoking the constructor of the internal
+						IList<Instruction> instructions = new List<Instruction>();
+						instructions.Add(worker.Create(OpCodes.Ldarg_0));
+					//	if (internalConstructor.Parameters.Count == 1)
+					//		instructions.Add(worker.Create(OpCodes.Ldarg_0));
+						instructions.Add(worker.Create(OpCodes.Newobj, targetAssembly.MainModule.Import(internalConstructor)));
+						instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
 
-							// Create instructions for invoking the constructor of the internal
-							IList<Instruction> instructions = new List<Instruction>();
-							instructions.Add(worker.Create(OpCodes.Ldarg_0));
-							instructions.Add(worker.Create(OpCodes.Newobj, targetAssembly.MainModule.Import(internalConstructor)));
-							instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
+						// Add the instructions after the call to the base constructor
+						Instruction baseCall = FindBaseConstructorCall(constructor);
+						AppendInstructionList(worker, baseCall, instructions);
 
-							// Add the instructions before the first instruction
-							PrependInstructionList(worker, constructor.Body.Instructions[0], instructions);
-
-							// Log
-							StoreInstructionLog(instructions, "Internal code added to {0} for internal {1}", constructor.ToString(), internalDef.ToString());
-						}
+						// Log
+						StoreInstructionLog(instructions, "Internal code added to {0} for internal {1}", constructor.ToString(), internalDef.ToString());
 					}
 				}
 			}
@@ -603,8 +609,9 @@ namespace Composestar.StarLight.ILWeaver
 						instructions.Add(worker.Create(OpCodes.Call, initMethodRef));
 						instructions.Add(worker.Create(OpCodes.Stfld, externalDef));
 
-						// Add the instructions
-						PrependInstructionList(worker, constructor.Body.Instructions[0], instructions);
+						// Add the instructions after the call to the base constructor
+						Instruction baseCall = FindBaseConstructorCall(constructor);
+						AppendInstructionList(worker, baseCall, instructions);
 
 						// Log
 						StoreInstructionLog(instructions, "External code added to {0} for external {1}", constructor.ToString(), externalDef.ToString());
@@ -949,6 +956,27 @@ namespace Composestar.StarLight.ILWeaver
 						instruction.OpCode.ToString());
 			}
 			Console.WriteLine();
+		}
+
+		/// <summary>
+		/// Returns the instruction of the base call in the specified constructor.
+		/// </summary>
+		/// <param name="constructor"></param>
+		/// <returns></returns>
+		private Instruction FindBaseConstructorCall(MethodDefinition constructor)
+		{
+			// the first call instruction should be it
+			// TODO: add a check to see if the operand is really base
+			foreach (Instruction instr in constructor.Body.Instructions)
+			{
+				if (instr.OpCode == OpCodes.Call)
+				{
+					//	Console.WriteLine("### call: " + instr.Operand);
+					return instr;
+				}
+			}
+			throw new ILWeaverException(
+				string.Format("Could not find base constructor call in {0}.", constructor));
 		}
 
 		/// <summary>

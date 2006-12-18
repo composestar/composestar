@@ -15,10 +15,10 @@ ValueType Test: minimum=1 (correct=True), maximum=10 (correct=True)
 
 Argument tests for static and non-static method, see tracelog
 
-BasicTests.TestInternal.ctor()
-BasicTests.TestExternal.ctor()
 BasicTests.FilterTestsHelper.ctor()
 BasicTests.FilterTests.ctor()
+BasicTests.TestInternal.ctor()
+BasicTests.TestExternal.ctor()
 Log : cur sel:func1, cur method: func1 (declaring type BasicTests.FilterTests).
 Local variables: 2
 BasicTests.TestExternal.externalMe()
