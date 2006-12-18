@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/Java" default="build">
+
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}Core${file.separator}common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}${file.separator}common.xml" />
+
+	<echo>Processing: ${ant.project.name} ...</echo>
+	
+	<description>
+	The Compose* .NET
+	The .NET implementation of Compose*
+	</description>
+
+	<target name="clean" depends="init" description="Cleanup the result of compilations">
+		<delete dir="${out.qa}" />
+		<ant target="clean" dir="Compiletime" />
+		<ant target="clean" dir="Runtime" />
+		<ant target="clean" dir="Examples" />
+		<ant target="clean" dir="Testing" />
+	</target>	
+	
+	<target name="build" description="Build the .Net implementation of Compose*">
+		<ant target="build" dir="Compiletime" />
+		<ant target="build" dir="Runtime" />
+	</target>
+	
+	<target name="plugin" description="Build the plugin for the IDE" >
+		<ant target="build" dir="Plugin" />
+	</target>
+	
+	<target name="test" description="Execute system tests">
+		<ant target="test" dir="Testing"/>
+	</target>
+	
+	<target name="install" description="Install the result" >
+		<ant target="install" dir="Compiletime" />
+		<ant target="install" dir="Runtime" />
+		<ant target="install" dir="Plugin" />
+	</target>
+	
+	<target name="uninstall" description="Clean up and installation" >
+		<!--<ant target="uninstall" dir="Compiletime" />-->
+		<ant target="uninstall" dir="Runtime" />
+		<!--<ant target="uninstall" dir="Plugin" />-->
+	</target>
+	
+	<target name="init_qa" depends="init">
+		<mkdir dir="${out.qa}" />
+	</target>
+	
+	<target name="findbugs" depends="init_qa" description="Execute FindBugs">
+		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
+			<class location="${build.Java}${file.separator}Compiletime${file.separator}${out.build}" />
+			<sourcePath path="${build.Java}${file.separator}Compiletime${file.separator}src" />
+			<auxClasspath refid="lib.core" />
+			<auxClasspath>
+				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
+			</auxClasspath>
+		</findbugs>
+		<xslt in="${out.qa}${file.separator}findbugs-result.xml" out="${out.qa}${file.separator}findbugs-result.html" style="${findbugs.style}" />
+	</target>
+	
+	<target name="checkstyle" depends="init_qa" description="Run CheckStyle code proof reading">
+		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false" classpathref="lib.Java">
+			<formatter type="xml" toFile="${out.qa}${file.separator}checkstyle-result.xml" />
+			<property key="config_loc" value="${bin.checkstyle}" />
+			<FileSet dir="${build.Java}${file.separator}Compiletime${file.separator}src">
+				<include name="**/*.java" />
+				
+				<exclude name="Composestar/Java/DUMMER/JSharpLexer.java" />
+				<exclude name="Composestar/Java/DUMMER/JSharpRecognizer.java" />
+				<exclude name="Composestar/Java/DUMMER/JSharpTokenTypes.java" />
+			</FileSet>
+		</checkstyle>
+		<xslt in="${out.qa}${file.separator}checkstyle-result.xml" out="${out.qa}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
+	</target>
+
+</project>
