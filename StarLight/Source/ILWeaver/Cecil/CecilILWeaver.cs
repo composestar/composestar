@@ -173,7 +173,7 @@ namespace Composestar.StarLight.ILWeaver
 					_configuration.AssemblyConfiguration.WeaveSpecificationFile,
 					_configuration.AssemblyConfiguration.Name);
 
-				return _weaveResults; 				
+				return _weaveResults; 
 			}
 
 			StoreTimeStamp(swTotal.Elapsed, "Loaded weave specification");
@@ -497,8 +497,8 @@ namespace Composestar.StarLight.ILWeaver
 							instructions.Add(worker.Create(OpCodes.Newobj, targetAssembly.MainModule.Import(internalConstructor)));
 							instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
 
-							// Add the instructions
-							InsertBeforeInstructionList(worker, constructor.Body.Instructions[0], instructions);
+							// Add the instructions before the first instruction
+							PrependInstructionList(worker, constructor.Body.Instructions[0], instructions);
 
 							// Log
 							StoreInstructionLog(instructions, "Internal code added to {0} for internal {1}", constructor.ToString(), internalDef.ToString());
@@ -506,7 +506,6 @@ namespace Composestar.StarLight.ILWeaver
 					}
 				}
 			}
-
 		}
 
 		/// <summary>
@@ -605,7 +604,7 @@ namespace Composestar.StarLight.ILWeaver
 						instructions.Add(worker.Create(OpCodes.Stfld, externalDef));
 
 						// Add the instructions
-						InsertBeforeInstructionList(worker, constructor.Body.Instructions[0], instructions);
+						PrependInstructionList(worker, constructor.Body.Instructions[0], instructions);
 
 						// Log
 						StoreInstructionLog(instructions, "External code added to {0} for external {1}", constructor.ToString(), externalDef.ToString());
@@ -746,7 +745,7 @@ namespace Composestar.StarLight.ILWeaver
 			{
 				// Add the instructions
 				int instructionsCount = 0;
-				instructionsCount += InsertBeforeInstructionList(worker, ins, visitor.Instructions);
+				instructionsCount += PrependInstructionList(worker, ins, visitor.Instructions);
 
 				// Log
 				StoreInstructionLog(visitor.Instructions, "Input filters for {0}", method.ToString());
@@ -880,7 +879,7 @@ namespace Composestar.StarLight.ILWeaver
 
 						int instructionsCount = 0;
 						// Add the instructions
-						instructionsCount += ReplaceAndInsertInstructionList(worker, instruction, visitor.Instructions);
+						instructionsCount += ReplaceWithInstructionList(worker, instruction, visitor.Instructions);
 
 						// Log
 						StoreInstructionLog(visitor.Instructions, "Output filters({2}) for {0} call {1}", method.ToString(), md.ToString(), _weaveResults.WeaveStatistics.OutputFiltersAdded);
@@ -911,7 +910,7 @@ namespace Composestar.StarLight.ILWeaver
 		[SuppressMessage("Microsoft.Design", "CA1063")]
 		public void Dispose(bool disposing)
 		{
-			if (!m_disposed)
+			if (!_disposed)
 			{
 				if (disposing)
 				{
@@ -921,13 +920,10 @@ namespace Composestar.StarLight.ILWeaver
 				// Dispose unmanaged resources
 			}
 
-			m_disposed = true;
+			_disposed = true;
 		}
 
-		/// <summary>
-		/// M _disposed
-		/// </summary>
-		private bool m_disposed;
+		private bool _disposed;
 
 		#endregion
 
@@ -956,13 +952,13 @@ namespace Composestar.StarLight.ILWeaver
 		}
 
 		/// <summary>
-		/// Inserts the instruction list before the start instruction.
+		/// Inserts a list of instructions before the specified instruction.
 		/// </summary>
 		/// <param name="worker">The worker.</param>
 		/// <param name="startInstruction">The start instruction.</param>
 		/// <param name="instructionsToAdd">The instructions to add.</param>
-		/// <returns></returns>
-		private static int InsertBeforeInstructionList(CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+		/// <returns>The number of instructions that were added.</returns>
+		private static int PrependInstructionList(CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
 		{
 			foreach (Instruction instr in instructionsToAdd)
 			{
@@ -973,14 +969,14 @@ namespace Composestar.StarLight.ILWeaver
 		}
 
 		/// <summary>
-		/// Inserts the instruction list after a specified instruction.
+		/// Inserts a list of instructions after a specified instruction.
 		/// </summary>
 		/// <param name="worker">The worker.</param>
 		/// <param name="startInstruction">The start instruction.</param>
 		/// <param name="instructionsToAdd">The instructions to add.</param>
-		/// <returns>The number of instructions inserted.</returns>
+		/// <returns>The number of instructions that were added.</returns>
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Might be used in the future.")]
-		private static int InsertInstructionList(CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+		private static int AppendInstructionList(CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
 		{
 			foreach (Instruction instr in instructionsToAdd)
 			{
@@ -992,14 +988,19 @@ namespace Composestar.StarLight.ILWeaver
 		}
 
 		/// <summary>
-		/// Replaces the startinstruction and insert instruction list.
+		/// Replaces the specified instruction with a list of instructions.
 		/// </summary>
 		/// <param name="worker">The worker.</param>
-		/// <param name="startInstruction">The start instruction.</param>
+		/// <param name="startInstruction">The instruction to replace.</param>
 		/// <param name="instructionsToAdd">The instructions to add.</param>
-		/// <returns></returns>
-		private static int ReplaceAndInsertInstructionList(CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+		/// <returns>
+		/// The number of instructions that were added.
+		/// This is one less than the length of the instruction list because one existing instruction was replaced.
+		/// </returns>
+		private static int ReplaceWithInstructionList(CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
 		{
+			// FIXME: what if startInstruction is used as a jump target?
+
 			bool first = true;
 			foreach (Instruction instr in instructionsToAdd)
 			{
