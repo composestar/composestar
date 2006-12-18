@@ -362,7 +362,9 @@ public class FILTHServiceImpl extends FILTHService
 		/* process XML specification, build the rules into the graph */
 		try
 		{
-			XMLReader xr = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+			SAXParserFactory saxfactory = SAXParserFactory.newInstance();
+			saxfactory.setNamespaceAware(true);
+			XMLReader xr = saxfactory.newSAXParser().getXMLReader();
 			ConstraintFilter of = new ConstraintFilter(g);
 			of.setParent(xr);
 
