@@ -69,7 +69,7 @@
 		<mkdir dir="${out.dist}"/>
 	</target>
 	
-	<target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet" description="compile the .NET compiletime"/>
+	<target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet" description="Build the .NET Compiletime"/>
 	
 	<target name="antlr">
 		<!--

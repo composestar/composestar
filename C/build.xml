@@ -18,7 +18,7 @@
 	The C implementation of Compose*
 	</description>
 
-	<target name="clean" depends="init" description="Cleanup the result of compilations" unless="ignore.c">
+	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<echo> Clean Compose*C </echo>
 		<ant target="clean" dir="Compiletime" />
 		<echo> Clean Compose*C Examples</echo>
@@ -26,7 +26,7 @@
 		<ant target="clean" dir="ComposestarEclipsePlugin" />
 	</target>	
 	
-	<target name="build" description="Build the .C implementation of Compose*" unless="ignore.c">
+	<target name="build" description="Build the .C implementation of Compose*">
 		<echo> Build of build.xml C </echo>
 		<ant target="build" dir="Compiletime" />
 		<ant target="build" dir="ComposestarEclipsePlugin" />
@@ -36,7 +36,7 @@
 		<ant target="test" dir="Testing" />
 	</target>
 	
-	<target name="install" depends="build" description="Install the result" unless="ignore.c">
+	<target name="install" depends="build" description="Install the result">
 		<echo> installing Compose*C </echo>
 		<ant target="install" dir="ComposestarEclipsePlugin"/>
 		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
