@@ -389,7 +389,9 @@ public class Run
 		/* process XML specification */
 		try
 		{
-			XMLReader xr = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+			SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+			saxFactory.setNamespaceAware(true);
+			XMLReader xr = saxFactory.newSAXParser().getXMLReader();
 			ConstraintFilter of = new ConstraintFilter(g);
 			of.setParent(xr);
 			FileReader r = new FileReader("XMLTest.xml");
