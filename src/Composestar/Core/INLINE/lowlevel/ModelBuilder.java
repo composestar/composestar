@@ -34,6 +34,7 @@ import Composestar.Utils.Debug;
 public class ModelBuilder implements CTCommonModule
 {
 	private static final String MODULE_NAME = "INLINE";
+
 	/**
 	 * The LowLevelInliner used to translate an inputfilterset to code.
 	 */
@@ -59,7 +60,6 @@ public class ModelBuilder implements CTCommonModule
 	 * to check whether an setInnerCall contextInstruction is necessary.
 	 */
 	private HashSet inlinedMethodSet;
-
 
 	/**
 	 * All filtermodules in the filterset.
@@ -228,7 +228,7 @@ public class ModelBuilder implements CTCommonModule
 		Iterator iter = methods.iterator();
 		while (iter.hasNext())
 		{
-			MethodInfo method = (MethodInfo) iter.next();			
+			MethodInfo method = (MethodInfo) iter.next();
 			processMethod(method);
 		}
 	}
@@ -240,7 +240,7 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	private void processMethod(MethodInfo methodInfo)
 	{
-	//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing " + methodInfo);
+		// Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing " + methodInfo);
 
 		// set current selector:
 		this.currentSelector = methodInfo.name();
@@ -305,7 +305,6 @@ public class ModelBuilder implements CTCommonModule
 			outputFilterCode.put(call, callBlock);
 		}
 	}
-
 
 	/**
 	 * @return The current selector being processed.

@@ -10,17 +10,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * @author Michiel
- *
- * Does not write anything. Used in the FILTH module.
+ * @author Michiel Does not write anything. Used in the FILTH module.
  */
-public class DevNullOutputStream extends OutputStream {
+public class DevNullOutputStream extends OutputStream
+{
 
-	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.io.OutputStream#write(int)
 	 */
-	public void write(int b) throws IOException {
+	public void write(int b) throws IOException
+	{
 
 	}
 }

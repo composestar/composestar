@@ -12,20 +12,24 @@ import Composestar.Core.Master.Config.Language;
 public class ConvertersHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
+
 	CompilerHandler returnHandler;
+
 	Language language;
-	
-	public ConvertersHandler(Language lang, XMLReader parser,CompilerHandler returnHandler){
+
+	public ConvertersHandler(Language lang, XMLReader parser, CompilerHandler returnHandler)
+	{
 		this.language = lang;
 		this.parser = parser;
 		this.returnHandler = returnHandler;
 	}
-	
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException 
+
+	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
-		if("Converter".equals(raw_name)){
-			// end <converter> 
-			if(amap.getValue("name")!=null)
+		if ("Converter".equals(raw_name))
+		{
+			// end <converter>
+			if (amap.getValue("name") != null)
 			{
 				String name = amap.getValue("name");
 				String replaceBy = amap.getValue("replaceBy");
@@ -39,19 +43,18 @@ public class ConvertersHandler extends DefaultHandler implements ContentHandler
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException 
+	public void endElement(String uri, String local_name, String raw_name) throws SAXException
 	{
-		if("Converters".equals(raw_name)){
+		if ("Converters".equals(raw_name))
+		{
 			// end <converter>
-			parser.setContentHandler( returnHandler );
+			parser.setContentHandler(returnHandler);
 		}
 	}
 
-	public void startDocument() 
-	{
-	}
+	public void startDocument()
+	{}
 
-	public void endDocument() 
-	{
-	}
+	public void endDocument()
+	{}
 }

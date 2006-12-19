@@ -16,12 +16,17 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
- * A FilterType represents a type a filter can have. It is not bound to a specific filter (i.e. a member 
- * of the filter), but a property a filter can have. Therefore it is not a concern anymore but a normal
- * RepositoryEntity.
+ * A FilterType represents a type a filter can have. It is not bound to a
+ * specific filter (i.e. a member of the filter), but a property a filter can
+ * have. Therefore it is not a concern anymore but a normal RepositoryEntity.
  */
 public class FilterType extends RepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7876700154644254076L;
+
 	public String type;
 
 	private FilterAction acceptCallAction;
@@ -45,12 +50,11 @@ public class FilterType extends RepositoryEntity
 	// public final static String AFTER = "After";
 
 	/**
-	 * Contains a mapping from strings representing filtertypes to FilterType objects
+	 * Contains a mapping from strings representing filtertypes to FilterType
+	 * objects
 	 */
 	private static Hashtable filterTypeMapping;
-	
-	
-	
+
 	/**
 	 * @return java.lang.String
 	 * @roseuid 401FAA650206
@@ -133,22 +137,25 @@ public class FilterType extends RepositoryEntity
 		this.rejectReturnAction = rejectReturnAction;
 	}
 
-	
-	public static FilterType getFilterType( String name ){
-		if ( filterTypeMapping == null ){
+	public static FilterType getFilterType(String name)
+	{
+		if (filterTypeMapping == null)
+		{
 			createFilterTypeMapping();
 		}
-		
-		return (FilterType) filterTypeMapping.get( name.toLowerCase() );
+
+		return (FilterType) filterTypeMapping.get(name.toLowerCase());
 	}
-	
-	private static void createFilterTypeMapping(){
+
+	private static void createFilterTypeMapping()
+	{
 		DataStore ds = DataStore.instance();
-	    filterTypeMapping = new Hashtable();
-	    Iterator filterTypeIter = ds.getAllInstancesOf(FilterType.class);
-	    while( filterTypeIter.hasNext() ){
-	    	FilterType filterType = (FilterType) filterTypeIter.next();
-	    	filterTypeMapping.put( filterType.getType().toLowerCase(), filterType );
-	    } 
+		filterTypeMapping = new Hashtable();
+		Iterator filterTypeIter = ds.getAllInstancesOf(FilterType.class);
+		while (filterTypeIter.hasNext())
+		{
+			FilterType filterType = (FilterType) filterTypeIter.next();
+			filterTypeMapping.put(filterType.getType().toLowerCase(), filterType);
+		}
 	}
 }

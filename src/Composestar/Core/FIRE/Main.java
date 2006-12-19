@@ -24,32 +24,32 @@ import Composestar.Core.FIRE.jargs.CmdLineParser;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
-public class Main 
+public class Main
 {
-	private static LinkedList readConcern (String filename)
+	private static LinkedList readConcern(String filename)
 	{
 		DataStore ds = DataStore.instance();
 
-		Composestar.Core.REXREF.Main rexref = new Composestar.Core.REXREF.Main(); 
-		CommonResources cr = new CommonResources(); 
+		Composestar.Core.REXREF.Main rexref = new Composestar.Core.REXREF.Main();
+		CommonResources cr = new CommonResources();
 
 		cr.addResource("CpsFileName", filename);
 
 		COPPER copper = new COPPER();
-		try 
+		try
 		{
 			copper.run(cr);
 			rexref.run(cr);
 		}
 		catch (ModuleException e)
 		{
-			System.out.println ("Exception in FilterReasoningEngineTest.readConcern(" + filename + ")");
+			System.out.println("Exception in FilterReasoningEngineTest.readConcern(" + filename + ")");
 		}
 
 		return createList(ds);
 	}
 
-	private static LinkedList createList(DataStore ds) 
+	private static LinkedList createList(DataStore ds)
 	{
 		// This list contains FilterModule references.
 		LinkedList ll = new LinkedList();
@@ -58,7 +58,7 @@ public class Main
 		while (it.hasNext())
 		{
 			Object item = it.next();
-			if (item instanceof FilterModule) 
+			if (item instanceof FilterModule)
 			{
 				FilterModuleReference fmr = new FilterModuleReference();
 				fmr.setRef((FilterModule) item);
@@ -69,12 +69,13 @@ public class Main
 		return ll;
 	}
 
-	private static void printUsage() 
+	private static void printUsage()
 	{
-		System.err.println("usage: Composestar.Core.FIRE.Main [{-h, --help}] [{-v,--verbose}] [{-t,--testfile}] filename");
+		System.err
+				.println("usage: Composestar.Core.FIRE.Main [{-h, --help}] [{-v,--verbose}] [{-t,--testfile}] filename");
 	}
 
-	private static void printHelp() 
+	private static void printHelp()
 	{
 		System.out.println("help: ");
 		System.out.println("This program reads an input filter and prints the possible actions");
@@ -83,18 +84,18 @@ public class Main
 		System.out.println();
 	}
 
-	public static void main(String[] args) 
+	public static void main(String[] args)
 	{
 		CmdLineParser parser = new CmdLineParser();
 		CmdLineParser.Option help = parser.addBooleanOption('h', "help");
 		CmdLineParser.Option verbose = parser.addBooleanOption('v', "verbose");
 		CmdLineParser.Option testfile = parser.addBooleanOption('t', "testfile");
 
-		try 
+		try
 		{
 			parser.parse(args);
 		}
-		catch (CmdLineParser.OptionException e) 
+		catch (CmdLineParser.OptionException e)
 		{
 			System.err.println(e.getMessage());
 			printUsage();
@@ -104,13 +105,13 @@ public class Main
 		String[] otherArgs = parser.getRemainingArgs();
 
 		// Invalid parameters
-		if (args.length == 0 || otherArgs.length != 1) 
+		if (args.length == 0 || otherArgs.length != 1)
 		{
-			printUsage(); 
+			printUsage();
 			System.exit(1);
 		}
 
-		if (parser.getOptionValue(help) != null && ((Boolean)parser.getOptionValue(help)).booleanValue())
+		if (parser.getOptionValue(help) != null && ((Boolean) parser.getOptionValue(help)).booleanValue())
 		{
 			printHelp();
 			System.exit(0);
@@ -119,22 +120,28 @@ public class Main
 		// Extract the values entered for the various options -- if the
 		// options were not specified, the corresponding values will be
 		// null.
-		Boolean isVerbose = (Boolean)parser.getOptionValue(verbose);
-		Boolean isTestFile = (Boolean)parser.getOptionValue(testfile);
+		Boolean isVerbose = (Boolean) parser.getOptionValue(verbose);
+		Boolean isTestFile = (Boolean) parser.getOptionValue(testfile);
 		String fileName = otherArgs[0];
 
 		// set verbose
-		if (isVerbose != null && isVerbose.booleanValue()) Debug.setMode(3);
-		else Debug.setMode(0);
+		if (isVerbose != null && isVerbose.booleanValue())
+		{
+			Debug.setMode(3);
+		}
+		else
+		{
+			Debug.setMode(0);
+		}
 
 		FilterReasoningEngine fire = null;
 
-		if (isTestFile != null && isTestFile.booleanValue()) 
+		if (isTestFile != null && isTestFile.booleanValue())
 		{
 			try
 			{
 				fire = new FilterReasoningEngine(new FileInputStream(fileName));
-			} 
+			}
 			catch (FileNotFoundException e)
 			{
 				System.out.println("Cannot find the specified file");
@@ -151,8 +158,6 @@ public class Main
 
 		System.out.println(fire.getTree().toTreeString());
 
-
 		System.exit(0);
 	}
 }
-

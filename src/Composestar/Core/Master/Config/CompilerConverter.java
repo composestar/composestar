@@ -2,37 +2,52 @@ package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
 
-public class CompilerConverter implements Serializable{
+public class CompilerConverter implements Serializable
+{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2071985122483867847L;
 
 	private String name;
+
 	private String expression;
+
 	private String replaceBy;
-	
-	public CompilerConverter() {
-		
+
+	public CompilerConverter()
+	{
+
 	}
-	
-	public String getName() {
+
+	public String getName()
+	{
 		return name;
- 	}
-	
-	public void setName(String name) {
+	}
+
+	public void setName(String name)
+	{
 		this.name = name;
 	}
-	
-	public String getExpression() {
+
+	public String getExpression()
+	{
 		return expression;
 	}
-	
-	public void setExpression(String expression) {
+
+	public void setExpression(String expression)
+	{
 		this.expression = expression;
 	}
-	
-	public String getReplaceBy() {
+
+	public String getReplaceBy()
+	{
 		return replaceBy;
 	}
-	
-	public void setReplaceBy(String replaceBy) {
+
+	public void setReplaceBy(String replaceBy)
+	{
 		this.replaceBy = replaceBy;
 	}
 }

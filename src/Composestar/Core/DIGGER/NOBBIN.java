@@ -22,27 +22,29 @@ import Composestar.Core.Master.Config.Configuration;
 
 /**
  * A NOBBIN will walk the paths created by DIGGER
- *
+ * 
  * @author Michiel Hendriks
  */
 public class NOBBIN
 {
 	protected Graph graph;
-	
+
 	/**
 	 * Traverse the graph up to this number of concerns
 	 */
 	protected int maxDepth;
-	
+
 	protected Map signatures;
-	
+
 	public NOBBIN(Graph inGraph)
 	{
 		signatures = new HashMap();
 		graph = inGraph;
-		maxDepth = Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "maxdepth", 5); // just a number
+		maxDepth = Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "maxdepth", 5); // just
+		// a
+		// number
 	}
-	
+
 	/**
 	 * Walks the paths created in the graphs
 	 * 
@@ -60,7 +62,7 @@ public class NOBBIN
 			}
 		}
 	}
-	
+
 	/**
 	 * Walks the paths of a concern as far as possible
 	 * 
@@ -69,6 +71,6 @@ public class NOBBIN
 	 */
 	public void walk(ConcernNode concernNode) throws ModuleException
 	{
-		
+
 	}
 }

@@ -31,27 +31,26 @@ import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
 /**
- * Takes care of compiling the real user sources. Links with the dummies and takes 
- * care not to destroy them during compilation.
+ * Takes care of compiling the real user sources. Links with the dummies and
+ * takes care not to destroy them during compilation.
  */
 public class RealSourceManager implements CTCommonModule
 {
 	public RealSourceManager()
-	{
-	}
+	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
 		List compiledSources = new ArrayList();
 
-		//compile sources of projects
+		// compile sources of projects
 		Configuration config = Configuration.instance();
 		List projects = config.getProjects().getProjects();
-		
+
 		Iterator projIt = projects.iterator();
 		while (projIt.hasNext())
 		{
-			Project project = (Project)projIt.next();
+			Project project = (Project) projIt.next();
 			Language lang = project.getLanguage();
 			CompilerSettings compsettings = lang.getCompilerSettings();
 			LangCompiler comp = compsettings.getCompiler();
@@ -59,25 +58,28 @@ public class RealSourceManager implements CTCommonModule
 			String exetype = config.getProjects().getApplicationStart();
 			String exefile = getExeFile(project, exetype);
 
-			//set target of sources
+			// set target of sources
 			Iterator sourceIt = project.getSources().iterator();
 			while (sourceIt.hasNext())
 			{
-				Source source = (Source)sourceIt.next();
+				Source source = (Source) sourceIt.next();
 				String filename = source.getFileName();
 				source.setIsExecutable(filename.equals(exefile));
-				
+
 				String target = getTargetFile(source.getFileName(), source.isExecutable());
-				Debug.out(Debug.MODE_DEBUG, "RECOMA", "Source '" + source.getFileName() + "' will be compiled to assembly '" + target + "'");				
+				Debug.out(Debug.MODE_DEBUG, "RECOMA", "Source '" + source.getFileName()
+						+ "' will be compiled to assembly '" + target + "'");
 				source.setTarget(target);
 			}
-			
+
 			// do the actual compilation
-			try {
+			try
+			{
 				comp.compileSources(project);
 			}
-			catch (CompilerException e) {
-				throw new ModuleException("Compilation error: " + e.getMessage() , "RECOMA");
+			catch (CompilerException e)
+			{
+				throw new ModuleException("Compilation error: " + e.getMessage(), "RECOMA");
 			}
 		}
 
@@ -85,33 +87,37 @@ public class RealSourceManager implements CTCommonModule
 	}
 
 	/**
-	 * Returns the name of the sourcefile in which the specified executable type is defined.
-     */
+	 * Returns the name of the sourcefile in which the specified executable type
+	 * is defined.
+	 */
 	private String getExeFile(Project project, String exec) throws ModuleException
 	{
 		Iterator tsIt = project.getTypeSources().iterator();
 		while (tsIt.hasNext())
 		{
-			TypeSource ts = (TypeSource)tsIt.next();
+			TypeSource ts = (TypeSource) tsIt.next();
 			if (ts.getName().equals(exec))
+			{
 				return ts.getFileName();
+			}
 		}
-		
+
 		throw new ModuleException("Source file for executable type '" + exec + "' unknown", "RECOMA");
 	}
 
 	/**
 	 * Converts sourcefile to a compilation targetfile
+	 * 
 	 * @param sourcePath
 	 * @param isExec whether sourcefile contains executable
 	 */
 	private static String getTargetFile(String sourcePath, boolean isExec)
 	{
 		String targetFile = "";
-		
+
 		// convert / to \ because of build.ini format
 		// nsp = normalized source path
-		String nsp = sourcePath.replace('/','\\');
+		String nsp = sourcePath.replace('/', '\\');
 
 		// last part of sourcefile's path, without extension
 		// e.g. C:\pacman\Main.jsl => Main
@@ -125,7 +131,7 @@ public class RealSourceManager implements CTCommonModule
 		Iterator typesItr = types.iterator();
 		while (typesItr.hasNext())
 		{
-			String type = (String)typesItr.next();
+			String type = (String) typesItr.next();
 			String[] elems = type.split("\\.");
 			List list = Arrays.asList(elems);
 			if (list.contains(srcType))
@@ -138,19 +144,21 @@ public class RealSourceManager implements CTCommonModule
 		if (targetFile.length() == 0) // full namespace not found
 		{
 			if (!types.isEmpty())
-				targetFile = (String)types.get(0); // first type declared in sourcefile
-			else 
 			{
-				Debug.out(Debug.MODE_WARNING, "RECOMA",srcType+" is not a fully qualified target of source "+sourcePath);
+				targetFile = (String) types.get(0); // first type declared in
+				// sourcefile
+			}
+			else
+			{
+				Debug.out(Debug.MODE_WARNING, "RECOMA", srcType + " is not a fully qualified target of source "
+						+ sourcePath);
 				targetFile = srcType; // last part of sourcefile's path
 			}
 		}
 
-		// finish by adding .dll or .exe 
+		// finish by adding .dll or .exe
 		targetFile += (isExec ? ".exe" : ".dll");
 
-		return targetFile; 
+		return targetFile;
 	}
 }
-
-

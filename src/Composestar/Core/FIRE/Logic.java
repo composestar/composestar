@@ -2,20 +2,17 @@ package Composestar.Core.FIRE;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2003 University of Twente.
- *
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
- * 
- * $Id$
- * 
+ * Copyright (C) 2003 University of Twente. Licensed under LGPL v2.1 or (at your
+ * option) any later version. [http://www.fsf.org/copyleft/lgpl.html] $Id:
+ * Logic.java 2282 2006-10-25 14:12:31Z arjanderoo $
  */
- 
+
 class Logic
 {
-	/* LeftHand will be changed.
+	/*
+	 * LeftHand will be changed.
 	 */
-	public static void or (boolean [] lh, boolean [] rh)
+	public static void or(boolean[] lh, boolean[] rh)
 	{
 		for (int i = 0; i < lh.length; i++)
 		{
@@ -23,12 +20,12 @@ class Logic
 		}
 	}
 
-	/* LeftHand will be changed.
-	 * TODO: Not checked if they have the same length
+	/*
+	 * LeftHand will be changed. TODO: Not checked if they have the same length
 	 */
-	public static void or (Column lh, Column rh)
+	public static void or(Column lh, Column rh)
 	{
-		int smallestCol = Logic.smallestColumn (lh, rh);
+		int smallestCol = Logic.smallestColumn(lh, rh);
 
 		for (int i = 0; i < smallestCol; i++)
 		{
@@ -36,9 +33,10 @@ class Logic
 		}
 	}
 
-	/* Changes the left hand side.
+	/*
+	 * Changes the left hand side.
 	 */
-	public static void and (boolean [] lh, boolean [] rh)
+	public static void and(boolean[] lh, boolean[] rh)
 	{
 		for (int i = 0; i < lh.length; i++)
 		{
@@ -46,21 +44,24 @@ class Logic
 		}
 	}
 
-	private static int smallestColumn (Column lh, Column rh)
+	private static int smallestColumn(Column lh, Column rh)
 	{
-		if (lh.length < rh.length) return lh.length;
+		if (lh.length < rh.length)
+		{
+			return lh.length;
+		}
 		return rh.length;
 	}
 
-
 	/**
 	 * TODO: Review: Not checked if they have the same length
-     * @param rh
-     * @param lh
-     */
+	 * 
+	 * @param rh
+	 * @param lh
+	 */
 	public static void and(Column lh, Column rh)
 	{
-		int smallestCol = Logic.smallestColumn (lh, rh);
+		int smallestCol = Logic.smallestColumn(lh, rh);
 
 		for (int i = 0; i < smallestCol; i++)
 		{
@@ -68,7 +69,7 @@ class Logic
 		}
 	}
 
-	public static void xor (boolean [] lh, boolean [] rh)
+	public static void xor(boolean[] lh, boolean[] rh)
 	{
 		for (int i = 0; i < lh.length; i++)
 		{
@@ -76,7 +77,7 @@ class Logic
 		}
 	}
 
-	public static void implies (boolean [] lh, boolean [] rh)
+	public static void implies(boolean[] lh, boolean[] rh)
 	{
 		for (int i = 0; i < lh.length; i++)
 		{
@@ -84,23 +85,22 @@ class Logic
 		}
 	}
 
-	public static void equivalence (boolean [] lh, boolean [] rh)
+	public static void equivalence(boolean[] lh, boolean[] rh)
 	{
 		for (int i = 0; i < lh.length; i++)
 		{
-			lh[i] = (lh[i] && rh[i]) || (!lh[i] && !rh[i]) ;
+			lh[i] = (lh[i] && rh[i]) || (!lh[i] && !rh[i]);
 		}
 	}
 
-
-	public static void not (boolean [] lh)
+	public static void not(boolean[] lh)
 	{
 		for (int i = 0; i < lh.length; i++)
 		{
-			lh[i] = !lh[i]; 
+			lh[i] = !lh[i];
 		}
 	}
-	
+
 	public static void not(Column lh)
 	{
 		for (int i = 0; i < lh.length; i++)
@@ -113,11 +113,12 @@ class Logic
 	{
 		for (int i = 0; i < lh.length; i++)
 		{
-			if (lh.getValue(i)) return false;
+			if (lh.getValue(i))
+			{
+				return false;
+			}
 		}
 
 		return true;
 	}
 }
-
-

@@ -9,57 +9,43 @@ package Composestar.Core.FIRE;
  * 
  * $Id$
  * 
-**/
+ **/
 
-import java.io.*;
-import antlr.CommonAST;
+import java.io.InputStream;
 
-public class AntlrStdIn extends TreeBuilder 
+public class AntlrStdIn extends TreeBuilder
 {
 	InputStream inputStream = null;
 
-	public AntlrStdIn (InputStream input)
+	public AntlrStdIn(InputStream input)
 	{
 		inputStream = input;
 	}
 
 	public FilterComponent getTree()
 	{
-		return getTree(new  FilterReasoningEngine(inputStream));
+		return getTree(new FilterReasoningEngine(inputStream));
 	}
 
-	public FilterComponent getTree (FilterReasoningEngine fireInfo)
+	public FilterComponent getTree(FilterReasoningEngine fireInfo)
 	{
 
-		//	Uncomment the following lines, if you want to use the internal FIRE parser.		
-		/*			
-
-		 try 
-		 {
-		 // We start to parse, make sure we empty the symboltable.
-		 (SymbolTable.getInstance()).empty();
-			
-		 Debug.out(3, "Excellent choice! Using internal FIRE parser\n");
-		 Debug.out(2, "=-= Parsing Filter Input =-=\n");
-			
-		 TT_Lexer lexer = new TT_Lexer(new DataInputStream(inputStream));
-		 TT_BuildTree parser = new TT_BuildTree(lexer);
-		 parser.program();
-		 Debug.out(3, parser.getAST().toStringList() + "\n");
-
-		 Debug.out(2, "=-= Building FilterComponent Tree =-=\n");
-		 TT_BuildFireTree checker = new TT_BuildFireTree();
-
-		 FilterComponent fc = checker.program((CommonAST)parser.getAST());
-
-		 // No more symbols.
-		 (SymbolTable.getInstance()).done();
-		 return fc;
-		 } 
-		 catch(Exception e) 
-		 {
-		 System.err.println("Exception raised while building the FilterComponent Tree: " + e);
-		 }
+		// Uncomment the following lines, if you want to use the internal FIRE
+		// parser.
+		/*
+		 * try { // We start to parse, make sure we empty the symboltable.
+		 * (SymbolTable.getInstance()).empty(); Debug.out(3, "Excellent choice!
+		 * Using internal FIRE parser\n"); Debug.out(2, "=-= Parsing Filter
+		 * Input =-=\n"); TT_Lexer lexer = new TT_Lexer(new
+		 * DataInputStream(inputStream)); TT_BuildTree parser = new
+		 * TT_BuildTree(lexer); parser.program(); Debug.out(3,
+		 * parser.getAST().toStringList() + "\n"); Debug.out(2, "=-= Building
+		 * FilterComponent Tree =-=\n"); TT_BuildFireTree checker = new
+		 * TT_BuildFireTree(); FilterComponent fc =
+		 * checker.program((CommonAST)parser.getAST()); // No more symbols.
+		 * (SymbolTable.getInstance()).done(); return fc; } catch(Exception e) {
+		 * System.err.println("Exception raised while building the
+		 * FilterComponent Tree: " + e); }
 		 */
 		return null;
 	}

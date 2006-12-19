@@ -37,18 +37,20 @@ public class EMBEX implements CTCommonModule
 	}
 
 	/**
-	 * Iterates over cps concerns and calls saveToFile for embedded sources found
-	 * Creates directory for embedded sources  
+	 * Iterates over cps concerns and calls saveToFile for embedded sources
+	 * found Creates directory for embedded sources
 	 */
-	public void run(CommonResources resources) throws ModuleException 
+	public void run(CommonResources resources) throws ModuleException
 	{
 		DataStore ds = DataStore.instance();
 		PathSettings ps = config.getPathSettings();
 
 		// fetch temppath
 		String basePath = ps.getPath("Base");
-		if (basePath == null || basePath.length() == 0) 
+		if (basePath == null || basePath.length() == 0)
+		{
 			throw new ModuleException("Error in configuration file: no path Base", MODULE_NAME);
+		}
 
 		// create directory for embedded code
 		File embeddedDir = new File(basePath, "obj/embedded/");
@@ -56,23 +58,23 @@ public class EMBEX implements CTCommonModule
 
 		// iterate over all cps concerns
 		Iterator concernIt = ds.getAllInstancesOf(CpsConcern.class);
-		while (concernIt.hasNext()) 
+		while (concernIt.hasNext())
 		{
 			// fetch implementation
-			CpsConcern cps = (CpsConcern)concernIt.next();
+			CpsConcern cps = (CpsConcern) concernIt.next();
 			Implementation imp = cps.getImplementation();
 
 			if (imp instanceof Source)
 			{
 				// fetch embedded source and save
-				Source sourceCode = (Source)imp;
+				Source sourceCode = (Source) imp;
 				String language = sourceCode.getLanguage();
 				File target = new File(embeddedDir, sourceCode.getSourceFile());
 
-				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Found embedded source: " + sourceCode.getClassName());
-				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"\tLanguage: " + language);
-				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"\tFile: " + sourceCode.getSourceFile());
-				
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found embedded source: " + sourceCode.getClassName());
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "\tLanguage: " + language);
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "\tFile: " + sourceCode.getSourceFile());
+
 				Composestar.Core.Master.Config.Source source = new Composestar.Core.Master.Config.Source();
 				source.setFileName(target.getAbsolutePath());
 
@@ -80,20 +82,20 @@ public class EMBEX implements CTCommonModule
 				ts.setFileName(target.getAbsolutePath());
 				ts.setName(sourceCode.getClassName());
 
-				Project prj = getProject(language);				
+				Project prj = getProject(language);
 				prj.addSource(source);
 				prj.addTypeSource(ts);
 
-				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Added embedded code to project: " + prj.getName());
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Added embedded code to project: " + prj.getName());
 
 				this.saveToFile(target, sourceCode);
 			}
 		}
 	}
-	
+
 	/**
-	 * Returns the first project with the specified language 
-	 * which will be used to add embedded code in that language to.
+	 * Returns the first project with the specified language which will be used
+	 * to add embedded code in that language to.
 	 */
 	private Project getProject(String language) throws ModuleException
 	{
@@ -101,12 +103,12 @@ public class EMBEX implements CTCommonModule
 		List languageProjects = allProjects.getProjectsByLanguage(language);
 		if (languageProjects == null || languageProjects.size() == 0)
 		{
-			throw new ModuleException(
-					"No suitable project found for embedded code in language " + language, MODULE_NAME);
+			throw new ModuleException("No suitable project found for embedded code in language " + language,
+					MODULE_NAME);
 		}
 		else
 		{
-			return (Project)languageProjects.get(0);
+			return (Project) languageProjects.get(0);
 		}
 	}
 
@@ -116,17 +118,18 @@ public class EMBEX implements CTCommonModule
 	private void saveToFile(File target, Source src) throws ModuleException
 	{
 		BufferedWriter bw = null;
-		try {
+		try
+		{
 			bw = new BufferedWriter(new FileWriter(target));
 			bw.write(src.getSource());
 		}
-		catch (IOException e) {
-			throw new ModuleException("Could not save embedded source: " + e.getMessage() , MODULE_NAME);
+		catch (IOException e)
+		{
+			throw new ModuleException("Could not save embedded source: " + e.getMessage(), MODULE_NAME);
 		}
-		finally {
+		finally
+		{
 			FileUtils.close(bw);
 		}
 	}
 }
-
-

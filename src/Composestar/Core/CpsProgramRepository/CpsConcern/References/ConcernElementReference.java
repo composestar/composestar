@@ -9,49 +9,54 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
+public class ConcernElementReference extends Reference
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1009972111299460775L;
 
-public class ConcernElementReference extends Reference {
-  public String concern;
+	public String concern;
 
+	/**
+	 * @roseuid 401FAA5701DD
+	 */
+	public ConcernElementReference()
+	{
+		super();
+	}
 
-  /**
-   * @roseuid 401FAA5701DD
-   */
-  public ConcernElementReference() {
-    super();
-  }
+	/**
+	 * @return java.lang.String
+	 * @roseuid 401FAA5701DE
+	 */
+	public String getConcern()
+	{
+		return concern;
+	}
 
+	/**
+	 * @param concernValue
+	 * @roseuid 401FAA5701E7
+	 */
+	public void setConcern(String concernValue)
+	{
+		this.concern = concernValue;
+		this.updateRepositoryReference();
+	}
 
-  /**
-   * @return java.lang.String
-   *
-   * @roseuid 401FAA5701DE
-   */
-  public String getConcern() {
-    return concern;
-  }
+	public String getQualifiedName()
+	{
+		String fname = "";
+		int i;
 
-
-  /**
-   * @param concernValue
-   * @roseuid 401FAA5701E7
-   */
-  public void setConcern(String concernValue) {
-    this.concern = concernValue;
-	  this.updateRepositoryReference();
-  }
-
-
-  public String getQualifiedName() {
-    String fname = "";
-    int i;
-
-    for (i = 0; i < pack.size(); i++) {
-      fname += pack.elementAt(i);
-      fname += ".";
-    }
-    fname += concern;
-    fname += '.' + name;
-    return (fname);
-  }
+		for (i = 0; i < pack.size(); i++)
+		{
+			fname += pack.elementAt(i);
+			fname += ".";
+		}
+		fname += concern;
+		fname += '.' + name;
+		return fname;
+	}
 }

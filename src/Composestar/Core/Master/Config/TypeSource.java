@@ -2,28 +2,40 @@ package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
 
-public class TypeSource implements Serializable{
-	
+public class TypeSource implements Serializable
+{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3478303188238617896L;
+
 	private String name;
+
 	private String fileName;
-	
-	public TypeSource() {
-		
+
+	public TypeSource()
+	{
+
 	}
-	
-	public String getName() {
+
+	public String getName()
+	{
 		return name;
 	}
-	
-	public void setName(String name) {
+
+	public void setName(String name)
+	{
 		this.name = name;
 	}
-	
-	public String getFileName() {
+
+	public String getFileName()
+	{
 		return fileName;
 	}
-	
-	public void setFileName(String filename) {
+
+	public void setFileName(String filename)
+	{
 		this.fileName = filename;
 	}
 }

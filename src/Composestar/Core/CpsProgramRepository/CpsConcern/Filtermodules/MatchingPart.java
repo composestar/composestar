@@ -9,56 +9,63 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+public class MatchingPart extends AbstractPattern
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7242696850818180538L;
 
-public class MatchingPart extends AbstractPattern {
-  //public MatchingType matchType; -> get from MatchingPartAST
-  public MatchingPartAST mpa;
+	// public MatchingType matchType; -> get from MatchingPartAST
+	public MatchingPartAST mpa;
 
-  /**
-   * @roseuid 401FAA66001C
-   * @deprecated
-   */
-  public MatchingPart() {
-    super();
-  }
-  
-  public MatchingPart(MatchingPartAST abstr) {
-	super(abstr);
-	mpa = abstr;
-	target = mpa.getTarget();
-	MessageSelectorAST msAST = mpa.getSelector();
-	if(msAST instanceof ParameterizedMessageSelectorAST){
-		selector = new ParameterizedMessageSelector(msAST);
-		selector.setParent(this);
-	}else{
-		selector = new MessageSelector(msAST);
-		selector.setParent(this);
+	/**
+	 * @roseuid 401FAA66001C
+	 * @deprecated
+	 */
+	public MatchingPart()
+	{
+		super();
 	}
-  }
 
-  /**
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingType
-   *
-   * @roseuid 401FAA66001D
-   */
-  public MatchingType getMatchType() {
-    return mpa.getMatchType();
-  }
+	public MatchingPart(MatchingPartAST abstr)
+	{
+		super(abstr);
+		mpa = abstr;
+		target = mpa.getTarget();
+		MessageSelectorAST msAST = mpa.getSelector();
+		if (msAST instanceof ParameterizedMessageSelectorAST)
+		{
+			selector = new ParameterizedMessageSelector(msAST);
+			selector.setParent(this);
+		}
+		else
+		{
+			selector = new MessageSelector(msAST);
+			selector.setParent(this);
+		}
+	}
 
+	/**
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingType
+	 * @roseuid 401FAA66001D
+	 */
+	public MatchingType getMatchType()
+	{
+		return mpa.getMatchType();
+	}
 
-  /**
-   * @param matchTypeValue
-   * @roseuid 401FAA660030
-   */
-  public void setMatchType(MatchingType matchTypeValue) {
-    mpa.setMatchType(matchTypeValue);
-  }
+	/**
+	 * @param matchTypeValue
+	 * @roseuid 401FAA660030
+	 */
+	public void setMatchType(MatchingType matchTypeValue)
+	{
+		mpa.setMatchType(matchTypeValue);
+	}
 
-public void Pattern() {
-	mpa.Pattern();
-}
-
-public MatchingPartAST getMpa() {
-	return mpa;
-}
+	public MatchingPartAST getMpa()
+	{
+		return mpa;
+	}
 }

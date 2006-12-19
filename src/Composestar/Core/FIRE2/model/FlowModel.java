@@ -10,30 +10,27 @@ import java.util.Enumeration;
 
 /**
  * @author Arjan
- *
  */
-public interface FlowModel{
-    
-    /**
-     * @return Returns the startNode.
-     */
-    public FlowNode getStartNode();
-    
-    
-    /**
-     * @return Returns the endNode.
-     */
-    public FlowNode getEndNode();
-    
-    /**
-     * 
-     * @return Returns all nodes
-     */
-    public Enumeration getNodes();
-    
-    /**
-     * 
-     * @return Returns all transitions
-     */
-    public Enumeration getTransitions();
+public interface FlowModel
+{
+
+	/**
+	 * @return Returns the startNode.
+	 */
+	public FlowNode getStartNode();
+
+	/**
+	 * @return Returns the endNode.
+	 */
+	public FlowNode getEndNode();
+
+	/**
+	 * @return Returns all nodes
+	 */
+	public Enumeration getNodes();
+
+	/**
+	 * @return Returns all transitions
+	 */
+	public Enumeration getTransitions();
 }

@@ -9,61 +9,67 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
+
 /**
  * reference to a condition
  */
-public class ConditionReference extends FilterModuleElementReference 
+public class ConditionReference extends FilterModuleElementReference
 {
-  private Condition ref;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4787078018239503481L;
 
+	private Condition ref;
 
-  /**
-   * @roseuid 401FAA580170
-   */
-  public ConditionReference() {
-    super();
-  }
+	/**
+	 * @roseuid 401FAA580170
+	 */
+	public ConditionReference()
+	{
+		super();
+	}
 
+	/**
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition
+	 * @roseuid 401FAA580171
+	 */
+	public Condition getRef()
+	{
+		return ref;
+	}
 
-  /**
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition
-   *
-   * @roseuid 401FAA580171
-   */
-  public Condition getRef() {
-  	return ref;
-  }
-
-
-  /**
-   * @param refValue
-   * @roseuid 40503CA002BA
-   */
-  public void setRef(Condition refValue) {
-    this.ref = refValue;
-  }
+	/**
+	 * @param refValue
+	 * @roseuid 40503CA002BA
+	 */
+	public void setRef(Condition refValue)
+	{
+		this.ref = refValue;
+	}
 
 	/**
 	 * Custom deserialization of this object
-     * @param in
-     */
-	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
+	 * 
+	 * @param in
+	 */
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		this.ref = (Condition)in.readObject();
+		this.ref = (Condition) in.readObject();
 	}
-	
+
 	/**
 	 * Custom serialization of this object
-     * @param out
-     */
+	 * 
+	 * @param out
+	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(this.ref);
-	} 
+	}
 }

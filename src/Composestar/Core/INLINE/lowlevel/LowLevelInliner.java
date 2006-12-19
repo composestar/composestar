@@ -22,11 +22,12 @@ import Composestar.Core.FIRE2.util.queryengine.predicates.StateType;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
- * The inlining engine which also uses lowlevel constructs like jumps. This inlining engine
- * translates the executionmodel of a filterset (for a given selector) to calls to a LowLevelInlineStrategy
- * object, that abstractly resemble the code translation of the filterset.
- * So it translates the filterset language to a procedural language.
- * The LowLevelInlineStrategy object is responsible for the actual code generation. 
+ * The inlining engine which also uses lowlevel constructs like jumps. This
+ * inlining engine translates the executionmodel of a filterset (for a given
+ * selector) to calls to a LowLevelInlineStrategy object, that abstractly
+ * resemble the code translation of the filterset. So it translates the
+ * filterset language to a procedural language. The LowLevelInlineStrategy
+ * object is responsible for the actual code generation.
  * 
  * @author Arjan
  */
@@ -45,6 +46,7 @@ public class LowLevelInliner
 
 	/**
 	 * The constructor
+	 * 
 	 * @param strategy The strategy that does the actual code generation.
 	 */
 	public LowLevelInliner(LowLevelInlineStrategy strategy)
@@ -109,7 +111,10 @@ public class LowLevelInliner
 
 		Enumeration filterElements = filterBlock.filterElements.elements();
 
-		if (filterElements.hasMoreElements()) inlineFilterElements(filterElements);
+		if (filterElements.hasMoreElements())
+		{
+			inlineFilterElements(filterElements);
+		}
 
 		strategy.endFilter();
 	}
@@ -294,7 +299,6 @@ public class LowLevelInliner
 	 */
 	private void identifyFilterElementBlocks(ExecutionState filterState, FilterBlock filterBlock)
 	{
-		ExecutionState nextFilterState = null;
 		ExecutionState nextState = getNextState(filterState);
 		Vector result = new Vector();
 

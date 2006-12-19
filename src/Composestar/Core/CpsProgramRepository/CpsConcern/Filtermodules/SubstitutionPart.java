@@ -9,22 +9,30 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-public class SubstitutionPart extends AbstractPattern {
-  public SubstitutionPartAST spAST;
-	
-  /**
-   * @roseuid 401FAA6900AD
-   * @deprecated
-   */
-  public SubstitutionPart() {
-    super();
-  }
-  
-  public SubstitutionPart(SubstitutionPartAST aspAST) {
-	super(aspAST);
-	spAST = aspAST;
-	target = spAST.getTarget();
-	selector = new MessageSelector(spAST.getSelector());
-	selector.setParent(this);
-  }
+public class SubstitutionPart extends AbstractPattern
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7806329462233206287L;
+
+	public SubstitutionPartAST spAST;
+
+	/**
+	 * @roseuid 401FAA6900AD
+	 * @deprecated
+	 */
+	public SubstitutionPart()
+	{
+		super();
+	}
+
+	public SubstitutionPart(SubstitutionPartAST aspAST)
+	{
+		super(aspAST);
+		spAST = aspAST;
+		target = spAST.getTarget();
+		selector = new MessageSelector(spAST.getSelector());
+		selector.setParent(this);
+	}
 }

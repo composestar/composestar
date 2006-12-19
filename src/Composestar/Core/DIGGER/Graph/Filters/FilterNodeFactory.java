@@ -10,7 +10,6 @@
 package Composestar.Core.DIGGER.Graph.Filters;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.DIGGER.DIGGER;
 import Composestar.Core.DIGGER.Graph.FilterNode;
 import Composestar.Core.DIGGER.Graph.Graph;
@@ -39,34 +38,34 @@ public final class FilterNodeFactory
 	public static FilterNode createFilterNode(Graph inGraph, Filter forFilter, byte inDirection) throws ModuleException
 	{
 		String filterType = forFilter.getFilterType().getType();
-//		if (FilterType.DISPATCH.equals(filterType))
-//		{
-//			return new DispatchFilterNode(inGraph, forFilter);
-//		}
-//		else if (FilterType.SEND.equals(filterType))
-//		{
-//			return new SendFilterNode(inGraph, forFilter);
-//		}
-//		else if (FilterType.ERROR.equals(filterType))
-//		{
-//			return new ErrorFilterNode(inGraph, forFilter, inDirection);
-//		}
-//		else if (FilterType.META.equals(filterType))
-//		{
-//			return new MetaFilterNode(inGraph, forFilter, inDirection);
-//		}
-//		else if (FilterType.CUSTOM.equals(filterType))
-//		{
-//			return new CustomFilterNode(inGraph, forFilter, inDirection);
-//		}
-//		else if (FilterType.APPEND.equals(filterType))
-//		{
-//			return new AppendFilterNode(inGraph, forFilter, inDirection);
-//		}
-//		else if (FilterType.PREPEND.equals(filterType))
-//		{
-//			return new PrependFilterNode(inGraph, forFilter, inDirection);
-//		}
+		// if (FilterType.DISPATCH.equals(filterType))
+		// {
+		// return new DispatchFilterNode(inGraph, forFilter);
+		// }
+		// else if (FilterType.SEND.equals(filterType))
+		// {
+		// return new SendFilterNode(inGraph, forFilter);
+		// }
+		// else if (FilterType.ERROR.equals(filterType))
+		// {
+		// return new ErrorFilterNode(inGraph, forFilter, inDirection);
+		// }
+		// else if (FilterType.META.equals(filterType))
+		// {
+		// return new MetaFilterNode(inGraph, forFilter, inDirection);
+		// }
+		// else if (FilterType.CUSTOM.equals(filterType))
+		// {
+		// return new CustomFilterNode(inGraph, forFilter, inDirection);
+		// }
+		// else if (FilterType.APPEND.equals(filterType))
+		// {
+		// return new AppendFilterNode(inGraph, forFilter, inDirection);
+		// }
+		// else if (FilterType.PREPEND.equals(filterType))
+		// {
+		// return new PrependFilterNode(inGraph, forFilter, inDirection);
+		// }
 
 		if (Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "acceptUnknownFilter", true))
 		{

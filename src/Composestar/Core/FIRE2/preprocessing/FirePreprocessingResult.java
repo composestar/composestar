@@ -15,63 +15,73 @@ import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
- * 
- *
  * @author Arjan de Roo
  */
-public class FirePreprocessingResult extends RepositoryEntity {
-    private FlowModel flowModelInputFilters;
-    private ExecutionModel executionModelInputFilters;
-    private FlowModel flowModelOutputFilters;
-    private ExecutionModel executionModelOutputFilters;
-    
-    public FirePreprocessingResult( 
-            FlowModel flowModelInputFilters, ExecutionModel executionModelInputFilters,
-            FlowModel flowModelOutputFilters, ExecutionModel executionModelOutputFilters)
-    {
-        super();
-        
-        this.flowModelInputFilters = flowModelInputFilters;
-        this.executionModelInputFilters = executionModelInputFilters;
-        
-        this.flowModelOutputFilters = flowModelOutputFilters;
-        this.executionModelOutputFilters = executionModelOutputFilters;
-    }
+public class FirePreprocessingResult extends RepositoryEntity
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4193686682386435353L;
 
-    /**
-     * @return the executionModelInputFilters
-     */
-    public ExecutionModel getExecutionModelInputFilters(){
-        return executionModelInputFilters;
-    }
+	private FlowModel flowModelInputFilters;
 
-    /**
-     * @return the executionModelOutputFilters
-     */
-    public ExecutionModel getExecutionModelOutputFilters(){
-        return executionModelOutputFilters;
-    }
+	private ExecutionModel executionModelInputFilters;
 
-    /**
-     * @return the flowModelInputFilters
-     */
-    public FlowModel getFlowModelInputFilters(){
-        return flowModelInputFilters;
-    }
+	private FlowModel flowModelOutputFilters;
 
-    /**
-     * @return the flowModelOutputFilters
-     */
-    public FlowModel getFlowModelOutputFilters(){
-        return flowModelOutputFilters;
-    }
-    
-    /**
+	private ExecutionModel executionModelOutputFilters;
+
+	public FirePreprocessingResult(FlowModel flowModelInputFilters, ExecutionModel executionModelInputFilters,
+			FlowModel flowModelOutputFilters, ExecutionModel executionModelOutputFilters)
+	{
+		super();
+
+		this.flowModelInputFilters = flowModelInputFilters;
+		this.executionModelInputFilters = executionModelInputFilters;
+
+		this.flowModelOutputFilters = flowModelOutputFilters;
+		this.executionModelOutputFilters = executionModelOutputFilters;
+	}
+
+	/**
+	 * @return the executionModelInputFilters
+	 */
+	public ExecutionModel getExecutionModelInputFilters()
+	{
+		return executionModelInputFilters;
+	}
+
+	/**
+	 * @return the executionModelOutputFilters
+	 */
+	public ExecutionModel getExecutionModelOutputFilters()
+	{
+		return executionModelOutputFilters;
+	}
+
+	/**
+	 * @return the flowModelInputFilters
+	 */
+	public FlowModel getFlowModelInputFilters()
+	{
+		return flowModelInputFilters;
+	}
+
+	/**
+	 * @return the flowModelOutputFilters
+	 */
+	public FlowModel getFlowModelOutputFilters()
+	{
+		return flowModelOutputFilters;
+	}
+
+	/**
 	 * Custom deserialization of this object
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		
+
 	}
 
 	/**
@@ -79,6 +89,6 @@ public class FirePreprocessingResult extends RepositoryEntity {
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		
+
 	}
 }

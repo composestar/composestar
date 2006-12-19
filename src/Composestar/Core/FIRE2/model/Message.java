@@ -9,8 +9,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
- * 
- *
  * @author Arjan de Roo
  */
 public class Message
@@ -70,9 +68,9 @@ public class Message
 		return target;
 	}
 
-
 	/**
 	 * The constructs a message with the given target and selector.
+	 * 
 	 * @param target
 	 * @param selector
 	 */
@@ -81,9 +79,11 @@ public class Message
 		this.target = target;
 		this.selector = selector;
 	}
-	
+
 	/**
-	 * The constructs a message with the given target and MethodInfo as selector.
+	 * The constructs a message with the given target and MethodInfo as
+	 * selector.
+	 * 
 	 * @param target
 	 * @param selector
 	 */
@@ -110,10 +110,11 @@ public class Message
 	}
 
 	/**
-	 * Indicates whether this message is a generalization of a set of
-	 * message, i.e. whether the target and/or the selector is the star.
-	 * @return <code>true</code> when either the selector or target or both is the star.
-	 *   else <code>false</code>
+	 * Indicates whether this message is a generalization of a set of message,
+	 * i.e. whether the target and/or the selector is the star.
+	 * 
+	 * @return <code>true</code> when either the selector or target or both is
+	 *         the star. else <code>false</code>
 	 */
 	public boolean isGeneralization()
 	{
@@ -125,7 +126,10 @@ public class Message
 	 */
 	public boolean equals(Object obj)
 	{
-		if (obj == null || !(obj instanceof Message)) return false;
+		if (obj == null || !(obj instanceof Message))
+		{
+			return false;
+		}
 		Message m = (Message) obj;
 
 		return checkEquals(m.selector, selector) && checkEquals(m.target, target);
@@ -143,12 +147,12 @@ public class Message
 	{
 		return selector1.getName().equals(selector2.getName());
 	}
-	
+
 	public static boolean checkEquals(MessageSelector selector1, String selector2)
 	{
 		return selector1.getName().equals(selector2);
 	}
-	
+
 	public static boolean checkEquals(String selector1, String selector2)
 	{
 		return selector1.equals(selector2);

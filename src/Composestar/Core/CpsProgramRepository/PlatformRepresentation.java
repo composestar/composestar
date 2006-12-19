@@ -15,15 +15,15 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
  * Abstract interface representing the platform dependent implementation of a
  * concern.
  */
-public abstract class PlatformRepresentation  implements SerializableRepositoryEntity
+public abstract class PlatformRepresentation implements SerializableRepositoryEntity
 {
-	private Concern parent = null;
+	private Concern parent;
 
 	public void setParentConcern(Concern parent)
 	{
 		this.parent = parent;
 	}
-	
+
 	public Concern getParentConcern()
 	{
 		return this.parent;

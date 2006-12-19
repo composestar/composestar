@@ -28,14 +28,15 @@ public class FilterAction extends Instruction
 	 * message).
 	 */
 	private Message substitutedMessage;
-	
+
 	/**
 	 * Indicates whether the action is on call (true) or on return (false)
 	 */
 	private boolean onCall;
-	
+
 	/**
-	 * Indicates whether the action returns the flow (only when the action is on call).
+	 * Indicates whether the action returns the flow (only when the action is on
+	 * call).
 	 */
 	private boolean returning;
 
@@ -46,8 +47,10 @@ public class FilterAction extends Instruction
 	 * @param message The current message.
 	 * @param substitutedMessage The substituted message (substitutionpart
 	 *            applied on the current message).
-	 * @param onCall Indicates whether the action is on call (true) or on return (false)
-	 * @param returning Indicates whether the action returns the flow (only when the action is on call).
+	 * @param onCall Indicates whether the action is on call (true) or on return
+	 *            (false)
+	 * @param returning Indicates whether the action returns the flow (only when
+	 *            the action is on call).
 	 */
 	public FilterAction(String type, Message message, Message substitutedMessage, boolean onCall, boolean returning)
 	{
@@ -81,7 +84,7 @@ public class FilterAction extends Instruction
 	{
 		return type;
 	}
-	
+
 	/**
 	 * @return the onCall
 	 */

@@ -16,10 +16,12 @@ import java.util.List;
 public class StreamGobbler extends Thread
 {
 	private InputStream is;
+
 	private List output;
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param is The input stream to monitor.
 	 */
 	public StreamGobbler(InputStream is)
@@ -37,7 +39,7 @@ public class StreamGobbler extends Thread
 		Iterator it = output.iterator();
 		while (it.hasNext())
 		{
-			out.append((String)it.next());
+			out.append((String) it.next());
 			out.append('\n');
 		}
 		return out.toString();
@@ -52,8 +54,8 @@ public class StreamGobbler extends Thread
 	}
 
 	/**
-	 * Start thread and fetch data from the stream. 
-	 * The thread stops when the stream is closed.
+	 * Start thread and fetch data from the stream. The thread stops when the
+	 * stream is closed.
 	 */
 	public void run()
 	{
@@ -63,20 +65,24 @@ public class StreamGobbler extends Thread
 			BufferedReader br = new BufferedReader(isr);
 			String line;
 			while ((line = br.readLine()) != null)
+			{
 				output.add(line);
+			}
 		}
 		catch (IOException e)
 		{
 			System.out.println("StreamGobbler::run - This should be impossible, sorry!");
 			e.printStackTrace();
 		}
-		finally {
+		finally
+		{
 			done();
 		}
 	}
-	
+
 	/**
-	 * All data is retrieved from the stream. Notifies all threads waiting for it.
+	 * All data is retrieved from the stream. Notifies all threads waiting for
+	 * it.
 	 */
 	private synchronized void done()
 	{

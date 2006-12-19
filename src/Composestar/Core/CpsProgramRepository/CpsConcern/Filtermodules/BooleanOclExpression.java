@@ -9,45 +9,50 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 /**
  * @modelguid {298702D8-779F-4FE0-B6A7-6417F2AEAAC1}
  */
-public class BooleanOclExpression extends ContextRepositoryEntity {
+public class BooleanOclExpression extends ContextRepositoryEntity
+{
 
-  /**
-   * @modelguid {ADCB919B-FD9B-4B52-9ABE-B132818A98DC}
-   */
-  private String source;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7632430596280498910L;
 
+	/**
+	 * @modelguid {ADCB919B-FD9B-4B52-9ABE-B132818A98DC}
+	 */
+	private String source;
 
-  /**
-   * @modelguid {F96261F0-D84A-4456-8CDF-F5A9502D9E2C}
-   * @roseuid 401FAA56033C
-   */
-  public BooleanOclExpression() {
-    super();
-  }
+	/**
+	 * @modelguid {F96261F0-D84A-4456-8CDF-F5A9502D9E2C}
+	 * @roseuid 401FAA56033C
+	 */
+	public BooleanOclExpression()
+	{
+		super();
+	}
 
+	/**
+	 * @return java.lang.String
+	 * @modelguid {CC85EBB0-12E2-4C02-8822-594CEE27A65C}
+	 * @roseuid 401FAA560344
+	 */
+	public String getSource()
+	{
+		return source;
+	}
 
-  /**
-   * @return java.lang.String
-   *
-   * @modelguid {CC85EBB0-12E2-4C02-8822-594CEE27A65C}
-   * @roseuid 401FAA560344
-   */
-  public String getSource() {
-    return source;
-  }
-
-
-  /**
-   * @param sourceValue
-   * @modelguid {9B1EF1E0-50EA-44B2-B0ED-50A97A0DEDEB}
-   * @roseuid 401FAA560345
-   */
-  public void setSource(String sourceValue) {
-    this.source = sourceValue;
-  }
+	/**
+	 * @param sourceValue
+	 * @modelguid {9B1EF1E0-50EA-44B2-B0ED-50A97A0DEDEB}
+	 * @roseuid 401FAA560345
+	 */
+	public void setSource(String sourceValue)
+	{
+		this.source = sourceValue;
+	}
 }

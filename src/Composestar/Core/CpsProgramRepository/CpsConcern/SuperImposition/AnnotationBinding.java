@@ -12,31 +12,37 @@
 
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
-
 import java.util.Vector;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 
 public class AnnotationBinding extends Binding
 {
-  public Vector annotationList; // Vector of ConcernReference
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3277653416800288682L;
 
-  public AnnotationBinding()
-  {
-    super();
-    annotationList = new Vector();
-  }
+	public Vector annotationList; // Vector of ConcernReference
 
-  public boolean addAnnotation(ConcernReference annot)
-  {
-    annotationList.addElement(annot);
-    return true;
-  }
- 
-  /**
-   * @return Vector (.NET doesn't allow Collection) of ConcernReferences that (when resolved) should point to annotation classes
-   */
-  public Vector getAnnotations()
-  {
-    return annotationList;
-  }
+	public AnnotationBinding()
+	{
+		super();
+		annotationList = new Vector();
+	}
+
+	public boolean addAnnotation(ConcernReference annot)
+	{
+		annotationList.addElement(annot);
+		return true;
+	}
+
+	/**
+	 * @return Vector (.NET doesn't allow Collection) of ConcernReferences that
+	 *         (when resolved) should point to annotation classes
+	 */
+	public Vector getAnnotations()
+	{
+		return annotationList;
+	}
 }

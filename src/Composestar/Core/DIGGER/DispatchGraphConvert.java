@@ -41,16 +41,14 @@ public class DispatchGraphConvert
 	 * Output to GraphViz DOT format
 	 */
 	public static final int FORMAT_DOT = 1;
-	
+
 	/**
-	 * Produces a GraphML file
-	 * http://graphml.graphdrawing.org
+	 * Produces a GraphML file http://graphml.graphdrawing.org
 	 */
 	public static final int FORMAT_GRAPHML = 2;
 
 	/**
-	 * Produces a GXL file
-	 * http://www.gupro.de/GXL
+	 * Produces a GXL file http://www.gupro.de/GXL
 	 */
 	public static final int FORMAT_GXL = 3;
 
@@ -139,10 +137,10 @@ public class DispatchGraphConvert
 					return customXslt.toString();
 				}
 				throw new Exception("Error using custom format: " + customXslt);
-				
+
 			default:
 				throw new Exception("Unsupported format: " + inFormat);
-		}		
+		}
 	}
 
 	/**

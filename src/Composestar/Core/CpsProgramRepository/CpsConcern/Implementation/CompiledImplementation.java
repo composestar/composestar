@@ -9,77 +9,87 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Implementation;
 
-import Composestar.Core.CpsProgramRepository.*;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 
 /**
- * @modelguid {10359D51-3F2F-4373-AA93-EFAF9599E301}
- * this is nothing but a reference to a CompiledConcernRepr.
+ * @modelguid {10359D51-3F2F-4373-AA93-EFAF9599E301} this is nothing but a
+ *            reference to a CompiledConcernRepr.
  */
-public class CompiledImplementation extends Implementation {
-  public PlatformRepresentation reference;
-  public String name;
-  public String className;
+public class CompiledImplementation extends Implementation
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1307122468820927617L;
 
+	public PlatformRepresentation reference;
 
-  /**
-   * @roseuid 404DDA7902A2
-   */
-  public CompiledImplementation() {
-    super();
-  }
+	public String name;
 
+	public String className;
 
-  /**
-   * @return java.lang.String
-   *
-   * @modelguid {A45C9BBA-972F-4DD3-B95B-F8F4639D2B56}
-   * @roseuid 401FAA5601FA
-   */
-  public String getName() {
-    return name;
-  }
+	/**
+	 * @roseuid 404DDA7902A2
+	 */
+	public CompiledImplementation()
+	{
+		super();
+	}
 
+	/**
+	 * @return java.lang.String
+	 * @modelguid {A45C9BBA-972F-4DD3-B95B-F8F4639D2B56}
+	 * @roseuid 401FAA5601FA
+	 */
+	public String getName()
+	{
+		return name;
+	}
 
-  /**
-   * @param nameValue
-   * @modelguid {EB5AE02C-8B85-4DA9-BCC5-114834CFDADC}
-   * @roseuid 401FAA560203
-   */
-  public void setName(String nameValue) {
-    this.name = nameValue;
-  }
+	/**
+	 * @param nameValue
+	 * @modelguid {EB5AE02C-8B85-4DA9-BCC5-114834CFDADC}
+	 * @roseuid 401FAA560203
+	 */
+	public void setName(String nameValue)
+	{
+		this.name = nameValue;
+	}
 
+	/**
+	 * @return Composestar.Core.CpsProgramRepository.PlatformRepresentation
+	 * @roseuid 40ADE0980338
+	 */
+	public PlatformRepresentation getReference()
+	{
+		return reference;
+	}
 
-  /**
-   * @return Composestar.Core.CpsProgramRepository.PlatformRepresentation
-   *
-   * @roseuid 40ADE0980338
-   */
-  public PlatformRepresentation getReference() {
-    return reference;
-  }
+	/**
+	 * @param referenceValue
+	 * @roseuid 40ADE0A6005D
+	 */
+	public void setReference(PlatformRepresentation referenceValue)
+	{
+		this.reference = referenceValue;
+	}
 
+	public String getClassName()
+	{
+		return className;
+	}
 
-  /**
-   * @param referenceValue
-   * @roseuid 40ADE0A6005D
-   */
-  public void setReference(PlatformRepresentation referenceValue) {
-    this.reference = referenceValue;
-  }
-
-
-  public String getClassName() {
-    return className;
-  }
-
-
-  public void setClassName(Vector qualifiedClass) {
-    if(!qualifiedClass.isEmpty()) className = (String) qualifiedClass.elementAt(0);
-    for(int i=1; i<qualifiedClass.size(); i++) {
-      className += '.' + (String) qualifiedClass.elementAt(i);
-    }
-  }
+	public void setClassName(Vector qualifiedClass)
+	{
+		if (!qualifiedClass.isEmpty())
+		{
+			className = (String) qualifiedClass.elementAt(0);
+		}
+		for (int i = 1; i < qualifiedClass.size(); i++)
+		{
+			className += '.' + (String) qualifiedClass.elementAt(i);
+		}
+	}
 }

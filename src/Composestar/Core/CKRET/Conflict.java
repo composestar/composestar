@@ -13,33 +13,56 @@ import java.io.Serializable;
 
 public class Conflict implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7017897791526259274L;
+
 	private String resource = "";
+
 	private String sequence = "";
+
 	private String msg = "";
+
 	private String expr = "";
-	
-	public void setResource(String resource) {
+
+	public void setResource(String resource)
+	{
 		this.resource = resource;
 	}
-	public String getResource() {
+
+	public String getResource()
+	{
 		return resource;
 	}
-	public void setSequence(String sequence) {
+
+	public void setSequence(String sequence)
+	{
 		this.sequence = sequence;
 	}
-	public String getSequence() {
+
+	public String getSequence()
+	{
 		return sequence;
 	}
-	public void setMsg(String msg) {
+
+	public void setMsg(String msg)
+	{
 		this.msg = msg;
 	}
-	public String getMsg() {
+
+	public String getMsg()
+	{
 		return msg;
 	}
-	public void setExpr(String expr) {
+
+	public void setExpr(String expr)
+	{
 		this.expr = expr;
 	}
-	public String getExpr() {
+
+	public String getExpr()
+	{
 		return expr;
 	}
 }

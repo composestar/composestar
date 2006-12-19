@@ -17,7 +17,6 @@ public class Label
 	 */
 	private int id;
 
-	
 	public Label()
 	{
 		this.id = -1;

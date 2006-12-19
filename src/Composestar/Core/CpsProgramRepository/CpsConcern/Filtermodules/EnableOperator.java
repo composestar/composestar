@@ -9,13 +9,19 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+public class EnableOperator extends EnableOperatorType
+{
 
-public class EnableOperator extends EnableOperatorType {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5626871115157056377L;
 
-  /**
-   * @roseuid 404C4B6B0211
-   */
-  public EnableOperator() {
-    super();
-  }
+	/**
+	 * @roseuid 404C4B6B0211
+	 */
+	public EnableOperator()
+	{
+		super();
+	}
 }

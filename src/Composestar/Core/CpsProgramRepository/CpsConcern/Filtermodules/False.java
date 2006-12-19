@@ -11,6 +11,11 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 public class False extends CondLiteral
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2079825319816646771L;
+
 	public False()
 	{
 		super();

@@ -1,16 +1,22 @@
 package Composestar.Core.COPPER;
 
-import antlr.*;
-import antlr.collections.*;
+import antlr.CommonAST;
+import antlr.Token;
+import antlr.collections.AST;
 
 public class CpsAST extends CommonAST
 {
-	protected int line = 0;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2547618156802188540L;
+
+	protected int line;
 
 	public void initialize(Token tok)
 	{
 		super.initialize(tok);
-		if(tok != null)
+		if (tok != null)
 		{
 			line = tok.getLine();
 		}
@@ -19,7 +25,7 @@ public class CpsAST extends CommonAST
 	public void initialize(AST tok)
 	{
 		super.initialize(tok);
-		if(tok != null)
+		if (tok != null)
 		{
 			line = tok.getLine();
 		}
@@ -27,8 +33,9 @@ public class CpsAST extends CommonAST
 
 	public void initialize(int type, String txt)
 	{
-		super.initialize(type,txt);
+		super.initialize(type, txt);
 	}
+
 	public int getLine()
 	{
 		return line;

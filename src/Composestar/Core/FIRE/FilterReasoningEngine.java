@@ -9,34 +9,36 @@ package Composestar.Core.FIRE;
  * 
  * $Id$
  * 
-**/
+ **/
 import java.util.HashMap;
 import java.util.LinkedList;
-import Composestar.Utils.Debug;
 
-public class FilterReasoningEngine 
+public class FilterReasoningEngine
 {
 	public static final int FALSE = 0;
+
 	public static final int UNKNOWN = 1;
+
 	public static final int TRUE = 2;
-	
+
 	/**
- 	 * Strategy pattern, treeBuilder creates the FIRE tree.	
+	 * Strategy pattern, treeBuilder creates the FIRE tree.
 	 */
 	TreeBuilder treeBuilder = null;
 
-	/** 
+	/**
 	 * The results of the calculations are stored in this stateTable.
 	 */
-	StateTable stateTable = null; 
+	StateTable stateTable = null;
 
 	// Get the symbols. The symbol table can be reused.
-	HashMap symbolHash =  null;
+	HashMap symbolHash = null;
 
-	/** 
+	/**
 	 * ctor, read the filtersets from the format specified by the ANTLR syntax.
-     * @param input
-     */
+	 * 
+	 * @param input
+	 */
 	public FilterReasoningEngine(java.io.InputStream input)
 	{
 		treeBuilder = new AntlrStdIn(input);
@@ -44,28 +46,30 @@ public class FilterReasoningEngine
 
 	/**
 	 * ctor, read the filtersets from the repository.
-     * @param list
-     */
+	 * 
+	 * @param list
+	 */
 	public FilterReasoningEngine(LinkedList list)
-	{	
+	{
 		treeBuilder = new RepositoryPtrList(list);
 	}
 
 	/**
 	 * Build the tree, calculate the results
 	 */
-	public void run() 
+	public void run()
 	{
-		Tand fc = (Tand) treeBuilder.getTree(this); 
+		Tand fc = (Tand) treeBuilder.getTree(this);
 
-		//Debug.out (Debug.MODE_INFORMATION, "FIRE", fc.toTreeString());
+		// Debug.out (Debug.MODE_INFORMATION, "FIRE", fc.toTreeString());
 
 		SymbolTable st = SymbolTable.getInstance();
-		//Debug.out (Debug.MODE_INFORMATION, "FIRE", "\n" + st.toString()); // print the symboltable.
+		// Debug.out (Debug.MODE_INFORMATION, "FIRE", "\n" + st.toString()); //
+		// print the symboltable.
 
 		// Initialize status column
-		Symbol [] symbols = st.getAllSymbols();
-		Symbol [] conditions = st.getSymbols(0);
+		Symbol[] symbols = st.getAllSymbols();
+		Symbol[] conditions = st.getSymbols(0);
 
 		stateTable = new StateTable(symbols, conditions, this);
 		StatusColumn status = new StatusColumn(st.getColumnLength(), true);
@@ -74,23 +78,25 @@ public class FilterReasoningEngine
 
 		symbolHash = st.getHashMap();
 
-		//Debug.out (Debug.MODE_INFORMATION, "FIRE", "Status after calculation: " + status);
-		//Debug.out (Debug.MODE_INFORMATION, "FIRE", stateTable.toString());
+		// Debug.out (Debug.MODE_INFORMATION, "FIRE", "Status after calculation:
+		// " + status);
+		// Debug.out (Debug.MODE_INFORMATION, "FIRE", stateTable.toString());
 	}
 
 	/**
 	 * Return the result tree.
 	 */
-	public Node getTree ()
+	public Node getTree()
 	{
-		return stateTable.getNode(); 
+		return stateTable.getNode();
 	}
-	
+
 	/**
 	 * Return all paths to a specific node
-     * @param toNode
-     */
-	public LinkedList getPaths (Node toNode)
+	 * 
+	 * @param toNode
+	 */
+	public LinkedList getPaths(Node toNode)
 	{
 		Node tree = getTree();
 
@@ -98,14 +104,14 @@ public class FilterReasoningEngine
 		DepthFirstIterator dfi = (DepthFirstIterator) tree.getIterator(DepthFirstIterator.class);
 
 		do
-		{	dfi.skipTo (toNode);
+		{
+			dfi.skipTo(toNode);
 
 			if (!dfi.isDone() && !dfi.getNode().hasChildren())
 			{
-				ll.add (dfi.getPath());
+				ll.add(dfi.getPath());
 			}
-		} 
-		while (!dfi.isDone());
+		} while (!dfi.isDone());
 
 		return ll;
 	}
@@ -113,7 +119,7 @@ public class FilterReasoningEngine
 	/**
 	 * Return all leaf nodes from the tree
 	 */
-	public LinkedList getLeafs ()
+	public LinkedList getLeafs()
 	{
 		Node tree = getTree();
 		LinkedList ll = new LinkedList();
@@ -122,8 +128,10 @@ public class FilterReasoningEngine
 
 		while (!dfi.isDone())
 		{
-			if (!dfi.getNode().hasChildren()) 
+			if (!dfi.getNode().hasChildren())
+			{
 				ll.add(dfi.getNode());
+			}
 
 			dfi.next();
 		}
@@ -131,43 +139,43 @@ public class FilterReasoningEngine
 		return ll;
 	}
 
-	
-	////////////////// FilterSetInfo /// FIREInfo
-	
+	// //////////////// FilterSetInfo /// FIREInfo
+
 	protected HashMap concernSymbols = new HashMap();
-	
+
 	public void addConcernSymbol(String concern, Symbol s)
 	{
 		concernSymbols.put(concern, s);
 	}
-	
+
 	public Symbol getConcernSymbol(String concern)
 	{
 		return (Symbol) concernSymbols.get(concern);
 	}
-	
-	public String getConcern (String symbolName)
+
+	public String getConcern(String symbolName)
 	{
 		java.util.Iterator itr = concernSymbols.keySet().iterator();
-		
+
 		while (itr.hasNext())
 		{
 			String key = (String) itr.next();
 			Symbol s = (Symbol) concernSymbols.get(key);
-			
-			if (s != null && s.getName().equals(symbolName)) return key;
+
+			if (s != null && s.getName().equals(symbolName))
+			{
+				return key;
+			}
 		}
-		
+
 		return null;
 	}
-	
-	//////////////////////////////////////////////////////////////////////
+
+	// ////////////////////////////////////////////////////////////////////
 
 	// We suffer from the fact that the symbol table is a singleton.
 	/*
-	public boolean equals (FilterReasoningEngine fire)
-	{
-		return getTree().equals(fire.getTree());
-	}
-	*/
+	 * public boolean equals (FilterReasoningEngine fire) { return
+	 * getTree().equals(fire.getTree()); }
+	 */
 }

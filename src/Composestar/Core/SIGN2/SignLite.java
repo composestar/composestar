@@ -75,8 +75,10 @@ public class SignLite implements CTCommonModule
 		dictionary = new Hashtable();
 
 		dictionary.put("isDispatch", new StateType("DispatchAction"));
-		//TODO Should be changed later in FlowChartNames.RETURN_ACTION_NODE, but then the checks whether
-		//the dispatchtarget exists need to be turned of for other return actions than the DispatchAction.
+		// TODO Should be changed later in FlowChartNames.RETURN_ACTION_NODE,
+		// but then the checks whether
+		// the dispatchtarget exists need to be turned of for other return
+		// actions than the DispatchAction.
 
 		dictionary.put("isMeta", new StateType("###disabled###"));
 
@@ -213,21 +215,23 @@ public class SignLite implements CTCommonModule
 	{
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)){
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
 			dispTarget = state.getMessage().getTarget();
 		}
 
 		// get the dispatch selector:
 		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)){ 
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
 			dispSelector = state.getMessage().getSelector();
 		}
 
 		// get dispatchtarget concern and methods:
 		String dispatchMethodName = dispSelector;
 		List methods;
-		if (Message.checkEquals(dispTarget, Message.INNER_TARGET) || 
-				Message.checkEquals(dispTarget, Message.SELF_TARGET))
+		if (Message.checkEquals(dispTarget, Message.INNER_TARGET)
+				|| Message.checkEquals(dispTarget, Message.SELF_TARGET))
 		{
 			Type type = (Type) concern.getPlatformRepresentation();
 			MethodInfo targetMethod = method.getClone(dispSelector, type);
@@ -287,7 +291,10 @@ public class SignLite implements CTCommonModule
 	private LinkedList getMethodList(Concern c)
 	{
 		Type dt = (Type) c.getPlatformRepresentation();
-		if (dt == null) return new LinkedList();
+		if (dt == null)
+		{
+			return new LinkedList();
+		}
 
 		return new LinkedList(dt.getMethods());
 	}
@@ -313,7 +320,10 @@ public class SignLite implements CTCommonModule
 		List parameters = info.getParameters();
 		for (int i = 0; i < parameters.size(); i++)
 		{
-			if (i > 0) buffer.append(", ");
+			if (i > 0)
+			{
+				buffer.append(", ");
+			}
 
 			ParameterInfo parameter = (ParameterInfo) parameters.get(i);
 			buffer.append(parameter.ParameterTypeString);
@@ -329,7 +339,10 @@ public class SignLite implements CTCommonModule
 		while (iterator.hasNext())
 		{
 			MethodInfo containedMethod = (MethodInfo) iterator.next();
-			if (containedMethod.checkEquals(method)) return true;
+			if (containedMethod.checkEquals(method))
+			{
+				return true;
+			}
 		}
 
 		return false;

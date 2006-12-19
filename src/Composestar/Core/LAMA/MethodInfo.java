@@ -51,9 +51,10 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	 * This method should make a clone of the MethodInfo with the name and
 	 * parentType changed to the given name and actualParent. The parameters and
 	 * return type should stay the same.
-     * @param name
-     * @param actualParent
-     */
+	 * 
+	 * @param name
+	 * @param actualParent
+	 */
 	public abstract MethodInfo getClone(String name, Type actualParent);
 
 	/**
@@ -168,7 +169,10 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	 */
 	public boolean hasParameters(String[] types)
 	{
-		if (Parameters.size() != types.length) return false;
+		if (Parameters.size() != types.length)
+		{
+			return false;
+		}
 
 		for (int i = 0; i < types.length; i++)
 		{
@@ -191,7 +195,7 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	{
 		Parent = parent;
 	}
-	
+
 	public String returnTypeName()
 	{
 		return ReturnTypeString;
@@ -203,12 +207,15 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 		{
 			TypeMap map = TypeMap.instance();
 			ReturnType = map.getType(ReturnTypeString);
-			
+
 			if (ReturnType == null)
+			{
 				return null;
-				//throw new RuntimeException("Unable to find type specification for '" + ReturnTypeString + "'");
+				// throw new RuntimeException("Unable to find type specification for
+				// '" + ReturnTypeString + "'");
+			}
 		}
-		
+
 		return ReturnType;
 	}
 
@@ -250,8 +257,9 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 
 	/**
 	 * Custom deserialization of this object
-     * @param in
-     */
+	 * 
+	 * @param in
+	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		Name = in.readUTF();
@@ -265,8 +273,9 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 
 	/**
 	 * Custom serialization of this object
-     * @param out
-     */
+	 * 
+	 * @param out
+	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeUTF(Name);
@@ -280,17 +289,29 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 
 	public boolean checkEquals(MethodInfo method)
 	{
-		if (!method.Name.equals(this.Name)) return false;
+		if (!method.Name.equals(this.Name))
+		{
+			return false;
+		}
 
-		if (!method.ReturnTypeString.equals(this.ReturnTypeString)) return false;
+		if (!method.ReturnTypeString.equals(this.ReturnTypeString))
+		{
+			return false;
+		}
 
-		if (this.Parameters.size() != method.Parameters.size()) return false;
+		if (this.Parameters.size() != method.Parameters.size())
+		{
+			return false;
+		}
 
 		for (int i = 0; i < this.Parameters.size(); i++)
 		{
 			ParameterInfo thisPar = (ParameterInfo) this.Parameters.get(i);
 			ParameterInfo objPar = (ParameterInfo) method.Parameters.get(i);
-			if (!thisPar.ParameterTypeString.equals(objPar.ParameterTypeString)) return false;
+			if (!thisPar.ParameterTypeString.equals(objPar.ParameterTypeString))
+			{
+				return false;
+			}
 		}
 
 		return true;

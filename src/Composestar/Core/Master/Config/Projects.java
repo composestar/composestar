@@ -14,14 +14,22 @@ import Composestar.Utils.FileUtils;
 
 public class Projects implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4696163750932369815L;
+
 	private Properties properties;
+
 	private List allProjects;
+
 	private List concernSources;
+
 	private Map projectsByLanguage;
-	
-	//private List dependencies;
-	//private List compiledDummies;
-	//private List compiledSources;
+
+	// private List dependencies;
+	// private List compiledDummies;
+	// private List compiledSources;
 
 	public Projects()
 	{
@@ -29,49 +37,53 @@ public class Projects implements Serializable
 		allProjects = new ArrayList();
 		concernSources = new ArrayList();
 		projectsByLanguage = new HashMap();
-		
-		//dependencies = new ArrayList();
-		//compiledDummies = new ArrayList();
-		//compiledSources = new ArrayList();
+
+		// dependencies = new ArrayList();
+		// compiledDummies = new ArrayList();
+		// compiledSources = new ArrayList();
 	}
-	
+
 	public void setRunDebugLevel(int value)
 	{
-		properties.setProperty("runDebugLevel", "" + value);		
+		properties.setProperty("runDebugLevel", "" + value);
 	}
 
 	public int getRunDebugLevel()
 	{
 		String level = properties.getProperty("runDebugLevel");
-		if (level!=null) return Integer.parseInt(level);
-	
+		if (level != null)
+		{
+			return Integer.parseInt(level);
+		}
+
 		return 0;
 	}
-	
+
 	public void setOutputPath(String value)
 	{
-		properties.setProperty("outputPath", value);		
+		properties.setProperty("outputPath", value);
 	}
 
 	public String getOutputPath()
 	{
 		return properties.getProperty("outputPath");
 	}
-	
+
 	public void setApplicationStart(String value)
 	{
-		properties.setProperty("applicationStart", value);		
+		properties.setProperty("applicationStart", value);
 	}
-	
+
 	public String getApplicationStart()
 	{
 		return properties.getProperty("applicationStart");
 	}
-	
+
 	/**
-	 * @deprecated Use setRunDebugLevel/setOutputPath/setApplicationStart/setExecutable.
-     * @param key
-     * @param value
+	 * @deprecated Use
+	 *             setRunDebugLevel/setOutputPath/setApplicationStart/setExecutable.
+	 * @param key
+	 * @param value
 	 */
 	public void addProperty(String key, String value)
 	{
@@ -79,8 +91,9 @@ public class Projects implements Serializable
 	}
 
 	/**
-	 * @deprecated Use getRunDebugLevel/getOutputPath/getApplicationStart/getExecutable.
-     * @param key
+	 * @deprecated Use
+	 *             getRunDebugLevel/getOutputPath/getApplicationStart/getExecutable.
+	 * @param key
 	 */
 	public String getProperty(String key)
 	{
@@ -112,9 +125,11 @@ public class Projects implements Serializable
 
 	public List getProjectsByLanguage(String language)
 	{
-		List projects = (List)projectsByLanguage.get(language);
+		List projects = (List) projectsByLanguage.get(language);
 		if (projects == null)
+		{
 			projectsByLanguage.put(language, projects = new ArrayList());
+		}
 
 		return projects;
 	}
@@ -125,9 +140,11 @@ public class Projects implements Serializable
 		Iterator projIt = allProjects.iterator();
 		while (projIt.hasNext())
 		{
-			Project p = (Project)projIt.next();
+			Project p = (Project) projIt.next();
 			if (p.getCompiledDummies() != null)
+			{
 				compiledDummies.add(p.getCompiledDummies());
+			}
 		}
 		return compiledDummies;
 	}
@@ -138,9 +155,11 @@ public class Projects implements Serializable
 		Iterator projIt = allProjects.iterator();
 		while (projIt.hasNext())
 		{
-			Project p = (Project)projIt.next();
+			Project p = (Project) projIt.next();
 			if (p.getCompiledSources() != null)
+			{
 				compiledSources.addAll(p.getCompiledSources());
+			}
 		}
 		return compiledSources;
 	}
@@ -151,31 +170,33 @@ public class Projects implements Serializable
 		Iterator projIt = allProjects.iterator();
 		while (projIt.hasNext())
 		{
-			Project p = (Project)projIt.next();
+			Project p = (Project) projIt.next();
 			List deps = p.getDependencies();
 			Iterator depIt = deps.iterator();
 			while (depIt.hasNext())
 			{
-				Dependency dependency = (Dependency)depIt.next();
+				Dependency dependency = (Dependency) depIt.next();
 				if (!dependencies.contains(dependency))
+				{
 					dependencies.add(dependency);
+				}
 			}
 		}
 		return dependencies;
 	}
-	
+
 	public Iterator dependencies()
 	{
 		Set depset = new HashSet();
 		Iterator projIt = allProjects.iterator();
 		while (projIt.hasNext())
 		{
-			Project p = (Project)projIt.next();
+			Project p = (Project) projIt.next();
 			List deps = p.getDependencies();
 			Iterator depIt = deps.iterator();
 			while (depIt.hasNext())
 			{
-				Dependency dependency = (Dependency)depIt.next();
+				Dependency dependency = (Dependency) depIt.next();
 				depset.add(dependency);
 			}
 		}
@@ -198,12 +219,15 @@ public class Projects implements Serializable
 	 * Returns the source instance for the specified filename. TODO: this can be
 	 * implemented a lot more efficiently by using a map from filename to
 	 * source.
-     * @param fileName
-     */
+	 * 
+	 * @param fileName
+	 */
 	public Source getSource(String fileName)
 	{
 		if (fileName == null)
+		{
 			throw new IllegalArgumentException("specified filename cannot be null");
+		}
 
 		// normalize specified filename
 		String nfn = FileUtils.normalizeFilename(fileName);
@@ -212,15 +236,22 @@ public class Projects implements Serializable
 		Iterator sourceIt = sources.iterator();
 		while (sourceIt.hasNext())
 		{
-			Source s = (Source)sourceIt.next();
+			Source s = (Source) sourceIt.next();
 			String sfn = s.getFileName();
-			if (sfn == null) continue; // FIXME: can this even happen? if so: how should it be handled?
-			
+			if (sfn == null)
+			{
+				continue; // FIXME: can this even happen? if so: how should it
+				// be handled?
+			}
+
 			// normalize source filename
 			String nsfn = FileUtils.normalizeFilename(sfn);
-			
+
 			// compare specified and source
-			if (nfn.equals(nsfn)) return s;
+			if (nfn.equals(nsfn))
+			{
+				return s;
+			}
 		}
 
 		return null;

@@ -7,14 +7,13 @@ package Composestar.Core.LAMA;
 import java.util.HashSet;
 
 /**
- * @author havingaw
- *
- * TODO: Insert description of class here
+ * @author havingaw TODO: Insert description of class here
  */
 public class UnitResult
 {
-	private HashSet multiRes;			// Used by INCRE
-	private ProgramElement singleRes;	// Used by INCRE
+	private HashSet multiRes; // Used by INCRE
+
+	private ProgramElement singleRes; // Used by INCRE
 
 	public UnitResult()
 	{ // Has to exist for .NET serialization
@@ -42,7 +41,8 @@ public class UnitResult
 	}
 
 	/*
-	 * @return a hashset containing program elements, or null if the relation is unique
+	 * @return a hashset containing program elements, or null if the relation is
+	 * unique
 	 */
 	public HashSet multiValue()
 	{
@@ -51,11 +51,11 @@ public class UnitResult
 
 	public boolean isSingleValue()
 	{
-		return (singleRes != null);
+		return singleRes != null;
 	}
 
 	public boolean isMultiValue()
 	{
-		return (multiRes != null);
+		return multiRes != null;
 	}
 }

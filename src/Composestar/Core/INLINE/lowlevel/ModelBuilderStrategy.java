@@ -76,7 +76,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private static int lastMethodId;
 
-
 	/**
 	 * Indicates whether the instructionset of the current inline is empty or
 	 * not. When it is empty, this indicates that the filters don't change the
@@ -211,15 +210,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * The endline method for the inputfilters
 	 */
 	private void endInlineIF()
-	{
-	}
+	{}
 
 	/**
 	 * The endline method for the outputfilters
 	 */
 	private void endInlineOF()
-	{
-	}
+	{}
 
 	/**
 	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#startFilter(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter,
@@ -391,7 +388,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 				getSubstitutedMessage(state),
 				true,
 				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
-		
+
 		empty = false;
 		currentBlock.addInstruction(instruction);
 	}
@@ -411,14 +408,15 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 				getSubstitutedMessage(state),
 				false,
 				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
-		
+
 		empty = false;
 		currentBlock.addInstruction(instruction);
 	}
 
 	/**
-	 * Generates the dispatch action. This action is treated seperately, because if only a dispatch is done to
-	 * the inner method, the filtercode can be ignored.
+	 * Generates the dispatch action. This action is treated seperately, because
+	 * if only a dispatch is done to the inner method, the filtercode can be
+	 * ignored.
 	 * 
 	 * @param state The state corresponding with the action
 	 */
@@ -437,8 +435,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			empty = false;
 		}
 	}
-
-	
 
 	/**
 	 * Pushes an instruction block to the block stack (change to inner scope).
@@ -470,11 +466,17 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	{
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
 		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		return new Message(dispTarget, dispSelector);
 	}

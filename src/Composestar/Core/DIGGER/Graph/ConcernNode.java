@@ -30,7 +30,7 @@ public class ConcernNode extends AbstractConcernNode
 
 	/**
 	 * @param inConcern
-     * @param inGraph
+	 * @param inGraph
 	 */
 	public ConcernNode(Graph inGraph, Concern inConcern)
 	{

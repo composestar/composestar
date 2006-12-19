@@ -9,16 +9,22 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-
 /**
  * the ',' between filter elements (means a condition or)
  */
-public class CORfilterElementCompOper extends FilterElementCompOper {
+public class CORfilterElementCompOper extends FilterElementCompOper
+{
 
-  /**
-   * @roseuid 404C4B6A033C
-   */
-  public CORfilterElementCompOper() {
-    super();
-  }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8852892366560754263L;
+
+	/**
+	 * @roseuid 404C4B6A033C
+	 */
+	public CORfilterElementCompOper()
+	{
+		super();
+	}
 }

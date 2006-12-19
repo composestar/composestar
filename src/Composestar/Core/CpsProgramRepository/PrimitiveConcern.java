@@ -10,18 +10,26 @@
 package Composestar.Core.CpsProgramRepository;
 
 /**
- * all 'native' implementations (including .NET objects and primitive data types)
- * should subclass and/or be wrapped by me.
- * we can't reason about the implementation here.
+ * all 'native' implementations (including .NET objects and primitive data
+ * types) should subclass and/or be wrapped by me. we can't reason about the
+ * implementation here.
  */
 public class PrimitiveConcern extends Concern
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7730136747082190101L;
+
+	/**
+	 * @roseuid 404C4B660391
+	 */
 	public PrimitiveConcern()
 	{
 		super();
 	}
 
-	public Object clone () throws CloneNotSupportedException
+	public Object clone() throws CloneNotSupportedException
 	{
 		PrimitiveConcern newObject = (PrimitiveConcern) super.clone();
 
@@ -31,7 +39,7 @@ public class PrimitiveConcern extends Concern
 
 		return newObject;
 	}
-	
+
 	public String toString()
 	{
 		return "PrimitiveConcern[" + platformRepr + "]";

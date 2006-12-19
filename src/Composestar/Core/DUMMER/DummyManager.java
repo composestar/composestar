@@ -18,26 +18,25 @@ import Composestar.Utils.FileUtils;
 public class DummyManager implements CTCommonModule
 {
 	public static final String MODULE_NAME = "DUMMER";
-	
-	public DummyManager() 
-	{
-	}
-	
+
+	public DummyManager()
+	{}
+
 	public void run(CommonResources resources) throws ModuleException
 	{
 		createDummies();
 	}
-	
+
 	private void createDummies() throws ModuleException
 	{
 		Configuration config = Configuration.instance();
 		String dummyPath = config.getPathSettings().getPath("Dummy");
-		
+
 		List projects = config.getProjects().getProjects();
-		Iterator projIt = projects.iterator();		
+		Iterator projIt = projects.iterator();
 		while (projIt.hasNext())
 		{
-			Project project = (Project)projIt.next();
+			Project project = (Project) projIt.next();
 			createProjectDummies(dummyPath, project);
 		}
 	}
@@ -46,7 +45,7 @@ public class DummyManager implements CTCommonModule
 	{
 		List sources = project.getSources();
 		List outputFilenames = new ArrayList(sources.size());
-		
+
 		File baseDir = new File(project.getBasePath());
 		File dummyDir = new File(baseDir, "obj/" + dummyPath);
 
@@ -56,35 +55,41 @@ public class DummyManager implements CTCommonModule
 		Iterator sourceIt = sources.iterator();
 		while (sourceIt.hasNext())
 		{
-			Source source = (Source)sourceIt.next();			
-			try {
-				File sourceFile = new File(source.getFileName());				
-				String target = FileUtils.createOutputFilename(baseDir.getAbsolutePath(), "/obj/" + dummyPath, sourceFile.getAbsolutePath());
+			Source source = (Source) sourceIt.next();
+			try
+			{
+				File sourceFile = new File(source.getFileName());
+				String target = FileUtils.createOutputFilename(baseDir.getAbsolutePath(), "/obj/" + dummyPath,
+						sourceFile.getAbsolutePath());
 				String targetPath = FileUtils.getDirectoryPart(target);
-				FileUtils.createFullPath(targetPath); // Make sure the directory exists
-				
+				FileUtils.createFullPath(targetPath); // Make sure the
+				// directory exists
+
 				File dummyFile = new File(target);
 				String absolutePath = dummyFile.getAbsolutePath();
 				outputFilenames.add(absolutePath);
 				source.setDummy(absolutePath);
 			}
-			catch (Exception e) {
-				throw new ModuleException("Error while creating targetfile of dummy: "+e.getMessage(),MODULE_NAME);
+			catch (Exception e)
+			{
+				throw new ModuleException("Error while creating targetfile of dummy: " + e.getMessage(), MODULE_NAME);
 			}
 		}
-		
+
 		// Create all dummies in one go.
 		DummyEmitter emitter = project.getLanguage().getEmitter();
 		emitter.createDummies(project, sources, outputFilenames);
 
 		// compile dummies
-		try {
+		try
+		{
 			LangCompiler comp = project.getLanguage().getCompilerSettings().getCompiler();
 			comp.compileDummies(project);
 		}
-		catch (CompilerException e) {
+		catch (CompilerException e)
+		{
 			e.printStackTrace();
-			throw new ModuleException("Cannot compile dummies: "+e.getMessage(),MODULE_NAME);
+			throw new ModuleException("Cannot compile dummies: " + e.getMessage(), MODULE_NAME);
 		}
 	}
 }

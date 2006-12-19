@@ -28,7 +28,7 @@ public class ErrorFilterNode extends FilterNode
 	{
 		super(inGraph, inFilter, inDirection);
 	}
-	
+
 	protected void processSubstitutionParts(MatchingPattern mp, FilterElementNode mpNode) throws ModuleException
 	{
 		mpNode.addOutgoingEdge(new LambdaEdge(graph.getExceptionNode(true)));

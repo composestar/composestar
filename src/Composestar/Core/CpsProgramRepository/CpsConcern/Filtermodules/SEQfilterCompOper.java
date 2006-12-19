@@ -9,17 +9,23 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-
 /**
- * This FilterCompositionOperator implements Sequential, AND-type, Filtering of a
- * stack of filters. It is written as ";"
+ * This FilterCompositionOperator implements Sequential, AND-type, Filtering of
+ * a stack of filters. It is written as ";"
  */
-public class SEQfilterCompOper extends FilterCompOper {
+public class SEQfilterCompOper extends FilterCompOper
+{
 
-  /**
-   * @roseuid 404C4B6A0378
-   */
-  public SEQfilterCompOper() {
-    super();
-  }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3420786736732121171L;
+
+	/**
+	 * @roseuid 404C4B6A0378
+	 */
+	public SEQfilterCompOper()
+	{
+		super();
+	}
 }

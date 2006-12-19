@@ -8,20 +8,22 @@ import Composestar.Core.INCRE.FileDependency;
 import Composestar.Core.INCRE.Module;
 import Composestar.Core.INCRE.ObjectDependency;
 
-public class DependencyHandler extends DefaultHandler 
+public class DependencyHandler extends DefaultHandler
 {
-	private ConfigManager configmanager = null;
-	private Module module = null;
-	private ModulesHandler returnhandler = null;
+	private ConfigManager configmanager;
 
-	public DependencyHandler(ConfigManager cfg, Module module, ModulesHandler returnhandler) 
+	private Module module;
+
+	private ModulesHandler returnhandler;
+
+	public DependencyHandler(ConfigManager cfg, Module module, ModulesHandler returnhandler)
 	{
 		this.configmanager = cfg;
 		this.module = module;
 		this.returnhandler = returnhandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException 
+	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
 		if (local_name.equalsIgnoreCase("dependency"))
 		{
@@ -31,58 +33,63 @@ public class DependencyHandler extends DefaultHandler
 			{
 				// create a file dependency
 				FileDependency fdep = new FileDependency(name);
-				
-				if(amap.getValue("isAdded")!=null)
+
+				if (amap.getValue("isAdded") != null)
+				{
 					fdep.setIsAdded(amap.getValue("isAdded").equalsIgnoreCase("true"));
-				
+				}
+
 				module.addDep(fdep);
-								
+
 				// look further in the xml file, between <path> tags
-				PathHandler pathhandler = new PathHandler(configmanager,fdep,this);
+				PathHandler pathhandler = new PathHandler(configmanager, fdep, this);
 				configmanager.getXMLReader().setContentHandler(pathhandler);
 			}
 			else if (deptype.equals("OBJECT"))
 			{
 				// create a object dependency and add it to module
 				ObjectDependency objdep = new ObjectDependency(name);
-				module.addDep(objdep); 
-								
+				module.addDep(objdep);
+
 				// add arguments store and lookup if available
-				if(amap.getValue("store")!=null)
+				if (amap.getValue("store") != null)
+				{
 					objdep.store = amap.getValue("store").equals("true");
-				if(amap.getValue("lookup")!=null)
+				}
+				if (amap.getValue("lookup") != null)
+				{
 					objdep.lookup = amap.getValue("lookup").equals("true");
+				}
 
 				// look further in the xml file, between <path> tags
-				PathHandler pathhandler = new PathHandler(configmanager,objdep,this);
+				PathHandler pathhandler = new PathHandler(configmanager, objdep, this);
 				configmanager.getXMLReader().setContentHandler(pathhandler);
 			}
-			else 
+			else
 			{
 				// throw something
 			}
 		}
-		else if (local_name.equalsIgnoreCase("comparisons")){
+		else if (local_name.equalsIgnoreCase("comparisons"))
+		{
 			// look further in the xml file, between <comparisons> tags
-			ComparisonsHandler comphandler = new ComparisonsHandler(configmanager,this.module,this);
+			ComparisonsHandler comphandler = new ComparisonsHandler(configmanager, this.module, this);
 			configmanager.getXMLReader().setContentHandler(comphandler);
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) 
-	{	
+	public void endElement(String uri, String local_name, String raw_name)
+	{
 		if (local_name.equalsIgnoreCase("module"))
 		{
-			// go to next module 
+			// go to next module
 			configmanager.getXMLReader().setContentHandler(returnhandler);
 		}
 	}
 
-	public void startDocument() 
-	{
-	}
+	public void startDocument()
+	{}
 
-	public void endDocument() 
-	{
-	}
+	public void endDocument()
+	{}
 }

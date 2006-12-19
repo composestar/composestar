@@ -14,34 +14,26 @@ import java.io.File;
 import java.util.List;
 
 /**
- * CommandLineExecutor is a tool for running command line programs. 
- * It's intention is to handle command line calls for all operating systems.
- * Things that do not work:
- * - programs that require user input.
- * - redirection in windows.
- * 
- * Usage:
- *   List cmd = new ArrayList();
- *   cmd.add("csc");
- *   cmd.add("foo.cs");
- *   
- *   CommandLineExecutor cle = new CommandLineExecutor();
- *   cle.exec(cmd);
- *   
- *   System.out.println(e.outputNormal());
+ * CommandLineExecutor is a tool for running command line programs. It's
+ * intention is to handle command line calls for all operating systems. Things
+ * that do not work: - programs that require user input. - redirection in
+ * windows. Usage: List cmd = new ArrayList(); cmd.add("csc");
+ * cmd.add("foo.cs"); CommandLineExecutor cle = new CommandLineExecutor();
+ * cle.exec(cmd); System.out.println(e.outputNormal());
  */
 public class CommandLineExecutor
 {
 	private StreamGobbler errorGobbler;
+
 	private StreamGobbler outputGobbler;
 
 	/**
-	 * Executess the command and waits for it to return. 
-	 * WARNING: If the program hangs this function will never return.
-	 * Please note that return values indicating error differ between programs and 
-	 * operating systems.
+	 * Executess the command and waits for it to return. WARNING: If the program
+	 * hangs this function will never return. Please note that return values
+	 * indicating error differ between programs and operating systems.
+	 * 
 	 * @deprecated
-     */
+	 */
 	public int exec(String command)
 	{
 		return exec(command, null);
@@ -52,20 +44,21 @@ public class CommandLineExecutor
 	 */
 	public int exec(String command, File dir)
 	{
-		try {
+		try
+		{
 
-			// "some" OSs need special treatment to be able to use built in functions
-			// shouldnt be needed, since we're not using 'built in functions' (aka 'call')
+			// "some" OSs need special treatment to be able to use built in
+			// functions
+			// shouldnt be needed, since we're not using 'built in functions'
+			// (aka 'call')
 			String osName = System.getProperty("os.name");
-			if (osName.equals( "Windows NT")
-					|| osName.equals("Windows 2000")
-					|| osName.equals("Windows CE")
-					|| osName.equals("Windows XP")) {
+			if (osName.equals("Windows NT") || osName.equals("Windows 2000") || osName.equals("Windows CE")
+					|| osName.equals("Windows XP"))
+			{
 				command = "cmd.exe /C " + command;
 			}
-			else if (osName.equals("Windows 95")
-					|| osName.equals("Windows 98")
-					|| osName.equals("Windows ME")) {
+			else if (osName.equals("Windows 95") || osName.equals("Windows 98") || osName.equals("Windows ME"))
+			{
 				command = "command.exe /C " + command;
 			}
 			// real operating systems handle this flawlessly
@@ -74,7 +67,8 @@ public class CommandLineExecutor
 			Process proc = rt.exec(command, null, dir);
 
 			// connect error and output filters
-			// these are threads because the buffers used to hold the output data
+			// these are threads because the buffers used to hold the output
+			// data
 			// could otherwise overrun which blocks the program.
 			errorGobbler = new StreamGobbler(proc.getErrorStream());
 			outputGobbler = new StreamGobbler(proc.getInputStream());
@@ -87,30 +81,32 @@ public class CommandLineExecutor
 			// wait for the output threads
 			outputGobbler.waitForResult();
 			errorGobbler.waitForResult();
-			
+
 			return result;
 		}
-		catch (Throwable t) {
+		catch (Throwable t)
+		{
 			// TODO: New throw specific to project
 			t.printStackTrace();
 			return -1;
 		}
 	}
-	
+
 	public int exec(List cmdList)
 	{
 		String[] cmdArray = new String[cmdList.size()];
 		cmdList.toArray(cmdArray);
-		
+
 		return exec(cmdArray);
 	}
-	
+
 	public int exec(String[] command)
 	{
-		try {
+		try
+		{
 			Runtime rt = Runtime.getRuntime();
 			Process proc = rt.exec(command);
-			
+
 			// connect error and output filters
 			errorGobbler = new StreamGobbler(proc.getErrorStream());
 			outputGobbler = new StreamGobbler(proc.getInputStream());
@@ -119,25 +115,26 @@ public class CommandLineExecutor
 
 			// wait for program return.
 			int result = proc.waitFor();
-			
+
 			// wait for the output threads
 			outputGobbler.waitForResult();
 			errorGobbler.waitForResult();
 
 			return result;
 		}
-		catch (Exception e) {
+		catch (Exception e)
+		{
 			// TODO: New throw specific to project
 			return -1;
 		}
 	}
-	
+
 	/**
 	 * Returns the program output to STDOUT or null if no program was executed.
 	 */
 	public String outputNormal()
 	{
-		return (outputGobbler == null ? null : outputGobbler.result());
+		return outputGobbler == null ? null : outputGobbler.result();
 	}
 
 	/**
@@ -145,7 +142,7 @@ public class CommandLineExecutor
 	 */
 	public String outputError()
 	{
-		return (errorGobbler == null ? null : errorGobbler.result());
+		return errorGobbler == null ? null : errorGobbler.result();
 	}
 
 	/**
@@ -155,6 +152,6 @@ public class CommandLineExecutor
 	{
 		CommandLineExecutor e = new CommandLineExecutor();
 		e.exec(args);
-		System.out.println(e.outputNormal());     
+		System.out.println(e.outputNormal());
 	}
 }

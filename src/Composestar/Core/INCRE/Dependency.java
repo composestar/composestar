@@ -2,27 +2,30 @@ package Composestar.Core.INCRE;
 
 import Composestar.Core.Exception.ModuleException;
 
-public class Dependency 
+public class Dependency
 {
 	protected String name;
+
 	protected Path mypath = new Path();
-	public boolean store = false;
-	public boolean lookup = false;
-	   
+
+	public boolean store;
+
+	public boolean lookup;
+
 	/**
 	 * @roseuid 42206A590280
-     * @param name
+	 * @param name
 	 */
-	public Dependency(String name) 
+	public Dependency(String name)
 	{
 		this.name = name;
 	}
-	   
+
 	/**
-	  * @return Object
-	  * @roseuid 420A220F0128
-     * @param obj
-	  */
+	 * @return Object
+	 * @roseuid 420A220F0128
+	 * @param obj
+	 */
 	public Object getDepObject(Object obj) throws ModuleException
 	{
 		return null;
@@ -37,7 +40,7 @@ public class Dependency
 	{
 		return this.mypath;
 	}
-		
+
 	public void addNode(Node n)
 	{
 		this.mypath.addNode(n);

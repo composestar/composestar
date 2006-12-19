@@ -5,290 +5,365 @@ import java.lang.reflect.Modifier;
 import java.util.AbstractList;
 import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Vector;
-import java.util.Enumeration;
 import java.util.Stack;
+import java.util.Vector;
 
-import Composestar.Utils.*;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Utils.Debug;
 
-public class MyComparator {
+public class MyComparator
+{
 
-    public static HashMap myFields = new HashMap();
-    public static HashMap comparisons = new HashMap();
-    private String module;
+	public static HashMap myFields = new HashMap();
 
-    public static int compare = 0;
+	public static HashMap comparisons = new HashMap();
 
-    public MyComparator(String module) {
-        this.module = module;
-    }
+	private String module;
 
-    public int getCompare() {
-        return compare;
-    }
+	public static int compare;
 
-    public void clearComparisons() {
-        comparisons.clear();
-    }
+	public MyComparator(String module)
+	{
+		this.module = module;
+	}
 
-    public int duplicates = 0;
+	public int getCompare()
+	{
+		return compare;
+	}
 
-    /*
-     * Compares two objects
-     * returns true if equals and false otherwise
-     */
-    public boolean compare(Object a, Object b) throws ModuleException {
-        // Keep track of the number of comparisons made
-        compare++;
-        
-        // special cases: one or both objects are null
-        if (a == null && b == null) {          
-        	return true;
-        }
-        else if (a == null || b == null){
-           	return false;
-        }
-        
-        // first check the types of both objects
-        if (a.getClass().getName().equals(b.getClass().getName())) {
-            if (a.getClass().equals(String.class)) {
-                // easy case
-                return a.equals(b);
-            } else if (a.getClass().equals(Integer.class)) {
-                // easy case
-                return a.equals(b);
-            } else if (a.getClass().equals(Boolean.class)) {
-                // easy case
-                return a.equals(b);
-            } else if (a instanceof AbstractList) {
-                // compare abstract list
-                return compareAbstractLists((AbstractList) a, (AbstractList) b);
-            } else if (a instanceof HashSet) {
-                // compare HashSets
-                return compareAbstractSets((HashSet) a, (HashSet) b);
-            } else {
-                if (hasComparableObjects(a)) {
-                    // compare all INCRE fields
-                    if (!compareINCREfields(a, b))
-                        return false;
-                } else {
-                    //iterate over all public fields
-                    Enumeration enumFields = getFields(a.getClass()).elements();
-                    while (enumFields.hasMoreElements()) {
-                        Field field = (Field) enumFields.nextElement();
+	public void clearComparisons()
+	{
+		comparisons.clear();
+	}
 
-                        try {
-                            // only public fields are compared
-                            if (!compare(field.get(a), field.get(b)))
-                                return false;
-                        } catch (Exception excep) {
-                            throw new ModuleException("INCRE::MyComparator error: " + excep.getMessage());
-                        }
-                    }
-                }
-            }
+	public int duplicates;
 
-            return true;
-        }
+	/*
+	 * Compares two objects returns true if equals and false otherwise
+	 */
+	public boolean compare(Object a, Object b) throws ModuleException
+	{
+		// Keep track of the number of comparisons made
+		compare++;
 
-        return false;
-    }
+		// special cases: one or both objects are null
+		if (a == null && b == null)
+		{
+			return true;
+		}
+		else if (a == null || b == null)
+		{
+			return false;
+		}
 
-    /**
-     * @param AbstractList a1
-     * @param AbstractList a2
-     * @return
-     * @param a1
-     * @param a2
-     */
-    public boolean compareAbstractLists(AbstractList a1, AbstractList a2) throws ModuleException {
-        if (a1.size() != a2.size()) // compare sizes first
-            return false;
-        else {// compare all objects in the ArrayList
-            for (int i = 0; i < a1.size(); i++) {
-                Object obj1 = a1.get(i);
-                Object obj2 = a2.get(i);
-                if (!compare(obj1, obj2)) {
-                    // no match, return false
-                    return false;
-                }
-            }
-        }
+		// first check the types of both objects
+		if (a.getClass().getName().equals(b.getClass().getName()))
+		{
+			if (a.getClass().equals(String.class))
+			{
+				// easy case
+				return a.equals(b);
+			}
+			else if (a.getClass().equals(Integer.class))
+			{
+				// easy case
+				return a.equals(b);
+			}
+			else if (a.getClass().equals(Boolean.class))
+			{
+				// easy case
+				return a.equals(b);
+			}
+			else if (a instanceof AbstractList)
+			{
+				// compare abstract list
+				return compareAbstractLists((AbstractList) a, (AbstractList) b);
+			}
+			else if (a instanceof HashSet)
+			{
+				// compare HashSets
+				return compareAbstractSets((HashSet) a, (HashSet) b);
+			}
+			else
+			{
+				if (hasComparableObjects(a))
+				{
+					// compare all INCRE fields
+					if (!compareINCREfields(a, b))
+					{
+						return false;
+					}
+				}
+				else
+				{
+					// iterate over all public fields
+					Enumeration enumFields = getFields(a.getClass()).elements();
+					while (enumFields.hasMoreElements())
+					{
+						Field field = (Field) enumFields.nextElement();
 
-        return true;
-    }
+						try
+						{
+							// only public fields are compared
+							if (!compare(field.get(a), field.get(b)))
+							{
+								return false;
+							}
+						}
+						catch (Exception excep)
+						{
+							throw new ModuleException("MyComparator error: " + excep.getMessage(), "INCRE");
+						}
+					}
+				}
+			}
 
-    /**
-     * @param HashSet s1
-     * @param HashSet s2
-     * @return
-     * @param s2
-     * @param s1
-     */
-    public boolean compareAbstractSets(AbstractSet s1, AbstractSet s2) throws ModuleException {
-        if (s1.size() != s2.size()) // compare sizes first
-            return false;
-        else {// compare all objects in the HashSet
+			return true;
+		}
 
-            Iterator iter1 = s1.iterator();
-            Iterator iter2 = s2.iterator();
-            while (iter1.hasNext()) {
-                Object obj1 = iter1.next();
-                Object obj2 = iter2.next();
-                if (!compare(obj1, obj2)) {
-                    // no match, return false
-                    return false;
-                }
-            }
-        }
+		return false;
+	}
 
-        return true;
-    }
+	/**
+	 * @param AbstractList a1
+	 * @param AbstractList a2
+	 * @return
+	 * @param a1
+	 * @param a2
+	 */
+	public boolean compareAbstractLists(AbstractList a1, AbstractList a2) throws ModuleException
+	{
+		if (a1.size() != a2.size()) // compare sizes first
+		{
+			return false;
+		}
+		else
+		{// compare all objects in the ArrayList
+			for (int i = 0; i < a1.size(); i++)
+			{
+				Object obj1 = a1.get(i);
+				Object obj2 = a2.get(i);
+				if (!compare(obj1, obj2))
+				{
+					// no match, return false
+					return false;
+				}
+			}
+		}
 
+		return true;
+	}
 
-    /**
-     * @param Class
-     * @return
-     * @param c
-     */
-    public Vector getFields(Class c) {
+	/**
+	 * @param HashSet s1
+	 * @param HashSet s2
+	 * @return
+	 * @param s2
+	 * @param s1
+	 */
+	public boolean compareAbstractSets(AbstractSet s1, AbstractSet s2) throws ModuleException
+	{
+		if (s1.size() != s2.size()) // compare sizes first
+		{
+			return false;
+		}
+		else
+		{// compare all objects in the HashSet
 
-        if (myFields.containsKey(c))
-            return (Vector) myFields.get(c);
+			Iterator iter1 = s1.iterator();
+			Iterator iter2 = s2.iterator();
+			while (iter1.hasNext())
+			{
+				Object obj1 = iter1.next();
+				Object obj2 = iter2.next();
+				if (!compare(obj1, obj2))
+				{
+					// no match, return false
+					return false;
+				}
+			}
+		}
 
-        Vector fields = new Vector();
-        Stack stack = new Stack();
-        Class myClass = c;
-        //while( !myClass.equals(Object.class) )
-        //{
-        stack.push(myClass);
-        //	myClass = myClass.getSuperclass();
-        //}
+		return true;
+	}
 
-        while (!stack.empty()) {
-            myClass = (Class) stack.pop();
-            Field[] declaredFields = myClass.getDeclaredFields();
-            for (int i = 0; i < declaredFields.length; i++) {
-                // can only check public fields
-                if (Modifier.isPublic(declaredFields[i].getModifiers())) {
-                    Field f = declaredFields[i];
-                    // IMPORTANT: skip repositoryKey due to different hashcodes
-                    if (!f.getName().equals("repositoryKey"))
-                        fields.add(f);
-                }
-            }
-        }
+	/**
+	 * @param Class
+	 * @return
+	 * @param c
+	 */
+	public Vector getFields(Class c)
+	{
 
-        myFields.put(c, fields);
-        return fields;
-    }
+		if (myFields.containsKey(c))
+		{
+			return (Vector) myFields.get(c);
+		}
 
+		Vector fields = new Vector();
+		Stack stack = new Stack();
+		Class myClass = c;
+		// while( !myClass.equals(Object.class) )
+		// {
+		stack.push(myClass);
+		// myClass = myClass.getSuperclass();
+		// }
 
-    /**
-     * Adds the result of a comparison to the map
-     *
-     * @param id     The id of the object compared
-     * @param result The result of the comparison
-     * @return
-     */
-    public void addComparison(String id, boolean result) {
-    	if (id != null) {
-    		Boolean b = Boolean.valueOf(result);
-            comparisons.put(id, b);
-        } else {
-            Debug.out(Debug.MODE_DEBUG, "INCRE::Comparator", "Key of comparison is null!");
-        }
-    }
+		while (!stack.empty())
+		{
+			myClass = (Class) stack.pop();
+			Field[] declaredFields = myClass.getDeclaredFields();
+			for (int i = 0; i < declaredFields.length; i++)
+			{
+				// can only check public fields
+				if (Modifier.isPublic(declaredFields[i].getModifiers()))
+				{
+					Field f = declaredFields[i];
+					// IMPORTANT: skip repositoryKey due to different hashcodes
+					if (!f.getName().equals("repositoryKey"))
+					{
+						fields.add(f);
+					}
+				}
+			}
+		}
 
-    /**
-     * Check whether an object has been compared before
-     *
-     * @param id The id of the object
-     * @return true if object is in map, false if not
-     */
-    public boolean comparisonMade(String id) {
-    	return (comparisons.containsKey(id));
-    }
+		myFields.put(c, fields);
+		return fields;
+	}
 
-    /*
-     * Get the result of an earlier comparison
-     * @param id The id of the object compared
-     * @return boolean The result of the comparison
-     */
-    public boolean getComparison(String id) {
-        return ((Boolean) comparisons.get(id)).booleanValue();
-    }
+	/**
+	 * Adds the result of a comparison to the map
+	 * 
+	 * @param id The id of the object compared
+	 * @param result The result of the comparison
+	 * @return
+	 */
+	public void addComparison(String id, boolean result)
+	{
+		if (id != null)
+		{
+			Boolean b = Boolean.valueOf(result);
+			comparisons.put(id, b);
+		}
+		else
+		{
+			Debug.out(Debug.MODE_DEBUG, "INCRE::Comparator", "Key of comparison is null!");
+		}
+	}
 
-    public boolean hasComparableObjects(Object obj) {
-        String fullname = obj.getClass().getName();
-        INCRE incre = INCRE.instance();
-        Module m = incre.getConfigManager().getModuleByID(this.module);
+	/**
+	 * Check whether an object has been compared before
+	 * 
+	 * @param id The id of the object
+	 * @return true if object is in map, false if not
+	 */
+	public boolean comparisonMade(String id)
+	{
+		return comparisons.containsKey(id);
+	}
 
-        return m.hasComparableObjects(fullname);
-    }
+	/*
+	 * Get the result of an earlier comparison @param id The id of the object
+	 * compared @return boolean The result of the comparison
+	 */
+	public boolean getComparison(String id)
+	{
+		return ((Boolean) comparisons.get(id)).booleanValue();
+	}
 
-    /**
-     * Compares all 'INCRE fields' of two objects
-     * The fields are acquired from the Module and were extracted from the incre configuration file
-     * @param b
-     * @param a
-     */
-    public boolean compareINCREfields(Object a, Object b) throws ModuleException {
-        try {
-        	INCRE incre = INCRE.instance();
-            String fullname = a.getClass().getName();
-            Module m = incre.getConfigManager().getModuleByID(this.module);
-            ArrayList compObjects = m.getComparableObjects(fullname);
-            boolean equal;
-            String key = null;
+	public boolean hasComparableObjects(Object obj)
+	{
+		String fullname = obj.getClass().getName();
+		INCRE incre = INCRE.instance();
+		Module m = incre.getConfigManager().getModuleByID(this.module);
 
-            Iterator itrObjects = compObjects.iterator();
-            while (itrObjects.hasNext()) {
-                Object obj = itrObjects.next();
-                Object fielda = null;
-                Object fieldb = null;
+		return m.hasComparableObjects(fullname);
+	}
 
-                if (obj instanceof FieldNode) {
-                    FieldNode fieldnode = (FieldNode) obj;
-                    key = fieldnode.getUniqueID(a)+b.hashCode();
-                    fielda = fieldnode.visit(a);
-                    fieldb = fieldnode.visit(b);
-                } else if (obj instanceof MethodNode) {
-                    MethodNode methodnode = (MethodNode) obj;
-                    key = methodnode.getUniqueID(a)+b.hashCode();
-                    fielda = methodnode.visit(a);
-                    fieldb = methodnode.visit(b);
-                } else if (obj instanceof Path) {
-                    Path path = (Path) obj;
-                    fielda = path.follow(a);
-                    fieldb = path.follow(b);
-                }
+	/**
+	 * Compares all 'INCRE fields' of two objects The fields are acquired from
+	 * the Module and were extracted from the incre configuration file
+	 * 
+	 * @param b
+	 * @param a
+	 */
+	public boolean compareINCREfields(Object a, Object b) throws ModuleException
+	{
+		try
+		{
+			INCRE incre = INCRE.instance();
+			String fullname = a.getClass().getName();
+			Module m = incre.getConfigManager().getModuleByID(this.module);
+			ArrayList compObjects = m.getComparableObjects(fullname);
+			boolean equal;
+			String key = null;
 
-                if (key != null && comparisonMade(key)) {
-                    // already made comparison before
-                	duplicates++;
-                    equal = getComparison(key);
-                } else {
-                    if (key != null)// temporarily true to avoid infinite loops
-                        addComparison(key, true);
+			Iterator itrObjects = compObjects.iterator();
+			while (itrObjects.hasNext())
+			{
+				Object obj = itrObjects.next();
+				Object fielda = null;
+				Object fieldb = null;
 
-                    equal = compare(fielda, fieldb);
+				if (obj instanceof FieldNode)
+				{
+					FieldNode fieldnode = (FieldNode) obj;
+					key = fieldnode.getUniqueID(a) + b.hashCode();
+					fielda = fieldnode.visit(a);
+					fieldb = fieldnode.visit(b);
+				}
+				else if (obj instanceof MethodNode)
+				{
+					MethodNode methodnode = (MethodNode) obj;
+					key = methodnode.getUniqueID(a) + b.hashCode();
+					fielda = methodnode.visit(a);
+					fieldb = methodnode.visit(b);
+				}
+				else if (obj instanceof Path)
+				{
+					Path path = (Path) obj;
+					fielda = path.follow(a);
+					fieldb = path.follow(b);
+				}
 
-                    if (key != null)// store result of comparison
-                        addComparison(key, equal);
-                }
+				if (key != null && comparisonMade(key))
+				{
+					// already made comparison before
+					duplicates++;
+					equal = getComparison(key);
+				}
+				else
+				{
+					if (key != null)// temporarily true to avoid infinite loops
+					{
+						addComparison(key, true);
+					}
 
-                if (!equal) // stop comparison by returning false
-                    return false;
-            }
-        } catch (Exception e) {
-        	throw new ModuleException("INCRE::MyComparator error: " + e.toString());
-        }
+					equal = compare(fielda, fieldb);
 
-        return true;
-    }
+					if (key != null)// store result of comparison
+					{
+						addComparison(key, equal);
+					}
+				}
+
+				if (!equal) // stop comparison by returning false
+				{
+					return false;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			throw new ModuleException("MyComparator error: " + e.toString(), "INCRE");
+		}
+
+		return true;
+	}
 }

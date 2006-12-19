@@ -2,17 +2,12 @@ package Composestar.Core.FIRE;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2003 University of Twente.
- *
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
- * 
- * $Id$
- * 
-**/
+ * Copyright (C) 2003 University of Twente. Licensed under LGPL v2.1 or (at your
+ * option) any later version. [http://www.fsf.org/copyleft/lgpl.html] $Id:
+ * DepthFirstIterator.java 2772 2006-11-15 15:56:35Z arjanderoo $
+ */
 
-
-public class DepthFirstIterator extends ChildIterator 
+public class DepthFirstIterator extends ChildIterator
 {
 	protected boolean done;
 
@@ -26,15 +21,17 @@ public class DepthFirstIterator extends ChildIterator
 		super(itr);
 	}
 
-
 	public void first()
 	{
 		done = false;
 
-		while (canStepBack()) super.stepBack();
+		while (canStepBack())
+		{
+			super.stepBack();
+		}
 		super.first();
 	}
-	
+
 	public void stepBack()
 	{
 		pop();
@@ -43,15 +40,30 @@ public class DepthFirstIterator extends ChildIterator
 
 	public void nextHorizontal()
 	{
-		if (hasNext()) super.next();
-		else if (canStepBack()) stepBack();
-		else done = true;
+		if (hasNext())
+		{
+			super.next();
+		}
+		else if (canStepBack())
+		{
+			stepBack();
+		}
+		else
+		{
+			done = true;
+		}
 	}
 
 	public void next()
 	{
-		if (canStepInto()) stepInto();
-		else nextHorizontal();
+		if (canStepInto())
+		{
+			stepInto();
+		}
+		else
+		{
+			nextHorizontal();
+		}
 	}
 
 	public boolean isDone()

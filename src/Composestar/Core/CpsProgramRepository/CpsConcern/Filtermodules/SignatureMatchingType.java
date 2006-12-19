@@ -9,13 +9,19 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+public class SignatureMatchingType extends MatchingType
+{
 
-public class SignatureMatchingType extends MatchingType {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -999053163580940409L;
 
-  /**
-   * @roseuid 404C4B6B02A8
-   */
-  public SignatureMatchingType() {
-    super();
-  }
+	/**
+	 * @roseuid 404C4B6B02A8
+	 */
+	public SignatureMatchingType()
+	{
+		super();
+	}
 }

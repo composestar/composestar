@@ -25,25 +25,30 @@ public class BuildConfigHandler extends DefaultHandler implements ContentHandler
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
 		Configuration config = Configuration.instance();
-		
+
 		if ("BuildConfiguration".equals(raw_name))
-		{	// in <BuildConfiguration>
+		{ // in <BuildConfiguration>
 			// look further
 			parser.setContentHandler(new ProjectsHandler(parser, this));
 		}
 		else if ("Settings".equals(raw_name))
-		{	// in <Settings>
-			String buildDebugLevel = amap.getValue("buildDebugLevel");			
+		{ // in <Settings>
+			String buildDebugLevel = amap.getValue("buildDebugLevel");
 			if (buildDebugLevel != null)
 			{
 				// TODO: deprecated. remove.
-				Debug.out(Debug.MODE_WARNING, "MASTER", "Attribute buildDebugLevel of Settings is deprecated. Use buildDebugLevel of Projects instead.");
-				try {
+				Debug
+						.out(Debug.MODE_WARNING, "MASTER",
+								"Attribute buildDebugLevel of Settings is deprecated. Use buildDebugLevel of Projects instead.");
+				try
+				{
 					int level = Integer.parseInt(buildDebugLevel);
 					config.setBuildDebugLevel(level);
 				}
-				catch (NumberFormatException e) {
-					Debug.out(Debug.MODE_WARNING, "MASTER", "Invalid build debug level '" + buildDebugLevel + "'. Expecting a number between 0 and 4. Reverting to default level 2.");
+				catch (NumberFormatException e)
+				{
+					Debug.out(Debug.MODE_WARNING, "MASTER", "Invalid build debug level '" + buildDebugLevel
+							+ "'. Expecting a number between 0 and 4. Reverting to default level 2.");
 					config.setBuildDebugLevel(2);
 				}
 			}
@@ -52,8 +57,8 @@ public class BuildConfigHandler extends DefaultHandler implements ContentHandler
 			parser.setContentHandler(new SettingsHandler(parser, this));
 		}
 		else if ("Platform".equals(raw_name))
-		{	// in <Platform>
-			//	look further
+		{ // in <Platform>
+			// look further
 			parser.setContentHandler(new PlatformHandler(parser, this));
 			if (amap.getValue("name") != null)
 			{
@@ -64,16 +69,13 @@ public class BuildConfigHandler extends DefaultHandler implements ContentHandler
 	}
 
 	public void endElement(String uri, String local_name, String raw_name) throws SAXException
-	{
-	}
+	{}
 
 	public void startDocument()
-	{
-	}
+	{}
 
 	public void endDocument()
-	{
-	}
+	{}
 
 	public static void main(String[] args)
 	{

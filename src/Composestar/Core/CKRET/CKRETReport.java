@@ -20,8 +20,15 @@ import Composestar.Core.FILTH.FilterModuleOrder;
  */
 public class CKRETReport implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6635419458687692484L;
+
 	private FilterModuleOrder order;
+
 	private FilterSetAnalysis analysis;
+
 	private boolean selected;
 
 	public CKRETReport(FilterModuleOrder order, FilterSetAnalysis analysis, boolean selected)
@@ -34,17 +41,17 @@ public class CKRETReport implements Serializable
 	}
 
 	/**
-	 * Adds this report to the set of reports of a concern
-	 * The set is the dynamic object called 'CKRETReports'
+	 * Adds this report to the set of reports of a concern The set is the
+	 * dynamic object called 'CKRETReports'
 	 */
 	public void addToConcern()
 	{
 		Concern c = this.analysis.getConcern();
-		ArrayList reports = (ArrayList)c.getDynObject("CKRETReports");
+		ArrayList reports = (ArrayList) c.getDynObject("CKRETReports");
 		// if this is not available yet, create it
-		if (reports == null) 
+		if (reports == null)
 		{
-			reports = new ArrayList(); 
+			reports = new ArrayList();
 			c.addDynObject("CKRETReports", reports);
 		}
 
@@ -53,17 +60,16 @@ public class CKRETReport implements Serializable
 
 	public FilterModuleOrder getOrder()
 	{
-		return this.order;		
+		return this.order;
 	}
 
 	public boolean getSelected()
 	{
-		return this.selected;		
+		return this.selected;
 	}
 
 	public FilterSetAnalysis getAnalysis()
 	{
-		return this.analysis;		
+		return this.analysis;
 	}
 }
-

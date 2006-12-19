@@ -9,116 +9,118 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.*;
-import Composestar.Utils.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SimpleSelExpression;
+import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
+import Composestar.Utils.CPSIterator;
 
 /**
- * @modelguid {AE646A8D-63B9-4526-B3B7-9402D9AF580F}
- * Definition of the Selector that defines the crosscut
+ * @modelguid {AE646A8D-63B9-4526-B3B7-9402D9AF580F} Definition of the Selector
+ *            that defines the crosscut
  */
-public class SelectorDefinition extends DeclaredRepositoryEntity {
-  public Vector selExpressionList;
+public class SelectorDefinition extends DeclaredRepositoryEntity
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8636845317655529305L;
 
+	public Vector selExpressionList;
 
-  /**
-   * @modelguid {78DDA528-5560-41A8-BB73-FB6A5D5C4C27}
-   * @roseuid 401FAA6800B6
-   */
-  public SelectorDefinition() {
-    super();
-    selExpressionList = new Vector();
-  }
+	/**
+	 * @modelguid {78DDA528-5560-41A8-BB73-FB6A5D5C4C27}
+	 * @roseuid 401FAA6800B6
+	 */
+	public SelectorDefinition()
+	{
+		super();
+		selExpressionList = new Vector();
+	}
 
+	/**
+	 * selExpressionList
+	 * 
+	 * @param selExpression
+	 * @return boolean
+	 * @modelguid {573E5F06-0190-48FD-8C84-767F4BACC692}
+	 * @roseuid 401FAA6800CA
+	 */
+	public boolean addSelExpression(SimpleSelExpression selExpression)
+	{
+		selExpressionList.addElement(selExpression);
+		return true;
+	}
 
-  /**
-   * selExpressionList
-   *
-   * @param selExpression
-   * @return boolean
-   *
-   * @modelguid {573E5F06-0190-48FD-8C84-767F4BACC692}
-   * @roseuid 401FAA6800CA
-   */
-  public boolean addSelExpression(SimpleSelExpression selExpression) {
-    selExpressionList.addElement(selExpression);
-    return (true);
-  }
+	/**
+	 * @param index
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelec
+	 *         torDef.SimpleSelExpression
+	 * @modelguid {E6470D13-A23E-45BA-9CD7-60546539E7D2}
+	 * @roseuid 401FAA6800D4
+	 */
+	public SimpleSelExpression removeSelExpression(int index)
+	{
+		Object o = selExpressionList.elementAt(index);
+		selExpressionList.removeElementAt(index);
+		return (SimpleSelExpression) o;
+	}
 
+	/**
+	 * @param index
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelec
+	 *         torDef.SimpleSelExpression
+	 * @modelguid {8C40809B-3EF0-4FC7-9925-73B341395845}
+	 * @roseuid 401FAA6800E8
+	 */
+	public SimpleSelExpression getSelExpression(int index)
+	{
+		return (SimpleSelExpression) selExpressionList.elementAt(index);
+	}
 
-  /**
-   * @param index
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelec
-   *         torDef.SimpleSelExpression
-   *
-   * @modelguid {E6470D13-A23E-45BA-9CD7-60546539E7D2}
-   * @roseuid 401FAA6800D4
-   */
-  public SimpleSelExpression removeSelExpression(int index) {
-    Object o = selExpressionList.elementAt(index);
-    selExpressionList.removeElementAt(index);
-    return ((SimpleSelExpression) o);
-  }
+	/**
+	 * @return java.util.Iterator
+	 * @modelguid {B3803077-2581-4A13-9C86-8D7F44FD263E}
+	 * @roseuid 401FAA6800FB
+	 */
+	public Iterator getSelExpressionIterator()
+	{
+		return new CPSIterator(selExpressionList);
+	}
 
+	/**
+	 * @return Vector obsolete??
+	 * @roseuid 404929FD0119
+	 */
+	public Vector getConcerns()
+	{
+		return null;
+	}
 
-  /**
-   * @param index
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelec
-   *         torDef.SimpleSelExpression
-   *
-   * @modelguid {8C40809B-3EF0-4FC7-9925-73B341395845}
-   * @roseuid 401FAA6800E8
-   */
-  public SimpleSelExpression getSelExpression(int index) {
-    return ((SimpleSelExpression) selExpressionList.elementAt(index));
-  }
-
-
-  /**
-   * @return java.util.Iterator
-   *
-   * @modelguid {B3803077-2581-4A13-9C86-8D7F44FD263E}
-   * @roseuid 401FAA6800FB
-   */
-  public Iterator getSelExpressionIterator() {
-    return (new CPSIterator(selExpressionList));
-  }
-
-
-  /**
-   * @return Vector
-   *
-   *         obsolete??
-   *
-   * @roseuid 404929FD0119
-   */
-  public Vector getConcerns() {
-    return null;
-  }
-
-
-  /**
-   * interprets the selector definition and attaches a Vector of ConcernReferences
-   * in the dynamicObjects with ID "interpretation"
-   *
-   * @return java.util.Vector
-   *
-   * @roseuid 4053B2C000C7
-   */
-  public Vector interpret() {
-    Vector result = new Vector();
-    Iterator selExpIter = this.getSelExpressionIterator();
-    while (selExpIter.hasNext()) {
-      //GG
-      for (Enumeration e = ((SimpleSelExpression) selExpIter.next()).interpret().elements();
-           e.hasMoreElements();) {
-        result.addElement(e.nextElement());
-      }
-      // result.addAll(((SimpleSelExpression) selExpIter.next()).interpret().elements()); GG
-    }
-    this.addDynObject("interpretation", result);
-    return (result);
-  }
+	/**
+	 * interprets the selector definition and attaches a Vector of
+	 * ConcernReferences in the dynamicObjects with ID "interpretation"
+	 * 
+	 * @return java.util.Vector
+	 * @roseuid 4053B2C000C7
+	 */
+	public Vector interpret()
+	{
+		Vector result = new Vector();
+		Iterator selExpIter = this.getSelExpressionIterator();
+		while (selExpIter.hasNext())
+		{
+			// GG
+			for (Enumeration e = ((SimpleSelExpression) selExpIter.next()).interpret().elements(); e.hasMoreElements();)
+			{
+				result.addElement(e.nextElement());
+			}
+			// result.addAll(((SimpleSelExpression)
+			// selExpIter.next()).interpret().elements()); GG
+		}
+		this.addDynObject("interpretation", result);
+		return result;
+	}
 }

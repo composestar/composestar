@@ -9,44 +9,49 @@
  */
 package Composestar.Core.RepositoryImplementation;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 
 /**
- * This defines a declaration of an entity, together with its type (e.g. variable,
- * parameters, etc.), such as "newThing : ItsType"; It combines a 
+ * This defines a declaration of an entity, together with its type (e.g.
+ * variable, parameters, etc.), such as "newThing : ItsType"; It combines a
  * DeclaredRepositoryEntity (through inheritance), with a reference to a type
  * (i.e. a reference to a Concern: hence ConcernReference)
  */
-public class TypedDeclaration extends DeclaredRepositoryEntity {
-    /**
+public class TypedDeclaration extends DeclaredRepositoryEntity
+{
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1939895305879861259L;
+
 	public ConcernReference type;
-    public Reference theReference;
 
-    /**
-     * @roseuid 404C4B650353
-     */
-    public TypedDeclaration() {
-    	super();
-    }
+	public Reference theReference;
 
-    /**
-     * @param type
-     * @roseuid 40EBD2DE0350
-     */
-    public void setType(ConcernReference type) {
-     	this.type = type;
-    }
+	/**
+	 * @roseuid 404C4B650353
+	 */
+	public TypedDeclaration()
+	{
+		super();
+	}
 
-    /**
-     * @return
-     * Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference
-     * @roseuid 40EBD2E70043
-     */
-    public ConcernReference getType() {
-     	return type;
-    }
+	/**
+	 * @param type
+	 * @roseuid 40EBD2DE0350
+	 */
+	public void setType(ConcernReference type)
+	{
+		this.type = type;
+	}
+
+	/**
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference
+	 * @roseuid 40EBD2E70043
+	 */
+	public ConcernReference getType()
+	{
+		return type;
+	}
 }

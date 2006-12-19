@@ -11,7 +11,7 @@ package Composestar.Core.CONE;
 
 import Composestar.Core.Master.CTCommonModule;
 
-public interface WeaveFileGenerator extends CTCommonModule 
+public interface WeaveFileGenerator extends CTCommonModule
 {
-	
+
 }

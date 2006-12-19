@@ -9,9 +9,6 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
@@ -20,6 +17,11 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  */
 public class FilterElement extends ContextRepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3420736618255579131L;
+
 	public FilterElementAST filterElementAST;
 
 	// public ConditionExpression conditionPart; -> delegate to FilterElementAST
@@ -90,7 +92,7 @@ public class FilterElement extends ContextRepositoryEntity
 	{
 		filterElementAST.setEnableOperatorType(enableOperatorTypeValue);
 	}
-	
+
 	public MatchingPattern getMatchingPattern()
 	{
 		return matchingPattern;

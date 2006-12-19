@@ -18,6 +18,11 @@ public class FilterElementAST extends ContextRepositoryEntity
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6524966819127558665L;
+
+	/**
 	 * @modelguid {6783CA89-B3A5-4BAC-959E-31BB7590D241}
 	 */
 	public ConditionExpression conditionPart;

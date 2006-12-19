@@ -21,7 +21,7 @@ public class FilterAction extends RepositoryEntity
 	private int messageChangeBehaviour;
 
 	private String name;
-	
+
 	private String fullName;
 
 	/**
@@ -87,7 +87,5 @@ public class FilterAction extends RepositoryEntity
 	{
 		this.fullName = fullName;
 	}
-	
-	
 
 }

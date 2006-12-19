@@ -9,55 +9,44 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 /**
- * @modelguid {86ABF788-6260-4FAD-9691-88814BEEC0EF}
- * This represents the '=>' (Enabling) or '~>' (Disabling) operator
- * we explicitly represent these two operators as subclasses of EnableOperatorType
+ * @modelguid {86ABF788-6260-4FAD-9691-88814BEEC0EF} This represents the '=>'
+ *            (Enabling) or '~>' (Disabling) operator we explicitly represent
+ *            these two operators as subclasses of EnableOperatorType
  */
-public abstract class EnableOperatorType extends ContextRepositoryEntity {
+public abstract class EnableOperatorType extends ContextRepositoryEntity
+{
 
-  /**
-   * @modelguid {75F90E43-9F74-4907-BE97-537D6C99ED9E}
-   */
-  private String type;
+	/**
+	 * @modelguid {75F90E43-9F74-4907-BE97-537D6C99ED9E}
+	 */
+	private String type;
 
+	/**
+	 * @roseuid 404DDA6C0050
+	 */
+	public EnableOperatorType()
+	{
+		super();
+	}
 
-  /**
-   * @roseuid 404DDA6C0050
-   */
-  public EnableOperatorType() {
-    super();
-  }
+	/**
+	 * @return java.lang.String
+	 * @roseuid 401FAA65010B
+	 */
+	public String getType()
+	{
+		return type;
+	}
 
-
-  /**
-   * inclusion or exclusion
-   *
-   * @modelguid {D0708A16-936B-41EA-8CC8-726FF95051FA}
-   * @roseuid 401FAA650101
-   */
-  public void FilterOperatorType() {
-
-  }
-
-
-  /**
-   * @return java.lang.String
-   *
-   * @roseuid 401FAA65010B
-   */
-  public String getType() {
-    return type;
-  }
-
-
-  /**
-   * @param typeValue
-   * @roseuid 401FAA65010C
-   */
-  public void setType(String typeValue) {
-    this.type = typeValue;
-  }
+	/**
+	 * @param typeValue
+	 * @roseuid 401FAA65010C
+	 */
+	public void setType(String typeValue)
+	{
+		this.type = typeValue;
+	}
 }

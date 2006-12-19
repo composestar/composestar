@@ -99,7 +99,7 @@ public abstract class FilterNode extends Node
 		addOutgoingEdge(new ConditionalEdge(inElement, inCondition));
 		lastElement = inElement;
 	}
-	
+
 	/**
 	 * Add a filter element node to this filter node
 	 * 
@@ -127,9 +127,9 @@ public abstract class FilterNode extends Node
 		{
 			FilterElement elm = (FilterElement) filterElements.next();
 			FilterElementNode elmNode = new FilterElementNode(graph, elm);
-			//appendFilterElement(elmNode, elm.getConditionPart());
-			//processMatchingPatterns(elm, elmNode);
-			
+			// appendFilterElement(elmNode, elm.getConditionPart());
+			// processMatchingPatterns(elm, elmNode);
+
 			appendFilterElement(elmNode, elm);
 			processSubstitutionParts(elm.getMatchingPattern(), elmNode);
 		}
@@ -145,19 +145,16 @@ public abstract class FilterNode extends Node
 	 */
 	protected void processMatchingPatterns(FilterElement elm, FilterElementNode elmNode) throws ModuleException
 	{
-		// go through all patterns.
-		// a pattern can have multiple outgoing edges in case of a
-		// messagelist
-		/*
-		Iterator matchingPatterns = elm.getMatchingPatternIterator();
-		while (matchingPatterns.hasNext())
-		{
-			MatchingPattern mp = (MatchingPattern) matchingPatterns.next();
-			MatchingPatternNode mpNode = new MatchingPatternNode(graph, mp);
-			elmNode.appendPattern(mpNode, mp.getMatchingParts());
-			processSubstitutionParts(mp, mpNode);
-		}
-		*/		
+	// go through all patterns.
+	// a pattern can have multiple outgoing edges in case of a
+	// messagelist
+	/*
+	 * Iterator matchingPatterns = elm.getMatchingPatternIterator(); while
+	 * (matchingPatterns.hasNext()) { MatchingPattern mp = (MatchingPattern)
+	 * matchingPatterns.next(); MatchingPatternNode mpNode = new
+	 * MatchingPatternNode(graph, mp); elmNode.appendPattern(mpNode,
+	 * mp.getMatchingParts()); processSubstitutionParts(mp, mpNode); }
+	 */
 	}
 
 	/**
@@ -183,7 +180,7 @@ public abstract class FilterNode extends Node
 			}
 		}
 	}
-	
+
 	/**
 	 * Dig through the substituion parts
 	 * 
@@ -204,8 +201,9 @@ public abstract class FilterNode extends Node
 			{
 				mpNode.addOutgoingEdge(new SubstitutionEdge(targetNode, subst));
 			}
-			else {
-				Debug.out(Debug.MODE_WARNING, DIGGER.MODULE_NAME, "Unknown substitution target: "+subst.getTarget());
+			else
+			{
+				Debug.out(Debug.MODE_WARNING, DIGGER.MODULE_NAME, "Unknown substitution target: " + subst.getTarget());
 			}
 		}
 	}

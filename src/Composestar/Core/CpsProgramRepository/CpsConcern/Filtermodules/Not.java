@@ -11,11 +11,16 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 /**
  * The Not operator
- *
+ * 
  * @author Michiel Hendriks
  */
 public class Not extends UnaryOperator
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3703389311192256887L;
+
 	public Not()
 	{
 		super();

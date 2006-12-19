@@ -14,12 +14,20 @@ package Composestar.Core.Exception;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
- * this exception must be thrown by all modules when they encounter a fatal error.
+ * this exception must be thrown by all modules when they encounter a fatal
+ * error.
  */
 public class ModuleException extends Exception
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 28750835698180954L;
+
 	private String module;
+
 	private String errorLocationFilename;
+
 	private int errorLocationLineNumber;
 
 	public ModuleException(String message, String module)
@@ -35,7 +43,7 @@ public class ModuleException extends Exception
 		this(message, module);
 		this.errorLocationFilename = errorLocation.getDescriptionFileName();
 		this.errorLocationLineNumber = errorLocation.getDescriptionLineNumber();
-		//this.errorLocation = errorLocation;
+		// this.errorLocation = errorLocation;
 	}
 
 	public ModuleException(String message, String module, String errorLocationFilename, int errorLocationLineNumber)
@@ -70,7 +78,13 @@ public class ModuleException extends Exception
 
 	public String toString()
 	{
-		if (module != null) return module + " ERROR: " + getMessage();
-		else return "UNDEFINED-MODULE ERROR: " + getMessage();
+		if (module != null)
+		{
+			return module + " ERROR: " + getMessage();
+		}
+		else
+		{
+			return "UNDEFINED-MODULE ERROR: " + getMessage();
+		}
 	}
 }

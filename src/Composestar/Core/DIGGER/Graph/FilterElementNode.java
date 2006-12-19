@@ -27,7 +27,7 @@ public class FilterElementNode extends Node
 
 	/**
 	 * @param inGraph
-     * @param inElement
+	 * @param inElement
 	 */
 	public FilterElementNode(Graph inGraph, FilterElement inElement)
 	{
@@ -36,7 +36,6 @@ public class FilterElementNode extends Node
 	}
 
 	/**
-	 * 
 	 * @param inPattern
 	 * @param inMatchingParts
 	 * @deprecated

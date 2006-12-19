@@ -9,8 +9,13 @@
  */
 package Composestar.Core.DIGGER.Graph;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 
 /**
  * An edge with an condition expression
@@ -24,7 +29,7 @@ public class ConditionalEdge extends Edge
 
 	/**
 	 * @param inDestination
-     * @param inExpression
+	 * @param inExpression
 	 */
 	public ConditionalEdge(Node inDestination, ConditionExpression inExpression)
 	{

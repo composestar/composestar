@@ -11,12 +11,12 @@
 package Composestar.Core.Master;
 
 /**
- * Main entry point for the CompileTime. The Master class holds coreModules
- * and executes them in the order they are added.
+ * Main entry point for the CompileTime. The Master class holds coreModules and
+ * executes them in the order they are added.
  */
 public abstract class Master
-{	
+{
 	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
-	
-	public abstract void run();		
+
+	public abstract void run();
 }

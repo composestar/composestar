@@ -9,7 +9,7 @@ package Composestar.Core.FIRE;
  * 
  * $Id$
  * 
-**/
+ **/
 
 import java.util.HashMap;
 
@@ -18,16 +18,15 @@ import java.util.HashMap;
  */
 public class SymbolTable
 {
-	/** Currently there are 3 types available. 
-	 *  0: Condition
-	 *  1: Target
-	 *  2: Selector
+	/**
+	 * Currently there are 3 types available. 0: Condition 1: Target 2: Selector
 	 */
 	public static final int CONDITION = 0;
+
 	public static final int TARGET = 1;
+
 	public static final int SELECTOR = 2;
-	
-	
+
 	private final int totalTypes = 3;
 
 	/**
@@ -36,8 +35,8 @@ public class SymbolTable
 	private static SymbolTable object = null;
 
 	/**
-	 * Store all types in a hashmap. 
-	 * Symbol name is the key and the type the value.
+	 * Store all types in a hashmap. Symbol name is the key and the type the
+	 * value.
 	 */
 	private HashMap symbolMap = null;
 
@@ -48,8 +47,10 @@ public class SymbolTable
 
 	/**
 	 */
-	private Symbol [] allSymbols = null;
-	private Symbol [][] typeSymbols = null;
+	private Symbol[] allSymbols = null;
+
+	private Symbol[][] typeSymbols = null;
+
 	private int columnLength = 0;
 
 	/**
@@ -61,12 +62,15 @@ public class SymbolTable
 	}
 
 	/**
-	 * Return the instance of the SymbolTable object.
-	 * Those who want to access the SymbolTable object, should call this method.
+	 * Return the instance of the SymbolTable object. Those who want to access
+	 * the SymbolTable object, should call this method.
 	 */
 	public static SymbolTable getInstance()
 	{
-		if (object == null) object = new SymbolTable();
+		if (object == null)
+		{
+			object = new SymbolTable();
+		}
 		return object;
 	}
 
@@ -78,20 +82,25 @@ public class SymbolTable
 		symbolMap = new HashMap();
 
 		// reset the symbolCounter;
-		for (int i = 0; i < symbolCounter.length; i++) 
+		for (int i = 0; i < symbolCounter.length; i++)
+		{
 			symbolCounter[i] = 0;
+		}
 
 		allSymbols = null;
 		typeSymbols = null;
 	}
-	
-	public Symbol addSymbol (String name, int type)
+
+	public Symbol addSymbol(String name, int type)
 	{
 		// No way. We are already done().
-		if (allSymbols != null) return null;
+		if (allSymbols != null)
+		{
+			return null;
+		}
 
 		String key = getHashKey(name, type);
-		if (symbolMap.containsKey(key)) 
+		if (symbolMap.containsKey(key))
 		{
 			return (Symbol) symbolMap.get(key);
 		}
@@ -99,23 +108,23 @@ public class SymbolTable
 		{
 			symbolCounter[type]++;
 
-			Symbol s = new Symbol(name, type); 
+			Symbol s = new Symbol(name, type);
 			symbolMap.put(key, s);
 			return s;
 		}
 	}
 
-	public HashMap getHashMap ()
+	public HashMap getHashMap()
 	{
 		return (HashMap) symbolMap.clone();
 	}
 
-	public Symbol getSymbol (String name, int type)
+	public Symbol getSymbol(String name, int type)
 	{
 		return (Symbol) symbolMap.get(getHashKey(name, type));
 	}
 
-	public Symbol[] getSymbols (int type)
+	public Symbol[] getSymbols(int type)
 	{
 		return typeSymbols[type];
 	}
@@ -128,14 +137,16 @@ public class SymbolTable
 	public void done()
 	{
 		// Calculate the typeSymbols arrays.
-		int totalLength = 0; 
+		int totalLength = 0;
 		typeSymbols = new Symbol[3][];
 		for (int i = 0; i < totalTypes; i++)
 		{
 			typeSymbols[i] = getSymbolArray(i);
 
 			if (typeSymbols[i] != null)
+			{
 				totalLength += typeSymbols[i].length;
+			}
 		}
 
 		allSymbols = getAllSymbolsArray();
@@ -144,57 +155,73 @@ public class SymbolTable
 
 	/**
 	 * @Return the number of symbols that are available of a given type.
-     * @param type
+	 * @param type
 	 */
-	public int totalSymbols (int type) { return symbolCounter[type]; }
+	public int totalSymbols(int type)
+	{
+		return symbolCounter[type];
+	}
 
 	/**
 	 * @Return the hard coded number of types that are available
 	 */
-	public int totalTypes () {return totalTypes;}
+	public int totalTypes()
+	{
+		return totalTypes;
+	}
 
-    /**
-     * @Return a string representation of the SymbolTypes.
-     */
-    public String toString()
-    {
-        if (allSymbols == null) return "Symbol table not done";
+	/**
+	 * @Return a string representation of the SymbolTypes.
+	 */
+	public String toString()
+	{
+		if (allSymbols == null)
+		{
+			return "Symbol table not done";
+		}
 
-        String out = "Symbol table\n-----------\n";
+		String out = "Symbol table\n-----------\n";
 
-        for (int i = 0; i < allSymbols.length; i++)
-        {
-            out += i + " --> " + (allSymbols[i]).toString() + '\n';
-        }
+		for (int i = 0; i < allSymbols.length; i++)
+		{
+			out += i + " --> " + (allSymbols[i]).toString() + '\n';
+		}
 
-        return out;
-    }
+		return out;
+	}
 
 	public int getColumnLength()
 	{
 		return columnLength;
 	}
-	
+
 	/**
 	 * Get all symbols of a given type.
-     * @param type
-     */
-	private Symbol [] getSymbolArray (int type)
+	 * 
+	 * @param type
+	 */
+	private Symbol[] getSymbolArray(int type)
 	{
-		if (symbolCounter[type] == 0) return null;
+		if (symbolCounter[type] == 0)
+		{
+			return null;
+		}
 
 		Symbol symbols[] = new Symbol[symbolCounter[type]];
 		int k = 0;
 
-		Symbol [] allSymbols = getAllSymbolsArray();
+		Symbol[] allSymbols = getAllSymbolsArray();
 		for (int i = 0; i < allSymbols.length; i++)
 		{
-			if (allSymbols[i].getType() == type) symbols[k++] = allSymbols[i];
+			if (allSymbols[i].getType() == type)
+			{
+				symbols[k++] = allSymbols[i];
+			}
 		}
 
 		return symbols;
 	}
-	
+
 	// TODO: arraycopy.
 	private Symbol[] getAllSymbolsArray()
 	{
@@ -208,45 +235,47 @@ public class SymbolTable
 		return symbols;
 	}
 
-
-/////////////////////////////////// CALCULATE COLUMNS ////////////////////////////////
+	// ///////////////////////////////// CALCULATE COLUMNS
+	// ////////////////////////////////
 
 	/**
 	 * Calculate 2^x
-     * @param power
-     */
+	 * 
+	 * @param power
+	 */
 	private int power2(int power)
 	{
-		int val = 1;	
+		int val = 1;
 		val <<= power;
 		return val;
 	}
 
 	/**
-	 * @return the length of a column. 
+	 * @return the length of a column.
 	 */
 	private void calculateColumnLength()
 	{
 		// If calculated once, return internal stored value.
-		//if (columnLength != 0) return columnLength;
+		// if (columnLength != 0) return columnLength;
 
 		int total = power2(totalSymbols(0));
 		for (int i = 1; i < totalTypes(); i++)
 		{
-			if (totalSymbols(i) != 0) 
+			if (totalSymbols(i) != 0)
+			{
 				total *= totalSymbols(i);
+			}
 		}
 
 		columnLength = total;
 	}
-
 
 	/**
 	 * Add to each symbol all the possible permutations.
 	 */
 	private void calculateColumnBits()
 	{
-		calculateColumnLength(); 
+		calculateColumnLength();
 
 		int trueBits = 1;
 
@@ -254,11 +283,11 @@ public class SymbolTable
 		Symbol symbols[] = getSymbols(0);
 		for (int i = 0; i < totalSymbols(0); i++)
 		{
-			symbols[i].column =  new Column (columnLength, trueBits, 1, 0);
-			symbols[i].originalColumn =  new Column (columnLength, trueBits, 1, 0);
-			trueBits <<= 1; 
+			symbols[i].column = new Column(columnLength, trueBits, 1, 0);
+			symbols[i].originalColumn = new Column(columnLength, trueBits, 1, 0);
+			trueBits <<= 1;
 		}
-		
+
 		// And the rest of the symbol types.
 		trueBits = power2(totalSymbols(0));
 
@@ -267,22 +296,20 @@ public class SymbolTable
 			symbols = getSymbols(type);
 			for (int i = 0; i < totalSymbols(type); i++)
 			{
-				symbols[i].column = new Column (columnLength, trueBits, (symbols.length - 1), i);
-				symbols[i].originalColumn =  new Column (columnLength, trueBits, (symbols.length - 1), i);
+				symbols[i].column = new Column(columnLength, trueBits, (symbols.length - 1), i);
+				symbols[i].originalColumn = new Column(columnLength, trueBits, (symbols.length - 1), i);
 			}
 
-			if (totalSymbols(type) > 0) 
+			if (totalSymbols(type) > 0)
+			{
 				trueBits *= symbols.length;
+			}
 		}
 	}
 
-
 	private String getHashKey(String name, int type)
 	{
-			return name + type;
+		return name + type;
 	}
-				
 
 }
-
-

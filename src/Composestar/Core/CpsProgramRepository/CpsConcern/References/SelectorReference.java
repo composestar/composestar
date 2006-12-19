@@ -9,59 +9,65 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class SelectorReference extends ConcernElementReference 
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
+
+public class SelectorReference extends ConcernElementReference
 {
-  private SelectorDefinition ref;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2912163342445539118L;
 
+	private SelectorDefinition ref;
 
-  /**
-   * @roseuid 401FAA68017D
-   */
-  public SelectorReference() {
-    super();
-  }
+	/**
+	 * @roseuid 401FAA68017D
+	 */
+	public SelectorReference()
+	{
+		super();
+	}
 
+	/**
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDef
+	 *         inition
+	 * @roseuid 401FAA68017E
+	 */
+	public SelectorDefinition getRef()
+	{
+		return ref;
+	}
 
-  /**
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDef
-   *         inition
-   *
-   * @roseuid 401FAA68017E
-   */
-  public SelectorDefinition getRef() {
-    return ref;
-  }
-
-
-  /**
-   * @param refValue
-   * @roseuid 40503C3500F4
-   */
-  public void setRef(SelectorDefinition refValue) {
-    this.ref = refValue;
-  }
+	/**
+	 * @param refValue
+	 * @roseuid 40503C3500F4
+	 */
+	public void setRef(SelectorDefinition refValue)
+	{
+		this.ref = refValue;
+	}
 
 	/**
 	 * Custom deserialization of this object
-     * @param in
-     */
-	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
+	 * 
+	 * @param in
+	 */
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		// nothing yet
+	// nothing yet
 	}
-	 
+
 	/**
 	 * Custom serialization of this object
-     * @param out
-     */
+	 * 
+	 * @param out
+	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		// nothing yet
-	}	
+	// nothing yet
+	}
 }
