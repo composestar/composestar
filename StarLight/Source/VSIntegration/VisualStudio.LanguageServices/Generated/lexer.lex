@@ -93,6 +93,7 @@ ABStar       [^\*\n]*
 [A-Z]*                    { return (int)Tokens.UPPERCASESTRING; }
 {UpLow}                   { return (int)Tokens.UPLOWSTRING; }
 [a-z](?:[a-zA-Z]|[0-9]|_)*|\'[a-zA-Z0-9_`]*\'  { return (int)Tokens.CONSTSTRING; }
+\"[a-zA-Z0-9_\\\/:\. ]*\" { return (int)Tokens.FILENAME; }
 
 [0-9]+                    { return (int)Tokens.NUMBER;   }
 -?\d+(\x2E\d+)?           { return (int)Tokens.CONSTNUM; }
@@ -123,7 +124,6 @@ ABStar       [^\*\n]*
 \&                        { return (int)Tokens.AND;      }
 \&\&                      { return (int)Tokens.AMPAMP;   }
 \|                        { return (int)Tokens.BAR;      }
-\"                        { return (int)Tokens.QUOTE;    }
 \'                        { return (int)Tokens.SQUOTE;   }
 \|\|                      { return (int)Tokens.BARBAR;   }
 \.                        { return (int)Tokens.DOT;      }

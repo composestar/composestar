@@ -58,15 +58,16 @@
     }
 %}
 
-%token IDENTIFIER NUMBER DOT COLON COMMA TRUE FALSE DOUBLECOLON
+%token IDENTIFIER NUMBER DOT COLON COMMA TRUE FALSE DOUBLECOLON FILENAME
 %token KWCONCERN KWFILTERMODULE KWSUPERIMPOSITION KWIMPLEMENTATION KWINTERNALS KWEXTERNALS KWCONDITIONS
-%token KWINPUTFILTERS KWOUTPUTFILTERS KWINNER FMLIST KWIN KWSELECTORS KWFILTERMODULES KWANNOTATIONS KWCONSTRAINTS
-%token KWPRE KWPRESOFT KWPREHARD KWAS KWBY KWIN KWPROLOGFUN
+%token KWINPUTFILTERS KWOUTPUTFILTERS KWINNER FMLIST KWSELECTORS KWPROLOGFUN KWFILTERMODULES KWANNOTATIONS KWCONSTRAINTS
+%token KWIMPLEMENTATION KWIN KWBY KWAS
+%token KWPRE KWPRESOFT KWPREHARD
 
 // %token ';' '(' ')' '{' '}' '=' 
 // %token '+' '-' '*' '/' '!' '&' '^'
 
-%token EQ NEQ GT GTE LT LTE AMPAMP BARBAR TRUECON FALSECON QUOTE SQUOTE LARROW
+%token EQ NEQ GT GTE LT LTE AMPAMP BARBAR TRUECON FALSECON SQUOTE LARROW
 %token BAR AND NOT STAR
 %token maxParseToken 
 %token LEX_WHITE LEX_COMMENT LEX_ERROR UPLOWSTRING UPPERCASESTRING LOWERCASESTRING CONSTSTRING CONSTNUM 
@@ -681,7 +682,7 @@ ImplementationDefinition
     : KWBY Classname ';'
     | KWBY error                                    { CallHdlr("Missing classname", @2); }
     | KWBY Classname error                          { CallHdlr("Missing ;", @3); }
-    | KWIN SourceLanguage KWBY Classname KWAS FileName
+    | KWIN SourceLanguage KWBY Classname KWAS FILENAME
     | KWIN error                                    { CallHdlr("Missing sourcelanguage", @2); }
     | KWIN SourceLanguage KWBY error                { CallHdlr("Missing classname", @4); }
     | KWIN SourceLanguage KWBY Classname KWAS error { CallHdlr("Missing filename", @6); }
@@ -693,10 +694,6 @@ Classname
 
 SourceLanguage
     : IDENTIFIER
-    ;
-
-FileName
-    : QUOTE IDENTIFIER QUOTE
     ;
 
 %%
