@@ -58,10 +58,10 @@
                 default: 
                     break;
             }
-         				
-			if (Composestar.StarLight.VisualStudio.Babel.Resolver.IsPrologFunction(txt))
-				return (int)Tokens.KWPROLOGFUN;         				
-         				
+            
+            if (Composestar.StarLight.VisualStudio.Babel.Resolver.IsPrologFunction(txt))
+                return (int)Tokens.KWPROLOGFUN;
+            
             return (int)Tokens.IDENTIFIER;
        }
        
@@ -77,10 +77,9 @@
        }
 %}
 
-
-White0          [ \t\r\f\v]
-White           {White0}|\n
-UpLow			[A-Z][a-z]* 
+White0       [ \t\r\f\v]
+White        {White0}|\n
+UpLow        [A-Z][a-z]* 
 
 CmntStart    \/\*
 CmntEnd      \*\/
@@ -89,21 +88,21 @@ ABStar       [^\*\n]*
 
 %%
 
-[a-zA-Z_][a-zA-Z0-9_`]*  { return GetIdToken(yytext); }
-[a-z]*					  { return (int)Tokens.LOWERCASESTRING; }
-[A-Z]*					  { return (int)Tokens.UPPERCASESTRING; }
+[a-zA-Z_][a-zA-Z0-9_`]*   { return GetIdToken(yytext); }
+[a-z]*                    { return (int)Tokens.LOWERCASESTRING; }
+[A-Z]*                    { return (int)Tokens.UPPERCASESTRING; }
 {UpLow}                   { return (int)Tokens.UPLOWSTRING; }
 [a-z](?:[a-zA-Z]|[0-9]|_)*|\'[a-zA-Z0-9_`]*\'  { return (int)Tokens.CONSTSTRING; }
 
-[0-9]+                    { return (int)Tokens.NUMBER; }
--?\d+(\x2E\d+)?  { return (int)Tokens.CONSTNUM; }
+[0-9]+                    { return (int)Tokens.NUMBER;   }
+-?\d+(\x2E\d+)?           { return (int)Tokens.CONSTNUM; }
 \<-                       { return (int)Tokens.WEAVEOPERATION; }
-\x3F\x3F                  { return (int)Tokens.FMLIST;    }
+\x3F\x3F                  { return (int)Tokens.FMLIST;         }
 ::                        { return (int)Tokens.DOUBLECOLON;    }
 ;                         { return (int)';';    }
-:                         { return (int)Tokens.COLON;    }
-,                         { return (int)Tokens.COMMA;    }
-\*                        { return (int)Tokens.STAR;    }
+:                         { return (int)Tokens.COLON;  }
+,                         { return (int)Tokens.COMMA;  }
+\*                        { return (int)Tokens.STAR;   }
 \(                        { return (int)'(';    }
 \)                        { return (int)')';    }
 \{                        { return (int)'{';    }
@@ -115,29 +114,29 @@ ABStar       [^\*\n]*
 \-                        { return (int)'-';    }
 \/                        { return (int)'/';    }
 \!                        { return (int)Tokens.NOT;    }
-=                         { return (int)Tokens.EQ;    }
-\!=                       { return (int)Tokens.NEQ;   }
-\>                        { return (int)Tokens.GT; }
+=                         { return (int)Tokens.EQ;     }
+\!=                       { return (int)Tokens.NEQ;    }
+\>                        { return (int)Tokens.GT;     }
 \>=                       { return (int)Tokens.GTE;    }
 \<                        { return (int)Tokens.LT;     }
 \<=                       { return (int)Tokens.LTE;    }
 \&                        { return (int)Tokens.AND;    }
 \&\&                      { return (int)Tokens.AMPAMP; }
 \|                        { return (int)Tokens.BAR;    }
-\"                        { return (int)Tokens.QUOTE;    }
-\'                        { return (int)Tokens.SINGLEQUOTE;    }
+\"                        { return (int)Tokens.QUOTE;  }
+\'                        { return (int)Tokens.SINGLEQUOTE; }
 \|\|                      { return (int)Tokens.BARBAR; }
 \.                        { return (int)Tokens.DOT;    }
-=\>                        { return (int)Tokens.TRUECON;    }
-~\>                        { return (int)Tokens.FALSECON;    }
-\<-                        { return (int)Tokens.ANNOTATION;    }
+=\>                       { return (int)Tokens.TRUECON;    }
+~\>                       { return (int)Tokens.FALSECON;   }
+\<-                       { return (int)Tokens.ANNOTATION; }
 
 {CmntSingle}.*\n { return (int)Tokens.LEX_COMMENT; } 
 
 {CmntStart}{ABStar}\**{CmntEnd} { return (int)Tokens.LEX_COMMENT; } 
 {CmntStart}{ABStar}\**          { BEGIN(COMMENT); return (int)Tokens.LEX_COMMENT; }
 <COMMENT>\n                     |                                
-<COMMENT>{ABStar}\**            { return (int)Tokens.LEX_COMMENT; }                                
+<COMMENT>{ABStar}\**            { return (int)Tokens.LEX_COMMENT; }
 <COMMENT>{ABStar}\**{CmntEnd}   { BEGIN(INITIAL); return (int)Tokens.LEX_COMMENT; }
 
 {White0}+                  { return (int)Tokens.LEX_WHITE; }
