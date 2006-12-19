@@ -34,8 +34,7 @@ namespace InventoryTwo
 		{
 			foreach (IObserver o in observers)
 			{
-			//	o.Update(this);
-				o.Update();
+				o.Update(/*this*/);
 			}
 		}
 	}

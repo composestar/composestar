@@ -15,13 +15,13 @@ namespace InventoryTwo
 			stock = new ArrayList();
 		}
 
-		[InventoryTwo.Observed]
+		[Observed]
 		public void AddProduct(Product p) 
 		{
 			stock.Add(p);
 		}
 
-		[InventoryTwo.Observed]
+		[Observed]
 		public void RemoveProduct(Product p)
 		{
 			stock.Remove(p);

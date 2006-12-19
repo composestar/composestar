@@ -29,17 +29,15 @@ concern BonusConcern in PacmanTwo
 		inputfilters
 			touched : After = { [*.createViews] bm.createViews }
 	}
-	
-	/*
+/*	
 	filtermodule LevelUp
 	{
 		externals
 			bm: PacmanTwo.Bonus.Bonus = PacmanTwo.Bonus.Bonus.instance();
 		inputfilters
-			lvlup : Meta = { [*.increaseLevelx] bm.levelUp }
+			lvlup : After = { [*.increaseLevel] bm.levelUp }
 	}
-	*/
-/*
+
 	filtermodule BonusPickupSound
 	{
 		internals

@@ -18,8 +18,9 @@ concern DynamicStrategy in PacmanTwo
 		conditions
 			isEvil : game.hasEvilPacman();
 			isSmart : inner.isSmart();
-	//	inputfilters
-	//		smarty : Dispatch = { isSmart => [*.ponder] inner.getNextMove }		
+			isVerySmart : inner.isVerySmart();
+		inputfilters
+			smarty : Dispatch = { isSmart => [*.ponder] inner.getNextMove }		
 		outputfilters
 			setstrat : Send = { !isEvil & isSmart => [*.doGetNextMove] stalker.getNextMoveNS
 			                  ,  isEvil           => [*.doGetNextMove] chicken.getNextMoveNS }
@@ -32,6 +33,6 @@ concern DynamicStrategy in PacmanTwo
 			ai = { C | isClassWithName(C, 'PacmanTwo.AIController') };
 		filtermodules
 			level <- PathFinder;
-//			ai <- dynstrat;
+		//	ai <- dynstrat;
 	}
 }
