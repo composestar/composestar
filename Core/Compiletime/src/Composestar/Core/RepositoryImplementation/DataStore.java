@@ -24,7 +24,7 @@ import Composestar.Utils.Debug;
  * The Repository part of the Compose* project. It supports reading and writing
  * objects. It allows for basic store and restore operations
  * 
- * @author Pascal Dürr
+ * @author Pascal Durr
  * @version $Id$
  */
 public class DataStore implements Serializable, Cloneable

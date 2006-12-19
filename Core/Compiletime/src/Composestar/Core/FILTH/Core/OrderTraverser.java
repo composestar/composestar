@@ -78,9 +78,9 @@ public class OrderTraverser
 			if (candidates.size() == 1)
 			{
 				/*
-				 * ez a rész nem jó, ez már nem kell , a rekurziónak a két
-				 * kettévált sorokat kell felhalmoznia, gy?jtenie /* select the
-				 * next node into the execution order
+				 * it isn't correct, that its unendly recursive
+				 * It is just the way it works, ok ?
+				 * select the next node into the execution order
 				 */
 				current = (Node) candidates.getFirst();
 			}
