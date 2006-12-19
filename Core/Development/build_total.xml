@@ -162,6 +162,7 @@
 		<antcall target="findbugs_core" />
 		<antcall target="findbugs_dotnet" />
 		<antcall target="findbugs_starlight" />
+		<antcall target="findbugs_java" />
 	</target>
 	
 	<target name="findbugs_core" depends="init">
@@ -170,6 +171,10 @@
 	
 	<target name="findbugs_dotnet" depends="init" if="enabled.dotnet">
 		<ant target="findbugs" dir="${build.dotnet}" />
+	</target>
+	
+	<target name="findbugs_java" depends="init" if="enabled.java">
+		<ant target="findbugs" dir="${build.java}" />
 	</target>
 	
 	<target name="findbugs_starlight" depends="init" if="enabled.starlight">
@@ -181,6 +186,7 @@
 		<antcall target="checkstyle_core" />
 		<antcall target="checkstyle_dotnet" />
 		<antcall target="checkstyle_starlight" />
+		<antcall target="checkstyle_java" />
 	</target>
 	
 	<target name="checkstyle_core" depends="init">
@@ -189,6 +195,10 @@
 	
 	<target name="checkstyle_dotnet" depends="init" if="enabled.dotnet">
 		<ant target="checkstyle" dir="${build.dotnet}" />
+	</target>
+	
+	<target name="checkstyle_java" depends="init" if="enabled.java">
+		<ant target="checkstyle" dir="${build.java}" />
 	</target>
 	
 	<target name="checkstyle_starlight" depends="init" if="enabled.starlight">
