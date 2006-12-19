@@ -498,14 +498,12 @@ namespace Composestar.StarLight.ILWeaver
 						// Create instructions for invoking the constructor of the internal
 						IList<Instruction> instructions = new List<Instruction>();
 						instructions.Add(worker.Create(OpCodes.Ldarg_0));
-					//	if (internalConstructor.Parameters.Count == 1)
-					//		instructions.Add(worker.Create(OpCodes.Ldarg_0));
 						instructions.Add(worker.Create(OpCodes.Newobj, targetAssembly.MainModule.Import(internalConstructor)));
 						instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
 
-						// Add the instructions after the call to the base constructor
-						Instruction baseCall = FindBaseConstructorCall(constructor);
-						AppendInstructionList(worker, baseCall, instructions);
+						// Add the instructions at the very start of the constructor
+						Instruction first = constructor.Body.Instructions[0];
+						PrependInstructionList(worker, first, instructions);
 
 						// Log
 						StoreInstructionLog(instructions, "Internal code added to {0} for internal {1}", constructor.ToString(), internalDef.ToString());
@@ -524,9 +522,11 @@ namespace Composestar.StarLight.ILWeaver
 		{
 			MethodDefinition constructor = null;
 		/*
+			// first check for a constructor with one argument that has the same type as inner
 			constructor = internalType.Constructors.GetConstructor(false, new TypeReference[] { innerType });
 			if (constructor != null) return constructor;
 		*/
+			// then check for a no-arg constructor
 			constructor = internalType.Constructors.GetConstructor(false, new TypeReference[] { });
 			if (constructor != null) return constructor;
 
@@ -965,16 +965,28 @@ namespace Composestar.StarLight.ILWeaver
 		/// <returns></returns>
 		private Instruction FindBaseConstructorCall(MethodDefinition constructor)
 		{
+			if (constructor.ExplicitThis)
+			{
+				throw new ILWeaverException(
+					string.Format("Constructor {0} does not contain a base call.", constructor));
+			}
+			
 			// the first call instruction should be it
-			// TODO: add a check to see if the operand is really base
 			foreach (Instruction instr in constructor.Body.Instructions)
 			{
 				if (instr.OpCode == OpCodes.Call)
 				{
-					//	Console.WriteLine("### call: " + instr.Operand);
+					MethodReference target = (MethodReference)instr.Operand;
+					if (target.Name != MethodDefinition.Ctor)
+					{
+						throw new ILWeaverException(
+							string.Format("Expected base constructor call, but encountered call to {0}.", target));
+					}
+					
 					return instr;
 				}
 			}
+
 			throw new ILWeaverException(
 				string.Format("Could not find base constructor call in {0}.", constructor));
 		}
