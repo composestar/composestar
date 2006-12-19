@@ -90,7 +90,7 @@
 		<ant target="deploy" dir="Source/VSIntegration/MSBuildTasks" />
 	</target>
 
-	<target name="deploy_vs" description="Deploy Compose* StarLight VS Integration" if="plugin.starlight.enabled"><!-- unless="ignore.plugin.starlight" -->
+	<target name="deploy_vs" description="Deploy Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
 		<ant target="deploy" dir="Source/VSIntegration/VisualStudio.Project" />
 	</target>
 
@@ -323,17 +323,18 @@
 					<antMenuItem name="Build all"     target="build"/>
 					<antMenuItem name="Rebuild all"   target="rebuild"/>
 					<antMenuItem name="Compiletime"   target="build_compiletime"/>
+					<antMenuItem name="CoreElement"   target="build_core_elements"/>
+					<antMenuItem name="WeaveStrategy" target="build_weaving"/>
 					<antMenuItem name="MSBuildTasks"  target="build_msbuild"/>
-					<antMenuItem name="WeaveStrategy" target="build_ws"/>
 					<antMenuItem name="VSIntegration" target="build_vs"/>
 					<antMenuItem name="Installer"     target="build_installer"/>
 				</antMenuItem>
 				<antMenuItem name="Deployment">
 					<antMenuItem name="Deploy all"    target="deploy"/>
 					<antMenuItem name="Compiletime"   target="deploy_compiletime"/>
+					<antMenuItem name="CoreElements"  target="deploy_core_elements"/>
+					<antMenuItem name="WeaveStrategy" target="deploy_weaving"/>
 					<antMenuItem name="MSBuildTasks"  target="deploy_msbuild"/>
-					<antMenuItem name="CoreElements"  target="deploy_ce"/>
-					<antMenuItem name="WeaveStrategy" target="deploy_ws"/>
 					<antMenuItem name="VSIntegration" target="deploy_vs"/>
 				</antMenuItem>
 				<!--
