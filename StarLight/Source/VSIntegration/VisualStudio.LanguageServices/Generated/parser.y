@@ -66,7 +66,7 @@
 // %token ';' '(' ')' '{' '}' '=' 
 // %token '+' '-' '*' '/' '!' '&' '^'
 
-%token EQ NEQ GT GTE LT LTE AMPAMP BARBAR TRUECON FALSECON QUOTE SINGLEQUOTE WEAVEOPERATION ANNOTATION 
+%token EQ NEQ GT GTE LT LTE AMPAMP BARBAR TRUECON FALSECON QUOTE SQUOTE LARROW
 %token BAR AND NOT STAR
 %token maxParseToken 
 %token LEX_WHITE LEX_COMMENT LEX_ERROR UPLOWSTRING UPPERCASESTRING LOWERCASESTRING CONSTSTRING CONSTNUM 
@@ -554,8 +554,8 @@ PrologArg
     | PrologList
     | CONSTNUM
     | Type
-    | SINGLEQUOTE Type SINGLEQUOTE { Match(@1, @2); }
-    | SINGLEQUOTE Type error       { CallHdlr("Missing closing '", @3); }
+    | SQUOTE Type SQUOTE { Match(@1, @2); }
+    | SQUOTE Type error       { CallHdlr("Missing closing '", @3); }
     ;
 
 PrologVar
@@ -583,7 +583,7 @@ ListElems2
 /* Common Binding Information */
 
 CommonBindingPart
-    : SelectorBinding WEAVEOPERATION
+    : SelectorBinding LARROW
     ;
 
 SelectorBinding
@@ -626,8 +626,8 @@ FilterModuleSet
 /* Annotation Bindings */
 
 AnnotationBinding
-    : KWANNOTATIONS SelectorRef ANNOTATION AnnotationSet ';'
-    | KWANNOTATIONS SelectorRef ANNOTATION AnnotationSet error  { CallHdlr("Missing ;", @5); }
+    : KWANNOTATIONS SelectorRef LARROW AnnotationSet ';'
+    | KWANNOTATIONS SelectorRef LARROW AnnotationSet error  { CallHdlr("Missing ;", @5); }
     ;
 
 AnnotationSet
