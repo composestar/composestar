@@ -240,7 +240,8 @@ public class StarLightMaster extends Master
 				Debug.out(Debug.MODE_DEBUG, "INCRE", m.getName() + " executed in " + incre.getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL) + " ms");
 			}
 			
-			incre.storeHistory();
+			//incre now stores the history automatically
+			//incre.storeHistory();
 
 			// write config file:
 			File file = new File(configFileName);
