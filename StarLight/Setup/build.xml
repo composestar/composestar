@@ -13,7 +13,7 @@
 
   <property name="MSBuildTasks.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}MSBuildTasks"/>
   <property name="VSProject.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}VisualStudio.Project"/>
-  <property name="WeaveStrategy.dir" location="..${file.separator}Source${file.separator}StarLight.Weaving.BuildIn"/>
+  <property name="WeaveStrategy.dir" location="..${file.separator}Source${file.separator}StarLight.Weaving.BuiltIn"/>
   <property name="wixsource.path" value="${build.starlight}${file.separator}Setup${file.separator}WixStarLight${file.separator}"/>
   <property name="msi.file" value="${build.starlight}${file.separator}Setup${file.separator}Releases${file.separator}StarLight.msi"/>
   <property name="wixtemp.path" value="${build.starlight}${file.separator}Setup${file.separator}"/>
@@ -64,14 +64,14 @@
 					<arg value="-loc ${wixsource.path}WixUI_en-us.wxl"/>		
 					<arg value="-nologo" />	
 			</exec>	  			
-			<antcall target="clean"/> 
+			<antcall target="clean" inheritRefs="true"/> 
 	</target>
 		
 	<target name="compile_sources" depends="init">
 	  <echo>Compiling .NET sources in release mode</echo>
   	<msbuild solution="${MSBuildTasks.dir}${file.separator}StarLight.MSBuild.Tasks.csproj" target="build" config="release" />
     <msbuild solution="${VSProject.dir}${file.separator}StarLight.VisualStudio.Project.csproj" target="build" config="release" />
-    <msbuild solution="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuildIn.csproj" target="build" config="release" /> 
+    <msbuild solution="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuiltIn.csproj" target="build" config="release" /> 
 	<!--  <dn:msbuild buildfile="${MSBuildTasks.dir}${file.separator}StarLight.MSBuild.Tasks.csproj">
         <dn:target name="build"/>        
         <dn:property name="Configuration" value="Release"/>

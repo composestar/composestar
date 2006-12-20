@@ -48,7 +48,7 @@
 	<target name="build" depends="init_local,build_core,compile,jar" description="Build the StarLight compiletime"/>
 
 	<target name="build_core" depends="init">
-		<ant target="build" dir="${build.core}/Compiletime"/>
+		<ant target="build" dir="${build.core}/Compiletime" inheritRefs="true"/>
 	</target>
 	
 	<target name="antlr">

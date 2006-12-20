@@ -22,7 +22,7 @@
 	</target>
 
 	<target name="antlr">
-		<ant dir="${build.core}/Compiletime/grammar" target="antlr_dotnet"/>
+		<ant dir="${build.core}/Compiletime/grammar" target="antlr_dotnet" inheritRefs="true"/>
 	</target>
 
 </project>
