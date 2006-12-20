@@ -17,7 +17,7 @@
 	The Compose* Eclipse C Plugin
 	</description>
 	
-	<target name="init_local" depends="init">
+	<target name="init_local" depends="init_eclipse">
 		<echo> Installing Composestar Eclipse Plugin for C: init_local </echo>
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
