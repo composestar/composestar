@@ -10,223 +10,222 @@
 	<!-- clean tasks -->
 	
 	<target name="clean" description="Cleanup compilation results">
-		<antcall target="clean_core" />
-		<antcall target="clean_dotnet" />
-		<antcall target="clean_starlight" />
-		<antcall target="clean_java" />
-		<antcall target="clean_c" />
+		<antcall target="clean_core" inheritRefs="true" />
+		<antcall target="clean_dotnet" inheritRefs="true" />
+		<antcall target="clean_starlight" inheritRefs="true" />
+		<antcall target="clean_java" inheritRefs="true" />
+		<antcall target="clean_c" inheritRefs="true" />
 	</target>
 	
 	<target name="clean_core" depends="init" description="Clean the Core of Compose*">
-		<ant target="clean" dir="${build.core}" />
+		<ant target="clean" dir="${build.core}" inheritRefs="true" />
 	</target>
 
 	<target name="clean_dotnet" depends="init" if="enabled.dotnet" description="Clean the .NET port of Compose*">
-		<ant target="clean" dir="${build.dotnet}" />
+		<ant target="clean" dir="${build.dotnet}" inheritRefs="true" />
 	</target>
 	
 	<target name="clean_starlight" depends="init" if="enabled.starlight" description="Clean Compose* StarLight">
-		<echo message="Running clean on StarLight"/>
-		<ant target="clean" dir="${build.starlight}" />
+		<ant target="clean" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 	
 	<target name="clean_java" depends="init" if="enabled.java" description="Clean the Java port of Compose*">
-		<ant target="clean" dir="${build.java}" />
+		<ant target="clean" dir="${build.java}" inheritRefs="true" />
 	</target>
 	
 	<target name="clean_c" depends="init" if="enabled.c" description="Clean the C port of Compose*">
-		<ant target="clean" dir="${build.c}" />
+		<ant target="clean" dir="${build.c}" inheritRefs="true" />
 	</target>
 	
 	<!-- build tasks -->	
 	
 	<target name="build" description="Builds all available and enabled parts of the Compose* project">
-		<antcall target="build_core" />
-		<antcall target="build_dotnet" />
-		<antcall target="build_starlight" />
-		<antcall target="build_java" />
-		<antcall target="build_c" />
+		<antcall target="build_core" inheritRefs="true" />
+		<antcall target="build_dotnet" inheritRefs="true" />
+		<antcall target="build_starlight" inheritRefs="true" />
+		<antcall target="build_java" inheritRefs="true" />
+		<antcall target="build_c" inheritRefs="true" />
 	</target>
 	
 	<target name="build_core" depends="init" description="Build the Core of Compose*">
-		<ant target="build" dir="${build.core}" />
+		<ant target="build" dir="${build.core}" inheritRefs="true" />
 	</target>
 	
 	<target name="build_dotnet" depends="build_core" if="enabled.dotnet" description="Build the .NET port">
-		<ant target="build" dir="${build.dotnet}" />
+		<ant target="build" dir="${build.dotnet}" inheritRefs="true" />
 	</target>
 	
 	<target name="build_starlight" depends="build_core" if="enabled.starlight" description="Build Compose* StarLight">
-		<ant target="build" dir="${build.starlight}" />
+		<ant target="build" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 	
 	<target name="build_java" depends="build_core" if="enabled.java" description="Build the Java port">
-		<ant target="build" dir="${build.java}" />
+		<ant target="build" dir="${build.java}" inheritRefs="true" />
 	</target>
 	
 	<target name="build_c" depends="build_core" if="enabled.c" description="Build the C port">
-		<ant target="build" dir="${build.c}" />
+		<ant target="build" dir="${build.c}" inheritRefs="true" />
 	</target>
 
 	<!-- install tasks -->
 	
 	<target name="install" description="Copy the resulting binaries to the installation directory.">
-		<antcall target="install_core" />
-		<antcall target="install_dotnet" />
-		<antcall target="install_starlight" />
-		<antcall target="install_java" />	
-		<antcall target="install_c" />	
+		<antcall target="install_core" inheritRefs="true" />
+		<antcall target="install_dotnet" inheritRefs="true" />
+		<antcall target="install_starlight" inheritRefs="true" />
+		<antcall target="install_java" inheritRefs="true" />	
+		<antcall target="install_c" inheritRefs="true" />	
 	</target>
 
 	<target name="install_core" depends="init">
-		<ant target="install" dir="${build.core}" />		
+		<ant target="install" dir="${build.core}" inheritRefs="true" />		
 	</target>
 	
 	<target name="install_dotnet" depends="init" if="enabled.dotnet">
-		<ant target="install" dir="${build.dotnet}" />
+		<ant target="install" dir="${build.dotnet}" inheritRefs="true" />
 	</target>
 
 	<target name="install_starlight" depends="init" if="enabled.starlight">
-		<ant target="install" dir="${build.starlight}" />
+		<ant target="install" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 
 	<target name="install_java" depends="init" if="enabled.java">
-		<ant target="install" dir="${build.java}" />
+		<ant target="install" dir="${build.java}" inheritRefs="true" />
 	</target>
 	
 	<target name="install_c" depends="init" if="enabled.c">
-		<ant target="install" dir="${build.c}" />
+		<ant target="install" dir="${build.c}" inheritRefs="true" />
 	</target>
 
 	<!-- publish tasks -->
 	
 	<target name="publish">
-		<antcall target="publish_dotnet"/>
-		<antcall target="publish_starlight"/>
+		<antcall target="publish_dotnet" inheritRefs="true" />
+		<antcall target="publish_starlight" inheritRefs="true" />
 	</target>
 
 	<target name="publish_dotnet" depends="init,build_dotnet" if="enabled.dotnet" description="Create installer for Compose* .NET">
-		<ant target="publish" dir="${build.dotnet}/Installer"/>
+		<ant target="publish" dir="${build.dotnet}/Installer" inheritRefs="true" />
 	</target>
 	
 	<target name="publish_starlight" depends="init,build_starlight" if="enabled.starlight" description="Create installer for Compose* StarLight">
-		<ant target="publish" dir="${build.starlight}/Setup"/>
+		<ant target="publish" dir="${build.starlight}/Setup" inheritRefs="true" />
 	</target>
 	
 	<!-- uninstall tasks -->
 	
 	<target name="uninstall" depends="init" description="Uninstall">
 		<!--<ant target="uninstall" dir="${build.core}" />-->
-		<antcall target="uninstall_dotnet" />
+		<antcall target="uninstall_dotnet" inheritRefs="true" />
 	</target>
 	
 	<target name="uninstall_dotnet" if="enabled.dotnet">
-		<ant target="uninstall" dir="${build.dotnet}" />
+		<ant target="uninstall" dir="${build.dotnet}" inheritRefs="true" />
 	</target>
 	
 	<!-- plugin tasks -->
 	
 	<target name="plugin" depends="init" description="Compile the IDE plugins">
-		<antcall target="plugin_dotnet" />
-		<antcall target="plugin_java" />	
+		<antcall target="plugin_dotnet" inheritRefs="true" />
+		<antcall target="plugin_java" inheritRefs="true" />	
 	</target>
 	
 	<target name="plugin_dotnet" depends="init" if="enabled.dotnet">
-		<ant target="plugin" dir="${build.dotnet}" />
+		<ant target="plugin" dir="${build.dotnet}" inheritRefs="true" />
 	</target>
 	
 	<target name="plugin_java" depends="init" if="enabled.java">
-		<ant target="plugin" dir="${build.java}" />
+		<ant target="plugin" dir="${build.java}" inheritRefs="true" />
 	</target>
 	
 	<!-- QA tasks -->
 	<target name="qa" depends="findbugs,checkstyle" description="Execute Quality Assurance tasks" />
 
 	<target name="qa_starlight" description="Execute Quality Assurance tasks">
-		<antcall target="fxcop_starlight" />
-		<antcall target="findbugs_starlight" />
-		<antcall target="checkstyle_starlight" />
+		<antcall target="fxcop_starlight" inheritRefs="true" />
+		<antcall target="findbugs_starlight" inheritRefs="true" />
+		<antcall target="checkstyle_starlight" inheritRefs="true" />
 	</target>
 
   <!-- execute FXCop tools -->
   <target name="fxcop" depends="init" description="Analyse the .net code using FxCop.">
-		<antcall target="fxcop_starlight" />
+		<antcall target="fxcop_starlight" inheritRefs="true" />
 	</target>
 
   <target name="fxcop_starlight" depends="init" if="enabled.starlight">
-		<ant target="fxcop" dir="${build.starlight}" />
+		<ant target="fxcop" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 
 	<!-- execute the findbugs tool -->
 	<target name="findbugs" depends="init" description="Analyse the compiled Java code for possible bugs.">
-		<antcall target="findbugs_core" />
-		<antcall target="findbugs_dotnet" />
-		<antcall target="findbugs_starlight" />
-		<antcall target="findbugs_java" />
+		<antcall target="findbugs_core" inheritRefs="true" />
+		<antcall target="findbugs_dotnet" inheritRefs="true" />
+		<antcall target="findbugs_starlight" inheritRefs="true" />
+		<antcall target="findbugs_java" inheritRefs="true" />
 	</target>
 	
 	<target name="findbugs_core" depends="init">
-		<ant target="findbugs" dir="${build.core}" />
+		<ant target="findbugs" dir="${build.core}" inheritRefs="true" />
 	</target>
 	
 	<target name="findbugs_dotnet" depends="init" if="enabled.dotnet">
-		<ant target="findbugs" dir="${build.dotnet}" />
+		<ant target="findbugs" dir="${build.dotnet}" inheritRefs="true" />
 	</target>
 	
 	<target name="findbugs_java" depends="init" if="enabled.java">
-		<ant target="findbugs" dir="${build.java}" />
+		<ant target="findbugs" dir="${build.java}" inheritRefs="true" />
 	</target>
 	
 	<target name="findbugs_starlight" depends="init" if="enabled.starlight">
-		<ant target="findbugs" dir="${build.starlight}" />
+		<ant target="findbugs" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 	
 	<!-- execute the checkstyle tool -->
 	<target name="checkstyle" depends="init" description="Run CheckStyle source code proof reader.">
-		<antcall target="checkstyle_core" />
-		<antcall target="checkstyle_dotnet" />
-		<antcall target="checkstyle_starlight" />
-		<antcall target="checkstyle_java" />
+		<antcall target="checkstyle_core" inheritRefs="true" />
+		<antcall target="checkstyle_dotnet" inheritRefs="true" />
+		<antcall target="checkstyle_starlight" inheritRefs="true" />
+		<antcall target="checkstyle_java" inheritRefs="true" />
 	</target>
 	
 	<target name="checkstyle_core" depends="init">
-		<ant target="checkstyle" dir="${build.core}" />
+		<ant target="checkstyle" dir="${build.core}" inheritRefs="true" />
 	</target>
 	
 	<target name="checkstyle_dotnet" depends="init" if="enabled.dotnet">
-		<ant target="checkstyle" dir="${build.dotnet}" />
+		<ant target="checkstyle" dir="${build.dotnet}" inheritRefs="true" />
 	</target>
 	
 	<target name="checkstyle_java" depends="init" if="enabled.java">
-		<ant target="checkstyle" dir="${build.java}" />
+		<ant target="checkstyle" dir="${build.java}" inheritRefs="true" />
 	</target>
 	
 	<target name="checkstyle_starlight" depends="init" if="enabled.starlight">
-		<ant target="checkstyle" dir="${build.starlight}" />
+		<ant target="checkstyle" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 	
 	<!-- documentation -->
 	<target name="documentation_starlight" description="Create the StarLight documentation." depends="init" if="enabled.starlight">
-		<ant target="documentation" dir="${build.starlight}" />
+		<ant target="documentation" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 
 	<!-- tests -->	
 	<target name="test" description="Execute system tests.">
-		<antcall target="test_core" />
-		<antcall target="test_dotnet" />
-		<antcall target="test_java" />
+		<antcall target="test_core" inheritRefs="true" />
+		<antcall target="test_dotnet" inheritRefs="true" />
+		<antcall target="test_java" inheritRefs="true" />
 	</target>
 
 	<target name="test_core" depends="init" description="Execute JUnit tests.">
-		<ant target="test" dir="${build.core}"/>
+		<ant target="test" dir="${build.core}" inheritRefs="true" />
 	</target>
 	
 	<target name="test_dotnet" depends="init" if="enabled.dotnet">
-		<ant target="test" dir="${build.dotnet}" />
+		<ant target="test" dir="${build.dotnet}" inheritRefs="true" />
 	</target>
 	
 	<target name="test_java" depends="init" if="enabled.java">
-		<ant target="test" dir="${build.java}" />
+		<ant target="test" dir="${build.java}" inheritRefs="true" />
 	</target>
 	
 	<!-- SVN tasks -->
@@ -235,72 +234,58 @@
 	/>
 	
 	<target name="svn-update-core" depends="init">
-		<ant target="svn-update" dir="${build.core}" />
+		<ant target="svn-update" dir="${build.core}" inheritRefs="true" />
 	</target>
 	
 	<target name="svn-update-dotnet" depends="init" if="enabled.dotnet">
-		<ant target="svn-update" dir="${build.dotnet}" />
+		<ant target="svn-update" dir="${build.dotnet}" inheritRefs="true" />
 	</target>
 	
 	<target name="svn-update-starlight" depends="init" if="enabled.starlight">
-		<ant target="svn-update" dir="${build.starlight}" />
+		<ant target="svn-update" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 	
 	<target name="svn-update-java" depends="init" if="enabled.java">
-		<ant target="svn-update" dir="${build.java}" />
+		<ant target="svn-update" dir="${build.java}" inheritRefs="true" />
 	</target>
 	
 	<target name="svn-update-c" depends="init" if="enabled.c">
-		<ant target="svn-update" dir="${build.c}" />
+		<ant target="svn-update" dir="${build.c}" inheritRefs="true" />
 	</target>
 	
 	<!-- do everything -->
 	<!-- note: "install" should imply "build" -->
-	<target name="install_test"   depends="install,test" description="Install and test the whole system"/>
+	<target name="install_test" depends="install,test" description="Install and test the whole system"/>
 	<target name="required" depends="clean,install,test" description="Perform the required actions before allowing a commit." />	
-	<target name="cleaninstall"  depends="clean,install" description="Clean, compile, and then install" />
-	<target name="all"   depends="clean,install,test,qa" description="Recompile, install and test the whole system." />	
+	<target name="cleaninstall" depends="clean,install" description="Clean, compile, and then install" />
+	<target name="all" depends="clean,install,test,qa" description="Recompile, install and test the whole system." />	
 	
 	<target name="integration">
-		<antcall target="svn-update-all" />
-		<antcall target="required" />
+		<antcall target="svn-update-all" inheritRefs="true" />
+		<antcall target="required" inheritRefs="true" />
 	</target>
 	
 	<target name="integration_starlight">
 		<property name="build.integration.core" value="c:\starlight\core" />
 		<property name="build.integration.starlight" value="c:\starlight\starlight" />
-		<antcall target="svn-update-core" />
-		<antcall target="svn-update-starlight" />
-		<ant target="clean_deploy_test" dir="${build.integration.starlight}" />
+		<antcall target="svn-update-core" inheritRefs="true" />
+		<antcall target="svn-update-starlight" inheritRefs="true" />
+		<ant target="clean_deploy_test" dir="${build.integration.starlight}" inheritRefs="true" />
 	</target>
 
 	<target name="integration_publish_starlight">
 		<property name="build.integration.core" value="c:\starlight\core" />
 		<property name="build.integration.starlight" value="c:\starlight\starlight" />
-		<ant target="fxcop" dir="${build.integration.starlight}" />
-		<ant target="findbugs" dir="${build.integration.starlight}" />
-		<ant target="checkstyle" dir="${build.integration.starlight}" />
-		<antcall target="findbugs_core" />
-		<antcall target="checkstyle_core" />
+		<ant target="fxcop" dir="${build.integration.starlight}" inheritRefs="true" />
+		<ant target="findbugs" dir="${build.integration.starlight}" inheritRefs="true" />
+		<ant target="checkstyle" dir="${build.integration.starlight}" inheritRefs="true" />
+		<antcall target="findbugs_core" inheritRefs="true" />
+		<antcall target="checkstyle_core" inheritRefs="true" />
 	</target>
 
 	<target name="integration_publish">
-		<antcall target="publish" />
-		<antcall target="qa" />
-	</target>
-	
-	<target name="nightlybuild" description="Execute the nightly build">
-		<tstamp />
-		<echo>
-========================================================================
-                  Compose* Nightly Build - Report
-
-The following in the report of the nightly build of Compose* on:
- ${TODAY}
-If the build failed the cause will be listed at the end of the report.
-========================================================================
-		</echo>
-		<antcall target="all" />
+		<antcall target="publish" inheritRefs="true" />
+		<antcall target="qa" inheritRefs="true" />
 	</target>
 	
 	<!-- fancy selection -->	
@@ -316,27 +301,25 @@ If the build failed the cause will be listed at the end of the report.
 					<antMenuItem name="Rebuild all" target="rebuild"/>
 					<antMenuItem name="Core"        target="build_core"/>
 					<!-- unfortunately these ifs don't seem to work very well -->
-					<antMenuItem name="DotNET"      target="build_dotnet"    if="enabled.dotnet"/>
-					<antMenuItem name="StarLight"   target="build_starlight" if="enabled.starlight"/>
-					<antMenuItem name="Java"        target="build_java"      if="enabled.java"/>
-				<!--
-					<antMenuItem name="C"           target="build_c"         if="enabled.c"/>
-				-->
+					<antMenuItem name="DotNET"      target="build_dotnet"		if="enabled.dotnet"/>
+					<antMenuItem name="StarLight"   target="build_starlight"	if="enabled.starlight"/>
+					<antMenuItem name="Java"        target="build_java"			if="enabled.java"/>
+					<antMenuItem name="C"           target="build_c"			if="enabled.c"/>
 				</antMenuItem>
 				<antMenuItem name="Plugin">
-					<antMenuItem name="DotNET" target="plugin_dotnet" if="enabled.dotnet"/>
-					<antMenuItem name="Java"   target="plugin_java"   if="enabled.java"/>
+					<antMenuItem name="DotNET"		target="plugin_dotnet"		if="enabled.dotnet"/>
+					<antMenuItem name="Java"		target="plugin_java"		if="enabled.java"/>
 				</antMenuItem>
 				<antMenuItem name="Install">
-					<antMenuItem name="Install"   target="install"/>
-					<antMenuItem name="Uninstall" target="uninstall"/>
+					<antMenuItem name="Install"		target="install"/>
+					<antMenuItem name="Uninstall"	target="uninstall"/>
 				</antMenuItem>
 				<antMenuItem name="Publish">
-					<antMenuItem name="All"    target="publish"/>
-					<antMenuItem name="DotNET" target="publish_dotnet" if="enabled.dotnet"/>
-					<antMenuItem name="StarLight" target="publish_starlight" if="enabled.starlight"/>
+					<antMenuItem name="All"			target="publish"/>
+					<antMenuItem name="DotNET"		target="publish_dotnet"		if="enabled.dotnet"/>
+					<antMenuItem name="StarLight"	target="publish_starlight"	if="enabled.starlight"/>
 				</antMenuItem>
-				<antMenuItem name="Run tests"   target="test"/>
+				<antMenuItem name="Run tests"		target="test"/>
 				<antMenuItem name="QA">
 					<antMenuItem name="All QA targets" target="qa"/>
 					<antMenuItem name="FindBugs"       target="findbugs"/>

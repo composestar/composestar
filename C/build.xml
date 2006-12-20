@@ -20,25 +20,25 @@
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<echo> Clean Compose*C </echo>
-		<ant target="clean" dir="Compiletime" />
+		<ant target="clean" dir="Compiletime" inheritRefs="true" />
 		<echo> Clean Compose*C Examples</echo>
-		<ant target="clean" dir="Examples" />
-		<ant target="clean" dir="ComposestarEclipsePlugin" />
+		<ant target="clean" dir="Examples" inheritRefs="true" />
+		<ant target="clean" dir="ComposestarEclipsePlugin" inheritRefs="true" />
 	</target>	
 	
 	<target name="build" description="Build the .C implementation of Compose*">
 		<echo> Build of build.xml C </echo>
-		<ant target="build" dir="Compiletime" />
-		<ant target="build" dir="ComposestarEclipsePlugin" />
+		<ant target="build" dir="Compiletime" inheritRefs="true" />
+		<ant target="build" dir="ComposestarEclipsePlugin" inheritRefs="true" />
 	</target>
 
 	<target name="test" description="Execute system tests">
-		<ant target="test" dir="Testing" />
+		<ant target="test" dir="Testing" inheritRefs="true" />
 	</target>
 	
 	<target name="install" depends="build" description="Install the result">
 		<echo> installing Compose*C </echo>
-		<ant target="install" dir="ComposestarEclipsePlugin"/>
+		<ant target="install" dir="ComposestarEclipsePlugin" inheritRefs="true" />
 		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
 			<FileSet dir="${build.core}/Compiletime/dist">
 				<include name="ComposestarCore.jar"/>

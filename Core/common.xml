@@ -7,7 +7,7 @@ Common routines. Always include this file in every build.xml file
 <project name="ComposeStarCommon" xmlns:cs="antlib:Composestar">
 
 	<target name="init" unless="build.initialized">
-		<property name="build.initialized" value="false"/>
+		<property name="build.initialized" value="true" />
 		<tstamp/>
 
 		<!-- figure out the directory where common.xml is located -->
@@ -108,13 +108,7 @@ Common routines. Always include this file in every build.xml file
 		</condition>
 		
 		<!-- resolve system variables -->	
-		<!-- Windows XP -->	
-		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper.exe" failifexecutionfails="false" os="Windows XP">
-			<arg value="getsystemproperties"/>
-			<arg value="${build.core}${file.separator}Development${file.separator}system.properties"/>
-		</exec>
-		<!-- Windows 2003 -->
-		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper.exe" failifexecutionfails="false" os="Windows 2003">
+		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper.exe" failifexecutionfails="false" osfamily="windows">
 			<arg value="getsystemproperties"/>
 			<arg value="${build.core}${file.separator}Development${file.separator}system.properties"/>
 		</exec>
@@ -128,9 +122,6 @@ Common routines. Always include this file in every build.xml file
 		
 		<!-- final fallback -->
 		<property name="composestar.installdir" value="${user.home}${file.separator}ComposeStar"/>
-		
-		<!-- location of Eclipse pluginsfolder -->
-		<property name="eclipse.pluginsdir" value="${env.ECLIPSE_HOME}${file.separator}plugins"/>
 		
 		<!-- make macro -->
 		<macrodef name="make">
@@ -287,12 +278,7 @@ Common routines. Always include this file in every build.xml file
 			<fileset dir="${build.core}/Compiletime"    includes="${out.jar.core}"/>
 			<fileset dir="${build.starlight}/Libraries" includes="**/*.jar"/>
 			<fileset dir="${build.starlight}/Source/Compiletime/lib" includes="*.jar" />
-		</path>
-		
-		<!-- eclipse libraries -->
-		<path id="lib.eclipse">
-			<fileset dir="${env.ECLIPSE_HOME}${file.separator}plugins" includes="*.jar"/>
-		</path>
+		</path>		
 			
 		<!-- findbugs jars -->
 		<path id="lib.findbugs">	  
@@ -353,6 +339,30 @@ Common routines. Always include this file in every build.xml file
 		</path>
 		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="lib.svnant"/>
 		
+	</target>
+	
+	<!-- initialize and require eclipse -->
+	<target name="init_eclipse" depends="init" unless="build.eclipse.initialized">
+		<property name="build.eclipse.initialized" value="true" />
+		
+		<!-- location of Eclipse pluginsfolder -->
+		<property name="eclipse.home" value="${env.ECLIPSE_HOME}"/>
+		
+		<fail message="Eclipse was not found. Either set the 'eclipse.home' property or the 'ECLIPSE_HOME' environment variable.">
+			<condition>
+				<not>
+					<available file="${eclipse.home}${file.separator}.eclipseproduct" />
+				</not>
+			</condition>
+		</fail>
+		
+		<!-- location of Eclipse pluginsfolder -->
+		<property name="eclipse.pluginsdir" value="${eclipse.home}${file.separator}plugins"/>
+		
+		<!-- eclipse libraries -->
+		<path id="lib.eclipse">
+			<fileset dir="${eclipse.pluginsdir}" includes="*.jar"/>
+		</path>
 	</target>
 	
 	<!-- generic target to rebuild all -->

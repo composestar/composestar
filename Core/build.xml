@@ -20,19 +20,19 @@
 
 	<target name="clean" depends="init">
 		<delete dir="${out.qa}" />
-		<ant target="clean" dir="Compiletime" />
-		<ant target="clean" dir="Runtime" />
+		<ant target="clean" dir="Compiletime" inheritRefs="true" />
+		<ant target="clean" dir="Runtime" inheritRefs="true" />
 	</target>
 	
 	
 	<target name="build">
-		<ant target="build" dir="Compiletime" />
-		<ant target="build" dir="Runtime" />
+		<ant target="build" dir="Compiletime" inheritRefs="true" />
+		<ant target="build" dir="Runtime" inheritRefs="true" />
 	</target>
 	
 	<target name="install">
-		<ant target="install" dir="Compiletime" />
-		<ant target="install" dir="Runtime" />
+		<ant target="install" dir="Compiletime" inheritRefs="true" />
+		<ant target="install" dir="Runtime" inheritRefs="true" />
 	</target>
 	
 	<target name="init_qa" depends="init">
@@ -40,7 +40,7 @@
 	</target>
 	
 	<target name="findbugs" depends="init_qa">
-		<ant target="qa_build" dir="Runtime" />
+		<ant target="qa_build" dir="Runtime" inheritRefs="true" />
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.core}${file.separator}Compiletime${file.separator}${out.build}" />
 			<class location="${build.core}${file.separator}Runtime${file.separator}${out.build}" />
@@ -83,7 +83,7 @@
 	-->
 
 	<target name="test" description="Runs tests.">
-		<ant target="unittest" dir="Compiletime"/>
+		<ant target="unittest" dir="Compiletime" inheritRefs="true" />
 	</target>
 	
 </project>

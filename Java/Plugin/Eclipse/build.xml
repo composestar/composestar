@@ -17,7 +17,7 @@
 	The Compose* Eclipse Java Plugin
 	</description>
 	
-	<target name="init_local" depends="init">
+	<target name="init_local" depends="init_eclipse">
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
 	</target>

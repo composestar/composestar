@@ -20,35 +20,35 @@
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<delete dir="${out.qa}" />
-		<ant target="clean" dir="Compiletime" />
-		<ant target="clean" dir="Runtime" />
-		<ant target="clean" dir="Examples" />
-		<ant target="clean" dir="Testing" />
-		<ant target="clean" dir="Installer" />
+		<ant target="clean" dir="Compiletime" inheritRefs="true" />
+		<ant target="clean" dir="Runtime" inheritRefs="true" />
+		<ant target="clean" dir="Examples" inheritRefs="true" />
+		<ant target="clean" dir="Testing" inheritRefs="true" />
+		<ant target="clean" dir="Installer" inheritRefs="true" />
 	</target>	
 	
 	<target name="build" description="Build the .Net implementation of Compose*">
-		<ant target="build" dir="Compiletime" />
-		<ant target="build" dir="Runtime" />
+		<ant target="build" dir="Compiletime" inheritRefs="true" />
+		<ant target="build" dir="Runtime" inheritRefs="true" />
 	</target>
 	
 	<target name="plugin" description="Build the plugin for the IDE" >
-		<ant target="build" dir="Plugin" />
+		<ant target="build" dir="Plugin" inheritRefs="true" />
 	</target>
 	
 	<target name="test" description="Execute system tests">
-		<ant target="test" dir="Testing"/>
+		<ant target="test" dir="Testing" inheritRefs="true" />
 	</target>
 	
 	<target name="install" description="Install the result" >
-		<ant target="install" dir="Compiletime" />
-		<ant target="install" dir="Runtime" />
-		<ant target="install" dir="Plugin" />
+		<ant target="install" dir="Compiletime" inheritRefs="true" />
+		<ant target="install" dir="Runtime" inheritRefs="true" />
+		<ant target="install" dir="Plugin" inheritRefs="true" />
 	</target>
 	
 	<target name="uninstall" description="Clean up and installation" >
 		<!--<ant target="uninstall" dir="Compiletime" />-->
-		<ant target="uninstall" dir="Runtime" />
+		<ant target="uninstall" dir="Runtime" inheritRefs="true" />
 		<!--<ant target="uninstall" dir="Plugin" />-->
 	</target>
 	

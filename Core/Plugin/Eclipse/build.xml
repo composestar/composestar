@@ -17,10 +17,7 @@
 	The Compose* Eclipse Plugin (Core Part)
 	</description>
 	
-	<target name="init_local" depends="init">
-		<!-- fail if ECLIPSE_HOME environment variable not set! -->
-		<fail unless="env.ECLIPSE_HOME" message="ECLIPSE_HOME environment variable has not been set!"></fail>
-		
+	<target name="init_local" depends="init_eclipse">		
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin"/>
 		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin/META-INF"/>

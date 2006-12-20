@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/DotNET/Compiletime" default="build">
+<project name="ComposeStar/DotNET/Compiletime" default="build" xmlns:dn="antlib:org.apache.ant.dotnet">
 
 	<condition property="build.core" value="../../Core">
 		<and>
@@ -92,12 +92,12 @@
 	</target>
 			
 	<target name="compile_dotnet">
-		<csc targettype="exe" debug="false" destfile="${out.dist}\AttributeHarvester.exe">
+		<dn:csc targettype="exe" debug="false" destfile="${out.dist}\AttributeHarvester.exe">
 			<src dir="src\Composestar\DotNET\TYM\TypeHarvester" includes="AttributeHarvester.cs"/>
-		</csc>
-		<csc targettype="exe" debug="false" destfile="${out.dist}\TypeHarvester.exe">
+		</dn:csc>
+		<dn:csc targettype="exe" debug="false" destfile="${out.dist}\TypeHarvester.exe">
 			<src dir="src\Composestar\DotNET\TYM\TypeHarvester" includes="TypeHarvester.cs"/>
-		</csc>
+		</dn:csc>
 		<antcall target="compile_dotnet_devenv"/>
 		<antcall target="compile_dotnet_msbuild"/>
 	</target>
