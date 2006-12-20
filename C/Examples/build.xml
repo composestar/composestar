@@ -19,7 +19,6 @@
 	
 	<target name="clean" depends="init">
 		<!-- delete generated files in /bin -->
-		<echo> Cleaning examples Compose*C</echo>
 		<delete>
 			<FileSet dir="${build.c}/Examples">
 				<include name="**/bin/*.exe"/>
