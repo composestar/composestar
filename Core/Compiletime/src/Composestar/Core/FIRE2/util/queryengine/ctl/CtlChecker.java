@@ -9,6 +9,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -70,7 +71,8 @@ public class CtlChecker
 		Vector v = (Vector) reverseTable.get(state);
 
 		ExecutionState state2;
-		HashSet satSet2 = null, reverseSatSet2 = null;
+		HashSet satSet2 = null;
+		HashSet reverseSatSet2 = null;
 		Vector v2 = null;
 		if (!v.isEmpty())
 		{
@@ -111,10 +113,10 @@ public class CtlChecker
 
 		simplifierMap = new Hashtable();
 
-		Enumeration startStates = model.getEntranceStates();
-		while (startStates.hasMoreElements())
+		Iterator startStates = model.getEntranceStates();
+		while (startStates.hasNext())
 		{
-			addState((ExecutionState) startStates.nextElement());
+			addState((ExecutionState) startStates.next());
 		}
 
 		for (int i = backwardStateVector.size() - 1; i >= 0; i--)
@@ -135,10 +137,10 @@ public class CtlChecker
 
 		reverseTable.put(state, new Vector());
 
-		Enumeration e = state.getOutTransitions();
-		while (e.hasMoreElements())
+		Iterator it = state.getOutTransitions();
+		while (it.hasNext())
 		{
-			ExecutionTransition transition = (ExecutionTransition) e.nextElement();
+			ExecutionTransition transition = (ExecutionTransition) it.next();
 			ExecutionState nextState = transition.getEndState();
 			addState(nextState);
 
@@ -434,11 +436,11 @@ public class CtlChecker
 			}
 			else
 			{
-				Enumeration outTransitions = state.getOutTransitions();
+				Iterator outTransitions = state.getOutTransitions();
 				Vector v = new Vector();
-				while (outTransitions.hasMoreElements())
+				while (outTransitions.hasNext())
 				{
-					ExecutionTransition transition = (ExecutionTransition) outTransitions.nextElement();
+					ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
 					v.addElement(transition.getEndState());
 				}
 				return v.elements();

@@ -9,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -68,10 +67,10 @@ public class ViewPanel extends JPanel
 
 		Vector edges = new Vector();
 
-		Enumeration enumer = model.getEntranceStates();
-		while (enumer.hasMoreElements())
+		Iterator it = model.getEntranceStates();
+		while (it.hasNext())
 		{
-			Object obj = enumer.nextElement();
+			Object obj = it.next();
 			Node node = new Node((ExecutionState) obj);
 			nodeMap.put(obj, node);
 
@@ -181,10 +180,10 @@ public class ViewPanel extends JPanel
 
 		Node node = (Node) nodeMap.get(state);
 
-		Enumeration outTransitions = state.getOutTransitions();
-		while (outTransitions.hasMoreElements())
+		Iterator outTransitions = state.getOutTransitions();
+		while (outTransitions.hasNext())
 		{
-			ExecutionTransition transition = (ExecutionTransition) outTransitions.nextElement();
+			ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
 
 			ExecutionState nextState = transition.getEndState();
 			if (!nodeMap.containsKey(nextState))

@@ -70,7 +70,7 @@ public class Viewer extends JFrame
 		}
 
 		this.setSize(600, 600);
-		this.show();
+		this.setVisible(true);
 
 		this.addWindowListener(new WindowAdapter()
 		{

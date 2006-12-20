@@ -6,7 +6,7 @@
  */
 package Composestar.Core.FIRE2.model;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
@@ -100,7 +100,7 @@ public abstract class ExecutionState
 		return stateType;
 	}
 
-	public abstract Enumeration getOutTransitions();
+	public abstract Iterator getOutTransitions();
 
 	public int hashCode()
 	{

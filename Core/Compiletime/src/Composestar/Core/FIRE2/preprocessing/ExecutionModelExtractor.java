@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -288,9 +287,9 @@ public class ExecutionModelExtractor
 			entranceStates.put(state.getMessage(), state);
 		}
 
-		public Enumeration getEntranceStates()
+		public Iterator getEntranceStates()
 		{
-			return entranceStates.elements();
+			return entranceStates.values().iterator();
 		}
 
 		/**
@@ -410,9 +409,9 @@ public class ExecutionModelExtractor
 			outTransitions.removeElement(transition);
 		}
 
-		public Enumeration getOutTransitions()
+		public Iterator getOutTransitions()
 		{
-			return outTransitions.elements();
+			return outTransitions.iterator();
 		}
 
 		public void addInTransition(ExecutionTransition transition)
@@ -425,9 +424,9 @@ public class ExecutionModelExtractor
 			inTransitions.removeElement(transition);
 		}
 
-		public Enumeration getInTransitions()
+		public Iterator getInTransitions()
 		{
-			return inTransitions.elements();
+			return inTransitions.iterator();
 		}
 	}
 

@@ -7,6 +7,7 @@ package Composestar.Core.FIRE2.util.regex;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -62,11 +63,11 @@ public class Matcher
 		processedStates = new HashSet();
 		unvisitedStates = new Stack();
 
-		Enumeration states = model.getEntranceStates();
+		Iterator states = model.getEntranceStates();
 		RegularState regularState = pattern.getStartState();
-		while (states.hasMoreElements())
+		while (states.hasNext())
 		{
-			ExecutionState state = (ExecutionState) states.nextElement();
+			ExecutionState state = (ExecutionState) states.next();
 			addState(new CombinedState(state, regularState));
 		}
 	}
@@ -92,7 +93,7 @@ public class Matcher
 		RegularTransition regularTransition;
 		RegularState[] nextStates;
 
-		Enumeration executionTransitions;
+		Iterator executionTransitions;
 		ExecutionState executionState;
 		ExecutionTransition executionTransition;
 
@@ -123,9 +124,9 @@ public class Matcher
 		// empty and non-empty transition in ExecutionModel:
 		executionState = state.executionState;
 		executionTransitions = executionState.getOutTransitions();
-		while (executionTransitions.hasMoreElements())
+		while (executionTransitions.hasNext())
 		{
-			executionTransition = (ExecutionTransition) executionTransitions.nextElement();
+			executionTransition = (ExecutionTransition) executionTransitions.next();
 			sequence = labeler.getLabels(executionTransition);
 			if (sequence.isEmpty())
 			{
@@ -252,7 +253,7 @@ public class Matcher
 	private boolean isEndState(CombinedState state)
 	{
 		if (state.regularState.equals(pattern.getEndState())
-				&& !state.executionState.getOutTransitions().hasMoreElements())
+				&& !state.executionState.getOutTransitions().hasNext())
 		{
 			endState = state;
 			return true;

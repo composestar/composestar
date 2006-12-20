@@ -7,6 +7,7 @@ package Composestar.Core.INLINE.highlevel;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
@@ -199,13 +200,13 @@ public class HighLevelInliner
 	{
 		Vector result = new Vector();
 
-		Enumeration enumer = model.getEntranceStates();
-		if (!enumer.hasMoreElements())
+		Iterator it = model.getEntranceStates();
+		if (!it.hasNext())
 		{
 			return result;
 		}
 
-		ExecutionState fmState = (ExecutionState) enumer.nextElement();
+		ExecutionState fmState = (ExecutionState) it.next();
 		while (fmState != null)
 		{
 			fmState = identifyFilterModuleBlock(fmState, result);
@@ -335,11 +336,11 @@ public class HighLevelInliner
 		FilterElementBlock block = new FilterElementBlock();
 		block.conditionExprState = condExpr;
 
-		Enumeration outTransitions = condExpr.getOutTransitions();
+		Iterator outTransitions = condExpr.getOutTransitions();
 		// enumeration has 1 or 2 elements
-		while (outTransitions.hasMoreElements())
+		while (outTransitions.hasNext())
 		{
-			ExecutionTransition transition = (ExecutionTransition) outTransitions.nextElement();
+			ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
 
 			ExecutionState exitState = getExitState(transition.getEndState());
 
@@ -365,10 +366,10 @@ public class HighLevelInliner
 	 */
 	private ExecutionState getNextState(ExecutionState state)
 	{
-		Enumeration transitions = state.getOutTransitions();
-		if (transitions.hasMoreElements())
+		Iterator transitions = state.getOutTransitions();
+		if (transitions.hasNext())
 		{
-			ExecutionTransition transition = (ExecutionTransition) transitions.nextElement();
+			ExecutionTransition transition = (ExecutionTransition) transitions.next();
 			return transition.getEndState();
 		}
 		else
@@ -392,8 +393,8 @@ public class HighLevelInliner
 		while (!isExitState(currentState))
 		{
 			// get the next state:
-			Enumeration outTransitions = currentState.getOutTransitions();
-			ExecutionTransition transition = (ExecutionTransition) outTransitions.nextElement();
+			Iterator outTransitions = currentState.getOutTransitions();
+			ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
 			currentState = transition.getEndState();
 		}
 
@@ -461,10 +462,10 @@ public class HighLevelInliner
 			reverseTable = new Hashtable();
 			conditionTable = new Hashtable();
 
-			Enumeration startStates = model.getEntranceStates();
-			while (startStates.hasMoreElements())
+			Iterator startStates = model.getEntranceStates();
+			while (startStates.hasNext())
 			{
-				addState((ExecutionState) startStates.nextElement());
+				addState((ExecutionState) startStates.next());
 			}
 		}
 
@@ -479,10 +480,10 @@ public class HighLevelInliner
 
 			reverseTable.put(state, new Vector());
 
-			Enumeration e = state.getOutTransitions();
-			while (e.hasMoreElements())
+			Iterator it = state.getOutTransitions();
+			while (it.hasNext())
 			{
-				ExecutionTransition transition = (ExecutionTransition) e.nextElement();
+				ExecutionTransition transition = (ExecutionTransition) it.next();
 				ExecutionState nextState = transition.getEndState();
 				addState(nextState);
 

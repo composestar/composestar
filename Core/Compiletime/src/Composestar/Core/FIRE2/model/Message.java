@@ -5,6 +5,7 @@
 package Composestar.Core.FIRE2.model;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelectorAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 
 /**
@@ -69,14 +70,16 @@ public class Message
 
 	private static MessageSelector getStarSelector()
 	{
-		MessageSelector selector = new MessageSelector();
+		// TODO: (michiel) validate that using an empty MessageSelectorAST is legal
+		MessageSelector selector = new MessageSelector(new MessageSelectorAST());
 		selector.setName("*");
 		return selector;
 	}
 
 	private static MessageSelector getUndistinguishableSelector()
 	{
-		MessageSelector selector = new MessageSelector();
+		// TODO: (michiel) validate that using an empty MessageSelectorAST is legal
+		MessageSelector selector = new MessageSelector(new MessageSelectorAST());
 		selector.setName("+");
 		return selector;
 	}

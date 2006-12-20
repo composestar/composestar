@@ -217,14 +217,14 @@ public class FlowModelExtractor
 			this.endNode = endNode;
 		}
 
-		public Enumeration getNodes()
+		public Iterator getNodes()
 		{
-			return nodes.elements();
+			return nodes.iterator();
 		}
 
-		public Enumeration getTransitions()
+		public Iterator getTransitions()
 		{
-			return transitions.elements();
+			return transitions.iterator();
 		}
 
 		/**
@@ -288,9 +288,9 @@ public class FlowModelExtractor
 			transitions.removeElement(transition);
 		}
 
-		public Enumeration getTransitions()
+		public Iterator getTransitions()
 		{
-			return transitions.elements();
+			return transitions.iterator();
 		}
 
 		/**

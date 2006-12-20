@@ -6,6 +6,7 @@ package Composestar.Core.INLINE.lowlevel;
 
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -254,11 +255,11 @@ public class LowLevelInliner
 		FilterElementBlock block = new FilterElementBlock();
 		block.conditionExprState = condExpr;
 
-		Enumeration outTransitions = condExpr.getOutTransitions();
+		Iterator outTransitions = condExpr.getOutTransitions();
 		// enumeration has 1 or 2 elements
-		while (outTransitions.hasMoreElements())
+		while (outTransitions.hasNext())
 		{
-			ExecutionTransition transition = (ExecutionTransition) outTransitions.nextElement();
+			ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
 
 			ExecutionState exitState = getExitState(transition.getEndState());
 
@@ -284,10 +285,10 @@ public class LowLevelInliner
 	 */
 	private ExecutionState getNextState(ExecutionState state)
 	{
-		Enumeration transitions = state.getOutTransitions();
-		if (transitions.hasMoreElements())
+		Iterator transitions = state.getOutTransitions();
+		if (transitions.hasNext())
 		{
-			ExecutionTransition transition = (ExecutionTransition) transitions.nextElement();
+			ExecutionTransition transition = (ExecutionTransition) transitions.next();
 			return transition.getEndState();
 		}
 		else
@@ -311,8 +312,8 @@ public class LowLevelInliner
 		while (!isExitState(currentState))
 		{
 			// get the next state:
-			Enumeration outTransitions = currentState.getOutTransitions();
-			ExecutionTransition transition = (ExecutionTransition) outTransitions.nextElement();
+			Iterator outTransitions = currentState.getOutTransitions();
+			ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
 			currentState = transition.getEndState();
 		}
 

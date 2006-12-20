@@ -238,7 +238,7 @@ public class Sign implements CTCommonModule
 		signature = getSignature(concern);
 
 		execModel = fireModel.getExecutionModel(messageSelector);
-		entranceState = (ExecutionState) execModel.getEntranceStates().nextElement();
+		entranceState = (ExecutionState) execModel.getEntranceStates().next();
 
 		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
 		Enumeration dispatchStates = checker.matchingStates();
