@@ -43,7 +43,7 @@
 	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file"/>
 	
 	<target name="antlr">
-		<ant dir="${build.core}/Compiletime/grammar" target="antlr_java"/>
+		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java"/>
 	</target>
 	
 	<target name="compile" depends="local_init,antlr">
