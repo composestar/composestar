@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterNode.java,v 1.8 2006/10/10 22:38:15 elmuerte Exp $
+ * $Id$
  */
 package Composestar.Core.DIGGER.Graph;
 

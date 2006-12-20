@@ -17,10 +17,11 @@ import Composestar.Core.RepositoryImplementation.DataMap;
 
 /**
  * This class holds the shared resources between the modules e.g the repository
- * object. TODO: Add hashmap for storing non-global stuff.
+ * object.
  */
 public class CommonResources implements Serializable
 {
+	// TODO: Add hashmap for storing non-global stuff.
 	private static final long serialVersionUID = 2652039710117430543L;
 
 	/**

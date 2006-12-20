@@ -47,6 +47,11 @@
 	</target>
 	
 	<target name="compile" depends="local_init,antlr">
+		<propertyfile file="${out.build}/version.properties">
+			<entry key="version" value="${version.core}.${version.build}" />
+			<entry key="version.build" value="${version.build}" />
+			<entry key="version.compiledate" type="date" value="now" pattern="EEE, d MMM yyyy HH:mm:ss Z" />
+		</propertyfile>
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java"/>
 		</javac>

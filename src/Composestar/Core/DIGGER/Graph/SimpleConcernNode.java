@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: SimpleConcernNode.java,v 1.2 2006/10/03 06:31:05 elmuerte Exp $
+ * $Id$
  */
 package Composestar.Core.DIGGER.Graph;
 

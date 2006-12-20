@@ -256,4 +256,23 @@ public class Projects implements Serializable
 
 		return null;
 	}
+	
+	/**
+	 * returns original source of binary if available
+	 */
+	public Source getSourceOfBinary(String binary)
+	{
+		Iterator sourceItr = this.getSources().iterator();
+		while(sourceItr.hasNext())
+		{
+			Source s = (Source)sourceItr.next();
+			
+			if(binary.indexOf(s.getTarget())>0)
+			{
+				return s;
+			}
+		}
+			
+		return null;
+	}
 }

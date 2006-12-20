@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: MetaNode.java,v 1.5 2006/10/05 13:19:24 elmuerte Exp $
+ * $Id$
  */
 package Composestar.Core.DIGGER.Graph.Filters;
 

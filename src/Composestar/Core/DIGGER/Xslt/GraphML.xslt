@@ -8,7 +8,7 @@ Copyright (C) 2006 University of Twente.
 Licensed under LGPL v2.1 or (at your option) any later version.
 [http://www.fsf.org/copyleft/lgpl.html]
 
-$Id: GraphVizDot.xslt,v 1.1 2006/10/12 11:59:54 elmuerte Exp $
+$Id$
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<xsl:output indent="yes" />
