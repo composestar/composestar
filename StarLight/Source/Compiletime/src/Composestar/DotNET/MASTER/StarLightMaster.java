@@ -64,7 +64,7 @@ public class StarLightMaster extends Master
 		processCmdArgs(args);
 	}
 
-	private void processCmdArgs(String[] args)
+	public void processCmdArgs(String[] args)
 	{
 		for (int i = 0; i < args.length; i++)
 		{
