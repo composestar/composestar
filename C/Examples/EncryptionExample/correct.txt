@@ -8,4 +8,3 @@ protocol received data: 1205:aaaa
 protocol received data: aaaa 
 Server receiveData2: aaaa
 Example runned end value:aaaa 
-<EOF>

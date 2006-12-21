@@ -73,9 +73,9 @@ public class CLOLA extends LOLA
 		if (incremental && !selectors.isEmpty())
 		{
 			selectors = splitSelectors(selectors); // which
-																							// selectors
-																							// to
-																							// skip/process?
+			// selectors
+			// to
+			// skip/process?
 		}
 
 		// initialize when we have one or more predicate selectors
@@ -135,13 +135,13 @@ public class CLOLA extends LOLA
 	public void initPrologEngine(CommonResources resources, String generatedPredicatesFilename) throws ModuleException
 	{
 		/* Get the names of special files (containing base predicate libraries) */
-		String prologLibraryFilename = FileUtils.fixFilename(Configuration.instance().getPathSettings().getPath(
+		String prologLibraryFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath(
 				"Composestar")
 				+ "binaries/prolog/lib.pro");
-		String prologConnectorFilename = FileUtils.fixFilename(Configuration.instance().getPathSettings().getPath(
-				"Composestar")
+		String prologConnectorFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings()
+				.getPath("Composestar")
 				+ "binaries/prolog/connector.pro");
-		String CLangMap = FileUtils.fixFilename(Configuration.instance().getPathSettings().getPath("Composestar")
+		String CLangMap = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath("Composestar")
 				+ "binaries/prolog/clangmap.pro");
 
 		/* Initialize the prolog engine */
@@ -159,28 +159,27 @@ public class CLOLA extends LOLA
 
 		if (Init.askJinni("reconsult('" + prologLibraryFilename + "')").equals("no"))
 		{
-			Debug.out(Debug.MODE_WARNING,
-					"LOLA", "Could not load prolog base library! Expected location: " + prologLibraryFilename);
+			Debug.out(Debug.MODE_WARNING, "LOLA", "Could not load prolog base library! Expected location: "
+					+ prologLibraryFilename);
 		}
 		if (Init.askJinni("reconsult('" + prologConnectorFilename + "')").equals("no"))
 		{
-			Debug.out(Debug.MODE_WARNING,
-					"LOLA", "Could not load prolog connector library! Expected location: " + prologConnectorFilename);
+			Debug.out(Debug.MODE_WARNING, "LOLA", "Could not load prolog connector library! Expected location: "
+					+ prologConnectorFilename);
 		}
 		if (Init.askJinni("reconsult('" + generatedPredicatesFilename + "')").equals("no"))
 		{
-			Debug.out(
-					Debug.MODE_WARNING, "LOLA", "Could not load prolog language-mapping library! Expected location: "
-							+ generatedPredicatesFilename);
+			Debug.out(Debug.MODE_WARNING, "LOLA", "Could not load prolog language-mapping library! Expected location: "
+					+ generatedPredicatesFilename);
 		}
 		if (Init.askJinni("reconsult('" + CLangMap + "')").equals("no"))
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA",
-					"Could not load prolog connector library! Expected location: " + CLangMap);
+			Debug.out(Debug.MODE_WARNING, "LOLA", "Could not load prolog connector library! Expected location: "
+					+ CLangMap);
 		}
 		if (!Init.run(new String[] {}))
 		{
-			throw new ModuleException("FATAL: Prolog interpreter could not be initialized!");
+			throw new ModuleException("FATAL: Prolog interpreter could not be initialized!", "LOLA");
 		}
 	}
 

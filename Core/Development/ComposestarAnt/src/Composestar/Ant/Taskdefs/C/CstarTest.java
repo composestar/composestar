@@ -287,7 +287,7 @@ public class CstarTest extends BaseTask
 	{
 		String projectBase = workspace + java.io.File.separator + projectname;
 		File correct = new File(projectBase, CORRECT_OUTPUT);
-		boolean sof = false;
+		boolean soh = false;
 		BufferedReader expectedReader = null;
 		BufferedReader actualReader = null;
 
@@ -295,28 +295,34 @@ public class CstarTest extends BaseTask
 		{
 			expectedReader = new BufferedReader(new FileReader(correct));
 			actualReader = new BufferedReader(new StringReader(output));
-			
-			// ignore initial 2 lines (contains changing data)
-			for (int firstlines = 0; firstlines < 2; firstlines++)
+
+			while (!soh)
 			{
-				actualReader.readLine();
+				String actual = actualReader.readLine();
+				if (actual == null)
+				{
+					throw new Exception("Invalid output: EOF before SOH");
+				}
+				soh = compareLines(actual, "___RUN OUTPUT BEGIN___");
 			}
 
 			while (true)
 			{
 				String expected = expectedReader.readLine();
 				String actual = actualReader.readLine();
-				
-				if (compareLines(actual, "Encryption Example send text= aaaa")) sof = true;
-				if (compareLines(expected, "<EOF>") && sof) break;
-				
-				if (!compareLines(expected, actual) && sof)
+
+				if (compareLines(actual, "___RUN OUTPUT END___"))
+				{
+					break;
+				}
+
+				if (!compareLines(expected, actual))
 				{
 					throw new Exception("Invalid output: expected " + quote(expected) + ", but encountered "
 							+ quote(actual));
 				}
 
-				if (expected == null || actual == null) 
+				if (expected == null || actual == null)
 				{
 					if (expected != actual)
 					{

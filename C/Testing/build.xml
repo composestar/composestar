@@ -22,19 +22,15 @@
 
 	<target name="test" depends="test_exec" description="Execute the C system test."/>
 	
-	<target name="test_comp" depends="init_eclipse">
-		<cs:c_comp workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar;${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar">
-			<DirSet dir="${build.c}/Examples">
-				<include name="EncryptionExample"/> 
-			</DirSet>
-		</cs:c_comp>
+	<target name="test_comp" depends="init_eclipse">		
 	</target>	
 
 	<!-- execute tests -->
 	<target name="test_exec" depends="init_eclipse">
-		<cs:c_test workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar;${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar">
+		<cs:c_test workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar;${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Parametercheck.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Timing.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Tracing.jar">
 			<DirSet dir="${build.c}/Examples">
 				<include name="EncryptionExample"/> 
+				<include name="PolishCalculator"/> 
 			</DirSet>
 		</cs:c_test>
 	</target>

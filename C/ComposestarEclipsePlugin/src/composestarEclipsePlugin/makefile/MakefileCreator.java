@@ -274,8 +274,10 @@ public class MakefileCreator
 		try
 		{
 			bw.write("run: \n");
-			bw.write("\t" + outputPath.replace("" + java.io.File.separatorChar, "/") + projectDescription.getName()
+			bw.write("\t@echo ___RUN OUTPUT BEGIN___\n");
+			bw.write("\t@" + outputPath.replace("" + java.io.File.separatorChar, "/") + projectDescription.getName()
 					+ "\n");
+			bw.write("\t@echo ___RUN OUTPUT END___\n");
 		}
 		catch (IOException io)
 		{
@@ -447,7 +449,6 @@ public class MakefileCreator
 			bw.write("\n");
 			clean(bw);
 			bw.write("\n");
-			bw.write("# test komt dit in the make file");
 			bw.close();
 			Debug.instance().Log("MakeFile Created Succesfully", Debug.MSG_INFORMATION);
 		}

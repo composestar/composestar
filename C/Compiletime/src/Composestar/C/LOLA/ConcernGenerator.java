@@ -112,7 +112,7 @@ public class ConcernGenerator extends DefaultHandler
 			String key = (String) resultsEnum.next();
 			Set element = (Set) concerns.get(key);
 			PrimitiveConcern pconcern = (PrimitiveConcern) DataStore.instance().getObjectByID(key);
-			DataStore.instance().removeObject(pconcern);
+			DataStore.instance().removeObject(key);
 			if (pconcern != null && element != null)
 			{
 				Debug.out(Debug.MODE_INFORMATION, "CLOLA", "Concern: " + key + " has methods: ");
