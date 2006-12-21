@@ -1,4 +1,4 @@
-<project name="Composestar/C/Testing" default="test">
+<project name="Composestar/C/Testing" default="test" xmlns:cs="antlib:Composestar">
 
 	<description>
 	Run the Compose* SystemTest for C
@@ -14,8 +14,6 @@
 	<import file="${build.core}/common.xml"/>
 
 	<target name="init_local" depends="init">
-		<taskdef name="cstarTest"     classname="Composestar.Ant.Taskdefs.C.CstarTest"/>
-		<taskdef name="cstarComp"     classname="Composestar.Ant.Taskdefs.C.CstarComp"/>
 	</target>
 
 	<target name="clean" depends="init">
@@ -59,20 +57,20 @@
 
 	<target name="test" depends="test_exec" description="Execute the C system test."/>
 	<target name="test_comp" depends="init_local">
-		<cstarComp workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar ${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar">
+		<cs:c_comp workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar ${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar">
 			<DirSet dir="${build.c}/Examples">
 				<include name="EncryptionExample"/> 
 			</DirSet>
-		</cstarComp>
+		</cs:c_comp>
 	</target>	
 
 	<!-- execute tests -->
 	<target name="test_exec" depends="init_local">
-		<cstarTest workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar ${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar">
+		<cs:c_test workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar ${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar">
 			<DirSet dir="${build.c}/Examples">
 				<include name="EncryptionExample"/> 
 			</DirSet>
-		</cstarTest>
+		</cs:c_test>
 	</target>
 
 </project>

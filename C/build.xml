@@ -36,6 +36,7 @@
 	
 	<target name="install" depends="init_eclipse,build" description="Install the result">
 		<ant target="install" dir="ComposestarEclipsePlugin" inheritRefs="true" />
+		
 		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
 			<FileSet dir="${build.core}/Compiletime/dist">
 				<include name="ComposestarCore.jar"/>

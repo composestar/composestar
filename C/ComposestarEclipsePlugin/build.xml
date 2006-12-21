@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/C/ComposestarEclipsePlugin" default="build">
 
-	<condition property="build.core" value="../../../Core">
+	<condition property="build.core" value="../../Core">
 		<and>
 			<not>
 				<isset property="build.core" />
 			</not>
-			<available file="../../../Core/common.xml" />
+			<available file="../../Core/common.xml" />
 		</and>
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
@@ -27,13 +27,6 @@
 	<target name="clean" depends="init">
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
-		<delete dir="${eclipse.home}/plugins/ComposestarEclipsePlugin"/>
-		<delete>
-			<FileSet dir="${build.c}/ComposestarEclipsePlugin">
-				<include name="ComposestarEclipsePlugin.jar"/>
-			</FileSet>
-		</delete>	
-		
 	</target>
 
 	<!-- build -->	
@@ -49,33 +42,16 @@
 	</target>
 	
 	<!-- create jar -->
-	<target name="jar">
-		<jar destfile="ComposestarEclipsePlugin.jar">
+	<target name="jar" depends="compile">
+		<jar destfile="${out.dist}/ComposestarEclipsePlugin.jar">
 			<fileset dir="${out.build}" />
 		</jar>
 	</target>
 	
 	<!-- install -->	
 	<target name="install" depends="init_local,build" description="install the eclipse plugin">
-		<!-- classes 
 		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin">
-			<fileset dir="${out.dist}"/>
-		</copy>-->
-		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
-			<fileset dir="${build.c}/Compiletime/Output">
-				<include name="ComposestarC.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
-			<fileset dir="${build.core}/Compiletime/dist"/>
-		</copy>
-		
-		<!-- plugin files -->
-			
-		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin">
-			<fileset dir=".">
-				<include name="**/*.*"/>
-			</fileset> 
+			<fileset dir="${out.dist}" />
 		</copy>
 	
 	</target>
