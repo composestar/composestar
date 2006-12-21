@@ -111,7 +111,7 @@ public abstract class Semantic
 
 	/**
 	 * @return The name of the parameter of the matching function
-	 * @param offset of the parameter from the function
+	 * @param index of the parameter from the function
 	 */
 	protected String parameterName(int index)
 	{
@@ -132,7 +132,7 @@ public abstract class Semantic
 	/**
 	 * @return The type of the annotation of the parameter of the matching
 	 *         function
-	 * @param offset of the parameter from the function
+	 * @param index  of the parameter from the function
 	 */
 	protected CAnnotation parameterAnnotation(int index)
 	{
@@ -209,7 +209,7 @@ public abstract class Semantic
 
 	/**
 	 * @return The type of the parameter of the matching function
-	 * @param offset of the parameter from the function
+	 * @param index of the parameter from the function
 	 */
 	protected String parameterTypeMF(int index)
 	{
@@ -259,7 +259,7 @@ public abstract class Semantic
 
 	/**
 	 * @return The type of the parameter of the substitution function
-	 * @param offset of the parameter from the function
+	 * @param index of the parameter from the function
 	 */
 	protected String parameterTypeSF(int index)
 	{

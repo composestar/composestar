@@ -63,7 +63,7 @@ public class ClassModifier
 			JavaMethodInfo m = (JavaMethodInfo) it.next();
 			int modifiers = m.theMethod.getModifiers();
 			CtClass returnClass = null;
-			if (m.ReturnTypeString != "")
+			if (!m.ReturnTypeString.equals(""))
 			{
 				returnClass = findClass(m.ReturnTypeString);
 			}

@@ -278,11 +278,11 @@ public class JavaCompiler implements LangCompiler
 			Source s = (Source) sourceIt.next();
 			if (dummies)
 			{
-				sourcefiles.append("\"" + FileUtils.normalizeFilename(s.getDummy()) + "\"");
+                sourcefiles.append("\"").append(FileUtils.normalizeFilename(s.getDummy())).append("\"");
 			}
 			else
 			{
-				sourcefiles.append("\"" + s.getFileName() + "\"" + "\n");
+                sourcefiles.append("\"").append(s.getFileName()).append("\"" + "\n");
 			}
 		}
 

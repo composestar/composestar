@@ -138,11 +138,7 @@ public class Aspect
 			for (int j = 0; j < p.getNumberOfAdviceApplications(); j++)
 			{
 				AdviceApplication aa = p.getAdviceApplication(j);
-				if (this.advices.containsKey(aa.getId()))
-				{
-					return true;
-				}
-				else
+				if (!this.advices.containsKey(aa.getId()))
 				{
 					return false;
 				}

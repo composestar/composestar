@@ -103,7 +103,10 @@ public class FITER implements CTCommonModule
 		{
 			FilterType ftype = (FilterType) result.get(i);
 			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Unable to resolve filter type: " + ftype.getName() + "!");
-			throw new ModuleException("Unable to resolve filter type: " + ftype.getName() + "!", MODULE_NAME, ftype);
+        }
+
+        if(!result.isEmpty()){
+            throw new ModuleException("Unable to resolve filter type: " + ((FilterType) result.get(0)).getName() + "!", MODULE_NAME, (FilterType) (result.get(0)));
 		}
 	}
 

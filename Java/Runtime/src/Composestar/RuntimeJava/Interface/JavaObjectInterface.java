@@ -73,7 +73,7 @@ public class JavaObjectInterface extends ObjectInterface
 			}
 			else if (fieldType.equals(boolean.class))
 			{
-				result = new Boolean(field.getBoolean(object));
+				result = Boolean.valueOf(field.getBoolean(object));
 			}
 			else
 			{

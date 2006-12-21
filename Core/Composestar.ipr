@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="4" relativePaths="false">
+<project version="4" relativePaths="true">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
   </component>
@@ -281,12 +281,12 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:/composestar/trunk/C/Compiletime/CompiletimeC.iml" filepath="C:/composestar/trunk/C/Compiletime/CompiletimeC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../C/Compiletime/CompiletimeC.iml" filepath="$PROJECT_DIR$/../C/Compiletime/CompiletimeC.iml" />
       <module fileurl="file://$PROJECT_DIR$/Compiletime/CompiletimeCore.iml" filepath="$PROJECT_DIR$/Compiletime/CompiletimeCore.iml" />
-      <module fileurl="file://C:/composestar/trunk/DotNET/Compiletime/CompiletimeDotNET.iml" filepath="C:/composestar/trunk/DotNET/Compiletime/CompiletimeDotNET.iml" />
-      <module fileurl="file://C:/composestar/trunk/Java/Compiletime/CompiletimeJava.iml" filepath="C:/composestar/trunk/Java/Compiletime/CompiletimeJava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../DotNET/Compiletime/CompiletimeDotNET.iml" filepath="$PROJECT_DIR$/../DotNET/Compiletime/CompiletimeDotNET.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Java/Compiletime/CompiletimeJava.iml" filepath="$PROJECT_DIR$/../Java/Compiletime/CompiletimeJava.iml" />
       <module fileurl="file://$PROJECT_DIR$/Runtime/RuntimeCore.iml" filepath="$PROJECT_DIR$/Runtime/RuntimeCore.iml" />
-      <module fileurl="file://C:/composestar/trunk/Java/Runtime/RuntimeJava.iml" filepath="C:/composestar/trunk/Java/Runtime/RuntimeJava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Java/Runtime/RuntimeJava.iml" filepath="$PROJECT_DIR$/../Java/Runtime/RuntimeJava.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">

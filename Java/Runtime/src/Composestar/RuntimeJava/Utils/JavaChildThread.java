@@ -4,23 +4,19 @@ import java.util.HashMap;
 
 import Composestar.RuntimeCore.Utils.*;
 
-public class JavaChildThread implements ChildThread, Runnable
+public class JavaChildThread extends Thread implements ChildThread, Runnable 
 {
 
 	private ChildRunnable running = null;
 
 	private java.lang.Thread parent = null;
 
-	private java.lang.Thread thisThread = null;
-
 	private static HashMap threads = new HashMap();
 
 	public JavaChildThread()
 	{
-		thisThread = new java.lang.Thread(this);
-		thisThread.setDaemon(true);
-		addChildThread(thisThread, this);
-		thisThread.start();
+		setDaemon(true);
+		start();
 	}
 
 	public ChildThread createNew()
@@ -48,26 +44,6 @@ public class JavaChildThread implements ChildThread, Runnable
 		threads.put(key, thread);
 	}
 
-	public boolean equals(Object o)
-	{
-		if (o instanceof java.lang.Thread)
-		{
-			return ((java.lang.Thread) o).equals(thisThread);
-		}
-		else if (o instanceof JavaChildThread)
-		{
-			if (thisThread == null)
-			{
-				return false;
-			}
-			return thisThread.equals(((JavaChildThread) o).thisThread);
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 	public EntryPoint getEntryPoint()
 	{
 		// ..
@@ -76,17 +52,7 @@ public class JavaChildThread implements ChildThread, Runnable
 
 	public java.lang.Thread getThread()
 	{
-		while (thisThread == null)
-		{
-			try
-			{
-				java.lang.Thread.yield();
-			}
-			catch (Exception e)
-			{
-			}
-		}
-		return thisThread;
+		return this;
 	}
 
 	public java.lang.Thread getParentThread()
@@ -106,7 +72,7 @@ public class JavaChildThread implements ChildThread, Runnable
 
 	public boolean isSuspended()
 	{
-		return running == null || thisThread.isAlive();
+		return running == null || this.isAlive();
 	}
 
 	public void resumeThread()
@@ -145,12 +111,12 @@ public class JavaChildThread implements ChildThread, Runnable
 	public void start()
 	{
 		parent = java.lang.Thread.currentThread();
-		thisThread.interrupt();
+		this.interrupt();
 	}
 
 	public void suspendThread()
 	{
-		while (true)
+		while (running == null)
 		{
 			try
 			{

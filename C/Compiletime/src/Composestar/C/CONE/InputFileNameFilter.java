@@ -42,18 +42,7 @@ public class InputFileNameFilter implements FilenameFilter
 	public boolean accept(File arg0, String arg1)
 	{
 		File f = new File(arg0, arg1);
-		if (arg1.endsWith(".ccc"))
-		{
-			return true;
-		}
-		else if (f.isDirectory())
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return arg1.endsWith(".ccc") || f.isDirectory();
 	}
 
 }

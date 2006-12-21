@@ -12,7 +12,7 @@ public class CCONE extends CONE
 
 	/**
 	 * @param resources
-	 * @throws Composestar.core.Exception.ModuleException
+	 * @throws Composestar.Core.Exception.ModuleException
 	 * @roseuid 404DB2030076
 	 */
 	public void run(CommonResources resources) throws ModuleException

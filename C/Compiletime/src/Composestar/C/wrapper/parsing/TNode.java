@@ -482,14 +482,14 @@ public class TNode extends CommonAST
 
 		if (this.getLineNum() != 0)
 		{
-			str.append(" line:" + (this.getLineNum()));
+            str.append(" line:").append(this.getLineNum());
 		}
 
 		Enumeration keys = (this.getAttributesTable().keys());
 		while (keys.hasMoreElements())
 		{
 			String key = (String) keys.nextElement();
-			str.append(" " + key + ":" + (this.getAttribute(key)));
+            str.append(" ").append(key).append(":").append(this.getAttribute(key));
 		}
 
 		return str.toString();

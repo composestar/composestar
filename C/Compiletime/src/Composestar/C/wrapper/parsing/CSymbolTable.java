@@ -206,14 +206,12 @@ public class CSymbolTable
 	public String toString()
 	{
 		StringBuffer buff = new StringBuffer(300);
-		buff.append("Composestar.C.parsing.CSymbolTable { \nCurrentScope: " + currentScopeAsString()
-				+ "\nDefinedSymbols:\n");
+        buff.append("Composestar.C.parsing.CSymbolTable { \nCurrentScope: ").append(currentScopeAsString()).append("\nDefinedSymbols:\n");
 		Enumeration ke = symTable.keys();
 		Enumeration ve = symTable.elements();
 		while (ke.hasMoreElements())
 		{
-			buff.append(ke.nextElement().toString() + " (" + TNode.getNameForType(((TNode) ve.nextElement()).getType())
-					+ ")\n");
+            buff.append(ke.nextElement().toString()).append(" (").append(TNode.getNameForType(((TNode) ve.nextElement()).getType())).append(")\n");
 		}
 		buff.append("}\n");
 		return buff.toString();

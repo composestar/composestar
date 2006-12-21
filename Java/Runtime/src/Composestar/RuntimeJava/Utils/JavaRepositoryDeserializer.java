@@ -22,7 +22,7 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			ois = new ObjectInputStream(bis);
 
-			while(true)
+			while(fis.available() != 0)
 			{
 				Object o = ois.readObject();
 				if(o instanceof RepositoryEntity)
