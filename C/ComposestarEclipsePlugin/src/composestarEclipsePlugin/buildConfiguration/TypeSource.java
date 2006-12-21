@@ -1,24 +1,29 @@
 package composestarEclipsePlugin.buildConfiguration;
 
 /**
- * Class representing a type source.
- * Used by BuildConfigurationManager to build configuration-file.
+ * Class representing a type source. Used by BuildConfigurationManager to build
+ * configuration-file.
  */
-public class TypeSource {
-	
+public class TypeSource
+{
+
 	private String name = "";
+
 	private String filename = "";
-	
-	public TypeSource(String Name, String fileName){
+
+	public TypeSource(String Name, String fileName)
+	{
 		this.name = Name;
 		this.filename = fileName;
 	}
-	
-	public String getName(){
+
+	public String getName()
+	{
 		return name;
 	}
-	
-	public String getFileName(){
+
+	public String getFileName()
+	{
 		return filename;
 	}
 }
