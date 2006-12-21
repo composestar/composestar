@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/C/Compiletime" default="build">
+<project name="ComposeStar/C/Compiletime" default="build" xmlns:cs="antlib:Composestar">
 
 	<condition property="build.core" value="../../Core">
 		<and>
@@ -43,21 +43,18 @@
 	<target name="build" depends="init_local,antlr,compile,jar" description="build the C compiletime"/>
 	
 	<target name="antlr" depends="init_local">		
-		<antlr target="src/Composestar/C/grammar/StdCParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
+		<cs:antlr target="src/Composestar/C/grammar/StdCParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
 			<classpath refid="lib.c"/>
-		</antlr>
-		<antlr target="src/Composestar/C/grammar/GnuCParser.g" glib="src/Composestar/C/grammar/StdCParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
+		</cs:antlr>
+		<cs:antlr target="src/Composestar/C/grammar/GnuCParser.g" glib="src/Composestar/C/grammar/StdCParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
 			<classpath refid="lib.c"/>
-		</antlr>
-		<antlr target="src/Composestar/C/grammar/GnuCTreeParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
+		</cs:antlr>
+		<cs:antlr target="src/Composestar/C/grammar/GnuCTreeParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
 			<classpath refid="lib.c"/>
-		</antlr>
-		<antlr target="src/Composestar/C/grammar/GnuCEmitter.g" glib="src/Composestar/C/grammar/GnuCTreeParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
+		</cs:antlr>
+		<cs:antlr target="src/Composestar/C/grammar/GnuCEmitter.g" glib="src/Composestar/C/grammar/GnuCTreeParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
 			<classpath refid="lib.c"/>
-		</antlr>
-		<antlr target="src/Composestar/C/wrapper/parsing/expandedGnuCEmitter.g" outputdirectory="src/Composestar/C/wrapper/parsing">
-			<classpath refid="lib.c"/>
-		</antlr>
+		</cs:antlr>
 	</target>
 	
 	<target name="compile" depends="init_local,antlr">
