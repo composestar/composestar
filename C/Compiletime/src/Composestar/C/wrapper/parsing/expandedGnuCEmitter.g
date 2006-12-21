@@ -42,7 +42,8 @@ import java.util.*;
 
 import antlr.CommonAST;
 import antlr.DumpASTVisitor;
-}class GnuCEmitter extends TreeParser;
+}
+class GnuCEmitter extends TreeParser;
 
 options {
 	importVocab= GnuC;

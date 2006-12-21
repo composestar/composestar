@@ -16,27 +16,56 @@
 	<target name="clean" depends="init" description="clean the compilation results">
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
-		<delete dir="Output"/>
+		
+		<delete>
+			<fileset dir="src/Composestar/C/wrapper/parsing">
+				<include name="GnuCEmitter.*"/>
+				<include name="GnuCEmitterTokenTypes.*"/>
+				<include name="GnuCLexer.*"/>
+				<include name="GnuCLexerTokenTypes.*"/>
+				<include name="GnuCParser.*"/>
+				<include name="GnuCTokenTypes.*"/>
+				<include name="GnuCTreeParser.*"/>
+				<include name="GnuCTreeParserTokenTypes.*"/>
+				<include name="StdCLexer.*"/>
+				<include name="StdCParser.*"/>
+				<include name="STDCTokenTypes.*"/>
+				<include name="*.smap"/>
+			</fileset>
+		</delete>
 	</target>
 
 	<target name="init_local" depends="init">
-		<!--<path id="${build.c}/ComposestarEclipsePlugin/binaries/antlr.jar">
-		</path>-->
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
-		<mkdir dir="${build.c}/Compiletime/Output"/>
 	</target>
 	
-	<target name="build" depends="init_local,compile_c,jar" description="build the C compiletime"/>
+	<target name="build" depends="init_local,antlr,compile,jar" description="build the C compiletime"/>
 	
-	<!--Maybe recompiling grammar files is needed-->
-	<target name="compile_c" depends="init_local">
-		<javac srcdir="src" destdir="${build.c}/Compiletime/Output" classpathref="lib.core" classpath="${build.c}\ComposestarEclipsePlugin\binaries\antlr.jar;${build.core}\Compiletime\dist\ComposestarCORE.jar" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}"> <!--source="${build.c.version}" target="${build.c.version}" debug="${build.debug}" deprecation="${build.deprecation}" -->
-		</javac>
+	<target name="antlr" depends="init_local">		
+		<antlr target="src/Composestar/C/grammar/StdCParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
+			<classpath refid="lib.c"/>
+		</antlr>
+		<antlr target="src/Composestar/C/grammar/GnuCParser.g" glib="src/Composestar/C/grammar/StdCParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
+			<classpath refid="lib.c"/>
+		</antlr>
+		<antlr target="src/Composestar/C/grammar/GnuCTreeParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
+			<classpath refid="lib.c"/>
+		</antlr>
+		<antlr target="src/Composestar/C/grammar/GnuCEmitter.g" glib="src/Composestar/C/grammar/GnuCTreeParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
+			<classpath refid="lib.c"/>
+		</antlr>
+		<antlr target="src/Composestar/C/wrapper/parsing/expandedGnuCEmitter.g" outputdirectory="src/Composestar/C/wrapper/parsing">
+			<classpath refid="lib.c"/>
+		</antlr>
+	</target>
+	
+	<target name="compile" depends="init_local,antlr">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.c" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}" />
 	</target>
 			
-	<target name="jar" depends="compile_c">
-		<jar destfile="${out.dist}/ComposestarC.jar" basedir="${build.c}/Compiletime/Output"/> <!--"${out.build}" -->
+	<target name="jar" depends="compile">
+		<jar destfile="${out.dist}/ComposestarC.jar" basedir="${out.build}"/>
 	</target>
 	
 	<target name="install" depends="init_eclipse,build" description="Install the C compiletime">
