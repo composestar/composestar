@@ -198,7 +198,7 @@ public class CstarTest extends BaseTask
 			execute.setSpawn(false);
 			execute.setWorkingDirectory(new File(eclipseHome));
 
-			String[] cmd = { "java", "-cp", "startup.jar", launcher, "-application",
+			String[] cmd = { "java", "-cp", eclipseHome + File.separator + "startup.jar", launcher, "-application",
 					"ComposestarEclipsePlugin.testrun", projectname, "-data", workspace, "-clean" };
 			execute.setCommandline(cmd);
 
@@ -214,7 +214,7 @@ public class CstarTest extends BaseTask
 			{
 				throw new Exception("Exit code is not zero: " + err);
 			}
-			
+
 			checkOutput(projectname, outputStream.toString());
 
 			cntSuccess++;
