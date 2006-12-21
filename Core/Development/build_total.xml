@@ -289,7 +289,7 @@
 	</target>
 	
 	<!-- fancy selection -->	
-	<target name="select" depends="init">	
+	<target name="select">	
 		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar"/>
 		<antmenu image="${basedir}/logo.gif" title="Compose* Build">
 		
