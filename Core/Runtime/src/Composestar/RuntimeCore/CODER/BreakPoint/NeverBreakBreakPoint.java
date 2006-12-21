@@ -19,8 +19,4 @@ public class NeverBreakBreakPoint implements BreakPoint{
     public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){
 		return false;
     }
-
-    public boolean threadSpecific() {
-        return false;
-    }
 }

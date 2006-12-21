@@ -10,15 +10,15 @@ import java.util.*;
  */
 public class BreakPointOr extends BreakPointBi
 {
-	public BreakPointOr(Halter halt, BreakPoint right, BreakPoint left)
+	public BreakPointOr(BreakPoint right, BreakPoint left)
 	{
-		this(halt,right);
+		this(right);
 		setLeft(left);
 	}
 
-	public BreakPointOr(Halter halt, BreakPoint right)
+	public BreakPointOr(BreakPoint right)
 	{
-		super(halt,right);
+		super(right);
 	}
 
 	public boolean check(boolean isLeft, boolean isRight)

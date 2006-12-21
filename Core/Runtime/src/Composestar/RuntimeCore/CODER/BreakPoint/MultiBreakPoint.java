@@ -15,16 +15,14 @@ import java.util.Iterator;
  * Summary description for MultiBreakPoint.
  */
 public class MultiBreakPoint implements BreakPoint{
-    private boolean threadSpecifics = false;
     private ArrayList breakpoints;
 
-    public MultiBreakPoint(Halter halt) {
-        super(halt);
+    public MultiBreakPoint() {
         breakpoints = new ArrayList();
     }
 
-    public MultiBreakPoint(Halter halt, MultiBreakPoint breakpoint) {
-        this(halt);
+    public MultiBreakPoint(MultiBreakPoint breakpoint) {
+        super();
         addBreakpoint(breakpoint);
     }
 
@@ -36,32 +34,8 @@ public class MultiBreakPoint implements BreakPoint{
         return false;
     }
 
-    protected BreakPoint getCopy() {
-        return threadSpecific() ? new MultiBreakPoint(halt, this) : this;
-    }
-
     public void addBreakpoint(BreakPoint point) {
-		if(point == null) return;
-
-        if (point instanceof NeverBreakBreakPoint) {
-        } else if (point instanceof MultiBreakPoint) {
-            MultiBreakPoint mbpoint = (MultiBreakPoint) point;
-            threadSpecifics = mbpoint.threadSpecifics || threadSpecifics;
-            Iterator i = mbpoint.breakpoints.iterator();
-            while (i.hasNext()) {
-                BreakPoint item = ((BreakPoint) i.next()).getForNextThread();
-                breakpoints.add(item);
-            }
-        } else {
-            threadSpecifics = threadSpecifics || point.threadSpecific();
-            breakpoints.add(point);
-        }
-    }
-
-    // Override when breakpoint uses information from multiple threads.
-    // e.g. PI Calculus instead of LTL or Regular expressions
-    public boolean threadSpecific() {
-        return threadSpecifics;
+        breakpoints.add(point);
     }
 
     public BreakPoint add(BreakPoint point) {
@@ -70,14 +44,7 @@ public class MultiBreakPoint implements BreakPoint{
     }
 
     public BreakPoint remove(BreakPoint point) {
-        if (super.remove(point).equals(this)) return this;
-        threadSpecifics = false;
         breakpoints.remove(point);
-        Iterator i = breakpoints.iterator();
-        while (!threadSpecifics && i.hasNext()) {
-            BreakPoint item = ((BreakPoint) i.next()).getForNextThread();
-            threadSpecifics = item.threadSpecific() || threadSpecifics;
-        }
         return this;
     }
 }

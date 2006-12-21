@@ -15,14 +15,14 @@ public abstract class BreakPointBi extends BreakPointMono
 {
 	protected BreakPoint left = null;
 
-    public BreakPointBi(Halter halt, BreakPoint right)
+    public BreakPointBi(BreakPoint right)
     {
-        super(halt, right);
+        super(right);
     }
 
-	public BreakPointBi(Halter halt, BreakPoint left, BreakPoint right)
+	public BreakPointBi(BreakPoint left, BreakPoint right)
 	{
-		super(halt, right);
+		super(right);
 		setLeft(left);
 	}
 

@@ -13,9 +13,9 @@ public class BreakPointRelease extends BreakPointBi
 	private boolean armed = false;
 	private boolean released = false;
 
-	public BreakPointRelease(Halter halt, BreakPoint right)
+	public BreakPointRelease(BreakPoint right)
 	{
-		super(halt,right);
+		super(right);
 	}
 
 	public boolean check(boolean isLeft, boolean isRight)

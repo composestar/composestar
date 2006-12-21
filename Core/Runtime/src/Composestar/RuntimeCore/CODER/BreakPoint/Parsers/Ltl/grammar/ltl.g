@@ -30,16 +30,16 @@ options {
 
 formula returns [BreakPoint result = null]
 	{BreakPoint right = null;}
-	: GLOBAL result = formula { result = new BreakPointGlobal(halt,result);}
-	| FUTURE result = formula { result = new BreakPointFuture(halt,result);}
+	: GLOBAL result = formula { result = new BreakPointGlobal(result);}
+	| FUTURE result = formula { result = new BreakPointFuture(result);}
 	| result = subformula ( right = rightpart {((BreakPointBi)right).setLeft(result); result = right;})?
 	;
 
 rightpart returns [BreakPoint result = null]
-	: OR result = formula {result = new BreakPointOr(halt,result);}
-	| AND result = formula {result = new BreakPointAnd(halt,result);}
-	| UNTIL result = formula { result = new BreakPointUntil(halt,result);} 
-	| RELEASE result = formula { result = new BreakPointRelease(halt,result);}
+	: OR result = formula {result = new BreakPointOr(result);}
+	| AND result = formula {result = new BreakPointAnd(result);}
+	| UNTIL result = formula { result = new BreakPointUntil(result);} 
+	| RELEASE result = formula { result = new BreakPointRelease(result);}
 	;
 
 subformula returns [BreakPoint result = null]

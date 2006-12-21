@@ -14,9 +14,9 @@ import java.util.*;
  */
 public class BreakPointFuture extends BreakPointMono
 {
-	public BreakPointFuture(Halter halt, BreakPoint right)
+	public BreakPointFuture(BreakPoint right)
 	{
-		super(halt, right);
+		super(right);
 	}
 
     public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){

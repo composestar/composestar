@@ -9,15 +9,15 @@ import Composestar.RuntimeCore.FLIRT.*;
  */
 public class BreakPointAnd extends BreakPointBi
 {
-	public BreakPointAnd(Halter halt, BreakPoint right, BreakPoint left)
+	public BreakPointAnd(BreakPoint right, BreakPoint left)
 	{
-		this(halt,right);
+		this(right);
 		setLeft(left);
 	}
 
-	public BreakPointAnd(Halter halt, BreakPoint right)
+	public BreakPointAnd(BreakPoint right)
 	{
-		super(halt,right);
+		super(right);
 	}
 
 	public boolean check(boolean isLeft, boolean isRight)

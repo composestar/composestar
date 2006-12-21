@@ -16,9 +16,9 @@ public class BreakPointGlobal extends BreakPointMono
 {
 	protected boolean stillOn = true;
 
-	public BreakPointGlobal(Halter halt, BreakPoint right)
+	public BreakPointGlobal(BreakPoint right)
 	{
-		super(halt, right);
+		super(right);
 	}
 
     public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){

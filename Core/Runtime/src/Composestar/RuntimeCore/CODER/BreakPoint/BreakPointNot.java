@@ -14,9 +14,9 @@ import java.util.*;
  */
 public abstract class BreakPointNot extends BreakPointMono
 {
-	public BreakPointNot(Halter halt, BreakPoint right)
+	public BreakPointNot(BreakPoint right)
 	{
-		super(halt, right);
+		super(right);
 	}
 
     public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){

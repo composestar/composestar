@@ -21,14 +21,14 @@ public class SelectorBreakPoint implements BreakPoint{
     }
 
     public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){
-		LinkedList list = afterMessage.getMessages();
+		/*LinkedList list = afterMessage.getMessages();
 		for(int i = 0; i < list.size();i++)
 		{
-			if(sList.indexOf(((DebuggableSingleMessage)list.get(i)).getSelector()) >= 0)
+			if(sList.indexOf((list.get(i)).getSelector()) >= 0)
 			{
 				return true;
 			}
-		}
+		}*/
 		return false;
     }
 }

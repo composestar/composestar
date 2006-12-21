@@ -11,9 +11,9 @@ public class BreakPointUntil extends BreakPointBi
 {
 	private boolean first = true;
 
-	public BreakPointUntil(Halter halt, BreakPoint right)
+	public BreakPointUntil(BreakPoint right)
 	{
-		super(halt,right);
+		super(right);
 	}
 
 	public boolean check(boolean isLeft,boolean isRight)

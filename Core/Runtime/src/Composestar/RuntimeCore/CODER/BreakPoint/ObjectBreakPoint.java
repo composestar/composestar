@@ -43,10 +43,6 @@ public abstract class ObjectBreakPoint implements BreakPoint {
 		return false;
     }
 
-    public boolean threadSpecific() {
-        return false;
-    }
-
     public void setSelector(String selector) throws BreakPointParseException
 	{
 		if(selector == null || selector.length() == 0) selector = "*";

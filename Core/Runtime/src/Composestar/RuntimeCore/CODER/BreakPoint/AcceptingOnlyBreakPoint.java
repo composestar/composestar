@@ -21,8 +21,4 @@ public class AcceptingOnlyBreakPoint implements BreakPoint{
     public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList MessageList, JoinPoint point){
         return eventType == DebuggerProvider.FILTER_ACCEPTED;
     }
-
-    public boolean threadSpecific() {
-        return false;
-    }
 }
