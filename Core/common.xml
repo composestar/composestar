@@ -278,7 +278,12 @@ Common routines. Always include this file in every build.xml file
 			<fileset dir="${build.core}/Compiletime"    includes="${out.jar.core}"/>
 			<fileset dir="${build.starlight}/Libraries" includes="**/*.jar"/>
 			<fileset dir="${build.starlight}/Source/Compiletime/lib" includes="*.jar" />
-		</path>		
+		</path>
+		
+		<path id="lib.c">
+			<path refid="lib.core"/>
+			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
+		</path>	
 			
 		<!-- findbugs jars -->
 		<path id="lib.findbugs">	  
