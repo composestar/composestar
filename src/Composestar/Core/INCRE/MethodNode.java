@@ -107,15 +107,17 @@ public class MethodNode extends Node
 	 */
 	public String getUniqueID(Object obj)
 	{
-		String uniqueID = obj.hashCode() + "." + this.reference;
+		StringBuffer uniqueID = new StringBuffer(obj.hashCode());		
+		uniqueID.append(".");
+		uniqueID.append(this.reference);
 		if (!parameters.isEmpty())
 		{
 			Iterator params = parameters.iterator();
 			while (params.hasNext())
 			{
-				uniqueID += (String) params.next();
+				uniqueID.append((String) params.next());
 			}
 		}
-		return uniqueID;
+		return uniqueID.toString();
 	}
 }

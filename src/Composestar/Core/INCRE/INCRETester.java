@@ -167,7 +167,7 @@ public class INCRETester
 		buffer.append("</").append(tag).append('>');
 	}
 
-	public static void main(String args[])
+	public static void main(String[] args)
 	{
 		INCRETester it = new INCRETester();
 		if (args.length != 1)
@@ -197,9 +197,9 @@ public class INCRETester
 
 		public HashMap instances = new HashMap();
 
-		public FileRecord(String filename)
+		public FileRecord(String inFilename)
 		{
-			this.filename = filename;
+			filename = inFilename;
 			ds = new DataStore();
 		}
 

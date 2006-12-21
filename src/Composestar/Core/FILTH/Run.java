@@ -1,25 +1,25 @@
-package Composestar.Core.FILTH;
-
 /*
- * Created on 2-sep-2003
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
+package Composestar.Core.FILTH;
 
 /**
  * @author nagyist
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 import java.io.FileReader;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import Composestar.Core.FILTH.Core.Action;
 import Composestar.Core.FILTH.Core.ExecutionManager;
@@ -57,8 +57,8 @@ public class Run
 		Action.insert(u, g);
 		p1.insert(g);
 		p2.insert(g);
-		OrderTraverser ot = new OrderTraverser();
-		LinkedList order = ot.traverse(g);
+		//OrderTraverser ot = new OrderTraverser();
+		//LinkedList order = ot.traverse(g);
 		// for (Iterator i=order.iterator();i.hasNext();)
 		// System.out.println(((Node)i.next()).getElement());
 	}
@@ -98,8 +98,8 @@ public class Run
 		p6.insert(g);
 		p7.insert(g);
 
-		OrderTraverser ot = new OrderTraverser();
-		LinkedList order = ot.traverse(g);
+		//OrderTraverser ot = new OrderTraverser();
+		//LinkedList order = ot.traverse(g);
 		// for (Iterator i=order.iterator();i.hasNext();)
 		// System.out.println(((Node)i.next()).getElement());
 	}
@@ -308,8 +308,8 @@ public class Run
 		Action.insert(u, g);
 		p1.insert(g);
 		p2.insert(g);
-		OrderTraverser ot = new OrderTraverser();
-		LinkedList multiOrder = ot.multiTraverse(g);
+		//OrderTraverser ot = new OrderTraverser();
+		//LinkedList multiOrder = ot.multiTraverse(g);
 		// System.out.println("<<multiple-orders>>");
 		// for (Iterator j=multiOrder.iterator();j.hasNext();){
 		// for (Iterator i=((LinkedList)j.next()).iterator();i.hasNext();)
@@ -337,8 +337,8 @@ public class Run
 		// Action.insert(u,g);
 		// p1.insert(g);
 		// p2.insert(g);
-		OrderTraverser ot = new OrderTraverser();
-		LinkedList multiOrder = ot.multiTraverse(g);
+		//OrderTraverser ot = new OrderTraverser();
+		//LinkedList multiOrder = ot.multiTraverse(g);
 		// System.out.println("<<multiple-orders>>");
 		// for (Iterator j=multiOrder.iterator();j.hasNext();){
 		// for (Iterator i=((LinkedList)j.next()).iterator();i.hasNext();)
@@ -368,8 +368,8 @@ public class Run
 		p1.insert(g);
 		p2.insert(g);
 		p3.insert(g);
-		OrderTraverser ot = new OrderTraverser();
-		LinkedList multiOrder = ot.multiTraverse(g);
+		//OrderTraverser ot = new OrderTraverser();
+		//LinkedList multiOrder = ot.multiTraverse(g);
 		// System.out.println("<<multiple-orders>>");
 		// for (Iterator j=multiOrder.iterator();j.hasNext();){
 		// for (Iterator i=((LinkedList)j.next()).iterator();i.hasNext();)
@@ -389,7 +389,9 @@ public class Run
 		/* process XML specification */
 		try
 		{
-			XMLReader xr = XMLReaderFactory.createXMLReader();
+			SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+			saxFactory.setNamespaceAware(true);
+			XMLReader xr = saxFactory.newSAXParser().getXMLReader();
 			ConstraintFilter of = new ConstraintFilter(g);
 			of.setParent(xr);
 			FileReader r = new FileReader("XMLTest.xml");
@@ -401,8 +403,8 @@ public class Run
 		}
 		/* process XML specification */
 
-		OrderTraverser ot = new OrderTraverser();
-		LinkedList multiOrder = ot.multiTraverse(g);
+		//OrderTraverser ot = new OrderTraverser();
+		//LinkedList multiOrder = ot.multiTraverse(g);
 		// System.out.println("<<multiple-orders>>");
 		// for (Iterator j=multiOrder.iterator();j.hasNext();){
 		// for (Iterator i=((LinkedList)j.next()).iterator();i.hasNext();)

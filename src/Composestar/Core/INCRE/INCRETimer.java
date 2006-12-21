@@ -20,11 +20,11 @@ public class INCRETimer
 
 	private long elapsedTime;
 
-	public INCRETimer(String module, String description, int type)
+	public INCRETimer(String inModule, String inDescription, int inType)
 	{
-		this.module = module;
-		this.description = description;
-		this.type = type;
+		module = inModule;
+		description = inDescription;
+		type = inType;
 	}
 
 	public void start()

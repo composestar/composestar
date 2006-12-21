@@ -34,5 +34,7 @@ public class SubstitutionPart extends AbstractPattern
 		target = spAST.getTarget();
 		selector = new MessageSelector(spAST.getSelector());
 		selector.setParent(this);
+		descriptionFileName = aspAST.getDescriptionFileName();
+		descriptionLineNumber = aspAST.getDescriptionLineNumber();
 	}
 }

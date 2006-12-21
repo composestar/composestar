@@ -154,18 +154,20 @@ public class CondMatchEdge extends Edge
 			sb.append("{");
 		}
 		Iterator it = matchingParts.iterator();
+		int cnt = 0;
 		while (it.hasNext())
 		{
+			cnt++;
 			MatchingPart mp = (MatchingPart) it.next();
-			if (sb.length() > 0)
+			if (cnt > 1)
 			{
 				if (isMessageList)
 				{
-					sb.append(", ");
+					sb.append("; ");
 				}
 				else
 				{
-					sb.append("; ");
+					sb.append(", ");
 				}
 			}
 			if (mp.getMatchType() instanceof NameMatchingType)

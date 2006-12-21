@@ -4,10 +4,10 @@
  */
 package Composestar.Core.CORE2;
 
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
@@ -81,7 +81,7 @@ public class Core implements CTCommonModule
 		ExecutionModel execModel = fireModel.getExecutionModel();
 		ExecutionStateIterator iterator = new ExecutionStateIterator(execModel);
 
-		Enumeration enumer;
+		Iterator it;
 
 		while (iterator.hasNext())
 		{
@@ -109,20 +109,21 @@ public class Core implements CTCommonModule
 				}
 			}
 
-			enumer = state.getOutTransitions();
-			while (enumer.hasMoreElements())
+			it = state.getOutTransitions();
+			while (it.hasNext())
 			{
-				transition = (ExecutionTransition) enumer.nextElement();
+				transition = (ExecutionTransition) it.next();
 				visitedTransitions.add(transition.getFlowTransition());
 			}
 		}
 
 		// check useless filters (filters that only continue):
-		enumer = filterContinueTable.keys();
-		while (enumer.hasMoreElements())
+		it = filterContinueTable.entrySet().iterator();
+		while (it.hasNext())
 		{
-			Filter filter = (Filter) enumer.nextElement();
-			Boolean b = (Boolean) filterContinueTable.get(filter);
+			Entry entry = (Entry) it.next();
+			Filter filter = (Filter) entry.getKey();
+			Boolean b = (Boolean) entry.getValue();
 			if (b.booleanValue())
 			{
 				Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Redundant filter found!", filter);
@@ -134,10 +135,10 @@ public class Core implements CTCommonModule
 		{
 
 			// unreachable matchingparts:
-			enumer = flowModels[i].getNodes();
-			while (enumer.hasMoreElements())
+			it = flowModels[i].getNodes();
+			while (it.hasNext())
 			{
-				flowNode = (FlowNode) enumer.nextElement();
+				flowNode = (FlowNode) it.next();
 
 				if (!visitedNodes.contains(flowNode) && flowNode.containsName("MatchingPart"))
 				{
@@ -147,10 +148,10 @@ public class Core implements CTCommonModule
 			}
 
 			// matchingparts that always accept or reject:
-			enumer = flowModels[i].getTransitions();
-			while (enumer.hasMoreElements())
+			it = flowModels[i].getTransitions();
+			while (it.hasNext())
 			{
-				flowTransition = (FlowTransition) enumer.nextElement();
+				flowTransition = (FlowTransition) it.next();
 				if (!visitedTransitions.contains(flowTransition))
 				{
 					FlowNode startNode = flowTransition.getStartNode();

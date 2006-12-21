@@ -1,4 +1,4 @@
-package Composestar.Core.COPPER.applet;
+package Composestar.Core.COPPER.Applet;
 
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Element;

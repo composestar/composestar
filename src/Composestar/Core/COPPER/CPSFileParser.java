@@ -17,10 +17,9 @@ import java.io.StringReader;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 import antlr.ANTLRException;
 import antlr.CommonAST;
-import antlr.NoViableAltException;
-import antlr.NoViableAltForCharException;
 import antlr.RecognitionException;
 import antlr.debug.misc.ASTFrame;
 
@@ -29,96 +28,71 @@ import antlr.debug.misc.ASTFrame;
  */
 public class CPSFileParser
 {
-
 	private CpsParser parser;
 
-	public void parseCpsFileWithName(String file) throws ModuleException
+	public void parseCpsFileWithName(String filename) throws ModuleException
 	{
-		try
+		this.readCpsFile(filename);
+		this.parseCpsFile(filename);
+
+		COPPER.setParser(parser);
+		COPPER.setParseTree((CommonAST) parser.getAST());
+
+		Debug.out(Debug.MODE_DEBUG, COPPER.MODULE_NAME, "Parse tree: " + parser.getAST().toStringTree());
+		if (COPPER.isShowtree())
 		{
-			this.readCpsFile(file);
-			this.parseCpsFile(file);
-
-			COPPER.setParser(parser);
-
-			COPPER.setParseTree((CommonAST) parser.getAST());
-
-			Debug.out(Debug.MODE_DEBUG, "COPPER", "Parse tree: " + parser.getAST().toStringTree());
-			if (COPPER.isShowtree())
-			{
-				System.out.println(COPPER.getParseTree().toStringList() + "\n\n");
-				ASTFrame frame = new ASTFrame("The tree", COPPER.getParseTree());
-				frame.setSize(800, 600);
-				frame.setVisible(true);
-			}
-		}
-		catch (ModuleException e)
-		{
-			throw e;
+			System.out.println(COPPER.getParseTree().toStringList() + "\n\n");
+			ASTFrame frame = new ASTFrame(filename, COPPER.getParseTree());
+			frame.setSize(800, 600);
+			frame.setVisible(true);
 		}
 	}
 
 	public void readCpsFile(String file) throws ModuleException
 	{
-		BufferedReader d;
+		BufferedReader reader = null;
 		try
 		{
-			COPPER.setCpscontents("");
-			d = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-			try
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			StringBuffer sb = new StringBuffer();
+
+			String line = reader.readLine();
+			while (line != null)
 			{
-				String line = d.readLine();
-				while (line != null)
-				{
-					COPPER.setCpscontents(COPPER.getCpscontents() + (line + "\r\n"));
-					line = d.readLine();
-				}
+				sb.append(line).append("\r\n");
+				line = reader.readLine();
 			}
-			finally
-			{
-				d.close();
-			}
+
+			COPPER.setCpscontents(sb.toString());
 		}
 		catch (IOException ioe)
 		{
-			Debug.out(Debug.MODE_ERROR, "COPPER", "The specified file: " + file + " could not be found or read!");
-			throw new ModuleException("The specified file: " + file + " could not be found or read!", "COPPER");
+			throw new ModuleException("The specified file '" + file + "' could not be found or read!", COPPER.MODULE_NAME);
+		}
+		finally
+		{
+			FileUtils.close(reader);
 		}
 	}
 
 	public void parseCpsFile(String file) throws ModuleException
 	{
-		StringReader sr;
-		CpsPosLexer lexer;
-
 		try
 		{
-			sr = new StringReader(COPPER.getCpscontents());
-			lexer = new CpsPosLexer(sr);
+			StringReader sr = new StringReader(COPPER.getCpscontents());
+			CpsPosLexer lexer = new CpsPosLexer(sr);
 			parser = new CpsParser(lexer);
 			parser.getASTFactory().setASTNodeClass(CpsAST.class);
 			// parser.setASTNodeClass("Composestar.Core.COPPER.CpsAST");
 			parser.concern();
 		}
-		catch (NoViableAltException e)
-		{
-			Debug.out(Debug.MODE_ERROR, "COPPER", "Syntax Error: " + e.getMessage(), file, e.getLine());
-			throw new ModuleException("Syntax error in cps file: " + e, "COPPER");
-		}
-		catch (NoViableAltForCharException e)
-		{
-			Debug.out(Debug.MODE_ERROR, "COPPER", "Syntax Error: " + e.getMessage(), file, e.getLine());
-			throw new ModuleException("Syntax error in cps file: " + e, "COPPER");
-		}
 		catch (RecognitionException e)
 		{
-			Debug.out(Debug.MODE_ERROR, "COPPER", "Syntax Error: " + e.getMessage(), file, e.getLine());
-			throw new ModuleException("Syntax error in cps file: " + e, "COPPER");
+			throw new ModuleException("Syntax error in concern file: " + e, COPPER.MODULE_NAME, file, e.getLine());
 		}
 		catch (ANTLRException e)
 		{
-			Debug.out(Debug.MODE_ERROR, "COPPER", "Syntax Error: " + e.getMessage(), file, 0);
-			throw new ModuleException("Syntax error in cps file: " + e, "COPPER");
+			throw new ModuleException("Syntax error in concern file: " + e, COPPER.MODULE_NAME, file, 0);
 		}
 	}
 }

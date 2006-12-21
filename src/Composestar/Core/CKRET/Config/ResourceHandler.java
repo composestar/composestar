@@ -42,10 +42,10 @@ public class ResourceHandler extends DefaultHandler
 	 * @roseuid 405026C5011E
 	 * @param repository
 	 */
-	public ResourceHandler(ConfigParser handler, XMLReader parser, Repository repository)
+	public ResourceHandler(ConfigParser handler, XMLReader inparser, Repository repository)
 	{
-		this.returnhandler = handler;
-		this.parser = parser;
+		returnhandler = handler;
+		parser = inparser;
 		// Repository repository1 = repository;
 
 	}

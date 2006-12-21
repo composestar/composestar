@@ -16,10 +16,10 @@ public class ProjectsHandler extends DefaultHandler implements ContentHandler
 
 	BuildConfigHandler returnHandler;
 
-	public ProjectsHandler(XMLReader parser, BuildConfigHandler documentHandler)
+	public ProjectsHandler(XMLReader inParser, BuildConfigHandler documentHandler)
 	{
-		this.parser = parser;
-		this.returnHandler = documentHandler;
+		parser = inParser;
+		returnHandler = documentHandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

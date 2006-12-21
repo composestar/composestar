@@ -1,15 +1,16 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.FILTH.Core;
 
-/*
- * Created on 9-sep-2003
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
-
 /**
- * @author nagyist To change the template for this generated type comment go to
- *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author nagyist
  */
 
 public class HardCondRule extends Rule
@@ -24,9 +25,9 @@ public class HardCondRule extends Rule
 	{
 		// System.out.print(" *applying: HardCond
 		// <"+(Action)_left+","+(Action)_right+">*\n");
-		if ((_left.evaluate() == null) || (!((Action) _left).isExecuted()) || (!_left.evaluate().booleanValue()))
+		if ((left.evaluate() == null) || (!((Action) left).isExecuted()) || (!left.evaluate().booleanValue()))
 		{
-			((Action) _right).setExecutable(false);
+			((Action) right).setExecutable(false);
 		}
 	}
 }

@@ -9,9 +9,8 @@
  */
 package Composestar.Core.DIGGER.Graph;
 
-import java.util.List;
-
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * @author Michiel Hendriks
@@ -19,11 +18,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElem
 public class FilterElementNode extends Node
 {
 	protected FilterElement element;
-
-	/**
-	 * @deprecated
-	 */
-	protected MatchingPatternNode lastPattern;
 
 	/**
 	 * @param inGraph
@@ -34,16 +28,9 @@ public class FilterElementNode extends Node
 		super(inGraph, "");
 		element = inElement;
 	}
-
-	/**
-	 * @param inPattern
-	 * @param inMatchingParts
-	 * @deprecated
-	 */
-	public void appendPattern(MatchingPatternNode inPattern, List inMatchingParts)
+	
+	public RepositoryEntity getRepositoryEntity()
 	{
-		inPattern.setOwner(this);
-		addOutgoingEdge(new MatchingEdge(inPattern, inMatchingParts));
-		lastPattern = inPattern;
+		return element;
 	}
 }

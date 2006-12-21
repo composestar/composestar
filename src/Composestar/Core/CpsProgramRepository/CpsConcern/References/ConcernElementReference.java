@@ -47,16 +47,17 @@ public class ConcernElementReference extends Reference
 
 	public String getQualifiedName()
 	{
-		String fname = "";
+		StringBuffer fname = new StringBuffer();
 		int i;
 
 		for (i = 0; i < pack.size(); i++)
 		{
-			fname += pack.elementAt(i);
-			fname += ".";
+			fname.append(pack.elementAt(i));
+			fname.append(".");
 		}
-		fname += concern;
-		fname += '.' + name;
-		return fname;
+		fname.append(concern);
+		fname.append('.');
+		fname.append(name);
+		return fname.toString();
 	}
 }

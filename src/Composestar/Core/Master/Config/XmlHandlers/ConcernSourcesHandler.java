@@ -15,10 +15,10 @@ public class ConcernSourcesHandler extends DefaultHandler implements ContentHand
 
 	ProjectsHandler returnHandler;
 
-	public ConcernSourcesHandler(XMLReader parser, ProjectsHandler documentHandler)
+	public ConcernSourcesHandler(XMLReader inParser, ProjectsHandler inDocumentHandler)
 	{
-		this.parser = parser;
-		this.returnHandler = documentHandler;
+		parser = inParser;
+		returnHandler = inDocumentHandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

@@ -31,10 +31,10 @@ public class ActionsHandler extends DefaultHandler
 	 * @roseuid 405026C303BE
 	 * @param repository
 	 */
-	public ActionsHandler(ConfigParser handler, XMLReader parser, Repository repository)
+	public ActionsHandler(ConfigParser handler, XMLReader inparser, Repository repository)
 	{
-		this.returnhandler = handler;
-		this.parser = parser;
+		returnhandler = handler;
+		parser = inparser;
 
 	}
 

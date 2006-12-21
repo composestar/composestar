@@ -127,8 +127,7 @@ public class ExistCondition implements BaseChecker
 			if (!doesConditionExists(conditionName, fm))
 			{
 				ConditionVariable tempCe = (ConditionVariable) ce;
-				Debug.out(Debug.MODE_ERROR, "CHKREP", "Condition " + conditionName + " is not declared in Conditions",
-						tempCe.getDescriptionFileName(), tempCe.getDescriptionLineNumber());
+				Debug.out(Debug.MODE_ERROR, "CHKREP", "Condition " + conditionName + " is not declared in Conditions", tempCe);
 				nonFatal = false;
 			}
 		}

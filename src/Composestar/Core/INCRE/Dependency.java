@@ -14,11 +14,11 @@ public class Dependency
 
 	/**
 	 * @roseuid 42206A590280
-	 * @param name
+	 * @param inName
 	 */
-	public Dependency(String name)
+	public Dependency(String inName)
 	{
-		this.name = name;
+		name = inName;
 	}
 
 	/**

@@ -12,9 +12,7 @@ package Composestar.Core.CKRET;
 import java.util.ArrayList;
 
 /**
- * @author Administrator To change the template for this generated type comment
- *         go to Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and
- *         Comments
+ * 
  */
 public class Resource
 {
@@ -26,9 +24,9 @@ public class Resource
 	// private StringBuffer history;
 	// private StringBuffer fancyhistory;
 
-	public Resource(String name)
+	public Resource(String inname)
 	{
-		this.name = name;
+		this.name = inname;
 		// this.history = new StringBuffer();
 		// this.fancyhistory = new StringBuffer();
 	}

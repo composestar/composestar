@@ -11,7 +11,7 @@ public class CpsAST extends CommonAST
 	 */
 	private static final long serialVersionUID = 2547618156802188540L;
 
-	protected int line;
+	protected int line = -1;
 
 	public void initialize(Token tok)
 	{
@@ -38,6 +38,13 @@ public class CpsAST extends CommonAST
 
 	public int getLine()
 	{
-		return line;
+		if ((line == -1) && (getFirstChild() != null))
+		{
+			return getFirstChild().getLine();
+		}
+		else 
+		{
+			return line;
+		}
 	}
 }

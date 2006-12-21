@@ -25,8 +25,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * Test whether all the internals are used. Generates warnings and does not quit
- * the compiler. 17 oct 2005
+ * Test whether all internals are used. Generates non-fatal warnings.
  * 
  * @author DoornenbalD
  */
@@ -155,8 +154,7 @@ public class NotUsedInternals implements BaseChecker
 				 */
 				if (!isInternalUsed)
 				{
-					Debug.out(Debug.MODE_WARNING, "CHKREP", "Internal " + internalID + " is declared but never used",
-							internal.getDescriptionFileName(), internal.getDescriptionLineNumber());
+					Debug.out(Debug.MODE_WARNING, "CHKREP", "Internal " + internalID + " is declared but never used", internal);
 				}
 			}
 		}

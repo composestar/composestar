@@ -25,13 +25,13 @@ public class ComparisonsPathHandler extends DefaultHandler
 
 	private ArrayList nodes;
 
-	public ComparisonsPathHandler(ConfigManager cfg, Module module, String fullname, TypeHandler returnhandler)
+	public ComparisonsPathHandler(ConfigManager cfg, Module inModule, String inFullname, TypeHandler inReturnhandler)
 	{
-		this.configmanager = cfg;
-		this.module = module;
-		this.fullname = fullname;
-		this.returnhandler = returnhandler;
-		this.nodes = new ArrayList();
+		configmanager = cfg;
+		module = inModule;
+		fullname = inFullname;
+		returnhandler = inReturnhandler;
+		nodes = new ArrayList();
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
@@ -56,15 +56,15 @@ public class ComparisonsPathHandler extends DefaultHandler
 		if (local_name.equalsIgnoreCase("path"))
 		{
 			Path path = new Path();
-			Iterator nodes = this.nodes.iterator();
+			Iterator nodesIt = nodes.iterator();
 
-			while (nodes.hasNext())
+			while (nodesIt.hasNext())
 			{
-				path.addNode((Node) nodes.next());
+				path.addNode((Node) nodesIt.next());
 			}
 
-			this.module.addComparableObject(this.fullname, path);
-			this.nodes.clear();
+			module.addComparableObject(fullname, path);
+			nodes.clear();
 
 			// look further between <type> tags
 			configmanager.getXMLReader().setContentHandler(returnhandler);

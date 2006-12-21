@@ -6,9 +6,11 @@ public class Source implements Serializable
 {
 	private static final long serialVersionUID = -5054531327936357776L;
 
-	private boolean isExecutable = false;
+	private boolean isEmbedded;
+	
+	private boolean isExecutable;
 
-	private String fileName;
+	private String filename;
 
 	private String dummy;
 
@@ -22,22 +24,32 @@ public class Source implements Serializable
 
 	public String getFileName()
 	{
-		return fileName;
+		return filename;
 	}
 
-	public void setFileName(String filename)
+	public void setFileName(String inFilename)
 	{
-		this.fileName = filename;
+		filename = inFilename;
 	}
 
+	public boolean isEmbedded()
+	{
+		return isEmbedded;
+	}
+
+	public void setIsEmbedded(boolean isemb)
+	{
+		isEmbedded = isemb;
+	}
+	
 	public boolean isExecutable()
 	{
-		return this.isExecutable;
+		return isExecutable;
 	}
 
 	public void setIsExecutable(boolean isexe)
 	{
-		this.isExecutable = isexe;
+		isExecutable = isexe;
 	}
 
 	/*
@@ -46,7 +58,7 @@ public class Source implements Serializable
 	 */
 	public void setDummy(String filename)
 	{
-		this.dummy = filename;
+		dummy = filename;
 	}
 
 	public String getDummy()
@@ -59,14 +71,14 @@ public class Source implements Serializable
 		return target;
 	}
 
-	public void setTarget(String target)
+	public void setTarget(String inTarget)
 	{
-		this.target = target;
+		target = inTarget;
 	}
 
 	public void setProject(Project p)
 	{
-		this.project = p;
+		project = p;
 	}
 
 	public Project getProject()

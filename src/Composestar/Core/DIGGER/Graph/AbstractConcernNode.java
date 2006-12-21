@@ -11,6 +11,7 @@ package Composestar.Core.DIGGER.Graph;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.DIGGER.DIGGER;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
 
 /**
@@ -34,6 +35,11 @@ public abstract class AbstractConcernNode extends Node
 	}
 	
 	public Concern getConcern()
+	{
+		return concern;
+	}
+	
+	public RepositoryEntity getRepositoryEntity()
 	{
 		return concern;
 	}

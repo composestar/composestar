@@ -18,11 +18,11 @@ public class ProjectDependenciesHandler extends DefaultHandler implements Conten
 
 	Project project;
 
-	public ProjectDependenciesHandler(Project project, XMLReader parser, ProjectHandler documentHandler)
+	public ProjectDependenciesHandler(Project inProject, XMLReader inParser, ProjectHandler documentHandler)
 	{
-		this.project = project;
-		this.parser = parser;
-		this.returnHandler = documentHandler;
+		project = inProject;
+		parser = inParser;
+		returnHandler = documentHandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

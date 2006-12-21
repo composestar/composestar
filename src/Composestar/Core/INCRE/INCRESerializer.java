@@ -17,36 +17,36 @@ import Composestar.Utils.FileUtils;
 public class INCRESerializer implements CTCommonModule
 {
 	private static final String MODULE_NAME = "INCRESerializer";
-	
+
 	public INCRESerializer()
 	{
-		
+
 	}
-	
+
 	public void run(CommonResources resources) throws ModuleException
 	{
-		String incre_enabled = Configuration.instance().getModuleProperty(INCRE.MODULE_NAME, "enabled", "false");
-			
-		if("true".equalsIgnoreCase(incre_enabled))
+		if (Configuration.instance().getModuleProperty(INCRE.MODULE_NAME, "enabled", false))
 		{
 			// only serialize when incremental compilation is enabled
 			INCRE incre = INCRE.instance();
-			INCRETimer increhistory = incre.getReporter().openProcess("INCRESerializer","Creation of INCRE history",INCRETimer.TYPE_OVERHEAD);
+			INCRETimer increhistory = incre.getReporter().openProcess("INCRESerializer", "Creation of INCRE history",
+					INCRETimer.TYPE_OVERHEAD);
 			storeHistory();
 			increhistory.stop();
 		}
 	}
-	
+
 	/**
 	 * Writes the repository to disk to provide incremental compilation
 	 */
 	public void storeHistory() throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
-		Debug.out(Debug.MODE_DEBUG, INCRE.MODULE_NAME, "Comparator made " + incre.comparator.getCompare() + " comparisons");
+		Debug.out(Debug.MODE_DEBUG, INCRE.MODULE_NAME, "Comparator made " + incre.comparator.getCompare()
+				+ " comparisons");
 
 		DataStore ds = DataStore.instance();
-		Configuration config = Configuration.instance();
+		// Configuration config = Configuration.instance();
 
 		ObjectOutputStream oos = null;
 		try

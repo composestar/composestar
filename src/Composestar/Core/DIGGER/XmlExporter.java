@@ -42,7 +42,7 @@ import Composestar.Core.DIGGER.Graph.SimpleConcernNode;
 import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Exports the generated dispatch graph to an XML file
@@ -51,6 +51,8 @@ import Composestar.Utils.Debug;
  */
 public class XmlExporter
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DIGGER.MODULE_NAME);
+	
 	/**
 	 * If true add comments
 	 */
@@ -62,7 +64,7 @@ public class XmlExporter
 
 	public XmlExporter(Graph inGraph, File filename) throws ModuleException
 	{
-		Debug.out(Debug.MODE_INFORMATION, DIGGER.MODULE_NAME, "Exporting dispatch graph to " + filename.toString());
+		logger.info("Exporting dispatch graph to " + filename.toString());
 		addComments = Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "xmlComments", false);
 		graph = inGraph;
 
@@ -73,6 +75,11 @@ public class XmlExporter
 		}
 
 		exportGraphTo(filename);
+	}
+	
+	public Document getXmlDocument()
+	{
+		return xmlDoc;
 	}
 
 	protected void exportGraphTo(File filename) throws ModuleException

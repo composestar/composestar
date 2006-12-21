@@ -47,34 +47,34 @@ public class FilterModuleElementReference extends ConcernElementReference
 
 	public String getQualifiedName()
 	{
-		String fname = "";
+		StringBuffer fname = new StringBuffer();
 		int i;
 
 		for (i = 0; i < pack.size(); i++)
 		{
-			fname += pack.elementAt(i);
-			fname += ".";
+			fname.append(pack.elementAt(i));
+			fname.append(".");
 		}
 		if (concern != null)
 		{
-			fname += concern;
+			fname.append(concern);
 		}
 		if (concern != null && filterModule != null)
 		{
-			fname += "::";
+			fname.append("::");
 		}
 		if (filterModule != null)
 		{
-			fname += filterModule;
+			fname.append(filterModule);
 		}
 		if (filterModule != null && name != null)
 		{
-			fname += ":";
+			fname.append(":");
 		}
 		if (name != null)
 		{
-			fname += name;
+			fname.append(name);
 		}
-		return fname;
+		return fname.toString();
 	}
 }

@@ -1,14 +1,16 @@
 /*
- * Created on Mar 16, 2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.FILTH;
 
 /**
- * @author Isti To change the template for this generated type comment go to
- *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author Isti
  */
 import java.io.PrintStream;
 import java.util.List;
@@ -19,13 +21,9 @@ import Composestar.Core.Master.CommonResources;
 
 public abstract class FILTHService
 {
-	// static{
-	// System.setProperty("org.xml.sax.driver","org.apache.crimson.parser.XMLReaderImpl");
-	// }
+	protected static PrintStream log = System.out;
 
-	public static PrintStream log = System.out;
-
-	public static int printMode = FILTHService.HTML;
+	protected static int printMode = FILTHService.HTML;
 
 	public static final int HTML = 1;
 
@@ -39,6 +37,11 @@ public abstract class FILTHService
 	public static void setLog(String out) throws Exception
 	{
 		log = new PrintStream(new java.io.FileOutputStream(out));
+	}
+	
+	public static PrintStream getLog()
+	{
+		return log;
 	}
 
 	public static FILTHService getInstance(CommonResources cr)
@@ -60,25 +63,25 @@ public abstract class FILTHService
 
 	public static void printTab(int n, String mesg)
 	{
-		String s = "";
+		StringBuffer s = new StringBuffer();
 		for (int i = 0; i < n; i++)
 		{
 			if (printMode == FILTHService.HTML)
 			{
-				s += "&nbsp;";
+				s.append("&nbsp;");
 			}
 			else
 			{
-				s += " ";
+				s.append(" ");
 			}
 		}
 		if (printMode == FILTHService.HTML)
 		{
-			log.print(s + mesg + "<br>");
+			log.print(s.toString() + mesg + "<br>");
 		}
 		else
 		{
-			log.print(s + mesg);
+			log.print(s.toString() + mesg);
 		}
 	}
 

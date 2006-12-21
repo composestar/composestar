@@ -1,29 +1,30 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.FILTH.Core;
 
-/*
- * Created on 12-sep-2003
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
-
 /**
- * @author nagyist To change the template for this generated type comment go to
- *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author nagyist
  */
 public abstract class SkipRule extends Rule
 {
-	protected Parameter _newValue;
+	protected Parameter newValue;
 
-	public SkipRule(Parameter left, Parameter right, Parameter newValue)
+	public SkipRule(Parameter left, Parameter right, Parameter innewValue)
 	{
 		super(left, right);
-		_newValue = newValue;
+		newValue = innewValue;
 	}
 
 	public Parameter getNewValue()
 	{
-		return _newValue;
+		return newValue;
 	}
 
 	/*

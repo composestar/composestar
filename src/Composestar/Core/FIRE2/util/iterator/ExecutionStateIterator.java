@@ -4,7 +4,6 @@
  */
 package Composestar.Core.FIRE2.util.iterator;
 
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -25,10 +24,10 @@ public class ExecutionStateIterator implements Iterator
 
 	public ExecutionStateIterator(ExecutionModel model)
 	{
-		Enumeration enumer = model.getEntranceStates();
-		while (enumer.hasMoreElements())
+		Iterator it = model.getEntranceStates();
+		while (it.hasNext())
 		{
-			unvisitedStates.push(enumer.nextElement());
+			unvisitedStates.push(it.next());
 		}
 	}
 
@@ -73,10 +72,10 @@ public class ExecutionStateIterator implements Iterator
 	{
 		ExecutionState nextState;
 
-		Enumeration enumer = state.getOutTransitions();
-		while (enumer.hasMoreElements())
+		Iterator it = state.getOutTransitions();
+		while (it.hasNext())
 		{
-			ExecutionTransition transition = (ExecutionTransition) enumer.nextElement();
+			ExecutionTransition transition = (ExecutionTransition) it.next();
 			nextState = transition.getEndState();
 
 			if (!visitedStates.contains(nextState))

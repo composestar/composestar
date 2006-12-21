@@ -39,15 +39,15 @@ import Composestar.Utils.FileUtils;
  */
 public class CKRET implements CTCommonModule
 {
-	public static final int PROGRESSIVE = 2;
-
-	public static final int REDUNDANT = 1;
+	public static final String MODULE_NAME = "CKRET";
+	
+	public static final String[] MODES = { "NORMAL", "REDUNDANT", "PROGRESSIVE" };
 
 	public static final int NORMAL = 0;
+	public static final int REDUNDANT = 1;
+	public static final int PROGRESSIVE = 2;
 
-	protected static int MODE = 0;
-
-	public static final String[] MODES = { "NORMAL", "REDUNDANT", "PROGRESSIVE" };
+	protected static int mode;	
 
 	private static Reporter reporter;
 
@@ -55,7 +55,7 @@ public class CKRET implements CTCommonModule
 
 	public static int getMode()
 	{
-		return MODE;
+		return mode;
 	}
 
 	public void run(CommonResources resources) throws ModuleException
@@ -66,27 +66,27 @@ public class CKRET implements CTCommonModule
 		// make sure it has been initialized at least once...
 		try
 		{
-			INCRETimer initckret = incre.getReporter().openProcess("CKRET", "Initializing CKRET repository",
+			INCRETimer initckret = incre.getReporter().openProcess(MODULE_NAME, "Initializing CKRET repository",
 					INCRETimer.TYPE_NORMAL);
 			Repository.instance().init();
 			initckret.stop();
 		}
 		catch (ModuleException me)
 		{
-			Debug.out(Debug.MODE_WARNING, "CKRET", me.getMessage());
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, me.getMessage());
 			return;
 		}
 
 		// fetch the ckret runmode
-		int mode = config.getModuleProperty("SECRET", "mode", MODE);
-		if (mode >= 0 && mode <= 2)
+		int newMode = config.getModuleProperty("SECRET", "mode", mode);
+		if (newMode >= 0 && newMode <= 2)
 		{
-			Debug.out(Debug.MODE_INFORMATION, "CKRET", "CKRET mode set to " + MODES[mode]);
-			MODE = mode;
+			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "CKRET mode set to " + MODES[newMode]);
+			mode = newMode;
 		}
 		else
 		{
-			Debug.out(Debug.MODE_WARNING, "CKRET", "Unknown CKRET mode: " + mode + ", CKRET will run in " + MODES[MODE]
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Unknown CKRET mode: " + newMode + ", CKRET will run in " + MODES[mode]
 					+ " mode");
 		}
 
@@ -114,12 +114,12 @@ public class CKRET implements CTCommonModule
 				reporter = new HTMLReporter(reportFile, cssFile, resources);
 				reporter.open();
 
-				Debug.out(Debug.MODE_DEBUG, "CKRET", "CKRET report file (" + reportFile + ") created...");
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "CKRET report file (" + reportFile + ") created...");
 			}
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("CKRET", "CKRET report file creation failed (" + reportFile + "), with reason: "
+			throw new ModuleException(MODULE_NAME, "CKRET report file creation failed (" + reportFile + "), with reason: "
 					+ e.getMessage());
 		}
 
@@ -130,13 +130,13 @@ public class CKRET implements CTCommonModule
 
 			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
 			{
-				if (incre.isProcessedByModule(concern, "CKRET"))
+				if (incre.isProcessedByModule(concern, MODULE_NAME))
 				{
 					this.copyOperation(concern);
 				}
 				else
 				{
-					INCRETimer ckretrun = incre.getReporter().openProcess("CKRET", concern.getUniqueID(),
+					INCRETimer ckretrun = incre.getReporter().openProcess(MODULE_NAME, concern.getUniqueID(),
 							INCRETimer.TYPE_NORMAL);
 					this.run(concern);
 					ckretrun.stop();
@@ -158,21 +158,21 @@ public class CKRET implements CTCommonModule
 			ConcernAnalysis ca = new ConcernAnalysis(concern);
 			List fmolist = (List) concern.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 
-			switch (CKRET.MODE)
+			switch (CKRET.mode)
 			{
-				case NORMAL: // NORMAL
+				case NORMAL:
 					if (!ca.checkOrder(singleOrder, true))
 					{
-						Debug.out(Debug.MODE_WARNING, "CKRET", "Semantic conflict(s) detected on concern "
-								+ concern.getQualifiedName(), reportFile);
+						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Semantic conflict(s) detected on concern "
+								+ concern.getQualifiedName(), reportFile, 0);
 					}
 					break;
 
-				case REDUNDANT: // REDUNDANT
+				case REDUNDANT:
 					if (!ca.checkOrder(singleOrder, true))
 					{
-						Debug.out(Debug.MODE_WARNING, "CKRET", "Semantic conflict(s) detected on concern "
-								+ concern.getQualifiedName(), reportFile);
+						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Semantic conflict(s) detected on concern "
+								+ concern.getQualifiedName(), reportFile, 0);
 					}
 					for (Iterator fmoit = fmolist.iterator(); fmoit.hasNext();)
 					{
@@ -186,7 +186,7 @@ public class CKRET implements CTCommonModule
 					}
 					break;
 
-				case PROGRESSIVE: // PROGRESSIVE
+				case PROGRESSIVE:
 					boolean foundGoodOrder = ca.checkOrder(singleOrder, true);
 
 					for (Iterator fmoit = fmolist.iterator(); fmoit.hasNext();)
@@ -202,25 +202,25 @@ public class CKRET implements CTCommonModule
 									// so this is the first good order found...
 									foundGoodOrder = true;
 									concern.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmo);
-									Debug.out(Debug.MODE_INFORMATION, "CKRET",
+									Debug.out(Debug.MODE_INFORMATION, MODULE_NAME,
 											"Selected filtermodule order for concern " + concern.getQualifiedName()
 													+ ':');
-									Debug.out(Debug.MODE_INFORMATION, "CKRET", '\t' + fmo.toString());
+									Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, '\t' + fmo.toString());
 								}
 							}
 						}
 					}
 					if (!foundGoodOrder)
 					{
-						Debug.out(Debug.MODE_WARNING, "CKRET",
+						Debug.out(Debug.MODE_WARNING, MODULE_NAME,
 								"Unable to find a filtermodule order without conflicts for concern:");
-						Debug.out(Debug.MODE_WARNING, "CKRET", '\t' + concern.getQualifiedName());
+						Debug.out(Debug.MODE_WARNING, MODULE_NAME, '\t' + concern.getQualifiedName());
 					}
 
 					break;
 
 				default: // OOPS
-					Debug.out(Debug.MODE_WARNING, "CKRET", "Unknown mode used");
+					Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Unknown mode used");
 					break;
 			}
 		}
@@ -231,7 +231,7 @@ public class CKRET implements CTCommonModule
 	private void copyOperation(Concern concern) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
-		INCRETimer ckretcopy = incre.getReporter().openProcess("CKRET", concern.getUniqueID(),
+		INCRETimer ckretcopy = incre.getReporter().openProcess(MODULE_NAME, concern.getUniqueID(),
 				INCRETimer.TYPE_INCREMENTAL);
 
 		// set singleorder from previous CKRET run

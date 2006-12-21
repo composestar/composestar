@@ -99,16 +99,16 @@ public class MatchingPatternAST extends ContextRepositoryEntity
 	 */
 	public void addSubstitutionPart(SubstitutionPartAST substitutionPartValue)
 	{
-		this.substitutionParts.addElement(substitutionPartValue);
+		substitutionParts.addElement(substitutionPartValue);
 	}
 
-	public void setMatchingParts(Vector matchingParts)
+	public void setMatchingParts(Vector inMatchingParts)
 	{
-		this.matchingParts = matchingParts;
+		matchingParts = inMatchingParts;
 	}
 
-	public void setSubstitutionParts(Vector substitutionParts)
+	public void setSubstitutionParts(Vector inSubstitutionParts)
 	{
-		this.substitutionParts = substitutionParts;
+		substitutionParts = inSubstitutionParts;
 	}
 }

@@ -28,11 +28,12 @@ public class Constraint
 
 	private String message;
 
-	public Constraint(String resource, String patternString, String message, boolean type) throws PatternParseException
+	public Constraint(String inresource, String patternString, String inmessage, boolean type)
+			throws PatternParseException
 	{
-		this.resource = resource;
-		this.pattern = Pattern.compile(patternString);
-		this.message = message;
+		resource = inresource;
+		pattern = Pattern.compile(patternString);
+		message = inmessage;
 	}
 
 	public Pattern getPattern()

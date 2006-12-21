@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+
 /**
  * Base class for all nodes in the graph
  * 
@@ -91,5 +93,14 @@ public abstract class Node
 	public Iterator getOutgoingEdges()
 	{
 		return outgoingEdges.iterator();
+	}
+	
+	/**
+	 * Return the associated repository entity (if any)
+	 * @return
+	 */
+	public RepositoryEntity getRepositoryEntity()
+	{
+		return null;
 	}
 }

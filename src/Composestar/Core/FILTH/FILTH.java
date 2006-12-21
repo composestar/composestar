@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.FILTH;
 
 import java.util.Iterator;
@@ -18,12 +27,13 @@ import Composestar.Utils.Debug;
  */
 public class FILTH implements CTCommonModule
 {
+	public static final String FILTER_ORDERING_SPEC = "FILTER_ORDERING_SPEC";
+	
 	/**
 	 * Calculates orders of the superimposed filtermodules
 	 */
 	public FILTH()
 	{
-	/* empty constructor */
 	}
 
 	/**
@@ -66,8 +76,7 @@ public class FILTH implements CTCommonModule
 				else
 				{
 					/* Calculate FilterModuleOrders */
-					INCRETimer filthrun = incre.getReporter().openProcess("FILTH", c.getUniqueID(),
-							INCRETimer.TYPE_NORMAL);
+					INCRETimer filthrun = incre.getReporter().openProcess("FILTH", c.getUniqueID(), INCRETimer.TYPE_NORMAL);
 					list = filthservice.getMultipleOrder(c);
 					filthrun.stop();
 				}
@@ -75,27 +84,24 @@ public class FILTH implements CTCommonModule
 				if (list.size() > 1)
 				{
 					Debug.out(Debug.MODE_INFORMATION, "FILTH",
-							"Encountered shared join point: " + c.getQualifiedName(), c.getDescriptionFileName());
-					FilterModuleOrder singleOrder = (FilterModuleOrder) c
-							.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-					String tmpstr = "";
+							"Encountered shared join point: " + c.getQualifiedName(), c);
+					
+					FilterModuleOrder singleOrder = 
+						(FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+					
+					StringBuffer sb = new StringBuffer();
 					if (singleOrder != null)
 					{
 						List tmplist = singleOrder.orderAsList();
+						int last = tmplist.size() - 1;
 						for (int i = 0; i < tmplist.size(); i++)
 						{
 							String fmr = (String) tmplist.get(i);
-							if (i != (tmplist.size() - 1))
-							{
-								tmpstr += fmr + " --> ";
-							}
-							else
-							{
-								tmpstr += fmr;
-							}
+							sb.append(fmr);
+							if (i != last) sb.append(" --> ");
 						}
 					}
-					Debug.out(Debug.MODE_DEBUG, "FILTH", "Selecting filter module order: " + tmpstr);
+					Debug.out(Debug.MODE_DEBUG, "FILTH", "Selecting filter module order: " + sb);
 				}
 			}
 		}

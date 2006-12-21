@@ -5,7 +5,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class StringUtils
+/**
+ * @see Composestar.Utils.StringUtilsTest
+ */
+public final class StringUtils
 {
 	/**
 	 * Public constructor needed because this class is serialized into the
@@ -64,5 +67,15 @@ public class StringUtils
 		String[] result = new String[parts.size()];
 		parts.toArray(result);
 		return result;
+	}
+
+	public static String capitalize(String s)
+	{
+		if (s == null || "".equals(s)) return s;
+		
+		char[] chars = s.toCharArray();
+		chars[0] = Character.toUpperCase(chars[0]);
+		
+		return new String(chars);
 	}
 }

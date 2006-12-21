@@ -57,6 +57,8 @@ public class Filter extends DeclaredRepositoryEntity
 	public Filter(FilterAST aFilterAST)
 	{
 		filterAST = aFilterAST;
+		descriptionFileName = aFilterAST.getDescriptionFileName();
+		descriptionLineNumber = aFilterAST.getDescriptionLineNumber();
 
 		// create unique Filter Elements
 		filterElements = new Vector();

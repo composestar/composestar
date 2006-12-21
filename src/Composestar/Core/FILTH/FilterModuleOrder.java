@@ -1,14 +1,16 @@
 /*
- * Created on Mar 19, 2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.FILTH;
 
 /**
- * @author Isti To change the template for this generated type comment go to
- *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author Isti
  */
 
 import java.util.Iterator;
@@ -36,11 +38,11 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 	 */
 	public static final String ALL_ORDERS_KEY = "FilterModuleOrders";
 
-	public Vector _order;
+	public Vector order;
 
 	public FilterModuleOrder()
 	{
-		_order = new Vector();
+		order = new Vector();
 
 	}
 
@@ -49,31 +51,36 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 		super(parent);
 	}
 
-	public FilterModuleOrder(LinkedList order)
+	public FilterModuleOrder(LinkedList inOrder)
 	{
-		_order = new Vector();
-		int size = order.size();
+		order = new Vector();
+		int size = inOrder.size();
 		for (int i = 0; i < size; i++)
 		{
-			FilterModuleReference fmr = (FilterModuleReference) order.get(i);
-			_order.addElement(fmr.getRef().getQualifiedName());
+			FilterModuleReference fmr = (FilterModuleReference) inOrder.get(i);
+			order.addElement(fmr.getRef().getQualifiedName());
 			// _order.addElement(order.get(i));
 		}
 	}
 
 	public void addFilterModule(FilterModuleReference fmr)
 	{
-		_order.addElement(fmr.getQualifiedName());
+		order.addElement(fmr.getQualifiedName());
 	}
 
 	public List orderAsList()
 	{
-		return _order;
+		return order;
 	}
 
 	public Iterator order()
 	{
-		return _order.iterator();
+		return order.iterator();
+	}
+	
+	public int hashCode()
+	{
+		return super.hashCode();
 	}
 
 	public boolean equals(Object o)
@@ -84,21 +91,21 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 		}
 
 		FilterModuleOrder other = (FilterModuleOrder) o;
-		return _order.equals(other._order);
+		return order.equals(other.order);
 	}
 
 	public String toString()
 	{
-		String retval = "";
+		StringBuffer retval = new StringBuffer();
 		List modules = orderAsList();
 		for (int i = 0; i < modules.size() - 1; i++)
 		{
-			retval += (String) modules.get(i);
+			retval.append((String) modules.get(i));
 			if (i < modules.size() - 2)
 			{
-				retval += " + ";
+				retval.append(" + ");
 			}
 		}
-		return retval;
+		return retval.toString();
 	}
 }

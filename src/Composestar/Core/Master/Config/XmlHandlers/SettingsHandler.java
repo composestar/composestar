@@ -12,10 +12,10 @@ public class SettingsHandler extends DefaultHandler implements ContentHandler
 
 	BuildConfigHandler returnHandler;
 
-	public SettingsHandler(XMLReader parser, BuildConfigHandler documentHandler)
+	public SettingsHandler(XMLReader inParser, BuildConfigHandler documentHandler)
 	{
-		this.parser = parser;
-		this.returnHandler = documentHandler;
+		parser = inParser;
+		returnHandler = documentHandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

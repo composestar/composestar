@@ -14,11 +14,11 @@ public class ComparisonsHandler extends DefaultHandler
 
 	private DependencyHandler returnhandler;
 
-	public ComparisonsHandler(ConfigManager cfg, Module module, DependencyHandler returnhandler)
+	public ComparisonsHandler(ConfigManager cfg, Module inModule, DependencyHandler inReturnhandler)
 	{
-		this.configmanager = cfg;
-		this.module = module;
-		this.returnhandler = returnhandler;
+		configmanager = cfg;
+		module = inModule;
+		returnhandler = inReturnhandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

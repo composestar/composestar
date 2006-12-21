@@ -22,11 +22,14 @@ import Composestar.Core.DIGGER.Graph.Graph;
 import Composestar.Core.DIGGER.Graph.Filters.FilterNodeFactory;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * DIGGER - DIspatch Graph GEneratoR
@@ -36,6 +39,8 @@ import Composestar.Utils.Debug;
 public class DIGGER implements CTCommonModule
 {
 	public static final String MODULE_NAME = "DIGGER";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	/**
 	 * The key for the dispatch graph in repository
@@ -51,16 +56,35 @@ public class DIGGER implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		// if (incremental) digIncremental(); // how? I've got no idea
-		// else
+		INCRE incre = INCRE.instance();
+		INCRETimer filthinit;
+
+		filthinit = incre.getReporter().openProcess(MODULE_NAME, "Creating dispatch graph", INCRETimer.TYPE_NORMAL);
 		dig();
+		filthinit.stop();
 
 		// export to XML
 		if (Configuration.instance().getModuleProperty(MODULE_NAME, "exportToXML", true))
 		{
-			new XmlExporter(graph, new File(Configuration.instance().getPathSettings().getPath("Base") + File.separator
-					+ Configuration.instance().getPathSettings().getPath("Analysis", "analyses") + File.separator
-					+ "DispatchGraph.xml"));
+			filthinit = incre.getReporter().openProcess(MODULE_NAME, "Exporting to XML", INCRETimer.TYPE_NORMAL);
+			XmlExporter exporter = new XmlExporter(graph, new File(Configuration.instance().getPathSettings().getPath(
+					"Base")
+					+ File.separator
+					+ Configuration.instance().getPathSettings().getPath("Analyses", "analyses")
+					+ File.separator + "DispatchGraph.xml"));
+			filthinit.stop();
+
+			if (Configuration.instance().getModuleProperty(MODULE_NAME, "runGraphViz", true))
+			{
+				filthinit = incre.getReporter().openProcess(MODULE_NAME, "Exporting to PNG", INCRETimer.TYPE_NORMAL);
+				GraphVizRunner gvr = new GraphVizRunner(exporter.getXmlDocument(), new File(Configuration.instance()
+						.getPathSettings().getPath("Base")
+						+ File.separator
+						+ Configuration.instance().getPathSettings().getPath("Analyses", "analyses")
+						+ File.separator + "DispatchGraph.png"));
+				gvr.run();
+				filthinit.stop();
+			}
 		}
 
 		NOBBIN nobbin = new NOBBIN(graph);
@@ -85,8 +109,10 @@ public class DIGGER implements CTCommonModule
 			FilterModuleOrder fmOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 			if (fmOrder != null)
 			{
-				Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Generating dispatch graph for: "
-						+ concern.getQualifiedName());
+				if (Debug.willLog(Debug.MODE_INFORMATION))
+				{
+					logger.info("Generating dispatch graph for: " + concern.getQualifiedName());
+				}
 
 				ConcernNode concernNode = (ConcernNode) graph.getConcernNode(concern);
 				if (concernNode == null)
@@ -100,7 +126,10 @@ public class DIGGER implements CTCommonModule
 				while (filterModules.hasNext())
 				{
 					FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) filterModules.next());
-					Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing FilterModule: " + fm.getQualifiedName());
+					if (Debug.willLog(Debug.MODE_DEBUG))
+					{
+						logger.debug("Processing FilterModule: " + fm.getQualifiedName());
+					}
 					digFilterChain(fm.getInputFilterIterator(), concernNode.getInputFilters());
 					digFilterChain(fm.getOutputFilterIterator(), concernNode.getOutputFilters());
 				}
@@ -121,7 +150,10 @@ public class DIGGER implements CTCommonModule
 		while (filterChain.hasNext())
 		{
 			Filter filter = (Filter) filterChain.next();
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing Filter: " + filter.getQualifiedName());
+			if (Debug.willLog(Debug.MODE_DEBUG))
+			{
+				logger.debug("Processing Filter: " + filter.getQualifiedName());
+			}
 			FilterNode filterNode = FilterNodeFactory.createFilterNode(graph, filter, chainNode.getDirection());
 			chainNode.appendFilter(filterNode);
 			filterNode.processElements();

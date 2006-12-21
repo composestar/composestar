@@ -11,19 +11,21 @@ public class ParameterizedInternal extends Internal
 
 	public String parameter;
 
-	public ParameterizedInternalAST pin_ast;
+	public ParameterizedInternalAST pinAst;
 
 	public ParameterizedInternal()
 	{
 		super();
 	}
 
-	public ParameterizedInternal(ParameterizedInternalAST par_ast)
+	public ParameterizedInternal(ParameterizedInternalAST parAst)
 	{
 		super();
-		pin_ast = par_ast;
-		name = pin_ast.getName();
-		parameter = pin_ast.getParameter();
+		pinAst = parAst;
+		name = pinAst.getName();
+		parameter = pinAst.getParameter();
+		descriptionFileName = pinAst.getDescriptionFileName();
+		descriptionLineNumber = pinAst.getDescriptionLineNumber();
 	}
 
 	public void setParameter(String aParameter)
@@ -51,21 +53,21 @@ public class ParameterizedInternal extends Internal
 
 	public int getDescriptionLineNumber()
 	{
-		return pin_ast.getDescriptionLineNumber();
+		return pinAst.getDescriptionLineNumber();
 	}
 
 	public void setDescriptionLineNumber(int newLineNumber)
 	{
-		pin_ast.setDescriptionLineNumber(newLineNumber);
+		pinAst.setDescriptionLineNumber(newLineNumber);
 	}
 
 	public String getDescriptionFileName()
 	{
-		return pin_ast.getDescriptionFileName();
+		return pinAst.getDescriptionFileName();
 	}
 
 	public void setDescriptionFileName(String newFileName)
 	{
-		pin_ast.setDescriptionFileName(newFileName);
+		pinAst.setDescriptionFileName(newFileName);
 	}
 }

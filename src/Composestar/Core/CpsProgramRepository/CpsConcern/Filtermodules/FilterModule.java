@@ -27,7 +27,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	private static final long serialVersionUID = 4898318100147611976L;
 
-	public FilterModuleAST fm_ast;
+	public FilterModuleAST fmAst;
 
 	public Vector parameters;
 
@@ -50,7 +50,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	public FilterModule()
 	{
 		super();
-		fm_ast = new FilterModuleAST();
+		fmAst = new FilterModuleAST();
 		parameters = new Vector();
 		// conditions = new Vector();
 		internals = new Vector();
@@ -60,14 +60,15 @@ public class FilterModule extends DeclaredRepositoryEntity
 		outputFilters = new Vector();
 	}
 
-	public FilterModule(FilterModuleAST fmAst, Vector args, String id)
+	public FilterModule(FilterModuleAST inFmAst, Vector args, String id)
 	{
 		super();
-		descriptionLineNumber = 0;
 		uniqueID = id;
-		fm_ast = fmAst;
-		setParent(fm_ast.getParent());
-		setName(fm_ast.getName());
+		fmAst = inFmAst;
+		descriptionFileName = fmAst.getDescriptionFileName();
+		descriptionLineNumber = fmAst.getDescriptionLineNumber();
+		setParent(fmAst.getParent());
+		setName(fmAst.getName());
 		int counter = 1;
 		DataStore ds = DataStore.instance();
 
@@ -80,13 +81,13 @@ public class FilterModule extends DeclaredRepositoryEntity
 		outputFilters = new Vector();
 
 		// create the FilterModuleParameter (instances)
-		Iterator parameterIterator = fm_ast.getParameterIterator();
+		Iterator parameterIterator = fmAst.getParameterIterator();
 		int index = 0;
 		while (parameterIterator.hasNext())
 		{
-			FilterModuleParameterAST fmp_ast = (FilterModuleParameterAST) parameterIterator.next();
+			FilterModuleParameterAST fmpAst = (FilterModuleParameterAST) parameterIterator.next();
 			// we take the assumption that #parameters == # arguments
-			FilterModuleParameter fmp = new FilterModuleParameter(fmp_ast, args.elementAt(index), counter);
+			FilterModuleParameter fmp = new FilterModuleParameter(fmpAst, args.elementAt(index), counter);
 			fmp.setParent(this);
 			this.addParameter(fmp);
 			index++;
@@ -94,7 +95,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 		}
 
 		// create unique internals
-		Iterator internalIt = fm_ast.getInternalIterator();
+		Iterator internalIt = fmAst.getInternalIterator();
 		while (internalIt.hasNext())
 		{
 			InternalAST internalAST = (InternalAST) internalIt.next();
@@ -116,7 +117,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 			}
 		}
 
-		Iterator filterIt = fm_ast.getInputFilterIterator();
+		Iterator filterIt = fmAst.getInputFilterIterator();
 		while (filterIt.hasNext())
 		{
 			Filter filter = new Filter((FilterAST) filterIt.next());
@@ -125,7 +126,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 			ds.addObject(filter);
 		}
 
-		filterIt = fm_ast.getOutputFilterIterator();
+		filterIt = fmAst.getOutputFilterIterator();
 		while (filterIt.hasNext())
 		{
 			Filter filter = new Filter((FilterAST) filterIt.next());
@@ -250,7 +251,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public boolean addCondition(Condition condition)
 	{
-		return fm_ast.addCondition(condition);
+		return fmAst.addCondition(condition);
 	}
 
 	/**
@@ -261,7 +262,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public Condition removeCondition(int index)
 	{
-		return fm_ast.removeCondition(index);
+		return fmAst.removeCondition(index);
 	}
 
 	/**
@@ -272,7 +273,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public Condition getCondition(int index)
 	{
-		return fm_ast.getCondition(index);
+		return fmAst.getCondition(index);
 	}
 
 	/**
@@ -282,7 +283,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public Iterator getConditionIterator()
 	{
-		return fm_ast.getConditionIterator();
+		return fmAst.getConditionIterator();
 	}
 
 	/**
@@ -295,7 +296,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public boolean addInternalAST(InternalAST internal)
 	{
-		return fm_ast.addInternal(internal);
+		return fmAst.addInternal(internal);
 	}
 
 	/**
@@ -306,7 +307,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public InternalAST removeInternalAST(int index)
 	{
-		return fm_ast.removeInternal(index);
+		return fmAst.removeInternal(index);
 	}
 
 	/**
@@ -317,7 +318,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public InternalAST getInternalAST(int index)
 	{
-		return fm_ast.getInternal(index);
+		return fmAst.getInternal(index);
 	}
 
 	/**
@@ -327,7 +328,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public Iterator getInternalASTIterator()
 	{
-		return fm_ast.getInternalIterator();
+		return fmAst.getInternalIterator();
 	}
 
 	/**
@@ -340,7 +341,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public boolean addExternal(External external)
 	{
-		return fm_ast.addExternal(external);
+		return fmAst.addExternal(external);
 	}
 
 	/**
@@ -351,7 +352,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public External removeExternal(int index)
 	{
-		return fm_ast.removeExternal(index);
+		return fmAst.removeExternal(index);
 	}
 
 	/**
@@ -362,7 +363,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public External getExternal(int index)
 	{
-		return fm_ast.getExternal(index);
+		return fmAst.getExternal(index);
 	}
 
 	/**
@@ -372,7 +373,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public Iterator getExternalIterator()
 	{
-		return fm_ast.getExternalIterator();
+		return fmAst.getExternalIterator();
 	}
 
 	/**
@@ -386,7 +387,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public boolean addMethod(Method method)
 	{
-		return fm_ast.addMethod(method);
+		return fmAst.addMethod(method);
 	}
 
 	/**
@@ -398,7 +399,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public Method removeMethod(int index)
 	{
-		return fm_ast.removeMethod(index);
+		return fmAst.removeMethod(index);
 	}
 
 	/**
@@ -410,7 +411,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public Method getMethod(int index)
 	{
-		return fm_ast.getMethod(index);
+		return fmAst.getMethod(index);
 	}
 
 	/**
@@ -421,7 +422,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public Iterator getMethodIterator()
 	{
-		return fm_ast.getMethodIterator();
+		return fmAst.getMethodIterator();
 	}
 
 	/**
@@ -538,7 +539,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public boolean doesParameterASTExists(FilterModuleParameterAST fmp)
 	{
-		return fm_ast.doesParameterExists(fmp);
+		return fmAst.doesParameterExists(fmp);
 	}
 
 	/**
@@ -550,7 +551,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public void addParameterAST(FilterModuleParameterAST fmp)
 	{
-		fm_ast.addParameter(fmp);
+		fmAst.addParameter(fmp);
 	}
 
 	/**
@@ -558,7 +559,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 */
 	public Iterator getParameterASTIterator()
 	{
-		return fm_ast.getParameterIterator();
+		return fmAst.getParameterIterator();
 	}
 
 	public Vector getOutputFilters()
@@ -566,29 +567,24 @@ public class FilterModule extends DeclaredRepositoryEntity
 		return outputFilters;
 	}
 
-	public Object clone() throws CloneNotSupportedException
-	{
-		return fm_ast.clone();
-	}
-
 	public int getDescriptionLineNumber()
 	{
-		return fm_ast.getDescriptionLineNumber();
+		return fmAst.getDescriptionLineNumber();
 	}
 
 	public void setDescriptionLineNumber(int newLineNumber)
 	{
-		fm_ast.setDescriptionLineNumber(newLineNumber);
+		fmAst.setDescriptionLineNumber(newLineNumber);
 	}
 
 	public String getDescriptionFileName()
 	{
-		return fm_ast.getDescriptionFileName();
+		return fmAst.getDescriptionFileName();
 	}
 
 	public void setDescriptionFileName(String newFileName)
 	{
-		fm_ast.setDescriptionFileName(newFileName);
+		fmAst.setDescriptionFileName(newFileName);
 	}
 
 	/*
@@ -598,9 +594,9 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 * return fm_ast.getDynIterator(); }
 	 */
 
-	public FilterModuleAST getFm_ast()
+	public FilterModuleAST getFmAst()
 	{
-		return fm_ast;
+		return fmAst;
 	}
 
 	public String getUniqueNumber()
@@ -608,9 +604,9 @@ public class FilterModule extends DeclaredRepositoryEntity
 		return this.uniqueID;
 	}
 
-	public void setUniqueNumber(String uniqueID)
+	public void setUniqueNumber(String inUniqueNumber)
 	{
-		this.uniqueID = uniqueID;
+		uniqueID = inUniqueNumber;
 	}
 
 	public String getName()

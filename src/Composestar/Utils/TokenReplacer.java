@@ -8,16 +8,16 @@ import java.util.Map;
  */
 public class TokenReplacer
 {
-	private Map m_replacements;
+	private Map replacements;
 
 	public TokenReplacer()
 	{
-		m_replacements = new HashMap();
+		replacements = new HashMap();
 	}
 
 	public void addReplacement(String token, String replacement)
 	{
-		m_replacements.put(token, replacement);
+		replacements.put(token, replacement);
 	}
 
 	public String process(String s)
@@ -66,6 +66,6 @@ public class TokenReplacer
 
 	private String getReplacement(String token)
 	{
-		return (String) m_replacements.get(token);
+		return (String) replacements.get(token);
 	}
 }

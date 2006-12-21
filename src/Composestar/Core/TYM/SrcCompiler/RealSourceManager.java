@@ -157,7 +157,7 @@ public class RealSourceManager implements CTCommonModule
 		}
 
 		// finish by adding .dll or .exe
-		targetFile += (isExec ? ".exe" : ".dll");
+		targetFile += isExec ? ".exe" : ".dll";
 
 		return targetFile;
 	}

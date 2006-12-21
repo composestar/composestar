@@ -22,12 +22,12 @@ public class StreamGobbler extends Thread
 	/**
 	 * Constructor.
 	 * 
-	 * @param is The input stream to monitor.
+	 * @param inis The input stream to monitor.
 	 */
-	public StreamGobbler(InputStream is)
+	public StreamGobbler(InputStream inis)
 	{
-		this.is = is;
-		this.output = new ArrayList(32);
+		is = inis;
+		output = new ArrayList(32);
 	}
 
 	/**

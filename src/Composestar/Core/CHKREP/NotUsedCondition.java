@@ -24,17 +24,17 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * @author DoornenbalD Checks on not used Conditions. Iterates on the
- *         FilerModules to get the Condtions and then checks per condtion the
- *         input and output filters.
+ * Checks on not used Conditions. Iterates on the FilerModules to get the 
+ * Condtions and then checks per condtion the input and output filters.
+ *
+ * @author DoornenbalD
  */
 public class NotUsedCondition implements BaseChecker
 {
 	private DataStore ds;
 
 	/**
-	 * Performs the check. Calls isUsedInFilters for both input and output
-	 * filters
+	 * Performs the check. Calls isUsedInFilters for both input and output filters.
 	 */
 	public boolean performCheck()
 	{
@@ -53,8 +53,7 @@ public class NotUsedCondition implements BaseChecker
 				if (!used)
 				{
 					Debug.out(Debug.MODE_WARNING, "CHKREP",
-							"Condition " + c.getName() + " is declared, but never used", c.getDescriptionFileName(), c
-									.getDescriptionLineNumber());
+							"Condition " + c.getName() + " is declared, but never used", c);
 				}
 			}
 		}

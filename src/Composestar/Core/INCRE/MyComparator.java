@@ -18,17 +18,17 @@ import Composestar.Utils.Debug;
 public class MyComparator
 {
 
-	public static HashMap myFields = new HashMap();
+	protected HashMap myFields = new HashMap();
 
-	public static HashMap comparisons = new HashMap();
+	protected HashMap comparisons = new HashMap();
 
-	private String module;
+	protected String module;
 
-	public static int compare;
+	protected int compare;
 
-	public MyComparator(String module)
+	public MyComparator(String inModule)
 	{
-		this.module = module;
+		module = inModule;
 	}
 
 	public int getCompare()

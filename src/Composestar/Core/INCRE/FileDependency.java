@@ -40,7 +40,7 @@ public class FileDependency extends Dependency
 		{
 			return dep;
 		}
-		else if (dep != null)
+		else
 		{
 			throw new ModuleException("Unknown filedependency found", "INCRE");
 		}

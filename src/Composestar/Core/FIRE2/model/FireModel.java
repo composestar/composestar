@@ -62,12 +62,13 @@ public class FireModel
 	public FireModel(Concern concern, FilterModuleOrder order, boolean inputFilters)
 	{
 		this.concern = concern;
+		
+		List v = order.orderAsList();
 
-		Vector v = order._order;
 		FilterModule[] modules = new FilterModule[v.size()];
 		for (int i = 0; i < v.size(); i++)
 		{
-			String ref = (String) v.elementAt(i);
+			String ref = (String) v.get(i);
 			FilterModule fm = (FilterModule) DataStore.instance().getObjectByID(ref);
 			if (fm == null)
 			{
@@ -154,7 +155,7 @@ public class FireModel
 		int signatureCheck = state.signatureCheck;
 		MethodInfo methodInfo = state.signatureCheckInfo;
 		ExecutionState baseState = state.baseState;
-		Enumeration baseEnum;
+		Iterator baseIt;
 
 		if (signatureCheck != NO_SIGNATURE_CHECK
 				&& state.getFlowNode().containsName(FlowChartNames.SIGNATURE_MATCHING_NODE))
@@ -165,52 +166,52 @@ public class FireModel
 				if (signatureCheck == STRICT_SIGNATURE_CHECK)
 				{
 					Vector v = new Vector();
-					baseEnum = v.elements();
+					baseIt = v.iterator();
 				}
 				else
 				{
-					baseEnum = baseState.getOutTransitions();
+					baseIt = baseState.getOutTransitions();
 			}
 			}
 			else if (result == SIGNATURE_MATCH_TRUE)
 			{
 				Vector v = new Vector();
-				Enumeration enumer = baseState.getOutTransitions();
-				while (enumer.hasMoreElements())
+				Iterator it = baseState.getOutTransitions();
+				while (it.hasNext())
 				{
-					transition = (ExecutionTransition) enumer.nextElement();
+					transition = (ExecutionTransition) it.next();
 					if (transition.getFlowTransition().getType() == FlowTransition.FLOW_TRUE_TRANSITION)
 					{
 						v.addElement(transition);
 					}
 				}
-				baseEnum = v.elements();
+				baseIt = v.iterator();
 			}
 			else
 			{
 				Vector v = new Vector();
-				Enumeration enumer = baseState.getOutTransitions();
-				while (enumer.hasMoreElements())
+				Iterator it = baseState.getOutTransitions();
+				while (it.hasNext())
 				{
-					transition = (ExecutionTransition) enumer.nextElement();
+					transition = (ExecutionTransition) it.next();
 					if (transition.getFlowTransition().getType() == FlowTransition.FLOW_FALSE_TRANSITION)
 					{
 						v.addElement(transition);
 					}
 				}
-				baseEnum = v.elements();
+				baseIt = v.iterator();
 			}
 		}
 		else
 		{
-			baseEnum = baseState.getOutTransitions();
+			baseIt = baseState.getOutTransitions();
 		}
 
 		// create ExtendedExecutionTransitions:
 		Vector outTransitions = new Vector();
-		while (baseEnum.hasMoreElements())
+		while (baseIt.hasNext())
 		{
-			ExecutionTransition baseTransition = (ExecutionTransition) baseEnum.nextElement();
+			ExecutionTransition baseTransition = (ExecutionTransition) baseIt.next();
 			outTransitions.addElement(new ExtendedExecutionTransition(state.model, state, baseTransition, false));
 		}
 
@@ -308,7 +309,7 @@ public class FireModel
 				else
 				{
 					MethodWrapper wrapper = signature.getMethodWrapper(matchMethodInfo);
-					if (wrapper.RelationType == MethodWrapper.UNKNOWN)
+					if (wrapper.relationType == MethodWrapper.UNKNOWN)
 					{
 						return SIGNATURE_MATCH_UNKNOWN;
 				}
@@ -555,9 +556,9 @@ public class FireModel
 			}
 		}
 
-		public Enumeration getEntranceStates()
+		public Iterator getEntranceStates()
 		{
-			return entranceTable.elements();
+			return entranceTable.values().iterator();
 		}
 
 		public boolean isEntranceMessage(Message message)
@@ -592,14 +593,14 @@ public class FireModel
 			this.layer = layer;
 		}
 
-		public Enumeration getOutTransitions()
+		public Iterator getOutTransitions()
 		{
 			if (outTransitions == null)
 			{
 				outTransitions = FireModel.this.getOutTransitions(this);
 			}
 
-			return outTransitions.elements();
+			return outTransitions.iterator();
 		}
 
 	}

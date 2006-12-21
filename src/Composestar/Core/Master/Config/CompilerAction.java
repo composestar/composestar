@@ -24,9 +24,9 @@ public class CompilerAction implements Serializable
 		return name;
 	}
 
-	public void setName(String name)
+	public void setName(String inName)
 	{
-		this.name = name;
+		name = inName;
 	}
 
 	public String getArgument()
@@ -34,8 +34,8 @@ public class CompilerAction implements Serializable
 		return argument;
 	}
 
-	public void setArgument(String argument)
+	public void setArgument(String inArgument)
 	{
-		this.argument = argument;
+		argument = inArgument;
 	}
 }

@@ -55,6 +55,8 @@ public class MessageSelector extends ContextRepositoryEntity
 		super();
 		msAST = amsAST;
 		name = msAST.getName();
+		descriptionFileName = msAST.getDescriptionFileName();
+		descriptionLineNumber = msAST.getDescriptionLineNumber();
 	}
 
 	/**

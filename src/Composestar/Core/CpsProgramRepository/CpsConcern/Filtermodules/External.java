@@ -121,9 +121,9 @@ public class External extends TypedDeclaration
 		return longinit;
 	}
 
-	public void setLonginit(FilterModuleElementReference longinit)
+	public void setLonginit(FilterModuleElementReference inlonginit)
 	{
-		this.longinit = longinit;
+		longinit = inlonginit;
 	}
 
 	public ExternalConcernReference getShortinit()

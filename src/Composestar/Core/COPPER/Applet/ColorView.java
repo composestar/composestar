@@ -1,4 +1,4 @@
-package Composestar.Core.COPPER.applet;
+package Composestar.Core.COPPER.Applet;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -14,7 +14,7 @@ public class ColorView extends PlainView
 {
 	Segment line;
 
-	static public Hashtable keywords;
+	public static Hashtable keywords;
 
 	public ColorView(Element e)
 	{

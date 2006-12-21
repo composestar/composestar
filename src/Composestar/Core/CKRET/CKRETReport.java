@@ -31,11 +31,11 @@ public class CKRETReport implements Serializable
 
 	private boolean selected;
 
-	public CKRETReport(FilterModuleOrder order, FilterSetAnalysis analysis, boolean selected)
+	public CKRETReport(FilterModuleOrder inorder, FilterSetAnalysis inanalysis, boolean inselected)
 	{
-		this.order = order;
-		this.analysis = analysis;
-		this.selected = selected;
+		order = inorder;
+		analysis = inanalysis;
+		selected = inselected;
 
 		this.addToConcern();
 	}

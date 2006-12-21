@@ -23,7 +23,7 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	 */
 	private static final long serialVersionUID = 3283145732364930465L;
 
-	public int RelationType;
+	public int relationType;
 
 	public static final int NORMAL = 1;
 
@@ -35,17 +35,17 @@ public class MethodWrapper implements SerializableRepositoryEntity
 
 	public static final int ALL = 255;
 
-	public MethodInfo theMethodInfo;
+	public MethodInfo methodInfo;
 
 	/**
-	 * @roseuid 404C4B670107
-	 * @param methodInfo
-	 * @param relationType
+	 * 
+	 * @param inRelationType
+	 * @param inMethodInfo
 	 */
-	public MethodWrapper(int relationType, MethodInfo methodInfo)
+	public MethodWrapper(int inRelationType, MethodInfo inMethodInfo)
 	{
-		RelationType = relationType;
-		theMethodInfo = methodInfo;
+		relationType = inRelationType;
+		methodInfo = inMethodInfo;
 	}
 
 	public MethodWrapper()
@@ -55,7 +55,7 @@ public class MethodWrapper implements SerializableRepositoryEntity
 
 	public MethodInfo getMethodInfo()
 	{
-		return theMethodInfo;
+		return methodInfo;
 	}
 
 	/**
@@ -64,30 +64,30 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	 */
 	public int getRelationType()
 	{
-		return RelationType;
+		return relationType;
 	}
 
 	public void setRelationType(int type)
 	{
-		RelationType = type;
+		relationType = type;
 	}
 
 	public String toString()
 	{
-		String rel = "?" + RelationType;
-		if (RelationType == NORMAL)
+		String rel = "?" + relationType;
+		if (relationType == NORMAL)
 		{
 			rel = "o";
 		}
-		else if (RelationType == ADDED)
+		else if (relationType == ADDED)
 		{
 			rel = "+";
 		}
-		else if (RelationType == REMOVED)
+		else if (relationType == REMOVED)
 		{
 			rel = "-";
 		}
 
-		return "[" + rel + "]" + theMethodInfo.toString();
+		return "[" + rel + "]" + methodInfo.toString();
 	}
 }

@@ -9,12 +9,12 @@
  */
 package Composestar.Core.COPPER;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -48,7 +48,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureM
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
@@ -73,6 +72,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImp
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClass;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClassAndSubClasses;
+import Composestar.Core.FILTH.FILTH;
+import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
@@ -121,16 +122,10 @@ public class CpsRepositoryBuilder
 	private SuperImposition si;
 
 	private Target ta;
-
-	private int lineNumber; // Sneaky default value
-
-	// special variables
-	private ConditionExpression lastTouched; // used to insert condition
+	
+	private HashMap orderingconstraints = new HashMap();
 
 	// stuff in the right place
-
-	// points to the last condition object we modified
-	private Vector condAll; // temporary vector used to store conditionparts
 
 	private boolean parsingInput = true; // whether we're parsing an input-
 
@@ -157,7 +152,6 @@ public class CpsRepositoryBuilder
 	 */
 	public CpsRepositoryBuilder()
 	{
-		condAll = new Vector();
 		// SelectorDefinition concernSelf = null;
 		namespace = null;
 		split = new Splitter();
@@ -380,18 +374,19 @@ public class CpsRepositoryBuilder
 					Vector v = new Vector();
 					if (init.size() >= 2)
 					{
-						String target = "";
+						StringBuffer sb = new StringBuffer();
 						String selector = (String) init.get(init.size() - 1);
 						for (int i = 0; i < (init.size() - 1); i++)
 						{
 							// System.out.println("Hello:
 							// "+(String)init.get(i));
-							target += (String) init.get(i) + '.';
+							if (i > 0) sb.append('.');
+							sb.append((String) init.get(i));
 							v.add(init.get(i));
 						}
 						// System.out.println("Hello: "+selector);
 						ecref.setInitSelector(selector);
-						ecref.setInitTarget(target.substring(0, target.length() - 1));
+						ecref.setInitTarget(sb.toString());
 					}
 					split.splitConcernReference(v);
 					ecref.setPackage(split.getPack());
@@ -699,10 +694,6 @@ public class CpsRepositoryBuilder
 		fec.setParent(fe);
 		fe.setConditionPart(fec);
 		this.addToRepository(fec);
-
-		condAll.clear(); // clear the condition Vector for the next
-		// filterelement
-		lastTouched = null; // reset this for the next series
 	}
 
 	public ConditionExpression addAnd(ConditionExpression lhs, ConditionExpression rhs)
@@ -753,146 +744,6 @@ public class CpsRepositoryBuilder
 							.getFmelem()));
 			return cv;
 		}
-	}
-
-	/**
-	 * Adds an And object (can be present in an FilterElement)
-	 * 
-	 * @deprecated
-	 */
-	public void addAnd()
-	{
-		And and = new And();
-		if (lastTouched != null)
-		{ // we are adding this up the tree
-			and.setLeft(lastTouched);
-			lastTouched.setParent(and); // we could not add this before, and dit
-			// not exist yet
-		}
-		lastTouched = and;
-		condAll.add(and);
-	}
-
-	/**
-	 * Adds an Or object (can be present in an FilterElement)
-	 * 
-	 * @deprecated
-	 */
-	public void addOr()
-	{
-		Or or = new Or();
-		if (lastTouched != null)
-		{ // we are adding this up the tree
-			or.setLeft(lastTouched);
-			lastTouched.setParent(or); // we could not add this before, and dit
-			// not exist yet
-		}
-		lastTouched = or;
-		condAll.add(or);
-	}
-
-	/**
-	 * Adds an Not object
-	 * 
-	 * @param condname Name of the literal to apply not to
-	 * @deprecated
-	 */
-	public void addNot(Vector condname)
-	{
-		Not not = new Not();
-		if (lastTouched != null)
-		{ // means we're the right part of the branch, don't adjust
-			// lastTouched
-			if (lastTouched instanceof BinaryOperator)
-			{
-				((BinaryOperator) lastTouched).setRight(not);
-				not.setParent(lastTouched);
-			}
-		}
-		else
-		{ // we're the left part, so change lastTouched
-			lastTouched = not;
-		}
-		condAll.add(not);
-
-		// now add the literal
-		addConditionLiteral(condname, not);
-	}
-
-	/**
-	 * Adds a literal or variable (i.e. a condition name)
-	 * 
-	 * @param condname Name of the condition (may include package + concern +
-	 *            fm)
-	 * @param override If called from Not, this points to the Not object to
-	 *            attach this condition to; if null, then just add using the
-	 *            default algoritm
-	 * @deprecated
-	 */
-	public void addConditionLiteral(Vector condname, ConditionExpression override)
-	{
-
-		ConditionExpression ce;
-
-		// special case if "true" or "false" are specified
-		if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("true"))
-		{
-			ce = new True();
-		}
-		else if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("false"))
-		{
-			ce = new False();
-		}
-		else
-		{
-			ce = new ConditionVariable();
-			split.splitFmElemReference(condname, true);
-			((ConditionVariable) ce).setCondition(addConditionReference(split.getPack(), split.getConcern(), split
-					.getFm(), split.getFmelem()));
-		}
-
-		if (override != null)
-		{ // we're adding under a not
-			((Not) override).setOperand(ce);
-			ce.setParent(override);
-		}
-		else if (lastTouched != null)
-		{ // means we're the right part of the branch
-			if (lastTouched instanceof BinaryOperator)
-			{
-				((BinaryOperator) lastTouched).setRight(ce);
-				ce.setParent(lastTouched);
-			}
-			else if (lastTouched instanceof UnaryOperator)
-			{
-				((UnaryOperator) lastTouched).setOperand(ce);
-				ce.setParent(lastTouched);
-			}
-		}
-		else
-		{
-			// if this is null, the parent has nog yet been created, so we're on
-			// the left side of the branch
-			lastTouched = ce;
-		}
-		condAll.add(ce);
-
-		// cp.setParent(fe);
-		// fe.setConditionPart(cp); ;
-		// Main.all.add(cp);
-	}
-
-	/**
-	 * Adds a True (happens when you do not specify any condition in
-	 * FilterElement; i.e. always true)
-	 * 
-	 * @deprecated
-	 */
-	public void addConditionTrue()
-	{
-		True true_ = new True();
-		lastTouched = true_;
-		condAll.add(true_);
 	}
 
 	/**
@@ -1329,8 +1180,8 @@ public class CpsRepositoryBuilder
 		// concernSelf.addSelExpression(concernSelfSelClass);
 		// don't add this to the repository, unless needed
 
-		// fixme
-		addSelectorDefinition("self", lineNumber);
+		// FIXME:
+		addSelectorDefinition("self", 0);
 		// addSelectorExpression(1, cpsc.getName());
 		Vector vtemp = new Vector();
 		// vtemp.add(cpsc.getName());
@@ -1556,6 +1407,21 @@ public class CpsRepositoryBuilder
 			this.addToRepository(fmp);
 		}
 	}
+	
+	public void addFMOrderingConstraint(String fm, String fm1)
+	{
+		SyntacticOrderingConstraint constraint = (SyntacticOrderingConstraint)this.orderingconstraints.get(fm);
+		if(constraint == null) // First constraint 
+		{
+			constraint = new SyntacticOrderingConstraint(fm);
+			constraint.addRightFilterModule(fm1);
+			this.orderingconstraints.put(fm, constraint);
+		}
+		else
+		{
+			constraint.addRightFilterModule(fm1);;
+		}
+	}
 
 	/**
 	 * Creates a new AnnotationBinding
@@ -1619,11 +1485,11 @@ public class CpsRepositoryBuilder
 	 *            compiler)
 	 * @param filename Name of the file containing the source
 	 */
-	public void addSourceFile(String lang, String filename)
+	public void addSourceFile(String lang, String srcfilename)
 	{
 		SourceFile srcf = new SourceFile();
 		srcf.setLanguage(lang);
-		srcf.setSourceFile(filename);
+		srcf.setSourceFile(srcfilename);
 		cpsc.setImplementation(srcf);
 		this.addToRepository(srcf);
 	}
@@ -1637,13 +1503,13 @@ public class CpsRepositoryBuilder
 	 * @param line
 	 * @param className
 	 */
-	public void addEmbeddedSource(String lang, Vector className, String filename, int line)
+	public void addEmbeddedSource(String lang, Vector className, String srcfilename, int line)
 	{
 		Source src = new Source();
 		src.setLanguage(lang);
 		src.setClassName(className);
-		src.setSourceFile(filename);
-		src.setDescriptionFileName(this.filename);
+		src.setSourceFile(srcfilename);
+		src.setDescriptionFileName(filename);
 		src.setDescriptionLineNumber(line);
 		src.setSource(COPPER.getEmbeddedSource()); // add the extracted source
 		cpsc.setImplementation(src);
@@ -1850,6 +1716,8 @@ public class CpsRepositoryBuilder
 		completeInputFilters();
 		completeOutputFilters();
 		completeFilterElements();
+		
+		this.ds.addObject(FILTH.FILTER_ORDERING_SPEC, this.orderingconstraints);
 	}
 
 	/**
@@ -1995,9 +1863,8 @@ public class CpsRepositoryBuilder
 				}
 				else
 				{
-					current.getRightOperator().setRightArgument(null); // nothing
-					// after
-					// this
+					current.getRightOperator().setRightArgument(null); 
+					// nothing after this
 				}
 			}
 		}
@@ -2015,8 +1882,8 @@ public class CpsRepositoryBuilder
 		return cpsc.getName();
 	}
 
-	public void setFilename(String filename)
+	public void setFilename(String infilename)
 	{
-		this.filename = filename;
+		filename = infilename;
 	}
 }

@@ -64,7 +64,7 @@ public class PathHelper
 		strTok = new StringTokenizer(pathpart, "@");
 		if (pathpart.startsWith("@"))
 		{
-			HandlePosition(strTok.nextToken(), piece);
+			handlePosition(strTok.nextToken(), piece);
 		}
 
 		// name@ (number | last) [new]
@@ -76,22 +76,22 @@ public class PathHelper
 			if (strTok.hasMoreTokens())
 			{ // @(number | last) [new]
 				temp = strTok.nextToken();
-				HandlePosition(temp, piece);
+				handlePosition(temp, piece);
 			}
 		}
 
 		return piece;
 	}
 
-	private void HandlePosition(String temp, Piece piece)
+	private void handlePosition(String temp, Piece piece)
 	{
 		if (temp.endsWith("new"))
 		{
 			piece.setCreateNew(true);
 			if (temp.length() > 3)
 			{ // extra check
-				temp = temp.substring(0, temp.length() - 3); // (number |
-				// last)
+			// (number | last)
+				temp = temp.substring(0, temp.length() - 3);
 				piece.setPosition(temp);
 			}
 		}

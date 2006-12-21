@@ -6,7 +6,7 @@
  */
 package Composestar.Core.FIRE2.model;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -15,7 +15,7 @@ import java.util.Set;
 public interface ExecutionModel
 {
 
-	public Enumeration getEntranceStates();
+	public Iterator getEntranceStates();
 
 	/**
 	 * Returns the entrance state for the given selector. If a selector doesn't

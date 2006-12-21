@@ -1,15 +1,16 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.FILTH.Core;
 
-/*
- * Created on 11-sep-2003
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
-
 /**
- * @author nagyist To change the template for this generated type comment go to
- *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author nagyist
  */
 public class HardSkipRule extends SkipRule
 {
@@ -30,11 +31,11 @@ public class HardSkipRule extends SkipRule
 
 		// System.out.print(" *applying: HardSkip
 		// <"+(Action)_left+","+(Action)_right+">*\n");
-		if ((_left.evaluate() != null) && (_left.evaluate().booleanValue()))
+		if ((left.evaluate() != null) && (left.evaluate().booleanValue()))
 		{
-			((Action) _right).setExecutable(false);
-			((Action) _right).setReturnValue(_newValue.evaluate());
-			((Action) _right).setExecuted();
+			((Action) right).setExecutable(false);
+			((Action) right).setReturnValue(newValue.evaluate());
+			((Action) right).setExecuted();
 			// System.out.print(" * skipping>> "+(Action)_right+" with
 			// "+_newValue.evaluate()+"*\n");
 

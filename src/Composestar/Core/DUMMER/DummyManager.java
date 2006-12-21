@@ -88,7 +88,6 @@ public class DummyManager implements CTCommonModule
 		}
 		catch (CompilerException e)
 		{
-			e.printStackTrace();
 			throw new ModuleException("Cannot compile dummies: " + e.getMessage(), MODULE_NAME);
 		}
 	}

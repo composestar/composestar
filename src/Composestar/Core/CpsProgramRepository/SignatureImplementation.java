@@ -22,7 +22,7 @@ public class SignatureImplementation implements SerializableRepositoryEntity
 	 */
 	private static final long serialVersionUID = 3321584582486823819L;
 
-	public int RelationType;
+	public int relationType;
 
 	public static final int NORMAL = 1;
 

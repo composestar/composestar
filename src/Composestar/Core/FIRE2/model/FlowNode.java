@@ -4,7 +4,6 @@
  */
 package Composestar.Core.FIRE2.model;
 
-import java.util.Enumeration;
 import java.util.Iterator;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
@@ -24,7 +23,7 @@ public interface FlowNode
 
 	public final static int ACTION_NODE = 4;
 
-	public Enumeration getTransitions();
+	public Iterator getTransitions();
 
 	/**
 	 * Returns the (first) transition from this startnode to the given endnode,

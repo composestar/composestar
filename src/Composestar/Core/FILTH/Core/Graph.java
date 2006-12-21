@@ -1,37 +1,33 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.FILTH.Core;
 
-/*
- * Created on 2-sep-2003
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
-
-/**
- * @author nagyist
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 import java.util.LinkedList;
 
 public class Graph
 {
-	private Node _root;
+	private Node root;
 
 	private LinkedList nodes = new LinkedList();
 
 	private LinkedList edges = new LinkedList();
 
-	public void setRoot(Node root)
+	public void setRoot(Node inroot)
 	{
-		_root = root;
+		root = inroot;
 		nodes.add(root);
 	}
 
 	public Node getRoot()
 	{
-		return _root;
+		return root;
 	}
 
 	public LinkedList getNodes()

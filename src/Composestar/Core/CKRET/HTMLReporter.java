@@ -29,11 +29,11 @@ public class HTMLReporter implements Reporter
 
 	private String cssFile;
 
-	public HTMLReporter(String path, String cssFile, CommonResources resources) throws Exception
+	public HTMLReporter(String path, String incssFile, CommonResources resources) throws Exception
 	{
 		writer = new BufferedWriter(new FileWriter(path));
 		buffer = new StringBuffer("");
-		this.cssFile = cssFile;
+		cssFile = incssFile;
 	}
 
 	public void openConcern(Concern concern)
@@ -55,7 +55,7 @@ public class HTMLReporter implements Reporter
 			new CKRETReport(order, analysis, selected);
 		}
 
-		boolean hasConflicts = (analysis.numConflictingExecutions() != 0);
+		boolean hasConflicts = analysis.numConflictingExecutions() != 0;
 
 		if (selected && hasConflicts)
 		{

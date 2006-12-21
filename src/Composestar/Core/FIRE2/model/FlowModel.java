@@ -6,7 +6,7 @@
  */
 package Composestar.Core.FIRE2.model;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
  * @author Arjan
@@ -27,10 +27,10 @@ public interface FlowModel
 	/**
 	 * @return Returns all nodes
 	 */
-	public Enumeration getNodes();
+	public Iterator getNodes();
 
 	/**
 	 * @return Returns all transitions
 	 */
-	public Enumeration getTransitions();
+	public Iterator getTransitions();
 }

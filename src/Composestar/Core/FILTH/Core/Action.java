@@ -1,98 +1,98 @@
-package Composestar.Core.FILTH.Core;
-
 /*
- * Created on 2-sep-2003
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
+package Composestar.Core.FILTH.Core;
 
 /**
  * @author nagyist
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Action implements Parameter
 {
-	String _name;
+	private String name;
 
-	public Action(String name, Boolean rvalue, boolean present)
+	private Boolean rvalue;
+
+	private boolean present;
+
+	private boolean executed;
+
+	private boolean executable;
+
+	protected LinkedList rules = new LinkedList();
+
+	public Action(String inname, Boolean inrvalue, boolean inpresent)
 	{
-		_name = name;
-		_rvalue = rvalue;
+		name = inname;
+		rvalue = inrvalue;
+		present = inpresent;
 		if (present)
 		{
 			this.setExecutable(true);
 		}
 	}
 
-	private Boolean _rvalue;
-
 	public Boolean getReturnValue()
 	{
-		return _rvalue;
+		return rvalue;
 	}
 
-	public void setReturnValue(Boolean rvalue)
+	public void setReturnValue(Boolean inrvalue)
 	{
-		_rvalue = rvalue;
+		rvalue = inrvalue;
 	}
-
-	private boolean _present;
 
 	public boolean isPresent()
 	{
-		return _present;
+		return present;
 	}
-
-	private boolean _executed = false;
 
 	public boolean isExecuted()
 	{
-		return _executed;
+		return executed;
 	}
 
 	public void setExecuted()
 	{
-		_executed = true;
+		executed = true;
 	}
-
-	private boolean _executable = false;
 
 	public boolean isExecutable()
 	{
-		return _executable;
+		return executable;
 	}
 
-	public void setExecutable(boolean executable)
+	public void setExecutable(boolean inexecutable)
 	{
-		_executable = executable;
+		executable = inexecutable;
 	}
-
-	protected LinkedList _rules = new LinkedList();
 
 	public void addRule(Rule rule)
 	{
-		_rules.add(rule);
+		rules.add(rule);
 	}
 
 	public LinkedList getRules()
 	{
-		return _rules;
+		return rules;
 	}
 
 	public String toString()
 	{
-		return _name;
+		return name;
 	}
 
 	public String getName()
 	{
-		return _name;
+		return name;
 	}
 
 	public static void insert(Action a, Graph g)
@@ -114,7 +114,7 @@ public class Action implements Parameter
 		return null;
 	}
 
-	public static Node lookupByName(String name, Graph g)
+	public static Node lookupByName(String inname, Graph g)
 	{
 		Node current;
 		for (Iterator i = g.getNodes().iterator(); i.hasNext();)
@@ -126,7 +126,7 @@ public class Action implements Parameter
 				continue;
 			}
 
-			if (((Action) current.getElement()).getName().equals(name))
+			if (((Action) current.getElement()).getName().equals(inname))
 			{
 				return current;
 			}
@@ -145,7 +145,7 @@ public class Action implements Parameter
 
 	public void execute()
 	{
-		_executed = true;
+		executed = true;
 		// TO DO: execute the superimposed behaviour
 	}
 

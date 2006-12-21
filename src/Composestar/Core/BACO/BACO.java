@@ -14,19 +14,20 @@ import Composestar.Core.Master.Config.CustomFilter;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 public abstract class BACO implements CTCommonModule
 {
 	public static final String MODULE_NAME = "BACO";
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	public BACO()
 	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Copying files to output directory...");
+		logger.debug("Copying files to output directory...");
 
 		Set filesToCopy = new HashSet();
 		addRequiredFiles(filesToCopy);
@@ -42,7 +43,7 @@ public abstract class BACO implements CTCommonModule
 	{
 		Configuration config = Configuration.instance();
 		String cpsPath = config.getPathSettings().getPath("Composestar");
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "ComposestarHome: '" + cpsPath + "'");
+		logger.debug("ComposestarHome: '" + cpsPath + "'");
 
 		Iterator it = config.getPlatform().getRequiredFiles().iterator();
 		while (it.hasNext())
@@ -50,7 +51,7 @@ public abstract class BACO implements CTCommonModule
 			String requiredFile = (String) it.next();
 			String filename = cpsPath + "binaries/" + requiredFile;
 
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Adding required file: '" + filename + "'");
+			logger.debug("Adding required file: '" + filename + "'");
 			filesToCopy.add(filename);
 		}
 	}
@@ -63,7 +64,7 @@ public abstract class BACO implements CTCommonModule
 		{
 			String lib = (String) it.next();
 
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Adding built library: '" + lib + "'");
+			logger.debug("Adding built library: '" + lib + "'");
 			filesToCopy.add(FileUtils.unquote(lib));
 		}
 	}
@@ -77,7 +78,7 @@ public abstract class BACO implements CTCommonModule
 			CustomFilter filter = (CustomFilter) it.next();
 			String lib = filter.getLibrary();
 
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Adding custom filter: '" + lib + "'");
+			logger.debug("Adding custom filter: '" + lib + "'");
 			filesToCopy.add(FileUtils.unquote(lib));
 		}
 	}
@@ -100,7 +101,7 @@ public abstract class BACO implements CTCommonModule
 					String depFilename = dependency.getFileName();
 					filesToCopy.add(FileUtils.unquote(depFilename));
 
-					Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Adding dependency: '" + depFilename + "'");
+					logger.debug("Adding dependency: '" + depFilename + "'");
 				}
 			}
 		}
@@ -113,7 +114,7 @@ public abstract class BACO implements CTCommonModule
 		String basePath = config.getPathSettings().getPath("Base");
 		String repository = basePath + "repository.xml";
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Adding repository: '" + repository + "'");
+		logger.debug("Adding repository: '" + repository + "'");
 		filesToCopy.add(repository);
 	}
 
@@ -123,7 +124,7 @@ public abstract class BACO implements CTCommonModule
 
 		// determine output dir:
 		String outputPath = config.getProjects().getOutputPath();
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "OutputPath: '" + outputPath + "'");
+		logger.debug("OutputPath: '" + outputPath + "'");
 
 		// create the output dir if needed
 		if (!FileUtils.createFullPath(outputPath))
@@ -145,7 +146,7 @@ public abstract class BACO implements CTCommonModule
 		String dest = outputPath + FileUtils.getFilenamePart(source);
 		try
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Copying '" + source + "' to '" + dest + "'");
+			logger.debug("Copying '" + source + "' to '" + dest + "'");
 			FileUtils.copyFile(dest, source);
 		}
 		catch (IOException e)
@@ -157,7 +158,7 @@ public abstract class BACO implements CTCommonModule
 			}
 			else
 			{
-				Debug.out(Debug.MODE_WARNING, MODULE_NAME, msg);
+				logger.warn(msg);
 			}
 		}
 	}

@@ -1,18 +1,14 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.FILTH.Core;
 
-/*
- * Created on 3-sep-2003
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
-
-/**
- * @author nagyist
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -82,9 +78,9 @@ public class OrderTraverser
 			if (candidates.size() == 1)
 			{
 				/*
-				 * ez a rész nem jó, ez már nem kell , a rekurziónak a két
-				 * kettévált sorokat kell felhalmoznia, gy?jtenie /* select the
-				 * next node into the execution order
+				 * it isn't correct, that its unendly recursive
+				 * It is just the way it works, ok ?
+				 * select the next node into the execution order
 				 */
 				current = (Node) candidates.getFirst();
 			}
@@ -334,33 +330,33 @@ public class OrderTraverser
 	/* ====== Pair: An Entity of the database for detecting cycles ======= */
 	public class Pair
 	{
-		private Node _node;
+		private Node node;
 
-		private LinkedList _edges = new LinkedList();
+		private LinkedList edges = new LinkedList();
 
-		public Pair(Node node)
+		public Pair(Node innode)
 		{
-			_node = node;
+			node = innode;
 		}
 
 		public void addEdge(Edge e)
 		{
-			_edges.add(e);
+			edges.add(e);
 		}
 
 		public Edge removeAnEdge()
 		{
 			Edge deleted = null;
-			if (_edges.size() != 0)
+			if (edges.size() != 0)
 			{
-				deleted = (Edge) _edges.removeFirst();
+				deleted = (Edge) edges.removeFirst();
 			}
 			return deleted;
 		}
 
 		public Node getNode()
 		{
-			return _node;
+			return node;
 		}
 
 		public boolean isInThePath(LinkedList path)
@@ -368,7 +364,7 @@ public class OrderTraverser
 
 			for (Iterator i = path.iterator(); i.hasNext();)
 			{
-				if (((Pair) i.next()).getNode().getElement().equals(this._node.getElement()))
+				if (((Pair) i.next()).getNode().getElement().equals(this.node.getElement()))
 				{
 					return true;
 				}

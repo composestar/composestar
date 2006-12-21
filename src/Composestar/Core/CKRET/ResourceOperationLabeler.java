@@ -191,7 +191,7 @@ public class ResourceOperationLabeler implements Labeler
 							String spec = dna.getValue().replaceAll("\"", "");
 							if (!grammer.matcher(spec).matches())
 							{
-								MethodInfo dnmi = ((MethodInfo) dna.getTarget());
+								MethodInfo dnmi = (MethodInfo) dna.getTarget();
 								String fullMethodName = dnmi.parent().m_fullName + '.' + dnmi.name();
 								throw new ModuleException("Error in annotation semantics of method " + fullMethodName,
 										"CKRET");
@@ -227,10 +227,10 @@ public class ResourceOperationLabeler implements Labeler
 							// this.metaSemantics.put(filter, metaOperations);
 						}
 					}
-					Iterator ReifiedMessageBehaviour = method.getReifiedMessageBehavior().iterator();
-					while (ReifiedMessageBehaviour.hasNext())
+					Iterator reifiedMessageBehaviour = method.getReifiedMessageBehavior().iterator();
+					while (reifiedMessageBehaviour.hasNext())
 					{
-						String refMes = (String) (ReifiedMessageBehaviour.next());
+						String refMes = (String) (reifiedMessageBehaviour.next());
 
 						StringTokenizer st = new StringTokenizer(refMes.replaceAll("\"", ""), ",");
 
@@ -278,10 +278,10 @@ public class ResourceOperationLabeler implements Labeler
 
 		private String resource;
 
-		public LabelResourcePair(String label, String resource)
+		public LabelResourcePair(String inlabel, String inresource)
 		{
-			this.label = label;
-			this.resource = resource;
+			label = inlabel;
+			resource = inresource;
 		}
 
 		public boolean equals(Object obj)

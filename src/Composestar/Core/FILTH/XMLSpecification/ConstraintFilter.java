@@ -1,17 +1,16 @@
-package Composestar.Core.FILTH.XMLSpecification;
-
 /*
- * Created on 15-mrt-2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
+package Composestar.Core.FILTH.XMLSpecification;
 
 /**
  * @author nagyist
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -29,13 +28,13 @@ public class ConstraintFilter extends ArgumentFilter
 	// private ArgumentFilter _af;
 	private String value;
 
-	private Graph _graph;
+	private Graph graph;
 
 	// public OrderFilter(ArgumentFilter af){ _af=af; }
 
 	public ConstraintFilter(Graph g)
 	{
-		_graph = g;
+		graph = g;
 	}
 
 	public ConstraintFilter(XMLReader parent)
@@ -56,7 +55,7 @@ public class ConstraintFilter extends ArgumentFilter
 			/* attrbutes for s */
 			if (atts != null)
 			{
-				String type = atts.getQName(0);
+				//String type = atts.getQName(0);
 				value = atts.getValue(0);
 			}
 			// System.out.println("BEGIN ");
@@ -76,7 +75,7 @@ public class ConstraintFilter extends ArgumentFilter
 		{
 			// System.out.println(value + "END");
 
-			nl = Action.lookupByName(_left, _graph);
+			nl = Action.lookupByName(left, graph);
 
 			if (nl != null)
 			{
@@ -92,7 +91,7 @@ public class ConstraintFilter extends ArgumentFilter
 				l = null;
 			}
 
-			nr = Action.lookupByName(_right, _graph);
+			nr = Action.lookupByName(right, graph);
 			if (nr != null)
 			{
 				r = (Action) nr.getElement();
@@ -112,12 +111,12 @@ public class ConstraintFilter extends ArgumentFilter
 			{
 				if ("pre_soft".equals(value))
 				{
-					Rule _rule = new SoftPreRule(l, r);
-					_rule.insert(_graph);
+					Rule rule = new SoftPreRule(l, r);
+					rule.insert(graph);
 
 					// FILTHService.print("FILTH::adding rule> "+value+"( "+l+"
 					// , "+r+" )\n");
-					FILTHService.log.print("<li><i>" + value + "( " + l + " , " + r + ")</i></li>\n");
+					FILTHService.getLog().print("<li><i>" + value + "( " + l + " , " + r + ")</i></li>\n");
 				}
 			}
 

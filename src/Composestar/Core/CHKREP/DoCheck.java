@@ -18,10 +18,6 @@ import Composestar.Utils.Debug;
  */
 public class DoCheck
 {
-	public static DataStore ds; // the repository
-
-	public static boolean debug = true; // display debugging information?
-
 	/**
 	 * Initializes all variables so we can start parsing a (new) cpsfile
 	 */
@@ -33,19 +29,18 @@ public class DoCheck
 	 * 
 	 * @param d
 	 */
-	public void go(DataStore d) throws ModuleException
+	public void go(DataStore ds) throws ModuleException
 	{
 		// try {
 		init();
 
 		// Debug.setMode(3); <<< ONLY USE THIS ONCE IN MASTER WHEN READING
 		// CONFIG FILE
-		if (d == null)
+		if (ds == null)
 		{
 			Debug.out(Debug.MODE_WARNING, "CHKREP", "invalid repository");
 			return;
 		}
-		ds = d;
 
 		// Testbench
 		NotUsedInternals nui = new NotUsedInternals();

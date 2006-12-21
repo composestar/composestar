@@ -243,7 +243,7 @@ public class Sign implements CTCommonModule
 		signature = getSignature(concern);
 
 		execModel = fireModel.getExecutionModel(messageSelector);
-		entranceState = (ExecutionState) execModel.getEntranceStates().nextElement();
+		entranceState = (ExecutionState) execModel.getEntranceStates().next();
 
 		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
 		Enumeration dispatchStates = checker.matchingStates();
@@ -833,18 +833,18 @@ public class Sign implements CTCommonModule
 				while (iter2.hasNext())
 				{
 					wrapper = (MethodWrapper) iter2.next();
-					if (wrapper.RelationType == MethodWrapper.UNKNOWN)
+					if (wrapper.relationType == MethodWrapper.UNKNOWN)
 					{
-						int result = resolveMethodDispatch(concern, model, wrapper.theMethodInfo);
+						int result = resolveMethodDispatch(concern, model, wrapper.methodInfo);
 
 						if (result == IN_SIGNATURE)
 						{
-							wrapper.RelationType = MethodWrapper.NORMAL;
+							wrapper.relationType = MethodWrapper.NORMAL;
 							changed = true;
 						}
 						else if (result == NOT_IN_SIGNATURE)
 						{
-							wrapper.RelationType = MethodWrapper.REMOVED;
+							wrapper.relationType = MethodWrapper.REMOVED;
 							// signature.removeMethodWrapper( wrapper );
 							changed = true;
 						}
@@ -1056,10 +1056,10 @@ public class Sign implements CTCommonModule
 				wrapper = (MethodWrapper) iter2.next();
 
 				// check for cyclic dependancies:
-				if (wrapper.RelationType == MethodWrapper.UNKNOWN)
+				if (wrapper.relationType == MethodWrapper.UNKNOWN)
 				{
 					Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Cyclic signature " + "dependancy found on method '"
-							+ concern.getName() + '.' + wrapper.theMethodInfo.Name + '\'');
+							+ concern.getName() + '.' + wrapper.methodInfo.Name + '\'');
 				}
 
 				// check for unexisting dispatches:

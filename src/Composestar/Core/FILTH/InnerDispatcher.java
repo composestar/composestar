@@ -1,8 +1,11 @@
 /*
- * Created on 28-jul-2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.FILTH;
 
@@ -30,13 +33,15 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleR
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
- * @author Staijen To change the template for this generated type comment go to
- *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author Staijen
  */
 public class InnerDispatcher
 {
 
 	private static FilterModuleReference innerDispatchReference;
+
+	private InnerDispatcher()
+	{}
 
 	public static FilterModuleReference getInnerDispatchReference()
 	{

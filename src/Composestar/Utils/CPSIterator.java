@@ -27,10 +27,10 @@ public class CPSIterator implements Iterator
 	 * @param v
 	 * @roseuid 40ADF325008E
 	 */
-	public CPSIterator(Vector v)
+	public CPSIterator(Vector inv)
 	{
-		this.v = v;
-		this.index = 0;
+		v = inv;
+		index = 0;
 	}
 
 	/**

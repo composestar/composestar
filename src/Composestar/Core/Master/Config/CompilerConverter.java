@@ -26,9 +26,9 @@ public class CompilerConverter implements Serializable
 		return name;
 	}
 
-	public void setName(String name)
+	public void setName(String inName)
 	{
-		this.name = name;
+		name = inName;
 	}
 
 	public String getExpression()
@@ -36,9 +36,9 @@ public class CompilerConverter implements Serializable
 		return expression;
 	}
 
-	public void setExpression(String expression)
+	public void setExpression(String inExpression)
 	{
-		this.expression = expression;
+		expression = inExpression;
 	}
 
 	public String getReplaceBy()
@@ -46,8 +46,8 @@ public class CompilerConverter implements Serializable
 		return replaceBy;
 	}
 
-	public void setReplaceBy(String replaceBy)
+	public void setReplaceBy(String inReplaceBy)
 	{
-		this.replaceBy = replaceBy;
+		replaceBy = inReplaceBy;
 	}
 }

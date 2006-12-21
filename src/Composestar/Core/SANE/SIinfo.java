@@ -1,5 +1,3 @@
-//Source file: D:\\Lodewijk\\software\\ComposeStar\\composestar\\src\\Composestar\\core\\SANE\\SIinfo.java
-
 package Composestar.Core.SANE;
 
 import java.util.Iterator;
@@ -88,7 +86,7 @@ public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRep
 		return theFmSIinfo;
 	}
 
-	public CPSIterator FilterModSIAltsIter()
+	public CPSIterator filterModSIAltsIter()
 	{
 		return new CPSIterator(theFmSIinfo);
 	}

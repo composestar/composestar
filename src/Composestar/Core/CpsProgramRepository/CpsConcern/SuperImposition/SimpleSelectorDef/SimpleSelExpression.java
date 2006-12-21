@@ -87,9 +87,9 @@ public abstract class SimpleSelExpression extends ContextRepositoryEntity
 		return ref;
 	}
 
-	public void setRef(ConcernReference ref)
+	public void setRef(ConcernReference inRef)
 	{
-		this.ref = ref;
+		ref = inRef;
 	}
 
 }

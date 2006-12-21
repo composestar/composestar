@@ -10,6 +10,7 @@ Licensed under LGPL v2.1 or (at your option) any later version.
 
 $Id$
 -->
+<!-- Note: untested -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<xsl:output indent="yes" />
