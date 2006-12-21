@@ -32,4 +32,9 @@ public abstract class AbstractConcernNode extends Node
 	{
 		Debug.out(Debug.MODE_ERROR, DIGGER.MODULE_NAME, "Tried to set owner for a concern node: " + label);
 	}
+	
+	public Concern getConcern()
+	{
+		return concern;
+	}
 }

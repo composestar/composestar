@@ -10,6 +10,9 @@
 
 package Composestar.Core.DIGGER.Walker;
 
+import java.util.Iterator;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
 import Composestar.Core.DIGGER.Graph.CondMatchEdge;
 
@@ -47,6 +50,37 @@ public class Message
 		selector = inSelector;
 	}
 	
+	public Message(Message base)
+	{
+		concernNode = base.getConcernNode();
+		selector = base.getSelector();
+	}
+	
+	public AbstractConcernNode getConcernNode()
+	{
+		return concernNode;
+	}
+	
+	public String getSelector()
+	{
+		return selector;
+	}
+	
+	public void setSelector(String inval)
+	{
+		selector = inval;
+	}
+	
+	public void setCertenty(int inval)
+	{
+		certenty = inval;
+	}
+	
+	public int getCertenty()
+	{
+		return certenty;
+	}
+	
 	/**
 	 * Returns true when this message matches
 	 * @param edge
@@ -54,6 +88,31 @@ public class Message
 	 */
 	public boolean matches(CondMatchEdge edge)
 	{
-		return false;
+		boolean res = false;
+		if (!edge.getIsMessageList())
+		{
+			Iterator it = edge.getMatchingParts();
+			while (it.hasNext())
+			{
+				MatchingPart mp = (MatchingPart) it.next();
+				if (mp.getSelector().equals(selector) || mp.getSelector().equals("*"))
+				{
+					res = true;
+					break;
+				}
+			}
+		}
+		else
+		{
+			//TODO: ...
+		}
+		if (edge.getEnabler())
+		{
+			return res;
+		}
+		else
+		{
+			return !res;
+		}
 	}
 }

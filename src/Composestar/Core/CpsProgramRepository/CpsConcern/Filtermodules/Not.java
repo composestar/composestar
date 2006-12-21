@@ -25,4 +25,18 @@ public class Not extends UnaryOperator
 	{
 		super();
 	}
+	
+	public int simulateResult()
+	{
+		int res = operand.simulateResult();
+		switch (res)
+		{
+			case RESULT_FALSE:
+				return RESULT_TRUE;
+			case RESULT_TRUE:
+				return RESULT_FALSE;
+			default:
+				return res;
+		}
+	}
 }

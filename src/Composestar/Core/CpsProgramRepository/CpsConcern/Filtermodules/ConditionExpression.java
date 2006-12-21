@@ -16,6 +16,9 @@ import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
  */
 public abstract class ConditionExpression extends ContextRepositoryEntity
 {
+	public static final int RESULT_FALSE = -1;
+
+	public static final int RESULT_TRUE = 0;
 
 	/**
 	 * @roseuid 401FAA580095
@@ -63,4 +66,12 @@ public abstract class ConditionExpression extends ContextRepositoryEntity
 	{
 		return false;
 	}
+
+	/**
+	 * Simulate the evaluation of the expression.
+	 * 
+	 * @return Either RESULT_FALSE, RESULT_TRUE or the number of variables the
+	 *         result depends on
+	 */
+	public abstract int simulateResult();
 }
