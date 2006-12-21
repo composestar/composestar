@@ -237,7 +237,6 @@ public class CstarTest extends BaseTask
 			*run:
 			*make run
 			*/
-			String commandline="";
 			String[] cmd = { "java", "-cp", eclipseHome+"/startup.jar", launcher, "-application","ComposestarEclipsePlugin.headlessCEPTest", projectname, "-customfilter", customfilterString, "-data", workspace};
 			//{"make", "run", "-C", workspace+"\\"+projectname};
 			
@@ -296,7 +295,7 @@ public class CstarTest extends BaseTask
 			actualReader = new BufferedReader(new StringReader(output));
 			for(int firstlines = 0;  firstlines < 2; firstlines++ )
 			{
-				String actual = actualReader.readLine();
+				actualReader.readLine();
 			}			
 
 			while (true)

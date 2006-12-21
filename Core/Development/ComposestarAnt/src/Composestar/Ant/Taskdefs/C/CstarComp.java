@@ -1,18 +1,12 @@
 package Composestar.Ant.Taskdefs.C;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.DirSet;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Commandline.Argument;
-import org.apache.tools.ant.types.PatternSet.NameEntry;
 
 import Composestar.Ant.Taskdefs.BaseTask;
 
@@ -185,9 +179,8 @@ public class CstarComp extends BaseTask
 
 			log("Execution command: " + command);
 
-	        	Process proc = rt.exec(command);
-			//int err=proc.waitFor();			
-			int err=0;
+	        Process proc = rt.exec(command);
+			int err = proc.waitFor();			
 			/**Java java = (Java) getProject().createTask("java");
 			java.init();
 			java.setDir(new File(eclipseHome));
