@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -36,38 +36,50 @@ package Composestar.C.specification;
 public class XMLParameter
 {
 	private String type = "";
+
 	private String name = "";
+
 	private boolean invert = false;
-	
-	public void setType(String type) {
+
+	public void setType(String type)
+	{
 		this.type = type;
 	}
-	
-	public String getType() {
+
+	public String getType()
+	{
 		return type;
 	}
-	
-	public void setName(String id) {
+
+	public void setName(String id)
+	{
 		this.name = id;
 	}
-	
-	public String getName() {
+
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setInvert(boolean invert) {
+	public void setInvert(boolean invert)
+	{
 		this.invert = invert;
 	}
 
-	public boolean isInvert() {
+	public boolean isInvert()
+	{
 		return invert;
 	}
-	
+
 	public String toString()
-    {
-		if(invert)
-			return "\t\t\t!!! Parameter: name="+name+" type="+type+"\n";
+	{
+		if (invert)
+		{
+			return "\t\t\t!!! Parameter: name=" + name + " type=" + type + "\n";
+		}
 		else
-			return "\t\t\t    Parameter: name="+name+" type="+type+"\n";
-    }
+		{
+			return "\t\t\t    Parameter: name=" + name + " type=" + type + "\n";
+		}
+	}
 }

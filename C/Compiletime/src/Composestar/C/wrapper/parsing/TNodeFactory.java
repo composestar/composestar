@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -35,34 +35,36 @@ package Composestar.C.wrapper.parsing;
 
 import antlr.ASTFactory;
 import antlr.collections.AST;
-import Composestar.C.wrapper.parsing.TNode;
 
-/** This class extends ASTFactory to build instances
- of class com.ideals.weavec.wrapper.parsing.TNode */
+/**
+ * This class extends ASTFactory to build instances of class
+ * com.ideals.weavec.wrapper.parsing.TNode
+ */
 public class TNodeFactory extends ASTFactory
 {
 
-  /** Create a new ampty AST node */
-  public AST create() { 
-    return new TNode();
-  }
+	/** Create a new ampty AST node */
+	public AST create()
+	{
+		return new TNode();
+	}
 
-        /** Create a new AST node from type and text */
-        public AST create(int ttype, String text)
-        {
-                AST ast = new TNode();
-                ast.setType(ttype);
-                ast.setText(text);
-                return ast;
-        }
+	/** Create a new AST node from type and text */
+	public AST create(int ttype, String text)
+	{
+		AST ast = new TNode();
+		ast.setType(ttype);
+		ast.setText(text);
+		return ast;
+	}
 
-        /** Create a new AST node from an existing AST node */
-        public AST create(AST ast) {
-                AST newast = new TNode();
-                newast.setType(ast.getType());
-                newast.setText(ast.getText());
-                return newast;
-        }
+	/** Create a new AST node from an existing AST node */
+	public AST create(AST ast)
+	{
+		AST newast = new TNode();
+		newast.setType(ast.getType());
+		newast.setText(ast.getText());
+		return newast;
+	}
 
-  
 }

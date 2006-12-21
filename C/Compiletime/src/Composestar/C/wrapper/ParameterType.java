@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,148 +37,160 @@ import Composestar.C.wrapper.parsing.GnuCTokenTypes;
 import Composestar.C.wrapper.utils.GeneralUtils;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ByelasH
- * Date: 23-dec-2004
- * Time: 10:09:11
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: ByelasH Date: 23-dec-2004 Time: 10:09:11 To
+ * change this template use File | Settings | File Templates.
  */
 public class ParameterType
 {
-    protected int type[];
-    protected String additionaltypeValue = null;
+	protected int type[];
 
-    protected boolean defined = false;
-    protected int pointer = 0;
-    protected int array = 0;
+	protected String additionaltypeValue = null;
 
-    public boolean isArray()
-    {
-        return array > 0;
-    }
+	protected boolean defined = false;
 
-    public void addArrayLevel()
-    {
-        this.array++;
-    }
-    
-    public int getArrayLevel()
-    {
-        return this.array;
-    }
+	protected int pointer = 0;
 
-    public boolean isPointer()
-    {
-        return pointer > 0;
-    }
+	protected int array = 0;
 
-    public void addPointerLevel()
-    {
-        this.pointer++;
-    }
-    
-    public int getPointerLevel()
-    {
-        return this.pointer;
-    }
+	public boolean isArray()
+	{
+		return array > 0;
+	}
 
-    public ParameterType(int[] type, String additionalTypeValue)
-    {
-        this.type = type;
-        this.additionaltypeValue = additionalTypeValue;
-        this.defined = true;
-    }
+	public void addArrayLevel()
+	{
+		this.array++;
+	}
 
-    public ParameterType(int[] type)
-    {
-        this.type = type;
-    }
+	public int getArrayLevel()
+	{
+		return this.array;
+	}
 
-    public int getTypesLength()
-    {
-        return type.length;
-    }
+	public boolean isPointer()
+	{
+		return pointer > 0;
+	}
 
-    public int getType(int i)
-    {
-        return type[i];
-    }
-    
-    public void setType(int[] type)
-    {
-        this.type = type;
-    }
+	public void addPointerLevel()
+	{
+		this.pointer++;
+	}
 
-    public String getAdditionalTypeValue()
-    {
-        return additionaltypeValue;
-    }
-    
-    public void setAdditionalTypeValue(String addtype)
-    {
-        this.additionaltypeValue = addtype;
-    }
+	public int getPointerLevel()
+	{
+		return this.pointer;
+	}
 
-    public boolean isDefined()
-    {
-        return defined;
-    }
+	public ParameterType(int[] type, String additionalTypeValue)
+	{
+		this.type = type;
+		this.additionaltypeValue = additionalTypeValue;
+		this.defined = true;
+	}
 
-    public void setDefined()
-    {
-       this.defined = true;
-    }
+	public ParameterType(int[] type)
+	{
+		this.type = type;
+	}
 
-    public void testParameterType()
-    {
-        for (int i = 0; i < type.length; i++)
-        {
-            int i1 = type[i];
-            System.out.print(" "+GeneralUtils.getTypeForID(i1));
-        }
-        if(defined)
-            System.out.print(" " + additionaltypeValue);
+	public int getTypesLength()
+	{
+		return type.length;
+	}
 
-        if(this.isArray())
-        	for(int j=0; j<this.getArrayLevel();j++)
-        		System.out.print("[]");
+	public int getType(int i)
+	{
+		return type[i];
+	}
 
-        if(this.isPointer())
-        	for(int j=0; j<this.getPointerLevel();j++)
-        		System.out.print("*");
+	public void setType(int[] type)
+	{
+		this.type = type;
+	}
 
-        System.out.println("");
-    }
+	public String getAdditionalTypeValue()
+	{
+		return additionaltypeValue;
+	}
 
-    public String getTypeName()
-    {
-    	String tmp = "";
-    	for (int i = 0; i < type.length; i++)
-        {
-    		if(type[i] != GnuCTokenTypes.NTypedefName)
-    			tmp +=GeneralUtils.getTypeForID(type[i]);
-        }
+	public void setAdditionalTypeValue(String addtype)
+	{
+		this.additionaltypeValue = addtype;
+	}
 
-    	if(defined)
-    	{
-            tmp += " "+additionaltypeValue;
-    	}
+	public boolean isDefined()
+	{
+		return defined;
+	}
 
-        if(this.isArray())
-        {
-        	for(int j=0; j<this.getArrayLevel();j++)
-        	{
-        		tmp += "[]";
-        	}
-        }
+	public void setDefined()
+	{
+		this.defined = true;
+	}
 
-        if(this.isPointer())
-        {
-        	for(int j=0; j<this.getPointerLevel();j++)
-        	{
-        		tmp += "*";
-        	}
-        }
-        return tmp;
-    }
+	public void testParameterType()
+	{
+		for (int i = 0; i < type.length; i++)
+		{
+			int i1 = type[i];
+			System.out.print(" " + GeneralUtils.getTypeForID(i1));
+		}
+		if (defined)
+		{
+			System.out.print(" " + additionaltypeValue);
+		}
+
+		if (this.isArray())
+		{
+			for (int j = 0; j < this.getArrayLevel(); j++)
+			{
+				System.out.print("[]");
+			}
+		}
+
+		if (this.isPointer())
+		{
+			for (int j = 0; j < this.getPointerLevel(); j++)
+			{
+				System.out.print("*");
+			}
+		}
+
+		System.out.println("");
+	}
+
+	public String getTypeName()
+	{
+		String tmp = "";
+		for (int i = 0; i < type.length; i++)
+		{
+			if (type[i] != GnuCTokenTypes.NTypedefName)
+			{
+				tmp += GeneralUtils.getTypeForID(type[i]);
+			}
+		}
+
+		if (defined)
+		{
+			tmp += " " + additionaltypeValue;
+		}
+
+		if (this.isArray())
+		{
+			for (int j = 0; j < this.getArrayLevel(); j++)
+			{
+				tmp += "[]";
+			}
+		}
+
+		if (this.isPointer())
+		{
+			for (int j = 0; j < this.getPointerLevel(); j++)
+			{
+				tmp += "*";
+			}
+		}
+		return tmp;
+	}
 }

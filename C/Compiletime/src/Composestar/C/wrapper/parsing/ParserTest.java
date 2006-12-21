@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -33,81 +33,84 @@
  */
 package Composestar.C.wrapper.parsing;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 
-import antlr.*;
+import antlr.RecognitionException;
+import antlr.TokenStreamException;
 
 public class ParserTest
 {
-    public static void main(String[] args)
-    {
-        for (int i=0; i<args.length; i++)
-        {
-        try
-            {
-            String programName = args[i];
-//      System.out.println("\nworking on " + programName);
-//      System.out.flush();
-//      System.err.println("\nworking on " + programName);
-//      System.err.flush();
-            DataInputStream dis = null;
-            if (programName.equals("-")) {
-                dis = new DataInputStream( System.in );
-            }   
-            else {
-                dis = new DataInputStream(new FileInputStream(programName));
-            }
-            GnuCLexer lexer =
-                new GnuCLexer ( dis );
-            lexer.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
-            lexer.initialize();
-            // Parse the input expression.
-            GnuCParser parser = new GnuCParser ( lexer );
-            
-            // set AST node type to TNode or get nasty cast class errors
-            parser.setASTNodeType(TNode.class.getName());
-            TNode.setTokenVocabulary("Composestar.C.wrapper.parsing.GnuCTokenTypes");
+	public static void main(String[] args)
+	{
+		for (int i = 0; i < args.length; i++)
+		{
+			try
+			{
+				String programName = args[i];
+				// System.out.println("\nworking on " + programName);
+				// System.out.flush();
+				// System.err.println("\nworking on " + programName);
+				// System.err.flush();
+				DataInputStream dis = null;
+				if (programName.equals("-"))
+				{
+					dis = new DataInputStream(System.in);
+				}
+				else
+				{
+					dis = new DataInputStream(new FileInputStream(programName));
+				}
+				GnuCLexer lexer = new GnuCLexer(dis);
+				lexer.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
+				lexer.initialize();
+				// Parse the input expression.
+				GnuCParser parser = new GnuCParser(lexer);
 
-            // invoke parser
-            try {
-                parser.translationUnit();
-            }
-            catch (RecognitionException e) {
-                System.err.println("Fatal IO error:\n"+e);
-                System.exit(1);
-            }
-            catch (TokenStreamException e) {
-                System.err.println("Fatal IO error:\n"+e);
-                System.exit(1);
-            }
+				// set AST node type to TNode or get nasty cast class errors
+				parser.setASTNodeType(TNode.class.getName());
+				TNode.setTokenVocabulary("Composestar.C.wrapper.parsing.GnuCTokenTypes");
 
-            // Garbage collection hint
-            System.gc();
-            
-//      System.out.println(lexer.getPreprocessorInfoChannel());
-//    TNode.printTree(parser.getAST());      System.out.flush();  
+				// invoke parser
+				try
+				{
+					parser.translationUnit();
+				}
+				catch (RecognitionException e)
+				{
+					System.err.println("Fatal IO error:\n" + e);
+					System.exit(1);
+				}
+				catch (TokenStreamException e)
+				{
+					System.err.println("Fatal IO error:\n" + e);
+					System.exit(1);
+				}
 
-            // Garbage collection hint
-            System.gc();
+				// Garbage collection hint
+				System.gc();
 
-            /*GnuCEmitter e = new GnuCEmitter(lexer.getPreprocessorInfoChannel());
-            
-            // set AST node type to TNode or get nasty cast class errors
-            e.setASTNodeType(TNode.class.getName());
+				// System.out.println(lexer.getPreprocessorInfoChannel());
+				// TNode.printTree(parser.getAST()); System.out.flush();
 
-            // walk that tree
-            e.translationUnit( parser.getAST() );
+				// Garbage collection hint
+				System.gc();
 
-            // Garbage collection hint
-            System.gc();*/
+				/*
+				 * GnuCEmitter e = new
+				 * GnuCEmitter(lexer.getPreprocessorInfoChannel()); // set AST
+				 * node type to TNode or get nasty cast class errors
+				 * e.setASTNodeType(TNode.class.getName()); // walk that tree
+				 * e.translationUnit( parser.getAST() ); // Garbage collection
+				 * hint System.gc();
+				 */
 
-            }
-        catch ( Exception e )
-            {
-            System.err.println ( "exception: " + e);
-            e.printStackTrace();
-            }
-        }
-    }
+			}
+			catch (Exception e)
+			{
+				System.err.println("exception: " + e);
+				e.printStackTrace();
+			}
+		}
+	}
 }
-

@@ -52,8 +52,22 @@
 	<target name="install" depends="init_local,build" description="install the eclipse plugin">
 		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin">
 			<fileset dir="${out.dist}" />
+			<fileset dir="${basedir}">
+				<include name="META-INF/**" />
+				<include name="plugin.*" />
+				<include name="message.*" />
+				<include name="PlatformConfigurations.xml" />
+				<include name="INCREconfig.xml" />
+				
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>	
+		
+		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries/prolog">
+			<fileset dir="${basedir}/binaries/prolog/">
+				<include name="clangmap.pro" />
+			</fileset>
 		</copy>
-	
 	</target>
 	
 </project>

@@ -1,51 +1,74 @@
 package Composestar.C.CONE;
 
-public class SubstituteSemantic extends Semantic{
-	
-	private String type="Substitute";
-	private String advice="";
-	private boolean afterAdvice=false;
-	private boolean beforeAdvice=true;
-	private boolean redirectMessage=true;
-	private boolean needsHeaderFiles=false;
-	
-	
-	public String getBeforeAdvice(){
-		String conditionCode= conditionCode();
-		String parameters ="";
-		for(int i=0; i<numberOfParametersMF();i++){
-			if(i==numberOfParametersMF()-1)
-				parameters+=parameterName(i);
+public class SubstituteSemantic extends Semantic
+{
+
+	private String type = "Substitute";
+
+	private String advice = "";
+
+	private boolean afterAdvice = false;
+
+	private boolean beforeAdvice = true;
+
+	private boolean redirectMessage = true;
+
+	private boolean needsHeaderFiles = false;
+
+	public String getBeforeAdvice()
+	{
+		String conditionCode = conditionCode();
+		String parameters = "";
+		for (int i = 0; i < numberOfParametersMF(); i++)
+		{
+			if (i == numberOfParametersMF() - 1)
+			{
+				parameters += parameterName(i);
+			}
 			else
-				parameters+=parameterName(i)+',';
+			{
+				parameters += parameterName(i) + ',';
+			}
 		}
-		if(conditionCode.equals(""))
-			advice= substitutionFunction()+ "("+parameters+");\n";
-		else advice= "if("+ disableOperatorCode()+conditionCode+")"+substitutionFunction()+ "("+parameters+");\n";
+		if (conditionCode.equals(""))
+		{
+			advice = substitutionFunction() + "(" + parameters + ");\n";
+		}
+		else
+		{
+			advice = "if(" + disableOperatorCode() + conditionCode + ")" + substitutionFunction() + "(" + parameters
+					+ ");\n";
+		}
 		return advice;
 	}
-	
-	public boolean afterAdvice(){
+
+	public boolean afterAdvice()
+	{
 		return afterAdvice;
 	}
-	
-	public boolean beforeAdvice(){
+
+	public boolean beforeAdvice()
+	{
 		return beforeAdvice;
-	} 
-	
-	public boolean redirectMessage(){
+	}
+
+	public boolean redirectMessage()
+	{
 		return redirectMessage;
 	}
-	
-	public String headerFile(){
+
+	public String headerFile()
+	{
 		return "";
 	}
-	
-	public boolean needsHeaderFiles(){
+
+	public boolean needsHeaderFiles()
+	{
 		return needsHeaderFiles;
 	}
-		
-	public String getType(){
+
+	public String getType()
+	{
 		return type;
 	}
 }

@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -36,55 +36,55 @@ package Composestar.C.specification;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: ByelasH
- * Date: 19-jan-2005
- * Time: 10:40:18
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: ByelasH Date: 19-jan-2005 Time: 10:40:18 To
+ * change this template use File | Settings | File Templates.
  */
 public class Scope
 {
-    private String filename = null;
-    private boolean toCompleteFile = false;
-    private Vector functionNames = new Vector();// the names of functions weaving will be applied
+	private String filename = null;
 
-    public Scope(String filename)
-    {
-        this.filename = filename;
-    }
+	private boolean toCompleteFile = false;
 
-    public String getFilename()
-    {
-        return filename;
-    }
+	private Vector functionNames = new Vector();// the names of functions
+												// weaving will be applied
 
-    public void setFilename(String filename)
-    {
-        this.filename = filename;
-    }
+	public Scope(String filename)
+	{
+		this.filename = filename;
+	}
 
-    public boolean isToCompleteFile()
-    {
-        return toCompleteFile;
-    }
+	public String getFilename()
+	{
+		return filename;
+	}
 
-    public void setToCompleteFile(boolean toCompleteFile)
-    {
-        this.toCompleteFile = toCompleteFile;
-    }
+	public void setFilename(String filename)
+	{
+		this.filename = filename;
+	}
 
-    public int getFunctionNumber()
-    {
-        return functionNames.size();
-    }
+	public boolean isToCompleteFile()
+	{
+		return toCompleteFile;
+	}
 
-    public String getFunctionName(int i)
-    {
-        return (String) functionNames.elementAt(i);
-    }
+	public void setToCompleteFile(boolean toCompleteFile)
+	{
+		this.toCompleteFile = toCompleteFile;
+	}
 
-    public void addFunctionName(String fName)
-    {
-        functionNames.addElement(fName);
-    }
+	public int getFunctionNumber()
+	{
+		return functionNames.size();
+	}
+
+	public String getFunctionName(int i)
+	{
+		return (String) functionNames.elementAt(i);
+	}
+
+	public void addFunctionName(String fName)
+	{
+		functionNames.addElement(fName);
+	}
 }

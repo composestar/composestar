@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -33,48 +33,50 @@
  */
 package Composestar.C.wrapper.utils;
 
-import Composestar.C.wrapper.*;
-
 import java.io.File;
-import java.util.*;
+
+import Composestar.C.wrapper.Function;
+import Composestar.C.wrapper.Parameter;
 
 public class StaticVariableReplacer
 {
 	public static String replaceStaticVariables(String input, Function function)
 	{
-		String output = input.replaceAll("%FUNC_NAME%",function.getName());
-		output = output.replaceAll("%FUNC_NAME_UPPER%",function.getName().toUpperCase());
-		output = output.replaceAll("%FILE_NAME%",function.getFileName());
-		output = output.replaceAll("%FILE_NAME_UPPER%",function.getFileName().toUpperCase());
-		output = output.replaceAll("%MODULE_NAME_UPPER%",getFileNameFromString(function.getFileName().toUpperCase()));
-		output = output.replaceAll("%MODULE_NAME%",getFileNameFromString(function.getFileName().toLowerCase()));
+		String output = input.replaceAll("%FUNC_NAME%", function.getName());
+		output = output.replaceAll("%FUNC_NAME_UPPER%", function.getName().toUpperCase());
+		output = output.replaceAll("%FILE_NAME%", function.getFileName());
+		output = output.replaceAll("%FILE_NAME_UPPER%", function.getFileName().toUpperCase());
+		output = output.replaceAll("%MODULE_NAME_UPPER%", getFileNameFromString(function.getFileName().toUpperCase()));
+		output = output.replaceAll("%MODULE_NAME%", getFileNameFromString(function.getFileName().toLowerCase()));
 		return output;
 	}
-	
+
 	public static String replaceParameter(String input, Parameter param)
 	{
-		return input.replaceAll("%PARAM_NAME%",param.getValueID());
+		return input.replaceAll("%PARAM_NAME%", param.getValueID());
 	}
-	
+
 	public static String replaceStaticVariables(String input, String file)
 	{
-		String output = input.replaceAll("%FILE_NAME%",file);
-		output = output.replaceAll("%FILE_NAME_UPPER%",file.toUpperCase());
-		output = output.replaceAll("%MODULE_NAME_UPPER%",getFileNameFromString(file.toUpperCase()));
-		output = output.replaceAll("%MODULE_NAME%",getFileNameFromString(file.toLowerCase()));
-		
+		String output = input.replaceAll("%FILE_NAME%", file);
+		output = output.replaceAll("%FILE_NAME_UPPER%", file.toUpperCase());
+		output = output.replaceAll("%MODULE_NAME_UPPER%", getFileNameFromString(file.toUpperCase()));
+		output = output.replaceAll("%MODULE_NAME%", getFileNameFromString(file.toLowerCase()));
+
 		return output;
 	}
-	
+
 	private static String getFileNameFromString(String str)
 	{
 		String out = "";
-		if(str.indexOf(File.separator) > 0)
+		if (str.indexOf(File.separator) > 0)
 		{
-			out = str.substring(str.lastIndexOf(File.separator)+1);
+			out = str.substring(str.lastIndexOf(File.separator) + 1);
 		}
-		if(out.endsWith(".ccc") || out.endsWith(".CCC"))
-			out = out.substring(0,out.length()-2);
+		if (out.endsWith(".ccc") || out.endsWith(".CCC"))
+		{
+			out = out.substring(0, out.length() - 2);
+		}
 		return out;
 	}
 }

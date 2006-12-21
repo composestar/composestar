@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -33,96 +33,111 @@
  */
 package Composestar.C.wrapper.parsing;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 public class PreprocessorInfoChannel
 {
-    Hashtable lineLists = new Hashtable(); // indexed by Token number
-    int firstValidTokenNumber = 0;
-    int maxTokenNumber = 0;
+	Hashtable lineLists = new Hashtable(); // indexed by Token number
 
-    public void addLineForTokenNumber( Object line, Integer toknum )
-    {
-    	if(line instanceof String)
-    	{
-    		if(((String)line).indexOf("# ") > 0)
-    		{
-    			System.out.println("Found line directive "+line);
-    		}
-    	}
-        if ( lineLists.containsKey( toknum ) ) {
-            Vector lines = (Vector) lineLists.get( toknum );
-            lines.addElement(line);
-        }
-        else {
-            Vector lines = new Vector();
-            lines.addElement(line);
-            lineLists.put(toknum, lines);
-            if ( maxTokenNumber < toknum.intValue() ) {
-                maxTokenNumber = toknum.intValue();
-            }
-        }
-    }
+	int firstValidTokenNumber = 0;
 
-    public int getMaxTokenNumber()
-    {
-        return maxTokenNumber;
-    }
+	int maxTokenNumber = 0;
 
-    public void setMaxTokenNumber(int maxTokenNumber)
-    {
-        this.maxTokenNumber = maxTokenNumber;
-    }
+	public void addLineForTokenNumber(Object line, Integer toknum)
+	{
+		if (line instanceof String)
+		{
+			if (((String) line).indexOf("# ") > 0)
+			{
+				System.out.println("Found line directive " + line);
+			}
+		}
+		if (lineLists.containsKey(toknum))
+		{
+			Vector lines = (Vector) lineLists.get(toknum);
+			lines.addElement(line);
+		}
+		else
+		{
+			Vector lines = new Vector();
+			lines.addElement(line);
+			lineLists.put(toknum, lines);
+			if (maxTokenNumber < toknum.intValue())
+			{
+				maxTokenNumber = toknum.intValue();
+			}
+		}
+	}
 
-    public Vector extractLinesPrecedingTokenNumber( Integer toknum )
-    {
-        Vector lines = new Vector();
-        if (toknum == null) return lines;       
-        for (int i = firstValidTokenNumber; i < toknum.intValue(); i++){
-            Integer inti = new Integer(i);
-            if ( lineLists.containsKey( inti ) ) {
-                Vector tokenLineVector = (Vector) lineLists.get( inti );
-                if ( tokenLineVector != null) {
-                    Enumeration tokenLines = tokenLineVector.elements();
-                    while ( tokenLines.hasMoreElements() ) {
-                        lines.addElement( tokenLines.nextElement() );
-                    }
-                    lineLists.remove(inti);
-                }
-            }
-        }
-        firstValidTokenNumber = toknum.intValue();
-        return lines;
-    }
+	public int getMaxTokenNumber()
+	{
+		return maxTokenNumber;
+	}
 
-    public String toString()
-    {
-        StringBuffer sb = new StringBuffer("Composestar.C.parsing.PreprocessorInfoChannel:\n");
-        for (int i = 0; i <= maxTokenNumber + 1; i++){
-            Integer inti = new Integer(i);
-            if ( lineLists.containsKey( inti ) ) {
-                Vector tokenLineVector = (Vector) lineLists.get( inti );
-                if ( tokenLineVector != null) {
-                    Enumeration tokenLines = tokenLineVector.elements();
-                    while ( tokenLines.hasMoreElements() ) {
-                        sb.append(inti + ":" + tokenLines.nextElement() + '\n');
-                    }
-                }
-            }
-        }
-        return sb.toString();
-    }
+	public void setMaxTokenNumber(int maxTokenNumber)
+	{
+		this.maxTokenNumber = maxTokenNumber;
+	}
 
-    public Hashtable getHashtableLine()
-    {
-        return lineLists;
-    }
+	public Vector extractLinesPrecedingTokenNumber(Integer toknum)
+	{
+		Vector lines = new Vector();
+		if (toknum == null)
+		{
+			return lines;
+		}
+		for (int i = firstValidTokenNumber; i < toknum.intValue(); i++)
+		{
+			Integer inti = new Integer(i);
+			if (lineLists.containsKey(inti))
+			{
+				Vector tokenLineVector = (Vector) lineLists.get(inti);
+				if (tokenLineVector != null)
+				{
+					Enumeration tokenLines = tokenLineVector.elements();
+					while (tokenLines.hasMoreElements())
+					{
+						lines.addElement(tokenLines.nextElement());
+					}
+					lineLists.remove(inti);
+				}
+			}
+		}
+		firstValidTokenNumber = toknum.intValue();
+		return lines;
+	}
 
-    public void setHashtable(Hashtable hashtable)
-    {
-        this.lineLists = hashtable; 
-    }
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer("Composestar.C.parsing.PreprocessorInfoChannel:\n");
+		for (int i = 0; i <= maxTokenNumber + 1; i++)
+		{
+			Integer inti = new Integer(i);
+			if (lineLists.containsKey(inti))
+			{
+				Vector tokenLineVector = (Vector) lineLists.get(inti);
+				if (tokenLineVector != null)
+				{
+					Enumeration tokenLines = tokenLineVector.elements();
+					while (tokenLines.hasMoreElements())
+					{
+						sb.append(inti + ":" + tokenLines.nextElement() + '\n');
+					}
+				}
+			}
+		}
+		return sb.toString();
+	}
+
+	public Hashtable getHashtableLine()
+	{
+		return lineLists;
+	}
+
+	public void setHashtable(Hashtable hashtable)
+	{
+		this.lineLists = hashtable;
+	}
 }
-
-
-

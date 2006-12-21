@@ -1273,3 +1273,83 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
 	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-12-21 13:11:55.937 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\sandbox\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-12-21 13:11:57.531
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY org.eclipse.core.resources 4 2 2006-12-21 13:12:01.140
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NoClassDefFoundError: org/eclipse/cdt/internal/ui/preferences/CEditorPreferencePage
+	at org.eclipse.cdt.ui.CUIPreferenceInitializer.initializeDefaultPreferences(CUIPreferenceInitializer.java:42)
+	at org.eclipse.core.internal.preferences.PreferenceServiceRegistryHelper.runInitializer(PreferenceServiceRegistryHelper.java:276)
+	at org.eclipse.core.internal.preferences.PreferenceServiceRegistryHelper.applyRuntimeDefaults(PreferenceServiceRegistryHelper.java:130)
+	at org.eclipse.core.internal.preferences.PreferencesService.applyRuntimeDefaults(PreferencesService.java:337)
+	at org.eclipse.core.internal.preferences.DefaultPreferences.applyRuntimeDefaults(DefaultPreferences.java:162)
+	at org.eclipse.core.internal.preferences.DefaultPreferences.loadDefaults(DefaultPreferences.java:231)
+	at org.eclipse.core.internal.preferences.DefaultPreferences.load(DefaultPreferences.java:227)
+	at org.eclipse.core.internal.preferences.EclipsePreferences.create(EclipsePreferences.java:307)
+	at org.eclipse.core.internal.preferences.EclipsePreferences.internalNode(EclipsePreferences.java:543)
+	at org.eclipse.core.internal.preferences.EclipsePreferences.node(EclipsePreferences.java:662)
+	at org.eclipse.core.internal.preferences.AbstractScope.getNode(AbstractScope.java:38)
+	at org.eclipse.core.runtime.preferences.DefaultScope.getNode(DefaultScope.java:67)
+	at org.eclipse.ui.preferences.ScopedPreferenceStore.getDefaultPreferences(ScopedPreferenceStore.java:248)
+	at org.eclipse.ui.preferences.ScopedPreferenceStore.getPreferenceNodes(ScopedPreferenceStore.java:282)
+	at org.eclipse.ui.preferences.ScopedPreferenceStore.internalGet(ScopedPreferenceStore.java:472)
+	at org.eclipse.ui.preferences.ScopedPreferenceStore.getInt(ScopedPreferenceStore.java:498)
+	at org.eclipse.cdt.internal.ui.preferences.BuildConsolePreferencePage.buildConsoleLines(BuildConsolePreferencePage.java:118)
+	at org.eclipse.cdt.internal.ui.buildconsole.BuildConsolePartitioner.<init>(BuildConsolePartitioner.java:112)
+	at org.eclipse.cdt.internal.ui.buildconsole.BuildConsoleManager.getConsolePartioner(BuildConsoleManager.java:269)
+	at org.eclipse.cdt.internal.ui.buildconsole.BuildConsoleManager.getConsole(BuildConsoleManager.java:254)
+	at org.eclipse.cdt.internal.ui.buildconsole.CBuildConsole.start(CBuildConsole.java:33)
+	at org.eclipse.cdt.make.core.MakeBuilder.invokeMake(MakeBuilder.java:138)
+	at org.eclipse.cdt.make.core.MakeBuilder.build(MakeBuilder.java:81)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:145)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:208)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2006-12-21 13:14:49.937 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\sandbox\C/Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-12-21 13:14:51.484
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+!SESSION 2006-12-21 13:17:00.265 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\sandbox\C\Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-12-21 13:17:01.734
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+!SESSION 2006-12-21 13:18:27.171 -----------------------------------------------
+eclipse.buildId=M20060921-0945
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Encryption.jar
+Command-line arguments:  -application ComposestarEclipsePlugin.headlessCEPTest EncryptionExample -customfilter C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Decryption.jar C:\sandbox\C\Examples\EncryptionExample\CustomFilters\Encryption.jar -data C:\sandbox\C\Examples
+
+!ENTRY org.eclipse.core.resources 2 10035 2006-12-21 13:18:28.609
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.

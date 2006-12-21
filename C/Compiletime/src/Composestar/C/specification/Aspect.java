@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -33,135 +33,150 @@
  */
 package Composestar.C.specification;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 import Composestar.C.wrapper.utils.GeneralUtils;
 
 public class Aspect
 {
-    private String id = null;
-    private Hashtable pointcuts = new Hashtable();
-    private Hashtable advices = new Hashtable();
-    
-    public String getId()
-    {
-        return id;
-    }
+	private String id = null;
 
-    public void setId(String id)
-    {
-        this.id = id;
-    }
+	private Hashtable pointcuts = new Hashtable();
 
-    public void addPointcut(Pointcut pointcut)
-    {
-        pointcuts.put(pointcut.getId(),pointcut);
-    }
+	private Hashtable advices = new Hashtable();
 
-    public int getNumberOfPointcuts()
-    {
-        return pointcuts.size();
-    }
+	public String getId()
+	{
+		return id;
+	}
 
-    public Pointcut getPointcut(int i)
-    {
-    	Iterator it = pointcuts.values().iterator();
-    	int j=0;
-    	while(it.hasNext())
-    	{
-    		if(j == i) return (Pointcut)it.next();
-    		else it.next();
-    		j++;
-    	}
-    	return null;
-    }
-    
-    public void addAdvice(Advice advice)
-    {
-    	this.advices.put(advice.getId(), advice);
-    }
-    
-    public int getNumberOfAdvices()
-    {
-    	return advices.size();
-    }
-    
-    public Advice getAdvice(int i)
-    {
-    	Iterator it = advices.values().iterator();
-    	int j=0;
-    	while(it.hasNext())
-    	{
-    		if(j == i) return (Advice)it.next();
-    		else
-    		{
-    			it.next();
-    			j++;
-    		}
-    	}
-    	return null;
-    }
-    
-    public String toString()
-    {
-    	String tmp = "";
-    	tmp+="Aspect("+aspectIsSane()+"): "+id+"\n";
-    	for(int i=0; i<this.getNumberOfPointcuts(); i++)
-    	{
-    		tmp+=this.getPointcut(i).toString();
-    	}
-    	for(int i=0; i<this.getNumberOfAdvices(); i++)
-    	{
-    		tmp+=this.getAdvice(i).toString();
-    	}
-    	return tmp;
-    }
-    
-    public boolean aspectIsSane()
-    {
-    	for(int i=0; i<this.getNumberOfPointcuts(); i++)
-    	{
-    		Pointcut p = this.getPointcut(i);
-    		for(int j=0; j<p.getNumberOfAdviceApplications(); j++)
-    		{
-    			AdviceApplication aa = p.getAdviceApplication(j);
-    			if(this.advices.containsKey(aa.getId()))
-    			{
-    				return true;
-    			}
-    			else
-    				return false;
-    		}
-    	}
-    	return true;
-    }
-    
-    public ArrayList getAllFiles()
-    {
-    	ArrayList list = new ArrayList();
-    	for(int i=0; i<this.getNumberOfPointcuts(); i++)
-    	{
-    		Pointcut p = this.getPointcut(i);
-    		for(int j=0; j<p.getNumberOfFunctions(); j++)
-    		{
-    			list.add(p.getFunctions(j).getFile()); 
-    		}
-    	}
-    	return list;
-    }
-    
-    public Hashtable getAdvices()
-    {
-    	return this.advices;
-    }
+	public void setId(String id)
+	{
+		this.id = id;
+	}
+
+	public void addPointcut(Pointcut pointcut)
+	{
+		pointcuts.put(pointcut.getId(), pointcut);
+	}
+
+	public int getNumberOfPointcuts()
+	{
+		return pointcuts.size();
+	}
+
+	public Pointcut getPointcut(int i)
+	{
+		Iterator it = pointcuts.values().iterator();
+		int j = 0;
+		while (it.hasNext())
+		{
+			if (j == i)
+			{
+				return (Pointcut) it.next();
+			}
+			else
+			{
+				it.next();
+			}
+			j++;
+		}
+		return null;
+	}
+
+	public void addAdvice(Advice advice)
+	{
+		this.advices.put(advice.getId(), advice);
+	}
+
+	public int getNumberOfAdvices()
+	{
+		return advices.size();
+	}
+
+	public Advice getAdvice(int i)
+	{
+		Iterator it = advices.values().iterator();
+		int j = 0;
+		while (it.hasNext())
+		{
+			if (j == i)
+			{
+				return (Advice) it.next();
+			}
+			else
+			{
+				it.next();
+				j++;
+			}
+		}
+		return null;
+	}
+
+	public String toString()
+	{
+		String tmp = "";
+		tmp += "Aspect(" + aspectIsSane() + "): " + id + "\n";
+		for (int i = 0; i < this.getNumberOfPointcuts(); i++)
+		{
+			tmp += this.getPointcut(i).toString();
+		}
+		for (int i = 0; i < this.getNumberOfAdvices(); i++)
+		{
+			tmp += this.getAdvice(i).toString();
+		}
+		return tmp;
+	}
+
+	public boolean aspectIsSane()
+	{
+		for (int i = 0; i < this.getNumberOfPointcuts(); i++)
+		{
+			Pointcut p = this.getPointcut(i);
+			for (int j = 0; j < p.getNumberOfAdviceApplications(); j++)
+			{
+				AdviceApplication aa = p.getAdviceApplication(j);
+				if (this.advices.containsKey(aa.getId()))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public ArrayList getAllFiles()
+	{
+		ArrayList list = new ArrayList();
+		for (int i = 0; i < this.getNumberOfPointcuts(); i++)
+		{
+			Pointcut p = this.getPointcut(i);
+			for (int j = 0; j < p.getNumberOfFunctions(); j++)
+			{
+				list.add(p.getFunctions(j).getFile());
+			}
+		}
+		return list;
+	}
+
+	public Hashtable getAdvices()
+	{
+		return this.advices;
+	}
 
 	public boolean hasCall()
 	{
 		Iterator adviceit = this.advices.values().iterator();
-		while(adviceit.hasNext())
+		while (adviceit.hasNext())
 		{
-			Advice advice = (Advice)adviceit.next();
-			if(advice.getType() == GeneralUtils.FUNCTION_CALL)
+			Advice advice = (Advice) adviceit.next();
+			if (advice.getType() == GeneralUtils.FUNCTION_CALL)
 			{
 				return true;
 			}

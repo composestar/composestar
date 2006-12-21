@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -33,81 +33,80 @@
  */
 package Composestar.C.specification;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
-
 /**
- * Created by IntelliJ IDEA.
- * User: ByelasH
- * Date: 18-jan-2005
- * Time: 11:49:50
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: ByelasH Date: 18-jan-2005 Time: 11:49:50 To
+ * change this template use File | Settings | File Templates.
  */
 public class AspectReader
 {
-    private PointcutFactory pointcutFactory = new PointcutFactory();
-    private AdviceFactory adviceFactory = new AdviceFactory();
+	private PointcutFactory pointcutFactory = new PointcutFactory();
 
-    public Aspect readAspectSpecification(String filename)
-    {
-        System.out.println("Reading aspect specification: " + filename);
-        Aspect aspect = new Aspect();
-        Document doc = parseXmlFile(filename, false);
-        Element root = doc.getDocumentElement();
+	private AdviceFactory adviceFactory = new AdviceFactory();
 
-        aspect.setId(root.getAttribute("id"));
+	public Aspect readAspectSpecification(String filename)
+	{
+		System.out.println("Reading aspect specification: " + filename);
+		Aspect aspect = new Aspect();
+		Document doc = parseXmlFile(filename, false);
+		Element root = doc.getDocumentElement();
 
-        NodeList pointcuts = doc.getElementsByTagName("pointcut");
+		aspect.setId(root.getAttribute("id"));
 
-        for(int i = 0; i < pointcuts.getLength(); i++)
-        {
-           Element element = (Element)pointcuts.item(i);
-            Pointcut pointcut = pointcutFactory.createPointcut(element);
-            pointcut.setParent(aspect);
-            aspect.addPointcut(pointcut);
-        }
-        
-        NodeList advices = doc.getElementsByTagName("advice");
+		NodeList pointcuts = doc.getElementsByTagName("pointcut");
 
-        for(int i = 0; i < advices.getLength(); i++)
-        {
-           Element element = (Element)advices.item(i);
-            Advice advice = adviceFactory.createAdvice(element);
-            aspect.addAdvice(advice);
-        }
-        
-        return aspect;
-    }
+		for (int i = 0; i < pointcuts.getLength(); i++)
+		{
+			Element element = (Element) pointcuts.item(i);
+			Pointcut pointcut = pointcutFactory.createPointcut(element);
+			pointcut.setParent(aspect);
+			aspect.addPointcut(pointcut);
+		}
 
-    public static Document parseXmlFile(String filename, boolean validating)
-    {
-        try
-        {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setValidating(validating);
+		NodeList advices = doc.getElementsByTagName("advice");
 
-            Document doc = factory.newDocumentBuilder().parse(new File(filename));
-            return doc;
-        }
-        catch (SAXException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch (ParserConfigurationException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch (IOException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
+		for (int i = 0; i < advices.getLength(); i++)
+		{
+			Element element = (Element) advices.item(i);
+			Advice advice = adviceFactory.createAdvice(element);
+			aspect.addAdvice(advice);
+		}
+
+		return aspect;
+	}
+
+	public static Document parseXmlFile(String filename, boolean validating)
+	{
+		try
+		{
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setValidating(validating);
+
+			Document doc = factory.newDocumentBuilder().parse(new File(filename));
+			return doc;
+		}
+		catch (SAXException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		catch (ParserConfigurationException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		catch (IOException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
 }

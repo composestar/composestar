@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -33,60 +33,60 @@
  */
 package Composestar.C.specification;
 
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import Composestar.C.wrapper.utils.GeneralUtils;
 
 public class AdviceFactory
 {
-    public Advice createAdvice(Element element)
-    {
-    	String id = element.getAttribute("id");
-    	String type = element.getAttribute("type");
-    	int ttype = GeneralUtils.getTypeOfProgramPoint(type);
-    	if(ttype == 0)
-    	{
-    		System.out.println("Undefined join point type: "+type);
-    		System.exit(-1);
-    	}
-    	int priority = 0;
-    	try
-    	{
-    		priority = Integer.valueOf(element.getAttribute("priority")).intValue();
-    	}
-    	catch(Exception e)
-    	{
-    		priority = 0;
-    	}
-    	
-    	Advice advice = new Advice();
-    	advice.setId(id);
-    	advice.setType(ttype);
-    	advice.setPriority(priority);
-    	parseCode(advice, element);
-        return advice;
-    }
+	public Advice createAdvice(Element element)
+	{
+		String id = element.getAttribute("id");
+		String type = element.getAttribute("type");
+		int ttype = GeneralUtils.getTypeOfProgramPoint(type);
+		if (ttype == 0)
+		{
+			System.out.println("Undefined join point type: " + type);
+			System.exit(-1);
+		}
+		int priority = 0;
+		try
+		{
+			priority = Integer.valueOf(element.getAttribute("priority")).intValue();
+		}
+		catch (Exception e)
+		{
+			priority = 0;
+		}
 
-    private void parseCode(Advice advice, Element element)
-    {
-        NodeList nodeList = element.getElementsByTagName("code");
-        if (nodeList.getLength() > 0)
-        {
-            NodeList nList = nodeList.item(0).getChildNodes();
-            if (nList != null)
-            {
-                for (int ii = 0; ii < nList.getLength(); ii++)
-                {
-                    Node n = nList.item(ii);
-                    if (n.getNodeName().equalsIgnoreCase("#cdata-section"))
-                    {
-                        String code = n.getNodeValue();
-                        advice.setCode(code);
-                    }
-                }
-            }
-        }
-    }
+		Advice advice = new Advice();
+		advice.setId(id);
+		advice.setType(ttype);
+		advice.setPriority(priority);
+		parseCode(advice, element);
+		return advice;
+	}
+
+	private void parseCode(Advice advice, Element element)
+	{
+		NodeList nodeList = element.getElementsByTagName("code");
+		if (nodeList.getLength() > 0)
+		{
+			NodeList nList = nodeList.item(0).getChildNodes();
+			if (nList != null)
+			{
+				for (int ii = 0; ii < nList.getLength(); ii++)
+				{
+					Node n = nList.item(ii);
+					if (n.getNodeName().equalsIgnoreCase("#cdata-section"))
+					{
+						String code = n.getNodeValue();
+						advice.setCode(code);
+					}
+				}
+			}
+		}
+	}
 }

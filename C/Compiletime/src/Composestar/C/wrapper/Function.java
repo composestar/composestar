@@ -6,16 +6,16 @@
  * [http://www.opensource.org/licenses/bsd-license.php]
  * 
  * Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
+ modification, are permitted provided that the following conditions
+ are met:
  * 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+ notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the University of Twente nor the names of its 
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -33,278 +33,320 @@
  */
 package Composestar.C.wrapper;
 
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
 import Composestar.C.wrapper.parsing.TNode;
 import Composestar.C.wrapper.utils.GeneralUtils;
 
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.Enumeration;
-
 /**
- * Created by IntelliJ IDEA.
- * User: ByelasH
- * Date: 23-dec-2004
- * Time: 10:14:11
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: ByelasH Date: 23-dec-2004 Time: 10:14:11 To
+ * change this template use File | Settings | File Templates.
  */
 public class Function extends WeaveblePoint
 {
-    private String name = null;
-    
-    private ParameterType retParameter = null;
+	private String name = null;
 
-    private Vector returnPoints = new Vector(); // vector with ReturnPoints
+	private ParameterType retParameter = null;
 
-    private Vector inParameters = new Vector(); // vector with Parameters
+	private Vector returnPoints = new Vector(); // vector with ReturnPoints
 
-    private TNode toInsertBefore = null; // node113 of a function
+	private Vector inParameters = new Vector(); // vector with Parameters
 
-    public TNode mainNode = null;
+	private TNode toInsertBefore = null; // node113 of a function
 
-    private boolean bVoid = false;
-    private boolean noInputParameters = false;
+	public TNode mainNode = null;
 
-    public boolean isNoInputParameters()
-    {
-        return noInputParameters;
-    }
+	private boolean bVoid = false;
 
-    public void setNoInputParameters()
-    {
-        this.noInputParameters = true;
-    }
+	private boolean noInputParameters = false;
 
-    public int getNumberExitPoints()
-    {
-        return returnPoints.size();
-    }
+	public boolean isNoInputParameters()
+	{
+		return noInputParameters;
+	}
 
-    public ExitPoint getExitPoint(int i)
-    {
-        return (ExitPoint) returnPoints.elementAt(i);
-    }
+	public void setNoInputParameters()
+	{
+		this.noInputParameters = true;
+	}
 
-    public TNode getMainNode()
-    {
-        return mainNode;
-    }
+	public int getNumberExitPoints()
+	{
+		return returnPoints.size();
+	}
 
-    public TNode getToInsertBeforeNode()
-    {
-        return toInsertBefore;
-    }
+	public ExitPoint getExitPoint(int i)
+	{
+		return (ExitPoint) returnPoints.elementAt(i);
+	}
 
-    public Function(String name, ParameterType retParameter, Vector inParameters,
-                    TNode mainNode, TNode toInsertBeforeNode, Vector returnPoints, String filename)
-    {
-        super(filename);
-    	this.name = name;
-        this.retParameter = retParameter;
+	public TNode getMainNode()
+	{
+		return mainNode;
+	}
 
-        this.inParameters = inParameters;
-        this.mainNode = mainNode;
-        this.toInsertBefore = toInsertBeforeNode;
-        this.returnPoints = returnPoints;
-    }
+	public TNode getToInsertBeforeNode()
+	{
+		return toInsertBefore;
+	}
 
-    public String getName()
-    {
-        return name;
-    }
-    
-    public ParameterType getReturnParameter()
-    {
-        return retParameter;
-    }
+	public Function(String name, ParameterType retParameter, Vector inParameters, TNode mainNode,
+			TNode toInsertBeforeNode, Vector returnPoints, String filename)
+	{
+		super(filename);
+		this.name = name;
+		this.retParameter = retParameter;
 
-    public int getNumberOfInputs()
-    {
-        return inParameters.size();
-    }
+		this.inParameters = inParameters;
+		this.mainNode = mainNode;
+		this.toInsertBefore = toInsertBeforeNode;
+		this.returnPoints = returnPoints;
+	}
 
-    public Parameter getInputParameter(int i)
-    {
-        return (Parameter)inParameters.elementAt(i);
-    }
-    
-    public boolean hasNoParameters()
-    {
-    	boolean retValue = false;
-    	if(this.inParameters ==null)
-    		retValue = true;
-    	else if(this.inParameters.size() <= 0)
-    		retValue = true;
-    	return retValue;
-    }
+	public String getName()
+	{
+		return name;
+	}
 
-    public boolean isVoid()
-    {
-        return bVoid;
-    }
+	public ParameterType getReturnParameter()
+	{
+		return retParameter;
+	}
 
-    public void setVoid()
-    {
-        bVoid = true;
-    }
+	public int getNumberOfInputs()
+	{
+		return inParameters.size();
+	}
 
-    private void printOneNode(TNode node)
-    {
-        System.out.print(" > " + node.getText() + "\t  type: " + node.getType() +
-                        "  line: " + node.getLineNum() + "  children# " + node.getNumberOfChildren());
+	public Parameter getInputParameter(int i)
+	{
+		return (Parameter) inParameters.elementAt(i);
+	}
 
-        Enumeration keys = ((TNode)node).getAttributesTable().keys();
-        while (keys.hasMoreElements())
-        {
-            String key = (String) keys.nextElement();
-            if(key.equalsIgnoreCase("tokenNumber"))
-              System.out.print(" " + key + ":" + ((TNode)node).getAttribute(key));
-            else if(key.equalsIgnoreCase("source"))
-              System.out.print("  --isSource");
-            else if(key.equalsIgnoreCase("scopeName"))
-              System.out.print("   scope :" + ((TNode)node).getAttribute(key));
-            else
-              System.out.print("key::" + key + " == "+ ((TNode)node).getAttribute(key));
-        }
-        System.out.println("");
+	public boolean hasNoParameters()
+	{
+		boolean retValue = false;
+		if (this.inParameters == null)
+		{
+			retValue = true;
+		}
+		else if (this.inParameters.size() <= 0)
+		{
+			retValue = true;
+		}
+		return retValue;
+	}
 
-    }
+	public boolean isVoid()
+	{
+		return bVoid;
+	}
 
+	public void setVoid()
+	{
+		bVoid = true;
+	}
 
-    // testing - later remove
-    public void testFunction()
-    {
-        System.out.println("----------- " + name);
-        System.out.print(" before node ");
-        printOneNode(toInsertBefore);
+	private void printOneNode(TNode node)
+	{
+		System.out.print(" > " + node.getText() + "\t  type: " + node.getType() + "  line: " + node.getLineNum()
+				+ "  children# " + node.getNumberOfChildren());
 
-        System.out.println("number of return points: " + returnPoints.size());
-            for (int i = 0; i < returnPoints.size(); i++)
-            {
-                TNode n = ((ExitPoint)returnPoints.elementAt(i)).getNode();
-                printOneNode(n);
-                if( ((ExitPoint)returnPoints.elementAt(i)).isSimpleVarReturn())
-                    System.out.println(" return value: " +
-                            ((ExitPoint)returnPoints.elementAt(i)).getValueID());
-            }
+		Enumeration keys = (node).getAttributesTable().keys();
+		while (keys.hasMoreElements())
+		{
+			String key = (String) keys.nextElement();
+			if (key.equalsIgnoreCase("tokenNumber"))
+			{
+				System.out.print(" " + key + ":"
+						+ (node).getAttribute(key));
+			}
+			else if (key.equalsIgnoreCase("source"))
+			{
+				System.out.print("  --isSource");
+			}
+			else if (key.equalsIgnoreCase("scopeName"))
+			{
+				System.out.print("   scope :"
+						+ (node).getAttribute(key));
+			}
+			else
+			{
+				System.out.print("key::" + key + " == " + (node).getAttribute(key));
+			}
+		}
+		System.out.println("");
 
-        if(noInputParameters)
-            System.out.println("no input par");
-        else
-        {
-            for (int i = 0; i < inParameters.size(); i++)
-            {
-                Parameter parameter = (Parameter) inParameters.elementAt(i);
-                System.out.print("input :  ");
-                parameter.testParameter();
-            }
-        }
-        if(bVoid)
-            System.out.println("void");
-        else
-        {
-            System.out.print("output  ");
-            retParameter.testParameterType();
-        }
-        System.out.println("------------------------------");
-    }
+	}
 
-    public void setReturnPoints(Vector returnPoints)
-    {
-        this.returnPoints = returnPoints;
-    }
-    
-    public boolean hasReturnType(String type)
-    {
-    	if(this.retParameter == null)
-    		return false;
-    	if(type.equals("*"))
-    		return true;
-    	return this.matchType(this.retParameter,type);
-    }
-    
-    public boolean matchType(ParameterType ptype, String type)
-    {
-    	boolean found = true;
-    	Parameter param = Function.getParameterFromParameterString(type);
-    	if( param.getArrayLevel() != ptype.getArrayLevel())
+	// testing - later remove
+	public void testFunction()
+	{
+		System.out.println("----------- " + name);
+		System.out.print(" before node ");
+		printOneNode(toInsertBefore);
+
+		System.out.println("number of return points: " + returnPoints.size());
+		for (int i = 0; i < returnPoints.size(); i++)
+		{
+			TNode n = ((ExitPoint) returnPoints.elementAt(i)).getNode();
+			printOneNode(n);
+			if (((ExitPoint) returnPoints.elementAt(i)).isSimpleVarReturn())
+			{
+				System.out.println(" return value: "
+						+ ((ExitPoint) returnPoints.elementAt(i)).getValueID());
+			}
+		}
+
+		if (noInputParameters)
+		{
+			System.out.println("no input par");
+		}
+		else
+		{
+			for (int i = 0; i < inParameters.size(); i++)
+			{
+				Parameter parameter = (Parameter) inParameters.elementAt(i);
+				System.out.print("input :  ");
+				parameter.testParameter();
+			}
+		}
+		if (bVoid)
+		{
+			System.out.println("void");
+		}
+		else
+		{
+			System.out.print("output  ");
+			retParameter.testParameterType();
+		}
+		System.out.println("------------------------------");
+	}
+
+	public void setReturnPoints(Vector returnPoints)
+	{
+		this.returnPoints = returnPoints;
+	}
+
+	public boolean hasReturnType(String type)
+	{
+		if (this.retParameter == null)
+		{
 			return false;
-    	if( param.getPointerLevel() != ptype.getPointerLevel())
+		}
+		if (type.equals("*"))
+		{
+			return true;
+		}
+		return this.matchType(this.retParameter, type);
+	}
+
+	public boolean matchType(ParameterType ptype, String type)
+	{
+		boolean found = true;
+		Parameter param = Function.getParameterFromParameterString(type);
+		if (param.getArrayLevel() != ptype.getArrayLevel())
+		{
 			return false;
-    	if( param.getTypesLength() > ptype.getTypesLength())
-    		return false;
-    	
-    	for(int i=0; i<param.getTypesLength(); i++)
-    	{
-    		boolean tmpfound = false;
-    		for(int j=0; j<ptype.getTypesLength(); j++)
-    		{
-    			if(param.type[i] == ptype.type[j])
-    				tmpfound = tmpfound | true;
-    			else if(param.type[i] == 27 && ptype.type[j] == 98) // An id can also be a typedef :(
-    				tmpfound = tmpfound | true;
-    			
-    		}
-    		found = found & tmpfound;
-    	}
-    	return found;
-    }
-    
-    public static Parameter getParameterFromParameterString(String param)
+		}
+		if (param.getPointerLevel() != ptype.getPointerLevel())
+		{
+			return false;
+		}
+		if (param.getTypesLength() > ptype.getTypesLength())
+		{
+			return false;
+		}
+
+		for (int i = 0; i < param.getTypesLength(); i++)
+		{
+			boolean tmpfound = false;
+			for (int j = 0; j < ptype.getTypesLength(); j++)
+			{
+				if (param.type[i] == ptype.type[j])
+				{
+					tmpfound = tmpfound | true;
+				}
+				else if (param.type[i] == 27 && ptype.type[j] == 98)
+				{
+					// can
+																			// also
+																			// be a
+																			// typedef
+																			// :(
+					tmpfound = tmpfound | true;
+				}
+
+			}
+			found = found & tmpfound;
+		}
+		return found;
+	}
+
+	public static Parameter getParameterFromParameterString(String param)
 	{
 		String theparam = param;
 		Parameter parameter = new Parameter(new int[0]);
 		// Fix pointer
-		while(theparam.endsWith("*"))
+		while (theparam.endsWith("*"))
 		{
 			parameter.addPointerLevel();
-			theparam = theparam.substring(0,theparam.length()-1);
+			theparam = theparam.substring(0, theparam.length() - 1);
 		}
 		// Fix array
-		while(theparam.endsWith("[]"))
+		while (theparam.endsWith("[]"))
 		{
 			parameter.addArrayLevel();
-			theparam = theparam.substring(0,theparam.length()-2);
+			theparam = theparam.substring(0, theparam.length() - 2);
 		}
 		// Now get the type!
-		StringTokenizer st = new StringTokenizer(theparam," ",false);
+		StringTokenizer st = new StringTokenizer(theparam, " ", false);
 		int[] type = new int[st.countTokens()];
-		int i=0;
-		while(st.hasMoreTokens())
+		int i = 0;
+		while (st.hasMoreTokens())
 		{
 			int ttype = GeneralUtils.getTypeForString(st.nextToken());
-			//System.out.println("Param type: "+GnuCParser._tokenNames[ttype]);
+			// System.out.println("Param type: "+GnuCParser._tokenNames[ttype]);
 			type[i] = ttype;
 		}
 		parameter.setType(type);
 		return parameter;
 	}
-    
-    public boolean hasParameterWithType(String type)
-    {
-    	if(this.inParameters == null)
-    		return false;
-    	for(int i=0; i<this.inParameters.size(); i++)
-    	{
-    		Parameter param = (Parameter)this.inParameters.get(i);
-    		if(this.matchType(param,type))
-    			return true;
-    	}
-    	return false;
-    }
-    
-    public boolean hasParameterWithName(String name)
-    {
-    	for(int i=0; i<this.inParameters.size(); i++)
-    	{
-    		Parameter param = (Parameter)this.inParameters.get(i);
-    		if(param.getValueID().equals(name))
-    			return true;
-    	}
-    	return false;
-    }
-    
-    public String toString()
-    {
-    	return this.filename+":"+this.name;
-    }
+
+	public boolean hasParameterWithType(String type)
+	{
+		if (this.inParameters == null)
+		{
+			return false;
+		}
+		for (int i = 0; i < this.inParameters.size(); i++)
+		{
+			Parameter param = (Parameter) this.inParameters.get(i);
+			if (this.matchType(param, type))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasParameterWithName(String name)
+	{
+		for (int i = 0; i < this.inParameters.size(); i++)
+		{
+			Parameter param = (Parameter) this.inParameters.get(i);
+			if (param.getValueID().equals(name))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public String toString()
+	{
+		return this.filename + ":" + this.name;
+	}
 }
