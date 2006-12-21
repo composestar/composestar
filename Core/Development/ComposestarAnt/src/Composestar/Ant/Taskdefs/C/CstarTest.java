@@ -84,11 +84,11 @@ public class CstarTest extends BaseTask
 	 */
 	protected String eclipseHome;
 
-	/**
-	*Custom filters
-`	**/
+	/***************************************************************************
+	 * Custom filters `
+	 **************************************************************************/
 	protected String customfilterString;
-	
+
 	/**
 	 * Application-id as defined in plugin.xml
 	 */
@@ -193,65 +193,67 @@ public class CstarTest extends BaseTask
 	{
 		log("" + (cntCurrent * 100 / cntTotal) + "% - " + projectname, Project.MSG_INFO);
 		cntCurrent++;
-//		int procerr=0;
-//		try{
-//
-//			Runtime rt = Runtime.getRuntime();
-//
-//			String command = "java -cp "+ eclipseHome+"/startup.jar "+ launcher + " -application "+"ComposestarEclipsePlugin.headlessCEPTest "+ projectname + " -customfilter "+ customfilterString+ " -data "+ workspace;
-//			
-//
-//			log("Execution command: " + command);
-//
-///	        	Process proc = rt.exec(command);
-//		}
-//		catch(Exception e){}
-		
-		/** fIRST RUN ECLIPSEpLUGIn
-		/*********
-		 * java -cp startup.jar org.eclipse.core.launcher.Main 
-		 * -application ComposestarEclipsePlugin.headlessCEPTest 
-		 * EncryptionExample //ProjectName 
-		 * -customfilter //Customfilters should be added
-		 * C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\SystemTest\EncryptionExample\CustomFilters\Decryption.jar 
+		// int procerr=0;
+		// try{
+		//
+		// Runtime rt = Runtime.getRuntime();
+		//
+		// String command = "java -cp "+ eclipseHome+"/startup.jar "+ launcher +
+		// " -application "+"ComposestarEclipsePlugin.headlessCEPTest "+
+		// projectname + " -customfilter "+ customfilterString+ " -data "+
+		// workspace;
+		//			
+		//
+		// log("Execution command: " + command);
+		//
+		// / Process proc = rt.exec(command);
+		// }
+		// catch(Exception e){}
+
+		/**
+		 * fIRST RUN ECLIPSEpLUGIn /********* java -cp startup.jar
+		 * org.eclipse.core.launcher.Main -application
+		 * ComposestarEclipsePlugin.headlessCEPTest EncryptionExample
+		 * //ProjectName -customfilter //Customfilters should be added
+		 * C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\SystemTest\EncryptionExample\CustomFilters\Decryption.jar
 		 * C:\Utwente\Afstuderen\jwtewinkel\TestOmgeving\SystemTest\EncryptionExample\CustomFilters\Encryption.jar
 		 */
 		// exec command on system runtime
 		try
 		{
-						
+
 			log(projectname, Project.MSG_VERBOSE);
 
-			
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
 			ExecuteStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
 			ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
-			//Execute runFirst= new Execute(streamHandler, watchdog);
+			// Execute runFirst= new Execute(streamHandler, watchdog);
 			Execute execute = new Execute(streamHandler, watchdog);
 			execute.setAntRun(getProject());
 			execute.setSpawn(false);
 			execute.setWorkingDirectory(new File(eclipseHome));
 
-			/****
-			*run:
-			*make run
-			*/
-			String[] cmd = { "java", "-cp", eclipseHome+"/startup.jar", launcher, "-application","ComposestarEclipsePlugin.headlessCEPTest", projectname, "-customfilter", customfilterString, "-data", workspace};
-			//{"make", "run", "-C", workspace+"\\"+projectname};
-			
-			log("make command= "+ "make run -C "+workspace+"\\"+projectname);
-			//Thread.sleep(15000);
-			execute.setCommandline(cmd); 
-			//for(int i =0;i<cmd.length; i++)
-			//{
-			//	commandline += cmd[i];
-			//}
-			//log("Debug1:"+projectname + commandline);
-			
+			/*******************************************************************
+			 * run: make run
+			 */
+			String[] cmd = { "java", "-cp", eclipseHome + "/startup.jar", launcher, "-application",
+					"ComposestarEclipsePlugin.headlessCEPTest", projectname, "-customfilter", customfilterString,
+					"-data", workspace };
+			// {"make", "run", "-C", workspace+"\\"+projectname};
+
+			log("make command= " + "make run -C " + workspace + "\\" + projectname);
+			// Thread.sleep(15000);
+			execute.setCommandline(cmd);
+			// for(int i =0;i<cmd.length; i++)
+			// {
+			// commandline += cmd[i];
+			// }
+			// log("Debug1:"+projectname + commandline);
+
 			int err = execute.execute();
-			//log("Debug2:"+projectname+err);
-			
+			// log("Debug2:"+projectname+err);
+
 			if (execute.killedProcess())
 			{
 				cntTimeout++;
@@ -262,7 +264,7 @@ public class CstarTest extends BaseTask
 			{
 				throw new Exception("Exit code is not zero: " + err);
 			}
-			
+
 			checkOutput(projectname, outputStream.toString());
 
 			cntSuccess++;
@@ -285,7 +287,7 @@ public class CstarTest extends BaseTask
 	{
 		String projectBase = workspace + java.io.File.separator + projectname;
 		File correct = new File(projectBase, CORRECT_OUTPUT);
-		boolean sof=false;
+		boolean sof = false;
 		BufferedReader expectedReader = null;
 		BufferedReader actualReader = null;
 
@@ -293,24 +295,36 @@ public class CstarTest extends BaseTask
 		{
 			expectedReader = new BufferedReader(new FileReader(correct));
 			actualReader = new BufferedReader(new StringReader(output));
-			for(int firstlines = 0;  firstlines < 2; firstlines++ )
+			
+			// ignore initial 2 lines (contains changing data)
+			for (int firstlines = 0; firstlines < 2; firstlines++)
 			{
 				actualReader.readLine();
-			}			
+			}
 
 			while (true)
 			{
 				String expected = expectedReader.readLine();
 				String actual = actualReader.readLine();
-				if(compareLines(actual, "Encryption Example send text= aaaa")) sof=true;
-				if(compareLines(expected, "<EOF>")&&sof) break;
-				if (!compareLines(expected, actual)&&sof)
+				
+				if (compareLines(actual, "Encryption Example send text= aaaa")) sof = true;
+				if (compareLines(expected, "<EOF>") && sof) break;
+				
+				if (!compareLines(expected, actual) && sof)
 				{
 					throw new Exception("Invalid output: expected " + quote(expected) + ", but encountered "
 							+ quote(actual));
 				}
 
-				if (expected == null || actual == null) break;
+				if (expected == null || actual == null) 
+				{
+					if (expected != actual)
+					{
+						throw new Exception("Invalid output: expected " + quote(expected) + ", but encountered "
+								+ quote(actual));
+					}
+					break;
+				}
 			}
 		}
 		finally

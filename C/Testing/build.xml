@@ -16,47 +16,13 @@
 	<target name="init_local" depends="init">
 	</target>
 
-	<target name="clean" depends="init">
-		<!-- delete generated files in /bin -->
-		<delete>
-			<FileSet dir="${build.c}/Examples">
-				<include name="**/bin/*.exe"/>
-			</FileSet>
-		</delete>
-		<delete>
-			<FileSet dir="${build.c}/Examples">
-				<include name="**/*.ccc"/>
-			</FileSet>
-		</delete>
-		<delete>
-			<FileSet dir="${build.c}/Examples">
-				<include name="**/*.cccout"/>
-			</FileSet>
-		</delete>
-		<delete>
-			<FileSet dir="${build.c}/Examples">
-				<include name="**/buildconfiguration.xml"/>
-			</FileSet>
-		</delete>
-		<delete>
-			<FileSet dir="${build.c}/Examples">
-				<include name="**/makefile"/>
-			</FileSet>
-		</delete>	
-		
-		
-		<!-- delete /analyses dir -->
-		<delete includeEmptyDirs="true">
-			<FileSet dir="${build.c}/Examples">
-				<include name="**/analyses/"/>
-			</FileSet>
-		</delete>
-	</target>
+	<target name="clean" />
 	
-	<target name="build"/>
+	<target name="build" />
 
 	<target name="test" depends="test_exec" description="Execute the C system test."/>
-	<target name="test_comp" depends="init_local">
+	
+	<target name="test_comp" depends="init_eclipse">
 		<cs:c_comp workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar ${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar">
 			<DirSet dir="${build.c}/Examples">
 				<include name="EncryptionExample"/> 
@@ -65,7 +31,7 @@
 	</target>	
 
 	<!-- execute tests -->
-	<target name="test_exec" depends="init_local">
+	<target name="test_exec" depends="init_eclipse">
 		<cs:c_test workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar ${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar">
 			<DirSet dir="${build.c}/Examples">
 				<include name="EncryptionExample"/> 
