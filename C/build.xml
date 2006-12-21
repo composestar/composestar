@@ -30,8 +30,7 @@
 	</target>
 
 	<target name="test" description="Execute system tests">
-		<!-- temporarily disabled because ant tasks have not (yet) been ported -->
-		<!--<ant target="test" dir="Testing" inheritRefs="true" />-->
+		<ant target="test" dir="Testing" inheritRefs="true" />
 	</target>
 	
 	<target name="install" depends="init_eclipse,build" description="Install the result">
@@ -44,6 +43,9 @@
 			<FileSet dir="${build.c}/Compiletime/dist">
 				<include name="ComposestarC.jar"/>
 			</FileSet>
+			<fileset dir="${build.core}/Compiletime/binaries/antlr">
+				<include name="antlr.jar"/>
+			</fileset>
 		</copy>
 		
 		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries/prolog">
