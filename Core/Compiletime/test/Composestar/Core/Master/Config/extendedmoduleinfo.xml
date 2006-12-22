@@ -1,0 +1,7 @@
+<moduleinfo extends="/Composestar/Core/Master/Config/moduleinfo.xml">
+	<settings>
+		<setting id="extraString">
+			<default>Additional Setting</default>
+		</setting>
+	</settings>
+</moduleinfo>

@@ -123,6 +123,11 @@
 	</target>
 
 	<target name="jar">
+		<copy todir="${out.build}">
+			<fileset dir="src">
+				<include name="**/moduleinfo.xml"/>
+			</fileset>
+		</copy>
 		<jar destfile="${out.jar.dotnet}" basedir="${out.build}" manifest="src/MANIFEST.MF"/>
 	</target>
 	

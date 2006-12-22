@@ -13,26 +13,16 @@ public class INCREXMLParser extends DefaultHandler
 		this.configmanager = cfg;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if (local_name.equalsIgnoreCase("modules"))
+		if (qName.equalsIgnoreCase("modules"))
 		{
-			ModulesHandler modulehandler = new ModulesHandler(configmanager, this);
+			ModulesHandler modulehandler = new ModulesHandler(configmanager, null);
 			configmanager.getXMLReader().setContentHandler(modulehandler);
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException
-	{
-
-	}
-
-	public void startDocument()
-	{
-
-	}
-
-	public void endDocument()
+	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
 
 	}

@@ -48,7 +48,7 @@
 	
 	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file"/>
 	
-	<target name="antlr">
+	<target name="antlr" depends="local_init">
 		<antlr target="src/Composestar/Core/COPPER/grammar/cps.g" outputdirectory="src/Composestar/Core/COPPER">
 			<classpath refid="lib.core"/>
 		</antlr>
@@ -73,6 +73,7 @@
 		<copy todir="${out.build}"><!-- copy groove grammars -->
 			<fileset dir="src">
 				<include name="**/*.gpr"/>
+				<include name="**/moduleinfo.xml"/>
 				<include name="Composestar/Core/DIGGER/Xslt/*.xslt"/>
 			</fileset>
 		</copy>

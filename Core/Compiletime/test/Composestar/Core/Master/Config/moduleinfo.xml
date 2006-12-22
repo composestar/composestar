@@ -1,0 +1,27 @@
+<moduleinfo id="test">
+	<name>ModuleInfo Name</name>
+	<description>ModuleInfo Description</description>
+	
+	<settings>
+		<setting id="aBool" type="bool">
+			<name>A boolean value</name>
+			<default>true</default>
+		</setting>
+		<setting id="anotherBool" type="boolean">
+			<name>Another boolean value</name>
+			<default>false</default>
+		</setting>
+		<setting id="anInteger" type="int">
+			<default>12345</default>
+		</setting>
+		<setting id="AString">
+			<default>This is a string value</default>
+		</setting>
+	</settings>
+	
+	<incre>
+		<module name="testModule" incremental="false" summary="Test module info">
+			<bla />
+		</module>
+	</incre>
+</moduleinfo>

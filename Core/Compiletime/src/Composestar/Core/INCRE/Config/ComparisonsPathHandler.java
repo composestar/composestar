@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.FieldNode;
@@ -15,7 +16,7 @@ import Composestar.Core.INCRE.Path;
 
 public class ComparisonsPathHandler extends DefaultHandler
 {
-	private ConfigManager configmanager;
+	private XMLReader reader;
 
 	private Module module;
 
@@ -25,24 +26,24 @@ public class ComparisonsPathHandler extends DefaultHandler
 
 	private ArrayList nodes;
 
-	public ComparisonsPathHandler(ConfigManager cfg, Module inModule, String inFullname, TypeHandler inReturnhandler)
+	public ComparisonsPathHandler(XMLReader inReader, Module inModule, String inFullname, TypeHandler inReturnhandler)
 	{
-		configmanager = cfg;
+		reader = inReader;
 		module = inModule;
 		fullname = inFullname;
 		returnhandler = inReturnhandler;
 		nodes = new ArrayList();
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if (local_name.equalsIgnoreCase("method"))
+		if (qName.equalsIgnoreCase("method"))
 		{
 			String methodname = amap.getValue("name");
 			MethodNode method = new MethodNode(methodname);
 			this.nodes.add(method);
 		}
-		else if (local_name.equalsIgnoreCase("field"))
+		else if (qName.equalsIgnoreCase("field"))
 		{
 			String fieldname = amap.getValue("name");
 			FieldNode field = new FieldNode(fieldname);
@@ -50,10 +51,10 @@ public class ComparisonsPathHandler extends DefaultHandler
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name)
+	public void endElement(String uri, String localName, String qName)
 	{
 		// next type between <comparisons> tags
-		if (local_name.equalsIgnoreCase("path"))
+		if (qName.equalsIgnoreCase("path"))
 		{
 			Path path = new Path();
 			Iterator nodesIt = nodes.iterator();
@@ -67,17 +68,7 @@ public class ComparisonsPathHandler extends DefaultHandler
 			nodes.clear();
 
 			// look further between <type> tags
-			configmanager.getXMLReader().setContentHandler(returnhandler);
+			reader.setContentHandler(returnhandler);
 		}
-	}
-
-	public void startDocument()
-	{
-
-	}
-
-	public void endDocument()
-	{
-
 	}
 }

@@ -2,21 +2,22 @@ package Composestar.Core.INCRE.Config;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.Module;
 
 public class ComparisonsHandler extends DefaultHandler
 {
-	private ConfigManager configmanager;
+	private XMLReader reader;
 
 	private Module module;
 
 	private DependencyHandler returnhandler;
 
-	public ComparisonsHandler(ConfigManager cfg, Module inModule, DependencyHandler inReturnhandler)
+	public ComparisonsHandler(XMLReader inReader, Module inModule, DependencyHandler inReturnhandler)
 	{
-		configmanager = cfg;
+		reader = inReader;
 		module = inModule;
 		returnhandler = inReturnhandler;
 	}
@@ -28,8 +29,8 @@ public class ComparisonsHandler extends DefaultHandler
 			String fullname = amap.getValue("fullname");
 
 			// look further between <type> tags
-			TypeHandler typehandler = new TypeHandler(configmanager, module, fullname, this);
-			configmanager.getXMLReader().setContentHandler(typehandler);
+			TypeHandler typehandler = new TypeHandler(reader, module, fullname, this);
+			reader.setContentHandler(typehandler);
 		}
 	}
 
@@ -38,17 +39,7 @@ public class ComparisonsHandler extends DefaultHandler
 		if (local_name.equalsIgnoreCase("comparisons"))
 		{
 			// look further between <module> tags
-			configmanager.getXMLReader().setContentHandler(returnhandler);
+			reader.setContentHandler(returnhandler);
 		}
-	}
-
-	public void startDocument()
-	{
-
-	}
-
-	public void endDocument()
-	{
-
 	}
 }

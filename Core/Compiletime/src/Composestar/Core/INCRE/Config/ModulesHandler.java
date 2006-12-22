@@ -2,29 +2,70 @@ package Composestar.Core.INCRE.Config;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.Module;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Utils.Debug;
 
 public class ModulesHandler extends DefaultHandler
 {
 	private ConfigManager configmanager;
 
-	public ModulesHandler(ConfigManager cfg, INCREXMLParser returnhandler)
+	private DefaultHandler returnHandler;
+
+	private XMLReader reader;
+
+	private Module m;
+
+	public ModulesHandler(ConfigManager cfg, DefaultHandler inReturnhandler)
 	{
-		this.configmanager = cfg;
+		configmanager = cfg;
+		reader = cfg.getXMLReader();
+		returnHandler = inReturnhandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public ModulesHandler(XMLReader inXMLReader, DefaultHandler inReturnhandler)
 	{
-		if (local_name.equalsIgnoreCase("module"))
-		{
-			String name = amap.getValue("name");
-			Module m = new Module(name);
+		reader = inXMLReader;
+		returnHandler = inReturnhandler;
+	}
 
-			if (amap.getValue("fulltype") != null)
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
+	{
+		if (qName.equalsIgnoreCase("module"))
+		{
+			m = null;
+			String fullType = amap.getValue("fulltype");
+			
+			if (configmanager != null) // if loaded from INCRE try to import existing settings
 			{
-				m.setFullType(amap.getValue("fulltype"));
+				try
+				{
+					Class fullTypeClass = Class.forName(fullType);
+					ModuleInfo mi = Configuration.instance().getModuleInfo(fullTypeClass);
+					if (mi != null)
+					{
+						m = mi.getIncreModule();
+					}
+				}
+				catch (ClassNotFoundException e)
+				{
+					Debug.out(Debug.MODE_ERROR, "INCRE","Module class not found: "+fullType);
+				}
+			}
+			
+			if (m == null)
+			{
+				String name = amap.getValue("name");
+				m = new Module(name);
+			}
+
+			if (fullType != null)
+			{
+				m.setFullType(fullType);
 			}
 			if (amap.getValue("input") != null)
 			{
@@ -43,25 +84,28 @@ public class ModulesHandler extends DefaultHandler
 				m.setEnabled(amap.getValue("enabled").equals("true"));
 			}
 
-			configmanager.addModule(name, m);
-
-			DependencyHandler dependencyhandler = new DependencyHandler(configmanager, m, this);
-			configmanager.getXMLReader().setContentHandler(dependencyhandler);
+			if (configmanager != null) configmanager.addModule(m.getName(), m);
+		}
+		else if (qName.equalsIgnoreCase("dependencies") && (m != null))
+		{
+			DependencyHandler dependencyhandler = new DependencyHandler(reader, m, this);
+			reader.setContentHandler(dependencyhandler);
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name)
+	public void endElement(String uri, String localName, String qName)
 	{
-
+		if (qName.equalsIgnoreCase("module"))
+		{
+			if (returnHandler != null)
+			{
+				reader.setContentHandler(returnHandler);
+			}
+		}
 	}
 
-	public void startDocument()
+	public Module getModule()
 	{
-
-	}
-
-	public void endDocument()
-	{
-
+		return m;
 	}
 }
