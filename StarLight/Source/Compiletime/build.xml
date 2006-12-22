@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight/Compiletime" default="build">
 
-	<condition property="build.core" value="../../../Core">
-		<and>
-			<not><isset property="build.core"/></not>
-			<available file="../../../Core/common.xml"/>
-		</and>
-	</condition>
-	
+  <property name="build.core" value="../../../Core"/>
 	<import file="${build.core}/common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>	
@@ -59,7 +53,7 @@
 		-->
 	</target>
 	
-	<target name="create_xsd">
+	<target name="create_xsd" depends="init_local">
 		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build" config="${msbuild.config}"/>
 		<exec executable="${xsd.exe}" dir="..\StarLightEntities\bin\debug">
 			<arg line="Composestar.StarLight.Entities.dll"/>
@@ -88,7 +82,7 @@
 
 	</target>
 	
-	<target name="compile" depends="build_xmltypes">
+	<target name="compile" depends="init_local,build_xmltypes">
 		<javac srcdir="src/Composestar" destdir="${out.build}" classpathref="lib.starlight" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java"/>
 			<exclude name="**/_svn" />
