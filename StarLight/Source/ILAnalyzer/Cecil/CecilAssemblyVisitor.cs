@@ -493,10 +493,7 @@ namespace Composestar.StarLight.ILAnalyzer
 			// Interface
 			foreach (TypeReference interfaceDef in type.Interfaces)
 			{
-				if (string.IsNullOrEmpty(typeElement.ImplementedInterfaces))
-					typeElement.ImplementedInterfaces = interfaceDef.FullName;
-				else
-					typeElement.ImplementedInterfaces = String.Format(CultureInfo.CurrentCulture, "{0};{1}", typeElement.ImplementedInterfaces, interfaceDef.FullName);
+				typeElement.Interfaces.Add(interfaceDef.FullName);
 			}
 
 			// Basetype

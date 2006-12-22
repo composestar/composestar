@@ -55,9 +55,9 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	public sealed class TypeElement : ICustomAttributes
 	{
 		private string _name = string.Empty;
-		private string _baseType = string.Empty;
 		private string _namespace = string.Empty;
-		private string _implementedInterfaces = string.Empty;
+		private string _baseType = string.Empty;
+		private List<string> _interfaces = new List<string>();
 		private bool _isAbstract;
 		private bool _isInterface;
 		private bool _isSealed;
@@ -84,26 +84,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		/// <summary>
-		/// Base type of this type.
-		/// </summary>
-		[XmlAttribute]
-		public string BaseType
-		{
-			get { return _baseType; }
-			set { _baseType = value; }
-		}
-
-		/// <summary>
-		/// Gets the fullname.
-		/// </summary>
-		/// <value>The fullname.</value>
-		[XmlIgnore]
-		public string FullName
-		{
-			get { return string.Format(CultureInfo.CurrentCulture, "{0}.{1}", _namespace, _name); }
-		}
-
-		/// <summary>
 		/// Full namespace of this type.
 		/// </summary>
 		/// <value>The namespace.</value>
@@ -115,14 +95,34 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		/// <summary>
-		/// Gets or sets the implemented interfaces.
+		/// Gets the fullname.
 		/// </summary>
-		/// <value>The implemented interfaces.</value>
-		[XmlAttribute]
-		public string ImplementedInterfaces
+		/// <value>The fullname.</value>
+		[XmlIgnore]
+		public string FullName
 		{
-			get { return _implementedInterfaces; }
-			set { _implementedInterfaces = value; }
+			get { return string.Concat(_namespace, ".", _name); }
+		}
+
+		/// <summary>
+		/// Base type of this type.
+		/// </summary>
+		[XmlAttribute]
+		public string BaseType
+		{
+			get { return _baseType; }
+			set { _baseType = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the list of implemented interfaces.
+		/// </summary>
+		[XmlArray("Interfaces")]
+		[XmlArrayItem("Interface")]
+		public List<string> Interfaces
+		{
+			get { return _interfaces; }
+			set { _interfaces = value; }
 		}
 
 		/// <summary>

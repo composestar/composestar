@@ -470,12 +470,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 			dnt.setBaseType(te.getBaseType());
 			
 			// Set the implemented interfaces
-			String[] implementedInterfaces = te.getImplementedInterfaces().split(";");
-			for (int j = 0; j < implementedInterfaces.length; j++)
+			String[] interfaces = te.getInterfaces().getInterfaceArray();
+			for (int j = 0; j < interfaces.length; j++)
 			{
-				String ii = implementedInterfaces[j];
-				if (!"".equals(ii)) 
-					dnt.addImplementedInterface(ii);
+				dnt.addImplementedInterface(interfaces[j]);
 			}
 			
 			dnt.setIsAbstract(te.getIsAbstract());
