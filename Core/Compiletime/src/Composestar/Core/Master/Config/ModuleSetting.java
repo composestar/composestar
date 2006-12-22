@@ -154,7 +154,7 @@ public class ModuleSetting
 		}
 		else if (type == Boolean.class)
 		{
-			setValue(Boolean.parseBoolean(newValue));
+			setValue("true".equalsIgnoreCase(newValue));
 		}
 		else if (type == Float.class)
 		{
