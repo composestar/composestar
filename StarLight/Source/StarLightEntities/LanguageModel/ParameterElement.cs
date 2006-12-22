@@ -51,19 +51,10 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	[XmlRoot("Parameter", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public sealed class ParameterElement
 	{
-
-		/// <summary>
-		/// _parameter option
-		/// </summary>
-		private ParameterOptions _parameterOption = ParameterOptions.None;
-		/// <summary>
-		/// _ordinal
-		/// </summary>
-		private short _ordinal;
-		/// <summary>
-		/// _name
-		/// </summary>
 		private string _name;
+		private string _type;
+		private short _ordinal;
+		private ParameterOptions _parameterOption = ParameterOptions.None;
 
 		/// <summary>
 		/// Gets or sets the name.
@@ -75,7 +66,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			get { return _name; }
 			set { _name = value; }
 		}
-		private string _type;
 
 		/// <summary>
 		/// Gets or sets the type.

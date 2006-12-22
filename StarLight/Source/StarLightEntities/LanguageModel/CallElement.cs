@@ -51,10 +51,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	[XmlRoot("Call", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public class CallElement
 	{
-
-		/// <summary>
-		/// _method reference
-		/// </summary>
 		private string _methodReference;
 
 		/// <summary>

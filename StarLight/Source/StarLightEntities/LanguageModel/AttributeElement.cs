@@ -40,6 +40,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Composestar.StarLight.Entities.LanguageModel
@@ -47,15 +48,12 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// <summary>
 	/// Contains a single annotation definition.
 	/// </summary>
-	[Serializable()]
+	[Serializable]
 	[XmlRoot("Attribute", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public sealed class AttributeElement
 	{
-
-		/// <summary>
-		/// _attribute type
-		/// </summary>
 		private String _attributeType;
+		private List<AttributeValueElement> _values = new List<AttributeValueElement>();
 
 		/// <summary>
 		/// Gets or sets the type of the attribute.
@@ -70,34 +68,28 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		/// <summary>
-		/// _values
-		/// </summary>
-		private List<AttributeValueElement> _values = new List<AttributeValueElement>();
-
-		/// <summary>
 		/// Gets or sets the values.
 		/// </summary>
 		/// <value>The values.</value>
 		[XmlArray("Values")]
 		[XmlArrayItem("Value")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
 		public List<AttributeValueElement> Values
 		{
 			get { return _values; }
 			set { _values = value; }
 		}
-
 	}
 
 	/// <summary>
 	/// Contains a single attribute value.
 	/// </summary>
-	[Serializable()]
+	[Serializable]
 	[XmlRoot("AttributeValue", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public sealed class AttributeValueElement
 	{
-
 		private string _name;
+		private string _value;
 
 		/// <summary>
 		/// Gets or sets the name.
@@ -109,8 +101,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			get { return _name; }
 			set { _name = value; }
 		}
-
-		private string _value;
 
 		/// <summary>
 		/// Gets or sets the value.

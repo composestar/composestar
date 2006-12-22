@@ -54,6 +54,10 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	public sealed class FieldElement : ICustomAttributes 
 	{
 		private string _name;
+		private string _type;
+		private bool _isPrivate;
+		private bool _isPublic;
+		private bool _isStatic;
 
 		/// <summary>
 		/// Gets or sets the name.
@@ -66,8 +70,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			set { _name = value; }
 		}
 
-		private string _type;
-
 		/// <summary>
 		/// Gets or sets the type.
 		/// </summary>
@@ -78,8 +80,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			get { return _type; }
 			set { _type = value; }
 		}
-
-		private bool _isPrivate;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is private.
@@ -94,8 +94,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			set { _isPrivate = value; }
 		}
 
-		private bool _isPublic;
-
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is public.
 		/// </summary>
@@ -106,7 +104,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			get { return _isPublic; }
 			set { _isPublic = value; }
 		}
-		private bool _isStatic;
+
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is static.
 		/// </summary>
@@ -128,10 +126,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		/// </value>
 		public bool HasAttributes
 		{
-			get
-			{
-				return _attributes.Count > 0;
-			}
+			get { return (_attributes.Count > 0); }
 		}
 
 		private List<AttributeElement> _attributes = new List<AttributeElement>();
@@ -145,17 +140,10 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
 		public List<AttributeElement> Attributes
 		{
-			get
-			{
-				return _attributes;
-			}
-			set
-			{
-				_attributes = value;
-			}
+			get { return _attributes; }
+			set { _attributes = value; }
 		}
 
 		#endregion
-
 	}
 }

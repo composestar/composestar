@@ -48,26 +48,36 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// <summary>
 	/// Contains a single Assembly definition.
 	/// </summary>
-	[Serializable()]
+	[Serializable]
 	[XmlRoot("Assembly", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public sealed class AssemblyElement
 	{
-		/// <summary>
-		/// <returns>String</returns>
-		/// Name of the assembly. A fully qualified name.
-		/// </summary>
 		private string _name;
-		/// <summary>
-		/// _file name
-		/// </summary>
 		private string _fileName;
-		/// <summary>
-		/// _types
-		/// </summary>
 		private List<TypeElement> _types = new List<TypeElement>();
 
 		/// <summary>
-		/// Collection of TypeElements
+		/// Name of the assembly. A fully qualified name.
+		/// </summary>
+		[XmlAttribute]
+		public string Name
+		{
+			get { return _name; }
+			set { _name = value; }
+		}
+
+		/// <summary>
+		/// Name of the file this assembly is in.
+		/// </summary>
+		[XmlAttribute]
+		public string FileName
+		{
+			get { return _fileName; }
+			set { _fileName = value; }
+		}
+
+		/// <summary>
+		/// A list of types that are defined in this assembly.
 		/// </summary>
 		[XmlArray("Types")]
 		[XmlArrayItem("Type")]
@@ -78,24 +88,5 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			set { _types = value; }
 		}
 
-		/// <summary>
-		/// Name of the file this assembly is in.
-		/// </summary>
-		[XmlAttribute()]
-		public string FileName
-		{
-			get { return _fileName; }
-			set { _fileName = value; }
-		}
-
-		/// <summary>
-		/// Name of the assembly. A fully qualified name.
-		/// </summary>
-		[XmlAttribute()]
-		public string Name
-		{
-			get { return _name; }
-			set { _name = value; }
-		}
 	}
 }

@@ -57,6 +57,9 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		{
 		}
 
+		/// <summary>
+		/// The fully qualified name of the type that is to be expanded.
+		/// </summary>
 		[XmlAttribute]
 		public string Name
 		{
@@ -64,6 +67,9 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			set { _name = value; }
 		}
 
+		/// <summary>
+		/// A list of methods that is to be added to the type.
+		/// </summary>
 		[XmlArray("ExtraMethods")]
 		[XmlArrayItem("Method")]
 		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]

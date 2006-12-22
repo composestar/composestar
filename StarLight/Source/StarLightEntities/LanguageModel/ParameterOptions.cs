@@ -53,11 +53,11 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	public enum ParameterOptions
 	{
 		/// <summary>
-		/// Input parameter.
+		/// An input parameter.
 		/// </summary>
 		In = 1,
 		/// <summary>
-		/// Output parameter.
+		/// An output parameter.
 		/// </summary>
 		Out = 2,
 		/// <summary>
@@ -69,7 +69,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		/// </summary>
 		RetVal = 8,
 		/// <summary>
-		/// None option.
+		/// No options.
 		/// </summary>
 		None = 0,
 	}

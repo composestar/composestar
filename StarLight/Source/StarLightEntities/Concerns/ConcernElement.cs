@@ -52,21 +52,12 @@ namespace Composestar.StarLight.Entities.Concerns
 	[XmlRoot("Concern", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public class ConcernElement
 	{
-		/// <summary>
-		/// _file name
-		/// </summary>
 		private string _fileName;
-		/// <summary>
-		/// _concern name
-		/// </summary>
 		private string _concernName;
-		/// <summary>
-		/// _timestamp
-		/// </summary>
 		private long _timestamp;
 		private string _pathName;
 		private bool _hasOutputFilters;
-		private List<String> _types = new List<string>();
+		private List<string> _types = new List<string>();
 
 		/// <summary>
 		/// Gets or sets the types used in the internals or externals.
@@ -74,7 +65,7 @@ namespace Composestar.StarLight.Entities.Concerns
 		/// <value>The types.</value>
 		[XmlArray("Types")]
 		[XmlArrayItem("Type")]
-		public List<String> ReferencedTypes
+		public List<string> ReferencedTypes
 		{
 			get { return _types; }
 			set { _types = value; }

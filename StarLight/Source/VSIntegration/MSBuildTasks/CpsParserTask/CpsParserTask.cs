@@ -61,53 +61,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	{
 		private const string EmbeddedFolderName = "Embedded";
 
-		/// <summary>
-		/// inputs
-		/// </summary>
+		#region Task properties
+
+		/// inputs:
 		private string _baseDir;
-		/// <summary>
-		/// _repository file name
-		/// </summary>
 		private string _repositoryFileName;
-		/// <summary>
-		/// _concern files
-		/// </summary>
 		private ITaskItem[] _concernFiles;
-		/// <summary>
-		/// _code language
-		/// </summary>
 		private string _codeLanguage;
 
-		/// <summary>
-		/// outputs
-		/// </summary>
+		/// outputs:
 		private ITaskItem[] _referencedTypes;
-		/// <summary>
-		/// _extra sources
-		/// </summary>
 		private IList<ITaskItem> _extraSources;
-		/// <summary>
-		/// _has output filters
-		/// </summary>
 		private bool _hasOutputFilters;
-		/// <summary>
-		/// _concerns dirty
-		/// </summary>
 		private bool _concernsDirty;
-
-		#region Constructor
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:CpsParserTask"/> class.
-		/// </summary>
-		public CpsParserTask()
-			: base(Properties.Resources.ResourceManager)
-		{
-			_extraSources = new List<ITaskItem>();
-		}
-		#endregion
-
-		#region Properties
 
 		/// <summary>
 		/// Sets the project base directory.
@@ -186,6 +152,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			get { return _concernsDirty; }
 		}
 
+		#endregion
+
+		#region Constructor
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:CpsParserTask"/> class.
+		/// </summary>
+		public CpsParserTask()
+			: base(Properties.Resources.ResourceManager)
+		{
+			_extraSources = new List<ITaskItem>();
+		}
 		#endregion
 
 		/// <summary>

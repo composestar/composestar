@@ -52,17 +52,24 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	[XmlRoot("Method", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public sealed class MethodElement : ICustomAttributes 
 	{
-		/// <summary>
-		/// _name
-		/// </summary>
 		private string _name;
+		private string _returnType;
+		private string _signature;
+		private bool _isAbstract;
+		private bool _isConstructor;
+		private bool _isPrivate;
+		private bool _isPublic;
+		private bool _isStatic;
+		private bool _isVirtual;
+		private List<ParameterElement> _parameters = new List<ParameterElement>();
+		private MethodBody _methodBody;
 
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
 		/// <value>The name.</value>
 		/// <returns>String</returns>
-		[XmlAttribute()]
+		[XmlAttribute]
 		public string Name
 		{
 			get { return _name; }
@@ -70,33 +77,26 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		/// <summary>
-		/// _return type
-		/// </summary>
-		private string _returnType;
-
-		/// <summary>
 		/// Gets or sets the type of the return.
 		/// </summary>
 		/// <value>The type of the return.</value>
-		[XmlAttribute()]
+		[XmlAttribute]
 		public string ReturnType
 		{
 			get { return _returnType; }
 			set { _returnType = value; }
 		}
-		private string _signature;
 
 		/// <summary>
 		/// Gets or sets the signature.
 		/// </summary>
 		/// <value>The signature.</value>
-		[XmlAttribute()]
+		[XmlAttribute]
 		public string Signature
 		{
 			get { return _signature; }
 			set { _signature = value; }
 		}
-		private bool _isAbstract;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is abstract.
@@ -104,13 +104,12 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		/// <value>
 		/// 	<c>true</c> if this instance is abstract; otherwise, <c>false</c>.
 		/// </value>
-		[XmlAttribute()]
+		[XmlAttribute]
 		public bool IsAbstract
 		{
 			get { return _isAbstract; }
 			set { _isAbstract = value; }
 		}
-		private bool _isConstructor;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is constructor.
@@ -118,13 +117,12 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		/// <value>
 		/// 	<c>true</c> if this instance is constructor; otherwise, <c>false</c>.
 		/// </value>
-		[XmlAttribute()]
+		[XmlAttribute]
 		public bool IsConstructor
 		{
 			get { return _isConstructor; }
 			set { _isConstructor = value; }
 		}
-		private bool _isPrivate;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is private.
@@ -132,86 +130,34 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		/// <value>
 		/// 	<c>true</c> if this instance is private; otherwise, <c>false</c>.
 		/// </value>
-		[XmlAttribute()]
+		[XmlAttribute]
 		public bool IsPrivate
 		{
 			get { return _isPrivate; }
 			set { _isPrivate = value; }
 		}
-		private bool _isPublic;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is public.
 		/// </summary>
 		/// <value><c>true</c> if this instance is public; otherwise, <c>false</c>.</value>
-		[XmlAttribute()]
+		[XmlAttribute]
 		public bool IsPublic
 		{
 			get { return _isPublic; }
 			set { _isPublic = value; }
 		}
-		private bool _isStatic;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is static.
 		/// </summary>
 		/// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
-		[XmlAttribute()]
+		[XmlAttribute]
 		public bool IsStatic
 		{
 			get { return _isStatic; }
 			set { _isStatic = value; }
 		}
-
-		private List<ParameterElement> _parameters = new List<ParameterElement>();
-
-		/// <summary>
-		/// Gets or sets the parameters.
-		/// </summary>
-		/// <value>The parameters.</value>
-		[XmlArray("Parameters")]
-		[XmlArrayItem("Parameter")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-		public List<ParameterElement> Parameters
-		{
-			get { return _parameters; }
-			set { _parameters = value; }
-		}
-
-		private MethodBody _methodBody;
-
-		/// <summary>
-		/// Gets or sets the body.
-		/// </summary>
-		/// <value>The body.</value>
-		public MethodBody Body
-		{
-			get
-			{
-				return _methodBody;
-			}
-			set
-			{
-				_methodBody = value;
-			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this instance has a method body.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance has a method body; otherwise, <c>false</c>.
-		/// </value>
-		[XmlIgnore]
-		public bool HasMethodBody
-		{
-			get
-			{
-				return (_methodBody != null);
-			}
-		}
-
-		private bool _isVirtual;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is virtual.
@@ -226,6 +172,41 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			set { _isVirtual = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets the parameters.
+		/// </summary>
+		/// <value>The parameters.</value>
+		[XmlArray("Parameters")]
+		[XmlArrayItem("Parameter")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		public List<ParameterElement> Parameters
+		{
+			get { return _parameters; }
+			set { _parameters = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the body.
+		/// </summary>
+		/// <value>The body.</value>
+		public MethodBody Body
+		{
+			get { return _methodBody; }
+			set { _methodBody = value; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance has a method body.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance has a method body; otherwise, <c>false</c>.
+		/// </value>
+		[XmlIgnore]
+		public bool HasMethodBody
+		{
+			get { return (_methodBody != null); }
+		}
+
 		#region ICustomAttributes
 
 		/// <summary>
@@ -236,10 +217,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		/// </value>
 		public bool HasAttributes
 		{
-			get
-			{
-				return _attributes.Count > 0;
-			}
+			get { return (_attributes.Count > 0); }
 		}
 
 		private List<AttributeElement> _attributes = new List<AttributeElement>();
@@ -253,17 +231,10 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
 		public List<AttributeElement> Attributes
 		{
-			get
-			{
-				return _attributes;
-			}
-			set
-			{
-				_attributes = value;
-			}
+			get { return _attributes; }
+			set { _attributes = value; }
 		}
 
 		#endregion
-
 	}
 }

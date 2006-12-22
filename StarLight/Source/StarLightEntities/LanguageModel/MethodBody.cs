@@ -39,6 +39,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Composestar.StarLight.Entities.LanguageModel
 {
@@ -53,7 +54,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 
 		[XmlArray("Calls")]
 		[XmlArrayItem("Call")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
 		public List<CallElement> Calls
 		{
 			get { return _calls; }
