@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/C/ComposestarEclipsePlugin" default="build">
+<project name="ComposeStar/C/Plugin/Eclipse" default="build">
 
-	<condition property="build.core" value="../../Core">
+	<condition property="build.core" value="${basedir}/../../../Core">
 		<and>
 			<not>
 				<isset property="build.core" />
 			</not>
-			<available file="../../Core/common.xml" />
+			<available file="../../../Core/common.xml" />
 		</and>
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />

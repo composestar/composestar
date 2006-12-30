@@ -21,12 +21,12 @@
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<ant target="clean" dir="Compiletime" inheritRefs="true" />
 		<ant target="clean" dir="Examples" inheritRefs="true" />
-		<ant target="clean" dir="ComposestarEclipsePlugin" inheritRefs="true" />
+		<ant target="clean" dir="Plugin" inheritRefs="true" />
 	</target>	
 	
 	<target name="build" description="Build the .C implementation of Compose*">
 		<ant target="build" dir="Compiletime" inheritRefs="true" />
-		<ant target="build" dir="ComposestarEclipsePlugin" inheritRefs="true" />
+		<ant target="build" dir="Plugin" inheritRefs="true" />
 	</target>
 
 	<target name="test" description="Execute system tests">
@@ -34,7 +34,7 @@
 	</target>
 	
 	<target name="install" depends="init_eclipse,build" description="Install the result">
-		<ant target="install" dir="ComposestarEclipsePlugin" inheritRefs="true" />
+		<ant target="install" dir="Plugin" inheritRefs="true" />
 		
 		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
 			<FileSet dir="${build.core}/Compiletime/dist">
