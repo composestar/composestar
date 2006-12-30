@@ -1,8 +1,5 @@
 package ComposestarEclipsePlugin.Core.UI;
 
-import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
-import ComposestarEclipsePlugin.Core.IComposestarConstants;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.layout.GridData;
@@ -13,31 +10,47 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 
-public class ComposestarPropertyPage extends PropertyPage implements IComposestarConstants {
+import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
+import ComposestarEclipsePlugin.Core.IComposestarConstants;
 
-	//Main class UI widgets
+public class ComposestarPropertyPage extends PropertyPage implements IComposestarConstants
+{
+
+	// Main class UI widgets
 	protected Button fSearchExternalJarsCheckButton;
+
 	protected Button fConsiderInheritedMainButton;
+
 	protected Button fSearchButton;
+
 	protected Text mainClass;
-	
-	//Composestar settings UI widgets
+
+	// Composestar settings UI widgets
 	protected Combo buildDebugLevel;
+
 	protected Combo incremental;
+
 	protected Combo runDebugLevel;
+
 	protected Combo secretMode;
+
 	protected Text classpathText;
+
 	protected Text filterModuleOrder;
-	
+
 	protected GridData gd;
+
 	protected IProject project;
+
 	protected String location;
-	
-	public Control createContents(Composite parent) {
+
+	public Control createContents(Composite parent)
+	{
 		return null;
 	}
-	
-	public void performApply() {
+
+	public void performApply()
+	{
 		ComposestarEclipsePluginPlugin plugin = ComposestarEclipsePluginPlugin.getDefault();
 		IDialogSettings settings = plugin.getDialogSettings(location);
 		settings.put("mainClass", mainClass.getText());
@@ -49,20 +62,25 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 		settings.put("classpath", classpathText.getText());
 		plugin.saveDialogSettings(location);
 	}
-	
-	public void loadDialogSettings(IDialogSettings settings) {
-		
-		if(settings.get("mainClass")!=null)
-		mainClass.setText(settings.get("mainClass"));
-		
+
+	public void loadDialogSettings(IDialogSettings settings)
+	{
+
+		if (settings.get("mainClass") != null)
+		{
+			mainClass.setText(settings.get("mainClass"));
+		}
+
 		buildDebugLevel.select(settings.getInt("buildDebugLevel"));
 		incremental.select(incremental.indexOf(settings.get("incremental")));
 		runDebugLevel.select(settings.getInt("runDebugLevel"));
-		secretMode.select(settings.getInt("secretMode")+1);
+		secretMode.select(settings.getInt("secretMode") + 1);
 		classpathText.setText(settings.get("classpath"));
-		
-		if(settings.get("filterModuleOrder")!=null)
-		filterModuleOrder.setText(settings.get("filterModuleOrder"));
-	
+
+		if (settings.get("filterModuleOrder") != null)
+		{
+			filterModuleOrder.setText(settings.get("filterModuleOrder"));
+		}
+
 	}
 }

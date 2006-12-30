@@ -8,7 +8,10 @@ import org.eclipse.core.runtime.IPath;
 
 import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
-import ComposestarEclipsePlugin.Core.BuildConfiguration.*;
+import ComposestarEclipsePlugin.Core.IComposestarConstants;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.BuildConfigurationManager;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Path;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Project;
 import ComposestarEclipsePlugin.Core.Utils.FileUtils;
 
 /**
@@ -120,9 +123,9 @@ public class BuildAction extends Action
 		if (selectedProjects == NO_PROJECTS)
 		{
 			// no projects selected
-			Debug.instance().Log("No projects selected!", Debug.MSG_ERROR);
+			Debug.instance().Log("No projects selected!", IComposestarConstants.MSG_ERROR);
 		}
-		
+
 		// buildPath
 		buildPath = FileUtils.fixFilename(projectLocation.toOSString() + "/obj/");
 

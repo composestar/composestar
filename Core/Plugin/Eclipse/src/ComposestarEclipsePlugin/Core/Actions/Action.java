@@ -8,11 +8,12 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
- * Represents an Action. All Actions should extend this class. 
+ * Represents an Action. All Actions should extend this class.
  */
 public class Action
 {
@@ -33,7 +34,7 @@ public class Action
 	protected IProject[] selectedProjects = NO_PROJECTS;
 
 	/**
-	 * Constructor. 
+	 * Constructor.
 	 */
 	public Action()
 	{
@@ -49,7 +50,8 @@ public class Action
 	}
 
 	/**
-	 * Extracts projects from a given selection. Uses NO_PROJECTS if no projects are found.
+	 * Extracts projects from a given selection. Uses NO_PROJECTS if no projects
+	 * are found.
 	 */
 	public static IProject[] extractProjects(Object[] selection)
 	{
@@ -83,7 +85,8 @@ public class Action
 	}
 
 	/**
-	 * @see IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+	 * @see IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection)
 	{
@@ -96,11 +99,12 @@ public class Action
 			selectedProjects = extractProjects(((IStructuredSelection) selection).toArray());
 		}
 	}
-	
+
 	/**
 	 * Sets selected projects manually.
 	 * <p>
-	 * E.g. this is used by TestBuild and TestRun for running action in headless mode.
+	 * E.g. this is used by TestBuild and TestRun for running action in headless
+	 * mode.
 	 * 
 	 * @see TestBuild
 	 * @see TestRun
