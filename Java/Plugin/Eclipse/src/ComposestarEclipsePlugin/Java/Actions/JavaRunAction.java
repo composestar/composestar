@@ -1,5 +1,9 @@
 package ComposestarEclipsePlugin.Java.Actions;
 
+import java.io.File;
+import java.util.HashSet;
+import java.util.Iterator;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -13,13 +17,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
-
-import ComposestarEclipsePlugin.Core.Actions.Action;
 import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
+import ComposestarEclipsePlugin.Core.IComposestarConstants;
+import ComposestarEclipsePlugin.Core.Actions.Action;
 import ComposestarEclipsePlugin.Core.Utils.CommandLineExecutor;
 import ComposestarEclipsePlugin.Core.Utils.FileUtils;
 
@@ -103,7 +104,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 
 		if (selectedProjects[0] == null)
 		{
-			Debug.instance().Log("No project selected", Debug.MSG_ERROR);
+			Debug.instance().Log("No project selected", IComposestarConstants.MSG_ERROR);
 			return;
 		}
 
@@ -180,12 +181,14 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 			}
 			else
 			{
-				Debug.instance().Log("Program run failure reported by process. Exit code is " + result, Debug.MSG_ERROR);
+				Debug.instance().Log("Program run failure reported by process. Exit code is " + result,
+						IComposestarConstants.MSG_ERROR);
 			}
 		}
 		catch (Exception e)
 		{
-			Debug.instance().Log("Program run failure reported: " + e.getCause().getMessage(), Debug.MSG_ERROR);
+			Debug.instance().Log("Program run failure reported: " + e.getCause().getMessage(),
+					IComposestarConstants.MSG_ERROR);
 			completed = false;
 		}
 	}
@@ -193,9 +196,12 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 	private void getCStarBinaries()
 	{
 		// FIXME: why is this necessary? should not be hardcoded...
-		String cstarcore = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath("/binaries/ComposestarCORE.jar"));
-		String cstarjava = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath("/binaries/ComposestarJava.jar"));
-		String prolog = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath("/binaries/prolog/prolog.jar"));
+		String cstarcore = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
+				.getAbsolutePath("/binaries/ComposestarCORE.jar"));
+		String cstarjava = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
+				.getAbsolutePath("/binaries/ComposestarJava.jar"));
+		String prolog = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
+				.getAbsolutePath("/binaries/prolog/prolog.jar"));
 
 		classpath.add(cstarcore);
 		classpath.add(cstarjava);
@@ -234,7 +240,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 		}
 		catch (JavaModelException jme)
 		{
-			Debug.instance().Log("Java Model Exception: " + jme.getMessage(), Debug.MSG_ERROR);
+			Debug.instance().Log("Java Model Exception: " + jme.getMessage(), IComposestarConstants.MSG_ERROR);
 		}
 	}
 
@@ -282,7 +288,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 			if (settings.get("mainClass") == null)
 			{
 				// mainClass not set!
-				Debug.instance().Log("Main class not set.", Debug.MSG_ERROR);
+				Debug.instance().Log("Main class not set.", IComposestarConstants.MSG_ERROR);
 			}
 			else
 			{
@@ -292,7 +298,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 		else
 		{
 			// composestar settings not set!
-			Debug.instance().Log("Compose* settings not set.", Debug.MSG_ERROR);
+			Debug.instance().Log("Compose* settings not set.", IComposestarConstants.MSG_ERROR);
 		}
 	}
 }

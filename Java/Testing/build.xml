@@ -42,7 +42,7 @@
 	
 	<!-- compile projects -->
 	<target name="test_comp" depends="init_eclipse">
-		<cs:j_comp workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.testbuild">
+		<cs:j_comp workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="Composestar.Eclipse.Plugin.Java.testbuild">
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>
 				<include name="ConditionTests"/>
@@ -59,7 +59,7 @@
 	
 	<!-- execute tests -->
 	<target name="test_exec" depends="init_eclipse">
-		<cs:j_test workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.testrun">
+		<cs:j_test workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="Composestar.Eclipse.Plugin.Java.testrun">
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>
 				<include name="ConditionTests"/>

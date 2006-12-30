@@ -26,7 +26,6 @@
 	<target name="clean" depends="init">
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
-		<delete dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin"/>
 	</target>
 	
 	<!-- build -->	
@@ -41,23 +40,18 @@
 	
 	<!-- jar -->
 	<target name="jar" depends="compile">
-		<jar destfile="${out.dist}/ComposestarEclipsePluginCore.jar" basedir="${out.build}" excludes="*.jar"/>
+		<jar destfile="${out.dist}/ComposestarEclipseCore.jar" manifest="META-INF/MANIFEST.MF">
+			<fileset dir="${out.build}" />
+		</jar>
 	</target>
 	
 	<!-- install -->	
-	<target name="install" depends="init_local,build" description="">
-		<!-- Compose* Logo -->
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/icons">
-			<fileset dir="../../Development/">
-				<include name="logo.gif"/>
-			</fileset>
-		</copy>
-		
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin">
+	<target name="install" depends="init_local,build" description="">	
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarCore">
 			<fileset dir="${out.dist}" />
 		</copy>
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/META-INF">
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarCore/META-INF">
 			<fileset dir="META-INF" />
-		</copy>		
+		</copy>	
 	</target>
 </project>

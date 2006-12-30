@@ -50,8 +50,8 @@
 		</jar>
 	</target>
 		
-	<target name="install" depends="build" description="install the java runtime">
-		<copy todir="${composestar.installdir}/Binaries">
+	<target name="install" depends="init_eclipse,build" description="install the java runtime">
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarCore/Binaries">
 			<fileset dir="${out.dist}"/>
 		</copy>
 	</target>

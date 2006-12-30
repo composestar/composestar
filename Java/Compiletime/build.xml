@@ -59,11 +59,16 @@
 		<jar destfile="${out.jar.java}" basedir="${out.build}"/>
 	</target>
 	
-	<target name="install" depends="build" description="Install the Java compiletime">
-		<!-- jar files -->
-		<copy todir="${composestar.installdir}${file.separator}binaries">
+	<target name="install" depends="init_eclipse,build" description="Install the Java compiletime">
+		<!-- install to eclipse dir -->
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarCore${file.separator}Binaries">
 			<fileset dir="${out.dist}"/>
-			<fileset dir="${build.java}${file.separator}Compiletime${file.separator}binaries${file.separator}javassist"/>
+			<fileset dir="Binaries${file.separator}javassist"/>
+		</copy>
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarCore">
+			<fileset dir="src/Composestar/Java/INCRE/">
+				<include name="*.xml"/>
+			</fileset>
 		</copy>
 	</target>
 

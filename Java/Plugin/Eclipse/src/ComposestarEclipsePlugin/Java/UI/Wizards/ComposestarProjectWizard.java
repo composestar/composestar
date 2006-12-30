@@ -6,10 +6,10 @@ import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -22,13 +22,17 @@ import org.eclipse.ui.IWorkbench;
 public class ComposestarProjectWizard extends Wizard implements INewWizard
 {
 	private IWorkbench fWorkbench;
+
 	private IStructuredSelection fSelection;
 
 	private ComposestarProjectWizardFirstPage fFirstPage;
+
 	private ComposestarProjectWizardSecondPage fSecondPage;
 
 	private static String ComposestarProjectWizard_title = "New Compose* Java Project";
+
 	private static String ComposestarProjectWizard_op_error_title = "Error Creating Compose* Java Project";
+
 	private static String ComposestarProjectWizard_op_error_message = "An error occurred while creating the Compose* Java project";
 
 	public ComposestarProjectWizard()
@@ -122,10 +126,19 @@ public class ComposestarProjectWizard extends Wizard implements INewWizard
 		{
 			ISchedulingRule rule = null;
 			Job job = Platform.getJobManager().currentJob();
-			if (job != null) rule = job.getRule();
+			if (job != null)
+			{
+				rule = job.getRule();
+			}
 			IRunnableWithProgress runnable = null;
-			if (rule != null) runnable = new WorkbenchRunnableAdapter(op, rule, true);
-			else runnable = new WorkbenchRunnableAdapter(op, getSchedulingRule());
+			if (rule != null)
+			{
+				runnable = new WorkbenchRunnableAdapter(op, rule, true);
+			}
+			else
+			{
+				runnable = new WorkbenchRunnableAdapter(op, getSchedulingRule());
+			}
 			getContainer().run(canRunForked(), true, runnable);
 		}
 		catch (InvocationTargetException e)
@@ -142,7 +155,8 @@ public class ComposestarProjectWizard extends Wizard implements INewWizard
 
 	protected ISchedulingRule getSchedulingRule()
 	{
-		return ResourcesPlugin.getWorkspace().getRoot(); // look all by default
+		return ResourcesPlugin.getWorkspace().getRoot(); // look all by
+		// default
 	}
 
 	protected boolean canRunForked()

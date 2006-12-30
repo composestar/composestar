@@ -14,16 +14,9 @@ public class ComposestarJavaApplicationTabGroup extends AbstractLaunchConfigurat
 {
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode)
 	{
-		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] 
-		    { 
-				new JavaMainTab(), 
-				new JavaArgumentsTab(),
-				new JavaJRETab(), 
-				new ComposestarJavaClasspathTab(), 
-				new SourceLookupTab(), 
-				new EnvironmentTab(),
-				new CommonTab() 
-			};
+		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] { new JavaMainTab(), new JavaArgumentsTab(),
+				new JavaJRETab(), new ComposestarJavaClasspathTab(), new SourceLookupTab(), new EnvironmentTab(),
+				new CommonTab() };
 		setTabs(tabs);
 	}
 }

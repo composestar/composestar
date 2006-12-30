@@ -22,7 +22,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 	// The shared instance.
 	private static ComposestarEclipsePluginPlugin plugin;
 
-	private final static String PLUGIN_NAME = "ComposestarEclipsePlugin";
+	private final static String PLUGIN_NAME = "Composestar.Eclipse.Plugin.Core";
 
 	public DialogSettings dialogSettings = null;
 

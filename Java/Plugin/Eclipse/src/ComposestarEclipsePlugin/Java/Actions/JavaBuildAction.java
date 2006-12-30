@@ -1,5 +1,7 @@
 package ComposestarEclipsePlugin.Java.Actions;
 
+import java.util.HashSet;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -12,16 +14,16 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import java.util.HashSet;
-
-import ComposestarEclipsePlugin.Core.Actions.BuildAction;
-import ComposestarEclipsePlugin.Core.Actions.Sources;
-import ComposestarEclipsePlugin.Core.BuildConfiguration.*;
 import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
+import ComposestarEclipsePlugin.Core.IComposestarConstants;
+import ComposestarEclipsePlugin.Core.Actions.BuildAction;
+import ComposestarEclipsePlugin.Core.Actions.Sources;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.ModuleSetting;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Project;
 import ComposestarEclipsePlugin.Core.Utils.FileUtils;
 import ComposestarEclipsePlugin.Core.Utils.Timer;
-import ComposestarEclipsePlugin.Java.*;
+import ComposestarEclipsePlugin.Java.MasterManager;
 
 /**
  * Action for building a Java project with Compose*.
@@ -133,7 +135,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 		{
 			Debug.instance().Log("---------------- Done -----------------");
 			Debug.instance().Log("");
-			Debug.instance().Log("Composestar build failed.", Debug.MSG_ERROR);
+			Debug.instance().Log("Composestar build failed.", IComposestarConstants.MSG_ERROR);
 			Debug.instance().Log("");
 			Debug.instance().Log("");
 		}
@@ -186,7 +188,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 		{
 			builtOk = false;
 			Debug.instance().Log("The compose* project settings are not set! (See properties page of project)\n",
-					Debug.MSG_ERROR);
+					IComposestarConstants.MSG_ERROR);
 		}
 	}
 
@@ -251,7 +253,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 		}
 		catch (JavaModelException jme)
 		{
-			Debug.instance().Log("Java Model Exception: " + jme.getMessage(), Debug.MSG_ERROR);
+			Debug.instance().Log("Java Model Exception: " + jme.getMessage(), IComposestarConstants.MSG_ERROR);
 		}
 	}
 

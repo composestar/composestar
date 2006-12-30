@@ -17,7 +17,7 @@ public class Platform extends DefaultHandler
 
 	private String name;
 
-	private String classPath;
+	private String classPath = "";
 
 	public Platform(String name)
 	{

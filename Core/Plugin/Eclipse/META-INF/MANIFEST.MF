@@ -1,11 +1,21 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ComposestarEclipsePluginCore Plug-in
-Bundle-SymbolicName: ComposestarEclipsePluginCore
+Bundle-Name: Composestar Eclipse Plugin Core
+Bundle-SymbolicName: Composestar.Eclipse.Plugin.Core
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
+Bundle-ClassPath: ComposestarEclipseCore.jar
 Require-Bundle: org.eclipse.core.resources,
- org.eclipse.osgi,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.console
+Bundle-Vendor: University of Twente
+Export-Package: ComposestarEclipsePlugin,
+ ComposestarEclipsePlugin.Core,
+ ComposestarEclipsePlugin.Core.Actions,
+ ComposestarEclipsePlugin.Core.BuildConfiguration,
+ ComposestarEclipsePlugin.Core.UI,
+ ComposestarEclipsePlugin.Core.Utils
+Eclipse-LazyStart: true
+Eclipse-AutoStart: true
+Bundle-Activator: ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin

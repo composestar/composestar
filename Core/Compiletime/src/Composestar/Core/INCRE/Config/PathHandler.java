@@ -74,5 +74,13 @@ public class PathHandler extends DefaultHandler
 				reader.setContentHandler(returnhandler);
 			}
 		}
+		// this is included here because of crappy parsing by incre
+		else if (qName.equalsIgnoreCase("dependency"))
+		{
+			if (returnhandler != null)
+			{
+				reader.setContentHandler(returnhandler);
+			}
+		}
 	}
 }

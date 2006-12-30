@@ -23,29 +23,20 @@
 	</target>
 	
 	<!-- clean -->
-	<target name="clean" depends="init,clean_core">
+	<target name="clean" depends="init">
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
 	</target>
 	
-	<!-- clean core -->
-	<target name="clean_core">
-		<ant target="clean" dir="${build.core}${file.separator}Plugin${file.separator}Eclipse" />
-	</target>
 	
 	<!-- build -->	
-	<target name="build" depends="init_local,build_core,compile,jar" description="compile the eclipse plugin" />
-		
-	<!-- build core -->
-	<target name="build_core">
-		<ant target="build" dir="${build.core}${file.separator}Plugin${file.separator}Eclipse" />
-	</target>
-	
+	<target name="build" depends="init_local,compile,jar" description="compile the eclipse plugin" />
+
 	<!-- compile -->
 	<target name="compile" depends="init_local" >
 		<javac srcdir="src" destdir="${out.build}" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<classpath>
-				<pathelement location="${build.core}/Plugin/Eclipse/${out.build}/ComposestarEclipsePluginCore.jar"/>
+				<pathelement location="${build.core}/Plugin/Eclipse/${out.dist}/ComposestarEclipseCore.jar"/>
 			</classpath>
 			<classpath refid="lib.eclipse" />
 		</javac>
@@ -53,52 +44,26 @@
 	
 	<!-- create jar -->
 	<target name="jar">
-		<jar destfile="${out.dist}/ComposestarEclipsePlugin.jar">
-			<fileset dir="${build.core}/Plugin/Eclipse/${out.build}">
-				<filename name="**/*.class"/>
-			</fileset>
+		<jar destfile="${out.dist}/ComposestarEclipseJava.jar" manifest="META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}" />
 		</jar>
 	</target>
 	
 	<!-- install -->	
-	<target name="install" depends="init_local,install_core,build" description="install the eclipse plugin">
+	<target name="install" depends="build" description="install the eclipse plugin">
 		
-		<!-- classes -->
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin">
-			<fileset dir="${out.dist}"/>
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarJava">
+			<fileset dir="${out.dist}" />
 		</copy>
 		
 		<!-- plugin files -->
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin">
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarJava">
 			<fileset dir=".">
-				<filename name="*.*"></filename>
+				<include name="plugin.*" />
+				<include name="META-INF/*" />
 			</fileset>
-		</copy>
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/META-INF">
-			<fileset dir="META-INF">
-				<filename name="MANIFEST.MF"/>
-			</fileset>
-		</copy>
-		
-		<!-- INCREConfig -->
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin">
-			<fileset dir="../../Compiletime/src/Composestar/Java/INCRE/">
-				<include name="*.xml"/>
-			</fileset>
-		</copy>
-		
-		<!-- Compose* Java Compiletime  -->
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/binaries">
-			<fileset dir="../../Compiletime/dist/"/>
-			<fileset dir="../../Runtime/dist/"/>
 		</copy>
 	
-	</target>
-	
-	<!-- clean core -->
-	<target name="install_core">
-		<ant target="install" dir="${build.core}${file.separator}Plugin${file.separator}Eclipse" />
 	</target>
 	
 </project>

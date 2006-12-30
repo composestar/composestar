@@ -54,28 +54,41 @@ import ComposestarEclipsePlugin.Core.Utils.FileUtils;
 public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 {
 	private static final String FILENAME_PROJECT = ".project";
+
 	private static final String FILENAME_CLASSPATH = ".classpath";
 
 	private static String fSecondPage_ErrorTitle = "New Compose* Java Project";
+
 	private static String fSecondPage_ErrorMessage = "An error occurred while creating project. Check log for details.";
+
 	private static String fSecondPage_ErrorRemoveTitle = "Error Creating Compose* Java Project";
+
 	private static String fSecondPage_ErrorRemoveMessage = "An error occurred while removing a temporary project.";
+
 	private static String fSecondPage_OperationRemove = "Removing project...";
+
 	private static String fSecondPage_ProblemRestoreProject = "Problem while restoring backup for .project";
+
 	private static String fSecondPage_ProblemRestoreClasspath = "Problem while restoring backup for .classpath";
+
 	private static String fSecondPage_OperationInitialize = "Initializing project...";
+
 	private static String fSecondPage_ProblemBackup = "Problem while creating backup for ''{0}''";
+
 	private static String fSecondPage_OperationCreate = "Creating project...";
 
 	private final ComposestarProjectWizardFirstPage fFirstPage;
 
 	private URI fCurrProjectLocation;
+
 	private IProject fCurrProject;
 
 	private boolean fKeepContent;
 
 	private File fDotProjectBackup;
+
 	private File fDotClasspathBackup;
+
 	private Boolean fIsAutobuild;
 
 	public ComposestarProjectWizardSecondPage(ComposestarProjectWizardFirstPage mainPage)
@@ -218,7 +231,7 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 
 	final void doRemoveProject(IProgressMonitor monitor) throws InvocationTargetException
 	{
-		final boolean noProgressMonitor = (fCurrProjectLocation == null); 
+		final boolean noProgressMonitor = (fCurrProjectLocation == null);
 		// inside workspace
 		if (monitor == null || noProgressMonitor)
 		{
@@ -238,7 +251,7 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 			}
 			finally
 			{
-				CoreUtility.enableAutoBuild(fIsAutobuild.booleanValue()); 
+				CoreUtility.enableAutoBuild(fIsAutobuild.booleanValue());
 				// fIsAutobuild must be set
 				fIsAutobuild = null;
 			}
@@ -258,7 +271,7 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 	private void restoreExistingFiles(URI projectLocation, IProgressMonitor monitor) throws CoreException
 	{
 		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotClasspathBackup != null ? 1 : 0)) * 2;
-		monitor.beginTask("", ticks); 
+		monitor.beginTask("", ticks);
 		try
 		{
 			if (fDotProjectBackup != null)
@@ -313,7 +326,10 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 			while (true)
 			{
 				int bytesRead = is.read(buffer);
-				if (bytesRead == -1) break;
+				if (bytesRead == -1)
+				{
+					break;
+				}
 
 				os.write(buffer, 0, bytesRead);
 			}
@@ -351,7 +367,7 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 
 			URI realLocation = fCurrProjectLocation;
 			if (fCurrProjectLocation == null)
-			{ 
+			{
 				// inside workspace
 				try
 				{
@@ -361,7 +377,7 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 				}
 				catch (URISyntaxException e)
 				{
-					Assert.isTrue(false, "Can't happen"); 
+					Assert.isTrue(false, "Can't happen");
 				}
 			}
 
@@ -419,11 +435,12 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 				List cpEntries = new ArrayList();
 				cpEntries.add(JavaCore.newSourceEntry(projectPath.append(srcPath)));
 				cpEntries.addAll(Arrays.asList(getDefaultClasspathEntry()));
-				
+
 				// most importantly add compose* runtime library
-				final IPath composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath("/binaries/ComposestarRuntimeInterpreter.jar")));
+				final IPath composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
+						.getAbsolutePath("/Binaries/ComposestarRuntimeInterpreter.jar")));
 				cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null));
-				
+
 				entries = (IClasspathEntry[]) cpEntries.toArray(new IClasspathEntry[cpEntries.size()]);
 
 				// configure the output location
@@ -435,13 +452,14 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 				List cpEntries = new ArrayList();
 				cpEntries.add(JavaCore.newSourceEntry(projectPath));
 				cpEntries.addAll(Arrays.asList(getDefaultClasspathEntry()));
-				
+
 				// most importantly add compose* runtime library
-				final IPath composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath("/binaries/ComposestarRuntimeInterpreter.jar")));
+				final IPath composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
+						.getAbsolutePath("/Binaries/ComposestarRuntimeInterpreter.jar")));
 				cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null));
-				
+
 				entries = (IClasspathEntry[]) cpEntries.toArray(new IClasspathEntry[cpEntries.size()]);
-				
+
 				outputLocation = projectPath;
 				monitor.worked(2);
 			}
@@ -451,7 +469,7 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 			}
 
 			init(JavaCore.create(fCurrProject), outputLocation, entries, false);
-			configureJavaProject(new SubProgressMonitor(monitor, 3)); 
+			configureJavaProject(new SubProgressMonitor(monitor, 3));
 			// create the Java project to allow the use of the
 			// new source folder page
 		}
@@ -501,12 +519,12 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 			IFileStore projectFile = file.getChild(FILENAME_PROJECT);
 			if (projectFile.fetchInfo().exists())
 			{
-				fDotProjectBackup = createBackup(projectFile, "project-desc"); 
+				fDotProjectBackup = createBackup(projectFile, "project-desc");
 			}
 			IFileStore classpathFile = file.getChild(FILENAME_CLASSPATH);
 			if (classpathFile.fetchInfo().exists())
 			{
-				fDotClasspathBackup = createBackup(classpathFile, "classpath-desc"); 
+				fDotClasspathBackup = createBackup(classpathFile, "classpath-desc");
 			}
 		}
 	}
