@@ -344,6 +344,14 @@ Common routines. Always include this file in every build.xml file
 		</path>
 		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="lib.svnant"/>
 		
+		<!-- initial eclipse initialization -->
+		<!-- location of Eclipse pluginsfolder -->
+		<property name="eclipse.home" value="${env.ECLIPSE_HOME}"/>
+		
+		<condition property="available.eclipse">
+			<available file="${eclipse.home}${file.separator}.eclipseproduct" />
+		</condition>
+		
 	</target>
 	
 	<!-- initialize and require eclipse -->
@@ -356,7 +364,7 @@ Common routines. Always include this file in every build.xml file
 		<fail message="Eclipse was not found. Either set the 'eclipse.home' property or the 'ECLIPSE_HOME' environment variable.">
 			<condition>
 				<not>
-					<available file="${eclipse.home}${file.separator}.eclipseproduct" />
+					<isset property="available.eclipse" />
 				</not>
 			</condition>
 		</fail>
@@ -421,7 +429,7 @@ Common routines. Always include this file in every build.xml file
 		<echo message="  build.c:                ${build.c}"/>
 		<echo></echo>
 		<echo message="	 composestar.installdir: ${composestar.installdir}"/>
-		<echo message="	 eclipse.pluginsdir:     ${eclipse.pluginsdir}"/>
+		<echo message="	 eclipse.home:           ${eclipse.home}"/>
 		<echo></echo>
 		<echo message="Status of Compose* ports:"/>
 		<echo message="  DotNET:    ${status.dotnet}	(version ${version.dotnet})"/>

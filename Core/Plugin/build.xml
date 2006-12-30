@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/Core/Plugin" default="build">
+
+	<condition property="build.core" value="${basedir}${file.separator}..">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}/../common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}${file.separator}common.xml" />
+	
+	<echo>Processing: ${ant.project.name} ...</echo>
+	
+	<description>
+	The Compose* Core Plugin
+	</description>
+	
+	<target name="clean" depends="clean_eclipse" />
+
+	<target name="clean_eclipse" depends="init" if="available.eclipse">
+		<ant target="clean" dir="Eclipse" inheritRefs="true" />
+	</target>
+
+	<target name="build" depends="build_eclipse" />
+	
+	<target name="build_eclipse" depends="init" if="available.eclipse">
+		<ant target="build" dir="Eclipse" inheritRefs="true" />
+	</target>
+	
+	<target name="install" depends="install_eclipse" />
+	
+	<target name="install_eclipse" depends="init" if="available.eclipse">
+		<ant target="install" dir="Eclipse" inheritRefs="true" />
+	</target>
+	
+</project>

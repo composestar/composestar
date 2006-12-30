@@ -80,36 +80,69 @@
 		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF"/>
 	</target>
 	
-	<target name="install" depends="build" description="Install the core files">
+	<target name="install" depends="build,install_system,install_eclipse" description="Install the core files" />
+	
+	<macrodef name="install_core" description="Install the core to a given directory">
+		<attribute name="todir" description="Directory to copy the files to" />		
+		<sequential>
+			<!--
+			<fail message="The destination directory @{todir} does not exist.">
+				<condition>
+					<not>
+						<available file="@{todir}" />
+					</not>
+				</condition>
+			</fail>
+			-->			
+			<mkdir dir="@{todir}" />
+			
+			<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="@{todir}"/>
+			<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="@{todir}"/>
+			<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="@{todir}"/>
 
-		<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${composestar.installdir}"/>
-		<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="${composestar.installdir}"/>
-		<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${composestar.installdir}"/>
+			<copy todir="@{todir}/Binaries">
+				<fileset dir="${out.dist}"/>
+			</copy>
+			<copy file="binaries/antlr/antlr.jar" todir="@{todir}/Binaries"/>
 
-		<copy todir="${composestar.installdir}/Binaries">
-			<fileset dir="${out.dist}"/>
-		</copy>
-		<copy file="binaries/antlr/antlr.jar" todir="${composestar.installdir}/Binaries"/>
+			<copy todir="@{todir}/Binaries/prolog">
+				<fileset dir="binaries/prolog">
+					<include name="prolog.jar"/>
+					<include name="lib.pro"/>
+					<include name="connector.pro"/>
+				</fileset>
+			</copy>
 
-		<copy todir="${composestar.installdir}/Binaries/prolog">
-			<fileset dir="binaries/prolog">
-				<include name="prolog.jar"/>
-				<include name="lib.pro"/>
-				<include name="connector.pro"/>
-			</fileset>
-		</copy>
-
-		<copy todir="${composestar.installdir}/Binaries/groove">
-			<fileset dir="binaries/groove">
-				<include name="groove-1_2_0.jar"/>
-				<include name="castor-0_9_5_2-xml.jar"/>
-				<include name="jgraph.jar"/>
-				<include name="xerces-2_6_0-xercesImpl.jar"/>
-				<include name="xerces-2_6_0-xml-apis.jar"/>
-			</fileset>
-		</copy>
-
+			<copy todir="@{todir}/Binaries/groove">
+				<fileset dir="binaries/groove">
+					<include name="groove-1_2_0.jar"/>
+					<include name="castor-0_9_5_2-xml.jar"/>
+					<include name="jgraph.jar"/>
+					<include name="xerces-2_6_0-xercesImpl.jar"/>
+					<include name="xerces-2_6_0-xml-apis.jar"/>
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+	
+	<target name="install_system" depends="build" if="available.dotnet">
+		<!-- install the core files for the system, currently this is only used for dotnet -->
+		<install_core todir="${composestar.installdir}" />
 	</target>
+	
+	<target name="install_eclipse" depends="build" if="available.eclipse">
+		<!-- copy files to eclipse -->
+		<!-- 
+			this construction is intentional to create a fail safe method to 
+			install the eclipse files even when eclipse is not available 
+		-->
+		<antcall target="-install_eclipse" inheritRefs="true" />
+	</target>	
+	
+	<target name="-install_eclipse" depends="init_eclipse">
+		<install_core todir="${eclipse.pluginsdir}/ComposestarEclipsePlugin" />
+	</target>
+	
 	
 	<target name="test" depends="unittest,validate_moduleinfo" description="Run tests" />
 

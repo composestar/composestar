@@ -19,16 +19,13 @@
 	
 	<target name="init_local" depends="init_eclipse">		
 		<mkdir dir="${out.build}"/>
-		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin"/>
-		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin/META-INF"/>
-		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin/binaries"/>
-		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin/binaries/prolog"/>
-		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin/icons"/>
+		<mkdir dir="${out.dist}"/>		
 	</target>
 	
 	<!-- clean -->
 	<target name="clean" depends="init">
 		<delete dir="${out.build}"/>
+		<delete dir="${out.dist}"/>
 		<delete dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin"/>
 	</target>
 	
@@ -37,36 +34,18 @@
 	</target>
 	
 	<!-- compile -->
-	<target name="compile">
+	<target name="compile" depends="init_local">
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.eclipse" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
 		</javac>
 	</target>
 	
 	<!-- jar -->
-	<target name="jar">
-		<jar destfile="${out.build}/ComposestarEclipsePluginCore.jar" basedir="${out.build}" excludes="*.jar"/>
+	<target name="jar" depends="compile">
+		<jar destfile="${out.dist}/ComposestarEclipsePluginCore.jar" basedir="${out.build}" excludes="*.jar"/>
 	</target>
 	
 	<!-- install -->	
 	<target name="install" depends="init_local,build" description="">
-		
-		<!-- Compose* Core Compiletime -->
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/binaries">
-			<fileset dir="../../Compiletime/dist/"/>
-		</copy>
-		
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin">
-			<fileset dir="../../Compiletime/src/Composestar/Core/CKRET/">
-				<include name="CKRET.css"/>
-				<include name="filterdesc.xml"/>
-			</fileset>
-		</copy>
-				
-		<!-- prolog ( apparently this is needed at runtime ) -->
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/binaries/prolog">
-			<fileset dir="../../Compiletime/binaries/prolog/" excludes="prolog-src.jar"/>
-		</copy>
-		
 		<!-- Compose* Logo -->
 		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/icons">
 			<fileset dir="../../Development/">
@@ -74,5 +53,11 @@
 			</fileset>
 		</copy>
 		
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin">
+			<fileset dir="${out.dist}" />
+		</copy>
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/META-INF">
+			<fileset dir="META-INF" />
+		</copy>		
 	</target>
 </project>
