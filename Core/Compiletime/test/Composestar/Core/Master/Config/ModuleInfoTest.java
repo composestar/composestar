@@ -23,29 +23,20 @@ public class ModuleInfoTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		mi = ModuleInfo.load(getClass().getResourceAsStream("moduleinfo.xml"));
+		ModuleInfoManager.load(getClass().getResourceAsStream("moduleinfo.xml"));
+		mi = ModuleInfoManager.get(TestDummy.class);
 	}
 
 	protected void tearDown() throws Exception
-	{
-		super.tearDown();
+	{		
+		ModuleInfoManager.clear();
 		mi = null;
-	}
-	
-	public void testLoadingSax()
-	{
-		try
-		{
-			ModuleInfo.load(getClass().getResourceAsStream("moduleinfo.xml"));
-		}
-		catch (ConfigurationException e)
-		{
-			fail("Exception loading module info xml: "+e.getMessage());
-		}
+		super.tearDown();
 	}
 
 	public void testInfo()
 	{
+		assertNotNull(mi);
 		assertEquals(mi.getId(), "test");
 		assertEquals(mi.getName(), "ModuleInfo Name");
 		assertEquals(mi.getDescription(), "ModuleInfo Description");
@@ -105,7 +96,8 @@ public class ModuleInfoTest extends TestCase
 	{
 		Module m = mi.getIncreModule();
 		assertNotNull(m);
-		assertEquals(m.getName(), "testModule");
+		assertEquals(m.getName(), "test");
+		assertEquals(m.getModuleClass(), mi.getModuleClass());
 		assertEquals(m.isIncremental(), false);
 	}
 	
@@ -113,9 +105,23 @@ public class ModuleInfoTest extends TestCase
 	{
 		try
 		{
-			ModuleInfo emi = ModuleInfo.load(getClass().getResourceAsStream("extendedmoduleinfo.xml"));
+			ModuleInfo emi = ModuleInfoManager.get(TestDummyEx.class);
+			assertEquals(emi.getModuleClass(), TestDummyEx.class);
+			assertNotSame(emi, mi);
 			assertEquals(emi.getStringSetting("AString"), "This is a string value");
 			assertEquals(emi.getStringSetting("extraString", "wrong"), "Additional Setting");
+			
+			mi.setSettingValue("anInteger", new Integer(54321));
+			if (mi.getIntSetting("anInteger") == emi.getIntSetting("anInteger"))
+			{
+				fail("emi.settings.anInteger should not be equal to mi.settings.anInteger");
+			}
+			
+			Module m = emi.getIncreModule();
+			assertNotNull(m);
+			assertEquals(m.getName(), "test");
+			assertEquals(m.isIncremental(), false);
+			assertEquals(m.getModuleClass(), emi.getModuleClass());
 		}
 		catch (ConfigurationException e)
 		{

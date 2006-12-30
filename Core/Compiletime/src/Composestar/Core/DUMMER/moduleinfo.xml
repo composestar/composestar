@@ -1,10 +1,15 @@
-<moduleinfo id="DUMMER">
-	<name>Dummy Manager</name>
-	<description><![CDATA[Creates dummies of the source files. A dummy source file only contains the declaration part of the methods and classes. The method bodies are omitted. This is a platform depended module.]]></description>
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="DUMMER" class="Composestar.Core.DUMMER.DummyManager">
+		<name>Dummy Manager</name>
+		<description>
+			<![CDATA[Creates dummies of the source files. A dummy source file only contains the declaration part of the methods and classes. The method bodies are omitted. This is a platform depended module.]]>
+		</description>
 
-	<incre>
-		<module name="DUMMER" fulltype="Composestar.Core.DUMMER.DummyManager" enabled="true" incremental="false" summary="Generating dummy sources...">
-			<dependencies></dependencies>	
-		</module>
-	</incre>
-</moduleinfo>
+		<incre>
+			<module enabled="true" incremental="false" summary="Generating dummy sources...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

@@ -1,27 +1,37 @@
-<moduleinfo id="test">
-	<name>ModuleInfo Name</name>
-	<description>ModuleInfo Description</description>
+<modules>
+	<moduleinfo id="test" class="Composestar.Core.Master.Config.TestDummy">
+		<name>ModuleInfo Name</name>
+		<description>ModuleInfo Description</description>
+		
+		<settings>
+			<setting id="aBool" type="bool">
+				<name>A boolean value</name>
+				<default>true</default>
+			</setting>
+			<setting id="anotherBool" type="boolean">
+				<name>Another boolean value</name>
+				<default>false</default>
+			</setting>
+			<setting id="anInteger" type="int">
+				<default>12345</default>
+			</setting>
+			<setting id="AString">
+				<default>This is a string value</default>
+			</setting>
+		</settings>
+		
+		<incre>
+			<module name="this will be ignored" incremental="false" summary="Test module info">
+				<bla />
+			</module>
+		</incre>
+	</moduleinfo>
 	
-	<settings>
-		<setting id="aBool" type="bool">
-			<name>A boolean value</name>
-			<default>true</default>
-		</setting>
-		<setting id="anotherBool" type="boolean">
-			<name>Another boolean value</name>
-			<default>false</default>
-		</setting>
-		<setting id="anInteger" type="int">
-			<default>12345</default>
-		</setting>
-		<setting id="AString">
-			<default>This is a string value</default>
-		</setting>
-	</settings>
-	
-	<incre>
-		<module name="testModule" incremental="false" summary="Test module info">
-			<bla />
-		</module>
-	</incre>
-</moduleinfo>
+	<moduleinfo class="Composestar.Core.Master.Config.TestDummyEx" extends="Composestar.Core.Master.Config.TestDummy">
+		<settings>
+			<setting id="extraString">
+				<default>Additional Setting</default>
+			</setting>
+		</settings>
+	</moduleinfo>
+</modules>

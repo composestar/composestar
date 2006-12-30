@@ -4,17 +4,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
 
 public class MethodNode extends Node
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2857249370031652021L;
 
-	private ArrayList parameters;
+	private List parameters;
 
 	public MethodNode(String ref)
 	{
@@ -73,7 +71,7 @@ public class MethodNode extends Node
 		this.parameters = params;
 	}
 
-	public ArrayList getParameters()
+	public List getParameters()
 	{
 		return this.parameters;
 	}

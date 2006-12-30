@@ -1,12 +1,9 @@
 package Composestar.Core.Master.Config;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import Composestar.Utils.Debug;
 
 public class Configuration implements Serializable
 {
@@ -28,7 +25,10 @@ public class Configuration implements Serializable
 
 	private CustomFilters filters;
 
-	private Map moduleInfo;
+	/**
+	 * Temporary storage of module settings
+	 */
+	private Map tmpModuleSettings;
 
 	public Configuration()
 	{
@@ -40,7 +40,7 @@ public class Configuration implements Serializable
 		libraries = new BuiltLibraries();
 		filters = new CustomFilters();
 
-		moduleInfo = new HashMap();
+		tmpModuleSettings = new HashMap();
 	}
 
 	public static Configuration instance()
@@ -158,33 +158,13 @@ public class Configuration implements Serializable
 	 * setFilters(CustomFilters filters) { this.filters = filters; }
 	 */
 
-	/**
-	 * Returns the ModuleInfo instance for the given class.
-	 */
-	public ModuleInfo getModuleInfo(Class forClass)
+	public void addTmpModuleSettings(String moduleName, Map props)
 	{
-		if (moduleInfo.containsKey(forClass))
-		{
-			return (ModuleInfo) moduleInfo.get(forClass);
-		}
-		else
-		{
-			ModuleInfo mi;
-			try
-			{
-				InputStream miXML = forClass.getResourceAsStream("moduleinfo.xml");
-				if (miXML == null) return null;
-				mi = ModuleInfo.load(miXML);
-				moduleInfo.put(forClass, mi);
-				moduleInfo.put(mi.getId(), mi);
-				return mi;
-			}
-			catch (ConfigurationException e)
-			{
-				Debug.out(Debug.MODE_ERROR, "Configuration", "Exception while loading module info for " + forClass
-						+ ": " + e.getMessage());
-				return null;
-			}
-		}
+		tmpModuleSettings.put(moduleName, props);
+	}
+
+	public Map getTmpModuleSettings(String moduleName)
+	{
+		return (Map) tmpModuleSettings.get(moduleName);
 	}
 }

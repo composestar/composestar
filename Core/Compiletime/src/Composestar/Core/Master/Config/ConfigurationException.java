@@ -17,6 +17,8 @@ package Composestar.Core.Master.Config;
  */
 public class ConfigurationException extends Exception
 {
+	private static final long serialVersionUID = 5270266594960250006L;
+
 	/**
 	 * @param message
 	 */

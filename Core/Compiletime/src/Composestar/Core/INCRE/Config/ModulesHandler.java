@@ -6,8 +6,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.Module;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Utils.Debug;
 
 public class ModulesHandler extends DefaultHandler
@@ -39,33 +39,40 @@ public class ModulesHandler extends DefaultHandler
 		{
 			m = null;
 			String fullType = amap.getValue("fulltype");
-			
-			if (configmanager != null) // if loaded from INCRE try to import existing settings
+			Class fullTypeClass = null;
+			try
 			{
-				try
+				if (fullType != null)
 				{
-					Class fullTypeClass = Class.forName(fullType);
-					ModuleInfo mi = Configuration.instance().getModuleInfo(fullTypeClass);
-					if (mi != null)
-					{
-						m = mi.getIncreModule();
-					}
-				}
-				catch (ClassNotFoundException e)
-				{
-					Debug.out(Debug.MODE_ERROR, "INCRE","Module class not found: "+fullType);
+					fullTypeClass = Class.forName(fullType);
 				}
 			}
-			
+			catch (ClassNotFoundException e)
+			{
+				Debug.out(Debug.MODE_ERROR, "INCRE", "Module class not found: " + fullType);
+			}
+
+			// if loaded from INCRE try to import existing settings through
+			// ModuleInfo
+			if ((configmanager != null) && (fullTypeClass != null))
+			{
+				ModuleInfo mi = ModuleInfoManager.get(fullTypeClass);
+				if (mi != null)
+				{
+					m = mi.getIncreModule();
+				}
+			}
+
 			if (m == null)
 			{
+				// name will be null when loaded for the ModuleInfo instance
 				String name = amap.getValue("name");
 				m = new Module(name);
 			}
 
-			if (fullType != null)
+			if (fullTypeClass != null)
 			{
-				m.setFullType(fullType);
+				m.setModuleClass(fullTypeClass);
 			}
 			if (amap.getValue("input") != null)
 			{
@@ -84,7 +91,10 @@ public class ModulesHandler extends DefaultHandler
 				m.setEnabled(amap.getValue("enabled").equals("true"));
 			}
 
-			if (configmanager != null) configmanager.addModule(m.getName(), m);
+			if ((configmanager != null) && (m.getName() != null))
+			{
+				configmanager.addModule(m.getName(), m);
+			}
 		}
 		else if (qName.equalsIgnoreCase("dependencies") && (m != null))
 		{

@@ -1,16 +1,22 @@
-<moduleinfo id="COPPER">
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="COPPER" class="Composestar.Core.COPPER.COPPER">
 
-	<description><![CDATA[COPPER parses the concern sources and produces the repository entries that will be used by other modules. During processing the so called syntactic sugar is applied that expands the repository entries to their complete form. Only the conern source syntax will be validated.]]></description>
+		<description>
+			<![CDATA[COPPER parses the concern sources and produces the repository entries that will be used by other modules. During processing the so called syntactic sugar is applied that expands the repository entries to their complete form. Only the conern source syntax will be validated.]]>
+		</description>
 
-	<incre>
-		<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true" summary="Parsing concerns...">
-			<dependencies>
-				<dependency type="FILE" name="cpsfile">
-				<path>
-					<node type="FIELD" nodevalue="fileName"></node>
-				</path>
-				</dependency>
-			</dependencies>
-		</module>
-	</incre>
-</moduleinfo>
+		<incre>
+			<module input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true"
+				summary="Parsing concerns...">
+				<dependencies>
+					<dependency type="FILE" name="cpsfile">
+						<path>
+							<node type="FIELD" nodevalue="fileName"></node>
+						</path>
+					</dependency>
+				</dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

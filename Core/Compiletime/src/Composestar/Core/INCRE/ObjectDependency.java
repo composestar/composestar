@@ -4,6 +4,8 @@ import Composestar.Core.Exception.ModuleException;
 
 public class ObjectDependency extends Dependency
 {
+	private static final long serialVersionUID = 8367947175676592879L;
+
 	public ObjectDependency(String name)
 	{
 		super(name);

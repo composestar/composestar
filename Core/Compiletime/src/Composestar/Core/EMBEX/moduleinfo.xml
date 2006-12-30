@@ -1,10 +1,17 @@
-<moduleinfo id="EMBEX">
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="EMBEX" class="Composestar.Core.EMBEX.EMBEX">
 
-	<description><![CDATA[Extracts the embedded sources from the concern sources and saves them to the disk for further use.]]></description>
+		<name>Embedded sourcecode extractor</name>
 
-	<incre>
-		<module name="EMBEX" fulltype="Composestar.Core.EMBEX.EMBEX" enabled="true" incremental="false" summary="Extracting embedded sources...">
-			<dependencies></dependencies>	
-		</module>
-	</incre>
-</moduleinfo>
+		<description>
+			<![CDATA[Extracts the embedded sources from the concern sources and saves them to the disk for further use.]]>
+		</description>
+
+		<incre>
+			<module enabled="true" incremental="false" summary="Extracting embedded sources...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

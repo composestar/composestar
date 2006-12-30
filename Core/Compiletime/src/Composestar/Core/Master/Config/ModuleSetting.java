@@ -10,6 +10,8 @@
 
 package Composestar.Core.Master.Config;
 
+import java.io.Serializable;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -21,8 +23,10 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  * @author Michiel Hendriks
  */
-public class ModuleSetting
+public class ModuleSetting implements Serializable
 {
+	private static final long serialVersionUID = -1912794100834316135L;
+
 	/**
 	 * The config variable
 	 */
@@ -48,7 +52,7 @@ public class ModuleSetting
 	 */
 	protected Object defaultValue;
 
-	protected ModuleSettingHandler SAXHandler;
+	protected transient DefaultHandler SAXHandler;
 
 	/**
 	 * Constructor to use with the SAX parser
@@ -154,7 +158,7 @@ public class ModuleSetting
 		}
 		else if (type == Boolean.class)
 		{
-			setValue("true".equalsIgnoreCase(newValue));
+			setValue(Boolean.valueOf(newValue));
 		}
 		else if (type == Float.class)
 		{

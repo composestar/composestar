@@ -83,7 +83,7 @@
 	-->
 
 	<target name="test" description="Runs tests.">
-		<ant target="unittest" dir="Compiletime" inheritRefs="true" />
+		<ant target="test" dir="Compiletime" inheritRefs="true" />
 	</target>
 	
 </project>

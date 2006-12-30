@@ -10,15 +10,16 @@
 
 package Composestar.Core.Master.Config;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import java.util.Map.Entry;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -28,21 +29,32 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.Module;
 import Composestar.Core.INCRE.Config.ModulesHandler;
+import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Encapsulates the data in the module's module.xml
+ * Encapsulates the data in the module's moduleinfo.xml <br />
+ * Create an instance of this class using the <code>ModuleInfo.load()</code>
+ * static method. To use this information in a module request the instance
+ * through the Configuration class.
  * 
  * @author Michiel Hendriks
  */
-public class ModuleInfo
+public class ModuleInfo implements Serializable
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration");
+	private static final long serialVersionUID = -818944551130427548L;
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("ModuleInfo");
 
 	/**
 	 * Module identifier
 	 */
 	protected String id;
+
+	/**
+	 * The class of the module
+	 */
+	protected Class moduleClass;
 
 	/**
 	 * Human-readable name of the module
@@ -64,52 +76,28 @@ public class ModuleInfo
 	 */
 	protected Module increModule;
 
-	protected DefaultHandler SAXHandler;
-
-	public static ModuleInfo load(InputStream source) throws ConfigurationException
-	{
-		try
-		{
-			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-			ModuleInfo result = new ModuleInfo();
-			result.SAXHandler = result.getNewSAXHandler(parser.getXMLReader(), null);
-			parser.parse(source, result.SAXHandler);
-			result.SAXHandler = null;
-			return result;
-		}
-		catch (ParserConfigurationException e)
-		{
-			throw new ConfigurationException("Parser Configuration Exception: " + e.getMessage());
-		}
-		catch (SAXException e)
-		{
-			throw new ConfigurationException("SAX Exception: " + e.getMessage());
-		}
-		catch (IOException e)
-		{
-			throw new ConfigurationException("Exception reading configuration: " + e.getMessage());
-		}
-	}
-
 	/**
-	 * Use this method to load ModuleInfo from within a SAX loading system.
-	 * Note: after construction the DefaultHandler should receive the
-	 * startElement() call with the &lt;module&gt; tag
+	 * Load ModuleInfo through SAX. This is used by the ModuleInfoManager
 	 * 
 	 * @param reader
 	 * @param inReturnHandler
 	 * @return
 	 */
-	public static ModuleInfo load(XMLReader reader, ContentHandler inReturnHandler)
+	public static ModuleInfo loadSax(XMLReader reader, ContentHandler inReturnHandler)
 	{
-		ModuleInfo mi = new ModuleInfo();
-		mi.SAXHandler = mi.getNewSAXHandler(reader, inReturnHandler);
-		return mi;
+		ModuleInfo result = new ModuleInfo();
+		reader.setContentHandler(result.getNewSAXHandler(reader, inReturnHandler));
+		return result;
 	}
 
 	public String getId()
 	{
 		return id;
+	}
+
+	public Class getModuleClass()
+	{
+		return moduleClass;
 	}
 
 	public String getName()
@@ -226,20 +214,38 @@ public class ModuleInfo
 		settings = new HashMap();
 	}
 
+	/**
+	 * Initialize the configuration
+	 */
+	public void initConfig()
+	{
+		Map config = Configuration.instance().getTmpModuleSettings(id);
+		if (config == null) return;
+		Iterator entries = config.entrySet().iterator();
+		while (entries.hasNext())
+		{
+			Entry entry = (Entry) entries.next();
+			try
+			{
+				setSettingValue((String) entry.getKey(), entry.getValue());
+			}
+			catch (ConfigurationException e)
+			{
+				Debug.out(Debug.MODE_ERROR, id, "Error setting '" + entry.getKey() + "' to '" + entry.getValue()
+						+ "': " + e.getMessage());
+			}
+		}
+	}
+
 	protected DefaultHandler getNewSAXHandler(XMLReader reader, ContentHandler inReturnHandler)
 	{
 		return new ModuleInfoHandler(this, reader, inReturnHandler);
 	}
 
-	public DefaultHandler getSAXHandler()
-	{
-		return SAXHandler;
-	}
-
 	/**
 	 * SAX Handler class for the ModuleInfo
 	 * 
-	 * @author Composer
+	 * @author Michiel Hendriks
 	 */
 	class ModuleInfoHandler extends DefaultHandler
 	{
@@ -280,24 +286,56 @@ public class ModuleInfo
 			returnHandler = inReturnHandler;
 		}
 
-		protected void inheritedLoad(InputStream source) throws ConfigurationException
+		protected void processExtends(String source)
 		{
+			ModuleInfo extMi;
+			Class extClass = null;
 			try
 			{
-				SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-				parser.parse(source, mi.getNewSAXHandler(parser.getXMLReader(), null));
+				extClass = Class.forName(source);
 			}
-			catch (ParserConfigurationException e)
+			catch (ClassNotFoundException e)
 			{
-				throw new ConfigurationException("Parser Configuration Exception: " + e.getMessage());
 			}
-			catch (SAXException e)
+			if (extClass != null)
 			{
-				throw new ConfigurationException("SAX Exception: " + e.getMessage());
+				extMi = ModuleInfoManager.get(extClass);
 			}
-			catch (IOException e)
+			else
 			{
-				throw new ConfigurationException("Exception reading configuration: " + e.getMessage());
+				extMi = ModuleInfoManager.get(source);
+			}
+			if (extMi != null)
+			{
+				// perform a deep copy through (de)serialization
+				ModuleInfo copy = null;
+				try
+				{
+					ByteArrayOutputStream bos = new ByteArrayOutputStream();
+					ObjectOutputStream out = new ObjectOutputStream(bos);
+					out.writeObject(extMi);
+					out.flush();
+					out.close();
+
+					ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
+					copy = (ModuleInfo) in.readObject();
+
+					// copy back data
+					mi.description = copy.description;
+					mi.id = copy.id;
+					mi.increModule = copy.increModule;
+					mi.moduleClass = copy.moduleClass;
+					mi.name = copy.name;
+					mi.settings = copy.settings;
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+				catch (ClassNotFoundException cnfe)
+				{
+					cnfe.printStackTrace();
+				}
 			}
 		}
 
@@ -307,23 +345,42 @@ public class ModuleInfo
 			{
 				state = STATE_MODULE;
 				mi.settings.clear();
+				boolean bExtended = false;
 				if (attributes.getValue("extends") != null)
 				{
-					// this module extends from an other module
-					String extendsFrom = attributes.getValue("extends");
-					try
-					{
-						inheritedLoad(getClass().getResourceAsStream(extendsFrom));
-					}
-					catch (ConfigurationException e)
-					{
-						throw new SAXException("Exception while processing extended moduleinfo: " + e.getMessage());
-					}
+					processExtends(attributes.getValue("extends"));
+					bExtended = true;
 				}
 				if (attributes.getValue("id") != null)
 				{
 					mi.id = attributes.getValue("id");
 					mi.name = mi.id;
+				}
+				if (attributes.getValue("class") != null)
+				{
+					try
+					{
+						mi.moduleClass = Class.forName(attributes.getValue("class"));
+					}
+					catch (ClassNotFoundException e)
+					{
+						logger.error("Module class not found: " + e.getMessage());
+					}
+				}
+				if (mi.id == null || mi.id.equals(""))
+				{
+					throw new SAXException("ModuleInfo requires an id attribute.");
+				}
+				if (mi.moduleClass == null)
+				{
+					throw new SAXException("ModuleInfo requires an class attribute.");
+				}
+
+				if (bExtended)
+				{
+					// make sure incre module is up to date
+					mi.increModule.setName(mi.id);
+					mi.increModule.setModuleClass(mi.moduleClass);
 				}
 			}
 			else if ((state == STATE_MODULE) && qName.equalsIgnoreCase("name"))
@@ -344,9 +401,17 @@ public class ModuleInfo
 			{
 				try
 				{
-					moduleSetting = new ModuleSetting(reader, this);
-					reader.setContentHandler(moduleSetting.getSAXHandler());
-					moduleSetting.getSAXHandler().startElement(uri, localName, qName, attributes);
+					if (Boolean.valueOf(attributes.getValue("remove")).booleanValue())
+					{
+						// remove the setting
+						mi.removeSetting(attributes.getValue("id"));
+					}
+					else
+					{
+						moduleSetting = new ModuleSetting(reader, this);
+						reader.setContentHandler(moduleSetting.getSAXHandler());
+						moduleSetting.getSAXHandler().startElement(uri, localName, qName, attributes);
+					}
 				}
 				catch (ConfigurationException e)
 				{
@@ -390,6 +455,7 @@ public class ModuleInfo
 				{
 					try
 					{
+						mi.removeSetting(moduleSetting.getId()); // overloading
 						mi.addSetting(moduleSetting);
 					}
 					catch (ConfigurationException e)
@@ -403,6 +469,8 @@ public class ModuleInfo
 			{
 				state = STATE_MODULE;
 				mi.increModule = increHandler.getModule();
+				mi.increModule.setName(mi.id);
+				mi.increModule.setModuleClass(mi.moduleClass);
 				increHandler = null;
 			}
 		}

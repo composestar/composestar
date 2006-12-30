@@ -110,6 +110,8 @@
 		</copy>
 
 	</target>
+	
+	<target name="test" depends="unittest,validate_moduleinfo" description="Run tests" />
 
 	<target name="compile_tests" depends="local_init,compile">
 		<path id="lib.test">
@@ -139,6 +141,15 @@
 				</fileset>
 			</batchtest>
 		</junit>
+	</target>
+	
+	<target name="validate_moduleinfo" description="Validate the moduleinfo.xml files">
+		<schemavalidate noNamespaceFile="src/Composestar/Core/Master/Config/ModuleInfo.xsd">
+			<schema namespace="http://composestar.sf.net/ModuleInfo.xsd" file="src/Composestar/Core/Master/Config/ModuleInfo.xsd" />
+			<fileset dir="src">
+				<include name="**/moduleinfo.xml" />
+			</fileset>
+		</schemavalidate>
 	</target>
 	
 </project>
