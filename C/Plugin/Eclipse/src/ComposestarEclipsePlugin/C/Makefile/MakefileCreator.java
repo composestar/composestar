@@ -18,8 +18,8 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.IPath;
 
-import ComposestarEclipsePlugin.C.Debug;
 import ComposestarEclipsePlugin.C.Dialogs.StandardSettings;
+import ComposestarEclipsePlugin.Core.Debug;
 
 /**
  * @author johan

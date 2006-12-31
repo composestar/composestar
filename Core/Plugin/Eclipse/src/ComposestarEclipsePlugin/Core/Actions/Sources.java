@@ -30,6 +30,11 @@ public class Sources
 	{
 		this.selectedProjects = selectedProjects;
 	}
+	
+	public HashSet getSources(String extension)
+	{
+		return getSources(extension, new HashSet());
+	}
 
 	public HashSet getSources(String extension, HashSet skiplist)
 	{

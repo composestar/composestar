@@ -10,8 +10,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 
-import ComposestarEclipsePlugin.C.ComposestarEclipsePluginPlugin;
-import ComposestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.C.IComposestarCConstants;
+import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
+import ComposestarEclipsePlugin.Core.Debug;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.ModuleSetting;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Path;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Project;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Settings;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.TypeSource;
 
 /**
  * This class is responsible for creating a buildconfigurationfile
@@ -187,7 +193,7 @@ public class BuildConfigurationManager
 
 			bw.write(spacePad(1) + "</Settings>\n");
 
-			String path = ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml");
+			String path = ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml", IComposestarCConstants.BUNDLE_ID);
 			BufferedReader in = new BufferedReader(new FileReader(path));
 			String s;
 			StringBuffer buffer = new StringBuffer();

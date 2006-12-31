@@ -2,7 +2,8 @@ package ComposestarEclipsePlugin.Core;
 
 public interface IComposestarConstants
 {
-
+	public static final String BUNDLE_ID = "Composestar.Eclipse.Plugin.Core";
+	
 	// Console
 	public static final String CONSOLE_TITLE = "Compose* Console";
 

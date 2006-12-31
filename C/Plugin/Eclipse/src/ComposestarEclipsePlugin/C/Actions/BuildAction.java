@@ -18,15 +18,16 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import ComposestarEclipsePlugin.C.Debug;
 import ComposestarEclipsePlugin.C.MasterManager;
 import ComposestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
-import ComposestarEclipsePlugin.C.BuildConfiguration.ModuleSetting;
-import ComposestarEclipsePlugin.C.BuildConfiguration.Path;
-import ComposestarEclipsePlugin.C.BuildConfiguration.Project;
-import ComposestarEclipsePlugin.C.BuildConfiguration.Settings;
 import ComposestarEclipsePlugin.C.Dialogs.BuildDialog;
 import ComposestarEclipsePlugin.C.Makefile.MakefileCreator;
+import ComposestarEclipsePlugin.Core.Debug;
+import ComposestarEclipsePlugin.Core.Actions.Sources;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.ModuleSetting;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Path;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Project;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Settings;
 
 /**
  * This action should call the BuildConfigurationManager, furthermore a property

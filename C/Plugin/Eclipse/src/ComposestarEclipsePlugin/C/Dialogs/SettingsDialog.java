@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ComposestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.Core.Debug;
 
 public class SettingsDialog extends Dialog
 {

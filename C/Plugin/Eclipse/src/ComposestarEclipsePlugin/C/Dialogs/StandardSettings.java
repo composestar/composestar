@@ -9,7 +9,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import ComposestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.Core.Debug;
 
 public class StandardSettings extends DefaultHandler
 {

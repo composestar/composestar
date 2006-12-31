@@ -93,6 +93,29 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 		return relativePath.getFile();
 	}
 
+	/**
+	 * Use this method to retrieve the absolute path for plugin depended files
+	 * like increconfig.xml or platformconfigurations.xml
+	 * 
+	 * @param path
+	 * @param BundleName
+	 * @return
+	 */
+	public static String getAbsolutePath(String path, String BundleName)
+	{
+		Bundle bundle = Platform.getBundle(BundleName);
+		URL relativePath = bundle.getEntry(path);
+		try
+		{
+			URL fullPathString = FileLocator.toFileURL(relativePath);
+			return fullPathString.getFile();
+		}
+		catch (java.io.IOException io)
+		{
+		}
+		return relativePath.getFile();
+	}
+
 	public IDialogSettings getDialogSettings()
 	{
 		return getDialogSettings("");

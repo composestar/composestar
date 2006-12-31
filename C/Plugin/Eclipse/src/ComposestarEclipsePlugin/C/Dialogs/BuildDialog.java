@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import ComposestarEclipsePlugin.C.Debug;
-import ComposestarEclipsePlugin.C.Actions.Sources;
+import ComposestarEclipsePlugin.Core.Debug;
+import ComposestarEclipsePlugin.Core.Actions.Sources;
 
 public class BuildDialog extends Dialog
 {

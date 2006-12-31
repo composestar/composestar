@@ -22,13 +22,14 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
-import ComposestarEclipsePlugin.C.Actions.Sources;
 import ComposestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
-import ComposestarEclipsePlugin.C.BuildConfiguration.ModuleSetting;
-import ComposestarEclipsePlugin.C.BuildConfiguration.Path;
-import ComposestarEclipsePlugin.C.BuildConfiguration.Project;
-import ComposestarEclipsePlugin.C.BuildConfiguration.Settings;
 import ComposestarEclipsePlugin.C.Makefile.MakefileCreator;
+import ComposestarEclipsePlugin.Core.Debug;
+import ComposestarEclipsePlugin.Core.Actions.Sources;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.ModuleSetting;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Path;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Project;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Settings;
 
 /**
  * @author Johan
@@ -68,7 +69,7 @@ public class PlatformRunnable implements IPlatformRunnable
 		String osName = System.getProperty("os.name");
 		String eclipseInstallationOS = "";
 
-		Debug.instance().DebugModeOff();
+		Debug.instance().setEnabled(false);
 
 		for (int i = 0; i < eclipseInstallation.length; i++)
 		{
