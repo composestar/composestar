@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.utils;
+package composestarEclipsePlugin.C.Utils;
 
 import java.io.File;
 

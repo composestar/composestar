@@ -1,15 +1,22 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ComposestarEclipsePlugin Plug-in
-Bundle-SymbolicName: ComposestarEclipsePlugin; singleton:=true
+Bundle-Name: Composestar Eclipse Plugin C
+Bundle-SymbolicName: Composestar.Eclipse.Plugin.C;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: ComposestarEclipsePlugin.jar
-Bundle-Activator: composestarEclipsePlugin.ComposestarEclipsePluginPlugin
+Bundle-ClassPath: ComposestarEclipseC.jar
+Bundle-Activator: composestarEclipsePlugin.C.ComposestarEclipsePluginPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.ui.console,
  org.eclipse.jdt.core
+Eclipse-LazyStart: true
 Eclipse-AutoStart: true
-Bundle-Vendor: University of Twente, Department SE
+Bundle-Vendor: University of Twente
+Export-Package: composestarEclipsePlugin.C,
+ composestarEclipsePlugin.C.Actions,
+ composestarEclipsePlugin.C.BuildConfiguration,
+ composestarEclipsePlugin.C.Dialogs,
+ composestarEclipsePlugin.C.Makefile,
+ composestarEclipsePlugin.C.Utils

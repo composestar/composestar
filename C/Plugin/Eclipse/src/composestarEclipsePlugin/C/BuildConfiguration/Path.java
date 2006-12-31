@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.buildConfiguration;
+package composestarEclipsePlugin.C.BuildConfiguration;
 
 /**
  * Class representing a compose* path. Used by BuildConfigurationManager to

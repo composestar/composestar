@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.dialogs;
+package composestarEclipsePlugin.C.Dialogs;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import composestarEclipsePlugin.Debug;
-import composestarEclipsePlugin.actions.Sources;
+import composestarEclipsePlugin.C.Debug;
+import composestarEclipsePlugin.C.Actions.Sources;
 
 public class BuildDialog extends Dialog
 {

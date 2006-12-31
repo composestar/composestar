@@ -67,7 +67,7 @@
 	
 	<target name="install" depends="init_eclipse,build" description="Install the C compiletime">
 		<!-- jar files -->
-		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
+		<copy todir="${eclipse.pluginsdir}/ComposestarCore/Binaries">
 			<fileset dir="${out.dist}"/>
 		</copy>
 	</target>

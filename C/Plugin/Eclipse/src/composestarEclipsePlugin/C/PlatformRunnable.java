@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package composestarEclipsePlugin;
+package composestarEclipsePlugin.C;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,13 +22,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
-import composestarEclipsePlugin.actions.Sources;
-import composestarEclipsePlugin.buildConfiguration.BuildConfigurationManager;
-import composestarEclipsePlugin.buildConfiguration.ModuleSetting;
-import composestarEclipsePlugin.buildConfiguration.Path;
-import composestarEclipsePlugin.buildConfiguration.Project;
-import composestarEclipsePlugin.buildConfiguration.Settings;
-import composestarEclipsePlugin.makefile.MakefileCreator;
+import composestarEclipsePlugin.C.Actions.Sources;
+import composestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
+import composestarEclipsePlugin.C.BuildConfiguration.ModuleSetting;
+import composestarEclipsePlugin.C.BuildConfiguration.Path;
+import composestarEclipsePlugin.C.BuildConfiguration.Project;
+import composestarEclipsePlugin.C.BuildConfiguration.Settings;
+import composestarEclipsePlugin.C.Makefile.MakefileCreator;
 
 /**
  * @author Johan

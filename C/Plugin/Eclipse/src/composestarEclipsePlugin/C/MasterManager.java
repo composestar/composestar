@@ -1,7 +1,7 @@
-package composestarEclipsePlugin;
+package composestarEclipsePlugin.C;
 
-import composestarEclipsePlugin.buildConfiguration.BuildConfigurationManager;
-import composestarEclipsePlugin.utils.CommandLineExecutor;
+import composestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
+import composestarEclipsePlugin.C.Utils.CommandLineExecutor;
 
 /**
  * Class for triggering the compose* compiler

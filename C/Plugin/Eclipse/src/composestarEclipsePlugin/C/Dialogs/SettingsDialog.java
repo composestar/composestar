@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.dialogs;
+package composestarEclipsePlugin.C.Dialogs;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import composestarEclipsePlugin.Debug;
+import composestarEclipsePlugin.C.Debug;
 
 public class SettingsDialog extends Dialog
 {

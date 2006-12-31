@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.actions;
+package composestarEclipsePlugin.C.Actions;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,15 +17,15 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import composestarEclipsePlugin.Debug;
-import composestarEclipsePlugin.MasterManager;
-import composestarEclipsePlugin.buildConfiguration.BuildConfigurationManager;
-import composestarEclipsePlugin.buildConfiguration.ModuleSetting;
-import composestarEclipsePlugin.buildConfiguration.Path;
-import composestarEclipsePlugin.buildConfiguration.Project;
-import composestarEclipsePlugin.buildConfiguration.Settings;
-import composestarEclipsePlugin.dialogs.BuildDialog;
-import composestarEclipsePlugin.makefile.MakefileCreator;
+import composestarEclipsePlugin.C.Debug;
+import composestarEclipsePlugin.C.MasterManager;
+import composestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
+import composestarEclipsePlugin.C.BuildConfiguration.ModuleSetting;
+import composestarEclipsePlugin.C.BuildConfiguration.Path;
+import composestarEclipsePlugin.C.BuildConfiguration.Project;
+import composestarEclipsePlugin.C.BuildConfiguration.Settings;
+import composestarEclipsePlugin.C.Dialogs.BuildDialog;
+import composestarEclipsePlugin.C.Makefile.MakefileCreator;
 
 /**
  * This action should call the BuildConfigurationManager, furthermore a property

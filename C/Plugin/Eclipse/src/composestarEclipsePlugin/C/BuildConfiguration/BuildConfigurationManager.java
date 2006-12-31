@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.buildConfiguration;
+package composestarEclipsePlugin.C.BuildConfiguration;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 
-import composestarEclipsePlugin.ComposestarEclipsePluginPlugin;
-import composestarEclipsePlugin.Debug;
+import composestarEclipsePlugin.C.ComposestarEclipsePluginPlugin;
+import composestarEclipsePlugin.C.Debug;
 
 /**
  * This class is responsible for creating a buildconfigurationfile

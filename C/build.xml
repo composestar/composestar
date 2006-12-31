@@ -34,38 +34,8 @@
 	</target>
 	
 	<target name="install" depends="init_eclipse,build" description="Install the result">
+		<ant target="install" dir="Compiletime" inheritRefs="true" />
 		<ant target="install" dir="Plugin" inheritRefs="true" />
-		
-		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries">
-			<FileSet dir="${build.core}/Compiletime/dist">
-				<include name="ComposestarCORE.jar"/>
-			</FileSet>			
-			<FileSet dir="${build.c}/Compiletime/dist">
-				<include name="ComposestarC.jar"/>
-			</FileSet>
-			<fileset dir="${build.core}/Compiletime/binaries/antlr">
-				<include name="antlr.jar"/>
-			</fileset>
-		</copy>
-		
-		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries/prolog">
-			<fileset dir="${build.core}/Compiletime/binaries/prolog">
-				<include name="prolog.jar"/>
-				<include name="lib.pro"/>
-				<include name="connector.pro"/>
-			</fileset>
-		</copy>
-
-		<copy todir="${eclipse.home}/plugins/ComposestarEclipsePlugin/binaries/groove">
-			<fileset dir="${build.core}/Compiletime/binaries/groove">
-				<include name="groove-1_2_0.jar"/>
-				<include name="castor-0_9_5_2-xml.jar"/>
-				<include name="jgraph.jar"/>
-				<include name="xerces-2_6_0-xercesImpl.jar"/>
-				<include name="xerces-2_6_0-xml-apis.jar"/>
-			</fileset>
-		</copy>
 	</target>
-
 
 </project>

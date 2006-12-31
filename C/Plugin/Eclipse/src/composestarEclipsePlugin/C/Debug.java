@@ -1,4 +1,4 @@
-package composestarEclipsePlugin;
+package composestarEclipsePlugin.C;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;

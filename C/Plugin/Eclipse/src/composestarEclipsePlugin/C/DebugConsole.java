@@ -1,4 +1,4 @@
-package composestarEclipsePlugin;
+package composestarEclipsePlugin.C;
 
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
