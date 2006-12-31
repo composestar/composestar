@@ -4,7 +4,7 @@ Bundle-Name: Composestar Eclipse Plugin C
 Bundle-SymbolicName: Composestar.Eclipse.Plugin.C;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: ComposestarEclipseC.jar
-Bundle-Activator: ComposestarEclipsePlugin.C.ComposestarEclipsePluginPlugin
+Bundle-Activator: ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
