@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.C;
+package ComposestarEclipsePlugin.C;
 
 import java.net.URL;
 

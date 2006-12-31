@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.C.Actions;
+package ComposestarEclipsePlugin.C.Actions;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,16 +12,17 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import composestarEclipsePlugin.C.Debug;
-import composestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
-import composestarEclipsePlugin.C.BuildConfiguration.ModuleSetting;
-import composestarEclipsePlugin.C.BuildConfiguration.Path;
-import composestarEclipsePlugin.C.BuildConfiguration.Project;
-import composestarEclipsePlugin.C.BuildConfiguration.Settings;
-import composestarEclipsePlugin.C.Dialogs.SettingsDialog;
+import ComposestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
+import ComposestarEclipsePlugin.C.BuildConfiguration.ModuleSetting;
+import ComposestarEclipsePlugin.C.BuildConfiguration.Path;
+import ComposestarEclipsePlugin.C.BuildConfiguration.Project;
+import ComposestarEclipsePlugin.C.BuildConfiguration.Settings;
+import ComposestarEclipsePlugin.C.Dialogs.SettingsDialog;
 
 public class SettingsAction implements IWorkbenchWindowActionDelegate
 {
@@ -69,7 +70,7 @@ public class SettingsAction implements IWorkbenchWindowActionDelegate
 	{
 		SettingsDialog dialog = new SettingsDialog(window.getShell(), selectedProjects);
 		dialog.open();
-		if (dialog.getReturnCode() == dialog.OK)
+		if (dialog.getReturnCode() == Window.OK)
 		{
 			BuildConfigurationManager.instance().clearConfigManager();
 
@@ -208,7 +209,7 @@ public class SettingsAction implements IWorkbenchWindowActionDelegate
 			selectedProjects = extractProjects(((IStructuredSelection) selection).toArray());
 		}
 		action.setEnabled(selectedProjects.length > 0); // &&
-														// !ResourcesPlugin.getWorkspace().isAutoBuilding());
+		// !ResourcesPlugin.getWorkspace().isAutoBuilding());
 	}
 
 	protected static IProject[] extractProjects(Object[] selection)

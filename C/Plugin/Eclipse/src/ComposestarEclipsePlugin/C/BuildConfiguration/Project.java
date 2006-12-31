@@ -1,9 +1,9 @@
-package composestarEclipsePlugin.C.BuildConfiguration;
+package ComposestarEclipsePlugin.C.BuildConfiguration;
 
 import java.util.ArrayList;
 import java.util.Properties;
 
-import composestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.C.Debug;
 
 /**
  * Class representing a project. Used by BuildConfigurationManager to build

@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.C.BuildConfiguration;
+package ComposestarEclipsePlugin.C.BuildConfiguration;
 
 import java.util.HashMap;
 

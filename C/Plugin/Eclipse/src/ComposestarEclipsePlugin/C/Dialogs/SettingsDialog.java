@@ -1,7 +1,8 @@
-package composestarEclipsePlugin.C.Dialogs;
+package ComposestarEclipsePlugin.C.Dialogs;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -19,7 +20,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import composestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.C.Debug;
 
 public class SettingsDialog extends Dialog
 {
@@ -95,11 +96,11 @@ public class SettingsDialog extends Dialog
 
 	protected void buttonPressed(int buttonID)
 	{
-		if (buttonID == this.OK)
+		if (buttonID == Window.OK)
 		{
 			super.okPressed();
 		}
-		if (buttonID == this.CANCEL)
+		if (buttonID == Window.CANCEL)
 		{
 			super.cancelPressed();
 		}

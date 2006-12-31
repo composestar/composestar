@@ -6,7 +6,7 @@
  *For instance \Program Files\ -> \"Program Files"\, and parhseparator is important 
  *GCC requires other things such as pathseparator is always "/" 
  * */
-package composestarEclipsePlugin.C.Makefile;
+package ComposestarEclipsePlugin.C.Makefile;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,8 +18,8 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.IPath;
 
-import composestarEclipsePlugin.C.Debug;
-import composestarEclipsePlugin.C.Dialogs.StandardSettings;
+import ComposestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.C.Dialogs.StandardSettings;
 
 /**
  * @author johan
@@ -250,8 +250,7 @@ public class MakefileCreator
 				String file = ((IPath) i.next()).lastSegment();
 				if (!file.equals("message.c"))
 				{
-					command += " "
-							+ outputPath.replace("" + java.io.File.separatorChar, "/") + file;
+					command += " " + outputPath.replace("" + java.io.File.separatorChar, "/") + file;
 				}
 			}
 			bw.write("\t gcc -o" + outputPath.replace("" + java.io.File.separatorChar, "/")

@@ -51,13 +51,13 @@
             id="build"
             label="Build"
             menubarPath="composestar/slot1"
-            class="composestarEclipsePlugin.actions.BuildAction">
+            class="ComposestarEclipsePlugin.C.Actions.BuildAction">
         </action>
         <action
         	id="settings"	
             label="Settings"
             menubarPath="composestar/slot2"
-            class="composestarEclipsePlugin.actions.SettingsAction">
+            class="ComposestarEclipsePlugin.C.Actions.SettingsAction">
             </action>
       </actionSet>
 	</extension>
@@ -65,7 +65,7 @@
 		id="headlessCEPTest"
 		point="org.eclipse.core.runtime.applications">
 		<application>
-			<run class="composestarEclipsePlugin.PlatformRunnable"/>
+			<run class="ComposestarEclipsePlugin.C.PlatformRunnable"/>
 		</application>
 	</extension>	 
  

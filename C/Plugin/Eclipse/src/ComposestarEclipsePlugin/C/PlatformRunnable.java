@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package composestarEclipsePlugin.C;
+package ComposestarEclipsePlugin.C;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,13 +22,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
-import composestarEclipsePlugin.C.Actions.Sources;
-import composestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
-import composestarEclipsePlugin.C.BuildConfiguration.ModuleSetting;
-import composestarEclipsePlugin.C.BuildConfiguration.Path;
-import composestarEclipsePlugin.C.BuildConfiguration.Project;
-import composestarEclipsePlugin.C.BuildConfiguration.Settings;
-import composestarEclipsePlugin.C.Makefile.MakefileCreator;
+import ComposestarEclipsePlugin.C.Actions.Sources;
+import ComposestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
+import ComposestarEclipsePlugin.C.BuildConfiguration.ModuleSetting;
+import ComposestarEclipsePlugin.C.BuildConfiguration.Path;
+import ComposestarEclipsePlugin.C.BuildConfiguration.Project;
+import ComposestarEclipsePlugin.C.BuildConfiguration.Settings;
+import ComposestarEclipsePlugin.C.Makefile.MakefileCreator;
 
 /**
  * @author Johan
@@ -100,7 +100,7 @@ public class PlatformRunnable implements IPlatformRunnable
 				project.create(npm);
 			}
 			project.open(npm);
-			project.refreshLocal(project.DEPTH_INFINITE, null);
+			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 			Settings settings = new Settings();
 			Sources source = new Sources(selectedProjects);

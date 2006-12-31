@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.C;
+package ComposestarEclipsePlugin.C;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -112,8 +112,7 @@ public class Debug
 				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
 				if (activePage != null)
 				{
-					activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW, null,
-							IWorkbenchPage.VIEW_VISIBLE);
+					activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW, null, IWorkbenchPage.VIEW_VISIBLE);
 				}
 			}
 

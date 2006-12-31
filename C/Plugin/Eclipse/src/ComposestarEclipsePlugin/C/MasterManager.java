@@ -1,7 +1,7 @@
-package composestarEclipsePlugin.C;
+package ComposestarEclipsePlugin.C;
 
-import composestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
-import composestarEclipsePlugin.C.Utils.CommandLineExecutor;
+import ComposestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
+import ComposestarEclipsePlugin.C.Utils.CommandLineExecutor;
 
 /**
  * Class for triggering the compose* compiler
@@ -51,8 +51,7 @@ public class MasterManager
 	}
 
 	public void setOutputPath(String outputPath)
-	{
-	}
+	{}
 
 	public void setBasePath(String basePath)
 	{

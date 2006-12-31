@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.C.BuildConfiguration;
+package ComposestarEclipsePlugin.C.BuildConfiguration;
 
 /**
  * Class representing a type source. Used by BuildConfigurationManager to build

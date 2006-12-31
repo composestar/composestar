@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.C.Dialogs;
+package ComposestarEclipsePlugin.C.Dialogs;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -9,7 +9,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import composestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.C.Debug;
 
 public class StandardSettings extends DefaultHandler
 {
@@ -97,24 +97,21 @@ public class StandardSettings extends DefaultHandler
 		{
 			if ((attr.getValue("name").equals("FILTH")) && (attr.getValue("input") != null))
 			{
-				filterModuleOrderString = attr
-						.getValue("input");
+				filterModuleOrderString = attr.getValue("input");
 			}
 		}
 		if ("Module".equals(qName) && attr != null)
 		{
 			if ((attr.getValue("name").equals("SECRET")) && (attr.getValue("mode") != null))
 			{
-				secretString = attr
-						.getValue("mode");
+				secretString = attr.getValue("mode");
 			}
 		}
 		if ("Module".equals(qName) && attr != null)
 		{
 			if ((attr.getValue("name").equals("ILICIT")) && (attr.getValue("verifyAssemblies") != null))
 			{
-				verifyAssembliesString = attr
-						.getValue("verifyAssemblies");
+				verifyAssembliesString = attr.getValue("verifyAssemblies");
 			}
 		}
 		if ("Module".equals(qName) && attr != null)

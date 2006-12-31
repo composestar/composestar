@@ -1,9 +1,10 @@
-package composestarEclipsePlugin.C.Dialogs;
+package ComposestarEclipsePlugin.C.Dialogs;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -21,8 +22,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import composestarEclipsePlugin.C.Debug;
-import composestarEclipsePlugin.C.Actions.Sources;
+import ComposestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.C.Actions.Sources;
 
 public class BuildDialog extends Dialog
 {
@@ -111,7 +112,7 @@ public class BuildDialog extends Dialog
 
 	protected void buttonPressed(int buttonID)
 	{
-		if (buttonID == this.OK)
+		if (buttonID == Window.OK)
 		{
 			if (mainString.equals("") || language.equals(""))
 			{
@@ -122,7 +123,7 @@ public class BuildDialog extends Dialog
 				super.okPressed();
 			}
 		}
-		if (buttonID == this.CANCEL)
+		if (buttonID == Window.CANCEL)
 		{
 			super.cancelPressed();
 		}
@@ -343,8 +344,8 @@ public class BuildDialog extends Dialog
 		customFilterText = new Text(group, SWT.MULTI | SWT.WRAP);
 		if (!customFilterString.equals(""))
 		{
-			customFilterText.setText(customFilterString.replaceAll(
-					java.io.File.pathSeparator, java.io.File.pathSeparator + "\n"));
+			customFilterText.setText(customFilterString.replaceAll(java.io.File.pathSeparator,
+					java.io.File.pathSeparator + "\n"));
 		}
 		customFilterText.addModifyListener(new ModifyListener()
 		{

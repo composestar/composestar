@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.C.Actions;
+package ComposestarEclipsePlugin.C.Actions;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,9 +10,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
-import composestarEclipsePlugin.C.Debug;
-import composestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
-import composestarEclipsePlugin.C.BuildConfiguration.Project;
+import ComposestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
+import ComposestarEclipsePlugin.C.BuildConfiguration.Project;
 
 public class Sources
 {

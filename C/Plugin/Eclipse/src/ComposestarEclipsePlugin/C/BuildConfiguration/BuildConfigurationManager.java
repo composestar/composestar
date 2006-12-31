@@ -1,4 +1,4 @@
-package composestarEclipsePlugin.C.BuildConfiguration;
+package ComposestarEclipsePlugin.C.BuildConfiguration;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 
-import composestarEclipsePlugin.C.ComposestarEclipsePluginPlugin;
-import composestarEclipsePlugin.C.Debug;
+import ComposestarEclipsePlugin.C.ComposestarEclipsePluginPlugin;
+import ComposestarEclipsePlugin.C.Debug;
 
 /**
  * This class is responsible for creating a buildconfigurationfile
@@ -141,9 +141,8 @@ public class BuildConfigurationManager
 			bw.write(spacePad(1) + "</Projects>\n");
 
 			// settings
-			bw.write(spacePad(1)
-					+ "<Settings composestarIni=\"Composestar.ini\" buildDebugLevel=\""
-					+ buildDebugLevel + "\" compilePhase=\"one\" platform=\"c\">\n");
+			bw.write(spacePad(1) + "<Settings composestarIni=\"Composestar.ini\" buildDebugLevel=\"" + buildDebugLevel
+					+ "\" compilePhase=\"one\" platform=\"c\">\n");
 
 			// module settings
 			bw.write(spacePad(2) + "<Modules>\n");
@@ -257,8 +256,7 @@ public class BuildConfigurationManager
 		{
 			if (customFilters[i].length() > 0)
 			{
-				cFilter.add(customFilters[i]
-						.replaceFirst(java.io.File.pathSeparator, ""));
+				cFilter.add(customFilters[i].replaceFirst(java.io.File.pathSeparator, ""));
 			}
 		}
 	}
