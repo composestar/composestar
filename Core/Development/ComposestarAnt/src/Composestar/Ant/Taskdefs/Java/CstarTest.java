@@ -199,7 +199,7 @@ public class CstarTest extends BaseTask
 			execute.setWorkingDirectory(new File(eclipseHome));
 
 			String[] cmd = { "java", "-cp", eclipseHome + File.separator + "startup.jar", launcher, "-application",
-					"ComposestarEclipsePlugin.testrun", projectname, "-data", workspace, "-clean" };
+					application, projectname, "-data", workspace, "-clean" };
 			execute.setCommandline(cmd);
 
 			int err = execute.execute();
