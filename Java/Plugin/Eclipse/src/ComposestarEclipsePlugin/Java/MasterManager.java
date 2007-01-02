@@ -2,6 +2,7 @@ package ComposestarEclipsePlugin.Java;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 
+import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.IComposestarConstants;
 import ComposestarEclipsePlugin.Core.BuildConfiguration.BuildConfigurationManager;
@@ -65,14 +66,15 @@ public class MasterManager
 		String basePath = FileUtils.getDirectoryPart(bcmanager.buildconfigFile);
 		try
 		{
+			String pluginPath = ComposestarEclipsePluginPlugin.getAbsolutePath("");
 			String classPath = settings.get("classpath");
-			String command = "java.exe " + jvmOptions + " -cp \"" + classPath + "\" " + mainClass + " " + "\""
+			classPath = classPath.replaceAll("%composestar%", pluginPath);
+			String command = "java " + jvmOptions + " -cp \"" + classPath + "\" " + mainClass + " " + "\""
 					+ bcmanager.buildconfigFile + "\"";
 			if (logOutput)
 			{
 				command += " > " + basePath + java.io.File.separator + logFile;
 			}
-			System.err.println(">>>> "+command);
 			CommandLineExecutor cmdExec = new CommandLineExecutor();
 			int result = cmdExec.exec("call " + command);
 

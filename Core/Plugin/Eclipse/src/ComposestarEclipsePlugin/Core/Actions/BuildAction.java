@@ -144,7 +144,7 @@ public class BuildAction extends Action
 
 		p = new Path();
 		p.setName("Composestar");
-		p.setPath(ComposestarEclipsePluginPlugin.getAbsolutePath("/"));
+		p.setPath(ComposestarEclipsePluginPlugin.getAbsolutePath("/")+"/");
 		buildConfig.addPath(p);
 
 		p = new Path();

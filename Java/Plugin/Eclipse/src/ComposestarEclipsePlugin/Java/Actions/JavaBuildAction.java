@@ -1,5 +1,6 @@
 package ComposestarEclipsePlugin.Java.Actions;
 
+import java.io.File;
 import java.util.HashSet;
 
 import org.eclipse.core.resources.IProject;
@@ -23,6 +24,7 @@ import ComposestarEclipsePlugin.Core.BuildConfiguration.ModuleSetting;
 import ComposestarEclipsePlugin.Core.BuildConfiguration.Project;
 import ComposestarEclipsePlugin.Core.Utils.FileUtils;
 import ComposestarEclipsePlugin.Core.Utils.Timer;
+import ComposestarEclipsePlugin.Java.IComposestarJavaConstants;
 import ComposestarEclipsePlugin.Java.MasterManager;
 
 /**
@@ -90,6 +92,22 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 		projectConfig.addProperty("language", language);
 		projectConfig.addProperty("name", selectedProjects[0].getName());
 
+		// make sure ComposestarRuntimeInterpreter.jar is properly referenced
+		for (int i = 0; i < projectConfig.getDependencies().size(); i++)
+		{
+			String dep = (String) projectConfig.getDependencies().get(i);
+			if (dep.toLowerCase().endsWith("composestarruntimeinterpreter.jar"))
+			{
+				File runtime = new File(dep);
+				if (!runtime.exists())
+				{
+					dep = ComposestarEclipsePluginPlugin.getAbsolutePath("/Binaries/ComposestarRuntimeInterpreter.jar");
+					projectConfig.getDependencies().set(i, dep);
+				}
+				break;
+			}
+		}
+
 		// load project compose* settings
 		loadDialogSettings(projectLocation.toOSString());
 
@@ -99,6 +117,9 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 			buildConfig.setProject(projectConfig);
 			String projectPath = selectedProjects[0].getProject().getLocation().toOSString();
 			projectPath += java.io.File.separatorChar;
+
+			buildConfig.setPlatformConfigFile(ComposestarEclipsePluginPlugin.getAbsolutePath(
+					"/PlatformConfigurations.xml", IComposestarJavaConstants.BUNDLE_ID));
 
 			// create buildconfig and save to disk
 			buildConfig.saveToXML(FileUtils.fixFilename(projectPath + "BuildConfiguration.xml"));
@@ -114,6 +135,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 			IDialogSettings settings = ComposestarEclipsePluginPlugin.getDefault().getDialogSettings(
 					projectLocation.toOSString());
 			Debug.instance().Log("Invoking Master...\n");
+
 			m.run(settings);
 			if (!m.completed)
 			{
@@ -173,6 +195,8 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 				ModuleSetting incre = new ModuleSetting();
 				incre.setName("INCRE");
 				incre.addSetting("enabled", settings.get("incremental"));
+				incre.addSetting("config", ComposestarEclipsePluginPlugin.getAbsolutePath("/INCREconfig.xml",
+						IComposestarJavaConstants.BUNDLE_ID));
 				buildConfig.addModuleSetting(incre);
 			}
 

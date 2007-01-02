@@ -80,17 +80,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 
 	public static String getAbsolutePath(String path)
 	{
-		Bundle bundle = Platform.getBundle(PLUGIN_NAME);
-		URL relativePath = bundle.getEntry(path);
-		try
-		{
-			URL fullPathString = FileLocator.toFileURL(relativePath);
-			return fullPathString.getFile();
-		}
-		catch (java.io.IOException io)
-		{
-		}
-		return relativePath.getFile();
+		return getAbsolutePath(path, PLUGIN_NAME);
 	}
 
 	/**
@@ -105,15 +95,24 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 	{
 		Bundle bundle = Platform.getBundle(BundleName);
 		URL relativePath = bundle.getEntry(path);
+		String result;
 		try
 		{
 			URL fullPathString = FileLocator.toFileURL(relativePath);
-			return fullPathString.getFile();
+			File f = new File(fullPathString.getFile());
+			result = f.getAbsolutePath();
 		}
 		catch (java.io.IOException io)
 		{
+			File f = new File(relativePath.getFile());
+			result = f.getAbsolutePath();
 		}
-		return relativePath.getFile();
+		if (result == null)
+		{
+			return null;
+		}
+		// since c:/foo/bar is also legal under windows
+		return result.replace('\\', '/');
 	}
 
 	public IDialogSettings getDialogSettings()
@@ -134,7 +133,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 		String readWritePath = "";
 		if (location.equals(""))
 		{
-			readWritePath = getAbsolutePath("/");
+			readWritePath = getAbsolutePath("/") + "/";
 		}
 		else
 		{
@@ -174,7 +173,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 			String readWritePath = "";
 			if (location.equals(""))
 			{
-				readWritePath = getAbsolutePath("/");
+				readWritePath = getAbsolutePath("/") + "/";
 			}
 			else
 			{

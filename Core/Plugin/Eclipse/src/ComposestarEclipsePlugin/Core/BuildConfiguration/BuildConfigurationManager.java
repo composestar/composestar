@@ -37,7 +37,9 @@ public class BuildConfigurationManager
 	private String runDebugLevel = "";
 
 	private String outputPath = "";
-
+	
+	private String platformConfigFile = "";
+	
 	public BuildConfigurationManager()
 	{
 
@@ -51,9 +53,18 @@ public class BuildConfigurationManager
 		}
 		return (Instance);
 	}
+	
+	public void setPlatformConfigFile(String pcf)
+	{
+		platformConfigFile = pcf;
+	}
 
 	public void saveToXML(String fileName)
 	{
+		if (platformConfigFile.equals(""))
+		{
+			platformConfigFile = ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml");
+		}
 		try
 		{
 			Debug.instance().Log("Building configuration file...");
@@ -185,15 +196,18 @@ public class BuildConfigurationManager
 
 			bw.write(spacePad(1) + "</Settings>\n");
 
-			String path = ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml");
-			BufferedReader in = new BufferedReader(new FileReader(path));
+			BufferedReader in = new BufferedReader(new FileReader(platformConfigFile));
 			String s;
 			StringBuffer buffer = new StringBuffer();
 			boolean skip = true;
+			
+			String pluginPath = ComposestarEclipsePluginPlugin.getAbsolutePath("");
 			while ((s = in.readLine()) != null)
 			{
 				if (s.startsWith("<Platforms>"))
 				{
+					// Replace %composestar% with the core plugin path (where the binaries are)
+					s = s.replaceAll("%composestar%", pluginPath);
 					buffer.append(spacePad(1) + "" + s + "\n");
 					skip = false;
 				}
@@ -240,6 +254,7 @@ public class BuildConfigurationManager
 		projects.clear();
 		concernsources.clear();
 		settings.clearPaths();
+		platformConfigFile = "";
 	}
 
 	public void setConcernSources(String source)

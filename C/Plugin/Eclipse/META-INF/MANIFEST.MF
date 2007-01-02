@@ -19,8 +19,7 @@ Export-Package: ComposestarEclipsePlugin.C,
  ComposestarEclipsePlugin.C.Actions,
  ComposestarEclipsePlugin.C.BuildConfiguration,
  ComposestarEclipsePlugin.C.Dialogs,
- ComposestarEclipsePlugin.C.Makefile,
- ComposestarEclipsePlugin.C.Utils
+ ComposestarEclipsePlugin.C.Makefile
 Import-Package: ComposestarEclipsePlugin.Core,
  ComposestarEclipsePlugin.Core.Actions,
  ComposestarEclipsePlugin.Core.BuildConfiguration,

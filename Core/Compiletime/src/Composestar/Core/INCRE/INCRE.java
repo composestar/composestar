@@ -193,6 +193,12 @@ public final class INCRE implements CTCommonModule
 		{
 			return file.getAbsolutePath();
 		}
+		
+		file = new File(filename); // absolute path
+		if (file.exists())
+		{
+			return file.getAbsolutePath();
+		}
 
 		throw new ModuleException("No configuration file found with name " + filename, MODULE_NAME);
 	}
