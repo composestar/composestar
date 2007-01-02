@@ -12,11 +12,9 @@ import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.FIRE2.model.ExecutionLabels;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
-import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.queryengine.predicates.StateType;
@@ -41,8 +39,8 @@ public class LowLevelInliner
 
 	private void initialize()
 	{
-		isFilter = new StateType(FlowChartNames.FILTER_NODE);
-		isCondExpr = new StateType(FlowChartNames.CONDITION_EXPRESSION_NODE);
+		isFilter = new StateType(FlowNode.FILTER_NODE);
+		isCondExpr = new StateType(FlowNode.CONDITION_EXPRESSION_NODE);
 	}
 
 	public void inline(ExecutionModel model, FilterModule[] modules, MethodInfo method)
@@ -263,7 +261,7 @@ public class LowLevelInliner
 
 			ExecutionState exitState = getExitState(transition.getEndState());
 
-			if (transition.getLabel().equals(ExecutionLabels.CONDITION_EXPRESSION_TRUE))
+			if (transition.getLabel().equals(ExecutionTransition.CONDITION_EXPRESSION_TRUE))
 			{
 				block.flowTrueExitState = exitState;
 			}
@@ -323,7 +321,7 @@ public class LowLevelInliner
 	private boolean isExitState(ExecutionState state)
 	{
 		// exitstate is either a ConditionExpression or an Action state:
-		return isCondExpr.isTrue(state) || state.getFlowNode().containsName(FlowChartNames.ACTION_NODE);
+		return isCondExpr.isTrue(state) || state.getFlowNode().containsName(FlowNode.ACTION_NODE);
 	}
 
 	private class FilterBlock

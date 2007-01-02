@@ -21,7 +21,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
-import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
@@ -37,9 +36,9 @@ public class FlowModelExtractor
 {
 	public final static String FLOW_NODE_ANNOTATION = "FlowNode";
 
-	private final static Label FILTERMODULE_LABEL = new DefaultLabel(FlowChartNames.FILTER_MODULE_NODE);
+	private final static Label FILTERMODULE_LABEL = new DefaultLabel(FlowNode.FILTER_MODULE_NODE);
 
-	private final static Label END_LABEL = new DefaultLabel(FlowChartNames.END_NODE);
+	private final static Label END_LABEL = new DefaultLabel(FlowNode.END_NODE);
 
 	private final static String FLOW_TRUE_LABEL = "flowTrue";
 

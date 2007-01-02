@@ -4,7 +4,6 @@
  */
 package Composestar.Core.FIRE2.model;
 
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -149,7 +148,7 @@ public class FireModel
 		Iterator baseIt;
 
 		if (signatureCheck != NO_SIGNATURE_CHECK
-				&& state.getFlowNode().containsName(FlowChartNames.SIGNATURE_MATCHING_NODE))
+				&& state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING_NODE))
 		{
 			int result = signatureCheck(state, signatureCheck, methodInfo);
 			if (result == SIGNATURE_MATCH_UNKNOWN)
@@ -239,7 +238,7 @@ public class FireModel
 	{
 		// check for signaturematching:
 		if (signatureCheck != NO_SIGNATURE_CHECK
-				&& state.getFlowNode().containsName(FlowChartNames.SIGNATURE_MATCHING_NODE))
+				&& state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING_NODE))
 		{
 			MatchingPart matchingPart = (MatchingPart) state.getFlowNode().getRepositoryLink();
 

@@ -26,7 +26,6 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FireModel;
-import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.FIRE2.util.queryengine.ctl.CtlChecker;
@@ -87,9 +86,9 @@ public class Sign implements CTCommonModule
 		// creating dictionary
 		dictionary = new Hashtable();
 
-		dictionary.put("isDispatch", new StateType(FlowChartNames.DISPATCH_ACTION_NODE));
+		dictionary.put("isDispatch", new StateType(FlowNode.DISPATCH_ACTION_NODE));
 
-		dictionary.put("isMeta", new StateType(FlowChartNames.META_ACTION_NODE));
+		dictionary.put("isMeta", new StateType(FlowNode.META_ACTION_NODE));
 
 		isStatePredicate = new IsState(null);
 		dictionary.put("isState", isStatePredicate);

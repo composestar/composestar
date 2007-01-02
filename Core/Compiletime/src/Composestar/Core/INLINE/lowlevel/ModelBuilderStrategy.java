@@ -14,7 +14,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.FIRE2.model.ExecutionState;
-import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.INLINE.model.Block;
@@ -310,11 +309,11 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		Instruction instruction;
 
 		FlowNode node = state.getFlowNode();
-		if (node.containsName(FlowChartNames.DISPATCH_ACTION_NODE))
+		if (node.containsName(FlowNode.DISPATCH_ACTION_NODE))
 		{
 			generateDispatchAction(state);
 		}
-		else if (node.containsName(FlowChartNames.META_ACTION_NODE))
+		else if (node.containsName(FlowNode.META_ACTION_NODE))
 		{// "before action" ) ){
 			// generateBeforeAction( state );
 			generateAfterAction(state);
@@ -328,26 +327,26 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			// jump to end:
 			jump(-1);
 		}
-		else if (node.containsName(FlowChartNames.ERROR_ACTION_NODE))
+		else if (node.containsName(FlowNode.ERROR_ACTION_NODE))
 		{
-			instruction = new FilterAction(FlowChartNames.ERROR_ACTION_NODE, state.getMessage());
+			instruction = new FilterAction(FlowNode.ERROR_ACTION_NODE, state.getMessage());
 			empty = false;
 			currentBlock.addInstruction(instruction);
 			noJumpEnd = true;
 		}
-		else if (node.containsName(FlowChartNames.CONTINUE_ACTION_NODE))
+		else if (node.containsName(FlowNode.CONTINUE_ACTION_NODE))
 		{
-			instruction = new FilterAction(FlowChartNames.CONTINUE_ACTION_NODE, state.getMessage());
+			instruction = new FilterAction(FlowNode.CONTINUE_ACTION_NODE, state.getMessage());
 			empty = false;
 			currentBlock.addInstruction(instruction);
 		}
-		else if (node.containsName(FlowChartNames.SUBSTITUTION_ACTION_NODE))
+		else if (node.containsName(FlowNode.SUBSTITUTION_ACTION_NODE))
 		{
-			instruction = new FilterAction(FlowChartNames.SUBSTITUTION_ACTION_NODE, getCallMessage(state));
+			instruction = new FilterAction(FlowNode.SUBSTITUTION_ACTION_NODE, getCallMessage(state));
 			empty = false;
 			currentBlock.addInstruction(instruction);
 		}
-		else if (node.containsName(FlowChartNames.CUSTOM_ACTION_NODE))
+		else if (node.containsName(FlowNode.CUSTOM_ACTION_NODE))
 		{
 			instruction = new FilterAction("custom", getCallMessage(state));
 			currentBlock.addInstruction(instruction);
@@ -368,7 +367,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			currentBlock.addInstruction(innerCallContext);
 		}
 
-		FilterAction action = new FilterAction(FlowChartNames.DISPATCH_ACTION_NODE, callMessage);
+		FilterAction action = new FilterAction(FlowNode.DISPATCH_ACTION_NODE, callMessage);
 		currentBlock.addInstruction(action);
 
 		Target target = callMessage.getTarget();

@@ -13,7 +13,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FIRE2.model.ExecutionLabels;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.util.regex.LabelSequence;
@@ -37,70 +36,70 @@ public class ResourceOperationLabeler implements Labeler
 		// condition:
 		LabelSequence seq = new LabelSequence();
 		seq.addResourceOperation("read");
-		operationTable.put(new LabelResourcePair(ExecutionLabels.CONDITION_EXPRESSION_FALSE, "condition"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.CONDITION_EXPRESSION_TRUE, "condition"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.CONDITION_EXPRESSION_FALSE, "condition"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.CONDITION_EXPRESSION_TRUE, "condition"), seq);
 
 		// matchingpart:
 		seq = new LabelSequence();
 		seq.addResourceOperation("read");
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_ANY_FALSE, "target"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_FALSE_STAR, "target"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_FALSE_TRUE, "target"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_STAR_STAR, "target"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_STAR_TRUE, "target"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_TRUE_STAR, "target"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_TRUE_TRUE, "target"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.SIGNATURE_MATCHING_PART_FALSE, "target"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.SIGNATURE_MATCHING_PART_TRUE_STAR, "target"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.SIGNATURE_MATCHING_PART_TRUE_TRUE, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_ANY_FALSE, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_FALSE_STAR, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_FALSE_TRUE, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_STAR_STAR, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_STAR_TRUE, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_TRUE_STAR, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_TRUE_TRUE, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_FALSE, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_TRUE_STAR, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_TRUE_TRUE, "target"), seq);
 
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_ANY_FALSE, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_FALSE_STAR, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_FALSE_TRUE, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_STAR_STAR, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_STAR_TRUE, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_TRUE_STAR, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.NAME_MATCHING_PART_TRUE_TRUE, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.SIGNATURE_MATCHING_PART_FALSE, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.SIGNATURE_MATCHING_PART_TRUE_STAR, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionLabels.SIGNATURE_MATCHING_PART_TRUE_TRUE, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_ANY_FALSE, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_FALSE_STAR, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_FALSE_TRUE, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_STAR_STAR, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_STAR_TRUE, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_TRUE_STAR, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_TRUE_TRUE, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_FALSE, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_TRUE_STAR, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_TRUE_TRUE, "selector"), seq);
 
 		// error-action:
 		seq = new LabelSequence();
 		seq.addResourceOperation("discard");
-		operationTable.put(new LabelResourcePair(ExecutionLabels.ERROR_ACTION, "args"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.ERROR_ACTION, "args"), seq);
 
 		seq = new LabelSequence();
 		seq.addResourceOperation("error");
 		seq.addResourceOperation("return");
-		operationTable.put(new LabelResourcePair(ExecutionLabels.ERROR_ACTION, "message"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.ERROR_ACTION, "message"), seq);
 
 		// dispatch-action:
 		seq = new LabelSequence();
 		seq.addResourceOperation("dispatch");
 		seq.addResourceOperation("return");
-		operationTable.put(new LabelResourcePair(ExecutionLabels.DISPATCH_ACTION, "message"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "message"), seq);
 
 		seq = new LabelSequence();
 		seq.addResourceOperation("write");
-		operationTable.put(new LabelResourcePair(ExecutionLabels.DISPATCH_ACTION, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "target"), seq);
 
 		seq = new LabelSequence();
 		seq.addResourceOperation("write");
-		operationTable.put(new LabelResourcePair(ExecutionLabels.DISPATCH_ACTION, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "selector"), seq);
 
 		seq = new LabelSequence();
 		seq.addResourceOperation("read");
-		operationTable.put(new LabelResourcePair(ExecutionLabels.DISPATCH_ACTION, "args"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "args"), seq);
 
 		// substitution action:
 		seq = new LabelSequence();
 		seq.addResourceOperation("write");
-		operationTable.put(new LabelResourcePair(ExecutionLabels.SUBSTITUTION_ACTION, "target"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.SUBSTITUTION_ACTION, "target"), seq);
 
 		seq = new LabelSequence();
 		seq.addResourceOperation("write");
-		operationTable.put(new LabelResourcePair(ExecutionLabels.SUBSTITUTION_ACTION, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.SUBSTITUTION_ACTION, "selector"), seq);
 	}
 
 	public void setCurrentResource(String resource)
@@ -110,7 +109,7 @@ public class ResourceOperationLabeler implements Labeler
 
 	public LabelSequence getLabels(ExecutionTransition transition)
 	{
-		if (transition.getLabel().equals(ExecutionLabels.META_ACTION))
+		if (transition.getLabel().equals(ExecutionTransition.META_ACTION))
 		{
 			try
 			{
