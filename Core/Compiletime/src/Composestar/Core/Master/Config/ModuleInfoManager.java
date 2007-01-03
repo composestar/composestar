@@ -36,7 +36,7 @@ public class ModuleInfoManager
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("ModuleInfo");
 
-	protected static ModuleInfoManager instance;
+	private static ModuleInfoManager instance;
 
 	protected Map classCache;
 
@@ -230,7 +230,7 @@ public class ModuleInfoManager
 	 * 
 	 * @author Michiel Hendriks
 	 */
-	class ModuleInfosHandler extends DefaultHandler
+	static class ModuleInfosHandler extends DefaultHandler
 	{
 		protected ModuleInfoManager manager;
 

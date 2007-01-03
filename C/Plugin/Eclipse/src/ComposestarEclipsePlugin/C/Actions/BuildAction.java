@@ -18,10 +18,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+import ComposestarEclipsePlugin.C.IComposestarCConstants;
 import ComposestarEclipsePlugin.C.MasterManager;
 import ComposestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
 import ComposestarEclipsePlugin.C.Dialogs.BuildDialog;
 import ComposestarEclipsePlugin.C.Makefile.MakefileCreator;
+import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.Actions.Sources;
 import ComposestarEclipsePlugin.Core.BuildConfiguration.ModuleSetting;
@@ -163,8 +165,7 @@ public class BuildAction implements IWorkbenchWindowActionDelegate
 			buildPath.setPath(dialog.getBuildPath());
 			buildPath.setName("Build");
 			BuildConfigurationManager.instance().addPath(buildPath);
-			composestarPath.setPath(eclipseInstallationOS + "plugins" + java.io.File.separatorChar
-					+ "ComposestarEclipsePlugin" + java.io.File.separatorChar);
+			composestarPath.setPath(ComposestarEclipsePluginPlugin.getAbsolutePath("/") + "/");
 			composestarPath.setName("Composestar");
 			BuildConfigurationManager.instance().addPath(composestarPath);
 
@@ -184,6 +185,8 @@ public class BuildAction implements IWorkbenchWindowActionDelegate
 			ModuleSetting incre = new ModuleSetting();
 			incre.setName("INCRE");
 			incre.addSetting("enabled", dialog.getIncrementalString());
+			incre.addSetting("config", ComposestarEclipsePluginPlugin.getAbsolutePath("/INCREconfig.xml",
+					IComposestarCConstants.BUNDLE_ID));
 			BuildConfigurationManager.instance().addModuleSettings(incre);
 
 			ModuleSetting ilicit = new ModuleSetting();

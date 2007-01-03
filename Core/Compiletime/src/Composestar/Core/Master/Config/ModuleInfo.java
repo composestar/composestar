@@ -247,7 +247,7 @@ public class ModuleInfo implements Serializable
 	 * 
 	 * @author Michiel Hendriks
 	 */
-	class ModuleInfoHandler extends DefaultHandler
+	static class ModuleInfoHandler extends DefaultHandler
 	{
 
 		protected static final byte STATE_INIT = 0;

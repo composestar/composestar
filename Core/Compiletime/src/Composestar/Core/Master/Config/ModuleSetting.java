@@ -194,6 +194,7 @@ public class ModuleSetting implements Serializable
 	 */
 	public void setValue(int newValue) throws ConfigurationException
 	{
+		// TODO: when switching to Java 1.5 use Integer.valueOf(...)
 		setValue(new Integer(newValue));
 	}
 
@@ -268,7 +269,7 @@ public class ModuleSetting implements Serializable
 	 * 
 	 * @author Composer
 	 */
-	class ModuleSettingHandler extends DefaultHandler
+	static class ModuleSettingHandler extends DefaultHandler
 	{
 		protected ModuleSetting ms;
 
@@ -329,7 +330,7 @@ public class ModuleSetting implements Serializable
 					}
 					try
 					{
-						type = Class.forName(prefType);
+						ms.type = Class.forName(prefType);
 					}
 					catch (ClassNotFoundException e)
 					{

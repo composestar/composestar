@@ -18,7 +18,9 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.IPath;
 
+import ComposestarEclipsePlugin.C.IComposestarCConstants;
 import ComposestarEclipsePlugin.C.Dialogs.StandardSettings;
+import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
 
 /**
@@ -62,7 +64,7 @@ public class MakefileCreator
 		{
 			if (eclipseInstallation[i].contains(" "))
 			{
-				eclipseInstallation[i] = "\"" + eclipseInstallation[i] + "\"";
+				eclipseInstallation[i] = eclipseInstallation[i];
 			}
 			eclipseInstallationOS += eclipseInstallation[i] + java.io.File.separatorChar;
 		}
@@ -84,11 +86,8 @@ public class MakefileCreator
 		try
 		{
 			bw.write("copyMessageFromPlugin:\n");
-			// copy /Y
-			// c:\local\Johan\Eclipse\eclipse\plugins\ComposestarEclipsePlugin\message.*
-			// H:\MingwTest\EclipsePlugin\EncryptionExample\bin\
-			bw.write("\t$(fileCopy) " + eclipseInstallationOS + "plugins" + java.io.File.separatorChar
-					+ "ComposestarEclipsePlugin" + java.io.File.separatorChar + "message.* " + basePath + "\n");
+			File path = new File(ComposestarEclipsePluginPlugin.getAbsolutePath("/", IComposestarCConstants.BUNDLE_ID));
+			bw.write("\t$(fileCopy) \"" + path + File.separator + "message.*\" " + basePath + "\n");
 			bw.write("\n");
 		}
 		catch (IOException io)
@@ -156,21 +155,52 @@ public class MakefileCreator
 			 * ss.getClassPathString()+
 			 * "C:/local/Johan/ComposestarCVS/composestarcore/src/;C:/local/Johan/ComposestarCVS/composestarc/src/"
 			 */
+
+			// ComposestarEclipsePluginPlugin.getAbsolutePath("/",
+			// IComposestarCConstants.BUNDLE_ID)
 			bw.write("weave:\n");
-			String path = eclipseInstallationOS.replace("\"", "") + "plugins" + File.separator
-					+ "ComposestarEclipsePlugin" + File.separator + "binaries" + File.separator;// "C:/local/Johan/EclipsePlugin/ComposestarEclipsePlugin/";
+			// String path = eclipseInstallationOS.replace("\"", "") + "plugins"
+			// + File.separator
+			// + "ComposestarEclipsePlugin" + File.separator + "binaries" +
+			// File.separator;//
+			// "C:/local/Johan/EclipsePlugin/ComposestarEclipsePlugin/";
+
 			String jvmOptions = "";
-			String xerces = path + "groove" + File.separator + "xerces-2_6_0-xml-apis.jar$(SEP)";
-			String xercesImpl = path + "groove" + File.separator + "xerces-2_6_0-xercesImpl.jar$(SEP)";
-			String jgraph = path + "groove" + File.separator + "jgraph.jar$(SEP)";
-			String castor = path + "groove" + File.separator + "castor-0_9_5_2-xml.jar$(SEP)";
-			String groove = path + "groove" + File.separator + "groove-1_2_0.jar$(SEP)";
-			String antlr = path + "antlr.jar$(SEP)";
-			String prolog = path + "prolog" + File.separator + "prolog.jar$(SEP)"; // org.eclipse.core.runtime.Platform.getInstallLocation().getURL().getPath().toString()+"plugins"+java.io.File.separatorChar+"ComposestarEclipsePlugin"+java.io.File.separatorChar+"bin"+java.io.File.separatorChar+"prolog.jar;";
-			String cC = path + "ComposestarC.jar$(SEP)";
-			String cCORE = path + "ComposestarCORE.jar$(SEP)";
+			
+			String xerces = ComposestarEclipsePluginPlugin
+					.getAbsolutePath("/Binaries/groove/xerces-2_6_0-xml-apis.jar")
+					+ "$(SEP)";
+			// path + "groove" + File.separator +
+			// "xerces-2_6_0-xml-apis.jar$(SEP)";
+			String xercesImpl = ComposestarEclipsePluginPlugin
+					.getAbsolutePath("/Binaries/groove/xerces-2_6_0-xercesImpl.jar")
+					+ "$(SEP)";
+			// path + "groove" + File.separator +
+			// "xerces-2_6_0-xercesImpl.jar$(SEP)";
+			String jgraph = ComposestarEclipsePluginPlugin.getAbsolutePath("/Binaries/groove/jgraph.jar") + "$(SEP)";
+			// path + "groove" + File.separator + "jgraph.jar$(SEP)";
+			String castor = ComposestarEclipsePluginPlugin.getAbsolutePath("/Binaries/groove/castor-0_9_5_2-xml.jar")
+					+ "$(SEP)";
+			// path + "groove" + File.separator +
+			// "castor-0_9_5_2-xml.jar$(SEP)";
+			String groove = ComposestarEclipsePluginPlugin.getAbsolutePath("/Binaries/groove/groove-1_2_0.jar")
+					+ "$(SEP)";
+			// path + "groove" + File.separator + "groove-1_2_0.jar$(SEP)";
+			String antlr = ComposestarEclipsePluginPlugin.getAbsolutePath("/Binaries/antlr.jar") + "$(SEP)";
+			// path + "antlr.jar$(SEP)";
+			String prolog = ComposestarEclipsePluginPlugin.getAbsolutePath("/Binaries/prolog/prolog.jar") + "$(SEP)";
+			// path + "prolog" + File.separator + "prolog.jar$(SEP)";
+
+			// org.eclipse.core.runtime.Platform.getInstallLocation().getURL().getPath().toString()+"plugins"+java.io.File.separatorChar+"ComposestarEclipsePlugin"+java.io.File.separatorChar+"bin"+java.io.File.separatorChar+"prolog.jar;";
+			String cC = ComposestarEclipsePluginPlugin.getAbsolutePath("/Binaries/ComposestarC.jar") + "$(SEP)";
+			// path + "ComposestarC.jar$(SEP)";
+			String cCORE = ComposestarEclipsePluginPlugin.getAbsolutePath("/Binaries/ComposestarCORE.jar") + "$(SEP)";
+			// path + "ComposestarCORE.jar$(SEP)";
+			
 			String mainClass = "Composestar.C.MASTER.CMaster";
+			
 			customFilters = customFilters.replaceAll("\n", "");
+			
 			String command = "java.exe " + jvmOptions + " -cp \"" + xerces + xercesImpl + jgraph + castor + groove
 					+ antlr + prolog + cC + cCORE + customFilters + "\" " + mainClass + " " + "\"" + projectPath
 					+ "BuildConfiguration.xml" + "\"";// ss.getClassPathString()+
