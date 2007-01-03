@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.1"?>
+<?eclipse version="3.2"?>
 <plugin>
 
 	--------------------------------------------------
@@ -7,16 +7,16 @@
 	--------------------------------------------------
   	<extension point="org.eclipse.ui.preferencePages">
  		<page
- 			id="composestareclipseplugin.ui.preferencepage"
- 			name="%COMPOSESTAR_NAME"
+ 			id="composestar.eclipse.plugin.java.preferencepage"
+ 			name="%COMPOSESTAR"
  			class="ComposestarEclipsePlugin.Java.UI.JavaComposestarPreferencePage">
  		</page>
  	</extension>
 
  	<extension point="org.eclipse.ui.propertyPages">
  		<page
- 			id="composestareclipseplugin.ui.propertypage"
- 			name="%COMPOSESTAR_NAME"
+ 			id="composestar.eclipse.plugin.java.propertypage"
+ 			name="%COMPOSESTAR"
  			objectClass="org.eclipse.core.resources.IProject"
  			class="ComposestarEclipsePlugin.Java.UI.JavaComposestarPropertyPage"
  			adaptable="true">
@@ -27,39 +27,39 @@
       <objectContribution
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
-            id="composestarbuild">
+            id="composestar.eclipse.plugin.java.c1">
         <menu
-        	id="cstarpopup"
-       		label="%COMPOSESTAR_NAME"
+        	id="composestar.eclipse.plugin.java.popupmenu"
+       		label="%COMPOSESTAR"
        		path="additions">
        		<separator name="slot1"/>
        	</menu>
        	<action
-            label="Run"
-            menubarPath="cstarpopup/slot1" 
+            label="%COMPOSESTAR_POPUP_LABEL_RUN"
+            menubarPath="composestar.eclipse.plugin.java.popupmenu/slot1" 
             class="ComposestarEclipsePlugin.Java.Actions.JavaRunAction"
             enablesFor="1"
-            id="composestar.run">
+            id="composestar.eclipse.plugin.java.action.run">
         </action>
         <action
-            label="Build"
-            menubarPath="cstarpopup/slot1" 
+            label="%COMPOSESTAR_POPUP_LABEL_BUILD"
+            menubarPath="composestar.eclipse.plugin.java.popupmenu/slot1" 
             class="ComposestarEclipsePlugin.Java.Actions.JavaBuildAction"
             enablesFor="1"
-            id="composestar.build">
+            id="composestar.eclipse.plugin.java.action.build">
         </action>
       </objectContribution>
     </extension>
     
     <extension point="org.eclipse.ui.newWizards"> 
       <category 
-        id="composestareclipseplugin.category.wizards" 
-        name="Compose*"> 
+        id="composestar.eclipse.plugin.java.category.wizards" 
+        name="%COMPOSESTAR"> 
       </category> 
       <wizard 
-          id="composestareclipseplugin.wizards.project" 
-          name="Compose* Java Project" 
-          category="composestareclipseplugin.category.wizards"
+          id="composestar.eclipse.plugin.java.wizards.project" 
+          name="%COMPOSESTAR_JAVA_PROJECT" 
+          category="composestar.eclipse.plugin.java.category.wizards"
           icon="icons/logo.gif" 
           class="ComposestarEclipsePlugin.Java.UI.Wizards.ComposestarProjectWizard"
           project="true"> 
@@ -69,13 +69,13 @@
     <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            type="composestar.java.launching.application"
+            type="composestar.eclipse.plugin.java.launching.application"
             helpContextId="org.eclipse.jdt.debug.ui.launchConfigHelpContext.local_java_application"
             class="ComposestarEclipsePlugin.Java.UI.ComposestarJavaApplicationTabGroup"
-            id="ComposestarEclipsePlugin.launchConfigurationTabGroup.ComposestarJavaApplication">
+            id="composestar.eclipse.plugin.java.launchConfigurationTabGroup">
             <launchMode
                   mode="run"
-                  description="Run a Compose* Java application">
+                  description="%COMPOSESTAR_JAVA_LAUNCH_DESCRIPTION">
             </launchMode>
       </launchConfigurationTabGroup>
     </extension>
@@ -83,8 +83,8 @@
     <!-- <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     	<launchConfigurationTypeImage
         	icon="icons/logo.gif"
-        	configTypeID="composestar.java.launching.application"
-        	id="composestareclipseplugin.launchConfigurationTypeImage.composestarJavaApplication">
+        	configTypeID="composestar.eclipse.plugin.java.launching.application"
+        	id="composestar.eclipse.plugin.java.launchConfigurationTypeImage">
     	</launchConfigurationTypeImage>
 	</extension> -->
 
@@ -96,10 +96,10 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="org.eclipse.jdt.launching.JavaLaunchDelegate"
-            id="composestar.java.launching.application"
+            id="composestar.eclipse.plugin.java.launching.application"
             migrationDelegate="org.eclipse.jdt.internal.launching.JavaMigrationDelegate"
             modes="run"
-            name="Compose* Java Application"
+            name="%COMPOSESTAR_JAVA_APPLICATION"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
       </launchConfigurationType>
@@ -108,7 +108,7 @@
     <extension point="org.eclipse.jdt.launching.classpathProviders">
   		<classpathProvider
    			class="ComposestarEclipsePlugin.Java.ComposestarClasspathProvider"
-   			id="composestar.runtime.libraries">
+   			id="composestar.eclipse.plugin.java.runtime.libraries">
   		</classpathProvider>
  	</extension>
     

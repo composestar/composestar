@@ -6,7 +6,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 
 public class ComposestarJavaClasspathTab extends JavaClasspathTab
 {
-	private static final String CLASSPATH_PROVIDER = "composestar.runtime.libraries";
+	private static final String CLASSPATH_PROVIDER = "composestar.eclipse.plugin.java.runtime.libraries";
 
 	/*
 	 * (non-Javadoc)
