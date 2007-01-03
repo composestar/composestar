@@ -26,6 +26,9 @@
 	
 	<target name="build" description="Build the .C implementation of Compose*">
 		<ant target="build" dir="Compiletime" inheritRefs="true" />
+	</target>
+	
+	<target name="plugin" description="Build the plugin for the IDE" >
 		<ant target="build" dir="Plugin" inheritRefs="true" />
 	</target>
 

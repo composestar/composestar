@@ -27,7 +27,7 @@
 
 	<!-- execute tests -->
 	<target name="test_exec" depends="init_eclipse">
-		<cs:c_test workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="ComposestarEclipsePlugin.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar;${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Parametercheck.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Timing.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Tracing.jar">
+		<cs:c_test workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="Composestar.Eclipse.Plugin.C.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar;${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Parametercheck.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Timing.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Tracing.jar">
 			<DirSet dir="${build.c}/Examples">
 				<include name="EncryptionExample"/> 
 				<include name="PolishCalculator"/> 
