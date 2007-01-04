@@ -11,9 +11,9 @@ public class ThreadPool
 
 	private ChildThread protoType = null;
 
-	private static ThreadPool instance = null;
+	protected static ThreadPool instance = null;
 
-	private ThreadPool()
+	protected ThreadPool()
 	{
 		pool = new ArrayList();
 	}
@@ -32,7 +32,7 @@ public class ThreadPool
 		pool.add(returned);
 	}
 
-	private synchronized ChildThread get()
+	protected synchronized ChildThread get()
 	{
 		if (pool.isEmpty())
 		{

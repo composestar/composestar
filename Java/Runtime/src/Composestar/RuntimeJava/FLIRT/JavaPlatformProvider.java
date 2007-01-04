@@ -16,7 +16,7 @@ public class JavaPlatformProvider extends PlatformProvider
 		new JavaObjectInterface();
 		new JavaInvoker();
 		new JavaFilterFactory();
-		ThreadPool.setProtoType(new JavaChildThread());
+		new JavaThreadPool();
 	}
 
 	public RepositoryDeserializer getRepositoryDeserializer()

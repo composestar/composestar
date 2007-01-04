@@ -15,8 +15,9 @@ public class JavaChildThread extends Thread implements ChildThread, Runnable
 
 	public JavaChildThread()
 	{
-		setDaemon(true);
-		start();
+		synchronized(threads){
+			threads.put(this,this);
+		}
 	}
 
 	public ChildThread createNew()
@@ -72,35 +73,16 @@ public class JavaChildThread extends Thread implements ChildThread, Runnable
 
 	public boolean isSuspended()
 	{
-		return running == null || this.isAlive();
+		return false;
 	}
 
 	public void resumeThread()
 	{
-		if (!isSuspended()) notify();
 	}
 
 	public void run()
 	{
-		while (true) // We are a deamon thread so we will be killed automatically
-		{
-			while (running == null)
-			{
-				try
-				{
-					synchronized (this)
-					{
-						wait();
-					}
-				}
-				catch (InterruptedException e)
-				{
-				}
-			}
-			running.run();
-			running = null;
-			ThreadPool.returnChildThread(this);
-		}
+		running.run();
 	}
 
 	public void setRunnable(ChildRunnable run)
@@ -108,27 +90,8 @@ public class JavaChildThread extends Thread implements ChildThread, Runnable
 		this.running = run;
 	}
 
-	public void start()
-	{
-		parent = java.lang.Thread.currentThread();
-		this.interrupt();
-	}
 
 	public void suspendThread()
 	{
-		while (running == null)
-		{
-			try
-			{
-				synchronized (this)
-				{
-					while (isSuspended())
-						wait();
-				}
-			}
-			catch (InterruptedException e)
-			{
-			}
-		}
 	}
 }
