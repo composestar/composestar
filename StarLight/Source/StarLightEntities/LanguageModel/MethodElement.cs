@@ -209,6 +209,8 @@ namespace Composestar.StarLight.Entities.LanguageModel
 
 		#region ICustomAttributes
 
+		private List<AttributeElement> _attributes = new List<AttributeElement>();
+
 		/// <summary>
 		/// Gets a value indicating whether this instance has attributes.
 		/// </summary>
@@ -219,8 +221,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		{
 			get { return (_attributes.Count > 0); }
 		}
-
-		private List<AttributeElement> _attributes = new List<AttributeElement>();
 
 		/// <summary>
 		/// Gets or sets the attributes.

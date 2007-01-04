@@ -237,7 +237,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				AnalyzeReferencedAssemblies(analyzer, refAssemblies, assemblies);
 
 				// Store the found assemblies in the configuration container
-				StoreAssemblies(analyzer, assemblies);
+				StoreAssemblies(analyzer);
 			}
 
 			return !Log.HasLoggedErrors;
@@ -406,7 +406,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 			// Create a new AssemblyConfig object
 			asmConfig = new AssemblyConfig();
-
 			asmConfig.FileName = filename;
 			asmConfig.Name = assembly.Name;
 			asmConfig.Timestamp = File.GetLastWriteTime(filename).Ticks;
@@ -611,12 +610,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </summary>
 		/// <param name="analyzer">The analyzer.</param>
 		/// <param name="assemblies">The assemblies.</param>
-		private void StoreAssemblies(IILAnalyzer analyzer, List<AssemblyElement> assemblies)
+		private void StoreAssemblies(IILAnalyzer analyzer)
 		{
-			if (assemblies.Count == 0 || Log.HasLoggedErrors)
+			if (_assembliesToStore.Count == 0 || Log.HasLoggedErrors)
 				return;
 
-			Log.LogMessageFromResources("StoreInDatabase", assemblies.Count);
+			Log.LogMessageFromResources("StoreInDatabase", _assembliesToStore.Count);
 			Stopwatch sw = Stopwatch.StartNew();
 
 			// Check if we have to save the assembly data
@@ -638,7 +637,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			EntitiesAccessor.Instance.SaveConfiguration(_repositoryFileName, _configContainer);
 
 			sw.Stop();
-			Log.LogMessageFromResources("StoreInDatabaseCompleted", assemblies.Count, analyzer.ResolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
+			Log.LogMessageFromResources("StoreInDatabaseCompleted", _assembliesToStore.Count, analyzer.ResolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
 		}
 
 		/// <summary>

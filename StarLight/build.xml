@@ -313,7 +313,7 @@
 	<target name="clean_deploy" depends="clean,deploy"/>
 	<target name="clean_deploy_test" depends="clean,deploy,test"/>
 
-	<target name="select" depends="init">
+	<target name="select">
 		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar"/>
 		<antmenu image="images/logos/logofull.png">
 
