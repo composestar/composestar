@@ -54,7 +54,7 @@ public class GrooveASTBuilder
 	public final static int REJECT_ACTION = 2;
 
 	public final static String STAR_REPRESENTATION = "'*'";
-	
+
 	/*
 	 * Edge labels in the AST
 	 */
@@ -87,13 +87,10 @@ public class GrooveASTBuilder
 	public final static String SELECTOR_EDGE = "selector";
 
 	public final static String TARGET_EDGE = "target";
-	
-	
+
 	private Hashtable selectorTable;
 
 	private Hashtable targetTable;
-
-	
 
 	public GrooveASTBuilder()
 	{
@@ -527,46 +524,6 @@ public class GrooveASTBuilder
 		graph.addEdge(edge);
 
 		return patternNode;
-	}
-
-	/**
-	 * @param substitutionPart
-	 * @param graph
-	 * @return
-	 */
-	private Node buildSubstitutionPartNode(MatchingPart substitutionPart, Graph graph)
-	{
-		AnnotatedNode substitutionPartNode = new AnnotatedNode();
-		substitutionPartNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, substitutionPart);
-		graph.addNode(substitutionPartNode);
-
-		AnnotatedEdge edge = new AnnotatedEdge(substitutionPartNode, FlowNode.SUBSTITUTION_PART_NODE,
-				substitutionPartNode);
-		graph.addEdge(edge);
-
-		// selector:
-		MessageSelector selector = substitutionPart.selector;
-		Node selectorNode = (Node) selectorTable.get(selector.getName());
-		if (selectorNode == null)
-		{
-			selectorNode = buildSelectorNode(selector, graph);
-		}
-
-		edge = new AnnotatedEdge(substitutionPartNode, SELECTOR_EDGE, selectorNode);
-		graph.addEdge(edge);
-
-		// target:
-		Target target = substitutionPart.getTarget();
-		Node targetNode = (Node) targetTable.get(target.name);
-		if (targetNode == null)
-		{
-			targetNode = buildTargetNode(target, graph);
-		}
-
-		edge = new AnnotatedEdge(substitutionPartNode, TARGET_EDGE, targetNode);
-		graph.addEdge(edge);
-
-		return substitutionPartNode;
 	}
 
 	/**

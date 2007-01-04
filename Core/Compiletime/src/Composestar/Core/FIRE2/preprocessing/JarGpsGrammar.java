@@ -96,64 +96,72 @@ public class JarGpsGrammar extends GpsGrammar
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		ZipInputStream zis = new ZipInputStream(bis);
 		ZipEntry ze;
-		while ((ze = zis.getNextEntry()) != null)
+		try
 		{
-			String name = ze.getName();
-			if (name.startsWith(grammarLocation) && name.endsWith(".gpr") && !ze.isDirectory())
+			while ((ze = zis.getNextEntry()) != null)
 			{
-				String fileName = name.substring(grammarLocation.length() + 1);
-				String subName = fileName.substring(0, fileName.length() - 4);
-
-				int separatorPos = subName.indexOf('.');
-
-				Integer priority;
-				if (separatorPos > 0)
+				String name = ze.getName();
+				if (name.startsWith(grammarLocation) && name.endsWith(".gpr") && !ze.isDirectory())
 				{
-					priority = new Integer(fileName.substring(0, separatorPos));
-					if (priority.intValue() < 0)
+					String fileName = name.substring(grammarLocation.length() + 1);
+					String subName = fileName.substring(0, fileName.length() - 4);
+
+					int separatorPos = subName.indexOf('.');
+
+					Integer priority;
+					if (separatorPos > 0)
 					{
-						throw new NumberFormatException("" + priority + " is not a valid priority");
+						priority = new Integer(fileName.substring(0, separatorPos));
+						if (priority.intValue() < 0)
+						{
+							throw new NumberFormatException("" + priority + " is not a valid priority");
+						}
+					}
+					else
+					{
+						priority = PrioritizedRuleSystem.DEFAULT_PRIORITY;
+					}
+
+					String ruleName = subName.substring(separatorPos + 1);
+					StructuredRuleName extendedRulePath = new StructuredRuleName(rulePath, ruleName);
+
+					// check for overlapping rule and directory names
+					if (ruleGraphMap.containsKey(extendedRulePath))
+					{
+						throw new IOException(LOAD_ERROR + ": duplicate rule name \"" + extendedRulePath + '\"');
+					}
+					try
+					{
+						RuleGraph ruleGraph = createRuleGraph(innerLoader.unmarshal(relativeLocation + '/' + fileName),
+								extendedRulePath);
+						ruleGraph.setFixed();
+						ruleGraphMap.put(extendedRulePath, ruleGraph);
+						priorityMap.put(extendedRulePath, priority);
+
+					}
+					catch (GraphFormatException exc)
+					{
+						throw new IOException(LOAD_ERROR + ": rule format error in " + grammarLocation + ": "
+								+ exc.getMessage());
+					}
+					catch (XmlException exc)
+					{
+						throw new IOException(LOAD_ERROR + ": xml format error in " + grammarLocation + ": "
+								+ exc.getMessage());
+					}
+					catch (FileNotFoundException exc)
+					{
+						// proceed; this should not occur but I'm not sure now
+						// and
+						// don't want
+						// to turn it into an assert
 					}
 				}
-				else
-				{
-					priority = PrioritizedRuleSystem.DEFAULT_PRIORITY;
-				}
-
-				String ruleName = subName.substring(separatorPos + 1);
-				StructuredRuleName extendedRulePath = new StructuredRuleName(rulePath, ruleName);
-
-				// check for overlapping rule and directory names
-				if (ruleGraphMap.containsKey(extendedRulePath))
-				{
-					throw new IOException(LOAD_ERROR + ": duplicate rule name \"" + extendedRulePath + '\"');
-				}
-				try
-				{
-					RuleGraph ruleGraph = createRuleGraph(innerLoader.unmarshal(relativeLocation + '/' + fileName),
-							extendedRulePath);
-					ruleGraph.setFixed();
-					ruleGraphMap.put(extendedRulePath, ruleGraph);
-					priorityMap.put(extendedRulePath, priority);
-
-				}
-				catch (GraphFormatException exc)
-				{
-					throw new IOException(LOAD_ERROR + ": rule format error in " + grammarLocation + ": "
-							+ exc.getMessage());
-				}
-				catch (XmlException exc)
-				{
-					throw new IOException(LOAD_ERROR + ": xml format error in " + grammarLocation + ": "
-							+ exc.getMessage());
-				}
-				catch (FileNotFoundException exc)
-				{
-					// proceed; this should not occur but I'm not sure now and
-					// don't want
-					// to turn it into an assert
-				}
 			}
+		}
+		finally
+		{
+			zis.close();
 		}
 
 	}

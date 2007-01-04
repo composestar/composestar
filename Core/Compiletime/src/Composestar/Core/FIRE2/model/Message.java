@@ -70,7 +70,8 @@ public class Message
 
 	private static MessageSelector getStarSelector()
 	{
-		// TODO: (michiel) validate that using an empty MessageSelectorAST is legal
+		// TODO: (michiel) validate that using an empty MessageSelectorAST is
+		// legal
 		MessageSelector selector = new MessageSelector(new MessageSelectorAST());
 		selector.setName("*");
 		return selector;
@@ -78,7 +79,8 @@ public class Message
 
 	private static MessageSelector getUndistinguishableSelector()
 	{
-		// TODO: (michiel) validate that using an empty MessageSelectorAST is legal
+		// TODO: (michiel) validate that using an empty MessageSelectorAST is
+		// legal
 		MessageSelector selector = new MessageSelector(new MessageSelectorAST());
 		selector.setName("+");
 		return selector;

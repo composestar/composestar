@@ -117,8 +117,8 @@ public class ModelBuilder implements CTCommonModule
 		// get filtermodules:
 		FilterModuleOrder filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
-		currentFireModelIF = new FireModel(concern, filterModules, true);
-		currentFireModelOF = new FireModel(concern, filterModules, false);
+		currentFireModelIF = new FireModel(concern, filterModules);
+		currentFireModelOF = currentFireModelIF;
 
 		List order = filterModules.orderAsList();
 		modules = new FilterModule[order.size()];
@@ -154,7 +154,8 @@ public class ModelBuilder implements CTCommonModule
 	private void processMethod(MethodInfo methodInfo)
 	{
 		// create executionmodel:
-		ExecutionModel execModel = currentFireModelIF.getExecutionModel(methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
+		ExecutionModel execModel = currentFireModelIF.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo,
+				FireModel.STRICT_SIGNATURE_CHECK);
 
 		// create inlineModel:
 		inliner.inline(execModel, modules, methodInfo);
@@ -240,7 +241,7 @@ public class ModelBuilder implements CTCommonModule
 	private Block createCallBlock(Target target, MethodInfo methodInfo)
 	{
 		// create executionModel:
-		ExecutionModel execModel = currentFireModelOF.getExecutionModel(target, methodInfo,
+		ExecutionModel execModel = currentFireModelOF.getExecutionModel(FireModel.OUTPUT_FILTERS, target, methodInfo,
 				FireModel.STRICT_SIGNATURE_CHECK);
 
 		// create inlineModel:

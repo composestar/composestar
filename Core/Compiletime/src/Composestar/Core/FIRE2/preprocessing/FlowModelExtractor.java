@@ -17,7 +17,6 @@ import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -253,13 +252,6 @@ public class FlowModelExtractor
 		 * Contains all transitions originating from this node.
 		 */
 		private Vector transitions;
-
-		/**
-		 * Hashtable to add annotations to a node, which don't need to be
-		 * serialized. Useful for algorithms to store some processing
-		 * information.
-		 */
-		private transient Hashtable annotations = new Hashtable();
 
 		/**
 		 * Default constructor

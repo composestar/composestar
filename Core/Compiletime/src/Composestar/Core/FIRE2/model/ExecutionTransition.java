@@ -14,7 +14,7 @@ public abstract class ExecutionTransition
 	/*
 	 * Transition labels
 	 */
-	
+
 	public final static String CONDITION_EXPRESSION_FALSE = "<ConditionExpression-false>";
 
 	public final static String CONDITION_EXPRESSION_TRUE = "<ConditionExpression-true>";
@@ -84,8 +84,7 @@ public abstract class ExecutionTransition
 	public final static String SUBSTITUTION_PART_VALUE_VALUE = "<SubstitutionPart-value-value>";
 
 	public final static String SUBSTITUTION_PART_GENERALIZATION = "SubstitutionPart";
-	
-	
+
 	/**
 	 * The label of this transition.
 	 */

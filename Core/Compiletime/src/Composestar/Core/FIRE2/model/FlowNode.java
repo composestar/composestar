@@ -18,7 +18,7 @@ public interface FlowNode
 	/*
 	 * Names (labels) a FlowNode can have
 	 */
-	
+
 	public final static String FLOW_ELEMENT_NODE = "FlowElement";
 
 	public final static String FILTER_MODULE_NODE = "FilterModule";

@@ -144,7 +144,7 @@ public class Sign implements CTCommonModule
 			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
 			{
 				filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-				model = new FireModel(concern, filterModules, true);
+				model = new FireModel(concern, filterModules);
 				analysisModels.put(concern, model);
 
 				unsolvedConcerns.add(concern);
@@ -203,7 +203,7 @@ public class Sign implements CTCommonModule
 			{
 				concern = (Concern) iter.next();
 				model = (FireModel) analysisModels.get(concern);
-				distinguishable = model.getDistinguishable();
+				distinguishable = model.getDistinguishableSelectors(FireModel.INPUT_FILTERS);
 				messages = distinguishable.iterator();
 
 				// first distinguishable:
@@ -236,7 +236,7 @@ public class Sign implements CTCommonModule
 
 		signature = getSignature(concern);
 
-		execModel = fireModel.getExecutionModel(messageSelector);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, messageSelector);
 		entranceState = (ExecutionState) execModel.getEntranceStates().next();
 
 		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
@@ -700,7 +700,7 @@ public class Sign implements CTCommonModule
 		{
 			concern = (Concern) iter.next();
 			model = (FireModel) analysisModels.get(concern);
-			distinguishable = model.getDistinguishable();
+			distinguishable = model.getDistinguishableSelectors(FireModel.INPUT_FILTERS);
 			selectors = distinguishable.iterator();
 
 			// first distinguishable:
@@ -740,7 +740,7 @@ public class Sign implements CTCommonModule
 		ExecutionModel execModel;
 		Signature signature;
 
-		execModel = fireModel.getExecutionModel(selector);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, selector);
 		signature = getSignature(concern);
 
 		// don't do the check when the signature has the given selector:
@@ -856,7 +856,7 @@ public class Sign implements CTCommonModule
 		ExecutionModel execModel;
 
 		// first check with strict signature checks:
-		execModel = fireModel.getExecutionModel(methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
 		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
 		Enumeration enu = checker.matchingStates();
 
@@ -885,7 +885,7 @@ public class Sign implements CTCommonModule
 
 		// then check again with loose signature checks:
 
-		execModel = fireModel.getExecutionModel(methodInfo, FireModel.LOOSE_SIGNATURE_CHECK);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo, FireModel.LOOSE_SIGNATURE_CHECK);
 		checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
 		enu = checker.matchingStates();
 
@@ -1070,7 +1070,7 @@ public class Sign implements CTCommonModule
 		ExecutionState state;
 		ExecutionModel execModel;
 
-		execModel = fireModel.getExecutionModel(methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
 
 		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
 		Enumeration enu = checker.matchingStates();

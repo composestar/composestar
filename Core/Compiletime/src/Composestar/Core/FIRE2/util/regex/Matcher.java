@@ -252,8 +252,7 @@ public class Matcher
 
 	private boolean isEndState(CombinedState state)
 	{
-		if (state.regularState.equals(pattern.getEndState())
-				&& !state.executionState.getOutTransitions().hasNext())
+		if (state.regularState.equals(pattern.getEndState()) && !state.executionState.getOutTransitions().hasNext())
 		{
 			endState = state;
 			return true;

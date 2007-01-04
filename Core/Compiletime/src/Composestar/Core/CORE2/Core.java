@@ -66,8 +66,8 @@ public class Core implements CTCommonModule
 		HashSet visitedTransitions = new HashSet();
 		Hashtable filterContinueTable = new Hashtable();
 
-		FireModel fireModel = new FireModel(concern, modules, true);
-		ExecutionModel execModel = fireModel.getExecutionModel();
+		FireModel fireModel = new FireModel(concern, modules);
+		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS);
 		ExecutionStateIterator iterator = new ExecutionStateIterator(execModel);
 
 		Iterator it;
@@ -126,46 +126,43 @@ public class Core implements CTCommonModule
 			}
 		}
 
-		FlowModel[] flowModels = fireModel.getFlowModels();
-		for (int i = 0; i < flowModels.length; i++)
+		FlowModel flowModel = fireModel.getFlowModel(FireModel.INPUT_FILTERS);
+
+		// unreachable matchingparts:
+		it = flowModel.getNodes();
+		while (it.hasNext())
 		{
+			flowNode = (FlowNode) it.next();
 
-			// unreachable matchingparts:
-			it = flowModels[i].getNodes();
-			while (it.hasNext())
+			if (!visitedNodes.contains(flowNode) && flowNode.containsName("MatchingPart"))
 			{
-				flowNode = (FlowNode) it.next();
-
-				if (!visitedNodes.contains(flowNode) && flowNode.containsName("MatchingPart"))
-				{
-					Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Unreachable matchingpart found!", flowNode
-							.getRepositoryLink());
-				}
+				Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Unreachable matchingpart found!", flowNode
+						.getRepositoryLink());
 			}
+		}
 
-			// matchingparts that always accept or reject:
-			it = flowModels[i].getTransitions();
-			while (it.hasNext())
+		// matchingparts that always accept or reject:
+		it = flowModel.getTransitions();
+		while (it.hasNext())
+		{
+			flowTransition = (FlowTransition) it.next();
+			if (!visitedTransitions.contains(flowTransition))
 			{
-				flowTransition = (FlowTransition) it.next();
-				if (!visitedTransitions.contains(flowTransition))
+				FlowNode startNode = flowTransition.getStartNode();
+				if (visitedNodes.contains(startNode) && startNode.containsName("MatchingPart"))
 				{
-					FlowNode startNode = flowTransition.getStartNode();
-					if (visitedNodes.contains(startNode) && startNode.containsName("MatchingPart"))
+					MatchingPart part = (MatchingPart) startNode.getRepositoryLink();
+					if (flowTransition.getType() == FlowTransition.FLOW_TRUE_TRANSITION)
 					{
-						MatchingPart part = (MatchingPart) startNode.getRepositoryLink();
-						if (flowTransition.getType() == FlowTransition.FLOW_TRUE_TRANSITION)
-						{
-							Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Matchingpart never accepts!", startNode
-									.getRepositoryLink());
-						}
-						else if (!part.getSelector().getName().equals("*") || !part.getTarget().getName().equals("*"))
-						{
-							Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Matchingpart always accepts!", startNode
-									.getRepositoryLink());
-						}
-
+						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Matchingpart never accepts!", startNode
+								.getRepositoryLink());
 					}
+					else if (!part.getSelector().getName().equals("*") || !part.getTarget().getName().equals("*"))
+					{
+						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Matchingpart always accepts!", startNode
+								.getRepositoryLink());
+					}
+
 				}
 			}
 		}
