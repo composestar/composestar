@@ -1,7 +1,10 @@
 package ComposestarEclipsePlugin.C.Dialogs;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -20,7 +23,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ComposestarEclipsePlugin.C.IComposestarCConstants;
+import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
+import ComposestarEclipsePlugin.Core.BuildConfiguration.Platform;
 
 public class SettingsDialog extends Dialog
 {
@@ -69,17 +75,15 @@ public class SettingsDialog extends Dialog
 
 	private String rundlString = "";
 
+	private IDialogSettings settings;
+	
+	private String projectLocation;
+
 	public SettingsDialog(Shell shell, IProject[] selection)
 	{
 		super(shell);
-		if (selection[0].getFile("BuildConfiguration.xml").exists())
-		{
-			getStandardSettings(selection);
-		}
-		else
-		{
-			Debug.instance().Log("No buildConfiguration file found");
-		}
+		projectLocation = selection[0].getProject().getLocation().toString();
+		getStandardSettings(selection);
 	}
 
 	/**
@@ -98,6 +102,7 @@ public class SettingsDialog extends Dialog
 	{
 		if (buttonID == Window.OK)
 		{
+			saveSettings();
 			super.okPressed();
 		}
 		if (buttonID == Window.CANCEL)
@@ -139,7 +144,7 @@ public class SettingsDialog extends Dialog
 
 		rundlText = new Text(group, SWT.BORDER | SWT.SINGLE);
 
-		if (!rundlString.equals(""))
+		if (!rundlString.equals("") && rundlString != null)
 		{
 			rundlText.setText(rundlString);
 		}
@@ -172,7 +177,7 @@ public class SettingsDialog extends Dialog
 		label.setText("BuildDebugLevel [0-5]");
 
 		builddlText = new Text(group, SWT.BORDER | SWT.SINGLE);
-		if (!builddlString.equals(""))
+		if (!builddlString.equals("") && builddlString != null)
 		{
 			builddlText.setText(builddlString);
 		}
@@ -207,7 +212,11 @@ public class SettingsDialog extends Dialog
 		debuggerType.add("NotSet");
 		debuggerType.add("Code Debugger");
 		debuggerType.add("Visual Debugger");
-		if (debuggerString.equals("Code Debugger"))
+		if (debuggerString == null)
+		{
+			debuggerType.select(0);
+		}
+		else if (debuggerString.equals("Code Debugger"))
 		{
 			debuggerType.select(1);
 		}
@@ -246,7 +255,11 @@ public class SettingsDialog extends Dialog
 		secretMode.add("SelectedOrder");
 		secretMode.add("AllOrders");
 		secretMode.add("AllOrdersAndSelect");
-		if (secretString.equals("SelectedOrder"))
+		if (secretString == null)
+		{
+			secretMode.select(3);
+		}
+		else if (secretString.equals("SelectedOrder"))
 		{
 			secretMode.select(1);
 		}
@@ -286,7 +299,7 @@ public class SettingsDialog extends Dialog
 		incremental = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		incremental.add("False");
 		incremental.add("True");
-		if (incrementalString.equals("True"))
+		if (incrementalString != null && incrementalString.equals("True"))
 		{
 			incremental.select(1);
 		}
@@ -319,7 +332,7 @@ public class SettingsDialog extends Dialog
 		verifyAssemblies = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		verifyAssemblies.add("False");
 		verifyAssemblies.add("True");
-		if (!verifyAssembliesString.equals("True"))
+		if (verifyAssembliesString != null && !verifyAssembliesString.equals("True"))
 		{
 			verifyAssemblies.select(0);
 		}
@@ -350,7 +363,7 @@ public class SettingsDialog extends Dialog
 		label.setText("FilterModuleOrder");
 
 		filterModuleOrder = new Text(group, SWT.BORDER | SWT.SINGLE);
-		if (!filterModuleOrderString.equals(""))
+		if (filterModuleOrderString != null && !filterModuleOrderString.equals(""))
 		{
 			filterModuleOrder.setText(filterModuleOrderString);
 		}
@@ -387,7 +400,7 @@ public class SettingsDialog extends Dialog
 		label.setText("Classpath");
 
 		classPathText = new Text(group, SWT.MULTI | SWT.WRAP);
-		if (!classPathString.equals(""))
+		if (classPathString != null && !classPathString.equals(""))
 		{
 			classPathText.setText(classPathString.replaceAll(";", ";\n"));
 		}
@@ -410,25 +423,42 @@ public class SettingsDialog extends Dialog
 		return controls;
 	}
 
+	private void saveSettings()
+	{
+		settings.put("classPath", classPathString);
+		settings.put("applicationStart", mainString);
+		settings.put("buildDebugLevel", builddlString);
+		settings.put("runDebugLevel", rundlString);
+		settings.put("language", language);
+		settings.put("basePath", baseString);
+		settings.put("buildPath", buildString);
+		settings.put("outputPath", outputString);
+		settings.put("debugger", debuggerString);
+		settings.put("secretMode", secretString);
+		settings.put("incremental", incrementalString);
+		settings.put("verifyAssemblies", verifyAssembliesString);
+		settings.put("filterModuleOrder", filterModuleOrderString);
+		
+		ComposestarEclipsePluginPlugin.getDefault().saveDialogSettings(projectLocation);
+	}
+
 	private void getStandardSettings(IProject[] selection)
 	{
-		StandardSettings ss;
-		String projectLocation = selection[0].getProject().getLocation().toString();
-		ss = new StandardSettings(projectLocation);
-		ss.run();
-		builddlString = ss.getBuilddlString();
-		rundlString = ss.getRundlString();
-		mainString = ss.getMainString();
-		language = ss.getLanguage();
-		baseString = ss.getBasePath();
-		buildString = ss.getBuildPath();
-		outputString = ss.getOutputPath();
-		classPathString = ss.getClassPathString();
-		debuggerString = ss.getDebuggerString();
-		secretString = ss.getSecretString();
-		incrementalString = ss.getIncrementalString();
-		verifyAssembliesString = ss.getVerifyAssembliesString();
-		filterModuleOrderString = ss.getFilterModuleOrderString();
+		settings = ComposestarEclipsePluginPlugin.getDefault().getDialogSettings(projectLocation);
+
+		classPathString = settings.get("classPath");
+		mainString = settings.get("applicationStart");
+		builddlString = settings.get("buildDebugLevel");
+		rundlString = settings.get("runDebugLevel");
+		language = settings.get("language");
+		baseString = projectLocation;
+		buildString = settings.get("buildPath");
+		outputString = settings.get("outputPath");
+		debuggerString = settings.get("debugger");
+		secretString = settings.get("secretMode");
+		incrementalString = settings.get("incremental");
+		verifyAssembliesString = settings.get("verifyAssemblies");
+		filterModuleOrderString = settings.get("filterModuleOrder");
 
 		if (builddlString == null || builddlString.equals(""))
 		{
@@ -441,6 +471,14 @@ public class SettingsDialog extends Dialog
 			Debug.instance().Log("runDebugLevel was not set, Standard value applied", Debug.MSG_WARNING);
 		}
 
+		if (classPathString == null)
+		{
+			File f = new File(ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml",
+					IComposestarCConstants.BUNDLE_ID));
+			Platform p = new Platform("C");
+			p.readPlatform(f.toString());
+			classPathString = p.getClassPath();
+		}
 	}
 
 	public String getRundl()

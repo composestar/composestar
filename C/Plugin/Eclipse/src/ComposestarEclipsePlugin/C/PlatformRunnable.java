@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.JavaCore;
 
 import ComposestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
 import ComposestarEclipsePlugin.C.Makefile.MakefileCreator;
+import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.Actions.Sources;
 import ComposestarEclipsePlugin.Core.BuildConfiguration.ModuleSetting;
@@ -69,7 +70,7 @@ public class PlatformRunnable implements IPlatformRunnable
 		String osName = System.getProperty("os.name");
 		String eclipseInstallationOS = "";
 
-		Debug.instance().setEnabled(false);
+		Debug.instance().setToStdOut(true);
 
 		for (int i = 0; i < eclipseInstallation.length; i++)
 		{
@@ -151,8 +152,7 @@ public class PlatformRunnable implements IPlatformRunnable
 					+ java.io.File.separatorChar);
 			buildPath.setName("Build");
 			BuildConfigurationManager.instance().addPath(buildPath);
-			composestarPath.setPath(eclipseInstallationOS + "plugins" + java.io.File.separatorChar
-					+ "ComposestarEclipsePlugin" + java.io.File.separatorChar + java.io.File.separatorChar);
+			composestarPath.setPath(ComposestarEclipsePluginPlugin.getAbsolutePath("/") + "/");
 			composestarPath.setName("Composestar");
 			BuildConfigurationManager.instance().addPath(composestarPath);
 
@@ -182,6 +182,8 @@ public class PlatformRunnable implements IPlatformRunnable
 			ModuleSetting incre = new ModuleSetting();
 			incre.setName("INCRE");
 			incre.addSetting("enabled", "False");
+			incre.addSetting("config", ComposestarEclipsePluginPlugin.getAbsolutePath("/INCREconfig.xml",
+					IComposestarCConstants.BUNDLE_ID));
 			BuildConfigurationManager.instance().addModuleSettings(incre);
 
 			ModuleSetting ilicit = new ModuleSetting();

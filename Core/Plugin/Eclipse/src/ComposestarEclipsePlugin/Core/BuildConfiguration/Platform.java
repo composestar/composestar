@@ -1,9 +1,12 @@
 package ComposestarEclipsePlugin.Core.BuildConfiguration;
 
+import java.io.FileInputStream;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
@@ -32,7 +35,7 @@ public class Platform extends DefaultHandler
 			SAXParser saxParser = saxParserFactory.newSAXParser();
 			XMLReader parser = saxParser.getXMLReader();
 			parser.setContentHandler(this);
-			parser.parse(fileName);
+			parser.parse(new InputSource(new FileInputStream(fileName)));
 		}
 		catch (Exception e)
 		{

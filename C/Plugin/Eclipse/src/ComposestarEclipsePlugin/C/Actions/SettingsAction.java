@@ -69,6 +69,7 @@ public class SettingsAction implements IWorkbenchWindowActionDelegate
 
 	public void run(IAction action)
 	{
+		//TODO: don't save the buildconfig.xml it's done by IDialogSettings
 		SettingsDialog dialog = new SettingsDialog(window.getShell(), selectedProjects);
 		dialog.open();
 		if (dialog.getReturnCode() == Window.OK)
@@ -170,7 +171,7 @@ public class SettingsAction implements IWorkbenchWindowActionDelegate
 			BuildConfigurationManager.instance().setProject(projectConfig);
 			String projectPath = selectedProjects[0].getProject().getLocation().toOSString();
 			projectPath += java.io.File.separatorChar;
-			BuildConfigurationManager.instance().saveToXML(projectPath + "BuildConfiguration.xml");
+			//BuildConfigurationManager.instance().saveToXML(projectPath + "BuildConfiguration.xml");
 			BuildConfigurationManager.instance().clearConfigManager();
 		}
 	}

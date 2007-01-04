@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Compose*">
+	<item value="bin\" key="buildPath"/>
+	<item value="bin\" key="outputPath"/>
+	<item value="" key="verifyAssemblies"/>
+	<item value="CustomFilters\Parametercheck.jar&#x0A;CustomFilters\Timing.jar&#x0A;CustomFilters\Tracing.jar" key="customFilter"/>
+	<item value="3" key="runDebugLevel"/>
+	<item value="ExampleRunner" key="applicationStart"/>
+	<item value="C:/sandbox/C/Examples/EncryptionExample" key="basePath"/>
+	<item value="3" key="buildDebugLevel"/>
+	<item value="" key="secretMode"/>
+	<item value="" key="debugger"/>
+	<item value="" key="filterModuleOrder"/>
+	<item value="JAVA" key="language"/>
+	<item value="" key="incremental"/>
+	<item value="%composestar%/Binaries/ComposestarCORE.jar;%composestar%/Binaries/ComposestarC.jar;%composestar%/Binaries/antlr.jar;%composestar%/Binaries/prolog/prolog.jar;%composestar%/Binaries/groove/castor-0_9_5_2-xml.jar;%composestar%/Binaries/groove/groove-1_2_0.jar;%composestar%/Binaries/groove/jgraph.jar;%composestar%/Binaries/groove/xerces-2_6_0-xercesImpl.jar;%composestar%/Binaries/groove/xerces-2_6_0-xml-apis.jar;" key="classPath"/>
+</section>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar" default="build">
 
 	<import file="../common.xml"/>
@@ -214,6 +214,7 @@
 		<antcall target="test_core" inheritRefs="true" />
 		<antcall target="test_dotnet" inheritRefs="true" />
 		<antcall target="test_java" inheritRefs="true" />
+		<antcall target="test_c" inheritRefs="true" />
 	</target>
 
 	<target name="test_core" depends="init" description="Execute JUnit tests.">
@@ -226,6 +227,10 @@
 	
 	<target name="test_java" depends="init" if="enabled.java">
 		<ant target="test" dir="${build.java}" inheritRefs="true" />
+	</target>
+	
+	<target name="test_c" depends="init" if="enabled.c">
+		<ant target="test" dir="${build.c}" inheritRefs="true" />
 	</target>
 	
 	<!-- SVN tasks -->

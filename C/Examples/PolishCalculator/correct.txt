@@ -1,0 +1,6 @@
+
+Welcome to the reverse polish calculator
+Calculating (1-2) * (4+5), requires an input of the form:
+1 2 - 4 5 + * (enter)
+The program can be terminated by using the letter: q 
+Returned by Aspect NoInput, for commandline testing adapt selector NoInput.cps

@@ -237,9 +237,8 @@ public class CstarTest extends BaseTask
 			/*******************************************************************
 			 * run: make run
 			 */
-			String[] cmd = { "java", "-cp", eclipseHome + "/startup.jar", launcher, "-application",
-					"ComposestarEclipsePlugin.headlessCEPTest", projectname, "-customfilter", customfilterString,
-					"-data", workspace };
+			String[] cmd = { "java", "-cp", eclipseHome + "/startup.jar", launcher, "-application", application,
+					projectname, "-customfilter", customfilterString, "-data", workspace };
 			// {"make", "run", "-C", workspace+"\\"+projectname};
 
 			log("make command= " + "make run -C " + workspace + "\\" + projectname);

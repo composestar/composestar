@@ -26,6 +26,12 @@ public class Debug implements IComposestarConstants
 	private MessageConsole myConsole;
 
 	private boolean enabled = true;
+	
+	private boolean toStdOut = false;
+	
+	private PrintStream origOut;
+	
+	private PrintStream newOut;
 
 	public Debug()
 	{
@@ -34,7 +40,9 @@ public class Debug implements IComposestarConstants
 		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(myConsole);
 		stream = myConsole.newMessageStream();
 		stream.setActivateOnWrite(true);
-		System.setOut(new PrintStream(stream));
+		origOut = System.out;
+		newOut = new PrintStream(stream);
+		System.setOut(newOut);
 	}
 
 	public static Debug instance()
@@ -69,6 +77,11 @@ public class Debug implements IComposestarConstants
 
 	private void PrintMessage(final String msg, final int msgKind)
 	{
+		if (toStdOut)
+		{
+			System.out.println(msg);
+		}
+		
 		// Print the message in the UI Thread in async mode
 		Display.getDefault().asyncExec(new Runnable()
 		{
@@ -99,5 +112,17 @@ public class Debug implements IComposestarConstants
 	public void setEnabled(boolean b)
 	{
 		this.enabled = b;
+	}
+	
+	public void setToStdOut(boolean b)
+	{
+		this.toStdOut = b;
+		if (toStdOut)
+		{
+			System.setOut(origOut);
+		}
+		else {
+			System.setOut(newOut);
+		}
 	}
 }

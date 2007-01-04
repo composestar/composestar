@@ -193,15 +193,21 @@ public class BuildConfigurationManager
 
 			bw.write(spacePad(1) + "</Settings>\n");
 
-			String path = ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml", IComposestarCConstants.BUNDLE_ID);
+			String path = ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml",
+					IComposestarCConstants.BUNDLE_ID);
 			BufferedReader in = new BufferedReader(new FileReader(path));
 			String s;
 			StringBuffer buffer = new StringBuffer();
 			boolean skip = true;
+			
+			String pluginPath = ComposestarEclipsePluginPlugin.getAbsolutePath("");
 			while ((s = in.readLine()) != null)
 			{
 				if (s.startsWith("<Platforms>"))
 				{
+					// Replace %composestar% with the core plugin path (where
+					// the binaries are)
+					s = s.replaceAll("%composestar%", pluginPath);
 					buffer.append(spacePad(1) + "" + s + "\n");
 					skip = false;
 				}
@@ -257,12 +263,13 @@ public class BuildConfigurationManager
 
 	public void addCustomFilter(String customFilter)
 	{
+		customFilter = customFilter.replaceAll(";", "\n");
 		String[] customFilters = customFilter.split("\n");
 		for (int i = 0; i < customFilters.length; i++)
 		{
 			if (customFilters[i].length() > 0)
 			{
-				cFilter.add(customFilters[i].replaceFirst(java.io.File.pathSeparator, ""));
+				cFilter.add(customFilters[i]);
 			}
 		}
 	}

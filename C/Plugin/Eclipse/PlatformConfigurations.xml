@@ -1,5 +1,5 @@
 <Platforms>
-  <Platform name="C" mainClass="Composestar.C.MASTER.CMaster" classPath="C:\local\Johan\ComposeStarCVS\composestarcore\src;C:\local\Johan\ComposeStarCVS\composestarc\src;C:\Program Files\ComposeStar\binaries\antlr.jar;C:\Program Files\ComposeStar\binaries\prolog\prolog.jar" options="">
+  <Platform name="C" mainClass="Composestar.C.MASTER.CMaster" classPath="%composestar%/Binaries/ComposestarCORE.jar;%composestar%/Binaries/ComposestarC.jar;%composestar%/Binaries/antlr.jar;%composestar%/Binaries/prolog/prolog.jar;%composestar%/Binaries/groove/castor-0_9_5_2-xml.jar;%composestar%/Binaries/groove/groove-1_2_0.jar;%composestar%/Binaries/groove/jgraph.jar;%composestar%/Binaries/groove/xerces-2_6_0-xercesImpl.jar;%composestar%/Binaries/groove/xerces-2_6_0-xml-apis.jar;" options="">
     <Languages defaultLanguage="C">
       <Language name="C">
         <Compiler name="CCompiler" executable="gcc" options="" implementedBy="Composestar.C.COMP.JavaCompiler">
@@ -15,15 +15,8 @@
 	</Language>
     </Languages>
     <RequiredFiles>
-      <RequiredFile fileName="AntlrDotNet.dll" />
-      <RequiredFile fileName="ComposestarCore.dll" />
-      <RequiredFile fileName="ComposestarCoreDotNET.dll" />
-      <RequiredFile fileName="ComposeStarDotNETRuntimeInterpreter.dll" />
-      <RequiredFile fileName="ComposeStarDotNETUtilities.dll" />
-      <RequiredFile fileName="ComposeStarFilterDebugger.dll" />
-      <RequiredFile fileName="ComposeStarRuntimeInterpreter.dll" />
-      <RequiredFile fileName="ComposeStarUtilities.dll" />
-      <RequiredFile fileName="DotNETPlatformInterface.dll" />
+      <RequiredFile fileName="ComposestarCore.jar" />
+      <RequiredFile fileName="ComposestarC.jar" />
     </RequiredFiles>
   </Platform>
 </Platforms>

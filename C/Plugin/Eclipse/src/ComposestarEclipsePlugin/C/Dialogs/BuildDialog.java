@@ -4,6 +4,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -22,6 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.Actions.Sources;
 
@@ -76,6 +78,10 @@ public class BuildDialog extends Dialog
 
 	private Sources source = null;
 
+	private IDialogSettings settings;
+
+	private String projectLocation;
+
 	/**
 	 * Constructor
 	 * 
@@ -86,16 +92,8 @@ public class BuildDialog extends Dialog
 	{
 		super(shell);
 		this.selection = selection;
-
-		if (selection[0].getFile("BuildConfiguration.xml").exists())
-		{
-			getStandardSettings(selection);
-		}
-		else
-		{
-			Debug.instance().Log("No buildConfiguration file found");
-		}
-
+		projectLocation = selection[0].getProject().getLocation().toString();
+		getStandardSettings(selection);
 	}
 
 	/**
@@ -120,6 +118,7 @@ public class BuildDialog extends Dialog
 			}
 			else
 			{
+				saveSettings();
 				super.okPressed();
 			}
 		}
@@ -342,10 +341,9 @@ public class BuildDialog extends Dialog
 		label.setText("CustomFilters");
 
 		customFilterText = new Text(group, SWT.MULTI | SWT.WRAP);
-		if (!customFilterString.equals(""))
+		if (customFilterString != null && !customFilterString.equals(""))
 		{
-			customFilterText.setText(customFilterString.replaceAll(java.io.File.pathSeparator,
-					java.io.File.pathSeparator + "\n"));
+			customFilterText.setText(customFilterString.replaceAll(java.io.File.pathSeparator, "\n"));
 		}
 		customFilterText.addModifyListener(new ModifyListener()
 		{
@@ -371,8 +369,7 @@ public class BuildDialog extends Dialog
 				shell.setText("Select Custom Filter library");
 				FileDialog fd = new FileDialog(shell, SWT.OPEN);
 				fd.open();
-				customFilterString += fd.getFilterPath() + java.io.File.separatorChar + fd.getFileName()
-						+ java.io.File.pathSeparator + "\n";
+				customFilterString += fd.getFilterPath() + java.io.File.separatorChar + fd.getFileName() + "\n";
 				customFilterText.setText(customFilterString);
 			}
 		});
@@ -395,25 +392,44 @@ public class BuildDialog extends Dialog
 		return controls;
 	}
 
+	private void saveSettings()
+	{
+		settings.put("customFilter", customFilterString);
+		settings.put("applicationStart", mainString);
+		settings.put("buildDebugLevel", builddlString);
+		settings.put("runDebugLevel", rundlString);
+		settings.put("language", language);
+		settings.put("basePath", baseString);
+		settings.put("buildPath", buildString);
+		settings.put("outputPath", outputString);
+		settings.put("debugger", debuggerString);
+		settings.put("secretMode", secretString);
+		settings.put("incremental", incrementalString);
+		settings.put("verifyAssemblies", verifyAssembliesString);
+		settings.put("filterModuleOrder", filterModuleOrderString);
+
+		ComposestarEclipsePluginPlugin.getDefault().saveDialogSettings(projectLocation);
+	}
+
 	private void getStandardSettings(IProject[] selection)
 	{
-		StandardSettings ss;
-		String projectLocation = selection[0].getProject().getLocation().toString();
-		ss = new StandardSettings(projectLocation);
-		ss.run();
-		customFilterString = ss.getCustomFilterString();
-		mainString = ss.getMainString();
-		builddlString = ss.getBuilddlString();
-		rundlString = ss.getRundlString();
-		language = ss.getLanguage();
-		baseString = ss.getBasePath();
-		buildString = ss.getBuildPath();
-		outputString = ss.getOutputPath();
-		debuggerString = ss.getDebuggerString();
-		secretString = ss.getSecretString();
-		incrementalString = ss.getIncrementalString();
-		verifyAssembliesString = ss.getVerifyAssembliesString();
-		filterModuleOrderString = ss.getFilterModuleOrderString();
+		projectLocation = selection[0].getProject().getLocation().toString();
+
+		settings = ComposestarEclipsePluginPlugin.getDefault().getDialogSettings(projectLocation);
+
+		customFilterString = settings.get("customFilter");
+		mainString = settings.get("applicationStart");
+		builddlString = settings.get("buildDebugLevel");
+		rundlString = settings.get("runDebugLevel");
+		language = settings.get("language");
+		baseString = projectLocation;
+		buildString = settings.get("buildPath");
+		outputString = settings.get("outputPath");
+		debuggerString = settings.get("debugger");
+		secretString = settings.get("secretMode");
+		incrementalString = settings.get("incremental");
+		verifyAssembliesString = settings.get("verifyAssemblies");
+		filterModuleOrderString = settings.get("filterModuleOrder");
 
 		if (baseString == null || baseString.equals(""))
 		{
@@ -445,10 +461,9 @@ public class BuildDialog extends Dialog
 			buildString = projectLocation;
 			Debug.instance().Log("buildPath was not set, Standard value applied", Debug.MSG_WARNING);
 		}
-		if (language == null)
+		if (customFilterString == null)
 		{
-			language = "C";
-			Debug.instance().Log("Language was not set, Standard value applied", Debug.MSG_WARNING);
+			customFilterString = "";
 		}
 	}
 
