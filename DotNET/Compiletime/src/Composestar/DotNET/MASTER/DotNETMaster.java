@@ -19,14 +19,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
-import Composestar.Utils.Version;
 
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules and
@@ -34,82 +29,20 @@ import Composestar.Utils.Version;
  */
 public class DotNETMaster extends Master
 {
-	public DotNETMaster(String[] args)
-	{
-		super(args);
-	}
-
 	/**
-	 * Calls run on all modules added to the master.
+	 * Compose* main function. Creates the Master object and invokes the run
+	 * method.
+	 * 
+	 * @param args The command line arguments.
 	 */
-	public void run()
+	public static void main(String[] args)
 	{
-		try
+		if (args.length == 0)
 		{
-			long beginTime = System.currentTimeMillis();
-			
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Creating datastore...");
-			DataStore.instance();
-
-			// initialize INCRE
-			INCRE incre = INCRE.instance();
-			incre.run(resources);
-
-			// execute enabled modules one by one
-			Iterator modulesIter = incre.getModules();
-			while (modulesIter.hasNext())
-			{
-				Module m = (Module) modulesIter.next();
-				m.execute(resources);
-			}
-
-			incre.getReporter().close();
-
-			// display total time elapsed
-			long total = System.currentTimeMillis() - beginTime;
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Total time: " + total + "ms");
-
-			// display number of warnings
-			if (Debug.willLog(Debug.MODE_WARNING))
-			{
-				Debug.outWarnings();
-			}
+			System.out.println("Usage: java -jar ComposestarDotNET.jar <config file>");
+			return;
 		}
-		catch (ModuleException e)
-		{
-			String error = e.getMessage();
-			String filename = e.getErrorLocationFilename();
-			int lineNumber = e.getErrorLocationLineNumber();
-			
-			if (error == null || "null".equals(error))
-			{
-				error = e.toString();
-			}
-
-			if (filename == null || "".equals(filename))
-			{
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
-			}
-			else
-			{
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error, filename, lineNumber);
-			}
-
-			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + Debug.stackTrace(e));
-			System.exit(ECOMPILE);
-		}
-		catch (Exception e)
-		{
-			String error = e.getMessage();
-			if (error == null || "null".equals(error))
-			{
-				error = e.toString();
-			}
-
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Internal compiler error: " + error);
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
-			System.exit(EFAIL);
-		}
+		main(DotNETMaster.class, args);
 	}
 
 	// not used
@@ -159,41 +92,5 @@ public class DotNETMaster extends Master
 		{
 			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Unable to update configuration file '" + configfile + "'!");
 		}
-	}
-
-	/**
-	 * Compose* main function. Creates the Master object and invokes the run method.
-	 * 
-	 * @param args The command line arguments.
-	 */
-	public static void main(String[] args)
-	{
-		if (args.length == 0)
-		{
-			System.out.println("Usage: java -jar ComposestarDotNET.jar <config file>");
-			return;
-		}
-
-		String arg = args[0].toLowerCase();
-		if (arg.equals("-v") || arg.equals("--version"))
-		{
-			Version.reportVersion(System.out);
-			return;
-		}
-		
-		Master master = new DotNETMaster(args);
-		try
-		{
-			master.loadConfiguration();
-		}
-		catch (Exception e)
-		{
-			System.out.println(e.getMessage());
-			System.exit(ECONFIG);
-		}
-
-		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, Version.getTitle() + " " + Version.getVersionString());
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Compiled on "+Version.getCompileDate().toString());
-		master.run();
 	}
 }

@@ -15,19 +15,13 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
-import Composestar.Utils.Version;
 
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules and
@@ -35,49 +29,6 @@ import Composestar.Utils.Version;
  */
 public class CMaster extends Master
 {
-	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
-
-	public static String phase = "";
-
-	// private CommonResources resources;
-	// private String configfile;
-
-	/**
-	 * Default ctor.
-	 * 
-	 * @param configurationFile
-	 * @throws Composestar.core.Exception.ModuleException
-	 * @roseuid 401B9C520251
-	 */
-	public CMaster(String[] args) throws ModuleException
-	{
-		super(args);
-
-		// configfile = args[0];
-		// Debug.setMode(3);
-		// resources = new CommonResources();
-
-		// init the project configuration file
-		// resources.CustomFilters = new Properties();
-		/**
-		 * try { Debug.out(Debug.MODE_DEBUG,"Master","Reading build
-		 * configuration from: "+configurationFile); SAXParserFactory
-		 * saxParserFactory = SAXParserFactory.newInstance(); SAXParser
-		 * saxParser = saxParserFactory.newSAXParser(); XMLReader parser =
-		 * saxParser.getXMLReader(); //BuildXMLHandler handler = new
-		 * BuildXMLHandler( parser ); BuildConfigHandler handler = new
-		 * BuildConfigHandler(parser); parser.setContentHandler( handler );
-		 * parser.parse( new InputSource( configurationFile ));
-		 * //System.out.println("Done... "+config.pathSettings.getPath("Base"));
-		 * //System.exit(-1); } catch( Exception e ) { throw new
-		 * ModuleException("An error occured while reading the build
-		 * configuration file: "+configurationFile+", reason:
-		 * "+e.getMessage(),"Master"); } DataStore ds = DataStore.instance();
-		 * ds.addObject(Master.RESOURCES_KEY,resources); // Set debug level try {
-		 * Debug.setMode(Integer.parseInt(Configuration.instance().getProperty("buildDebugLevel"))); }
-		 * catch (NumberFormatException e) { Debug.setMode(1); }
-		 */
-	}
 
 	/**
 	 * Compose* main function. Creates the Master object. Adds the desired
@@ -85,138 +36,15 @@ public class CMaster extends Master
 	 * added.
 	 * 
 	 * @param args
-	 * @roseuid 401B89E70233
 	 */
 	public static void main(String[] args)
 	{
-
 		if (args.length == 0)
 		{
-			// System.out.println("Usage: java " + Version.getProgramName() + "
-			// <config file>");
+			System.out.println("Usage: java -jar ComposestarC.jar <config file>");
 			return;
 		}
-		if (args[0].equalsIgnoreCase("-v"))
-		{
-			// System.out.println(Version.getTitleString());
-			// System.out.println(Version.getAuthorString());
-			System.exit(0);
-		}
-
-		try
-		{
-			Debug.out(Debug.MODE_DEBUG, "Master", "Invoking Master " + Version.getVersionString() + " now...");
-			Master master = new CMaster(args);
-			master.run();
-			Debug.out(Debug.MODE_DEBUG, "Master", "Master initialized.");
-		}
-		catch (ModuleException e)
-		{
-			// /System.out.println("Could not open configuration file: " +
-			// args[0]);
-			// System.out.println("Exiting...");
-			System.exit(-1);
-		}
-
-	}
-
-	/**
-	 * Calls run on all modules added to the master.
-	 * 
-	 * @roseuid 401B92150325
-	 */
-	public void run()
-	{
-		// This is the 'hardcoded' version
-
-		try
-		{
-
-			Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());
-
-			this.loadConfiguration();
-
-			// Apache XML driver is moved to a different package in Java 5
-			if (System.getProperty("java.version").substring(0, 3).equals("1.5"))
-			{
-				System.setProperty("org.xml.sax.driver", "com.sun.org.apache.xerces.internal.parsers.SAXParser");
-				Debug.out(Debug.MODE_DEBUG, "Master", "Selecting SAXParser XML SAX Driver");
-			}
-			else
-			{
-				System.setProperty("org.xml.sax.driver", "org.apache.crimson.parser.XMLReaderImpl");
-				Debug.out(Debug.MODE_DEBUG, "Master", "Selecting XMLReaderImpl XML SAX Driver");
-			}
-
-			Debug.out(Debug.MODE_DEBUG, "Master", "Creating datastore...");
-			DataStore.instance();
-
-			// initialize INCRE
-			INCRE incre = INCRE.instance();
-			incre.run(resources);
-
-			Iterator modulesIter = incre.getModules();
-			while (modulesIter.hasNext())
-			{
-				// execute enabled modules one by one
-				Module m = (Module) modulesIter.next();
-				m.execute(resources);
-			}
-
-			incre.getReporter().close();
-			if (Debug.getMode() >= Debug.MODE_WARNING)
-			{
-				Debug.outWarnings();
-			}
-
-		}
-		catch (ModuleException e)
-		{ // MasterStopException
-			String error = e.getMessage();
-			if (error == null || "null".equals(error)) // great information
-			{
-				error = e.toString();
-			}
-
-			if ((e.getErrorLocationFilename() != null) && !e.getErrorLocationFilename().equals(""))
-			{
-				Debug.out(
-						Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e
-								.getErrorLocationLineNumber());
-			}
-			else
-			{
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
-			}
-			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + printStackTrace(e));
-			System.exit(1);
-		}
-		catch (Exception e)
-		{
-			String error = e.getMessage();
-			if (error == null || "null".equals(error)) // great information
-			{
-				error = e.toString();
-			}
-			Debug.out(Debug.MODE_ERROR, "Master", "Internal compiler error: " + error);
-			Debug.out(Debug.MODE_ERROR, "Master", "StackTrace: " + printStackTrace(e));
-			// System.exit(1);
-		}
-	}
-
-	public String printStackTrace(Exception e)
-	{
-		try
-		{
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			return sw.toString();
-		}
-		catch (Exception e2)
-		{
-			return "Stack Trace Failed";
-		}
+		main(CMaster.class, args);
 	}
 
 	public void SaveModifiedConfigurationKeys(CommonResources resources)

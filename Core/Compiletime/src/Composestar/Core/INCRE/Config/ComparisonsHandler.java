@@ -1,6 +1,7 @@
 package Composestar.Core.INCRE.Config;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
@@ -13,18 +14,18 @@ public class ComparisonsHandler extends DefaultHandler
 
 	private Module module;
 
-	private DependencyHandler returnhandler;
+	private ContentHandler returnhandler;
 
-	public ComparisonsHandler(XMLReader inReader, Module inModule, DependencyHandler inReturnhandler)
+	public ComparisonsHandler(XMLReader inReader, Module inModule, ContentHandler inReturnhandler)
 	{
 		reader = inReader;
 		module = inModule;
 		returnhandler = inReturnhandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if (local_name.equalsIgnoreCase("type"))
+		if (qName.equalsIgnoreCase("type"))
 		{
 			String fullname = amap.getValue("fullname");
 
@@ -34,9 +35,9 @@ public class ComparisonsHandler extends DefaultHandler
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name)
+	public void endElement(String uri, String localName, String qName)
 	{
-		if (local_name.equalsIgnoreCase("comparisons"))
+		if (qName.equalsIgnoreCase("comparisons"))
 		{
 			// look further between <module> tags
 			reader.setContentHandler(returnhandler);

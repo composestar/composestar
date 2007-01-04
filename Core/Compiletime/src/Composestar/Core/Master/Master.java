@@ -11,6 +11,7 @@
 package Composestar.Core.Master;
 
 import java.io.File;
+import java.util.Iterator;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -18,10 +19,14 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
+import Composestar.Utils.Version;
 
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules and
@@ -39,7 +44,8 @@ public abstract class Master
 	public static final int ECOMPILE = 1;
 
 	/**
-	 * Return code when no config file was found
+	 * Return code when no config file was found (or an exception was raised
+	 * during parsing of the configuration)
 	 */
 	public static final int ECONFIG = 2;
 
@@ -47,17 +53,17 @@ public abstract class Master
 	 * General execution failure
 	 */
 	public static final int EFAIL = 3;
+	
+	/**
+	 * Errors were raised during compiling
+	 */
+	public static final int EERRORS = 4;
 
 	protected String configfile;
 
 	protected int debugOverride = -1;
 
 	protected CommonResources resources;
-
-	public Master(String[] args)
-	{
-		processCmdArgs(args);
-	}
 
 	public void processCmdArgs(String[] args)
 	{
@@ -126,5 +132,133 @@ public abstract class Master
 		}
 	}
 
-	public abstract void run();
+	/**
+	 * Calls run on all modules added to the master.
+	 */
+	public int run()
+	{
+		try
+		{
+			long beginTime = System.currentTimeMillis();
+
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Creating datastore...");
+			DataStore.instance();
+
+			// initialize INCRE
+			INCRE incre = INCRE.instance();
+			incre.run(resources);
+
+			// execute enabled modules one by one
+			Iterator modulesIter = incre.getModules();
+			while (modulesIter.hasNext())
+			{
+				Module m = (Module) modulesIter.next();
+				m.execute(resources);
+			}
+
+			incre.getReporter().close();
+
+			// display total time elapsed
+			long total = System.currentTimeMillis() - beginTime;
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Total time: " + total + "ms");
+
+			// display number of warnings
+			if (Debug.willLog(Debug.MODE_WARNING))
+			{
+				Debug.outWarnings();
+			}
+			
+			/*
+			// note: some tests produce errors during compiling and therefor this is disabled
+			  
+			if (Debug.numErrors() > 0)
+			{
+				Debug.outWarnings();
+				return EERRORS;
+			}
+			*/
+		}
+		catch (ModuleException e)
+		{
+			String error = e.getMessage();
+			String filename = e.getErrorLocationFilename();
+			int lineNumber = e.getErrorLocationLineNumber();
+
+			if (error == null || "null".equals(error))
+			{
+				error = e.toString();
+			}
+
+			if (filename == null || "".equals(filename))
+			{
+				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
+			}
+			else
+			{
+				Debug.out(Debug.MODE_ERROR, e.getModule(), error, filename, lineNumber);
+			}
+
+			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + Debug.stackTrace(e));
+			return ECOMPILE;
+		}
+		catch (Exception e)
+		{
+			String error = e.getMessage();
+			if (error == null || "null".equals(error))
+			{
+				error = e.toString();
+			}
+
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Internal compiler error: " + error);
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
+			return EFAIL;
+		}
+		return 0;
+	}
+
+	protected static void main(Class masterClass, String[] args)
+	{
+		if (args.length == 0)
+		{
+			return;
+		}
+
+		String arg = args[0].toLowerCase();
+		if (arg.equals("-v") || arg.equals("--version"))
+		{
+			Version.reportVersion(System.out);
+			return;
+		}
+
+		Master master;
+		try
+		{
+			master = (Master) masterClass.newInstance();
+		}
+		catch (Exception e)
+		{
+			System.err.println("Failed to initialize master: " + e.getMessage());
+			e.printStackTrace();
+			System.exit(EFAIL);
+			return;
+		}
+		master.processCmdArgs(args);
+		try
+		{
+			master.loadConfiguration();
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+			System.exit(ECONFIG);
+		}
+
+		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, Version.getTitle() + " " + Version.getVersionString());
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Compiled on " + Version.getCompileDate().toString());
+		int ret = master.run();
+		if (ret != 0)
+		{
+			System.exit(ret);
+		}
+	}
 }

@@ -10,15 +10,24 @@ import Composestar.Utils.Logging.LocationProvider;
 public final class Debug
 {
 	public static final int MODE_ERROR = 0;
+
 	public static final int MODE_CRUCIAL = 1;
+
 	public static final int MODE_WARNING = 2;
+
 	public static final int MODE_INFORMATION = 3;
+
 	public static final int MODE_DEBUG = 4;
+
 	public static final int MODE_DEFAULTMODE = MODE_INFORMATION;
 
 	private static int currentMode = MODE_DEFAULTMODE;
+
 	private static int errThreshold = -1;
+
 	private static int warnings;
+
+	private static int errors;
 
 	/**
 	 * Public constructor needed because this class is serialized into the
@@ -26,7 +35,7 @@ public final class Debug
 	 */
 	public Debug()
 	{
-		//throw new UnsupportedOperationException();
+	// throw new UnsupportedOperationException();
 	}
 
 	public static void setMode(int mode)
@@ -38,12 +47,12 @@ public final class Debug
 	{
 		return currentMode;
 	}
-	
+
 	public static void setErrThreshold(int et)
 	{
 		errThreshold = et;
 	}
-	
+
 	/**
 	 * Return true if this message will be logged with Debug.out(...) is called
 	 */
@@ -53,24 +62,25 @@ public final class Debug
 	}
 
 	/**
-	 * Returns whether a message with the specified mode should be printed to System.out. 
+	 * Returns whether a message with the specified mode should be printed to
+	 * System.out.
 	 */
 	private static boolean printToOut(int mode)
 	{
 		return true;
 	}
-	
+
 	/**
-	 * Returns whether a message with the specified mode should be printed to System.err. 
+	 * Returns whether a message with the specified mode should be printed to
+	 * System.err.
 	 */
 	private static boolean printToErr(int mode)
 	{
-		if (mode == MODE_CRUCIAL)
-			return false;
-		
+		if (mode == MODE_CRUCIAL) return false;
+
 		return (mode <= errThreshold);
 	}
-	
+
 	/**
 	 * Returns the description for the specified mode.
 	 */
@@ -134,31 +144,35 @@ public final class Debug
 		if (currentMode >= mode)
 		{
 			String modeDescription = getModeDescription(mode);
-			
+
 			if (mode == MODE_WARNING)
 			{
 				warnings++;
 			}
-			
+			else if (mode == MODE_ERROR)
+			{
+				errors++;
+			}
+
 			if (filename == null)
 			{
 				filename = "";
 			}
-			
+
 			if (printToOut(mode))
 			{
 				String full = module + '~' + modeDescription + '~' + filename + '~' + line + '~' + msg;
 				System.out.println(full);
 			}
-			
+
 			if (printToErr(mode))
 			{
-				String full = "["+module+"] "+ StringUtils.capitalize(modeDescription) + ": " + msg;
+				String full = "[" + module + "] " + StringUtils.capitalize(modeDescription) + ": " + msg;
 				System.err.println(full);
 			}
 		}
 	}
-	
+
 	/**
 	 * @deprecated
 	 */
@@ -213,10 +227,20 @@ public final class Debug
 
 	public static void outWarnings()
 	{
-		if (warnings > 0)
+		if ((warnings > 0) || (errors > 0))
 		{
-			System.out.println("Warnings: " + warnings + '.');
+			System.out.println("Warnings: " + warnings + "; Errors: " + errors);
 		}
+	}
+	
+	public static int numErrors()
+	{
+		return errors;
+	}
+	
+	public static int numWarnings()
+	{
+		return warnings;
 	}
 
 	public static String stackTrace(Throwable t)

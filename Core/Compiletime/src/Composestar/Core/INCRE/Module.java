@@ -82,6 +82,11 @@ public class Module implements Serializable
 		String id = d.getName();
 		deps.put(id, d);
 	}
+	
+	public void clearDeps()
+	{
+		deps.clear();
+	}
 
 	public void addComparableObject(String key, Object obj)
 	{
@@ -151,6 +156,11 @@ public class Module implements Serializable
 	public ArrayList getComparableObjects(String key)
 	{
 		return (ArrayList) comparableObjects.get(key);
+	}
+	
+	public void clearComparableObjects()
+	{
+		comparableObjects.clear();
 	}
 
 	public Iterator getDeps()

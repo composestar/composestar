@@ -5,6 +5,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
@@ -49,7 +50,7 @@ public class ModulesHandler extends DefaultHandler
 			}
 			catch (ClassNotFoundException e)
 			{
-				Debug.out(Debug.MODE_ERROR, "INCRE", "Module class not found: " + fullType);
+				Debug.out(Debug.MODE_ERROR, INCRE.MODULE_NAME, "Module class not found: " + fullType);
 			}
 
 			// if loaded from INCRE try to import existing settings through
@@ -98,8 +99,15 @@ public class ModulesHandler extends DefaultHandler
 		}
 		else if (qName.equalsIgnoreCase("dependencies") && (m != null))
 		{
+			m.clearDeps(); // clear previously set dependencies
 			DependencyHandler dependencyhandler = new DependencyHandler(reader, m, this);
 			reader.setContentHandler(dependencyhandler);
+		}
+		else if (qName.equalsIgnoreCase("comparisons") && (m != null))
+		{
+			m.clearComparableObjects(); // clear previously set comparisons
+			ComparisonsHandler comparisonsHandler = new ComparisonsHandler(reader, m, this);
+			reader.setContentHandler(comparisonsHandler);
 		}
 	}
 
