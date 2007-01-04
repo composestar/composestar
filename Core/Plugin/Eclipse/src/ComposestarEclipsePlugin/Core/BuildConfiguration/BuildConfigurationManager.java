@@ -299,7 +299,7 @@ public class BuildConfigurationManager
 	{
 		platform = new Platform(name);
 		// TODO: must be plugin depended path
-		platform.readPlatform(ComposestarEclipsePluginPlugin.getAbsolutePath("/") + "PlatformConfigurations.xml");
+		platform.readPlatform(ComposestarEclipsePluginPlugin.getAbsolutePath("/") + "/PlatformConfigurations.xml");
 	}
 
 	public void setRunDebugLevel(String runDebugLevel)
