@@ -3,6 +3,7 @@ package Composestar.Ant.Taskdefs.C;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -28,6 +29,7 @@ public class CstarTest extends BaseTask
 {
 
 	protected static final String CORRECT_OUTPUT = "correct.txt";
+	protected static final String BUILDLOG = "buildlog.txt";
 
 	/**
 	 * Eclipse launcher
@@ -224,7 +226,7 @@ public class CstarTest extends BaseTask
 
 			log(projectname, Project.MSG_VERBOSE);
 
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			FileOutputStream outputStream = new FileOutputStream(new File(workspace + java.io.File.separator + projectname, BUILDLOG));
 			ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
 			ExecuteStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
 			ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
@@ -264,7 +266,7 @@ public class CstarTest extends BaseTask
 				throw new Exception("Exit code is not zero: " + err);
 			}
 
-			checkOutput(projectname, outputStream.toString());
+			checkOutput(projectname);
 
 			cntSuccess++;
 		}
@@ -282,10 +284,11 @@ public class CstarTest extends BaseTask
 		}
 	}
 
-	private void checkOutput(String projectname, String output) throws Exception
+	private void checkOutput(String projectname) throws Exception
 	{
 		String projectBase = workspace + java.io.File.separator + projectname;
 		File correct = new File(projectBase, CORRECT_OUTPUT);
+		File buildlog = new File(projectBase, BUILDLOG);
 		boolean soh = false;
 		BufferedReader expectedReader = null;
 		BufferedReader actualReader = null;
@@ -293,7 +296,7 @@ public class CstarTest extends BaseTask
 		try
 		{
 			expectedReader = new BufferedReader(new FileReader(correct));
-			actualReader = new BufferedReader(new StringReader(output));
+			actualReader = new BufferedReader(new FileReader(buildlog));
 
 			while (!soh)
 			{
