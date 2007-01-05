@@ -38,7 +38,7 @@
 	
 	<target name="build"/>
 
-	<target name="test" depends="test_comp" description="Execute the Java system test."/>
+	<target name="test" depends="test_comp,test_exec" description="Execute the Java system test."/>
 	
 	<!-- compile projects -->
 	<target name="test_comp" depends="init_eclipse">
@@ -58,7 +58,7 @@
 
 	
 	<!-- execute tests -->
-	<target name="test_exec" depends="init_eclipse">
+	<target name="test_exec" depends="test_comp,init_eclipse">
 		<cs:j_test workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="Composestar.Eclipse.Plugin.Java.testrun">
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>

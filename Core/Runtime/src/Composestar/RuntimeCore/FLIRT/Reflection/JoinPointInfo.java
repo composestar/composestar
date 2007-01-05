@@ -3,9 +3,7 @@ package Composestar.RuntimeCore.FLIRT.Reflection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-
-import Composestar.RuntimeCore.Utils.ChildThread;
-import Composestar.RuntimeCore.Utils.ThreadPool;
+import java.lang.Thread;
 
 public class JoinPointInfo
 {
@@ -13,15 +11,15 @@ public class JoinPointInfo
 
 	public static JoinPoint getJoinPointInfo()
 	{
-		return (JoinPoint) joinpointByThread.get(ThreadPool.getCurrentChildTread());
+		return (JoinPoint) joinpointByThread.get(Thread.currentThread());
 	}
 
 	protected static void updateJoinPoint(JoinPoint jp)
 	{
-		joinpointByThread.put(ThreadPool.getCurrentChildTread(), jp);
+		joinpointByThread.put(Thread.currentThread(), jp);
 	}
 
-	protected static void updateJoinPoint(ChildThread thread, JoinPoint jp)
+	protected static void updateJoinPoint(Thread thread, JoinPoint jp)
 	{
 		joinpointByThread.put(thread, jp);
 	}

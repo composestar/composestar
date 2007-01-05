@@ -100,11 +100,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DotNETChildThread.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DotNETInvoker.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -116,6 +111,11 @@
                 />
                 <File
                     RelPath = "RepositoryFixer.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Thread.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

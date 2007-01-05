@@ -8,8 +8,7 @@ import Composestar.RuntimeCore.FLIRT.Reflection.JoinPointInfo;
 import Composestar.RuntimeCore.FLIRT.Reflection.JoinPointInfoProxy;
 import Composestar.RuntimeCore.FLIRT.Reflection.MessageInfo;
 import Composestar.RuntimeCore.FLIRT.Reflection.MessageInfoProxy;
-import Composestar.RuntimeCore.Utils.ChildThread;
-import Composestar.RuntimeCore.Utils.ThreadPool;
+import java.lang.Thread;
 
 /**
  * Models the action that comes from the acceptance of a message by a Meta
@@ -22,7 +21,7 @@ import Composestar.RuntimeCore.Utils.ThreadPool;
  * is allowed to move on to the next filter.
  * 
  * @author Carlos Noguera
- * @see dotNetComposestar.Runtime.Flirt.Meta
+ * @see Composestar.RuntimeCore.FLIRT.Filtertypes.Meta
  */
 public class MetaAction extends ComposeStarAction
 {
@@ -81,7 +80,7 @@ public class MetaAction extends ComposeStarAction
 	 *         return callback; } Executes this MetaAction This process is
 	 *         explained at the beginning of this class.
 	 * @return depends on the handling of the reified message by the ACT method
-	 * @see dotNetComposestar.Runtime.Flirt.actions.MetaAction
+	 * @see Composestar.RuntimeCore.FLIRT.Filtertypes.Meta
 	 * @roseuid 40EAA5BD026D
 	 */
 	public Object execute()
@@ -91,7 +90,7 @@ public class MetaAction extends ComposeStarAction
 		// Invoker.getInstance().invoke(actObject, actMethod, args);
 
 		// start execution in a new thread
-		ChildThread t = ThreadPool.getChildThread(this.message);
+		Thread t = new Thread(this.message);
 		t.start();
 
 		// Store jp and m in ACT thread

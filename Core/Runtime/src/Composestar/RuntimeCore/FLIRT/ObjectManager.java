@@ -3,6 +3,8 @@ package Composestar.RuntimeCore.FLIRT;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.lang.Thread;
+import java.lang.Runnable;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
@@ -20,12 +22,9 @@ import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 import Composestar.RuntimeCore.FLIRT.Policy.FilterPolicy;
 import Composestar.RuntimeCore.FLIRT.Policy.PolicyExecutionResult;
-import Composestar.RuntimeCore.Utils.ChildRunnable;
-import Composestar.RuntimeCore.Utils.ChildThread;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.RuntimeCore.Utils.Invoker;
 import Composestar.RuntimeCore.Utils.SyncBuffer;
-import Composestar.RuntimeCore.Utils.ThreadPool;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -41,7 +40,7 @@ import Composestar.RuntimeCore.Utils.ThreadPool;
  * manager is NOT thread safe. Finally, the object manager also manages the
  * filtermodules that are imposed on the object that manages.
  */
-public class ObjectManager implements ChildRunnable
+public class ObjectManager implements Runnable
 {
 
 	/**
@@ -98,7 +97,7 @@ public class ObjectManager implements ChildRunnable
 	{
 		if (!this.working)
 		{
-			ChildThread child = ThreadPool.getChildThread(this);
+			Thread child = new Thread(this);
 			child.start();
 		}
 	}

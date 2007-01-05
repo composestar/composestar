@@ -15,21 +15,21 @@ public class StateHandler {
 	private final static String MODULENAME= "CODER(StateHandler)";
 
 	private Halter halter;
-	private ChildThread thisThread;
+	private Thread thisThread;
 	private BreakPoint breakpoint;
 
 	public StateHandler(BreakPoint breakpoint, Halter halter)
 	{
-		this(ThreadPool.getCurrentChildTread(),breakpoint, halter);
+		this(Thread.currentThread(),breakpoint, halter);
 	}
 
 	public void cleanup()
 	{
-		thisThread = ThreadPool.getCurrentChildTread();
+		thisThread = Thread.currentThread();
 		halter.setThread(thisThread);
 	}
 
-	public StateHandler(ChildThread thread, BreakPoint breakpoint, Halter halter)
+	public StateHandler(Thread thread, BreakPoint breakpoint, Halter halter)
 	{
 		this.breakpoint = breakpoint;
 		this.halter = halter;
@@ -70,6 +70,6 @@ public class StateHandler {
 
 	public EntryPoint getEntryPoint()
 	{
-		return thisThread.getEntryPoint();
+		return null;//thisThread.getEntryPoint();
 	}
 }

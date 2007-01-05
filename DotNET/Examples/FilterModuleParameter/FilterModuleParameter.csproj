@@ -89,6 +89,36 @@
                     AssemblyName = "ComposeStarUtilities"
                     HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarUtilities.dll"
                 />
+                <Reference
+                    Name = "ComposestarCore"
+                    AssemblyName = "ComposestarCore"
+                    HintPath = "..\..\..\..\..\Program Files\ComposeStar\binaries\ComposestarCore.dll"
+                />
+                <Reference
+                    Name = "ComposestarCoreDotNET"
+                    AssemblyName = "ComposestarCoreDotNET"
+                    HintPath = "..\..\..\..\..\Program Files\ComposeStar\binaries\ComposestarCoreDotNET.dll"
+                />
+                <Reference
+                    Name = "ComposeStarDotNETRuntimeInterpreter"
+                    AssemblyName = "ComposeStarDotNETRuntimeInterpreter"
+                    HintPath = "..\..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarDotNETRuntimeInterpreter.dll"
+                />
+                <Reference
+                    Name = "ComposeStarDotNETUtilities"
+                    AssemblyName = "ComposeStarDotNETUtilities"
+                    HintPath = "..\..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarDotNETUtilities.dll"
+                />
+                <Reference
+                    Name = "ComposeStarFilterDebugger"
+                    AssemblyName = "ComposeStarFilterDebugger"
+                    HintPath = "..\..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarFilterDebugger.dll"
+                />
+                <Reference
+                    Name = "vjslib"
+                    AssemblyName = "vjslib"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\vjslib.dll"
+                />
             </References>
         </Build>
         <Files>

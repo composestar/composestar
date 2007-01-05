@@ -1,10 +1,9 @@
 package Composestar.RuntimeCore.FLIRT.Reflection;
 
 import java.util.HashMap;
+import java.lang.Thread;
 
 import Composestar.RuntimeCore.FLIRT.Message.Message;
-import Composestar.RuntimeCore.Utils.ChildThread;
-import Composestar.RuntimeCore.Utils.ThreadPool;
 
 /**
  * <pre>
@@ -57,23 +56,22 @@ public class MessageInfo
 
 	public static Message getMessageInfo()
 	{
-		return (Message) messagesByThread.get(ThreadPool.getCurrentChildTread());
+		return (Message) messagesByThread.get(Thread.currentThread());
 	}
 
 	/**
 	 * Updates the message for this thread. This method should be called only
 	 * within the interpreter
 	 * 
-	 * @param Composestar.Runtime.FLIRT.message.Message
 	 * @param msg
 	 */
 
 	static void updateMessage(Message msg)
 	{
-		messagesByThread.put(ThreadPool.getCurrentChildTread(), new Message(msg));
+		messagesByThread.put(Thread.currentThread(), new Message(msg));
 	}
 
-	static void updateMessage(ChildThread t, Message msg)
+	static void updateMessage(Thread t, Message msg)
 	{
 		messagesByThread.put(t, new Message(msg));
 	}

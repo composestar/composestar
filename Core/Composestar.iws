@@ -138,19 +138,7 @@
       </PATH>
     </subPane>
   </component>
-  <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="ObjectBreakPoint.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/ObjectBreakPoint.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="0" selection-start="1024" selection-end="1024" vertical-scroll-proportion="2.0350404">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
+  <component name="FileEditorManager" />
   <component name="FindManager">
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
@@ -180,7 +168,16 @@
     <option name="LAST_EDITED_TAB_NAME" />
   </component>
   <component name="NamedScopeManager" />
-  <component name="PackagesPane" />
+  <component name="PackagesPane">
+    <subPane>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+    </subPane>
+  </component>
   <component name="PerforceChangeBrowserSettings">
     <option name="USE_CLIENT_FILTER" value="true" />
     <option name="CLIENT" value="" />
@@ -227,6 +224,102 @@
           <option name="myItemId" value="Composestar.ipr" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
         </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="RuntimeJava" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="RuntimeJava" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="RuntimeJava" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime\src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime\src\Composestar\RuntimeJava" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime\src\Composestar\RuntimeJava\Utils" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="RuntimeJava" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime\src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime\src\Composestar\RuntimeJava" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime\src\Composestar\RuntimeJava\Interface" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="RuntimeJava" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime\src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime\src\Composestar\RuntimeJava" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Java\Runtime\src\Composestar\RuntimeJava\FLIRT" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
       </PATH>
       <PATH>
         <PATH_ELEMENT>
@@ -296,7 +389,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\CODER" />
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\FLIRT" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -322,11 +415,11 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\CODER" />
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\FLIRT" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\CODER\BreakPoint" />
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\FLIRT\Reflection" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -352,16 +445,18 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\CODER" />
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\FLIRT" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\CODER\BreakPoint" />
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\FLIRT\Message" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
+      </PATH>
+      <PATH>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Runtime\src\Composestar\RuntimeCore\CODER\BreakPoint\Parsers" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
         </PATH_ELEMENT>
       </PATH>
     </subPane>
@@ -377,7 +472,7 @@
       <showLibraryContents />
       <hideEmptyPackages />
       <abbreviatePackageNames />
-      <showStructure Favorites="false" ProjectPane="false" />
+      <showStructure Favorites="false" Scope="false" PackagesPane="false" ProjectPane="false" />
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
@@ -397,6 +492,13 @@
   <component name="RecentsManager" />
   <component name="RestoreUpdateTree" />
   <component name="RunManager">
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+    </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <module name="" />
       <option name="MAIN_CLASS_NAME" />
@@ -408,13 +510,6 @@
       <option name="VM_PARAMETERS" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-    </configuration>
-    <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
       <option name="MAIN_CLASS_NAME" />
@@ -441,13 +536,25 @@
       <option name="TEST_SEARCH_SCOPE">
         <value defaultName="wholeProject" />
       </option>
+      <method>
+        <option name="Make" value="true" />
+      </method>
     </configuration>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
       <Port>5050</Port>
     </configuration>
   </component>
-  <component name="ScopeViewComponent" />
+  <component name="ScopeViewComponent">
+    <subPane subId="Project">
+      <PATH>
+        <PATH_ELEMENT USER_OBJECT="Root">
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="" />
+        </PATH_ELEMENT>
+      </PATH>
+    </subPane>
+  </component>
   <component name="SelectInManager" />
   <component name="StarteamConfiguration">
     <option name="SERVER" value="" />
@@ -511,16 +618,16 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1160" height="844" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="7" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32669684" order="0" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="1" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.0" order="0" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" order="1" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41355464" order="8" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41355464" order="8" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3997195" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
@@ -618,97 +725,6 @@
     <option name="myLastEditedConfigurable" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/AlwaysBreakBreakPoint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="13" selection-start="384" selection-end="384" vertical-scroll-proportion="0.21480145">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPoint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="17" selection-start="377" selection-end="377" vertical-scroll-proportion="0.21480145">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPointAnd.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="10" selection-start="539" selection-end="539" vertical-scroll-proportion="0.7364621">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPointBi.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="24" selection-start="1251" selection-end="1251" vertical-scroll-proportion="0.93862814">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPointFuture.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="28" selection-start="522" selection-end="522" vertical-scroll-proportion="0.2761733">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPointGlobal.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="14" selection-start="587" selection-end="587" vertical-scroll-proportion="0.65970147">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPointMono.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="22" selection-start="261" selection-end="261" vertical-scroll-proportion="0.29142857">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPointNot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="25" selection-start="525" selection-end="525" vertical-scroll-proportion="0.45671642">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPointOr.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="24" selection-start="425" selection-end="425" vertical-scroll-proportion="0.7285714">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPointRelease.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="14" selection-start="437" selection-end="437" vertical-scroll-proportion="0.68">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPointUntil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="14" selection-start="377" selection-end="377" vertical-scroll-proportion="0.6314286">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/BreakPointValueOperator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="13" selection-start="548" selection-end="548" vertical-scroll-proportion="-7.289552">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/MultiBreakPoint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="13" selection-start="519" selection-end="519" vertical-scroll-proportion="0.3552239">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/NeverBreakBreakPoint.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="5" selection-start="617" selection-end="617" vertical-scroll-proportion="0.65970147">
@@ -718,7 +734,105 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/ObjectBreakPoint.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="0" selection-start="1024" selection-end="1024" vertical-scroll-proportion="2.0350404">
+        <state line="45" column="0" selection-start="1024" selection-end="1024" vertical-scroll-proportion="0.035906643">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/MessageHandlingFacility.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="529" column="33" selection-start="16928" selection-end="16928" vertical-scroll-proportion="4.2836623">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Message/Message.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="216" column="51" selection-start="4587" selection-end="4587" vertical-scroll-proportion="0.8168761">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/ObjectManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="38" selection-start="3576" selection-end="3576" vertical-scroll-proportion="0.3773585">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/Halter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="39" selection-end="39" vertical-scroll-proportion="0.04404145">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/StateHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="20" selection-start="1697" selection-end="1697" vertical-scroll-proportion="0.58760107">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Reflection/JoinPointInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="25" selection-start="134" selection-end="134" vertical-scroll-proportion="0.1761658">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Message/ReifiedMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="51" selection-start="159" selection-end="159" vertical-scroll-proportion="0.13212435">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Reflection/JoinPointInfoProxy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="39" selection-start="216" selection-end="216" vertical-scroll-proportion="0.46195653">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Reflection/MessageInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="53" selection-start="131" selection-end="131" vertical-scroll-proportion="0.19263457">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Actions/MetaAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="96" column="43" selection-start="3296" selection-end="3296" vertical-scroll-proportion="0.47308782">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Reflection/MessageInfoProxy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="57" selection-start="162" selection-end="162" vertical-scroll-proportion="0.13858695">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Java/Runtime/src/Composestar/RuntimeJava/FLIRT/JavaPlatformProvider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="59" selection-start="516" selection-end="516" vertical-scroll-proportion="0.5543478">
           <folding />
         </state>
       </provider>

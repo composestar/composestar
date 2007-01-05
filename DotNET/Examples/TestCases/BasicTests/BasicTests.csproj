@@ -89,6 +89,16 @@
                     AssemblyName = "ComposeStarUtilities"
                     HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarUtilities.dll"
                 />
+                <Reference
+                    Name = "ComposeStarDotNETUtilities"
+                    AssemblyName = "ComposeStarDotNETUtilities"
+                    HintPath = "..\..\..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarDotNETUtilities.dll"
+                />
+                <Reference
+                    Name = "vjslib"
+                    AssemblyName = "vjslib"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\vjslib.dll"
+                />
             </References>
         </Build>
         <Files>

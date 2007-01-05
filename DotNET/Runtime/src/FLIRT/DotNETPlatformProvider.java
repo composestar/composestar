@@ -19,7 +19,6 @@ public class DotNETPlatformProvider extends PlatformProvider
 		new DotNETObjectInterface();
 		new DotNETInvoker();
 		new DotNETFilterFactory();
-		ThreadPool.setProtoType(new DotNETChildThread());
 	}
 
 	public RepositoryDeserializer getRepositoryDeserializer()

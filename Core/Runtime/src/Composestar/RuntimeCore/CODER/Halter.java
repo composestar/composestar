@@ -1,13 +1,12 @@
 package Composestar.RuntimeCore.CODER;
 
-import Composestar.RuntimeCore.Utils.ChildThread;
 /**
  * Summary description for Halter.
  */
 public interface Halter {
     public void halting();
 
-	public void setThread(ChildThread thread);
+	public void setThread(Thread thread);
 
     public boolean isGlobalHalted();
 

@@ -2,9 +2,10 @@ package Composestar.RuntimeCore.FLIRT.Message;
 
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.RuntimeCore.FLIRT.ObjectManager;
-import Composestar.RuntimeCore.Utils.ChildRunnable;
 import Composestar.RuntimeCore.Utils.Invoker;
 import Composestar.RuntimeCore.Utils.SyncBuffer;
+import java.lang.Thread;
+import java.lang.Runnable;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -12,7 +13,7 @@ import Composestar.RuntimeCore.Utils.SyncBuffer;
  * option) any later version. [http://www.fsf.org/copyleft/lgpl.html] $Id:
  * ReifiedMessage.java 2287 2006-10-26 08:06:15Z marcusk $
  */
-public class ReifiedMessage implements ChildRunnable
+public class ReifiedMessage implements Runnable
 {
 	public static final int REIFIED = 0;
 

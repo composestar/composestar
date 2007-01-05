@@ -2,7 +2,7 @@ package Composestar.RuntimeCore.FLIRT.Reflection;
 
 import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-import Composestar.RuntimeCore.Utils.ChildThread;
+import java.lang.Thread;
 
 public class MessageInfoProxy
 {
@@ -11,7 +11,7 @@ public class MessageInfoProxy
 		MessageInfo.updateMessage(msg);
 	}
 
-	public static void updateMessage(ChildThread t, Message msg)
+	public static void updateMessage(Thread t, Message msg)
 	{
 		MessageInfo.updateMessage(t, msg);
 	}
@@ -21,7 +21,7 @@ public class MessageInfoProxy
 		updateMessage(msg.getOrgMessage());
 	}
 
-	public static void updateMessage(ChildThread t, MessageList msg)
+	public static void updateMessage(Thread t, MessageList msg)
 	{
 		MessageInfo.updateMessage(t, msg.getOrgMessage());
 	}
