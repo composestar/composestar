@@ -25,6 +25,11 @@ public class Trail
 
 	protected ConditionExpression condition;
 
+	/**
+	 * Resulting message. This should be more or less equal to the message of
+	 * the breadcrumb it leads to (target value of the breadcrumb is always
+	 * inner).
+	 */
 	protected Message resultMessage;
 
 	protected Concern targetConcern;

@@ -86,28 +86,30 @@ public class DIGGER implements CTCommonModule
 					logger.info("Generating dispatch graph for: " + concern.getQualifiedName());
 				}
 
-				// process input filters
 				FireModel fm = new FireModel(concern, fmOrder);
+				processFireModel(concern, fm, FireModel.INPUT_FILTERS);
+				processFireModel(concern, fm, FireModel.OUTPUT_FILTERS);
+			}
+		}
+	}
 
-				Iterator it = fm.getExecutionModel(FireModel.INPUT_FILTERS).getEntranceStates();
-				while (it.hasNext())
-				{
-					ExecutionState es = (ExecutionState) it.next();
-					Message msg = es.getMessage();
-					logger.debug("Entrace message: " + msg.getTarget().getName() + "." + msg.getSelector().getName());
-					Breadcrumb crumb = new Breadcrumb(concern, msg, FireModel.INPUT_FILTERS);
-					traverseExecutionModel(es, crumb, crumb.addTrail());
+	protected void processFireModel(Concern concern, FireModel fm, int filterChain) throws ModuleException
+	{
+		Iterator it = fm.getExecutionModel(filterChain).getEntranceStates();
+		while (it.hasNext())
+		{
+			ExecutionState es = (ExecutionState) it.next();
+			Message msg = es.getMessage();
+			logger.debug("Entrace message: " + msg.getTarget().getName() + "." + msg.getSelector().getName());
+			Breadcrumb crumb = new Breadcrumb(concern, msg, filterChain);
+			traverseExecutionModel(es, crumb, crumb.addTrail());
 
-					Iterator results = crumb.getTrails();
-					while (results.hasNext())
-					{
-						Trail trail = (Trail) results.next();
-						msg = trail.getResultMessage();
-						logger
-								.debug("Message result: " + msg.getTarget().getName() + "."
-										+ msg.getSelector().getName());
-					}
-				}
+			Iterator results = crumb.getTrails();
+			while (results.hasNext())
+			{
+				Trail trail = (Trail) results.next();
+				msg = trail.getResultMessage();
+				logger.debug("Message result: " + msg.getTarget().getName() + "." + msg.getSelector().getName());
 			}
 		}
 	}
@@ -118,7 +120,7 @@ public class DIGGER implements CTCommonModule
 	 * @param state
 	 * @param crumb
 	 * @param trail
-	 * @throws ModuleException 
+	 * @throws ModuleException
 	 */
 	protected void traverseExecutionModel(ExecutionState state, Breadcrumb crumb, Trail trail) throws ModuleException
 	{
@@ -127,9 +129,8 @@ public class DIGGER implements CTCommonModule
 			FlowNode flowNode = state.getFlowNode();
 			if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE))
 			{
-				// trail.addExpression();
 				// needed for certainty checks
-				ConditionExpression cond = (ConditionExpression) flowNode.getRepositoryLink(); 
+				ConditionExpression cond = (ConditionExpression) flowNode.getRepositoryLink();
 				trail.setCondition(cond);
 			}
 			else if (flowNode.containsName(FlowNode.CONDITION_OPERATOR_NODE))
@@ -146,6 +147,7 @@ public class DIGGER implements CTCommonModule
 				Concern targetConcern = findTargetConcern(crumb, state.getMessage().getTarget());
 				trail.setTargetConcern(targetConcern);
 			}
+			// TODO: handle error action (what about other actions?)
 
 			// Create a list of the outgoing transitions. This is done to
 			// optimize the algorithm, in most cases there is only one outgoing
@@ -191,7 +193,7 @@ public class DIGGER implements CTCommonModule
 	 * @param concern
 	 * @param target
 	 * @return
-	 * @throws ModuleException 
+	 * @throws ModuleException
 	 */
 	protected Concern findTargetConcern(Breadcrumb crumb, Target target) throws ModuleException
 	{
@@ -215,7 +217,7 @@ public class DIGGER implements CTCommonModule
 		{
 			if (direction == FireModel.INPUT_FILTERS)
 			{
-				// return the special "inner" node
+				// actual method is executed
 				return null;
 			}
 			else if (direction == FireModel.OUTPUT_FILTERS)

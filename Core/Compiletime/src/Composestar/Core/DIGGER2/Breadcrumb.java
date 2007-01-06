@@ -29,8 +29,14 @@ public class Breadcrumb
 {
 	protected Concern concern;
 
+	/**
+	 * The message that functioned as entrance message for the execution graph
+	 */
 	protected Message message;
 
+	/**
+	 * input or output filter
+	 */
 	protected int direction;
 
 	protected List trails;
