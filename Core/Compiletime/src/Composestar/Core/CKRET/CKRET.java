@@ -28,6 +28,8 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.SIinfo;
@@ -78,7 +80,8 @@ public class CKRET implements CTCommonModule
 		}
 
 		// fetch the ckret runmode
-		int newMode = config.getModuleProperty("SECRET", "mode", mode);
+		ModuleInfo mi = ModuleInfoManager.get("SECRET");
+		int newMode = mi.getIntSetting("mode");
 		if (newMode >= 0 && newMode <= 2)
 		{
 			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "CKRET mode set to " + MODES[newMode]);

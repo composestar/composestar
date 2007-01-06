@@ -117,15 +117,14 @@ public class ModuleInfoManager
 				logger.error("Failed to load module info from XML: " + e.getMessage());
 			}
 		}
-		//TODO: enable when other moduleinfo.xml files have been created 
-		//logger.warn("No module info available for " + forClass);
+		// TODO: enable when other moduleinfo.xml files have been created
+		// logger.warn("No module info available for " + forClass);
 		return null;
 	}
 
 	public static ModuleInfo get(String moduleName)
 	{
 		ModuleInfoManager mim = getInstance();
-		// TODO take into accound double registrations
 		if (mim.idCache.containsKey(moduleName))
 		{
 			return (ModuleInfo) mim.idCache.get(moduleName);
@@ -167,10 +166,9 @@ public class ModuleInfoManager
 		ModuleInfoManager mim = getInstance();
 		mim.idCache.remove(moduleName);
 	}
-	
+
 	/**
 	 * Removes all registered ModuleInfo instances
-	 *
 	 */
 	public static void clear()
 	{
@@ -198,14 +196,11 @@ public class ModuleInfoManager
 		String id = newMi.getId();
 		if (idCache.containsKey(id))
 		{
-			//logger.warn("Already a module registered with id: " + id);
-			// TODO: properly handle this
-			idCache.put(id, newMi);
+			// logger.warn("Already a module registered with id: " + id);
+			// TODO: properly handle this, we now assume that the last module
+			// registered is the active one
 		}
-		else
-		{
-			idCache.put(id, newMi);
-		}
+		idCache.put(id, newMi);
 	}
 
 	protected ModuleInfoManager()

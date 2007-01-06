@@ -128,11 +128,11 @@ public class ModuleInfo implements Serializable
 	{
 		if (settings.containsKey(key))
 		{
-			logger.debug("Request module setting '" + key + "' for module '" + id + "'");
+			//logger.debug("Request module setting '" + key + "' for module '" + id + "'");
 			ModuleSetting ms = (ModuleSetting) settings.get(key);
 			return ms;
 		}
-		throw new ConfigurationException("Request unknown module setting '" + key + "' for module '" + id + "'");
+		throw new ConfigurationException("Requested unknown module setting '" + key + "' for module '" + id + "'");
 	}
 
 	public Iterator getSettings()

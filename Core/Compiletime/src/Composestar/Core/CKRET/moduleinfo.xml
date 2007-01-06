@@ -26,6 +26,12 @@
 			Then the specified patterns are matches against the
 			sequences of operations performed on the resources.
 		</description>
+		
+		<settings>
+			<setting id="mode" type="integer">
+				<default>2</default>
+			</setting>
+		</settings>
 
 		<incre>
 			<module

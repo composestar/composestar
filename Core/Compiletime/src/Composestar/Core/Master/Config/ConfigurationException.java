@@ -10,12 +10,14 @@
 
 package Composestar.Core.Master.Config;
 
+import Composestar.Core.Exception.ModuleException;
+
 /**
  * A configuration exception
  *
  * @author Michiel Hendriks
  */
-public class ConfigurationException extends Exception
+public class ConfigurationException extends ModuleException
 {
 	private static final long serialVersionUID = 5270266594960250006L;
 
@@ -24,6 +26,6 @@ public class ConfigurationException extends Exception
 	 */
 	public ConfigurationException(String message)
 	{
-		super(message);
+		super(message, "Configuration");
 	}
 }

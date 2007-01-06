@@ -38,12 +38,17 @@ public class ModulesHandler extends DefaultHandler
 				for (int i = 0; i < amap.getLength(); i++)
 				{
 					String key = amap.getQName(i);
+					if ("name".equals(key))
+					{
+						continue;
+					}
 					String val = amap.getValue(key);
 					m.addProperty(key, val);
 					props.put(key, val);
 				}
 
 				Configuration.instance().getModuleSettings().addModule(name, m);
+				
 				Configuration.instance().addTmpModuleSettings(name, props);
 			}
 		}

@@ -26,7 +26,8 @@ public class Configuration implements Serializable
 	private CustomFilters filters;
 
 	/**
-	 * Temporary storage of module settings
+	 * Temporary storage of module settings. ModuleInfo uses this to populate
+	 * it's settings when it's loaded.
 	 */
 	private Map tmpModuleSettings;
 
@@ -92,37 +93,49 @@ public class Configuration implements Serializable
 		return moduleSettings;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public ModuleSettings getModuleSettings(String module)
 	{
 		return moduleSettings.getModule(module);
 	}
 
+	/**
+	 * @deprecated Directly use ModuleInfo
+	 */
 	public String getModuleProperty(String module, String key, String def)
 	{
-		ModuleSettings ms = getModuleSettings(module);
-		if (ms != null)
+		ModuleInfo mi = ModuleInfoManager.get(module);
+		if (mi != null)
 		{
-			return ms.getProperty(key, def);
+			return mi.getStringSetting(key, def);
 		}
 		return def;
 	}
 
+	/**
+	 * @deprecated Directly use ModuleInfo
+	 */
 	public int getModuleProperty(String module, String key, int def)
 	{
-		ModuleSettings ms = getModuleSettings(module);
-		if (ms != null)
+		ModuleInfo mi = ModuleInfoManager.get(module);
+		if (mi != null)
 		{
-			return ms.getProperty(key, def);
+			return mi.getIntSetting(key, def);
 		}
 		return def;
 	}
 
+	/**
+	 * @deprecated Directly use ModuleInfo
+	 */
 	public boolean getModuleProperty(String module, String key, boolean def)
 	{
-		ModuleSettings ms = getModuleSettings(module);
-		if (ms != null)
+		ModuleInfo mi = ModuleInfoManager.get(module);
+		if (mi != null)
 		{
-			return ms.getProperty(key, def);
+			return mi.getBooleanSetting(key, def);
 		}
 		return def;
 	}
