@@ -23,10 +23,14 @@
 			</fileset>
 		</delete>
 		
+		<!-- xml beans -->
+		<delete dir="${out.xmltypes}"/>
+		
 	</target>
 	
 	<target name="init_local" depends="init">
-		
+
+		<property name="out.xmltypes"     location="../StarLightEntities/obj/xmltypes"/>
 		<property name="core.jar"         location="${build.core}/Compiletime/${out.jar.core}"/>
 		<property name="starlight.jar"    location="${out.jar.starlight}"/>
 		<property name="xmltypes.jar"     location="lib/xmltypes.jar"/>
@@ -34,6 +38,7 @@
 		
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
+		<mkdir dir="${out.xmltypes}"/>
 	
 	</target>
 
@@ -57,7 +62,7 @@
 		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build" config="${msbuild.config}"/>
 		<exec executable="${xsd.exe}" dir="..\StarLightEntities\bin\debug">
 			<arg line="Composestar.StarLight.Entities.dll"/>
-			<arg line="/outputdir:../../obj"/>
+			<arg line="/outputdir:${out.xmltypes}"/>
 		</exec>
 	</target>
 	
@@ -73,12 +78,12 @@
 		         classpathref="lib.xmlbeans"/>
 
 		<xmlbean classpathref="lib.xmlbeans"
-		         schema="../StarLightEntities/obj/schema0.xsd" 
+		         schema="${out.xmltypes}/schema0.xsd" 
 		         destfile="${xmltypes.jar}" 
-		         srcgendir="../StarLightEntities/obj/xmltypes"/>
+		         srcgendir="${out.xmltypes}"/>
 
 		<zip destfile="${xmltypes-src.zip}"
-		     basedir="../StarLightEntities/obj/xmltypes"/>
+		     basedir="${out.xmltypes}"/>
 
 	</target>
 	

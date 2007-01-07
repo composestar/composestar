@@ -18,18 +18,26 @@
 	<!-- clean -->
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
-		<delete dir="${out.qa.starlight}" />
-		<delete dir="${out.fxcop.starlight}" />
-		<delete dir="${out.nunit}" />
-		<delete file="Documentation\ComposeStar-StarLight.chm" />
-		<delete file="Documentation\LastBuild.log" />
-
+		
 		<!-- run clean on all msbuild project files -->
 		<cs:dn_msbatch target="clean">
 			<fileset dir="Source">
 				<include name="**/*.csproj"/>
 			</fileset>
 		</cs:dn_msbatch>
+
+		<!-- clean java code -->
+		<ant target="clean" dir="Source/Compiletime" inheritRefs="true"/>
+
+		<!-- clean qa -->
+		<delete dir="${out.qa.starlight}" />
+		<delete dir="${out.fxcop.starlight}" />
+		<delete dir="${out.nunit}" />
+
+		<!-- clean documentation -->
+		<delete file="Documentation\ComposeStar-StarLight.chm" />
+		<delete file="Documentation\LastBuild.log" />
+		
 	</target>
 
 	<!-- build -->
