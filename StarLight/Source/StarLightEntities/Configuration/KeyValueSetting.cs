@@ -49,16 +49,17 @@ namespace Composestar.StarLight.Entities.Configuration
 	/// Contains a key and value to store settings
 	/// </summary>
 	[Serializable]
-	[XmlRoot("Setting", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("KeyValueSetting", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public class KeyValueSetting
 	{
+		private string _key;
+		private string _value;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:KeyValueSetting"/> class.
 		/// </summary>
 		public KeyValueSetting()
 		{
-
 		}
 
 		/// <summary>
@@ -68,18 +69,9 @@ namespace Composestar.StarLight.Entities.Configuration
 		/// <param name="value">The value.</param>
 		public KeyValueSetting(string key, string value)
 		{
-			/// <summary>
-			/// _key
-			/// </summary>
 			_key = key;
-			/// <summary>
-			/// _value
-			/// </summary>
 			_value = value;
 		}
-
-		private string _key;
-		private string _value;
 
 		/// <summary>
 		/// Gets or sets the key.
@@ -89,14 +81,8 @@ namespace Composestar.StarLight.Entities.Configuration
 		[XmlAttribute]
 		public string Key
 		{
-			get
-			{
-				return _key;
-			}
-			set
-			{
-				_key = value;
-			}
+			get { return _key; }
+			set { _key = value; }
 		}
 
 		/// <summary>
@@ -107,15 +93,8 @@ namespace Composestar.StarLight.Entities.Configuration
 		[XmlAttribute]
 		public string Value
 		{
-			get
-			{
-				return _value;
-			}
-			set
-			{
-				_value = value;
-			}
+			get { return _value; }
+			set { _value = value; }
 		}
-		
 	}
 }

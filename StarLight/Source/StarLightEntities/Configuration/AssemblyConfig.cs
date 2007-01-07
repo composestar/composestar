@@ -56,6 +56,14 @@ namespace Composestar.StarLight.Entities.Configuration
 	public class AssemblyConfig
 	{
 		private string _name;
+		private long _timestamp;
+		private string _fileName;
+		private string _serializedFileName = string.Empty;
+		private AssemblyElement _assembly;
+		private String _weaveSpec;
+		private bool _isReference;
+		private bool _isDummy;
+		private PdbMode _debugFileMode = PdbMode.HideFilters;
 
 		/// <summary>
 		/// Gets or sets the name.
@@ -68,8 +76,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _name = value; }
 		}
 
-		private long _timestamp;
-
 		/// <summary>
 		/// Gets or sets the time stamp.
 		/// </summary>
@@ -80,8 +86,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _timestamp; }
 			set { _timestamp = value; }
 		}
-
-		private string _fileName;
 
 		/// <summary>
 		/// Gets or sets the filename.
@@ -94,8 +98,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _fileName = value; }
 		}
 
-		private string _serializedFileName = string.Empty;
-
 		/// <summary>
 		/// Gets or sets the serialized filename.
 		/// </summary>
@@ -106,8 +108,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _serializedFileName; }
 			set { _serializedFileName = value; }
 		}
-
-		private AssemblyElement _assembly;
 
 		/// <summary>
 		/// Gets or sets the assembly.
@@ -137,8 +137,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			}
 		}
 
-		private String _weaveSpec;
-
 		/// <summary>
 		/// Gets or sets the weave specification file.
 		/// </summary>
@@ -149,8 +147,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _weaveSpec; }
 			set { _weaveSpec = value; }
 		}
-
-		private bool _isReference;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this assembly is a reference.
@@ -165,8 +161,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _isReference = value; }
 		}
 
-		private bool _isDummy;
-
 		/// <summary>
 		/// Gets or sets a value indicating whether this is a dummy assembly.
 		/// </summary>
@@ -179,8 +173,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _isDummy; }
 			set { _isDummy = value; }
 		}
-
-		private  PdbMode _debugFileMode = PdbMode.HideFilters;
 
 		/// <summary>
 		/// Gets or sets the debug file mode.

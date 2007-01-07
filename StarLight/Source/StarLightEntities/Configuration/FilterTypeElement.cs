@@ -48,13 +48,14 @@ namespace Composestar.StarLight.Entities.Configuration
 	/// Filter type element
 	/// </summary>
 	[Serializable]
-	[XmlRoot("FilterType", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("FilterTypeElement", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public class FilterTypeElement
 	{
-		/// <summary>
-		/// _name
-		/// </summary>
 		private string _name;
+		private string _acceptCallAction;
+		private string _rejectCallAction;
+		private string _acceptReturnAction;
+		private string _rejectReturnAction;
 
 		/// <summary>
 		/// Gets or sets the name.
@@ -68,8 +69,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _name = value; }
 		}
 
-		private string _acceptCallAction;
-
 		/// <summary>
 		/// Gets or sets the accept call action.
 		/// </summary>
@@ -80,8 +79,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _acceptCallAction; }
 			set { _acceptCallAction = value; }
 		}
-
-		private string _rejectCallAction;
 
 		/// <summary>
 		/// Gets or sets the reject call action.
@@ -94,8 +91,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _rejectCallAction = value; }
 		}
 
-		private string _acceptReturnAction;
-
 		/// <summary>
 		/// Gets or sets the accept return action.
 		/// </summary>
@@ -106,8 +101,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _acceptReturnAction; }
 			set { _acceptReturnAction = value; }
 		}
-
-		private string _rejectReturnAction;
 
 		/// <summary>
 		/// Gets or sets the reject return action.

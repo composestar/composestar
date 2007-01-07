@@ -47,7 +47,7 @@ namespace Composestar.StarLight.Entities.Configuration
 	/// Filter action element describes a single filter action to be used in a filter type.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("FilterAction", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("FilterActionElement", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public class FilterActionElement
 	{
 		public const int FlowContinue = 1;
@@ -58,11 +58,16 @@ namespace Composestar.StarLight.Entities.Configuration
 		public const int MessageAny = 3;
 
 		private bool _createJPC;
+		private int _flowBehavior;
+		private int _messageChangeBehavior;
+		private string _name;
+		private string _fullName;
+		private string _assembly;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to create a JoinPointContext object.
 		/// </summary>
-		/// <value><c>true</c> if the weaver has to create a JPC; otherwise, <c>false</c>.</value>
+		/// <value><c>true</c> if the weaver must create a JPC; otherwise, <c>false</c>.</value>
 		[XmlAttribute]
 		[SuppressMessage("Microsoft.Naming", "CA1705:LongAcronymsShouldBePascalCased")]
 		public bool CreateJPC
@@ -70,8 +75,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _createJPC; }
 			set { _createJPC = value; }
 		}
-
-		private int _flowBehavior;
 
 		/// <summary>
 		/// Gets or sets the flow behavior.
@@ -83,7 +86,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _flowBehavior; }
 			set { _flowBehavior = value; }
 		}
-		private int _messageChangeBehavior;
 
 		/// <summary>
 		/// Gets or sets the message change behavior.
@@ -95,7 +97,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _messageChangeBehavior; }
 			set { _messageChangeBehavior = value; }
 		}
-		private string _name;
 
 		/// <summary>
 		/// Gets or sets the name.
@@ -107,7 +108,6 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _name; }
 			set { _name = value; }
 		}
-		private string _fullName;
 
 		/// <summary>
 		/// Gets or sets the full name.
@@ -120,14 +120,12 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _fullName = value; }
 		}
 
-		private String _assembly;
-
 		/// <summary>
 		/// Gets or sets the assembly.
 		/// </summary>
 		/// <value>The assembly.</value>
 		[XmlAttribute]
-		public String Assembly
+		public string Assembly
 		{
 			get { return _assembly; }
 			set { _assembly = value; }

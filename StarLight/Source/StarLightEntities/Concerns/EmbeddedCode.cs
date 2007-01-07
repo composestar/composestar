@@ -49,20 +49,11 @@ namespace Composestar.StarLight.Entities.Concerns
 	/// Represents the code embedded inside a concern
 	/// </summary>
 	[Serializable]
-	[XmlRoot("EmbeddedCode", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("EmbeddedCode", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public class EmbeddedCode
 	{
-		/// <summary>
-		/// _language
-		/// </summary>
 		private string _language;
-		/// <summary>
-		/// _code
-		/// </summary>
 		private string _code;
-		/// <summary>
-		/// _file name
-		/// </summary>
 		private string _fileName;
 
 		/// <summary>
