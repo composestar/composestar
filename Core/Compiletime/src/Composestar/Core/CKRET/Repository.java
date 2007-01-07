@@ -71,12 +71,12 @@ public class Repository
 			ckretconfigfile = Configuration.instance().getPathSettings().getPath("Composestar") + CKRET_CONFIG;
 			if (!(new File(ckretconfigfile).exists()))
 			{
-				throw new ModuleException("Filter specification (" + CKRET_CONFIG + ") not found.", "CKRET");
+				throw new ModuleException("Filter specification (" + CKRET_CONFIG + ") not found.", CKRET.MODULE_NAME);
 			}
 		}
 		INCRE.instance().addConfiguration("CKRETConfigFile", ckretconfigfile);
 
-		Debug.out(Debug.MODE_INFORMATION, "CKRET", "Using filter specification in " + ckretconfigfile);
+		Debug.out(Debug.MODE_INFORMATION, CKRET.MODULE_NAME, "Using filter specification in " + ckretconfigfile);
 
 		ConfigParser parser = new ConfigParser();
 		parser.parse(ckretconfigfile, this);

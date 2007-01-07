@@ -150,6 +150,30 @@ public class ModuleInfo implements Serializable
 		ModuleSetting ms = getSetting(key);
 		ms.setValue(newValue);
 	}
+	
+	public void setSettingValue(String key, String newValue) throws ConfigurationException
+	{
+		ModuleSetting ms = getSetting(key);
+		ms.setValue(newValue);
+	}
+	
+	public void setSettingValue(String key, int newValue) throws ConfigurationException
+	{
+		ModuleSetting ms = getSetting(key);
+		ms.setValue(newValue);
+	}
+	
+	public void setSettingValue(String key, boolean newValue) throws ConfigurationException
+	{
+		ModuleSetting ms = getSetting(key);
+		ms.setValue(newValue);
+	}
+	
+	public void setSettingValue(String key, float newValue) throws ConfigurationException
+	{
+		ModuleSetting ms = getSetting(key);
+		ms.setValue(newValue);
+	}
 
 	public String getStringSetting(String key) throws ConfigurationException
 	{
@@ -227,7 +251,7 @@ public class ModuleInfo implements Serializable
 			Entry entry = (Entry) entries.next();
 			try
 			{
-				setSettingValue((String) entry.getKey(), entry.getValue());
+				setSettingValue((String) entry.getKey(), (String) entry.getValue());
 			}
 			catch (ConfigurationException e)
 			{

@@ -1,5 +1,5 @@
 <modules>
-	<moduleinfo id="CKRET" class="Composestar.Core.CKRET.CKRET">
+	<moduleinfo id="SECRET" class="Composestar.Core.CKRET.CKRET">
 		<name>Semantic Reasoning Tool</name>
 		<description>
 			If multiple filtermodules are imposed on the same joinpoint,

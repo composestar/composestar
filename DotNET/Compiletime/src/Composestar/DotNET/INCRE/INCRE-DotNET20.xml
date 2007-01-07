@@ -89,7 +89,7 @@
 			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>		
 	</module>
-	<module name="CKRET" fulltype="Composestar.Core.CKRET.CKRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
+	<module name="SECRET" fulltype="Composestar.Core.CKRET.CKRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
 		<dependencies>
 			<dependency type="FILE" name="CKRETConfigFile" isAdded="false">
 				<path>

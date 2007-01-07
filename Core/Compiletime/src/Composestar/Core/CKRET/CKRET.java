@@ -36,12 +36,13 @@ import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
+//FIXME: rename package to SECRET
 /**
  * SECRET
  */
 public class CKRET implements CTCommonModule
 {
-	public static final String MODULE_NAME = "CKRET";
+	public static final String MODULE_NAME = "SECRET";
 	
 	public static final String[] MODES = { "NORMAL", "REDUNDANT", "PROGRESSIVE" };
 

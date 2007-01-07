@@ -193,7 +193,7 @@ public class ResourceOperationLabeler implements Labeler
 								MethodInfo dnmi = (MethodInfo) dna.getTarget();
 								String fullMethodName = dnmi.parent().m_fullName + '.' + dnmi.name();
 								throw new ModuleException("Error in annotation semantics of method " + fullMethodName,
-										"CKRET");
+										CKRET.MODULE_NAME);
 							}
 							StringTokenizer st = new StringTokenizer(dna.getValue().replaceAll("\"", ""), ",");
 							List metaOperations = new ArrayList();
@@ -214,7 +214,7 @@ public class ResourceOperationLabeler implements Labeler
 								// }
 								// catch(Exception e)
 								// {
-								// throw new ModuleException("CKRET","Error
+								// throw new ModuleException(CKRET.MODULE_NAME,"Error
 								// in annotation semantics of filter " +
 								// filter.getQualifiedName());
 								// }
@@ -251,7 +251,7 @@ public class ResourceOperationLabeler implements Labeler
 							// }
 							// catch(Exception e)
 							// {
-							// throw new ModuleException("CKRET","Error in
+							// throw new ModuleException(CKRET.MODULE_NAME,"Error in
 							// annotation semantics of filter " +
 							// filter.getQualifiedName());
 							// }
