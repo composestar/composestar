@@ -68,7 +68,6 @@ namespace Composestar.StarLight.ILAnalyzer
 	[CLSCompliant(false)]
 	public class CecilAssemblyVisitor : BaseReflectionVisitor
 	{
-
 		#region Constants
 
 		private const string ModuleName = "<Module>";
@@ -84,47 +83,17 @@ namespace Composestar.StarLight.ILAnalyzer
 
 		private IAnalyzerResults _results;
 
-		/// <summary>
-		/// _assembly element
-		/// </summary>
 		private AssemblyElement _assemblyElement = new AssemblyElement();
-		/// <summary>
-		/// _assembly
-		/// </summary>
 		private AssemblyDefinition _assembly;
 
-		/// <summary>
-		/// _resolved assemblies
-		/// </summary>
-		private IList<String> _resolvedAssemblies = new List<String>();
-		/// <summary>
-		/// _unresolved assemblies
-		/// </summary>
-		private IList<String> _unresolvedAssemblies = new List<String>();
-		/// <summary>
-		/// _cached types
-		/// </summary>
-		private IList<String> _cachedTypes = new List<String>();
-		/// <summary>
-		/// _resolved types
-		/// </summary>
-		private IList<String> _resolvedTypes = new List<String>();
-		/// <summary>
-		/// _unresolved types
-		/// </summary>
-		private List<String> _unresolvedTypes = new List<String>();
+		private IList<string> _resolvedAssemblies = new List<string>();
+		private IList<string> _unresolvedAssemblies = new List<string>();
+		private IList<string> _cachedTypes = new List<string>();
+		private IList<string> _resolvedTypes = new List<string>();
+		private IList<string> _unresolvedTypes = new List<string>();
 
-		/// <summary>
-		/// _save type
-		/// </summary>
 		private bool _saveType;
-		/// <summary>
-		/// _save inner type
-		/// </summary>
 		private bool _saveInnerType;
-		/// <summary>
-		/// _process method body
-		/// </summary>
 		private bool _processMethodBody = true;
 		private bool _processProperties;
 		private bool _processAttributes;
@@ -145,14 +114,8 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// <value>The results.</value>
 		public IAnalyzerResults Results
 		{
-			get
-			{
-				return _results;
-			}
-			set
-			{
-				_results = value;
-			}
+			get { return _results; }
+			set { _results = value; }
 		}
 
 		/// <summary>
@@ -161,217 +124,138 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// <value><c>true</c> if to process properties; otherwise, <c>false</c>.</value>
 		public bool ProcessProperties
 		{
-			get
-			{
-				return _processProperties;
-			}
-			set
-			{
-				_processProperties = value;
-			}
+			get { return _processProperties; }
+			set { _processProperties = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether [extract unresolved only].
+		/// Gets or sets a value indicating whether to extract unresolved only.
 		/// </summary>
 		/// <value>
-		/// 	<c>true</c> if [extract unresolved only]; otherwise, <c>false</c>.
+		/// 	<c>true</c> if only unresolved only must be extracted; otherwise, <c>false</c>.
 		/// </value>
 		public bool ExtractUnresolvedOnly
 		{
-			get
-			{
-				return _extractUnresolvedOnly;
-			}
-			set
-			{
-				_extractUnresolvedOnly = value;
-			}
+			get { return _extractUnresolvedOnly; }
+			set { _extractUnresolvedOnly = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the resolved types.
+		/// Gets or sets the list of resolved types.
 		/// </summary>
 		/// <value>The resolved types.</value>
-		public IList<String> ResolvedTypes
+		public IList<string> ResolvedTypes
 		{
-			get
-			{
-				return _resolvedTypes;
-			}
-			set
-			{
-				_resolvedTypes = value;
-			}
+			get { return _resolvedTypes; }
+			set { _resolvedTypes = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the unresolved types.
+		/// Gets or sets the list of unresolved types.
 		/// </summary>
 		/// <value>The unresolved types.</value>
-		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-		public List<String> UnresolvedTypes
+		public IList<string> UnresolvedTypes
 		{
-			get
-			{
-				return _unresolvedTypes;
-			}
-			set
-			{
-				_unresolvedTypes = value;
-			}
+			get { return _unresolvedTypes; }
+			set { _unresolvedTypes = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the filter actions.
+		/// Gets the list of filter actions.
 		/// </summary>
 		/// <value>The filter actions.</value>
 		public IList<FilterActionElement> FilterActions
 		{
-			get
-			{
-				return _filterActions;
-			}
+			get { return _filterActions; }
 		}
 
 		/// <summary>
-		/// Gets or sets the filter types.
+		/// Gets the list of filter types.
 		/// </summary>
 		/// <value>The filter types.</value>
 		public IList<FilterTypeElement> FilterTypes
 		{
-			get
-			{
-				return _filterTypes;
-			}
+			get { return _filterTypes; }
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether [include fields].
+		/// Gets or sets a value indicating whether to include fields.
 		/// </summary>
-		/// <value><c>true</c> if [include fields]; otherwise, <c>false</c>.</value>
+		/// <value><c>true</c> if fields must be included; otherwise, <c>false</c>.</value>
 		public bool IncludeFields
 		{
-			get
-			{
-				return _includeFields;
-			}
-			set
-			{
-				_includeFields = value;
-			}
+			get { return _includeFields; }
+			set { _includeFields = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether [process attributes].
+		/// Gets or sets a value indicating whether to process attributes.
 		/// </summary>
-		/// <value><c>true</c> if [process attributes]; otherwise, <c>false</c>.</value>
+		/// <value><c>true</c> if attributes must be processed; otherwise, <c>false</c>.</value>
 		public bool ProcessAttributes
 		{
-			get
-			{
-				return _processAttributes;
-			}
-			set
-			{
-				_processAttributes = value;
-			}
+			get { return _processAttributes; }
+			set { _processAttributes = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether [process method body].
+		/// Gets or sets a value indicating whether to process method bodies.
 		/// </summary>
-		/// <value><c>true</c> if [process method body]; otherwise, <c>false</c>.</value>
+		/// <value><c>true</c> if method bodies must be processed; otherwise, <c>false</c>.</value>
 		public bool ProcessMethodBody
 		{
-			get
-			{
-				return _processMethodBody;
-			}
-			set
-			{
-				_processMethodBody = value;
-			}
+			get { return _processMethodBody; }
+			set { _processMethodBody = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether [save inner type].
+		/// Gets or sets a value indicating whether to save inner types.
 		/// </summary>
-		/// <value><c>true</c> if [save inner type]; otherwise, <c>false</c>.</value>
+		/// <value><c>true</c> if inner type must be saved; otherwise, <c>false</c>.</value>
 		public bool SaveInnerType
 		{
-			get
-			{
-				return _saveInnerType;
-			}
-			set
-			{
-				_saveInnerType = value;
-			}
+			get { return _saveInnerType; }
+			set { _saveInnerType = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether [save type].
+		/// Gets or sets a value indicating whether to save types.
 		/// </summary>
-		/// <value><c>true</c> if [save type]; otherwise, <c>false</c>.</value>
+		/// <value><c>true</c> if types must be saved; otherwise, <c>false</c>.</value>
 		public bool SaveType
 		{
-			get
-			{
-				return _saveType;
-			}
-			set
-			{
-				_saveType = value;
-			}
+			get { return _saveType; }
+			set { _saveType = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the cached types.
+		/// Gets or sets a list of cached types.
 		/// </summary>
 		/// <value>The cached types.</value>
-		public IList<String> CachedTypes
+		public IList<string> CachedTypes
 		{
-			get
-			{
-				return _cachedTypes;
-			}
-			set
-			{
-				_cachedTypes = value;
-			}
+			get { return _cachedTypes; }
+			set { _cachedTypes = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the unresolved assemblies.
+		/// Gets or sets a list of unresolved assemblies.
 		/// </summary>
 		/// <value>The unresolved assemblies.</value>
-		public IList<String> UnresolvedAssemblies
+		public IList<string> UnresolvedAssemblies
 		{
-			get
-			{
-				return _unresolvedAssemblies;
-			}
-			set
-			{
-				_unresolvedAssemblies = value;
-			}
+			get { return _unresolvedAssemblies; }
+			set { _unresolvedAssemblies = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the resolved assemblies.
+		/// Gets or sets a list of resolved assemblies.
 		/// </summary>
 		/// <value>The resolved assemblies.</value>
-		public IList<String> ResolvedAssemblies
+		public IList<string> ResolvedAssemblies
 		{
-			get
-			{
-				return _resolvedAssemblies;
-			}
-			set
-			{
-				_resolvedAssemblies = value;
-			}
+			get { return _resolvedAssemblies; }
+			set { _resolvedAssemblies = value; }
 		}
 
 		#endregion
@@ -383,7 +267,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
 		#endregion
 
-		#region Analyze Function
+		#region Analyze function
 
 		/// <summary>
 		/// Analyze the specified assembly filename.
@@ -392,7 +276,6 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// <returns></returns>
 		public AssemblyElement Analyze(string assemblyFileName)
 		{
-
 			try
 			{
 				// Load assembly for processing by Mono.Cecil
@@ -400,7 +283,7 @@ namespace Composestar.StarLight.ILAnalyzer
 			}
 			catch (EndOfStreamException)
 			{
-				throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, assemblyFileName));
+				throw new BadImageFormatException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, assemblyFileName));
 			}
 
 			AddResolvedAssemblyList(_assembly.Name.ToString());
@@ -428,8 +311,8 @@ namespace Composestar.StarLight.ILAnalyzer
 			}
 
 			// Remove types without a proper assembly name, e.g. the generic identifiers T, V, K, TKey, TValue, TOutput, TItem
-			IList<String> unresolvedtypes = new List<String>(UnresolvedTypes);
-			foreach (String type in unresolvedtypes)
+			IList<string> unresolvedtypes = new List<string>(UnresolvedTypes);
+			foreach (string type in unresolvedtypes)
 			{
 				if (type.EndsWith(", NULL"))
 				{
@@ -641,7 +524,7 @@ namespace Composestar.StarLight.ILAnalyzer
 			{
 				me.Body = new Entities.LanguageModel.MethodBody();
 
-				List<String> callList = new List<string>();
+				List<string> callList = new List<string>();
 
 				foreach (Instruction instr in method.Body.Instructions)
 				{
@@ -719,14 +602,14 @@ namespace Composestar.StarLight.ILAnalyzer
 
 			if (assembly == null)
 			{
-				throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
+				throw new ILAnalyzerException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
 			}
 
 			Type refType = assembly.GetType(type.FullName);
 
 			if (refType == null)
 			{
-				throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindType, type.FullName));
+				throw new ILAnalyzerException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindType, type.FullName));
 			}
 
 			FilterActionAttribute[] faas = (FilterActionAttribute[])refType.GetCustomAttributes(typeof(FilterActionAttribute), true);
@@ -781,7 +664,7 @@ namespace Composestar.StarLight.ILAnalyzer
 			return;
 		}
 
-		private String m_rootAssembly;
+		private string m_rootAssembly;
 
 		/// <summary>
 		/// Mies the reflection only resolve event handler.
@@ -794,7 +677,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
 			AssemblyName name = new AssemblyName(args.Name);
 
-			String asmToCheck = Path.GetDirectoryName(m_rootAssembly) + "\\" + name.Name + ".dll";
+			string asmToCheck = Path.GetDirectoryName(m_rootAssembly) + "\\" + name.Name + ".dll";
 
 			if (File.Exists(asmToCheck))
 			{
@@ -851,14 +734,14 @@ namespace Composestar.StarLight.ILAnalyzer
 
 			if (assembly == null)
 			{
-				throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
+				throw new ILAnalyzerException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
 			}
 
 			Type refType = assembly.GetType(type.FullName);
 
 			if (refType == null)
 			{
-				throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindType, type.FullName));
+				throw new ILAnalyzerException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindType, type.FullName));
 			}
 
 			FilterTypeAttribute[] ftas = (FilterTypeAttribute[])refType.GetCustomAttributes(typeof(FilterTypeAttribute), true);
@@ -1054,9 +937,9 @@ namespace Composestar.StarLight.ILAnalyzer
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		private static string CreateTypeName(TypeReference type)
 		{
-			String typeName = type.FullName;
+			string typeName = type.FullName;
 
-			if (typeName.Contains("`")) typeName = String.Format(CultureInfo.CurrentCulture, "{0}.{1}", type.Namespace, type.Name);
+			if (typeName.Contains("`")) typeName = string.Format(CultureInfo.CurrentCulture, "{0}.{1}", type.Namespace, type.Name);
 			if (typeName.EndsWith("&")) typeName = typeName.Substring(0, typeName.Length - 1);
 			if (typeName.EndsWith("**")) typeName = typeName.Substring(0, typeName.Length - 2);
 			if (typeName.EndsWith("*")) typeName = typeName.Substring(0, typeName.Length - 1);
@@ -1076,7 +959,7 @@ namespace Composestar.StarLight.ILAnalyzer
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
 		private static string CreateTypeAFQN(AssemblyDefinition targetAssemblyDefinition, TypeReference type)
 		{
-			return String.Format(CultureInfo.CurrentCulture, "{0}, {1}", CreateTypeName(type), CreateAFQN(targetAssemblyDefinition, type));
+			return string.Format(CultureInfo.CurrentCulture, "{0}, {1}", CreateTypeName(type), CreateAFQN(targetAssemblyDefinition, type));
 		}
 
 		/// <summary>
@@ -1086,7 +969,7 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// <param name="type">The type.</param>
 		/// <returns></returns>
 		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		private static String CreateAFQN(AssemblyDefinition targetAssemblyDefinition, TypeReference type)
+		private static string CreateAFQN(AssemblyDefinition targetAssemblyDefinition, TypeReference type)
 		{
 			if (targetAssemblyDefinition == null)
 				throw new ArgumentNullException("targetAssemblyDefinition");

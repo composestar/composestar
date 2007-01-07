@@ -450,15 +450,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			configuration.ExtractUnresolvedOnly = true;
 			configuration.BinFolder = _binFolder;
 
-			// Store before reinit
-			List<string> tempUnresolvedTypes = analyzer.UnresolvedTypes;
+			// Store before reset
+			IList<string> tempUnresolvedTypes = analyzer.UnresolvedTypes;
 
 			// Create a new analyzer using the object builder
 			IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
 			analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration));
 
-			// Set the unresolved types (because we reinit the analyzer)
-			analyzer.UnresolvedTypes.AddRange(tempUnresolvedTypes);
+			// Set the unresolved types (because we have reset the analyzer)
+			foreach (string type in tempUnresolvedTypes)
+			{
+				analyzer.UnresolvedTypes.Add(type);
+			}
 
 			// Add the assemblies to analyze.
 			foreach (ITaskItem item in refAssemblies)

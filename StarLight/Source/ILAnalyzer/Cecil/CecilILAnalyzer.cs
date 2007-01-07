@@ -76,7 +76,7 @@ namespace Composestar.StarLight.ILAnalyzer
 		private IList<string> _resolvedAssemblies = new List<string>();
 		private IList<string> _unresolvedAssemblies = new List<string>();
 		private IList<string> _resolvedTypes = new List<string>();
-		private List<string> _unresolvedTypes = new List<string>();
+		private IList<string> _unresolvedTypes = new List<string>();
 		private IList<string> _cachedTypes = new List<string>();
 
 		private CecilAnalyzerConfiguration _configuration;
@@ -89,7 +89,7 @@ namespace Composestar.StarLight.ILAnalyzer
 		#region Properties
 
 		/// <summary>
-		/// Gets or sets the resolved types.
+		/// Gets the resolved types.
 		/// </summary>
 		/// <value>The resolved types.</value>
 		public IList<string> ResolvedTypes
@@ -98,13 +98,12 @@ namespace Composestar.StarLight.ILAnalyzer
 		}
 
 		/// <summary>
-		/// Gets or sets the unresolved types.
+		/// Gets the unresolved types.
 		/// </summary>
 		/// <value>The unresolved types.</value>
-		public List<string> UnresolvedTypes
+		public IList<string> UnresolvedTypes
 		{
 			get { return _unresolvedTypes; }
-			set { _unresolvedTypes = value; }
 		}
 
 		/// <summary>
@@ -129,7 +128,6 @@ namespace Composestar.StarLight.ILAnalyzer
 				return _dar;
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the unresolved assemblies.

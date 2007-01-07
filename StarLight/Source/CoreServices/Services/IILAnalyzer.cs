@@ -69,8 +69,8 @@ namespace Composestar.StarLight.CoreServices
 		/// Gets or sets the unresolved types.
 		/// </summary>
 		/// <value>The unresolved types.</value>
-		[SuppressMessage("Microsoft.Usage", "CA2227")]
-		List<string> UnresolvedTypes { get; set; }
+		[SuppressMessage("Microsoft.Design", "CA1002")]
+		IList<string> UnresolvedTypes { get; }
 
 		/// <summary>
 		/// Gets the resolved types.
