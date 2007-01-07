@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="SEMTEX" class="Composestar.DotNET.SEMTEX.DotNETSemTexRunner">
+		<incre>
+			<module phase="two" enabled="true" incremental="true" summary="Collecting semantic information...">
+				<dependencies>
+					<dependency type="FILE" name="assembly"></dependency>
+				</dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+
+	<moduleinfo id="SEMTEXCollector" class="Composestar.DotNET.SEMTEX.DotNETSemTexCollector">
+		<incre>
+			<module phase="two" enabled="true" incremental="true" summary="Importing semantic information...">
+				<dependencies>
+					<dependency type="FILE" name="assembly"></dependency>
+				</dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

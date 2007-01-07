@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="CONE-IS" class="Composestar.DotNET.CONE.DotNETWeaveFileGenerator">
+		<incre>
+			<module enabled="true" incremental="false" summary="Generating weave specification file...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+
+	<moduleinfo id="CONE-XML" class="Composestar.DotNET.CONE.DotNETRepositorySerializer">
+		<incre>
+			<module enabled="true" incremental="false" summary="Serializing repository...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

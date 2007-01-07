@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo extends="Composestar.Core.BACO.BACO" class="Composestar.DotNET.BACO.DotNETBACO"></moduleinfo>
+</modules>

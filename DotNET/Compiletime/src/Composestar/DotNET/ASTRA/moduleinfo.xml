@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="ASTRA" class="Composestar.DotNET.ASTRA.ASTRA">
+		<incre>
+			<module enabled="true" incremental="false" summary="Transforming signatures...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

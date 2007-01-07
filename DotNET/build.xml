@@ -37,6 +37,7 @@
 	</target>
 	
 	<target name="test" description="Execute system tests">
+		<ant target="test" dir="Compiletime" inheritRefs="true" />
 		<ant target="test" dir="Testing" inheritRefs="true" />
 	</target>
 	

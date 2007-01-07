@@ -4,117 +4,25 @@
 	<module fulltype="Composestar.Core.EMBEX.EMBEX" />
 	<module fulltype="Composestar.Core.DUMMER.DummyManager" />
 	<module fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" />
-	<module fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner"/>
-	<module fulltype="Composestar.DotNET.TYM.TypeCollector.AttributeCollector" />	
+	<module fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" />
+	<module fulltype="Composestar.DotNET.TYM.TypeCollector.AttributeCollector" />
 	<module fulltype="Composestar.Core.REXREF.Main" />
-	<module fulltype="Composestar.DotNET.LOLA.DotNETLOLA" />	
-	<module fulltype="Composestar.Core.FITER.FITER" />	
+	<module fulltype="Composestar.DotNET.LOLA.DotNETLOLA" />
+	<module fulltype="Composestar.Core.FITER.FITER" />
 	<module fulltype="Composestar.Core.CHKREP.Main" />
-	<module fulltype="Composestar.Core.SANE.SANE" />	
+	<module fulltype="Composestar.Core.SANE.SANE" />
 	<module fulltype="Composestar.Core.FILTH.FILTH" />
-	
-	<module name="FIRE" fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" enabled="true" incremental="false" summary="FIRE Preprocessing...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="CORE" fulltype="Composestar.Core.CORE2.Core" enabled="true" incremental="false" summary="Detecting conflicts...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="SIGN" fulltype="Composestar.Core.SIGN2.Sign" enabled="true" incremental="false" summary="Generating signatures...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="ASTRA" fulltype="Composestar.DotNET.ASTRA.ASTRA" enabled="true" incremental="false" summary="Transforming signatures...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="RECOMA" fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" input="Composestar.Core.Master.Config.Source" enabled="true" incremental="true" summary="Compiling all sources...">
-		<dependencies>
-			<dependency type="FILE" name="source">
-				<path>
-					<node type="FIELD" nodevalue="fileName"></node>
-				</path>
-			</dependency>
-			<dependency type="FILE" name="xternals">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.COMP.DotNETCompiler.externalSources"></node>
-				</path>
-			</dependency>
-			<dependency type="FILE" name="CompileLibsDependencies">
-				<path>
-					<node type="CONFIG" nodevalue="Dependencies"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="fullsignatures">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.COMP.DotNETCompiler.fullSignatures"></node>
-				</path>
-			</dependency>
-		</dependencies>
-		<comparisons>
-			<type fullname="Composestar.Core.CpsProgramRepository.Signature">
-				<field name="methodByName"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.MethodWrapper">
-				<field name="RelationType"></field>
-			</type>
-		</comparisons>
-	</module>
-	<module name="CONE-IS" fulltype="Composestar.DotNET.CONE.DotNETWeaveFileGenerator" enabled="true" incremental="false" summary="Generating weave specification file...">
-		<dependencies></dependencies>	
-	</module>	
-	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT" input="java.lang.String" enabled="true" incremental="true" summary="Weaving assemblies...">
-		<dependencies>
-			<dependency type="FILE" name="assembly" isAdded="false"></dependency>
-			<dependency type="OBJECT" name="ApplicationInfo" store="true" lookup="true">
-				<path>
-					<node type="CONFIG" nodevalue="ApplicationStart"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="RunDebugLevel" store="true" lookup="true">
-				<path>
-					<node type="CONFIG" nodevalue="RunDebugLevel"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="ConcernsWithFMO">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.getConcernsWithFMO"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="CastingInterceptions">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.castingInterceptions"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="InstantiationClasses">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.getAfterInstantiationClasses"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="ConcernsWithOutputFilters">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.getConcernsWithOutputFilters"></node>
-				</path>
-			</dependency>
-		</dependencies>	
-	</module>
-	<module name="SEMTEX" fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexRunner" phase="two" enabled="true" incremental="true" summary="Collecting semantic information...">
-		<dependencies>
-			<dependency type="FILE" name="assembly"></dependency>
-		</dependencies>		
-	</module>
-	<module name="SEMTEXCollector" fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexCollector" phase="two" enabled="true" incremental="true" summary="Importing semantic information...">
-		<dependencies>
-			<dependency type="FILE" name="assembly"></dependency>
-		</dependencies>		
-	</module>
-	
+	<module fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" />
+	<module fulltype="Composestar.Core.CORE2.Core" />
+	<module fulltype="Composestar.Core.SIGN2.Sign" />
+	<module fulltype="Composestar.DotNET.ASTRA.ASTRA" />
+	<module fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" />
+	<module fulltype="Composestar.DotNET.CONE.DotNETWeaveFileGenerator" />
+	<module fulltype="Composestar.DotNET.ILICIT.ILICIT" />
+	<module fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexRunner" />
+	<module fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexCollector" />
 	<module fulltype="Composestar.Core.CKRET.CKRET" />
-	
-	<module name="INCRESerializer" fulltype="Composestar.Core.INCRE.INCRESerializer" enabled="true" incremental="false" summary="Serializing repository for incremental compilation...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="CONE-XML" fulltype="Composestar.DotNET.CONE.DotNETRepositorySerializer" enabled="true" incremental="false" summary="Serializing repository...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="BACO" fulltype="Composestar.DotNET.BACO.DotNETBACO" enabled="true" incremental="false" summary="Copying libraries...">
-		<dependencies></dependencies>	
-	</module>
+	<module fulltype="Composestar.Core.INCRE.INCRESerializer" />
+	<module fulltype="Composestar.DotNET.CONE.DotNETRepositorySerializer" />
+	<module fulltype="Composestar.DotNET.BACO.DotNETBACO" />
 </modules>

@@ -151,7 +151,7 @@
 			<path refid="lib.core"/>
 			<pathelement path="${out.build}"/>
 		</path>
-		<javac srcdir="test" destdir="test" classpathref="lib.test" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="test" destdir="${out.build}" classpathref="lib.test" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
 			<include name="**/*.java"/>
 			<exclude name="**/AssemblyInfo.java"/>
 		</javac>
@@ -175,14 +175,5 @@
 			</batchtest>
 		</junit>
 	</target>
-	
-	<target name="validate_moduleinfo" description="Validate the moduleinfo.xml files">
-		<schemavalidate noNamespaceFile="src/Composestar/Core/Master/Config/ModuleInfo.xsd">
-			<schema namespace="http://composestar.sf.net/ModuleInfo.xsd" file="src/Composestar/Core/Master/Config/ModuleInfo.xsd" />
-			<fileset dir="src">
-				<include name="**/moduleinfo.xml" />
-			</fileset>
-		</schemavalidate>
-	</target>
-	
+		
 </project>

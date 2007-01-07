@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
-	<moduleinfo id="BACO" class="Composestar.Core.BACO.BACO">
+	<moduleinfo id="CORE" class="Composestar.Core.CORE2.Core">
 		<incre>
-			<module enabled="true" incremental="false" summary="Copying libraries...">
+			<module enabled="true" incremental="false" summary="Detecting conflicts...">
 				<dependencies></dependencies>
 			</module>
 		</incre>

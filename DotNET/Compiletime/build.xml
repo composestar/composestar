@@ -158,5 +158,7 @@
 			</fileset>
 		</copy>
 	</target>
+	
+	<target name="test" depends="validate_moduleinfo" description="Run tests" />
 
 </project>

@@ -398,6 +398,15 @@ Common routines. Always include this file in every build.xml file
 			</keywordsadd>
 		</svn>
 	</target>
+	
+	<target name="validate_moduleinfo" depends="init" description="Validate the moduleinfo.xml files">
+		<schemavalidate noNamespaceFile="${build.core}/Compiletime/src/Composestar/Core/Master/Config/ModuleInfo.xsd">
+			<schema namespace="http://composestar.sf.net/ModuleInfo.xsd" file="${build.core}/Compiletime/src/Composestar/Core/Master/Config/ModuleInfo.xsd" />
+			<fileset dir="src">
+				<include name="**/moduleinfo.xml" />
+			</fileset>
+		</schemavalidate>
+	</target>
 
 	<target name="report" depends="init" description="Report on the status of each platform">
 		
