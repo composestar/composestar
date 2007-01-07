@@ -13,9 +13,6 @@
 	<module fulltype="Composestar.Core.SANE.SANE" />	
 	<module fulltype="Composestar.Core.FILTH.FILTH" />
 	
-	<module name="DIGGER" fulltype="Composestar.Core.DIGGER.DIGGER" enabled="true" incremental="false" summary="Digging...">
-		<dependencies></dependencies>	
-	</module>	
 	<module name="FIRE" fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" enabled="true" incremental="false" summary="FIRE Preprocessing...">
 		<dependencies></dependencies>	
 	</module>
