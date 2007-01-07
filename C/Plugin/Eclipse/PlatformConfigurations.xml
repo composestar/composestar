@@ -1,5 +1,5 @@
 <Platforms>
-  <Platform name="C" mainClass="Composestar.C.MASTER.CMaster" classPath="%composestar%/Binaries/ComposestarCORE.jar;%composestar%/Binaries/ComposestarC.jar;%composestar%/Binaries/antlr.jar;%composestar%/Binaries/prolog/prolog.jar;%composestar%/Binaries/groove/castor-0_9_5_2-xml.jar;%composestar%/Binaries/groove/groove-1_2_0.jar;%composestar%/Binaries/groove/jgraph.jar;%composestar%/Binaries/groove/xerces-2_6_0-xercesImpl.jar;%composestar%/Binaries/groove/xerces-2_6_0-xml-apis.jar;" options="">
+  <Platform name="C" mainClass="Composestar.C.MASTER.CMaster" classPath="%composestar%/binaries/ComposestarCORE.jar;%composestar%/binaries/ComposestarC.jar;%composestar%/binaries/antlr.jar;%composestar%/binaries/prolog/prolog.jar;%composestar%/binaries/groove/castor-0_9_5_2-xml.jar;%composestar%/binaries/groove/groove-1_2_0.jar;%composestar%/binaries/groove/jgraph.jar;%composestar%/binaries/groove/xerces-2_6_0-xercesImpl.jar;%composestar%/binaries/groove/xerces-2_6_0-xml-apis.jar;" options="">
     <Languages defaultLanguage="C">
       <Language name="C">
         <Compiler name="CCompiler" executable="gcc" options="" implementedBy="Composestar.C.COMP.JavaCompiler">

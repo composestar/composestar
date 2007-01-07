@@ -64,12 +64,6 @@
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>	
-		
-		<copy todir="${eclipse.pluginsdir}/ComposestarCore/Binaries/prolog">
-			<fileset dir="${basedir}/binaries/prolog/">
-				<include name="clangmap.pro" />
-			</fileset>
-		</copy>
 	</target>
 	
 </project>
