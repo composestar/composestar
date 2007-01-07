@@ -80,7 +80,7 @@ public class CKRET implements CTCommonModule
 		}
 
 		// fetch the ckret runmode
-		ModuleInfo mi = ModuleInfoManager.get("SECRET");
+		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
 		int newMode = mi.getIntSetting("mode");
 		if (newMode >= 0 && newMode <= 2)
 		{

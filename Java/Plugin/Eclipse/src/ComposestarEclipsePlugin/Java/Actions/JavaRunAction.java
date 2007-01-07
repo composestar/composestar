@@ -236,6 +236,14 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 				{
 					classpath.add(FileUtils.fixFilename(classpaths[i].getPath().toOSString()));
 				}
+				else if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_VARIABLE)
+				{					
+					IClasspathEntry entry = JavaCore.getResolvedClasspathEntry(classpaths[i]);
+					if (entry != null)
+					{
+						classpath.add(FileUtils.fixFilename(entry.getPath().toOSString()));
+					}
+				}
 			}
 		}
 		catch (JavaModelException jme)

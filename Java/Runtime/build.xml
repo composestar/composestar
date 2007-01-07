@@ -32,20 +32,17 @@
 	<target name="build" depends="init_local,compile_java,jar" description="build the java runtime"/>
 	
 	<target name="compile_java" depends="init_local">
-		<ant target="jar" dir="${build.core}${file.separator}Runtime" /> 
 		<javac srcdir="src" destdir="${out.build}" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<classpath>
 				<pathelement location="${build.core}/Compiletime/${out.jar.core}"/>
-				<pathelement location="${build.core}/Runtime/${out.build}/ComposestarRuntimeInterpreter.jar"/>
+				<pathelement location="${build.core}/Runtime/${out.build}"/>
 			</classpath>
 		</javac>
 	</target>
 	
 	<target name="jar">
 		<jar destfile="${out.dist}/ComposestarRuntimeInterpreter.jar">
-			<fileset dir="${build.core}/Runtime/${out.build}"> 
-				<exclude name="*.jar"/>
-			</fileset>
+			<fileset dir="${build.core}/Runtime/${out.build}" /> 
 			<fileset dir="${out.build}" />
 		</jar>
 	</target>

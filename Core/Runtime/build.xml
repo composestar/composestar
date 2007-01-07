@@ -38,9 +38,10 @@
 	
 	<target name="local_init" depends="init">
 		<mkdir dir="${out.build}"/>
+		<mkdir dir="${out.dist}"/>
 	</target>
 	
-	<target name="build" depends="init,antlr" description="Create CODER parsers"/>
+	<target name="build" depends="init,antlr,jar" description="Create CODER parsers"/>
 	
 	<target name="antlr">
 		<antlr target="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl/grammar/ltl.g" outputdirectory="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl">
@@ -62,17 +63,9 @@
 	</target>
 			
 	<target name="jar" depends="compile_java">
-		<jar destfile="${out.build}/ComposestarRuntimeInterpreter.jar" basedir="${out.build}" excludes="*.jar"/>
+		<jar destfile="${out.dist}/ComposestarRuntimeInterpreter.jar" basedir="${out.build}" excludes="*.jar"/>
 	</target>
-	
-	<target name="qa_build" depends="init"><!-- special target to build the source for QA inspection -->	
-		<mkdir dir="${out.build}"/>
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.dotnet" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
-			<exclude name="**/AssemblyInfo.java"/>
-			<exclude name="Composestar/RuntimeCore/CODER/**"/> <!-- doesn't compile yet -->
-		</javac>
-	</target>
-	
+
 	<target name="install" depends="build" description=""/>
 
 </project>

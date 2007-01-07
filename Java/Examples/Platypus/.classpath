@@ -2,6 +2,8 @@
 <classpath>
 	<classpathentry excluding="**/.svn/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Program Files/ComposeStar/binaries/ComposestarRuntimeInterpreter.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/ComposestarCore/binaries/ComposestarCORE.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/ComposestarCore/binaries/ComposestarJava.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/ComposestarCore/binaries/ComposestarRuntimeInterpreter.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

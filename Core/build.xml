@@ -42,7 +42,6 @@
 	</target>
 	
 	<target name="findbugs" depends="init_qa">
-		<ant target="qa_build" dir="Runtime" inheritRefs="true" />
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.core}${file.separator}Compiletime${file.separator}${out.build}" />
 			<class location="${build.core}${file.separator}Runtime${file.separator}${out.build}" />
