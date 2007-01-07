@@ -49,7 +49,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// Contains information about a single method.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("Method", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("MethodElement", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public sealed class MethodElement : ICustomAttributes 
 	{
 		private string _name;
@@ -63,6 +63,17 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		private bool _isVirtual;
 		private List<ParameterElement> _parameters = new List<ParameterElement>();
 		private MethodBody _methodBody;
+
+		public MethodElement()
+		{
+		}
+
+		public MethodElement(string name, string returnType, List<ParameterElement> parameters)
+		{
+			_name = name;
+			_returnType = returnType;
+			_parameters = parameters;
+		}
 
 		/// <summary>
 		/// Gets or sets the name.

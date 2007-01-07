@@ -60,16 +60,14 @@ namespace Composestar.Repository
 	/// </summary>
 	public sealed class EntitiesAccessor : IEntitiesAccessor
 	{
-
 		#region Singleton Instance
-		private static readonly EntitiesAccessor m_Instance = new EntitiesAccessor();
+		private static readonly EntitiesAccessor _instance = new EntitiesAccessor();
 
 		// Explicit static constructor to tell C# compiler
 		// not to mark type as beforefieldinit
 		[SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Needed for singleton.", Scope = "Member", Target = "Composestar.Repository.EntitiesAccessor..cctor()")]
 		static EntitiesAccessor()
 		{
-
 		}
 
 		/// <summary>
@@ -85,7 +83,7 @@ namespace Composestar.Repository
 		/// <value>The instance.</value>
 		public static EntitiesAccessor Instance
 		{
-			get { return m_Instance; }
+			get { return _instance; }
 		}
 
 		#endregion
@@ -104,19 +102,14 @@ namespace Composestar.Repository
 			if (string.IsNullOrEmpty(fileName))
 				throw new ArgumentNullException("fileName");
 
-			ConfigurationContainer configContainer;
-
 			if (File.Exists(fileName))
 			{
-				configContainer = ObjectXMLSerializer<ConfigurationContainer>.Load(fileName, SerializedFormat.Document);
+				return ObjectXMLSerializer<ConfigurationContainer>.Load(fileName, SerializedFormat.Document);
 			}
 			else
 			{
-				configContainer = new ConfigurationContainer();
+				return new ConfigurationContainer();
 			}
-
-
-			return configContainer;
 		}
 
 

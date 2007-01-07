@@ -48,7 +48,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// Represents a call to another method.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("Call", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("CallElement", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public class CallElement
 	{
 		private string _methodReference;

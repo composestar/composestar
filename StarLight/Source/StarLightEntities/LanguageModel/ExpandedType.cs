@@ -47,7 +47,7 @@ using Composestar.StarLight.Entities.LanguageModel;
 namespace Composestar.StarLight.Entities.LanguageModel
 {
 	[Serializable]
-	[XmlRoot("ExpandedType", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("ExpandedType", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public class ExpandedType
 	{
 		private string _name;

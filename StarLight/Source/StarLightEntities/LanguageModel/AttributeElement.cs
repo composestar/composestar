@@ -49,7 +49,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// Contains a single annotation definition.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("Attribute", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("AttributeElement", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public sealed class AttributeElement
 	{
 		private String _attributeType;

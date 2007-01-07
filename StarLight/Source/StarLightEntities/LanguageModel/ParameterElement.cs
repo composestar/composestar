@@ -48,13 +48,23 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// A parameter of a method.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("Parameter", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("ParameterElement", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public sealed class ParameterElement
 	{
 		private string _name;
 		private string _type;
 		private short _ordinal;
 		private ParameterOptions _parameterOption = ParameterOptions.None;
+
+		public ParameterElement()
+		{
+		}
+
+		public ParameterElement(string name, string type)
+		{
+			_name = name;
+			_type = type;
+		}
 
 		/// <summary>
 		/// Gets or sets the name.

@@ -47,7 +47,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// <summary>
 	/// Parameter options
 	/// </summary>
-	[Flags()]
+	[Flags]
 	[Serializable]
 	[XmlRoot("ParameterOptions", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public enum ParameterOptions

@@ -62,6 +62,5 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		/// <value>The attributes.</value>
 		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
 		List<AttributeElement> Attributes { get; }
-
 	}
 }
