@@ -100,12 +100,12 @@
 			<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="@{todir}"/>
 			<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="@{todir}"/>
 
-			<copy todir="@{todir}/Binaries">
+			<copy todir="@{todir}/binaries">
 				<fileset dir="${out.dist}"/>
 			</copy>
-			<copy file="binaries/antlr/antlr.jar" todir="@{todir}/Binaries"/>
+			<copy file="binaries/antlr/antlr.jar" todir="@{todir}/binaries"/>
 
-			<copy todir="@{todir}/Binaries/prolog">
+			<copy todir="@{todir}/binaries/prolog">
 				<fileset dir="binaries/prolog">
 					<include name="prolog.jar"/>
 					<include name="lib.pro"/>
@@ -113,7 +113,7 @@
 				</fileset>
 			</copy>
 
-			<copy todir="@{todir}/Binaries/groove">
+			<copy todir="@{todir}/binaries/groove">
 				<fileset dir="binaries/groove">
 					<include name="groove-1_2_0.jar"/>
 					<include name="castor-0_9_5_2-xml.jar"/>

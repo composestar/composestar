@@ -438,7 +438,7 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 
 				// most importantly add compose* runtime library
 				final IPath composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-						.getAbsolutePath("/Binaries/ComposestarRuntimeInterpreter.jar")));
+						.getAbsolutePath("/binaries/ComposestarRuntimeInterpreter.jar")));
 				cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null));
 
 				entries = (IClasspathEntry[]) cpEntries.toArray(new IClasspathEntry[cpEntries.size()]);
@@ -455,7 +455,7 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 
 				// most importantly add compose* runtime library
 				final IPath composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-						.getAbsolutePath("/Binaries/ComposestarRuntimeInterpreter.jar")));
+						.getAbsolutePath("/binaries/ComposestarRuntimeInterpreter.jar")));
 				cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null));
 
 				entries = (IClasspathEntry[]) cpEntries.toArray(new IClasspathEntry[cpEntries.size()]);

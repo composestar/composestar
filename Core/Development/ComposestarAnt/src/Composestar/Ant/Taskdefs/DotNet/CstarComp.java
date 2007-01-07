@@ -35,7 +35,7 @@ public class CstarComp extends BaseTask
 
 	/**
 	 * The location of ComposeStar; assumes the jar files are in
-	 * composestarBase+"/Binaries"
+	 * composestarBase+"/binaries"
 	 */
 	protected String composestarBase;
 

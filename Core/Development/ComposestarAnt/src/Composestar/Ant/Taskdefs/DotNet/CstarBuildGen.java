@@ -39,7 +39,7 @@ public final class CstarBuildGen extends TransformTask
 
 	/**
 	 * Sets the base directory of ComposeStar.
-	 * Assumes the jar files are in "{composestarBase}/Binaries".
+	 * Assumes the jar files are in "{composestarBase}/binaries".
 	 */
 	public void setComposestarBase(String path)
 	{
@@ -154,7 +154,7 @@ public final class CstarBuildGen extends TransformTask
 	private void registerCstarAsms()
 	{
 		FileSet cstarAsms = new FileSet();
-		cstarAsms.setDir(new File(m_composestarBase, "Binaries"));
+		cstarAsms.setDir(new File(m_composestarBase, "binaries"));
 		NameEntry inc = cstarAsms.createInclude();
 		inc.setName("*.dll");
 

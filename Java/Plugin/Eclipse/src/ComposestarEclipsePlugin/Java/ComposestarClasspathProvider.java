@@ -24,15 +24,15 @@ public class ComposestarClasspathProvider extends StandardClasspathProvider
 			IRuntimeClasspathEntry jreEntry = JavaRuntime.computeJREEntry(configuration);
 
 			final IPath composestarCorePath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-					.getAbsolutePath("/Binaries/ComposestarCORE.jar")));
+					.getAbsolutePath("/binaries/ComposestarCORE.jar")));
 			IRuntimeClasspathEntry cstarCore = JavaRuntime.newArchiveRuntimeClasspathEntry(composestarCorePath);
 
 			final IPath composestarJavaPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-					.getAbsolutePath("/Binaries/ComposestarJava.jar")));
+					.getAbsolutePath("/binaries/ComposestarJava.jar")));
 			IRuntimeClasspathEntry cstarJava = JavaRuntime.newArchiveRuntimeClasspathEntry(composestarJavaPath);
 
 			final IPath prologPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-					.getAbsolutePath("/Binaries/prolog/prolog.jar")));
+					.getAbsolutePath("/binaries/prolog/prolog.jar")));
 			IRuntimeClasspathEntry prolog = JavaRuntime.newArchiveRuntimeClasspathEntry(prologPath);
 
 			if (proj == null)

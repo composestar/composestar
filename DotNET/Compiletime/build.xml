@@ -133,18 +133,18 @@
 	
 	<target name="install" depends="build" description="Install the .NET compiletime">
 		<!-- jar files -->
-		<copy todir="${composestar.installdir}\Binaries">
+		<copy todir="${composestar.installdir}\binaries">
 			<fileset dir="${out.dist}"/>
 		</copy>
 		<!-- C# DummyGen -->
-		<copy todir="${composestar.installdir}\Binaries">
+		<copy todir="${composestar.installdir}\binaries">
 			<fileset dir="${CSharpDummyGenerator.dir}\bin">
 				<include name="CSharpDummyGenerator.exe"/>
 				<include name="antlr.runtime.dll"/>
 			</fileset>
 		</copy>
 		<!-- ILICIT Weavers -->
-		<copy todir="${composestar.installdir}\Binaries">
+		<copy todir="${composestar.installdir}\binaries">
 			<fileset dir="${Weaver.dir}\bin\Release">
 				<include name="IlWeaver.exe"/>
 				<include name="PeWeaver.exe"/>

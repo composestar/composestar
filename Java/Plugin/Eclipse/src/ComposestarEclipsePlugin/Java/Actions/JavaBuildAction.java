@@ -101,7 +101,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 				File runtime = new File(dep);
 				if (!runtime.exists())
 				{
-					dep = ComposestarEclipsePluginPlugin.getAbsolutePath("/Binaries/ComposestarRuntimeInterpreter.jar");
+					dep = ComposestarEclipsePluginPlugin.getAbsolutePath("/binaries/ComposestarRuntimeInterpreter.jar");
 					projectConfig.getDependencies().set(i, dep);
 				}
 				break;
