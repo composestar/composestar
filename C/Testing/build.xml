@@ -27,6 +27,19 @@
 
 	<!-- execute tests -->
 	<target name="test_exec" depends="init_eclipse">
+		<!-- test for some of the available tools -->
+		<condition property="executable.extention" value=".exe" else="">
+			<os family="windows" />
+		</condition>
+		<fail message="gcc and make were not available on the system path">
+			<condition>
+				<and>
+					<available file="gcc${executable.extention}" filepath="${env.PATH}" />
+					<available file="makegcc${executable.extention}" filepath="${env.PATH}" />
+				</and>
+			</condition>
+		</fail>
+		
 		<cs:c_test workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="Composestar.Eclipse.Plugin.C.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar;${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Parametercheck.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Timing.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Tracing.jar">
 			<DirSet dir="${build.c}/Examples">
 				<include name="EncryptionExample"/> 
