@@ -150,11 +150,11 @@ public class TracingAspect extends WeaveCAspect
 			{
 				if (i == 0)
 				{
-					this.inBuffer += "\"," + (String) this.inParams.get(i);
+					this.inBuffer += "\"," + this.inParams.get(i);
 				}
 				else
 				{
-					this.inBuffer += "," + (String) this.inParams.get(i);
+					this.inBuffer += "," + this.inParams.get(i);
 				}
 			}
 			this.inBuffer += ");";
@@ -171,11 +171,11 @@ public class TracingAspect extends WeaveCAspect
 			{
 				if (i == 0)
 				{
-					this.outBuffer += "\"," + (String) this.outParams.get(i);
+					this.outBuffer += "\"," + this.outParams.get(i);
 				}
 				else
 				{
-					this.outBuffer += "," + (String) this.outParams.get(i);
+					this.outBuffer += "," + this.outParams.get(i);
 				}
 			}
 			this.outBuffer += ");";
@@ -207,7 +207,6 @@ public class TracingAspect extends WeaveCAspect
 		TraceableType tt = ttdb.getTraceType(param.getTypeName());
 		if (tt == null && param.getPointerLevel() == 0)
 		{
-			return;
 			// System.out.println("No tracetype found for type:
 			// "+function.getName()+"."+param.getValueID());
 		}

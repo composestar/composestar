@@ -202,8 +202,7 @@ public class JarTransformer
 		}
 		catch (IOException ignored)
 		{
-			;
-		}
+        }
 
 		// create temporary file
 		File tempJar = null;
@@ -215,8 +214,7 @@ public class JarTransformer
 		}
 		catch (IOException ignored)
 		{
-			;
-		}
+        }
 
 		// Only rename file at end on success
 		boolean success = false;

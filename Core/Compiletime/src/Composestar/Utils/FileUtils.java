@@ -17,7 +17,6 @@ import java.io.Writer;
  * Contains utility methods that have to do with file handling; e.g. converting
  * backslashes in filenames to slashes
  * 
- * @see Composestar.Utils.FileUtilsTest
  */
 public final class FileUtils
 {

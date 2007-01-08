@@ -72,10 +72,10 @@ public class retrieveAST
 		commentKeepers = new Vector();
 
 		this.setFilename(filename);
-		this.getObjectname(objectname);
-		this.getNameSpace(namespace);
-		this.getUsedType(usedType);
-		this.getCFile(cf);
+		this.setObjectname(objectname);
+		this.setNameSpace(namespace);
+		this.setUsedType(usedType);
+		this.setCFile(cf);
 
 		try
 		{
@@ -213,24 +213,24 @@ public class retrieveAST
 		this.filename = filename;
 	}
 
-	public void getObjectname(String objectname)
+	public void setObjectname(String objectname)
 	{
 		this.objectname = objectname;
 	}
 
-	public void getCFile(CFile cf)
+	public void setCFile(CFile cf)
 	{
 		this.cf = cf;
 	}
 
-	public void getNameSpace(String namespace)
+	public void setNameSpace(String namespace)
 	{
 		this.namespace = namespace;
 	}
 
-	public void getUsedType(HashMap usedTypes)
+	public static void setUsedType(HashMap aUsedType)
 	{
-		this.usedTypes = usedTypes;
+		usedTypes = aUsedType;
 	}
 
 	public void setObjectName(String filename, CommonResources resources)

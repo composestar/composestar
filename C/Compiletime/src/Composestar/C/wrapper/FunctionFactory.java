@@ -110,9 +110,9 @@ public class FunctionFactory
 				ExitPoint exitPoint = null;
 				if (node.numberOfChildren() > 0)
 				{
-					if (((TNode) node.getFirstChild()).getType() == GnuCTokenTypes.ID)
+					if (node.getFirstChild().getType() == GnuCTokenTypes.ID)
 					{
-						String valueID = ((TNode) node.getFirstChild()).getText();
+						String valueID = node.getFirstChild().getText();
 						exitPoint = new ExitPoint(valueID, node, ExitPoint.RETURN);
 					}
 					else
@@ -130,7 +130,7 @@ public class FunctionFactory
 
 		// also here we need to check about simple end of the function
 		TNode ret = node113.firstChildOfType(GnuCTokenTypes.LITERAL_return);
-		if (ret != null && ((TNode) ret.getNextSibling()).getType() == GnuCTokenTypes.RCURLY)
+		if (ret != null && ret.getNextSibling().getType() == GnuCTokenTypes.RCURLY)
 		{
 			// not needed to add simple exit
 		}

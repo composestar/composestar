@@ -79,7 +79,7 @@ public class Annotation
 	public void printAnnotation()
 	{
 		Debug.out(Debug.MODE_INFORMATION, "ANNOTATION", "Annotation:" + type + "\n" + "Value first element:"
-				+ (String) values.get(0) + "\n" + "Target:" + target + "\n");
+				+ values.get(0) + "\n" + "Target:" + target + "\n");
 	}
 
 	public String getType()

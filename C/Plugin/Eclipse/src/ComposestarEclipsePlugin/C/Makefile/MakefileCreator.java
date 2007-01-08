@@ -200,12 +200,12 @@ public class MakefileCreator
 				String file = ((IPath) i.next()).lastSegment();
 				if (!file.equals("message.c"))
 				{
-					command += " " + outputPath.replace("" + java.io.File.separatorChar, "/") + file;
+					command += " " + outputPath.replace(java.io.File.separatorChar, '/') + file;
 				}
 			}
-			bw.write("\t gcc -o" + outputPath.replace("" + java.io.File.separatorChar, "/")
+			bw.write("\t gcc -o" + outputPath.replace(java.io.File.separatorChar, '/')
 					+ projectDescription.getName() + ".exe" + " " + command + " "
-					+ outputPath.replace("" + java.io.File.separatorChar, "/") + "message.c \n");
+					+ outputPath.replace(java.io.File.separatorChar, '/') + "message.c \n");
 		}
 		catch (IOException io)
 		{
@@ -224,7 +224,7 @@ public class MakefileCreator
 		{
 			bw.write("run: \n");
 			bw.write("\t@echo ___RUN OUTPUT BEGIN___\n");
-			bw.write("\t@" + outputPath.replace("" + java.io.File.separatorChar, "/") + projectDescription.getName()
+			bw.write("\t@" + outputPath.replace(java.io.File.separatorChar, '/') + projectDescription.getName()
 					+ "\n");
 			bw.write("\t@echo ___RUN OUTPUT END___\n");
 		}

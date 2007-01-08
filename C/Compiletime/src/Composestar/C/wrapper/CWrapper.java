@@ -282,19 +282,19 @@ public class CWrapper implements CTCommonModule
 		this.filename = filename;
 	}
 
-	public void getObjectname(String objectname)
+	public void setObjectname(String objectname)
 	{
 		this.objectname = objectname;
 	}
 
-	public void getNameSpace(String namespace)
+	public void setNameSpace(String namespace)
 	{
 		this.namespace = namespace;
 	}
 
-	public void getUsedType(HashMap usedTypes)
+	public static void setUsedType(HashMap aUsedType)
 	{
-		this.usedTypes = usedTypes;
+		usedTypes = aUsedType;
 	}
 
 	public void setObjectName(String filename, CommonResources resources)

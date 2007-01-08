@@ -414,7 +414,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 
 			}
 			/** include header file * */
-			if (aspectInConcern == true)
+			if (aspectInConcern)
 			{
 				includeMessageHeader();
 			}

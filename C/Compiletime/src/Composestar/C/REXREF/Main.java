@@ -59,9 +59,9 @@ public class Main extends DefaultHandler implements CTCommonModule
 		}
 		DoResolve dr = new DoResolve();
 		dr.go(DataStore.instance());
-	};
+	}
 
-	private void resolveConcernReferences() throws ModuleException
+    private void resolveConcernReferences() throws ModuleException
 	{
 		// iterate over all instances of ConcernReference
 		checkCConcern();
@@ -102,7 +102,7 @@ public class Main extends DefaultHandler implements CTCommonModule
 								+ " in cps concern as well as in xml file");
 					}
 				}
-				if (inCConcern == false)
+				if (!inCConcern)
 				{
 					throw new ModuleException(
 							"ConcernReference '"

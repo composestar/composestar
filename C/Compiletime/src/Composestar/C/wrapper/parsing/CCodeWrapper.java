@@ -626,7 +626,7 @@ public class CCodeWrapper
 		}
 		else
 		{
-			while (((TNode) firstChild.getNextSibling()).getType() == 102)
+			while (firstChild.getNextSibling().getType() == 102)
 			{
 				firstChild = (TNode) firstChild.getNextSibling();
 			}

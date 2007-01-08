@@ -138,7 +138,108 @@
       </PATH>
     </subPane>
   </component>
-  <component name="FileEditorManager" />
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="TracingAspect.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/ASPECTS/TRACING/TracingAspect.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="209" column="12" selection-start="6427" selection-end="6427" vertical-scroll-proportion="0.048158642">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GnuCEmitter.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/parsing/GnuCEmitter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="688" column="19" selection-start="20462" selection-end="20462" vertical-scroll-proportion="0.048158642">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GnuCLexer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/parsing/GnuCLexer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="67" column="13" selection-start="2695" selection-end="2695" vertical-scroll-proportion="0.048158642">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CWrapper.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/CWrapper.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="282" column="20" selection-start="9288" selection-end="9288" vertical-scroll-proportion="0.048158642">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="retrieveAST.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/retrieveAST.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="77" column="16" selection-start="2045" selection-end="2045" vertical-scroll-proportion="0.048158642">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/REXREF/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="104" column="20" selection-start="3267" selection-end="3267" vertical-scroll-proportion="0.048158642">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CWeaveFileGenerator.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/CONE/CWeaveFileGenerator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="416" column="16" selection-start="17566" selection-end="17566" vertical-scroll-proportion="0.048158642">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="junit-noframes.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Compiletime/test/junit-noframes.html">
+          <provider editor-type-id="HtmlPreview">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="19" selection-start="733" selection-end="733" vertical-scroll-proportion="0.051829267">
+              <folding>
+                <marker date="1168258943281" expanded="true" signature="712:731" placeholder="{...}" />
+                <marker date="1168258943281" expanded="true" signature="49421:50509" placeholder="..." />
+                <marker date="1168258943281" expanded="true" signature="49421:49440" placeholder="..." />
+                <marker date="1168258943281" expanded="true" signature="49421:49431" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ClassMap.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../Java/Compiletime/src/Composestar/Java/TYM/TypeHarvester/ClassMap.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="36" column="12" selection-start="601" selection-end="601" vertical-scroll-proportion="0.046195652">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="OrderTraverser.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Compiletime/src/Composestar/Core/FILTH/Core/OrderTraverser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="291" column="8" selection-start="7363" selection-end="7363" vertical-scroll-proportion="0.048158642">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
   <component name="FindManager">
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
@@ -459,6 +560,96 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
         </PATH_ELEMENT>
       </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="CompiletimeCore" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="CompiletimeCore" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Compiletime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="CompiletimeCore" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Compiletime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Compiletime\src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="CompiletimeCore" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Compiletime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Compiletime\src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Compiletime\src\Composestar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Compiletime\src\Composestar\Utils" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Composestar.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="CompiletimeCore" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Compiletime" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Compiletime\src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\composestar\trunk\Core\Compiletime\src\Composestar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
     </subPane>
   </component>
   <component name="ProjectReloadState">
@@ -472,7 +663,7 @@
       <showLibraryContents />
       <hideEmptyPackages />
       <abbreviatePackageNames />
-      <showStructure Favorites="false" Scope="false" PackagesPane="false" ProjectPane="false" />
+      <showStructure ProjectPane="false" Scope="false" PackagesPane="false" Favorites="false" />
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
@@ -511,16 +702,6 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
-    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <module name="" />
-    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -539,6 +720,16 @@
       <method>
         <option name="Make" value="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <module name="" />
     </configuration>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -624,11 +815,11 @@
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="7" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.0" order="0" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32941177" order="0" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" order="1" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41355464" order="8" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3997195" order="6" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41355464" order="8" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39972338" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
@@ -725,93 +916,6 @@
     <option name="myLastEditedConfigurable" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/NeverBreakBreakPoint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="5" selection-start="617" selection-end="617" vertical-scroll-proportion="0.65970147">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/BreakPoint/ObjectBreakPoint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="0" selection-start="1024" selection-end="1024" vertical-scroll-proportion="0.035906643">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/MessageHandlingFacility.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="529" column="33" selection-start="16928" selection-end="16928" vertical-scroll-proportion="4.2836623">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Message/Message.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="216" column="51" selection-start="4587" selection-end="4587" vertical-scroll-proportion="0.8168761">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/ObjectManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="38" selection-start="3576" selection-end="3576" vertical-scroll-proportion="0.3773585">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/Halter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="39" selection-end="39" vertical-scroll-proportion="0.04404145">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/CODER/StateHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="20" selection-start="1697" selection-end="1697" vertical-scroll-proportion="0.58760107">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Reflection/JoinPointInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="25" selection-start="134" selection-end="134" vertical-scroll-proportion="0.1761658">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Message/ReifiedMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="51" selection-start="159" selection-end="159" vertical-scroll-proportion="0.13212435">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Reflection/JoinPointInfoProxy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="39" selection-start="216" selection-end="216" vertical-scroll-proportion="0.46195653">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Reflection/MessageInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="53" selection-start="131" selection-end="131" vertical-scroll-proportion="0.19263457">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Runtime/src/Composestar/RuntimeCore/FLIRT/Actions/MetaAction.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="96" column="43" selection-start="3296" selection-end="3296" vertical-scroll-proportion="0.47308782">
@@ -833,6 +937,98 @@
     <entry file="file://$PROJECT_DIR$/../Java/Runtime/src/Composestar/RuntimeJava/FLIRT/JavaPlatformProvider.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="21" column="59" selection-start="516" selection-end="516" vertical-scroll-proportion="0.5543478">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Java/Compiletime/src/Composestar/Java/TYM/TypeHarvester/JavaHarvestRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="135" column="22" selection-start="3302" selection-end="3302" vertical-scroll-proportion="0.9212598">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Compiletime/src/Composestar/Utils/FileUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="3" selection-start="512" selection-end="512" vertical-scroll-proportion="0.19947506">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/ASPECTS/TRACING/TracingAspect.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="209" column="12" selection-start="6427" selection-end="6427" vertical-scroll-proportion="0.048158642">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/parsing/GnuCEmitter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="688" column="19" selection-start="20462" selection-end="20462" vertical-scroll-proportion="0.048158642">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/parsing/GnuCLexer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="67" column="13" selection-start="2695" selection-end="2695" vertical-scroll-proportion="0.048158642">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/CWrapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="282" column="20" selection-start="9288" selection-end="9288" vertical-scroll-proportion="0.048158642">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/REXREF/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="104" column="20" selection-start="3267" selection-end="3267" vertical-scroll-proportion="0.048158642">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/CONE/CWeaveFileGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="416" column="16" selection-start="17566" selection-end="17566" vertical-scroll-proportion="0.048158642">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Compiletime/test/junit-noframes.html">
+      <provider editor-type-id="HtmlPreview">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="19" selection-start="733" selection-end="733" vertical-scroll-proportion="0.051829267">
+          <folding>
+            <marker date="1168258943281" expanded="true" signature="712:731" placeholder="{...}" />
+            <marker date="1168258943281" expanded="true" signature="49421:50509" placeholder="..." />
+            <marker date="1168258943281" expanded="true" signature="49421:49440" placeholder="..." />
+            <marker date="1168258943281" expanded="true" signature="49421:49431" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Java/Compiletime/src/Composestar/Java/TYM/TypeHarvester/ClassMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="12" selection-start="601" selection-end="601" vertical-scroll-proportion="0.046195652">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Compiletime/src/Composestar/Core/FILTH/Core/OrderTraverser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="291" column="8" selection-start="7363" selection-end="7363" vertical-scroll-proportion="0.048158642">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/retrieveAST.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="77" column="16" selection-start="2045" selection-end="2045" vertical-scroll-proportion="0.048158642">
           <folding />
         </state>
       </provider>

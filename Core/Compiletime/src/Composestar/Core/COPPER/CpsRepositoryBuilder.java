@@ -1456,8 +1456,8 @@ public class CpsRepositoryBuilder
 		}
 		else
 		{
-			constraint.addRightFilterModule(fm1);;
-		}
+			constraint.addRightFilterModule(fm1);
+        }
 	}
 
 	/**

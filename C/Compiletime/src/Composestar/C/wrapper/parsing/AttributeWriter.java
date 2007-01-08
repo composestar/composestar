@@ -72,7 +72,7 @@ public class AttributeWriter
 				while (values.hasNext())
 				{
 
-					bw.write("     <value text=" + (String) values.next() + "/>\n");
+					bw.write("     <value text=" + values.next() + "/>\n");
 				}
 				bw.write("   </values>\n");
 				bw.write("  </Attribute>\n");

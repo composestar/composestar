@@ -34,8 +34,7 @@ public class ClassMap
 		else
 		{
 			// duplicate
-			return;
-		}
+			}
 
 	}
 
