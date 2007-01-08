@@ -18,7 +18,7 @@ namespace wedding.ConcernImplementations
 
 		public void needWeddingLicence(ReifiedMessage rm)
 		{
-			rm.proceed();
+			rm.resume();
 			Person from = ((Person) rm.getSender());
 			if(!from.hasWeddingLicence())
 			{
