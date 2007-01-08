@@ -173,8 +173,8 @@ public class ILICIT implements WEAVER
 		cmdList.add("/nologo");
 
 		// verify libraries?
-		String va = config.getModuleProperty(MODULE_NAME, "verifyAssemblies", "false");
-		if ("true".equalsIgnoreCase(va))
+		boolean va = config.getModuleProperty(MODULE_NAME, "verifyAssemblies", false);
+		if (va)
 		{
 			cmdList.add("/verify");
 		}
