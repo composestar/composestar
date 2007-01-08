@@ -400,14 +400,13 @@ namespace Composestar.StarLight.ILAnalyzer
 
 				// We may need the base class
 				AddUnresolvedType(type.BaseType);
-
 			}
 
 			// Check if a SkipWeaving attribute is set. 
 			// The FilterTypes and FilterActions are collected, but the type is not saved.
 			if (!SkipWeaving(type.CustomAttributes))
 			{				
-				if (!ExtractUnresolvedOnly || (ExtractUnresolvedOnly && _unresolvedTypes.Contains(CreateTypeName(type))))
+				if (!ExtractUnresolvedOnly || _unresolvedTypes.Contains(CreateTypeName(type)))
 				{
 					// Get custom attributes
 					if (!ExtractUnresolvedOnly)
@@ -416,7 +415,8 @@ namespace Composestar.StarLight.ILAnalyzer
 					_currentType = typeElement;
 
 					// Properties
-					if (ProcessProperties | processPropertiesInThisType)
+					if (ProcessProperties || processPropertiesInThisType)
+					{
 						foreach (PropertyDefinition property in type.Properties)
 						{
 							if (SkipWeaving(property.CustomAttributes))
@@ -427,10 +427,10 @@ namespace Composestar.StarLight.ILAnalyzer
 
 							if (property.GetMethod != null)
 								property.GetMethod.Accept(this);
-
 						}
+					}
 
-					// Visit methods
+					// Methods
 					foreach (MethodDefinition method in type.Methods)
 					{
 						// check if we have to skip this method
@@ -449,8 +449,7 @@ namespace Composestar.StarLight.ILAnalyzer
 						method.Accept(this);
 					}
 
-
-					// Visit fields
+					// Fields
 					foreach (FieldDefinition field in type.Fields)
 					{
 						if (SkipWeaving(field.CustomAttributes))
@@ -470,7 +469,6 @@ namespace Composestar.StarLight.ILAnalyzer
 			}
 		}
 
-
 		/// <summary>
 		/// Visits the method definition.
 		/// </summary>
@@ -478,7 +476,6 @@ namespace Composestar.StarLight.ILAnalyzer
 		[CLSCompliant(false)]
 		public override void VisitMethodDefinition(MethodDefinition method)
 		{
-
 			// If we only extract the unresolvedtypes then we most likely are only interested
 			// in methods which can be overriden. So skip the rest.
 			if (ExtractUnresolvedOnly && !method.IsVirtual)
@@ -506,13 +503,15 @@ namespace Composestar.StarLight.ILAnalyzer
 				pe.Type = param.ParameterType.FullName;
 
 				if ((param.Attributes & Mono.Cecil.ParameterAttributes.Out) != Mono.Cecil.ParameterAttributes.Out)
-					pe.ParameterOption = pe.ParameterOption | ParameterOptions.In;
+					pe.ParameterOption |= ParameterOptions.In;
 				else
 					pe.ParameterOption &= ~ParameterOptions.In;
+				
 				if ((param.Attributes & Mono.Cecil.ParameterAttributes.Out) == Mono.Cecil.ParameterAttributes.Out)
-					pe.ParameterOption = pe.ParameterOption | ParameterOptions.Out;
+					pe.ParameterOption |= ParameterOptions.Out;
+				
 				if ((param.Attributes & Mono.Cecil.ParameterAttributes.Optional) == Mono.Cecil.ParameterAttributes.Optional)
-					pe.ParameterOption = pe.ParameterOption | ParameterOptions.Optional;
+					pe.ParameterOption |= ParameterOptions.Optional;
 
 				// Remark; we do not harvest custom attributes here. 
 				
@@ -545,7 +544,6 @@ namespace Composestar.StarLight.ILAnalyzer
 						}
 					}
 				}
-
 			}
 
 			// Custom attributes
@@ -674,7 +672,6 @@ namespace Composestar.StarLight.ILAnalyzer
 		/// <returns></returns>
 		private Assembly MyReflectionOnlyResolveEventHandler(object sender, ResolveEventArgs args)
 		{
-
 			AssemblyName name = new AssemblyName(args.Name);
 
 			string asmToCheck = Path.GetDirectoryName(m_rootAssembly) + "\\" + name.Name + ".dll";
@@ -711,7 +708,6 @@ namespace Composestar.StarLight.ILAnalyzer
 			  Assembly.LoadFile(Path.Combine(rootPath, "Composestar.StarLight.Filters.dll"));
 
 			_reflectionAssemblySetup = true;
-
 		}
 
 		/// <summary>
@@ -730,7 +726,6 @@ namespace Composestar.StarLight.ILAnalyzer
 			SetupReflectionAssembly(type.Module.Image.FileInformation.Directory.FullName);
 
 			Assembly assembly = Assembly.LoadFrom(type.Module.Image.FileInformation.FullName);
-
 
 			if (assembly == null)
 			{
@@ -755,9 +750,7 @@ namespace Composestar.StarLight.ILAnalyzer
 				ftEl.RejectCallAction = fta.RejectCallAction;
 				ftEl.AcceptReturnAction = fta.AcceptReturnAction;
 				ftEl.RejectReturnAction = fta.RejectReturnAction;
-
 			}
-
 		}
 
 		#endregion
@@ -841,7 +834,6 @@ namespace Composestar.StarLight.ILAnalyzer
 
 			// remove from unresolved
 			_unresolvedTypes.Remove(typeName);
-
 		}
 
 		/// <summary>
@@ -858,7 +850,6 @@ namespace Composestar.StarLight.ILAnalyzer
 					_unresolvedTypes.Add(typeName);
 				}
 			}
-
 		}
 
 		/// <summary>
@@ -939,7 +930,7 @@ namespace Composestar.StarLight.ILAnalyzer
 		{
 			string typeName = type.FullName;
 
-			if (typeName.Contains("`")) typeName = string.Format(CultureInfo.CurrentCulture, "{0}.{1}", type.Namespace, type.Name);
+			if (typeName.Contains("`")) typeName = string.Concat(type.Namespace, ".", type.Name);
 			if (typeName.EndsWith("&")) typeName = typeName.Substring(0, typeName.Length - 1);
 			if (typeName.EndsWith("**")) typeName = typeName.Substring(0, typeName.Length - 2);
 			if (typeName.EndsWith("*")) typeName = typeName.Substring(0, typeName.Length - 1);
@@ -977,15 +968,15 @@ namespace Composestar.StarLight.ILAnalyzer
 			if (type == null)
 				throw new ArgumentNullException("type");
 
-
 			if (type.Scope != null)
 			{
 				// Locally declared type
 				if (type.Scope is ModuleDefinition)
 				{
-					if (((ModuleDefinition)type.Scope).Assembly != null)
+					ModuleDefinition scope = (ModuleDefinition)type.Scope;
+					if (scope.Assembly != null)
 					{
-						return ((ModuleDefinition)type.Scope).Assembly.Name.FullName;
+						return scope.Assembly.Name.FullName;
 					}
 				}
 
@@ -1016,7 +1007,6 @@ namespace Composestar.StarLight.ILAnalyzer
 			{
 				if (attribute.Constructor.DeclaringType.FullName.Equals(_skipWeavingAttribute))
 				{
-					
 					if (attribute.ConstructorParameters.Count == 1 && attribute.ConstructorParameters[0] != null)
 						return (Convert.ToBoolean(attribute.ConstructorParameters[0], CultureInfo.InvariantCulture));
 
@@ -1046,7 +1036,6 @@ namespace Composestar.StarLight.ILAnalyzer
 			{
 				if (attribute.Constructor.DeclaringType.FullName.Equals(_processPropertiesAttribute))
 				{
-
 					if (attribute.ConstructorParameters.Count == 1 && attribute.ConstructorParameters[0] != null)
 						return (Convert.ToBoolean(attribute.ConstructorParameters[0], CultureInfo.InvariantCulture));
 
@@ -1061,6 +1050,5 @@ namespace Composestar.StarLight.ILAnalyzer
 		}
 
 		#endregion
-
 	}
 }
