@@ -193,7 +193,7 @@ public class PlatformRunnable implements IPlatformRunnable
 
 			ModuleSetting secret = new ModuleSetting();
 			secret.setName("SECRET");
-			secret.addSetting("mode", "NotSet");
+			//secret.addSetting("mode", "NotSet");
 			BuildConfigurationManager.instance().addModuleSettings(secret);
 
 			ModuleSetting filth = new ModuleSetting();

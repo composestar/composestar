@@ -209,7 +209,7 @@ public class SettingsDialog extends Dialog
 		label.setText("DebuggerType");
 
 		debuggerType = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		debuggerType.add("NotSet");
+		debuggerType.add("Not Set");
 		debuggerType.add("Code Debugger");
 		debuggerType.add("Visual Debugger");
 		if (debuggerString == null)
