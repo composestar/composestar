@@ -1,5 +1,6 @@
 package Rot13Filter;
 
+import java.lang.Thread;
 import Composestar.RuntimeCore.FLIRT.Actions.*;
 import Composestar.RuntimeCore.FLIRT.Message.*;
 import Composestar.RuntimeCore.FLIRT.Reflection.*;
@@ -43,7 +44,7 @@ public class RotAction extends ComposeStarAction
 	public Object execute()
 	{
 		// Start execution in a new thread
-		ChildThread t = ThreadPool.getChildThread(this.message);
+		Thread t = new Thread(this.message);
 		t.start();
 
 		// Store jp and m in ACT thread.
