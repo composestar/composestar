@@ -25,7 +25,7 @@ public class Game implements Runnable
 	 */
 	public static long FRAMESCAP = 16;
 
-	static protected Game _instance;
+	protected static Game _instance;
 
 	/**
 	 * List with elements that receive game events like Tick and Reset
@@ -41,10 +41,12 @@ public class Game implements Runnable
 	 * The current level
 	 */
 	protected Level _level;
+
 	/**
 	 * All game elements (Pacman, Ghosts, Fruit, ...)
 	 */
 	protected Vector gameElements;
+
 	/**
 	 * All human controllers (e.g. players)
 	 */
@@ -106,7 +108,7 @@ public class Game implements Runnable
 			{
 				try 
 				{
-					Thread.sleep(FRAMESCAP-frameTime);
+					Thread.sleep(FRAMESCAP - frameTime);
 				}
 				catch(Exception e)
 				{

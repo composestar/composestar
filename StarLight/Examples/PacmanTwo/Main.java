@@ -40,7 +40,7 @@ public class Main extends Frame
 	{
 		this.setSize(640, 512);
 		this.setTitle("Pacman* 2.0");
-		this.setBackground(java.awt.Color.black);
+		this.setBackground(Color.black);
 		this.setLayout(new BorderLayout());
 		this.setForeground(new Color(32,192,255));
 				
