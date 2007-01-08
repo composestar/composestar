@@ -116,17 +116,20 @@
 	<target name="test_exec" depends="init_local">
 		<cs:test>
 			<FileSet dir="${build.dotnet}/Examples">
-				<!--
+				<!-- output not always correct -->
+				<include name="InventoryTwo/bin/InventoryTwo.Example.exe"/>
+				
+				<!-- plaged with deadlocks -->
+				<include name="Wedding/bin/wedding.Wedding.exe"/>
+				<include name="Inventory/bin/ExampleAOP.Example.exe"/>
+				
+				<!-- working as it should -->
 				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>
-				<include name="DesignPatterns/Implementations/Composite/bin/Composestar.Patterns.Composite.Main.exe"/>
-				-->
 				<include name="Platypus/bin/PlatypusExample.Main.exe"/>
 				<include name="PredicateQueries/bin/MyApp.Main.exe"/>
 				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe"/>
 				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe"/>
-				<include name="Wedding/bin/wedding.Wedding.exe"/>
-				<include name="Inventory/bin/ExampleAOP.Example.exe"/>
-				<include name="InventoryTwo/bin/InventoryTwo.Example.exe"/>
+				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe"/>
 				
 				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Builder/bin/Composestar.Patterns.Builder.Main.exe"/>
@@ -139,7 +142,6 @@
 				<include name="DesignPatterns/Implementations/Proxy/bin/Composestar.Patterns.Proxy.Main.exe"/>
 				<include name="DesignPatterns/Implementations/TemplateMethod/bin/Composestar.Patterns.TemplateMethod.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Visitor/bin/Composestar.Patterns.Visitor.Main.exe"/>
-				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe"/>
 				
 				<include name="TestCases/GrammarTest/bin/GrammarTest.Class1.exe"/>
 				<include name="TestCases/FilterModuleOrderingConstraints/bin/FilterModuleOrderingConstraints.MainRunner.exe"/>
