@@ -90,5 +90,14 @@ public class Breadcrumb
 	{
 		return trails.iterator();
 	}
-
+	
+	public int numTrails()
+	{
+		return trails.size();
+	}
+	
+	public String toString()
+	{
+		return concern.getQualifiedName()+" "+message.toString();
+	}
 }

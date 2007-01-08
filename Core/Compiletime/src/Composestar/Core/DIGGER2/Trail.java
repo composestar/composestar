@@ -31,9 +31,22 @@ public class Trail
 	 * inner).
 	 */
 	protected Message resultMessage;
+	
+	/**
+	 * Will be null until the references have been resolved
+	 */
+	protected Breadcrumb destinationCrumb;
 
+	/**
+	 * The concern this trail points to
+	 */
 	protected Concern targetConcern;
-
+	
+	/**
+	 * If true then this trail is part of a recursive trail
+	 */
+	protected boolean recursive;
+	
 	public Trail(Breadcrumb inOwner)
 	{
 		owner = inOwner;
@@ -68,5 +81,29 @@ public class Trail
 	{
 		return targetConcern;
 	}
+	
+	public void setDestinationCrumb(Breadcrumb inCrumb)
+	{
+		destinationCrumb = inCrumb;
+	}
+	
+	public Breadcrumb getDestinationCrumb()
+	{
+		return destinationCrumb;
+	}
 
+	public boolean isEOL()
+	{
+		return destinationCrumb == null;
+	}
+	
+	public boolean isRecursive()
+	{
+		return recursive;
+	}
+	
+	public void setRecursive(boolean rec)
+	{
+		recursive = rec;
+	}
 }

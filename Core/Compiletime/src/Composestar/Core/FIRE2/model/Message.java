@@ -157,4 +157,9 @@ public class Message
 	{
 		return target1.getName().equals(target2.getName());
 	}
+	
+	public String toString()
+	{
+		return target.getName() + "." + selector.getName();
+	}
 }

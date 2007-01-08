@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -189,7 +190,7 @@ public class Sign implements CTCommonModule
 		Iterator iter;
 		Concern concern;
 		FireModel model;
-		HashSet distinguishable;
+		Set distinguishable;
 		Iterator messages;
 		String message;
 
@@ -224,7 +225,7 @@ public class Sign implements CTCommonModule
 		}
 	}
 
-	private boolean checkMessage(Concern concern, FireModel fireModel, String messageSelector, HashSet distinguishable)
+	private boolean checkMessage(Concern concern, FireModel fireModel, String messageSelector, Set distinguishable)
 	{
 		boolean changed = false;
 		ExecutionModel execModel;
@@ -337,7 +338,7 @@ public class Sign implements CTCommonModule
 	}
 
 	private MethodInfo[] getMethods(Concern concern, String selector, ExecutionState dispatchState,
-			ExecutionState matchingState, HashSet distinguishable)
+			ExecutionState matchingState, Set distinguishable)
 	{
 		FlowNode node = matchingState.getFlowNode();
 		if (node.containsName("NameMatchingPart"))
@@ -361,7 +362,7 @@ public class Sign implements CTCommonModule
 	}
 
 	private MethodInfo[] getMethods(Concern concern, String selector, ExecutionState state, boolean nameMatching,
-			Target signatureMatchingTarget, HashSet distinguishable)
+			Target signatureMatchingTarget, Set distinguishable)
 	{
 		// case 2:
 		if (!selector.equals(Message.UNDISTINGUISHABLE_SELECTOR.getName()))
@@ -462,7 +463,7 @@ public class Sign implements CTCommonModule
 		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
 	}
 
-	private MethodInfo[] getInnerMethods(Concern concern, ExecutionState state, HashSet distinguishable)
+	private MethodInfo[] getInnerMethods(Concern concern, ExecutionState state, Set distinguishable)
 	{
 		Vector result = new Vector();
 
@@ -545,7 +546,7 @@ public class Sign implements CTCommonModule
 		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
 	}
 
-	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, HashSet distinguishable)
+	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, Set distinguishable)
 	{
 		Vector result = new Vector();
 		Type type = (Type) concern.getPlatformRepresentation();
@@ -588,7 +589,7 @@ public class Sign implements CTCommonModule
 		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
 	}
 
-	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, Target donor, HashSet distinguishable)
+	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, Target donor, Set distinguishable)
 	{
 		Vector result = new Vector();
 
@@ -689,7 +690,7 @@ public class Sign implements CTCommonModule
 		Iterator iter;
 		Concern concern;
 		FireModel model;
-		HashSet distinguishable;
+		Set distinguishable;
 		Iterator selectors;
 		String selector;
 		MethodInfo method;

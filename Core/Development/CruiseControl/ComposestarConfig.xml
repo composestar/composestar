@@ -53,7 +53,7 @@
 				reportsuccess="fixes" 
 				skipusers="true"
 				returnname="Continuous Integration Server"
-				returnaddress="elmuerte@users.sourceforge.net"
+				returnaddress="pascal_durr@users.sourceforge.net"
 			>
 				<always address="composestar-developers@lists.sourceforge.net" />
 				

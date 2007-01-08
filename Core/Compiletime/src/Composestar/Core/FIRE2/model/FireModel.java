@@ -632,7 +632,7 @@ public class FireModel
 	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
 	 * @return The distinguishable selectors.
 	 */
-	public HashSet getDistinguishableSelectors(int filterPosition)
+	public Set getDistinguishableSelectors(int filterPosition)
 	{
 		HashSet distinguishable = new HashSet();
 		for (int i = 0; i < filterModules.length; i++)
@@ -678,7 +678,7 @@ public class FireModel
 			ExecutionState state;
 			ExtendedExecutionState extendedState;
 
-			HashSet distinguishable = getDistinguishableSelectors(filterPosition);
+			Set distinguishable = getDistinguishableSelectors(filterPosition);
 			Iterator iter = distinguishable.iterator();
 			while (iter.hasNext())
 			{
