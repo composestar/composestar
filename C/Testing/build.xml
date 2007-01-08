@@ -33,10 +33,12 @@
 		</condition>
 		<fail message="gcc and make were not available on the system path">
 			<condition>
-				<and>
-					<available file="gcc${executable.extention}" filepath="${env.PATH}" />
-					<available file="makegcc${executable.extention}" filepath="${env.PATH}" />
-				</and>
+				<not>
+					<and>
+						<available file="gcc${executable.extention}" filepath="${env.PATH}" />
+						<available file="make${executable.extention}" filepath="${env.PATH}" />
+					</and>
+				</not>
 			</condition>
 		</fail>
 		

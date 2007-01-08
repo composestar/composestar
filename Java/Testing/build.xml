@@ -42,6 +42,18 @@
 	
 	<!-- compile projects -->
 	<target name="test_comp" depends="init_eclipse">
+		<!-- test for some of the available tools -->
+		<condition property="executable.extention" value=".exe" else="">
+			<os family="windows" />
+		</condition>
+		<fail message="gcc and make were not available on the system path">
+			<condition>
+				<not>
+					<available file="javac${executable.extention}" filepath="${env.PATH}" />
+				</not>
+			</condition>
+		</fail>
+	
 		<cs:j_comp workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="Composestar.Eclipse.Plugin.Java.testbuild">
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>
