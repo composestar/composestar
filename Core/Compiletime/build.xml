@@ -151,7 +151,7 @@
 			<path refid="lib.core"/>
 			<pathelement path="${out.build}"/>
 		</path>
-		<javac srcdir="test" destdir="${out.build}" classpathref="lib.test" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="test" destdir="test" classpathref="lib.test" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<include name="**/*.java"/>
 			<exclude name="**/AssemblyInfo.java"/>
 		</javac>
@@ -167,13 +167,20 @@
 				<path refid="lib.test"/>
 				<pathelement path="test"/>
 			</classpath>
-			<formatter type="plain"/>
+			<formatter type="xml" />
 			<batchtest todir="test">
 				<fileset dir="test">
 					<include name="**/*Test.class"/>
 				</fileset>
 			</batchtest>
-		</junit>
+		</junit>		
+		<taskdef name="junitreport" classname="org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator" classpathref="lib.junit"/>
+		<junitreport todir="test">
+			<fileset dir="test">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="noframes" todir="test" />
+		</junitreport>
 	</target>
 		
 </project>
