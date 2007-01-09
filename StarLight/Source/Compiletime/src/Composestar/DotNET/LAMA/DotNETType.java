@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
@@ -28,8 +27,6 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
-
-import composestar.dotNET.tym.entities.TypeElement;
 
 /**
  * Corresponds to the Type class in the .NET framework. For more information on 
@@ -42,756 +39,459 @@ import composestar.dotNET.tym.entities.TypeElement;
 public class DotNETType extends Type
 {
 	private static final long serialVersionUID = 5652622506200113401L;
-	
-	public int HashCode;
-    private boolean IsAbstract;
-    private boolean IsByRef;
-    private boolean IsClass;
-    private boolean IsEnum;
-    private boolean IsInterface;
-    private boolean IsPointer;
-    private boolean IsPrimitive;
-    private boolean IsPublic;
-    private boolean IsSealed;
-    private boolean IsSerializable;
-    private boolean IsValueType;
-    private boolean IsNotPublic;
-    
-    public ArrayList ImplementedInterfaceNames; // List of Strings
-    private ArrayList ImplementedInterfaces; // List of DotNETTypes
-    public DotNETType theDotNETType;
-    public DotNETModule Assembly;
-    public String NameSpace;
-    public String AssemblyName;
-    public String AssemblyQualifiedName;
-    private DotNETType BaseType;
-    public DotNETModule Module;
-    private DotNETType UnderlyingType;
-    public String UnderlyingTypeString;
-    public String BaseTypeString;
- 
-	// private sets
-    private ProgramElement parentNS; // Added by the Language Model; this relation can be used in logic queries
-    private HashSet childTypes; // Added by the Language Model; this relation contains links to sub-types of this type.
-    
-    private HashSet parameterTypes; // Added by the Language Model; this relation contains links to parameters of this type.
-    private HashSet methodReturnTypes; // Added by the Language Model; this relation contains links to methods that return this type.
-    private HashSet fieldTypes; // Added by the Language Model; this relation contains links to fields of this type.
-    private HashSet implementedBy; // Added by the Language Model; this relation exists for interfaces and points to the Types that implement this interface
-    
-	public String fromDLL; // Added by TypeHarvester and TypeCollector for incremental type collecting
 
-	public TypeElement typeElement;
-	
-    /**
-     * @roseuid 4028E9FF026C
-     */
-    public DotNETType()
-    {
-    	super();
-        ImplementedInterfaceNames = new ArrayList();
-        ImplementedInterfaces = null;
-        childTypes = new HashSet();
-        parameterTypes = new HashSet();
-        methodReturnTypes = new HashSet();
-        fieldTypes = new HashSet();
-        implementedBy = new HashSet();  
-	 }
-    
-    /**
-     * @return java.lang.String
-     * @roseuid 401B84CF01D8
-     */
-    public String assemblyQualifiedName() {
-        return AssemblyQualifiedName;     
-    }
-    
-    /**
-     * @param name
-     * @roseuid 4029F59702DC
-     */
-    public void setAssemblyQualifedName(String name) {
-        AssemblyQualifiedName = name;     
-    }
-    
-    public void setAssemblyName(String name) {
-    	AssemblyName = name;
-    }
-    
-    /**
-     * @return Composestar.dotnet.LAMA.DotNETType
-     * @roseuid 401B84CF01D9
-     */
-    public DotNETType baseType() {
-        if( BaseType == null ) {
-            TypeMap map = TypeMap.instance();
-			BaseType = (DotNETType)map.getType( BaseTypeString );
+	private boolean IsClass;
+	private boolean IsInterface;
+	private boolean IsEnum;
+	private boolean IsValueType;
+	private boolean IsPrimitive;
+	private boolean IsAbstract;
+	private boolean IsSealed;
+	private boolean IsPublic;
+
+	private DotNETType BaseType;
+	private String BaseTypeString;
+	private List ImplementedInterfaces; // List of DotNETTypes
+	private List ImplementedInterfaceNames; // List of Strings
+	private String Namespace;
+	private String AssemblyName;
+	private String AssemblyQualifiedName;
+	private DotNETType UnderlyingType;
+	private String UnderlyingTypeString;
+	private String fromDLL; // Added by TypeHarvester and TypeCollector for incremental type collecting
+
+	// for LOLA
+	private ProgramElement parentNS; // Added by the Language Model; this relation can be used in logic queries
+	private HashSet childTypes; // Added by the Language Model; this relation contains links to sub-types of this type.
+
+	private HashSet parameterTypes; // Added by the Language Model; this relation contains links to parameters of this type.
+	private HashSet methodReturnTypes; // Added by the Language Model; this relation contains links to methods that return this type.
+	private HashSet fieldTypes; // Added by the Language Model; this relation contains links to fields of this type.
+	private HashSet implementedBy; // Added by the Language Model; this relation exists for interfaces and points to the Types that implement this interface
+
+	public DotNETType()
+	{
+		super();
+		ImplementedInterfaceNames = new ArrayList();
+		ImplementedInterfaces = null;
+		childTypes = new HashSet();
+		parameterTypes = new HashSet();
+		methodReturnTypes = new HashSet();
+		fieldTypes = new HashSet();
+		implementedBy = new HashSet();
+	}
+
+	public boolean isClass()
+	{
+		return IsClass;
+	}
+
+	public void setIsClass(boolean isClass)
+	{
+		IsClass = isClass;
+	}
+
+	public boolean isInterface()
+	{
+		return IsInterface;
+	}
+
+	public void setIsInterface(boolean isInterface)
+	{
+		IsInterface = isInterface;
+	}
+
+	public boolean isEnum()
+	{
+		return IsEnum;
+	}
+
+	public void setIsEnum(boolean isEnum)
+	{
+		IsEnum = isEnum;
+	}
+
+	public boolean isValueType()
+	{
+		return IsValueType;
+	}
+
+	public void setIsValueType(boolean isValueType)
+	{
+		IsValueType = isValueType;
+	}
+
+	public boolean isPrimitive()
+	{
+		return IsPrimitive;
+	}
+
+	public void setIsPrimitive(boolean isPrim)
+	{
+		IsPrimitive = isPrim;
+	}
+
+	public boolean isAbstract()
+	{
+		return IsAbstract;
+	}
+
+	public void setIsAbstract(boolean isAbstract)
+	{
+		IsAbstract = isAbstract;
+	}
+
+	public boolean isSealed()
+	{
+		return IsSealed;
+	}
+
+	public void setIsSealed(boolean isSealed)
+	{
+		IsSealed = isSealed;
+	}
+
+	public boolean isPublic()
+	{
+		return IsPublic;
+	}
+
+	public void setIsPublic(boolean isPublic)
+	{
+		IsPublic = isPublic;
+	}
+
+	public DotNETType baseType()
+	{
+		if (BaseType == null)
+		{
+			TypeMap map = TypeMap.instance();
+			BaseType = (DotNETType)map.getType(BaseTypeString);
 		}
-        return BaseType;     
-    }
-    
-    /**
-     * @param type
-     * @roseuid 4029F5FC0205
-     */
-    public void setBaseType(String type) {
-        BaseTypeString = type;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01DB
-     */
-    public boolean isAbstract() {
-        return IsAbstract;     
-    }
-    
-    /**
-     * @param isAbstract
-     * @roseuid 4029F63A0092
-     */
-    public void setIsAbstract(boolean isAbstract) {
-        IsAbstract = isAbstract;     
-    }
-    
-       
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01E0
-     */
-    public boolean isByRef() {
-        return IsByRef;     
-    }
-    
-    /**
-     * @param isByRef
-     * @roseuid 4029F69E01FE
-     */
-    public void setIsByRef(boolean isByRef) {
-        IsByRef = isByRef;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01E1
-     */
-    public boolean isClass() {
-        return IsClass;     
-    }
-    
-    /**
-     * @param isClass
-     * @roseuid 4029F6E001F9
-     */
-    public void setIsClass(boolean isClass) {
-        IsClass = isClass;     
-    }
-    
-  
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01E3
-     */
-    public boolean isEnum() {
-        return IsEnum;     
-    }
-    
-    /**
-     * @param isEnum
-     * @roseuid 4029F6FF01B7
-     */
-    public void setIsEnum(boolean isEnum) {
-        IsEnum = isEnum;     
-    }
-    
+		return BaseType;
+	}
 
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01E5
-     */
-    public boolean isInterface() {
-        return IsInterface;     
-    }
-    
-    /**
-     * @param isInterface
-     * @roseuid 4029F728012A
-     */
-    public void setIsInterface(boolean isInterface) {
-        IsInterface = isInterface;     
-    }
-    
-   
-    
-  
-    /**
-     * @param isNested
-     * @roseuid 4029F794018A
-     */
-    public void setIsNestedPrivate(boolean isNested) {
-        m_isNestedPrivate = isNested;     
-    }
-    
-    /**
-     * @param isNested
-     * @roseuid 4029F7A1012E
-     */
-    public void setIsNestedPublic(boolean isNested) {
-        m_isNestedPublic = isNested;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01EB
-     */
-    public boolean isNotPublic() {
-        return IsNotPublic;     
-    }
-    
-    /**
-     * @param isPublic
-     * @roseuid 4029F7AB03BD
-     */
-    public void setIsNotPublic(boolean isPublic) {
-        IsNotPublic = isPublic;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01EC
-     */
-    public boolean isPointer() {
-        return IsPointer;     
-    }
-    
-    /**
-     * @param isPointer
-     * @roseuid 4029F7B8005F
-     */
-    public void setIsPointer(boolean isPointer) {
-        IsPointer = isPointer;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01ED
-     */
-    public boolean isPrimitive() {
-        return IsPrimitive;     
-    }
-    
-    /**
-     * @param isPrim
-     * @roseuid 4029F7C902EE
-     */
-    public void setIsPrimitive(boolean isPrim) {
-        IsPrimitive = isPrim;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01EE
-     */
-    public boolean isPublic() {
-        return IsPublic;     
-    }
-    
-    /**
-     * @param isPublic
-     * @roseuid 4029F7D40380
-     */
-    public void setIsPublic(boolean isPublic) {
-        IsPublic = isPublic;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01EF
-     */
-    public boolean isSealed() {
-        return IsSealed;     
-    }
-    
-    /**
-     * @param isSealed
-     * @roseuid 4029F7DE02A8
-     */
-    public void setIsSealed(boolean isSealed) {
-        IsSealed = isSealed;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01F0
-     */
-    public boolean isSerializable() {
-        return IsSerializable;     
-    }
-    
-    /**
-     * @param isSer
-     * @roseuid 4029F7E803CF
-     */
-    public void setIsSerializable(boolean isSer) {
-        IsSerializable = isSer;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01F1
-     */
-    public boolean isValueType() {
-        return IsValueType;     
-    }
-    
-    /**
-     * @param isValueT
-     * @roseuid 4029F7F800BB
-     */
-    public void setIsValueType(boolean isValueT) {
-        IsValueType = isValueT;     
-    }
-    
-    /**
-     * @return Composestar.DotNET.LAMA.DotNETModule
-     * @roseuid 401B84CF01F2
-     */
-    public DotNETModule module() {
-        return Module;     
-    }
-    
-    /**
-     * @param mod
-     * @roseuid 4029F80E0348
-     */
-    public void setModule(DotNETModule mod) {
-        Module = mod;     
-    }
-    
-    /**
-     * @return java.lang.String
-     * @roseuid 401B84CF01F4
-     */
-    public String namespace() {
-        return NameSpace;     
-    }
-    
-    /**
-     * @param space
-     * @roseuid 4029F878028C
-     */
-    public void setNamespace(String space) {
-        NameSpace = space;     
-    }
-    
-    /**
-     * @return Composestar.DotNET.LAMA.DotNETType
-     * @roseuid 401B84CF01F5
-     */
-    public DotNETType underlyingSystemType() {
-        if( UnderlyingType == null ) {
-            TypeMap map = TypeMap.instance();
-            UnderlyingType = (DotNETType)map.getType( UnderlyingTypeString );
-        }
-        return UnderlyingType;     
-    }
-    
-    /**
-     * @param type
-     * @roseuid 4029F8890114
-     */
-    public void setunderlyingSystemType(String type) {
-        UnderlyingTypeString = type;     
-    }
-    
-    /**
-     * @param types
-     * @return Composestar.DotNET.LAMA.DotNETMethodInfo
-     * @roseuid 401B84CF01F6
-     */
-    public DotNETMethodInfo getConstructor(String[] types) {
-        DotNETMethodInfo method = null;
-        for( ListIterator iter = m_methods.listIterator(); iter.hasNext(); /* nop */ ) 
+	public void setBaseType(String type)
+	{
+		BaseTypeString = type;
+	}
+
+	public void addImplementedInterface(String iface)
+	{
+		ImplementedInterfaceNames.add(iface);
+	}
+
+	public List getImplementedInterfaces()
+	{
+		if (null == ImplementedInterfaces)
 		{
-			method = (DotNETMethodInfo)iter.next();
-            if( method.isConstructor() && method.hasParameters( types ) ) 
+			ImplementedInterfaces = new ArrayList();
+			Iterator iter = ImplementedInterfaceNames.iterator();
+			TypeMap map = TypeMap.instance();
+			while (iter.hasNext())
 			{
-                return method;
-            }
-        }
-        return null;     
-    }
-    
-    /**
-     * @return java.util.List
-     * @roseuid 401B84CF01F7
-     */
-    public List getConstructors() {
-        DotNETMethodInfo method = null;
-        List constructors = new ArrayList();
-        for( ListIterator iter = m_methods.listIterator(); iter.hasNext(); /* nop */ ) 
+				DotNETType iface = (DotNETType)map.getType((String)iter.next());
+				if (null != iface) ImplementedInterfaces.add(iface);
+			}
+		}
+		return ImplementedInterfaces;
+	}
+
+	public String namespace()
+	{
+		return Namespace;
+	}
+
+	public void setNamespace(String space)
+	{
+		Namespace = space;
+	}
+
+	public String assemblyName()
+	{
+		int comma = AssemblyName.indexOf(',');
+		if (comma == -1) return AssemblyName;
+		return AssemblyName.substring(0, comma);
+	}
+
+	public void setAssemblyName(String name)
+	{
+		AssemblyName = name;
+	}
+
+	public String assemblyQualifiedName()
+	{
+		return AssemblyQualifiedName;
+	}
+
+	public void setAssemblyQualifedName(String name)
+	{
+		AssemblyQualifiedName = name;
+	}
+
+	public DotNETType underlyingSystemType()
+	{
+		if (UnderlyingType == null)
 		{
-			method = (DotNETMethodInfo)iter.next();
-            if( method.isConstructor() ) 
+			TypeMap map = TypeMap.instance();
+			UnderlyingType = (DotNETType)map.getType(UnderlyingTypeString);
+		}
+		return UnderlyingType;
+	}
+
+	public void setUnderlyingSystemType(String type)
+	{
+		UnderlyingTypeString = type;
+	}
+
+	public String getFromDLL()
+	{
+		return fromDLL;
+	}
+
+	public void setFromDLL(String fromDLL)
+	{
+		this.fromDLL = fromDLL;
+	}
+
+	public List getConstructors()
+	{
+		List constructors = new ArrayList();
+		for (Iterator it = m_methods.iterator(); it.hasNext(); /* nop */)
+		{
+			DotNETMethodInfo method = (DotNETMethodInfo)it.next();
+			if (method.isConstructor())
 			{
-                constructors.add( method );
-            }
-        }
-        return constructors;     
-    }
-    
-    /**
-     * @return int
-     * @roseuid 401B84CF01F8
-     */
-    public int getHashCode() {
-        return HashCode;     
-    }
-    
-    /**
-     * @param code
-     * @roseuid 4029F8A400AE
-     */
-    public void setHashCode(int code) {
-        HashCode = code;     
-    }
-    
-    public DotNETFieldInfo getField(String name) {
-		DotNETFieldInfo field = null;
-		for (ListIterator iter = m_fields.listIterator(); iter.hasNext(); /* nop */ ) 
+				constructors.add(method);
+			}
+		}
+		return constructors;
+	}
+
+	public DotNETMethodInfo getConstructor(String[] types)
+	{
+		for (Iterator it = m_methods.iterator(); it.hasNext(); /* nop */)
 		{
-			field = (DotNETFieldInfo)iter.next();
+			DotNETMethodInfo method = (DotNETMethodInfo)it.next();
+			if (method.isConstructor() && method.hasParameters(types))
+			{
+				return method;
+			}
+		}
+		return null;
+	}
+
+	public DotNETFieldInfo getField(String name)
+	{
+		for (Iterator it = m_fields.iterator(); it.hasNext(); /* nop */)
+		{
+			DotNETFieldInfo field = (DotNETFieldInfo)it.next();
 			if (field.name().equals(name))
 			{
 				return field;
 			}
 		}
 		return null;
-    }
-    
-    public void addImplementedInterface(String iface) {
-      ImplementedInterfaceNames.add(iface);
-    }
-    
-    public List getImplementedInterfaces() {
-      if (null == ImplementedInterfaces)
-      {
-        ImplementedInterfaces = new ArrayList();
-        Iterator iter = ImplementedInterfaceNames.iterator();
-        TypeMap map = TypeMap.instance();
-        while (iter.hasNext())
-        {
-          DotNETType iface = (DotNETType)map.getType( (String)iter.next() );
-          if (null != iface)
-            ImplementedInterfaces.add(iface);
-        }
-      }
-      return ImplementedInterfaces;
-    }
-    
-    /**
-     * @return java.lang.String
-     * @roseuid 40FD2B88026A
-     */
-    public String assemblyName() {
-    	int comma = AssemblyName.indexOf(',');
-    	if (comma == -1) return AssemblyName;
-    	return AssemblyName.substring(0, comma);
-    } 
-    
-    
-    public String useArrayType(String type){
-    	if(type.endsWith("[]")){
-    		return "[]";
-    	}
-    	else return "";
-    }
-    
-    
-    /**
-     * Converts a .net type to IL data type as defined at
-     * http://www.codeproject.com/dotnet/ilassembly.asp
-     * 
-     * @return an IL datatype
-     */ 
-    public String ilType() {
-    	String fullName = this.m_fullName;
-    	String arrayPart = "";
-    	if(fullName.endsWith("[]")){
-    		fullName = fullName.substring(0,fullName.length()-2);
-    		arrayPart = "[]";
-    	}
-		if( fullName.equals("System.Void"))
-			return "void" + arrayPart;
-		else if (fullName.equals("System.Boolean")) 
-			return "bool" + arrayPart;
-		else if (fullName.equals("System.Char")) 
-			return "Char" + arrayPart;
-		else if (fullName.equals("System.SByte")) 
-			return "int8" + arrayPart;
-		else if (fullName.equals("System.Int16")) 
-			return "int16" + arrayPart;
-		else if (fullName.equals("System.Int32")) 
-			return "int32" + arrayPart;
-		else if (fullName.equals("System.64")) 
-			return "int64" + arrayPart;
-		else if (fullName.equals("System.IntPtr")) 
-			return "native int" + arrayPart;
-		else if (fullName.equals("System.Byte")) 
-			return "unsigned int8" + arrayPart;
-		else if (fullName.equals("System.UInt16")) 
-			return "unsigned int16" + arrayPart;
-		else if (fullName.equals("System.UInt32")) 
-			return "unsigned int32" + arrayPart;
-		else if (fullName.equals("System.UInt64")) 
-			return "unsigned int64" + arrayPart;
-		else if (fullName.equals("System.UIntPtr")) 
-			return "native unsigned int" + arrayPart;
-		else if (fullName.equals("System.Single")) 
-			return "Float32" + arrayPart;
-		else if (fullName.equals("System.Double")) 
-			return "Float64" + arrayPart;
-		else if (fullName.equals("System.Object")) 
-			return "object" + arrayPart;
-		else if (fullName.equals("System.IntPtr")) 
-			return "*" + arrayPart;
-		else if (fullName.equals("System.Array")) 
-			return "Array" + arrayPart;
-		else if (fullName.equals("System.String")) 
-			return "string" + arrayPart;
-		else
-			return "class [" + this.assemblyName() + "]" + fullName + arrayPart; 
-    }
-    
-    /** Stuff for LOLA **/
-    
-    private HashSet toHashSet(Collection c)
-    {
-      HashSet result = new HashSet();
-      Iterator iter = c.iterator();
-      while (iter.hasNext())
-        result.add(iter.next());
-      return result;
-    }
-    
-    private HashSet filterDeclaredHere(Collection in)
-    {
-      HashSet out = new HashSet();
-      Iterator iter = in.iterator();
-      while (iter.hasNext())
-      {
-        Object obj = iter.next();
-        if (obj instanceof DotNETMethodInfo)
-        {
-          if (((DotNETMethodInfo)obj).isDeclaredHere())
-          	out.add(obj);
-        }
-        else if (obj instanceof DotNETFieldInfo)
-        {
-          if (((DotNETFieldInfo)obj).isDeclaredHere())
-            out.add(obj);
-        }
-        else
-          out.add(obj); // No filtering on other kinds of objects
-      }
-      return out;
-    }
-    
-    public UnitResult getUnitRelationForClass(String argumentName)
-    {
-      if (argumentName.equals("ParentNamespace"))
-        return new UnitResult(parentNS);
-      else if (argumentName.equals("ParentClass"))
-        return new UnitResult(baseType()); // can be null!
-      else if (argumentName.equals("ChildClasses"))
-        return new UnitResult(childTypes);
-      else if (argumentName.equals("ChildMethods"))
-        return new UnitResult(filterDeclaredHere(m_methods));
-      else if (argumentName.equals("ChildFields"))
-        return new UnitResult(filterDeclaredHere(m_fields));
-      else if (argumentName.equals("ParameterClass"))
-        return new UnitResult(parameterTypes);
-      else if (argumentName.equals("MethodReturnClass"))
-        return new UnitResult(methodReturnTypes);
-      else if (argumentName.equals("FieldClass"))
-        return new UnitResult(fieldTypes);
-      else if (argumentName.equals("Implements"))
-        return new UnitResult(toHashSet(getImplementedInterfaces()));
-      else if (argumentName.equals("Annotations"))
-      {
-        Iterator i = getAnnotations().iterator();
-        HashSet res = new HashSet();
-        while (i.hasNext())
-          res.add(((Annotation)i.next()).getType());
-        return new UnitResult(res);
-      }
+	}
 
-      return null;      
-    }
-    
-    public UnitResult getUnitRelationForInterface(String argumentName)
-    {
-      if (argumentName.equals("ParentNamespace"))
-        return new UnitResult(parentNS);
-      else if (argumentName.equals("ParentInterface"))
-        return new UnitResult(baseType()); // can be null!
-      else if (argumentName.equals("ChildInterfaces"))
-        return new UnitResult(childTypes);
-      else if (argumentName.equals("ChildMethods"))
-        return new UnitResult(filterDeclaredHere(m_methods));
-      else if (argumentName.equals("ParameterInterface"))
-        return new UnitResult(parameterTypes);
-      else if (argumentName.equals("MethodReturnInterface"))
-        return new UnitResult(methodReturnTypes);
-      else if (argumentName.equals("FieldInterface"))
-        return new UnitResult(fieldTypes);
-      else if (argumentName.equals("ImplementedBy"))
-        return new UnitResult(implementedBy);
-      else if (argumentName.equals("Annotations"))
-      {
-        Iterator i = getAnnotations().iterator();
-        HashSet res = new HashSet();
-        while (i.hasNext())
-          res.add(((Annotation)i.next()).getType());
-        return new UnitResult(res);
-      }
-        
-      return null;      
-    }
+	// Stuff for LOLA
+
+	private HashSet toHashSet(Collection c)
+	{
+		HashSet result = new HashSet();
+		Iterator iter = c.iterator();
+		while (iter.hasNext())
+			result.add(iter.next());
+		return result;
+	}
+
+	private HashSet filterDeclaredHere(Collection in)
+	{
+		HashSet out = new HashSet();
+		Iterator iter = in.iterator();
+		while (iter.hasNext())
+		{
+			Object obj = iter.next();
+			if (obj instanceof DotNETMethodInfo)
+			{
+				if (((DotNETMethodInfo)obj).isDeclaredHere()) out.add(obj);
+			}
+			else if (obj instanceof DotNETFieldInfo)
+			{
+				if (((DotNETFieldInfo)obj).isDeclaredHere()) out.add(obj);
+			}
+			else out.add(obj); // No filtering on other kinds of objects
+		}
+		return out;
+	}
+
+	public UnitResult getUnitRelationForClass(String argumentName)
+	{
+		if (argumentName.equals("ParentNamespace")) return new UnitResult(parentNS);
+		else if (argumentName.equals("ParentClass")) return new UnitResult(baseType()); // can be null!
+		else if (argumentName.equals("ChildClasses")) return new UnitResult(childTypes);
+		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(m_methods));
+		else if (argumentName.equals("ChildFields")) return new UnitResult(filterDeclaredHere(m_fields));
+		else if (argumentName.equals("ParameterClass")) return new UnitResult(parameterTypes);
+		else if (argumentName.equals("MethodReturnClass")) return new UnitResult(methodReturnTypes);
+		else if (argumentName.equals("FieldClass")) return new UnitResult(fieldTypes);
+		else if (argumentName.equals("Implements")) return new UnitResult(toHashSet(getImplementedInterfaces()));
+		else if (argumentName.equals("Annotations"))
+		{
+			Iterator i = getAnnotations().iterator();
+			HashSet res = new HashSet();
+			while (i.hasNext())
+				res.add(((Annotation)i.next()).getType());
+			return new UnitResult(res);
+		}
+
+		return null;
+	}
+
+	public UnitResult getUnitRelationForInterface(String argumentName)
+	{
+		if (argumentName.equals("ParentNamespace")) return new UnitResult(parentNS);
+		else if (argumentName.equals("ParentInterface")) return new UnitResult(baseType()); // can be null!
+		else if (argumentName.equals("ChildInterfaces")) return new UnitResult(childTypes);
+		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(m_methods));
+		else if (argumentName.equals("ParameterInterface")) return new UnitResult(parameterTypes);
+		else if (argumentName.equals("MethodReturnInterface")) return new UnitResult(methodReturnTypes);
+		else if (argumentName.equals("FieldInterface")) return new UnitResult(fieldTypes);
+		else if (argumentName.equals("ImplementedBy")) return new UnitResult(implementedBy);
+		else if (argumentName.equals("Annotations"))
+		{
+			Iterator i = getAnnotations().iterator();
+			HashSet res = new HashSet();
+			while (i.hasNext())
+				res.add(((Annotation)i.next()).getType());
+			return new UnitResult(res);
+		}
+
+		return null;
+	}
 
 	public UnitResult getUnitRelationForAnnotation(String argumentName)
 	{
-	  HashSet resClasses = new HashSet();
-	  HashSet resInterfaces = new HashSet();
-	  HashSet resMethods = new HashSet();
-	  HashSet resFields = new HashSet();
-	  HashSet resParameters = new HashSet();
-	  
-	  Iterator i = getAnnotationInstances().iterator();
-	  while (i.hasNext())
-	  {
-	    ProgramElement unit = ((Annotation)i.next()).getTarget();
-	    if (unit instanceof DotNETType)
-	    {
-	      DotNETType type = (DotNETType)unit;
-	      if (type.isInterface())
-	        resInterfaces.add(type);
-	      else if (type.isClass())
-	        resClasses.add(type);
-	    }
-	    else if (unit instanceof DotNETMethodInfo)
-	      resMethods.add(unit);
-	    else if (unit instanceof FieldInfo)
-	      resFields.add(unit);
-	    else if (unit instanceof ParameterInfo)
-	      resParameters.add(unit);
-	  }
-	  
-	  if (argumentName.equals("AttachedClasses"))
-	    return new UnitResult(resClasses);
-	  else if (argumentName.equals("AttachedInterfaces"))
-	    return new UnitResult(resInterfaces);
-	  else if (argumentName.equals("AttachedMethods"))
-	    return new UnitResult(resMethods);
-	  else if (argumentName.equals("AttachedFields"))
-	    return new UnitResult(resFields);
-	  else if (argumentName.equals("AttachedParameters"))
-	    return new UnitResult(resParameters);
-	  
-	  return null;
-	}
-    
-    
-    public UnitResult getUnitRelation(String argumentName)
-    {
-      if (getUnitType().equals("Class"))
-        return getUnitRelationForClass(argumentName);
-      else if (getUnitType().equals("Interface"))
-        return getUnitRelationForInterface(argumentName);
-      else if (getUnitType().equals("Annotation"))
-        return getUnitRelationForAnnotation(argumentName);
-      return null; // Should never happen!
-    }
-    
-    /*** Extra method for storing the parent namespace; called by DotNETLanguageModel::completeModel() **/
-    public void setParentNamespace(ProgramElement parentNS)
-    {
-      this.parentNS = parentNS;
-    }
-    
-    /*** Extra method for adding links to child types of this type */
-    public void addChildType(ProgramElement childType)
-    {
-    	if (this.childTypes == null) childTypes = new HashSet();
-	    this.childTypes.add(childType);
+		HashSet resClasses = new HashSet();
+		HashSet resInterfaces = new HashSet();
+		HashSet resMethods = new HashSet();
+		HashSet resFields = new HashSet();
+		HashSet resParameters = new HashSet();
+
+		Iterator i = getAnnotationInstances().iterator();
+		while (i.hasNext())
+		{
+			ProgramElement unit = ((Annotation)i.next()).getTarget();
+			if (unit instanceof DotNETType)
+			{
+				DotNETType type = (DotNETType)unit;
+				if (type.isInterface()) resInterfaces.add(type);
+				else if (type.isClass()) resClasses.add(type);
+			}
+			else if (unit instanceof DotNETMethodInfo) resMethods.add(unit);
+			else if (unit instanceof FieldInfo) resFields.add(unit);
+			else if (unit instanceof ParameterInfo) resParameters.add(unit);
+		}
+
+		if (argumentName.equals("AttachedClasses")) return new UnitResult(resClasses);
+		else if (argumentName.equals("AttachedInterfaces")) return new UnitResult(resInterfaces);
+		else if (argumentName.equals("AttachedMethods")) return new UnitResult(resMethods);
+		else if (argumentName.equals("AttachedFields")) return new UnitResult(resFields);
+		else if (argumentName.equals("AttachedParameters")) return new UnitResult(resParameters);
+
+		return null;
 	}
 
-    /*** Extra method for adding links to parameters of this type */
-    public void addParameterType(ProgramElement paramType)
-    {
-      this.parameterTypes.add(paramType);
-    }
+	public UnitResult getUnitRelation(String argumentName)
+	{
+		if (getUnitType().equals("Class")) return getUnitRelationForClass(argumentName);
+		else if (getUnitType().equals("Interface")) return getUnitRelationForInterface(argumentName);
+		else if (getUnitType().equals("Annotation")) return getUnitRelationForAnnotation(argumentName);
+		return null; // Should never happen!
+	}
 
-    /*** Extra method for adding links to methods that return this type */
-    public void addMethodReturnType(ProgramElement returnType)
-    {
-      this.methodReturnTypes.add(returnType);
-    }
+	/** 
+	 * Extra method for storing the parent namespace; 
+	 * called by DotNETLanguageModel::completeModel()
+	 */
+	public void setParentNamespace(ProgramElement parentNS)
+	{
+		this.parentNS = parentNS;
+	}
 
-    /*** Extra method for adding links to methods that return this type */
-    public void addFieldType(ProgramElement fieldType)
-    {
-      this.fieldTypes.add(fieldType);
-    }
+	/**
+	 * Extra method for adding links to child types of this type. 
+	 */
+	public void addChildType(ProgramElement childType)
+	{
+		if (childTypes == null) childTypes = new HashSet();
+		childTypes.add(childType);
+	}
 
-    /*** Extra method for adding links to classes that implement this interface */
-    public void addImplementedBy(ProgramElement aClass)
-    {
-      implementedBy.add(aClass);
-    }
-    
-    /* (non-Javadoc)
-     * @see Composestar.Core.LAMA.ProgramElement#getUnitType()
-     */
-    public String getUnitType()
-    {
-	  if (isInterface())
-        return "Interface";
-      else if (isAttribute())
-        return "Annotation";
-      else
-        return "Class";
-    }
+	/** 
+	 * Extra method for adding links to parameters of this type.
+	 */
+	public void addParameterType(ProgramElement paramType)
+	{
+		this.parameterTypes.add(paramType);
+	}
 
-    /** Stuff for annotations **/
-    
-    // A class is an annotation (attribute) type, if it inherits from System.Attribute.
-    public boolean isAttribute()
-    {
-    	DotNETType baseType = this.baseType();
-    	while (baseType != null)
-    	{
-    		String unitName = baseType.getUnitName();    		
-    		if ("System.Attribute".equals(unitName))
-    			return true;
-    		
-    		baseType = baseType.baseType();
-    	}
-    	return false;
-    	//return (0!=attributeInstances.size());
-    }
-    
-    /**
-     * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
-     */
-    public Collection getUnitAttributes()
-    {
-      HashSet result = new HashSet();
-      if (isPublic())
-        result.add("public");
-      return result;
-    }	
+	/**
+	 * Extra method for adding links to methods that return this type 
+	 */
+	public void addMethodReturnType(ProgramElement returnType)
+	{
+		this.methodReturnTypes.add(returnType);
+	}
+
+	/**
+	 * Extra method for adding links to methods that return this type 
+	 */
+	public void addFieldType(ProgramElement fieldType)
+	{
+		this.fieldTypes.add(fieldType);
+	}
+
+	/**
+	 * Extra method for adding links to classes that implement this interface
+	 */
+	public void addImplementedBy(ProgramElement aClass)
+	{
+		implementedBy.add(aClass);
+	}
+
+	public String getUnitType()
+	{
+		// TODO: enum?
+		if (isInterface()) return "Interface";
+		else if (isAttribute()) return "Annotation";
+		else return "Class";
+	}
+
+	// Stuff for annotations
+
+	/**
+	 * A class is an annotation (attribute) type, if it inherits from System.Attribute.
+	 */
+	public boolean isAttribute()
+	{
+		DotNETType baseType = this.baseType();
+		while (baseType != null)
+		{
+			String unitName = baseType.getUnitName();
+			if ("System.Attribute".equals(unitName)) return true;
+
+			baseType = baseType.baseType();
+		}
+		return false;
+	}
+
+	public Collection getUnitAttributes()
+	{
+		HashSet result = new HashSet();
+		if (isPublic()) result.add("public");
+		return result;
+	}
 
 	public void reset()
 	{
@@ -800,15 +500,14 @@ public class DotNETType extends Type
 		methodReturnTypes = new HashSet();
 		fieldTypes = new HashSet();
 		implementedBy = new HashSet();
-		UnitRegister.instance().registerLanguageUnit(this);  
-		
+		UnitRegister.instance().registerLanguageUnit(this);
+
 		// register fields
 		Iterator fiter = m_fields.iterator();
 		while (fiter.hasNext())
 		{
 			DotNETFieldInfo field = (DotNETFieldInfo)fiter.next();
-			if (null != field)
-				UnitRegister.instance().registerLanguageUnit(field); 
+			if (null != field) UnitRegister.instance().registerLanguageUnit(field);
 		}
 
 		// register methods and its parameters
@@ -816,35 +515,17 @@ public class DotNETType extends Type
 		while (miter.hasNext())
 		{
 			DotNETMethodInfo method = (DotNETMethodInfo)miter.next();
-			if (null != method)
-				UnitRegister.instance().registerLanguageUnit(method);
- 
+			if (null != method) UnitRegister.instance().registerLanguageUnit(method);
+
 			Iterator piter = method.getParameters().iterator();
 			while (piter.hasNext())
 			{
 				DotNETParameterInfo param = (DotNETParameterInfo)piter.next();
-				if (null != param)
-					UnitRegister.instance().registerLanguageUnit(param);
+				if (null != param) UnitRegister.instance().registerLanguageUnit(param);
 			}
 		}
 	}
-	
-	/**
-	 * @return the fromDLL
-	 */
-	public String getFromDLL()
-	{
-		return fromDLL;
-	}
 
-	/**
-	 * @param fromDLL the fromDLL to set
-	 */
-	public void setFromDLL(String fromDLL)
-	{
-		this.fromDLL = fromDLL;
-	}
-	
 	/**
 	 * Returns a string representation of this object.
 	 */
@@ -856,86 +537,70 @@ public class DotNETType extends Type
 	/**
 	 * Custom deserialization of this object
 	 */
-	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		HashCode = in.readInt();
+//		HashCode = in.readInt();
 		IsAbstract = in.readBoolean();
-		IsByRef = in.readBoolean();
+//		IsByRef = in.readBoolean();
 		IsClass = in.readBoolean();
 		IsEnum = in.readBoolean();
 		IsInterface = in.readBoolean();
-		IsPointer = in.readBoolean();
+//		IsPointer = in.readBoolean();
 		IsPrimitive = in.readBoolean();
 		IsPublic = in.readBoolean();
 		IsSealed = in.readBoolean();
-		IsSerializable = in.readBoolean();
 		IsValueType = in.readBoolean();
-		IsNotPublic = in.readBoolean();
 		ImplementedInterfaceNames = (ArrayList)in.readObject();
-		theDotNETType = (DotNETType)in.readObject();
-		Assembly = (DotNETModule)in.readObject();
-		NameSpace = in.readUTF();
-		if(NameSpace.equals(""))
-			NameSpace = null;
+//		theDotNETType = (DotNETType)in.readObject();
+//		Assembly = (DotNETModule)in.readObject();
+		Namespace = in.readUTF();
+		if (Namespace.equals("")) Namespace = null;
 		AssemblyQualifiedName = in.readUTF();
-		Module = (DotNETModule)in.readObject();
+//		Module = (DotNETModule)in.readObject();
 		UnderlyingTypeString = in.readUTF();
 		BaseTypeString = in.readUTF();
-		if(BaseTypeString.equals(""))
-			BaseTypeString = null;
+		if (BaseTypeString.equals("")) BaseTypeString = null;
 		fromDLL = in.readUTF();
 		annotationInstances = (ArrayList)in.readObject();
 	}
-	 
+
 	/**
 	 * Custom serialization of this object
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeInt(HashCode);
+//		out.writeInt(HashCode);
 		out.writeBoolean(IsAbstract);
-		out.writeBoolean(IsByRef);
+//		out.writeBoolean(IsByRef);
 		out.writeBoolean(IsClass);
 		out.writeBoolean(IsEnum);
 		out.writeBoolean(IsInterface);
-		out.writeBoolean(IsPointer);
+//		out.writeBoolean(IsPointer);
 		out.writeBoolean(IsPrimitive);
 		out.writeBoolean(IsPublic);
 		out.writeBoolean(IsSealed);
-		out.writeBoolean(IsSerializable);
 		out.writeBoolean(IsValueType);
-		out.writeBoolean(IsNotPublic);
 		out.writeObject(ImplementedInterfaceNames);
-		out.writeObject(theDotNETType);
-		out.writeObject(Assembly);
-		
-		if(NameSpace!=null)
-			out.writeUTF(NameSpace);
-		else
-			out.writeUTF("");
-		
-		if(AssemblyQualifiedName!=null)
-			out.writeUTF(AssemblyQualifiedName);
-		else
-			out.writeUTF("");
-		
-		out.writeObject(Module);
-		
-		if(UnderlyingTypeString!=null)
-			out.writeUTF(UnderlyingTypeString);
-		else
-			out.writeUTF("");
-			
-		if(BaseTypeString!=null)
-			out.writeUTF(BaseTypeString);
-		else
-			out.writeUTF("");
+//		out.writeObject(theDotNETType);
+//		out.writeObject(Assembly);
 
-		if(fromDLL!=null)
-			out.writeUTF(fromDLL);
-		else
-			out.writeUTF("");
-		
+		if (Namespace != null) out.writeUTF(Namespace);
+		else out.writeUTF("");
+
+		if (AssemblyQualifiedName != null) out.writeUTF(AssemblyQualifiedName);
+		else out.writeUTF("");
+
+//		out.writeObject(Module);
+
+		if (UnderlyingTypeString != null) out.writeUTF(UnderlyingTypeString);
+		else out.writeUTF("");
+
+		if (BaseTypeString != null) out.writeUTF(BaseTypeString);
+		else out.writeUTF("");
+
+		if (fromDLL != null) out.writeUTF(fromDLL);
+		else out.writeUTF("");
+
 		out.writeObject(annotationInstances);
 	}
 }

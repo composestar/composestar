@@ -58,23 +58,16 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		private string _namespace = string.Empty;
 		private string _baseType = string.Empty;
 		private List<string> _interfaces = new List<string>();
-		private bool _isAbstract;
-		private bool _isInterface;
-		private bool _isSealed;
-		private bool _isValueType;
-		private bool _isEnum;
-		private bool _isClass;
-		private bool _isNotPublic;
-		private bool _isPrimitive;
-		private bool _isPublic;
-		private bool _isSerializable;
 		private List<MethodElement> _methods = new List<MethodElement>();
 		private List<FieldElement> _fields = new List<FieldElement>();
-		private List<AttributeElement> _attributes = new List<AttributeElement>();
-
-		public TypeElement()
-		{
-		}
+		private bool _isClass;
+		private bool _isInterface;
+		private bool _isEnum;
+		private bool _isValueType;
+		private bool _isPrimitive;
+		private bool _isAbstract;
+		private bool _isSealed;
+		private bool _isPublic;
 
 		/// <summary>
 		/// The name of this type.
@@ -129,128 +122,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this instance is abstract.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is abstract; otherwise, <c>false</c>.
-		/// </value>
-		[XmlAttribute]
-		public bool IsAbstract
-		{
-			get { return _isAbstract; }
-			set { _isAbstract = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is interface.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is interface; otherwise, <c>false</c>.
-		/// </value>
-		[XmlAttribute]
-		public bool IsInterface
-		{
-			get { return _isInterface; }
-			set { _isInterface = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is sealed.
-		/// </summary>
-		/// <value><c>true</c> if this instance is sealed; otherwise, <c>false</c>.</value>
-		[XmlAttribute]
-		public bool IsSealed
-		{
-			get { return _isSealed; }
-			set { _isSealed = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is value type.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is value type; otherwise, <c>false</c>.
-		/// </value>
-		[XmlAttribute]
-		public bool IsValueType
-		{
-			get { return _isValueType; }
-			set { _isValueType = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is enum.
-		/// </summary>
-		/// <value><c>true</c> if this instance is enum; otherwise, <c>false</c>.</value>
-		[XmlAttribute]
-		public bool IsEnum
-		{
-			get { return _isEnum; }
-			set { _isEnum = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is class.
-		/// </summary>
-		/// <value><c>true</c> if this instance is class; otherwise, <c>false</c>.</value>
-		[XmlAttribute]
-		public bool IsClass
-		{
-			get { return _isClass; }
-			set { _isClass = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is not public.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is not public; otherwise, <c>false</c>.
-		/// </value>
-		[XmlAttribute]
-		public bool IsNotPublic
-		{
-			get { return _isNotPublic; }
-			set { _isNotPublic = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is primitive.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is primitive; otherwise, <c>false</c>.
-		/// </value>
-		[XmlAttribute]
-		public bool IsPrimitive
-		{
-			get { return _isPrimitive; }
-			set { _isPrimitive = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is public.
-		/// </summary>
-		/// <value><c>true</c> if this instance is public; otherwise, <c>false</c>.</value>
-		[XmlAttribute]
-		public bool IsPublic
-		{
-			get { return _isPublic; }
-			set { _isPublic = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is serializable.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is serializable; otherwise, <c>false</c>.
-		/// </value>
-		[XmlAttribute]
-		public bool IsSerializable
-		{
-			get { return _isSerializable; }
-			set { _isSerializable = value; }
-		}
-
-		/// <summary>
 		/// Gets or sets the methods.
 		/// </summary>
 		/// <value>The methods.</value>
@@ -276,7 +147,105 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			set { _fields = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is class.
+		/// </summary>
+		/// <value><c>true</c> if this instance is class; otherwise, <c>false</c>.</value>
+		[XmlAttribute]
+		public bool IsClass
+		{
+			get { return _isClass; }
+			set { _isClass = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is interface.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is interface; otherwise, <c>false</c>.
+		/// </value>
+		[XmlAttribute]
+		public bool IsInterface
+		{
+			get { return _isInterface; }
+			set { _isInterface = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is enum.
+		/// </summary>
+		/// <value><c>true</c> if this instance is enum; otherwise, <c>false</c>.</value>
+		[XmlAttribute]
+		public bool IsEnum
+		{
+			get { return _isEnum; }
+			set { _isEnum = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is value type.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is value type; otherwise, <c>false</c>.
+		/// </value>
+		[XmlAttribute]
+		public bool IsValueType
+		{
+			get { return _isValueType; }
+			set { _isValueType = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is primitive.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is primitive; otherwise, <c>false</c>.
+		/// </value>
+		[XmlAttribute]
+		public bool IsPrimitive
+		{
+			get { return _isPrimitive; }
+			set { _isPrimitive = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is sealed.
+		/// </summary>
+		/// <value><c>true</c> if this instance is sealed; otherwise, <c>false</c>.</value>
+		[XmlAttribute]
+		public bool IsSealed
+		{
+			get { return _isSealed; }
+			set { _isSealed = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this type is abstract.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this type is abstract; otherwise, <c>false</c>.
+		/// </value>
+		[XmlAttribute]
+		public bool IsAbstract
+		{
+			get { return _isAbstract; }
+			set { _isAbstract = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is public.
+		/// </summary>
+		/// <value><c>true</c> if this instance is public; otherwise, <c>false</c>.</value>
+		[XmlAttribute]
+		public bool IsPublic
+		{
+			get { return _isPublic; }
+			set { _isPublic = value; }
+		}
+
 		#region ICustomAttributes
+
+		private List<AttributeElement> _attributes = new List<AttributeElement>();
 
 		/// <summary>
 		/// Gets a value indicating whether this instance has attributes.

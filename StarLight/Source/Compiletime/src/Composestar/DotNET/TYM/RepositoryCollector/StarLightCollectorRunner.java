@@ -74,11 +74,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 	private INCREReporter reporter = INCRE.instance().getReporter();
 	private INCRETimer deserializeTimer = reporter.openProcess(MODULE_NAME, "xml deserialize", INCRETimer.TYPE_NORMAL);
-//	private INCRETimer storeTimer = reporter.openProcess(MODULE_NAME, "storing in repository", INCRETimer.TYPE_NORMAL);
-//	private INCRETimer timer1 = reporter.openProcess(MODULE_NAME, "timer1", INCRETimer.TYPE_NORMAL);
-//	private INCRETimer timer2 = reporter.openProcess(MODULE_NAME, "timer2", INCRETimer.TYPE_NORMAL);
-//	private INCRETimer timer3 = reporter.openProcess(MODULE_NAME, "timer3", INCRETimer.TYPE_NORMAL);
-//	private INCRETimer timer4 = reporter.openProcess(MODULE_NAME, "timer4", INCRETimer.TYPE_NORMAL);
 
 	private long starttime = 0;
 	
@@ -310,9 +305,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 				// Get the .NET platform representation for this concern
 				DotNETType t = (DotNETType)c.getPlatformRepresentation();
 
-				// Add to datastore if type belongs to the assembly we are
-				// restoring
-				if (t != null && t.fromDLL.equals(assemblyName))
+				// Add to datastore if type belongs to the assembly we are restoring
+				if (t != null && t.getFromDLL().equals(assemblyName))
 				{
 					// Register the type with LAMA
 					t.setParentConcern(null);
@@ -476,38 +470,15 @@ public class StarLightCollectorRunner implements CollectorRunner
 				dnt.addImplementedInterface(interfaces[j]);
 			}
 			
-			dnt.setIsAbstract(te.getIsAbstract());
-			// type.setIsAnsiClass( ... );
-			// type.setIsArray( typeElement.get_IsArray() );
-			// type.setIsAutoClass( Boolean.valueOf( lastCharData ).booleanValue() );
-			// type.setIsAutoLayout( ... );
-			// type.setIsByRef( ... );
 			dnt.setIsClass(te.getIsClass());
-			// type.setIsContextful( ... );
-			dnt.setIsEnum(te.getIsEnum());
-			// type.setIsImport( ... );
 			dnt.setIsInterface(te.getIsInterface());
-			// type.setIsMarshalByRef( ... );
-			// type.setIsNestedFamAndAssem( ... );
-			// type.setIsNestedAssembly( ... );
-			// type.setIsNestedFamOrAssem( ... );
-			// type.setIsNestedPrivate( ... );
-			// type.setIsNestedPublic( ... );
-			dnt.setIsNotPublic(te.getIsNotPublic());
-			// type.setIsPointer( ... );
+			dnt.setIsEnum(te.getIsEnum());
+			dnt.setIsValueType(te.getIsValueType());
 			dnt.setIsPrimitive(te.getIsPrimitive());
 			dnt.setIsPublic(te.getIsPublic());
+			dnt.setIsAbstract(te.getIsAbstract());
 			dnt.setIsSealed(te.getIsSealed());
-			dnt.setIsSerializable(te.getIsSerializable());
-			dnt.setIsValueType(te.getIsValueType());
-
-			// TODO: create system in DotNETModule to avoid duplicates
-			// DotNETModule mod = new DotNETModule();
-			// mod.setFullyQualifiedName( ... );
-			// type.setModule( mod );
-
-			// type.setunderlyingSystemType( ... );
-			// type.setHashCode( Integer.parseInt( ... ) );
+		//	dnt.setUnderlyingSystemType( ... );
 			dnt.setFromDLL(assembly.getName());
 			
 			//Set the attributes for this type
@@ -561,8 +532,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			FieldElement storedField = fields.getFieldArray(i);
 
-			// Debug.out(Debug.MODE_DEBUG,MODULE_NAME," Retrieving field
-			// '"+storedField.get_Name()+"'");
+		//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing field '" + storedField.getName() + "'...");
 
 			DotNETFieldInfo field = new DotNETFieldInfo();
 			field.setIsDeclaredHere(true);
@@ -598,22 +568,14 @@ public class StarLightCollectorRunner implements CollectorRunner
 			DotNETMethodInfo method = new DotNETMethodInfo();
 			method.setIsDeclaredHere(true);
 			method.setName(storedMethod.getName());
-			// methodInfo.setCallingConvention( ... );
-			method.setIsAbstract(storedMethod.getIsAbstract());
-			// methodInfo.setIsAssembly( Boolean.valueOf( ... );
+			method.setReturnType(storedMethod.getReturnType());
+			method.setSignature(storedMethod.getSignature());
 			method.setIsConstructor(storedMethod.getIsConstructor());
-			// methodInfo.setIsFamily( Boolean.valueOf( ... );
-			// methodInfo.setIsFamilyAndAssembly( ... );
-			// methodInfo.setIsFamilyOrAssembly( ... );
-			// methodInfo.setIsFinal( ... );
-			// methodInfo.setIsHideBySig( ... );
 			method.setIsPrivate(storedMethod.getIsPrivate());
 			method.setIsPublic(storedMethod.getIsPublic());
 			method.setIsStatic(storedMethod.getIsStatic());
+			method.setIsAbstract(storedMethod.getIsAbstract());
 			method.setIsVirtual(storedMethod.getIsVirtual());
-			// methodInfo.setHashCode( ... );
-			method.setReturnType(storedMethod.getReturnType());
-			method.setSignature(storedMethod.getSignature());
 
 			collectParameters(storedMethod, method);
 		//	if (storedMethod.isSetBody())
@@ -651,13 +613,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 			parameter.setPosition(storedParameter.getOrdinal());
 			parameter.setParameterType(storedParameter.getType());
 
-			//parameter.setIsln(storedParameter.getIsIn());
-			//parameter.setIsOptional(storedParameter.getIsOptional());
-			//parameter.setIsOut(storedParameter.getIsOut());
-			//parameter.setIsRetVal(storedParameter.getIsRetVal());
-			// parameter.setIsLcid( Boolean.valueOf( LastCharData ).booleanValue() );
-			// parameter.setHashCode( Integer.parseInt( LastCharData ) );
-			
 			parameters[parameter.position() - 1] = parameter;
 		}
 

@@ -156,7 +156,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 						// assembly:
 						DotNETType type2 = (DotNETType) internal.getType().getRef().getPlatformRepresentation();
-						storedInternal.setAssembly(type2.fromDLL);
+						storedInternal.setAssembly(type2.getFromDLL());
 					}
 
 					// externals:
