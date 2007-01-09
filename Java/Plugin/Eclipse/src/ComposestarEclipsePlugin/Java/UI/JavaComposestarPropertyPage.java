@@ -45,6 +45,7 @@ import ComposestarEclipsePlugin.Core.BuildConfiguration.BuildConfigurationManage
 import ComposestarEclipsePlugin.Core.BuildConfiguration.Platform;
 import ComposestarEclipsePlugin.Core.UI.ComposestarPropertyPage;
 import ComposestarEclipsePlugin.Core.Utils.FileUtils;
+import ComposestarEclipsePlugin.Java.IComposestarJavaConstants;
 
 public class JavaComposestarPropertyPage extends ComposestarPropertyPage implements IRunnableContext
 {
@@ -383,6 +384,9 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 			runDebugLevel.select(1);
 			secretMode.select(0);
 
+			BuildConfigurationManager.instance().setPlatformConfigFile(ComposestarEclipsePluginPlugin.getAbsolutePath(
+					"/PlatformConfigurations.xml", IComposestarJavaConstants.BUNDLE_ID));
+			
 			Platform p = BuildConfigurationManager.instance().getPlatform("Java");
 			classpathText.setText(p.getClassPath());
 
