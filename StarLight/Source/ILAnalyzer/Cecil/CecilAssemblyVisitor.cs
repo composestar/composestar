@@ -368,10 +368,8 @@ namespace Composestar.StarLight.ILAnalyzer
 			typeElement.IsSealed = type.IsSealed;
 			typeElement.IsValueType = type.IsValueType;
 			typeElement.IsClass = !type.IsValueType & !type.IsInterface;
-			typeElement.IsNotPublic = type.Attributes == Mono.Cecil.TypeAttributes.NotPublic;
 			typeElement.IsPrimitive = false;
 			typeElement.IsPublic = type.Attributes == Mono.Cecil.TypeAttributes.Public;
-			typeElement.IsSerializable = type.Attributes == Mono.Cecil.TypeAttributes.Serializable;
 
 			// Interface
 			foreach (TypeReference interfaceDef in type.Interfaces)
