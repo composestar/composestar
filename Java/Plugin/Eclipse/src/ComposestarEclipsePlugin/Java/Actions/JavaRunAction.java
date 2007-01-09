@@ -177,10 +177,13 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 
 			if (result == 0)
 			{
+				System.out.print(cmdExec.outputNormal());
 				completed = true;
 			}
 			else
 			{
+				System.out.print(cmdExec.outputNormal());
+				System.err.print(cmdExec.outputError());
 				Debug.instance().Log("Program run failure reported by process. Exit code is " + result,
 						IComposestarConstants.MSG_ERROR);
 			}
