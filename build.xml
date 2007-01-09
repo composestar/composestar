@@ -102,18 +102,15 @@
 		<path id="lib.test">
 			<path refid="lib.core"/>
 			<pathelement path="${out.build}"/>
+			<pathelement location="${build.core}\Compiletime\binaries\junit\junit.jar"/>
 		</path>
-		<javac srcdir="test" destdir="test" classpathref="lib.test" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="test" destdir="test" classpathref="lib.test" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<include name="**/*.java"/>
 			<exclude name="**/AssemblyInfo.java"/>
 		</javac>
 	</target>
 
 	<target name="unittest" depends="compile_tests" description="Runs JUnit tests">
-		<path id="lib.junit">
-			<fileset dir="${build.core}\Compiletime\binaries\junit" includes="*.jar"/>
-		</path>
-		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="lib.junit"/>
 		<junit printsummary="on" haltonfailure="on">
 			<classpath>
 				<path refid="lib.test"/>
