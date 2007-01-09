@@ -56,16 +56,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		private short _ordinal;
 		private ParameterOptions _parameterOption = ParameterOptions.None;
 
-		public ParameterElement()
-		{
-		}
-
-		public ParameterElement(string name, string type)
-		{
-			_name = name;
-			_type = type;
-		}
-
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>

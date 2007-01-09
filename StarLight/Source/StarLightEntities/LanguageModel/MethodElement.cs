@@ -55,25 +55,14 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		private string _name;
 		private string _returnType;
 		private string _signature;
-		private bool _isAbstract;
 		private bool _isConstructor;
 		private bool _isPrivate;
 		private bool _isPublic;
 		private bool _isStatic;
+		private bool _isAbstract;
 		private bool _isVirtual;
 		private List<ParameterElement> _parameters = new List<ParameterElement>();
 		private MethodBody _methodBody;
-
-		public MethodElement()
-		{
-		}
-
-		public MethodElement(string name, string returnType, List<ParameterElement> parameters)
-		{
-			_name = name;
-			_returnType = returnType;
-			_parameters = parameters;
-		}
 
 		/// <summary>
 		/// Gets or sets the name.
@@ -107,19 +96,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		{
 			get { return _signature; }
 			set { _signature = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is abstract.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is abstract; otherwise, <c>false</c>.
-		/// </value>
-		[XmlAttribute]
-		public bool IsAbstract
-		{
-			get { return _isAbstract; }
-			set { _isAbstract = value; }
 		}
 
 		/// <summary>
@@ -171,6 +147,19 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this instance is abstract.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is abstract; otherwise, <c>false</c>.
+		/// </value>
+		[XmlAttribute]
+		public bool IsAbstract
+		{
+			get { return _isAbstract; }
+			set { _isAbstract = value; }
+		}
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this instance is virtual.
 		/// </summary>
 		/// <value>
@@ -189,7 +178,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		/// <value>The parameters.</value>
 		[XmlArray("Parameters")]
 		[XmlArrayItem("Parameter")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
 		public List<ParameterElement> Parameters
 		{
 			get { return _parameters; }
@@ -249,9 +238,11 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		#endregion
 
 		/// <summary>
-		/// 
+		/// Generates a signature identifying the specified method.
 		/// </summary>
-		/// <param name="decType"></param>
+		/// <param name="decType">The fully qualified name of the type the method is declared in.</param>
+		/// <param name="me">The method.</param>
+		/// <returns></returns>
 		public static string GenerateSignature(string decType, MethodElement me)
 		{
 			StringBuilder sb = new StringBuilder();

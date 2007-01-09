@@ -59,17 +59,6 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		private bool _isPublic;
 		private bool _isStatic;
 
-		public FieldElement()
-		{
-		}
-
-		public FieldElement(string name, string type, List<string> mods)
-		{
-			_name = name;
-			_type = type;
-			//_mods = mods;
-		}
-
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
