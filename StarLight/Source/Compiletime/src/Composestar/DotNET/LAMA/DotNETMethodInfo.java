@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.MethodInfo;
@@ -32,321 +33,222 @@ public class DotNETMethodInfo extends MethodInfo
 {
 	private static final long serialVersionUID = -1303615818393508196L;
 
-	public int CallingConvention;
-    private int HashCode;
-    private boolean IsAbstract;
-    private boolean IsAssembly;
-    private boolean IsConstructor;
-    private boolean IsFinal;
-    private boolean IsPrivate;
-    private boolean IsPublic;
-    private boolean IsStatic;
-    private boolean IsVirtual;
-    private boolean IsDeclaredHere;
-    
-    public String signature;
-    
-    /**
-     * @roseuid 401B84CF0212
-     */
-    public DotNETMethodInfo() 
+	private boolean isConstructor;
+	private boolean isPrivate;
+	private boolean isAssembly;
+	private boolean isPublic;
+	private boolean isStatic;
+	private boolean isFinal;
+	private boolean isAbstract;
+	private boolean isVirtual;
+	private boolean isDeclaredHere;
+	private String signature;
+
+	public DotNETMethodInfo() 
 	{
-    	super();
-    }
-    
-    //add clone: currently used to support selector name conversion
-    //copy only stuff that applies to a method signature, this excludes e.g. the parent
-    public MethodInfo getClone(String n, Type actualParent){
-    	DotNETMethodInfo mi = new DotNETMethodInfo();
-    	mi.setName(n);
-    	//set MethodInfo variables
-    	//mi.Parent = this.Parent;
-    	mi.Parent = actualParent;
-    	mi.Parameters = this.Parameters;
-    	mi.ReturnType = this.ReturnType;
-    	mi.ReturnTypeString = this.ReturnTypeString;
-    	
-    	//set DotNETMethodInfo variables
-    	mi.CallingConvention = this.CallingConvention;
-    	mi.IsAbstract = this.IsAbstract;
-    	mi.IsAssembly = this.IsAssembly;
-    	mi.IsConstructor = this.IsConstructor;
-    	mi.IsDeclaredHere = this.IsDeclaredHere;
-       	mi.IsFinal = this.IsFinal;
-       	mi.IsPrivate = this.IsPrivate;
-    	mi.IsPublic = this.IsPublic;
-    	mi.IsStatic = this.IsStatic;
-    	mi.IsVirtual = this.IsVirtual;
-    	
-    	mi.signature = this.signature;
-    	return mi;
-    }
+		super();
+	}
 
-    /**
-     * @return int
-     * @roseuid 401B84CF0201
-     */
-    public int callingConvention() {
-		return CallingConvention;     
-    }
-    
-    /**
-     * @param cv
-     * @roseuid 402A018403CD
-     */
-    public void setCallingConvention(int cv) {
-       CallingConvention = cv;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0202
-     */
-    public boolean isAbstract() {
-    return IsAbstract;     
-    }
-    
-    /**
-     * @param isAbstract
-     * @roseuid 402A0195034F
-     */
-    public void setIsAbstract(boolean isAbstract) {
-       IsAbstract = isAbstract;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0203
-     */
-    public boolean isAssembly() {
-       return IsAssembly;     
-    }
-    
-    /**
-     * @param isAssembly
-     * @roseuid 402A01AC00F9
-     */
-    public void setIsAssembly(boolean isAssembly) {
-       IsAssembly = isAssembly;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0204
-     */
-    public boolean isConstructor() {
-    return IsConstructor;     
-    }
-    
-    /**
-     * @param isConstructor
-     * @roseuid 402A01BB026D
-     */
-    public void setIsConstructor(boolean isConstructor) {
-       IsConstructor = isConstructor;     
-    }
-    
-   
-        
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0208
-     */
-    public boolean isFinal() {
-       return IsFinal;     
-    }
-    
-    /**
-     * @param isFinal
-     * @roseuid 402A01FB02A1
-     */
-    public void setIsFinal(boolean isFinal) {
-       IsFinal = isFinal;     
-    }
-    
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF020A
-     */
-    public boolean isPrivate() {
-    return IsPrivate;     
-    }
-    
-    /**
-     * @param isPrivate
-     * @roseuid 402A0240034B
-     */
-    public void setIsPrivate(boolean isPrivate) {
-       IsPrivate = isPrivate;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF020B
-     */
-    public boolean isPublic() {
-    return IsPublic;     
-    }
-    
-    /**
-     * @param isPublic
-     * @roseuid 402A024C0280
-     */
-    public void setIsPublic(boolean isPublic) {
-       IsPublic = isPublic;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF020C
-     */
-    public boolean isStatic() {
-    return IsStatic;     
-    }
-    
-    /**
-     * @param isStatic
-     * @roseuid 402A026E02BB
-     */
-    public void setIsStatic(boolean isStatic) {
-       IsStatic = isStatic;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF020D
-     */
-    public boolean isVirtual() {
-    return IsVirtual;     
-    }
-    
-    /**
-     * @param isVirtual
-     * @roseuid 402A027A03E4
-     */
-    public void setIsVirtual(boolean isVirtual) {
-       IsVirtual = isVirtual;     
-    }
-            
-    /**
-     * @return int
-     * @roseuid 401B84CF0210
-     */
-    public int getHashCode() {
-    return HashCode;     
-    }
-    
-    /**
-     * @param code
-     * @roseuid 402A0319000E
-     */
-    public void setHashCode(int code) {
-       HashCode = code;     
-    }
-    
-    /**
-     * @param param
-     * @roseuid 402A032A02F7
-     */
-    public void addParameter(DotNETParameterInfo param) {
-       Parameters.add( param );
-       //param.setParent(this);
-    }
-    
-    /**
-     * @param parent
-     * @roseuid 405068A401B0
-     */
-    public void setParent(DotNETType parent) {
-     	Parent = parent;     
-    }
-    
-    /** Stuff for LOLA**/
-    
-    private HashSet toHashSet(Collection c)
-    {
-      HashSet result = new HashSet();
-      Iterator iter = c.iterator();
-      while (iter.hasNext())
-        result.add(iter.next());
-      return result;
-    }
-    
-    /* (non-Javadoc)
-     * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
-     */
-    public UnitResult getUnitRelation(String argumentName)
-    {
-      if (argumentName.equals("ParentClass") && Parent.getUnitType().equals("Class"))
-        return new UnitResult(Parent);
-      else if (argumentName.equals("ParentInterface") && Parent.getUnitType().equals("Interface"))
-        return new UnitResult(Parent);      
-      else if (argumentName.equals("ChildParameters"))
-        return new UnitResult(toHashSet(Parameters));
-      else if (argumentName.equals("ReturnClass") && returnType().getUnitType().equals("Class"))
-        return new UnitResult(returnType());
-      else if (argumentName.equals("ReturnInterface") && returnType().getUnitType().equals("Interface"))
-        return new UnitResult(returnType());
-      else if (argumentName.equals("ReturnAnnotation") && returnType().getUnitType().equals("Annotation"))
-          return new UnitResult(returnType());
-      else if (argumentName.equals("Annotations"))
-      {
-        Iterator i = getAnnotations().iterator();
-        HashSet res = new HashSet();
-        while (i.hasNext())
-          res.add(((Annotation)i.next()).getType());
-        return new UnitResult(res);
-      }        
-      
-      return null;
-    }
-
-    public boolean isDeclaredHere()
-    {
-      return IsDeclaredHere;
-    }
-
-    public void setIsDeclaredHere(boolean declaredHere)
-    {
-      IsDeclaredHere = declaredHere;
-    }
-
-    /* (non-Javadoc)
-     * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
-     */
-    public Collection getUnitAttributes()
-    {
-      HashSet result = new HashSet();
-      if (isPublic())
-        result.add("public");
-      if (isPrivate())
-        result.add("private");
-      /*if (isProtected())
-        result.add("protected");*/
-      if (isStatic())
-        result.add("static");
-      if (isFinal())
-        result.add("final");
-      return result;
-    }
-
-    
-    
 	/**
-	 * @return the method signature
+	 * Currently used to support selector name conversion.
+	 * Copy only stuff that applies to a method signature.
+	 * This excludes e.g. the parent.
 	 */
+	public MethodInfo getClone(String n, Type actualParent)
+	{
+		DotNETMethodInfo mi = new DotNETMethodInfo();
+		mi.setName(n);
+
+		// set MethodInfo variables
+		mi.Parent = actualParent;
+		mi.Parameters = this.Parameters;
+		mi.ReturnType = this.ReturnType;
+		mi.ReturnTypeString = this.ReturnTypeString;
+
+		// set DotNETMethodInfo variables
+		mi.isConstructor = this.isConstructor;
+		mi.isPrivate = this.isPrivate;
+		mi.isAssembly = this.isAssembly;
+		mi.isPublic = this.isPublic;
+		mi.isDeclaredHere = this.isDeclaredHere;
+		mi.isStatic = this.isStatic;
+		mi.isFinal = this.isFinal;
+		mi.isAbstract = this.isAbstract;
+		mi.isVirtual = this.isVirtual;
+
+		mi.isDeclaredHere = this.isDeclaredHere;
+		mi.signature = this.signature;
+		return mi;
+	}
+
+	public boolean isConstructor()
+	{
+		return isConstructor;
+	}
+
+	public void setIsConstructor(boolean isConstructor)
+	{
+		this.isConstructor = isConstructor;
+	}
+
+	public boolean isPrivate()
+	{
+		return isPrivate;
+	}
+
+	public void setIsPrivate(boolean isPrivate)
+	{
+		this.isPrivate = isPrivate;
+	}
+
+	public boolean isAssembly()
+	{
+		return isAssembly;
+	}
+
+	public void setIsInternal(boolean isAssembly)
+	{
+		this.isAssembly = isAssembly;
+	}
+
+	public boolean isPublic()
+	{
+		return isPublic;
+	}
+
+	public void setIsPublic(boolean isPublic)
+	{
+		this.isPublic = isPublic;
+	}
+
+	public boolean isStatic()
+	{
+		return isStatic;
+	}
+
+	public void setIsStatic(boolean isStatic)
+	{
+		this.isStatic = isStatic;
+	}
+
+	public boolean isFinal()
+	{
+		return isFinal;
+	}
+
+	public void setIsFinal(boolean isFinal)
+	{
+		this.isFinal = isFinal;
+	}
+
+	public boolean isAbstract()
+	{
+		return isAbstract;
+	}
+
+	public void setIsAbstract(boolean isAbstract)
+	{
+		this.isAbstract = isAbstract;
+	}
+
+	public boolean isVirtual()
+	{
+		return isVirtual;
+	}
+
+	public void setIsVirtual(boolean isVirtual)
+	{
+		this.isVirtual = isVirtual;
+	}
+
+	public boolean isDeclaredHere()
+	{
+		return isDeclaredHere;
+	}
+
+	public void setIsDeclaredHere(boolean declaredHere)
+	{
+		isDeclaredHere = declaredHere;
+	}
+
 	public String getSignature()
 	{
 		return signature;
 	}
 
-	/**
-	 * @param sig, the signature to set
-	 */
 	public void setSignature(String sig)
 	{
 		this.signature = sig;
+	}
+/*
+	public void addParameter(DotNETParameterInfo param)
+	{
+		Parameters.add(param);
+		// param.setParent(this);
+	}
+
+	public void setParent(DotNETType parent)
+	{
+		Parent = parent;
+	}
+*/
+	// Stuff for LOLA
+
+	private HashSet toHashSet(Collection c)
+	{
+		HashSet result = new HashSet();
+		Iterator iter = c.iterator();
+		while (iter.hasNext())
+			result.add(iter.next());
+		return result;
+	}
+
+	public UnitResult getUnitRelation(String argumentName)
+	{
+		if (argumentName.equals("ParentClass") && Parent.getUnitType().equals("Class"))
+			return new UnitResult(Parent);
+		else if (argumentName.equals("ParentInterface") && Parent.getUnitType().equals("Interface"))
+			return new UnitResult(Parent);      
+		else if (argumentName.equals("ChildParameters"))
+			return new UnitResult(toHashSet(Parameters));
+		else if (argumentName.equals("ReturnClass") && returnType().getUnitType().equals("Class"))
+			return new UnitResult(returnType());
+		else if (argumentName.equals("ReturnInterface") && returnType().getUnitType().equals("Interface"))
+			return new UnitResult(returnType());
+		else if (argumentName.equals("ReturnAnnotation") && returnType().getUnitType().equals("Annotation"))
+			return new UnitResult(returnType());
+		else if (argumentName.equals("Annotations"))
+		{
+			Iterator i = getAnnotations().iterator();
+			HashSet res = new HashSet();
+			while (i.hasNext())
+				res.add(((Annotation)i.next()).getType());
+			return new UnitResult(res);
+		}        
+
+		return null;
+	}
+
+	public Collection getUnitAttributes()
+	{
+		Set result = new HashSet();
+		if (isPrivate())
+			result.add("private");
+		if (isAssembly())
+			result.add("assembly");
+		if (isPublic())
+			result.add("public");
+	//	if (isProtected())
+	//		result.add("protected");
+		if (isStatic())
+			result.add("static");
+		if (isFinal())
+			result.add("final");
+		if (isAbstract())
+			result.add("abstract");
+		if (isVirtual())
+			result.add("virtual");
+		return result;
 	}
 
 	/**
@@ -354,36 +256,32 @@ public class DotNETMethodInfo extends MethodInfo
 	 */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
-		CallingConvention = in.readInt();
-		HashCode = in.readInt();
-		IsAbstract = in.readBoolean();
-		IsAssembly = in.readBoolean();
-		IsConstructor = in.readBoolean();
-		IsFinal = in.readBoolean();
-		IsPrivate = in.readBoolean();
-		IsPublic = in.readBoolean();
-		IsStatic = in.readBoolean();
-		IsVirtual = in.readBoolean();
-		IsDeclaredHere = in.readBoolean();
+		isConstructor = in.readBoolean();
+		isPrivate = in.readBoolean();
+		isAssembly = in.readBoolean();
+		isPublic = in.readBoolean();
+		isStatic = in.readBoolean();
+		isFinal = in.readBoolean();
+		isAbstract = in.readBoolean();
+		isVirtual = in.readBoolean();
+		isDeclaredHere = in.readBoolean();
 		signature = in.readUTF();
 	}
-	 
+
 	/**
 	 * Custom serialization of this object
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeInt(CallingConvention);
-		out.writeInt(HashCode);
-		out.writeBoolean(IsAbstract);
-		out.writeBoolean(IsAssembly);
-		out.writeBoolean(IsConstructor);
-		out.writeBoolean(IsFinal);
-		out.writeBoolean(IsPrivate);
-		out.writeBoolean(IsPublic);
-		out.writeBoolean(IsStatic);
-		out.writeBoolean(IsVirtual);
-		out.writeBoolean(IsDeclaredHere);
+		out.writeBoolean(isConstructor);
+		out.writeBoolean(isPrivate);
+		out.writeBoolean(isAssembly);
+		out.writeBoolean(isPublic);
+		out.writeBoolean(isStatic);
+		out.writeBoolean(isFinal);
+		out.writeBoolean(isAbstract);
+		out.writeBoolean(isVirtual);
+		out.writeBoolean(isDeclaredHere);
 		out.writeUTF(signature);
 	}
 }
