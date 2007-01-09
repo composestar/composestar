@@ -10,7 +10,7 @@
     <AssemblyName>InventoryTwo</AssemblyName>
     <OutputType>Library</OutputType>
     <CodeLanguage>CSharp</CodeLanguage>
-    <UseDummies>True</UseDummies>
+    <ExpandSignatures>True</ExpandSignatures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -25,6 +25,12 @@
     <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+      <Name>Composestar.StarLight.ContextInfo</Name>
+      <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.2\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Composestar.StarLight.Filters, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
       <Name>Composestar.StarLight.Filters</Name>
       <AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>

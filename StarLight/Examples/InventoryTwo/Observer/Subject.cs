@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+//using Composestar.StarLight.ContextInfo;
 
 namespace InventoryTwo
 {
@@ -30,11 +31,11 @@ namespace InventoryTwo
 			return (observers.Count > 0);
 		}
 
-		public void Notify()
+		public void Notify(/*JoinPointContext c*/)
 		{
 			foreach (IObserver o in observers)
 			{
-				o.Update(/*this*/);
+				o.Update(/*c.StartTarget*/);
 			}
 		}
 	}

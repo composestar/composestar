@@ -10,14 +10,14 @@ namespace InventoryTwo
 	{
 		private Inventory inventory;
 
-		public InventoryDisplay(Inventory i)
+		public InventoryDisplay(Inventory inventory)
 		{
-			inventory = i;
+			this.inventory = inventory;
 		}
 
-	//	public void Update(Subject s)
-		public void Update()
+		public void Update(/*Object s*/)
 		{
+			/*Inventory inventory = (Inventory)s;*/
 			Console.WriteLine("List of products in Inventory:");
 			foreach (Product p in inventory.GetProducts())
 			{
