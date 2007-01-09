@@ -483,7 +483,6 @@ namespace Composestar.StarLight.ILAnalyzer
 
 			// Create a new method element
 			MethodElement me = new MethodElement();
-			me.Signature = method.ToString();
 			me.Name = method.Name;
 			me.ReturnType = method.ReturnType.ReturnType.FullName;			
 			me.IsAbstract = method.IsAbstract;
@@ -492,6 +491,9 @@ namespace Composestar.StarLight.ILAnalyzer
 			me.IsPublic = method.Attributes == Mono.Cecil.MethodAttributes.Public;
 			me.IsStatic = method.IsStatic;
 			me.IsVirtual = method.IsVirtual;
+
+			string declaringTypeName = method.DeclaringType.FullName;
+			me.Signature = MethodElement.GenerateSignature(declaringTypeName, me);
 
 			// Add the parameters
 			foreach (ParameterDefinition param in method.Parameters)

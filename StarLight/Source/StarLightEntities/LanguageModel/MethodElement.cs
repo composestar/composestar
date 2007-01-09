@@ -247,5 +247,28 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		#endregion
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="decType"></param>
+		public static string GenerateSignature(string decType, MethodElement me)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append(me.ReturnType);
+			sb.Append(" ");
+			if (decType != null)
+				sb.Append(decType).Append("::");
+			sb.Append(me.Name);
+			sb.Append("(");
+			for (int i = 0; i < me.Parameters.Count; i++)
+			{
+				sb.Append(me.Parameters[i].Type);
+				if (i < me.Parameters.Count - 1)
+					sb.Append(",");
+			}
+			sb.Append(")");
+			return sb.ToString();
+		}
 	}
 }
