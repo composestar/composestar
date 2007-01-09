@@ -31,11 +31,11 @@ namespace InventoryTwo
 			return (observers.Count > 0);
 		}
 
-		public void Notify(/*JoinPointContext c*/)
+		public void Notify(/*JoinPointContext jpc*/)
 		{
 			foreach (IObserver o in observers)
 			{
-				o.Update(/*c.StartTarget*/);
+				o.Update(/*jpc.StartTarget*/);
 			}
 		}
 	}
