@@ -78,16 +78,38 @@ public interface FlowNode
 	public final static String FE_VOID_COMP_OPER_NODE = "VoidCompOper";
 
 	/**
-	 * The end node marks the end of the flow in the current filtermodule and
-	 * the continuation to the next filtermodule.
+	 * In the flowmodel of a filter module, this node marks the end of the flow
+	 * in the current module, proceeding to the next filter module. This node is
+	 * reached after an action that continues the flow of the last filter in the
+	 * filter module. In this case flow should continue to the next filter. But
+	 * because the next filter is in the following filter module, this
+	 * continuation if indicated by the End node. <br>
+	 * <br>
+	 * In the flowmodel of a complete filter set this node marks the end of the
+	 * flow in that filter set, after the last filter did an action that
+	 * continues the flow. Flow should have continued to a next filter, but
+	 * because there is no next filter, flow continues to the end node. In the
+	 * execution models of the selectors in the signature of a concern, this end
+	 * node should not be reached. Because reaching this end state means no
+	 * Dispatch has been done. This indicates a conflict, to be reported by
+	 * SIGN.
 	 */
 	public final static String END_NODE = "End";
 
 	/**
-	 * The stop node marks the exit of the filterset
+	 * The stop node marks the exit of the filterset. The stop node is reached
+	 * after a filter action that does not continue the flow, for example a
+	 * Dispatch action or an Error action. Examples of actions that do continue
+	 * the flow are the Substitution action, the Meta action, the Wait action
+	 * and the Continue action (the Meta action might in practice not continue
+	 * the flow, but because we have no knowledge about this during filter
+	 * reasoning, the Meta action is assumed to continue the flow).
 	 */
 	public final static String STOP_NODE = "Stop";
 
+	/*
+	 * Some labels that indicate a class of nodes
+	 */
 	public final static String CONTEXT_NODE = "ContextNode";
 
 	public final static String PROCEDURE_NODE = "ProcedureNode";
