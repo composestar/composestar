@@ -492,9 +492,6 @@ namespace Composestar.StarLight.ILAnalyzer
 			me.IsStatic = method.IsStatic;
 			me.IsVirtual = method.IsVirtual;
 
-			string declaringTypeName = method.DeclaringType.FullName;
-			me.Signature = MethodElement.GenerateSignature(declaringTypeName, me);
-
 			// Add the parameters
 			foreach (ParameterDefinition param in method.Parameters)
 			{
@@ -550,6 +547,10 @@ namespace Composestar.StarLight.ILAnalyzer
 
 			// Custom attributes
 			me.Attributes.AddRange(ExtractCustomAttributes(method.CustomAttributes));
+
+			// Set the signature
+			string declaringTypeName = method.DeclaringType.FullName;
+			me.Signature = MethodElement.GenerateSignature(declaringTypeName, me);
 
 			// Add to the type
 			_currentType.Methods.Add(me);
