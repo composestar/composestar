@@ -227,6 +227,7 @@
 	<!-- Testing -->
 
 	<target name="test" depends="init,init_test" description="Execute Tests on the StarLight code other then QA tests">
+		<antcall target="test_junit" inheritRefs="true" />
 		<antcall target="test_nunit" inheritRefs="true" />
 		<!--
 		<antcall target="test_ntime" /> 
@@ -235,9 +236,13 @@
 		<antcall target="systemtest" inheritRefs="true"/> 
 	</target>
 
-	<target name="init_test" >
-		<mkdir dir="${out.nunit}" />
-	</target>
+  <target name="init_test" >
+    <mkdir dir="${out.nunit}" />
+  </target>
+
+  <target name="test_junit">
+		<ant target="unittest" dir="${build.core}/Compiletime" inheritRefs="true"/>    
+  </target>
 
 	<target name="init_nunit" depends="init" description="Build the NUnit projects">
 		<echo level="info">Compiling .NET NUnit projects</echo>
@@ -354,6 +359,7 @@
 				-->
 				<antMenuItem name="Run tests">
 					<antMenuItem name="All"           target="test"/>
+					<antMenuItem name="JUnit"         target="test_junit"/>
 					<antMenuItem name="NUnit"         target="test_nunit"/>
 					<antMenuItem name="NTime"         target="test_ntime"/>
 					<antMenuItem name="Systemtest"    target="systemtest"/>
