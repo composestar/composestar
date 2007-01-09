@@ -13,8 +13,8 @@ import java.io.InputStreamReader;
 public class StreamGobbler extends Thread
 {
 	private InputStream Is;
-
-	private String Result = "";
+	
+	private StringBuffer sb;
 
 	/**
 	 * ctor
@@ -25,6 +25,7 @@ public class StreamGobbler extends Thread
 	public StreamGobbler(InputStream is)
 	{
 		Is = is;
+		sb = new StringBuffer();
 	}
 
 	/**
@@ -35,7 +36,7 @@ public class StreamGobbler extends Thread
 	 */
 	public String result()
 	{
-		return Result;
+		return sb.toString();
 	}
 
 	/**
@@ -53,8 +54,9 @@ public class StreamGobbler extends Thread
 			String line = null;
 			while ((line = br.readLine()) != null)
 			{
-				System.out.println(line);
-				Result += line + "\n";
+				//System.out.println(line);
+				sb.append(line);
+				sb.append("\n");
 			}
 		}
 		catch (IOException ioe)

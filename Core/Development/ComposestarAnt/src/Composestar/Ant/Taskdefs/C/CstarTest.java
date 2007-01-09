@@ -225,6 +225,12 @@ public class CstarTest extends BaseTask
 		{
 
 			log(projectname, Project.MSG_VERBOSE);
+			
+			File oldLog = new File(workspace + java.io.File.separator + projectname, BUILDLOG);
+			if (oldLog.exists())
+			{
+				oldLog.renameTo(new File(workspace + java.io.File.separator + projectname, "buildlog.old.txt"));
+			}
 
 			FileOutputStream outputStream = new FileOutputStream(new File(workspace + java.io.File.separator + projectname, BUILDLOG));
 			ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
@@ -254,6 +260,8 @@ public class CstarTest extends BaseTask
 
 			int err = execute.execute();
 			// log("Debug2:"+projectname+err);
+			
+			outputStream.close();
 
 			if (execute.killedProcess())
 			{
