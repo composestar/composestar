@@ -37,6 +37,22 @@ public class FileUtilsTest extends TestCase
 		assertEquals("readme.txt", FileUtils.unquote("\"readme.txt\""));
 		assertEquals("foo\"bar.txt", FileUtils.unquote("\"foo\"bar.txt\""));
 	}
+	
+	public void testGetExtension()
+	{
+		try
+		{
+			FileUtils.getExtension(null);
+			throw new AssertionFailedError("IllegalArgumentException expected");
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+
+		assertEquals(null, FileUtils.getExtension("foo"));
+		assertEquals("bar", FileUtils.getExtension("foo.bar"));
+		assertEquals("bar", FileUtils.getExtension("foo.quux.bar"));
+	}
 
 	public void testRemoveExtension()
 	{
@@ -83,8 +99,7 @@ public class FileUtilsTest extends TestCase
 		{
 		}
 
-		// assertEquals("", FileUtils.replaceExtension("", "")); // should throw
-		// exception?
+		// assertEquals("", FileUtils.replaceExtension("", "")); // or throw exception?
 		assertEquals("foo.baz", FileUtils.replaceExtension("foo.bar", "baz"));
 		assertEquals("foo.baz", FileUtils.replaceExtension("foo.bar", ".baz"));
 		assertEquals("foo.bar.xyz", FileUtils.replaceExtension("foo.bar.baz", ".xyz"));

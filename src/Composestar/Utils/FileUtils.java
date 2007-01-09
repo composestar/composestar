@@ -146,6 +146,17 @@ public final class FileUtils
 		}
 	}
 
+	public static String getExtension(String filename)
+	{
+		if (filename == null)
+		{
+			throw new IllegalArgumentException("filename can not be null");
+		}
+
+		int lastdot = filename.lastIndexOf('.');		
+		return (lastdot == -1 ? null : filename.substring(lastdot + 1));
+	}
+
 	public static String removeExtension(String filename)
 	{
 		if (filename == null)
@@ -154,14 +165,7 @@ public final class FileUtils
 		}
 
 		int lastdot = filename.lastIndexOf('.');
-		if (lastdot == -1)
-		{
-			return filename;
-		}
-		else
-		{
-			return filename.substring(0, lastdot);
-		}
+		return (lastdot == -1 ? filename : filename.substring(0, lastdot));
 	}
 
 	public static String replaceExtension(String filename, String newext)
