@@ -119,6 +119,7 @@
 				<!-- output not always correct -->
 				<!--
 				<include name="InventoryTwo/bin/InventoryTwo.Example.exe"/>
+				<include name="Wedding/bin/wedding.Wedding.exe"/>
 				-->
 				
 				<!-- plaged with deadlocks -->
@@ -132,8 +133,7 @@
 				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>
 				<include name="Platypus/bin/PlatypusExample.Main.exe"/>
 				<include name="PredicateQueries/bin/MyApp.Main.exe"/>
-				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe"/>
-				<include name="Wedding/bin/wedding.Wedding.exe"/>
+				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe"/>				
 				
 				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Builder/bin/Composestar.Patterns.Builder.Main.exe"/>
