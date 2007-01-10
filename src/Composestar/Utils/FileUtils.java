@@ -21,6 +21,8 @@ import java.io.Writer;
  */
 public final class FileUtils
 {
+	private static final int BUFSIZE = 1024;
+	
 	private FileUtils()
 	{}
 
@@ -131,19 +133,42 @@ public final class FileUtils
 			is = new BufferedInputStream(new FileInputStream(source));
 			os = new BufferedOutputStream(new FileOutputStream(dest));
 
-			// transfer bytes from in to out
-			byte[] buf = new byte[65536];
-			int len;
-			while ((len = is.read(buf)) > 0)
-			{
-				os.write(buf, 0, len);
-			}
+			copy(is, os);
 		}
 		finally
 		{
 			close(is);
 			close(os);
 		}
+	}
+	
+	public static void copy(InputStream is, OutputStream os) throws IOException
+	{
+		byte[] buffer = new byte[BUFSIZE];
+		
+		int read;
+		while ((read = is.read(buffer)) > 0)
+			os.write(buffer, 0, read);
+	}
+
+	public static void copy(Reader r, Writer w) throws IOException
+	{
+		char[] buffer = new char[BUFSIZE];
+		
+		int read;
+		while ((read = r.read(buffer)) > 0)
+			w.write(buffer, 0, read);		
+	}
+
+	public static void copy(Reader r, Writer w, int count) throws IOException
+	{
+		char[] buffer = new char[count];
+		
+		int read = 0;
+		while (read != count)
+			read += r.read(buffer, read, count - read);
+
+		w.write(buffer);		
 	}
 
 	public static String getExtension(String filename)
