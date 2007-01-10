@@ -411,7 +411,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			asmConfig.Timestamp = File.GetLastWriteTime(filename).Ticks;
 			asmConfig.Assembly = assembly;
 			asmConfig.IsReference = false;
-			asmConfig.IsDummy = "true".Equals(item.GetMetadata("IsDummy"));
 
 			// Generate a unique filename
 			asmConfig.GenerateSerializedFileName(_intermediateOutputPath);
@@ -523,7 +522,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 							asmConfig.Timestamp = File.GetLastWriteTime(filename).Ticks;
 							asmConfig.Assembly = assembly;
 							asmConfig.IsReference = true;
-							asmConfig.IsDummy = false;
 
 							// Generate a unique filename
 							asmConfig.GenerateSerializedFileName(_intermediateOutputPath);

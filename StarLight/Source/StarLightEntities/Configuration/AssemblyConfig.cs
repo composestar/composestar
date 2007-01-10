@@ -62,7 +62,6 @@ namespace Composestar.StarLight.Entities.Configuration
 		private AssemblyElement _assembly;
 		private String _weaveSpec;
 		private bool _isReference;
-		private bool _isDummy;
 		private PdbMode _debugFileMode = PdbMode.HideFilters;
 
 		/// <summary>
@@ -159,19 +158,6 @@ namespace Composestar.StarLight.Entities.Configuration
 		{
 			get { return _isReference; }
 			set { _isReference = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this is a dummy assembly.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this is a dummy assembly; otherwise, <c>false</c>.
-		/// </value>
-		[XmlAttribute]
-		public bool IsDummy
-		{
-			get { return _isDummy; }
-			set { _isDummy = value; }
 		}
 
 		/// <summary>
