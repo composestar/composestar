@@ -122,10 +122,10 @@
 				-->
 				
 				<!-- plaged with deadlocks -->
-				<!--
-				<include name="Wedding/bin/wedding.Wedding.exe"/>
+				<!--				
 				<include name="Inventory/bin/ExampleAOP.Example.exe"/>
 				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe"/>
+				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe"/>
 				-->
 				
 				<!-- working as it should -->
@@ -133,7 +133,7 @@
 				<include name="Platypus/bin/PlatypusExample.Main.exe"/>
 				<include name="PredicateQueries/bin/MyApp.Main.exe"/>
 				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe"/>
-				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe"/>
+				<include name="Wedding/bin/wedding.Wedding.exe"/>
 				
 				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Builder/bin/Composestar.Patterns.Builder.Main.exe"/>
