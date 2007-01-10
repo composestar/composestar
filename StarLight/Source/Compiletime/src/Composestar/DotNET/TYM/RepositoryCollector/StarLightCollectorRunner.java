@@ -478,7 +478,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 			dnt.setIsPublic(te.getIsPublic());
 			dnt.setIsAbstract(te.getIsAbstract());
 			dnt.setIsSealed(te.getIsSealed());
-		//	dnt.setUnderlyingSystemType( ... );
 			dnt.setFromDLL(assembly.getName());
 			
 			//Set the attributes for this type

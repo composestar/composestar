@@ -148,7 +148,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this instance is class.
+		/// Gets or sets a value indicating whether this instance is a class.
 		/// </summary>
 		/// <value><c>true</c> if this instance is class; otherwise, <c>false</c>.</value>
 		[XmlAttribute]
@@ -159,7 +159,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this instance is interface.
+		/// Gets or sets a value indicating whether this instance is an interface.
 		/// </summary>
 		/// <value>
 		/// 	<c>true</c> if this instance is interface; otherwise, <c>false</c>.
@@ -172,7 +172,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this instance is enum.
+		/// Gets or sets a value indicating whether this instance is an enum.
 		/// </summary>
 		/// <value><c>true</c> if this instance is enum; otherwise, <c>false</c>.</value>
 		[XmlAttribute]
@@ -183,7 +183,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this instance is value type.
+		/// Gets or sets a value indicating whether this instance is a value type.
 		/// </summary>
 		/// <value>
 		/// 	<c>true</c> if this instance is value type; otherwise, <c>false</c>.

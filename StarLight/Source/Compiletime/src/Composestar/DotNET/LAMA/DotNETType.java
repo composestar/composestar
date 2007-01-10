@@ -56,8 +56,6 @@ public class DotNETType extends Type
 	private String Namespace;
 	private String AssemblyName;
 	private String AssemblyQualifiedName;
-	private DotNETType UnderlyingType;
-	private String UnderlyingTypeString;
 	private String fromDLL; // Added by TypeHarvester and TypeCollector for incremental type collecting
 
 	// for LOLA
@@ -227,21 +225,6 @@ public class DotNETType extends Type
 	public void setAssemblyQualifedName(String name)
 	{
 		AssemblyQualifiedName = name;
-	}
-
-	public DotNETType underlyingSystemType()
-	{
-		if (UnderlyingType == null)
-		{
-			TypeMap map = TypeMap.instance();
-			UnderlyingType = (DotNETType)map.getType(UnderlyingTypeString);
-		}
-		return UnderlyingType;
-	}
-
-	public void setUnderlyingSystemType(String type)
-	{
-		UnderlyingTypeString = type;
 	}
 
 	public String getFromDLL()
@@ -539,29 +522,24 @@ public class DotNETType extends Type
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-//		HashCode = in.readInt();
-		IsAbstract = in.readBoolean();
-//		IsByRef = in.readBoolean();
 		IsClass = in.readBoolean();
-		IsEnum = in.readBoolean();
 		IsInterface = in.readBoolean();
-//		IsPointer = in.readBoolean();
-		IsPrimitive = in.readBoolean();
-		IsPublic = in.readBoolean();
-		IsSealed = in.readBoolean();
+		IsEnum = in.readBoolean();
 		IsValueType = in.readBoolean();
-		ImplementedInterfaceNames = (ArrayList)in.readObject();
-//		theDotNETType = (DotNETType)in.readObject();
-//		Assembly = (DotNETModule)in.readObject();
-		Namespace = in.readUTF();
-		if (Namespace.equals("")) Namespace = null;
-		AssemblyQualifiedName = in.readUTF();
-//		Module = (DotNETModule)in.readObject();
-		UnderlyingTypeString = in.readUTF();
+		IsPrimitive = in.readBoolean();
+		IsAbstract = in.readBoolean();
+		IsSealed = in.readBoolean();
+		IsPublic = in.readBoolean();
+
 		BaseTypeString = in.readUTF();
-		if (BaseTypeString.equals("")) BaseTypeString = null;
+		ImplementedInterfaceNames = (List)in.readObject();
+		Namespace = in.readUTF();
+		AssemblyQualifiedName = in.readUTF();
 		fromDLL = in.readUTF();
 		annotationInstances = (ArrayList)in.readObject();
+
+		if ("".equals(BaseTypeString)) BaseTypeString = null;
+		if ("".equals(Namespace)) Namespace = null;
 	}
 
 	/**
@@ -569,38 +547,20 @@ public class DotNETType extends Type
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-//		out.writeInt(HashCode);
-		out.writeBoolean(IsAbstract);
-//		out.writeBoolean(IsByRef);
 		out.writeBoolean(IsClass);
-		out.writeBoolean(IsEnum);
 		out.writeBoolean(IsInterface);
-//		out.writeBoolean(IsPointer);
-		out.writeBoolean(IsPrimitive);
-		out.writeBoolean(IsPublic);
-		out.writeBoolean(IsSealed);
+		out.writeBoolean(IsEnum);
 		out.writeBoolean(IsValueType);
+		out.writeBoolean(IsPrimitive);
+		out.writeBoolean(IsAbstract);
+		out.writeBoolean(IsSealed);
+		out.writeBoolean(IsPublic);
+
+		out.writeUTF(BaseTypeString != null ? BaseTypeString : "");
 		out.writeObject(ImplementedInterfaceNames);
-//		out.writeObject(theDotNETType);
-//		out.writeObject(Assembly);
-
-		if (Namespace != null) out.writeUTF(Namespace);
-		else out.writeUTF("");
-
-		if (AssemblyQualifiedName != null) out.writeUTF(AssemblyQualifiedName);
-		else out.writeUTF("");
-
-//		out.writeObject(Module);
-
-		if (UnderlyingTypeString != null) out.writeUTF(UnderlyingTypeString);
-		else out.writeUTF("");
-
-		if (BaseTypeString != null) out.writeUTF(BaseTypeString);
-		else out.writeUTF("");
-
-		if (fromDLL != null) out.writeUTF(fromDLL);
-		else out.writeUTF("");
-
+		out.writeUTF(Namespace != null ? Namespace : "");
+		out.writeUTF(AssemblyQualifiedName != null ? AssemblyQualifiedName : "");
+		out.writeUTF(fromDLL != null ? fromDLL : "");
 		out.writeObject(annotationInstances);
 	}
 }
