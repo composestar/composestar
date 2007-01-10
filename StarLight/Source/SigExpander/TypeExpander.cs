@@ -58,7 +58,7 @@ namespace Composestar.StarLight.SigExpander
 			_resolver = resolver;
 		}
 
-		public void AddDummyMethod(MethodElement me)
+		public void AddEmptyMethod(MethodElement me)
 		{
 		//	Console.WriteLine("\t" + me.Name);
 
