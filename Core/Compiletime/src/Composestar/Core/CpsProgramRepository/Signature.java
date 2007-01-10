@@ -79,7 +79,7 @@ public class Signature implements SerializableRepositoryEntity
 		if (!methodByKey.containsKey(key))
 		{
 			methodByKey.put(key, mw);
-			methodByName.put(methodInfo.name(), mw);
+			methodByName.put(methodInfo.getName(), mw);
 
 			return true;
 		}
@@ -171,9 +171,9 @@ public class Signature implements SerializableRepositoryEntity
 		{
 			methodByKey.remove(key);
 		}
-		if (methodByName.containsKey(minfo.name()))
+		if (methodByName.containsKey(minfo.getName()))
 		{
-			methodByName.remove(minfo.name());
+			methodByName.remove(minfo.getName());
 		}
 	}
 
@@ -210,7 +210,7 @@ public class Signature implements SerializableRepositoryEntity
 
 	public String getHashKey(MethodInfo methodInfo)
 	{
-		StringBuffer key = new StringBuffer(methodInfo.name() + '%');
+		StringBuffer key = new StringBuffer(methodInfo.getName() + '%');
 		List parameter = methodInfo.getParameters();
 		for (int i = 0; i < parameter.size(); i++)
 		{

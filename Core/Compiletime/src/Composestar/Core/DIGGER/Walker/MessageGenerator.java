@@ -99,7 +99,7 @@ public class MessageGenerator
 		while (it.hasNext())
 		{
 			MethodInfo mi = (MethodInfo) it.next();
-			Message msg = getMessageFor(concernNode, mi.name());
+			Message msg = getMessageFor(concernNode, mi.getName());
 			lst.add(msg);
 		}
 		return lst;

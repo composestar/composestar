@@ -372,7 +372,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 
 		Target target = callMessage.getTarget();
 		MessageSelector selector = callMessage.getSelector();
-		if (!Message.checkEquals(Message.INNER_TARGET, target) || !selector.getName().equals(currentMethod.name()))
+		if (!Message.checkEquals(Message.INNER_TARGET, target) || !selector.getName().equals(currentMethod.getName()))
 		{
 			empty = false;
 		}
@@ -431,7 +431,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		{
 			MethodInfo calledMethod;
 
-			if (callMessage.getSelector().getName().equals(currentMethod.name()))
+			if (callMessage.getSelector().getName().equals(currentMethod.getName()))
 			{
 				calledMethod = currentMethod;
 			}

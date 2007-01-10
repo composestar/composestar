@@ -33,7 +33,7 @@ public final class FilterNodeFactory
 	 * 
 	 * @param inGraph
 	 * @param forFilter
-	 * @param inDirection the direction of the filter (input or output)
+	 * @param inDirection the filterPosition of the filter (input or output)
 	 * @return
 	 */
 	public static FilterNode createFilterNode(Graph inGraph, Filter forFilter, byte inDirection) throws ModuleException

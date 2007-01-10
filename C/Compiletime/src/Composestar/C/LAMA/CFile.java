@@ -104,7 +104,7 @@ public class CFile extends Type
 		{
 			method = (CMethodInfo) iter.next();
 			// if same name && param length
-			if (method.name().equals(name))
+			if (method.getName().equals(name))
 			{
 				return method;
 			}

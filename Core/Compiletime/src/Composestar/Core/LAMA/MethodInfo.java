@@ -60,8 +60,18 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	/**
 	 * @return java.lang.String
 	 * @roseuid 401B84CF020E
+	 * @deprecated Use {@link #getName()} instead
 	 */
 	public String name()
+	{
+		return getName();
+	}
+
+	/**
+	 * @return java.lang.String
+	 * @roseuid 401B84CF020E
+	 */
+	public String getName()
 	{
 		return Name;
 	}
@@ -227,7 +237,7 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 
 	public String getUnitName()
 	{
-		return name();
+		return getName();
 	}
 
 	public String getUnitType()

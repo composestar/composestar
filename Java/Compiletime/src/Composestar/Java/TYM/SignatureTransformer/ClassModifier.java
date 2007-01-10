@@ -67,7 +67,7 @@ public class ClassModifier
 			{
 				returnClass = findClass(m.ReturnTypeString);
 			}
-			String methodName = m.name();
+			String methodName = m.getName();
 			CtClass[] parameters = new CtClass[m.Parameters.size()];
 			if (m.Parameters.size() > 0)
 			{
@@ -115,7 +115,7 @@ public class ClassModifier
 			
 			try 
 			{
-				CtMethod method = ct.getDeclaredMethod(m.name(),parameters);
+				CtMethod method = ct.getDeclaredMethod(m.getName(),parameters);
 				ct.removeMethod(method);
 			}
 			catch(Exception e)

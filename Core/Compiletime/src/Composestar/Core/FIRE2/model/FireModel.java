@@ -722,7 +722,7 @@ public class FireModel
 
 		public ExtendedExecutionModel(int filterPosition, MethodInfo methodInfo, int signatureCheck)
 		{
-			Message message = getEntranceMessage(methodInfo.name());
+			Message message = getEntranceMessage(methodInfo.getName());
 
 			ExecutionState state = executionModels[filterPosition][0].getEntranceState(message);
 
@@ -740,7 +740,7 @@ public class FireModel
 			// TODO: (michiel) validate that using an empty MessageSelectorAST
 			// is legal
 			MessageSelector selector = new MessageSelector(new MessageSelectorAST());
-			selector.setName(methodInfo.name());
+			selector.setName(methodInfo.getName());
 			Message message = new Message(target, selector);
 
 			ExecutionState state = executionModels[filterPosition][0].getEntranceState(message);

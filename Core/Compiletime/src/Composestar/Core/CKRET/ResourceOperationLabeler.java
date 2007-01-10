@@ -191,7 +191,7 @@ public class ResourceOperationLabeler implements Labeler
 							if (!grammer.matcher(spec).matches())
 							{
 								MethodInfo dnmi = (MethodInfo) dna.getTarget();
-								String fullMethodName = dnmi.parent().m_fullName + '.' + dnmi.name();
+								String fullMethodName = dnmi.parent().m_fullName + '.' + dnmi.getName();
 								throw new ModuleException("Error in annotation semantics of method " + fullMethodName,
 										CKRET.MODULE_NAME);
 							}

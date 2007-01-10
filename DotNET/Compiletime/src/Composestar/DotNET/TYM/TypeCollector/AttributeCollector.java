@@ -126,7 +126,7 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 			while (it.hasNext())
 			{
 				MethodInfo method = (MethodInfo) it.next();
-				if (method.name().equals(methodName))
+				if (method.getName().equals(methodName))
 				{
 					return method;
 				}

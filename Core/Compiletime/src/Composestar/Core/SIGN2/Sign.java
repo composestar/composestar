@@ -322,7 +322,7 @@ public class Sign implements CTCommonModule
 				for (int j = 0; j < methods.length; j++)
 				{
 					// remove parameters:
-					MethodInfo m = methods[j].getClone(methods[j].name(), methods[j].parent());
+					MethodInfo m = methods[j].getClone(methods[j].getName(), methods[j].parent());
 					m.Parameters = new ArrayList();
 
 					if (!signature.hasMethod(m))
@@ -717,7 +717,7 @@ public class Sign implements CTCommonModule
 			for (int i = 0; i < methods.size(); i++)
 			{
 				method = (MethodInfo) methods.get(i);
-				selector = method.name();
+				selector = method.getName();
 				if (!distinguishable.contains(selector) && !checkedSelectors.contains(selector))
 				{
 					checkNonDispatchable(concern, model, selector);
@@ -1120,11 +1120,11 @@ public class Sign implements CTCommonModule
 				for (int i = 0; i < methods.size(); i++)
 				{
 					MethodInfo m = (MethodInfo) methods.get(i);
-					if (m.name().equals(targetMethod.name()))
+					if (m.getName().equals(targetMethod.getName()))
 					{
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method "
 								+ methodInfoString(method) + " in concern " + concern.name
-								+ " might be dispatched to method " + m.name() + " in inner with the wrong parameters "
+								+ " might be dispatched to method " + m.getName() + " in inner with the wrong parameters "
 								+ "and/or return type!", state.getFlowNode().getRepositoryLink());
 						return;
 					}
@@ -1132,7 +1132,7 @@ public class Sign implements CTCommonModule
 
 				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method " + methodInfoString(method)
 						+ " in concern " + concern.name + " might be dispatched to the unresolved " + "method "
-						+ targetMethod.name() + " in inner", state.getFlowNode().getRepositoryLink());
+						+ targetMethod.getName() + " in inner", state.getFlowNode().getRepositoryLink());
 			}
 		}
 		else
@@ -1146,12 +1146,12 @@ public class Sign implements CTCommonModule
 			Signature signature = getSignature(targetConcern);
 			if (!signature.hasMethod(targetMethod))
 			{
-				if (signature.hasMethod(targetMethod.name()))
+				if (signature.hasMethod(targetMethod.getName()))
 				{
 					Debug
 							.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method "
 									+ methodInfoString(method) + " in concern " + concern.name
-									+ " might be dispatched to method " + targetMethod.name() + " in concern "
+									+ " might be dispatched to method " + targetMethod.getName() + " in concern "
 									+ targetConcern.getName() + " with the wrong parameters and/or return type!", state
 									.getFlowNode().getRepositoryLink());
 				}
@@ -1159,7 +1159,7 @@ public class Sign implements CTCommonModule
 				{
 					Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method " + methodInfoString(method)
 							+ " in concern " + concern.name + " might be dispatched to the unresolved " + "method "
-							+ targetMethod.name() + " in concern " + targetConcern.getName(), state.getFlowNode()
+							+ targetMethod.getName() + " in concern " + targetConcern.getName(), state.getFlowNode()
 							.getRepositoryLink());
 				}
 			}
@@ -1234,7 +1234,7 @@ public class Sign implements CTCommonModule
 			MethodInfo method = wrapper.getMethodInfo();
 
 			// if same name && param length
-			if (method.name().equals(name) && method.hasParameters(types))
+			if (method.getName().equals(name) && method.hasParameters(types))
 			{
 				return wrapper;
 			}
@@ -1268,7 +1268,7 @@ public class Sign implements CTCommonModule
 	private String methodInfoString(MethodInfo info)
 	{
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(info.name());
+		buffer.append(info.getName());
 
 		buffer.append('(');
 		List parameters = info.getParameters();
@@ -1386,7 +1386,7 @@ public class Sign implements CTCommonModule
 						}
 
 						Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "\t[ " + relation + " ] " + "(" + returntype
-								+ ") " + mi.name() + "(" + StringUtils.join(paramNames, ", ") + ")");
+								+ ") " + mi.getName() + "(" + StringUtils.join(paramNames, ", ") + ")");
 					}
 				}
 			}

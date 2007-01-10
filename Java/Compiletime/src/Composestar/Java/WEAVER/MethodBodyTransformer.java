@@ -287,7 +287,7 @@ public class MethodBodyTransformer extends ExprEditor
 			if(methods.hasNext())
 			{
 				JavaMethodInfo method = (JavaMethodInfo)methods.next();
-				if(method.name().equals(m.getMethodName()))
+				if(method.getName().equals(m.getMethodName()))
 				{
 					// equal parameters?
 					if(equalParameters(m,method))

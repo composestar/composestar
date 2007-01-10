@@ -162,7 +162,7 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 			while (i.hasNext())
 			{
 				MethodInfo method = (MethodInfo) i.next();
-				if (method.name().equals(methodName))
+				if (method.getName().equals(methodName))
 				{
 					return method;
 				}

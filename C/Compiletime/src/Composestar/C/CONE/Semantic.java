@@ -298,7 +298,7 @@ public abstract class Semantic
 	 */
 	protected String matchingFunction()
 	{
-		return method.name();
+		return method.getName();
 	}
 
 	/**

@@ -169,7 +169,7 @@ public class ClassModifier extends TransformerBase
 		writenn("instance ");
 
 		writenn(((DotNETType) dnmi.returnType()).ilType());
-		writenn(" " + mi.name() + "(");
+		writenn(" " + mi.getName() + "(");
 
 		Iterator it = mi.getParameters().iterator();
 		while (it.hasNext())

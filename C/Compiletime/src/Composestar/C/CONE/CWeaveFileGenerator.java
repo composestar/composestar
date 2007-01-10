@@ -455,11 +455,11 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 	public Pointcut createPointcut(Filter filter, Concern c, int filterelem, int pointcutNumber)
 	{
 
-		Pointcut pointcut = new Pointcut(method.name() + pointcutNumber);
+		Pointcut pointcut = new Pointcut(method.getName() + pointcutNumber);
 		Functions functions = new Functions();
 		functions.setFile(file.getFullName());
-		functions.setData(method.name());
-		Debug.out(Debug.MODE_INFORMATION, "CCONE", "Function to be superimposed:" + method.name() + " & "
+		functions.setData(method.getName());
+		Debug.out(Debug.MODE_INFORMATION, "CCONE", "Function to be superimposed:" + method.getName() + " & "
 				+ filter.getQualifiedName());
 		int type = GeneralUtils.getTypeForProgramElement("function");
 		if (type == 0)
@@ -657,7 +657,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 			Debug.out(Debug.MODE_ERROR, "CONE", "Undefined join point type: execution");
 			System.exit(-1);
 		}
-		advice.setId(filter.getName() + filterelem + method.name() + methodOffset + adviceType);
+		advice.setId(filter.getName() + filterelem + method.getName() + methodOffset + adviceType);
 		advice.setType(ttype);
 		advice.setPriority(priority);
 
@@ -760,7 +760,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 	{
 		Aspect aspect = new Aspect();
 
-		String matchingFunction = method.name();
+		String matchingFunction = method.getName();
 		String matchingFile = file.FullName;
 		Debug.out(Debug.MODE_INFORMATION, "CCONE", "Header added to file:" + matchingFile + "For function"
 				+ matchingFunction);
@@ -798,7 +798,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 		SubstitutionPart sub = (SubstitutionPart) (filter.getFilterElement(filterelem).getMatchingPattern()
 				.getSubstitutionParts().elementAt(0));
 		String substitutionFunction = sub.getSelector().name;
-		String matchingFunction = method.name();
+		String matchingFunction = method.getName();
 		String matchingFile = file.FullName;
 
 		CFile file = null;
