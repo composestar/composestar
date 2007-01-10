@@ -21,8 +21,14 @@ import Composestar.Core.FIRE2.model.Message;
  */
 public class Trail
 {
+	/**
+	 * The owner of this trail
+	 */
 	protected Breadcrumb owner;
 
+	/**
+	 * Condition expression that must be true. Used during recursion check.
+	 */
 	protected ConditionExpression condition;
 
 	/**
@@ -31,22 +37,34 @@ public class Trail
 	 * inner).
 	 */
 	protected Message resultMessage;
-	
+
 	/**
-	 * Will be null until the references have been resolved
+	 * Points to the next breadcrumb. This will be null in the following cases:
+	 * <ul>
+	 * <li> points to the inner object (in this case the targetConcern is null too) </li>
+	 * <li> points to a concern without superimposition </li>
+	 * </ul>
+	 * In both cases it's the end of the trail.
 	 */
 	protected Breadcrumb destinationCrumb;
 
 	/**
-	 * The concern this trail points to
+	 * The concern this trail points to. This is null in case the trail points
+	 * to the inner object.
 	 */
 	protected Concern targetConcern;
-	
+
 	/**
 	 * If true then this trail is part of a recursive trail
 	 */
 	protected boolean recursive;
-	
+
+	/**
+	 * This trail has been resolved to the next crumb (which could be null).
+	 * After DIGGER has been run all trails should be resolved.
+	 */
+	protected boolean resolved;
+
 	public Trail(Breadcrumb inOwner)
 	{
 		owner = inOwner;
@@ -81,29 +99,38 @@ public class Trail
 	{
 		return targetConcern;
 	}
-	
+
 	public void setDestinationCrumb(Breadcrumb inCrumb)
 	{
 		destinationCrumb = inCrumb;
+		resolved = true;
 	}
-	
+
 	public Breadcrumb getDestinationCrumb()
 	{
 		return destinationCrumb;
 	}
 
+	/**
+	 * @return true if this is the end of the trail.
+	 */
 	public boolean isEOL()
 	{
-		return destinationCrumb == null;
+		return (destinationCrumb == null) && resolved;
 	}
-	
+
 	public boolean isRecursive()
 	{
 		return recursive;
 	}
-	
+
 	public void setRecursive(boolean rec)
 	{
 		recursive = rec;
+	}
+
+	public boolean isResolved()
+	{
+		return resolved;
 	}
 }

@@ -4,6 +4,10 @@
 		<name>Dispatch Graph Generator</name>
 
 		<settings>
+			<setting id="mode" type="integer">
+				<name>Mode</name>
+				<default>1</default>
+			</setting>
 			<setting id="resolve" type="boolean">
 				<name>Resolve graph</name>
 				<default>true</default>
@@ -19,8 +23,7 @@
 		</settings>
 
 		<incre>
-			<module enabled="true" incremental="false"
-				summary="Generating dispatch graph...">
+			<module enabled="true" incremental="false" summary="Generating dispatch graph...">
 				<dependencies></dependencies>
 			</module>
 		</incre>

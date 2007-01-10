@@ -37,15 +37,20 @@ public class Breadcrumb
 	/**
 	 * input or output filter
 	 */
-	protected int direction;
+	protected int filterPosition;
 
 	protected List trails;
 
-	public Breadcrumb(Concern inConcern, Message inMessage, int inDirection)
+	/**
+	 * Resolved status of the trails.
+	 */
+	protected transient boolean resolvedStatus;
+
+	public Breadcrumb(Concern inConcern, Message inMessage, int inFilterPosition)
 	{
 		concern = inConcern;
 		message = inMessage;
-		direction = inDirection;
+		filterPosition = inFilterPosition;
 		trails = new ArrayList();
 	}
 
@@ -59,9 +64,30 @@ public class Breadcrumb
 		return message;
 	}
 
-	public int getDirection()
+	public int getFilterPosition()
 	{
-		return direction;
+		return filterPosition;
+	}
+
+	/**
+	 * @return true if the breadcrumb has been fully resolved
+	 */
+	public boolean isResolved()
+	{
+		if (!resolvedStatus)
+		{
+			resolvedStatus = true;
+			Iterator it = trails.iterator();
+			while (it.hasNext())
+			{
+				if (!((Trail) it.next()).isResolved())
+				{
+					resolvedStatus = false;
+					break;
+				}
+			}
+		}
+		return resolvedStatus;
 	}
 
 	/**
@@ -73,6 +99,7 @@ public class Breadcrumb
 	{
 		Trail trail = new Trail(this);
 		trails.add(trail);
+		resolvedStatus = false; // new trails are never resolved
 		return trail;
 	}
 
@@ -90,14 +117,14 @@ public class Breadcrumb
 	{
 		return trails.iterator();
 	}
-	
+
 	public int numTrails()
 	{
 		return trails.size();
 	}
-	
+
 	public String toString()
 	{
-		return concern.getQualifiedName()+" "+message.toString();
+		return concern.getQualifiedName() + " " + message.toString();
 	}
 }
