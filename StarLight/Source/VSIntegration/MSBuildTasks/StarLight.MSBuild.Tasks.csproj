@@ -50,12 +50,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CpsParserTask\BuilderConfigurator.cs" />
     <Compile Include="CpsParserTask\CpsParserTask.cs" />
-    <Compile Include="DummiesTask\DummiesTask.cs" />
     <Compile Include="ILAnalyzerTask\BuilderConfigurator.cs" />
     <Compile Include="ILAnalyzerTask\ILAnalyzerTask.cs" />
     <Compile Include="ILVerifyTask\ILVerifyTask.cs" />
@@ -92,10 +92,6 @@
     <ProjectReference Include="..\..\CpsParser\CpsParser.csproj">
       <Project>{4684F559-E4BA-466E-8EED-962987B34363}</Project>
       <Name>CpsParser %28Source\CpsParser\CpsParser%29</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Dummies\CSharp\Composestar.StarLight.Dummies.csproj">
-      <Project>{B0A1577D-951D-4886-8726-9388FB15CFF4}</Project>
-      <Name>Composestar.StarLight.Dummies</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ILAnalyzer\ILAnalyzer.csproj">
       <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
