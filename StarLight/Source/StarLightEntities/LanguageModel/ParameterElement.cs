@@ -48,7 +48,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// A parameter of a method.
 	/// </summary>
 	[Serializable]
-	[XmlType("ParameterElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("ParameterElement", Namespace = Constants.NS)]
 	public sealed class ParameterElement
 	{
 		private string _name;

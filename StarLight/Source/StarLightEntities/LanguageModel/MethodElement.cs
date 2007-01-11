@@ -49,7 +49,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// Contains information about a single method.
 	/// </summary>
 	[Serializable]
-	[XmlType("MethodElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("MethodElement", Namespace = Constants.NS)]
 	public sealed class MethodElement : ICustomAttributes 
 	{
 		private string _name;

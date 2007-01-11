@@ -51,7 +51,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// </summary>
 	/// <returns>ICustom attributes</returns>
 	[Serializable]
-	[XmlType("TypeElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("TypeElement", Namespace = Constants.NS)]
 	public sealed class TypeElement : ICustomAttributes
 	{
 		private string _name = string.Empty;

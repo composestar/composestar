@@ -47,7 +47,7 @@ using Composestar.StarLight.Entities.LanguageModel;
 namespace Composestar.StarLight.Entities.LanguageModel
 {
 	[Serializable]
-	[XmlRoot("Signatures", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlRoot("Signatures", Namespace = Constants.NS)]
 	public class Signatures
 	{
 		private List<ExpandedType> _expandedTypes = new List<ExpandedType>();

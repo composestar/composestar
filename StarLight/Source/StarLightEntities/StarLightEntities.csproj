@@ -120,6 +120,7 @@
   <ItemGroup>
     <Compile Include="Concerns\EmbeddedCode.cs" />
     <Compile Include="Configuration\KeyValueSetting.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="LanguageModel\AttributeElement.cs" />
     <Compile Include="LanguageModel\ICustomAttributes.cs" />
     <Compile Include="LanguageModel\Signatures.cs" />

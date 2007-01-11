@@ -50,7 +50,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// Contains a single field.
 	/// </summary>
 	[Serializable]
-	[XmlType("FieldElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("FieldElement", Namespace = Constants.NS)]
 	public sealed class FieldElement : ICustomAttributes 
 	{
 		private string _name;

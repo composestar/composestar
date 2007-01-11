@@ -47,7 +47,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// Method body of a method.
 	/// </summary>
 	[Serializable]
-	[XmlType("MethodBody", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("MethodBody", Namespace = Constants.NS)]
 	public class MethodBody
 	{
 		private List<CallElement> _calls = new List<CallElement>();

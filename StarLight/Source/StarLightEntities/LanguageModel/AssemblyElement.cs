@@ -49,7 +49,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// Contains a single Assembly definition.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("Assembly", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlRoot("Assembly", Namespace = Constants.NS)]
 	public sealed class AssemblyElement
 	{
 		private string _name;
