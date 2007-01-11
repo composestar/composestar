@@ -34,7 +34,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
 import Composestar.Core.FIRE2.model.FlowNode;
-import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * @author Arjan de Roo
@@ -518,7 +518,16 @@ public class GrooveASTBuilder
 		SubstitutionPart substitutionPart = (pattern.getSubstitutionParts().isEmpty()) ? null
 				: (SubstitutionPart) pattern.getSubstitutionParts().elementAt(0);
 
-		substitutionPartNode = buildSubstitutionPartNode(substitutionPart, graph);
+		if (pattern.getSubstitutionParts().isEmpty())
+		{
+			// If substitution part does not exist, use matching part as
+			// substitution part
+			substitutionPartNode = buildSubstitutionPartNode(matchingPart, graph);
+		}
+		else
+		{
+			substitutionPartNode = buildSubstitutionPartNode(substitutionPart, graph);
+		}
 
 		edge = new AnnotatedEdge(patternNode, SUBSTITUTION_PART_EDGE, substitutionPartNode);
 		graph.addEdge(edge);
@@ -533,8 +542,19 @@ public class GrooveASTBuilder
 	 */
 	private Node buildSubstitutionPartNode(SubstitutionPart substitutionPart, Graph graph)
 	{
+		return buildSubstitutionPartNode(substitutionPart.getTarget(), substitutionPart.getSelector(), graph,
+				substitutionPart);
+	}
+
+	private Node buildSubstitutionPartNode(MatchingPart matchingPart, Graph graph)
+	{
+		return buildSubstitutionPartNode(matchingPart.getTarget(), matchingPart.getSelector(), graph, matchingPart);
+	}
+
+	private Node buildSubstitutionPartNode(Target target, MessageSelector selector, Graph graph, RepositoryEntity entity)
+	{
 		AnnotatedNode substitutionPartNode = new AnnotatedNode();
-		substitutionPartNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, substitutionPart);
+		substitutionPartNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, entity);
 		graph.addNode(substitutionPartNode);
 
 		AnnotatedEdge edge = new AnnotatedEdge(substitutionPartNode, FlowNode.SUBSTITUTION_PART_NODE,
@@ -542,15 +562,6 @@ public class GrooveASTBuilder
 		graph.addEdge(edge);
 
 		// selector:
-		MessageSelector selector;
-		if (substitutionPart == null)
-		{
-			selector = Message.STAR_SELECTOR;
-		}
-		else
-		{
-			selector = substitutionPart.selector;
-		}
 		Node selectorNode = (Node) selectorTable.get(selector.getName());
 		if (selectorNode == null)
 		{
@@ -561,15 +572,6 @@ public class GrooveASTBuilder
 		graph.addEdge(edge);
 
 		// target:
-		Target target;
-		if (substitutionPart == null)
-		{
-			target = Message.STAR_TARGET;
-		}
-		else
-		{
-			target = substitutionPart.getTarget();
-		}
 		Node targetNode = (Node) targetTable.get(target.name);
 		if (targetNode == null)
 		{

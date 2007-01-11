@@ -1,11 +1,9 @@
-# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\runtime.gps\SignatureMatchingPart-true-true.gpr
+# Layout information for D:\composestar\Core\Compiletime\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\runtime.gps\SignatureMatchingPart-true-true.gpr
 # Each line contains layout information about a node or edge
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-n n5786 654 60 18 18 
-n n5781 51 261 18 18 
-n n5784 583 377 18 18 
-n n5782 139 60 18 18 
-n n5783 424 58 18 18 
-e n5785 n5785 "not:'*'" 500 500 401 207 420 267 481 282 481 282 12
-n n5785 392 199 18 18 
+n n604 51 261 18 18 
+n n602 424 58 18 18 
+e n603 n603 "not:'*'" 500 500 401 207 420 267 481 282 481 282 12
+n n601 583 377 18 18 
+n n603 392 199 18 18 
