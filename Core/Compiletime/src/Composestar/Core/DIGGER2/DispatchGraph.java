@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.Message;
@@ -60,7 +59,7 @@ public class DispatchGraph
 	 * Handle to the resolve class used to resolve the breadcrumbs from the
 	 * input data.
 	 */
-	protected transient Resolver resolver;
+	protected /*transient*/ Resolver resolver;
 	
 	public DispatchGraph(int inMode)
 	{
@@ -103,7 +102,7 @@ public class DispatchGraph
 	public Iterator getCrumbs(Concern concern)
 	{
 		// TODO: redo
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	// TODO: redo
@@ -165,12 +164,12 @@ public class DispatchGraph
 				break;
 		}
 		*/
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	public Iterator getAllCrumbs()
 	{
 		// TODO: redo
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 }

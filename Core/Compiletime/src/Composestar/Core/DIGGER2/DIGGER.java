@@ -85,7 +85,7 @@ public class DIGGER implements CTCommonModule
 		}
 		if (moduleInfo.getBooleanSetting("exportXml"))
 		{
-			DispatchGraphExporter exporter = new XMLDGExporter(graph);
+			DispatchGraphExporter exporter = new XMLDispatchGraphExporter(graph);
 			exporter.export();
 		}
 
@@ -101,7 +101,8 @@ public class DIGGER implements CTCommonModule
 	 */
 	protected void createBreadcrumbs() throws ModuleException
 	{
-		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME, "Creating breadcrumbs", INCRETimer.TYPE_NORMAL);
+		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME,
+				"Creating breadcrumbs in mode " + graph.getMode(), INCRETimer.TYPE_NORMAL);
 		Iterator concerns = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (concerns.hasNext())
 		{
@@ -118,13 +119,15 @@ public class DIGGER implements CTCommonModule
 				switch (graph.getMode())
 				{
 					case DispatchGraph.MODE_BASIC:
-						processFireModel(concern, fm.getExecutionModel(FireModel.INPUT_FILTERS).getEntranceStates(), FireModel.INPUT_FILTERS);
+						processFireModel(concern, fm.getExecutionModel(FireModel.INPUT_FILTERS).getEntranceStates(),
+								FireModel.INPUT_FILTERS);
 						// no output filter support
-						//processFireModel(concern, fm, FireModel.OUTPUT_FILTERS);
+						// processFireModel(concern, fm,
+						// FireModel.OUTPUT_FILTERS);
 						break;
 					default:
 						processFullFireModel(concern, fm);
-						
+
 				}
 			}
 		}
@@ -156,20 +159,27 @@ public class DIGGER implements CTCommonModule
 	{
 		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME, "Checking for recursive filter definitions",
 				INCRETimer.TYPE_NORMAL);
+		Iterator it = allCrumbs.iterator();
+		while (it.hasNext())
+		{
+			//Breadcrumb crumb = (Breadcrumb) it.next();
+			//graph.getResolver().resolve(crumb);
+		}
 		timer.stop();
 	}
 
 	/**
-	 * Process the firemodel to create the breadcrumbs
+	 * Process a collection of entrance states to breadcrumbs. This method is
+	 * used in BASIC mode.
 	 * 
 	 * @param concern
-	 * @param fm
+	 * @param entranceStates
 	 * @param filterChain
 	 * @throws ModuleException
 	 */
-	protected void processFireModel(Concern concern, Iterator entranceStates, int filterPosition) throws ModuleException
+	protected void processFireModel(Concern concern, Iterator entranceStates, int filterPosition)
+			throws ModuleException
 	{
-		//Iterator it = fm.getExecutionModel(filterPosition).getEntranceStates();
 		while (entranceStates.hasNext())
 		{
 			ExecutionState es = (ExecutionState) entranceStates.next();
@@ -178,7 +188,16 @@ public class DIGGER implements CTCommonModule
 			allCrumbs.add(crumb);
 		}
 	}
-	
+
+	/**
+	 * Do a full processing of the firemodel. This constructs an execution graph
+	 * for every method in the concern. Only in this case will signature
+	 * matching be performed. This method is used in the FULL mode.
+	 * 
+	 * @param concern
+	 * @param fm
+	 * @throws ModuleException
+	 */
 	protected void processFullFireModel(Concern concern, FireModel fm) throws ModuleException
 	{
 		Type type = (Type) concern.getPlatformRepresentation();
@@ -187,17 +206,19 @@ public class DIGGER implements CTCommonModule
 		{
 			MethodInfo methodInfo = (MethodInfo) it.next();
 			int filterPosition = FireModel.INPUT_FILTERS;
-				
+
 			ExecutionModel em = fm.getExecutionModel(filterPosition, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
 			if (em.getEntranceMessages().size() > 1)
 			{
-				logger.warn(concern.getName()+"."+methodInfo.getName()+" has "+em.getEntranceMessages().size()+" entrance messages");
+				logger.warn(concern.getName() + "." + methodInfo.getName() + " has " + em.getEntranceMessages().size()
+						+ " entrance messages");
 			}
 			Iterator entranceStates = em.getEntranceStates();
 			ExecutionState es = (ExecutionState) entranceStates.next();
-			new Composestar.Core.FIRE2.util.viewer.Viewer(em);
-			//logger.debug(concern.getName()+"."+methodInfo.getName()+" has entrance message "+es.getMessage());
-			
+			//new Composestar.Core.FIRE2.util.viewer.Viewer(em);
+			// logger.debug(concern.getName()+"."+methodInfo.getName()+" has
+			// entrance message "+es.getMessage());
+
 			Breadcrumb crumb = graph.getResolver().resolve(concern, es, filterPosition);
 			graph.addCrumb(crumb);
 			allCrumbs.add(crumb);

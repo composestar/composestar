@@ -117,10 +117,11 @@ public class Resolver
 				ConditionExpression cond = (ConditionExpression) flowNode.getRepositoryLink();
 				trail.setCondition(cond);
 			}
-			else if (flowNode.containsName(FlowNode.SUBSTITUTION_PART_NODE))
+			else if (flowNode.containsName(FlowNode.DISPATCH_ACTION_NODE))
 			{
-				trail.setResultMessage(state.getMessage());
-				Concern targetConcern = findTargetConcern(crumb, state.getMessage().getTarget());
+				Message newMsg = new Message(state.getSubstitutionTarget(), state.getSubstitutionSelector());
+				trail.setResultMessage(newMsg);
+				Concern targetConcern = findTargetConcern(crumb, newMsg.getTarget());
 				trail.setTargetConcern(targetConcern);
 			}
 			// TODO: handle error action (what about other actions?)
@@ -130,7 +131,7 @@ public class Resolver
 			// transition and only in cases of multiple transitions we need to
 			// branch (because of an alternative trail).
 			List outs = new ArrayList();
-			Iterator it = state.getOutTransitions();
+			Iterator it = state.getOutTransitions();			
 			while (it.hasNext())
 			{
 				outs.add(it.next());

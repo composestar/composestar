@@ -17,10 +17,10 @@ import Composestar.Core.Exception.ModuleException;
  * 
  * @author Michiel Hendriks
  */
-public class XMLDGExporter extends DispatchGraphExporter
+public class XMLDispatchGraphExporter extends DispatchGraphExporter
 {
 
-	public XMLDGExporter(DispatchGraph inGraph)
+	public XMLDispatchGraphExporter(DispatchGraph inGraph)
 	{
 		super(inGraph);
 	}

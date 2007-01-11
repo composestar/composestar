@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.Message;
@@ -45,7 +44,7 @@ public class ConcernCrumbs
 		{
 			case FireModel.OUTPUT_FILTERS:
 				// TODO:
-				throw new NotImplementedException();
+				throw new UnsupportedOperationException();
 			default:
 				inputCrumbs.put(crumb.getMessage().getSelector().getName(), crumb);
 		}
@@ -69,7 +68,7 @@ public class ConcernCrumbs
 	public Breadcrumb getOutputCrumb(String selector)
 	{
 		//TODO:
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 	public Iterator getOutputCrumbs()
