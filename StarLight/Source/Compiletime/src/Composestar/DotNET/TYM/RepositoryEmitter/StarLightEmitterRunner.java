@@ -260,7 +260,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
 
-				String filename = FileUtils.removeExtension(config.getSerializedFilename());
+				String filename = FileUtils.removeExtension(config.getSerializedFileName());
 				filename = filename + "_weavespec.xml.gzip";
 				
 				OutputStream outputStream = null;

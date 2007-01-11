@@ -55,58 +55,14 @@ namespace Composestar.StarLight.Entities.Configuration
 	[XmlRoot("AssemblyConfig", Namespace = "Entities.TYM.DotNET.Composestar")]
 	public class AssemblyConfig
 	{
-		private string _name;
-		private long _timestamp;
-		private string _fileName;
-		private string _serializedFileName = string.Empty;
 		private AssemblyElement _assembly;
-		private String _weaveSpec;
+		private string _name;
+		private string _fileName;
+		private long _timestamp;
 		private bool _isReference;
+		private string _serializedFileName = string.Empty;
+		private string _weaveSpec;
 		private PdbMode _debugFileMode = PdbMode.HideFilters;
-
-		/// <summary>
-		/// Gets or sets the name.
-		/// </summary>
-		/// <value>The name.</value>
-		[XmlAttribute]
-		public string Name
-		{
-			get { return _name; }
-			set { _name = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the time stamp.
-		/// </summary>
-		/// <value>The time stamp.</value>
-		[XmlAttribute]
-		public long Timestamp
-		{
-			get { return _timestamp; }
-			set { _timestamp = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the filename.
-		/// </summary>
-		/// <value>The filename.</value>
-		[XmlAttribute("Filename")]
-		public string FileName
-		{
-			get { return _fileName; }
-			set { _fileName = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the serialized filename.
-		/// </summary>
-		/// <value>The serialized filename.</value>
-		[XmlAttribute("SerializedFilename")]
-		public string SerializedFileName
-		{
-			get { return _serializedFileName; }
-			set { _serializedFileName = value; }
-		}
 
 		/// <summary>
 		/// Gets or sets the assembly.
@@ -120,31 +76,36 @@ namespace Composestar.StarLight.Entities.Configuration
 		}
 
 		/// <summary>
-		/// Generate a serialized filename to be used to store the file.
+		/// Gets or sets the name.
 		/// </summary>
-		public void GenerateSerializedFileName(string objectFolder)
+		/// <value>The name.</value>
+		[XmlAttribute]
+		public string Name
 		{
-			if (_assembly != null)
-			{
-				string name = _assembly.Name;
-				name = name.Replace(", ", "_");
-				name = name.Replace(".", "_");
-				name = name.Replace("Version=", "");
-				name = name.Replace("Culture=", "");
-				name = name.Replace("PublicKeyToken=", "");
-				_serializedFileName = Path.Combine(objectFolder, string.Format(CultureInfo.CurrentCulture, "{0}.xml.gzip", name));
-			}
+			get { return _name; }
+			set { _name = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the weave specification file.
+		/// Gets or sets the filename.
 		/// </summary>
-		/// <value>The weave specification file.</value>
+		/// <value>The filename.</value>
 		[XmlAttribute]
-		public String WeaveSpecificationFile
+		public string FileName
 		{
-			get { return _weaveSpec; }
-			set { _weaveSpec = value; }
+			get { return _fileName; }
+			set { _fileName = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the timestamp.
+		/// </summary>
+		/// <value>The timestamp.</value>
+		[XmlAttribute]
+		public long Timestamp
+		{
+			get { return _timestamp; }
+			set { _timestamp = value; }
 		}
 
 		/// <summary>
@@ -158,6 +119,42 @@ namespace Composestar.StarLight.Entities.Configuration
 		{
 			get { return _isReference; }
 			set { _isReference = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the serialized filename.
+		/// </summary>
+		/// <value>The serialized filename.</value>
+		[XmlAttribute]
+		public string SerializedFileName
+		{
+			get { return _serializedFileName; }
+			set { _serializedFileName = value; }
+		}
+
+		/// <summary>
+		/// Generate a serialized filename to be used to store the file.
+		/// </summary>
+		public void GenerateSerializedFileName(string objectFolder)
+		{
+			string name = _name;
+			name = name.Replace(", ", "_");
+			name = name.Replace(".", "_");
+			name = name.Replace("Version=", "");
+			name = name.Replace("Culture=", "");
+			name = name.Replace("PublicKeyToken=", "");
+			_serializedFileName = Path.Combine(objectFolder, string.Concat(name, ".xml.gzip"));
+		}
+
+		/// <summary>
+		/// Gets or sets the weave specification file.
+		/// </summary>
+		/// <value>The weave specification file.</value>
+		[XmlAttribute]
+		public string WeaveSpecificationFile
+		{
+			get { return _weaveSpec; }
+			set { _weaveSpec = value; }
 		}
 
 		/// <summary>

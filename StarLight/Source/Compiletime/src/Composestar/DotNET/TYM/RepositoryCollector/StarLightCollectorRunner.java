@@ -3,6 +3,7 @@ package Composestar.DotNET.TYM.RepositoryCollector;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.xmlbeans.XmlException;
@@ -33,6 +33,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.DotNET.LAMA.DotNETAttribute;
+import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
 import Composestar.DotNET.LAMA.DotNETFieldInfo;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETParameterInfo;
@@ -43,6 +44,7 @@ import Composestar.Utils.FileUtils;
 
 import composestar.dotNET.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET.tym.entities.ArrayOfAttributeElement;
+import composestar.dotNET.tym.entities.ArrayOfCallElement;
 import composestar.dotNET.tym.entities.ArrayOfFieldElement;
 import composestar.dotNET.tym.entities.ArrayOfFilterActionElement;
 import composestar.dotNET.tym.entities.ArrayOfFilterTypeElement;
@@ -52,10 +54,12 @@ import composestar.dotNET.tym.entities.AssemblyConfig;
 import composestar.dotNET.tym.entities.AssemblyDocument;
 import composestar.dotNET.tym.entities.AssemblyElement;
 import composestar.dotNET.tym.entities.AttributeElement;
+import composestar.dotNET.tym.entities.CallElement;
 import composestar.dotNET.tym.entities.ConfigurationContainer;
 import composestar.dotNET.tym.entities.FieldElement;
 import composestar.dotNET.tym.entities.FilterActionElement;
 import composestar.dotNET.tym.entities.FilterTypeElement;
+import composestar.dotNET.tym.entities.MethodBody;
 import composestar.dotNET.tym.entities.MethodElement;
 import composestar.dotNET.tym.entities.ParameterElement;
 import composestar.dotNET.tym.entities.TypeElement;
@@ -65,18 +69,13 @@ public class StarLightCollectorRunner implements CollectorRunner
 	public static final String MODULE_NAME = "COLLECTOR";
 	public static final String MODULE_NAME_INCRE = "COLLECTOR";
 	
-	private List callsToOtherMethods = new Vector();
-
-//	private HashMap fieldMap = new HashMap();
-//	private HashMap methodMap = new HashMap();
-//	private HashMap parameterMap = new HashMap();
-//	private HashMap callsMap = new HashMap();
-
+	private boolean processBodies = false;
+	private List callsToOtherMethods = new ArrayList();
+	
 	private INCREReporter reporter = INCRE.instance().getReporter();
 	private INCRETimer deserializeTimer = reporter.openProcess(MODULE_NAME, "xml deserialize", INCRETimer.TYPE_NORMAL);
-
 	private long starttime = 0;
-	
+
 	public void run(CommonResources resources) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
@@ -96,7 +95,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing assembly '" + assemblyName + "'...");
 			
-			if (incre.isProcessedByModule(ac,MODULE_NAME))
+			if (incre.isProcessedByModule(ac, MODULE_NAME))
 			{
 				INCRETimer copyTimer = reporter.openProcess(MODULE_NAME,assemblyName,INCRETimer.TYPE_INCREMENTAL);
 				copyOperation(assemblyName);
@@ -104,75 +103,11 @@ public class StarLightCollectorRunner implements CollectorRunner
 			}
 			else
 			{
-				INCRETimer runTimer = incre.getReporter().openProcess(MODULE_NAME,assemblyName,INCRETimer.TYPE_NORMAL);
+				INCRETimer runTimer = reporter.openProcess(MODULE_NAME,assemblyName,INCRETimer.TYPE_NORMAL);
 				collectOperation(ac);
 				runTimer.stop();
 			}
 		}
-
-		// loop through all current concerns, fetch implementation and remove
-		// from types map.
-//		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing cps concerns...");
-//		starttime = System.currentTimeMillis();
-
-//		Iterator repIt = dataStore.getIterator();
-//		while (repIt.hasNext())
-//		{
-//			Object next = repIt.next();
-//			if (next instanceof CpsConcern)
-//			{
-//				CpsConcern concern = (CpsConcern) next;
-//				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing concern '" + concern.name + "'");
-//				// fetch implementation name
-//				Object impl = concern.getImplementation();
-//				String className = "";
-//				if (impl == null)
-//				{
-//					continue;
-//				}
-//				else if (impl instanceof Source)
-//				{
-//					// fixes the problem with the embedded code not being in the
-//					// type map at all.
-//					continue;
-//					// Source source = (Source)impl;
-//					// className = source.getClassName();
-//				}
-//				else if (impl instanceof SourceFile)
-//				{
-//					// TO DO: remove this?
-//					SourceFile source = (SourceFile) impl;
-//					String sourceFile = source.getSourceFile();
-//					className = sourceFile.replaceAll("\\.\\w+", "");
-//				}
-//				else if (impl instanceof CompiledImplementation)
-//				{
-//					className = ((CompiledImplementation) impl).getClassName();
-//				}
-//				else
-//				{
-//					throw new ModuleException(
-//							"CollectorRunner: Can only handle concerns with source file implementations or direct class links.",
-//							MODULE_NAME);
-//				}
-//
-//				// transform source name into assembly name blaat.java -->  blaat.dll
-//				if (!typeMap.containsKey(className))
-//				{
-//					throw new ModuleException("Implementation: " + className + " for concern: " + concern.getName()
-//							+ " not found!", MODULE_NAME);
-//
-//				}
-//				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing type " + className);
-//				DotNETType type = (DotNETType) typeMap.get(className);
-//				concern.setPlatformRepresentation(type);
-//				type.setParentConcern(concern);
-//				typeMap.remove(className);
-//				count++;
-//			}
-//		}
-//		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, count + " cps concerns added in "
-//				+ (System.currentTimeMillis() - starttime) + " ms.");
 
 		// loop through rest of the concerns and add to the repository in the
 		// form of primitive concerns
@@ -274,14 +209,18 @@ public class StarLightCollectorRunner implements CollectorRunner
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Attribute types resolved in "
 				+ (System.currentTimeMillis() - starttime) + " ms.");
 		
-		// resolve the MethodInfo reference in the calls within a method:
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolving method references for calls withing a method...");
-		starttime = System.currentTimeMillis();
+		// resolve the MethodInfo reference in the calls within a method:	
+		if (processBodies)
+		{
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+					"Resolving method references for calls withing a method...");
+			starttime = System.currentTimeMillis();
+
+			resolveCallsToOtherMethods();
 		
-		resolveCallsToOtherMethods();
-		
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Method references resolved in "
-				+ (System.currentTimeMillis() - starttime) + " ms.");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+					"Method references resolved in " + (System.currentTimeMillis() - starttime) + " ms.");
+		}
 	}
 	
 	public void copyOperation(String assemblyName) throws ModuleException
@@ -314,7 +253,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 					// Add the type to the TypeMap
 					TypeMap.instance().addType(t.fullName(), t);
-
 					typecount++;
 				}
 			}
@@ -325,7 +263,7 @@ public class StarLightCollectorRunner implements CollectorRunner
     
 	public void collectOperation(AssemblyConfig assembly) throws ModuleException
 	{
-		String serializedFilename = assembly.getSerializedFilename();
+		String serializedFilename = assembly.getSerializedFileName();
 
 		InputStream is = null;
 		try
@@ -543,7 +481,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 			//Set the attributes for this field
 			DotNETAttribute[] attributes = collectAttributes(storedField.getAttributes());
-			for (int j=0; j < attributes.length; j++)
+			for (int j = 0; j < attributes.length; j++)
 				field.addAnnotation(attributes[j]);
 			
 			type.addField(field);
@@ -577,8 +515,9 @@ public class StarLightCollectorRunner implements CollectorRunner
 			method.setIsVirtual(storedMethod.getIsVirtual());
 
 			collectParameters(storedMethod, method);
-		//	if (storedMethod.isSetBody())
-		//		collectMethodBody(storedMethod.getBody(), method);
+			
+			if (processBodies && storedMethod.isSetBody())
+				collectMethodBody(storedMethod.getBody(), method);
 
 			//Set the attributes for this method
 			DotNETAttribute[] attributes = collectAttributes(storedMethod.getAttributes());
@@ -621,26 +560,26 @@ public class StarLightCollectorRunner implements CollectorRunner
 		}
 	}
 
-//	private void collectMethodBody(MethodBody storedMethodBody, DotNETMethodInfo method)
-//	{
-//		// Get the call elements for this method body
-//		ArrayOfCallElement storedCalls = storedMethodBody.getCalls();
-//
-//		for (int i = 0; i < storedCalls.sizeOfCallArray(); i++)
-//		{
-//			CallElement storedCall = storedCalls.getCallArray(i);
-//
-//			DotNETCallToOtherMethod call = new DotNETCallToOtherMethod();
-//			call.setCallElement(storedCall);
-//
-//			// TODO: is this mapping correct ?
-//			call.OperationName = storedCall.getMethodReference();
-//
-//			method.getCallsToOtherMethods().add(call);
-//
-//			callsToOtherMethods.add(call);
-//		}
-//	}
+	private void collectMethodBody(MethodBody storedMethodBody, DotNETMethodInfo method)
+	{
+		// Get the call elements for this method body
+		ArrayOfCallElement storedCalls = storedMethodBody.getCalls();
+
+		for (int i = 0; i < storedCalls.sizeOfCallArray(); i++)
+		{
+			CallElement storedCall = storedCalls.getCallArray(i);
+
+			DotNETCallToOtherMethod call = new DotNETCallToOtherMethod();
+			call.setCallElement(storedCall);
+
+			// TODO: is this mapping correct ?
+			call.OperationName = storedCall.getMethodReference();
+
+			method.getCallsToOtherMethods().add(call);
+
+			callsToOtherMethods.add(call);
+		}
+	}
 
 	/**
 	 * Resolve the MethodInfo of the called method for all calls to other
