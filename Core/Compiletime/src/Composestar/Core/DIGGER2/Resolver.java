@@ -10,9 +10,7 @@
 
 package Composestar.Core.DIGGER2;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -126,17 +124,28 @@ public class Resolver
 			}
 			// TODO: handle error action (what about other actions?)
 
-			// Create a list of the outgoing transitions. This is done to
-			// optimize the algorithm, in most cases there is only one outgoing
-			// transition and only in cases of multiple transitions we need to
-			// branch (because of an alternative trail).
-			List outs = new ArrayList();
-			Iterator it = state.getOutTransitions();			
+			// traverse all outgoing transitions of the state
+			// in most cases there is only one outgoing transition, this
+			// transition will be traversed inline, additional transitions will
+			// be branched (recursive call of this method).
+			Iterator it = state.getOutTransitions();
+			int idx = 0;
 			while (it.hasNext())
 			{
-				outs.add(it.next());
+				idx++;
+				ExecutionTransition trans = (ExecutionTransition) it.next();
+				if (idx == 1)
+				{
+					// the first state will be traversed inline
+					state = trans.getEndState();
+				}
+				else
+				{
+					// branch all additional states
+					traverseState(trans.getEndState(), crumb, crumb.addTrail());
+				}
 			}
-			if (outs.size() == 0)
+			if (idx == 0)
 			{
 				if (!flowNode.containsName(FlowNode.STOP_NODE))
 				{
@@ -149,20 +158,10 @@ public class Resolver
 				}
 				return;
 			}
-			else if (outs.size() > 1)
+			else if (idx > 1)
 			{
-				logger.debug("[resolver] Branching into " + outs.size() + " trails");
-				// fork for each transition additional transition
-				// the first transition will be followed inline
-				for (int i = 1; i < outs.size(); i++)
-				{
-					ExecutionTransition trans = (ExecutionTransition) outs.get(i);
-					traverseState(trans.getEndState(), crumb, crumb.addTrail());
-				}
+				logger.debug("[resolver] Branched into " + idx + " trails");
 			}
-			// follow the remaining transition
-			ExecutionTransition trans = (ExecutionTransition) outs.get(0);
-			state = trans.getEndState();
 		}
 	}
 

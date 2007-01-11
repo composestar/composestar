@@ -10,8 +10,10 @@
 
 package Composestar.Core.DIGGER2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -171,5 +173,11 @@ public class DispatchGraph
 	{
 		// TODO: redo
 		throw new UnsupportedOperationException();
+	}
+	
+	public List getResultingMessages(Breadcrumb crumb) throws RecursiveFilterException
+	{
+		List stack = new ArrayList();
+		return stack;
 	}
 }

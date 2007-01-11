@@ -69,7 +69,7 @@ public class DIGGER implements CTCommonModule
 		incre = INCRE.instance();
 		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Main", INCRETimer.TYPE_OVERHEAD);
 		moduleInfo = ModuleInfoManager.get(DIGGER.class);
-		graph = new DispatchGraph(0 /*moduleInfo.getIntSetting("mode")*/);
+		graph = new DispatchGraph(1 /*moduleInfo.getIntSetting("mode")*/);
 		graph.setAutoResolve(false);
 		DataStore.instance().addObject(DispatchGraph.REPOSITORY_KEY, graph);
 		allCrumbs = new ArrayList();
@@ -147,7 +147,18 @@ public class DIGGER implements CTCommonModule
 		while (it.hasNext())
 		{
 			Breadcrumb crumb = (Breadcrumb) it.next();
-			graph.getResolver().resolve(crumb);
+			try
+			{
+				graph.getResultingMessages(crumb);
+			}
+			catch (RecursiveFilterException e)
+			{
+				logger.error("RecursiveFilterException");
+				if (e.numVars() > 0)
+				{
+					logger.debug("");
+				}
+			}
 		}
 		timer.stop();
 	}
@@ -162,8 +173,8 @@ public class DIGGER implements CTCommonModule
 		Iterator it = allCrumbs.iterator();
 		while (it.hasNext())
 		{
-			//Breadcrumb crumb = (Breadcrumb) it.next();
-			//graph.getResolver().resolve(crumb);
+			Breadcrumb crumb = (Breadcrumb) it.next();
+			graph.getResolver().resolve(crumb);
 		}
 		timer.stop();
 	}
