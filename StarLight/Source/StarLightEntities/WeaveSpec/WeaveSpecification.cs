@@ -36,14 +36,14 @@
 
 #region Using directives
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
-#endregion
 
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+#endregion
 
 namespace Composestar.StarLight.Entities.WeaveSpec
 {
@@ -51,31 +51,24 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 	/// A weave specification file.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("WeaveSpecification", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlRoot("WeaveSpecification", Namespace = Constants.NS)]
 	public class WeaveSpecification
 	{
-
-		/// <summary>
-		/// _assembly name
-		/// </summary>
 		private string _assemblyName;
+		private List<WeaveType> _weaveTypes;
+		private List<InlineInstruction> _generalizedAIMs;
 
 		/// <summary>
 		/// Gets or sets the name of the assembly this weave file applies to.
 		/// </summary>
 		/// <value>The name of the assembly.</value>
-		/// <returns>String</returns>
+		/// <returns>string</returns>
 		[XmlAttribute]
 		public string AssemblyName
 		{
 			get { return _assemblyName; }
 			set { _assemblyName = value; }
 		}
-
-		/// <summary>
-		/// _weave types
-		/// </summary>
-		private List<WeaveType> _weaveTypes;
 
 		/// <summary>
 		/// Gets or sets the types to weave on.
@@ -97,13 +90,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		[XmlAttribute]
 		public static string Version
 		{
-			get
-			{
-				return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-			}
+			get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
 		}
-
-		private List<InlineInstruction> _generalizedAIMs;
 
 		/// <summary>
 		/// Gets or sets the generalized abstract instruction models, referenced by WeaveMethod and WeaveCall
@@ -111,7 +99,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		/// <value>The generalized abstract instruction models</value>
 		[XmlArray("GeneralizedAIMs")]
 		[XmlArrayItem("GeneralizedAIM")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
 		public List<InlineInstruction> GeneralizedAIMs
 		{
 			get { return _generalizedAIMs; }

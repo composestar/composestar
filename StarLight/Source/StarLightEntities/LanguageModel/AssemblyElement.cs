@@ -87,6 +87,5 @@ namespace Composestar.StarLight.Entities.LanguageModel
 			get { return _types; }
 			set { _types = value; }
 		}
-
 	}
 }

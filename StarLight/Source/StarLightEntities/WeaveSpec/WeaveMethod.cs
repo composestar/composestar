@@ -35,13 +35,14 @@
 #endregion
 
 #region Using directives
-using Composestar.StarLight;
-using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
+
+using Composestar.StarLight;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 #endregion
 
 namespace Composestar.StarLight.Entities.WeaveSpec
@@ -50,13 +51,13 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 	/// The method in a type with certain input filters and output filters.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("WeaveMethod", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("WeaveMethod", Namespace = Constants.NS)]
 	public class WeaveMethod
 	{
-		/// <summary>
-		/// Method id, unique within the assembly
-		/// </summary>
 		private int _id;
+		private string _signature;
+		private InlineInstruction _inputFilter;
+		private List<WeaveCall> _weaveCalls = new List<WeaveCall>();
 
 		/// <summary>
 		/// Gets or sets the id of the method. This id is unique within the assembly.
@@ -69,39 +70,15 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		}
 
 		/// <summary>
-		/// _signature
-		/// </summary>
-		private string _signature;
-
-		/// <summary>
 		/// Gets or sets the signature of the method.
 		/// </summary>
 		/// <value>The signature.</value>
-		/// <returns>String</returns>
 		[XmlAttribute]
 		public string Signature
 		{
 			get { return _signature; }
 			set { _signature = value; }
 		}
-
-		//private int _inputFilterId;
-
-		///// <summary>
-		///// Gets or sets the input filter id. This is the id of the abstract inputfiltercode to be used
-		///// for this method.
-		///// </summary>
-		///// <value>The input filter id.</value>
-		//public int InputFilterId
-		//{
-		//    get { return _inputFilterId; }
-		//    set { _inputFilterId = value; }
-		//}
-
-		/// <summary>
-		/// _input filter
-		/// </summary>
-		private InlineInstruction _inputFilter;
 
 		/// <summary>
 		/// Gets or sets the input filter.
@@ -114,18 +91,13 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		}
 
 		/// <summary>
-		/// _weave calls
-		/// </summary>
-		private List<WeaveCall> _weaveCalls = new List<WeaveCall>();
-
-		/// <summary>
 		/// Gets or sets the calls to weave. 
 		/// Specified as a list with WeaveCall elements.
 		/// </summary>
 		/// <value>The calls to weave.</value>
 		[XmlArray("WeaveCalls")]
 		[XmlArrayItem("WeaveCall")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
 		public List<WeaveCall> Calls
 		{
 			get { return _weaveCalls; }
@@ -141,15 +113,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		[XmlIgnore]
 		public bool HasInputFilters
 		{
-			get
-			{
-				if (InputFilter != null)
-				{
-					return true;
-				}
-
-				return false;
-			}
+			get { return InputFilter != null; }
 		}
 
 		/// <summary>
@@ -161,15 +125,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		[XmlIgnore]
 		public bool HasOutputFilters
 		{
-			get
-			{
-
-				if (Calls.Count > 0)
-					return true;
-
-				return false;
-			}
+			get { return Calls.Count > 0; }
 		}
-
 	}
 }

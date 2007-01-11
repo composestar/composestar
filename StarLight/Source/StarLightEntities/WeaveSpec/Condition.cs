@@ -47,39 +47,26 @@ using System.Xml.Serialization;
 namespace Composestar.StarLight.Entities.WeaveSpec
 {
 	/// <summary>
-	/// Condition
+	/// A condition.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("Condition", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("Condition", Namespace = Constants.NS)]
 	public class Condition
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Condition"/> class.
-		/// </summary>
-		public Condition()
-		{
-
-		}
+		private string _name;
+		private Reference _reference;
 
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
 		/// <value>The name.</value>
-		/// <returns>String</returns>
+		/// <returns>string</returns>
 		[XmlAttribute]
-		public String Name
+		public string Name
 		{
-			get
-			{
-				return _name;
-			}
-			set
-			{
-				_name = value;
-			}
+			get { return _name; }
+			set { _name = value; }
 		}
-
-		private String _name;
 
 		/// <summary>
 		/// Gets or sets the reference.
@@ -87,17 +74,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		/// <value>The reference.</value>
 		public Reference Reference
 		{
-			get
-			{
-				return _reference;
-			}
-			set
-			{
-				_reference = value;
-			}
+			get { return _reference; }
+			set { _reference = value; }
 		}
-
-		private Reference _reference;
-
 	}
 }

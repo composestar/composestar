@@ -47,34 +47,28 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 {
 	/// <summary>
 	/// An internal.
-	/// <returns>String</returns>
 	/// </summary>
 	[Serializable]
-	[XmlRoot("Internal", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("Internal", Namespace = Constants.NS)]
 	[SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "It is an internal, use the full namespace to eliminate conflicts with System.EnterrpiseServices.Internal.")]
 	public class Internal
 	{
-		/// <summary>
-		/// _name
-		/// </summary>
 		private string _name;
+		private string _namespace;
+		private string _type;
+		private string _assembly;
+		private string _concern;
 
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
 		/// <value>The name.</value>
-		/// <returns>String</returns>
 		[XmlAttribute]
 		public string Name
 		{
 			get { return _name; }
 			set { _name = value; }
 		}
-
-		/// <summary>
-		/// _namespace
-		/// </summary>
-		private string _namespace;
 
 		/// <summary>
 		/// Gets or sets the name space.
@@ -87,38 +81,27 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 			set { _namespace = value; }
 		}
 
-		private String _type;
-
 		/// <summary>
 		/// Gets or sets the type.
 		/// </summary>
 		/// <value>The type.</value>
 		[XmlAttribute]
-		public String Type
+		public string Type
 		{
 			get { return _type; }
 			set { _type = value; }
 		}
 
-		private String _assembly;
-
 		/// <summary>
 		/// Gets or sets the assembly containing the type.
 		/// </summary>
+		/// <value>The assembly.</value>
 		[XmlAttribute]
-		public String Assembly
+		public string Assembly
 		{
-			get
-			{
-				return _assembly;
-			}
-			set
-			{
-				_assembly = value;
-			}
+			get { return _assembly; }
+			set { _assembly = value; }
 		}
-
-		private string _concern;
 
 		/// <summary>
 		/// Gets or sets the concern.

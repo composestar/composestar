@@ -49,27 +49,25 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 	/// 
 	/// </summary>
 	[Serializable]
-	[XmlRoot("WeaveType", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("WeaveType", Namespace = Constants.NS)]
 	public class WeaveType
 	{
-
+		private string _name;
+		private List<Internal> _internals = new List<Internal>();
+		private List<External> _externals = new List<External>();
+		private List<Condition> _conditions = new List<Condition>();
+		private List<WeaveMethod> _methods = new List<WeaveMethod>();
 
 		/// <summary>
-		/// Gets a value indicating whether this instance has internals.
+		/// Gets or sets the name of the type. Needed for the lookup.
 		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance has internals; otherwise, <c>false</c>.
-		/// </value>
-		[XmlIgnore]
-		public bool HasInternals
+		/// <value>The name.</value>
+		[XmlAttribute]
+		public string Name
 		{
-			/// <summary>
-			/// _internals
-			/// </summary>
-			get { return _internals.Count > 0; } // get
+			get { return _name; }
+			set { _name = value; }
 		}
-
-		private List<Internal> _internals = new List<Internal>();
 
 		/// <summary>
 		/// Gets or sets the internals.
@@ -83,6 +81,75 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		{
 			get { return _internals; }
 			set { _internals = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the externals.
+		/// </summary>
+		/// <value>The externals.</value>
+		[XmlArray("Externals")]
+		[XmlArrayItem("External")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		public List<External> Externals
+		{
+			get { return _externals; }
+			set { _externals = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the conditions.
+		/// </summary>
+		/// <value>The conditions.</value>
+		[XmlArray("Conditions")]
+		[XmlArrayItem("Condition")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		public List<Condition> Conditions
+		{
+			get { return _conditions; }
+			set { _conditions = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the methods with instructions to weave.
+		/// </summary>
+		/// <value>The methods.</value>
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		public List<WeaveMethod> Methods
+		{
+			get { return _methods; }
+		}
+
+		/// <summary>
+		/// Gets the method with the specified signature.
+		/// </summary>
+		/// <param name="signature">The signature.</param>
+		/// <returns>The method or null if not found.</returns>
+		public WeaveMethod GetMethod(String signature)
+		{
+			foreach (WeaveMethod weaveMethod in Methods)
+			{
+				if (weaveMethod.Signature.Equals(signature))
+				{
+					return weaveMethod;
+				}
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance has internals.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance has internals; otherwise, <c>false</c>.
+		/// </value>
+		[XmlIgnore]
+		public bool HasInternals
+		{
+			/// <summary>
+			/// _internals
+			/// </summary>
+			get { return _internals.Count > 0; }
 		}
 
 		/// <summary>
@@ -102,21 +169,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 			get { return Externals.Count > 0; }
 		}
 
-		private List<External> _externals = new List<External>();
-
-		/// <summary>
-		/// Gets or sets the externals.
-		/// </summary>
-		/// <value>The externals.</value>
-		[XmlArray("Externals")]
-		[XmlArrayItem("External")]
-		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-		public List<External> Externals
-		{
-			get { return _externals; }
-			set { _externals = value; }
-		}
-
 		/// <summary>
 		/// Gets a value indicating whether this instance has conditions.
 		/// </summary>
@@ -127,58 +179,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		public bool HasConditions
 		{
 			get { return Conditions.Count > 0; }
-		}
-
-		private List<Condition> _conditions = new List<Condition>();
-
-		/// <summary>
-		/// Gets or sets the conditions.
-		/// </summary>
-		/// <value>The conditions.</value>
-		[XmlArray("Conditions")]
-		[XmlArrayItem("Condition")]
-		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-		public List<Condition> Conditions
-		{
-			get { return _conditions; }
-			set { _conditions = value; }
-		}
-
-		private string _name;
-
-		/// <summary>
-		/// Gets or sets the name of the type. Needed for the lookup.
-		/// </summary>
-		/// <value>The name.</value>
-		[XmlAttribute]
-		public string Name
-		{
-			get { return _name; }
-			set { _name = value; }
-		}
-
-		private List<WeaveMethod> _methods = new List<WeaveMethod>();
-		public WeaveMethod GetMethod(String signature)
-		{
-			foreach(WeaveMethod weaveMethod in Methods)
-			{
-				if(weaveMethod.Signature.Equals(signature))
-				{
-					return weaveMethod;
-				}
-			}
-
-			return null;
-		}
-
-		/// <summary>
-		/// Gets or sets the methods with instructions to weave.
-		/// </summary>
-		/// <value>The methods.</value>
-		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-		public List<WeaveMethod> Methods
-		{
-			get { return _methods; }
 		}
 
 		/// <summary>
@@ -194,7 +194,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 			{
 				foreach (WeaveMethod method in _methods)
 				{
-					if (method.InputFilter != null)
+					if (method.HasInputFilters)
 						return true;
 				}
 
@@ -215,7 +215,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 			{
 				foreach (WeaveMethod method in _methods)
 				{
-					if (method.Calls.Count > 0)
+					if (method.HasOutputFilters)
 						return true;
 				}
 

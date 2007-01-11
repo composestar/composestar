@@ -49,44 +49,22 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 	/// A call with outputfilters.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("WeaveCall", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("WeaveCall", Namespace = Constants.NS)]
 	public class WeaveCall
 	{
-		/// <summary>
-		/// _method name
-		/// </summary>
 		private string _methodName;
+		private InlineInstruction _outputFilter;
 
 		/// <summary>
 		/// Gets or sets the method name of the call.
 		/// </summary>
 		/// <value>The selector.</value>
-		/// <returns>String</returns>
 		[XmlAttribute]
 		public string MethodName
 		{
 			get { return _methodName; }
 			set { _methodName = value; }
 		}
-
-		//private int _outputFilterId;
-
-		///// <summary>
-		///// Gets or sets the output filter id. This is the id of the abstract inputfiltercode to be used
-		///// for this method.
-		///// </summary>
-		///// <value>The output filter id.</value>
-		//public int OutputFilterId
-		//{
-		//    get { return _outputFilterId; }
-		//    set { _outputFilterId = value; }
-		//}
-
-
-		/// <summary>
-		/// _output filter
-		/// </summary>
-		private InlineInstruction _outputFilter;
 
 		/// <summary>
 		/// Gets or sets the output filter id. This is the id of the abstract inputfiltercode to be used

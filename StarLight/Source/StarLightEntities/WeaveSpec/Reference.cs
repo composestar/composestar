@@ -49,118 +49,74 @@ using System.Xml.Serialization;
 namespace Composestar.StarLight.Entities.WeaveSpec
 {
 	/// <summary>
-	/// Reference
-	/// <returns>String</returns>
+	/// A reference.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("Reference", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("Reference", Namespace = Constants.NS)]
 	public class Reference
 	{
-		public const String InnerTarget = "inner";
-		public const String SelfTarget = "self";
+		public const string InnerTarget = "inner";
+		public const string SelfTarget = "self";
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Reference"/> class.
-		/// </summary>
-		public Reference()
-		{
-		}
-		
+		private string _namespace;
+		private string _target;
+		private string _assembly;
+		private string _selector;
+		private int _innerCallContext;
+
 		/// <summary>
 		/// Gets or sets the name space.
 		/// </summary>
 		/// <value>The name space.</value>
 		[XmlAttribute]
-		public String Namespace
+		public string Namespace
 		{
-			get
-			{
-				return _namespace;
-			}
-			set
-			{
-				_namespace = value;
-			}
-		}
-
-		private String _namespace;
-
-
-		/// <summary>
-		/// Gets the fullname.
-		/// </summary>
-		/// <value>The fullname.</value>
-		/// <returns>String</returns>
-		[XmlIgnore]
-		public string FullName
-		{
-			get
-			{
-				return string.Format(CultureInfo.CurrentCulture, "{0}.{1}", _namespace, _target);
-			}
+			get { return _namespace; }
+			set { _namespace = value; }
 		}
 
 		/// <summary>
 		/// Gets or sets the target.
 		/// </summary>
 		/// <value>The target.</value>
-		/// <returns>String</returns>
 		[XmlAttribute]
-		public String Target
+		public string Target
 		{
-			get
-			{
-				return _target;
-			}
-			set
-			{
-				_target = value;
-			}
+			get { return _target; }
+			set { _target = value; }
 		}
 
-		private String _target;
-		
 		/// <summary>
-		/// _assembly
+		/// Gets the fullname.
 		/// </summary>
-		private String _assembly;
+		/// <value>The fullname.</value>
+		[XmlIgnore]
+		public string FullName
+		{
+			get { return string.Concat(_namespace, ".", _target); }
+		}
 
 		/// <summary>
 		/// Gets or sets the assembly containing the type of the reference.
 		/// </summary>
-		/// <returns>String</returns>
+		/// <value>The assembly.</value>
 		[XmlAttribute]
-		public String Assembly
+		public string Assembly
 		{
-			get
-			{
-				return _assembly;
-			}
-			set
-			{
-				_assembly = value;
-			}
+			get { return _assembly; }
+			set { _assembly = value; }
 		}
 		
 		/// <summary>
 		/// Gets or sets the selector.
 		/// </summary>
 		/// <value>The selector.</value>
-		/// <returns>String</returns>
 		[XmlAttribute]
-		public String Selector
+		public string Selector
 		{
-			get
-			{
-				return _selector;
-			}
-			set
-			{
-				_selector = value;
-			}
+			get { return _selector; }
+			set { _selector = value; }
 		}
-
-		private String _selector;
 
 		/// <summary>
 		/// Gets or sets the inner call context.
@@ -169,17 +125,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		[XmlAttribute]
 		public int InnerCallContext
 		{
-			get
-			{
-				return _innerCallContext;
-			}
-			set
-			{
-				_innerCallContext = value;
-			}
+			get { return _innerCallContext; }
+			set { _innerCallContext = value; }
 		}
-
-		private int _innerCallContext;
-
 	}
 }
