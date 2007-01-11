@@ -174,7 +174,6 @@ public class CstarTest extends BaseTask
 			execute.setSpawn(false);
 			execute.setWorkingDirectory(exec.getParentFile());
 			
-			//String[] cmd = { exec.getAbsolutePath() };
 			commandLine.setExecutable(exec.getAbsolutePath());
 			execute.setCommandline(commandLine.getCommandline());
 

@@ -17,6 +17,5 @@
 	<taskdef name="j_test"				classname="Composestar.Ant.Taskdefs.Java.CstarTest"/>
 	
 	<!-- C -->
-	<taskdef name="c_comp"				classname="Composestar.Ant.Taskdefs.C.CstarComp"/>
 	<taskdef name="c_test"				classname="Composestar.Ant.Taskdefs.C.CstarTest"/>
 </antlib>
