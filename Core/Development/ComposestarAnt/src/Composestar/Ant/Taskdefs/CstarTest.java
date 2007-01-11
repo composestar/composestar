@@ -114,6 +114,11 @@ public class CstarTest extends BaseTask
 		cntCurrent = 0;
 		failList.clear();
 		
+		if (commandLine == null)
+		{
+			commandLine = new Commandline();
+		}
+		
 		runTests(tests);
 		reportResults();
 		
