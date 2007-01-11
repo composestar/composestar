@@ -129,10 +129,10 @@
 				<include name="Inventory/bin/ExampleAOP.Example.exe"/>
 				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe"/>
 				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe"/>
+				<include name="Wedding/bin/wedding.Wedding.exe"/>
 				-->
 				
 				<!-- correct.txt less tests -->
-				<include name="Wedding/bin/wedding.Wedding.exe"/>
 				
 				<!-- working as it should -->
 				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>
