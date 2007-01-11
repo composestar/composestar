@@ -115,11 +115,13 @@
 	
 	<target name="test_exec" depends="init_local">
 		<cs:test>
+			<commandline>
+				<argument value="-systemtest" />
+			</commandline>
 			<FileSet dir="${build.dotnet}/Examples">
-				<!-- output not always correct -->
+				<!-- output not always correct but should be -->
 				<!--
 				<include name="InventoryTwo/bin/InventoryTwo.Example.exe"/>
-				<include name="Wedding/bin/wedding.Wedding.exe"/>
 				-->
 				
 				<!-- plaged with deadlocks -->
@@ -129,10 +131,12 @@
 				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe"/>
 				-->
 				
+				<!-- correct.txt less tests -->
+				<include name="Wedding/bin/wedding.Wedding.exe"/>
+				
 				<!-- working as it should -->
 				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>
 				<include name="Platypus/bin/PlatypusExample.Main.exe"/>
-				<include name="PredicateQueries/bin/MyApp.Main.exe"/>
 				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe"/>				
 				
 				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe"/>

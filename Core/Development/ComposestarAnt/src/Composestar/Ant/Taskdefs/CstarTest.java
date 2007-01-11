@@ -16,6 +16,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
 /**
@@ -35,7 +36,12 @@ public class CstarTest extends BaseTask
 	/**
 	 * If true fail on the first test that failed
 	 */
-	protected boolean failOnFirstError = false;
+	protected boolean failOnFirstError = false; 
+	
+	/**
+	 * Used to pass commandline arguments to the tests
+	 */
+	protected Commandline commandLine;
 
 	/**
 	 * 5 minutes by default.
@@ -90,6 +96,11 @@ public class CstarTest extends BaseTask
 	public void addFileset(FileSet set)
 	{
 		super.addFileset(set);
+	}
+	
+	public void addCommandline(Commandline cmd)
+	{
+		commandLine = cmd;
 	}
 	
 	public void execute() throws BuildException
@@ -163,8 +174,9 @@ public class CstarTest extends BaseTask
 			execute.setSpawn(false);
 			execute.setWorkingDirectory(exec.getParentFile());
 			
-			String[] cmd = { exec.getAbsolutePath() };
-			execute.setCommandline(cmd);
+			//String[] cmd = { exec.getAbsolutePath() };
+			commandLine.setExecutable(exec.getAbsolutePath());
+			execute.setCommandline(commandLine.getCommandline());
 
 			int err = execute.execute();
 
@@ -200,6 +212,12 @@ public class CstarTest extends BaseTask
 	private void checkOutput(File exec, String output) throws Exception
 	{
 		File correct = new File(exec.getParentFile(), CORRECT_OUTPUT);
+		
+		if (!correct.exists())
+		{
+			log("No "+CORRECT_OUTPUT+" skipping output validation", Project.MSG_INFO);
+			return;
+		}
 		
 		BufferedReader expectedReader = null;
 		BufferedReader actualReader = null;
