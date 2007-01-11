@@ -35,18 +35,19 @@
 #endregion
 
 #region Using directives
+using System;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+
 using antlr.collections;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.CpsParser.Properties;
 using Composestar.StarLight.Entities.Concerns;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.IO;
-using System.Text;
 #endregion
 
 namespace Composestar.StarLight.CpsParser
@@ -56,21 +57,9 @@ namespace Composestar.StarLight.CpsParser
 	/// </summary>
 	public class CpsFileParser : ICpsParser
 	{
-		/// <summary>
-		/// _configuration
-		/// </summary>
 		private CpsParserConfiguration _configuration;
-		/// <summary>
-		/// Types
-		/// </summary>
-		private IList<string> _types = new List<string>();
-		/// <summary>
-		/// _embedded code
-		/// </summary>
+		private ISet<string> _types = new Set<string>();
 		private EmbeddedCode _embeddedCode;
-		/// <summary>
-		/// _has output filters
-		/// </summary>
 		private bool _hasOutputFilters;
 
 		/// <summary>
@@ -98,9 +87,9 @@ namespace Composestar.StarLight.CpsParser
 		/// Gets the type names that are referenced from the parsed input.
 		/// </summary>
 		/// <value>A read-only list with the names of referenced types.</value>
-		public ReadOnlyCollection<string> ReferencedTypes
+		public ISet<string> ReferencedTypes
 		{
-			get { return new ReadOnlyCollection<string>(_types); }
+			get { return _types; }
 		}
 
 		/// <summary>
@@ -205,7 +194,7 @@ namespace Composestar.StarLight.CpsParser
 				// this is actually incorrect since it will only occur if 
 				// there are less than two two closing tags in the embedded code.
 
-				throw new CpsParserException(String.Format(
+				throw new CpsParserException(string.Format(
 					Resources.ClosingTagExpected, FileName), FileName);
 			}
 
@@ -308,6 +297,5 @@ namespace Composestar.StarLight.CpsParser
 		private bool m_disposed = false;
 
 		#endregion
-
 	}
 }

@@ -53,7 +53,7 @@ namespace Composestar.StarLight.CoreServices
 		/// Gets the type names that are referenced from the parsed input.
 		/// </summary>
 		/// <value>A read-only list with the names of referenced types.</value>
-		ReadOnlyCollection<string> ReferencedTypes { get; }
+		ISet<string> ReferencedTypes { get; }
 
 		/// <summary>
 		/// Gets a value indicating whether the input parsed had output filters.
