@@ -19,7 +19,9 @@ import javax.swing.JPanel;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
+import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
+import Composestar.Core.FIRE2.model.FlowTransition;
 
 public class ViewPanel extends JPanel
 {
@@ -52,14 +54,88 @@ public class ViewPanel extends JPanel
 	{
 		super();
 
-		super.setBackground(Color.WHITE);
+		initialize(model);
+	}
+
+	public ViewPanel(FlowModel model)
+	{
+		super();
 
 		initialize(model);
 	}
 
+	private void initialize()
+	{
+		super.setBackground(Color.WHITE);
+	}
+
+	private void initialize(FlowModel model)
+	{
+		initialize();
+
+		unProcessed = new LinkedList();
+		nodeMap = new HashMap();
+		labelCounter = new HashMap();
+
+		Vector edges = new Vector();
+
+		FlowNode startNode = model.getStartNode();
+
+		rootNode = new Node(startNode);
+		nodeMap.put(startNode, rootNode);
+		unProcessed.add(startNode);
+
+		while (!unProcessed.isEmpty())
+		{
+			FlowNode node = (FlowNode) unProcessed.removeFirst();
+			process(node);
+			addLabels(node);
+		}
+
+		calculatePositions();
+	}
+
+	private void process(FlowNode flowNode)
+	{
+		Vector primaryEdges = new Vector();
+		Vector secondaryEdges = new Vector();
+
+		Node node = (Node) nodeMap.get(flowNode);
+
+		Iterator outTransitions = flowNode.getTransitions();
+		while (outTransitions.hasNext())
+		{
+			FlowTransition transition = (FlowTransition) outTransitions.next();
+
+			FlowNode nextFlowNode = transition.getEndNode();
+			if (!nodeMap.containsKey(nextFlowNode))
+			{
+				Node newNode = new Node(nextFlowNode);
+
+				nodeMap.put(nextFlowNode, newNode);
+				unProcessed.add(nextFlowNode);
+
+				Edge edge = new Edge(node, newNode);
+				primaryEdges.add(edge);
+			}
+			else
+			{
+				Node nextNode = (Node) nodeMap.get(nextFlowNode);
+
+				Edge edge = new Edge(node, nextNode);
+				secondaryEdges.add(edge);
+			}
+		}
+
+		node.primaryEdges = (Edge[]) primaryEdges.toArray(EmptyEdgeArray);
+		node.secondaryEdges = (Edge[]) secondaryEdges.toArray(EmptyEdgeArray);
+	}
+
 	private void initialize(ExecutionModel model)
 	{
-		rootNode = new Node(null);
+		initialize();
+
+		rootNode = new Node((ExecutionState) null);
 
 		unProcessed = new LinkedList();
 		nodeMap = new HashMap();
@@ -94,14 +170,12 @@ public class ViewPanel extends JPanel
 		{
 			ExecutionState state = (ExecutionState) unProcessed.removeFirst();
 			processExecState(state);
-			addLabels(state);
+			addLabels(state.getFlowNode());
 		}
 	}
 
-	private void addLabels(ExecutionState state)
+	private void addLabels(FlowNode node)
 	{
-		FlowNode node = state.getFlowNode();
-
 		Iterator iter = node.getNames();
 		while (iter.hasNext())
 		{
@@ -123,18 +197,17 @@ public class ViewPanel extends JPanel
 		}
 	}
 
-	private String getLabel(ExecutionState state)
+	private String getLabel(FlowNode flowNode)
 	{
-		if (state == null)
+		if (flowNode == null)
 		{
 			return "";
 		}
 
-		FlowNode node = state.getFlowNode();
 		String currentLabel = "";
 		int currentCount = Integer.MAX_VALUE;
 
-		Iterator iterator = node.getNames();
+		Iterator iterator = flowNode.getNames();
 		while (iterator.hasNext())
 		{
 			Object obj = iterator.next();
@@ -267,7 +340,7 @@ public class ViewPanel extends JPanel
 
 		// paint label:
 		FontMetrics metrics = g.getFontMetrics();
-		String label = getLabel(node.state);
+		String label = getLabel(node.flowNode);
 		int width = metrics.stringWidth(label);
 		if (width > 2 * RADIUS)
 		{
@@ -349,9 +422,20 @@ public class ViewPanel extends JPanel
 
 		private ExecutionState state;
 
+		private FlowNode flowNode;
+
 		public Node(ExecutionState state)
 		{
 			this.state = state;
+			if (state != null)
+			{
+				this.flowNode = state.getFlowNode();
+			}
+		}
+
+		public Node(FlowNode node)
+		{
+			this.flowNode = node;
 		}
 
 		public int treeWidth()

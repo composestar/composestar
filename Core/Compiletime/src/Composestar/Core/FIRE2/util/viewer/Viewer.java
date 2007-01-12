@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import Composestar.Core.FIRE2.model.ExecutionModel;
+import Composestar.Core.FIRE2.model.FlowModel;
 
 public class Viewer extends JFrame
 {
@@ -34,6 +35,13 @@ public class Viewer extends JFrame
 		init(model);
 	}
 
+	public Viewer(FlowModel model)
+	{
+		super();
+
+		init(model);
+	}
+
 	public Viewer(JPanel controlPanel, ExecutionModel model)
 	{
 		super();
@@ -47,9 +55,20 @@ public class Viewer extends JFrame
 		viewPanel.highlightNodes(executionStates);
 	}
 
+	private void init(FlowModel model){
+		viewPanel = new ViewPanel(model);
+		
+		init();
+	}
+	
 	private void init(ExecutionModel model)
 	{
 		viewPanel = new ViewPanel(model);
+		
+		init();
+	}
+	
+	private void init(){
 		JScrollPane scroller = new JScrollPane(viewPanel);
 
 		if (controlPanel != null)
