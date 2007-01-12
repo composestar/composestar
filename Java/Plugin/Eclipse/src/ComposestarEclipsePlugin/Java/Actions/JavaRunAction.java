@@ -173,17 +173,17 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 		try
 		{
 			CommandLineExecutor cmdExec = new CommandLineExecutor();
-			int result = cmdExec.exec("call " + command, new File(project.getLocation().toOSString()));
+			int result = cmdExec.exec(/*"call " +*/ command, new File(project.getLocation().toOSString()));
 
 			if (result == 0)
 			{
-				System.out.print(cmdExec.outputNormal());
+				//System.out.print(cmdExec.outputNormal());
 				completed = true;
 			}
 			else
 			{
-				System.out.print(cmdExec.outputNormal());
-				System.err.print(cmdExec.outputError());
+				//System.out.print(cmdExec.outputNormal());
+				//System.err.print(cmdExec.outputError());
 				Debug.instance().Log("Program run failure reported by process. Exit code is " + result,
 						IComposestarConstants.MSG_ERROR);
 			}

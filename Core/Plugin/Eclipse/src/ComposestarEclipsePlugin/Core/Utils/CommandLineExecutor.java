@@ -2,6 +2,8 @@ package ComposestarEclipsePlugin.Core.Utils;
 
 import java.io.File;
 
+import ComposestarEclipsePlugin.Core.Debug;
+
 /**
  * CmdExec is a tool for running command line programs. Its intention is to
  * handle command line calls for all operating systems. Things that do not work: -
@@ -36,7 +38,7 @@ public class CommandLineExecutor
 	{
 		return ErrorGobbler.result();
 	}
-
+	
 	/**
 	 * Execute command. exec executes the command and waits for it to return.
 	 * WARNING: If the program hangs this function will never return. Please
@@ -49,48 +51,7 @@ public class CommandLineExecutor
 	 */
 	public int exec(String execString)
 	{
-		try
-		{
-			String osName = System.getProperty("os.name");
-			// "some" OSs need special treatment to be able to use built in
-			// functions
-			if (osName.equals("Windows NT") || osName.equals("Windows 2000") || osName.equals("Windows CE")
-					|| osName.equals("Windows XP"))
-			{
-				execString = "cmd.exe /C " + execString;
-			}
-			else if (osName.equals("Windows 95") || osName.equals("Windows 98") || osName.equals("Windows ME"))
-			{
-				execString = "command.exe /C " + execString;
-			}
-			// else real operating systems handle this flawlessly
-
-			Runtime rt = Runtime.getRuntime();
-
-			Process proc = rt.exec(execString);
-
-			// connect error and output filters
-			// these are threads because the buffers used to hold the output
-			// data
-			// could otherwise overrun which blocks the program.
-			ErrorGobbler = new StreamGobbler(proc.getErrorStream());
-			OutputGobbler = new StreamGobbler(proc.getInputStream());
-			ErrorGobbler.start();
-			OutputGobbler.start();
-
-			// wait for program return.
-			int exitVal = proc.waitFor();
-
-			// wait for the output threads
-			OutputGobbler.waitForResult();
-			ErrorGobbler.waitForResult();
-			return exitVal;
-		}
-		catch (Throwable t)
-		{
-			t.printStackTrace();
-		}
-		return -1;
+		return exec(execString, null);
 	}
 
 	public int exec(String execString, File dir)
@@ -119,8 +80,8 @@ public class CommandLineExecutor
 			// these are threads because the buffers used to hold the output
 			// data
 			// could otherwise overrun which blocks the program.
-			ErrorGobbler = new StreamGobbler(proc.getErrorStream());
-			OutputGobbler = new StreamGobbler(proc.getInputStream());
+			ErrorGobbler = new StreamGobbler(proc.getErrorStream(), Debug.instance().getErrorStream());
+			OutputGobbler = new StreamGobbler(proc.getInputStream(), Debug.instance().getOutputStream());
 			ErrorGobbler.start();
 			OutputGobbler.start();
 
@@ -149,6 +110,6 @@ public class CommandLineExecutor
 	{
 		CommandLineExecutor e = new CommandLineExecutor();
 		e.exec(args[0]);
-		System.out.println(e.outputNormal());
+		//System.out.println(e.outputNormal());
 	}
 }

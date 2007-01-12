@@ -18,7 +18,6 @@ public class TestBuild implements IPlatformRunnable
 	public Object run(Object args) throws Exception
 	{
 		Object[] args_ = (Object[]) args;
-		PrintStream orig = System.out;
 
 		try
 		{
@@ -29,9 +28,6 @@ public class TestBuild implements IPlatformRunnable
 
 			// disable debugging
 			Debug.instance().setEnabled(false);
-
-			// retrieve the original printstream
-			System.setOut(orig);
 
 			// find project
 			IJavaProject jp = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaProject("" + args_[0]);

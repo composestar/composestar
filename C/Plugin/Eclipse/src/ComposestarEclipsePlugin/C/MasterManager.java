@@ -36,12 +36,12 @@ public class MasterManager
 
 			if (result == 0)
 			{
-				Debug.instance().Log(cmdExec.outputNormal());
+				//Debug.instance().Log(cmdExec.outputNormal());
 				completed = true;
 			}
 			else
 			{
-				Debug.instance().Log(cmdExec.outputError());
+				//Debug.instance().Log(cmdExec.outputError());
 				Debug.instance().Log("Master run failure reported by process. Exit code is " + result, Debug.MSG_ERROR);
 			}
 		}

@@ -70,8 +70,6 @@ public class PlatformRunnable implements IPlatformRunnable
 		String osName = System.getProperty("os.name");
 		String eclipseInstallationOS = "";
 
-		Debug.instance().setToStdOut(true);
-
 		for (int i = 0; i < eclipseInstallation.length; i++)
 		{
 			eclipseInstallationOS += eclipseInstallation[i] + java.io.File.separatorChar;

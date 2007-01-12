@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Compose*">
-	<item value="bin\" key="buildPath"/>
-	<item value="bin\" key="outputPath"/>
-	<item value="" key="verifyAssemblies"/>
-	<item value="CustomFilters\Decryption.jar&#x0A;CustomFilters\Encryption.jar" key="customFilter"/>
-	<item value="3" key="runDebugLevel"/>
-	<item value="ExampleRunner" key="applicationStart"/>
-	<item value="C:/sandbox/C/Examples/EncryptionExample" key="basePath"/>
-	<item value="3" key="buildDebugLevel"/>
-	<item value="" key="secretMode"/>
-	<item value="" key="debugger"/>
-	<item value="" key="filterModuleOrder"/>
-	<item value="JAVA" key="language"/>
-	<item value="" key="incremental"/>
-	<item value="%composestar%/binaries/ComposestarCORE.jar;%composestar%/binaries/ComposestarC.jar;%composestar%/binaries/antlr.jar;%composestar%/binaries/prolog/prolog.jar;%composestar%/binaries/groove/castor-0_9_5_2-xml.jar;%composestar%/binaries/groove/groove-1_2_0.jar;%composestar%/binaries/groove/jgraph.jar;%composestar%/binaries/groove/xerces-2_6_0-xercesImpl.jar;%composestar%/binaries/groove/xerces-2_6_0-xml-apis.jar;" key="classPath"/>
+	<item key="customFilter" value="CustomFilters\Decryption.jar&#x0A;CustomFilters\Encryption.jar"/>
+	<item key="incremental" value=""/>
+	<item key="runDebugLevel" value="3"/>
+	<item key="debugger" value=""/>
+	<item key="outputPath" value="bin\"/>
+	<item key="filterModuleOrder" value=""/>
+	<item key="language" value="JAVA"/>
+	<item key="secretMode" value=""/>
+	<item key="verifyAssemblies" value=""/>
+	<item key="basePath" value="D:/dev/Afstuderen/sandbox/C/Examples/EncryptionExample"/>
+	<item key="buildPath" value="bin\"/>
+	<item key="applicationStart" value="ExampleRunner"/>
+	<item key="classPath" value="%composestar%/binaries/ComposestarCORE.jar;%composestar%/binaries/ComposestarC.jar;%composestar%/binaries/antlr.jar;%composestar%/binaries/prolog/prolog.jar;%composestar%/binaries/groove/castor-0_9_5_2-xml.jar;%composestar%/binaries/groove/groove-1_2_0.jar;%composestar%/binaries/groove/jgraph.jar;%composestar%/binaries/groove/xerces-2_6_0-xercesImpl.jar;%composestar%/binaries/groove/xerces-2_6_0-xml-apis.jar;"/>
+	<item key="buildDebugLevel" value="3"/>
 </section>

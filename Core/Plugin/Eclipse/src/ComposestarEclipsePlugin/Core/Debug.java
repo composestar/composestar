@@ -26,23 +26,33 @@ public class Debug implements IComposestarConstants
 	private MessageConsole myConsole;
 
 	private boolean enabled = true;
-	
-	private boolean toStdOut = false;
-	
-	private PrintStream origOut;
-	
-	private PrintStream newOut;
+
+	private PrintStream outputStream;
+
+	private PrintStream errorStream;
 
 	public Debug()
 	{
-		myConsole = new MessageConsole(CONSOLE_TITLE, null);
-		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { myConsole });
-		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(myConsole);
-		stream = myConsole.newMessageStream();
-		stream.setActivateOnWrite(true);
-		origOut = System.out;
-		newOut = new PrintStream(stream);
-		System.setOut(newOut);
+		if (Display.getCurrent() != null) // no display == headless
+		{
+			myConsole = new MessageConsole(CONSOLE_TITLE, null);
+			ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { myConsole });
+			ConsolePlugin.getDefault().getConsoleManager().showConsoleView(myConsole);
+
+			stream = myConsole.newMessageStream();
+			stream.setActivateOnWrite(true);
+			outputStream = new PrintStream(stream);
+
+			stream = myConsole.newMessageStream();
+			stream.setActivateOnWrite(true);
+			stream.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+			errorStream = new PrintStream(stream);
+		}
+		else
+		{
+			outputStream = System.out;
+			errorStream = System.err;
+		}
 	}
 
 	public static Debug instance()
@@ -56,7 +66,10 @@ public class Debug implements IComposestarConstants
 
 	public void clear()
 	{
-		myConsole.clearConsole();
+		if (myConsole != null)
+		{
+			myConsole.clearConsole();
+		}
 	}
 
 	public void Log(String msg)
@@ -77,52 +90,60 @@ public class Debug implements IComposestarConstants
 
 	private void PrintMessage(final String msg, final int msgKind)
 	{
-		if (toStdOut)
+		if (myConsole != null)
 		{
-			System.out.println(msg);
-		}
-		
-		// Print the message in the UI Thread in async mode
-		Display.getDefault().asyncExec(new Runnable()
-		{
-			public void run()
+			// Print the message in the UI Thread in async mode
+			Display.getDefault().asyncExec(new Runnable()
 			{
-				int swtColorId = SWT.COLOR_BLACK;
-
-				switch (msgKind)
+				public void run()
 				{
-					case MSG_INFORMATION:
-						swtColorId = SWT.COLOR_BLACK;
-						break;
-					case MSG_ERROR:
-						swtColorId = SWT.COLOR_RED;
-						break;
-					case MSG_WARNING:
-						swtColorId = SWT.COLOR_YELLOW;
-						break;
-					default:
+					int swtColorId = SWT.COLOR_BLACK;
+
+					switch (msgKind)
+					{
+						case MSG_INFORMATION:
+							swtColorId = SWT.COLOR_BLACK;
+							break;
+						case MSG_ERROR:
+							swtColorId = SWT.COLOR_RED;
+							break;
+						case MSG_WARNING:
+							swtColorId = SWT.COLOR_YELLOW;
+							break;
+						default:
+					}
+					stream = myConsole.newMessageStream();
+					stream.setColor(Display.getCurrent().getSystemColor(swtColorId));
+					stream.println(msg);
 				}
-				stream = myConsole.newMessageStream();
-				stream.setColor(Display.getCurrent().getSystemColor(swtColorId));
-				stream.println(msg);
+			});
+		}
+		else
+		{
+			switch (msgKind)
+			{
+				case MSG_ERROR:
+					errorStream.println(msg);
+					break;
+				default:
+					outputStream.println(msg);
+					break;
 			}
-		});
+		}
 	}
 
 	public void setEnabled(boolean b)
 	{
 		this.enabled = b;
 	}
-	
-	public void setToStdOut(boolean b)
+
+	public PrintStream getErrorStream()
 	{
-		this.toStdOut = b;
-		if (toStdOut)
-		{
-			System.setOut(origOut);
-		}
-		else {
-			System.setOut(newOut);
-		}
+		return errorStream;
+	}
+
+	public PrintStream getOutputStream()
+	{
+		return outputStream;
 	}
 }

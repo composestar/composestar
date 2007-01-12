@@ -28,15 +28,11 @@ public class TestRun implements IPlatformRunnable
 	public Object run(Object args) throws Exception
 	{
 		Object[] args_ = (Object[]) args;
-		PrintStream orig = System.out;
 
 		try
 		{
 			// disable debugging
 			Debug.instance().setEnabled(false);
-
-			// retrieve the original printstream
-			System.setOut(orig);
 
 			// disable auto building
 			IWorkspace ws = ResourcesPlugin.getWorkspace();
