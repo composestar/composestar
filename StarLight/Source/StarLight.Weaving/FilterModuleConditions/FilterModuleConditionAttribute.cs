@@ -34,56 +34,63 @@
 */
 #endregion
 
+#region Using directives
 using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using Composestar.StarLight.Entities.Concerns;
+using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.WeaveSpec;
+using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.Utilities.Interfaces;
-using Composestar.StarLight.Utilities;
+#endregion
 
-namespace Composestar.StarLight.Weaving.Strategies
+namespace Composestar.StarLight.Weaving.FilterModuleConditions
 {
 	/// <summary>
-	/// Strategy to create the NotImplementedAction. This action injects <see cref="T:System.NotImplementedException">NotImplementedExceptions</see> into the code.
+	/// The base class for the custom attributes for Filter Module Conditions.
 	/// </summary>
-	[WeaveStrategyAttribute("NotImplementedAction")]
 	[CLSCompliant(false)]
-	
-	public class NotImplementedActionWeaveStrategy : FilterActionWeaveStrategy
+	[AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+	public abstract class FilterModuleConditionAttribute : Attribute
 	{
 
 		/// <summary>
-		/// Weaves the NotImplementedException action.
+		/// Perform the actual IL code generation needed for the Filter Module Condition.
+		/// For instance, this function can create the information which can be used by the condition function.
 		/// </summary>
 		/// <param name="visitor">The visitor.</param>
-		/// <param name="filterAction">The filter action.</param>
 		/// <param name="originalCall">The original call.</param>
-		/// <remarks>
-		/// Generate exception throw
-		/// </remarks>
-		/// <example>
-		/// The following construction should be created:
-		/// <code>
-		/// throw new NotImplementedException();
-		/// </code>
-		/// or in IL code:
-		/// <code>
-		/// newobj instance void [mscorlib]System.NotImplementedException::.ctor()
-		/// throw
-		/// </code>
-		/// </example>
-		public override void Weave(ICecilInliningInstructionVisitor visitor, FilterAction filterAction,
-			MethodDefinition originalCall)
-		{
-			// Create an exception
-			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Newobj,
-				CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
-				typeof(NotImplementedException).GetConstructors()[0])));
+		/// <param name="conditionMethod">The condition method.</param>
+		public abstract void Generate(ICecilInliningInstructionVisitor visitor, MethodDefinition originalCall, MethodElement conditionMethod);
 
-			// Throw the exception
-			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Throw));
-		}
+		/// <summary>
+		/// Determines whether the specified condition method is valid for this type of code generation.
+		/// If this function returns false, then the RequiredCondition text is displayed.
+		/// </summary>
+		/// <param name="conditionMethod">The condition method.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified condition method is valid; otherwise, <c>false</c>.
+		/// </returns>
+		public abstract bool IsValidCondition(MethodElement conditionMethod);
+
+		/// <summary>
+		/// Returns a description of this Filter Module Condition.
+		/// </summary>
+		/// <returns>String</returns>
+		public abstract string Description { get; }
+
+		/// <summary>
+		/// Gets the required condition text. The developer has to specify the message to show when the IsValidCondition is false.
+		/// </summary>
+		/// <value>The required condition message text.</value>
+		public abstract string RequiredCondition { get; }
+
 	}
 }

@@ -88,6 +88,60 @@ namespace Composestar.StarLight.Weaving.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filter Module Condition which requires no parameters..
+        /// </summary>
+        internal static string FMCEmptyDescription {
+            get {
+                return ResourceManager.GetString("FMCEmptyDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This Filter Module Condition requires a boolean function with no parameters..
+        /// </summary>
+        internal static string FMCEmptyRequired {
+            get {
+                return ResourceManager.GetString("FMCEmptyRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter Module Condition with the fully qualified name of the current executing method..
+        /// </summary>
+        internal static string FMCFQNDescription {
+            get {
+                return ResourceManager.GetString("FMCFQNDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This Filter Module Condition requires a boolean function with a string as parameter..
+        /// </summary>
+        internal static string FMCFQNRequired {
+            get {
+                return ResourceManager.GetString("FMCFQNRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter Module Condition with a MethodInfo object as its parameter..
+        /// </summary>
+        internal static string FMCMethodInfoDescription {
+            get {
+                return ResourceManager.GetString("FMCMethodInfoDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This Filter Module Condition requires a boolean function with one parameter with as its type a System.Reflection.MethodInfo..
+        /// </summary>
+        internal static string FMCMethodInfoRequired {
+            get {
+                return ResourceManager.GetString("FMCMethodInfoRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not set inner call context for method &apos;{0}&apos; calling method &apos;{1}&apos;.
         /// </summary>
         internal static string SetInnerCallFailed {

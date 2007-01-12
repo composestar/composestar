@@ -126,6 +126,24 @@
   <data name="FieldNotFound" xml:space="preserve">
     <value>The field {0} could not be found.</value>
   </data>
+  <data name="FMCEmptyDescription" xml:space="preserve">
+    <value>Filter Module Condition which requires no parameters.</value>
+  </data>
+  <data name="FMCEmptyRequired" xml:space="preserve">
+    <value>This Filter Module Condition requires a boolean function with no parameters.</value>
+  </data>
+  <data name="FMCFQNDescription" xml:space="preserve">
+    <value>Filter Module Condition with the fully qualified name of the current executing method.</value>
+  </data>
+  <data name="FMCFQNRequired" xml:space="preserve">
+    <value>This Filter Module Condition requires a boolean function with a string as parameter.</value>
+  </data>
+  <data name="FMCMethodInfoDescription" xml:space="preserve">
+    <value>Filter Module Condition with a MethodInfo object as its parameter.</value>
+  </data>
+  <data name="FMCMethodInfoRequired" xml:space="preserve">
+    <value>This Filter Module Condition requires a boolean function with one parameter with as its type a System.Reflection.MethodInfo.</value>
+  </data>
   <data name="SetInnerCallFailed" xml:space="preserve">
     <value>Could not set inner call context for method '{0}' calling method '{1}'</value>
   </data>

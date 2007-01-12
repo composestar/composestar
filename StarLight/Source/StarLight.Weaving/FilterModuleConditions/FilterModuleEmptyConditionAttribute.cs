@@ -35,40 +35,84 @@
 #endregion
 
 #region Using directives
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Diagnostics.CodeAnalysis;
+
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
 using Composestar.StarLight.Entities.Concerns;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.Utilities.Interfaces;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Composestar.StarLight.Utilities;
 #endregion
 
-namespace Composestar.StarLight.Weaving.Strategies
+namespace Composestar.StarLight.Weaving.FilterModuleConditions
 {
 	/// <summary>
-	/// A continue action does not perform any operation. It will simple skip to the next filter.
+	/// Apply this attribute to Filter Module Conditions which requires no parameters and thus no information about the current method.
 	/// </summary>
-	/// <returns>Filter action weave strategy</returns>
-	[WeaveStrategyAttribute("ContinueAction")]
-	[CLSCompliant(false)]	
-	public class ContinueActionWeaveStrategy : FilterActionWeaveStrategy
+	[CLSCompliant(false)]
+	public class FilterModuleEmptyConditionAttribute : FilterModuleConditionAttribute
 	{
+		private readonly string _booleanReturnType = typeof(Boolean).FullName;
 
 		/// <summary>
-		/// Generate the code which has to be inserted at the place of the filter specified by the visitor.
+		/// Returns a description of this Filter Module Condition.
+		/// </summary>
+		/// <value></value>
+		/// <returns>String</returns>
+		public override string Description
+		{
+			get { return Properties.Resources.FMCEmptyDescription; }
+		}
+
+		/// <summary>
+		/// Perform the actual IL code generation needed for the Filter Module Condition.
+		/// For instance, this function can create the information which can be used by the condition function.
 		/// </summary>
 		/// <param name="visitor">The visitor.</param>
-		/// <param name="filterAction">The filter action.</param>
 		/// <param name="originalCall">The original call.</param>
-		public override void Weave(ICecilInliningInstructionVisitor visitor, FilterAction filterAction,
-			MethodDefinition originalCall)
+		/// <param name="conditionMethod">The condition method.</param>
+		[CLSCompliant(false)]
+		public override void Generate(ICecilInliningInstructionVisitor visitor, MethodDefinition originalCall, MethodElement conditionMethod)
 		{
-			//do nothing
+			// We do not need to generate any code since there are no parameters.
+		}
+
+		/// <summary>
+		/// Determines whether the specified condition method is valid for this type of code generation.
+		/// If this function returns false, then the RequiredCondition text is displayed.
+		/// </summary>
+		/// <param name="conditionMethod">The condition method.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified condition method is valid; otherwise, <c>false</c>.
+		/// </returns>
+		public override bool IsValidCondition(MethodElement conditionMethod)
+		{
+			// Method must return a bool
+			if (!conditionMethod.ReturnType.Equals(_booleanReturnType))
+				return false;
+
+			// There should be no parameters
+			if (conditionMethod.Parameters.Count > 0)
+				return false;
+
+			return true;
+		}
+
+		/// <summary>
+		/// Gets the required condition text. The developer has to specify the message to show when the IsValidCondition is false.
+		/// </summary>
+		/// <value>The required condition message text.</value>
+		public override string RequiredCondition
+		{
+			get { return Properties.Resources.FMCEmptyRequired; }
 		}
 	}
 }
