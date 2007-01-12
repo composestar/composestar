@@ -122,6 +122,7 @@
     <Compile Include="Configuration\KeyValueSetting.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="LanguageModel\AttributeElement.cs" />
+    <Compile Include="LanguageModel\ExpandedAssembly.cs" />
     <Compile Include="LanguageModel\ICustomAttributes.cs" />
     <Compile Include="LanguageModel\Signatures.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

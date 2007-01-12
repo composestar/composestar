@@ -50,17 +50,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 	/// </summary>
 	/// <returns>Condition expression</returns>
 	[Serializable]
-	[XmlRoot("True", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("TrueCondition", Namespace = Constants.NS)]
 	public class TrueCondition : ConditionExpression, IVisitable
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:True"/> class.
-		/// </summary>
-		public TrueCondition()
-		{
-
-		}
-
 		/// <summary>
 		/// Accepts the specified visitor.
 		/// </summary>
@@ -72,7 +64,5 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 
 			visitor.VisitTrue(this);
 		}
-
 	}
-
 }

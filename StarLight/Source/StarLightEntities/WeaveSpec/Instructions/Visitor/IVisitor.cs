@@ -40,7 +40,6 @@ using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 
 namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor
 {
-
 	/// <summary>
 	/// Visitor for the instructions.
 	/// </summary>    
@@ -51,11 +50,13 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor
 		/// </summary>
 		/// <param name="branch">The branch.</param>
 		void VisitBranch(Branch branch);
+		
 		/// <summary>
 		/// Visits the branch false.
 		/// </summary>
 		/// <param name="branch">The branch.</param>
 		void VisitBranchFalse(Branch branch);
+		
 		/// <summary>
 		/// Visits the branch end.
 		/// </summary>

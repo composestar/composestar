@@ -50,7 +50,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 	/// </summary>
 	/// <returns>Inline instruction</returns>
 	[Serializable]
-	[XmlRoot("Jump", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("JumpInstruction", Namespace = Constants.NS)]
 	public class JumpInstruction : InlineInstruction, IVisitable
 	{
 		/// <summary>
@@ -99,6 +99,5 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 			base.Accept(visitor);
 			visitor.VisitJumpInstruction(this);
 		}
-
 	}
 }

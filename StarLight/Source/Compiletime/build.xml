@@ -78,7 +78,7 @@
 		         classpathref="lib.xmlbeans"/>
 
 		<xmlbean classpathref="lib.xmlbeans"
-		         schema="${out.xmltypes}/schema0.xsd" 
+		         schema="${out.xmltypes}/schema1.xsd" 
 		         destfile="${xmltypes.jar}" 
 		         srcgendir="${out.xmltypes}"/>
 

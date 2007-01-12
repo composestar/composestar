@@ -50,12 +50,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 	/// </summary>
 	/// <returns>IVisitable</returns>
 	[Serializable]
-	[XmlRoot("Label", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("Label", Namespace = Constants.NS)]
 	public class Label : IVisitable
 	{
-		/// <summary>
-		/// _id
-		/// </summary>
 		private int _id;
 
 		/// <summary>
@@ -83,8 +80,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		[XmlAttribute]
 		public int Id
 		{
-			get { return _id; } // get
-			set { _id = value; } // set
+			get { return _id; }
+			set { _id = value; }
 		}
 
 		/// <summary>
@@ -93,8 +90,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// <param name="visitor">The visitor.</param>
 		public void Accept(IVisitor visitor)
 		{
-
 		}
-
 	}
 }

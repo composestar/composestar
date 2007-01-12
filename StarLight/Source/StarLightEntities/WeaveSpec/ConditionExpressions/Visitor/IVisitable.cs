@@ -46,5 +46,5 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor
 		/// </summary>
 		/// <param name="visitor">The visitor.</param>
 		void Accept(IVisitor visitor);
-	} // IVisitable
+	}
 }

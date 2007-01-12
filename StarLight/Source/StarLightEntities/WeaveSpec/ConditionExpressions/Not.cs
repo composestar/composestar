@@ -50,15 +50,10 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 	/// </summary>
 	/// <returns>Condition expression</returns>
 	[Serializable]
-	[XmlRoot("Not", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("NotCondition", Namespace = Constants.NS)]
 	public class NotCondition : ConditionExpression, IVisitable
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Not"/> class.
-		/// </summary>
-		public NotCondition()
-		{
-		}
+		private ConditionExpression _operand;
 
 		/// <summary>
 		/// Gets or sets the operand.
@@ -66,18 +61,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 		/// <value>The operand.</value>
 		public ConditionExpression Operand
 		{
-			get
-			{
-				return _operand;
-			}
-			set
-			{
-				_operand = value;
-			}
+			get { return _operand; }
+			set { _operand = value; }
 		}
-
-		private ConditionExpression _operand;
-
 
 		/// <summary>
 		/// Accepts the specified visitor.
@@ -94,6 +80,5 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 			}
 			visitor.VisitNot(this);
 		}
-
 	}
 }

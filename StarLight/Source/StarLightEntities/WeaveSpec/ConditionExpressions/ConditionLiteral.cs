@@ -51,37 +51,21 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 	/// </summary>
 	/// <returns>Condition expression</returns>
 	[Serializable]
-	[XmlRoot("ConditionLiteral", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("ConditionLiteral", Namespace = Constants.NS)]
 	public class ConditionLiteral : ConditionExpression, IVisitable
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:ConditionLiteral"/> class.
-		/// </summary>
-		public ConditionLiteral()
-		{
-
-		}
+		private string _name;
 
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
 		/// <value>The name.</value>
-		/// <returns>String</returns>
 		[XmlAttribute]
-		public String Name
+		public string Name
 		{
-			get
-			{
-				return _name;
-			}
-			set
-			{
-				_name = value;
-			}
+			get { return _name; }
+			set { _name = value; }
 		}
-
-		private String _name;
-
 
 		/// <summary>
 		/// Accepts the specified visitor.
@@ -94,6 +78,5 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 
 			visitor.VisitConditionLiteral(this);
 		}
-
 	}
 }

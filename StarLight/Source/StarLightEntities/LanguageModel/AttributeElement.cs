@@ -85,7 +85,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	/// Contains a single attribute value.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("AttributeValue", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("AttributeValueElement", Namespace = Constants.NS)]
 	public sealed class AttributeValueElement
 	{
 		private string _name;

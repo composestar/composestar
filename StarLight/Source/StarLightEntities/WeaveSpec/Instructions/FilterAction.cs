@@ -53,43 +53,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 	/// </summary>
 	/// <returns>Inline instruction</returns>
 	[Serializable]
-	[XmlRoot("FilterActionInstruction", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("FilterAction", Namespace = Constants.NS)]
 	public class FilterAction : InlineInstruction, IVisitable
 	{
-
-		#region Private Variables
-
-		/// <summary>
-		/// _type
-		/// </summary>
-		private string _type;
-		/// <summary>
-		/// _full name
-		/// </summary>
-		private string _fullName;
-		/// <summary>
-		/// _selector
-		/// </summary>
-		private string _selector;
-		/// <summary>
-		/// _target
-		/// </summary>
-		private string _target;
-		private string _substitutionSelector;
-		private string _substitutionTarget;
-
-		/// <summary>
-		/// Indicates whether this filter action instruction should be executed on call or on return.
-		/// </summary>
-		private bool _onCall;
-
-		/// <summary>
-		/// Indicates whether this filter action instruction returns the flow (only when it is on call).
-		/// </summary>
-		private bool _returning;
-
-		#endregion
-
 		#region Constants
 
 		public const String DispatchAction = "DispatchAction";
@@ -105,6 +71,27 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		public const String SelfTarget = "self";
 
 		private const String GeneralizeSelector = "_";
+
+		#endregion
+
+		#region Private Variables
+
+		private string _type;
+		private string _fullName;
+		private string _selector;
+		private string _target;
+		private string _substitutionSelector;
+		private string _substitutionTarget;
+
+		/// <summary>
+		/// Indicates whether this filter action instruction should be executed on call or on return.
+		/// </summary>
+		private bool _onCall;
+
+		/// <summary>
+		/// Indicates whether this filter action instruction returns the flow (only when it is on call).
+		/// </summary>
+		private bool _returning;
 
 		#endregion
 
@@ -172,14 +159,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		[XmlAttribute]
 		public String Type
 		{
-			get
-			{
-				return _type;
-			}
-			set
-			{
-				_type = value;
-			}
+			get { return _type; }
+			set { _type = value; }
 		}
 		/// <summary>
 		/// Indicates whether this filter action instruction should be executed on call or on return.
@@ -203,16 +184,14 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 
 		#endregion
 
-		#region ctor
+		#region Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:FilterAction"/> class.
 		/// </summary>
 		public FilterAction()
 		{
-
 		}
-
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:FilterAction"/> class.

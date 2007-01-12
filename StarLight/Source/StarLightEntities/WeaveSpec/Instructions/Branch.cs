@@ -49,27 +49,15 @@ using System.Xml.Serialization;
 /// </summary>
 namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 {
-
 	/// <summary>
 	/// A branch contains two blocks; a true and a false flow. The condition determines which path is taken at runtime.
 	/// </summary>
-	/// <returns>Inline instruction</returns>
 	[Serializable]
-	[XmlRoot("Branch", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("Branch", Namespace = Constants.NS)]
 	public class Branch : InlineInstruction, IVisitable
 	{
-		/// <summary>
-		/// _condition expression
-		/// </summary>
 		private ConditionExpression _conditionExpression;
-
-		/// <summary>
-		/// _true block
-		/// </summary>
 		private Block _trueBlock;
-		/// <summary>
-		/// _false block
-		/// </summary>
 		private Block _falseBlock;
 
 		/// <summary>
@@ -77,7 +65,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// </summary>
 		public Branch()
 		{
-
 		}
 
 		/// <summary>
@@ -87,7 +74,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		public Branch(ConditionExpression conditionExpression)
 		{
 			_conditionExpression = conditionExpression;
-
 		}
 
 		/// <summary>
@@ -96,14 +82,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// <value>The true block.</value>
 		public Block TrueBlock
 		{
-			get
-			{
-				return _trueBlock;
-			}
-			set
-			{
-				_trueBlock = value;
-			}
+			get { return _trueBlock; }
+			set { _trueBlock = value; }
 		}
 
 		/// <summary>
@@ -112,14 +92,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// <value>The false block.</value>
 		public Block FalseBlock
 		{
-			get
-			{
-				return _falseBlock;
-			}
-			set
-			{
-				_falseBlock = value;
-			}
+			get { return _falseBlock; }
+			set { _falseBlock = value; }
 		}
 
 		/// <summary>
@@ -130,14 +104,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		[XmlElement("Condition")]
 		public ConditionExpression ConditionExpression
 		{
-			get
-			{
-				return _conditionExpression;
-			}
-			set
-			{
-				_conditionExpression = value;
-			}
+			get { return _conditionExpression; }
+			set { _conditionExpression = value; }
 		}
 
 
@@ -159,9 +127,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 			if (_falseBlock != null)
 				((IVisitable)_falseBlock).Accept(visitor);
 			visitor.VisitBranchEnd(this);
-
 		}
-
-
 	}
 }

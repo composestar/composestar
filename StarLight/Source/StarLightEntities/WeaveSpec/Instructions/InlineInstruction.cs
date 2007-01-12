@@ -49,19 +49,14 @@ using System.Xml.Serialization;
 /// </summary>
 namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 {
-
 	/// <summary>
 	/// Base class for the inline weaving instructions.
 	/// </summary>
 	/// <returns>IVisitable</returns>
 	[Serializable]
-	[XmlRoot("Instruction", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("InlineInstruction", Namespace = Constants.NS)]
 	public abstract class InlineInstruction : IVisitable
 	{
-
-		/// <summary>
-		/// _label
-		/// </summary>
 		private int _label;
 
 		/// <summary>
@@ -69,7 +64,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// </summary>
 		protected InlineInstruction()
 		{
-
 		}
 
 		/// <summary>
@@ -81,23 +75,15 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 			_label = label;
 		}
 
-
 		/// <summary>
 		/// Gets or sets the label.
 		/// </summary>
 		/// <value>The label.</value>
-		/// <returns>Int</returns>
 		[XmlAttribute]
 		public int Label
 		{
-			get
-			{
-				return _label;
-			}
-			set
-			{
-				_label = value;
-			}
+			get { return _label; }
+			set { _label = value; }
 		}
 
 		/// <summary>
@@ -122,6 +108,5 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		{
 			return string.Format(CultureInfo.CurrentCulture, "Label {0}:\n", _label.ToString(CultureInfo.CurrentCulture));
 		}
-
 	}
 } 

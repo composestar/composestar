@@ -52,7 +52,7 @@ namespace Composestar.StarLight.Entities.Configuration
 	/// Contains configuration about the assembly.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("AssemblyConfig", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("AssemblyConfig", Namespace = Constants.NS)]
 	public class AssemblyConfig
 	{
 		private AssemblyElement _assembly;
@@ -60,8 +60,9 @@ namespace Composestar.StarLight.Entities.Configuration
 		private string _fileName;
 		private long _timestamp;
 		private bool _isReference;
-		private string _serializedFileName = string.Empty;
+		private string _typeSpec;
 		private string _weaveSpec;
+		private string _expandSpec;
 		private PdbMode _debugFileMode = PdbMode.HideFilters;
 
 		/// <summary>
@@ -126,24 +127,10 @@ namespace Composestar.StarLight.Entities.Configuration
 		/// </summary>
 		/// <value>The serialized filename.</value>
 		[XmlAttribute]
-		public string SerializedFileName
+		public string TypeSpecificationFile
 		{
-			get { return _serializedFileName; }
-			set { _serializedFileName = value; }
-		}
-
-		/// <summary>
-		/// Generate a serialized filename to be used to store the file.
-		/// </summary>
-		public void GenerateSerializedFileName(string objectFolder)
-		{
-			string name = _name;
-			name = name.Replace(", ", "_");
-			name = name.Replace(".", "_");
-			name = name.Replace("Version=", "");
-			name = name.Replace("Culture=", "");
-			name = name.Replace("PublicKeyToken=", "");
-			_serializedFileName = Path.Combine(objectFolder, string.Concat(name, ".xml.gzip"));
+			get { return _typeSpec; }
+			set { _typeSpec = value; }
 		}
 
 		/// <summary>
@@ -157,6 +144,13 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _weaveSpec = value; }
 		}
 
+		[XmlAttribute]
+		public string ExpansionSpecificationFile
+		{
+			get { return _expandSpec; }
+			set { _expandSpec = value; }
+		}
+
 		/// <summary>
 		/// Gets or sets the debug file mode.
 		/// </summary>
@@ -166,6 +160,20 @@ namespace Composestar.StarLight.Entities.Configuration
 		{
 			get { return _debugFileMode; }
 			set { _debugFileMode = value; }
+		}
+
+		/// <summary>
+		/// Generate a serialized filename to be used to store the file.
+		/// </summary>
+		public void GenerateTypeSpecificationFileName(string objectFolder)
+		{
+			string name = _name;
+			name = name.Replace(", ", "_");
+			name = name.Replace(".", "_");
+			name = name.Replace("Version=", "");
+			name = name.Replace("Culture=", "");
+			name = name.Replace("PublicKeyToken=", "");
+			_typeSpec = Path.Combine(objectFolder, string.Concat(name, ".xml.gzip"));
 		}
 
 		/// <summary>

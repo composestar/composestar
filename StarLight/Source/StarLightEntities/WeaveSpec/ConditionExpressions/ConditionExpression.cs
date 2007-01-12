@@ -48,22 +48,12 @@ using System.Xml.Serialization;
 /// </summary>
 namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 {
-
 	/// <summary>
 	/// The base of all the ConditionExpressions.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("ConditionExpression", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("ConditionExpression", Namespace = Constants.NS)]
 	public abstract class ConditionExpression
 	{
-		/// <summary>
-		/// Create condition expression
-		/// </summary>
-		protected ConditionExpression()
-		{
-
-		}
-
 	}
-
 } 

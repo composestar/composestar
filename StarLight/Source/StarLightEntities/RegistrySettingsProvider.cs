@@ -58,7 +58,6 @@ using Composestar.StarLight.Entities.Properties;
 
 namespace Composestar.StarLight.CoreServices.Settings.Providers
 {
-
 	/// <summary>
 	/// The settings provider using the registry.
 	/// </summary>
@@ -79,7 +78,6 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 
 		public RegistrySettingsProvider()
 		{
-
 		}
 
 		/// <summary>
@@ -102,10 +100,7 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 		/// <returns>A brief, friendly description suitable for display in administrative tools or other UIs.</returns>
 		public override string Description
 		{
-			get
-			{
-				return ProviderDescription;
-			}
+			get { return ProviderDescription; }
 		}
 
 		/// <summary>
@@ -115,14 +110,8 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 		/// <returns>A <see cref="T:System.String"></see> that contains the application's shortened name, which does not contain a full path or extension, for example, SimpleAppSettings.</returns>
 		public override string ApplicationName
 		{
-			get
-			{
-				return ProviderApplicationName;
-			}
-			set
-			{
-				// Do nothing
-			}
+			get { return ProviderApplicationName; }
+			set { /* Do nothing */ }
 		}
 
 		/// <summary>
@@ -137,14 +126,11 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 		   Read = "HKEY_LOCAL_MACHINE\\Software\\ComposeStar\\StarLight")]
 		public override SettingsPropertyValueCollection GetPropertyValues(SettingsContext context, SettingsPropertyCollection collection)
 		{
-			SettingsPropertyValueCollection values;
-			SettingsPropertyValue value;
-
 			if (collection == null)
 				throw new ArgumentNullException("collection");
 			
 			// First, create a place to put all the properties and their values.
-			values = new SettingsPropertyValueCollection();
+			SettingsPropertyValueCollection values = new SettingsPropertyValueCollection();
 
 			// Get the path to the current version
 			string registryPath = RetrieveCurrentVersionPath();
@@ -159,7 +145,7 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 			{
 				foreach (SettingsProperty setting in collection)
 				{
-					value = new SettingsPropertyValue(setting);
+					SettingsPropertyValue value = new SettingsPropertyValue(setting);
 					value.SerializedValue = (string)regKey.GetValue(value.Name, setting.DefaultValue);
 					value.IsDirty = false;
 
@@ -211,6 +197,5 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 
 			return String.Format(CultureInfo.CurrentCulture, @"Software\ComposeStar\StarLight\{0}", currentversion);
 		}
-
 	}
 }

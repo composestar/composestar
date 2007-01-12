@@ -35,12 +35,13 @@
 #endregion
 
 #region Using directives
-using Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
+
+using Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor;
 #endregion
 
 namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
@@ -50,42 +51,22 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 	/// </summary>
 	/// <returns>Inline instruction</returns>
 	[Serializable]
-	[XmlRoot("Block", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("Block", Namespace = Constants.NS)]
 	public class Block : InlineInstruction, IVisitable
 	{
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Block"/> class.
-		/// </summary>
-		public Block()
-		{
-
-		}
-
-
-		/// <summary>
-		/// _instructions
-		/// </summary>
 		private List<InlineInstruction> _instructions = new List<InlineInstruction>();
 
 		/// <summary>
 		/// Gets or sets the instructions.
 		/// </summary>
 		/// <value>The instructions.</value>
-		/// <returns>List</returns>
 		[XmlArray("Instructions")]
 		[XmlArrayItem("Instruction")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
 		public List<InlineInstruction> Instructions
 		{
-			get
-			{
-				return _instructions;
-			}
-			set
-			{
-				_instructions = value;
-			}
+			get { return _instructions; }
+			set { _instructions = value; }
 		}
 
 		/// <summary>
@@ -100,9 +81,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 			{
 				instr.Accept(visitor);
 			}
-
 		}
-
 	}
-
 }

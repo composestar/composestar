@@ -50,22 +50,12 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 	/// </summary>
 	/// <returns>Condition expression</returns>
 	[Serializable]
-	[XmlRoot("And", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("AndCondition", Namespace = Constants.NS)]
 	public class AndCondition : ConditionExpression, IVisitable
 	{
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:And"/> class.
-		/// </summary>
-		public AndCondition()
-		{
-
-		}
-
-		/// <summary>
-		/// _branch id
-		/// </summary>
 		private int _branchId;
+		private ConditionExpression _left;
+		private ConditionExpression _right;
 
 		/// <summary>
 		/// Gets or sets the branch id.
@@ -75,10 +65,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 		[XmlAttribute]
 		public int BranchId
 		{
-			get { return _branchId; } // get
-			set { _branchId = value; } // set
+			get { return _branchId; }
+			set { _branchId = value; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the left.
@@ -86,20 +75,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 		/// <value>The left.</value>
 		public ConditionExpression Left
 		{
-			get
-			{
-				/// <summary>
-				/// _left
-				/// </summary>
-				return _left;
-			}
-			set
-			{
-				_left = value;
-			}
+			get { return _left; }
+			set { _left = value; }
 		}
-
-		private ConditionExpression _left;
 
 		/// <summary>
 		/// Gets or sets the right.
@@ -107,20 +85,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 		/// <value>The right.</value>
 		public ConditionExpression Right
 		{
-			get
-			{
-				/// <summary>
-				/// _right
-				/// </summary>
-				return _right;
-			}
-			set
-			{
-				_right = value;
-			}
+			get { return _right; }
+			set { _right = value; }
 		}
-
-		private ConditionExpression _right;
 
 		/// <summary>
 		/// Accepts the specified visitor.
@@ -136,6 +103,5 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 			((IVisitable)_right).Accept(visitor);
 			visitor.VisitAndRight(this);
 		}
-
 	}
 }

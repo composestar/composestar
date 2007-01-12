@@ -50,36 +50,23 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 	/// </summary>
 	/// <returns>Condition expression</returns>
 	[Serializable]
-	[XmlRoot("Or", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("OrCondition", Namespace = Constants.NS)]
 	public class OrCondition : ConditionExpression, IVisitable
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:Or"/> class.
-		/// </summary>
-		public OrCondition()
-		{
-
-		}
+		private int _branchId;
+		private ConditionExpression _left;
+		private ConditionExpression _right;
 
 		/// <summary>
 		/// Gets or sets the branch id.
 		/// </summary>
 		/// <value>The branch id.</value>
-		/// <returns>Int</returns>
 		[XmlAttribute]
 		public int BranchId
 		{
-			get
-			{
-				return _branchId;
-			}
-			set
-			{
-				_branchId = value;
-			}
+			get { return _branchId; }
+			set { _branchId = value; }
 		}
-
-		private int _branchId;
 
 		/// <summary>
 		/// Gets or sets the left.
@@ -87,17 +74,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 		/// <value>The left.</value>
 		public ConditionExpression Left
 		{
-			get
-			{
-				return _left;
-			}
-			set
-			{
-				_left = value;
-			}
+			get { return _left; }
+			set { _left = value; }
 		}
-
-		private ConditionExpression _left;
 
 		/// <summary>
 		/// Gets or sets the right.
@@ -105,17 +84,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 		/// <value>The right.</value>
 		public ConditionExpression Right
 		{
-			get
-			{
-				return _right;
-			}
-			set
-			{
-				_right = value;
-			}
+			get { return _right; }
+			set { _right = value; }
 		}
-
-		private ConditionExpression _right;
 
 		/// <summary>
 		/// Accepts the specified visitor.
@@ -131,6 +102,5 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 			((IVisitable)_right).Accept(visitor);
 			visitor.VisitOrRight(this);
 		}
-
 	}
 }

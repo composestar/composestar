@@ -46,10 +46,10 @@ using System.Xml.Serialization;
 namespace Composestar.StarLight.Entities.Concerns
 {
 	/// <summary>
-	/// Represents the code embedded inside a concern
+	/// Represents the code embedded inside a concern.
 	/// </summary>
 	[Serializable]
-	[XmlType("EmbeddedCode", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("EmbeddedCode", Namespace = Constants.NS)]
 	public class EmbeddedCode
 	{
 		private string _language;

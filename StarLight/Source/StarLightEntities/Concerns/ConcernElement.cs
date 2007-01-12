@@ -49,7 +49,7 @@ namespace Composestar.StarLight.Entities.Concerns
 	/// A concern specification.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("Concern", Namespace = "Entities.TYM.DotNET.Composestar")]
+	[XmlType("ConcernElement", Namespace = Constants.NS)]
 	public class ConcernElement
 	{
 		private string _fileName;
