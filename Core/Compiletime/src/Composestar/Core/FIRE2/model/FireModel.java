@@ -360,7 +360,8 @@ public class FireModel
 		while (baseIt.hasNext())
 		{
 			ExecutionTransition baseTransition = (ExecutionTransition) baseIt.next();
-			outTransitions.addElement(new ExtendedExecutionTransition(state.model, state, baseTransition, false));
+			ExtendedExecutionState endState = deriveState(baseTransition.getEndState(), state, state.layer);
+			outTransitions.addElement(new ExtendedExecutionTransition(state, endState, baseTransition));
 		}
 
 		return outTransitions;
@@ -375,21 +376,21 @@ public class FireModel
 			return new Vector();
 		}
 
-		ExtendedExecutionState[] nextStates = new ExtendedExecutionState[1];
+		ExtendedExecutionState extendedNextState;
 
 		ExecutionState nextState = executionModels[startState.filterPosition][layer + 1].getEntranceState(startState
 				.getMessage());
 
-		nextStates[0] = deriveState(nextState, startState, layer + 1);
+		extendedNextState = deriveState(nextState, startState, layer + 1);
 
-		if (nextStates[0] == null)
+		if (extendedNextState == null)
 		{
 			// should not occur
-			throw new RuntimeException("No next state found, while" + " there should have been one!");
+			throw new RuntimeException("No next state found, while there should have been one!");
 		}
 
 		Vector result = new Vector();
-		result.addElement(new ExtendedExecutionTransition(startState, nextStates[0]));
+		result.addElement(new ExtendedExecutionTransition(startState, extendedNextState));
 		return result;
 	}
 
@@ -502,9 +503,12 @@ public class FireModel
 	 */
 	private ExtendedExecutionState deriveState(ExecutionState baseState, ExtendedExecutionState startState, int layer)
 	{
+		ExtendedExecutionState result;
+		ExtendedExecutionModel model = startState.model;
+		
 		if (!baseState.getMessage().isGeneralization())
 		{
-			return new ExtendedExecutionState(startState.model, baseState, baseState.getMessage(),
+			result = new ExtendedExecutionState(model, baseState, baseState.getMessage(),
 					startState.signatureCheck, startState.signatureCheckInfo, startState.filterPosition, layer);
 		}
 		else
@@ -521,8 +525,18 @@ public class FireModel
 
 			Message derivedMessage = new Message(derivedTarget, derivedSelector);
 
-			return new ExtendedExecutionState(startState.model, baseState, derivedMessage, startState.signatureCheck,
+			result = new ExtendedExecutionState(model, baseState, derivedMessage, startState.signatureCheck,
 					startState.signatureCheckInfo, startState.filterPosition, layer);
+		}
+		
+		// Check whether the model already contains the state:
+		if ( model.stateCache.containsKey(result)){
+			return (ExtendedExecutionState) model.stateCache.get(result);
+		}
+		else{
+			// Add state to statecache:
+			model.stateCache.put(result, result);
+			return result;
 		}
 	}
 
@@ -673,6 +687,8 @@ public class FireModel
 
 		public ExtendedExecutionModel(int filterPosition)
 		{
+			this.filterPosition = filterPosition;
+			
 			String selector;
 			Message message;
 			ExecutionState state;
@@ -708,6 +724,8 @@ public class FireModel
 
 		public ExtendedExecutionModel(int filterPosition, String selector)
 		{
+			this.filterPosition = filterPosition;
+			
 			Message message = getEntranceMessage(selector);
 
 			ExecutionState state = executionModels[filterPosition][0].getEntranceState(message);
@@ -722,6 +740,8 @@ public class FireModel
 
 		public ExtendedExecutionModel(int filterPosition, MethodInfo methodInfo, int signatureCheck)
 		{
+			this.filterPosition = filterPosition;
+			
 			Message message = getEntranceMessage(methodInfo.getName());
 
 			ExecutionState state = executionModels[filterPosition][0].getEntranceState(message);
@@ -736,6 +756,8 @@ public class FireModel
 
 		public ExtendedExecutionModel(int filterPosition, Target target, MethodInfo methodInfo, int signatureCheck)
 		{
+			this.filterPosition = filterPosition;
+			
 			// Message message = getEntranceMessage( )
 			// TODO: (michiel) validate that using an empty MessageSelectorAST
 			// is legal
@@ -812,6 +834,7 @@ public class FireModel
 			this.baseState = baseState;
 			this.signatureCheck = signatureCheck;
 			this.signatureCheckInfo = signatureCheckInfo;
+			this.filterPosition = filterPosition;
 			this.layer = layer;
 		}
 
@@ -829,34 +852,28 @@ public class FireModel
 
 	private class ExtendedExecutionTransition extends ExecutionTransition
 	{
-		private ExtendedExecutionModel model;
-
 		private ExtendedExecutionState startState;
 
 		private ExecutionTransition baseTransition;
 
 		private ExtendedExecutionState endState;
 
-		private boolean nextLayer;
-
-		public ExtendedExecutionTransition(ExtendedExecutionModel model, ExtendedExecutionState startState,
-				ExecutionTransition baseTransition, boolean nextLayer)
+		public ExtendedExecutionTransition(ExtendedExecutionState startState, ExtendedExecutionState endState,
+				ExecutionTransition baseTransition)
 		{
 			super(baseTransition.getLabel(), getExtendedFlowTransition(baseTransition));
 
-			this.model = model;
 			this.startState = startState;
+			this.endState = endState;
 			this.baseTransition = baseTransition;
-			this.nextLayer = nextLayer;
 		}
 
 		public ExtendedExecutionTransition(ExtendedExecutionState startState, ExtendedExecutionState endState)
 		{
-			super("", null);
+			super("", startState.getFlowNode().getTransition(endState.getFlowNode()));
 
 			this.startState = startState;
 			this.endState = endState;
-			this.nextLayer = true;
 		}
 
 		public ExecutionState getStartState()
@@ -866,30 +883,6 @@ public class FireModel
 
 		public ExecutionState getEndState()
 		{
-			if (endState == null)
-			{
-				int newLayer;
-				if (nextLayer)
-				{
-					newLayer = startState.layer + 1;
-				}
-				else
-				{
-					newLayer = startState.layer;
-				}
-				endState = deriveState(baseTransition.getEndState(), startState, newLayer);
-
-				// if state already in
-				if (model.stateCache.containsKey(endState))
-				{
-					endState = (ExtendedExecutionState) model.stateCache.get(endState);
-				}
-				else
-				{
-					model.stateCache.put(endState, endState);
-				}
-			}
-
 			return endState;
 		}
 	}
