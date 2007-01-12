@@ -255,7 +255,7 @@ public class ModuleInfo implements Serializable
 			}
 			catch (ConfigurationException e)
 			{
-				Debug.out(Debug.MODE_ERROR, id, "Error setting '" + entry.getKey() + "' to '" + entry.getValue()
+				Debug.out(Debug.MODE_ERROR, id, "Error setting config option '" + entry.getKey() + "' to '" + entry.getValue()
 						+ "': " + e.getMessage());
 			}
 		}

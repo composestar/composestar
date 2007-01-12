@@ -1,7 +1,5 @@
 package ComposestarEclipsePlugin.Java.Actions;
 
-import java.io.PrintStream;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
@@ -31,6 +29,8 @@ public class TestRun implements IPlatformRunnable
 
 		try
 		{
+			Debug.instance().setLogToStd(true);
+			
 			// disable debugging
 			Debug.instance().setEnabled(false);
 

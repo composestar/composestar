@@ -27,32 +27,27 @@ public class Debug implements IComposestarConstants
 
 	private boolean enabled = true;
 
+	private boolean logToStd = false;
+
 	private PrintStream outputStream;
 
 	private PrintStream errorStream;
 
+	private MessageConsoleStream errorMessageStream;
+
 	public Debug()
 	{
-		if (Display.getCurrent() != null) // no display == headless
-		{
-			myConsole = new MessageConsole(CONSOLE_TITLE, null);
-			ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { myConsole });
-			ConsolePlugin.getDefault().getConsoleManager().showConsoleView(myConsole);
+		myConsole = new MessageConsole(CONSOLE_TITLE, null);
+		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { myConsole });
+		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(myConsole);
 
-			stream = myConsole.newMessageStream();
-			stream.setActivateOnWrite(true);
-			outputStream = new PrintStream(stream);
+		stream = myConsole.newMessageStream();
+		stream.setActivateOnWrite(true);
+		outputStream = new PrintStream(stream);
 
-			stream = myConsole.newMessageStream();
-			stream.setActivateOnWrite(true);
-			stream.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
-			errorStream = new PrintStream(stream);
-		}
-		else
-		{
-			outputStream = System.out;
-			errorStream = System.err;
-		}
+		errorMessageStream = myConsole.newMessageStream();
+		errorMessageStream.setActivateOnWrite(true);
+		errorStream = new PrintStream(errorMessageStream);
 	}
 
 	public static Debug instance()
@@ -61,7 +56,7 @@ public class Debug implements IComposestarConstants
 		{
 			Instance = new Debug();
 		}
-		return (Instance);
+		return Instance;
 	}
 
 	public void clear()
@@ -90,7 +85,7 @@ public class Debug implements IComposestarConstants
 
 	private void PrintMessage(final String msg, final int msgKind)
 	{
-		if (myConsole != null)
+		if (!logToStd)
 		{
 			// Print the message in the UI Thread in async mode
 			Display.getDefault().asyncExec(new Runnable()
@@ -123,10 +118,10 @@ public class Debug implements IComposestarConstants
 			switch (msgKind)
 			{
 				case MSG_ERROR:
-					errorStream.println(msg);
+					System.err.println(msg);
 					break;
 				default:
-					outputStream.println(msg);
+					System.out.println(msg);
 					break;
 			}
 		}
@@ -134,16 +129,48 @@ public class Debug implements IComposestarConstants
 
 	public void setEnabled(boolean b)
 	{
-		this.enabled = b;
+		enabled = b;
+	}
+
+	/**
+	 * Set debug out to be logged to either standard output or GUI console
+	 * 
+	 * @param b
+	 */
+	public void setLogToStd(boolean b)
+	{
+		logToStd = b;
 	}
 
 	public PrintStream getErrorStream()
 	{
-		return errorStream;
+		if (logToStd)
+		{
+			return System.err;
+		}
+		else
+		{
+			try
+			{
+				errorMessageStream.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+			}
+			catch (Exception e)
+			{
+				// nop
+			}
+			return errorStream;
+		}
 	}
 
 	public PrintStream getOutputStream()
 	{
-		return outputStream;
+		if (logToStd)
+		{
+			return System.out;
+		}
+		else
+		{
+			return outputStream;
+		}
 	}
 }

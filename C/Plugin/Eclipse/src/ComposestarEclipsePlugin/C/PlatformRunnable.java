@@ -62,6 +62,8 @@ public class PlatformRunnable implements IPlatformRunnable
 
 	public Object run(Object args) throws Exception
 	{
+		Debug.instance().setLogToStd(true);
+		
 		String[] cmdArgs = (String[]) args;
 		HashSet sources = new HashSet();
 		HashSet concerns = new HashSet();

@@ -154,7 +154,21 @@ public class ModuleSetting implements Serializable
 		}
 		else if (type == Integer.class)
 		{
-			setValue(Integer.parseInt(newValue));
+			if (newValue.equals(""))
+			{
+				value = defaultValue;
+			}
+			else
+			{
+				try
+				{
+					setValue(Integer.parseInt(newValue));
+				}
+				catch (NumberFormatException e)
+				{
+					throw new ConfigurationException("Number Format Exception: "+e.getMessage());
+				}
+			}
 		}
 		else if (type == Boolean.class)
 		{
@@ -162,7 +176,21 @@ public class ModuleSetting implements Serializable
 		}
 		else if (type == Float.class)
 		{
-			setValue(Float.parseFloat(newValue));
+			if (newValue.equals(""))
+			{
+				value = defaultValue;
+			}
+			else
+			{
+				try
+				{
+					setValue(Float.parseFloat(newValue));
+				}
+				catch (NumberFormatException e)
+				{
+					throw new ConfigurationException("Number Format Exception: "+e.getMessage());
+				}
+			}
 		}
 		else if (type == String.class)
 		{

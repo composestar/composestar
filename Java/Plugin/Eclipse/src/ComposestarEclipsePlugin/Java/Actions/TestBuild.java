@@ -1,7 +1,5 @@
 package ComposestarEclipsePlugin.Java.Actions;
 
-import java.io.PrintStream;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -21,7 +19,8 @@ public class TestBuild implements IPlatformRunnable
 
 		try
 		{
-
+			Debug.instance().setLogToStd(true);
+			
 			// log compile results
 			MasterManager m = MasterManager.getInstance();
 			m.logOutput = true;
