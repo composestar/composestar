@@ -245,7 +245,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 				DotNETType t = (DotNETType)c.getPlatformRepresentation();
 
 				// Add to datastore if type belongs to the assembly we are restoring
-				if (t != null && t.getFromDLL().equals(assemblyName))
+				if (t != null && assemblyName.equals(t.assemblyName()))
 				{
 					// Register the type with LAMA
 					t.setParentConcern(null);
@@ -263,7 +263,7 @@ public class StarLightCollectorRunner implements CollectorRunner
     
 	public void collectOperation(AssemblyConfig assembly) throws ModuleException
 	{
-		String serializedFilename = assembly.getSerializedFileName();
+		String serializedFilename = assembly.getTypeSpecificationFile();
 
 		InputStream is = null;
 		try
@@ -416,7 +416,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			dnt.setIsPublic(te.getIsPublic());
 			dnt.setIsAbstract(te.getIsAbstract());
 			dnt.setIsSealed(te.getIsSealed());
-			dnt.setFromDLL(assembly.getName());
+		//	dnt.setFromDLL(assembly.getName());
 			
 			//Set the attributes for this type
 			DotNETAttribute[] attributes = collectAttributes(te.getAttributes());

@@ -55,8 +55,7 @@ public class DotNETType extends Type
 	private List ImplementedInterfaceNames; // List of Strings
 	private String Namespace;
 	private String AssemblyName;
-	private String AssemblyQualifiedName;
-	private String fromDLL; // Added by TypeHarvester and TypeCollector for incremental type collecting
+//	private String fromFile;
 
 	// for LOLA
 	private ProgramElement parentNS; // Added by the Language Model; this relation can be used in logic queries
@@ -207,34 +206,12 @@ public class DotNETType extends Type
 
 	public String assemblyName()
 	{
-		int comma = AssemblyName.indexOf(',');
-		if (comma == -1) return AssemblyName;
-		return AssemblyName.substring(0, comma);
+		return AssemblyName;
 	}
 
 	public void setAssemblyName(String name)
 	{
 		AssemblyName = name;
-	}
-
-	public String assemblyQualifiedName()
-	{
-		return AssemblyQualifiedName;
-	}
-
-	public void setAssemblyQualifedName(String name)
-	{
-		AssemblyQualifiedName = name;
-	}
-
-	public String getFromDLL()
-	{
-		return fromDLL;
-	}
-
-	public void setFromDLL(String fromDLL)
-	{
-		this.fromDLL = fromDLL;
 	}
 
 	public List getConstructors()
@@ -534,8 +511,7 @@ public class DotNETType extends Type
 		BaseTypeString = in.readUTF();
 		ImplementedInterfaceNames = (List)in.readObject();
 		Namespace = in.readUTF();
-		AssemblyQualifiedName = in.readUTF();
-		fromDLL = in.readUTF();
+//		fromFile = in.readUTF();
 		annotationInstances = (ArrayList)in.readObject();
 
 		if ("".equals(BaseTypeString)) BaseTypeString = null;
@@ -559,8 +535,7 @@ public class DotNETType extends Type
 		out.writeUTF(BaseTypeString != null ? BaseTypeString : "");
 		out.writeObject(ImplementedInterfaceNames);
 		out.writeUTF(Namespace != null ? Namespace : "");
-		out.writeUTF(AssemblyQualifiedName != null ? AssemblyQualifiedName : "");
-		out.writeUTF(fromDLL != null ? fromDLL : "");
+//		out.writeUTF(fromFile != null ? fromFile : "");
 		out.writeObject(annotationInstances);
 	}
 }

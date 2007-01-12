@@ -371,7 +371,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				return ac.FileName.Equals(filename);
 			});
 
-			if (asmConfig != null && File.Exists(asmConfig.SerializedFileName))
+			if (asmConfig != null && File.Exists(asmConfig.TypeSpecificationFile))
 			{
 				// Already in the config. Check the last modification date.
 				if (asmConfig.Timestamp == File.GetLastWriteTime(filename).Ticks)
@@ -413,7 +413,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			asmConfig.IsReference = false;
 
 			// Generate a unique filename
-			asmConfig.GenerateSerializedFileName(_intermediateOutputPath);
+			asmConfig.GenerateTypeSpecificationFileName(_intermediateOutputPath);
 
 			_assembliesToStore.Add(asmConfig);
 			_assembliesDirty = true;
@@ -487,7 +487,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						// If a source assembly has changed, then new unresolved types can be introduced.
 						// So we must rescan the library based on the value of assemblyChanged.
 						// TODO: can this be optimized?
-						if (!_assembliesDirty && asmConfig != null && File.Exists(asmConfig.SerializedFileName))
+						if (!_assembliesDirty && asmConfig != null && File.Exists(asmConfig.TypeSpecificationFile))
 						{
 							// Already in the config. Check the last modification date.
 							if (asmConfig.Timestamp == File.GetLastWriteTime(filename).Ticks)
@@ -524,7 +524,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 							asmConfig.IsReference = true;
 
 							// Generate a unique filename
-							asmConfig.GenerateSerializedFileName(_intermediateOutputPath);
+							asmConfig.GenerateTypeSpecificationFileName(_intermediateOutputPath);
 
 							_assembliesToStore.Add(asmConfig);
 							assemblies.Add(assembly);
@@ -624,7 +624,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			{
 				// save each assembly if needed (there must be an assemblyElement)
 				if (assembly.Assembly != null)
-					EntitiesAccessor.Instance.SaveAssemblyElement(assembly.SerializedFileName, assembly.Assembly);
+					EntitiesAccessor.Instance.SaveAssemblyElement(assembly.TypeSpecificationFile, assembly.Assembly);
 			}
 
 			// Set the assemblies to store

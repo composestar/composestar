@@ -107,7 +107,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			if (concern.getDynObject("superImpInfo") != null)
 			{
 				// get weavespec:
-				WeaveSpecification weaveSpec = getWeaveSpec(type.getFromDLL());
+				WeaveSpecification weaveSpec = getWeaveSpec(type.assemblyName());
 
 				// get filtermodules:
 				FilterModuleOrder order = (FilterModuleOrder) concern.getDynObject("SingleOrder");
@@ -155,8 +155,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 						storedInternal.setType(internal.getType().getName());
 
 						// assembly:
-						DotNETType type2 = (DotNETType) internal.getType().getRef().getPlatformRepresentation();
-						storedInternal.setAssembly(type2.getFromDLL());
+						DotNETType dnt = (DotNETType) internal.getType().getRef().getPlatformRepresentation();
+						storedInternal.setAssembly(dnt.assemblyName());
 					}
 
 					// externals:
@@ -175,7 +175,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 						// reference:
 						ExternalConcernReference reference = external.getShortinit();
 						DotNETType refType = (DotNETType) reference.getRef().getPlatformRepresentation();
-						Reference storedReference = createReference(type, refType.getFromDLL(), reference.getPackage(),
+						Reference storedReference = createReference(type, refType.assemblyName(), reference.getPackage(),
 								reference.getName(), reference.getInitSelector());
 						storedExternal.setReference(storedReference);
 
@@ -190,8 +190,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 						storedExternal.setType(packages.toString() + external.getType().getName());
 
 						// assembly:
-						DotNETType type2 = (DotNETType) external.getType().getRef().getPlatformRepresentation();
-						storedExternal.setAssembly(type2.getFromDLL());
+						DotNETType dnt = (DotNETType) external.getType().getRef().getPlatformRepresentation();
+						storedExternal.setAssembly(dnt.assemblyName());
 					}
 
 					// conditions:
@@ -235,7 +235,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 						Reference reference = createReference(
 								type, 
-								refType.getFromDLL(), 
+								refType.assemblyName(), 
 								condition.getShortref().getPackage(), 
 								condition.getShortref().getName(), 
 								(String) condition.getDynObject("selector"));
@@ -260,7 +260,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
 
-				String filename = FileUtils.removeExtension(config.getSerializedFileName());
+				String filename = FileUtils.removeExtension(config.getTypeSpecificationFile());
 				filename = filename + "_weavespec.xml.gzip";
 				
 				OutputStream outputStream = null;
@@ -284,37 +284,30 @@ public class StarLightEmitterRunner implements CTCommonModule
 	}
 
 	/**
-	 * Gets the weavespecification corresponding with a given dll
+	 * Gets the weavespecification corresponding with a given assembly.
 	 * 
-	 * @param dllName The dll for which the weavespec needs to be returned
-	 * @return The weavespec for the given dll. If not existing, a new one is
-	 *         created.
+	 * @param assemblyName The name of the assembly for which the weavespec needs to be returned.
+	 * @return The weavespec for the given dll. If it does not exist, a new one is created.
 	 */
-	private WeaveSpecification getWeaveSpec(String dllName)
+	private WeaveSpecification getWeaveSpec(String assemblyName)
 	{
-		if (weaveSpecs.containsKey(dllName))
+		if (weaveSpecs.containsKey(assemblyName))
 		{
-			return (WeaveSpecification) weaveSpecs.get(dllName);
+			return (WeaveSpecification) weaveSpecs.get(assemblyName);
 		}
 		else
 		{
 			WeaveSpecification weaveSpec = WeaveSpecification.Factory.newInstance();
 			weaveSpec.addNewWeaveTypes();
-			weaveSpec.setAssemblyName(dllName);
-			weaveSpecs.put(dllName, weaveSpec);
+			weaveSpec.setAssemblyName(assemblyName);
+			weaveSpecs.put(assemblyName, weaveSpec);
 			return weaveSpec;
 		}
 	}
 
 	/**
-	 * Creates the reference used by the external and condition to retrieve it's
+	 * Creates the reference used by the external and condition to retrieve its
 	 * instance/value
-	 * 
-	 * @param type
-	 * @param pack
-	 * @param target
-	 * @param selector
-	 * @return
 	 */
 	private Reference createReference(Type type, String assembly, Vector pack, String target, String selector)
 	{

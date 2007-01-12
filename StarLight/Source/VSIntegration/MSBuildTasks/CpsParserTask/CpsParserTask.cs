@@ -35,21 +35,23 @@
 #endregion
 
 #region Using directives
-using Composestar.Repository;
-using Composestar.StarLight.CoreServices;
-using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.StarLight.CpsParser;
-using Composestar.StarLight.Entities.Concerns;
-using Composestar.StarLight.Entities.Configuration;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
-using Microsoft.Practices.ObjectBuilder;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;  
 using System.IO;
+
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+using Microsoft.Practices.ObjectBuilder;
+
+using Composestar.Repository;
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.CpsParser;
+using Composestar.StarLight.Entities.Concerns;
+using Composestar.StarLight.Entities.Configuration;
 #endregion
 
 namespace Composestar.StarLight.MSBuild.Tasks
