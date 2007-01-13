@@ -7,7 +7,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g 2883 2006-11-22 11:24:33Z marcusk $
+ * $Id: cps.g 2897 2006-11-23 13:38:11Z marcusk $
  */
 
 //package Composestar.Core.COPPER;

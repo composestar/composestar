@@ -13,16 +13,16 @@
 		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}"/>
 	</target>
 
-	<target name="build" depends="init" description="Build the Tasks project">
+	<target name="build" depends="init,antlr" description="Build the Tasks project">
 		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}" />
 	</target>
 
-	<target name="deploy" depends="init" description="Deploy the Tasks project">
+	<target name="deploy" depends="init,antlr" description="Deploy the Tasks project">
 		<msbuild solution="${buildfile}" target="deploy" config="${msbuild.config}" />
 	</target>
 
 	<target name="antlr">
-		<ant dir="${build.core}/Compiletime/grammar" target="antlr_dotnet" inheritRefs="true"/>
+		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_dotnet" inheritRefs="true"/>
 	</target>
 
 </project>
