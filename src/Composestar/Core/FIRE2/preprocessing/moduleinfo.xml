@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="FIRE" class="Composestar.Core.FIRE2.preprocessing.Preprocessor">
+		<name>Filter Reasoning Engine</name>
+		<incre>
+			<module enabled="true" incremental="false" summary="FIRE Preprocessing...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

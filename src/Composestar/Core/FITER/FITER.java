@@ -25,7 +25,7 @@ public class FITER implements CTCommonModule
 		// turned off for starlight compatibility
 		// ArrayList customfilters = getCustomFilterTypes();
 		// resolveCustomFilterTypes(customfilters);
-	}
+//	}
 
 	// private ArrayList getCustomFilterTypes()
 	// {
@@ -70,53 +70,61 @@ public class FITER implements CTCommonModule
 	// {
 	// FilterType ftype =(FilterType)definedCustomFilters.next();
 	//							
-	// if(customFilterType.getUnitName().indexOf('.') < 0)
-	// {
-	// if(customFilterType.getUnitName().endsWith(ftype.getName()))
-	// {
-	// Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Resolved filter type:
-	// "+ftype.getName()+" to "+customFilterType.getUnitName());
-	// result.remove(ftype);
-	// }
-	// }
-	// else
-	// {
-	// if(customFilterType.getUnitName().endsWith("."+ftype.getName()))
-	// {
-	// Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Resolved filter type:
-	// "+ftype.getName()+" to "+customFilterType.getUnitName());
-	// result.remove(ftype);
-	// }
-	// }
-	// }
-	// }
-	// }
-	// }
-	// }
-	// for(int i=0; i<result.size(); i++)
-	// {
-	// FilterType ftype = (FilterType)result.get(i);
-	// Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Unable to resolve filter type:
-	// "+ftype.getName()+"!");
-	// throw new ModuleException("Unable to resolve filter type:
-	// "+ftype.getName()+"!",MODULE_NAME,ftype);
-	// }
-	// }
-	//	
-	// private HashSet getChildsofClass(ProgramElement filterType)
-	// {
-	// HashSet total = new HashSet();
-	// HashSet hashset =
-	// filterType.getUnitRelation("ChildClasses").multiValue();
-	// total.addAll(hashset);
-	// Iterator it = hashset.iterator();
-	// while(it.hasNext())
-	// {
-	// ProgramElement customFilterType = (ProgramElement)it.next();
-	// HashSet subset = this.getChildsofClass(customFilterType);
-	// total.add(subset);
-	// }
-	// return total;
-	// }
+	// 
+
+		// if (customFilterType.getUnitName().indexOf('.') < 0)
+		// {
+		// if (customFilterType.getUnitName().endsWith(ftype.getName()))
+		// {
+		// Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Resolved filter type:
+		// "
+		// + ftype.getName() + " to " + customFilterType.getUnitName());
+		// result.remove(ftype);
+		// }
+		// }
+		// else
+		// {
+		// if (customFilterType.getUnitName().endsWith("." + ftype.getName()))
+		// {
+		// Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Resolved filter type:
+		// "
+		// + ftype.getName() + " to " + customFilterType.getUnitName());
+		// result.remove(ftype);
+		// }
+		// }
+		// }
+		// }
+		// }
+		// }
+		// }
+		// for (int i = 0; i < result.size(); i++)
+		// {
+		// FilterType ftype = (FilterType) result.get(i);
+		// Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Unable to resolve filter
+		// type: " + ftype.getName() + "!");
+		// }
+		//
+		// if(!result.isEmpty()){
+		// throw new ModuleException("Unable to resolve filter type: " +
+		// ((FilterType) result.get(0)).getName() + "!", MODULE_NAME,
+		// (FilterType) (result.get(0)));
+		// }
+		// }
+		//
+		// private HashSet getChildsofClass(ProgramElement filterType)
+		// {
+		// HashSet total = new HashSet();
+		// HashSet hashset =
+		// filterType.getUnitRelation("ChildClasses").multiValue();
+		// total.addAll(hashset);
+		// Iterator it = hashset.iterator();
+		// while (it.hasNext())
+		// {
+		// ProgramElement customFilterType = (ProgramElement) it.next();
+		// HashSet subset = this.getChildsofClass(customFilterType);
+		//			total.add(subset);
+		//		}
+		//		return total;
+	}
 
 }

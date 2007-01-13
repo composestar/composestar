@@ -4,9 +4,6 @@ import Composestar.Utils.Debug;
 
 public class ConfigNode extends Node
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1676465661039216621L;
 
 	public ConfigNode(String objectref)

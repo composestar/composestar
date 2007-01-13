@@ -2,6 +2,7 @@ package Composestar.Core.INCRE.Config;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.FileDependency;
@@ -10,22 +11,22 @@ import Composestar.Core.INCRE.ObjectDependency;
 
 public class DependencyHandler extends DefaultHandler
 {
-	private ConfigManager configmanager;
+	private XMLReader reader;
 
 	private Module module;
 
 	private ModulesHandler returnhandler;
 
-	public DependencyHandler(ConfigManager cfg, Module inModule, ModulesHandler inReturnhandler)
+	public DependencyHandler(XMLReader inReader, Module inModule, ModulesHandler inReturnhandler)
 	{
-		configmanager = cfg;
+		reader = inReader;
 		module = inModule;
 		returnhandler = inReturnhandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if (local_name.equalsIgnoreCase("dependency"))
+		if (qName.equalsIgnoreCase("dependency"))
 		{
 			String name = amap.getValue("name");
 			String deptype = amap.getValue("type");
@@ -42,8 +43,8 @@ public class DependencyHandler extends DefaultHandler
 				module.addDep(fdep);
 
 				// look further in the xml file, between <path> tags
-				PathHandler pathhandler = new PathHandler(configmanager, fdep, this);
-				configmanager.getXMLReader().setContentHandler(pathhandler);
+				PathHandler pathhandler = new PathHandler(reader, fdep, this);
+				reader.setContentHandler(pathhandler);
 			}
 			else if (deptype.equals("OBJECT"))
 			{
@@ -62,34 +63,30 @@ public class DependencyHandler extends DefaultHandler
 				}
 
 				// look further in the xml file, between <path> tags
-				PathHandler pathhandler = new PathHandler(configmanager, objdep, this);
-				configmanager.getXMLReader().setContentHandler(pathhandler);
+				PathHandler pathhandler = new PathHandler(reader, objdep, this);
+				reader.setContentHandler(pathhandler);
 			}
 			else
 			{
 				// throw something
 			}
 		}
-		else if (local_name.equalsIgnoreCase("comparisons"))
+		else if (qName.equalsIgnoreCase("comparisons"))
 		{
 			// look further in the xml file, between <comparisons> tags
-			ComparisonsHandler comphandler = new ComparisonsHandler(configmanager, this.module, this);
-			configmanager.getXMLReader().setContentHandler(comphandler);
+			ComparisonsHandler comphandler = new ComparisonsHandler(reader, this.module, this);
+			reader.setContentHandler(comphandler);
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name)
+	public void endElement(String uri, String localName, String qName)
 	{
-		if (local_name.equalsIgnoreCase("module"))
+		if (qName.equalsIgnoreCase("dependencies"))
 		{
-			// go to next module
-			configmanager.getXMLReader().setContentHandler(returnhandler);
+			if (returnhandler != null)
+			{
+				reader.setContentHandler(returnhandler);
+			}
 		}
 	}
-
-	public void startDocument()
-	{}
-
-	public void endDocument()
-	{}
 }

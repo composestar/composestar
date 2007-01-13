@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="LOLA" class="Composestar.Core.LOLA.LOLA">
+		<description>LOLA evaluates the superimposition selector statements in order to return the program elements the filter modules should be imposed upon.</description>
+		
+		<incre>
+			<module enabled="true" incremental="false" summary="Evaluating predicate selectors...">
+				<dependencies></dependencies>
+				<comparisons>
+					<type fullname="Composestar.Core.CpsProgramRepository.PrimitiveConcern">
+						<field name="platformRepr"></field>
+					</type>
+					<type fullname="Composestar.Core.LAMA.UnitResult">
+						<field name="multiRes"></field>
+						<field name="singleRes"></field>
+					</type>
+				</comparisons>		
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

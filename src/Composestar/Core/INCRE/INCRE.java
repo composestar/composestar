@@ -30,6 +30,8 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.ConcernSource;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -100,9 +102,12 @@ public final class INCRE implements CTCommonModule
 	private ArrayList historyConcernsWithModifiedSignatures;
 
 	private String projectSources;
+	
+	protected ModuleInfo moduleInfo;
 
 	private INCRE()
 	{
+		moduleInfo = ModuleInfoManager.get(INCRE.class);
 		config = Configuration.instance();
 		reporter = new INCREReporter();
 		reporter.open();
@@ -112,7 +117,7 @@ public final class INCRE implements CTCommonModule
 		historyObjectsOrdered = new HashMap();
 		externalSourcesBySource = new HashMap();
 		configurations = new INCREConfigurations();
-		modulesByName = new HashMap();
+		modulesByName = new HashMap();		
 	}
 
 	public static INCRE instance()
@@ -131,7 +136,7 @@ public final class INCRE implements CTCommonModule
 		historyfile = ps.getPath("Base") + HISTORY_FILENAME;
 		
 		// check whether incremental compilation is enabled
-		enabled = config.getModuleProperty(MODULE_NAME, "enabled", false);
+		enabled = moduleInfo.getBooleanSetting("enabled");
 
 		// non-incremental compilation so clean history
 		if (!enabled)
@@ -180,7 +185,7 @@ public final class INCRE implements CTCommonModule
 
 		String projectBase = ps.getPath("Base");
 		String cps = ps.getPath("Composestar");
-		String filename = config.getModuleProperty(MODULE_NAME, "config", "INCREconfig.xml");
+		String filename = moduleInfo.getStringSetting("config");
 
 		File file = new File(projectBase, filename);
 		if (file.exists())
@@ -189,6 +194,12 @@ public final class INCRE implements CTCommonModule
 		}
 
 		file = new File(cps, filename);
+		if (file.exists())
+		{
+			return file.getAbsolutePath();
+		}
+		
+		file = new File(filename); // absolute path
 		if (file.exists())
 		{
 			return file.getAbsolutePath();

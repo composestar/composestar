@@ -1,9 +1,13 @@
 package Composestar.Core.INCRE;
 
+import java.io.Serializable;
+
 import Composestar.Core.Exception.ModuleException;
 
-public class Dependency
+public class Dependency implements Serializable
 {
+	private static final long serialVersionUID = -6858098114389292052L;
+
 	protected String name;
 
 	protected Path mypath = new Path();

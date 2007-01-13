@@ -133,7 +133,7 @@ public class SignLite implements CTCommonModule
 			if (concern.getDynObject("superImpInfo") != null)
 			{
 				filterModules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
-				model = new FireModel(concern, filterModules, true);
+				model = new FireModel(concern, filterModules);
 				analysisModels.put(concern, model);
 
 				unsolvedConcerns.add(concern);
@@ -198,7 +198,7 @@ public class SignLite implements CTCommonModule
 		ExecutionState state;
 		ExecutionModel execModel;
 
-		execModel = fireModel.getExecutionModel(methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
 
 		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
 		Enumeration enu = checker.matchingStates();
@@ -242,19 +242,20 @@ public class SignLite implements CTCommonModule
 				for (int i = 0; i < methods.size(); i++)
 				{
 					MethodInfo m = (MethodInfo) methods.get(i);
-					if (m.name().equals(targetMethod.name()))
+					if (m.getName().equals(targetMethod.getName()))
 					{
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method "
 								+ methodInfoString(method) + " in concern " + concern.name
-								+ " might be dispatched to method " + m.name() + " in inner with the wrong parameters "
-								+ "and/or return type!", state.getFlowNode().getRepositoryLink());
+								+ " might be dispatched to method " + m.getName()
+								+ " in inner with the wrong parameters " + "and/or return type!", state.getFlowNode()
+								.getRepositoryLink());
 						return;
 					}
 				}
 
 				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method " + methodInfoString(method)
 						+ " in concern " + concern.name + " might be dispatched to the unresolved " + "method "
-						+ targetMethod.name() + " in inner", state.getFlowNode().getRepositoryLink());
+						+ targetMethod.getName() + " in inner", state.getFlowNode().getRepositoryLink());
 			}
 		}
 		else
@@ -268,12 +269,12 @@ public class SignLite implements CTCommonModule
 			Signature signature = getSignature(targetConcern);
 			if (!signature.hasMethod(targetMethod))
 			{
-				if (signature.hasMethod(targetMethod.name()))
+				if (signature.hasMethod(targetMethod.getName()))
 				{
 					Debug
 							.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method "
 									+ methodInfoString(method) + " in concern " + concern.name
-									+ " might be dispatched to method " + targetMethod.name() + " in concern "
+									+ " might be dispatched to method " + targetMethod.getName() + " in concern "
 									+ targetConcern.getName() + " with the wrong parameters and/or return type!", state
 									.getFlowNode().getRepositoryLink());
 				}
@@ -281,7 +282,7 @@ public class SignLite implements CTCommonModule
 				{
 					Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method " + methodInfoString(method)
 							+ " in concern " + concern.name + " might be dispatched to the unresolved " + "method "
-							+ targetMethod.name() + " in concern " + targetConcern.getName(), state.getFlowNode()
+							+ targetMethod.getName() + " in concern " + targetConcern.getName(), state.getFlowNode()
 							.getRepositoryLink());
 				}
 			}
@@ -314,7 +315,7 @@ public class SignLite implements CTCommonModule
 	private String methodInfoString(MethodInfo info)
 	{
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(info.name());
+		buffer.append(info.getName());
 
 		buffer.append('(');
 		List parameters = info.getParameters();

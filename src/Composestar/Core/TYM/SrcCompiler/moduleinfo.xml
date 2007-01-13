@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="RECOMA" class="Composestar.Core.TYM.SrcCompiler.RealSourceManager">
+		<incre>
+			<module input="Composestar.Core.Master.Config.Source" enabled="true" incremental="true"
+				summary="Compiling all sources...">
+				<dependencies>
+					<dependency type="FILE" name="source">
+						<path>
+							<node type="FIELD" nodevalue="fileName"></node>
+						</path>
+					</dependency>
+					<dependency type="FILE" name="xternals">
+						<path>
+							<node type="METHOD" nodevalue="Composestar.DotNET.COMP.DotNETCompiler.externalSources"></node>
+						</path>
+					</dependency>
+					<dependency type="FILE" name="CompileLibsDependencies">
+						<path>
+							<node type="CONFIG" nodevalue="Dependencies"></node>
+						</path>
+					</dependency>
+					<dependency type="OBJECT" name="fullsignatures">
+						<path>
+							<node type="METHOD" nodevalue="Composestar.DotNET.COMP.DotNETCompiler.fullSignatures"></node>
+						</path>
+					</dependency>
+				</dependencies>
+				<comparisons>
+					<type fullname="Composestar.Core.CpsProgramRepository.Signature">
+						<field name="methodByName"></field>
+					</type>
+					<type fullname="Composestar.Core.CpsProgramRepository.MethodWrapper">
+						<field name="RelationType"></field>
+					</type>
+				</comparisons>
+			</module>
+
+		</incre>
+	</moduleinfo>
+</modules>

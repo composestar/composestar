@@ -17,11 +17,9 @@ import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
-import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
@@ -37,9 +35,9 @@ public class FlowModelExtractor
 {
 	public final static String FLOW_NODE_ANNOTATION = "FlowNode";
 
-	private final static Label FILTERMODULE_LABEL = new DefaultLabel(FlowChartNames.FILTER_MODULE_NODE);
+	private final static Label FILTERMODULE_LABEL = new DefaultLabel(FlowNode.FILTER_MODULE_NODE);
 
-	private final static Label END_LABEL = new DefaultLabel(FlowChartNames.END_NODE);
+	private final static Label END_LABEL = new DefaultLabel(FlowNode.END_NODE);
 
 	private final static String FLOW_TRUE_LABEL = "flowTrue";
 
@@ -254,13 +252,6 @@ public class FlowModelExtractor
 		 * Contains all transitions originating from this node.
 		 */
 		private Vector transitions;
-
-		/**
-		 * Hashtable to add annotations to a node, which don't need to be
-		 * serialized. Useful for algorithms to store some processing
-		 * information.
-		 */
-		private transient Hashtable annotations = new Hashtable();
 
 		/**
 		 * Default constructor

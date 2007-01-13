@@ -78,7 +78,7 @@ public abstract class Type extends ProgramElement
 		for (Iterator it = m_methods.iterator(); it.hasNext();)
 		{
 			MethodInfo mi = (MethodInfo) it.next();
-			if (mi.name().equals(name) && mi.hasParameters(types))
+			if (mi.getName().equals(name) && mi.hasParameters(types))
 			{
 				return mi;
 			}

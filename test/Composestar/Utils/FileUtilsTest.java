@@ -180,13 +180,13 @@ public class FileUtilsTest extends TestCase
 			sw = new StringWriter();
 			
 			FileUtils.copy(sr, sw, 5);
-			sw.append('F');
+			sw.write('F');
 			FileUtils.copy(sr, sw, 4);
-			sw.append('J');
+			sw.write('J');
 			FileUtils.copy(sr, sw, 8);
-			sw.append('R');
+			sw.write('R');
 			FileUtils.copy(sr, sw, 2);
-			sw.append('T');
+			sw.write('T');
 			FileUtils.copy(sr, sw, 7);
 		}
 		catch (IOException e)

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="CORE" class="Composestar.Core.CORE2.Core">
+		<incre>
+			<module enabled="true" incremental="false" summary="Detecting conflicts...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

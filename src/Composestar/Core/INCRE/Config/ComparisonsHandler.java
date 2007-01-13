@@ -1,54 +1,46 @@
 package Composestar.Core.INCRE.Config;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.Module;
 
 public class ComparisonsHandler extends DefaultHandler
 {
-	private ConfigManager configmanager;
+	private XMLReader reader;
 
 	private Module module;
 
-	private DependencyHandler returnhandler;
+	private ContentHandler returnhandler;
 
-	public ComparisonsHandler(ConfigManager cfg, Module inModule, DependencyHandler inReturnhandler)
+	public ComparisonsHandler(XMLReader inReader, Module inModule, ContentHandler inReturnhandler)
 	{
-		configmanager = cfg;
+		reader = inReader;
 		module = inModule;
 		returnhandler = inReturnhandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if (local_name.equalsIgnoreCase("type"))
+		if (qName.equalsIgnoreCase("type"))
 		{
 			String fullname = amap.getValue("fullname");
 
 			// look further between <type> tags
-			TypeHandler typehandler = new TypeHandler(configmanager, module, fullname, this);
-			configmanager.getXMLReader().setContentHandler(typehandler);
+			TypeHandler typehandler = new TypeHandler(reader, module, fullname, this);
+			reader.setContentHandler(typehandler);
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name)
+	public void endElement(String uri, String localName, String qName)
 	{
-		if (local_name.equalsIgnoreCase("comparisons"))
+		if (qName.equalsIgnoreCase("comparisons"))
 		{
 			// look further between <module> tags
-			configmanager.getXMLReader().setContentHandler(returnhandler);
+			reader.setContentHandler(returnhandler);
 		}
-	}
-
-	public void startDocument()
-	{
-
-	}
-
-	public void endDocument()
-	{
-
 	}
 }

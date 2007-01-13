@@ -92,7 +92,7 @@ public class DeclaredRepositoryEntity extends ContextRepositoryEntity
 				o = (DeclaredRepositoryEntity) o.getParent();
 			}
 		}
-		// now traverse in reverse direction, so we start with a concern
+		// now traverse in reverse filterPosition, so we start with a concern
 		for (i = temp.size() - 1; i >= 0; i--)
 		{
 			if (i == temp.size() - 1)

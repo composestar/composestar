@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="SIGN" class="Composestar.Core.SIGN2.Sign">
+		<incre>
+			<module enabled="true" incremental="false" summary="Generating signatures...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

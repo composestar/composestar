@@ -2,6 +2,7 @@ package Composestar.Core.INCRE.Config;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.DynamicNode;
@@ -10,22 +11,22 @@ import Composestar.Core.INCRE.ObjectDependency;
 
 public class ObjectDependencyHandler extends DefaultHandler
 {
-	private ConfigManager configmanager;
+	private XMLReader reader;
 
 	private ObjectDependency objdep;
 
 	private DependencyHandler returnhandler;
 
-	public ObjectDependencyHandler(ConfigManager cfg, ObjectDependency inObjdep, DependencyHandler inReturnhandler)
+	public ObjectDependencyHandler(XMLReader inReader, ObjectDependency inObjdep, DependencyHandler inReturnhandler)
 	{
-		configmanager = cfg;
+		reader = inReader;
 		objdep = inObjdep;
 		returnhandler = inReturnhandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if (local_name.equalsIgnoreCase("node"))
+		if (qName.equalsIgnoreCase("node"))
 		{
 			// process <node>
 			String nodetype = amap.getValue("type");
@@ -50,22 +51,12 @@ public class ObjectDependencyHandler extends DefaultHandler
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name)
+	public void endElement(String uri, String localName, String qName)
 	{
-		if (local_name.equalsIgnoreCase("path"))
+		if (qName.equalsIgnoreCase("path"))
 		{
 			// go to next dependency
-			configmanager.getXMLReader().setContentHandler(returnhandler);
+			reader.setContentHandler(returnhandler);
 		}
-	}
-
-	public void startDocument()
-	{
-
-	}
-
-	public void endDocument()
-	{
-
 	}
 }

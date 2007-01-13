@@ -184,17 +184,6 @@ public class DataStore implements Serializable, Cloneable
 	}
 
 	/**
-	 * Removes an object given the ID.
-	 * 
-	 * @param obj Object The object to be removed.
-	 * @return Object The object that was removed.
-	 */
-	public Object removeObject(Object obj)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * Checks if the given id is contained in the datastore.
 	 * 
 	 * @param id String The id to check for.

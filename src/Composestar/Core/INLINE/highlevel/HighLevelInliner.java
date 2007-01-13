@@ -16,11 +16,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
-import Composestar.Core.FIRE2.model.ExecutionLabels;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
-import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.util.queryengine.predicates.StateType;
 import Composestar.Core.LAMA.MethodInfo;
@@ -51,11 +49,11 @@ public class HighLevelInliner
 
 	private void initialize()
 	{
-		isFilter = new StateType(FlowChartNames.FILTER_NODE);
-		isCondExpr = new StateType(FlowChartNames.CONDITION_EXPRESSION_NODE);
-		isAction = new StateType(FlowChartNames.ACTION_NODE);
-		isFilterModule = new StateType(FlowChartNames.FILTER_MODULE_NODE);
-		isEnd = new StateType(FlowChartNames.END_NODE);
+		isFilter = new StateType(FlowNode.FILTER_NODE);
+		isCondExpr = new StateType(FlowNode.CONDITION_EXPRESSION_NODE);
+		isAction = new StateType(FlowNode.ACTION_NODE);
+		isFilterModule = new StateType(FlowNode.FILTER_MODULE_NODE);
+		isEnd = new StateType(FlowNode.END_NODE);
 	}
 
 	public void inline(ExecutionModel model, FilterModule[] modules, MethodInfo method)
@@ -344,7 +342,7 @@ public class HighLevelInliner
 
 			ExecutionState exitState = getExitState(transition.getEndState());
 
-			if (transition.getLabel().equals(ExecutionLabels.CONDITION_EXPRESSION_TRUE))
+			if (transition.getLabel().equals(ExecutionTransition.CONDITION_EXPRESSION_TRUE))
 			{
 				block.flowTrueExitState = exitState;
 			}
@@ -404,7 +402,7 @@ public class HighLevelInliner
 	private boolean isExitState(ExecutionState state)
 	{
 		// exitstate is either a ConditionExpression or an Action state:
-		return isCondExpr.isTrue(state) || state.getFlowNode().containsName(FlowChartNames.ACTION_NODE);
+		return isCondExpr.isTrue(state) || state.getFlowNode().containsName(FlowNode.ACTION_NODE);
 	}
 
 	private class FilterModuleBlock
@@ -554,12 +552,12 @@ public class HighLevelInliner
 			// if startnode of the transition is a condition expression, add
 			// this condition
 			// expression
-			if (flowNode.containsName(FlowChartNames.CONDITION_EXPRESSION_NODE))
+			if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE))
 			{
 				ConditionExpression expr1 = (ConditionExpression) conditionTable.get(startState);
 				ConditionExpression expr2 = (ConditionExpression) flowNode.getRepositoryLink();
 
-				if (transition.getLabel().equals(ExecutionLabels.CONDITION_EXPRESSION_FALSE))
+				if (transition.getLabel().equals(ExecutionTransition.CONDITION_EXPRESSION_FALSE))
 				{
 					Not not = new Not();
 					not.setOperand(expr2);
@@ -596,7 +594,7 @@ public class HighLevelInliner
 			for (int i = backwardStateVector.size() - 1; i >= 0; i--)
 			{
 				state = (ExecutionState) backwardStateVector.elementAt(i);
-				if (state.getFlowNode().containsName(FlowChartNames.ACTION_NODE))
+				if (state.getFlowNode().containsName(FlowNode.ACTION_NODE))
 				{
 					inlineState(state);
 				}

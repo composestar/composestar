@@ -31,9 +31,9 @@ public class AbstractVM
 
 	public List analyze(Concern concern, FilterModuleOrder filterModules)
 	{
-		FireModel fireModel = new FireModel(concern, filterModules, true);
+		FireModel fireModel = new FireModel(concern, filterModules);
 
-		ExecutionModel execModel = fireModel.getExecutionModel();
+		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS);
 
 		ResourceOperationLabeler labeler = new ResourceOperationLabeler();
 

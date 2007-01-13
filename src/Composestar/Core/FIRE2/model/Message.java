@@ -90,7 +90,7 @@ public class Message
 	public Message(Target target, MethodInfo selector)
 	{
 		this.target = target;
-		this.selector = selector.name();
+		this.selector = selector.getName();
 	}
 
 	/**
@@ -161,5 +161,10 @@ public class Message
 	public static boolean checkEquals(Target target1, Target target2)
 	{
 		return target1.getName().equals(target2.getName());
+	}
+
+	public String toString()
+	{
+		return target.getName() + "." + selector;
 	}
 }

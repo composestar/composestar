@@ -32,7 +32,7 @@ public class SendFilterNode extends FilterNode
 	{
 		if (inDirection != FilterChainNode.OUTPUT)
 		{
-			throw new ModuleException("Send Filter may only have direction == output", DIGGER.MODULE_NAME);
+			throw new ModuleException("Send Filter may only have filterPosition == output", DIGGER.MODULE_NAME);
 		}
 		else
 		{

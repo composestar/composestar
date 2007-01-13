@@ -1,0 +1,238 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
+
+package Composestar.Core.DIGGER2;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.FIRE2.model.ExecutionModel;
+import Composestar.Core.FIRE2.model.ExecutionState;
+import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
+
+/**
+ * DIspatch Grapg GEneratoR.
+ * 
+ * @author Michiel Hendriks
+ */
+public class DIGGER implements CTCommonModule
+{
+	public static final String MODULE_NAME = "DIGGER";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
+	protected DispatchGraph graph;
+
+	protected INCRE incre;
+
+	protected ModuleInfo moduleInfo;
+
+	protected int recursionCheckDepth;
+
+	protected List allCrumbs;
+
+	/**
+	 * 
+	 */
+	public DIGGER()
+	{}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
+	 */
+	public void run(CommonResources resources) throws ModuleException
+	{
+		incre = INCRE.instance();
+		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Main", INCRETimer.TYPE_OVERHEAD);
+		moduleInfo = ModuleInfoManager.get(DIGGER.class);
+		graph = new DispatchGraph(1 /*moduleInfo.getIntSetting("mode")*/);
+		graph.setAutoResolve(false);
+		DataStore.instance().addObject(DispatchGraph.REPOSITORY_KEY, graph);
+		allCrumbs = new ArrayList();
+		createBreadcrumbs();
+		if (moduleInfo.getBooleanSetting("resolve"))
+		{
+			resolveBreadcrumbs();
+			recursionCheckDepth = moduleInfo.getIntSetting("recursionCheck");
+			if (recursionCheckDepth > 0)
+			{
+				checkRecursion();
+			}
+		}
+		if (moduleInfo.getBooleanSetting("exportXml"))
+		{
+			DispatchGraphExporter exporter = new XMLDispatchGraphExporter(graph);
+			exporter.export();
+		}
+
+		graph.setAutoResolve(true);
+		allCrumbs.clear();
+		filthinit.stop();
+	}
+
+	/**
+	 * Create the breadcrumbs
+	 * 
+	 * @throws ModuleException
+	 */
+	protected void createBreadcrumbs() throws ModuleException
+	{
+		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME,
+				"Creating breadcrumbs in mode " + graph.getMode(), INCRETimer.TYPE_NORMAL);
+		Iterator concerns = DataStore.instance().getAllInstancesOf(Concern.class);
+		while (concerns.hasNext())
+		{
+			Concern concern = (Concern) concerns.next();
+			FilterModuleOrder fmOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+			if (fmOrder != null)
+			{
+				if (Debug.willLog(Debug.MODE_INFORMATION))
+				{
+					logger.info("Generating dispatch graph for: " + concern.getQualifiedName());
+				}
+
+				FireModel fm = new FireModel(concern, fmOrder);
+				switch (graph.getMode())
+				{
+					case DispatchGraph.MODE_BASIC:
+						processFireModel(concern, fm.getExecutionModel(FireModel.INPUT_FILTERS).getEntranceStates(),
+								FireModel.INPUT_FILTERS);
+						// no output filter support
+						// processFireModel(concern, fm,
+						// FireModel.OUTPUT_FILTERS);
+						break;
+					default:
+						processFullFireModel(concern, fm);
+
+				}
+			}
+		}
+		timer.stop();
+	}
+
+	/**
+	 * Resolve the destination crumbs of the trails
+	 * 
+	 * @throws ModuleException
+	 */
+	protected void resolveBreadcrumbs() throws ModuleException
+	{
+		INCRETimer timer = incre.getReporter()
+				.openProcess(MODULE_NAME, "Resolving breadcrumbs", INCRETimer.TYPE_NORMAL);
+		Iterator it = allCrumbs.iterator();
+		while (it.hasNext())
+		{
+			Breadcrumb crumb = (Breadcrumb) it.next();
+			try
+			{
+				graph.getResultingMessages(crumb);
+			}
+			catch (RecursiveFilterException e)
+			{
+				logger.error("RecursiveFilterException");
+				if (e.numVars() > 0)
+				{
+					logger.debug("");
+				}
+			}
+		}
+		timer.stop();
+	}
+
+	/**
+	 * 
+	 */
+	protected void checkRecursion() throws ModuleException
+	{
+		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME, "Checking for recursive filter definitions",
+				INCRETimer.TYPE_NORMAL);
+		Iterator it = allCrumbs.iterator();
+		while (it.hasNext())
+		{
+			Breadcrumb crumb = (Breadcrumb) it.next();
+			graph.getResolver().resolve(crumb);
+		}
+		timer.stop();
+	}
+
+	/**
+	 * Process a collection of entrance states to breadcrumbs. This method is
+	 * used in BASIC mode.
+	 * 
+	 * @param concern
+	 * @param entranceStates
+	 * @param filterChain
+	 * @throws ModuleException
+	 */
+	protected void processFireModel(Concern concern, Iterator entranceStates, int filterPosition)
+			throws ModuleException
+	{
+		while (entranceStates.hasNext())
+		{
+			ExecutionState es = (ExecutionState) entranceStates.next();
+			Breadcrumb crumb = graph.getResolver().resolve(concern, es, filterPosition);
+			graph.addCrumb(crumb);
+			allCrumbs.add(crumb);
+		}
+	}
+
+	/**
+	 * Do a full processing of the firemodel. This constructs an execution graph
+	 * for every method in the concern. Only in this case will signature
+	 * matching be performed. This method is used in the FULL mode.
+	 * 
+	 * @param concern
+	 * @param fm
+	 * @throws ModuleException
+	 */
+	protected void processFullFireModel(Concern concern, FireModel fm) throws ModuleException
+	{
+		Type type = (Type) concern.getPlatformRepresentation();
+		Iterator it = type.getMethods().iterator();
+		while (it.hasNext())
+		{
+			MethodInfo methodInfo = (MethodInfo) it.next();
+			int filterPosition = FireModel.INPUT_FILTERS;
+
+			ExecutionModel em = fm.getExecutionModel(filterPosition, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
+			if (em.getEntranceMessages().size() > 1)
+			{
+				logger.warn(concern.getName() + "." + methodInfo.getName() + " has " + em.getEntranceMessages().size()
+						+ " entrance messages");
+			}
+			Iterator entranceStates = em.getEntranceStates();
+			ExecutionState es = (ExecutionState) entranceStates.next();
+			//new Composestar.Core.FIRE2.util.viewer.Viewer(em);
+			// logger.debug(concern.getName()+"."+methodInfo.getName()+" has
+			// entrance message "+es.getMessage());
+
+			Breadcrumb crumb = graph.getResolver().resolve(concern, es, filterPosition);
+			graph.addCrumb(crumb);
+			allCrumbs.add(crumb);
+		}
+	}
+}

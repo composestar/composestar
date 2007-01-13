@@ -13,7 +13,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.FIRE2.model.ExecutionState;
-import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.INLINE.model.Block;
@@ -347,25 +346,25 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			jump(-1);
 			return;
 		}
-		else if (node.containsName(FlowChartNames.ACCEPT_CALL_ACTION_NODE))
+		else if (node.containsName(FlowNode.ACCEPT_CALL_ACTION_NODE))
 		{
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
 					.getAcceptCallAction();
 			generateCallAction(state, action);
 		}
-		else if (node.containsName(FlowChartNames.REJECT_CALL_ACTION_NODE))
+		else if (node.containsName(FlowNode.REJECT_CALL_ACTION_NODE))
 		{
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
 					.getRejectCallAction();
 			generateCallAction(state, action);
 		}
-		else if (node.containsName(FlowChartNames.ACCEPT_RETURN_ACTION_NODE))
+		else if (node.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE))
 		{
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
 					.getAcceptReturnAction();
 			generateReturnAction(state, action);
 		}
-		else if (node.containsName(FlowChartNames.REJECT_RETURN_ACTION_NODE))
+		else if (node.containsName(FlowNode.REJECT_RETURN_ACTION_NODE))
 		{
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
 					.getRejectReturnAction();

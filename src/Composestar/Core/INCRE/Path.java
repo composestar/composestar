@@ -1,13 +1,17 @@
 package Composestar.Core.INCRE;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
 
-public class Path
+public class Path implements Serializable
 {
-	private ArrayList nodes = new ArrayList();
+	private static final long serialVersionUID = 3702399602907107235L;
+
+	private List nodes = new ArrayList();
 
 	public Path()
 	{}

@@ -34,7 +34,7 @@ public abstract class FilterNode extends Node
 	protected Filter filter;
 
 	/**
-	 * The direction of this filter (input\output)
+	 * The filterPosition of this filter (input\output)
 	 */
 	protected byte direction = -1;
 
@@ -51,7 +51,7 @@ public abstract class FilterNode extends Node
 	}
 
 	/**
-	 * Return the direction of this filter (input-/outputfilter)
+	 * Return the filterPosition of this filter (input-/outputfilter)
 	 * 
 	 * @return
 	 */

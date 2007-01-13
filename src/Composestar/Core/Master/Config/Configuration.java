@@ -1,13 +1,12 @@
 package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class Configuration implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8812125434498730547L;
 
 	private static Configuration cfgInstance;
@@ -26,6 +25,12 @@ public class Configuration implements Serializable
 
 	private CustomFilters filters;
 
+	/**
+	 * Temporary storage of module settings. ModuleInfo uses this to populate
+	 * it's settings when it's loaded.
+	 */
+	private Map tmpModuleSettings;
+
 	public Configuration()
 	{
 		properties = new Properties();
@@ -35,6 +40,8 @@ public class Configuration implements Serializable
 		platform = new Platform();
 		libraries = new BuiltLibraries();
 		filters = new CustomFilters();
+
+		tmpModuleSettings = new HashMap();
 	}
 
 	public static Configuration instance()
@@ -86,39 +93,51 @@ public class Configuration implements Serializable
 		return moduleSettings;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public ModuleSettings getModuleSettings(String module)
 	{
 		return moduleSettings.getModule(module);
 	}
 
+	/**
+	 * @deprecated Directly use ModuleInfo
+	 */
 	public String getModuleProperty(String module, String key, String def)
 	{
-		ModuleSettings ms = getModuleSettings(module);
-		if (ms != null)
+		ModuleInfo mi = ModuleInfoManager.get(module);
+		if (mi != null)
 		{
-			return ms.getProperty(key, def);
+			return mi.getStringSetting(key, def);
 		}
-		return def; 
+		return def;
 	}
 
+	/**
+	 * @deprecated Directly use ModuleInfo
+	 */
 	public int getModuleProperty(String module, String key, int def)
 	{
-		ModuleSettings ms = getModuleSettings(module);
-		if (ms != null)
+		ModuleInfo mi = ModuleInfoManager.get(module);
+		if (mi != null)
 		{
-			return ms.getProperty(key, def);
+			return mi.getIntSetting(key, def);
 		}
-		return def; 
+		return def;
 	}
 
+	/**
+	 * @deprecated Directly use ModuleInfo
+	 */
 	public boolean getModuleProperty(String module, String key, boolean def)
 	{
-		ModuleSettings ms = getModuleSettings(module);
-		if (ms != null)
+		ModuleInfo mi = ModuleInfoManager.get(module);
+		if (mi != null)
 		{
-			return ms.getProperty(key, def);
+			return mi.getBooleanSetting(key, def);
 		}
-		return def; 
+		return def;
 	}
 
 	public PathSettings getPathSettings()
@@ -140,6 +159,7 @@ public class Configuration implements Serializable
 	{
 		return filters;
 	}
+
 	/*
 	 * public void setProjects(Projects projects) { this.projects = projects; }
 	 * public void setModuleSettings(ModuleSettings moduleSettings) {
@@ -150,4 +170,14 @@ public class Configuration implements Serializable
 	 * libraries) { this.libraries = libraries; } public void
 	 * setFilters(CustomFilters filters) { this.filters = filters; }
 	 */
+
+	public void addTmpModuleSettings(String moduleName, Map props)
+	{
+		tmpModuleSettings.put(moduleName, props);
+	}
+
+	public Map getTmpModuleSettings(String moduleName)
+	{
+		return (Map) tmpModuleSettings.get(moduleName);
+	}
 }

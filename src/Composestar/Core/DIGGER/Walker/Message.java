@@ -272,7 +272,7 @@ public class Message
 		while (it.hasNext())
 		{
 			MethodInfo mi = (MethodInfo) it.next();
-			if (mi.name().equals(selector))
+			if (mi.getName().equals(selector))
 			{
 				return true;
 			}

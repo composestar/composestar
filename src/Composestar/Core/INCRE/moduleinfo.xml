@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="INCRE" class="Composestar.Core.INCRE.INCRE">
+		<name>Incremental Builder</name>
+		<description>
+			Facilitates incremental building of the project. It stores the produced results of the incremental modules
+			in it's history database. Modules need to be designed to be incremental.
+		</description>
+		<settings>
+			<setting id="enabled" type="boolean">
+				<name>Incremental Build Enabled</name>
+				<default>False</default>
+			</setting>
+			<setting id="config">
+				<name>Configuration File</name>
+				<default>INCREconfig.xml</default>
+			</setting>
+		</settings>
+	</moduleinfo>
+	
+	<moduleinfo id="INCRESerializer" class="Composestar.Core.INCRE.INCRESerializer">
+		<incre>
+			<module enabled="true" incremental="false"
+				summary="Serializing repository for incremental compilation...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

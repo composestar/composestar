@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+	<xs:annotation>
+		<xs:documentation>
+			The XML Schema definition for ModuleInfo data. The ModuleInfo provides a generalized way to store and
+			retrieve information about Compose* modules.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:element name="modules">
+		<xs:annotation>
+			<xs:documentation>
+				The modules tag serves as entry point for the moduleinfo definitions. This is to add the ability add
+				more than one moduleinfo definition in an XML file.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="1" maxOccurs="unbounded">
+				<xs:element name="moduleinfo" type="ModuleInfo" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ModuleInfo">
+		<xs:annotation>
+			<xs:documentation>Defines a Compose* module</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Human readable name of the module.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						A description of this module. Can be used for documentation perposes.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="settings" type="Settings" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="incre" type="IncreConfig" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						This will hold the incre configuration. It accepts a single incre &lt;module&gt;. When using
+						extends this will completely replace the previous definition.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					The identifier of the module. This is also used for the incre configuration. This attribute is
+					required unless extends is set.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="class" type="xs:NMTOKEN" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					The class associated with this moduleinfo. This is also used for the incre configuration.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="extends" type="xs:NMTOKEN" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					If set the moduleinfo will import the all the data from the module info of the given class.
+					Everything specified in this module info will overwrite the previous data.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="Settings">
+		<xs:annotation>
+			<xs:documentation>Grouping element for module settings</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="setting" type="Setting" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Setting">
+		<xs:annotation>
+			<xs:documentation>Defines a setting for the module</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Human readable name of the setting.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="default" type="xs:string" maxOccurs="1" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Default value.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required">
+			<xs:annotation>
+				<xs:documentation>The setting identifier.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="type" use="optional" type="xs:NMTOKEN">			<xs:annotation>
+				<xs:documentation>
+					The type of the setting. Defaults to "string". Accepted values are: int, integer, bool, boolean,
+					string, float. Or a fully qualified class name of the type.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="remove" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					If set to true remove the existing setting with this name. This is only useful when the module info
+					is extended.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="IncreConfig">
+		<!-- import this from the incre config spec, it should contain a single module element -->
+		<xs:annotation>
+			<xs:documentation>Encapsulates the incre configuration for this module.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="module" type="xs:anyType">
+				<xs:annotation>
+					<xs:documentation>
+						Actual implementation of this type is defined by the INCRE config DTD which the except that the
+						"name" and "fullType" attributes are completely ignored.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

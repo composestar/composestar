@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="FITER" class="Composestar.Core.FITER.FITER">
+		<incre>
+			<module enabled="true" incremental="false" summary="Verifying filter types...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

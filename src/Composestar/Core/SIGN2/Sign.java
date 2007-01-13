@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -151,7 +152,7 @@ public class Sign implements CTCommonModule
 			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
 			{
 				filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-				model = new FireModel(concern, filterModules, true);
+				model = new FireModel(concern, filterModules);
 				analysisModels.put(concern, model);
 
 				unsolvedConcerns.add(concern);
@@ -196,7 +197,7 @@ public class Sign implements CTCommonModule
 		Iterator iter;
 		Concern concern;
 		FireModel model;
-		HashSet distinguishable;
+		Set distinguishable;
 		Iterator messages;
 		String message;
 
@@ -210,7 +211,7 @@ public class Sign implements CTCommonModule
 			{
 				concern = (Concern) iter.next();
 				model = (FireModel) analysisModels.get(concern);
-				distinguishable = model.getDistinguishable();
+				distinguishable = model.getDistinguishableSelectors(FireModel.INPUT_FILTERS);
 				messages = distinguishable.iterator();
 
 				// first distinguishable:
@@ -230,7 +231,7 @@ public class Sign implements CTCommonModule
 		}
 	}
 
-	private boolean checkMessage(Concern concern, FireModel fireModel, String messageSelector, HashSet distinguishable)
+	private boolean checkMessage(Concern concern, FireModel fireModel, String messageSelector, Set distinguishable)
 	{
 		boolean changed = false;
 		ExecutionModel execModel;
@@ -242,7 +243,7 @@ public class Sign implements CTCommonModule
 
 		signature = getSignature(concern);
 
-		execModel = fireModel.getExecutionModel(messageSelector);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, messageSelector);
 		entranceState = (ExecutionState) execModel.getEntranceStates().next();
 
 		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
@@ -327,7 +328,7 @@ public class Sign implements CTCommonModule
 				for (int j = 0; j < methods.length; j++)
 				{
 					// remove parameters:
-					MethodInfo m = methods[j].getClone(methods[j].name(), methods[j].parent());
+					MethodInfo m = methods[j].getClone(methods[j].getName(), methods[j].parent());
 					m.Parameters = new ArrayList();
 
 					if (!signature.hasMethod(m))
@@ -343,7 +344,7 @@ public class Sign implements CTCommonModule
 	}
 
 	private MethodInfo[] getMethods(Concern concern, String selector, ExecutionState dispatchState,
-			ExecutionState matchingState, HashSet distinguishable)
+			ExecutionState matchingState, Set distinguishable)
 	{
 		FlowNode node = matchingState.getFlowNode();
 		if (node.containsName("NameMatchingPart"))
@@ -367,7 +368,7 @@ public class Sign implements CTCommonModule
 	}
 
 	private MethodInfo[] getMethods(Concern concern, String selector, ExecutionState state, boolean nameMatching,
-			Target signatureMatchingTarget, HashSet distinguishable)
+			Target signatureMatchingTarget, Set distinguishable)
 	{
 		// case 2:
 		if (!selector.equals(Message.UNDISTINGUISHABLE_SELECTOR))
@@ -397,8 +398,7 @@ public class Sign implements CTCommonModule
 		{
 			if (state.getMessage().getTarget().getName().equals("inner"))
 			{
-				return getInnerMethods(concern, state,
-						distinguishable);
+				return getInnerMethods(concern, state, distinguishable);
 			}
 			else
 			{
@@ -411,8 +411,7 @@ public class Sign implements CTCommonModule
 		{
 			if (signatureMatchingTarget.getName().equals("inner"))
 			{
-				return getInnerMethods(concern, state,
-						distinguishable);
+				return getInnerMethods(concern, state, distinguishable);
 			}
 			else
 			{
@@ -471,7 +470,7 @@ public class Sign implements CTCommonModule
 		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
 	}
 
-	private MethodInfo[] getInnerMethods(Concern concern, ExecutionState state, HashSet distinguishable)
+	private MethodInfo[] getInnerMethods(Concern concern, ExecutionState state, Set distinguishable)
 	{
 		Vector result = new Vector();
 
@@ -554,7 +553,7 @@ public class Sign implements CTCommonModule
 		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
 	}
 
-	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, HashSet distinguishable)
+	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, Set distinguishable)
 	{
 		Vector result = new Vector();
 		Type type = (Type) concern.getPlatformRepresentation();
@@ -590,7 +589,7 @@ public class Sign implements CTCommonModule
 		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
 	}
 
-	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, Target donor, HashSet distinguishable)
+	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, Target donor, Set distinguishable)
 	{
 		Vector result = new Vector();
 
@@ -691,7 +690,7 @@ public class Sign implements CTCommonModule
 		Iterator iter;
 		Concern concern;
 		FireModel model;
-		HashSet distinguishable;
+		Set distinguishable;
 		Iterator selectors;
 		String selector;
 		MethodInfo method;
@@ -702,7 +701,7 @@ public class Sign implements CTCommonModule
 		{
 			concern = (Concern) iter.next();
 			model = (FireModel) analysisModels.get(concern);
-			distinguishable = model.getDistinguishable();
+			distinguishable = model.getDistinguishableSelectors(FireModel.INPUT_FILTERS);
 			selectors = distinguishable.iterator();
 
 			// first distinguishable:
@@ -718,7 +717,7 @@ public class Sign implements CTCommonModule
 			for (int i = 0; i < methods.size(); i++)
 			{
 				method = (MethodInfo) methods.get(i);
-				selector = method.name();
+				selector = method.getName();
 				if (!distinguishable.contains(selector) && !checkedSelectors.contains(selector))
 				{
 					checkNonDispatchable(concern, model, selector);
@@ -742,7 +741,7 @@ public class Sign implements CTCommonModule
 		ExecutionModel execModel;
 		Signature signature;
 
-		execModel = fireModel.getExecutionModel(selector);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, selector);
 		signature = getSignature(concern);
 
 		// don't do the check when the signature has the given selector:
@@ -769,8 +768,7 @@ public class Sign implements CTCommonModule
 			String dispSelector = state.getSubstitutionMessage().getSelector();
 			if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
 			{
-				dispSelector = state.getMessage()
-						.getSelector();
+				dispSelector = state.getMessage().getSelector();
 			}
 
 			// get the dispatch target:
@@ -860,7 +858,7 @@ public class Sign implements CTCommonModule
 		ExecutionModel execModel;
 
 		// first check with strict signature checks:
-		execModel = fireModel.getExecutionModel(methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
 		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
 		Enumeration enu = checker.matchingStates();
 
@@ -889,7 +887,7 @@ public class Sign implements CTCommonModule
 
 		// then check again with loose signature checks:
 
-		execModel = fireModel.getExecutionModel(methodInfo, FireModel.LOOSE_SIGNATURE_CHECK);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo, FireModel.LOOSE_SIGNATURE_CHECK);
 		checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
 		enu = checker.matchingStates();
 
@@ -1074,7 +1072,7 @@ public class Sign implements CTCommonModule
 		ExecutionState state;
 		ExecutionModel execModel;
 
-		execModel = fireModel.getExecutionModel(methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
 
 		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
 		Enumeration enu = checker.matchingStates();
@@ -1123,10 +1121,11 @@ public class Sign implements CTCommonModule
 				for (int i = 0; i < methods.size(); i++)
 				{
 					MethodInfo m = (MethodInfo) methods.get(i);
-					if (m.name().equals(targetMethod.name()))
+					if (m.getName().equals(targetMethod.getName()))
 					{
-						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The call to method " + methodInfoString(method)
-								+ " in concern " + concern.name + " might be dispatched to method " + m.name()
+						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method "
+								+ methodInfoString(method) + " in concern " + concern.name
+								+ " might be dispatched to method " + m.getName()
 								+ " in inner with the wrong parameters " + "and/or return type!", state.getFlowNode()
 								.getRepositoryLink());
 						return;
@@ -1135,7 +1134,7 @@ public class Sign implements CTCommonModule
 
 				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method " + methodInfoString(method)
 						+ " in concern " + concern.name + " might be dispatched to the unresolved " + "method "
-						+ targetMethod.name() + " in inner", state.getFlowNode().getRepositoryLink());
+						+ targetMethod.getName() + " in inner", state.getFlowNode().getRepositoryLink());
 			}
 		}
 		else
@@ -1149,12 +1148,12 @@ public class Sign implements CTCommonModule
 			Signature signature = getSignature(targetConcern);
 			if (!signature.hasMethod(targetMethod))
 			{
-				if (signature.hasMethod(targetMethod.name()))
+				if (signature.hasMethod(targetMethod.getName()))
 				{
 					Debug
 							.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method "
 									+ methodInfoString(method) + " in concern " + concern.name
-									+ " might be dispatched to method " + targetMethod.name() + " in concern "
+									+ " might be dispatched to method " + targetMethod.getName() + " in concern "
 									+ targetConcern.getName() + " with the wrong parameters and/or return type!", state
 									.getFlowNode().getRepositoryLink());
 				}
@@ -1162,7 +1161,7 @@ public class Sign implements CTCommonModule
 				{
 					Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method " + methodInfoString(method)
 							+ " in concern " + concern.name + " might be dispatched to the unresolved " + "method "
-							+ targetMethod.name() + " in concern " + targetConcern.getName(), state.getFlowNode()
+							+ targetMethod.getName() + " in concern " + targetConcern.getName(), state.getFlowNode()
 							.getRepositoryLink());
 				}
 			}
@@ -1198,13 +1197,13 @@ public class Sign implements CTCommonModule
 				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method '" + methodInfoString(method)
 						+ "' in concern '" + concern.name + "' might lead to a meta-call to an"
 						+ " unresolved meta-method '" + dispSelector // michielh:
-																		// this
-																		// used
-																		// to be
-																		// "m.name()"
-																		// but m
-																		// is
-																		// null
+						// this
+						// used
+						// to be
+						// "m.name()"
+						// but m
+						// is
+						// null
 						+ "' in inner!", state.getFlowNode().getRepositoryLink());
 			}
 		}
@@ -1236,7 +1235,7 @@ public class Sign implements CTCommonModule
 			MethodInfo method = wrapper.getMethodInfo();
 
 			// if same name && param length
-			if (method.name().equals(name) && method.hasParameters(types))
+			if (method.getName().equals(name) && method.hasParameters(types))
 			{
 				return wrapper;
 			}
@@ -1270,7 +1269,7 @@ public class Sign implements CTCommonModule
 	private String methodInfoString(MethodInfo info)
 	{
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(info.name());
+		buffer.append(info.getName());
 
 		buffer.append('(');
 		List parameters = info.getParameters();
@@ -1385,7 +1384,7 @@ public class Sign implements CTCommonModule
 					}
 
 					Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "\t[ " + relation + " ] " + "(" + returntype + ") "
-							+ mi.name() + "(" + StringUtils.join(paramNames, ", ") + ")");
+							+ mi.getName() + "(" + StringUtils.join(paramNames, ", ") + ")");
 				}
 			}
 		}

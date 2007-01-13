@@ -1,65 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph id="graph" role="graph" edgeids="false" edgemode="directed">
-        <node id="n5367"/>
-        <node id="n5372"/>
-        <node id="n5369"/>
-        <node id="n5371"/>
-        <node id="n5370"/>
-        <node id="n5368"/>
-        <edge from="n5369" to="n5368">
-            <attr name="label">
-                <string>selector</string>
-            </attr>
-        </edge>
-        <edge from="n5368" to="n5368">
-            <attr name="label">
-                <string>'*'</string>
-            </attr>
-        </edge>
-        <edge from="n5372" to="n5371">
-            <attr name="label">
-                <string>del:target</string>
-            </attr>
-        </edge>
-        <edge from="n5369" to="n5367">
-            <attr name="label">
-                <string>target</string>
-            </attr>
-        </edge>
-        <edge from="n5369" to="n5370">
-            <attr name="label">
-                <string>flowTrue</string>
-            </attr>
-        </edge>
-        <edge from="n5369" to="n5369">
-            <attr name="label">
-                <string>SignatureMatchingPart</string>
-            </attr>
-        </edge>
-        <edge from="n5372" to="n5369">
+        <node id="n1201"/>
+        <node id="n1199"/>
+        <node id="n1198"/>
+        <node id="n1200"/>
+        <edge from="n1200" to="n1201">
             <attr name="label">
                 <string>del:pc</string>
             </attr>
         </edge>
-        <edge from="n5370" to="n5370">
+        <edge from="n1201" to="n1199">
             <attr name="label">
-                <string>FlowElement</string>
+                <string>selector</string>
             </attr>
         </edge>
-        <edge from="n5372" to="n5370">
+        <edge from="n1200" to="n1198">
             <attr name="label">
                 <string>new:pc</string>
             </attr>
         </edge>
-        <edge from="n5372" to="n5372">
+        <edge from="n1201" to="n1198">
+            <attr name="label">
+                <string>flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n1200" to="n1200">
             <attr name="label">
                 <string>Frame</string>
             </attr>
         </edge>
-        <edge from="n5372" to="n5367">
+        <edge from="n1201" to="n1201">
             <attr name="label">
-                <string>new:target</string>
+                <string>SignatureMatchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n1199" to="n1199">
+            <attr name="label">
+                <string>'*'</string>
+            </attr>
+        </edge>
+        <edge from="n1198" to="n1198">
+            <attr name="label">
+                <string>FlowElement</string>
             </attr>
         </edge>
     </graph>

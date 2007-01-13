@@ -42,7 +42,7 @@
 	
 	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file"/>
 	
-	<target name="antlr">
+	<target name="antlr" depends="local_init">
 		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java"/>
 	</target>
 	
@@ -61,24 +61,39 @@
 		<copy todir="${out.build}"><!-- copy groove grammars -->
 			<fileset dir="src">
 				<include name="**/*.gpr"/>
+				<include name="**/moduleinfo.xml"/>
 				<include name="Composestar/Core/DIGGER/Xslt/*.xslt"/>
 			</fileset>
 		</copy>
 		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF"/>
 	</target>
 	
-	<target name="install" depends="build" description="Install the core files">
+	<target name="install" depends="build,install_system,install_eclipse" description="Install the core files" />
+	
+	<macrodef name="install_core" description="Install the core to a given directory">
+		<attribute name="todir" description="Directory to copy the files to" />		
+		<sequential>
+			<!--
+			<fail message="The destination directory @{todir} does not exist.">
+				<condition>
+					<not>
+						<available file="@{todir}" />
+					</not>
+				</condition>
+			</fail>
+			-->			
+			<mkdir dir="@{todir}" />
+			
+			<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="@{todir}"/>
+			<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="@{todir}"/>
+			<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="@{todir}"/>
 
-		<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${composestar.installdir}"/>
-		<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="${composestar.installdir}"/>
-		<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${composestar.installdir}"/>
-
-		<copy todir="${composestar.installdir}/Binaries">
+			<copy todir="@{todir}/binaries">
 			<fileset dir="${out.dist}"/>
 			<fileset file="binaries/antlr/antlr.jar"/>
 		</copy>
 
-		<copy todir="${composestar.installdir}/Binaries/prolog">
+			<copy todir="@{todir}/binaries/prolog">
 			<fileset dir="binaries/prolog">
 				<include name="prolog.jar"/>
 				<include name="lib.pro"/>
@@ -86,7 +101,7 @@
 			</fileset>
 		</copy>
 
-		<copy todir="${composestar.installdir}/Binaries/groove">
+			<copy todir="@{todir}/binaries/groove">
 			<fileset dir="binaries/groove">
 				<include name="groove-1_2_0.jar"/>
 				<include name="castor-0_9_5_2-xml.jar"/>
@@ -95,8 +110,29 @@
 				<include name="xerces-2_6_0-xml-apis.jar"/>
 			</fileset>
 		</copy>
-
+		</sequential>
+	</macrodef>
+	
+	<target name="install_system" depends="build" if="available.dotnet">
+		<!-- install the core files for the system, currently this is only used for dotnet -->
+		<install_core todir="${composestar.installdir}" />
 	</target>
+	
+	<target name="install_eclipse" depends="build" if="available.eclipse">
+		<!-- copy files to eclipse -->
+		<!-- 
+			this construction is intentional to create a fail safe method to 
+			install the eclipse files even when eclipse is not available 
+		-->
+		<antcall target="-install_eclipse" inheritRefs="true" />
+	</target>	
+	
+	<target name="-install_eclipse" depends="init_eclipse">
+		<install_core todir="${eclipse.pluginsdir}/ComposestarCore" />
+	</target>
+	
+	
+	<target name="test" depends="unittest,validate_moduleinfo" description="Run tests" />
 
 	<target name="compile_tests" depends="local_init,compile">
 		<path id="lib.test">
@@ -116,13 +152,19 @@
 				<path refid="lib.test"/>
 				<pathelement path="test"/>
 			</classpath>
-			<formatter type="plain"/>
+			<formatter type="xml" />
 			<batchtest todir="test">
 				<fileset dir="test">
 					<include name="**/*Test.class"/>
 				</fileset>
 			</batchtest>
 		</junit>
+		<junitreport todir="test">
+			<fileset dir="test">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="noframes" todir="test" />
+		</junitreport>
 	</target>
 	
 </project>

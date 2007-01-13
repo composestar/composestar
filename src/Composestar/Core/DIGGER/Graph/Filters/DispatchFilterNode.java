@@ -32,7 +32,7 @@ public class DispatchFilterNode extends FilterNode
 	{
 		if (inDirection != FilterChainNode.INPUT)
 		{
-			throw new ModuleException("Dispatch Filter may only have direction == input", DIGGER.MODULE_NAME);
+			throw new ModuleException("Dispatch Filter may only have filterPosition == input", DIGGER.MODULE_NAME);
 		}
 		else
 		{

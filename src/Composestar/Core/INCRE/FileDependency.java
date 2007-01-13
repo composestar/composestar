@@ -7,6 +7,8 @@ import Composestar.Core.Exception.ModuleException;
 
 public class FileDependency extends Dependency
 {
+	private static final long serialVersionUID = -1106616256876579742L;
+
 	private boolean isAdded = true;
 
 	/**

@@ -209,8 +209,8 @@ public class ModelBuilder implements CTCommonModule
 		// get filtermodules:
 		FilterModuleOrder filterModules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
 
-		currentFireModelIF = new FireModel(concern, filterModules, true);
-		currentFireModelOF = new FireModel(concern, filterModules, false);
+		currentFireModelIF = new FireModel(concern, filterModules);
+		currentFireModelOF = currentFireModelIF;
 
 		List order = filterModules.orderAsList();
 		modules = new FilterModule[order.size()];
@@ -243,10 +243,11 @@ public class ModelBuilder implements CTCommonModule
 		// Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing " + methodInfo);
 
 		// set current selector:
-		this.currentSelector = methodInfo.name();
+		this.currentSelector = methodInfo.getName();
 
 		// create executionmodel:
-		ExecutionModel execModel = currentFireModelIF.getExecutionModel(methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
+		ExecutionModel execModel = currentFireModelIF.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo,
+				FireModel.STRICT_SIGNATURE_CHECK);
 
 		// create inlineModel:
 		inputFilterInliner.inline(execModel, modules, methodInfo);
@@ -286,11 +287,12 @@ public class ModelBuilder implements CTCommonModule
 		ExecutionModel execModel;
 		if (methodInfo != null)
 		{
-			execModel = currentFireModelOF.getExecutionModel(methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
+			execModel = currentFireModelOF.getExecutionModel(FireModel.OUTPUT_FILTERS, methodInfo,
+					FireModel.STRICT_SIGNATURE_CHECK);
 		}
 		else
 		{
-			execModel = currentFireModelOF.getExecutionModel(call.getMethodName());
+			execModel = currentFireModelOF.getExecutionModel(FireModel.OUTPUT_FILTERS, call.getMethodName());
 		}
 
 		// create inlineModel:
