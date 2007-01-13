@@ -266,7 +266,13 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
     superImpositionBlock : LCURLY! superImpositionInner RCURLY!;
 
-      superImpositionInner : (selectorDef)? (filtermoduleBind)? (annotationBind)? (constraints)?;
+      superImpositionInner : (conditionDef)? (selectorDef)? (filtermoduleBind)? (annotationBind)? (constraints)?;
+
+    /*---------------------------------------------------------------------------*/
+    conditionDef : "conditions"^ (singleConditionDef)* ;
+
+      singleConditionDef: NAME COLON! concernReference SEMICOLON!
+      { #singleConditionDef = #([CONDITION_, "condition"], #singleConditionDef);} ;
 
 
     /*---------------------------------------------------------------------------*/
@@ -292,7 +298,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
          ;
 
     /*---------------------------------------------------------------------------*/
-    commonBindingPart : selectorRef weaveOperation;
+    commonBindingPart : (NAME FILTER_OP) => NAME FILTER_OP selectorRef weaveOperation
+    	| selectorRef weaveOperation;
     
        	conditionRef : fmElemReference;
   

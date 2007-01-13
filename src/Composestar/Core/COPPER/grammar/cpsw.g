@@ -187,7 +187,14 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
         singleOutputFilter : #(OFILTER_ n:NAME {typev.clear();} type {b.addOutputFilter(n.getText(), typev,n.getLine());} (actualParameters)? (filterElements)? );
 
   /////////////////////////////////////////////////////////////////////////
-  superImposition : #("superimposition" {b.addSuperImposition();} (selectorDef)? (filtermoduleBind)? (annotationBind)? (constraints)?);
+  superImposition : #("superimposition" {b.addSuperImposition();} (conditionDef)? (selectorDef)? (filtermoduleBind)? (annotationBind)? (constraints)?);
+      
+      
+    /*---------------------------------------------------------------------------*/
+     conditionDef : #("conditions" (singleConditionDef)*);
+
+      singleConditionDef : #(CONDITION_ (n2:NAME) {namev.clear();} (n:NAME {namev.add(n.getText());} )+ {s = null;} (s:SEMICOLON)? {if(s == null) b.addFilterModuleCondition(n2.getText(), namev, 0,n2.getLine()); else b.addFilterModuleCondition(n2.getText(), namev, 1,n2.getLine()); });
+
 
     /*---------------------------------------------------------------------------*/
      selectorDef : #("selectors" (singleSelectorDefinition)*);

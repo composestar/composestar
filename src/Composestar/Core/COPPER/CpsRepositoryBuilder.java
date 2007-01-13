@@ -506,6 +506,62 @@ public class CpsRepositoryBuilder
 		fm.addCondition(c);
 		this.addToRepository(c);
 	}
+	
+	/**
+	 * Adds a Filter Module Condition object to the repository
+	 * 
+	 * @param name
+	 * @param init Name of the condition
+	 * @param type
+	 * @param lineNumber
+	 */
+	public void addFilterModuleCondition(String name, Vector init, int type, int lineNumber)
+	{
+		Condition c = new Condition();
+		c.setName(name);
+		c.setDescriptionFileName(filename);
+		c.setDescriptionLineNumber(lineNumber);
+
+		if (type == 0)
+		{ // short version
+			split.splitConcernElemReference(init);
+			c.setParent(si);
+			c.addDynObject("selector", split.getConcernelem());
+			if (split.getConcern().compareTo("inner") == 0)
+			{
+				// Reference to 'inner'
+				DeclaredObjectReference dor = new DeclaredObjectReference();
+				dor.setName("inner");
+				c.setShortref(dor);
+			}
+			else if (isInternal(split.getConcern()) || isExternal(split.getConcern()))
+			{
+				// Reference to an internal or an external
+				DeclaredObjectReference dor = new DeclaredObjectReference();
+				dor.setName(split.getConcern());
+				dor.setConcern(cpsc.getName());
+				dor.setFilterModule(fm.getName());
+				c.setShortref(dor);
+			}
+			else
+			{
+				// addMethodReference(split.getPack(), cpsc.getName(),
+				// fm.getName(), split.getConcernelem(), new Vector());
+				// addDeclaredObjectReference(split.getPack(), cpsc.getName(),
+				// fm.getName(), "a."+split.getConcernelem());
+
+				c.setShortref(addConcernReference(split.getPack(), split.getConcern()));
+			}
+		}
+		else
+		{ // long version
+			split.splitFmElemReference(init, false);
+			c.setLongref(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
+			c.setParent(si);
+		}
+		si.addFilterModuleCondition(c);
+		this.addToRepository(c);
+	}
 
 	/**
 	 * Adds a Method object to the repository

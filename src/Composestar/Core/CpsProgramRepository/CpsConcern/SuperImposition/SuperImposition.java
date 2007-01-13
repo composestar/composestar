@@ -12,6 +12,7 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 import java.util.Iterator;
 import java.util.Vector;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 import Composestar.Utils.CPSIterator;
 
@@ -40,6 +41,11 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	public Vector selectors;
 
 	/**
+	 * Contains all declared filter module conditions
+	 */
+	public Vector filterModuleConditions;
+
+	/**
 	 * @modelguid {9C81F007-8BBA-44D2-9A5D-8A616EE76A04}
 	 * @roseuid 401FAA690139
 	 */
@@ -51,6 +57,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 		methods = new Vector();
 		conditions = new Vector();
 		selectors = new Vector();
+		filterModuleConditions = new Vector();
 		setName("superimposition");
 	}
 
@@ -266,5 +273,35 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	public Iterator getSelectorIterator()
 	{
 		return new CPSIterator(selectors);
+	}
+
+	/**
+	 * Adds a filter module condition.
+	 * 
+	 * @param condition The filter module condition to add.
+	 */
+	public void addFilterModuleCondition(Condition condition)
+	{
+		filterModuleConditions.add(condition);
+	}
+
+	/**
+	 * @return An Iterator to iterate over the filter module conditions.
+	 */
+	public Iterator getFilterModuleConditions()
+	{
+		return filterModuleConditions.iterator();
+	}
+
+	/**
+	 * Removes a filter module condition.
+	 * 
+	 * @param condition The filter module condition to remove.
+	 * @return true when this SuperImposition contained the filter module
+	 *         condition.
+	 */
+	public boolean removeFilterModuleCondition(Condition condition)
+	{
+		return filterModuleConditions.remove(condition);
 	}
 }
