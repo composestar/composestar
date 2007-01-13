@@ -37,26 +37,32 @@ import composestar.dotNET.tym.entities.ConfigurationContainerDocument;
 import composestar.dotNET.tym.entities.KeyValueSetting;
 
 /**
- * Main entry point for the CompileTime. The Master class holds coreModules
- * and executes them in the order they are added.
+ * Main entry point for the CompileTime. The Master class holds coreModules and
+ * executes them in the order they are added.
  */
 public class StarLightMaster extends Master
 {
 	private static final String MODULE_NAME = "MASTER";
+
 	private static final String VERSION = "0.2 beta";
+
 	private static final String AUTHOR = "University of Twente";
+
 	private static final String TITLE = "ComposeStar StarLight";
 
 	private static String configFileName;
+
 	private static String increConfig = "INCREconfig.xml";
-	
+
 	private static ConfigurationContainerDocument configDocument;
+
 	private static ConfigurationContainer configContainer;
 
 	private long startTime;
 
 	/**
 	 * Default ctor.
+	 * 
 	 * @param configurationFile
 	 */
 	public StarLightMaster(String[] args)
@@ -102,7 +108,9 @@ public class StarLightMaster extends Master
 	}
 
 	/**
-	 * Searches the settings array for a specific key and return the value for that key.
+	 * Searches the settings array for a specific key and return the value for
+	 * that key.
+	 * 
 	 * @return the value for the specified key if it exists; null otherwise.
 	 */
 	private String getSettingValue(String key)
@@ -111,13 +119,12 @@ public class StarLightMaster extends Master
 		for (int i = 0; i < settings.sizeOfSettingArray(); i++)
 		{
 			KeyValueSetting kv = settings.getSettingArray(i);
-			if (kv.getKey().equalsIgnoreCase(key))
-				return kv.getValue(); 
+			if (kv.getKey().equalsIgnoreCase(key)) return kv.getValue();
 		}
-		
+
 		return null;
 	}
-	
+
 	private int getSettingValue(String key, int def)
 	{
 		String value = getSettingValue(key);
@@ -127,22 +134,23 @@ public class StarLightMaster extends Master
 
 	/**
 	 * Initialize the StarLight master.
-	 * @throws IOException 
-	 * @throws XmlException 
+	 * 
+	 * @throws IOException
+	 * @throws XmlException
 	 */
 	private void initialize() throws XmlException, IOException
 	{
 		startTime = System.currentTimeMillis();
-		Debug.out(Debug.MODE_INFORMATION,MODULE_NAME,"Master initializing.");
+		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Master initializing.");
 
 		File configFile = new File(configFileName);
 		if (!configFile.exists())
 		{
-			Debug.out(Debug.MODE_ERROR,MODULE_NAME,"Configuration file '" + configFileName + " not found!");
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Configuration file '" + configFileName + " not found!");
 			System.exit(-1);
 		}
 
-		Debug.out(Debug.MODE_INFORMATION,MODULE_NAME,"Using configuration file '" + configFileName + "'");
+		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Using configuration file '" + configFileName + "'");
 		configDocument = ConfigurationContainerDocument.Factory.parse(configFile);
 		configContainer = configDocument.getConfigurationContainer();
 
@@ -153,29 +161,30 @@ public class StarLightMaster extends Master
 
 		// Create the repository
 		DataStore.instance();
-		
+
 		// Set the paths
 		Configuration config = Configuration.instance();
 		PathSettings ps = config.getPathSettings();
 
-		if (getSettingValue("IntermediateOutputPath") != null) {
+		if (getSettingValue("IntermediateOutputPath") != null)
+		{
 			ps.addPath("Base", getSettingValue("IntermediateOutputPath"));
 		}
-		ps.addPath("Composestar", getSettingValue("InstallFolder") + "\\" );
+		ps.addPath("Composestar", getSettingValue("InstallFolder") + "\\");
 
 		// Enable INCRE and set config file
 		ModuleSettings increSettings = new ModuleSettings();
 		increSettings.setName("INCRE");
-	//	increSettings.addProperty("enabled", "true");
+		// increSettings.addProperty("enabled", "true");
 		increSettings.addProperty("enabled", "false");
 		increSettings.addProperty("config", increConfig);
 		config.getModuleSettings().addModule("INCRE", increSettings);
-		
+
 		// Set FILTH input file
 		ModuleSettings filthSettings = new ModuleSettings();
 		filthSettings.setName("FILTH");
 		filthSettings.addProperty("input", getSettingValue("SpecificationFILTH"));
-		filthSettings.addProperty("outputEnabled",getSettingValue("OutputEnabledFILTH"));
+		filthSettings.addProperty("outputEnabled", getSettingValue("OutputEnabledFILTH"));
 		config.getModuleSettings().addModule("FILTH", filthSettings);
 
 		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Master initialized.");
@@ -199,7 +208,7 @@ public class StarLightMaster extends Master
 	/**
 	 * Calls run on all modules added to the master.
 	 */
-	public void run()
+	public int run()
 	{
 		try
 		{
@@ -218,7 +227,7 @@ public class StarLightMaster extends Master
 				File concernFile = new File(ci.getPathName(), ci.getFileName());
 				concern.setFileName(concernFile.getAbsolutePath());
 
-				Configuration.instance().getProjects().addConcernSource(concern);                
+				Configuration.instance().getProjects().addConcernSource(concern);
 			}
 
 			// Init new resources
@@ -235,20 +244,21 @@ public class StarLightMaster extends Master
 			Iterator modulesIter = incre.getModules();
 			while (modulesIter.hasNext())
 			{
-				Module m = (Module)modulesIter.next();
+				Module m = (Module) modulesIter.next();
 				m.execute(resources);
-				Debug.out(Debug.MODE_DEBUG, "INCRE", m.getName() + " executed in " + incre.getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL) + " ms");
+				Debug.out(Debug.MODE_DEBUG, "INCRE", m.getName() + " executed in "
+						+ incre.getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL) + " ms");
 			}
-			
-			//incre now stores the history automatically
-			//incre.storeHistory();
+
+			// incre now stores the history automatically
+			// incre.storeHistory();
 
 			// write config file:
 			File file = new File(configFileName);
 			configDocument.save(file);
 
 			long elapsed = System.currentTimeMillis() - startTime;
-			System.out.println("total elapsed time: "  + elapsed + " ms");
+			System.out.println("total elapsed time: " + elapsed + " ms");
 
 			// Close INCRE
 			INCRE.instance().getReporter().close();
@@ -259,28 +269,32 @@ public class StarLightMaster extends Master
 		catch (ModuleException e)
 		{
 			String error = e.getMessage();
-			if (error == null || error.equals("null")) //great information
+			if (error == null || error.equals("null")) // great information
 			{
 				error = e.toString();
 			}
 
-			if ((e.getErrorLocationFilename() != null) && e.getErrorLocationFilename().length() > 0)
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e.getErrorLocationLineNumber());
-			else
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
-			
-			//Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + printStackTrace(e));
-			System.exit(1);
-		} 
+			if ((e.getErrorLocationFilename() != null) && e.getErrorLocationFilename().length() > 0) Debug.out(
+					Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e
+							.getErrorLocationLineNumber());
+			else Debug.out(Debug.MODE_ERROR, e.getModule(), error);
+
+			// Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " +
+			// printStackTrace(e));
+			return ECOMPILE;
+		}
 		catch (Exception ex)
 		{
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, Debug.stackTrace(ex));
-			System.exit(1);
+			return EFAIL;
 		}
+
+		return 0;
 	}
 
 	/**
 	 * Compose* StarLight main function.
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args)
@@ -297,22 +311,26 @@ public class StarLightMaster extends Master
 			System.out.println(AUTHOR);
 			System.exit(0);
 		}
-		
+
 		// Create new master
 		StarLightMaster master = new StarLightMaster(args);
 
 		try
-		{ 
+		{
 			// Initialize
-			master.initialize();    
+			master.initialize();
 
 			// Run the master process
-			master.run();
+			int ret = master.run();
+			if (ret != 0)
+			{
+				System.exit(ret);
+			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			Debug.out(Debug.MODE_ERROR,MODULE_NAME, "Could not open configuration file: " + args[0]);            
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Could not open configuration file: " + args[0]);
 			System.exit(-1);
 		}
 	}
