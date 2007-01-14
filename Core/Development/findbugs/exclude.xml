@@ -5,15 +5,11 @@
 	<Match classregex="Composestar\.Core\.COPPER\.CpsLexer" />
 	<Match classregex="Composestar\.Core\.COPPER\.CpsParser" />
 	
-	<!-- old\obsolete code -->
-	<Match classregex="Composestar\.Core\.FIRE\..*" />
-	<Match classregex="Composestar\.Core\.SIGN\..*" />
-	<Match classregex="Composestar\.Core\.SECRET\..*" />
+	<Match classregex="Composestar\.C\.wrapper\.parsing\.GnuC.*" />
+	<Match classregex="Composestar\.C\.wrapper\.parsing\.StdC.*" />
 	
-	<Match class="Composestar.Utils.INIFile" />
-	
+	<!-- don't check for leading lowercase in these classes -->
 	<Match classregex="Composestar\.DotNET\.LAMA\..*">
-		<!-- don't check for leading lowercase in these classes -->
 		<BugCode name="Nm" />
 	</Match>
 </FindBugsFilter>

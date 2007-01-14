@@ -88,6 +88,11 @@
 					dest="artifacts/${project.name}/"
 					subdirectory="qa_java"
 				/>
+				<artifactspublisher
+					dir="${composestar.path}/C/qa"
+					dest="artifacts/${project.name}/"
+					subdirectory="qa_c"
+				/>
 					
 				<!-- clean up old artifacts, e.a. -->			
 				<antpublisher 

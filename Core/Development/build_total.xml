@@ -162,6 +162,7 @@
 		<antcall target="findbugs_dotnet" inheritRefs="true" />
 		<antcall target="findbugs_starlight" inheritRefs="true" />
 		<antcall target="findbugs_java" inheritRefs="true" />
+		<antcall target="findbugs_c" inheritRefs="true" />
 	</target>
 	
 	<target name="findbugs_core" depends="init">
@@ -180,12 +181,17 @@
 		<ant target="findbugs" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 	
+	<target name="findbugs_c" depends="init" if="enabled.c">
+		<ant target="findbugs" dir="${build.c}" inheritRefs="true" />
+	</target>
+	
 	<!-- execute the checkstyle tool -->
 	<target name="checkstyle" depends="init" description="Run CheckStyle source code proof reader.">
 		<antcall target="checkstyle_core" inheritRefs="true" />
 		<antcall target="checkstyle_dotnet" inheritRefs="true" />
 		<antcall target="checkstyle_starlight" inheritRefs="true" />
 		<antcall target="checkstyle_java" inheritRefs="true" />
+		<antcall target="checkstyle_c" inheritRefs="true" />
 	</target>
 	
 	<target name="checkstyle_core" depends="init">
@@ -202,6 +208,10 @@
 	
 	<target name="checkstyle_starlight" depends="init" if="enabled.starlight">
 		<ant target="checkstyle" dir="${build.starlight}" inheritRefs="true" />
+	</target>
+	
+	<target name="checkstyle_c" depends="init" if="enabled.c">
+		<ant target="checkstyle" dir="${build.c}" inheritRefs="true" />
 	</target>
 	
 	<!-- documentation -->

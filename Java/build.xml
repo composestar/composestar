@@ -59,10 +59,14 @@
 	<target name="findbugs" depends="init_qa" description="Execute FindBugs">
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.java}${file.separator}Compiletime${file.separator}${out.build}" />
+			<class location="${build.java}${file.separator}Runtime${file.separator}${out.build}" />
 			<sourcePath path="${build.java}${file.separator}Compiletime${file.separator}src" />
+			<sourcePath path="${build.java}${file.separator}Runtime${file.separator}src" />
 			<auxClasspath refid="lib.core" />
 			<auxClasspath>
 				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
+				<pathelement path="${build.java}${file.separator}Compiletime${file.separator}binaries${file.separator}javassist${file.separator}javassist.jar" />
+				<pathelement path="${build.core}${file.separator}Runtime${file.separator}${out.build}" />
 			</auxClasspath>
 		</findbugs>
 		<xslt in="${out.qa}${file.separator}findbugs-result.xml" out="${out.qa}${file.separator}findbugs-result.html" style="${findbugs.style}" />
@@ -75,9 +79,13 @@
 			<FileSet dir="${build.java}${file.separator}Compiletime${file.separator}src">
 				<include name="**/*.java" />
 				
-				<exclude name="Composestar/Java/DUMMER/JSharpLexer.java" />
-				<exclude name="Composestar/Java/DUMMER/JSharpRecognizer.java" />
-				<exclude name="Composestar/Java/DUMMER/JSharpTokenTypes.java" />
+				<exclude name="Composestar/Java/DUMMER/JavaLexer.java" />
+				<exclude name="Composestar/Java/DUMMER/JavaRecognizer.java" />
+				<exclude name="Composestar/Java/DUMMER/JavaTokenTypes.java" />
+			</FileSet>
+			
+			<FileSet dir="${build.java}${file.separator}runtime${file.separator}src">
+				<include name="**/*.java" />
 			</FileSet>
 		</checkstyle>
 		<xslt in="${out.qa}${file.separator}checkstyle-result.xml" out="${out.qa}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
