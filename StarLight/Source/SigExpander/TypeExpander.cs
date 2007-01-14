@@ -76,8 +76,13 @@ namespace Composestar.StarLight.SigExpander
 				newMethod.Parameters.Add(param);
 			}
 
+			Type exceptionType = typeof(NotImplementedException);
+			MethodReference cons = _type.Module.Import(exceptionType.GetConstructor(new Type[] {}));
+
 			CilWorker worker = newMethod.Body.CilWorker;
-			worker.Append(worker.Create(OpCodes.Ret));
+			worker.Append(worker.Create(OpCodes.Nop));
+			worker.Append(worker.Create(OpCodes.Newobj, cons));
+			worker.Append(worker.Create(OpCodes.Throw));
 
 			_type.Methods.Add(newMethod);
 		}

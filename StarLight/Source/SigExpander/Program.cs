@@ -48,51 +48,70 @@ using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.SigExpander.Properties;
 using Composestar.StarLight.Entities.LanguageModel;
+using System.Xml.Serialization;
+using Composestar.StarLight.Entities.Configuration;
 #endregion
 
 namespace Composestar.StarLight.SigExpander
 {
-	public class AssemblyExpander
+	public class Program
 	{
-		private string _spec;
-		private IList<string> _assemblies;
+		private string _config;
 
-		public AssemblyExpander(string spec, IList<string> assemblies)
+		public Program(string config)
 		{
-			_spec = spec;
-			_assemblies = assemblies;
+			_config = config;
 		}
 
 		public void Start()
 		{
-			Signatures sigs = EntitiesAccessor.Instance.LoadSignatureSpecification(_spec);
-			ExpandAssemblies(sigs, _assemblies);
-		}
+			if (!File.Exists(_config))
+				throw new SigExpanderException("Configuration file '" + _config + "' does not exist");
 
-		private void ExpandAssemblies(Signatures sigs, IList<string> assemblies)
-		{
-			foreach (string assembly in assemblies)
+			IEntitiesAccessor accessor = EntitiesAccessor.Instance;
+			ConfigurationContainer config = accessor.LoadConfiguration(_config);
+			
+			foreach (AssemblyConfig ac in config.Assemblies)
 			{
-				AssemblyDefinition ad = AssemblyFactory.GetAssembly(assembly);
-				ExpandAssembly(sigs, ad);
-
-				string target = GetTargetFileName(assembly);
-				AssemblyFactory.SaveAssembly(ad, target);
+				if (ac.ExpansionSpecificationFile != null)
+				{
+					ExpandedAssembly ea = LoadExpandedAssembly(ac.ExpansionSpecificationFile);
+					ExpandAssembly(ea);
+				}
 			}
 		}
 
-		private void ExpandAssembly(Signatures sigs, AssemblyDefinition ad)
+		private ExpandedAssembly LoadExpandedAssembly(string file)
 		{
+			if (!File.Exists(file))
+				throw new SigExpanderException("File '" + file + "' does not exist");
+
+			using (Stream stream = File.OpenRead(file))
+			{
+				XmlSerializer xs = new XmlSerializer(typeof(ExpandedAssembly));
+				return (ExpandedAssembly)xs.Deserialize(stream);
+			}
+		}
+
+		private void ExpandAssembly(ExpandedAssembly ea)
+		{
+			Console.WriteLine("Processing assembly {0}...", ea.Name);
+
+			AssemblyDefinition ad = AssemblyFactory.GetAssembly(ea.Name);
 			TypeResolver resolver = new TypeResolver(ad);
 			ModuleDefinition module = ad.MainModule;
 
-			foreach (ExpandedType et in sigs.ExpandedTypes)
+			foreach (ExpandedType et in ea.Types)
 			{
 				TypeDefinition type = module.Types[et.Name];
 
-				if (type == null) continue;
+				if (type == null)
+				{
+					Console.WriteLine("Warning: could not find type {0}.", et.Name);
+					return;
+				}
 
-			//	Console.WriteLine(type.FullName);
+				Console.WriteLine(type.FullName);
 
 				TypeExpander expander = new TypeExpander(type, resolver);
 				foreach (MethodElement me in et.ExtraMethods)
@@ -100,39 +119,38 @@ namespace Composestar.StarLight.SigExpander
 					expander.AddEmptyMethod(me);
 				}
 			}
+
+			string target = GetTargetFileName(ea.Name);
+			AssemblyFactory.SaveAssembly(ad, target);
+
+			Console.WriteLine("Stored assembly {0}.", target);
 		}
 
 		private string GetTargetFileName(string input)
 		{
-			return input;
-		//	string ext = Path.GetExtension(input);
-		//	string noext = Path.GetFileNameWithoutExtension(input);
-		//	string dir = Path.GetDirectoryName(input);
-		//	return Path.Combine(dir, noext + ".expanded" + ext);
+			string ext = Path.GetExtension(input);
+			string noext = Path.GetFileNameWithoutExtension(input);
+			string dir = Path.GetDirectoryName(input);
+			return Path.Combine(dir, noext + ".expanded" + ext);
 		}
 
 		public static void Main(string[] args)
 		{
-			if (args.Length < 2)
+			if (args.Length != 1)
 			{
-				Console.WriteLine("Usage: Composestar.StarLight.SigExpander <spec> <assemblies>");
+				Console.WriteLine("Usage: Composestar.StarLight.SigExpander <config file>");
 				Environment.Exit(1);
 			}
 
-			string spec = args[0];
-
-			IList<string> assemblies = new List<string>();
-			for (int i = 1; i < args.Length; i++)
-				assemblies.Add(args[i]);
-
 			try
 			{
-				AssemblyExpander program = new AssemblyExpander(spec, assemblies);
+				string config = args[0];
+				Program program = new Program(config);
 				program.Start();
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e);
+				Console.WriteLine("Error: " + e.Message);
 				Environment.Exit(2);
 			}
  		}
