@@ -37,9 +37,8 @@
 #region Using directives
 using System;
 using System.IO;
-using System.Text;
 using System.Collections.Generic;
-using System.CodeDom.Compiler;
+using System.Xml.Serialization;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -48,8 +47,8 @@ using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.SigExpander.Properties;
 using Composestar.StarLight.Entities.LanguageModel;
-using System.Xml.Serialization;
 using Composestar.StarLight.Entities.Configuration;
+using Composestar.StarLight.Utilities;
 #endregion
 
 namespace Composestar.StarLight.SigExpander
@@ -57,10 +56,12 @@ namespace Composestar.StarLight.SigExpander
 	public class Program
 	{
 		private string _config;
+		private IAssemblyResolver _assemblyResolver;
 
 		public Program(string config)
 		{
 			_config = config;
+			_assemblyResolver = new StarLightAssemblyResolver(@"bin\Debug");
 		}
 
 		public void Start()
@@ -76,7 +77,7 @@ namespace Composestar.StarLight.SigExpander
 				if (ac.ExpansionSpecificationFile != null)
 				{
 					ExpandedAssembly ea = LoadExpandedAssembly(ac.ExpansionSpecificationFile);
-					ExpandAssembly(ea);
+					ExpandAssembly(ea, ac.FileName);
 				}
 			}
 		}
@@ -93,13 +94,16 @@ namespace Composestar.StarLight.SigExpander
 			}
 		}
 
-		private void ExpandAssembly(ExpandedAssembly ea)
+		private void ExpandAssembly(ExpandedAssembly ea, string file)
 		{
-			Console.WriteLine("Processing assembly {0}...", ea.Name);
+			Console.WriteLine("Processing assembly '{0}'...", file);
 
-			AssemblyDefinition ad = AssemblyFactory.GetAssembly(ea.Name);
-			TypeResolver resolver = new TypeResolver(ad);
+			if (!File.Exists(file))
+				throw new SigExpanderException("Assembly '" + file + "' does not exist");
+
+			AssemblyDefinition ad = AssemblyFactory.GetAssembly(file);
 			ModuleDefinition module = ad.MainModule;
+			TypeResolver typeResolver = new TypeResolver(_assemblyResolver, ad);
 
 			foreach (ExpandedType et in ea.Types)
 			{
@@ -111,27 +115,26 @@ namespace Composestar.StarLight.SigExpander
 					return;
 				}
 
-				Console.WriteLine(type.FullName);
-
-				TypeExpander expander = new TypeExpander(type, resolver);
+				TypeExpander expander = new TypeExpander(type, typeResolver);
 				foreach (MethodElement me in et.ExtraMethods)
 				{
 					expander.AddEmptyMethod(me);
 				}
 			}
 
-			string target = GetTargetFileName(ea.Name);
+			string target = GetTargetFileName(file);
 			AssemblyFactory.SaveAssembly(ad, target);
 
-			Console.WriteLine("Stored assembly {0}.", target);
+			Console.WriteLine("Written '{0}'.", target);
 		}
 
 		private string GetTargetFileName(string input)
 		{
-			string ext = Path.GetExtension(input);
-			string noext = Path.GetFileNameWithoutExtension(input);
-			string dir = Path.GetDirectoryName(input);
-			return Path.Combine(dir, noext + ".expanded" + ext);
+			return input;
+		//	string ext = Path.GetExtension(input);
+		//	string noext = Path.GetFileNameWithoutExtension(input);
+		//	string dir = Path.GetDirectoryName(input);
+		//	return Path.Combine(dir, noext + ".expanded" + ext);
 		}
 
 		public static void Main(string[] args)
@@ -150,7 +153,7 @@ namespace Composestar.StarLight.SigExpander
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("Error: " + e.Message);
+				Console.WriteLine("Error: " + e.ToString());
 				Environment.Exit(2);
 			}
  		}

@@ -299,10 +299,10 @@ public class StarLightMaster extends Master
 	 */
 	public static void main(String[] args)
 	{
-		if (args.length != 1)
+		if (args.length < 1)
 		{
-			System.out.println("Usage: java -jar StarLight.jar <config file>");
-			System.exit(0);
+			System.out.println("Usage: java -jar StarLight.jar [options] <config file>");
+			System.exit(-1);
 		}
 
 		if (args[0].equalsIgnoreCase("-v"))

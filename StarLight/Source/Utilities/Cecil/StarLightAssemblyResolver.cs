@@ -59,7 +59,6 @@ namespace Composestar.StarLight.Utilities
 	[CLSCompliant(false)]
 	public class StarLightAssemblyResolver : BaseAssemblyResolver
 	{
-
 		#region Private variables
 
 		private Dictionary<string, AssemblyDefinition> _cache;
@@ -67,7 +66,7 @@ namespace Composestar.StarLight.Utilities
 
 		#endregion
 
-		#region ctor
+		#region Constructor
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:ILWeaverAssemblyResolver"/> class.
@@ -105,19 +104,15 @@ namespace Composestar.StarLight.Utilities
 			if (String.IsNullOrEmpty(fullName))
 				return null;
 
-			AssemblyNameReference assemblyNameReferenceParsed;
-
 			try
 			{
-				assemblyNameReferenceParsed = AssemblyNameReference.Parse(fullName);
+				AssemblyNameReference anr = AssemblyNameReference.Parse(fullName);
+				return Resolve(anr);
 			}
 			catch (ArgumentException)
 			{
 				return null;
 			}
-
-			return Resolve(assemblyNameReferenceParsed);
-
 		}
 
 		/// <summary>
@@ -131,7 +126,7 @@ namespace Composestar.StarLight.Utilities
 			AssemblyDefinition asm;
 			if (!_cache.TryGetValue(name.FullName, out asm))
 			{
-				asm = ResolveInternal(name);
+				asm = InnerResolve(name);
 				if (asm != null)
 					_cache[name.FullName] = asm;
 			}
@@ -144,7 +139,7 @@ namespace Composestar.StarLight.Utilities
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <returns></returns>
-		private AssemblyDefinition ResolveInternal(AssemblyNameReference name)
+		private AssemblyDefinition InnerResolve(AssemblyNameReference name)
 		{
 			string[] exts = new string[] { ".dll", ".exe" };
 			string[] dirs = new string[] { _binFolder, ".", "bin" };
@@ -169,10 +164,8 @@ namespace Composestar.StarLight.Utilities
 				return asm;
 
 			return null;
-
 		}
 
 		#endregion
-
 	}
 }

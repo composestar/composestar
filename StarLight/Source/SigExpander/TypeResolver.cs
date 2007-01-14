@@ -37,7 +37,7 @@
 #region Using directives
 using System;
 using System.Collections.Generic;
-using System.Text;
+using Composestar.StarLight.Utilities;
 using Mono.Cecil;
 #endregion
 
@@ -45,21 +45,16 @@ namespace Composestar.StarLight.SigExpander
 {
 	public class TypeResolver
 	{
+		private IAssemblyResolver _assemblyResolver;
 		private ModuleDefinition _mainModule;
 		private IList<ModuleDefinition> _references;
 		private IDictionary<string, TypeReference> _cache;
 
-		public TypeResolver(AssemblyDefinition assembly)
+		public TypeResolver(IAssemblyResolver ar, AssemblyDefinition assembly)
 		{
+			_assemblyResolver = ar;
 			_mainModule = assembly.MainModule;
-			_references = new List<ModuleDefinition>();
 			_cache = new Dictionary<string, TypeReference>();
-
-			foreach (AssemblyNameReference anr in _mainModule.AssemblyReferences)
-			{
-				AssemblyDefinition asm = assembly.Resolver.Resolve(anr);
-				_references.Add(asm.MainModule);
-			}
 		}
 
 		public TypeReference ForceResolve(string name)
@@ -88,10 +83,18 @@ namespace Composestar.StarLight.SigExpander
 		{
 			// try main module
 			TypeReference tr = _mainModule.Types[name];
-			if (tr != null) 
+			if (tr != null)
 				return tr;
 
-			// try referenced modules
+			// try referenced types
+			tr = _mainModule.TypeReferences[name];
+			if (tr != null)
+				return tr;
+
+			// try referenced assemblies
+			if (_references == null)
+				LoadReferences();
+
 			foreach (ModuleDefinition module in _references)
 			{
 				tr = module.Types[name];
@@ -102,6 +105,16 @@ namespace Composestar.StarLight.SigExpander
 
 			// not found
 			return null;
+		}
+
+		private void LoadReferences()
+		{
+			_references = new List<ModuleDefinition>();
+			foreach (AssemblyNameReference anr in _mainModule.AssemblyReferences)
+			{
+				AssemblyDefinition asm = _assemblyResolver.Resolve(anr);
+				_references.Add(asm.MainModule);
+			}
 		}
 	}
 }

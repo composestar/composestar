@@ -63,6 +63,10 @@
       <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
       <Name>StarLightEntities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Utilities\Cecil\CecilUtilities.csproj">
+      <Project>{125370E1-A7FB-4458-A2AC-CA7C044FC944}</Project>
+      <Name>CecilUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />

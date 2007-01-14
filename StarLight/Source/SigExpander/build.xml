@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="ComposeStar/StarLight/SigExpander" default="build">
+
+	<property name="build.core" location="../../../Core"/>
+	<import file="${build.core}/common.xml" />
+
+	<echo>Processing: ${ant.project.name} ...</echo>
+	<description>The Compose* StarLight Signature Expander.</description>
+
+	<property name="buildfile" value="SigExpander.csproj"/>
+
+	<target name="clean" depends="init" description="Clean build results">
+		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}"/>
+	</target>
+
+	<target name="build" depends="init" description="Build the SigExpander project">
+		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}" />
+	</target>
+
+	<target name="deploy" depends="init" description="Deploy the SigExpander project">
+		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}" />
+    <!-- todo: deploy -->
+	</target>
+
+</project>

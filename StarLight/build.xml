@@ -46,6 +46,7 @@
 		<antcall target="build_compiletime" inheritRefs="true"/>
 		<antcall target="build_core_elements" inheritRefs="true"/>
 		<antcall target="build_weaving" inheritRefs="true"/>
+		<antcall target="build_expansion" inheritRefs="true"/>
 		<antcall target="build_msbuild" inheritRefs="true"/>
 		<antcall target="build_vs" inheritRefs="true"/>
 	</target>
@@ -63,7 +64,11 @@
 		<ant target="build" dir="Source/StarLight.Weaving.BuiltIn" inheritRefs="true" />
 	</target>
 
-	<target name="build_msbuild" description="Build Compose* StarLight MSBuild tasks">
+	<target name="build_expansion" description="Build Compose* StarLight Weaving Strategies">
+		<ant target="build" dir="Source/SigExpander" inheritRefs="true" />
+	</target>
+
+  <target name="build_msbuild" description="Build Compose* StarLight MSBuild tasks">
 		<ant target="build" dir="Source/VSIntegration/MSBuildTasks" inheritRefs="true" />
 	</target>
 
@@ -77,6 +82,7 @@
 		<antcall target="deploy_compiletime" inheritRefs="true"/>
 		<antcall target="deploy_core_elements" inheritRefs="true"/>
 		<antcall target="deploy_weaving" inheritRefs="true"/>
+		<antcall target="deploy_expansion" inheritRefs="true"/>
 		<antcall target="deploy_msbuild" inheritRefs="true"/>
 		<antcall target="deploy_vs" inheritRefs="true"/>
 		<antcall target="deploy_misc" inheritRefs="true"/>
@@ -92,6 +98,10 @@
 
 	<target name="deploy_weaving" description="Deploy Compose* StarLight Weaving Strategies">
 		<ant target="deploy" dir="Source/StarLight.Weaving.BuiltIn" inheritRefs="true" />
+	</target>
+
+	<target name="deploy_expansion" description="Build Compose* StarLight Weaving Strategies">
+		<ant target="deploy" dir="Source/SigExpander" inheritRefs="true" />
 	</target>
 
 	<target name="deploy_msbuild" description="Deploy Compose* StarLight MSBuild tasks">
@@ -236,13 +246,13 @@
 		<antcall target="systemtest" inheritRefs="true"/> 
 	</target>
 
-  <target name="init_test" >
-    <mkdir dir="${out.nunit}" />
-  </target>
+	<target name="init_test" >
+		<mkdir dir="${out.nunit}" />
+	</target>
 
-  <target name="test_junit">
+	<target name="test_junit">
 		<ant target="unittest" dir="${build.core}/Compiletime" inheritRefs="true"/>    
-  </target>
+	</target>
 
 	<target name="init_nunit" depends="init" description="Build the NUnit projects">
 		<echo level="info">Compiling .NET NUnit projects</echo>
