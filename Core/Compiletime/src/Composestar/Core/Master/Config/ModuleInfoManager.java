@@ -38,9 +38,9 @@ public class ModuleInfoManager
 
 	private static ModuleInfoManager instance;
 
-	protected Map classCache;
+	protected Map<Class,ModuleInfo> classCache;
 
-	protected Map idCache;
+	protected Map<String,ModuleInfo> idCache;
 
 	/**
 	 * Return the current instance of the ModuleInfoManager
@@ -99,7 +99,7 @@ public class ModuleInfoManager
 		ModuleInfoManager mim = getInstance();
 		if (mim.classCache.containsKey(forClass))
 		{
-			return (ModuleInfo) mim.classCache.get(forClass);
+			return mim.classCache.get(forClass);
 		}
 		InputStream is = forClass.getResourceAsStream("moduleinfo.xml");
 		if (is != null)
@@ -109,7 +109,7 @@ public class ModuleInfoManager
 				load(new InputSource(is));
 				if (mim.classCache.containsKey(forClass))
 				{
-					return (ModuleInfo) mim.classCache.get(forClass);
+					return mim.classCache.get(forClass);
 				}
 			}
 			catch (ConfigurationException e)
@@ -127,7 +127,7 @@ public class ModuleInfoManager
 		ModuleInfoManager mim = getInstance();
 		if (mim.idCache.containsKey(moduleName))
 		{
-			return (ModuleInfo) mim.idCache.get(moduleName);
+			return mim.idCache.get(moduleName);
 		}
 		return null;
 	}
@@ -205,8 +205,8 @@ public class ModuleInfoManager
 
 	protected ModuleInfoManager()
 	{
-		classCache = new HashMap();
-		idCache = new HashMap();
+		classCache = new HashMap<Class,ModuleInfo>();
+		idCache = new HashMap<String,ModuleInfo>();
 	}
 
 	/**

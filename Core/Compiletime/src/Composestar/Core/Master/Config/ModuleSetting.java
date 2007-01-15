@@ -222,8 +222,7 @@ public class ModuleSetting implements Serializable
 	 */
 	public void setValue(int newValue) throws ConfigurationException
 	{
-		// TODO: when switching to Java 1.5 use Integer.valueOf(...)
-		setValue(new Integer(newValue));
+		setValue(Integer.valueOf(newValue));
 	}
 
 	/**
@@ -232,7 +231,7 @@ public class ModuleSetting implements Serializable
 	 */
 	public void setValue(float newValue) throws ConfigurationException
 	{
-		setValue(new Float(newValue));
+		setValue(Float.valueOf(newValue));
 	}
 
 	public String getStringValue()
