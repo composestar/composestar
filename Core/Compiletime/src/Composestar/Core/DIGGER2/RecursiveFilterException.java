@@ -10,7 +10,6 @@
 
 package Composestar.Core.DIGGER2;
 
-import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -51,10 +50,8 @@ public class RecursiveFilterException extends Exception
 		crumb = inCrumb;
 		trace = inTrace;
 		
-		Iterator<Trail> it = trace.iterator();
-		while (it.hasNext())
+		for (Trail trail : trace)
 		{
-			Trail trail = it.next();
 			trail.setRecursive(true);
 			int cnd = trail.getCondition().simulateResult();
 			if (cnd != ConditionExpression.RESULT_FALSE)

@@ -101,6 +101,14 @@ public class Breadcrumb
 		resolvedStatus = false; // new trails are never resolved
 		return trail;
 	}
+	
+	public Trail addTrail(Trail base)
+	{
+		Trail trail = new Trail(this, base);
+		trails.add(trail);
+		resolvedStatus = false; // new trails are never resolved
+		return trail;
+	}
 
 	/**
 	 * Remove a trail. Should only be used in case of deadends

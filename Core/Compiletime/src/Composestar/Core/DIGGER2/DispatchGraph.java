@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Utils.Logging.CPSLogger;
@@ -114,6 +115,19 @@ public class DispatchGraph
 			throw new ModuleException("Called getInputCrumb without a valid message", DIGGER.MODULE_NAME);
 		}
 		return getInputCrumb(concern, msg.getSelector().getName());
+	}
+
+	public Breadcrumb getInputCrumb(Concern concern, MessageSelector selector) throws ModuleException
+	{
+		if (concern == null)
+		{
+			throw new ModuleException("Called getInputCrumb without a valid concern instance", DIGGER.MODULE_NAME);
+		}
+		if (selector == null)
+		{
+			throw new ModuleException("Called getInputCrumb without a valid selector", DIGGER.MODULE_NAME);
+		}
+		return getInputCrumb(concern, selector.getName());
 	}
 
 	public Breadcrumb getInputCrumb(Concern concern, String selector) throws ModuleException

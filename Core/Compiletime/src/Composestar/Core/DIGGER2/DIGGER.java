@@ -263,9 +263,8 @@ public class DIGGER implements CTCommonModule
 			}
 			Iterator entranceStates = em.getEntranceStates();
 			ExecutionState es = (ExecutionState) entranceStates.next();
-			// new Composestar.Core.FIRE2.util.viewer.Viewer(em);
-			// logger.debug(concern.getName()+"."+methodInfo.getName()+" has
-			// entrance message "+es.getMessage());
+
+			//new Composestar.Core.FIRE2.util.viewer.Viewer(em);
 
 			Breadcrumb crumb = graph.getResolver().resolve(concern, es, filterPosition);
 			graph.addCrumb(crumb);

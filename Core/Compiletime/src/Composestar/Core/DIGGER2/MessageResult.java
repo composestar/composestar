@@ -48,10 +48,15 @@ public class MessageResult
 	}
 
 	/**
-	 * @return the related concern
+	 * @return the resulting concern. In case of a dispatch to inner the concern
+	 *         of the breadcrumb otherwise it's the target of the concern.
 	 */
 	public Concern getConcern()
 	{
+		if (trail.getTargetConcern() != null)
+		{
+			return trail.getTargetConcern();
+		}
 		return crumb.getConcern();
 	}
 

@@ -79,6 +79,22 @@ public class Trail
 		owner = inOwner;
 	}
 
+	/**
+	 * Copy constructor. Only elements that have been set before a branch will
+	 * be set. Since the branch happens on the condition expression node the
+	 * condition expression and the reposiroty entry will be copied. The rest
+	 * should always be overwritten by other nodes.
+	 * 
+	 * @param inOwner
+	 * @param base
+	 */
+	public Trail(Breadcrumb inOwner, Trail base)
+	{
+		this(inOwner);
+		condition = base.getCondition();
+		re = base.getRE();
+	}
+
 	public Breadcrumb getOwner()
 	{
 		return owner;
