@@ -80,7 +80,8 @@
 		<xmlbean classpathref="lib.xmlbeans"
 		         schema="${out.xmltypes}/schema1.xsd" 
 		         destfile="${xmltypes.jar}" 
-		         srcgendir="${out.xmltypes}"/>
+		         srcgendir="${out.xmltypes}"
+		         javasource="1.5"/>
 
 		<zip destfile="${xmltypes-src.zip}"
 		     basedir="${out.xmltypes}"/>
