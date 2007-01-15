@@ -101,40 +101,34 @@ public class JarTransformer
 			JarLoader jl = new JarLoader(jarFile);
 			HashMap classen = jl.getLoadedClasses();
 			Iterator keyset = classen.keySet().iterator();
-			while (keyset.hasNext())
-			{
+            for (Object o : classen.keySet()) {
 
-				String classname = (String) keyset.next();
-				Class clazz = (Class) classen.get(classname);
+                String classname = (String) o;
+                Class clazz = (Class) classen.get(classname);
 
-				DataStore ds = DataStore.instance();
-				Concern concern = (Concern) ds.getObjectByID(clazz.getName());
-				Signature signature = concern.getSignature();
-				if (signature != null)
-				{
-					List methodsAdded = signature.getMethods(MethodWrapper.ADDED);
-					List methodsRemoved = signature.getMethods(MethodWrapper.REMOVED);
-					if (methodsAdded.size() > 0 || methodsRemoved.size() > 0)
-					{
-						modify = true;
-					}
-				}
+                DataStore ds = DataStore.instance();
+                Concern concern = (Concern) ds.getObjectByID(clazz.getName());
+                Signature signature = concern.getSignature();
+                if (signature != null) {
+                    List methodsAdded = signature.getMethods(MethodWrapper.ADDED);
+                    List methodsRemoved = signature.getMethods(MethodWrapper.REMOVED);
+                    if (methodsAdded.size() > 0 || methodsRemoved.size() > 0) {
+                        modify = true;
+                    }
+                }
 
-				// convert classname to jarentry
-				String entry = convertPackageToJar(classname);
-				if (modify)
-				{
-					ClassWrapper c = new ClassWrapper(clazz, concern, null);
-					modifiedClasses.put(entry, c);
-					modify = false;
-				}
-				else
-				{
-					JarEntry je = (JarEntry) temp.get(entry);
-					unmodifiedEntries.put(entry, je);
-				}
-			}
-		}
+                // convert classname to jarentry
+                String entry = convertPackageToJar(classname);
+                if (modify) {
+                    ClassWrapper c = new ClassWrapper(clazz, concern, null);
+                    modifiedClasses.put(entry, c);
+                    modify = false;
+                } else {
+                    JarEntry je = (JarEntry) temp.get(entry);
+                    unmodifiedEntries.put(entry, je);
+                }
+            }
+        }
 		catch (JarLoaderException e)
 		{
 			throw new ModuleException("Error while loading classes from jar: " + e.getMessage(), "SITRA");
@@ -180,13 +174,12 @@ public class JarTransformer
 	{
 
 		Iterator keyset = modifiedClasses.keySet().iterator();
-		while (keyset.hasNext())
-		{
-			String key = (String) keyset.next();
-			ClassWrapper c = (ClassWrapper) modifiedClasses.get(key);
-			ClassModifier.instance().modifyClass(c, jarFile);
-		}
-	}
+        for (Object o : modifiedClasses.keySet()) {
+            String key = (String) o;
+            ClassWrapper c = (ClassWrapper) modifiedClasses.get(key);
+            ClassModifier.instance().modifyClass(c, jarFile);
+        }
+    }
 
 	/**
 	 * Writes the changes back to the original jarfile.
@@ -229,23 +222,20 @@ public class JarTransformer
 			try
 			{
 				// add original unmodified files
-				Iterator keyset = unmodifiedEntries.keySet().iterator();
-				while (keyset.hasNext())
-				{
-					String key = (String) keyset.next();
-					JarEntry entry = (JarEntry) unmodifiedEntries.get(key);
-					InputStream is = jar.getInputStream(entry);
-					newJar.putNextEntry(entry);
-					while ((bytesRead = is.read(buffer)) != -1)
-					{
-						newJar.write(buffer, 0, bytesRead);
-					}
-					is.close();
-				}
+                for (Object o : unmodifiedEntries.keySet()) {
+                    String key = (String) o;
+                    JarEntry entry = (JarEntry) unmodifiedEntries.get(key);
+                    InputStream is = jar.getInputStream(entry);
+                    newJar.putNextEntry(entry);
+                    while ((bytesRead = is.read(buffer)) != -1) {
+                        newJar.write(buffer, 0, bytesRead);
+                    }
+                    is.close();
+                }
 
-				// add modified entries
-				keyset = modifiedClasses.keySet().iterator();
-				while (keyset.hasNext())
+                // add modified entries
+                Iterator keyset = modifiedClasses.keySet().iterator();
+                while (keyset.hasNext())
 				{
 					String key = (String) keyset.next();
 					ClassWrapper c = (ClassWrapper) modifiedClasses.get(key);

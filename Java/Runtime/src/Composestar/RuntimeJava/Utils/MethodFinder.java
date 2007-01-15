@@ -106,17 +106,16 @@ public final class MethodFinder
 	{
 		List matchingMembers = new ArrayList();
 
-		for (Iterator it = memberList.iterator(); it.hasNext();)
-		{
-			Member member = (Member) it.next();
-			Class[] methodParamTypes = (Class[]) paramMap.get(member);
+        for (Object aMemberList : memberList) {
+            Member member = (Member) aMemberList;
+            Class[] methodParamTypes = (Class[]) paramMap.get(member);
 
-			if (Arrays.equals(methodParamTypes, parameterTypes)) return member;
+            if (Arrays.equals(methodParamTypes, parameterTypes)) return member;
 
-			if (ClassUtilities.compatibleClasses(methodParamTypes, parameterTypes)) matchingMembers.add(member);
-		}
+            if (ClassUtilities.compatibleClasses(methodParamTypes, parameterTypes)) matchingMembers.add(member);
+        }
 
-		if (matchingMembers.isEmpty()) throw new NoSuchMethodException("no member in " + clazz.getName()
+        if (matchingMembers.isEmpty()) throw new NoSuchMethodException("no member in " + clazz.getName()
 				+ " matching given args");
 
 		if (matchingMembers.size() == 1) return (Member) matchingMembers.get(0);
@@ -163,59 +162,50 @@ public final class MethodFinder
 	{
 		List mostSpecificMembers = new ArrayList();
 
-		for (Iterator memberIt = memberList.iterator(); memberIt.hasNext();)
-		{
-			Member member = (Member) memberIt.next();
+        for (Object aMemberList : memberList) {
+            Member member = (Member) aMemberList;
 
-			if (mostSpecificMembers.isEmpty())
-			{
-				// First guy in is the most specific so far.
-				mostSpecificMembers.add(member);
-			}
-			else
-			{
-				boolean moreSpecific = true;
-				boolean lessSpecific = false;
+            if (mostSpecificMembers.isEmpty()) {
+                // First guy in is the most specific so far.
+                mostSpecificMembers.add(member);
+            } else {
+                boolean moreSpecific = true;
+                boolean lessSpecific = false;
 
-				// Is member more specific than everyone in the most-specific
-				// set?
-				for (Iterator specificIt = mostSpecificMembers.iterator(); specificIt.hasNext();)
-				{
-					Member moreSpecificMember = (Member) specificIt.next();
+                // Is member more specific than everyone in the most-specific
+                // set?
+                for (Object mostSpecificMember : mostSpecificMembers) {
+                    Member moreSpecificMember = (Member) mostSpecificMember;
 
-					if (!memberIsMoreSpecific(member, moreSpecificMember))
-					{
-						/*
-						 * Can't be more specific than the whole set. Bail out,
-						 * and mark whether member is less specific than the
-						 * member under consideration. If it is less specific,
-						 * it need not be added to the ambiguity set. This is no
-						 * guarantee of not getting added to the ambiguity
-						 * set...we're just not clever enough yet to make that
-						 * assessment.
-						 */
+                    if (!memberIsMoreSpecific(member, moreSpecificMember)) {
+                        /*
+                               * Can't be more specific than the whole set. Bail out,
+                               * and mark whether member is less specific than the
+                               * member under consideration. If it is less specific,
+                               * it need not be added to the ambiguity set. This is no
+                               * guarantee of not getting added to the ambiguity
+                               * set...we're just not clever enough yet to make that
+                               * assessment.
+                               */
 
-						moreSpecific = false;
-						lessSpecific = memberIsMoreSpecific(moreSpecificMember, member);
-						break;
-					}
-				}
+                        moreSpecific = false;
+                        lessSpecific = memberIsMoreSpecific(moreSpecificMember, member);
+                        break;
+                    }
+                }
 
-				if (moreSpecific)
-				{
-					// Member is the most specific now.
-					mostSpecificMembers.clear();
-					mostSpecificMembers.add(member);
-				}
-				else if (!lessSpecific)
-				{
-					// Add to ambiguity set if mutually unspecific.
-					mostSpecificMembers.add(member);
-				}
-			}
-		}
+                if (moreSpecific) {
+                    // Member is the most specific now.
+                    mostSpecificMembers.clear();
+                    mostSpecificMembers.add(member);
+                } else if (!lessSpecific) {
+                    // Add to ambiguity set if mutually unspecific.
+                    mostSpecificMembers.add(member);
+                }
+            }
+        }
 
-		if (mostSpecificMembers.size() > 1)
+        if (mostSpecificMembers.size() > 1)
 		{
 			throw new NoSuchMethodException("...");
 		}
@@ -314,12 +304,11 @@ public final class MethodFinder
 	{
 		Constructor[] ctors = clazz.getConstructors();
 
-		for (int i = 0; i < ctors.length; ++i)
-		{
-			ctorList.add(ctors[i]);
-			paramMap.put(ctors[i], ctors[i].getParameterTypes());
-		}
-	}
+        for (Constructor ctor : ctors) {
+            ctorList.add(ctor);
+            paramMap.put(ctor, ctor.getParameterTypes());
+        }
+    }
 
 	/**
 	 * Loads up the data structures for my target class's methods.
@@ -329,57 +318,49 @@ public final class MethodFinder
 
 		Method[] methods = clazz.getMethods();
 
-		for (int i = 0; i < methods.length; ++i)
-		{
-			Method m = methods[i];
-			String methodName = m.getName();
-			Class[] paramTypes = m.getParameterTypes();
+        for (Method m : methods) {
+            String methodName = m.getName();
+            Class[] paramTypes = m.getParameterTypes();
 
-			List list = (List) methodMap.get(methodName);
+            List list = (List) methodMap.get(methodName);
 
-			if (list == null)
-			{
-				list = new ArrayList();
-				methodMap.put(methodName, list);
-			}
+            if (list == null) {
+                list = new ArrayList();
+                methodMap.put(methodName, list);
+            }
 
-			/*if (! ClassUtilities.classIsAccessible(clazz))
-			m = ClassUtilities.getAccessibleMethodFrom(clazz, methodName,
-			paramTypes );*/
+            /*if (! ClassUtilities.classIsAccessible(clazz))
+               m = ClassUtilities.getAccessibleMethodFrom(clazz, methodName,
+               paramTypes );*/
 
-			if (m != null)
-			{
-				list.add(m);
-				paramMap.put(m, paramTypes);
-			}
-		}
+            if (m != null) {
+                list.add(m);
+                paramMap.put(m, paramTypes);
+            }
+        }
 
-		methods = clazz.getDeclaredMethods();
-		for (int i = 0; i < methods.length; ++i)
-		{
-			Method m = methods[i];
-			String methodName = m.getName();
-			Class[] paramTypes = m.getParameterTypes();
+        methods = clazz.getDeclaredMethods();
+        for (Method m : methods) {
+            String methodName = m.getName();
+            Class[] paramTypes = m.getParameterTypes();
 
-			List list = (List) methodMap.get(methodName);
+            List list = (List) methodMap.get(methodName);
 
-			if (list == null)
-			{
-				list = new ArrayList();
-				methodMap.put(methodName, list);
-			}
+            if (list == null) {
+                list = new ArrayList();
+                methodMap.put(methodName, list);
+            }
 
-			/*if (! ClassUtilities.classIsAccessible(clazz))
-			m = ClassUtilities.getAccessibleMethodFrom(clazz, methodName,
-			paramTypes );*/
+            /*if (! ClassUtilities.classIsAccessible(clazz))
+               m = ClassUtilities.getAccessibleMethodFrom(clazz, methodName,
+               paramTypes );*/
 
-			if (m != null)
-			{
-				list.add(m);
-				paramMap.put(m, paramTypes);
-			}
-		}
-	}
+            if (m != null) {
+                list.add(m);
+                paramMap.put(m, paramTypes);
+            }
+        }
+    }
 
 	/**
 	 * @param first a Member

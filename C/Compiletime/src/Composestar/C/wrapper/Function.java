@@ -321,28 +321,24 @@ public class Function extends WeaveblePoint
 		{
 			return false;
 		}
-		for (int i = 0; i < this.inParameters.size(); i++)
-		{
-			Parameter param = (Parameter) this.inParameters.get(i);
-			if (this.matchType(param, type))
-			{
-				return true;
-			}
-		}
-		return false;
+        for (Object inParameter : this.inParameters) {
+            Parameter param = (Parameter) inParameter;
+            if (this.matchType(param, type)) {
+                return true;
+            }
+        }
+        return false;
 	}
 
 	public boolean hasParameterWithName(String name)
 	{
-		for (int i = 0; i < this.inParameters.size(); i++)
-		{
-			Parameter param = (Parameter) this.inParameters.get(i);
-			if (param.getValueID().equals(name))
-			{
-				return true;
-			}
-		}
-		return false;
+        for (Object inParameter : this.inParameters) {
+            Parameter param = (Parameter) inParameter;
+            if (param.getValueID().equals(name)) {
+                return true;
+            }
+        }
+        return false;
 	}
 
 	public String toString()

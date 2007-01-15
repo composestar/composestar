@@ -118,7 +118,7 @@ public class Sign implements CTCommonModule
 
 		printConcernMethods(resources);
 
-		resources.addResource("signaturesmodified", Boolean.valueOf(true));
+		resources.addResource("signaturesmodified", true);
 
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "signature generation and checking done");
 	}
@@ -157,12 +157,11 @@ public class Sign implements CTCommonModule
 
 				// Add all (usr src) methods to the signature with status
 				// unknown.
-				for (int i = 0; i < methods.size(); i++)
-				{
-					signature.add((MethodInfo) methods.get(i), MethodWrapper.NORMAL);
-				}
+                for (Object method : methods) {
+                    signature.add((MethodInfo) method, MethodWrapper.NORMAL);
+                }
 
-				signature.setStatus(Signature.SOLVED);
+                signature.setStatus(Signature.SOLVED);
 
 				solvedConcerns.add(concern);
 			}
@@ -276,15 +275,13 @@ public class Sign implements CTCommonModule
 					dispatch = true;
 				}
 
-				for (int j = 0; j < methods.length; j++)
-				{
-					if (!signature.hasMethod(methods[j]))
-					{
-						signature.add(methods[j], earlierSignatureMatch ? MethodWrapper.UNKNOWN : MethodWrapper.NORMAL);
-						changed = true;
-					}
-				}
-			}
+                for (MethodInfo method : methods) {
+                    if (!signature.hasMethod(method)) {
+                        signature.add(method, earlierSignatureMatch ? MethodWrapper.UNKNOWN : MethodWrapper.NORMAL);
+                        changed = true;
+                    }
+                }
+            }
 		}
 
 		if (dispatch || true)
@@ -319,19 +316,17 @@ public class Sign implements CTCommonModule
 				// add methods:
 				methods = getMethods(concern, messageSelector, state, matchingpartState, distinguishable);
 
-				for (int j = 0; j < methods.length; j++)
-				{
-					// remove parameters:
-					MethodInfo m = methods[j].getClone(methods[j].getName(), methods[j].parent());
-					m.Parameters = new ArrayList();
+                for (MethodInfo method : methods) {
+                    // remove parameters:
+                    MethodInfo m = method.getClone(method.getName(), method.parent());
+                    m.Parameters = new ArrayList();
 
-					if (!signature.hasMethod(m))
-					{
-						signature.add(m, earlierSignatureMatch ? MethodWrapper.UNKNOWN : MethodWrapper.NORMAL);
-						changed = true;
-					}
-				}
-			}
+                    if (!signature.hasMethod(m)) {
+                        signature.add(m, earlierSignatureMatch ? MethodWrapper.UNKNOWN : MethodWrapper.NORMAL);
+                        changed = true;
+                    }
+                }
+            }
 		}
 
 		return changed;
@@ -450,17 +445,15 @@ public class Sign implements CTCommonModule
 		}
 
 		Vector result = new Vector();
-		for (int i = 0; i < methods.size(); i++)
-		{
-			MethodInfo method = (MethodInfo) methods.get(i);
-			if (method.Name.equals(dispatchMethodName))
-			{
-				MethodInfo newMethod = method.getClone(selector, (Type) concern.getPlatformRepresentation());
-				result.addElement(newMethod);
-			}
-		}
+        for (Object method1 : methods) {
+            MethodInfo method = (MethodInfo) method1;
+            if (method.Name.equals(dispatchMethodName)) {
+                MethodInfo newMethod = method.getClone(selector, (Type) concern.getPlatformRepresentation());
+                result.addElement(newMethod);
+            }
+        }
 
-		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
+        return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
 	}
 
 	private MethodInfo[] getInnerMethods(Concern concern, ExecutionState state, Set distinguishable)
@@ -573,20 +566,18 @@ public class Sign implements CTCommonModule
 
 		// check for each method whether it is not distinguishable and
 		// add it to the signature of the concern:
-		for (int i = 0; i < methods.size(); i++)
-		{
-			MethodInfo method = (MethodInfo) methods.get(i);
+        for (Object method1 : methods) {
+            MethodInfo method = (MethodInfo) method1;
 
-			if (distinguishable.contains(method.Name))
-			{
-				continue;
-			}
+            if (distinguishable.contains(method.Name)) {
+                continue;
+            }
 
-			MethodInfo newMethod = method.getClone(method.Name, type);
-			result.addElement(newMethod);
-		}
+            MethodInfo newMethod = method.getClone(method.Name, type);
+            result.addElement(newMethod);
+        }
 
-		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
+        return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
 	}
 
 	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, Target donor, Set distinguishable)
@@ -639,50 +630,40 @@ public class Sign implements CTCommonModule
 		Signature donorSignature = getSignature(donorConcern);
 		List methods = donorSignature.getMethods();
 
-		for (int i = 0; i < methods.size(); i++)
-		{
-			MethodInfo method = (MethodInfo) methods.get(i);
+        for (Object method1 : methods) {
+            MethodInfo method = (MethodInfo) method1;
 
-			// check not distinguishable:
-			if (distinguishable.contains(method.Name))
-			{
-				continue;
-			}
+            // check not distinguishable:
+            if (distinguishable.contains(method.Name)) {
+                continue;
+            }
 
-			// check dispatchselector in dispatchtarget:
+            // check dispatchselector in dispatchtarget:
 
-			// first create targetMethod:
-			MethodInfo targetMethod;
-			// this makes the distinction between case 6 and 5:
-			if (Message.checkEquals(dispSelector, Message.UNDISTINGUISHABLE_SELECTOR))
-			{
-				targetMethod = method.getClone(method.Name, targetType);
-			}
-			else
-			{
-				targetMethod = method.getClone(dispSelector.getName(), targetType);
-			}
+            // first create targetMethod:
+            MethodInfo targetMethod;
+            // this makes the distinction between case 6 and 5:
+            if (Message.checkEquals(dispSelector, Message.UNDISTINGUISHABLE_SELECTOR)) {
+                targetMethod = method.getClone(method.Name, targetType);
+            } else {
+                targetMethod = method.getClone(dispSelector.getName(), targetType);
+            }
 
-			// then do the check:
-			if (dispTarget.name.equals("inner"))
-			{
-				// if inner, check inner methods:
-				if (containsMethod(innerMethods, targetMethod))
-				{
-					result.addElement(method);
-				}
-			}
-			else
-			{
-				// else check signature methods:
-				if (targetSignature.hasMethod(targetMethod))
-				{
-					result.addElement(method);
-				}
-			}
-		}
+            // then do the check:
+            if (dispTarget.name.equals("inner")) {
+                // if inner, check inner methods:
+                if (containsMethod(innerMethods, targetMethod)) {
+                    result.addElement(method);
+                }
+            } else {
+                // else check signature methods:
+                if (targetSignature.hasMethod(targetMethod)) {
+                    result.addElement(method);
+                }
+            }
+        }
 
-		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
+        return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
 	}
 
 	private void phase1Check()
@@ -714,17 +695,15 @@ public class Sign implements CTCommonModule
 			// then inner undistinguishable:
 			HashSet checkedSelectors = new HashSet();
 			LinkedList methods = getMethodList(concern);
-			for (int i = 0; i < methods.size(); i++)
-			{
-				method = (MethodInfo) methods.get(i);
-				selector = method.getName();
-				if (!distinguishable.contains(selector) && !checkedSelectors.contains(selector))
-				{
-					checkNonDispatchable(concern, model, selector);
-					checkedSelectors.add(selector);
-				}
-			}
-		}
+            for (Object method1 : methods) {
+                method = (MethodInfo) method1;
+                selector = method.getName();
+                if (!distinguishable.contains(selector) && !checkedSelectors.contains(selector)) {
+                    checkNonDispatchable(concern, model, selector);
+                    checkedSelectors.add(selector);
+                }
+            }
+        }
 	}
 
 	/**
@@ -1117,20 +1096,18 @@ public class Sign implements CTCommonModule
 			List methods = getMethodList(concern);
 			if (!containsMethod(methods, targetMethod))
 			{
-				for (int i = 0; i < methods.size(); i++)
-				{
-					MethodInfo m = (MethodInfo) methods.get(i);
-					if (m.getName().equals(targetMethod.getName()))
-					{
-						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method "
-								+ methodInfoString(method) + " in concern " + concern.name
-								+ " might be dispatched to method " + m.getName() + " in inner with the wrong parameters "
-								+ "and/or return type!", state.getFlowNode().getRepositoryLink());
-						return;
-					}
-				}
+                for (Object method1 : methods) {
+                    MethodInfo m = (MethodInfo) method1;
+                    if (m.getName().equals(targetMethod.getName())) {
+                        Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method "
+                                + methodInfoString(method) + " in concern " + concern.name
+                                + " might be dispatched to method " + m.getName() + " in inner with the wrong parameters "
+                                + "and/or return type!", state.getFlowNode().getRepositoryLink());
+                        return;
+                    }
+                }
 
-				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method " + methodInfoString(method)
+                Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method " + methodInfoString(method)
 						+ " in concern " + concern.name + " might be dispatched to the unresolved " + "method "
 						+ targetMethod.getName() + " in inner", state.getFlowNode().getRepositoryLink());
 			}
@@ -1300,33 +1277,27 @@ public class Sign implements CTCommonModule
 			LinkedList dnmi = getMethodList(concern);
 			Signature signature = concern.getSignature();
 
-			for (int i = 0; i < dnmi.size(); i++)
-			{
-				MethodInfo methodInfo = (MethodInfo) dnmi.get(i);
-				MethodWrapper wrapper = signature.getMethodWrapper(methodInfo);
+            for (Object aDnmi : dnmi) {
+                MethodInfo methodInfo = (MethodInfo) aDnmi;
+                MethodWrapper wrapper = signature.getMethodWrapper(methodInfo);
 
-				if (wrapper == null)
-				{
-					signature.add(methodInfo, MethodWrapper.REMOVED);
-				}
-				else if (wrapper.getRelationType() == MethodWrapper.ADDED)
-				{
-					wrapper.setRelationType(MethodWrapper.NORMAL);
-				}
-			}
+                if (wrapper == null) {
+                    signature.add(methodInfo, MethodWrapper.REMOVED);
+                } else if (wrapper.getRelationType() == MethodWrapper.ADDED) {
+                    wrapper.setRelationType(MethodWrapper.NORMAL);
+                }
+            }
 
-			List normal = signature.getMethodWrappers(MethodWrapper.NORMAL);
+            List normal = signature.getMethodWrappers(MethodWrapper.NORMAL);
 			Iterator normalItr = normal.iterator();
-			while (normalItr.hasNext())
-			{
-				MethodWrapper mw = (MethodWrapper) normalItr.next();
-				MethodInfo minfo = mw.getMethodInfo();
-				if (!containsMethod(dnmi, minfo))
-				{
-					mw.setRelationType(MethodWrapper.ADDED);
-				}
-			}
-		}
+            for (Object aNormal : normal) {
+                MethodWrapper mw = (MethodWrapper) aNormal;
+                MethodInfo minfo = mw.getMethodInfo();
+                if (!containsMethod(dnmi, minfo)) {
+                    mw.setRelationType(MethodWrapper.ADDED);
+                }
+            }
+        }
 	}
 
 	public void printConcernMethods(CommonResources resources)
@@ -1379,13 +1350,12 @@ public class Sign implements CTCommonModule
 
 						List paramNames = new ArrayList();
 						Iterator piIt = mi.getParameters().iterator();
-						while (piIt.hasNext())
-						{
-							ParameterInfo pi = (ParameterInfo) piIt.next();
-							paramNames.add(pi.name());
-						}
+                        for (Object o : mi.getParameters()) {
+                            ParameterInfo pi = (ParameterInfo) o;
+                            paramNames.add(pi.name());
+                        }
 
-						Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "\t[ " + relation + " ] " + "(" + returntype
+                        Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "\t[ " + relation + " ] " + "(" + returntype
 								+ ") " + mi.getName() + "(" + StringUtils.join(paramNames, ", ") + ")");
 					}
 				}
@@ -1398,15 +1368,13 @@ public class Sign implements CTCommonModule
 	private boolean containsMethod(List methods, MethodInfo method)
 	{
 		Iterator iterator = methods.iterator();
-		while (iterator.hasNext())
-		{
-			MethodInfo containedMethod = (MethodInfo) iterator.next();
-			if (containedMethod.checkEquals(method))
-			{
-				return true;
-			}
-		}
+        for (Object method1 : methods) {
+            MethodInfo containedMethod = (MethodInfo) method1;
+            if (containedMethod.checkEquals(method)) {
+                return true;
+            }
+        }
 
-		return false;
+        return false;
 	}
 }

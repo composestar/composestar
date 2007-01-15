@@ -174,11 +174,10 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 										else
 										{
 											Iterator filemethodIt = file.getMethods().iterator();
-											while (filemethodIt.hasNext())
-											{
-												methods.put(filemethodIt.next(), file);
-											}
-										}
+                                            for (Object o : file.getMethods()) {
+                                                methods.put(o, file);
+                                            }
+                                        }
 										/**
 										 * we cannot overwrite the original
 										 * parent of the methods, for the
@@ -195,36 +194,32 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 										if (methods.size() == 0 && file.getMethods().size() == 0)
 										{
 											Iterator methodIterator = c.getSignature().methodByName.m_keys.iterator();
-											while (methodIterator.hasNext())
-											{
-												String methodName = (String) methodIterator.next();
-												if (methodName.equals(((MatchingPart) (filter.getFilterElement(x)
-														.getMatchingPattern().getMatchingParts().elementAt(0)))
-														.getSelector().getName()))
-												{
-													CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
-															.get(methodName)).getMethodInfo();
-													// file=(CFile)((CFunction)method.Parent).Parent;
-													CFile fl = (CFile) mi.Parent;
-													methods.put(mi, fl);
-													Debug.out(Debug.MODE_INFORMATION, "cone",
-															"Need to weave on function: "
-																	+ ((MethodWrapper) c.getSignature().methodByName
-																			.get(methodName)).getMethodInfo().Name
-																	+ " in file " + file.FullName + "/" + file.Name);
-												}
-												else if ("*".equals(((MatchingPart) (filter.getFilterElement(x)
-														.getMatchingPattern().getMatchingParts().elementAt(0)))
-														.getSelector().getName()))
-												{
-													CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
-															.get(methodName)).getMethodInfo();// (CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();
-													// file=(CFile)((CFunction)method.Parent).Parent;
-													CFile fl = (CFile) mi.Parent;
-													methods.put(mi, fl);
-												}
-											}
-										}
+                                            for (Object m_key : c.getSignature().methodByName.m_keys) {
+                                                String methodName = (String) m_key;
+                                                if (methodName.equals(((MatchingPart) (filter.getFilterElement(x)
+                                                        .getMatchingPattern().getMatchingParts().elementAt(0)))
+                                                        .getSelector().getName())) {
+                                                    CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
+                                                            .get(methodName)).getMethodInfo();
+                                                    // file=(CFile)((CFunction)method.Parent).Parent;
+                                                    CFile fl = (CFile) mi.Parent;
+                                                    methods.put(mi, fl);
+                                                    Debug.out(Debug.MODE_INFORMATION, "cone",
+                                                            "Need to weave on function: "
+                                                                    + ((MethodWrapper) c.getSignature().methodByName
+                                                                    .get(methodName)).getMethodInfo().Name
+                                                                    + " in file " + file.FullName + "/" + file.Name);
+                                                } else if ("*".equals(((MatchingPart) (filter.getFilterElement(x)
+                                                        .getMatchingPattern().getMatchingParts().elementAt(0)))
+                                                        .getSelector().getName())) {
+                                                    CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
+                                                            .get(methodName)).getMethodInfo();// (CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();
+                                                    // file=(CFile)((CFunction)method.Parent).Parent;
+                                                    CFile fl = (CFile) mi.Parent;
+                                                    methods.put(mi, fl);
+                                                }
+                                            }
+                                        }
 									}
 									/**
 									 * when there are conditions used, include
@@ -307,11 +302,10 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 										else
 										{
 											Iterator filemethodIt = file.getMethods().iterator();
-											while (filemethodIt.hasNext())
-											{
-												methods.put(filemethodIt.next(), file);
-											}
-										}
+                                            for (Object o : file.getMethods()) {
+                                                methods.put(o, file);
+                                            }
+                                        }
 										/**
 										 * we cannot overwrite the original
 										 * parent of the methods, for the
@@ -328,36 +322,32 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 										if (methods.size() == 0 && file.getMethods().size() == 0)
 										{
 											Iterator methodIterator = c.getSignature().methodByName.m_keys.iterator();
-											while (methodIterator.hasNext())
-											{
-												String methodName = (String) methodIterator.next();
-												if (methodName.equals(((MatchingPart) (filter.getFilterElement(x)
-														.getMatchingPattern().getMatchingParts().elementAt(0)))
-														.getSelector().getName()))
-												{
-													CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
-															.get(methodName)).getMethodInfo();
-													// file=(CFile)((CFunction)method.Parent).Parent;
-													CFile fl = (CFile) mi.Parent;
-													methods.put(mi, fl);
-													Debug.out(Debug.MODE_INFORMATION, "cone",
-															"Need to weave on function: "
-																	+ ((MethodWrapper) c.getSignature().methodByName
-																			.get(methodName)).getMethodInfo().Name
-																	+ " in file " + file.FullName + "/" + file.Name);
-												}
-												else if ("*".equals(((MatchingPart) (filter.getFilterElement(x)
-														.getMatchingPattern().getMatchingParts().elementAt(0)))
-														.getSelector().getName()))
-												{
-													CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
-															.get(methodName)).getMethodInfo();// (CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();
-													// file=(CFile)((CFunction)method.Parent).Parent;
-													CFile fl = (CFile) mi.Parent;
-													methods.put(mi, fl);
-												}
-											}
-										}
+                                            for (Object m_key : c.getSignature().methodByName.m_keys) {
+                                                String methodName = (String) m_key;
+                                                if (methodName.equals(((MatchingPart) (filter.getFilterElement(x)
+                                                        .getMatchingPattern().getMatchingParts().elementAt(0)))
+                                                        .getSelector().getName())) {
+                                                    CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
+                                                            .get(methodName)).getMethodInfo();
+                                                    // file=(CFile)((CFunction)method.Parent).Parent;
+                                                    CFile fl = (CFile) mi.Parent;
+                                                    methods.put(mi, fl);
+                                                    Debug.out(Debug.MODE_INFORMATION, "cone",
+                                                            "Need to weave on function: "
+                                                                    + ((MethodWrapper) c.getSignature().methodByName
+                                                                    .get(methodName)).getMethodInfo().Name
+                                                                    + " in file " + file.FullName + "/" + file.Name);
+                                                } else if ("*".equals(((MatchingPart) (filter.getFilterElement(x)
+                                                        .getMatchingPattern().getMatchingParts().elementAt(0)))
+                                                        .getSelector().getName())) {
+                                                    CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
+                                                            .get(methodName)).getMethodInfo();// (CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();
+                                                    // file=(CFile)((CFunction)method.Parent).Parent;
+                                                    CFile fl = (CFile) mi.Parent;
+                                                    methods.put(mi, fl);
+                                                }
+                                            }
+                                        }
 									}
 									/**
 									 * when there are conditions used, include
@@ -874,10 +864,9 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 		/** Tracing is switched off* */
 		// we.processAllInternalAdvices(weavebleobjects);
 		Iterator weaveit = weavebleobjects.iterator();
-		while (weaveit.hasNext())
-		{
-			we.weaveInstructionsForPoint((WeaveblePoint) weaveit.next());
-		}
-		we.emitFiles();
+        for (Object weavebleobject : weavebleobjects) {
+            we.weaveInstructionsForPoint((WeaveblePoint) weavebleobject);
+        }
+        we.emitFiles();
 	}
 }

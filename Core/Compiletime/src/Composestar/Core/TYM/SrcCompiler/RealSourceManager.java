@@ -48,42 +48,38 @@ public class RealSourceManager implements CTCommonModule
 		List projects = config.getProjects().getProjects();
 
 		Iterator projIt = projects.iterator();
-		while (projIt.hasNext())
-		{
-			Project project = (Project) projIt.next();
-			Language lang = project.getLanguage();
-			CompilerSettings compsettings = lang.getCompilerSettings();
-			LangCompiler comp = compsettings.getCompiler();
+        for (Object project1 : projects) {
+            Project project = (Project) project1;
+            Language lang = project.getLanguage();
+            CompilerSettings compsettings = lang.getCompilerSettings();
+            LangCompiler comp = compsettings.getCompiler();
 
-			String exetype = config.getProjects().getApplicationStart();
-			String exefile = getExeFile(project, exetype);
+            String exetype = config.getProjects().getApplicationStart();
+            String exefile = getExeFile(project, exetype);
 
-			// set target of sources
-			Iterator sourceIt = project.getSources().iterator();
-			while (sourceIt.hasNext())
-			{
-				Source source = (Source) sourceIt.next();
-				String filename = source.getFileName();
-				source.setIsExecutable(filename.equals(exefile));
+            // set target of sources
+            Iterator sourceIt = project.getSources().iterator();
+            for (Object o : project.getSources()) {
+                Source source = (Source) o;
+                String filename = source.getFileName();
+                source.setIsExecutable(filename.equals(exefile));
 
-				String target = getTargetFile(source.getFileName(), source.isExecutable());
-				Debug.out(Debug.MODE_DEBUG, "RECOMA", "Source '" + source.getFileName()
-						+ "' will be compiled to assembly '" + target + "'");
-				source.setTarget(target);
-			}
+                String target = getTargetFile(source.getFileName(), source.isExecutable());
+                Debug.out(Debug.MODE_DEBUG, "RECOMA", "Source '" + source.getFileName()
+                        + "' will be compiled to assembly '" + target + "'");
+                source.setTarget(target);
+            }
 
-			// do the actual compilation
-			try
-			{
-				comp.compileSources(project);
-			}
-			catch (CompilerException e)
-			{
-				throw new ModuleException("Compilation error: " + e.getMessage(), "RECOMA");
-			}
-		}
+            // do the actual compilation
+            try {
+                comp.compileSources(project);
+            }
+            catch (CompilerException e) {
+                throw new ModuleException("Compilation error: " + e.getMessage(), "RECOMA");
+            }
+        }
 
-		resources.addResource("CompiledSources", compiledSources);
+        resources.addResource("CompiledSources", compiledSources);
 	}
 
 	/**
@@ -93,16 +89,14 @@ public class RealSourceManager implements CTCommonModule
 	private String getExeFile(Project project, String exec) throws ModuleException
 	{
 		Iterator tsIt = project.getTypeSources().iterator();
-		while (tsIt.hasNext())
-		{
-			TypeSource ts = (TypeSource) tsIt.next();
-			if (ts.getName().equals(exec))
-			{
-				return ts.getFileName();
-			}
-		}
+        for (Object o : project.getTypeSources()) {
+            TypeSource ts = (TypeSource) o;
+            if (ts.getName().equals(exec)) {
+                return ts.getFileName();
+            }
+        }
 
-		throw new ModuleException("Source file for executable type '" + exec + "' unknown", "RECOMA");
+        throw new ModuleException("Source file for executable type '" + exec + "' unknown", "RECOMA");
 	}
 
 	/**
@@ -129,19 +123,17 @@ public class RealSourceManager implements CTCommonModule
 
 		// iterate over typesources to find type with full namespace
 		Iterator typesItr = types.iterator();
-		while (typesItr.hasNext())
-		{
-			String type = (String) typesItr.next();
-			String[] elems = type.split("\\.");
-			List list = Arrays.asList(elems);
-			if (list.contains(srcType))
-			{
-				targetFile = type;
-				break; // found full namespace
-			}
-		}
+        for (Object type1 : types) {
+            String type = (String) type1;
+            String[] elems = type.split("\\.");
+            List list = Arrays.asList(elems);
+            if (list.contains(srcType)) {
+                targetFile = type;
+                break; // found full namespace
+            }
+        }
 
-		if (targetFile.length() == 0) // full namespace not found
+        if (targetFile.length() == 0) // full namespace not found
 		{
 			if (!types.isEmpty())
 			{

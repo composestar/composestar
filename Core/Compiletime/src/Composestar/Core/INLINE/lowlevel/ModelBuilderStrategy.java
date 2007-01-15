@@ -521,7 +521,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private Label getLabel(int labelId)
 	{
-		Integer wrapper = new Integer(labelId);
+		Integer wrapper = labelId;
 		if (labelTable.containsKey(wrapper))
 		{
 			return (Label) labelTable.get(wrapper);
@@ -542,10 +542,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		Integer id = (Integer) methodTable.get(method);
 		if (id == null)
 		{
-			id = new Integer(lastMethodId++);
+			id = lastMethodId++;
 			methodTable.put(method, id);
 		}
 
-		return id.intValue();
+		return id;
 	}
 }

@@ -271,84 +271,75 @@ public class CLanguageModel extends LanguageModel
 		if (null != parameters)
 		{
 			Iterator paramIter = parameters.multiValue().iterator();
-			while (paramIter.hasNext())
-			{
-				CParameterInfo param = (CParameterInfo) paramIter.next();
-				if (param.parameterType() != null)
-				{
-					ProgramElement paramType = param.getUnitRelation(param.parameterType().getUnitType()).singleValue();
-					if ((null != paramType) && (paramType instanceof CParameterInfo))
-					{
-						// parameter
-																							// has
-																							// a
-																							// registered
-																							// Type
-						System.out
-								.println("Composestar.C.LOLA.METAMODEL>CLANGUAGEMODEL.Completemodel() missing add parametertype");
-						// ((CParameterInfo)paramType).addParameterType(param); //
-						// So also add the link the other way round.
-					}
-				}
-			}
-		}
+            for (Object o : parameters.multiValue()) {
+                CParameterInfo param = (CParameterInfo) o;
+                if (param.parameterType() != null) {
+                    ProgramElement paramType = param.getUnitRelation(param.parameterType().getUnitType()).singleValue();
+                    if ((null != paramType) && (paramType instanceof CParameterInfo)) {
+                        // parameter
+                        // has
+                        // a
+                        // registered
+                        // Type
+                        System.out
+                                .println("Composestar.C.LOLA.METAMODEL>CLANGUAGEMODEL.Completemodel() missing add parametertype");
+                        // ((CParameterInfo)paramType).addParameterType(param); //
+                        // So also add the link the other way round.
+                    }
+                }
+            }
+        }
 
 		/* Create missing Language Unit links for Methods */
 		UnitResult methods = unitDict.getByType("Method");
 		if (null != methods)
 		{
 			Iterator methodIter = methods.multiValue().iterator();
-			while (methodIter.hasNext())
-			{
-				CMethodInfo method = (CMethodInfo) methodIter.next();
-				if (method.returnType() != null)
-				{
-					ProgramElement methodReturnType = method.getUnitRelation(
-							"Return" + method.returnType().getUnitType()).singleValue();
-					if ((null != methodReturnType) && (methodReturnType instanceof CMethodInfo))
-					{
-						// method
-																										// has
-																										// a
-																										// registered
-																										// return
-																										// Type
-						System.out
-								.println("Composestar.C.LOLA.METAMODEL>CLANGUAGEMODEL.Completemodel() missing add methodtype");
-						// ((CMethodInfo)methodReturnType).addMethodReturnType(method);
-						// // So also add the link the other way round.
-					}
-				}
-			}
-		}
+            for (Object o : methods.multiValue()) {
+                CMethodInfo method = (CMethodInfo) o;
+                if (method.returnType() != null) {
+                    ProgramElement methodReturnType = method.getUnitRelation(
+                            "Return" + method.returnType().getUnitType()).singleValue();
+                    if ((null != methodReturnType) && (methodReturnType instanceof CMethodInfo)) {
+                        // method
+                        // has
+                        // a
+                        // registered
+                        // return
+                        // Type
+                        System.out
+                                .println("Composestar.C.LOLA.METAMODEL>CLANGUAGEMODEL.Completemodel() missing add methodtype");
+                        // ((CMethodInfo)methodReturnType).addMethodReturnType(method);
+                        // // So also add the link the other way round.
+                    }
+                }
+            }
+        }
 
 		/* Create missing Language Unit links for Fields */
 		UnitResult fields = unitDict.getByType("Field");
 		if (null != fields)
 		{
 			Iterator fieldIter = fields.multiValue().iterator();
-			while (fieldIter.hasNext())
-			{
-				CVariable field = (CVariable) fieldIter.next();
-				if (null != field.fieldType())
-				{
-					ProgramElement fieldType = field.getUnitRelation(field.fieldType().getUnitType()).singleValue();
-					if ((null != fieldType) && (fieldType instanceof CVariable))
-					{
-						// method
-																						// has
-																						// a
-																						// registered
-																						// return
-																						// Type
-						System.out
-								.println("Composestar.C.LOLA.METAMODEL>CLANGUAGEMODEL.Completemodel() missing add fieldtype");
-						// ((Type)fieldType).addFieldType(field); // So also add the
-						// link the other way round.
-					}
-				}
-			}
-		}
+            for (Object o : fields.multiValue()) {
+                CVariable field = (CVariable) o;
+                if (null != field.fieldType()) {
+                    ProgramElement fieldType = field.getUnitRelation(field.fieldType().getUnitType()).singleValue();
+                    if ((null != fieldType) && (fieldType instanceof CVariable)) {
+                        // method
+                        // has
+                        // a
+                        // registered
+                        // return
+                        // Type
+                        System.out
+                                .println("Composestar.C.LOLA.METAMODEL>CLANGUAGEMODEL.Completemodel() missing add fieldtype");
+                        // ((Type)fieldType).addFieldType(field); // So also add the
+                        // link the other way round.
+                    }
+                }
+            }
+        }
 	}
 
 	/**
@@ -370,16 +361,15 @@ public class CLanguageModel extends LanguageModel
 	{
 		// Loop 1: find methods, add only those that are ImplementedHere
 		Iterator unitIter = units.iterator();
-		while (unitIter.hasNext())
-		{
-			ProgramElement unit = (ProgramElement) unitIter.next();
-			Debug.out(Debug.MODE_WARNING, "CLanguagemodel", "Including: " + unit.getUnitType() + " "
-					+ unit.getUnitName());
-			// System.out.println("CLanguagemodel Including: " +
-			// unit.getUnitType() + " " + unit.getUnitName());
-			dict.addLanguageUnit(unit);
-		}
-	}
+        for (Object unit1 : units) {
+            ProgramElement unit = (ProgramElement) unit1;
+            Debug.out(Debug.MODE_WARNING, "CLanguagemodel", "Including: " + unit.getUnitType() + " "
+                    + unit.getUnitName());
+            // System.out.println("CLanguagemodel Including: " +
+            // unit.getUnitType() + " " + unit.getUnitName());
+            dict.addLanguageUnit(unit);
+        }
+    }
 
 	public static void consistentyCheck(UnitDictionary dict) throws ModelClashException
 	{

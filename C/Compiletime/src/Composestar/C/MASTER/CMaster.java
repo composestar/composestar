@@ -91,12 +91,11 @@ public class CMaster extends Master
 
 			BufferedWriter bw = new BufferedWriter(new FileWriter(configfile));
 			Iterator iterLines = configlines.iterator();
-			while (iterLines.hasNext())
-			{
-				line = (String) iterLines.next();
-				bw.write(line + "\n");
-			}
-			bw.close();
+            for (Object configline : configlines) {
+                line = (String) configline;
+                bw.write(line + "\n");
+            }
+            bw.close();
 		}
 		catch (IOException e)
 		{

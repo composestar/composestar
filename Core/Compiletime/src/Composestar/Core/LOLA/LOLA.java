@@ -314,25 +314,20 @@ public abstract class LOLA implements CTCommonModule
 				INCRETimer.TYPE_OVERHEAD);
 		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "Splitting selectors based on syntax query...");
 		Iterator predicateIterStep2 = toBeSkipped.iterator();
-		while (predicateIterStep2.hasNext())
-		{
-			PredicateSelector predSel = (PredicateSelector) predicateIterStep2.next();
-			PredicateSelector copySel = (PredicateSelector) incre.findHistoryObject(predSel);
+        for (Object aToBeSkipped : toBeSkipped) {
+            PredicateSelector predSel = (PredicateSelector) aToBeSkipped;
+            PredicateSelector copySel = (PredicateSelector) incre.findHistoryObject(predSel);
 
-			if (copySel != null)
-			{
-				// check query syntax
-				if (!(predSel.getQuery()).equals(copySel.getQuery()))
-				{
-					toBeMoved.add(predSel);
-				}
-			}
-			else
-			{
-				toBeMoved.add(predSel);
-			}
-		}
-		moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
+            if (copySel != null) {
+                // check query syntax
+                if (!(predSel.getQuery()).equals(copySel.getQuery())) {
+                    toBeMoved.add(predSel);
+                }
+            } else {
+                toBeMoved.add(predSel);
+            }
+        }
+        moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
 		step2.stop();
 
 		// Step 3: split based on query specific type information
@@ -375,65 +370,53 @@ public abstract class LOLA implements CTCommonModule
 			if (!toBeSkipped.isEmpty())
 			{
 				Iterator predicateIterStep4 = toBeSkipped.iterator();
-				while (predicateIterStep4.hasNext())
-				{ // for each selector gather dependent selectors
-					PredicateSelector predSel = (PredicateSelector) predicateIterStep4.next();
-					if (!predSel.getAnnotations().isEmpty())
-					{
-						Iterator annots = predSel.getAnnotations().iterator();
-						while (annots.hasNext())
-						{
-							// for each annotation find selectors superimposing
-							// it
-							String annotToFind = (String) annots.next();
-							Iterator annotBindingIter = dataStore.getAllInstancesOf(AnnotationBinding.class);
-							while (annotBindingIter.hasNext())
-							{
-								AnnotationBinding annotBind = (AnnotationBinding) annotBindingIter.next();
-								Iterator annotRefs = annotBind.annotationList.iterator();
-								while (annotRefs.hasNext())
-								{
-									ConcernReference annotRef = (ConcernReference) annotRefs.next();
-									Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
-									if (annotation.getUnitName().equals(annotToFind))
-									{
-										depSelectorsList.add(annotBind.getSelector().getRef());
-									}
-								}
-							}
-						}
-					}
+                for (Object aToBeSkipped : toBeSkipped) { // for each selector gather dependent selectors
+                    PredicateSelector predSel = (PredicateSelector) aToBeSkipped;
+                    if (!predSel.getAnnotations().isEmpty()) {
+                        Iterator annots = predSel.getAnnotations().iterator();
+                        for (Object o : predSel.getAnnotations()) {
+                            // for each annotation find selectors superimposing
+                            // it
+                            String annotToFind = (String) o;
+                            Iterator annotBindingIter = dataStore.getAllInstancesOf(AnnotationBinding.class);
+                            while (annotBindingIter.hasNext()) {
+                                AnnotationBinding annotBind = (AnnotationBinding) annotBindingIter.next();
+                                Iterator annotRefs = annotBind.annotationList.iterator();
+                                for (Object anAnnotationList : annotBind.annotationList) {
+                                    ConcernReference annotRef = (ConcernReference) anAnnotationList;
+                                    Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
+                                    if (annotation.getUnitName().equals(annotToFind)) {
+                                        depSelectorsList.add(annotBind.getSelector().getRef());
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-					// check whether dependent selectors are in toBeSkipped
-					// If not, restart
-					if (!depSelectorsList.isEmpty())
-					{
-						Iterator depSelectors = depSelectorsList.iterator();
-						while (depSelectors.hasNext())
-						{
-							SelectorDefinition depSelector = (SelectorDefinition) depSelectors.next();
-							Iterator selExpressions = depSelector.selExpressionList.iterator();
-							while (selExpressions.hasNext())
-							{
-								SimpleSelExpression simpleSel = (SimpleSelExpression) selExpressions.next();
-								if (simpleSel instanceof PredicateSelector)
-								{
-									if (toBeProcessed.contains(simpleSel) && toBeSkipped.contains(predSel))
-									{
-										moveSelector(predSel, toBeSkipped, toBeProcessed);
-										restart = true;
-									}
-								}
-							}
-						}
-					}
+                    // check whether dependent selectors are in toBeSkipped
+                    // If not, restart
+                    if (!depSelectorsList.isEmpty()) {
+                        Iterator depSelectors = depSelectorsList.iterator();
+                        for (Object aDepSelectorsList : depSelectorsList) {
+                            SelectorDefinition depSelector = (SelectorDefinition) aDepSelectorsList;
+                            Iterator selExpressions = depSelector.selExpressionList.iterator();
+                            for (Object aSelExpressionList : depSelector.selExpressionList) {
+                                SimpleSelExpression simpleSel = (SimpleSelExpression) aSelExpressionList;
+                                if (simpleSel instanceof PredicateSelector) {
+                                    if (toBeProcessed.contains(simpleSel) && toBeSkipped.contains(predSel)) {
+                                        moveSelector(predSel, toBeSkipped, toBeProcessed);
+                                        restart = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-					if (restart)
-					{
-						break;
-					}
-				} // end selector iteration
-			}
+                    if (restart) {
+                        break;
+                    }
+                } // end selector iteration
+            }
 		} // end step 4
 		step4.stop();
 
@@ -441,22 +424,18 @@ public abstract class LOLA implements CTCommonModule
 		INCRETimer step5 = incre.getReporter().openProcess(MODULE_NAME, "Resolving answers", INCRETimer.TYPE_OVERHEAD);
 		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "Resolving answers...");
 		Iterator predicateIterStep5 = toBeSkipped.iterator();
-		while (predicateIterStep5.hasNext())
-		{
-			PredicateSelector predSel = (PredicateSelector) predicateIterStep5.next();
-			if (!predSel.resolveAnswers())
-			{
-				// answers cannot be resolved, re-calculate selector
-				toBeMoved.add(predSel);
-				Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "[Cannot resolve answers] " + predSel.getQuery());
-			}
-			else
-			{
-				// successfully skipped
-				Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "[Succesfully Skip] " + predSel.getQuery());
-			}
-		}
-		moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
+        for (Object aToBeSkipped1 : toBeSkipped) {
+            PredicateSelector predSel = (PredicateSelector) aToBeSkipped1;
+            if (!predSel.resolveAnswers()) {
+                // answers cannot be resolved, re-calculate selector
+                toBeMoved.add(predSel);
+                Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "[Cannot resolve answers] " + predSel.getQuery());
+            } else {
+                // successfully skipped
+                Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "[Succesfully Skip] " + predSel.getQuery());
+            }
+        }
+        moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
 		step5.stop();
 
 		// return the list containing all selectors still to be processed
@@ -475,12 +454,11 @@ public abstract class LOLA implements CTCommonModule
 		if (!list.isEmpty())
 		{
 			Iterator predItr = list.iterator();
-			while (predItr.hasNext())
-			{
-				PredicateSelector predSel = (PredicateSelector) predItr.next();
-				moveSelector(predSel, from, to);
-			}
-			list.clear();
+            for (Object aList : list) {
+                PredicateSelector predSel = (PredicateSelector) aList;
+                moveSelector(predSel, from, to);
+            }
+            list.clear();
 		}
 	}
 

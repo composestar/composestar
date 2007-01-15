@@ -63,16 +63,14 @@ public class ComposestarBuiltins extends HashDict
 
 		/* Register the relation predicates for this language model */
 		Iterator relIterator = langModel.getRelationPredicates().values().iterator();
-		while (relIterator.hasNext())
-		{
-			RelationPredicate rp = (RelationPredicate) relIterator.next();
-			if (!(rp instanceof CompositeRelationPredicate))
-			{
-				register(new binaryRelationBuiltin(rp));
-			}
-		}
+        for (Object o : langModel.getRelationPredicates().values()) {
+            RelationPredicate rp = (RelationPredicate) o;
+            if (!(rp instanceof CompositeRelationPredicate)) {
+                register(new binaryRelationBuiltin(rp));
+            }
+        }
 
-		currentLangModel = langModel;
+        currentLangModel = langModel;
 	}
 
 	/**
@@ -582,16 +580,14 @@ class hasAttributeBuiltin extends FunBuiltin
 			}
 			HashSet filtered = new HashSet();
 			Iterator allIter = result.multiValue().iterator();
-			while (allIter.hasNext())
-			{
-				ProgramElement unit = (ProgramElement) allIter.next();
-				if (unit.hasUnitAttribute(attr))
-				{
-					filtered.add(unit);
-				}
-			}
+            for (Object o : result.multiValue()) {
+                ProgramElement unit = (ProgramElement) o;
+                if (unit.hasUnitAttribute(attr)) {
+                    filtered.add(unit);
+                }
+            }
 
-			ArrayList params = new ArrayList();
+            ArrayList params = new ArrayList();
 			params.add(attr);
 
 			if (tUnit instanceof JavaObject)

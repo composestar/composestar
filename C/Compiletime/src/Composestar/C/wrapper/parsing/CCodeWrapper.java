@@ -285,7 +285,7 @@ public class CCodeWrapper
 		Hashtable lineLists = infoChannel.getHashtableLine();
 		for (int i = 0; i <= infoChannel.getMaxTokenNumber(); i++)
 		{
-			Integer inti = new Integer(i);
+			Integer inti = i;
 			System.out.print(" # " + inti);
 			if (lineLists.containsKey(inti))
 			{
@@ -355,7 +355,7 @@ public class CCodeWrapper
 			Integer n = (Integer) node.getAttribute(TNode.TOKEN_NUMBER);
 			if (n != null)
 			{
-				int number = n.intValue();
+				int number = n;
 				if (number > result)
 				{
 					result = number;
@@ -464,14 +464,14 @@ public class CCodeWrapper
 
 		for (int i = 0; i <= infoChannel.getMaxTokenNumber(); i++)
 		{
-			Integer inti = new Integer(i);
+			Integer inti = i;
 			if (lineLists.containsKey(inti))
 			{
 				Vector tokenLineVector = (Vector) lineLists.get(inti);
 				if (tokenLineVector != null && i > tokenNumber)
 				{
 					newHashtable.remove(new Integer(i));
-					newHashtable.put(new Integer(i + iNumber), tokenLineVector);
+					newHashtable.put(i + iNumber, tokenLineVector);
 				}
 			}
 		}
@@ -555,7 +555,7 @@ public class CCodeWrapper
 			Integer n = (Integer) node.getAttribute(TNode.TOKEN_NUMBER);
 			if (n != null)
 			{
-				int number = n.intValue();
+				int number = n;
 				if (number > result)
 				{
 					result = number;

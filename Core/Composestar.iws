@@ -143,7 +143,7 @@
       <file leaf-file-name="TracingAspect.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/ASPECTS/TRACING/TracingAspect.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="209" column="12" selection-start="6427" selection-end="6427" vertical-scroll-proportion="0.025796661">
+            <state line="208" column="12" selection-start="6535" selection-end="6535" vertical-scroll-proportion="0.046831954">
               <folding />
             </state>
           </provider>
@@ -152,16 +152,7 @@
       <file leaf-file-name="CWrapper.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/CWrapper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="282" column="20" selection-start="9288" selection-end="9288" vertical-scroll-proportion="0.025796661">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="retrieveAST.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/retrieveAST.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="16" selection-start="2045" selection-end="2045" vertical-scroll-proportion="0.025796661">
+            <state line="272" column="5" selection-start="9738" selection-end="9738" vertical-scroll-proportion="0.046831954">
               <folding />
             </state>
           </provider>
@@ -170,7 +161,7 @@
       <file leaf-file-name="Message.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Compiletime/src/Composestar/Core/DIGGER/Walker/Message.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="243" column="20" selection-start="4856" selection-end="4856" vertical-scroll-proportion="0.025796661">
+            <state line="243" column="20" selection-start="4856" selection-end="4856" vertical-scroll-proportion="0.046831954">
               <folding />
             </state>
           </provider>
@@ -179,7 +170,7 @@
       <file leaf-file-name="Main.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/REXREF/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="104" column="20" selection-start="3267" selection-end="3267" vertical-scroll-proportion="0.025796661">
+            <state line="102" column="20" selection-start="3592" selection-end="3592" vertical-scroll-proportion="0.046831954">
               <folding />
             </state>
           </provider>
@@ -188,7 +179,7 @@
       <file leaf-file-name="CWeaveFileGenerator.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/CONE/CWeaveFileGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="416" column="16" selection-start="17566" selection-end="17566" vertical-scroll-proportion="0.025796661">
+            <state line="406" column="16" selection-start="19794" selection-end="19794" vertical-scroll-proportion="0.046831954">
               <folding />
             </state>
           </provider>
@@ -200,7 +191,7 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="19" selection-start="733" selection-end="733" vertical-scroll-proportion="0.02681388">
+            <state line="27" column="19" selection-start="733" selection-end="733" vertical-scroll-proportion="0.05029586">
               <folding />
             </state>
           </provider>
@@ -209,7 +200,7 @@
       <file leaf-file-name="ClassMap.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../Java/Compiletime/src/Composestar/Java/TYM/TypeHarvester/ClassMap.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="12" selection-start="601" selection-end="601" vertical-scroll-proportion="0.025222551">
+            <state line="36" column="12" selection-start="601" selection-end="601" vertical-scroll-proportion="0.044973545">
               <folding />
             </state>
           </provider>
@@ -218,7 +209,7 @@
       <file leaf-file-name="OrderTraverser.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Compiletime/src/Composestar/Core/FILTH/Core/OrderTraverser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="291" column="8" selection-start="7363" selection-end="7363" vertical-scroll-proportion="0.025796661">
+            <state line="279" column="8" selection-start="7741" selection-end="7741" vertical-scroll-proportion="0.046831954">
               <folding />
             </state>
           </provider>
@@ -649,7 +640,7 @@
       <showLibraryContents />
       <hideEmptyPackages />
       <abbreviatePackageNames />
-      <showStructure ProjectPane="false" Scope="false" PackagesPane="false" Favorites="false" />
+      <showStructure Favorites="false" Scope="false" PackagesPane="false" ProjectPane="false" />
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
@@ -679,25 +670,6 @@
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <module name="" />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-    </configuration>
-    <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
-    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -716,6 +688,25 @@
       <method>
         <option name="Make" value="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -795,17 +786,17 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1160" height="844" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="7" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32941177" order="0" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32941177" order="0" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" order="1" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41355464" order="8" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39972338" order="6" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39972338" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
@@ -943,66 +934,66 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/ASPECTS/TRACING/TracingAspect.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="209" column="12" selection-start="6427" selection-end="6427" vertical-scroll-proportion="0.025796661">
+        <state line="208" column="12" selection-start="6535" selection-end="6535" vertical-scroll-proportion="0.046831954">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/CWrapper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="282" column="20" selection-start="9288" selection-end="9288" vertical-scroll-proportion="0.025796661">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/retrieveAST.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="16" selection-start="2045" selection-end="2045" vertical-scroll-proportion="0.025796661">
+        <state line="272" column="5" selection-start="9738" selection-end="9738" vertical-scroll-proportion="0.046831954">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/REXREF/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="20" selection-start="3267" selection-end="3267" vertical-scroll-proportion="0.025796661">
+        <state line="102" column="20" selection-start="3592" selection-end="3592" vertical-scroll-proportion="0.046831954">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/CONE/CWeaveFileGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="416" column="16" selection-start="17566" selection-end="17566" vertical-scroll-proportion="0.025796661">
+        <state line="406" column="16" selection-start="19794" selection-end="19794" vertical-scroll-proportion="0.046831954">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Compiletime/test/junit-noframes.html">
-      <provider editor-type-id="HtmlPreview">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="19" selection-start="733" selection-end="733" vertical-scroll-proportion="0.02681388">
+        <state line="27" column="19" selection-start="733" selection-end="733" vertical-scroll-proportion="0.05029586">
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="HtmlPreview">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../Java/Compiletime/src/Composestar/Java/TYM/TypeHarvester/ClassMap.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="12" selection-start="601" selection-end="601" vertical-scroll-proportion="0.025222551">
+        <state line="36" column="12" selection-start="601" selection-end="601" vertical-scroll-proportion="0.044973545">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Compiletime/src/Composestar/Core/FILTH/Core/OrderTraverser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="291" column="8" selection-start="7363" selection-end="7363" vertical-scroll-proportion="0.025796661">
+        <state line="279" column="8" selection-start="7741" selection-end="7741" vertical-scroll-proportion="0.046831954">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../C/Compiletime/src/Composestar/C/wrapper/retrieveAST.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="77" column="16" selection-start="2045" selection-end="2045" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Compiletime/src/Composestar/Core/DIGGER/Walker/Message.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="243" column="20" selection-start="4856" selection-end="4856" vertical-scroll-proportion="0.025796661">
+        <state line="243" column="20" selection-start="4856" selection-end="4856" vertical-scroll-proportion="0.046831954">
           <folding />
         </state>
       </provider>

@@ -11,12 +11,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.C.LAMA.CFile;
-import Composestar.C.wrapper.parsing.GnuCLexer;
-import Composestar.C.wrapper.parsing.GnuCParser;
-import Composestar.C.wrapper.parsing.GnuCTreeParser;
-import Composestar.C.wrapper.parsing.PreprocessorInfoChannel;
-import Composestar.C.wrapper.parsing.TNode;
-import Composestar.C.wrapper.parsing.WrappedAST;
+import Composestar.C.wrapper.parsing.*;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Utils.Debug;
@@ -134,11 +129,10 @@ public class retrieveAST
 			usedTypes.putAll(treeparser.getUsedTypes());
 			HashMap annotations = treeparser.getAnnotationASTMap();
 			Iterator annoIterator = annotations.values().iterator();
-			while (annoIterator.hasNext())
-			{
-				((Composestar.C.wrapper.parsing.Annotation) annoIterator.next()).addAnnotationtoLAMA();
-			}
-			// printMetaModel();
+            for (Object o : annotations.values()) {
+                ((Annotation) o).addAnnotationtoLAMA();
+            }
+            // printMetaModel();
 		}
 		catch (RecognitionException e)
 		{

@@ -370,124 +370,108 @@ public class JavaLanguageModel extends LanguageModel
 		if (null != classes)
 		{
 			Iterator classIter = classes.multiValue().iterator();
-			while (classIter.hasNext())
-			{
-				JavaType concern = (JavaType) classIter.next();
-				LangNamespace ns = rootNS;
-				if ((null != concern.namespace()) && (!concern.namespace().equals(""))) 
-				{	
-					ns = findOrAddNamespace(unitDict, rootNS, concern.namespace());
-				}
-				ns.addChildClass(concern);
-				concern.setParentNamespace(ns);
-				ProgramElement superType = concern.getUnitRelation("ParentClass").singleValue();
-				if (null != superType)
-				{
-					// The concern has a registered superType
-					// So also add the link the other way round.
-					((JavaType) superType).addChildType(concern); 
-				}
-				Collection implementedInterfaces = concern.getUnitRelation("Implements").multiValue();
-				Iterator ifaceIter = implementedInterfaces.iterator();
-				while (ifaceIter.hasNext())
-				{ 
-					// This class implements interfaces, also add the reverse
-					// mapping from interface -> classes that implement it
-					JavaType iface = (JavaType) ifaceIter.next();
-					iface.addImplementedBy(concern);
-				}
-			}
-		}
+            for (Object o : classes.multiValue()) {
+                JavaType concern = (JavaType) o;
+                LangNamespace ns = rootNS;
+                if ((null != concern.namespace()) && (!concern.namespace().equals(""))) {
+                    ns = findOrAddNamespace(unitDict, rootNS, concern.namespace());
+                }
+                ns.addChildClass(concern);
+                concern.setParentNamespace(ns);
+                ProgramElement superType = concern.getUnitRelation("ParentClass").singleValue();
+                if (null != superType) {
+                    // The concern has a registered superType
+                    // So also add the link the other way round.
+                    ((JavaType) superType).addChildType(concern);
+                }
+                Collection implementedInterfaces = concern.getUnitRelation("Implements").multiValue();
+                Iterator ifaceIter = implementedInterfaces.iterator();
+                for (Object implementedInterface : implementedInterfaces) {
+                    // This class implements interfaces, also add the reverse
+                    // mapping from interface -> classes that implement it
+                    JavaType iface = (JavaType) implementedInterface;
+                    iface.addImplementedBy(concern);
+                }
+            }
+        }
 
 		/* Create missing Language Unit links for Interfaces */
 		UnitResult interfaces = unitDict.getByType("Interface");
 		if (null != interfaces)
 		{
 			Iterator ifaceIter = interfaces.multiValue().iterator();
-			while (ifaceIter.hasNext())
-			{
-				JavaType concern = (JavaType) ifaceIter.next();
-				LangNamespace ns = rootNS;
-				if (!(null == concern.namespace() || !concern.namespace().equals(""))) 
-				{	
-					ns = findOrAddNamespace(unitDict, rootNS, concern.namespace());
-				}
-				ns.addChildInterface(concern);
-				concern.setParentNamespace(ns);
+            for (Object o : interfaces.multiValue()) {
+                JavaType concern = (JavaType) o;
+                LangNamespace ns = rootNS;
+                if (!(null == concern.namespace() || !concern.namespace().equals(""))) {
+                    ns = findOrAddNamespace(unitDict, rootNS, concern.namespace());
+                }
+                ns.addChildInterface(concern);
+                concern.setParentNamespace(ns);
 
-				ProgramElement superType = concern.getUnitRelation("ParentInterface").singleValue();
-				if (null != superType) 
-				{
-					// The concern has a registered superType
-					// So also add the link the other way round.
-					((JavaType) superType).addChildType(concern); 
-				}
-			}
-		}
+                ProgramElement superType = concern.getUnitRelation("ParentInterface").singleValue();
+                if (null != superType) {
+                    // The concern has a registered superType
+                    // So also add the link the other way round.
+                    ((JavaType) superType).addChildType(concern);
+                }
+            }
+        }
 
 		/* Create missing Language Unit links for Parameters */
 		UnitResult parameters = unitDict.getByType("Parameter");
 		if (null != parameters)
 		{
 			Iterator paramIter = parameters.multiValue().iterator();
-			while (paramIter.hasNext())
-			{
-				JavaParameterInfo param = (JavaParameterInfo) paramIter.next();
-				if (param.parameterType() != null)
-				{
-					ProgramElement paramType = param.getUnitRelation(param.parameterType().getUnitType()).singleValue();
-					if ((null != paramType) && (paramType instanceof JavaType)) 
-					{	
-						// The parameter has a registered Type
-						// So also add the link the other way round.
-						((JavaType) paramType).addParameterType(param); 
-					}
-				}
-			}
-		}
+            for (Object o : parameters.multiValue()) {
+                JavaParameterInfo param = (JavaParameterInfo) o;
+                if (param.parameterType() != null) {
+                    ProgramElement paramType = param.getUnitRelation(param.parameterType().getUnitType()).singleValue();
+                    if ((null != paramType) && (paramType instanceof JavaType)) {
+                        // The parameter has a registered Type
+                        // So also add the link the other way round.
+                        ((JavaType) paramType).addParameterType(param);
+                    }
+                }
+            }
+        }
 
 		/* Create missing Language Unit links for Methods */
 		UnitResult methods = unitDict.getByType("Method");
 		if (null != methods)
 		{
 			Iterator methodIter = methods.multiValue().iterator();
-			while (methodIter.hasNext())
-			{
-				JavaMethodInfo method = (JavaMethodInfo) methodIter.next();
-				if (method.returnType() != null)
-				{
-					ProgramElement methodReturnType = method.getUnitRelation(
-							"Return" + method.returnType().getUnitType()).singleValue();
-					if ((null != methodReturnType) && (methodReturnType instanceof JavaType))
-					{	
-						// The method has a registered return Type
-						// So also add the link the other way round.
-						((JavaType) methodReturnType).addMethodReturnType(method); 
-					}
-				}
-			}
-		}
+            for (Object o : methods.multiValue()) {
+                JavaMethodInfo method = (JavaMethodInfo) o;
+                if (method.returnType() != null) {
+                    ProgramElement methodReturnType = method.getUnitRelation(
+                            "Return" + method.returnType().getUnitType()).singleValue();
+                    if ((null != methodReturnType) && (methodReturnType instanceof JavaType)) {
+                        // The method has a registered return Type
+                        // So also add the link the other way round.
+                        ((JavaType) methodReturnType).addMethodReturnType(method);
+                    }
+                }
+            }
+        }
 
 		/* Create missing Language Unit links for Fields */
 		UnitResult fields = unitDict.getByType("Field");
 		if (null != fields)
 		{
 			Iterator fieldIter = fields.multiValue().iterator();
-			while (fieldIter.hasNext())
-			{
-				JavaFieldInfo field = (JavaFieldInfo) fieldIter.next();
-				if (null != field.fieldType())
-				{
-					ProgramElement fieldType = field.getUnitRelation(field.fieldType().getUnitType()).singleValue();
-					if ((null != fieldType) && (fieldType instanceof JavaType)) 
-					{
-						// The method has a registered return Type
-						// So also add the link the other way round.
-						((JavaType) fieldType).addFieldType(field); 
-					}
-				}
-			}
-		}
+            for (Object o : fields.multiValue()) {
+                JavaFieldInfo field = (JavaFieldInfo) o;
+                if (null != field.fieldType()) {
+                    ProgramElement fieldType = field.getUnitRelation(field.fieldType().getUnitType()).singleValue();
+                    if ((null != fieldType) && (fieldType instanceof JavaType)) {
+                        // The method has a registered return Type
+                        // So also add the link the other way round.
+                        ((JavaType) fieldType).addFieldType(field);
+                    }
+                }
+            }
+        }
 	}
 
 	/**
@@ -509,37 +493,30 @@ public class JavaLanguageModel extends LanguageModel
 	{
 		Debug.out(Debug.MODE_DEBUG, "LOLA", "Creating index on the language units");
 		// Loop 1: find methods, add only those that are ImplementedHere
-		Iterator unitIter = units.iterator();
-		while (unitIter.hasNext())
-		{
-			ProgramElement unit = (ProgramElement) unitIter.next();
-			if (unit instanceof JavaMethodInfo)
-			{
-				JavaMethodInfo method = (JavaMethodInfo) unit;
-				if (method.isDeclaredHere())
-				{
-					dict.addLanguageUnit(unit);
-				}
-				else
-				{ 	
-					// Exclude this method because it is inherited; set the
-					// parent of its child parameters
-					// so they will be noticed for removal by the 2nd loop.
-					Collection params = method.getUnitRelation("ChildParameters").multiValue();
-					Iterator paramsIter = params.iterator();
-					while (paramsIter.hasNext())
-					{
-						JavaParameterInfo paramInfo = (JavaParameterInfo) paramsIter.next();
-						paramInfo.setParent(method); // Have to set this, so we can later skip this unit altogether
-					}
-				}
-			}
-		}
-		// Loop 2: add all units, skipping fields that are not ImplementedHere (i.e. inherited).
+        for (Object unit1 : units) {
+            ProgramElement unit = (ProgramElement) unit1;
+            if (unit instanceof JavaMethodInfo) {
+                JavaMethodInfo method = (JavaMethodInfo) unit;
+                if (method.isDeclaredHere()) {
+                    dict.addLanguageUnit(unit);
+                } else {
+                    // Exclude this method because it is inherited; set the
+                    // parent of its child parameters
+                    // so they will be noticed for removal by the 2nd loop.
+                    Collection params = method.getUnitRelation("ChildParameters").multiValue();
+                    Iterator paramsIter = params.iterator();
+                    for (Object param : params) {
+                        JavaParameterInfo paramInfo = (JavaParameterInfo) param;
+                        paramInfo.setParent(method); // Have to set this, so we can later skip this unit altogether
+                    }
+                }
+            }
+        }
+        // Loop 2: add all units, skipping fields that are not ImplementedHere (i.e. inherited).
 		// A parameter is skipped when its parent method is not ImplementedHere.
 		// Methods are skipped altogether, because they have been added in loop 1 already.
-		unitIter = units.iterator();
-		while (unitIter.hasNext())
+        Iterator unitIter = units.iterator();
+        while (unitIter.hasNext())
 		{
 			ProgramElement unit = (ProgramElement) unitIter.next();
 			if (unit instanceof JavaFieldInfo)
@@ -667,20 +644,18 @@ public class JavaLanguageModel extends LanguageModel
 			lostMatch = true; // assume we are not going to find a child that matches
 			UnitResult children = currNS.getUnitRelation("ChildNamespaces");
 			Iterator childIter = children.multiValue().iterator();
-			while (childIter.hasNext())
-			{
-				LangNamespace ns = (LangNamespace) childIter.next();
-				if (namespace.startsWith(ns.getUnitName() + '.') || namespace.equals(ns.getUnitName()))
-				{ 
-					// we found a matching child! Update the current node and
-					// try another iteration
-					currNS = ns;
-					lostMatch = false;
-					break;
-				}
-			}
+            for (Object o : children.multiValue()) {
+                LangNamespace ns = (LangNamespace) o;
+                if (namespace.startsWith(ns.getUnitName() + '.') || namespace.equals(ns.getUnitName())) {
+                    // we found a matching child! Update the current node and
+                    // try another iteration
+                    currNS = ns;
+                    lostMatch = false;
+                    break;
+                }
+            }
 
-			// Did not match at some point? If so we'll have to add the
+            // Did not match at some point? If so we'll have to add the
 			// remainder of the namespace.
 			if (lostMatch)
 			{

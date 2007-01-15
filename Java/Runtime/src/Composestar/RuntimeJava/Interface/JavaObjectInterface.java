@@ -45,35 +45,35 @@ public class JavaObjectInterface extends ObjectInterface
 
 			if (fieldType.equals(int.class))
 			{
-				result = new Integer(field.getInt(object));
+				result = field.getInt(object);
 			}
 			else if (fieldType.equals(long.class))
 			{
-				result = new Long(field.getLong(object));
+				result = field.getLong(object);
 			}
 			else if (fieldType.equals(char.class))
 			{
-				result = new Character(field.getChar(object));
+				result = field.getChar(object);
 			}
 			else if (fieldType.equals(double.class))
 			{
-				result = new Double(field.getDouble(object));
+				result = field.getDouble(object);
 			}
 			else if (fieldType.equals(float.class))
 			{
-				result = new Float(field.getFloat(object));
+				result = field.getFloat(object);
 			}
 			else if (fieldType.equals(short.class))
 			{
-				result = new Short(field.getShort(object));
+				result = field.getShort(object);
 			}
 			else if (fieldType.equals(byte.class))
 			{
-				result = new Byte(field.getByte(object));
+				result = field.getByte(object);
 			}
 			else if (fieldType.equals(boolean.class))
 			{
-				result = Boolean.valueOf(field.getBoolean(object));
+				result = field.getBoolean(object);
 			}
 			else
 			{

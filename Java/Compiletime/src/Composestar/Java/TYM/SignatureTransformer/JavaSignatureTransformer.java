@@ -31,18 +31,17 @@ public class JavaSignatureTransformer implements SignatureTransformer
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		boolean signaturesmodified = ((Boolean) (resources.getResource("signaturesmodified"))).booleanValue();
+		boolean signaturesmodified = (Boolean) (resources.getResource("signaturesmodified"));
 		if (signaturesmodified) // process only if signatures are modified
 		{
 			// Iterate over dummy jarfiles
 			ArrayList dummies = (ArrayList) Configuration.instance().getProjects().getCompiledDummies();
 			Iterator dumIt = dummies.iterator();
-			while (dumIt.hasNext())
-			{
-				String name = (String) dumIt.next();
-				JarTransformer transformer = new JarTransformer(name);
-				transformer.run();
-			}
-		}
+            for (Object dummy : dummies) {
+                String name = (String) dummy;
+                JarTransformer transformer = new JarTransformer(name);
+                transformer.run();
+            }
+        }
 	}
 }

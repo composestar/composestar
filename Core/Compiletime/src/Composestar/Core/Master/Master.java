@@ -67,30 +67,21 @@ public abstract class Master
 
 	public void processCmdArgs(String[] args)
 	{
-		for (int i = 0; i < args.length; i++)
-		{
-			String arg = args[i];
-			if (arg.startsWith("-d"))
-			{
-				debugOverride = Integer.parseInt(arg.substring(2));
-				Debug.setMode(debugOverride);
-			}
-			else if (arg.startsWith("-t"))
-			{
-				int et = Integer.parseInt(arg.substring(2));
-				Debug.setErrThreshold(et);
-			}
-			else if (arg.startsWith("-"))
-			{
-				System.out.println("Unknown option " + arg);
-			}
-			else
-			{
-				// assume it's the config file
-				configfile = args[i];
-			}
-		}
-	}
+        for (String arg : args) {
+            if (arg.startsWith("-d")) {
+                debugOverride = Integer.parseInt(arg.substring(2));
+                Debug.setMode(debugOverride);
+            } else if (arg.startsWith("-t")) {
+                int et = Integer.parseInt(arg.substring(2));
+                Debug.setErrThreshold(et);
+            } else if (arg.startsWith("-")) {
+                System.out.println("Unknown option " + arg);
+            } else {
+                // assume it's the config file
+                configfile = arg;
+            }
+        }
+    }
 
 	public void loadConfiguration() throws Exception
 	{

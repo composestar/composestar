@@ -190,15 +190,13 @@ public class Annotation
 		{
 			List methods = type.getMethods();
 			Iterator i = methods.iterator();
-			while (i.hasNext())
-			{
-				MethodInfo method = (MethodInfo) i.next();
-				if (method.Name.equals(methodName))
-				{
-					return method;
-				}
-			}
-		}
+            for (Object method1 : methods) {
+                MethodInfo method = (MethodInfo) method1;
+                if (method.Name.equals(methodName)) {
+                    return method;
+                }
+            }
+        }
 		return null;
 	}
 
@@ -213,15 +211,13 @@ public class Annotation
 		{
 			List fields = type.getFields();
 			Iterator i = fields.iterator();
-			while (i.hasNext())
-			{
-				CVariable field = (CVariable) i.next();
-				if (field.Name.equals(fieldName))
-				{
-					return field;
-				}
-			}
-		}
+            for (Object field1 : fields) {
+                CVariable field = (CVariable) field1;
+                if (field.Name.equals(fieldName)) {
+                    return field;
+                }
+            }
+        }
 		return null;
 	}
 
@@ -229,15 +225,13 @@ public class Annotation
 	{
 		MethodInfo method = getMethodLocation(functionName);
 		Iterator paramIter = method.getParameters().iterator();
-		while (paramIter.hasNext())
-		{
-			CParameterInfo param = (CParameterInfo) paramIter.next();
-			if (param.Name.equals(paramName))
-			{
-				return param;
-			}
-		}
-		return null;
+        for (Object o : method.getParameters()) {
+            CParameterInfo param = (CParameterInfo) o;
+            if (param.Name.equals(paramName)) {
+                return param;
+            }
+        }
+        return null;
 	}
 
 }

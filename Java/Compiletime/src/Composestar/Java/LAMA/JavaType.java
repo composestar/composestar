@@ -159,9 +159,8 @@ public class JavaType extends Type
 	{
 		HashSet result = new HashSet();
 		Iterator iter = c.iterator();
-		while (iter.hasNext())
-			result.add(iter.next());
-		return result;
+        for (Object aC : c) result.add(aC);
+        return result;
 	}
 
 	/**
@@ -174,20 +173,14 @@ public class JavaType extends Type
 	{
 		HashSet out = new HashSet();
 		Iterator iter = in.iterator();
-		while (iter.hasNext())
-		{
-			Object obj = iter.next();
-			if (obj instanceof JavaMethodInfo)
-			{
-				if (((JavaMethodInfo) obj).isDeclaredHere()) out.add(obj);
-			}
-			else if (obj instanceof JavaFieldInfo)
-			{
-				if (((JavaFieldInfo) obj).isDeclaredHere()) out.add(obj);
-			}
-			else out.add(obj); // No filtering on other kinds of objects
-		}
-		return out;
+        for (Object obj : in) {
+            if (obj instanceof JavaMethodInfo) {
+                if (((JavaMethodInfo) obj).isDeclaredHere()) out.add(obj);
+            } else if (obj instanceof JavaFieldInfo) {
+                if (((JavaFieldInfo) obj).isDeclaredHere()) out.add(obj);
+            } else out.add(obj); // No filtering on other kinds of objects
+        }
+        return out;
 	}
 
 	/**
@@ -224,21 +217,18 @@ public class JavaType extends Type
 		HashSet resParameters = new HashSet();
 
 		Iterator i = getAnnotationInstances().iterator();
-		while (i.hasNext())
-		{
-			ProgramElement unit = ((JavaAnnotation) i.next()).getTarget();
-			if (unit instanceof JavaType)
-			{
-				JavaType type = (JavaType) unit;
-				if (type.isInterface()) resInterfaces.add(type);
-				else resClasses.add(type);
-			}
-			else if (unit instanceof JavaMethodInfo) resMethods.add(unit);
-			else if (unit instanceof FieldInfo) resFields.add(unit);
-			else if (unit instanceof ParameterInfo) resParameters.add(unit);
-		}
+        for (Object o : getAnnotationInstances()) {
+            ProgramElement unit = ((JavaAnnotation) o).getTarget();
+            if (unit instanceof JavaType) {
+                JavaType type = (JavaType) unit;
+                if (type.isInterface()) resInterfaces.add(type);
+                else resClasses.add(type);
+            } else if (unit instanceof JavaMethodInfo) resMethods.add(unit);
+            else if (unit instanceof FieldInfo) resFields.add(unit);
+            else if (unit instanceof ParameterInfo) resParameters.add(unit);
+        }
 
-		if (argumentName.equals("AttachedClasses")) return new UnitResult(resClasses);
+        if (argumentName.equals("AttachedClasses")) return new UnitResult(resClasses);
 		else if (argumentName.equals("AttachedInterfaces")) return new UnitResult(resInterfaces);
 		else if (argumentName.equals("AttachedMethods")) return new UnitResult(resMethods);
 		else if (argumentName.equals("AttachedFields")) return new UnitResult(resFields);

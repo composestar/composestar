@@ -246,20 +246,17 @@ public class ModuleInfo implements Serializable
 		Map config = Configuration.instance().getTmpModuleSettings(id);
 		if (config == null) return;
 		Iterator entries = config.entrySet().iterator();
-		while (entries.hasNext())
-		{
-			Entry entry = (Entry) entries.next();
-			try
-			{
-				setSettingValue((String) entry.getKey(), (String) entry.getValue());
-			}
-			catch (ConfigurationException e)
-			{
-				Debug.out(Debug.MODE_ERROR, id, "Error setting config option '" + entry.getKey() + "' to '" + entry.getValue()
-						+ "': " + e.getMessage());
-			}
-		}
-	}
+        for (Object o : config.entrySet()) {
+            Entry entry = (Entry) o;
+            try {
+                setSettingValue((String) entry.getKey(), (String) entry.getValue());
+            }
+            catch (ConfigurationException e) {
+                Debug.out(Debug.MODE_ERROR, id, "Error setting config option '" + entry.getKey() + "' to '" + entry.getValue()
+                        + "': " + e.getMessage());
+            }
+        }
+    }
 
 	protected DefaultHandler getNewSAXHandler(XMLReader reader, ContentHandler inReturnHandler)
 	{
@@ -425,7 +422,7 @@ public class ModuleInfo implements Serializable
 			{
 				try
 				{
-					if (Boolean.valueOf(attributes.getValue("remove")).booleanValue())
+					if (Boolean.valueOf(attributes.getValue("remove")))
 					{
 						// remove the setting
 						mi.removeSetting(attributes.getValue("id"));

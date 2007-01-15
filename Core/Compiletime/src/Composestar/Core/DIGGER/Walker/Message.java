@@ -269,15 +269,13 @@ public class Message
 			}
 		}
 		Iterator it = type.getMethods().iterator();
-		while (it.hasNext())
-		{
-			MethodInfo mi = (MethodInfo) it.next();
-			if (mi.getName().equals(selector))
-			{
-				return true;
-			}
-		}
-		return false;
+        for (Object o : type.getMethods()) {
+            MethodInfo mi = (MethodInfo) o;
+            if (mi.getName().equals(selector)) {
+                return true;
+            }
+        }
+        return false;
 	}
 
 	public String toString()

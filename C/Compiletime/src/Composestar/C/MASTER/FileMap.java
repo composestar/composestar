@@ -60,15 +60,13 @@ public class FileMap implements Serializable, Cloneable
 	public String getFileASTwithName(String fileName)
 	{
 		Iterator fileit = fileASTMap.values().iterator();
-		while (fileit.hasNext())
-		{
-			String fn = ((retrieveAST) fileit.next()).getFilename();
-			if (fn.indexOf(fileName) != -1)
-			{
-				return fn;
-			}
-		}
-		return "";
+        for (Object o : fileASTMap.values()) {
+            String fn = ((retrieveAST) o).getFilename();
+            if (fn.indexOf(fileName) != -1) {
+                return fn;
+            }
+        }
+        return "";
 	}
 
 }

@@ -111,11 +111,10 @@ public class MethodNode extends Node
 		if (!parameters.isEmpty())
 		{
 			Iterator params = parameters.iterator();
-			while (params.hasNext())
-			{
-				uniqueID.append((String) params.next());
-			}
-		}
+            for (Object parameter : parameters) {
+                uniqueID.append((String) parameter);
+            }
+        }
 		return uniqueID.toString();
 	}
 }

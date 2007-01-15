@@ -39,31 +39,27 @@ public class AbstractVM
 
 		List conflicts = new ArrayList();
 
-		for (Iterator ci = Repository.instance().getConstraints().iterator(); ci.hasNext();)
-		{
-			Constraint constraint = (Constraint) ci.next();
+        for (Object o1 : Repository.instance().getConstraints()) {
+            Constraint constraint = (Constraint) o1;
 
-			for (Iterator ri = ResourceHandler.getResources().iterator(); ri.hasNext();)
-			{
-				Resource res = (Resource) ri.next();
-				if (constraint.getResource().equals("*") || constraint.getResource().equals(res.getName()))
-				{
-					labeler.setCurrentResource(res.getName());
-					Matcher matcher = new Matcher(constraint.getPattern(), execModel, labeler);
+            for (Object o : ResourceHandler.getResources()) {
+                Resource res = (Resource) o;
+                if (constraint.getResource().equals("*") || constraint.getResource().equals(res.getName())) {
+                    labeler.setCurrentResource(res.getName());
+                    Matcher matcher = new Matcher(constraint.getPattern(), execModel, labeler);
 
-					if (matcher.matches())
-					{
-						Conflict conflict = new Conflict();
-						conflict.setResource(res.getName());
-						conflict.setMsg(constraint.getMessage());
-						// conflict.setSequence(matcher.matchTrace());
-						conflict.setExpr(constraint.getPattern().toString());
-						conflicts.add(conflict);
-					}
-				}
-			}
-		}
-		// System.err.println("AVM: done...");
+                    if (matcher.matches()) {
+                        Conflict conflict = new Conflict();
+                        conflict.setResource(res.getName());
+                        conflict.setMsg(constraint.getMessage());
+                        // conflict.setSequence(matcher.matchTrace());
+                        conflict.setExpr(constraint.getPattern().toString());
+                        conflicts.add(conflict);
+                    }
+                }
+            }
+        }
+        // System.err.println("AVM: done...");
 		return conflicts;
 	}
 }

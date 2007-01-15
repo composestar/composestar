@@ -81,28 +81,26 @@ public class Main extends DefaultHandler implements CTCommonModule
 			{
 				boolean inCConcern = false;
 				Iterator modIter = modules.keySet().iterator();
-				while (modIter.hasNext())
-				{
-					String module = (String) modIter.next();
-					if (ref.getName().equals(module))
-					{
-						/** create concern and add to repository * */
-						PrimitiveConcern pconcern = new PrimitiveConcern();
-						CFile type = new CFile();
-						pconcern.setName(module);
-						type.setName(module);
-						type.setFullName(module);
-						pconcern.setPlatformRepresentation(type);
-						type.setParentConcern(pconcern);
-						DataStore.instance().addObject(pconcern.getName(), pconcern);
-						ref.setRef(pconcern);
-						ref.setResolved(true);
-						inCConcern = true;
-						Debug.out(Debug.MODE_INFORMATION, "REXREF", "Found " + module
-								+ " in cps concern as well as in xml file");
-					}
-				}
-				if (!inCConcern)
+                for (Object o : modules.keySet()) {
+                    String module = (String) o;
+                    if (ref.getName().equals(module)) {
+                        /** create concern and add to repository * */
+                        PrimitiveConcern pconcern = new PrimitiveConcern();
+                        CFile type = new CFile();
+                        pconcern.setName(module);
+                        type.setName(module);
+                        type.setFullName(module);
+                        pconcern.setPlatformRepresentation(type);
+                        type.setParentConcern(pconcern);
+                        DataStore.instance().addObject(pconcern.getName(), pconcern);
+                        ref.setRef(pconcern);
+                        ref.setResolved(true);
+                        inCConcern = true;
+                        Debug.out(Debug.MODE_INFORMATION, "REXREF", "Found " + module
+                                + " in cps concern as well as in xml file");
+                    }
+                }
+                if (!inCConcern)
 				{
 					throw new ModuleException(
 							"ConcernReference '"

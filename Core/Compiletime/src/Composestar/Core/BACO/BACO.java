@@ -46,66 +46,60 @@ public abstract class BACO implements CTCommonModule
 		logger.debug("ComposestarHome: '" + cpsPath + "'");
 
 		Iterator it = config.getPlatform().getRequiredFiles().iterator();
-		while (it.hasNext())
-		{
-			String requiredFile = (String) it.next();
-			String filename = cpsPath + "binaries/" + requiredFile;
+        for (Object o : config.getPlatform().getRequiredFiles()) {
+            String requiredFile = (String) o;
+            String filename = cpsPath + "binaries/" + requiredFile;
 
-			logger.debug("Adding required file: '" + filename + "'");
-			filesToCopy.add(filename);
-		}
-	}
+            logger.debug("Adding required file: '" + filename + "'");
+            filesToCopy.add(filename);
+        }
+    }
 
 	protected void addBuiltLibraries(Set filesToCopy)
 	{
 		List builtLibs = (List) DataStore.instance().getObjectByID("BuiltLibs");
 		Iterator it = builtLibs.iterator();
-		while (it.hasNext())
-		{
-			String lib = (String) it.next();
+        for (Object builtLib : builtLibs) {
+            String lib = (String) builtLib;
 
-			logger.debug("Adding built library: '" + lib + "'");
-			filesToCopy.add(FileUtils.unquote(lib));
-		}
-	}
+            logger.debug("Adding built library: '" + lib + "'");
+            filesToCopy.add(FileUtils.unquote(lib));
+        }
+    }
 
 	protected void addCustomFilters(Set filesToCopy)
 	{
 		Configuration config = Configuration.instance();
 		Iterator it = config.getFilters().getCustomFilters().iterator();
-		while (it.hasNext())
-		{
-			CustomFilter filter = (CustomFilter) it.next();
-			String lib = filter.getLibrary();
+        for (Object o : config.getFilters().getCustomFilters()) {
+            CustomFilter filter = (CustomFilter) o;
+            String lib = filter.getLibrary();
 
-			logger.debug("Adding custom filter: '" + lib + "'");
-			filesToCopy.add(FileUtils.unquote(lib));
-		}
-	}
+            logger.debug("Adding custom filter: '" + lib + "'");
+            filesToCopy.add(FileUtils.unquote(lib));
+        }
+    }
 
 	protected void addDependencies(Set filesToCopy)
 	{
 		Configuration config = Configuration.instance();
 		Iterator it = config.getProjects().getProjects().iterator();
-		while (it.hasNext())
-		{
-			Project project = (Project) it.next();
+        for (Object o1 : config.getProjects().getProjects()) {
+            Project project = (Project) o1;
 
-			// add deps
-			Iterator projectit = project.getDependencies().iterator();
-			while (projectit.hasNext())
-			{
-				Dependency dependency = (Dependency) projectit.next();
-				if (isNeededDependency(dependency))
-				{
-					String depFilename = dependency.getFileName();
-					filesToCopy.add(FileUtils.unquote(depFilename));
+            // add deps
+            Iterator projectit = project.getDependencies().iterator();
+            for (Object o : project.getDependencies()) {
+                Dependency dependency = (Dependency) o;
+                if (isNeededDependency(dependency)) {
+                    String depFilename = dependency.getFileName();
+                    filesToCopy.add(FileUtils.unquote(depFilename));
 
-					logger.debug("Adding dependency: '" + depFilename + "'");
-				}
-			}
-		}
-	}
+                    logger.debug("Adding dependency: '" + depFilename + "'");
+                }
+            }
+        }
+    }
 
 	protected void addRepository(Set filesToCopy)
 	{
@@ -134,12 +128,11 @@ public abstract class BACO implements CTCommonModule
 
 		// start the actual copying
 		Iterator filesIt = filesToCopy.iterator();
-		while (filesIt.hasNext())
-		{
-			String source = (String) filesIt.next();
-			copyFile(outputPath, source, fatal);
-		}
-	}
+        for (Object aFilesToCopy : filesToCopy) {
+            String source = (String) aFilesToCopy;
+            copyFile(outputPath, source, fatal);
+        }
+    }
 
 	protected void copyFile(String outputPath, String source, boolean fatal) throws ModuleException
 	{

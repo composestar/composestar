@@ -48,12 +48,11 @@ public class JavaCompiler implements LangCompiler
 
 		// add dependencies to classpath
 		Iterator deps = p.getDependencies().iterator();
-		while (deps.hasNext())
-		{
-			options = options + ";" + FileUtils.quote(((Dependency)deps.next()).getFileName());
-		}
+        for (Object o1 : p.getDependencies()) {
+            options = options + ";" + FileUtils.quote(((Dependency) o1).getFileName());
+        }
 
-		// add destination directory
+        // add destination directory
 		String buildPath = p.getBasePath() + "obj/";
 		options = options + " -d " + FileUtils.quote(buildPath);
 
@@ -69,11 +68,10 @@ public class JavaCompiler implements LangCompiler
 		command = command.replaceAll("\\{OPTIONS\\}", options);
 		
 		Iterator sourceIt = p.getSources().iterator();
-		while (sourceIt.hasNext())
-		{
-			compileSource( command, ((Source)sourceIt.next()).getFileName(), buildPath );
-		}
-	}
+        for (Object o : p.getSources()) {
+            compileSource(command, ((Source) o).getFileName(), buildPath);
+        }
+    }
 	
 	private void compileSource(String command, String source, String buildPath) throws CompilerException
 	{
@@ -203,24 +201,22 @@ public class JavaCompiler implements LangCompiler
 		String targetPath = basePath + "obj/" + dummyPath;
 
 		Iterator sourceIt = p.getSources().iterator();
-		while (sourceIt.hasNext())
-		{
-			Source source = (Source) sourceIt.next();
-			String dummyfile = FileUtils.normalizeFilename(source.getDummy());
-			String classPath = dummyfile.substring(dummyfile.indexOf(dummyPath) + dummyPath.length());
-			classPath = classPath.replaceAll(FileUtils.getFilenamePart(dummyfile), "*.class");
-			classpaths.add(classPath);
-		}
+        for (Object o : p.getSources()) {
+            Source source = (Source) o;
+            String dummyfile = FileUtils.normalizeFilename(source.getDummy());
+            String classPath = dummyfile.substring(dummyfile.indexOf(dummyPath) + dummyPath.length());
+            classPath = classPath.replaceAll(FileUtils.getFilenamePart(dummyfile), "*.class");
+            classpaths.add(classPath);
+        }
 
-		String paths = "";
+        String paths = "";
 		Iterator pathIt = classpaths.iterator();
-		while (pathIt.hasNext())
-		{
-			String path = (String) pathIt.next();
-			paths += " " + path;
-		}
+        for (Object classpath : classpaths) {
+            String path = (String) classpath;
+            paths += " " + path;
+        }
 
-		File targetDir = new File(targetPath);
+        File targetDir = new File(targetPath);
 		String name = p.getName() + ".dummies.jar";
 		String compiledUnit = targetPath + name;
 
@@ -273,20 +269,16 @@ public class JavaCompiler implements LangCompiler
 		StringBuffer sourcefiles = new StringBuffer();
 
 		Iterator sourceIt = p.getSources().iterator();
-		while (sourceIt.hasNext())
-		{
-			Source s = (Source) sourceIt.next();
-			if (dummies)
-			{
+        for (Object o : p.getSources()) {
+            Source s = (Source) o;
+            if (dummies) {
                 sourcefiles.append("\"").append(FileUtils.normalizeFilename(s.getDummy())).append("\"");
-			}
-			else
-			{
+            } else {
                 sourcefiles.append("\"").append(s.getFileName()).append("\"" + "\n");
-			}
-		}
+            }
+        }
 
-		// emit file
+        // emit file
 		try
 		{
 			BufferedWriter bw = new BufferedWriter(new FileWriter(target));

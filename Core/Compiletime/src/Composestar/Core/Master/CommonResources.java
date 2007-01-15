@@ -60,7 +60,7 @@ public class CommonResources implements Serializable
 
 	public void addBoolean(String key, boolean value)
 	{
-		resources.put(key, Boolean.valueOf(value));
+		resources.put(key, value);
 	}
 
 	/**
@@ -102,6 +102,6 @@ public class CommonResources implements Serializable
 			throw new RuntimeException("Resource with key '" + key + "' is not a Boolean");
 		}
 
-		return ((Boolean) resource).booleanValue();
+		return (Boolean) resource;
 	}
 }

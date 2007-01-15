@@ -48,16 +48,14 @@ public class ExecutionManager
 			rules = setPreferences(rules);
 			detectConflict(rules);
 			// step 2. detect conflicts, like skip-skip
-			for (Iterator i = rules.iterator(); i.hasNext();)
-			{
-				if (currentAction.isExecutable())
-				{
-					crule = (Rule) i.next();
-					crule.apply();
-				}
-			}
+            for (Object rule : rules) {
+                if (currentAction.isExecutable()) {
+                    crule = (Rule) rule;
+                    crule.apply();
+                }
+            }
 
-			// if the current action is still executable...
+            // if the current action is still executable...
 			if (currentAction.isExecutable())
 			{
 				// System.out.println("executed>> "+currentAction);
@@ -101,19 +99,16 @@ public class ExecutionManager
 		/* end of pref. table */
 
 		LinkedList newRules = new LinkedList();
-		for (Iterator j = preflist.iterator(); j.hasNext();)
-		{
-			prefix = (String) j.next();
-			for (Iterator i = rules.iterator(); i.hasNext();)
-			{
-				r = (Rule) i.next();
-				if (r.getIdentifier().startsWith(prefix))
-				{
-					newRules.addLast(r);
-				}
-			}
-		}
-		// System.out.println(rules.size()+"-"+newRules.size());
+        for (Object aPreflist : preflist) {
+            prefix = (String) aPreflist;
+            for (Object rule : rules) {
+                r = (Rule) rule;
+                if (r.getIdentifier().startsWith(prefix)) {
+                    newRules.addLast(r);
+                }
+            }
+        }
+        // System.out.println(rules.size()+"-"+newRules.size());
 		return newRules;
 	}
 
@@ -127,18 +122,16 @@ public class ExecutionManager
 		LinkedList crules = new LinkedList();
 		/* collect the skip rules */
 		Rule r;
-		for (Iterator i = rules.iterator(); i.hasNext();)
-		{
-			r = (Rule) i.next();
-			if (r.getIdentifier().startsWith("skip"))
-			{
-				crules.add(r);
-			}
-		}
-		/*
-		 * evaluate the parameters of skip rules and their skipping value if
-		 * there is a conflict
-		 */
+        for (Object rule : rules) {
+            r = (Rule) rule;
+            if (r.getIdentifier().startsWith("skip")) {
+                crules.add(r);
+            }
+        }
+        /*
+           * evaluate the parameters of skip rules and their skipping value if
+           * there is a conflict
+           */
 		try
 		{
 			if (crules.size() > 1)
@@ -158,10 +151,10 @@ public class ExecutionManager
 
 							// and both should be skipped
 							if ((((r1.getLeft().evaluate() != null) && (r2.getLeft().evaluate() != null)) && ((r1
-									.getLeft().evaluate().booleanValue()) && (r2.getLeft().evaluate().booleanValue())))
-									|| (((r1.getLeft().evaluate() != null) && (r1.getLeft().evaluate().booleanValue())) && ((r2
+                                    .getLeft().evaluate()) && (r2.getLeft().evaluate())))
+									|| (((r1.getLeft().evaluate() != null) && (r1.getLeft().evaluate())) && ((r2
 											.getLeft().evaluate() == null) && (r2 instanceof SoftSkipRule)))
-									|| (((r2.getLeft().evaluate() != null) && (r2.getLeft().evaluate().booleanValue())) && ((r1
+									|| (((r2.getLeft().evaluate() != null) && (r2.getLeft().evaluate())) && ((r1
 											.getLeft().evaluate() == null) && (r1 instanceof SoftSkipRule))))
 							{
 								throw new RuntimeException("Conflict between two skips");

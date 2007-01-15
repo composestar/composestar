@@ -242,17 +242,17 @@ public class ModuleSetting implements Serializable
 
 	public int getIntValue()
 	{
-		return ((Integer) value).intValue();
+		return (Integer) value;
 	}
 
 	public boolean getBooleanValue()
 	{
-		return ((Boolean) value).booleanValue();
+		return (Boolean) value;
 	}
 
 	public float getFloatValue()
 	{
-		return ((Float) value).floatValue();
+		return (Float) value;
 	}
 
 	public Object getDefaultValue()

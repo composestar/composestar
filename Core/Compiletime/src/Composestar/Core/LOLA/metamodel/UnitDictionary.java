@@ -264,12 +264,11 @@ public class UnitDictionary
 		HashSet result = new HashSet();
 
 		Iterator types = unitsByType.values().iterator();
-		while (types.hasNext())
-		{
-			result.addAll((HashSet) types.next());
-		}
+        for (Object o : unitsByType.values()) {
+            result.addAll((HashSet) o);
+        }
 
-		return new UnitResult(result);
+        return new UnitResult(result);
 	}
 
 	/**

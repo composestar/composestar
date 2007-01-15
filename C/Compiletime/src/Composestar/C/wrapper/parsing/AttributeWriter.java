@@ -69,12 +69,11 @@ public class AttributeWriter
 						+ '"' + " >\n");
 				bw.write("   <values>\n");
 				Iterator values = anno.getValues().iterator();
-				while (values.hasNext())
-				{
+                for (Object o : anno.getValues()) {
 
-					bw.write("     <value text=" + values.next() + "/>\n");
-				}
-				bw.write("   </values>\n");
+                    bw.write("     <value text=" + o + "/>\n");
+                }
+                bw.write("   </values>\n");
 				bw.write("  </Attribute>\n");
 			}
 			catch (IOException io)

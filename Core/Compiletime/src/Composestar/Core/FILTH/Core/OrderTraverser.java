@@ -19,11 +19,10 @@ public class OrderTraverser
 	public static LinkedList cloneLinkedList(LinkedList l)
 	{
 		LinkedList temp = new LinkedList();
-		for (Iterator i = l.iterator(); i.hasNext();)
-		{
-			temp.add(i.next());
-		}
-		return temp;
+        for (Object aL : l) {
+            temp.add(aL);
+        }
+        return temp;
 	}
 
 	public LinkedList multiTraverse(Graph g)
@@ -119,30 +118,26 @@ public class OrderTraverser
 		boolean pc;
 
 		/* Iterating through all the available nodes */
-		for (Iterator i = available.iterator(); i.hasNext();)
-		{
-			Node current = (Node) i.next();
-			/* Checking all the incoming edges of a node */
-			pc = true;
-			for (Iterator j = current.getIncomingEdges().iterator(); j.hasNext();)
-			{
-				Node aParent = ((Edge) j.next()).getLeft();
-				if (!used.contains(aParent))
-				{
-					pc = false;
-					break;
-				}
-			}
-			/*
-			 * if all the parents has already been traversed and parents are
-			 * passed
-			 */
-			if (pc)
-			{
-				candidates.add(current);
-			}
-		}
-		/* if there is no candidate node return null */
+        for (Object anAvailable : available) {
+            Node current = (Node) anAvailable;
+            /* Checking all the incoming edges of a node */
+            pc = true;
+            for (Object o : current.getIncomingEdges()) {
+                Node aParent = ((Edge) o).getLeft();
+                if (!used.contains(aParent)) {
+                    pc = false;
+                    break;
+                }
+            }
+            /*
+                * if all the parents has already been traversed and parents are
+                * passed
+                */
+            if (pc) {
+                candidates.add(current);
+            }
+        }
+        /* if there is no candidate node return null */
 		if (candidates.isEmpty())
 		{
 			return null;
@@ -212,30 +207,26 @@ public class OrderTraverser
 		boolean pc;
 
 		/* Iterating through all the available nodes */
-		for (Iterator i = available.iterator(); i.hasNext();)
-		{
-			Node current = (Node) i.next();
-			/* Checking all the incoming edges of a node */
-			pc = true;
-			for (Iterator j = current.getIncomingEdges().iterator(); j.hasNext();)
-			{
-				Node aParent = ((Edge) j.next()).getLeft();
-				if (!used.contains(aParent))
-				{
-					pc = false;
-					break;
-				}
-			}
-			/*
-			 * if all the parents has already been traversed and parents are
-			 * passed
-			 */
-			if (pc)
-			{
-				candidates.add(current);
-			}
-		}
-		/* if there is no candidate node return null */
+        for (Object anAvailable : available) {
+            Node current = (Node) anAvailable;
+            /* Checking all the incoming edges of a node */
+            pc = true;
+            for (Object o : current.getIncomingEdges()) {
+                Node aParent = ((Edge) o).getLeft();
+                if (!used.contains(aParent)) {
+                    pc = false;
+                    break;
+                }
+            }
+            /*
+                * if all the parents has already been traversed and parents are
+                * passed
+                */
+            if (pc) {
+                candidates.add(current);
+            }
+        }
+        /* if there is no candidate node return null */
 		if (candidates.isEmpty())
 		{
 			return null;
@@ -257,24 +248,21 @@ public class OrderTraverser
 		Edge currentEdge = null;
 
 		/* select an available node that has a parent among the used nodes: */
-		for (Iterator i = available.iterator(); i.hasNext();)
-		{
-			Node current = (Node) i.next();
+        for (Object anAvailable : available) {
+            Node current = (Node) anAvailable;
 
-			for (Iterator j = current.getIncomingEdges().iterator(); (start == null) && (j.hasNext());)
-			{
-				currentEdge = (Edge) j.next();
-				aParent = currentEdge.getLeft();
-				/* we've found a node with a parent already passed */
-				if (used.contains(aParent))
-				{
-					start = currentEdge.getRight();
-				}
-			}
+            for (Iterator j = current.getIncomingEdges().iterator(); (start == null) && (j.hasNext());) {
+                currentEdge = (Edge) j.next();
+                aParent = currentEdge.getLeft();
+                /* we've found a node with a parent already passed */
+                if (used.contains(aParent)) {
+                    start = currentEdge.getRight();
+                }
+            }
 
-		}
+        }
 
-		if (start == null)
+        if (start == null)
 		{
 			throw new RuntimeException("error: there is no starting node for the cycle");
 		}
@@ -362,14 +350,12 @@ public class OrderTraverser
 		public boolean isInThePath(LinkedList path)
 		{
 
-			for (Iterator i = path.iterator(); i.hasNext();)
-			{
-				if (((Pair) i.next()).getNode().getElement().equals(this.node.getElement()))
-				{
-					return true;
-				}
-			}
-			return false;
+            for (Object aPath : path) {
+                if (((Pair) aPath).getNode().getElement().equals(this.node.getElement())) {
+                    return true;
+                }
+            }
+            return false;
 		}
 	}
 
@@ -380,30 +366,29 @@ public class OrderTraverser
 		Edge e;
 
 		Pair p = new Pair(n);
-		for (Iterator i = n.getIncomingEdges().iterator(); i.hasNext();)
-		{
-			e = (Edge) i.next();
-			// we don't extend the database with the edges to the root node and
-			// the node from which we come
-			if ((!e.equals(exc)) && (!e.getLeft().getElement().equals("root"))) // not
-			// the
-			// exception
-			// edge
-			// and
-			// the
-			// edges
-			// referring
-			// back
-			// to
-			// the
-			// root
-			// node
-			{
-				p.addEdge(e);
-			}
+        for (Object o : n.getIncomingEdges()) {
+            e = (Edge) o;
+            // we don't extend the database with the edges to the root node and
+            // the node from which we come
+            if ((!e.equals(exc)) && (!e.getLeft().getElement().equals("root"))) // not
+            // the
+            // exception
+            // edge
+            // and
+            // the
+            // edges
+            // referring
+            // back
+            // to
+            // the
+            // root
+            // node
+            {
+                p.addEdge(e);
+            }
 
-		}
-		// db.addFirst(p);
+        }
+        // db.addFirst(p);
 		return p;
 	}
 
@@ -411,16 +396,14 @@ public class OrderTraverser
 	{
 		Node n;
 		// System.out.println("<<<cycle-begin>>>");
-		for (Iterator i = path.iterator(); i.hasNext();)
-		{
-			n = ((Pair) i.next()).getNode();
-			// System.out.print(n.getElement()+" ");
-			if (stopPair.getNode().getElement().equals(n.getElement()))
-			{
-				break;
-			}
-		}
-		// System.out.println("\n<<cycle-end>>>");
+        for (Object aPath : path) {
+            n = ((Pair) aPath).getNode();
+            // System.out.print(n.getElement()+" ");
+            if (stopPair.getNode().getElement().equals(n.getElement())) {
+                break;
+            }
+        }
+        // System.out.println("\n<<cycle-end>>>");
 	}
 
 }

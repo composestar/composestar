@@ -79,12 +79,11 @@ public class HTMLReporter implements Reporter
 
 		buffer.append("<b>Filters:</b><BR>");
 		int i = 0;
-		for (Iterator it = analysis.getFilters().iterator(); it.hasNext();)
-		{
-			i++;
-			buffer.append("").append(i).append(". ").append(((Filter) it.next()).getQualifiedName()).append("<BR>");
-		}
-		buffer.append("<BR>");
+        for (Object o : analysis.getFilters()) {
+            i++;
+            buffer.append("").append(i).append(". ").append(((Filter) o).getQualifiedName()).append("<BR>");
+        }
+        buffer.append("<BR>");
 
 		if (analysis.numConflictingExecutions() == 0)
 		{
@@ -96,40 +95,38 @@ public class HTMLReporter implements Reporter
 
 			List executionConflicts = analysis.executionConflicts();
 
-			for (Iterator it = executionConflicts.iterator(); it.hasNext();)
-			{
-				buffer.append("<tr><td align=left valign=top><b>Actions:</b><BR>");
+            for (Object executionConflict : executionConflicts) {
+                buffer.append("<tr><td align=left valign=top><b>Actions:</b><BR>");
 
-				// Entry entry = (Entry) it.next();
-				// ExecutionAnalysis ea = (ExecutionAnalysis) entry.getKey();
-				// List conflicts = (List) entry.getValue();
-				List conflicts = (List) it.next();
+                // Entry entry = (Entry) it.next();
+                // ExecutionAnalysis ea = (ExecutionAnalysis) entry.getKey();
+                // List conflicts = (List) entry.getValue();
+                List conflicts = (List) executionConflict;
 
-				// i = 0;
-				// for( Iterator actionIterator = ea.getActions().iterator();
-				// actionIterator.hasNext(); )
-				// {
-				// i++;
-				// buffer.append("").append(i).append(".
-				// ").append(actionIterator.next().toString()).append("<BR>");
-				// }
+                // i = 0;
+                // for( Iterator actionIterator = ea.getActions().iterator();
+                // actionIterator.hasNext(); )
+                // {
+                // i++;
+                // buffer.append("").append(i).append(".
+                // ").append(actionIterator.next().toString()).append("<BR>");
+                // }
 
-				buffer.append("</td><td align=left valign=top><b>Conflicts</b>");
+                buffer.append("</td><td align=left valign=top><b>Conflicts</b>");
 
-				buffer.append("<table border=0 cellpadding=0 cellspacing=0 width=100%>");
-				buffer
-						.append("<tr><td><i>Resource:</i></td><td width=200><i>Sequence:</i></td><td width=150><i>Pattern:</i></td><td><i>Message:</i></td></tr>");
-				for (Iterator conflictIterator = conflicts.iterator(); conflictIterator.hasNext();)
-				{
-					Conflict conflict = (Conflict) conflictIterator.next();
-					buffer.append("<tr><td>").append(conflict.getResource()).append("</td><td>").append(
-							conflict.getSequence()).append("</td><td>").append(conflict.getExpr()).append("</td><td>")
-							.append(conflict.getMsg()).append("</td></tr>");
-				}
-				buffer.append("</table>");
-				buffer.append("</td></tr>");
-			}
-			buffer.append("</table><br/>");
+                buffer.append("<table border=0 cellpadding=0 cellspacing=0 width=100%>");
+                buffer
+                        .append("<tr><td><i>Resource:</i></td><td width=200><i>Sequence:</i></td><td width=150><i>Pattern:</i></td><td><i>Message:</i></td></tr>");
+                for (Object conflict1 : conflicts) {
+                    Conflict conflict = (Conflict) conflict1;
+                    buffer.append("<tr><td>").append(conflict.getResource()).append("</td><td>").append(
+                            conflict.getSequence()).append("</td><td>").append(conflict.getExpr()).append("</td><td>")
+                            .append(conflict.getMsg()).append("</td></tr>");
+                }
+                buffer.append("</table>");
+                buffer.append("</td></tr>");
+            }
+            buffer.append("</table><br/>");
 		}
 		buffer.append("</div>");
 	}

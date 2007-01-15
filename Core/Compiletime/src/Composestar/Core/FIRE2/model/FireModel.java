@@ -479,16 +479,14 @@ public class FireModel
 	private boolean containsMethod(List methods, MethodInfo method)
 	{
 		Iterator iterator = methods.iterator();
-		while (iterator.hasNext())
-		{
-			MethodInfo containedMethod = (MethodInfo) iterator.next();
-			if (containedMethod.checkEquals(method))
-			{
-				return true;
-			}
-		}
+        for (Object method1 : methods) {
+            MethodInfo containedMethod = (MethodInfo) method1;
+            if (containedMethod.checkEquals(method)) {
+                return true;
+            }
+        }
 
-		return false;
+        return false;
 	}
 
 	/**
@@ -653,15 +651,13 @@ public class FireModel
 		{
 			Set selectors = executionModels[filterPosition][i].getEntranceMessages();
 			Iterator iter = selectors.iterator();
-			while (iter.hasNext())
-			{
-				Message message = (Message) iter.next();
-				if (!Message.checkEquals(message.getSelector(), Message.STAR_SELECTOR))
-				{
-					distinguishable.add(message.getSelector().getName());
-				}
-			}
-		}
+            for (Object selector : selectors) {
+                Message message = (Message) selector;
+                if (!Message.checkEquals(message.getSelector(), Message.STAR_SELECTOR)) {
+                    distinguishable.add(message.getSelector().getName());
+                }
+            }
+        }
 
 		return distinguishable;
 	}
@@ -696,20 +692,19 @@ public class FireModel
 
 			Set distinguishable = getDistinguishableSelectors(filterPosition);
 			Iterator iter = distinguishable.iterator();
-			while (iter.hasNext())
-			{
-				selector = (String) iter.next();
-				message = getEntranceMessage(selector);
+            for (Object aDistinguishable : distinguishable) {
+                selector = (String) aDistinguishable;
+                message = getEntranceMessage(selector);
 
-				state = executionModels[filterPosition][0].getEntranceState(message);
+                state = executionModels[filterPosition][0].getEntranceState(message);
 
-				extendedState = new ExtendedExecutionState(this, state, message, NO_SIGNATURE_CHECK, null,
-						filterPosition, 0);
+                extendedState = new ExtendedExecutionState(this, state, message, NO_SIGNATURE_CHECK, null,
+                        filterPosition, 0);
 
-				entranceTable.put(message, extendedState);
-			}
+                entranceTable.put(message, extendedState);
+            }
 
-			// undistinguishable selector:
+            // undistinguishable selector:
 			message = getEntranceMessage(Message.UNDISTINGUISHABLE_SELECTOR.getName());
 
 			state = executionModels[filterPosition][0].getEntranceState(message);

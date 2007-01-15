@@ -157,11 +157,10 @@ public class Run
 		p2.insert(g);
 		OrderTraverser ot = new OrderTraverser();
 		LinkedList order = ot.traverse(g);
-		for (Iterator i = order.iterator(); i.hasNext();)
-		{
-			System.out.println(((Node) i.next()).getElement());
-		}
-	}
+        for (Object anOrder : order) {
+            System.out.println(((Node) anOrder).getElement());
+        }
+    }
 
 	/* testing cond-cond */
 	public void test4()

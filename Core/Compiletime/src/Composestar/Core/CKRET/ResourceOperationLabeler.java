@@ -180,89 +180,81 @@ public class ResourceOperationLabeler implements Labeler
 				if (method != null)
 				{
 					List attributes = method.getAnnotations();
-					for (int i = 0; i < attributes.size(); i++)
-					{
-						Annotation dna = (Annotation) attributes.get(i);
-						if (dna.getType().fullName().startsWith("Composestar.")
-								&& dna.getType().fullName().endsWith("Semantics"))
-						{
-							// System.err.println(dna.getValue());
-							String spec = dna.getValue().replaceAll("\"", "");
-							if (!grammer.matcher(spec).matches())
-							{
-								MethodInfo dnmi = (MethodInfo) dna.getTarget();
-								String fullMethodName = dnmi.parent().m_fullName + '.' + dnmi.getName();
-								throw new ModuleException("Error in annotation semantics of method " + fullMethodName,
-										CKRET.MODULE_NAME);
-							}
-							StringTokenizer st = new StringTokenizer(dna.getValue().replaceAll("\"", ""), ",");
-							List metaOperations = new ArrayList();
+                    for (Object attribute : attributes) {
+                        Annotation dna = (Annotation) attribute;
+                        if (dna.getType().fullName().startsWith("Composestar.")
+                                && dna.getType().fullName().endsWith("Semantics")) {
+                            // System.err.println(dna.getValue());
+                            String spec = dna.getValue().replaceAll("\"", "");
+                            if (!grammer.matcher(spec).matches()) {
+                                MethodInfo dnmi = (MethodInfo) dna.getTarget();
+                                String fullMethodName = dnmi.parent().m_fullName + '.' + dnmi.getName();
+                                throw new ModuleException("Error in annotation semantics of method " + fullMethodName,
+                                        CKRET.MODULE_NAME);
+                            }
+                            StringTokenizer st = new StringTokenizer(dna.getValue().replaceAll("\"", ""), ",");
+                            List metaOperations = new ArrayList();
 
-							while (st.hasMoreTokens())
-							{
-								String token = st.nextToken();
-								StringTokenizer ost = new StringTokenizer(token, ".()");
-								// try
-								// {
-								String resource = ost.nextToken();
-								String operation = ost.nextToken();
-								if (ost.hasMoreTokens())
-								{
-									String argument = ost.nextToken();
-								}
-								metaOperations.add(new Operation(operation, resource));
-								// }
-								// catch(Exception e)
-								// {
-								// throw new ModuleException(CKRET.MODULE_NAME,"Error
-								// in annotation semantics of filter " +
-								// filter.getQualifiedName());
-								// }
-							}
+                            while (st.hasMoreTokens()) {
+                                String token = st.nextToken();
+                                StringTokenizer ost = new StringTokenizer(token, ".()");
+                                // try
+                                // {
+                                String resource = ost.nextToken();
+                                String operation = ost.nextToken();
+                                if (ost.hasMoreTokens()) {
+                                    String argument = ost.nextToken();
+                                }
+                                metaOperations.add(new Operation(operation, resource));
+                                // }
+                                // catch(Exception e)
+                                // {
+                                // throw new ModuleException(CKRET.MODULE_NAME,"Error
+                                // in annotation semantics of filter " +
+                                // filter.getQualifiedName());
+                                // }
+                            }
 
-							// TODO: this overrides a previously found
-							// scenario for the same filter
-							// which should obviously never happen...
-							// this.metaSemantics.put(filter, metaOperations);
-						}
-					}
-					Iterator reifiedMessageBehaviour = method.getReifiedMessageBehavior().iterator();
-					while (reifiedMessageBehaviour.hasNext())
-					{
-						String refMes = (String) (reifiedMessageBehaviour.next());
+                            // TODO: this overrides a previously found
+                            // scenario for the same filter
+                            // which should obviously never happen...
+                            // this.metaSemantics.put(filter, metaOperations);
+                        }
+                    }
+                    Iterator reifiedMessageBehaviour = method.getReifiedMessageBehavior().iterator();
+                    for (Object o1 : method.getReifiedMessageBehavior()) {
+                        String refMes = (String) (o1);
 
-						StringTokenizer st = new StringTokenizer(refMes.replaceAll("\"", ""), ",");
+                        StringTokenizer st = new StringTokenizer(refMes.replaceAll("\"", ""), ",");
 
-						List metaOperations = new ArrayList();
+                        List metaOperations = new ArrayList();
 
-						while (st.hasMoreTokens())
-						{
-							String token = st.nextToken();
-							StringTokenizer ost = new StringTokenizer(token, ".()");
-							// try
-							// {
-							String resource = ost.nextToken();
-							String operation = ost.nextToken();
-							if (ost.hasMoreTokens())
-							{
-								String argument = ost.nextToken();
-							}
-							metaOperations.add(new Operation(operation, resource));
-							// }
-							// catch(Exception e)
-							// {
-							// throw new ModuleException(CKRET.MODULE_NAME,"Error in
-							// annotation semantics of filter " +
-							// filter.getQualifiedName());
-							// }
-						}
+                        while (st.hasMoreTokens()) {
+                            String token = st.nextToken();
+                            StringTokenizer ost = new StringTokenizer(token, ".()");
+                            // try
+                            // {
+                            String resource = ost.nextToken();
+                            String operation = ost.nextToken();
+                            if (ost.hasMoreTokens()) {
+                                String argument = ost.nextToken();
+                            }
+                            metaOperations.add(new Operation(operation, resource));
+                            // }
+                            // catch(Exception e)
+                            // {
+                            // throw new ModuleException(CKRET.MODULE_NAME,"Error in
+                            // annotation semantics of filter " +
+                            // filter.getQualifiedName());
+                            // }
+                        }
 
-						// TODO: this overrides a previously found scenario
-						// for the same filter
-						// which should obviously never happen...
-						// this.metaSemantics.put(filter, metaOperations);
-					}
-				}
+                        // TODO: this overrides a previously found scenario
+                        // for the same filter
+                        // which should obviously never happen...
+                        // this.metaSemantics.put(filter, metaOperations);
+                    }
+                }
 			}
 		}
 

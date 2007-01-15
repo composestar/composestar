@@ -85,15 +85,13 @@ public class INCREReporter
 		{
 			ArrayList list = (ArrayList) timings.get(module);
 			Iterator timerItr = list.iterator();
-			while (timerItr.hasNext())
-			{
-				INCRETimer timer = (INCRETimer) timerItr.next();
-				if (timer.getType() == type)
-				{
-					total += timer.getElapsed();
-				}
-			}
-		}
+            for (Object aList : list) {
+                INCRETimer timer = (INCRETimer) aList;
+                if (timer.getType() == type) {
+                    total += timer.getElapsed();
+                }
+            }
+        }
 
 		return total;
 	}
@@ -139,57 +137,54 @@ public class INCREReporter
 	{
 		// append all timings
 		Iterator modules = timings.keySet().iterator();
-		while (modules.hasNext())
-		{
-			String modulename = (String) modules.next();
-			ArrayList moduletimings = (ArrayList) timings.get(modulename);
+        for (Object o : timings.keySet()) {
+            String modulename = (String) o;
+            ArrayList moduletimings = (ArrayList) timings.get(modulename);
 
-			// append header
-			buffer.append("<tr class=startmodulerow><td><b>");
-			buffer.append("PROCESSES OF ").append(modulename);
-			buffer.append("</b></td><td align=center><b>TYPE");
-			buffer.append("</b></td><td align=center><b>ELAPSED");
-			buffer.append("</b></td></tr>");
+            // append header
+            buffer.append("<tr class=startmodulerow><td><b>");
+            buffer.append("PROCESSES OF ").append(modulename);
+            buffer.append("</b></td><td align=center><b>TYPE");
+            buffer.append("</b></td><td align=center><b>ELAPSED");
+            buffer.append("</b></td></tr>");
 
-			// append timings of processes
-			Iterator timerItr = moduletimings.iterator();
-			while (timerItr.hasNext())
-			{
-				INCRETimer timer = (INCRETimer) timerItr.next();
+            // append timings of processes
+            Iterator timerItr = moduletimings.iterator();
+            for (Object moduletiming : moduletimings) {
+                INCRETimer timer = (INCRETimer) moduletiming;
 
-				if (timer.getType() != INCRETimer.TYPE_ALL)
-				{
-					buffer.append("<tr class=white><td>");
-					buffer.append(timer.getDescription());
-					buffer.append("</td><td>");
-					buffer.append(timer.strType());
-					buffer.append("</td><td>");
-					buffer.append(timer.getElapsed());
-					buffer.append(" ms</td></tr>");
-				}
-			}
+                if (timer.getType() != INCRETimer.TYPE_ALL) {
+                    buffer.append("<tr class=white><td>");
+                    buffer.append(timer.getDescription());
+                    buffer.append("</td><td>");
+                    buffer.append(timer.strType());
+                    buffer.append("</td><td>");
+                    buffer.append(timer.getElapsed());
+                    buffer.append(" ms</td></tr>");
+                }
+            }
 
-			// append summary of module
-			long incremental = this.getTotalForModule(modulename, INCRETimer.TYPE_INCREMENTAL);
-			long overhead = this.getTotalForModule(modulename, INCRETimer.TYPE_OVERHEAD);
-			long elapsed = this.getTotalForModule(modulename, INCRETimer.TYPE_ALL);
-			long normal = elapsed - incremental - overhead;
+            // append summary of module
+            long incremental = this.getTotalForModule(modulename, INCRETimer.TYPE_INCREMENTAL);
+            long overhead = this.getTotalForModule(modulename, INCRETimer.TYPE_OVERHEAD);
+            long elapsed = this.getTotalForModule(modulename, INCRETimer.TYPE_ALL);
+            long normal = elapsed - incremental - overhead;
 
-			buffer.append("<tr class=endmodulerow><td align=right>Total Overhead</td><td></td><td>");
-			buffer.append("").append(overhead);
-			buffer.append("	ms</td></tr>");
-			buffer.append("<tr class=endmodulerow><td align=right>Total Normal</td><td></td><td>");
-			buffer.append("").append(normal);
-			buffer.append("	ms</td></tr>");
-			buffer.append("<tr class=endmodulerow><td align=right>Total Incremental</td><td></td><td>");
-			buffer.append("").append(incremental);
-			buffer.append("	ms</td></tr>");
-			buffer.append("<tr class=endmodulerow><td align=right>Total Elapsed</td><td></td><td>");
-			buffer.append("").append(elapsed);
-			buffer.append("	ms</td></tr>");
-		}
+            buffer.append("<tr class=endmodulerow><td align=right>Total Overhead</td><td></td><td>");
+            buffer.append("").append(overhead);
+            buffer.append("	ms</td></tr>");
+            buffer.append("<tr class=endmodulerow><td align=right>Total Normal</td><td></td><td>");
+            buffer.append("").append(normal);
+            buffer.append("	ms</td></tr>");
+            buffer.append("<tr class=endmodulerow><td align=right>Total Incremental</td><td></td><td>");
+            buffer.append("").append(incremental);
+            buffer.append("	ms</td></tr>");
+            buffer.append("<tr class=endmodulerow><td align=right>Total Elapsed</td><td></td><td>");
+            buffer.append("").append(elapsed);
+            buffer.append("	ms</td></tr>");
+        }
 
-		// append end of report
+        // append end of report
 		buffer.append("</table></body></html>");
 
 		try

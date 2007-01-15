@@ -75,16 +75,14 @@ public class CDirectory extends LangNamespace
 	{
 		CDirectory subDir;
 		Iterator i = subDirs.iterator();
-		while (i.hasNext())
-		{
-			subDir = (CDirectory) i.next();
-			if (subDir.getDirName().equals(dirName))
-			{
-				return subDir;
-			}
+        for (Object subDir1 : subDirs) {
+            subDir = (CDirectory) subDir1;
+            if (subDir.getDirName().equals(dirName)) {
+                return subDir;
+            }
 
-		}
-		return null;
+        }
+        return null;
 	}
 
 	public void addFile(CFile file)
@@ -97,16 +95,14 @@ public class CDirectory extends LangNamespace
 	{
 		CFile file;
 		Iterator i = files.iterator();
-		while (i.hasNext())
-		{
-			file = (CFile) i.next();
-			if (file.getFullName().equals(fileName))
-			{
-				return file;
-			}
+        for (Object file1 : files) {
+            file = (CFile) file1;
+            if (file.getFullName().equals(fileName)) {
+                return file;
+            }
 
-		}
-		return null;
+        }
+        return null;
 	}
 
 	public ArrayList getAllSubDirs()
@@ -117,13 +113,12 @@ public class CDirectory extends LangNamespace
 		if (subDirs != null)
 		{
 			Iterator subdirIterator = subDirs.iterator();
-			while (subdirIterator.hasNext())
-			{
-				subdir = (CDirectory) subdirIterator.next();
-				allSubDirs.add(subdir);
-				allSubDirs.addAll(subdir.getAllSubDirs());
-			}
-		}
+            for (Object subDir : subDirs) {
+                subdir = (CDirectory) subDir;
+                allSubDirs.add(subdir);
+                allSubDirs.addAll(subdir.getAllSubDirs());
+            }
+        }
 		return allSubDirs;
 	}
 
@@ -131,27 +126,23 @@ public class CDirectory extends LangNamespace
 	{
 		ArrayList allFilesInSubDirs = null;
 		Iterator sdIterator = getAllSubDirs().iterator();
-		while (sdIterator.hasNext())
-		{
-			Iterator filesOfSDIterator = ((CDirectory) sdIterator.next()).getFiles().iterator();
-			while (filesOfSDIterator.hasNext())
-			{
-				allFilesInSubDirs.add(filesOfSDIterator.next());
-			}
-		}
-		return allFilesInSubDirs;
+        for (Object o : getAllSubDirs()) {
+            Iterator filesOfSDIterator = ((CDirectory) o).getFiles().iterator();
+            for (Object o1 : ((CDirectory) o).getFiles()) {
+                allFilesInSubDirs.add(o1);
+            }
+        }
+        return allFilesInSubDirs;
 	}
 
 	public ArrayList getAllFunctions()
 	{
 		ArrayList allFunctions = new ArrayList();
-		Iterator fileIterator = files.iterator();
-		while (fileIterator.hasNext())
-		{
-			allFunctions.addAll(((CFile) fileIterator.next()).getMethods());
-		}
-		fileIterator = getAllFiles().iterator();
-		while (fileIterator.hasNext())
+        for (Object file : files) {
+            allFunctions.addAll(((CFile) file).getMethods());
+        }
+        Iterator fileIterator = getAllFiles().iterator();
+        while (fileIterator.hasNext())
 		{
 			allFunctions.addAll(((CFile) fileIterator.next()).getMethods());
 		}
@@ -182,12 +173,10 @@ public class CDirectory extends LangNamespace
 	{
 		HashSet out = new HashSet();
 		Iterator iter = in.iterator();
-		while (iter.hasNext())
-		{
-			Object obj = iter.next();
-			out.add(obj);
-		}
-		return out;
+        for (Object obj : in) {
+            out.add(obj);
+        }
+        return out;
 	}
 
 	public UnitResult getUnitRelation(String argumentName)

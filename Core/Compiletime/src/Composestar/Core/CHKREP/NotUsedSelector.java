@@ -65,16 +65,14 @@ public class NotUsedSelector implements BaseChecker
 			{
 				// a little (style) error in the repository?
 				Iterator annotbinding = si.getAnnotationBindings().iterator();
-				while (annotbinding.hasNext())
-				{
-					AnnotationBinding ab = (AnnotationBinding) annotbinding.next();
-					SelectorReference sf = ab.getSelector();
-					if (sf.getName().equals(selDef.getName()))
-					{
-						isUsed = true;
-					}
-				}
-			}
+                for (Object o : si.getAnnotationBindings()) {
+                    AnnotationBinding ab = (AnnotationBinding) o;
+                    SelectorReference sf = ab.getSelector();
+                    if (sf.getName().equals(selDef.getName())) {
+                        isUsed = true;
+                    }
+                }
+            }
 
 			if (!isUsed)
 			{

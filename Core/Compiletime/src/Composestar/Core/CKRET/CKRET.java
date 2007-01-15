@@ -178,43 +178,37 @@ public class CKRET implements CTCommonModule
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Semantic conflict(s) detected on concern "
 								+ concern.getQualifiedName(), reportFile, 0);
 					}
-					for (Iterator fmoit = fmolist.iterator(); fmoit.hasNext();)
-					{
-						LinkedList order = (LinkedList) fmoit.next();
-						FilterModuleOrder fmo = new FilterModuleOrder(order);
+                    for (Object aFmolist1 : fmolist) {
+                        LinkedList order = (LinkedList) aFmolist1;
+                        FilterModuleOrder fmo = new FilterModuleOrder(order);
 
-						if (!fmo.equals(singleOrder))
-						{
-							ca.checkOrder(fmo, false);
-						}
-					}
-					break;
+                        if (!fmo.equals(singleOrder)) {
+                            ca.checkOrder(fmo, false);
+                        }
+                    }
+                    break;
 
 				case PROGRESSIVE:
 					boolean foundGoodOrder = ca.checkOrder(singleOrder, true);
 
-					for (Iterator fmoit = fmolist.iterator(); fmoit.hasNext();)
-					{
-						LinkedList order = (LinkedList) fmoit.next();
-						FilterModuleOrder fmo = new FilterModuleOrder(order);
-						if (!fmo.equals(singleOrder))
-						{
-							if (ca.checkOrder(fmo, !foundGoodOrder))
-							{
-								if (!foundGoodOrder)
-								{
-									// so this is the first good order found...
-									foundGoodOrder = true;
-									concern.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmo);
-									Debug.out(Debug.MODE_INFORMATION, MODULE_NAME,
-											"Selected filtermodule order for concern " + concern.getQualifiedName()
-													+ ':');
-									Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, '\t' + fmo.toString());
-								}
-							}
-						}
-					}
-					if (!foundGoodOrder)
+                    for (Object aFmolist : fmolist) {
+                        LinkedList order = (LinkedList) aFmolist;
+                        FilterModuleOrder fmo = new FilterModuleOrder(order);
+                        if (!fmo.equals(singleOrder)) {
+                            if (ca.checkOrder(fmo, !foundGoodOrder)) {
+                                if (!foundGoodOrder) {
+                                    // so this is the first good order found...
+                                    foundGoodOrder = true;
+                                    concern.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmo);
+                                    Debug.out(Debug.MODE_INFORMATION, MODULE_NAME,
+                                            "Selected filtermodule order for concern " + concern.getQualifiedName()
+                                                    + ':');
+                                    Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, '\t' + fmo.toString());
+                                }
+                            }
+                        }
+                    }
+                    if (!foundGoodOrder)
 					{
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME,
 								"Unable to find a filtermodule order without conflicts for concern:");
@@ -250,12 +244,11 @@ public class CKRET implements CTCommonModule
 			Debug.out(Debug.MODE_INFORMATION, "INCRE", "Skipping CKRET run for " + oldconcern.getQualifiedName());
 			getReporter().openConcern(oldconcern);
 			Iterator repItr = reports.iterator();
-			while (repItr.hasNext())
-			{
-				CKRETReport report = (CKRETReport) repItr.next();
-				getReporter().reportOrder(report.getOrder(), report.getAnalysis(), report.getSelected(), true);
-			}
-			getReporter().closeConcern();
+            for (Object report1 : reports) {
+                CKRETReport report = (CKRETReport) report1;
+                getReporter().reportOrder(report.getOrder(), report.getAnalysis(), report.getSelected(), true);
+            }
+            getReporter().closeConcern();
 			concern.addDynObject("CKRETReports", reports);
 		}
 
@@ -290,21 +283,18 @@ public class CKRET implements CTCommonModule
 			}
 			// iterate over methods
 			Iterator methods = type.getMethods().iterator();
-			while (methods.hasNext())
-			{
-				MethodInfo method = (MethodInfo) methods.next();
-				// iterate over annotations
-				Iterator annotations = method.getAnnotations().iterator();
-				while (annotations.hasNext())
-				{
-					Annotation anno = (Annotation) annotations.next();
-					if (anno.getType().getUnitName().endsWith("Semantics"))
-					{
-						annos.add(anno);
-					}
-				}
-			}
-		}
+            for (Object o : type.getMethods()) {
+                MethodInfo method = (MethodInfo) o;
+                // iterate over annotations
+                Iterator annotations = method.getAnnotations().iterator();
+                for (Object o1 : method.getAnnotations()) {
+                    Annotation anno = (Annotation) o1;
+                    if (anno.getType().getUnitName().endsWith("Semantics")) {
+                        annos.add(anno);
+                    }
+                }
+            }
+        }
 
 		return annos;
 	}

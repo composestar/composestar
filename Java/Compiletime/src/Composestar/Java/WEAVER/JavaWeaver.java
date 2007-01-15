@@ -67,25 +67,23 @@ public class JavaWeaver implements WEAVER
 		Configuration config = Configuration.instance();
 		List projects = config.getProjects().getProjects();
 		Iterator projIt = projects.iterator();
-		while (projIt.hasNext())
-		{
-			c = new ClassWeaver();
+        for (Object project : projects) {
+            c = new ClassWeaver();
 
-			// add classpaths
-			p = (Project) projIt.next();
-			deps = (ArrayList) p.getDependencies();
-			depsIt = deps.iterator();
-			while (depsIt.hasNext())
-			{
-				dependency = ((Dependency) depsIt.next()).getFileName();
-				c.addClasspath(dependency);
-			}
-			c.addClasspath(p.getBasePath() + "obj/");
+            // add classpaths
+            p = (Project) project;
+            deps = (ArrayList) p.getDependencies();
+            depsIt = deps.iterator();
+            while (depsIt.hasNext()) {
+                dependency = ((Dependency) depsIt.next()).getFileName();
+                c.addClasspath(dependency);
+            }
+            c.addClasspath(p.getBasePath() + "obj/");
 
-			// weave
-			c.weave(p);
-		}
-	}
+            // weave
+            c.weave(p);
+        }
+    }
 
 	public void createHookDictionary(CommonResources resources)
 	{
@@ -146,24 +144,21 @@ public class JavaWeaver implements WEAVER
 			{
 				FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject("SingleOrder");
 				Iterator iterFilterModules = fmo.orderAsList().iterator();
-				while (iterFilterModules.hasNext())
-				{
-					String fmn = (String) iterFilterModules.next();
-					FilterModule fm = (FilterModule) ds.getObjectByID(fmn);
-					Iterator iterInternals = fm.getInternalIterator();
-					while (iterInternals.hasNext())
-					{
-						Internal internal = (Internal) iterInternals.next();
-						String internalQN = internal.getType().getQualifiedName();
-						castConcern = true;
-						if (!qns.contains(internalQN))
-						{
-							qns.add(internalQN);
-							hd.addCastInterception(internalQN);
-						}
-					}
-				}
-			}
+                for (Object o : fmo.orderAsList()) {
+                    String fmn = (String) o;
+                    FilterModule fm = (FilterModule) ds.getObjectByID(fmn);
+                    Iterator iterInternals = fm.getInternalIterator();
+                    while (iterInternals.hasNext()) {
+                        Internal internal = (Internal) iterInternals.next();
+                        String internalQN = internal.getType().getQualifiedName();
+                        castConcern = true;
+                        if (!qns.contains(internalQN)) {
+                            qns.add(internalQN);
+                            hd.addCastInterception(internalQN);
+                        }
+                    }
+                }
+            }
 			if (castConcern && !qns.contains(c.getQualifiedName()))
 			{
 				qns.add(c.getQualifiedName());

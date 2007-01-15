@@ -249,7 +249,7 @@ public class GrooveASTBuilder
 		// create reject and accept nodes:
 		AnnotatedNode rejectNode = new AnnotatedNode();
 		rejectNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, filter);
-		rejectNode.addAnnotation(ACTION_NODE_ANNOTATION, new Integer(REJECT_ACTION));
+		rejectNode.addAnnotation(ACTION_NODE_ANNOTATION, REJECT_ACTION);
 		graph.addNode(rejectNode);
 		edge = new AnnotatedEdge(filterNode, REJECT_EDGE, rejectNode);
 		graph.addEdge(edge);
@@ -258,7 +258,7 @@ public class GrooveASTBuilder
 
 		AnnotatedNode acceptNode = new AnnotatedNode();
 		acceptNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, filter);
-		acceptNode.addAnnotation(ACTION_NODE_ANNOTATION, new Integer(ACCEPT_ACTION));
+		acceptNode.addAnnotation(ACTION_NODE_ANNOTATION, ACCEPT_ACTION);
 		graph.addNode(acceptNode);
 		edge = new AnnotatedEdge(filterNode, ACCEPT_EDGE, acceptNode);
 		graph.addEdge(edge);

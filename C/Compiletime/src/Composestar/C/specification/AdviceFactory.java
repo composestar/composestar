@@ -54,7 +54,7 @@ public class AdviceFactory
 		int priority = 0;
 		try
 		{
-			priority = Integer.valueOf(element.getAttribute("priority")).intValue();
+			priority = Integer.valueOf(element.getAttribute("priority"));
 		}
 		catch (Exception e)
 		{

@@ -304,7 +304,7 @@ public class WrappedAST
 		Hashtable lineLists = infoChannel.getHashtableLine();
 		for (int i = 0; i <= infoChannel.getMaxTokenNumber(); i++)
 		{
-			Integer inti = new Integer(i);
+			Integer inti = i;
 
 			if (lineLists.containsKey(inti))
 			{
@@ -375,7 +375,7 @@ public class WrappedAST
 			Integer n = (Integer) node.getAttribute(TNode.TOKEN_NUMBER);
 			if (n != null)
 			{
-				int number = n.intValue();
+				int number = n;
 				if (number > result)
 				{
 					result = number;
@@ -536,14 +536,14 @@ public class WrappedAST
 
 		for (int i = 0; i <= infoChannel.getMaxTokenNumber(); i++)
 		{
-			Integer inti = new Integer(i);
+			Integer inti = i;
 			if (lineLists.containsKey(inti))
 			{
 				Vector tokenLineVector = (Vector) lineLists.get(inti);
 				if (tokenLineVector != null && i > tokenNumber)
 				{
 					newHashtable.remove(new Integer(i));
-					newHashtable.put(new Integer(i + iNumber), tokenLineVector);
+					newHashtable.put(i + iNumber, tokenLineVector);
 				}
 			}
 		}
@@ -567,7 +567,7 @@ public class WrappedAST
 			// from 1
 			for (int i = 1; i <= infoChannel.getMaxTokenNumber(); i++)
 			{
-				Integer inti = new Integer(i);
+				Integer inti = i;
 				if (lineLists.containsKey(inti))
 				{
 					Vector tokenLineVector = (Vector) lineLists.get(inti);
@@ -575,7 +575,7 @@ public class WrappedAST
 					{
 						newHashtable.remove(new Integer(i));
 						int newNumber = findNewNumberForInfoChannel(i);
-						newHashtable.put(new Integer(newNumber), tokenLineVector);
+						newHashtable.put(newNumber, tokenLineVector);
 					}
 				}
 			}
@@ -754,7 +754,7 @@ public class WrappedAST
 			Integer n = (Integer) node.getAttribute(TNode.TOKEN_NUMBER);
 			if (n != null)
 			{
-				int number = n.intValue();
+				int number = n;
 				if (number > result)
 				{
 					result = number;
@@ -776,7 +776,7 @@ public class WrappedAST
 			Integer n = (Integer) node.getAttribute(TNode.TOKEN_NUMBER);
 			if (n != null)
 			{
-				int number = n.intValue();
+				int number = n;
 				if (number > result)
 				{
 					result = number;

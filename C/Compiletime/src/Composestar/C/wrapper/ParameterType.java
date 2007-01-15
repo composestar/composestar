@@ -131,12 +131,10 @@ public class ParameterType
 
 	public void testParameterType()
 	{
-		for (int i = 0; i < type.length; i++)
-		{
-			int i1 = type[i];
-			System.out.print(" " + GeneralUtils.getTypeForID(i1));
-		}
-		if (defined)
+        for (int i1 : type) {
+            System.out.print(" " + GeneralUtils.getTypeForID(i1));
+        }
+        if (defined)
 		{
 			System.out.print(" " + additionaltypeValue);
 		}
@@ -163,15 +161,13 @@ public class ParameterType
 	public String getTypeName()
 	{
 		String tmp = "";
-		for (int i = 0; i < type.length; i++)
-		{
-			if (type[i] != GnuCTokenTypes.NTypedefName)
-			{
-				tmp += GeneralUtils.getTypeForID(type[i]);
-			}
-		}
+        for (int aType : type) {
+            if (aType != GnuCTokenTypes.NTypedefName) {
+                tmp += GeneralUtils.getTypeForID(aType);
+            }
+        }
 
-		if (defined)
+        if (defined)
 		{
 			tmp += " " + additionaltypeValue;
 		}

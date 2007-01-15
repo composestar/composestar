@@ -84,9 +84,8 @@ public class JavaMethodInfo extends MethodInfo
 	{
 		HashSet result = new HashSet();
 		Iterator iter = c.iterator();
-		while (iter.hasNext())
-			result.add(iter.next());
-		return result;
+        for (Object aC : c) result.add(aC);
+        return result;
 	}
 
 	/**

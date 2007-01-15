@@ -96,13 +96,12 @@ public class MessageGenerator
 			return lst;
 		}
 		Iterator it = type.getMethods().iterator();
-		while (it.hasNext())
-		{
-			MethodInfo mi = (MethodInfo) it.next();
-			Message msg = getMessageFor(concernNode, mi.getName());
-			lst.add(msg);
-		}
-		return lst;
+        for (Object o : type.getMethods()) {
+            MethodInfo mi = (MethodInfo) o;
+            Message msg = getMessageFor(concernNode, mi.getName());
+            lst.add(msg);
+        }
+        return lst;
 	}
 
 	/**

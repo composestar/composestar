@@ -99,63 +99,63 @@ public class DotNETMethodInfoHandler extends DefaultHandler implements ContentHa
 		// <!ELEMENT IsAbstract (#PCDATA)>
 		else if ("IsAbstract".equals(rawName))
 		{
-			methodInfo.setIsAbstract(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsAbstract(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsAssembly (#PCDATA)>
 		else if ("IsAssembly".equals(rawName))
 		{
-			methodInfo.setIsAssembly(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsAssembly(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsConstructor (#PCDATA)>
 		else if ("IsConstructor".equals(rawName))
 		{
-			methodInfo.setIsConstructor(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsConstructor(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsFamily (#PCDATA)>
 		else if ("IsFamily".equals(rawName))
 		{
-			methodInfo.setIsFamily(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsFamily(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsFamilyAndAssembly (#PCDATA)>
 		else if ("IsFamilyAndAssembly".equals(rawName))
 		{
-			methodInfo.setIsFamilyAndAssembly(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsFamilyAndAssembly(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsFamilyOrAssembly (#PCDATA)>
 		else if ("IsFamilyOrAssembly".equals(rawName))
 		{
-			methodInfo.setIsFamilyOrAssembly(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsFamilyOrAssembly(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsFinal (#PCDATA)>
 		else if ("IsFinal".equals(rawName))
 		{
-			methodInfo.setIsFinal(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsFinal(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsHideBySig (#PCDATA)>
 		else if ("IsHideBySig".equals(rawName))
 		{
-			methodInfo.setIsHideBySig(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsHideBySig(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsPrivate (#PCDATA)>
 		else if ("IsPrivate".equals(rawName))
 		{
 			// TODO: Is*P*rivate
-			methodInfo.setIsprivate(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsprivate(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsPublic (#PCDATA)>
 		else if ("IsPublic".equals(rawName))
 		{
-			methodInfo.setIsPublic(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsPublic(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsStatic (#PCDATA)>
 		else if ("IsStatic".equals(rawName))
 		{
-			methodInfo.setIsStatic(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsStatic(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsVirtual (#PCDATA)>
 		else if ("IsVirtual".equals(rawName))
 		{
-			methodInfo.setIsVirtual(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsVirtual(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT HashCode (#PCDATA)>
 		else if ("HashCode".equals(rawName))
@@ -169,7 +169,7 @@ public class DotNETMethodInfoHandler extends DefaultHandler implements ContentHa
 		}
 		else if ("IsDeclaredHere".equals(rawName))
 		{
-			methodInfo.setIsDeclaredHere(Boolean.valueOf(lastCharData).booleanValue());
+			methodInfo.setIsDeclaredHere(Boolean.valueOf(lastCharData));
 		}
 		else if ("MethodAttributes".equals(rawName))
 		{

@@ -121,52 +121,48 @@ public class CWrapper implements CTCommonModule
 		// InputFileNameFilter(), resources);
 		cfiles = getAllFilesFromDirectory(new File(filename), true, new InputFileNameFilter(), null);
 
-		for (int i = 0; i < cfiles.size(); i++)
-		{
-			this.fileASTMap.put(cfiles.get(i), new Object());
-			// this.fileASTMap.put(((String)cfiles.get(i)).substring(((String)cfiles.get(i)).lastIndexOf("\\"),((String)cfiles.get(i)).indexOf(".ccc")));
-		}
+        for (Object cfile : cfiles) {
+            this.fileASTMap.put(cfile, new Object());
+            // this.fileASTMap.put(((String)cfiles.get(i)).substring(((String)cfiles.get(i)).lastIndexOf("\\"),((String)cfiles.get(i)).indexOf(".ccc")));
+        }
 
-		Iterator it = this.fileASTMap.keySet().iterator();
-		while (it.hasNext())
-		{
-			filename = (String) it.next();
-			String cfName = filename.substring(filename.lastIndexOf("\\") + 1, filename.indexOf(".ccc"));
-			CFile cf = (CFile) absolutePaths.get(cfName);
-			// filename
-			// =((File)absolutePaths.get(filename)).getAbsolutePath();//(String)cfiles.get(i);
-			// //
+        Iterator it = this.fileASTMap.keySet().iterator();
+        for (Object o : this.fileASTMap.keySet()) {
+            filename = (String) o;
+            String cfName = filename.substring(filename.lastIndexOf("\\") + 1, filename.indexOf(".ccc"));
+            CFile cf = (CFile) absolutePaths.get(cfName);
+            // filename
+            // =((File)absolutePaths.get(filename)).getAbsolutePath();//(String)cfiles.get(i);
+            // //
 
-			// filename = (String)it.next();//(String)cfiles.get(i); //
-			// System.out.println("Handling file"+ filename);
+            // filename = (String)it.next();//(String)cfiles.get(i); //
+            // System.out.println("Handling file"+ filename);
 
-			try
-			{
-				/***************************************************************
-				 * ****************************8 object name is the filename
-				 * without the extension and without the tempfolder-path,
-				 * subdirs from the tempfolder path are changed into
-				 * subdir.object*
-				 **************************************************************/
-				retrieveAST wrapper = new retrieveAST();
+            try {
+                /***************************************************************
+                 * ****************************8 object name is the filename
+                 * without the extension and without the tempfolder-path,
+                 * subdirs from the tempfolder path are changed into
+                 * subdir.object*
+                 **************************************************************/
+                retrieveAST wrapper = new retrieveAST();
 
-				setObjectName(filename, resources);
-				setNameSpace(filename, resources);
-				wrapper.createWrappedAST(filename, objectname, namespace, usedTypes, cf, this);
-				this.fileASTMap.put(filename, wrapper);
-				FileMap.instance().addFileAST(filename, wrapper);// createWrappedAST(filename,
-																	// objectname,
-																	// namespace,
-																	// out,
-																	// usedTypes,
-																	// this));
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		/** Write annotations to attributes.xml* */
+                setObjectName(filename, resources);
+                setNameSpace(filename, resources);
+                wrapper.createWrappedAST(filename, objectname, namespace, usedTypes, cf, this);
+                this.fileASTMap.put(filename, wrapper);
+                FileMap.instance().addFileAST(filename, wrapper);// createWrappedAST(filename,
+                // objectname,
+                // namespace,
+                // out,
+                // usedTypes,
+                // this));
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        /** Write annotations to attributes.xml* */
 		AttributeWriter.instance().saveToXML(tempFolder + "attributes.xml");
 
 		// Iterator i = usedTypes.values().iterator();
@@ -192,19 +188,15 @@ public class CWrapper implements CTCommonModule
 					cdirectory.addSubDir(cdir);
 				}
 			}
-			for (int i = 0; i < children.length; i++)
-			{
-				File f = new File(dir, children[i]);
-				if (!recurse && f.isFile())
-				{
-					list.add(f.getAbsolutePath());
-				}
-				else if (recurse)
-				{
-					list.addAll(getAllFilesFromDirectory(f, recurse, fnf, cdir));
-				}
-			}
-		}
+            for (String aChildren : children) {
+                File f = new File(dir, aChildren);
+                if (!recurse && f.isFile()) {
+                    list.add(f.getAbsolutePath());
+                } else if (recurse) {
+                    list.addAll(getAllFilesFromDirectory(f, recurse, fnf, cdir));
+                }
+            }
+        }
 		else
 		{
 			CFile cf = new CFile();
@@ -244,15 +236,13 @@ public class CWrapper implements CTCommonModule
 
 				firstNameSpace = true;
 				String[] children = dir.list(fnf);
-				for (int i = 0; i < children.length; i++)
-				{
-					File f = new File(dir, children[i]);
-					if (recurse)
-					{
-						createDirectoryStructure(f, recurse, fnf, resources);
-					}
-				}
-			}
+                for (String aChildren : children) {
+                    File f = new File(dir, aChildren);
+                    if (recurse) {
+                        createDirectoryStructure(f, recurse, fnf, resources);
+                    }
+                }
+            }
 			else
 			// is in directory:namespace and this directory contains a .c file
 			{

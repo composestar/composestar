@@ -52,12 +52,11 @@ public class CSymbolTable
 	public void printSymbolTable()
 	{
 		Iterator it = symTable.keySet().iterator();
-		while (it.hasNext())
-		{
-			String str = (String) it.next();
-			System.out.println(" +++ " + str + " \t\t " + symTable.get(str));
-		}
-		System.out.println("------------------------");
+        for (Object o : symTable.keySet()) {
+            String str = (String) o;
+            System.out.println(" +++ " + str + " \t\t " + symTable.get(str));
+        }
+        System.out.println("------------------------");
 		// Enumeration symenum = symTable.keys();
 		// while (enum.hasMoreElements())
 		// {

@@ -131,62 +131,62 @@ public class DotNETTypeHandler extends DefaultHandler implements ContentHandler
 		// <!ELEMENT IsAbstract (#PCDATA)>
 		else if ("IsAbstract".equals(rawName))
 		{
-			type.setIsAbstract(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsAbstract(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsAnsiClass (#PCDATA)>
 		else if ("IsAnsiClass".equals(rawName))
 		{
-			type.setIsAnsiClass(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsAnsiClass(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsArray (#PCDATA)>
 		else if ("IsArray".equals(rawName))
 		{
-			type.setIsArray(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsArray(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsAutoClass (#PCDATA)>
 		else if ("IsAutoClass".equals(rawName))
 		{
-			type.setIsAutoClass(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsAutoClass(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsAutoLayout (#PCDATA)>
 		else if ("IsAutoLayout".equals(rawName))
 		{
-			type.setIsAutoLayout(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsAutoLayout(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsByRef (#PCDATA)>
 		else if ("IsByRef".equals(rawName))
 		{
-			type.setIsByRef(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsByRef(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsClass (#PCDATA)>
 		else if ("IsClass".equals(rawName))
 		{
-			type.setIsClass(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsClass(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsContextful (#PCDATA)>
 		else if ("IsContextful".equals(rawName))
 		{
-			type.setIsContextful(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsContextful(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsEnum (#PCDATA)>
 		else if ("IsEnum".equals(rawName))
 		{
-			type.setIsEnum(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsEnum(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsImport (#PCDATA)>
 		else if ("IsImport".equals(rawName))
 		{
-			type.setIsImport(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsImport(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsInterface (#PCDATA)>
 		else if ("IsInterface".equals(rawName))
 		{
-			type.setIsInterface(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsInterface(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsMarshalByRef (#PCDATA)>
 		else if ("IsMarshalByRef".equals(rawName))
 		{
-			type.setIsMarshalByRef(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsMarshalByRef(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsNestedFamANDAssem (#PCDATA)>
 		else if ("IsNestedFamANDAssem".equals(rawName))
@@ -198,57 +198,57 @@ public class DotNETTypeHandler extends DefaultHandler implements ContentHandler
 		// <!ELEMENT IsNestedAssembly (#PCDATA)>
 		else if ("IsNestedAssembly".equals(rawName))
 		{
-			type.setIsNestedAssembly(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsNestedAssembly(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsNestedFamORAssem (#PCDATA)>
 		else if ("IsNestedFamORAssem".equals(rawName))
 		{
-			type.setIsNestedFamOrAssem(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsNestedFamOrAssem(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsNestedPrivate (#PCDATA)>
 		else if ("IsNestedPrivate".equals(rawName))
 		{
-			type.setIsNestedPrivate(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsNestedPrivate(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsNestedPublic (#PCDATA)>
 		else if ("IsNestedPublic".equals(rawName))
 		{
-			type.setIsNestedPublic(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsNestedPublic(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsNotPublic (#PCDATA)>
 		else if ("IsNotPublic".equals(rawName))
 		{
-			type.setIsNotPublic(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsNotPublic(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsPointer (#PCDATA)>
 		else if ("IsPointer".equals(rawName))
 		{
-			type.setIsPointer(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsPointer(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsPrimitive (#PCDATA)>
 		else if ("IsPrimitive".equals(rawName))
 		{
-			type.setIsPrimitive(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsPrimitive(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsPublic (#PCDATA)>
 		else if ("IsPublic".equals(rawName))
 		{
-			type.setIsPublic(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsPublic(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsSealed (#PCDATA)>
 		else if ("IsSealed".equals(rawName))
 		{
-			type.setIsSealed(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsSealed(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsSerializable (#PCDATA)>
 		else if ("IsSerializable".equals(rawName))
 		{
-			type.setIsSerializable(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsSerializable(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsValueType (#PCDATA)>
 		else if ("IsValueType".equals(rawName))
 		{
-			type.setIsValueType(Boolean.valueOf(lastCharData).booleanValue());
+			type.setIsValueType(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT Module (#PCDATA)>
 		else if ("Module".equals(rawName))

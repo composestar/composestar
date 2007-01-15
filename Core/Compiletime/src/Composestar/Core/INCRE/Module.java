@@ -123,30 +123,26 @@ public class Module implements Serializable
 	public void addComparableObjects(HashMap map)
 	{
 		Iterator entries = map.entrySet().iterator();
-		while (entries.hasNext())
-		{
-			Entry entry = (Entry) entries.next();
-			Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
-			while (objItr.hasNext())
-			{
-				addComparableObject((String) entry.getKey(), objItr.next());
-			}
-		}
-	}
+        for (Object o : map.entrySet()) {
+            Entry entry = (Entry) o;
+            Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
+            for (Object o1 : ((HashMap) entry.getValue()).values()) {
+                addComparableObject((String) entry.getKey(), o1);
+            }
+        }
+    }
 
 	public void removeComparableObjects(HashMap map)
 	{
 		Iterator entries = map.entrySet().iterator();
-		while (entries.hasNext())
-		{
-			Entry entry = (Entry) entries.next();
-			Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
-			while (objItr.hasNext())
-			{
-				removeComparableObject((String) entry.getKey(), objItr.next());
-			}
-		}
-	}
+        for (Object o : map.entrySet()) {
+            Entry entry = (Entry) o;
+            Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
+            for (Object o1 : ((HashMap) entry.getValue()).values()) {
+                removeComparableObject((String) entry.getKey(), o1);
+            }
+        }
+    }
 
 	public boolean hasComparableObjects(String key)
 	{

@@ -31,14 +31,13 @@ public class JavaBACO extends BACO
 	{
 		List weavedClasses = (List)DataStore.instance().getObjectByID("WeavedClasses");
 		Iterator it = weavedClasses.iterator();
-		while (it.hasNext())
-		{
-			String clazz = (String)it.next();
+        for (Object weavedClass : weavedClasses) {
+            String clazz = (String) weavedClass;
 
-			Debug.out(Debug.MODE_DEBUG,"BACO","Adding weaved class: '" + clazz + "'");
-			filesToCopy.add(FileUtils.unquote(clazz));
-		}
-	}
+            Debug.out(Debug.MODE_DEBUG, "BACO", "Adding weaved class: '" + clazz + "'");
+            filesToCopy.add(FileUtils.unquote(clazz));
+        }
+    }
 	
 	protected void addRequiredFiles(Set filesToCopy)
 	{

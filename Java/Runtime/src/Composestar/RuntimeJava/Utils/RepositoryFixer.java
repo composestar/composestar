@@ -58,40 +58,30 @@ public class RepositoryFixer
 		Field[] fields = o.getClass().getFields();
 		Object child;
 
-		for (int i = 0; i < fields.length; i++)
-		{
-			child = fields[i].get(o);
-			if (child == null)
-			{
-			}
-			else if (child instanceof RepositoryEntity)
-			{
-				Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing '" + fields[i].getName() + "' of type '"
-						+ child.getClass().getName() + "'.");
+        for (Field field : fields) {
+            child = field.get(o);
+            if (child == null) {
+            } else if (child instanceof RepositoryEntity) {
+                Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing '" + field.getName() + "' of type '"
+                        + child.getClass().getName() + "'.");
 
-				Object temp = fixEntity((RepositoryEntity) child, ds);
-				fields[i].set(o, temp);
-			}
-			else if (child instanceof Vector)
-			{
-				Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing '" + fields[i].getName() + "' of type '"
-						+ child.getClass().getName() + "'.");
-				fields[i].set(o, fixVector((Vector) child, ds));
-			}
-			else if (child instanceof DataMap)
-			{
-				Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing '" + fields[i].getName() + "' of type '"
-						+ child.getClass().getName() + "'.");
-				// fields[i].set(o, fixMap((Map) child, ds) );
-			}
-			else
-			{
-				Debug.out(Debug.MODE_DEBUG, "FLIRT", "Field '" + fields[i].getName() + "' has unknown type '"
-						+ child.getClass().getName() + "'.");
-			}
+                Object temp = fixEntity((RepositoryEntity) child, ds);
+                field.set(o, temp);
+            } else if (child instanceof Vector) {
+                Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing '" + field.getName() + "' of type '"
+                        + child.getClass().getName() + "'.");
+                field.set(o, fixVector((Vector) child, ds));
+            } else if (child instanceof DataMap) {
+                Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing '" + field.getName() + "' of type '"
+                        + child.getClass().getName() + "'.");
+                // fields[i].set(o, fixMap((Map) child, ds) );
+            } else {
+                Debug.out(Debug.MODE_DEBUG, "FLIRT", "Field '" + field.getName() + "' has unknown type '"
+                        + child.getClass().getName() + "'.");
+            }
 
-		}
-	}
+        }
+    }
 
 	public Object fixEntity(RepositoryEntity o, DataStore ds)
 	{

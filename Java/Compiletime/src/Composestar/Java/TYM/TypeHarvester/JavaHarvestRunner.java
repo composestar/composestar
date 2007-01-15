@@ -46,63 +46,53 @@ public class JavaHarvestRunner implements HarvestRunner
 		ArrayList toBeHarvested = new ArrayList();
 
 		Iterator dummyIt = dummyList.iterator();
-		while (dummyIt.hasNext())
-		{
-			String library = (String) dummyIt.next();
-			try
-			{
-				cpm.addFile(library);
-				toBeHarvested.add(library);
-			}
-			catch (Exception e)
-			{
-				throw new ModuleException("Error while updating classpath" + e.toString(), "HARVESTER");
-			}
-		}
+        for (Object aDummyList : dummyList) {
+            String library = (String) aDummyList;
+            try {
+                cpm.addFile(library);
+                toBeHarvested.add(library);
+            }
+            catch (Exception e) {
+                throw new ModuleException("Error while updating classpath" + e.toString(), "HARVESTER");
+            }
+        }
 
-		Iterator depsIt = dependencyList.iterator();
-		while (depsIt.hasNext())
-		{
-			Dependency dep = (Dependency) depsIt.next();
-			String library = (String) dep.getFileName();
-			try
-			{
-				cpm.addFile(library);
-				toBeHarvested.add(library);
-			}
-			catch (Exception e)
-			{
-				throw new ModuleException("Error while updating classpath" + e.toString(), "HARVESTER");
-			}
-		}
+        Iterator depsIt = dependencyList.iterator();
+        for (Object aDependencyList : dependencyList) {
+            Dependency dep = (Dependency) aDependencyList;
+            String library = (String) dep.getFileName();
+            try {
+                cpm.addFile(library);
+                toBeHarvested.add(library);
+            }
+            catch (Exception e) {
+                throw new ModuleException("Error while updating classpath" + e.toString(), "HARVESTER");
+            }
+        }
 
-		Iterator libsIt = toBeHarvested.iterator();
+        Iterator libsIt = toBeHarvested.iterator();
 
-		while (libsIt.hasNext())
-		{
+        for (Object aToBeHarvested : toBeHarvested) {
 
-			String library = (String) libsIt.next();
+            String library = (String) aToBeHarvested;
 
-			try
-			{
-				JarLoader jl = new JarLoader(library);
-				HashMap classen = jl.getLoadedClasses();
-				Iterator classIt = classen.keySet().iterator();
-				while (classIt.hasNext())
-				{
-					Class c = (Class) classen.get(classIt.next());
-					cm.addClass(c);
+            try {
+                JarLoader jl = new JarLoader(library);
+                HashMap classen = jl.getLoadedClasses();
+                Iterator classIt = classen.keySet().iterator();
+                for (Object o : classen.keySet()) {
+                    Class c = (Class) classen.get(o);
+                    cm.addClass(c);
 
-					Debug.out(Debug.MODE_DEBUG, "HARVESTER", "Class extracted:" + c.getName());
-				}
-			}
-			catch (JarLoaderException e)
-			{
-				throw new ModuleException("Error while loading classes from " + library + ": " + e.getMessage(),
-						"HARVESTER");
-			}
-		}
-	}
+                    Debug.out(Debug.MODE_DEBUG, "HARVESTER", "Class extracted:" + c.getName());
+                }
+            }
+            catch (JarLoaderException e) {
+                throw new ModuleException("Error while loading classes from " + library + ": " + e.getMessage(),
+                        "HARVESTER");
+            }
+        }
+    }
 
 	/** 
 	 * Helper class. A 'hack' to adjust the classpath in runtime. 

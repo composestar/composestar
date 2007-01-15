@@ -79,12 +79,12 @@ public class Struct extends WeaveblePoint
 			{
 				if (type != GnuCTokenTypes.LITERAL_void)
 				{
-					types.add(new Integer(type));
+					types.add(type);
 				}
 			}
 			else if (type == GnuCTokenTypes.NTypedefName)
 			{
-				types.add(new Integer(type));
+				types.add(type);
 				typedefname = tmp.firstChildOfType(GnuCTokenTypes.ID).getText();
 			}
 			else if (tmp.getType() == GnuCTokenTypes.NStructDeclarator)
@@ -117,7 +117,7 @@ public class Struct extends WeaveblePoint
 
 				for (int i = 0; i < tmptype.length; i++)
 				{
-					tmptype[i] = ((Integer) types.get(i)).intValue();
+					tmptype[i] = (Integer) types.get(i);
 				}
 
 				param.setType(tmptype);

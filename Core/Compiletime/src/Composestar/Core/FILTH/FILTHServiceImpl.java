@@ -156,71 +156,62 @@ public class FILTHServiceImpl extends FILTHService
 		 * System.out.println("/n-----------"); }
 		 */
 		FilterModuleReference fr = null;
-		for (Iterator k = orders.iterator(); k.hasNext();)
-		{
-			Iterator i = ((List) k.next()).iterator();
-			/* skip the root */
-			i.next();
-			LinkedList anOrder = new LinkedList();
-			while (i.hasNext())
-			{
-				Action a = (Action) ((Node) i.next()).getElement();
+        for (Object order : orders) {
+            Iterator i = ((List) order).iterator();
+            /* skip the root */
+            i.next();
+            LinkedList anOrder = new LinkedList();
+            while (i.hasNext()) {
+                Action a = (Action) ((Node) i.next()).getElement();
 
-				for (Iterator j = modulrefs.iterator(); j.hasNext();)
-				{
-					fr = (FilterModuleReference) j.next();
-					// System.out.println("FILTH
-					// ordering>>>"+a+"::"+fr.getName() );
-					if (a.getName().equals(fr.getName()))
-					{
-						break;
-					}
+                for (Object modulref : modulrefs) {
+                    fr = (FilterModuleReference) modulref;
+                    // System.out.println("FILTH
+                    // ordering>>>"+a+"::"+fr.getName() );
+                    if (a.getName().equals(fr.getName())) {
+                        break;
+                    }
 
-				}
-				anOrder.addLast(fr);
-				// System.out.println(count++);
-			}
-			anOrder.addLast(InnerDispatcher.getInnerDispatchReference());
-			forders.addLast(anOrder);
-		}
+                }
+                anOrder.addLast(fr);
+                // System.out.println(count++);
+            }
+            anOrder.addLast(InnerDispatcher.getInnerDispatchReference());
+            forders.addLast(anOrder);
+        }
 
-		/* DEBUG info about the orders */
+        /* DEBUG info about the orders */
 		int alt = 1;
 
 		FILTHService.log.print("<h4>Selected Order: </h4>\n");
 		FILTHService.log.print("<ol>\n");
 		// FILTHService.printTab(3,"<-- Alternative ("+ alt++ +") -->\n");
-		for (Iterator j = ((LinkedList) forders.getFirst()).iterator(); j.hasNext();)
-		{
-			FilterModuleReference fmr = (FilterModuleReference) j.next();
-			if (!(fmr.getRef().getQualifiedName()
-					.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
-			{
-				FILTHService.log.print("<li><i>" + fmr.getRef().getQualifiedName() + "</i></li>\n");
-			}
-		}
-		FILTHService.log.print("</ol>\n");
+        for (Object o : ((LinkedList) forders.getFirst())) {
+            FilterModuleReference fmr = (FilterModuleReference) o;
+            if (!(fmr.getRef().getQualifiedName()
+                    .equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule"))) {
+                FILTHService.log.print("<li><i>" + fmr.getRef().getQualifiedName() + "</i></li>\n");
+            }
+        }
+        FILTHService.log.print("</ol>\n");
 
 		FILTHService.log.print("<h4>Alternatives: </h4>\n");
 		// FILTHService.log.print("<ul>\n");
 
-		for (Iterator i = forders.iterator(); i.hasNext();)
-		{
-			FILTHService.log.print("<h4>Alternative[" + alt + "]: </h4>\n");
-			FILTHService.log.print("<ol>\n");
-			for (Iterator j = ((List) i.next()).iterator(); j.hasNext();)
-			{
-				FilterModuleReference fmr = (FilterModuleReference) j.next();
-				if (!(fmr.getRef().getQualifiedName()
-						.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
-				{
-					FILTHService.log.print("<li><i>" + fmr.getRef().getQualifiedName() + "</i></li>\n");
-				}
-			}
-			FILTHService.log.print("</ol>\n");
-			alt++;
-		}
-		/* DEBUG info end */
+        for (Object forder : forders) {
+            FILTHService.log.print("<h4>Alternative[" + alt + "]: </h4>\n");
+            FILTHService.log.print("<ol>\n");
+            for (Object o : ((List) forder)) {
+                FilterModuleReference fmr = (FilterModuleReference) o;
+                if (!(fmr.getRef().getQualifiedName()
+                        .equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule"))) {
+                    FILTHService.log.print("<li><i>" + fmr.getRef().getQualifiedName() + "</i></li>\n");
+                }
+            }
+            FILTHService.log.print("</ol>\n");
+            alt++;
+        }
+        /* DEBUG info end */
 
 		/** * attaching all orders to the concern in DataStore */
 		c.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY, forders);
@@ -288,30 +279,27 @@ public class FILTHServiceImpl extends FILTHService
 		
 		String left, right;
 		Iterator it = map.values().iterator();
-		while(it.hasNext())
-		{
-			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint)it.next();
-			left = soc.getLeft();
-			Iterator socit = soc.getRightFilterModules();
-			while(socit.hasNext())
-			{
-				right = (String)socit.next();
-				this.processRule(left,right,g);
-			}
-		}
-	}
+        for (Object o : map.values()) {
+            SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint) o;
+            left = soc.getLeft();
+            Iterator socit = soc.getRightFilterModules();
+            while (socit.hasNext()) {
+                right = (String) socit.next();
+                this.processRule(left, right, g);
+            }
+        }
+    }
 	
 	private void printOrderingSpecifications()
 	{
 		HashMap map = (HashMap)DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
 		Iterator it = map.values().iterator();
-		
-		while(it.hasNext())
-		{
-			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint)it.next();
-			FILTHService.log.print("<li><i>" + soc.toString() + "</i></li>\n");
-		}
-	}
+
+        for (Object o : map.values()) {
+            SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint) o;
+            FILTHService.log.print("<li><i>" + soc.toString() + "</i></li>\n");
+        }
+    }
 	
 	private void processRule(String left, String right, Graph graph)
 	{

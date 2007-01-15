@@ -189,11 +189,11 @@ public class ViewPanel extends JPanel
 
 		if (i == null)
 		{
-			labelCounter.put(obj, new Integer(1));
+			labelCounter.put(obj, 1);
 		}
 		else
 		{
-			labelCounter.put(obj, new Integer(i.intValue() + 1));
+			labelCounter.put(obj, i.intValue() + 1);
 		}
 	}
 
@@ -213,10 +213,10 @@ public class ViewPanel extends JPanel
 			Object obj = iterator.next();
 			Integer i = (Integer) labelCounter.get(obj);
 
-			if (i.intValue() < currentCount)
+			if (i < currentCount)
 			{
 				currentLabel = (String) obj;
-				currentCount = i.intValue();
+				currentCount = i;
 			}
 		}
 
@@ -227,16 +227,14 @@ public class ViewPanel extends JPanel
 	{
 		// first remove highlight:
 		Collection nodes = nodeMap.values();
-		Iterator iter = nodes.iterator();
-		while (iter.hasNext())
-		{
-			Node node = (Node) iter.next();
-			node.highlighted = false;
-		}
+        for (Object node1 : nodes) {
+            Node node = (Node) node1;
+            node.highlighted = false;
+        }
 
-		// then add highlight:
-		iter = executionStates.iterator();
-		while (iter.hasNext())
+        // then add highlight:
+        Iterator iter = executionStates.iterator();
+        while (iter.hasNext())
 		{
 			ExecutionState state = (ExecutionState) iter.next();
 			Node node = (Node) nodeMap.get(state);
@@ -303,12 +301,11 @@ public class ViewPanel extends JPanel
 
 		int width = 0;
 		int newYOffset = yOffset + 2 * (MARGIN + RADIUS);
-		for (int i = 0; i < node.primaryEdges.length; i++)
-		{
-			width += calculatePosition(node.primaryEdges[i].endNode, xOffset + width, newYOffset);
-		}
+        for (Edge primaryEdge : node.primaryEdges) {
+            width += calculatePosition(primaryEdge.endNode, xOffset + width, newYOffset);
+        }
 
-		this.height = Math.max(yOffset, this.height);
+        this.height = Math.max(yOffset, this.height);
 
 		return width;
 	}
@@ -333,12 +330,11 @@ public class ViewPanel extends JPanel
 
 		g.drawOval(node.xPos - RADIUS, node.yPos - RADIUS, 2 * RADIUS, 2 * RADIUS);
 
-		for (int i = 0; i < node.primaryEdges.length; i++)
-		{
-			paintNode(g, node.primaryEdges[i].endNode);
-		}
+        for (Edge primaryEdge : node.primaryEdges) {
+            paintNode(g, primaryEdge.endNode);
+        }
 
-		// paint label:
+        // paint label:
 		FontMetrics metrics = g.getFontMetrics();
 		String label = getLabel(node.flowNode);
 		int width = metrics.stringWidth(label);
@@ -354,16 +350,14 @@ public class ViewPanel extends JPanel
 
 	private void paintEdges(Graphics g, Node node)
 	{
-		for (int i = 0; i < node.primaryEdges.length; i++)
-		{
-			paintEdge(g, node.primaryEdges[i]);
-		}
+        for (Edge primaryEdge : node.primaryEdges) {
+            paintEdge(g, primaryEdge);
+        }
 
-		for (int i = 0; i < node.secondaryEdges.length; i++)
-		{
-			paintEdge(g, node.secondaryEdges[i]);
-		}
-	}
+        for (Edge secondaryEdge : node.secondaryEdges) {
+            paintEdge(g, secondaryEdge);
+        }
+    }
 
 	private void paintEdge(Graphics g, Edge edge)
 	{
@@ -442,12 +436,11 @@ public class ViewPanel extends JPanel
 		{
 			int width = 1;
 
-			for (int i = 0; i < primaryEdges.length; i++)
-			{
-				width += primaryEdges[i].endNode.treeWidth();
-			}
+            for (Edge primaryEdge : primaryEdges) {
+                width += primaryEdge.endNode.treeWidth();
+            }
 
-			return width;
+            return width;
 		}
 	}
 

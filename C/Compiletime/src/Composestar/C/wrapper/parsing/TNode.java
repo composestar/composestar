@@ -144,7 +144,7 @@ public class TNode extends CommonAST
 		setType(tok.getType());
 		setLineNum(tok.getLine());
 		setAttribute("source", tok.getSource());
-		setAttribute("tokenNumber", new Integer(tok.getTokenNumber()));
+		setAttribute("tokenNumber", tok.getTokenNumber());
 	}
 
 	public void initialize(AST tr)
@@ -776,7 +776,7 @@ public class TNode extends CommonAST
 	{
 		if (this.getAttribute(TNode.TOKEN_NUMBER) != null)
 		{
-			this.setAttribute(TNode.TOKEN_NUMBER, new Integer(i));
+			this.setAttribute(TNode.TOKEN_NUMBER, i);
 		}
 	}
 
@@ -784,8 +784,7 @@ public class TNode extends CommonAST
 	{
 		if (this.getAttribute(TNode.TOKEN_NUMBER) != null)
 		{
-			return ((Integer) this.getAttribute(TNode.TOKEN_NUMBER))
-					.intValue();
+			return (Integer) this.getAttribute(TNode.TOKEN_NUMBER);
 		}
 		return -1;
 	}

@@ -114,14 +114,12 @@ public class JavaInvoker extends Invoker
 	private Method getMethod(Class type, String name)
 	{
 		Method[] meths = type.getMethods();
-		for (int i = 0; i < meths.length; i++)
-		{
-			if (meths[i].getName().equalsIgnoreCase(name))
-			{
-				return meths[i];
-			}
-		}
-		return null;
+        for (Method meth : meths) {
+            if (meth.getName().equalsIgnoreCase(name)) {
+                return meth;
+            }
+        }
+        return null;
 	}
 
 	public boolean objectHasMethod(Object inner, String m_selector, Dictionary context)

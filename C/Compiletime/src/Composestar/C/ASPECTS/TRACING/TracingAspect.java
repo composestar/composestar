@@ -100,19 +100,18 @@ public class TracingAspect extends WeaveCAspect
 	{
 		this.wrapper = wrapper;
 		Iterator it = wrapper.getFunctions().iterator();
-		while (it.hasNext())
-		{
-			this.hasInTrace = false;
-			this.hasOutTrace = false;
-			// this.inBuffer = "printf(\"Input parameter(s):";
-			// this.outBuffer = "printf(\"Output parameter(s):";
-			this.inBuffer = "ZPSPTR_trace_in_var(%MODULE_NAME%_mod_data.tr_handle,funcname,\"Input parameter(s): ";
-			this.outBuffer = "ZPSPTR_trace_out_var(%MODULE_NAME%_mod_data.tr_handle,funcname,\"Output parameter(s): ";
-			this.inParams = new ArrayList();
-			this.outParams = new ArrayList();
-			this.traceFunction((Function) it.next());
-		}
-		// System.out.println("Check: "+wrapper.getFunctions().size()+" ==
+        for (Object o : wrapper.getFunctions()) {
+            this.hasInTrace = false;
+            this.hasOutTrace = false;
+            // this.inBuffer = "printf(\"Input parameter(s):";
+            // this.outBuffer = "printf(\"Output parameter(s):";
+            this.inBuffer = "ZPSPTR_trace_in_var(%MODULE_NAME%_mod_data.tr_handle,funcname,\"Input parameter(s): ";
+            this.outBuffer = "ZPSPTR_trace_out_var(%MODULE_NAME%_mod_data.tr_handle,funcname,\"Output parameter(s): ";
+            this.inParams = new ArrayList();
+            this.outParams = new ArrayList();
+            this.traceFunction((Function) o);
+        }
+        // System.out.println("Check: "+wrapper.getFunctions().size()+" ==
 		// "+this.weavebleobjs.size());
 		return weavebleobjs;
 	}
@@ -436,18 +435,14 @@ public class TracingAspect extends WeaveCAspect
 					this.firstInTrace = false;
 				}
 				this.inBuffer += intrace;
-				for (int j = 0; j < tracenames.size(); j++)
-				{
-					if (this.inParams.size() > 0)
-					{
-						this.inParams.add(" " + tracenames.get(j));
-					}
-					else
-					{
-						this.inParams.add(tracenames.get(j));
-					}
-				}
-			}
+                for (Object tracename : tracenames) {
+                    if (this.inParams.size() > 0) {
+                        this.inParams.add(" " + tracename);
+                    } else {
+                        this.inParams.add(tracename);
+                    }
+                }
+            }
 			else if (param.getUsageType() == Parameter.OUT)
 			{
 				this.hasOutTrace = true;
@@ -457,18 +452,14 @@ public class TracingAspect extends WeaveCAspect
 					this.firstOutTrace = false;
 				}
 				this.outBuffer += outtrace;
-				for (int j = 0; j < tracenames.size(); j++)
-				{
-					if (this.outParams.size() > 0)
-					{
-						this.outParams.add(" " + tracenames.get(j));
-					}
-					else
-					{
-						this.outParams.add(tracenames.get(j));
-					}
-				}
-			}
+                for (Object tracename : tracenames) {
+                    if (this.outParams.size() > 0) {
+                        this.outParams.add(" " + tracename);
+                    } else {
+                        this.outParams.add(tracename);
+                    }
+                }
+            }
 			else if (param.getUsageType() == Parameter.INOUT)
 			{
 				this.hasInTrace = true;
@@ -478,37 +469,29 @@ public class TracingAspect extends WeaveCAspect
 					this.firstInTrace = false;
 				}
 				this.inBuffer += intrace;
-				for (int j = 0; j < tracenames.size(); j++)
-				{
-					if (this.inParams.size() > 0)
-					{
-						this.inParams.add(" " + tracenames.get(j));
-					}
-					else
-					{
-						this.inParams.add(tracenames.get(j));
-					}
-				}
+                for (Object tracename1 : tracenames) {
+                    if (this.inParams.size() > 0) {
+                        this.inParams.add(" " + tracename1);
+                    } else {
+                        this.inParams.add(tracename1);
+                    }
+                }
 
-				this.hasOutTrace = true;
+                this.hasOutTrace = true;
 				if (this.firstOutTrace)
 				{
 					this.outBuffer += ",";
 					this.firstOutTrace = false;
 				}
 				this.outBuffer += outtrace;
-				for (int j = 0; j < tracenames.size(); j++)
-				{
-					if (this.outParams.size() > 0)
-					{
-						this.outParams.add(" " + tracenames.get(j));
-					}
-					else
-					{
-						this.outParams.add(tracenames.get(j));
-					}
-				}
-			}
+                for (Object tracename : tracenames) {
+                    if (this.outParams.size() > 0) {
+                        this.outParams.add(" " + tracename);
+                    } else {
+                        this.outParams.add(tracename);
+                    }
+                }
+            }
 		}
 	}
 

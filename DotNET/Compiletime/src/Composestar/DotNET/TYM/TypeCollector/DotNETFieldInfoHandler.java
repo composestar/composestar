@@ -59,43 +59,43 @@ public class DotNETFieldInfoHandler extends DefaultHandler implements ContentHan
 		}
 		else if ("IsAssembly".equals(rawName))
 		{
-			FieldInfo.setIsAssembly(Boolean.valueOf(charData).booleanValue());
+			FieldInfo.setIsAssembly(Boolean.valueOf(charData));
 		}
 		else if ("IsFamily".equals(rawName))
 		{
-			FieldInfo.setIsFamily(Boolean.valueOf(charData).booleanValue());
+			FieldInfo.setIsFamily(Boolean.valueOf(charData));
 		}
 		else if ("IsFamilyAndAssembly".equals(rawName))
 		{
-			FieldInfo.setIsFamilyAndAssembly(Boolean.valueOf(charData).booleanValue());
+			FieldInfo.setIsFamilyAndAssembly(Boolean.valueOf(charData));
 		}
 		else if ("IsFamilyOrAssembly".equals(rawName))
 		{
-			FieldInfo.setIsFamilyOrAssembly(Boolean.valueOf(charData).booleanValue());
+			FieldInfo.setIsFamilyOrAssembly(Boolean.valueOf(charData));
 		}
 		else if ("IsInitOnly".equals(rawName))
 		{
-			FieldInfo.setIsInitOnly(Boolean.valueOf(charData).booleanValue());
+			FieldInfo.setIsInitOnly(Boolean.valueOf(charData));
 		}
 		else if ("IsLiteral".equals(rawName))
 		{
-			FieldInfo.setIsLiteral(Boolean.valueOf(charData).booleanValue());
+			FieldInfo.setIsLiteral(Boolean.valueOf(charData));
 		}
 		else if ("IsPrivate".equals(rawName))
 		{
-			FieldInfo.setIsPrivate(Boolean.valueOf(charData).booleanValue());
+			FieldInfo.setIsPrivate(Boolean.valueOf(charData));
 		}
 		else if ("IsPublic".equals(rawName))
 		{
-			FieldInfo.setIsPublic(Boolean.valueOf(charData).booleanValue());
+			FieldInfo.setIsPublic(Boolean.valueOf(charData));
 		}
 		else if ("IsStatic".equals(rawName))
 		{
-			FieldInfo.setIsStatic(Boolean.valueOf(charData).booleanValue());
+			FieldInfo.setIsStatic(Boolean.valueOf(charData));
 		}
 		else if ("IsDeclaredHere".equals(rawName))
 		{
-			FieldInfo.setIsDeclaredHere(Boolean.valueOf(charData).booleanValue());
+			FieldInfo.setIsDeclaredHere(Boolean.valueOf(charData));
 		}
 		else if ("HashCode".equals(rawName))
 		{

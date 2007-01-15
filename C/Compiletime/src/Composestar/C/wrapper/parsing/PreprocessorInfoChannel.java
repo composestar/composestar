@@ -64,9 +64,9 @@ public class PreprocessorInfoChannel
 			Vector lines = new Vector();
 			lines.addElement(line);
 			lineLists.put(toknum, lines);
-			if (maxTokenNumber < toknum.intValue())
+			if (maxTokenNumber < toknum)
 			{
-				maxTokenNumber = toknum.intValue();
+				maxTokenNumber = toknum;
 			}
 		}
 	}
@@ -88,9 +88,9 @@ public class PreprocessorInfoChannel
 		{
 			return lines;
 		}
-		for (int i = firstValidTokenNumber; i < toknum.intValue(); i++)
+		for (int i = firstValidTokenNumber; i < toknum; i++)
 		{
-			Integer inti = new Integer(i);
+			Integer inti = i;
 			if (lineLists.containsKey(inti))
 			{
 				Vector tokenLineVector = (Vector) lineLists.get(inti);
@@ -105,7 +105,7 @@ public class PreprocessorInfoChannel
 				}
 			}
 		}
-		firstValidTokenNumber = toknum.intValue();
+		firstValidTokenNumber = toknum;
 		return lines;
 	}
 
@@ -114,7 +114,7 @@ public class PreprocessorInfoChannel
 		StringBuffer sb = new StringBuffer("Composestar.C.parsing.PreprocessorInfoChannel:\n");
 		for (int i = 0; i <= maxTokenNumber + 1; i++)
 		{
-			Integer inti = new Integer(i);
+			Integer inti = i;
 			if (lineLists.containsKey(inti))
 			{
 				Vector tokenLineVector = (Vector) lineLists.get(inti);

@@ -205,22 +205,22 @@ final class ClassUtilities {
 
     Class[] interfaces = aClass.getInterfaces();
 
-    for (int i = 0; i < interfaces.length; ++i) {
-      overriddenMethod = null;
+      for (Class anInterface1 : interfaces) {
+          overriddenMethod = null;
 
-      if (classIsAccessible(interfaces[i])) {
-        try {
-          overriddenMethod =
-            interfaces[i].getMethod(methodName, parameterTypes);
-        } catch (NoSuchMethodException _) {
-        }
+          if (classIsAccessible(anInterface1)) {
+              try {
+                  overriddenMethod =
+                          anInterface1.getMethod(methodName, parameterTypes);
+              } catch (NoSuchMethodException _) {
+              }
 
-        if (overriddenMethod != null)
-          return overriddenMethod;
+              if (overriddenMethod != null)
+                  return overriddenMethod;
+          }
       }
-    }
 
-    overriddenMethod = null;
+      overriddenMethod = null;
 
     // Try superclass's superclass and implemented interfaces.
     if (superclass != null) {
@@ -232,15 +232,15 @@ final class ClassUtilities {
     }
 
     // Try implemented interfaces' extended interfaces...
-    for (int i = 0; i < interfaces.length; ++i) {
-      overriddenMethod =
-        getAccessibleMethodFrom(interfaces[i], methodName, parameterTypes);
+      for (Class anInterface : interfaces) {
+          overriddenMethod =
+                  getAccessibleMethodFrom(anInterface, methodName, parameterTypes);
 
-      if (overriddenMethod != null)
-        return overriddenMethod;
-    }
+          if (overriddenMethod != null)
+              return overriddenMethod;
+      }
 
-    // Give up.
+      // Give up.
     return null;
   }
 

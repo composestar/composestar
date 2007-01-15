@@ -232,13 +232,12 @@ public final class INCRE implements CTCommonModule
 		List result = new ArrayList();
 
 		Iterator sourceIt = config.getProjects().getSources().iterator();
-		while (sourceIt.hasNext())
-		{
-			Source s = (Source) sourceIt.next();
-			result.add(s.getFileName());
-		}
+        for (Object o : config.getProjects().getSources()) {
+            Source s = (Source) o;
+            result.add(s.getFileName());
+        }
 
-		return result;
+        return result;
 	}
 
 	/**
@@ -490,15 +489,13 @@ public final class INCRE implements CTCommonModule
 				Source s = (Source) obj;
 				List historysources = configurations.historyconfig.getProjects().getSources();
 				Iterator sources = historysources.iterator();
-				while (sources.hasNext())
-				{
-					Source historysource = (Source) sources.next();
-					if (s.getFileName().equals(historysource.getFileName()))
-					{
-						return historysource;
-					}
-				}
-			}
+                for (Object historysource1 : historysources) {
+                    Source historysource = (Source) historysource1;
+                    if (s.getFileName().equals(historysource.getFileName())) {
+                        return historysource;
+                    }
+                }
+            }
 
 			Iterator objIter = history.getAllInstancesOf(obj.getClass());
 			while (objIter.hasNext())
@@ -537,13 +534,13 @@ public final class INCRE implements CTCommonModule
 	{
 		if (filesCheckedOnTimeStamp.containsKey(filename))
 		{
-			return ((Boolean) filesCheckedOnTimeStamp.get(filename)).booleanValue();
+			return (Boolean) filesCheckedOnTimeStamp.get(filename);
 		}
 		else
 		{
 			File f = new File(filename);
 			boolean modified = isFileModified(f);
-			filesCheckedOnTimeStamp.put(filename, Boolean.valueOf(modified));
+			filesCheckedOnTimeStamp.put(filename, modified);
 			return modified;
 		}
 	}
@@ -589,7 +586,7 @@ public final class INCRE implements CTCommonModule
 		if (filesCheckedOnProjectConfig.containsKey(filename)) // checked
 		// before
 		{
-			return ((Boolean) filesCheckedOnProjectConfig.get(filename)).booleanValue();
+			return (Boolean) filesCheckedOnProjectConfig.get(filename);
 		}
 
 		boolean isAdded = true;
@@ -612,12 +609,11 @@ public final class INCRE implements CTCommonModule
 			// sources
 			List conList = configurations.historyconfig.getProjects().getConcernSources();
 			Iterator cps = conList.iterator();
-			while (cps.hasNext())
-			{
-				ConcernSource cs = (ConcernSource) cps.next();
-				searchBuffer.append(cs.getFileName());
-			}
-		}
+            for (Object aConList : conList) {
+                ConcernSource cs = (ConcernSource) aConList;
+                searchBuffer.append(cs.getFileName());
+            }
+        }
 		else if (fixedFile.endsWith(".dll") || fixedFile.endsWith(".exe"))
 		{
 			// TODO: use SupportedLanguages and move/replace .NET specific code
@@ -638,13 +634,12 @@ public final class INCRE implements CTCommonModule
 			// searchStr = prop.getProperty("Dependencies");
 			List depList = configurations.historyconfig.getProjects().getDependencies();
 			Iterator dependencies = depList.iterator();
-			while (dependencies.hasNext())
-			{
-				Dependency d = (Dependency) dependencies.next();
-				searchBuffer.append(d.getFileName());
-			}
+            for (Object aDepList : depList) {
+                Dependency d = (Dependency) aDepList;
+                searchBuffer.append(d.getFileName());
+            }
 
-			// searchStr += prop.getProperty("Assemblies");
+            // searchStr += prop.getProperty("Assemblies");
 			List dummies = configurations.historyconfig.getProjects().getCompiledDummies();
 			String[] dummyPaths = (String[]) dummies.toArray(new String[dummies.size()]);
 			searchBuffer.append(StringConverter.stringListToString(dummyPaths));
@@ -677,7 +672,7 @@ public final class INCRE implements CTCommonModule
 					+ " added to project since last compilation run");
 		}
 
-		this.filesCheckedOnProjectConfig.put(filename, Boolean.valueOf(isAdded));
+		this.filesCheckedOnProjectConfig.put(filename, isAdded);
 		return isAdded;
 	}
 
@@ -828,16 +823,14 @@ public final class INCRE implements CTCommonModule
 	{
 
 		Iterator sourceItr = sources.iterator();
-		while (sourceItr.hasNext())
-		{
-			String src = (String) sourceItr.next();
-			if (declaredInSource(c, src))
-			{
-				return true;
-			}
-		}
+        for (Object source : sources) {
+            String src = (String) source;
+            if (declaredInSource(c, src)) {
+                return true;
+            }
+        }
 
-		return false;
+        return false;
 	}
 
 	/**
@@ -933,29 +926,26 @@ public final class INCRE implements CTCommonModule
 				{
 					// iterate over all files
 					Iterator fileItr = files.iterator();
-					while (fileItr.hasNext())
-					{
-						String currentFile = (String) fileItr.next();
-						if (fdep.isAdded() && isFileAdded(currentFile, fdep))
-						{
-							// check files for added to project or not
-							// optimalisation: certain files do not need this
-							// check
-							// can be configured in .xml file by isAdded=false
-							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
-									+ ",dep=" + dep.getName() + ",input=" + input + ']');
-							return false; // file added to project thus
-							// modified!
-						}
-						if (isFileModified(currentFile))
-						{
-							overhead.stop();
-							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
-									+ ",dep=" + dep.getName() + ",input=" + input + ']');
-							return false;
-						}
-					}
-				}
+                    for (Object file : files) {
+                        String currentFile = (String) file;
+                        if (fdep.isAdded() && isFileAdded(currentFile, fdep)) {
+                            // check files for added to project or not
+                            // optimalisation: certain files do not need this
+                            // check
+                            // can be configured in .xml file by isAdded=false
+                            Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
+                                    + ",dep=" + dep.getName() + ",input=" + input + ']');
+                            return false; // file added to project thus
+                            // modified!
+                        }
+                        if (isFileModified(currentFile)) {
+                            overhead.stop();
+                            Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
+                                    + ",dep=" + dep.getName() + ",input=" + input + ']');
+                            return false;
+                        }
+                    }
+                }
 			}
 			else
 			{

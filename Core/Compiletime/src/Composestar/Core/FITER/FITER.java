@@ -65,44 +65,34 @@ public class FITER implements CTCommonModule
 				ProgramElement filterType = ur.singleValue();
 				HashSet allFilterTypes = getChildsofClass(filterType);
 				Iterator allFilterTypesIt = allFilterTypes.iterator();
-				while (allFilterTypesIt.hasNext())
-				{
-					Object obj = allFilterTypesIt.next();
-					if (obj instanceof ProgramElement)
-					{
-						ProgramElement customFilterType = (ProgramElement) obj;
-						Iterator definedCustomFilters = working.iterator();
-						while (definedCustomFilters.hasNext())
-						{
-							FilterType ftype = (FilterType) definedCustomFilters.next();
+                for (Object obj : allFilterTypes) {
+                    if (obj instanceof ProgramElement) {
+                        ProgramElement customFilterType = (ProgramElement) obj;
+                        Iterator definedCustomFilters = working.iterator();
+                        for (Object aWorking : working) {
+                            FilterType ftype = (FilterType) aWorking;
 
-							if (customFilterType.getUnitName().indexOf('.') < 0)
-							{
-								if (customFilterType.getUnitName().endsWith(ftype.getName()))
-								{
-									Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Resolved filter type: "
-											+ ftype.getName() + " to " + customFilterType.getUnitName());
-									result.remove(ftype);
-								}
-							}
-							else
-							{
-								if (customFilterType.getUnitName().endsWith("." + ftype.getName()))
-								{
-									Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Resolved filter type: "
-											+ ftype.getName() + " to " + customFilterType.getUnitName());
-									result.remove(ftype);
-								}
-							}
-						}
-					}
-				}
-			}
+                            if (customFilterType.getUnitName().indexOf('.') < 0) {
+                                if (customFilterType.getUnitName().endsWith(ftype.getName())) {
+                                    Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Resolved filter type: "
+                                            + ftype.getName() + " to " + customFilterType.getUnitName());
+                                    result.remove(ftype);
+                                }
+                            } else {
+                                if (customFilterType.getUnitName().endsWith("." + ftype.getName())) {
+                                    Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Resolved filter type: "
+                                            + ftype.getName() + " to " + customFilterType.getUnitName());
+                                    result.remove(ftype);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 		}
-		for (int i = 0; i < result.size(); i++)
-		{
-			FilterType ftype = (FilterType) result.get(i);
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Unable to resolve filter type: " + ftype.getName() + "!");
+        for (Object aResult : result) {
+            FilterType ftype = (FilterType) aResult;
+            Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Unable to resolve filter type: " + ftype.getName() + "!");
         }
 
         if(!result.isEmpty()){
@@ -116,13 +106,12 @@ public class FITER implements CTCommonModule
 		HashSet hashset = filterType.getUnitRelation("ChildClasses").multiValue();
 		total.addAll(hashset);
 		Iterator it = hashset.iterator();
-		while (it.hasNext())
-		{
-			ProgramElement customFilterType = (ProgramElement) it.next();
-			HashSet subset = this.getChildsofClass(customFilterType);
-			total.add(subset);
-		}
-		return total;
+        for (Object aHashset : hashset) {
+            ProgramElement customFilterType = (ProgramElement) aHashset;
+            HashSet subset = this.getChildsofClass(customFilterType);
+            total.add(subset);
+        }
+        return total;
 	}
 
 }

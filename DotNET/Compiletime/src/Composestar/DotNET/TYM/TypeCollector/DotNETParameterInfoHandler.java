@@ -76,27 +76,27 @@ public class DotNETParameterInfoHandler extends DefaultHandler implements Conten
 		if ("IsIn".equals(rawName))
 		{
 			// TODO: SetIs"In"
-			ParamInfo.setIsln(Boolean.valueOf(LastCharData).booleanValue());
+			ParamInfo.setIsln(Boolean.valueOf(LastCharData));
 		}
 		// <!ELEMENT IsLcid (#PCDATA)>
 		else if ("IsLcid".equals(rawName))
 		{
-			ParamInfo.setIsLcid(Boolean.valueOf(LastCharData).booleanValue());
+			ParamInfo.setIsLcid(Boolean.valueOf(LastCharData));
 		}
 		// <!ELEMENT IsOptional (#PCDATA)>
 		else if ("IsOptional".equals(rawName))
 		{
-			ParamInfo.setIsOptional(Boolean.valueOf(LastCharData).booleanValue());
+			ParamInfo.setIsOptional(Boolean.valueOf(LastCharData));
 		}
 		// <!ELEMENT IsOut (#PCDATA)>
 		else if ("IsOut".equals(rawName))
 		{
-			ParamInfo.setIsOut(Boolean.valueOf(LastCharData).booleanValue());
+			ParamInfo.setIsOut(Boolean.valueOf(LastCharData));
 		}
 		// <!ELEMENT IsRetval (#PCDATA)>
 		else if ("IsRetval".equals(rawName))
 		{
-			ParamInfo.setIsRetVal(Boolean.valueOf(LastCharData).booleanValue());
+			ParamInfo.setIsRetVal(Boolean.valueOf(LastCharData));
 		}
 		// <!ELEMENT ParameterType (#PCDATA)>
 		else if ("ParameterType".equals(rawName))

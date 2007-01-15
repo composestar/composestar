@@ -49,11 +49,10 @@ public class ErrorFilterNode extends FilterNode
 	{
 		// process queue
 		Iterator it = acceptEdges.iterator();
-		while (it.hasNext())
-		{
-			addOutgoingEdge(new CondMatchEdge(inFilter, (FilterElement) it.next()));
-		}
-		acceptEdges.clear();
+        for (Object acceptEdge : acceptEdges) {
+            addOutgoingEdge(new CondMatchEdge(inFilter, (FilterElement) acceptEdge));
+        }
+        acceptEdges.clear();
 		// add lamba edge to exception
 		addOutgoingEdge(new LambdaEdge(graph.getExceptionNode(true)));
 	}

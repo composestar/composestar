@@ -133,14 +133,13 @@ public class ModelBuilder implements CTCommonModule
 		Type type = (Type) concern.getPlatformRepresentation();
 		List list = type.getMethods();
 		Iterator iter = list.iterator();
-		while (iter.hasNext())
-		{
-			MethodInfo method = (MethodInfo) iter.next();
+        for (Object aList : list) {
+            MethodInfo method = (MethodInfo) aList;
 
-			processMethod(method);
-		}
+            processMethod(method);
+        }
 
-		// do innercall checks:
+        // do innercall checks:
 		for (int i = 0; i < innerCallCheckTasks.size(); i++)
 		{
 			ContextInstruction instruction = (ContextInstruction) innerCallCheckTasks.elementAt(i);
@@ -165,7 +164,7 @@ public class ModelBuilder implements CTCommonModule
 		if (inlineBlock != null)
 		{
 			inputFilterCode.put(methodInfo, inlineBlock);
-			inlinedMethodSet.add(new Integer(builderStrategy.getMethodId(methodInfo)));
+			inlinedMethodSet.add(builderStrategy.getMethodId(methodInfo));
 		}
 
 		// process calls:
