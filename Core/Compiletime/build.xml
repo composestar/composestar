@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/Core/Compiletime" default="build">
-	
+
 	<condition property="build.core" value="..">
 		<and>
 			<not><isset property="build.core"/></not>
@@ -46,7 +46,18 @@
 		<mkdir dir="${out.dist}"/>
 	</target>
 	
-	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file"/>
+	<target name="java-versionclass">
+		<copy file="src/Composestar/Utils/Version.j" tofile="src/Composestar/Utils/Version.java" overwrite="true"/>
+		<tstamp>
+		    <format property="BUILD_DATE" pattern="EEE, d MMM yyyy HH:mm:ss Z" locale="en"/>
+  		</tstamp>		
+		<echo>Setting Build date to: ${BUILD_DATE}</echo>   
+		<replace file="src/Composestar/Utils/Version.java"
+			token="@BUILD_DATE@"
+			value="${BUILD_DATE}"/>
+	</target>
+
+	<target name="build" depends="java-versionclass,local_init,antlr,compile,jar" description="Compile the code and create the jar file"/>
 	
 	<target name="antlr" depends="local_init">
 		<antlr target="src/Composestar/Core/COPPER/grammar/cps.g" outputdirectory="src/Composestar/Core/COPPER">
@@ -55,8 +66,8 @@
 		<antlr target="src/Composestar/Core/COPPER/grammar/cpsw.g" outputdirectory="src/Composestar/Core/COPPER">
 			<classpath refid="lib.core"/>
 		</antlr>
-	</target>
-	
+	</target>	
+
 	<target name="compile" depends="local_init,antlr">
 		<propertyfile file="${out.build}/version.properties">
 			<entry key="version" value="${version.core}.${version.build}" />
