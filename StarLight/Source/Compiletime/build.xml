@@ -62,7 +62,7 @@
 		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build" config="${msbuild.config}"/>
 		<exec executable="${xsd.exe}" dir="..\StarLightEntities\bin\debug">
 			<arg line="Composestar.StarLight.Entities.dll"/>
-			<arg line="/outputdir:${out.xmltypes}"/>
+			<arg line="/outputdir:'${out.xmltypes}'"/>
 		</exec>
 	</target>
 	
