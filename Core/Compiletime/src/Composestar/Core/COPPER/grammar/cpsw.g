@@ -28,22 +28,22 @@ options {
         ASTLabelType = "CpsAST";
 }
 {
-  public String cur_fm = new String();
+  public String cur_fm = "";
   public CpsRepositoryBuilder b = new CpsRepositoryBuilder();
-  public Vector typev = new Vector();     //temp vector for types
-  public Vector parameterv = new Vector();//temp vector for parameters
-  public Vector namev = new Vector();     //temp vector for names
-  public Vector objv = new Vector();      //temp vector for objects (target / selector names)
-  public Vector typev2 = new Vector();    //temp vector for types of 2nd selector
-  public Vector temptypes = new Vector(); //temp vector for types (including full package names)
-  public Vector tempnames = new Vector(); //temp vector for names (including full packages)
-  public Vector arg = new Vector();       //temp string for argument name
-  public int t=0;                         //flag for selectorexpression
-  public int matching=0;                  //flag for name / signature matching (0=signature, 1=name)
-  public Vector typel = new Vector();     //temp vector for type list (in methods)
-  public String target;                   //temp string for target name
-  public String selector;                 //temp string for selector name
-  public int paratype=0;                  //flag for parameter type (0 = error, 1 =no parameter, 2 = parameter, 3 = parameterlist)
+  public Vector typev = new Vector(2);     //temp vector for types
+  public Vector parameterv = new Vector(2);//temp vector for parameters
+  public Vector namev = new Vector(8,8);   //temp vector for names
+  public Vector objv = new Vector(8);      //temp vector for objects (target / selector names)
+  public Vector typev2 = new Vector(2);    //temp vector for types of 2nd selector
+  public Vector temptypes = new Vector(4); //temp vector for types (including full package names)
+  public Vector tempnames = new Vector(4); //temp vector for names (including full packages)
+  public Vector arg = new Vector(2);       //temp string for argument name
+  public int t=0;                          //flag for selectorexpression
+  public int matching=0;                   //flag for name / signature matching (0=signature, 1=name)
+  public Vector typel = new Vector(4);     //temp vector for type list (in methods)
+  public String target;                    //temp string for target name
+  public String selector;                  //temp string for selector name
+  public int paratype=0;                   //flag for parameter type (0 = error, 1 =no parameter, 2 = parameter, 3 = parameterlist)
   
   public CpsRepositoryBuilder getRepositoryBuilder()
   {

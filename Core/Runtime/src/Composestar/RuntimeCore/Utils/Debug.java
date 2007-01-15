@@ -84,7 +84,7 @@ public class Debug
 		}
 	}
 
-	// You can use this instead of System.out.printline while debugging and
+	/** @noinspection ResultOfMethodCallIgnored*/ // You can use this instead of System.out.printline while debugging and
 	// still be able to find it in debug mode 5
 	public static final void programmerOut(String module, String message)
 	{
