@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="ComposeStar/StarLight/SourceAnalyzer" default="antlr" xmlns:cs="antlib:Composestar">
+
+  <property name="build.core" location="${basedir}/../../../Core"/>
+  <import file="${build.core}/common.xml"/>
+
+  <echo>Processing: ${ant.project.name} ...</echo>
+  <description>...</description>
+
+  <target name="init_local" depends="init">
+  </target>
+
+  <target name="antlr" depends="init_local" description="Generates the C# version of the J# grammar">
+
+    <cs:antlr target="JSharp/jsharp.g"
+              outputdirectory="JSharp"
+              classpathref="lib.core"/>
+
+    <cs:antlr target="JSharp/jsharp-walker.g"
+              outputdirectory="JSharp"
+              classpathref="lib.core"/>
+
+  </target>
+  <!--
+  <target name="gen">
+
+    <path id="lib.xmlbeans">
+      <pathelement path="C:/CPS/StarLight/Libraries/xmlbeans/xbean.jar"/>
+      <pathelement path="C:/CPS/StarLight/Libraries/xmlbeans/jsr173_1.0_api.jar"/>
+    </path>
+
+    <taskdef name="xmlbean"
+             classname="org.apache.xmlbeans.impl.tool.XMLBean"
+             classpathref="lib.xmlbeans"/>
+
+    <xmlbean classpathref="lib.xmlbeans"
+             schema="schema0.xsd" 
+             destfile="xmltypes.jar" 
+             srcgendir="."/>
+
+  </target>
+-->
+  <target name="clean"/>
+  <target name="build"/>
+  
+</project>
