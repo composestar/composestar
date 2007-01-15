@@ -46,7 +46,7 @@
 		<condition property="executable.extention" value=".exe" else="">
 			<os family="windows" />
 		</condition>
-		<fail message="gcc and make were not available on the system path">
+		<fail message="javac is not available on the system path">
 			<condition>
 				<not>
 					<available file="javac${executable.extention}" filepath="${env.PATH}" />
