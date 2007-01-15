@@ -68,6 +68,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		private bool _isAbstract;
 		private bool _isSealed;
 		private bool _isPublic;
+		private string _fromSource;
 
 		/// <summary>
 		/// The name of this type.
@@ -241,6 +242,16 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		{
 			get { return _isPublic; }
 			set { _isPublic = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the name of the source file this type element was harvested from.
+		/// </summary>
+		/// <value>The name of the source file or null if the type was harvested from an assembly.</value>
+		public string FromSource
+		{
+			get { return _fromSource; }
+			set { _fromSource = value; }
 		}
 
 		#region ICustomAttributes

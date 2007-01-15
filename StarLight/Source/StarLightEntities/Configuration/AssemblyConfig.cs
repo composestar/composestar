@@ -57,6 +57,7 @@ namespace Composestar.StarLight.Entities.Configuration
 	{
 		private AssemblyElement _assembly;
 		private string _name;
+		private string _serializedName;
 		private string _fileName;
 		private long _timestamp;
 		private bool _isReference;
@@ -85,6 +86,26 @@ namespace Composestar.StarLight.Entities.Configuration
 		{
 			get { return _name; }
 			set { _name = value; }
+		}
+
+		[XmlAttribute]
+		public string SerializedName
+		{
+			get
+			{
+				if (_serializedName == null)
+				{
+					string name = _name;
+					name = name.Replace(", ", "_");
+					name = name.Replace(".", "_");
+					name = name.Replace("Version=", "");
+					name = name.Replace("Culture=", "");
+					name = name.Replace("PublicKeyToken=", "");
+					_serializedName = name;
+				}
+				return _serializedName;
+			}
+			set { _serializedName = value; }
 		}
 
 		/// <summary>
@@ -165,15 +186,9 @@ namespace Composestar.StarLight.Entities.Configuration
 		/// <summary>
 		/// Generate a serialized filename to be used to store the file.
 		/// </summary>
-		public void GenerateTypeSpecificationFileName(string objectFolder)
+		public void GenerateTypeSpecificationFileName(string baseDir)
 		{
-			string name = _name;
-			name = name.Replace(", ", "_");
-			name = name.Replace(".", "_");
-			name = name.Replace("Version=", "");
-			name = name.Replace("Culture=", "");
-			name = name.Replace("PublicKeyToken=", "");
-			_typeSpec = Path.Combine(objectFolder, string.Concat(name, ".xml.gzip"));
+			_typeSpec = Path.Combine(baseDir, string.Concat(SerializedName, ".xml.gzip"));
 		}
 
 		/// <summary>

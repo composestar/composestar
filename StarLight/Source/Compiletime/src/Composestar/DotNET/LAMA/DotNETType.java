@@ -55,7 +55,7 @@ public class DotNETType extends Type
 	private List ImplementedInterfaceNames; // List of Strings
 	private String Namespace;
 	private String AssemblyName;
-//	private String fromFile;
+	private String fromSource;
 
 	// for LOLA
 	private ProgramElement parentNS; // Added by the Language Model; this relation can be used in logic queries
@@ -212,6 +212,21 @@ public class DotNETType extends Type
 	public void setAssemblyName(String name)
 	{
 		AssemblyName = name;
+	}
+	
+	public boolean isFromSource()
+	{
+		return fromSource != null;
+	}
+	
+	public String getFromSource()
+	{
+		return fromSource;
+	}
+	
+	public void setFromSource(String fromFile)
+	{
+		this.fromSource = fromFile;
 	}
 
 	public List getConstructors()

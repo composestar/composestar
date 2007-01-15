@@ -384,9 +384,9 @@ public class StarLightCollectorRunner implements CollectorRunner
 		TypeElement[] types = assembly.getTypes().getTypeArray();
 
 		// Process all types, i.e. map them to LAMA
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Generating language model with " + types.length + " types...");
-		
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Generating language model with " + types.length + " types...");		
 		starttime = System.currentTimeMillis();
+		
 		for (int i = 0; i < types.length; i++)
 		{
 			TypeElement te = types[i];
@@ -398,8 +398,9 @@ public class StarLightCollectorRunner implements CollectorRunner
 			dnt.setName(te.getName());
 			dnt.setNamespace(te.getNamespace());
 			dnt.setFullName(fullName);
-			dnt.setAssemblyName(assembly.getName());
 			dnt.setBaseType(te.getBaseType());
+			dnt.setAssemblyName(assembly.getName());
+			dnt.setFromSource(te.getFromSource());
 			
 			// Set the implemented interfaces
 			String[] interfaces = te.getInterfaces().getInterfaceArray();
@@ -416,7 +417,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 			dnt.setIsPublic(te.getIsPublic());
 			dnt.setIsAbstract(te.getIsAbstract());
 			dnt.setIsSealed(te.getIsSealed());
-		//	dnt.setFromDLL(assembly.getName());
 			
 			//Set the attributes for this type
 			DotNETAttribute[] attributes = collectAttributes(te.getAttributes());
