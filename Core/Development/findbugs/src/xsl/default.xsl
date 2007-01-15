@@ -49,11 +49,11 @@
 
 <xsl:output
 	method="xml"
+	indent="yes"
 	omit-xml-declaration="yes"
 	standalone="yes"
+    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
 	doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-	doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
-	indent="yes"
 	encoding="UTF-8"/>
 
 <xsl:variable name="literalNbsp">&amp;nbsp;</xsl:variable>
@@ -62,7 +62,7 @@
 
 <xsl:variable name="bugTableHeader">
 	<tr class="tableheader">
-		<th align="left">Code<xsl:value-of select="$literalNbsp" disable-output-escaping="yes"/></th>
+		<th align="left">Code<xsl:value-of select="$literalNbsp"/></th>
 		<th align="left">Warning</th>
 	</tr>
 </xsl:variable>
@@ -252,7 +252,7 @@
 			<p id="{$warningId}" style="display: none;">
 				<a href="#{@type}">Bug type <xsl:value-of select="@type"/> (click for details)</a>
 				<xsl:for-each select="./*/Message">
-					<br/><xsl:value-of select="text()"/>
+					<br/><xsl:value-of select="text()" disable-output-escaping="no"/>
 				</xsl:for-each>
 			</p>
 		</td>
