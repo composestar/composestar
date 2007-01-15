@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,14 +30,12 @@ import Composestar.Utils.Debug;
  */
 public class DataStore implements Serializable, Cloneable
 {
-	private static DataStore instance = null;
-
 	private static final long serialVersionUID = -1235392544932797436L;
 
+	private static DataStore instance = null;
 	private static final boolean DEBUG = false;
 
 	private String filename = "ComposeStarDataStore.ser";
-
 	public DataMap map;
 
 	/**
@@ -85,6 +84,14 @@ public class DataStore implements Serializable, Cloneable
 	public Iterator keys()
 	{
 		return map.keySet().iterator();
+	}
+	
+	/**
+	 * Returns a collection of all objects in this datastore.
+	 */
+	public Collection getObjects()
+	{
+		return map.values();
 	}
 
 	/**
