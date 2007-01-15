@@ -69,6 +69,16 @@ public class Trail
 	{
 		owner = inOwner;
 	}
+	
+	public Breadcrumb getOwner()
+	{
+		return owner;
+	}
+	
+	public Concern getSourceConcern()
+	{
+		return owner.getConcern();
+	}
 
 	public void setCondition(ConditionExpression inCondition)
 	{

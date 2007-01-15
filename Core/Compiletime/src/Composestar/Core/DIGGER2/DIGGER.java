@@ -51,7 +51,7 @@ public class DIGGER implements CTCommonModule
 
 	protected int recursionCheckDepth;
 
-	protected List allCrumbs;
+	protected List<Breadcrumb> allCrumbs;
 
 	/**
 	 * 
@@ -69,10 +69,10 @@ public class DIGGER implements CTCommonModule
 		incre = INCRE.instance();
 		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Main", INCRETimer.TYPE_OVERHEAD);
 		moduleInfo = ModuleInfoManager.get(DIGGER.class);
-		graph = new DispatchGraph(1 /*moduleInfo.getIntSetting("mode")*/);
+		graph = new DispatchGraph(1 /* moduleInfo.getIntSetting("mode") */);
 		graph.setAutoResolve(false);
 		DataStore.instance().addObject(DispatchGraph.REPOSITORY_KEY, graph);
-		allCrumbs = new ArrayList();
+		allCrumbs = new ArrayList<Breadcrumb>();
 		createBreadcrumbs();
 		if (moduleInfo.getBooleanSetting("resolve"))
 		{
@@ -143,22 +143,9 @@ public class DIGGER implements CTCommonModule
 	{
 		INCRETimer timer = incre.getReporter()
 				.openProcess(MODULE_NAME, "Resolving breadcrumbs", INCRETimer.TYPE_NORMAL);
-		Iterator it = allCrumbs.iterator();
-		while (it.hasNext())
+		for (Breadcrumb crumb : allCrumbs)
 		{
-			Breadcrumb crumb = (Breadcrumb) it.next();
-			try
-			{
-				graph.getResultingMessages(crumb);
-			}
-			catch (RecursiveFilterException e)
-			{
-				logger.error("RecursiveFilterException");
-				if (e.numVars() > 0)
-				{
-					logger.debug("");
-				}
-			}
+			graph.getResolver().resolve(crumb);
 		}
 		timer.stop();
 	}
@@ -170,13 +157,46 @@ public class DIGGER implements CTCommonModule
 	{
 		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME, "Checking for recursive filter definitions",
 				INCRETimer.TYPE_NORMAL);
-		Iterator it = allCrumbs.iterator();
-		while (it.hasNext())
+		for (Breadcrumb crumb : allCrumbs)
 		{
-			Breadcrumb crumb = (Breadcrumb) it.next();
-			graph.getResolver().resolve(crumb);
+			try
+			{
+				graph.getResultingMessages(crumb);
+			}
+			catch (RecursiveFilterException e)
+			{
+				reportRecursion(e);
+			}
 		}
 		timer.stop();
+	}
+
+	public void reportRecursion(RecursiveFilterException e)
+	{
+		StringBuffer sb = new StringBuffer();
+
+		sb.append(e.getCrumb().getConcern().getName());
+		sb.append(".");
+		sb.append(e.getCrumb().getMessage().getSelector().getName());
+
+		for (Trail trail : e.getTrace())
+		{
+			sb.append(" -> ");
+
+			sb.append(trail.getTargetConcern().getName());
+			sb.append(".");
+			sb.append(trail.getResultMessage().getSelector().getName());
+		}
+
+		if (e.numVars() == 0)
+		{
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Infinite recursive filter definition: " + sb.toString());
+		}
+		else
+		{
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Possibly infitite recursive filter definition (depended on ~"
+					+ e.numVars() + " conditionals): " + sb.toString());
+		}
 	}
 
 	/**
@@ -226,7 +246,7 @@ public class DIGGER implements CTCommonModule
 			}
 			Iterator entranceStates = em.getEntranceStates();
 			ExecutionState es = (ExecutionState) entranceStates.next();
-			//new Composestar.Core.FIRE2.util.viewer.Viewer(em);
+			// new Composestar.Core.FIRE2.util.viewer.Viewer(em);
 			// logger.debug(concern.getName()+"."+methodInfo.getName()+" has
 			// entrance message "+es.getMessage());
 

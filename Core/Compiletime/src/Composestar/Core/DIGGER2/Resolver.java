@@ -58,10 +58,10 @@ public class Resolver
 		logger.debug("[resolver] entrance message: " + msg.toString());
 		Breadcrumb crumb = new Breadcrumb(concern, msg, filterChain);
 		traverseState(state, crumb, crumb.addTrail());
-		Iterator results = crumb.getTrails();
+		Iterator<Trail> results = crumb.getTrails();
 		while (results.hasNext())
 		{
-			Trail trail = (Trail) results.next();
+			Trail trail = results.next();
 			msg = trail.getResultMessage();
 			logger.debug("[resolver] message result: " + msg.toString());
 		}
@@ -76,10 +76,10 @@ public class Resolver
 	 */
 	public void resolve(Breadcrumb crumb) throws ModuleException
 	{
-		Iterator trails = crumb.getTrails();
+		Iterator<Trail> trails = crumb.getTrails();
 		while (trails.hasNext())
 		{
-			Trail trail = (Trail) trails.next();
+			Trail trail = trails.next();
 			logger.debug("[resolver] " + trail.getResultMessage().toString() + " for " + crumb.toString());
 			if (trail.getTargetConcern() != null)
 			{
