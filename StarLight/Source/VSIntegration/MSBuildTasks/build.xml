@@ -23,6 +23,7 @@
 
 	<target name="antlr">
 		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_dotnet" inheritRefs="true"/>
+		<ant dir="../../TypeAnalyzer" target="antlr" inheritRefs="true"/>
 	</target>
 
 </project>

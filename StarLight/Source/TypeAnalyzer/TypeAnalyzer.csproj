@@ -55,7 +55,6 @@
     <Compile Include="AssemblyContext.cs" />
     <Compile Include="SourceAnalyzer.cs" />
     <Compile Include="SourceInfo.cs" />
-    <Compile Include="SourceTypeResolver.cs" />
     <Compile Include="TypeAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

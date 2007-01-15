@@ -21,26 +21,8 @@
               classpathref="lib.core"/>
 
   </target>
-  <!--
-  <target name="gen">
 
-    <path id="lib.xmlbeans">
-      <pathelement path="C:/CPS/StarLight/Libraries/xmlbeans/xbean.jar"/>
-      <pathelement path="C:/CPS/StarLight/Libraries/xmlbeans/jsr173_1.0_api.jar"/>
-    </path>
-
-    <taskdef name="xmlbean"
-             classname="org.apache.xmlbeans.impl.tool.XMLBean"
-             classpathref="lib.xmlbeans"/>
-
-    <xmlbean classpathref="lib.xmlbeans"
-             schema="schema0.xsd" 
-             destfile="xmltypes.jar" 
-             srcgendir="."/>
-
-  </target>
--->
-  <target name="clean"/>
   <target name="build"/>
+  <target name="clean"/>
   
 </project>
