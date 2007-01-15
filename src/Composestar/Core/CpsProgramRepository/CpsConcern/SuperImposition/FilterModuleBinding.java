@@ -12,6 +12,7 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 import java.util.Iterator;
 import java.util.Vector;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Utils.CPSIterator;
 
@@ -26,6 +27,8 @@ public class FilterModuleBinding extends Binding
 	private static final long serialVersionUID = 298685754111384645L;
 
 	public Vector filterModuleSet;
+
+	public Condition condition;
 
 	/**
 	 * @modelguid {887B9895-CA97-4FDA-82D2-17A606C9BB2F}
@@ -85,5 +88,26 @@ public class FilterModuleBinding extends Binding
 	public Iterator getFilterModuleIterator()
 	{
 		return new CPSIterator(filterModuleSet);
+	}
+
+	/**
+	 * Sets the filtermodule condition for this binding.
+	 * 
+	 * @param condition
+	 */
+	public void setFilterModuleCondition(Condition condition)
+	{
+		this.condition = condition;
+	}
+
+	/**
+	 * Returns the filter module condition, or <code>null</code> if there is
+	 * no such condition.
+	 * 
+	 * @return
+	 */
+	public Condition getFilterModuleCondition()
+	{
+		return condition;
 	}
 }

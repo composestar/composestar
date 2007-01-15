@@ -13,13 +13,12 @@ package Composestar.Core.FILTH;
  * @author Isti
  */
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 
 public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity
 {
@@ -40,44 +39,66 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 
 	public Vector order;
 
+	public Vector orderQN;
+
 	public FilterModuleOrder()
 	{
 		order = new Vector();
+		orderQN = new Vector();
 
 	}
 
 	public FilterModuleOrder(Concern parent)
 	{
 		super(parent);
+
+		order = new Vector();
+		orderQN = new Vector();
 	}
 
 	public FilterModuleOrder(LinkedList inOrder)
 	{
 		order = new Vector();
+		orderQN = new Vector();
+
 		int size = inOrder.size();
 		for (int i = 0; i < size; i++)
 		{
-			FilterModuleReference fmr = (FilterModuleReference) inOrder.get(i);
-			order.addElement(fmr.getRef().getQualifiedName());
-			// _order.addElement(order.get(i));
+			FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) inOrder.get(i);
+			order.add(fmsi);
+			orderQN.addElement(fmsi.getFilterModule().getRef().getQualifiedName());
 		}
 	}
 
-	public void addFilterModule(FilterModuleReference fmr)
+	public void addFilterModule(FilterModuleSuperImposition fmsi)
 	{
-		order.addElement(fmr.getQualifiedName());
+		order.add(fmsi);
+		orderQN.add(fmsi.getFilterModule().getRef().getQualifiedName());
 	}
 
+	/**
+	 * Returns a list of the filter modules in this FilterModuleOrder as a list
+	 * of qualified names.
+	 * 
+	 * @deprecated The method <code>filterModuleSIList()</code> should be
+	 *             used, which returns a list of FilterModuleSuperImpositions.
+	 */
 	public List orderAsList()
+	{
+		return orderQN;
+	}
+
+	/**
+	 * Returns the list of FilterModuleSuperImpositions in this
+	 * FilterModuleOrder.
+	 * 
+	 * @return
+	 */
+	public List filterModuleSIList()
 	{
 		return order;
 	}
 
-	public Iterator order()
-	{
-		return order.iterator();
-	}
-	
 	public int hashCode()
 	{
 		return super.hashCode();

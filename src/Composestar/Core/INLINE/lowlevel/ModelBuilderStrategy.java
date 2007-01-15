@@ -5,23 +5,27 @@
 package Composestar.Core.INLINE.lowlevel;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Stack;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
+import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
 import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 
 public class ModelBuilderStrategy implements LowLevelInlineStrategy
 {
@@ -38,6 +42,11 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * The filtersettype;
 	 */
 	private int filterSetType;
+
+	/**
+	 * The FilterCode instance of the current inline.
+	 */
+	private FilterCode filterCode;
 
 	/**
 	 * The complete instructionblock of the current inline
@@ -118,7 +127,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * 
 	 * @return
 	 */
-	public Block getInlineBlock()
+	public FilterCode getFilterCode()
 	{
 		if (empty)
 		{
@@ -126,38 +135,23 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 		else
 		{
-			return inlineBlock;
+			return filterCode;
 		}
 	}
 
 	/**
-	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#startInline(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule[],
+	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#startInline(Composestar.Core.FILTH.FilterModuleOrder,
 	 *      Composestar.Core.LAMA.MethodInfo, java.lang.String[])
 	 */
-	public void startInline(FilterModule[] filterSet, MethodInfo method, String[] argReferences)
+	public void startInline(FilterModuleOrder filterSet, MethodInfo method, String[] argReferences)
 	{
-		if (filterSetType == INPUT_FILTERS)
-		{
-			startInlineIF(filterSet, method, argReferences);
-		}
-		else
-		{
-			startInlineOF(filterSet, method, argReferences);
-		}
-	}
+		filterCode = new FilterCode();
 
-	/**
-	 * The startinline method for inputfilters
-	 * 
-	 * @param filterSet
-	 * @param method
-	 * @param argReferences
-	 */
-	private void startInlineIF(FilterModule[] filterSet, MethodInfo method, String[] argReferences)
-	{
 		this.currentMethod = method;
 
 		inlineBlock = new Block();
+		filterCode.setInstruction(inlineBlock);
+
 		blockStack = new Stack();
 		labelTable = new Hashtable();
 		currentLabelId = -1;
@@ -166,28 +160,28 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 
 		// set current block to inlineblock
 		currentBlock = inlineBlock;
-	}
 
-	/**
-	 * The startinline method for the outputfilters
-	 * 
-	 * @param filterSet
-	 * @param method
-	 * @param argReferences
-	 */
-	private void startInlineOF(FilterModule[] filterSet, MethodInfo method, String[] argReferences)
-	{
-		this.currentMethod = method;
+		// Check whether there are conditions to check before filter code can be
+		// executed. This is the case when all filtermodules, except the last
+		// default dispatch filter module, are conditional. Then we can check
+		// all these conditions in advance and when they are all false, no
+		// filtercode needs to be executed.
+		List list = filterSet.filterModuleSIList();
+		boolean hasCheckConditions = true;
+		for (int i = 0; i < list.size() - 1; i++)
+		{
+			FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) list.get(i);
+			hasCheckConditions = hasCheckConditions && (fmsi.getCondition() != null);
+		}
 
-		inlineBlock = new Block();
-		blockStack = new Stack();
-		labelTable = new Hashtable();
-		currentLabelId = -1;
-
-		empty = true;
-
-		// set current block to inlineblock
-		currentBlock = inlineBlock;
+		if (hasCheckConditions)
+		{
+			for (int i = 0; i < list.size() - 1; i++)
+			{
+				FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) list.get(i);
+				filterCode.addCheckCondition(fmsi.getCondition());
+			}
+		}
 	}
 
 	/**
@@ -240,6 +234,18 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	public void endFilter()
 	{
 		popBlock();
+	}
+
+	/**
+	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#evalCondition(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition)
+	 */
+	public void evalCondition(Condition condition)
+	{
+		System.out.println("###########EVAL CONDITION################");
+		Branch branch = new Branch(condition);
+		this.currentBlock.addInstruction(branch);
+
+		this.currentBranch = branch;
 	}
 
 	/**

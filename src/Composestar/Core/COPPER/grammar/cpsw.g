@@ -19,6 +19,7 @@ package Composestar.Core.COPPER;
 
 import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.FilterModuleBinding;
 }
 
 class CpsTreeWalker extends TreeParser;
@@ -211,7 +212,7 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
     /*---------------------------------------------------------------------------*/
     filtermoduleBind : #("filtermodules" (singleFmBind)*);
 
-      singleFmBind : #(FM_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addFilterModuleBinding(namev, n.getLine());}  filterModuleSet);
+      singleFmBind : #(FM_ {namev.clear();n2=null;} (#(FMCONDBIND_ n2:NAME FILTER_OP))? (n:NAME {namev.add(n.getText());})+ {FilterModuleBinding binding = b.addFilterModuleBinding(namev, n.getLine()); if (n2!=null) b.bindFilterModuleCondition(binding, n2.getText());}  filterModuleSet);
 
         filterModuleSet : #(FMSET_ (#(FMELEM_ {namev.clear();} {parameterv.clear();} filterModuleElement))+);
 

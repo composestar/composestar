@@ -4,9 +4,10 @@
  */
 package Composestar.Core.INLINE.lowlevel;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.LAMA.MethodInfo;
 
@@ -25,7 +26,7 @@ public interface LowLevelInlineStrategy
 	 * @param method The method for which inlining is done
 	 * @param argReferences
 	 */
-	public void startInline(FilterModule[] filterSet, MethodInfo method, String[] argReferences);
+	public void startInline(FilterModuleOrder filterSet, MethodInfo method, String[] argReferences);
 
 	/**
 	 * Called when inlining is done.
@@ -44,6 +45,14 @@ public interface LowLevelInlineStrategy
 	 * Called to indicate the end of a filterblock.
 	 */
 	public void endFilter();
+
+	/**
+	 * Called to indicate that a condition needs to be evaluated. Currently used
+	 * only for filter module conditions
+	 * 
+	 * @param condition
+	 */
+	public void evalCondition(Condition condition);
 
 	/**
 	 * Called to indicate that a conditionexpression needs to be evaluated

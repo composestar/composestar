@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
 import Composestar.Utils.CPSIterator;
 
@@ -130,7 +131,7 @@ public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRep
 	 * @param index
 	 * @roseuid 405A5EE500FC
 	 */
-	public void addFMsAt(Iterator fms, int index)
+	public void addFMsAt(Iterator fms, Condition fmCondition, int index)
 	{
 		// get (create if necessary) the FilterModSIinfo instance
 		FilterModSIinfo fmSIinfo;
@@ -144,7 +145,7 @@ public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRep
 		{
 			fmSIinfo = (FilterModSIinfo) theFmSIinfo.get(index);
 		}
-		fmSIinfo.addFMs(fms);
+		fmSIinfo.addFMs(fms, fmCondition);
 	}
 
 	/**

@@ -122,7 +122,7 @@ public class CpsRepositoryBuilder
 	private SuperImposition si;
 
 	private Target ta;
-	
+
 	private HashMap orderingconstraints = new HashMap();
 
 	// stuff in the right place
@@ -506,7 +506,7 @@ public class CpsRepositoryBuilder
 		fm.addCondition(c);
 		this.addToRepository(c);
 	}
-	
+
 	/**
 	 * Adds a Filter Module Condition object to the repository
 	 * 
@@ -515,7 +515,7 @@ public class CpsRepositoryBuilder
 	 * @param type
 	 * @param lineNumber
 	 */
-	public void addFilterModuleCondition(String name, Vector init, int type, int lineNumber)
+	public void addFilterModuleCondition(String name, Vector init, int type, int lineNumber) throws SemanticException
 	{
 		Condition c = new Condition();
 		c.setName(name);
@@ -559,8 +559,24 @@ public class CpsRepositoryBuilder
 			c.setLongref(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
 			c.setParent(si);
 		}
-		si.addFilterModuleCondition(c);
+		if (!si.addFilterModuleCondition(c))
+		{
+			throw new SemanticException("Identifier of the condition not unique in the superimposition", c
+					.getDescriptionFileName(), c.descriptionLineNumber, 0);
+		}
 		this.addToRepository(c);
+	}
+
+	public void addFilterModuleConditionOperand(FilterModuleBinding binding, String conditionId)
+			throws SemanticException
+	{
+		Condition condition = si.getFilterModuleCondition(conditionId);
+
+		if (condition == null)
+		{
+			throw new SemanticException("Condition corresponding with identifier " + conditionId + " can not be found",
+					binding.getDescriptionFileName(), binding.descriptionLineNumber, 0);
+		}
 	}
 
 	/**
@@ -1420,7 +1436,7 @@ public class CpsRepositoryBuilder
 	 * @param name the selector (can include package + concern)
 	 * @param line
 	 */
-	public void addFilterModuleBinding(Vector name, int line)
+	public FilterModuleBinding addFilterModuleBinding(Vector name, int line)
 	{
 		fmb = new FilterModuleBinding();
 		fmb.setDescriptionFileName(filename);
@@ -1432,6 +1448,21 @@ public class CpsRepositoryBuilder
 		fmb.setParent(si);
 		si.addFilterModuleBinding(fmb);
 		this.addToRepository(fmb);
+
+		return fmb;
+	}
+
+	public void bindFilterModuleCondition(FilterModuleBinding binding, String conditionId) throws SemanticException
+	{
+		Condition condition = si.getFilterModuleCondition(conditionId);
+
+		if (condition == null)
+		{
+			throw new SemanticException("Identifier " + conditionId + " cannot be bound to a filter module condition",
+					binding.getDescriptionFileName(), binding.descriptionLineNumber, 0);
+		}
+
+		binding.setFilterModuleCondition(condition);
 	}
 
 	/**
@@ -1463,11 +1494,11 @@ public class CpsRepositoryBuilder
 			this.addToRepository(fmp);
 		}
 	}
-	
+
 	public void addFMOrderingConstraint(String fm, String fm1)
 	{
-		SyntacticOrderingConstraint constraint = (SyntacticOrderingConstraint)this.orderingconstraints.get(fm);
-		if(constraint == null) // First constraint 
+		SyntacticOrderingConstraint constraint = (SyntacticOrderingConstraint) this.orderingconstraints.get(fm);
+		if (constraint == null) // First constraint
 		{
 			constraint = new SyntacticOrderingConstraint(fm);
 			constraint.addRightFilterModule(fm1);
@@ -1476,7 +1507,7 @@ public class CpsRepositoryBuilder
 		else
 		{
 			constraint.addRightFilterModule(fm1);
-        }
+		}
 	}
 
 	/**
@@ -1772,7 +1803,7 @@ public class CpsRepositoryBuilder
 		completeInputFilters();
 		completeOutputFilters();
 		completeFilterElements();
-		
+
 		this.ds.addObject(FILTH.FILTER_ORDERING_SPEC, this.orderingconstraints);
 	}
 
@@ -1919,7 +1950,7 @@ public class CpsRepositoryBuilder
 				}
 				else
 				{
-					current.getRightOperator().setRightArgument(null); 
+					current.getRightOperator().setRightArgument(null);
 					// nothing after this
 				}
 			}

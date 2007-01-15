@@ -310,6 +310,7 @@ public class ExecutionModelExtractor
 
 			if (state == null)
 			{
+				//FIXME Undistinguishable target/selector instead of star target/selector
 				state = (ExecutionState) entranceStates.get(new Message(Message.STAR_TARGET, message.getSelector()));
 			}
 			if (state == null)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry including="**/*.gpr|**/*.java|MANIFEST.MF" excluding="**/.svn/|**/_svn/|AssemblyInfo.java|Composestar/AssemblyInfo.java|Composestar/Core/CORE/|Composestar/Core/SECRET/|Composestar/Core/SIGN/|bin/|obj/" kind="src" path="src"/>
-	<classpathentry excluding="**/.svn/|**/_svn/|TEST-*.txt" kind="src" path="test"/>
+	<classpathentry excluding="**/.svn/|AssemblyInfo.java|Composestar/AssemblyInfo.java|bin/|obj/" including="**/*.gpr|**/*.java|**/moduleinfo.xml|Composestar/Core/DIGGER/Xslt/|MANIFEST.MF" kind="src" path="src"/>
+	<classpathentry excluding="**/.svn/|TEST-*.txt" kind="src" output="test" path="test"/>
 	<classpathentry kind="lib" path="binaries/antlr/antlr.jar"/>
 	<classpathentry kind="lib" path="binaries/junit/junit.jar"/>
 	<classpathentry kind="lib" path="binaries/prolog/prolog.jar"/>

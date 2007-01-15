@@ -4,6 +4,7 @@
  */
 package Composestar.Core.INLINE.model;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 
 /**
@@ -14,9 +15,16 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionE
 public class Branch extends Instruction
 {
 	/**
-	 * The conditionexpression that is checked to do the branching
+	 * The conditionexpression that is checked to do the branching, or
+	 * <code>null</code> if the condition is used.
 	 */
 	private ConditionExpression conditionExpression;
+
+	/**
+	 * The condition that is checked to do the branching, or <code>null</code>
+	 * if the conditionexpression is used.
+	 */
+	private Condition condition;
 
 	/**
 	 * The instructionblock that should be executed when the conditionexpression
@@ -42,11 +50,29 @@ public class Branch extends Instruction
 	}
 
 	/**
+	 * The constructor
+	 * 
+	 * @param condition The condition to check for the branching.
+	 */
+	public Branch(Condition condition)
+	{
+		this.condition = condition;
+	}
+
+	/**
 	 * @return the conditionExpression
 	 */
 	public ConditionExpression getConditionExpression()
 	{
 		return conditionExpression;
+	}
+
+	/**
+	 * @return the condition
+	 */
+	public Condition getCondition()
+	{
+		return condition;
 	}
 
 	/**

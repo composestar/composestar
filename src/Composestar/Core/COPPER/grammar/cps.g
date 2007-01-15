@@ -53,6 +53,7 @@ tokens {
 	FILTERMODULEPARAMETERS_;
 	FILTERSET_;
 	FMELEM_;
+	FMCONDBIND_;
 	FMSET_;
 	FM_;
 	IFILTER_;
@@ -298,8 +299,11 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
          ;
 
     /*---------------------------------------------------------------------------*/
-    commonBindingPart : (NAME FILTER_OP) => NAME FILTER_OP selectorRef weaveOperation
+    commonBindingPart : (NAME FILTER_OP) => fmCondBind selectorRef weaveOperation
     	| selectorRef weaveOperation;
+    
+    	fmCondBind : NAME FILTER_OP
+    	    { #fmCondBind = #([FMCONDBIND_, "condition"], #fmCondBind);};
     
        	conditionRef : fmElemReference;
   

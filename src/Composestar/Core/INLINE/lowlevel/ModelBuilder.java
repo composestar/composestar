@@ -12,12 +12,11 @@ import java.util.List;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FireModel;
-import Composestar.Core.INLINE.model.Block;
+import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.CTCommonModule;
@@ -64,7 +63,7 @@ public class ModelBuilder implements CTCommonModule
 	/**
 	 * All filtermodules in the filterset.
 	 */
-	private FilterModule[] modules;
+	private FilterModuleOrder modules;
 
 	/**
 	 * The FireModel of the inputfilters in the filterset.
@@ -127,9 +126,9 @@ public class ModelBuilder implements CTCommonModule
 	 * @param method
 	 * @return
 	 */
-	public static Block getInputFilterCode(MethodInfo method)
+	public static FilterCode getInputFilterCode(MethodInfo method)
 	{
-		return (Block) inputFilterCode.get(method);
+		return (FilterCode) inputFilterCode.get(method);
 	}
 
 	/**
@@ -140,9 +139,9 @@ public class ModelBuilder implements CTCommonModule
 	 * @param call
 	 * @return
 	 */
-	public static Block getOutputFilterCode(CallToOtherMethod call)
+	public static FilterCode getOutputFilterCode(CallToOtherMethod call)
 	{
-		return (Block) outputFilterCode.get(call);
+		return (FilterCode) outputFilterCode.get(call);
 	}
 
 	/**
@@ -207,19 +206,10 @@ public class ModelBuilder implements CTCommonModule
 		inlinedMethodSet = new HashSet();
 
 		// get filtermodules:
-		FilterModuleOrder filterModules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
+		modules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
 
-		currentFireModelIF = new FireModel(concern, filterModules);
+		currentFireModelIF = new FireModel(concern, modules);
 		currentFireModelOF = currentFireModelIF;
-
-		List order = filterModules.orderAsList();
-		modules = new FilterModule[order.size()];
-		for (int i = 0; i < order.size(); i++)
-		{
-			String ref = (String) order.get(i);
-
-			modules[i] = (FilterModule) DataStore.instance().getObjectByID(ref);
-		}
 
 		// iterate methods:
 		Signature sig = concern.getSignature();
@@ -253,10 +243,10 @@ public class ModelBuilder implements CTCommonModule
 		inputFilterInliner.inline(execModel, modules, methodInfo);
 
 		// store inlineModel in methodElement:
-		Block inlineBlock = inputFilterBuilderStrategy.getInlineBlock();
-		if (inlineBlock != null)
+		FilterCode filterCode = inputFilterBuilderStrategy.getFilterCode();
+		if (filterCode != null)
 		{
-			inputFilterCode.put(methodInfo, inlineBlock);
+			inputFilterCode.put(methodInfo, filterCode);
 			inlinedMethodSet.add(new Integer(ModelBuilderStrategy.getMethodId(methodInfo)));
 		}
 
@@ -299,12 +289,12 @@ public class ModelBuilder implements CTCommonModule
 		outputFilterInliner.inline(execModel, modules, methodInfo);
 
 		// store inlineModel in callStructure:
-		Block callBlock = outputFilterBuilderStrategy.getInlineBlock();
+		FilterCode filterCode = outputFilterBuilderStrategy.getFilterCode();
 
 		// add callBlock to call
-		if (callBlock != null)
+		if (filterCode != null)
 		{
-			outputFilterCode.put(call, callBlock);
+			outputFilterCode.put(call, filterCode);
 		}
 	}
 

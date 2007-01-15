@@ -12,6 +12,14 @@ package Composestar.Core.INLINE.model;
 public interface Visitor
 {
 	/**
+	 * Called when a FilterCode instance is visited.
+	 * 
+	 * @param filterCode
+	 * @return
+	 */
+	public Object visitFilterCode(FilterCode filterCode);
+
+	/**
 	 * Called when a block is visited.
 	 * 
 	 * @param block

@@ -84,6 +84,8 @@ public interface FlowNode
 
 	public final static String FE_VOID_COMP_OPER_NODE = "VoidCompOper";
 
+	public final static String FM_CONDITION_NODE = "FilterModuleCondition";
+	
 	/**
 	 * In the flowmodel of a filter module, this node marks the end of the flow
 	 * in the current module, proceeding to the next filter module. This node is

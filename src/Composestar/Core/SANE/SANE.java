@@ -155,7 +155,7 @@ public class SANE implements CTCommonModule
 							siConcern.addDynObject(SIinfo.DATAMAP_KEY, siInfo);
 						}
 
-						siInfo.addFMsAt(fmBinding.getFilterModuleIterator(), 0);
+						siInfo.addFMsAt(fmBinding.getFilterModuleIterator(), fmBinding.getFilterModuleCondition(), 0);
 					}
 				}
 			}

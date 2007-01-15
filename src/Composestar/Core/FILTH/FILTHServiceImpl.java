@@ -40,6 +40,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.FilterModSIinfo;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
 
@@ -162,22 +163,22 @@ public class FILTHServiceImpl extends FILTHService
 
 		Graph g = new Graph();
 		g.setRoot(new Node("root"));
-		
+
 		FILTHService.log.print("<h4>Superimposed Filter Modules: </h4>\n");
 		FILTHService.log.print("<ul>\n");
 		modulrefs = processModules(c, g);
 		FILTHService.log.print("</ul>\n");
 
 		this.processOrderingSpecifications(g);
-		
+
 		FILTHService.log.print("<h4>Ordering constraints: </h4>\n");
 		FILTHService.log.print("<ul>\n");
-		
+
 		this.printOrderingSpecifications();
-		this.processXML(c,g);
-		
+		this.processXML(c, g);
+
 		FILTHService.log.print("</ul>\n");
-		
+
 		// FILTHService.print("FILTH::generating alternatives\n");
 		OrderTraverser ot = new OrderTraverser();
 		LinkedList orders = ot.multiTraverse(g);
@@ -188,7 +189,7 @@ public class FILTHServiceImpl extends FILTHService
 		 * System.out.println(((Node)i.next()).getElement());
 		 * System.out.println("/n-----------"); }
 		 */
-		FilterModuleReference fr = null;
+		FilterModuleSuperImposition fmsi = null;
 		for (Iterator k = orders.iterator(); k.hasNext();)
 		{
 			Iterator i = ((List) k.next()).iterator();
@@ -201,19 +202,19 @@ public class FILTHServiceImpl extends FILTHService
 
 				for (Iterator j = modulrefs.iterator(); j.hasNext();)
 				{
-					fr = (FilterModuleReference) j.next();
+					fmsi = (FilterModuleSuperImposition) j.next();
 					// System.out.println("FILTH
 					// ordering>>>"+a+"::"+fr.getName() );
-					if (a.getName().equals(fr.getName()))
+					if (a.getName().equals(fmsi.getFilterModule().getName()))
 					{
 						break;
 					}
 
 				}
-				anOrder.addLast(fr);
+				anOrder.addLast(fmsi);
 				// System.out.println(count++);
 			}
-			anOrder.addLast(InnerDispatcher.getInnerDispatchReference());
+			anOrder.addLast(new FilterModuleSuperImposition(InnerDispatcher.getInnerDispatchReference()));
 			forders.addLast(anOrder);
 		}
 
@@ -225,7 +226,8 @@ public class FILTHServiceImpl extends FILTHService
 		// FILTHService.printTab(3,"<-- Alternative ("+ alt++ +") -->\n");
 		for (Iterator j = ((LinkedList) forders.getFirst()).iterator(); j.hasNext();)
 		{
-			FilterModuleReference fmr = (FilterModuleReference) j.next();
+			fmsi = (FilterModuleSuperImposition) j.next();
+			FilterModuleReference fmr = fmsi.getFilterModule();
 			if (!(fmr.getRef().getQualifiedName()
 					.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
 			{
@@ -243,7 +245,8 @@ public class FILTHServiceImpl extends FILTHService
 			FILTHService.log.print("<ol>\n");
 			for (Iterator j = ((List) i.next()).iterator(); j.hasNext();)
 			{
-				FilterModuleReference fmr = (FilterModuleReference) j.next();
+				fmsi = (FilterModuleSuperImposition) j.next();
+				FilterModuleReference fmr = fmsi.getFilterModule();
 				if (!(fmr.getRef().getQualifiedName()
 						.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
 				{
@@ -275,8 +278,8 @@ public class FILTHServiceImpl extends FILTHService
 
 		if (alt > 2)
 		{
-			Debug.out(Debug.MODE_WARNING, "FILTH", 
-					"Multiple Filter Module orderings possible for concern " + c.getQualifiedName(), filename, 0);
+			Debug.out(Debug.MODE_WARNING, "FILTH", "Multiple Filter Module orderings possible for concern "
+					+ c.getQualifiedName(), filename, 0);
 		}
 
 		return forders; // arrange this according to the output required!!
@@ -302,50 +305,51 @@ public class FILTHServiceImpl extends FILTHService
 		/* add the name of each filtermodule into the graph */
 		for (Iterator i = fmsi.getIter(); i.hasNext();)
 		{
-			FilterModuleReference fr = (FilterModuleReference) i.next();
+			FilterModuleSuperImposition fms = (FilterModuleSuperImposition) i.next();
+			FilterModuleReference fr = fms.getFilterModule();
 			Action a = new Action(fr.getName(), Boolean.TRUE, true);
 			Action.insert(a, g);
 
 			// FILTHService.print("FILTH::adding module> "+fr.getName()+"|");
 			FILTHService.log.print("<li><i>" + fr.getQualifiedName() + "</i></li>\n");
 
-			modulerefs.add(fr);
+			modulerefs.add(fms);
 		}
 		return modulerefs;
 	}
 
 	private void processOrderingSpecifications(Graph g)
 	{
-		HashMap map = (HashMap)DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
-		Debug.out(Debug.MODE_INFORMATION, "FILTH", "FilterModule ordering constraints: "+map);
-		
+		HashMap map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
+		Debug.out(Debug.MODE_INFORMATION, "FILTH", "FilterModule ordering constraints: " + map);
+
 		String left, right;
 		Iterator it = map.values().iterator();
-		while(it.hasNext())
+		while (it.hasNext())
 		{
-			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint)it.next();
+			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint) it.next();
 			left = soc.getLeft();
 			Iterator socit = soc.getRightFilterModules();
-			while(socit.hasNext())
+			while (socit.hasNext())
 			{
-				right = (String)socit.next();
-				this.processRule(left,right,g);
+				right = (String) socit.next();
+				this.processRule(left, right, g);
 			}
 		}
 	}
-	
+
 	private void printOrderingSpecifications()
 	{
-		HashMap map = (HashMap)DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
+		HashMap map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
 		Iterator it = map.values().iterator();
-		
-		while(it.hasNext())
+
+		while (it.hasNext())
 		{
-			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint)it.next();
+			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint) it.next();
 			FILTHService.log.print("<li><i>" + soc.toString() + "</i></li>\n");
 		}
 	}
-	
+
 	private void processRule(String left, String right, Graph graph)
 	{
 		Action l, r;
@@ -381,7 +385,7 @@ public class FILTHServiceImpl extends FILTHService
 			 */
 			r = null;
 		}
-		
+
 		/* we add a rule only if both arguments are active */
 		if ((l != null) && (r != null))
 		{
@@ -389,7 +393,7 @@ public class FILTHServiceImpl extends FILTHService
 			rule.insert(graph);
 		}
 	}
-	
+
 	private void processXML(Concern c, Graph g)
 	{
 		/* process XML specification, build the rules into the graph */
@@ -415,22 +419,22 @@ public class FILTHServiceImpl extends FILTHService
 				}
 				else
 				{
-					Debug.out(Debug.MODE_WARNING, "FILTH", 
-							"Could not read/find Filter Module Order specification (" + specfile + ").", c);
+					Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification ("
+							+ specfile + ").", c);
 				}
 			}
 		}
 		catch (SAXException se)
 		{
-			Debug.out(Debug.MODE_WARNING, "FILTH", 
-					"Problems parsing file: " + specfile + ", message: " + se.getMessage());
-			
+			Debug.out(Debug.MODE_WARNING, "FILTH", "Problems parsing file: " + specfile + ", message: "
+					+ se.getMessage());
+
 			Debug.out(Debug.MODE_DEBUG, "FILTH", Debug.stackTrace(se));
 		}
 		catch (Exception ioe)
 		{
-			Debug.out(Debug.MODE_WARNING, "FILTH", 
-					"Could not read/find Filter Module Order specification (" + specfile + ").", c);
+			Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification (" + specfile
+					+ ").", c);
 		}
 	}
 
@@ -448,30 +452,30 @@ public class FILTHServiceImpl extends FILTHService
 		Debug.out(Debug.MODE_DEBUG, "FILTH [INCRE]", "Restored " + forders.size()
 				+ " Filter Module Order(s) for concern " + c.getName());
 	}
-	
-//	public List getOrder(CpsConcern c)
-//	{
-//		LinkedList forder = new LinkedList();
-//		LinkedList modulrefs;
-//		Graph g = new Graph();
-//		g.setRoot(new Node((Object) "root"));
-//		modulrefs = processModules(c, g);
-//		processXML(c, g);
-//		OrderTraverser ot = new OrderTraverser();
-//		LinkedList order = ot.traverse(g);
-//		Action a;
-//		Iterator i = order.iterator();
-//		i.next();
-//		while (i.hasNext())
-//		{
-//			a = (Action) ((Node) i.next()).getElement();
-//			for (Iterator j = modulrefs.iterator(); j.hasNext();)
-//			{
-//				FilterModuleReference fr = ((FilterModuleReference) j.next());
-//				System.out.println("FILTH ordering>>>" + a + "::" + fr.getName());
-//				if (a.getName().equals(fr.getName())) forder.addLast(fr);
-//			}
-//		}
-//		return forder;
-//	}
+
+	// public List getOrder(CpsConcern c)
+	// {
+	// LinkedList forder = new LinkedList();
+	// LinkedList modulrefs;
+	// Graph g = new Graph();
+	// g.setRoot(new Node((Object) "root"));
+	// modulrefs = processModules(c, g);
+	// processXML(c, g);
+	// OrderTraverser ot = new OrderTraverser();
+	// LinkedList order = ot.traverse(g);
+	// Action a;
+	// Iterator i = order.iterator();
+	// i.next();
+	// while (i.hasNext())
+	// {
+	// a = (Action) ((Node) i.next()).getElement();
+	// for (Iterator j = modulrefs.iterator(); j.hasNext();)
+	// {
+	// FilterModuleReference fr = ((FilterModuleReference) j.next());
+	// System.out.println("FILTH ordering>>>" + a + "::" + fr.getName());
+	// if (a.getName().equals(fr.getName())) forder.addLast(fr);
+	// }
+	// }
+	// return forder;
+	// }
 }

@@ -9,6 +9,7 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -43,7 +44,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	/**
 	 * Contains all declared filter module conditions
 	 */
-	public Vector filterModuleConditions;
+	public HashMap filterModuleConditions;
 
 	/**
 	 * @modelguid {9C81F007-8BBA-44D2-9A5D-8A616EE76A04}
@@ -57,7 +58,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 		methods = new Vector();
 		conditions = new Vector();
 		selectors = new Vector();
-		filterModuleConditions = new Vector();
+		filterModuleConditions = new HashMap();
 		setName("superimposition");
 	}
 
@@ -279,10 +280,20 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	 * Adds a filter module condition.
 	 * 
 	 * @param condition The filter module condition to add.
+	 * @return <code>false</code> if and only if the SuperImposition already
+	 *         contains a condition with the same name
 	 */
-	public void addFilterModuleCondition(Condition condition)
+	public boolean addFilterModuleCondition(Condition condition)
 	{
-		filterModuleConditions.add(condition);
+		if (filterModuleConditions.containsKey(condition.getName()))
+		{
+			return false;
+		}
+		else
+		{
+			filterModuleConditions.put(condition.getName(), condition);
+			return true;
+		}
 	}
 
 	/**
@@ -290,7 +301,19 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	 */
 	public Iterator getFilterModuleConditions()
 	{
-		return filterModuleConditions.iterator();
+		return filterModuleConditions.entrySet().iterator();
+	}
+
+	/**
+	 * Returns the filter module condition corresponding with the identifier, or
+	 * <code>null</code> if no such filter module condition is present.
+	 * 
+	 * @param identifier
+	 * @return
+	 */
+	public Condition getFilterModuleCondition(String identifier)
+	{
+		return (Condition) filterModuleConditions.get(identifier);
 	}
 
 	/**
@@ -302,6 +325,14 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	 */
 	public boolean removeFilterModuleCondition(Condition condition)
 	{
-		return filterModuleConditions.remove(condition);
+		if (filterModuleConditions.containsValue(condition))
+		{
+			filterModuleConditions.remove(condition.getName());
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

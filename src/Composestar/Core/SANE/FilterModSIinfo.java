@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Utils.CPSIterator;
@@ -51,26 +52,22 @@ public class FilterModSIinfo extends Composestar.Core.RepositoryImplementation.C
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule
 	 * @roseuid 405986F50195
 	 */
-	public FilterModule getByName(String name)
+	public FilterModuleSuperImposition getByName(String name)
 	{
 		FilterModule fm = null;
 		CPSIterator iter = this.getIter();
-		for (; iter.hasNext();)
+		while (iter.hasNext())
 		{
-			fm = ((FilterModuleReference) iter.next()).getRef();
+			FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) iter.next();
+			fm = fmsi.getFilterModule().getRef();
 			if (fm.getName().equals(name))
 			{
-				break;
+				return fmsi;
 			}
 		}
-		if (iter.hasNext())
-		{
-			return fm;
-		}
-		else
-		{
-			return null;
-		}
+
+		// Not found
+		return null;
 	}
 
 	/**
@@ -95,11 +92,13 @@ public class FilterModSIinfo extends Composestar.Core.RepositoryImplementation.C
 	 * @param fms
 	 * @roseuid 405A70AE0275
 	 */
-	public void addFMs(Iterator fms)
+	public void addFMs(Iterator fms, Condition condition)
 	{
-		for (; fms.hasNext();)
+		while (fms.hasNext())
 		{
-			this.getAll().addElement(fms.next());
+			FilterModuleReference fm = (FilterModuleReference) fms.next();
+			FilterModuleSuperImposition fmsi = new FilterModuleSuperImposition(fm, condition);
+			superimposed.addElement(fmsi);
 		}
 	}
 }
