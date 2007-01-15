@@ -25,6 +25,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCREReporter;
 import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
@@ -42,13 +43,11 @@ import Composestar.DotNET.MASTER.StarLightMaster;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
-import composestar.dotNET.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET.tym.entities.ArrayOfAttributeElement;
 import composestar.dotNET.tym.entities.ArrayOfCallElement;
 import composestar.dotNET.tym.entities.ArrayOfFieldElement;
 import composestar.dotNET.tym.entities.ArrayOfFilterActionElement;
 import composestar.dotNET.tym.entities.ArrayOfFilterTypeElement;
-import composestar.dotNET.tym.entities.ArrayOfMethodElement;
 import composestar.dotNET.tym.entities.ArrayOfParameterElement;
 import composestar.dotNET.tym.entities.AssemblyConfig;
 import composestar.dotNET.tym.entities.AssemblyDocument;
@@ -70,7 +69,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	public static final String MODULE_NAME_INCRE = "COLLECTOR";
 	
 	private boolean processBodies = false;
-	private List callsToOtherMethods = new ArrayList();
+	private List<DotNETCallToOtherMethod> callsToOtherMethods = new ArrayList<DotNETCallToOtherMethod>();
 	
 	private INCREReporter reporter = INCRE.instance().getReporter();
 	private INCRETimer deserializeTimer = reporter.openProcess(MODULE_NAME, "xml deserialize", INCRETimer.TYPE_NORMAL);
@@ -80,17 +79,14 @@ public class StarLightCollectorRunner implements CollectorRunner
 	{
 		INCRE incre = INCRE.instance();
 		DataStore dataStore = DataStore.instance();
-		Map typeMap = TypeMap.instance().map();
 		ConfigurationContainer configContainer = StarLightMaster.getConfigContainer();
 
 		// Collect all filtertypes and filteractions:
 		collectFilterTypesAndActions(configContainer);
 		
 		// Collect all types from the persistent repository
-		ArrayOfAssemblyConfig assemblies = configContainer.getAssemblies();
-		for (int i = 0; i < assemblies.sizeOfAssemblyConfigArray(); i++)
+		for (AssemblyConfig ac : configContainer.getAssemblies().getAssemblyConfigList())
 		{
-			AssemblyConfig ac = assemblies.getAssemblyConfigArray(i);
 			String assemblyName = ac.getName();
 			
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing assembly '" + assemblyName + "'...");
@@ -114,44 +110,37 @@ public class StarLightCollectorRunner implements CollectorRunner
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing primitive concerns...");
 		starttime = System.currentTimeMillis();
 		
-		Set unresolvedAttributeTypes = new HashSet();
+		Set<Annotation> unresolvedAttributeTypes = new HashSet<Annotation>();
 		
-		Iterator it = typeMap.values().iterator();
-		while (it.hasNext())
+		Map<String,DotNETType> typeMap = TypeMap.instance().map();
+		for (DotNETType type : typeMap.values())
 		{
-			DotNETType type = (DotNETType) it.next();
-			
 			// Collect type attributes
-			List typeAnnos = type.getAnnotations();
+			List<Annotation> typeAnnos = type.getAnnotations();
 			if (typeAnnos != null)
 			{
-				for (int i = 0; i < typeAnnos.size(); i++)
-					unresolvedAttributeTypes.add(typeAnnos.get(i));
+				unresolvedAttributeTypes.addAll(typeAnnos);
 			}
 			
 			// Collect field attributes
-			Iterator fieldIter = type.getFields().iterator();
-			while (fieldIter.hasNext()) 
+			List<DotNETFieldInfo> fields = type.getFields();
+			for (DotNETFieldInfo field : fields) 
 			{
-				DotNETFieldInfo field = (DotNETFieldInfo)fieldIter.next();
-				List fieldAnnos = field.getAnnotations();
+				List<Annotation> fieldAnnos = field.getAnnotations();
 				if (fieldAnnos != null)
 				{
-					for (int i = 0; i < fieldAnnos.size(); i++)
-						unresolvedAttributeTypes.add(fieldAnnos.get(i));
+					unresolvedAttributeTypes.addAll(fieldAnnos);
 				}
 			}
 			
 			// Collect method attributes
-			Iterator methodIter = type.getMethods().iterator();
-			while (methodIter.hasNext())
+			List<DotNETMethodInfo> methods = type.getMethods();
+			for (DotNETMethodInfo method : methods)
 			{
-				DotNETMethodInfo method = (DotNETMethodInfo)methodIter.next();
-				List methodAnnos = method.getAnnotations();
+				List<Annotation> methodAnnos = method.getAnnotations();
 				if (methodAnnos != null)
 				{
-					for (int i = 0; i < methodAnnos.size(); i++)
-						unresolvedAttributeTypes.add(methodAnnos.get(i));
+					unresolvedAttributeTypes.addAll(methodAnnos);
 				}
 			}
 			
@@ -172,27 +161,24 @@ public class StarLightCollectorRunner implements CollectorRunner
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolving " + unresolvedAttributeTypes.size() + " attribute types...");
 		starttime = System.currentTimeMillis();
 		
-		Map newAttributeTypes = new HashMap();
-		Iterator unresolvedAttributeTypeIter = unresolvedAttributeTypes.iterator();
-		while (unresolvedAttributeTypeIter.hasNext())
+		Map<String,DotNETType> newAttributeTypes = new HashMap<String,DotNETType>();
+		for (Annotation annotation : unresolvedAttributeTypes)
 		{
-			DotNETAttribute attribute = (DotNETAttribute)unresolvedAttributeTypeIter.next();
-		
-			if (typeMap.containsKey(attribute.getTypeName()))
+			if (typeMap.containsKey(annotation.getTypeName()))
 			{
 				// Attribute type has been resolved by the analyzer
-				attribute.setType((Type)typeMap.get(attribute.getTypeName()));
+				annotation.setType((Type)typeMap.get(annotation.getTypeName()));
 			}
-			else if (newAttributeTypes.containsKey(attribute.getTypeName()))
+			else if (newAttributeTypes.containsKey(annotation.getTypeName()))
 			{
 				// Attribute type has been encountered before, use previously created type
-				attribute.setType((Type)newAttributeTypes.get(attribute.getTypeName()));
+				annotation.setType((Type)newAttributeTypes.get(annotation.getTypeName()));
 			}
 			else
 			{
 				// Create a new DotNETType element
 				DotNETType attributeType = new DotNETType();
-				attributeType.setFullName(attribute.getTypeName());
+				attributeType.setFullName(annotation.getTypeName());
 				
 				// Add this attribute type to the repository as a primitive concern
 				PrimitiveConcern pc_attribute = new PrimitiveConcern();
@@ -230,12 +216,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 		int typecount = 0;
 
-		/* collect and iterate over all objects from previous compilation runs */
-		Iterator it = incre.history.getIterator();
-		while (it.hasNext())
+		// collect and iterate over all objects from previous compilation runs
+		
+		for (Object obj : incre.history.getObjects())
 		{
-			Object obj = it.next();
-
 			// Only restore PrimitiveConcerns and CpsConcerns
 			if (obj instanceof PrimitiveConcern || obj instanceof CpsConcern)
 			{
@@ -299,14 +283,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 		// create mapping from strings to filteractions, to use later to resolve
 		// the actions in a filtertype
-		Hashtable actionMapping = new Hashtable();
+		Map<String,FilterAction> actionMapping = new HashMap<String,FilterAction>();
 
 		// get FilterActions
-		ArrayOfFilterActionElement storedActions = config.getFilterActions();
-		for (int i = 0; i < storedActions.sizeOfFilterActionArray(); i++)
+		List<FilterActionElement> storedActions = config.getFilterActions().getFilterActionList();
+		for (FilterActionElement storedAction : storedActions)
 		{
-			FilterActionElement storedAction = storedActions.getFilterActionArray(i);
-
 			FilterAction filterAction = new FilterAction();
 			filterAction.setName(storedAction.getName());
 			filterAction.setFullName(storedAction.getFullName());
@@ -317,11 +299,9 @@ public class StarLightCollectorRunner implements CollectorRunner
 		}
 
 		// get FilterTypes:
-		ArrayOfFilterTypeElement storedFilters = config.getFilterTypes();
-		for (int i = 0; i < storedFilters.sizeOfFilterTypeArray(); i++)
+		List<FilterTypeElement> storedTypes = config.getFilterTypes().getFilterTypeList();
+		for (FilterTypeElement storedType : storedTypes)
 		{
-			FilterTypeElement storedType = storedFilters.getFilterTypeArray(i);
-
 			FilterType filterType = new FilterType();
 			filterType.setType(storedType.getName());
 
@@ -362,7 +342,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			filterType.setRejectReturnAction(rejectReturnAction);
 		}
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, storedFilters.sizeOfFilterTypeArray() + " filters with "
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, storedTypes.size() + " filters with "
 				+ actionMapping.size() + " filter actions read from database in "
 				+ (System.currentTimeMillis() - starttime) + " ms.");
 	}
@@ -381,15 +361,14 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 	private void collectTypes(AssemblyElement assembly) throws ModuleException
 	{
-		TypeElement[] types = assembly.getTypes().getTypeArray();
+		List<TypeElement> types = assembly.getTypes().getTypeList();
 
 		// Process all types, i.e. map them to LAMA
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Generating language model with " + types.length + " types...");		
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Generating language model with " + types.size() + " types...");		
 		starttime = System.currentTimeMillis();
 		
-		for (int i = 0; i < types.length; i++)
+		for (TypeElement te : types)
 		{
-			TypeElement te = types[i];
 			String fullName = getFullName(te);
 
 		//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing type '" + fullName + "'...");
@@ -403,10 +382,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 			dnt.setFromSource(te.getFromSource());
 			
 			// Set the implemented interfaces
-			String[] interfaces = te.getInterfaces().getInterfaceArray();
-			for (int j = 0; j < interfaces.length; j++)
+			List<String> interfaces = te.getInterfaces().getInterfaceList();
+			for (String iface : interfaces)
 			{
-				dnt.addImplementedInterface(interfaces[j]);
+				dnt.addImplementedInterface(iface);
 			}
 			
 			dnt.setIsClass(te.getIsClass());
@@ -461,14 +440,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 	private void collectFields(TypeElement storedType, DotNETType type) throws ModuleException
 	{
-		// Get all fields for the type 'storedType'
-		ArrayOfFieldElement fields = storedType.getFields();
-
 		// Process all fields
-		for (int i = 0; i < fields.sizeOfFieldArray(); i++)
+		List<FieldElement> fields = storedType.getFields().getFieldList();
+		for (FieldElement storedField : fields)
 		{
-			FieldElement storedField = fields.getFieldArray(i);
-
 		//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing field '" + storedField.getName() + "'...");
 
 			DotNETFieldInfo field = new DotNETFieldInfo();
@@ -481,8 +456,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 			//Set the attributes for this field
 			DotNETAttribute[] attributes = collectAttributes(storedField.getAttributes());
-			for (int j = 0; j < attributes.length; j++)
-				field.addAnnotation(attributes[j]);
+			for (DotNETAttribute attribute : attributes)
+				field.addAnnotation(attribute);
 			
 			type.addField(field);
 		}
@@ -490,11 +465,9 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 	private void collectMethods(TypeElement storedType, DotNETType type) throws ModuleException
 	{
-		ArrayOfMethodElement methods = storedType.getMethods();
-
-		for (int i = 0; i < methods.sizeOfMethodArray(); i++)
+		List<MethodElement> methods = storedType.getMethods().getMethodList();
+		for (MethodElement storedMethod : methods)
 		{
-			MethodElement storedMethod = methods.getMethodArray(i);
 			String name = storedMethod.getName();
 
 		//	Debug.out(Debug.MODE_DEBUG,MODULE_NAME, "Processing method '" + name + "'...");
@@ -521,8 +494,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 			//Set the attributes for this method
 			DotNETAttribute[] attributes = collectAttributes(storedMethod.getAttributes());
-			for (int j = 0; j < attributes.length; j++)
-				method.addAnnotation(attributes[j]);
+			for (DotNETAttribute attribute : attributes)
+				method.addAnnotation(attribute);
 			
 			type.addMethod(method);
 		}
