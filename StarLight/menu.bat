@@ -11,7 +11,7 @@ IF NOT "%1" == "" SET TARGET=%1
 
 IF NOT EXIST "%JAVA_HOME%\bin\javac.exe" GOTO nojavahome
 
-CALL %CORE%\Development\Ant\bin\ant.bat -buildfile %BUILD_FILE% %TARGET% %2 %3 %4 %5 %6 %7 %8 %9
+CALL "%CORE%\Development\Ant\bin\ant.bat" -buildfile "%BUILD_FILE%" "%TARGET%" %2 %3 %4 %5 %6 %7 %8 %9
 GOTO end
 
 :end
