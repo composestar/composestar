@@ -1,8 +1,8 @@
 package Composestar.DotNET.LAMA;
 
-import Composestar.Core.LAMA.*;
-
 import java.io.Serializable;
+
+import Composestar.Core.LAMA.Annotation;
 
 public class DotNETAttribute extends Annotation implements Serializable{
     

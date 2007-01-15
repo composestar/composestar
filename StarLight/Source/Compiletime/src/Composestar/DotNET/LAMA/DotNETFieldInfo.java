@@ -10,16 +10,16 @@
 
 package Composestar.DotNET.LAMA;
 
-import Composestar.Core.LAMA.*;
-import Composestar.Core.LAMA.FieldInfo;
-
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import Composestar.Core.LAMA.Annotation;
+import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.UnitResult;
 
 /**
  * @author havingaw

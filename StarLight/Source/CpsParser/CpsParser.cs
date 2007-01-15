@@ -60,91 +60,92 @@ namespace Composestar.StarLight.CpsParser
 		public const int FILTERMODULEPARAMETERS_ = 20;
 		public const int FILTERSET_ = 21;
 		public const int FMELEM_ = 22;
-		public const int FMSET_ = 23;
-		public const int FM_ = 24;
-		public const int IFILTER_ = 25;
-		public const int INTERNAL_ = 26;
-		public const int METHOD2_ = 27;
-		public const int METHODNAMESET_ = 28;
-		public const int METHODNAME_ = 29;
-		public const int METHOD_ = 30;
-		public const int NOTEXPR_ = 31;
-		public const int MPSET_ = 32;
-		public const int MP_ = 33;
-		public const int MPART_ = 34;
-		public const int OCL_ = 35;
-		public const int OFILTER_ = 36;
-		public const int OREXPR_ = 37;
-		public const int PARAMETER_ = 38;
-		public const int PARAMETERLIST_ = 39;
-		public const int SELEC2_ = 40;
-		public const int SELEC_ = 41;
-		public const int SELEXP_ = 42;
-		public const int SOURCE_ = 43;
-		public const int SPART_ = 44;
-		public const int TSSET_ = 45;
-		public const int TARGET_ = 46;
-		public const int TYPELIST_ = 47;
-		public const int TYPE_ = 48;
-		public const int VAR_ = 49;
-		public const int APS_ = 50;
-		public const int PROLOG_EXPRESSION = 51;
-		public const int LITERAL_concern = 52;
-		public const int NAME = 53;
-		public const int LPARENTHESIS = 54;
-		public const int RPARENTHESIS = 55;
-		public const int LITERAL_in = 56;
-		public const int SEMICOLON = 57;
-		public const int COMMA = 58;
-		public const int COLON = 59;
-		public const int DOT = 60;
-		public const int LCURLY = 61;
-		public const int RCURLY = 62;
-		public const int LITERAL_filtermodule = 63;
-		public const int PARAMETER_NAME = 64;
-		public const int PARAMETERLIST_NAME = 65;
-		public const int LITERAL_internals = 66;
-		public const int LITERAL_externals = 67;
-		public const int EQUALS = 68;
-		public const int DOUBLE_COLON = 69;
-		public const int STAR = 70;
-		public const int LITERAL_conditions = 71;
-		public const int LITERAL_inputfilters = 72;
-		public const int FILTER_OP = 73;
-		public const int OR = 74;
-		public const int AND = 75;
-		public const int NOT = 76;
-		public const int HASH = 77;
-		public const int LSQUARE = 78;
-		public const int RSQUARE = 79;
-		public const int LANGLE = 80;
-		public const int RANGLE = 81;
-		public const int LITERAL_outputfilters = 82;
-		public const int LITERAL_superimposition = 83;
-		public const int LITERAL_selectors = 84;
-		public const int ARROW_LEFT = 85;
-		public const int LITERAL_filtermodules = 86;
-		public const int LITERAL_annotations = 87;
-		public const int LITERAL_constraints = 88;
-		public const int LITERAL_presoft = 89;
-		public const int LITERAL_pre = 90;
-		public const int LITERAL_prehard = 91;
-		public const int LITERAL_implementation = 92;
-		public const int LITERAL_by = 93;
-		public const int LITERAL_as = 94;
-		public const int FILENAME = 95;
-		public const int QUESTIONMARK = 96;
-		public const int DIGIT = 97;
-		public const int FILE_SPECIAL = 98;
-		public const int LETTER = 99;
-		public const int NEWLINE = 100;
-		public const int SPECIAL = 101;
-		public const int QUOTE = 102;
-		public const int SINGLEQUOTE = 103;
-		public const int PROLOG_STRING = 104;
-		public const int COMMENTITEMS = 105;
-		public const int COMMENT = 106;
-		public const int WS = 107;
+		public const int FMCONDBIND_ = 23;
+		public const int FMSET_ = 24;
+		public const int FM_ = 25;
+		public const int IFILTER_ = 26;
+		public const int INTERNAL_ = 27;
+		public const int METHOD2_ = 28;
+		public const int METHODNAMESET_ = 29;
+		public const int METHODNAME_ = 30;
+		public const int METHOD_ = 31;
+		public const int NOTEXPR_ = 32;
+		public const int MPSET_ = 33;
+		public const int MP_ = 34;
+		public const int MPART_ = 35;
+		public const int OCL_ = 36;
+		public const int OFILTER_ = 37;
+		public const int OREXPR_ = 38;
+		public const int PARAMETER_ = 39;
+		public const int PARAMETERLIST_ = 40;
+		public const int SELEC2_ = 41;
+		public const int SELEC_ = 42;
+		public const int SELEXP_ = 43;
+		public const int SOURCE_ = 44;
+		public const int SPART_ = 45;
+		public const int TSSET_ = 46;
+		public const int TARGET_ = 47;
+		public const int TYPELIST_ = 48;
+		public const int TYPE_ = 49;
+		public const int VAR_ = 50;
+		public const int APS_ = 51;
+		public const int PROLOG_EXPRESSION = 52;
+		public const int LITERAL_concern = 53;
+		public const int NAME = 54;
+		public const int LPARENTHESIS = 55;
+		public const int RPARENTHESIS = 56;
+		public const int LITERAL_in = 57;
+		public const int SEMICOLON = 58;
+		public const int COMMA = 59;
+		public const int COLON = 60;
+		public const int DOT = 61;
+		public const int LCURLY = 62;
+		public const int RCURLY = 63;
+		public const int LITERAL_filtermodule = 64;
+		public const int PARAMETER_NAME = 65;
+		public const int PARAMETERLIST_NAME = 66;
+		public const int LITERAL_internals = 67;
+		public const int LITERAL_externals = 68;
+		public const int EQUALS = 69;
+		public const int DOUBLE_COLON = 70;
+		public const int STAR = 71;
+		public const int LITERAL_conditions = 72;
+		public const int LITERAL_inputfilters = 73;
+		public const int FILTER_OP = 74;
+		public const int OR = 75;
+		public const int AND = 76;
+		public const int NOT = 77;
+		public const int HASH = 78;
+		public const int LSQUARE = 79;
+		public const int RSQUARE = 80;
+		public const int LANGLE = 81;
+		public const int RANGLE = 82;
+		public const int LITERAL_outputfilters = 83;
+		public const int LITERAL_superimposition = 84;
+		public const int LITERAL_selectors = 85;
+		public const int ARROW_LEFT = 86;
+		public const int LITERAL_filtermodules = 87;
+		public const int LITERAL_annotations = 88;
+		public const int LITERAL_constraints = 89;
+		public const int LITERAL_presoft = 90;
+		public const int LITERAL_pre = 91;
+		public const int LITERAL_prehard = 92;
+		public const int LITERAL_implementation = 93;
+		public const int LITERAL_by = 94;
+		public const int LITERAL_as = 95;
+		public const int FILENAME = 96;
+		public const int QUESTIONMARK = 97;
+		public const int DIGIT = 98;
+		public const int FILE_SPECIAL = 99;
+		public const int LETTER = 100;
+		public const int NEWLINE = 101;
+		public const int SPECIAL = 102;
+		public const int QUOTE = 103;
+		public const int SINGLEQUOTE = 104;
+		public const int PROLOG_STRING = 105;
+		public const int COMMENTITEMS = 106;
+		public const int COMMENT = 107;
+		public const int WS = 108;
 		
 		
 	public String sourceLang = null;              //source language
@@ -3331,11 +3332,11 @@ _loop180_breakloop:			;
 				}
 				else
 				{
-					goto _loop201_breakloop;
+					goto _loop202_breakloop;
 				}
 				
 			}
-_loop201_breakloop:			;
+_loop202_breakloop:			;
 		}    // ( ... )*
 		filtermoduleBind_AST = currentAST.root;
 		returnAST = filtermoduleBind_AST;
@@ -3365,11 +3366,11 @@ _loop201_breakloop:			;
 				}
 				else
 				{
-					goto _loop220_breakloop;
+					goto _loop221_breakloop;
 				}
 				
 			}
-_loop220_breakloop:			;
+_loop221_breakloop:			;
 		}    // ( ... )*
 		annotationBind_AST = currentAST.root;
 		returnAST = annotationBind_AST;
@@ -3400,11 +3401,11 @@ _loop220_breakloop:			;
 				}
 				else
 				{
-					goto _loop230_breakloop;
+					goto _loop231_breakloop;
 				}
 				
 			}
-_loop230_breakloop:			;
+_loop231_breakloop:			;
 		}    // ( ... )*
 		constraints_AST = currentAST.root;
 		returnAST = constraints_AST;
@@ -3674,14 +3675,11 @@ _loop192_breakloop:			;
 		}
 		if ( synPredMatched195 )
 		{
-			AST tmp158_AST = null;
-			tmp158_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(ref currentAST, tmp158_AST);
-			match(NAME);
-			AST tmp159_AST = null;
-			tmp159_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(ref currentAST, tmp159_AST);
-			match(FILTER_OP);
+			fmCondBind();
+			if (0 == inputState.guessing)
+			{
+				astFactory.addASTChild(ref currentAST, returnAST);
+			}
 			selectorRef();
 			if (0 == inputState.guessing)
 			{
@@ -3713,6 +3711,36 @@ _loop192_breakloop:			;
 		}
 		
 		returnAST = commonBindingPart_AST;
+	}
+	
+	public void fmCondBind() //throws RecognitionException, TokenStreamException
+{
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		AST fmCondBind_AST = null;
+		
+		AST tmp158_AST = null;
+		tmp158_AST = astFactory.create(LT(1));
+		astFactory.addASTChild(ref currentAST, tmp158_AST);
+		match(NAME);
+		AST tmp159_AST = null;
+		tmp159_AST = astFactory.create(LT(1));
+		astFactory.addASTChild(ref currentAST, tmp159_AST);
+		match(FILTER_OP);
+		if (0==inputState.guessing)
+		{
+			fmCondBind_AST = (AST)currentAST.root;
+			fmCondBind_AST = (AST) astFactory.make(astFactory.create(FMCONDBIND_,"condition"), fmCondBind_AST);
+			currentAST.root = fmCondBind_AST;
+			if ( (null != fmCondBind_AST) && (null != fmCondBind_AST.getFirstChild()) )
+				currentAST.child = fmCondBind_AST.getFirstChild();
+			else
+				currentAST.child = fmCondBind_AST;
+			currentAST.advanceChildToEnd();
+		}
+		fmCondBind_AST = currentAST.root;
+		returnAST = fmCondBind_AST;
 	}
 	
 	public void selectorRef() //throws RecognitionException, TokenStreamException
@@ -3824,11 +3852,11 @@ _loop192_breakloop:			;
 						}
 						else
 						{
-							goto _loop206_breakloop;
+							goto _loop207_breakloop;
 						}
 						
 					}
-_loop206_breakloop:					;
+_loop207_breakloop:					;
 				}    // ( ... )*
 				match(RCURLY);
 				break;
@@ -3854,11 +3882,11 @@ _loop206_breakloop:					;
 						}
 						else
 						{
-							goto _loop208_breakloop;
+							goto _loop209_breakloop;
 						}
 						
 					}
-_loop208_breakloop:					;
+_loop209_breakloop:					;
 				}    // ( ... )*
 				break;
 			}
@@ -3967,11 +3995,11 @@ _loop208_breakloop:					;
 						}
 						else
 						{
-							goto _loop214_breakloop;
+							goto _loop215_breakloop;
 						}
 						
 					}
-_loop214_breakloop:					;
+_loop215_breakloop:					;
 				}    // ( ... )*
 				break;
 			}
@@ -4053,11 +4081,11 @@ _loop214_breakloop:					;
 					}
 					else
 					{
-						goto _loop217_breakloop;
+						goto _loop218_breakloop;
 					}
 					
 				}
-_loop217_breakloop:				;
+_loop218_breakloop:				;
 			}    // ( ... )*
 			match(RCURLY);
 			if (0==inputState.guessing)
@@ -4147,11 +4175,11 @@ _loop217_breakloop:				;
 					}
 					else
 					{
-						goto _loop224_breakloop;
+						goto _loop225_breakloop;
 					}
 					
 				}
-_loop224_breakloop:				;
+_loop225_breakloop:				;
 			}    // ( ... )*
 			match(RCURLY);
 			annotationSet_AST = currentAST.root;
@@ -4178,11 +4206,11 @@ _loop224_breakloop:				;
 					}
 					else
 					{
-						goto _loop226_breakloop;
+						goto _loop227_breakloop;
 					}
 					
 				}
-_loop226_breakloop:				;
+_loop227_breakloop:				;
 			}    // ( ... )*
 			if (0==inputState.guessing)
 			{
@@ -4469,7 +4497,7 @@ _loop226_breakloop:				;
 	}
 	static public void initializeASTFactory( ASTFactory factory )
 	{
-		factory.setMaxNodeType(107);
+		factory.setMaxNodeType(108);
 	}
 	
 	public static readonly string[] tokenNames_ = new string[] {
@@ -4496,6 +4524,7 @@ _loop226_breakloop:				;
 		@"""FILTERMODULEPARAMETERS_""",
 		@"""FILTERSET_""",
 		@"""FMELEM_""",
+		@"""FMCONDBIND_""",
 		@"""FMSET_""",
 		@"""FM_""",
 		@"""IFILTER_""",
@@ -4587,26 +4616,26 @@ _loop226_breakloop:				;
 	{
 		long[] data = new long[8];
 		data[0]=-16L;
-		data[1]=17592186043903L;
+		data[1]=35184372087807L;
 		for (int i = 2; i<=7; i++) { data[i]=0L; }
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
 	private static long[] mk_tokenSet_1_()
 	{
-		long[] data = { 2314850208468434944L, 90179L, 0L, 0L};
+		long[] data = { 4629700416936869888L, 180358L, 0L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_1_ = new BitSet(mk_tokenSet_1_());
 	private static long[] mk_tokenSet_2_()
 	{
-		long[] data = { 9007199254740992L, 67L, 0L, 0L};
+		long[] data = { 18014398509481984L, 134L, 0L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_2_ = new BitSet(mk_tokenSet_2_());
 	private static long[] mk_tokenSet_3_()
 	{
-		long[] data = { -4611686018427387920L, 17592186044415L, 0L, 0L};
+		long[] data = { 9223372036854775792L, 35184372088831L, 0L, 0L};
 		return data;
 	}
 	public static readonly BitSet tokenSet_3_ = new BitSet(mk_tokenSet_3_());

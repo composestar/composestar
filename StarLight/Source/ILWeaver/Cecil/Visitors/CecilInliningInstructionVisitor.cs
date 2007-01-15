@@ -512,6 +512,15 @@ namespace Composestar.StarLight.ILWeaver
 		#region Inlining Instructions Visitor Handlers
 
 		/// <summary>
+		/// Visits the filter code
+		/// </summary>
+		/// <param name="filterCode"></param>
+		public void VisitFilterCode(FilterCode filterCode)
+		{
+			//TODO
+		}
+
+		/// <summary>
 		/// Visits the inline instruction.
 		/// </summary>
 		/// <remarks>

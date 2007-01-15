@@ -703,7 +703,7 @@ namespace Composestar.StarLight.ILWeaver
 				return;
 
 			// Get the input filter
-			InlineInstruction inputFilter = weaveMethod.InputFilter;
+			InlineInstruction inputFilter = weaveMethod.InputFilter.Instructions;
 
 			// Only proceed when we have an inputfilter
 			if (inputFilter == null)
@@ -1086,7 +1086,7 @@ namespace Composestar.StarLight.ILWeaver
 			foreach (WeaveCall wc in weaveCalls)
 			{
 				if (wc.MethodName.Equals(callSignature))
-					return wc.OutputFilter;
+					return wc.OutputFilter.Instructions;
 			}
 
 			return null;

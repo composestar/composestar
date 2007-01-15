@@ -474,12 +474,11 @@ namespace Composestar.StarLight.Weaving.Strategies
 
 			if (weaveMethod == null)
 			{
-				throw new ILWeaverException(
-					String.Format(CultureInfo.CurrentCulture,
-					Properties.Resources.SetInnerCallFailed,
-					visitor.Method.ToString(),
-					method.ToString())
-				);
+				// If weave method could not be found, this means that the method
+				// does not have filters woven and so no inner call context needs
+			    // to be set.
+
+				return;
 			}
 			//}
 

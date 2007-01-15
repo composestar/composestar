@@ -10,15 +10,16 @@
 
 package Composestar.DotNET.LAMA;
 
-import Composestar.Core.LAMA.*;
-
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import Composestar.Core.LAMA.Annotation;
+import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.UnitResult;
 
 /**
  * Corresponds to the ParameterInfo class in the .NET framework. For more 

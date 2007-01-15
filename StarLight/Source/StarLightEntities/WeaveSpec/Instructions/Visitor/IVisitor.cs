@@ -46,6 +46,12 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor
 	public interface IVisitor
 	{
 		/// <summary>
+		/// Visits the filter code.
+		/// </summary>
+		/// <param name="code">The filter code</param>
+		void VisitFilterCode(FilterCode code);
+
+		/// <summary>
 		/// Visits the branch.
 		/// </summary>
 		/// <param name="branch">The branch.</param>

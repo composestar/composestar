@@ -12,10 +12,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import Composestar.DotNET.LAMA.*;
-import Composestar.Core.INCRE.MethodNode;
-import Composestar.Utils.Debug;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.MethodNode;
 import Composestar.Core.LAMA.LangNamespace;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitResult;
@@ -28,6 +26,11 @@ import Composestar.Core.LOLA.metamodel.ModelClashException;
 import Composestar.Core.LOLA.metamodel.RelationPredicate;
 import Composestar.Core.LOLA.metamodel.RelationType;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
+import Composestar.DotNET.LAMA.DotNETFieldInfo;
+import Composestar.DotNET.LAMA.DotNETMethodInfo;
+import Composestar.DotNET.LAMA.DotNETParameterInfo;
+import Composestar.DotNET.LAMA.DotNETType;
+import Composestar.Utils.Debug;
 
 public class DotNETLanguageModel extends LanguageModel
 {

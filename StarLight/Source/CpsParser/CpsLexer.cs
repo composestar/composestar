@@ -66,91 +66,92 @@ namespace Composestar.StarLight.CpsParser
 		public const int FILTERMODULEPARAMETERS_ = 20;
 		public const int FILTERSET_ = 21;
 		public const int FMELEM_ = 22;
-		public const int FMSET_ = 23;
-		public const int FM_ = 24;
-		public const int IFILTER_ = 25;
-		public const int INTERNAL_ = 26;
-		public const int METHOD2_ = 27;
-		public const int METHODNAMESET_ = 28;
-		public const int METHODNAME_ = 29;
-		public const int METHOD_ = 30;
-		public const int NOTEXPR_ = 31;
-		public const int MPSET_ = 32;
-		public const int MP_ = 33;
-		public const int MPART_ = 34;
-		public const int OCL_ = 35;
-		public const int OFILTER_ = 36;
-		public const int OREXPR_ = 37;
-		public const int PARAMETER_ = 38;
-		public const int PARAMETERLIST_ = 39;
-		public const int SELEC2_ = 40;
-		public const int SELEC_ = 41;
-		public const int SELEXP_ = 42;
-		public const int SOURCE_ = 43;
-		public const int SPART_ = 44;
-		public const int TSSET_ = 45;
-		public const int TARGET_ = 46;
-		public const int TYPELIST_ = 47;
-		public const int TYPE_ = 48;
-		public const int VAR_ = 49;
-		public const int APS_ = 50;
-		public const int PROLOG_EXPRESSION = 51;
-		public const int LITERAL_concern = 52;
-		public const int NAME = 53;
-		public const int LPARENTHESIS = 54;
-		public const int RPARENTHESIS = 55;
-		public const int LITERAL_in = 56;
-		public const int SEMICOLON = 57;
-		public const int COMMA = 58;
-		public const int COLON = 59;
-		public const int DOT = 60;
-		public const int LCURLY = 61;
-		public const int RCURLY = 62;
-		public const int LITERAL_filtermodule = 63;
-		public const int PARAMETER_NAME = 64;
-		public const int PARAMETERLIST_NAME = 65;
-		public const int LITERAL_internals = 66;
-		public const int LITERAL_externals = 67;
-		public const int EQUALS = 68;
-		public const int DOUBLE_COLON = 69;
-		public const int STAR = 70;
-		public const int LITERAL_conditions = 71;
-		public const int LITERAL_inputfilters = 72;
-		public const int FILTER_OP = 73;
-		public const int OR = 74;
-		public const int AND = 75;
-		public const int NOT = 76;
-		public const int HASH = 77;
-		public const int LSQUARE = 78;
-		public const int RSQUARE = 79;
-		public const int LANGLE = 80;
-		public const int RANGLE = 81;
-		public const int LITERAL_outputfilters = 82;
-		public const int LITERAL_superimposition = 83;
-		public const int LITERAL_selectors = 84;
-		public const int ARROW_LEFT = 85;
-		public const int LITERAL_filtermodules = 86;
-		public const int LITERAL_annotations = 87;
-		public const int LITERAL_constraints = 88;
-		public const int LITERAL_presoft = 89;
-		public const int LITERAL_pre = 90;
-		public const int LITERAL_prehard = 91;
-		public const int LITERAL_implementation = 92;
-		public const int LITERAL_by = 93;
-		public const int LITERAL_as = 94;
-		public const int FILENAME = 95;
-		public const int QUESTIONMARK = 96;
-		public const int DIGIT = 97;
-		public const int FILE_SPECIAL = 98;
-		public const int LETTER = 99;
-		public const int NEWLINE = 100;
-		public const int SPECIAL = 101;
-		public const int QUOTE = 102;
-		public const int SINGLEQUOTE = 103;
-		public const int PROLOG_STRING = 104;
-		public const int COMMENTITEMS = 105;
-		public const int COMMENT = 106;
-		public const int WS = 107;
+		public const int FMCONDBIND_ = 23;
+		public const int FMSET_ = 24;
+		public const int FM_ = 25;
+		public const int IFILTER_ = 26;
+		public const int INTERNAL_ = 27;
+		public const int METHOD2_ = 28;
+		public const int METHODNAMESET_ = 29;
+		public const int METHODNAME_ = 30;
+		public const int METHOD_ = 31;
+		public const int NOTEXPR_ = 32;
+		public const int MPSET_ = 33;
+		public const int MP_ = 34;
+		public const int MPART_ = 35;
+		public const int OCL_ = 36;
+		public const int OFILTER_ = 37;
+		public const int OREXPR_ = 38;
+		public const int PARAMETER_ = 39;
+		public const int PARAMETERLIST_ = 40;
+		public const int SELEC2_ = 41;
+		public const int SELEC_ = 42;
+		public const int SELEXP_ = 43;
+		public const int SOURCE_ = 44;
+		public const int SPART_ = 45;
+		public const int TSSET_ = 46;
+		public const int TARGET_ = 47;
+		public const int TYPELIST_ = 48;
+		public const int TYPE_ = 49;
+		public const int VAR_ = 50;
+		public const int APS_ = 51;
+		public const int PROLOG_EXPRESSION = 52;
+		public const int LITERAL_concern = 53;
+		public const int NAME = 54;
+		public const int LPARENTHESIS = 55;
+		public const int RPARENTHESIS = 56;
+		public const int LITERAL_in = 57;
+		public const int SEMICOLON = 58;
+		public const int COMMA = 59;
+		public const int COLON = 60;
+		public const int DOT = 61;
+		public const int LCURLY = 62;
+		public const int RCURLY = 63;
+		public const int LITERAL_filtermodule = 64;
+		public const int PARAMETER_NAME = 65;
+		public const int PARAMETERLIST_NAME = 66;
+		public const int LITERAL_internals = 67;
+		public const int LITERAL_externals = 68;
+		public const int EQUALS = 69;
+		public const int DOUBLE_COLON = 70;
+		public const int STAR = 71;
+		public const int LITERAL_conditions = 72;
+		public const int LITERAL_inputfilters = 73;
+		public const int FILTER_OP = 74;
+		public const int OR = 75;
+		public const int AND = 76;
+		public const int NOT = 77;
+		public const int HASH = 78;
+		public const int LSQUARE = 79;
+		public const int RSQUARE = 80;
+		public const int LANGLE = 81;
+		public const int RANGLE = 82;
+		public const int LITERAL_outputfilters = 83;
+		public const int LITERAL_superimposition = 84;
+		public const int LITERAL_selectors = 85;
+		public const int ARROW_LEFT = 86;
+		public const int LITERAL_filtermodules = 87;
+		public const int LITERAL_annotations = 88;
+		public const int LITERAL_constraints = 89;
+		public const int LITERAL_presoft = 90;
+		public const int LITERAL_pre = 91;
+		public const int LITERAL_prehard = 92;
+		public const int LITERAL_implementation = 93;
+		public const int LITERAL_by = 94;
+		public const int LITERAL_as = 95;
+		public const int FILENAME = 96;
+		public const int QUESTIONMARK = 97;
+		public const int DIGIT = 98;
+		public const int FILE_SPECIAL = 99;
+		public const int LETTER = 100;
+		public const int NEWLINE = 101;
+		public const int SPECIAL = 102;
+		public const int QUOTE = 103;
+		public const int SINGLEQUOTE = 104;
+		public const int PROLOG_STRING = 105;
+		public const int COMMENTITEMS = 106;
+		public const int COMMENT = 107;
+		public const int WS = 108;
 		
 		public CpsLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
@@ -173,25 +174,25 @@ namespace Composestar.StarLight.CpsParser
 			caseSensitiveLiterals = true;
 			setCaseSensitive(true);
 			literals = new Hashtable(100, (float) 0.4, null, Comparer.Default);
-			literals.Add("internals", 66);
-			literals.Add("selectors", 84);
-			literals.Add("constraints", 88);
-			literals.Add("superimposition", 83);
-			literals.Add("inputfilters", 72);
-			literals.Add("conditions", 71);
-			literals.Add("outputfilters", 82);
-			literals.Add("pre", 90);
-			literals.Add("in", 56);
-			literals.Add("externals", 67);
-			literals.Add("prehard", 91);
-			literals.Add("annotations", 87);
-			literals.Add("filtermodules", 86);
-			literals.Add("presoft", 89);
-			literals.Add("implementation", 92);
-			literals.Add("concern", 52);
-			literals.Add("filtermodule", 63);
-			literals.Add("by", 93);
-			literals.Add("as", 94);
+			literals.Add("internals", 67);
+			literals.Add("selectors", 85);
+			literals.Add("constraints", 89);
+			literals.Add("superimposition", 84);
+			literals.Add("inputfilters", 73);
+			literals.Add("conditions", 72);
+			literals.Add("outputfilters", 83);
+			literals.Add("pre", 91);
+			literals.Add("in", 57);
+			literals.Add("externals", 68);
+			literals.Add("prehard", 92);
+			literals.Add("annotations", 88);
+			literals.Add("filtermodules", 87);
+			literals.Add("presoft", 90);
+			literals.Add("implementation", 93);
+			literals.Add("concern", 53);
+			literals.Add("filtermodule", 64);
+			literals.Add("by", 94);
+			literals.Add("as", 95);
 		}
 		
 		override public IToken nextToken()			//throws TokenStreamException
@@ -842,11 +843,11 @@ tryAgain:
 		_ttype = NEWLINE;
 		
 		{
-			bool synPredMatched266 = false;
+			bool synPredMatched267 = false;
 			if (((cached_LA1=='\r') && (cached_LA2=='\n')))
 			{
-				int _m266 = mark();
-				synPredMatched266 = true;
+				int _m267 = mark();
+				synPredMatched267 = true;
 				inputState.guessing++;
 				try {
 					{
@@ -855,12 +856,12 @@ tryAgain:
 				}
 				catch (RecognitionException)
 				{
-					synPredMatched266 = false;
+					synPredMatched267 = false;
 				}
-				rewind(_m266);
+				rewind(_m267);
 				inputState.guessing--;
 			}
-			if ( synPredMatched266 )
+			if ( synPredMatched267 )
 			{
 				match("\r\n");
 			}
@@ -947,11 +948,11 @@ tryAgain:
 				}
 				else
 				{
-					goto _loop273_breakloop;
+					goto _loop274_breakloop;
 				}
 				
 			}
-_loop273_breakloop:			;
+_loop274_breakloop:			;
 		}    // ( ... )*
 		mSINGLEQUOTE(false);
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
@@ -967,11 +968,11 @@ _loop273_breakloop:			;
 		int _ttype; IToken _token=null; int _begin=text.Length;
 		_ttype = COMMENTITEMS;
 		
-		bool synPredMatched276 = false;
+		bool synPredMatched277 = false;
 		if (((cached_LA1=='*') && (cached_LA2=='/')))
 		{
-			int _m276 = mark();
-			synPredMatched276 = true;
+			int _m277 = mark();
+			synPredMatched277 = true;
 			inputState.guessing++;
 			try {
 				{
@@ -980,12 +981,12 @@ _loop273_breakloop:			;
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched276 = false;
+				synPredMatched277 = false;
 			}
-			rewind(_m276);
+			rewind(_m277);
 			inputState.guessing--;
 		}
-		if ( synPredMatched276 )
+		if ( synPredMatched277 )
 		{
 			match("*/");
 		}
@@ -1034,11 +1035,11 @@ _loop273_breakloop:			;
 						}
 						else
 						{
-							goto _loop283_breakloop;
+							goto _loop284_breakloop;
 						}
 						
 					}
-_loop283_breakloop:					;
+_loop284_breakloop:					;
 				}    // ( ... )*
 			}
 			else if ((cached_LA1=='/') && (cached_LA2=='*')) {
@@ -1068,17 +1069,17 @@ _loop283_breakloop:					;
 		int _ttype; IToken _token=null; int _begin=text.Length;
 		_ttype = FILENAME;
 		
-		bool synPredMatched288 = false;
+		bool synPredMatched289 = false;
 		if (((cached_LA1=='"') && (tokenSet_3_.member(cached_LA2))))
 		{
-			int _m288 = mark();
-			synPredMatched288 = true;
+			int _m289 = mark();
+			synPredMatched289 = true;
 			inputState.guessing++;
 			try {
 				{
 					mQUOTE(false);
 					{ // ( ... )+
-						int _cnt287=0;
+						int _cnt288=0;
 						for (;;)
 						{
 							switch ( cached_LA1 )
@@ -1120,31 +1121,31 @@ _loop283_breakloop:					;
 							}
 							default:
 							{
-								if (_cnt287 >= 1) { goto _loop287_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
+								if (_cnt288 >= 1) { goto _loop288_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
 							}
 							break; }
-							_cnt287++;
+							_cnt288++;
 						}
-_loop287_breakloop:						;
+_loop288_breakloop:						;
 					}    // ( ... )+
 					mQUOTE(false);
 				}
 			}
 			catch (RecognitionException)
 			{
-				synPredMatched288 = false;
+				synPredMatched289 = false;
 			}
-			rewind(_m288);
+			rewind(_m289);
 			inputState.guessing--;
 		}
-		if ( synPredMatched288 )
+		if ( synPredMatched289 )
 		{
 			int _saveIndex = 0;
 			_saveIndex = text.Length;
 			mQUOTE(false);
 			text.Length = _saveIndex;
 			{ // ( ... )+
-				int _cnt290=0;
+				int _cnt291=0;
 				for (;;)
 				{
 					switch ( cached_LA1 )
@@ -1186,12 +1187,12 @@ _loop287_breakloop:						;
 					}
 					default:
 					{
-						if (_cnt290 >= 1) { goto _loop290_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
+						if (_cnt291 >= 1) { goto _loop291_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
 					}
 					break; }
-					_cnt290++;
+					_cnt291++;
 				}
-_loop290_breakloop:				;
+_loop291_breakloop:				;
 			}    // ( ... )+
 			_saveIndex = text.Length;
 			mQUOTE(false);
@@ -1289,11 +1290,11 @@ _loop290_breakloop:				;
 				}
 				default:
 				{
-					goto _loop294_breakloop;
+					goto _loop295_breakloop;
 				}
 				 }
 			}
-_loop294_breakloop:			;
+_loop295_breakloop:			;
 		}    // ( ... )*
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{

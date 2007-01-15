@@ -35,46 +35,78 @@
 #endregion
 
 #region Using directives
-using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor;
+using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
-namespace Composestar.StarLight.Entities.WeaveSpec
+namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 {
 	/// <summary>
-	/// A call with outputfilters.
+	/// A jump instruction to a specific label specified by the target.
 	/// </summary>
+	/// <returns>Inline instruction</returns>
 	[Serializable]
-	[XmlType("WeaveCall", Namespace = Constants.NS)]
-	public class WeaveCall
+	[XmlType("FilterCode", Namespace = Constants.NS)]
+	public class FilterCode : IVisitable
 	{
-		private string _methodName;
-		private FilterCode _outputFilter;
+		/// <summary>
+		/// The conditions to check before executing the filtercode
+		/// </summary>
+		private List<ConditionLiteral> _checkConditions;
 
 		/// <summary>
-		/// Gets or sets the method name of the call.
+		/// The instructions
 		/// </summary>
-		/// <value>The selector.</value>
-		[XmlAttribute]
-		public string MethodName
+		private InlineInstruction _instructions;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:FilterCode"/> class.
+		/// </summary>
+		public FilterCode()
 		{
-			get { return _methodName; }
-			set { _methodName = value; }
+
 		}
 
 		/// <summary>
-		/// Gets or sets the output filter id. This is the id of the abstract inputfiltercode to be used
-		/// for this method.
+		/// Gets or sets the conditions to check before executing the filtercode.
 		/// </summary>
-		/// <value>The output filter id.</value>
-		public FilterCode OutputFilter
+		/// <value>The conditions to check.</value>
+		[XmlArray("CheckConditions")]
+		[XmlArrayItem("CheckCondition")]
+		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+		public List<ConditionLiteral> CheckConditions
 		{
-			get { return _outputFilter; }
-			set { _outputFilter = value; }
+			get { return _checkConditions; }
+			set { _checkConditions = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the instructions.
+		/// </summary>
+		/// <value>The instructions.</value>
+		/// <returns>The instructions.</returns>
+		public InlineInstruction Instructions
+		{
+			get { return _instructions; } // get
+			set { _instructions = value; } // set
+		}
+
+		/// <summary>
+		/// Accepts the specified visitor.
+		/// </summary>
+		/// <param name="visitor">The visitor.</param>
+		public void Accept(IVisitor visitor)
+		{
+			if (visitor == null)
+				throw new ArgumentNullException("visitor");
+
+			visitor.VisitFilterCode(this);
 		}
 	}
 }

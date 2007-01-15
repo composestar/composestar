@@ -1,5 +1,6 @@
 package Composestar.DotNET.TYM.RepositoryEmitter;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
@@ -16,6 +18,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
 import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
@@ -40,9 +43,9 @@ class InstructionTranslator implements Visitor
 		Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction filterAction;
 
 		DataStore dataStore = DataStore.instance();
-		Iterator it = dataStore.getAllInstancesOf(
-				Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.class);
-		
+		Iterator it = dataStore
+				.getAllInstancesOf(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.class);
+
 		while (it.hasNext())
 		{
 			filterAction = (Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction) it.next();
@@ -50,10 +53,39 @@ class InstructionTranslator implements Visitor
 		}
 	}
 
+	/**
+	 * @see Composestar.Core.INLINE.model.Visitor#visitFilterCode(Composestar.Core.INLINE.model.FilterCode)
+	 */
+	public Object visitFilterCode(FilterCode filterCode)
+	{
+		composestar.dotNET.tym.entities.FilterCode weaveFilterCode = composestar.dotNET.tym.entities.FilterCode.Factory
+				.newInstance();
+
+		// Instructions
+		InlineInstruction instruction = (InlineInstruction) filterCode.getInstruction().accept(this);
+		weaveFilterCode.setInstructions(instruction);
+
+		// Check conditions
+		Iterator condIter = filterCode.getCheckConditions();
+		ArrayList conditionLiterals = new ArrayList();
+		while (condIter.hasNext())
+		{
+			Condition condition = (Condition) condIter.next();
+
+			conditionLiterals.add(translateCondition(condition));
+		}
+
+		weaveFilterCode.addNewCheckConditions();
+		weaveFilterCode.getCheckConditions().setCheckConditionArray(
+				(composestar.dotNET.tym.entities.ConditionLiteral[]) conditionLiterals
+						.toArray(new composestar.dotNET.tym.entities.ConditionLiteral[0]));
+
+		return weaveFilterCode;
+	}
+
 	public Object visitBlock(Block block)
 	{
-		composestar.dotNET.tym.entities.Block weaveBlock 
-				= composestar.dotNET.tym.entities.Block.Factory.newInstance();
+		composestar.dotNET.tym.entities.Block weaveBlock = composestar.dotNET.tym.entities.Block.Factory.newInstance();
 		weaveBlock.addNewInstructions();
 
 		setLabel(block, weaveBlock);
@@ -78,12 +110,20 @@ class InstructionTranslator implements Visitor
 
 	public Object visitBranch(Branch branch)
 	{
-		composestar.dotNET.tym.entities.Branch weaveBranch 
-				= composestar.dotNET.tym.entities.Branch.Factory.newInstance();
+		composestar.dotNET.tym.entities.Branch weaveBranch = composestar.dotNET.tym.entities.Branch.Factory
+				.newInstance();
 
 		setLabel(branch, weaveBranch);
 
-		weaveBranch.setCondition(translateConditionExpression(branch.getConditionExpression()));
+		if (branch.getConditionExpression() != null)
+		{
+			weaveBranch.setCondition(translateConditionExpression(branch.getConditionExpression()));
+		}
+		else
+		{
+			weaveBranch.setCondition(translateCondition(branch.getCondition()));
+		}
+
 		weaveBranch.setTrueBlock((composestar.dotNET.tym.entities.Block) branch.getTrueBlock().accept(this));
 		weaveBranch.setFalseBlock((composestar.dotNET.tym.entities.Block) branch.getFalseBlock().accept(this));
 
@@ -106,7 +146,7 @@ class InstructionTranslator implements Visitor
 
 		weaveAction.setSubstitutionSelector(filterAction.getSubstitutedMessage().getSelector());
 		weaveAction.setSubstitutionTarget(filterAction.getSubstitutedMessage().getTarget().getName());
-		
+
 		weaveAction.setOnCall(filterAction.isOnCall());
 		weaveAction.setReturning(filterAction.isReturning());
 
@@ -124,7 +164,15 @@ class InstructionTranslator implements Visitor
 		return weaveJump;
 	}
 
-	
+	private composestar.dotNET.tym.entities.ConditionExpression translateCondition(Condition condition)
+	{
+		composestar.dotNET.tym.entities.ConditionLiteral conditionLiteral = composestar.dotNET.tym.entities.ConditionLiteral.Factory
+				.newInstance();
+		conditionLiteral.setName(condition.getName());
+		
+		return conditionLiteral;
+	}
+
 	private composestar.dotNET.tym.entities.ConditionExpression translateConditionExpression(
 			ConditionExpression expression)
 	{
@@ -132,7 +180,7 @@ class InstructionTranslator implements Visitor
 		{
 			And and = (And) expression;
 			AndCondition weaveAnd = AndCondition.Factory.newInstance();
-			
+
 			weaveAnd.setLeft(translateConditionExpression(and.getLeft()));
 			weaveAnd.setRight(translateConditionExpression(and.getRight()));
 

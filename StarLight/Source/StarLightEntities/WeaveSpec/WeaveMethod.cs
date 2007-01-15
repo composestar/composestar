@@ -56,7 +56,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 	{
 		private int _id;
 		private string _signature;
-		private InlineInstruction _inputFilter;
+		private FilterCode _inputFilter;
 		private List<WeaveCall> _weaveCalls = new List<WeaveCall>();
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		/// Gets or sets the input filter.
 		/// </summary>
 		/// <value>The input filter.</value>
-		public InlineInstruction InputFilter
+		public FilterCode InputFilter
 		{
 			get { return _inputFilter; }
 			set { _inputFilter = value; }

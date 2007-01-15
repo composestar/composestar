@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ExternalConce
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INLINE.lowlevel.ModelBuilder;
-import Composestar.Core.INLINE.model.Block;
+import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
@@ -37,6 +38,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETType;
@@ -47,7 +49,6 @@ import Composestar.Utils.StringUtils;
 
 import composestar.dotNET.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET.tym.entities.AssemblyConfig;
-import composestar.dotNET.tym.entities.InlineInstruction;
 import composestar.dotNET.tym.entities.Reference;
 import composestar.dotNET.tym.entities.WeaveCall;
 import composestar.dotNET.tym.entities.WeaveMethod;
@@ -58,10 +59,13 @@ import composestar.dotNET.tym.entities.WeaveType;
 public class StarLightEmitterRunner implements CTCommonModule
 {
 	public static final String MODULE_NAME = "EMITTER";
-	
+
 	private DataStore dataStore;
+
 	private Map weaveSpecs;
 	
+	private InstructionTranslator instructionTranslater = new InstructionTranslator();
+
 	public StarLightEmitterRunner()
 	{
 		this.dataStore = DataStore.instance();
@@ -82,12 +86,14 @@ public class StarLightEmitterRunner implements CTCommonModule
 			throw new ModuleException("NullPointerException in emitter", MODULE_NAME);
 		}
 	}
-	
+
 	/**
 	 * Gets the weavespecification corresponding with a given assembly.
 	 * 
-	 * @param assemblyName The name of the assembly for which the weavespec needs to be returned.
-	 * @return The weavespec for the given dll. If it does not exist, a new one is created.
+	 * @param assemblyName The name of the assembly for which the weavespec
+	 *            needs to be returned.
+	 * @return The weavespec for the given dll. If it does not exist, a new one
+	 *         is created.
 	 */
 	private WeaveSpecification getWeaveSpec(String assemblyName)
 	{
@@ -104,12 +110,12 @@ public class StarLightEmitterRunner implements CTCommonModule
 			return weaveSpec;
 		}
 	}
-	
+
 	private void writeWeaveSpecs() throws ModuleException
 	{
 		Configuration config = Configuration.instance();
 		PathSettings pathSettings = config.getPathSettings();
-		
+
 		ArrayOfAssemblyConfig assemblies = StarLightMaster.getConfigContainer().getAssemblies();
 		for (int i = 0; i < assemblies.sizeOfAssemblyConfigArray(); i++)
 		{
@@ -122,11 +128,11 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 				File baseDir = new File(pathSettings.getPath("Base"), "Starlight");
 				File file = new File(baseDir, ac.getSerializedName() + "_weavespec.xml.gzip");
-				
+
 				OutputStream outputStream = null;
 				try
 				{
-					outputStream = new GZIPOutputStream(new FileOutputStream(file));					
+					outputStream = new GZIPOutputStream(new FileOutputStream(file));
 					doc.save(outputStream);
 				}
 				catch (IOException e)
@@ -137,10 +143,10 @@ public class StarLightEmitterRunner implements CTCommonModule
 				{
 					FileUtils.close(outputStream);
 				}
-				
+
 				ac.setWeaveSpecificationFile(file.getAbsolutePath());
 			}
-		}		
+		}
 	}
 
 	private void processConcerns() throws ModuleException
@@ -152,7 +158,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			processConcern(concern);
 		}
 	}
-	
+
 	private void processConcern(Concern concern) throws ModuleException
 	{
 		DotNETType type = (DotNETType) concern.getPlatformRepresentation();
@@ -160,6 +166,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 		if (concern.getDynObject("superImpInfo") != null)
 		{
+			// HashSet to prevent the same condition from being stored twice.
+			HashSet storedConditions = new HashSet();
+
 			// get weavespec:
 			WeaveSpecification weaveSpec = getWeaveSpec(type.assemblyName());
 
@@ -173,11 +182,11 @@ public class StarLightEmitterRunner implements CTCommonModule
 			weaveType.addNewMethods();
 			weaveType.setName(type.fullName());
 
-			Iterator filterModules = order.orderAsList().iterator();
+			Iterator filterModules = order.filterModuleSIList().iterator();
 			while (filterModules.hasNext())
 			{
-				String ref = (String) filterModules.next();
-				FilterModule filterModule = (FilterModule) dataStore.getObjectByID(ref);
+				FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) filterModules.next();
+				FilterModule filterModule = fmsi.getFilterModule().getRef();
 
 				// internals:
 				Iterator internals = filterModule.getInternalIterator();
@@ -185,8 +194,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				{
 					// store internal:
 					Internal internal = (Internal) internals.next();
-					composestar.dotNET.tym.entities.Internal storedInternal 
-							= weaveType.getInternals().addNewInternal();
+					composestar.dotNET.tym.entities.Internal storedInternal = weaveType.getInternals().addNewInternal();
 
 					// name:
 					storedInternal.setName(internal.getName());
@@ -209,8 +217,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				{
 					// store external
 					External external = (External) externals.next();
-					composestar.dotNET.tym.entities.External storedExternal 
-							= weaveType.getExternals().addNewExternal();
+					composestar.dotNET.tym.entities.External storedExternal = weaveType.getExternals().addNewExternal();
 
 					// name:
 					storedExternal.setName(external.getName());
@@ -231,58 +238,68 @@ public class StarLightEmitterRunner implements CTCommonModule
 				}
 
 				// conditions:
+				// filter module condition:
+				Condition condition = fmsi.getCondition();
+				if (condition != null && !storedConditions.contains(condition))
+				{
+					storeCondition(weaveType, type, condition);
+					storedConditions.add(condition);
+				}
 				Iterator conditions = filterModule.getConditionIterator();
 				while (conditions.hasNext())
 				{
-
 					// store condition:
-					Condition condition = (Condition) conditions.next();
-					composestar.dotNET.tym.entities.Condition storedCondition 
-							= weaveType.getConditions().addNewCondition();
-
-					// name:
-					storedCondition.setName(condition.getName());
-
-					// reference:
-					DotNETType refType;
-					Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference condRef = condition
-							.getShortref();
-					if (condRef instanceof DeclaredObjectReference)
+					condition = (Condition) conditions.next();
+					if (!storedConditions.contains(condition))
 					{
-						DeclaredObjectReference dor = (DeclaredObjectReference) condRef;
-						if (dor.getName().equals("inner") || dor.getName().equals("self"))
-						{
-							refType = type;
-						}
-						else
-						{
-							refType = (DotNETType) dor.getRef().getType().getRef().getPlatformRepresentation();
-						}
+						storeCondition(weaveType, type, condition);
+						storedConditions.add(condition);
 					}
-					else if (condRef instanceof ConcernReference)
-					{
-						ConcernReference cor = (ConcernReference) condRef;
-						refType = (DotNETType) cor.getRef().getPlatformRepresentation();
-					}
-					else
-					{
-						throw new RuntimeException("Unknown reference type");
-					}
-
-					Reference reference = createReference(
-							type, 
-							refType.assemblyName(), 
-							condition.getShortref().getPackage(), 
-							condition.getShortref().getName(), 
-							(String) condition.getDynObject("selector"));
-
-					storedCondition.setReference(reference);
 				}
 			}
 
 			// emit methods:
 			processMethods(concern, weaveType);
 		}
+	}
+
+	private void storeCondition(WeaveType weaveType, DotNETType type, Condition condition)
+	{
+
+		composestar.dotNET.tym.entities.Condition storedCondition = weaveType.getConditions().addNewCondition();
+
+		// name:
+		storedCondition.setName(condition.getName());
+
+		// reference:
+		DotNETType refType;
+		Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference condRef = condition.getShortref();
+		if (condRef instanceof DeclaredObjectReference)
+		{
+			DeclaredObjectReference dor = (DeclaredObjectReference) condRef;
+			if (dor.getName().equals("inner") || dor.getName().equals("self"))
+			{
+				refType = type;
+			}
+			else
+			{
+				refType = (DotNETType) dor.getRef().getType().getRef().getPlatformRepresentation();
+			}
+		}
+		else if (condRef instanceof ConcernReference)
+		{
+			ConcernReference cor = (ConcernReference) condRef;
+			refType = (DotNETType) cor.getRef().getPlatformRepresentation();
+		}
+		else
+		{
+			throw new RuntimeException("Unknown reference type");
+		}
+
+		Reference reference = createReference(type, refType.assemblyName(), condition.getShortref().getPackage(),
+				condition.getShortref().getName(), (String) condition.getDynObject("selector"));
+
+		storedCondition.setReference(reference);
 	}
 
 	/**
@@ -328,9 +345,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private void processMethods(Concern concern, WeaveType weaveType) throws ModuleException
 	{
-		Signature sig = concern.getSignature();		
+		Signature sig = concern.getSignature();
 		List methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
-		
+
 		boolean hasFilters;
 		List weaveMethods = new ArrayList();
 
@@ -346,14 +363,14 @@ public class StarLightEmitterRunner implements CTCommonModule
 			weaveMethod.setSignature(method.getSignature());
 
 			// get the block containing the filterinstructions:
-			Block filterInstructions = ModelBuilder.getInputFilterCode(method);
+			FilterCode filterCode = ModelBuilder.getInputFilterCode(method);
 
-			if (filterInstructions != null)
+			if (filterCode != null)
 			{
 				hasFilters = true;
 
 				// add inputfilter code:
-				weaveMethod.setInputFilter(translateInstruction(filterInstructions));
+				weaveMethod.setInputFilter(translateInstruction(filterCode));
 			}
 
 			// emit calls:
@@ -369,7 +386,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		// add inlined methods to type:
 		WeaveMethod[] wma = new WeaveMethod[weaveMethods.size()];
 		weaveMethods.toArray(wma);
-		
+
 		weaveType.getMethods().setWeaveMethodArray(wma);
 	}
 
@@ -383,8 +400,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 			DotNETCallToOtherMethod call = (DotNETCallToOtherMethod) calls.next();
 
 			// add outputfilter code:
-			Block code = ModelBuilder.getOutputFilterCode(call);
-			if (code != null)
+			FilterCode filterCode = ModelBuilder.getOutputFilterCode(call);
+			if (filterCode != null)
 			{
 				WeaveCall weaveCall = weaveMethod.getWeaveCalls().addNewWeaveCall();
 
@@ -392,11 +409,12 @@ public class StarLightEmitterRunner implements CTCommonModule
 				weaveCall.setMethodName(call.getMethodName());
 
 				// set filtercode
-				weaveCall.setOutputFilter(translateInstruction(code));
+				weaveCall.setOutputFilter(translateInstruction(filterCode));
 
 				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Storing call" + weaveCall.toString());
 
-				// set hasfilters to true to indicate that the method has filters
+				// set hasfilters to true to indicate that the method has
+				// filters
 				hasFilters = true;
 			}
 		}
@@ -405,8 +423,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 		return hasFilters;
 	}
 
-	private InlineInstruction translateInstruction(Block block)
+	private composestar.dotNET.tym.entities.FilterCode translateInstruction(FilterCode filterCode)
 	{
-		return (InlineInstruction) block.accept(new InstructionTranslator());
+		return (composestar.dotNET.tym.entities.FilterCode) filterCode.accept(instructionTranslater);
 	}
 }
