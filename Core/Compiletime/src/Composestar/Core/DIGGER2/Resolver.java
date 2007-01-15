@@ -85,7 +85,7 @@ public class Resolver
 			{
 				// crumbs always refer to input crumbs
 				Breadcrumb toCrumb = graph.getInputCrumb(trail.getTargetConcern(), trail.getResultMessage());
-				logger.debug("[resolver]  resolved to: " + toCrumb);
+				logger.debug("[resolver]  leads to: " + toCrumb);
 				trail.setDestinationCrumb(toCrumb);
 			}
 			else
@@ -114,6 +114,10 @@ public class Resolver
 				// needed for certainty checks
 				ConditionExpression cond = (ConditionExpression) flowNode.getRepositoryLink();
 				trail.setCondition(cond);
+			}
+			else if (flowNode.containsName(FlowNode.FILTER_ELEMENT_NODE))
+			{
+				trail.setRE(flowNode.getRepositoryLink());
 			}
 			else if (flowNode.containsName(FlowNode.DISPATCH_ACTION_NODE))
 			{

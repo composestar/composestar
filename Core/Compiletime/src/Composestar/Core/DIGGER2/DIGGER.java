@@ -29,6 +29,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -69,10 +70,12 @@ public class DIGGER implements CTCommonModule
 		incre = INCRE.instance();
 		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Main", INCRETimer.TYPE_OVERHEAD);
 		moduleInfo = ModuleInfoManager.get(DIGGER.class);
-		graph = new DispatchGraph(1 /* moduleInfo.getIntSetting("mode") */);
+		graph = new DispatchGraph(moduleInfo.getIntSetting("mode"));
 		graph.setAutoResolve(false);
 		DataStore.instance().addObject(DispatchGraph.REPOSITORY_KEY, graph);
 		allCrumbs = new ArrayList<Breadcrumb>();
+		filthinit.stop();
+
 		createBreadcrumbs();
 		if (moduleInfo.getBooleanSetting("resolve"))
 		{
@@ -91,7 +94,6 @@ public class DIGGER implements CTCommonModule
 
 		graph.setAutoResolve(true);
 		allCrumbs.clear();
-		filthinit.stop();
 	}
 
 	/**
@@ -161,7 +163,15 @@ public class DIGGER implements CTCommonModule
 		{
 			try
 			{
-				graph.getResultingMessages(crumb);
+				List<MessageResult> results = graph.getResultingMessages(crumb);
+				if (results.size() > 0)
+				{
+					logger.debug("" + crumb + " results in:");
+					for (MessageResult msgResult : results)
+					{
+						logger.debug("" + msgResult.getConcern().getName() + "." + msgResult.getSelector().getName());
+					}
+				}
 			}
 			catch (RecursiveFilterException e)
 			{
@@ -179,6 +189,7 @@ public class DIGGER implements CTCommonModule
 		sb.append(".");
 		sb.append(e.getCrumb().getMessage().getSelector().getName());
 
+		RepositoryEntity re = null;
 		for (Trail trail : e.getTrace())
 		{
 			sb.append(" -> ");
@@ -186,16 +197,22 @@ public class DIGGER implements CTCommonModule
 			sb.append(trail.getTargetConcern().getName());
 			sb.append(".");
 			sb.append(trail.getResultMessage().getSelector().getName());
+
+			// the first trail point to the start
+			if (re == null)
+			{
+				re = trail.getRE();
+			}
 		}
 
 		if (e.numVars() == 0)
 		{
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Infinite recursive filter definition: " + sb.toString());
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Infinite recursive filter definition: " + sb.toString(), re);
 		}
 		else
 		{
 			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Possibly infitite recursive filter definition (depended on ~"
-					+ e.numVars() + " conditionals): " + sb.toString());
+					+ e.numVars() + " conditionals): " + sb.toString(), re);
 		}
 	}
 

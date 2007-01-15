@@ -57,7 +57,7 @@ public class DispatchGraph
 	/**
 	 * 
 	 */
-	protected Map<Concern,ConcernCrumbs> crumbs;
+	protected Map<Concern, ConcernCrumbs> crumbs;
 
 	/**
 	 * Handle to the resolve class used to resolve the breadcrumbs from the
@@ -68,7 +68,7 @@ public class DispatchGraph
 	public DispatchGraph(int inMode)
 	{
 		mode = inMode;
-		crumbs = new HashMap<Concern,ConcernCrumbs>();
+		crumbs = new HashMap<Concern, ConcernCrumbs>();
 		resolver = new Resolver(this);
 	}
 
@@ -160,11 +160,11 @@ public class DispatchGraph
 	 */
 	public List<MessageResult> getResultingMessages(Breadcrumb crumb) throws RecursiveFilterException
 	{
-		logger.debug("=> " + crumb.getMessage());
 		return getResultingMessages(crumb, new ArrayList<Trail>());
 	}
 
-	protected List<MessageResult> getResultingMessages(Breadcrumb crumb, List<Trail> stack) throws RecursiveFilterException
+	protected List<MessageResult> getResultingMessages(Breadcrumb crumb, List<Trail> stack)
+			throws RecursiveFilterException
 	{
 		List<MessageResult> results = new ArrayList<MessageResult>();
 		boolean freshCrumb = true;
@@ -179,8 +179,7 @@ public class DispatchGraph
 				cnt++;
 				if (trail.isEOL())
 				{
-					// TODO: use result message class, use a map?
-					// this is a resulting message
+					results.add(new MessageResult(crumb, trail));
 				}
 				else
 				{
@@ -189,8 +188,7 @@ public class DispatchGraph
 					{
 						throw new RecursiveFilterException(crumb, stack.subList(idx, stack.size()));
 					}
-					Breadcrumb nextCrumb = trail.getDestinationCrumb();						
-					logger.debug(" -> " + nextCrumb.getMessage());
+					Breadcrumb nextCrumb = trail.getDestinationCrumb();
 					if (cnt == 1)
 					{
 						stack.add(trail);

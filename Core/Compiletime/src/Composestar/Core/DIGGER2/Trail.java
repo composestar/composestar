@@ -13,6 +13,7 @@ package Composestar.Core.DIGGER2;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * A trail contains information about the transition to a new breadcrumb.
@@ -27,9 +28,16 @@ public class Trail
 	protected Breadcrumb owner;
 
 	/**
-	 * Condition expression that must be true. Used during recursion check.
+	 * Condition expression that must be true. Used during recursion checking
 	 */
 	protected ConditionExpression condition;
+
+	/**
+	 * most valuable repository entity, this is used to refer to a repository
+	 * entity that matching this trail the best. In most cases this is a
+	 * FilterElement.
+	 */
+	protected RepositoryEntity re;
 
 	/**
 	 * Resulting message. This should be more or less equal to the message of
@@ -41,7 +49,8 @@ public class Trail
 	/**
 	 * Points to the next breadcrumb. This will be null in the following cases:
 	 * <ul>
-	 * <li> points to the inner object (in this case the targetConcern is null too) </li>
+	 * <li> points to the inner object (in this case the targetConcern is null
+	 * too) </li>
 	 * <li> points to a concern without superimposition </li>
 	 * </ul>
 	 * In both cases it's the end of the trail.
@@ -69,12 +78,12 @@ public class Trail
 	{
 		owner = inOwner;
 	}
-	
+
 	public Breadcrumb getOwner()
 	{
 		return owner;
 	}
-	
+
 	public Concern getSourceConcern()
 	{
 		return owner.getConcern();
@@ -142,5 +151,15 @@ public class Trail
 	public boolean isResolved()
 	{
 		return resolved;
+	}
+
+	public void setRE(RepositoryEntity inRe)
+	{
+		re = inRe;
+	}
+
+	public RepositoryEntity getRE()
+	{
+		return re;
 	}
 }
