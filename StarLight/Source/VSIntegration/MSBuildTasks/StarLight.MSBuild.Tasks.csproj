@@ -62,7 +62,7 @@
     <Compile Include="ILWeaverTask\BuilderConfigurator.cs" />
     <Compile Include="ILWeaverTask\ILWeaverTask.cs" />
     <None Include="..\Target Files\StarLight\0.2\StarLight.targets">
-      <Link>Target\StarLight.targets</Link>
+      <Link>StarLight.targets</Link>
     </None>
     <None Include="MasterCallerTask\JavaServerTask.cs" />
     <Compile Include="MasterCallerTask\MasterCallerTask.cs" />
@@ -72,6 +72,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TypeAnalyzerTask\TypeAnalyzerTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -108,6 +109,10 @@
     <ProjectReference Include="..\..\StarLightEntities\StarLightEntities.csproj">
       <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
       <Name>StarLightEntities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TypeAnalyzer\TypeAnalyzer.csproj">
+      <Project>{16AB6F33-D59F-42BB-BA8B-4AFA979569F4}</Project>
+      <Name>TypeAnalyzer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
