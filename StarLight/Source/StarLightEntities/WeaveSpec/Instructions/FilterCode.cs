@@ -58,7 +58,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// <summary>
 		/// The conditions to check before executing the filtercode
 		/// </summary>
-		private List<ConditionLiteral> _checkConditions;
+		private ConditionExpression _checkCondition;
 
 		/// <summary>
 		/// The instructions
@@ -74,16 +74,13 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		}
 
 		/// <summary>
-		/// Gets or sets the conditions to check before executing the filtercode.
+		/// Gets or sets the condition expression to check before executing the filtercode.
 		/// </summary>
-		/// <value>The conditions to check.</value>
-		[XmlArray("CheckConditions")]
-		[XmlArrayItem("CheckCondition")]
-		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-		public List<ConditionLiteral> CheckConditions
+		/// <value>The condition expression to check.</value>
+		public ConditionExpression CheckCondition
 		{
-			get { return _checkConditions; }
-			set { _checkConditions = value; }
+			get { return _checkCondition; }
+			set { _checkCondition = value; }
 		}
 
 		/// <summary>

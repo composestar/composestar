@@ -1,6 +1,5 @@
 package Composestar.DotNET.TYM.RepositoryEmitter;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -67,18 +66,31 @@ class InstructionTranslator implements Visitor
 
 		// Check conditions
 		Iterator condIter = filterCode.getCheckConditions();
-		ArrayList conditionLiterals = new ArrayList();
+		composestar.dotNET.tym.entities.ConditionExpression condExpr = null;
+		composestar.dotNET.tym.entities.ConditionExpression condExpr2;
 		while (condIter.hasNext())
 		{
 			Condition condition = (Condition) condIter.next();
 
-			conditionLiterals.add(translateCondition(condition));
+			condExpr2 = translateCondition(condition);
+
+			if (condExpr == null)
+			{
+				condExpr = condExpr2;
+			}
+			else
+			{
+				OrCondition or = OrCondition.Factory.newInstance();
+				or.setLeft(condExpr);
+				or.setRight(condExpr2);
+				condExpr = or;
+			}
 		}
 
-		weaveFilterCode.addNewCheckConditions();
-		weaveFilterCode.getCheckConditions().setCheckConditionArray(
-				(composestar.dotNET.tym.entities.ConditionLiteral[]) conditionLiterals
-						.toArray(new composestar.dotNET.tym.entities.ConditionLiteral[0]));
+		if (condExpr != null)
+		{
+			weaveFilterCode.setCheckCondition(condExpr);
+		}
 
 		return weaveFilterCode;
 	}
@@ -169,7 +181,7 @@ class InstructionTranslator implements Visitor
 		composestar.dotNET.tym.entities.ConditionLiteral conditionLiteral = composestar.dotNET.tym.entities.ConditionLiteral.Factory
 				.newInstance();
 		conditionLiteral.setName(condition.getName());
-		
+
 		return conditionLiteral;
 	}
 

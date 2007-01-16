@@ -385,7 +385,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// Performs the weaving of the current instruction set.
 		/// </summary>
 		/// <param name="instructionSet">The instruction set.</param>
-		public void DoWeave(InlineInstruction instructionSet)
+		public void DoWeave(FilterCode instructionSet)
 		{
 			// Store the current index in the Instructions to use it later to insert the create action store.
 			int currentIndex = Instructions.Count;
@@ -517,7 +517,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// <param name="filterCode"></param>
 		public void VisitFilterCode(FilterCode filterCode)
 		{
-			//TODO
+			filterCode.Instructions.Accept(this);
 		}
 
 		/// <summary>

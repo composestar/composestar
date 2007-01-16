@@ -42,6 +42,8 @@ using Composestar.StarLight.CoreServices.Logger;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
+using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
+using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.Utilities;
 using Composestar.StarLight.Utilities.Interfaces;
@@ -702,11 +704,11 @@ namespace Composestar.StarLight.ILWeaver
 			if (!weaveMethod.HasInputFilters)
 				return;
 
-			// Get the input filter
-			InlineInstruction inputFilter = weaveMethod.InputFilter.Instructions;
+			// Get the input filter code
+			FilterCode filterCode = weaveMethod.InputFilter;
 
-			// Only proceed when we have an inputfilter
-			if (inputFilter == null)
+			// Only proceed when we have filtercode
+			if (filterCode == null)
 				return;
 
 			#endregion
@@ -729,13 +731,16 @@ namespace Composestar.StarLight.ILWeaver
 			List<Instruction> instructions = new List<Instruction>();
 			visitor.Instructions = instructions;
 
+			// Weave the check conditions:
+			Instruction endJump = WeaveCheckCondition(filterCode, visitor);
+
 			// Weave the innercall check task:
 			Instruction resetInstruction = WeaveCheckInnerCall(targetAssembly, method, weaveMethod, worker, instructions);
 
 			// Visit the elements in the block
 			try
 			{
-				visitor.DoWeave(inputFilter);
+				visitor.DoWeave(filterCode);
 			}
 			catch (Exception ex)
 			{
@@ -746,6 +751,12 @@ namespace Composestar.StarLight.ILWeaver
 
 			// Add the reset instruction:
 			instructions.Add(resetInstruction);
+
+			// Add endJump instruction:
+			if (endJump != null)
+			{
+				instructions.Add(endJump);
+			}
 
 			// Only add instructions if we have instructions
 			if (visitor.Instructions.Count > 0)
@@ -764,6 +775,24 @@ namespace Composestar.StarLight.ILWeaver
 			//
 			// What follows are the original instructions
 			//
+		}
+
+		private Instruction WeaveCheckCondition(FilterCode filterCode, CecilInliningInstructionVisitor instrVisitor)
+		{
+			ConditionExpression condExpr = filterCode.CheckCondition;
+			if (condExpr == null)
+			{
+				return null;
+			}
+
+			CecilConditionsVisitor condVisitor = new CecilConditionsVisitor(instrVisitor);
+			((IVisitable) condExpr).Accept(condVisitor);
+
+			// If expression is false, do not execute filter code:
+			Instruction endJump = instrVisitor.Worker.Create(OpCodes.Nop);
+			instrVisitor.Instructions.Add(instrVisitor.Worker.Create(OpCodes.Brfalse, endJump));
+			
+			return endJump;
 		}
 
 		/// <summary>
