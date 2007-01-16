@@ -55,10 +55,10 @@ using Composestar.StarLight.Utilities;
 namespace Composestar.StarLight.Weaving.FilterModuleConditions
 {
 	/// <summary>
-	/// Apply this attribute to Filter Module Conditions which requires the Fully Qualified Name of the current method.
+	/// Apply this attribute to Filter Module Conditions which requires the NameSpace and Type of the current method.
 	/// </summary>
 	[CLSCompliant(false)]
-	public class FilterModuleFQNConditionAttribute : FilterModuleConditionAttribute
+	public class FilterModuleNSConditionAttribute : FilterModuleConditionAttribute
 	{
 
 		private readonly string _booleanReturnType = typeof(Boolean).FullName;
@@ -71,7 +71,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		/// <returns>String</returns>
 		public override string Description
 		{
-			get { return Properties.Resources.FMCFQNDescription; }
+			get { return Properties.Resources.FMCNSDescription; }
 		}
 
 		/// <summary>
@@ -84,11 +84,17 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		[CLSCompliant(false)]
 		public override void Generate(ICecilInliningInstructionVisitor visitor, MethodDefinition originalCall, MethodDefinition conditionMethod)
 		{
-			// Determine the fqn
-			string fqn = originalCall.ToString();
+			// Determine the ns
+			string ns = originalCall.DeclaringType.Namespace;
 
-			// Place the FQN of the current method onto the stack
-			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, fqn));
+			// Place the NS of the current method onto the stack
+			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, ns));
+
+			// Determine the type
+			string type = originalCall.DeclaringType.Name;
+
+			// Place the type of the current method onto the stack
+			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, type));
  
 		}
 
@@ -107,10 +113,13 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 				return false;
 
 			// There should be no parameters
-			if (conditionMethod.Parameters.Count != 1)
+			if (conditionMethod.Parameters.Count != 2)
 				return false;
 
 			if (!conditionMethod.Parameters[0].ParameterType.FullName.Equals(_stringType))
+				return false;
+
+			if (!conditionMethod.Parameters[1].ParameterType.FullName.Equals(_stringType))
 				return false; 
 
 			return true;
@@ -122,7 +131,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		/// <value>The required condition message text.</value>
 		public override string RequiredCondition
 		{
-			get { return Properties.Resources.FMCFQNRequired; }
+			get { return Properties.Resources.FMCNSRequired; }
 		}
 	}
 }

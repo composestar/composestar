@@ -214,4 +214,10 @@
   <data name="NoSuitableInternalConstructor" xml:space="preserve">
     <value>Could not find a suitable constructor for internal {0}.</value>
   </data>
+  <data name="FilterModuleConditionNotFound" xml:space="preserve">
+    <value>Unable to instantiate the Filter Module Condition '{0}'.</value>
+  </data>
+  <data name="FilterConditionInvalid" xml:space="preserve">
+    <value>The Filter Module Condition is invalid for '{0}' in combination with attribute '{1}'. {2}</value>
+  </data>
 </root>

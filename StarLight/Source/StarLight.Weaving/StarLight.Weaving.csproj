@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FilterModuleConditions\FilterModuleNSConditionAttribute.cs" />
     <Compile Include="FilterModuleConditions\FilterModuleFQNConditionAttribute.cs" />
     <Compile Include="FilterModuleConditions\FilterModuleConditionAttribute.cs" />
     <Compile Include="FilterModuleConditions\FilterModuleEmptyConditionAttribute.cs" />

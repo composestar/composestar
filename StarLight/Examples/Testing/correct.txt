@@ -121,19 +121,37 @@ BasicTests.FilterTestsHelper.makeTrip()
 BasicTests.ConditionalSuperImpositionTests.ctor()
 
 Logging + timing enabled:
+Should log function 'System.Void BasicTests.ConditionalSuperImpositionTests::CondSIFunc1()' ? True
+Should log function 'System.Void BasicTests.ConditionalSuperImpositionTests::CondSIFunc1()' ? True
 Log : cur sel:CondSIFunc1, cur method: CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests).
 Local variables: 2
+Should log ns 'BasicTests', type 'ConditionalSuperImpositionTests' ? True
+Log : cur sel:CondSIFunc1, cur method: CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests).
+Local variables: 2
+Log : cur sel:CondSIFunc1, cur method: CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests).
+Local variables: 2
+Should log function 'System.Void BasicTests.ConditionalSuperImpositionTests::CondSIFunc1()' ? True
 BasicTests.ConditionalSuperImpositionTests.Executing CondSIFunc1...()
-Timed method CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests)
 
 Logging enabled:
+Should log function 'System.Void BasicTests.ConditionalSuperImpositionTests::CondSIFunc1()' ? True
+Should log function 'System.Void BasicTests.ConditionalSuperImpositionTests::CondSIFunc1()' ? True
 Log : cur sel:CondSIFunc1, cur method: CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests).
 Local variables: 2
+Should log ns 'BasicTests', type 'ConditionalSuperImpositionTests' ? True
+Log : cur sel:CondSIFunc1, cur method: CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests).
+Local variables: 2
+Log : cur sel:CondSIFunc1, cur method: CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests).
+Local variables: 2
+Should log function 'System.Void BasicTests.ConditionalSuperImpositionTests::CondSIFunc1()' ? True
 BasicTests.ConditionalSuperImpositionTests.Executing CondSIFunc1...()
 
 Timing enabled:
+Should log function 'System.Void BasicTests.ConditionalSuperImpositionTests::CondSIFunc1()' ? False
+Should log ns 'BasicTests', type 'ConditionalSuperImpositionTests' ? False
 BasicTests.ConditionalSuperImpositionTests.Executing CondSIFunc1...()
-Timed method CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests)
 
 Logging + timing disabled:
+Should log function 'System.Void BasicTests.ConditionalSuperImpositionTests::CondSIFunc1()' ? False
+Should log ns 'BasicTests', type 'ConditionalSuperImpositionTests' ? False
 BasicTests.ConditionalSuperImpositionTests.Executing CondSIFunc1...()

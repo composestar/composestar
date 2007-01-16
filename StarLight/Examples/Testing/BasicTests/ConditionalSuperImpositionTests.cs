@@ -1,6 +1,8 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Text;
+#endregion
 
 namespace BasicTests
 {
@@ -18,16 +20,34 @@ namespace BasicTests
 			report("Executing CondSIFunc1...");
 		}
 
-		[Composestar.StarLight.SkipWeaving()]
+		[Composestar.StarLight.SkipWeaving]
+		[Composestar.StarLight.Weaving.FilterModuleConditions.FilterModuleEmptyCondition]
 		public static Boolean LoggingEnabled()
 		{
 			return loggingEnabled;
 		}
 
-		[Composestar.StarLight.SkipWeaving()]
-		public static Boolean TimingEnabled()
+		[Composestar.StarLight.SkipWeaving]
+		[Composestar.StarLight.Weaving.FilterModuleConditions.FilterModuleMethodInfoCondition]
+		public static Boolean TimingEnabled(System.Reflection.MethodBase methodInfo)
 		{
-			return timingEnabled;
+			return timingEnabled && methodInfo.Name.Equals("Test");
+		}
+
+		[Composestar.StarLight.SkipWeaving]
+		[Composestar.StarLight.Weaving.FilterModuleConditions.FilterModuleFQNCondition]
+		public static Boolean ShouldLog(String fqn)
+		{
+			Console.WriteLine("Should log function '{0}' ? {1}", fqn, loggingEnabled.ToString());
+			return loggingEnabled;
+		}
+
+		[Composestar.StarLight.SkipWeaving]
+		[Composestar.StarLight.Weaving.FilterModuleConditions.FilterModuleNSCondition]
+		public static Boolean ShouldLogExt(String ns, String type)
+		{
+			Console.WriteLine("Should log ns '{0}', type '{1}' ? {2}", ns, type, loggingEnabled.ToString());
+			return loggingEnabled;
 		}
 	}
 }

@@ -63,7 +63,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 	public class FilterModuleMethodInfoConditionAttribute : FilterModuleConditionAttribute 
 	{
 
-		private readonly string _methodInfoType = typeof(System.Reflection.MethodInfo).FullName;
+		private readonly string _methodInfoType = typeof(System.Reflection.MethodBase).FullName;
 		private readonly string _booleanReturnType = typeof(Boolean).FullName;
 
 		/// <summary>
@@ -74,7 +74,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		/// <param name="originalCall">The original call.</param>
 		/// <param name="conditionMethod">The condition method.</param>
 		[CLSCompliant(false)]
-		public override void Generate(ICecilInliningInstructionVisitor visitor, MethodDefinition originalCall, MethodElement conditionMethod)
+		public override void Generate(ICecilInliningInstructionVisitor visitor, MethodDefinition originalCall, MethodDefinition conditionMethod)
 		{
 		
 			// We need to get the MethodInfo object and place it on the stack so we can supply it to the FMC.
@@ -98,7 +98,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 				visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.GetMethodFromHandle)));
 
 
-			// We now have a MethodInfo object on the stack. Return control to the caller and let them call the FMC.
+			// We now have a MethodBase object on the stack. Return control to the caller and let them call the FMC.
 
 		}
 
@@ -109,10 +109,10 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		/// <returns>
 		/// 	<c>true</c> if the specified condition method is valid; otherwise, <c>false</c>.
 		/// </returns>
-		public override bool IsValidCondition(MethodElement conditionMethod)
+		public override bool IsValidCondition(MethodDefinition conditionMethod)
 		{
 			// Method must return a bool
-			if (!conditionMethod.ReturnType.Equals(_booleanReturnType))
+			if (!conditionMethod.ReturnType.ReturnType.FullName.Equals(_booleanReturnType))
 				return false; 
 
 			// We need only one parameter
@@ -120,7 +120,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 				return false;
 
 			// This must be a methodInfo parameter
-			if (!conditionMethod.Parameters[0].Type.Equals(_methodInfoType))
+			if (!conditionMethod.Parameters[0].ParameterType.FullName.Equals(_methodInfoType))
 				return false;
 
 			return true;

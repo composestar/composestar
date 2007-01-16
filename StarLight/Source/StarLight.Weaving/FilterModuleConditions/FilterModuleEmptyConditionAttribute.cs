@@ -80,7 +80,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		/// <param name="originalCall">The original call.</param>
 		/// <param name="conditionMethod">The condition method.</param>
 		[CLSCompliant(false)]
-		public override void Generate(ICecilInliningInstructionVisitor visitor, MethodDefinition originalCall, MethodElement conditionMethod)
+		public override void Generate(ICecilInliningInstructionVisitor visitor, MethodDefinition originalCall, MethodDefinition conditionMethod)
 		{
 			// We do not need to generate any code since there are no parameters.
 		}
@@ -93,10 +93,10 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		/// <returns>
 		/// 	<c>true</c> if the specified condition method is valid; otherwise, <c>false</c>.
 		/// </returns>
-		public override bool IsValidCondition(MethodElement conditionMethod)
+		public override bool IsValidCondition(MethodDefinition conditionMethod)
 		{
 			// Method must return a bool
-			if (!conditionMethod.ReturnType.Equals(_booleanReturnType))
+			if (!conditionMethod.ReturnType.ReturnType.FullName.Equals(_booleanReturnType))
 				return false;
 
 			// There should be no parameters

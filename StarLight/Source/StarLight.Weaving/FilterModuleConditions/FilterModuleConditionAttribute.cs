@@ -68,7 +68,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		/// <param name="visitor">The visitor.</param>
 		/// <param name="originalCall">The original call.</param>
 		/// <param name="conditionMethod">The condition method.</param>
-		public abstract void Generate(ICecilInliningInstructionVisitor visitor, MethodDefinition originalCall, MethodElement conditionMethod);
+		public abstract void Generate(ICecilInliningInstructionVisitor visitor, MethodDefinition originalCall, MethodDefinition conditionMethod);
 
 		/// <summary>
 		/// Determines whether the specified condition method is valid for this type of code generation.
@@ -78,7 +78,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		/// <returns>
 		/// 	<c>true</c> if the specified condition method is valid; otherwise, <c>false</c>.
 		/// </returns>
-		public abstract bool IsValidCondition(MethodElement conditionMethod);
+		public abstract bool IsValidCondition(MethodDefinition conditionMethod);
 
 		/// <summary>
 		/// Returns a description of this Filter Module Condition.

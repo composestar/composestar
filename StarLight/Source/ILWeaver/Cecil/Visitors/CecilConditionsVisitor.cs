@@ -46,6 +46,7 @@ using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.Utilities;
+using Composestar.StarLight.Weaving.FilterModuleConditions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
@@ -273,6 +274,8 @@ namespace Composestar.StarLight.ILWeaver
 			// Get the method
 			MethodReference method;
 			FieldDefinition target = null;
+
+			// Check if this is an inner or self target.
 			if (con.Reference.Target.Equals(Reference.InnerTarget) ||
 				con.Reference.Target.Equals(Reference.SelfTarget))
 			{
@@ -303,7 +306,7 @@ namespace Composestar.StarLight.ILWeaver
 
 				if (md == null)
 					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.MethodNotFound2, con.Reference.Selector, con.Reference.Target, fieldType.FullName));
-
+			
 				method = _visitor.TargetAssemblyDefinition.MainModule.Import(md);
 			}
 			else
@@ -314,6 +317,7 @@ namespace Composestar.StarLight.ILWeaver
 					con.Reference.Assembly, String.Empty);
 			}
 
+			// If we could not find the condition method, throw an exception
 			if (method == null)
 				throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
 					Properties.Resources.MethodNotFound,
@@ -321,7 +325,7 @@ namespace Composestar.StarLight.ILWeaver
 					con.Reference.FullName,
 					con.Reference.Assembly));
 
-
+			// If it is an inner or self call, we set the InnerCall context
 			if (con.Reference.Target.Equals(Reference.InnerTarget) ||
 				con.Reference.Target.Equals(Reference.SelfTarget))
 			{
@@ -342,8 +346,7 @@ namespace Composestar.StarLight.ILWeaver
 						CreateMethodReference(typeof(FilterContext).GetMethod("SetInnerCall",
 						new Type[] { typeof(object), typeof(int) }))));
 				}
-
-
+				
 				// Load the this pointer
 				Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
 			}
@@ -356,9 +359,53 @@ namespace Composestar.StarLight.ILWeaver
 				// Load the field
 				Instructions.Add(Worker.Create(OpCodes.Ldfld, target));
 			}
-			//else do nothing, because of static call
+			// else do nothing, because of static call
+				
+			// Create a method definition so we can inspect the custom attributes
+			MethodDefinition methodDef = (MethodDefinition)method;
+			if (methodDef != null)
+			{
+				// Find a correct custom attribute to use
+				foreach (CustomAttribute ca in methodDef.CustomAttributes)
+				{
+					String typeName = ca.Constructor.DeclaringType.ToString();   
 
-			// Check if we have to add the JPC
+					// Check if the custom attribute is called FilterModule so we do not activate all kinds of attributes
+					if (typeName.Contains("FilterModule"))
+					{
+						// Resolve the FMC
+						FilterModuleConditionAttribute fmca = ResolveFilterModuleCondition(typeName);
+
+						// Do we have a FMCA?
+						if (fmca != null)
+						{
+							// Check if the condition is valid for this code generation
+							if (fmca.IsValidCondition(methodDef))
+							{
+								fmca.Generate(_visitor, Method, methodDef); 
+							}
+							else
+								// Throw an exception since the condition is not valid, we cannot create valid code for this.
+								throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+									Properties.Resources.FilterConditionInvalid,
+									typeName, methodDef.ToString(), fmca.RequiredCondition));
+						}
+						else
+						{
+							// Throw an exception
+							throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+								Properties.Resources.FilterModuleConditionNotFound,
+								typeName));
+						}
+
+						// Quit the for loop. If there are more custom attributes, we simply skip them.
+						break;  
+					}
+				}
+			}
+
+			// Check if we have to add the JPC 
+			// Legacy code, should be able to do this using the FilterModule?
 			if (method.Parameters.Count == 1)
 			{
 				if (method.Parameters[0].ParameterType.FullName.Equals(typeof(JoinPointContext).FullName))
@@ -374,6 +421,69 @@ namespace Composestar.StarLight.ILWeaver
 		}
 
 		/// <summary>
+		/// Resolve filter module condition
+		/// </summary>
+		/// <param name="nameOfAttribute">Name of attribute</param>
+		/// <returns>Filter module condition attribute</returns>
+		private static FilterModuleConditionAttribute ResolveFilterModuleCondition(string nameOfAttribute)
+		{
+			// If the name is empty, return null
+			if (string.IsNullOrEmpty(nameOfAttribute))
+				return null;
+
+			// The custom attribute must start with FilterModule, 
+			// so we do not try to instantiate all kinds of custom attributes
+			if (!nameOfAttribute.Contains("FilterModule"))
+				return null;
+
+			FilterModuleConditionAttribute fmca = null;
+
+			// Check if it is in the cache
+			if (_filterConditionAttributesCache.TryGetValue(nameOfAttribute, out fmca))
+				return fmca;
+			else
+			{
+				// Not in the cache, try to resolve it.
+				// Look up the assembly containing the filter modules
+				System.Reflection.Assembly assembly = typeof(FilterModuleConditionAttribute).Assembly;
+				// TODO This does not allow us to use other assemblies.
+
+				if (assembly == null)
+					return null;
+
+				Type type = assembly.GetType(nameOfAttribute, false, true);
+
+				// If we could not find the type, return null
+				if (type == null)
+					return null;
+
+				// Create an instance
+				try
+				{
+					fmca = Activator.CreateInstance(type) as FilterModuleConditionAttribute;
+				}
+				catch 
+				{
+					return null;
+				}
+
+				// Check for null
+				if (fmca == null)
+					return null;
+
+				// Add to cache
+				_filterConditionAttributesCache.Add(nameOfAttribute, fmca);
+				return fmca;
+			}
+
+		}
+
+		/// <summary>
+		/// Dictionary to cache the found FilterModuleConditionAttribute objects.
+		/// </summary>
+		private static Dictionary<string, FilterModuleConditionAttribute> _filterConditionAttributesCache = new Dictionary<string, FilterModuleConditionAttribute>(); 
+
+		/// <summary>
 		/// Determines whether the specified target is internal.
 		/// </summary>
 		/// <param name="target">The target.</param>
@@ -383,12 +493,8 @@ namespace Composestar.StarLight.ILWeaver
 		private bool IsInternal(string target)
 		{
 			foreach (Internal i in _visitor.WeaveType.Internals)
-			{
 				if (i.Name.Equals(target))
-				{
 					return true;
-				}
-			}
 
 			return false;
 		}
@@ -404,12 +510,8 @@ namespace Composestar.StarLight.ILWeaver
 		private bool IsExternal(string target)
 		{
 			foreach (External e in _visitor.WeaveType.Externals)
-			{
 				if (e.Name.Equals(target))
-				{
 					return true;
-				}
-			}
 
 			return false;
 		}
