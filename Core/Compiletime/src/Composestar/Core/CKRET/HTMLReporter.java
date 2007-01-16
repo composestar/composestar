@@ -12,7 +12,6 @@ package Composestar.Core.CKRET;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -23,11 +22,11 @@ import Composestar.Core.Master.Config.Configuration;
 
 public class HTMLReporter implements Reporter
 {
-	private BufferedWriter writer;
+	private transient BufferedWriter writer;
 
-	private StringBuffer buffer;
+	private transient StringBuffer buffer;
 
-	private String cssFile;
+	private transient String cssFile;
 
 	public HTMLReporter(String path, String incssFile, CommonResources resources) throws Exception
 	{
@@ -79,11 +78,12 @@ public class HTMLReporter implements Reporter
 
 		buffer.append("<b>Filters:</b><BR>");
 		int i = 0;
-        for (Object o : analysis.getFilters()) {
-            i++;
-            buffer.append("").append(i).append(". ").append(((Filter) o).getQualifiedName()).append("<BR>");
-        }
-        buffer.append("<BR>");
+		for (Object o : analysis.getFilters())
+		{
+			i++;
+			buffer.append("").append(i).append(". ").append(((Filter) o).getQualifiedName()).append("<BR>");
+		}
+		buffer.append("<BR>");
 
 		if (analysis.numConflictingExecutions() == 0)
 		{
@@ -95,38 +95,40 @@ public class HTMLReporter implements Reporter
 
 			List executionConflicts = analysis.executionConflicts();
 
-            for (Object executionConflict : executionConflicts) {
-                buffer.append("<tr><td align=left valign=top><b>Actions:</b><BR>");
+			for (Object executionConflict : executionConflicts)
+			{
+				buffer.append("<tr><td align=left valign=top><b>Actions:</b><BR>");
 
-                // Entry entry = (Entry) it.next();
-                // ExecutionAnalysis ea = (ExecutionAnalysis) entry.getKey();
-                // List conflicts = (List) entry.getValue();
-                List conflicts = (List) executionConflict;
+				// Entry entry = (Entry) it.next();
+				// ExecutionAnalysis ea = (ExecutionAnalysis) entry.getKey();
+				// List conflicts = (List) entry.getValue();
+				List conflicts = (List) executionConflict;
 
-                // i = 0;
-                // for( Iterator actionIterator = ea.getActions().iterator();
-                // actionIterator.hasNext(); )
-                // {
-                // i++;
-                // buffer.append("").append(i).append(".
-                // ").append(actionIterator.next().toString()).append("<BR>");
-                // }
+				// i = 0;
+				// for( Iterator actionIterator = ea.getActions().iterator();
+				// actionIterator.hasNext(); )
+				// {
+				// i++;
+				// buffer.append("").append(i).append(".
+				// ").append(actionIterator.next().toString()).append("<BR>");
+				// }
 
-                buffer.append("</td><td align=left valign=top><b>Conflicts</b>");
+				buffer.append("</td><td align=left valign=top><b>Conflicts</b>");
 
-                buffer.append("<table border=0 cellpadding=0 cellspacing=0 width=100%>");
-                buffer
-                        .append("<tr><td><i>Resource:</i></td><td width=200><i>Sequence:</i></td><td width=150><i>Pattern:</i></td><td><i>Message:</i></td></tr>");
-                for (Object conflict1 : conflicts) {
-                    Conflict conflict = (Conflict) conflict1;
-                    buffer.append("<tr><td>").append(conflict.getResource()).append("</td><td>").append(
-                            conflict.getSequence()).append("</td><td>").append(conflict.getExpr()).append("</td><td>")
-                            .append(conflict.getMsg()).append("</td></tr>");
-                }
-                buffer.append("</table>");
-                buffer.append("</td></tr>");
-            }
-            buffer.append("</table><br/>");
+				buffer.append("<table border=0 cellpadding=0 cellspacing=0 width=100%>");
+				buffer
+						.append("<tr><td><i>Resource:</i></td><td width=200><i>Sequence:</i></td><td width=150><i>Pattern:</i></td><td><i>Message:</i></td></tr>");
+				for (Object conflict1 : conflicts)
+				{
+					Conflict conflict = (Conflict) conflict1;
+					buffer.append("<tr><td>").append(conflict.getResource()).append("</td><td>").append(
+							conflict.getSequence()).append("</td><td>").append(conflict.getExpr()).append("</td><td>")
+							.append(conflict.getMsg()).append("</td></tr>");
+				}
+				buffer.append("</table>");
+				buffer.append("</td></tr>");
+			}
+			buffer.append("</table><br/>");
 		}
 		buffer.append("</div>");
 	}
@@ -143,16 +145,14 @@ public class HTMLReporter implements Reporter
 				"\"/>\n");
 		buffer.append("</head>\n");
 		buffer.append("<body>\n");
-		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"" + "file://").append(
-				Configuration.instance().getPathSettings().getPath("Composestar")).append(
-				"/logo.gif\"/>  /TRESE/Compose*/CKRET</i></b></font></div>\n");
+		buffer.append("<h1><span>/TRESE/Compose*/CKRET</span></h1>\n");
 
 		buffer.append("<h3>").append((new Date()).toString());
 		buffer.append("<BR>");
 		buffer.append("Platform: ").append(Configuration.instance().getPlatformName());
 		buffer.append("<BR>");
 		buffer.append("Runmode: ").append(CKRET.MODES[CKRET.getMode()]);
-		buffer.append("</h3>");
+		buffer.append("</h3>\n");
 	}
 
 	public void close()

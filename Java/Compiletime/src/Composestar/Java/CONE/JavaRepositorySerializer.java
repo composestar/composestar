@@ -2,6 +2,7 @@ package Composestar.Java.CONE;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
+import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 import java.util.Iterator;
 
@@ -61,6 +62,10 @@ public class JavaRepositorySerializer implements RepositorySerializer
 		catch (StackOverflowError ex)
 		{
 			throw new ModuleException("Need more stack size to serialize repository: " + ex.toString(), "CONE");
+		}
+		catch (NotSerializableException e)
+		{
+			throw new ModuleException("Unserializable class encountered: " + e.toString(), "CONE");
 		}
 		catch (Exception e)
 		{

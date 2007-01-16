@@ -19,7 +19,8 @@ import Composestar.Core.LAMA.UnitResult;
 import Composestar.Utils.StringConverter;
 
 /**
- * An instance of <code>JavaType</code> represents a class object in Java. It extends the generic object <code>Type</code>.
+ * An instance of <code>JavaType</code> represents a class object in Java. It
+ * extends the generic object <code>Type</code>.
  * 
  * @see Composestar.Core.LAMA.Type
  */
@@ -28,20 +29,46 @@ public class JavaType extends Type
 	private static final long serialVersionUID = 3739255608747710756L;
 
 	public Class theClass;
+
 	public boolean isAnnotation;
+
 	private JavaType superClass;
+
 	public ArrayList ImplementedInterfaceNames; // List of Strings
+
 	private ArrayList ImplementedInterfaces; // List of JavaTypes
 
-	private ProgramElement parentNS; // Added by the Language Model; this relation can be used in logic queries
-	private HashSet childTypes; // Added by the Language Model; this relation contains links to sub-types of this type.
-	private HashSet parameterTypes; // Added by the Language Model; this relation contains links to parameters of this type.
-	private HashSet methodReturnTypes; // Added by the Language Model; this relation contains links to methods that return this type.
-	private HashSet fieldTypes; // Added by the Language Model; this relation contains links to fields of this type.
-	private HashSet implementedBy; // Added by the Language Model; this relation exists for interfaces and points to the Types that implement this interface
+	private ProgramElement parentNS; // Added by the Language Model; this
+
+	// relation can be used in logic queries
+
+	private HashSet childTypes; // Added by the Language Model; this relation
+
+	// contains links to sub-types of this type.
+
+	private HashSet parameterTypes; // Added by the Language Model; this
+
+	// relation contains links to parameters of
+	// this type.
+
+	private HashSet methodReturnTypes; // Added by the Language Model; this
+
+	// relation contains links to methods
+	// that return this type.
+
+	private HashSet fieldTypes; // Added by the Language Model; this relation
+
+	// contains links to fields of this type.
+
+	private HashSet implementedBy; // Added by the Language Model; this
+
+	// relation exists for interfaces and points
+	// to the Types that implement this
+	// interface
 
 	/**
 	 * Constructor
+	 * 
 	 * @param c - <code>java.lang.Class</code> instance.
 	 */
 	public JavaType(Class c)
@@ -59,9 +86,10 @@ public class JavaType extends Type
 	}
 
 	/**
-	 * Returns the <code>Class</code> instance wrapped inside this <code>JavaType</code> instance.
+	 * Returns the <code>Class</code> instance wrapped inside this
+	 * <code>JavaType</code> instance.
 	 * 
-	 * @return java.lang.Class 
+	 * @return java.lang.Class
 	 */
 	public Class getclass()
 	{
@@ -70,7 +98,7 @@ public class JavaType extends Type
 
 	/**
 	 * Adds an interface to this <code>JavaType</code>.
-	 *
+	 * 
 	 * @param iface the interface.
 	 */
 	public void addImplementedInterface(String iface)
@@ -79,7 +107,8 @@ public class JavaType extends Type
 	}
 
 	/**
-	 * Returns a list of interfaces that this <code>JavaType</code> implements.
+	 * Returns a list of interfaces that this <code>JavaType</code>
+	 * implements.
 	 */
 	public List getImplementedInterfaces()
 	{
@@ -100,6 +129,7 @@ public class JavaType extends Type
 
 	/**
 	 * Returns the fully qualified package name of this class.
+	 * 
 	 * @return java.lang.String
 	 */
 	public String namespace()
@@ -118,7 +148,9 @@ public class JavaType extends Type
 
 	/**
 	 * Sets the annotation state of this <code>JavaType</code>.
-	 * @param b - true if this <code>JavaType</code> is an <code>Annotation</code>.
+	 * 
+	 * @param b - true if this <code>JavaType</code> is an
+	 *            <code>Annotation</code>.
 	 */
 	public void setIsAnnotation(boolean b)
 	{
@@ -126,7 +158,7 @@ public class JavaType extends Type
 	}
 
 	/**
-	 * Return true if this class represents an <code>Interface</code>. 
+	 * Return true if this class represents an <code>Interface</code>.
 	 */
 	public boolean isInterface()
 	{
@@ -153,34 +185,43 @@ public class JavaType extends Type
 	/** Stuff for LOLA * */
 
 	/**
-	 * Helper method. Converts a <code>Collection</code> to a <code>HashSet</code>.
+	 * Helper method. Converts a <code>Collection</code> to a
+	 * <code>HashSet</code>.
 	 */
 	private HashSet toHashSet(Collection c)
 	{
 		HashSet result = new HashSet();
-		Iterator iter = c.iterator();
-        for (Object aC : c) result.add(aC);
-        return result;
+		for (Object aC : c)
+		{
+			result.add(aC);
+		}
+		return result;
 	}
 
 	/**
-	 * Filters declared objects. Only methods or fields declared in this class are returned.
+	 * Filters declared objects. Only methods or fields declared in this class
+	 * are returned.
 	 * 
 	 * @param in - a set of <code>MethodInfo</code> or <code>FieldInfo</code>.
-	 * @return a <code>HashSet</code> containing objects declared in this class.
+	 * @return a <code>HashSet</code> containing objects declared in this
+	 *         class.
 	 */
 	private HashSet filterDeclaredHere(Collection in)
 	{
 		HashSet out = new HashSet();
-		Iterator iter = in.iterator();
-        for (Object obj : in) {
-            if (obj instanceof JavaMethodInfo) {
-                if (((JavaMethodInfo) obj).isDeclaredHere()) out.add(obj);
-            } else if (obj instanceof JavaFieldInfo) {
-                if (((JavaFieldInfo) obj).isDeclaredHere()) out.add(obj);
-            } else out.add(obj); // No filtering on other kinds of objects
-        }
-        return out;
+		for (Object obj : in)
+		{
+			if (obj instanceof JavaMethodInfo)
+			{
+				if (((JavaMethodInfo) obj).isDeclaredHere()) out.add(obj);
+			}
+			else if (obj instanceof JavaFieldInfo)
+			{
+				if (((JavaFieldInfo) obj).isDeclaredHere()) out.add(obj);
+			}
+			else out.add(obj); // No filtering on other kinds of objects
+		}
+		return out;
 	}
 
 	/**
@@ -216,19 +257,36 @@ public class JavaType extends Type
 		HashSet resFields = new HashSet();
 		HashSet resParameters = new HashSet();
 
-		Iterator i = getAnnotationInstances().iterator();
-        for (Object o : getAnnotationInstances()) {
-            ProgramElement unit = ((JavaAnnotation) o).getTarget();
-            if (unit instanceof JavaType) {
-                JavaType type = (JavaType) unit;
-                if (type.isInterface()) resInterfaces.add(type);
-                else resClasses.add(type);
-            } else if (unit instanceof JavaMethodInfo) resMethods.add(unit);
-            else if (unit instanceof FieldInfo) resFields.add(unit);
-            else if (unit instanceof ParameterInfo) resParameters.add(unit);
-        }
+		for (Object o : getAnnotationInstances())
+		{
+			ProgramElement unit = ((JavaAnnotation) o).getTarget();
+			if (unit instanceof JavaType)
+			{
+				JavaType type = (JavaType) unit;
+				if (type.isInterface())
+				{
+					resInterfaces.add(type);
+				}
+				else
+				{
+					resClasses.add(type);
+				}
+			}
+			else if (unit instanceof JavaMethodInfo)
+			{
+				resMethods.add(unit);
+			}
+			else if (unit instanceof FieldInfo)
+			{
+				resFields.add(unit);
+			}
+			else if (unit instanceof ParameterInfo)
+			{
+				resParameters.add(unit);
+			}
+		}
 
-        if (argumentName.equals("AttachedClasses")) return new UnitResult(resClasses);
+		if (argumentName.equals("AttachedClasses")) return new UnitResult(resClasses);
 		else if (argumentName.equals("AttachedInterfaces")) return new UnitResult(resInterfaces);
 		else if (argumentName.equals("AttachedMethods")) return new UnitResult(resMethods);
 		else if (argumentName.equals("AttachedFields")) return new UnitResult(resFields);
@@ -240,7 +298,9 @@ public class JavaType extends Type
 	public UnitResult getUnitRelationForClass(String argumentName)
 	{
 		if (argumentName.equals("ParentNamespace")) return new UnitResult(parentNS);
-		else if (argumentName.equals("ParentClass")) return new UnitResult(superClass()); // can be null!
+		else if (argumentName.equals("ParentClass")) return new UnitResult(superClass()); // can
+		// be
+		// null!
 		else if (argumentName.equals("ChildClasses")) return new UnitResult(childTypes);
 		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(this.m_methods));
 		else if (argumentName.equals("ChildFields")) return new UnitResult(filterDeclaredHere(this.m_fields));
@@ -263,7 +323,9 @@ public class JavaType extends Type
 	public UnitResult getUnitRelationForInterface(String argumentName)
 	{
 		if (argumentName.equals("ParentNamespace")) return new UnitResult(parentNS);
-		else if (argumentName.equals("ParentInterface")) return new UnitResult(superClass()); // can be null!
+		else if (argumentName.equals("ParentInterface")) return new UnitResult(superClass()); // can
+		// be
+		// null!
 		else if (argumentName.equals("ChildInterfaces")) return new UnitResult(childTypes);
 		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(this.m_methods));
 		else if (argumentName.equals("ParameterInterface")) return new UnitResult(parameterTypes);
@@ -330,13 +392,13 @@ public class JavaType extends Type
 	{
 		this.parentNS = parentNS;
 	}
-	
+
 	/**
 	 * Custom deserialization of this object
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		ImplementedInterfaceNames = (ArrayList)in.readObject();
+		ImplementedInterfaceNames = (ArrayList) in.readObject();
 	}
 
 	/**

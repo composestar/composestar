@@ -23,11 +23,11 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * Checks if a Selector which is declared in selectors is used in the 
- * FilterModuleBinding. Since every selector also has a standard selector 
- * self, this one is filtered out by default.
- *
- * @author DoornenbalD 
+ * Checks if a Selector which is declared in selectors is used in the
+ * FilterModuleBinding. Since every selector also has a standard selector self,
+ * this one is filtered out by default.
+ * 
+ * @author DoornenbalD
  */
 public class NotUsedSelector implements BaseChecker
 {
@@ -64,15 +64,16 @@ public class NotUsedSelector implements BaseChecker
 			if (!isUsed)
 			{
 				// a little (style) error in the repository?
-				Iterator annotbinding = si.getAnnotationBindings().iterator();
-                for (Object o : si.getAnnotationBindings()) {
-                    AnnotationBinding ab = (AnnotationBinding) o;
-                    SelectorReference sf = ab.getSelector();
-                    if (sf.getName().equals(selDef.getName())) {
-                        isUsed = true;
-                    }
-                }
-            }
+				for (Object o : si.getAnnotationBindings())
+				{
+					AnnotationBinding ab = (AnnotationBinding) o;
+					SelectorReference sf = ab.getSelector();
+					if (sf.getName().equals(selDef.getName()))
+					{
+						isUsed = true;
+					}
+				}
+			}
 
 			if (!isUsed)
 			{
@@ -107,7 +108,8 @@ public class NotUsedSelector implements BaseChecker
 			 */
 			if (!isUsed && !selDef.getName().equals("self"))
 			{
-				Debug.out(Debug.MODE_WARNING, "CHKREP", "Selector " + selDef.getName() + " is declared but never used", selDef);
+				Debug.out(Debug.MODE_WARNING, "CHKREP", "Selector " + selDef.getName() + " is declared but never used",
+						selDef);
 			}
 		}
 		return false;

@@ -36,21 +36,23 @@ import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
-//FIXME: rename package to SECRET
+// FIXME: rename package to SECRET
 /**
  * SECRET
  */
 public class CKRET implements CTCommonModule
 {
 	public static final String MODULE_NAME = "SECRET";
-	
+
 	public static final String[] MODES = { "NORMAL", "REDUNDANT", "PROGRESSIVE" };
 
 	public static final int NORMAL = 0;
+
 	public static final int REDUNDANT = 1;
+
 	public static final int PROGRESSIVE = 2;
 
-	protected static int mode;	
+	protected static int mode;
 
 	private static Reporter reporter;
 
@@ -90,8 +92,8 @@ public class CKRET implements CTCommonModule
 		}
 		else
 		{
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Unknown CKRET mode: " + newMode + ", CKRET will run in " + MODES[mode]
-					+ " mode");
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Unknown CKRET mode: " + newMode + ", CKRET will run in "
+					+ MODES[mode] + " mode");
 		}
 
 		try
@@ -123,8 +125,8 @@ public class CKRET implements CTCommonModule
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException(MODULE_NAME, "CKRET report file creation failed (" + reportFile + "), with reason: "
-					+ e.getMessage());
+			throw new ModuleException(MODULE_NAME, "CKRET report file creation failed (" + reportFile
+					+ "), with reason: " + e.getMessage());
 		}
 
 		Iterator conIt = DataStore.instance().getAllInstancesOf(Concern.class);
@@ -178,37 +180,43 @@ public class CKRET implements CTCommonModule
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Semantic conflict(s) detected on concern "
 								+ concern.getQualifiedName(), reportFile, 0);
 					}
-                    for (Object aFmolist1 : fmolist) {
-                        LinkedList order = (LinkedList) aFmolist1;
-                        FilterModuleOrder fmo = new FilterModuleOrder(order);
+					for (Object aFmolist1 : fmolist)
+					{
+						LinkedList order = (LinkedList) aFmolist1;
+						FilterModuleOrder fmo = new FilterModuleOrder(order);
 
-                        if (!fmo.equals(singleOrder)) {
-                            ca.checkOrder(fmo, false);
-                        }
-                    }
-                    break;
+						if (!fmo.equals(singleOrder))
+						{
+							ca.checkOrder(fmo, false);
+						}
+					}
+					break;
 
 				case PROGRESSIVE:
 					boolean foundGoodOrder = ca.checkOrder(singleOrder, true);
 
-                    for (Object aFmolist : fmolist) {
-                        LinkedList order = (LinkedList) aFmolist;
-                        FilterModuleOrder fmo = new FilterModuleOrder(order);
-                        if (!fmo.equals(singleOrder)) {
-                            if (ca.checkOrder(fmo, !foundGoodOrder)) {
-                                if (!foundGoodOrder) {
-                                    // so this is the first good order found...
-                                    foundGoodOrder = true;
-                                    concern.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmo);
-                                    Debug.out(Debug.MODE_INFORMATION, MODULE_NAME,
-                                            "Selected filtermodule order for concern " + concern.getQualifiedName()
-                                                    + ':');
-                                    Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, '\t' + fmo.toString());
-                                }
-                            }
-                        }
-                    }
-                    if (!foundGoodOrder)
+					for (Object aFmolist : fmolist)
+					{
+						LinkedList order = (LinkedList) aFmolist;
+						FilterModuleOrder fmo = new FilterModuleOrder(order);
+						if (!fmo.equals(singleOrder))
+						{
+							if (ca.checkOrder(fmo, !foundGoodOrder))
+							{
+								if (!foundGoodOrder)
+								{
+									// so this is the first good order found...
+									foundGoodOrder = true;
+									concern.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmo);
+									Debug.out(Debug.MODE_INFORMATION, MODULE_NAME,
+											"Selected filtermodule order for concern " + concern.getQualifiedName()
+													+ ':');
+									Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, '\t' + fmo.toString());
+								}
+							}
+						}
+					}
+					if (!foundGoodOrder)
 					{
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME,
 								"Unable to find a filtermodule order without conflicts for concern:");
@@ -243,31 +251,31 @@ public class CKRET implements CTCommonModule
 		{
 			Debug.out(Debug.MODE_INFORMATION, "INCRE", "Skipping CKRET run for " + oldconcern.getQualifiedName());
 			getReporter().openConcern(oldconcern);
-			Iterator repItr = reports.iterator();
-            for (Object report1 : reports) {
-                CKRETReport report = (CKRETReport) report1;
-                getReporter().reportOrder(report.getOrder(), report.getAnalysis(), report.getSelected(), true);
-            }
-            getReporter().closeConcern();
+			for (Object report1 : reports)
+			{
+				CKRETReport report = (CKRETReport) report1;
+				getReporter().reportOrder(report.getOrder(), report.getAnalysis(), report.getSelected(), true);
+			}
+			getReporter().closeConcern();
 			concern.addDynObject("CKRETReports", reports);
 		}
 
 		ckretcopy.stop();
 	}
 
-	public ArrayList getSemanticAnnotations(PrimitiveConcern pc)
+	public List<Annotation> getSemanticAnnotations(PrimitiveConcern pc)
 	{
 		return getSemanticAnnotations((Concern) pc);
 	}
 
-	public ArrayList getSemanticAnnotations(CpsConcern cps)
+	public List<Annotation> getSemanticAnnotations(CpsConcern cps)
 	{
 		return getSemanticAnnotations((Concern) cps);
 	}
 
-	public ArrayList getSemanticAnnotations(Concern c)
+	public List<Annotation> getSemanticAnnotations(Concern c)
 	{
-		ArrayList annos = new ArrayList();
+		List<Annotation> annos = new ArrayList<Annotation>();
 		INCRE incre = INCRE.instance();
 		DataStore ds = incre.getCurrentRepository();
 
@@ -282,19 +290,20 @@ public class CKRET implements CTCommonModule
 				continue;
 			}
 			// iterate over methods
-			Iterator methods = type.getMethods().iterator();
-            for (Object o : type.getMethods()) {
-                MethodInfo method = (MethodInfo) o;
-                // iterate over annotations
-                Iterator annotations = method.getAnnotations().iterator();
-                for (Object o1 : method.getAnnotations()) {
-                    Annotation anno = (Annotation) o1;
-                    if (anno.getType().getUnitName().endsWith("Semantics")) {
-                        annos.add(anno);
-                    }
-                }
-            }
-        }
+			for (Object o : type.getMethods())
+			{
+				MethodInfo method = (MethodInfo) o;
+				// iterate over annotations
+				for (Object o1 : method.getAnnotations())
+				{
+					Annotation anno = (Annotation) o1;
+					if (anno.getType().getUnitName().endsWith("Semantics"))
+					{
+						annos.add(anno);
+					}
+				}
+			}
+		}
 
 		return annos;
 	}

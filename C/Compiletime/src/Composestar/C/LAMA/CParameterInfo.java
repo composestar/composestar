@@ -27,7 +27,7 @@ import Composestar.Core.LAMA.UnitResult;
  * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
  * fsystemreflectionparameterinfoclasstopic.asp
  */
-public class CParameterInfo extends ParameterInfo /* implements LanguageUnit */
+public class CParameterInfo extends ParameterInfo
 {
 	/**
 	 * 

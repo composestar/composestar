@@ -21,7 +21,7 @@ import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
-public class CVariable extends FieldInfo implements SerializableRepositoryEntity
+public class CVariable extends FieldInfo
 {
 
 	private static final long serialVersionUID = 235924601234730641L;

@@ -288,6 +288,10 @@ public class DIGGER implements CTCommonModule
 	protected void processFullFireModel(Concern concern, FireModel fm) throws ModuleException
 	{
 		Type type = (Type) concern.getPlatformRepresentation();
+		if (type == null)
+		{
+			return;
+		}
 		Iterator it = type.getMethods().iterator();
 		while (it.hasNext())
 		{

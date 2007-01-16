@@ -29,11 +29,7 @@ import Composestar.Core.LAMA.UnitResult;
  * This is the methodinfo implementation for C, it extends the core methodinfo.
  * Its main task is to add unit-relations to the methods.
  */
-public class CMethodInfo extends MethodInfo /*
-											 * implements
-											 * SerializableRepositoryEntity,
-											 * LanguageUnit
-											 */
+public class CMethodInfo extends MethodInfo
 {
 
 	private static final long serialVersionUID = 5652622506200113201L;

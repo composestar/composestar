@@ -7,10 +7,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 import Composestar.Utils.StringUtils;
 
-public abstract class MethodInfo extends ProgramElement implements SerializableRepositoryEntity
+public abstract class MethodInfo extends ProgramElement
 {
 
 	public String Name;

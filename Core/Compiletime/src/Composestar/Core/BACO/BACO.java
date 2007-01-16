@@ -2,7 +2,6 @@ package Composestar.Core.BACO;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +19,7 @@ import Composestar.Utils.Logging.CPSLogger;
 public abstract class BACO implements CTCommonModule
 {
 	public static final String MODULE_NAME = "BACO";
+
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	public BACO()
@@ -29,7 +29,7 @@ public abstract class BACO implements CTCommonModule
 	{
 		logger.debug("Copying files to output directory...");
 
-		Set filesToCopy = new HashSet();
+		Set<String> filesToCopy = new HashSet<String>();
 		addRequiredFiles(filesToCopy);
 		addBuiltLibraries(filesToCopy);
 		addCustomFilters(filesToCopy);
@@ -39,69 +39,70 @@ public abstract class BACO implements CTCommonModule
 		copyFiles(filesToCopy, false);
 	}
 
-	protected void addRequiredFiles(Set filesToCopy)
+	protected void addRequiredFiles(Set<String> filesToCopy)
 	{
 		Configuration config = Configuration.instance();
 		String cpsPath = config.getPathSettings().getPath("Composestar");
 		logger.debug("ComposestarHome: '" + cpsPath + "'");
 
-		Iterator it = config.getPlatform().getRequiredFiles().iterator();
-        for (Object o : config.getPlatform().getRequiredFiles()) {
-            String requiredFile = (String) o;
-            String filename = cpsPath + "binaries/" + requiredFile;
+		for (Object o : config.getPlatform().getRequiredFiles())
+		{
+			String requiredFile = (String) o;
+			String filename = cpsPath + "binaries/" + requiredFile;
 
-            logger.debug("Adding required file: '" + filename + "'");
-            filesToCopy.add(filename);
-        }
-    }
+			logger.debug("Adding required file: '" + filename + "'");
+			filesToCopy.add(filename);
+		}
+	}
 
-	protected void addBuiltLibraries(Set filesToCopy)
+	protected void addBuiltLibraries(Set<String> filesToCopy)
 	{
 		List builtLibs = (List) DataStore.instance().getObjectByID("BuiltLibs");
-		Iterator it = builtLibs.iterator();
-        for (Object builtLib : builtLibs) {
-            String lib = (String) builtLib;
+		for (Object builtLib : builtLibs)
+		{
+			String lib = (String) builtLib;
 
-            logger.debug("Adding built library: '" + lib + "'");
-            filesToCopy.add(FileUtils.unquote(lib));
-        }
-    }
+			logger.debug("Adding built library: '" + lib + "'");
+			filesToCopy.add(FileUtils.unquote(lib));
+		}
+	}
 
-	protected void addCustomFilters(Set filesToCopy)
+	protected void addCustomFilters(Set<String> filesToCopy)
 	{
 		Configuration config = Configuration.instance();
-		Iterator it = config.getFilters().getCustomFilters().iterator();
-        for (Object o : config.getFilters().getCustomFilters()) {
-            CustomFilter filter = (CustomFilter) o;
-            String lib = filter.getLibrary();
+		for (Object o : config.getFilters().getCustomFilters())
+		{
+			CustomFilter filter = (CustomFilter) o;
+			String lib = filter.getLibrary();
 
-            logger.debug("Adding custom filter: '" + lib + "'");
-            filesToCopy.add(FileUtils.unquote(lib));
-        }
-    }
+			logger.debug("Adding custom filter: '" + lib + "'");
+			filesToCopy.add(FileUtils.unquote(lib));
+		}
+	}
 
-	protected void addDependencies(Set filesToCopy)
+	protected void addDependencies(Set<String> filesToCopy)
 	{
 		Configuration config = Configuration.instance();
-		Iterator it = config.getProjects().getProjects().iterator();
-        for (Object o1 : config.getProjects().getProjects()) {
-            Project project = (Project) o1;
+		for (Object o1 : config.getProjects().getProjects())
+		{
+			Project project = (Project) o1;
 
-            // add deps
-            Iterator projectit = project.getDependencies().iterator();
-            for (Object o : project.getDependencies()) {
-                Dependency dependency = (Dependency) o;
-                if (isNeededDependency(dependency)) {
-                    String depFilename = dependency.getFileName();
-                    filesToCopy.add(FileUtils.unquote(depFilename));
+			// add deps
+			for (Object o : project.getDependencies())
+			{
+				Dependency dependency = (Dependency) o;
+				if (isNeededDependency(dependency))
+				{
+					String depFilename = dependency.getFileName();
+					filesToCopy.add(FileUtils.unquote(depFilename));
 
-                    logger.debug("Adding dependency: '" + depFilename + "'");
-                }
-            }
-        }
-    }
+					logger.debug("Adding dependency: '" + depFilename + "'");
+				}
+			}
+		}
+	}
 
-	protected void addRepository(Set filesToCopy)
+	protected void addRepository(Set<String> filesToCopy)
 	{
 		Configuration config = Configuration.instance();
 
@@ -112,7 +113,7 @@ public abstract class BACO implements CTCommonModule
 		filesToCopy.add(repository);
 	}
 
-	private void copyFiles(Set filesToCopy, boolean fatal) throws ModuleException
+	private void copyFiles(Set<String> filesToCopy, boolean fatal) throws ModuleException
 	{
 		Configuration config = Configuration.instance();
 
@@ -127,12 +128,11 @@ public abstract class BACO implements CTCommonModule
 		}
 
 		// start the actual copying
-		Iterator filesIt = filesToCopy.iterator();
-        for (Object aFilesToCopy : filesToCopy) {
-            String source = (String) aFilesToCopy;
-            copyFile(outputPath, source, fatal);
-        }
-    }
+		for (String source : filesToCopy)
+		{
+			copyFile(outputPath, source, fatal);
+		}
+	}
 
 	protected void copyFile(String outputPath, String source, boolean fatal) throws ModuleException
 	{

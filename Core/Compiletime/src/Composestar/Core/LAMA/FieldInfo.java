@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-
-public abstract class FieldInfo extends ProgramElement implements SerializableRepositoryEntity
+public abstract class FieldInfo extends ProgramElement
 {
 
 	public String Name;

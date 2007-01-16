@@ -1,5 +1,9 @@
 package Composestar.Core.RepositoryImplementation;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -139,7 +143,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 	{
 		// shallow copy
 		DataMap dmap = new DataMap(this);
-				
+
 		return dmap;
 	}
 
@@ -176,5 +180,34 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 			result.put(m_keys.elementAt(i), m_values.elementAt(i));
 		}
 		return result;
+	}
+	
+	/**
+	 * Custom deserialization of this object
+	 */
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		m_keys = (Vector) in.readObject();
+		m_values = (Vector) in.readObject();
+	}
+
+	/**
+	 * Custom serialization of this object. Only store serializable objects.
+	 */
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+		Vector serKeys = new Vector();
+		Vector serValues = new Vector();
+		for (int i = 0; i < m_values.size(); i++)
+		{
+			Object o = m_values.get(i);
+			if (o instanceof Serializable)
+			{
+				serKeys.add(m_keys.get(i));
+				serValues.add(o);
+			}
+		}
+		out.writeObject(serKeys);
+		out.writeObject(serValues);
 	}
 }

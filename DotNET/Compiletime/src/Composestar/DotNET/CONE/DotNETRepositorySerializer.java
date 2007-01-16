@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Enumeration;
@@ -28,7 +29,6 @@ import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
@@ -275,14 +275,13 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		{
 			handleStringField(field, obj);
 		}
-		if (fieldValue instanceof Vector)
+		else if (fieldValue instanceof Vector)
 		{
 			handleVectorField(field, obj, (Vector) fieldValue);
 		}
-		else if (fieldValue instanceof RepositoryEntity || fieldValue instanceof DataMap
-				|| fieldValue instanceof SerializableRepositoryEntity)
+		else if (fieldValue instanceof SerializableRepositoryEntity)
 		{
-			// just a regular object, which requires it's fields dumped
+			// serializable object, which requires it's fields dumped
 			if (fieldValue != null)
 			{
 				startElement(field.getName(), "xsi:type=\"" + getType(fieldValue) + "\"");
@@ -290,6 +289,11 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 				writeFields(fieldValue);
 				fieldEndElement(field);
 			}
+		}
+		else if (fieldValue instanceof Serializable)
+		{
+			Debug.out(Debug.MODE_DEBUG, "CONE-XML", "Ignored serializable object " + obj.getClass().getName() + "."
+					+ field.getName() + " of type " + fieldValue.getClass().getName());
 		}
 		else if (fieldValue != null)
 		{
@@ -322,14 +326,16 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		{
 			myClass = (Class) stack.pop();
 			Field[] declaredFields = myClass.getDeclaredFields();
-            for (Field declaredField : declaredFields) {
-                int modifier = declaredField.getModifiers();
+			for (Field declaredField : declaredFields)
+			{
+				int modifier = declaredField.getModifiers();
 
-                if (Modifier.isPublic(modifier)) {
-                    fields.add(declaredField);
-                }
-            }
-        }
+				if (Modifier.isPublic(modifier))
+				{
+					fields.add(declaredField);
+				}
+			}
+		}
 		orderedFieldInfo.put(c, fields);
 		return fields;
 	}
