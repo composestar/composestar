@@ -56,7 +56,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 	{
 		private int _id;
 		private string _signature;
-		private FilterCode _inputFilter;
+		private int _filterCodeId;
 		private List<WeaveCall> _weaveCalls = new List<WeaveCall>();
 
 		/// <summary>
@@ -81,13 +81,13 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		}
 
 		/// <summary>
-		/// Gets or sets the input filter.
+		/// Gets or sets the input filter FilterCode id.
 		/// </summary>
-		/// <value>The input filter.</value>
-		public FilterCode InputFilter
+		/// <value>The input filter FilterCode id.</value>
+		public int FilterCodeId
 		{
-			get { return _inputFilter; }
-			set { _inputFilter = value; }
+			get { return _filterCodeId; }
+			set { _filterCodeId = value; }
 		}
 
 		/// <summary>
@@ -113,7 +113,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		[XmlIgnore]
 		public bool HasInputFilters
 		{
-			get { return InputFilter != null; }
+			get { return FilterCodeId >= 0; }
 		}
 
 		/// <summary>

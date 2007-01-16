@@ -109,6 +109,11 @@ namespace Composestar.StarLight.ILWeaver
 		/// </summary>
 		private IWeaveResults _weaveResults;
 
+		/// <summary>
+		/// The current weave specification being processed.
+		/// </summary>
+		private WeaveSpecification _currentWeaveSpec;
+
 		#endregion
 
 		/// <summary>
@@ -164,9 +169,9 @@ namespace Composestar.StarLight.ILWeaver
 
 			// Get the weave specification
 			StoreTimeStamp(swTotal.Elapsed, "Loading weave specification");
-			WeaveSpecification weaveSpec = _entitiesAccessor.LoadWeaveSpecification(_configuration.AssemblyConfiguration.WeaveSpecificationFile);
+			_currentWeaveSpec = _entitiesAccessor.LoadWeaveSpecification(_configuration.AssemblyConfiguration.WeaveSpecificationFile);
 
-			if (weaveSpec == null)
+			if (_currentWeaveSpec == null)
 			{
 				_weaveResults.SetWeaveResult(WeaveResult.Error);
 				_weaveResults.Log.LogError(LogOriginName, Properties.Resources.WeavingSpecNotFound, 
@@ -181,7 +186,7 @@ namespace Composestar.StarLight.ILWeaver
 			StoreTimeStamp(swTotal.Elapsed, "Loaded weave specification");
 
 			// If empty, we can quit
-			if (weaveSpec.WeaveTypes.Count == 0)
+			if (_currentWeaveSpec.WeaveTypes.Count == 0)
 			{
 				// Stop timing
 				swTotal.Stop();
@@ -211,7 +216,7 @@ namespace Composestar.StarLight.ILWeaver
 			StoreTimeStamp(swTotal.Elapsed, "Loaded assembly");
 					
 			// Get only the types we have info for
-			foreach (WeaveType weaveType in weaveSpec.WeaveTypes)
+			foreach (WeaveType weaveType in _currentWeaveSpec.WeaveTypes)
 			{
 				StoreTimeStamp(swTotal.Elapsed, "Retrieving type '{0}'", weaveType.Name);
 
@@ -705,7 +710,8 @@ namespace Composestar.StarLight.ILWeaver
 				return;
 
 			// Get the input filter code
-			FilterCode filterCode = weaveMethod.InputFilter;
+			int id = weaveMethod.FilterCodeId;
+			FilterCode filterCode = _currentWeaveSpec.GeneralizedFilterCodes[id];
 
 			// Only proceed when we have filtercode
 			if (filterCode == null)
@@ -879,7 +885,7 @@ namespace Composestar.StarLight.ILWeaver
 				// Find the corresponding call in the list of calls
 				MethodReference mr = (MethodReference)(instruction.Operand);
 				MethodDefinition md = CecilUtilities.ResolveMethodDefinition(mr);
-				InlineInstruction outputFilter = GetOutputFilterForCall(weaveMethod.Calls, md.ToString());
+				FilterCode outputFilter = GetOutputFilterForCall(weaveMethod.Calls, md.ToString());
 
 				// If we found an outputFilter in the repository, then see if we have to perform weaving
 				if (outputFilter != null)
@@ -1105,17 +1111,25 @@ namespace Composestar.StarLight.ILWeaver
 		}
 
 		/// <summary>
-		/// Gets the output filter for call.
+		/// Gets the output filter FilterCode for call.
 		/// </summary>
 		/// <param name="weaveCalls">Weave calls</param>
 		/// <param name="callSignature">Call signature</param>
-		/// <returns>Inline instruction</returns>
-		private static InlineInstruction GetOutputFilterForCall(List<WeaveCall> weaveCalls, string callSignature)
+		/// <returns>The output filter FilterCode.</returns>
+		private FilterCode GetOutputFilterForCall(List<WeaveCall> weaveCalls, string callSignature)
 		{
 			foreach (WeaveCall wc in weaveCalls)
 			{
 				if (wc.MethodName.Equals(callSignature))
-					return wc.OutputFilter.Instructions;
+				{
+					int id = wc.FilterCodeId;
+					if (id < 0)
+					{
+						return null;
+					}
+
+					return _currentWeaveSpec.GeneralizedFilterCodes[id];
+				}
 			}
 
 			return null;

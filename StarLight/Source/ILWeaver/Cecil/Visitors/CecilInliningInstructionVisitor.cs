@@ -76,6 +76,8 @@ namespace Composestar.StarLight.ILWeaver
 
 		private const int BranchLabelOffSet = 100000;
 
+		private const String GeneralizationSelector = "+";
+
 		#endregion
 
 		#region Private variables
@@ -376,7 +378,7 @@ namespace Composestar.StarLight.ILWeaver
 
 			return m_JpcLocal;
 		}
-		
+
 		#endregion
 
 		#endregion
@@ -445,14 +447,14 @@ namespace Composestar.StarLight.ILWeaver
 			Instructions.Add(whileStart);
 
 			// Call the HasMoreStoredActions method
-			Instructions.Add(Worker.Create(OpCodes.Callvirt, 
-				CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, 
+			Instructions.Add(Worker.Create(OpCodes.Callvirt,
+				CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
 				CachedMethodDefinition.HasMoreStoredActions)));
 
 			// Add branch code
 			Instruction whileEnd = Worker.Create(OpCodes.Nop);
 			Instructions.Add(Worker.Create(OpCodes.Brfalse, whileEnd));
-			
+
 			//
 			// Switch expression
 			//
@@ -461,8 +463,8 @@ namespace Composestar.StarLight.ILWeaver
 			Instructions.Add(Worker.Create(OpCodes.Ldloc, asVar));
 
 			// Call the NextStoredAction method
-			Instructions.Add(Worker.Create(OpCodes.Callvirt, 
-				CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, 
+			Instructions.Add(Worker.Create(OpCodes.Callvirt,
+				CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
 				CachedMethodDefinition.NextStoredAction)));
 
 			// The switch statement
@@ -472,7 +474,7 @@ namespace Composestar.StarLight.ILWeaver
 			// Default: jump to the end
 			Instruction switchEnd = Worker.Create(OpCodes.Nop);
 			Instructions.Add(Worker.Create(OpCodes.Br, switchEnd));
-			
+
 			//
 			// Cases
 			//
@@ -536,27 +538,76 @@ namespace Composestar.StarLight.ILWeaver
 				Instructions.Add(GetJumpLabel(inlineInstruction.Label));
 			}
 		}
-		
+
 		/// <summary>
 		/// Visits the filter action. Uses Strategypattern to weave a specific instruction.
 		/// </summary>
 		/// <param name="filterAction">The filter action.</param>
 		public void VisitFilterAction(FilterAction filterAction)
 		{
-			if (filterAction.OnCall)
+			FilterAction degeneralizedAction = Degeneralize(filterAction);
+
+			if (degeneralizedAction.OnCall)
 			{
-				WeaveFilterAction(filterAction);
-				if (filterAction.Returning)
+				WeaveFilterAction(degeneralizedAction);
+				if (degeneralizedAction.Returning)
 				{
 					Instructions.Add(Worker.Create(OpCodes.Br, _returnInstruction));
 				}
 			}
 			else
 			{
-				StoreAction(filterAction);
+				StoreAction(degeneralizedAction);
 			}
 		}
-		
+
+		/// <summary>
+		/// Degeneralizes the filter action. This means that the generalization selector
+		/// is replaced with the called methods name.
+		/// </summary>
+		/// <param name="filterAction">The filter action to be degeneralized</param>
+		private FilterAction Degeneralize(FilterAction filterAction)
+		{
+			if (filterAction.Selector.Equals(GeneralizationSelector) ||
+				filterAction.SubstitutionSelector.Equals(GeneralizationSelector))
+			{
+				FilterAction degenFilterAction = new FilterAction();
+
+				degenFilterAction.FullName = filterAction.FullName;
+				degenFilterAction.Label = filterAction.Label;
+				degenFilterAction.OnCall = filterAction.OnCall;
+				degenFilterAction.Returning = filterAction.Returning;
+
+				if (filterAction.Selector.Equals(GeneralizationSelector))
+				{
+					degenFilterAction.Selector = CalledMethod.Name;
+				}
+				else
+				{
+					degenFilterAction.Selector = filterAction.Selector;
+				}
+
+				if (filterAction.SubstitutionSelector.Equals(GeneralizationSelector))
+				{
+					degenFilterAction.SubstitutionSelector = CalledMethod.Name;
+				}
+				else
+				{
+					degenFilterAction.SubstitutionSelector = filterAction.SubstitutionSelector;
+				}
+
+				degenFilterAction.SubstitutionTarget = filterAction.SubstitutionTarget;
+				degenFilterAction.Target = filterAction.Target;
+				degenFilterAction.Type = filterAction.Type;
+
+				return degenFilterAction;
+			}
+			else
+			{
+				return filterAction;
+			}
+		}
+
 		/// <summary>
 		/// Weaves the filter action. Uses strategy pattern.
 		/// </summary>
@@ -587,7 +638,7 @@ namespace Composestar.StarLight.ILWeaver
 			// Add an unconditional branch instruction
 			Instructions.Add(Worker.Create(OpCodes.Br, jumpToInstruction));
 		}
-		
+
 		#region Branching
 
 		/// <summary>
@@ -717,9 +768,9 @@ namespace Composestar.StarLight.ILWeaver
 			Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.StoreAction)));
 
 		}
-		
+
 		#endregion
-		
+
 		/// <summary>
 		/// This method creates and initializes the JoinPointContext. This always happens at the beginning
 		/// of the filtercode. All FilterActions should use the JoinPointContext to access parameter values and
@@ -735,12 +786,12 @@ namespace Composestar.StarLight.ILWeaver
 			// Create new joinpointcontext object
 			//
 			Instructions.Add(Worker.Create(OpCodes.Newobj,
-				CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, 
+				CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
 				CachedMethodDefinition.JoinPointContextConstructor)));
 
 			// Store the just created joinpointcontext object
 			Instructions.Add(Worker.Create(OpCodes.Stloc, jpcVar));
-			
+
 			//
 			// Store sender (only for outputfilters)
 			//
@@ -753,8 +804,8 @@ namespace Composestar.StarLight.ILWeaver
 				Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
 
 				// Call set_Sender
-				Instructions.Add(Worker.Create(OpCodes.Callvirt, 
-					CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, 
+				Instructions.Add(Worker.Create(OpCodes.Callvirt,
+					CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
 					CachedMethodDefinition.JoinPointContextSetSender)));
 			}
 
@@ -805,7 +856,7 @@ namespace Composestar.StarLight.ILWeaver
 							Instructions.Add(Worker.Create(OpCodes.Ldnull));
 						}
 
-                        int ordinal = param.Sequence - 1;// (CalledMethod.HasThis ? 1 : 0);
+						int ordinal = param.Sequence - 1;// (CalledMethod.HasThis ? 1 : 0);
 
 						// Load the ordinal
 						Instructions.Add(Worker.Create(OpCodes.Ldc_I4, ordinal));

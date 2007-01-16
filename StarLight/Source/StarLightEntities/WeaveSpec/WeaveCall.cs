@@ -53,7 +53,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 	public class WeaveCall
 	{
 		private string _methodName;
-		private FilterCode _outputFilter;
+		private int _filterCodeId;
 
 		/// <summary>
 		/// Gets or sets the method name of the call.
@@ -67,14 +67,14 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		}
 
 		/// <summary>
-		/// Gets or sets the output filter id. This is the id of the abstract inputfiltercode to be used
-		/// for this method.
+		/// Gets or sets the output filter FilterCode id. This is the id of the generalized filtercode
+		/// to be used for this method.
 		/// </summary>
-		/// <value>The output filter id.</value>
-		public FilterCode OutputFilter
+		/// <value>The output filter FilterCode id.</value>
+		public int FilterCodeId
 		{
-			get { return _outputFilter; }
-			set { _outputFilter = value; }
+			get { return _filterCodeId; }
+			set { _filterCodeId = value; }
 		}
 	}
 }

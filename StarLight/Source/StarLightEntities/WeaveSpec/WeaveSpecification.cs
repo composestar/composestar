@@ -56,7 +56,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 	{
 		private string _assemblyName;
 		private List<WeaveType> _weaveTypes;
-		private List<InlineInstruction> _generalizedAIMs;
+		private List<FilterCode> _generalizedFilterCodes;
 
 		/// <summary>
 		/// Gets or sets the name of the assembly this weave file applies to.
@@ -97,13 +97,13 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		/// Gets or sets the generalized abstract instruction models, referenced by WeaveMethod and WeaveCall
 		/// </summary>
 		/// <value>The generalized abstract instruction models</value>
-		[XmlArray("GeneralizedAIMs")]
-		[XmlArrayItem("GeneralizedAIM")]
+		[XmlArray("GeneralizedFilterCodes")]
+		[XmlArrayItem("GeneralizedFilterCode")]
 		[SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-		public List<InlineInstruction> GeneralizedAIMs
+		public List<FilterCode> GeneralizedFilterCodes
 		{
-			get { return _generalizedAIMs; }
-			set { _generalizedAIMs = value; }
+			get { return _generalizedFilterCodes; }
+			set { _generalizedFilterCodes = value; }
 		}
 	}
 }

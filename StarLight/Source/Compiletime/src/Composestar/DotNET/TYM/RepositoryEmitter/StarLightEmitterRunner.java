@@ -63,13 +63,18 @@ public class StarLightEmitterRunner implements CTCommonModule
 	private DataStore dataStore;
 
 	private Map weaveSpecs;
-	
+
+	private Map compressors;
+
 	private InstructionTranslator instructionTranslater = new InstructionTranslator();
+
+	private FilterCodeCompressor currentCompressor;
 
 	public StarLightEmitterRunner()
 	{
 		this.dataStore = DataStore.instance();
 		this.weaveSpecs = new HashMap();
+		this.compressors = new HashMap();
 	}
 
 	public void run(CommonResources resources) throws ModuleException
@@ -99,7 +104,10 @@ public class StarLightEmitterRunner implements CTCommonModule
 	{
 		if (weaveSpecs.containsKey(assemblyName))
 		{
-			return (WeaveSpecification) weaveSpecs.get(assemblyName);
+			WeaveSpecification weaveSpec = (WeaveSpecification) weaveSpecs.get(assemblyName);
+			currentCompressor = (FilterCodeCompressor) compressors.get(weaveSpec);
+
+			return weaveSpec;
 		}
 		else
 		{
@@ -107,6 +115,10 @@ public class StarLightEmitterRunner implements CTCommonModule
 			weaveSpec.addNewWeaveTypes();
 			weaveSpec.setAssemblyName(assemblyName);
 			weaveSpecs.put(assemblyName, weaveSpec);
+
+			currentCompressor = new FilterCodeCompressor();
+			compressors.put(weaveSpec, currentCompressor);
+
 			return weaveSpec;
 		}
 	}
@@ -123,6 +135,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			if (weaveSpecs.containsKey(ac.getName()))
 			{
 				WeaveSpecification weaveSpec = (WeaveSpecification) weaveSpecs.get(ac.getName());
+				addGeneralizedFilterCodes(weaveSpec);
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
 
@@ -147,6 +160,27 @@ public class StarLightEmitterRunner implements CTCommonModule
 				ac.setWeaveSpecificationFile(file.getAbsolutePath());
 			}
 		}
+	}
+
+	/**
+	 * Adds the generalized filtercodes from the compressor to the weavespec.
+	 * @param weaveSpec
+	 */
+	private void addGeneralizedFilterCodes(WeaveSpecification weaveSpec)
+	{
+		FilterCodeCompressor compressor = (FilterCodeCompressor) compressors.get(weaveSpec);
+
+		FilterCode[] filterCodes = compressor.getGeneralizedFilterCodes();
+
+		composestar.dotNET.tym.entities.FilterCode[] translatedFilterCodes = new composestar.dotNET.tym.entities.FilterCode[filterCodes.length];
+
+		for (int i = 0; i < filterCodes.length; i++)
+		{
+			translatedFilterCodes[i] = translateFilterCode(filterCodes[i]);
+		}
+
+		weaveSpec.addNewGeneralizedFilterCodes();
+		weaveSpec.getGeneralizedFilterCodes().setGeneralizedFilterCodeArray(translatedFilterCodes);
 	}
 
 	private void processConcerns() throws ModuleException
@@ -370,7 +404,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 				hasFilters = true;
 
 				// add inputfilter code:
-				weaveMethod.setInputFilter(translateInstruction(filterCode));
+				int id = currentCompressor.addFilterCode(filterCode, method.getName());
+				weaveMethod.setFilterCodeId(id);
 			}
 
 			// emit calls:
@@ -409,7 +444,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 				weaveCall.setMethodName(call.getMethodName());
 
 				// set filtercode
-				weaveCall.setOutputFilter(translateInstruction(filterCode));
+				int id = currentCompressor.addFilterCode(filterCode, call.getMethodName());
+				weaveCall.setFilterCodeId(id);
 
 				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Storing call" + weaveCall.toString());
 
@@ -423,7 +459,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		return hasFilters;
 	}
 
-	private composestar.dotNET.tym.entities.FilterCode translateInstruction(FilterCode filterCode)
+	private composestar.dotNET.tym.entities.FilterCode translateFilterCode(FilterCode filterCode)
 	{
 		return (composestar.dotNET.tym.entities.FilterCode) filterCode.accept(instructionTranslater);
 	}
