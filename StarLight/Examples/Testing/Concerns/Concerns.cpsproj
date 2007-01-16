@@ -39,6 +39,7 @@
     <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
+    <Concern Include="ConditionalSuperImpositionTestsConcern.cps" />
     <Concern Include="FilterTestsConcerns.cps">
     </Concern>
     <None Include="TypeTestsConcern.cps" />

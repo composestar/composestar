@@ -91,6 +91,21 @@ namespace BasicTests
 			filtTests.makeTrip();
 
 			filtTests.makeOutsideTrip();
+			
+
+
+			////// Conditional superimposition tests //////
+			Console.WriteLine("#### Conditional superimposition tests ####");
+			ConditionalSuperImpositionTests csiTests = new ConditionalSuperImpositionTests();
+			// logging filter module enabled:
+			Console.WriteLine("Logging enabled:");
+			ConditionalSuperImpositionTests.isEnabled = true;
+			csiTests.CondSIFunc1();
+			// logging filter module disabled:
+			Console.WriteLine("Logging disabled:");
+			ConditionalSuperImpositionTests.isEnabled = false;
+			csiTests.CondSIFunc1();
+
 		}
 	}
 }

@@ -91,6 +91,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConditionalSuperImpositionTests.cs" />
     <Compile Include="CustomAttributes.cs" />
     <Compile Include="MyValueType.cs" />
     <Compile Include="NotImplementedFilterType.cs" />
