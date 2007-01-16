@@ -243,14 +243,19 @@ public class StarLightCollectorRunner implements CollectorRunner
     
 	public void collectOperation(AssemblyConfig assembly) throws ModuleException
 	{
-		String serializedFilename = assembly.getTypeSpecificationFile();
+		String filename = assembly.getTypeSpecificationFile();
 
 		InputStream is = null;
 		try
 		{
 			deserializeTimer.start();
-			is = new GZIPInputStream(new FileInputStream(serializedFilename));
+			
+			is = new FileInputStream(filename);
+			if (filename.endsWith(".gzip"))
+				is = new GZIPInputStream(is);
+			
 			AssemblyDocument doc = AssemblyDocument.Factory.parse(is);
+			
 			deserializeTimer.stop();
 			
 			collectTypes(doc.getAssembly());
@@ -258,13 +263,13 @@ public class StarLightCollectorRunner implements CollectorRunner
 		catch (XmlException e)
 		{
 			throw new ModuleException(
-					"CollectorRunner: XmlException while parsing " + serializedFilename +
+					"CollectorRunner: XmlException while parsing " + filename +
 					": " + e.getMessage(), MODULE_NAME);
 		}
 		catch (IOException e)
 		{
 			throw new ModuleException(
-					"CollectorRunner: IOException while parsing " + serializedFilename + 
+					"CollectorRunner: IOException while parsing " + filename + 
 					": " + e.getMessage(), MODULE_NAME);
 		}
 		finally
@@ -376,6 +381,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			dnt.setBaseType(te.getBaseType());
 			dnt.setAssemblyName(assembly.getName());
 			dnt.setFromSource(te.getFromSource());
+			dnt.setEndPos(te.getEndPos());
 			
 			// Set the implemented interfaces
 			List<String> interfaces = te.getInterfaces().getInterfaceList();

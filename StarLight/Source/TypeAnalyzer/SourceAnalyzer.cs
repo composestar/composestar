@@ -60,6 +60,7 @@ namespace Composestar.StarLight.TypeAnalyzer
 			{
 				TypeElement te = new TypeElement();
 				te.FromSource = context.FileName;
+				te.EndPos = dt.EndPos;
 				te.Name = dt.Name;
 				te.Namespace = context.Namespace;
 				te.BaseType = ResolveBaseType(context, dt.BaseType);

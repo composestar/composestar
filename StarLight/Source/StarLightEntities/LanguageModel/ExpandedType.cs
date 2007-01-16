@@ -51,6 +51,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 	public class ExpandedType
 	{
 		private string _name;
+		private int _endPos;
 		private List<MethodElement> _extraMethods = new List<MethodElement>();
 
 		public ExpandedType()
@@ -65,6 +66,16 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		{
 			get { return _name; }
 			set { _name = value; }
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[XmlAttribute]
+		public int EndPos
+		{
+			get { return _endPos; }
+			set { _endPos = value; }
 		}
 
 		/// <summary>

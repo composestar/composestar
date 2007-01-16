@@ -69,6 +69,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		private bool _isSealed;
 		private bool _isPublic;
 		private string _fromSource;
+		private int _endPos;
 
 		/// <summary>
 		/// The name of this type.
@@ -252,6 +253,16 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		{
 			get { return _fromSource; }
 			set { _fromSource = value; }
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[XmlAttribute]
+		public int EndPos
+		{
+			get { return _endPos; }
+			set { _endPos = value; }
 		}
 
 		#region ICustomAttributes

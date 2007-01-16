@@ -57,12 +57,15 @@ class TypeExpander
 		if (dnt.isFromSource())
 		{
 			String source = dnt.getFromSource();
-			return getExpandedSource(source).addNewType();
+			ExpandedType et = getExpandedSource(source).addNewType();
+			et.setEndPos(dnt.getEndPos());
+			return et;
 		}
 		else
 		{
 			String assemblyName = dnt.assemblyName();
-			return getExpandedAssembly(assemblyName).getTypes().addNewType();
+			ExpandedType et = getExpandedAssembly(assemblyName).getTypes().addNewType();
+			return et;
 		}
 	}
 	

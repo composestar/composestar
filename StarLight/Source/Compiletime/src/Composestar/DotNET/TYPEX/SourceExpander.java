@@ -44,8 +44,8 @@ class SourceExpander
 			
 			for (ExpandedType et : source.sortedTypes())
 			{
-				int endPos = 12345;
-				int skip = endPos - curPos;
+				int skip = et.getEndPos() - curPos;
+				curPos += skip;
 				
 				FileUtils.copy(reader, writer, skip);
 				
