@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cps\CpsAnalyzer.cs" />
+    <Compile Include="JSharp\JSharpPosLexer.cs" />
     <Compile Include="CSharp\CSharpAnalyzer.cs" />
     <Compile Include="CSharp\CSharpSourceInfo.cs" />
     <Compile Include="JSharp\JSharpAnalyzer.cs" />
@@ -53,6 +54,8 @@
     <Compile Include="JSharp\JSharpWalkerTokenTypes.cs" />
     <Compile Include="NamespaceContext.cs" />
     <Compile Include="AssemblyContext.cs" />
+    <Compile Include="Util\PosAST.cs" />
+    <Compile Include="Util\PosToken.cs" />
     <Compile Include="SourceAnalyzer.cs" />
     <Compile Include="SourceInfo.cs" />
     <Compile Include="TypeAnalyzer.cs" />

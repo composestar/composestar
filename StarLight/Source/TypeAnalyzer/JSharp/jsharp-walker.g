@@ -130,13 +130,13 @@ typeDefinition returns [DefinedType r = null]
 	}
 	:	#(CLASS_DEF 
 			a=attributes m=modifiers n=identifier e=extendsClause i=implementsClause 
-			{ r = CreateDefinedClass(n, e, i, m); }
-			classBody[r]
+			{ r = CreateDefinedClass(n, e, i, m); r.EndPos = ((PosAST)#typeDefinition).getEndPos(); }
+			typeBody[r]
 		)
 	|	#(INTERFACE_DEF 
 			a=attributes m=modifiers n=identifier i=interfaceExtends
-			{ r = CreateDefinedInterface(n, i, m); }
-			classBody[r]
+			{ r = CreateDefinedInterface(n, i, m); r.EndPos = ((PosAST)#typeDefinition).getEndPos(); }
+			typeBody[r]
 		)
 	;
 	
@@ -157,14 +157,14 @@ implementsClause returns [List<string> r = new List<string>()]
 			(n=qname { r.Add(n); } )*
 		)
 	;
-
+	
 /////////////////////////////////////// CLASSES ///////////////////////////////////////
 
-classBody[DefinedType d]
-	:	#(CLASS_BODY (classMember[d])*)
+typeBody[DefinedType d]
+	:	#(CLASS_BODY (typeMember[d])*)
 	;
 	
-classMember[DefinedType d]
+typeMember[DefinedType d]
 	{ MethodElement m; FieldElement f; DefinedType t; }
 	:	ctorDef[d]
 	|	f=fieldDef			{ d.Fields.Add(f); }

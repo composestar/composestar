@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +44,6 @@ import Composestar.Utils.FileUtils;
 
 import composestar.dotNET.tym.entities.ArrayOfAttributeElement;
 import composestar.dotNET.tym.entities.ArrayOfCallElement;
-import composestar.dotNET.tym.entities.ArrayOfFieldElement;
-import composestar.dotNET.tym.entities.ArrayOfFilterActionElement;
-import composestar.dotNET.tym.entities.ArrayOfFilterTypeElement;
 import composestar.dotNET.tym.entities.ArrayOfParameterElement;
 import composestar.dotNET.tym.entities.AssemblyConfig;
 import composestar.dotNET.tym.entities.AssemblyDocument;

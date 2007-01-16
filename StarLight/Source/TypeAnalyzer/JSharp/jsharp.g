@@ -220,28 +220,30 @@ modifier
 	|	"strictfp"
 	;
 	
-//////////////////////////////// XXX ////////////////////////////////
+//////////////////////////////// TYPE DEFINITION ////////////////////////////////
 
 classDefinition![AST atts, AST mods]
-	:	"class" n:IDENT s:superClassClause i:implementsClause b:classBody
-		{ ## = #([CLASS_DEF,"CLASS_DEF"],atts,mods,n,s,i,b); }
+	{ int endPos; }
+	:	"class" n:IDENT s:superClassClause i:implementsClause endPos=b:classBody
+		{
+			## = #([CLASS_DEF,"CLASS_DEF",PosAST.ClassName],atts,mods,n,s,i,b);
+			((PosAST)##).setEndPos(endPos);
+		}
+	;
+
+// Definition of a Java interface
+interfaceDefinition![AST atts, AST mods]
+	{ int endPos; }
+	:	"interface" n:IDENT e:interfaceExtends endPos=b:classBody
+		{
+			## = #([INTERFACE_DEF,"INTERFACE_DEF",PosAST.ClassName],atts,mods,n,e,b); 
+			((PosAST)##).setEndPos(endPos);
+		}
 	;
 
 superClassClause!
 	:	( "extends" n:qname )?
 		{ ## = #([EXTENDS_CLAUSE,"EXTENDS_CLAUSE"],n); }
-	;
-
-// Definition of a Java interface
-interfaceDefinition![AST atts, AST mods]
-	:	"interface" n:IDENT e:interfaceExtends b:classBody
-		{ ## = #([INTERFACE_DEF,"INTERFACE_DEF"],atts,mods,n,e,b);}
-	;
-
-// This is the body of a class.  You can have classMembers and extra semicolons.
-classBody
-	:	LCURLY! (classMember | SEMI!)* r:RCURLY!
-		{ ## = #([CLASS_BODY, "CLASS_BODY"], ##); }
 	;
 
 // An interface can extend several other interfaces...
@@ -256,7 +258,13 @@ implementsClause
 		{ ## = #([IMPLEMENTS_CLAUSE,"IMPLEMENTS_CLAUSE"], ##); }
 	;
 
-//////////////////////////////// XXX ////////////////////////////////
+// This is the body of a class.  You can have classMembers and extra semicolons.
+classBody returns [int endPos = -1]
+	:	LCURLY! (classMember | SEMI!)* end:RCURLY!
+		{ ## = #([CLASS_BODY], ##); endPos = ((PosToken)end).getPosition(); }
+	;
+
+//////////////////////////////// TYPE BODY ////////////////////////////////
 
 // Now the various things that can be defined inside a class or interface...
 // Note that not all of these are really valid in an interface (constructors,
@@ -831,8 +839,9 @@ identPrimary
  *
  */
 newExpression
+	{ int endPos; }
 	:	"new"^ typeName[true]
-		(	LPAREN! argList RPAREN! (classBody)?
+		(	LPAREN! argList RPAREN! (endPos=classBody)?
 		|	newArrayDeclarator (arrayInitializer)?
 		)
 	;

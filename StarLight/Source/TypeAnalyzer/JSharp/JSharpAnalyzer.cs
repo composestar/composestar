@@ -67,7 +67,7 @@ namespace Composestar.StarLight.TypeAnalyzer.JSharp
 			Console.WriteLine("Parsing {0}...", source);
 
 			TextReader reader = File.OpenText(source);
-			JSharpLexer lexer = new JSharpLexer(reader);
+			JSharpPosLexer lexer = new JSharpPosLexer(reader);
 			JSharpParser parser = new JSharpParser(lexer);
 
 			parser.compilationUnit();
@@ -109,6 +109,7 @@ namespace Composestar.StarLight.TypeAnalyzer.JSharp
 
 		public static bool IsPrimitive(string name)
 		{
+			name = name.TrimEnd('[', ']');
 			return (GetPrimitiveFullName(name) != null);
 		}
 

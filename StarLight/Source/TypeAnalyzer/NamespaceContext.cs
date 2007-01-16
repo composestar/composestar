@@ -10,17 +10,20 @@ namespace Composestar.StarLight.TypeAnalyzer
 		private AssemblyContext _ac;
 		private string _filename;
 		private string _namespace;
-		private List<string> _namespaceImports = new List<string>();
-		private Dictionary<string, string> _specificImports = new Dictionary<string, string>();
-		private Set<string> _sourceTypes = new Set<string>();
-		private Dictionary<string, string> _cache = new Dictionary<string, string>();
+		private List<string> _namespaceImports;
+		private Dictionary<string, string> _specificImports;
+		private Set<string> _sourceTypes;
+		private Dictionary<string, string> _cache;
 
-		public NamespaceContext(AssemblyContext rc, string filename, string ns, Set<string> types)
+		public NamespaceContext(AssemblyContext ac, string filename, string ns, Set<string> types)
 		{
-			_ac = rc;
+			_ac = ac;
 			_filename = filename;
 			_namespace = ns;
+			_namespaceImports = new List<string>();
+			_specificImports = new Dictionary<string, string>();
 			_sourceTypes = types;
+			_cache = new Dictionary<string, string>();
 		}
 
 		public NamespaceContext(NamespaceContext parent, string ns)
@@ -31,6 +34,7 @@ namespace Composestar.StarLight.TypeAnalyzer
 			_namespaceImports = new List<string>(parent._namespaceImports);
 			_specificImports = new Dictionary<string, string>(parent._specificImports);
 			_sourceTypes = parent._sourceTypes;
+			_cache = new Dictionary<string, string>();
 		}
 
 		public string FileName

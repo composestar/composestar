@@ -1,6 +1,3 @@
-/**
- * 
- */
 package Composestar.DotNET.TYPEX;
 
 import java.io.File;
