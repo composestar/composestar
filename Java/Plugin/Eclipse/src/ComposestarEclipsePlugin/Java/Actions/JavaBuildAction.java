@@ -179,7 +179,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 		if (plugin.dialogSettingsFound)
 		{
 			buildConfig.setApplicationStart(settings.get("mainClass"));
-			buildConfig.addSetting("buildDebugLevel", settings.get("buildDebugLevel"));
+			buildConfig.setBuildDebugLevel(settings.get("buildDebugLevel"));
 			buildConfig.setRunDebugLevel(settings.get("runDebugLevel"));
 
 			if (settings.get("filterModuleOrder") != null)
