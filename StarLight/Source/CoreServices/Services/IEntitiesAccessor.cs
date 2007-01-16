@@ -50,7 +50,7 @@ namespace Composestar.StarLight.CoreServices
 	/// Combines the interfaces for the entities.
 	/// </summary>
 	public interface IEntitiesAccessor 
-		: IConfigurationAccessors, IAssemblyAccessors, IWeaveSpecAccessors, ISignatureSpecAccessors
+		: IConfigurationAccessors, IAssemblyAccessors, IWeaveSpecAccessors
 	{
 	}
 
@@ -115,18 +115,5 @@ namespace Composestar.StarLight.CoreServices
 		/// <param name="weaveSpecification">The weave specification.</param>
 		/// <returns></returns>
 		bool SaveWeaveSpecification(string fileName, WeaveSpecification weaveSpecification);
-	}
-
-	/// <summary>
-	/// Interface for the signature specification load function.
-	/// </summary>
-	public interface ISignatureSpecAccessors
-	{
-		/// <summary>
-		/// Loads a signature specification from an xml file.
-		/// </summary>
-		/// <param name="fileName">The filename.</param>
-		/// <returns>The loaded signature specification</returns>
-		Signatures LoadSignatureSpecification(string fileName);
 	}
 }

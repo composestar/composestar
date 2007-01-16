@@ -208,7 +208,7 @@ namespace Composestar.Repository
 				return null;
 			}
 		}
-
+	
 		private Type[] _extraTypes;
 
 		/// <summary>
@@ -229,7 +229,7 @@ namespace Composestar.Repository
 				return _extraTypes;
 			}
 		}
-
+	
 		/// <summary>
 		/// Saves the weave specification.
 		/// </summary>
@@ -247,26 +247,6 @@ namespace Composestar.Repository
 			ObjectXMLSerializer<WeaveSpecification>.Save(weaveSpecification, fileName, SerializedFormat.DocumentCompressed);
 
 			return true;
-		}
-
-		#endregion
-
-		#region Signatures
-
-		/// <summary>
-		/// Loads the signature expansion specification.
-		/// </summary>
-		/// <param name="fileName"></param>
-		/// <returns></returns>
-		public Signatures LoadSignatureSpecification(string fileName)
-		{
-			if (string.IsNullOrEmpty(fileName))
-				throw new ArgumentNullException("fileName");
-
-			if (!File.Exists(fileName))
-				throw new FileNotFoundException(fileName);
-
-			return ObjectXMLSerializer<Signatures>.Load(fileName, SerializedFormat.DocumentCompressed);
 		}
 
 		#endregion

@@ -40,12 +40,12 @@ public class TYPEX implements CTCommonModule
 			return;
 		}
 		
-		TypeExpander se = new TypeExpander();
-		collectExpandedTypes(se);		
-		se.run();
+		TypeExpander te = new TypeExpander();
+		collectExpandedTypes(te);		
+		te.run();
 	}
 	
-	private void collectExpandedTypes(TypeExpander se)
+	private void collectExpandedTypes(TypeExpander te)
 	{
 		List<Concern> concerns 
 			= dataStore.getListOfAllInstances(Concern.class);
@@ -65,7 +65,7 @@ public class TYPEX implements CTCommonModule
 			
 			for (DotNETMethodInfo mi : methods)
 			{
-				se.addExtraMethod(dnt, mi);
+				te.addExtraMethod(dnt, mi);
 			}
 		}
 	}
