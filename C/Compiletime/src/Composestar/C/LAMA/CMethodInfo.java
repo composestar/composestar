@@ -91,10 +91,11 @@ public class CMethodInfo extends MethodInfo
 	{
 		HashSet out = new HashSet();
 		Iterator iter = in.iterator();
-        for (Object obj : in) {
-            out.add(obj);
-        }
-        return out;
+		for (Object obj : in)
+		{
+			out.add(obj);
+		}
+		return out;
 	}
 
 	public void addParameter(ParameterInfo param)

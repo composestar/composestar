@@ -28,13 +28,12 @@ import Composestar.Utils.Debug;
 public class FILTH implements CTCommonModule
 {
 	public static final String FILTER_ORDERING_SPEC = "FILTER_ORDERING_SPEC";
-	
+
 	/**
 	 * Calculates orders of the superimposed filtermodules
 	 */
 	public FILTH()
-	{
-	}
+	{}
 
 	/**
 	 * 
@@ -75,7 +74,8 @@ public class FILTH implements CTCommonModule
 				else
 				{
 					/* Calculate FilterModuleOrders */
-					INCRETimer filthrun = incre.getReporter().openProcess("FILTH", c.getUniqueID(), INCRETimer.TYPE_NORMAL);
+					INCRETimer filthrun = incre.getReporter().openProcess("FILTH", c.getUniqueID(),
+							INCRETimer.TYPE_NORMAL);
 					list = filthservice.getMultipleOrder(c);
 					filthrun.stop();
 				}
@@ -84,10 +84,10 @@ public class FILTH implements CTCommonModule
 				{
 					Debug.out(Debug.MODE_INFORMATION, "FILTH",
 							"Encountered shared join point: " + c.getQualifiedName(), c);
-					
-					FilterModuleOrder singleOrder = 
-						(FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-					
+
+					FilterModuleOrder singleOrder = (FilterModuleOrder) c
+							.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+
 					StringBuffer sb = new StringBuffer();
 					if (singleOrder != null)
 					{

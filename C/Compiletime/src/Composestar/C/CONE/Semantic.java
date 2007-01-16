@@ -132,7 +132,7 @@ public abstract class Semantic
 	/**
 	 * @return The type of the annotation of the parameter of the matching
 	 *         function
-	 * @param index  of the parameter from the function
+	 * @param index of the parameter from the function
 	 */
 	protected CAnnotation parameterAnnotation(int index)
 	{

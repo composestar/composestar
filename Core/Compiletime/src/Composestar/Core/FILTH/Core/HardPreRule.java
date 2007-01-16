@@ -10,7 +10,7 @@
 package Composestar.Core.FILTH.Core;
 
 /**
- * @author nagyist 
+ * @author nagyist
  */
 public class HardPreRule extends Rule
 {

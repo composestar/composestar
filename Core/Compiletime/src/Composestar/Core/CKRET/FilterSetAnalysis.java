@@ -82,21 +82,23 @@ public class FilterSetAnalysis implements Serializable
 		List list = new ArrayList();
 
 		Iterator itr = filterModules.iterator();
-        for (Object filterModule : filterModules) {
-            String name = (String) filterModule;
-            // if(
-            // !(name.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
-            {
-                FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID(name);
-                Iterator ifItr = fm.getInputFilterIterator();
+		for (Object filterModule : filterModules)
+		{
+			String name = (String) filterModule;
+			// if(
+			// !(name.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
+			{
+				FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID(name);
+				Iterator ifItr = fm.getInputFilterIterator();
 
-                while (ifItr.hasNext()) {
-                    Filter f = (Filter) ifItr.next();
-                    list.add(f);
-                }
-            }
-        }
-        return list;
+				while (ifItr.hasNext())
+				{
+					Filter f = (Filter) ifItr.next();
+					list.add(f);
+				}
+			}
+		}
+		return list;
 	}
 
 	public Concern getConcern()

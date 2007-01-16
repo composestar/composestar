@@ -181,7 +181,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Custom deserialization of this object
 	 */

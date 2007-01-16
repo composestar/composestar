@@ -154,7 +154,8 @@ public class NotUsedInternals implements BaseChecker
 				 */
 				if (!isInternalUsed)
 				{
-					Debug.out(Debug.MODE_WARNING, "CHKREP", "Internal " + internalID + " is declared but never used", internal);
+					Debug.out(Debug.MODE_WARNING, "CHKREP", "Internal " + internalID + " is declared but never used",
+							internal);
 				}
 			}
 		}

@@ -79,7 +79,7 @@ public abstract class FilterNode extends Node
 	{
 		return filter.getFilterType().getType();
 	}
-	
+
 	/**
 	 * Adds the edge to the next filter in the filter chain.
 	 * 

@@ -123,7 +123,7 @@ public class PreprocessorInfoChannel
 					Enumeration tokenLines = tokenLineVector.elements();
 					while (tokenLines.hasMoreElements())
 					{
-                        sb.append(inti).append(":").append(tokenLines.nextElement()).append('\n');
+						sb.append(inti).append(":").append(tokenLines.nextElement()).append('\n');
 					}
 				}
 			}

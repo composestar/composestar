@@ -55,7 +55,7 @@ public class ConstraintFilter extends ArgumentFilter
 			/* attrbutes for s */
 			if (atts != null)
 			{
-				//String type = atts.getQName(0);
+				// String type = atts.getQName(0);
 				value = atts.getValue(0);
 			}
 			// System.out.println("BEGIN ");

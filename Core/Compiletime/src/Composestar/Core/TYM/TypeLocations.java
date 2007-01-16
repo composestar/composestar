@@ -51,17 +51,19 @@ public class TypeLocations
 	{
 		Configuration config = Configuration.instance();
 		Iterator prit = config.getProjects().getProjects().iterator();
-        for (Object o1 : config.getProjects().getProjects()) {
-            Project prj = (Project) o1;
-            Iterator tsit = prj.getTypeSources().iterator();
-            for (Object o : prj.getTypeSources()) {
-                TypeSource ts = (TypeSource) o;
-                String type = ts.getName();
-                String file = ts.getFileName();
-                addTypeSource(type, file);
-            }
-        }
-    }
+		for (Object o1 : config.getProjects().getProjects())
+		{
+			Project prj = (Project) o1;
+			Iterator tsit = prj.getTypeSources().iterator();
+			for (Object o : prj.getTypeSources())
+			{
+				TypeSource ts = (TypeSource) o;
+				String type = ts.getName();
+				String file = ts.getFileName();
+				addTypeSource(type, file);
+			}
+		}
+	}
 
 	private void addTypeSource(String typeName, String sourceFile)
 	{
@@ -89,11 +91,12 @@ public class TypeLocations
 	private void setTypesAssembly(List types, String assembly)
 	{
 		Iterator it = types.iterator();
-        for (Object type1 : types) {
-            String type = (String) type1;
-            typeToAssembly.put(type, assembly);
-        }
-    }
+		for (Object type1 : types)
+		{
+			String type = (String) type1;
+			typeToAssembly.put(type, assembly);
+		}
+	}
 
 	/**
 	 * Returns the source path for the type with the specified name, or null if
@@ -114,15 +117,17 @@ public class TypeLocations
 	{
 		List types = new ArrayList();
 		Iterator entries = typeToSource.entrySet().iterator();
-        for (Object o : typeToSource.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            String typeName = (String) entry.getKey();
-            String sourceFile = (String) entry.getValue();
-            if (sourceFile.equals(source)) {
-                types.add(typeName);
-            }
-        }
-        return types;
+		for (Object o : typeToSource.entrySet())
+		{
+			Map.Entry entry = (Map.Entry) o;
+			String typeName = (String) entry.getKey();
+			String sourceFile = (String) entry.getValue();
+			if (sourceFile.equals(source))
+			{
+				types.add(typeName);
+			}
+		}
+		return types;
 	}
 
 	/**

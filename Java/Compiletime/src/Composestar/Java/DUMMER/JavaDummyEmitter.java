@@ -44,7 +44,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	private ArrayList packages = new ArrayList();
 
 	private boolean packageDefinition = false;
-	
+
 	private ASTFactory factory = new ASTFactory();
 
 	/**
@@ -66,26 +66,27 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 */
 	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException
 	{
-		if(source.isEmbedded())
+		if (source.isEmbedded())
 		{
 			Configuration config = Configuration.instance();
 			String dummyPath = config.getPathSettings().getPath("Dummy");
 			String basePath = project.getBasePath();
 			outputFilename = basePath + "obj/" + dummyPath;
-			
+
 			// change outputFilename
 			TypeLocations types = TypeLocations.instance();
 			Iterator embeddedTypes = types.getTypesBySource(source.getFileName()).iterator();
-            for (Object o : types.getTypesBySource(source.getFileName())) {
-                String type = (String) o;
-                outputFilename += type;
-                outputFilename = outputFilename.replace('.', '/');
-                outputFilename += ".java";
-                source.setDummy(outputFilename);
-                source.setFileName(FileUtils.normalizeFilename(source.getFileName()));
-            }
-        }
-		
+			for (Object o : types.getTypesBySource(source.getFileName()))
+			{
+				String type = (String) o;
+				outputFilename += type;
+				outputFilename = outputFilename.replace('.', '/');
+				outputFilename += ".java";
+				source.setDummy(outputFilename);
+				source.setFileName(FileUtils.normalizeFilename(source.getFileName()));
+			}
+		}
+
 		currentSource = source;
 		packageName = "";
 		packages = new ArrayList();
@@ -180,31 +181,29 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		out("}");
 	}
 
-	/** 
-	* Returns a copy of an AST without nodes that have the specified text. 
-	*/ 
-	private AST filterChildren(AST ast, String remove) 
-	{ 
-		if (ast == null) 
-		throw new IllegalArgumentException("ast cannot be null"); 
-	
-	    if (remove == null) 
-	    throw new IllegalArgumentException("remove cannot be null"); 
-	    
-	    AST result = factory.create(ast.getType(), ast.getText()); 
-	    AST child = ast.getFirstChild(); 
-	    while (child != null) 
-	    { 
-	    	String text = child.getText(); 
-	        if (! remove.equals(text)) 
-	        { 
-	        	AST clone = factory.create(child); 
-	            result.addChild(clone); 
-	        } 
-	        child = child.getNextSibling(); 
-	    } 
-	    return result; 
-	} 
+	/**
+	 * Returns a copy of an AST without nodes that have the specified text.
+	 */
+	private AST filterChildren(AST ast, String remove)
+	{
+		if (ast == null) throw new IllegalArgumentException("ast cannot be null");
+
+		if (remove == null) throw new IllegalArgumentException("remove cannot be null");
+
+		AST result = factory.create(ast.getType(), ast.getText());
+		AST child = ast.getFirstChild();
+		while (child != null)
+		{
+			String text = child.getText();
+			if (!remove.equals(text))
+			{
+				AST clone = factory.create(child);
+				result.addChild(clone);
+			}
+			child = child.getNextSibling();
+		}
+		return result;
+	}
 
 	/**
 	 * Find a child of the given AST that has the given type.
@@ -716,7 +715,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case EXTENDS_CLAUSE:
-				
+
 				if (hasChildren(ast))
 				{
 					out("extends ");
@@ -793,16 +792,17 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case VARIABLE_DEF:
-				AST assign = getChild(ast, ASSIGN); 
-				AST mods = getChild(ast, MODIFIERS); 
-				
-				// remove the final modifier from uninitialized variable declarations 
-				if (assign == null) 
-				{ 
-				mods = filterChildren(mods, "final"); 
-				} 
-				
-				visit(mods); 
+				AST assign = getChild(ast, ASSIGN);
+				AST mods = getChild(ast, MODIFIERS);
+
+				// remove the final modifier from uninitialized variable
+				// declarations
+				if (assign == null)
+				{
+					mods = filterChildren(mods, "final");
+				}
+
+				visit(mods);
 				visit(getChild(ast, TYPE));
 				out(" ");
 				visit(getChild(ast, IDENT));
@@ -945,7 +945,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				// skip TYPE_ARGS
 				visit(child2);
 				if (child3.getType() != ARRAY_DECLARATOR) out("(");
-				visit(getChild(ast,ELIST));
+				visit(getChild(ast, ELIST));
 				if (child3.getType() != ARRAY_DECLARATOR) out(")");
 				break;
 
@@ -1161,18 +1161,19 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				debug.println("Invalid type:" + ast.getType());
 				break;
 
-		/*
-		 * The following are tokens, but I don't think JavaRecognizer ever
-		 * produces an AST with one of these types: case COMMA: case
-		 * LITERAL_implements: case LITERAL_class: case LITERAL_extends: case
-		 * EOF: case NULL_TREE_LOOKAHEAD: case BLOCK: case LABELED_STAT: //
-		 * refuse to implement on moral grounds :) case LITERAL_import: case
-		 * LBRACK: case RBRACK: case LCURLY: case RCURLY: case LPAREN: case
-		 * RPAREN: case LITERAL_else: // else is a child of "if" AST case COLON: //
-		 * part of the trinary operator case WS: // whitespace case ESC: case
-		 * HEX_DIGIT: case VOCAB: case EXPONENT: // exponents and float suffixes
-		 * are left in the NUM_FLOAT case FLOAT_SUFFIX
-		 */
+			/*
+			 * The following are tokens, but I don't think JavaRecognizer ever
+			 * produces an AST with one of these types: case COMMA: case
+			 * LITERAL_implements: case LITERAL_class: case LITERAL_extends:
+			 * case EOF: case NULL_TREE_LOOKAHEAD: case BLOCK: case
+			 * LABELED_STAT: // refuse to implement on moral grounds :) case
+			 * LITERAL_import: case LBRACK: case RBRACK: case LCURLY: case
+			 * RCURLY: case LPAREN: case RPAREN: case LITERAL_else: // else is a
+			 * child of "if" AST case COLON: // part of the trinary operator
+			 * case WS: // whitespace case ESC: case HEX_DIGIT: case VOCAB: case
+			 * EXPONENT: // exponents and float suffixes are left in the
+			 * NUM_FLOAT case FLOAT_SUFFIX
+			 */
 
 		}
 		stack.pop();
@@ -1210,7 +1211,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * For testing.
 	 */

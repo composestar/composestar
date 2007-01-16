@@ -52,7 +52,7 @@ import Composestar.Utils.Logging.CPSLogger;
 public class XmlExporter
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DIGGER.MODULE_NAME);
-	
+
 	/**
 	 * If true add comments
 	 */
@@ -76,7 +76,7 @@ public class XmlExporter
 
 		exportGraphTo(filename);
 	}
-	
+
 	public Document getXmlDocument()
 	{
 		return xmlDoc;

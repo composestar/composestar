@@ -7,7 +7,7 @@ public class Source implements Serializable
 	private static final long serialVersionUID = -5054531327936357776L;
 
 	private boolean isEmbedded;
-	
+
 	private boolean isExecutable;
 
 	private String filename;
@@ -41,7 +41,7 @@ public class Source implements Serializable
 	{
 		isEmbedded = isemb;
 	}
-	
+
 	public boolean isExecutable()
 	{
 		return isExecutable;

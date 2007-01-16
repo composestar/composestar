@@ -5,26 +5,25 @@ import java.util.Map;
 
 import Composestar.Utils.Debug;
 
-
 /**
  * More or less a placeholder class for log4j style logging
  */
 public class CPSLogger
 {
-	private static final Map loggers = new HashMap(); 
-	
+	private static final Map loggers = new HashMap();
+
 	private final String name;
-	
+
 	protected CPSLogger(String name)
 	{
 		this.name = name;
 	}
-	
+
 	public void stackTrace(Throwable t)
 	{
 		Debug.out(Debug.MODE_DEBUG, name, Debug.stackTrace(t));
 	}
-	
+
 	public void error(String msg)
 	{
 		Debug.out(Debug.MODE_ERROR, name, msg);

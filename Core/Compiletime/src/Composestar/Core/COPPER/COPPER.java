@@ -45,10 +45,12 @@ public class COPPER implements CTCommonModule
 	private static final int PARSE_PHASES = 1;
 
 	private static String cpscontents; // contents of the cps file we're
-										// parsing
+
+	// parsing
 
 	private static String embeddedSource; // string used to hold the source
-											// (if embedded)
+
+	// (if embedded)
 
 	private static CpsParser parser;
 
@@ -177,22 +179,26 @@ public class COPPER implements CTCommonModule
 		INCRE incre = INCRE.instance();
 		Iterator cpsIterator = Configuration.instance().getProjects().getConcernSources().iterator();
 
-        for (Object o : Configuration.instance().getProjects().getConcernSources()) {
-            ConcernSource concern = (ConcernSource) o;
+		for (Object o : Configuration.instance().getProjects().getConcernSources())
+		{
+			ConcernSource concern = (ConcernSource) o;
 
-            if (incre.isProcessedByModule(concern, MODULE_NAME)) {
-                INCRETimer coppercopy = incre.getReporter().openProcess(MODULE_NAME, concern.getFileName(),
-                        INCRETimer.TYPE_INCREMENTAL);
-                copper.copyOperation(concern.getFileName());
-                coppercopy.stop();
-            } else {
-                INCRETimer copperrun = incre.getReporter().openProcess(MODULE_NAME, concern.getFileName(),
-                        INCRETimer.TYPE_NORMAL);
-                copper.parseCpsFile(concern.getFileName(), ALL_PHASES);
-                copperrun.stop();
-            }
-        }
-    }
+			if (incre.isProcessedByModule(concern, MODULE_NAME))
+			{
+				INCRETimer coppercopy = incre.getReporter().openProcess(MODULE_NAME, concern.getFileName(),
+						INCRETimer.TYPE_INCREMENTAL);
+				copper.copyOperation(concern.getFileName());
+				coppercopy.stop();
+			}
+			else
+			{
+				INCRETimer copperrun = incre.getReporter().openProcess(MODULE_NAME, concern.getFileName(),
+						INCRETimer.TYPE_NORMAL);
+				copper.parseCpsFile(concern.getFileName(), ALL_PHASES);
+				copperrun.stop();
+			}
+		}
+	}
 
 	public static void setParseTree(CommonAST theParseTree)
 	{
@@ -254,44 +260,61 @@ public class COPPER implements CTCommonModule
 		boolean test = false;
 		boolean verify = false;
 		int result = 0;
-        for (String arg : args) {
-            if ("--test".equals(arg) || "-t".equals(arg)) {
-                test = true;
-                verify = false;
-            } else if (arg.equals("--verify") || "-v".equals(arg)) {
-                test = false;
-                verify = true;
-            } else if (arg.equals("--debug") || arg.equals("-d")) {
-                Debug.setMode(Debug.MODE_INFORMATION);
-            } else if (arg.startsWith("@")) {
-                // Parse the response file (should contain a semicolon seperated
-                // list of .cps files)
+		for (String arg : args)
+		{
+			if ("--test".equals(arg) || "-t".equals(arg))
+			{
+				test = true;
+				verify = false;
+			}
+			else if (arg.equals("--verify") || "-v".equals(arg))
+			{
+				test = false;
+				verify = true;
+			}
+			else if (arg.equals("--debug") || arg.equals("-d"))
+			{
+				Debug.setMode(Debug.MODE_INFORMATION);
+			}
+			else if (arg.startsWith("@"))
+			{
+				// Parse the response file (should contain a semicolon seperated
+				// list of .cps files)
 
-                File f = new File(arg.substring(1));
-                if (f.exists()) {
-                    try {
-                        BufferedReader br = new BufferedReader(new FileReader(f.getName()));
-                        String line = br.readLine();
-                        if (line != null) {
-                            String[] files = line.split(";");
-                            for (int k = 0; k < files.length; k++) {
-                                cpsfiles.add(files[k]);
-                            }
-                        }
-                        br.close();
-                    }
-                    catch (IOException e) {
-                        Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Error reading response file.");
-                    }
-                } else {
-                    Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Response file '" + f.getName() + "' not found!");
-                }
+				File f = new File(arg.substring(1));
+				if (f.exists())
+				{
+					try
+					{
+						BufferedReader br = new BufferedReader(new FileReader(f.getName()));
+						String line = br.readLine();
+						if (line != null)
+						{
+							String[] files = line.split(";");
+							for (int k = 0; k < files.length; k++)
+							{
+								cpsfiles.add(files[k]);
+							}
+						}
+						br.close();
+					}
+					catch (IOException e)
+					{
+						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Error reading response file.");
+					}
+				}
+				else
+				{
+					Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Response file '" + f.getName() + "' not found!");
+				}
 
-            } else {
-                cpsfiles.add(arg);
-            }
-        }
-        if (args.length == 0 || (!test && !verify))
+			}
+			else
+			{
+				cpsfiles.add(arg);
+			}
+		}
+		if (args.length == 0 || (!test && !verify))
 		{
 			System.out.println("Usage: java COPPER [options] *.cps");
 			System.out.println("\t Options:\t --test   | -t\tParse all the files and write the XML file");
@@ -305,26 +328,29 @@ public class COPPER implements CTCommonModule
 		{
 			int errors = 0;
 
-            for (Object cpsfile : cpsfiles) {
-                try {
-                    Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Parsing concernfile '" + cpsfile + "'...");
-                    copper.parseCpsFile((String) cpsfile, ALL_PHASES);
+			for (Object cpsfile : cpsfiles)
+			{
+				try
+				{
+					Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Parsing concernfile '" + cpsfile + "'...");
+					copper.parseCpsFile((String) cpsfile, ALL_PHASES);
 
-                    Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Serializing repository...");
-                    // RepositorySerializer rs = new
-                    // DotNETRepositorySerializer(new
-                    // java.io.File((String)cpsfiles.get(i) + ".xml"),
-                    // DataStore.instance());
-                    // RepositorySerializer rs =
-                    // (RepositorySerializer)DataStore.instance().getObjectByID("RepositorySerializer");
-                    // rs.run(resources);
-                }
-                catch (ModuleException e) {
-                    errors++;
-                }
-            }
+					Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Serializing repository...");
+					// RepositorySerializer rs = new
+					// DotNETRepositorySerializer(new
+					// java.io.File((String)cpsfiles.get(i) + ".xml"),
+					// DataStore.instance());
+					// RepositorySerializer rs =
+					// (RepositorySerializer)DataStore.instance().getObjectByID("RepositorySerializer");
+					// rs.run(resources);
+				}
+				catch (ModuleException e)
+				{
+					errors++;
+				}
+			}
 
-            if (errors > 0)
+			if (errors > 0)
 			{
 				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Grammar verification and/or serializing failed for "
 						+ errors + " cps files!");
@@ -340,17 +366,20 @@ public class COPPER implements CTCommonModule
 		{
 			int errors = 0;
 
-            for (Object cpsfile : cpsfiles) {
-                Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Parsing concernfile '" + cpsfile + "'...");
-                try {
-                    copper.parseCpsFile((String) cpsfile, PARSE_PHASES);
-                }
-                catch (ModuleException e) {
-                    errors++;
-                }
-            }
+			for (Object cpsfile : cpsfiles)
+			{
+				Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Parsing concernfile '" + cpsfile + "'...");
+				try
+				{
+					copper.parseCpsFile((String) cpsfile, PARSE_PHASES);
+				}
+				catch (ModuleException e)
+				{
+					errors++;
+				}
+			}
 
-            if (errors > 0)
+			if (errors > 0)
 			{
 				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Grammar verification failed for " + errors + " cps files!");
 				result = 1;

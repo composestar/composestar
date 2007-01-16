@@ -166,7 +166,7 @@ public class ModuleSetting implements Serializable
 				}
 				catch (NumberFormatException e)
 				{
-					throw new ConfigurationException("Number Format Exception: "+e.getMessage());
+					throw new ConfigurationException("Number Format Exception: " + e.getMessage());
 				}
 			}
 		}
@@ -188,7 +188,7 @@ public class ModuleSetting implements Serializable
 				}
 				catch (NumberFormatException e)
 				{
-					throw new ConfigurationException("Number Format Exception: "+e.getMessage());
+					throw new ConfigurationException("Number Format Exception: " + e.getMessage());
 				}
 			}
 		}

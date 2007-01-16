@@ -50,17 +50,20 @@ public class JavaCollectorRunner implements CollectorRunner
 			ClassMap cm = ClassMap.instance();
 			HashMap classes = cm.map();
 			Iterator classIt = classes.values().iterator();
-            for (Object o : classes.values()) {
-                Class c = (Class) o;
-                try {
-                    processType(c);
-                }
-                catch (Throwable t) {
-                    Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Error while processing type: " + c.getName() + " --> "
-                            + t.getMessage());
-                }
-            }
-            try
+			for (Object o : classes.values())
+			{
+				Class c = (Class) o;
+				try
+				{
+					processType(c);
+				}
+				catch (Throwable t)
+				{
+					Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Error while processing type: " + c.getName() + " --> "
+							+ t.getMessage());
+				}
+			}
+			try
 			{
 				processPendingTypes();
 			}
@@ -134,15 +137,16 @@ public class JavaCollectorRunner implements CollectorRunner
 		// loop through rest of the concerns and add to the repository in the
 		// form of primitive concerns
 		Iterator it = typeMap.values().iterator();
-        for (Object o1 : typeMap.values()) {
-            JavaType type = (JavaType) o1;
-            PrimitiveConcern pc = new PrimitiveConcern();
-            pc.setName(type.fullName());
-            pc.setPlatformRepresentation(type);
-            type.setParentConcern(pc);
-            dataStore.addObject(type.fullName(), pc);
-        }
-    }
+		for (Object o1 : typeMap.values())
+		{
+			JavaType type = (JavaType) o1;
+			PrimitiveConcern pc = new PrimitiveConcern();
+			pc.setName(type.fullName());
+			pc.setPlatformRepresentation(type);
+			type.setParentConcern(pc);
+			dataStore.addObject(type.fullName(), pc);
+		}
+	}
 
 	/**
 	 * Processes a type. Adds the interfaces, superclasses, methods and fields.
@@ -185,23 +189,26 @@ public class JavaCollectorRunner implements CollectorRunner
 
 		// add interfaces
 		Class[] interfaces = c.getInterfaces();
-        for (Class anInterface : interfaces) {
-            jtype.addImplementedInterface(anInterface.getName());
-            addPendingType(anInterface.getName(), anInterface);
-        }
+		for (Class anInterface : interfaces)
+		{
+			jtype.addImplementedInterface(anInterface.getName());
+			addPendingType(anInterface.getName(), anInterface);
+		}
 
-        // add methods
+		// add methods
 		Method[] methods = c.getMethods();
-        for (Method method : methods) {
-            jtype.addMethod(processMethodInfo(method));
-        }
+		for (Method method : methods)
+		{
+			jtype.addMethod(processMethodInfo(method));
+		}
 
-        // add fields
+		// add fields
 		Field[] fields = c.getFields();
-        for (Field field : fields) {
-            jtype.addField(processFieldInfo(field));
-        }
-    }
+		for (Field field : fields)
+		{
+			jtype.addField(processFieldInfo(field));
+		}
+	}
 
 	/**
 	 * Processes a method. Adds the parameters.
@@ -218,10 +225,11 @@ public class JavaCollectorRunner implements CollectorRunner
 
 		// add parameters
 		Class[] parameters = m.getParameterTypes();
-        for (Class parameter : parameters) {
-            jmethod.addParameter(processParameterInfo(parameter));
-        }
-        return jmethod;
+		for (Class parameter : parameters)
+		{
+			jmethod.addParameter(processParameterInfo(parameter));
+		}
+		return jmethod;
 	}
 
 	/**
@@ -292,14 +300,14 @@ public class JavaCollectorRunner implements CollectorRunner
 			pendingIt = pendingTypes.values().iterator();
 		}
 	}
-	
+
 	private void typeProcessed(String key, Class type)
 	{
-		if (pendingTypes.containsKey(key)) 
+		if (pendingTypes.containsKey(key))
 		{
 			pendingTypes.remove(key);
 		}
-		if (!processedTypes.containsKey(key)) 
+		if (!processedTypes.containsKey(key))
 		{
 			processedTypes.put(key, type);
 		}
@@ -308,6 +316,6 @@ public class JavaCollectorRunner implements CollectorRunner
 	// Added by INCRE.
 	public void copyOperation(Vector dlls)
 	{
-		
+
 	}
 }

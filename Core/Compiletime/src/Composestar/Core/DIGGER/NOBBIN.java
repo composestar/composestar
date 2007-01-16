@@ -116,25 +116,31 @@ public class NOBBIN
 
 		List messages = gen.create(concernNode);
 		Iterator it = messages.iterator();
-        for (Object message : messages) {
-            Message inMsg = (Message) message;
-            List outMsgs = walk(concernNode.getInputFilters(), inMsg, new ArrayList());
-            if (exporter != null) {
-                if ((outMsgs.size() != 1) || (!outMsgs.get(0).equals(inMsg))) {
-                    exporter.addResult(inMsg, outMsgs);
-                }
-            }
-            if (outMsgs.size() > 0) {
-                if (Debug.willLog(Debug.MODE_DEBUG)) {
-                    logger.debug("[RESULT] " + inMsg + " :");
-                    Iterator msgit = outMsgs.iterator();
-                    for (Object outMsg : outMsgs) {
-                        logger.debug("[RESULT] + " + outMsg);
-                    }
-                }
-            }
-        }
-    }
+		for (Object message : messages)
+		{
+			Message inMsg = (Message) message;
+			List outMsgs = walk(concernNode.getInputFilters(), inMsg, new ArrayList());
+			if (exporter != null)
+			{
+				if ((outMsgs.size() != 1) || (!outMsgs.get(0).equals(inMsg)))
+				{
+					exporter.addResult(inMsg, outMsgs);
+				}
+			}
+			if (outMsgs.size() > 0)
+			{
+				if (Debug.willLog(Debug.MODE_DEBUG))
+				{
+					logger.debug("[RESULT] " + inMsg + " :");
+					Iterator msgit = outMsgs.iterator();
+					for (Object outMsg : outMsgs)
+					{
+						logger.debug("[RESULT] + " + outMsg);
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * Walk the the graph from a given node. This will actually more or less

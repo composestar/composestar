@@ -103,30 +103,35 @@ public class Action implements Parameter
 	public static Node lookup(Action a, Graph g)
 	{
 		Node current;
-        for (Object o : g.getNodes()) {
-            current = (Node) o;
-            if (current.getElement().equals(a)) {
-                return current;
-            }
-        }
-        return null;
+		for (Object o : g.getNodes())
+		{
+			current = (Node) o;
+			if (current.getElement().equals(a))
+			{
+				return current;
+			}
+		}
+		return null;
 	}
 
 	public static Node lookupByName(String inname, Graph g)
 	{
 		Node current;
-        for (Object o : g.getNodes()) {
-            current = (Node) o;
-            /* the root element is only a string, we skip it */
-            if (current.getElement() instanceof String) {
-                continue;
-            }
+		for (Object o : g.getNodes())
+		{
+			current = (Node) o;
+			/* the root element is only a string, we skip it */
+			if (current.getElement() instanceof String)
+			{
+				continue;
+			}
 
-            if (((Action) current.getElement()).getName().equals(inname)) {
-                return current;
-            }
-        }
-        return null;
+			if (((Action) current.getElement()).getName().equals(inname))
+			{
+				return current;
+			}
+		}
+		return null;
 	}
 
 	public Boolean evaluate()

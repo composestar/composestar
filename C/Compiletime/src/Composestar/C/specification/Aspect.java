@@ -169,12 +169,14 @@ public class Aspect
 	public boolean hasCall()
 	{
 		Iterator adviceit = this.advices.values().iterator();
-        for (Object o : this.advices.values()) {
-            Advice advice = (Advice) o;
-            if (advice.getType() == GeneralUtils.FUNCTION_CALL) {
-                return true;
-            }
-        }
-        return false;
+		for (Object o : this.advices.values())
+		{
+			Advice advice = (Advice) o;
+			if (advice.getType() == GeneralUtils.FUNCTION_CALL)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

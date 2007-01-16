@@ -206,8 +206,7 @@ public class CCodeWrapper
 			String key = (String) keys.nextElement();
 			if (key.equalsIgnoreCase("tokenNumber"))
 			{
-				System.out.print(" " + key + ":"
-						+ (node).getAttribute(key));
+				System.out.print(" " + key + ":" + (node).getAttribute(key));
 			}
 			if (key.equalsIgnoreCase("source"))
 			{
@@ -243,8 +242,7 @@ public class CCodeWrapper
 			String key = (String) keys.nextElement();
 			if (key.equalsIgnoreCase("tokenNumber"))
 			{
-				System.out.print(" " + key + ":"
-						+ (node).getAttribute(key));
+				System.out.print(" " + key + ":" + (node).getAttribute(key));
 			}
 			if (key.equalsIgnoreCase("source"))
 			{
@@ -431,8 +429,7 @@ public class CCodeWrapper
 				String key = (String) keys.nextElement();
 				if (key.equalsIgnoreCase(TNode.TOKEN_NUMBER))
 				{
-					System.out.print(" " + key + ":"
-							+ (node).getAttribute(key));
+					System.out.print(" " + key + ":" + (node).getAttribute(key));
 				}
 				if (key.equalsIgnoreCase(TNode.IS_SOURCE))
 				{
@@ -440,8 +437,7 @@ public class CCodeWrapper
 				}
 				if (key.equalsIgnoreCase(TNode.SCOPE_NAME))
 				{
-					System.out.print("   scope :"
-							+ (node).getAttribute(key));
+					System.out.print("   scope :" + (node).getAttribute(key));
 				}
 				else
 				{
@@ -766,8 +762,7 @@ public class CCodeWrapper
 			String key = (String) keys.nextElement();
 			if (key.equalsIgnoreCase("tokenNumber"))
 			{
-				System.out.print(" " + key + ":"
-						+ (node).getAttribute(key));
+				System.out.print(" " + key + ":" + (node).getAttribute(key));
 			}
 			else if (key.equalsIgnoreCase("source"))
 			{
@@ -775,8 +770,7 @@ public class CCodeWrapper
 			}
 			else if (key.equalsIgnoreCase("scopeName"))
 			{
-				System.out.print("   scope :"
-						+ (node).getAttribute(key));
+				System.out.print("   scope :" + (node).getAttribute(key));
 			}
 			else
 			{

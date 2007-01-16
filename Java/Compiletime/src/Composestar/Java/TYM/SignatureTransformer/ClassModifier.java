@@ -58,31 +58,35 @@ public class ClassModifier
 	public void addMethods(List methods, CtClass ct) throws Exception
 	{
 		Iterator it = methods.iterator();
-        for (Object method : methods) {
-            JavaMethodInfo m = (JavaMethodInfo) method;
-            int modifiers = m.theMethod.getModifiers();
-            CtClass returnClass = null;
-            if (!m.ReturnTypeString.equals("")) {
-                returnClass = findClass(m.ReturnTypeString);
-            }
-            String methodName = m.getName();
-            CtClass[] parameters = new CtClass[m.Parameters.size()];
-            if (m.Parameters.size() > 0) {
-                Class[] params = m.theMethod.getParameterTypes();
-                for (int i = 0; i < params.length; i++) {
-                    String name = params[i].getName();
-                    CtClass clazz = findClass(name);
-                    parameters[i] = clazz;
-                }
-            }
-            CtClass[] exceptions = new CtClass[0];
-            CtMethod newMethod = CtNewMethod.make(modifiers, returnClass, methodName, parameters, exceptions, null, ct);
-            Debug.out(Debug.MODE_INFORMATION, "SITRA", "method " + newMethod.getName() + " added to dummy class "
-                    + ct.getName());
-            ct.addMethod(newMethod);
-        }
+		for (Object method : methods)
+		{
+			JavaMethodInfo m = (JavaMethodInfo) method;
+			int modifiers = m.theMethod.getModifiers();
+			CtClass returnClass = null;
+			if (!m.ReturnTypeString.equals(""))
+			{
+				returnClass = findClass(m.ReturnTypeString);
+			}
+			String methodName = m.getName();
+			CtClass[] parameters = new CtClass[m.Parameters.size()];
+			if (m.Parameters.size() > 0)
+			{
+				Class[] params = m.theMethod.getParameterTypes();
+				for (int i = 0; i < params.length; i++)
+				{
+					String name = params[i].getName();
+					CtClass clazz = findClass(name);
+					parameters[i] = clazz;
+				}
+			}
+			CtClass[] exceptions = new CtClass[0];
+			CtMethod newMethod = CtNewMethod.make(modifiers, returnClass, methodName, parameters, exceptions, null, ct);
+			Debug.out(Debug.MODE_INFORMATION, "SITRA", "method " + newMethod.getName() + " added to dummy class "
+					+ ct.getName());
+			ct.addMethod(newMethod);
+		}
 
-    }
+	}
 
 	/**
 	 * Deletes a list of methods from a class.
@@ -94,29 +98,34 @@ public class ClassModifier
 	public void deleteMethods(List methods, CtClass ct) throws Exception
 	{
 		Iterator it = methods.iterator();
-        for (Object method1 : methods) {
-            JavaMethodInfo m = (JavaMethodInfo) method1;
-            CtClass[] parameters = new CtClass[m.Parameters.size()];
-            if (m.Parameters.size() > 0) {
-                Class[] params = m.theMethod.getParameterTypes();
-                for (int i = 0; i < params.length; i++) {
-                    String name = params[i].getName();
-                    CtClass clazz = findClass(name);
-                    parameters[i] = clazz;
-                }
-            }
+		for (Object method1 : methods)
+		{
+			JavaMethodInfo m = (JavaMethodInfo) method1;
+			CtClass[] parameters = new CtClass[m.Parameters.size()];
+			if (m.Parameters.size() > 0)
+			{
+				Class[] params = m.theMethod.getParameterTypes();
+				for (int i = 0; i < params.length; i++)
+				{
+					String name = params[i].getName();
+					CtClass clazz = findClass(name);
+					parameters[i] = clazz;
+				}
+			}
 
-            try {
-                CtMethod method = ct.getDeclaredMethod(m.getName(), parameters);
-                ct.removeMethod(method);
-            }
-            catch (Exception e) {
-                // swallow not found exception: can occur when method
-                // should be removed which is not declared in the class
-                // but inherited from superclass
-            }
-        }
-    }
+			try
+			{
+				CtMethod method = ct.getDeclaredMethod(m.getName(), parameters);
+				ct.removeMethod(method);
+			}
+			catch (Exception e)
+			{
+				// swallow not found exception: can occur when method
+				// should be removed which is not declared in the class
+				// but inherited from superclass
+			}
+		}
+	}
 
 	/**
 	 * Returns a CtClass instance if the class is found.
@@ -153,7 +162,7 @@ public class ClassModifier
 		// make adjustments
 		Concern concern = c.getConcern();
 		Signature signature = concern.getSignature();
-		
+
 		if (signature != null)
 		{
 			List methods = signature.getMethods(MethodWrapper.ADDED);

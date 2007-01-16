@@ -164,11 +164,11 @@ public class Message
 	{
 		return clones.iterator();
 	}
-	
+
 	public void addResult(Message res)
 	{
 		// to filter out duplicated
-		if (!results.contains(res))	results.add(res);
+		if (!results.contains(res)) results.add(res);
 	}
 
 	public Iterator getResults()
@@ -269,13 +269,15 @@ public class Message
 			}
 		}
 		Iterator it = type.getMethods().iterator();
-        for (Object o : type.getMethods()) {
-            MethodInfo mi = (MethodInfo) o;
-            if (mi.getName().equals(selector)) {
-                return true;
-            }
-        }
-        return false;
+		for (Object o : type.getMethods())
+		{
+			MethodInfo mi = (MethodInfo) o;
+			if (mi.getName().equals(selector))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String toString()

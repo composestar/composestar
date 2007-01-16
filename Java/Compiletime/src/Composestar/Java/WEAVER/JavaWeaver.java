@@ -67,23 +67,25 @@ public class JavaWeaver implements WEAVER
 		Configuration config = Configuration.instance();
 		List projects = config.getProjects().getProjects();
 		Iterator projIt = projects.iterator();
-        for (Object project : projects) {
-            c = new ClassWeaver();
+		for (Object project : projects)
+		{
+			c = new ClassWeaver();
 
-            // add classpaths
-            p = (Project) project;
-            deps = (ArrayList) p.getDependencies();
-            depsIt = deps.iterator();
-            while (depsIt.hasNext()) {
-                dependency = ((Dependency) depsIt.next()).getFileName();
-                c.addClasspath(dependency);
-            }
-            c.addClasspath(p.getBasePath() + "obj/");
+			// add classpaths
+			p = (Project) project;
+			deps = (ArrayList) p.getDependencies();
+			depsIt = deps.iterator();
+			while (depsIt.hasNext())
+			{
+				dependency = ((Dependency) depsIt.next()).getFileName();
+				c.addClasspath(dependency);
+			}
+			c.addClasspath(p.getBasePath() + "obj/");
 
-            // weave
-            c.weave(p);
-        }
-    }
+			// weave
+			c.weave(p);
+		}
+	}
 
 	public void createHookDictionary(CommonResources resources)
 	{
@@ -144,21 +146,24 @@ public class JavaWeaver implements WEAVER
 			{
 				FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject("SingleOrder");
 				Iterator iterFilterModules = fmo.orderAsList().iterator();
-                for (Object o : fmo.orderAsList()) {
-                    String fmn = (String) o;
-                    FilterModule fm = (FilterModule) ds.getObjectByID(fmn);
-                    Iterator iterInternals = fm.getInternalIterator();
-                    while (iterInternals.hasNext()) {
-                        Internal internal = (Internal) iterInternals.next();
-                        String internalQN = internal.getType().getQualifiedName();
-                        castConcern = true;
-                        if (!qns.contains(internalQN)) {
-                            qns.add(internalQN);
-                            hd.addCastInterception(internalQN);
-                        }
-                    }
-                }
-            }
+				for (Object o : fmo.orderAsList())
+				{
+					String fmn = (String) o;
+					FilterModule fm = (FilterModule) ds.getObjectByID(fmn);
+					Iterator iterInternals = fm.getInternalIterator();
+					while (iterInternals.hasNext())
+					{
+						Internal internal = (Internal) iterInternals.next();
+						String internalQN = internal.getType().getQualifiedName();
+						castConcern = true;
+						if (!qns.contains(internalQN))
+						{
+							qns.add(internalQN);
+							hd.addCastInterception(internalQN);
+						}
+					}
+				}
+			}
 			if (castConcern && !qns.contains(c.getQualifiedName()))
 			{
 				qns.add(c.getQualifiedName());
@@ -170,7 +175,7 @@ public class JavaWeaver implements WEAVER
 
 	public void getMethodInterceptions(CommonResources resources)
 	{
-		
+
 		FILTHService filthservice = FILTHService.getInstance(resources);
 
 		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
@@ -181,22 +186,22 @@ public class JavaWeaver implements WEAVER
 			if (!list.isEmpty())
 			{
 				Iterator iterFilterModules = list.iterator();
-				if(hasInputFilters(iterFilterModules))
+				if (hasInputFilters(iterFilterModules))
 				{
 					Debug.out(Debug.MODE_DEBUG, "WEAVER", " method calls to " + c.getQualifiedName()
-						+ " added to hook dictionary...");
+							+ " added to hook dictionary...");
 					HookDictionary.instance().addIncomingMethodInterception(c.getQualifiedName());
 				}
-				if(hasOutputFilters(iterFilterModules))
+				if (hasOutputFilters(iterFilterModules))
 				{
 					Debug.out(Debug.MODE_DEBUG, "WEAVER", " method calls from " + c.getQualifiedName()
 							+ " added to hook dictionary...");
-						HookDictionary.instance().addOutgoingMethodInterception(c.getQualifiedName());
+					HookDictionary.instance().addOutgoingMethodInterception(c.getQualifiedName());
 				}
 			}
 		}
 	}
-	
+
 	private boolean hasInputFilters(Iterator iterFilterModules)
 	{
 		while (iterFilterModules.hasNext())
@@ -210,7 +215,7 @@ public class JavaWeaver implements WEAVER
 		}
 		return false;
 	}
-	
+
 	private boolean hasOutputFilters(Iterator iterFilterModules)
 	{
 		while (iterFilterModules.hasNext())

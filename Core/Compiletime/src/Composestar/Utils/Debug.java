@@ -232,12 +232,12 @@ public final class Debug
 			System.out.println("Warnings: " + warnings + "; Errors: " + errors);
 		}
 	}
-	
+
 	public static int numErrors()
 	{
 		return errors;
 	}
-	
+
 	public static int numWarnings()
 	{
 		return warnings;

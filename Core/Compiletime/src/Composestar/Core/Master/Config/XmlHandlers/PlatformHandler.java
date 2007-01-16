@@ -45,12 +45,13 @@ public class PlatformHandler extends DefaultHandler implements ContentHandler
 					// add language to projects
 					List projects = config.getProjects().getProjectsByLanguage(languagename);
 					Iterator prjIter = projects.iterator();
-                    for (Object project : projects) {
-                        // System.out.println("add lang "+lang.getName());
-                        Project p = (Project) project;
-                        p.setLanguage(lang);
-                    }
-                }
+					for (Object project : projects)
+					{
+						// System.out.println("add lang "+lang.getName());
+						Project p = (Project) project;
+						p.setLanguage(lang);
+					}
+				}
 				else
 				{
 					// next language

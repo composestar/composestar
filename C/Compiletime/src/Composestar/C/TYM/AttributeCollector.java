@@ -142,13 +142,15 @@ public class AttributeCollector extends DefaultHandler
 		{
 			List methods = type.getMethods();
 			Iterator i = methods.iterator();
-            for (Object method1 : methods) {
-                MethodInfo method = (MethodInfo) method1;
-                if (method.Name.equals(methodName)) {
-                    return method;
-                }
-            }
-        }
+			for (Object method1 : methods)
+			{
+				MethodInfo method = (MethodInfo) method1;
+				if (method.Name.equals(methodName))
+				{
+					return method;
+				}
+			}
+		}
 		return null;
 	}
 
@@ -163,13 +165,15 @@ public class AttributeCollector extends DefaultHandler
 		{
 			List fields = type.getFields();
 			Iterator i = fields.iterator();
-            for (Object field1 : fields) {
-                FieldInfo field = (FieldInfo) field1;
-                if (field.Name.equals(fieldName)) {
-                    return field;
-                }
-            }
-        }
+			for (Object field1 : fields)
+			{
+				FieldInfo field = (FieldInfo) field1;
+				if (field.Name.equals(fieldName))
+				{
+					return field;
+				}
+			}
+		}
 		return null;
 	}
 

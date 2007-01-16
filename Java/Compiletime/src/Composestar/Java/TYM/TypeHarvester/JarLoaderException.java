@@ -9,7 +9,7 @@ public class JarLoaderException extends Exception
 	private static final long serialVersionUID = 363940188119203677L;
 
 	/**
-	 * Default constructor. 
+	 * Default constructor.
 	 */
 	public JarLoaderException()
 	{
@@ -18,6 +18,7 @@ public class JarLoaderException extends Exception
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param message - an error message
 	 */
 	public JarLoaderException(String message)

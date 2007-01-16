@@ -275,8 +275,7 @@ public class FunctionFactory
 				iii[i] = type;
 				if (type == GnuCTokenTypes.NTypedefName)
 				{
-					additionalType = n.firstChildOfType(GnuCTokenTypes.ID)
-							.getText();
+					additionalType = n.firstChildOfType(GnuCTokenTypes.ID).getText();
 				}
 			}
 			p = new ParameterType(iii, additionalType);

@@ -59,11 +59,12 @@ public class ComparisonsPathHandler extends DefaultHandler
 			Path path = new Path();
 			Iterator nodesIt = nodes.iterator();
 
-            for (Object node : nodes) {
-                path.addNode((Node) node);
-            }
+			for (Object node : nodes)
+			{
+				path.addNode((Node) node);
+			}
 
-            module.addComparableObject(fullname, path);
+			module.addComparableObject(fullname, path);
 			nodes.clear();
 
 			// look further between <type> tags

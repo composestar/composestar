@@ -57,8 +57,8 @@ public class Run
 		Action.insert(u, g);
 		p1.insert(g);
 		p2.insert(g);
-		//OrderTraverser ot = new OrderTraverser();
-		//LinkedList order = ot.traverse(g);
+		// OrderTraverser ot = new OrderTraverser();
+		// LinkedList order = ot.traverse(g);
 		// for (Iterator i=order.iterator();i.hasNext();)
 		// System.out.println(((Node)i.next()).getElement());
 	}
@@ -98,8 +98,8 @@ public class Run
 		p6.insert(g);
 		p7.insert(g);
 
-		//OrderTraverser ot = new OrderTraverser();
-		//LinkedList order = ot.traverse(g);
+		// OrderTraverser ot = new OrderTraverser();
+		// LinkedList order = ot.traverse(g);
 		// for (Iterator i=order.iterator();i.hasNext();)
 		// System.out.println(((Node)i.next()).getElement());
 	}
@@ -157,10 +157,11 @@ public class Run
 		p2.insert(g);
 		OrderTraverser ot = new OrderTraverser();
 		LinkedList order = ot.traverse(g);
-        for (Object anOrder : order) {
-            System.out.println(((Node) anOrder).getElement());
-        }
-    }
+		for (Object anOrder : order)
+		{
+			System.out.println(((Node) anOrder).getElement());
+		}
+	}
 
 	/* testing cond-cond */
 	public void test4()
@@ -307,8 +308,8 @@ public class Run
 		Action.insert(u, g);
 		p1.insert(g);
 		p2.insert(g);
-		//OrderTraverser ot = new OrderTraverser();
-		//LinkedList multiOrder = ot.multiTraverse(g);
+		// OrderTraverser ot = new OrderTraverser();
+		// LinkedList multiOrder = ot.multiTraverse(g);
 		// System.out.println("<<multiple-orders>>");
 		// for (Iterator j=multiOrder.iterator();j.hasNext();){
 		// for (Iterator i=((LinkedList)j.next()).iterator();i.hasNext();)
@@ -336,8 +337,8 @@ public class Run
 		// Action.insert(u,g);
 		// p1.insert(g);
 		// p2.insert(g);
-		//OrderTraverser ot = new OrderTraverser();
-		//LinkedList multiOrder = ot.multiTraverse(g);
+		// OrderTraverser ot = new OrderTraverser();
+		// LinkedList multiOrder = ot.multiTraverse(g);
 		// System.out.println("<<multiple-orders>>");
 		// for (Iterator j=multiOrder.iterator();j.hasNext();){
 		// for (Iterator i=((LinkedList)j.next()).iterator();i.hasNext();)
@@ -367,8 +368,8 @@ public class Run
 		p1.insert(g);
 		p2.insert(g);
 		p3.insert(g);
-		//OrderTraverser ot = new OrderTraverser();
-		//LinkedList multiOrder = ot.multiTraverse(g);
+		// OrderTraverser ot = new OrderTraverser();
+		// LinkedList multiOrder = ot.multiTraverse(g);
 		// System.out.println("<<multiple-orders>>");
 		// for (Iterator j=multiOrder.iterator();j.hasNext();){
 		// for (Iterator i=((LinkedList)j.next()).iterator();i.hasNext();)
@@ -402,15 +403,14 @@ public class Run
 		}
 		/* process XML specification */
 
-		//OrderTraverser ot = new OrderTraverser();
-		//LinkedList multiOrder = ot.multiTraverse(g);
+		// OrderTraverser ot = new OrderTraverser();
+		// LinkedList multiOrder = ot.multiTraverse(g);
 		// System.out.println("<<multiple-orders>>");
 		// for (Iterator j=multiOrder.iterator();j.hasNext();){
 		// for (Iterator i=((LinkedList)j.next()).iterator();i.hasNext();)
 		// System.out.println(((Node)i.next()).getElement());
 		// System.out.println("/n-----------");
 		// }
-
 	}
 
 	public void test12()

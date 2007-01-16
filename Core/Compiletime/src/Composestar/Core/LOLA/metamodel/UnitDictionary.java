@@ -19,36 +19,37 @@ import Composestar.Core.LOLA.LOLA;
 import Composestar.Utils.Debug;
 
 /**
- * Keeps a list of all registered Language Units that can be
- * queried by the prolog engine. Several indexes are created, 
- * such that looking up units should be fast in most common cases.
+ * Keeps a list of all registered Language Units that can be queried by the
+ * prolog engine. Several indexes are created, such that looking up units should
+ * be fast in most common cases.
  * 
- * @author havingaw 
+ * @author havingaw
  */
 public class UnitDictionary
 {
 	private LanguageModel langModel;
 
-	// Indexes on Units. Be very careful to keep these consistent with each other.
+	// Indexes on Units. Be very careful to keep these consistent with each
+	// other.
 	// The information is stored in different ways to enable faster lookups.
 	// E.g. users will often query by unit name, while the prolog engine will
-	// often look up units based on type+id. So at least those methods should be fast.
+	// often look up units based on type+id. So at least those methods should be
+	// fast.
 
 	/**
-	 * Contains all language units. The key is the classname of the unit
-	 * type, the value is a set of all LanguageUnits of that type.
+	 * Contains all language units. The key is the classname of the unit type,
+	 * the value is a set of all LanguageUnits of that type.
 	 */
 	private Hashtable unitsByType;
 
 	/**
-	 * Used to select units by name - like unitsByType, the first level is an index
-	 * classType -> 2nd hashtable.
-	 * The 2nd level hashtable contains the name of a unit as key, and the
-	 * object itself as value if the name is guaranteed to be unique 
-	 * (Namespaces, Classes, Types, Interfaces), 
-	 * or a hashset of objects if they don't have to be unique 
-	 * (fields, operations, methods, constructors).
- 	 */	
+	 * Used to select units by name - like unitsByType, the first level is an
+	 * index classType -> 2nd hashtable. The 2nd level hashtable contains the
+	 * name of a unit as key, and the object itself as value if the name is
+	 * guaranteed to be unique (Namespaces, Classes, Types, Interfaces), or a
+	 * hashset of objects if they don't have to be unique (fields, operations,
+	 * methods, constructors).
+	 */
 	private Hashtable unitsByName;
 
 	public UnitDictionary()
@@ -82,30 +83,39 @@ public class UnitDictionary
 		{
 			String name = unit.getUnitName();
 			String type = unit.getUnitType();
-		//	Debug.out(Debug.MODE_DEBUG, LOLA.MODULE_NAME, "Adding " + type + ": '" + name + "'");
-			
+			// Debug.out(Debug.MODE_DEBUG, LOLA.MODULE_NAME, "Adding " + type +
+			// ": '" + name + "'");
+
 			LanguageUnitType unitInfo = langModel.getLanguageUnitType(type);
 
 			// Step 1: Add the unit to the namebased index
-			if (!unitsByName.containsKey(type)) // Might be the first unit of this type
+			if (!unitsByName.containsKey(type)) // Might be the first unit of
+												// this type
 			{
-				unitsByName.put(type, new Hashtable()); // If yes, create the table for this type
+				unitsByName.put(type, new Hashtable()); // If yes, create the
+														// table for this type
 			}
 
 			Hashtable nameTypeTable = (Hashtable) unitsByName.get(type);
-			if (unitInfo.isNameUnique()) // Unit has unique name; add it directly.
+			if (unitInfo.isNameUnique()) // Unit has unique name; add it
+											// directly.
 			{
-				if (nameTypeTable.containsKey(name)) // In this case the unit will *NOT* have been added anywhere!
+				if (nameTypeTable.containsKey(name)) // In this case the unit
+														// will *NOT* have been
+														// added anywhere!
 				{
 					Debug.out(Debug.MODE_WARNING, "LOLA", "Duplicate key for unit with unique name: " + name);
 					return;
-					// throw new ModelClashException("Duplicate key for unit with unique name");
+					// throw new ModelClashException("Duplicate key for unit
+					// with unique name");
 				}
 
 				nameTypeTable.put(name, unit);
 			}
-			else // The unit might not have a unique name
-			{	// If no other unit with this name exists yet, create a hashset of names
+			else
+			// The unit might not have a unique name
+			{ // If no other unit with this name exists yet, create a hashset
+				// of names
 				if (!nameTypeTable.containsKey(name))
 				{
 					nameTypeTable.put(name, new HashSet());
@@ -119,7 +129,8 @@ public class UnitDictionary
 			}
 
 			// Step 2: Add the unit to the index by type
-			// First unit of this type? Create a hashtable to store units of this type.
+			// First unit of this type? Create a hashtable to store units of
+			// this type.
 			if (!unitsByType.containsKey(type))
 			{
 				unitsByType.put(type, new HashSet());
@@ -135,58 +146,59 @@ public class UnitDictionary
 		}
 	}
 
-//	/**
-//	 * @param id ID of the unit to look for
-//	 * @return The language unit (any class that implements LanguageUnit) with
-//	 *         the specified ID, null if no such unit exists.
-//	 */
-//	public LanguageUnit getUnit(String id)
-//	{
-//		Iterator i = unitsByType.keySet().iterator(); 
-//		while (i.hasNext()) 
-//		{
-//			Hashtable list = (Hashtable) unitsByType.get(i.next()); 
-//			if (list.containsKey(id)) 
-//				return (LanguageUnit)list.get(id); 
-//		} 
-//		return null; 
-//	}
+	// /**
+	// * @param id ID of the unit to look for
+	// * @return The language unit (any class that implements LanguageUnit) with
+	// * the specified ID, null if no such unit exists.
+	// */
+	// public LanguageUnit getUnit(String id)
+	// {
+	// Iterator i = unitsByType.keySet().iterator();
+	// while (i.hasNext())
+	// {
+	// Hashtable list = (Hashtable) unitsByType.get(i.next());
+	// if (list.containsKey(id))
+	// return (LanguageUnit)list.get(id);
+	// }
+	// return null;
+	// }
 
-//	/**
-//	 * @param id ID of the unit to look for
-//	 * @param type Type of the unit to look for (=getClass().getName() of the
-//	 *            specified language unit class)
-//	 * @return The language unit of type 'type' with the specified ID, null if
-//	 *         no such unit exists.
-//	 */
-//	public LanguageUnit getUnit(String id, String type)
-//	{
-//		Map units = (Map)unitsByType.get(type);
-//		if (units != null)
-//		{
-//			return (LanguageUnit)units.get(id);
-//		}
-//		return null;
-//	}	 
+	// /**
+	// * @param id ID of the unit to look for
+	// * @param type Type of the unit to look for (=getClass().getName() of the
+	// * specified language unit class)
+	// * @return The language unit of type 'type' with the specified ID, null if
+	// * no such unit exists.
+	// */
+	// public LanguageUnit getUnit(String id, String type)
+	// {
+	// Map units = (Map)unitsByType.get(type);
+	// if (units != null)
+	// {
+	// return (LanguageUnit)units.get(id);
+	// }
+	// return null;
+	// }
 
 	/**
 	 * @param name Name of the unit to look for
 	 * @param type Type of the unit to look for (=getClass().getName() of the
-	 *             specified language unit class)
+	 *            specified language unit class)
 	 * @return Language unit with the specified name, or null if no such unit
-	 *         exists *or* the unit is of a type where names might not be unique (!)
+	 *         exists *or* the unit is of a type where names might not be unique
+	 *         (!)
 	 */
 	public UnitResult getByName(String name, String type)
 	{
 		if (!unitsByName.containsKey(type))
 		{
-			Debug.out(Debug.MODE_WARNING, LOLA.MODULE_NAME, 
-					"UnitDictionary::getByName - type '" + type + "' not found!");
-			
+			Debug.out(Debug.MODE_WARNING, LOLA.MODULE_NAME, "UnitDictionary::getByName - type '" + type
+					+ "' not found!");
+
 			return null; // The unit type does not even exist!
 		}
 
-		Map names = (Map)unitsByName.get(type);
+		Map names = (Map) unitsByName.get(type);
 		if (names.containsKey(name))
 		{
 			Object result = names.get(name);
@@ -264,11 +276,12 @@ public class UnitDictionary
 		HashSet result = new HashSet();
 
 		Iterator types = unitsByType.values().iterator();
-        for (Object o : unitsByType.values()) {
-            result.addAll((HashSet) o);
-        }
+		for (Object o : unitsByType.values())
+		{
+			result.addAll((HashSet) o);
+		}
 
-        return new UnitResult(result);
+		return new UnitResult(result);
 	}
 
 	/**

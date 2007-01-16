@@ -326,8 +326,7 @@ public class WrappingUtil
 			String key = (String) keys.nextElement();
 			if (key.equalsIgnoreCase("tokenNumber"))
 			{
-				System.out.print(" " + key + ":"
-						+ (node).getAttribute(key));
+				System.out.print(" " + key + ":" + (node).getAttribute(key));
 			}
 			else if (key.equalsIgnoreCase("source"))
 			{
@@ -335,8 +334,7 @@ public class WrappingUtil
 			}
 			else if (key.equalsIgnoreCase("scopeName"))
 			{
-				System.out.print("   scope :"
-						+ (node).getAttribute(key));
+				System.out.print("   scope :" + (node).getAttribute(key));
 			}
 			else
 			{

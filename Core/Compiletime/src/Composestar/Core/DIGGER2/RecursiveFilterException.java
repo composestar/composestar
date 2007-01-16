@@ -22,11 +22,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionE
 public class RecursiveFilterException extends Exception
 {
 	protected int vars;
-	
+
 	protected Breadcrumb crumb;
 
 	protected List<Trail> trace;
-	
+
 	/**
 	 * Unconditional recursive filter definition.
 	 * 
@@ -49,7 +49,7 @@ public class RecursiveFilterException extends Exception
 		super(inMessage);
 		crumb = inCrumb;
 		trace = inTrace;
-		
+
 		for (Trail trail : trace)
 		{
 			trail.setRecursive(true);
@@ -60,7 +60,7 @@ public class RecursiveFilterException extends Exception
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the originating breadcrumb
 	 * 

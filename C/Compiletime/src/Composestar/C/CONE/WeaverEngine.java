@@ -77,83 +77,111 @@ public class WeaverEngine
 		Hashtable functionsToRealWeavebaleObjectsMap = new Hashtable();
 
 		Iterator aspectit = aspectMap.values().iterator();
-        for (Object o1 : aspectMap.values()) {
-            Aspect aspect = (Aspect) o1;
+		for (Object o1 : aspectMap.values())
+		{
+			Aspect aspect = (Aspect) o1;
 
-            for (int i = 0; i < aspect.getNumberOfPointcuts(); i++) {
-                Pointcut pc = aspect.getPointcut(i);
-                for (int j = 0; j < pc.getNumberOfFunctions(); j++) {
-                    Functions funcs = pc.getFunctions(j);
+			for (int i = 0; i < aspect.getNumberOfPointcuts(); i++)
+			{
+				Pointcut pc = aspect.getPointcut(i);
+				for (int j = 0; j < pc.getNumberOfFunctions(); j++)
+				{
+					Functions funcs = pc.getFunctions(j);
 
-                    if (funcs.getFile().equalsIgnoreCase("*.c")) {
-                        Iterator keyit = fileASTMap.values().iterator();
-                        ArrayList list = new ArrayList();
-                        while (keyit.hasNext()) {
-                            retrieveAST wrapper = (retrieveAST) keyit.next();
-                            if (funcs.getType() == GeneralUtils.FUNCTION) {
-                                Iterator funcit = wrapper.getFunctions().iterator();
-                                for (Object o : wrapper.getFunctions()) {
-                                    Function function = (Function) o;
-                                    String mod = StaticVariableReplacer.replaceStaticVariables(funcs.getData(),
-                                            function);
-                                    if (Pattern.matches(mod, function.getName())) {
-                                        list.add(function);
-                                    }
-                                }
-                            } else if (funcs.getType() == GeneralUtils.STRUCT) {
-                                String mod = StaticVariableReplacer.replaceStaticVariables(funcs.getData(), wrapper
-                                        .getFilename());
-                                if (wrapper.structASTMap.containsKey(mod)) {
-                                    Struct struct = (Struct) wrapper.structASTMap.get(mod);
-                                    list.add(struct);
-                                }
-                            } else if (funcs.getType() == GeneralUtils.GLOBAL) {
-                                list.add(wrapper.introductionPoint);
-                            } else if (funcs.getType() == GeneralUtils.HEADER) {
-                                list.add(wrapper.headerintroductionPoint);
-                            }
-                        }
-                        list = this.restrictFunctions(funcs, list);
-                        functionsToRealWeavebaleObjectsMap.put(funcs, list);
-                    } else
-                    // bla.c methodebla
-                    {
-                        Iterator keyit = fileASTMap.values().iterator();
-                        ArrayList list = new ArrayList();
-                        while (keyit.hasNext()) {
-                            retrieveAST wrapper = (retrieveAST) keyit.next();
-                            if (funcs.getType() == GeneralUtils.FUNCTION) {
-                                if (wrapper.getFilename().indexOf(funcs.getFile()) > 0) {
-                                    Iterator funcit = wrapper.getFunctions().iterator();
-                                    for (Object o : wrapper.getFunctions()) {
-                                        Function function = (Function) o;
-                                        String mod = StaticVariableReplacer.replaceStaticVariables(funcs.getData(),
-                                                function);
-                                        if (Pattern.matches(mod, function.getName())) {
-                                            list.add(function);
-                                        }
-                                    }
-                                }
-                            } else if (funcs.getType() == GeneralUtils.STRUCT) {
-                                String mod = StaticVariableReplacer.replaceStaticVariables(funcs.getData(), wrapper
-                                        .getFilename());
-                                if (wrapper.structASTMap.containsKey(mod)) {
-                                    Struct struct = (Struct) wrapper.structASTMap.get(mod);
-                                    list.add(struct);
-                                }
-                            } else if (funcs.getType() == GeneralUtils.GLOBAL) {
-                                list.add(wrapper.introductionPoint);
-                            } else if (funcs.getType() == GeneralUtils.HEADER) {
-                                list.add(wrapper.headerintroductionPoint);
-                            }
-                        }
-                        list = this.restrictFunctions(funcs, list);
-                        functionsToRealWeavebaleObjectsMap.put(funcs, list);
-                    }
-                }
-            }
-        }
-        return functionsToRealWeavebaleObjectsMap;
+					if (funcs.getFile().equalsIgnoreCase("*.c"))
+					{
+						Iterator keyit = fileASTMap.values().iterator();
+						ArrayList list = new ArrayList();
+						while (keyit.hasNext())
+						{
+							retrieveAST wrapper = (retrieveAST) keyit.next();
+							if (funcs.getType() == GeneralUtils.FUNCTION)
+							{
+								Iterator funcit = wrapper.getFunctions().iterator();
+								for (Object o : wrapper.getFunctions())
+								{
+									Function function = (Function) o;
+									String mod = StaticVariableReplacer.replaceStaticVariables(funcs.getData(),
+											function);
+									if (Pattern.matches(mod, function.getName()))
+									{
+										list.add(function);
+									}
+								}
+							}
+							else if (funcs.getType() == GeneralUtils.STRUCT)
+							{
+								String mod = StaticVariableReplacer.replaceStaticVariables(funcs.getData(), wrapper
+										.getFilename());
+								if (wrapper.structASTMap.containsKey(mod))
+								{
+									Struct struct = (Struct) wrapper.structASTMap.get(mod);
+									list.add(struct);
+								}
+							}
+							else if (funcs.getType() == GeneralUtils.GLOBAL)
+							{
+								list.add(wrapper.introductionPoint);
+							}
+							else if (funcs.getType() == GeneralUtils.HEADER)
+							{
+								list.add(wrapper.headerintroductionPoint);
+							}
+						}
+						list = this.restrictFunctions(funcs, list);
+						functionsToRealWeavebaleObjectsMap.put(funcs, list);
+					}
+					else
+					// bla.c methodebla
+					{
+						Iterator keyit = fileASTMap.values().iterator();
+						ArrayList list = new ArrayList();
+						while (keyit.hasNext())
+						{
+							retrieveAST wrapper = (retrieveAST) keyit.next();
+							if (funcs.getType() == GeneralUtils.FUNCTION)
+							{
+								if (wrapper.getFilename().indexOf(funcs.getFile()) > 0)
+								{
+									Iterator funcit = wrapper.getFunctions().iterator();
+									for (Object o : wrapper.getFunctions())
+									{
+										Function function = (Function) o;
+										String mod = StaticVariableReplacer.replaceStaticVariables(funcs.getData(),
+												function);
+										if (Pattern.matches(mod, function.getName()))
+										{
+											list.add(function);
+										}
+									}
+								}
+							}
+							else if (funcs.getType() == GeneralUtils.STRUCT)
+							{
+								String mod = StaticVariableReplacer.replaceStaticVariables(funcs.getData(), wrapper
+										.getFilename());
+								if (wrapper.structASTMap.containsKey(mod))
+								{
+									Struct struct = (Struct) wrapper.structASTMap.get(mod);
+									list.add(struct);
+								}
+							}
+							else if (funcs.getType() == GeneralUtils.GLOBAL)
+							{
+								list.add(wrapper.introductionPoint);
+							}
+							else if (funcs.getType() == GeneralUtils.HEADER)
+							{
+								list.add(wrapper.headerintroductionPoint);
+							}
+						}
+						list = this.restrictFunctions(funcs, list);
+						functionsToRealWeavebaleObjectsMap.put(funcs, list);
+					}
+				}
+			}
+		}
+		return functionsToRealWeavebaleObjectsMap;
 	}
 
 	public ArrayList restrictFunctions(Functions funcs, ArrayList funclist)
@@ -227,7 +255,7 @@ public class WeaverEngine
 							if (func.hasParameterWithName(param.getName()))
 							{
 								if (func.hasParameterWithType(param.getType())) // 1 1
-																				// = 1
+								// = 1
 								{
 									if (param.isInvert())
 									{
@@ -271,75 +299,95 @@ public class WeaverEngine
 		// funcs --> function/struct
 		HashSet weavebleobjects = new HashSet();
 		Iterator funcit = functionsToRealWeavebaleObjectsMap.keySet().iterator();
-        for (Object o : functionsToRealWeavebaleObjectsMap.keySet()) {
-            Functions funcs = (Functions) o;
-            Debug.out(Debug.MODE_INFORMATION, "CONE", "Evaluating advice: " + funcs.getParent().getParent().getId());
-            if (funcs.getType() == GeneralUtils.FUNCTION) {
-                ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
-                for (Object aList : list) {
-                    Function func = (Function) aList;
-                    for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++) {
-                        AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
-                        Hashtable defadvices = funcs.getParent().getParent().getAdvices();
-                        Advice adv = (Advice) defadvices.get(aa.getId());
+		for (Object o : functionsToRealWeavebaleObjectsMap.keySet())
+		{
+			Functions funcs = (Functions) o;
+			Debug.out(Debug.MODE_INFORMATION, "CONE", "Evaluating advice: " + funcs.getParent().getParent().getId());
+			if (funcs.getType() == GeneralUtils.FUNCTION)
+			{
+				ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
+				for (Object aList : list)
+				{
+					Function func = (Function) aList;
+					for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++)
+					{
+						AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
+						Hashtable defadvices = funcs.getParent().getParent().getAdvices();
+						Advice adv = (Advice) defadvices.get(aa.getId());
 
-                        if (adv.getType() == GeneralUtils.FUNCTION_INTRODUCTION
-                                || adv.getType() == GeneralUtils.FUNCTION_CALL
-                                || adv.getType() == GeneralUtils.FUNCTION_BODY) {
-                            func.addWeavingInstruction(new WeavingInstruction(func, adv, aa));
-                            NUMWS++;
-                            weavebleobjects.add(func);
-                        }
-                    }
-                }
-            } else if (funcs.getType() == GeneralUtils.STRUCT) {
-                ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
-                for (Object aList : list) {
-                    Struct struct = (Struct) aList;
-                    for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++) {
-                        AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
-                        Hashtable defadvices = funcs.getParent().getParent().getAdvices();
-                        Advice adv = (Advice) defadvices.get(aa.getId());
-                        if (adv.getType() == GeneralUtils.STRUCTURE_INTRODUCTION) {
-                            struct.addWeavingInstruction(new WeavingInstruction("", adv, aa));
-                            NUMWS++;
-                            weavebleobjects.add(struct);
-                        }
-                    }
-                }
-            } else if (funcs.getType() == GeneralUtils.GLOBAL) {
-                ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
-                for (Object aList : list) {
-                    GlobalIntroductionPoint gip = (GlobalIntroductionPoint) aList;
-                    for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++) {
-                        AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
-                        Hashtable defadvices = funcs.getParent().getParent().getAdvices();
-                        Advice adv = (Advice) defadvices.get(aa.getId());
-                        if (adv.getType() == GeneralUtils.GLOBAL_INTRODUCTION) {
-                            gip.addWeavingInstruction(new WeavingInstruction("", adv, aa));
-                            NUMWS++;
-                            weavebleobjects.add(gip);
-                        }
-                    }
-                }
-            } else if (funcs.getType() == GeneralUtils.HEADER) {
-                ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
-                for (Object aList : list) {
-                    HeaderIntroductionPoint hip = (HeaderIntroductionPoint) aList;
-                    for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++) {
-                        AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
-                        Hashtable defadvices = funcs.getParent().getParent().getAdvices();
-                        Advice adv = (Advice) defadvices.get(aa.getId());
-                        if (adv.getType() == GeneralUtils.HEADER_INTRODUCTION) {
-                            hip.addWeavingInstruction(new WeavingInstruction("", adv, aa));
-                            NUMWS++;
-                            weavebleobjects.add(hip);
-                        }
-                    }
-                }
-            }
-        }
-        Debug.out(Debug.MODE_INFORMATION, "CCONE", "weaveinstructions: " + weavebleobjects);
+						if (adv.getType() == GeneralUtils.FUNCTION_INTRODUCTION
+								|| adv.getType() == GeneralUtils.FUNCTION_CALL
+								|| adv.getType() == GeneralUtils.FUNCTION_BODY)
+						{
+							func.addWeavingInstruction(new WeavingInstruction(func, adv, aa));
+							NUMWS++;
+							weavebleobjects.add(func);
+						}
+					}
+				}
+			}
+			else if (funcs.getType() == GeneralUtils.STRUCT)
+			{
+				ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
+				for (Object aList : list)
+				{
+					Struct struct = (Struct) aList;
+					for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++)
+					{
+						AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
+						Hashtable defadvices = funcs.getParent().getParent().getAdvices();
+						Advice adv = (Advice) defadvices.get(aa.getId());
+						if (adv.getType() == GeneralUtils.STRUCTURE_INTRODUCTION)
+						{
+							struct.addWeavingInstruction(new WeavingInstruction("", adv, aa));
+							NUMWS++;
+							weavebleobjects.add(struct);
+						}
+					}
+				}
+			}
+			else if (funcs.getType() == GeneralUtils.GLOBAL)
+			{
+				ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
+				for (Object aList : list)
+				{
+					GlobalIntroductionPoint gip = (GlobalIntroductionPoint) aList;
+					for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++)
+					{
+						AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
+						Hashtable defadvices = funcs.getParent().getParent().getAdvices();
+						Advice adv = (Advice) defadvices.get(aa.getId());
+						if (adv.getType() == GeneralUtils.GLOBAL_INTRODUCTION)
+						{
+							gip.addWeavingInstruction(new WeavingInstruction("", adv, aa));
+							NUMWS++;
+							weavebleobjects.add(gip);
+						}
+					}
+				}
+			}
+			else if (funcs.getType() == GeneralUtils.HEADER)
+			{
+				ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
+				for (Object aList : list)
+				{
+					HeaderIntroductionPoint hip = (HeaderIntroductionPoint) aList;
+					for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++)
+					{
+						AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
+						Hashtable defadvices = funcs.getParent().getParent().getAdvices();
+						Advice adv = (Advice) defadvices.get(aa.getId());
+						if (adv.getType() == GeneralUtils.HEADER_INTRODUCTION)
+						{
+							hip.addWeavingInstruction(new WeavingInstruction("", adv, aa));
+							NUMWS++;
+							weavebleobjects.add(hip);
+						}
+					}
+				}
+			}
+		}
+		Debug.out(Debug.MODE_INFORMATION, "CCONE", "weaveinstructions: " + weavebleobjects);
 		return weavebleobjects;
 	}
 
@@ -368,102 +416,116 @@ public class WeaverEngine
 		Enumeration ittest = test.keys();
 		ArrayList wis = wp.prioritizeWeavingInstructions();
 		Iterator wisit = wis.iterator();
-        for (Object wi1 : wis) {
-            WeavingInstruction wi = (WeavingInstruction) wi1;
+		for (Object wi1 : wis)
+		{
+			WeavingInstruction wi = (WeavingInstruction) wi1;
 
-            if (wi.getCode() == null) {
-                Debug.out(Debug.MODE_WARNING, "CONE", "WARNING: no code to weave, skipping...");
-                return;
-            }
+			if (wi.getCode() == null)
+			{
+				Debug.out(Debug.MODE_WARNING, "CONE", "WARNING: no code to weave, skipping...");
+				return;
+			}
 
-            switch (wi.getType()) {
-                case WeavingInstruction.FUNCTION_EXECUTION_BEFORE: {
-                    Function func = wi.getFunction();
-                    String filename = objectToFileName(func.getFileName(), fm);
+			switch (wi.getType())
+			{
+				case WeavingInstruction.FUNCTION_EXECUTION_BEFORE:
+				{
+					Function func = wi.getFunction();
+					String filename = objectToFileName(func.getFileName(), fm);
 
-                    retrieveAST cwrapper = (retrieveAST) fileASTMap.get(filename);
-                    WrappedAST wast = cwrapper.getWrappedAST();
-                    wast.weaveEntryFunction(func, wi.getCode());
-                    break;
-                }
-                case WeavingInstruction.FUNCTION_EXECUTION_AFTER: {
-                    Function func = wi.getFunction();
-                    String filename = objectToFileName(func.getFileName(), fm);
-                    System.out.println("Weaving on function execution after: " + func.getFileName() + ":"
-                            + func.getName() + ": " + wi.getAdvice().getId() + "= this different then:" + filename);
+					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(filename);
+					WrappedAST wast = cwrapper.getWrappedAST();
+					wast.weaveEntryFunction(func, wi.getCode());
+					break;
+				}
+				case WeavingInstruction.FUNCTION_EXECUTION_AFTER:
+				{
+					Function func = wi.getFunction();
+					String filename = objectToFileName(func.getFileName(), fm);
+					System.out.println("Weaving on function execution after: " + func.getFileName() + ":"
+							+ func.getName() + ": " + wi.getAdvice().getId() + "= this different then:" + filename);
 
-                    retrieveAST cwrapper = (retrieveAST) fileASTMap.get(filename);
-                    WrappedAST wast = cwrapper.getWrappedAST();
+					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(filename);
+					WrappedAST wast = cwrapper.getWrappedAST();
 
-                    wast.weaveExitFunction(func, wi.getCode());
-                    break;
-                }
-                case WeavingInstruction.FUNCTION_CALL_BEFORE: {
-                    Function func = wi.getFunction();
-                    Iterator fileit = fileASTMap.values().iterator();
-                    for (Object o : fileASTMap.values()) {
-                        retrieveAST cwrapper = (retrieveAST) o;
-                        cwrapper.getWrappedAST().weaveGlobalFunctionCallBefore(wi.getCode(), func.getName());
-                    }
-                    break;
-                }
-                case WeavingInstruction.FUNCTION_CALL_AFTER: {
-                    Function func = wi.getFunction();
-                    Iterator fileit = fileASTMap.values().iterator();
-                    for (Object o : fileASTMap.values()) {
-                        retrieveAST cwrapper = (retrieveAST) o;
-                        cwrapper.getWrappedAST().weaveGlobalFunctionCallAfter(wi.getCode(), func.getName());
-                    }
-                    break;
-                }
-                case WeavingInstruction.GLOBAL_INTRODUCTION_BEFORE:
-                case WeavingInstruction.GLOBAL_INTRODUCTION_AFTER: {
+					wast.weaveExitFunction(func, wi.getCode());
+					break;
+				}
+				case WeavingInstruction.FUNCTION_CALL_BEFORE:
+				{
+					Function func = wi.getFunction();
+					Iterator fileit = fileASTMap.values().iterator();
+					for (Object o : fileASTMap.values())
+					{
+						retrieveAST cwrapper = (retrieveAST) o;
+						cwrapper.getWrappedAST().weaveGlobalFunctionCallBefore(wi.getCode(), func.getName());
+					}
+					break;
+				}
+				case WeavingInstruction.FUNCTION_CALL_AFTER:
+				{
+					Function func = wi.getFunction();
+					Iterator fileit = fileASTMap.values().iterator();
+					for (Object o : fileASTMap.values())
+					{
+						retrieveAST cwrapper = (retrieveAST) o;
+						cwrapper.getWrappedAST().weaveGlobalFunctionCallAfter(wi.getCode(), func.getName());
+					}
+					break;
+				}
+				case WeavingInstruction.GLOBAL_INTRODUCTION_BEFORE:
+				case WeavingInstruction.GLOBAL_INTRODUCTION_AFTER:
+				{
 
-                    GlobalIntroductionPoint gip = (GlobalIntroductionPoint) wp;
-                    String completeName = fm.getFileASTwithName(gip.getFileName());
-                    retrieveAST cwrapper = (retrieveAST) fileASTMap.get(completeName);
-                    WrappedAST wast = cwrapper.getWrappedAST();
-                    wast.weaveGlobalIntroduction(wi.getCode(), gip);
-                    break;
-                }
-                case WeavingInstruction.HEADER_INTRODUCTION_BEFORE:
-                case WeavingInstruction.HEADER_INTRODUCTION_AFTER: {
+					GlobalIntroductionPoint gip = (GlobalIntroductionPoint) wp;
+					String completeName = fm.getFileASTwithName(gip.getFileName());
+					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(completeName);
+					WrappedAST wast = cwrapper.getWrappedAST();
+					wast.weaveGlobalIntroduction(wi.getCode(), gip);
+					break;
+				}
+				case WeavingInstruction.HEADER_INTRODUCTION_BEFORE:
+				case WeavingInstruction.HEADER_INTRODUCTION_AFTER:
+				{
 
-                    HeaderIntroductionPoint hip = (HeaderIntroductionPoint) wp;
+					HeaderIntroductionPoint hip = (HeaderIntroductionPoint) wp;
 
-                    String completeName = fm.getFileASTwithName(hip.getFileName());
+					String completeName = fm.getFileASTwithName(hip.getFileName());
 
-                    retrieveAST cwrapper = (retrieveAST) fileASTMap.get(completeName);
-                    WrappedAST wast = cwrapper.getWrappedAST();
+					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(completeName);
+					WrappedAST wast = cwrapper.getWrappedAST();
 
-                    wast.weaveHeaderIntroduction(wi.getCode(), hip);
-                    break;
-                }
-                case WeavingInstruction.STRUCTURE_INTRODUCTION_BEFORE:
-                case WeavingInstruction.STRUCTURE_INTRODUCTION_AFTER: {
-                    Struct struct = (Struct) wp;
-                    retrieveAST cwrapper = (retrieveAST) fileASTMap.get(struct.getFileName());
-                    WrappedAST wast = cwrapper.getWrappedAST();
-                    wast.weaveStructureIntroduction(wi.getCode(), (Struct) wp);
-                    break;
-                }
-                case WeavingInstruction.FUNCTION_INTRODUCTION_AFTER:
-                case WeavingInstruction.FUNCTION_INTRODUCTION_BEFORE: {
-                    Function func = wi.getFunction();
-                    retrieveAST cwrapper = (retrieveAST) fileASTMap.get(func.getFileName());
-                    WrappedAST wast = cwrapper.getWrappedAST();
-                    wast.weaveFunctionIntroduction(func, wi.getCode());
-                    break;
-                }
-                default: {
-                    Debug
-                            .out(Debug.MODE_ERROR, "CONE",
-                                    "The specified weaving operation is not supported, exciting...");
-                    System.exit(-1);
-                }
-            }
-        }
-    }
+					wast.weaveHeaderIntroduction(wi.getCode(), hip);
+					break;
+				}
+				case WeavingInstruction.STRUCTURE_INTRODUCTION_BEFORE:
+				case WeavingInstruction.STRUCTURE_INTRODUCTION_AFTER:
+				{
+					Struct struct = (Struct) wp;
+					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(struct.getFileName());
+					WrappedAST wast = cwrapper.getWrappedAST();
+					wast.weaveStructureIntroduction(wi.getCode(), (Struct) wp);
+					break;
+				}
+				case WeavingInstruction.FUNCTION_INTRODUCTION_AFTER:
+				case WeavingInstruction.FUNCTION_INTRODUCTION_BEFORE:
+				{
+					Function func = wi.getFunction();
+					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(func.getFileName());
+					WrappedAST wast = cwrapper.getWrappedAST();
+					wast.weaveFunctionIntroduction(func, wi.getCode());
+					break;
+				}
+				default:
+				{
+					Debug
+							.out(Debug.MODE_ERROR, "CONE",
+									"The specified weaving operation is not supported, exciting...");
+					System.exit(-1);
+				}
+			}
+		}
+	}
 
 	public void emitFiles()
 	{
@@ -472,33 +534,39 @@ public class WeaverEngine
 		Hashtable fileASTMap = fm.getFileASTs();
 
 		Iterator fileit = fileASTMap.keySet().iterator();
-        for (Object o : fileASTMap.keySet()) {
-            String file = (String) o;
-            WrappedAST wast = ((retrieveAST) fileASTMap.get(file)).getWrappedAST();
-            if (file.lastIndexOf(File.separator) > 0) {
-                file = file.substring(file.lastIndexOf(File.separator) + 1) + "out";
-            }
-            Debug.out(Debug.MODE_INFORMATION, "CONE", "Writing file: " + tempFolder + file + "...");
-            try {
-                wast.emiteToFile(tempFolder + file);
-            }
-            catch (Exception e) {
-                Debug.out(Debug.MODE_ERROR, "CONE", "An error occured while writing the output file...");
-                e.printStackTrace();
-            }
-        }
-    }
+		for (Object o : fileASTMap.keySet())
+		{
+			String file = (String) o;
+			WrappedAST wast = ((retrieveAST) fileASTMap.get(file)).getWrappedAST();
+			if (file.lastIndexOf(File.separator) > 0)
+			{
+				file = file.substring(file.lastIndexOf(File.separator) + 1) + "out";
+			}
+			Debug.out(Debug.MODE_INFORMATION, "CONE", "Writing file: " + tempFolder + file + "...");
+			try
+			{
+				wast.emiteToFile(tempFolder + file);
+			}
+			catch (Exception e)
+			{
+				Debug.out(Debug.MODE_ERROR, "CONE", "An error occured while writing the output file...");
+				e.printStackTrace();
+			}
+		}
+	}
 
 	private String objectToFileName(String object, FileMap fm)
 	{
 		Hashtable test = fm.getFileASTs();
 		Iterator ittest = test.values().iterator();
-        for (Object o : test.values()) {
-            retrieveAST cw = (retrieveAST) o;
-            if (object.equals(cw.objectname)) {
-                return (cw.getFilename()).replace('\\', '\\');
-            }
-        }
-        return null;
+		for (Object o : test.values())
+		{
+			retrieveAST cw = (retrieveAST) o;
+			if (object.equals(cw.objectname))
+			{
+				return (cw.getFilename()).replace('\\', '\\');
+			}
+		}
+		return null;
 	}
 }

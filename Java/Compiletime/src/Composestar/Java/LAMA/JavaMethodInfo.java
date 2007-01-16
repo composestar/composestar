@@ -15,7 +15,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * An instance of <code>JavaMethodInfo</code> represents a method in Java. It extends the generic object <code>MethodInfo</code>.
+ * An instance of <code>JavaMethodInfo</code> represents a method in Java. It
+ * extends the generic object <code>MethodInfo</code>.
  * 
  * @see Composestar.Core.LAMA.MethodInfo
  */
@@ -27,7 +28,7 @@ public class JavaMethodInfo extends MethodInfo
 	public Method theMethod;
 
 	/**
-	 * Default constructor. 
+	 * Default constructor.
 	 */
 	public JavaMethodInfo()
 	{
@@ -36,6 +37,7 @@ public class JavaMethodInfo extends MethodInfo
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param m - <code>java.lang.reflect.Method</code> instance.
 	 */
 	public JavaMethodInfo(Method m)
@@ -45,7 +47,8 @@ public class JavaMethodInfo extends MethodInfo
 	}
 
 	/**
-	 * Returns true if this <code>JavaMethodInfo</code> is declared inside its parent <code>Type</code>.
+	 * Returns true if this <code>JavaMethodInfo</code> is declared inside its
+	 * parent <code>Type</code>.
 	 */
 	public boolean isDeclaredHere()
 	{
@@ -78,14 +81,16 @@ public class JavaMethodInfo extends MethodInfo
 	/** Stuff for LOLA * */
 
 	/**
-	 * Helper method. Converts a <code>Collection</code> to a <code>HashSet</code>.
+	 * Helper method. Converts a <code>Collection</code> to a
+	 * <code>HashSet</code>.
 	 */
 	private HashSet toHashSet(Collection c)
 	{
 		HashSet result = new HashSet();
 		Iterator iter = c.iterator();
-        for (Object aC : c) result.add(aC);
-        return result;
+		for (Object aC : c)
+			result.add(aC);
+		return result;
 	}
 
 	/**
@@ -134,7 +139,7 @@ public class JavaMethodInfo extends MethodInfo
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		
+
 	}
 
 	/**
@@ -142,6 +147,6 @@ public class JavaMethodInfo extends MethodInfo
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		
+
 	}
 }

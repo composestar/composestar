@@ -83,13 +83,14 @@ public class ConcernGenerator extends DefaultHandler
 		Vector results = new Vector();
 		HashMap resultsMap = new HashMap();
 		Iterator selectorIter = concerns.keySet().iterator();
-        for (Object o : concerns.keySet()) {
-            String key = (String) o;
-            PredicateSelector selector = (PredicateSelector) concerns.get(key); // selectorIter.next();
-            selector.run();
-            resultsMap.put(key, selector.getSelectedUnits());
-        }
-        concerns.clear();
+		for (Object o : concerns.keySet())
+		{
+			String key = (String) o;
+			PredicateSelector selector = (PredicateSelector) concerns.get(key); // selectorIter.next();
+			selector.run();
+			resultsMap.put(key, selector.getSelectedUnits());
+		}
+		concerns.clear();
 		concerns.putAll(resultsMap);
 	}
 
@@ -106,34 +107,40 @@ public class ConcernGenerator extends DefaultHandler
 	public void createConcerns()
 	{
 		Iterator resultsEnum = concerns.keySet().iterator();
-        for (Object o : concerns.keySet()) {
-            String key = (String) o;
-            Set element = (Set) concerns.get(key);
-            PrimitiveConcern pconcern = (PrimitiveConcern) DataStore.instance().getObjectByID(key);
-            DataStore.instance().removeObject(key);
-            if (pconcern != null && element != null) {
-                Debug.out(Debug.MODE_INFORMATION, "CLOLA", "Concern: " + key + " has methods: ");
-                Signature sig = new Signature();
-                Iterator methods = element.iterator();
-                for (Object method : element) {
-                    if (method instanceof CMethodInfo) {
-                        CMethodInfo methodInfo = (CMethodInfo) method;
-                        Debug.out(Debug.MODE_INFORMATION, "CLOLA", "Method: " + methodInfo.Name);
-                        sig.add(methodInfo, MethodWrapper.ADDED);
-                        // By doing addMethod, I'm overwriting the original
-                        // parent
-                        // that's probably not good, because then the filename
-                        // is not retrievable annymore.
-                        // cf.addMethod(methodInfo);
-                    } else {
-                        Debug.out(Debug.MODE_ERROR, "CLOLA", "Result of module " + key + " is not a set of functions");
-                    }
-                }
-                pconcern.setSignature(sig);
-                /** overwrite concern in datastore, with added signature* */
-                DataStore.instance().addObject(pconcern.getName(), pconcern);
-            }
-        }
-    }
+		for (Object o : concerns.keySet())
+		{
+			String key = (String) o;
+			Set element = (Set) concerns.get(key);
+			PrimitiveConcern pconcern = (PrimitiveConcern) DataStore.instance().getObjectByID(key);
+			DataStore.instance().removeObject(key);
+			if (pconcern != null && element != null)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "CLOLA", "Concern: " + key + " has methods: ");
+				Signature sig = new Signature();
+				Iterator methods = element.iterator();
+				for (Object method : element)
+				{
+					if (method instanceof CMethodInfo)
+					{
+						CMethodInfo methodInfo = (CMethodInfo) method;
+						Debug.out(Debug.MODE_INFORMATION, "CLOLA", "Method: " + methodInfo.Name);
+						sig.add(methodInfo, MethodWrapper.ADDED);
+						// By doing addMethod, I'm overwriting the original
+						// parent
+						// that's probably not good, because then the filename
+						// is not retrievable annymore.
+						// cf.addMethod(methodInfo);
+					}
+					else
+					{
+						Debug.out(Debug.MODE_ERROR, "CLOLA", "Result of module " + key + " is not a set of functions");
+					}
+				}
+				pconcern.setSignature(sig);
+				/** overwrite concern in datastore, with added signature* */
+				DataStore.instance().addObject(pconcern.getName(), pconcern);
+			}
+		}
+	}
 
 }

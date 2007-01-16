@@ -134,71 +134,81 @@ public class Projects implements Serializable
 	{
 		List compiledDummies = new ArrayList();
 		Iterator projIt = allProjects.iterator();
-        for (Object allProject : allProjects) {
-            Project p = (Project) allProject;
-            if (p.getCompiledDummies() != null) {
-                compiledDummies.add(p.getCompiledDummies());
-            }
-        }
-        return compiledDummies;
+		for (Object allProject : allProjects)
+		{
+			Project p = (Project) allProject;
+			if (p.getCompiledDummies() != null)
+			{
+				compiledDummies.add(p.getCompiledDummies());
+			}
+		}
+		return compiledDummies;
 	}
 
 	public List getCompiledSources()
 	{
 		List compiledSources = new ArrayList();
 		Iterator projIt = allProjects.iterator();
-        for (Object allProject : allProjects) {
-            Project p = (Project) allProject;
-            if (p.getCompiledSources() != null) {
-                compiledSources.addAll(p.getCompiledSources());
-            }
-        }
-        return compiledSources;
+		for (Object allProject : allProjects)
+		{
+			Project p = (Project) allProject;
+			if (p.getCompiledSources() != null)
+			{
+				compiledSources.addAll(p.getCompiledSources());
+			}
+		}
+		return compiledSources;
 	}
 
 	public List getDependencies()
 	{
 		List dependencies = new ArrayList();
 		Iterator projIt = allProjects.iterator();
-        for (Object allProject : allProjects) {
-            Project p = (Project) allProject;
-            List deps = p.getDependencies();
-            Iterator depIt = deps.iterator();
-            for (Object dep : deps) {
-                Dependency dependency = (Dependency) dep;
-                if (!dependencies.contains(dependency)) {
-                    dependencies.add(dependency);
-                }
-            }
-        }
-        return dependencies;
+		for (Object allProject : allProjects)
+		{
+			Project p = (Project) allProject;
+			List deps = p.getDependencies();
+			Iterator depIt = deps.iterator();
+			for (Object dep : deps)
+			{
+				Dependency dependency = (Dependency) dep;
+				if (!dependencies.contains(dependency))
+				{
+					dependencies.add(dependency);
+				}
+			}
+		}
+		return dependencies;
 	}
 
 	public Iterator dependencies()
 	{
 		Set depset = new HashSet();
 		Iterator projIt = allProjects.iterator();
-        for (Object allProject : allProjects) {
-            Project p = (Project) allProject;
-            List deps = p.getDependencies();
-            Iterator depIt = deps.iterator();
-            for (Object dep : deps) {
-                Dependency dependency = (Dependency) dep;
-                depset.add(dependency);
-            }
-        }
-        return depset.iterator();
+		for (Object allProject : allProjects)
+		{
+			Project p = (Project) allProject;
+			List deps = p.getDependencies();
+			Iterator depIt = deps.iterator();
+			for (Object dep : deps)
+			{
+				Dependency dependency = (Dependency) dep;
+				depset.add(dependency);
+			}
+		}
+		return depset.iterator();
 	}
 
 	public List getSources()
 	{
 		List sources = new ArrayList();
 		Iterator projIt = allProjects.iterator();
-        for (Object allProject : allProjects) {
-            Project p = (Project) allProject;
-            sources.addAll(p.getSources());
-        }
-        return sources;
+		for (Object allProject : allProjects)
+		{
+			Project p = (Project) allProject;
+			sources.addAll(p.getSources());
+		}
+		return sources;
 	}
 
 	/**
@@ -220,40 +230,45 @@ public class Projects implements Serializable
 
 		List sources = getSources();
 		Iterator sourceIt = sources.iterator();
-        for (Object source : sources) {
-            Source s = (Source) source;
-            String sfn = s.getFileName();
-            if (sfn == null) {
-                continue; // FIXME: can this even happen? if so: how should it
-                // be handled?
-            }
+		for (Object source : sources)
+		{
+			Source s = (Source) source;
+			String sfn = s.getFileName();
+			if (sfn == null)
+			{
+				continue; // FIXME: can this even happen? if so: how should it
+				// be handled?
+			}
 
-            // normalize source filename
-            String nsfn = FileUtils.normalizeFilename(sfn);
+			// normalize source filename
+			String nsfn = FileUtils.normalizeFilename(sfn);
 
-            // compare specified and source
-            if (nfn.equals(nsfn)) {
-                return s;
-            }
-        }
+			// compare specified and source
+			if (nfn.equals(nsfn))
+			{
+				return s;
+			}
+		}
 
-        return null;
+		return null;
 	}
-	
+
 	/**
 	 * returns original source of binary if available
 	 */
 	public Source getSourceOfBinary(String binary)
 	{
 		Iterator sourceItr = this.getSources().iterator();
-        for (Object o : this.getSources()) {
-            Source s = (Source) o;
+		for (Object o : this.getSources())
+		{
+			Source s = (Source) o;
 
-            if (binary.indexOf(s.getTarget()) > 0) {
-                return s;
-            }
-        }
+			if (binary.indexOf(s.getTarget()) > 0)
+			{
+				return s;
+			}
+		}
 
-        return null;
+		return null;
 	}
 }

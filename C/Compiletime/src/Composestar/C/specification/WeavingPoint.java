@@ -47,7 +47,8 @@ public class WeavingPoint
 	private int type = -1;
 
 	private String functionName = null; // function name is a parameter if type
-										// = FUNCTION_CALL
+
+	// = FUNCTION_CALL
 
 	public WeavingPoint(int type)
 	{

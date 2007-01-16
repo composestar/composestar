@@ -340,7 +340,6 @@ public class TNode extends CommonAST
 	// public TNode getParent() {
 	// return (TNode)getFirstSibling().up;
 	// }
-
 	/**
 	 * add the new node as a new sibling, inserting it ahead of any existing
 	 * next sibling. This method maintains double-linking. if node is null,
@@ -482,14 +481,14 @@ public class TNode extends CommonAST
 
 		if (this.getLineNum() != 0)
 		{
-            str.append(" line:").append(this.getLineNum());
+			str.append(" line:").append(this.getLineNum());
 		}
 
 		Enumeration keys = (this.getAttributesTable().keys());
 		while (keys.hasMoreElements())
 		{
 			String key = (String) keys.nextElement();
-            str.append(" ").append(key).append(":").append(this.getAttribute(key));
+			str.append(" ").append(key).append(":").append(this.getAttribute(key));
 		}
 
 		return str.toString();
@@ -548,8 +547,7 @@ public class TNode extends CommonAST
 		// System.out.print(getNameForType(t.getType()));
 		if (((TNode) t).getLineNum() != 0)
 		{
-			System.out.print(" line:" + ((TNode) t).getLineNum() + " chi#"
-					+ t.getNumberOfChildren() + " ");
+			System.out.print(" line:" + ((TNode) t).getLineNum() + " chi#" + t.getNumberOfChildren() + " ");
 		}
 
 		Enumeration keys = ((TNode) t).getAttributesTable().keys();
@@ -611,8 +609,7 @@ public class TNode extends CommonAST
 		}
 		if (((TNode) t).getLineNum() != 0)
 		{
-			out.print(" line:" + ((TNode) t).getLineNum() + " chi#"
-					+ t.getNumberOfChildren() + " ");
+			out.print(" line:" + ((TNode) t).getLineNum() + " chi#" + t.getNumberOfChildren() + " ");
 		}
 
 		Enumeration keys = ((TNode) t).getAttributesTable().keys();
@@ -838,8 +835,7 @@ public class TNode extends CommonAST
 			String key = (String) keys.nextElement();
 			if (key.equalsIgnoreCase("tokenNumber"))
 			{
-				System.out.print(" " + key + ":"
-						+ (node).getAttribute(key));
+				System.out.print(" " + key + ":" + (node).getAttribute(key));
 			}
 			else if (key.equalsIgnoreCase("source"))
 			{
@@ -847,8 +843,7 @@ public class TNode extends CommonAST
 			}
 			else if (key.equalsIgnoreCase("scopeName"))
 			{
-				System.out.print("   scope :"
-						+ (node).getAttribute(key));
+				System.out.print("   scope :" + (node).getAttribute(key));
 			}
 			else
 			{

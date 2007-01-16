@@ -77,7 +77,7 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 	{
 		return order.iterator();
 	}
-	
+
 	public int hashCode()
 	{
 		return super.hashCode();

@@ -218,17 +218,20 @@ public class MyComparator
 		{
 			myClass = (Class) stack.pop();
 			Field[] declaredFields = myClass.getDeclaredFields();
-            for (Field declaredField : declaredFields) {
-                // can only check public fields
-                if (Modifier.isPublic(declaredField.getModifiers())) {
-                    Field f = declaredField;
-                    // IMPORTANT: skip repositoryKey due to different hashcodes
-                    if (!f.getName().equals("repositoryKey")) {
-                        fields.add(f);
-                    }
-                }
-            }
-        }
+			for (Field declaredField : declaredFields)
+			{
+				// can only check public fields
+				if (Modifier.isPublic(declaredField.getModifiers()))
+				{
+					Field f = declaredField;
+					// IMPORTANT: skip repositoryKey due to different hashcodes
+					if (!f.getName().equals("repositoryKey"))
+					{
+						fields.add(f);
+					}
+				}
+			}
+		}
 
 		myFields.put(c, fields);
 		return fields;
@@ -302,50 +305,59 @@ public class MyComparator
 			String key = null;
 
 			Iterator itrObjects = compObjects.iterator();
-            for (Object obj : compObjects) {
-                Object fielda = null;
-                Object fieldb = null;
+			for (Object obj : compObjects)
+			{
+				Object fielda = null;
+				Object fieldb = null;
 
-                if (obj instanceof FieldNode) {
-                    FieldNode fieldnode = (FieldNode) obj;
-                    key = fieldnode.getUniqueID(a) + b.hashCode();
-                    fielda = fieldnode.visit(a);
-                    fieldb = fieldnode.visit(b);
-                } else if (obj instanceof MethodNode) {
-                    MethodNode methodnode = (MethodNode) obj;
-                    key = methodnode.getUniqueID(a) + b.hashCode();
-                    fielda = methodnode.visit(a);
-                    fieldb = methodnode.visit(b);
-                } else if (obj instanceof Path) {
-                    Path path = (Path) obj;
-                    fielda = path.follow(a);
-                    fieldb = path.follow(b);
-                }
+				if (obj instanceof FieldNode)
+				{
+					FieldNode fieldnode = (FieldNode) obj;
+					key = fieldnode.getUniqueID(a) + b.hashCode();
+					fielda = fieldnode.visit(a);
+					fieldb = fieldnode.visit(b);
+				}
+				else if (obj instanceof MethodNode)
+				{
+					MethodNode methodnode = (MethodNode) obj;
+					key = methodnode.getUniqueID(a) + b.hashCode();
+					fielda = methodnode.visit(a);
+					fieldb = methodnode.visit(b);
+				}
+				else if (obj instanceof Path)
+				{
+					Path path = (Path) obj;
+					fielda = path.follow(a);
+					fieldb = path.follow(b);
+				}
 
-                if (key != null && comparisonMade(key)) {
-                    // already made comparison before
-                    duplicates++;
-                    equal = getComparison(key);
-                } else {
-                    if (key != null)// temporarily true to avoid infinite loops
-                    {
-                        addComparison(key, true);
-                    }
+				if (key != null && comparisonMade(key))
+				{
+					// already made comparison before
+					duplicates++;
+					equal = getComparison(key);
+				}
+				else
+				{
+					if (key != null)// temporarily true to avoid infinite loops
+					{
+						addComparison(key, true);
+					}
 
-                    equal = compare(fielda, fieldb);
+					equal = compare(fielda, fieldb);
 
-                    if (key != null)// store result of comparison
-                    {
-                        addComparison(key, equal);
-                    }
-                }
+					if (key != null)// store result of comparison
+					{
+						addComparison(key, equal);
+					}
+				}
 
-                if (!equal) // stop comparison by returning false
-                {
-                    return false;
-                }
-            }
-        }
+				if (!equal) // stop comparison by returning false
+				{
+					return false;
+				}
+			}
+		}
 		catch (Exception e)
 		{
 			throw new ModuleException("MyComparator error: " + e.toString(), "INCRE");

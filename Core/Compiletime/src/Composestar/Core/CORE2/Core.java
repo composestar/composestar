@@ -22,7 +22,7 @@ import Composestar.Utils.Debug;
 public class Core implements CTCommonModule
 {
 	public static final String MODULE_NAME = "CORE";
-	
+
 	private CoreConflictDetector detector = new CoreConflictDetector();
 
 	public Core()
@@ -50,7 +50,7 @@ public class Core implements CTCommonModule
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:   o/ ");
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:  /|   ... " + concern.getName() + " ...");
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:  / \\ ");
-		
+
 		FilterModuleOrder filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
 		FireModel fireModel = new FireModel(concern, filterModules);
@@ -59,10 +59,11 @@ public class Core implements CTCommonModule
 		printConflicts(conflicts);
 	}
 
-	
-	private void printConflicts(CoreConflict[] conflicts){
-        for (CoreConflict conflict : conflicts) {
-            Debug.out(Debug.MODE_WARNING, MODULE_NAME, conflict.getDescription(), conflict.getLocation());
-        }
-    }
+	private void printConflicts(CoreConflict[] conflicts)
+	{
+		for (CoreConflict conflict : conflicts)
+		{
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, conflict.getDescription(), conflict.getLocation());
+		}
+	}
 }

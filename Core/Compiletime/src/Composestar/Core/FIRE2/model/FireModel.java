@@ -479,14 +479,16 @@ public class FireModel
 	private boolean containsMethod(List methods, MethodInfo method)
 	{
 		Iterator iterator = methods.iterator();
-        for (Object method1 : methods) {
-            MethodInfo containedMethod = (MethodInfo) method1;
-            if (containedMethod.checkEquals(method)) {
-                return true;
-            }
-        }
+		for (Object method1 : methods)
+		{
+			MethodInfo containedMethod = (MethodInfo) method1;
+			if (containedMethod.checkEquals(method))
+			{
+				return true;
+			}
+		}
 
-        return false;
+		return false;
 	}
 
 	/**
@@ -503,11 +505,11 @@ public class FireModel
 	{
 		ExtendedExecutionState result;
 		ExtendedExecutionModel model = startState.model;
-		
+
 		if (!baseState.getMessage().isGeneralization())
 		{
-			result = new ExtendedExecutionState(model, baseState, baseState.getMessage(),
-					startState.signatureCheck, startState.signatureCheckInfo, startState.filterPosition, layer);
+			result = new ExtendedExecutionState(model, baseState, baseState.getMessage(), startState.signatureCheck,
+					startState.signatureCheckInfo, startState.filterPosition, layer);
 		}
 		else
 		{
@@ -526,12 +528,14 @@ public class FireModel
 			result = new ExtendedExecutionState(model, baseState, derivedMessage, startState.signatureCheck,
 					startState.signatureCheckInfo, startState.filterPosition, layer);
 		}
-		
+
 		// Check whether the model already contains the state:
-		if ( model.stateCache.containsKey(result)){
+		if (model.stateCache.containsKey(result))
+		{
 			return (ExtendedExecutionState) model.stateCache.get(result);
 		}
-		else{
+		else
+		{
 			// Add state to statecache:
 			model.stateCache.put(result, result);
 			return result;
@@ -651,13 +655,15 @@ public class FireModel
 		{
 			Set selectors = executionModels[filterPosition][i].getEntranceMessages();
 			Iterator iter = selectors.iterator();
-            for (Object selector : selectors) {
-                Message message = (Message) selector;
-                if (!Message.checkEquals(message.getSelector(), Message.STAR_SELECTOR)) {
-                    distinguishable.add(message.getSelector().getName());
-                }
-            }
-        }
+			for (Object selector : selectors)
+			{
+				Message message = (Message) selector;
+				if (!Message.checkEquals(message.getSelector(), Message.STAR_SELECTOR))
+				{
+					distinguishable.add(message.getSelector().getName());
+				}
+			}
+		}
 
 		return distinguishable;
 	}
@@ -684,7 +690,7 @@ public class FireModel
 		public ExtendedExecutionModel(int filterPosition)
 		{
 			this.filterPosition = filterPosition;
-			
+
 			String selector;
 			Message message;
 			ExecutionState state;
@@ -692,19 +698,20 @@ public class FireModel
 
 			Set distinguishable = getDistinguishableSelectors(filterPosition);
 			Iterator iter = distinguishable.iterator();
-            for (Object aDistinguishable : distinguishable) {
-                selector = (String) aDistinguishable;
-                message = getEntranceMessage(selector);
+			for (Object aDistinguishable : distinguishable)
+			{
+				selector = (String) aDistinguishable;
+				message = getEntranceMessage(selector);
 
-                state = executionModels[filterPosition][0].getEntranceState(message);
+				state = executionModels[filterPosition][0].getEntranceState(message);
 
-                extendedState = new ExtendedExecutionState(this, state, message, NO_SIGNATURE_CHECK, null,
-                        filterPosition, 0);
+				extendedState = new ExtendedExecutionState(this, state, message, NO_SIGNATURE_CHECK, null,
+						filterPosition, 0);
 
-                entranceTable.put(message, extendedState);
-            }
+				entranceTable.put(message, extendedState);
+			}
 
-            // undistinguishable selector:
+			// undistinguishable selector:
 			message = getEntranceMessage(Message.UNDISTINGUISHABLE_SELECTOR.getName());
 
 			state = executionModels[filterPosition][0].getEntranceState(message);
@@ -720,7 +727,7 @@ public class FireModel
 		public ExtendedExecutionModel(int filterPosition, String selector)
 		{
 			this.filterPosition = filterPosition;
-			
+
 			Message message = getEntranceMessage(selector);
 
 			ExecutionState state = executionModels[filterPosition][0].getEntranceState(message);
@@ -736,7 +743,7 @@ public class FireModel
 		public ExtendedExecutionModel(int filterPosition, MethodInfo methodInfo, int signatureCheck)
 		{
 			this.filterPosition = filterPosition;
-			
+
 			Message message = getEntranceMessage(methodInfo.getName());
 
 			ExecutionState state = executionModels[filterPosition][0].getEntranceState(message);
@@ -752,7 +759,7 @@ public class FireModel
 		public ExtendedExecutionModel(int filterPosition, Target target, MethodInfo methodInfo, int signatureCheck)
 		{
 			this.filterPosition = filterPosition;
-			
+
 			// Message message = getEntranceMessage( )
 			// TODO: (michiel) validate that using an empty MessageSelectorAST
 			// is legal

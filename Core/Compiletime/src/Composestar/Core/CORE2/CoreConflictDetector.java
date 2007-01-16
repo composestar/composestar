@@ -181,16 +181,18 @@ public class CoreConflictDetector
 		{
 			boolean onlyContinue = true;
 			Iterator actionIter = currentActionNodes.iterator();
-            for (Object currentActionNode : currentActionNodes) {
-                FlowNode actionNode = (FlowNode) currentActionNode;
-                if (!unreachableActionNodes.contains(actionNode)
-                        && !actionNode.containsName(FlowNode.CONTINUE_ACTION_NODE)) {
-                    onlyContinue = false;
-                    break;
-                }
-            }
+			for (Object currentActionNode : currentActionNodes)
+			{
+				FlowNode actionNode = (FlowNode) currentActionNode;
+				if (!unreachableActionNodes.contains(actionNode)
+						&& !actionNode.containsName(FlowNode.CONTINUE_ACTION_NODE))
+				{
+					onlyContinue = false;
+					break;
+				}
+			}
 
-            if (onlyContinue)
+			if (onlyContinue)
 			{
 				CoreConflict conflict = new CoreConflict(CoreConflict.FILTER_REDUNDANT, (Filter) currentFilterNode
 						.getRepositoryLink(), accRejFilterConflict);

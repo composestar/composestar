@@ -144,16 +144,20 @@ public class Matcher
 			else
 			{
 				nextStates = getNextStates(regularState, sequence);
-                for (RegularState nextState : nextStates) {
-                    newState = new CombinedState(executionTransition.getEndState(), nextState, state,
-                            executionTransition);
-                    if (isEndState(newState)) {
-                        return true;
-                    } else {
-                        addState(newState);
-                    }
-                }
-            }
+				for (RegularState nextState : nextStates)
+				{
+					newState = new CombinedState(executionTransition.getEndState(), nextState, state,
+							executionTransition);
+					if (isEndState(newState))
+					{
+						return true;
+					}
+					else
+					{
+						addState(newState);
+					}
+				}
+			}
 		}
 
 		return false;
@@ -169,11 +173,12 @@ public class Matcher
 		{
 			String resOper = (String) resOperSeq.nextElement();
 
-            for (RegularState currentState : currentStates) {
-                v.addAll(getNextStates(currentState, resOper));
-            }
+			for (RegularState currentState : currentStates)
+			{
+				v.addAll(getNextStates(currentState, resOper));
+			}
 
-            currentStates = (RegularState[]) v.toArray(new RegularState[v.size()]);
+			currentStates = (RegularState[]) v.toArray(new RegularState[v.size()]);
 		}
 
 		return currentStates;

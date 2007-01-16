@@ -37,8 +37,8 @@ public class DotNETSemTexCollector implements CTCommonModule
 		File semTexFile = new File(filename);
 		if (!semTexFile.exists())
 		{
-			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, 
-					"The SemTex file " + filename + " does not exists. Skipping SemTex Collector.");
+			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "The SemTex file " + filename
+					+ " does not exists. Skipping SemTex Collector.");
 		}
 		else
 		{
@@ -49,7 +49,8 @@ public class DotNETSemTexCollector implements CTCommonModule
 				SAXParser saxParser = saxParserFactory.newSAXParser();
 				SemanticContainerHandler sch = new SemanticContainerHandler();
 
-				// We use the getCleanInputStream because the SAX parser has some problems with UTF-8
+				// We use the getCleanInputStream because the SAX parser has
+				// some problems with UTF-8
 				FileInputStream in = FileUtils.getCleanInputStream(new File(filename));
 				saxParser.parse(in, sch);
 			}

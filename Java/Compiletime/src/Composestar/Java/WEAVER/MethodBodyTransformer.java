@@ -38,7 +38,7 @@ public class MethodBodyTransformer extends ExprEditor
 {
 
 	private ClassPool classpool;
-	
+
 	public MethodBodyTransformer(ClassPool classpool)
 	{
 		this.classpool = classpool;
@@ -54,10 +54,10 @@ public class MethodBodyTransformer extends ExprEditor
 		HookDictionary hd = HookDictionary.instance();
 		try
 		{
-			if(hd.isCastInterception(c.getType().getName()))
+			if (hd.isCastInterception(c.getType().getName()))
 			{
-				c.replace("$_ = $proceed(Composestar.RuntimeCore.FLIRT.CastingFacility.handleCast($1" + 
-						", " + '"' + c.getType().getName() + '"' + "));");
+				c.replace("$_ = $proceed(Composestar.RuntimeCore.FLIRT.CastingFacility.handleCast($1" + ", " + '"'
+						+ c.getType().getName() + '"' + "));");
 			}
 		}
 		catch (NotFoundException nfe)
@@ -115,13 +115,13 @@ public class MethodBodyTransformer extends ExprEditor
 	public void edit(MethodCall m) throws CannotCompileException
 	{
 		HookDictionary hd = HookDictionary.instance();
-		
+
 		String target = m.getClassName();
 		String caller = m.where().getDeclaringClass().getName();
-		
+
 		try
 		{
-			if (hd.isMethodInterception(target,caller))
+			if (hd.isMethodInterception(target, caller))
 			{
 				String signature = m.getSignature();
 				CtClass returnType = Descriptor.getReturnType(signature, classpool);
@@ -158,19 +158,22 @@ public class MethodBodyTransformer extends ExprEditor
 	 */
 	public void edit(NewExpr e) throws CannotCompileException
 	{
-		
+
 		HookDictionary hd = HookDictionary.instance();
 		if (hd.isAfterInstantationInterception(e.getClassName()))
 		{
 			int mod = e.where().getModifiers();
 			boolean isStaticCaller = Modifier.isStatic(mod);
-			if(isStaticCaller)
+			if (isStaticCaller)
 			{
-				e.replace("{$_ = $proceed($$); Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleInstanceCreation(" + '"' + e.where().getName() + '"' + ",$_,$args);}");
+				e
+						.replace("{$_ = $proceed($$); Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleInstanceCreation("
+								+ '"' + e.where().getName() + '"' + ",$_,$args);}");
 			}
 			else
 			{
-				e.replace("{$_ = $proceed($$); Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleInstanceCreation(this,$_,$args);}");
+				e
+						.replace("{$_ = $proceed($$); Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleInstanceCreation(this,$_,$args);}");
 			}
 		}
 	}
@@ -191,9 +194,8 @@ public class MethodBodyTransformer extends ExprEditor
 		{
 			// static caller, static target
 			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(" + '"'
-					+ m.where().getDeclaringClass().getName() + '"' + "," + '"'
-					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"'
-					+ ",$args);");
+					+ m.where().getDeclaringClass().getName() + '"' + "," + '"' + m.getClassName() + '"' + "," + '"'
+					+ m.getMethodName() + '"' + ",$args);");
 		}
 		else if (isStaticCaller && !isStaticTarget)
 		{
@@ -205,9 +207,8 @@ public class MethodBodyTransformer extends ExprEditor
 		else if (!isStaticCaller && isStaticTarget)
 		{
 			// non-static caller, static target
-			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this," + '"' 
-					+ m.getClassName()+ '"' + "," + '"' + m.getMethodName() + '"'
-					+ ",$args);");
+			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this," + '"'
+					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"' + ",$args);");
 		}
 		else
 		{
@@ -233,9 +234,8 @@ public class MethodBodyTransformer extends ExprEditor
 		{
 			// static caller, static target
 			m.replace("$_ = ($r)" + "Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleReturnMethodCall("
-					+ '"' + m.where().getDeclaringClass().getName() + '"' + "," + '"'
-					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"'
-					+ ",$args);");
+					+ '"' + m.where().getDeclaringClass().getName() + '"' + "," + '"' + m.getClassName() + '"' + ","
+					+ '"' + m.getMethodName() + '"' + ",$args);");
 		}
 		else if (isStaticCaller && !isStaticTarget)
 		{
@@ -249,8 +249,7 @@ public class MethodBodyTransformer extends ExprEditor
 			// non-static caller, static target
 			m.replace("$_ = ($r)"
 					+ "Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleReturnMethodCall(this," + '"'
-					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"'
-					+ ",$args);");
+					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"' + ",$args);");
 		}
 		else
 		{
@@ -260,37 +259,37 @@ public class MethodBodyTransformer extends ExprEditor
 					+ m.getMethodName() + '"' + ",$args);");
 		}
 	}
-	
+
 	/**
 	 * Helper Method.
 	 */
 	private boolean isStaticTarget(MethodCall m)
 	{
 		// first try: bytecode search
-		try 
+		try
 		{
 			int mod = m.getMethod().getModifiers();
 			return Modifier.isStatic(mod);
 		}
-		catch(NotFoundException nfe)
+		catch (NotFoundException nfe)
 		{
 			// no method declaration found in bytecode.
 		}
-		
+
 		// second try: lookup in concern's Signature (it could be added by SIGN)
 		DataStore d = DataStore.instance();
-		Concern c = (Concern)d.getObjectByID(m.getClassName());
-		if(c != null)
+		Concern c = (Concern) d.getObjectByID(m.getClassName());
+		if (c != null)
 		{
 			Signature s = c.getSignature();
 			Iterator methods = s.getMethods().iterator();
-			if(methods.hasNext())
+			if (methods.hasNext())
 			{
-				JavaMethodInfo method = (JavaMethodInfo)methods.next();
-				if(method.getName().equals(m.getMethodName()))
+				JavaMethodInfo method = (JavaMethodInfo) methods.next();
+				if (method.getName().equals(m.getMethodName()))
 				{
 					// equal parameters?
-					if(equalParameters(m,method))
+					if (equalParameters(m, method))
 					{
 						// is static?
 						Method theMethod = method.theMethod;
@@ -302,41 +301,41 @@ public class MethodBodyTransformer extends ExprEditor
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Helper Method.
 	 */
 	private boolean equalParameters(MethodCall m, MethodInfo method)
 	{
-		try 
+		try
 		{
 			// retrieve parameters from methodcall
 			String signature = m.getSignature();
 			CtClass[] parameterTypes = Descriptor.getParameterTypes(signature, classpool);
-			String[] types = new String[parameterTypes.length]; 
-		
-			for(int i=0; i<parameterTypes.length; i++)
+			String[] types = new String[parameterTypes.length];
+
+			for (int i = 0; i < parameterTypes.length; i++)
 			{
 				types[i] = parameterTypes[i].getName();
 			}
-			
+
 			// return false if number of parameters are not the same.
-			if(types.length != method.getParameters().size())
+			if (types.length != method.getParameters().size())
 			{
 				return false;
 			}
-			
+
 			// equal parameters?
 			Object[] params = method.getParameters().toArray();
-			for(int j=0; j<params.length; j++)
+			for (int j = 0; j < params.length; j++)
 			{
-				if(!((ParameterInfo)params[j]).getParameterTypeString().equals(types[j]))
+				if (!((ParameterInfo) params[j]).getParameterTypeString().equals(types[j]))
 				{
 					return false;
 				}
 			}
 		}
-		catch(NotFoundException nfe)
+		catch (NotFoundException nfe)
 		{
 			// should not happen!
 			Debug.out(Debug.MODE_ERROR, "WEAVER", "NotFoundException: " + nfe.getMessage());

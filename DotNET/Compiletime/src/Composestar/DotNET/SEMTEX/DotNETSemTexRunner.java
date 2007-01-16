@@ -24,7 +24,7 @@ import Composestar.Utils.StringUtils;
 public class DotNETSemTexRunner implements CTCommonModule
 {
 	public static final String MODULE_NAME = "SEMTEX";
-	
+
 	public DotNETSemTexRunner()
 	{}
 
@@ -79,9 +79,14 @@ public class DotNETSemTexRunner implements CTCommonModule
 		}
 		else
 		{
-			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, 
-					"SemTex Analyzer not found on its expected location: " + exe + ". Semantic Analyzing will be skipped. " +
-					"See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");
+			Debug
+					.out(
+							Debug.MODE_INFORMATION,
+							MODULE_NAME,
+							"SemTex Analyzer not found on its expected location: "
+									+ exe
+									+ ". Semantic Analyzing will be skipped. "
+									+ "See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");
 
 			return null;
 		}

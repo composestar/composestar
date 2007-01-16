@@ -22,9 +22,8 @@ import Composestar.Utils.FileUtils;
 /**
  * Responsible for dissassembling an assembly, parsing the contents of its
  * dissassembled file and delegating the modification to it and finally
- * assemblying the output. 
- * 
- * FIXME: something like AssemblyTransformer might be a more appropriate name?
+ * assemblying the output. FIXME: something like AssemblyTransformer might be a
+ * more appropriate name?
  */
 public class ILCodeParser extends TransformerBase
 {

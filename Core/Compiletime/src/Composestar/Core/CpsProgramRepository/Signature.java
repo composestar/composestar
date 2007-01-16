@@ -214,7 +214,7 @@ public class Signature implements SerializableRepositoryEntity
 		List parameter = methodInfo.getParameters();
 		for (int i = 0; i < parameter.size(); i++)
 		{
-            key.append(((ParameterInfo) parameter.get(i)).ParameterTypeString).append('%');
+			key.append(((ParameterInfo) parameter.get(i)).ParameterTypeString).append('%');
 		}
 
 		key.append(methodInfo.returnType());

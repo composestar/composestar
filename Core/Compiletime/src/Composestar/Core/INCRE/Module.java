@@ -82,7 +82,7 @@ public class Module implements Serializable
 		String id = d.getName();
 		deps.put(id, d);
 	}
-	
+
 	public void clearDeps()
 	{
 		deps.clear();
@@ -123,26 +123,30 @@ public class Module implements Serializable
 	public void addComparableObjects(HashMap map)
 	{
 		Iterator entries = map.entrySet().iterator();
-        for (Object o : map.entrySet()) {
-            Entry entry = (Entry) o;
-            Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
-            for (Object o1 : ((HashMap) entry.getValue()).values()) {
-                addComparableObject((String) entry.getKey(), o1);
-            }
-        }
-    }
+		for (Object o : map.entrySet())
+		{
+			Entry entry = (Entry) o;
+			Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
+			for (Object o1 : ((HashMap) entry.getValue()).values())
+			{
+				addComparableObject((String) entry.getKey(), o1);
+			}
+		}
+	}
 
 	public void removeComparableObjects(HashMap map)
 	{
 		Iterator entries = map.entrySet().iterator();
-        for (Object o : map.entrySet()) {
-            Entry entry = (Entry) o;
-            Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
-            for (Object o1 : ((HashMap) entry.getValue()).values()) {
-                removeComparableObject((String) entry.getKey(), o1);
-            }
-        }
-    }
+		for (Object o : map.entrySet())
+		{
+			Entry entry = (Entry) o;
+			Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
+			for (Object o1 : ((HashMap) entry.getValue()).values())
+			{
+				removeComparableObject((String) entry.getKey(), o1);
+			}
+		}
+	}
 
 	public boolean hasComparableObjects(String key)
 	{
@@ -153,7 +157,7 @@ public class Module implements Serializable
 	{
 		return (ArrayList) comparableObjects.get(key);
 	}
-	
+
 	public void clearComparableObjects()
 	{
 		comparableObjects.clear();

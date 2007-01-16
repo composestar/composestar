@@ -14,7 +14,8 @@ import Composestar.Core.LAMA.UnitResult;
 import Composestar.Utils.StringConverter;
 
 /**
- * An instance of <code>JavaFieldInfo</code> represents a field object in Java. It extends the generic object <code>FieldInfo</code>.
+ * An instance of <code>JavaFieldInfo</code> represents a field object in
+ * Java. It extends the generic object <code>FieldInfo</code>.
  * 
  * @see Composestar.Core.LAMA.FieldInfo
  */
@@ -26,6 +27,7 @@ public class JavaFieldInfo extends FieldInfo
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param f - <code>java.lang.reflect.Field</code> instance.
 	 */
 	public JavaFieldInfo(Field f)
@@ -35,7 +37,8 @@ public class JavaFieldInfo extends FieldInfo
 	}
 
 	/**
-	 * Returns true if this <code>JavaFieldInfo</code> is declared inside its parent <code>Type</code>.
+	 * Returns true if this <code>JavaFieldInfo</code> is declared inside its
+	 * parent <code>Type</code>.
 	 */
 	public boolean isDeclaredHere()
 	{
@@ -89,7 +92,7 @@ public class JavaFieldInfo extends FieldInfo
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-	
+
 	}
 
 	/**
@@ -97,6 +100,6 @@ public class JavaFieldInfo extends FieldInfo
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-	
+
 	}
 }

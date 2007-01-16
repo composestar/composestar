@@ -38,9 +38,9 @@ public class ModuleInfoManager
 
 	private static ModuleInfoManager instance;
 
-	protected Map<Class,ModuleInfo> classCache;
+	protected Map<Class, ModuleInfo> classCache;
 
-	protected Map<String,ModuleInfo> idCache;
+	protected Map<String, ModuleInfo> idCache;
 
 	/**
 	 * Return the current instance of the ModuleInfoManager
@@ -205,8 +205,8 @@ public class ModuleInfoManager
 
 	protected ModuleInfoManager()
 	{
-		classCache = new HashMap<Class,ModuleInfo>();
-		idCache = new HashMap<String,ModuleInfo>();
+		classCache = new HashMap<Class, ModuleInfo>();
+		idCache = new HashMap<String, ModuleInfo>();
 	}
 
 	/**

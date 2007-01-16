@@ -195,8 +195,7 @@ public class CVariable extends FieldInfo
 		}
 		else if ("Class".equals(argumentName) && "Class".equals(fieldType().getUnitType()))
 		{
-			return new UnitResult(
-					fieldType());
+			return new UnitResult(fieldType());
 		}
 		return null;
 	}

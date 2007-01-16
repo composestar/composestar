@@ -55,20 +55,22 @@ public class Viewer extends JFrame
 		viewPanel.highlightNodes(executionStates);
 	}
 
-	private void init(FlowModel model){
+	private void init(FlowModel model)
+	{
 		viewPanel = new ViewPanel(model);
-		
+
 		init();
 	}
-	
+
 	private void init(ExecutionModel model)
 	{
 		viewPanel = new ViewPanel(model);
-		
+
 		init();
 	}
-	
-	private void init(){
+
+	private void init()
+	{
 		JScrollPane scroller = new JScrollPane(viewPanel);
 
 		if (controlPanel != null)

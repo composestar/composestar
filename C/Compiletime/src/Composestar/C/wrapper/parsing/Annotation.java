@@ -23,7 +23,8 @@ public class Annotation
 	private String type = "";
 
 	private String target = ""; // type, method, field -> the original program
-								// element names
+
+	// element names
 
 	private String filename = "";
 
@@ -190,13 +191,15 @@ public class Annotation
 		{
 			List methods = type.getMethods();
 			Iterator i = methods.iterator();
-            for (Object method1 : methods) {
-                MethodInfo method = (MethodInfo) method1;
-                if (method.Name.equals(methodName)) {
-                    return method;
-                }
-            }
-        }
+			for (Object method1 : methods)
+			{
+				MethodInfo method = (MethodInfo) method1;
+				if (method.Name.equals(methodName))
+				{
+					return method;
+				}
+			}
+		}
 		return null;
 	}
 
@@ -211,13 +214,15 @@ public class Annotation
 		{
 			List fields = type.getFields();
 			Iterator i = fields.iterator();
-            for (Object field1 : fields) {
-                CVariable field = (CVariable) field1;
-                if (field.Name.equals(fieldName)) {
-                    return field;
-                }
-            }
-        }
+			for (Object field1 : fields)
+			{
+				CVariable field = (CVariable) field1;
+				if (field.Name.equals(fieldName))
+				{
+					return field;
+				}
+			}
+		}
 		return null;
 	}
 
@@ -225,13 +230,15 @@ public class Annotation
 	{
 		MethodInfo method = getMethodLocation(functionName);
 		Iterator paramIter = method.getParameters().iterator();
-        for (Object o : method.getParameters()) {
-            CParameterInfo param = (CParameterInfo) o;
-            if (param.Name.equals(paramName)) {
-                return param;
-            }
-        }
-        return null;
+		for (Object o : method.getParameters())
+		{
+			CParameterInfo param = (CParameterInfo) o;
+			if (param.Name.equals(paramName))
+			{
+				return param;
+			}
+		}
+		return null;
 	}
 
 }

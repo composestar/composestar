@@ -43,6 +43,7 @@ import Composestar.Core.Exception.ModuleException;
 public class NobbinXmlExporter extends NobbinExporter
 {
 	protected Document xmlDoc;
+
 	protected Element xmlRoot;
 
 	/**
@@ -75,14 +76,14 @@ public class NobbinXmlExporter extends NobbinExporter
 		xmlRoot.appendChild(msg);
 		msg.setAttribute("concern", input.getConcern().getName());
 		msg.setAttribute("selector", input.getSelector());
-		msg.setAttribute("certainty", ""+input.getCertainty());
+		msg.setAttribute("certainty", "" + input.getCertainty());
 		msg.setAttribute("recursive", Boolean.toString(input.isRecursive()));
 		Iterator it = results.iterator();
 		while (it.hasNext())
 		{
 			Object o = it.next();
 			if (o instanceof Message) addResultMessage(msg, (Message) o);
-			else if (o instanceof List) 
+			else if (o instanceof List)
 			{
 				Iterator reslist = ((List) o).iterator();
 				Element reselm = xmlDoc.createElement("results");
@@ -94,7 +95,7 @@ public class NobbinXmlExporter extends NobbinExporter
 			}
 		}
 	}
-	
+
 	protected void addResultMessage(Element parent, Message input)
 	{
 		if (input instanceof ExceptionMessage)
@@ -102,12 +103,13 @@ public class NobbinXmlExporter extends NobbinExporter
 			Element msg = xmlDoc.createElement("exception");
 			parent.appendChild(msg);
 		}
-		else {
+		else
+		{
 			Element msg = xmlDoc.createElement("result");
 			parent.appendChild(msg);
 			msg.setAttribute("concern", input.getConcern().getName());
 			msg.setAttribute("selector", input.getSelector());
-			msg.setAttribute("certainty", ""+input.getCertainty());
+			msg.setAttribute("certainty", "" + input.getCertainty());
 			msg.setAttribute("recursive", Boolean.toString(input.isRecursive()));
 		}
 	}
@@ -118,7 +120,8 @@ public class NobbinXmlExporter extends NobbinExporter
 		Source source = new DOMSource(xmlDoc);
 		Result result = new StreamResult(filename);
 
-		try {
+		try
+		{
 			Transformer xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.setOutputProperty(OutputKeys.METHOD, "xml");
 			xformer.setOutputProperty(OutputKeys.INDENT, "yes");

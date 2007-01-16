@@ -114,11 +114,12 @@ public class CType extends Type
 	{
 		HashSet out = new HashSet();
 		Iterator iter = in.iterator();
-        for (Object obj : in) {
-            out.add(obj);
-            // System.out.println(((ProgramElement)obj).getUnitName());
-        }
-        return out;
+		for (Object obj : in)
+		{
+			out.add(obj);
+			// System.out.println(((ProgramElement)obj).getUnitName());
+		}
+		return out;
 	}
 
 	public String getUnitName()

@@ -28,7 +28,7 @@ public class ModuleInfoTest extends TestCase
 	}
 
 	protected void tearDown() throws Exception
-	{		
+	{
 		ModuleInfoManager.clear();
 		mi = null;
 		super.tearDown();
@@ -81,17 +81,17 @@ public class ModuleInfoTest extends TestCase
 		{
 			fail("Failed to set new value");
 		}
-		
+
 		try
 		{
 			mi.setSettingValue("non existing setting", null);
 			fail("No exception on non existing value");
 		}
 		catch (ConfigurationException e)
-		{			
+		{
 		}
 	}
-	
+
 	public void testIncre()
 	{
 		Module m = mi.getIncreModule();
@@ -100,7 +100,7 @@ public class ModuleInfoTest extends TestCase
 		assertEquals(m.getModuleClass(), mi.getModuleClass());
 		assertEquals(m.isIncremental(), false);
 	}
-	
+
 	public void testNestedLoading()
 	{
 		try
@@ -110,13 +110,13 @@ public class ModuleInfoTest extends TestCase
 			assertNotSame(emi, mi);
 			assertEquals(emi.getStringSetting("AString"), "This is a string value");
 			assertEquals(emi.getStringSetting("extraString", "wrong"), "Additional Setting");
-			
+
 			mi.setSettingValue("anInteger", new Integer(54321));
 			if (mi.getIntSetting("anInteger") == emi.getIntSetting("anInteger"))
 			{
 				fail("emi.settings.anInteger should not be equal to mi.settings.anInteger");
 			}
-			
+
 			Module m = emi.getIncreModule();
 			assertNotNull(m);
 			assertEquals(m.getName(), "test");
@@ -125,7 +125,7 @@ public class ModuleInfoTest extends TestCase
 		}
 		catch (ConfigurationException e)
 		{
-			fail("Exception loading module info xml: "+e.getMessage());
+			fail("Exception loading module info xml: " + e.getMessage());
 		}
 	}
 }

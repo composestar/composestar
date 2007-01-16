@@ -27,15 +27,15 @@ public class ConcernCrumbs
 {
 	protected Concern concern;
 
-	protected Map<String,Breadcrumb> inputCrumbs;
+	protected Map<String, Breadcrumb> inputCrumbs;
 
-	protected Map<String,Breadcrumb> outputCrumbs;
+	protected Map<String, Breadcrumb> outputCrumbs;
 
 	public ConcernCrumbs(Concern inConcern)
 	{
 		concern = inConcern;
-		inputCrumbs = new HashMap<String,Breadcrumb>();
-		outputCrumbs = new HashMap<String,Breadcrumb>();
+		inputCrumbs = new HashMap<String, Breadcrumb>();
+		outputCrumbs = new HashMap<String, Breadcrumb>();
 	}
 
 	public void addCrumb(Breadcrumb crumb)
@@ -49,7 +49,7 @@ public class ConcernCrumbs
 				inputCrumbs.put(crumb.getMessage().getSelector().getName(), crumb);
 		}
 	}
-	
+
 	public Breadcrumb getInputCrumb(String selector)
 	{
 		if (inputCrumbs.containsKey(selector))
@@ -59,18 +59,18 @@ public class ConcernCrumbs
 		// return the "+" crumb otherwise
 		return inputCrumbs.get(Message.UNDISTINGUISHABLE_SELECTOR.getName());
 	}
-	
+
 	public Iterator<Breadcrumb> getInputCrumbs()
 	{
 		return inputCrumbs.values().iterator();
 	}
-	
+
 	public Breadcrumb getOutputCrumb(String selector)
 	{
-		//TODO:
+		// TODO:
 		throw new UnsupportedOperationException();
 	}
-	
+
 	public Iterator<Breadcrumb> getOutputCrumbs()
 	{
 		return outputCrumbs.values().iterator();

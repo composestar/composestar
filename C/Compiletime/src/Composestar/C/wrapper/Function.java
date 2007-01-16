@@ -160,8 +160,7 @@ public class Function extends WeaveblePoint
 			String key = (String) keys.nextElement();
 			if (key.equalsIgnoreCase("tokenNumber"))
 			{
-				System.out.print(" " + key + ":"
-						+ (node).getAttribute(key));
+				System.out.print(" " + key + ":" + (node).getAttribute(key));
 			}
 			else if (key.equalsIgnoreCase("source"))
 			{
@@ -169,8 +168,7 @@ public class Function extends WeaveblePoint
 			}
 			else if (key.equalsIgnoreCase("scopeName"))
 			{
-				System.out.print("   scope :"
-						+ (node).getAttribute(key));
+				System.out.print("   scope :" + (node).getAttribute(key));
 			}
 			else
 			{
@@ -195,8 +193,7 @@ public class Function extends WeaveblePoint
 			printOneNode(n);
 			if (((ExitPoint) returnPoints.elementAt(i)).isSimpleVarReturn())
 			{
-				System.out.println(" return value: "
-						+ ((ExitPoint) returnPoints.elementAt(i)).getValueID());
+				System.out.println(" return value: " + ((ExitPoint) returnPoints.elementAt(i)).getValueID());
 			}
 		}
 
@@ -272,10 +269,10 @@ public class Function extends WeaveblePoint
 				else if (param.type[i] == 27 && ptype.type[j] == 98)
 				{
 					// can
-																			// also
-																			// be a
-																			// typedef
-																			// :(
+					// also
+					// be a
+					// typedef
+					// :(
 					tmpfound = tmpfound | true;
 				}
 
@@ -321,24 +318,28 @@ public class Function extends WeaveblePoint
 		{
 			return false;
 		}
-        for (Object inParameter : this.inParameters) {
-            Parameter param = (Parameter) inParameter;
-            if (this.matchType(param, type)) {
-                return true;
-            }
-        }
-        return false;
+		for (Object inParameter : this.inParameters)
+		{
+			Parameter param = (Parameter) inParameter;
+			if (this.matchType(param, type))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean hasParameterWithName(String name)
 	{
-        for (Object inParameter : this.inParameters) {
-            Parameter param = (Parameter) inParameter;
-            if (param.getValueID().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+		for (Object inParameter : this.inParameters)
+		{
+			Parameter param = (Parameter) inParameter;
+			if (param.getValueID().equals(name))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String toString()

@@ -322,10 +322,10 @@ public class ILICIT implements WEAVER
 		INCRE incre = INCRE.instance();
 		List concerns = new ArrayList();
 		List concernsWithFMO = incre.getConcernsWithFMO();
-		
+
 		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
 		String target = FileUtils.removeExtension(orig.getTarget());
-		ArrayList sources = new ArrayList((Collection)incre.externalSourcesBySource.get(orig));
+		ArrayList sources = new ArrayList((Collection) incre.externalSourcesBySource.get(orig));
 		sources.add(0, orig.getFileName());
 
 		if (!concernsWithFMO.isEmpty())
@@ -357,10 +357,10 @@ public class ILICIT implements WEAVER
 		INCRE incre = INCRE.instance();
 		DataStore ds = incre.getCurrentRepository();
 		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
-				
+
 		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
 		String target = FileUtils.removeExtension(orig.getTarget());
-		ArrayList sources = new ArrayList((Collection)incre.externalSourcesBySource.get(orig));
+		ArrayList sources = new ArrayList((Collection) incre.externalSourcesBySource.get(orig));
 		sources.add(0, orig.getFileName());
 
 		if (!concernsWithFMO.isEmpty())
@@ -417,10 +417,10 @@ public class ILICIT implements WEAVER
 	{
 		INCRE incre = INCRE.instance();
 		ArrayList result = new ArrayList();
-		
+
 		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
 		String target = FileUtils.removeExtension(orig.getTarget());
-		ArrayList sources = new ArrayList((Collection)incre.externalSourcesBySource.get(orig));
+		ArrayList sources = new ArrayList((Collection) incre.externalSourcesBySource.get(orig));
 		sources.add(0, orig.getFileName());
 
 		Iterator it = incre.getAllInstancesOfOrdered(CompiledImplementation.class);
@@ -475,10 +475,10 @@ public class ILICIT implements WEAVER
 		INCRE incre = INCRE.instance();
 		DataStore ds = incre.getCurrentRepository();
 		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
-		
+
 		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
 		String target = FileUtils.removeExtension(orig.getTarget());
-		ArrayList sources = new ArrayList((Collection)incre.externalSourcesBySource.get(orig));
+		ArrayList sources = new ArrayList((Collection) incre.externalSourcesBySource.get(orig));
 		sources.add(0, orig.getFileName());
 
 		if (!concernsWithFMO.isEmpty())

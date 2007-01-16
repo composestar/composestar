@@ -201,11 +201,12 @@ public class Pattern
 
 				RegularTransition transition1 = new RegularTransition(startState, endState);
 				transition1.setNegation(true);
-                for (String resourceOperation : resourceOperations) {
-                    transition1.addResourceOperation(resourceOperation);
-                }
+				for (String resourceOperation : resourceOperations)
+				{
+					transition1.addResourceOperation(resourceOperation);
+				}
 
-                return result;
+				return result;
 			}
 			else
 			{

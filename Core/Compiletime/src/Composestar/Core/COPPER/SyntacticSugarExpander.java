@@ -143,52 +143,55 @@ public class SyntacticSugarExpander
 		}
 	}
 
-//	private AstManipulator am;
+	// private AstManipulator am;
 
-//	private void AddDefault()
-//	{
-//		String concernName;
-//		String fmName;
-//		concernName = am.getValue("concern\\@0");
-//		fmName = concernName + "_interface";
-//		am.add("concern\\filtermodule\\" + fmName);
-//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\disp");
-//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\type\\Dispatch");
-//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\[");
-//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\selector\\inner");
-//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\target\\*");
-//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\;");
-//		am.add("concern\\superimposition\\filtermodules\\filtermodule@lastnew\\self");
-//		am.add("concern\\superimposition\\filtermodules\\filtermodule@last\\filtermoduleset\\filtermodule element\\" + fmName);
-//	}
+	// private void AddDefault()
+	// {
+	// String concernName;
+	// String fmName;
+	// concernName = am.getValue("concern\\@0");
+	// fmName = concernName + "_interface";
+	// am.add("concern\\filtermodule\\" + fmName);
+	// am.add("concern\\filtermodule\\inputfilters\\inputfilter\\disp");
+	// am.add("concern\\filtermodule\\inputfilters\\inputfilter\\type\\Dispatch");
+	// am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\[");
+	// am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\selector\\inner");
+	// am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\target\\*");
+	// am.add("concern\\filtermodule\\inputfilters\\inputfilter\\;");
+	// am.add("concern\\superimposition\\filtermodules\\filtermodule@lastnew\\self");
+	// am.add("concern\\superimposition\\filtermodules\\filtermodule@last\\filtermoduleset\\filtermodule
+	// element\\" + fmName);
+	// }
 
-//	private void ExpandOnSelf()
-//	{
-//		String fmName;
-//		boolean check = true;
-//		int i = 0;
-//		while (check)
-//		{
-//			check = am.checkifExists("concern\\filtermodule@" + i);
-//			if (!check) break;
-//			fmName = am.getValue("concern\\filtermodule@" + i + "\\@0");
-//			check = am.checkifExists("concern\\filtermodule@" + i + "\\@1");
-//			if (!check) break;
-//			if ("on".equals(am.getValue("concern\\filtermodule@" + i + "\\@1")))
-//			{
-//				am.add("concern\\superimposition\\filtermodule@lastnew\\self");
-//				am.add("concern\\superimposition\\filtermodule@last\\filtermoduleset\\filtermodule element\\" + fmName);
-//			}
-//			i++;
-//		}
-//	}
-	 
-//	private void AddSelfReference()
-//	{
-//		String concernName;
-//		concernName = am.getValue("concern\\@0");
-//		am.add("concern\\superimposition\\selectors\\selector@lastnew\\self");
-//		am.add("concern\\superimposition\\selectors\\selector@last\\selectorsexpression\\=");
-//		am.add("concern\\superimposition\\selectors\\selector@last\\selectorsexpression\\" + concernName);
-//	}
+	// private void ExpandOnSelf()
+	// {
+	// String fmName;
+	// boolean check = true;
+	// int i = 0;
+	// while (check)
+	// {
+	// check = am.checkifExists("concern\\filtermodule@" + i);
+	// if (!check) break;
+	// fmName = am.getValue("concern\\filtermodule@" + i + "\\@0");
+	// check = am.checkifExists("concern\\filtermodule@" + i + "\\@1");
+	// if (!check) break;
+	// if ("on".equals(am.getValue("concern\\filtermodule@" + i + "\\@1")))
+	// {
+	// am.add("concern\\superimposition\\filtermodule@lastnew\\self");
+	// am.add("concern\\superimposition\\filtermodule@last\\filtermoduleset\\filtermodule
+	// element\\" + fmName);
+	// }
+	// i++;
+	// }
+	// }
+
+	// private void AddSelfReference()
+	// {
+	// String concernName;
+	// concernName = am.getValue("concern\\@0");
+	// am.add("concern\\superimposition\\selectors\\selector@lastnew\\self");
+	// am.add("concern\\superimposition\\selectors\\selector@last\\selectorsexpression\\=");
+	// am.add("concern\\superimposition\\selectors\\selector@last\\selectorsexpression\\"
+	// + concernName);
+	// }
 }

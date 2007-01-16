@@ -44,7 +44,7 @@ public class Breadcrumb
 	/**
 	 * Resolved status of the trails.
 	 */
-	protected /*transient*/ boolean resolvedStatus;
+	protected/* transient */boolean resolvedStatus;
 
 	public Breadcrumb(Concern inConcern, Message inMessage, int inFilterPosition)
 	{
@@ -101,7 +101,7 @@ public class Breadcrumb
 		resolvedStatus = false; // new trails are never resolved
 		return trail;
 	}
-	
+
 	public Trail addTrail(Trail base)
 	{
 		Trail trail = new Trail(this, base);

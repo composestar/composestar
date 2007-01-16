@@ -31,17 +31,20 @@ public class AnnotationCollector implements CTCommonModule
 		{
 			ClassMap classmap = ClassMap.instance();
 			HashMap classes = classmap.map();
-			for (Object o : classes.values()) {
-                Class c = (Class) o;
-                try {
-                    fetchMethodAnnotations(c);
-                }
-                catch (Throwable t) {
-                    Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Error while fetching annotations from type: "
-                            + c.getName() + " --> " + t.getMessage());
-                }
-            }
-        }
+			for (Object o : classes.values())
+			{
+				Class c = (Class) o;
+				try
+				{
+					fetchMethodAnnotations(c);
+				}
+				catch (Throwable t)
+				{
+					Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Error while fetching annotations from type: "
+							+ c.getName() + " --> " + t.getMessage());
+				}
+			}
+		}
 		catch (Exception e)
 		{
 			throw new ModuleException(e.getMessage(), "AnnotationCollector");
@@ -58,24 +61,27 @@ public class AnnotationCollector implements CTCommonModule
 	{
 
 		Method[] methods = c.getMethods();
-        for (Method method : methods) {
-            Annotation[] annotations = method.getAnnotations();
-            for (Annotation annotation : annotations) {
-                JavaAnnotation annot = new JavaAnnotation();
-                Type annotType = getTypeLocation(annotation.annotationType().getName());
-                if (annotType != null) {
-                    annot.register(annotType, getMethodLocation(getTypeLocation(c.getName()), method.getName()));
-                }
+		for (Method method : methods)
+		{
+			Annotation[] annotations = method.getAnnotations();
+			for (Annotation annotation : annotations)
+			{
+				JavaAnnotation annot = new JavaAnnotation();
+				Type annotType = getTypeLocation(annotation.annotationType().getName());
+				if (annotType != null)
+				{
+					annot.register(annotType, getMethodLocation(getTypeLocation(c.getName()), method.getName()));
+				}
 
-                // retrieving value
-                String value = "";
-                String annotStr = annotation.toString();
-                // "@Composestar.Semantics(value=args.read)"
-                value = annotStr.substring(annotStr.indexOf("=") + 1, annotStr.indexOf(")"));
-                annot.setValue(value);
-            }
-        }
-    }
+				// retrieving value
+				String value = "";
+				String annotStr = annotation.toString();
+				// "@Composestar.Semantics(value=args.read)"
+				value = annotStr.substring(annotStr.indexOf("=") + 1, annotStr.indexOf(")"));
+				annot.setValue(value);
+			}
+		}
+	}
 
 	/**
 	 * Locates a method. Returns a <code>MethodInfo</code> instance or null if
@@ -90,13 +96,15 @@ public class AnnotationCollector implements CTCommonModule
 		if (type != null)
 		{
 			List methods = type.getMethods();
-			for (Object method1 : methods) {
-                MethodInfo method = (MethodInfo) method1;
-                if (method.Name.equals(methodName)) {
-                    return method;
-                }
-            }
-        }
+			for (Object method1 : methods)
+			{
+				MethodInfo method = (MethodInfo) method1;
+				if (method.Name.equals(methodName))
+				{
+					return method;
+				}
+			}
+		}
 		return null;
 	}
 

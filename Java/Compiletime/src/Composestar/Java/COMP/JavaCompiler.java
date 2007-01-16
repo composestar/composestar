@@ -48,11 +48,12 @@ public class JavaCompiler implements LangCompiler
 
 		// add dependencies to classpath
 		Iterator deps = p.getDependencies().iterator();
-        for (Object o1 : p.getDependencies()) {
-            options = options + ";" + FileUtils.quote(((Dependency) o1).getFileName());
-        }
+		for (Object o1 : p.getDependencies())
+		{
+			options = options + ";" + FileUtils.quote(((Dependency) o1).getFileName());
+		}
 
-        // add destination directory
+		// add destination directory
 		String buildPath = p.getBasePath() + "obj/";
 		options = options + " -d " + FileUtils.quote(buildPath);
 
@@ -66,18 +67,19 @@ public class JavaCompiler implements LangCompiler
 		command = action.getArgument();
 		command = lang.getCompilerSettings().getProperty("executable") + " " + command;
 		command = command.replaceAll("\\{OPTIONS\\}", options);
-		
+
 		Iterator sourceIt = p.getSources().iterator();
-        for (Object o : p.getSources()) {
-            compileSource(command, ((Source) o).getFileName(), buildPath);
-        }
-    }
-	
+		for (Object o : p.getSources())
+		{
+			compileSource(command, ((Source) o).getFileName(), buildPath);
+		}
+	}
+
 	private void compileSource(String command, String source, String buildPath) throws CompilerException
 	{
-		
+
 		command = command.replaceAll("\\{SOURCES\\}", FileUtils.quote(source));
-				
+
 		// compile
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
 		int result = cmdExec.exec("call " + command, new File(buildPath));
@@ -103,6 +105,7 @@ public class JavaCompiler implements LangCompiler
 			}
 		}
 	}
+
 	/**
 	 * Compiles the dummy sources of a project.
 	 * 
@@ -143,8 +146,8 @@ public class JavaCompiler implements LangCompiler
 		createFile(p, true, target);
 
 		CompilerAction action = lang.getCompilerSettings().getCompilerAction("Compile");
-		if (action == null) 
-		{	
+		if (action == null)
+		{
 			throw new CompilerException("Cannot obtain compileraction");
 		}
 
@@ -201,22 +204,24 @@ public class JavaCompiler implements LangCompiler
 		String targetPath = basePath + "obj/" + dummyPath;
 
 		Iterator sourceIt = p.getSources().iterator();
-        for (Object o : p.getSources()) {
-            Source source = (Source) o;
-            String dummyfile = FileUtils.normalizeFilename(source.getDummy());
-            String classPath = dummyfile.substring(dummyfile.indexOf(dummyPath) + dummyPath.length());
-            classPath = classPath.replaceAll(FileUtils.getFilenamePart(dummyfile), "*.class");
-            classpaths.add(classPath);
-        }
+		for (Object o : p.getSources())
+		{
+			Source source = (Source) o;
+			String dummyfile = FileUtils.normalizeFilename(source.getDummy());
+			String classPath = dummyfile.substring(dummyfile.indexOf(dummyPath) + dummyPath.length());
+			classPath = classPath.replaceAll(FileUtils.getFilenamePart(dummyfile), "*.class");
+			classpaths.add(classPath);
+		}
 
-        String paths = "";
+		String paths = "";
 		Iterator pathIt = classpaths.iterator();
-        for (Object classpath : classpaths) {
-            String path = (String) classpath;
-            paths += " " + path;
-        }
+		for (Object classpath : classpaths)
+		{
+			String path = (String) classpath;
+			paths += " " + path;
+		}
 
-        File targetDir = new File(targetPath);
+		File targetDir = new File(targetPath);
 		String name = p.getName() + ".dummies.jar";
 		String compiledUnit = targetPath + name;
 
@@ -230,7 +235,7 @@ public class JavaCompiler implements LangCompiler
 		String CompilerOutput = cmdExec.outputError();
 
 		if (result != 0)
-		{ 
+		{
 			// there was an error
 			try
 			{
@@ -269,16 +274,20 @@ public class JavaCompiler implements LangCompiler
 		StringBuffer sourcefiles = new StringBuffer();
 
 		Iterator sourceIt = p.getSources().iterator();
-        for (Object o : p.getSources()) {
-            Source s = (Source) o;
-            if (dummies) {
-                sourcefiles.append("\"").append(FileUtils.normalizeFilename(s.getDummy())).append("\"");
-            } else {
-                sourcefiles.append("\"").append(s.getFileName()).append("\"" + "\n");
-            }
-        }
+		for (Object o : p.getSources())
+		{
+			Source s = (Source) o;
+			if (dummies)
+			{
+				sourcefiles.append("\"").append(FileUtils.normalizeFilename(s.getDummy())).append("\"");
+			}
+			else
+			{
+				sourcefiles.append("\"").append(s.getFileName()).append("\"" + "\n");
+			}
+		}
 
-        // emit file
+		// emit file
 		try
 		{
 			BufferedWriter bw = new BufferedWriter(new FileWriter(target));

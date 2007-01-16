@@ -20,7 +20,8 @@ public class JavaLOLA extends LOLA
 	/**
 	 * Constructor
 	 * 
-	 * @param model the language model to be used by this instance of the logic            language
+	 * @param model the language model to be used by this instance of the logic
+	 *            language
 	 */
 	public JavaLOLA(JavaLanguageModel model)
 	{

@@ -129,10 +129,11 @@ public class retrieveAST
 			usedTypes.putAll(treeparser.getUsedTypes());
 			HashMap annotations = treeparser.getAnnotationASTMap();
 			Iterator annoIterator = annotations.values().iterator();
-            for (Object o : annotations.values()) {
-                ((Annotation) o).addAnnotationtoLAMA();
-            }
-            // printMetaModel();
+			for (Object o : annotations.values())
+			{
+				((Annotation) o).addAnnotationtoLAMA();
+			}
+			// printMetaModel();
 		}
 		catch (RecognitionException e)
 		{
@@ -151,8 +152,7 @@ public class retrieveAST
 		System.out.println("Meta model for file: " + this.getFilename());
 		if (this.introductionPoint != null)
 		{
-			System.out.println("Introduction JP: "
-					+ this.introductionPoint.getNode().getLineNum());
+			System.out.println("Introduction JP: " + this.introductionPoint.getNode().getLineNum());
 		}
 		for (int i = 0; i < getFunctions().size(); i++)
 		{

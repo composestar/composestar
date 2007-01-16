@@ -287,7 +287,7 @@ public class DotNETCompiler implements LangCompiler
 		PathSettings ps = Configuration.instance().getPathSettings();
 		String targetFile = ps.getPath("Base") + "obj/" + src.getTarget();
 		String ilFile = ps.getPath("Base") + "obj/Weaver/" + src.getTarget();
-		
+
 		String ext = (src.isExecutable() ? ".exe" : ".dll");
 		ilFile = ilFile.replaceAll(ext, ".il");
 
@@ -341,8 +341,7 @@ public class DotNETCompiler implements LangCompiler
 	/**
 	 * Returns a list containing modified signatures (signatures with
 	 * ADDED/REMOVED methodwrappers) of concerns extracted from external linked
-	 * source files 
-	 * Used by INCRE
+	 * source files Used by INCRE
 	 */
 	public ArrayList fullSignatures(Source src) throws ModuleException
 	{
@@ -355,25 +354,25 @@ public class DotNETCompiler implements LangCompiler
 		String buildPath = Configuration.instance().getPathSettings().getPath("Base") + "obj/";
 		concernsToCheck = incre.getConcernsWithModifiedSignature();
 
-		if(!concernsToCheck.isEmpty())
+		if (!concernsToCheck.isEmpty())
 		{
 			// add full signatures of external linked sources
 			String target = buildPath + src.getTarget();
-			extSources = (ArrayList)incre.externalSourcesBySource.get(src);
-			
-			if(extSources == null)
+			extSources = (ArrayList) incre.externalSourcesBySource.get(src);
+
+			if (extSources == null)
 			{
-				extSources = (ArrayList)externalSources(src);
+				extSources = (ArrayList) externalSources(src);
 			}
-		
+
 			Iterator conIter = concernsToCheck.iterator();
-			while ( conIter.hasNext() )
+			while (conIter.hasNext())
 			{
-				Concern c = (Concern)conIter.next();
-				
-				if(incre.declaredInSources(c,extSources))
+				Concern c = (Concern) conIter.next();
+
+				if (incre.declaredInSources(c, extSources))
 				{
-					if(!concernsCheckedByKey.contains(c.getQualifiedName()))
+					if (!concernsCheckedByKey.contains(c.getQualifiedName()))
 					{
 						signatures.add(c.getSignature());
 						concernsCheckedByKey.add(c.getQualifiedName());

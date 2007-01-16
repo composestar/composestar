@@ -227,14 +227,15 @@ public class ViewPanel extends JPanel
 	{
 		// first remove highlight:
 		Collection nodes = nodeMap.values();
-        for (Object node1 : nodes) {
-            Node node = (Node) node1;
-            node.highlighted = false;
-        }
+		for (Object node1 : nodes)
+		{
+			Node node = (Node) node1;
+			node.highlighted = false;
+		}
 
-        // then add highlight:
-        Iterator iter = executionStates.iterator();
-        while (iter.hasNext())
+		// then add highlight:
+		Iterator iter = executionStates.iterator();
+		while (iter.hasNext())
 		{
 			ExecutionState state = (ExecutionState) iter.next();
 			Node node = (Node) nodeMap.get(state);
@@ -301,11 +302,12 @@ public class ViewPanel extends JPanel
 
 		int width = 0;
 		int newYOffset = yOffset + 2 * (MARGIN + RADIUS);
-        for (Edge primaryEdge : node.primaryEdges) {
-            width += calculatePosition(primaryEdge.endNode, xOffset + width, newYOffset);
-        }
+		for (Edge primaryEdge : node.primaryEdges)
+		{
+			width += calculatePosition(primaryEdge.endNode, xOffset + width, newYOffset);
+		}
 
-        this.height = Math.max(yOffset, this.height);
+		this.height = Math.max(yOffset, this.height);
 
 		return width;
 	}
@@ -330,11 +332,12 @@ public class ViewPanel extends JPanel
 
 		g.drawOval(node.xPos - RADIUS, node.yPos - RADIUS, 2 * RADIUS, 2 * RADIUS);
 
-        for (Edge primaryEdge : node.primaryEdges) {
-            paintNode(g, primaryEdge.endNode);
-        }
+		for (Edge primaryEdge : node.primaryEdges)
+		{
+			paintNode(g, primaryEdge.endNode);
+		}
 
-        // paint label:
+		// paint label:
 		FontMetrics metrics = g.getFontMetrics();
 		String label = getLabel(node.flowNode);
 		int width = metrics.stringWidth(label);
@@ -350,14 +353,16 @@ public class ViewPanel extends JPanel
 
 	private void paintEdges(Graphics g, Node node)
 	{
-        for (Edge primaryEdge : node.primaryEdges) {
-            paintEdge(g, primaryEdge);
-        }
+		for (Edge primaryEdge : node.primaryEdges)
+		{
+			paintEdge(g, primaryEdge);
+		}
 
-        for (Edge secondaryEdge : node.secondaryEdges) {
-            paintEdge(g, secondaryEdge);
-        }
-    }
+		for (Edge secondaryEdge : node.secondaryEdges)
+		{
+			paintEdge(g, secondaryEdge);
+		}
+	}
 
 	private void paintEdge(Graphics g, Edge edge)
 	{
@@ -436,11 +441,12 @@ public class ViewPanel extends JPanel
 		{
 			int width = 1;
 
-            for (Edge primaryEdge : primaryEdges) {
-                width += primaryEdge.endNode.treeWidth();
-            }
+			for (Edge primaryEdge : primaryEdges)
+			{
+				width += primaryEdge.endNode.treeWidth();
+			}
 
-            return width;
+			return width;
 		}
 	}
 

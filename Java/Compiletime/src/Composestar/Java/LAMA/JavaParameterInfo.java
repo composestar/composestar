@@ -12,7 +12,8 @@ import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.UnitResult;
 
 /**
- * An instance of <code>JavaParameterInfo</code> represents a parameter object in Java. It extends the generic object <code>ParameterInfo</code>.
+ * An instance of <code>JavaParameterInfo</code> represents a parameter object
+ * in Java. It extends the generic object <code>ParameterInfo</code>.
  * 
  * @see Composestar.Core.LAMA.ParameterInfo
  */
@@ -27,7 +28,8 @@ public class JavaParameterInfo extends ParameterInfo
 	/**
 	 * Constructor.
 	 * 
-	 * @param p - <code>java.lang.Class</code> instance representing this parameter.
+	 * @param p - <code>java.lang.Class</code> instance representing this
+	 *            parameter.
 	 */
 	public JavaParameterInfo(Class p)
 	{
@@ -68,13 +70,13 @@ public class JavaParameterInfo extends ParameterInfo
 
 		return null;
 	}
-	
+
 	/**
 	 * Custom deserialization of this object
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		
+
 	}
 
 	/**
@@ -82,6 +84,6 @@ public class JavaParameterInfo extends ParameterInfo
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		
+
 	}
 }

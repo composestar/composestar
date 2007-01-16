@@ -53,7 +53,7 @@ public final class INCRE implements CTCommonModule
 	private static INCRE increInstance;
 
 	private static final String HISTORY_FILENAME = "history.dat";
-	
+
 	public static final String MODULE_NAME = "INCRE";
 
 	public boolean enabled;
@@ -63,11 +63,11 @@ public final class INCRE implements CTCommonModule
 	private DataStore currentRepository;
 
 	public DataStore history;
-	
+
 	public String historyfile = "";
-	
+
 	private Date lastCompTime;
-	
+
 	public boolean searchingHistory;
 
 	public MyComparator comparator;
@@ -102,7 +102,7 @@ public final class INCRE implements CTCommonModule
 	private ArrayList historyConcernsWithModifiedSignatures;
 
 	private String projectSources;
-	
+
 	protected ModuleInfo moduleInfo;
 
 	private INCRE()
@@ -117,7 +117,7 @@ public final class INCRE implements CTCommonModule
 		historyObjectsOrdered = new HashMap();
 		externalSourcesBySource = new HashMap();
 		configurations = new INCREConfigurations();
-		modulesByName = new HashMap();		
+		modulesByName = new HashMap();
 	}
 
 	public static INCRE instance()
@@ -134,7 +134,7 @@ public final class INCRE implements CTCommonModule
 	{
 		PathSettings ps = config.getPathSettings();
 		historyfile = ps.getPath("Base") + HISTORY_FILENAME;
-		
+
 		// check whether incremental compilation is enabled
 		enabled = moduleInfo.getBooleanSetting("enabled");
 
@@ -198,7 +198,7 @@ public final class INCRE implements CTCommonModule
 		{
 			return file.getAbsolutePath();
 		}
-		
+
 		file = new File(filename); // absolute path
 		if (file.exists())
 		{
@@ -232,12 +232,13 @@ public final class INCRE implements CTCommonModule
 		List result = new ArrayList();
 
 		Iterator sourceIt = config.getProjects().getSources().iterator();
-        for (Object o : config.getProjects().getSources()) {
-            Source s = (Source) o;
-            result.add(s.getFileName());
-        }
+		for (Object o : config.getProjects().getSources())
+		{
+			Source s = (Source) o;
+			result.add(s.getFileName());
+		}
 
-        return result;
+		return result;
 	}
 
 	/**
@@ -489,13 +490,15 @@ public final class INCRE implements CTCommonModule
 				Source s = (Source) obj;
 				List historysources = configurations.historyconfig.getProjects().getSources();
 				Iterator sources = historysources.iterator();
-                for (Object historysource1 : historysources) {
-                    Source historysource = (Source) historysource1;
-                    if (s.getFileName().equals(historysource.getFileName())) {
-                        return historysource;
-                    }
-                }
-            }
+				for (Object historysource1 : historysources)
+				{
+					Source historysource = (Source) historysource1;
+					if (s.getFileName().equals(historysource.getFileName()))
+					{
+						return historysource;
+					}
+				}
+			}
 
 			Iterator objIter = history.getAllInstancesOf(obj.getClass());
 			while (objIter.hasNext())
@@ -609,11 +612,12 @@ public final class INCRE implements CTCommonModule
 			// sources
 			List conList = configurations.historyconfig.getProjects().getConcernSources();
 			Iterator cps = conList.iterator();
-            for (Object aConList : conList) {
-                ConcernSource cs = (ConcernSource) aConList;
-                searchBuffer.append(cs.getFileName());
-            }
-        }
+			for (Object aConList : conList)
+			{
+				ConcernSource cs = (ConcernSource) aConList;
+				searchBuffer.append(cs.getFileName());
+			}
+		}
 		else if (fixedFile.endsWith(".dll") || fixedFile.endsWith(".exe"))
 		{
 			// TODO: use SupportedLanguages and move/replace .NET specific code
@@ -634,12 +638,13 @@ public final class INCRE implements CTCommonModule
 			// searchStr = prop.getProperty("Dependencies");
 			List depList = configurations.historyconfig.getProjects().getDependencies();
 			Iterator dependencies = depList.iterator();
-            for (Object aDepList : depList) {
-                Dependency d = (Dependency) aDepList;
-                searchBuffer.append(d.getFileName());
-            }
+			for (Object aDepList : depList)
+			{
+				Dependency d = (Dependency) aDepList;
+				searchBuffer.append(d.getFileName());
+			}
 
-            // searchStr += prop.getProperty("Assemblies");
+			// searchStr += prop.getProperty("Assemblies");
 			List dummies = configurations.historyconfig.getProjects().getCompiledDummies();
 			String[] dummyPaths = (String[]) dummies.toArray(new String[dummies.size()]);
 			searchBuffer.append(StringConverter.stringListToString(dummyPaths));
@@ -705,8 +710,7 @@ public final class INCRE implements CTCommonModule
 	 * from unmodified libraries/sources are excluded If this information is not
 	 * available then the primitive concern is included
 	 * 
-	 * @param ds
-	 *            Datastore to search
+	 * @param ds Datastore to search
 	 * @return
 	 */
 	public ArrayList getAllModifiedPrimitiveConcerns(DataStore ds) throws ModuleException
@@ -768,10 +772,8 @@ public final class INCRE implements CTCommonModule
 	/**
 	 * Returns true if concern is possible declared in a sourcefile
 	 * 
-	 * @param c -
-	 *            The concern possible declared in sourcefile
-	 * @param src -
-	 *            Fullpath of sourcefile
+	 * @param c - The concern possible declared in sourcefile
+	 * @param src - Fullpath of sourcefile
 	 * @param source
 	 */
 	public boolean declaredInSource(Concern c, String source)
@@ -795,7 +797,7 @@ public final class INCRE implements CTCommonModule
 			{
 				location = FileUtils.normalizeFilename(location);
 				source = FileUtils.normalizeFilename(source);
-								
+
 				if (location.equals(source))
 				{
 					return true;
@@ -814,23 +816,23 @@ public final class INCRE implements CTCommonModule
 	/**
 	 * Returns true if concern is possible declared in one of the source files
 	 * 
-	 * @param c -
-	 *            The concern possible declared in sourcefile
-	 * @param sources -
-	 *            Fullpath of sourcefile
+	 * @param c - The concern possible declared in sourcefile
+	 * @param sources - Fullpath of sourcefile
 	 */
 	public boolean declaredInSources(Concern c, ArrayList sources)
 	{
 
 		Iterator sourceItr = sources.iterator();
-        for (Object source : sources) {
-            String src = (String) source;
-            if (declaredInSource(c, src)) {
-                return true;
-            }
-        }
+		for (Object source : sources)
+		{
+			String src = (String) source;
+			if (declaredInSource(c, src))
+			{
+				return true;
+			}
+		}
 
-        return false;
+		return false;
 	}
 
 	/**
@@ -926,26 +928,29 @@ public final class INCRE implements CTCommonModule
 				{
 					// iterate over all files
 					Iterator fileItr = files.iterator();
-                    for (Object file : files) {
-                        String currentFile = (String) file;
-                        if (fdep.isAdded() && isFileAdded(currentFile, fdep)) {
-                            // check files for added to project or not
-                            // optimalisation: certain files do not need this
-                            // check
-                            // can be configured in .xml file by isAdded=false
-                            Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
-                                    + ",dep=" + dep.getName() + ",input=" + input + ']');
-                            return false; // file added to project thus
-                            // modified!
-                        }
-                        if (isFileModified(currentFile)) {
-                            overhead.stop();
-                            Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
-                                    + ",dep=" + dep.getName() + ",input=" + input + ']');
-                            return false;
-                        }
-                    }
-                }
+					for (Object file : files)
+					{
+						String currentFile = (String) file;
+						if (fdep.isAdded() && isFileAdded(currentFile, fdep))
+						{
+							// check files for added to project or not
+							// optimalisation: certain files do not need this
+							// check
+							// can be configured in .xml file by isAdded=false
+							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
+									+ ",dep=" + dep.getName() + ",input=" + input + ']');
+							return false; // file added to project thus
+							// modified!
+						}
+						if (isFileModified(currentFile))
+						{
+							overhead.stop();
+							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
+									+ ",dep=" + dep.getName() + ",input=" + input + ']');
+							return false;
+						}
+					}
+				}
 			}
 			else
 			{
@@ -1023,7 +1028,7 @@ public final class INCRE implements CTCommonModule
 			f.delete();
 		}
 	}
-	
+
 	/**
 	 * Reads a written repository from disk
 	 */
@@ -1032,7 +1037,7 @@ public final class INCRE implements CTCommonModule
 		try
 		{
 			INCRE incre = INCRE.instance();
-			
+
 			FileInputStream fis = new FileInputStream(historyfile);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			ObjectInputStream ois = new ObjectInputStream(bis);
@@ -1065,7 +1070,7 @@ public final class INCRE implements CTCommonModule
 			return false;
 		}
 	}
-	
+
 	public void addModuleByName(String name, CTCommonModule module)
 	{
 		this.modulesByName.put(name, module);

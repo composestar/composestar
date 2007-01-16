@@ -67,7 +67,8 @@ public class CPSFileParser
 		}
 		catch (IOException ioe)
 		{
-			throw new ModuleException("The specified file '" + file + "' could not be found or read!", COPPER.MODULE_NAME);
+			throw new ModuleException("The specified file '" + file + "' could not be found or read!",
+					COPPER.MODULE_NAME);
 		}
 		finally
 		{

@@ -61,13 +61,15 @@ public class Resource
 	//	
 	public boolean operationIsInAlphabet(String operation)
 	{
-        for (Object anAlphabet : this.alphabet) {
-            String str = (String) anAlphabet;
-            if (str.equals(operation)) {
-                return true;
-            }
-        }
-        return false;
+		for (Object anAlphabet : this.alphabet)
+		{
+			String str = (String) anAlphabet;
+			if (str.equals(operation))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void addToAlphabet(String operation)

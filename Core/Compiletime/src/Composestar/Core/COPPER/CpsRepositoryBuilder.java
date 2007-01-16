@@ -122,7 +122,7 @@ public class CpsRepositoryBuilder
 	private SuperImposition si;
 
 	private Target ta;
-	
+
 	private HashMap orderingconstraints = new HashMap();
 
 	// stuff in the right place
@@ -1444,11 +1444,11 @@ public class CpsRepositoryBuilder
 			this.addToRepository(fmp);
 		}
 	}
-	
+
 	public void addFMOrderingConstraint(String fm, String fm1)
 	{
-		SyntacticOrderingConstraint constraint = (SyntacticOrderingConstraint)this.orderingconstraints.get(fm);
-		if(constraint == null) // First constraint 
+		SyntacticOrderingConstraint constraint = (SyntacticOrderingConstraint) this.orderingconstraints.get(fm);
+		if (constraint == null) // First constraint
 		{
 			constraint = new SyntacticOrderingConstraint(fm);
 			constraint.addRightFilterModule(fm1);
@@ -1457,7 +1457,7 @@ public class CpsRepositoryBuilder
 		else
 		{
 			constraint.addRightFilterModule(fm1);
-        }
+		}
 	}
 
 	/**
@@ -1753,7 +1753,7 @@ public class CpsRepositoryBuilder
 		completeInputFilters();
 		completeOutputFilters();
 		completeFilterElements();
-		
+
 		this.ds.addObject(FILTH.FILTER_ORDERING_SPEC, this.orderingconstraints);
 	}
 
@@ -1900,7 +1900,7 @@ public class CpsRepositoryBuilder
 				}
 				else
 				{
-					current.getRightOperator().setRightArgument(null); 
+					current.getRightOperator().setRightArgument(null);
 					// nothing after this
 				}
 			}

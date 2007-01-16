@@ -29,17 +29,19 @@ public class SourceExtractor
 			int endpos = b.lastIndexOf('}'); // Closing tag of concern
 			if (endpos > 0)
 			{
-				endpos = b.lastIndexOf('}', endpos - 1); // Closing tag of implementation by
+				endpos = b.lastIndexOf('}', endpos - 1); // Closing tag of
+															// implementation by
 			}
 
 			if (endpos <= 0)
 			{
-				throw new ModuleException("Expecting closing '}' at end of cps file and after embedded source", MODULE_NAME);
+				throw new ModuleException("Expecting closing '}' at end of cps file and after embedded source",
+						MODULE_NAME);
 			}
 
 			String es = b.substring(COPPER.getParser().startPos, endpos);
 			COPPER.setEmbeddedSource(es);
-			
+
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, es);
 		}
 	}

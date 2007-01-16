@@ -83,12 +83,14 @@ public class Parameter extends ParameterType
 	public void testParameter()
 	{
 
-        for (int aType : type) {
-            if (!(aType == GnuCTokenTypes.NTypedefName)) {
-                System.out.print(GeneralUtils.getTypeForID(aType) + " ");
-            }
-        }
-        if (defined)
+		for (int aType : type)
+		{
+			if (!(aType == GnuCTokenTypes.NTypedefName))
+			{
+				System.out.print(GeneralUtils.getTypeForID(aType) + " ");
+			}
+		}
+		if (defined)
 		{
 			System.out.print(additionaltypeValue);
 		}

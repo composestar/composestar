@@ -31,9 +31,9 @@ public class ModulesHandler extends DefaultHandler
 			{
 				String name = amap.getValue("name");
 				ModuleSettings m = new ModuleSettings();
-				
+
 				HashMap props = new HashMap();
-				
+
 				m.setName(name);
 				for (int i = 0; i < amap.getLength(); i++)
 				{
@@ -48,7 +48,7 @@ public class ModulesHandler extends DefaultHandler
 				}
 
 				Configuration.instance().getModuleSettings().addModule(name, m);
-				
+
 				Configuration.instance().addTmpModuleSettings(name, props);
 			}
 		}

@@ -45,28 +45,36 @@ public class ModelGenerator
 	{
 		output.println("%% Definition of language unit types\n");
 		Iterator types = model.getLanguageUnitTypes().iterator();
-        for (Object o1 : model.getLanguageUnitTypes()) {
-            LanguageUnitType type = (LanguageUnitType) o1;
-            if (type instanceof CompositeLanguageUnitType) {
-                output.println(genCompositeUnitTypePredicates((CompositeLanguageUnitType) type));
-            } else {
-                output.println(genUnitTypePredicates(type));
-            }
-        }
+		for (Object o1 : model.getLanguageUnitTypes())
+		{
+			LanguageUnitType type = (LanguageUnitType) o1;
+			if (type instanceof CompositeLanguageUnitType)
+			{
+				output.println(genCompositeUnitTypePredicates((CompositeLanguageUnitType) type));
+			}
+			else
+			{
+				output.println(genUnitTypePredicates(type));
+			}
+		}
 
-        output.println("\n\n%% Definition of relations between language units\n");
+		output.println("\n\n%% Definition of relations between language units\n");
 
 		Iterator rels = model.getRelationPredicates().values().iterator();
-        for (Object o : model.getRelationPredicates().values()) {
-            RelationPredicate rel = (RelationPredicate) o;
-            if (rel instanceof CompositeRelationPredicate) {
-                output.println(genCompositeRelationPredicate((CompositeRelationPredicate) rel));
-            } else {
-                output.println(genRelationPredicate(rel));
-            }
-        }
+		for (Object o : model.getRelationPredicates().values())
+		{
+			RelationPredicate rel = (RelationPredicate) o;
+			if (rel instanceof CompositeRelationPredicate)
+			{
+				output.println(genCompositeRelationPredicate((CompositeRelationPredicate) rel));
+			}
+			else
+			{
+				output.println(genRelationPredicate(rel));
+			}
+		}
 
-    }
+	}
 
 	private static String genUnitTypePredicates(LanguageUnitType type)
 	{
@@ -113,16 +121,17 @@ public class ModelGenerator
 		Collection containedTypes = type.getContainedTypes();
 
 		// Definition of isSomething(Unit) predicate
-        for (Object containedType1 : containedTypes) {
-            LanguageUnitType containedType = (LanguageUnitType) containedType1;
-            res.append("is").append(type.getType()).append("(Unit) :-\n");
-            res.append("  is").append(containedType.getType()).append("(Unit).\n");
-        }
-        res.append('\n');
+		for (Object containedType1 : containedTypes)
+		{
+			LanguageUnitType containedType = (LanguageUnitType) containedType1;
+			res.append("is").append(type.getType()).append("(Unit) :-\n");
+			res.append("  is").append(containedType.getType()).append("(Unit).\n");
+		}
+		res.append('\n');
 
 		// Definition of isSomethingWithName(Unit, Name) predicate
-        Iterator iter = containedTypes.iterator();
-        while (iter.hasNext())
+		Iterator iter = containedTypes.iterator();
+		while (iter.hasNext())
 		{
 			LanguageUnitType containedType = (LanguageUnitType) iter.next();
 			res.append("is").append(type.getType()).append("WithName(Unit, Name) :-\n");
@@ -227,13 +236,14 @@ public class ModelGenerator
 		StringBuffer res = new StringBuffer();
 
 		Iterator iter = containedRels.iterator();
-        for (Object containedRel1 : containedRels) {
-            RelationPredicate containedRel = (RelationPredicate) containedRel1;
-            Vector varList = getVarList(containedRel);
-            res.append(rel.getPredicateName()).append('(').append(commaSeparated(varList)).append(") :-\n  ");
-            res.append(containedRel.getPredicateName()).append('(').append(commaSeparated(varList)).append(").\n");
-        }
-        res.append('\n');
+		for (Object containedRel1 : containedRels)
+		{
+			RelationPredicate containedRel = (RelationPredicate) containedRel1;
+			Vector varList = getVarList(containedRel);
+			res.append(rel.getPredicateName()).append('(').append(commaSeparated(varList)).append(") :-\n  ");
+			res.append(containedRel.getPredicateName()).append('(').append(commaSeparated(varList)).append(").\n");
+		}
+		res.append('\n');
 
 		return res.toString();
 	}

@@ -46,7 +46,8 @@ public class Scope
 	private boolean toCompleteFile = false;
 
 	private Vector functionNames = new Vector();// the names of functions
-												// weaving will be applied
+
+	// weaving will be applied
 
 	public Scope(String filename)
 	{

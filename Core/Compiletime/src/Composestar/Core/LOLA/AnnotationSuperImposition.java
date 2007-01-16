@@ -96,18 +96,19 @@ public class AnnotationSuperImposition
 		 */
 
 		Iterator predicateIter = LOLA.selectors.iterator();
-        for (Object selector : LOLA.selectors) {
-            PredicateSelector predSel = (PredicateSelector) selector;
-            Selector s = new Selector();
-            s.name = ((SelectorDefinition) predSel.getParent()).getQualifiedName();
-            s.predicate = predSel;
-            s.posInResultVector = selectors.size();
-            selectors.add(s);
-            Debug.out(Debug.MODE_DEBUG, "LOLA", "Predicate selector added (" + s.name + ", " + s.predicate.getQuery()
-                    + ')');
-        }
+		for (Object selector : LOLA.selectors)
+		{
+			PredicateSelector predSel = (PredicateSelector) selector;
+			Selector s = new Selector();
+			s.name = ((SelectorDefinition) predSel.getParent()).getQualifiedName();
+			s.predicate = predSel;
+			s.posInResultVector = selectors.size();
+			selectors.add(s);
+			Debug.out(Debug.MODE_DEBUG, "LOLA", "Predicate selector added (" + s.name + ", " + s.predicate.getQuery()
+					+ ')');
+		}
 
-        Iterator annotBindingIter = dataStore.getAllInstancesOf(AnnotationBinding.class);
+		Iterator annotBindingIter = dataStore.getAllInstancesOf(AnnotationBinding.class);
 		while (annotBindingIter.hasNext())
 		{
 			AnnotationBinding annotBind = (AnnotationBinding) annotBindingIter.next();
@@ -121,46 +122,52 @@ public class AnnotationSuperImposition
 			}
 
 			boolean foundSelector = false;
-            for (Object selector : selectors) {
-                Selector sel = (Selector) selector;
-                if (sel.name.equals(selDef.getQualifiedName())) {
-                    foundSelector = true;
-                    Iterator annotsToAttach = annotBind.getAnnotations().iterator();
-                    for (Object o : annotBind.getAnnotations()) {
-                        ConcernReference annotRef = (ConcernReference) o;
-                        Concern concernRef = annotRef.getRef();
-                        if (null == concernRef) {
-                            Debug.out(Debug.MODE_WARNING, "LOLA", "Annotation class " + annotRef.getQualifiedName()
-                                    + " referenced in annotation binding does not exist; skipping", annotRef);
-                            continue; // Just skip, or should this be a fatal
-                            // error?
-                        }
-                        PlatformRepresentation annotConcern = annotRef.getRef().getPlatformRepresentation();
-                        if (null == annotConcern || !(annotConcern instanceof Type)) {
-                            Debug.out(Debug.MODE_WARNING, "LOLA", "Annotation class " + annotRef.getQualifiedName()
-                                    + " referenced in annotation binding or is not a .NET class!", annotRef);
-                            continue; // Just skip, or should this be a fatal
-                            // error?
-                        }
-                        Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
+			for (Object selector : selectors)
+			{
+				Selector sel = (Selector) selector;
+				if (sel.name.equals(selDef.getQualifiedName()))
+				{
+					foundSelector = true;
+					Iterator annotsToAttach = annotBind.getAnnotations().iterator();
+					for (Object o : annotBind.getAnnotations())
+					{
+						ConcernReference annotRef = (ConcernReference) o;
+						Concern concernRef = annotRef.getRef();
+						if (null == concernRef)
+						{
+							Debug.out(Debug.MODE_WARNING, "LOLA", "Annotation class " + annotRef.getQualifiedName()
+									+ " referenced in annotation binding does not exist; skipping", annotRef);
+							continue; // Just skip, or should this be a fatal
+							// error?
+						}
+						PlatformRepresentation annotConcern = annotRef.getRef().getPlatformRepresentation();
+						if (null == annotConcern || !(annotConcern instanceof Type))
+						{
+							Debug.out(Debug.MODE_WARNING, "LOLA", "Annotation class " + annotRef.getQualifiedName()
+									+ " referenced in annotation binding or is not a .NET class!", annotRef);
+							continue; // Just skip, or should this be a fatal
+							// error?
+						}
+						Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
 
-                        if (!(annotation.getUnitType().equals("Annotation"))) {
-                            Debug.out(Debug.MODE_WARNING, "LOLA", annotRef.getQualifiedName()
-                                    + " is not an annotation type! (make sure it extends System.Attribute)", annotRef);
-                            continue; // Just skip, or should this be a fatal
-                            // error?
-                        }
+						if (!(annotation.getUnitType().equals("Annotation")))
+						{
+							Debug.out(Debug.MODE_WARNING, "LOLA", annotRef.getQualifiedName()
+									+ " is not an annotation type! (make sure it extends System.Attribute)", annotRef);
+							continue; // Just skip, or should this be a fatal
+							// error?
+						}
 
-                        AnnotationAction act = new AnnotationAction();
-                        act.selector = sel;
-                        act.annotation = annotation;
-                        annotationActions.add(act);
-                        Debug.out(Debug.MODE_DEBUG, "LOLA", "Annotation binding: '" + act.annotation.getUnitName()
-                                + "' to selector '" + act.selector.name + '\'');
-                    }
-                }
-            }
-            if (!foundSelector)
+						AnnotationAction act = new AnnotationAction();
+						act.selector = sel;
+						act.annotation = annotation;
+						annotationActions.add(act);
+						Debug.out(Debug.MODE_DEBUG, "LOLA", "Annotation binding: '" + act.annotation.getUnitName()
+								+ "' to selector '" + act.selector.name + '\'');
+					}
+				}
+			}
+			if (!foundSelector)
 			{
 				throw new ModuleException("Can bind annotations only to predicate selector statements: "
 						+ selDef.getQualifiedName(), "LOLA", selDef);
@@ -352,14 +359,15 @@ public class AnnotationSuperImposition
 	public Vector evaluateSelectors() throws ModuleException
 	{
 		Vector results = new Vector();
-        for (Object selector1 : selectors) {
-            Selector selector = (Selector) selector1;
-            selector.predicate.run();
-            results.add(selector.predicate.getSelectedUnits());
-            // System.out.println("Selector: " + selector.name + " selected [" +
-            // selector.predicate.getSelectedUnits() + "]");
-        }
-        return results;
+		for (Object selector1 : selectors)
+		{
+			Selector selector = (Selector) selector1;
+			selector.predicate.run();
+			results.add(selector.predicate.getSelectedUnits());
+			// System.out.println("Selector: " + selector.name + " selected [" +
+			// selector.predicate.getSelectedUnits() + "]");
+		}
+		return results;
 	}
 
 	/**
@@ -444,37 +452,42 @@ public class AnnotationSuperImposition
 				AnnotationAction action = (AnnotationAction) annotationActions.elementAt(currAction);
 				Set attachTo = (Set) currState.selectorResults.elementAt(action.selector.posInResultVector);
 
-                for (Object anAttachTo : attachTo) {
-                    ProgramElement elem = (ProgramElement) anAttachTo;
-                    // Currently, we don't attach the same annotation more than
-                    // once.
+				for (Object anAttachTo : attachTo)
+				{
+					ProgramElement elem = (ProgramElement) anAttachTo;
+					// Currently, we don't attach the same annotation more than
+					// once.
 
-                    boolean doubleAnnot = false;
-                    for (Object o : elem.getAnnotations()) {
-                        Annotation existingAnnot = (Annotation) o;
-                        if (existingAnnot.getType().equals(action.annotation)) {
-                            doubleAnnot = true;
-                            break; // out of existing Annotations for-loop
-                        }
-                    }
-                    if (!doubleAnnot) {
-                        Debug.out(Debug.MODE_DEBUG, "LOLA", "Attaching annotation '" + action.annotation.name()
-                                + "' to program element '" + elem.toString());
+					boolean doubleAnnot = false;
+					for (Object o : elem.getAnnotations())
+					{
+						Annotation existingAnnot = (Annotation) o;
+						if (existingAnnot.getType().equals(action.annotation))
+						{
+							doubleAnnot = true;
+							break; // out of existing Annotations for-loop
+						}
+					}
+					if (!doubleAnnot)
+					{
+						Debug.out(Debug.MODE_DEBUG, "LOLA", "Attaching annotation '" + action.annotation.name()
+								+ "' to program element '" + elem.toString());
 
-                        Annotation annotInst = new Annotation(true); // true
-                        // =
-                        // SuperImposed
-                        // annotation
-                        annotInst.register(action.annotation, elem);
-                        removeMeLater.add(annotInst);
-                    } else
-                    // We don't attach the same annotation twice right now (!)
-                    {
-                        Debug.out(Debug.MODE_INFORMATION, "LOLA", "Not attaching '" + action.annotation.getUnitName()
-                                + "' to '" + elem.getUnitName() + "' a second time!");
-                    }
-                }
-            }
+						Annotation annotInst = new Annotation(true); // true
+						// =
+						// SuperImposed
+						// annotation
+						annotInst.register(action.annotation, elem);
+						removeMeLater.add(annotInst);
+					}
+					else
+					// We don't attach the same annotation twice right now (!)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "LOLA", "Not attaching '" + action.annotation.getUnitName()
+								+ "' to '" + elem.getUnitName() + "' a second time!");
+					}
+				}
+			}
 			currAction = currState.lastAction;
 			currState = currState.prevState; // Will become null when we have
 			// passed the root node
@@ -485,11 +498,12 @@ public class AnnotationSuperImposition
 
 	public void resetAnnotationState(Set annotToRemove)
 	{
-        for (Object anAnnotToRemove : annotToRemove) {
-            Annotation attr = (Annotation) anAnnotToRemove;
-            attr.deregister();
-        }
-    }
+		for (Object anAnnotToRemove : annotToRemove)
+		{
+			Annotation attr = (Annotation) anAnnotToRemove;
+			attr.deregister();
+		}
+	}
 
 	/**
 	 * Internal helper structures, just for storing algorithm data in a easily

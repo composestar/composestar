@@ -61,13 +61,14 @@ public class JarGpsGrammar extends GpsGrammar
 		Map priorityMap = new HashMap();
 		loadRules(grammarUrl, grammarLocation, null, ruleGraphMap, priorityMap);
 		Iterator ruleGraphIter = ruleGraphMap.entrySet().iterator();
-        for (Object o : ruleGraphMap.entrySet()) {
-            Map.Entry ruleGraphEntry = (Map.Entry) o;
-            StructuredRuleName ruleName = (StructuredRuleName) ruleGraphEntry.getKey();
-            RuleGraph ruleGraph = (RuleGraph) ruleGraphEntry.getValue();
-            result.add(ruleGraph, (Integer) priorityMap.get(ruleName));
-        }
-        // get the start graph
+		for (Object o : ruleGraphMap.entrySet())
+		{
+			Map.Entry ruleGraphEntry = (Map.Entry) o;
+			StructuredRuleName ruleName = (StructuredRuleName) ruleGraphEntry.getKey();
+			RuleGraph ruleGraph = (RuleGraph) ruleGraphEntry.getValue();
+			result.add(ruleGraph, (Integer) priorityMap.get(ruleName));
+		}
+		// get the start graph
 		Graph startGraph = null;
 
 		result.setStartGraph(startGraph);

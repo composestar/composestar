@@ -341,14 +341,16 @@ public class CRepositorySerializer implements RepositorySerializer
 		{
 			myClass = (Class) stack.pop();
 			Field[] declaredFields = myClass.getDeclaredFields();
-            for (Field declaredField : declaredFields) {
-                int modifier = declaredField.getModifiers();
+			for (Field declaredField : declaredFields)
+			{
+				int modifier = declaredField.getModifiers();
 
-                if (Modifier.isPublic(modifier)) {
-                    fields.add(declaredField);
-                }
-            }
-        }
+				if (Modifier.isPublic(modifier))
+				{
+					fields.add(declaredField);
+				}
+			}
+		}
 		orderedFieldInfo.put(c, fields);
 		return fields;
 	}

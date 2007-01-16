@@ -58,8 +58,8 @@ public class ClassWeaver
 	}
 
 	/**
-	 * Returns the output file of a class.
-	 * It concatenates baseDir and the package of the class.
+	 * Returns the output file of a class. It concatenates baseDir and the
+	 * package of the class.
 	 * 
 	 * @param baseDir base directory
 	 * @param clazz CtClass
@@ -68,11 +68,11 @@ public class ClassWeaver
 	{
 		String outputFile = baseDir;
 		String fqName = clazz.getName();
-		fqName = fqName.replace('.',java.io.File.separatorChar);
+		fqName = fqName.replace('.', java.io.File.separatorChar);
 		outputFile += fqName + ".class";
 		return FileUtils.normalizeFilename(outputFile);
 	}
-	
+
 	/**
 	 * Weaves a project.
 	 * <p>
@@ -93,59 +93,70 @@ public class ClassWeaver
 		TypeSource type;
 		String name;
 		String outputDir;
-		
+
 		List weavedClasses = new ArrayList();
 		DataStore.instance().addObject("WeavedClasses", weavedClasses);
 
 		// write applicationStart
 		writeApplicationStart();
-		
+
 		// FIXME: this is added because somehow javassist prunes and frozens
-		// types from embedded sources. So temporarily disabled weaving on embedded types.
+		// types from embedded sources. So temporarily disabled weaving on
+		// embedded types.
 		boolean isEmbeddedType = false;
 		TypeLocations types = TypeLocations.instance();
-		
+
 		Iterator typeIt = p.getTypeSources().iterator();
-        for (Object o1 : p.getTypeSources()) {
-            type = (TypeSource) o1;
-            name = type.getName();
+		for (Object o1 : p.getTypeSources())
+		{
+			type = (TypeSource) o1;
+			name = type.getName();
 
-            // FIXME: this is added because somehow javassist prunes and frozens
-            // types from embedded sources. So temporarily disabled weaving on embedded types.
-            String s = FileUtils.normalizeFilename(types.getSourceByType(name));
-            Iterator sourceIt = p.getSources().iterator();
-            for (Object o : p.getSources()) {
-                Source source = (Source) o;
-                if (s.equals(source.getFileName())) {
-                    if (source.isEmbedded()) {
-                        isEmbeddedType = true;
-                    }
-                }
-            }
+			// FIXME: this is added because somehow javassist prunes and frozens
+			// types from embedded sources. So temporarily disabled weaving on
+			// embedded types.
+			String s = FileUtils.normalizeFilename(types.getSourceByType(name));
+			Iterator sourceIt = p.getSources().iterator();
+			for (Object o : p.getSources())
+			{
+				Source source = (Source) o;
+				if (s.equals(source.getFileName()))
+				{
+					if (source.isEmbedded())
+					{
+						isEmbeddedType = true;
+					}
+				}
+			}
 
-            // create outputFile
-            outputDir = p.getBasePath();
-            outputDir += "obj/weaver/";
+			// create outputFile
+			outputDir = p.getBasePath();
+			outputDir += "obj/weaver/";
 
-            // weave the class and write to disk
-            try {
-                CtClass clazz = classpool.get(name);
-                if (!isEmbeddedType) // FIXME: enable weaving on embedded types
-                {
-                    clazz.instrument(new MethodBodyTransformer(classpool));
-                    clazz.writeFile(outputDir);
-                    weavedClasses.add(getOutputFile(outputDir, clazz));
-                } else {
-                    weavedClasses.add(getOutputFile(p.getBasePath() + "obj/", clazz));
-                    isEmbeddedType = false;
-                }
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                throw new ModuleException("Error while instrumenting " + name + ": " + e.getMessage(), "WEAVER");
-            }
-        }
-    }
+			// weave the class and write to disk
+			try
+			{
+				CtClass clazz = classpool.get(name);
+				if (!isEmbeddedType) // FIXME: enable weaving on embedded
+										// types
+				{
+					clazz.instrument(new MethodBodyTransformer(classpool));
+					clazz.writeFile(outputDir);
+					weavedClasses.add(getOutputFile(outputDir, clazz));
+				}
+				else
+				{
+					weavedClasses.add(getOutputFile(p.getBasePath() + "obj/", clazz));
+					isEmbeddedType = false;
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				throw new ModuleException("Error while instrumenting " + name + ": " + e.getMessage(), "WEAVER");
+			}
+		}
+	}
 
 	/**
 	 * Writes the application start info in the Main Class.

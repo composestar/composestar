@@ -67,9 +67,9 @@ public class DotNETLanguageModel extends LanguageModel
 			Class fieldImpl = Class.forName("Composestar.DotNET.LAMA.DotNETFieldInfo");
 			Class parameterImpl = Class.forName("Composestar.DotNET.LAMA.DotNETParameterInfo");
 			Class annotationImpl = Class.forName("Composestar.DotNET.LAMA.DotNETType");
-			
-			//******** Definition of unit types ********
-			
+
+			// ******** Definition of unit types ********
+
 			// Define the 'Namespace' language unit type
 			LanguageUnitType utNamespace = new LanguageUnitType(namespaceImpl, "Namespace", true);
 			addLanguageUnitType(utNamespace);
@@ -82,7 +82,8 @@ public class DotNETLanguageModel extends LanguageModel
 			LanguageUnitType utInterface = new LanguageUnitType(interfaceImpl, "Interface", true);
 			addLanguageUnitType(utInterface);
 
-			// Define the 'Type' composite language unit type (Type = Class | Interface)
+			// Define the 'Type' composite language unit type (Type = Class |
+			// Interface)
 			LanguageUnitType utType = new CompositeLanguageUnitType(typeImpl, "Type", true, utClass, utInterface);
 			addLanguageUnitType(utType);
 
@@ -102,7 +103,7 @@ public class DotNETLanguageModel extends LanguageModel
 			LanguageUnitType utAnnotation = new LanguageUnitType(annotationImpl, "Annotation", true);
 			addLanguageUnitType(utAnnotation);
 
-			//******** Definition of unit relations ********
+			// ******** Definition of unit relations ********
 
 			// Annotation
 			RelationType annotationAttachedClasses = new RelationType("AttachedClasses", utClass, RelationType.MULTIPLE);
@@ -173,9 +174,10 @@ public class DotNETLanguageModel extends LanguageModel
 			RelationType interfaceImplementedBy = new RelationType("ImplementedBy", utClass, RelationType.MULTIPLE);
 			utInterface.addRelationType(interfaceImplementedBy);
 
-		//	Interface does not have fields
-		//	RelationType interfaceChildFields = new RelationType("ChildFields", utField, RelationType.MULTIPLE);
-		//	utInterface.addRelationType(interfaceChildFields); 
+			// Interface does not have fields
+			// RelationType interfaceChildFields = new
+			// RelationType("ChildFields", utField, RelationType.MULTIPLE);
+			// utInterface.addRelationType(interfaceChildFields);
 
 			RelationType interfaceParameterInterface = new RelationType("ParameterInterface", utParameter,
 					RelationType.MULTIPLE);
@@ -244,8 +246,8 @@ public class DotNETLanguageModel extends LanguageModel
 			RelationType parameterAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
 			utParameter.addRelationType(parameterAnnotations);
 
-			//******** Definition of relation predicates ********
-			
+			// ******** Definition of relation predicates ********
+
 			// Namespace
 			RelationPredicate namespaceHasClass = new RelationPredicate("namespaceHasClass", namespaceChildClasses,
 					"Namespace", classParentNamespace, "Class");
@@ -430,7 +432,7 @@ public class DotNETLanguageModel extends LanguageModel
 					{
 						// parameter has a registered type, so
 						// also add the link the other way round.
-						((DotNETType) paramType).addParameterType(param); 
+						((DotNETType) paramType).addParameterType(param);
 					}
 				}
 			}
@@ -452,7 +454,7 @@ public class DotNETLanguageModel extends LanguageModel
 					{
 						// method has a registered return type, so
 						// also add the link the other way round.
-						((DotNETType) methodReturnType).addMethodReturnType(method); 
+						((DotNETType) methodReturnType).addMethodReturnType(method);
 					}
 				}
 			}
@@ -473,7 +475,7 @@ public class DotNETLanguageModel extends LanguageModel
 					{
 						// method has a registered return type, so
 						// also add the link the other way round.
-						((DotNETType) fieldType).addFieldType(field); 
+						((DotNETType) fieldType).addFieldType(field);
 					}
 				}
 			}
@@ -552,7 +554,7 @@ public class DotNETLanguageModel extends LanguageModel
 				{
 					// The parameter does not belong
 					// to an inherited method, so add it.
-					dict.addLanguageUnit(unit); 
+					dict.addLanguageUnit(unit);
 				}
 			}
 			else if (!(unit instanceof DotNETMethodInfo))
@@ -565,13 +567,14 @@ public class DotNETLanguageModel extends LanguageModel
 
 	public static void consistentyCheck(UnitDictionary dict) throws ModelClashException
 	{
-		// Check whether all references to other langunits exist, stuff like that
+	// Check whether all references to other langunits exist, stuff like that
 	}
 
 	public static void modelComplianceCheck(UnitDictionary dict) throws ModelClashException
 	{
-		// Check whether the specified relations can indeed exist and stuff like that;
-		// whether unique names are indeed unique etc. etc.
+	// Check whether the specified relations can indeed exist and stuff like
+	// that;
+	// whether unique names are indeed unique etc. etc.
 	}
 
 	/**
@@ -629,14 +632,15 @@ public class DotNETLanguageModel extends LanguageModel
 		}
 		catch (ModelClashException mce)
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", 
-					"Unable to generate map of relations from " + from + " to " + to + ": " + mce.getMessage());
+			Debug.out(Debug.MODE_WARNING, "LOLA", "Unable to generate map of relations from " + from + " to " + to
+					+ ": " + mce.getMessage());
 		}
 
 		return null;
 	}
 
-	// ******************************* private helper methods *************************
+	// ******************************* private helper methods
+	// *************************
 
 	/**
 	 * Because namespaces do not exist as 'standalone' language units as such,

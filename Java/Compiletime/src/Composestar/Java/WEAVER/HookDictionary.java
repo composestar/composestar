@@ -24,7 +24,7 @@ public class HookDictionary
 	private List castInterceptions = new ArrayList();
 
 	private Hashtable incomingMethodInterceptions = new Hashtable();
-	
+
 	private Hashtable outgoingMethodInterceptions = new Hashtable();
 
 	private static HookDictionary Instance = null;
@@ -88,7 +88,7 @@ public class HookDictionary
 			incomingMethodInterceptions.put(className, new Hashtable());
 		}
 	}
-	
+
 	/**
 	 * Adds <b>all</b> outgoing method calls from a target class to Dictionary.
 	 * 
@@ -109,35 +109,18 @@ public class HookDictionary
 	 * @param methodName the method name.
 	 * @param params the method parameters.
 	 */
-	/*public void addMethodInterception(String className, String methodName, List params)
-	{
-		Hashtable methods;
-		List parameters;
-		if (methodInterceptions.get(className) != null)
-		{
-			methods = (Hashtable) methodInterceptions.get(className);
-			if (methods.get(methodName) != null)
-			{
-				methods.put(methodName, params);
-				methodInterceptions.put(className, methods);
-			}
-			else
-			{
-				parameters = (List) methods.get(methodName);
-				if (!compareParameters(parameters, params))
-				{
-					methods.put(methodName, params);
-					methodInterceptions.put(className, methods);
-				}
-			}
-		}
-		else
-		{ // create a new entry
-			methods = new Hashtable();
-			methods.put(methodName, params);
-			methodInterceptions.put(className, methods);
-		}
-	}*/
+	/*
+	 * public void addMethodInterception(String className, String methodName,
+	 * List params) { Hashtable methods; List parameters; if
+	 * (methodInterceptions.get(className) != null) { methods = (Hashtable)
+	 * methodInterceptions.get(className); if (methods.get(methodName) != null) {
+	 * methods.put(methodName, params); methodInterceptions.put(className,
+	 * methods); } else { parameters = (List) methods.get(methodName); if
+	 * (!compareParameters(parameters, params)) { methods.put(methodName,
+	 * params); methodInterceptions.put(className, methods); } } } else { //
+	 * create a new entry methods = new Hashtable(); methods.put(methodName,
+	 * params); methodInterceptions.put(className, methods); } }
+	 */
 
 	/**
 	 * Returns true if an instantiation of the specified class should be
@@ -165,8 +148,8 @@ public class HookDictionary
 	}
 
 	/**
-	 * Returns true if a method call to the specified target or from the specified caller should be
-	 * intercepted.
+	 * Returns true if a method call to the specified target or from the
+	 * specified caller should be intercepted.
 	 */
 	public boolean isMethodInterception(String target, String caller)
 	{
@@ -189,22 +172,14 @@ public class HookDictionary
 	 * @param methodName the name of the method.
 	 * @param params the method parameters.
 	 */
-	/*public boolean isMethodInterception(String className, String methodName, List params)
-	{
-		if (methodInterceptions.containsKey(className))
-		{
-			Hashtable methods = (Hashtable) methodInterceptions.get(className);
-			if (methods.containsKey(methodName))
-			{
-				List parameters = (List) methods.get(methodName);
-				if (compareParameters(parameters, params))
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}*/
+	/*
+	 * public boolean isMethodInterception(String className, String methodName,
+	 * List params) { if (methodInterceptions.containsKey(className)) {
+	 * Hashtable methods = (Hashtable) methodInterceptions.get(className); if
+	 * (methods.containsKey(methodName)) { List parameters = (List)
+	 * methods.get(methodName); if (compareParameters(parameters, params)) {
+	 * return true; } } } return false; }
+	 */
 
 	/**
 	 * Helper method. Compares two list of parameters. Returns true if the lists
@@ -213,26 +188,13 @@ public class HookDictionary
 	 * @param params1 - list of parameters
 	 * @param params2 - a second list of parameters
 	 */
-	/*public boolean compareParameters(List params1, List params2)
-	{
-		// check the size
-		if (params1.size() != params2.size())
-		{
-			return false;
-		}
-		String param1;
-		String param2; // check the parameters
-		Iterator paramsIt1 = params1.iterator();
-		Iterator paramsIt2 = params2.iterator();
-		while (paramsIt1.hasNext())
-		{
-			param1 = (String) paramsIt1.next();
-			param2 = (String) paramsIt2.next();
-			if (!param1.equalsIgnoreCase(param2))
-			{
-				return false;
-			}
-		}
-		return true;
-	}*/
+	/*
+	 * public boolean compareParameters(List params1, List params2) { // check
+	 * the size if (params1.size() != params2.size()) { return false; } String
+	 * param1; String param2; // check the parameters Iterator paramsIt1 =
+	 * params1.iterator(); Iterator paramsIt2 = params2.iterator(); while
+	 * (paramsIt1.hasNext()) { param1 = (String) paramsIt1.next(); param2 =
+	 * (String) paramsIt2.next(); if (!param1.equalsIgnoreCase(param2)) { return
+	 * false; } } return true; }
+	 */
 }

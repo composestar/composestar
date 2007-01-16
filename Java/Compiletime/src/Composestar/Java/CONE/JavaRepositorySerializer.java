@@ -25,7 +25,8 @@ public class JavaRepositorySerializer implements RepositorySerializer
 	/**
 	 * run method.
 	 * 
-	 * @throws ModuleException : when an error occurs while serializing the repository.
+	 * @throws ModuleException : when an error occurs while serializing the
+	 *             repository.
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{

@@ -123,15 +123,17 @@ public class DIGGER implements CTCommonModule
 
 				// TODO: move to ConcernNode?
 				Iterator filterModules = fmOrder.orderAsList().iterator();
-                for (Object o : fmOrder.orderAsList()) {
-                    FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) o);
-                    if (Debug.willLog(Debug.MODE_DEBUG)) {
-                        logger.debug("Processing FilterModule: " + fm.getQualifiedName());
-                    }
-                    digFilterChain(fm.getInputFilterIterator(), concernNode.getInputFilters());
-                    digFilterChain(fm.getOutputFilterIterator(), concernNode.getOutputFilters());
-                }
-            }
+				for (Object o : fmOrder.orderAsList())
+				{
+					FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) o);
+					if (Debug.willLog(Debug.MODE_DEBUG))
+					{
+						logger.debug("Processing FilterModule: " + fm.getQualifiedName());
+					}
+					digFilterChain(fm.getInputFilterIterator(), concernNode.getInputFilters());
+					digFilterChain(fm.getOutputFilterIterator(), concernNode.getOutputFilters());
+				}
+			}
 		}
 	}
 

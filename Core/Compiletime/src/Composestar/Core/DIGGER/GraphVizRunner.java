@@ -33,7 +33,7 @@ import Composestar.Utils.Logging.CPSLogger;
 public class GraphVizRunner
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DIGGER.MODULE_NAME);
-	
+
 	protected Document xmlDoc;
 
 	protected File outFile;
@@ -52,7 +52,7 @@ public class GraphVizRunner
 		logger.info("Exporting dispatch graph to " + outFile.toString());
 		try
 		{
-			// translate graph to a dot file			
+			// translate graph to a dot file
 			Transformer xformer = TransformerFactory.newInstance().newTransformer(
 					DispatchGraphConvert.getXslt(DispatchGraphConvert.FORMAT_DOT));
 			Source xmlSource = new DOMSource(xmlDoc);

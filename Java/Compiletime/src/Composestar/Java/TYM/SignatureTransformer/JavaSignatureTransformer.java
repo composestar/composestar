@@ -37,11 +37,12 @@ public class JavaSignatureTransformer implements SignatureTransformer
 			// Iterate over dummy jarfiles
 			ArrayList dummies = (ArrayList) Configuration.instance().getProjects().getCompiledDummies();
 			Iterator dumIt = dummies.iterator();
-            for (Object dummy : dummies) {
-                String name = (String) dummy;
-                JarTransformer transformer = new JarTransformer(name);
-                transformer.run();
-            }
-        }
+			for (Object dummy : dummies)
+			{
+				String name = (String) dummy;
+				JarTransformer transformer = new JarTransformer(name);
+				transformer.run();
+			}
+		}
 	}
 }

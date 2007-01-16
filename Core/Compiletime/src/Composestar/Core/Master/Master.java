@@ -53,7 +53,7 @@ public abstract class Master
 	 * General execution failure
 	 */
 	public static final int EFAIL = 3;
-	
+
 	/**
 	 * Errors were raised during compiling
 	 */
@@ -67,21 +67,29 @@ public abstract class Master
 
 	public void processCmdArgs(String[] args)
 	{
-        for (String arg : args) {
-            if (arg.startsWith("-d")) {
-                debugOverride = Integer.parseInt(arg.substring(2));
-                Debug.setMode(debugOverride);
-            } else if (arg.startsWith("-t")) {
-                int et = Integer.parseInt(arg.substring(2));
-                Debug.setErrThreshold(et);
-            } else if (arg.startsWith("-")) {
-                System.out.println("Unknown option " + arg);
-            } else {
-                // assume it's the config file
-                configfile = arg;
-            }
-        }
-    }
+		for (String arg : args)
+		{
+			if (arg.startsWith("-d"))
+			{
+				debugOverride = Integer.parseInt(arg.substring(2));
+				Debug.setMode(debugOverride);
+			}
+			else if (arg.startsWith("-t"))
+			{
+				int et = Integer.parseInt(arg.substring(2));
+				Debug.setErrThreshold(et);
+			}
+			else if (arg.startsWith("-"))
+			{
+				System.out.println("Unknown option " + arg);
+			}
+			else
+			{
+				// assume it's the config file
+				configfile = arg;
+			}
+		}
+	}
 
 	public void loadConfiguration() throws Exception
 	{
@@ -158,16 +166,12 @@ public abstract class Master
 			{
 				Debug.outWarnings();
 			}
-			
+
 			/*
-			// note: some tests produce errors during compiling and therefor this is disabled
-			  
-			if (Debug.numErrors() > 0)
-			{
-				Debug.outWarnings();
-				return EERRORS;
-			}
-			*/
+			 * // note: some tests produce errors during compiling and therefor
+			 * this is disabled if (Debug.numErrors() > 0) {
+			 * Debug.outWarnings(); return EERRORS; }
+			 */
 		}
 		catch (ModuleException e)
 		{

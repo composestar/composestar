@@ -118,21 +118,23 @@ public class CFile extends Type
 	{
 		HashSet result = new HashSet();
 		Iterator iter = c.iterator();
-        for (Object aC : c) {
-            result.add(aC);
-        }
-        return result;
+		for (Object aC : c)
+		{
+			result.add(aC);
+		}
+		return result;
 	}
 
 	private HashSet filterDeclaredHere(Collection in)
 	{
 		HashSet out = new HashSet();
 		Iterator iter = in.iterator();
-        for (Object obj : in) {
-            out.add(obj);
-            // System.out.println(((ProgramElement)obj).getUnitName());
-        }
-        return out;
+		for (Object obj : in)
+		{
+			out.add(obj);
+			// System.out.println(((ProgramElement)obj).getUnitName());
+		}
+		return out;
 	}
 
 	public UnitResult getUnitRelation(String argumentName)
@@ -162,13 +164,15 @@ public class CFile extends Type
 		{
 			HashSet resMethods = new HashSet();
 			Iterator i = getAnnotationInstances().iterator();
-            for (Object o : getAnnotationInstances()) {
-                ProgramElement unit = ((CAnnotation) o).getTarget();
-                if (unit instanceof CMethodInfo) {
-                    resMethods.add(unit);
-                }
-            }
-            if (argumentName.equals("AttachedMethods"))
+			for (Object o : getAnnotationInstances())
+			{
+				ProgramElement unit = ((CAnnotation) o).getTarget();
+				if (unit instanceof CMethodInfo)
+				{
+					resMethods.add(unit);
+				}
+			}
+			if (argumentName.equals("AttachedMethods"))
 			{
 				return new UnitResult(resMethods);
 				// System.out.println("Annotation found it works quit good in

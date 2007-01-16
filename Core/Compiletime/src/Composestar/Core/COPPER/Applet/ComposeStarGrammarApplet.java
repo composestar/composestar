@@ -25,12 +25,17 @@ import antlr.ANTLRException;
 public class ComposeStarGrammarApplet extends JApplet implements ActionListener, KeyListener
 {
 	private static final long serialVersionUID = 5255074200151125654L;
+
 	protected static final double RESIZEWEIGHT = 0.75;
+
 	protected static int errline = -1;
 
 	protected JButton button;
+
 	protected JEditorPane textpane;
+
 	protected JTextArea msgpane;
+
 	protected String src = "";
 
 	public void init()
@@ -46,7 +51,8 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 		msgpane = new JTextArea("Compiler messages...");
 		msgpane.setEditable(false);
 
-		JSplitPane spane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, new JScrollPane(textpane), new JScrollPane(msgpane));
+		JSplitPane spane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, new JScrollPane(textpane), new JScrollPane(
+				msgpane));
 		spane.setContinuousLayout(true);
 		spane.setOneTouchExpandable(true);
 		spane.setDividerLocation((int) (this.getHeight() / 1.3));
@@ -117,8 +123,7 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 	}
 
 	public void keyPressed(KeyEvent e)
-	{
-	}
+	{}
 
 	public void keyReleased(KeyEvent e)
 	{
