@@ -2,6 +2,7 @@ package Composestar.Java.TYM.TypeCollector;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -49,7 +50,6 @@ public class JavaCollectorRunner implements CollectorRunner
 			// iterate over classes
 			ClassMap cm = ClassMap.instance();
 			HashMap classes = cm.map();
-			Iterator classIt = classes.values().iterator();
 			for (Object o : classes.values())
 			{
 				Class c = (Class) o;
@@ -136,7 +136,6 @@ public class JavaCollectorRunner implements CollectorRunner
 
 		// loop through rest of the concerns and add to the repository in the
 		// form of primitive concerns
-		Iterator it = typeMap.values().iterator();
 		for (Object o1 : typeMap.values())
 		{
 			JavaType type = (JavaType) o1;
@@ -200,6 +199,15 @@ public class JavaCollectorRunner implements CollectorRunner
 		for (Method method : methods)
 		{
 			jtype.addMethod(processMethodInfo(method));
+		}
+		
+		methods = c.getDeclaredMethods();
+		for (Method method : methods)
+		{
+			if(Modifier.isPrivate(method.getModifiers()))
+			{	
+				jtype.addMethod(processMethodInfo(method));
+			}
 		}
 
 		// add fields
