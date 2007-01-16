@@ -34,6 +34,8 @@ public class BuildConfigurationManager
 
 	private String applicationStart = "";
 
+	private String buildDebugLevel = "";
+	
 	private String runDebugLevel = "";
 
 	private String outputPath = "";
@@ -76,8 +78,8 @@ public class BuildConfigurationManager
 			bw.write("<BuildConfiguration version=\"1.00\">\n");
 
 			// projects
-			bw.write(spacePad(1) + "<Projects applicationStart=\"" + applicationStart + "\" runDebugLevel=\""
-					+ runDebugLevel + "\" outputPath=\"" + outputPath + "\">\n");
+			bw.write(spacePad(1) + "<Projects buildDebugLevel=\"" + buildDebugLevel + "\" applicationStart=\"" 
+					+ applicationStart + "\" runDebugLevel=\"" + runDebugLevel + "\" outputPath=\"" + outputPath + "\">\n");
 			Iterator projIt = projects.iterator();
 			while (projIt.hasNext())
 			{
@@ -305,6 +307,11 @@ public class BuildConfigurationManager
 		platform.readPlatform(platformConfigFile);
 	}
 
+	public void setBuildDebugLevel(String buildDebugLevel)
+	{
+		this.buildDebugLevel = buildDebugLevel;
+	}
+	
 	public void setRunDebugLevel(String runDebugLevel)
 	{
 		this.runDebugLevel = runDebugLevel;

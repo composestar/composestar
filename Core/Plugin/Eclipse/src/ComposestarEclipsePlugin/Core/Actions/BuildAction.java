@@ -133,9 +133,7 @@ public class BuildAction extends Action
 		buildConfig.setOutputPath(outputPath);
 
 		projectConfig.addProperty("basePath", FileUtils.fixFilename(projectLocation.toOSString() + "/"));
-		projectConfig.addProperty("outputPath", outputPath);
-		projectConfig.addProperty("buildPath", buildPath);
-
+		
 		// more paths
 		Path p = new Path();
 		p.setName("Base");
