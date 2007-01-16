@@ -52,7 +52,7 @@ public interface LowLevelInlineStrategy
 	 * 
 	 * @param condition
 	 */
-	public void evalCondition(Condition condition);
+	public void evalCondition(Condition condition, int jumpLabel);
 
 	/**
 	 * Called to indicate that a conditionexpression needs to be evaluated

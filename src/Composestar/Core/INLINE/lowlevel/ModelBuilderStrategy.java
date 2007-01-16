@@ -236,14 +236,18 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		popBlock();
 	}
 
-	/**
-	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#evalCondition(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition)
+	
+	
+	
+	/** (non-Javadoc)
+	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#evalCondition(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition, int)
 	 */
-	public void evalCondition(Condition condition)
+	public void evalCondition(Condition condition, int jumpLabel)
 	{
-		System.out.println("###########EVAL CONDITION################");
 		Branch branch = new Branch(condition);
+		branch.setLabel(new Label(jumpLabel));
 		this.currentBlock.addInstruction(branch);
+		this.currentLabelId = jumpLabel;
 
 		this.currentBranch = branch;
 	}

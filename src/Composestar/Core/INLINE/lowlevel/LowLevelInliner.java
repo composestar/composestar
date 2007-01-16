@@ -247,7 +247,7 @@ public class LowLevelInliner
 	{
 		Condition condition = (Condition) fmCond.filterModuleConditionState.getFlowNode().getRepositoryLink();
 
-		strategy.evalCondition(condition);
+		strategy.evalCondition(condition, fmCond.label);
 
 		// True branch
 		strategy.beginTrueBranch();

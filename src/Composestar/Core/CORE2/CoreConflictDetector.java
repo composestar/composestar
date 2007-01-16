@@ -99,7 +99,6 @@ public class CoreConflictDetector
 	private List checkForConflicts(FlowModel flowModel, Set reachableParts)
 	{
 		List conflicts = new ArrayList();
-		int transitionCount = 0;// FIXME Only for testing
 
 		// Iterate over the flowModel
 		OrderedFlowNodeIterator nodeIter = new OrderedFlowNodeIterator(flowModel);
@@ -148,7 +147,6 @@ public class CoreConflictDetector
 				Iterator transitionIter = node.getTransitions();
 				while (transitionIter.hasNext())
 				{
-					transitionCount++;// FIXME Only for testing
 					FlowTransition transition = (FlowTransition) transitionIter.next();
 					if (!reachableParts.contains(transition))
 					{
@@ -158,9 +156,6 @@ public class CoreConflictDetector
 
 			}
 		}
-
-		System.out.println("Transitions:" + transitionCount);// FIXME Only
-		// for testing
 
 		return conflicts;
 	}
