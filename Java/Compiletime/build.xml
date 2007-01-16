@@ -51,7 +51,6 @@
 	
 	<target name="compile_java" depends="init_local,antlr">
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.java" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
-			<exclude name="**/AnnotationCollector.java"/>
 		</javac>
 	</target>
 			

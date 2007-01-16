@@ -25,7 +25,7 @@
 			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>		
 	</module>
-	<module name="AnnotationCollector" fulltype="Composestar.Java.TYM.TypeCollector.AnnotationCollector" enabled="false" incremental="false" summary="Collecting annotations...">
+	<module name="AnnotationCollector" fulltype="Composestar.Java.TYM.TypeCollector.AnnotationCollector" enabled="true" incremental="false" summary="Collecting annotations...">
 		<dependencies></dependencies>	
 	</module>
 	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">

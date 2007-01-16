@@ -3,7 +3,6 @@ package Composestar.Java.TYM.TypeCollector;
 import java.lang.reflect.Method;
 import java.lang.annotation.*;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -32,8 +31,7 @@ public class AnnotationCollector implements CTCommonModule
 		{
 			ClassMap classmap = ClassMap.instance();
 			HashMap classes = classmap.map();
-			Iterator classIt = classes.values().iterator();
-            for (Object o : classes.values()) {
+			for (Object o : classes.values()) {
                 Class c = (Class) o;
                 try {
                     fetchMethodAnnotations(c);
@@ -92,8 +90,7 @@ public class AnnotationCollector implements CTCommonModule
 		if (type != null)
 		{
 			List methods = type.getMethods();
-			Iterator i = methods.iterator();
-            for (Object method1 : methods) {
+			for (Object method1 : methods) {
                 MethodInfo method = (MethodInfo) method1;
                 if (method.Name.equals(methodName)) {
                     return method;
