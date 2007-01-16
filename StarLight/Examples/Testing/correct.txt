@@ -116,11 +116,24 @@ Log : cur sel:makeOutsideTrip, cur method: makeOutsideTrip (declaring type Basic
 Local variables: 2
 BasicTests.FilterTests.makeOutsideTrip()
 BasicTests.FilterTestsHelper.makeTrip()
+
 #### Conditional superimposition tests ####
 BasicTests.ConditionalSuperImpositionTests.ctor()
+
+Logging + timing enabled:
+Log : cur sel:CondSIFunc1, cur method: CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests).
+Local variables: 2
+BasicTests.ConditionalSuperImpositionTests.Executing CondSIFunc1...()
+Timed method CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests)
+
 Logging enabled:
 Log : cur sel:CondSIFunc1, cur method: CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests).
-Local variables: 1
+Local variables: 2
 BasicTests.ConditionalSuperImpositionTests.Executing CondSIFunc1...()
-Logging disabled:
+
+Timing enabled:
+BasicTests.ConditionalSuperImpositionTests.Executing CondSIFunc1...()
+Timed method CondSIFunc1 (declaring type BasicTests.ConditionalSuperImpositionTests)
+
+Logging + timing disabled:
 BasicTests.ConditionalSuperImpositionTests.Executing CondSIFunc1...()

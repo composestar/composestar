@@ -118,6 +118,9 @@
     <Compile Include="TestsBase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TimingFilterType.cs" />
+    <Compile Include="TimingStartAction.cs" />
+    <Compile Include="TimingStopAction.cs" />
     <Compile Include="TypeTests.cs">
       <SubType>Code</SubType>
     </Compile>

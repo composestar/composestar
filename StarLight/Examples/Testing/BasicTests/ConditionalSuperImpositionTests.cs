@@ -6,7 +6,8 @@ namespace BasicTests
 {
 	public class ConditionalSuperImpositionTests : TestsBase
 	{
-		public static Boolean isEnabled;
+		public static Boolean loggingEnabled;
+		public static Boolean timingEnabled;
 
 		public ConditionalSuperImpositionTests()
 		{
@@ -17,9 +18,16 @@ namespace BasicTests
 			report("Executing CondSIFunc1...");
 		}
 
-		public static Boolean CheckEnabled()
+		[Composestar.StarLight.SkipWeaving()]
+		public static Boolean LoggingEnabled()
 		{
-			return isEnabled;
+			return loggingEnabled;
+		}
+
+		[Composestar.StarLight.SkipWeaving()]
+		public static Boolean TimingEnabled()
+		{
+			return timingEnabled;
 		}
 	}
 }

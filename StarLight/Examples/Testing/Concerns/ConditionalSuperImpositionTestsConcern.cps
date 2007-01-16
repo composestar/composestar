@@ -3,17 +3,24 @@ concern ConditionalSuperImpositionTestsConcern in BasicTests
 	filtermodule FM3
 	{
 		inputfilters
-			condDisp : Dispatch = { True => [*.CheckEnabled] };
 			logging  : Logging = { True => [*.*] }
+	}
+	
+	filtermodule FM4
+	{
+		inputfilters
+			timing : Timing = { True => [*.*] }
 	}
 
 	superimposition
 	{
 		conditions
-		    checkEnabled : BasicTests.ConditionalSuperImpositionTests.CheckEnabled;
+		    loggingEnabled : BasicTests.ConditionalSuperImpositionTests.LoggingEnabled;
+		    timingEnabled : BasicTests.ConditionalSuperImpositionTests.TimingEnabled;
 		selectors
 			csiClass = { C | isClassWithName(C, 'BasicTests.ConditionalSuperImpositionTests') };
 		filtermodules
-			checkEnabled => csiClass <- FM3;
+			loggingEnabled => csiClass <- FM3;
+			timingEnabled => csiClass <- FM4;
 	}
 }

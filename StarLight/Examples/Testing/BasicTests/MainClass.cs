@@ -95,17 +95,37 @@ namespace BasicTests
 
 
 			////// Conditional superimposition tests //////
+			Console.WriteLine("");
 			Console.WriteLine("#### Conditional superimposition tests ####");
 			ConditionalSuperImpositionTests csiTests = new ConditionalSuperImpositionTests();
-			// logging filter module enabled:
-			Console.WriteLine("Logging enabled:");
-			ConditionalSuperImpositionTests.isEnabled = true;
-			csiTests.CondSIFunc1();
-			// logging filter module disabled:
-			Console.WriteLine("Logging disabled:");
-			ConditionalSuperImpositionTests.isEnabled = false;
-			csiTests.CondSIFunc1();
+			Console.WriteLine("");
 
+			// logging + timing filter module enabled:
+			Console.WriteLine("Logging + timing enabled:");
+			ConditionalSuperImpositionTests.loggingEnabled = true;
+			ConditionalSuperImpositionTests.timingEnabled = true;
+			csiTests.CondSIFunc1();
+			Console.WriteLine("");
+
+			// only logging enabled:
+			Console.WriteLine("Logging enabled:");
+			ConditionalSuperImpositionTests.loggingEnabled = true;
+			ConditionalSuperImpositionTests.timingEnabled = false;
+			csiTests.CondSIFunc1();
+			Console.WriteLine("");
+
+			// only timing enabled:
+			Console.WriteLine("Timing enabled:");
+			ConditionalSuperImpositionTests.loggingEnabled = false;
+			ConditionalSuperImpositionTests.timingEnabled = true;
+			csiTests.CondSIFunc1();
+			Console.WriteLine("");
+
+			// logging + timing filter module disabled:
+			Console.WriteLine("Logging + timing disabled:");
+			ConditionalSuperImpositionTests.loggingEnabled = false;
+			ConditionalSuperImpositionTests.timingEnabled = false;
+			csiTests.CondSIFunc1();
 		}
 	}
 }
