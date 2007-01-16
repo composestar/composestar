@@ -31,10 +31,37 @@ public class MessageResult
 	 */
 	protected Trail trail;
 
-	public MessageResult(Breadcrumb inCrumb, Trail inTrail)
+	/**
+	 * The resulting selector. This can either be the selector of the resulting
+	 * message in the trail (when it's substituted) or the selector of the
+	 * crumb. In case the crumb has an undistinguishable selector (only used
+	 * when the dispatch graph is created in mode 0) the initial selector is
+	 * used.
+	 */
+	protected MessageSelector selector;
+
+	/**
+	 * Default constructor
+	 * 
+	 * @param inCrumb the breadcrumb this result relates to
+	 * @param inTrail the trail (of the breadcrumb) that is followed
+	 * @param initialSelector fallback selector used in case of star and
+	 *            undistinguishable selector usage
+	 */
+	public MessageResult(Breadcrumb inCrumb, Trail inTrail, MessageSelector initialSelector)
 	{
 		crumb = inCrumb;
 		trail = inTrail;
+
+		selector = trail.getResultMessage().getSelector();
+		if (Message.STAR_SELECTOR.equals(selector))
+		{
+			selector = crumb.getMessage().getSelector();
+		}
+		if (Message.UNDISTINGUISHABLE_SELECTOR.equals(selector))
+		{
+			selector = initialSelector;
+		}
 	}
 
 	public Breadcrumb getBreadcrumb()
@@ -61,23 +88,11 @@ public class MessageResult
 	}
 
 	/**
-	 * @return the resulting selector for the message. This is either the
-	 *         selector from the message of the trail or the selector of the
-	 *         message of the breadcrumb (e.g. the entrance message) when the
-	 *         trail's message contains a slar selector.
+	 * @see MessageResult#selector
+	 * @return the resulting selector for the message.
 	 */
 	public MessageSelector getSelector()
 	{
-		Message msg = trail.getResultMessage();
-		if (msg != null)
-		{
-			MessageSelector result = msg.getSelector();
-			if (result.equals(Message.STAR_SELECTOR))
-			{
-				return crumb.getMessage().getSelector();
-			}
-			return result;
-		}
-		return null;
+		return selector;
 	}
 }

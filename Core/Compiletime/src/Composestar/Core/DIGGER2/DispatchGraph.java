@@ -19,7 +19,6 @@ import java.util.Map;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FIRE2.model.Message;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -56,7 +55,7 @@ public class DispatchGraph
 	protected boolean autoResolve;
 
 	/**
-	 * 
+	 * Contains the collection of the breadcrumbs that make up this graph.
 	 */
 	protected Map<Concern, ConcernCrumbs> crumbs;
 
@@ -78,21 +77,36 @@ public class DispatchGraph
 		return resolver;
 	}
 
+	/**
+	 * @see DispatchGraph#autoResolve
+	 */
 	public boolean getAutoResolve()
 	{
 		return autoResolve;
 	}
 
+	/**
+	 * @see DispatchGraph#autoResolve
+	 */
 	public void setAutoResolve(boolean inval)
 	{
 		autoResolve = inval;
 	}
 
+	/**
+	 * @see DispatchGraph#mode
+	 */
 	public int getMode()
 	{
 		return mode;
 	}
 
+	/**
+	 * Add a new breadcrumb to the graph. This will automatically construct the
+	 * ConcernCrumb instance when it's not realdy present
+	 * 
+	 * @param crumb
+	 */
 	public void addCrumb(Breadcrumb crumb)
 	{
 		ConcernCrumbs concernCrumbs = crumbs.get(crumb.getConcern());
@@ -104,19 +118,9 @@ public class DispatchGraph
 		concernCrumbs.addCrumb(crumb);
 	}
 
-	public Breadcrumb getInputCrumb(Concern concern, Message msg) throws ModuleException
-	{
-		if (concern == null)
-		{
-			throw new ModuleException("Called getInputCrumb without a valid concern instance", DIGGER.MODULE_NAME);
-		}
-		if ((msg == null) || (msg.getSelector() == null))
-		{
-			throw new ModuleException("Called getInputCrumb without a valid message", DIGGER.MODULE_NAME);
-		}
-		return getInputCrumb(concern, msg.getSelector().getName());
-	}
-
+	/**
+	 * @see DispatchGraph#getInputCrumb(Concern, String)
+	 */
 	public Breadcrumb getInputCrumb(Concern concern, MessageSelector selector) throws ModuleException
 	{
 		if (concern == null)
@@ -130,6 +134,16 @@ public class DispatchGraph
 		return getInputCrumb(concern, selector.getName());
 	}
 
+	/**
+	 * Returns the input breadcrumb for a given concern and selector. The result
+	 * can be null in case there is not crumb for the given selector and one
+	 * could not be resolved.
+	 * 
+	 * @param concern
+	 * @param selector
+	 * @return
+	 * @throws ModuleException
+	 */
 	public Breadcrumb getInputCrumb(Concern concern, String selector) throws ModuleException
 	{
 		if (concern == null)
@@ -169,16 +183,26 @@ public class DispatchGraph
 	 * Returns a list of resulting messages for a breadcrumb
 	 * 
 	 * @param crumb
-	 * @return
+	 * @return list with MessageResult instances in the order of appearance
 	 * @throws RecursiveFilterException
 	 */
 	public List<MessageResult> getResultingMessages(Breadcrumb crumb) throws RecursiveFilterException
 	{
-		return getResultingMessages(crumb, new ArrayList<Trail>());
+		return getResultingMessages(crumb, new ArrayList<Trail>(), crumb.getMessage().getSelector());
 	}
 
-	protected List<MessageResult> getResultingMessages(Breadcrumb crumb, List<Trail> stack)
-			throws RecursiveFilterException
+	/**
+	 * The actual implementation of the the result searching algorithm
+	 * 
+	 * @param crumb the current crumb being processed
+	 * @param stack stack of trails followed, used for recusion checking
+	 * @param initialSelector the initial selector, will be used in the
+	 *            MessageResult when needed
+	 * @return list with MessageResult instances in the order of appearance
+	 * @throws RecursiveFilterException
+	 */
+	protected List<MessageResult> getResultingMessages(Breadcrumb crumb, List<Trail> stack,
+			MessageSelector initialSelector) throws RecursiveFilterException
 	{
 		List<MessageResult> results = new ArrayList<MessageResult>();
 		boolean freshCrumb = true;
@@ -193,18 +217,23 @@ public class DispatchGraph
 				cnt++;
 				if (trail.isEOL())
 				{
-					results.add(new MessageResult(crumb, trail));
+					// the end of a trail, add it to the results
+					results.add(new MessageResult(crumb, trail, initialSelector));
 				}
 				else
 				{
 					int idx = stack.indexOf(trail);
 					if (idx > -1)
 					{
+						// trail was already encountered, the result is
+						// recursive
 						throw new RecursiveFilterException(crumb, stack.subList(idx, stack.size()));
 					}
 					Breadcrumb nextCrumb = trail.getDestinationCrumb();
 					if (cnt == 1)
 					{
+						// don't recursively call this function for the first
+						// trail
 						stack.add(trail);
 						crumb = nextCrumb;
 						freshCrumb = true;
@@ -213,7 +242,7 @@ public class DispatchGraph
 					{
 						List<Trail> newStack = new ArrayList<Trail>(stack);
 						newStack.add(trail);
-						results.addAll(getResultingMessages(nextCrumb, newStack));
+						results.addAll(getResultingMessages(nextCrumb, newStack, initialSelector));
 					}
 				}
 			}
