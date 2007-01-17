@@ -4,9 +4,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,16 +22,15 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterActi
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCREReporter;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.DotNET.LAMA.DotNETAttribute;
 import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
 import Composestar.DotNET.LAMA.DotNETFieldInfo;
@@ -39,8 +38,8 @@ import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETParameterInfo;
 import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.DotNET.MASTER.StarLightMaster;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 import composestar.dotNET.tym.entities.ArrayOfAttributeElement;
 import composestar.dotNET.tym.entities.ArrayOfCallElement;
@@ -59,52 +58,212 @@ import composestar.dotNET.tym.entities.MethodElement;
 import composestar.dotNET.tym.entities.ParameterElement;
 import composestar.dotNET.tym.entities.TypeElement;
 
-public class StarLightCollectorRunner implements CollectorRunner
+public class StarLightCollectorRunner implements CTCommonModule
 {
-	public static final String MODULE_NAME = "COLLECTOR";
-	public static final String MODULE_NAME_INCRE = "COLLECTOR";
+	public static final String MODULE_NAME = "COLLECTOR";	
+	private static CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 	
 	private boolean processBodies = false;
 	private List<DotNETCallToOtherMethod> callsToOtherMethods = new ArrayList<DotNETCallToOtherMethod>();
 	
-	private INCREReporter reporter = INCRE.instance().getReporter();
-	private INCRETimer deserializeTimer = reporter.openProcess(MODULE_NAME, "xml deserialize", INCRETimer.TYPE_NORMAL);
-	private long starttime = 0;
-
+	private ConfigurationContainer configContainer = StarLightMaster.getConfigContainer();
+	private INCRE incre = INCRE.instance();
+	
 	public void run(CommonResources resources) throws ModuleException
 	{
-		INCRE incre = INCRE.instance();
-		DataStore dataStore = DataStore.instance();
-		ConfigurationContainer configContainer = StarLightMaster.getConfigContainer();
-
-		// Collect all filtertypes and filteractions:
-		collectFilterTypesAndActions(configContainer);
+		// Collect filtertypes and filteractions
+		collectFilterTypesAndActions();
 		
-		// Collect all types from the persistent repository
+		// Collect the type information from assemblies
+		collectAssemblies();
+		
+		// Collect primitive concerns
+		collectPrimitiveConcerns();
+		
+		// resolve the MethodInfo reference in the calls within a method
+		resolveCallsToOtherMethods();
+	}
+	
+	private void collectFilterTypesAndActions() throws ModuleException
+	{
+		long starttime = System.currentTimeMillis();
+
+		// create mapping from strings to filteractions, to use later to resolve
+		// the actions in a filtertype
+		Map<String,FilterAction> actionMapping = new HashMap<String,FilterAction>();
+
+		// get FilterActions
+		List<FilterActionElement> storedActions = configContainer.getFilterActions().getFilterActionList();
+		for (FilterActionElement storedAction : storedActions)
+		{
+			FilterAction filterAction = new FilterAction();
+			filterAction.setName(storedAction.getName());
+			filterAction.setFullName(storedAction.getFullName());
+			filterAction.setFlowBehaviour(storedAction.getFlowBehavior());
+			filterAction.setMessageChangeBehaviour(storedAction.getMessageChangeBehavior());
+
+			actionMapping.put(filterAction.getName(), filterAction);
+		}
+
+		// get FilterTypes:
+		List<FilterTypeElement> storedTypes = configContainer.getFilterTypes().getFilterTypeList();
+		for (FilterTypeElement storedType : storedTypes)
+		{
+			FilterType filterType = new FilterType();
+			filterType.setType(storedType.getName());
+
+			// get acceptCallAction:
+			FilterAction acceptCallAction = (FilterAction) actionMapping.get(storedType.getAcceptCallAction());
+			if (acceptCallAction == null)
+			{
+				throw new ModuleException(
+						"AcceptCallAction '" + storedType.getAcceptCallAction() +
+						"' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+			}
+			filterType.setAcceptCallAction(acceptCallAction);
+
+			// get rejectCallAction:
+			FilterAction rejectCallAction = (FilterAction) actionMapping.get(storedType.getRejectCallAction());
+			if (rejectCallAction == null)
+			{
+				throw new ModuleException(
+						"RejectCallAction '" + storedType.getRejectCallAction() +
+						"' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+			}
+			filterType.setRejectCallAction(rejectCallAction);
+
+			// get acceptReturnAction:
+			FilterAction acceptReturnAction = (FilterAction) actionMapping.get(storedType.getAcceptReturnAction());
+			if (acceptReturnAction == null)
+			{
+				throw new ModuleException(
+						"AcceptReturnAction '" + storedType.getAcceptReturnAction() +
+						"' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+			}
+			filterType.setAcceptReturnAction(acceptReturnAction);
+
+			// get rejectReturnAction:
+			FilterAction rejectReturnAction = (FilterAction) actionMapping.get(storedType.getRejectReturnAction());
+			if (rejectReturnAction == null)
+			{
+				throw new ModuleException(
+						"RejectReturnAction '" + storedType.getRejectReturnAction() +
+						"' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+			}
+			filterType.setRejectReturnAction(rejectReturnAction);
+		}
+
+		logger.debug(
+				storedTypes.size() + " filters with " +
+				actionMapping.size() + " filter actions read from database in " +
+				(System.currentTimeMillis() - starttime) + " ms.");
+	}
+	
+	private void collectAssemblies() throws ModuleException
+	{
 		for (AssemblyConfig ac : configContainer.getAssemblies().getAssemblyConfigList())
 		{
 			String assemblyName = ac.getName();
 			
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing assembly '" + assemblyName + "'...");
+			logger.debug("Processing assembly '" + assemblyName + "'...");
 			
 			if (incre.isProcessedByModule(ac, MODULE_NAME))
 			{
-				INCRETimer copyTimer = reporter.openProcess(MODULE_NAME,assemblyName,INCRETimer.TYPE_INCREMENTAL);
-				copyOperation(assemblyName);
+				INCRETimer copyTimer = incre.getReporter().openProcess(
+						MODULE_NAME, assemblyName, INCRETimer.TYPE_INCREMENTAL);
+				
+				copyAssemblies(assemblyName);
 				copyTimer.stop();
 			}
 			else
 			{
-				INCRETimer runTimer = reporter.openProcess(MODULE_NAME,assemblyName,INCRETimer.TYPE_NORMAL);
-				collectOperation(ac);
+				INCRETimer runTimer = incre.getReporter().openProcess(
+						MODULE_NAME, assemblyName, INCRETimer.TYPE_NORMAL);
+				
+				collectAssembly(ac);
 				runTimer.stop();
 			}
 		}
+	}
+	
+	private void copyAssemblies(String assemblyName) throws ModuleException
+	{
+		logger.debug("Restoring type information for assembly '" + assemblyName + "'");
 
-		// loop through rest of the concerns and add to the repository in the
-		// form of primitive concerns
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing primitive concerns...");
-		starttime = System.currentTimeMillis();
+		// collect and iterate over all objects from previous compilation runs
+		
+		int typecount = 0;
+		for (Object obj : incre.history.getObjects())
+		{
+			// Only restore PrimitiveConcerns and CpsConcerns
+			if (obj instanceof PrimitiveConcern || obj instanceof CpsConcern)
+			{
+				Concern c = (Concern)obj;
+
+				// Get the .NET platform representation for this concern
+				DotNETType t = (DotNETType)c.getPlatformRepresentation();
+
+				// Add to datastore if type belongs to the assembly we are restoring
+				if (t != null && assemblyName.equals(t.assemblyName()))
+				{
+					// Register the type with LAMA
+					t.setParentConcern(null);
+					Composestar.Core.LAMA.UnitRegister.instance().registerLanguageUnit(t);
+
+					// Add the type to the TypeMap
+					TypeMap.instance().addType(t.fullName(), t);
+					typecount++;
+				}
+			}
+		}
+
+		logger.debug(typecount + " types restored");
+	}
+    
+	private void collectAssembly(AssemblyConfig assembly) throws ModuleException
+	{
+		String filename = assembly.getTypeSpecificationFile();
+
+		logger.debug("Loading type information from '" + filename + "'...");
+		
+		InputStream is = null;
+		try
+		{
+			INCRETimer deserializeTimer = incre.getReporter().openProcess(
+					MODULE_NAME, "XML deserialize", INCRETimer.TYPE_NORMAL);
+			
+			is = new FileInputStream(filename);
+			if (filename.endsWith(".gzip"))
+				is = new GZIPInputStream(is);
+			
+			AssemblyDocument doc = AssemblyDocument.Factory.parse(is);
+			
+			deserializeTimer.stop();
+			
+			collectTypes(doc.getAssembly());
+		}
+		catch (XmlException e)
+		{
+			throw new ModuleException(
+					"CollectorRunner: XmlException while parsing " + filename +
+					": " + e.getMessage(), MODULE_NAME);
+		}
+		catch (IOException e)
+		{
+			throw new ModuleException(
+					"CollectorRunner: IOException while parsing " + filename + 
+					": " + e.getMessage(), MODULE_NAME);
+		}
+		finally
+		{
+			FileUtils.close(is);
+		}
+	}
+	
+	private void collectPrimitiveConcerns()
+	{		
+		logger.debug("Processing primitive concerns...");
+		long starttime = System.currentTimeMillis();
 		
 		Set<Annotation> unresolvedAttributeTypes = new HashSet<Annotation>();
 		
@@ -145,19 +304,26 @@ public class StarLightCollectorRunner implements CollectorRunner
 			pc.setName(type.fullName());
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
-			dataStore.addObject(type.fullName(), pc);
+			DataStore.instance().addObject(type.fullName(), pc);
 			
-		//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Adding primitive concern '" + pc.getName() + "'");
+		//	logger.debug("Adding primitive concern '" + pc.getName() + "'");
 		}
 		
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, typeMap.size() + " primitive concerns added in "
-				+ (System.currentTimeMillis() - starttime) + " ms.");
-		
+		long elapsed = System.currentTimeMillis() - starttime;
+		logger.debug(typeMap.size() + " primitive concerns added in " + elapsed + " ms.");
+
 		// Resolve attribute types
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolving " + unresolvedAttributeTypes.size() + " attribute types...");
-		starttime = System.currentTimeMillis();
+		resolveAttributeTypes(unresolvedAttributeTypes);
+	}
+	
+	private void resolveAttributeTypes(Set<Annotation> unresolvedAttributeTypes)
+	{
+		logger.debug("Resolving " + unresolvedAttributeTypes.size() + " attribute types...");
+		long starttime = System.currentTimeMillis();
 		
+		Map<String,DotNETType> typeMap = TypeMap.instance().map();
 		Map<String,DotNETType> newAttributeTypes = new HashMap<String,DotNETType>();
+		
 		for (Annotation annotation : unresolvedAttributeTypes)
 		{
 			if (typeMap.containsKey(annotation.getTypeName()))
@@ -181,200 +347,32 @@ public class StarLightCollectorRunner implements CollectorRunner
 				pc_attribute.setName(attributeType.fullName());
 				pc_attribute.setPlatformRepresentation(attributeType);
 				attributeType.setParentConcern(pc_attribute);
-				dataStore.addObject(attributeType.fullName(), pc_attribute);
+				DataStore.instance().addObject(attributeType.fullName(), pc_attribute);
 				
 				// Add this attribute type to the list of added types
 				newAttributeTypes.put(attributeType.fullName(), attributeType);
 			}
 		}
-		
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Attribute types resolved in "
-				+ (System.currentTimeMillis() - starttime) + " ms.");
-		
-		// resolve the MethodInfo reference in the calls within a method:	
-		if (processBodies)
-		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
-					"Resolving method references for calls withing a method...");
-			starttime = System.currentTimeMillis();
-
-			resolveCallsToOtherMethods();
-		
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
-					"Method references resolved in " + (System.currentTimeMillis() - starttime) + " ms.");
-		}
+	
+		long elapsed = System.currentTimeMillis() - starttime;
+		logger.debug("Attribute types resolved in " + elapsed + " ms.");
 	}
 	
-	public void copyOperation(String assemblyName) throws ModuleException
-	{
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME_INCRE, "Restoring type information from '" + assemblyName + "'");
-		INCRE incre = INCRE.instance();
-
-		int typecount = 0;
-
-		// collect and iterate over all objects from previous compilation runs
-		
-		for (Object obj : incre.history.getObjects())
-		{
-			// Only restore PrimitiveConcerns and CpsConcerns
-			if (obj instanceof PrimitiveConcern || obj instanceof CpsConcern)
-			{
-				Concern c = (Concern)obj;
-
-				// Get the .NET platform representation for this concern
-				DotNETType t = (DotNETType)c.getPlatformRepresentation();
-
-				// Add to datastore if type belongs to the assembly we are restoring
-				if (t != null && assemblyName.equals(t.assemblyName()))
-				{
-					// Register the type with LAMA
-					t.setParentConcern(null);
-					Composestar.Core.LAMA.UnitRegister.instance().registerLanguageUnit(t);
-
-					// Add the type to the TypeMap
-					TypeMap.instance().addType(t.fullName(), t);
-					typecount++;
-				}
-			}
-		}
-
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME_INCRE, typecount + " types restored");
-	}
-    
-	public void collectOperation(AssemblyConfig assembly) throws ModuleException
-	{
-		String filename = assembly.getTypeSpecificationFile();
-
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Loading type information from '" + filename + "'...");
-		
-		InputStream is = null;
-		try
-		{
-			deserializeTimer.start();
-			
-			is = new FileInputStream(filename);
-			if (filename.endsWith(".gzip"))
-				is = new GZIPInputStream(is);
-			
-			AssemblyDocument doc = AssemblyDocument.Factory.parse(is);
-			
-			deserializeTimer.stop();
-			
-			collectTypes(doc.getAssembly());
-		}
-		catch (XmlException e)
-		{
-			throw new ModuleException(
-					"CollectorRunner: XmlException while parsing " + filename +
-					": " + e.getMessage(), MODULE_NAME);
-		}
-		catch (IOException e)
-		{
-			throw new ModuleException(
-					"CollectorRunner: IOException while parsing " + filename + 
-					": " + e.getMessage(), MODULE_NAME);
-		}
-		finally
-		{
-			FileUtils.close(is);
-		}
-	}
-	
-	private void collectFilterTypesAndActions(ConfigurationContainer config) throws ModuleException
-	{
-		long starttime = System.currentTimeMillis();
-
-		// create mapping from strings to filteractions, to use later to resolve
-		// the actions in a filtertype
-		Map<String,FilterAction> actionMapping = new HashMap<String,FilterAction>();
-
-		// get FilterActions
-		List<FilterActionElement> storedActions = config.getFilterActions().getFilterActionList();
-		for (FilterActionElement storedAction : storedActions)
-		{
-			FilterAction filterAction = new FilterAction();
-			filterAction.setName(storedAction.getName());
-			filterAction.setFullName(storedAction.getFullName());
-			filterAction.setFlowBehaviour(storedAction.getFlowBehavior());
-			filterAction.setMessageChangeBehaviour(storedAction.getMessageChangeBehavior());
-
-			actionMapping.put(filterAction.getName(), filterAction);
-		}
-
-		// get FilterTypes:
-		List<FilterTypeElement> storedTypes = config.getFilterTypes().getFilterTypeList();
-		for (FilterTypeElement storedType : storedTypes)
-		{
-			FilterType filterType = new FilterType();
-			filterType.setType(storedType.getName());
-
-			// get acceptCallAction:
-			FilterAction acceptCallAction = (FilterAction) actionMapping.get(storedType.getAcceptCallAction());
-			if (acceptCallAction == null)
-			{
-				throw new ModuleException("AcceptCallAction '" + storedType.getAcceptCallAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
-			}
-			filterType.setAcceptCallAction(acceptCallAction);
-
-			// get rejectCallAction:
-			FilterAction rejectCallAction = (FilterAction) actionMapping.get(storedType.getRejectCallAction());
-			if (rejectCallAction == null)
-			{
-				throw new ModuleException("RejectCallAction '" + storedType.getRejectCallAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
-			}
-			filterType.setRejectCallAction(rejectCallAction);
-
-			// get acceptReturnAction:
-			FilterAction acceptReturnAction = (FilterAction) actionMapping.get(storedType.getAcceptReturnAction());
-			if (acceptReturnAction == null)
-			{
-				throw new ModuleException("AcceptReturnAction '" + storedType.getAcceptReturnAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
-			}
-			filterType.setAcceptReturnAction(acceptReturnAction);
-
-			// get rejectReturnAction:
-			FilterAction rejectReturnAction = (FilterAction) actionMapping.get(storedType.getRejectReturnAction());
-			if (rejectReturnAction == null)
-			{
-				throw new ModuleException("RejectReturnAction '" + storedType.getRejectReturnAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
-			}
-			filterType.setRejectReturnAction(rejectReturnAction);
-		}
-
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, storedTypes.size() + " filters with "
-				+ actionMapping.size() + " filter actions read from database in "
-				+ (System.currentTimeMillis() - starttime) + " ms.");
-	}
-	
-	private String getFullName(TypeElement te) throws ModuleException
-	{
-		String name = te.getName();
-		String ns = te.getNamespace();
-
-		if (te.getName() == null)
-			throw new ModuleException("Type must have a name attribute", MODULE_NAME);
-		
-		// see rev. 2806
-		return (ns.endsWith("+") ? (ns + name) : (ns + "." + name));
-	}
-
+	/**
+	 * Process all types, i.e. map them to LAMA
+	 */
 	private void collectTypes(AssemblyElement assembly) throws ModuleException
 	{
 		List<TypeElement> types = assembly.getTypes().getTypeList();
 
-		// Process all types, i.e. map them to LAMA
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Generating language model with " + types.size() + " types...");		
-		starttime = System.currentTimeMillis();
+		logger.debug("Generating language model with " + types.size() + " types...");		
+		long starttime = System.currentTimeMillis();
 		
 		for (TypeElement te : types)
 		{
 			String fullName = getFullName(te);
 
-		//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing type '" + fullName + "'...");
+		//	logger.debug("Processing type '" + fullName + "'...");
 
 			DotNETType dnt = new DotNETType();
 			dnt.setName(te.getName());
@@ -401,11 +399,11 @@ public class StarLightCollectorRunner implements CollectorRunner
 			dnt.setIsAbstract(te.getIsAbstract());
 			dnt.setIsSealed(te.getIsSealed());
 			
-			//Set the attributes for this type
-			DotNETAttribute[] attributes = collectAttributes(te.getAttributes());
-			for (int j = 0; j < attributes.length; j++)
+			// Set the attributes for this type
+			List<DotNETAttribute> attributes = collectAttributes(te.getAttributes());
+			for (DotNETAttribute attribute : attributes)
 			{
-				dnt.addAnnotation(attributes[j]);
+				dnt.addAnnotation(attribute);
 			}
 
 			collectFields(te, dnt);
@@ -415,20 +413,29 @@ public class StarLightCollectorRunner implements CollectorRunner
 			TypeMap.instance().addType(dnt.fullName(), dnt);
 		}
 		
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Language model generated in "
-				+ (System.currentTimeMillis() - starttime) + " ms.");
+		long elapsed = System.currentTimeMillis() - starttime;
+		logger.debug("Language model generated in " + elapsed + " ms.");
 	}
 	
-	private DotNETAttribute[] collectAttributes(ArrayOfAttributeElement attributes)
+	private String getFullName(TypeElement te) throws ModuleException
 	{
-		if (attributes == null) return new DotNETAttribute[0];
+		String name = te.getName();
+		String ns = te.getNamespace();
+
+		if (te.getName() == null)
+			throw new ModuleException("Type must have a name attribute", MODULE_NAME);
 		
-		DotNETAttribute[] result = new DotNETAttribute[attributes.sizeOfAttributeArray()];
+		// see rev. 2806
+		return (ns.endsWith("+") ? (ns + name) : (ns + "." + name));
+	}
+
+	private List<DotNETAttribute> collectAttributes(ArrayOfAttributeElement attributes)
+	{
+		if (attributes == null) return Collections.EMPTY_LIST;
 		
-		for (int i = 0; i < attributes.sizeOfAttributeArray(); i++)
+		List<DotNETAttribute> result = new ArrayList<DotNETAttribute>();
+		for (AttributeElement ae : attributes.getAttributeList())
 		{
-			AttributeElement ae = attributes.getAttributeArray(i);
-			
 			DotNETAttribute attribute = new DotNETAttribute();
 			attribute.setTypeName(ae.getAttributeType());	
 			
@@ -436,9 +443,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 			if (ae.getValues().sizeOfValueArray() >= 1) 
 				attribute.setValue(ae.getValues().getValueArray(0).getValue());
 
-			result[i] = attribute;
+			result.add(attribute);
 		}
-	
 		return result;
 	}
 
@@ -448,7 +454,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 		List<FieldElement> fields = storedType.getFields().getFieldList();
 		for (FieldElement storedField : fields)
 		{
-		//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing field '" + storedField.getName() + "'...");
+		//	logger.debug("Processing field '" + storedField.getName() + "'...");
 
 			DotNETFieldInfo field = new DotNETFieldInfo();
 			field.setIsDeclaredHere(true);
@@ -459,7 +465,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			field.setIsStatic(storedField.getIsStatic());
 
 			//Set the attributes for this field
-			DotNETAttribute[] attributes = collectAttributes(storedField.getAttributes());
+			List<DotNETAttribute> attributes = collectAttributes(storedField.getAttributes());
 			for (DotNETAttribute attribute : attributes)
 				field.addAnnotation(attribute);
 			
@@ -474,7 +480,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			String name = storedMethod.getName();
 
-		//	Debug.out(Debug.MODE_DEBUG,MODULE_NAME, "Processing method '" + name + "'...");
+		//	logger.debug("Processing method '" + name + "'...");
 
 			if (name == null)
 				throw new ModuleException("Method must have a name attribute", MODULE_NAME);
@@ -497,7 +503,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 				collectMethodBody(storedMethod.getBody(), method);
 
 			//Set the attributes for this method
-			DotNETAttribute[] attributes = collectAttributes(storedMethod.getAttributes());
+			List<DotNETAttribute> attributes = collectAttributes(storedMethod.getAttributes());
 			for (DotNETAttribute attribute : attributes)
 				method.addAnnotation(attribute);
 			
@@ -518,7 +524,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			ParameterElement storedParameter = storedParameters.getParameterArray(i);
 			String name = storedParameter.getName();
 
-		//	Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Retrieving parameter '" + name + "'");
+		//	logger.debug("Retrieving parameter '" + name + "'");
 			
 			if (name == null)
 				throw new ModuleException("ParameterInfo must have a name attribute.", MODULE_NAME);
@@ -559,16 +565,22 @@ public class StarLightCollectorRunner implements CollectorRunner
 	}
 
 	/**
-	 * Resolve the MethodInfo of the called method for all calls to other
-	 * methods.
+	 * Resolve the MethodInfo of the called method for all calls to other methods.
 	 */
 	private void resolveCallsToOtherMethods()
 	{
-		Iterator it = callsToOtherMethods.iterator();
-		while (it.hasNext())
+		if (processBodies)
 		{
-			CallToOtherMethod call = (CallToOtherMethod) it.next();
-			call.setCalledMethod(getMethodInfo(call));
+			logger.debug("Resolving method references for calls withing a method...");
+			long starttime = System.currentTimeMillis();
+
+			for (CallToOtherMethod call : callsToOtherMethods)
+			{
+				call.setCalledMethod(getMethodInfo(call));
+			}
+			
+			long elapsed = System.currentTimeMillis() - starttime;
+			logger.debug("Method references resolved in " + elapsed + " ms.");
 		}
 	}
 
