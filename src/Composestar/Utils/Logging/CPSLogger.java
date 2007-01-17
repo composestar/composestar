@@ -30,6 +30,11 @@ public class CPSLogger
 		Debug.out(Debug.MODE_ERROR, name, msg);
 	}
 
+	public void error(String msg, LocationProvider lp)
+	{
+		Debug.out(Debug.MODE_ERROR, name, msg, lp);
+	}
+
 	public void warn(String msg)
 	{
 		Debug.out(Debug.MODE_WARNING, name, msg);

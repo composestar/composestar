@@ -50,13 +50,13 @@ import Composestar.Utils.StringUtils;
  */
 public final class INCRE implements CTCommonModule
 {
+	public static final String MODULE_NAME = "INCRE";
+
 	private static INCRE instance;
 
 	private static final String HISTORY_FILENAME = "history.dat";
 	
-	public static final String MODULE_NAME = "INCRE";
-
-	public boolean enabled;
+	private boolean enabled;
 
 	private Configuration config;
 
@@ -64,7 +64,7 @@ public final class INCRE implements CTCommonModule
 
 	public DataStore history;
 	
-	public String historyfile = "";
+	public File historyFile;
 	
 	private Date lastCompTime;
 	
@@ -133,7 +133,7 @@ public final class INCRE implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		PathSettings ps = config.getPathSettings();
-		historyfile = ps.getPath("Base") + HISTORY_FILENAME;
+		historyFile = new File(ps.getPath("Base"), HISTORY_FILENAME);
 		
 		// check whether incremental compilation is enabled
 		enabled = moduleInfo.getBooleanSetting("enabled");
@@ -174,7 +174,7 @@ public final class INCRE implements CTCommonModule
 		increinit.stop(); // stop timing INCRE's initialization
 
 		// INCRE enabled or not?
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "INCRE is " + (this.enabled ? "enabled" : "disabled"));
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "INCRE is " + (enabled ? "enabled" : "disabled"));
 	}
 
 	private String getConfigFile() throws ModuleException
@@ -1025,11 +1025,8 @@ public final class INCRE implements CTCommonModule
 
 	public void deleteHistory()
 	{
-		File f = new File(this.historyfile);
-		if (f.exists())
-		{
-			f.delete();
-		}
+		if (historyFile.exists()) 
+			historyFile.delete();
 	}
 	
 	/**
@@ -1041,7 +1038,7 @@ public final class INCRE implements CTCommonModule
 		{
 			INCRE incre = INCRE.instance();
 			
-			FileInputStream fis = new FileInputStream(historyfile);
+			FileInputStream fis = new FileInputStream(historyFile);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			ObjectInputStream ois = new ObjectInputStream(bis);
 			incre.history = new DataStore();

@@ -1,6 +1,7 @@
 package Composestar.Core.INCRE;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
@@ -36,7 +37,7 @@ public class INCRESerializer implements CTCommonModule
 			INCRETimer increhistory = incre.getReporter().openProcess(
 					"INCRESerializer", "Creation of INCRE history", INCRETimer.TYPE_OVERHEAD);
 			
-			storeHistory(incre.historyfile);
+			storeHistory(incre.historyFile);
 			increhistory.stop();
 		}
 	}
@@ -44,7 +45,7 @@ public class INCRESerializer implements CTCommonModule
 	/**
 	 * Writes the repository to disk to provide incremental compilation
 	 */
-	private void storeHistory(String filename) throws ModuleException
+	private void storeHistory(File historyFile) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
 		Debug.out(Debug.MODE_DEBUG, INCRE.MODULE_NAME, 
@@ -54,7 +55,7 @@ public class INCRESerializer implements CTCommonModule
 		ObjectOutputStream oos = null;
 		try
 		{
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(historyFile);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			oos = new ObjectOutputStream(bos);
 
@@ -69,7 +70,7 @@ public class INCRESerializer implements CTCommonModule
 			oos.writeInt(count - 1);
 
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
-					"Up to " + count + " objects to store in '" + filename + "'...");
+					"Up to " + count + " objects to store in '" + historyFile + "'...");
 
 			Iterator it = ds.getIterator();
 			while (it.hasNext())

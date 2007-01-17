@@ -1,27 +1,13 @@
-//Source file: C:\\local\\staijen\\composestar\\src\\Composestar\\core\\Exception\\ModuleException.java
-
-/*
- * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2003 University of Twente.
- *
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
- *
- * $Id$
- */
 package Composestar.Core.Exception;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Utils.Logging.LocationProvider;
 
 /**
- * this exception must be thrown by all modules when they encounter a fatal
- * error.
+ * this exception must be thrown by all modules when they encounter a fatal error.
  */
-public class ModuleException extends Exception
+public class ModuleException extends Exception implements LocationProvider
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 28750835698180954L;
 
 	private String module;
@@ -43,7 +29,6 @@ public class ModuleException extends Exception
 		this(message, inmodule);
 		errorLocationFilename = errorLocation.getDescriptionFileName();
 		errorLocationLineNumber = errorLocation.getDescriptionLineNumber();
-		// this.errorLocation = errorLocation;
 	}
 
 	public ModuleException(String message, String inmodule, String inerrorLocationFilename,
@@ -73,6 +58,16 @@ public class ModuleException extends Exception
 	}
 
 	public int getErrorLocationLineNumber()
+	{
+		return this.errorLocationLineNumber;
+	}
+
+	public String getFilename()
+	{
+		return this.errorLocationFilename;
+	}
+
+	public int getLineNumber()
 	{
 		return this.errorLocationLineNumber;
 	}
