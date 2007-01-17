@@ -20,8 +20,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -48,14 +49,9 @@ import Composestar.Utils.FileUtils;
  */
 public class DotNETRepositorySerializer extends CONE implements RepositorySerializer
 {
-	private Hashtable orderedFieldInfo;
+	private Map<Class, List<Field>> orderedFieldInfo;
 
 	private PrintWriter out = null;
-
-	/**
-	 * List of prepository enteries that have already been written
-	 */
-	private List reSeenList;
 
 	/**
 	 * @param destination
@@ -68,7 +64,6 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		reSeenList = new ArrayList();
 		DataStore ds = DataStore.instance();
 
 		String repositoryFilename = Configuration.instance().getPathSettings().getPath("Base") + "repository.xml";
@@ -78,7 +73,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		Debug.out(Debug.MODE_DEBUG, "CONE-XML", "v0.2+(optimized)");
 		Debug.out(Debug.MODE_DEBUG, "CONE-XML", "Writing repository to file '" + destination.getName() + "'...");
 
-		orderedFieldInfo = new Hashtable();
+		orderedFieldInfo = new HashMap<Class, List<Field>>();
 		try
 		{
 			out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
@@ -210,7 +205,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 				// any other object requires just to have it's fields dumped.
 				// again the type is specified
 				startElement("anyType", "xsi:type=\"" + getType(element) + "\"");
-				writeFields(element, depth+1);
+				writeFields(element, depth + 1);
 				endElement("anyType");
 			}
 			else
@@ -227,41 +222,39 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 	{
 		Class objClass = obj.getClass();
 
-		if ((obj instanceof RepositoryEntity) && (depth > 5)) // 4 levels deep == directly in DataStore
+		// RepositoryEntityies up to depth = 4 are in the DataStore entries that
+		// are deeper belong to other objects. But since all RepositoryEntities
+		// already belong to the main DataStore we don't need to save them
+		// again. The repository fixer at run time should take care of that (by
+		// resolving the repository keys).
+		if ((obj instanceof RepositoryEntity) && (depth > 5))
 		{
 			RepositoryEntity re = (RepositoryEntity) obj;
-			//if (reSeenList.contains(re.getRepositoryKey()))
-			//{
-				// only write the repository key for reference
-				try
-				{
-					handleStringField(objClass.getField("repositoryKey"), re);
-				}
-				catch (SecurityException e)
-				{
-				}
-				catch (NoSuchFieldException e)
-				{
-				}
-				catch (IllegalAccessException e)
-				{
-				}
-				return;
-			//}
-			//reSeenList.add(re.getRepositoryKey());
+			try
+			{
+				handleStringField(objClass.getField("repositoryKey"), re);
+			}
+			catch (SecurityException e)
+			{
+			}
+			catch (NoSuchFieldException e)
+			{
+			}
+			catch (IllegalAccessException e)
+			{
+			}
+			return;
 		}
 
-		Vector fields = getOrderedOutputFields(objClass);
+		List<Field> fields = getOrderedOutputFields(objClass);
 		if (fields.size() == 0)
 		{
 			// System.out.println("Class with no fields: " + objClass);
 			return;
 		}
 
-		Enumeration e = fields.elements();
-		while (e.hasMoreElements())
+		for (Field field : fields)
 		{
-			Field field = (Field) e.nextElement();
 			if (!Modifier.isStatic(field.getModifiers()))
 			{
 				try
@@ -289,7 +282,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 					}
 					else
 					{
-						handleObjectField(field, obj, depth+1);
+						handleObjectField(field, obj, depth + 1);
 					}
 				}
 				catch (Exception ex)
@@ -309,7 +302,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		}
 		else if (fieldValue instanceof Vector)
 		{
-			handleVectorField(field, obj, (Vector) fieldValue, depth+1);
+			handleVectorField(field, obj, (Vector) fieldValue, depth + 1);
 		}
 		else if (fieldValue instanceof SerializableRepositoryEntity)
 		{
@@ -318,7 +311,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 			{
 				startElement(field.getName(), "xsi:type=\"" + getType(fieldValue) + "\"");
 				// dump the fields of the fieldValue object
-				writeFields(fieldValue, depth+1);
+				writeFields(fieldValue, depth + 1);
 				fieldEndElement(field);
 			}
 		}
@@ -335,18 +328,18 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 
 	}
 
-	private Vector getOrderedOutputFields(Class c)
+	private List<Field> getOrderedOutputFields(Class c)
 	{
 		// fields have been ordered before for class c, then fetch the ordered
 		// list
 		// from the storage map
 		if (orderedFieldInfo.containsKey(c))
 		{
-			return (Vector) orderedFieldInfo.get(c);
+			return orderedFieldInfo.get(c);
 		}
 
-		Vector fields = new Vector();
-		Stack stack = new Stack();
+		List<Field> fields = new ArrayList<Field>();
+		Stack<Class> stack = new Stack<Class>();
 		Class myClass = c;
 		while (!myClass.equals(Object.class))
 		{

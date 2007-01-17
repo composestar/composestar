@@ -95,7 +95,7 @@ public class DIGGER implements CTCommonModule
 		moduleInfo = ModuleInfoManager.get(DIGGER.class);
 		graph = new DispatchGraph(moduleInfo.getIntSetting("mode"));
 		graph.setAutoResolve(false);
-		DataStore.instance().addObject(DispatchGraph.REPOSITORY_KEY, graph);
+		resources.add(DispatchGraph.REPOSITORY_KEY, graph);
 		allCrumbs = new ArrayList<Breadcrumb>();
 		filthinit.stop();
 

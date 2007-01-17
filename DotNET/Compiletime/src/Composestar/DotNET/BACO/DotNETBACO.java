@@ -27,7 +27,7 @@ public class DotNETBACO extends BACO
 		return !isSystemAssembly(dependency.getFileName());
 	}
 
-	protected void addBuiltLibraries(Set filesToCopy)
+	protected void addBuiltLibraries(Set<String> filesToCopy)
 	{
 		// TODO: only copy PDB's when runDebugLevel >= x?
 		List builtLibs = (List) DataStore.instance().getObjectByID("BuiltLibs");

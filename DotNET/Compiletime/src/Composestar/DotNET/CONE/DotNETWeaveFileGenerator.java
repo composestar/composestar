@@ -286,9 +286,9 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Method definitions block has been written.");
 	}
 
-	private List getAfterInstantiationClasses()
+	private List<String> getAfterInstantiationClasses()
 	{
-		List result = new ArrayList();
+		List<String> result = new ArrayList<String>();
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Searching for instantiation interceptions...");
 
 		DataStore ds = DataStore.instance();
@@ -372,7 +372,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 	private void writeCastingInterceptions()
 	{
-		Set qns = new HashSet();
+		Set<String> qns = new HashSet<String>();
 
 		out.println("<casts>");
 
@@ -469,7 +469,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Class definition for class '*' has been written.");
 
 		// Write definitions for outputfilters and instantiations
-		List instantiationClasses = getAfterInstantiationClasses();
+		List<String> instantiationClasses = getAfterInstantiationClasses();
 
 		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (iterConcerns.hasNext())
@@ -516,10 +516,8 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		}
 
 		// Write remaining class instantiations
-		Iterator iterClasses = instantiationClasses.iterator();
-		while (iterClasses.hasNext())
+		for (String className : instantiationClasses)
 		{
-			String className = (String) iterClasses.next();
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing definition for class '" + className + "'...");
 			writeAfterInstantiationRecord(className);
 			Debug

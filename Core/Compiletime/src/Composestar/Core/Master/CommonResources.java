@@ -10,10 +10,11 @@
 
 package Composestar.Core.Master;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * This class holds the shared resources between the modules e.g the repository
@@ -21,9 +22,9 @@ import java.util.Properties;
  * runtime. Do not use the DataStore or dynamic maps of repository entities for
  * this because they will be saved in the repository file.
  */
-public class CommonResources implements Serializable
+public class CommonResources
 {
-	private static final long serialVersionUID = 2652039710117430543L;
+	private static CommonResources instance;
 
 	/**
 	 * Information about the Custom Filters that are used in this project.
@@ -34,15 +35,24 @@ public class CommonResources implements Serializable
 	/**
 	 * Map holding all the resources
 	 */
-	private transient Map<String, Object> resources;
+	private transient Map<Object, Object> resources;
 
+	public static CommonResources instance()
+	{
+		if (instance == null)
+		{
+			instance = new CommonResources();
+		}
+		return instance;
+	}
+	
 	/**
 	 * Default constructor.
 	 */
-	public CommonResources()
+	protected CommonResources()
 	{
 		CustomFilters = new Properties();
-		resources = new HashMap<String, Object>();
+		resources = new HashMap<Object, Object>();
 	}
 
 	/**
@@ -51,12 +61,31 @@ public class CommonResources implements Serializable
 	 * @param key An identifier for this resource.
 	 * @param object The object to store for this key.
 	 */
-	public void addResource(String key, Object object)
+	public void add(Object key, Object object)
 	{
 		resources.put(key, object);
 	}
 
-	public void addBoolean(String key, boolean value)
+	/**
+	 * Add a resource for a given repository entity
+	 * 
+	 * @param re
+	 * @param key
+	 * @param object
+	 */
+	public void add(RepositoryEntity re, Object key, Object object)
+	{
+		@SuppressWarnings("unchecked")
+		Map<Object, Object> reResources = (Map<Object, Object>) resources.get(re);
+		if (reResources == null)
+		{
+			reResources = new HashMap<Object, Object>();
+			resources.put(re, reResources);
+		}
+		reResources.put(key, object);
+	}
+
+	public void addBoolean(Object key, boolean value)
 	{
 		resources.put(key, value);
 	}
@@ -68,14 +97,26 @@ public class CommonResources implements Serializable
 	 * @return An object pointer if an object with the specified key was found
 	 *         or null if the key is invalid.
 	 */
-	public Object getResource(String key)
+	public Object get(Object key)
 	{
-		if (!resources.containsKey(key))
+		return resources.get(key);
+	}
+
+	/**
+	 * Retrieve a repository entity resource
+	 * 
+	 * @param re
+	 * @param key
+	 * @return
+	 */
+	public Object get(RepositoryEntity re, Object key)
+	{
+		Map reResources = (Map) resources.get(re);
+		if (reResources == null)
 		{
 			return null;
 		}
-
-		return resources.get(key);
+		return reResources.get(key);
 	}
 
 	/**
@@ -84,9 +125,9 @@ public class CommonResources implements Serializable
 	 * @throws RuntimeException if there is no resource with the specified name,
 	 *             or if it is not a Boolean.
 	 */
-	public boolean getBoolean(String key)
+	public boolean getBoolean(Object key)
 	{
-		Object resource = getResource(key);
+		Object resource = get(key);
 
 		if (resource == null)
 		{

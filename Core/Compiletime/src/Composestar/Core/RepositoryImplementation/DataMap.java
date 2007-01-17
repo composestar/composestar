@@ -15,7 +15,10 @@ import java.util.Vector;
  * The DataMap is in implementation of the java.util.Map interface that uses two
  * public Vectors as storage, one for keys, and one for values.
  * RepositoryEntities that need a map should used the DataMap since it can be
- * serialized by CONE-XML.
+ * serialized by CONE-XML. Only serializable objects may be added to this map
+ * because the entries will mostlikely be serialized. Only data that is needed
+ * at runtime should be added to a DataMap. To store compiletime only data used
+ * the CommonResources.
  * 
  * @author Tom Staijen
  * @version 0.9.0
@@ -74,6 +77,17 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 
 	public Object put(Object key, Object value)
 	{
+		if (!(value instanceof Serializable))
+		{
+			throw new UnsupportedOperationException(
+					"Value must implement Serializable or use CommonResources otherwise");
+		}
+		if (!(key instanceof Serializable))
+		{
+			throw new UnsupportedOperationException(
+					"Value must implement Serializable or use CommonResources otherwise");
+		}
+
 		int index = m_keys.indexOf(key);
 		if (index < 0)
 		{

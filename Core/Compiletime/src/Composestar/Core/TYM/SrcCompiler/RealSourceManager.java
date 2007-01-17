@@ -83,7 +83,7 @@ public class RealSourceManager implements CTCommonModule
 			}
 		}
 
-		resources.addResource("CompiledSources", compiledSources);
+		resources.add("CompiledSources", compiledSources);
 	}
 
 	/**

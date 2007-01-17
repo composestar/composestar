@@ -163,7 +163,7 @@ public class DotNETCollectorRunner implements CollectorRunner
 	{
 		TypeMap map = TypeMap.instance();
 
-		List skippedAssemblies = (List) resources.getResource("skippedAssemblies");
+		List skippedAssemblies = (List) resources.get("skippedAssemblies");
 		Iterator asmItr = skippedAssemblies.iterator();
 		while (asmItr.hasNext())
 		{

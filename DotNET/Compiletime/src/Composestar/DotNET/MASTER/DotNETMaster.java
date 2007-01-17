@@ -48,7 +48,7 @@ public class DotNETMaster extends Master
 	// not used
 	public void saveModifiedConfigurationKeys(CommonResources resources)
 	{
-		List builtAssemblies = (List) resources.getResource("BuiltAssemblies");
+		List builtAssemblies = (List) resources.get("BuiltAssemblies");
 		List configLines = new ArrayList();
 
 		try

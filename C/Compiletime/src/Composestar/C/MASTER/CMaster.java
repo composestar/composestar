@@ -49,7 +49,7 @@ public class CMaster extends Master
 
 	public void SaveModifiedConfigurationKeys(CommonResources resources)
 	{
-		ArrayList builtAssemblies = (ArrayList) resources.getResource("BuiltAssemblies");
+		ArrayList builtAssemblies = (ArrayList) resources.get("BuiltAssemblies");
 		if (builtAssemblies == null)
 		{
 			builtAssemblies = new ArrayList();

@@ -118,7 +118,7 @@ public class Sign implements CTCommonModule
 
 		printConcernMethods(resources);
 
-		resources.addResource("signaturesmodified", true);
+		resources.add("signaturesmodified", true);
 
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "signature generation and checking done");
 	}

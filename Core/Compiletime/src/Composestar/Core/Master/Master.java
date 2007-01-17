@@ -36,8 +36,6 @@ public abstract class Master
 {
 	public static final String MODULE_NAME = "Master";
 
-	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
-
 	/**
 	 * Compile process failed (e.g. a ModuleException was thrown)
 	 */
@@ -99,11 +97,9 @@ public abstract class Master
 			throw new Exception("Unable to open configuration file: " + configfile);
 		}
 
-		// create the repository
-		DataStore ds = DataStore.instance();
-
-		resources = new CommonResources();
-		ds.addObject(RESOURCES_KEY, resources);
+		// create the repository and common resources
+		DataStore.instance();
+		resources = CommonResources.instance();
 
 		// load the project configuration file
 		try
@@ -139,9 +135,6 @@ public abstract class Master
 		try
 		{
 			long beginTime = System.currentTimeMillis();
-
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Creating datastore...");
-			DataStore.instance();
 
 			// initialize INCRE
 			INCRE incre = INCRE.instance();

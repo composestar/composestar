@@ -39,7 +39,7 @@ public class DotNETHarvestRunner implements HarvestRunner
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		resources.addResource("skippedAssemblies", skippedAssemblies);
+		resources.add("skippedAssemblies", skippedAssemblies);
 
 		List dummies = config.getProjects().getCompiledDummies();
 		List dependencies = config.getProjects().getDependencies();
