@@ -161,9 +161,7 @@ public final class INCRE implements CTCommonModule
 			// time the loading process
 			INCRETimer loadhistory = this.getReporter().openProcess(MODULE_NAME, "Loading history",
 					INCRETimer.TYPE_OVERHEAD);
-			enabled = loadHistory(); // shut down INCRE
-			// in case loading
-			// fails
+			enabled = loadHistory(); // disable incremental compilation in case loading fails
 			loadhistory.stop();
 		}
 
@@ -1066,7 +1064,7 @@ public final class INCRE implements CTCommonModule
 		}
 		catch (FileNotFoundException e)
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Cannot find history thus INCRE is not ");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Cannot find history file.");
 			return false;
 		}
 		catch (Exception e)

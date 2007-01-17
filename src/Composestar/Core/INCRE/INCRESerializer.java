@@ -10,6 +10,8 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
@@ -20,18 +22,21 @@ public class INCRESerializer implements CTCommonModule
 
 	public INCRESerializer()
 	{
-
 	}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		if (Configuration.instance().getModuleProperty(INCRE.MODULE_NAME, "enabled", false))
+		ModuleInfo mi = ModuleInfoManager.get("INCRE");
+		boolean incremental = mi.getBooleanSetting("enabled");
+		
+		if (incremental)
 		{
-			// only serialize when incremental compilation is enabled
 			INCRE incre = INCRE.instance();
-			INCRETimer increhistory = incre.getReporter().openProcess("INCRESerializer", "Creation of INCRE history",
-					INCRETimer.TYPE_OVERHEAD);
-			storeHistory();
+
+			INCRETimer increhistory = incre.getReporter().openProcess(
+					"INCRESerializer", "Creation of INCRE history", INCRETimer.TYPE_OVERHEAD);
+			
+			storeHistory(incre.historyfile);
 			increhistory.stop();
 		}
 	}
@@ -39,19 +44,17 @@ public class INCRESerializer implements CTCommonModule
 	/**
 	 * Writes the repository to disk to provide incremental compilation
 	 */
-	public void storeHistory() throws ModuleException
+	private void storeHistory(String filename) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
-		Debug.out(Debug.MODE_DEBUG, INCRE.MODULE_NAME, "Comparator made " + incre.comparator.getCompare()
-				+ " comparisons");
+		Debug.out(Debug.MODE_DEBUG, INCRE.MODULE_NAME, 
+				"Comparator made " + incre.comparator.getCompare() + " comparisons");
 
 		DataStore ds = DataStore.instance();
-		// Configuration config = Configuration.instance();
-
 		ObjectOutputStream oos = null;
 		try
 		{
-			FileOutputStream fos = new FileOutputStream(INCRE.instance().historyfile);
+			FileOutputStream fos = new FileOutputStream(filename);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			oos = new ObjectOutputStream(bos);
 
@@ -65,7 +68,8 @@ public class INCRESerializer implements CTCommonModule
 			int count = ds.size(), stored = 0;
 			oos.writeInt(count - 1);
 
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Up to " + count + " objects to store");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+					"Up to " + count + " objects to store in '" + filename + "'...");
 
 			Iterator it = ds.getIterator();
 			while (it.hasNext())
