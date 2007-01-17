@@ -100,7 +100,6 @@ public class JarTransformer
 		{
 			JarLoader jl = new JarLoader(jarFile);
 			HashMap classen = jl.getLoadedClasses();
-			Iterator keyset = classen.keySet().iterator();
 			for (Object o : classen.keySet())
 			{
 
@@ -179,7 +178,6 @@ public class JarTransformer
 	public void transform() throws Exception
 	{
 
-		Iterator keyset = modifiedClasses.keySet().iterator();
 		for (Object o : modifiedClasses.keySet())
 		{
 			String key = (String) o;

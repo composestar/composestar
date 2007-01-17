@@ -75,7 +75,6 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 			// change outputFilename
 			TypeLocations types = TypeLocations.instance();
-			Iterator embeddedTypes = types.getTypesBySource(source.getFileName()).iterator();
 			for (Object o : types.getTypesBySource(source.getFileName()))
 			{
 				String type = (String) o;

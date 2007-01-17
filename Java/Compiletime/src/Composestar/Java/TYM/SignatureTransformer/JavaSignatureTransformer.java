@@ -1,7 +1,6 @@
 package Composestar.Java.TYM.SignatureTransformer;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CommonResources;
@@ -36,7 +35,6 @@ public class JavaSignatureTransformer implements SignatureTransformer
 		{
 			// Iterate over dummy jarfiles
 			ArrayList dummies = (ArrayList) Configuration.instance().getProjects().getCompiledDummies();
-			Iterator dumIt = dummies.iterator();
 			for (Object dummy : dummies)
 			{
 				String name = (String) dummy;

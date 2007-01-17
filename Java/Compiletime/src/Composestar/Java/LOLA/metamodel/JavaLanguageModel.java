@@ -370,7 +370,6 @@ public class JavaLanguageModel extends LanguageModel
 		UnitResult classes = unitDict.getByType("Class");
 		if (null != classes)
 		{
-			Iterator classIter = classes.multiValue().iterator();
 			for (Object o : classes.multiValue())
 			{
 				JavaType concern = (JavaType) o;
@@ -389,7 +388,6 @@ public class JavaLanguageModel extends LanguageModel
 					((JavaType) superType).addChildType(concern);
 				}
 				Collection implementedInterfaces = concern.getUnitRelation("Implements").multiValue();
-				Iterator ifaceIter = implementedInterfaces.iterator();
 				for (Object implementedInterface : implementedInterfaces)
 				{
 					// This class implements interfaces, also add the reverse
@@ -404,7 +402,6 @@ public class JavaLanguageModel extends LanguageModel
 		UnitResult interfaces = unitDict.getByType("Interface");
 		if (null != interfaces)
 		{
-			Iterator ifaceIter = interfaces.multiValue().iterator();
 			for (Object o : interfaces.multiValue())
 			{
 				JavaType concern = (JavaType) o;
@@ -430,7 +427,6 @@ public class JavaLanguageModel extends LanguageModel
 		UnitResult parameters = unitDict.getByType("Parameter");
 		if (null != parameters)
 		{
-			Iterator paramIter = parameters.multiValue().iterator();
 			for (Object o : parameters.multiValue())
 			{
 				JavaParameterInfo param = (JavaParameterInfo) o;
@@ -451,7 +447,6 @@ public class JavaLanguageModel extends LanguageModel
 		UnitResult methods = unitDict.getByType("Method");
 		if (null != methods)
 		{
-			Iterator methodIter = methods.multiValue().iterator();
 			for (Object o : methods.multiValue())
 			{
 				JavaMethodInfo method = (JavaMethodInfo) o;
@@ -473,7 +468,6 @@ public class JavaLanguageModel extends LanguageModel
 		UnitResult fields = unitDict.getByType("Field");
 		if (null != fields)
 		{
-			Iterator fieldIter = fields.multiValue().iterator();
 			for (Object o : fields.multiValue())
 			{
 				JavaFieldInfo field = (JavaFieldInfo) o;
@@ -526,7 +520,6 @@ public class JavaLanguageModel extends LanguageModel
 					// parent of its child parameters
 					// so they will be noticed for removal by the 2nd loop.
 					Collection params = method.getUnitRelation("ChildParameters").multiValue();
-					Iterator paramsIter = params.iterator();
 					for (Object param : params)
 					{
 						JavaParameterInfo paramInfo = (JavaParameterInfo) param;
@@ -673,7 +666,6 @@ public class JavaLanguageModel extends LanguageModel
 			lostMatch = true; // assume we are not going to find a child that
 								// matches
 			UnitResult children = currNS.getUnitRelation("ChildNamespaces");
-			Iterator childIter = children.multiValue().iterator();
 			for (Object o : children.multiValue())
 			{
 				LangNamespace ns = (LangNamespace) o;

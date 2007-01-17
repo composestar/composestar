@@ -7,7 +7,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CommonResources;
@@ -45,7 +44,6 @@ public class JavaHarvestRunner implements HarvestRunner
 		ArrayList dependencyList = (ArrayList) Configuration.instance().getProjects().getDependencies();
 		ArrayList toBeHarvested = new ArrayList();
 
-		Iterator dummyIt = dummyList.iterator();
 		for (Object aDummyList : dummyList)
 		{
 			String library = (String) aDummyList;
@@ -60,7 +58,6 @@ public class JavaHarvestRunner implements HarvestRunner
 			}
 		}
 
-		Iterator depsIt = dependencyList.iterator();
 		for (Object aDependencyList : dependencyList)
 		{
 			Dependency dep = (Dependency) aDependencyList;
@@ -76,8 +73,6 @@ public class JavaHarvestRunner implements HarvestRunner
 			}
 		}
 
-		Iterator libsIt = toBeHarvested.iterator();
-
 		for (Object aToBeHarvested : toBeHarvested)
 		{
 
@@ -87,7 +82,6 @@ public class JavaHarvestRunner implements HarvestRunner
 			{
 				JarLoader jl = new JarLoader(library);
 				HashMap classen = jl.getLoadedClasses();
-				Iterator classIt = classen.keySet().iterator();
 				for (Object o : classen.keySet())
 				{
 					Class c = (Class) classen.get(o);

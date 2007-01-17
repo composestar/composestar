@@ -1,7 +1,6 @@
 package Composestar.Java.TYM.SignatureTransformer;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javassist.*;
@@ -57,7 +56,6 @@ public class ClassModifier
 	 */
 	public void addMethods(List methods, CtClass ct) throws Exception
 	{
-		Iterator it = methods.iterator();
 		for (Object method : methods)
 		{
 			JavaMethodInfo m = (JavaMethodInfo) method;
@@ -97,7 +95,6 @@ public class ClassModifier
 	 */
 	public void deleteMethods(List methods, CtClass ct) throws Exception
 	{
-		Iterator it = methods.iterator();
 		for (Object method1 : methods)
 		{
 			JavaMethodInfo m = (JavaMethodInfo) method1;

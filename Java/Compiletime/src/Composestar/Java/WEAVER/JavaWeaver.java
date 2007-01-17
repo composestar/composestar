@@ -66,7 +66,6 @@ public class JavaWeaver implements WEAVER
 
 		Configuration config = Configuration.instance();
 		List projects = config.getProjects().getProjects();
-		Iterator projIt = projects.iterator();
 		for (Object project : projects)
 		{
 			c = new ClassWeaver();
@@ -145,7 +144,6 @@ public class JavaWeaver implements WEAVER
 			if (c.getDynObject("SingleOrder") != null)
 			{
 				FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject("SingleOrder");
-				Iterator iterFilterModules = fmo.orderAsList().iterator();
 				for (Object o : fmo.orderAsList())
 				{
 					String fmn = (String) o;

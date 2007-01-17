@@ -1,7 +1,6 @@
 package Composestar.Java.WEAVER;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javassist.ClassPool;
@@ -106,7 +105,6 @@ public class ClassWeaver
 		boolean isEmbeddedType = false;
 		TypeLocations types = TypeLocations.instance();
 
-		Iterator typeIt = p.getTypeSources().iterator();
 		for (Object o1 : p.getTypeSources())
 		{
 			type = (TypeSource) o1;
@@ -116,7 +114,6 @@ public class ClassWeaver
 			// types from embedded sources. So temporarily disabled weaving on
 			// embedded types.
 			String s = FileUtils.normalizeFilename(types.getSourceByType(name));
-			Iterator sourceIt = p.getSources().iterator();
 			for (Object o : p.getSources())
 			{
 				Source source = (Source) o;

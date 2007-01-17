@@ -9,7 +9,6 @@ import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +29,6 @@ public class JavaBACO extends BACO
 	protected void addBuiltLibraries(Set filesToCopy)
 	{
 		List weavedClasses = (List) DataStore.instance().getObjectByID("WeavedClasses");
-		Iterator it = weavedClasses.iterator();
 		for (Object weavedClass : weavedClasses)
 		{
 			String clazz = (String) weavedClass;

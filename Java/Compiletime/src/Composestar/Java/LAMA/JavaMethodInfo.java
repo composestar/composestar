@@ -87,7 +87,6 @@ public class JavaMethodInfo extends MethodInfo
 	private HashSet toHashSet(Collection c)
 	{
 		HashSet result = new HashSet();
-		Iterator iter = c.iterator();
 		for (Object aC : c)
 			result.add(aC);
 		return result;

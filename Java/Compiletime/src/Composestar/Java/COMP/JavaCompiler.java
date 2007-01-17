@@ -47,7 +47,6 @@ public class JavaCompiler implements LangCompiler
 		options = options + "\"" + p.getCompiledDummies() + "\"";
 
 		// add dependencies to classpath
-		Iterator deps = p.getDependencies().iterator();
 		for (Object o1 : p.getDependencies())
 		{
 			options = options + ";" + FileUtils.quote(((Dependency) o1).getFileName());
@@ -68,7 +67,6 @@ public class JavaCompiler implements LangCompiler
 		command = lang.getCompilerSettings().getProperty("executable") + " " + command;
 		command = command.replaceAll("\\{OPTIONS\\}", options);
 
-		Iterator sourceIt = p.getSources().iterator();
 		for (Object o : p.getSources())
 		{
 			compileSource(command, ((Source) o).getFileName(), buildPath);
@@ -203,7 +201,6 @@ public class JavaCompiler implements LangCompiler
 		String basePath = config.getPathSettings().getPath("Base");
 		String targetPath = basePath + "obj/" + dummyPath;
 
-		Iterator sourceIt = p.getSources().iterator();
 		for (Object o : p.getSources())
 		{
 			Source source = (Source) o;
@@ -273,7 +270,6 @@ public class JavaCompiler implements LangCompiler
 	{
 		StringBuffer sourcefiles = new StringBuffer();
 
-		Iterator sourceIt = p.getSources().iterator();
 		for (Object o : p.getSources())
 		{
 			Source s = (Source) o;

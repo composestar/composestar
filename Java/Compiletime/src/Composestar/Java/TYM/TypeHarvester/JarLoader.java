@@ -190,23 +190,6 @@ public class JarLoader extends ClassLoader
 	{
 		return this.classesDefined;
 	}
-
-	/**
-	 * For testing purposes.
-	 * 
-	 * @param args the fullpath of jar-file
-	 */
-	public static void main(String[] args)
-	{
-
-		try
-		{
-			JarLoader jl = new JarLoader(args[0]);
-		}
-		catch (JarLoaderException e)
-		{
-
-		}
-	}
+	
 }// end class JarLoader
 
