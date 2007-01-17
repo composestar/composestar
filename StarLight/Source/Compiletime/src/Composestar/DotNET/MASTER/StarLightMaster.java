@@ -13,26 +13,24 @@ package Composestar.DotNET.MASTER;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.INCRE.INCREModule;
+import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
-import Composestar.Core.Master.Config.ConcernSource;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 import composestar.dotNET.tym.entities.ArrayOfKeyValueSetting;
-import composestar.dotNET.tym.entities.ConcernElement;
 import composestar.dotNET.tym.entities.ConfigurationContainer;
 import composestar.dotNET.tym.entities.ConfigurationContainerDocument;
 import composestar.dotNET.tym.entities.KeyValueSetting;
@@ -47,6 +45,7 @@ public class StarLightMaster extends Master
 	private static final String VERSION = "0.2 beta";
 	private static final String AUTHOR = "University of Twente";
 	private static final String TITLE = "ComposeStar StarLight";
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	private static String configFileName;
 	private static String increConfig = "INCREconfig.xml";
@@ -56,9 +55,7 @@ public class StarLightMaster extends Master
 	private long startTime;
 
 	/**
-	 * Default ctor.
-	 * 
-	 * @param configurationFile
+	 * Creates a new StarLightMaster with the specified command line arguments.
 	 */
 	public StarLightMaster(String[] args)
 	{
@@ -136,16 +133,16 @@ public class StarLightMaster extends Master
 	private void initialize() throws Exception
 	{
 		startTime = System.currentTimeMillis();
-		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Master initializing.");
+		logger.info("Master initializing.");
 
 		File configFile = new File(configFileName);
 		if (!configFile.exists())
 		{
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Configuration file '" + configFileName + " not found!");
+			logger.error("Configuration file '" + configFileName + " not found!");
 			System.exit(-1);
 		}
 
-		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Using configuration file '" + configFileName + "'");
+		logger.info("Using configuration file '" + configFileName + "'");
 		configDocument = ConfigurationContainerDocument.Factory.parse(configFile);
 		configContainer = configDocument.getConfigurationContainer();
 
@@ -170,7 +167,7 @@ public class StarLightMaster extends Master
 		incre.setSettingValue("enabled", false);
 		incre.setSettingValue("config", increConfig);
 		
-		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Master initialized.");
+		logger.info("Master initialized.");
 	}
 
 	/**
@@ -182,34 +179,21 @@ public class StarLightMaster extends Master
 		{
 			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, TITLE + " " + VERSION);
 
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Reading configuration");
-
-			// TODO: move to RepositoryCollector?
-			List<ConcernElement> concerns = configContainer.getConcerns().getConcernList();
-			for (ConcernElement ce : concerns)
-			{
-				ConcernSource concern = new ConcernSource();
-				File concernFile = new File(ce.getPathName(), ce.getFileName());
-				concern.setFileName(concernFile.getAbsolutePath());
-
-				Configuration.instance().getProjects().addConcernSource(concern);
-			}
-
 			// Create new resources
 			CommonResources resources = new CommonResources();
 
 			// Initialize INCRE
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Initializing INCRE...");
+			logger.debug("Initializing INCRE...");
 			INCRE incre = INCRE.instance();
 			incre.run(resources);
 
-			// Set FILTH options
+			// Set FILTH options (must be done after INCRE is initialized)
 			ModuleInfo filth = ModuleInfoManager.get("FILTH");
 			filth.setSettingValue("input", getSettingValue("SpecificationFILTH"));
 			filth.setSettingValue("outputEnabled", getSettingValue("OutputEnabledFILTH"));
 
 			// Execute enabled modules one by one
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Executing modules...");
+			logger.debug("Executing modules...");
 
 			Iterator<INCREModule> it = incre.getModules();
 			while (it.hasNext())
@@ -218,14 +202,14 @@ public class StarLightMaster extends Master
 				m.execute(resources);
 				
 				long total = incre.getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL);
-				Debug.out(Debug.MODE_DEBUG, INCRE.MODULE_NAME, m.getName() + " executed in " + total + " ms");
+				logger.debug(m.getName() + " executed in " + total + " ms");
 			}
 
 			// write config file:
 			configDocument.save(new File(configFileName));
 
 			long elapsed = System.currentTimeMillis() - startTime;
-			System.out.println("total elapsed time: " + elapsed + " ms");
+			logger.info("Total elapsed time: " + elapsed + " ms");
 
 			// Close INCRE
 			INCRE.instance().getReporter().close();
@@ -235,24 +219,28 @@ public class StarLightMaster extends Master
 		}
 		catch (ModuleException e)
 		{
-			String error = e.getMessage();
-			if (error == null || error.equals("null")) // great information
+			String message = e.getMessage();
+			if (message == null || "null".equals(message)) // great information
 			{
-				error = e.toString();
+				message = e.toString();
 			}
 
-			if ((e.getErrorLocationFilename() != null) && e.getErrorLocationFilename().length() > 0) Debug.out(
-					Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e
-							.getErrorLocationLineNumber());
-			else Debug.out(Debug.MODE_ERROR, e.getModule(), error);
+			CPSLogger moduleLogger = CPSLogger.getCPSLogger(e.getModule());
+			if (e.getFilename() == null || "".equals(e.getFilename()))
+			{
+				moduleLogger.error(message);
+			}
+			else
+			{
+				moduleLogger.error(message, e);
+			}
 
-			// Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " +
-			// printStackTrace(e));
+		//	moduleLogger.stackTrace(e);
 			return ECOMPILE;
 		}
-		catch (Exception ex)
+		catch (Exception e)
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, Debug.stackTrace(ex));
+			logger.stackTrace(e);
 			return EFAIL;
 		}
 

@@ -1,5 +1,6 @@
 package Composestar.DotNET.TYM.RepositoryCollector;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +31,8 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.ConcernSource;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.DotNET.LAMA.DotNETAttribute;
 import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
@@ -49,6 +52,7 @@ import composestar.dotNET.tym.entities.AssemblyDocument;
 import composestar.dotNET.tym.entities.AssemblyElement;
 import composestar.dotNET.tym.entities.AttributeElement;
 import composestar.dotNET.tym.entities.CallElement;
+import composestar.dotNET.tym.entities.ConcernElement;
 import composestar.dotNET.tym.entities.ConfigurationContainer;
 import composestar.dotNET.tym.entities.FieldElement;
 import composestar.dotNET.tym.entities.FilterActionElement;
@@ -76,6 +80,9 @@ public class StarLightCollectorRunner implements CTCommonModule
 		
 		// Collect the type information from assemblies
 		collectAssemblies();
+		
+		// Collection cps concern sources
+		collectConcernSources();
 		
 		// Collect primitive concerns
 		collectPrimitiveConcerns();
@@ -257,6 +264,19 @@ public class StarLightCollectorRunner implements CTCommonModule
 		finally
 		{
 			FileUtils.close(is);
+		}
+	}
+	
+	private void collectConcernSources()
+	{
+		List<ConcernElement> concerns = configContainer.getConcerns().getConcernList();
+		for (ConcernElement ce : concerns)
+		{
+			ConcernSource concern = new ConcernSource();
+			File concernFile = new File(ce.getPathName(), ce.getFileName());
+			concern.setFileName(concernFile.getAbsolutePath());
+
+			Configuration.instance().getProjects().addConcernSource(concern);
 		}
 	}
 	

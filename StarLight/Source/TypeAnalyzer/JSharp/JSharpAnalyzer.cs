@@ -28,7 +28,7 @@ namespace Composestar.StarLight.TypeAnalyzer.JSharp
 			// resolve referenced types
 			foreach (CompilationUnit cu in cus)
 			{
-				Console.WriteLine("Analyzing {0}...", cu.FileName);
+			//	Console.WriteLine("Analyzing {0}...", cu.FileName);
 
 				NamespaceContext context = new NamespaceContext(ac, cu.FileName, cu.Package, typeNames);
 				foreach (string import in cu.Imports)
@@ -64,7 +64,7 @@ namespace Composestar.StarLight.TypeAnalyzer.JSharp
 
 		private CompilationUnit ParseSource(string source)
 		{
-			Console.WriteLine("Parsing {0}...", source);
+		//	Console.WriteLine("Parsing {0}...", source);
 
 			TextReader reader = File.OpenText(source);
 			JSharpPosLexer lexer = new JSharpPosLexer(reader);
