@@ -13,7 +13,7 @@
 			</setting>
 			<setting id="outputEnabled" type="boolean">
 				<name>Output enabled</name>
-        <default>false</default>
+				<default>false</default>
 			</setting>
 		</settings>
 		<incre>
