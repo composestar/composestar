@@ -207,7 +207,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	
 	public void copyOperation(String assemblyName) throws ModuleException
 	{
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME_INCRE, "Restoring types from '" + assemblyName + "'");
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME_INCRE, "Restoring type information from '" + assemblyName + "'");
 		INCRE incre = INCRE.instance();
 
 		int typecount = 0;
@@ -245,6 +245,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 	{
 		String filename = assembly.getTypeSpecificationFile();
 
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Loading type information from '" + filename + "'...");
+		
 		InputStream is = null;
 		try
 		{

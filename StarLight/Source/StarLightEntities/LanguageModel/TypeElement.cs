@@ -249,6 +249,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 		/// Gets or sets the name of the source file this type element was harvested from.
 		/// </summary>
 		/// <value>The name of the source file or null if the type was harvested from an assembly.</value>
+		[XmlAttribute]
 		public string FromSource
 		{
 			get { return _fromSource; }

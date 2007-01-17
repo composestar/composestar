@@ -67,7 +67,7 @@ options {
 		fe.Name = name;
 		fe.Type = type;
 		fe.IsPrivate = mods.Contains("private");
-		fe.IsPublic = mods.Contains("public");
+		fe.IsPublic = mods.Contains("public") || mods.Contains("protected");
 		fe.IsStatic = mods.Contains("static");
 		return fe;
 	}
@@ -79,10 +79,12 @@ options {
 		me.Name = name;
 		me.ReturnType = returnType;
 		me.Parameters = parameters;
+		me.IsConstructor = false;
 		me.IsPrivate = mods.Contains("private");
-		me.IsPublic = mods.Contains("public");
+		me.IsPublic = mods.Contains("public") || mods.Contains("protected");
 		me.IsStatic = mods.Contains("static");
 		me.IsAbstract = mods.Contains("abstract");
+		me.IsVirtual = !mods.Contains("final") && !mods.Contains("static");
 		return me;
 	}
 	

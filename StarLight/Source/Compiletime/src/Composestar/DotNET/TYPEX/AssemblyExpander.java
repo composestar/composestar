@@ -35,6 +35,9 @@ class AssemblyExpander
 
 	public void expand(Map<String,ExpandedAssembly> assemblies) throws ModuleException
 	{
+		if (assemblies.size() == 0)
+			return;
+		
 		writeExpansionSpecs(assemblies);
 		invokeExpander();
 	}
@@ -51,7 +54,7 @@ class AssemblyExpander
 				doc.setExpandedAssembly(ea);
 
 				File baseDir = new File(pathSettings.getPath("Base"), "Starlight");
-				File file = new File(baseDir, ac.getSerializedName() + "_expandspec.xml");
+				File file = new File(baseDir, ac.getId() + "_expandspec.xml");
 				
 				OutputStream os = null;
 				try

@@ -56,8 +56,8 @@ namespace Composestar.StarLight.Entities.Configuration
 	public class AssemblyConfig
 	{
 		private AssemblyElement _assembly;
+		private string _id;
 		private string _name;
-		private string _serializedName;
 		private string _fileName;
 		private long _timestamp;
 		private bool _isReference;
@@ -77,6 +77,26 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _assembly = value; }
 		}
 
+		[XmlAttribute]
+		public string Id
+		{
+			get
+			{
+				if (_id == null)
+				{
+					string name = _name;
+					name = name.Replace(", ", "_");
+					name = name.Replace(".", "_");
+					name = name.Replace("Version=", "");
+					name = name.Replace("Culture=", "");
+					name = name.Replace("PublicKeyToken=", "");
+					_id = name;
+				}
+				return _id;
+			}
+			set { _id = value; }
+		}
+
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
@@ -86,26 +106,6 @@ namespace Composestar.StarLight.Entities.Configuration
 		{
 			get { return _name; }
 			set { _name = value; }
-		}
-
-		[XmlAttribute]
-		public string SerializedName
-		{
-			get
-			{
-				if (_serializedName == null)
-				{
-					string name = _name;
-					name = name.Replace(", ", "_");
-					name = name.Replace(".", "_");
-					name = name.Replace("Version=", "");
-					name = name.Replace("Culture=", "");
-					name = name.Replace("PublicKeyToken=", "");
-					_serializedName = name;
-				}
-				return _serializedName;
-			}
-			set { _serializedName = value; }
 		}
 
 		/// <summary>
@@ -188,7 +188,7 @@ namespace Composestar.StarLight.Entities.Configuration
 		/// </summary>
 		public void GenerateTypeSpecificationFileName(string baseDir)
 		{
-			_typeSpec = Path.Combine(baseDir, string.Concat(SerializedName, ".xml.gzip"));
+			_typeSpec = Path.Combine(baseDir, string.Concat(Id, ".xml.gzip"));
 		}
 
 		/// <summary>

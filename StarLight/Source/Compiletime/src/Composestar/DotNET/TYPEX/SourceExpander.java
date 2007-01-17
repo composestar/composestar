@@ -1,11 +1,14 @@
 package Composestar.DotNET.TYPEX;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
 import composestar.dotNET.tym.entities.ExpandedType;
@@ -32,14 +35,16 @@ class SourceExpander
 	
 	private void expand(ExpandedSource source) throws IOException
 	{
-		String ext = FileUtils.getExtension(source.toString());
+		Debug.out(Debug.MODE_DEBUG, TYPEX.MODULE_NAME, "Expanding '" + source.getFilename() + "'...");
+		
+		String ext = FileUtils.getExtension(source.getFilename());
 		MethodEmitter me = getMethodEmitter(ext); 
 
-		FileReader reader = null;
-		FileWriter writer = null;
+		BufferedReader reader = null;
+		BufferedWriter writer = null;
 		try {
-			reader = new FileReader(source.getFilename());
-			writer = new FileWriter(getDestFile(source));
+			reader = new BufferedReader(new FileReader(source.getFilename()));
+			writer = new BufferedWriter(new FileWriter(getDestFile(source)));
 			int curPos = 0;
 			
 			for (ExpandedType et : source.sortedTypes())

@@ -1,15 +1,19 @@
 package Composestar.DotNET.TYPEX;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
+import Composestar.DotNET.LAMA.DotNETParameterInfo;
 import Composestar.DotNET.LAMA.DotNETType;
 
+import composestar.dotNET.tym.entities.ArrayOfParameterElement;
 import composestar.dotNET.tym.entities.ExpandedAssembly;
 import composestar.dotNET.tym.entities.ExpandedType;
 import composestar.dotNET.tym.entities.MethodElement;
+import composestar.dotNET.tym.entities.ParameterElement;
 
 class TypeExpander
 {
@@ -36,6 +40,15 @@ class TypeExpander
 		MethodElement me = et.getExtraMethods().addNewMethod();
 		me.setName(mi.getName());
 		me.setReturnType(mi.returnTypeName());
+		
+		ArrayOfParameterElement pa = me.addNewParameters();
+		List<DotNETParameterInfo> paramInfos = mi.getParameters();
+		for (DotNETParameterInfo pi : paramInfos)
+		{
+			ParameterElement pe = pa.addNewParameter();
+			pe.setName(pi.name());
+			pe.setType(pi.getParameterTypeString());
+		}
 	}
 	
 	private ExpandedType getExpandedType(DotNETType dnt)

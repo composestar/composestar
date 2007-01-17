@@ -35,6 +35,25 @@
 #endregion
 
 #region Using directives
+using System;
+using System.IO;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Reflection;
+using System.Security.Policy;
+
+using Mono.Cecil;
+using Mono.Cecil.Binary;
+using Mono.Cecil.Cil;
+using Mono.Cecil.Metadata;
+using Mono.Cecil.Signatures;
+using MethodAttributes = Mono.Cecil.MethodAttributes;
+using FieldAttributes = Mono.Cecil.FieldAttributes;
+
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.CoreServices.Analyzer;
@@ -42,22 +61,6 @@ using Composestar.StarLight.CoreServices.Logger;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Filters.FilterTypes;
-using Mono.Cecil;
-using Mono.Cecil.Binary;
-using Mono.Cecil.Cil;
-using Mono.Cecil.Metadata;
-using Mono.Cecil.Signatures;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.IO;
-using System.Reflection;
-using System.Security.Policy;  //for evidence objec;
-using System.Text;
 #endregion
 
 namespace Composestar.StarLight.ILAnalyzer
@@ -485,10 +488,12 @@ namespace Composestar.StarLight.ILAnalyzer
 			me.ReturnType = method.ReturnType.ReturnType.FullName;			
 			me.IsAbstract = method.IsAbstract;
 			me.IsConstructor = method.IsConstructor;
-			me.IsPrivate = method.Attributes == Mono.Cecil.MethodAttributes.Private;
-			me.IsPublic = method.Attributes == Mono.Cecil.MethodAttributes.Public;
 			me.IsStatic = method.IsStatic;
 			me.IsVirtual = method.IsVirtual;
+
+			MethodAttributes memberAccess = method.Attributes & MethodAttributes.MemberAccessMask;
+			me.IsPrivate = memberAccess == MethodAttributes.Private;
+			me.IsPublic = memberAccess == MethodAttributes.Public;
 
 			// Add the parameters
 			foreach (ParameterDefinition param in method.Parameters)
@@ -567,10 +572,11 @@ namespace Composestar.StarLight.ILAnalyzer
 
 			fe.Name = field.Name;
 			fe.Type = field.FieldType.FullName;
-
-			fe.IsPrivate = field.Attributes == Mono.Cecil.FieldAttributes.Private;
-			fe.IsPublic = field.Attributes == Mono.Cecil.FieldAttributes.Public;
 			fe.IsStatic = field.IsStatic;
+
+			FieldAttributes fieldAccess = field.Attributes & FieldAttributes.FieldAccessMask;
+			fe.IsPrivate = fieldAccess == FieldAttributes.Private;
+			fe.IsPublic = fieldAccess == FieldAttributes.Public;
 
 			// Custom attributes
 			fe.Attributes.AddRange(ExtractCustomAttributes(field.CustomAttributes));

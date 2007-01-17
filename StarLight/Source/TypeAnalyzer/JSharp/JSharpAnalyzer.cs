@@ -78,7 +78,7 @@ namespace Composestar.StarLight.TypeAnalyzer.JSharp
 			CompilationUnit cu = walker.compilationUnit(root);
 			cu.FileName = source;
 			cu.Timestamp = File.GetLastWriteTime(source).Ticks;
-
+		
 			using (TextWriter writer = File.CreateText(source + ".xml"))
 			{
 				XmlSerializer xs = new XmlSerializer(typeof(CompilationUnit));

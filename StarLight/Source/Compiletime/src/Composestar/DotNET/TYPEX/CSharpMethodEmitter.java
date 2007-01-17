@@ -1,15 +1,15 @@
 package Composestar.DotNET.TYPEX;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.Writer;
 
 import composestar.dotNET.tym.entities.MethodElement;
 
 class CSharpMethodEmitter implements MethodEmitter
 {
-	public void emit(MethodElement method, Writer writer) throws IOException
+	public void emit(MethodElement me, BufferedWriter bw) throws IOException
 	{
-		writer.append(method.toString());
-		writer.append("\n");
+		bw.append(me.toString());
+		bw.append("\n");
 	}
 }

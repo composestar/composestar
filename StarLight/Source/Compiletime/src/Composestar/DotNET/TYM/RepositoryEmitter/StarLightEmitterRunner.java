@@ -140,7 +140,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 				doc.setWeaveSpecification(weaveSpec);
 
 				File baseDir = new File(pathSettings.getPath("Base"), "Starlight");
-				File file = new File(baseDir, ac.getSerializedName() + "_weavespec.xml.gzip");
+				File file = new File(baseDir, ac.getId() + "_weavespec.xml.gzip");
+				
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing '" + file + "'...");
 
 				OutputStream outputStream = null;
 				try
@@ -150,7 +152,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 				}
 				catch (IOException e)
 				{
-					throw new ModuleException("IOException while writing weavespecfile " + file, MODULE_NAME);
+					throw new ModuleException(
+							"IOException while writing weave spec '" + file + "'", MODULE_NAME);
 				}
 				finally
 				{

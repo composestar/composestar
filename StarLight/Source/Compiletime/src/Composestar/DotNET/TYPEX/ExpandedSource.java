@@ -36,8 +36,8 @@ class ExpandedSource
 		{
 			public int compare(ExpandedType a, ExpandedType b)
 			{
-				int endPosA = 5;
-				int endPosB = 13;
+				int endPosA = a.getEndPos();
+				int endPosB = b.getEndPos();
 				
 				if (endPosA == endPosB)
 					throw new IllegalArgumentException();
