@@ -20,7 +20,7 @@ import org.apache.xmlbeans.XmlException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Master.Config.ConcernSource;
@@ -211,10 +211,10 @@ public class StarLightMaster extends Master
 			// Execute enabled modules one by one
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Executing modules...");
 
-			Iterator<Module> it = incre.getModules();
+			Iterator<INCREModule> it = incre.getModules();
 			while (it.hasNext())
 			{
-				Module m = it.next();
+				INCREModule m = it.next();
 				m.execute(resources);
 				
 				long total = incre.getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL);
