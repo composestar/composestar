@@ -12,22 +12,27 @@ package Composestar.Core.FILTH;
 /**
  * @author Isti
  */
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
 
 public abstract class FILTHService
 {
-	protected static PrintStream log = System.out;
+	public static final int HTML = 1;
+	public static final int NORMAL = 2;
 
+	protected static PrintStream log = System.out;
 	protected static int printMode = FILTHService.HTML;
 
-	public static final int HTML = 1;
-
-	public static final int NORMAL = 2;
+	public static FILTHService getInstance(CommonResources cr) throws ModuleException
+	{
+		return new FILTHServiceImpl();
+	}
 
 	public static void setLog(PrintStream stream)
 	{
@@ -36,17 +41,12 @@ public abstract class FILTHService
 
 	public static void setLog(String out) throws Exception
 	{
-		log = new PrintStream(new java.io.FileOutputStream(out));
+		log = new PrintStream(new FileOutputStream(out));
 	}
 	
 	public static PrintStream getLog()
 	{
 		return log;
-	}
-
-	public static FILTHService getInstance(CommonResources cr)
-	{
-		return new FILTHServiceImpl(cr);
 	}
 
 	public static void print(String mesg)

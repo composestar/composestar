@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,8 +37,10 @@ import Composestar.Core.FILTH.Core.Rule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
 import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.ConfigurationException;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
@@ -46,10 +49,15 @@ import Composestar.Utils.Debug;
 
 public class FILTHServiceImpl extends FILTHService
 {
-	private String specfile;
+	private boolean outputEnabled;
+	private String specFilename;
 
-	protected FILTHServiceImpl(CommonResources cr)
-	{}
+	protected FILTHServiceImpl() throws ConfigurationException
+	{
+		ModuleInfo mi = ModuleInfoManager.get(FILTH.MODULE_NAME);
+		outputEnabled = mi.getBooleanSetting("outputEnabled");
+		specFilename = mi.getStringSetting("input");
+	}
 
 	public List getOrder(Concern c)
 	{
@@ -68,10 +76,6 @@ public class FILTHServiceImpl extends FILTHService
 
 	public List getMultipleOrder(Concern c)
 	{
-
-		// Filth output enabled
-		boolean filthOutput = Configuration.instance().getModuleProperty("FILTH", "outputEnabled", true);
-
 		String filename = "";
 		String cssFile = "";
 		try
@@ -105,10 +109,10 @@ public class FILTHServiceImpl extends FILTHService
 				{
 					filename = c.getName();
 				}
-				filename = file.getAbsolutePath() + "\\FILTH_" + java.net.URLEncoder.encode(filename, "UTF-8")
+				filename = file.getAbsolutePath() + "\\FILTH_" + URLEncoder.encode(filename, "UTF-8")
 						+ ".html";
 
-				if (filthOutput)
+				if (outputEnabled)
 				{
 					FILTHService.setLog(new PrintStream(new FileOutputStream(filename)));
 				}
@@ -130,7 +134,7 @@ public class FILTHServiceImpl extends FILTHService
 			// e.printStackTrace();
 			// throw new ModuleException("SECRET","FILTH report file creation
 			// failed (" + filename + "), with reason: " + e.getMessage());
-			Debug.out(Debug.MODE_INFORMATION, "FILTH", "FILTH report file creation failed (" + filename
+			Debug.out(Debug.MODE_INFORMATION, FILTH.MODULE_NAME, "FILTH report file creation failed (" + filename
 					+ "), with reason: " + e.getMessage());
 		}
 
@@ -278,7 +282,7 @@ public class FILTHServiceImpl extends FILTHService
 
 		if (alt > 2)
 		{
-			Debug.out(Debug.MODE_WARNING, "FILTH", "Multiple Filter Module orderings possible for concern "
+			Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Multiple Filter Module orderings possible for concern "
 					+ c.getQualifiedName(), filename, 0);
 		}
 
@@ -321,7 +325,7 @@ public class FILTHServiceImpl extends FILTHService
 	private void processOrderingSpecifications(Graph g)
 	{
 		HashMap map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
-		Debug.out(Debug.MODE_INFORMATION, "FILTH", "FilterModule ordering constraints: " + map);
+		Debug.out(Debug.MODE_INFORMATION, FILTH.MODULE_NAME, "FilterModule ordering constraints: " + map);
 
 		String left, right;
 		Iterator it = map.values().iterator();
@@ -405,35 +409,31 @@ public class FILTHServiceImpl extends FILTHService
 			ConstraintFilter of = new ConstraintFilter(g);
 			of.setParent(xr);
 
-			Configuration config = Configuration.instance();
-			specfile = config.getModuleProperty("FILTH", "input", null);
-
-			if (specfile != null)
+			if (specFilename != null)
 			{
-				// System.out.println(_specfile);
-				File file = new File(specfile);
+				File file = new File(specFilename);
 				if (file != null && file.exists() && file.canRead())
 				{
-					FileReader fr = new FileReader(specfile);
+					FileReader fr = new FileReader(specFilename);
 					of.parse(new InputSource(fr));
 				}
 				else
 				{
-					Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification ("
-							+ specfile + ").", c);
+					Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Could not read/find Filter Module Order specification ("
+							+ specFilename + ").", c);
 				}
 			}
 		}
 		catch (SAXException se)
 		{
-			Debug.out(Debug.MODE_WARNING, "FILTH", "Problems parsing file: " + specfile + ", message: "
+			Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Problems parsing file: " + specFilename + ", message: "
 					+ se.getMessage());
 
-			Debug.out(Debug.MODE_DEBUG, "FILTH", Debug.stackTrace(se));
+			Debug.out(Debug.MODE_DEBUG, FILTH.MODULE_NAME, Debug.stackTrace(se));
 		}
 		catch (Exception ioe)
 		{
-			Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification (" + specfile
+			Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Could not read/find Filter Module Order specification (" + specFilename
 					+ ").", c);
 		}
 	}
