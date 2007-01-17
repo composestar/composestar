@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config.XmlHandlers;
 
 import org.xml.sax.Attributes;
@@ -9,25 +18,24 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Project;
 
-public class ProjectDependenciesHandler extends DefaultHandler implements ContentHandler
+public class ProjectDependenciesHandler extends DefaultHandler
 {
+	protected XMLReader parser;
 
-	XMLReader parser;
+	protected ContentHandler returnHandler;
 
-	ProjectHandler returnHandler;
+	protected Project project;
 
-	Project project;
-
-	public ProjectDependenciesHandler(Project inProject, XMLReader inParser, ProjectHandler documentHandler)
+	public ProjectDependenciesHandler(Project inProject, XMLReader inParser, ContentHandler documentHandler)
 	{
 		project = inProject;
 		parser = inParser;
 		returnHandler = documentHandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if ("Dependency".equals(raw_name))
+		if ("Dependency".equals(qName))
 		{
 			// in <dependency>
 			if (amap.getValue("fileName") != null)
@@ -41,22 +49,12 @@ public class ProjectDependenciesHandler extends DefaultHandler implements Conten
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException
+	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
-		if ("Dependencies".equals(raw_name))
+		if ("Dependencies".equals(qName))
 		{
 			// end <dependencies>
 			parser.setContentHandler(returnHandler);
 		}
-	}
-
-	public void startDocument()
-	{
-
-	}
-
-	public void endDocument()
-	{
-
 	}
 }

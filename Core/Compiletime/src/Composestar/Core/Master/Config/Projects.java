@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
@@ -14,33 +23,22 @@ import Composestar.Utils.FileUtils;
 
 public class Projects implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4696163750932369815L;
 
 	private Properties properties;
 
-	private List allProjects;
+	private List<Project> allProjects;
 
-	private List concernSources;
+	private List<ConcernSource> concernSources;
 
-	private Map projectsByLanguage;
-
-	// private List dependencies;
-	// private List compiledDummies;
-	// private List compiledSources;
+	private Map<String, List<Project>> projectsByLanguage;
 
 	public Projects()
 	{
 		properties = new Properties();
-		allProjects = new ArrayList();
-		concernSources = new ArrayList();
-		projectsByLanguage = new HashMap();
-
-		// dependencies = new ArrayList();
-		// compiledDummies = new ArrayList();
-		// compiledSources = new ArrayList();
+		allProjects = new ArrayList<Project>();
+		concernSources = new ArrayList<ConcernSource>();
+		projectsByLanguage = new HashMap<String, List<Project>>();
 	}
 
 	public void setRunDebugLevel(int value)
@@ -100,7 +98,7 @@ public class Projects implements Serializable
 		concernSources.add(concernsource);
 	}
 
-	public List getConcernSources()
+	public List<ConcernSource> getConcernSources()
 	{
 		return concernSources;
 	}
@@ -113,30 +111,28 @@ public class Projects implements Serializable
 		getProjectsByLanguage(language).add(proj);
 	}
 
-	public List getProjects()
+	public List<Project> getProjects()
 	{
 		return allProjects;
 	}
 
-	public List getProjectsByLanguage(String language)
+	public List<Project> getProjectsByLanguage(String language)
 	{
-		List projects = (List) projectsByLanguage.get(language);
+		List<Project> projects = projectsByLanguage.get(language);
 		if (projects == null)
 		{
-			projects = new ArrayList();
+			projects = new ArrayList<Project>();
 			projectsByLanguage.put(language, projects);
 		}
 
 		return projects;
 	}
 
-	public List getCompiledDummies()
+	public List<String> getCompiledDummies()
 	{
-		List compiledDummies = new ArrayList();
-		Iterator projIt = allProjects.iterator();
-		for (Object allProject : allProjects)
+		List<String> compiledDummies = new ArrayList<String>();
+		for (Project p : allProjects)
 		{
-			Project p = (Project) allProject;
 			if (p.getCompiledDummies() != null)
 			{
 				compiledDummies.add(p.getCompiledDummies());
@@ -145,13 +141,11 @@ public class Projects implements Serializable
 		return compiledDummies;
 	}
 
-	public List getCompiledSources()
+	public List<String> getCompiledSources()
 	{
-		List compiledSources = new ArrayList();
-		Iterator projIt = allProjects.iterator();
-		for (Object allProject : allProjects)
+		List<String> compiledSources = new ArrayList<String>();
+		for (Project p : allProjects)
 		{
-			Project p = (Project) allProject;
 			if (p.getCompiledSources() != null)
 			{
 				compiledSources.addAll(p.getCompiledSources());
@@ -160,18 +154,13 @@ public class Projects implements Serializable
 		return compiledSources;
 	}
 
-	public List getDependencies()
+	public List<Dependency> getDependencies()
 	{
-		List dependencies = new ArrayList();
-		Iterator projIt = allProjects.iterator();
-		for (Object allProject : allProjects)
+		List<Dependency> dependencies = new ArrayList<Dependency>();
+		for (Project p : allProjects)
 		{
-			Project p = (Project) allProject;
-			List deps = p.getDependencies();
-			Iterator depIt = deps.iterator();
-			for (Object dep : deps)
+			for (Dependency dependency : p.getDependencies())
 			{
-				Dependency dependency = (Dependency) dep;
 				if (!dependencies.contains(dependency))
 				{
 					dependencies.add(dependency);
@@ -181,31 +170,24 @@ public class Projects implements Serializable
 		return dependencies;
 	}
 
-	public Iterator dependencies()
+	public Iterator<Dependency> dependencies()
 	{
-		Set depset = new HashSet();
-		Iterator projIt = allProjects.iterator();
-		for (Object allProject : allProjects)
+		Set<Dependency> depset = new HashSet<Dependency>();
+		for (Project p : allProjects)
 		{
-			Project p = (Project) allProject;
-			List deps = p.getDependencies();
-			Iterator depIt = deps.iterator();
-			for (Object dep : deps)
+			for (Dependency dependency : p.getDependencies())
 			{
-				Dependency dependency = (Dependency) dep;
 				depset.add(dependency);
 			}
 		}
 		return depset.iterator();
 	}
 
-	public List getSources()
+	public List<Source> getSources()
 	{
-		List sources = new ArrayList();
-		Iterator projIt = allProjects.iterator();
-		for (Object allProject : allProjects)
+		List<Source> sources = new ArrayList<Source>();
+		for (Project p : allProjects)
 		{
-			Project p = (Project) allProject;
 			sources.addAll(p.getSources());
 		}
 		return sources;
@@ -229,7 +211,6 @@ public class Projects implements Serializable
 		String nfn = FileUtils.normalizeFilename(fileName);
 
 		List sources = getSources();
-		Iterator sourceIt = sources.iterator();
 		for (Object source : sources)
 		{
 			Source s = (Source) source;
@@ -258,17 +239,13 @@ public class Projects implements Serializable
 	 */
 	public Source getSourceOfBinary(String binary)
 	{
-		Iterator sourceItr = this.getSources().iterator();
-		for (Object o : this.getSources())
+		for (Source s : this.getSources())
 		{
-			Source s = (Source) o;
-
 			if (binary.indexOf(s.getTarget()) > 0)
 			{
 				return s;
 			}
 		}
-
 		return null;
 	}
 }

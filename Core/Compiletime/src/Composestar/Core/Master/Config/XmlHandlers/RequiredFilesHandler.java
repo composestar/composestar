@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config.XmlHandlers;
 
 import org.xml.sax.Attributes;
@@ -10,19 +19,19 @@ import Composestar.Core.Master.Config.Configuration;
 
 public class RequiredFilesHandler extends DefaultHandler implements ContentHandler
 {
-	XMLReader parser;
+	protected XMLReader parser;
 
-	PlatformHandler returnHandler;
+	protected ContentHandler returnHandler;
 
-	public RequiredFilesHandler(XMLReader inParser, PlatformHandler inReturnHandler)
+	public RequiredFilesHandler(XMLReader inParser, ContentHandler inReturnHandler)
 	{
 		parser = inParser;
 		returnHandler = inReturnHandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if ("RequiredFile".equals(raw_name))
+		if ("RequiredFile".equals(qName))
 		{
 			// in <requiredfile>
 			Configuration config = Configuration.instance();
@@ -30,26 +39,15 @@ public class RequiredFilesHandler extends DefaultHandler implements ContentHandl
 			{
 				config.getPlatform().addRequiredFile(amap.getValue("fileName"));
 			}
-
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException
+	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
-		if ("RequiredFiles".equals(raw_name))
+		if ("RequiredFiles".equals(qName))
 		{
 			// end <requiredfiles>
 			parser.setContentHandler(returnHandler);
 		}
-	}
-
-	public void startDocument()
-	{
-
-	}
-
-	public void endDocument()
-	{
-
 	}
 }

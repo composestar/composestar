@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
@@ -9,9 +18,6 @@ import Composestar.Core.Exception.ModuleException;
 
 public class Language implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1180338061120207509L;
 
 	private String name;
@@ -20,12 +26,12 @@ public class Language implements Serializable
 
 	private String dummyEmitter;
 
-	private List extensions;
+	private List<String> extensions;
 
 	public Language()
 	{
 		compilerSettings = new CompilerSettings();
-		extensions = new ArrayList();
+		extensions = new ArrayList<String>();
 	}
 
 	public String getName()
@@ -66,7 +72,7 @@ public class Language implements Serializable
 		extensions.add(extension);
 	}
 
-	public List getExtensions()
+	public List<String> getExtensions()
 	{
 		return extensions;
 	}

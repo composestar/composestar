@@ -1,13 +1,18 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
 
 public class CustomFilter implements Serializable
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5750706940042791837L;
 
 	private String filter = "";
@@ -19,7 +24,7 @@ public class CustomFilter implements Serializable
 
 	public String getFilter()
 	{
-		return this.filter;
+		return filter;
 	}
 
 	public void setFilter(String inFilter)
@@ -29,7 +34,7 @@ public class CustomFilter implements Serializable
 
 	public String getLibrary()
 	{
-		return this.library;
+		return library;
 	}
 
 	public void setLibrary(String inLibrary)

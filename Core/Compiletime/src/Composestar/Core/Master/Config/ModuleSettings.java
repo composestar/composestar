@@ -3,6 +3,9 @@ package Composestar.Core.Master.Config;
 import java.io.Serializable;
 import java.util.Properties;
 
+/**
+ * @deprecated
+ */
 public class ModuleSettings implements Serializable
 {
 	/**

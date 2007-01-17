@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
@@ -7,36 +16,30 @@ import java.util.Properties;
 
 public class Project implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8492654317711347755L;
 
 	private Properties properties;
 
-	// private String name;
-	// private String language;
-	// private String basePath;
 	private Language language;
 
-	private List sources;
+	private List<Source> sources;
 
-	private List dependencies;
+	private List<Dependency> dependencies;
 
-	private List typeSources;
+	private List<TypeSource> typeSources;
 
 	private String compiledDummies;
 
-	private List compiledSources;
+	private List<String> compiledSources;
 
 	public Project()
 	{
 		properties = new Properties();
 		language = new Language();
-		sources = new ArrayList();
-		dependencies = new ArrayList();
-		typeSources = new ArrayList();
-		compiledSources = new ArrayList();
+		sources = new ArrayList<Source>();
+		dependencies = new ArrayList<Dependency>();
+		typeSources = new ArrayList<TypeSource>();
+		compiledSources = new ArrayList<String>();
 	}
 
 	public void setName(String name)
@@ -90,7 +93,7 @@ public class Project implements Serializable
 		dependencies.add(dep);
 	}
 
-	public List getDependencies()
+	public List<Dependency> getDependencies()
 	{
 		return dependencies;
 	}
@@ -101,7 +104,7 @@ public class Project implements Serializable
 		source.setProject(this);
 	}
 
-	public List getTypeSources()
+	public List<TypeSource> getTypeSources()
 	{
 		return typeSources;
 	}
@@ -111,7 +114,7 @@ public class Project implements Serializable
 		typeSources.add(typesource);
 	}
 
-	public List getSources()
+	public List<Source> getSources()
 	{
 		return sources;
 	}
@@ -141,7 +144,7 @@ public class Project implements Serializable
 		compiledSources.add(source);
 	}
 
-	public List getCompiledSources()
+	public List<String> getCompiledSources()
 	{
 		return this.compiledSources;
 	}

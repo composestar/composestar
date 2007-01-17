@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config.XmlHandlers;
 
 import org.xml.sax.Attributes;
@@ -9,24 +18,24 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
 
-public class ProjectSourcesHandler extends DefaultHandler implements ContentHandler
+public class ProjectSourcesHandler extends DefaultHandler
 {
-	XMLReader parser;
+	protected XMLReader parser;
 
-	ProjectHandler returnHandler;
+	protected ContentHandler returnHandler;
 
-	Project project;
+	protected Project project;
 
-	public ProjectSourcesHandler(Project inProject, XMLReader inParser, ProjectHandler documentHandler)
+	public ProjectSourcesHandler(Project inProject, XMLReader inParser, ContentHandler documentHandler)
 	{
 		project = inProject;
 		parser = inParser;
 		returnHandler = documentHandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if ("Source".equals(raw_name))
+		if ("Source".equals(qName))
 		{
 			// in <source>
 			Source s = new Source();
@@ -41,22 +50,12 @@ public class ProjectSourcesHandler extends DefaultHandler implements ContentHand
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException
+	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
-		if ("Sources".equals(raw_name))
+		if ("Sources".equals(qName))
 		{
 			// end <sources>
 			parser.setContentHandler(returnHandler);
 		}
-	}
-
-	public void startDocument()
-	{
-
-	}
-
-	public void endDocument()
-	{
-
 	}
 }

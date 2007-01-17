@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config.XmlHandlers;
 
 import org.xml.sax.Attributes;
@@ -9,21 +18,21 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.CustomFilter;
 
-public class CustomFiltersHandler extends DefaultHandler implements ContentHandler
+public class CustomFiltersHandler extends DefaultHandler
 {
-	XMLReader parser;
+	protected XMLReader parser;
 
-	ProjectsHandler returnHandler;
+	protected ContentHandler returnHandler;
 
-	public CustomFiltersHandler(XMLReader inParser, ProjectsHandler inReturnHandler)
+	public CustomFiltersHandler(XMLReader inParser, ContentHandler inReturnHandler)
 	{
 		parser = inParser;
 		returnHandler = inReturnHandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if ("Filter".equals(raw_name))
+		if ("Filter".equals(qName))
 		{// in <path>
 			// look further
 			if (amap.getValue("filtername") != null && amap.getValue("library") != null)
@@ -38,18 +47,12 @@ public class CustomFiltersHandler extends DefaultHandler implements ContentHandl
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException
+	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
-		if ("CustomFilters".equals(raw_name))
+		if ("CustomFilters".equals(qName))
 		{
 			// end <paths>
 			parser.setContentHandler(returnHandler);
 		}
 	}
-
-	public void startDocument()
-	{}
-
-	public void endDocument()
-	{}
 }

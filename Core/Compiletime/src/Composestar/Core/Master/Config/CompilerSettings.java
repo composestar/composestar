@@ -1,7 +1,17 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import Composestar.Core.COMP.LangCompiler;
@@ -9,22 +19,19 @@ import Composestar.Core.Exception.ModuleException;
 
 public class CompilerSettings implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1834476176562717483L;
 
 	private Properties properties;
 
-	private HashMap compilerActions;
+	private Map<String, CompilerAction> compilerActions;
 
-	private HashMap compilerConverters;
+	private Map<String, CompilerConverter> compilerConverters;
 
 	public CompilerSettings()
 	{
 		properties = new Properties();
-		compilerActions = new HashMap();
-		compilerConverters = new HashMap();
+		compilerActions = new HashMap<String, CompilerAction>();
+		compilerConverters = new HashMap<String, CompilerConverter>();
 	}
 
 	public void addProperty(String key, String value)
@@ -44,7 +51,7 @@ public class CompilerSettings implements Serializable
 
 	public CompilerAction getCompilerAction(String key)
 	{
-		return (CompilerAction) compilerActions.get(key);
+		return compilerActions.get(key);
 	}
 
 	public void addCompilerConverter(CompilerConverter converter)
@@ -54,19 +61,19 @@ public class CompilerSettings implements Serializable
 
 	public CompilerConverter getCompilerConverter(String key)
 	{
-		return (CompilerConverter) compilerConverters.get(key);
+		return compilerConverters.get(key);
 	}
 
 	public LangCompiler getCompiler() throws ModuleException
 	{
 		try
 		{
-			Class myclass = Class.forName(this.getProperty("implementedBy"));
+			Class myclass = Class.forName(getProperty("implementedBy"));
 			return (LangCompiler) myclass.newInstance();
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("Error while creating compiler..", "Master");
+			throw new ModuleException("Error while creating compiler defined by class "+getProperty("implementedBy"), "Master");
 		}
 	}
 
