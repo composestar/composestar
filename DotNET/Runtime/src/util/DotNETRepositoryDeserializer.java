@@ -39,6 +39,7 @@ public class DotNETRepositoryDeserializer extends RepositoryDeserializer
 
 			Debug.out(Debug.MODE_DEBUG,"FLIRT","Creating type deserializer... ");
 			Type type = DataStore.instance().GetType();
+			DataStore.setIsDeserializing(true);
 
 			Debug.out(Debug.MODE_DEBUG, "FLIRT", "DataStore type=" + type);
 			
@@ -51,6 +52,7 @@ public class DotNETRepositoryDeserializer extends RepositoryDeserializer
 			
 			DataStore.setInstance(ds);
 			RepositoryFixer.fixRepository(ds);
+			DataStore.setIsDeserializing(false);
 
 			return ds;
 		}

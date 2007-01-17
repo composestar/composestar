@@ -18,8 +18,10 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -51,6 +53,11 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 	private PrintWriter out = null;
 
 	/**
+	 * List of prepository enteries that have already been written
+	 */
+	private List reSeenList;
+
+	/**
 	 * @param destination
 	 * @param ds
 	 * @throws Composestar.core.Exception.ModuleException
@@ -61,6 +68,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 
 	public void run(CommonResources resources) throws ModuleException
 	{
+		reSeenList = new ArrayList();
 		DataStore ds = DataStore.instance();
 
 		String repositoryFilename = Configuration.instance().getPathSettings().getPath("Base") + "repository.xml";
@@ -165,7 +173,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		fieldEndElement(field);
 	}
 
-	private void handleVectorField(Field field, Object obj, Vector vector) throws IllegalAccessException
+	private void handleVectorField(Field field, Object obj, Vector vector, int depth) throws IllegalAccessException
 	{
 		if (vector.size() <= 0)
 		{
@@ -202,7 +210,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 				// any other object requires just to have it's fields dumped.
 				// again the type is specified
 				startElement("anyType", "xsi:type=\"" + getType(element) + "\"");
-				writeFields(element);
+				writeFields(element, depth+1);
 				endElement("anyType");
 			}
 			else
@@ -215,9 +223,33 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		fieldEndElement(field);
 	}
 
-	private void writeFields(Object obj)
+	private void writeFields(Object obj, int depth)
 	{
 		Class objClass = obj.getClass();
+
+		if ((obj instanceof RepositoryEntity) && (depth > 5)) // 4 levels deep == directly in DataStore
+		{
+			RepositoryEntity re = (RepositoryEntity) obj;
+			//if (reSeenList.contains(re.getRepositoryKey()))
+			//{
+				// only write the repository key for reference
+				try
+				{
+					handleStringField(objClass.getField("repositoryKey"), re);
+				}
+				catch (SecurityException e)
+				{
+				}
+				catch (NoSuchFieldException e)
+				{
+				}
+				catch (IllegalAccessException e)
+				{
+				}
+				return;
+			//}
+			//reSeenList.add(re.getRepositoryKey());
+		}
 
 		Vector fields = getOrderedOutputFields(objClass);
 		if (fields.size() == 0)
@@ -257,7 +289,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 					}
 					else
 					{
-						handleObjectField(field, obj);
+						handleObjectField(field, obj, depth+1);
 					}
 				}
 				catch (Exception ex)
@@ -268,7 +300,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		}
 	}
 
-	private void handleObjectField(Field field, Object obj) throws IllegalAccessException
+	private void handleObjectField(Field field, Object obj, int depth) throws IllegalAccessException
 	{
 		Object fieldValue = field.get(obj);
 		if (fieldValue instanceof String)
@@ -277,7 +309,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		}
 		else if (fieldValue instanceof Vector)
 		{
-			handleVectorField(field, obj, (Vector) fieldValue);
+			handleVectorField(field, obj, (Vector) fieldValue, depth+1);
 		}
 		else if (fieldValue instanceof SerializableRepositoryEntity)
 		{
@@ -286,7 +318,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 			{
 				startElement(field.getName(), "xsi:type=\"" + getType(fieldValue) + "\"");
 				// dump the fields of the fieldValue object
-				writeFields(fieldValue);
+				writeFields(fieldValue, depth+1);
 				fieldEndElement(field);
 			}
 		}
@@ -330,7 +362,10 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 			{
 				int modifier = declaredField.getModifiers();
 
-				if (Modifier.isPublic(modifier))
+				if (Modifier.isPublic(modifier) /*
+												 * &&
+												 * !Modifier.isTransient(modifier)
+												 */)
 				{
 					fields.add(declaredField);
 				}
@@ -387,7 +422,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		out.println("<?xml version=\"1.0\"?>");
 		startElement("DataStore",
 				"xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-		writeFields(ds);
+		writeFields(ds, 0);
 		endElement("DataStore");
 		out.flush();
 	}

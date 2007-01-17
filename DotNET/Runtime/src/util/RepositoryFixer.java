@@ -46,7 +46,7 @@ public class RepositoryFixer
 			while (it.hasNext())
 			{
 				Object obj = it.next();			
-				if (obj instanceof DeclaredRepositoryEntity)
+				if (obj instanceof RepositoryEntity)
 				{
 					//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing clone " + ((DeclaredRepositoryEntity)obj).repositoryKey + "." );
 					fixChildren(obj, ds);																
@@ -86,6 +86,7 @@ public class RepositoryFixer
 			{
 				Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() +"'.");
 				//fields[i].SetValue(o, fixVector((Vector) child, ds) );
+				fixChildren(child, ds);
 			}
 			else
 			{
@@ -124,9 +125,9 @@ public class RepositoryFixer
 		for( Enumeration e = v.elements(); e.hasMoreElements(); )
 		{
 			Object o = e.nextElement();
-			if( o instanceof DeclaredRepositoryEntity )
+			if( o instanceof RepositoryEntity )
 			{
-				returnVector.addElement(fixEntity((DeclaredRepositoryEntity)o, ds));
+				returnVector.addElement(fixEntity((RepositoryEntity)o, ds));
 			}
 			else
 				returnVector.addElement(o);
