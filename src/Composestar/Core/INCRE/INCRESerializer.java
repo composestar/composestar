@@ -48,7 +48,7 @@ public class INCRESerializer implements CTCommonModule
 	{
 		INCRE incre = INCRE.instance();
 		Debug.out(Debug.MODE_DEBUG, INCRE.MODULE_NAME, 
-				"Comparator made " + incre.comparator.getCompare() + " comparisons");
+				"Comparator made " + incre.comparator.getCompareCount() + " comparisons");
 
 		DataStore ds = DataStore.instance();
 		ObjectOutputStream oos = null;

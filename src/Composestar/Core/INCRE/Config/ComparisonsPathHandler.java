@@ -10,7 +10,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.FieldNode;
 import Composestar.Core.INCRE.MethodNode;
-import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.INCRE.Node;
 import Composestar.Core.INCRE.Path;
 
@@ -18,7 +18,7 @@ public class ComparisonsPathHandler extends DefaultHandler
 {
 	private XMLReader reader;
 
-	private Module module;
+	private INCREModule module;
 
 	private String fullname = "";
 
@@ -26,7 +26,7 @@ public class ComparisonsPathHandler extends DefaultHandler
 
 	private ArrayList nodes;
 
-	public ComparisonsPathHandler(XMLReader inReader, Module inModule, String inFullname, TypeHandler inReturnhandler)
+	public ComparisonsPathHandler(XMLReader inReader, INCREModule inModule, String inFullname, TypeHandler inReturnhandler)
 	{
 		reader = inReader;
 		module = inModule;

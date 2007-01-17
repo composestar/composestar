@@ -9,7 +9,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCREModule;
 import Composestar.Utils.Debug;
 
 /**
@@ -50,14 +50,14 @@ public class ConfigManager
 		return this.xmlreader;
 	}
 
-	public void addModule(String id, Module m)
+	public void addModule(String id, INCREModule m)
 	{
 		this.modules.put(id, m);
 	}
 
-	public Module getModuleByID(String id)
+	public INCREModule getModuleByID(String id)
 	{
-		return (Module) modules.get(id);
+		return (INCREModule) modules.get(id);
 	}
 
 	public Map getModules()

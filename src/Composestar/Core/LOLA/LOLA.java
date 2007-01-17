@@ -17,8 +17,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSe
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.INCRE.Module;
-import Composestar.Core.INCRE.MyComparator;
+import Composestar.Core.INCRE.INCREModule;
+import Composestar.Core.INCRE.INCREComparator;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
@@ -343,8 +343,8 @@ public abstract class LOLA implements CTCommonModule
 		Iterator predicateIterStep3 = toBeSkipped.iterator();
 		ArrayList currentTYM = incre.getAllModifiedPrimitiveConcerns(DataStore.instance());
 		ArrayList historyTYM = incre.getAllModifiedPrimitiveConcerns(incre.history);
-		Module lola = incre.getConfigManager().getModuleByID(MODULE_NAME);
-		MyComparator comparator = new MyComparator(MODULE_NAME);
+		INCREModule lola = incre.getConfigManager().getModuleByID(MODULE_NAME);
+		INCREComparator comparator = new INCREComparator(MODULE_NAME);
 		while (predicateIterStep3.hasNext())
 		{
 			// check TYM information

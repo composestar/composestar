@@ -13,7 +13,7 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Utils.Debug;
 
-public class Module implements Serializable
+public class INCREModule implements Serializable
 {
 	private static final long serialVersionUID = -3962139604512378231L;
 
@@ -39,10 +39,10 @@ public class Module implements Serializable
 	 */
 	private Map comparableObjects = new HashMap();
 
-	public Module()
+	public INCREModule()
 	{}
 
-	public Module(String inName)
+	public INCREModule(String inName)
 	{
 		name = inName;
 	}

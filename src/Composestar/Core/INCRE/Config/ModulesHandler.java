@@ -6,7 +6,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Utils.Debug;
@@ -19,7 +19,7 @@ public class ModulesHandler extends DefaultHandler
 
 	private XMLReader reader;
 
-	private Module m;
+	private INCREModule m;
 
 	public ModulesHandler(ConfigManager cfg, DefaultHandler inReturnhandler)
 	{
@@ -68,7 +68,7 @@ public class ModulesHandler extends DefaultHandler
 			{
 				// name will be null when loaded for the ModuleInfo instance
 				String name = amap.getValue("name");
-				m = new Module(name);
+				m = new INCREModule(name);
 			}
 
 			if (fullTypeClass != null)
@@ -122,7 +122,7 @@ public class ModulesHandler extends DefaultHandler
 		}
 	}
 
-	public Module getModule()
+	public INCREModule getModule()
 	{
 		return m;
 	}

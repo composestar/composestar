@@ -6,17 +6,17 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCREModule;
 
 public class ComparisonsHandler extends DefaultHandler
 {
 	private XMLReader reader;
 
-	private Module module;
+	private INCREModule module;
 
 	private ContentHandler returnhandler;
 
-	public ComparisonsHandler(XMLReader inReader, Module inModule, ContentHandler inReturnhandler)
+	public ComparisonsHandler(XMLReader inReader, INCREModule inModule, ContentHandler inReturnhandler)
 	{
 		reader = inReader;
 		module = inModule;

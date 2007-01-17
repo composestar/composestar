@@ -15,25 +15,21 @@ import java.util.Vector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Utils.Debug;
 
-public class MyComparator
+public class INCREComparator
 {
-
 	protected HashMap myFields = new HashMap();
-
 	protected HashMap comparisons = new HashMap();
-
 	protected String module;
+	protected int compareCount;
 
-	protected int compare;
-
-	public MyComparator(String inModule)
+	public INCREComparator(String inModule)
 	{
 		module = inModule;
 	}
 
-	public int getCompare()
+	public int getCompareCount()
 	{
-		return compare;
+		return compareCount;
 	}
 
 	public void clearComparisons()
@@ -49,7 +45,7 @@ public class MyComparator
 	public boolean compare(Object a, Object b) throws ModuleException
 	{
 		// Keep track of the number of comparisons made
-		compare++;
+		compareCount++;
 
 		// special cases: one or both objects are null
 		if (a == null && b == null)
@@ -199,7 +195,6 @@ public class MyComparator
 	 */
 	public Vector getFields(Class c)
 	{
-
 		if (myFields.containsKey(c))
 		{
 			return (Vector) myFields.get(c);
@@ -281,7 +276,7 @@ public class MyComparator
 	{
 		String fullname = obj.getClass().getName();
 		INCRE incre = INCRE.instance();
-		Module m = incre.getConfigManager().getModuleByID(this.module);
+		INCREModule m = incre.getConfigManager().getModuleByID(this.module);
 
 		return m.hasComparableObjects(fullname);
 	}
@@ -299,7 +294,7 @@ public class MyComparator
 		{
 			INCRE incre = INCRE.instance();
 			String fullname = a.getClass().getName();
-			Module m = incre.getConfigManager().getModuleByID(this.module);
+			INCREModule m = incre.getConfigManager().getModuleByID(this.module);
 			ArrayList compObjects = m.getComparableObjects(fullname);
 			boolean equal;
 			String key = null;

@@ -6,19 +6,19 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.FieldNode;
-import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCREModule;
 
 public class TypeHandler extends DefaultHandler
 {
 	private XMLReader reader;
 
-	private Module module;
+	private INCREModule module;
 
 	private String fullname = "";
 
 	private ComparisonsHandler returnhandler;
 
-	public TypeHandler(XMLReader inReader, Module inModule, String inFullname, ComparisonsHandler inReturnhandler)
+	public TypeHandler(XMLReader inReader, INCREModule inModule, String inFullname, ComparisonsHandler inReturnhandler)
 	{
 		reader = inReader;
 		module = inModule;
