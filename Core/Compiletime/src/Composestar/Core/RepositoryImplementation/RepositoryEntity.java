@@ -15,9 +15,19 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 {
 	private static final long serialVersionUID = -7445401465568382172L;
 
+	/**
+	 * Counter used to create the uniqueId
+	 */
+	private static int counter;
+
 	public DataMap dynamicmap;
 
 	public String repositoryKey;
+
+	/**
+	 * Used for a proper unique ID in the getUniqueId() method
+	 */
+	public int uniqueId;
 
 	public String descriptionFileName;
 
@@ -26,9 +36,18 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 	public RepositoryEntity()
 	{
 		dynamicmap = new DataMap();
+		uniqueId = getCounter();
 
 		DataStore ds = DataStore.instance();
-		repositoryKey = ds.addObject(this);
+		if (ds != null) // could be null in case of deserialization at runtime
+		{
+			repositoryKey = ds.addObject(this);
+		}
+	}
+
+	private static int getCounter()
+	{
+		return counter++;
 	}
 
 	public int getDescriptionLineNumber()
@@ -58,15 +77,11 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 
 	public Object getDynObject(String key)
 	{
-		// Debug.out(Debug.MODE_DEBUG,"RepositoryImplementation","Keys:
-		// "+this.dynamicmap.keySet());
 		return this.dynamicmap.get(key);
 	}
 
 	public Iterator getDynIterator()
 	{
-		// Debug.out(Debug.MODE_DEBUG,"RepositoryImplementation","DynMap:
-		// "+this.dynamicmap);
 		return this.dynamicmap.values().iterator();
 	}
 
@@ -74,20 +89,39 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 	{
 		if (repositoryKey != null && repositoryKey.compareTo(this.getUniqueID()) != 0)
 		{
-			String oldKey = repositoryKey;
 			DataStore ds = DataStore.instance();
-			ds.removeObject(oldKey);
-			repositoryKey = ds.addObject(this);
+			if (ds != null) // is null when deserializing at runtime
+			{
+				String oldKey = repositoryKey;
+				ds.removeObject(oldKey);
+				repositoryKey = ds.addObject(this);
+			}
 		}
 	}
 
+	/**
+	 * @return the repository key of this entiy
+	 */
+	public String getRepositoryKey()
+	{
+		return repositoryKey;
+	}
+
+	public void setRepositoryKey(String newKey)
+	{
+		System.err.println("Updating repo key from " + repositoryKey + " to " + newKey);
+		repositoryKey = newKey;
+	}
+
+	/**
+	 * Returns the generated unique identifier. This might not be equal to the
+	 * stored repository key.
+	 * 
+	 * @return
+	 */
 	public String getUniqueID()
 	{
-		// FIXME: obj.hashCode() is not guaranteed to produce unique values
-		// for distinct instances of some class, so this can lead to subtle
-		// bugs.
-		// FIXME: shouldn't this simply return repositoryKey?
-		return this.getClass() + "_" + this.hashCode();
+		return this.getClass() + "#" + uniqueId;
 	}
 
 	public Object clone() throws CloneNotSupportedException

@@ -11,30 +11,30 @@
 package Composestar.Core.Master;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-
-import Composestar.Core.RepositoryImplementation.DataMap;
 
 /**
  * This class holds the shared resources between the modules e.g the repository
- * object.
+ * object. Use the common resources to store information only required at
+ * runtime. Do not use the DataStore or dynamic maps of repository entities for
+ * this because they will be saved in the repository file.
  */
 public class CommonResources implements Serializable
 {
-	// TODO: Add hashmap for storing non-global stuff.
 	private static final long serialVersionUID = 2652039710117430543L;
 
 	/**
 	 * Information about the Custom Filters that are used in this project.
-	 * FIXME: create a getter?
+	 * FIXME: this is never written, remove?
 	 */
-	public Properties CustomFilters;
+	public transient Properties CustomFilters;
 
 	/**
-	 * Map holding all private resources. FIXME: this field is private, so we
-	 * can use a HashMap?
+	 * Map holding all the resources
 	 */
-	private DataMap resources;
+	private transient Map<String, Object> resources;
 
 	/**
 	 * Default constructor.
@@ -42,7 +42,7 @@ public class CommonResources implements Serializable
 	public CommonResources()
 	{
 		CustomFilters = new Properties();
-		resources = new DataMap();
+		resources = new HashMap<String, Object>();
 	}
 
 	/**
@@ -53,8 +53,6 @@ public class CommonResources implements Serializable
 	 */
 	public void addResource(String key, Object object)
 	{
-		// Debug.out(Debug.MODE_DEBUG,"RES","Added resource: " + key + " -> " +
-		// object.getClass());
 		resources.put(key, object);
 	}
 
@@ -72,8 +70,6 @@ public class CommonResources implements Serializable
 	 */
 	public Object getResource(String key)
 	{
-		// Debug.out(Debug.MODE_DEBUG,"RES","Requested resource: " + key);
-
 		if (!resources.containsKey(key))
 		{
 			return null;

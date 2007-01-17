@@ -191,10 +191,6 @@ public class CpsRepositoryBuilder
 	public void finalizeNamespace()
 	{
 		cpsc.setQualifiedName(namespace + '.' + cpsc.getName());
-		// System.out.println("CPSC: "+this.cpsc.getQualifiedName());
-		ds.removeObject(cpsc.repositoryKey);
-		ds.addObject(cpsc.getQualifiedName(), cpsc);
-		cpsc.repositoryKey = cpsc.getQualifiedName();
 	}
 
 	public void addToNamespace(String name)

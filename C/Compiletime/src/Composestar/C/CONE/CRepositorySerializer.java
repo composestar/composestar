@@ -411,13 +411,13 @@ public class CRepositorySerializer implements RepositorySerializer
 				// System.err.println("??? found a " +
 				// value.getClass().getName() );
 			}
-			else if (key.compareTo(((RepositoryEntity) value).repositoryKey) != 0)
+			else if (key.compareTo(((RepositoryEntity) value).getRepositoryKey()) != 0)
 			{
 				// this is bad, the entity has another key then the datastore
 				// uses
 				// to reference the object
 				System.err.println("FATAL ERROR?!!!");
-				System.err.println("Key: " + key + " points to " + ((RepositoryEntity) value).repositoryKey);
+				System.err.println("Key: " + key + " points to " + ((RepositoryEntity) value).getRepositoryKey());
 			}
 		}
 

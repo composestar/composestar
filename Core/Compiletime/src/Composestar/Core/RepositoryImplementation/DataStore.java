@@ -31,6 +31,12 @@ public class DataStore implements Serializable, Cloneable
 {
 	private static DataStore instance = null;
 
+	/**
+	 * If set to true instance() will always return null in order to prevent
+	 * automatically adding of objects to the DataStore during deserializing
+	 */
+	private static boolean isDeserializing = false;
+
 	private static final long serialVersionUID = -1235392544932797436L;
 
 	private static final boolean DEBUG = false;
@@ -56,6 +62,10 @@ public class DataStore implements Serializable, Cloneable
 	 */
 	public static DataStore instance()
 	{
+		if (isDeserializing)
+		{
+			return null;
+		}
 		if (instance == null)
 		{
 			instance = new DataStore();
@@ -69,6 +79,11 @@ public class DataStore implements Serializable, Cloneable
 	public static void setInstance(DataStore ds)
 	{
 		instance = ds;
+	}
+
+	public static void setIsDeserializing(boolean inval)
+	{
+		isDeserializing = inval;
 	}
 
 	/**

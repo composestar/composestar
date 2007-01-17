@@ -136,7 +136,7 @@ public class COPPER implements CTCommonModule
 						if (!decl.getName().equals("inner"))
 						{
 							DataStore.instance().addObject(obj);
-							entity.repositoryKey = entity.getUniqueID();
+							entity.setRepositoryKey(entity.getUniqueID());
 						}
 					}
 				}
@@ -164,7 +164,7 @@ public class COPPER implements CTCommonModule
 					else if (obj != null)
 					{
 						DataStore.instance().addObject(obj);
-						entity.repositoryKey = entity.getUniqueID();
+						entity.setRepositoryKey(entity.getUniqueID());
 						// don't forget to update repositoryKey due to different
 						// hashcodes
 					}

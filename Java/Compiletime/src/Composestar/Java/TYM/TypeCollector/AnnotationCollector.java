@@ -1,18 +1,18 @@
 package Composestar.Java.TYM.TypeCollector;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.annotation.*;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Java.LAMA.*;
+import Composestar.Java.LAMA.JavaAnnotation;
 import Composestar.Java.TYM.TypeHarvester.ClassMap;
 import Composestar.Utils.Debug;
 
@@ -30,10 +30,9 @@ public class AnnotationCollector implements CTCommonModule
 		try
 		{
 			ClassMap classmap = ClassMap.instance();
-			HashMap classes = classmap.map();
-			for (Object o : classes.values())
+			Map<String,Class> classes = classmap.map();
+			for (Class c : classes.values())
 			{
-				Class c = (Class) o;
 				try
 				{
 					fetchMethodAnnotations(c);

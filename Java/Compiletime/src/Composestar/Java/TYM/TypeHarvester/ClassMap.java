@@ -1,13 +1,14 @@
 package Composestar.Java.TYM.TypeHarvester;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Utility class containing the harvested classes in a <code>HashMap</code>.
  */
 public class ClassMap
 {
-	private HashMap harvestedClasses = new HashMap();
+	private Map<String,Class> harvestedClasses = new HashMap<String,Class>();
 
 	private static ClassMap Instance;
 
@@ -64,7 +65,7 @@ public class ClassMap
 	/**
 	 * Returns the map.
 	 */
-	public HashMap map()
+	public Map<String,Class> map()
 	{
 		return harvestedClasses;
 	}

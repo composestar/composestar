@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
@@ -13,11 +14,17 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledI
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.LAMA.*;
+import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
-import Composestar.Java.LAMA.*;
+import Composestar.Java.LAMA.JavaFieldInfo;
+import Composestar.Java.LAMA.JavaMethodInfo;
+import Composestar.Java.LAMA.JavaParameterInfo;
+import Composestar.Java.LAMA.JavaType;
 import Composestar.Java.TYM.TypeHarvester.ClassMap;
 import Composestar.Utils.Debug;
 
@@ -49,10 +56,9 @@ public class JavaCollectorRunner implements CollectorRunner
 		{
 			// iterate over classes
 			ClassMap cm = ClassMap.instance();
-			HashMap classes = cm.map();
-			for (Object o : classes.values())
+			Map<String,Class> classes = cm.map();
+			for (Class c : classes.values())
 			{
-				Class c = (Class) o;
 				try
 				{
 					processType(c);
