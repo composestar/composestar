@@ -77,6 +77,10 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _assembly = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets the unique identifier for this assembly.
+		/// </summary>
+		/// <value>The identifier.</value>
 		[XmlAttribute]
 		public string Id
 		{
@@ -144,9 +148,9 @@ namespace Composestar.StarLight.Entities.Configuration
 		}
 
 		/// <summary>
-		/// Gets or sets the serialized filename.
+		/// Gets or sets the type specification file.
 		/// </summary>
-		/// <value>The serialized filename.</value>
+		/// <value>The filename of the type specification.</value>
 		[XmlAttribute]
 		public string TypeSpecificationFile
 		{
@@ -157,7 +161,7 @@ namespace Composestar.StarLight.Entities.Configuration
 		/// <summary>
 		/// Gets or sets the weave specification file.
 		/// </summary>
-		/// <value>The weave specification file.</value>
+		/// <value>The filename of the weave specification.</value>
 		[XmlAttribute]
 		public string WeaveSpecificationFile
 		{
@@ -165,6 +169,10 @@ namespace Composestar.StarLight.Entities.Configuration
 			set { _weaveSpec = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets the expansion specification file.
+		/// </summary>
+		/// <value>The filename of the expansion specification.</value>
 		[XmlAttribute]
 		public string ExpansionSpecificationFile
 		{
