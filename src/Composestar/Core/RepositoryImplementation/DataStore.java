@@ -43,10 +43,7 @@ public class DataStore implements Serializable, Cloneable
 	 */
 	public DataStore()
 	{
-		if (DEBUG)
-		{
-			Debug.out(Debug.MODE_INFORMATION, "DataStore", "Creating Datastore...");
-		}
+		Debug.out(Debug.MODE_DEBUG, "DataStore", "Creating Datastore...");
 		map = new DataMap();
 	}
 
