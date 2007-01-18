@@ -77,6 +77,8 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 
 	public Object put(Object key, Object value)
 	{
+		/*
+		// NOTE: J# doesn't like this
 		if (!(value instanceof Serializable))
 		{
 			throw new UnsupportedOperationException(
@@ -87,6 +89,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 			throw new UnsupportedOperationException(
 					"Value must implement Serializable or use CommonResources otherwise");
 		}
+		*/
 
 		int index = m_keys.indexOf(key);
 		if (index < 0)
