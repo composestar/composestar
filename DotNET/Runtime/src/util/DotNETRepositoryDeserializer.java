@@ -14,6 +14,7 @@ import Composestar.RuntimeCore.Utils.*;
 
 import System.*;
 import System.IO.*;
+import System.IO.Compression.*;
 import System.Reflection.*;
 import System.Xml.*;
 import System.Xml.Serialization.*;
@@ -42,11 +43,13 @@ public class DotNETRepositoryDeserializer extends RepositoryDeserializer
 			DataStore.setIsDeserializing(true);
 
 			Debug.out(Debug.MODE_DEBUG, "FLIRT", "DataStore type=" + type);
+
+			StreamReader fileStream = new StreamReader(file);
 			
 			// Constructs an instance of the XmlSerializer with the type
 			// of object that is being deserialized.
 			XmlSerializer xs = new XmlSerializer(type, typeArray);
-			XmlReader reader = new XmlTextReader(file);
+			XmlReader reader = new XmlTextReader(fileStream);
 			
 			DataStore ds = (DataStore)xs.Deserialize(reader);
 			

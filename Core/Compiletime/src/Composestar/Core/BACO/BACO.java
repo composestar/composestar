@@ -1,10 +1,12 @@
 package Composestar.Core.BACO;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.CONE.RepositorySerializer;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
@@ -21,13 +23,17 @@ public abstract class BACO implements CTCommonModule
 	public static final String MODULE_NAME = "BACO";
 
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	
+	protected CommonResources resources;
 
 	public BACO()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public void run(CommonResources inResources) throws ModuleException
 	{
 		logger.debug("Copying files to output directory...");
+		
+		resources = inResources;
 
 		Set<String> filesToCopy = new HashSet<String>();
 		addRequiredFiles(filesToCopy);
@@ -104,13 +110,12 @@ public abstract class BACO implements CTCommonModule
 
 	protected void addRepository(Set<String> filesToCopy)
 	{
-		Configuration config = Configuration.instance();
-
-		String basePath = config.getPathSettings().getPath("Base");
-		String repository = basePath + "repository.xml";
-
-		logger.debug("Adding repository: '" + repository + "'");
-		filesToCopy.add(repository);
+		File repository = (File) resources.get(RepositorySerializer.REPOSITORY_FILE_KEY); 
+		if (repository != null)
+		{
+			logger.debug("Adding repository: '" + repository + "'");
+			filesToCopy.add(repository.getAbsoluteFile().toString());
+		}		
 	}
 
 	private void copyFiles(Set<String> filesToCopy, boolean fatal) throws ModuleException

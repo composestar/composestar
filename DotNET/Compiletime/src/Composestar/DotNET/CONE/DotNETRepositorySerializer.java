@@ -10,10 +10,11 @@
 
 package Composestar.DotNET.CONE;
 
-import java.io.BufferedWriter;
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -25,13 +26,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.CONE.RepositorySerializer;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
@@ -49,6 +52,8 @@ import Composestar.Utils.FileUtils;
  */
 public class DotNETRepositorySerializer extends CONE implements RepositorySerializer
 {
+	public static final String MODULE_NAME = "CONE-XML";
+	
 	private Map<Class, List<Field>> orderedFieldInfo;
 
 	private PrintWriter out = null;
@@ -57,7 +62,6 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 	 * @param destination
 	 * @param ds
 	 * @throws Composestar.core.Exception.ModuleException
-	 * @roseuid 40EBC2C5001B
 	 */
 	public DotNETRepositorySerializer()
 	{}
@@ -66,22 +70,25 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 	{
 		DataStore ds = DataStore.instance();
 
-		String repositoryFilename = Configuration.instance().getPathSettings().getPath("Base") + "repository.xml";
+		ModuleInfo mi = ModuleInfoManager.get(DotNETRepositorySerializer.MODULE_NAME);
+		File destination = (File) resources.get(REPOSITORY_FILE_KEY);
 
-		File destination = new File(repositoryFilename);
-
-		Debug.out(Debug.MODE_DEBUG, "CONE-XML", "v0.2+(optimized)");
-		Debug.out(Debug.MODE_DEBUG, "CONE-XML", "Writing repository to file '" + destination.getName() + "'...");
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing repository to file '" + destination.getName() + "'...");
 
 		orderedFieldInfo = new HashMap<Class, List<Field>>();
 		try
 		{
-			out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
+			OutputStream os = new FileOutputStream(destination);
+			if (mi.getBooleanSetting("compressed"))
+			{
+				os = new GZIPOutputStream(os);
+			}
+			out = new PrintWriter(new BufferedOutputStream(os));
 			write(ds);
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("Unable to open output file: repository.xml", "CONE-XML");
+			throw new ModuleException("Unable to open output file: " + destination.getAbsolutePath(), MODULE_NAME);
 		}
 		finally
 		{
@@ -168,7 +175,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		fieldEndElement(field);
 	}
 
-	private void handleVectorField(Field field, Object obj, Vector vector, int depth) throws IllegalAccessException
+	private void handleVectorField(Field field, Object obj, Vector vector, int depth) throws IllegalAccessException, ModuleException
 	{
 		if (vector.size() <= 0)
 		{
@@ -218,7 +225,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		fieldEndElement(field);
 	}
 
-	private void writeFields(Object obj, int depth)
+	private void writeFields(Object obj, int depth) throws ModuleException
 	{
 		Class objClass = obj.getClass();
 
@@ -287,13 +294,13 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 				}
 				catch (Exception ex)
 				{
-					System.err.println("CONE-XML Error: " + ex.getMessage());
+					throw new ModuleException(ex.getClass().getName()+": "+ex.getMessage(), MODULE_NAME);
 				}
 			}
 		}
 	}
 
-	private void handleObjectField(Field field, Object obj, int depth) throws IllegalAccessException
+	private void handleObjectField(Field field, Object obj, int depth) throws IllegalAccessException, ModuleException
 	{
 		Object fieldValue = field.get(obj);
 		if (fieldValue instanceof String)
@@ -317,7 +324,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		}
 		else if (fieldValue instanceof Serializable)
 		{
-			Debug.out(Debug.MODE_DEBUG, "CONE-XML", "Ignored serializable object " + obj.getClass().getName() + "."
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Ignored serializable object " + obj.getClass().getName() + "."
 					+ field.getName() + " of type " + fieldValue.getClass().getName());
 		}
 		else if (fieldValue != null)

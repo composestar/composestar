@@ -9,6 +9,12 @@
 	</moduleinfo>
 
 	<moduleinfo id="CONE-XML" class="Composestar.DotNET.CONE.DotNETRepositorySerializer">
+		<settings>
+			<setting id="compressed" type="boolean">
+				<name>Compress file</name>
+				<default>false</default><!-- there is no support for gzip decompression in .net 1.1 -->
+			</setting>
+		</settings>
 		<incre>
 			<module enabled="true" incremental="false" summary="Serializing repository...">
 				<dependencies></dependencies>

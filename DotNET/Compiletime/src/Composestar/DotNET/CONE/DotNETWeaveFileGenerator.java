@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.CONE.RepositorySerializer;
 import Composestar.Core.CONE.WeaveFileGenerator;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
@@ -34,6 +35,8 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.Master.Config.Source;
@@ -53,12 +56,12 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 {
 	private final static String MODULE_NAME = "CONE-IS";
 
-	private final static String REPOSITORY = "repository.xml";
-
 	private Configuration config;
 
 	private PrintWriter out = null;
-
+	
+	protected File repositoryFile;
+	
 	public DotNETWeaveFileGenerator()
 	{
 		config = Configuration.instance();
@@ -71,6 +74,16 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing weave specifications to file '" + destination.getName()
 				+ "'...");
 
+		ModuleInfo mi = ModuleInfoManager.get(DotNETRepositorySerializer.MODULE_NAME);
+		if (mi.getBooleanSetting("compressed"))
+		{
+			repositoryFile = new File(Configuration.instance().getPathSettings().getPath("Base") + "repository.xml.gz");
+		}
+		else {
+			repositoryFile = new File(Configuration.instance().getPathSettings().getPath("Base") + "repository.xml");
+		}
+		resources.add(RepositorySerializer.REPOSITORY_FILE_KEY, repositoryFile);
+		
 		try
 		{
 			out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
@@ -245,7 +258,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Inserting method definition for 'handleApplicationStart'.");
 		out
 				.println("<method id=\"application_start\" assembly=\"ComposeStarDotNETRuntimeInterpreter\" class=\"Composestar.RuntimeDotNET.FLIRT.DotNETMessageHandlingFacility\" name=\"handleDotNETApplicationStart\">");
-		out.println("<argument value=\"" + REPOSITORY + "\" type=\"string\"/>");
+		out.println("<argument value=\"" + repositoryFile.getName() + "\" type=\"string\"/>");
 		out.println("<argument value=\"" + debugLevel + "\" type=\"int\"/>");
 		out.println("</method>");
 
