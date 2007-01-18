@@ -21,8 +21,6 @@ import Composestar.Utils.Debug;
 public class JavaHarvestRunner implements HarvestRunner
 {
 
-	private ClassPathModifier cpm; // helper object to modify the classpath.
-
 	private ClassMap cm; // contains the harvested classes.
 
 	/**
@@ -30,7 +28,6 @@ public class JavaHarvestRunner implements HarvestRunner
 	 */
 	public JavaHarvestRunner()
 	{
-		cpm = new ClassPathModifier();
 		cm = ClassMap.instance();
 	}
 
@@ -49,7 +46,7 @@ public class JavaHarvestRunner implements HarvestRunner
 			String library = (String) aDummyList;
 			try
 			{
-				cpm.addFile(library);
+				ClassPathModifier.addFile(library);
 				toBeHarvested.add(library);
 			}
 			catch (Exception e)
@@ -64,7 +61,7 @@ public class JavaHarvestRunner implements HarvestRunner
 			String library = (String) dep.getFileName();
 			try
 			{
-				cpm.addFile(library);
+				ClassPathModifier.addFile(library);
 				toBeHarvested.add(library);
 			}
 			catch (Exception e)
@@ -75,18 +72,15 @@ public class JavaHarvestRunner implements HarvestRunner
 
 		for (Object aToBeHarvested : toBeHarvested)
 		{
-
 			String library = (String) aToBeHarvested;
-
 			try
 			{
 				JarLoader jl = new JarLoader(library);
 				HashMap classen = jl.getLoadedClasses();
-				for (Object o : classen.keySet())
+				for (Object o : classen.values())
 				{
-					Class c = (Class) classen.get(o);
+					Class c = (Class) o;
 					cm.addClass(c);
-
 					Debug.out(Debug.MODE_DEBUG, "HARVESTER", "Class extracted:" + c.getName());
 				}
 			}
@@ -99,27 +93,26 @@ public class JavaHarvestRunner implements HarvestRunner
 	}
 
 	/**
-	 * Helper class. A 'hack' to adjust the classpath in runtime.
+	 * Helper class. A 'hack' to adjust the classpath at runtime.
 	 */
-	public class ClassPathModifier
+	static class ClassPathModifier
 	{
+		
+		private static Class[] parameters = new Class[] { URL.class };
 
-		private Class[] parameters = new Class[] { URL.class };
-
-		public void addFile(String s) throws IOException
+		public static void addFile(String s) throws IOException
 		{
 			File f = new File(s);
 			addFile(f);
 		}
 
-		public void addFile(File f) throws IOException
+		public static void addFile(File f) throws IOException
 		{
 			addURL(f.toURL());
 		}
 
-		public void addURL(URL u) throws IOException
+		public static void addURL(URL u) throws IOException
 		{
-
 			URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 			Class sysclass = URLClassLoader.class;
 

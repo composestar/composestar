@@ -21,7 +21,7 @@ import Composestar.Utils.FileUtils;
  */
 public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, JavaTokenTypes
 {
-	private StringBuffer dummy;
+	private StringBuilder dummy;
 
 	private java.util.Stack stack = new java.util.Stack();
 
@@ -71,16 +71,18 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			Configuration config = Configuration.instance();
 			String dummyPath = config.getPathSettings().getPath("Dummy");
 			String basePath = project.getBasePath();
-			outputFilename = basePath + "obj/" + dummyPath;
-
+			StringBuffer outputfile = new StringBuffer(basePath).append("obj/").append(dummyPath);
+			
 			// change outputFilename
 			TypeLocations types = TypeLocations.instance();
 			for (Object o : types.getTypesBySource(source.getFileName()))
 			{
 				String type = (String) o;
-				outputFilename += type;
-				outputFilename = outputFilename.replace('.', '/');
-				outputFilename += ".java";
+				outputfile.append(type);
+				outputFilename = outputfile.toString().replace('.', '/');
+				outputfile = new StringBuffer(outputFilename);
+				outputfile.append(".java");
+				outputFilename = outputfile.toString();
 				source.setDummy(outputFilename);
 				source.setFileName(FileUtils.normalizeFilename(source.getFileName()));
 			}
@@ -89,7 +91,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		currentSource = source;
 		packageName = "";
 		packages = new ArrayList();
-		dummy = new StringBuffer();
+		dummy = new StringBuilder();
 		// Create a root AST node with id 0
 		ASTFactory factory = new ASTFactory();
 		AST root = factory.create(ROOT_ID, "AST ROOT");
@@ -264,18 +266,21 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 */
 	private String getPackageName()
 	{
-		String name = packageName;
+		StringBuilder name = new StringBuilder(packageName);
 		if (packages.size() > 0)
 		{
 			// iterate over packages
 			Iterator packageIt = packages.iterator();
 			while (packageIt.hasNext())
 			{
-				name += packageIt.next();
-				if (packageIt.hasNext()) name += ".";
+				name.append(packageIt.next());
+				if (packageIt.hasNext())
+				{
+					name.append('.');
+				}
 			}
 		}
-		return name;
+		return name.toString();
 	}
 
 	private static int getPrecedence(AST ast)

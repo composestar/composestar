@@ -32,7 +32,7 @@ public class JavaCompiler implements LangCompiler
 	public void compileSources(Project p) throws CompilerException
 	{
 		String command = "";
-		String options = "-classpath ";
+		StringBuilder options = new StringBuilder("-classpath ");
 		Language lang = p.getLanguage();
 		if (lang != null)
 		{
@@ -44,18 +44,18 @@ public class JavaCompiler implements LangCompiler
 		}
 
 		// add dummies to classpath
-		options = options + "\"" + p.getCompiledDummies() + "\"";
-
+		options.append('"').append(p.getCompiledDummies()).append('"');
+		
 		// add dependencies to classpath
 		for (Object o1 : p.getDependencies())
 		{
-			options = options + ";" + FileUtils.quote(((Dependency) o1).getFileName());
+			options.append(';').append(FileUtils.quote(((Dependency) o1).getFileName()));
 		}
 
 		// add destination directory
 		String buildPath = p.getBasePath() + "obj/";
-		options = options + " -d " + FileUtils.quote(buildPath);
-
+		options.append(" -d ").append(FileUtils.quote(buildPath));
+		
 		// create command
 		CompilerAction action = lang.getCompilerSettings().getCompilerAction("Compile");
 		if (action == null)
@@ -65,7 +65,7 @@ public class JavaCompiler implements LangCompiler
 
 		command = action.getArgument();
 		command = lang.getCompilerSettings().getProperty("executable") + " " + command;
-		command = command.replaceAll("\\{OPTIONS\\}", options);
+		command = command.replaceAll("\\{OPTIONS\\}", options.toString());
 
 		for (Object o : p.getSources())
 		{
@@ -114,7 +114,7 @@ public class JavaCompiler implements LangCompiler
 	public void compileDummies(Project p) throws CompilerException
 	{
 		String command = "";
-		String options = "";
+		StringBuilder options = new StringBuilder();
 		Language lang = p.getLanguage();
 
 		if (lang != null)
@@ -129,11 +129,11 @@ public class JavaCompiler implements LangCompiler
 		Iterator deps = p.getDependencies().iterator();
 		if (deps.hasNext())
 		{
-			options = "-classpath ";
-			options = options + "\"" + ((Dependency) deps.next()).getFileName() + "\"";
+			options.append("-classpath").append(' ');
+			options.append('"').append(((Dependency) deps.next()).getFileName()).append('"');
 			while (deps.hasNext())
 			{
-				options = options + ";" + "\"" + ((Dependency) deps.next()).getFileName() + "\"";
+				options.append(';').append('"').append(((Dependency) deps.next()).getFileName()).append('"');
 			}
 		}
 
@@ -151,7 +151,7 @@ public class JavaCompiler implements LangCompiler
 
 		command = action.getArgument();
 		command = lang.getCompilerSettings().getProperty("executable") + " " + command;
-		command = command.replaceAll("\\{OPTIONS\\}", options);
+		command = command.replaceAll("\\{OPTIONS\\}", options.toString());
 		command = command.replaceAll("\\{SOURCES\\}", argfiles);
 
 		Debug.out(Debug.MODE_DEBUG, "DUMMER", "command for compiling dummies: " + command);
@@ -210,12 +210,11 @@ public class JavaCompiler implements LangCompiler
 			classpaths.add(classPath);
 		}
 
-		String paths = "";
-		Iterator pathIt = classpaths.iterator();
+		StringBuilder paths = new StringBuilder();
 		for (Object classpath : classpaths)
 		{
 			String path = (String) classpath;
-			paths += " " + path;
+			paths.append(' ').append(path);
 		}
 
 		File targetDir = new File(targetPath);
@@ -225,7 +224,7 @@ public class JavaCompiler implements LangCompiler
 		command = p.getLanguage().getCompilerSettings().getCompilerAction("CreateJar").getArgument();
 		command = command.replaceAll("\\{OPTIONS\\}", "-cf");
 		command = command.replaceAll("\\{NAME\\}", name);
-		command = command.replaceAll("\\{CLASSES\\}", paths);
+		command = command.replaceAll("\\{CLASSES\\}", paths.toString());
 
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
 		int result = cmdExec.exec(command, targetDir);
