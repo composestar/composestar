@@ -47,10 +47,6 @@ public class INCRESerializer implements CTCommonModule
 	 */
 	private void storeHistory(File historyFile) throws ModuleException
 	{
-		INCRE incre = INCRE.instance();
-		Debug.out(Debug.MODE_DEBUG, INCRE.MODULE_NAME, 
-				"Comparator made " + incre.comparator.getCompareCount() + " comparisons");
-
 		DataStore ds = DataStore.instance();
 		ObjectOutputStream oos = null;
 		try

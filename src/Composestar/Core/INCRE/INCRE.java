@@ -70,8 +70,6 @@ public final class INCRE implements CTCommonModule
 	
 	public boolean searchingHistory;
 
-	public INCREComparator comparator;
-
 	private ConfigManager configmanager;
 
 	private INCREReporter reporter;
@@ -117,7 +115,7 @@ public final class INCRE implements CTCommonModule
 		historyObjectsOrdered = new HashMap();
 		externalSourcesBySource = new HashMap();
 		configurations = new INCREConfigurations();
-		modulesByName = new HashMap();		
+		modulesByName = new HashMap();
 	}
 
 	public static INCRE instance()
@@ -238,7 +236,7 @@ public final class INCRE implements CTCommonModule
 
 		return result;
 	}
-
+	
 	/**
 	 * Returns an instance of INCREReporter
 	 */
@@ -702,7 +700,7 @@ public final class INCRE implements CTCommonModule
 	{
 		return configmanager.getModules().values().iterator();
 	}
-
+	
 	/**
 	 * Returns all primitive concerns potentially modified primitive concerns
 	 * from unmodified libraries/sources are excluded If this information is not
@@ -752,7 +750,7 @@ public final class INCRE implements CTCommonModule
 			}
 		}
 
-		/* sort primitive concerns */
+		/* sort primitive concerns by id */
 		Collections.sort(list, new Comparator()
 		{
 			public int compare(Object o1, Object o2)
@@ -779,7 +777,6 @@ public final class INCRE implements CTCommonModule
 	 */
 	public boolean declaredInSource(Concern c, String source)
 	{
-
 		/* Sourcefile format: C:/Program Files/ComposeStar/... */
 		TypeLocations locations = TypeLocations.instance();
 		PlatformRepresentation repr = c.getPlatformRepresentation();
@@ -839,28 +836,32 @@ public final class INCRE implements CTCommonModule
 	}
 
 	/**
-	 * Returns true in case all dependencies have not been modified return false
-	 * otherwise (aka Returns whether all dependencies are unmodified?) FIXME:
-	 * this can use some clarification. also the method name doesnt seem related
-	 * to the description. Procedure: 1. Get module 2. Get dependencies of
-	 * modules 3. iterate over dependencies 4. get dependent object 5. search
-	 * history for same object 6. compare two objects (only in case not a file)
-	 * 7. stop if modification found
+	 * Returns true in case all dependencies have not been modified,
+	 * return false otherwise.
+	 * (aka "Returns whether all dependencies are unmodified"?)
+	 *  
+	 * FIXME: this can use some clarification. also the method name doesnt seem related
+	 * to the description. 
 	 * 
-	 * @roseuid 41F4E50900CB
-	 * @param moduleName
-	 * @param input
+	 * Procedure: 
+	 * 1. Get module 
+	 * 2. Get dependencies of modules 
+	 * 3. iterate over dependencies 
+	 * 4. get dependent object 
+	 * 5. search history for same object 
+	 * 6. compare two objects (only in case not a file)
+	 * 7. stop if modification found
 	 */
 	public boolean isProcessedByModule(Object input, String moduleName) throws ModuleException
 	{
-		comparator = new INCREComparator(moduleName);
 		currentRepository = DataStore.instance();
 		searchingHistory = false;
 		Object historyobject = null;
 		Object depofinputobject;
 		Object depofhistoryobject;
-		INCRETimer overhead = getReporter().openProcess(moduleName, "INCRE::isProcessedBy(" + input + ')',
-				INCRETimer.TYPE_OVERHEAD);
+		INCREComparator comparator = new INCREComparator(moduleName);
+		INCRETimer overhead = getReporter().openProcess(
+				moduleName, "INCRE::isProcessedBy(" + input + ')', INCRETimer.TYPE_OVERHEAD);
 
 		if (!isModuleInc(moduleName))
 		{
@@ -899,10 +900,13 @@ public final class INCRE implements CTCommonModule
 			}
 			catch (Exception e)
 			{
-				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Could not capture dependency " + dep.getName() + " for "
-						+ input);
-				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName + ",dep="
-						+ dep.getName() + ",input=" + input + ']');
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+						"Could not capture dependency " + dep.getName() + " for " + input);
+				
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+						"Found modified dependency [module=" + moduleName + 
+						",dep=" + dep.getName() + ",input=" + input + ']');
+				
 				return false;
 			}
 
@@ -920,10 +924,11 @@ public final class INCRE implements CTCommonModule
 					List hfiles = (List) dep.getDepObject(input);
 					if (!hfiles.get(0).equals("EMPTY_CONFIG"))
 					{
-						// configuration has been removed since last compilation
-						// run
-						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
-								+ ",dep=" + dep.getName() + ",input=" + input + ']');
+						// configuration has been removed since last compilation run
+						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+								"Found modified dependency [module=" + moduleName +
+								",dep=" + dep.getName() + ",input=" + input + ']');
+						
 						return false;
 					}
 				}
@@ -938,18 +943,21 @@ public final class INCRE implements CTCommonModule
 						{
 							// check files for added to project or not
 							// optimalisation: certain files do not need this
-							// check
-							// can be configured in .xml file by isAdded=false
-							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
-									+ ",dep=" + dep.getName() + ",input=" + input + ']');
-							return false; // file added to project thus
-							// modified!
+							// check can be configured in .xml file by isAdded=false
+							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+									"Found modified dependency [module=" + moduleName +
+									",dep=" + dep.getName() + ",input=" + input + ']');
+							
+							// file added to project so modified!
+							return false; 
 						}
 						if (isFileModified(currentFile))
 						{
 							overhead.stop();
-							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
-									+ ",dep=" + dep.getName() + ",input=" + input + ']');
+							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+									"Found modified dependency [module=" + moduleName +
+									",dep=" + dep.getName() + ",input=" + input + ']');
+							
 							return false;
 						}
 					}
@@ -965,8 +973,10 @@ public final class INCRE implements CTCommonModule
 					if (modified)
 					{
 						overhead.stop();
-						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
-								+ ",dep=" + dep.getName() + ",input=" + input + ']');
+						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+								"Found modified dependency [module=" + moduleName +
+								",dep=" + dep.getName() + ",input=" + input + ']');
+						
 						return false;
 					}
 				}
@@ -998,8 +1008,10 @@ public final class INCRE implements CTCommonModule
 						if (modified)
 						{
 							overhead.stop();
-							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
-									+ ",dep=" + dep.getName() + ",input=" + input + ']');
+							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+									"Found modified dependency [module=" + moduleName +
+									",dep=" + dep.getName() + ",input=" + input + ']');
+							
 							return false;
 						}
 					}
@@ -1008,8 +1020,10 @@ public final class INCRE implements CTCommonModule
 						// history of input object cannot be found
 						// so input has not been processed
 						overhead.stop();
-						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
-								+ ",dep=" + dep.getName() + ",input=" + input + ']');
+						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, 
+								"Found modified dependency [module=" + moduleName +
+								",dep=" + dep.getName() + ",input=" + input + ']');
+						
 						return false;
 					}
 				}
