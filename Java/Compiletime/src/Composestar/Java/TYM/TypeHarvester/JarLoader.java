@@ -14,11 +14,11 @@ public class JarLoader extends ClassLoader
 
 	private HashMap classesDefined = new HashMap();
 
-	public final static char PACKAGE_SEPARATOR = '.';
+	public static final char PACKAGE_SEPARATOR = '.';
 
-	public final static char JAR_SEPARATOR = '/';
+	public static final char JAR_SEPARATOR = '/';
 
-	public final static String CLASS_EXTENSION = ".class";
+	public static final String CLASS_EXTENSION = ".class";
 
 	private boolean redundant;
 

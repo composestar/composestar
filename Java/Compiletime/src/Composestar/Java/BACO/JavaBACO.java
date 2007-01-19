@@ -83,8 +83,14 @@ public class JavaBACO extends BACO
 		catch (IOException e)
 		{
 			String msg = "Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage();
-			if (fatal) throw new ModuleException(msg, MODULE_NAME);
-			else Debug.out(Debug.MODE_WARNING, MODULE_NAME, msg);
+			if (fatal) 
+			{	
+				throw new ModuleException(msg, MODULE_NAME);
+			}
+			else 
+			{
+				Debug.out(Debug.MODE_WARNING, MODULE_NAME, msg);
+			}
 		}
 	}
 

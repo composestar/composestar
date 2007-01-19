@@ -228,14 +228,14 @@ public class JavaCompiler implements LangCompiler
 
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
 		int result = cmdExec.exec(command, targetDir);
-		String CompilerOutput = cmdExec.outputError();
+		String compilerOutput = cmdExec.outputError();
 
 		if (result != 0)
 		{
 			// there was an error
 			try
 			{
-				java.util.StringTokenizer st = new java.util.StringTokenizer(CompilerOutput, "\n");
+				java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
 				String lastToken = null;
 				while (st.hasMoreTokens())
 				{

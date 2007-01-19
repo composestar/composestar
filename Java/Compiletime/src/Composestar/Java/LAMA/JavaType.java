@@ -121,7 +121,10 @@ public class JavaType extends Type
 			while (iter.hasNext())
 			{
 				JavaType iface = (JavaType) map.getType((String) iter.next());
-				if (null != iface) ImplementedInterfaces.add(iface);
+				if (null != iface) 
+				{
+					ImplementedInterfaces.add(iface);
+				}
 			}
 		}
 		return ImplementedInterfaces;
@@ -134,7 +137,10 @@ public class JavaType extends Type
 	 */
 	public String namespace()
 	{
-		if (theClass.getPackage() == null) return null;
+		if (theClass.getPackage() == null) 
+		{
+			return null;
+		}
 		return theClass.getPackage().getName();
 	}
 
@@ -213,13 +219,22 @@ public class JavaType extends Type
 		{
 			if (obj instanceof JavaMethodInfo)
 			{
-				if (((JavaMethodInfo) obj).isDeclaredHere()) out.add(obj);
+				if (((JavaMethodInfo) obj).isDeclaredHere()) 
+				{
+					out.add(obj);
+				}
 			}
 			else if (obj instanceof JavaFieldInfo)
 			{
-				if (((JavaFieldInfo) obj).isDeclaredHere()) out.add(obj);
+				if (((JavaFieldInfo) obj).isDeclaredHere()) 
+				{
+					out.add(obj);
+				}
 			}
-			else out.add(obj); // No filtering on other kinds of objects
+			else 
+			{
+				out.add(obj); // No filtering on other kinds of objects
+			}
 		}
 		return out;
 	}
@@ -243,9 +258,18 @@ public class JavaType extends Type
 	 */
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (getUnitType().equals("Class")) return getUnitRelationForClass(argumentName);
-		else if (getUnitType().equals("Interface")) return getUnitRelationForInterface(argumentName);
-		else if (getUnitType().equals("Annotation")) return getUnitRelationForAnnotation(argumentName);
+		if (getUnitType().equals("Class")) 
+		{
+			return getUnitRelationForClass(argumentName);
+		}
+		else if (getUnitType().equals("Interface")) 
+		{
+			return getUnitRelationForInterface(argumentName);
+		}
+		else if (getUnitType().equals("Annotation")) 
+		{
+			return getUnitRelationForAnnotation(argumentName);
+		}
 		return null; // Should never happen!
 	}
 
@@ -286,34 +310,76 @@ public class JavaType extends Type
 			}
 		}
 
-		if (argumentName.equals("AttachedClasses")) return new UnitResult(resClasses);
-		else if (argumentName.equals("AttachedInterfaces")) return new UnitResult(resInterfaces);
-		else if (argumentName.equals("AttachedMethods")) return new UnitResult(resMethods);
-		else if (argumentName.equals("AttachedFields")) return new UnitResult(resFields);
-		else if (argumentName.equals("AttachedParameters")) return new UnitResult(resParameters);
+		if (argumentName.equals("AttachedClasses")) 
+		{
+			return new UnitResult(resClasses);
+		}
+		else if (argumentName.equals("AttachedInterfaces")) 
+		{
+			return new UnitResult(resInterfaces);
+		}
+		else if (argumentName.equals("AttachedMethods")) 
+		{
+			return new UnitResult(resMethods);
+		}
+		else if (argumentName.equals("AttachedFields")) 
+		{
+			return new UnitResult(resFields);
+		}
+		else if (argumentName.equals("AttachedParameters")) 
+		{
+			return new UnitResult(resParameters);
+		}
 
 		return null;
 	}
 
 	public UnitResult getUnitRelationForClass(String argumentName)
 	{
-		if (argumentName.equals("ParentNamespace")) return new UnitResult(parentNS);
-		else if (argumentName.equals("ParentClass")) return new UnitResult(superClass()); // can
-		// be
-		// null!
-		else if (argumentName.equals("ChildClasses")) return new UnitResult(childTypes);
-		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(this.m_methods));
-		else if (argumentName.equals("ChildFields")) return new UnitResult(filterDeclaredHere(this.m_fields));
-		else if (argumentName.equals("ParameterClass")) return new UnitResult(parameterTypes);
-		else if (argumentName.equals("MethodReturnClass")) return new UnitResult(methodReturnTypes);
-		else if (argumentName.equals("FieldClass")) return new UnitResult(fieldTypes);
-		else if (argumentName.equals("Implements")) return new UnitResult(toHashSet(getImplementedInterfaces()));
+		if (argumentName.equals("ParentNamespace")) 
+		{
+			return new UnitResult(parentNS);
+		}
+		else if (argumentName.equals("ParentClass")) 
+		{	
+			return new UnitResult(superClass()); // can be null!
+		}
+		else if (argumentName.equals("ChildClasses")) 
+		{
+			return new UnitResult(childTypes);
+		}
+		else if (argumentName.equals("ChildMethods")) 
+		{
+			return new UnitResult(filterDeclaredHere(this.m_methods));
+		}
+		else if (argumentName.equals("ChildFields")) 
+		{
+			return new UnitResult(filterDeclaredHere(this.m_fields));
+		}
+		else if (argumentName.equals("ParameterClass")) 
+		{
+			return new UnitResult(parameterTypes);
+		}
+		else if (argumentName.equals("MethodReturnClass")) 
+		{
+			return new UnitResult(methodReturnTypes);
+		}
+		else if (argumentName.equals("FieldClass")) 
+		{
+			return new UnitResult(fieldTypes);
+		}
+		else if (argumentName.equals("Implements")) 
+		{
+			return new UnitResult(toHashSet(getImplementedInterfaces()));
+		}
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((JavaAnnotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 
@@ -322,22 +388,46 @@ public class JavaType extends Type
 
 	public UnitResult getUnitRelationForInterface(String argumentName)
 	{
-		if (argumentName.equals("ParentNamespace")) return new UnitResult(parentNS);
-		else if (argumentName.equals("ParentInterface")) return new UnitResult(superClass()); // can
-		// be
-		// null!
-		else if (argumentName.equals("ChildInterfaces")) return new UnitResult(childTypes);
-		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(this.m_methods));
-		else if (argumentName.equals("ParameterInterface")) return new UnitResult(parameterTypes);
-		else if (argumentName.equals("MethodReturnInterface")) return new UnitResult(methodReturnTypes);
-		else if (argumentName.equals("FieldInterface")) return new UnitResult(fieldTypes);
-		else if (argumentName.equals("ImplementedBy")) return new UnitResult(implementedBy);
+		if (argumentName.equals("ParentNamespace")) 
+		{
+			return new UnitResult(parentNS);
+		}
+		else if (argumentName.equals("ParentInterface")) 
+		{
+			return new UnitResult(superClass()); // can be null!
+		}
+		else if (argumentName.equals("ChildInterfaces")) 
+		{
+			return new UnitResult(childTypes);
+		}
+		else if (argumentName.equals("ChildMethods")) 
+		{
+			return new UnitResult(filterDeclaredHere(this.m_methods));
+		}
+		else if (argumentName.equals("ParameterInterface")) 
+		{
+			return new UnitResult(parameterTypes);
+		}
+		else if (argumentName.equals("MethodReturnInterface")) 
+		{
+			return new UnitResult(methodReturnTypes);
+		}
+		else if (argumentName.equals("FieldInterface")) 
+		{
+			return new UnitResult(fieldTypes);
+		}
+		else if (argumentName.equals("ImplementedBy")) 
+		{
+			return new UnitResult(implementedBy);
+		}
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((JavaAnnotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 
@@ -349,9 +439,18 @@ public class JavaType extends Type
 	 */
 	public String getUnitType()
 	{
-		if (isInterface()) return "Interface";
-		else if (isAnnotation()) return "Annotation";
-		else return "Class";
+		if (isInterface()) 
+		{
+			return "Interface";
+		}
+		else if (isAnnotation()) 
+		{
+			return "Annotation";
+		}
+		else 
+		{
+			return "Class";
+		}
 	}
 
 	/** * Extra method for adding links to child types of this type */

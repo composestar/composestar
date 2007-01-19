@@ -598,7 +598,9 @@ public class JavaLanguageModel extends LanguageModel
 		try
 		{
 			if (from.equals(to)) // empty path
-			return relations;
+			{
+				return relations;
+			}
 			else if (from.equals(getLanguageUnitType("Class").getImplementingClass().getName()))
 			{
 				if (to.equals(getLanguageUnitType("Method").getImplementingClass().getName()))
@@ -693,7 +695,10 @@ public class JavaLanguageModel extends LanguageModel
 					// While there are more parts, determine where this one
 					// ends, and add it to the dictionary.
 					int pos = nsToAdd.indexOf('.');
-					if (pos < 0) pos = nsToAdd.length();
+					if (pos < 0) 
+					{
+						pos = nsToAdd.length();
+					}
 					while (pos > 0)
 					{
 						String subnsName = currNS.getUnitName() + (currNS.getUnitName().length() > 0 ? "." : "")
@@ -706,9 +711,15 @@ public class JavaLanguageModel extends LanguageModel
 						{
 							nsToAdd = nsToAdd.substring(pos + 1);
 							pos = nsToAdd.indexOf('.');
-							if (pos < 0) pos = nsToAdd.length();
+							if (pos < 0) 
+							{
+								pos = nsToAdd.length();
+							}
 						}
-						else pos = -1;
+						else 
+						{
+							pos = -1;
+						}
 						currNS = subns;
 					}
 				}

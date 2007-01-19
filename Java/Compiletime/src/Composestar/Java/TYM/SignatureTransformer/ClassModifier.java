@@ -19,7 +19,7 @@ import Composestar.Utils.Debug;
 public class ClassModifier
 {
 
-	private static ClassModifier Instance = null;
+	private static ClassModifier Instance;
 
 	private ClassPool classpool;
 
@@ -43,7 +43,7 @@ public class ClassModifier
 		{
 			Instance = new ClassModifier();
 		}
-		return (Instance);
+		return Instance;
 	}
 
 	/**

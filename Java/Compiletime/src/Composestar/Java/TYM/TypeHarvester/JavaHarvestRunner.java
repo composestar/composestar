@@ -95,7 +95,7 @@ public class JavaHarvestRunner implements HarvestRunner
 	/**
 	 * Helper class. A 'hack' to adjust the classpath at runtime.
 	 */
-	static class ClassPathModifier
+	private static class ClassPathModifier
 	{
 		
 		private static Class[] parameters = new Class[] { URL.class };

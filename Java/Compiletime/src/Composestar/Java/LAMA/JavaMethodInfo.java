@@ -52,7 +52,10 @@ public class JavaMethodInfo extends MethodInfo
 	 */
 	public boolean isDeclaredHere()
 	{
-		if ((Parent.fullName()).equals(theMethod.getDeclaringClass().getName())) return true;
+		if ((Parent.fullName()).equals(theMethod.getDeclaringClass().getName())) 
+		{
+			return true;
+		}
 		return false;
 	}
 
@@ -88,7 +91,9 @@ public class JavaMethodInfo extends MethodInfo
 	{
 		HashSet result = new HashSet();
 		for (Object aC : c)
+		{
 			result.add(aC);
+		}
 		return result;
 	}
 
@@ -111,22 +116,38 @@ public class JavaMethodInfo extends MethodInfo
 	 */
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentClass") && Parent.getUnitType().equals("Class")) return new UnitResult(Parent);
-		else if (argumentName.equals("ParentInterface") && Parent.getUnitType().equals("Interface")) return new UnitResult(
-				Parent);
-		else if (argumentName.equals("ChildParameters")) return new UnitResult(toHashSet(Parameters));
-		else if (argumentName.equals("ReturnClass") && returnType().getUnitType().equals("Class")) return new UnitResult(
-				returnType());
-		else if (argumentName.equals("ReturnInterface") && returnType().getUnitType().equals("Interface")) return new UnitResult(
-				returnType());
-		else if (argumentName.equals("ReturnAnnotation") && returnType().getUnitType().equals("Annotation")) return new UnitResult(
-				returnType());
+		if (argumentName.equals("ParentClass") && Parent.getUnitType().equals("Class")) 
+		{
+			return new UnitResult(Parent);
+		}
+		else if (argumentName.equals("ParentInterface") && Parent.getUnitType().equals("Interface")) 
+		{
+			return new UnitResult(Parent);
+		}
+		else if (argumentName.equals("ChildParameters")) 
+		{
+			return new UnitResult(toHashSet(Parameters));
+		}
+		else if (argumentName.equals("ReturnClass") && returnType().getUnitType().equals("Class")) 
+		{	
+			return new UnitResult(returnType());
+		}
+		else if (argumentName.equals("ReturnInterface") && returnType().getUnitType().equals("Interface")) 
+		{
+			return new UnitResult(returnType());
+		}
+		else if (argumentName.equals("ReturnAnnotation") && returnType().getUnitType().equals("Annotation")) 
+		{
+			return new UnitResult(returnType());
+		}	
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((JavaAnnotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 

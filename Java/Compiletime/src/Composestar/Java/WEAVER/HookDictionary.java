@@ -27,7 +27,7 @@ public class HookDictionary
 
 	private Hashtable outgoingMethodInterceptions = new Hashtable();
 
-	private static HookDictionary Instance = null;
+	private static HookDictionary Instance;
 
 	public HookDictionary()
 	{

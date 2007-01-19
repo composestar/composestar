@@ -42,7 +42,10 @@ public class JavaFieldInfo extends FieldInfo
 	 */
 	public boolean isDeclaredHere()
 	{
-		if ((Parent.fullName()).equals(theField.getDeclaringClass().getName())) return true;
+		if ((Parent.fullName()).equals(theField.getDeclaringClass().getName())) 
+		{
+			return true;
+		}
 		return false;
 	}
 
@@ -68,19 +71,30 @@ public class JavaFieldInfo extends FieldInfo
 	public UnitResult getUnitRelation(String argumentName)
 	{
 
-		if ("ParentType".equals(argumentName)) return new UnitResult(Parent);
-		else if ("Class".equals(argumentName) && "Class".equals(fieldType().getUnitType())) return new UnitResult(
-				fieldType());
-		else if ("Interface".equals(argumentName) && "Interface".equals(fieldType().getUnitType())) return new UnitResult(
-				fieldType());
-		else if ("Annotation".equals(argumentName) && "Annotation".equals(fieldType().getUnitType())) return new UnitResult(
-				fieldType());
+		if ("ParentType".equals(argumentName)) 
+		{
+			return new UnitResult(Parent);
+		}
+		else if ("Class".equals(argumentName) && "Class".equals(fieldType().getUnitType())) 
+		{
+			return new UnitResult(fieldType());
+		}
+		else if ("Interface".equals(argumentName) && "Interface".equals(fieldType().getUnitType())) 
+		{
+			return new UnitResult(fieldType());
+		}
+		else if ("Annotation".equals(argumentName) && "Annotation".equals(fieldType().getUnitType())) 
+		{
+			return new UnitResult(fieldType());
+		}
 		else if ("Annotations".equals(argumentName))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((JavaAnnotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 

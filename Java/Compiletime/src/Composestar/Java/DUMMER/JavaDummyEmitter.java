@@ -25,7 +25,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 	private java.util.Stack stack = new java.util.Stack();
 
-	private final static int ROOT_ID = 0;
+	private static final int ROOT_ID = 0;
 
 	private static int ALL = -1;
 
@@ -33,11 +33,11 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 	private PrintStream debug = System.err;
 
-	private int tabs = 0;
+	private int tabs;
 
 	private boolean lastOutputWasNewline = true;
 
-	private Source currentSource = null;
+	private Source currentSource;
 
 	private String packageName = "";
 
@@ -93,7 +93,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		packages = new ArrayList();
 		dummy = new StringBuilder();
 		// Create a root AST node with id 0
-		ASTFactory factory = new ASTFactory();
+		factory = new ASTFactory();
 		AST root = factory.create(ROOT_ID, "AST ROOT");
 
 		try
@@ -187,9 +187,15 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 */
 	private AST filterChildren(AST ast, String remove)
 	{
-		if (ast == null) throw new IllegalArgumentException("ast cannot be null");
+		if (ast == null) 
+		{
+			throw new IllegalArgumentException("ast cannot be null");
+		}
 
-		if (remove == null) throw new IllegalArgumentException("remove cannot be null");
+		if (remove == null)
+		{
+			throw new IllegalArgumentException("remove cannot be null");
+		}
 
 		AST result = factory.create(ast.getType(), ast.getText());
 		AST child = ast.getFirstChild();
@@ -364,9 +370,9 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 			case LITERAL_new:
 				return -1;
-
+			default:
+				return -2;
 		}
-		return -2;
 	}
 
 	/**
@@ -376,7 +382,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 */
 	private boolean hasChildren(AST ast)
 	{
-		return (ast.getFirstChild() != null);
+		return ast.getFirstChild() != null;
 	}
 
 	/**
@@ -396,7 +402,6 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			AST type = getChild(ast, TYPE);
 			visit(type);
 			methodReturnType = type.getFirstChild();
-
 			out(" ");
 		}
 		visit(getChild(ast, IDENT));
@@ -471,7 +476,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 	private void printWithParens(AST parent, AST ast)
 	{
-		boolean parensNeeded = (getPrecedence(parent) < getPrecedence(ast));
+		boolean parensNeeded = getPrecedence(parent) < getPrecedence(ast);
 		if (parensNeeded)
 		{
 			out("(");
@@ -750,7 +755,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				{
 					visit(child3);
 				}
-				else visit(child2);
+				else 
+				{
+					visit(child2);
+				}
 				break;
 
 			case OBJBLOCK:
@@ -948,9 +956,15 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				out("new ");
 				// skip TYPE_ARGS
 				visit(child2);
-				if (child3.getType() != ARRAY_DECLARATOR) out("(");
+				if (child3.getType() != ARRAY_DECLARATOR) 
+				{
+					out("(");
+				}
 				visit(getChild(ast, ELIST));
-				if (child3.getType() != ARRAY_DECLARATOR) out(")");
+				if (child3.getType() != ARRAY_DECLARATOR) 
+				{
+					out(")");
+				}
 				break;
 
 			case METHOD_CALL:
@@ -1019,7 +1033,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			case STRING_LITERAL:
 			case NUM_FLOAT:
 			case NUM_DOUBLE:
-				if (this.packageDefinition) this.packages.add(ast.getText());
+				if (this.packageDefinition) 
+				{
+					this.packages.add(ast.getText());
+				}
 				out(ast.getText());
 				break;
 

@@ -3,7 +3,6 @@ package Composestar.Java.LAMA;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,19 +51,30 @@ public class JavaParameterInfo extends ParameterInfo
 	 */
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentMethod")) return new UnitResult(Parent);
-		else if (argumentName.equals("Class") && parameterType().getUnitType().equals("Class")) return new UnitResult(
-				parameterType());
-		else if (argumentName.equals("Interface") && parameterType().getUnitType().equals("Interface")) return new UnitResult(
-				parameterType());
-		else if (argumentName.equals("Annotation") && parameterType().getUnitType().equals("Annotation")) return new UnitResult(
-				parameterType());
+		if (argumentName.equals("ParentMethod")) 
+		{
+			return new UnitResult(Parent);
+		}
+		else if (argumentName.equals("Class") && parameterType().getUnitType().equals("Class")) 
+		{
+			return new UnitResult(parameterType());
+		}
+		else if (argumentName.equals("Interface") && parameterType().getUnitType().equals("Interface")) 
+		{	
+			return new UnitResult(parameterType());
+		}
+		else if (argumentName.equals("Annotation") && parameterType().getUnitType().equals("Annotation")) 
+		{
+			return new UnitResult(parameterType());
+		}
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((JavaAnnotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 

@@ -84,7 +84,10 @@ public class JarTransformer
 				else
 				{
 					// add to unmodified list
-					if (!name.equals("META-INF/")) unmodifiedEntries.put(name, entry);
+					if (!name.equals("META-INF/")) 
+					{
+						unmodifiedEntries.put(name, entry);
+					}
 				}
 			}
 		}
@@ -310,10 +313,5 @@ public class JarTransformer
 				}
 			}
 		}
-	}
-
-	public static void main(String[] args)
-	{
-
 	}
 }
