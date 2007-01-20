@@ -212,56 +212,43 @@ public class INCREModule implements Serializable
 	 */
 	public void execute(CommonResources resources) throws ModuleException
 	{
-		if (enabled)
+		// module is not enabled so return
+		if (!enabled) return;
+
+		if (summary.length() != 0)
 		{
-			// module is enabled for the phase so continue
+			Debug.out(Debug.MODE_CRUCIAL, this.name, summary);
+		}
 
-			if (summary.length() != 0)
-			{
-				Debug.out(Debug.MODE_CRUCIAL, this.name, summary);
-			}
+		if (moduleClass == null)
+		{
+			throw new ModuleException("Module class has not been assigned", name);
+		}
 
-			try
-			{
-				if (moduleClass == null)
-				{
-					throw new ModuleException("Module class has not been assigned", name);
-				}
-				if (moduleClass.isAssignableFrom(CTCommonModule.class))
-				{
-					throw new ModuleException("Module " + moduleClass + " does not implement interface CTCommonModule",
-							name);
-				}
-				CTCommonModule module = (CTCommonModule) moduleClass.newInstance();
+		if (!CTCommonModule.class.isAssignableFrom(moduleClass))
+		{
+			throw new ModuleException(
+					"Module " + moduleClass + " does not implement interface CTCommonModule", name);
+		}
+		
+		try
+		{
+			CTCommonModule module = (CTCommonModule) moduleClass.newInstance();
 
-				INCRETimer timer = INCRE.instance().getReporter().openProcess(name, name, INCRETimer.TYPE_ALL);
-				module.run(resources);
-				INCRE.instance().addModuleByName(this.name, module);
-				timer.stop();
-			}
-			/*
-			 * // these should not be catched; can cause more problems if you
-			 * do. catch (StackOverflowError e) { throw new ModuleException("I
-			 * need more stack!", "INCRE running " + this.name); } catch
-			 * (OutOfMemoryError e) { throw new ModuleException("I am using too
-			 * much memory!", "INCRE running " + this.name); }
-			 */
-			catch (InstantiationException e)
-			{
-				throw new ModuleException("Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
-						"INCRE running " + name);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new ModuleException("Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
-						"INCRE running " + name);
-			}
-			/*
-			 * // the only other exception thrown is ModuleException, // which
-			 * we can just let fall through catch (Exception e) {
-			 * Debug.out(Debug.MODE_DEBUG, "Master", Debug.stackTrace(e)); throw
-			 * new ModuleException(e.toString(),"INCRE running " + name); }
-			 */
+			INCRETimer timer = INCRE.instance().getReporter().openProcess(name, name, INCRETimer.TYPE_ALL);
+			module.run(resources);
+			INCRE.instance().addModuleByName(this.name, module);
+			timer.stop();
+		}
+		catch (InstantiationException e)
+		{
+			throw new ModuleException("Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
+					"INCRE running " + name);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new ModuleException("Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
+					"INCRE running " + name);
 		}
 	}
 }

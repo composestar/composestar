@@ -23,7 +23,7 @@ public class ConfigManager
 	private XMLReader xmlreader;
 
 	/**
-	 * HashMap containing modules. The keys are the names of the modules. The
+	 * Map containing modules. The keys are the names of the modules. The
 	 * values are the module objects.
 	 */
 	public Map modules = new LinkedHashMap();

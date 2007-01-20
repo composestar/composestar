@@ -11,7 +11,6 @@
 package Composestar.Core.Master;
 
 import java.io.File;
-import java.util.Iterator;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -21,7 +20,6 @@ import org.xml.sax.XMLReader;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -156,17 +154,10 @@ public abstract class Master
 
 			// initialize INCRE
 			INCRE incre = INCRE.instance();
-			incre.run(resources);
+			incre.init();
 
 			// execute enabled modules one by one
-			Iterator modulesIter = incre.getModules();
-			while (modulesIter.hasNext())
-			{
-				INCREModule m = (INCREModule) modulesIter.next();
-				m.execute(resources);
-			}
-
-			incre.getReporter().close();
+			incre.runModules(resources);
 
 			// display total time elapsed
 			long total = System.currentTimeMillis() - beginTime;

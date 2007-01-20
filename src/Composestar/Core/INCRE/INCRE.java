@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -48,7 +49,7 @@ import Composestar.Utils.StringUtils;
  * run. This decision is based on the history which is being loaded and stored
  * by INCRE. This class is the heart of the incremental compilation process.
  */
-public final class INCRE implements CTCommonModule
+public final class INCRE
 {
 	public static final String MODULE_NAME = "INCRE";
 
@@ -128,7 +129,7 @@ public final class INCRE implements CTCommonModule
 		return instance;
 	}
 
-	public void run(CommonResources resources) throws ModuleException
+	public void init() throws ModuleException
 	{
 		PathSettings ps = config.getPathSettings();
 		historyFile = new File(ps.getPath("Base"), HISTORY_FILENAME);
@@ -143,7 +144,8 @@ public final class INCRE implements CTCommonModule
 		}
 
 		// time this initialization process
-		INCRETimer increinit = this.getReporter().openProcess(MODULE_NAME, "", INCRETimer.TYPE_ALL);
+		INCRETimer increinit = getReporter().openProcess(
+				MODULE_NAME, "", INCRETimer.TYPE_ALL);
 
 		// parse the XML configuration file containing the modules
 		String configFile = getConfigFile();
@@ -157,8 +159,9 @@ public final class INCRE implements CTCommonModule
 		{
 			// load data of previous compilation run (history)
 			// time the loading process
-			INCRETimer loadhistory = this.getReporter().openProcess(MODULE_NAME, "Loading history",
-					INCRETimer.TYPE_OVERHEAD);
+			INCRETimer loadhistory = getReporter().openProcess(
+					MODULE_NAME, "Loading history", INCRETimer.TYPE_OVERHEAD);
+			
 			enabled = loadHistory(); // disable incremental compilation in case loading fails
 			loadhistory.stop();
 		}
@@ -174,28 +177,44 @@ public final class INCRE implements CTCommonModule
 		// INCRE enabled or not?
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "INCRE is " + (enabled ? "enabled" : "disabled"));
 	}
+	
+	public void runModules(CommonResources resources) throws ModuleException
+	{
+		Collection<INCREModule> modules 
+			= configmanager.getModules().values();
+		
+		for (INCREModule m : modules)
+		{
+			m.execute(resources);
+			
+			long total = getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL);
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, m.getName() + " executed in " + total + " ms");
+		}
+	}
 
 	private String getConfigFile() throws ModuleException
 	{
 		PathSettings ps = config.getPathSettings();
-
-		String projectBase = ps.getPath("Base");
-		String cps = ps.getPath("Composestar");
 		String filename = moduleInfo.getStringSetting("config");
 
+		// try in project directory
+		String projectBase = ps.getPath("Base");
 		File file = new File(projectBase, filename);
 		if (file.exists())
 		{
 			return file.getAbsolutePath();
 		}
 
+		// try in Compose* installation directory
+		String cps = ps.getPath("Composestar");
 		file = new File(cps, filename);
 		if (file.exists())
 		{
 			return file.getAbsolutePath();
 		}
 		
-		file = new File(filename); // absolute path
+		// try as absolute path
+		file = new File(filename);
 		if (file.exists())
 		{
 			return file.getAbsolutePath();
@@ -227,10 +246,9 @@ public final class INCRE implements CTCommonModule
 	{
 		List result = new ArrayList();
 
-		Iterator sourceIt = config.getProjects().getSources().iterator();
-		while (sourceIt.hasNext())
+		List<Source> sources = config.getProjects().getSources(); 
+		for (Source s : sources)
 		{
-			Source s = (Source) sourceIt.next();
 			result.add(s.getFileName());
 		}
 
@@ -695,6 +713,7 @@ public final class INCRE implements CTCommonModule
 	 * Returns all modules extracted from a configuration file
 	 * 
 	 * @return Iterator of modules
+	 * @deprecated use runModules.
 	 */
 	public Iterator getModules()
 	{
@@ -821,7 +840,6 @@ public final class INCRE implements CTCommonModule
 	 */
 	public boolean declaredInSources(Concern c, ArrayList sources)
 	{
-
 		Iterator sourceItr = sources.iterator();
 		while (sourceItr.hasNext())
 		{
