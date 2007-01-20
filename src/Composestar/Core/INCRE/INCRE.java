@@ -872,6 +872,11 @@ public final class INCRE
 	 */
 	public boolean isProcessedByModule(Object input, String moduleName) throws ModuleException
 	{
+		if (!isModuleInc(moduleName))
+		{
+			return false;
+		}
+
 		currentRepository = DataStore.instance();
 		searchingHistory = false;
 		Object historyobject = null;
@@ -880,11 +885,6 @@ public final class INCRE
 		INCREComparator comparator = new INCREComparator(moduleName);
 		INCRETimer overhead = getReporter().openProcess(
 				moduleName, "INCRE::isProcessedBy(" + input + ')', INCRETimer.TYPE_OVERHEAD);
-
-		if (!isModuleInc(moduleName))
-		{
-			return false;
-		}
 
 		INCREModule mod = configmanager.getModuleByID(moduleName);
 		if (mod == null)
