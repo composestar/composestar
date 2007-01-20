@@ -12,14 +12,11 @@ package Composestar.DotNET.MASTER;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.apache.xmlbeans.XmlException;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCREModule;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Master.Config.Configuration;
@@ -185,7 +182,7 @@ public class StarLightMaster extends Master
 			// Initialize INCRE
 			logger.debug("Initializing INCRE...");
 			INCRE incre = INCRE.instance();
-			incre.run(resources);
+			incre.init();
 
 			// Set FILTH options (must be done after INCRE is initialized)
 			ModuleInfo filth = ModuleInfoManager.get("FILTH");
@@ -194,16 +191,7 @@ public class StarLightMaster extends Master
 
 			// Execute enabled modules one by one
 			logger.debug("Executing modules...");
-
-			Iterator<INCREModule> it = incre.getModules();
-			while (it.hasNext())
-			{
-				INCREModule m = it.next();
-				m.execute(resources);
-				
-				long total = incre.getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL);
-				logger.debug(m.getName() + " executed in " + total + " ms");
-			}
+			incre.runModules(resources);
 
 			// write config file:
 			configDocument.save(new File(configFileName));
@@ -212,7 +200,7 @@ public class StarLightMaster extends Master
 			logger.info("Total elapsed time: " + elapsed + " ms");
 
 			// Close INCRE
-			INCRE.instance().getReporter().close();
+			incre.getReporter().close();
 
 			// Successfull exit
 			System.exit(0);
