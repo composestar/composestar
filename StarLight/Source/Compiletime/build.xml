@@ -60,7 +60,7 @@
 	
 	<target name="create_xsd" depends="init_local">
 		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build" config="${msbuild.config}"/>
-		<exec executable="${xsd.exe}" dir="..\StarLightEntities\bin\debug">
+		<exec executable="${xsd.exe}" dir="..\StarLightEntities\bin\${msbuild.config}">
 			<arg line="Composestar.StarLight.Entities.dll"/>
 			<arg line="/outputdir:'${out.xmltypes}'"/>
 		</exec>
