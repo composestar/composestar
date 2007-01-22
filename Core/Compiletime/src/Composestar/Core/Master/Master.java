@@ -11,7 +11,10 @@
 package Composestar.Core.Master;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -23,6 +26,9 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.ConfigurationException;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
@@ -61,7 +67,14 @@ public abstract class Master
 
 	protected int debugOverride = -1;
 
+	protected Map<String, Map<String, String>> settingsOverride;
+
 	protected CommonResources resources;
+
+	protected Master()
+	{
+		settingsOverride = new HashMap<String, Map<String, String>>();
+	}
 
 	public void processCmdArgs(String[] args)
 	{
@@ -76,6 +89,23 @@ public abstract class Master
 			{
 				int et = Integer.parseInt(arg.substring(2));
 				Debug.setErrThreshold(et);
+			}
+			else if (arg.startsWith("-D"))
+			{
+				// -D<module>.<setting>=<value>
+				String[] setting = arg.substring(2).split("\\.|=", 3);
+				if (setting.length != 3)
+				{
+					System.err.println("Correct format is: -D<module>.<setting>=<value>");
+					continue;
+				}
+				Map<String, String> ms = settingsOverride.get(setting[0]);
+				if (ms == null)
+				{
+					ms = new HashMap<String, String>();
+					settingsOverride.put(setting[0], ms);
+				}
+				ms.put(setting[1], setting[2]);
 			}
 			else if (arg.startsWith("-"))
 			{
@@ -138,7 +168,56 @@ public abstract class Master
 
 			// initialize INCRE
 			INCRE incre = INCRE.instance();
+
+			ModuleInfo mi = ModuleInfoManager.get(INCRE.class);
+			Map<String, String> overrideSet = settingsOverride.get(INCRE.MODULE_NAME);
+			if ((overrideSet != null) && (mi != null))
+			{
+				for (Entry<String, String> entry : overrideSet.entrySet())
+				{
+					try
+					{
+						mi.setSettingValue(entry.getKey(), entry.getValue());
+					}
+					catch (ConfigurationException ce)
+					{
+						Debug.out(Debug.MODE_ERROR, INCRE.MODULE_NAME, "Configuration override error: "
+								+ ce.getMessage());
+					}
+				}
+			}
+
 			incre.run(resources);
+
+			// load override settings
+			for (Entry<String, Map<String, String>> entry : settingsOverride.entrySet())
+			{
+				if (entry.getKey().equals(INCRE.MODULE_NAME))
+				{
+					continue;
+				}
+				mi = ModuleInfoManager.get(entry.getKey());
+				if (mi != null)
+				{
+					for (Entry<String, String> se : entry.getValue().entrySet())
+					{
+						try
+						{
+							mi.setSettingValue(se.getKey(), se.getValue());
+						}
+						catch (ConfigurationException ce)
+						{
+							Debug.out(Debug.MODE_ERROR, entry.getKey(), "Configuration override error: "
+									+ ce.getMessage());
+						}
+					}
+				}
+				else
+				{
+					Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Configuration override error: no such module: "
+							+ entry.getKey());
+				}
+			}
 
 			// execute enabled modules one by one
 			Iterator modulesIter = incre.getModules();

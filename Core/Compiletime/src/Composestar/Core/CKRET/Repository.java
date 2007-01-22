@@ -33,7 +33,7 @@ public class Repository
 
 	private Map filters;
 
-	private List constraints;
+	private List<Constraint> constraints;
 
 	public static Repository instance()
 	{
@@ -47,17 +47,17 @@ public class Repository
 	private Repository()
 	{
 		filters = new HashMap();
-		constraints = new ArrayList();
+		constraints = new ArrayList<Constraint>();
 	}
 
 	public void addConstraint(Constraint constraint)
 	{
-		this.constraints.add(constraint);
+		constraints.add(constraint);
 	}
 
-	public List getConstraints()
+	public List<Constraint> getConstraints()
 	{
-		return this.constraints;
+		return constraints;
 	}
 
 	protected void init() throws ModuleException

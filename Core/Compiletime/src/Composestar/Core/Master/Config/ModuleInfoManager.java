@@ -186,7 +186,7 @@ public class ModuleInfoManager
 	{
 		if (classCache.containsKey(newMi.getModuleClass()))
 		{
-			logger.error("Manager already has a ModuleInfo for " + newMi.getModuleClass());
+			logger.warn("Manager already has a ModuleInfo for " + newMi.getModuleClass());
 		}
 		else
 		{

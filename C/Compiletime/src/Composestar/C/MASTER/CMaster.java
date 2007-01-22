@@ -10,18 +10,7 @@
 
 package Composestar.C.MASTER;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules and
@@ -45,63 +34,5 @@ public class CMaster extends Master
 			return;
 		}
 		main(CMaster.class, args);
-	}
-
-	public void SaveModifiedConfigurationKeys(CommonResources resources)
-	{
-		ArrayList builtAssemblies = (ArrayList) resources.get("BuiltAssemblies");
-		if (builtAssemblies == null)
-		{
-			builtAssemblies = new ArrayList();
-		}
-		String execAssembly = (String) DataStore.instance().getObjectByID("Executable");
-		if (!builtAssemblies.contains(execAssembly))
-		{
-			/* add the executable */
-			builtAssemblies.add(execAssembly);
-		}
-		java.util.ArrayList configlines = new java.util.ArrayList();
-
-		try
-		{
-			BufferedReader br = new BufferedReader(new FileReader(configfile));
-			String line = br.readLine();
-			while (line != null)
-			{
-				if (line.startsWith("BuiltAssemblies="))
-				{
-					line = "BuiltAssemblies=" + builtAssemblies.size();
-					configlines.add(line);
-					for (int i = 0; i < builtAssemblies.size(); i++)
-					{
-						Object temp = builtAssemblies.get(i);
-						if (temp != null)
-						{
-							configlines.add("BuiltAssembly" + i + "=" + temp.toString());
-						}
-					}
-				}
-				else
-				{
-					configlines.add(line);
-				}
-				line = br.readLine();
-			}
-			br.close();
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(configfile));
-			Iterator iterLines = configlines.iterator();
-			for (Object configline : configlines)
-			{
-				line = (String) configline;
-				bw.write(line + "\n");
-			}
-			bw.close();
-		}
-		catch (IOException e)
-		{
-			Debug.out(Debug.MODE_WARNING, "Master", "Unable to update configuration file '" + configfile + "'!");
-		}
-
 	}
 }

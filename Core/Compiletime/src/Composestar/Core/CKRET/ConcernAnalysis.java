@@ -16,34 +16,32 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.FILTH.FilterModuleOrder;
 
 /**
- * @author Administrator To change the template for this generated type comment
- *         go to Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and
- *         Comments
+ * 
  */
 public class ConcernAnalysis
 {
 	private Concern concern;
 
-	private Map orders;
+	private Map<FilterModuleOrder,FilterSetAnalysis> orders;
 
 	public ConcernAnalysis(Concern inconcern)
 	{
 		concern = inconcern;
-		orders = new HashMap();
+		orders = new HashMap<FilterModuleOrder,FilterSetAnalysis>();
 	}
 
 	public Concern getConcern()
 	{
-		return this.concern;
+		return concern;
 	}
 
 	protected boolean checkOrder(FilterModuleOrder order, boolean isSelected)
 	{
-		FilterSetAnalysis oa = new FilterSetAnalysis(this.concern, order);
+		FilterSetAnalysis oa = new FilterSetAnalysis(concern, order);
 
 		oa.analyze();
 
-		this.orders.put(order, oa);
+		orders.put(order, oa);
 
 		switch (CKRET.getMode())
 		{
