@@ -53,21 +53,22 @@ using Composestar.StarLight.Utilities;
 #endregion
 
 
-namespace Composestar.StarLight.Weaving.FilterModuleConditions
+namespace Composestar.StarLight.Weaving.ConditionParameters
 {
 	/// <summary>
-	/// Apply this attribute to the method containing the Filter Module Condition which requires a method info object 
+	/// Apply this attribute to the method containing the condition which requires a method info object 
 	/// as its argument.
 	/// </summary>
 	[CLSCompliant(false)]
-	public class FilterModuleMethodInfoConditionAttribute : FilterModuleConditionAttribute 
+	public class ConditionParameterMethodInfoAttribute : ConditionParameterAttribute 
 	{
 
 		private readonly string _methodInfoType = typeof(System.Reflection.MethodBase).FullName;
 		private readonly string _booleanReturnType = typeof(Boolean).FullName;
 
+
 		/// <summary>
-		/// Perform the actual IL code generation needed for the Filter Module Condition.
+		/// Perform the actual IL code generation needed for the Condition parameters.
 		/// For instance, this function can create the information which can be used by the condition function.
 		/// </summary>
 		/// <param name="visitor">The visitor.</param>
@@ -128,7 +129,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		}
 
 		/// <summary>
-		/// Returns a description of this Filter Module Condition.
+		/// Returns a description of this Condition Parameter.
 		/// </summary>
 		/// <value></value>
 		/// <returns>String</returns>

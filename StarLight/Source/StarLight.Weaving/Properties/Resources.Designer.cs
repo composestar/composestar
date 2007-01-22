@@ -88,7 +88,7 @@ namespace Composestar.StarLight.Weaving.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filter Module Condition which requires no parameters..
+        ///   Looks up a localized string similar to Condition Parameter which requires no parameters..
         /// </summary>
         internal static string FMCEmptyDescription {
             get {
@@ -97,7 +97,7 @@ namespace Composestar.StarLight.Weaving.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This Filter Module Condition requires a boolean function with no parameters..
+        ///   Looks up a localized string similar to This Condition Parameter requires a boolean function with no parameters..
         /// </summary>
         internal static string FMCEmptyRequired {
             get {
@@ -106,7 +106,7 @@ namespace Composestar.StarLight.Weaving.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filter Module Condition with the fully qualified name of the current executing method..
+        ///   Looks up a localized string similar to Condition Parameter with the fully qualified name of the current executing method..
         /// </summary>
         internal static string FMCFQNDescription {
             get {
@@ -115,7 +115,7 @@ namespace Composestar.StarLight.Weaving.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This Filter Module Condition requires a boolean function with a string as parameter..
+        ///   Looks up a localized string similar to This Condition Parameter requires a boolean function with a string as parameter..
         /// </summary>
         internal static string FMCFQNRequired {
             get {
@@ -124,7 +124,7 @@ namespace Composestar.StarLight.Weaving.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filter Module Condition with a MethodBase object as its parameter..
+        ///   Looks up a localized string similar to Condition Parameter with a MethodBase object as its parameter..
         /// </summary>
         internal static string FMCMethodInfoDescription {
             get {
@@ -133,7 +133,7 @@ namespace Composestar.StarLight.Weaving.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This Filter Module Condition requires a boolean function with one parameter with as its type a System.Reflection.MethodBase. This will contain the current MethodInfo object..
+        ///   Looks up a localized string similar to This Condition Parameter requires a boolean function with one parameter with as its type a System.Reflection.MethodBase. This will contain the current MethodInfo object..
         /// </summary>
         internal static string FMCMethodInfoRequired {
             get {
@@ -142,7 +142,7 @@ namespace Composestar.StarLight.Weaving.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filter Module Condition with the namespace of the current executing method..
+        ///   Looks up a localized string similar to Condition Parameter with the namespace of the current executing method..
         /// </summary>
         internal static string FMCNSDescription {
             get {
@@ -151,7 +151,7 @@ namespace Composestar.StarLight.Weaving.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This Filter Module Condition requires a boolean function with two string parameters. The first one will contain the namespace, the second one the type..
+        ///   Looks up a localized string similar to This Condition Parameter requires a boolean function with two string parameters. The first one will contain the namespace, the second one the type..
         /// </summary>
         internal static string FMCNSRequired {
             get {

@@ -106,6 +106,24 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The ConditionParameter is invalid for &apos;{0}&apos; in combination with attribute &apos;{1}&apos;. {2}.
+        /// </summary>
+        internal static string ConditionParameterInvalid {
+            get {
+                return ResourceManager.GetString("ConditionParameterInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to instantiate the Condition Parameter &apos;{0}&apos;..
+        /// </summary>
+        internal static string ConditionParameterNotFound {
+            get {
+                return ResourceManager.GetString("ConditionParameterNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The constructor .ctor() for the type {0} could not be found..
         /// </summary>
         internal static string ConstructorNotFound {
@@ -196,29 +214,11 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Filter Module Condition is invalid for &apos;{0}&apos; in combination with attribute &apos;{1}&apos;. {2}.
-        /// </summary>
-        internal static string FilterConditionInvalid {
-            get {
-                return ResourceManager.GetString("FilterConditionInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The label for the JumpFilterAction has not been set..
         /// </summary>
         internal static string FilterJumpLabelIsNotSet {
             get {
                 return ResourceManager.GetString("FilterJumpLabelIsNotSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to instantiate the Filter Module Condition &apos;{0}&apos;..
-        /// </summary>
-        internal static string FilterModuleConditionNotFound {
-            get {
-                return ResourceManager.GetString("FilterModuleConditionNotFound", resourceCulture);
             }
         }
         

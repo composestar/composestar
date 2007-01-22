@@ -46,7 +46,7 @@ using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.Utilities;
-using Composestar.StarLight.Weaving.FilterModuleConditions;
+using Composestar.StarLight.Weaving.ConditionParameters;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
@@ -71,6 +71,7 @@ namespace Composestar.StarLight.ILWeaver
 		#region Constant Values
 
 		private const int BranchLabelOffSet = 9000;
+		private const string ConditionParameterName = "ConditionParameter";
 
 		#endregion
 
@@ -361,40 +362,42 @@ namespace Composestar.StarLight.ILWeaver
 			}
 			// else do nothing, because of static call
 				
-			// Create a method definition so we can inspect the custom attributes
+			// Convert to a method definition so we can inspect the custom attributes
 			MethodDefinition methodDef = (MethodDefinition)method;
 			if (methodDef != null)
 			{
-				// Find a correct custom attribute to use
+				// Find a custom attribute to use
 				foreach (CustomAttribute ca in methodDef.CustomAttributes)
 				{
+					// Retrieve the type name of the custom attribute
 					String typeName = ca.Constructor.DeclaringType.ToString();   
 
-					// Check if the custom attribute is called FilterModule so we do not activate all kinds of attributes
-					if (typeName.Contains("FilterModule"))
+					// Check if the custom attribute is called ConditionParameter so we do not activate all kinds of attributes
+					if (typeName.Contains(ConditionParameterName))
 					{
-						// Resolve the FMC
-						FilterModuleConditionAttribute fmca = ResolveFilterModuleCondition(typeName);
+						// Resolve the CP
+						ConditionParameterAttribute cpa = ResolveConditionParameter(typeName);
 
-						// Do we have a FMCA?
-						if (fmca != null)
+						// Do we have a CPA?
+						if (cpa != null)
 						{
 							// Check if the condition is valid for this code generation
-							if (fmca.IsValidCondition(methodDef))
+							if (cpa.IsValidCondition(methodDef))
 							{
-								fmca.Generate(_visitor, Method, methodDef); 
+								// Generate the code needed for this condition
+								cpa.Generate(_visitor, Method, methodDef); 
 							}
 							else
-								// Throw an exception since the condition is not valid, we cannot create valid code for this.
+								// Throw an exception since the condition is not valid. We cannot create valid code for this.
 								throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-									Properties.Resources.FilterConditionInvalid,
-									typeName, methodDef.ToString(), fmca.RequiredCondition));
+									Properties.Resources.ConditionParameterInvalid,
+									typeName, methodDef.ToString(), cpa.RequiredCondition));
 						}
 						else
 						{
-							// Throw an exception
+							// Throw an exception, we cannot create the custom attribute
 							throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-								Properties.Resources.FilterModuleConditionNotFound,
+								Properties.Resources.ConditionParameterNotFound,
 								typeName));
 						}
 
@@ -405,7 +408,7 @@ namespace Composestar.StarLight.ILWeaver
 			}
 
 			// Check if we have to add the JPC 
-			// Legacy code, should be able to do this using the FilterModule?
+			// Legacy code, should be able to do this using the ConditionParameter?
 			if (method.Parameters.Count == 1)
 			{
 				if (method.Parameters[0].ParameterType.FullName.Equals(typeof(JoinPointContext).FullName))
@@ -421,31 +424,31 @@ namespace Composestar.StarLight.ILWeaver
 		}
 
 		/// <summary>
-		/// Resolve filter module condition
+		/// Resolve condition parameter attribute.
 		/// </summary>
 		/// <param name="nameOfAttribute">Name of attribute</param>
-		/// <returns>Filter module condition attribute</returns>
-		private static FilterModuleConditionAttribute ResolveFilterModuleCondition(string nameOfAttribute)
+		/// <returns>Condition Parameter attribute</returns>
+		private static ConditionParameterAttribute ResolveConditionParameter(string nameOfAttribute)
 		{
 			// If the name is empty, return null
 			if (string.IsNullOrEmpty(nameOfAttribute))
 				return null;
 
-			// The custom attribute must start with FilterModule, 
+			// The custom attribute must start with ConditionParameter, 
 			// so we do not try to instantiate all kinds of custom attributes
-			if (!nameOfAttribute.Contains("FilterModule"))
+			if (!nameOfAttribute.Contains(ConditionParameterName))
 				return null;
 
-			FilterModuleConditionAttribute fmca = null;
+			ConditionParameterAttribute cpa = null;
 
 			// Check if it is in the cache
-			if (_filterConditionAttributesCache.TryGetValue(nameOfAttribute, out fmca))
-				return fmca;
+			if (_conditionParameterAttributesCache.TryGetValue(nameOfAttribute, out cpa))
+				return cpa;
 			else
 			{
 				// Not in the cache, try to resolve it.
 				// Look up the assembly containing the filter modules
-				System.Reflection.Assembly assembly = typeof(FilterModuleConditionAttribute).Assembly;
+				System.Reflection.Assembly assembly = typeof(ConditionParameterAttribute).Assembly;
 				// TODO This does not allow us to use other assemblies.
 
 				if (assembly == null)
@@ -460,7 +463,7 @@ namespace Composestar.StarLight.ILWeaver
 				// Create an instance
 				try
 				{
-					fmca = Activator.CreateInstance(type) as FilterModuleConditionAttribute;
+					cpa = Activator.CreateInstance(type) as ConditionParameterAttribute;
 				}
 				catch 
 				{
@@ -468,20 +471,20 @@ namespace Composestar.StarLight.ILWeaver
 				}
 
 				// Check for null
-				if (fmca == null)
+				if (cpa == null)
 					return null;
 
 				// Add to cache
-				_filterConditionAttributesCache.Add(nameOfAttribute, fmca);
-				return fmca;
+				_conditionParameterAttributesCache.Add(nameOfAttribute, cpa);
+				return cpa;
 			}
 
 		}
 
 		/// <summary>
-		/// Dictionary to cache the found FilterModuleConditionAttribute objects.
+		/// Dictionary to cache the found ConditionParameterAttribute objects.
 		/// </summary>
-		private static Dictionary<string, FilterModuleConditionAttribute> _filterConditionAttributesCache = new Dictionary<string, FilterModuleConditionAttribute>(); 
+		private static Dictionary<string, ConditionParameterAttribute> _conditionParameterAttributesCache = new Dictionary<string, ConditionParameterAttribute>(); 
 
 		/// <summary>
 		/// Determines whether the specified target is internal.

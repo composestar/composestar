@@ -52,20 +52,20 @@ using Composestar.StarLight.Utilities.Interfaces;
 using Composestar.StarLight.Utilities;
 #endregion
 
-namespace Composestar.StarLight.Weaving.FilterModuleConditions
+namespace Composestar.StarLight.Weaving.ConditionParameters
 {
 	/// <summary>
-	/// Apply this attribute to Filter Module Conditions which requires the Fully Qualified Name of the current method.
+	/// Apply this attribute to conditions which requires the Fully Qualified Name of the current method.
 	/// </summary>
 	[CLSCompliant(false)]
-	public class FilterModuleFQNConditionAttribute : FilterModuleConditionAttribute
+	public class ConditionParameterFQNAttribute : ConditionParameterAttribute
 	{
 
 		private readonly string _booleanReturnType = typeof(Boolean).FullName;
 		private readonly string _stringType = typeof(String).FullName;
-	
+		
 		/// <summary>
-		/// Returns a description of this Filter Module Condition.
+		/// Returns a description of this Condition Parameter.
 		/// </summary>
 		/// <value></value>
 		/// <returns>String</returns>
@@ -74,8 +74,9 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 			get { return Properties.Resources.FMCFQNDescription; }
 		}
 
+
 		/// <summary>
-		/// Perform the actual IL code generation needed for the Filter Module Condition.
+		/// Perform the actual IL code generation needed for the Condition parameters.
 		/// For instance, this function can create the information which can be used by the condition function.
 		/// </summary>
 		/// <param name="visitor">The visitor.</param>

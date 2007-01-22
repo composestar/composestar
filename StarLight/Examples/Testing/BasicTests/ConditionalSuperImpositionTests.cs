@@ -21,21 +21,21 @@ namespace BasicTests
 		}
 
 		[Composestar.StarLight.SkipWeaving]
-		[Composestar.StarLight.Weaving.FilterModuleConditions.FilterModuleEmptyCondition]
+		[Composestar.StarLight.Weaving.ConditionParameters.ConditionParameterEmpty]
 		public static Boolean LoggingEnabled()
 		{
 			return loggingEnabled;
 		}
 
 		[Composestar.StarLight.SkipWeaving]
-		[Composestar.StarLight.Weaving.FilterModuleConditions.FilterModuleMethodInfoCondition]
+		[Composestar.StarLight.Weaving.ConditionParameters.ConditionParameterMethodInfo]
 		public static Boolean TimingEnabled(System.Reflection.MethodBase methodInfo)
 		{
 			return timingEnabled && methodInfo.Name.Equals("Test");
 		}
 
 		[Composestar.StarLight.SkipWeaving]
-		[Composestar.StarLight.Weaving.FilterModuleConditions.FilterModuleFQNCondition]
+		[Composestar.StarLight.Weaving.ConditionParameters.ConditionParameterFQN]
 		public static Boolean ShouldLog(String fqn)
 		{
 			Console.WriteLine("Should log function '{0}' ? {1}", fqn, loggingEnabled.ToString());
@@ -43,7 +43,7 @@ namespace BasicTests
 		}
 
 		[Composestar.StarLight.SkipWeaving]
-		[Composestar.StarLight.Weaving.FilterModuleConditions.FilterModuleNSCondition]
+		[Composestar.StarLight.Weaving.ConditionParameters.ConditionParameterNS]
 		public static Boolean ShouldLogExt(String ns, String type)
 		{
 			Console.WriteLine("Should log ns '{0}', type '{1}' ? {2}", ns, type, loggingEnabled.ToString());

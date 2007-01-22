@@ -34,6 +34,7 @@ The FilterContext is used internally by the StarLight compiler to include runtim
         <contentItem sourcePath="HTML\Weaving\*.*" destPath="Weaving\" />
         <contentItem sourcePath="HTML\Annotated Reference Manual\*.*" destPath="Annotated Reference Manual\" />
         <contentItem sourcePath="HTML\Strong Naming Assemblies\*.*" destPath="Strong Naming Assemblies\" />
+        <contentItem sourcePath="HTML\Conditional Superimposition\*.*" destPath="Conditional Superimposition\" />
     </additionalContent>
     <contentPlacement>AboveNamespaces</contentPlacement>
     <dependencies>

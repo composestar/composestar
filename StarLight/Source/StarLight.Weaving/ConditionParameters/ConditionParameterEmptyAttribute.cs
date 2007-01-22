@@ -52,18 +52,19 @@ using Composestar.StarLight.Utilities.Interfaces;
 using Composestar.StarLight.Utilities;
 #endregion
 
-namespace Composestar.StarLight.Weaving.FilterModuleConditions
+namespace Composestar.StarLight.Weaving.ConditionParameters
 {
 	/// <summary>
-	/// Apply this attribute to Filter Module Conditions which requires no parameters and thus no information about the current method.
+	/// Apply this attribute to conditions which requires no parameters and thus no information about the current method.
 	/// </summary>
 	[CLSCompliant(false)]
-	public class FilterModuleEmptyConditionAttribute : FilterModuleConditionAttribute
+	public class ConditionParameterEmptyAttribute : ConditionParameterAttribute
 	{
 		private readonly string _booleanReturnType = typeof(Boolean).FullName;
 
+
 		/// <summary>
-		/// Returns a description of this Filter Module Condition.
+		/// Returns a description of this Condition Parameter.
 		/// </summary>
 		/// <value></value>
 		/// <returns>String</returns>
@@ -72,8 +73,9 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 			get { return Properties.Resources.FMCEmptyDescription; }
 		}
 
+
 		/// <summary>
-		/// Perform the actual IL code generation needed for the Filter Module Condition.
+		/// Perform the actual IL code generation needed for the Condition parameters.
 		/// For instance, this function can create the information which can be used by the condition function.
 		/// </summary>
 		/// <param name="visitor">The visitor.</param>

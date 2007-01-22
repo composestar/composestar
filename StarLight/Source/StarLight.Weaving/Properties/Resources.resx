@@ -127,28 +127,28 @@
     <value>The field {0} could not be found.</value>
   </data>
   <data name="FMCEmptyDescription" xml:space="preserve">
-    <value>Filter Module Condition which requires no parameters.</value>
+    <value>Condition Parameter which requires no parameters.</value>
   </data>
   <data name="FMCEmptyRequired" xml:space="preserve">
-    <value>This Filter Module Condition requires a boolean function with no parameters.</value>
+    <value>This Condition Parameter requires a boolean function with no parameters.</value>
   </data>
   <data name="FMCNSDescription" xml:space="preserve">
-    <value>Filter Module Condition with the namespace of the current executing method.</value>
+    <value>Condition Parameter with the namespace of the current executing method.</value>
   </data>
   <data name="FMCNSRequired" xml:space="preserve">
-    <value>This Filter Module Condition requires a boolean function with two string parameters. The first one will contain the namespace, the second one the type.</value>
+    <value>This Condition Parameter requires a boolean function with two string parameters. The first one will contain the namespace, the second one the type.</value>
   </data>
   <data name="FMCFQNDescription" xml:space="preserve">
-    <value>Filter Module Condition with the fully qualified name of the current executing method.</value>
+    <value>Condition Parameter with the fully qualified name of the current executing method.</value>
   </data>
   <data name="FMCFQNRequired" xml:space="preserve">
-    <value>This Filter Module Condition requires a boolean function with a string as parameter.</value>
+    <value>This Condition Parameter requires a boolean function with a string as parameter.</value>
   </data>
   <data name="FMCMethodInfoDescription" xml:space="preserve">
-    <value>Filter Module Condition with a MethodBase object as its parameter.</value>
+    <value>Condition Parameter with a MethodBase object as its parameter.</value>
   </data>
   <data name="FMCMethodInfoRequired" xml:space="preserve">
-    <value>This Filter Module Condition requires a boolean function with one parameter with as its type a System.Reflection.MethodBase. This will contain the current MethodInfo object.</value>
+    <value>This Condition Parameter requires a boolean function with one parameter with as its type a System.Reflection.MethodBase. This will contain the current MethodInfo object.</value>
   </data>
   <data name="SetInnerCallFailed" xml:space="preserve">
     <value>Could not set inner call context for method '{0}' calling method '{1}'</value>

@@ -51,18 +51,18 @@ using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.Utilities.Interfaces;
 #endregion
 
-namespace Composestar.StarLight.Weaving.FilterModuleConditions
+namespace Composestar.StarLight.Weaving.ConditionParameters
 {
 	/// <summary>
-	/// The base class for the custom attributes for Filter Module Conditions.
+	/// The base class for the custom attributes for ConditionParameters.
 	/// </summary>
 	[CLSCompliant(false)]
 	[AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-	public abstract class FilterModuleConditionAttribute : Attribute
+	public abstract class ConditionParameterAttribute : Attribute
 	{
 
 		/// <summary>
-		/// Perform the actual IL code generation needed for the Filter Module Condition.
+		/// Perform the actual IL code generation needed for the Condition parameters.
 		/// For instance, this function can create the information which can be used by the condition function.
 		/// </summary>
 		/// <param name="visitor">The visitor.</param>
@@ -81,7 +81,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		public abstract bool IsValidCondition(MethodDefinition conditionMethod);
 
 		/// <summary>
-		/// Returns a description of this Filter Module Condition.
+		/// Returns a description of this Condition Parameter.
 		/// </summary>
 		/// <returns>String</returns>
 		public abstract string Description { get; }

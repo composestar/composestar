@@ -1,0 +1,130 @@
+<html>
+<head>
+    <title>Applying Conditional Superimposition</title>
+    <link href="..\styles.css" type="text/css" rel="STYLESHEET">
+    <link href="Styles\presentation.css" type="text/css" rel="STYLESHEET">
+</head>
+<body topmargin="0" leftmargin="0">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="100%" class="TopHeaderRepeatSmall">
+                &nbsp;</td>
+            <td align="right">
+                <img src="images/logo_top_small.png" title="ComposeStar StarLight" /></td>
+        </tr>
+    </table>
+    <div id="mainSection">
+        <div id="mainBody">
+            <h1 class="heading">
+                Conditional Superimposition
+            </h1>
+            <p>
+                To use conditional superimposition, you need a boolean static function which evaluates
+                a condition and returns either a true or a false. If a true value is returned, the
+                filter module will be superimposed on the code. This is evaluated at runtime.</p>
+            <p>
+                However, most of the time, the condition function will need additional information
+                to determine if the filter module needs to be superimposed. This can be, for instance,
+                the name of the current method or, more advanced, the reflected method information.
+                Keep in mind that retrieving the method information using light-weight reflection
+                is more time consuming than using the name of the current method. This can already
+                be determined at compile time.
+            </p>
+            <p>
+                To determine what type of information a conditional function requires, you must
+                annotate the function with a custom attribute of type <strong>ConditionParameterAttribute</strong>.
+                There are a number of attributes available, each for a different type of parameters.
+                In addition, your condition function must have the correct parameters in its signature.
+                The custom attribute will be used to generate the code at compile time needed for
+                the parameters. Before code generation, the condition will be checked for correctness.
+                It must return a boolean and has the correct number and type of parameters.</p>
+            <h3 class="subHeading">
+                Condition Parameters</h3>
+            <p>
+                The following custom attributes are available in the <strong>Composestar.StarLight.Weaving.ConditionParameters</strong>
+                namespace:</p>
+            <table class="members" id="tasks">
+                <tr>
+                    <th class="nameColumn">
+                        Name</th>
+                    <th class="descriptionColumn">
+                        Description</th>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">ConditionParameterEmptyAttribute</span></b></td>
+                    <td>
+                        <div class="summary">
+                            No parameters are needed for this attribute.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">ConditionParameterFQNAttribute</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Only one parameter of type <em>String</em> is required. The Fully Qualified Name
+                            of the current method is placed in this strong at compile time. This is the full
+                            signature of the method.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">ConditionParameterMethodInfoAttribute</span></b></td>
+                    <td>
+                        <div class="summary">
+                            One parameter of type <em>MethodBase</em> is required. At runtime, the method information
+                            is retrieved and passed to the condition function. This
+                            <see cref="T:System.Reflection.MethodBase" />
+                            contains all the information of the current method, like the parameters, return
+                            type, name etc.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">ConditionParameterNSAttribute</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Two string parameters are required. The first one is filled with the namespace of
+                            the current method, the second contains the type of the current class.
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <h3 class="subHeading">
+                Example</h3>
+            <p>
+                The following listing shows how a <strong>ConditionParameterMethodInfo</strong>
+                attribute is used to generate, at compile time, the code needed for the <strong>TimingEnabled</strong>
+                condition.</p>
+            <table border="1" width="95%">
+                <tr>
+                    <td>
+                        <code>
+                            <div style="font-family: Consolas; font-size: 9pt; color: black; background: white;">
+                                <p style="margin: 0px;">
+                                    [Composestar.StarLight.Weaving.ConditionParameters.<span style="color: #2b91af;">ConditionParameterMethodInfo</span>]</p>
+                                <p style="margin: 0px;">
+                                    <span style="color: blue;">public</span> <span style="color: blue;">static</span>
+                                    <span style="color: #2b91af;">Boolean</span> TimingEnabled(System.Reflection.<span
+                                        style="color: #2b91af;">MethodBase</span> methodInfo)</p>
+                                <p style="margin: 0px;">
+                                    {</p>
+                                <p style="margin: 0px;">
+                                    &nbsp;&nbsp;&nbsp; <span style="color: blue;">return</span> timingEnabled &amp;&amp;
+                                    methodInfo.Name.Equals(<span style="color: #a31515;">"Test"</span>);</p>
+                                <p style="margin: 0px;">
+                                    }</p>
+                            </div>
+                        </code>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+<!-- @SortOrder 9 -->

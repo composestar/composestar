@@ -52,13 +52,13 @@ using Composestar.StarLight.Utilities.Interfaces;
 using Composestar.StarLight.Utilities;
 #endregion
 
-namespace Composestar.StarLight.Weaving.FilterModuleConditions
+namespace Composestar.StarLight.Weaving.ConditionParameters
 {
 	/// <summary>
-	/// Apply this attribute to Filter Module Conditions which requires the NameSpace and Type of the current method.
+	/// Apply this attribute to conditions which requires the NameSpace and Type of the current method.
 	/// </summary>
 	[CLSCompliant(false)]
-	public class FilterModuleNSConditionAttribute : FilterModuleConditionAttribute
+	public class ConditionParameterNSAttribute : ConditionParameterAttribute
 	{
 
 		private readonly string _booleanReturnType = typeof(Boolean).FullName;
@@ -75,7 +75,7 @@ namespace Composestar.StarLight.Weaving.FilterModuleConditions
 		}
 
 		/// <summary>
-		/// Perform the actual IL code generation needed for the Filter Module Condition.
+		/// Perform the actual IL code generation needed for the Condition parameters.
 		/// For instance, this function can create the information which can be used by the condition function.
 		/// </summary>
 		/// <param name="visitor">The visitor.</param>
