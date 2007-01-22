@@ -81,7 +81,7 @@ public class StarLightMaster extends Master
 	}
 
 	/**
-	 * @return The repository filename.
+	 * @return the name of the configuration file.
 	 */
 	public static String getConfigFileName()
 	{
@@ -94,6 +94,14 @@ public class StarLightMaster extends Master
 	public static ConfigurationContainer getConfigContainer()
 	{
 		return configContainer;
+	}
+
+	/**
+	 * Stores the configContainer.
+	 */
+	public static void storeConfigContainer() throws IOException
+	{
+		configDocument.save(new File(configFileName));
 	}
 
 	/**
@@ -153,10 +161,7 @@ public class StarLightMaster extends Master
 		Configuration config = Configuration.instance();
 		PathSettings ps = config.getPathSettings();
 
-		if (getSettingValue("IntermediateOutputPath") != null)
-		{
-			ps.addPath("Base", getSettingValue("IntermediateOutputPath"));
-		}
+		ps.addPath("Base", getSettingValue("IntermediateOutputPath"));
 		ps.addPath("Composestar", getSettingValue("InstallFolder") + "\\");
 
 		// Set INCRE options
@@ -174,6 +179,8 @@ public class StarLightMaster extends Master
 	{
 		try
 		{
+			initialize();
+			
 			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, TITLE + " " + VERSION);
 
 			// Create new resources
@@ -193,8 +200,8 @@ public class StarLightMaster extends Master
 			logger.debug("Executing modules...");
 			incre.runModules(resources);
 
-			// write config file:
-			configDocument.save(new File(configFileName));
+			// write config file
+			storeConfigContainer();
 
 			long elapsed = System.currentTimeMillis() - startTime;
 			logger.info("Total elapsed time: " + elapsed + " ms");
@@ -260,9 +267,6 @@ public class StarLightMaster extends Master
 
 		try
 		{
-			// Initialize
-			master.initialize();
-
 			// Run the master process
 			int ret = master.run();
 			if (ret != 0)

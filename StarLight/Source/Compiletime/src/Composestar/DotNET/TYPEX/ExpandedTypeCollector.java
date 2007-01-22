@@ -1,10 +1,14 @@
 package Composestar.DotNET.TYPEX;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.MethodWrapper;
+import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
+import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETParameterInfo;
 import Composestar.DotNET.LAMA.DotNETType;
@@ -15,26 +19,52 @@ import composestar.dotNET.tym.entities.ExpandedType;
 import composestar.dotNET.tym.entities.MethodElement;
 import composestar.dotNET.tym.entities.ParameterElement;
 
-class TypeExpander
+class ExpandedTypeCollector
 {
 	private Map<String,ExpandedType> types;
 	private Map<String,ExpandedAssembly> assemblies;
 	private Map<String,ExpandedSource> sources;
 	
-	public TypeExpander()
+	public ExpandedTypeCollector()
 	{
 		types = new HashMap<String,ExpandedType>();
 		assemblies = new HashMap<String,ExpandedAssembly>();
 		sources = new HashMap<String,ExpandedSource>();
 	}
 
-	public void run() throws ModuleException
+	public void process(List<Concern> concerns)
 	{
-		new SourceExpander().expand(sources.values());
-		new AssemblyExpander().expand(assemblies);
+		for (Concern concern : concerns)
+		{
+			PlatformRepresentation pr = concern.getPlatformRepresentation();
+
+			if (pr == null || !(pr instanceof DotNETType))
+				continue;
+
+			DotNETType dnt = (DotNETType) pr;
+			Signature sig = concern.getSignature();
+			
+			List<DotNETMethodInfo> methods 
+				= sig.getMethods(MethodWrapper.ADDED);
+			
+			for (DotNETMethodInfo mi : methods)
+			{
+				addExtraMethod(dnt, mi);
+			}
+		}
 	}
 
-	public void addExtraMethod(DotNETType dnt, DotNETMethodInfo mi)
+	public Collection<ExpandedAssembly> getExpandedAssemblies()
+	{
+		return assemblies.values();
+	}
+	
+	public Collection<ExpandedSource> getExpandedSources()
+	{
+		return sources.values();
+	}
+
+	private void addExtraMethod(DotNETType dnt, DotNETMethodInfo mi)
 	{
 		ExpandedType et = getExpandedType(dnt);
 		MethodElement me = et.getExtraMethods().addNewMethod();
@@ -82,13 +112,13 @@ class TypeExpander
 		}
 	}
 	
-	private ExpandedAssembly getExpandedAssembly(String name)
+	private ExpandedAssembly getExpandedAssembly(String assemblyName)
 	{
-		ExpandedAssembly ea = assemblies.get(name);
+		ExpandedAssembly ea = assemblies.get(assemblyName);
 		if (ea == null)
 		{
-			assemblies.put(name, ea = ExpandedAssembly.Factory.newInstance());
-			ea.setName(name);
+			assemblies.put(assemblyName, ea = ExpandedAssembly.Factory.newInstance());
+			ea.setName(assemblyName);
 			ea.addNewTypes();
 		}
 		
@@ -99,7 +129,9 @@ class TypeExpander
 	{
 		ExpandedSource es = sources.get(sourceFilename);
 		if (es == null)
+		{
 			sources.put(sourceFilename, es = new ExpandedSource(sourceFilename));
+		}
 
 		return es;
 	}

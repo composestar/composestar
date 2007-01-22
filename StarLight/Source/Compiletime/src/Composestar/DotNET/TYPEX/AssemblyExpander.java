@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,16 +26,21 @@ import composestar.dotNET.tym.entities.ExpandedAssemblyDocument;
 
 class AssemblyExpander
 {
-	private Configuration config;
-	private PathSettings pathSettings;
+	private File baseDir;
+	private Map<String,AssemblyConfig> assemblyConfigs;
 	
 	public AssemblyExpander()
 	{
-		config = Configuration.instance();
-		pathSettings = config.getPathSettings();
+		PathSettings ps = Configuration.instance().getPathSettings();
+		baseDir = new File(ps.getPath("Base"), "Starlight");
+
+		assemblyConfigs = new HashMap<String,AssemblyConfig>();		
+		ArrayOfAssemblyConfig acs = StarLightMaster.getConfigContainer().getAssemblies();
+		for (AssemblyConfig ac : acs.getAssemblyConfigList())
+			assemblyConfigs.put(ac.getName(), ac);
 	}
 
-	public void expand(Map<String,ExpandedAssembly> assemblies) throws ModuleException
+	public void process(Collection<ExpandedAssembly> assemblies) throws ModuleException
 	{
 		if (assemblies.size() == 0)
 			return;
@@ -41,40 +48,46 @@ class AssemblyExpander
 		writeExpansionSpecs(assemblies);
 		invokeExpander();
 	}
-	
-	private void writeExpansionSpecs(Map<String,ExpandedAssembly> assemblies) throws ModuleException
-	{
-		ArrayOfAssemblyConfig acs = StarLightMaster.getConfigContainer().getAssemblies();
-		for (AssemblyConfig ac : acs.getAssemblyConfigList())
-		{
-			if (assemblies.containsKey(ac.getName()))
-			{
-				ExpandedAssembly ea = (ExpandedAssembly) assemblies.get(ac.getName());
-				ExpandedAssemblyDocument doc = ExpandedAssemblyDocument.Factory.newInstance();
-				doc.setExpandedAssembly(ea);
 
-				File baseDir = new File(pathSettings.getPath("Base"), "Starlight");
-				File file = new File(baseDir, ac.getId() + "_expandspec.xml");
-				
-				OutputStream os = null;
-				try
-				{
-					os = new FileOutputStream(file);					
-					doc.save(os);
-				}
-				catch (IOException e)
-				{
-					throw new ModuleException(
-							"IOException while writing weavespecfile " + file, TYPEX.MODULE_NAME);
-				}
-				finally
-				{
-					FileUtils.close(os);
-				}
-				
-				ac.setExpansionSpecificationFile(file.getAbsolutePath());
+	private void writeExpansionSpecs(Collection<ExpandedAssembly> assemblies) throws ModuleException
+	{
+		for (ExpandedAssembly ea : assemblies)
+		{
+			AssemblyConfig ac = assemblyConfigs.get(ea.getName());
+			
+			ExpandedAssemblyDocument doc = ExpandedAssemblyDocument.Factory.newInstance();
+			doc.setExpandedAssembly(ea);
+
+			File file = new File(baseDir, ac.getId() + "_expandspec.xml");
+			ac.setExpansionSpecificationFile(file.getAbsolutePath());
+
+			OutputStream os = null;
+			try
+			{
+				os = new FileOutputStream(file);					
+				doc.save(os);
 			}
-		}		
+			catch (IOException e)
+			{
+				throw new ModuleException(
+						"IOException while writing expansion spec '" + file + 
+						"': " + e.getMessage(), TYPEX.MODULE_NAME);
+			}
+			finally
+			{
+				FileUtils.close(os);
+			}			
+		}
+		
+		try
+		{
+			StarLightMaster.storeConfigContainer();
+		}
+		catch (IOException e)
+		{
+			throw new ModuleException(
+					"IOException while writing configuration: " + e.getMessage(), TYPEX.MODULE_NAME);
+		}
 	}
 	
 	private void invokeExpander() throws ModuleException
@@ -101,7 +114,7 @@ class AssemblyExpander
 		File baseDir = new File("C:\\CPS\\StarLight\\Source\\SigExpander\\bin\\Debug");
 		File exe = new File(baseDir, "Composestar.StarLight.SigExpander.exe");
 		
-		if (! exe.exists())
+		if (!exe.exists())
 			throw new RuntimeException("Executable does not exist: " + exe);
 		
 		return exe.getAbsolutePath();

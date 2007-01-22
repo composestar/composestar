@@ -1,18 +1,14 @@
 package Composestar.DotNET.TYPEX;
 
+import java.io.File;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
-import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.DotNET.LAMA.DotNETMethodInfo;
-import Composestar.DotNET.LAMA.DotNETType;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * TYPEX - TYPe EXpander.
@@ -24,49 +20,47 @@ import Composestar.Utils.Debug;
 public class TYPEX implements CTCommonModule
 {
 	public static final String MODULE_NAME = "TYPEX";
+	
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
-	private DataStore dataStore;
+	//@In("concerns")
+	private List<Concern> concerns;
+	
+	//@In("signatures.modified")
+	private boolean signaturesModified;
+	
+	//@Out("sources.expanded.files")
+	private List<File> expandedSources;
 	
 	public TYPEX()
 	{
-		dataStore = DataStore.instance();
 	}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		if (!resources.getBoolean("signaturesmodified"))
+		concerns = DataStore.instance().getListOfAllInstances(Concern.class);
+		signaturesModified = resources.getBoolean("signaturesmodified");
+
+		run();
+		
+		resources.addResource("sources.expanded.files", expandedSources);
+	}
+	
+	private void run() throws ModuleException
+	{
+		if (!signaturesModified)
 		{
-			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "No need to transform assemblies");
+			logger.info("No need to transform assemblies");
 			return;
 		}
 		
-		TypeExpander te = new TypeExpander();
-		collectExpandedTypes(te);		
-		te.run();
-	}
-	
-	private void collectExpandedTypes(TypeExpander te)
-	{
-		List<Concern> concerns 
-			= dataStore.getListOfAllInstances(Concern.class);
+		ExpandedTypeCollector te = new ExpandedTypeCollector();
+		te.process(concerns);
 		
-		for (Concern concern : concerns)
-		{
-			PlatformRepresentation pr = concern.getPlatformRepresentation();
-
-			if (pr == null || !(pr instanceof DotNETType))
-				continue;
-
-			DotNETType dnt = (DotNETType) pr;
-			Signature sig = concern.getSignature();
-			
-			List<DotNETMethodInfo> methods 
-				= sig.getMethods(MethodWrapper.ADDED);
-			
-			for (DotNETMethodInfo mi : methods)
-			{
-				te.addExtraMethod(dnt, mi);
-			}
-		}
+		AssemblyExpander ae = new AssemblyExpander();
+		ae.process(te.getExpandedAssemblies());
+		
+		SourceExpander se = new SourceExpander();
+		expandedSources = se.process(te.getExpandedSources());
 	}
 }

@@ -21,6 +21,7 @@ Copyright (C) University of Twente, 2006
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILAnalyzerTask"   AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll"/>
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll"/>
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll"/>
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.TypeAnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll"/>
 
   <PropertyGroup>
     <StarLightFolder>$(ProjectDir)$(BaseIntermediateOutputPath)StarLight</StarLightFolder>
@@ -227,6 +228,7 @@ Copyright (C) University of Twente, 2006
       GetTargetPath;
       CopyFilesToOutputDirectory;
       ParseConcerns;
+      AnalyzeTypes;
       AnalyzeAssemblies;
       MasterCaller;
       ILWeaverRunner;
@@ -354,7 +356,7 @@ Copyright (C) University of Twente, 2006
     <MakeDir Directories="$(StarLightFolder)"/>
   </Target>
 
-  <Target Name ="BackupFiles">
+  <Target Name="BackupFiles">
     <Message Text="Creating backup of already weaved files."/>
     <CreateItem
       Include="$(OutDir)*.exe;$(OutDir)*.dll" 
@@ -398,7 +400,7 @@ Copyright (C) University of Twente, 2006
       <Output TaskParameter="Include" ItemName="WeavableAssemblies"/>
     </CreateItem>
 
-    <CreateItem Include="@(MainAssembly)" Condition=" '$(CodeLanguage)' != '' ">
+    <CreateItem Include="@(MainAssembly->'%(FullPath)')" Condition=" '$(CodeLanguage)' != '' ">
       <Output TaskParameter="Include" ItemName="WeavableAssemblies"/>
     </CreateItem>
 
@@ -416,9 +418,33 @@ Copyright (C) University of Twente, 2006
     <OnError ExecuteTargets="CleanBackup"/>
   </Target>
 
+  <Target Name="AnalyzeTypes" Condition="'$(CodeLanguage)' != '' And '$(ExpandSignatures)' == 'True'">
+    <Message Text="Extracting type information"/>
+
+    <Message Text="ReferencePath=@(ReferencePath)"/>                       <!-- Paths to resolved primary files -->
+    <Message Text="ReferenceDependencyPaths=@(ReferenceDependencyPaths)"/> <!-- Paths to resolved dependency files -->
+    <Message Text="ReferenceCopyLocalPaths=@(ReferenceCopyLocalPaths)"/>   <!-- Paths to files that should be copied to the local directory -->
+<!--
+    <CreateItem Include="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')">
+      <Output TaskParameter="Include" ItemName="WeavableAssemblies"/>
+    </CreateItem>
+-->
+    <TypeAnalyzerTask
+      AssemblyName="$(AssemblyName)" 
+      CodeLanguage="$(CodeLanguage)"
+      Concerns="@(Concern->'%(FullPath)')"
+      Sources="@(Compile->'%(FullPath)')"      
+      ReferencedAssemblies="@(ReferencePath)"/>
+  
+  </Target>
+
   <!--MasterCaller target -->  
   <Target Name="MasterCaller" Condition="'$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False'">
     <Message Text="Executing Composestar Master."/>
+    
+    <CreateProperty Value="incre-normal.xml" Condition="'$(ExpandSignatures)' == 'True'">
+      <Output TaskParameter="Value" PropertyName="IncreConfig"/>
+    </CreateProperty>
     
     <MasterCallerTask 
       ContinueOnError="false"

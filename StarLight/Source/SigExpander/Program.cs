@@ -94,14 +94,14 @@ namespace Composestar.StarLight.SigExpander
 			}
 		}
 
-		private void ExpandAssembly(ExpandedAssembly ea, string file)
+		private void ExpandAssembly(ExpandedAssembly ea, string assemblyFilename)
 		{
-			Console.WriteLine("Processing assembly '{0}'...", file);
+			Console.WriteLine("Processing assembly '{0}'...", assemblyFilename);
 
-			if (!File.Exists(file))
-				throw new SigExpanderException("Assembly '" + file + "' does not exist");
+			if (!File.Exists(assemblyFilename))
+				throw new SigExpanderException("Assembly '" + assemblyFilename + "' does not exist");
 
-			AssemblyDefinition ad = AssemblyFactory.GetAssembly(file);
+			AssemblyDefinition ad = AssemblyFactory.GetAssembly(assemblyFilename);
 			ModuleDefinition module = ad.MainModule;
 			TypeResolver typeResolver = new TypeResolver(_assemblyResolver, ad);
 
@@ -122,7 +122,7 @@ namespace Composestar.StarLight.SigExpander
 				}
 			}
 
-			string target = GetTargetFileName(file);
+			string target = GetTargetFileName(assemblyFilename);
 			AssemblyFactory.SaveAssembly(ad, target);
 
 			Console.WriteLine("Written '{0}'.", target);
