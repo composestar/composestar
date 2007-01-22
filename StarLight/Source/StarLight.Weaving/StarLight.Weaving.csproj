@@ -93,7 +93,10 @@
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
   <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying..." />
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight" ValueName="StarLightInstallFolder">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion">
+      <Output TaskParameter="Value" PropertyName="StarLightVersion"/>
+    </RegistryRead>
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(StarLightVersion)" ValueName="StarLightInstallFolder">
       <Output TaskParameter="Value" PropertyName="StarLightInstallFolder" />
     </RegistryRead>
     <CreateProperty Value="$(StarLightInstallFolder)\CoreElements">
