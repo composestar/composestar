@@ -32,7 +32,7 @@ import Composestar.Utils.Debug;
  */
 public class ModelBuilder implements CTCommonModule
 {
-	private static final String MODULE_NAME = "INLINE";
+	public static final String MODULE_NAME = "INLINE";
 
 	/**
 	 * The LowLevelInliner used to translate an inputfilterset to code.
@@ -200,7 +200,7 @@ public class ModelBuilder implements CTCommonModule
 			return;
 		}
 
-		Debug.out(Debug.MODE_DEBUG, "INLINER", "Processing concern " + concern.getName());
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing concern " + concern.getName());
 
 		// initialize:
 		inlinedMethodSet = new HashSet();
