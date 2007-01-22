@@ -41,6 +41,7 @@ namespace BasicTests
 
 			FooBarQuux fbq = new FooBarQuux();
 			fbq.foo();
+			fbq.ignored();
 		}
 	}
 }
