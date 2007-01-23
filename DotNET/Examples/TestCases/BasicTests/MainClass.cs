@@ -1,4 +1,5 @@
 using System;
+using Composestar.RuntimeCore.FLIRT.Exception;
 
 namespace BasicTests
 {
@@ -39,9 +40,26 @@ namespace BasicTests
 
 			filtTests.makeOutsideTrip();
 
+
 			FooBarQuux fbq = new FooBarQuux();
-			fbq.foo();
-			fbq.ignored();
+			try 
+			{
+				fbq.foo(); // should result in an exception
+			}
+			catch (ErrorFilterException e)
+			{
+				Console.Out.WriteLine("An ErrorFilterException was raised.");
+			}
+			try 
+			{
+				// method introduced by a concern
+				fbq.quux2(); // should be quux3 but a bug in Fire prevents this
+			}
+			catch (ErrorFilterException e)
+			{
+				Console.Out.WriteLine("An ErrorFilterException was raised.");
+			}
+			fbq.success();
 		}
 	}
 }
