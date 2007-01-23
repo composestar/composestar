@@ -10,11 +10,7 @@
 
 package Composestar.Core.WEAVER;
 
-import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 
 public interface WEAVER extends CTCommonModule
-{
-	void run(CommonResources resources) throws ModuleException;
-}
+{}

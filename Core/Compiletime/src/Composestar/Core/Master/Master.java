@@ -239,11 +239,12 @@ public abstract class Master
 				Debug.outWarnings();
 			}
 
-			/*
-			 * // note: some tests produce errors during compiling and therefor
-			 * this is disabled if (Debug.numErrors() > 0) {
-			 * Debug.outWarnings(); return EERRORS; }
-			 */
+			if (Debug.numErrors() > 0)
+			{
+				Debug.outWarnings();
+				return EERRORS;
+			}
+
 		}
 		catch (ModuleException e)
 		{

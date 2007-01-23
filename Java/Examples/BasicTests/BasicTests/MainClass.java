@@ -1,5 +1,7 @@
 package BasicTests;
 
+import Composestar.RuntimeCore.FLIRT.Exception.*;
+
 public class MainClass
 {
 	public static void main(String[] args)
@@ -40,6 +42,24 @@ public class MainClass
 		filtTests.makeOutsideTrip();
 
 		FooBarQuux fbq = new FooBarQuux();
-		fbq.foo();
+		try 
+		{
+			fbq.foo(); // should result in an exception
+		}
+		catch (ErrorFilterException e)
+		{
+			System.out.println("An ErrorFilterException was raised.");
+		}
+		try 
+		{
+			// method introduced by a concern
+			fbq.quux2(); // should be quux3 but a bug in Fire or Sign prevents this
+					 // because quux3 isn't added
+		}
+		catch (ErrorFilterException e)
+		{
+			System.out.println("An ErrorFilterException was raised.");
+		}
+		fbq.success();
 	}
 }

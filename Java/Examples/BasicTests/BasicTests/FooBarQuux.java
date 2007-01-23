@@ -17,6 +17,11 @@ public class FooBarQuux extends TestsBase
 		report("quux");
 	}
 
+	public void ignored()
+	{
+		report("ignored");
+	}
+
 	public void success()
 	{
 		report("success");

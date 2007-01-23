@@ -1,8 +1,18 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.FITER;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.Exception.ModuleException;
@@ -31,13 +41,13 @@ public class FITER implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Verifying Filter Types...");
-		ArrayList customfilters = getCustomFilterTypes();
+		ArrayList<FilterType> customfilters = getCustomFilterTypes();
 		resolveCustomFilterTypes(customfilters);
 	}
 
-	private ArrayList getCustomFilterTypes()
+	private ArrayList<FilterType> getCustomFilterTypes()
 	{
-		ArrayList customfilters = new ArrayList();
+		ArrayList<FilterType> customfilters = new ArrayList<FilterType>();
 		DataStore ds = DataStore.instance();
 		Iterator it = ds.getAllInstancesOf(FilterType.class);
 		while (it.hasNext())
@@ -51,10 +61,10 @@ public class FITER implements CTCommonModule
 		return customfilters;
 	}
 
-	private void resolveCustomFilterTypes(ArrayList customfilters) throws ModuleException
+	private void resolveCustomFilterTypes(ArrayList<FilterType> customfilters) throws ModuleException
 	{
-		ArrayList working = new ArrayList(customfilters);
-		ArrayList result = new ArrayList(customfilters);
+		ArrayList<FilterType> working = new ArrayList<FilterType>(customfilters);
+		ArrayList<FilterType> result = new ArrayList<FilterType>(customfilters);
 		LOLA lola = (LOLA) INCRE.instance().getModuleByName(LOLA.MODULE_NAME);
 		String filterSuperClass = "Composestar.RuntimeCore.FLIRT.Filtertypes.CustomFilter";
 		if (lola.unitDict != null)
@@ -63,18 +73,14 @@ public class FITER implements CTCommonModule
 			if (ur != null && ur.singleValue() != null)
 			{
 				ProgramElement filterType = ur.singleValue();
-				HashSet allFilterTypes = getChildsofClass(filterType);
-				Iterator allFilterTypesIt = allFilterTypes.iterator();
+				Set allFilterTypes = getChildsofClass(filterType);
 				for (Object obj : allFilterTypes)
 				{
 					if (obj instanceof ProgramElement)
 					{
 						ProgramElement customFilterType = (ProgramElement) obj;
-						Iterator definedCustomFilters = working.iterator();
-						for (Object aWorking : working)
+						for (FilterType ftype : working)
 						{
-							FilterType ftype = (FilterType) aWorking;
-
 							if (customFilterType.getUnitName().indexOf('.') < 0)
 							{
 								if (customFilterType.getUnitName().endsWith(ftype.getName()))
@@ -98,9 +104,8 @@ public class FITER implements CTCommonModule
 				}
 			}
 		}
-		for (Object aResult : result)
+		for (FilterType ftype : result)
 		{
-			FilterType ftype = (FilterType) aResult;
 			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Unable to resolve filter type: " + ftype.getName() + "!");
 		}
 
@@ -111,17 +116,15 @@ public class FITER implements CTCommonModule
 		}
 	}
 
-	private HashSet getChildsofClass(ProgramElement filterType)
+	private Set<ProgramElement> getChildsofClass(ProgramElement filterType)
 	{
-		HashSet total = new HashSet();
-		HashSet hashset = filterType.getUnitRelation("ChildClasses").multiValue();
-		total.addAll(hashset);
-		Iterator it = hashset.iterator();
-		for (Object aHashset : hashset)
+		Set<ProgramElement> total = new HashSet<ProgramElement>();
+		@SuppressWarnings("unchecked")
+		Set<ProgramElement> children = filterType.getUnitRelation("ChildClasses").multiValue();
+		total.addAll(children);
+		for (Object aChild : children)
 		{
-			ProgramElement customFilterType = (ProgramElement) aHashset;
-			HashSet subset = this.getChildsofClass(customFilterType);
-			total.add(subset);
+			total.addAll(getChildsofClass((ProgramElement) aChild));
 		}
 		return total;
 	}
