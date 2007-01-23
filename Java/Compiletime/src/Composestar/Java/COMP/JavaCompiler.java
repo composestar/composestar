@@ -34,11 +34,8 @@ public class JavaCompiler implements LangCompiler
 		String command = "";
 		StringBuilder options = new StringBuilder("-classpath ");
 		Language lang = p.getLanguage();
-		if (lang != null)
-		{
-			// OK fine
-		}
-		else
+		
+		if (lang == null)
 		{
 			throw new CompilerException("Project has no language object");
 		}
@@ -117,11 +114,7 @@ public class JavaCompiler implements LangCompiler
 		StringBuilder options = new StringBuilder();
 		Language lang = p.getLanguage();
 
-		if (lang != null)
-		{
-			// OK fine
-		}
-		else
+		if (lang == null)
 		{
 			throw new CompilerException("Project has no language object");
 		}
@@ -228,7 +221,7 @@ public class JavaCompiler implements LangCompiler
 
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
 		int result = cmdExec.exec(command, targetDir);
-		String compilerOutput = cmdExec.outputError();
+		compilerOutput = cmdExec.outputError();
 
 		if (result != 0)
 		{

@@ -22,8 +22,6 @@ public class JavaParameterInfo extends ParameterInfo
 
 	private Class theParameter;
 
-	public JavaMethodInfo Parent;
-
 	/**
 	 * Constructor.
 	 * 

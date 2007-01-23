@@ -708,6 +708,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				visit(getChild(ast, STRING_LITERAL));
 				out(")");
 				newline();
+				break;
 
 			case TYPE_ARGS: // added 1.5
 				break;
