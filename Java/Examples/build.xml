@@ -20,10 +20,10 @@
 	
 	<target name="build" />
 	
-	<target name="clean" description="Clean intermediate files from the examples.">
+	<target name="clean" depends="init" description="Clean intermediate files from the examples.">
 		<delete includeemptydirs="true">
 			<FileSet dir="${basedir}" >
-				<include name="*/BuildConfiguration.xml" />
+				<include name="*/BuildConfiguration.xml" unless="keep.buildconfiguration" />
 				<include name="*/repository.dat" />
 				<include name="*/buildlog.txt" />
 				<include name="*/langmap.pro" />			

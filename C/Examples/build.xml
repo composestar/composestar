@@ -18,56 +18,20 @@
 	<target name="build" description="Clean the .C implementation of Compose*"/>
 	
 	<target name="clean" depends="init">
-		<!-- delete generated files in /bin -->
+		<!-- delete generated files in /bin -->	
 		<delete>
 			<FileSet dir="${build.c}/Examples">
+				<include name="**/buildconfiguration.xml"  unless="keep.buildconfiguration" />
 				<include name="**/bin/*.exe"/>
-			</FileSet>
-		</delete>
-		<delete>
-			<FileSet dir="${build.c}/Examples">
 				<include name="**/*.ccc"/>
-			</FileSet>
-		</delete>
-		<delete>
-			<FileSet dir="${build.c}/Examples">
 				<include name="**/*.cccout"/>
-			</FileSet>
-		</delete>
-		<delete>
-			<FileSet dir="${build.c}/Examples">
 				<include name="**/*.gst"/>
-			</FileSet>
-		</delete>
-		
-		<delete>
-			<FileSet dir="${build.c}/Examples">
-				<include name="**/buildconfiguration.xml"/>
-			</FileSet>
-		</delete>
-		<delete>
-			<FileSet dir="${build.c}/Examples">
 				<include name="**/*.html"/>
-			</FileSet>
-		</delete>
-		
-		<delete>
-			<FileSet dir="${build.c}/Examples">
 				<include name="**/makefile"/>
-			</FileSet>
-		</delete>	
-		
-		<delete includeEmptyDirs="true">
-			<FileSet dir="${build.c}/Examples">
 				<include name="**/analyses/"/>
-			</FileSet>
-		</delete>
-		<delete includeEmptyDirs="true">
-			<FileSet dir="${build.c}/Examples">
 				<include name="**/obj/"/>
 			</FileSet>
-		</delete>
-		
+		</delete>		
 	</target>
 	
 </project>

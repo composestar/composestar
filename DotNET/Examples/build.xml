@@ -20,49 +20,30 @@
 	
 	<target name="build" />
 	
-	<target name="clean" description="Clean intermediate files from the examples.">
+	<target name="clean" depends="init" description="Clean intermediate files from the examples.">
+		<patternset id="dotnet.compile.results" >
+			<include name="*/BuildConfiguration.xml" unless="keep.buildconfiguration" />
+			<include name="*/repository.xml" />
+			<include name="*/types.xml" />
+			<include name="*/weavespec.xml" />
+			<include name="*/weavelog.txt" />
+			<include name="*/filelist.peweaver" />
+			<include name="*/filelist.ilweaver" />
+			<include name="*/attributes.xml" />
+			<include name="*/langmap.pro" />			
+			<include name="*/*.gst" />
+			<include name="*/obj/**" />
+		</patternset>
+	
 		<delete includeemptydirs="true">
 			<FileSet dir="${basedir}" >
-				<include name="*/BuildConfiguration.xml" />
-				<include name="*/repository.xml" />
-				<include name="*/types.xml" />
-				<include name="*/weavespec.xml" />
-				<include name="*/weavelog.txt" />
-				<include name="*/filelist.peweaver" />
-				<include name="*/filelist.ilweaver" />
-				<include name="*/attributes.xml" />
-				<!--<include name="*/buildlog.txt" />-->
-				<include name="*/langmap.pro" />			
-				<include name="*/*.gst" />
-				<include name="*/obj/**" />
+				<patternset refid="dotnet.compile.results" />
 			</FileSet>
 			<FileSet dir="${basedir}/DesignPatterns/Implementations" >
-				<include name="*/BuildConfiguration.xml" />
-				<include name="*/repository.xml" />
-				<include name="*/types.xml" />
-				<include name="*/weavespec.xml" />
-				<include name="*/weavelog.txt" />
-				<include name="*/filelist.peweaver" />
-				<include name="*/filelist.ilweaver" />
-				<include name="*/attributes.xml" />
-				<!--<include name="*/buildlog.txt" />-->
-				<include name="*/langmap.pro" />
-				<include name="*/*.gst" />			
-				<include name="*/obj/**" />
+				<patternset refid="dotnet.compile.results" />
 			</FileSet>
 			<FileSet dir="${basedir}/TestCases" >
-				<include name="*/BuildConfiguration.xml" />
-				<include name="*/repository.xml" />
-				<include name="*/types.xml" />
-				<include name="*/weavespec.xml" />
-				<include name="*/weavelog.txt" />
-				<include name="*/filelist.peweaver" />
-				<include name="*/filelist.ilweaver" />
-				<include name="*/attributes.xml" />
-				<!--<include name="*/buildlog.txt" />-->
-				<include name="*/langmap.pro" />
-				<include name="*/*.gst" />			
-				<include name="*/obj/**" />
+				<patternset refid="dotnet.compile.results" />
 			</FileSet>
 		</delete>
 	</target>
