@@ -175,6 +175,11 @@
 					usedebug="false" 
 				/>			
 				<artifactspublisher
+					dir="${starlight.path}/Setup/Releases"
+					dest="artifacts/${project.name}/"
+					subdirectory="releases"
+				/>
+				<artifactspublisher
 					dir="${starlight.path}/Core/qa"
 					dest="artifacts/${project.name}/"
 					subdirectory="qa_core"
