@@ -83,10 +83,27 @@ public class FileUtilsTest extends TestCase
 		{
 		}
 
-		// assertEquals("", FileUtils.replaceExtension("", "")); // should throw
-		// exception?
+	//	assertEquals("", FileUtils.replaceExtension("", "")); // should throw exception?
 		assertEquals("foo.baz", FileUtils.replaceExtension("foo.bar", "baz"));
 		assertEquals("foo.baz", FileUtils.replaceExtension("foo.bar", ".baz"));
 		assertEquals("foo.bar.xyz", FileUtils.replaceExtension("foo.bar.baz", ".xyz"));
+	}
+
+	public void testCreateOutputFilename()
+	{
+		try
+		{
+			FileUtils.createOutputFilename("d:/foo/", "quux", "c:/foo/bar.txt");
+			throw new AssertionFailedError("IllegalArgumentException expected");
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+		
+		assertEquals("c:/foo/quux/bar.txt", 
+				FileUtils.createOutputFilename("c:/foo/", "quux/", "c:/foo/bar.txt"));
+
+		assertEquals("c:\\foo\\quux\\bar.txt", 
+				FileUtils.createOutputFilename("c:\\foo\\", "quux\\", "c:\\foo\\bar.txt"));
 	}
 }

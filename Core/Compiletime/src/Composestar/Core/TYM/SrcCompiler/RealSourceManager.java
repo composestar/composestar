@@ -12,7 +12,6 @@ package Composestar.Core.TYM.SrcCompiler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.COMP.CompilerException;
@@ -47,7 +46,6 @@ public class RealSourceManager implements CTCommonModule
 		Configuration config = Configuration.instance();
 		List projects = config.getProjects().getProjects();
 
-		Iterator projIt = projects.iterator();
 		for (Object project1 : projects)
 		{
 			Project project = (Project) project1;
@@ -59,7 +57,6 @@ public class RealSourceManager implements CTCommonModule
 			String exefile = getExeFile(project, exetype);
 
 			// set target of sources
-			Iterator sourceIt = project.getSources().iterator();
 			for (Object o : project.getSources())
 			{
 				Source source = (Source) o;
@@ -92,7 +89,6 @@ public class RealSourceManager implements CTCommonModule
 	 */
 	private String getExeFile(Project project, String exec) throws ModuleException
 	{
-		Iterator tsIt = project.getTypeSources().iterator();
 		for (Object o : project.getTypeSources())
 		{
 			TypeSource ts = (TypeSource) o;
@@ -128,7 +124,6 @@ public class RealSourceManager implements CTCommonModule
 		List types = locations.getTypesBySource(nsp);
 
 		// iterate over typesources to find type with full namespace
-		Iterator typesItr = types.iterator();
 		for (Object type1 : types)
 		{
 			String type = (String) type1;
@@ -145,14 +140,16 @@ public class RealSourceManager implements CTCommonModule
 		{
 			if (!types.isEmpty())
 			{
-				targetFile = (String) types.get(0); // first type declared in
-				// sourcefile
+				// first type declared in sourcefile
+				targetFile = (String) types.get(0); 
 			}
 			else
 			{
-				Debug.out(Debug.MODE_WARNING, "RECOMA", srcType + " is not a fully qualified target of source "
-						+ sourcePath);
-				targetFile = srcType; // last part of sourcefile's path
+				Debug.out(Debug.MODE_WARNING, "RECOMA", 
+						srcType + " is not a fully qualified target of source " + sourcePath);
+				
+				// last part of sourcefile's path
+				targetFile = srcType;
 			}
 		}
 

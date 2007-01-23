@@ -116,7 +116,7 @@ public class Configuration implements Serializable
 	}
 
 	/**
-	 * @deprecated Directly use ModuleInfo
+	 * @deprecated use ModuleInfoManager
 	 */
 	public String getModuleProperty(String module, String key, String def)
 	{
@@ -129,7 +129,7 @@ public class Configuration implements Serializable
 	}
 
 	/**
-	 * @deprecated Directly use ModuleInfo
+	 * @deprecated use ModuleInfoManager
 	 */
 	public int getModuleProperty(String module, String key, int def)
 	{
@@ -142,7 +142,7 @@ public class Configuration implements Serializable
 	}
 
 	/**
-	 * @deprecated Directly use ModuleInfo
+	 * @deprecated use ModuleInfoManager
 	 */
 	public boolean getModuleProperty(String module, String key, boolean def)
 	{

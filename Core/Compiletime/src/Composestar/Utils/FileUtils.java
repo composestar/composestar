@@ -199,11 +199,12 @@ public final class FileUtils
 	 * @param sourceName the name of the original file
 	 * @return The converted (output)-filename.
 	 */
-	public static String createOutputFilename(String basePath, String prefix, String sourceName) throws Exception
+	public static String createOutputFilename(String basePath, String prefix, String sourceName)
 	{
 		if (!sourceName.startsWith(basePath))
 		{
-			throw new Exception("File + '" + sourceName + "' should be within the project basePath '" + basePath + "'");
+			throw new IllegalArgumentException(
+					"File + '" + sourceName + "' should be within the project basePath '" + basePath + "'");
 		}
 
 		return basePath + prefix + sourceName.substring(basePath.length());
