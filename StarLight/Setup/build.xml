@@ -48,7 +48,7 @@
 					<arg value="-nologo" />
 			</exec>
 			<echo>Running Light for MSI generation to ${msi.file}</echo>
-	    <exec executable="${path.wix}light.exe" failonerror="true">					
+	    		<exec executable="${path.wix}light.exe" failonerror="true">					
 					<arg value="-out"/>
 					<arg value="${msi.file}"/>
 					<arg value="-b ${wixtemp.path}"/>
@@ -64,7 +64,8 @@
 					<arg value="${wixsource.path}wixui.wixlib"/>
 					<arg value="-loc ${wixsource.path}WixUI_en-us.wxl"/>		
 					<arg value="-nologo" />	
-			</exec>	  			
+			</exec>
+			<checksum file="${msi.file}" forceOverwrite="yes" todir="${build.starlight}${file.separator}Setup${file.separator}Releases${file.separator}"/>
 	</target>
 		
 	<target name="compile_sources" depends="init">
