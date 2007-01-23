@@ -52,7 +52,7 @@
       </Directory>
       <Directory Id="WeaveStrategies" Name="Weave" LongName="WeaveStrategies">
         <Component Id="WeaveStrategies" Guid="23698DA6-DA18-4339-85AB-789FE509FE73">
-          <File Id="BuiltInStrategies" Name="Builtin" DiskId="1" LongName="Composestar.StarLight.Weaving.BuiltIn.dll" src="$(var.weaveStrategyBinPath)\" />
+          <File Id="BuildInStrategies" Name="Buildin" DiskId="1" LongName="Composestar.StarLight.Weaving.BuildIn.dll" src="$(var.weaveStrategyBinPath)\" />
         </Component>
       </Directory>
       <Directory Id ='Binaries' Name='Binaries' />

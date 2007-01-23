@@ -15,7 +15,7 @@
   <property name="VSProject.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}VisualStudio.Project"/>
   <property name="WeaveStrategy.dir" location="..${file.separator}Source${file.separator}StarLight.Weaving.BuiltIn"/>
   <property name="wixsource.path" value="${build.starlight}${file.separator}Setup${file.separator}WixStarLight${file.separator}"/>
-  <property name="msi.file" value="${build.starlight}${file.separator}Setup${file.separator}Releases${file.separator}StarLight.msi"/>
+  <property name="msi.file" value="${build.starlight}${file.separator}Setup${file.separator}Releases${file.separator}StarLight_${version.starlight}.msi"/>
   <property name="wixtemp.path" value="${build.starlight}${file.separator}Setup${file.separator}"/>
    
   <echo>Processing: ${ant.project.name} ...</echo>
@@ -25,7 +25,8 @@
 	<target name="clean" depends="init" description="Clean compile results">
 		 <echo>Cleaning WIX object files</echo>
      <delete>
-     		<fileset dir="." includes="**/*.wixobj"/>
+	     <fileset dir="." includes="**/*.wixobj"/>
+	     <fileset dir="Releases" includes="**/*.msi"/>
      </delete>     
 	</target>
    
@@ -64,7 +65,6 @@
 					<arg value="-loc ${wixsource.path}WixUI_en-us.wxl"/>		
 					<arg value="-nologo" />	
 			</exec>	  			
-			<antcall target="clean" inheritRefs="true"/> 
 	</target>
 		
 	<target name="compile_sources" depends="init">

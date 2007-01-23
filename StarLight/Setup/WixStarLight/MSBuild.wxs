@@ -22,13 +22,13 @@
               <File Id="File_Tasks7" Name="TASKS7" LongName="Composestar.StarLight.ILWeaver.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks8" Name="TASKS8" LongName="Microsoft.Practices.ObjectBuilder.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks9" Name="TASKS9" LongName="Mono.Cecil.dll" src="$(var.IntegrationTasksPath)\" />
-              <File Id="File_Tasks17" Name="TASKS17" LongName="Mono.Cecil.Pdb.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks12" Name="TASKS12" LongName="antlr.runtime.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks13" Name="TASKS13" LongName="Composestar.StarLight.CpsParser.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks14" Name="TASKS14" LongName="Composestar.StarLight.Utilities.Cecil.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks15" Name="TASKS15" LongName="Composestar.StarLight.Filters.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks16" Name="TASKS16" LongName="Composestar.StarLight.Weaving.dll" src="$(var.IntegrationTasksPath)\" />
-              <File Id="File_Tasks17" Name="TASKS17" LongName="Composestar.StarLight.Dummies.dll" src="$(var.IntegrationTasksPath)\" />
+	      <!-- <File Id="File_Tasks17" Name="TASKS17" LongName="Composestar.StarLight.Dummies.dll" src="$(var.IntegrationTasksPath)\" /> -->
+              <File Id="File_Tasks18" Name="TASKS18" LongName="Mono.Cecil.Pdb.dll" src="$(var.IntegrationTasksPath)\" />
             </Component>
           </Directory>
         </Directory>

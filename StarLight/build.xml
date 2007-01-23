@@ -37,6 +37,9 @@
 		<!-- clean documentation -->
 		<delete file="Documentation\ComposeStar-StarLight.chm" />
 		<delete file="Documentation\LastBuild.log" />
+
+		<!-- clean installer -->
+		<ant target="clean" dir="Setup" inheritRefs="true"/>
 		
 	</target>
 

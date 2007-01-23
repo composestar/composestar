@@ -23,7 +23,7 @@
 
   <!-- Relative path of the folder with the binaries -->
   <?define IntegrationBinPath=..\..\Source\VSIntegration\VisualStudio.Project\bin\Release?>
-  <?define weaveStrategyBinPath=..\..\Source\StarLight.Weaving.BuildIn\bin\Release?>
+  <?define weaveStrategyBinPath=..\..\Source\StarLight.Weaving.BuiltIn\bin\Release?>
   <?define IntegrationTasksPath=..\..\Source\VSIntegration\MSBuildTasks\bin\Release?>
   <?define SnippetsSources=..\..\Source\VSIntegration\VisualStudio.Project\bin\Release\CodeSnippets?>
   <?define ProjectTemplatesZipPath=..\..\Source\VSIntegration\VisualStudio.Project\obj\Release?>
