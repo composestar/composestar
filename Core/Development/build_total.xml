@@ -109,7 +109,7 @@
 	</target>
 	
 	<target name="publish_starlight" depends="init,build_starlight" if="enabled.starlight" description="Create installer for Compose* StarLight">
-		<ant target="publish" dir="${build.starlight}/Setup" inheritRefs="true" />
+		<ant target="build" dir="${build.starlight}/Setup" inheritRefs="true" />
 	</target>
 	
 	<!-- uninstall tasks -->
@@ -291,6 +291,7 @@
 	<target name="integration_publish_starlight">
 		<property name="build.integration.core" value="c:\starlight\core" />
 		<property name="build.integration.starlight" value="c:\starlight\starlight" />
+		<ant target="build_installer" dir="${build.integration.starlight}" inheritRefs="true" />
 		<ant target="fxcop" dir="${build.integration.starlight}" inheritRefs="true" />
 		<ant target="findbugs" dir="${build.integration.starlight}" inheritRefs="true" />
 		<ant target="checkstyle" dir="${build.integration.starlight}" inheritRefs="true" />
