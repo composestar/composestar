@@ -53,7 +53,8 @@ namespace BasicTests
 			try 
 			{
 				// method introduced by a concern
-				fbq.quux2(); // should be quux3 but a bug in Fire prevents this
+				fbq.quux2(); // should be quux3 but a bug in Fire or Sign prevents this
+							 // because quux3 isn't added
 			}
 			catch (ErrorFilterException e)
 			{
