@@ -10,7 +10,8 @@ import java.util.*;
  * This code was adapted from code provided by Paul Hosler in an article
  * for Application Development Trends: http://www.adtmag.com/java/article.aspx?id=4337
  */
-final class ClassUtilities {
+final class ClassUtilities 
+{
   /**
    * Mapping from primitive wrapper Classes to their
    * corresponding primitive Classes.
@@ -92,34 +93,53 @@ final class ClassUtilities {
    * unknown class or primitive
    */
   static Class classForNameOrPrimitive(String name, ClassLoader loader)
-  throws ClassNotFoundException {
+  throws ClassNotFoundException 
+  {
     if (name == null || name.equals("") || name.equals("null")
         || name.equals("void"))
-      return Void.TYPE;
+    {
+    	return Void.TYPE;
+    }
  
     if (name.equals("boolean"))
+    {
       return Boolean.TYPE;
- 
+    }
+    
     if (name.equals("byte"))
-      return Byte.TYPE;
+    {
+    	return Byte.TYPE;
+    }
 
     if (name.equals("char"))
-      return Character.TYPE;
+    {
+    	return Character.TYPE;
+    }
 
     if (name.equals("double"))
-      return Double.TYPE;
+    {
+    	return Double.TYPE;
+    }
 
     if (name.equals("float"))
-      return Float.TYPE;
+    {
+    	return Float.TYPE;
+    }
 
     if (name.equals("int"))
-      return Integer.TYPE;
+    {
+    	return Integer.TYPE;
+    }
 
     if (name.equals("long"))
-      return Long.TYPE;
+    {
+    	return Long.TYPE;
+    }
 
     if (name.equals("short"))
-      return Short.TYPE;
+    {
+    	return Short.TYPE;
+    }
 
     return Class.forName(name, false, loader);
   }
@@ -129,7 +149,8 @@ final class ClassUtilities {
    * @return  true if the class is accessible, false otherwise.
    * Presently returns true if the class is declared public.
    */
-  static boolean classIsAccessible(Class aClass) {
+  static boolean classIsAccessible(Class aClass) 
+  {
     return Modifier.isPublic(aClass.getModifiers());
   }
 
@@ -147,24 +168,36 @@ final class ClassUtilities {
    * Object or array class in lhs, but not a primitive.
    * @return  true if compatible, false otherwise
    */
-  static boolean compatibleClasses(Class[] lhs, Class[] rhs) {
+  static boolean compatibleClasses(Class[] lhs, Class[] rhs) 
+  {
     if (lhs.length != rhs.length)
-      return false;
+    {
+    	return false;
+    }
 
-    for (int i = 0; i < lhs.length; ++i) {
-      if (rhs[i] == null || rhs[i].equals(Void.TYPE)) {
+    for (int i = 0; i < lhs.length; ++i) 
+    {
+      if (rhs[i] == null || rhs[i].equals(Void.TYPE)) 
+      {
         if (lhs[i].isPrimitive())
-          return false;
+        {
+        	return false;
+        }
         else
-          continue;
+        {
+        	continue;
+        }
       }
 
-      if (! lhs[i].isAssignableFrom(rhs[i])) {
+      if (! lhs[i].isAssignableFrom(rhs[i])) 
+      {
         Class lhsPrimEquiv = primitiveEquivalentOf(lhs[i]);
         Class rhsPrimEquiv = primitiveEquivalentOf(rhs[i]);
 
         if (! primitiveIsAssignableFrom(lhsPrimEquiv, rhsPrimEquiv))
-          return false;
+        {
+        	return false;
+        }
       }
     }
 
@@ -183,20 +216,27 @@ final class ClassUtilities {
    * searched, then their superclasses, etc. until a method is
    * found.  Returns null if there is no such method.
    */
-  static Method getAccessibleMethodFrom(Class aClass, String methodName, Class[] parameterTypes) {
+  static Method getAccessibleMethodFrom(Class aClass, String methodName, Class[] parameterTypes) 
+  {
     // Look for overridden method in the superclass.
     Class superclass = aClass.getSuperclass();
     Method overriddenMethod = null;
 
-    if (superclass != null && classIsAccessible(superclass)) {
-      try {
+    if (superclass != null && classIsAccessible(superclass)) 
+    {
+      try 
+      {
         overriddenMethod =
           superclass.getMethod(methodName, parameterTypes);
-      } catch (NoSuchMethodException _) {
+      } 
+      catch (NoSuchMethodException _) 
+      {
       }
 
       if (overriddenMethod != null)
-        return overriddenMethod;
+      {
+    	  return overriddenMethod;
+      }
     }
 
     // If here, then aClass represents Object, or an interface, or
@@ -205,39 +245,52 @@ final class ClassUtilities {
 
     Class[] interfaces = aClass.getInterfaces();
 
-      for (Class anInterface1 : interfaces) {
+      for (Class anInterface1 : interfaces) 
+      {
           overriddenMethod = null;
 
-          if (classIsAccessible(anInterface1)) {
-              try {
+          if (classIsAccessible(anInterface1)) 
+          {
+              try 
+              {
                   overriddenMethod =
                           anInterface1.getMethod(methodName, parameterTypes);
-              } catch (NoSuchMethodException _) {
+              } 
+              catch (NoSuchMethodException _) 
+              {
               }
 
               if (overriddenMethod != null)
-                  return overriddenMethod;
+              {
+            	  return overriddenMethod;
+              }
           }
       }
 
       overriddenMethod = null;
 
     // Try superclass's superclass and implemented interfaces.
-    if (superclass != null) {
+    if (superclass != null) 
+    {
       overriddenMethod =
         getAccessibleMethodFrom(superclass, methodName, parameterTypes);
 
       if (overriddenMethod != null)
-        return overriddenMethod;
+      {
+    	  return overriddenMethod;
+      }
     }
 
     // Try implemented interfaces' extended interfaces...
-      for (Class anInterface : interfaces) {
+      for (Class anInterface : interfaces) 
+      {
           overriddenMethod =
                   getAccessibleMethodFrom(anInterface, methodName, parameterTypes);
 
           if (overriddenMethod != null)
-              return overriddenMethod;
+          {
+        	  return overriddenMethod;
+          }
       }
 
       // Give up.
@@ -250,7 +303,8 @@ final class ClassUtilities {
    * primitive wrapper.  If aClass is primitive, returns aClass.
    * Otherwise, returns null.
    */
-  static Class primitiveEquivalentOf(Class aClass) {
+  static Class primitiveEquivalentOf(Class aClass) 
+  {
     return aClass.isPrimitive()
            ? aClass
            : (Class) objectToPrimitiveMap.get(aClass);
@@ -268,20 +322,29 @@ final class ClassUtilities {
    * does not represent a primitive (e.g. Byte.TYPE), returns
    * false.
    */
-  static boolean primitiveIsAssignableFrom(Class lhs, Class rhs) {
+  static boolean primitiveIsAssignableFrom(Class lhs, Class rhs) 
+  {
     if (lhs == null || rhs == null)
-      return false;
+    {
+    	return false;
+    }
 
     if (! (lhs.isPrimitive() && rhs.isPrimitive()))
-      return false;
+    {
+    	return false;
+    }
 
     if (lhs.equals(rhs))
-      return true;
+    {
+    	return true;
+    }
 
     Set wideningSet = (Set) primitiveWideningsMap.get(rhs);
 
     if (wideningSet == null)
-      return false;
+    {
+    	return false;
+    }
 
     return wideningSet.contains(lhs);
   }

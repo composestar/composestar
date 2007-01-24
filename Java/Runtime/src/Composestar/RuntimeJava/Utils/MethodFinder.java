@@ -65,8 +65,14 @@ public final class MethodFinder
 
 	public boolean equals(Object o)
 	{
-		if (this == o) return true;
-		else if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) 
+		{
+			return true;
+		}
+		else if (o == null || getClass() != o.getClass())
+		{
+			return false;
+		}
 		else
 		{
 			MethodFinder other = (MethodFinder) o;
@@ -93,7 +99,10 @@ public final class MethodFinder
 	 */
 	public Constructor findConstructor(Class[] parameterTypes) throws NoSuchMethodException
 	{
-		if (parameterTypes == null) parameterTypes = new Class[0];
+		if (parameterTypes == null) 
+		{
+			parameterTypes = new Class[0];
+		}
 
 		return (Constructor) findMemberIn(ctorList, parameterTypes);
 	}
@@ -106,19 +115,32 @@ public final class MethodFinder
 	{
 		List matchingMembers = new ArrayList();
 
-        for (Object aMemberList : memberList) {
+        for (Object aMemberList : memberList) 
+        {
             Member member = (Member) aMemberList;
             Class[] methodParamTypes = (Class[]) paramMap.get(member);
 
-            if (Arrays.equals(methodParamTypes, parameterTypes)) return member;
+            if (Arrays.equals(methodParamTypes, parameterTypes)) 
+            {
+            	return member;
+            }
 
-            if (ClassUtilities.compatibleClasses(methodParamTypes, parameterTypes)) matchingMembers.add(member);
+            if (ClassUtilities.compatibleClasses(methodParamTypes, parameterTypes)) 
+            {
+            	matchingMembers.add(member);
+            }
         }
 
-        if (matchingMembers.isEmpty()) throw new NoSuchMethodException("no member in " + clazz.getName()
-				+ " matching given args");
-
-		if (matchingMembers.size() == 1) return (Member) matchingMembers.get(0);
+        if (matchingMembers.isEmpty()) 
+        {
+        	throw new NoSuchMethodException("no member in " + clazz.getName()
+        		+ " matching given args");
+        }
+        
+		if (matchingMembers.size() == 1) 
+		{
+			return (Member) matchingMembers.get(0);
+		}
 
 		return findMostSpecificMemberIn(matchingMembers);
 	}
@@ -145,9 +167,15 @@ public final class MethodFinder
 	{
 		List methodList = (List) methodMap.get(methodName);
 
-		if (methodList == null) throw new NoSuchMethodException("no method named " + clazz.getName() + "." + methodName);
+		if (methodList == null) 
+		{
+			throw new NoSuchMethodException("no method named " + clazz.getName() + "." + methodName);
+		}
 
-		if (parameterTypes == null) parameterTypes = new Class[0];
+		if (parameterTypes == null) 
+		{
+			parameterTypes = new Class[0];
+		}
 
 		return (Method) findMemberIn(methodList, parameterTypes);
 	}
@@ -162,22 +190,28 @@ public final class MethodFinder
 	{
 		List mostSpecificMembers = new ArrayList();
 
-        for (Object aMemberList : memberList) {
+        for (Object aMemberList : memberList) 
+        {
             Member member = (Member) aMemberList;
 
-            if (mostSpecificMembers.isEmpty()) {
+            if (mostSpecificMembers.isEmpty()) 
+            {
                 // First guy in is the most specific so far.
                 mostSpecificMembers.add(member);
-            } else {
+            } 
+            else 
+            {
                 boolean moreSpecific = true;
                 boolean lessSpecific = false;
 
                 // Is member more specific than everyone in the most-specific
                 // set?
-                for (Object mostSpecificMember : mostSpecificMembers) {
+                for (Object mostSpecificMember : mostSpecificMembers) 
+                {
                     Member moreSpecificMember = (Member) mostSpecificMember;
 
-                    if (!memberIsMoreSpecific(member, moreSpecificMember)) {
+                    if (!memberIsMoreSpecific(member, moreSpecificMember)) 
+                    {
                         /*
                                * Can't be more specific than the whole set. Bail out,
                                * and mark whether member is less specific than the
@@ -194,11 +228,14 @@ public final class MethodFinder
                     }
                 }
 
-                if (moreSpecific) {
+                if (moreSpecific) 
+                {
                     // Member is the most specific now.
                     mostSpecificMembers.clear();
                     mostSpecificMembers.add(member);
-                } else if (!lessSpecific) {
+                } 
+                else if (!lessSpecific) 
+                {
                     // Add to ambiguity set if mutually unspecific.
                     mostSpecificMembers.add(member);
                 }
@@ -229,9 +266,14 @@ public final class MethodFinder
 			argTypes = new Class[args.length];
 
 			for (int i = 0; i < args.length; ++i)
+			{
 				argTypes[i] = (args[i] == null) ? Void.TYPE : args[i].getClass();
+			}
 		}
-		else argTypes = new Class[0];
+		else 
+		{
+			argTypes = new Class[0];
+		}
 
 		return argTypes;
 	}
@@ -285,9 +327,14 @@ public final class MethodFinder
 			types = new Class[classNames.length];
 
 			for (int i = 0; i < classNames.length; ++i)
+			{	
 				types[i] = ClassUtilities.classForNameOrPrimitive(classNames[i], loader);
+			}
 		}
-		else types = new Class[0];
+		else 
+		{
+			types = new Class[0];
+		}
 
 		return types;
 	}
@@ -304,7 +351,8 @@ public final class MethodFinder
 	{
 		Constructor[] ctors = clazz.getConstructors();
 
-        for (Constructor ctor : ctors) {
+        for (Constructor ctor : ctors) 
+        {
             ctorList.add(ctor);
             paramMap.put(ctor, ctor.getParameterTypes());
         }
@@ -318,13 +366,15 @@ public final class MethodFinder
 
 		Method[] methods = clazz.getMethods();
 
-        for (Method m : methods) {
+        for (Method m : methods) 
+        {
             String methodName = m.getName();
             Class[] paramTypes = m.getParameterTypes();
 
             List list = (List) methodMap.get(methodName);
 
-            if (list == null) {
+            if (list == null) 
+            {
                 list = new ArrayList();
                 methodMap.put(methodName, list);
             }
@@ -333,20 +383,23 @@ public final class MethodFinder
                m = ClassUtilities.getAccessibleMethodFrom(clazz, methodName,
                paramTypes );*/
 
-            if (m != null) {
+            if (m != null) 
+            {
                 list.add(m);
                 paramMap.put(m, paramTypes);
             }
         }
 
         methods = clazz.getDeclaredMethods();
-        for (Method m : methods) {
+        for (Method m : methods) 
+        {
             String methodName = m.getName();
             Class[] paramTypes = m.getParameterTypes();
 
             List list = (List) methodMap.get(methodName);
 
-            if (list == null) {
+            if (list == null) 
+            {
                 list = new ArrayList();
                 methodMap.put(methodName, list);
             }
@@ -355,7 +408,8 @@ public final class MethodFinder
                m = ClassUtilities.getAccessibleMethodFrom(clazz, methodName,
                paramTypes );*/
 
-            if (m != null) {
+            if (m != null) 
+            {
                 list.add(m);
                 paramMap.put(m, paramTypes);
             }

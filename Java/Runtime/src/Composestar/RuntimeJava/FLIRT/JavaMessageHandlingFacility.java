@@ -17,7 +17,7 @@ public class JavaMessageHandlingFacility extends MessageHandlingFacility
 	 * @param filename String The location of the xml file
 	 * @param debug int The debug level
 	 */
-	public synchronized static void handleJavaApplicationStart(String filename, int debug)
+	public static synchronized void handleJavaApplicationStart(String filename, int debug)
 	{
 		handleApplicationStart(filename, debug, new JavaPlatformProvider());
 	}

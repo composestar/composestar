@@ -31,7 +31,10 @@ public class JavaObjectInterface extends ObjectInterface
 
 	public Object getFieldValue(Object object, String fieldName)
 	{
-		if (object == null) return null;
+		if (object == null) 
+		{
+			return null;
+		}
 		Class type = object.getClass();
 		Object result = null;
 		Field field = null;
@@ -40,7 +43,10 @@ public class JavaObjectInterface extends ObjectInterface
 		{
 			field = type.getField(fieldName);
 			accessible = field.isAccessible();
-			if (!accessible) field.setAccessible(true);
+			if (!accessible) 
+			{
+				field.setAccessible(true);
+			}
 			Class fieldType = field.getType();
 
 			if (fieldType.equals(int.class))
@@ -86,7 +92,10 @@ public class JavaObjectInterface extends ObjectInterface
 		}
 		finally
 		{
-			if (field != null) field.setAccessible(accessible);
+			if (field != null) 
+			{
+				field.setAccessible(accessible);
+			}
 		}
 		return result;
 	}

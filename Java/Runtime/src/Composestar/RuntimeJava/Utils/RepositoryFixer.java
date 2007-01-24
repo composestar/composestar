@@ -40,8 +40,10 @@ public class RepositoryFixer
 				Object obj = it.next();
 				if (obj instanceof DeclaredRepositoryEntity)
 				{
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing clone "
+					if (Debug.SHOULD_DEBUG) 
+					{	Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing clone "
 							+ ((DeclaredRepositoryEntity) obj).repositoryKey + ".");
+					}
 					fixChildren(obj, ds);
 				}
 			}
@@ -58,24 +60,34 @@ public class RepositoryFixer
 		Field[] fields = o.getClass().getFields();
 		Object child;
 
-        for (Field field : fields) {
+        for (Field field : fields) 
+        {
             child = field.get(o);
-            if (child == null) {
-            } else if (child instanceof RepositoryEntity) {
+            if (child == null) 
+            {
+            } 
+            else if (child instanceof RepositoryEntity) 
+            {
                 Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing '" + field.getName() + "' of type '"
                         + child.getClass().getName() + "'.");
 
                 Object temp = fixEntity((RepositoryEntity) child, ds);
                 field.set(o, temp);
-            } else if (child instanceof Vector) {
+            } 
+            else if (child instanceof Vector) 
+            {
                 Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing '" + field.getName() + "' of type '"
                         + child.getClass().getName() + "'.");
                 field.set(o, fixVector((Vector) child, ds));
-            } else if (child instanceof DataMap) {
+            } 
+            else if (child instanceof DataMap) 
+            {
                 Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing '" + field.getName() + "' of type '"
                         + child.getClass().getName() + "'.");
                 // fields[i].set(o, fixMap((Map) child, ds) );
-            } else {
+            } 
+            else 
+            {
                 Debug.out(Debug.MODE_DEBUG, "FLIRT", "Field '" + field.getName() + "' has unknown type '"
                         + child.getClass().getName() + "'.");
             }
@@ -90,8 +102,11 @@ public class RepositoryFixer
 
 		if (reffedObject == null)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_ERROR, "FLIRT",
+			if (Debug.SHOULD_DEBUG) 
+			{	
+				Debug.out(Debug.MODE_ERROR, "FLIRT",
 					"Fatal Error: Unable to resolve object with key '" + repositoryKey + "'.");
+			}
 			System.exit(0);
 		}
 
@@ -109,7 +124,10 @@ public class RepositoryFixer
 			{
 				returnVector.addElement(fixEntity((DeclaredRepositoryEntity) o, ds));
 			}
-			else returnVector.addElement(o);
+			else 
+			{
+				returnVector.addElement(o);
+			}
 		}
 		return returnVector;
 	}
@@ -132,10 +150,16 @@ public class RepositoryFixer
 					referenced = ds.getObjectByID(fqn);
 					if (referenced == null)
 					{
-						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+						if (Debug.SHOULD_DEBUG)
+						{
+							Debug.out(Debug.MODE_INFORMATION, "FLIRT",
 								"Unable to resolve concern '" + fqn + "' with key '" + ref.repositoryKey + "'.");
+						}
 					}
-					else ((ConcernReference) ref).setRef((Concern) referenced);
+					else
+					{
+						((ConcernReference) ref).setRef((Concern) referenced);
+					}
 				}
 				else if (ref instanceof FilterModuleReference)
 				{
@@ -143,8 +167,11 @@ public class RepositoryFixer
 
 					if (referenced == null)
 					{
-						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+						if (Debug.SHOULD_DEBUG)
+						{	
+							Debug.out(Debug.MODE_INFORMATION, "FLIRT",
 								"Unable to resolve filtermodule '" + fqn + "' with key '" + ref.repositoryKey + "'.");
+						}
 					}
 				}
 				else if (ref instanceof DeclaredObjectReference)
@@ -155,8 +182,11 @@ public class RepositoryFixer
 					referenced = ds.getObjectByID(fqn);
 					if (referenced == null)
 					{
-						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Unable to resolve object '"
+						if (Debug.SHOULD_DEBUG) 
+						{	
+							Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Unable to resolve object '"
 								+ fqn + "'.");
+						}
 					}
 					else ((DeclaredObjectReference) ref).setRef((TypedDeclaration) referenced);
 				}
@@ -168,8 +198,11 @@ public class RepositoryFixer
 					referenced = ds.getObjectByID(fqn);
 					if (referenced == null)
 					{
-						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+						if (Debug.SHOULD_DEBUG) 
+						{	
+							Debug.out(Debug.MODE_INFORMATION, "FLIRT",
 								"Unable to resolve condition '" + fqn + "'.");
+						}
 					}
 					else ((ConditionReference) ref).setRef((Condition) referenced);
 				}
@@ -181,8 +214,11 @@ public class RepositoryFixer
 				}
 				else
 				{
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Unable to resolve object '"
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Unable to resolve object '"
 							+ fqn + "' from class '" + ref.getClass().getName() + "'.");
+					}
 				}
 			}
 		}
@@ -196,11 +232,17 @@ public class RepositoryFixer
 		{
 			current = (DeclaredRepositoryEntity) it.next();
 			// skipping PrimitiveConcerns
-			if (current instanceof PrimitiveConcern) continue;
+			if (current instanceof PrimitiveConcern) 
+			{
+				continue;
+			}
 
 			String fqn = current.repositoryKey;
 			// skipping entities with no dots in the fqn
-			if (fqn.lastIndexOf(".") == -1) continue;
+			if (fqn.lastIndexOf(".") == -1) 
+			{
+				continue;
+			}
 
 			String pfqn = fqn.substring(0, fqn.lastIndexOf("."));
 			if (fqn.compareTo(pfqn) != 0)
@@ -209,8 +251,11 @@ public class RepositoryFixer
 				if (parent != null)
 				{
 					current.setParent(parent);
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", "Parent of '" + fqn + "' set to '"
+					if (Debug.SHOULD_DEBUG) 
+					{
+						Debug.out(Debug.MODE_DEBUG, "FLIRT", "Parent of '" + fqn + "' set to '"
 							+ pfqn + "'.");
+					}
 				}
 			}
 		}
