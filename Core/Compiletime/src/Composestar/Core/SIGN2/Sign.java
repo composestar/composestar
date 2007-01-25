@@ -118,8 +118,6 @@ public class Sign implements CTCommonModule
 
 		printConcernMethods(resources);
 
-		resources.add("signaturesmodified", true);
-
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "signature generation and checking done");
 	}
 
@@ -153,7 +151,7 @@ public class Sign implements CTCommonModule
 			else
 			{
 				Signature signature = getSignature(concern);
-				LinkedList methods = getMethodList(concern);
+				List methods = getMethodList(concern);
 
 				// Add all (usr src) methods to the signature with status
 				// unknown.
@@ -495,7 +493,7 @@ public class Sign implements CTCommonModule
 		Type targetType = (Type) targetConcern.getPlatformRepresentation();
 
 		// get the inner methods:
-		LinkedList methods = getMethodList(concern);
+		List methods = getMethodList(concern);
 
 		// check for each method whether it is not distinguishable and
 		// whether the corresponding dispatchselector is in the dispatchtarget:
@@ -713,7 +711,7 @@ public class Sign implements CTCommonModule
 
 			// then inner undistinguishable:
 			HashSet checkedSelectors = new HashSet();
-			LinkedList methods = getMethodList(concern);
+			List methods = getMethodList(concern);
 			for (Object method1 : methods)
 			{
 				method = (MethodInfo) method1;
@@ -1195,15 +1193,9 @@ public class Sign implements CTCommonModule
 			{
 				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method '" + methodInfoString(method)
 						+ "' in concern '" + concern.name + "' might lead to a meta-call to an"
-						+ " unresolved meta-method '" + dispSelector.getName() // michielh:
-						// this
-						// used
-						// to
-						// be
-						// "m.name()"
-						// but
-						// m is
-						// null
+						+ " unresolved meta-method '" + dispSelector.getName() 
+						// michielh:
+						// this used to be "m.name()" but m is null
 						+ "' in inner!", state.getFlowNode().getRepositoryLink());
 			}
 		}
@@ -1243,7 +1235,7 @@ public class Sign implements CTCommonModule
 		return null;
 	}
 
-	private LinkedList getMethodList(Concern c)
+	private List getMethodList(Concern c)
 	{
 		Type dt = (Type) c.getPlatformRepresentation();
 		if (dt == null)
@@ -1290,7 +1282,6 @@ public class Sign implements CTCommonModule
 
 	public void phase3()
 	{
-
 		DataStore datastore = DataStore.instance();
 		Iterator conIter = datastore.getAllInstancesOf(Concern.class);
 
@@ -1298,7 +1289,7 @@ public class Sign implements CTCommonModule
 		{
 			Concern concern = (Concern) conIter.next();
 
-			LinkedList dnmi = getMethodList(concern);
+			List dnmi = getMethodList(concern);
 			Signature signature = concern.getSignature();
 
 			for (Object aDnmi : dnmi)
@@ -1317,7 +1308,6 @@ public class Sign implements CTCommonModule
 			}
 
 			List normal = signature.getMethodWrappers(MethodWrapper.NORMAL);
-			Iterator normalItr = normal.iterator();
 			for (Object aNormal : normal)
 			{
 				MethodWrapper mw = (MethodWrapper) aNormal;
@@ -1344,9 +1334,8 @@ public class Sign implements CTCommonModule
 			Signature st = concern.getSignature();
 			if (st != null && concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
 			{
-				Debug
-						.out(Debug.MODE_INFORMATION, MODULE_NAME, "\tSignature for concern: "
-								+ concern.getQualifiedName());
+				Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, 
+						"\tSignature for concern: " + concern.getQualifiedName());
 
 				// Show them your goodies.
 				Iterator mwIt = st.getMethodWrapperIterator();
@@ -1379,7 +1368,6 @@ public class Sign implements CTCommonModule
 						String returntype = mi.getReturnTypeString();
 
 						List paramNames = new ArrayList();
-						Iterator piIt = mi.getParameters().iterator();
 						for (Object o : mi.getParameters())
 						{
 							ParameterInfo pi = (ParameterInfo) o;
@@ -1398,7 +1386,6 @@ public class Sign implements CTCommonModule
 
 	private boolean containsMethod(List methods, MethodInfo method)
 	{
-		Iterator iterator = methods.iterator();
 		for (Object method1 : methods)
 		{
 			MethodInfo containedMethod = (MethodInfo) method1;
