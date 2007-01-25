@@ -10,11 +10,12 @@
 
 package Composestar.Core.Master;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.Annotations.In;
+import Composestar.Core.Annotations.Out;
 
 /**
  * This class holds the shared resources between the modules e.g the repository
@@ -27,15 +28,9 @@ public class CommonResources
 	private static CommonResources instance;
 
 	/**
-	 * Information about the Custom Filters that are used in this project.
-	 * FIXME: this is never written, remove?
-	 */
-	public transient Properties CustomFilters;
-
-	/**
 	 * Map holding all the resources
 	 */
-	private transient Map<Object, Object> resources;
+	private transient Map<String,Object> resources;
 
 	public static CommonResources instance()
 	{
@@ -51,8 +46,7 @@ public class CommonResources
 	 */
 	protected CommonResources()
 	{
-		CustomFilters = new Properties();
-		resources = new HashMap<Object, Object>();
+		resources = new HashMap<String,Object>();
 	}
 
 	/**
@@ -61,35 +55,16 @@ public class CommonResources
 	 * @param key An identifier for this resource.
 	 * @param object The object to store for this key.
 	 */
-	public void add(Object key, Object object)
+	public void add(String key, Object object)
 	{
 		resources.put(key, object);
 	}
 
-	/**
-	 * Add a resource for a given repository entity
-	 * 
-	 * @param re
-	 * @param key
-	 * @param object
-	 */
-	public void add(RepositoryEntity re, Object key, Object object)
-	{
-		@SuppressWarnings("unchecked")
-		Map<Object, Object> reResources = (Map<Object, Object>) resources.get(re);
-		if (reResources == null)
-		{
-			reResources = new HashMap<Object, Object>();
-			resources.put(re, reResources);
-		}
-		reResources.put(key, object);
-	}
-
-	public void addBoolean(Object key, boolean value)
+	public void addBoolean(String key, boolean value)
 	{
 		resources.put(key, value);
 	}
-
+	
 	/**
 	 * Fetch a resource with a key.
 	 * 
@@ -100,23 +75,6 @@ public class CommonResources
 	public Object get(Object key)
 	{
 		return resources.get(key);
-	}
-
-	/**
-	 * Retrieve a repository entity resource
-	 * 
-	 * @param re
-	 * @param key
-	 * @return
-	 */
-	public Object get(RepositoryEntity re, Object key)
-	{
-		Map reResources = (Map) resources.get(re);
-		if (reResources == null)
-		{
-			return null;
-		}
-		return reResources.get(key);
 	}
 
 	/**
@@ -131,14 +89,123 @@ public class CommonResources
 
 		if (resource == null)
 		{
-			throw new RuntimeException("No resource for key '" + key + "'");
+			throw new ResourceException(
+					"No resource for key '" + key + "'");
 		}
 
 		if (!(resource instanceof Boolean))
 		{
-			throw new RuntimeException("Resource with key '" + key + "' is not a Boolean");
+			throw new ResourceException(
+					"Resource with key '" + key + "' is not a Boolean");
 		}
 
 		return (Boolean) resource;
+	}
+
+	public <T> T create(String key, Class<T> c)
+	{
+		T resource = create(c);
+		add(key, resource);
+		return resource;
+	}
+
+	public <T> T create(Class<T> c)
+	{
+		try
+		{
+			T resource = c.newInstance();
+			inject(resource);
+			return resource;
+		}
+		catch (InstantiationException e)
+		{
+			throw new ResourceException(
+					"Could not create resource of class '" + c.getName() + "'" + 
+					e.getMessage());
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new ResourceException(
+					"Could not create resource of class '" + c.getName() + "'" + 
+					e.getMessage());
+		}
+	}
+	
+	public void inject(Object object)
+	{
+		Class c = object.getClass();
+		for (Field field : c.getFields())
+		{
+			In in = field.getAnnotation(In.class);
+			Out out = field.getAnnotation(Out.class);
+			
+			if (in != null)
+			{
+				if (out != null)
+				{
+					throw new ResourceException(
+							"Field '" + field.getName() + "' " + 
+							"cannot have both an In and an Out annotation");
+				}
+				
+				Object value = get(in.value());
+				
+				if (value == null && in.required())
+				{
+					throw new ResourceException(
+							"No value for required resource '" + in.value() + "'");
+				}
+				
+				if (!field.getClass().isAssignableFrom(value.getClass()))
+				{
+					throw new ResourceException(
+							"Resource '" + in.value() + "' " + 
+							"is not assignable to field '" + field.getName() + "'");
+				}
+				
+				try
+				{
+					field.setAccessible(true);
+					field.set(object, value);
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new ResourceException(
+							"Could not access field '" + field.getName() + "'");
+				}
+			}
+		}
+	}
+
+	public void extract(Object object)
+	{
+		Class c = object.getClass();
+		for (Field field : c.getFields())
+		{
+			In in = field.getAnnotation(In.class);
+			Out out = field.getAnnotation(Out.class);
+			
+			if (out != null)
+			{
+				if (in != null)
+				{
+					throw new ResourceException(
+							"Field '" + field.getName() + "' " + 
+							"cannot have both an In and an Out annotation");
+				}
+				
+				try
+				{
+					field.setAccessible(true);
+					Object value = field.get(object);
+					add(out.value(), value);
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new ResourceException(
+							"Could not access field '" + field.getName() + "'");
+				}
+			}
+		}
 	}
 }

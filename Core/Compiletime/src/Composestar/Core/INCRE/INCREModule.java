@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.ResourceException;
 import Composestar.Utils.Debug;
 
 public class INCREModule implements Serializable
@@ -228,12 +229,16 @@ public class INCREModule implements Serializable
 		{
 			CTCommonModule module = (CTCommonModule) moduleClass.newInstance();
 			INCRE.instance().addModuleByName(this.moduleName, module);
+			
+			resources.inject(module);
 
 			INCRETimer timer = INCRE.instance().getReporter().openProcess(
 					moduleName, moduleName, INCRETimer.TYPE_ALL);
 			
 			module.run(resources);
 			timer.stop();
+			
+			resources.extract(module);
 		}
 		catch (InstantiationException e)
 		{
@@ -242,6 +247,12 @@ public class INCREModule implements Serializable
 					"INCRE running " + moduleName);
 		}
 		catch (IllegalAccessException e)
+		{
+			throw new ModuleException(
+					"Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
+					"INCRE running " + moduleName);
+		}
+		catch (ResourceException e)
 		{
 			throw new ModuleException(
 					"Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
