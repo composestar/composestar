@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -175,6 +176,20 @@ public final class INCRE
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "INCRE is " + (enabled ? "enabled" : "disabled"));
 	}
 
+	public void runModules(CommonResources resources) throws ModuleException
+	{
+		Collection<INCREModule> modules 
+			= configmanager.getModules().values();
+		
+		for (INCREModule m : modules)
+		{
+			m.execute(resources);
+			
+			long total = getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL);
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, m.getName() + " executed in " + total + " ms");
+		}
+	}
+	
 	private String getConfigFile() throws ModuleException
 	{
 		PathSettings ps = config.getPathSettings();
@@ -843,21 +858,21 @@ public final class INCRE
 	 */
 	public boolean isProcessedByModule(Object input, String moduleName) throws ModuleException
 	{
+		if (!isModuleInc(moduleName))
+		{
+			return false;
+		}
+
 		INCREComparator comparator = new INCREComparator(moduleName);
 		currentRepository = DataStore.instance();
 		searchingHistory = false;
 		Object historyobject = null;
 		Object depofinputobject;
 		Object depofhistoryobject;
-		INCRETimer overhead = getReporter().openProcess(moduleName, "INCRE::isProcessedBy(" + input + ')',
-				INCRETimer.TYPE_OVERHEAD);
+		INCRETimer overhead = getReporter().openProcess(
+				moduleName, "INCRE::isProcessedBy(" + input + ')', INCRETimer.TYPE_OVERHEAD);
 
-		if (!isModuleInc(moduleName))
-		{
-			return false;
-		}
-
-		Composestar.Core.INCRE.INCREModule mod = configmanager.getModuleByID(moduleName);
+		INCREModule mod = configmanager.getModuleByID(moduleName);
 		if (mod == null)
 		{
 			throw new ModuleException("INCRE cannot find module " + moduleName + '!', MODULE_NAME);
@@ -868,8 +883,9 @@ public final class INCRE
 		{
 			if (mod.getInput() == null || !Class.forName(mod.getInput()).isInstance(input))
 			{
-				throw new ModuleException("Wrong input for module " + mod.getName() + ". " + input.getClass()
-						+ " is not an instance of " + mod.getInput(), MODULE_NAME);
+				throw new ModuleException(
+						"Wrong input for module " + mod.getName() + ". " + input.getClass() +
+						" is not an instance of " + mod.getInput(), MODULE_NAME);
 			}
 		}
 		catch (ClassNotFoundException e)

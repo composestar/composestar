@@ -207,26 +207,22 @@ public abstract class Master
 						}
 						catch (ConfigurationException ce)
 						{
-							Debug.out(Debug.MODE_ERROR, entry.getKey(), "Configuration override error: "
-									+ ce.getMessage());
+							Debug.out(Debug.MODE_ERROR, entry.getKey(), 
+									"Configuration override error: " + ce.getMessage());
 						}
 					}
 				}
 				else
 				{
-					Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Configuration override error: no such module: "
-							+ entry.getKey());
+					Debug.out(Debug.MODE_ERROR, MODULE_NAME, 
+							"Configuration override error: no such module: " + entry.getKey());
 				}
 			}
 
 			// execute enabled modules one by one
-			Iterator modulesIter = incre.getModules();
-			while (modulesIter.hasNext())
-			{
-				INCREModule m = (INCREModule) modulesIter.next();
-				m.execute(resources);
-			}
+			incre.runModules(resources);
 
+			// close the incre reporter
 			incre.getReporter().close();
 
 			// display total time elapsed
@@ -244,7 +240,6 @@ public abstract class Master
 				Debug.outWarnings();
 				return EERRORS;
 			}
-
 		}
 		catch (ModuleException e)
 		{
