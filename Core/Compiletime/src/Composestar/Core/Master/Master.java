@@ -24,7 +24,7 @@ import org.xml.sax.XMLReader;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.ConfigurationException;
 import Composestar.Core.Master.Config.ModuleInfo;
@@ -187,7 +187,7 @@ public abstract class Master
 				}
 			}
 
-			incre.run(resources);
+			incre.init();
 
 			// load override settings
 			for (Entry<String, Map<String, String>> entry : settingsOverride.entrySet())
@@ -223,7 +223,7 @@ public abstract class Master
 			Iterator modulesIter = incre.getModules();
 			while (modulesIter.hasNext())
 			{
-				Module m = (Module) modulesIter.next();
+				INCREModule m = (INCREModule) modulesIter.next();
 				m.execute(resources);
 			}
 

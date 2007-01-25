@@ -10,6 +10,8 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
@@ -20,17 +22,19 @@ public class INCRESerializer implements CTCommonModule
 
 	public INCRESerializer()
 	{
-
 	}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		if (Configuration.instance().getModuleProperty(INCRE.MODULE_NAME, "enabled", false))
+		ModuleInfo mi = ModuleInfoManager.get("INCRE");
+		boolean incremental = mi.getBooleanSetting("enabled");
+		
+		if (incremental)
 		{
 			// only serialize when incremental compilation is enabled
 			INCRE incre = INCRE.instance();
-			INCRETimer increhistory = incre.getReporter().openProcess("INCRESerializer", "Creation of INCRE history",
-					INCRETimer.TYPE_OVERHEAD);
+			INCRETimer increhistory = incre.getReporter().openProcess(
+					"INCRESerializer", "Creation of INCRE history", INCRETimer.TYPE_OVERHEAD);
 			storeHistory();
 			increhistory.stop();
 		}
@@ -42,16 +46,12 @@ public class INCRESerializer implements CTCommonModule
 	public void storeHistory() throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
-		Debug.out(Debug.MODE_DEBUG, INCRE.MODULE_NAME, "Comparator made " + incre.comparator.getCompare()
-				+ " comparisons");
-
 		DataStore ds = DataStore.instance();
-		// Configuration config = Configuration.instance();
 
 		ObjectOutputStream oos = null;
 		try
 		{
-			FileOutputStream fos = new FileOutputStream(INCRE.instance().historyfile);
+			FileOutputStream fos = new FileOutputStream(incre.historyFile);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			oos = new ObjectOutputStream(bos);
 

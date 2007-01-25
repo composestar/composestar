@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.INCRE.Config.ModulesHandler;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;
@@ -74,7 +74,7 @@ public class ModuleInfo implements Serializable
 	/**
 	 * The incre module settings
 	 */
-	protected Module increModule;
+	protected INCREModule increModule;
 
 	/**
 	 * Load ModuleInfo through SAX. This is used by the ModuleInfoManager
@@ -110,7 +110,7 @@ public class ModuleInfo implements Serializable
 		return description;
 	}
 
-	public Module getIncreModule()
+	public INCREModule getIncreModule()
 	{
 		return increModule;
 	}

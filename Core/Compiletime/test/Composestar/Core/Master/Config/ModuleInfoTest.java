@@ -11,7 +11,7 @@
 package Composestar.Core.Master.Config;
 
 import junit.framework.TestCase;
-import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCREModule;
 
 /**
  * @author Michiel Hendriks
@@ -94,7 +94,7 @@ public class ModuleInfoTest extends TestCase
 
 	public void testIncre()
 	{
-		Module m = mi.getIncreModule();
+		INCREModule m = mi.getIncreModule();
 		assertNotNull(m);
 		assertEquals(m.getName(), "test");
 		assertEquals(m.getModuleClass(), mi.getModuleClass());
@@ -117,7 +117,7 @@ public class ModuleInfoTest extends TestCase
 				fail("emi.settings.anInteger should not be equal to mi.settings.anInteger");
 			}
 
-			Module m = emi.getIncreModule();
+			INCREModule m = emi.getIncreModule();
 			assertNotNull(m);
 			assertEquals(m.getName(), "test");
 			assertEquals(m.isIncremental(), false);

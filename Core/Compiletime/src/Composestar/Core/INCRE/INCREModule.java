@@ -13,11 +13,11 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Utils.Debug;
 
-public class Module implements Serializable
+public class INCREModule implements Serializable
 {
 	private static final long serialVersionUID = -3962139604512378231L;
 
-	private String name = null;
+	private String moduleName;
 
 	private Class moduleClass;
 
@@ -39,17 +39,14 @@ public class Module implements Serializable
 	 */
 	private Map comparableObjects = new HashMap();
 
-	public Module()
-	{}
-
-	public Module(String inName)
+	public INCREModule(String inName)
 	{
-		name = inName;
+		moduleName = inName;
 	}
 
 	public void setName(String inName)
 	{
-		name = inName;
+		moduleName = inName;
 	}
 
 	public void setFullType(String ftype) throws ClassNotFoundException
@@ -122,11 +119,9 @@ public class Module implements Serializable
 
 	public void addComparableObjects(HashMap map)
 	{
-		Iterator entries = map.entrySet().iterator();
 		for (Object o : map.entrySet())
 		{
 			Entry entry = (Entry) o;
-			Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
 			for (Object o1 : ((HashMap) entry.getValue()).values())
 			{
 				addComparableObject((String) entry.getKey(), o1);
@@ -136,11 +131,9 @@ public class Module implements Serializable
 
 	public void removeComparableObjects(HashMap map)
 	{
-		Iterator entries = map.entrySet().iterator();
 		for (Object o : map.entrySet())
 		{
 			Entry entry = (Entry) o;
-			Iterator objItr = ((HashMap) entry.getValue()).values().iterator();
 			for (Object o1 : ((HashMap) entry.getValue()).values())
 			{
 				removeComparableObject((String) entry.getKey(), o1);
@@ -170,7 +163,7 @@ public class Module implements Serializable
 
 	public String getName()
 	{
-		return name;
+		return moduleName;
 	}
 
 	public String getFullType()
@@ -212,56 +205,47 @@ public class Module implements Serializable
 	 */
 	public void execute(CommonResources resources) throws ModuleException
 	{
-		if (enabled)
+		if (!enabled) return;
+
+		if (summary.length() != 0)
 		{
-			// module is enabled for the phase so continue
+			Debug.out(Debug.MODE_CRUCIAL, this.moduleName, summary);
+		}
 
-			if (summary.length() != 0)
-			{
-				Debug.out(Debug.MODE_CRUCIAL, this.name, summary);
-			}
+		if (moduleClass == null)
+		{
+			throw new ModuleException(
+					"Module class has not been assigned", moduleName);
+		}
+		
+		if (!CTCommonModule.class.isAssignableFrom(moduleClass))
+		{
+			throw new ModuleException(
+					"Module " + moduleClass + " does not implement interface CTCommonModule", moduleName);
+		}
 
-			try
-			{
-				if (moduleClass == null)
-				{
-					throw new ModuleException("Module class has not been assigned", name);
-				}
-				if (moduleClass.isAssignableFrom(CTCommonModule.class))
-				{
-					throw new ModuleException("Module " + moduleClass + " does not implement interface CTCommonModule",
-							name);
-				}
-				CTCommonModule module = (CTCommonModule) moduleClass.newInstance();
+		try
+		{
+			CTCommonModule module = (CTCommonModule) moduleClass.newInstance();
+			INCRE.instance().addModuleByName(this.moduleName, module);
 
-				INCRETimer timer = INCRE.instance().getReporter().openProcess(name, name, INCRETimer.TYPE_ALL);
-				module.run(resources);
-				INCRE.instance().addModuleByName(this.name, module);
-				timer.stop();
-			}
-			/*
-			 * // these should not be catched; can cause more problems if you
-			 * do. catch (StackOverflowError e) { throw new ModuleException("I
-			 * need more stack!", "INCRE running " + this.name); } catch
-			 * (OutOfMemoryError e) { throw new ModuleException("I am using too
-			 * much memory!", "INCRE running " + this.name); }
-			 */
-			catch (InstantiationException e)
-			{
-				throw new ModuleException("Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
-						"INCRE running " + name);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new ModuleException("Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
-						"INCRE running " + name);
-			}
-			/*
-			 * // the only other exception thrown is ModuleException, // which
-			 * we can just let fall through catch (Exception e) {
-			 * Debug.out(Debug.MODE_DEBUG, "Master", Debug.stackTrace(e)); throw
-			 * new ModuleException(e.toString(),"INCRE running " + name); }
-			 */
+			INCRETimer timer = INCRE.instance().getReporter().openProcess(
+					moduleName, moduleName, INCRETimer.TYPE_ALL);
+			
+			module.run(resources);
+			timer.stop();
+		}
+		catch (InstantiationException e)
+		{
+			throw new ModuleException(
+					"Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
+					"INCRE running " + moduleName);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new ModuleException(
+					"Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
+					"INCRE running " + moduleName);
 		}
 	}
 }

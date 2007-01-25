@@ -6,18 +6,18 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.FileDependency;
-import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.INCRE.ObjectDependency;
 
 public class DependencyHandler extends DefaultHandler
 {
 	private XMLReader reader;
 
-	private Module module;
+	private INCREModule module;
 
 	private ModulesHandler returnhandler;
 
-	public DependencyHandler(XMLReader inReader, Module inModule, ModulesHandler inReturnhandler)
+	public DependencyHandler(XMLReader inReader, INCREModule inModule, ModulesHandler inReturnhandler)
 	{
 		reader = inReader;
 		module = inModule;

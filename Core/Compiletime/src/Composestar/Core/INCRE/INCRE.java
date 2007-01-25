@@ -48,13 +48,13 @@ import Composestar.Utils.StringUtils;
  * run. This decision is based on the history which is being loaded and stored
  * by INCRE. This class is the heart of the incremental compilation process.
  */
-public final class INCRE implements CTCommonModule
+public final class INCRE
 {
-	private static INCRE increInstance;
+	public static final String MODULE_NAME = "INCRE";
 
 	private static final String HISTORY_FILENAME = "history.dat";
 
-	public static final String MODULE_NAME = "INCRE";
+	private static INCRE instance;
 
 	public boolean enabled;
 
@@ -64,13 +64,11 @@ public final class INCRE implements CTCommonModule
 
 	public DataStore history;
 
-	public String historyfile = "";
+	public File historyFile;
 
 	private Date lastCompTime;
 
 	public boolean searchingHistory;
-
-	public MyComparator comparator;
 
 	private ConfigManager configmanager;
 
@@ -122,18 +120,18 @@ public final class INCRE implements CTCommonModule
 
 	public static INCRE instance()
 	{
-		if (increInstance == null)
+		if (instance == null)
 		{
-			increInstance = new INCRE();
+			instance = new INCRE();
 		}
 
-		return increInstance;
+		return instance;
 	}
 
-	public void run(CommonResources resources) throws ModuleException
+	public void init() throws ModuleException
 	{
 		PathSettings ps = config.getPathSettings();
-		historyfile = ps.getPath("Base") + HISTORY_FILENAME;
+		historyFile = new File(ps.getPath("Base"), HISTORY_FILENAME);
 
 		// check whether incremental compilation is enabled
 		enabled = moduleInfo.getBooleanSetting("enabled");
@@ -159,11 +157,9 @@ public final class INCRE implements CTCommonModule
 		{
 			// load data of previous compilation run (history)
 			// time the loading process
-			INCRETimer loadhistory = this.getReporter().openProcess(MODULE_NAME, "Loading history",
-					INCRETimer.TYPE_OVERHEAD);
-			enabled = loadHistory(); // shut down INCRE
-			// in case loading
-			// fails
+			INCRETimer loadhistory = this.getReporter().openProcess(
+					MODULE_NAME, "Loading history", INCRETimer.TYPE_OVERHEAD);
+			enabled = loadHistory(); // disable incremental compilation in case loading fails
 			loadhistory.stop();
 		}
 
@@ -176,38 +172,41 @@ public final class INCRE implements CTCommonModule
 		increinit.stop(); // stop timing INCRE's initialization
 
 		// INCRE enabled or not?
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "INCRE is " + (this.enabled ? "enabled" : "disabled"));
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "INCRE is " + (enabled ? "enabled" : "disabled"));
 	}
 
 	private String getConfigFile() throws ModuleException
 	{
 		PathSettings ps = config.getPathSettings();
-
-		String projectBase = ps.getPath("Base");
-		String cps = ps.getPath("Composestar");
 		String filename = moduleInfo.getStringSetting("config");
 
+		// try in project directory
+		String projectBase = ps.getPath("Base");
 		File file = new File(projectBase, filename);
 		if (file.exists())
 		{
 			return file.getAbsolutePath();
 		}
 
+		// try in Compose* installation directory
+		String cps = ps.getPath("Composestar");
 		file = new File(cps, filename);
 		if (file.exists())
 		{
 			return file.getAbsolutePath();
 		}
-
-		file = new File(filename); // absolute path
+		
+		// try as absolute path
+		file = new File(filename);
 		if (file.exists())
 		{
 			return file.getAbsolutePath();
 		}
 
-		throw new ModuleException("No configuration file found with name " + filename, MODULE_NAME);
+		throw new ModuleException(
+				"No configuration file found with name '" + filename + "'", MODULE_NAME);
 	}
-
+	
 	private void loadConfiguration(String configfile) throws ModuleException
 	{
 		INCRETimer increparse = this.getReporter().openProcess(MODULE_NAME, "Parsing configuration file",
@@ -231,7 +230,6 @@ public final class INCRE implements CTCommonModule
 	{
 		List result = new ArrayList();
 
-		Iterator sourceIt = config.getProjects().getSources().iterator();
 		for (Object o : config.getProjects().getSources())
 		{
 			Source s = (Source) o;
@@ -611,7 +609,6 @@ public final class INCRE implements CTCommonModule
 			// searchStr = prop.getProperty("ConcernSources");// look in concern
 			// sources
 			List conList = configurations.historyconfig.getProjects().getConcernSources();
-			Iterator cps = conList.iterator();
 			for (Object aConList : conList)
 			{
 				ConcernSource cs = (ConcernSource) aConList;
@@ -637,7 +634,6 @@ public final class INCRE implements CTCommonModule
 			// TODO: possible naming conflict when JAVA platform is there
 			// searchStr = prop.getProperty("Dependencies");
 			List depList = configurations.historyconfig.getProjects().getDependencies();
-			Iterator dependencies = depList.iterator();
 			for (Object aDepList : depList)
 			{
 				Dependency d = (Dependency) aDepList;
@@ -691,7 +687,7 @@ public final class INCRE implements CTCommonModule
 			return false;
 		}
 
-		Module m = configmanager.getModuleByID(name);
+		INCREModule m = configmanager.getModuleByID(name);
 		return (m != null) && m.isIncremental();
 	}
 
@@ -778,7 +774,6 @@ public final class INCRE implements CTCommonModule
 	 */
 	public boolean declaredInSource(Concern c, String source)
 	{
-
 		/* Sourcefile format: C:/Program Files/ComposeStar/... */
 		TypeLocations locations = TypeLocations.instance();
 		PlatformRepresentation repr = c.getPlatformRepresentation();
@@ -821,8 +816,6 @@ public final class INCRE implements CTCommonModule
 	 */
 	public boolean declaredInSources(Concern c, ArrayList sources)
 	{
-
-		Iterator sourceItr = sources.iterator();
 		for (Object source : sources)
 		{
 			String src = (String) source;
@@ -845,29 +838,29 @@ public final class INCRE implements CTCommonModule
 	 * 7. stop if modification found
 	 * 
 	 * @roseuid 41F4E50900CB
-	 * @param modulename
+	 * @param moduleName
 	 * @param input
 	 */
-	public boolean isProcessedByModule(Object input, String modulename) throws ModuleException
+	public boolean isProcessedByModule(Object input, String moduleName) throws ModuleException
 	{
-		comparator = new MyComparator(modulename);
+		INCREComparator comparator = new INCREComparator(moduleName);
 		currentRepository = DataStore.instance();
 		searchingHistory = false;
 		Object historyobject = null;
 		Object depofinputobject;
 		Object depofhistoryobject;
-		INCRETimer overhead = getReporter().openProcess(modulename, "INCRE::isProcessedBy(" + input + ')',
+		INCRETimer overhead = getReporter().openProcess(moduleName, "INCRE::isProcessedBy(" + input + ')',
 				INCRETimer.TYPE_OVERHEAD);
 
-		if (!isModuleInc(modulename))
+		if (!isModuleInc(moduleName))
 		{
 			return false;
 		}
 
-		Composestar.Core.INCRE.Module mod = configmanager.getModuleByID(modulename);
+		Composestar.Core.INCRE.INCREModule mod = configmanager.getModuleByID(moduleName);
 		if (mod == null)
 		{
-			throw new ModuleException("INCRE cannot find module " + modulename + '!', MODULE_NAME);
+			throw new ModuleException("INCRE cannot find module " + moduleName + '!', MODULE_NAME);
 		}
 
 		// *** Little verification of input object ***
@@ -898,7 +891,7 @@ public final class INCRE implements CTCommonModule
 			{
 				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Could not capture dependency " + dep.getName() + " for "
 						+ input);
-				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename + ",dep="
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName + ",dep="
 						+ dep.getName() + ",input=" + input + ']');
 				return false;
 			}
@@ -919,7 +912,7 @@ public final class INCRE implements CTCommonModule
 					{
 						// configuration has been removed since last compilation
 						// run
-						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
+						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
 								+ ",dep=" + dep.getName() + ",input=" + input + ']');
 						return false;
 					}
@@ -927,7 +920,6 @@ public final class INCRE implements CTCommonModule
 				else
 				{
 					// iterate over all files
-					Iterator fileItr = files.iterator();
 					for (Object file : files)
 					{
 						String currentFile = (String) file;
@@ -937,7 +929,7 @@ public final class INCRE implements CTCommonModule
 							// optimalisation: certain files do not need this
 							// check
 							// can be configured in .xml file by isAdded=false
-							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
+							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
 									+ ",dep=" + dep.getName() + ",input=" + input + ']');
 							return false; // file added to project thus
 							// modified!
@@ -945,7 +937,7 @@ public final class INCRE implements CTCommonModule
 						if (isFileModified(currentFile))
 						{
 							overhead.stop();
-							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
+							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
 									+ ",dep=" + dep.getName() + ",input=" + input + ']');
 							return false;
 						}
@@ -962,7 +954,7 @@ public final class INCRE implements CTCommonModule
 					if (modified)
 					{
 						overhead.stop();
-						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
+						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
 								+ ",dep=" + dep.getName() + ",input=" + input + ']');
 						return false;
 					}
@@ -995,7 +987,7 @@ public final class INCRE implements CTCommonModule
 						if (modified)
 						{
 							overhead.stop();
-							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
+							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
 									+ ",dep=" + dep.getName() + ",input=" + input + ']');
 							return false;
 						}
@@ -1005,7 +997,7 @@ public final class INCRE implements CTCommonModule
 						// history of input object cannot be found
 						// so input has not been processed
 						overhead.stop();
-						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
+						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + moduleName
 								+ ",dep=" + dep.getName() + ",input=" + input + ']');
 						return false;
 					}
@@ -1022,11 +1014,8 @@ public final class INCRE implements CTCommonModule
 
 	public void deleteHistory()
 	{
-		File f = new File(this.historyfile);
-		if (f.exists())
-		{
-			f.delete();
-		}
+		if (historyFile.exists())
+			historyFile.delete();
 	}
 
 	/**
@@ -1038,7 +1027,7 @@ public final class INCRE implements CTCommonModule
 		{
 			INCRE incre = INCRE.instance();
 
-			FileInputStream fis = new FileInputStream(historyfile);
+			FileInputStream fis = new FileInputStream(historyFile);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			ObjectInputStream ois = new ObjectInputStream(bis);
 			incre.history = new DataStore();
@@ -1061,7 +1050,7 @@ public final class INCRE implements CTCommonModule
 		}
 		catch (FileNotFoundException e)
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Cannot find history thus INCRE is not ");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Cannot find history file");
 			return false;
 		}
 		catch (Exception e)
