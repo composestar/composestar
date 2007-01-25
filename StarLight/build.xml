@@ -77,6 +77,7 @@
 
 	<target name="build_vs" description="Build Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
 		<ant target="build" dir="Source/VSIntegration/VisualStudio.Project" inheritRefs="true"/>
+		<ant target="build" dir="Source/VSIntegration/VisualStudio.LanguageServices" inheritRefs="true"/>
 	</target>
 
 	<!-- deploy -->
