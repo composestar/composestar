@@ -43,6 +43,7 @@
 		</schedule>
 		
 		<log>
+			<merge file="${composestar.path}\Core\Compiletime\test\TESTS-TestSuites.xml" />
 			<delete every="1" unit="MONTH" ignoreSuffix="false" />
 		</log>
 		
