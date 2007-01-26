@@ -1,7 +1,7 @@
 concern CreateIterator {
 
-	filtermodule CreatorIterator{
-		
+	filtermodule CreatorIterator
+	{
 		internals
 			ic : Composestar.Patterns.Iterator.CreatorIterator;
 
@@ -9,15 +9,16 @@ concern CreateIterator {
 			create : Dispatch = { ic.* }
 	}
 	
-	superimposition{
+	superimposition
+	{
 		selectors
 			aggregate = { C | classHasAnnotationWithName(C,'Composestar.Patterns.Iterator.Annotations.ConcreteAggregate') };
 		filtermodules
 			aggregate <- CreatorIterator;
 	}
+
 	implementation in JSharp by	CreatorIterator as "CreatorIterator.jsl"
 	{
-
 		package Composestar.Patterns.Iterator;
 
 		import java.util.Iterator;

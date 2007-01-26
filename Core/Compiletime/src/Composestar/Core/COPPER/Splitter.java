@@ -2,8 +2,9 @@ package Composestar.Core.COPPER;
 
 import java.util.Vector;
 
-//this is a class to help split references that are supplied in a Vector correctly
-
+/**
+ * Helps split references that are supplied in a Vector correctly.
+ */
 public class Splitter
 {
 	private Vector pack;
@@ -18,9 +19,7 @@ public class Splitter
 
 	private int i, j;
 
-	private CpsRepositoryBuilder bui; // reference to a builder class (so we
-
-	// can get to defaults)
+	private CpsRepositoryBuilder bui; // reference to a builder class (so we  can get to defaults)
 
 	public Splitter()
 	{

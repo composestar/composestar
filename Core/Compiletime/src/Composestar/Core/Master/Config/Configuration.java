@@ -86,33 +86,9 @@ public class Configuration implements Serializable
 		return properties.getProperty("Platform");
 	}
 
-	/**
-	 * @deprecated Use getPlatformName() and getBuildDebugLevel().
-	 */
-	public String getProperty(String key)
-	{
-		return properties.getProperty(key);
-	}
-
 	public Projects getProjects()
 	{
 		return projects;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public Modules getModuleSettings()
-	{
-		return null;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public ModuleSettings getModuleSettings(String module)
-	{
-		return null;
 	}
 
 	/**

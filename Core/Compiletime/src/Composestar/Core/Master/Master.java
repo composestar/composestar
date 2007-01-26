@@ -12,7 +12,6 @@ package Composestar.Core.Master;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -24,7 +23,6 @@ import org.xml.sax.XMLReader;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.ConfigurationException;
 import Composestar.Core.Master.Config.ModuleInfo;
@@ -63,7 +61,7 @@ public abstract class Master
 	 */
 	public static final int EERRORS = 4;
 
-	protected String configfile;
+	protected String configFilename;
 
 	protected int debugOverride = -1;
 
@@ -114,17 +112,18 @@ public abstract class Master
 			else
 			{
 				// assume it's the config file
-				configfile = arg;
+				configFilename = arg;
 			}
 		}
 	}
 
 	public void loadConfiguration() throws Exception
 	{
-		File cfgFile = new File(configfile);
-		if (!cfgFile.canRead())
+		File configFile = new File(configFilename);
+		if (!configFile.canRead())
 		{
-			throw new Exception("Unable to open configuration file: " + configfile);
+			throw new Exception(
+					"Unable to open configuration file: '" + configFilename + "'");
 		}
 
 		// create the repository and common resources
@@ -134,7 +133,7 @@ public abstract class Master
 		// load the project configuration file
 		try
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Reading build configuration from: " + configfile);
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Reading build configuration from: " + configFilename);
 
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
@@ -142,12 +141,13 @@ public abstract class Master
 
 			BuildConfigHandler handler = new BuildConfigHandler(parser);
 			parser.setContentHandler(handler);
-			parser.parse(new InputSource(configfile));
+			parser.parse(new InputSource(configFilename));
 		}
 		catch (Exception e)
 		{
-			throw new Exception("An error occured while reading the build configuration file: " + configfile
-					+ ", reason: " + e.getMessage());
+			throw new Exception(
+					"An error occured while reading the build configuration file '" + configFilename + 
+					"': " + e.getMessage());
 		}
 
 		// Set debug level
@@ -166,9 +166,6 @@ public abstract class Master
 		{
 			long beginTime = System.currentTimeMillis();
 
-			// initialize INCRE
-			INCRE incre = INCRE.instance();
-
 			ModuleInfo mi = ModuleInfoManager.get(INCRE.class);
 			Map<String, String> overrideSet = settingsOverride.get(INCRE.MODULE_NAME);
 			if ((overrideSet != null) && (mi != null))
@@ -181,12 +178,14 @@ public abstract class Master
 					}
 					catch (ConfigurationException ce)
 					{
-						Debug.out(Debug.MODE_ERROR, INCRE.MODULE_NAME, "Configuration override error: "
-								+ ce.getMessage());
+						Debug.out(Debug.MODE_ERROR, INCRE.MODULE_NAME, 
+								"Configuration override error: " + ce.getMessage());
 					}
 				}
 			}
 
+			// initialize INCRE
+			INCRE incre = INCRE.instance();
 			incre.init();
 
 			// load override settings

@@ -707,16 +707,6 @@ public final class INCRE
 	}
 
 	/**
-	 * Returns all modules extracted from a configuration file
-	 * 
-	 * @return Iterator of modules
-	 */
-	public Iterator getModules()
-	{
-		return configmanager.getModules().values().iterator();
-	}
-
-	/**
 	 * Returns all primitive concerns potentially modified primitive concerns
 	 * from unmodified libraries/sources are excluded If this information is not
 	 * available then the primitive concern is included

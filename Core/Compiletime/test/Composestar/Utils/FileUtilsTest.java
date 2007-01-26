@@ -1,5 +1,9 @@
 package Composestar.Utils;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
@@ -105,5 +109,32 @@ public class FileUtilsTest extends TestCase
 
 		assertEquals("c:\\foo\\quux\\bar.txt", 
 				FileUtils.createOutputFilename("c:\\foo\\", "quux\\", "c:\\foo\\bar.txt"));
+	}
+
+	public void testCopyWholeChars()
+	{
+		String input = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			
+		StringReader sr = null;
+		StringWriter sw = null;
+		try
+		{
+			sr = new StringReader(input);
+			sw = new StringWriter();
+			
+			FileUtils.copy(sr, sw);
+		}
+		catch (IOException e)
+		{
+			throw new AssertionFailedError(
+					"IOException: " + e.getMessage());
+		}
+		finally
+		{
+			FileUtils.close(sr);
+			FileUtils.close(sw);
+		}
+
+		assertEquals(input, sw.toString());
 	}
 }
