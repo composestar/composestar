@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: SpecificationFileNameFilter.java,v 1.1 2006/09/01 15:31:21 johantewinkel Exp $
+ * $Id$
  */
 package Composestar.C.specification;
 

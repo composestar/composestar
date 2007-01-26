@@ -37,6 +37,9 @@
 				<include name="CpsTreeWalkerTokenTypes.*"/>
 				<include name="*.smap"/>
 			</fileset>
+			<fileset dir="src/Composestar/Utils">
+				<include name="Version.java" />
+			</fileset>
 		</delete>
 
 	</target>

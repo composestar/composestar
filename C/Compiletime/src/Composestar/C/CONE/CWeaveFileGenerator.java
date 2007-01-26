@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CWeaveFileGenerator.java,v 1.4 2006/10/23 11:30:45 johantewinkel Exp $
+ * $Id$
  */
 package Composestar.C.CONE;
 

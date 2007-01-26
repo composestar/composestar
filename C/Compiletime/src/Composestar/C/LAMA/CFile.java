@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CFile.java,v 1.2 2006/09/30 12:20:30 johantewinkel Exp $
+ * $Id$
  */
 
 package Composestar.C.LAMA;

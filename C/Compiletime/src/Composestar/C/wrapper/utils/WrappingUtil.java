@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: WrappingUtil.java,v 1.1 2006/09/04 08:12:15 johantewinkel Exp $
+ * $Id$
  */
 package Composestar.C.wrapper.utils;
 

@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: WeaverEngine.java,v 1.3 2006/10/15 08:54:33 johantewinkel Exp $
+ * $Id$
  */
 package Composestar.C.CONE;
 
