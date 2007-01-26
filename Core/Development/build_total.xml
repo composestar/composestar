@@ -278,6 +278,7 @@
 	<target name="integration">
 		<antcall target="svn-update-all" inheritRefs="true" />
 		<antcall target="required" inheritRefs="true" />
+		<antcall target="qa" inheritRefs="true" />
 	</target>
 	
 	<target name="integration_starlight">
@@ -301,7 +302,7 @@
 
 	<target name="integration_publish">
 		<antcall target="publish" inheritRefs="true" />
-		<antcall target="qa" inheritRefs="true" />
+		<!--<antcall target="qa" inheritRefs="true" />-->
 	</target>
 	
 	<!-- fancy selection -->	
