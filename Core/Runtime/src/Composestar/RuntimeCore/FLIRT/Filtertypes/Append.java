@@ -2,6 +2,7 @@ package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
 import java.util.Dictionary;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.RuntimeCore.FLIRT.Actions.AppendAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
@@ -29,7 +30,7 @@ public class Append extends FilterTypeRuntime
 		/*
 		 * if(modifiedMessage.getTarget().equals("*")) {
 		 * modifiedMessage.setTarget(originalMessage.getTarget()); } else
-		 * if(modifiedMessage.getTarget().equals("inner")) {
+		 * if(modifiedMessage.getTarget().equals(Target.INNER)) {
 		 * modifiedMessage.setTarget(originalMessage.getInner()); } else
 		 * if(modifiedMessage.getTarget() instanceof String &&
 		 * originalMessage.getInternal((String)modifiedMessage.getTarget()) !=

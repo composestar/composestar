@@ -174,7 +174,7 @@ public abstract class FilterNode extends Node
 				return null;
 			}
 		}
-		else if ("inner".equals(targetString))
+		else if (Target.INNER.equals(targetString))
 		{
 			if (direction == FilterChainNode.INPUT)
 			{

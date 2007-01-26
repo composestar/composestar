@@ -29,6 +29,7 @@ import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
 import Composestar.Core.DIGGER.Graph.ConcernNode;
 import Composestar.Core.DIGGER.Graph.CondMatchEdge;
@@ -180,7 +181,7 @@ public class XmlExporter
 		processFilterChainNode(concernNode.getInputFilters(), cn);
 		processFilterChainNode(concernNode.getOutputFilters(), cn);
 
-		Element xmlInner = xmlDoc.createElement("inner");
+		Element xmlInner = xmlDoc.createElement(Target.INNER);
 		xmlInner.setAttribute("id", getIdForNode(concernNode.getInnerNode()));
 		cn.appendChild(xmlInner);
 	}

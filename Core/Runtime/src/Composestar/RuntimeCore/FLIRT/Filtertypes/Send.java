@@ -2,6 +2,7 @@ package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
 import java.util.Dictionary;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
 import Composestar.RuntimeCore.FLIRT.Actions.SendAction;
@@ -37,7 +38,7 @@ public class Send extends FilterTypeRuntime
 		/*
 		 * if(modifiedMessage.getSelector().equals("*")) {
 		 * modifiedMessage.setSelector(originalMessage.getSelector()); }
-		 * if(modifiedMessage.getTarget().equals("inner")) {
+		 * if(modifiedMessage.getTarget().equals(Target.INNER)) {
 		 * modifiedMessage.setTarget(originalMessage.getInner()); } else
 		 * if(modifiedMessage.getTarget().equals("*")) {
 		 * modifiedMessage.setTarget(originalMessage.getTarget()); } else

@@ -2,6 +2,7 @@ package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
 import java.util.Dictionary;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
@@ -31,7 +32,7 @@ public class Dispatch extends FilterTypeRuntime
 		 * modifiedMessage.setSelector(originalMessage.getSelector()); } // If
 		 * we dispatch to inner we should dispatch to the inner object // In all
 		 * other cases hand it over to the message handlingfacilty
-		 * if(modifiedMessage.getTarget().equals("inner")) {
+		 * if(modifiedMessage.getTarget().equals(Target.INNER)) {
 		 * modifiedMessage.setTarget(originalMessage.getInner()); return new
 		 * DispatchToInnerAction(originalMessage,true,originalMessage.getInner(),modifiedMessage.getSelector(),
 		 * originalMessage.getArguments()); } else

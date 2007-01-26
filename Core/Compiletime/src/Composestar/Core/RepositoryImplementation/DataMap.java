@@ -77,14 +77,14 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 
 	public Object put(Object key, Object value)
 	{
+		// At runtime elements are added that are not serializable (and don't have to be)
 		/*
-		// NOTE: J# doesn't like this
-		if (!(value instanceof Serializable))
+		if ((key != null) && !(value instanceof Serializable))
 		{
 			throw new UnsupportedOperationException(
 					"Value must implement Serializable or use CommonResources otherwise");
 		}
-		if (!(key instanceof Serializable))
+		if ((key != null) && !(key instanceof Serializable))
 		{
 			throw new UnsupportedOperationException(
 					"Value must implement Serializable or use CommonResources otherwise");
@@ -109,6 +109,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 	public Object remove(Object key)
 	{
 		int index = m_keys.indexOf(key);
+		if (index == -1) return null;
 		Object old = m_values.elementAt(index);
 		m_values.removeElementAt(index);
 		m_keys.removeElementAt(index);
@@ -173,7 +174,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 		{
 			Object key = m_keys.elementAt(i);
 			Object value = m_values.elementAt(i);
-			if (value.getClass().equals(c) && value instanceof RepositoryEntity)
+			if (value.getClass().equals(c) && (value instanceof RepositoryEntity))
 			{
 				RepositoryEntity re = (RepositoryEntity) value;
 				if (re.getDynObject("REFERENCED") == null)
@@ -185,7 +186,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 		for (Enumeration e = removeKeys.elements(); e.hasMoreElements();)
 		{
 			Object key = e.nextElement();
-			this.remove(key);
+			remove(key);
 		}
 	}
 

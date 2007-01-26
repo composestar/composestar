@@ -61,7 +61,7 @@ public class SignatureMatchingRuntime extends MatchingTypeRuntime
 		}
 
 		// If needed we do an inner replacement.
-		if (ct_target.equals("inner"))
+		if (ct_target.equals(Target.INNER))
 		{
 			if (Debug.SHOULD_DEBUG)
 			{

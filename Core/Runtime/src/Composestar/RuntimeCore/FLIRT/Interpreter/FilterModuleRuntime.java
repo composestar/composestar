@@ -5,6 +5,7 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.RuntimeCore.FLIRT.ObjectManager;
 import Composestar.RuntimeCore.FLIRT.Exception.InvalidConditionException;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
@@ -301,7 +302,7 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 				Object[] args = EmptyObjectList;
 
 				// Check to see if it is condition on inner!
-				if (ctarget.equals("inner"))
+				if (ctarget.equals(Target.INNER))
 				{
 					if (Debug.SHOULD_DEBUG)
 					{

@@ -1,5 +1,6 @@
 package Composestar.RuntimeCore.FLIRT.Actions;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
@@ -109,7 +110,7 @@ public class DispatchAction extends ComposeStarAction
 		{
 			Message m = (Message) ms.next();
 
-			if (m.getTarget().equals("inner"))
+			if (m.getTarget().equals(Target.INNER))
 			{
 				m.setTarget(m.getInner());
 

@@ -126,7 +126,7 @@ public class MatchingPartRuntime extends AbstractPatternRuntime
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '*'.");
 			}
 		}
-		else if (target.equalsIgnoreCase("inner"))
+		else if (target.equalsIgnoreCase(Target.INNER))
 		{
 			if (Debug.SHOULD_DEBUG)
 			{

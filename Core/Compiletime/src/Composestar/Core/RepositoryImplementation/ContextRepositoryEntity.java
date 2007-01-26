@@ -16,10 +16,6 @@ package Composestar.Core.RepositoryImplementation;
  */
 public class ContextRepositoryEntity extends RepositoryEntity
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 9219062801100391060L;
 
 	/**

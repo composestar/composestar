@@ -20,8 +20,16 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 	 */
 	private static int counter;
 
+	/**
+	 * Data store for accociate information with this entity that is also
+	 * required during runtime. All entities added to this map need to be
+	 * serializable.
+	 */
 	public DataMap dynamicmap;
 
+	/**
+	 * The key under which this entity is added to the repository
+	 */
 	public String repositoryKey;
 
 	/**
@@ -29,8 +37,15 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 	 */
 	public int uniqueId;
 
+	/**
+	 * Filename this entity was declared in. Only used for entities specified in
+	 * .cps files
+	 */
 	public String descriptionFileName;
 
+	/**
+	 * Line number where this entity was declared
+	 */
 	public int descriptionLineNumber;
 
 	public RepositoryEntity()
@@ -57,7 +72,7 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 
 	public void setDescriptionLineNumber(int newLineNumber)
 	{
-		this.descriptionLineNumber = newLineNumber;
+		descriptionLineNumber = newLineNumber;
 	}
 
 	public String getDescriptionFileName()
@@ -67,27 +82,31 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 
 	public void setDescriptionFileName(String newFileName)
 	{
-		this.descriptionFileName = newFileName;
+		descriptionFileName = newFileName;
 	}
 
 	public void addDynObject(String key, Object obj)
 	{
-		this.dynamicmap.put(key, obj);
+		dynamicmap.put(key, obj);
 	}
 
 	public Object getDynObject(String key)
 	{
-		return this.dynamicmap.get(key);
+		return dynamicmap.get(key);
 	}
 
 	public Iterator getDynIterator()
 	{
-		return this.dynamicmap.values().iterator();
+		return dynamicmap.values().iterator();
 	}
 
+	/**
+	 * Update repository to point to the proper location of this instance. The
+	 * key could have been changed.
+	 */
 	public void updateRepositoryReference()
 	{
-		if (repositoryKey != null && repositoryKey.compareTo(this.getUniqueID()) != 0)
+		if (repositoryKey != null && repositoryKey.compareTo(getUniqueID()) != 0)
 		{
 			DataStore ds = DataStore.instance();
 			if (ds != null) // is null when deserializing at runtime
@@ -100,7 +119,7 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 	}
 
 	/**
-	 * @return the repository key of this entiy
+	 * @return the repository key of this entity
 	 */
 	public String getRepositoryKey()
 	{

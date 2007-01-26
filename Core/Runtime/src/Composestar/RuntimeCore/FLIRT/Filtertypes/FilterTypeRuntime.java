@@ -2,6 +2,7 @@ package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
 import java.util.Dictionary;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 import Composestar.RuntimeCore.FLIRT.Message.Message;
@@ -79,7 +80,7 @@ public abstract class FilterTypeRuntime
 		{
 			Message modifiedMessage = (Message) mod.get(i);
 
-			if (modifiedMessage.getTarget().equals("inner"))
+			if (modifiedMessage.getTarget().equals(Target.INNER))
 			{
 				modifiedMessage.setTarget(originalMessages.getInner());
 			}

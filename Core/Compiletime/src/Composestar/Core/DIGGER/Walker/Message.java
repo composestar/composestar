@@ -17,6 +17,7 @@ import java.util.List;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.DIGGER.NOBBIN;
@@ -249,7 +250,7 @@ public class Message
 			return true;
 		}
 		// otherwise look it up
-		if (mp.getTarget().getName().equals("inner") || mp.getTarget().getName().equals("*"))
+		if (mp.getTarget().getName().equals(Target.INNER) || mp.getTarget().getName().equals("*"))
 		{
 			type = (Type) concernNode.getConcern().getPlatformRepresentation();
 		}

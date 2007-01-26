@@ -22,11 +22,11 @@ import Composestar.Core.Master.Config.Configuration;
 
 public class HTMLReporter implements Reporter
 {
-	private transient BufferedWriter writer;
+	private BufferedWriter writer;
 
-	private transient StringBuffer buffer;
+	private StringBuffer buffer;
 
-	private transient String cssFile;
+	private String cssFile;
 
 	public HTMLReporter(String path, String incssFile, CommonResources resources) throws Exception
 	{

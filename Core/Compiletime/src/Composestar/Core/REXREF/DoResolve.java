@@ -24,6 +24,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.NameMatchingType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ParameterizedInternal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ParameterizedMessageSelector;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
@@ -613,7 +614,7 @@ public class DoResolve
 		{
 			DeclaredObjectReference ref = (DeclaredObjectReference) dorit.next();
 			boolean found = false;
-			if (ref.getName().compareTo("inner") != 0)
+			if (ref.getName().compareTo(Target.INNER) != 0)
 			{
 				// first try to find the concern
 				for (Iterator cpsit = ds.getAllInstancesOf(CpsConcern.class); cpsit.hasNext();)
@@ -671,7 +672,7 @@ public class DoResolve
 			}
 			if (!ref.getResolved())
 			{
-				if (!ref.getName().equals("*") && !ref.getName().equals("inner"))
+				if (!ref.getName().equals("*") && !ref.getName().equals(Target.INNER))
 				{
 					throw new ModuleException("DeclaredObjectReference '" + ref.getName()
 							+ "' cannot be resolved (are you referencing a non-existent object?)", "REXREF", ref);

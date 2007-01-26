@@ -386,7 +386,7 @@ public class Sign implements CTCommonModule
 		// case 4:
 		else if (nameMatching && Message.checkEquals(state.getSubstitutionSelector(), Message.STAR_SELECTOR))
 		{
-			if (state.getTarget().getName().equals("inner"))
+			if (state.getTarget().getName().equals(Target.INNER))
 			{
 				return getInnerMethods(concern, state, distinguishable);
 			}
@@ -399,7 +399,7 @@ public class Sign implements CTCommonModule
 		// case 5 and 6
 		else if (!nameMatching)
 		{
-			if (signatureMatchingTarget.getName().equals("inner"))
+			if (signatureMatchingTarget.getName().equals(Target.INNER))
 			{
 				return getInnerMethods(concern, state, distinguishable);
 			}
@@ -434,7 +434,7 @@ public class Sign implements CTCommonModule
 		// get dispatchtarget concern and methods:
 		String dispatchMethodName = dispSelector.getName();
 		List methods;
-		if (dispTarget.name.equals("inner"))
+		if (dispTarget.name.equals(Target.INNER))
 		{
 			methods = getMethodList(concern);
 		}
@@ -481,7 +481,7 @@ public class Sign implements CTCommonModule
 
 		// get the targetconcern:
 		Concern targetConcern;
-		if (dispTarget.name.equals("inner"))
+		if (dispTarget.name.equals(Target.INNER))
 		{
 			targetConcern = concern;
 		}
@@ -518,7 +518,7 @@ public class Sign implements CTCommonModule
 				targetMethod = method.getClone(dispSelector.getName(), targetType);
 			}
 
-			if (dispTarget.name.equals("inner"))
+			if (dispTarget.name.equals(Target.INNER))
 			{
 				// if inner, check inner methods:
 
@@ -607,7 +607,7 @@ public class Sign implements CTCommonModule
 
 		// get target signature or innermethods:
 		Concern targetConcern;
-		if (dispTarget.name.equals("inner"))
+		if (dispTarget.name.equals(Target.INNER))
 		{
 			targetConcern = concern;
 		}
@@ -621,7 +621,7 @@ public class Sign implements CTCommonModule
 		Signature targetSignature = null;
 		List innerMethods = null;
 		// signature only relevant when dispatchTarget != inner
-		if (!dispTarget.name.equals("inner"))
+		if (!dispTarget.name.equals(Target.INNER))
 		{
 			targetSignature = getSignature(targetConcern);
 		}
@@ -662,7 +662,7 @@ public class Sign implements CTCommonModule
 			}
 
 			// then do the check:
-			if (dispTarget.name.equals("inner"))
+			if (dispTarget.name.equals(Target.INNER))
 			{
 				// if inner, check inner methods:
 				if (containsMethod(innerMethods, targetMethod))
@@ -771,7 +771,7 @@ public class Sign implements CTCommonModule
 
 			// get the dispatch target:
 			Concern targetConcern;
-			if (dispTarget.name.equals("inner"))
+			if (dispTarget.name.equals(Target.INNER))
 			{
 				targetConcern = concern;
 			}
@@ -932,7 +932,7 @@ public class Sign implements CTCommonModule
 		}
 
 		// get dispatchtarget concern and methods:
-		if (dispTarget.name.equals("inner"))
+		if (dispTarget.name.equals(Target.INNER))
 		{
 			Type type = (Type) concern.getPlatformRepresentation();
 			MethodInfo targetMethod = method.getClone(dispSelector.getName(), type);
@@ -990,7 +990,7 @@ public class Sign implements CTCommonModule
 		}
 
 		// get dispatchtarget concern and methods:
-		if (dispTarget.name.equals("inner"))
+		if (dispTarget.name.equals(Target.INNER))
 		{
 			Type type = (Type) concern.getPlatformRepresentation();
 
@@ -1107,7 +1107,7 @@ public class Sign implements CTCommonModule
 		}
 
 		// get dispatchtarget concern and methods:
-		if (dispTarget.name.equals("inner"))
+		if (dispTarget.name.equals(Target.INNER))
 		{
 			Type type = (Type) concern.getPlatformRepresentation();
 			MethodInfo targetMethod = method.getClone(dispSelector.getName(), type);
@@ -1184,7 +1184,7 @@ public class Sign implements CTCommonModule
 		// get dispatchtarget concern and methods:
 		// String dispatchMethodName = dispSelector.getName();
 		// List methods;
-		if (dispTarget.name.equals("inner"))
+		if (dispTarget.name.equals(Target.INNER))
 		{
 			Type type = (Type) concern.getPlatformRepresentation();
 

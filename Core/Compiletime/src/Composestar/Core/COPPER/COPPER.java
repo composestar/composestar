@@ -18,6 +18,7 @@ import java.util.Iterator;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.Exception.ModuleException;
@@ -115,10 +116,7 @@ public class COPPER implements CTCommonModule
 				if (!entity.dynamicmap.isEmpty())
 				{
 					// remove dynamic object REFERENCED
-					if (entity.getDynObject("REFERENCED") != null)
-					{
-						entity.dynamicmap.remove("REFERENCED");
-					}
+					entity.dynamicmap.remove("REFERENCED");
 				}
 
 				if (obj instanceof Reference)
@@ -133,7 +131,7 @@ public class COPPER implements CTCommonModule
 					DeclaredObjectReference decl = (DeclaredObjectReference) obj;
 					if (decl.getDescriptionFileName() == null)
 					{
-						if (!decl.getName().equals("inner"))
+						if (!decl.getName().equals(Target.INNER))
 						{
 							DataStore.instance().addObject(obj);
 							entity.setRepositoryKey(entity.getUniqueID());

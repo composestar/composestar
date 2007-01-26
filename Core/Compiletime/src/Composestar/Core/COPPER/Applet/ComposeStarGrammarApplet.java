@@ -20,6 +20,7 @@ import javax.swing.JTextArea;
 import Composestar.Core.COPPER.CpsAST;
 import Composestar.Core.COPPER.CpsParser;
 import Composestar.Core.COPPER.CpsPosLexer;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import antlr.ANTLRException;
 
 public class ComposeStarGrammarApplet extends JApplet implements ActionListener, KeyListener
@@ -171,7 +172,7 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 		keys.put("meta", color);
 		keys.put("send", color);
 		keys.put("realtime", color);
-		keys.put("inner", color);
+		keys.put(Target.INNER, color);
 		keys.put("self", color);
 		keys.put("wait", color);
 		ColorView.keywords = keys;

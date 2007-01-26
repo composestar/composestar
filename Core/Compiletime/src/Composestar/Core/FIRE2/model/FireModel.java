@@ -415,7 +415,7 @@ public class FireModel
 				matchSelector = state.getMessage().getSelector();
 			}
 
-			if (matchTarget.name.equals("inner"))
+			if (matchTarget.name.equals(Target.INNER))
 			{
 				List methods;
 				Type matchType = (Type) concern.getPlatformRepresentation();
@@ -620,7 +620,7 @@ public class FireModel
 	private Message getEntranceMessage(String selector)
 	{
 		Target t = new Target();
-		t.name = "inner";
+		t.setName(Target.INNER);
 		MessageSelector s = new MessageSelector(new MessageSelectorAST());
 		s.setName(selector);
 

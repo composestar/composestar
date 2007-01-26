@@ -467,11 +467,11 @@ public class CpsRepositoryBuilder
 			split.splitConcernElemReference(init);
 			c.setParent(fm);
 			c.addDynObject("selector", split.getConcernelem());
-			if (split.getConcern().compareTo("inner") == 0)
+			if (split.getConcern().compareTo(Target.INNER) == 0)
 			{
 				// Reference to 'inner'
 				DeclaredObjectReference dor = new DeclaredObjectReference();
-				dor.setName("inner");
+				dor.setName(Target.INNER);
 				c.setShortref(dor);
 			}
 			else if (isInternal(split.getConcern()) || isExternal(split.getConcern()))
