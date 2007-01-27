@@ -19,6 +19,7 @@ import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.DirSet;
 
+import Composestar.Ant.TestOutput;
 import Composestar.Ant.Taskdefs.BaseTask;
 
 /**
@@ -28,6 +29,7 @@ public class CstarTest extends BaseTask
 {
 
 	protected static final String CORRECT_OUTPUT = "correct.txt";
+
 	protected static final String BUILDLOG = "buildlog.txt";
 
 	/**
@@ -97,6 +99,13 @@ public class CstarTest extends BaseTask
 
 	private final List m_dirSets;
 
+	/**
+	 * File to save the results to
+	 */
+	protected String resultOutput;
+
+	protected TestOutput testOutput;
+
 	public CstarTest()
 	{
 		super();
@@ -138,6 +147,11 @@ public class CstarTest extends BaseTask
 		this.application = application;
 	}
 
+	public void setResultOutput(String in)
+	{
+		resultOutput = in;
+	}
+
 	public void addDirset(DirSet ds)
 	{
 		m_dirSets.add(ds);
@@ -145,6 +159,8 @@ public class CstarTest extends BaseTask
 
 	public void execute() throws BuildException
 	{
+		testOutput = new TestOutput("Composestar.Testing.C");
+
 		List tests = collectInputs();
 
 		cntTotal = tests.size();
@@ -156,6 +172,8 @@ public class CstarTest extends BaseTask
 
 		runTests(tests);
 		reportResults();
+
+		testOutput.save(resultOutput);
 
 		if (failOnError && (cntFail > 0))
 		{
@@ -192,6 +210,8 @@ public class CstarTest extends BaseTask
 
 	protected void runTest(String projectname) throws BuildException
 	{
+		testOutput.beginTest(projectname);
+
 		log("" + (cntCurrent * 100 / cntTotal) + "% - " + projectname, Project.MSG_INFO);
 		cntCurrent++;
 		// int procerr=0;
@@ -224,14 +244,15 @@ public class CstarTest extends BaseTask
 		{
 
 			log(projectname, Project.MSG_VERBOSE);
-			
+
 			File oldLog = new File(workspace + java.io.File.separator + projectname, BUILDLOG);
 			if (oldLog.exists())
 			{
 				oldLog.renameTo(new File(workspace + java.io.File.separator + projectname, "buildlog.old.txt"));
 			}
 
-			FileOutputStream outputStream = new FileOutputStream(new File(workspace + java.io.File.separator + projectname, BUILDLOG));
+			FileOutputStream outputStream = new FileOutputStream(new File(workspace + java.io.File.separator
+					+ projectname, BUILDLOG));
 			ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
 			ExecuteStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
 			ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
@@ -259,7 +280,7 @@ public class CstarTest extends BaseTask
 
 			int err = execute.execute();
 			// log("Debug2:"+projectname+err);
-			
+
 			outputStream.close();
 
 			if (execute.killedProcess())
@@ -280,6 +301,7 @@ public class CstarTest extends BaseTask
 		catch (Exception e)
 		{
 			cntFail++;
+			testOutput.endTest(e.getMessage());
 			if (failOnFirstError)
 			{
 				throw new BuildException("Testing of " + projectname + " failed; " + e.getMessage());
@@ -289,6 +311,7 @@ public class CstarTest extends BaseTask
 				addFailure(projectname, e.getMessage());
 			}
 		}
+		testOutput.endTest();
 	}
 
 	private void checkOutput(String projectname) throws Exception

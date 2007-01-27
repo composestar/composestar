@@ -19,6 +19,7 @@ import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.DirSet;
 
+import Composestar.Ant.TestOutput;
 import Composestar.Ant.Taskdefs.BaseTask;
 
 /**
@@ -90,6 +91,13 @@ public class CstarTest extends BaseTask
 	protected String application;
 
 	private final List m_dirSets;
+	
+	/**
+	 * File to save the results to
+	 */
+	protected String resultOutput;
+
+	protected TestOutput testOutput;
 
 	public CstarTest()
 	{
@@ -131,9 +139,16 @@ public class CstarTest extends BaseTask
 	{
 		m_dirSets.add(ds);
 	}
+	
+	public void setResultOutput(String in)
+	{
+		resultOutput = in;
+	}
 
 	public void execute() throws BuildException
 	{
+		testOutput = new TestOutput("Composestar.Testing.Java.Execution");
+		
 		List tests = collectInputs();
 
 		cntTotal = tests.size();
@@ -145,6 +160,8 @@ public class CstarTest extends BaseTask
 
 		runTests(tests);
 		reportResults();
+		
+		testOutput.save(resultOutput);
 
 		if (failOnError && (cntFail > 0))
 		{
@@ -181,6 +198,8 @@ public class CstarTest extends BaseTask
 
 	protected void runTest(String projectname) throws BuildException
 	{
+		testOutput.beginTest(projectname);
+		
 		log("" + (cntCurrent * 100 / cntTotal) + "% - " + projectname, Project.MSG_INFO);
 		cntCurrent++;
 
@@ -222,6 +241,7 @@ public class CstarTest extends BaseTask
 		catch (Exception e)
 		{
 			cntFail++;
+			testOutput.endTest(e.getMessage());
 			if (failOnFirstError)
 			{
 				throw new BuildException("Testing of " + projectname + " failed; " + e.getMessage());
@@ -231,6 +251,7 @@ public class CstarTest extends BaseTask
 				addFailure(projectname, e.getMessage());
 			}
 		}
+		testOutput.endTest();
 	}
 
 	private void checkOutput(String projectname, String output) throws Exception

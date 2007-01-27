@@ -98,7 +98,7 @@
 	<!-- compiles projects (requires BuildConfiguration.xml to be present) -->
 
 	<target name="test_comp" depends="init_local,test_bgen">
-		<cs:dn_comp composestarBase="${composestar.installdir}">
+		<cs:dn_comp composestarBase="${composestar.installdir}" resultOutput="${basedir}/TEST-Compilation.xml">
 			<FileSet dir="${build.dotnet}/Examples">
 				<include name="**/BuildConfiguration.xml"/>
 				<exclude name="AOSD2006Demo/EncryptionFilter/*"/>
@@ -114,7 +114,7 @@
 	<!-- executes tests -->
 	
 	<target name="test_exec" depends="init_local">
-		<cs:test>
+		<cs:test resultOutput="${basedir}/TEST-Execution.xml">
 			<commandline>
 				<argument value="-systemtest" />
 			</commandline>

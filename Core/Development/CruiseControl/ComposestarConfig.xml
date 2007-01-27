@@ -49,6 +49,10 @@
 			<merge file="${composestar.path}\Java\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\C\qa\checkstyle-result.xml" />
 			
+			<merge file="${composestar.path}\DotNET\Testing\TEST-*.xml" />
+			<merge file="${composestar.path}\Java\Testing\TEST-*.xml" />
+			<merge file="${composestar.path}\C\Testing\TEST-*.xml" />
+			
 			<delete every="1" unit="MONTH" ignoreSuffix="false" />
 		</log>
 		

@@ -19,8 +19,11 @@ import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
+import Composestar.Ant.TestOutput;
+
 /**
- * Runs multiple executables and compares the output with the data in the correct.txt file.
+ * Runs multiple executables and compares the output with the data in the
+ * correct.txt file.
  * 
  * @author Michiel Hendriks
  */
@@ -36,8 +39,8 @@ public class CstarTest extends BaseTask
 	/**
 	 * If true fail on the first test that failed
 	 */
-	protected boolean failOnFirstError = false; 
-	
+	protected boolean failOnFirstError = false;
+
 	/**
 	 * Used to pass commandline arguments to the tests
 	 */
@@ -46,8 +49,8 @@ public class CstarTest extends BaseTask
 	/**
 	 * 5 minutes by default.
 	 */
-	protected long timeout = 300000; 
-	
+	protected long timeout = 300000;
+
 	/**
 	 * Total tests executed
 	 */
@@ -57,7 +60,7 @@ public class CstarTest extends BaseTask
 	 * Number of succesful tests
 	 */
 	protected int cntSuccess;
-	
+
 	/**
 	 * Number of timed-out tests.
 	 */
@@ -73,11 +76,18 @@ public class CstarTest extends BaseTask
 	 */
 	protected int cntCurrent;
 
+	/**
+	 * File to save the results to
+	 */
+	protected String resultOutput;
+
+	protected TestOutput testOutput;
+
 	public CstarTest()
 	{
 		super();
 	}
-	
+
 	public void setFailOnError(boolean failOnError)
 	{
 		this.failOnError = failOnError;
@@ -92,19 +102,26 @@ public class CstarTest extends BaseTask
 	{
 		this.timeout = timeout;
 	}
+	
+	public void setResultOutput(String in)
+	{
+		resultOutput = in;
+	}
 
 	public void addFileset(FileSet set)
 	{
 		super.addFileset(set);
 	}
-	
+
 	public void addCommandline(Commandline cmd)
 	{
 		commandLine = cmd;
 	}
-	
+
 	public void execute() throws BuildException
 	{
+		testOutput = new TestOutput("Composestar.Testing.Execution");
+
 		List tests = collectInputs();
 
 		cntTotal = tests.size();
@@ -113,55 +130,54 @@ public class CstarTest extends BaseTask
 		cntFail = 0;
 		cntCurrent = 0;
 		failList.clear();
-		
+
 		if (commandLine == null)
 		{
 			commandLine = new Commandline();
 		}
-		
+
 		runTests(tests);
 		reportResults();
-		
+
+		testOutput.save(resultOutput);
+
 		if (failOnError && (cntFail > 0))
 		{
 			throw new BuildException("" + cntFail + " test(s) failed.");
 		}
 	}
-	
+
 	private void reportResults()
 	{
-		log("" +
-			"total: " + cntTotal + 
-			"; success: " + cntSuccess +
-			"; timeouts: " + cntTimeout +
-			"; failed: " + cntFail +
-			"; ratio: " + (cntSuccess * 100 / cntTotal) + "%", 
-			(cntFail == 0 ? Project.MSG_INFO : Project.MSG_WARN));
-		
+		log("" + "total: " + cntTotal + "; success: " + cntSuccess + "; timeouts: " + cntTimeout + "; failed: "
+				+ cntFail + "; ratio: " + (cntSuccess * 100 / cntTotal) + "%", (cntFail == 0 ? Project.MSG_INFO
+				: Project.MSG_WARN));
+
 		if (cntFail > 0)
 		{
-			log("The following tests failed:", Project.MSG_ERR);		
+			log("The following tests failed:", Project.MSG_ERR);
 			reportFailures();
 		}
 	}
 
 	private void runTests(List tests)
 	{
-		if (tests.size() == 0)
-			throw new BuildException("No tests to run");
-		
+		if (tests.size() == 0) throw new BuildException("No tests to run");
+
 		log("Testing " + tests.size() + " program(s)", Project.MSG_INFO);
 
 		Iterator it = tests.iterator();
 		while (it.hasNext())
 		{
-			File exec = (File)it.next();
+			File exec = (File) it.next();
 			runTest(exec);
 		}
 	}
-	
+
 	protected void runTest(File exec) throws BuildException
 	{
+		testOutput.beginTest(exec.toString());
+		
 		log("" + (cntCurrent * 100 / cntTotal) + "% - " + exec, Project.MSG_INFO);
 		cntCurrent++;
 
@@ -178,7 +194,7 @@ public class CstarTest extends BaseTask
 			execute.setAntRun(getProject());
 			execute.setSpawn(false);
 			execute.setWorkingDirectory(exec.getParentFile());
-			
+
 			commandLine.setExecutable(exec.getAbsolutePath());
 			execute.setCommandline(commandLine.getCommandline());
 
@@ -192,9 +208,9 @@ public class CstarTest extends BaseTask
 
 			if (err != 0)
 			{
-				throw new Exception("Exit code is not zero: "+err);
+				throw new Exception("Exit code is not zero: " + err);
 			}
-			
+
 			checkOutput(exec, outputStream.toString());
 
 			cntSuccess++;
@@ -202,6 +218,7 @@ public class CstarTest extends BaseTask
 		catch (Exception e)
 		{
 			cntFail++;
+			testOutput.endTest(e.getMessage());
 			if (failOnFirstError)
 			{
 				throw new BuildException("Testing of " + exec + " failed; " + e.getMessage());
@@ -211,22 +228,24 @@ public class CstarTest extends BaseTask
 				addFailure(exec.toString(), e.getMessage());
 			}
 		}
+		testOutput.endTest();
 	}
 
 	private void checkOutput(File exec, String output) throws Exception
 	{
 		File correct = new File(exec.getParentFile(), CORRECT_OUTPUT);
-		
+
 		if (!correct.exists())
 		{
-			log("No "+CORRECT_OUTPUT+" skipping output validation", Project.MSG_INFO);
+			log("No " + CORRECT_OUTPUT + " skipping output validation", Project.MSG_INFO);
 			return;
 		}
-		
+
 		BufferedReader expectedReader = null;
 		BufferedReader actualReader = null;
-		
-		try {
+
+		try
+		{
 			expectedReader = new BufferedReader(new FileReader(correct));
 			actualReader = new BufferedReader(new StringReader(output));
 
@@ -234,42 +253,45 @@ public class CstarTest extends BaseTask
 			{
 				String expected = expectedReader.readLine();
 				String actual = actualReader.readLine();
-				
-				if (! compareLines(expected, actual))
+
+				if (!compareLines(expected, actual))
 				{
-					throw new Exception(
-							"Invalid output: expected " + quote(expected) 
-							+ ", but encountered " + quote(actual));
+					throw new Exception("Invalid output: expected " + quote(expected) + ", but encountered "
+							+ quote(actual));
 				}
-				
-				if (expected == null || actual == null)
-					break;
+
+				if (expected == null || actual == null) break;
 			}
 		}
-		finally {
+		finally
+		{
 			close(expectedReader);
 			close(actualReader);
 		}
 	}
-	
+
 	private boolean compareLines(String e, String a)
 	{
 		// if one is null then both must be
-		if (e == null || a == null)
-			return e == a;
-		
+		if (e == null || a == null) return e == a;
+
 		// else just check for equality
 		return e.equals(a);
 	}
-	
+
 	private String quote(String line)
 	{
 		return (line == null ? "<EOF>" : "'" + line + "'");
 	}
-	
+
 	private void close(Reader r)
 	{
-		try { if (r != null) r.close(); }
-		catch (IOException e) {} // ignore
+		try
+		{
+			if (r != null) r.close();
+		}
+		catch (IOException e)
+		{
+		} // ignore
 	}
 }

@@ -8,6 +8,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
+import Composestar.Ant.TestOutput;
 import Composestar.Ant.Taskdefs.BaseTask;
 import Composestar.Ant.Taskdefs.SupJava;
 
@@ -64,6 +65,13 @@ public class CstarComp extends BaseTask
 	 */
 	protected int cntFail;
 	
+	/**
+	 * File to save the results to
+	 */
+	protected String resultOutput;
+	
+	protected TestOutput testOutput;
+	
 	public CstarComp()
 	{
 		super();
@@ -93,6 +101,11 @@ public class CstarComp extends BaseTask
 	{
 		this.composestarBase = composestarBase;
 	}
+	
+	public void setResultOutput(String in)
+	{
+		resultOutput = in;
+	}
 
 	public void addFileset(FileSet set)
 	{
@@ -101,6 +114,8 @@ public class CstarComp extends BaseTask
 
 	public void execute() throws BuildException
 	{
+		testOutput = new TestOutput("Composestar.Testing.DotNET.Compilation");
+		
 		List projects = collectInputs();
 		cntTotal = projects.size();
 		cntSuccess = 0;
@@ -118,6 +133,8 @@ public class CstarComp extends BaseTask
 		}
 
 		reportResults();
+		
+		testOutput.save(resultOutput);
 
 		if (failOnError && (cntFail > 0))
 		{
@@ -144,6 +161,7 @@ public class CstarComp extends BaseTask
 	protected void compileProject(File buildXML) throws BuildException
 	{
 		File projectDir = buildXML.getParentFile();
+		testOutput.beginTest(projectDir.toString());
 		log("" + (cntCurrent * 100 / cntTotal) + "% - " + projectDir, Project.MSG_INFO);
 		cntCurrent++;
 
@@ -187,6 +205,7 @@ public class CstarComp extends BaseTask
 		catch (Exception e)
 		{
 			cntFail++;
+			testOutput.endTest(e.getMessage());
 			if (failOnFirstError)
 			{
 				throw new BuildException("Compilation of project in " + projectDir + " failed; " + e.getMessage());
@@ -196,5 +215,6 @@ public class CstarComp extends BaseTask
 				addFailure(projectDir.getAbsolutePath(), e.getMessage());
 			}
 		}
+		testOutput.endTest();
 	}
 }

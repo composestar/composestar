@@ -14,6 +14,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline.Argument;
 import org.apache.tools.ant.types.PatternSet.NameEntry;
 
+import Composestar.Ant.TestOutput;
 import Composestar.Ant.Taskdefs.BaseTask;
 
 /**
@@ -21,14 +22,14 @@ import Composestar.Ant.Taskdefs.BaseTask;
  */
 public class CstarComp extends BaseTask
 {
-	
+
 	private final List m_dirSets;
-	
+
 	/**
 	 * Eclipse launcher
 	 */
 	protected String launcher = "org.eclipse.core.launcher.Main";
-	
+
 	/**
 	 * If true fail the build if a single project failed to compile
 	 */
@@ -43,12 +44,12 @@ public class CstarComp extends BaseTask
 	 * The location of eclipse workspace; location of the examples.
 	 */
 	protected String workspace;
-	
+
 	/**
 	 * The location of eclipse (%ECLIPSE_HOME%).
 	 */
 	protected String eclipseHome;
-	
+
 	/**
 	 * Application-id as defined in plugin.xml
 	 */
@@ -73,7 +74,14 @@ public class CstarComp extends BaseTask
 	 * Number of failed builds
 	 */
 	protected int cntFail;
-	
+
+	/**
+	 * File to save the results to
+	 */
+	protected String resultOutput;
+
+	protected TestOutput testOutput;
+
 	public CstarComp()
 	{
 		super();
@@ -94,26 +102,33 @@ public class CstarComp extends BaseTask
 	{
 		this.workspace = workspace;
 	}
-	
+
 	public void setEclipseHome(String eclipseHome)
 	{
 		this.eclipseHome = eclipseHome;
 	}
-	
+
 	public void setApplication(String application)
 	{
 		this.application = application;
+	}
+
+	public void setResultOutput(String in)
+	{
+		resultOutput = in;
 	}
 
 	public void addDirset(DirSet ds)
 	{
 		m_dirSets.add(ds);
 	}
-	
+
 	public void execute() throws BuildException
 	{
+		testOutput = new TestOutput("Composestar.Testing.Java.Compilation");
+
 		List projects = collectInputs();
-		
+
 		cntTotal = projects.size();
 		cntSuccess = 0;
 		cntFail = 0;
@@ -125,36 +140,36 @@ public class CstarComp extends BaseTask
 		Iterator it = projects.iterator();
 		while (it.hasNext())
 		{
-			String projectName = (String)it.next();
+			String projectName = (String) it.next();
 			compileProject(projectName);
 		}
 
 		reportResults();
+
+		testOutput.save(resultOutput);
 
 		if (failOnError && (cntFail > 0))
 		{
 			throw new BuildException("Compilation of " + cntFail + " project(s) failed.");
 		}
 	}
-	
+
 	private void reportResults()
 	{
-		log("" +
-				"total: " + cntTotal + 
-				"; success: " + cntSuccess +
-				"; failed: " + cntFail +
-				"; ratio: " + (cntSuccess * 100 / cntTotal) + "%", 
-				(cntFail == 0)?Project.MSG_INFO:Project.MSG_WARN );
-			
+		log("" + "total: " + cntTotal + "; success: " + cntSuccess + "; failed: " + cntFail + "; ratio: "
+				+ (cntSuccess * 100 / cntTotal) + "%", (cntFail == 0) ? Project.MSG_INFO : Project.MSG_WARN);
+
 		if (cntFail > 0)
 		{
-			log("Compilation of the following projects failed:", Project.MSG_ERR);		
+			log("Compilation of the following projects failed:", Project.MSG_ERR);
 			reportFailures();
 		}
 	}
 
 	protected void compileProject(String projectName) throws BuildException
 	{
+		testOutput.beginTest(projectName);
+		
 		log("" + (cntCurrent * 100 / cntTotal) + "% - " + projectName, Project.MSG_INFO);
 		cntCurrent++;
 
@@ -185,20 +200,22 @@ public class CstarComp extends BaseTask
 			NameEntry inc = startupJar.createInclude();
 			inc.setName("startup.jar");
 			cpath.addFileset(startupJar);
-			
+
 			java.setFork(true);
-			
+
 			int err = java.executeJava();
 			if (err != 0)
 			{
-				throw new Exception("Exit code is not zero: "+err+" (check buildlog.txt in project basedir for more information)");
+				throw new Exception("Exit code is not zero: " + err
+						+ " (check buildlog.txt in project basedir for more information)");
 			}
-			
+
 			cntSuccess++;
 		}
 		catch (Exception e)
 		{
 			cntFail++;
+			testOutput.endTest(e.getMessage());
 			if (failOnFirstError)
 			{
 				throw new BuildException("Compilation of project " + projectName + " failed; " + e.getMessage());
@@ -208,25 +225,27 @@ public class CstarComp extends BaseTask
 				addFailure(projectName, e.getMessage());
 			}
 		}
+		testOutput.endTest();
 	}
-	
+
 	protected List collectInputs() throws BuildException
 	{
 		List result = new ArrayList();
 		Iterator it = m_dirSets.iterator();
 		while (it.hasNext())
 		{
-			try {
-				DirSet ds = (DirSet)it.next();
+			try
+			{
+				DirSet ds = (DirSet) it.next();
 				String[] dirs = ds.getDirectoryScanner(getProject()).getIncludedDirectories();
-				for(int i=0; i<dirs.length; i++)
+				for (int i = 0; i < dirs.length; i++)
 				{
 					result.add(dirs[i]);
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
-				throw new BuildException("Error while collecting inputs: "+e.getMessage());
+				throw new BuildException("Error while collecting inputs: " + e.getMessage());
 			}
 		}
 		return result;
