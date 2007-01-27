@@ -44,14 +44,15 @@
 		
 		<log>
 			<merge file="${composestar.path}\Core\Compiletime\test\TESTS-TestSuites.xml" />
+			
+			<merge dir="${composestar.path}\DotNET\Testing" pattern="TEST-*.xml" />
+			<merge dir="${composestar.path}\Java\Testing" pattern="TEST-*.xml" />
+			<merge dir="${composestar.path}\C\Testing" pattern="TEST-*.xml" />
+			
 			<merge file="${composestar.path}\Core\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\DotNET\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\Java\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\C\qa\checkstyle-result.xml" />
-			
-			<merge file="${composestar.path}\DotNET\Testing\TEST-*.xml" />
-			<merge file="${composestar.path}\Java\Testing\TEST-*.xml" />
-			<merge file="${composestar.path}\C\Testing\TEST-*.xml" />
 			
 			<delete every="1" unit="MONTH" ignoreSuffix="false" />
 		</log>
