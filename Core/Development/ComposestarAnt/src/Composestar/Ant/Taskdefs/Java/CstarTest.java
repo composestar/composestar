@@ -91,7 +91,7 @@ public class CstarTest extends BaseTask
 	protected String application;
 
 	private final List m_dirSets;
-	
+
 	/**
 	 * File to save the results to
 	 */
@@ -139,7 +139,7 @@ public class CstarTest extends BaseTask
 	{
 		m_dirSets.add(ds);
 	}
-	
+
 	public void setResultOutput(String in)
 	{
 		resultOutput = in;
@@ -148,7 +148,7 @@ public class CstarTest extends BaseTask
 	public void execute() throws BuildException
 	{
 		testOutput = new TestOutput("Composestar.Testing.Java.Execution");
-		
+
 		List tests = collectInputs();
 
 		cntTotal = tests.size();
@@ -160,7 +160,7 @@ public class CstarTest extends BaseTask
 
 		runTests(tests);
 		reportResults();
-		
+
 		testOutput.save(resultOutput);
 
 		if (failOnError && (cntFail > 0))
@@ -199,7 +199,7 @@ public class CstarTest extends BaseTask
 	protected void runTest(String projectname) throws BuildException
 	{
 		testOutput.beginTest(projectname);
-		
+
 		log("" + (cntCurrent * 100 / cntTotal) + "% - " + projectname, Project.MSG_INFO);
 		cntCurrent++;
 
@@ -258,6 +258,12 @@ public class CstarTest extends BaseTask
 	{
 		String projectBase = workspace + java.io.File.separator + projectname;
 		File correct = new File(projectBase, CORRECT_OUTPUT);
+
+		if (!correct.exists())
+		{
+			log("No " + CORRECT_OUTPUT + " skipping output validation", Project.MSG_INFO);
+			return;
+		}
 
 		BufferedReader expectedReader = null;
 		BufferedReader actualReader = null;
