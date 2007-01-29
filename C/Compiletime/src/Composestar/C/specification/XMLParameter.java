@@ -53,7 +53,7 @@ public class XMLParameter
 
 	public void setName(String id)
 	{
-		this.name = id;
+		name = id;
 	}
 
 	public String getName()

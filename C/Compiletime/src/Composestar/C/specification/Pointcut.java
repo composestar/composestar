@@ -62,45 +62,45 @@ public class Pointcut
 
 	public void addFunctions(Functions funcs)
 	{
-		this.functions.add(funcs);
+		functions.add(funcs);
 	}
 
 	public int getNumberOfFunctions()
 	{
-		return this.functions.size();
+		return functions.size();
 	}
 
 	public Functions getFunctions(int i)
 	{
-		return (Functions) this.functions.get(i);
+		return (Functions) functions.get(i);
 	}
 
 	public void addAdviceApplication(AdviceApplication advapp)
 	{
-		this.advices.add(advapp);
+		advices.add(advapp);
 	}
 
 	public int getNumberOfAdviceApplications()
 	{
-		return this.advices.size();
+		return advices.size();
 	}
 
 	public AdviceApplication getAdviceApplication(int i)
 	{
-		return (AdviceApplication) this.advices.get(i);
+		return (AdviceApplication) advices.get(i);
 	}
 
 	public String toString()
 	{
 		String tmp = "";
-		tmp += "\tPointcut: " + this.id + "\n";
-		for (int i = 0; i < this.getNumberOfFunctions(); i++)
+		tmp += "\tPointcut: " + id + "\n";
+		for (int i = 0; i < getNumberOfFunctions(); i++)
 		{
-			tmp += this.getFunctions(i).toString();
+			tmp += getFunctions(i).toString();
 		}
-		for (int i = 0; i < this.getNumberOfAdviceApplications(); i++)
+		for (int i = 0; i < getNumberOfAdviceApplications(); i++)
 		{
-			tmp += this.getAdviceApplication(i).toString();
+			tmp += getAdviceApplication(i).toString();
 		}
 		return tmp;
 	}

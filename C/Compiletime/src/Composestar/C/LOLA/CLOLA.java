@@ -39,10 +39,10 @@ public class CLOLA extends LOLA
 	 */
 	public CLOLA(CLanguageModel model)
 	{
-		this.initialized = false;
-		this.langModel = model;
-		this.dataStore = DataStore.instance();
-		this.unitDict = new UnitDictionary(model);
+		initialized = false;
+		langModel = model;
+		dataStore = DataStore.instance();
+		unitDict = new UnitDictionary(model);
 		selectors = new ArrayList();
 	}
 

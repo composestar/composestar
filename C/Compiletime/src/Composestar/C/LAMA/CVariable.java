@@ -19,7 +19,6 @@ import java.util.HashSet;
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 public class CVariable extends FieldInfo
 {
@@ -53,12 +52,12 @@ public class CVariable extends FieldInfo
 
 	public int getHashCode()
 	{
-		return this.HashCode;
+		return HashCode;
 	}
 
 	public void setHashCode(int hashcode)
 	{
-		this.HashCode = hashcode;
+		HashCode = hashcode;
 	}
 
 	/**
@@ -69,12 +68,12 @@ public class CVariable extends FieldInfo
 
 	public void setFieldType(String fieldtype)
 	{
-		this.FieldTypeString = fieldtype;
+		FieldTypeString = fieldtype;
 	}
 
 	public boolean isStatic()
 	{
-		return this.IsStatic;
+		return IsStatic;
 	}
 
 	public void setIsInline(boolean isInline)
@@ -84,7 +83,7 @@ public class CVariable extends FieldInfo
 
 	public boolean isInline()
 	{
-		return this.isInline;
+		return isInline;
 	}
 
 	public void setIsExtern(boolean isExtern)
@@ -94,22 +93,22 @@ public class CVariable extends FieldInfo
 
 	public boolean isExtern()
 	{
-		return this.isExtern;
+		return isExtern;
 	}
 
 	public void setIsStatic(boolean isStatic)
 	{
-		this.IsStatic = isStatic;
+		IsStatic = isStatic;
 	}
 
 	public boolean isPointer()
 	{
-		return this.pointerLevel > 0;
+		return pointerLevel > 0;
 	}
 
 	public void setPointerLevel(int pointer)
 	{
-		this.pointerLevel = pointer;
+		pointerLevel = pointer;
 	}
 
 	public int getPointerLevel()
@@ -119,12 +118,12 @@ public class CVariable extends FieldInfo
 
 	public boolean isArray()
 	{
-		return this.arrayLevel > 0;
+		return arrayLevel > 0;
 	}
 
 	public void setArrayLevel(int pointer)
 	{
-		this.arrayLevel = pointer;
+		arrayLevel = pointer;
 	}
 
 	public int getArrayLevel()
@@ -134,7 +133,7 @@ public class CVariable extends FieldInfo
 
 	public boolean isGlobal()
 	{
-		return this.isGlobal;
+		return isGlobal;
 	}
 
 	public void setIsGlobal(boolean isGlobal)
@@ -144,17 +143,17 @@ public class CVariable extends FieldInfo
 
 	public String name()
 	{
-		return this.Name;
+		return Name;
 	}
 
 	public void setName(String name)
 	{
-		this.Name = name;
+		Name = name;
 	}
 
 	public void setParent(CFile parent)
 	{
-		this.ParentFile = parent;
+		ParentFile = parent;
 	}
 
 	public String getUnitName()

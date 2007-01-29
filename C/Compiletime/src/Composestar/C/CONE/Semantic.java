@@ -376,7 +376,7 @@ public abstract class Semantic
 	{
 		if (concern.getPlatformRepresentation() instanceof CFile)
 		{
-			this.file = (CFile) concern.getPlatformRepresentation();
+			file = (CFile) concern.getPlatformRepresentation();
 		}
 		this.concern = concern;
 	}

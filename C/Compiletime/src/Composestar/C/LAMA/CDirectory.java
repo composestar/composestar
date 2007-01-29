@@ -58,7 +58,7 @@ public class CDirectory extends LangNamespace
 
 	public CDirectory getParentDir()
 	{
-		return this.parentDir;
+		return parentDir;
 	}
 
 	public ArrayList getFiles()

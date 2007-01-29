@@ -19,17 +19,17 @@ public class WeaveblePoint
 
 	public void addWeavingInstruction(WeavingInstruction wi)
 	{
-		this.weavinginstructions.add(wi);
+		weavinginstructions.add(wi);
 	}
 
 	public WeavingInstruction getWeavingInstruction(int i)
 	{
-		return (WeavingInstruction) this.weavinginstructions.get(i);
+		return (WeavingInstruction) weavinginstructions.get(i);
 	}
 
 	public int getNumberOfWeaveInstructions()
 	{
-		return this.weavinginstructions.size();
+		return weavinginstructions.size();
 	}
 
 	public static void main(String[] args)
@@ -59,7 +59,7 @@ public class WeaveblePoint
 	{
 		// System.out.println("Evaluating advices:
 		// "+this.weavinginstructions.size());
-		ArrayList backup = new ArrayList(this.weavinginstructions);
+		ArrayList backup = new ArrayList(weavinginstructions);
 		ArrayList newlist = new ArrayList();
 		// System.out.println("Old: "+backup);
 		// System.out.println("New: "+newlist);
@@ -108,11 +108,11 @@ public class WeaveblePoint
 
 	public String getFileName()
 	{
-		return this.filename;
+		return filename;
 	}
 
 	public void SetFileName(String name)
 	{
-		this.filename = name;
+		filename = name;
 	}
 }

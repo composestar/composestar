@@ -88,8 +88,8 @@ public class WrappedAST
 			Vector commentKeepers, GlobalIntroductionPoint intropoint, HeaderIntroductionPoint headerpoint)
 	{
 		this.node = node;
-		this.introductionPoint = intropoint;
-		this.headerintroductionPoint = headerpoint;
+		introductionPoint = intropoint;
+		headerintroductionPoint = headerpoint;
 
 		this.infoChannel = infoChannel;
 		this.allNodes = allNodes;
@@ -815,11 +815,11 @@ public class WrappedAST
 	public void weaveGlobalIntroduction(String code, GlobalIntroductionPoint gip)
 	{
 		TNode iNode = wrappingUtil.prepareNodeForIntroduction(StaticVariableReplacer.replaceStaticVariables(code,
-				this.filename));
+				filename));
 		TNode previous = gip.getNode().getPreviousNode();
 		// System.out.println("Previous NODE:
 		// "+GnuCParser._tokenNames[previous.getType()]);
-		this.insertBeforeNode(previous, iNode);
+		insertBeforeNode(previous, iNode);
 	}
 
 	public void weaveHeaderIntroduction(String code, HeaderIntroductionPoint hip)
@@ -831,7 +831,7 @@ public class WrappedAST
 	public void weaveStructureIntroduction(String code, Struct struct)
 	{
 		TNode[] iNodes = wrappingUtil.prepareNodeForStructureIntroduction(StaticVariableReplacer
-				.replaceStaticVariables(code, this.filename));
+				.replaceStaticVariables(code, filename));
 
 		// System.out.println("Struct code:
 		// "+StaticVariableReplacer.replaceStaticVariables(code,

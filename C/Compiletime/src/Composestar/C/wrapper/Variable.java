@@ -22,7 +22,7 @@ public class Variable
 
 	public String FieldTypeString()
 	{
-		return this.FieldTypeString;
+		return FieldTypeString;
 	}
 
 	public void setFieldTypeString(String FieldTypeString)
@@ -32,7 +32,7 @@ public class Variable
 
 	public boolean isStatic()
 	{
-		return this.IsStatic;
+		return IsStatic;
 	}
 
 	public void setIsInline(boolean isInline)
@@ -42,7 +42,7 @@ public class Variable
 
 	public boolean isInline()
 	{
-		return this.isInline;
+		return isInline;
 	}
 
 	public void setIsExtern(boolean isExtern)
@@ -52,22 +52,22 @@ public class Variable
 
 	public boolean isExtern()
 	{
-		return this.isExtern;
+		return isExtern;
 	}
 
 	public void setIsStatic(boolean isStatic)
 	{
-		this.IsStatic = isStatic;
+		IsStatic = isStatic;
 	}
 
 	public boolean isPointer()
 	{
-		return this.pointerLevel > 0;
+		return pointerLevel > 0;
 	}
 
 	public int getPointerLevel()
 	{
-		return this.pointerLevel;
+		return pointerLevel;
 	}
 
 	public void setPointerLevel(int pointerLevel)
@@ -77,7 +77,7 @@ public class Variable
 
 	public boolean isArray()
 	{
-		return this.arrayLevel > 0;
+		return arrayLevel > 0;
 	}
 
 	public void setArrayLevel(int arrayLevel)
@@ -87,12 +87,12 @@ public class Variable
 
 	public int getArrayLevel()
 	{
-		return this.arrayLevel;
+		return arrayLevel;
 	}
 
 	public boolean isGlobal()
 	{
-		return this.isGlobal;
+		return isGlobal;
 	}
 
 	public void setIsGlobal(boolean isGlobal)
@@ -102,7 +102,7 @@ public class Variable
 
 	public String name()
 	{
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name)
@@ -112,12 +112,12 @@ public class Variable
 
 	public String fileName()
 	{
-		return this.filename;
+		return filename;
 	}
 
 	public void setFileName(String name)
 	{
-		this.filename = name;
+		filename = name;
 	}
 
 }

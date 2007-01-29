@@ -32,7 +32,7 @@ public class Struct extends WeaveblePoint
 	public void setNode(TNode node)
 	{
 		this.node = node;
-		this.populateStructInfo(node);
+		populateStructInfo(node);
 	}
 
 	public TNode getNode()
@@ -42,9 +42,9 @@ public class Struct extends WeaveblePoint
 
 	public Parameter getElement(int index)
 	{
-		if (index >= 0 && index < this.elements.size())
+		if (index >= 0 && index < elements.size())
 		{
-			return (Parameter) this.elements.get(index);
+			return (Parameter) elements.get(index);
 		}
 		else
 		{
@@ -54,12 +54,12 @@ public class Struct extends WeaveblePoint
 
 	public void addElement(Parameter param)
 	{
-		this.elements.add(param);
+		elements.add(param);
 	}
 
 	public int getNumberOfElements()
 	{
-		return this.elements.size();
+		return elements.size();
 	}
 
 	private void populateStructInfo(TNode node)
@@ -123,7 +123,7 @@ public class Struct extends WeaveblePoint
 				param.setType(tmptype);
 				typedefname = null;
 				types = new ArrayList();
-				this.addElement(param);
+				addElement(param);
 				param = new Parameter(null);
 				// return;
 			}

@@ -38,7 +38,7 @@ public class CType extends Type
 	{
 		UnitRegister.instance().registerLanguageUnit(this);
 		this.name = name;
-		this.fullName = name;
+		fullName = name;
 	}
 
 	public void setStruct(boolean isStruct)

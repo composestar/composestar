@@ -94,30 +94,30 @@ public class Parameter extends ParameterType
 		{
 			System.out.print(additionaltypeValue);
 		}
-		if (this.isArray())
+		if (isArray())
 		{
-			for (int j = 0; j < this.getArrayLevel(); j++)
+			for (int j = 0; j < getArrayLevel(); j++)
 			{
 				System.out.print("[]");
 			}
 		}
-		if (this.isPointer())
+		if (isPointer())
 		{
-			for (int j = 0; j < this.getPointerLevel(); j++)
+			for (int j = 0; j < getPointerLevel(); j++)
 			{
 				System.out.print("*");
 			}
 		}
 		System.out.print("  " + valueID);
-		if (this.usageType == IN)
+		if (usageType == IN)
 		{
 			System.out.println("(IN)");
 		}
-		else if (this.usageType == OUT)
+		else if (usageType == OUT)
 		{
 			System.out.println("(OUT)");
 		}
-		else if (this.usageType == INOUT)
+		else if (usageType == INOUT)
 		{
 			System.out.println("(INOUT)");
 		}

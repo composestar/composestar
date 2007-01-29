@@ -43,7 +43,7 @@ public class TraceTypesDB
 
 	private TraceTypesDB()
 	{
-		this.map = new HashMap();
+		map = new HashMap();
 	}
 
 	public static TraceTypesDB instance()
@@ -57,12 +57,12 @@ public class TraceTypesDB
 
 	public int getNumberOfTraceTypes()
 	{
-		return this.map.size();
+		return map.size();
 	}
 
 	public void addTraceType(TraceableType type)
 	{
-		this.map.put(type.getType(), type);
+		map.put(type.getType(), type);
 	}
 
 	public TraceableType getTraceType(String type)

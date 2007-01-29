@@ -102,15 +102,15 @@ public class TracingAspect extends WeaveCAspect
 		Iterator it = wrapper.getFunctions().iterator();
 		for (Object o : wrapper.getFunctions())
 		{
-			this.hasInTrace = false;
-			this.hasOutTrace = false;
+			hasInTrace = false;
+			hasOutTrace = false;
 			// this.inBuffer = "printf(\"Input parameter(s):";
 			// this.outBuffer = "printf(\"Output parameter(s):";
-			this.inBuffer = "ZPSPTR_trace_in_var(%MODULE_NAME%_mod_data.tr_handle,funcname,\"Input parameter(s): ";
-			this.outBuffer = "ZPSPTR_trace_out_var(%MODULE_NAME%_mod_data.tr_handle,funcname,\"Output parameter(s): ";
-			this.inParams = new ArrayList();
-			this.outParams = new ArrayList();
-			this.traceFunction((Function) o);
+			inBuffer = "ZPSPTR_trace_in_var(%MODULE_NAME%_mod_data.tr_handle,funcname,\"Input parameter(s): ";
+			outBuffer = "ZPSPTR_trace_out_var(%MODULE_NAME%_mod_data.tr_handle,funcname,\"Output parameter(s): ";
+			inParams = new ArrayList();
+			outParams = new ArrayList();
+			traceFunction((Function) o);
 		}
 		// System.out.println("Check: "+wrapper.getFunctions().size()+" ==
 		// "+this.weavebleobjs.size());
@@ -128,77 +128,77 @@ public class TracingAspect extends WeaveCAspect
 				// System.out.println("Checking param: "+param.getTypeName());
 				if (param.getAdditionalTypeValue() != null) // STRUCT!
 				{
-					this.traceStruct(param, function);
-					this.weavebleobjs.add(function);
+					traceStruct(param, function);
+					weavebleobjs.add(function);
 				}
 				else
 				{
-					this.traceParameter(param, function);
-					this.weavebleobjs.add(function);
+					traceParameter(param, function);
+					weavebleobjs.add(function);
 				}
 			}
 		}
 		else
 		{
-			this.weaveBasicIn(function);
-			this.weaveBasicOut(function);
+			weaveBasicIn(function);
+			weaveBasicOut(function);
 		}
 
-		if (this.hasInTrace)
+		if (hasInTrace)
 		{
-			for (int i = 0; i < this.inParams.size(); i++)
+			for (int i = 0; i < inParams.size(); i++)
 			{
 				if (i == 0)
 				{
-					this.inBuffer += "\"," + this.inParams.get(i);
+					inBuffer += "\"," + inParams.get(i);
 				}
 				else
 				{
-					this.inBuffer += "," + this.inParams.get(i);
+					inBuffer += "," + inParams.get(i);
 				}
 			}
-			this.inBuffer += ");";
+			inBuffer += ");";
 			if (PROFILE)
 			{
-				System.out.println("Input: " + this.inBuffer);
+				System.out.println("Input: " + inBuffer);
 			}
-			createWeaveInstruction(function, null, this.inBuffer, GeneralUtils.BEFORE);
+			createWeaveInstruction(function, null, inBuffer, GeneralUtils.BEFORE);
 
 		}
-		if (this.hasOutTrace)
+		if (hasOutTrace)
 		{
-			for (int i = 0; i < this.outParams.size(); i++)
+			for (int i = 0; i < outParams.size(); i++)
 			{
 				if (i == 0)
 				{
-					this.outBuffer += "\"," + this.outParams.get(i);
+					outBuffer += "\"," + outParams.get(i);
 				}
 				else
 				{
-					this.outBuffer += "," + this.outParams.get(i);
+					outBuffer += "," + outParams.get(i);
 				}
 			}
-			this.outBuffer += ");";
+			outBuffer += ");";
 			if (PROFILE)
 			{
-				System.out.println("Output: " + this.outBuffer);
+				System.out.println("Output: " + outBuffer);
 			}
-			createWeaveInstruction(function, null, this.outBuffer, GeneralUtils.AFTER);
+			createWeaveInstruction(function, null, outBuffer, GeneralUtils.AFTER);
 		}
 	}
 
 	private void weaveBasicIn(Function function)
 	{
 		String in = "ZDSPTR_trace_in(%MODULE_NAME%_mod_data.tr_handle, func_name);";
-		this.createWeaveInstruction(function, null, in, GeneralUtils.BEFORE);
-		this.weavebleobjs.add(function);
+		createWeaveInstruction(function, null, in, GeneralUtils.BEFORE);
+		weavebleobjs.add(function);
 	}
 
 	private void weaveBasicOut(Function function)
 	{
 		String out = "ZDSPTR_trace_out(%MODULE_NAME%_mod_data.tr_handle, func_name, result);";
-		this.createWeaveInstruction(function, null, out, GeneralUtils.AFTER);
-		this.weavebleobjs.add(function);
+		createWeaveInstruction(function, null, out, GeneralUtils.AFTER);
+		weavebleobjs.add(function);
 	}
 
 	private void traceParameter(Parameter param, Function function)
@@ -214,72 +214,72 @@ public class TracingAspect extends WeaveCAspect
 		{
 			if (param.getUsageType() == Parameter.IN)
 			{
-				this.hasInTrace = true;
-				if (!this.firstInTrace)
+				hasInTrace = true;
+				if (!firstInTrace)
 				{
-					this.inBuffer += ",";
-					this.firstInTrace = false;
+					inBuffer += ",";
+					firstInTrace = false;
 				}
-				this.inBuffer += StaticVariableReplacer.replaceParameter("%PARAM_NAME% = %p", param);
-				if (this.inParams.size() > 0)
+				inBuffer += StaticVariableReplacer.replaceParameter("%PARAM_NAME% = %p", param);
+				if (inParams.size() > 0)
 				{
-					this.inParams.add(" " + param.getValueID());
+					inParams.add(" " + param.getValueID());
 				}
 				else
 				{
-					this.inParams.add(param.getValueID());
+					inParams.add(param.getValueID());
 				}
 			}
 			else if (param.getUsageType() == Parameter.OUT)
 			{
-				this.hasOutTrace = true;
-				if (this.firstOutTrace)
+				hasOutTrace = true;
+				if (firstOutTrace)
 				{
-					this.outBuffer += ",";
-					this.firstOutTrace = false;
+					outBuffer += ",";
+					firstOutTrace = false;
 				}
-				this.outBuffer += StaticVariableReplacer.replaceParameter("%PARAM_NAME% = %p", param);
-				if (this.outParams.size() > 0)
+				outBuffer += StaticVariableReplacer.replaceParameter("%PARAM_NAME% = %p", param);
+				if (outParams.size() > 0)
 				{
-					this.outParams.add(" " + param.getValueID());
+					outParams.add(" " + param.getValueID());
 				}
 				else
 				{
-					this.outParams.add(param.getValueID());
+					outParams.add(param.getValueID());
 				}
 			}
 			else if (param.getUsageType() == Parameter.INOUT)
 			{
-				this.hasInTrace = true;
-				if (this.firstInTrace)
+				hasInTrace = true;
+				if (firstInTrace)
 				{
-					this.inBuffer += ",";
-					this.firstInTrace = false;
+					inBuffer += ",";
+					firstInTrace = false;
 				}
-				this.inBuffer += StaticVariableReplacer.replaceParameter("%PARAM_NAME% = %p", param);
-				if (this.inParams.size() > 0)
+				inBuffer += StaticVariableReplacer.replaceParameter("%PARAM_NAME% = %p", param);
+				if (inParams.size() > 0)
 				{
-					this.inParams.add(" " + param.getValueID());
+					inParams.add(" " + param.getValueID());
 				}
 				else
 				{
-					this.inParams.add(param.getValueID());
+					inParams.add(param.getValueID());
 				}
 
-				this.hasOutTrace = true;
-				if (this.firstOutTrace)
+				hasOutTrace = true;
+				if (firstOutTrace)
 				{
-					this.outBuffer += ",";
-					this.firstOutTrace = false;
+					outBuffer += ",";
+					firstOutTrace = false;
 				}
-				this.outBuffer += StaticVariableReplacer.replaceParameter("%PARAM_NAME% = %p", param);
-				if (this.outParams.size() > 0)
+				outBuffer += StaticVariableReplacer.replaceParameter("%PARAM_NAME% = %p", param);
+				if (outParams.size() > 0)
 				{
-					this.outParams.add(" " + param.getValueID());
+					outParams.add(" " + param.getValueID());
 				}
 				else
 				{
-					this.outParams.add(param.getValueID());
+					outParams.add(param.getValueID());
 				}
 			}
 		}
@@ -287,72 +287,72 @@ public class TracingAspect extends WeaveCAspect
 		{
 			if (param.getUsageType() == Parameter.IN)
 			{
-				this.hasInTrace = true;
-				if (this.firstInTrace)
+				hasInTrace = true;
+				if (firstInTrace)
 				{
-					this.inBuffer += ",";
-					this.firstInTrace = false;
+					inBuffer += ",";
+					firstInTrace = false;
 				}
-				this.inBuffer += StaticVariableReplacer.replaceParameter(tt.getInTraceString(), param);
-				if (this.inParams.size() > 0)
+				inBuffer += StaticVariableReplacer.replaceParameter(tt.getInTraceString(), param);
+				if (inParams.size() > 0)
 				{
-					this.inParams.add(" " + param.getValueID());
+					inParams.add(" " + param.getValueID());
 				}
 				else
 				{
-					this.inParams.add(param.getValueID());
+					inParams.add(param.getValueID());
 				}
 			}
 			else if (param.getUsageType() == Parameter.OUT)
 			{
-				this.hasOutTrace = true;
-				if (this.firstOutTrace)
+				hasOutTrace = true;
+				if (firstOutTrace)
 				{
-					this.outBuffer += ",";
-					this.firstOutTrace = false;
+					outBuffer += ",";
+					firstOutTrace = false;
 				}
-				this.outBuffer += StaticVariableReplacer.replaceParameter(tt.getOutTraceString(), param);
-				if (this.outParams.size() > 0)
+				outBuffer += StaticVariableReplacer.replaceParameter(tt.getOutTraceString(), param);
+				if (outParams.size() > 0)
 				{
-					this.outParams.add(" " + param.getValueID());
+					outParams.add(" " + param.getValueID());
 				}
 				else
 				{
-					this.outParams.add(param.getValueID());
+					outParams.add(param.getValueID());
 				}
 			}
 			else if (param.getUsageType() == Parameter.INOUT)
 			{
-				this.hasInTrace = true;
-				if (this.firstInTrace)
+				hasInTrace = true;
+				if (firstInTrace)
 				{
-					this.inBuffer += ",";
-					this.firstInTrace = false;
+					inBuffer += ",";
+					firstInTrace = false;
 				}
-				this.inBuffer += StaticVariableReplacer.replaceParameter(tt.getInTraceString(), param);
-				if (this.inParams.size() > 0)
+				inBuffer += StaticVariableReplacer.replaceParameter(tt.getInTraceString(), param);
+				if (inParams.size() > 0)
 				{
-					this.inParams.add(" " + param.getValueID());
+					inParams.add(" " + param.getValueID());
 				}
 				else
 				{
-					this.inParams.add(param.getValueID());
+					inParams.add(param.getValueID());
 				}
 
-				this.hasOutTrace = true;
-				if (this.firstOutTrace)
+				hasOutTrace = true;
+				if (firstOutTrace)
 				{
-					this.outBuffer += ",";
-					this.firstOutTrace = false;
+					outBuffer += ",";
+					firstOutTrace = false;
 				}
-				this.outBuffer += StaticVariableReplacer.replaceParameter(tt.getOutTraceString(), param);
-				if (this.outParams.size() > 0)
+				outBuffer += StaticVariableReplacer.replaceParameter(tt.getOutTraceString(), param);
+				if (outParams.size() > 0)
 				{
-					this.outParams.add(" " + param.getValueID());
+					outParams.add(" " + param.getValueID());
 				}
 				else
 				{
-					this.outParams.add(param.getValueID());
+					outParams.add(param.getValueID());
 				}
 			}
 		}
@@ -402,7 +402,7 @@ public class TracingAspect extends WeaveCAspect
 			// this
 		}
 
-		Struct struct = (Struct) this.wrapper.structASTMap.get(param.getAdditionalTypeValue());
+		Struct struct = (Struct) wrapper.structASTMap.get(param.getAdditionalTypeValue());
 		if (struct != null)
 		{
 			String intrace = param.getValueID() + " = { ";
@@ -428,83 +428,83 @@ public class TracingAspect extends WeaveCAspect
 
 			if (param.getUsageType() == Parameter.IN)
 			{
-				this.hasInTrace = true;
-				if (this.firstInTrace)
+				hasInTrace = true;
+				if (firstInTrace)
 				{
-					this.inBuffer += ",";
-					this.firstInTrace = false;
+					inBuffer += ",";
+					firstInTrace = false;
 				}
-				this.inBuffer += intrace;
+				inBuffer += intrace;
 				for (Object tracename : tracenames)
 				{
-					if (this.inParams.size() > 0)
+					if (inParams.size() > 0)
 					{
-						this.inParams.add(" " + tracename);
+						inParams.add(" " + tracename);
 					}
 					else
 					{
-						this.inParams.add(tracename);
+						inParams.add(tracename);
 					}
 				}
 			}
 			else if (param.getUsageType() == Parameter.OUT)
 			{
-				this.hasOutTrace = true;
-				if (this.firstOutTrace)
+				hasOutTrace = true;
+				if (firstOutTrace)
 				{
-					this.outBuffer += ",";
-					this.firstOutTrace = false;
+					outBuffer += ",";
+					firstOutTrace = false;
 				}
-				this.outBuffer += outtrace;
+				outBuffer += outtrace;
 				for (Object tracename : tracenames)
 				{
-					if (this.outParams.size() > 0)
+					if (outParams.size() > 0)
 					{
-						this.outParams.add(" " + tracename);
+						outParams.add(" " + tracename);
 					}
 					else
 					{
-						this.outParams.add(tracename);
+						outParams.add(tracename);
 					}
 				}
 			}
 			else if (param.getUsageType() == Parameter.INOUT)
 			{
-				this.hasInTrace = true;
-				if (this.firstInTrace)
+				hasInTrace = true;
+				if (firstInTrace)
 				{
-					this.inBuffer += ",";
-					this.firstInTrace = false;
+					inBuffer += ",";
+					firstInTrace = false;
 				}
-				this.inBuffer += intrace;
+				inBuffer += intrace;
 				for (Object tracename1 : tracenames)
 				{
-					if (this.inParams.size() > 0)
+					if (inParams.size() > 0)
 					{
-						this.inParams.add(" " + tracename1);
+						inParams.add(" " + tracename1);
 					}
 					else
 					{
-						this.inParams.add(tracename1);
+						inParams.add(tracename1);
 					}
 				}
 
-				this.hasOutTrace = true;
-				if (this.firstOutTrace)
+				hasOutTrace = true;
+				if (firstOutTrace)
 				{
-					this.outBuffer += ",";
-					this.firstOutTrace = false;
+					outBuffer += ",";
+					firstOutTrace = false;
 				}
-				this.outBuffer += outtrace;
+				outBuffer += outtrace;
 				for (Object tracename : tracenames)
 				{
-					if (this.outParams.size() > 0)
+					if (outParams.size() > 0)
 					{
-						this.outParams.add(" " + tracename);
+						outParams.add(" " + tracename);
 					}
 					else
 					{
-						this.outParams.add(tracename);
+						outParams.add(tracename);
 					}
 				}
 			}

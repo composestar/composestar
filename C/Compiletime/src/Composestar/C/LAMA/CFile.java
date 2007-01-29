@@ -60,14 +60,14 @@ public class CFile extends Type
 
 	public void addVariable(CVariable variable)
 	{
-		this.addField(variable);
+		addField(variable);
 		variable.setParent(this);
 	}
 
 	public void setName(String Name)
 	{
 		this.Name = Name;
-		this.FullName = Name;
+		FullName = Name;
 	}
 
 	public String getFullName()
@@ -82,7 +82,7 @@ public class CFile extends Type
 
 	public void setDirectory(CDirectory dir)
 	{
-		this.parent = dir;
+		parent = dir;
 	}
 
 	public CDirectory getDirectory()
@@ -100,7 +100,7 @@ public class CFile extends Type
 	public CMethodInfo getMethodInfo(String name)
 	{
 		CMethodInfo method = null;
-		for (ListIterator iter = this.m_methods.listIterator(); iter.hasNext();)
+		for (ListIterator iter = m_methods.listIterator(); iter.hasNext();)
 		{
 			method = (CMethodInfo) iter.next();
 			// if same name && param length

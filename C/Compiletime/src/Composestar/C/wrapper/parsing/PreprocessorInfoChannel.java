@@ -138,6 +138,6 @@ public class PreprocessorInfoChannel
 
 	public void setHashtable(Hashtable hashtable)
 	{
-		this.lineLists = hashtable;
+		lineLists = hashtable;
 	}
 }

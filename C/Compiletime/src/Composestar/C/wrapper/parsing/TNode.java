@@ -154,7 +154,7 @@ public class TNode extends CommonAST
 		setType(t.getType());
 		setLineNum(t.getLineNum());
 		setDefNode(t.getDefNode());
-		this.attributes = t.getAttributesTable();
+		attributes = t.getAttributesTable();
 	}
 
 	/** Get the token type for this node */
@@ -479,16 +479,16 @@ public class TNode extends CommonAST
 	{
 		StringBuffer str = new StringBuffer(getNameForType(getType()) + "[" + getText() + ", " + "]");
 
-		if (this.getLineNum() != 0)
+		if (getLineNum() != 0)
 		{
-			str.append(" line:").append(this.getLineNum());
+			str.append(" line:").append(getLineNum());
 		}
 
-		Enumeration keys = (this.getAttributesTable().keys());
+		Enumeration keys = (getAttributesTable().keys());
 		while (keys.hasMoreElements())
 		{
 			String key = (String) keys.nextElement();
-			str.append(" ").append(key).append(":").append(this.getAttribute(key));
+			str.append(" ").append(key).append(":").append(getAttribute(key));
 		}
 
 		return str.toString();
@@ -771,24 +771,24 @@ public class TNode extends CommonAST
 
 	public void setTokenNumber(int i)
 	{
-		if (this.getAttribute(TNode.TOKEN_NUMBER) != null)
+		if (getAttribute(TNode.TOKEN_NUMBER) != null)
 		{
-			this.setAttribute(TNode.TOKEN_NUMBER, i);
+			setAttribute(TNode.TOKEN_NUMBER, i);
 		}
 	}
 
 	public int getTokenNumber()
 	{
-		if (this.getAttribute(TNode.TOKEN_NUMBER) != null)
+		if (getAttribute(TNode.TOKEN_NUMBER) != null)
 		{
-			return (Integer) this.getAttribute(TNode.TOKEN_NUMBER);
+			return (Integer) getAttribute(TNode.TOKEN_NUMBER);
 		}
 		return -1;
 	}
 
 	public boolean isSource()
 	{
-		if (this.getAttribute(TNode.IS_SOURCE) != null)
+		if (getAttribute(TNode.IS_SOURCE) != null)
 		{
 			return true;
 		}
@@ -797,9 +797,9 @@ public class TNode extends CommonAST
 
 	public String getScope()
 	{
-		if (this.getAttribute(TNode.SCOPE_NAME) != null)
+		if (getAttribute(TNode.SCOPE_NAME) != null)
 		{
-			return (String) this.getAttribute(TNode.SCOPE_NAME);
+			return (String) getAttribute(TNode.SCOPE_NAME);
 		}
 		return "";
 	}

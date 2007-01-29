@@ -75,10 +75,10 @@ public class CMethodInfo extends MethodInfo
 		CMethodInfo mi = new CMethodInfo();
 		mi.setName(n);
 		mi.Parent = actualParent;
-		mi.Parameters = this.Parameters;
-		mi.ReturnType = this.ReturnType;
-		mi.ReturnTypeString = this.ReturnTypeString;
-		mi.CallingConvention = this.CallingConvention;
+		mi.Parameters = Parameters;
+		mi.ReturnType = ReturnType;
+		mi.ReturnTypeString = ReturnTypeString;
+		mi.CallingConvention = CallingConvention;
 		return mi;
 	}
 
@@ -136,7 +136,7 @@ public class CMethodInfo extends MethodInfo
 
 	public void setName(String name)
 	{
-		this.Name = name;
+		Name = name;
 	}
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException

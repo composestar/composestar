@@ -63,7 +63,7 @@ public class FunctionFactory
 		fVoid = false;
 		noInput = false;
 
-		this.node = mainNode;
+		node = mainNode;
 		vecReturns = new Vector();
 
 		name = parseName();
@@ -186,12 +186,12 @@ public class FunctionFactory
 						String ID = node100.firstChildOfType(GnuCTokenTypes.ID).getText();
 						Parameter p = new Parameter(iii, sss, ID);
 
-						this.checkForPointer(node100, p);
-						this.checkForArray(node100, p);
+						checkForPointer(node100, p);
+						checkForArray(node100, p);
 
 						v.add(p);
 
-						this.params.put(ID, p);
+						params.put(ID, p);
 					}
 					else
 					{
@@ -216,10 +216,10 @@ public class FunctionFactory
 						TNode node100 = node114.firstChildOfType(GnuCTokenTypes.NDeclarator);
 						String ID = node100.firstChildOfType(GnuCTokenTypes.ID).getText();
 						p.setValueID(ID);
-						this.checkForPointer(node100, p);
-						this.checkForArray(node100, p);
+						checkForPointer(node100, p);
+						checkForArray(node100, p);
 						v.add(p);
-						this.params.put(ID, p);
+						params.put(ID, p);
 					}
 				}
 				node114 = node114.firstSiblingOfType(GnuCTokenTypes.NParameterDeclaration);

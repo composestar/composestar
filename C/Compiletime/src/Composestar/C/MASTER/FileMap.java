@@ -44,17 +44,17 @@ public class FileMap implements Serializable, Cloneable
 
 	public void addFileASTs(Hashtable fileASTs)
 	{
-		this.fileASTMap.putAll(fileASTs);
+		fileASTMap.putAll(fileASTs);
 	}
 
 	public void addFileAST(String name, retrieveAST rast)
 	{
-		this.fileASTMap.put(name, rast);
+		fileASTMap.put(name, rast);
 	}
 
 	public Hashtable getFileASTs()
 	{
-		return this.fileASTMap;
+		return fileASTMap;
 	}
 
 	public String getFileASTwithName(String fileName)

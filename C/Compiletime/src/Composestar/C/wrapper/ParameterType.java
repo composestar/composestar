@@ -59,12 +59,12 @@ public class ParameterType
 
 	public void addArrayLevel()
 	{
-		this.array++;
+		array++;
 	}
 
 	public int getArrayLevel()
 	{
-		return this.array;
+		return array;
 	}
 
 	public boolean isPointer()
@@ -74,19 +74,19 @@ public class ParameterType
 
 	public void addPointerLevel()
 	{
-		this.pointer++;
+		pointer++;
 	}
 
 	public int getPointerLevel()
 	{
-		return this.pointer;
+		return pointer;
 	}
 
 	public ParameterType(int[] type, String additionalTypeValue)
 	{
 		this.type = type;
-		this.additionaltypeValue = additionalTypeValue;
-		this.defined = true;
+		additionaltypeValue = additionalTypeValue;
+		defined = true;
 	}
 
 	public ParameterType(int[] type)
@@ -116,7 +116,7 @@ public class ParameterType
 
 	public void setAdditionalTypeValue(String addtype)
 	{
-		this.additionaltypeValue = addtype;
+		additionaltypeValue = addtype;
 	}
 
 	public boolean isDefined()
@@ -126,7 +126,7 @@ public class ParameterType
 
 	public void setDefined()
 	{
-		this.defined = true;
+		defined = true;
 	}
 
 	public void testParameterType()
@@ -140,17 +140,17 @@ public class ParameterType
 			System.out.print(" " + additionaltypeValue);
 		}
 
-		if (this.isArray())
+		if (isArray())
 		{
-			for (int j = 0; j < this.getArrayLevel(); j++)
+			for (int j = 0; j < getArrayLevel(); j++)
 			{
 				System.out.print("[]");
 			}
 		}
 
-		if (this.isPointer())
+		if (isPointer())
 		{
-			for (int j = 0; j < this.getPointerLevel(); j++)
+			for (int j = 0; j < getPointerLevel(); j++)
 			{
 				System.out.print("*");
 			}
@@ -175,17 +175,17 @@ public class ParameterType
 			tmp += " " + additionaltypeValue;
 		}
 
-		if (this.isArray())
+		if (isArray())
 		{
-			for (int j = 0; j < this.getArrayLevel(); j++)
+			for (int j = 0; j < getArrayLevel(); j++)
 			{
 				tmp += "[]";
 			}
 		}
 
-		if (this.isPointer())
+		if (isPointer())
 		{
-			for (int j = 0; j < this.getPointerLevel(); j++)
+			for (int j = 0; j < getPointerLevel(); j++)
 			{
 				tmp += "*";
 			}

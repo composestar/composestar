@@ -63,23 +63,23 @@ public class Functions
 
 	public XMLParameter getParameter(int i)
 	{
-		return (XMLParameter) this.parameters.get(i);
+		return (XMLParameter) parameters.get(i);
 	}
 
 	public void addParameter(XMLParameter param)
 	{
-		this.setHasParamSpec(true);
-		this.parameters.add(param);
+		setHasParamSpec(true);
+		parameters.add(param);
 	}
 
 	public int getNumberOfParameters()
 	{
-		return this.parameters.size();
+		return parameters.size();
 	}
 
 	public void setReturnType(String returnType)
 	{
-		this.setHasReturnSpec(true);
+		setHasReturnSpec(true);
 		this.returnType = returnType;
 	}
 
@@ -90,7 +90,7 @@ public class Functions
 
 	public void setData(String function)
 	{
-		this.data = function;
+		data = function;
 	}
 
 	public String getData()
@@ -120,30 +120,30 @@ public class Functions
 
 	public void addFunction(Function func)
 	{
-		this.realFunctionTable.put(func.getName(), func);
+		realFunctionTable.put(func.getName(), func);
 	}
 
 	public void removeFunction(String funcname)
 	{
-		this.realFunctionTable.remove(funcname);
+		realFunctionTable.remove(funcname);
 	}
 
 	public String toString()
 	{
 		String tmp = "";
-		tmp += "\t\tFunctions: file=" + file + " data=" + this.data + "("
-				+ GeneralUtils.getTypeForProgramElement(this.type) + ")\n";
-		if (this.invertReturnType)
+		tmp += "\t\tFunctions: file=" + file + " data=" + data + "(" + GeneralUtils.getTypeForProgramElement(type)
+				+ ")\n";
+		if (invertReturnType)
 		{
-			tmp += "\t\t\t!!! Return: type=" + this.returnType + "\n";
+			tmp += "\t\t\t!!! Return: type=" + returnType + "\n";
 		}
 		else
 		{
-			tmp += "\t\t\t    Return: type=" + this.returnType + "\n";
+			tmp += "\t\t\t    Return: type=" + returnType + "\n";
 		}
-		for (int i = 0; i < this.getNumberOfParameters(); i++)
+		for (int i = 0; i < getNumberOfParameters(); i++)
 		{
-			tmp += this.getParameter(i).toString();
+			tmp += getParameter(i).toString();
 		}
 		return tmp;
 	}

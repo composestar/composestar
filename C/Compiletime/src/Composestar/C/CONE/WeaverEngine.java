@@ -128,7 +128,7 @@ public class WeaverEngine
 								list.add(wrapper.headerintroductionPoint);
 							}
 						}
-						list = this.restrictFunctions(funcs, list);
+						list = restrictFunctions(funcs, list);
 						functionsToRealWeavebaleObjectsMap.put(funcs, list);
 					}
 					else
@@ -175,7 +175,7 @@ public class WeaverEngine
 								list.add(wrapper.headerintroductionPoint);
 							}
 						}
-						list = this.restrictFunctions(funcs, list);
+						list = restrictFunctions(funcs, list);
 						functionsToRealWeavebaleObjectsMap.put(funcs, list);
 					}
 				}

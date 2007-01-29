@@ -27,12 +27,12 @@ public class DispatchSemantic extends Semantic
 		String conditionCode = conditionCode();
 		if (conditionCode.equals(""))
 		{
-			advice = "return " + substitutionFunction + "(" + this.parameters() + ");\n";
+			advice = "return " + substitutionFunction + "(" + parameters() + ");\n";
 		}
 		else
 		{
 			advice = "if(" + disableOperatorCode() + conditionCode() + ") { return " + substitutionFunction + "("
-					+ this.parameters() + ");}\n";
+					+ parameters() + ");}\n";
 		}
 		return advice;
 	}

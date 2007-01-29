@@ -1,7 +1,6 @@
 package Composestar.C.wrapper;
 
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -11,7 +10,13 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.C.LAMA.CFile;
-import Composestar.C.wrapper.parsing.*;
+import Composestar.C.wrapper.parsing.Annotation;
+import Composestar.C.wrapper.parsing.GnuCLexer;
+import Composestar.C.wrapper.parsing.GnuCParser;
+import Composestar.C.wrapper.parsing.GnuCTreeParser;
+import Composestar.C.wrapper.parsing.PreprocessorInfoChannel;
+import Composestar.C.wrapper.parsing.TNode;
+import Composestar.C.wrapper.parsing.WrappedAST;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Utils.Debug;
@@ -66,11 +71,11 @@ public class retrieveAST
 		setFunctions(new Vector());
 		commentKeepers = new Vector();
 
-		this.setFilename(filename);
-		this.setObjectname(objectname);
+		setFilename(filename);
+		setObjectname(objectname);
 		this.setNameSpace(namespace);
-		this.setUsedType(usedType);
-		this.setCFile(cf);
+		setUsedType(usedType);
+		setCFile(cf);
 
 		try
 		{
@@ -79,8 +84,8 @@ public class retrieveAST
 			initialization(input);
 			fillAllNodes();
 
-			this.setWrappedAST(new WrappedAST(node, infoChannel, allNodes, getFunctions(), commentKeepers,
-					this.introductionPoint, this.headerintroductionPoint));
+			setWrappedAST(new WrappedAST(node, infoChannel, allNodes, getFunctions(), commentKeepers,
+					introductionPoint, headerintroductionPoint));
 			wrappedAST.setFilename(filename);
 
 			// this.setCW(this);
@@ -109,23 +114,23 @@ public class retrieveAST
 		TNode.setTokenVocabulary("Composestar.C.wrapper.parsing.GnuCTokenTypes");
 		try
 		{
-			parser.setFilename(this.filename);
+			parser.setFilename(filename);
 			parser.translationUnit();
 
 			GnuCTreeParser treeparser = new GnuCTreeParser();
 			treeparser.setUsedTypes(usedTypes);
 			treeparser.setCFile(cf);
-			treeparser.setFilename(this.objectname);
+			treeparser.setFilename(objectname);
 			treeparser.translationUnit(parser.getAST());
 			treeparser.printFields();
 			treeparser.addFieldsToRepository();
 			// CommonAST parseTree=(CommonAST)parser.getAST();
 			// printTree(parseTree);
 
-			this.introductionPoint = treeparser.getIntroductionPoint();
-			this.headerintroductionPoint = treeparser.getHeaderIntroductionPoint();
-			this.functions = treeparser.getFunctions();
-			this.structASTMap = treeparser.getStructASTMap();
+			introductionPoint = treeparser.getIntroductionPoint();
+			headerintroductionPoint = treeparser.getHeaderIntroductionPoint();
+			functions = treeparser.getFunctions();
+			structASTMap = treeparser.getStructASTMap();
 			usedTypes.putAll(treeparser.getUsedTypes());
 			HashMap annotations = treeparser.getAnnotationASTMap();
 			Iterator annoIterator = annotations.values().iterator();
@@ -149,14 +154,14 @@ public class retrieveAST
 
 	public void printMetaModel()
 	{
-		System.out.println("Meta model for file: " + this.getFilename());
-		if (this.introductionPoint != null)
+		System.out.println("Meta model for file: " + getFilename());
+		if (introductionPoint != null)
 		{
-			System.out.println("Introduction JP: " + this.introductionPoint.getNode().getLineNum());
+			System.out.println("Introduction JP: " + introductionPoint.getNode().getLineNum());
 		}
 		for (int i = 0; i < getFunctions().size(); i++)
 		{
-			Function function = (Function) this.getFunctions().get(i);
+			Function function = (Function) getFunctions().get(i);
 			if (function != null)
 			{
 				System.out.println("Meta model for function: " + function.getName());
@@ -229,11 +234,11 @@ public class retrieveAST
 
 	public void setObjectName(String filename, CommonResources resources)
 	{
-		this.objectname = Configuration.instance().getPathSettings().getPath("Base");
-		this.objectname = objectname.replace('/', '\\');
-		this.objectname = filename.substring(objectname.length());
-		this.objectname = objectname.substring(0, objectname.lastIndexOf(".ccc"));
-		this.objectname = objectname.replace('\\', '.');
+		objectname = Configuration.instance().getPathSettings().getPath("Base");
+		objectname = objectname.replace('/', '\\');
+		objectname = filename.substring(objectname.length());
+		objectname = objectname.substring(0, objectname.lastIndexOf(".ccc"));
+		objectname = objectname.replace('\\', '.');
 	}
 
 	public void setNameSpace(String filename, CommonResources resources)

@@ -85,27 +85,27 @@ public class WeavingInstruction
 	{
 		// System.out.println("Weaving instruction for: "+advicetype+" ==
 		// "+applicationtype);
-		this.setAdviceApplication(aa);
-		this.setAdvice(advice);
+		setAdviceApplication(aa);
+		setAdvice(advice);
 		this.function = function;
-		this.instructiontype = getInstructionType(advice.getType(), aa.getType());
-		this.code = advice.getCode();
+		instructiontype = getInstructionType(advice.getType(), aa.getType());
+		code = advice.getCode();
 	}
 
 	public WeavingInstruction(String alternate, Advice advice, AdviceApplication aa)
 	{
 		// System.out.println("Weaving instruction for: "+advicetype+" ==
 		// "+applicationtype);
-		this.setAdviceApplication(aa);
-		this.setAdvice(advice);
-		this.setAlternate(alternate);
-		this.instructiontype = getInstructionType(advice.getType(), aa.getType());
-		this.code = advice.getCode();
+		setAdviceApplication(aa);
+		setAdvice(advice);
+		setAlternate(alternate);
+		instructiontype = getInstructionType(advice.getType(), aa.getType());
+		code = advice.getCode();
 	}
 
 	public Function getFunction()
 	{
-		return this.function;
+		return function;
 	}
 
 	public void setFunction(Function function)
@@ -120,7 +120,7 @@ public class WeavingInstruction
 
 	public void setType(int type)
 	{
-		this.instructiontype = type;
+		instructiontype = type;
 	}
 
 	public String getCode()
@@ -137,13 +137,12 @@ public class WeavingInstruction
 	{
 		if (alternate == null)
 		{
-			return "WI[" + this.function.getFileName() + ":" + this.function.getName() + "] @ "
-					+ this.getInstructionString(instructiontype) + " CODE: " + this.getCode();
+			return "WI[" + function.getFileName() + ":" + function.getName() + "] @ "
+					+ getInstructionString(instructiontype) + " CODE: " + getCode();
 		}
 		else
 		{
-			return "WI[" + this.advice.getId() + "] @ " + this.getInstructionString(instructiontype) + " CODE: "
-					+ this.getCode();
+			return "WI[" + advice.getId() + "] @ " + getInstructionString(instructiontype) + " CODE: " + getCode();
 		}
 	}
 

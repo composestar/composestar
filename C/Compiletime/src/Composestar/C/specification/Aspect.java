@@ -88,7 +88,7 @@ public class Aspect
 
 	public void addAdvice(Advice advice)
 	{
-		this.advices.put(advice.getId(), advice);
+		advices.put(advice.getId(), advice);
 	}
 
 	public int getNumberOfAdvices()
@@ -119,26 +119,26 @@ public class Aspect
 	{
 		String tmp = "";
 		tmp += "Aspect(" + aspectIsSane() + "): " + id + "\n";
-		for (int i = 0; i < this.getNumberOfPointcuts(); i++)
+		for (int i = 0; i < getNumberOfPointcuts(); i++)
 		{
-			tmp += this.getPointcut(i).toString();
+			tmp += getPointcut(i).toString();
 		}
-		for (int i = 0; i < this.getNumberOfAdvices(); i++)
+		for (int i = 0; i < getNumberOfAdvices(); i++)
 		{
-			tmp += this.getAdvice(i).toString();
+			tmp += getAdvice(i).toString();
 		}
 		return tmp;
 	}
 
 	public boolean aspectIsSane()
 	{
-		for (int i = 0; i < this.getNumberOfPointcuts(); i++)
+		for (int i = 0; i < getNumberOfPointcuts(); i++)
 		{
-			Pointcut p = this.getPointcut(i);
+			Pointcut p = getPointcut(i);
 			for (int j = 0; j < p.getNumberOfAdviceApplications(); j++)
 			{
 				AdviceApplication aa = p.getAdviceApplication(j);
-				if (!this.advices.containsKey(aa.getId()))
+				if (!advices.containsKey(aa.getId()))
 				{
 					return false;
 				}
@@ -150,9 +150,9 @@ public class Aspect
 	public ArrayList getAllFiles()
 	{
 		ArrayList list = new ArrayList();
-		for (int i = 0; i < this.getNumberOfPointcuts(); i++)
+		for (int i = 0; i < getNumberOfPointcuts(); i++)
 		{
-			Pointcut p = this.getPointcut(i);
+			Pointcut p = getPointcut(i);
 			for (int j = 0; j < p.getNumberOfFunctions(); j++)
 			{
 				list.add(p.getFunctions(j).getFile());
@@ -163,13 +163,13 @@ public class Aspect
 
 	public Hashtable getAdvices()
 	{
-		return this.advices;
+		return advices;
 	}
 
 	public boolean hasCall()
 	{
-		Iterator adviceit = this.advices.values().iterator();
-		for (Object o : this.advices.values())
+		Iterator adviceit = advices.values().iterator();
+		for (Object o : advices.values())
 		{
 			Advice advice = (Advice) o;
 			if (advice.getType() == GeneralUtils.FUNCTION_CALL)

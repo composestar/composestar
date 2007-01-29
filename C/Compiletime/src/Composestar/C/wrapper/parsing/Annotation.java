@@ -40,7 +40,7 @@ public class Annotation
 	{
 		if (valueNode.getType() == GnuCTokenTypes.StringLiteral)
 		{
-			this.values.add(valueNode.getText());
+			values.add(valueNode.getText());
 		}
 	}
 

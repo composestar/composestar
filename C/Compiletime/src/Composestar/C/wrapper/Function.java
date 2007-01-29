@@ -69,7 +69,7 @@ public class Function extends WeaveblePoint
 
 	public void setNoInputParameters()
 	{
-		this.noInputParameters = true;
+		noInputParameters = true;
 	}
 
 	public int getNumberExitPoints()
@@ -101,7 +101,7 @@ public class Function extends WeaveblePoint
 
 		this.inParameters = inParameters;
 		this.mainNode = mainNode;
-		this.toInsertBefore = toInsertBeforeNode;
+		toInsertBefore = toInsertBeforeNode;
 		this.returnPoints = returnPoints;
 	}
 
@@ -128,11 +128,11 @@ public class Function extends WeaveblePoint
 	public boolean hasNoParameters()
 	{
 		boolean retValue = false;
-		if (this.inParameters == null)
+		if (inParameters == null)
 		{
 			retValue = true;
 		}
-		else if (this.inParameters.size() <= 0)
+		else if (inParameters.size() <= 0)
 		{
 			retValue = true;
 		}
@@ -229,7 +229,7 @@ public class Function extends WeaveblePoint
 
 	public boolean hasReturnType(String type)
 	{
-		if (this.retParameter == null)
+		if (retParameter == null)
 		{
 			return false;
 		}
@@ -237,7 +237,7 @@ public class Function extends WeaveblePoint
 		{
 			return true;
 		}
-		return this.matchType(this.retParameter, type);
+		return matchType(retParameter, type);
 	}
 
 	public boolean matchType(ParameterType ptype, String type)
@@ -314,14 +314,14 @@ public class Function extends WeaveblePoint
 
 	public boolean hasParameterWithType(String type)
 	{
-		if (this.inParameters == null)
+		if (inParameters == null)
 		{
 			return false;
 		}
-		for (Object inParameter : this.inParameters)
+		for (Object inParameter : inParameters)
 		{
 			Parameter param = (Parameter) inParameter;
-			if (this.matchType(param, type))
+			if (matchType(param, type))
 			{
 				return true;
 			}
@@ -331,7 +331,7 @@ public class Function extends WeaveblePoint
 
 	public boolean hasParameterWithName(String name)
 	{
-		for (Object inParameter : this.inParameters)
+		for (Object inParameter : inParameters)
 		{
 			Parameter param = (Parameter) inParameter;
 			if (param.getValueID().equals(name))
@@ -344,6 +344,6 @@ public class Function extends WeaveblePoint
 
 	public String toString()
 	{
-		return this.filename + ":" + this.name;
+		return filename + ":" + name;
 	}
 }

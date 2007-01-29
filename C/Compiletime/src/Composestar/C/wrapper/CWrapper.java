@@ -123,12 +123,12 @@ public class CWrapper implements CTCommonModule
 
 		for (Object cfile : cfiles)
 		{
-			this.fileASTMap.put(cfile, new Object());
+			fileASTMap.put(cfile, new Object());
 			// this.fileASTMap.put(((String)cfiles.get(i)).substring(((String)cfiles.get(i)).lastIndexOf("\\"),((String)cfiles.get(i)).indexOf(".ccc")));
 		}
 
-		Iterator it = this.fileASTMap.keySet().iterator();
-		for (Object o : this.fileASTMap.keySet())
+		Iterator it = fileASTMap.keySet().iterator();
+		for (Object o : fileASTMap.keySet())
 		{
 			filename = (String) o;
 			String cfName = filename.substring(filename.lastIndexOf("\\") + 1, filename.indexOf(".ccc"));
@@ -153,7 +153,7 @@ public class CWrapper implements CTCommonModule
 				setObjectName(filename, resources);
 				setNameSpace(filename, resources);
 				wrapper.createWrappedAST(filename, objectname, namespace, usedTypes, cf, this);
-				this.fileASTMap.put(filename, wrapper);
+				fileASTMap.put(filename, wrapper);
 				FileMap.instance().addFileAST(filename, wrapper);// createWrappedAST(filename,
 				// objectname,
 				// namespace,
@@ -299,11 +299,11 @@ public class CWrapper implements CTCommonModule
 
 	public void setObjectName(String filename, CommonResources resources)
 	{
-		this.objectname = Configuration.instance().getPathSettings().getPath("Base");
-		this.objectname = objectname.replace('/', '\\');
-		this.objectname = filename.substring(objectname.length());
-		this.objectname = objectname.substring(0, objectname.lastIndexOf(".ccc"));
-		this.objectname = objectname.replace('\\', '.');
+		objectname = Configuration.instance().getPathSettings().getPath("Base");
+		objectname = objectname.replace('/', '\\');
+		objectname = filename.substring(objectname.length());
+		objectname = objectname.substring(0, objectname.lastIndexOf(".ccc"));
+		objectname = objectname.replace('\\', '.');
 	}
 
 	public void setNameSpace(String filename, CommonResources resources)
