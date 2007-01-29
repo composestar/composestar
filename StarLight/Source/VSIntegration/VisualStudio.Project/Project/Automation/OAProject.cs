@@ -184,10 +184,18 @@ namespace Microsoft.VisualStudio.Package.Automation
 		{
 			get
 			{
-				object outputProperties = null;
+				/*object outputProperties = null;
 				IVsExtensibility3 vsExtensibility3 = this.project.GetService(typeof(IVsExtensibility)) as IVsExtensibility3;
 				vsExtensibility3.GetProperties(this, this.project.NodeProperties, out outputProperties);
-				return (EnvDTE.Properties)outputProperties;
+				return (EnvDTE.Properties)outputProperties;*/
+                if (this.project.NodeProperties != null)
+                {
+                    return new OAProperties(this.project.NodeProperties);
+                }
+                else
+                {
+                    return null;
+                }
 			}
 		}
 
