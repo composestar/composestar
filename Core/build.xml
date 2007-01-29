@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+
+cd<?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/Core" default="build">
 
 	<condition property="build.core" value="${basedir}">
@@ -29,6 +30,10 @@
 	<target name="build">
 		<ant target="build" dir="Compiletime" inheritRefs="true" />
 		<ant target="build" dir="Runtime" inheritRefs="true" />
+	</target>
+	
+	<target name="plugin">
+		<ant target="build" dir="Plugin" inheritRefs="true" />
 	</target>
 	
 	<target name="install">

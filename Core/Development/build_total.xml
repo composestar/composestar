@@ -126,6 +126,7 @@
 	<!-- plugin tasks -->
 	
 	<target name="plugin" depends="init" description="Compile the IDE plugins">
+		<ant target="plugin" dir="${build.core}" inheritRefs="true" />
 		<antcall target="plugin_dotnet" inheritRefs="true" />
 		<antcall target="plugin_java" inheritRefs="true" />	
 	</target>
