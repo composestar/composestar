@@ -10,65 +10,65 @@
 package Composestar.Core.COPPER;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
+import java.io.Reader;
+import java.io.StringWriter;
 
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 import antlr.ANTLRException;
 import antlr.CommonAST;
 import antlr.RecognitionException;
-import antlr.debug.misc.ASTFrame;
 
 /**
  * Parses the cps file and builds the parse tree
  */
 public class CPSFileParser
 {
-	private CpsParser parser;
-
-	public void parseCpsFileWithName(String filename) throws ModuleException
+	public ParseResult parse(String filename) throws ModuleException
 	{
-		this.readCpsFile(filename);
-		this.parseCpsFile(filename);
+		ParseResult pr = innerParse(filename);
 
-		COPPER.setParser(parser);
-		COPPER.setParseTree((CommonAST) parser.getAST());
-
-		Debug.out(Debug.MODE_DEBUG, COPPER.MODULE_NAME, "Parse tree: " + parser.getAST().toStringTree());
-		if (COPPER.isShowtree())
-		{
-			System.out.println(COPPER.getParseTree().toStringList() + "\n\n");
-			ASTFrame frame = new ASTFrame(filename, COPPER.getParseTree());
-			frame.setSize(800, 600);
-			frame.setVisible(true);
-		}
+		if (pr.startPos != -1)
+			pr.embeddedCode = extractEmbeddedCode(filename, pr.startPos);
+		
+		return pr;
 	}
-
-	public void readCpsFile(String file) throws ModuleException
+	
+	private ParseResult innerParse(String filename) throws ModuleException
 	{
-		BufferedReader reader = null;
+		Reader reader = null;
 		try
 		{
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-			StringBuffer sb = new StringBuffer();
-
-			String line = reader.readLine();
-			while (line != null)
-			{
-				sb.append(line).append("\r\n");
-				line = reader.readLine();
-			}
-
-			COPPER.setCpscontents(sb.toString());
+			reader = new BufferedReader(new FileReader(filename));
+			
+			CpsPosLexer lexer = new CpsPosLexer(reader);
+			CpsParser parser = new CpsParser(lexer);
+			parser.getASTFactory().setASTNodeClass(CpsAST.class);
+			parser.concern();
+			
+			ParseResult pr = new ParseResult();
+			pr.filename = filename;
+			pr.ast = (CommonAST) parser.getAST();
+			pr.startPos = parser.startPos;
+			return pr;
 		}
-		catch (IOException ioe)
+		catch (FileNotFoundException e)
 		{
-			throw new ModuleException("The specified file '" + file + "' could not be found or read!",
-					COPPER.MODULE_NAME);
+			throw new ModuleException(
+					"Could not open '" + filename + "': " + e.getMessage(), COPPER.MODULE_NAME);
+		}
+		catch (RecognitionException e)
+		{
+			throw new ModuleException(
+					"Syntax error in concern file: " + e, COPPER.MODULE_NAME, filename, e.getLine());
+		}
+		catch (ANTLRException e)
+		{
+			throw new ModuleException(
+					"Syntax error in concern file: " + e, COPPER.MODULE_NAME, filename, 0);
 		}
 		finally
 		{
@@ -76,24 +76,58 @@ public class CPSFileParser
 		}
 	}
 
-	public void parseCpsFile(String file) throws ModuleException
+	private String extractEmbeddedCode(String filename, int startPos) throws ModuleException
 	{
+		Reader reader = null;
 		try
 		{
-			StringReader sr = new StringReader(COPPER.getCpscontents());
-			CpsPosLexer lexer = new CpsPosLexer(sr);
-			parser = new CpsParser(lexer);
-			parser.getASTFactory().setASTNodeClass(CpsAST.class);
-			// parser.setASTNodeClass("Composestar.Core.COPPER.CpsAST");
-			parser.concern();
+			reader = new BufferedReader(new FileReader(filename));
+			StringWriter sw = new StringWriter();
+			
+			// skip until embedded code starts
+			int toSkip = startPos - 1;
+			while (toSkip > 0)
+				toSkip -= reader.skip(startPos);
+			
+			// copy the rest
+			FileUtils.copy(reader, sw);
+
+			// trim and return the result
+			return trimEmbeddedCode(sw.toString());
 		}
-		catch (RecognitionException e)
+		catch (FileNotFoundException e)
 		{
-			throw new ModuleException("Syntax error in concern file: " + e, COPPER.MODULE_NAME, file, e.getLine());
+			throw new ModuleException(
+					"Could not open '" + filename + "': " + e.getMessage(), COPPER.MODULE_NAME);
 		}
-		catch (ANTLRException e)
+		catch (IOException e)
 		{
-			throw new ModuleException("Syntax error in concern file: " + e, COPPER.MODULE_NAME, file, 0);
+			throw new ModuleException(
+					"Error reading from '" + filename + "': " + e.getMessage(), COPPER.MODULE_NAME);
 		}
+		finally
+		{
+			FileUtils.close(reader);
+		}
+	}
+	
+	private String trimEmbeddedCode(String source) throws ModuleException
+	{
+		// find closing tag of concern
+		int endpos = source.lastIndexOf('}');
+		if (endpos > 0)
+		{
+			// find closing tag of implementation by
+			endpos = source.lastIndexOf('}', endpos - 1);
+		}
+
+		if (endpos <= 0)
+		{
+			throw new ModuleException(
+					"Expecting closing '}' at end of cps file and after embedded source",
+					COPPER.MODULE_NAME);
+		}
+
+		return source.substring(0, endpos);
 	}
 }

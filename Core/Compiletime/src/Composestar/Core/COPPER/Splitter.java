@@ -8,22 +8,23 @@ import java.util.Vector;
 public class Splitter
 {
 	private Vector pack;
-
 	private String concern;
-
 	private String concernelem;
-
 	private String fm;
-
 	private String fmelem;
-
 	private int i, j;
 
-	private CpsRepositoryBuilder bui; // reference to a builder class (so we  can get to defaults)
+	private CpsRepositoryBuilder builder; // so we can get to defaults
 
 	public Splitter()
 	{
 		reset();
+	}
+
+	// needed for some methods...
+	public void setBuilder(CpsRepositoryBuilder builder)
+	{
+		this.builder = builder;
 	}
 
 	// resets all the previous work
@@ -107,7 +108,7 @@ public class Splitter
 		{
 			if (concern == null)
 			{
-				concern = bui.getCpsc();
+				concern = builder.getCpsc();
 			}
 		}
 	}
@@ -160,11 +161,11 @@ public class Splitter
 		{
 			if (concern == null)
 			{
-				concern = bui.getCpsc();
+				concern = builder.getCpsc();
 			}
 			if (fm == null)
 			{
-				fm = bui.getFm();
+				fm = builder.getFm();
 			}
 		}
 	}
@@ -204,10 +205,5 @@ public class Splitter
 	public String getConcernelem()
 	{
 		return concernelem;
-	}
-
-	public void setBuilder(CpsRepositoryBuilder buiValue)
-	{
-		bui = buiValue;
 	}
 }

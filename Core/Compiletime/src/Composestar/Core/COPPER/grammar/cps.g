@@ -17,74 +17,78 @@ header {
  * Parser / lexer class for .cps files
  */
 package Composestar.Core.COPPER;
-
 }
 
 class CpsParser extends Parser;
 options {
-        buildAST = true;
-        exportVocab = Cps;
-        k = 1;
-        ASTLabelType = "CpsAST";
-        defaultErrorHandler = false;
+	buildAST = true;
+	exportVocab = Cps;
+	k = 1;
+	ASTLabelType = "CpsAST";
+	defaultErrorHandler = false;
 }
 
 //extra tokens used in constructing the tree
 tokens {
-        ANDEXPR_;
-        ANNOTELEM_;
-        ANNOTSET_;
-        ANNOT_;
-        ARGUMENT_;
-        DECLAREDARGUMENT_;
-        DECLAREDPARAMETER_;
-        FPMSET_;
-        FPMDEF_;
-        FPMSTYPE_;
-        FPMDEFTYPE_;
-        CONDITION_;
-        CONDNAMESET_;
-        CONDNAME_;
-        EXTERNAL_;
-        FILTERELEM_;
-        FILTERMODULEPARAMETERS_;
-        FILTERSET_;
-        FMELEM_;
-        FMSET_;
-        FM_;
-        IFILTER_;
-        INTERNAL_;
-        METHOD2_;
-        METHODNAMESET_;
-        METHODNAME_;
-        METHOD_;
-        NOTEXPR_;
-        MPSET_;
-        MP_;
-        MPART_;
-        OCL_;
-        OFILTER_;
-        OREXPR_;
-        PARAMETER_;
-        PARAMETERLIST_;
-        SELEC2_;
-        SELEC_;
-        SELEXP_;
-        SOURCE_;
-        SPART_;
-        TSSET_;
-        TARGET_;
-        TYPELIST_;
-        TYPE_;
-        VAR_;
-        APS_;
-        PROLOG_EXPRESSION;
+    ANDEXPR_;
+    ANNOTELEM_;
+    ANNOTSET_;
+    ANNOT_;
+    ARGUMENT_;
+    DECLAREDARGUMENT_;
+    DECLAREDPARAMETER_;
+    FPMSET_;
+    FPMDEF_;
+    FPMSTYPE_;
+    FPMDEFTYPE_;
+    CONDITION_;
+    CONDNAMESET_;
+    CONDNAME_;
+    EXTERNAL_;
+    FILTERELEM_;
+    FILTERMODULEPARAMETERS_;
+    FILTERSET_;
+    FMELEM_;
+    FMSET_;
+    FM_;
+    IFILTER_;
+    INTERNAL_;
+    METHOD2_;
+    METHODNAMESET_;
+    METHODNAME_;
+    METHOD_;
+    NOTEXPR_;
+    MPSET_;
+    MP_;
+    MPART_;
+    OCL_;
+    OFILTER_;
+    OREXPR_;
+    PARAMETER_;
+    PARAMETERLIST_;
+    SELEC2_;
+    SELEC_;
+    SELEXP_;
+    SOURCE_;
+    SPART_;
+    TSSET_;
+    TARGET_;
+    TYPELIST_;
+    TYPE_;
+    VAR_;
+    APS_;
+    PROLOG_EXPRESSION;
 }
 {
-    public boolean sourceIncluded = false;        //source included in Cps file?
-    public int startPos = 0;                      //starting position of embedded source (in bytes)
-    public String sourceLang = null;              //source language
-    public String sourceFile = null;              //source filename
+	/**
+	 * starting position of embedded source (in chars).
+	 */
+	public int startPos = 0;
+
+	private void addEmbeddedCode(Token start)
+	{
+		startPos = ((PosToken)start).getBytePos() + 1;
+	}
 }
 
 concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"! namespace)? concernBlock;
@@ -101,7 +105,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
 //don't bother parsing the closing end / curly if implementation is used
 //(because of possible embedded source code, which stops the parsing at that point)
-  concernEnd : (implementation) => (implementation)
+  concernEnd : ("implementation")=> implementation
              | RCURLY!;
 
   //////////////////////////////////////////////////////////////////////////
@@ -149,18 +153,18 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
         //real definitions
         concernReference : fqn;                                                   //n.n.n
-        concernElemReference : (((NAME|DOT)* DOUBLE_COLON) => fqnDCName           //n.n.n.n::n
+        concernElemReference : (((NAME|DOT)* DOUBLE_COLON)=> fqnDCName           //n.n.n.n::n
                                 | NAME);                                          //n
 
-        fmElemReference : (((NAME|DOT)* DOUBLE_COLON) => fqnDCNameCName           //n.n.n.n::n:n
-                          |((NAME|DOT)* COLON) => nameCName                       //n:n
+        fmElemReference : (((NAME|DOT)* DOUBLE_COLON)=> fqnDCNameCName           //n.n.n.n::n:n
+                          |((NAME|DOT)* COLON)=> nameCName                       //n:n
                            | NAME);                                               //n  //fixme: don't allow this for bindings
 
-        fmElemReferenceCond : (((NAME|COLON)* DOUBLE_COLON) => fqnDCNameCName     //n.n.n.n::n:n
-                            |  (NAME COLON) => nameCName                          //n:n
+        fmElemReferenceCond : (((NAME|COLON)* DOUBLE_COLON)=> fqnDCNameCName     //n.n.n.n::n:n
+                            |  (NAME COLON)=> nameCName                          //n:n
                             |   NAME);                                            //n  //fixme: don't allow this for bindings
                             
-        fmElemReferenceStar : (((NAME|DOT)* DOUBLE_COLON) => fqnDCNameCStar       //n.n.n.n::n:*
+        fmElemReferenceStar : (((NAME|DOT)* DOUBLE_COLON)=> fqnDCNameCStar       //n.n.n.n::n:*
                                | nameCStar);                                      //n:*
                                
     /*---------------------------------------------------------------------------*/
@@ -184,8 +188,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
           filterElements : filterElement (COMMA filterElement)*
           { #filterElements = #([FILTERSET_, "filterelements"], #filterElements);} ;
 
-            //filterElement : (((~(FILTER_OP|SEMICOLON))* FILTER_OP) => orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
-            filterElement : (((~(FILTER_OP))* FILTER_OP) => orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
+            //filterElement : (((~(FILTER_OP|SEMICOLON))* FILTER_OP)=> orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
+            filterElement : (((~(FILTER_OP))* FILTER_OP)=> orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
                           | messagePatternSet)
                           { #filterElement = #([FILTERELEM_, "filterelement"], #filterElement);} ;
 
@@ -230,7 +234,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                                         | targetSelector
                                         ) ;
                   
-                   targetSelector : (target DOT) => target DOT! (selector|parameter|parameterlist)      //extra rule to help parse target.selector correctly
+                   targetSelector : (target DOT)=> target DOT! (selector|parameter|parameterlist)      //extra rule to help parse target.selector correctly
                                   | (selector|parameter|parameterlist);
 
                     target : (NAME                      //removed inner
@@ -333,7 +337,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
   //////////////////////////////////////////////////////////////////////////
   implementation : "implementation"^ implementationInner;
 
-    implementationInner : "in"! l2:NAME "by"! fqn "as"! f2:FILENAME lcurly:LCURLY! { sourceLang=l2.getText(); sourceFile=f2.getText(); sourceIncluded=true; if(lcurly != null) startPos=((PosToken)lcurly).getBytePos() + 1;}
+    implementationInner : "in"! lang:NAME "by"! tn:fqn "as"! fn:FILENAME start:LCURLY!
+                          { addEmbeddedCode(start); } 
                         | "by"! fqn SEMICOLON;   //assemblyname
 
 ///////////////////////////////////////////////////////////////////////////
@@ -342,8 +347,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
 class CpsLexer extends Lexer;
 options {
-        k = 2;
-        exportVocab = Cps;
+	k = 2;
+	exportVocab = Cps;
 }
 
 AND                     : '&';
@@ -372,7 +377,7 @@ QUESTIONMARK            : '?';
 protected DIGIT         : '0'..'9' ;
 protected FILE_SPECIAL  : '\\' | '/' | COLON!| ' ' | DOT;     //special items only allowed in filenames
 protected LETTER        : 'a'..'z'|'A'..'Z' ;
-protected NEWLINE       : (("\r\n") => "\r\n"           //DOS
+protected NEWLINE       : (("\r\n")=> "\r\n"           //DOS
                           | '\r'                        //Macintosh
                           | '\n'){newline();};          //Unix
 
@@ -384,13 +389,13 @@ protected SINGLEQUOTE   : '\'';
 PROLOG_STRING           : SINGLEQUOTE ( ~('\'') )* SINGLEQUOTE;
 
 protected COMMENTITEMS  : NEWLINE COMMENTITEMS
-                        | ("*/") => "*/"
+                        | ("*/")=> "*/"
                         | (~ ('\n'|'\r')) COMMENTITEMS;
 
 COMMENT                 : ("//" (~('\n'|'\r'))*
                         | "/*" COMMENTITEMS) { $setType(Token.SKIP); };
 
-FILENAME                : (QUOTE (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE) => QUOTE! (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE! //fixme: also allow paths?
+FILENAME                : (QUOTE (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE)=> QUOTE! (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE! //fixme: also allow paths?
                           | QUOTE {$setType(QUOTE);};
 
 NAME                    : (LETTER | SPECIAL) (LETTER | DIGIT | SPECIAL)*;
@@ -400,5 +405,5 @@ PARAMETERLIST_NAME      : QUESTIONMARK QUESTIONMARK NAME;
 PARAMETER_NAME          : QUESTIONMARK NAME;
 
 // NEWLINE and WS.... you can combine those
-WS                      : (NEWLINE) => NEWLINE { /*newline();*/ $setType(Token.SKIP);}
+WS                      : (NEWLINE)=> NEWLINE { /*newline();*/ $setType(Token.SKIP);}
                         | (' ' | '\t' | '\f') { $setType(Token.SKIP); } ;
