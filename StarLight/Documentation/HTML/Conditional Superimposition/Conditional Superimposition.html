@@ -4,7 +4,7 @@
     <link href="..\styles.css" type="text/css" rel="STYLESHEET">
     <link href="Styles\presentation.css" type="text/css" rel="STYLESHEET">
 </head>
-<body topmargin="0" leftmargin="0">
+<body topmargin="0" leftmargin="0" style="font-family: Times New Roman">
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
             <td width="100%" class="TopHeaderRepeatSmall">
@@ -18,10 +18,136 @@
             <h1 class="heading">
                 Conditional Superimposition
             </h1>
-            <p>Algemene uitleg over Conditional Superimposition.
-                </p>
+            <p>The superimposition of filter modules can be made conditional. At runtime the condition will
+               be evaluated to decide whether to execute the filter module.</p>
+            <h3>
+                Specifying the Conditions</h3>
+            <p>
+                To make a superimposition conditional, first a condition needs to be specified in
+                the 'superimposition' block. This can be done by using the 'conditions' tag. Below
+                the 'conditions' tag, the conditions are specified with the following layout:<br />
+                <br />
+                <span style="font-size: 10pt"><span style="font-family: Courier New">&lt;id&gt; : &lt;namespace&gt;.&lt;classname&gt;.&lt;methodname&gt;;<br />
+                </span>
+                    <br />
+                    <span style="font-family: Courier New">&lt;id&gt;</span></span> gives and id
+                to the condition.<br />
+                <span style="font-size: 10pt; font-family: Courier New">&lt;namespace&gt;.&lt;classname&gt;.&lt;methodname&gt;</span>
+                identifies the method used to obtain the truth value of the condition at runtime.<br />
+                <br />
+                Multiple options are available for the parameters
+                of the condition method. How to create a condition method is explained in <a
+                    href="../Conditional%20Superimposition/Applying%20Conditional%20Superimposition.html">Creating Condition Methods for Conditional Superimposition</a>.</p>
+            <p>
+                <table border="1" width="95%">
+                    <tr>
+                        <td>
+                            <code>
+                                <div style="font-size: 9pt; background: white; color: black; font-family: Consolas">
+                                    <p style="margin: 0px;">
+                                        <span style="color: blue;">superimposition</span></p>
+                                    <p style="margin: 0px;">{</p>
+                                    <p style="margin: 0px;">
+                                        &nbsp; &nbsp; <span style="color: blue"><strong>conditions</strong></span></p>
+                                    <p style="margin: 0px;">
+                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>conditionId : NameSpace.ClassName.MethodName;</strong></p>
+                                    <p style="margin: 0px;">
+                                        &nbsp; &nbsp; <span style="color: blue">selectors</span></p>
+                                    <p style="margin: 0px;">
+                                        &nbsp; &nbsp; &nbsp; &nbsp; ...</p>
+                                    <p style="margin: 0px;">
+                                        &nbsp;&nbsp; &nbsp;<span style="color: blue">filtermodules</span></p>
+                                    <p style="margin: 0px;">
+                                        &nbsp; &nbsp; &nbsp; &nbsp; ...</p>
+                                    <p style="margin: 0px;"></p>
+                                </div>
+                            </code>
+                        </td>
+                    </tr>
+                </table>
+            </p>
+            <h3>
+                Specifying Conditional Superimposition</h3>
+            <p>
+                The conditional superimposition can now be specified by placing the condition-id,
+                followed by '=&gt;', before a superimposition specification:</p>
+            <p>
+                <table border="1" width="95%">
+                    <tr>
+                        <td>
+                            <code>
+                                <div style="font-size: 9pt; background: white; color: black; font-family: Consolas">
+                                    <p style="margin: 0px;">
+                                        <span style="color: blue;">superimposition</span></p>
+                                    <p style="margin: 0px;">{</p>
+                                    <p style="margin: 0px;">&nbsp; &nbsp; <span style="color: blue">conditions</span></p>
+                                    <p style="margin: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ...</p>
+                                    <p style="margin: 0px;">&nbsp; &nbsp; <span style="color: blue">selectors</span></p>
+                                    <p style="margin: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; ...</p>
+                                    <p style="margin: 0px;">&nbsp; &nbsp; <span style="color: blue">filtermodules</span></p>
+                                    <p style="margin: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; <strong>conditionId
+                                                =&gt;</strong> someSelector &lt;- SomeFilterModule;</p>
+                                    <p style="margin: 0px;">}</p>
+                                </div>
+                            </code>
+                        </td>
+                    </tr>
+                </table>
+            </p>
         </div>
     </div>
+    <h3>
+        Example</h3>
+    The following listing shows an example of how conditional superimposition can be
+    used for a logging filter module:<br />
+    <br />
+    <table border="1" width="95%">
+        <tr>
+            <td>
+                <code>
+                    <div style="font-size: 9pt; background: white; color: black; font-family: Consolas">
+                            <p style="margin: 0px;">
+                                <span style="color: blue;">concern</span> LoggingConcern
+                                        <span style="color: blue">in</span> LoggingModule
+                            </p>
+                            <p style="margin: 0px;">{</p>
+                            <p style="margin: 0px;">&nbsp; &nbsp; <span style="color: blue">
+                                        filtermodule</span> LoggingFM</p>
+                            <p style="margin: 0px;">&nbsp; &nbsp;{</p>
+                            <p style="margin: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: blue">inputfilters</span></p>
+                            <p style="margin: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                        log: Logging = { True =&gt; [*.*] }</p>
+                            <p style="margin: 0px;">&nbsp; &nbsp;}</p>
+                            <p style="margin: 0px;">&nbsp; &nbsp;
+                            </p>
+                            <p style="margin: 0px;">
+                                &nbsp; &nbsp;
+                            </p>
+                        <p style="margin: 0px;">
+                            <span style="color: blue;">&nbsp; &nbsp; superimposition</span></p>
+                        <p style="margin: 0px;">
+                                &nbsp; &nbsp; {</p>
+                        <p style="margin: 0px;">
+                                &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: blue">
+                                    conditions</span></p>
+                        <p style="margin: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; enabled : LoggingModule.Logging.IsEnabled;</p>
+                                    <p style="margin: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: blue">
+                                                selectors</span></p>
+                        <p style="margin: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                logClasses = ...</p>
+                        <p style="margin: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: blue">
+                                    filtermodules</span></p>
+                        <p style="margin: 0px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                enabled =&gt; logClasses &lt;- LoggingFM;</p>
+                        <p style="margin: 0px;">
+                            &nbsp; &nbsp; }</p>
+                        <p style="margin: 0px;">
+                            }</p>
+                     </div>
+                </code>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
 <!-- @SortOrder 9 -->
