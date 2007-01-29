@@ -245,9 +245,35 @@
 	</target>
 	
 	<!-- SVN tasks -->
-	<target name="svn-update-all" description="Update all trees from the svn"
-		depends="svn-update-core,svn-update-dotnet,svn-update-starlight,svn-update-java,svn-update-c"
-	/>
+	<target name="svn-update-all" description="Update all trees from the svn" depends="init">
+		<svn>
+			<status path="${build.root}" textStatusProperty="build.root.svn.status" />
+		</svn>
+		<condition property="build.root.in.svn">
+			<not>
+				<equals arg1="${build.root.svn.status}" arg2="non-svn" />
+			</not>
+		</condition>
+		
+		<antcall target="svn-update-root" inheritRefs="true" />
+		<antcall target="svn-update-all-seperated" inheritRefs="true" />
+	</target>
+	
+	<!-- called when root is under svn control -->
+	<target name="svn-update-root" if="build.root.in.svn">
+		<svn>
+			<update dir="${build.root}" />
+		</svn>
+	</target>
+	
+	<!-- called when root is not under svn control -->
+	<target name="svn-update-all-seperated" unless="build.root.in.svn">
+		<antcall target="svn-update-core" inheritRefs="true" />
+		<antcall target="svn-update-dotnet" inheritRefs="true" />
+		<antcall target="svn-update-starlight" inheritRefs="true" />
+		<antcall target="svn-update-java" inheritRefs="true" />
+		<antcall target="svn-update-c" inheritRefs="true" />
+	</target>
 	
 	<target name="svn-update-core" depends="init">
 		<ant target="svn-update" dir="${build.core}" inheritRefs="true" />
