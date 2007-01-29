@@ -16,7 +16,13 @@
 	<target name="init_local" depends="init">
 	</target>
 
-	<target name="clean" />
+	<target name="clean">
+		<delete>
+			<fileset dir="${basedir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+		</delete>
+	</target>
 	
 	<target name="build" />
 

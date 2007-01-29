@@ -21,6 +21,11 @@
 	</target>
 
 	<target name="clean" depends="init">
+		<delete>
+			<fileset dir="${basedir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+		</delete>
 		<!-- delete /obj dirs -->
 		<delete includeEmptyDirs="true">
 			<FileSet dir="${build.dotnet}/Examples">

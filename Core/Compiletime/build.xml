@@ -42,6 +42,12 @@
 			</fileset>
 		</delete>
 
+		<delete>
+			<fileset dir="test">
+				<include name="TEST-*.xml" />
+				<include name="TESTS-*.xml" />
+			</fileset>
+		</delete>
 	</target>
 	
 	<target name="local_init" depends="init">
