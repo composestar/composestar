@@ -34,16 +34,17 @@
 package Composestar.C.ASPECTS.TRACING;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class TraceTypesDB
 {
-	private HashMap map = new HashMap();
+	private Map<String,TraceableType> map;
 
-	private static TraceTypesDB traceTypesDB = null;
+	private static TraceTypesDB traceTypesDB;
 
 	private TraceTypesDB()
 	{
-		map = new HashMap();
+		map = new HashMap<String,TraceableType>();
 	}
 
 	public static TraceTypesDB instance()
@@ -67,6 +68,6 @@ public class TraceTypesDB
 
 	public TraceableType getTraceType(String type)
 	{
-		return (TraceableType) map.get(type);
+		return map.get(type);
 	}
 }

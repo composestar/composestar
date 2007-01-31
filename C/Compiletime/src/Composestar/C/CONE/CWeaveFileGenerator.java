@@ -10,10 +10,10 @@
 package Composestar.C.CONE;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import Composestar.C.LAMA.CFile;
 import Composestar.C.LAMA.CMethodInfo;
@@ -35,6 +35,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPa
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
@@ -47,9 +48,9 @@ import Composestar.Utils.Debug;
  */
 public class CWeaveFileGenerator implements WeaveFileGenerator
 {
-	public static HashMap filterModuleReferenceMap = new HashMap();
+	public static Map<String, FilterModule> filterModuleReferenceMap = new HashMap<String, FilterModule>();
 
-	private HashMap aspects = new HashMap();
+	private Map<String, Aspect> aspects = new HashMap<String, Aspect>();
 
 	private DataStore ds = DataStore.instance();
 
@@ -59,13 +60,8 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 
 	private int methodOffset = -1;
 
-	/**
-	 * @roseuid 40EBC2AE0112
-	 */
 	public CWeaveFileGenerator()
-	{
-
-	}
+	{}
 
 	public void retrieveFilterModuleReferences()
 	{
@@ -109,10 +105,10 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 				if (c.getDynObject("SingleOrder") != null && c.getDynObject("SingleOrder") instanceof FilterModuleOrder)
 				{
 					FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject("SingleOrder");
-					Vector order = fmo.order;
+					List order = fmo.orderAsList();
 					for (int i = 0; i < order.size(); i++)
 					{
-						String filtermodulename = (String) order.elementAt(i);
+						String filtermodulename = (String) order.get(i);
 						FilterModule fm = (FilterModule) filterModuleReferenceMap.get(filtermodulename);
 
 						Debug.out(Debug.MODE_INFORMATION, "cone", "FQN: "
@@ -132,7 +128,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 						{
 							if (aspects.containsKey(fm.getQualifiedName()))
 							{
-								asp = (Aspect) aspects.get(fm.getQualifiedName());
+								asp = aspects.get(fm.getQualifiedName());
 								// aspects.remove(fm.getQualifiedName());
 							}
 							else
@@ -146,15 +142,15 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 							while (inputfilters.hasNext())
 							{
 								filter = (Filter) inputfilters.next();
-								int numberOfFilterElements = filter.filterElements.size();// .elementAt(0))..getFilterElement(0)
-								// //.getMatchingPattern(0).getMatchingParts().size();
+								int numberOfFilterElements = filter.filterElements.size();
+								// .elementAt(0))..getFilterElement(0).getMatchingPattern(0).getMatchingParts().size();
 								for (int x = 0; x < numberOfFilterElements; x++)
 								{
 									Debug.out(Debug.MODE_INFORMATION, "cone", "Other superimposed functions are:"
 											+ ((MatchingPart) ((Filter) fm.inputFilters.elementAt(0)).getFilterElement(
 													x).getMatchingPattern().getMatchingParts().elementAt(0))
 													.getSelector().getName());
-									HashMap methods = new HashMap();
+									Map<MethodInfo, CFile> methods = new HashMap<MethodInfo, CFile>();
 
 									if (c.getPlatformRepresentation() instanceof CFile)
 									{
@@ -173,10 +169,9 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 										}
 										else
 										{
-											Iterator filemethodIt = file.getMethods().iterator();
 											for (Object o : file.getMethods())
 											{
-												methods.put(o, file);
+												methods.put((MethodInfo) o, file);
 											}
 										}
 										/**
@@ -194,10 +189,9 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 
 										if (methods.size() == 0 && file.getMethods().size() == 0)
 										{
-											Iterator methodIterator = c.getSignature().methodByName.m_keys.iterator();
-											for (Object m_key : c.getSignature().methodByName.m_keys)
+											for (Object mKey : c.getSignature().methodByName.keySet())
 											{
-												String methodName = (String) m_key;
+												String methodName = (String) mKey;
 												if (methodName.equals(((MatchingPart) (filter.getFilterElement(x)
 														.getMatchingPattern().getMatchingParts().elementAt(0)))
 														.getSelector().getName()))
@@ -287,7 +281,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 								// //.getMatchingPattern().getMatchingParts().size();
 								for (int x = 0; x < numberOfFilterElements; x++)
 								{
-									HashMap methods = new HashMap();
+									Map<MethodInfo, CFile> methods = new HashMap<MethodInfo, CFile>();
 
 									if (c.getPlatformRepresentation() instanceof CFile)
 									{
@@ -306,10 +300,9 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 										}
 										else
 										{
-											Iterator filemethodIt = file.getMethods().iterator();
 											for (Object o : file.getMethods())
 											{
-												methods.put(o, file);
+												methods.put((MethodInfo) o, file);
 											}
 										}
 										/**
@@ -327,10 +320,9 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 
 										if (methods.size() == 0 && file.getMethods().size() == 0)
 										{
-											Iterator methodIterator = c.getSignature().methodByName.m_keys.iterator();
-											for (Object m_key : c.getSignature().methodByName.m_keys)
+											for (Object mKey : c.getSignature().methodByName.keySet())
 											{
-												String methodName = (String) m_key;
+												String methodName = (String) mKey;
 												if (methodName.equals(((MatchingPart) (filter.getFilterElement(x)
 														.getMatchingPattern().getMatchingParts().elementAt(0)))
 														.getSelector().getName()))
@@ -799,9 +791,9 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 		String matchingFunction = method.getName();
 		String matchingFile = file.FullName;
 
-		CFile file = null;
+		CFile cfile = null;
 		CFile substitutionFile = null;
-		CMethodInfo method = null;
+		CMethodInfo cmethod = null;
 		Concern c = null;
 		Iterator it = ds.getAllInstancesOf(Concern.class);
 		while (it.hasNext())
@@ -810,11 +802,11 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 			if (c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern)
 					&& c.getPlatformRepresentation() instanceof CFile)
 			{
-				file = (CFile) c.getPlatformRepresentation();
-				method = file.getMethodInfo(substitutionFunction);
-				if (method != null)
+				cfile = (CFile) c.getPlatformRepresentation();
+				cmethod = cfile.getMethodInfo(substitutionFunction);
+				if (cmethod != null)
 				{
-					substitutionFile = file;
+					substitutionFile = cfile;
 					break;
 				}
 			}
@@ -867,14 +859,14 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 	{
 		createAspects();
 		WeaverEngine we = new WeaverEngine();
-		Hashtable functionsToRealWeavebaleObjectsMap = we.populateFunctionsWithRealInfo(aspects, resources);
-		HashSet weavebleobjects = we.attachAdvicesToFunctions(functionsToRealWeavebaleObjectsMap);
+		Map<Functions, List<WeaveblePoint>> functionsToRealWeavebaleObjectsMap = we.populateFunctionsWithRealInfo(
+				aspects, resources);
+		Set<WeaveblePoint> weavebleobjects = we.attachAdvicesToFunctions(functionsToRealWeavebaleObjectsMap);
 		/** Tracing is switched off* */
 		// we.processAllInternalAdvices(weavebleobjects);
-		Iterator weaveit = weavebleobjects.iterator();
-		for (Object weavebleobject : weavebleobjects)
+		for (WeaveblePoint weavebleobject : weavebleobjects)
 		{
-			we.weaveInstructionsForPoint((WeaveblePoint) weavebleobject);
+			we.weaveInstructionsForPoint(weavebleobject);
 		}
 		we.emitFiles();
 	}

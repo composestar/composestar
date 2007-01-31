@@ -33,11 +33,11 @@
  */
 package Composestar.C.ASPECTS.TRACING;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import Composestar.C.wrapper.retrieveAST;
 
 public abstract class WeaveCAspect
 {
-	public abstract HashSet weave(retrieveAST wrapper);
+	public abstract Set weave(retrieveAST wrapper);
 }

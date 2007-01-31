@@ -35,11 +35,12 @@ package Composestar.C.CONE;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import Composestar.C.ASPECTS.TRACING.TracingAspect;
@@ -65,22 +66,18 @@ import Composestar.Utils.Debug;
 
 public class WeaverEngine
 {
-	private ArrayList cfiles = new ArrayList();
-
 	public static int NUMWS = 0;
 
-	public Hashtable populateFunctionsWithRealInfo(HashMap aspectMap, CommonResources resources)
+	public Map<Functions, List<WeaveblePoint>> populateFunctionsWithRealInfo(Map<String, Aspect> aspectMap,
+			CommonResources resources)
 	{
 		Debug.out(Debug.MODE_INFORMATION, "CONE", "Analyzing files...");
 		FileMap fm = FileMap.instance();
-		Hashtable fileASTMap = fm.getFileASTs();
-		Hashtable functionsToRealWeavebaleObjectsMap = new Hashtable();
+		Map<String, retrieveAST> fileASTMap = fm.getFileASTs();
+		Map<Functions, List<WeaveblePoint>> functionsToRealWeavebaleObjectsMap = new HashMap<Functions, List<WeaveblePoint>>();
 
-		Iterator aspectit = aspectMap.values().iterator();
-		for (Object o1 : aspectMap.values())
+		for (Aspect aspect : aspectMap.values())
 		{
-			Aspect aspect = (Aspect) o1;
-
 			for (int i = 0; i < aspect.getNumberOfPointcuts(); i++)
 			{
 				Pointcut pc = aspect.getPointcut(i);
@@ -90,14 +87,11 @@ public class WeaverEngine
 
 					if (funcs.getFile().equalsIgnoreCase("*.c"))
 					{
-						Iterator keyit = fileASTMap.values().iterator();
-						ArrayList list = new ArrayList();
-						while (keyit.hasNext())
+						List<WeaveblePoint> list = new ArrayList<WeaveblePoint>();
+						for (retrieveAST wrapper : fileASTMap.values())
 						{
-							retrieveAST wrapper = (retrieveAST) keyit.next();
 							if (funcs.getType() == GeneralUtils.FUNCTION)
 							{
-								Iterator funcit = wrapper.getFunctions().iterator();
 								for (Object o : wrapper.getFunctions())
 								{
 									Function function = (Function) o;
@@ -134,16 +128,13 @@ public class WeaverEngine
 					else
 					// bla.c methodebla
 					{
-						Iterator keyit = fileASTMap.values().iterator();
-						ArrayList list = new ArrayList();
-						while (keyit.hasNext())
+						List<WeaveblePoint> list = new ArrayList<WeaveblePoint>();
+						for (retrieveAST wrapper : fileASTMap.values())
 						{
-							retrieveAST wrapper = (retrieveAST) keyit.next();
 							if (funcs.getType() == GeneralUtils.FUNCTION)
 							{
 								if (wrapper.getFilename().indexOf(funcs.getFile()) > 0)
 								{
-									Iterator funcit = wrapper.getFunctions().iterator();
 									for (Object o : wrapper.getFunctions())
 									{
 										Function function = (Function) o;
@@ -184,20 +175,18 @@ public class WeaverEngine
 		return functionsToRealWeavebaleObjectsMap;
 	}
 
-	public ArrayList restrictFunctions(Functions funcs, ArrayList funclist)
+	public List<WeaveblePoint> restrictFunctions(Functions funcs, List<WeaveblePoint> funclist)
 	{
 		// this.printList(funclist);
-		ArrayList restrictedList = new ArrayList(funclist);
+		List<WeaveblePoint> restrictedList = new ArrayList<WeaveblePoint>(funclist);
 		if (funcs.getType() != GeneralUtils.FUNCTION)
 		{
 			return restrictedList;
 		}
-		Iterator funcit = funclist.iterator();
 		if (funcs.hasReturnSpec())
 		{
-			while (funcit.hasNext())
+			for (Object obj : funclist)
 			{
-				Object obj = funcit.next();
 				if (obj instanceof Function)
 				{
 					Function func = (Function) obj;
@@ -222,14 +211,12 @@ public class WeaverEngine
 		}
 		if (!restrictedList.isEmpty() && funcs.hasParamSpec())
 		{
-			ArrayList toBeRemoved = new ArrayList();
+			List<WeaveblePoint> toBeRemoved = new ArrayList<WeaveblePoint>();
 			for (int i = 0; i < funcs.getNumberOfParameters(); i++)
 			{
 				XMLParameter param = funcs.getParameter(i);
-				funcit = restrictedList.iterator();
-				while (funcit.hasNext())
+				for (Object obj : restrictedList)
 				{
-					Object obj = funcit.next();
 					if (obj instanceof Function)
 					{
 						Function func = (Function) obj;
@@ -282,10 +269,9 @@ public class WeaverEngine
 					}
 				}
 			}
-			funcit = toBeRemoved.iterator();
-			while (funcit.hasNext())
+			for (Object o : toBeRemoved)
 			{
-				restrictedList.remove(funcit.next());
+				restrictedList.remove(o);
 			}
 
 		}
@@ -294,25 +280,24 @@ public class WeaverEngine
 		return restrictedList;
 	}
 
-	public HashSet attachAdvicesToFunctions(Hashtable functionsToRealWeavebaleObjectsMap)
+	public Set<WeaveblePoint> attachAdvicesToFunctions(Map functionsToRealWeavebaleObjectsMap)
 	{
 		// funcs --> function/struct
-		HashSet weavebleobjects = new HashSet();
-		Iterator funcit = functionsToRealWeavebaleObjectsMap.keySet().iterator();
+		Set<WeaveblePoint> weavebleobjects = new HashSet<WeaveblePoint>();
 		for (Object o : functionsToRealWeavebaleObjectsMap.keySet())
 		{
 			Functions funcs = (Functions) o;
 			Debug.out(Debug.MODE_INFORMATION, "CONE", "Evaluating advice: " + funcs.getParent().getParent().getId());
 			if (funcs.getType() == GeneralUtils.FUNCTION)
 			{
-				ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
+				List list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
 				for (Object aList : list)
 				{
 					Function func = (Function) aList;
 					for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++)
 					{
 						AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
-						Hashtable defadvices = funcs.getParent().getParent().getAdvices();
+						Map defadvices = funcs.getParent().getParent().getAdvices();
 						Advice adv = (Advice) defadvices.get(aa.getId());
 
 						if (adv.getType() == GeneralUtils.FUNCTION_INTRODUCTION
@@ -328,14 +313,14 @@ public class WeaverEngine
 			}
 			else if (funcs.getType() == GeneralUtils.STRUCT)
 			{
-				ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
+				List list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
 				for (Object aList : list)
 				{
 					Struct struct = (Struct) aList;
 					for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++)
 					{
 						AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
-						Hashtable defadvices = funcs.getParent().getParent().getAdvices();
+						Map defadvices = funcs.getParent().getParent().getAdvices();
 						Advice adv = (Advice) defadvices.get(aa.getId());
 						if (adv.getType() == GeneralUtils.STRUCTURE_INTRODUCTION)
 						{
@@ -348,14 +333,14 @@ public class WeaverEngine
 			}
 			else if (funcs.getType() == GeneralUtils.GLOBAL)
 			{
-				ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
+				List list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
 				for (Object aList : list)
 				{
 					GlobalIntroductionPoint gip = (GlobalIntroductionPoint) aList;
 					for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++)
 					{
 						AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
-						Hashtable defadvices = funcs.getParent().getParent().getAdvices();
+						Map defadvices = funcs.getParent().getParent().getAdvices();
 						Advice adv = (Advice) defadvices.get(aa.getId());
 						if (adv.getType() == GeneralUtils.GLOBAL_INTRODUCTION)
 						{
@@ -368,14 +353,14 @@ public class WeaverEngine
 			}
 			else if (funcs.getType() == GeneralUtils.HEADER)
 			{
-				ArrayList list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
+				List list = (ArrayList) functionsToRealWeavebaleObjectsMap.get(funcs);
 				for (Object aList : list)
 				{
 					HeaderIntroductionPoint hip = (HeaderIntroductionPoint) aList;
 					for (int j = 0; j < funcs.getParent().getNumberOfAdviceApplications(); j++)
 					{
 						AdviceApplication aa = funcs.getParent().getAdviceApplication(j);
-						Hashtable defadvices = funcs.getParent().getParent().getAdvices();
+						Map defadvices = funcs.getParent().getParent().getAdvices();
 						Advice adv = (Advice) defadvices.get(aa.getId());
 						if (adv.getType() == GeneralUtils.HEADER_INTRODUCTION)
 						{
@@ -391,16 +376,14 @@ public class WeaverEngine
 		return weavebleobjects;
 	}
 
-	public void processAllInternalAdvices(HashSet weavebleobjects)
+	public void processAllInternalAdvices(Set<WeaveblePoint> weavebleobjects)
 	{
 		FileMap fm = FileMap.instance();
-		Hashtable fileASTMap = fm.getFileASTs();
-		Iterator wrapit = fileASTMap.values().iterator();
+		Map<String, retrieveAST> fileASTMap = fm.getFileASTs();
 		TracingAspect ta = new TracingAspect();
-		while (wrapit.hasNext())
+		for (retrieveAST wrapper : fileASTMap.values())
 		{
-			retrieveAST wrapper = (retrieveAST) wrapit.next();
-			HashSet set = ta.weave(wrapper);
+			Set<WeaveblePoint> set = ta.weave(wrapper);
 			if (set != null)
 			{
 				weavebleobjects.addAll(set);
@@ -411,11 +394,8 @@ public class WeaverEngine
 	public void weaveInstructionsForPoint(WeaveblePoint wp)
 	{
 		FileMap fm = FileMap.instance();
-		Hashtable fileASTMap = fm.getFileASTs();
-		Hashtable test = fm.getFileASTs();
-		Enumeration ittest = test.keys();
-		ArrayList wis = wp.prioritizeWeavingInstructions();
-		Iterator wisit = wis.iterator();
+		Map<String, retrieveAST> fileASTMap = fm.getFileASTs();
+		List wis = wp.prioritizeWeavingInstructions();
 		for (Object wi1 : wis)
 		{
 			WeavingInstruction wi = (WeavingInstruction) wi1;
@@ -433,7 +413,7 @@ public class WeaverEngine
 					Function func = wi.getFunction();
 					String filename = objectToFileName(func.getFileName(), fm);
 
-					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(filename);
+					retrieveAST cwrapper = fileASTMap.get(filename);
 					WrappedAST wast = cwrapper.getWrappedAST();
 					wast.weaveEntryFunction(func, wi.getCode());
 					break;
@@ -445,7 +425,7 @@ public class WeaverEngine
 					System.out.println("Weaving on function execution after: " + func.getFileName() + ":"
 							+ func.getName() + ": " + wi.getAdvice().getId() + "= this different then:" + filename);
 
-					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(filename);
+					retrieveAST cwrapper = fileASTMap.get(filename);
 					WrappedAST wast = cwrapper.getWrappedAST();
 
 					wast.weaveExitFunction(func, wi.getCode());
@@ -454,10 +434,8 @@ public class WeaverEngine
 				case WeavingInstruction.FUNCTION_CALL_BEFORE:
 				{
 					Function func = wi.getFunction();
-					Iterator fileit = fileASTMap.values().iterator();
-					for (Object o : fileASTMap.values())
+					for (retrieveAST cwrapper : fileASTMap.values())
 					{
-						retrieveAST cwrapper = (retrieveAST) o;
 						cwrapper.getWrappedAST().weaveGlobalFunctionCallBefore(wi.getCode(), func.getName());
 					}
 					break;
@@ -465,10 +443,8 @@ public class WeaverEngine
 				case WeavingInstruction.FUNCTION_CALL_AFTER:
 				{
 					Function func = wi.getFunction();
-					Iterator fileit = fileASTMap.values().iterator();
-					for (Object o : fileASTMap.values())
+					for (retrieveAST cwrapper : fileASTMap.values())
 					{
-						retrieveAST cwrapper = (retrieveAST) o;
 						cwrapper.getWrappedAST().weaveGlobalFunctionCallAfter(wi.getCode(), func.getName());
 					}
 					break;
@@ -479,7 +455,7 @@ public class WeaverEngine
 
 					GlobalIntroductionPoint gip = (GlobalIntroductionPoint) wp;
 					String completeName = fm.getFileASTwithName(gip.getFileName());
-					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(completeName);
+					retrieveAST cwrapper = fileASTMap.get(completeName);
 					WrappedAST wast = cwrapper.getWrappedAST();
 					wast.weaveGlobalIntroduction(wi.getCode(), gip);
 					break;
@@ -492,7 +468,7 @@ public class WeaverEngine
 
 					String completeName = fm.getFileASTwithName(hip.getFileName());
 
-					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(completeName);
+					retrieveAST cwrapper = fileASTMap.get(completeName);
 					WrappedAST wast = cwrapper.getWrappedAST();
 
 					wast.weaveHeaderIntroduction(wi.getCode(), hip);
@@ -502,7 +478,7 @@ public class WeaverEngine
 				case WeavingInstruction.STRUCTURE_INTRODUCTION_AFTER:
 				{
 					Struct struct = (Struct) wp;
-					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(struct.getFileName());
+					retrieveAST cwrapper = fileASTMap.get(struct.getFileName());
 					WrappedAST wast = cwrapper.getWrappedAST();
 					wast.weaveStructureIntroduction(wi.getCode(), (Struct) wp);
 					break;
@@ -511,7 +487,7 @@ public class WeaverEngine
 				case WeavingInstruction.FUNCTION_INTRODUCTION_BEFORE:
 				{
 					Function func = wi.getFunction();
-					retrieveAST cwrapper = (retrieveAST) fileASTMap.get(func.getFileName());
+					retrieveAST cwrapper = fileASTMap.get(func.getFileName());
 					WrappedAST wast = cwrapper.getWrappedAST();
 					wast.weaveFunctionIntroduction(func, wi.getCode());
 					break;
@@ -531,13 +507,12 @@ public class WeaverEngine
 	{
 		String tempFolder = Configuration.instance().getPathSettings().getPath("Output");
 		FileMap fm = FileMap.instance();
-		Hashtable fileASTMap = fm.getFileASTs();
+		Map<String, retrieveAST> fileASTMap = fm.getFileASTs();
 
-		Iterator fileit = fileASTMap.keySet().iterator();
-		for (Object o : fileASTMap.keySet())
+		for (Entry<String, retrieveAST> entry : fileASTMap.entrySet())
 		{
-			String file = (String) o;
-			WrappedAST wast = ((retrieveAST) fileASTMap.get(file)).getWrappedAST();
+			String file = entry.getKey();
+			WrappedAST wast = entry.getValue().getWrappedAST();
 			if (file.lastIndexOf(File.separator) > 0)
 			{
 				file = file.substring(file.lastIndexOf(File.separator) + 1) + "out";
@@ -557,11 +532,9 @@ public class WeaverEngine
 
 	private String objectToFileName(String object, FileMap fm)
 	{
-		Hashtable test = fm.getFileASTs();
-		Iterator ittest = test.values().iterator();
-		for (Object o : test.values())
+		Map<String, retrieveAST> test = fm.getFileASTs();
+		for (retrieveAST cw : test.values())
 		{
-			retrieveAST cw = (retrieveAST) o;
 			if (object.equals(cw.objectname))
 			{
 				return (cw.getFilename()).replace('\\', '\\');

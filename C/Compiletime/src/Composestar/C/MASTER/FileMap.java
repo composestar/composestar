@@ -1,26 +1,27 @@
 package Composestar.C.MASTER;
 
 import java.io.Serializable;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import Composestar.C.wrapper.retrieveAST;
 
 /**
- * @modelguid {A1641B28-AC6E-42C3-A196-95AEBCF46B38}
+ * 
  */
-public class FileMap implements Serializable, Cloneable
+public class FileMap implements Serializable
 {
 
 	public static final long serialVersionUID = -1135392544932797436L;
 
 	private static FileMap Instance = null;
 
-	public Hashtable fileASTMap;
+	public Map<String,retrieveAST> fileASTMap;
 
 	public FileMap()
 	{
-		fileASTMap = new Hashtable();
+		fileASTMap = new HashMap<String,retrieveAST>();
 	}
 
 	public static FileMap instance()
@@ -42,7 +43,7 @@ public class FileMap implements Serializable, Cloneable
 		return (fileASTMap.values().iterator());
 	}
 
-	public void addFileASTs(Hashtable fileASTs)
+	public void addFileASTs(Map<String,retrieveAST> fileASTs)
 	{
 		fileASTMap.putAll(fileASTs);
 	}
@@ -52,14 +53,13 @@ public class FileMap implements Serializable, Cloneable
 		fileASTMap.put(name, rast);
 	}
 
-	public Hashtable getFileASTs()
+	public Map<String,retrieveAST> getFileASTs()
 	{
 		return fileASTMap;
 	}
 
 	public String getFileASTwithName(String fileName)
 	{
-		Iterator fileit = fileASTMap.values().iterator();
 		for (Object o : fileASTMap.values())
 		{
 			String fn = ((retrieveAST) o).getFilename();

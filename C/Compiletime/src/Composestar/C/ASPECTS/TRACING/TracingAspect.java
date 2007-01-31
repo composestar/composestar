@@ -35,7 +35,8 @@ package Composestar.C.ASPECTS.TRACING;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import Composestar.C.CONE.WeaverEngine;
 import Composestar.C.CONE.WeavingInstruction;
@@ -44,6 +45,7 @@ import Composestar.C.specification.AdviceApplication;
 import Composestar.C.wrapper.Function;
 import Composestar.C.wrapper.Parameter;
 import Composestar.C.wrapper.Struct;
+import Composestar.C.wrapper.WeaveblePoint;
 import Composestar.C.wrapper.retrieveAST;
 import Composestar.C.wrapper.utils.GeneralUtils;
 import Composestar.C.wrapper.utils.Profiler;
@@ -51,25 +53,25 @@ import Composestar.C.wrapper.utils.StaticVariableReplacer;
 
 public class TracingAspect extends WeaveCAspect
 {
-	private retrieveAST wrapper = null;
+	private retrieveAST wrapper;
 
-	private HashSet weavebleobjs = new HashSet();
+	private Set<WeaveblePoint> weavebleobjs = new HashSet<WeaveblePoint>();
 
-	private boolean hasInTrace = false;
+	private boolean hasInTrace;
 
-	private boolean hasOutTrace = false;
+	private boolean hasOutTrace;
 
 	private boolean firstInTrace = true;
 
-	private boolean firstOutTrace = false;
+	private boolean firstOutTrace;
 
 	private String inBuffer = "";
 
 	private String outBuffer = "";
 
-	private ArrayList inParams = new ArrayList();
+	private List<String> inParams = new ArrayList<String>();
 
-	private ArrayList outParams = new ArrayList();
+	private List<String> outParams = new ArrayList<String>();
 
 	public static final boolean PROFILE = true;
 
@@ -96,10 +98,9 @@ public class TracingAspect extends WeaveCAspect
 		}
 	}
 
-	public HashSet weave(retrieveAST wrapper)
+	public Set<WeaveblePoint> weave(retrieveAST inWrapper)
 	{
-		this.wrapper = wrapper;
-		Iterator it = wrapper.getFunctions().iterator();
+		wrapper = inWrapper;
 		for (Object o : wrapper.getFunctions())
 		{
 			hasInTrace = false;
@@ -108,8 +109,8 @@ public class TracingAspect extends WeaveCAspect
 			// this.outBuffer = "printf(\"Output parameter(s):";
 			inBuffer = "ZPSPTR_trace_in_var(%MODULE_NAME%_mod_data.tr_handle,funcname,\"Input parameter(s): ";
 			outBuffer = "ZPSPTR_trace_out_var(%MODULE_NAME%_mod_data.tr_handle,funcname,\"Output parameter(s): ";
-			inParams = new ArrayList();
-			outParams = new ArrayList();
+			inParams.clear();
+			outParams.clear();
 			traceFunction((Function) o);
 		}
 		// System.out.println("Check: "+wrapper.getFunctions().size()+" ==
@@ -407,7 +408,7 @@ public class TracingAspect extends WeaveCAspect
 		{
 			String intrace = param.getValueID() + " = { ";
 			String outtrace = param.getValueID() + " = { ";
-			ArrayList tracenames = new ArrayList();
+			List<String> tracenames = new ArrayList<String>();
 			for (int j = 0; j < struct.getNumberOfElements(); j++)
 			{
 				Parameter structparam = struct.getElement(j);
@@ -435,7 +436,7 @@ public class TracingAspect extends WeaveCAspect
 					firstInTrace = false;
 				}
 				inBuffer += intrace;
-				for (Object tracename : tracenames)
+				for (String tracename : tracenames)
 				{
 					if (inParams.size() > 0)
 					{
@@ -456,7 +457,7 @@ public class TracingAspect extends WeaveCAspect
 					firstOutTrace = false;
 				}
 				outBuffer += outtrace;
-				for (Object tracename : tracenames)
+				for (String tracename : tracenames)
 				{
 					if (outParams.size() > 0)
 					{
@@ -477,7 +478,7 @@ public class TracingAspect extends WeaveCAspect
 					firstInTrace = false;
 				}
 				inBuffer += intrace;
-				for (Object tracename1 : tracenames)
+				for (String tracename1 : tracenames)
 				{
 					if (inParams.size() > 0)
 					{
@@ -496,7 +497,7 @@ public class TracingAspect extends WeaveCAspect
 					firstOutTrace = false;
 				}
 				outBuffer += outtrace;
-				for (Object tracename : tracenames)
+				for (String tracename : tracenames)
 				{
 					if (outParams.size() > 0)
 					{

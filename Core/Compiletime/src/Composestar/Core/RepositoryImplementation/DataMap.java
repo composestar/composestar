@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -129,7 +130,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 
 	public Set keySet()
 	{
-		throw new UnsupportedOperationException();
+		return new HashSet(m_keys);
 	}
 
 	public Set entrySet()

@@ -6,8 +6,9 @@
  */
 package Composestar.C.REXREF;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -31,14 +32,13 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * @author johan TODO To change the template for this generated type comment go
- *         to Window - Preferences - Java - Code Style - Code Templates
+ * @author johan
  */
 public class Main extends DefaultHandler implements CTCommonModule
-{// {
+{
 	public static boolean debug = true; // display debugging information?
 
-	private HashMap modules = new HashMap();
+	private List<String> modules = new ArrayList<String>();
 
 	/**
 	 * Constructor
@@ -80,10 +80,8 @@ public class Main extends DefaultHandler implements CTCommonModule
 			else if (!modules.isEmpty())
 			{
 				boolean inCConcern = false;
-				Iterator modIter = modules.keySet().iterator();
-				for (Object o : modules.keySet())
+				for (String module : modules)
 				{
-					String module = (String) o;
 					if (ref.getName().equals(module))
 					{
 						/** create concern and add to repository * */
@@ -142,7 +140,7 @@ public class Main extends DefaultHandler implements CTCommonModule
 	{
 		if ("module".equals(qName) && attr != null)
 		{
-			modules.put(attr.getValue("name"), null);
+			modules.add(attr.getValue("name"));
 		}
 	}
 }

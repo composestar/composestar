@@ -23,7 +23,6 @@ public class DispatchSemantic extends Semantic
 		// System.out.println(filter.name + "Dispatch filter
 		// semantics"+((SubstitutionPart)(filter.getFilterElement(elementNumber).getMatchingPattern(0).getSubstitutionParts().elementAt(0))).getSelector().getName());
 		String substitutionFunction = substitutionFunction();
-		String reifiedMessage = reifiedMessageCode();
 		String conditionCode = conditionCode();
 		if (conditionCode.equals(""))
 		{

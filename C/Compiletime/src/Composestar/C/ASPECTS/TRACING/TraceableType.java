@@ -37,13 +37,13 @@ public class TraceableType
 {
 	private String type = "";
 
-	private String IN_TRACE = "";
+	private String inTrace = "";
 
-	private String OUT_TRACE = "";
+	private String outTrace = "";
 
-	public void setType(String type)
+	public void setType(String inType)
 	{
-		this.type = type;
+		type = inType;
 	}
 
 	public String getType()
@@ -53,22 +53,22 @@ public class TraceableType
 
 	public void setInTraceString(String tracestr)
 	{
-		IN_TRACE = tracestr;
+		inTrace = tracestr;
 	}
 
 	public String getInTraceString()
 	{
-		return IN_TRACE;
+		return inTrace;
 	}
 
 	public void setOutTraceString(String tracestr)
 	{
-		OUT_TRACE = tracestr;
+		outTrace = tracestr;
 	}
 
 	public String getOutTraceString()
 	{
-		return OUT_TRACE;
+		return outTrace;
 	}
 
 }
