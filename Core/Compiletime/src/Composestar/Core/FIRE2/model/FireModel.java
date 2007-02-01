@@ -761,8 +761,6 @@ public class FireModel
 			this.filterPosition = filterPosition;
 
 			// Message message = getEntranceMessage( )
-			// TODO: (michiel) validate that using an empty MessageSelectorAST
-			// is legal
 			MessageSelector selector = new MessageSelector(new MessageSelectorAST());
 			selector.setName(methodInfo.getName());
 			Message message = new Message(target, selector);

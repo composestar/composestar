@@ -787,7 +787,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 		Aspect aspect = new Aspect();
 		SubstitutionPart sub = (SubstitutionPart) (filter.getFilterElement(filterelem).getMatchingPattern()
 				.getSubstitutionParts().elementAt(0));
-		String substitutionFunction = sub.getSelector().name;
+		String substitutionFunction = sub.getSelector().getName();
 		String matchingFunction = method.getName();
 		String matchingFile = file.FullName;
 
