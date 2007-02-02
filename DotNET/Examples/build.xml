@@ -23,7 +23,7 @@
 	<target name="clean" depends="init" description="Clean intermediate files from the examples.">
 		<patternset id="dotnet.compile.results" >
 			<include name="*/BuildConfiguration.xml" unless="keep.buildconfiguration" />
-			<include name="*/repository.xml" />
+			<include name="*/repository.xml*" />
 			<include name="*/types.xml" />
 			<include name="*/weavespec.xml" />
 			<include name="*/weavelog.txt" />

@@ -44,7 +44,15 @@ public class DotNETRepositoryDeserializer extends RepositoryDeserializer
 
 			Debug.out(Debug.MODE_DEBUG, "FLIRT", "DataStore type=" + type);
 
-			StreamReader fileStream = new StreamReader(file);
+			StreamReader fileStream;
+			if (file.toLowerCase().endsWith(".gz")) 
+			{
+				fileStream = new StreamReader(new GZipStream(file));
+			}
+			else 
+			{
+				fileStream = new StreamReader(file);
+			}
 			
 			// Constructs an instance of the XmlSerializer with the type
 			// of object that is being deserialized.

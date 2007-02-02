@@ -41,7 +41,7 @@
 				<include name="**/bin/**/*.exe"/>
 				<include name="**/bin/**/*.dll"/>
 				<include name="**/bin/**/*.pdb"/>
-				<include name="**/bin/**/repository.xml"/>
+				<include name="**/bin/**/repository.xml*"/>
 				<include name="**/bin/**/runlog.txt"/>
 				<exclude name="AOSD2006Demo/EncryptionFilter/**"/>
 				<exclude name="AOSD2006Demo/ProtocolLib/**"/>
