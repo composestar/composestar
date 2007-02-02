@@ -18,6 +18,9 @@
 ; if defined use the slow fade-in
 #define SPLASH_FADEIN
 
+; find the absolute path to regasm
+#define FIND_REGASM
+
 [Setup]
 AppName={#NAME}
 AppVerName={#NAME} {#VERSION}
@@ -117,6 +120,7 @@ end;
 
 var
   registeredAssemblies: TStringList;
+  regasmexe: String; // full path to regasm.exe when found
 
 procedure RegAsm();
 begin
@@ -131,8 +135,8 @@ var
   assembly: string;
 begin
   assembly := ExpandConstant(FileName);
-  Log('RegAsm: '+assembly);
-  Exec('regasm', '"'+assembly+'" /codebase', '', SW_HIDE, ewWaitUntilTerminated, dummy);
+  Log('RegAsm: '+regasmexe+' '+assembly);
+  Exec(regasmexe, '"'+assembly+'" /codebase', '', SW_HIDE, ewWaitUntilTerminated, dummy);
 end;
 
 procedure UnRegAsm(FileName: String);
@@ -145,11 +149,39 @@ begin
   Exec('regasm', '"'+assembly+'" /unregister', '', SW_HIDE, ewWaitUntilTerminated, dummy);
 end;
 
+function GetCORSystemDirectory(pbuffer: PChar; cchBuffer: DWORD; var dwlength: DWORD): HWND;
+  external 'GetCORSystemDirectory@mscoree stdcall';
+
 function detectedDotNet(): Boolean;
+var
+  dnpath,tmp: string;
+  pathlen: DWORD;
+  i: integer;
 begin
   Result := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\.NETFramework\policy\v1.1');
   if Result = false then begin
     SuppressibleMsgBox('This setup requires the .NET Framework v1.1. Please download and install the .NET Framework and run this setup again.', mbError, MB_OK, IDOK);
+  end
+  else begin
+    // find absolute location to regasm
+    // although, if regasm isn't in the path the compile process won't work either (since csc or vjs are not in the path)
+    #ifdef FIND_REGASM
+    SetLength(dnpath, 255*2);
+    GetCORSystemDirectory(PChar(dnpath), 255, pathlen);
+    tmp := ''; // ugly hack to convert MBCS
+    for i := 0 to pathlen-2 do begin
+      tmp := tmp+dnpath[i*2+1];
+    end;
+    if (FileExists(tmp+'regasm.exe')) then begin
+      regasmexe := tmp+'regasm.exe';
+    end
+    else begin
+    #endif
+      regasmexe := 'regasm.exe';
+    #ifdef FIND_REGASM
+    end;
+    #endif
+    Log('RegAsm = '+regasmexe);
   end;
 end;
 
