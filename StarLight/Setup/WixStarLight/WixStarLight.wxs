@@ -30,7 +30,8 @@
       <RegistrySearch Id="RegSearch_VS_2005" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS" Name="ProductDir" Type="raw" />
     </Property>
     <Property Id="DEVENV_DIR_2005">
-      <ComponentSearch Id="CompSearch_VS2005" Guid="320DB690-7979-4015-BD78-A16D7279043B" Type="directory" />
+	    <!-- <ComponentSearch Id="CompSearch_VS2005" Guid="320DB690-7979-4015-BD78-A16D7279043B" Type="directory" /> -->
+      <RegistrySearch Id="RegSearch_DevenvDir_2005" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\8.0" Name="InstallDir" Type="raw" />
     </Property>
     <Property Id="DEVENV_EXE_2005">
       <RegistrySearch Id="RegSearch_DevenvExe_2005" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS" Name="EnvironmentPath" Type="raw" />
