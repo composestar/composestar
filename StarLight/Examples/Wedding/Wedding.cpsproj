@@ -1,0 +1,87 @@
+<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"PacmanTwo"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{adb931c5-4742-497f-abaf-a3d2e14a47bb}</ProjectGuid>
+    <ProjectType>StarLight</ProjectType>
+    <RepositoryFilename>obj\starlight.xml</RepositoryFilename>
+    <RootNamespace>Wedding</RootNamespace>
+    <AssemblyName>Wedding</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <CodeLanguage>CSharp</CodeLanguage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>queue</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugLevel>Debug</DebugLevel>
+    <VerifyIL>True</VerifyIL>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>false</IncludeDebugInformation>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugLevel>Debug</DebugLevel>
+    <VerifyIL>False</VerifyIL>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+      <Name>Composestar.StarLight.ContextInfo</Name>
+      <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.2\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Composestar.StarLight.Filters, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+      <Name>Composestar.StarLight.Filters</Name>
+      <AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.2\Composestar.StarLight.Filters.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConcernImplementation\Band.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConcernImplementation\Catering.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConcernImplementation\Party.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConcernImplementation\Pocket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConcernImplementation\TaxOffice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConcernImplementation\TownHall.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Person.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Wedding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Concerns" />
+    <Folder Include="ConcernImplementation" />
+  </ItemGroup>
+  <ItemGroup>
+    <Concern Include="Concerns\Law.cps" />
+    <Concern Include="Concerns\Money.cps" />
+    <Concern Include="Concerns\Party.cps" />
+  </ItemGroup>
+  <!-- Import the CSharp targets -->
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!--Import the StarLight targets-->
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.2\StarLight.targets" />
+</Project>
