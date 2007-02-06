@@ -159,11 +159,11 @@ namespace ComposestarVSAddin
 				DependencyInserter.Equals(applicationObject.Solution.Projects, dllNames);
 
 				// Store dll path's in configuration file
-				string dummypaths = String.Join(",", (string[])dllNames.ToArray(typeof(string)));
-				ModuleSetting ilicitSettings = new ModuleSetting ();
-				ilicitSettings.Name = "ILICIT";
-				ilicitSettings.Elements.Add("assemblies", dummypaths)  ;
-				BuildConfigurationManager.Instance.Settings.SetModule(ilicitSettings); 
+				//string dummypaths = String.Join(",", (string[])dllNames.ToArray(typeof(string)));
+				//ModuleSetting ilicitSettings = new ModuleSetting ();
+				//ilicitSettings.Name = "ILICIT";
+				//ilicitSettings.Elements.Add("assemblies", dummypaths)  ;
+				//BuildConfigurationManager.Instance.Settings.SetModule(ilicitSettings); 
 			
 				//BuildConfigurationManager.Instance.Executable = this.ExecSource;
 

@@ -580,10 +580,10 @@ namespace BuildConfiguration
 			}
 
 			// FILTH configuration
-			ModuleSetting filthModule = new ModuleSetting();
-			filthModule.Name = "FILTH";
-			filthModule.Elements.Add("output_pattern", ".//analyses//FILTH_") ;
-			Settings.SetModule(filthModule);
+			//ModuleSetting filthModule = new ModuleSetting();
+			//filthModule.Name = "FILTH";
+			//filthModule.Elements.Add("output_pattern", ".//analyses//FILTH_") ;
+			//Settings.SetModule(filthModule);
 			
 			// Paths
 			Settings.Paths.Add("Dummy", "dummies\\") ;		

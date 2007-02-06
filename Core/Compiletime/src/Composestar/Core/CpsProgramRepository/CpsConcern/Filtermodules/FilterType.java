@@ -12,22 +12,17 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 import Composestar.Core.CpsProgramRepository.Concern;
 
 /**
- * @modelguid {FAFD0EAB-6BB2-4634-835C-74619506D1A1} This is a wrapper for the
- *            implementation of a filter; here, specific properties of a filter
- *            type (such as required by FIRE and SECRET) can be added. The
- *            implementations of the predefined filters will be
- *            PrimitiveConcerns; this may also be user-defined filter types that
- *            are implemented as a ComposeStarConcern. In the future, add
- *            specific attributes here that apply to all filter types, create
- *            subclasses on demand. we might or might not be able to reason
- *            about the implementation here (depending on whether it is a
- *            CpsConcern or PrimitiveConcern).
+ * This is a wrapper for the implementation of a filter; here, specific
+ * properties of a filter type (such as required by FIRE and SECRET) can be
+ * added. The implementations of the predefined filters will be
+ * PrimitiveConcerns; this may also be user-defined filter types that are
+ * implemented as a ComposeStarConcern. In the future, add specific attributes
+ * here that apply to all filter types, create subclasses on demand. we might or
+ * might not be able to reason about the implementation here (depending on
+ * whether it is a CpsConcern or PrimitiveConcern).
  */
 public class FilterType extends Concern
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7876700154644254076L;
 
 	public String type;

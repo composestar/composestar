@@ -133,6 +133,7 @@
 			<arg value="/dVERSION=${version.dotnet}" />
 			<arg value="/dBUILD=${version.build}" />
 		</exec>
-		<checksum file="${out.dist}${file.separator}ComposeStar.NET_${version.dotnet}.exe" forceOverwrite="yes"/>		
+		<!-- output GNU md5sum/sha1sum like hash file, use sha1 because there are no collisions (yet), in the future switch to sha-512 -->
+		<checksum file="${out.dist}${file.separator}ComposeStar.NET_${version.dotnet}.exe" forceOverwrite="yes" algorithm="sha1" format="MD5SUM" />
 	</target>
 </project>

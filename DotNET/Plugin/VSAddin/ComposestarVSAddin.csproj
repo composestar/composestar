@@ -281,7 +281,7 @@
                 />
                 <File
                     RelPath = "Settings\SettingsForm.cs"
-                    SubType = "Code"
+                    SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
