@@ -139,8 +139,7 @@ public class DotNETMethodInfoHandler extends DefaultHandler implements ContentHa
 		// <!ELEMENT IsPrivate (#PCDATA)>
 		else if ("IsPrivate".equals(rawName))
 		{
-			// TODO: Is*P*rivate
-			methodInfo.setIsprivate(Boolean.valueOf(lastCharData));
+			methodInfo.setIsPrivate(Boolean.valueOf(lastCharData));
 		}
 		// <!ELEMENT IsPublic (#PCDATA)>
 		else if ("IsPublic".equals(rawName))

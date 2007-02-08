@@ -52,14 +52,6 @@ public class ASTRA implements CTCommonModule
 				codeParser.setAssemblyName(name);
 				codeParser.run();
 			}
-
-			/*
-			 * TODO: can this be removed? String assemblies =
-			 * config.getModuleSettings().getModule("ILICIT").getProperty("assemblies");
-			 * String[] assemblyArray = assemblies.split(","); for( int i = 0; i <
-			 * assemblyArray.length; i++ ) {
-			 * codeParser.setAssemblyName(assemblyArray[i]); codeParser.run(); }
-			 */
 		}
 		catch (ModifierException e)
 		{

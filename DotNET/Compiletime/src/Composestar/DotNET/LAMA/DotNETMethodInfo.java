@@ -281,7 +281,7 @@ public class DotNETMethodInfo extends MethodInfo
 	 * @param isPrivate
 	 * @roseuid 402A0240034B
 	 */
-	public void setIsprivate(boolean isPrivate)
+	public void setIsPrivate(boolean isPrivate)
 	{
 		IsPrivate = isPrivate;
 	}

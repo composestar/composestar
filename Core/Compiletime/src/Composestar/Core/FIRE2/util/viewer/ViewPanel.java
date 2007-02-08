@@ -22,6 +22,7 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
+import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 
 public class ViewPanel extends JPanel
 {
@@ -346,6 +347,18 @@ public class ViewPanel extends JPanel
 			width = 2 * RADIUS;
 		}
 		g.drawString(label, node.xPos - width / 2, node.yPos);
+
+		// paint name of rep entity
+		if ((node.flowNode != null) && (node.flowNode.getRepositoryLink() instanceof DeclaredRepositoryEntity))
+		{
+			label = ((DeclaredRepositoryEntity) node.flowNode.getRepositoryLink()).getName();
+			width = metrics.stringWidth(label);
+			if (width > 2 * RADIUS)
+			{
+				width = 2 * RADIUS;
+			}
+			g.drawString(label, node.xPos - width / 2, node.yPos + (int) (metrics.getHeight() * 1.25));
+		}
 
 		// paint edges:
 		paintEdges(g, node);
