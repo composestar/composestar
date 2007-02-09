@@ -37,7 +37,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CpsParserConfiguration.cs" />
     <Compile Include="CpsFileParser.cs" />
     <Compile Include="CpsLexer.cs" />
     <Compile Include="CpsParser.cs" />

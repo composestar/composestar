@@ -57,7 +57,7 @@ namespace Composestar.StarLight.CpsParser
 	/// </summary>
 	public class CpsFileParser : ICpsParser
 	{
-		private CpsParserConfiguration _configuration;
+		private string _filename;
 		private ISet<string> _types = new Set<string>();
 		private EmbeddedCode _embeddedCode;
 		private bool _hasOutputFilters;
@@ -66,12 +66,12 @@ namespace Composestar.StarLight.CpsParser
 		/// Initializes a new instance of the <see cref="T:CpsFileParser"/> class.
 		/// </summary>
 		/// <param name="configuration">The configuration.</param>
-		public CpsFileParser(CpsParserConfiguration configuration)
+		public CpsFileParser(string filename)
 		{
-			if (configuration == null)
-				throw new ArgumentNullException("configuration");
+			if (filename == null)
+				throw new ArgumentNullException("filename");
 
-			_configuration = configuration;
+			_filename = filename;
 		}
 
 		/// <summary>
@@ -80,13 +80,13 @@ namespace Composestar.StarLight.CpsParser
 		/// <value>The filename of the concern.</value>
 		private String FileName
 		{
-			get { return _configuration.Filename; }
+			get { return _filename; }
 		}
 
 		/// <summary>
 		/// Gets the type names that are referenced from the parsed input.
 		/// </summary>
-		/// <value>A read-only list with the names of referenced types.</value>
+		/// <value>A set with the names of referenced types.</value>
 		public ISet<string> ReferencedTypes
 		{
 			get { return _types; }

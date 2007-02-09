@@ -35,14 +35,8 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         ///</summary>
         public TestContext TestContext
         {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
+            get { return testContextInstance; }
+            set { testContextInstance = value; }
         }
 
 #endif
@@ -87,11 +81,10 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [TestMethod()]
         public void ConstructorTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("test.cps"));
+			string filename = base.GetPathToConcern("test.cps");
+            CpsFileParser target = new CpsFileParser(filename);
 
-            CpsFileParser target = new CpsFileParser(configuration);
-
-            Assert.IsNotNull(target, "Composestar.StarLight.CpsParser.CpsFilePareser constructor did not return an object.");
+            Assert.IsNotNull(target, "Composestar.StarLight.CpsParser.CpsFileParser constructor did not return an object.");
         }
 
 #if !NUNIT
@@ -118,9 +111,8 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [ExpectedException(typeof(Composestar.StarLight.CoreServices.Exceptions.CpsParserException)) ]
         public void InvalidConcernFileTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("invalid_concern.cps"));
-
-            CpsFileParser target = new CpsFileParser(configuration);
+			string filename = base.GetPathToConcern("invalid_concern.cps");
+			CpsFileParser target = new CpsFileParser(filename);
 
             target.Parse();
             Assert.Fail("Composestar.StarLight.CpsParser.CpsFileParser.Parse did not return the expected Composestar.StarLight.CoreServices.Exceptions.CpsParserException.");
@@ -133,9 +125,8 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [TestMethod()]
         public void HasNoOutputFiltersTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("Logging.cps"));
-
-            CpsFileParser target = new CpsFileParser(configuration);
+			string filename = base.GetPathToConcern("Logging.cps");
+			CpsFileParser target = new CpsFileParser(filename);
 
             target.Parse();
             
@@ -148,9 +139,8 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [TestMethod()]
         public void HasOutputFiltersTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("platypus.cps"));
-
-            CpsFileParser target = new CpsFileParser(configuration);
+            string filename = base.GetPathToConcern("platypus.cps");
+            CpsFileParser target = new CpsFileParser(filename);
 
             target.Parse();
 
@@ -163,15 +153,13 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [TestMethod()]
         public void ReferencedTypesCountTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("law.cps"));
-
-            CpsFileParser target = new CpsFileParser(configuration);
+			string filename = base.GetPathToConcern("law.cps");
+            CpsFileParser target = new CpsFileParser(filename);
 
             target.Parse();
 
             Assert.AreEqual(2, target.ReferencedTypes.Count, "Composestar.StarLight.CpsParser.CpsFileParser.ReferencedTypes does not contain the expected two types.");
         }
-
 
         /// <summary>
         ///A test to check that ReferencedTypes does not return a null value if there are no referenced types
@@ -179,17 +167,13 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [TestMethod()]
         public void ReferencedTypesTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("bulkupdates.cps"));
-
-            CpsFileParser target = new CpsFileParser(configuration);
+			string filename = base.GetPathToConcern("bulkupdates.cps");
+            CpsFileParser target = new CpsFileParser(filename);
 
             target.Parse();
 
             Assert.IsNotNull(target.ReferencedTypes, "Composestar.StarLight.CpsParser.CpsFileParser.ReferencedTypes was not set correctly.");
             Assert.AreEqual(0, target.ReferencedTypes.Count, "Composestar.StarLight.CpsParser.CpsFileParser.ReferencedTypes returned unexpected count.");
         }
-
     }
-
-
 }

@@ -44,7 +44,6 @@ using System.IO;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using Microsoft.Practices.ObjectBuilder;
 
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
@@ -203,8 +202,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						Log.LogMessageFromResources("ParsingConcernFile", concernFile);
 
 						// File is changed, we might not have the correct data
-						CpsParserConfiguration config = CpsParserConfiguration.CreateDefaultConfiguration(concernFile);
-						ICpsParser parser = DIHelper.CreateObject<CpsFileParser>(CreateContainer(config));
+						ICpsParser parser = new CpsFileParser(concernFile);
 
 						// Parse the concern file
 						parser.Parse();
@@ -350,7 +348,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			items.CopyTo(arr, 0);
 			return arr;
 		}
-
+/*
 		/// <summary>
 		/// Creates the services container.
 		/// </summary>
@@ -362,6 +360,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new CpsParserBuilderConfigurator());
 
 			return serviceContainer;
-		}
+		}*/
 	}
 }
