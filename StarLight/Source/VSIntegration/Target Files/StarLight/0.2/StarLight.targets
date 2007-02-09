@@ -449,7 +449,6 @@ Copyright (C) University of Twente, 2006
     <MasterCallerTask 
       ContinueOnError="false"
       RepositoryFilename="$(ProjectDir)$(RepositoryFilename)" 
-      ConcernFiles="@(Concern->'%(FullPath)')" 
       JavaDebugLevel="$(DebugLevel)" 
       IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" 
       IncreConfig="$(IncreConfig)" 

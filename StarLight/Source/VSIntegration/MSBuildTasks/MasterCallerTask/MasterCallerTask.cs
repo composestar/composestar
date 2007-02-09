@@ -72,54 +72,38 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		#region Task properties
 
 		private string _repositoryFileName;
-		private ITaskItem[] _concernFiles;
 		private string _debugLevel;
 		private string _intermediateOutputPath;
 		private string _increConfig;
 		private bool _filthOutput = true;
 
 		/// <summary>
-		/// Gets or sets the repository filename.
+		/// Sets the repository filename.
 		/// </summary>
 		/// <value>The repository filename.</value>
-		/// <returns>string</returns>
 		[Required]
 		public string RepositoryFileName
 		{
-			get { return _repositoryFileName; }
 			set { _repositoryFileName = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the concern files.
-		/// </summary>
-		/// <value>The concern files.</value>
-		[Required]
-		public ITaskItem[] ConcernFiles
-		{
-			get { return _concernFiles; }
-			set { _concernFiles = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the debug level.
+		/// Sets the debug level.
 		/// </summary>
 		/// <value>The debug level.</value>
 		public string JavaDebugLevel
 		{
-			get { return _debugLevel; }
 			set { _debugLevel = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the intermediate output path.
+		/// Sets the intermediate output path.
 		/// </summary>
 		/// <value>The intermediate output path.</value>
 		/// <returns>string</returns>
 		[Required]
 		public string IntermediateOutputPath
 		{
-			get { return _intermediateOutputPath; }
 			set { _intermediateOutputPath = value; }
 		}
 
@@ -132,12 +116,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether FILTH output is enabled.
+		/// Sets a value indicating whether FILTH output is enabled.
 		/// </summary>
 		/// <value><c>true</c> if FILTH output is enabled; otherwise, <c>false</c>.</value>
 		public bool FilthOutput
 		{
-			get { return _filthOutput; }
 			set { _filthOutput = value; }
 		}
 		#endregion
@@ -175,10 +158,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			Stopwatch sw = Stopwatch.StartNew();
 		
 			// Open DB
-			Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFileName);
+			Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", _repositoryFileName);
 			IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
 
-			ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);
+			ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(_repositoryFileName);
 
 			if (configContainer.Concerns.Count == 0)
 			{
@@ -189,26 +172,26 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			Log.LogMessageFromResources("MasterStartText");
 
 			// Place debuglevel
-			Log.LogMessageFromResources("StoreDebugLevel", JavaDebugLevel);
+			Log.LogMessageFromResources("StoreDebugLevel", _debugLevel);
 
 			// Set the Common Configuration
 			short debugLevelValue = -1;
-			if (!string.IsNullOrEmpty(JavaDebugLevel))
+			if (!string.IsNullOrEmpty(_debugLevel))
 			{
 				try
 				{
-					CurrentDebugMode = (DebugMode)Enum.Parse(typeof(DebugMode), JavaDebugLevel);
+					CurrentDebugMode = (DebugMode)Enum.Parse(typeof(DebugMode), _debugLevel);
 					debugLevelValue = (short)CurrentDebugMode;
 				}
 				catch (ArgumentException)
 				{
-					Log.LogErrorFromResources("CouldNotConvertDebugLevel", JavaDebugLevel);
+					Log.LogErrorFromResources("CouldNotConvertDebugLevel", _debugLevel);
 					return false;
 				}
 			}
 
 			configContainer.AddSetting("CompiletimeDebugLevel", debugLevelValue.ToString(CultureInfo.InvariantCulture));
-			configContainer.AddSetting("IntermediateOutputPath", IntermediateOutputPath);
+			configContainer.AddSetting("IntermediateOutputPath", _intermediateOutputPath);
 			configContainer.AddSetting("InstallFolder", StarLightSettings.Instance.StarLightInstallFolder);
 
 			// Set FILTH Specification
@@ -218,10 +201,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				filthFile = Path.Combine(StarLightSettings.Instance.StarLightInstallFolder, filthFile);
 			}
 			configContainer.AddSetting("SpecificationFILTH", filthFile);
-			configContainer.AddSetting("OutputEnabledFILTH", FilthOutput.ToString(CultureInfo.InvariantCulture));
+			configContainer.AddSetting("OutputEnabledFILTH", _filthOutput.ToString(CultureInfo.InvariantCulture));
 
 			// Save common config
-			entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer);
+			entitiesAccessor.SaveConfiguration(_repositoryFileName, configContainer);
 
 			// Create a process to execute the StarLight Master.
 			Process process = new Process();
