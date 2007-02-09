@@ -1,5 +1,7 @@
 package Composestar.DotNET.TYM.TypeCollector;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +55,13 @@ public class DotNETCollectorRunner implements CollectorRunner
 
 			DocumentHandler handler = new DocumentHandler(parser);
 			parser.setContentHandler(handler);
-			parser.parse(new InputSource(tempFolder + "types.xml"));
+			File typesXml = new File(tempFolder + "types.xml");
+			parser.parse(new InputSource(new FileInputStream(typesXml)));
+			if (!INCRE.instance().isIncremental())
+			{
+				typesXml.delete(); // free up some diskspace because types.xml
+									// is no longer needed
+			}
 		}
 		catch (SAXException e)
 		{

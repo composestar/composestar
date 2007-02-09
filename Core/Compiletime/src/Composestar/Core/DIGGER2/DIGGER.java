@@ -46,6 +46,12 @@ public class DIGGER implements CTCommonModule
 	 */
 	public static final String MODULE_NAME = "DIGGER";
 
+	/**
+	 * If set to true Fire2 execution graphs will be shown. Should only be used
+	 * for debugging of digger2
+	 */
+	private static final boolean SHOW_GRAPH = false;
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	/**
@@ -150,6 +156,12 @@ public class DIGGER implements CTCommonModule
 				switch (graph.getMode())
 				{
 					case DispatchGraph.MODE_BASIC:
+
+						if (SHOW_GRAPH)
+						{
+							new Composestar.Core.FIRE2.util.viewer.Viewer(fm.getExecutionModel(FireModel.INPUT_FILTERS));
+						}
+
 						processFireModel(concern, fm.getExecutionModel(FireModel.INPUT_FILTERS).getEntranceStates(),
 								FireModel.INPUT_FILTERS);
 						// no output filter support
@@ -307,7 +319,10 @@ public class DIGGER implements CTCommonModule
 			Iterator entranceStates = em.getEntranceStates();
 			ExecutionState es = (ExecutionState) entranceStates.next();
 
-			// new Composestar.Core.FIRE2.util.viewer.Viewer(em);
+			if (SHOW_GRAPH)
+			{
+				new Composestar.Core.FIRE2.util.viewer.Viewer(em);
+			}
 
 			Breadcrumb crumb = graph.getResolver().resolve(concern, es, filterPosition);
 			graph.addCrumb(crumb);

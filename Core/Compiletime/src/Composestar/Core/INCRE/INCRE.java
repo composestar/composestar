@@ -691,6 +691,14 @@ public final class INCRE
 		this.filesCheckedOnProjectConfig.put(filename, isAdded);
 		return isAdded;
 	}
+	
+	/**
+	 * @return true if INCRE is building in incremental mode
+	 */
+	public boolean isIncremental()
+	{
+		return enabled;
+	}
 
 	/**
 	 * @return true when module with the specified name is incremental

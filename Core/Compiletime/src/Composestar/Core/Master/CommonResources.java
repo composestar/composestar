@@ -156,6 +156,11 @@ public class CommonResources
 							"No value for required resource '" + in.value() + "'");
 				}
 				
+				if (value == null)
+				{
+					continue;
+				}
+				
 				if (!field.getClass().isAssignableFrom(value.getClass()))
 				{
 					throw new ResourceException(
