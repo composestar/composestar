@@ -25,7 +25,7 @@ public class Not extends UnaryOperator
 	{
 		super();
 	}
-	
+
 	public int simulateResult()
 	{
 		int res = operand.simulateResult();

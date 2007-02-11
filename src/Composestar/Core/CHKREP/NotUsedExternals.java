@@ -27,7 +27,7 @@ import Composestar.Utils.Debug;
 /**
  * Checks on unused Externals.
  * 
- * @author DoornenbalD 
+ * @author DoornenbalD
  */
 public class NotUsedExternals implements BaseChecker
 {
@@ -152,7 +152,8 @@ public class NotUsedExternals implements BaseChecker
 				 */
 				if (!isExternalUsed)
 				{
-					Debug.out(Debug.MODE_WARNING, "CHKREP", "External " + externalID + " is declared but never used", external);
+					Debug.out(Debug.MODE_WARNING, "CHKREP", "External " + externalID + " is declared but never used",
+							external);
 				}
 			}
 		}

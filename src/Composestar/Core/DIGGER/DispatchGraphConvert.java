@@ -97,7 +97,7 @@ public class DispatchGraphConvert
 	{
 		format = inFormat;
 	}
-	
+
 	public void setFormat(String inFormat)
 	{
 		if (inFormat.equals("dot"))
@@ -147,18 +147,20 @@ public class DispatchGraphConvert
 				throw new Exception("Unsupported format: " + inFormat);
 		}
 	}
-	
+
 	public static Source getXslt(int inFormat)
 	{
 		switch (inFormat)
 		{
 			case FORMAT_DOT:
-				return new StreamSource(DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator + "GraphVizDot.xslt");
+				return new StreamSource(DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator
+						+ "GraphVizDot.xslt");
 			case FORMAT_GRAPHML:
-				return new StreamSource(DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator + "GraphML.xslt");
+				return new StreamSource(DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator
+						+ "GraphML.xslt");
 			case FORMAT_GXL:
 				return new StreamSource(DispatchGraphConvert.class.getResource(XSLT_PATH) + File.separator + "GXL.xslt");
-			case FORMAT_CUSTOM:				
+			case FORMAT_CUSTOM:
 			default:
 				return null;
 		}

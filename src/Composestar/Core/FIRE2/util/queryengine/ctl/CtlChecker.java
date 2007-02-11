@@ -168,7 +168,7 @@ public class CtlChecker
 	{
 		HashSet satSet;
 
-		if (reversed.booleanValue())
+		if (reversed)
 		{
 			satSet = (HashSet) reverseSatTable.get(state);
 		}
@@ -379,7 +379,7 @@ public class CtlChecker
 		public Object visitReverse(Reverse formula, Object arg)
 		{
 			Boolean b1 = (Boolean) arg;
-			Boolean b2 = (!b1.booleanValue()) ? Boolean.TRUE : Boolean.FALSE;
+			Boolean b2 = (!b1) ? Boolean.TRUE : Boolean.FALSE;
 
 			formula.subFormula.visit(this, b2);
 
@@ -415,7 +415,7 @@ public class CtlChecker
 		{
 			HashSet satSet;
 
-			if (reversed.booleanValue())
+			if (reversed)
 			{
 				satSet = (HashSet) reverseSatTable.get(state);
 			}
@@ -429,7 +429,7 @@ public class CtlChecker
 
 		private Enumeration getNextStates(ExecutionState state, Boolean reversed)
 		{
-			if (reversed.booleanValue())
+			if (reversed)
 			{
 				Vector v = (Vector) reverseTable.get(state);
 				return v.elements();
@@ -449,7 +449,7 @@ public class CtlChecker
 
 		private Enumeration backwardStateIterator(Boolean reverse)
 		{
-			if (reverse.booleanValue())
+			if (reverse)
 			{
 				return forwardStateVector.elements();
 			}

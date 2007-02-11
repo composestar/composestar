@@ -32,26 +32,26 @@ import Composestar.Core.Exception.ModuleException;
 public class ErrorFilterNode extends FilterNode
 {
 	protected List acceptEdges;
-	
+
 	public ErrorFilterNode(Graph inGraph, Filter inFilter, byte inDirection)
 	{
 		super(inGraph, inFilter, inDirection);
 		acceptEdges = new ArrayList();
 	}
-	
+
 	public void appendFilterElement(FilterElementNode inElement, FilterElement fe)
 	{
 		// add to queue
 		acceptEdges.add(fe);
 	}
-	
+
 	public void addNextFilter(FilterNode inFilter)
 	{
 		// process queue
 		Iterator it = acceptEdges.iterator();
-		while (it.hasNext())
+		for (Object acceptEdge : acceptEdges)
 		{
-			addOutgoingEdge(new CondMatchEdge(inFilter, (FilterElement) it.next()));
+			addOutgoingEdge(new CondMatchEdge(inFilter, (FilterElement) acceptEdge));
 		}
 		acceptEdges.clear();
 		// add lamba edge to exception
@@ -60,6 +60,6 @@ public class ErrorFilterNode extends FilterNode
 
 	protected void processSubstitutionParts(MatchingPattern mp, FilterElementNode mpNode) throws ModuleException
 	{
-		// nop
+	// nop
 	}
 }

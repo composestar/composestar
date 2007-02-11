@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
@@ -5,6 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Singleton containing the build configuration
+ *
+ * @author elmuerte
+ */
 public class Configuration implements Serializable
 {
 	private static final long serialVersionUID = -8812125434498730547L;
@@ -14,8 +28,6 @@ public class Configuration implements Serializable
 	private Properties properties;
 
 	private Projects projects;
-
-	private Modules moduleSettings;
 
 	private PathSettings pathSettings;
 
@@ -29,19 +41,18 @@ public class Configuration implements Serializable
 	 * Temporary storage of module settings. ModuleInfo uses this to populate
 	 * it's settings when it's loaded.
 	 */
-	private Map tmpModuleSettings;
+	private Map<String,Map> tmpModuleSettings;
 
 	public Configuration()
 	{
 		properties = new Properties();
 		projects = new Projects();
-		moduleSettings = new Modules();
 		pathSettings = new PathSettings();
 		platform = new Platform();
 		libraries = new BuiltLibraries();
 		filters = new CustomFilters();
 
-		tmpModuleSettings = new HashMap();
+		tmpModuleSettings = new HashMap<String,Map>();
 	}
 
 	public static Configuration instance()
@@ -75,34 +86,13 @@ public class Configuration implements Serializable
 		return properties.getProperty("Platform");
 	}
 
-	/**
-	 * @deprecated Use getPlatformName() and getBuildDebugLevel().
-	 */
-	public String getProperty(String key)
-	{
-		return properties.getProperty(key);
-	}
-
 	public Projects getProjects()
 	{
 		return projects;
 	}
 
-	public Modules getModuleSettings()
-	{
-		return moduleSettings;
-	}
-
 	/**
-	 * @deprecated
-	 */
-	public ModuleSettings getModuleSettings(String module)
-	{
-		return moduleSettings.getModule(module);
-	}
-
-	/**
-	 * @deprecated Directly use ModuleInfo
+	 * @deprecated use ModuleInfoManager
 	 */
 	public String getModuleProperty(String module, String key, String def)
 	{
@@ -115,7 +105,7 @@ public class Configuration implements Serializable
 	}
 
 	/**
-	 * @deprecated Directly use ModuleInfo
+	 * @deprecated use ModuleInfoManager
 	 */
 	public int getModuleProperty(String module, String key, int def)
 	{
@@ -128,7 +118,7 @@ public class Configuration implements Serializable
 	}
 
 	/**
-	 * @deprecated Directly use ModuleInfo
+	 * @deprecated use ModuleInfoManager
 	 */
 	public boolean getModuleProperty(String module, String key, boolean def)
 	{
@@ -160,17 +150,6 @@ public class Configuration implements Serializable
 		return filters;
 	}
 
-	/*
-	 * public void setProjects(Projects projects) { this.projects = projects; }
-	 * public void setModuleSettings(ModuleSettings moduleSettings) {
-	 * this.moduleSettings = moduleSettings; } public void
-	 * setPathSettings(PathSettings pathSettings) { this.pathSettings =
-	 * pathSettings; } public void setPlatform(Platform platform) {
-	 * this.platform = platform; } public void setLibraries(BuiltLibraries
-	 * libraries) { this.libraries = libraries; } public void
-	 * setFilters(CustomFilters filters) { this.filters = filters; }
-	 */
-
 	public void addTmpModuleSettings(String moduleName, Map props)
 	{
 		tmpModuleSettings.put(moduleName, props);
@@ -178,6 +157,6 @@ public class Configuration implements Serializable
 
 	public Map getTmpModuleSettings(String moduleName)
 	{
-		return (Map) tmpModuleSettings.get(moduleName);
+		return tmpModuleSettings.get(moduleName);
 	}
 }

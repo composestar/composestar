@@ -36,21 +36,23 @@ import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
-//FIXME: rename package to SECRET
+// FIXME: rename package to SECRET
 /**
  * SECRET
  */
 public class CKRET implements CTCommonModule
 {
 	public static final String MODULE_NAME = "SECRET";
-	
+
 	public static final String[] MODES = { "NORMAL", "REDUNDANT", "PROGRESSIVE" };
 
 	public static final int NORMAL = 0;
+
 	public static final int REDUNDANT = 1;
+
 	public static final int PROGRESSIVE = 2;
 
-	protected static int mode;	
+	protected static int mode;
 
 	private static Reporter reporter;
 
@@ -90,8 +92,8 @@ public class CKRET implements CTCommonModule
 		}
 		else
 		{
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Unknown CKRET mode: " + newMode + ", CKRET will run in " + MODES[mode]
-					+ " mode");
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Unknown CKRET mode: " + newMode + ", CKRET will run in "
+					+ MODES[mode] + " mode");
 		}
 
 		try
@@ -123,8 +125,8 @@ public class CKRET implements CTCommonModule
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException(MODULE_NAME, "CKRET report file creation failed (" + reportFile + "), with reason: "
-					+ e.getMessage());
+			throw new ModuleException(MODULE_NAME, "CKRET report file creation failed (" + reportFile
+					+ "), with reason: " + e.getMessage());
 		}
 
 		Iterator conIt = DataStore.instance().getAllInstancesOf(Concern.class);
@@ -178,9 +180,9 @@ public class CKRET implements CTCommonModule
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Semantic conflict(s) detected on concern "
 								+ concern.getQualifiedName(), reportFile, 0);
 					}
-					for (Iterator fmoit = fmolist.iterator(); fmoit.hasNext();)
+					for (Object aFmolist1 : fmolist)
 					{
-						LinkedList order = (LinkedList) fmoit.next();
+						LinkedList order = (LinkedList) aFmolist1;
 						FilterModuleOrder fmo = new FilterModuleOrder(order);
 
 						if (!fmo.equals(singleOrder))
@@ -193,9 +195,9 @@ public class CKRET implements CTCommonModule
 				case PROGRESSIVE:
 					boolean foundGoodOrder = ca.checkOrder(singleOrder, true);
 
-					for (Iterator fmoit = fmolist.iterator(); fmoit.hasNext();)
+					for (Object aFmolist : fmolist)
 					{
-						LinkedList order = (LinkedList) fmoit.next();
+						LinkedList order = (LinkedList) aFmolist;
 						FilterModuleOrder fmo = new FilterModuleOrder(order);
 						if (!fmo.equals(singleOrder))
 						{
@@ -249,10 +251,9 @@ public class CKRET implements CTCommonModule
 		{
 			Debug.out(Debug.MODE_INFORMATION, "INCRE", "Skipping CKRET run for " + oldconcern.getQualifiedName());
 			getReporter().openConcern(oldconcern);
-			Iterator repItr = reports.iterator();
-			while (repItr.hasNext())
+			for (Object report1 : reports)
 			{
-				CKRETReport report = (CKRETReport) repItr.next();
+				CKRETReport report = (CKRETReport) report1;
 				getReporter().reportOrder(report.getOrder(), report.getAnalysis(), report.getSelected(), true);
 			}
 			getReporter().closeConcern();
@@ -262,19 +263,19 @@ public class CKRET implements CTCommonModule
 		ckretcopy.stop();
 	}
 
-	public ArrayList getSemanticAnnotations(PrimitiveConcern pc)
+	public List<Annotation> getSemanticAnnotations(PrimitiveConcern pc)
 	{
 		return getSemanticAnnotations((Concern) pc);
 	}
 
-	public ArrayList getSemanticAnnotations(CpsConcern cps)
+	public List<Annotation> getSemanticAnnotations(CpsConcern cps)
 	{
 		return getSemanticAnnotations((Concern) cps);
 	}
 
-	public ArrayList getSemanticAnnotations(Concern c)
+	public List<Annotation> getSemanticAnnotations(Concern c)
 	{
-		ArrayList annos = new ArrayList();
+		List<Annotation> annos = new ArrayList<Annotation>();
 		INCRE incre = INCRE.instance();
 		DataStore ds = incre.getCurrentRepository();
 
@@ -289,15 +290,13 @@ public class CKRET implements CTCommonModule
 				continue;
 			}
 			// iterate over methods
-			Iterator methods = type.getMethods().iterator();
-			while (methods.hasNext())
+			for (Object o : type.getMethods())
 			{
-				MethodInfo method = (MethodInfo) methods.next();
+				MethodInfo method = (MethodInfo) o;
 				// iterate over annotations
-				Iterator annotations = method.getAnnotations().iterator();
-				while (annotations.hasNext())
+				for (Object o1 : method.getAnnotations())
 				{
-					Annotation anno = (Annotation) annotations.next();
+					Annotation anno = (Annotation) o1;
 					if (anno.getType().getUnitName().endsWith("Semantics"))
 					{
 						annos.add(anno);

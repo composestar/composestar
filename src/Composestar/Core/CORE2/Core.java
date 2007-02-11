@@ -61,9 +61,9 @@ public class Core implements CTCommonModule
 
 	private void printConflicts(CoreConflict[] conflicts)
 	{
-		for (int i = 0; i < conflicts.length; i++)
+		for (CoreConflict conflict : conflicts)
 		{
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, conflicts[i].getDescription(), conflicts[i].getLocation());
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, conflict.getDescription(), conflict.getLocation());
 		}
 	}
 }

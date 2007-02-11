@@ -24,9 +24,9 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * Checks on not used Conditions. Iterates on the FilerModules to get the 
+ * Checks on not used Conditions. Iterates on the FilerModules to get the
  * Condtions and then checks per condtion the input and output filters.
- *
+ * 
  * @author DoornenbalD
  */
 public class NotUsedCondition implements BaseChecker
@@ -34,7 +34,8 @@ public class NotUsedCondition implements BaseChecker
 	private DataStore ds;
 
 	/**
-	 * Performs the check. Calls isUsedInFilters for both input and output filters.
+	 * Performs the check. Calls isUsedInFilters for both input and output
+	 * filters.
 	 */
 	public boolean performCheck()
 	{

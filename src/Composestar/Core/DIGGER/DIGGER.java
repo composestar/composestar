@@ -123,9 +123,9 @@ public class DIGGER implements CTCommonModule
 
 				// TODO: move to ConcernNode?
 				Iterator filterModules = fmOrder.orderAsList().iterator();
-				while (filterModules.hasNext())
+				for (Object o : fmOrder.orderAsList())
 				{
-					FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) filterModules.next());
+					FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) o);
 					if (Debug.willLog(Debug.MODE_DEBUG))
 					{
 						logger.debug("Processing FilterModule: " + fm.getQualifiedName());

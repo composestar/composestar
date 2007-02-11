@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id$
+ * $Id: Version.java 2735 2006-11-14 19:39:01Z elmuerte $
  */
 package Composestar.Utils;
 
@@ -82,7 +82,7 @@ public final class Version
 		{
 			// note: this must match the format used by the ant script
 			SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
-			instance.compileDate = sdf.parse(instance.props.getProperty("version.compiledate", ""));
+			instance.compileDate = sdf.parse("@BUILD_DATE@");
 		}
 		catch (ParseException e)
 		{

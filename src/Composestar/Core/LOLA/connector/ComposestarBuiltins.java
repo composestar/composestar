@@ -31,9 +31,10 @@ import Composestar.Core.LOLA.metamodel.RelationPredicate;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
 
 /**
- * This class implements builtin predicates used by the Composestar Prolog metamodel.
+ * This class implements builtin predicates used by the Composestar Prolog
+ * metamodel.
  * 
- * @author havingaw 
+ * @author havingaw
  */
 public class ComposestarBuiltins extends HashDict
 {
@@ -63,9 +64,9 @@ public class ComposestarBuiltins extends HashDict
 
 		/* Register the relation predicates for this language model */
 		Iterator relIterator = langModel.getRelationPredicates().values().iterator();
-		while (relIterator.hasNext())
+		for (Object o : langModel.getRelationPredicates().values())
 		{
-			RelationPredicate rp = (RelationPredicate) relIterator.next();
+			RelationPredicate rp = (RelationPredicate) o;
 			if (!(rp instanceof CompositeRelationPredicate))
 			{
 				register(new binaryRelationBuiltin(rp));
@@ -85,7 +86,7 @@ public class ComposestarBuiltins extends HashDict
 		String key = proto.name() + '/' + proto.getArity();
 		put(key, proto);
 	}
-	
+
 	public static void setCurrentSelector(PredicateSelector inSelector)
 	{
 		currentSelector = inSelector;
@@ -132,7 +133,8 @@ class isUnitTypeBuiltin extends FunBuiltin
 		}
 		else
 		{
-			// Unit not specified, so we return a source containing the list of units
+			// Unit not specified, so we return a source containing the list of
+			// units
 			UnitResult unitsOfThisType = ComposestarBuiltins.langUnits.getByType(type);
 			if (null == unitsOfThisType) // Type does not exist!
 			{
@@ -554,8 +556,11 @@ class hasAttributeBuiltin extends FunBuiltin
 		String type = "";
 		if (!(tType instanceof Const))
 		{
-			ComposestarBuiltins.currentSelector.setToBeCheckedByINCRE(false);// too many cases
-			knownType = false; // Unit can be of any type; lookup will be slower
+			ComposestarBuiltins.currentSelector.setToBeCheckedByINCRE(false);// too
+																				// many
+																				// cases
+			knownType = false; // Unit can be of any type; lookup will be
+								// slower
 		}
 		else
 		{
@@ -564,7 +569,8 @@ class hasAttributeBuiltin extends FunBuiltin
 
 		Term tUnit = getArg(0);
 		Term tAttr = getArg(1);
-		if (tAttr instanceof Const) // Attribute is bound - lookup units with this attr
+		if (tAttr instanceof Const) // Attribute is bound - lookup units with
+									// this attr
 		{
 			String attr = ((Const) tAttr).name();
 			UnitResult result;
@@ -582,9 +588,9 @@ class hasAttributeBuiltin extends FunBuiltin
 			}
 			HashSet filtered = new HashSet();
 			Iterator allIter = result.multiValue().iterator();
-			while (allIter.hasNext())
+			for (Object o : result.multiValue())
 			{
-				ProgramElement unit = (ProgramElement) allIter.next();
+				ProgramElement unit = (ProgramElement) o;
 				if (unit.hasUnitAttribute(attr))
 				{
 					filtered.add(unit);

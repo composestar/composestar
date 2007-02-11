@@ -21,7 +21,9 @@ import Composestar.Core.FIRE2.util.regex.PatternParseException;
 public class ConstraintsHandler extends DefaultHandler
 {
 	private Repository repository;
+
 	private ConfigParser returnhandler;
+
 	private XMLReader parser;
 
 	public ConstraintsHandler(ConfigParser handler, XMLReader inparser, Repository inrepository)
@@ -48,7 +50,7 @@ public class ConstraintsHandler extends DefaultHandler
 				String resource = amap.getValue("resource");
 				String pattern = amap.getValue("pattern");
 				String message = amap.getValue("message");
-	
+
 				repository.addConstraint(new Constraint(resource, pattern, message, Constraint.CONFLICT));
 			}
 			else if (local_name.equalsIgnoreCase("require"))

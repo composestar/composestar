@@ -29,10 +29,9 @@ public class FILTH implements CTCommonModule
 {
 	public static final String MODULE_NAME = "FILTH";
 	public static final String FILTER_ORDERING_SPEC = "FILTER_ORDERING_SPEC";
-	
+
 	public FILTH()
-	{
-	}
+	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
@@ -42,7 +41,7 @@ public class FILTH implements CTCommonModule
 		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Init FILTH service", INCRETimer.TYPE_NORMAL);
 		
 		/* first set the ordering spec file!!!!! */
-		resources.addResource("ConstraintFile", "XMLTest.xml");
+		resources.add("ConstraintFile", "XMLTest.xml");
 		
 		/* get a FILTHService instance */
 		FILTHService filthservice = FILTHService.getInstance(resources);
@@ -81,10 +80,10 @@ public class FILTH implements CTCommonModule
 				{
 					Debug.out(Debug.MODE_INFORMATION, MODULE_NAME,
 							"Encountered shared join point: " + c.getQualifiedName(), c);
-					
-					FilterModuleOrder singleOrder = 
-						(FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-					
+
+					FilterModuleOrder singleOrder = (FilterModuleOrder) c
+							.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+
 					StringBuffer sb = new StringBuffer();
 					if (singleOrder != null)
 					{

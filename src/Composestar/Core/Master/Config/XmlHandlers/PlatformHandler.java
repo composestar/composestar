@@ -1,6 +1,14 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config.XmlHandlers;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.xml.sax.Attributes;
@@ -15,19 +23,19 @@ import Composestar.Core.Master.Config.Project;
 
 public class PlatformHandler extends DefaultHandler implements ContentHandler
 {
-	XMLReader parser;
+	protected XMLReader parser;
 
-	BuildConfigHandler returnHandler;
+	protected ContentHandler returnHandler;
 
-	public PlatformHandler(XMLReader inParser, BuildConfigHandler inReturnHandler)
+	public PlatformHandler(XMLReader inParser, ContentHandler inReturnHandler)
 	{
 		parser = inParser;
 		returnHandler = inReturnHandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if ("Language".equals(raw_name))
+		if ("Language".equals(qName))
 		{// in <language>
 			// look further
 			if (amap.getValue("name") != null)
@@ -43,12 +51,9 @@ public class PlatformHandler extends DefaultHandler implements ContentHandler
 					parser.setContentHandler(langhandler);
 
 					// add language to projects
-					List projects = config.getProjects().getProjectsByLanguage(languagename);
-					Iterator prjIter = projects.iterator();
-					while (prjIter.hasNext())
+					List<Project> projects = config.getProjects().getProjectsByLanguage(languagename);
+					for (Project p : projects)
 					{
-						// System.out.println("add lang "+lang.getName());
-						Project p = (Project) prjIter.next();
 						p.setLanguage(lang);
 					}
 				}
@@ -58,7 +63,7 @@ public class PlatformHandler extends DefaultHandler implements ContentHandler
 				}
 			}
 		}
-		else if ("RequiredFiles".equals(raw_name))
+		else if ("RequiredFiles".equals(qName))
 		{
 			// in <RequiredFiles>
 			// look further
@@ -67,18 +72,12 @@ public class PlatformHandler extends DefaultHandler implements ContentHandler
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException
+	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
-		if ("Platform".equals(raw_name))
+		if ("Platform".equals(qName))
 		{
 			// end <platform>
 			parser.setContentHandler(returnHandler);
 		}
 	}
-
-	public void startDocument()
-	{}
-
-	public void endDocument()
-	{}
 }

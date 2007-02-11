@@ -50,7 +50,7 @@ public class Message
 	private static Target getInnerTarget()
 	{
 		Target target = new Target();
-		target.setName("inner");
+		target.setName(Target.INNER);
 		return target;
 	}
 

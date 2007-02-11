@@ -61,8 +61,10 @@ public class ResourceOperationLabeler implements Labeler
 		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_TRUE_STAR, "selector"), seq);
 		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_TRUE_TRUE, "selector"), seq);
 		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_FALSE, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_TRUE_STAR, "selector"), seq);
-		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_TRUE_TRUE, "selector"), seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_TRUE_STAR, "selector"),
+				seq);
+		operationTable.put(new LabelResourcePair(ExecutionTransition.SIGNATURE_MATCHING_PART_TRUE_TRUE, "selector"),
+				seq);
 
 		// error-action:
 		seq = new LabelSequence();
@@ -180,9 +182,9 @@ public class ResourceOperationLabeler implements Labeler
 				if (method != null)
 				{
 					List attributes = method.getAnnotations();
-					for (int i = 0; i < attributes.size(); i++)
+					for (Object attribute : attributes)
 					{
-						Annotation dna = (Annotation) attributes.get(i);
+						Annotation dna = (Annotation) attribute;
 						if (dna.getType().fullName().startsWith("Composestar.")
 								&& dna.getType().fullName().endsWith("Semantics"))
 						{
@@ -214,7 +216,8 @@ public class ResourceOperationLabeler implements Labeler
 								// }
 								// catch(Exception e)
 								// {
-								// throw new ModuleException(CKRET.MODULE_NAME,"Error
+								// throw new
+								// ModuleException(CKRET.MODULE_NAME,"Error
 								// in annotation semantics of filter " +
 								// filter.getQualifiedName());
 								// }
@@ -227,9 +230,9 @@ public class ResourceOperationLabeler implements Labeler
 						}
 					}
 					Iterator reifiedMessageBehaviour = method.getReifiedMessageBehavior().iterator();
-					while (reifiedMessageBehaviour.hasNext())
+					for (Object o1 : method.getReifiedMessageBehavior())
 					{
-						String refMes = (String) (reifiedMessageBehaviour.next());
+						String refMes = (String) (o1);
 
 						StringTokenizer st = new StringTokenizer(refMes.replaceAll("\"", ""), ",");
 
@@ -251,7 +254,8 @@ public class ResourceOperationLabeler implements Labeler
 							// }
 							// catch(Exception e)
 							// {
-							// throw new ModuleException(CKRET.MODULE_NAME,"Error in
+							// throw new
+							// ModuleException(CKRET.MODULE_NAME,"Error in
 							// annotation semantics of filter " +
 							// filter.getQualifiedName());
 							// }

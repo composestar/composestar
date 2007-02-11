@@ -70,15 +70,15 @@ public class INCRETester
 
 		/* Compare number of type */
 		Iterator types1 = record1.instancesByType.keySet().iterator();
-		while (types1.hasNext())
+		for (Object o : record1.instancesByType.keySet())
 		{
-			String type = (String) types1.next();
-			int count1 = ((Integer) record1.instancesByType.get(type)).intValue();
+			String type = (String) o;
+			int count1 = (Integer) record1.instancesByType.get(type);
 			int count2 = 0;
 			Object obj = record2.instancesByType.get(type);
 			if (obj != null)
 			{
-				count2 = ((Integer) obj).intValue();
+				count2 = (Integer) obj;
 			}
 
 			if (count1 != count2)
@@ -251,14 +251,14 @@ public class INCRETester
 			String type = obj.getClass().getName();
 			if (instancesByType.containsKey(type))
 			{
-				count = ((Integer) instancesByType.get(type)).intValue();
+				count = (Integer) instancesByType.get(type);
 				count++;
 			}
 			else
 			{
 				count = 1;
 			}
-			instancesByType.put(type, new Integer(count));
+			instancesByType.put(type, count);
 		}
 	}
 }

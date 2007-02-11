@@ -201,9 +201,9 @@ public class Pattern
 
 				RegularTransition transition1 = new RegularTransition(startState, endState);
 				transition1.setNegation(true);
-				for (int i = 0; i < resourceOperations.length; i++)
+				for (String resourceOperation : resourceOperations)
 				{
-					transition1.addResourceOperation(resourceOperations[i]);
+					transition1.addResourceOperation(resourceOperation);
 				}
 
 				return result;

@@ -19,11 +19,11 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * ExistFiltermodule checks whether the filtermodules used
- * at the filtermodulebinding do exist. In the future it might be
- * necessary to extend this to the filtermodules stated in the externals
- * (maybe internals). Since these are not yet implemented.
- *         
+ * ExistFiltermodule checks whether the filtermodules used at the
+ * filtermodulebinding do exist. In the future it might be necessary to extend
+ * this to the filtermodules stated in the externals (maybe internals). Since
+ * these are not yet implemented.
+ * 
  * @author DoornenbalD
  */
 public class ExistFilterModule implements BaseChecker

@@ -34,7 +34,8 @@ public class ConfigManager
 		this.xmlreader = null;
 	}
 
-	public void parseXML(String filename) throws java.io.IOException, org.xml.sax.SAXException, ParserConfigurationException
+	public void parseXML(String filename) throws java.io.IOException, org.xml.sax.SAXException,
+			ParserConfigurationException
 	{
 		SAXParserFactory saxFactory = SAXParserFactory.newInstance();
 		saxFactory.setNamespaceAware(true);

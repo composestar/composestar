@@ -38,7 +38,6 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	public MethodInfo methodInfo;
 
 	/**
-	 * 
 	 * @param inRelationType
 	 * @param inMethodInfo
 	 */

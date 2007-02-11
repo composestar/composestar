@@ -588,7 +588,7 @@ public class FireModel
 				matchSelector = state.getMessage().getSelector();
 			}
 
-			if (matchTarget.name.equals("inner"))
+			if (matchTarget.name.equals(Target.INNER))
 			{
 				List methods;
 				Type matchType = (Type) concern.getPlatformRepresentation();
@@ -652,9 +652,9 @@ public class FireModel
 	private boolean containsMethod(List methods, MethodInfo method)
 	{
 		Iterator iterator = methods.iterator();
-		while (iterator.hasNext())
+		for (Object method1 : methods)
 		{
-			MethodInfo containedMethod = (MethodInfo) iterator.next();
+			MethodInfo containedMethod = (MethodInfo) method1;
 			if (containedMethod.checkEquals(method))
 			{
 				return true;
@@ -897,9 +897,9 @@ public class FireModel
 		{
 			Set selectors = executionModels[filterPosition][i].getEntranceMessages();
 			Iterator iter = selectors.iterator();
-			while (iter.hasNext())
+			for (Object selector : selectors)
 			{
-				Message message = (Message) iter.next();
+				Message message = (Message) selector;
 				if (!Message.checkEquals(message.getSelector(), Message.STAR_SELECTOR))
 				{
 					distinguishable.add(message.getSelector());
@@ -940,9 +940,9 @@ public class FireModel
 
 			Set distinguishable = getDistinguishableSelectors(filterPosition);
 			Iterator iter = distinguishable.iterator();
-			while (iter.hasNext())
+			for (Object aDistinguishable : distinguishable)
 			{
-				selector = (String) iter.next();
+				selector = (String) aDistinguishable;
 				message = getEntranceMessage(selector);
 
 				state = executionModels[filterPosition][0].getEntranceState(message);

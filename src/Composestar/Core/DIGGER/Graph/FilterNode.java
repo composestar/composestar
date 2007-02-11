@@ -79,7 +79,7 @@ public abstract class FilterNode extends Node
 	{
 		return filter.getFilterType().getType();
 	}
-	
+
 	/**
 	 * Adds the edge to the next filter in the filter chain.
 	 * 
@@ -174,7 +174,7 @@ public abstract class FilterNode extends Node
 				return null;
 			}
 		}
-		else if ("inner".equals(targetString))
+		else if (Target.INNER.equals(targetString))
 		{
 			if (direction == FilterChainNode.INPUT)
 			{

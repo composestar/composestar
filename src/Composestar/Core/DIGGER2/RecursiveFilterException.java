@@ -12,6 +12,8 @@ package Composestar.Core.DIGGER2;
 
 import java.util.List;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+
 /**
  * Exception thrown in case of a recursive filter definition.
  * 
@@ -21,7 +23,9 @@ public class RecursiveFilterException extends Exception
 {
 	protected int vars;
 
-	protected List trace;
+	protected Breadcrumb crumb;
+
+	protected List<Trail> trace;
 
 	/**
 	 * Unconditional recursive filter definition.
@@ -29,31 +33,50 @@ public class RecursiveFilterException extends Exception
 	 * @param inMessage
 	 * @param inTrace
 	 */
-	public RecursiveFilterException(String inMessage, List inTrace)
+	public RecursiveFilterException(Breadcrumb inCrumb, List<Trail> inTrace)
 	{
-		super(inMessage);
-		trace = inTrace;
+		this("Recursive filter definition", inCrumb, inTrace);
 	}
 
 	/**
-	 * Conditional recursive filter definition that depends inVars conditionals
+	 * Unconditional recursive filter definition.
 	 * 
 	 * @param inMessage
 	 * @param inTrace
-	 * @param inVars
 	 */
-	public RecursiveFilterException(String inMessage, List inTrace, int inVars)
+	public RecursiveFilterException(String inMessage, Breadcrumb inCrumb, List<Trail> inTrace)
 	{
-		this(inMessage, inTrace);
-		vars = inVars;
+		super(inMessage);
+		crumb = inCrumb;
+		trace = inTrace;
+
+		for (Trail trail : trace)
+		{
+			trail.setRecursive(true);
+			int cnd = trail.getCondition().simulateResult();
+			if (cnd != ConditionExpression.RESULT_FALSE)
+			{
+				vars += cnd;
+			}
+		}
 	}
 
 	/**
-	 * Return the message trace.
+	 * Returns the originating breadcrumb
 	 * 
 	 * @return
 	 */
-	public List getTrace()
+	public Breadcrumb getCrumb()
+	{
+		return crumb;
+	}
+
+	/**
+	 * Return the trace. This is a list of trails.
+	 * 
+	 * @return
+	 */
+	public List<Trail> getTrace()
 	{
 		return trace;
 	}

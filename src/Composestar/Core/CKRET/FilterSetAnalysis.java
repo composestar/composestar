@@ -25,66 +25,60 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  */
 public class FilterSetAnalysis implements Serializable
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5154995474750593236L;
 
 	private Concern concern;
 
 	private FilterModuleOrder order;
 
-	private List filters;
+	private List<Filter> filters;
 
 	private List executions;
 
-	private List conflictingExecutions;
+	private List<List> conflictingExecutions;
 
 	public FilterSetAnalysis(Concern inconcern, FilterModuleOrder inorder)
 	{
 		concern = inconcern;
 		order = inorder;
-		// messages = new HashMap();
 		executions = new ArrayList();
-		conflictingExecutions = new ArrayList();
+		conflictingExecutions = new ArrayList<List>();
 	}
 
-	public List getFilters()
+	public List<Filter> getFilters()
 	{
-		return this.filters;
+		return filters;
 	}
 
 	public void analyze()
 	{
-		this.filters = getFilterList(this.order.orderAsList());
+		filters = getFilterList(order.orderAsList());
 
 		AbstractVM avm = new AbstractVM();
-		List conflicts = avm.analyze(concern, this.order);
+		List conflicts = avm.analyze(concern, order);
 		if (!conflicts.isEmpty())
 		{
-			this.conflictingExecutions.add(conflicts);
+			conflictingExecutions.add(conflicts);
 		}
 	}
 
 	public int numConflictingExecutions()
 	{
-		return this.conflictingExecutions.size();
+		return conflictingExecutions.size();
 	}
 
 	public List executionConflicts()
 	{
-		return this.conflictingExecutions;
+		return conflictingExecutions;
 	}
 
-	protected static List getFilterList(List filterModules)
+	protected static List<Filter> getFilterList(List filterModules)
 	{
-		List list = new ArrayList();
+		List<Filter> list = new ArrayList<Filter>();
 
-		Iterator itr = filterModules.iterator();
-		while (itr.hasNext())
+		for (Object filterModule : filterModules)
 		{
-			String name = (String) itr.next();
+			String name = (String) filterModule;
 			// if(
 			// !(name.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
 			{
@@ -103,6 +97,6 @@ public class FilterSetAnalysis implements Serializable
 
 	public Concern getConcern()
 	{
-		return this.concern;
+		return concern;
 	}
 }

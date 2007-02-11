@@ -61,9 +61,9 @@ public class Resource
 	//	
 	public boolean operationIsInAlphabet(String operation)
 	{
-		for (int i = 0; i < this.alphabet.size(); i++)
+		for (Object anAlphabet : this.alphabet)
 		{
-			String str = (String) this.alphabet.get(i);
+			String str = (String) anAlphabet;
 			if (str.equals(operation))
 			{
 				return true;

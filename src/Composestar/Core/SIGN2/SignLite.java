@@ -101,8 +101,6 @@ public class SignLite implements CTCommonModule
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase1");
 		phase1();
 
-		resources.addResource("signaturesmodified", Boolean.valueOf(true));
-
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "signature generation and checking done");
 	}
 

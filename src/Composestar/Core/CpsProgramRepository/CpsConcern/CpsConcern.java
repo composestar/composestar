@@ -207,20 +207,21 @@ public class CpsConcern extends Concern
 		return (LabeledConcernReference) formalParameters.elementAt(index);
 	}
 
-	public void setQualifiedName(String name)
+	public void setQualifiedName(String inName)
 	{
-		this.qualifiedName = name;
+		qualifiedName = inName;
+		updateRepositoryReference();
 	}
 
 	public String getQualifiedName()
 	{
-		if (this.qualifiedName == null)
+		if (qualifiedName == null)
 		{
 			return super.getQualifiedName();
 		}
 		else
 		{
-			return this.qualifiedName;
+			return qualifiedName;
 		}
 	}
 

@@ -22,9 +22,6 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  */
 public class FilterType extends RepositoryEntity
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7876700154644254076L;
 
 	public String type;

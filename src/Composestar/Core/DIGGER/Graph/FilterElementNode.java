@@ -28,7 +28,7 @@ public class FilterElementNode extends Node
 		super(inGraph, "");
 		element = inElement;
 	}
-	
+
 	public RepositoryEntity getRepositoryEntity()
 	{
 		return element;

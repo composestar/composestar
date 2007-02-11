@@ -29,33 +29,62 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * DIspatch Grapg GEneratoR.
+ * DIspatch Grapg GEneratoR. Creates an initial dispatch graph using the
+ * selected filter module ordering and performs various checks on it.
  * 
  * @author Michiel Hendriks
  */
 public class DIGGER implements CTCommonModule
 {
+	/**
+	 * The identifier of this module.
+	 */
 	public static final String MODULE_NAME = "DIGGER";
+
+	/**
+	 * If set to true Fire2 execution graphs will be shown. Should only be used
+	 * for debugging of digger2
+	 */
+	private static final boolean SHOW_GRAPH = false;
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
+	/**
+	 * The initial dispatch graph created by digger. This instance is added
+	 * under the repository key defined by
+	 * {@link DispatchGraph#REPOSITORY_KEY DispatchGraph.REPOSITORY_KEY}
+	 */
 	protected DispatchGraph graph;
 
+	/**
+	 * Reference to the INCRE module, used for timer creation
+	 */
 	protected INCRE incre;
 
+	/**
+	 * Reference to out ModuleInfo instance, used to retrieve configuration
+	 * settings.
+	 */
 	protected ModuleInfo moduleInfo;
 
+	/**
+	 * If zero no recursion check is performed, any other value is ignored, for
+	 * the time being.
+	 */
 	protected int recursionCheckDepth;
 
-	protected List allCrumbs;
-
 	/**
-	 * 
+	 * Temporary list of all created breadcrumbs. This list will be empty when
+	 * DIGGER is done. It's used for faster access to all crumbs to perform
+	 * operations on.
 	 */
+	protected List<Breadcrumb> allCrumbs;
+
 	public DIGGER()
 	{}
 
@@ -66,14 +95,20 @@ public class DIGGER implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
+		// initialize
 		incre = INCRE.instance();
 		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Main", INCRETimer.TYPE_OVERHEAD);
 		moduleInfo = ModuleInfoManager.get(DIGGER.class);
-		graph = new DispatchGraph(1 /*moduleInfo.getIntSetting("mode")*/);
+		graph = new DispatchGraph(moduleInfo.getIntSetting("mode"));
 		graph.setAutoResolve(false);
-		DataStore.instance().addObject(DispatchGraph.REPOSITORY_KEY, graph);
-		allCrumbs = new ArrayList();
+		resources.add(DispatchGraph.REPOSITORY_KEY, graph);
+		allCrumbs = new ArrayList<Breadcrumb>();
+		filthinit.stop();
+
+		// step 1: breadcrumb creation, the crumbs will not be resolved
 		createBreadcrumbs();
+
+		// step 2: resolve and check the created crumbs
 		if (moduleInfo.getBooleanSetting("resolve"))
 		{
 			resolveBreadcrumbs();
@@ -83,15 +118,17 @@ public class DIGGER implements CTCommonModule
 				checkRecursion();
 			}
 		}
+
+		// step 3: export the generated data
 		if (moduleInfo.getBooleanSetting("exportXml"))
 		{
 			DispatchGraphExporter exporter = new XMLDispatchGraphExporter(graph);
 			exporter.export();
 		}
 
+		// cleanup
 		graph.setAutoResolve(true);
 		allCrumbs.clear();
-		filthinit.stop();
 	}
 
 	/**
@@ -119,6 +156,12 @@ public class DIGGER implements CTCommonModule
 				switch (graph.getMode())
 				{
 					case DispatchGraph.MODE_BASIC:
+
+						if (SHOW_GRAPH)
+						{
+							new Composestar.Core.FIRE2.util.viewer.Viewer(fm.getExecutionModel(FireModel.INPUT_FILTERS));
+						}
+
 						processFireModel(concern, fm.getExecutionModel(FireModel.INPUT_FILTERS).getEntranceStates(),
 								FireModel.INPUT_FILTERS);
 						// no output filter support
@@ -143,40 +186,85 @@ public class DIGGER implements CTCommonModule
 	{
 		INCRETimer timer = incre.getReporter()
 				.openProcess(MODULE_NAME, "Resolving breadcrumbs", INCRETimer.TYPE_NORMAL);
-		Iterator it = allCrumbs.iterator();
-		while (it.hasNext())
+		for (Breadcrumb crumb : allCrumbs)
 		{
-			Breadcrumb crumb = (Breadcrumb) it.next();
+			graph.getResolver().resolve(crumb);
+		}
+		timer.stop();
+	}
+
+	/**
+	 * Check for recusion in the created breadcrumb. This actually requests the
+	 * results for all crumbs and checks for an RecursiveFilterException to be
+	 * thrown.
+	 * 
+	 * @throws ModuleException
+	 */
+	protected void checkRecursion() throws ModuleException
+	{
+		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME, "Checking for recursive filter definitions",
+				INCRETimer.TYPE_NORMAL);
+		for (Breadcrumb crumb : allCrumbs)
+		{
 			try
 			{
-				graph.getResultingMessages(crumb);
+				List<MessageResult> results = graph.getResultingMessages(crumb);
+				if (results.size() > 0)
+				{
+					logger.debug("" + crumb + " results in:");
+					for (MessageResult msgResult : results)
+					{
+						logger.debug(" " + msgResult.getConcern().getName() + "." + msgResult.getSelector());
+					}
+				}
 			}
 			catch (RecursiveFilterException e)
 			{
-				logger.error("RecursiveFilterException");
-				if (e.numVars() > 0)
-				{
-					logger.debug("");
-				}
+				reportRecursion(e);
 			}
 		}
 		timer.stop();
 	}
 
 	/**
+	 * Report the recursive filter exception to the user in a more or less
+	 * friendly way. So that the user can inspect the cause.
 	 * 
+	 * @param e
 	 */
-	protected void checkRecursion() throws ModuleException
+	public void reportRecursion(RecursiveFilterException e)
 	{
-		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME, "Checking for recursive filter definitions",
-				INCRETimer.TYPE_NORMAL);
-		Iterator it = allCrumbs.iterator();
-		while (it.hasNext())
+		StringBuffer sb = new StringBuffer();
+
+		sb.append(e.getCrumb().getConcern().getName());
+		sb.append(".");
+		sb.append(e.getCrumb().getMessage().getSelector());
+
+		RepositoryEntity re = null;
+		for (Trail trail : e.getTrace())
 		{
-			Breadcrumb crumb = (Breadcrumb) it.next();
-			graph.getResolver().resolve(crumb);
+			sb.append(" -> ");
+
+			sb.append(trail.getTargetConcern().getName());
+			sb.append(".");
+			sb.append(trail.getResultMessage().getSelector());
+
+			// the first trail point to the start
+			if (re == null)
+			{
+				re = trail.getRE();
+			}
 		}
-		timer.stop();
+
+		if (e.numVars() == 0)
+		{
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Infinite recursive filter definition: " + sb.toString(), re);
+		}
+		else
+		{
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Possibly infitite recursive filter definition (depended on ~"
+					+ e.numVars() + " conditionals): " + sb.toString(), re);
+		}
 	}
 
 	/**
@@ -212,6 +300,10 @@ public class DIGGER implements CTCommonModule
 	protected void processFullFireModel(Concern concern, FireModel fm) throws ModuleException
 	{
 		Type type = (Type) concern.getPlatformRepresentation();
+		if (type == null)
+		{
+			return;
+		}
 		Iterator it = type.getMethods().iterator();
 		while (it.hasNext())
 		{
@@ -226,9 +318,11 @@ public class DIGGER implements CTCommonModule
 			}
 			Iterator entranceStates = em.getEntranceStates();
 			ExecutionState es = (ExecutionState) entranceStates.next();
-			//new Composestar.Core.FIRE2.util.viewer.Viewer(em);
-			// logger.debug(concern.getName()+"."+methodInfo.getName()+" has
-			// entrance message "+es.getMessage());
+
+			if (SHOW_GRAPH)
+			{
+				new Composestar.Core.FIRE2.util.viewer.Viewer(em);
+			}
 
 			Breadcrumb crumb = graph.getResolver().resolve(concern, es, filterPosition);
 			graph.addCrumb(crumb);

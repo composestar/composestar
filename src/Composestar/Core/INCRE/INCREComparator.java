@@ -18,18 +18,21 @@ import Composestar.Utils.Debug;
 public class INCREComparator
 {
 	protected HashMap myFields = new HashMap();
+
 	protected HashMap comparisons = new HashMap();
+
 	protected String module;
-	protected int compareCount;
+
+	protected int compare;
 
 	public INCREComparator(String inModule)
 	{
 		module = inModule;
 	}
 
-	public int getCompareCount()
+	public int getCompare()
 	{
-		return compareCount;
+		return compare;
 	}
 
 	public void clearComparisons()
@@ -45,7 +48,7 @@ public class INCREComparator
 	public boolean compare(Object a, Object b) throws ModuleException
 	{
 		// Keep track of the number of comparisons made
-		compareCount++;
+		compare++;
 
 		// special cases: one or both objects are null
 		if (a == null && b == null)
@@ -213,12 +216,12 @@ public class INCREComparator
 		{
 			myClass = (Class) stack.pop();
 			Field[] declaredFields = myClass.getDeclaredFields();
-			for (int i = 0; i < declaredFields.length; i++)
+			for (Field declaredField : declaredFields)
 			{
 				// can only check public fields
-				if (Modifier.isPublic(declaredFields[i].getModifiers()))
+				if (Modifier.isPublic(declaredField.getModifiers()))
 				{
-					Field f = declaredFields[i];
+					Field f = declaredField;
 					// IMPORTANT: skip repositoryKey due to different hashcodes
 					if (!f.getName().equals("repositoryKey"))
 					{
@@ -243,7 +246,7 @@ public class INCREComparator
 	{
 		if (id != null)
 		{
-			Boolean b = Boolean.valueOf(result);
+			Boolean b = result;
 			comparisons.put(id, b);
 		}
 		else
@@ -269,7 +272,7 @@ public class INCREComparator
 	 */
 	public boolean getComparison(String id)
 	{
-		return ((Boolean) comparisons.get(id)).booleanValue();
+		return (Boolean) comparisons.get(id);
 	}
 
 	public boolean hasComparableObjects(Object obj)
@@ -299,10 +302,8 @@ public class INCREComparator
 			boolean equal;
 			String key = null;
 
-			Iterator itrObjects = compObjects.iterator();
-			while (itrObjects.hasNext())
+			for (Object obj : compObjects)
 			{
-				Object obj = itrObjects.next();
 				Object fielda = null;
 				Object fieldb = null;
 

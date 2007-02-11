@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
@@ -58,10 +59,10 @@ public class Resolver
 		logger.debug("[resolver] entrance message: " + msg.toString());
 		Breadcrumb crumb = new Breadcrumb(concern, msg, filterChain);
 		traverseState(state, crumb, crumb.addTrail());
-		Iterator results = crumb.getTrails();
+		Iterator<Trail> results = crumb.getTrails();
 		while (results.hasNext())
 		{
-			Trail trail = (Trail) results.next();
+			Trail trail = results.next();
 			msg = trail.getResultMessage();
 			logger.debug("[resolver] message result: " + msg.toString());
 		}
@@ -76,16 +77,21 @@ public class Resolver
 	 */
 	public void resolve(Breadcrumb crumb) throws ModuleException
 	{
-		Iterator trails = crumb.getTrails();
+		Iterator<Trail> trails = crumb.getTrails();
 		while (trails.hasNext())
 		{
-			Trail trail = (Trail) trails.next();
+			Trail trail = trails.next();
 			logger.debug("[resolver] " + trail.getResultMessage().toString() + " for " + crumb.toString());
 			if (trail.getTargetConcern() != null)
 			{
 				// crumbs always refer to input crumbs
-				Breadcrumb toCrumb = graph.getInputCrumb(trail.getTargetConcern(), trail.getResultMessage());
-				logger.debug("[resolver]  resolved to: " + toCrumb);
+				String selector = trail.getResultMessage().getSelector();
+				if (Message.STAR_SELECTOR.equals(selector))
+				{
+					selector = crumb.getMessage().getSelector();
+				}
+				Breadcrumb toCrumb = graph.getInputCrumb(trail.getTargetConcern(), selector);
+				logger.debug("[resolver]  leads to crumb: " + toCrumb);
 				trail.setDestinationCrumb(toCrumb);
 			}
 			else
@@ -115,15 +121,31 @@ public class Resolver
 				ConditionExpression cond = (ConditionExpression) flowNode.getRepositoryLink();
 				trail.setCondition(cond);
 			}
+			else if (flowNode.containsName(FlowNode.FILTER_ELEMENT_NODE))
+			{
+				trail.setRE(flowNode.getRepositoryLink());
+			}
+			else if (flowNode.containsName(FlowNode.CONTINUE_ACTION_NODE))
+			{
+				// ignore
+			}
 			else if (flowNode.containsName("DispatchAction"))
 			{
-				Message newMsg = state.getSubstitutionMessage();
-//				Message newMsg = new Message(state.getSubstitutionTarget(), state.getSubstitutionSelector());
+				Message newMsg = new Message(state.getSubstitutionMessage().getTarget(), state.getSubstitutionMessage()
+						.getSelector());
 				trail.setResultMessage(newMsg);
 				Concern targetConcern = findTargetConcern(crumb, newMsg.getTarget());
 				trail.setTargetConcern(targetConcern);
 			}
-			// TODO: handle error action (what about other actions?)
+			else if (flowNode.containsName(FlowNode.EXIT_ACTION_NODE))
+			{
+				// TODO: implement
+				// trail.setErrorException();
+			}
+			else if (flowNode.containsName(FlowNode.ACTION_NODE))
+			{
+				// TODO: what about other actions?
+			}
 
 			// traverse all outgoing transitions of the state
 			// in most cases there is only one outgoing transition, this
@@ -142,8 +164,10 @@ public class Resolver
 				}
 				else
 				{
-					// branch all additional states
-					traverseState(trans.getEndState(), crumb, crumb.addTrail());
+					// branch all additional states, clone the trails from the
+					// current one because there is no guarantee that the first
+					// state will be the "short" state.
+					traverseState(trans.getEndState(), crumb, crumb.addTrail(trail));
 				}
 			}
 			if (idx == 0)
@@ -193,7 +217,7 @@ public class Resolver
 				return null;
 			}
 		}
-		else if ("inner".equals(targetString))
+		else if (Target.INNER.equals(targetString))
 		{
 			if (direction == FireModel.INPUT_FILTERS)
 			{

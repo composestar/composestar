@@ -39,19 +39,19 @@ public class Breadcrumb
 	 */
 	protected int filterPosition;
 
-	protected List trails;
+	protected List<Trail> trails;
 
 	/**
 	 * Resolved status of the trails.
 	 */
-	protected /*transient*/ boolean resolvedStatus;
+	protected/* transient */boolean resolvedStatus;
 
 	public Breadcrumb(Concern inConcern, Message inMessage, int inFilterPosition)
 	{
 		concern = inConcern;
 		message = inMessage;
 		filterPosition = inFilterPosition;
-		trails = new ArrayList();
+		trails = new ArrayList<Trail>();
 	}
 
 	public Concern getConcern()
@@ -77,10 +77,9 @@ public class Breadcrumb
 		if (!resolvedStatus)
 		{
 			resolvedStatus = true;
-			Iterator it = trails.iterator();
-			while (it.hasNext())
+			for (Trail trail : trails)
 			{
-				if (!((Trail) it.next()).isResolved())
+				if (!trail.isResolved())
 				{
 					resolvedStatus = false;
 					break;
@@ -103,6 +102,14 @@ public class Breadcrumb
 		return trail;
 	}
 
+	public Trail addTrail(Trail base)
+	{
+		Trail trail = new Trail(this, base);
+		trails.add(trail);
+		resolvedStatus = false; // new trails are never resolved
+		return trail;
+	}
+
 	/**
 	 * Remove a trail. Should only be used in case of deadends
 	 * 
@@ -113,7 +120,7 @@ public class Breadcrumb
 		trails.remove(trail);
 	}
 
-	public Iterator getTrails()
+	public Iterator<Trail> getTrails()
 	{
 		return trails.iterator();
 	}

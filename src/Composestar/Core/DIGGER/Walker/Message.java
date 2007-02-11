@@ -17,6 +17,7 @@ import java.util.List;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.DIGGER.NOBBIN;
@@ -164,11 +165,11 @@ public class Message
 	{
 		return clones.iterator();
 	}
-	
+
 	public void addResult(Message res)
 	{
 		// to filter out duplicated
-		if (!results.contains(res))	results.add(res);
+		if (!results.contains(res)) results.add(res);
 	}
 
 	public Iterator getResults()
@@ -249,7 +250,7 @@ public class Message
 			return true;
 		}
 		// otherwise look it up
-		if (mp.getTarget().getName().equals("inner") || mp.getTarget().getName().equals("*"))
+		if (mp.getTarget().getName().equals(Target.INNER) || mp.getTarget().getName().equals("*"))
 		{
 			type = (Type) concernNode.getConcern().getPlatformRepresentation();
 		}
@@ -269,9 +270,9 @@ public class Message
 			}
 		}
 		Iterator it = type.getMethods().iterator();
-		while (it.hasNext())
+		for (Object o : type.getMethods())
 		{
-			MethodInfo mi = (MethodInfo) it.next();
+			MethodInfo mi = (MethodInfo) o;
 			if (mi.getName().equals(selector))
 			{
 				return true;

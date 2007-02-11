@@ -87,6 +87,23 @@ public class CpsRepositoryBuilder
 {
 	private DataStore ds;
 
+	private Splitter splitter;
+
+	private String filename; // Filename of file currently being parsed, for
+								// reference in case of parsing errors.
+
+	private String embeddedCode;
+
+	private String namespace = null;
+
+	private boolean parsingInput = true; // whether we're parsing an input-
+											// or outputfilter (needed because
+											// of generalfilter)
+
+	private boolean workingOnMatching = true; // whether we're busy creating
+												// the matching or substitution
+												// part in a messagepatternset
+
 	private AnnotationBinding annotBinding;
 
 	private ConditionBinding cb;
@@ -125,38 +142,24 @@ public class CpsRepositoryBuilder
 
 	private HashMap orderingconstraints = new HashMap();
 
-	// stuff in the right place
-
-	private boolean parsingInput = true; // whether we're parsing an input-
-
-	// or outputfilter (needed because
-	// of generalfilter)
-
-	private boolean workingOnMatching = true; // whether we're busy creating
-
-	// the matching or substitution
-	// part in a messagepatternset
-
-	private Splitter split;
-
-	private String namespace;
-
-	public static final int MESSAGEP = 99;
-
-	private String filename = ""; // Filename of file currently being parsed,
-
-	// for reference in case of parsing errors.
-
 	/**
 	 * Constructor
 	 */
 	public CpsRepositoryBuilder()
 	{
-		// SelectorDefinition concernSelf = null;
-		namespace = null;
-		split = new Splitter();
-		split.setBuilder(this);
 		ds = DataStore.instance();
+		splitter = new Splitter();
+		splitter.setBuilder(this);
+	}
+
+	public void setFilename(String filename)
+	{
+		this.filename = filename;
+	}
+
+	public void setEmbeddedCode(String ec)
+	{
+		this.embeddedCode = ec;
 	}
 
 	/**
@@ -191,10 +194,6 @@ public class CpsRepositoryBuilder
 	public void finalizeNamespace()
 	{
 		cpsc.setQualifiedName(namespace + '.' + cpsc.getName());
-		// System.out.println("CPSC: "+this.cpsc.getQualifiedName());
-		ds.removeObject(cpsc.repositoryKey);
-		ds.addObject(cpsc.getQualifiedName(), cpsc);
-		cpsc.repositoryKey = cpsc.getQualifiedName();
 	}
 
 	public void addToNamespace(String name)
@@ -367,7 +366,7 @@ public class CpsRepositoryBuilder
 			{
 				if (type == 0)
 				{
-					split.splitConcernReference(init);
+					splitter.splitConcernReference(init);
 					// ex.setShortinit((addConcernReference(split.getPack(),
 					// split.getConcern())));
 					ExternalConcernReference ecref = new ExternalConcernReference();
@@ -388,18 +387,18 @@ public class CpsRepositoryBuilder
 						ecref.setInitSelector(selector);
 						ecref.setInitTarget(sb.toString());
 					}
-					split.splitConcernReference(v);
-					ecref.setPackage(split.getPack());
-					ecref.setName(split.getConcern());
+					splitter.splitConcernReference(v);
+					ecref.setPackage(splitter.getPack());
+					ecref.setName(splitter.getConcern());
 					ex.setShortinit(ecref);
 					// fixme:
 					this.addToRepository(ecref);
 				}
 				else
 				{
-					split.splitFmElemReference(init);
-					ex.setLonginit(addDeclaredObjectReference(split.getPack(), split.getConcern(), split.getFm(), split
-							.getFmelem()));
+					splitter.splitFmElemReference(init);
+					ex.setLonginit(addDeclaredObjectReference(splitter.getPack(), splitter.getConcern(), splitter
+							.getFm(), splitter.getFmelem()));
 				}
 			}
 			// String bla = null;
@@ -468,21 +467,21 @@ public class CpsRepositoryBuilder
 
 		if (type == 0)
 		{ // short version
-			split.splitConcernElemReference(init);
+			splitter.splitConcernElemReference(init);
 			c.setParent(fm);
-			c.addDynObject("selector", split.getConcernelem());
-			if (split.getConcern().compareTo("inner") == 0)
+			c.addDynObject("selector", splitter.getConcernelem());
+			if (splitter.getConcern().compareTo(Target.INNER) == 0)
 			{
 				// Reference to 'inner'
 				DeclaredObjectReference dor = new DeclaredObjectReference();
-				dor.setName("inner");
+				dor.setName(Target.INNER);
 				c.setShortref(dor);
 			}
-			else if (isInternal(split.getConcern()) || isExternal(split.getConcern()))
+			else if (isInternal(splitter.getConcern()) || isExternal(splitter.getConcern()))
 			{
 				// Reference to an internal or an external
 				DeclaredObjectReference dor = new DeclaredObjectReference();
-				dor.setName(split.getConcern());
+				dor.setName(splitter.getConcern());
 				dor.setConcern(cpsc.getName());
 				dor.setFilterModule(fm.getName());
 				c.setShortref(dor);
@@ -494,13 +493,14 @@ public class CpsRepositoryBuilder
 				// addDeclaredObjectReference(split.getPack(), cpsc.getName(),
 				// fm.getName(), "a."+split.getConcernelem());
 
-				c.setShortref(addConcernReference(split.getPack(), split.getConcern()));
+				c.setShortref(addConcernReference(splitter.getPack(), splitter.getConcern()));
 			}
 		}
 		else
 		{ // long version
-			split.splitFmElemReference(init, false);
-			c.setLongref(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
+			splitter.splitFmElemReference(init, false);
+			c.setLongref(addConditionReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+					.getFmelem()));
 			c.setParent(fm);
 		}
 		fm.addCondition(c);
@@ -524,21 +524,21 @@ public class CpsRepositoryBuilder
 
 		if (type == 0)
 		{ // short version
-			split.splitConcernElemReference(init);
+			splitter.splitConcernElemReference(init);
 			c.setParent(si);
-			c.addDynObject("selector", split.getConcernelem());
-			if (split.getConcern().compareTo("inner") == 0)
+			c.addDynObject("selector", splitter.getConcernelem());
+			if (splitter.getConcern().compareTo("inner") == 0)
 			{
 				// Reference to 'inner'
 				DeclaredObjectReference dor = new DeclaredObjectReference();
 				dor.setName("inner");
 				c.setShortref(dor);
 			}
-			else if (isInternal(split.getConcern()) || isExternal(split.getConcern()))
+			else if (isInternal(splitter.getConcern()) || isExternal(splitter.getConcern()))
 			{
 				// Reference to an internal or an external
 				DeclaredObjectReference dor = new DeclaredObjectReference();
-				dor.setName(split.getConcern());
+				dor.setName(splitter.getConcern());
 				dor.setConcern(cpsc.getName());
 				dor.setFilterModule(fm.getName());
 				c.setShortref(dor);
@@ -550,13 +550,14 @@ public class CpsRepositoryBuilder
 				// addDeclaredObjectReference(split.getPack(), cpsc.getName(),
 				// fm.getName(), "a."+split.getConcernelem());
 
-				c.setShortref(addConcernReference(split.getPack(), split.getConcern()));
+				c.setShortref(addConcernReference(splitter.getPack(), splitter.getConcern()));
 			}
 		}
 		else
 		{ // long version
-			split.splitFmElemReference(init, false);
-			c.setLongref(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
+			splitter.splitFmElemReference(init, false);
+			c.setLongref(addConditionReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+					.getFmelem()));
 			c.setParent(si);
 		}
 		if (!si.addFilterModuleCondition(c))
@@ -810,10 +811,9 @@ public class CpsRepositoryBuilder
 		else
 		{
 			ConditionVariable cv = new ConditionVariable();
-			split.splitFmElemReference(operand, true);
-			cv
-					.setCondition(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split
-							.getFmelem()));
+			splitter.splitFmElemReference(operand, true);
+			cv.setCondition(addConditionReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+					.getFmelem()));
 			return cv;
 		}
 	}
@@ -1104,10 +1104,11 @@ public class CpsRepositoryBuilder
 		// fixme: putting in the same thing twice basically
 		// even though you can only specify a NAME only in the grammar, we still
 		// create a reference here
-		split.splitFmElemReference(name, true);
+		splitter.splitFmElemReference(name, true);
 		// ta.setRef(addFilterModuleElementReference(splitPath.getPack(),
 		// splitPath.getConcern(), splitPath.getFm(), splitPath.getFmelem()));
-		ta.setRef(addDeclaredObjectReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
+		ta.setRef(addDeclaredObjectReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+				.getFmelem()));
 		this.addToRepository(ta);
 
 		if (workingOnMatching)
@@ -1170,8 +1171,6 @@ public class CpsRepositoryBuilder
 	 */
 	public void addParameterizedSelector(String name, Vector typev, int lineNumber)
 	{
-		int j;
-
 		// fixme: do something special with * here
 		ParameterizedMessageSelectorAST temp = new ParameterizedMessageSelectorAST();
 		s = temp;
@@ -1179,7 +1178,7 @@ public class CpsRepositoryBuilder
 		s.setDescriptionLineNumber(lineNumber);
 		s.setName(name);
 		this.addToRepository(s);
-		for (j = 0; j < typev.size(); j++)
+		for (int j = 0; j < typev.size(); j++)
 		{
 			s.addParameterType(addConcernReference((Vector) typev.elementAt(j)));
 		}
@@ -1346,8 +1345,8 @@ public class CpsRepositoryBuilder
 	public void addConditionBinding(Vector name, int line)
 	{
 		cb = new ConditionBinding();
-		split.splitConcernElemReference(name, true);
-		cb.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem(), line));
+		splitter.splitConcernElemReference(name, true);
+		cb.setSelector(addSelectorRef(splitter.getPack(), splitter.getConcern(), splitter.getConcernelem(), line));
 		cb.setParent(si);
 		si.addConditionBinding(cb);
 		this.addToRepository(cb);
@@ -1367,19 +1366,18 @@ public class CpsRepositoryBuilder
 			StarCondition starc = new StarCondition();
 			name.add("*"); // just add a star here so the splitting will be
 			// performed correctly
-			split.splitFmElemReference(name, true);
-			starc.setPackage(split.getPack());
-			starc.setConcern(split.getConcern());
-			starc.setFilterModule(split.getFm());
+			splitter.splitFmElemReference(name, true);
+			starc.setPackage(splitter.getPack());
+			starc.setConcern(splitter.getConcern());
+			starc.setFilterModule(splitter.getFm());
 			cb.addCondition(starc);
 			this.addToRepository(starc);
 		}
 		else
 		{ // only condition name, no star
-			split.splitFmElemReference(name, true);
-			cb
-					.addCondition(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split
-							.getFmelem()));
+			splitter.splitFmElemReference(name, true);
+			cb.addCondition(addConditionReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+					.getFmelem()));
 		}
 	}
 
@@ -1392,8 +1390,8 @@ public class CpsRepositoryBuilder
 	public void addMethodBinding(Vector name, int line)
 	{
 		mb = new MethodBinding();
-		split.splitConcernElemReference(name, true);
-		mb.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem(), line));
+		splitter.splitConcernElemReference(name, true);
+		mb.setSelector(addSelectorRef(splitter.getPack(), splitter.getConcern(), splitter.getConcernelem(), line));
 		mb.setParent(si);
 		si.addMethodBinding(mb);
 		this.addToRepository(mb);
@@ -1415,18 +1413,18 @@ public class CpsRepositoryBuilder
 			StarMethod starm = new StarMethod();
 			name.add("*"); // just add a star here so the splitting will be
 			// performed correctly
-			split.splitFmElemReference(name, true);
-			starm.setPackage(split.getPack());
-			starm.setConcern(split.getConcern());
-			starm.setFilterModule(split.getFm());
+			splitter.splitFmElemReference(name, true);
+			starm.setPackage(splitter.getPack());
+			starm.setConcern(splitter.getConcern());
+			starm.setFilterModule(splitter.getFm());
 			mb.addMethod(starm);
 			this.addToRepository(starm);
 		}
 		else
 		{ // no star
-			split.splitFmElemReference(name, true);
-			mb.addMethod(addMethodReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem(),
-					typelist));
+			splitter.splitFmElemReference(name, true);
+			mb.addMethod(addMethodReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+					.getFmelem(), typelist));
 		}
 	}
 
@@ -1442,9 +1440,9 @@ public class CpsRepositoryBuilder
 		fmb.setDescriptionFileName(filename);
 		fmb.setDescriptionLineNumber(line);
 
-		split.splitConcernElemReference(name, true);
+		splitter.splitConcernElemReference(name, true);
 
-		fmb.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem(), line));
+		fmb.setSelector(addSelectorRef(splitter.getPack(), splitter.getConcern(), splitter.getConcernelem(), line));
 		fmb.setParent(si);
 		si.addFilterModuleBinding(fmb);
 		this.addToRepository(fmb);
@@ -1477,10 +1475,10 @@ public class CpsRepositoryBuilder
 		FilterModuleReference fmref = new FilterModuleReference();
 		fmref.setDescriptionFileName(filename);
 		fmref.setDescriptionLineNumber(line);
-		split.splitConcernElemReference(name, true);
-		fmref.setPackage(split.getPack());
-		fmref.setConcern(split.getConcern());
-		fmref.setName(split.getConcernelem());
+		splitter.splitConcernElemReference(name, true);
+		fmref.setPackage(splitter.getPack());
+		fmref.setConcern(splitter.getConcern());
+		fmref.setName(splitter.getConcernelem());
 		fmb.addFilterModule(fmref);
 		this.addToRepository(fmref);
 
@@ -1520,8 +1518,9 @@ public class CpsRepositoryBuilder
 	{
 		annotBinding = new AnnotationBinding();
 
-		split.splitConcernElemReference(name, true);
-		annotBinding.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem(), line));
+		splitter.splitConcernElemReference(name, true);
+		annotBinding.setSelector(addSelectorRef(splitter.getPack(), splitter.getConcern(), splitter.getConcernelem(),
+				line));
 		annotBinding.setParent(si);
 		si.addAnnotationBinding(annotBinding);
 		this.addToRepository(annotBinding);
@@ -1535,9 +1534,9 @@ public class CpsRepositoryBuilder
 	public void addAnnotationName(Vector name)
 	{
 		ConcernReference cref = new ConcernReference();
-		split.splitConcernReference(name);
-		cref.setPackage(split.getPack());
-		cref.setName(split.getConcern());
+		splitter.splitConcernReference(name);
+		cref.setPackage(splitter.getPack());
+		cref.setName(splitter.getConcern());
 		annotBinding.addAnnotation(cref);
 		this.addToRepository(cref);
 	}
@@ -1574,11 +1573,11 @@ public class CpsRepositoryBuilder
 	 */
 	public void addSourceFile(String lang, String srcfilename)
 	{
-		SourceFile srcf = new SourceFile();
-		srcf.setLanguage(lang);
-		srcf.setSourceFile(srcfilename);
-		cpsc.setImplementation(srcf);
-		this.addToRepository(srcf);
+		SourceFile sf = new SourceFile();
+		sf.setLanguage(lang);
+		sf.setSourceFile(srcfilename);
+		cpsc.setImplementation(sf);
+		this.addToRepository(sf);
 	}
 
 	/**
@@ -1590,15 +1589,15 @@ public class CpsRepositoryBuilder
 	 * @param line
 	 * @param className
 	 */
-	public void addEmbeddedSource(String lang, Vector className, String srcfilename, int line)
+	public void addEmbeddedSource(String lang, Vector className, String targetFilename, int line)
 	{
 		Source src = new Source();
 		src.setLanguage(lang);
 		src.setClassName(className);
-		src.setSourceFile(srcfilename);
+		src.setSourceFile(targetFilename);
 		src.setDescriptionFileName(filename);
 		src.setDescriptionLineNumber(line);
-		src.setSource(COPPER.getEmbeddedSource()); // add the extracted source
+		src.setSource(embeddedCode);
 		cpsc.setImplementation(src);
 		this.addToRepository(src);
 	}
@@ -1633,9 +1632,9 @@ public class CpsRepositoryBuilder
 	public ConcernReference addConcernReference(Vector pack)
 	{
 		ConcernReference cref = new ConcernReference();
-		split.splitConcernReference(pack);
-		cref.setPackage(split.getPack());
-		cref.setName(split.getConcern());
+		splitter.splitConcernReference(pack);
+		cref.setPackage(splitter.getPack());
+		cref.setName(splitter.getConcern());
 		this.addToRepository(cref);
 		return cref;
 	}
@@ -1667,8 +1666,8 @@ public class CpsRepositoryBuilder
 	 */
 	public LabeledConcernReference addLabeledConcernReference(String label, Vector pack)
 	{
-		split.splitConcernReference(pack);
-		return addLabeledConcernReference(label, split.getPack(), split.getConcern());
+		splitter.splitConcernReference(pack);
+		return addLabeledConcernReference(label, splitter.getPack(), splitter.getConcern());
 	}
 
 	/**
@@ -1967,10 +1966,5 @@ public class CpsRepositoryBuilder
 	public String getCpsc()
 	{
 		return cpsc.getName();
-	}
-
-	public void setFilename(String infilename)
-	{
-		filename = infilename;
 	}
 }

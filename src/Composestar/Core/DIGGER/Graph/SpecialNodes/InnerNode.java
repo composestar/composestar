@@ -10,6 +10,7 @@
 
 package Composestar.Core.DIGGER.Graph.SpecialNodes;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.DIGGER.Graph.Graph;
 import Composestar.Core.DIGGER.Graph.Node;
 
@@ -23,6 +24,6 @@ public class InnerNode extends Node
 {
 	public InnerNode(Graph inGraph)
 	{
-		super(inGraph, "inner");
+		super(inGraph, Target.INNER);
 	}
 }

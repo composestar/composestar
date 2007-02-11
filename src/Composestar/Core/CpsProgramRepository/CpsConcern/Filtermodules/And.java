@@ -20,19 +20,19 @@ public class And extends BinaryOperator
 	{
 		super();
 	}
-	
+
 	public int simulateResult()
 	{
 		int resl = left.simulateResult();
 		if (resl == RESULT_FALSE)
 		{
 			return RESULT_FALSE;
-		}		
+		}
 		int resr = right.simulateResult();
 		if (resr == RESULT_FALSE)
 		{
 			return RESULT_FALSE;
 		}
-		return resl+resr;
+		return resl + resr;
 	}
 }

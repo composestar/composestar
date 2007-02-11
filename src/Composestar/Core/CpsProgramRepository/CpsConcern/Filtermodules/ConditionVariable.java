@@ -47,7 +47,7 @@ public class ConditionVariable extends ConditionExpression
 	{
 		this.condition = conditionValue;
 	}
-	
+
 	public int simulateResult()
 	{
 		return 1;

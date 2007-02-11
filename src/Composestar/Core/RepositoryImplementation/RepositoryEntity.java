@@ -15,20 +15,54 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 {
 	private static final long serialVersionUID = -7445401465568382172L;
 
+	/**
+	 * Counter used to create the uniqueId
+	 */
+	private static int counter;
+
+	/**
+	 * Data store for accociate information with this entity that is also
+	 * required during runtime. All entities added to this map need to be
+	 * serializable.
+	 */
 	public DataMap dynamicmap;
 
+	/**
+	 * The key under which this entity is added to the repository
+	 */
 	public String repositoryKey;
 
+	/**
+	 * Used for a proper unique ID in the getUniqueId() method
+	 */
+	public int uniqueId;
+
+	/**
+	 * Filename this entity was declared in. Only used for entities specified in
+	 * .cps files
+	 */
 	public String descriptionFileName;
 
+	/**
+	 * Line number where this entity was declared
+	 */
 	public int descriptionLineNumber;
 
 	public RepositoryEntity()
 	{
 		dynamicmap = new DataMap();
+		uniqueId = getCounter();
 
 		DataStore ds = DataStore.instance();
-		repositoryKey = ds.addObject(this);
+		if (ds != null) // could be null in case of deserialization at runtime
+		{
+			repositoryKey = ds.addObject(this);
+		}
+	}
+
+	private static int getCounter()
+	{
+		return counter++;
 	}
 
 	public int getDescriptionLineNumber()
@@ -38,7 +72,7 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 
 	public void setDescriptionLineNumber(int newLineNumber)
 	{
-		this.descriptionLineNumber = newLineNumber;
+		descriptionLineNumber = newLineNumber;
 	}
 
 	public String getDescriptionFileName()
@@ -48,46 +82,65 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 
 	public void setDescriptionFileName(String newFileName)
 	{
-		this.descriptionFileName = newFileName;
+		descriptionFileName = newFileName;
 	}
 
 	public void addDynObject(String key, Object obj)
 	{
-		this.dynamicmap.put(key, obj);
+		dynamicmap.put(key, obj);
 	}
 
 	public Object getDynObject(String key)
 	{
-		// Debug.out(Debug.MODE_DEBUG,"RepositoryImplementation","Keys:
-		// "+this.dynamicmap.keySet());
-		return this.dynamicmap.get(key);
+		return dynamicmap.get(key);
 	}
 
 	public Iterator getDynIterator()
 	{
-		// Debug.out(Debug.MODE_DEBUG,"RepositoryImplementation","DynMap:
-		// "+this.dynamicmap);
-		return this.dynamicmap.values().iterator();
+		return dynamicmap.values().iterator();
 	}
 
+	/**
+	 * Update repository to point to the proper location of this instance. The
+	 * key could have been changed.
+	 */
 	public void updateRepositoryReference()
 	{
-		if (repositoryKey != null && repositoryKey.compareTo(this.getUniqueID()) != 0)
+		if (repositoryKey != null && repositoryKey.compareTo(getUniqueID()) != 0)
 		{
-			String oldKey = repositoryKey;
 			DataStore ds = DataStore.instance();
-			ds.removeObject(oldKey);
-			repositoryKey = ds.addObject(this);
+			if (ds != null) // is null when deserializing at runtime
+			{
+				String oldKey = repositoryKey;
+				ds.removeObject(oldKey);
+				repositoryKey = ds.addObject(this);
+			}
 		}
 	}
 
+	/**
+	 * @return the repository key of this entity
+	 */
+	public String getRepositoryKey()
+	{
+		return repositoryKey;
+	}
+
+	public void setRepositoryKey(String newKey)
+	{
+		System.err.println("Updating repo key from " + repositoryKey + " to " + newKey);
+		repositoryKey = newKey;
+	}
+
+	/**
+	 * Returns the generated unique identifier. This might not be equal to the
+	 * stored repository key.
+	 * 
+	 * @return
+	 */
 	public String getUniqueID()
 	{
-		// FIXME: obj.hashCode() is not guaranteed to produce unique values
-		// for distinct instances of some class, so this can lead to subtle
-		// bugs.
-		// FIXME: shouldn't this simply return repositoryKey?
-		return this.getClass() + "_" + this.hashCode();
+		return this.getClass() + "#" + uniqueId;
 	}
 
 	public Object clone() throws CloneNotSupportedException

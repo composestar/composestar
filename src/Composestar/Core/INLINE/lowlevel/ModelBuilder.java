@@ -215,10 +215,9 @@ public class ModelBuilder implements CTCommonModule
 		Signature sig = concern.getSignature();
 		List methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
 
-		Iterator iter = methods.iterator();
-		while (iter.hasNext())
+		for (Object aList : methods)
 		{
-			MethodInfo method = (MethodInfo) iter.next();
+			MethodInfo method = (MethodInfo) aList;
 			processMethod(method);
 		}
 	}

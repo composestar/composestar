@@ -5,6 +5,19 @@ body, td, a
   background: #EEEEEE;
 }
 
+h1 
+{
+	background-image: url(logo.gif);
+	background-repeat: no-repeat;
+	height: 69px;	
+}
+
+h1 span 
+{
+	margin-left: 70px;
+	font-size: 1.5em;
+}
+
 div.concern
 {
   background: #DDDDDD;

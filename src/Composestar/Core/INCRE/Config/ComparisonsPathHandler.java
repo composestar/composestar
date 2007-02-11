@@ -59,9 +59,9 @@ public class ComparisonsPathHandler extends DefaultHandler
 			Path path = new Path();
 			Iterator nodesIt = nodes.iterator();
 
-			while (nodesIt.hasNext())
+			for (Object node : nodes)
 			{
-				path.addNode((Node) nodesIt.next());
+				path.addNode((Node) node);
 			}
 
 			module.addComparableObject(fullname, path);

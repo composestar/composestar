@@ -166,7 +166,7 @@ public class ModuleSetting implements Serializable
 				}
 				catch (NumberFormatException e)
 				{
-					throw new ConfigurationException("Number Format Exception: "+e.getMessage());
+					throw new ConfigurationException("Number Format Exception: " + e.getMessage());
 				}
 			}
 		}
@@ -188,7 +188,7 @@ public class ModuleSetting implements Serializable
 				}
 				catch (NumberFormatException e)
 				{
-					throw new ConfigurationException("Number Format Exception: "+e.getMessage());
+					throw new ConfigurationException("Number Format Exception: " + e.getMessage());
 				}
 			}
 		}
@@ -222,8 +222,7 @@ public class ModuleSetting implements Serializable
 	 */
 	public void setValue(int newValue) throws ConfigurationException
 	{
-		// TODO: when switching to Java 1.5 use Integer.valueOf(...)
-		setValue(new Integer(newValue));
+		setValue(Integer.valueOf(newValue));
 	}
 
 	/**
@@ -232,7 +231,7 @@ public class ModuleSetting implements Serializable
 	 */
 	public void setValue(float newValue) throws ConfigurationException
 	{
-		setValue(new Float(newValue));
+		setValue(Float.valueOf(newValue));
 	}
 
 	public String getStringValue()
@@ -242,17 +241,17 @@ public class ModuleSetting implements Serializable
 
 	public int getIntValue()
 	{
-		return ((Integer) value).intValue();
+		return (Integer) value;
 	}
 
 	public boolean getBooleanValue()
 	{
-		return ((Boolean) value).booleanValue();
+		return (Boolean) value;
 	}
 
 	public float getFloatValue()
 	{
-		return ((Float) value).floatValue();
+		return (Float) value;
 	}
 
 	public Object getDefaultValue()

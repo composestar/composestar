@@ -43,7 +43,7 @@ public abstract class FILTHService
 	{
 		log = new PrintStream(new FileOutputStream(out));
 	}
-	
+
 	public static PrintStream getLog()
 	{
 		return log;

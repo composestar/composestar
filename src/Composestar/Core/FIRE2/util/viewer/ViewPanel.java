@@ -22,6 +22,7 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
+import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 
 public class ViewPanel extends JPanel
 {
@@ -220,10 +221,10 @@ public class ViewPanel extends JPanel
 			Object obj = iterator.next();
 			Integer i = (Integer) labelCounter.get(obj);
 
-			if (i.intValue() < currentCount)
+			if (i < currentCount)
 			{
 				currentLabel = (String) obj;
-				currentCount = i.intValue();
+				currentCount = i;
 			}
 		}
 
@@ -234,15 +235,14 @@ public class ViewPanel extends JPanel
 	{
 		// first remove highlight:
 		Collection nodes = nodeMap.values();
-		Iterator iter = nodes.iterator();
-		while (iter.hasNext())
+		for (Object node1 : nodes)
 		{
-			Node node = (Node) iter.next();
+			Node node = (Node) node1;
 			node.highlighted = false;
 		}
 
 		// then add highlight:
-		iter = executionStates.iterator();
+		Iterator iter = executionStates.iterator();
 		while (iter.hasNext())
 		{
 			ExecutionState state = (ExecutionState) iter.next();
@@ -310,9 +310,9 @@ public class ViewPanel extends JPanel
 
 		int width = 0;
 		int newYOffset = yOffset + 2 * (MARGIN + RADIUS);
-		for (int i = 0; i < node.primaryEdges.length; i++)
+		for (Edge primaryEdge : node.primaryEdges)
 		{
-			width += calculatePosition(node.primaryEdges[i].endNode, xOffset + width, newYOffset);
+			width += calculatePosition(primaryEdge.endNode, xOffset + width, newYOffset);
 		}
 
 		this.height = Math.max(yOffset, this.height);
@@ -340,9 +340,9 @@ public class ViewPanel extends JPanel
 
 		g.drawOval(node.xPos - RADIUS, node.yPos - RADIUS, 2 * RADIUS, 2 * RADIUS);
 
-		for (int i = 0; i < node.primaryEdges.length; i++)
+		for (Edge primaryEdge : node.primaryEdges)
 		{
-			paintNode(g, node.primaryEdges[i].endNode);
+			paintNode(g, primaryEdge.endNode);
 		}
 
 		// paint label:
@@ -355,20 +355,32 @@ public class ViewPanel extends JPanel
 		}
 		g.drawString(label, node.xPos - width / 2, node.yPos);
 
+		// paint name of rep entity
+		if ((node.flowNode != null) && (node.flowNode.getRepositoryLink() instanceof DeclaredRepositoryEntity))
+		{
+			label = ((DeclaredRepositoryEntity) node.flowNode.getRepositoryLink()).getName();
+			width = metrics.stringWidth(label);
+			if (width > 2 * RADIUS)
+			{
+				width = 2 * RADIUS;
+			}
+			g.drawString(label, node.xPos - width / 2, node.yPos + (int) (metrics.getHeight() * 1.25));
+		}
+
 		// paint edges:
 		paintEdges(g, node);
 	}
 
 	private void paintEdges(Graphics g, Node node)
 	{
-		for (int i = 0; i < node.primaryEdges.length; i++)
+		for (Edge primaryEdge : node.primaryEdges)
 		{
-			paintEdge(g, node.primaryEdges[i]);
+			paintEdge(g, primaryEdge);
 		}
 
-		for (int i = 0; i < node.secondaryEdges.length; i++)
+		for (Edge secondaryEdge : node.secondaryEdges)
 		{
-			paintEdge(g, node.secondaryEdges[i]);
+			paintEdge(g, secondaryEdge);
 		}
 	}
 
@@ -449,9 +461,9 @@ public class ViewPanel extends JPanel
 		{
 			int width = 1;
 
-			for (int i = 0; i < primaryEdges.length; i++)
+			for (Edge primaryEdge : primaryEdges)
 			{
-				width += primaryEdges[i].endNode.treeWidth();
+				width += primaryEdge.endNode.treeWidth();
 			}
 
 			return width;

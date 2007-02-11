@@ -14,7 +14,7 @@ import Composestar.Core.Exception.ModuleException;
 
 /**
  * A configuration exception
- *
+ * 
  * @author Michiel Hendriks
  */
 public class ConfigurationException extends ModuleException

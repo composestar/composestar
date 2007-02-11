@@ -5,9 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
-public abstract class ProgramElement extends PlatformRepresentation implements SerializableRepositoryEntity
+public abstract class ProgramElement extends PlatformRepresentation
 {
 	/**
 	 * @return the name of this program element

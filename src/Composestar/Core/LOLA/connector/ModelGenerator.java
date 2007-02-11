@@ -45,9 +45,9 @@ public class ModelGenerator
 	{
 		output.println("%% Definition of language unit types\n");
 		Iterator types = model.getLanguageUnitTypes().iterator();
-		while (types.hasNext())
+		for (Object o1 : model.getLanguageUnitTypes())
 		{
-			LanguageUnitType type = (LanguageUnitType) types.next();
+			LanguageUnitType type = (LanguageUnitType) o1;
 			if (type instanceof CompositeLanguageUnitType)
 			{
 				output.println(genCompositeUnitTypePredicates((CompositeLanguageUnitType) type));
@@ -61,9 +61,9 @@ public class ModelGenerator
 		output.println("\n\n%% Definition of relations between language units\n");
 
 		Iterator rels = model.getRelationPredicates().values().iterator();
-		while (rels.hasNext())
+		for (Object o : model.getRelationPredicates().values())
 		{
-			RelationPredicate rel = (RelationPredicate) rels.next();
+			RelationPredicate rel = (RelationPredicate) o;
 			if (rel instanceof CompositeRelationPredicate)
 			{
 				output.println(genCompositeRelationPredicate((CompositeRelationPredicate) rel));
@@ -121,17 +121,16 @@ public class ModelGenerator
 		Collection containedTypes = type.getContainedTypes();
 
 		// Definition of isSomething(Unit) predicate
-		Iterator iter = containedTypes.iterator();
-		while (iter.hasNext())
+		for (Object containedType1 : containedTypes)
 		{
-			LanguageUnitType containedType = (LanguageUnitType) iter.next();
+			LanguageUnitType containedType = (LanguageUnitType) containedType1;
 			res.append("is").append(type.getType()).append("(Unit) :-\n");
 			res.append("  is").append(containedType.getType()).append("(Unit).\n");
 		}
 		res.append('\n');
 
 		// Definition of isSomethingWithName(Unit, Name) predicate
-		iter = containedTypes.iterator();
+		Iterator iter = containedTypes.iterator();
 		while (iter.hasNext())
 		{
 			LanguageUnitType containedType = (LanguageUnitType) iter.next();
@@ -237,9 +236,9 @@ public class ModelGenerator
 		StringBuffer res = new StringBuffer();
 
 		Iterator iter = containedRels.iterator();
-		while (iter.hasNext())
+		for (Object containedRel1 : containedRels)
 		{
-			RelationPredicate containedRel = (RelationPredicate) iter.next();
+			RelationPredicate containedRel = (RelationPredicate) containedRel1;
 			Vector varList = getVarList(containedRel);
 			res.append(rel.getPredicateName()).append('(').append(commaSeparated(varList)).append(") :-\n  ");
 			res.append(containedRel.getPredicateName()).append('(').append(commaSeparated(varList)).append(").\n");

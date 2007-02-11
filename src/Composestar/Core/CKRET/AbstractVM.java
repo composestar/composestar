@@ -10,7 +10,6 @@
 package Composestar.Core.CKRET;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.CKRET.Config.ResourceHandler;
@@ -29,7 +28,7 @@ public class AbstractVM
 	public AbstractVM()
 	{}
 
-	public List analyze(Concern concern, FilterModuleOrder filterModules)
+	public List<Conflict> analyze(Concern concern, FilterModuleOrder filterModules)
 	{
 		FireModel fireModel = new FireModel(concern, filterModules);
 
@@ -37,15 +36,15 @@ public class AbstractVM
 
 		ResourceOperationLabeler labeler = new ResourceOperationLabeler();
 
-		List conflicts = new ArrayList();
+		List<Conflict> conflicts = new ArrayList<Conflict>();
 
-		for (Iterator ci = Repository.instance().getConstraints().iterator(); ci.hasNext();)
+		for (Object o1 : Repository.instance().getConstraints())
 		{
-			Constraint constraint = (Constraint) ci.next();
+			Constraint constraint = (Constraint) o1;
 
-			for (Iterator ri = ResourceHandler.getResources().iterator(); ri.hasNext();)
+			for (Object o : ResourceHandler.getResources())
 			{
-				Resource res = (Resource) ri.next();
+				Resource res = (Resource) o;
 				if (constraint.getResource().equals("*") || constraint.getResource().equals(res.getName()))
 				{
 					labeler.setCurrentResource(res.getName());

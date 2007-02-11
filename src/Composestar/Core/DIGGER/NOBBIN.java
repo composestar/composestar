@@ -116,9 +116,9 @@ public class NOBBIN
 
 		List messages = gen.create(concernNode);
 		Iterator it = messages.iterator();
-		while (it.hasNext())
+		for (Object message : messages)
 		{
-			Message inMsg = (Message) it.next();
+			Message inMsg = (Message) message;
 			List outMsgs = walk(concernNode.getInputFilters(), inMsg, new ArrayList());
 			if (exporter != null)
 			{
@@ -133,9 +133,9 @@ public class NOBBIN
 				{
 					logger.debug("[RESULT] " + inMsg + " :");
 					Iterator msgit = outMsgs.iterator();
-					while (msgit.hasNext())
+					for (Object outMsg : outMsgs)
 					{
-						logger.debug("[RESULT] + " + msgit.next());
+						logger.debug("[RESULT] + " + outMsg);
 					}
 				}
 			}

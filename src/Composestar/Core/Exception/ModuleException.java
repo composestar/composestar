@@ -63,22 +63,22 @@ public class ModuleException extends Exception implements LocationProvider
 
 	public String getErrorLocationFilename()
 	{
-		return this.errorLocationFilename;
+		return errorLocationFilename;
 	}
 
 	public int getErrorLocationLineNumber()
 	{
-		return this.errorLocationLineNumber;
+		return errorLocationLineNumber;
 	}
 
 	public String getFilename()
 	{
-		return this.errorLocationFilename;
+		return errorLocationFilename;
 	}
 
 	public int getLineNumber()
 	{
-		return this.errorLocationLineNumber;
+		return errorLocationLineNumber;
 	}
 
 	public String toString()

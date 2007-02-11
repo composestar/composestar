@@ -11,6 +11,9 @@
 package Composestar.Core.Master;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -21,6 +24,9 @@ import org.xml.sax.XMLReader;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.ConfigurationException;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
@@ -33,8 +39,6 @@ import Composestar.Utils.Version;
 public abstract class Master
 {
 	public static final String MODULE_NAME = "Master";
-
-	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
 
 	/**
 	 * Compile process failed (e.g. a ModuleException was thrown)
@@ -51,22 +55,25 @@ public abstract class Master
 	 * General execution failure
 	 */
 	public static final int EFAIL = 3;
-	
+
 	/**
 	 * Errors were raised during compiling
 	 */
 	public static final int EERRORS = 4;
 
-	protected String configfile;
+	protected String configFilename;
 
 	protected int debugOverride = -1;
+
+	protected Map<String, Map<String, String>> settingsOverride;
 
 	protected CommonResources resources;
 
 	public Master()
 	{
-		
+		settingsOverride = new HashMap<String, Map<String, String>>();
 	}
+
 	
 	public Master(String[] args)
 	{
@@ -75,9 +82,8 @@ public abstract class Master
 
 	public void processCmdArgs(String[] args)
 	{
-		for (int i = 0; i < args.length; i++)
+		for (String arg : args)
 		{
-			String arg = args[i];
 			if (arg.startsWith("-d"))
 			{
 				debugOverride = Integer.parseInt(arg.substring(2));
@@ -88,6 +94,23 @@ public abstract class Master
 				int et = Integer.parseInt(arg.substring(2));
 				Debug.setErrThreshold(et);
 			}
+			else if (arg.startsWith("-D"))
+			{
+				// -D<module>.<setting>=<value>
+				String[] setting = arg.substring(2).split("\\.|=", 3);
+				if (setting.length != 3)
+				{
+					System.err.println("Correct format is: -D<module>.<setting>=<value>");
+					continue;
+				}
+				Map<String, String> ms = settingsOverride.get(setting[0]);
+				if (ms == null)
+				{
+					ms = new HashMap<String, String>();
+					settingsOverride.put(setting[0], ms);
+				}
+				ms.put(setting[1], setting[2]);
+			}
 			else if (arg.startsWith("-"))
 			{
 				System.out.println("Unknown option " + arg);
@@ -95,29 +118,28 @@ public abstract class Master
 			else
 			{
 				// assume it's the config file
-				configfile = args[i];
+				configFilename = arg;
 			}
 		}
 	}
 
 	public void loadConfiguration() throws Exception
 	{
-		File cfgFile = new File(configfile);
-		if (!cfgFile.canRead())
+		File configFile = new File(configFilename);
+		if (!configFile.canRead())
 		{
-			throw new Exception("Unable to open configuration file: " + configfile);
+			throw new Exception(
+					"Unable to open configuration file: '" + configFilename + "'");
 		}
 
-		// create the repository
-		DataStore ds = DataStore.instance();
-
-		resources = new CommonResources();
-		ds.addObject(RESOURCES_KEY, resources);
+		// create the repository and common resources
+		DataStore.instance();
+		resources = CommonResources.instance();
 
 		// load the project configuration file
 		try
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Reading build configuration from: " + configfile);
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Reading build configuration from: " + configFilename);
 
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
@@ -125,12 +147,13 @@ public abstract class Master
 
 			BuildConfigHandler handler = new BuildConfigHandler(parser);
 			parser.setContentHandler(handler);
-			parser.parse(new InputSource(configfile));
+			parser.parse(new InputSource(configFilename));
 		}
 		catch (Exception e)
 		{
-			throw new Exception("An error occured while reading the build configuration file: " + configfile
-					+ ", reason: " + e.getMessage());
+			throw new Exception(
+					"An error occured while reading the build configuration file '" + configFilename + 
+					"': " + e.getMessage());
 		}
 
 		// Set debug level
@@ -149,15 +172,63 @@ public abstract class Master
 		{
 			long beginTime = System.currentTimeMillis();
 
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Creating datastore...");
-			DataStore.instance();
+			ModuleInfo mi = ModuleInfoManager.get(INCRE.class);
+			Map<String, String> overrideSet = settingsOverride.get(INCRE.MODULE_NAME);
+			if ((overrideSet != null) && (mi != null))
+			{
+				for (Entry<String, String> entry : overrideSet.entrySet())
+				{
+					try
+					{
+						mi.setSettingValue(entry.getKey(), entry.getValue());
+					}
+					catch (ConfigurationException ce)
+					{
+						Debug.out(Debug.MODE_ERROR, INCRE.MODULE_NAME, 
+								"Configuration override error: " + ce.getMessage());
+					}
+				}
+			}
 
 			// initialize INCRE
 			INCRE incre = INCRE.instance();
 			incre.init();
 
+			// load override settings
+			for (Entry<String, Map<String, String>> entry : settingsOverride.entrySet())
+			{
+				if (entry.getKey().equals(INCRE.MODULE_NAME))
+				{
+					continue;
+				}
+				mi = ModuleInfoManager.get(entry.getKey());
+				if (mi != null)
+				{
+					for (Entry<String, String> se : entry.getValue().entrySet())
+					{
+						try
+						{
+							mi.setSettingValue(se.getKey(), se.getValue());
+						}
+						catch (ConfigurationException ce)
+						{
+							Debug.out(Debug.MODE_ERROR, entry.getKey(), 
+									"Configuration override error: " + ce.getMessage());
+						}
+					}
+				}
+				else
+				{
+					Debug.out(Debug.MODE_ERROR, MODULE_NAME, 
+							"Configuration override error: no such module: " + entry.getKey());
+				}
+			}
+
 			// execute enabled modules one by one
 			incre.runModules(resources);
+
+			// close the incre reporter
+			incre.getReporter().close();
 
 			// display total time elapsed
 			long total = System.currentTimeMillis() - beginTime;
@@ -168,16 +239,12 @@ public abstract class Master
 			{
 				Debug.outWarnings();
 			}
-			
-			/*
-			// note: some tests produce errors during compiling and therefor this is disabled
-			  
+
 			if (Debug.numErrors() > 0)
 			{
 				Debug.outWarnings();
 				return EERRORS;
 			}
-			*/
 		}
 		catch (ModuleException e)
 		{

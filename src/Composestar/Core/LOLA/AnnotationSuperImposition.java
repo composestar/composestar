@@ -85,9 +85,9 @@ public class AnnotationSuperImposition
 
 		// Gather all predicate selectors
 		Iterator predicateIter = LOLA.selectors.iterator();
-		while (predicateIter.hasNext())
+		for (Object selector : LOLA.selectors)
 		{
-			PredicateSelector predSel = (PredicateSelector) predicateIter.next();
+			PredicateSelector predSel = (PredicateSelector) selector;
 			SelectorDefinition sd = (SelectorDefinition) predSel.getParent();
 
 			Selector s = new Selector();
@@ -115,16 +115,16 @@ public class AnnotationSuperImposition
 			}
 
 			boolean foundSelector = false;
-			for (Iterator selectorIter = selectors.iterator(); selectorIter.hasNext();)
+			for (Object selector : selectors)
 			{
-				Selector sel = (Selector) selectorIter.next();
+				Selector sel = (Selector) selector;
 				if (sel.qname.equals(selDef.getQualifiedName()))
 				{
 					foundSelector = true;
 					Iterator annotsToAttach = annotBind.getAnnotations().iterator();
-					while (annotsToAttach.hasNext())
+					for (Object o : annotBind.getAnnotations())
 					{
-						ConcernReference annotRef = (ConcernReference) annotsToAttach.next();
+						ConcernReference annotRef = (ConcernReference) o;
 						Concern concernRef = annotRef.getRef();
 						if (null == concernRef)
 						{
@@ -353,9 +353,9 @@ public class AnnotationSuperImposition
 	public Vector evaluateSelectors() throws ModuleException
 	{
 		Vector results = new Vector();
-		for (Iterator selectorIter = selectors.iterator(); selectorIter.hasNext();)
+		for (Object selector1 : selectors)
 		{
-			Selector selector = (Selector) selectorIter.next();
+			Selector selector = (Selector) selector1;
 			selector.predicate.run();
 			results.add(selector.predicate.getSelectedUnits());
 			// System.out.println("Selector: " + selector.name + " selected [" +
@@ -446,16 +446,16 @@ public class AnnotationSuperImposition
 				AnnotationAction action = (AnnotationAction) annotationActions.elementAt(currAction);
 				Set attachTo = (Set) currState.selectorResults.elementAt(action.selector.posInResultVector);
 
-				for (Iterator progElemIter = attachTo.iterator(); progElemIter.hasNext();)
+				for (Object anAttachTo : attachTo)
 				{
-					ProgramElement elem = (ProgramElement) progElemIter.next();
+					ProgramElement elem = (ProgramElement) anAttachTo;
 					// Currently, we don't attach the same annotation more than
 					// once.
 
 					boolean doubleAnnot = false;
-					for (Iterator existingAnnots = elem.getAnnotations().iterator(); existingAnnots.hasNext();)
+					for (Object o : elem.getAnnotations())
 					{
-						Annotation existingAnnot = (Annotation) existingAnnots.next();
+						Annotation existingAnnot = (Annotation) o;
 						if (existingAnnot.getType().equals(action.annotation))
 						{
 							doubleAnnot = true;
@@ -492,9 +492,9 @@ public class AnnotationSuperImposition
 
 	public void resetAnnotationState(Set annotToRemove)
 	{
-		for (Iterator annotIter = annotToRemove.iterator(); annotIter.hasNext();)
+		for (Object anAnnotToRemove : annotToRemove)
 		{
-			Annotation attr = (Annotation) annotIter.next();
+			Annotation attr = (Annotation) anAnnotToRemove;
 			attr.deregister();
 		}
 	}

@@ -51,13 +51,13 @@ public class TypeLocations
 	{
 		Configuration config = Configuration.instance();
 		Iterator prit = config.getProjects().getProjects().iterator();
-		while (prit.hasNext())
+		for (Object o1 : config.getProjects().getProjects())
 		{
-			Project prj = (Project) prit.next();
+			Project prj = (Project) o1;
 			Iterator tsit = prj.getTypeSources().iterator();
-			while (tsit.hasNext())
+			for (Object o : prj.getTypeSources())
 			{
-				TypeSource ts = (TypeSource) tsit.next();
+				TypeSource ts = (TypeSource) o;
 				String type = ts.getName();
 				String file = ts.getFileName();
 				addTypeSource(type, file);
@@ -91,9 +91,9 @@ public class TypeLocations
 	private void setTypesAssembly(List types, String assembly)
 	{
 		Iterator it = types.iterator();
-		while (it.hasNext())
+		for (Object type1 : types)
 		{
-			String type = (String) it.next();
+			String type = (String) type1;
 			typeToAssembly.put(type, assembly);
 		}
 	}
@@ -117,9 +117,9 @@ public class TypeLocations
 	{
 		List types = new ArrayList();
 		Iterator entries = typeToSource.entrySet().iterator();
-		while (entries.hasNext())
+		for (Object o : typeToSource.entrySet())
 		{
-			Map.Entry entry = (Map.Entry) entries.next();
+			Map.Entry entry = (Map.Entry) o;
 			String typeName = (String) entry.getKey();
 			String sourceFile = (String) entry.getValue();
 			if (sourceFile.equals(source))

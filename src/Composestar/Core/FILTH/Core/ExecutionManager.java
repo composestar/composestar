@@ -19,12 +19,12 @@ public class ExecutionManager
 {
 	LinkedList order;
 
-	//Graph graph;
+	// Graph graph;
 
 	public ExecutionManager(LinkedList inorder, Graph g)
 	{
 		order = inorder;
-		//graph = g;
+		// graph = g;
 	}
 
 	public void execute()
@@ -48,11 +48,11 @@ public class ExecutionManager
 			rules = setPreferences(rules);
 			detectConflict(rules);
 			// step 2. detect conflicts, like skip-skip
-			for (Iterator i = rules.iterator(); i.hasNext();)
+			for (Object rule : rules)
 			{
 				if (currentAction.isExecutable())
 				{
-					crule = (Rule) i.next();
+					crule = (Rule) rule;
 					crule.apply();
 				}
 			}
@@ -101,12 +101,12 @@ public class ExecutionManager
 		/* end of pref. table */
 
 		LinkedList newRules = new LinkedList();
-		for (Iterator j = preflist.iterator(); j.hasNext();)
+		for (Object aPreflist : preflist)
 		{
-			prefix = (String) j.next();
-			for (Iterator i = rules.iterator(); i.hasNext();)
+			prefix = (String) aPreflist;
+			for (Object rule : rules)
 			{
-				r = (Rule) i.next();
+				r = (Rule) rule;
 				if (r.getIdentifier().startsWith(prefix))
 				{
 					newRules.addLast(r);
@@ -127,9 +127,9 @@ public class ExecutionManager
 		LinkedList crules = new LinkedList();
 		/* collect the skip rules */
 		Rule r;
-		for (Iterator i = rules.iterator(); i.hasNext();)
+		for (Object rule : rules)
 		{
-			r = (Rule) i.next();
+			r = (Rule) rule;
 			if (r.getIdentifier().startsWith("skip"))
 			{
 				crules.add(r);
@@ -158,10 +158,10 @@ public class ExecutionManager
 
 							// and both should be skipped
 							if ((((r1.getLeft().evaluate() != null) && (r2.getLeft().evaluate() != null)) && ((r1
-									.getLeft().evaluate().booleanValue()) && (r2.getLeft().evaluate().booleanValue())))
-									|| (((r1.getLeft().evaluate() != null) && (r1.getLeft().evaluate().booleanValue())) && ((r2
+									.getLeft().evaluate()) && (r2.getLeft().evaluate())))
+									|| (((r1.getLeft().evaluate() != null) && (r1.getLeft().evaluate())) && ((r2
 											.getLeft().evaluate() == null) && (r2 instanceof SoftSkipRule)))
-									|| (((r2.getLeft().evaluate() != null) && (r2.getLeft().evaluate().booleanValue())) && ((r1
+									|| (((r2.getLeft().evaluate() != null) && (r2.getLeft().evaluate())) && ((r1
 											.getLeft().evaluate() == null) && (r1 instanceof SoftSkipRule))))
 							{
 								throw new RuntimeException("Conflict between two skips");

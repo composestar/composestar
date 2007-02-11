@@ -1,11 +1,21 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2007 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.BACO;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.CONE.RepositorySerializer;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
@@ -20,16 +30,21 @@ import Composestar.Utils.Logging.CPSLogger;
 public abstract class BACO implements CTCommonModule
 {
 	public static final String MODULE_NAME = "BACO";
+
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	
+	protected CommonResources resources;
 
 	public BACO()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public void run(CommonResources inResources) throws ModuleException
 	{
 		logger.debug("Copying files to output directory...");
+		
+		resources = inResources;
 
-		Set filesToCopy = new HashSet();
+		Set<String> filesToCopy = new HashSet<String>();
 		addRequiredFiles(filesToCopy);
 		addBuiltLibraries(filesToCopy);
 		addCustomFilters(filesToCopy);
@@ -39,16 +54,15 @@ public abstract class BACO implements CTCommonModule
 		copyFiles(filesToCopy, false);
 	}
 
-	protected void addRequiredFiles(Set filesToCopy)
+	protected void addRequiredFiles(Set<String> filesToCopy)
 	{
 		Configuration config = Configuration.instance();
 		String cpsPath = config.getPathSettings().getPath("Composestar");
 		logger.debug("ComposestarHome: '" + cpsPath + "'");
 
-		Iterator it = config.getPlatform().getRequiredFiles().iterator();
-		while (it.hasNext())
+		for (Object o : config.getPlatform().getRequiredFiles())
 		{
-			String requiredFile = (String) it.next();
+			String requiredFile = (String) o;
 			String filename = cpsPath + "binaries/" + requiredFile;
 
 			logger.debug("Adding required file: '" + filename + "'");
@@ -56,26 +70,24 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
-	protected void addBuiltLibraries(Set filesToCopy)
+	protected void addBuiltLibraries(Set<String> filesToCopy)
 	{
 		List builtLibs = (List) DataStore.instance().getObjectByID("BuiltLibs");
-		Iterator it = builtLibs.iterator();
-		while (it.hasNext())
+		for (Object builtLib : builtLibs)
 		{
-			String lib = (String) it.next();
+			String lib = (String) builtLib;
 
 			logger.debug("Adding built library: '" + lib + "'");
 			filesToCopy.add(FileUtils.unquote(lib));
 		}
 	}
 
-	protected void addCustomFilters(Set filesToCopy)
+	protected void addCustomFilters(Set<String> filesToCopy)
 	{
 		Configuration config = Configuration.instance();
-		Iterator it = config.getFilters().getCustomFilters().iterator();
-		while (it.hasNext())
+		for (Object o : config.getFilters().getCustomFilters())
 		{
-			CustomFilter filter = (CustomFilter) it.next();
+			CustomFilter filter = (CustomFilter) o;
 			String lib = filter.getLibrary();
 
 			logger.debug("Adding custom filter: '" + lib + "'");
@@ -83,19 +95,17 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
-	protected void addDependencies(Set filesToCopy)
+	protected void addDependencies(Set<String> filesToCopy)
 	{
 		Configuration config = Configuration.instance();
-		Iterator it = config.getProjects().getProjects().iterator();
-		while (it.hasNext())
+		for (Object o1 : config.getProjects().getProjects())
 		{
-			Project project = (Project) it.next();
+			Project project = (Project) o1;
 
 			// add deps
-			Iterator projectit = project.getDependencies().iterator();
-			while (projectit.hasNext())
+			for (Object o : project.getDependencies())
 			{
-				Dependency dependency = (Dependency) projectit.next();
+				Dependency dependency = (Dependency) o;
 				if (isNeededDependency(dependency))
 				{
 					String depFilename = dependency.getFileName();
@@ -107,18 +117,17 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
-	protected void addRepository(Set filesToCopy)
+	protected void addRepository(Set<String> filesToCopy)
 	{
-		Configuration config = Configuration.instance();
-
-		String basePath = config.getPathSettings().getPath("Base");
-		String repository = basePath + "repository.xml";
-
-		logger.debug("Adding repository: '" + repository + "'");
-		filesToCopy.add(repository);
+		File repository = (File) resources.get(RepositorySerializer.REPOSITORY_FILE_KEY); 
+		if (repository != null)
+		{
+			logger.debug("Adding repository: '" + repository + "'");
+			filesToCopy.add(repository.getAbsoluteFile().toString());
+		}		
 	}
 
-	private void copyFiles(Set filesToCopy, boolean fatal) throws ModuleException
+	private void copyFiles(Set<String> filesToCopy, boolean fatal) throws ModuleException
 	{
 		Configuration config = Configuration.instance();
 
@@ -133,10 +142,8 @@ public abstract class BACO implements CTCommonModule
 		}
 
 		// start the actual copying
-		Iterator filesIt = filesToCopy.iterator();
-		while (filesIt.hasNext())
+		for (String source : filesToCopy)
 		{
-			String source = (String) filesIt.next();
 			copyFile(outputPath, source, fatal);
 		}
 	}

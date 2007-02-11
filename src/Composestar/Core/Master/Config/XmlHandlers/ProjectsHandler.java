@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config.XmlHandlers;
 
 import org.xml.sax.Attributes;
@@ -12,20 +21,20 @@ import Composestar.Utils.Debug;
 
 public class ProjectsHandler extends DefaultHandler implements ContentHandler
 {
-	XMLReader parser;
+	protected XMLReader parser;
 
-	BuildConfigHandler returnHandler;
+	protected ContentHandler returnHandler;
 
-	public ProjectsHandler(XMLReader inParser, BuildConfigHandler documentHandler)
+	public ProjectsHandler(XMLReader inParser, ContentHandler documentHandler)
 	{
 		parser = inParser;
 		returnHandler = documentHandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
 		Configuration config = Configuration.instance();
-		if ("Projects".equals(raw_name))
+		if ("Projects".equals(qName))
 		{ /* in <projects> */
 			Projects projects = config.getProjects();
 
@@ -39,8 +48,10 @@ public class ProjectsHandler extends DefaultHandler implements ContentHandler
 				}
 				catch (NumberFormatException e)
 				{
-					Debug.out(Debug.MODE_WARNING, "MASTER", "Invalid run debug level '" + runDebugLevel
-							+ "'. Expecting a number between 0 and 4. Reverting to default level 1.");
+					Debug.out(Debug.MODE_WARNING, "MASTER", 
+							"Invalid run debug level '" + runDebugLevel + "'. " +
+							"Expecting a number between 0 and 4. Reverting to default level 1.");
+					
 					projects.setRunDebugLevel(1);
 				}
 			}
@@ -55,8 +66,10 @@ public class ProjectsHandler extends DefaultHandler implements ContentHandler
 				}
 				catch (NumberFormatException e)
 				{
-					Debug.out(Debug.MODE_WARNING, "MASTER", "Invalid build debug level '" + runDebugLevel
-							+ "'. Expecting a number between 0 and 4. Reverting to default level 1.");
+					Debug.out(Debug.MODE_WARNING, "MASTER", 
+							"Invalid build debug level '" + runDebugLevel + "'. " +
+							"Expecting a number between 0 and 4. Reverting to default level 1.");
+					
 					projects.setRunDebugLevel(1);
 				}
 			}
@@ -76,31 +89,25 @@ public class ProjectsHandler extends DefaultHandler implements ContentHandler
 			// done here so look further
 			parser.setContentHandler(new ProjectHandler(parser, this));
 		}
-		if ("ConcernSources".equals(raw_name))
+		if ("ConcernSources".equals(qName))
 		{ // in <ConcernSources>
 			// look further
 			parser.setContentHandler(new ConcernSourcesHandler(parser, this));
 		}
 
-		if ("CustomFilters".equals(raw_name))
+		if ("CustomFilters".equals(qName))
 		{ // in <RequiredFiles>
 			// look further
 			parser.setContentHandler(new CustomFiltersHandler(parser, this));
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException
+	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
-		if ("Projects".equals(raw_name))
+		if ("Projects".equals(qName))
 		{
 			// end <projects>
 			parser.setContentHandler(returnHandler);
 		}
 	}
-
-	public void startDocument()
-	{}
-
-	public void endDocument()
-	{}
 }

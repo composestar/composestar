@@ -45,7 +45,7 @@ public class ConfigParser extends DefaultHandler
 		catch (Exception e)
 		{
 			Debug.out(Debug.MODE_WARNING, CKRET.MODULE_NAME, "Error parsing " + filename + ": " + e.getMessage());
-			Debug.out(Debug.MODE_DEBUG,   CKRET.MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
+			Debug.out(Debug.MODE_DEBUG, CKRET.MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
 		}
 	}
 
@@ -93,20 +93,17 @@ public class ConfigParser extends DefaultHandler
 	 * @roseuid 405026C6010E
 	 */
 	public void endElement(String uri, String local_name, String raw_name) throws SAXException
-	{
-	}
+	{}
 
 	/**
 	 * @roseuid 405026C6018C
 	 */
 	public void startDocument()
-	{
-	}
+	{}
 
 	/**
 	 * @roseuid 405026C6019B
 	 */
 	public void endDocument()
-	{
-	}
+	{}
 }

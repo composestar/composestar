@@ -29,18 +29,21 @@ public class INCRETimer
 
 	public void start()
 	{
-		this.startTime = System.currentTimeMillis();
+		this.startTime = System.nanoTime();
 	}
 
 	public void stop()
 	{
-		long stopTime = System.currentTimeMillis();
+		long stopTime = System.nanoTime();
 		this.elapsedTime = stopTime - this.startTime;
 	}
 
+	/**
+	 * @return elapsed time in miliseconds
+	 */
 	public long getElapsed()
 	{
-		return this.elapsedTime;
+		return this.elapsedTime / 1000000;
 	}
 
 	public String getModule()

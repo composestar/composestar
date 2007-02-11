@@ -103,9 +103,9 @@ public class Action implements Parameter
 	public static Node lookup(Action a, Graph g)
 	{
 		Node current;
-		for (Iterator i = g.getNodes().iterator(); i.hasNext();)
+		for (Object o : g.getNodes())
 		{
-			current = (Node) i.next();
+			current = (Node) o;
 			if (current.getElement().equals(a))
 			{
 				return current;
@@ -117,11 +117,11 @@ public class Action implements Parameter
 	public static Node lookupByName(String inname, Graph g)
 	{
 		Node current;
-		for (Iterator i = g.getNodes().iterator(); i.hasNext();)
+		for (Object o : g.getNodes())
 		{
-			current = (Node) i.next();
+			current = (Node) o;
 			/* the root element is only a string, we skip it */
-			if (current.getElement() instanceof java.lang.String)
+			if (current.getElement() instanceof String)
 			{
 				continue;
 			}

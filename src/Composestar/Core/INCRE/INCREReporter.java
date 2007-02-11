@@ -91,9 +91,9 @@ public class INCREReporter
 		{
 			ArrayList list = (ArrayList) timings.get(module);
 			Iterator timerItr = list.iterator();
-			while (timerItr.hasNext())
+			for (Object aList : list)
 			{
-				INCRETimer timer = (INCRETimer) timerItr.next();
+				INCRETimer timer = (INCRETimer) aList;
 				if (timer.getType() == type)
 				{
 					total += timer.getElapsed();
@@ -150,9 +150,9 @@ public class INCREReporter
 
 		// append all timings
 		Iterator modules = timings.keySet().iterator();
-		while (modules.hasNext())
+		for (Object o : timings.keySet())
 		{
-			String modulename = (String) modules.next();
+			String modulename = (String) o;
 			ArrayList moduletimings = (ArrayList) timings.get(modulename);
 
 			// append header
@@ -167,9 +167,9 @@ public class INCREReporter
 
 			// append timings of processes
 			Iterator timerItr = moduletimings.iterator();
-			while (timerItr.hasNext())
+			for (Object moduletiming : moduletimings)
 			{
-				INCRETimer timer = (INCRETimer) timerItr.next();
+				INCRETimer timer = (INCRETimer) moduletiming;
 
 				if (timer.getType() != INCRETimer.TYPE_ALL)
 				{

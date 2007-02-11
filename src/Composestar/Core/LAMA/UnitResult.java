@@ -4,14 +4,14 @@
 
 package Composestar.Core.LAMA;
 
-import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author havingaw TODO: Insert description of class here
  */
 public class UnitResult
 {
-	private HashSet multiRes; // Used by INCRE
+	private Set multiRes; // Used by INCRE
 
 	private ProgramElement singleRes; // Used by INCRE
 
@@ -25,7 +25,7 @@ public class UnitResult
 		this.multiRes = null;
 	}
 
-	public UnitResult(HashSet multi)
+	public UnitResult(Set multi)
 	{
 		this.multiRes = multi;
 		this.singleRes = null;
@@ -44,7 +44,7 @@ public class UnitResult
 	 * @return a hashset containing program elements, or null if the relation is
 	 * unique
 	 */
-	public HashSet multiValue()
+	public Set multiValue()
 	{
 		return multiRes;
 	}

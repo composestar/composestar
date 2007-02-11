@@ -17,7 +17,6 @@ header {
 $J:package Composestar.Core.COPPER;
 $C:using StringBuffer = System.Text.StringBuilder;
 }
-
 options {
 $C:	language  = CSharp;
 $C:	namespace = "Composestar.StarLight.CpsParser";
@@ -87,7 +86,16 @@ tokens {
 {
 	public String sourceLang = null;              //source language
 	public String sourceFile = null;              //source filename
-	public int startPos = -1;                     //starting position of embedded source (in bytes)
+	/**
+	 * starting position of embedded source (in chars).
+	 */
+	public int startPos = 0;
+
+	private void addEmbeddedCode(Token start)
+	{
+		startPos = ((PosToken)start).getBytePos() + 1;
+	}
+	//public int startPos = -1;                     //starting position of embedded source (in bytes)
 
 $J:	private void addEmbeddedSource(Token lang, Token fn, Token start)
 $C:	private void addEmbeddedSource(IToken lang, IToken fn, IToken start)
@@ -112,7 +120,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
 //don't bother parsing the closing end / curly if implementation is used
 //(because of possible embedded source code, which stops the parsing at that point)
-  concernEnd : (implementation) => (implementation)
+  concernEnd : ("implementation")=> implementation
                     | RCURLY!;
 
   //////////////////////////////////////////////////////////////////////////
@@ -160,18 +168,18 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
         //real definitions
         concernReference : fqn;                 																	//n.n.n
-        concernElemReference : (((NAME|DOT)* DOUBLE_COLON) => fqnDCName           //n.n.n.n::n
+        concernElemReference : (((NAME|DOT)* DOUBLE_COLON)=> fqnDCName           //n.n.n.n::n
                                 | NAME);                                          //n
 
-        fmElemReference : (((NAME|DOT)* DOUBLE_COLON) => fqnDCNameCName           //n.n.n.n::n:n
-                          |((NAME|DOT)* COLON) => nameCName                      	//n:n
+        fmElemReference : (((NAME|DOT)* DOUBLE_COLON)=> fqnDCNameCName           //n.n.n.n::n:n
+                          |((NAME|DOT)* COLON)=> nameCName                       //n:n
                            | NAME);                                               //n  //fixme: don't allow this for bindings
 
-        fmElemReferenceCond : (((NAME|COLON)* DOUBLE_COLON) => fqnDCNameCName     //n.n.n.n::n:n
-                            |  (NAME COLON) => nameCName                  	  //n:n
+        fmElemReferenceCond : (((NAME|COLON)* DOUBLE_COLON)=> fqnDCNameCName     //n.n.n.n::n:n
+                            |  (NAME COLON)=> nameCName                          //n:n
                             | 	NAME);                                            //n  //fixme: don't allow this for bindings
                             
-        fmElemReferenceStar : (((NAME|DOT)* DOUBLE_COLON) => fqnDCNameCStar       //n.n.n.n::n:*
+        fmElemReferenceStar : (((NAME|DOT)* DOUBLE_COLON)=> fqnDCNameCStar       //n.n.n.n::n:*
                                | nameCStar);                     									//n:*
                                
     /*---------------------------------------------------------------------------*/
@@ -195,8 +203,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
     	  filterElements : filterElement (COMMA filterElement)*
           { #filterElements = #([FILTERSET_, "filterelements"], #filterElements);} ;
 
-            //filterElement : (((~(FILTER_OP|SEMICOLON))* FILTER_OP) => orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
-            filterElement : (((~(FILTER_OP))* FILTER_OP) => orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
+            //filterElement : (((~(FILTER_OP|SEMICOLON))* FILTER_OP)=> orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
+            filterElement : (((~(FILTER_OP))* FILTER_OP)=> orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
                           | messagePatternSet)
                           { #filterElement = #([FILTERELEM_, "filterelement"], #filterElement);} ;
 
@@ -242,7 +250,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                                         | targetSelector
                                         ) ;
                   
-                   targetSelector : (target DOT) => target DOT! (selector|parameter|parameterlist)      //extra rule to help parse target.selector correctly
+                   targetSelector : (target DOT)=> target DOT! (selector|parameter|parameterlist)      //extra rule to help parse target.selector correctly
                                   | (selector|parameter|parameterlist);
 
                     target : (NAME                      //removed inner
@@ -404,7 +412,7 @@ QUESTIONMARK            : '?' ;
 protected DIGIT         : '0'..'9' ;
 protected FILE_SPECIAL  : '\\' | '/' | COLON!| ' ' | DOT;     //special items only allowed in filenames
 protected LETTER        : 'a'..'z'|'A'..'Z' ;
-protected NEWLINE       : (("\r\n") => "\r\n"           //DOS
+protected NEWLINE       : (("\r\n")=> "\r\n"           //DOS
                           | '\r'                        //Macintosh
                           | '\n'                        //Unix
                           ) {newline();};
@@ -417,13 +425,13 @@ protected SINGLEQUOTE   : '\'';
 PROLOG_STRING           : SINGLEQUOTE ( ~('\'') )* SINGLEQUOTE;
 
 protected COMMENTITEMS  : NEWLINE COMMENTITEMS
-                        | ("*/") => "*/"
+                        | ("*/")=> "*/"
                         | (~ ('\n'|'\r')) COMMENTITEMS;
 
 COMMENT                 : ("//" (~('\n'|'\r'))*
                         | "/*" COMMENTITEMS) { $setType(Token.SKIP); };
 
-FILENAME                : (QUOTE (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE) => QUOTE! (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE! //fixme: also allow paths?
+FILENAME                : (QUOTE (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE)=> QUOTE! (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE! //fixme: also allow paths?
                           | QUOTE {$setType(QUOTE);};
 
 NAME                    : (LETTER | SPECIAL) (LETTER | DIGIT | SPECIAL)*;
@@ -433,5 +441,5 @@ PARAMETERLIST_NAME      : QUESTIONMARK QUESTIONMARK NAME;
 PARAMETER_NAME          : QUESTIONMARK NAME;
 
 // NEWLINE and WS.... you can combine those
-WS                      : (NEWLINE) => NEWLINE { /*newline();*/ $setType(Token.SKIP);}
+WS                      : (NEWLINE)=> NEWLINE { /*newline();*/ $setType(Token.SKIP);}
                           | (' ' | '\t' | '\f') { $setType(Token.SKIP); } ;

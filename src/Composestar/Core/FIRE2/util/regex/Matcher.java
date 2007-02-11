@@ -144,9 +144,9 @@ public class Matcher
 			else
 			{
 				nextStates = getNextStates(regularState, sequence);
-				for (int i = 0; i < nextStates.length; i++)
+				for (RegularState nextState : nextStates)
 				{
-					newState = new CombinedState(executionTransition.getEndState(), nextStates[i], state,
+					newState = new CombinedState(executionTransition.getEndState(), nextState, state,
 							executionTransition);
 					if (isEndState(newState))
 					{
@@ -173,9 +173,9 @@ public class Matcher
 		{
 			String resOper = (String) resOperSeq.nextElement();
 
-			for (int i = 0; i < currentStates.length; i++)
+			for (RegularState currentState : currentStates)
 			{
-				v.addAll(getNextStates(currentStates[i], resOper));
+				v.addAll(getNextStates(currentState, resOper));
 			}
 
 			currentStates = (RegularState[]) v.toArray(new RegularState[v.size()]);

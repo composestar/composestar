@@ -46,7 +46,7 @@ public class StringUtilsTest extends TestCase
 		assertEquals("Foo", StringUtils.capitalize("foo"));
 		assertEquals("Foo", StringUtils.capitalize("Foo"));
 		assertEquals("BAR", StringUtils.capitalize("BAR"));
-		assertEquals("Foo bar", StringUtils.capitalize("foo bar"));		
+		assertEquals("Foo bar", StringUtils.capitalize("foo bar"));
 	}
 
 	private static void assertEquals(String message, Object[] expected, Object[] actual)
@@ -73,5 +73,5 @@ public class StringUtilsTest extends TestCase
 	private static void assertEquals(Object[] expected, Object[] actual)
 	{
 		assertEquals(null, expected, actual);
-	}	
+	}
 }

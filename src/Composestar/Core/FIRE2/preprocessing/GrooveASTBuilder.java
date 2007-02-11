@@ -67,11 +67,6 @@ public class GrooveASTBuilder
 	 */
 	private Hashtable targetTable;
 
-	/**
-	 * Cache for the star-selector
-	 */
-	private MessageSelector starSelector;
-
 	/*
 	 * Edge labels in the AST
 	 */
@@ -111,8 +106,6 @@ public class GrooveASTBuilder
 
 	public GrooveASTBuilder()
 	{
-		this.starSelector = new MessageSelector();
-		this.starSelector.setName(Message.STAR_SELECTOR);
 	}
 
 	public Graph buildAST(FilterModule filterModule, boolean forInputFilters)

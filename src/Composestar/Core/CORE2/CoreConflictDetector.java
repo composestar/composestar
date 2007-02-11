@@ -176,9 +176,9 @@ public class CoreConflictDetector
 		{
 			boolean onlyContinue = true;
 			Iterator actionIter = currentActionNodes.iterator();
-			while (actionIter.hasNext())
+			for (Object currentActionNode : currentActionNodes)
 			{
-				FlowNode actionNode = (FlowNode) actionIter.next();
+				FlowNode actionNode = (FlowNode) currentActionNode;
 				if (!unreachableActionNodes.contains(actionNode)
 						&& !actionNode.containsName(FlowNode.CONTINUE_ACTION_NODE))
 				{

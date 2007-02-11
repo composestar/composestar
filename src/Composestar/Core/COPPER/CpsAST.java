@@ -42,7 +42,7 @@ public class CpsAST extends CommonAST
 		{
 			return getFirstChild().getLine();
 		}
-		else 
+		else
 		{
 			return line;
 		}

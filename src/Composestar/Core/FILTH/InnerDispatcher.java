@@ -107,9 +107,9 @@ public class InnerDispatcher
 
 		// create the matchingpattern
 		Target mtarget = new Target();
-		mtarget.setName("inner");
+		mtarget.setName(Target.INNER);
 		DeclaredObjectReference dor = new DeclaredObjectReference();
-		dor.setName("inner");
+		dor.setName(Target.INNER);
 		dor.setConcern(cc.getName());
 		mtarget.setRef(dor);
 		dor.setFilterModule(fm.getName());
@@ -124,10 +124,10 @@ public class InnerDispatcher
 
 		SubstitutionPartAST spart = new SubstitutionPartAST();
 		Target starget = new Target();
-		starget.setName("inner");
+		starget.setName(Target.INNER);
 
 		DeclaredObjectReference subdor = new DeclaredObjectReference();
-		subdor.setName("inner");
+		subdor.setName(Target.INNER);
 		subdor.setConcern(cc.getName());
 		starget.setRef(subdor);
 		subdor.setFilterModule(fm.getName());

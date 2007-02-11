@@ -30,7 +30,7 @@ public class SoftCondRule extends Rule
 	{
 
 		System.out.print(" *applying: SoftCond <" + left + ',' + right + ">*\n");
-		if ((left.evaluate() != null) && (((Action) left).isExecuted()) && (!left.evaluate().booleanValue()))
+		if ((left.evaluate() != null) && (((Action) left).isExecuted()) && (!left.evaluate()))
 		{
 			((Action) right).setExecutable(false);
 		}

@@ -19,9 +19,9 @@ public class OrderTraverser
 	public static LinkedList cloneLinkedList(LinkedList l)
 	{
 		LinkedList temp = new LinkedList();
-		for (Iterator i = l.iterator(); i.hasNext();)
+		for (Object aL : l)
 		{
-			temp.add(i.next());
+			temp.add(aL);
 		}
 		return temp;
 	}
@@ -78,9 +78,9 @@ public class OrderTraverser
 			if (candidates.size() == 1)
 			{
 				/*
-				 * it isn't correct, that its unendly recursive
-				 * It is just the way it works, ok ?
-				 * select the next node into the execution order
+				 * it isn't correct, that its unendly recursive It is just the
+				 * way it works, ok ? select the next node into the execution
+				 * order
 				 */
 				current = (Node) candidates.getFirst();
 			}
@@ -119,14 +119,14 @@ public class OrderTraverser
 		boolean pc;
 
 		/* Iterating through all the available nodes */
-		for (Iterator i = available.iterator(); i.hasNext();)
+		for (Object anAvailable : available)
 		{
-			Node current = (Node) i.next();
+			Node current = (Node) anAvailable;
 			/* Checking all the incoming edges of a node */
 			pc = true;
-			for (Iterator j = current.getIncomingEdges().iterator(); j.hasNext();)
+			for (Object o : current.getIncomingEdges())
 			{
-				Node aParent = ((Edge) j.next()).getLeft();
+				Node aParent = ((Edge) o).getLeft();
 				if (!used.contains(aParent))
 				{
 					pc = false;
@@ -212,14 +212,14 @@ public class OrderTraverser
 		boolean pc;
 
 		/* Iterating through all the available nodes */
-		for (Iterator i = available.iterator(); i.hasNext();)
+		for (Object anAvailable : available)
 		{
-			Node current = (Node) i.next();
+			Node current = (Node) anAvailable;
 			/* Checking all the incoming edges of a node */
 			pc = true;
-			for (Iterator j = current.getIncomingEdges().iterator(); j.hasNext();)
+			for (Object o : current.getIncomingEdges())
 			{
-				Node aParent = ((Edge) j.next()).getLeft();
+				Node aParent = ((Edge) o).getLeft();
 				if (!used.contains(aParent))
 				{
 					pc = false;
@@ -257,9 +257,9 @@ public class OrderTraverser
 		Edge currentEdge = null;
 
 		/* select an available node that has a parent among the used nodes: */
-		for (Iterator i = available.iterator(); i.hasNext();)
+		for (Object anAvailable : available)
 		{
-			Node current = (Node) i.next();
+			Node current = (Node) anAvailable;
 
 			for (Iterator j = current.getIncomingEdges().iterator(); (start == null) && (j.hasNext());)
 			{
@@ -362,9 +362,9 @@ public class OrderTraverser
 		public boolean isInThePath(LinkedList path)
 		{
 
-			for (Iterator i = path.iterator(); i.hasNext();)
+			for (Object aPath : path)
 			{
-				if (((Pair) i.next()).getNode().getElement().equals(this.node.getElement()))
+				if (((Pair) aPath).getNode().getElement().equals(this.node.getElement()))
 				{
 					return true;
 				}
@@ -380,9 +380,9 @@ public class OrderTraverser
 		Edge e;
 
 		Pair p = new Pair(n);
-		for (Iterator i = n.getIncomingEdges().iterator(); i.hasNext();)
+		for (Object o : n.getIncomingEdges())
 		{
-			e = (Edge) i.next();
+			e = (Edge) o;
 			// we don't extend the database with the edges to the root node and
 			// the node from which we come
 			if ((!e.equals(exc)) && (!e.getLeft().getElement().equals("root"))) // not
@@ -411,9 +411,9 @@ public class OrderTraverser
 	{
 		Node n;
 		// System.out.println("<<<cycle-begin>>>");
-		for (Iterator i = path.iterator(); i.hasNext();)
+		for (Object aPath : path)
 		{
-			n = ((Pair) i.next()).getNode();
+			n = ((Pair) aPath).getNode();
 			// System.out.print(n.getElement()+" ");
 			if (stopPair.getNode().getElement().equals(n.getElement()))
 			{

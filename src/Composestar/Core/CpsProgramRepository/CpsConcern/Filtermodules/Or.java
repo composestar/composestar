@@ -20,7 +20,7 @@ public class Or extends BinaryOperator
 	{
 		super();
 	}
-	
+
 	public int simulateResult()
 	{
 		int resl = left.simulateResult();
@@ -32,11 +32,11 @@ public class Or extends BinaryOperator
 		if (resr == RESULT_TRUE)
 		{
 			return RESULT_TRUE;
-		}		
-		if (resl == RESULT_FALSE && resl==RESULT_FALSE)
-		{
-			return RESULT_FALSE;		
 		}
-		return resl+resr;
+		if (resl == RESULT_FALSE && resl == RESULT_FALSE)
+		{
+			return RESULT_FALSE;
+		}
+		return resl + resr;
 	}
 }

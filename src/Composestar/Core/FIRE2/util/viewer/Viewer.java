@@ -5,14 +5,13 @@
 package Composestar.Core.FIRE2.util.viewer;
 
 import java.awt.BorderLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Collection;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.WindowConstants;
 
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FlowModel;
@@ -92,13 +91,6 @@ public class Viewer extends JFrame
 
 		this.setSize(600, 600);
 		this.setVisible(true);
-
-		this.addWindowListener(new WindowAdapter()
-		{
-			public void windowClosing(WindowEvent e)
-			{
-				System.exit(0);
-			}
-		});
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 }

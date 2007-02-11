@@ -94,9 +94,10 @@ public abstract class Node
 	{
 		return outgoingEdges.iterator();
 	}
-	
+
 	/**
 	 * Return the associated repository entity (if any)
+	 * 
 	 * @return
 	 */
 	public RepositoryEntity getRepositoryEntity()

@@ -61,9 +61,9 @@ public class JarGpsGrammar extends GpsGrammar
 		Map priorityMap = new HashMap();
 		loadRules(grammarUrl, grammarLocation, null, ruleGraphMap, priorityMap);
 		Iterator ruleGraphIter = ruleGraphMap.entrySet().iterator();
-		while (ruleGraphIter.hasNext())
+		for (Object o : ruleGraphMap.entrySet())
 		{
-			Map.Entry ruleGraphEntry = (Map.Entry) ruleGraphIter.next();
+			Map.Entry ruleGraphEntry = (Map.Entry) o;
 			StructuredRuleName ruleName = (StructuredRuleName) ruleGraphEntry.getKey();
 			RuleGraph ruleGraph = (RuleGraph) ruleGraphEntry.getValue();
 			result.add(ruleGraph, (Integer) priorityMap.get(ruleName));
@@ -112,7 +112,7 @@ public class JarGpsGrammar extends GpsGrammar
 					if (separatorPos > 0)
 					{
 						priority = new Integer(fileName.substring(0, separatorPos));
-						if (priority.intValue() < 0)
+						if (priority < 0)
 						{
 							throw new NumberFormatException("" + priority + " is not a valid priority");
 						}

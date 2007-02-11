@@ -3,6 +3,9 @@ package Composestar.Core.Master.Config;
 import java.io.Serializable;
 import java.util.Properties;
 
+/**
+ * @deprecated
+ */
 public class ModuleSettings implements Serializable
 {
 	/**
@@ -65,6 +68,6 @@ public class ModuleSettings implements Serializable
 
 	public boolean getProperty(String key, boolean def)
 	{
-		return Boolean.valueOf(properties.getProperty(key, Boolean.toString(def))).booleanValue();
+		return Boolean.valueOf(properties.getProperty(key, Boolean.toString(def)));
 	}
 }

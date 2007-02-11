@@ -69,7 +69,7 @@ public class ModuleInfo implements Serializable
 	/**
 	 * Contains the module settings
 	 */
-	protected Map settings;
+	protected Map<String, ModuleSetting> settings;
 
 	/**
 	 * The incre module settings
@@ -128,14 +128,15 @@ public class ModuleInfo implements Serializable
 	{
 		if (settings.containsKey(key))
 		{
-			//logger.debug("Request module setting '" + key + "' for module '" + id + "'");
-			ModuleSetting ms = (ModuleSetting) settings.get(key);
+			// logger.debug("Request module setting '" + key + "' for module '"
+			// + id + "'");
+			ModuleSetting ms = settings.get(key);
 			return ms;
 		}
 		throw new ConfigurationException("Requested unknown module setting '" + key + "' for module '" + id + "'");
 	}
 
-	public Iterator getSettings()
+	public Iterator<ModuleSetting> getSettings()
 	{
 		return settings.values().iterator();
 	}
@@ -150,25 +151,25 @@ public class ModuleInfo implements Serializable
 		ModuleSetting ms = getSetting(key);
 		ms.setValue(newValue);
 	}
-	
+
 	public void setSettingValue(String key, String newValue) throws ConfigurationException
 	{
 		ModuleSetting ms = getSetting(key);
 		ms.setValue(newValue);
 	}
-	
+
 	public void setSettingValue(String key, int newValue) throws ConfigurationException
 	{
 		ModuleSetting ms = getSetting(key);
 		ms.setValue(newValue);
 	}
-	
+
 	public void setSettingValue(String key, boolean newValue) throws ConfigurationException
 	{
 		ModuleSetting ms = getSetting(key);
 		ms.setValue(newValue);
 	}
-	
+
 	public void setSettingValue(String key, float newValue) throws ConfigurationException
 	{
 		ModuleSetting ms = getSetting(key);
@@ -235,7 +236,7 @@ public class ModuleInfo implements Serializable
 
 	protected ModuleInfo()
 	{
-		settings = new HashMap();
+		settings = new HashMap<String, ModuleSetting>();
 	}
 
 	/**
@@ -245,18 +246,17 @@ public class ModuleInfo implements Serializable
 	{
 		Map config = Configuration.instance().getTmpModuleSettings(id);
 		if (config == null) return;
-		Iterator entries = config.entrySet().iterator();
-		while (entries.hasNext())
+		for (Object o : config.entrySet())
 		{
-			Entry entry = (Entry) entries.next();
+			Entry entry = (Entry) o;
 			try
 			{
 				setSettingValue((String) entry.getKey(), (String) entry.getValue());
 			}
 			catch (ConfigurationException e)
 			{
-				Debug.out(Debug.MODE_ERROR, id, "Error setting config option '" + entry.getKey() + "' to '" + entry.getValue()
-						+ "': " + e.getMessage());
+				Debug.out(Debug.MODE_ERROR, id, "Error setting config option '" + entry.getKey() + "' to '"
+						+ entry.getValue() + "': " + e.getMessage());
 			}
 		}
 	}
@@ -425,7 +425,7 @@ public class ModuleInfo implements Serializable
 			{
 				try
 				{
-					if (Boolean.valueOf(attributes.getValue("remove")).booleanValue())
+					if (Boolean.valueOf(attributes.getValue("remove")))
 					{
 						// remove the setting
 						mi.removeSetting(attributes.getValue("id"));

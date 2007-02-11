@@ -37,7 +37,8 @@ public class ExistSelector implements BaseChecker
 
 			if (!exist)
 			{
-				Debug.out(Debug.MODE_ERROR, "CHKREP", "Selector " + selector + " is used but not declared", fmb.getSelector());
+				Debug.out(Debug.MODE_ERROR, "CHKREP", "Selector " + selector + " is used but not declared", fmb
+						.getSelector());
 				nonFatal = false;
 			}
 		}

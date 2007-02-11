@@ -34,9 +34,9 @@ public class DummyManager implements CTCommonModule
 
 		List projects = config.getProjects().getProjects();
 		Iterator projIt = projects.iterator();
-		while (projIt.hasNext())
+		for (Object project1 : projects)
 		{
-			Project project = (Project) projIt.next();
+			Project project = (Project) project1;
 			createProjectDummies(dummyPath, project);
 		}
 	}
@@ -53,9 +53,9 @@ public class DummyManager implements CTCommonModule
 		dummyDir.mkdirs();
 
 		Iterator sourceIt = sources.iterator();
-		while (sourceIt.hasNext())
+		for (Object source1 : sources)
 		{
-			Source source = (Source) sourceIt.next();
+			Source source = (Source) source1;
 			try
 			{
 				File sourceFile = new File(source.getFileName());

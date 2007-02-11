@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config.XmlHandlers;
 
 import org.xml.sax.Attributes;
@@ -10,23 +19,23 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Utils.Debug;
 
-public class ProjectHandler extends DefaultHandler implements ContentHandler
+public class ProjectHandler extends DefaultHandler
 {
-	XMLReader parser;
+	protected XMLReader parser;
 
-	ProjectsHandler returnHandler;
+	protected ContentHandler returnHandler;
 
-	Project project;
+	protected Project project;
 
-	public ProjectHandler(XMLReader inParser, ProjectsHandler documentHandler)
+	public ProjectHandler(XMLReader inParser, ContentHandler documentHandler)
 	{
 		parser = inParser;
 		returnHandler = documentHandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if ("Project".equals(raw_name))
+		if ("Project".equals(qName))
 		{// in <Project>
 			project = new Project();
 			for (int i = 0; i < amap.getLength(); i++)
@@ -56,14 +65,14 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 			Configuration.instance().getProjects().addProject(project);
 		}
 
-		if ("Sources".equals(raw_name))
+		if ("Sources".equals(qName))
 		{// in <Sources>
 			// look further
 			ProjectSourcesHandler sourceshandler = new ProjectSourcesHandler(project, parser, this);
 			parser.setContentHandler(sourceshandler);
 		}
 
-		if ("Dependencies".equals(raw_name))
+		if ("Dependencies".equals(qName))
 		{// in <Dependencies>
 			// look further
 			ProjectDependenciesHandler dependencyhandler = new ProjectDependenciesHandler(project, parser, this);
@@ -72,18 +81,12 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException
+	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
-		if ("Project".equals(raw_name))
+		if ("Project".equals(qName))
 		{
 			// end <Project>
 			parser.setContentHandler(returnHandler);
 		}
 	}
-
-	public void startDocument()
-	{}
-
-	public void endDocument()
-	{}
 }

@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config.XmlHandlers;
 
 import org.xml.sax.Attributes;
@@ -9,24 +18,24 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Master.Config.CompilerAction;
 import Composestar.Core.Master.Config.Language;
 
-public class ActionsHandler extends DefaultHandler implements ContentHandler
+public class ActionsHandler extends DefaultHandler
 {
-	XMLReader parser;
+	protected XMLReader parser;
 
-	CompilerHandler returnHandler;
+	protected ContentHandler returnHandler;
 
-	Language language;
+	protected Language language;
 
-	public ActionsHandler(Language lang, XMLReader inParser, CompilerHandler inReturnHandler)
+	public ActionsHandler(Language lang, XMLReader inParser, ContentHandler inReturnHandler)
 	{
 		language = lang;
 		parser = inParser;
 		returnHandler = inReturnHandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if ("Action".equals(raw_name))
+		if ("Action".equals(qName))
 		{
 			// end <action>
 			if (amap.getValue("name") != null)
@@ -41,18 +50,12 @@ public class ActionsHandler extends DefaultHandler implements ContentHandler
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException
+	public void endElement(String uri, String local_name, String qName) throws SAXException
 	{
-		if ("Actions".equals(raw_name))
+		if ("Actions".equals(qName))
 		{
 			// end <actions>
 			parser.setContentHandler(returnHandler);
 		}
 	}
-
-	public void startDocument()
-	{}
-
-	public void endDocument()
-	{}
 }

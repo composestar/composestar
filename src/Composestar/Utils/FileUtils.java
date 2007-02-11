@@ -16,7 +16,6 @@ import java.io.Writer;
 /**
  * Contains utility methods that have to do with file handling; e.g. converting
  * backslashes in filenames to slashes
- * 
  */
 public final class FileUtils
 {
@@ -229,11 +228,12 @@ public final class FileUtils
 	 * @param sourceName the name of the original file
 	 * @return The converted (output)-filename.
 	 */
-	public static String createOutputFilename(String basePath, String prefix, String sourceName) throws Exception
+	public static String createOutputFilename(String basePath, String prefix, String sourceName)
 	{
 		if (!sourceName.startsWith(basePath))
 		{
-			throw new Exception("File + '" + sourceName + "' should be within the project basePath '" + basePath + "'");
+			throw new IllegalArgumentException(
+					"File + '" + sourceName + "' should be within the project basePath '" + basePath + "'");
 		}
 
 		return basePath + prefix + sourceName.substring(basePath.length());
@@ -282,6 +282,8 @@ public final class FileUtils
 	 * Get a file stream for the SAX parser whitout the Root element could not
 	 * be found exception. This is caused by a BOM character which is skipped by
 	 * this file reader.
+	 * 
+	 * @noinspection ResultOfMethodCallIgnored
 	 */
 	public static FileInputStream getCleanInputStream(File xmlFile) throws IOException
 	{

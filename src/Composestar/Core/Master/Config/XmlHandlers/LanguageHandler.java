@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.Master.Config.XmlHandlers;
 
 import org.xml.sax.Attributes;
@@ -8,24 +17,24 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Master.Config.Language;
 
-public class LanguageHandler extends DefaultHandler implements ContentHandler
+public class LanguageHandler extends DefaultHandler
 {
-	XMLReader parser;
+	protected XMLReader parser;
 
-	PlatformHandler returnHandler;
+	protected ContentHandler returnHandler;
 
-	Language language;
+	protected Language language;
 
-	public LanguageHandler(Language lang, XMLReader inParser, PlatformHandler inreturnHandler)
+	public LanguageHandler(Language lang, XMLReader inParser, ContentHandler inreturnHandler)
 	{
 		language = lang;
 		parser = inParser;
 		returnHandler = inreturnHandler;
 	}
 
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
+	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
-		if ("Compiler".equals(raw_name))
+		if ("Compiler".equals(qName))
 		{
 			for (int i = 0; i < amap.getLength(); i++)
 			{
@@ -38,14 +47,14 @@ public class LanguageHandler extends DefaultHandler implements ContentHandler
 			CompilerHandler comphandler = new CompilerHandler(language, parser, this);
 			parser.setContentHandler(comphandler);
 		}
-		else if ("DummyGeneration".equals(raw_name))
+		else if ("DummyGeneration".equals(qName))
 		{
 			if (amap.getValue("emitter") != null)
 			{
 				language.setEmitter(amap.getValue("emitter"));
 			}
 		}
-		else if ("FileExtensions".equals(raw_name))
+		else if ("FileExtensions".equals(qName))
 		{
 			// look further
 			FileExtensionsHandler fexhandler = new FileExtensionsHandler(language, parser, this);
@@ -53,18 +62,12 @@ public class LanguageHandler extends DefaultHandler implements ContentHandler
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException
+	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
-		if ("Language".equals(raw_name))
+		if ("Language".equals(qName))
 		{
 			// end <language>
 			parser.setContentHandler(returnHandler);
 		}
 	}
-
-	public void startDocument()
-	{}
-
-	public void endDocument()
-	{}
 }

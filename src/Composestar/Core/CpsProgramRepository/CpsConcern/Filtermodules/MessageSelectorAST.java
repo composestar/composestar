@@ -17,28 +17,23 @@ import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 import Composestar.Utils.CPSIterator;
 
 /**
- * @modelguid {F5586509-49A4-471C-90EA-2C66B42B702A} the message selector as
- *            used in filter patterns (nb; the term is selector is sometimes
- *            used, but this is confusing with the selector used in
- *            superimposition)
+ * the message selector as used in filter patterns (nb; the term is selector is
+ * sometimes used, but this is confusing with the selector used in
+ * superimposition)
  */
 public class MessageSelectorAST extends ContextRepositoryEntity
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4560974741705816846L;
 
 	/**
-	 * @modelguid {CA61B6DA-3A70-4676-BE31-559D50E68699}
+	 * 
 	 */
 	public String name;
 
 	public Vector typeList;
 
 	/**
-	 * @roseuid 404DDA6F03AC
+	 * 
 	 */
 	public MessageSelectorAST()
 	{
@@ -48,8 +43,6 @@ public class MessageSelectorAST extends ContextRepositoryEntity
 
 	/**
 	 * @return java.lang.String
-	 * @modelguid {AD4E0123-C75E-45AE-AACB-835F9A49FB33}
-	 * @roseuid 401FAA6703CB
 	 */
 	public String getName()
 	{
@@ -58,8 +51,6 @@ public class MessageSelectorAST extends ContextRepositoryEntity
 
 	/**
 	 * @param nameValue
-	 * @modelguid {7D1FDAAC-BA9B-4A3B-B02B-228E4A73D30C}
-	 * @roseuid 401FAA6703CC
 	 */
 	public void setName(String nameValue)
 	{
@@ -71,8 +62,6 @@ public class MessageSelectorAST extends ContextRepositoryEntity
 	 * 
 	 * @param type
 	 * @return boolean
-	 * @modelguid {DDD36DA7-2C64-4269-945C-2AA0D91D457B}
-	 * @roseuid 401FAA6703D6
 	 */
 	public boolean addParameterType(ConcernReference type)
 	{
@@ -83,8 +72,6 @@ public class MessageSelectorAST extends ContextRepositoryEntity
 	/**
 	 * @param index
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference
-	 * @modelguid {4A770336-B0FC-4E69-8353-5D7050FD59B6}
-	 * @roseuid 401FAA680001
 	 */
 	public ConcernReference removeParameterType(int index)
 	{
@@ -96,8 +83,6 @@ public class MessageSelectorAST extends ContextRepositoryEntity
 	/**
 	 * @param index
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference
-	 * @modelguid {0AA74210-29B2-4D19-A8A0-FC9277E8B436}
-	 * @roseuid 401FAA68000C
 	 */
 	public ConcernReference getParameterType(int index)
 	{
@@ -106,8 +91,6 @@ public class MessageSelectorAST extends ContextRepositoryEntity
 
 	/**
 	 * @return java.util.Iterator
-	 * @modelguid {C106BE0D-804D-41EC-9CDF-B78F134F9AF8}
-	 * @roseuid 401FAA680020
 	 */
 	public Iterator getParameterTypeIterator()
 	{

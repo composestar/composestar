@@ -90,7 +90,7 @@ public class PathHelper
 			piece.setCreateNew(true);
 			if (temp.length() > 3)
 			{ // extra check
-			// (number | last)
+				// (number | last)
 				temp = temp.substring(0, temp.length() - 3);
 				piece.setPosition(temp);
 			}

@@ -12,7 +12,6 @@ package Composestar.Core.TYM.SrcCompiler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.COMP.CompilerException;
@@ -47,10 +46,9 @@ public class RealSourceManager implements CTCommonModule
 		Configuration config = Configuration.instance();
 		List projects = config.getProjects().getProjects();
 
-		Iterator projIt = projects.iterator();
-		while (projIt.hasNext())
+		for (Object project1 : projects)
 		{
-			Project project = (Project) projIt.next();
+			Project project = (Project) project1;
 			Language lang = project.getLanguage();
 			CompilerSettings compsettings = lang.getCompilerSettings();
 			LangCompiler comp = compsettings.getCompiler();
@@ -59,10 +57,9 @@ public class RealSourceManager implements CTCommonModule
 			String exefile = getExeFile(project, exetype);
 
 			// set target of sources
-			Iterator sourceIt = project.getSources().iterator();
-			while (sourceIt.hasNext())
+			for (Object o : project.getSources())
 			{
-				Source source = (Source) sourceIt.next();
+				Source source = (Source) o;
 				String filename = source.getFileName();
 				source.setIsExecutable(filename.equals(exefile));
 
@@ -83,7 +80,7 @@ public class RealSourceManager implements CTCommonModule
 			}
 		}
 
-		resources.addResource("CompiledSources", compiledSources);
+		resources.add("CompiledSources", compiledSources);
 	}
 
 	/**
@@ -92,10 +89,9 @@ public class RealSourceManager implements CTCommonModule
 	 */
 	private String getExeFile(Project project, String exec) throws ModuleException
 	{
-		Iterator tsIt = project.getTypeSources().iterator();
-		while (tsIt.hasNext())
+		for (Object o : project.getTypeSources())
 		{
-			TypeSource ts = (TypeSource) tsIt.next();
+			TypeSource ts = (TypeSource) o;
 			if (ts.getName().equals(exec))
 			{
 				return ts.getFileName();
@@ -128,10 +124,9 @@ public class RealSourceManager implements CTCommonModule
 		List types = locations.getTypesBySource(nsp);
 
 		// iterate over typesources to find type with full namespace
-		Iterator typesItr = types.iterator();
-		while (typesItr.hasNext())
+		for (Object type1 : types)
 		{
-			String type = (String) typesItr.next();
+			String type = (String) type1;
 			String[] elems = type.split("\\.");
 			List list = Arrays.asList(elems);
 			if (list.contains(srcType))
@@ -145,14 +140,16 @@ public class RealSourceManager implements CTCommonModule
 		{
 			if (!types.isEmpty())
 			{
-				targetFile = (String) types.get(0); // first type declared in
-				// sourcefile
+				// first type declared in sourcefile
+				targetFile = (String) types.get(0); 
 			}
 			else
 			{
-				Debug.out(Debug.MODE_WARNING, "RECOMA", srcType + " is not a fully qualified target of source "
-						+ sourcePath);
-				targetFile = srcType; // last part of sourcefile's path
+				Debug.out(Debug.MODE_WARNING, "RECOMA", 
+						srcType + " is not a fully qualified target of source " + sourcePath);
+				
+				// last part of sourcefile's path
+				targetFile = srcType;
 			}
 		}
 
