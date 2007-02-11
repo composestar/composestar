@@ -43,7 +43,8 @@ public class TYPEX implements CTCommonModule
 
 		run();
 		
-		resources.addResource("sources.expanded.files", expandedSources);
+		
+		//resources.addResource("sources.expanded.files", expandedSources);
 	}
 	
 	private void run() throws ModuleException
