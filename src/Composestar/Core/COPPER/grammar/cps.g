@@ -86,16 +86,7 @@ tokens {
 {
 	public String sourceLang = null;              //source language
 	public String sourceFile = null;              //source filename
-	/**
-	 * starting position of embedded source (in chars).
-	 */
-	public int startPos = 0;
-
-	private void addEmbeddedCode(Token start)
-	{
-		startPos = ((PosToken)start).getBytePos() + 1;
-	}
-	//public int startPos = -1;                     //starting position of embedded source (in bytes)
+	public int startPos = -1;                     //starting position of embedded source (in bytes)
 
 $J:	private void addEmbeddedSource(Token lang, Token fn, Token start)
 $C:	private void addEmbeddedSource(IToken lang, IToken fn, IToken start)
