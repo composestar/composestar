@@ -14,6 +14,8 @@
 
 	<target name="clean" depends="init" description="clean the compilation results">
 		
+		<ant target="clean" dir="${build.core}/Compiletime" inheritRefs="true"/>
+
 		<!-- Java build files -->
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
@@ -22,7 +24,7 @@
 				<include name="**/*.class"/>
 			</fileset>
 		</delete>
-		
+
 		<!-- xml beans -->
 		<delete dir="${out.xmltypes}"/>
 		
