@@ -2,11 +2,14 @@
 <modules>
 	<moduleinfo id="REXREF" class="Composestar.Core.REXREF.Main">
 		<name>Resolve External References</name>
-		<description>Concerns may have both internal and external references, e.g to a method or a condition represented by an object. REXREF traverses the repository and makes sure that all references are resolved.</description>
-		
+		<description>
+			Concerns may have both internal and external references, e.g to a method or a condition represented by an
+			object. REXREF traverses the repository and makes sure that all references are resolved.
+		</description>
+
 		<incre>
 			<module enabled="true" incremental="false" summary="Resolving references...">
-				<dependencies></dependencies>	
+				<dependencies></dependencies>
 			</module>
 		</incre>
 	</moduleinfo>

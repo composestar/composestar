@@ -3,7 +3,9 @@
 	<moduleinfo id="COPPER" class="Composestar.Core.COPPER.COPPER">
 
 		<description>
-			<![CDATA[COPPER parses the concern sources and produces the repository entries that will be used by other modules. During processing the so called syntactic sugar is applied that expands the repository entries to their complete form. Only the conern source syntax will be validated.]]>
+			COPPER parses the concern sources and produces the repository entries that will be used by other modules.
+			During processing the so called syntactic sugar is applied that expands the repository entries to their
+			complete form. Only the conern source syntax will be validated.
 		</description>
 
 		<incre>

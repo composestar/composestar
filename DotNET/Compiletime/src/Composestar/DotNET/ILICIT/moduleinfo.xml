@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
 	<moduleinfo id="ILICIT" class="Composestar.DotNET.ILICIT.ILICIT">
+		<description>
+			Applies the changes as specified by CONE-IS to the assemblies in order to impose the behavior defined in the
+			concern specifications.
+		</description>
 		<settings>
 			<setting id="verifyAssemblies" type="boolean">
 				<name>Verify Assemblies</name>
@@ -8,8 +12,7 @@
 			</setting>
 		</settings>
 		<incre>
-			<module input="java.lang.String" enabled="true"
-				incremental="true" summary="Weaving assemblies...">
+			<module input="java.lang.String" enabled="true" incremental="true" summary="Weaving assemblies...">
 				<dependencies>
 					<dependency type="FILE" name="assembly" isAdded="false"></dependency>
 					<dependency type="OBJECT" name="ApplicationInfo" store="true" lookup="true">

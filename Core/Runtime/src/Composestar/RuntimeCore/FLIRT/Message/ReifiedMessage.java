@@ -4,8 +4,6 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.RuntimeCore.FLIRT.ObjectManager;
 import Composestar.RuntimeCore.Utils.Invoker;
 import Composestar.RuntimeCore.Utils.SyncBuffer;
-import java.lang.Thread;
-import java.lang.Runnable;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -55,7 +53,7 @@ public class ReifiedMessage implements Runnable
 		this.messagelist = m;
 	}
 
-	public void setActMethodInfo(Object act, String method, Object[] args)
+	public synchronized void setActMethodInfo(Object act, String method, Object[] args)
 	{
 		this.actObject = act;
 		this.actMethod = method;

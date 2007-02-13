@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
 	<moduleinfo id="CONE-IS" class="Composestar.DotNET.CONE.DotNETWeaveFileGenerator">
+		<description>Generates the weaving specification file.</description>
 		<incre>
 			<module enabled="true" incremental="false" summary="Generating weave specification file...">
 				<dependencies></dependencies>
@@ -9,6 +10,7 @@
 	</moduleinfo>
 
 	<moduleinfo id="CONE-XML" class="Composestar.DotNET.CONE.DotNETRepositorySerializer">
+		<description>Saves the whole repository to an XML so that it's available at runtime.</description>
 		<settings>
 			<setting id="compressed" type="boolean">
 				<name>Compress file</name>

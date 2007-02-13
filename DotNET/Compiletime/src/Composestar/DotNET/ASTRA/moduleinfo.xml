@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
 	<moduleinfo id="ASTRA" class="Composestar.DotNET.ASTRA.ASTRA">
+		<description>Apply by SIGN added or removed methods to the assemblies.</description>
+
 		<incre>
 			<module enabled="true" incremental="false" summary="Transforming signatures...">
 				<dependencies></dependencies>

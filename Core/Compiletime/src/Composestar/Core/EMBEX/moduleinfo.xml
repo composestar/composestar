@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
 	<moduleinfo id="EMBEX" class="Composestar.Core.EMBEX.EMBEX">
-
 		<name>Embedded sourcecode extractor</name>
-
 		<description>
-			<![CDATA[Extracts the embedded sources from the concern sources and saves them to the disk for further use.]]>
+			Extracts the embedded sources from the concern sources and saves them to the disk for further use.
 		</description>
 
 		<incre>

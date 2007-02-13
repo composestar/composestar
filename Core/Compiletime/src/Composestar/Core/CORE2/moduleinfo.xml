@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
 	<moduleinfo id="CORE" class="Composestar.Core.CORE2.Core">
+		<name>Consistency Reasoning Engine</name>
+		<description>
+			CORE checks the filter sets, specified by the developer, for inconsistencies. Unreachable filters or
+			actions, conditions with a contradiction or tautology, are examples of problems found by CORE. If a problem
+			is found, the developer will be notified.
+		</description>
 		<incre>
 			<module enabled="true" incremental="false" summary="Detecting conflicts...">
 				<dependencies></dependencies>
