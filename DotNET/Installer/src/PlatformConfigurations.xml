@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Platforms>
-<Platform name="dotNET" mainClass="Composestar.DotNET.MASTER.DotNETMaster" classPath="{app}binaries\ComposestarCORE.jar;{app}binaries\ComposestarDotNET.jar;{app}binaries\antlr.jar;{app}binaries\prolog\prolog.jar" options="">
+<Platform name="dotNET" mainClass="Composestar.DotNET.MASTER.DotNETMaster" classPath="{app}binaries\ComposestarCORE.jar;{app}binaries\ComposestarDotNET.jar;{app}binaries\antlr.jar;{app}/binaries/log4j-1.2.14.jar;{app}binaries\prolog\prolog.jar" options="">
 <Languages defaultLanguage="CSharp">
 <Language name="CSharp" >
 <Compiler name="CSharpCompiler" executable="csc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">

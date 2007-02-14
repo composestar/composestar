@@ -211,10 +211,15 @@ namespace ComposestarVSAddin
 
 				switch (warninglevel)
 				{
+					case "ERROR" :
 					case "error" : mode = DebugModes.Error; break;
+					case "CRUCIAL":
 					case "crucial" : mode = DebugModes.Crucial; break;
+					case "WARN":
 					case "warning" : mode = DebugModes.Warning; break;
+					case "INFO":
 					case "information" : mode = DebugModes.Information; break;
+					case "DEBUG":
 					case "debug" : mode = DebugModes.Debug; break;
 					default: mode = DebugModes.NotSet; break;
 				}

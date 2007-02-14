@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Compose*">
-	<item key="classpath" value="%composestar%/binaries/ComposestarCORE.jar;%composestar%/binaries/ComposestarJava.jar;%composestar%/binaries/antlr.jar;%composestar%/binaries/prolog/prolog.jar;%composestar%/binaries/groove/castor-0_9_5_2-xml.jar;%composestar%/binaries/groove/groove-1_2_0.jar;%composestar%/binaries/groove/jgraph.jar;%composestar%/binaries/groove/xerces-2_6_0-xercesImpl.jar;%composestar%/binaries/groove/xerces-2_6_0-xml-apis.jar;%composestar%/binaries/javassist.jar;%composestar%/binaries/ComposestarRuntimeInterpreter.jar"/>
+	<item key="classpath" value="%composestar%/binaries/ComposestarCORE.jar;%composestar%/binaries/ComposestarJava.jar;%composestar%/binaries/antlr.jar;%composestar%/binaries/log4j-1.2.14.jar;%composestar%/binaries/prolog/prolog.jar;%composestar%/binaries/groove/castor-0_9_5_2-xml.jar;%composestar%/binaries/groove/groove-1_2_0.jar;%composestar%/binaries/groove/jgraph.jar;%composestar%/binaries/groove/xerces-2_6_0-xercesImpl.jar;%composestar%/binaries/groove/xerces-2_6_0-xml-apis.jar;%composestar%/binaries/javassist.jar;%composestar%/binaries/ComposestarRuntimeInterpreter.jar"/>
 	<item key="incremental" value="False"/>
 	<item key="runDebugLevel" value="1"/>
 	<item key="mainClass" value="PlatypusExample.Main"/>

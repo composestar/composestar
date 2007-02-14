@@ -85,7 +85,6 @@
 		</propertyfile>
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java"/>
-			<!--<exclude name="Composestar/Core/FIRE/*"/>-->			
 		</javac>
 	</target>
 	
@@ -93,6 +92,7 @@
 		<copy todir="${out.build}"><!-- copy groove grammars -->
 			<fileset dir="src">
 				<include name="**/*.gpr"/>
+				<include name="**/*.properties"/>
 				<include name="**/moduleinfo.xml"/>
 				<include name="Composestar/Core/DIGGER/Xslt/*.xslt"/>
 			</fileset>
@@ -124,6 +124,7 @@
 				<fileset dir="${out.dist}"/>
 			</copy>
 			<copy file="binaries/antlr/antlr.jar" todir="@{todir}/binaries"/>
+			<copy file="binaries/log4j/log4j-1.2.14.jar" todir="@{todir}/binaries"/>
 
 			<copy todir="@{todir}/binaries/prolog">
 				<fileset dir="binaries/prolog">

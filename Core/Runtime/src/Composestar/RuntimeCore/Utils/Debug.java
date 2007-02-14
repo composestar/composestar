@@ -9,15 +9,15 @@ public class Debug
 
 	private static int currentMode = 0;
 
-	public static final int MODE_ERROR = Composestar.Utils.Debug.MODE_ERROR; // 0;
+	public static final int MODE_ERROR = 0; // 0;
 
-	public static final int MODE_CRUCIAL = Composestar.Utils.Debug.MODE_CRUCIAL; // 1;
+	public static final int MODE_CRUCIAL = 1; // 1;
 
-	public static final int MODE_WARNING = Composestar.Utils.Debug.MODE_WARNING; // 2;
+	public static final int MODE_WARNING = 2; // 2;
 
-	public static final int MODE_INFORMATION = Composestar.Utils.Debug.MODE_INFORMATION; // 3;
+	public static final int MODE_INFORMATION = 3; // 3;
 
-	public static final int MODE_DEBUG = Composestar.Utils.Debug.MODE_DEBUG; // 4;
+	public static final int MODE_DEBUG = 4; // 4;
 
 	/**
 	 * @param mode

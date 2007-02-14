@@ -30,7 +30,6 @@ import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
-import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -147,7 +146,7 @@ public class DIGGER implements CTCommonModule
 			FilterModuleOrder fmOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 			if (fmOrder != null)
 			{
-				if (Debug.willLog(Debug.MODE_INFORMATION))
+				if (logger.isInfoEnabled())
 				{
 					logger.info("Generating dispatch graph for: " + concern.getQualifiedName());
 				}
@@ -258,12 +257,12 @@ public class DIGGER implements CTCommonModule
 
 		if (e.numVars() == 0)
 		{
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Infinite recursive filter definition: " + sb.toString(), re);
+			logger.error("Infinite recursive filter definition: " + sb.toString(), re);
 		}
 		else
 		{
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Possibly infitite recursive filter definition (depended on ~"
-					+ e.numVars() + " conditionals): " + sb.toString(), re);
+			logger.warn("Possibly infitite recursive filter definition (depended on ~" + e.numVars()
+					+ " conditionals): " + sb.toString(), re);
 		}
 	}
 
