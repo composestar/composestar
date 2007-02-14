@@ -18,6 +18,8 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.FIRE2.model.ExecutionModel;
+import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
@@ -54,8 +56,12 @@ public class FilterSetAnalysis implements Serializable
 	{
 		filters = getFilterList(order.orderAsList());
 
+		FireModel fireModel = new FireModel(concern, order);
+
+		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS);
+		
 		AbstractVM avm = new AbstractVM();
-		List conflicts = avm.analyze(concern, order);
+		List conflicts = avm.analyze(concern, execModel);
 		if (!conflicts.isEmpty())
 		{
 			conflictingExecutions.add(conflicts);

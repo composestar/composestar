@@ -35,13 +35,13 @@ public class ResourceOperationLabeler implements Labeler
 
 		// condition:
 		LabelSequence seq = new LabelSequence();
-		seq.addResourceOperation("read");
+		seq.addLabel("read");
 		operationTable.put(new LabelResourcePair(ExecutionTransition.CONDITION_EXPRESSION_FALSE, "condition"), seq);
 		operationTable.put(new LabelResourcePair(ExecutionTransition.CONDITION_EXPRESSION_TRUE, "condition"), seq);
 
 		// matchingpart:
 		seq = new LabelSequence();
-		seq.addResourceOperation("read");
+		seq.addLabel("read");
 		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_ANY_FALSE, "target"), seq);
 		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_FALSE_STAR, "target"), seq);
 		operationTable.put(new LabelResourcePair(ExecutionTransition.NAME_MATCHING_PART_FALSE_TRUE, "target"), seq);
@@ -68,39 +68,39 @@ public class ResourceOperationLabeler implements Labeler
 
 		// error-action:
 		seq = new LabelSequence();
-		seq.addResourceOperation("discard");
+		seq.addLabel("discard");
 		operationTable.put(new LabelResourcePair(ExecutionTransition.ERROR_ACTION, "args"), seq);
 
 		seq = new LabelSequence();
-		seq.addResourceOperation("error");
-		seq.addResourceOperation("return");
+		seq.addLabel("error");
+		seq.addLabel("return");
 		operationTable.put(new LabelResourcePair(ExecutionTransition.ERROR_ACTION, "message"), seq);
 
 		// dispatch-action:
 		seq = new LabelSequence();
-		seq.addResourceOperation("dispatch");
-		seq.addResourceOperation("return");
+		seq.addLabel("dispatch");
+		seq.addLabel("return");
 		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "message"), seq);
 
 		seq = new LabelSequence();
-		seq.addResourceOperation("write");
+		seq.addLabel("write");
 		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "target"), seq);
 
 		seq = new LabelSequence();
-		seq.addResourceOperation("write");
+		seq.addLabel("write");
 		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "selector"), seq);
 
 		seq = new LabelSequence();
-		seq.addResourceOperation("read");
+		seq.addLabel("read");
 		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "args"), seq);
 
 		// substitution action:
 		seq = new LabelSequence();
-		seq.addResourceOperation("write");
+		seq.addLabel("write");
 		operationTable.put(new LabelResourcePair(ExecutionTransition.SUBSTITUTION_ACTION, "target"), seq);
 
 		seq = new LabelSequence();
-		seq.addResourceOperation("write");
+		seq.addLabel("write");
 		operationTable.put(new LabelResourcePair(ExecutionTransition.SUBSTITUTION_ACTION, "selector"), seq);
 	}
 

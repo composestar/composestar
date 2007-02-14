@@ -13,14 +13,14 @@ import java.util.Vector;
  */
 public class Pattern
 {
-	private RegularMachine machine;
+	private RegularAutomaton automaton;
 
 	private String patternString;
 
 	private Pattern(String pattern) throws PatternParseException
 	{
 		this.patternString = pattern;
-		machine = Parser.parse(pattern);
+		automaton = Parser.parse(pattern);
 	}
 
 	public static Pattern compile(String pattern) throws PatternParseException
@@ -30,12 +30,12 @@ public class Pattern
 
 	protected RegularState getStartState()
 	{
-		return machine.getStartState();
+		return automaton.getStartState();
 	}
 
 	protected RegularState getEndState()
 	{
-		return machine.getEndState();
+		return automaton.getEndState();
 	}
 
 	/**
@@ -58,38 +58,38 @@ public class Pattern
 
 	private static class Parser
 	{
-		public static RegularMachine parse(String pattern) throws PatternParseException
+		public static RegularAutomaton parse(String pattern) throws PatternParseException
 		{
 			Lexer lexer = new Lexer(pattern);
 			return parseRegularExpression(lexer);
 		}
 
-		private static RegularMachine parseRegularExpression(Lexer lexer) throws PatternParseException
+		private static RegularAutomaton parseRegularExpression(Lexer lexer) throws PatternParseException
 		{
 			return parseUnionExpression(lexer);
 		}
 
-		private static RegularMachine parseUnionExpression(Lexer lexer) throws PatternParseException
+		private static RegularAutomaton parseUnionExpression(Lexer lexer) throws PatternParseException
 		{
-			RegularMachine machine1 = parseConcatExpression(lexer);
+			RegularAutomaton machine1 = parseConcatExpression(lexer);
 
 			Token token = lexer.peekNextToken();
 			if (token.getType() == Token.UNION_OPERATOR)
 			{
 				lexer.nextToken();
-				RegularMachine machine2 = parseUnionExpression(lexer);
+				RegularAutomaton machine2 = parseUnionExpression(lexer);
 
-				RegularMachine resultMachine = new RegularMachine();
+				RegularAutomaton resultAutomaton = new RegularAutomaton();
 				RegularState startState = new RegularState();
-				resultMachine.setStartState(startState);
+				resultAutomaton.setStartState(startState);
 				RegularState endState = new RegularState();
-				resultMachine.setEndState(endState);
+				resultAutomaton.setEndState(endState);
 				new RegularTransition(startState, machine1.getStartState());
 				new RegularTransition(startState, machine2.getStartState());
 				new RegularTransition(machine1.getEndState(), endState);
 				new RegularTransition(machine2.getEndState(), endState);
 
-				return resultMachine;
+				return resultAutomaton;
 			}
 			else
 			{
@@ -97,23 +97,23 @@ public class Pattern
 			}
 		}
 
-		private static RegularMachine parseConcatExpression(Lexer lexer) throws PatternParseException
+		private static RegularAutomaton parseConcatExpression(Lexer lexer) throws PatternParseException
 		{
-			RegularMachine machine1 = parseStarExpression(lexer);
+			RegularAutomaton machine1 = parseStarExpression(lexer);
 
 			Token token = lexer.peekNextToken();
 			switch (token.type)
 			{
 				case Token.LEFT_BRACKET:
 				case Token.NEGATION_OPERATOR:
-				case Token.RESOURCE_OPERATION:
-					RegularMachine machine2 = parseConcatExpression(lexer);
-					RegularMachine resultMachine = new RegularMachine();
-					resultMachine.setStartState(machine1.getStartState());
-					resultMachine.setEndState(machine2.getEndState());
+				case Token.WORD:
+					RegularAutomaton machine2 = parseConcatExpression(lexer);
+					RegularAutomaton resultAutomaton = new RegularAutomaton();
+					resultAutomaton.setStartState(machine1.getStartState());
+					resultAutomaton.setEndState(machine2.getEndState());
 					RegularTransition transition = new RegularTransition(machine1.getEndState(), machine2
 							.getStartState());
-					return resultMachine;
+					return resultAutomaton;
 				case Token.STAR_OPERATOR:
 					throw new PatternParseException("Unexpected star-operator at" + " position " + token.getPosition()
 							+ '.');
@@ -122,16 +122,16 @@ public class Pattern
 			}
 		}
 
-		private static RegularMachine parseStarExpression(Lexer lexer) throws PatternParseException
+		private static RegularAutomaton parseStarExpression(Lexer lexer) throws PatternParseException
 		{
-			RegularMachine machine1 = parseBasicExpression(lexer);
+			RegularAutomaton machine1 = parseBasicExpression(lexer);
 
 			Token token = lexer.peekNextToken();
 			if (token.type == Token.STAR_OPERATOR)
 			{
 				lexer.nextToken();
 
-				RegularMachine result = new RegularMachine();
+				RegularAutomaton result = new RegularAutomaton();
 
 				RegularState startState = new RegularState();
 				result.setStartState(startState);
@@ -152,14 +152,14 @@ public class Pattern
 			}
 		}
 
-		private static RegularMachine parseBasicExpression(Lexer lexer) throws PatternParseException
+		private static RegularAutomaton parseBasicExpression(Lexer lexer) throws PatternParseException
 		{
 			Token token = lexer.peekNextToken();
-			if (token.type == Token.RESOURCE_OPERATION)
+			if (token.type == Token.WORD)
 			{
 				lexer.nextToken();
 
-				RegularMachine result = new RegularMachine();
+				RegularAutomaton result = new RegularAutomaton();
 
 				RegularState startState = new RegularState();
 				result.setStartState(startState);
@@ -169,14 +169,14 @@ public class Pattern
 
 				// FIXME add label to transition
 				RegularTransition transition1 = new RegularTransition(startState, endState);
-				transition1.addResourceOperation(token.getValue());
+				transition1.addLabel(token.getValue());
 
 				return result;
 			}
 			else if (token.type == Token.LEFT_BRACKET)
 			{
 				lexer.nextToken();
-				RegularMachine result = parseRegularExpression(lexer);
+				RegularAutomaton result = parseRegularExpression(lexer);
 				token = lexer.nextToken();
 				if (token.type != Token.RIGHT_BRACKET)
 				{
@@ -189,9 +189,9 @@ public class Pattern
 			else if (token.type == Token.NEGATION_OPERATOR)
 			{
 				lexer.nextToken();
-				String[] resourceOperations = parseResourceOperationSequence(lexer);
+				String[] words = parseWordSequence(lexer);
 
-				RegularMachine result = new RegularMachine();
+				RegularAutomaton result = new RegularAutomaton();
 
 				RegularState startState = new RegularState();
 				result.setStartState(startState);
@@ -201,9 +201,9 @@ public class Pattern
 
 				RegularTransition transition1 = new RegularTransition(startState, endState);
 				transition1.setNegation(true);
-				for (String resourceOperation : resourceOperations)
+				for (String word : words)
 				{
-					transition1.addResourceOperation(resourceOperation);
+					transition1.addLabel(word);
 				}
 
 				return result;
@@ -211,14 +211,14 @@ public class Pattern
 			else
 			{
 				throw new PatternParseException("Unexpected token at" + " position " + token.getPosition()
-						+ ". Expected resource operation, left-bracket or " + "negation-operator.");
+						+ ". Expected word, left-bracket or " + "negation-operator.");
 			}
 		}
 
-		private static String[] parseResourceOperationSequence(Lexer lexer) throws PatternParseException
+		private static String[] parseWordSequence(Lexer lexer) throws PatternParseException
 		{
 			Token token = lexer.peekNextToken();
-			if (token.type == Token.RESOURCE_OPERATION)
+			if (token.type == Token.WORD)
 			{
 				lexer.nextToken();
 
@@ -234,10 +234,10 @@ public class Pattern
 				while (token.type != Token.RIGHT_BRACKET)
 				{
 					token = lexer.nextToken();
-					if (token.type != Token.RESOURCE_OPERATION)
+					if (token.type != Token.WORD)
 					{
 						throw new PatternParseException("Unexpected token at" + " position " + token.getPosition()
-								+ ". Expected resource operation.");
+								+ ". Expected word.");
 					}
 
 					result.addElement(token.getValue());
@@ -255,7 +255,7 @@ public class Pattern
 			else
 			{
 				throw new PatternParseException("Unexpected token at" + " position " + token.getPosition()
-						+ ". Expected resource operation or left-bracket.");
+						+ ". Expected word or left-bracket.");
 			}
 		}
 	}
@@ -328,11 +328,11 @@ public class Pattern
 				case '!':
 					return new Token(Token.NEGATION_OPERATOR, "" + c, pos, 1);
 				default:
-					return getResourceOperation();
+					return getWord();
 			}
 		}
 
-		private Token getResourceOperation() throws PatternParseException
+		private Token getWord() throws PatternParseException
 		{
 			int startPos = pos;
 			char c = pattern.charAt(startPos);
@@ -367,11 +367,11 @@ public class Pattern
 							+ "letter, digit or parenthesis.");
 				}
 
-				return new Token(Token.RESOURCE_OPERATION, buffer.toString(), pos, buffer.length() + 2);
+				return new Token(Token.WORD, buffer.toString(), pos, buffer.length() + 2);
 			}
 			else if (c == '.' || Character.isLetterOrDigit(c))
 			{
-				return new Token(Token.RESOURCE_OPERATION, "" + c, pos, 1);
+				return new Token(Token.WORD, "" + c, pos, 1);
 			}
 			else
 			{
@@ -401,7 +401,7 @@ public class Pattern
 
 		public final static int NEGATION_OPERATOR = 5;
 
-		public final static int RESOURCE_OPERATION = 100;
+		public final static int WORD = 100;
 
 		public final static int END_OF_PATTERN = 1000;
 
@@ -434,121 +434,121 @@ public class Pattern
 		}
 	}
 
-	static class RegularMachine
+}
+
+class RegularAutomaton
+{
+	private RegularState startState;
+
+	private RegularState endState;
+
+	public RegularAutomaton()
+	{}
+
+	public void setStartState(RegularState startState)
 	{
-		private RegularState startState;
+		this.startState = startState;
+	}
 
-		private RegularState endState;
+	public RegularState getStartState()
+	{
+		return startState;
+	}
 
-		public RegularMachine()
-		{}
+	public void setEndState(RegularState endState)
+	{
+		this.endState = endState;
+	}
 
-		public void setStartState(RegularState startState)
+	public RegularState getEndState()
+	{
+		return endState;
+	}
+}
+
+class RegularState
+{
+	private Vector<RegularTransition> outTransitions;
+
+	public RegularState()
+	{
+		outTransitions = new Vector<RegularTransition>();
+	}
+
+	public void addOutTransition(RegularTransition transition)
+	{
+		outTransitions.addElement(transition);
+	}
+
+	public Enumeration<RegularTransition> getOutTransitions()
+	{
+		return outTransitions.elements();
+	}
+}
+
+class RegularTransition
+{
+	private RegularState startState;
+
+	private RegularState endState;
+
+	private HashSet<String> labels;
+
+	private boolean negation;
+
+	public RegularTransition(RegularState startState, RegularState endState)
+	{
+		this.startState = startState;
+		this.endState = endState;
+
+		startState.addOutTransition(this);
+
+		labels = new HashSet<String>();
+	}
+
+	public void setNegation(boolean negation)
+	{
+		this.negation = negation;
+	}
+
+	public boolean isNegation()
+	{
+		return negation;
+	}
+
+	public void addLabel(String label)
+	{
+		labels.add(label);
+	}
+
+	public boolean match(String word)
+	{
+		if (labels.contains("_"))
 		{
-			this.startState = startState;
+			return !negation;
 		}
-
-		public RegularState getStartState()
+		else if (negation)
 		{
-			return startState;
+			return !labels.contains(word);
 		}
-
-		public void setEndState(RegularState endState)
+		else
 		{
-			this.endState = endState;
-		}
-
-		public RegularState getEndState()
-		{
-			return endState;
+			return labels.contains(word);
 		}
 	}
 
-	static class RegularState
+	public boolean isEmpty()
 	{
-		private Vector outTransitions;
-
-		public RegularState()
-		{
-			outTransitions = new Vector();
-		}
-
-		public void addOutTransition(RegularTransition transition)
-		{
-			outTransitions.addElement(transition);
-		}
-
-		public Enumeration getOutTransitions()
-		{
-			return outTransitions.elements();
-		}
+		return labels.isEmpty();
 	}
 
-	static class RegularTransition
+	public RegularState getEndState()
 	{
-		private RegularState startState;
-
-		private RegularState endState;
-
-		private HashSet operations;
-
-		private boolean negation;
-
-		public RegularTransition(RegularState startState, RegularState endState)
-		{
-			this.startState = startState;
-			this.endState = endState;
-
-			startState.addOutTransition(this);
-
-			operations = new HashSet();
-		}
-
-		public void setNegation(boolean negation)
-		{
-			this.negation = negation;
-		}
-
-		public boolean isNegation()
-		{
-			return negation;
-		}
-
-		public void addResourceOperation(String resourceOperation)
-		{
-			operations.add(resourceOperation);
-		}
-
-		public boolean match(String resourceOperation)
-		{
-			if (operations.contains("_"))
-			{
-				return !negation;
-			}
-			else if (negation)
-			{
-				return !operations.contains(resourceOperation);
-			}
-			else
-			{
-				return operations.contains(resourceOperation);
-			}
-		}
-
-		public boolean isEmpty()
-		{
-			return operations.isEmpty();
-		}
-
-		public RegularState getEndState()
-		{
-			return endState;
-		}
-
-		public RegularState getStartState()
-		{
-			return startState;
-		}
+		return endState;
 	}
 
+	public RegularState getStartState()
+	{
+		return startState;
+	}
 }

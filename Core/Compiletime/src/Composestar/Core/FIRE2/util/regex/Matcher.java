@@ -14,8 +14,6 @@ import java.util.Vector;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
-import Composestar.Core.FIRE2.util.regex.Pattern.RegularState;
-import Composestar.Core.FIRE2.util.regex.Pattern.RegularTransition;
 
 /**
  * @author Arjan de Roo
@@ -168,14 +166,14 @@ public class Matcher
 		RegularState[] currentStates = { state };
 		Vector v = new Vector();
 
-		Enumeration resOperSeq = sequence.getResourceOperationSequences();
-		while (resOperSeq.hasMoreElements())
+		Iterator<String> labelSeq = sequence.getLabels();
+		while (labelSeq.hasNext())
 		{
-			String resOper = (String) resOperSeq.nextElement();
+			String label = labelSeq.next();
 
 			for (RegularState currentState : currentStates)
 			{
-				v.addAll(getNextStates(currentState, resOper));
+				v.addAll(getNextStates(currentState, label));
 			}
 
 			currentStates = (RegularState[]) v.toArray(new RegularState[v.size()]);
@@ -184,14 +182,14 @@ public class Matcher
 		return currentStates;
 	}
 
-	private Collection getNextStates(RegularState state, String resourceOperation)
+	private Collection getNextStates(RegularState state, String label)
 	{
 		Enumeration transitions = state.getOutTransitions();
 		HashSet result = new HashSet();
 		while (transitions.hasMoreElements())
 		{
 			RegularTransition transition = (RegularTransition) transitions.nextElement();
-			if (transition.match(resourceOperation))
+			if (transition.match(label))
 			{
 				result.addAll(lambdaClosure(transition.getEndState()));
 			}
@@ -284,7 +282,7 @@ public class Matcher
 	{
 		public ExecutionState executionState;
 
-		public Pattern.RegularState regularState;
+		public RegularState regularState;
 
 		// private Vector trace;
 		private TransitionTrace trace;

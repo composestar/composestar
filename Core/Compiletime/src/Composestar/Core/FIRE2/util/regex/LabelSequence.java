@@ -4,33 +4,33 @@
  */
 package Composestar.Core.FIRE2.util.regex;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * @author Arjan de Roo
  */
 public class LabelSequence
 {
-	private Vector resourceOperations;
+	private ArrayList<String> labels;
 
 	public LabelSequence()
 	{
-		resourceOperations = new Vector();
+		labels = new ArrayList<String>();
 	}
 
-	public void addResourceOperation(String resourceOperation)
+	public void addLabel(String label)
 	{
-		resourceOperations.add(resourceOperation);
+		labels.add(label);
 	}
 
-	public Enumeration getResourceOperationSequences()
+	public Iterator<String> getLabels()
 	{
-		return resourceOperations.elements();
+		return labels.iterator();
 	}
 
 	public boolean isEmpty()
 	{
-		return resourceOperations.isEmpty();
+		return labels.isEmpty();
 	}
 }

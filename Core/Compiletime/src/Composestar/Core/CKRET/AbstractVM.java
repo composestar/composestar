@@ -14,9 +14,7 @@ import java.util.List;
 
 import Composestar.Core.CKRET.Config.ResourceHandler;
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
-import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.util.regex.Matcher;
 
 /**
@@ -28,12 +26,8 @@ public class AbstractVM
 	public AbstractVM()
 	{}
 
-	public List<Conflict> analyze(Concern concern, FilterModuleOrder filterModules)
+	public List<Conflict> analyze(Concern concern, ExecutionModel model)
 	{
-		FireModel fireModel = new FireModel(concern, filterModules);
-
-		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS);
-
 		ResourceOperationLabeler labeler = new ResourceOperationLabeler();
 
 		List<Conflict> conflicts = new ArrayList<Conflict>();
@@ -48,7 +42,7 @@ public class AbstractVM
 				if (constraint.getResource().equals("*") || constraint.getResource().equals(res.getName()))
 				{
 					labeler.setCurrentResource(res.getName());
-					Matcher matcher = new Matcher(constraint.getPattern(), execModel, labeler);
+					Matcher matcher = new Matcher(constraint.getPattern(), model, labeler);
 
 					if (matcher.matches())
 					{
