@@ -4,9 +4,19 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.StringTokenizer;
 
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
-import Composestar.Utils.Logging.LocationProvider;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Logging.LocationProvider;
+import Composestar.Utils.Logging.LogMessage;
+import Composestar.Utils.Logging.Log4j.CrucialLevel;
+
+/**
+ * @deprecated use Composestar.Utils.Logging.CPSLogger or
+ *             Composestar.Utils.Logging.SafeLogger
+ */
 public final class Debug
 {
 	public static final int MODE_ERROR = 0;
@@ -23,34 +33,45 @@ public final class Debug
 
 	private static int currentMode = MODE_DEFAULTMODE;
 
-	private static int errThreshold = -1;
-
 	private static int warnings;
 
 	private static int errors;
 
-	/**
-	 * Public constructor needed because this class is serialized into the
-	 * repository for some reason.
-	 */
-	public Debug()
-	{
-	// throw new UnsupportedOperationException();
-	}
-
 	public static void setMode(int mode)
 	{
 		currentMode = mode;
+		Logger root = Logger.getRootLogger();
+		root.setLevel(debugModeToLevel(mode));
+	}
+
+	/**
+	 * Return the level for the given legacy debug mode
+	 * 
+	 * @param mode
+	 * @return
+	 */
+	public static Level debugModeToLevel(int mode)
+	{
+		switch (mode)
+		{
+			case MODE_ERROR:
+				return Level.ERROR;
+			case MODE_CRUCIAL:
+				return CrucialLevel.CRUCIAL;
+			case MODE_WARNING:
+				return Level.WARN;
+			case MODE_INFORMATION:
+				return Level.INFO;
+			case MODE_DEBUG:
+				return Level.DEBUG;
+			default:
+				return Level.ERROR;
+		}
 	}
 
 	public static int getMode()
 	{
 		return currentMode;
-	}
-
-	public static void setErrThreshold(int et)
-	{
-		errThreshold = et;
 	}
 
 	/**
@@ -62,74 +83,27 @@ public final class Debug
 	}
 
 	/**
-	 * Returns whether a message with the specified mode should be printed to
-	 * System.out.
-	 */
-	private static boolean printToOut(int mode)
-	{
-		return true;
-	}
-
-	/**
-	 * Returns whether a message with the specified mode should be printed to
-	 * System.err.
-	 */
-	private static boolean printToErr(int mode)
-	{
-		if (mode == MODE_CRUCIAL) return false;
-
-		return (mode <= errThreshold);
-	}
-
-	/**
-	 * Returns the description for the specified mode.
-	 */
-	private static String getModeDescription(int mode)
-	{
-		switch (mode)
-		{
-			case MODE_ERROR:
-				return "error";
-
-			case MODE_CRUCIAL:
-				return "crucial";
-
-			case MODE_WARNING:
-				return "warning";
-
-			case MODE_INFORMATION:
-				return "information";
-
-			case MODE_DEBUG:
-				return "debug";
-
-			default:
-				return "unknown";
-		}
-	}
-
-	/**
 	 * Returns the mode level that correspondends to the specified description.
 	 */
 	private static int getModeLevel(String description)
 	{
-		if ("error".equals(description))
+		if ("error".equalsIgnoreCase(description))
 		{
 			return MODE_ERROR;
 		}
-		else if ("crucial".equals(description))
+		else if ("crucial".equalsIgnoreCase(description))
 		{
 			return MODE_CRUCIAL;
 		}
-		else if ("warning".equals(description))
+		else if ("warning".equals(description) || "WARN".equals(description))
 		{
 			return MODE_WARNING;
 		}
-		else if ("information".equals(description))
+		else if ("information".equals(description) || "INFO".equals(description))
 		{
 			return MODE_INFORMATION;
 		}
-		else if ("debug".equals(description))
+		else if ("debug".equalsIgnoreCase(description))
 		{
 			return MODE_DEBUG;
 		}
@@ -143,8 +117,6 @@ public final class Debug
 	{
 		if (currentMode >= mode)
 		{
-			String modeDescription = getModeDescription(mode);
-
 			if (mode == MODE_WARNING)
 			{
 				warnings++;
@@ -159,16 +131,24 @@ public final class Debug
 				filename = "";
 			}
 
-			if (printToOut(mode))
+			CPSLogger logger = CPSLogger.getCPSLogger(module);
+			switch (mode)
 			{
-				String full = module + '~' + modeDescription + '~' + filename + '~' + line + '~' + msg;
-				System.out.println(full);
-			}
-
-			if (printToErr(mode))
-			{
-				String full = "[" + module + "] " + StringUtils.capitalize(modeDescription) + ": " + msg;
-				System.err.println(full);
+				case MODE_CRUCIAL:
+					logger.log(CrucialLevel.CRUCIAL, new LogMessage(msg, filename, line));
+					break;
+				case MODE_DEBUG:
+					logger.debug(new LogMessage(msg, filename, line));
+					break;
+				case MODE_ERROR:
+					logger.error(new LogMessage(msg, filename, line));
+					break;
+				case MODE_WARNING:
+					logger.warn(new LogMessage(msg, filename, line));
+					break;
+				case MODE_INFORMATION:
+					logger.info(new LogMessage(msg, filename, line));
+					break;
 			}
 		}
 	}

@@ -54,11 +54,6 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "../../../DotNET/Runtime/src/AssemblyInfos/CORE/AssemblyInfo.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Composestar\core\CpsProgramRepository\Concern.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -599,17 +594,37 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Composestar\utils\Debug.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Composestar\utils\StringUtils.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Composestar\utils\Logging\ILogger.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\utils\Logging\ILoggerFactory.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Composestar\utils\Logging\LocationProvider.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\utils\Logging\RuntimeLogger.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\utils\Logging\RuntimeLoggerFactory.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\utils\Logging\SafeLogger.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

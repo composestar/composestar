@@ -19,7 +19,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.ILogger;
+import Composestar.Utils.Logging.SafeLogger;
 
 /**
  * The Repository part of the Compose* project. It supports reading and writing
@@ -41,6 +42,8 @@ public class DataStore implements Serializable, Cloneable
 	private static DataStore instance = null;
 	private static final boolean DEBUG = false;
 
+	private ILogger logger;
+
 	private String filename = "ComposeStarDataStore.ser";
 	public DataMap map;
 
@@ -49,7 +52,11 @@ public class DataStore implements Serializable, Cloneable
 	 */
 	public DataStore()
 	{
-		Debug.out(Debug.MODE_DEBUG, "DataStore", "Creating Datastore...");
+		if (DEBUG)
+		{
+			logger = SafeLogger.getILogger("DataStore");
+			logger.info("Creating Datastore...");
+		}
 		map = new DataMap();
 	}
 
@@ -151,8 +158,8 @@ public class DataStore implements Serializable, Cloneable
 				// OOPS this is very bad!!!
 				if (DEBUG)
 				{
-					Debug.out(Debug.MODE_WARNING, "DataStore", "Overwriting existing object '" + old + "' with id '"
-							+ id + "' with new object '" + obj + "'...");
+					logger.warn("Overwriting existing object '" + old + "' with id '" + id + "' with new object '"
+							+ obj + "'...");
 				}
 				map.put(id, obj);
 			}
@@ -197,7 +204,7 @@ public class DataStore implements Serializable, Cloneable
 	{
 		if (DEBUG)
 		{
-			Debug.out(Debug.MODE_INFORMATION, "DataStore", "Removing object from datastore with id '" + id + "'.");
+			logger.info("Removing object from datastore with id '" + id + "'.");
 		}
 		return map.remove(id);
 	}
@@ -272,7 +279,7 @@ public class DataStore implements Serializable, Cloneable
 		{
 			if (DEBUG)
 			{
-				Debug.out(Debug.MODE_INFORMATION, "DataStore", "Reading object from file '" + filename + "'... ");
+				logger.info("Reading object from file '" + filename + "'... ");
 			}
 			FileInputStream fis;
 			if (filename == null)
@@ -288,7 +295,7 @@ public class DataStore implements Serializable, Cloneable
 			ois.close();
 			if (DEBUG)
 			{
-				Debug.out(Debug.MODE_INFORMATION, "DataStore", "Done reading object '" + obj + "'.");
+				logger.info("Done reading object '" + obj + "'.");
 			}
 			return obj;
 		}
@@ -296,7 +303,7 @@ public class DataStore implements Serializable, Cloneable
 		{
 			if (DEBUG)
 			{
-				Debug.out(Debug.MODE_WARNING, "DataStore", "Failed reading object from file '" + filename + "'.");
+				logger.warn("Failed reading object from file '" + filename + "'.");
 				e.printStackTrace();
 			}
 			return null;
@@ -316,8 +323,7 @@ public class DataStore implements Serializable, Cloneable
 		{
 			if (DEBUG)
 			{
-				Debug.out(Debug.MODE_INFORMATION, "DataStore", "Writing object '" + obj + "' to file '" + filename
-						+ "'...");
+				logger.info("Writing object '" + obj + "' to file '" + filename + "'...");
 			}
 			FileOutputStream fos;
 			if (filename == null)
@@ -334,7 +340,7 @@ public class DataStore implements Serializable, Cloneable
 			oos.close();
 			if (DEBUG)
 			{
-				Debug.out(Debug.MODE_INFORMATION, "DataStore", "Done writing object '" + obj + "'.");
+				logger.info("Done writing object '" + obj + "'.");
 			}
 			return true;
 		}
@@ -342,8 +348,7 @@ public class DataStore implements Serializable, Cloneable
 		{
 			if (DEBUG)
 			{
-				Debug.out(Debug.MODE_WARNING, "DataStore", "Failed writing object '" + obj + "' to file '" + filename
-						+ "'.");
+				logger.warn("Failed writing object '" + obj + "' to file '" + filename + "'.");
 				e.printStackTrace();
 			}
 			return false;

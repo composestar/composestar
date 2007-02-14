@@ -11,6 +11,7 @@
 package Composestar.Core.Master;
 
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,6 +19,14 @@ import java.util.Map.Entry;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.net.SocketAppender;
+import org.apache.log4j.varia.LevelRangeFilter;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
@@ -31,6 +40,9 @@ import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Version;
+import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Logging.Log4j.CPSPatternLayout;
+import Composestar.Utils.Logging.Log4j.MetricAppender;
 
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules and
@@ -61,6 +73,10 @@ public abstract class Master
 	 */
 	public static final int EERRORS = 4;
 
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
+	protected MetricAppender logMetrics = new MetricAppender();
+
 	protected String configFilename;
 
 	protected int debugOverride = -1;
@@ -72,12 +88,39 @@ public abstract class Master
 	public Master()
 	{
 		settingsOverride = new HashMap<String, Map<String, String>>();
+		loggerSetup();
 	}
 
 	
 	public Master(String[] args)
 	{
+		loggerSetup();
 		processCmdArgs(args);
+	}
+
+	/**
+	 * Initialize the logger environment. This is called from the constructor so
+	 * the commandline arguments could still override the initial setup. This
+	 * method can be used to override the default logging behavior in the
+	 * platform masters.
+	 */
+	protected void loggerSetup()
+	{
+		URL propfile = Master.class.getResource("/log4j.properties");
+		if (propfile != null)
+		{
+			PropertyConfigurator.configure(propfile);
+		}
+		else
+		{
+			// fallback in case log4j.properties could not be found
+			Logger root = Logger.getRootLogger();
+			// this produces the legacy output:
+			// LEVEL~module~CPS File~CPS Line~message\n
+			Layout layout = new CPSPatternLayout("%p~%c~%s~%S~%m%n");
+			root.addAppender(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
+		}
+		Logger.getRootLogger().addAppender(logMetrics);
 	}
 
 	public void processCmdArgs(String[] args)
@@ -92,7 +135,15 @@ public abstract class Master
 			else if (arg.startsWith("-t"))
 			{
 				int et = Integer.parseInt(arg.substring(2));
-				Debug.setErrThreshold(et);
+
+				Logger root = Logger.getRootLogger();
+				ConsoleAppender errAppender = new ConsoleAppender(new CPSPatternLayout("[%c] %p: %m%n"),
+						ConsoleAppender.SYSTEM_ERR);
+				LevelRangeFilter rangeFilter = new LevelRangeFilter();
+				rangeFilter.setLevelMax(Level.FATAL);
+				rangeFilter.setLevelMin(Debug.debugModeToLevel(et));
+				errAppender.addFilter(rangeFilter);
+				root.addAppender(errAppender);
 			}
 			else if (arg.startsWith("-D"))
 			{
@@ -111,6 +162,20 @@ public abstract class Master
 				}
 				ms.put(setting[1], setting[2]);
 			}
+			else if (arg.startsWith("-L="))
+			{
+				// override Log4J configuration, must be before a -d setting
+				// -L=<filename>
+				arg = arg.substring(3);
+				LogManager.resetConfiguration();
+				PropertyConfigurator.configure(arg);
+				Logger.getRootLogger().addAppender(logMetrics);
+			}
+			else if (arg.equals("-LN"))
+			{
+				// log to net
+				Logger.getRootLogger().addAppender(new SocketAppender("127.0.0.1", 4445));
+			}
 			else if (arg.startsWith("-"))
 			{
 				System.out.println("Unknown option " + arg);
@@ -128,8 +193,7 @@ public abstract class Master
 		File configFile = new File(configFilename);
 		if (!configFile.canRead())
 		{
-			throw new Exception(
-					"Unable to open configuration file: '" + configFilename + "'");
+			throw new Exception("Unable to open configuration file: '" + configFilename + "'");
 		}
 
 		// create the repository and common resources
@@ -139,7 +203,7 @@ public abstract class Master
 		// load the project configuration file
 		try
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Reading build configuration from: " + configFilename);
+			logger.debug("Reading build configuration from: " + configFilename);
 
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
@@ -151,9 +215,8 @@ public abstract class Master
 		}
 		catch (Exception e)
 		{
-			throw new Exception(
-					"An error occured while reading the build configuration file '" + configFilename + 
-					"': " + e.getMessage());
+			throw new Exception("An error occured while reading the build configuration file '" + configFilename
+					+ "': " + e.getMessage());
 		}
 
 		// Set debug level
@@ -184,8 +247,8 @@ public abstract class Master
 					}
 					catch (ConfigurationException ce)
 					{
-						Debug.out(Debug.MODE_ERROR, INCRE.MODULE_NAME, 
-								"Configuration override error: " + ce.getMessage());
+						CPSLogger log = CPSLogger.getCPSLogger(INCRE.MODULE_NAME);
+						log.error("Configuration override error: " + ce.getMessage(), ce);
 					}
 				}
 			}
@@ -212,15 +275,14 @@ public abstract class Master
 						}
 						catch (ConfigurationException ce)
 						{
-							Debug.out(Debug.MODE_ERROR, entry.getKey(), 
-									"Configuration override error: " + ce.getMessage());
+							CPSLogger log = CPSLogger.getCPSLogger(entry.getKey());
+							log.error("Configuration override error: " + ce.getMessage(), ce);
 						}
 					}
 				}
 				else
 				{
-					Debug.out(Debug.MODE_ERROR, MODULE_NAME, 
-							"Configuration override error: no such module: " + entry.getKey());
+					logger.error("Configuration override error: no such module: " + entry.getKey());
 				}
 			}
 
@@ -232,52 +294,35 @@ public abstract class Master
 
 			// display total time elapsed
 			long total = System.currentTimeMillis() - beginTime;
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Total time: " + total + "ms");
+			logger.debug("Total time: " + total + "ms");
 
 			// display number of warnings
-			if (Debug.willLog(Debug.MODE_WARNING))
+			if ((logMetrics.numWarnings() > 0) || (logMetrics.numErrors() > 0) || (logMetrics.numFatals() > 0))
 			{
-				Debug.outWarnings();
+				// TODO: shouldn't print to stdout or anywhere else for that matter
+				System.out.println("Warnings: " + logMetrics.numWarnings() + "; Errors: " + logMetrics.numErrors());
 			}
 
-			if (Debug.numErrors() > 0)
+			if (logMetrics.numErrors() > 0)
 			{
-				Debug.outWarnings();
+				// Debug.outWarnings();
 				return EERRORS;
 			}
 		}
 		catch (ModuleException e)
 		{
-			String error = e.getMessage();
-			String filename = e.getErrorLocationFilename();
-			int lineNumber = e.getErrorLocationLineNumber();
+			CPSLogger mLogger = CPSLogger.getCPSLogger(e.getModule());
+			mLogger.error(e, e);
 
-			if (error == null || "null".equals(error))
-			{
-				error = e.toString();
-			}
-
-			if (filename == null || "".equals(filename))
-			{
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
-			}
-			else
-			{
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error, filename, lineNumber);
-			}
-
+			// TODO: shouldn't use stack trace
 			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + Debug.stackTrace(e));
 			return ECOMPILE;
 		}
 		catch (Exception e)
 		{
-			String error = e.getMessage();
-			if (error == null || "null".equals(error))
-			{
-				error = e.toString();
-			}
+			logger.error("Internal compiler error: " + e, e);
 
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Internal compiler error: " + error);
+//			 TODO: shouldn't use stack trace
 			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
 			return EFAIL;
 		}
@@ -288,6 +333,8 @@ public abstract class Master
 	{
 		if (args.length == 0)
 		{
+			System.err.println("No build configuration provided");
+			System.exit(EFAIL);
 			return;
 		}
 
@@ -318,11 +365,14 @@ public abstract class Master
 		catch (Exception e)
 		{
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 			System.exit(ECONFIG);
+			return;
 		}
 
-		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, Version.getTitle() + " " + Version.getVersionString());
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Compiled on " + Version.getCompileDate().toString());
+		logger.info(Version.getTitle() + " " + Version.getVersionString());
+		logger.debug("Compiled on " + Version.getCompileDate().toString());
+
 		int ret = master.run();
 		if (ret != 0)
 		{

@@ -17,8 +17,9 @@
 			</setting>
 		</settings>
 	</moduleinfo>
-	
+
 	<moduleinfo id="INCRESerializer" class="Composestar.Core.INCRE.INCRESerializer">
+		<description>Serializes the repository for incremental compilation.</description>
 		<incre>
 			<module enabled="true" incremental="false"
 				summary="Serializing repository for incremental compilation...">

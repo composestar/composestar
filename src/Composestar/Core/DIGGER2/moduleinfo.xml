@@ -2,6 +2,10 @@
 <modules>
 	<moduleinfo id="DIGGER" class="Composestar.Core.DIGGER2.DIGGER">
 		<name>Dispatch Graph Generator</name>
+		<description>
+			Connects the execution graphs of the concerns with eachother to create a fully connected graph of the
+			program. Also checks for recursive filter definitions.
+		</description>
 
 		<settings>
 			<setting id="mode" type="integer">

@@ -83,6 +83,8 @@ public class ModuleException extends Exception implements LocationProvider
 
 	public String toString()
 	{
+		return getMessage();
+		/*
 		if (module != null)
 		{
 			return module + " ERROR: " + getMessage();
@@ -91,5 +93,6 @@ public class ModuleException extends Exception implements LocationProvider
 		{
 			return "UNDEFINED-MODULE ERROR: " + getMessage();
 		}
+		*/
 	}
 }

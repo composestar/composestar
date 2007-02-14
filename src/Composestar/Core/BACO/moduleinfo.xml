@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
 	<moduleinfo id="BACO" class="Composestar.Core.BACO.BACO">
+		<description>Copies all files required for execution to the output directory. This includes the required runtime libraries and XML files produced by other modules like CONE.</description>
 		<incre>
 			<module enabled="true" incremental="false" summary="Copying libraries...">
 				<dependencies></dependencies>

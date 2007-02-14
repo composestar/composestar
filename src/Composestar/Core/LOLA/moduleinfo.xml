@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
 	<moduleinfo id="LOLA" class="Composestar.Core.LOLA.LOLA">
-		<description>LOLA evaluates the superimposition selector statements in order to return the program elements the filter modules should be imposed upon.</description>
-		
+		<description>
+			LOLA evaluates the superimposition selector statements in order to return the program elements the filter
+			modules should be imposed upon.
+		</description>
+
 		<incre>
 			<module enabled="true" incremental="false" summary="Evaluating predicate selectors...">
 				<dependencies></dependencies>
@@ -14,7 +17,7 @@
 						<field name="multiRes"></field>
 						<field name="singleRes"></field>
 					</type>
-				</comparisons>		
+				</comparisons>
 			</module>
 		</incre>
 	</moduleinfo>

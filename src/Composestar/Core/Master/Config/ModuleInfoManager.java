@@ -117,8 +117,7 @@ public class ModuleInfoManager
 				logger.error("Failed to load module info from XML: " + e.getMessage());
 			}
 		}
-		// TODO: enable when other moduleinfo.xml files have been created
-		// logger.warn("No module info available for " + forClass);
+		logger.debug("No module info available for " + forClass);
 		return null;
 	}
 
