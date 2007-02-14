@@ -109,6 +109,48 @@
 			<fileset file="${starlight.jar}"/>
 			<fileset file="${xmltypes.jar}"/>
 		</copy>
+		<install_core todir="${starlight.installdir}"/>
 	</target>
+	
+	
+	<macrodef name="install_core" description="Install the core to a given directory">
+		<attribute name="todir" description="Directory to copy the files to" />		
+		<sequential>
+			<!--
+			<fail message="The destination directory @{todir} does not exist.">
+				<condition>
+					<not>
+						<available file="@{todir}" />
+					</not>
+				</condition>                                                                                                                                  
+			</fail>
+			-->			
+			<mkdir dir="@{todir}" />
+			
+			<copy todir="@{todir}/binaries">
+			<fileset dir="${out.dist}"/>
+			<fileset file="${build.core}/Compiletime/binaries/antlr/antlr.jar"/>
+		</copy>
+			<copy file="${build.core}/Compiletime/binaries/log4j/log4j-1.2.14.jar" todir="@{todir}/binaries"/>
+
+			<copy todir="@{todir}/binaries/prolog">
+			<fileset dir="${build.core}/Compiletime/binaries/prolog">
+				<include name="prolog.jar"/>
+				<include name="lib.pro"/>
+				<include name="connector.pro"/>
+			</fileset>
+		</copy>
+
+			<copy todir="@{todir}/binaries/groove">
+			<fileset dir="${build.core}/Compiletime/binaries/groove">
+				<include name="groove-1_2_0.jar"/>
+				<include name="castor-0_9_5_2-xml.jar"/>
+				<include name="jgraph.jar"/>
+				<include name="xerces-2_6_0-xercesImpl.jar"/>
+				<include name="xerces-2_6_0-xml-apis.jar"/>
+			</fileset>
+		</copy>
+		</sequential>
+	</macrodef>
 	
 </project>

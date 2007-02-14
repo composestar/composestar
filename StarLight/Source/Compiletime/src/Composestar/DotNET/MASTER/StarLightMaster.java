@@ -39,14 +39,21 @@ import composestar.dotNET.tym.entities.KeyValueSetting;
 public class StarLightMaster extends Master
 {
 	private static final String MODULE_NAME = "MASTER";
+
 	private static final String VERSION = "0.2 beta";
+
 	private static final String AUTHOR = "University of Twente";
+
 	private static final String TITLE = "ComposeStar StarLight";
+
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	private static String configFileName;
+
 	private static String increConfig = "INCREconfig.xml";
+
 	private static ConfigurationContainerDocument configDocument;
+
 	private static ConfigurationContainer configContainer;
 
 	private long startTime;
@@ -168,7 +175,7 @@ public class StarLightMaster extends Master
 		ModuleInfo incre = ModuleInfoManager.get(INCRE.class);
 		incre.setSettingValue("enabled", false);
 		incre.setSettingValue("config", increConfig);
-		
+
 		logger.info("Master initialized.");
 	}
 
@@ -180,7 +187,7 @@ public class StarLightMaster extends Master
 		try
 		{
 			initialize();
-			
+
 			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, TITLE + " " + VERSION);
 
 			// Create new resources
@@ -230,12 +237,12 @@ public class StarLightMaster extends Master
 				moduleLogger.error(message, e);
 			}
 
-		//	moduleLogger.stackTrace(e);
+			// moduleLogger.stackTrace(e);
 			return ECOMPILE;
 		}
 		catch (Exception e)
 		{
-			logger.stackTrace(e);
+			// logger.stackTrace(e);
 			return EFAIL;
 		}
 
