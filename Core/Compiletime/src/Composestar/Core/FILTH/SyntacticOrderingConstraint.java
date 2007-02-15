@@ -1,32 +1,33 @@
 package Composestar.Core.FILTH;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class SyntacticOrderingConstraint
+public class SyntacticOrderingConstraint implements Serializable
 {
-	private ArrayList postconstraints;
+	private List postconstraints;
 
 	private String left;
 
-	public SyntacticOrderingConstraint(String left)
+	public SyntacticOrderingConstraint(String inLeft)
 	{
-		this.left = left;
-		this.postconstraints = new ArrayList();
+		left = inLeft;
+		postconstraints = new ArrayList();
 	}
 
 	public void addRightFilterModule(String fm)
 	{
-		this.postconstraints.add(fm);
+		postconstraints.add(fm);
 	}
 
 	public Iterator getRightFilterModules()
 	{
-		return this.postconstraints.iterator();
+		return postconstraints.iterator();
 	}
 
 	public String getLeft()
 	{
-		return this.left;
+		return left;
 	}
 
 	public String toString()
