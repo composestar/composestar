@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n1281"/>
+        <node id="n1282"/>
+        <node id="n1284"/>
+        <node id="n1285"/>
+        <node id="n1286"/>
+        <node id="n1283"/>
+        <edge from="n1283" to="n1284">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n1283" to="n1283">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n1281" to="n1281">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n1282" to="n1285">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n1282" to="n1282">
+            <attr name="label">
+                <string>NameMatchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n1283" to="n1282">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n1282" to="n1281">
+            <attr name="label">
+                <string>flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n1285" to="n1286">
+            <attr name="label">
+                <string>not:=</string>
+            </attr>
+        </edge>
+        <edge from="n1285" to="n1285">
+            <attr name="label">
+                <string>not:'*'</string>
+            </attr>
+        </edge>
+        <edge from="n1282" to="n1284">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n1284" to="n1284">
+            <attr name="label">
+                <string>not:'*'</string>
+            </attr>
+        </edge>
+        <edge from="n1283" to="n1286">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n1283" to="n1281">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

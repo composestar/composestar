@@ -1,0 +1,21 @@
+# Layout information for D:\composestar\composestarcore\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\FilterElementEnable.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n14777 924 734 18 18 
+e n14778 n14782 "rightOper" 618 650 389 193 568 569 11
+e n14778 n14779 "conditionOperator" 580 638 395 255 99 702 11
+e n14775 n14779 "new:flowTrue" 503 363 132 446 94 567 99 702 12
+n n14778 348 184 18 18 
+n n14779 93 694 18 18 
+n n14781 839 167 18 18 
+e n14778 n14775 "new:flowNext" 615 400 389 193 206 284 113 459 12
+n n14776 305 798 18 18 
+e n14780 n14778 "del:flowIn" 437 433 125 50 534 341 11
+e n14776 n14776 "new:Enable" 500 500 356 809 349 833 370 848 370 848 12
+e n14776 n14782 "new:flowIn" 624 491 356 807 473 694 568 569 12
+n n14782 534 560 18 18 
+n n14780 42 223 18 18 
+n n14775 51 450 18 18 
+e n14780 n14778 "new:flowNext" 487 708 82 232 216 129 389 193 12
+e n14778 n14777 "flowAccept" 605 603 389 193 964 743 11

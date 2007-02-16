@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="FIRE" class="Composestar.Core.FIRE2.preprocessing.Preprocessor">
+		<name>Filter Reasoning Engine</name>
+		<description>
+			FIRE predicts the result of an incoming messages considering a filter set. FIRE emulates each filter in the
+			filter set and determines possible mappings between the messages and actions. These combinations, with
+			internal states, are stored into the FIRE knowledge base. Providing a convenient interface, FIRE allows
+			other modules querying (and updating) the Reasoning Engine. Modules that use FIRE are CORE, SECRET and SIGN.
+		</description>
+		<incre>
+			<module enabled="true" incremental="false" summary="FIRE Preprocessing...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

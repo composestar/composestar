@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n1034"/>
+        <node id="n1035"/>
+        <edge from="n1035" to="n1035">
+            <attr name="label">
+                <string>MatchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n1034" to="n1034">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n1034" to="n1035">
+            <attr name="label">
+                <string>del:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n1034" to="n1035">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

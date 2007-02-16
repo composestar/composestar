@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n2109"/>
+        <node id="n2110"/>
+        <node id="n2108"/>
+        <edge from="n2110" to="n2110">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n2108" to="n2108">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n2110" to="n2108">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n2109" to="n2108">
+            <attr name="label">
+                <string>flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n2109" to="n2109">
+            <attr name="label">
+                <string>Filter</string>
+            </attr>
+        </edge>
+        <edge from="n2110" to="n2109">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

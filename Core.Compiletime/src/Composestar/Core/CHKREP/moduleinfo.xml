@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo class="Composestar.Core.CHKREP.Main" id="CHKREP">
+		<name>Check Repository</name>
+		<description>
+			CHKREP performs various checks on the repository in order to aid the developer to write better code or catch
+			certain runtime errors at compile time.
+		</description>
+		<incre>
+			<module enabled="true" incremental="false" summary="Checking repository...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

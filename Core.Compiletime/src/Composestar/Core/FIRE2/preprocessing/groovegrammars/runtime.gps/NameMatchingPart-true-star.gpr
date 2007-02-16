@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n2289"/>
+        <node id="n2291"/>
+        <node id="n2290"/>
+        <node id="n2288"/>
+        <node id="n2287"/>
+        <edge from="n2290" to="n2289">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n2290" to="n2291">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n2287" to="n2287">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n2291" to="n2291">
+            <attr name="label">
+                <string>not:'*'</string>
+            </attr>
+        </edge>
+        <edge from="n2288" to="n2288">
+            <attr name="label">
+                <string>'*'</string>
+            </attr>
+        </edge>
+        <edge from="n2289" to="n2288">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n2290" to="n2287">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n2290" to="n2290">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n2289" to="n2291">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n2289" to="n2289">
+            <attr name="label">
+                <string>NameMatchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n2289" to="n2287">
+            <attr name="label">
+                <string>flowTrue</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

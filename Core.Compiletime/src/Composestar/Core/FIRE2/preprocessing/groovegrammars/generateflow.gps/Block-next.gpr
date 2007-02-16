@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n263"/>
+        <node id="n260"/>
+        <node id="n262"/>
+        <node id="n264"/>
+        <node id="n261"/>
+        <edge from="n264" to="n262">
+            <attr name="label">
+                <string>not:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n262" to="n260">
+            <attr name="label">
+                <string>orderedNext</string>
+            </attr>
+        </edge>
+        <edge from="n260" to="n260">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n263" to="n260">
+            <attr name="label">
+                <string>new:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n260" to="n261">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n263" to="n262">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n264" to="n264">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n262" to="n262">
+            <attr name="label">
+                <string>Block</string>
+            </attr>
+        </edge>
+        <edge from="n263" to="n263">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n261" to="n261">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n262" to="n261">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

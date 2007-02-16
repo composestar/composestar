@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n8512"/>
+        <edge from="n8512" to="n8512">
+            <attr name="label">
+                <string>FlowTmp</string>
+            </attr>
+        </edge>
+        <edge from="n8512" to="n8512">
+            <attr name="label">
+                <string>not:FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n8512" to="n8512">
+            <attr name="label">
+                <string>new:FlowElement</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

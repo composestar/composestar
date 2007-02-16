@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n661"/>
+        <node id="n665"/>
+        <node id="n666"/>
+        <node id="n663"/>
+        <node id="n664"/>
+        <node id="n662"/>
+        <edge from="n661" to="n661">
+            <attr name="label">
+                <string>NameMatchingPart|SignatureMatchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n665" to="n665">
+            <attr name="label">
+                <string>'*'</string>
+            </attr>
+        </edge>
+        <edge from="n664" to="n663">
+            <attr name="label">
+                <string>pc</string>
+            </attr>
+        </edge>
+        <edge from="n662" to="n662">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n662" to="n662">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n664" to="n664">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n665" to="n665">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n664" to="n666">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n663" to="n663">
+            <attr name="label">
+                <string>FilterModule</string>
+            </attr>
+        </edge>
+        <edge from="n664" to="n664">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n666" to="n666">
+            <attr name="label">
+                <string>not:'*'</string>
+            </attr>
+        </edge>
+        <edge from="n664" to="n665">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n661" to="n666">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

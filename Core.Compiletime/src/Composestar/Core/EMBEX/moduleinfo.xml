@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="EMBEX" class="Composestar.Core.EMBEX.EMBEX">
+		<name>Embedded sourcecode extractor</name>
+		<description>
+			Extracts the embedded sources from the concern sources and saves them to the disk for further use.
+		</description>
+
+		<incre>
+			<module enabled="true" incremental="false" summary="Extracting embedded sources...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

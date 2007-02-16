@@ -1,0 +1,10 @@
+# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\generateflow.gps\VoidCompOper.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+e n2077 n2076 "del:flowIn" 447 475 724 66 455 398 11
+n n2075 105 154 18 18 
+e n2078 n2075 "new:flowFalse" 662 429 737 533 387 425 145 163 11
+n n2077 684 57 18 18 
+n n2078 697 524 18 18 
+n n2076 525 393 18 18 

@@ -1,0 +1,11 @@
+# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\runtime.gps\NameMatchingPart-true-star.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n2289 51 261 18 18 
+e n2291 n2291 "not:'*'" 500 500 145 64 122 22 76 23 76 23 12
+e n2288 n2288 "'*'" 500 500 403 208 440 242 488 227 488 227 12
+n n2291 135 57 18 18 
+n n2290 424 58 18 18 
+n n2288 392 199 18 18 
+n n2287 583 377 18 18 

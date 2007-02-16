@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n928"/>
+        <node id="n925"/>
+        <node id="n930"/>
+        <node id="n926"/>
+        <node id="n931"/>
+        <node id="n927"/>
+        <node id="n929"/>
+        <edge from="n925" to="n925">
+            <attr name="label">
+                <string>MatchingPattern</string>
+            </attr>
+        </edge>
+        <edge from="n929" to="n929">
+            <attr name="label">
+                <string>SubstitutionPart</string>
+            </attr>
+        </edge>
+        <edge from="n927" to="n927">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n925" to="n928">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n925" to="n929">
+            <attr name="label">
+                <string>substitutionPart</string>
+            </attr>
+        </edge>
+        <edge from="n926" to="n928">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n925" to="n925">
+            <attr name="label">
+                <string>del:Enable</string>
+            </attr>
+        </edge>
+        <edge from="n931" to="n931">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n926" to="n929">
+            <attr name="label">
+                <string>new:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n930" to="n930">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n930" to="n925">
+            <attr name="label">
+                <string>del:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n925" to="n927">
+            <attr name="label">
+                <string>orderNext</string>
+            </attr>
+        </edge>
+        <edge from="n928" to="n928">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n926" to="n926">
+            <attr name="label">
+                <string>MatchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n925" to="n931">
+            <attr name="label">
+                <string>flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n929" to="n931">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n925" to="n926">
+            <attr name="label">
+                <string>matchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n930" to="n926">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n927" to="n927">
+            <attr name="label">
+                <string>MatchingPattern</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

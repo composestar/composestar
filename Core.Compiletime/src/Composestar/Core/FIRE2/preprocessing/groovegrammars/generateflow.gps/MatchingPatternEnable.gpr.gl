@@ -1,0 +1,16 @@
+# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\generateflow.gps\MatchingPatternEnable.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n459 66 486 18 18 
+n n465 310 253 18 18 
+e n465 n465 "del:Enable" 500 500 356 259 371 201 329 157 329 157 12
+n n460 151 181 18 18 
+n n464 628 611 18 18 
+e n460 n459 "new:flowNext" 308 271 191 190 160 286 108 495 12
+n n463 265 631 18 18 
+e n461 n461 "new:Enable" 500 500 725 195 752 158 734 118 734 118 12
+n n466 859 288 18 18 
+n n461 678 183 18 18 
+e n459 n466 "flowFalse" 587 830 108 495 447 359 899 313 12
+n n462 479 42 18 18 

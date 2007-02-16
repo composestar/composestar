@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n449"/>
+        <node id="n452"/>
+        <node id="n446"/>
+        <node id="n448"/>
+        <node id="n451"/>
+        <node id="n450"/>
+        <node id="n447"/>
+        <edge from="n448" to="n451">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n447" to="n447">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n448" to="n447">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n448" to="n452">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n446" to="n450">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n446" to="n449">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n448" to="n451">
+            <attr name="label">
+                <string>new:substitutionTarget</string>
+            </attr>
+        </edge>
+        <edge from="n448" to="n452">
+            <attr name="label">
+                <string>new:substitutionSelector</string>
+            </attr>
+        </edge>
+        <edge from="n449" to="n449">
+            <attr name="label">
+                <string>'*'</string>
+            </attr>
+        </edge>
+        <edge from="n448" to="n446">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n446" to="n446">
+            <attr name="label">
+                <string>SubstitutionPart</string>
+            </attr>
+        </edge>
+        <edge from="n450" to="n450">
+            <attr name="label">
+                <string>'*'</string>
+            </attr>
+        </edge>
+        <edge from="n448" to="n448">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n446" to="n447">
+            <attr name="label">
+                <string>flowNext</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

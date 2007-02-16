@@ -1,0 +1,6 @@
+# Layout information for D:\composestar\composestarcore\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\FlowTmp-flowNext2.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n12713 502 167 18 18 
+n n12714 330 161 18 18 

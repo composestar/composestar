@@ -1,0 +1,146 @@
+<modules>
+	<moduleinfo id="SECRET" class="Composestar.Core.CKRET.CKRET">
+		<name>Semantic Reasoning Tool</name>
+		<description>
+			If multiple filtermodules are imposed on the same joinpoint,
+			certain conflicts may be introduced. The concern containing
+			these filtermodules are often developed at different times
+			and locations by different developers. These filtermodules
+			may have unintended side effects which only effect other
+			filtermodules. If these aspects are combined, semantic
+			conflicts becomes apparent. SECRET aims to reason about
+			these kind of semantic conflicts. It does a static analysis
+			on the semantics of the filters and detects possible
+			conflicts. The used model is, through the use of an XML
+			input specification, completely user adaptable. In input
+			specification, the accept- and reject-actions of filtertypes
+			are specified. Every action is specified by a list of named
+			operations on abstract resources. Also, patterns can be
+			specified that specify the allowed sequence of operations on
+			a resource. When SECRET analyzes a concern, it will fetch
+			the selected filtermodule-order and generate all possible
+			executions of the filterset. Every execution is a unique
+			combination of accept- and rejectactions of the filters in
+			the filterset. The operations of these actions are taken
+			from the input specification and performed on the resources.
+			Then the specified patterns are matches against the
+			sequences of operations performed on the resources.
+		</description>
+		
+		<settings>
+			<setting id="mode" type="integer">
+				<default>0</default>
+			</setting>
+		</settings>
+
+		<incre>
+			<module
+				input="Composestar.Core.CpsProgramRepository.Concern" enabled="true"
+				incremental="true"
+				summary="Checking for semantic conflicts among aspects...">
+				<dependencies>
+					<dependency type="FILE" name="CKRETConfigFile"
+						isAdded="false">
+						<path>
+							<node type="CONFIG"
+								nodevalue="CKRETConfigFile">
+							</node>
+						</path>
+					</dependency>
+					<dependency type="OBJECT" name="SECRETMode"
+						store="true" lookup="true">
+						<path>
+							<node type="CONFIG"
+								nodevalue="SECRETMode">
+							</node>
+						</path>
+					</dependency>
+					<dependency type="OBJECT" name="semantics"
+						store="true" lookup="true">
+						<path>
+							<node type="METHOD"
+								nodevalue="Composestar.Core.CKRET.CKRET.getSemanticAnnotations">
+							</node>
+						</path>
+					</dependency>
+					<dependency type="OBJECT"
+						name="filtermoduleorders">
+						<path>
+							<node type="DYNAMIC"
+								nodevalue="FilterModuleOrders">
+							</node>
+						</path>
+					</dependency>
+				</dependencies>
+				<comparisons>
+					<type
+						fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+						<field name="name"></field>
+						<field name="ref"></field>
+					</type>
+					<type
+						fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
+						<field name="inputFilters"></field>
+					</type>
+					<type
+						fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
+						<field name="filterElements"></field>
+					</type>
+					<type
+						fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
+						<field name="conditionPart"></field>
+						<field name="matchingPatterns"></field>
+					</type>
+					<type
+						fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral">
+						<path>
+							<method name="getCondition"></method>
+							<method name="getRef"></method>
+							<method name="getQualifiedName"></method>
+						</path>
+					</type>
+					<type
+						fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
+						<field name="left"></field>
+						<field name="right"></field>
+					</type>
+					<type
+						fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
+						<path>
+							<method name="getTarget"></method>
+							<method name="getName"></method>
+						</path>
+						<path>
+							<method name="getSelector"></method>
+							<method name="getName"></method>
+						</path>
+					</type>
+					<type
+						fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
+						<path>
+							<method name="getTarget"></method>
+							<method name="getName"></method>
+						</path>
+						<path>
+							<method name="getSelector"></method>
+							<method name="getName"></method>
+						</path>
+					</type>
+					<type
+						fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector">
+						<field name="typeList"></field>
+					</type>
+					<type
+						fullname="Composestar.DotNET.LAMA.DotNETAttribute">
+						<field name="value"></field>
+						<field name="target"></field>
+					</type>
+					<type
+						fullname="Composestar.DotNET.LAMA.DotNETMethodInfo">
+						<field name="Name"></field>
+					</type>
+				</comparisons>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

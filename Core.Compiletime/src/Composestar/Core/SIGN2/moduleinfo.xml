@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="SIGN" class="Composestar.Core.SIGN2.Sign">
+		<name>Signature Generation</name>
+		<description>
+			Composition filters may alter the signature of a concerns. SIGN computes the full signature for all concerns
+			using FIRE an detects if there are filters leading to ambiguous signatures.
+		</description>
+		<incre>
+			<module enabled="true" incremental="false" summary="Generating signatures...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

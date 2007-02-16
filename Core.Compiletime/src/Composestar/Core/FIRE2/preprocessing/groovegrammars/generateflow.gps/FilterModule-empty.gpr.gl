@@ -1,0 +1,11 @@
+# Layout information for D:\composestar\composestarcore\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\FilterModule-empty.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+e n1432 n1433 "orderFirst" 421 806 289 102 461 138 11
+n n1432 251 93 18 18 
+e n1433 n1433 "not:" 500 500 469 112 482 75 456 47 456 47 12
+n n1431 75 145 18 18 
+n n1433 449 102 18 18 
+n n1434 275 230 18 18 
+n n1435 68 92 18 18 

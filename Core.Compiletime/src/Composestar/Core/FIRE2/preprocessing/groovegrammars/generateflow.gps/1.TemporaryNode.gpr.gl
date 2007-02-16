@@ -1,0 +1,7 @@
+# Layout information for D:\composestar\composestarcore\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\TemporaryNode.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+e n8512 n8512 "not:FlowElement" 500 500 141 177 240 98 172 92 141 177 12
+n n8512 112 168 18 18 
+e n8512 n8512 "new:FlowElement" 500 500 141 177 238 258 176 253 141 177 12

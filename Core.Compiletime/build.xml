@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/Core/Compiletime" default="build" xmlns:cs="antlib:Composestar">
+
+	<property name="build.core" location=".."/>
+	<import file="${build.core}/common.xml"/>
+	
+	<echo>Processing: ${ant.project.name} ...</echo>
+	<description>The Compose* Core Compiletime. This is the core of the Compose* compiler.</description>
+
+	<target name="clean" depends="init" description="Clean compile results">
+
+		<!-- Java build files -->
+		<delete dir="${out.build}"/>
+		<delete dir="${out.dist}"/>
+		<delete>
+			<fileset dir="src">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="test">
+				<include name="**/*.class"/>
+			</fileset>
+		</delete>
+
+		<!-- COPPER parser -->
+		<delete>
+			<fileset dir="src/Composestar/Core/COPPER">
+				<include name="CpsLexer.java"/>
+				<include name="CpsParser.java"/>
+				<include name="CpsTokenTypes.*"/>
+				<include name="CpsTreeWalker.java"/>
+				<include name="CpsTreeWalkerTokenTypes.*"/>
+				<include name="*.smap"/>
+			</fileset>
+			<fileset dir="src/Composestar/Utils">
+				<include name="Version.java" />
+			</fileset>
+		</delete>
+
+		<delete>
+			<fileset dir="test">
+				<include name="TEST-*.xml" />
+				<include name="TESTS-*.xml" />
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="local_init" depends="init">
+		<mkdir dir="${out.build}"/>
+		<mkdir dir="${out.dist}"/>
+	</target>
+	
+	<target name="java-versionclass">
+		<copy file="src/Composestar/Utils/Version.j" tofile="src/Composestar/Utils/Version.java" overwrite="true"/>
+		<tstamp>
+		    <format property="BUILD_DATE" pattern="EEE, d MMM yyyy HH:mm:ss Z" locale="en"/>
+  		</tstamp>		
+		<echo>Setting Build date to: ${BUILD_DATE}</echo>   
+		<replace file="src/Composestar/Utils/Version.java"
+			token="@BUILD_DATE@"
+			value="${BUILD_DATE}"/>
+	</target>
+
+	<target name="build" depends="java-versionclass,local_init,antlr,compile,jar" description="Compile the code and create the jar file"/>
+	
+	<target name="antlr" depends="local_init">
+		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java"/>
+	</target>	
+
+	<target name="compile" depends="local_init,antlr">
+		<propertyfile file="${out.build}/version.properties">
+			<entry key="version" value="${version.core}.${version.build}" />
+			<entry key="version.build" value="${version.build}" />
+			<entry key="version.compiledate" type="date" value="now" pattern="EEE, d MMM yyyy HH:mm:ss Z" />
+		</propertyfile>
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+			<exclude name="**/AssemblyInfo.java"/>
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<copy todir="${out.build}"><!-- copy groove grammars -->
+			<fileset dir="src">
+				<include name="**/*.gpr"/>
+				<include name="**/*.properties"/>
+				<include name="**/moduleinfo.xml"/>
+				<include name="Composestar/Core/DIGGER/Xslt/*.xslt"/>
+			</fileset>
+		</copy>
+		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF"/>
+	</target>
+	
+	<target name="install" depends="build,install_system,install_eclipse" description="Install the core files" />
+	
+	<macrodef name="install_core" description="Install the core to a given directory">
+		<attribute name="todir" description="Directory to copy the files to" />		
+		<sequential>
+			<!--
+			<fail message="The destination directory @{todir} does not exist.">
+				<condition>
+					<not>
+						<available file="@{todir}" />
+					</not>
+				</condition>
+			</fail>
+			-->			
+			<mkdir dir="@{todir}" />
+			
+			<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="@{todir}"/>
+			<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="@{todir}"/>
+			<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="@{todir}"/>
+
+			<copy todir="@{todir}/binaries">
+			<fileset dir="${out.dist}"/>
+			<fileset file="binaries/antlr/antlr.jar"/>
+		</copy>
+			<copy file="binaries/log4j/log4j-1.2.14.jar" todir="@{todir}/binaries"/>
+
+			<copy todir="@{todir}/binaries/prolog">
+			<fileset dir="binaries/prolog">
+				<include name="prolog.jar"/>
+				<include name="lib.pro"/>
+				<include name="connector.pro"/>
+			</fileset>
+		</copy>
+
+			<copy todir="@{todir}/binaries/groove">
+			<fileset dir="binaries/groove">
+				<include name="groove-1_2_0.jar"/>
+				<include name="castor-0_9_5_2-xml.jar"/>
+				<include name="jgraph.jar"/>
+				<include name="xerces-2_6_0-xercesImpl.jar"/>
+				<include name="xerces-2_6_0-xml-apis.jar"/>
+			</fileset>
+		</copy>
+		</sequential>
+	</macrodef>
+	
+	<target name="install_system" depends="build" if="available.dotnet">
+		<!-- install the core files for the system, currently this is only used for dotnet -->
+		<install_core todir="${composestar.installdir}" />
+	</target>
+	
+	<target name="install_eclipse" depends="build" if="available.eclipse">
+		<!-- copy files to eclipse -->
+		<!-- 
+			this construction is intentional to create a fail safe method to 
+			install the eclipse files even when eclipse is not available 
+		-->
+		<antcall target="-install_eclipse" inheritRefs="true" />
+	</target>	
+	
+	<target name="-install_eclipse" depends="init_eclipse">
+		<install_core todir="${eclipse.pluginsdir}/ComposestarCore" />
+	</target>
+	
+	
+	<target name="test" depends="unittest,validate_moduleinfo" description="Run tests" />
+
+	<target name="compile_tests" depends="local_init,compile">
+		<path id="lib.test">
+			<path refid="lib.core"/>
+			<pathelement path="${out.build}"/>
+			<pathelement location="${build.core}\Compiletime\binaries\junit\junit.jar"/>
+		</path>
+		<javac srcdir="test" destdir="test" classpathref="lib.test" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+			<include name="**/*.java"/>
+			<exclude name="**/AssemblyInfo.java"/>
+		</javac>
+	</target>
+
+	<target name="unittest" depends="compile_tests" description="Runs JUnit tests">
+		<junit printsummary="on" haltonfailure="on">
+			<classpath>
+				<path refid="lib.test"/>
+				<pathelement path="test"/>
+			</classpath>
+			<formatter type="xml" />
+			<batchtest todir="test">
+				<fileset dir="test">
+					<include name="**/*Test.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+		<junitreport todir="test">
+			<fileset dir="test">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="noframes" todir="test" />
+		</junitreport>
+	</target>
+	
+</project>

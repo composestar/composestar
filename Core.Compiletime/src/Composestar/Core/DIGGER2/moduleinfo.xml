@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="DIGGER" class="Composestar.Core.DIGGER2.DIGGER">
+		<name>Dispatch Graph Generator</name>
+		<description>
+			Connects the execution graphs of the concerns with eachother to create a fully connected graph of the
+			program. Also checks for recursive filter definitions.
+		</description>
+
+		<settings>
+			<setting id="mode" type="integer">
+				<name>Mode</name>
+				<default>1</default>
+			</setting>
+			<setting id="resolve" type="boolean">
+				<name>Resolve graph</name>
+				<default>true</default>
+			</setting>
+			<setting id="recursionCheck" type="integer">
+				<name>Depth of recursion check</name>
+				<default>5</default>
+			</setting>
+			<setting id="exportXml" type="boolean">
+				<name>Export to XML file</name>
+				<default>true</default>
+			</setting>
+		</settings>
+
+		<incre>
+			<module enabled="true" incremental="false" summary="Generating dispatch graph...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>

@@ -1,0 +1,13 @@
+# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\runtime.gps\SubstitutionPart-value-value.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+e n2065 n2066 "new:substitutionTarget" 640 117 404 112 138 72 145 267 13
+e n2066 n2066 "not:'*'" 500 500 145 267 127 301 151 336 145 267 12
+e n2063 n2063 "not:'*'" 500 500 262 271 244 304 267 336 267 336 12
+e n2065 n2063 "new:substitutionSelector" 151 800 404 112 620 284 258 268 13
+n n2066 136 258 18 18 
+n n2064 161 157 18 18 
+n n2063 249 259 18 18 
+n n2067 383 225 18 18 
+n n2065 382 103 18 18 

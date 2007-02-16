@@ -1,0 +1,21 @@
+# Layout information for C:\files\work\ComposeGraph\runtime.gps\start-methodcall.gst
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n223 90 384 18 18 
+e n230 n228 "statement" 195 493 413 145 442 255 390 386 13
+e n228 n230 "flowNext" 852 602 390 386 358 281 366 232 413 145 13
+n n225 547 36 18 18 
+n n233 202 42 18 18 
+n n227 670 35 18 18 
+n n231 223 258 18 18 
+n n222 92 128 18 18 
+n n229 878 377 18 18 
+e n226 n226 "flowNext" 108 538 701 148 758 244 701 259 701 148 12
+e n228 n227 "referredSig" 500 500 390 386 515 301 568 133 701 44 13
+n n228 350 369 18 18 
+n n232 383 42 18 18 
+n n224 881 129 18 18 
+n n230 346 120 18 18 
+n n226 632 131 18 18 
+e n230 n228 "flowNext" 195 493 413 145 442 255 390 386 13

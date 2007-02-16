@@ -1,0 +1,6 @@
+<superimposition-contraints>
+	<constraint type="pre_soft">
+		<left>testModule1</left>
+		<right>testModule2</right>
+	</constraint>
+</superimposition-contraints>

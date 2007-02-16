@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n674"/>
+        <node id="n675"/>
+        <node id="n673"/>
+        <edge from="n675" to="n673">
+            <attr name="label">
+                <string>flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n675" to="n675">
+            <attr name="label">
+                <string>not:True</string>
+            </attr>
+        </edge>
+        <edge from="n674" to="n673">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n674" to="n675">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n673" to="n673">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n675" to="n675">
+            <attr name="label">
+                <string>ConditionExpression</string>
+            </attr>
+        </edge>
+        <edge from="n674" to="n674">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>
