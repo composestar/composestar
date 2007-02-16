@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="LOLA" class="Composestar.DotNET.LOLA.DotNETLOLA" extends="Composestar.Core.LOLA.LOLA"></moduleinfo>
+</modules>

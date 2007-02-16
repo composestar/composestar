@@ -1,0 +1,172 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{503DC896-C3AA-4AB1-B935-D72CE2072593}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>WeaveLibrary</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>
+    </RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInspection\AssemblyInspector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExitCodes\IlWeaverExitCodes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExitCodes\PeWeaverExitCodes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IlStructures\ClassBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IlStructures\ExternalAssemblyBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IlStructures\IlOpcode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IlStructures\IlStructure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IlStructures\MethodBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IlStructures\NamespaceBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IlWeaving\Weaver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IO\IlFileReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IO\IlFileWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\ApplicationInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\ArgumentInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\AssemblyInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\AttributeInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\AttributeModificationInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\ClassInstantiation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\ClassInterceptionInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\FieldInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\MethodInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\ReplacementInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\ReverseReplacementInformationComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeaveSpecifications\WeaveSpecifications.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

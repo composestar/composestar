@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="COLLECTOR" class="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner">
+		<name>Type Collector</name>
+		<description>
+			Collects the type information produced by the harvester and stores the information in the repository.
+		</description>
+		<incre>
+			<module enabled="true" incremental="false" summary="Collecting type information...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+
+	<moduleinfo id="AttributeCollector" class="Composestar.DotNET.TYM.TypeCollector.AttributeCollector">
+		<name>Attribute Collector</name>
+		<description>
+			Reads the attribute information stored in the attributes.xml file and stores it in the repository.
+		</description>
+		<incre>
+			<module enabled="true" incremental="false" summary="Collecting attributes...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
+</modules>
