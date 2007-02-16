@@ -37,6 +37,8 @@ import Composestar.Core.Master.Config.ConfigurationException;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
+import Composestar.Core.RepositoryImplementation.DataMap;
+import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Version;
@@ -89,13 +91,22 @@ public abstract class Master
 	{
 		settingsOverride = new HashMap<String, Map<String, String>>();
 		loggerSetup();
+		initEvironment();
 	}
 
 	
 	public Master(String[] args)
 	{
-		loggerSetup();
+		this();
 		processCmdArgs(args);
+	}
+	
+	/**
+	 * Called to initialize certain evironment settings
+	 */
+	protected void initEvironment()
+	{
+		DataMap.setDataMapClass(DataMapImpl.class);
 	}
 
 	/**

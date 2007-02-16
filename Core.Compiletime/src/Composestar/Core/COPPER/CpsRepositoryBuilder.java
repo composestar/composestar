@@ -72,6 +72,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImp
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClass;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClassAndSubClasses;
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.FILTH.FILTH;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -90,19 +91,22 @@ public class CpsRepositoryBuilder
 	private Splitter splitter;
 
 	private String filename; // Filename of file currently being parsed, for
-								// reference in case of parsing errors.
+
+	// reference in case of parsing errors.
 
 	private String embeddedCode;
 
 	private String namespace = null;
 
 	private boolean parsingInput = true; // whether we're parsing an input-
-											// or outputfilter (needed because
-											// of generalfilter)
+
+	// or outputfilter (needed because
+	// of generalfilter)
 
 	private boolean workingOnMatching = true; // whether we're busy creating
-												// the matching or substitution
-												// part in a messagepatternset
+
+	// the matching or substitution
+	// part in a messagepatternset
 
 	private AnnotationBinding annotBinding;
 
@@ -686,6 +690,13 @@ public class CpsRepositoryBuilder
 	public void addFilterType(String type, int lineNumber)
 	{
 		FilterType ft = FilterType.getFilterType(type);
+
+		if ((ft == null) && LegacyFilterTypes.useLegacyFilterTypes)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "COPPER", "Creating legacy custom filter with name: " + type);
+			ft = LegacyFilterTypes.createCustomFilterType(type);
+		}
+
 		if (ft == null)
 		{
 			Debug.out(Debug.MODE_ERROR, "COPPER", "Undefined FilterType '" + type + "'", filename, lineNumber);

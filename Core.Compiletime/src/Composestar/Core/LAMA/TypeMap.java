@@ -34,7 +34,7 @@ public class TypeMap implements SerializableRepositoryEntity
 	 */
 	public TypeMap()
 	{
-		Types = new DataMap();
+		Types = DataMap.newDataMapInstance();
 	}
 
 	/**

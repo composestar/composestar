@@ -2,6 +2,7 @@ package Composestar.Core.SANE;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * Contains the superimposition of one filter module. This consists of the
@@ -9,7 +10,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleR
  * 
  * @author Arjan
  */
-public class FilterModuleSuperImposition
+public class FilterModuleSuperImposition extends RepositoryEntity
 {
 	/**
 	 * The filter module in the superimposition
@@ -21,6 +22,9 @@ public class FilterModuleSuperImposition
 	 * <code>null</code> if the filter module is superimposed unconditionally.
 	 */
 	private Condition condition;
+
+	public FilterModuleSuperImposition()
+	{}
 
 	/**
 	 * Creates an unconditional filter module superimposition.

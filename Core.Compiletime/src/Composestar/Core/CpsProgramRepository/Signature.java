@@ -61,8 +61,8 @@ public class Signature implements SerializableRepositoryEntity
 	 */
 	public void empty()
 	{
-		methodByKey = new DataMap();
-		methodByName = new DataMap();
+		methodByKey = DataMap.newDataMapInstance();
+		methodByName = DataMap.newDataMapInstance();
 	}
 
 	/**

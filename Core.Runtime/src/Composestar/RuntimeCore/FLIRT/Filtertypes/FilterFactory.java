@@ -1,6 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
+import Composestar.Core.CpsProgramRepository.Legacy.FilterTypeNames;
 
 /**
  * FilterFactory is implemented as an abstract factory. It used to be a static
@@ -29,35 +30,35 @@ public abstract class FilterFactory
 	 */
 	public FilterTypeRuntime getFilterTypeFor(FilterType filterType)
 	{
-		if (filterType.getType().equals(FilterType.DISPATCH))
+		if (filterType.getType().equals(FilterTypeNames.DISPATCH))
 		{
 			return (new Dispatch());
 		}
-		else if (filterType.getType().equals(FilterType.WAIT))
+		else if (filterType.getType().equals(FilterTypeNames.WAIT))
 		{
 			return (new Wait());
 		}
-		else if (filterType.getType().equals(FilterType.ERROR))
+		else if (filterType.getType().equals(FilterTypeNames.ERROR))
 		{
 			return (new ErrorFilter());
 		}
-		else if (filterType.getType().equals(FilterType.META))
+		else if (filterType.getType().equals(FilterTypeNames.META))
 		{
 			return (new Meta());
 		}
-		else if (filterType.getType().equals(FilterType.SEND))
+		else if (filterType.getType().equals(FilterTypeNames.SEND))
 		{
 			return (new Send());
 		}
-		else if (filterType.getType().equals(FilterType.PREPEND))
+		else if (filterType.getType().equals(FilterTypeNames.PREPEND))
 		{
 			return (new Prepend());
 		}
-		else if (filterType.getType().equals(FilterType.APPEND))
+		else if (filterType.getType().equals(FilterTypeNames.APPEND))
 		{
 			return (new Append());
 		}
-		else if (filterType.getType().equals(FilterType.CUSTOM))
+		else if (filterType.getType().equals(FilterTypeNames.CUSTOM))
 		{
 			return getCustomFilterTypeFor(filterType);
 		}

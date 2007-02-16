@@ -22,6 +22,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
@@ -48,6 +49,11 @@ public class COPPER implements CTCommonModule
 	{
 		INCRE incre = INCRE.instance();
 		Configuration config = Configuration.instance();
+		
+		if (LegacyFilterTypes.useLegacyFilterTypes)
+		{
+			LegacyFilterTypes.addLegacyFilterTypes();
+		}
 
 		for (Object o : config.getProjects().getConcernSources())
 		{

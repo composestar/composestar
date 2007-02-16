@@ -57,7 +57,7 @@ public class DataStore implements Serializable, Cloneable
 			logger = SafeLogger.getILogger("DataStore");
 			logger.info("Creating Datastore...");
 		}
-		map = new DataMap();
+		map = DataMap.newDataMapInstance();
 	}
 
 	/**

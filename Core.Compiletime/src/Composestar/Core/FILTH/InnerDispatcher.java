@@ -66,7 +66,8 @@ public class InnerDispatcher
 
 		// add the filter to the filtermodule
 		fm.addInputFilter(createInnerDispatchFilter(cc, fm, "CpsDefaultInnerInputDispatchFilter"));
-		fm.addOutputFilter(createInnerDispatchFilter(cc, fm, "CpsDefaultInnerOutputDispatchFilter"));
+		// TODO: it should be a "send" filter, but not present for the runtime
+		//fm.addOutputFilter(createInnerDispatchFilter(cc, fm, "CpsDefaultInnerOutputDispatchFilter"));
 
 		// add concern and filtermodule to the datastore
 		DataStore.instance().addObject(cc);

@@ -15,49 +15,41 @@ import java.util.Set;
  * @author Tom Staijen
  * @version 0.9.0
  */
-public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
+public abstract class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 {
 	private static final long serialVersionUID = -6486304623601718657L;
 
-	// public Vector m_keys;
-	// public Vector m_values;
-	public HashMap map;
-
-	public DataMap()
+	protected static Class dataMapClass;
+	
+	public static boolean setDataMapClass(Class newClass)
 	{
-		// m_keys = new Vector();
-		// m_values = new Vector();
-		map = new HashMap();
-	}
-
-	public DataMap(DataMap dataMap)
-	{
-		// m_keys = new Vector(map.m_keys.size());
-		// m_values = new Vector(map.m_values.size());
-		map = new HashMap(dataMap.map.size());
-
-		Iterator keyIterator = dataMap.keySet().iterator();
-		while (keyIterator.hasNext())
+		if (DataMap.class.isAssignableFrom(newClass))
 		{
-			String key = (String) keyIterator.next();
-			map.put(key, dataMap.map.get(key));
+			dataMapClass = newClass;
+			return true;
 		}
+		return false;
 	}
 
-	public void clear()
+	public static DataMap newDataMapInstance()
 	{
-		map = new HashMap();
+		DataMap newMap;
+		try
+		{
+			newMap = (DataMap) dataMapClass.newInstance();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Unable to create DataMap of class " + dataMapClass);
+		}
+		return newMap;
 	}
 
-	public boolean containsKey(Object key)
-	{
-		return map.containsKey(key);
-	}
+	public abstract void clear();
 
-	public boolean containsValue(Object value)
-	{
-		return map.containsValue(value);
-	}
+	public abstract boolean containsKey(Object key);
+
+	public abstract boolean containsValue(Object value);
 
 	public Set entrySet()
 	{
@@ -69,106 +61,28 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 		throw new UnsupportedOperationException();
 	}
 
-	public Object get(Object key)
-	{
-		return map.get(key);
-	}
+	public abstract Object get(Object key);
 
-	public int hashCode()
-	{
-		return map.hashCode();
-	}
+	public abstract boolean isEmpty();
 
-	public boolean isEmpty()
-	{
-		return map.isEmpty();
-	}
+	public abstract Set keySet();
 
-	public Set keySet()
-	{
-		return map.keySet();
-	}
+	public abstract Object put(Object key, Object value);
 
-	public Object put(Object key, Object value)
-	{
-		return map.put(key, value);
-	}
+	public abstract void putAll(Map map);
 
-	public void putAll(Map map)
-	{
-		this.map.putAll(map);
-	}
+	public abstract Object remove(Object key);
 
-	public Object remove(Object key)
-	{
-		return map.remove(key);
-	}
+	public abstract int size();
 
-	public int size()
-	{
-		return map.size();
-	}
+	public abstract Collection values();
 
-	public Collection values()
-	{
-		return map.values();
-	}
+	public abstract void excludeUnreferenced(Class c);
 
-	public void excludeUnreferenced(Class c)
-	{
-	// int n = m_values.size();
-	// Vector removeKeys = new Vector();
-	// for (int i = 0; i < n; i++)
-	// {
-	// Object key = m_keys.elementAt(i);
-	// Object value = m_values.elementAt(i);
-	// if (value.getClass().equals(c) && value instanceof RepositoryEntity)
-	// {
-	// RepositoryEntity re = (RepositoryEntity)value;
-	// if (re.getDynObject("REFERENCED") == null)
-	// removeKeys.addElement(key);
-	// }
-	// }
-	// for (Enumeration e = removeKeys.elements(); e.hasMoreElements(); )
-	// {
-	// Object key = e.nextElement();
-	// this.remove(key);
-	// }
-	}
-
-	// public String toString()
-	// {
-	// return (m_keys + " == " + m_values);
-	// }
-
+	public abstract HashMap toHashMap();
+	
 	public Object clone() throws CloneNotSupportedException
 	{
-		/*
-		 * DataMap map = (DataMap)super.clone(); // At this point, the newObject
-		 * shares all data with the object // running clone. If you want
-		 * newObject to have its own // copy of data, you must clone this data
-		 * yourself. map.m_keys = new Vector(); map.m_values = new Vector();
-		 * return map;
-		 */
-		DataMap dmap = (DataMap) super.clone();
-
-		dmap.map = new HashMap(map.size());
-
-		Iterator keyIterator = keySet().iterator();
-		while (keyIterator.hasNext())
-		{
-			String key = (String) keyIterator.next();
-			dmap.put(key, map.get(key));
-		}
-
-		return dmap;
-	}
-
-	/**
-	 * For converting
-	 */
-	public HashMap toHashMap()
-	{
-		return map;
+		return super.clone();
 	}
 }
