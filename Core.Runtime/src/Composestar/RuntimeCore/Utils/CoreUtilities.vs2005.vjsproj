@@ -1,0 +1,133 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F694E733-E82A-4C5E-8D4A-2B888F6C915F}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>ComposeStarUtilities</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <OutputType>Library</OutputType>
+    <RootNamespace>
+    </RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="vjslib">
+      <Name>vjslib</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\..\..\DotNET\Runtime\src\AssemblyInfos\CORE\AssemblyInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Assertion.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ChildRunnable.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ChildThread.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ComposestarStack.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConditionBinding.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Debug.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EntryPoint.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Invoker.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="List.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MethodBinding.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ObjectInterface.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RepositoryDeserializer.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ResponseBuffer.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SyncBuffer.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ThreadPool.java">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Compiletime\src\Core.vs2005.vjsproj">
+      <Project>{AF0ABE9F-8EBA-49E5-A4EB-56ECE134B382}</Project>
+      <Name>Core.vs2005</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
