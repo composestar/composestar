@@ -40,6 +40,7 @@ import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.TYM.TypeLocations;
 import Composestar.DotNET.BACO.DotNETBACO;
 import Composestar.Utils.Debug;
@@ -311,7 +312,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		return result;
 	}
 
-	private void writeMethodInvocations(CommonResources resources)
+	private void writeMethodInvocations(CommonResources resources) throws ModuleException
 	{
 		FILTHService filthservice = FILTHService.getInstance(resources);
 
@@ -356,11 +357,11 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			{
 				FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
-				Iterator iterFilterModules = fmo.order();
+				Iterator iterFilterModules = fmo.filterModuleSIList().iterator();
 				while (iterFilterModules.hasNext())
 				{
-					String fmn = (String) iterFilterModules.next();
-					FilterModule fm = (FilterModule) DataStore.instance().getObjectByID(fmn);
+					FilterModuleSuperImposition fmn = (FilterModuleSuperImposition) iterFilterModules.next();
+					FilterModule fm = fmn.getFilterModule().getRef();
 
 					Iterator iterInternals = fm.getInternalIterator();
 					while (iterInternals.hasNext())
@@ -423,7 +424,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		out.println("</classReplacements>");
 	}
 
-	private void writeClassDefinitions(CommonResources resources)
+	private void writeClassDefinitions(CommonResources resources) throws ModuleException
 	{
 		// Write definitions for inputfilters and dummy unlinking
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing definition for class '*'...");
@@ -450,11 +451,11 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			{
 				FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
-				Iterator iterFilterModules = fmo.order();
+				Iterator iterFilterModules = fmo.filterModuleSIList().iterator();
 				while (iterFilterModules.hasNext())
 				{
-					String fmn = (String) iterFilterModules.next();
-					FilterModule fm = (FilterModule) DataStore.instance().getObjectByID(fmn);
+					FilterModuleSuperImposition fmn = (FilterModuleSuperImposition) iterFilterModules.next();
+					FilterModule fm = fmn.getFilterModule().getRef();
 
 					if (!fm.getOutputFilters().isEmpty())
 					{
