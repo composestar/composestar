@@ -92,7 +92,7 @@ public class NotUsedExternals implements BaseChecker
 				 * In the Outputfilters both matching and substitution target
 				 * must be checked.
 				 */
-				Iterator outputFilters = filterModule.getInputFilterIterator();
+				Iterator outputFilters = filterModule.getOutputFilterIterator();
 				while (outputFilters.hasNext())
 				{
 					Filter outputFilter = (Filter) outputFilters.next();
