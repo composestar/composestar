@@ -61,26 +61,35 @@ public class NotUsedInternals implements BaseChecker
 				Internal internal = (Internal) internals.next();
 				String internalID = internal.getName();
 
-				/*
-				 * With the Inputfilters you only have to check the substitution
-				 * part because the matching target can be only inner or *
-				 */
 				Iterator inputFilters = filterModule.getInputFilterIterator();
-				while (inputFilters.hasNext())
+				while (inputFilters.hasNext() && !isInternalUsed)
 				{
 					Filter inputFilter = (Filter) inputFilters.next();
 					Iterator fei = inputFilter.getFilterElementIterator();
-					while (fei.hasNext())
+					while (fei.hasNext() && !isInternalUsed)
 					{
 						FilterElement fe = (FilterElement) fei.next();
 						MatchingPattern mp = fe.getMatchingPattern();
 						Iterator spi = mp.getSubstitutionPartsIterator();
-						while (spi.hasNext())
+						while (spi.hasNext() && !isInternalUsed)
 						{
 							SubstitutionPart sp = (SubstitutionPart) spi.next();
 							if (!(sp == null))
 							{
 								if (internalID.equals(sp.getTarget().getName()))
+								{
+									isInternalUsed = true;
+								}
+							}
+						}
+
+						Iterator matchpi = mp.getMatchingPartsIterator();
+						while (matchpi.hasNext() && !isInternalUsed)
+						{
+							MatchingPart matchp = (MatchingPart) matchpi.next();
+							if (!(matchp == null))
+							{
+								if (internalID.equals(matchp.getTarget().getName()))
 								{
 									isInternalUsed = true;
 								}
@@ -94,11 +103,11 @@ public class NotUsedInternals implements BaseChecker
 				 * must be checked.
 				 */
 				Iterator outputFilters = filterModule.getOutputFilterIterator();
-				while (outputFilters.hasNext())
+				while (outputFilters.hasNext() && !isInternalUsed)
 				{
 					Filter outputFilter = (Filter) outputFilters.next();
 					Iterator fei = outputFilter.getFilterElementIterator();
-					while (fei.hasNext())
+					while (fei.hasNext() && !isInternalUsed)
 					{
 						FilterElement fe = (FilterElement) fei.next();
 						MatchingPattern mp = fe.getMatchingPattern();
@@ -107,7 +116,7 @@ public class NotUsedInternals implements BaseChecker
 						// long)
 
 						Iterator spi = mp.getSubstitutionPartsIterator();
-						while (spi.hasNext())
+						while (spi.hasNext() && !isInternalUsed)
 						{
 							SubstitutionPart sp = (SubstitutionPart) spi.next();
 							if (!(sp == null))
@@ -120,7 +129,7 @@ public class NotUsedInternals implements BaseChecker
 						}
 
 						Iterator matchpi = mp.getMatchingPartsIterator();
-						while (matchpi.hasNext())
+						while (matchpi.hasNext() && !isInternalUsed)
 						{
 							MatchingPart matchp = (MatchingPart) matchpi.next();
 							if (!(matchp == null))
@@ -138,7 +147,7 @@ public class NotUsedInternals implements BaseChecker
 				 * The search into the conditions.
 				 */
 				Iterator conditions = filterModule.getConditionIterator();
-				while (conditions.hasNext())
+				while (conditions.hasNext() && !isInternalUsed)
 				{
 					Condition condition = (Condition) conditions.next();
 					Reference ref = condition.getShortref();
