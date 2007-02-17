@@ -109,8 +109,8 @@ public abstract class Master
 			// fallback in case log4j.properties could not be found
 			Logger root = Logger.getRootLogger();
 			// this produces the legacy output:
-			// LEVEL~module~CPS File~CPS Line~message\n
-			Layout layout = new CPSPatternLayout("%p~%c~%s~%S~%m%n");
+			// module~LEVEL~CPS File~CPS Line~message\n
+			Layout layout = new CPSPatternLayout("%c~%p~%s~%S~%m%n");
 			root.addAppender(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
 		}
 		Logger.getRootLogger().addAppender(logMetrics);
