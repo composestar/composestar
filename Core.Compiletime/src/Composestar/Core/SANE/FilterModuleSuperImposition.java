@@ -12,6 +12,8 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  */
 public class FilterModuleSuperImposition extends RepositoryEntity
 {
+	private static final long serialVersionUID = -7267957969500237784L;
+
 	/**
 	 * The filter module in the superimposition
 	 */

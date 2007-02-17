@@ -60,21 +60,17 @@ public class NotUsedExternals implements BaseChecker
 				External external = (External) externals.next();
 				String externalID = external.getName();
 
-				/*
-				 * With the Inputfilters you only have to check the substitution
-				 * part because the matching target can be only inner or *
-				 */
 				Iterator inputFilters = filterModule.getInputFilterIterator();
-				while (inputFilters.hasNext())
+				while (inputFilters.hasNext() && !isExternalUsed)
 				{
 					Filter inputFilter = (Filter) inputFilters.next();
 					Iterator fei = inputFilter.getFilterElementIterator();
-					while (fei.hasNext())
+					while (fei.hasNext() && !isExternalUsed)
 					{
 						FilterElement fe = (FilterElement) fei.next();
 						MatchingPattern mp = fe.getMatchingPattern();
 						Iterator spi = mp.getSubstitutionPartsIterator();
-						while (spi.hasNext())
+						while (spi.hasNext() && !isExternalUsed)
 						{
 							SubstitutionPart sp = (SubstitutionPart) spi.next();
 							if (!(sp == null))
@@ -85,19 +81,28 @@ public class NotUsedExternals implements BaseChecker
 								}
 							}
 						}
+						
+						Iterator matchpi = mp.getMatchingPartsIterator();
+						while (matchpi.hasNext() && !isExternalUsed)
+						{
+							MatchingPart matchp = (MatchingPart) matchpi.next();
+							if (!(matchp == null))
+							{
+								if (externalID.equals(matchp.getTarget().getName()))
+								{
+									isExternalUsed = true;
+								}
+							}
+						}
 					}
 				}
 
-				/*
-				 * In the Outputfilters both matching and substitution target
-				 * must be checked.
-				 */
-				Iterator outputFilters = filterModule.getInputFilterIterator();
-				while (outputFilters.hasNext())
+				Iterator outputFilters = filterModule.getOutputFilterIterator();
+				while (outputFilters.hasNext() && !isExternalUsed)
 				{
 					Filter outputFilter = (Filter) outputFilters.next();
 					Iterator fei = outputFilter.getFilterElementIterator();
-					while (fei.hasNext())
+					while (fei.hasNext() && !isExternalUsed)
 					{
 						FilterElement fe = (FilterElement) fei.next();
 						MatchingPattern mp = fe.getMatchingPattern();
@@ -105,7 +110,7 @@ public class NotUsedExternals implements BaseChecker
 						// or substitution target (maybe the if statement is too
 						// long)
 						Iterator spi = mp.getSubstitutionPartsIterator();
-						while (spi.hasNext())
+						while (spi.hasNext() && !isExternalUsed)
 						{
 							SubstitutionPart sp = (SubstitutionPart) spi.next();
 							if (!(sp == null))
@@ -118,7 +123,7 @@ public class NotUsedExternals implements BaseChecker
 						}
 
 						Iterator matchpi = mp.getMatchingPartsIterator();
-						while (matchpi.hasNext())
+						while (matchpi.hasNext() && !isExternalUsed)
 						{
 							MatchingPart matchp = (MatchingPart) matchpi.next();
 							if (!(matchp == null))
@@ -136,7 +141,7 @@ public class NotUsedExternals implements BaseChecker
 				 * The search into the conditions.
 				 */
 				Iterator conditions = filterModule.getConditionIterator();
-				while (conditions.hasNext())
+				while (conditions.hasNext() && !isExternalUsed)
 				{
 					Condition condition = (Condition) conditions.next();
 					Reference ref = condition.getShortref();

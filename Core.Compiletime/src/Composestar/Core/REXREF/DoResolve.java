@@ -161,7 +161,7 @@ public class DoResolve
 		 * use int counters, more because this is the only method that actually
 		 * creates all the instantances of FilterModules, Internals, etc.
 		 */
-		// int fmCounter = 1;
+		int fmCounter = 0;
 		// for (Iterator it = ds.getAllInstancesOf(FilterModuleReference.class);
 		// it.hasNext();) {
 		Iterator it = ds.getAllInstancesOf(FilterModuleReference.class);
@@ -171,7 +171,7 @@ public class DoResolve
 			FilterModuleAST fm_ast = (FilterModuleAST) ds.getObjectByID(ref.getQualifiedName());
 			if (fm_ast != null)
 			{
-				String uniqueID = "0";
+				String uniqueID = ""+(fmCounter++);
 
 				// Create an unique ID for this FM instance, based on the
 				// SelectorReference for the FilterModuleReference

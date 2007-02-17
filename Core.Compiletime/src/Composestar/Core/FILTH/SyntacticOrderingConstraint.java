@@ -1,10 +1,13 @@
 package Composestar.Core.FILTH;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class SyntacticOrderingConstraint
+public class SyntacticOrderingConstraint implements Serializable
 {
-	private ArrayList postconstraints;
+	private static final long serialVersionUID = -5700210313914764322L;
+
+	private List postconstraints;
 
 	private String left;
 

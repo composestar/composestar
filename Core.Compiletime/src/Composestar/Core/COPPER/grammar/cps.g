@@ -212,6 +212,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
               messagePatternSet : messagePattern
                                 { #messagePatternSet = #([MPSET_, "messagePatternSet"], #messagePatternSet);} ;
 
+								// TODO: isn't matching optional too? e.g.: True => bla.*
                 messagePattern : ( matchingPart (substitutionPart)? )
                                  { #messagePattern = #([MP_, "messagePattern"], #messagePattern);} ;
                 
@@ -219,7 +220,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                  				  // matching list
                  				  LCURLY! singleTargetSelector (COMMA! singleTargetSelector)* RCURLY!
                  				  // matching sequence for multiple message
-                                | HASH LPARENTHESIS! singleTargetSelector (SEMICOLON singleTargetSelector)* RPARENTHESIS!
+                                | HASH LPARENTHESIS! singleTargetSelector (SEMICOLON! singleTargetSelector)* RPARENTHESIS!
                                   // normal
                                 | singleTargetSelector
                                 )
@@ -227,7 +228,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                                 ;
                 
                  substitutionPart : ( 
-                                      HASH LPARENTHESIS! targetSelector (SEMICOLON targetSelector)* RPARENTHESIS!
+                                      HASH LPARENTHESIS! targetSelector (SEMICOLON! targetSelector)* RPARENTHESIS!
                                     | targetSelector
                                     )
                                     { #substitutionPart = #([SPART_, "substitutionPart"], #substitutionPart);}
@@ -237,7 +238,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                    singleTargetSelector : (
                                           LSQUARE targetSelector RSQUARE!          // name
                                         | LANGLE targetSelector RANGLE!            // signature
-                                        //| SINGLEQUOTE targetSelector SINGLEQUOTE!  // name
+                                          //TODO: no name and no signature matching? why???
                                         | targetSelector
                                         ) ;
                   
@@ -346,18 +347,11 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
     /*---------------------------------------------------------------------------*/
     constraints : "constraints"^ (constraint SEMICOLON!)*; 
       
-      constraint : preSoftConstraint 
-                   | preConstraint 
-                   | preHardConstraint;
-
-        preSoftConstraint : "presoft"^ LPARENTHESIS! filterModuleRef COMMA filterModuleRef RPARENTHESIS!;
+      constraint : preConstraint;
 
             filterModuleRef : concernElemReference;
 
         preConstraint : "pre"^ LPARENTHESIS! filterModuleRef COMMA filterModuleRef RPARENTHESIS!;
-
-        preHardConstraint : "prehard"^ LPARENTHESIS! filterModuleRef COMMA filterModuleRef RPARENTHESIS!;
-
 
   //////////////////////////////////////////////////////////////////////////
   implementation : "implementation"^ implementationInner;
