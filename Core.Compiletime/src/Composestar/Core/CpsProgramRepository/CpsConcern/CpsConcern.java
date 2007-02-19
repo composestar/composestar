@@ -21,21 +21,13 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImp
 import Composestar.Utils.CPSIterator;
 
 /**
- * @modelguid {4B0A4EA3-A27B-4E40-8E3A-F80F4CEDA7A1} we can reason about the
- *            implementation here.
+ * we can reason about the implementation here.
  */
 public class CpsConcern extends Concern
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7396365167133765237L;
 
-	/**
-	 * @modelguid {7B45ADC0-2321-4502-B567-C0D90391CAD2}
-	 */
-	public Implementation implementation;
+	private transient Implementation implementation;
 
 	/**
 	 * @modelguid {D83B8E0F-0DD6-435B-80D8-67C6EC1DC456}

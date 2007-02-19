@@ -185,7 +185,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
       generalFilterSet : singleInputFilter (SEMICOLON singleInputFilter)*;
 
-        singleInputFilter : NAME COLON! type (LPARENTHESIS! actualParameters RPARENTHESIS!)? EQUALS! LCURLY! (filterElements)? RCURLY!
+        singleInputFilter : NAME COLON! type (LPARENTHESIS! actualParameters RPARENTHESIS!)? EQUALS! LCURLY! filterElements RCURLY!
         { #singleInputFilter = #([IFILTER_, "inputfilter"], #singleInputFilter );} ;
 
           actualParameters : NAME (COMMA! NAME)*
@@ -212,7 +212,6 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
               messagePatternSet : messagePattern
                                 { #messagePatternSet = #([MPSET_, "messagePatternSet"], #messagePatternSet);} ;
 
-								// TODO: isn't matching optional too? e.g.: True => bla.*
                 messagePattern : ( matchingPart (substitutionPart)? )
                                  { #messagePattern = #([MP_, "messagePattern"], #messagePattern);} ;
                 
@@ -238,7 +237,6 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                    singleTargetSelector : (
                                           LSQUARE targetSelector RSQUARE!          // name
                                         | LANGLE targetSelector RANGLE!            // signature
-                                          //TODO: no name and no signature matching? why???
                                         | targetSelector
                                         ) ;
                   
@@ -259,7 +257,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
       generalFilterSet2 : singleOutputFilter (SEMICOLON singleOutputFilter)* ;     //exactly the same definitons, but we use it to separate in- and outputfilters
 
-        singleOutputFilter : NAME COLON! type (LPARENTHESIS! actualParameters RPARENTHESIS!)? EQUALS! LCURLY! (filterElements)? RCURLY!
+        singleOutputFilter : NAME COLON! type (LPARENTHESIS! actualParameters RPARENTHESIS!)? EQUALS! LCURLY! filterElements RCURLY!
         { #singleOutputFilter = #([OFILTER_, "outputfilter"], #singleOutputFilter);} ;
         
    //////////////////////////////////////////////////////////////////////////

@@ -110,9 +110,9 @@
 			<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="@{todir}"/>
 
 			<copy todir="@{todir}/binaries">
-			<fileset dir="${out.dist}"/>
-			<fileset file="binaries/antlr/antlr.jar"/>
-		</copy>
+				<fileset dir="${out.dist}"/>
+			</copy>
+			<copy file="binaries/antlr/antlr.jar" todir="@{todir}/binaries"/>
 			<copy file="binaries/log4j/log4j-1.2.14.jar" todir="@{todir}/binaries"/>
 
 			<copy todir="@{todir}/binaries/prolog">

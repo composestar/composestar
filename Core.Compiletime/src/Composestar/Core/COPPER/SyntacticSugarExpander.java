@@ -115,7 +115,6 @@ public class SyntacticSugarExpander
 
 						SelClass sc = new SelClass();
 						sc.setClass(cref);
-						sc.setClassName(concern.getQualifiedName());
 						sc.setParent(sd);
 						sd.addSelExpression(sc);
 						ds.addObject(sc);

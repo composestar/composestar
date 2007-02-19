@@ -20,9 +20,9 @@ import antlr.CommonToken;
  */
 public class PosToken extends CommonToken
 {
-	int col = 0;
+	int col;
 
-	int bytePos = 0;
+	int bytePos;
 
 	/**
 	 * Constructor
@@ -74,9 +74,9 @@ public class PosToken extends CommonToken
 	}
 
 	/**
-	 * Sets the byte position in the file this token is found at
+	 * Sets the position in the line this token is found
 	 * 
-	 * @param c position in the file
+	 * @param c position in the line
 	 */
 	public void setBytePos(int c)
 	{
@@ -84,9 +84,9 @@ public class PosToken extends CommonToken
 	}
 
 	/**
-	 * Gets the byte position in the file that this token is found at
+	 * Gets the position in a line that is this token is found at
 	 * 
-	 * @return position in the file
+	 * @return position in a line
 	 */
 	public int getBytePos()
 	{

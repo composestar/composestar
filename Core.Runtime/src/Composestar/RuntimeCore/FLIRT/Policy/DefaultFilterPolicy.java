@@ -60,7 +60,7 @@ class DefaultFilterPolicy extends FilterPolicy
 			{
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tEvaluating filter '"
 						+ ((Filter) f.getReference()).getName() + "' of type '"
-						+ ((Filter) f.getReference()).getFilterType().getClass() + "'...");
+						+ ((Filter) f.getReference()).getFilterType().getType() + "'...");
 			}
 
 			boolean eval = f.canAccept(aMessage, context);
