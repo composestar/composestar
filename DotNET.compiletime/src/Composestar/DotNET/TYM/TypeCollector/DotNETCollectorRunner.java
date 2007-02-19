@@ -102,11 +102,8 @@ public class DotNETCollectorRunner implements CollectorRunner
 			}
 			else if (impl instanceof Source)
 			{
-				// fixes the problem with the embedded code not being in the
-				// type map at all.
-				continue;
-				// Source source = (Source)impl;
-				// className = source.getClassName();
+				Source source = (Source)impl;
+				className = source.getClassName();
 			}
 			else if (impl instanceof SourceFile)
 			{
@@ -124,6 +121,12 @@ public class DotNETCollectorRunner implements CollectorRunner
 				throw new ModuleException(
 						"CollectorRunner: Can only handle concerns with source file implementations or direct class links.",
 						MODULE_NAME);
+			}
+			
+			if (!concern.getQualifiedName().equals(className))
+			{
+				// implementation of a different class
+				continue;
 			}
 
 			// transform source name into assembly name blaat.java --> blaat.dll
