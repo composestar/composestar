@@ -1,6 +1,6 @@
 concern Bar in GrammarTest
 {
-	implementation in CSharp by Bar as "Bar.cs"
+	implementation in CSharp by GrammarTest.Bar as "Bar.cs"
   {
     using System;
     

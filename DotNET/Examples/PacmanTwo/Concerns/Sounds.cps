@@ -39,7 +39,7 @@ concern Sounds in PacmanTwo
 			pawns <- beepSoundPawns;
 	}
 
-	implementation in JSharp by Beeper as "Beeper.java"
+	implementation in JSharp by PacmanTwo.ConcernImplementations.Beeper as "Beeper.java"
 	{
 package PacmanTwo.ConcernImplementations;
 

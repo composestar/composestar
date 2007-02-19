@@ -16,7 +16,7 @@ concern EncapsulationConcern
 		filtermodules
 			subsystems <- facadeEncapsulation;
 	}
-	implementation in JSharp by	EncapsulationConcern as "EncapsulationConcern.jsl"
+	implementation in JSharp by	Composestar.Patterns.Facade.EncapsulationConcern as "EncapsulationConcern.jsl"
 	{
 		package Composestar.Patterns.Facade;
 

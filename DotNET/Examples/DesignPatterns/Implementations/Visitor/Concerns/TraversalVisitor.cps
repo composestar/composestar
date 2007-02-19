@@ -32,7 +32,7 @@ concern TraversalVisitor {
 			node <- TraversalNode;
 			binaryTreeElement <- Traversal;
 	}
-	implementation in JSharp by	TraversalVisitor as	"TraversalVisitor.jsl"
+	implementation in JSharp by	Composestar.Patterns.Visitor.TraversalVisitor as	"TraversalVisitor.jsl"
 	{
 		package Composestar.Patterns.Visitor;
 

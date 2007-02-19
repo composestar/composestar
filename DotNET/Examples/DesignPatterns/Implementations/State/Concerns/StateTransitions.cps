@@ -15,6 +15,6 @@ concern StateTransitions
 			empty_Insert_Normal : Meta	= {isEmpty => [*.insert] transitions.empty_Insert_Normal}; 
 			normal_Insert_Full	: Meta	= {isNormal => [*.insert] transitions.normal_Insert_Full};
 			normal_Remove_Empty	: Meta	= {isNormal => [*.removeFirst] transitions.normal_Remove_Empty};
-			full_Remove_Normal	: Meta	= { [*.removeFirst] transitions.full_Remove_Normal} 
+			full_Remove_Normal	: Meta	= {!isNormal => [*.removeFirst] transitions.full_Remove_Normal} 
 	}
 }	

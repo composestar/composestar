@@ -14,7 +14,7 @@ concern MementoCreation{
 		filtermodules
 			originator	<- mementoCreation;
 	}
-	implementation in JSharp by	MementoCreation as	"MementoCreation.jsl"
+	implementation in JSharp by	Composestar.Patterns.Memento.MementoCreation as	"MementoCreation.jsl"
 	{
 		package Composestar.Patterns.Memento;
 

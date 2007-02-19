@@ -5,7 +5,7 @@ concern inheritance in FilterModuleParameter
 		internals
 			parent : ?parent;
 		inputfilters
-			d : Dispatch = { <inner.*> inner.*, <parent.*> parent.*, [*.*] *.* }
+			d : Dispatch = { <inner.*> inner.*, <parent.*> parent.* }
 	}
 
 	superimposition

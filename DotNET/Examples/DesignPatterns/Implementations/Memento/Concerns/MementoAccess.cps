@@ -14,7 +14,7 @@ concern MementoAccess{
 		filtermodules
 			memento		<- mementoAccess;
 	}
-	implementation in JSharp by	MementoAccess as	"MementoAccess.jsl"
+	implementation in JSharp by	Composestar.Patterns.Memento.MementoAccess as	"MementoAccess.jsl"
 	{
 		package Composestar.Patterns.Memento;
 

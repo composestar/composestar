@@ -35,7 +35,7 @@ concern Levels in PacmanTwo
 			lvl <- createLevelAlt;
 	}
 
-	implementation in JSharp by LevelGenerator as "LevelGenerator.java"
+	implementation in JSharp by PacmanTwo.ConcernImplementations.LevelGenerator as "LevelGenerator.java"
 	{
 package PacmanTwo.ConcernImplementations;
 

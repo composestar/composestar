@@ -17,7 +17,7 @@ concern interfaceSound in pacman
       sound <- beepSound;
    }
    
-   implementation in JSharp by Beeper as "Beeper.jsl"
+   implementation in JSharp by pacman.ConcernImplementations.Beeper as "Beeper.jsl"
    {
 
 package pacman.ConcernImplementations;

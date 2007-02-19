@@ -31,7 +31,7 @@ concern SummationVisitor {
 			node <- SummationNode;
 			binaryTreeElement <- Summation;
 	}
-	implementation in JSharp by	SummationVisitor as	"SummationVisitor.jsl"
+	implementation in JSharp by	Composestar.Patterns.Visitor.SummationVisitor as	"SummationVisitor.jsl"
 	{
 		package Composestar.Patterns.Visitor;
 

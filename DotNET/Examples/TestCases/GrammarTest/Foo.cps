@@ -8,9 +8,9 @@ concern Foo in GrammarTest
 		conditions
 		  isBar : bar.isBar();
 		inputfilters
-		  foobar : Dispatch = {True & True =>[*.*] bar.*}
+		  foobar : Dispatch = {True & True => <bar.*> bar.*}
 		outputfilters
-		  barfoo : Dispatch (isBar, bar, foobar)= {}
+		  barfoo : Dispatch (isBar, bar, foobar)= {*.*}
   }
   
   filtermodule Filtermodule{
@@ -35,7 +35,7 @@ concern Foo in GrammarTest
 		  pre (Filtermodule, Filtermodule2);
   }
   
-  implementation in CSharp by Foo as "Foo.cs"
+  implementation in CSharp by GrammarTest.Foo as "Foo.cs"
   {
     using System;
     
