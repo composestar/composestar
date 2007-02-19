@@ -30,7 +30,7 @@ public class Source extends Implementation
 	/**
 	 * @modelguid {AAFEDDE6-9929-41C5-BF1E-FBF39245155D}
 	 */
-	public String source;
+	private transient String source;
 
 	public String sourceFile;
 
