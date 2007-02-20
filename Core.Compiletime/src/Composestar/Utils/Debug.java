@@ -64,8 +64,10 @@ public final class Debug
 				return Level.INFO;
 			case MODE_DEBUG:
 				return Level.DEBUG;
+			case 5:
+				return Level.TRACE;
 			default:
-				return Level.ERROR;
+				return Level.WARN;
 		}
 	}
 
