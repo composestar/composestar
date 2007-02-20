@@ -29,10 +29,11 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.DotNET.LAMA.DotNETType;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class DotNETCollectorRunner implements CollectorRunner
 {
-	public static final String MODULE_NAME = "COLLECTOR";
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	private INCRE incre;
 
@@ -60,7 +61,7 @@ public class DotNETCollectorRunner implements CollectorRunner
 			if (!INCRE.instance().isIncremental())
 			{
 				typesXml.delete(); // free up some diskspace because types.xml
-									// is no longer needed
+				// is no longer needed
 			}
 		}
 		catch (SAXException e)
@@ -102,7 +103,7 @@ public class DotNETCollectorRunner implements CollectorRunner
 			}
 			else if (impl instanceof Source)
 			{
-				Source source = (Source)impl;
+				Source source = (Source) impl;
 				className = source.getClassName();
 			}
 			else if (impl instanceof SourceFile)
@@ -122,10 +123,20 @@ public class DotNETCollectorRunner implements CollectorRunner
 						"CollectorRunner: Can only handle concerns with source file implementations or direct class links.",
 						MODULE_NAME);
 			}
-			
+
 			if (!concern.getQualifiedName().equals(className))
 			{
 				// implementation of a different class
+				Object otherConcern = dataStore.getObjectByID(className);
+				if (otherConcern instanceof CpsConcern)
+				{
+					logger.info("Implementation of " + concern + " contains type info for "
+							+ ((CpsConcern) otherConcern));
+					DotNETType type = (DotNETType) typeMap.get(className);
+					concern.setPlatformRepresentation(type);
+					type.setParentConcern((CpsConcern) otherConcern);
+					typeMap.remove(className);
+				}
 				continue;
 			}
 
@@ -136,6 +147,8 @@ public class DotNETCollectorRunner implements CollectorRunner
 						+ " not found!", MODULE_NAME);
 
 			}
+			logger.info("" + concern + " implements own type info");
+
 			DotNETType type = (DotNETType) typeMap.get(className);
 			concern.setPlatformRepresentation(type);
 			type.setParentConcern(concern);
