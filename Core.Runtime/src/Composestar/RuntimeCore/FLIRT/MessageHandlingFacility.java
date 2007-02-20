@@ -9,9 +9,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.LabeledConcernReference;
-import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.LegacyDataMap;
 import Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException;
 import Composestar.RuntimeCore.FLIRT.Exception.ErrorFilterException;
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
@@ -797,7 +795,6 @@ public abstract class MessageHandlingFacility
 	 */
 	public synchronized static void handleApplicationStart(String filename, int debug, PlatformProvider provider)
 	{
-		DataMap.setDataMapClass(LegacyDataMap.class);
 		Debug.setMode(debug);
 
 		provider.instantiatePlatform();

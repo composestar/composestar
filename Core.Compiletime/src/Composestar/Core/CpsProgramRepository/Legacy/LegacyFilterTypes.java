@@ -27,7 +27,7 @@ public final class LegacyFilterTypes
 
 	private static final FilterAction errorAction = createErrorAction();
 
-	private static final FilterAction substitutionAction = createSubstitutionAction();
+	//private static final FilterAction substitutionAction = createSubstitutionAction();
 
 	private static final FilterAction adviceAction = createAdviceAction();
 	
@@ -127,7 +127,7 @@ public final class LegacyFilterTypes
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.SEND);
-		type.setAcceptCallAction(continueAction);
+		type.setAcceptCallAction(dispatchAction);
 		type.setRejectCallAction(continueAction);
 		type.setAcceptReturnAction(continueAction);
 		type.setRejectReturnAction(continueAction);
@@ -137,9 +137,9 @@ public final class LegacyFilterTypes
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.META);
-		type.setAcceptCallAction(continueAction);
+		type.setAcceptCallAction(adviceAction);
 		type.setRejectCallAction(continueAction);
-		type.setAcceptReturnAction(continueAction);
+		type.setAcceptReturnAction(adviceAction);
 		type.setRejectReturnAction(continueAction);
 	}
 
@@ -155,32 +155,38 @@ public final class LegacyFilterTypes
 
 	private static void addBeforeFilterType()
 	{
+		/*
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.BEFORE);
 		type.setAcceptCallAction(adviceAction);
 		type.setRejectCallAction(continueAction);
 		type.setAcceptReturnAction(continueAction);
 		type.setRejectReturnAction(continueAction);
+		*/
 	}
 
 	private static void addAfterFilterType()
 	{
+		/*
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.AFTER);
 		type.setAcceptCallAction(continueAction);
 		type.setRejectCallAction(continueAction);
 		type.setAcceptReturnAction(adviceAction);
 		type.setRejectReturnAction(continueAction);
+		*/
 	}
 	
 	private static void addSubstitutionFilterType()
 	{
+		/*
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.SUBSTITUTION);
 		type.setAcceptCallAction(substitutionAction);
 		type.setRejectCallAction(continueAction);
 		type.setAcceptReturnAction(continueAction);
 		type.setRejectReturnAction(continueAction);
+		*/
 	}
 	
 	private static void addPrependFilterType()

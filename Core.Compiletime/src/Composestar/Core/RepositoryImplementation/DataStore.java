@@ -254,7 +254,7 @@ public class DataStore implements Serializable, Cloneable
 
 	public void excludeUnreferenced(Class c)
 	{
-		(map).excludeUnreferenced(c);
+		map.excludeUnreferenced(c);
 		/*
 		 * List removeKeys = new ArrayList(); Iterator it =
 		 * map.entrySet().iterator(); while (it.hasNext()) { Map.Entry entry =

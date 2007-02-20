@@ -114,24 +114,25 @@ public class DataMapImpl extends DataMap
 
 	public void excludeUnreferenced(Class c)
 	{
-	// int n = m_values.size();
-	// Vector removeKeys = new Vector();
-	// for (int i = 0; i < n; i++)
-	// {
-	// Object key = m_keys.elementAt(i);
-	// Object value = m_values.elementAt(i);
-	// if (value.getClass().equals(c) && value instanceof RepositoryEntity)
-	// {
-	// RepositoryEntity re = (RepositoryEntity)value;
-	// if (re.getDynObject("REFERENCED") == null)
-	// removeKeys.addElement(key);
-	// }
-	// }
-	// for (Enumeration e = removeKeys.elements(); e.hasMoreElements(); )
-	// {
-	// Object key = e.nextElement();
-	// this.remove(key);
-	// }
+		// CPSLogger logger = CPSLogger.getCPSLogger("datamap");
+		Iterator it = map.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Entry entry = (Entry) it.next();
+			if (entry.getValue().getClass().equals(c) && entry.getValue() instanceof RepositoryEntity)
+			{
+				RepositoryEntity re = (RepositoryEntity) entry.getValue();
+				if (re.getDynObject("REFERENCED") == null)
+				{
+					// if (logger.isDebugEnabled())
+					// {
+					// logger.debug("Removing " + entry.getValue().getClass() +
+					// " instance with key " + entry.getKey());
+					// }
+					it.remove();
+				}
+			}
+		}
 	}
 
 	// public String toString()

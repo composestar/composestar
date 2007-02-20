@@ -30,6 +30,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilter
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
@@ -66,8 +67,10 @@ public class InnerDispatcher
 
 		// add the filter to the filtermodule
 		fm.addInputFilter(createInnerDispatchFilter(cc, fm, "CpsDefaultInnerInputDispatchFilter"));
-		// TODO: it should be a "send" filter, but not present for the runtime
-		//fm.addOutputFilter(createInnerDispatchFilter(cc, fm, "CpsDefaultInnerOutputDispatchFilter"));
+		if (!LegacyFilterTypes.useLegacyFilterTypes) // don't add this one for legacy filter types
+		{
+			fm.addOutputFilter(createInnerDispatchFilter(cc, fm, "CpsDefaultInnerOutputDispatchFilter"));
+		}
 
 		// add concern and filtermodule to the datastore
 		DataStore.instance().addObject(cc);
