@@ -24,9 +24,9 @@ public class BreakPointLTLParser extends BreakPointParser
 		try 
 		{
 			StringReader sr = new StringReader(ltlExpression);
-			/*LtlLexer lexer = new LtlLexer(sr);
+			LtlLexer lexer = new LtlLexer(sr);
 			LtlParser parser = new LtlParser(lexer);
-			return parser.formula();*/ return new AlwaysBreakPoint();
+			return parser.formula();
 		} 
 		catch (Exception e) 
 		{

@@ -18,6 +18,7 @@ import Composestar.RuntimeCore.FLIRT.Reflection.JoinPointInfoProxy;
 import Composestar.RuntimeCore.FLIRT.Reflection.MessageInfoProxy;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.RuntimeCore.Utils.Invoker;
+import Composestar.RuntimeCore.CODER.DebuggerRuntime;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -55,7 +56,7 @@ class MetaFilterPolicy extends FilterPolicy
 						aMessage.getFirstMessage().getSelector()));
 		JoinPointInfoProxy.updateJoinPoint(jp);
 
-		//Debugger.getInstance().event(Debugger.MESSAGE_PROCESSING_START, null, aMessage, jp);
+		DebuggerRuntime.messageSent(aMessage.getSender(),aMessage.getOrgMessage().getSelector(),aMessage.getArguments(),aMessage.getOrgMessage().getTarget());
 		if (Debug.SHOULD_DEBUG)
 		{
 			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tProcessing meta filter policy...");

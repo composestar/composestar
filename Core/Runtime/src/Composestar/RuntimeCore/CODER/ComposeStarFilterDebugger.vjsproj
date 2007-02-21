@@ -150,6 +150,46 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "BreakPoint\BreakPointAnd.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\BreakPointFuture.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\BreakPointGlobal.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\BreakPointNot.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\BreakPointOr.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\BreakPointRelease.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\BreakPointUntil.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\BreakPointValueOperator.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "BreakPoint\NeverBreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -170,8 +210,38 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "BreakPoint\Parsers\LTL\LtlLexer.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\Parsers\LTL\LtlParser.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\Parsers\LTL\LtlParserTokenTypes.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "BreakPoint\Parsers\LTL\grammar\ltl.g"
                     BuildAction = "None"
+                />
+                <File
+                    RelPath = "BreakPoint\Value\FunctionCallValue.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\Value\Value.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BreakPoint\Value\VariableValue.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Visual\BreakPoint\Maker.java"

@@ -41,7 +41,7 @@
 	</target>
 
 	<target name="compile_java" depends="local_init,antlr">
-		<javac srcdir="src" destdir="${out.build}" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<classpath>
 				<pathelement location="${build.core}/Compiletime/${out.jar.core}"/>
 			</classpath>
