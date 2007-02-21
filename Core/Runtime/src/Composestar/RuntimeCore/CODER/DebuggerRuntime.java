@@ -1,23 +1,31 @@
 package Composestar.RuntimeCore.CODER;
 
+import java.io.File;
 /**
  * DebuggerRuntime
  * The debugger runtime is the interface between the subject and the debugger
  */
 public class DebuggerRuntime {
+	private static boolean USE_DEBUGGER = false;
+
     private Profiler profiler;
     private Halter halter;
     private DesignTime designTime;
     private Publisher publisher;
     
    private DebuggerRuntime() {
-       this.halter = new Halter();
-       this.publisher = new Publisher();
-       this.designTime = new DesignTime(this,this.publisher);
-       this.publisher.setDesignTime(this.designTime);
-       this.profiler = new Profiler(this.designTime);
+	   File config = new File("debugger.xml");
+	   if(config.exists())
+	   {
+		   this.halter = new Halter();
+		   this.publisher = new Publisher();
+		   this.designTime = new DesignTime(this,this.publisher);
+		   this.publisher.setDesignTime(this.designTime);
+		   this.profiler = new Profiler(this.designTime);
 
-       halter.resume();
+		   USE_DEBUGGER = true;
+		   halter.resume();
+	   }
    }
 
     public void suspend(){
@@ -40,35 +48,35 @@ public class DebuggerRuntime {
    }
 
     public static void messageSent(Object sender, String selector, Object[] args, Object target){
-        getInstance().messageSentEvent(sender,selector,args,target);
+        if(USE_DEBUGGER) getInstance().messageSentEvent(sender,selector,args,target);
     }
 
     public static void filterRejectedMessage(Object sender, String selector, Object[] args, Object target){
-        getInstance().filterRejectedMessageEvent(sender,selector,args,target);
+        if(USE_DEBUGGER) getInstance().filterRejectedMessageEvent(sender,selector,args,target);
     }
 
     public static void filterAcceptedMessage(Object sender, String selector, Object[] args, Object target){
-        getInstance().filterAcceptedMessageEvent(sender,selector,args,target);
+        if(USE_DEBUGGER) getInstance().filterAcceptedMessageEvent(sender,selector,args,target);
     }
 
     public static void messageDelivered(Object sender, String selector, Object[] args, Object target){
-        getInstance().messageDeliveredEvent(sender,selector,args,target);
+        if(USE_DEBUGGER) getInstance().messageDeliveredEvent(sender,selector,args,target);
     }
 
     public static void messageReturn(Object sender, String selector, Object[] args, Object target){
-        getInstance().messageReturnEvent(sender,selector,args,target);
+        if(USE_DEBUGGER) getInstance().messageReturnEvent(sender,selector,args,target);
     }
 
     public static void filterRejectedReturn(Object sender, String selector, Object[] args, Object target){
-        getInstance().filterRejectedReturnEvent(sender,selector,args,target);
+        if(USE_DEBUGGER) getInstance().filterRejectedReturnEvent(sender,selector,args,target);
     }
 
     public static void filterAcceptedReturn(Object sender, String selector, Object[] args, Object target){
-        getInstance().filterAcceptedReturnEvent(sender,selector,args,target);
+        if(USE_DEBUGGER) getInstance().filterAcceptedReturnEvent(sender,selector,args,target);
     }
 
     public static void messageReturned(Object sender, String selector, Object[] args, Object target){
-        getInstance().messageReturnedEvent(sender,selector,args,target);
+        if(USE_DEBUGGER) getInstance().messageReturnedEvent(sender,selector,args,target);
     }
 
     public synchronized void messageSentEvent(Object sender, String selector, Object[] args, Object target){

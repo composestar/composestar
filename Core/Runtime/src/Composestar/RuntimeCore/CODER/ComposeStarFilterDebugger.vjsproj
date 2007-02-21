@@ -140,37 +140,37 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Breaking\AlwaysBreakPoint.java"
+                    RelPath = "BreakPoint\AlwaysBreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Breaking\BreakPoint.java"
+                    RelPath = "BreakPoint\BreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Breaking\NeverBreakPoint.java"
+                    RelPath = "BreakPoint\NeverBreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Breaking\Parsers\BreakPointParseException.java"
+                    RelPath = "BreakPoint\Parsers\BreakPointParseException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Breaking\Parsers\BreakPointParser.java"
+                    RelPath = "BreakPoint\Parsers\BreakPointParser.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Breaking\Parsers\LTL\BreakPointLTLParser.java"
+                    RelPath = "BreakPoint\Parsers\LTL\BreakPointLTLParser.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Breaking\Parsers\LTL\grammar\ltl.g"
+                    RelPath = "BreakPoint\Parsers\LTL\grammar\ltl.g"
                     BuildAction = "None"
                 />
                 <File

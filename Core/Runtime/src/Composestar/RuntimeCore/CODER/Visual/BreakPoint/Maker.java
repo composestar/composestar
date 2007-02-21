@@ -3,7 +3,7 @@ package Composestar.RuntimeCore.CODER.Visual.BreakPoint;
 import Composestar.RuntimeCore.CODER.BreakPoint.BreakPoint;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.BreakPointParseException;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.BreakPointParser;
-import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Ltl.BreakPointLTLParser;
+import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.LTL.BreakPointLTLParser;
 
 import javax.swing.*;
 import java.awt.*;
