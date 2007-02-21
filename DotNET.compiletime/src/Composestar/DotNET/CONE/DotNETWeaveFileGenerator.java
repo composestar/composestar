@@ -31,6 +31,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledI
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
@@ -456,6 +457,11 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 				{
 					FilterModuleSuperImposition fmn = (FilterModuleSuperImposition) iterFilterModules.next();
 					FilterModule fm = fmn.getFilterModule().getRef();
+					
+					if (InnerDispatcher.isDefaultDispatch(fm))
+					{
+						continue;
+					}
 
 					if (!fm.getOutputFilters().isEmpty())
 					{
