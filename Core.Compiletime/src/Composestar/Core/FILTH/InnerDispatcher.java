@@ -30,7 +30,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilter
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
-import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
@@ -38,7 +37,6 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  */
 public class InnerDispatcher
 {
-
 	private static FilterModuleReference innerDispatchReference;
 
 	private InnerDispatcher()
@@ -52,32 +50,56 @@ public class InnerDispatcher
 		}
 		return innerDispatchReference;
 	}
+	
+	public static boolean isDefaultDispatch(String fmName)
+	{
+		if (fmName == null)
+		{
+			return false;
+		}
+		return innerDispatchReference.getQualifiedName().equals(fmName);
+	}
+	
+	public static boolean isDefaultDispatch(FilterModule fm)
+	{
+		if (innerDispatchReference == null)
+		{
+			return false;
+		}
+		return innerDispatchReference.getRef().equals(fm);
+	}
+	
+	public static boolean isDefaultDispatch(FilterModuleReference fmr)
+	{
+		if (fmr == null)
+		{
+			return false;
+		}
+		return fmr.equals(innerDispatchReference);
+	}
 
 	private static FilterModule createInnerDispatchFilterModule()
 	{
 		// create a conern
 		CpsConcern cc = new CpsConcern();
-		cc.setName("CpsDefaultInnerDispatchConcern");
+		cc.setName(DefaultInnerDispatchNames.CONCERN);
 
 		// create filtermodule
 		FilterModuleAST fm = new FilterModuleAST();
 		cc.addFilterModuleAST(fm);
 		fm.setParent(cc);
-		fm.setName("CpsDefaultInnerDispatchFilterModule");
+		fm.setName(DefaultInnerDispatchNames.FILTER_MODULE);
 
 		// add the filter to the filtermodule
-		fm.addInputFilter(createInnerDispatchFilter(cc, fm, "CpsDefaultInnerInputDispatchFilter"));
-		if (!LegacyFilterTypes.useLegacyFilterTypes) // don't add this one for legacy filter types
-		{
-			fm.addOutputFilter(createInnerDispatchFilter(cc, fm, "CpsDefaultInnerOutputDispatchFilter"));
-		}
+		fm.addInputFilter(createInnerDispatchFilter(cc, fm, DefaultInnerDispatchNames.INPUT_FILTER));
+		fm.addOutputFilter(createInnerDispatchFilter(cc, fm, DefaultInnerDispatchNames.OUTER_FILTER));
 
 		// add concern and filtermodule to the datastore
 		DataStore.instance().addObject(cc);
 		DataStore.instance().addObject(fm);
 
 		// create the instances
-		FilterModule fmInstance = new FilterModule(fm, new Vector(), "0");
+		FilterModule fmInstance = new FilterModule(fm, new Vector(), DefaultInnerDispatchNames.FILTER_MODULE_TOKEN);
 		DataStore.instance().addObject(fmInstance);
 
 		// return the filtermodule

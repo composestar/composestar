@@ -519,6 +519,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Composestar\core\FILTH\DefaultInnerDispatchNames.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Composestar\core\FILTH\FilterModuleOrder.java"
                     SubType = "Code"
                     BuildAction = "Compile"

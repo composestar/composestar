@@ -172,9 +172,19 @@ public class Resolver
 			}
 			if (idx == 0)
 			{
-				if (!flowNode.containsName(FlowNode.STOP_NODE))
+				if (!flowNode.containsName(FlowNode.STOP_NODE) && !flowNode.containsName(FlowNode.RETURN_NODE) )
 				{
-					logger.debug("[resolver] reached the end of a trail without a STOP node");
+					StringBuffer sb = new StringBuffer();
+					Iterator nameit = flowNode.getNames();
+					while (nameit.hasNext())
+					{
+						if (sb.length() > 0)
+						{
+							sb.append(", ");
+						}
+						sb.append(nameit.next());
+					}
+					logger.debug("[resolver] reached the end of a trail without a STOP or RETURN node. Contains labels: "+sb);
 				}
 				if (trail.getResultMessage() == null)
 				{

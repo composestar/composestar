@@ -232,8 +232,7 @@ public class FILTHServiceImpl extends FILTHService
 		{
 			fmsi = (FilterModuleSuperImposition) j.next();
 			FilterModuleReference fmr = fmsi.getFilterModule();
-			if (!(fmr.getRef().getQualifiedName()
-					.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
+			if (!InnerDispatcher.isDefaultDispatch(fmr))
 			{
 				FILTHService.log.print("<li><i>" + fmr.getRef().getQualifiedName() + "</i></li>\n");
 			}
@@ -251,8 +250,7 @@ public class FILTHServiceImpl extends FILTHService
 			{
 				fmsi = (FilterModuleSuperImposition) j.next();
 				FilterModuleReference fmr = fmsi.getFilterModule();
-				if (!(fmr.getRef().getQualifiedName()
-						.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
+				if (!InnerDispatcher.isDefaultDispatch(fmr))
 				{
 					FILTHService.log.print("<li><i>" + fmr.getRef().getQualifiedName() + "</i></li>\n");
 				}

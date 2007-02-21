@@ -18,6 +18,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -85,8 +86,7 @@ public class FilterSetAnalysis implements Serializable
 		for (Object filterModule : filterModules)
 		{
 			String name = (String) filterModule;
-			// if(
-			// !(name.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
+			//if (!InnerDispatcher.isDefaultDispatch(name))
 			{
 				FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID(name);
 				Iterator ifItr = fm.getInputFilterIterator();

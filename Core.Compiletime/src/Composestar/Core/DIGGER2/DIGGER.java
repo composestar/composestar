@@ -49,7 +49,7 @@ public class DIGGER implements CTCommonModule
 	 * If set to true Fire2 execution graphs will be shown. Should only be used
 	 * for debugging of digger2
 	 */
-	private static final boolean SHOW_GRAPH = false;
+	private static final boolean SHOW_GRAPH = true;
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
