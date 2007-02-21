@@ -81,11 +81,6 @@
                     HintPath = "VJSSupUILib.dll"
                 />
                 <Reference
-                    Name = "ComposeStarRuntimeInterpreter"
-                    Project = "{44C00A21-5832-4331-BEBB-0669F4CA299A}"
-                    Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
-                />
-                <Reference
                     Name = "AntlrDotNet"
                     Project = "{105127C9-CD0A-43C8-9314-D3C67A0C529A}"
                     Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
@@ -100,17 +95,22 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "BreakPointListener.java"
+                    RelPath = "DebuggerRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DebuggerFactory.java"
+                    RelPath = "DesignTime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DebuggerProvider.java"
+                    RelPath = "ExecutionStack.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExecutionStackItem.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -120,132 +120,91 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "StateHandler.java"
+                    RelPath = "Profiler.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "BreakPoint\AlwaysBreakBreakPoint.java"
+                    RelPath = "Publisher.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "BreakPoint\BreakPoint.java"
+                    RelPath = "SourceReference.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "BreakPoint\parsers\BreakPointParseException.java"
+                    RelPath = "SymbolManager.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "consoleDebugger\ConsolePrinterDebugger.java"
+                    RelPath = "Breaking\AlwaysBreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "value\FunctionCallValue.java"
+                    RelPath = "Breaking\BreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "value\Value.java"
+                    RelPath = "Breaking\NeverBreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "value\VariableValue.java"
+                    RelPath = "Breaking\Parsers\BreakPointParseException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\VisualDebugger.java"
+                    RelPath = "Breaking\Parsers\BreakPointParser.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\Visualizer.java"
+                    RelPath = "Breaking\Parsers\LTL\BreakPointLTLParser.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\CodeDebugger\CodeDebugger.java"
+                    RelPath = "Breaking\Parsers\LTL\grammar\ltl.g"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Visual\BreakPoint\Maker.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\CodeDebugger\GuiComponents\AcceptRejectGuiComponent.java"
+                    RelPath = "Visual\Inspector\FilterInspector.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\CodeDebugger\GuiComponents\CodeExecutionGuiComponent.java"
+                    RelPath = "Visual\Inspector\MessageInspector.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\FilterVisualizer\FilterVisualizer.java"
+                    RelPath = "Visual\Inspector\ObjectInspector.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\CustomGuiComponent.java"
+                    RelPath = "Visual\Representation\AcceptRejectGuiComponent.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\DebugGuiComponent.java"
+                    RelPath = "Visual\Representation\CodeDebugger.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\DispatchGuiComponent.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\ErrorGuiComponent.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\FilterExecutionGuiComponent.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\FilterGuiComponent.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\MessageGuiComponent.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\MetaGuiComponent.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\ObjectGuiComponent.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\Inspectors\FilterInspector.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\Inspectors\MessageInspector.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\Inspectors\ObjectInspector.java"
+                    RelPath = "Visual\Representation\CodeExecutionGuiComponent.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
