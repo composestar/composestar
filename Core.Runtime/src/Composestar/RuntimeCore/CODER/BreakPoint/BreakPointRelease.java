@@ -1,27 +1,28 @@
 package Composestar.RuntimeCore.CODER.BreakPoint;
 
-import Composestar.RuntimeCore.CODER.Halter;
-import Composestar.RuntimeCore.CODER.BreakPoint.*;
-import Composestar.RuntimeCore.FLIRT.*;
-import java.util.*;
+import Composestar.RuntimeCore.CODER.ExecutionStackItem;
 
 /**
  * Summary description for BreakPointBiLTL.
  */
-public class BreakPointRelease extends BreakPointBi
+public class BreakPointRelease extends BreakPoint
 {
 	private boolean armed = false;
 	private boolean released = false;
+	private BreakPoint left;
+	private BreakPoint right;
 
-	public BreakPointRelease(BreakPoint right)
+	public BreakPointRelease(BreakPoint left, BreakPoint right)
 	{
-		super(right);
+		this.left = left;
+		this.right = right;
 	}
 
-	public boolean check(boolean isLeft, boolean isRight)
+	public boolean check(ExecutionStackItem status)
 	{
+		boolean isLeft = left.check(status);
 		armed |= isLeft;
 		released |= (armed && !isLeft);
-		return released && isRight;
+		return released && right.check(status);
 	}
 }

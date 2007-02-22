@@ -5,10 +5,12 @@ import Composestar.RuntimeCore.CODER.ExecutionStackItem;
 /**
  * Created by IntelliJ IDEA.
  * User: reddog
- * Date: 18-feb-2007
- * Time: 23:14:46
+ * Date: 19-feb-2007
+ * Time: 13:59:38
  * To change this template use File | Settings | File Templates.
  */
-public abstract class BreakPoint {
-    public abstract boolean check(ExecutionStackItem status);
+public class NeverBreakPoint extends BreakPoint{
+    public boolean check(ExecutionStackItem status){
+        return false;
+    }
 }

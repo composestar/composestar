@@ -1,25 +1,22 @@
 package Composestar.RuntimeCore.CODER.BreakPoint;
 
-import Composestar.RuntimeCore.CODER.Halter;
-import Composestar.RuntimeCore.CODER.BreakPoint.*;
-import Composestar.RuntimeCore.FLIRT.*;
-import Composestar.RuntimeCore.FLIRT.Reflection.JoinPoint;
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
+import Composestar.RuntimeCore.CODER.ExecutionStackItem;
 
 import java.util.*;
 
 /**
  * Summary description for BreakPointBiLTL.
  */
-public abstract class BreakPointNot extends BreakPointMono
+public abstract class BreakPointNot extends BreakPoint
 {
+	private BreakPoint right;
+
 	public BreakPointNot(BreakPoint right)
 	{
-		super(right);
+		this.right = right;
 	}
 
-    public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){
-			return !right.matchEvent(eventType, currentFilter, messageList, point);
+    public boolean check(ExecutionStackItem status){
+		return !right.check(status);
     }
 }

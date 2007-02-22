@@ -25,15 +25,6 @@
 				<include name="*.smap"/>
 			</fileset>
 		</delete>
-		<delete>
-			<fileset dir="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Reg">
-				<include name="RegLexer.java"/>
-				<include name="RegParser.java"/>
-				<include name="RegTokenTypes.*"/>
-				<include name="RegParserTokenTypes.*"/>
-				<include name="*.smap"/>
-			</fileset>
-		</delete>
 	</target>	
 	
 	<target name="local_init" depends="init">
@@ -47,13 +38,10 @@
 		<antlr target="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl/grammar/ltl.g" outputdirectory="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl">
 			<classpath refid="lib.core"/>
 		</antlr>
-		<antlr target="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Reg/grammar/reg.g" outputdirectory="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Reg">
-			<classpath refid="lib.core"/>
-		</antlr>
 	</target>
 
 	<target name="compile_java" depends="local_init,antlr">
-		<javac srcdir="src" destdir="${out.build}" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<classpath>
 				<pathelement location="${build.core}/Compiletime/${out.jar.core}"/>
 			</classpath>

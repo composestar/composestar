@@ -1,6 +1,5 @@
-package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Ltl;
+package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.LTL;
 
-import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
 
@@ -15,7 +14,7 @@ public class BreakPointLTLParser extends BreakPointParser
 	{
 	}
 
-	public BreakPoint parse(String ltlExpression, Halter halt) throws BreakPointParseException
+	public BreakPoint parse(String ltlExpression) throws BreakPointParseException
 	{
 		if(ltlExpression == null || "".equals(ltlExpression.trim()))
 		{

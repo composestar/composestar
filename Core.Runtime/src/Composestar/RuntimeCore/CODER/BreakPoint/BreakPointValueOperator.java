@@ -1,19 +1,12 @@
 package Composestar.RuntimeCore.CODER.BreakPoint;
 
-import Composestar.RuntimeCore.CODER.BreakPointListener;
-import Composestar.RuntimeCore.CODER.Halter;
-import Composestar.RuntimeCore.CODER.StateHandler;
-import Composestar.RuntimeCore.FLIRT.Message.*;
-import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
-import Composestar.RuntimeCore.FLIRT.Reflection.JoinPoint;
-import Composestar.RuntimeCore.CODER.Value.Value;
-import java.util.ArrayList;
-import java.util.Dictionary;
+import Composestar.RuntimeCore.CODER.BreakPoint.Value.*;
+import Composestar.RuntimeCore.CODER.ExecutionStackItem;
 
 /**
  * Summary description for BreakPointBiLTL.
  */
-public class BreakPointValueOperator implements BreakPoint, Value
+public class BreakPointValueOperator extends BreakPoint implements Value
 {
 	protected Value left;
 	protected Value right;
@@ -114,7 +107,7 @@ public class BreakPointValueOperator implements BreakPoint, Value
 		return false;
 	}
 
-    public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){
+    public boolean check(ExecutionStackItem status){
 		//Just check the last one.
 		return getValue().equals(oTrue);
 	}
