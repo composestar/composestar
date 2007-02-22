@@ -13,6 +13,11 @@ public class Thread
 	private System.Threading.Thread innerThread;
 	private Runnable runable;
 
+	public static void sleep(int l) throws InterruptedException
+	{
+		System.Threading.Thread.Sleep(l);
+	}
+
 	public Thread(System.Threading.Thread thread)
 	{
 		this.innerThread = thread;
