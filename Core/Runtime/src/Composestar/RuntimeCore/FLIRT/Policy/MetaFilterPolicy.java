@@ -56,7 +56,7 @@ class MetaFilterPolicy extends FilterPolicy
 						aMessage.getFirstMessage().getSelector()));
 		JoinPointInfoProxy.updateJoinPoint(jp);
 
-		DebuggerRuntime.messageSent(aMessage.getSender(),aMessage.getOrgMessage().getSelector(),aMessage.getArguments(),aMessage.getOrgMessage().getTarget());
+		DebuggerRuntime.messageSent(aMessage.getSender(),aMessage.getOrgMessage().getSelector(),aMessage.getArguments(),aMessage.getOrgMessage().getTarget(),filterList);
 		if (Debug.SHOULD_DEBUG)
 		{
 			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tProcessing meta filter policy...");
@@ -66,7 +66,6 @@ class MetaFilterPolicy extends FilterPolicy
 			FilterRuntime f = (FilterRuntime) filterList.get(j);
 			MessageList originalMessage = new MessageList(aMessage);
 
-			//Debugger.getInstance().event(Debugger.MESSAGE_PROCESSING_START, null, aMessage, jp);
 			if (Debug.SHOULD_DEBUG)
 			{
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tEvaluating filter '"
@@ -83,12 +82,12 @@ class MetaFilterPolicy extends FilterPolicy
 
 			if (eval)
 			{
-				//Debugger.getInstance().event(Debugger.FILTER_ACCEPTED, f, modifiedMessage, jp);
+				DebuggerRuntime.filterAcceptedMessage(aMessage.getSender(),aMessage.getOrgMessage().getSelector(),aMessage.getArguments(),aMessage.getOrgMessage().getTarget(),f);
 				csa = f.getAcceptAction(originalMessage, modifiedMessage, context);
 			}
 			else
 			{
-				//Debugger.getInstance().event(Debugger.FILTER_REJECTED, f, modifiedMessage, jp);
+				DebuggerRuntime.filterRejectedMessage(aMessage.getSender(),aMessage.getOrgMessage().getSelector(),aMessage.getArguments(),aMessage.getOrgMessage().getTarget(),f);
 				csa = f.getRejectAction(originalMessage, modifiedMessage, context);
 			}
 

@@ -1,5 +1,6 @@
 package Composestar.RuntimeCore.CODER;
 
+import java.util.ArrayList;
 import java.io.File;
 /**
  * DebuggerRuntime
@@ -47,16 +48,16 @@ public class DebuggerRuntime {
      return SingletonHolder.instance;
    }
 
-    public static void messageSent(Object sender, String selector, Object[] args, Object target){
-        if(USE_DEBUGGER) getInstance().messageSentEvent(sender,selector,args,target);
+    public static void messageSent(Object sender, String selector, Object[] args, Object target, ArrayList filters){
+        if(USE_DEBUGGER) getInstance().messageSentEvent(sender,selector,args,target,filters);
     }
 
-    public static void filterRejectedMessage(Object sender, String selector, Object[] args, Object target){
-        if(USE_DEBUGGER) getInstance().filterRejectedMessageEvent(sender,selector,args,target);
+    public static void filterRejectedMessage(Object sender, String selector, Object[] args, Object target, Object filter){
+        if(USE_DEBUGGER) getInstance().filterRejectedMessageEvent(sender,selector,args,target,filter);
     }
 
-    public static void filterAcceptedMessage(Object sender, String selector, Object[] args, Object target){
-        if(USE_DEBUGGER) getInstance().filterAcceptedMessageEvent(sender,selector,args,target);
+    public static void filterAcceptedMessage(Object sender, String selector, Object[] args, Object target, Object filter){
+        if(USE_DEBUGGER) getInstance().filterAcceptedMessageEvent(sender,selector,args,target,filter);
     }
 
     public static void messageDelivered(Object sender, String selector, Object[] args, Object target){
@@ -79,17 +80,17 @@ public class DebuggerRuntime {
         if(USE_DEBUGGER) getInstance().messageReturnedEvent(sender,selector,args,target);
     }
 
-    public synchronized void messageSentEvent(Object sender, String selector, Object[] args, Object target){
+    public synchronized void messageSentEvent(Object sender, String selector, Object[] args, Object target,ArrayList filters){
         halter.checkHalt();
         profiler.messageSent(sender, selector, args,target);
     }
 
-    public synchronized void filterRejectedMessageEvent(Object sender, String selector, Object[] args, Object target){
+    public synchronized void filterRejectedMessageEvent(Object sender, String selector, Object[] args, Object target, Object filter){
         halter.checkHalt();
         profiler.filterRejectedMessage(sender, selector, args,target);
     }
 
-    public synchronized void filterAcceptedMessageEvent(Object sender, String selector, Object[] args, Object target){
+    public synchronized void filterAcceptedMessageEvent(Object sender, String selector, Object[] args, Object target, Object filter){
         halter.checkHalt();
         profiler.filterAcceptedMessage(sender, selector, args,target);
     }
