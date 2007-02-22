@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight/Compiletime" default="build">
 
-  <property name="build.core" value="../../../Core"/>
+	<condition property="build.core" value="${basedir}/../../../Core">
+		<and>
+			<not><isset property="build.core"/></not>
+			<available file="../../../Core/common.xml"/>
+		</and>
+	</condition>
 	<import file="${build.core}/common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>	
 	<description>The Compose* StarLight Compiletime</description>
-
-	<!-- default path to xsd.exe (can be overridden in build.ini) -->
-	<property name="xsd.exe" value="xsd.exe"/>
 
 	<!-- clean -->
 
@@ -31,6 +33,9 @@
 	</target>
 	
 	<target name="init_local" depends="init">
+	
+		<!-- default path to xsd.exe (can be overridden in build.ini) -->
+		<property name="xsd.exe" value="xsd.exe"/>
 
 		<property name="out.xmltypes"     location="../StarLightEntities/obj/xmltypes"/>
 		<property name="core.jar"         location="${build.core}/Compiletime/${out.jar.core}"/>

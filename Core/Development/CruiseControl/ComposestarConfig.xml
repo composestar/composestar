@@ -123,10 +123,11 @@
 		
 		<!-- set this to the location of the starlight root -->
 		<!-- 
-		     Because starlight is using a branch for its core, it needs a seperate folder 
-		     When the branch has been merged back, then the composestar folder can be used. 		
+		     Note: currently starlight is build as a seperate project by cruisecontrol
+					but it does use the same core as the rest of compose*. It's just that
+					the integration targets must be joined
 		-->
-		<property name="starlight.path" value="c:\starlight" />
+		<property name="starlight.path" value="c:\composestar" />
 		
 		<!-- set this to the location of the composestar root -->
 		<property name="composestar.path" value="c:\composestar" />
