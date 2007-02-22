@@ -1,232 +1,88 @@
 package Composestar.Core.RepositoryImplementation;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 /**
  * The DataMap is in implementation of the java.util.Map interface that uses two
  * public Vectors as storage, one for keys, and one for values.
  * RepositoryEntities that need a map should used the DataMap since it can be
- * serialized by CONE-XML. Only serializable objects may be added to this map
- * because the entries will mostlikely be serialized. Only data that is needed
- * at runtime should be added to a DataMap. To store compiletime only data used
- * the CommonResources.
+ * serialized by CONE-XML.
  * 
  * @author Tom Staijen
  * @version 0.9.0
  */
-public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
+public abstract class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 {
 	private static final long serialVersionUID = -6486304623601718657L;
 
-	public Vector m_keys;
-
-	public Vector m_values;
-
-	public DataMap()
+	protected static Class dataMapClass;
+	
+	public static boolean setDataMapClass(Class newClass)
 	{
-		m_keys = new Vector();
-		m_values = new Vector();
-	}
-
-	public DataMap(DataMap map)
-	{
-		m_keys = new Vector(map.m_keys.size());
-		m_values = new Vector(map.m_values.size());
-
-		for (int i = 0; i < m_keys.size(); i++)
+		if (DataMap.class.isAssignableFrom(newClass))
 		{
-			m_keys.addElement(map.m_keys.elementAt(i));
-			m_values.addElement(map.m_values.elementAt(i));
+			dataMapClass = newClass;
+			return true;
 		}
+		return false;
 	}
 
-	public int size()
+	public static DataMap newDataMapInstance()
 	{
-		return m_keys.size();
-	}
-
-	public boolean isEmpty()
-	{
-		return m_keys.isEmpty();
-	}
-
-	public boolean containsKey(Object key)
-	{
-		return m_keys.contains(key);
-	}
-
-	public boolean containsValue(Object value)
-	{
-		return m_values.contains(value);
-	}
-
-	public Object get(Object key)
-	{
-		int index = m_keys.indexOf(key);
-		return index < 0 ? null : m_values.elementAt(index);
-	}
-
-	public Object put(Object key, Object value)
-	{
-		// At runtime elements are added that are not serializable (and don't have to be)
-		/*
-		if ((key != null) && !(value instanceof Serializable))
+		DataMap newMap;
+		try
 		{
-			throw new UnsupportedOperationException(
-					"Value must implement Serializable or use CommonResources otherwise");
+			newMap = (DataMap) dataMapClass.newInstance();
 		}
-		if ((key != null) && !(key instanceof Serializable))
+		catch (Exception e)
 		{
-			throw new UnsupportedOperationException(
-					"Value must implement Serializable or use CommonResources otherwise");
+			throw new RuntimeException("Unable to create DataMap of class " + dataMapClass);
 		}
-		*/
-
-		int index = m_keys.indexOf(key);
-		if (index < 0)
-		{
-			m_keys.addElement(key);
-			m_values.addElement(value);
-			return null;
-		}
-		else
-		{
-			Object old = m_values.elementAt(index);
-			m_values.setElementAt(value, index);
-			return old;
-		}
+		return newMap;
 	}
 
-	public Object remove(Object key)
-	{
-		int index = m_keys.indexOf(key);
-		if (index == -1) return null;
-		Object old = m_values.elementAt(index);
-		m_values.removeElementAt(index);
-		m_keys.removeElementAt(index);
-		return old;
-	}
+	public abstract void clear();
 
-	public void putAll(Map map)
-	{
-		throw new UnsupportedOperationException();
-	}
+	public abstract boolean containsKey(Object key);
 
-	public void clear()
-	{
-		m_keys = new Vector();
-		m_values = new Vector();
-	}
-
-	public Set keySet()
-	{
-		return new HashSet(m_keys);
-	}
+	public abstract boolean containsValue(Object value);
 
 	public Set entrySet()
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection values()
-	{
-		return m_values;
-	}
-
-	public boolean equals(Object o)
+	public boolean equals(Object arg0)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	public int hashCode()
-	{
-		return m_keys.hashCode();
-	}
+	public abstract Object get(Object key);
 
-	public String toString()
-	{
-		return m_keys + " == " + m_values;
-	}
+	public abstract boolean isEmpty();
 
+	public abstract Set keySet();
+
+	public abstract Object put(Object key, Object value);
+
+	public abstract void putAll(Map map);
+
+	public abstract Object remove(Object key);
+
+	public abstract int size();
+
+	public abstract Collection values();
+
+	public abstract void excludeUnreferenced(Class c);
+
+	public abstract HashMap toHashMap();
+	
 	public Object clone() throws CloneNotSupportedException
 	{
-		// shallow copy
-		DataMap dmap = new DataMap(this);
-
-		return dmap;
-	}
-
-	public void excludeUnreferenced(Class c)
-	{
-		Vector removeKeys = new Vector();
-
-		int n = m_values.size();
-		for (int i = 0; i < n; i++)
-		{
-			Object key = m_keys.elementAt(i);
-			Object value = m_values.elementAt(i);
-			if (value.getClass().equals(c) && (value instanceof RepositoryEntity))
-			{
-				RepositoryEntity re = (RepositoryEntity) value;
-				if (re.getDynObject("REFERENCED") == null)
-				{
-					removeKeys.addElement(key);
-				}
-			}
-		}
-		for (Enumeration e = removeKeys.elements(); e.hasMoreElements();)
-		{
-			Object key = e.nextElement();
-			remove(key);
-		}
-	}
-
-	public HashMap toHashMap()
-	{
-		HashMap result = new HashMap();
-		for (int i = 0; i < m_keys.size(); i++)
-		{
-			result.put(m_keys.elementAt(i), m_values.elementAt(i));
-		}
-		return result;
-	}
-
-	/**
-	 * Custom deserialization of this object
-	 */
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-	{
-		m_keys = (Vector) in.readObject();
-		m_values = (Vector) in.readObject();
-	}
-
-	/**
-	 * Custom serialization of this object. Only store serializable objects.
-	 */
-	private void writeObject(ObjectOutputStream out) throws IOException
-	{
-		Vector serKeys = new Vector();
-		Vector serValues = new Vector();
-		for (int i = 0; i < m_values.size(); i++)
-		{
-			Object o = m_values.get(i);
-			if (o instanceof Serializable)
-			{
-				serKeys.add(m_keys.get(i));
-				serValues.add(o);
-			}
-		}
-		out.writeObject(serKeys);
-		out.writeObject(serValues);
+		return super.clone();
 	}
 }

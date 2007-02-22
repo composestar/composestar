@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/Core/Compiletime" default="build">
+<project name="ComposeStar/Core/Compiletime" default="build" xmlns:cs="antlib:Composestar">
 
-	<condition property="build.core" value="..">
-		<and>
-			<not><isset property="build.core"/></not>
-			<available file="../common.xml"/>
-		</and>
-	</condition>
+	<property name="build.core" location=".."/>
 	<import file="${build.core}/common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>
-	
 	<description>The Compose* Core Compiletime. This is the core of the Compose* compiler.</description>
 
 	<target name="clean" depends="init" description="Clean compile results">
@@ -33,7 +27,7 @@
 				<include name="CpsLexer.java"/>
 				<include name="CpsParser.java"/>
 				<include name="CpsTokenTypes.*"/>
-				<include name="CpsTreeWalker.java"/>				
+				<include name="CpsTreeWalker.java"/>
 				<include name="CpsTreeWalkerTokenTypes.*"/>
 				<include name="*.smap"/>
 			</fileset>
@@ -69,12 +63,7 @@
 	<target name="build" depends="java-versionclass,local_init,antlr,compile,jar" description="Compile the code and create the jar file"/>
 	
 	<target name="antlr" depends="local_init">
-		<antlr target="src/Composestar/Core/COPPER/grammar/cps.g" outputdirectory="src/Composestar/Core/COPPER">
-			<classpath refid="lib.core"/>
-		</antlr>
-		<antlr target="src/Composestar/Core/COPPER/grammar/cpsw.g" outputdirectory="src/Composestar/Core/COPPER">
-			<classpath refid="lib.core"/>
-		</antlr>
+		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java"/>
 	</target>	
 
 	<target name="compile" depends="local_init,antlr">
@@ -127,22 +116,22 @@
 			<copy file="binaries/log4j/log4j-1.2.14.jar" todir="@{todir}/binaries"/>
 
 			<copy todir="@{todir}/binaries/prolog">
-				<fileset dir="binaries/prolog">
-					<include name="prolog.jar"/>
-					<include name="lib.pro"/>
-					<include name="connector.pro"/>
-				</fileset>
-			</copy>
+			<fileset dir="binaries/prolog">
+				<include name="prolog.jar"/>
+				<include name="lib.pro"/>
+				<include name="connector.pro"/>
+			</fileset>
+		</copy>
 
 			<copy todir="@{todir}/binaries/groove">
-				<fileset dir="binaries/groove">
-					<include name="groove-1_2_0.jar"/>
-					<include name="castor-0_9_5_2-xml.jar"/>
-					<include name="jgraph.jar"/>
-					<include name="xerces-2_6_0-xercesImpl.jar"/>
-					<include name="xerces-2_6_0-xml-apis.jar"/>
-				</fileset>
-			</copy>
+			<fileset dir="binaries/groove">
+				<include name="groove-1_2_0.jar"/>
+				<include name="castor-0_9_5_2-xml.jar"/>
+				<include name="jgraph.jar"/>
+				<include name="xerces-2_6_0-xercesImpl.jar"/>
+				<include name="xerces-2_6_0-xml-apis.jar"/>
+			</fileset>
+		</copy>
 		</sequential>
 	</macrodef>
 	
@@ -199,5 +188,5 @@
 			<report format="noframes" todir="test" />
 		</junitreport>
 	</target>
-		
+	
 </project>

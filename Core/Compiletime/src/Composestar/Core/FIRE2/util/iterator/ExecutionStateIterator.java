@@ -4,6 +4,7 @@
  */
 package Composestar.Core.FIRE2.util.iterator;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -20,14 +21,16 @@ public class ExecutionStateIterator implements Iterator
 {
 	public Stack unvisitedStates = new Stack();
 
-	public HashSet visitedStates = new HashSet();
+	public HashSet iteratedStates = new HashSet();
 
 	public ExecutionStateIterator(ExecutionModel model)
 	{
 		Iterator it = model.getEntranceStates();
 		while (it.hasNext())
 		{
-			unvisitedStates.push(it.next());
+			Object obj = it.next();
+			unvisitedStates.push(obj);
+			iteratedStates.add(obj);
 		}
 	}
 
@@ -54,9 +57,6 @@ public class ExecutionStateIterator implements Iterator
 		// get next state:
 		state = (ExecutionState) unvisitedStates.pop();
 
-		// add to visitedStates:
-		visitedStates.add(state);
-
 		// add next unvisitedStates to the unvisitedStates stack:
 		addNextStates(state);
 
@@ -73,15 +73,24 @@ public class ExecutionStateIterator implements Iterator
 		ExecutionState nextState;
 
 		Iterator it = state.getOutTransitions();
+		ArrayList addStates = new ArrayList();
 		while (it.hasNext())
 		{
 			ExecutionTransition transition = (ExecutionTransition) it.next();
 			nextState = transition.getEndState();
 
-			if (!visitedStates.contains(nextState))
+			if (!iteratedStates.contains(nextState))
 			{
-				unvisitedStates.push(nextState);
+				addStates.add(nextState);
+				iteratedStates.add(nextState);
 			}
+		}
+
+		// Add states to unvisitedStates stack in reversed order of the
+		// transition iterator, to ensure that the endstate of an earlier
+		// transition is visited before the endstate of a later transition.
+		for (int i=addStates.size()-1; i>=0; i--){
+			unvisitedStates.push(addStates.get(i));
 		}
 	}
 

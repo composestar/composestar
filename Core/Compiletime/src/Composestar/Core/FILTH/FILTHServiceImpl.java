@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,19 +37,27 @@ import Composestar.Core.FILTH.Core.Rule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
 import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.ConfigurationException;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.FilterModSIinfo;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
 
 public class FILTHServiceImpl extends FILTHService
 {
-	private String specfile;
+	private boolean outputEnabled;
+	private String specFilename;
 
-	protected FILTHServiceImpl(CommonResources cr)
-	{}
+	protected FILTHServiceImpl() throws ConfigurationException
+	{
+		ModuleInfo mi = ModuleInfoManager.get(FILTH.MODULE_NAME);
+		outputEnabled = mi.getBooleanSetting("outputEnabled");
+		specFilename = mi.getStringSetting("input");
+	}
 
 	public List getOrder(Concern c)
 	{
@@ -72,16 +81,45 @@ public class FILTHServiceImpl extends FILTHService
 		try
 		{
 			String basedir = Configuration.instance().getPathSettings().getPath("Base");
-			File file = new File(basedir + "analyses/");
+			File file = new File(basedir + "Analyses/");
 			if (!file.exists())
 			{
 				file.mkdir();
 			}
 			if (file.isDirectory())
 			{
-				// System.out.println("Found and Dir: "+file.getAbsolutePath());
-				filename = file.getAbsolutePath() + "\\FILTH_" + c.getName() + ".html";
-				FILTHService.setLog(new PrintStream(new FileOutputStream(filename)));
+				if (c.getName().indexOf("<") >= 0)
+				{
+					filename = c.getName().substring(0, c.getName().indexOf("<"));
+
+					int count = 1, fromIndex = 0, foundIndex = 0;
+					do
+					{
+						foundIndex = c.getName().indexOf(",", fromIndex);
+						if (foundIndex >= 0)
+						{
+							count++;
+							fromIndex = foundIndex + 1;
+						}
+					} while (foundIndex >= 0);
+
+					filename = filename + "`" + count;
+				}
+				else
+				{
+					filename = c.getName();
+				}
+				filename = file.getAbsolutePath() + "\\FILTH_" + URLEncoder.encode(filename, "UTF-8")
+						+ ".html";
+
+				if (outputEnabled)
+				{
+					FILTHService.setLog(new PrintStream(new FileOutputStream(filename)));
+				}
+				else
+				{
+					FILTHService.setLog(new PrintStream(new DevNullOutputStream()));
+				}
 				cssFile = "file://" + Configuration.instance().getPathSettings().getPath("base") + "SECRET.css";
 				if (!(new File(cssFile).exists()))
 				{
@@ -96,7 +134,7 @@ public class FILTHServiceImpl extends FILTHService
 			// e.printStackTrace();
 			// throw new ModuleException("SECRET","FILTH report file creation
 			// failed (" + filename + "), with reason: " + e.getMessage());
-			Debug.out(Debug.MODE_INFORMATION, "FILTH", "FILTH report file creation failed (" + filename
+			Debug.out(Debug.MODE_INFORMATION, FILTH.MODULE_NAME, "FILTH report file creation failed (" + filename
 					+ "), with reason: " + e.getMessage());
 		}
 
@@ -155,10 +193,10 @@ public class FILTHServiceImpl extends FILTHService
 		 * System.out.println(((Node)i.next()).getElement());
 		 * System.out.println("/n-----------"); }
 		 */
-		FilterModuleReference fr = null;
-		for (Object order : orders)
+		FilterModuleSuperImposition fmsi = null;
+		for (Iterator k = orders.iterator(); k.hasNext();)
 		{
-			Iterator i = ((List) order).iterator();
+			Iterator i = ((List) k.next()).iterator();
 			/* skip the root */
 			i.next();
 			LinkedList anOrder = new LinkedList();
@@ -166,21 +204,21 @@ public class FILTHServiceImpl extends FILTHService
 			{
 				Action a = (Action) ((Node) i.next()).getElement();
 
-				for (Object modulref : modulrefs)
+				for (Iterator j = modulrefs.iterator(); j.hasNext();)
 				{
-					fr = (FilterModuleReference) modulref;
+					fmsi = (FilterModuleSuperImposition) j.next();
 					// System.out.println("FILTH
 					// ordering>>>"+a+"::"+fr.getName() );
-					if (a.getName().equals(fr.getName()))
+					if (a.getName().equals(fmsi.getFilterModule().getName()))
 					{
 						break;
 					}
 
 				}
-				anOrder.addLast(fr);
+				anOrder.addLast(fmsi);
 				// System.out.println(count++);
 			}
-			anOrder.addLast(InnerDispatcher.getInnerDispatchReference());
+			anOrder.addLast(new FilterModuleSuperImposition(InnerDispatcher.getInnerDispatchReference()));
 			forders.addLast(anOrder);
 		}
 
@@ -190,11 +228,11 @@ public class FILTHServiceImpl extends FILTHService
 		FILTHService.log.print("<h4>Selected Order: </h4>\n");
 		FILTHService.log.print("<ol>\n");
 		// FILTHService.printTab(3,"<-- Alternative ("+ alt++ +") -->\n");
-		for (Object o : ((LinkedList) forders.getFirst()))
+		for (Iterator j = ((LinkedList) forders.getFirst()).iterator(); j.hasNext();)
 		{
-			FilterModuleReference fmr = (FilterModuleReference) o;
-			if (!(fmr.getRef().getQualifiedName()
-					.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
+			fmsi = (FilterModuleSuperImposition) j.next();
+			FilterModuleReference fmr = fmsi.getFilterModule();
+			if (!InnerDispatcher.isDefaultDispatch(fmr))
 			{
 				FILTHService.log.print("<li><i>" + fmr.getRef().getQualifiedName() + "</i></li>\n");
 			}
@@ -204,15 +242,15 @@ public class FILTHServiceImpl extends FILTHService
 		FILTHService.log.print("<h4>Alternatives: </h4>\n");
 		// FILTHService.log.print("<ul>\n");
 
-		for (Object forder : forders)
+		for (Iterator i = forders.iterator(); i.hasNext();)
 		{
 			FILTHService.log.print("<h4>Alternative[" + alt + "]: </h4>\n");
 			FILTHService.log.print("<ol>\n");
-			for (Object o : ((List) forder))
+			for (Iterator j = ((List) i.next()).iterator(); j.hasNext();)
 			{
-				FilterModuleReference fmr = (FilterModuleReference) o;
-				if (!(fmr.getRef().getQualifiedName()
-						.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
+				fmsi = (FilterModuleSuperImposition) j.next();
+				FilterModuleReference fmr = fmsi.getFilterModule();
+				if (!InnerDispatcher.isDefaultDispatch(fmr))
 				{
 					FILTHService.log.print("<li><i>" + fmr.getRef().getQualifiedName() + "</i></li>\n");
 				}
@@ -242,7 +280,7 @@ public class FILTHServiceImpl extends FILTHService
 
 		if (alt > 2)
 		{
-			Debug.out(Debug.MODE_WARNING, "FILTH", "Multiple Filter Module orderings possible for concern "
+			Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Multiple Filter Module orderings possible for concern "
 					+ c.getQualifiedName(), filename, 0);
 		}
 
@@ -269,14 +307,15 @@ public class FILTHServiceImpl extends FILTHService
 		/* add the name of each filtermodule into the graph */
 		for (Iterator i = fmsi.getIter(); i.hasNext();)
 		{
-			FilterModuleReference fr = (FilterModuleReference) i.next();
+			FilterModuleSuperImposition fms = (FilterModuleSuperImposition) i.next();
+			FilterModuleReference fr = fms.getFilterModule();
 			Action a = new Action(fr.getName(), Boolean.TRUE, true);
 			Action.insert(a, g);
 
 			// FILTHService.print("FILTH::adding module> "+fr.getName()+"|");
 			FILTHService.log.print("<li><i>" + fr.getQualifiedName() + "</i></li>\n");
 
-			modulerefs.add(fr);
+			modulerefs.add(fms);
 		}
 		return modulerefs;
 	}
@@ -284,13 +323,13 @@ public class FILTHServiceImpl extends FILTHService
 	private void processOrderingSpecifications(Graph g)
 	{
 		HashMap map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
-		Debug.out(Debug.MODE_INFORMATION, "FILTH", "FilterModule ordering constraints: " + map);
+		Debug.out(Debug.MODE_INFORMATION, FILTH.MODULE_NAME, "FilterModule ordering constraints: " + map);
 
 		String left, right;
 		Iterator it = map.values().iterator();
-		for (Object o : map.values())
+		while (it.hasNext())
 		{
-			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint) o;
+			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint) it.next();
 			left = soc.getLeft();
 			Iterator socit = soc.getRightFilterModules();
 			while (socit.hasNext())
@@ -306,9 +345,9 @@ public class FILTHServiceImpl extends FILTHService
 		HashMap map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
 		Iterator it = map.values().iterator();
 
-		for (Object o : map.values())
+		while (it.hasNext())
 		{
-			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint) o;
+			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint) it.next();
 			FILTHService.log.print("<li><i>" + soc.toString() + "</i></li>\n");
 		}
 	}
@@ -368,35 +407,31 @@ public class FILTHServiceImpl extends FILTHService
 			ConstraintFilter of = new ConstraintFilter(g);
 			of.setParent(xr);
 
-			Configuration config = Configuration.instance();
-			specfile = config.getModuleProperty("FILTH", "input", null);
-
-			if (specfile != null)
+			if (specFilename != null)
 			{
-				// System.out.println(_specfile);
-				File file = new File(specfile);
+				File file = new File(specFilename);
 				if (file != null && file.exists() && file.canRead())
 				{
-					FileReader fr = new FileReader(specfile);
+					FileReader fr = new FileReader(specFilename);
 					of.parse(new InputSource(fr));
 				}
 				else
 				{
-					Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification ("
-							+ specfile + ").", c);
+					Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Could not read/find Filter Module Order specification ("
+							+ specFilename + ").", c);
 				}
 			}
 		}
 		catch (SAXException se)
 		{
-			Debug.out(Debug.MODE_WARNING, "FILTH", "Problems parsing file: " + specfile + ", message: "
+			Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Problems parsing file: " + specFilename + ", message: "
 					+ se.getMessage());
 
-			Debug.out(Debug.MODE_DEBUG, "FILTH", Debug.stackTrace(se));
+			Debug.out(Debug.MODE_DEBUG, FILTH.MODULE_NAME, Debug.stackTrace(se));
 		}
 		catch (Exception ioe)
 		{
-			Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification (" + specfile
+			Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Could not read/find Filter Module Order specification (" + specFilename
 					+ ").", c);
 		}
 	}
@@ -411,6 +446,9 @@ public class FILTHServiceImpl extends FILTHService
 		c.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY, forders);
 		FilterModuleOrder fmorder = new FilterModuleOrder((LinkedList) forders.getFirst());
 		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmorder);
+
+		Debug.out(Debug.MODE_DEBUG, "FILTH [INCRE]", "Restored " + forders.size()
+				+ " Filter Module Order(s) for concern " + c.getName());
 	}
 
 	// public List getOrder(CpsConcern c)

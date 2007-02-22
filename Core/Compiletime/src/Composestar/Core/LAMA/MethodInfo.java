@@ -205,13 +205,26 @@ public abstract class MethodInfo extends ProgramElement
 		Parent = parent;
 	}
 
+	public String returnTypeName()
+	{
+		return ReturnTypeString;
+	}
+
 	public Type returnType()
 	{
 		if (ReturnType == null)
 		{
 			TypeMap map = TypeMap.instance();
 			ReturnType = map.getType(ReturnTypeString);
+
+			if (ReturnType == null)
+			{
+				return null;
+				// throw new RuntimeException("Unable to find type specification for
+				// '" + ReturnTypeString + "'");
+			}
 		}
+
 		return ReturnType;
 	}
 

@@ -22,6 +22,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
@@ -48,6 +49,11 @@ public class COPPER implements CTCommonModule
 	{
 		INCRE incre = INCRE.instance();
 		Configuration config = Configuration.instance();
+		
+		if (LegacyFilterTypes.useLegacyFilterTypes)
+		{
+			LegacyFilterTypes.addLegacyFilterTypes();
+		}
 
 		for (Object o : config.getProjects().getConcernSources())
 		{
@@ -79,6 +85,11 @@ public class COPPER implements CTCommonModule
 
 		if (phase == ALL_PHASES)
 		{
+			// 2.source extraction
+			// Debug.out(Debug.MODE_DEBUG,"COPPER","Source extraction phase");
+			// SourceExtractor se = new SourceExtractor();
+			// se.extractSource();
+
 			// 3. create first version of objects
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Parse building phase");
 			walkTree(pr);
@@ -126,8 +137,8 @@ public class COPPER implements CTCommonModule
 				if (!entity.dynamicmap.isEmpty())
 				{
 					// remove dynamic object REFERENCED
-					entity.dynamicmap.remove("REFERENCED");
-				}
+						entity.dynamicmap.remove("REFERENCED");
+					}
 
 				if (obj instanceof Reference)
 				{
@@ -175,10 +186,10 @@ public class COPPER implements CTCommonModule
 
 						// don't forget to update repositoryKey due to different hashcodes
 						entity.setRepositoryKey(entity.getUniqueID());
-					}
-				}
+			}
 			}
 		}
+	}
 	}
 
 	public static void main(String[] args)

@@ -204,7 +204,7 @@ public abstract class Semantic
 
 	protected String annotationValue(CAnnotation anno)
 	{
-		return anno.m_value.substring(1, anno.m_value.length() - 1);
+		return anno.getValue().substring(1);
 	}
 
 	/**

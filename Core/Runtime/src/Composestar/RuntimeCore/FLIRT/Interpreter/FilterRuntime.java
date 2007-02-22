@@ -3,6 +3,7 @@ package Composestar.RuntimeCore.FLIRT.Interpreter;
 import java.util.ArrayList;
 import java.util.Dictionary;
 
+import Composestar.Core.FILTH.DefaultInnerDispatchNames;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.FilterTypeRuntime;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
@@ -26,8 +27,7 @@ public class FilterRuntime extends ReferenceEntityRuntime implements Interpretab
 
 	public boolean isDummy()
 	{
-		return reference.repositoryKey
-				.equalsIgnoreCase("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule.CpsDefaultInnerDispatchFilter");
+		return reference.repositoryKey.startsWith(DefaultInnerDispatchNames.FQN_FILTER_MODULE);
 	}
 
 	/**

@@ -2,7 +2,7 @@ package Composestar.Java.LAMA;
 
 import java.io.Serializable;
 
-import Composestar.Core.LAMA.*;
+import Composestar.Core.LAMA.Annotation;
 
 /**
  * An instance of <code>JavaAnnotation</code> represents an annotation in

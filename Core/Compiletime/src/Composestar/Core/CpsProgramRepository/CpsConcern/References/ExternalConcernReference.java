@@ -7,8 +7,7 @@
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
 /**
- * @author pascal TODO To change the template for this generated type comment go
- *         to Window - Preferences - Java - Code Style - Code Templates
+ * @author pascal
  */
 public class ExternalConcernReference extends ConcernReference
 {

@@ -4,8 +4,17 @@
  */
 package Composestar.Core.INLINE.model;
 
+/**
+ * A label that can be attached to an instruction, so that there can be a jump
+ * to that instruction
+ * 
+ * @author Arjan
+ */
 public class Label
 {
+	/**
+	 * The id of the label
+	 */
 	private int id;
 
 	public Label()

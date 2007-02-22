@@ -188,13 +188,20 @@ public class ViewPanel extends JPanel
 	{
 		Integer i = (Integer) labelCounter.get(obj);
 
+		int add = 1;
+		if (obj.toString().equals("AcceptCallAction") || obj.toString().equals("AcceptReturnAction")
+				|| obj.toString().equals("RejectCallAction") || obj.toString().equals("RejectReturnAction"))
+		{
+			add = 100000;
+		}
+
 		if (i == null)
 		{
-			labelCounter.put(obj, 1);
+			labelCounter.put(obj, new Integer(add));
 		}
 		else
 		{
-			labelCounter.put(obj, i.intValue() + 1);
+			labelCounter.put(obj, new Integer(i.intValue() + add));
 		}
 	}
 

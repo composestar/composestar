@@ -31,22 +31,17 @@ public class PrimitiveConcern extends Concern
 
 	public Object clone() throws CloneNotSupportedException
 	{
-		PrimitiveConcern newObject;
-		try
-		{
-			newObject = (PrimitiveConcern) super.clone();
+		PrimitiveConcern newObject = (PrimitiveConcern) super.clone();
 
-			// At this point, the newObject shares all data with the object
-			// running clone. If you want newObject to have its own
-			// copy of data, you must clone this data yourself.
-
-		}
-		catch (CloneNotSupportedException e)
-		{
-			// this should never happen
-			throw new InternalError(e.toString());
-		}
+		// At this point, the newObject shares all data with the object
+		// running clone. If you want newObject to have its own
+		// copy of data, you must clone this data yourself.
 
 		return newObject;
+	}
+
+	public String toString()
+	{
+		return "PrimitiveConcern[" + platformRepr + "]";
 	}
 }

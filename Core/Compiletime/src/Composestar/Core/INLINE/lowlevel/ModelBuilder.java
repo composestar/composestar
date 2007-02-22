@@ -8,54 +8,104 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
+import Composestar.Core.CpsProgramRepository.MethodWrapper;
+import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FireModel;
-import Composestar.Core.FIRE2.model.Message;
-import Composestar.Core.INLINE.model.Block;
-import Composestar.Core.INLINE.model.Branch;
-import Composestar.Core.INLINE.model.ContextInstruction;
+import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.SANE.SIinfo;
+import Composestar.Utils.Debug;
 
+/**
+ * Creates an abstract code object model for all methods in all concerns. It
+ * uses the LowLevelInliner engine to translate the filterset to code.
+ * 
+ * @author Arjan
+ */
 public class ModelBuilder implements CTCommonModule
 {
-	private LowLevelInliner inliner;
+	public static final String MODULE_NAME = "INLINE";
 
-	private ModelBuilderStrategy builderStrategy;
+	/**
+	 * The LowLevelInliner used to translate an inputfilterset to code.
+	 */
+	private LowLevelInliner inputFilterInliner;
 
-	// private Concern currentConcern;
+	/**
+	 * The LowLevelInlineStrategy used to translate an inputfilterset to code.
+	 */
+	private ModelBuilderStrategy inputFilterBuilderStrategy;
+
+	/**
+	 * The LowLevelInliner used to translate an outputfilterset to code.
+	 */
+	private LowLevelInliner outputFilterInliner;
+
+	/**
+	 * The LowLevelInlineStrategy used to translate an outputfilterset to code.
+	 */
+	private ModelBuilderStrategy outputFilterBuilderStrategy;
+
+	/**
+	 * Contains the methodId's of methods that have inputfilters inlined. Used
+	 * to check whether an setInnerCall contextInstruction is necessary.
+	 */
 	private HashSet inlinedMethodSet;
 
-	private FilterModule[] modules;
+	/**
+	 * All filtermodules in the filterset.
+	 */
+	private FilterModuleOrder modules;
 
+	/**
+	 * The FireModel of the inputfilters in the filterset.
+	 */
 	private FireModel currentFireModelIF;
 
+	/**
+	 * The FireModel of the outputFilters in the filterset.
+	 */
 	private FireModel currentFireModelOF;
 
+	/**
+	 * The Datastore.
+	 */
 	private DataStore dataStore;
 
-	private Vector innerCallCheckTasks = new Vector();
-
+	/**
+	 * Contains a mapping from MethodInfo to the code objectmodel of the
+	 * inputfilters that need to be inlined in the method.
+	 */
 	private static Hashtable inputFilterCode;
 
+	/**
+	 * Contains a mapping from CallToOtherMethod to the code objectmodel of the
+	 * outputfilters that need to be inlined on the call.
+	 */
 	private static Hashtable outputFilterCode;
 
+	/**
+	 * The current selector being processed.
+	 */
+	private String currentSelector;
+
+	/**
+	 * Creates the ModelBuilder.
+	 */
 	public ModelBuilder()
 	{
-		this.builderStrategy = new ModelBuilderStrategy(this);
-		this.inliner = new LowLevelInliner(builderStrategy);
+		this.inputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.INPUT_FILTERS);
+		this.inputFilterInliner = new LowLevelInliner(inputFilterBuilderStrategy);
+		this.outputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.OUTPUT_FILTERS);
+		this.outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy);
 	}
 
 	/**
@@ -68,30 +118,65 @@ public class ModelBuilder implements CTCommonModule
 
 	}
 
-	public static Block getInputFilterCode(MethodInfo method)
+	/**
+	 * Returns the inputfiltercode that needs to be inlined on the given method,
+	 * or <code>null</code> if no inputfilters need to be inlined in the
+	 * method.
+	 * 
+	 * @param method
+	 * @return
+	 */
+	public static FilterCode getInputFilterCode(MethodInfo method)
 	{
-		return (Block) inputFilterCode.get(method);
+		return (FilterCode) inputFilterCode.get(method);
 	}
 
-	public static Block getOutputFilterCode(CallToOtherMethod call)
+	/**
+	 * Returns the outputfiltercode that needs to be inlined on the given call,
+	 * or <code>null</code> if no outputfilters need to be inlined in the
+	 * call.
+	 * 
+	 * @param call
+	 * @return
+	 */
+	public static FilterCode getOutputFilterCode(CallToOtherMethod call)
 	{
-		return (Block) outputFilterCode.get(call);
+		return (FilterCode) outputFilterCode.get(call);
 	}
 
+	/**
+	 * Returns the methodid of the given method.
+	 * 
+	 * @param method
+	 * @return
+	 */
+	public static int getMethodId(MethodInfo method)
+	{
+		return ModelBuilderStrategy.getMethodId(method);
+	}
+
+	/**
+	 * Starts the inlining.
+	 */
 	private void startInliner()
 	{
 		initialize();
-		processInfo();
-		storeInfo();
+		process();
 	}
 
+	/**
+	 * Initialization
+	 */
 	private void initialize()
 	{
 		inputFilterCode = new Hashtable();
 		outputFilterCode = new Hashtable();
 	}
 
-	private void processInfo()
+	/**
+	 * Begins processing.
+	 */
+	private void process()
 	{
 		Iterator concerns = dataStore.getAllInstancesOf(Concern.class);
 
@@ -102,252 +187,121 @@ public class ModelBuilder implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Processes the given concern.
+	 * 
+	 * @param concern
+	 */
 	private void processConcern(Concern concern)
 	{
 		// get inputFiltermodules:
-		if (concern.getDynObject(SIinfo.DATAMAP_KEY) == null)
+		if (concern.getDynObject("superImpInfo") == null)
 		{
 			return;
 		}
 
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing concern " + concern.getName());
+
 		// initialize:
-		innerCallCheckTasks = new Vector();
 		inlinedMethodSet = new HashSet();
 
 		// get filtermodules:
-		FilterModuleOrder filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+		modules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
 
-		currentFireModelIF = new FireModel(concern, filterModules);
+		currentFireModelIF = new FireModel(concern, modules);
 		currentFireModelOF = currentFireModelIF;
 
-		List order = filterModules.orderAsList();
-		modules = new FilterModule[order.size()];
-		for (int i = 0; i < order.size(); i++)
-		{
-			String ref = (String) order.get(i);
-
-			modules[i] = (FilterModule) DataStore.instance().getObjectByID(ref);
-		}
-
 		// iterate methods:
-		Type type = (Type) concern.getPlatformRepresentation();
-		List list = type.getMethods();
-		Iterator iter = list.iterator();
-		for (Object aList : list)
+		Signature sig = concern.getSignature();
+		List methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
+
+		for (Object aList : methods)
 		{
 			MethodInfo method = (MethodInfo) aList;
-
 			processMethod(method);
-		}
-
-		// do innercall checks:
-		for (int i = 0; i < innerCallCheckTasks.size(); i++)
-		{
-			ContextInstruction instruction = (ContextInstruction) innerCallCheckTasks.elementAt(i);
-			if (!inlinedMethodSet.contains(new Integer(instruction.getCode())))
-			{
-				instruction.setType(ContextInstruction.REMOVED);
-			}
 		}
 	}
 
+	/**
+	 * Processes the given method.
+	 * 
+	 * @param methodInfo
+	 */
 	private void processMethod(MethodInfo methodInfo)
 	{
+		// Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing " + methodInfo);
+
+		// set current selector:
+		this.currentSelector = methodInfo.getName();
+
 		// create executionmodel:
 		ExecutionModel execModel = currentFireModelIF.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo,
 				FireModel.STRICT_SIGNATURE_CHECK);
 
 		// create inlineModel:
-		inliner.inline(execModel, modules, methodInfo);
+		inputFilterInliner.inline(execModel, modules, methodInfo);
 
 		// store inlineModel in methodElement:
-		Block inlineBlock = builderStrategy.getInlineBlock();
-		if (inlineBlock != null)
+		FilterCode filterCode = inputFilterBuilderStrategy.getFilterCode();
+		if (filterCode != null)
 		{
-			inputFilterCode.put(methodInfo, inlineBlock);
-			inlinedMethodSet.add(builderStrategy.getMethodId(methodInfo));
+			inputFilterCode.put(methodInfo, filterCode);
+			inlinedMethodSet.add(new Integer(ModelBuilderStrategy.getMethodId(methodInfo)));
 		}
 
 		// process calls:
-		// HashSet calls = methodInfo.getCallsToOtherMethods();
-		// Iterator iter = calls.iterator();
-		// while( iter.hasNext() ){
-		// CallToOtherMethod call = (CallToOtherMethod) iter.next();
-		// processCall( call );
-		// }
-
+		HashSet calls = methodInfo.getCallsToOtherMethods();
+		Iterator iter = calls.iterator();
+		while (iter.hasNext())
+		{
+			CallToOtherMethod call = (CallToOtherMethod) iter.next();
+			processCall(call);
+		}
 	}
 
+	/**
+	 * Processes the given call.
+	 * 
+	 * @param call
+	 */
 	private void processCall(CallToOtherMethod call)
 	{
-		Block callBlock = new Block();
-		Branch currentBranch = null;
+		// set current selector:
+		this.currentSelector = call.getMethodName();
 
 		// retrieve target methodinfo:
 		MethodInfo methodInfo = call.getCalledMethod();
 
-		// create executionmodel for distinguishable targets and the
-		// undistinguishable target
-
-		// Distinguishable:
-		// TODO first do only undistinguishable. The implementation for doing
-		// also distinguishable
-		// needs to be worked out further.
-		// HashSet distTargets = currentFireModel.getDistinguishableTargets();
-		// Iterator iter = distTargets.iterator();
-		// while( iter.hasNext() ){
-		// target = (Target) iter.next();
-
-		// //get callblock:
-		// Block block = createCallBlock( target, methodInfo );
-
-		// //create branch to check target:
-		// Branch branch = new Branch( new TargetSelectExpression(
-		// target.getName() ) );
-		// branch.setTrueBlock( block );
-
-		// block = new Block();
-		// block.addInstruction( branch );
-
-		// if ( currentBranch == null ){
-		// //add first branch:
-		// currentBranch = branch;
-		// callBlock.addInstruction( currentBranch );
-		// }
-		// else{
-		// //add new branch to previous branch:
-		// currentBranch.setFalseBlock( block );
-		// currentBranch = branch;
-		// }
-		// }
-
-		// Undistinguishable:
-		Block block = createCallBlock(Message.UNDISTINGUISHABLE_TARGET, methodInfo);
-		if (currentBranch == null)
+		// create executionModel:
+		ExecutionModel execModel;
+		if (methodInfo != null)
 		{
-			// no distinguishable targets.
-			// set callblock to the undistinguishable block:
-			callBlock = block;
+			execModel = currentFireModelOF.getExecutionModel(FireModel.OUTPUT_FILTERS, methodInfo,
+					FireModel.STRICT_SIGNATURE_CHECK);
 		}
 		else
 		{
-			currentBranch.setFalseBlock(block);
+			execModel = currentFireModelOF.getExecutionModel(FireModel.OUTPUT_FILTERS, call.getMethodName());
 		}
 
-		// add callBlock to call
-		outputFilterCode.put(call, callBlock);
-	}
-
-	private Block createCallBlock(Target target, MethodInfo methodInfo)
-	{
-		// create executionModel:
-		ExecutionModel execModel = currentFireModelOF.getExecutionModel(FireModel.OUTPUT_FILTERS, target, methodInfo,
-				FireModel.STRICT_SIGNATURE_CHECK);
-
 		// create inlineModel:
-		inliner.inline(execModel, modules, methodInfo);
+		outputFilterInliner.inline(execModel, modules, methodInfo);
 
 		// store inlineModel in callStructure:
-		Block callBlock = builderStrategy.getInlineBlock();
+		FilterCode filterCode = outputFilterBuilderStrategy.getFilterCode();
 
-		return callBlock;
+		// add callBlock to call
+		if (filterCode != null)
+		{
+			outputFilterCode.put(call, filterCode);
+		}
 	}
 
-	private void storeInfo()
+	/**
+	 * @return The current selector being processed.
+	 */
+	protected String getCurrentSelector()
 	{
-	// TODO
+		return this.currentSelector;
 	}
-
-	// private MethodInfo getMethodInfo( CallToOtherMethod call ){
-	// call.
-	// //TODO
-	// return null;
-	// }
-
-	// private MethodInfo getMethodInfo( String name, String[] parameters ){
-	// //TODO get name out of fully qualified name:
-
-	// if ( !methodTable.containsKey( name ) ){
-	// return null;
-	// }
-
-	// Vector methods = (Vector) methodTable.get( name );
-
-	// Enumeration enumer = methods.elements();
-	// while( enumer.hasMoreElements() ){
-	// MethodInfo methodInfo = (MethodInfo) enumer.nextElement();
-	// if ( methodInfo.hasParameters( parameters ) ){
-	// return methodInfo;
-	// }
-	// }
-
-	// return null;
-	// }
-
-	// private FieldStructure[] getExternals(){
-	// Vector externals = new Vector();
-	// for (int i=0; i<modules.length; i++){
-	// Iterator iter = modules[i].getExternalIterator();
-	// while( iter.hasNext() ){
-	// External external = (External) iter.next();
-	// Target target = currentFireModel.getTarget( external );
-	// FieldStructure field = new FieldStructure();
-	// field.name = target.getName();
-	// field.type = external.getType().getName();
-	// field.reference = external.getValueExpression(0).getName();
-	// }
-	// }
-
-	// return (FieldStructure[]) externals.toArray( new
-	// FieldStructure[externals.size()] );
-	// }
-
-	// private FieldStructure[] getInternals(){
-	// Vector internals = new Vector();
-	// for (int i=0; i<modules.length; i++){
-	// Iterator iter = modules[i].getInternalIterator();
-	// while( iter.hasNext() ){
-	// Internal internal = (Internal) iter.next();
-	// Target target = currentFireModel.getTarget( internal );
-	// FieldStructure field = new FieldStructure();
-	// field.name = target.getName();
-	// field.type = internal.getType().getName();
-	// }
-	// }
-
-	// return (FieldStructure[]) internals.toArray( new
-	// FieldStructure[internals.size()] );
-	// }
-
-	// private Enumeration getExternalTargets(){
-	// Vector targets = new Vector();
-	// for (int i=0; i<modules.length; i++){
-	// Iterator iter = modules[i].getExternalIterator();
-	// while( iter.hasNext() ){
-	// External external = (External) iter.next();
-	// targets.addElement( currentFireModel.getTarget( external ) );
-	// }
-	// }
-
-	// return targets.elements();
-	// }
-
-	// private Enumeration getInternalTargets(){
-	// Vector targets = new Vector();
-	// for (int i=0; i<modules.length; i++){
-	// Iterator iter = modules[i].getInternalIterator();
-	// while( iter.hasNext() ){
-	// Internal internal = (Internal) iter.next();
-	// targets.addElement( currentFireModel.getTarget( internal ) );
-	// }
-	// }
-
-	// return targets.elements();
-	// }
-
-	protected void addInnerCallCheckTask(ContextInstruction innerCallAction)
-	{
-		innerCallCheckTasks.add(innerCallAction);
-	}
-
 }

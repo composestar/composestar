@@ -72,6 +72,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImp
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClass;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClassAndSubClasses;
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.FILTH.FILTH;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -86,32 +87,63 @@ import antlr.SemanticException;
 public class CpsRepositoryBuilder
 {
 	private DataStore ds;
+
 	private Splitter splitter;
-	private String filename; // Filename of file currently being parsed, for reference in case of parsing errors.
+
+	private String filename; // Filename of file currently being parsed, for
+
+	// reference in case of parsing errors.
+
 	private String embeddedCode;
-	
+
 	private String namespace = null;
-	private boolean parsingInput = true; // whether we're parsing an input- or outputfilter (needed because of generalfilter)
-	private boolean workingOnMatching = true; // whether we're busy creating the matching or substitution part in a messagepatternset
-	
+
+	private boolean parsingInput = true; // whether we're parsing an input-
+
+	// or outputfilter (needed because
+	// of generalfilter)
+
+	private boolean workingOnMatching = true; // whether we're busy creating
+
+	// the matching or substitution
+	// part in a messagepatternset
+
 	private AnnotationBinding annotBinding;
+
 	private ConditionBinding cb;
+
 	private CpsConcern cpsc;
+
 	private FilterAST inf;
+
 	private FilterAST of;
+
 	private FilterElementAST fe;
+
 	private FilterModuleAST fm;
+
 	private FilterModuleBinding fmb;
+
 	private MatchingPartAST mp;
+
 	private MatchingPatternAST mpat;
+
 	private MatchingType mt;
+
 	private MessageSelectorAST s;
+
 	private Method m;
+
 	private MethodBinding mb;
+
 	private SelectorDefinition sd;
+
 	private SubstitutionPartAST sp;
+
 	private SuperImposition si;
+
 	private Target ta;
+
 	private HashMap orderingconstraints = new HashMap();
 
 	/**
@@ -369,8 +401,8 @@ public class CpsRepositoryBuilder
 				else
 				{
 					splitter.splitFmElemReference(init);
-					ex.setLonginit(addDeclaredObjectReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
-							.getFmelem()));
+					ex.setLonginit(addDeclaredObjectReference(splitter.getPack(), splitter.getConcern(), splitter
+							.getFm(), splitter.getFmelem()));
 				}
 			}
 			// String bla = null;
@@ -471,11 +503,85 @@ public class CpsRepositoryBuilder
 		else
 		{ // long version
 			splitter.splitFmElemReference(init, false);
-			c.setLongref(addConditionReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter.getFmelem()));
+			c.setLongref(addConditionReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+					.getFmelem()));
 			c.setParent(fm);
 		}
 		fm.addCondition(c);
 		this.addToRepository(c);
+	}
+
+	/**
+	 * Adds a Filter Module Condition object to the repository
+	 * 
+	 * @param name
+	 * @param init Name of the condition
+	 * @param type
+	 * @param lineNumber
+	 */
+	public void addFilterModuleCondition(String name, Vector init, int type, int lineNumber) throws SemanticException
+	{
+		Condition c = new Condition();
+		c.setName(name);
+		c.setDescriptionFileName(filename);
+		c.setDescriptionLineNumber(lineNumber);
+
+		if (type == 0)
+		{ // short version
+			splitter.splitConcernElemReference(init);
+			c.setParent(si);
+			c.addDynObject("selector", splitter.getConcernelem());
+			if (splitter.getConcern().compareTo("inner") == 0)
+			{
+				// Reference to 'inner'
+				DeclaredObjectReference dor = new DeclaredObjectReference();
+				dor.setName("inner");
+				c.setShortref(dor);
+			}
+			else if (isInternal(splitter.getConcern()) || isExternal(splitter.getConcern()))
+			{
+				// Reference to an internal or an external
+				DeclaredObjectReference dor = new DeclaredObjectReference();
+				dor.setName(splitter.getConcern());
+				dor.setConcern(cpsc.getName());
+				dor.setFilterModule(fm.getName());
+				c.setShortref(dor);
+			}
+			else
+			{
+				// addMethodReference(split.getPack(), cpsc.getName(),
+				// fm.getName(), split.getConcernelem(), new Vector());
+				// addDeclaredObjectReference(split.getPack(), cpsc.getName(),
+				// fm.getName(), "a."+split.getConcernelem());
+
+				c.setShortref(addConcernReference(splitter.getPack(), splitter.getConcern()));
+			}
+		}
+		else
+		{ // long version
+			splitter.splitFmElemReference(init, false);
+			c.setLongref(addConditionReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+					.getFmelem()));
+			c.setParent(si);
+		}
+		if (!si.addFilterModuleCondition(c))
+		{
+			throw new SemanticException("Identifier of the condition not unique in the superimposition", c
+					.getDescriptionFileName(), c.descriptionLineNumber, 0);
+		}
+		this.addToRepository(c);
+	}
+
+	public void addFilterModuleConditionOperand(FilterModuleBinding binding, String conditionId)
+			throws SemanticException
+	{
+		Condition condition = si.getFilterModuleCondition(conditionId);
+
+		if (condition == null)
+		{
+			throw new SemanticException("Condition corresponding with identifier " + conditionId + " can not be found",
+					binding.getDescriptionFileName(), binding.descriptionLineNumber, 0);
+		}
 	}
 
 	/**
@@ -558,12 +664,12 @@ public class CpsRepositoryBuilder
 		inf.setParent(fm);
 		inf.setDescriptionFileName(filename);
 		inf.setDescriptionLineNumber(lineNumber);
-		inf.setTypeImplementation(addConcernReference(type)); // FIXME: we do
-		// the same
-		// thing twice
-		// here
-		// basically
-		addFilterType((String) type.lastElement(), lineNumber);
+
+		// inf.setTypeImplementation(addConcernReference(type)); //fixme: we do
+		// the same thing twice here basically //turned of because a filtertype
+		// is not a concern anymore
+		addFilterType((String) type.lastElement(), lineNumber); //
+
 		if (fm.addInputFilter(inf))
 		{
 			this.addToRepository(inf);
@@ -583,57 +689,26 @@ public class CpsRepositoryBuilder
 	 */
 	public void addFilterType(String type, int lineNumber)
 	{
-		FilterType ft = new FilterType();
-		ft.setDescriptionFileName(filename);
-		ft.setDescriptionLineNumber(lineNumber);
+		FilterType ft = FilterType.getFilterType(type);
 
-		if (FilterType.WAIT.equalsIgnoreCase(type))
+		if ((ft == null) && LegacyFilterTypes.useLegacyFilterTypes)
 		{
-			ft.setType(FilterType.WAIT);
+			Debug.out(Debug.MODE_INFORMATION, "COPPER", "Creating legacy custom filter with name: " + type);
+			ft = LegacyFilterTypes.createCustomFilterType(type);
 		}
-		else if (FilterType.DISPATCH.equalsIgnoreCase(type))
+
+		if (ft == null)
 		{
-			ft.setType(FilterType.DISPATCH);
+			Debug.out(Debug.MODE_ERROR, "COPPER", "Undefined FilterType '" + type + "'", filename, lineNumber);
 		}
-		else if (FilterType.ERROR.equalsIgnoreCase(type))
-		{
-			ft.setType(FilterType.ERROR);
-		}
-		else if (FilterType.META.equalsIgnoreCase(type))
-		{
-			ft.setType(FilterType.META);
-		}
-		else if (FilterType.SUBSTITUTION.equalsIgnoreCase(type))
-		{
-			ft.setType(FilterType.SUBSTITUTION);
-		}
-		else if (FilterType.SEND.equalsIgnoreCase(type))
-		{
-			ft.setType(FilterType.SEND);
-		}
-		else if (FilterType.APPEND.equalsIgnoreCase(type))
-		{
-			ft.setType(FilterType.APPEND);
-		}
-		else if (FilterType.PREPEND.equalsIgnoreCase(type))
-		{
-			ft.setType(FilterType.PREPEND);
-		}
-		else
-		{
-			ft.setType(FilterType.CUSTOM);
-		}
-		ft.setName(type); // fixme: should we do this?
-		this.addToRepository(ft);
+
 		if (parsingInput)
 		{
 			inf.setFilterType(ft);
-			ft.setParent(inf);
 		}
 		else
 		{
 			of.setFilterType(ft);
-			ft.setParent(of);
 		}
 	}
 
@@ -748,8 +823,8 @@ public class CpsRepositoryBuilder
 		{
 			ConditionVariable cv = new ConditionVariable();
 			splitter.splitFmElemReference(operand, true);
-			cv.setCondition(addConditionReference(
-					splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter.getFmelem()));
+			cv.setCondition(addConditionReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+					.getFmelem()));
 			return cv;
 		}
 	}
@@ -1043,7 +1118,8 @@ public class CpsRepositoryBuilder
 		splitter.splitFmElemReference(name, true);
 		// ta.setRef(addFilterModuleElementReference(splitPath.getPack(),
 		// splitPath.getConcern(), splitPath.getFm(), splitPath.getFmelem()));
-		ta.setRef(addDeclaredObjectReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter.getFmelem()));
+		ta.setRef(addDeclaredObjectReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+				.getFmelem()));
 		this.addToRepository(ta);
 
 		if (workingOnMatching)
@@ -1148,7 +1224,8 @@ public class CpsRepositoryBuilder
 		of.setDescriptionLineNumber(lineNumber);
 		of.setDescriptionFileName(filename);
 		of.setParent(fm);
-		of.setTypeImplementation(addConcernReference(type));
+		// of.setTypeImplementation(addConcernReference(type)); //turned of
+		// because a filtertype is not a concern anymore
 		addFilterType((String) type.lastElement(), lineNumber);
 		if (fm.addOutputFilter(of))
 		{
@@ -1310,9 +1387,8 @@ public class CpsRepositoryBuilder
 		else
 		{ // only condition name, no star
 			splitter.splitFmElemReference(name, true);
-			cb
-					.addCondition(addConditionReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
-							.getFmelem()));
+			cb.addCondition(addConditionReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+					.getFmelem()));
 		}
 	}
 
@@ -1358,8 +1434,8 @@ public class CpsRepositoryBuilder
 		else
 		{ // no star
 			splitter.splitFmElemReference(name, true);
-			mb.addMethod(addMethodReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter.getFmelem(),
-					typelist));
+			mb.addMethod(addMethodReference(splitter.getPack(), splitter.getConcern(), splitter.getFm(), splitter
+					.getFmelem(), typelist));
 		}
 	}
 
@@ -1369,7 +1445,7 @@ public class CpsRepositoryBuilder
 	 * @param name the selector (can include package + concern)
 	 * @param line
 	 */
-	public void addFilterModuleBinding(Vector name, int line)
+	public FilterModuleBinding addFilterModuleBinding(Vector name, int line)
 	{
 		fmb = new FilterModuleBinding();
 		fmb.setDescriptionFileName(filename);
@@ -1381,6 +1457,21 @@ public class CpsRepositoryBuilder
 		fmb.setParent(si);
 		si.addFilterModuleBinding(fmb);
 		this.addToRepository(fmb);
+
+		return fmb;
+	}
+
+	public void bindFilterModuleCondition(FilterModuleBinding binding, String conditionId) throws SemanticException
+	{
+		Condition condition = si.getFilterModuleCondition(conditionId);
+
+		if (condition == null)
+		{
+			throw new SemanticException("Identifier " + conditionId + " cannot be bound to a filter module condition",
+					binding.getDescriptionFileName(), binding.descriptionLineNumber, 0);
+		}
+
+		binding.setFilterModuleCondition(condition);
 	}
 
 	/**
@@ -1439,7 +1530,8 @@ public class CpsRepositoryBuilder
 		annotBinding = new AnnotationBinding();
 
 		splitter.splitConcernElemReference(name, true);
-		annotBinding.setSelector(addSelectorRef(splitter.getPack(), splitter.getConcern(), splitter.getConcernelem(), line));
+		annotBinding.setSelector(addSelectorRef(splitter.getPack(), splitter.getConcern(), splitter.getConcernelem(),
+				line));
 		annotBinding.setParent(si);
 		si.addAnnotationBinding(annotBinding);
 		this.addToRepository(annotBinding);
@@ -1502,7 +1594,8 @@ public class CpsRepositoryBuilder
 	/**
 	 * Adds embedded sourcecode as implementationpart
 	 * 
-	 * @param lang Language of the embedded source (i.e. to call the correct compiler)
+	 * @param lang Language of the embedded source (i.e. to call the correct
+	 *            compiler)
 	 * @param filename Name of the file to which the source needs to be saved
 	 * @param line
 	 * @param className

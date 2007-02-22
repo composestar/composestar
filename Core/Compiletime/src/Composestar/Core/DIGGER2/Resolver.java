@@ -85,7 +85,7 @@ public class Resolver
 			if (trail.getTargetConcern() != null)
 			{
 				// crumbs always refer to input crumbs
-				MessageSelector selector = trail.getResultMessage().getSelector();
+				String selector = trail.getResultMessage().getSelector();
 				if (Message.STAR_SELECTOR.equals(selector))
 				{
 					selector = crumb.getMessage().getSelector();
@@ -129,14 +129,15 @@ public class Resolver
 			{
 				// ignore
 			}
-			else if (flowNode.containsName(FlowNode.DISPATCH_ACTION_NODE))
+			else if (flowNode.containsName("DispatchAction"))
 			{
-				Message newMsg = new Message(state.getSubstitutionTarget(), state.getSubstitutionSelector());
+				Message newMsg = new Message(state.getSubstitutionMessage().getTarget(), state.getSubstitutionMessage()
+						.getSelector());
 				trail.setResultMessage(newMsg);
 				Concern targetConcern = findTargetConcern(crumb, newMsg.getTarget());
 				trail.setTargetConcern(targetConcern);
 			}
-			else if (flowNode.containsName(FlowNode.ERROR_ACTION_NODE))
+			else if (flowNode.containsName(FlowNode.EXIT_ACTION_NODE))
 			{
 				// TODO: implement
 				// trail.setErrorException();
@@ -171,9 +172,19 @@ public class Resolver
 			}
 			if (idx == 0)
 			{
-				if (!flowNode.containsName(FlowNode.STOP_NODE))
+				if (!flowNode.containsName(FlowNode.STOP_NODE) && !flowNode.containsName(FlowNode.RETURN_NODE) )
 				{
-					logger.debug("[resolver] reached the end of a trail without a STOP node");
+					StringBuffer sb = new StringBuffer();
+					Iterator nameit = flowNode.getNames();
+					while (nameit.hasNext())
+					{
+						if (sb.length() > 0)
+						{
+							sb.append(", ");
+						}
+						sb.append(nameit.next());
+					}
+					logger.debug("[resolver] reached the end of a trail without a STOP or RETURN node. Contains labels: "+sb);
 				}
 				if (trail.getResultMessage() == null)
 				{

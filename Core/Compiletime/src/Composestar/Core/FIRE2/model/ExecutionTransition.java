@@ -14,7 +14,6 @@ public abstract class ExecutionTransition
 	/*
 	 * Transition labels
 	 */
-
 	public final static String CONDITION_EXPRESSION_FALSE = "<ConditionExpression-false>";
 
 	public final static String CONDITION_EXPRESSION_TRUE = "<ConditionExpression-true>";

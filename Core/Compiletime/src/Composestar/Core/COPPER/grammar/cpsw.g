@@ -19,13 +19,14 @@ package Composestar.Core.COPPER;
 
 import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.FilterModuleBinding;
 }
 
 class CpsTreeWalker extends TreeParser;
 options {
-	importVocab = Cps;
-	defaultErrorHandler = false;
-	ASTLabelType = "CpsAST";
+        importVocab = Cps;
+        defaultErrorHandler = false;
+        ASTLabelType = "CpsAST";
 }
 {
 	public CpsRepositoryBuilder b;
@@ -38,18 +39,18 @@ options {
 	public Vector temptypes = new Vector(4); //temp vector for types (including full package names)
 	public Vector tempnames = new Vector(4); //temp vector for names (including full packages)
 	public Vector arg = new Vector(2);       //temp string for argument name
-	public int t=0;                          //flag for selectorexpression
-	public int matching=0;                   //flag for name / signature matching (0=signature, 1=name)
+  public int t=0;                         //flag for selectorexpression
+  public int matching=0;                  //flag for name / signature matching (0=signature, 1=name)
 	public Vector typel = new Vector(4);     //temp vector for type list (in methods)
-	public String target;                    //temp string for target name
-	public String selector;                  //temp string for selector name
-	public int paratype=0;                   //flag for parameter type (0 = error, 1 =no parameter, 2 = parameter, 3 = parameterlist)
-	  
+  public String target;                   //temp string for target name
+  public String selector;                 //temp string for selector name
+  public int paratype=0;                  //flag for parameter type (0 = error, 1 =no parameter, 2 = parameter, 3 = parameterlist)
+  
 	public CpsTreeWalker(CpsRepositoryBuilder builder)
-	{
+  {
 		this();
 		this.b = builder;
-	}
+  }
 }
 
 concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalParameters)? (namespace {b.finalizeNamespace();})? (filterModule)* (superImposition)? (implementation)? {b.finish();});
@@ -188,7 +189,14 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
         singleOutputFilter : #(OFILTER_ n:NAME {typev.clear();} type {b.addOutputFilter(n.getText(), typev,n.getLine());} (actualParameters)? (filterElements)? );
 
   /////////////////////////////////////////////////////////////////////////
-  superImposition : #("superimposition" {b.addSuperImposition();} (selectorDef)? (filtermoduleBind)? (annotationBind)? (constraints)?);
+  superImposition : #("superimposition" {b.addSuperImposition();} (conditionDef)? (selectorDef)? (filtermoduleBind)? (annotationBind)? (constraints)?);
+      
+      
+    /*---------------------------------------------------------------------------*/
+     conditionDef : #("conditions" (singleConditionDef)*);
+
+      singleConditionDef : #(CONDITION_ (n2:NAME) {namev.clear();} (n:NAME {namev.add(n.getText());} )+ {s = null;} (s:SEMICOLON)? {if(s == null) b.addFilterModuleCondition(n2.getText(), namev, 0,n2.getLine()); else b.addFilterModuleCondition(n2.getText(), namev, 1,n2.getLine()); });
+
 
     /*---------------------------------------------------------------------------*/
      selectorDef : #("selectors" (singleSelectorDefinition)*);
@@ -205,7 +213,7 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
     /*---------------------------------------------------------------------------*/
     filtermoduleBind : #("filtermodules" (singleFmBind)*);
 
-      singleFmBind : #(FM_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addFilterModuleBinding(namev, n.getLine());}  filterModuleSet);
+      singleFmBind : #(FM_ {namev.clear();n2=null;} (#(FMCONDBIND_ n2:NAME FILTER_OP))? (n:NAME {namev.add(n.getText());})+ {FilterModuleBinding binding = b.addFilterModuleBinding(namev, n.getLine()); if (n2!=null) b.bindFilterModuleCondition(binding, n2.getText());}  filterModuleSet);
 
         filterModuleSet : #(FMSET_ (#(FMELEM_ {namev.clear();} {parameterv.clear();} filterModuleElement))+);
 
@@ -233,9 +241,9 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
 //////////////////////////////////////////////////////////////////////////
 
-	implementation : #("implementation" {namev.clear();} implementationInner);
+  implementation : #("implementation" {namev.clear();} implementationInner);
 
-	implementationInner
+  implementationInner
 	:	((NAME)+ FILENAME)=> 
 		lang:NAME (tn:NAME {namev.add(tn.getText());})+ fn:FILENAME
 		{ b.addEmbeddedSource(lang.getText(), namev, fn.getText(), tn.getLine()); } 
@@ -249,5 +257,5 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 	:	(	n:NAME
 			r.add(n.getText());
 		)+
-	;
+  ;
 */

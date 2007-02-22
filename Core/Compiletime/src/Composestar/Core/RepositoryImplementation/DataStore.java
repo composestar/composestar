@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,13 +26,11 @@ import Composestar.Utils.Logging.SafeLogger;
  * The Repository part of the Compose* project. It supports reading and writing
  * objects. It allows for basic store and restore operations
  * 
- * @author Pascal Durr
+ * @author Pascal Dürr
  * @version $Id$
  */
 public class DataStore implements Serializable, Cloneable
 {
-	private static DataStore instance = null;
-
 	/**
 	 * If set to true instance() will always return null in order to prevent
 	 * automatically adding of objects to the DataStore during deserializing
@@ -40,12 +39,12 @@ public class DataStore implements Serializable, Cloneable
 
 	private static final long serialVersionUID = -1235392544932797436L;
 
+	private static DataStore instance = null;
 	private static final boolean DEBUG = false;
 
 	private ILogger logger;
 
 	private String filename = "ComposeStarDataStore.ser";
-
 	public DataMap map;
 
 	/**
@@ -58,7 +57,7 @@ public class DataStore implements Serializable, Cloneable
 			logger = SafeLogger.getILogger("DataStore");
 			logger.info("Creating Datastore...");
 		}
-		map = new DataMap();
+		map = DataMap.newDataMapInstance();
 	}
 
 	/**
@@ -103,7 +102,15 @@ public class DataStore implements Serializable, Cloneable
 	 */
 	public Iterator keys()
 	{
-		return (map).m_keys.iterator();
+		return map.keySet().iterator();
+	}
+	
+	/**
+	 * Returns a collection of all objects in this datastore.
+	 */
+	public Collection getObjects()
+	{
+		return map.values();
 	}
 
 	/**
@@ -247,7 +254,7 @@ public class DataStore implements Serializable, Cloneable
 
 	public void excludeUnreferenced(Class c)
 	{
-		(map).excludeUnreferenced(c);
+		map.excludeUnreferenced(c);
 		/*
 		 * List removeKeys = new ArrayList(); Iterator it =
 		 * map.entrySet().iterator(); while (it.hasNext()) { Map.Entry entry =

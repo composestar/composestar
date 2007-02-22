@@ -26,25 +26,26 @@ import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Java.LAMA.JavaParameterInfo;
 import Composestar.Java.LAMA.JavaType;
 import Composestar.Java.TYM.TypeHarvester.ClassMap;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Module that collects the types retrieved by the <code>HarvestRunner</code>.
  */
 public class JavaCollectorRunner implements CollectorRunner
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
-	HashMap pendingTypes;
+	protected Map<String,Class> pendingTypes;
 
-	HashMap processedTypes;
+	protected Map<String,Class> processedTypes;
 
 	/**
 	 * Default Constructor.
 	 */
 	public JavaCollectorRunner()
 	{
-		pendingTypes = new HashMap();
-		processedTypes = new HashMap();
+		pendingTypes = new HashMap<String,Class>();
+		processedTypes = new HashMap<String,Class>();
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		{
 			// iterate over classes
 			ClassMap cm = ClassMap.instance();
-			Map<String,Class> classes = cm.map();
+			Map<String, Class> classes = cm.map();
 			for (Class c : classes.values())
 			{
 				try
@@ -65,8 +66,7 @@ public class JavaCollectorRunner implements CollectorRunner
 				}
 				catch (Throwable t)
 				{
-					Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Error while processing type: " + c.getName() + " --> "
-							+ t.getMessage());
+					logger.debug("Error while processing type: " + c.getName() + " --> " + t.getMessage(), t);
 				}
 			}
 			try
@@ -75,12 +75,12 @@ public class JavaCollectorRunner implements CollectorRunner
 			}
 			catch (Throwable t)
 			{
-				Debug.out(Debug.MODE_DEBUG, "COLLECTOR", t.getMessage());
+				logger.debug(t.getMessage(), t);
 			}
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException(e.getMessage(), "COLLECTOR");
+			throw new ModuleException(e.getMessage(), MODULE_NAME);
 		}
 
 		int count = 0;
@@ -104,11 +104,8 @@ public class JavaCollectorRunner implements CollectorRunner
 				}
 				else if (impl instanceof Source)
 				{
-					// fixes the problem with the embedded code not being in the
-					// type map at all.
-					continue;
-					// Source source = (Source)impl;
-					// className = source.getClassName();
+					Source source = (Source) impl;
+					className = source.getClassName();
 				}
 				else if (impl instanceof SourceFile)
 				{
@@ -124,13 +121,30 @@ public class JavaCollectorRunner implements CollectorRunner
 				else
 				{
 					throw new ModuleException(
-							"CollectorRunner: Can only handle concerns with source file implementations or direct class links.");
+							"Can only handle concerns with source file implementations or direct class links.",
+							MODULE_NAME);
+				}
+
+				if (!concern.getQualifiedName().equals(className))
+				{
+					// implementation of a different class
+					Object otherConcern = dataStore.getObjectByID(className);
+					if (otherConcern instanceof CpsConcern)
+					{
+						logger.info("Implementation of " + concern + " contains type info for "
+								+ ((CpsConcern) otherConcern));
+						JavaType type = (JavaType) typeMap.get(className);
+						concern.setPlatformRepresentation(type);
+						type.setParentConcern((CpsConcern) otherConcern);
+						typeMap.remove(className);
+					}
+					continue;
 				}
 
 				if (!typeMap.containsKey(className))
 				{
 					throw new ModuleException("Implementation: " + className + " for concern: " + concern.getName()
-							+ " not found!");
+							+ " not found!", MODULE_NAME);
 				}
 				JavaType type = (JavaType) typeMap.get(className);
 				concern.setPlatformRepresentation(type);
@@ -206,12 +220,12 @@ public class JavaCollectorRunner implements CollectorRunner
 		{
 			jtype.addMethod(processMethodInfo(method));
 		}
-		
+
 		methods = c.getDeclaredMethods();
 		for (Method method : methods)
 		{
-			if(Modifier.isPrivate(method.getModifiers()))
-			{	
+			if (Modifier.isPrivate(method.getModifiers()))
+			{
 				jtype.addMethod(processMethodInfo(method));
 			}
 		}

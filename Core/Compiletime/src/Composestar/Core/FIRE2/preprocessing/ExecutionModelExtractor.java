@@ -130,7 +130,7 @@ public class ExecutionModelExtractor
 		Node substitutionSelectorNode = null;
 		Node substitutionTargetNode = null;
 
-		MessageSelector selector, substitutionSelector;
+		String selector, substitutionSelector;
 		Target target, substitutionTarget;
 
 		Graph graph = state.getGraph();
@@ -189,8 +189,9 @@ public class ExecutionModelExtractor
 
 		if (selectorNode instanceof AnnotatedNode)
 		{
-			selector = (MessageSelector) ((AnnotatedNode) selectorNode)
+			MessageSelector msgSelector = (MessageSelector) ((AnnotatedNode) selectorNode)
 					.getAnnotation(GrooveASTBuilder.REPOSITORY_LINK_ANNOTATION);
+			selector = msgSelector.getName();
 		}
 		else
 		{
@@ -210,8 +211,10 @@ public class ExecutionModelExtractor
 
 		if (substitutionSelectorNode != null && substitutionSelectorNode instanceof AnnotatedNode)
 		{
-			substitutionSelector = (MessageSelector) ((AnnotatedNode) substitutionSelectorNode)
+			AnnotatedNode node = (AnnotatedNode) substitutionSelectorNode;
+			MessageSelector msgSelector = (MessageSelector) node
 					.getAnnotation(GrooveASTBuilder.REPOSITORY_LINK_ANNOTATION);
+			substitutionSelector = msgSelector.getName();
 		}
 		else
 		{
@@ -228,25 +231,26 @@ public class ExecutionModelExtractor
 			substitutionTarget = Message.STAR_TARGET;
 		}
 
+		Message substitutionMessage = new Message(substitutionTarget, substitutionSelector);
+
 		BasicExecutionState executionState;
 
 		// check for start- or endnode:
 		if (flowNode.equals(flowModel.getStartNode()))
 		{
-			executionState = new BasicExecutionState(flowNode, message, substitutionSelector, substitutionTarget,
+			executionState = new BasicExecutionState(flowNode, message, substitutionMessage,
 					ExecutionState.ENTRANCE_STATE);
 			executionModel.addState(executionState);
 			executionModel.addEntranceState(executionState);
 		}
 		else if (flowNode.equals(flowModel.getEndNode()))
 		{
-			executionState = new BasicExecutionState(flowNode, message, substitutionSelector, substitutionTarget,
-					ExecutionState.EXIT_STATE);
+			executionState = new BasicExecutionState(flowNode, message, substitutionMessage, ExecutionState.EXIT_STATE);
 			executionModel.addState(executionState);
 		}
 		else
 		{
-			executionState = new BasicExecutionState(flowNode, message, substitutionSelector, substitutionTarget,
+			executionState = new BasicExecutionState(flowNode, message, substitutionMessage,
 					ExecutionState.NORMAL_STATE);
 			executionModel.addState(executionState);
 		}
@@ -306,6 +310,7 @@ public class ExecutionModelExtractor
 
 			if (state == null)
 			{
+				//FIXME Undistinguishable target/selector instead of star target/selector
 				state = (ExecutionState) entranceStates.get(new Message(Message.STAR_TARGET, message.getSelector()));
 			}
 			if (state == null)
@@ -390,10 +395,9 @@ public class ExecutionModelExtractor
 
 		private Vector inTransitions;
 
-		public BasicExecutionState(FlowNode flowNode, Message message, MessageSelector substitutionSelector,
-				Target substitutionTarget, int stateType)
+		public BasicExecutionState(FlowNode flowNode, Message message, Message substitutionMessage, int stateType)
 		{
-			super(flowNode, message, substitutionSelector, substitutionTarget, stateType);
+			super(flowNode, message, substitutionMessage, stateType);
 
 			outTransitions = new Vector();
 			inTransitions = new Vector();

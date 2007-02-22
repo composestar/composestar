@@ -1,8 +1,11 @@
 package Composestar.Java.TYM.TypeHarvester;
 
-import java.io.*;
-import java.util.*;
-import java.util.jar.*;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Utility class to load classes from a jar resource.

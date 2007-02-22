@@ -4,7 +4,19 @@
  */
 package Composestar.Core.INLINE.model;
 
+/**
+ * All classes that can be visited by the instructionvisitor should implement
+ * this interface.
+ * 
+ * @author Arjan
+ */
 public interface Visitable
 {
+	/**
+	 * Method called when a visitor visits the implementing class.
+	 * 
+	 * @param visitor
+	 * @return
+	 */
 	public Object accept(Visitor visitor);
 }

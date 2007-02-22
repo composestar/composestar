@@ -4,10 +4,23 @@
  */
 package Composestar.Core.INLINE.model;
 
+/**
+ * A jump instruction
+ * 
+ * @author Arjan
+ */
 public class Jump extends Instruction
 {
+	/**
+	 * The label to jump to.
+	 */
 	private Label target;
 
+	/**
+	 * The constructor
+	 * 
+	 * @param target The label to jump to.
+	 */
 	public Jump(Label target)
 	{
 		this.target = target;

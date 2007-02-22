@@ -124,7 +124,10 @@ public class PredicateSelector extends SimpleSelExpression
 		HashSet uniqAnswers = new HashSet();
 		for (int i = 0; i < answers.size(); i++)
 		{
-			uniqAnswers.add(answers.elementAt(i));
+			if (answers.elementAt(i) != null)
+			{
+				uniqAnswers.add(answers.elementAt(i));
+			}
 		}
 
 		for (Iterator iter = uniqAnswers.iterator(); iter.hasNext();)

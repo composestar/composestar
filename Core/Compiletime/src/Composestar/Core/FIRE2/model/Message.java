@@ -5,8 +5,8 @@
 package Composestar.Core.FIRE2.model;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelectorAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
+import Composestar.Core.LAMA.MethodInfo;
 
 /**
  * @author Arjan de Roo
@@ -21,7 +21,7 @@ public class Message
 	/**
 	 * The selector of the message, or "*" to indicate an unknown selector.
 	 */
-	private MessageSelector selector;
+	private String selector;
 
 	public final static Target STAR_TARGET = getStarTarget();
 
@@ -31,9 +31,9 @@ public class Message
 
 	public final static Target UNDISTINGUISHABLE_TARGET = getUndistinguishableTarget();
 
-	public final static MessageSelector STAR_SELECTOR = getStarSelector();
+	public final static String STAR_SELECTOR = "*";
 
-	public final static MessageSelector UNDISTINGUISHABLE_SELECTOR = getUndistinguishableSelector();
+	public final static String UNDISTINGUISHABLE_SELECTOR = "+";
 
 	/**
 	 * The STAR-message
@@ -68,36 +68,35 @@ public class Message
 		return target;
 	}
 
-	private static MessageSelector getStarSelector()
-	{
-		MessageSelector selector = new MessageSelector(new MessageSelectorAST());
-		selector.setName("*");
-		return selector;
-	}
-
-	private static MessageSelector getUndistinguishableSelector()
-	{
-		MessageSelector selector = new MessageSelector(new MessageSelectorAST());
-		selector.setName("+");
-		return selector;
-	}
-
 	/**
 	 * The constructs a message with the given target and selector.
 	 * 
 	 * @param target
 	 * @param selector
 	 */
-	public Message(Target target, MessageSelector selector)
+	public Message(Target target, String selector)
 	{
 		this.target = target;
 		this.selector = selector;
 	}
 
 	/**
+	 * The constructs a message with the given target and MethodInfo as
+	 * selector.
+	 * 
+	 * @param target
+	 * @param selector
+	 */
+	public Message(Target target, MethodInfo selector)
+	{
+		this.target = target;
+		this.selector = selector.getName();
+	}
+
+	/**
 	 * @return Returns the selector.
 	 */
-	public MessageSelector getSelector()
+	public String getSelector()
 	{
 		return selector;
 	}
@@ -141,12 +140,22 @@ public class Message
 	 */
 	public int hashCode()
 	{
-		return selector.getName().hashCode() + target.getName().hashCode();
+		return selector.hashCode() + target.hashCode();
 	}
 
 	public static boolean checkEquals(MessageSelector selector1, MessageSelector selector2)
 	{
 		return selector1.getName().equals(selector2.getName());
+	}
+
+	public static boolean checkEquals(MessageSelector selector1, String selector2)
+	{
+		return selector1.getName().equals(selector2);
+	}
+
+	public static boolean checkEquals(String selector1, String selector2)
+	{
+		return selector1.equals(selector2);
 	}
 
 	public static boolean checkEquals(Target target1, Target target2)
@@ -156,6 +165,6 @@ public class Message
 
 	public String toString()
 	{
-		return target.getName() + "." + selector.getName();
+		return target.getName() + "." + selector;
 	}
 }

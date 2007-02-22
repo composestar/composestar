@@ -82,29 +82,22 @@ public class AnnotationSuperImposition
 	public void gatherDependencyAlgorithmInputs() throws ModuleException
 	{
 		Debug.out(Debug.MODE_DEBUG, "LOLA", "Gathering dependency algorithm inputs");
-		/** Gather all predicate selectors * */
-		/*
-		 * Iterator predicateIter =
-		 * dataStore.getAllInstancesOf(PredicateSelector.class); while
-		 * (predicateIter.hasNext()) { PredicateSelector predSel =
-		 * (PredicateSelector)predicateIter.next(); Selector s = new Selector();
-		 * s.name =
-		 * ((SelectorDefinition)predSel.getParent()).getQualifiedName();
-		 * s.predicate = predSel; s.posInResultVector = selectors.size();
-		 * selectors.add(s); Debug.out(Debug.MODE_DEBUG, "LOLA", "Predicate
-		 * selector added (" + s.name + ", " + s.predicate.getQuery() + ")"); }
-		 */
 
+		// Gather all predicate selectors
 		Iterator predicateIter = LOLA.selectors.iterator();
 		for (Object selector : LOLA.selectors)
 		{
 			PredicateSelector predSel = (PredicateSelector) selector;
+			SelectorDefinition sd = (SelectorDefinition) predSel.getParent();
+
 			Selector s = new Selector();
-			s.name = ((SelectorDefinition) predSel.getParent()).getQualifiedName();
+			s.name = sd.getName();
+			s.qname = sd.getQualifiedName();
 			s.predicate = predSel;
 			s.posInResultVector = selectors.size();
 			selectors.add(s);
-			Debug.out(Debug.MODE_DEBUG, "LOLA", "Predicate selector added (" + s.name + ", " + s.predicate.getQuery()
+
+			Debug.out(Debug.MODE_DEBUG, "LOLA", "Predicate selector added (" + s.qname + ", " + s.predicate.getQuery()
 					+ ')');
 		}
 
@@ -125,7 +118,7 @@ public class AnnotationSuperImposition
 			for (Object selector : selectors)
 			{
 				Selector sel = (Selector) selector;
-				if (sel.name.equals(selDef.getQualifiedName()))
+				if (sel.qname.equals(selDef.getQualifiedName()))
 				{
 					foundSelector = true;
 					Iterator annotsToAttach = annotBind.getAnnotations().iterator();
@@ -149,7 +142,6 @@ public class AnnotationSuperImposition
 							// error?
 						}
 						Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
-
 						if (!(annotation.getUnitType().equals("Annotation")))
 						{
 							Debug.out(Debug.MODE_WARNING, "LOLA", annotRef.getQualifiedName()
@@ -163,7 +155,7 @@ public class AnnotationSuperImposition
 						act.annotation = annotation;
 						annotationActions.add(act);
 						Debug.out(Debug.MODE_DEBUG, "LOLA", "Annotation binding: '" + act.annotation.getUnitName()
-								+ "' to selector '" + act.selector.name + '\'');
+								+ "' to selector '" + act.selector.qname + '\'');
 					}
 				}
 			}
@@ -236,9 +228,9 @@ public class AnnotationSuperImposition
 					msg.append("The problem was detected while applying the following annotation superimposition:\n");
 					AnnotationAction act = (AnnotationAction) annotationActions.elementAt(action);
 					msg.append("Attaching annotation ").append(act.annotation.getUnitName()).append(
-							" to the program elements selected by ").append(act.selector.name).append('\n');
+							" to the program elements selected by ").append(act.selector.qname).append('\n');
 					msg.append("This action shrunk the resultset of selector ").append(
-							((Selector) selectors.elementAt(errorLocation)).name);
+							((Selector) selectors.elementAt(errorLocation)).qname);
 					// At least one of the result sets shrunk, this is not
 					// allowed
 					throw new ModuleException(msg.toString(), "LOLA");
@@ -306,30 +298,32 @@ public class AnnotationSuperImposition
 		// Give warnings when selectors (still) do not select anything
 		for (int i = 0; i < endState.selectorResults.size(); i++)
 		{
+			Selector selector = (Selector) selectors.elementAt(i);
 			HashSet resultSet = (HashSet) endState.selectorResults.elementAt(i);
 			if (resultSet.isEmpty())
 			{
-				// Debug.out(Debug.MODE_WARNING, "LOLA", "Selector does not
-				// match any program elements: " +
-				// ((Selector)selectors.elementAt(i)).name);
-				Debug.out(Debug.MODE_WARNING, "LOLA", "Selector does not match any program elements",
-						((Selector) selectors.elementAt(i)).predicate);
+				Debug.out(Debug.MODE_WARNING, "LOLA", "Selector " + selector.qname
+						+ " does not match any program elements", selector.predicate);
 			}
 			else
 			{
-				Iterator resultit = resultSet.iterator();
+				StringBuffer names = new StringBuffer();
 
-				String names = "";
-				while (resultit.hasNext())
+				Iterator resultIt = resultSet.iterator();
+				while (resultIt.hasNext())
 				{
-					Object lu = resultit.next();
-					if (lu instanceof Type)
+					Object result = resultIt.next();
+					if (result instanceof ProgramElement)
 					{
-						Type dotnettype = (Type) lu;
-						names += dotnettype.m_fullName + ' ';
+						ProgramElement pe = (ProgramElement) result;
+						names.append(pe.getUnitName());
+					}
+					else
+					{
+						names.append("(unknown) ");
 					}
 				}
-				Debug.out(Debug.MODE_INFORMATION, "LOLA", "Selector " + ((Selector) selectors.elementAt(i)).name
+				Debug.out(Debug.MODE_INFORMATION, "LOLA", "Selector " + selector.qname
 						+ " matches the following program elements: " + names);
 			}
 		}
@@ -511,9 +505,11 @@ public class AnnotationSuperImposition
 	 */
 	private class Selector
 	{
-		public PredicateSelector predicate; // Executable predicate
+		public String name;
 
-		public String name; // Name of this selector
+		public String qname; // Name of this selector
+
+		public PredicateSelector predicate; // Executable predicate
 
 		public int posInResultVector; // this selectors position in the
 		// State.selectorResult

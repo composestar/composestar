@@ -26,7 +26,10 @@ import Composestar.Core.LOLA.metamodel.ModelClashException;
 import Composestar.Core.LOLA.metamodel.RelationPredicate;
 import Composestar.Core.LOLA.metamodel.RelationType;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
-import Composestar.Java.LAMA.*;
+import Composestar.Java.LAMA.JavaFieldInfo;
+import Composestar.Java.LAMA.JavaMethodInfo;
+import Composestar.Java.LAMA.JavaParameterInfo;
+import Composestar.Java.LAMA.JavaType;
 import Composestar.Utils.Debug;
 
 /**

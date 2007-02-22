@@ -1,5 +1,9 @@
 package Composestar.Java.BACO;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+
 import Composestar.Core.BACO.BACO;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Configuration;
@@ -7,10 +11,6 @@ import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
 
 public class JavaBACO extends BACO
 {

@@ -10,7 +10,10 @@
 
 package Composestar.DotNET.MASTER;
 
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.Master.Master;
+import Composestar.Core.RepositoryImplementation.DataMap;
+import Composestar.Core.RepositoryImplementation.LegacyDataMap;
 
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules and
@@ -18,6 +21,12 @@ import Composestar.Core.Master.Master;
  */
 public class DotNETMaster extends Master
 {
+	protected void initEvironment()
+	{
+		DataMap.setDataMapClass(LegacyDataMap.class);
+		LegacyFilterTypes.useLegacyFilterTypes = true;
+	}
+	
 	/**
 	 * Compose* main function. Creates the Master object and invokes the run
 	 * method.

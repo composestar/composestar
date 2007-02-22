@@ -5,6 +5,7 @@ import java.util.Dictionary;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAST;
+import Composestar.Core.FILTH.DefaultInnerDispatchNames;
 import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 import Composestar.RuntimeCore.Utils.Debug;
@@ -100,12 +101,7 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
 		// broke up the code into smaller, more debugable code
 		FilterRuntime fr = this.theFilterElement.theFilter;
 		Filter temp = (Filter) fr.getReference();
-		FilterAST astTemp = temp.getFilterAST();
-		String name = astTemp.getName();
-		if (name.equals("CpsDefaultInnerDispatchFilter")) // (
-		// ((Filter)this.theFilterElement.theFilter.getReference()).getFilterAST().getName().equals(
-		// "CpsDefaultInnerDispatchFilter"
-		// ) )
+		if (temp.getName().startsWith(DefaultInnerDispatchNames.FQN_FILTER_MODULE ))
 		{
 			ml.matchAll();
 			return true;

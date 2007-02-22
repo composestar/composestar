@@ -8,8 +8,7 @@ import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 
 public abstract class ProgramElement extends PlatformRepresentation
 {
-
-	/*
+	/**
 	 * @return the name of this program element
 	 */
 	public abstract String getUnitName();

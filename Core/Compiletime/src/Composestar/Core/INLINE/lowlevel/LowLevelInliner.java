@@ -4,32 +4,54 @@
  */
 package Composestar.Core.INLINE.lowlevel;
 
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
+import Composestar.Core.FIRE2.model.FlowTransition;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.queryengine.predicates.StateType;
 import Composestar.Core.LAMA.MethodInfo;
 
+/**
+ * The inlining engine which also uses lowlevel constructs like jumps. This
+ * inlining engine translates the executionmodel of a filterset (for a given
+ * selector) to calls to a LowLevelInlineStrategy object, that abstractly
+ * resemble the code translation of the filterset. So it translates the
+ * filterset language to a procedural language. The LowLevelInlineStrategy
+ * object is responsible for the actual code generation.
+ * 
+ * @author Arjan
+ */
 public class LowLevelInliner
 {
+	/**
+	 * The strategy that does the actual code generation.
+	 */
 	private LowLevelInlineStrategy strategy;
 
 	private StateType isCondExpr;
 
 	private StateType isFilter;
 
-	private HashMap filterMap;
+	private StateType isFMCondition;
 
+	private HashMap jumpMap;
+
+	/**
+	 * The constructor
+	 * 
+	 * @param strategy The strategy that does the actual code generation.
+	 */
 	public LowLevelInliner(LowLevelInlineStrategy strategy)
 	{
 		this.strategy = strategy;
@@ -37,40 +59,77 @@ public class LowLevelInliner
 		initialize();
 	}
 
+	/**
+	 * Initialization
+	 */
 	private void initialize()
 	{
 		isFilter = new StateType(FlowNode.FILTER_NODE);
 		isCondExpr = new StateType(FlowNode.CONDITION_EXPRESSION_NODE);
+		isFMCondition = new StateType(FlowNode.FM_CONDITION_NODE);
 	}
 
-	public void inline(ExecutionModel model, FilterModule[] modules, MethodInfo method)
+	/**
+	 * Runs the inlining engine for the given ExecutionModel and methodInfo.
+	 * 
+	 * @param model
+	 * @param filterSet
+	 * @param method
+	 */
+	public void inline(ExecutionModel model, FilterModuleOrder filterSet, MethodInfo method)
+
 	{
-		filterMap = new HashMap();
+		jumpMap = new HashMap();
 
-		Vector blocks = identifyFilters(model);
+		List blocks = identifyTopLevelElements(model);
 
-		inline(blocks, modules, method);
+		inline(blocks, filterSet, method);
 	}
 
-	private void inline(Vector blocks, FilterModule[] modules, MethodInfo method)
+	/**
+	 * Does the inlining for the given vector of filterblocks
+	 * 
+	 * @param blocks
+	 * @param filterSet
+	 * @param method
+	 */
+	private void inline(List blocks, FilterModuleOrder filterSet, MethodInfo method)
 	{
-		strategy.startInline(modules, method, new String[0]);
+		strategy.startInline(filterSet, method, new String[0]);
 
 		for (int i = 0; i < blocks.size(); i++)
 		{
-			inlineFilterBlock((FilterBlock) blocks.elementAt(i));
+			TopLevelBlock block = (TopLevelBlock) blocks.get(i);
+			if (block instanceof FilterBlock)
+			{
+				inlineFilterBlock((FilterBlock) block);
+			}
+			else if (block instanceof FilterModuleCondition)
+			{
+				inlineFilterModuleCondition((FilterModuleCondition) block);
+			}
+			else
+			{
+				// should not happen:
+				throw new RuntimeException("Unknown top level block");
+			}
 		}
 
 		strategy.endInline();
 	}
 
+	/**
+	 * Inlines the given filterblock
+	 * 
+	 * @param filterBlock
+	 */
 	private void inlineFilterBlock(FilterBlock filterBlock)
 	{
 		strategy.startFilter(filterBlock.filter, filterBlock.label);
 
-		Enumeration filterElements = filterBlock.filterElements.elements();
+		Iterator filterElements = filterBlock.filterElements.iterator();
 
-		if (filterElements.hasMoreElements())
+		if (filterElements.hasNext())
 		{
 			inlineFilterElements(filterElements);
 		}
@@ -78,9 +137,14 @@ public class LowLevelInliner
 		strategy.endFilter();
 	}
 
-	private void inlineFilterElements(Enumeration filterElements)
+	/**
+	 * Inlines the filterelements in the given enumeration.
+	 * 
+	 * @param filterElements
+	 */
+	private void inlineFilterElements(Iterator filterElements)
 	{
-		FilterElementBlock filterElement = (FilterElementBlock) filterElements.nextElement();
+		FilterElementBlock filterElement = (FilterElementBlock) filterElements.next();
 
 		ExecutionState flowFalseExitState = filterElement.flowFalseExitState;
 		ExecutionState flowTrueExitState = filterElement.flowTrueExitState;
@@ -96,7 +160,8 @@ public class LowLevelInliner
 			}
 			else
 			{
-				strategy.generateAction(flowTrueExitState);
+				strategy.generateAction(filterElement.flowTrueAction1);
+				strategy.generateAction(filterElement.flowTrueAction2);
 				generateJump(flowTrueExitState);
 			}
 		}
@@ -120,7 +185,8 @@ public class LowLevelInliner
 				strategy.evalCondExpr((ConditionExpression) condExprFlowNode.getRepositoryLink());
 				strategy.beginTrueBranch();
 
-				strategy.generateAction(flowTrueExitState);
+				strategy.generateAction(filterElement.flowTrueAction1);
+				strategy.generateAction(filterElement.flowTrueAction2);
 				generateJump(flowTrueExitState);
 
 				strategy.endTrueBranch();
@@ -136,7 +202,8 @@ public class LowLevelInliner
 		{
 			if (flowTrueExitState == null)
 			{
-				strategy.generateAction(flowFalseExitState);
+				strategy.generateAction(filterElement.flowFalseAction1);
+				strategy.generateAction(filterElement.flowFalseAction2);
 				generateJump(flowFalseExitState);
 			}
 			else if (isCondExpr.isTrue(flowTrueExitState))
@@ -147,7 +214,8 @@ public class LowLevelInliner
 			{
 				if (flowFalseExitState.equals(flowTrueExitState))
 				{
-					strategy.generateAction(flowFalseExitState);
+					strategy.generateAction(filterElement.flowFalseAction1);
+					strategy.generateAction(filterElement.flowFalseAction2);
 					generateJump(flowFalseExitState);
 				}
 				else
@@ -158,13 +226,15 @@ public class LowLevelInliner
 					strategy.evalCondExpr((ConditionExpression) condExprFlowNode.getRepositoryLink());
 					strategy.beginTrueBranch();
 
-					strategy.generateAction(flowTrueExitState);
+					strategy.generateAction(filterElement.flowTrueAction1);
+					strategy.generateAction(filterElement.flowTrueAction2);
 					generateJump(flowTrueExitState);
 
 					strategy.endTrueBranch();
 					strategy.beginFalseBranch();
 
-					strategy.generateAction(flowFalseExitState);
+					strategy.generateAction(filterElement.flowFalseAction1);
+					strategy.generateAction(filterElement.flowFalseAction2);
 					generateJump(flowFalseExitState);
 
 					strategy.endFalseBranch();
@@ -173,17 +243,39 @@ public class LowLevelInliner
 		}
 	}
 
+	private void inlineFilterModuleCondition(FilterModuleCondition fmCond)
+	{
+		Condition condition = (Condition) fmCond.filterModuleConditionState.getFlowNode().getRepositoryLink();
+
+		strategy.evalCondition(condition, fmCond.label);
+
+		// True branch
+		strategy.beginTrueBranch();
+		generateJump(fmCond.trueExit);
+		strategy.endTrueBranch();
+
+		// False branch
+		strategy.beginFalseBranch();
+		generateJump(fmCond.falseExit);
+		strategy.endFalseBranch();
+	}
+
+	/**
+	 * Generates a jump to the next filter after the given state.
+	 * 
+	 * @param state
+	 */
 	private void generateJump(ExecutionState state)
 	{
 		ExecutionState currentState = state;
-		while (currentState != null && !isFilter.isTrue(currentState))
+		while (currentState != null && !(isFilter.isTrue(currentState) || isFMCondition.isTrue(currentState)))
 		{
 			currentState = getNextState(currentState);
 		}
 
 		if (currentState != null)
 		{
-			FilterBlock block = (FilterBlock) filterMap.get(currentState);
+			TopLevelBlock block = (TopLevelBlock) jumpMap.get(currentState);
 			strategy.jump(block.label);
 		}
 		else
@@ -192,12 +284,19 @@ public class LowLevelInliner
 		}
 	}
 
-	private Vector identifyFilters(ExecutionModel model)
+	/**
+	 * Identifies all filterblocks and filter module conditions in the given
+	 * ExecutionModel.
+	 * 
+	 * @param model
+	 * @return
+	 */
+	private List identifyTopLevelElements(ExecutionModel model)
 	{
 		ExecutionStateIterator iterator = new ExecutionStateIterator(model);
 		ExecutionState state;
 		int label = 0;
-		Vector result = new Vector();
+		ArrayList result = new ArrayList();
 		while (iterator.hasNext())
 		{
 			state = (ExecutionState) iterator.next();
@@ -206,25 +305,75 @@ public class LowLevelInliner
 				FilterBlock block = identifyFilterBlock(state);
 				block.label = label++;
 				result.add(block);
+				jumpMap.put(state, block);
+			}
+			else if (isFMCondition.isTrue(state))
+			{
+				FilterModuleCondition fmCond = identifyFilterModuleCondition(state);
+				fmCond.label = label++;
+				result.add(fmCond);
+				jumpMap.put(state, fmCond);
 			}
 		}
 
 		return result;
 	}
 
+	/**
+	 * Identifies all FilterModuleBlocks in the given ExecutionModel.
+	 * 
+	 * @param model
+	 * @return
+	 */
+	private FilterModuleCondition identifyFilterModuleCondition(ExecutionState state)
+	{
+		FilterModuleCondition fmCond = new FilterModuleCondition();
+
+		fmCond.filterModuleConditionState = state;
+
+		// Find true-exit and false-exit
+		Iterator transitionIter = state.getOutTransitions();
+		while (transitionIter.hasNext())
+		{
+			ExecutionTransition transition = (ExecutionTransition) transitionIter.next();
+			if (transition.getFlowTransition().getType() == FlowTransition.FLOW_TRUE_TRANSITION)
+			{
+				fmCond.trueExit = transition.getEndState();
+			}
+			else if (transition.getFlowTransition().getType() == FlowTransition.FLOW_FALSE_TRANSITION)
+			{
+				fmCond.falseExit = transition.getEndState();
+			}
+		}
+
+		return fmCond;
+	}
+
+	/**
+	 * Identifies the complete filterblock corresponding with the given
+	 * filterstate.
+	 * 
+	 * @param filterState
+	 * @return
+	 */
 	private FilterBlock identifyFilterBlock(ExecutionState filterState)
 	{
 		FilterBlock filterBlock = new FilterBlock();
 		filterBlock.filter = (Filter) filterState.getFlowNode().getRepositoryLink();
 		identifyFilterElementBlocks(filterState, filterBlock);
-		filterMap.put(filterState, filterBlock);
 		return filterBlock;
 	}
 
+	/**
+	 * Identifies all filterelement blocks corresponding with the given filter.
+	 * 
+	 * @param filterState
+	 * @param filterBlock
+	 */
 	private void identifyFilterElementBlocks(ExecutionState filterState, FilterBlock filterBlock)
 	{
 		ExecutionState nextState = getNextState(filterState);
-		Vector result = new Vector();
+		ArrayList result = new ArrayList();
 
 		while (nextState != null)
 		{
@@ -248,6 +397,13 @@ public class LowLevelInliner
 		filterBlock.filterElements = result;
 	}
 
+	/**
+	 * Identifies the complete filterelement block corresponding with the
+	 * condition expression.
+	 * 
+	 * @param condExpr
+	 * @return
+	 */
 	private FilterElementBlock identifyFilterElementBlock(ExecutionState condExpr)
 	{
 		FilterElementBlock block = new FilterElementBlock();
@@ -264,10 +420,20 @@ public class LowLevelInliner
 			if (transition.getLabel().equals(ExecutionTransition.CONDITION_EXPRESSION_TRUE))
 			{
 				block.flowTrueExitState = exitState;
+				if (exitState.getFlowNode().containsName(FlowNode.ACTION_NODE))
+				{
+					block.flowTrueAction1 = exitState;
+					block.flowTrueAction2 = getNextState(exitState);
+				}
 			}
 			else
 			{
 				block.flowFalseExitState = exitState;
+				if (exitState.getFlowNode().containsName(FlowNode.ACTION_NODE))
+				{
+					block.flowFalseAction1 = exitState;
+					block.flowFalseAction2 = getNextState(exitState);
+				}
 			}
 		}
 
@@ -318,34 +484,107 @@ public class LowLevelInliner
 		return currentState;
 	}
 
+	/**
+	 * Indicates whether the given executionstate is an exitstate or not.
+	 * 
+	 * @param state
+	 * @return
+	 */
 	private boolean isExitState(ExecutionState state)
 	{
 		// exitstate is either a ConditionExpression or an Action state:
 		return isCondExpr.isTrue(state) || state.getFlowNode().containsName(FlowNode.ACTION_NODE);
 	}
 
-	private class FilterBlock
+	/**
+	 * The filter block
+	 * 
+	 * @author Arjan
+	 */
+	private class FilterBlock extends TopLevelBlock
 	{
+		/**
+		 * The filter
+		 */
 		public Filter filter;
 
-		public Vector filterElements;
-
-		public int label;
-
-		public FilterBlock()
-		{}
+		/**
+		 * A vector containing the filterelement blocks.
+		 */
+		public List filterElements;
 	}
 
+	/**
+	 * The filterelement block
+	 * 
+	 * @author Arjan
+	 */
 	private class FilterElementBlock
 	{
+		/**
+		 * The executionstate corresponding with the conditionexpression of this
+		 * filterelement.
+		 */
 		public ExecutionState conditionExprState;
 
+		/**
+		 * The exit(last) state of this filterelement when the
+		 * conditionexpression was true.
+		 */
 		public ExecutionState flowTrueExitState;
 
+		/**
+		 * The first (on return) action when the conditionexpression was true.
+		 */
+		public ExecutionState flowTrueAction1;
+
+		/**
+		 * The second (on call) action when the conditionexpression was true.
+		 */
+		public ExecutionState flowTrueAction2;
+
+		/**
+		 * The exit(last) state of this filterelement when the
+		 * conditionexpression was false.
+		 */
 		public ExecutionState flowFalseExitState;
 
-		public FilterElementBlock()
-		{}
+		/**
+		 * The first (on return) action when the conditionexpression was false.
+		 */
+		public ExecutionState flowFalseAction1;
+
+		/**
+		 * The second (on call) action when the conditionexpression was false.
+		 */
+		public ExecutionState flowFalseAction2;
+
+	}
+
+	private class FilterModuleCondition extends TopLevelBlock
+	{
+		/**
+		 * The execution state corresponding with the filter module condition.
+		 */
+		private ExecutionState filterModuleConditionState;
+
+		/**
+		 * The true exit state.
+		 */
+		private ExecutionState trueExit;
+
+		/**
+		 * The false exit state.
+		 */
+		private ExecutionState falseExit;
+	}
+
+	private class TopLevelBlock
+	{
+		/**
+		 * The label of the top level block, to generate jumps.
+		 */
+		public int label;
 	}
 
 }

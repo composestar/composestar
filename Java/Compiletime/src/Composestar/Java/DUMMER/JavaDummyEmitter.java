@@ -1,16 +1,26 @@
 package Composestar.Java.DUMMER;
 
-import antlr.*;
-import antlr.collections.*;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import Composestar.Core.DUMMER.DefaultEmitter;
+import Composestar.Core.DUMMER.DummyEmitter;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.DUMMER.*;
-import Composestar.Core.Master.Config.*;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.Config.Source;
+import Composestar.Core.Master.Config.TypeSource;
 import Composestar.Core.TYM.TypeLocations;
 import Composestar.Utils.FileUtils;
+import antlr.ASTFactory;
+import antlr.CommonAST;
+import antlr.collections.AST;
 
 /**
  * Class that creates dummy sources from java source files. A dummy source is a

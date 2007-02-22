@@ -18,7 +18,6 @@ public interface FlowNode
 	/*
 	 * Names (labels) a FlowNode can have
 	 */
-
 	public final static String FLOW_ELEMENT_NODE = "FlowElement";
 
 	public final static String FILTER_MODULE_NODE = "FilterModule";
@@ -49,17 +48,25 @@ public interface FlowNode
 
 	public final static String FILTER_ACTION_NODE = "FilterAction";
 
-	public final static String DISPATCH_ACTION_NODE = "DispatchAction";
+	public final static String CONTINUE_ACTION_NODE = "ContinueFlowAction";
 
-	public final static String META_ACTION_NODE = "MetaAction";
+	public final static String EXIT_ACTION_NODE = "ExitFlowAction";
 
-	public final static String ERROR_ACTION_NODE = "ErrorAction";
+	public final static String RETURN_ACTION_NODE = "ReturnFlowAction";
 
-	public final static String SUBSTITUTION_ACTION_NODE = "SubstitutionAction";
+	public final static String ORIGINAL_MESSAGE_ACTION_NODE = "OriginalMessageAction";
 
-	public final static String CUSTOM_ACTION_NODE = "ContinueCustomAction";
+	public final static String SUBSTITUTED_MESSAGE_ACTION_NODE = "SubstitutedMessageAction";
 
-	public final static String CONTINUE_ACTION_NODE = "ContinueAction";
+	public final static String ANY_MESSAGE_ACTION_NODE = "AnyMessageAction";
+
+	public final static String REJECT_CALL_ACTION_NODE = "RejectCallAction";
+
+	public final static String ACCEPT_CALL_ACTION_NODE = "AcceptCallAction";
+
+	public final static String REJECT_RETURN_ACTION_NODE = "RejectReturnAction";
+
+	public final static String ACCEPT_RETURN_ACTION_NODE = "AcceptReturnAction";
 
 	public final static String SIGNATURE_MATCHING_NODE = "SignatureMatchingPart";
 
@@ -77,6 +84,8 @@ public interface FlowNode
 
 	public final static String FE_VOID_COMP_OPER_NODE = "VoidCompOper";
 
+	public final static String FM_CONDITION_NODE = "FilterModuleCondition";
+	
 	/**
 	 * In the flowmodel of a filter module, this node marks the end of the flow
 	 * in the current module, proceeding to the next filter module. This node is
@@ -98,14 +107,19 @@ public interface FlowNode
 
 	/**
 	 * The stop node marks the exit of the filterset. The stop node is reached
-	 * after a filter action that does not continue the flow, for example a
-	 * Dispatch action or an Error action. Examples of actions that do continue
-	 * the flow are the Substitution action, the Meta action, the Wait action
-	 * and the Continue action (the Meta action might in practice not continue
-	 * the flow, but because we have no knowledge about this during filter
-	 * reasoning, the Meta action is assumed to continue the flow).
+	 * after a filter action that does not continue or return the flow, for
+	 * example an Error action. Examples of actions that do continue the flow
+	 * are the Substitution action, the Before action, the Wait action and the
+	 * Continue action. Examples of actions that return the flow are the
+	 * Dispatch action and the Skip action.
 	 */
 	public final static String STOP_NODE = "Stop";
+
+	/**
+	 * The return node marks the return through the filterset. Examples of
+	 * actions that return the flow are the Dispatch action and the Skip action.
+	 */
+	public final static String RETURN_NODE = "Return";
 
 	/*
 	 * Some labels that indicate a class of nodes

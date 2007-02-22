@@ -50,7 +50,7 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 
 	public RepositoryEntity()
 	{
-		dynamicmap = new DataMap();
+		dynamicmap = DataMap.newDataMapInstance();
 		uniqueId = getCounter();
 
 		DataStore ds = DataStore.instance();

@@ -29,10 +29,11 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.DotNET.LAMA.DotNETType;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class DotNETCollectorRunner implements CollectorRunner
 {
-	public static final String MODULE_NAME = "COLLECTOR";
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	private INCRE incre;
 
@@ -126,6 +127,16 @@ public class DotNETCollectorRunner implements CollectorRunner
 			if (!concern.getQualifiedName().equals(className))
 			{
 				// implementation of a different class
+				Object otherConcern = dataStore.getObjectByID(className);
+				if (otherConcern instanceof CpsConcern)
+				{
+					logger.info("Implementation of " + concern + " contains type info for "
+							+ ((CpsConcern) otherConcern));
+					DotNETType type = (DotNETType) typeMap.get(className);
+					concern.setPlatformRepresentation(type);
+					type.setParentConcern((CpsConcern) otherConcern);
+					typeMap.remove(className);
+				}
 				continue;
 			}
 
@@ -136,6 +147,8 @@ public class DotNETCollectorRunner implements CollectorRunner
 						+ " not found!", MODULE_NAME);
 
 			}
+			logger.info("" + concern + " implements own type info");
+
 			DotNETType type = (DotNETType) typeMap.get(className);
 			concern.setPlatformRepresentation(type);
 			type.setParentConcern(concern);

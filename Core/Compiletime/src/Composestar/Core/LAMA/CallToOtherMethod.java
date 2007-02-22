@@ -23,7 +23,15 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 	 */
 	private static final long serialVersionUID = 1718642064472551590L;
 
+	/**
+	 * The fully qualified name
+	 */
 	public String OperationName;
+
+	/**
+	 * The name of the method
+	 */
+	public String methodName;
 
 	public MethodInfo calledMethod;
 
@@ -100,6 +108,22 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 	public void setParent(Type parent)
 	{
 		Parent = parent;
+	}
+
+	/**
+	 * @return the methodName
+	 */
+	public String getMethodName()
+	{
+		return methodName;
+	}
+
+	/**
+	 * @param methodName the methodName to set
+	 */
+	public void setMethodName(String methodName)
+	{
+		this.methodName = methodName;
 	}
 
 	/**

@@ -12,6 +12,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
@@ -52,10 +53,7 @@ public class JavaRepositorySerializer implements RepositorySerializer
 			while (it.hasNext())
 			{
 				Object item = it.next();
-				if (item != null)
-				{
-					oos.writeObject(item);
-				}
+				oos.writeObject(item);
 			}
 
 			Debug.out(Debug.MODE_DEBUG, "CONE", "repository has been serialized");

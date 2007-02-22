@@ -9,9 +9,11 @@ public class Annotation implements Serializable
 {
 	private static final long serialVersionUID = 2225517155784402517L;
 
-	public Type m_type;
+	private String m_typename;
 
-	public String m_value;
+	private Type m_type;
+
+	private String m_value;
 
 	public ProgramElement m_target;
 
@@ -44,6 +46,21 @@ public class Annotation implements Serializable
 	{
 		m_type.removeAnnotationInstance(this);
 		m_target.removeAnnotation(this);
+	}
+
+	public void setTypeName(String name)
+	{
+		m_typename = name;
+	}
+
+	public String getTypeName()
+	{
+		return m_typename;
+	}
+
+	public void setType(Type t)
+	{
+		m_type = t;
 	}
 
 	public Type getType()
@@ -83,7 +100,8 @@ public class Annotation implements Serializable
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		m_type = (Type) in.readObject();
+		// m_type = (Type)in.readObject();
+		m_typename = in.readUTF();
 		m_target = (ProgramElement) in.readObject();
 		m_value = in.readUTF();
 		if (m_value.length() == 0)
@@ -100,7 +118,8 @@ public class Annotation implements Serializable
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeObject(m_type);
+		// out.writeObject(m_type);
+		out.writeUTF(m_typename);
 		out.writeObject(m_target);
 		out.writeUTF(m_value == null ? "" : m_value);
 		out.writeBoolean(m_isSuperImposed);

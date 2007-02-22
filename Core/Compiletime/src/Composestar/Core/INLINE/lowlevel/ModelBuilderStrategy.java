@@ -8,34 +8,45 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Stack;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
+import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
-import Composestar.Core.INLINE.model.Case;
-import Composestar.Core.INLINE.model.ContextExpression;
-import Composestar.Core.INLINE.model.ContextInstruction;
 import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
-import Composestar.Core.INLINE.model.Switch;
-import Composestar.Core.INLINE.model.While;
 import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 
 public class ModelBuilderStrategy implements LowLevelInlineStrategy
 {
+	public final static int INPUT_FILTERS = 1;
+
+	public final static int OUTPUT_FILTERS = 2;
+
 	/**
 	 * The ModelBuilder
 	 */
 	private ModelBuilder builder;
+
+	/**
+	 * The filtersettype;
+	 */
+	private int filterSetType;
+
+	/**
+	 * The FilterCode instance of the current inline.
+	 */
+	private FilterCode filterCode;
 
 	/**
 	 * The complete instructionblock of the current inline
@@ -66,17 +77,12 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	/**
 	 * Hashtable containing a mapping from MethodInfo to integer id's
 	 */
-	private Hashtable methodTable;
+	private static Hashtable methodTable;
 
-	private int lastMethodId;
-
-	private int nextReturnActionId;
-
-	private Switch onReturnInstructions;
-
-	private ContextInstruction createActionStoreInstruction;
-
-	private Label returnLabel;
+	/**
+	 * The last generated methodid.
+	 */
+	private static int lastMethodId;
 
 	/**
 	 * Indicates whether the instructionset of the current inline is empty or
@@ -96,17 +102,23 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private int currentLabelId;
 
-	/**
-	 * Indicates that the next jump to end should be ignored (for error action).
-	 * FIXME replace this with conceptual change in FIRE
-	 */
-	private boolean noJumpEnd;
+	private Label endLabel = new Label(-1);
 
-	public ModelBuilderStrategy(ModelBuilder builder)
+	/**
+	 * The constructor
+	 * 
+	 * @param builder The modelbuilder.
+	 * @param filterSetType Indicates whether this strategy is for inputfilters
+	 *            (constant INPUT_FILTERS) or for outputfilters (constant
+	 *            OUTPUT_FILTERS)
+	 */
+	public ModelBuilderStrategy(ModelBuilder builder, int filterSetType)
 	{
 		this.builder = builder;
-		this.methodTable = new Hashtable();
+		this.filterSetType = filterSetType;
+		methodTable = new Hashtable();
 		lastMethodId = 0;
+
 	}
 
 	/**
@@ -115,7 +127,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * 
 	 * @return
 	 */
-	public Block getInlineBlock()
+	public FilterCode getFilterCode()
 	{
 		if (empty)
 		{
@@ -123,42 +135,53 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 		else
 		{
-			return inlineBlock;
+			return filterCode;
 		}
 	}
 
 	/**
-	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#startInline(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule[],
+	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#startInline(Composestar.Core.FILTH.FilterModuleOrder,
 	 *      Composestar.Core.LAMA.MethodInfo, java.lang.String[])
 	 */
-	public void startInline(FilterModule[] filterSet, MethodInfo method, String[] argReferences)
+	public void startInline(FilterModuleOrder filterSet, MethodInfo method, String[] argReferences)
 	{
+		filterCode = new FilterCode();
+
 		this.currentMethod = method;
 
 		inlineBlock = new Block();
+		filterCode.setInstruction(inlineBlock);
+
 		blockStack = new Stack();
 		labelTable = new Hashtable();
 		currentLabelId = -1;
 
-		nextReturnActionId = 0;
-		onReturnInstructions = new Switch(new ContextExpression(ContextExpression.RETRIEVE_ACTION));
-		returnLabel = new Label(9997);
-
 		empty = true;
 
-		// create checkinnercall context instruction:
-		Block block = new Block();
+		// set current block to inlineblock
+		currentBlock = inlineBlock;
 
-		ContextInstruction checkInnercall = new ContextInstruction(ContextInstruction.CHECK_INNER_CALL,
-				getMethodId(method), block);
-		inlineBlock.addInstruction(checkInnercall);
+		// Check whether there are conditions to check before filter code can be
+		// executed. This is the case when all filtermodules, except the last
+		// default dispatch filter module, are conditional. Then we can check
+		// all these conditions in advance and when they are all false, no
+		// filtercode needs to be executed.
+		List list = filterSet.filterModuleSIList();
+		boolean hasCheckConditions = true;
+		for (int i = 0; i < list.size() - 1; i++)
+		{
+			FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) list.get(i);
+			hasCheckConditions = hasCheckConditions && (fmsi.getCondition() != null);
+		}
 
-		// create CreateActionStore instruction:
-		createActionStoreInstruction = new ContextInstruction(ContextInstruction.CREATE_ACTION_STORE);
-		block.addInstruction(createActionStoreInstruction);
-
-		// set current block to inner block of checkInnercall instruction:
-		currentBlock = block;
+		if (hasCheckConditions)
+		{
+			for (int i = 0; i < list.size() - 1; i++)
+			{
+				FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) list.get(i);
+				filterCode.addCheckCondition(fmsi.getCondition());
+			}
+		}
 	}
 
 	/**
@@ -166,36 +189,27 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	public void endInline()
 	{
-		// check whether there are on return actions:
-		if (!onReturnInstructions.hasCases())
+		if (filterSetType == INPUT_FILTERS)
 		{
-			// remove createActionStore instruction:
-			createActionStoreInstruction.setType(ContextInstruction.REMOVED);
-
-			// set jumpLabel of onReturnJump to end:
-			returnLabel.setId(9998);
+			endInlineIF();
 		}
 		else
 		{
-			// add onReturnActions:
-			Block block = new Block();
-			block.addInstruction(onReturnInstructions);
-
-			While whileInstruction = new While(new ContextExpression(ContextExpression.HAS_MORE_ACTIONS), block);
-			whileInstruction.setLabel(returnLabel);
-
-			currentBlock.addInstruction(whileInstruction);
+			endInlineOF();
 		}
-
-		ContextInstruction returnInstruction = new ContextInstruction(ContextInstruction.RETURN_ACTION);
-		returnInstruction.setLabel(new Label(9998));
-		currentBlock.addInstruction(returnInstruction);
-
-		// create resetInnercall context instruction:
-		ContextInstruction resetInnercall = new ContextInstruction(ContextInstruction.RESET_INNER_CALL);
-		resetInnercall.setLabel(getLabel(9999));
-		inlineBlock.addInstruction(resetInnercall);
 	}
+
+	/**
+	 * The endline method for the inputfilters
+	 */
+	private void endInlineIF()
+	{}
+
+	/**
+	 * The endline method for the outputfilters
+	 */
+	private void endInlineOF()
+	{}
 
 	/**
 	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#startFilter(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter,
@@ -220,6 +234,22 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	public void endFilter()
 	{
 		popBlock();
+	}
+
+	
+	
+	
+	/** (non-Javadoc)
+	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#evalCondition(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition, int)
+	 */
+	public void evalCondition(Condition condition, int jumpLabel)
+	{
+		Branch branch = new Branch(condition);
+		branch.setLabel(new Label(jumpLabel));
+		this.currentBlock.addInstruction(branch);
+		this.currentLabelId = jumpLabel;
+
+		this.currentBranch = branch;
 	}
 
 	/**
@@ -279,13 +309,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		Label label;
 		if (labelId == -1)
 		{
-			label = returnLabel;
-
-			if (noJumpEnd)
-			{
-				noJumpEnd = false;
-				return;
-			}
+			label = endLabel;
 		}
 		else if (labelId != currentLabelId + 1)
 		{
@@ -309,161 +333,115 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		Instruction instruction;
 
 		FlowNode node = state.getFlowNode();
-		if (node.containsName(FlowNode.DISPATCH_ACTION_NODE))
+
+		Filter filter = (Filter) node.getRepositoryLink();
+		FilterType filterType = filter.getFilterType();
+
+		if (node.containsName("ContinueAction"))
+		{
+			// if ( node.containsName(FlowChartNames.ACCEPT_CALL_ACTION_NODE) ||
+			// node.containsName(FlowChartNames.REJECT_CALL_ACTION_NODE)){
+			// instruction = new FilterAction("ContinueAction",
+			// state.getMessage(), getSubstitutedMessage(state));
+			// currentBlock.addInstruction(instruction);
+			// }
+		}
+		else if (node.containsName("DispatchAction"))
 		{
 			generateDispatchAction(state);
-		}
-		else if (node.containsName(FlowNode.META_ACTION_NODE))
-		{// "before action" ) ){
-			// generateBeforeAction( state );
-			generateAfterAction(state);
-		}
-		else if (node.containsName("AfterAction"))
-		{
-			generateAfterAction(state);
 		}
 		else if (node.containsName("SkipAction"))
 		{
 			// jump to end:
 			jump(-1);
+			return;
 		}
-		else if (node.containsName(FlowNode.ERROR_ACTION_NODE))
+		else if (node.containsName(FlowNode.ACCEPT_CALL_ACTION_NODE))
 		{
-			instruction = new FilterAction(FlowNode.ERROR_ACTION_NODE, state.getMessage());
-			empty = false;
-			currentBlock.addInstruction(instruction);
-			noJumpEnd = true;
+			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
+					.getAcceptCallAction();
+			generateCallAction(state, action);
 		}
-		else if (node.containsName(FlowNode.CONTINUE_ACTION_NODE))
+		else if (node.containsName(FlowNode.REJECT_CALL_ACTION_NODE))
 		{
-			instruction = new FilterAction(FlowNode.CONTINUE_ACTION_NODE, state.getMessage());
-			empty = false;
-			currentBlock.addInstruction(instruction);
+			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
+					.getRejectCallAction();
+			generateCallAction(state, action);
 		}
-		else if (node.containsName(FlowNode.SUBSTITUTION_ACTION_NODE))
+		else if (node.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE))
 		{
-			instruction = new FilterAction(FlowNode.SUBSTITUTION_ACTION_NODE, getCallMessage(state));
-			empty = false;
-			currentBlock.addInstruction(instruction);
+			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
+					.getAcceptReturnAction();
+			generateReturnAction(state, action);
 		}
-		else if (node.containsName(FlowNode.CUSTOM_ACTION_NODE))
+		else if (node.containsName(FlowNode.REJECT_RETURN_ACTION_NODE))
 		{
-			instruction = new FilterAction("custom", getCallMessage(state));
-			currentBlock.addInstruction(instruction);
+			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
+					.getRejectReturnAction();
+			generateReturnAction(state, action);
 		}
-		else
-		{
-			throw new RuntimeException("Unknown action");
-		}
-	}
-
-	private void generateDispatchAction(ExecutionState state)
-	{
-		Message callMessage = getCallMessage(state);
-
-		ContextInstruction innerCallContext = setInnerCallContext(callMessage);
-		if (innerCallContext != null)
-		{
-			currentBlock.addInstruction(innerCallContext);
-		}
-
-		FilterAction action = new FilterAction(FlowNode.DISPATCH_ACTION_NODE, callMessage);
-		currentBlock.addInstruction(action);
-
-		Target target = callMessage.getTarget();
-		MessageSelector selector = callMessage.getSelector();
-		if (!Message.checkEquals(Message.INNER_TARGET, target) || !selector.getName().equals(currentMethod.getName()))
-		{
-			empty = false;
-		}
-	}
-
-	private void generateBeforeAction(ExecutionState state)
-	{
-		Message callMessage = getCallMessage(state);
-
-		ContextInstruction innerCallContext = setInnerCallContext(callMessage);
-		if (innerCallContext != null)
-		{
-			currentBlock.addInstruction(innerCallContext);
-		}
-
-		FilterAction action = new FilterAction("BeforeAction", callMessage);
-		currentBlock.addInstruction(action);
-
-		empty = false;
-	}
-
-	private void generateAfterAction(ExecutionState state)
-	{
-		Message callMessage = getCallMessage(state);
-
-		int actionId = nextReturnActionId++;
-		ContextInstruction storeInstruction = new ContextInstruction(ContextInstruction.STORE_ACTION, actionId);
-		currentBlock.addInstruction(storeInstruction);
-
-		Block block = new Block();
-
-		ContextInstruction innerCallContext = setInnerCallContext(callMessage);
-		if (innerCallContext != null)
-		{
-			block.addInstruction(innerCallContext);
-		}
-
-		FilterAction action = new FilterAction("AfterAction", callMessage);
-		block.addInstruction(action);
-
-		Case caseInstruction = new Case(actionId, block);
-		onReturnInstructions.addCase(caseInstruction);
-
-		empty = false;
 	}
 
 	/**
-	 * Checks whether the call is an innercall and whether the called method has
-	 * inlined filters. Then the innercall filtercontext needs to be set.
+	 * Generates an action on call
 	 * 
-	 * @param callMessage
+	 * @param state The state corresponding with the action
+	 * @param action The action
 	 */
-	private ContextInstruction setInnerCallContext(Message callMessage)
+	private void generateCallAction(ExecutionState state,
+			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action)
 	{
-		if (Message.checkEquals(callMessage.getTarget(), Message.INNER_TARGET))
+		Instruction instruction = new FilterAction(
+				action.getName(),
+				state.getMessage(),
+				getSubstitutedMessage(state),
+				true,
+				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
+
+		empty = false;
+		currentBlock.addInstruction(instruction);
+	}
+
+	/**
+	 * Generates an action on return
+	 * 
+	 * @param state The state corresponding with the action
+	 * @param action The action
+	 */
+	private void generateReturnAction(ExecutionState state,
+			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action)
+	{
+		Instruction instruction = new FilterAction(
+				action.getName(),
+				state.getMessage(),
+				getSubstitutedMessage(state),
+				false,
+				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
+
+		empty = false;
+		currentBlock.addInstruction(instruction);
+	}
+
+	/**
+	 * Generates the dispatch action. This action is treated seperately, because
+	 * if only a dispatch is done to the inner method, the filtercode can be
+	 * ignored.
+	 * 
+	 * @param state The state corresponding with the action
+	 */
+	private void generateDispatchAction(ExecutionState state)
+	{
+		Message callMessage = getSubstitutedMessage(state);
+
+		FilterAction action = new FilterAction("DispatchAction", state.getMessage(), callMessage, true, true);
+		currentBlock.addInstruction(action);
+
+		Target target = callMessage.getTarget();
+		String selector = callMessage.getSelector();
+		if (!Message.checkEquals(Message.INNER_TARGET, target)
+				|| !Message.checkEquals(selector, builder.getCurrentSelector()))
 		{
-			MethodInfo calledMethod;
-
-			if (callMessage.getSelector().getName().equals(currentMethod.getName()))
-			{
-				calledMethod = currentMethod;
-			}
-			else
-			{
-				List parameterList = currentMethod.getParameters();
-				String[] parameters = new String[parameterList.size()];
-				for (int i = 0; i < parameterList.size(); i++)
-				{
-					ParameterInfo parameter = (ParameterInfo) parameterList.get(i);
-					parameters[i] = parameter.parameterType().fullName();
-				}
-
-				calledMethod = currentMethod.parent().getMethod(callMessage.getSelector().getName(), parameters);
-			}
-
-			// it is possible that a called method could not be found, SIGN
-			// already has given a warning
-			// or error for this
-			if (calledMethod == null)
-			{
-				return null;
-			}
-
-			ContextInstruction contextInstruction = new ContextInstruction(ContextInstruction.SET_INNER_CALL,
-					getMethodId(calledMethod));
-			builder.addInnerCallCheckTask(contextInstruction);
-			return contextInstruction;
-		}
-		else
-		{
-			return null;
+			empty = false;
 		}
 	}
 
@@ -493,17 +471,17 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * @param state
 	 * @return
 	 */
-	private Message getCallMessage(ExecutionState state)
+	private Message getSubstitutedMessage(ExecutionState state)
 	{
 		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionTarget();
+		Target dispTarget = state.getSubstitutionMessage().getTarget();
 		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
 		{
 			dispTarget = state.getMessage().getTarget();
 		}
 
 		// get the dispatch selector:
-		MessageSelector dispSelector = state.getSubstitutionSelector();
+		String dispSelector = state.getSubstitutionMessage().getSelector();
 		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
 		{
 			dispSelector = state.getMessage().getSelector();
@@ -534,11 +512,19 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 	}
 
-	public int getMethodId(MethodInfo method)
+	/**
+	 * Returns the methodid corresponding with the given MethodInfo.
+	 * 
+	 * @param method
+	 * @return
+	 */
+	public static int getMethodId(MethodInfo method)
 	{
 		if (method == null)
 		{
+			return -1;
 		}
+
 		Integer id = (Integer) methodTable.get(method);
 		if (id == null)
 		{

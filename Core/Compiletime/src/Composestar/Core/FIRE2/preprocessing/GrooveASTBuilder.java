@@ -18,6 +18,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOper
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperatorType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElementCompOper;
@@ -34,6 +35,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
 import Composestar.Core.FIRE2.model.FlowNode;
+import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
@@ -47,13 +49,23 @@ public class GrooveASTBuilder
 
 	public final static String REPOSITORY_LINK_ANNOTATION = "repositoryLink";
 
-	public final static String ACTION_NODE_ANNOTATION = "actionNode";
-
-	public final static int ACCEPT_ACTION = 1;
-
-	public final static int REJECT_ACTION = 2;
+	public final static String ACTION_ANNOTATION = "action";
 
 	public final static String STAR_REPRESENTATION = "'*'";
+
+	/**
+	 * Hashtable containing a mapping from the String representation of the
+	 * MessageSelector to the corresponding selector-node, to make sure that
+	 * each distinct selector has only one node
+	 */
+	private Hashtable selectorTable;
+
+	/**
+	 * Hashtable containing a mapping from the String representation of the
+	 * Target to the corresponding target-node, to make sure that each distinct
+	 * target has only one node
+	 */
+	private Hashtable targetTable;
 
 	/*
 	 * Edge labels in the AST
@@ -68,9 +80,13 @@ public class GrooveASTBuilder
 
 	public final static String RIGHT_ARGUMENT_EDGE = "rightArg";
 
-	public final static String REJECT_EDGE = "reject";
+	public final static String REJECT_CALL_EDGE = "rejectCall";
 
-	public final static String ACCEPT_EDGE = "accept";
+	public final static String ACCEPT_CALL_EDGE = "acceptCall";
+
+	public final static String REJECT_RETURN_EDGE = "rejectReturn";
+
+	public final static String ACCEPT_RETURN_EDGE = "acceptReturn";
 
 	public final static String FILTER_ELEMENT_EDGE = "filterElement";
 
@@ -88,13 +104,8 @@ public class GrooveASTBuilder
 
 	public final static String TARGET_EDGE = "target";
 
-	private Hashtable selectorTable;
-
-	private Hashtable targetTable;
-
 	public GrooveASTBuilder()
 	{
-
 	}
 
 	public Graph buildAST(FilterModule filterModule, boolean forInputFilters)
@@ -181,6 +192,17 @@ public class GrooveASTBuilder
 		edge = new AnnotatedEdge(stopNode, FlowNode.FLOW_ELEMENT_NODE, stopNode);
 		graph.addEdge(edge);
 
+		// stopNode:
+		AnnotatedNode exitNode = new AnnotatedNode();
+		exitNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, filterModule);
+		graph.addNode(exitNode);
+
+		edge = new AnnotatedEdge(exitNode, FlowNode.RETURN_NODE, exitNode);
+		graph.addEdge(edge);
+
+		edge = new AnnotatedEdge(exitNode, FlowNode.FLOW_ELEMENT_NODE, exitNode);
+		graph.addEdge(edge);
+
 		graph.setFixed();
 
 		return graph;
@@ -246,102 +268,48 @@ public class GrooveASTBuilder
 		AnnotatedEdge edge = new AnnotatedEdge(filterNode, FlowNode.FILTER_NODE, filterNode);
 		graph.addEdge(edge);
 
-		// create reject and accept nodes:
-		AnnotatedNode rejectNode = new AnnotatedNode();
-		rejectNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, filter);
-		rejectNode.addAnnotation(ACTION_NODE_ANNOTATION, REJECT_ACTION);
-		graph.addNode(rejectNode);
-		edge = new AnnotatedEdge(filterNode, REJECT_EDGE, rejectNode);
-		graph.addEdge(edge);
-		edge = new AnnotatedEdge(rejectNode, FlowNode.FILTER_ACTION_NODE, rejectNode);
-		graph.addEdge(edge);
-
-		AnnotatedNode acceptNode = new AnnotatedNode();
-		acceptNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, filter);
-		acceptNode.addAnnotation(ACTION_NODE_ANNOTATION, ACCEPT_ACTION);
-		graph.addNode(acceptNode);
-		edge = new AnnotatedEdge(filterNode, ACCEPT_EDGE, acceptNode);
-		graph.addEdge(edge);
-		edge = new AnnotatedEdge(acceptNode, FlowNode.FILTER_ACTION_NODE, acceptNode);
-		graph.addEdge(edge);
-
-		// add correct action to reject and accept node:
+		// create reject and accept nodes
 		FilterType filterType = filter.getFilterType();
-		if (filterType.type.equals(FilterType.META))
-		{
-			edge = new AnnotatedEdge(acceptNode, FlowNode.META_ACTION_NODE, acceptNode);
-			graph.addEdge(edge);
-			edge = new AnnotatedEdge(rejectNode, FlowNode.CONTINUE_ACTION_NODE, rejectNode);
-			graph.addEdge(edge);
-		}
-		else if (filterType.type.equals(FilterType.ERROR))
-		{
-			edge = new AnnotatedEdge(acceptNode, FlowNode.CONTINUE_ACTION_NODE, acceptNode);
-			graph.addEdge(edge);
-			edge = new AnnotatedEdge(rejectNode, FlowNode.ERROR_ACTION_NODE, rejectNode);
-			graph.addEdge(edge);
-		}
-		else if (filterType.type.equals(FilterType.DISPATCH))
-		{
-			edge = new AnnotatedEdge(acceptNode, FlowNode.DISPATCH_ACTION_NODE, acceptNode);
-			graph.addEdge(edge);
-			edge = new AnnotatedEdge(rejectNode, FlowNode.CONTINUE_ACTION_NODE, rejectNode);
-			graph.addEdge(edge);
-		}
-		else if (filterType.type.equals(FilterType.SEND))
-		{
-			// edge = new AnnotatedEdge( acceptNode, "SendAction", acceptNode );
-			// not implemented in the groove model yet;
-			edge = new AnnotatedEdge(acceptNode, FlowNode.CONTINUE_ACTION_NODE, acceptNode);
-			graph.addEdge(edge);
-			edge = new AnnotatedEdge(rejectNode, FlowNode.CONTINUE_ACTION_NODE, rejectNode);
-			graph.addEdge(edge);
-		}
-		else if (filterType.type.equals(FilterType.SUBSTITUTION))
-		{
-			edge = new AnnotatedEdge(acceptNode, FlowNode.SUBSTITUTION_ACTION_NODE, acceptNode);
-			graph.addEdge(edge);
-			edge = new AnnotatedEdge(rejectNode, FlowNode.CONTINUE_ACTION_NODE, rejectNode);
-			graph.addEdge(edge);
-		}
-		else if (filterType.type.equals(FilterType.WAIT))
-		{
-			// edge = new AnnotatedEdge( acceptNode, "WaitAction", acceptNode );
-			// not implemented in the groove model yet;
-			edge = new AnnotatedEdge(acceptNode, FlowNode.CONTINUE_ACTION_NODE, acceptNode);
-			graph.addEdge(edge);
-			edge = new AnnotatedEdge(rejectNode, FlowNode.CONTINUE_ACTION_NODE, rejectNode);
-			graph.addEdge(edge);
-		}
-		else if (filterType.type.equals(FilterType.APPEND))
-		{
-			// not implemented in the groove model yet;
-			edge = new AnnotatedEdge(acceptNode, FlowNode.CONTINUE_ACTION_NODE, acceptNode);
-			graph.addEdge(edge);
-			edge = new AnnotatedEdge(rejectNode, FlowNode.CONTINUE_ACTION_NODE, rejectNode);
-			graph.addEdge(edge);
-		}
-		else if (filterType.type.equals(FilterType.PREPEND))
-		{
-			// not implemented in the groove model yet;
-			edge = new AnnotatedEdge(acceptNode, FlowNode.CONTINUE_ACTION_NODE, acceptNode);
-			graph.addEdge(edge);
-			edge = new AnnotatedEdge(rejectNode, FlowNode.CONTINUE_ACTION_NODE, rejectNode);
-			graph.addEdge(edge);
-		}
-		else if (filterType.type.equals(FilterType.CUSTOM))
-		{
-			edge = new AnnotatedEdge(acceptNode, FlowNode.CUSTOM_ACTION_NODE, acceptNode);
-			graph.addEdge(edge);
-			edge = new AnnotatedEdge(rejectNode, FlowNode.CONTINUE_ACTION_NODE, rejectNode);
-			graph.addEdge(edge);
-		}
-		else
-		{
-			// should never happen, because all cases should be handled by
-			// previous if/elses
-			throw new RuntimeException("Unknown filtertype");
-		}
+
+		// create acceptCallNode
+		AnnotatedNode acceptCallNode = new AnnotatedNode();
+		acceptCallNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, filter);
+		edge = new AnnotatedEdge(acceptCallNode, FlowNode.ACCEPT_CALL_ACTION_NODE, acceptCallNode);
+		graph.addEdge(edge);
+		graph.addNode(acceptCallNode);
+		edge = new AnnotatedEdge(filterNode, ACCEPT_CALL_EDGE, acceptCallNode);
+		graph.addEdge(edge);
+		addActionInformation(graph, acceptCallNode, filterType.getAcceptCallAction());
+
+		// create rejectCallNode
+		AnnotatedNode rejectCallNode = new AnnotatedNode();
+		rejectCallNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, filter);
+		edge = new AnnotatedEdge(rejectCallNode, FlowNode.REJECT_CALL_ACTION_NODE, rejectCallNode);
+		graph.addEdge(edge);
+		graph.addNode(rejectCallNode);
+		edge = new AnnotatedEdge(filterNode, REJECT_CALL_EDGE, rejectCallNode);
+		graph.addEdge(edge);
+		addActionInformation(graph, rejectCallNode, filterType.getRejectCallAction());
+
+		// create acceptReturnNode
+		AnnotatedNode acceptReturnNode = new AnnotatedNode();
+		acceptReturnNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, filter);
+		edge = new AnnotatedEdge(acceptReturnNode, FlowNode.ACCEPT_RETURN_ACTION_NODE, acceptReturnNode);
+		graph.addEdge(edge);
+		graph.addNode(acceptReturnNode);
+		edge = new AnnotatedEdge(filterNode, ACCEPT_RETURN_EDGE, acceptReturnNode);
+		graph.addEdge(edge);
+		addActionInformation(graph, acceptReturnNode, filterType.getAcceptReturnAction());
+
+		// create rejectReturnNode
+		AnnotatedNode rejectReturnNode = new AnnotatedNode();
+		rejectReturnNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, filter);
+		edge = new AnnotatedEdge(rejectReturnNode, FlowNode.REJECT_RETURN_ACTION_NODE, rejectReturnNode);
+		graph.addEdge(edge);
+		graph.addNode(rejectReturnNode);
+		edge = new AnnotatedEdge(filterNode, REJECT_RETURN_EDGE, rejectReturnNode);
+		graph.addEdge(edge);
+		addActionInformation(graph, rejectReturnNode, filterType.getRejectReturnAction());
 
 		// iterate over filterelements:
 		Iterator filters = filter.getFilterElementIterator();
@@ -384,6 +352,58 @@ public class GrooveASTBuilder
 		}
 
 		return filterNode;
+	}
+
+	private void addActionInformation(Graph graph, AnnotatedNode actionNode, FilterAction action)
+	{
+		// add action as annotation
+		actionNode.addAnnotation(ACTION_ANNOTATION, action);
+
+		// add FilterActionNode label
+		AnnotatedEdge edge = new AnnotatedEdge(actionNode, FlowNode.FILTER_ACTION_NODE, actionNode);
+		graph.addEdge(edge);
+
+		// add flowbehaviour label
+		switch (action.getFlowBehaviour())
+		{
+			case FilterAction.FLOW_CONTINUE:
+				edge = new AnnotatedEdge(actionNode, FlowNode.CONTINUE_ACTION_NODE, actionNode);
+				graph.addEdge(edge);
+				break;
+			case FilterAction.FLOW_EXIT:
+				edge = new AnnotatedEdge(actionNode, FlowNode.EXIT_ACTION_NODE, actionNode);
+				graph.addEdge(edge);
+				break;
+			case FilterAction.FLOW_RETURN:
+				edge = new AnnotatedEdge(actionNode, FlowNode.RETURN_ACTION_NODE, actionNode);
+				graph.addEdge(edge);
+				break;
+			default:
+				throw new RuntimeException("Unknown Flowbehaviour");
+		}
+
+		// add message change behaviour label
+		switch (action.getMessageChangeBehaviour())
+		{
+			case FilterAction.MESSAGE_ORIGINAL:
+				edge = new AnnotatedEdge(actionNode, FlowNode.ORIGINAL_MESSAGE_ACTION_NODE, actionNode);
+				graph.addEdge(edge);
+				break;
+			case FilterAction.MESSAGE_SUBSTITUTED:
+				edge = new AnnotatedEdge(actionNode, FlowNode.EXIT_ACTION_NODE, actionNode);
+				graph.addEdge(edge);
+				break;
+			case FilterAction.MESSAGE_ANY:
+				edge = new AnnotatedEdge(actionNode, FlowNode.RETURN_ACTION_NODE, actionNode);
+				graph.addEdge(edge);
+				break;
+			default:
+				throw new RuntimeException("Unknown Flowbehaviour");
+		}
+
+		// add filteraction name label
+		edge = new AnnotatedEdge(actionNode, action.getName(), actionNode);
+		graph.addEdge(edge);
 	}
 
 	/**

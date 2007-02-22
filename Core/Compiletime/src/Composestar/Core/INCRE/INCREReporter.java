@@ -3,6 +3,7 @@ package Composestar.Core.INCRE;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -13,14 +14,16 @@ import Composestar.Utils.Debug;
 
 public class INCREReporter
 {
-	private BufferedWriter writer;
+	private BufferedWriter writer, writer2;
 
-	private StringBuffer buffer;
+	private StringBuffer buffer, buffer2;
 
 	private String cssFile;
 
 	// private String reportFile;
 	private LinkedHashMap timings;
+
+	private long timeStart, timeEnd, totalElapsed;
 
 	public INCREReporter()
 	{
@@ -49,16 +52,19 @@ public class INCREReporter
 		// String reportFile = resources.getProperty("TempFolder") +
 		// "INCRE.html";
 		String reportFile = config.getPathSettings().getPath("Base") + "INCRE.html";
+		String reportFile2 = config.getPathSettings().getPath("Base") + "INCRE.txt";
 		try
 		{
 			writer = new BufferedWriter(new FileWriter(reportFile));
+			writer2 = new BufferedWriter(new FileWriter(reportFile2));
 		}
 		catch (Exception e)
 		{
 			Debug.out(Debug.MODE_WARNING, "INCRE", "INCRE report file creation failed (" + reportFile + ')');
 		}
 
-		buffer = new StringBuffer("");
+		buffer = new StringBuffer();
+		buffer2 = new StringBuffer();
 		timings = new LinkedHashMap();
 	}
 
@@ -100,6 +106,7 @@ public class INCREReporter
 
 	public void open()
 	{
+		timeStart = System.currentTimeMillis();
 		// DataStore ds = DataStore.instance();
 		// Properties resources = (Properties)ds.getObjectByID("config");
 		// String tempPath = resources.getProperty( "TempFolder", "ERROR" );
@@ -137,6 +144,10 @@ public class INCREReporter
 
 	public void close()
 	{
+		// total time elapsed
+		timeEnd = System.currentTimeMillis();
+		totalElapsed = timeEnd - timeStart;
+
 		// append all timings
 		Iterator modules = timings.keySet().iterator();
 		for (Object o : timings.keySet())
@@ -150,6 +161,9 @@ public class INCREReporter
 			buffer.append("</b></td><td align=center><b>TYPE");
 			buffer.append("</b></td><td align=center><b>ELAPSED");
 			buffer.append("</b></td></tr>");
+
+			buffer2.append(modulename);
+			buffer2.append(":");
 
 			// append timings of processes
 			Iterator timerItr = moduletimings.iterator();
@@ -186,11 +200,19 @@ public class INCREReporter
 			buffer.append("	ms</td></tr>");
 			buffer.append("<tr class=endmodulerow><td align=right>Total Elapsed</td><td></td><td>");
 			buffer.append("").append(elapsed);
-			buffer.append("	ms</td></tr>");
+			buffer2.append(elapsed);
+			buffer2.append('\n');
+			buffer.append("	ms (");
+			double percentage = ((double) elapsed * 100d / (double) totalElapsed);
+			BigDecimal percDec = new BigDecimal(percentage);
+			percDec = percDec.setScale(1, BigDecimal.ROUND_HALF_UP);
+			buffer.append(percDec.toString());
+			buffer.append("%)</td></tr>");
 		}
 
 		// append end of report
 		buffer.append("</table></body></html>");
+		buffer2.append(totalElapsed);
 
 		try
 		{
@@ -198,6 +220,9 @@ public class INCREReporter
 			writer.write(buffer.toString());
 			writer.flush();
 			writer.close();
+			writer2.write(buffer2.toString());
+			writer2.flush();
+			writer2.close();
 		}
 		catch (Exception e)
 		{

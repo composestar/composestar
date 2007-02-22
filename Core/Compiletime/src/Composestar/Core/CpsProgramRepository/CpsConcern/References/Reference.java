@@ -90,6 +90,20 @@ public abstract class Reference extends RepositoryEntity
 	}
 
 	/**
+	 * @param packValue
+	 * @roseuid 40ADE4B50151
+	 */
+	public void setPackage(Vector packValue)
+	{
+		if (packValue == null)
+		{
+			packValue = new Vector();
+		}
+
+		this.pack = packValue;
+	}
+
+	/**
 	 * @return boolean
 	 * @roseuid 40ADE4550302
 	 */
@@ -107,30 +121,16 @@ public abstract class Reference extends RepositoryEntity
 		this.resolved = resolvedValue;
 	}
 
-	/**
-	 * @param packValue
-	 * @roseuid 40ADE4B50151
-	 */
-	public void setPackage(Vector packValue)
-	{
-		if (packValue == null)
-		{
-			packValue = new Vector();
-		}
-
-		this.pack = packValue;
-	}
-
 	public String getQualifiedName()
 	{
-		StringBuffer fname = new StringBuffer();
+		StringBuffer qname = new StringBuffer();
 		for (int i = 0; i < pack.size(); i++)
 		{
-			fname.append(pack.elementAt(i));
-			fname.append(".");
+			qname.append(pack.elementAt(i));
+			qname.append(".");
 		}
-		fname.append(name);
-		return fname.toString();
+		qname.append(name);
+		return qname.toString();
 	}
 
 }

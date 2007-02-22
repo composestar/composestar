@@ -144,7 +144,8 @@ public final class INCRE
 		}
 
 		// time this initialization process
-		INCRETimer increinit = this.getReporter().openProcess(MODULE_NAME, "", INCRETimer.TYPE_ALL);
+		INCRETimer increinit = getReporter().openProcess(
+				MODULE_NAME, "", INCRETimer.TYPE_ALL);
 
 		// parse the XML configuration file containing the modules
 		String configFile = getConfigFile();
@@ -175,6 +176,8 @@ public final class INCRE
 		// INCRE enabled or not?
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "INCRE is " + (enabled ? "enabled" : "disabled"));
 	}
+	
+	
 
 	public void runModules(CommonResources resources) throws ModuleException
 	{
@@ -253,7 +256,7 @@ public final class INCRE
 
 		return result;
 	}
-
+	
 	/**
 	 * Returns an instance of INCREReporter
 	 */
@@ -762,7 +765,7 @@ public final class INCRE
 			}
 		}
 
-		/* sort primitive concerns */
+		/* sort primitive concerns by id */
 		Collections.sort(list, new Comparator()
 		{
 			public int compare(Object o1, Object o2)
@@ -842,12 +845,20 @@ public final class INCRE
 	}
 
 	/**
-	 * Returns true in case all dependencies have not been modified return false
-	 * otherwise (aka Returns whether all dependencies are unmodified?) FIXME:
-	 * this can use some clarification. also the method name doesnt seem related
-	 * to the description. Procedure: 1. Get module 2. Get dependencies of
-	 * modules 3. iterate over dependencies 4. get dependent object 5. search
-	 * history for same object 6. compare two objects (only in case not a file)
+	 * Returns true in case all dependencies have not been modified,
+	 * return false otherwise.
+	 * (aka "Returns whether all dependencies are unmodified"?)
+	 *  
+	 * FIXME: this can use some clarification. also the method name doesnt seem related
+	 * to the description. 
+	 * 
+	 * Procedure: 
+	 * 1. Get module 
+	 * 2. Get dependencies of modules 
+	 * 3. iterate over dependencies 
+	 * 4. get dependent object 
+	 * 5. search history for same object 
+	 * 6. compare two objects (only in case not a file)
 	 * 7. stop if modification found
 	 * 
 	 * @roseuid 41F4E50900CB

@@ -1,10 +1,5 @@
 package Composestar.Java.LAMA;
 
-import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.Type;
-import Composestar.Core.LAMA.UnitResult;
-import Composestar.Utils.StringConverter;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,6 +8,11 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.LAMA.UnitResult;
+import Composestar.Utils.StringConverter;
 
 /**
  * An instance of <code>JavaMethodInfo</code> represents a method in Java. It

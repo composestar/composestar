@@ -9,6 +9,7 @@
  */
 package Composestar.Core.CpsProgramRepository;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +25,6 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
  */
 public class Signature implements SerializableRepositoryEntity
 {
-
 	/**
 	 * 
 	 */
@@ -61,8 +61,8 @@ public class Signature implements SerializableRepositoryEntity
 	 */
 	public void empty()
 	{
-		methodByKey = new DataMap();
-		methodByName = new DataMap();
+		methodByKey = DataMap.newDataMapInstance();
+		methodByName = DataMap.newDataMapInstance();
 	}
 
 	/**
@@ -80,7 +80,6 @@ public class Signature implements SerializableRepositoryEntity
 		{
 			methodByKey.put(key, mw);
 			methodByName.put(methodInfo.getName(), mw);
-
 			return true;
 		}
 
@@ -95,12 +94,12 @@ public class Signature implements SerializableRepositoryEntity
 	// TODO: Optimize: use LinkedHashSet
 	public List getMethods(int type)
 	{
-		List typeOnlyList = new LinkedList();
+		List typeOnlyList = new ArrayList();
 		Iterator itr = methodByKey.values().iterator();
 		while (itr.hasNext())
 		{
 			MethodWrapper mw = (MethodWrapper) itr.next();
-			if (mw.getRelationType() == type)
+			if ((mw.getRelationType() & type) != 0)
 			{
 				typeOnlyList.add(mw.getMethodInfo());
 			}
@@ -180,12 +179,12 @@ public class Signature implements SerializableRepositoryEntity
 	public boolean hasMethod(MethodInfo dnmi)
 	{
 		String key = getHashKey(dnmi);
-		return methodByKey.containsKey(key);
+		return (methodByKey.containsKey(key));
 	}
 
 	public boolean hasMethod(String methodName)
 	{
-		return methodByName.containsKey(methodName);
+		return (methodByName.containsKey(methodName));
 	}
 
 	public int getMethodStatus(String name)
@@ -199,32 +198,32 @@ public class Signature implements SerializableRepositoryEntity
 		return mw.getRelationType();
 	}
 
-	/**
-	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method
-	 * @roseuid 404C47840369
-	 */
 	public MethodInfo getNamedMethod()
 	{
 		return null;
 	}
 
+	// FIXME: move to MethodInfo
 	public String getHashKey(MethodInfo methodInfo)
 	{
-		StringBuffer key = new StringBuffer(methodInfo.getName() + '%');
-		List parameter = methodInfo.getParameters();
-		for (int i = 0; i < parameter.size(); i++)
+		StringBuffer sb = new StringBuffer();
+
+		sb.append(methodInfo.getName()).append('%');
+		sb.append(methodInfo.returnTypeName()).append('%');
+
+		List pars = methodInfo.getParameters();
+		for (int i = 0; i < pars.size(); i++)
 		{
-			key.append(((ParameterInfo) parameter.get(i)).ParameterTypeString).append('%');
+			ParameterInfo pi = (ParameterInfo) pars.get(i);
+			sb.append(pi.ParameterTypeString).append('%');
 		}
 
-		key.append(methodInfo.returnType());
-
-		return key.toString();
+		return sb.toString();
 	}
 
-	public void setStatus(int instatus)
+	public void setStatus(int _status)
 	{
-		status = instatus;
+		status = _status;
 	}
 
 	public int getStatus()

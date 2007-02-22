@@ -10,6 +10,7 @@
 
 package Composestar.C.MASTER;
 
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.Master.Master;
 
 /**
@@ -18,6 +19,15 @@ import Composestar.Core.Master.Master;
  */
 public class CMaster extends Master
 {
+	/* (non-Javadoc)
+	 * @see Composestar.Core.Master.Master#initEvironment()
+	 */
+	@Override
+	protected void initEvironment()
+	{
+		super.initEvironment();
+		LegacyFilterTypes.useLegacyFilterTypes = true;
+	}
 
 	/**
 	 * Compose* main function. Creates the Master object. Adds the desired

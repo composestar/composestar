@@ -11,7 +11,6 @@
 package Composestar.Core.DIGGER2;
 
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.FIRE2.model.Message;
 
 /**
@@ -38,7 +37,7 @@ public class MessageResult
 	 * when the dispatch graph is created in mode 0) the initial selector is
 	 * used.
 	 */
-	protected MessageSelector selector;
+	protected String selector;
 
 	/**
 	 * Default constructor
@@ -48,7 +47,7 @@ public class MessageResult
 	 * @param initialSelector fallback selector used in case of star and
 	 *            undistinguishable selector usage
 	 */
-	public MessageResult(Breadcrumb inCrumb, Trail inTrail, MessageSelector initialSelector)
+	public MessageResult(Breadcrumb inCrumb, Trail inTrail, String initialSelector)
 	{
 		crumb = inCrumb;
 		trail = inTrail;
@@ -91,7 +90,7 @@ public class MessageResult
 	 * @see MessageResult#selector
 	 * @return the resulting selector for the message.
 	 */
-	public MessageSelector getSelector()
+	public String getSelector()
 	{
 		return selector;
 	}

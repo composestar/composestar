@@ -71,4 +71,22 @@ public class MethodWrapper implements SerializableRepositoryEntity
 		relationType = type;
 	}
 
+	public String toString()
+	{
+		String rel = "?" + relationType;
+		if (relationType == NORMAL)
+		{
+			rel = "o";
+		}
+		else if (relationType == ADDED)
+		{
+			rel = "+";
+		}
+		else if (relationType == REMOVED)
+		{
+			rel = "-";
+		}
+
+		return "[" + rel + "]" + methodInfo.toString();
+	}
 }

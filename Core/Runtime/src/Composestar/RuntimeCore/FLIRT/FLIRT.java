@@ -1,11 +1,5 @@
 package Composestar.RuntimeCore.FLIRT;
 
-import java.util.ArrayList;
-
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
-import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 
 public class FLIRT
 {
@@ -26,6 +20,7 @@ public class FLIRT
 	 */
 	public void run(Object obj)
 	{
+		/*
 		Filter filter = new Filter();
 		FilterType type = new FilterType();
 		type.setName("Error");
@@ -39,6 +34,7 @@ public class FLIRT
 		ObjectManager om = new ObjectManager(obj, null);
 		om.addFilterModule(fmr);
 		GlobalObjectManager.setObjectManagerFor(obj, om);
+		*/
 	}
 
 	/**

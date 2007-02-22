@@ -18,9 +18,6 @@ import Composestar.Core.CpsProgramRepository.Concern;
  */
 public class ConcernReference extends Reference
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4669018731045759962L;
 
 	private Concern ref;

@@ -39,6 +39,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
+import Composestar.Core.FILTH.DefaultInnerDispatchNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.FilterFactory;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.FilterTypeRuntime;
@@ -147,6 +148,12 @@ public class RepositoryLinker
 	private void linkFilter(Filter filter, FilterModuleRuntime filterModuleRuntime, boolean input) throws Exception
 	{
 		FilterRuntime filterRuntime;
+		
+		if (!input && filter.getQualifiedName().equals(DefaultInnerDispatchNames.FQN_OUTER_FILTER))
+		{
+			// ignore the default inner output dispatch/send filter
+			return;
+		}
 
 		// INPUTFILTER: create a runtime input filter, link the compiletime
 		// input filter to it,

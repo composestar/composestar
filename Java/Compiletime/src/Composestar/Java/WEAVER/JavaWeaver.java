@@ -6,15 +6,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
@@ -86,7 +87,7 @@ public class JavaWeaver implements WEAVER
 		}
 	}
 
-	public void createHookDictionary(CommonResources resources)
+	public void createHookDictionary(CommonResources resources) throws ModuleException
 	{
 		getMethodInterceptions(resources);
 		getCastInterceptions();
@@ -171,7 +172,7 @@ public class JavaWeaver implements WEAVER
 
 	}
 
-	public void getMethodInterceptions(CommonResources resources)
+	public void getMethodInterceptions(CommonResources resources) throws ModuleException
 	{
 
 		FILTHService filthservice = FILTHService.getInstance(resources);
@@ -219,6 +220,11 @@ public class JavaWeaver implements WEAVER
 		while (iterFilterModules.hasNext())
 		{
 			FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) iterFilterModules.next());
+			
+			if (InnerDispatcher.isDefaultDispatch(fm))
+			{
+				continue;
+			}
 
 			if (!fm.getOutputFilters().isEmpty())
 			{

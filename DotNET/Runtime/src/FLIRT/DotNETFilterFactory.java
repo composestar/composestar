@@ -1,6 +1,7 @@
 package Composestar.RuntimeDotNET.FLIRT.Filtertypes;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyCustomFilterType;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
 import Composestar.RuntimeCore.Utils.Debug;
@@ -33,7 +34,7 @@ public class DotNETFilterFactory extends FilterFactory
 	 */
 	protected FilterTypeRuntime getCustomFilterTypeFor(FilterType filterType)
 	{
-		String filterName = filterType.getName();
+		String filterName = ((LegacyCustomFilterType) filterType).getName();
 			
 		AssemblyName[] ans = Assembly.GetEntryAssembly().GetReferencedAssemblies();
 		

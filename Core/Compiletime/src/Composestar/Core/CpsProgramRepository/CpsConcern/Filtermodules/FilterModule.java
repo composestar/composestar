@@ -17,14 +17,8 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 import Composestar.Utils.CPSIterator;
 
-/**
- * @modelguid {A1F21307-81AA-41BE-8D4C-79216E1F0EC6}
- */
 public class FilterModule extends DeclaredRepositoryEntity
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4898318100147611976L;
 
 	public FilterModuleAST fmAst;
@@ -40,11 +34,14 @@ public class FilterModule extends DeclaredRepositoryEntity
 
 	public Vector outputFilters;
 
-	public int uniqueNumber;
+	/**
+	 * A unique token for the filter module name. This token is used to
+	 * distinguish filter module instances (for example with filter module
+	 * parameters or conditional superimposition)
+	 */
+	public String uniqueToken;
 
 	/**
-	 * @modelguid {04F87A00-10B0-476E-8C87-A6BD604DEF19}
-	 * @roseuid 401FAA6303DA
 	 * @deprecated
 	 */
 	public FilterModule()
@@ -60,10 +57,10 @@ public class FilterModule extends DeclaredRepositoryEntity
 		outputFilters = new Vector();
 	}
 
-	public FilterModule(FilterModuleAST inFmAst, Vector args, int number)
+	public FilterModule(FilterModuleAST inFmAst, Vector args, String id)
 	{
 		super();
-		uniqueNumber = number;
+		uniqueToken = id;
 		fmAst = inFmAst;
 		descriptionFileName = fmAst.getDescriptionFileName();
 		descriptionLineNumber = fmAst.getDescriptionLineNumber();
@@ -599,19 +596,19 @@ public class FilterModule extends DeclaredRepositoryEntity
 		return fmAst;
 	}
 
-	public int getUniqueNumber()
+	public String getUniqueToken()
 	{
-		return uniqueNumber;
+		return this.uniqueToken;
 	}
 
-	public void setUniqueNumber(int inUniqueNumber)
+	public void setUniqueToken(String inUniqueToken)
 	{
-		uniqueNumber = inUniqueNumber;
+		uniqueToken = inUniqueToken;
 	}
 
 	public String getName()
 	{
-		return name + '!' + uniqueNumber;
+		return (name + '!' + uniqueToken);
 	}
 
 	public String getOriginalName()
@@ -620,7 +617,3 @@ public class FilterModule extends DeclaredRepositoryEntity
 	}
 
 }
-
-/**
- * void FilterModule.accept(RepositoryVisitor){ visitor.visit(this); }
- */

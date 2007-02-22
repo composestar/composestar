@@ -1,24 +1,23 @@
 package Composestar.Java.WEAVER;
 
+import java.lang.reflect.Method;
+import java.util.Iterator;
+
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.Descriptor;
-import javassist.expr.ExprEditor;
 import javassist.expr.Cast;
 import javassist.expr.ConstructorCall;
+import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
 import javassist.expr.Handler;
 import javassist.expr.Instanceof;
 import javassist.expr.MethodCall;
 import javassist.expr.NewArray;
 import javassist.expr.NewExpr;
-
-import java.lang.reflect.Method;
-import java.util.Iterator;
-
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.LAMA.MethodInfo;

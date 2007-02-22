@@ -13,8 +13,7 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Logging.LocationProvider;
 
 /**
- * this exception must be thrown by all modules when they encounter a fatal
- * error.
+ * this exception must be thrown by all modules when they encounter a fatal error.
  */
 public class ModuleException extends Exception implements LocationProvider
 {
@@ -39,7 +38,6 @@ public class ModuleException extends Exception implements LocationProvider
 		this(message, inmodule);
 		errorLocationFilename = errorLocation.getDescriptionFileName();
 		errorLocationLineNumber = errorLocation.getDescriptionLineNumber();
-		// this.errorLocation = errorLocation;
 	}
 
 	public ModuleException(String message, String inmodule, String inerrorLocationFilename,

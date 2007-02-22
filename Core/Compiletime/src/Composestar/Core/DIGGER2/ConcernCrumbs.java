@@ -46,7 +46,7 @@ public class ConcernCrumbs
 				// TODO:
 				throw new UnsupportedOperationException();
 			default:
-				inputCrumbs.put(crumb.getMessage().getSelector().getName(), crumb);
+				inputCrumbs.put(crumb.getMessage().getSelector(), crumb);
 		}
 	}
 
@@ -57,7 +57,7 @@ public class ConcernCrumbs
 			return inputCrumbs.get(selector);
 		}
 		// return the "+" crumb otherwise
-		return inputCrumbs.get(Message.UNDISTINGUISHABLE_SELECTOR.getName());
+		return inputCrumbs.get(Message.UNDISTINGUISHABLE_SELECTOR);
 	}
 
 	public Iterator<Breadcrumb> getInputCrumbs()

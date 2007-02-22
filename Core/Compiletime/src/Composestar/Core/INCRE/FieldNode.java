@@ -25,7 +25,7 @@ public class FieldNode extends Node
 		}
 		catch (Exception excep)
 		{
-			excep.printStackTrace();
+			// excep.printStackTrace();
 		}
 
 		try

@@ -202,7 +202,7 @@ public class DispatchGraph
 	 * @throws RecursiveFilterException
 	 */
 	protected List<MessageResult> getResultingMessages(Breadcrumb crumb, List<Trail> stack,
-			MessageSelector initialSelector) throws RecursiveFilterException
+			String initialSelector) throws RecursiveFilterException
 	{
 		List<MessageResult> results = new ArrayList<MessageResult>();
 		boolean freshCrumb = true;

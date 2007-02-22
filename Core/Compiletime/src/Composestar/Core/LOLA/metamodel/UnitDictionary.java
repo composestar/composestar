@@ -52,6 +52,8 @@ public class UnitDictionary
 	 */
 	private Hashtable unitsByName;
 
+	private Hashtable duplicateUniqueUnits;
+
 	public UnitDictionary()
 	{
 		this(null);
@@ -61,6 +63,7 @@ public class UnitDictionary
 	{
 		this.unitsByType = new Hashtable();
 		this.unitsByName = new Hashtable();
+		this.duplicateUniqueUnits = new Hashtable();
 		this.langModel = langModel;
 	}
 
@@ -104,10 +107,24 @@ public class UnitDictionary
 														// will *NOT* have been
 														// added anywhere!
 				{
-					Debug.out(Debug.MODE_WARNING, "LOLA", "Duplicate key for unit with unique name: " + name);
+					// Add warning suppression for duplicate class names within
+					// different assemblies
+					if (unit.getUnitType().equalsIgnoreCase("class"))
+					{
+						duplicateUniqueUnits.put(name, unit);
+						nameTypeTable.remove(name);
+					}
+
+					Debug.out(Debug.MODE_WARNING, "LOLA", "Duplicate key for unit with unique name: " + name
+							+ " (type '" + unit.getUnitType() + "')");
 					return;
 					// throw new ModelClashException("Duplicate key for unit
 					// with unique name");
+				}
+
+				if (duplicateUniqueUnits.containsKey(name))
+				{
+					return;
 				}
 
 				nameTypeTable.put(name, unit);
@@ -263,7 +280,8 @@ public class UnitDictionary
 		}
 		else
 		{
-			Debug.out(Debug.MODE_DEBUG, "LOLA", "UnitDictionary warning: request for non-existing unit type");
+			Debug.out(Debug.MODE_DEBUG, "LOLA", "UnitDictionary warning: request for non-existing unit type '" + type
+					+ "'");
 			return null;
 		}
 	}

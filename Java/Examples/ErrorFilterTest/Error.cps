@@ -9,8 +9,7 @@ concern ErrorTestConcern
 	superimposition
 	{
 		selectors
-			S = { C | isClassWithName(C, 'ErrorFilterTest.Subject') };
-			
+			S = { C | isClassWithName(C, 'ErrorFilterTest.Subject') };			
 		filtermodules
 			S <- ErrorTest;
 	}

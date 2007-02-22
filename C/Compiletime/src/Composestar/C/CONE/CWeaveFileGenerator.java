@@ -33,8 +33,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
+import Composestar.Core.CpsProgramRepository.Legacy.FilterTypeNames;
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyCustomFilterType;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -124,7 +127,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 								+ ((Filter) fm.inputFilters.elementAt(0)).getFilterType().type + ","
 								+ fm.internals.size() + "]");
 
-						if (!filtermodulename.startsWith("CpsDefaultInnerDispatchConcern"))
+						if (!InnerDispatcher.isDefaultDispatch(fm))
 						{
 							if (aspects.containsKey(fm.getQualifiedName()))
 							{
@@ -509,9 +512,10 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 			}
 		}
 
-		else if (filter.getFilterType().getType().equals("Custom"))
+		else if (filter.getFilterType().getType().equals(FilterTypeNames.CUSTOM))
 		{
-			if (filter.getFilterType().name.equals("Test"))
+			LegacyCustomFilterType customFilter = (LegacyCustomFilterType) filter.getFilterType();
+			if (customFilter.getName().equals("Test"))
 			{
 				Semantic filterSemantic = new TestSemantic();
 				instantiateFilterSemantic(filter, filterelem, c, filterSemantic);
@@ -534,17 +538,17 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 			{
 				try
 				{
-					Class cl = Class.forName(filter.getFilterType().getName());// CF.getFilter());//Fully
+					Class cl = Class.forName(customFilter.getName());// CF.getFilter());//Fully
 					// qualified
 					// name
 					// of
 					// class
 					Semantic filterSemantic = (Semantic) cl.newInstance();
 					instantiateFilterSemantic(filter, filterelem, c, filterSemantic);
-					if (!filter.getFilterType().getName().equalsIgnoreCase(filterSemantic.getType()))
+					if (!customFilter.getName().equalsIgnoreCase(filterSemantic.getType()))
 					{
 						Debug.out(Debug.MODE_ERROR, "CONE", "No Custom filter found with type:"
-								+ filter.getFilterType().getName());
+								+ customFilter.getName());
 					}
 					if (adviceType.equals("before") && filterSemantic.beforeAdvice())
 					{
@@ -577,15 +581,15 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 				}
 				catch (ClassNotFoundException e)
 				{
-					Debug.out(Debug.MODE_ERROR, "CONE", "Class " + filter.getFilterType().getName() + " not found");
+					Debug.out(Debug.MODE_ERROR, "CONE", "Class " + customFilter.getName() + " not found");
 				}
 				catch (IllegalAccessException e)
 				{
-					Debug.out(Debug.MODE_ERROR, "CONE", "Class " + filter.getFilterType().getName() + " not found");
+					Debug.out(Debug.MODE_ERROR, "CONE", "Class " + customFilter.getName() + " not found");
 				}
 				catch (InstantiationException e)
 				{
-					Debug.out(Debug.MODE_ERROR, "CONE", "Class " + filter.getFilterType().getName() + " not found");
+					Debug.out(Debug.MODE_ERROR, "CONE", "Class " + customFilter.getName() + " not found");
 				}
 			}
 		}

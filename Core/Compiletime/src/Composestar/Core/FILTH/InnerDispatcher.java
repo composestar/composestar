@@ -37,7 +37,6 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  */
 public class InnerDispatcher
 {
-
 	private static FilterModuleReference innerDispatchReference;
 
 	private InnerDispatcher()
@@ -51,34 +50,77 @@ public class InnerDispatcher
 		}
 		return innerDispatchReference;
 	}
+	
+	public static boolean isDefaultDispatch(String fmName)
+	{
+		if (fmName == null)
+		{
+			return false;
+		}
+		return innerDispatchReference.getQualifiedName().equals(fmName);
+	}
+	
+	public static boolean isDefaultDispatch(FilterModule fm)
+	{
+		if (innerDispatchReference == null)
+		{
+			return false;
+		}
+		return innerDispatchReference.getRef().equals(fm);
+	}
+	
+	public static boolean isDefaultDispatch(FilterModuleReference fmr)
+	{
+		if (fmr == null)
+		{
+			return false;
+		}
+		return fmr.equals(innerDispatchReference);
+	}
 
 	private static FilterModule createInnerDispatchFilterModule()
 	{
 		// create a conern
 		CpsConcern cc = new CpsConcern();
-		cc.setName("CpsDefaultInnerDispatchConcern");
+		cc.setName(DefaultInnerDispatchNames.CONCERN);
 
 		// create filtermodule
 		FilterModuleAST fm = new FilterModuleAST();
 		cc.addFilterModuleAST(fm);
 		fm.setParent(cc);
-		fm.setName("CpsDefaultInnerDispatchFilterModule");
+		fm.setName(DefaultInnerDispatchNames.FILTER_MODULE);
 
+		// add the filter to the filtermodule
+		fm.addInputFilter(createInnerDispatchFilter(cc, fm, DefaultInnerDispatchNames.INPUT_FILTER));
+		fm.addOutputFilter(createInnerDispatchFilter(cc, fm, DefaultInnerDispatchNames.OUTER_FILTER));
+
+		// add concern and filtermodule to the datastore
+		DataStore.instance().addObject(cc);
+		DataStore.instance().addObject(fm);
+
+		// create the instances
+		FilterModule fmInstance = new FilterModule(fm, new Vector(), DefaultInnerDispatchNames.FILTER_MODULE_TOKEN);
+		DataStore.instance().addObject(fmInstance);
+
+		// return the filtermodule
+		return fmInstance;
+	}
+
+	private static FilterAST createInnerDispatchFilter(CpsConcern cc, FilterModuleAST fm, String name)
+	{
 		// create a filter
 		FilterAST f = new FilterAST();
 		f.setParent(fm);
-		f.setName("CpsDefaultInnerDispatchFilter");
+		f.setName(name);
 
 		// create the filtertype and set it in the filter (typeImplementation as
 		// well)
-		FilterType filterType = new FilterType();
-		filterType.setType("Dispatch");
-		filterType.setName("Dispatch");
+		FilterType filterType = FilterType.getFilterType("Dispatch");
 		ConcernReference typeImplementation = new ConcernReference();
-		typeImplementation.setName(filterType.getName());
-		typeImplementation.setRef(filterType);
-		typeImplementation.setResolved(true);
-		f.setTypeImplementation(typeImplementation);
+		// typeImplementation.setName(filterType.getType());
+		// typeImplementation.setRef(filterType);
+		// typeImplementation.setResolved(true);
+		// f.setTypeImplementation(typeImplementation);
 		f.setFilterType(filterType);
 		f.setRightOperator(new VoidFilterCompOper());
 
@@ -123,19 +165,7 @@ public class InnerDispatcher
 		// fe.addMatchingPattern(mpattern);
 		fe.setMatchingPattern(mpattern);
 
-		// add the filter to the filtermodule
-		fm.addInputFilter(f);
-
-		// add concern and filtermodule to the datastore
-		DataStore.instance().addObject(cc);
-		DataStore.instance().addObject(fm);
-
-		// create the instances
-		FilterModule fmInstance = new FilterModule(fm, new Vector(), 0);
-		DataStore.instance().addObject(fmInstance);
-
-		// return the filtermodule
-		return fmInstance;
+		return f;
 	}
 
 	private static FilterModuleReference createInnerDispatchReference()

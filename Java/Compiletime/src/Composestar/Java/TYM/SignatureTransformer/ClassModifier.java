@@ -3,8 +3,10 @@ package Composestar.Java.TYM.SignatureTransformer;
 import java.util.ArrayList;
 import java.util.List;
 
-import javassist.*;
-
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.CtNewMethod;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;

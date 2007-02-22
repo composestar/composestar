@@ -7,14 +7,13 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
-
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.Master.Config.TypeSource;
-import Composestar.Core.TYM.TypeLocations;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.TYM.TypeLocations;
 import Composestar.Utils.FileUtils;
 
 /**

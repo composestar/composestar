@@ -158,7 +158,7 @@ public class ResourceOperationLabeler implements Labeler
 		// SubstitutionPart sp = (SubstitutionPart)
 		// filter.getFilterElement(0).getMatchingPattern()
 		// .getSubstitutionParts().firstElement();
-		DeclaredObjectReference dor = (DeclaredObjectReference) metaState.getSubstitutionTarget().getRef();
+		DeclaredObjectReference dor = (DeclaredObjectReference) metaState.getSubstitutionMessage().getTarget().getRef();
 		Object o = dor.getRef();
 		if (o instanceof Internal)
 		{
@@ -175,7 +175,7 @@ public class ResourceOperationLabeler implements Labeler
 			if (pr != null && pr instanceof Type)
 			{
 				Type dnt = (Type) pr;
-				String selector = metaState.getSubstitutionSelector().getName();
+				String selector = metaState.getSubstitutionMessage().getSelector();
 
 				String[] params = { "Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage" };
 				MethodInfo method = dnt.getMethod(selector, params);

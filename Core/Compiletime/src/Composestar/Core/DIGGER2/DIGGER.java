@@ -213,7 +213,7 @@ public class DIGGER implements CTCommonModule
 					logger.debug("" + crumb + " results in:");
 					for (MessageResult msgResult : results)
 					{
-						logger.debug(" " + msgResult.getConcern().getName() + "." + msgResult.getSelector().getName());
+						logger.debug(" " + msgResult.getConcern().getName() + "." + msgResult.getSelector());
 					}
 				}
 			}
@@ -237,7 +237,7 @@ public class DIGGER implements CTCommonModule
 
 		sb.append(e.getCrumb().getConcern().getName());
 		sb.append(".");
-		sb.append(e.getCrumb().getMessage().getSelector().getName());
+		sb.append(e.getCrumb().getMessage().getSelector());
 
 		RepositoryEntity re = null;
 		for (Trail trail : e.getTrace())
@@ -246,7 +246,7 @@ public class DIGGER implements CTCommonModule
 
 			sb.append(trail.getTargetConcern().getName());
 			sb.append(".");
-			sb.append(trail.getResultMessage().getSelector().getName());
+			sb.append(trail.getResultMessage().getSelector());
 
 			// the first trail point to the start
 			if (re == null)

@@ -8,9 +8,6 @@ package Composestar.Core.FIRE2.model;
 
 import java.util.Iterator;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-
 /**
  * @author Arjan de Roo
  */
@@ -18,11 +15,9 @@ public abstract class ExecutionState
 {
 	private FlowNode flowNode;
 
-	private Target substitutionTarget;
-
-	private MessageSelector substitutionSelector;
-
 	private Message message;
+
+	private Message substitutionMessage;
 
 	private int stateType;
 
@@ -32,15 +27,13 @@ public abstract class ExecutionState
 
 	public final static int NORMAL_STATE = 3;
 
-	public ExecutionState(FlowNode flowNode, Message message, MessageSelector substitutionSelector,
-			Target substitutionTarget, int stateType)
+	public ExecutionState(FlowNode flowNode, Message message, Message substitutionMessage, int stateType)
 	{
 		super();
 
 		this.flowNode = flowNode;
 		this.message = message;
-		this.substitutionSelector = substitutionSelector;
-		this.substitutionTarget = substitutionTarget;
+		this.substitutionMessage = substitutionMessage;
 		this.stateType = stateType;
 	}
 
@@ -53,43 +46,19 @@ public abstract class ExecutionState
 	}
 
 	/**
-	 * @return Returns the selector.
-	 */
-	public MessageSelector getSelector()
-	{
-		return message.getSelector();
-	}
-
-	/**
-	 * @return Returns the substitutionSelector.
-	 */
-	public MessageSelector getSubstitutionSelector()
-	{
-		return substitutionSelector;
-	}
-
-	/**
-	 * @return Returns the substitutionTarget.
-	 */
-	public Target getSubstitutionTarget()
-	{
-		return substitutionTarget;
-	}
-
-	/**
-	 * @return Returns the target.
-	 */
-	public Target getTarget()
-	{
-		return message.getTarget();
-	}
-
-	/**
 	 * @return Returns the message.
 	 */
 	public Message getMessage()
 	{
 		return message;
+	}
+
+	/**
+	 * @return the substitutionMessage
+	 */
+	public Message getSubstitutionMessage()
+	{
+		return substitutionMessage;
 	}
 
 	/**
@@ -122,17 +91,12 @@ public abstract class ExecutionState
 			return false;
 		}
 
-		if (!Message.checkEquals(this.substitutionTarget, state.substitutionTarget))
-		{
-			return false;
-		}
-
-		if (!Message.checkEquals(this.substitutionSelector, state.substitutionSelector))
-		{
-			return false;
-		}
-
 		if (!this.message.equals(state.message))
+		{
+			return false;
+		}
+
+		if (!this.substitutionMessage.equals(state.substitutionMessage))
 		{
 			return false;
 		}

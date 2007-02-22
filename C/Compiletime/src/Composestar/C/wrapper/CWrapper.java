@@ -181,6 +181,14 @@ public class CWrapper implements CTCommonModule
 		CDirectory cdir = null;
 		if (dir.isDirectory())
 		{
+			if (dir.getName().startsWith(".")) // skip directories with leading dot's
+			{
+				return list;
+			}
+			if (dir.getName().equals("CVS")) // skip CVS directory
+			{
+				return list;
+			}
 			String[] children = dir.list(fnf);
 			if (children.length > 0)
 			{

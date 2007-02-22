@@ -49,7 +49,12 @@ public class Projects implements Serializable
 	public int getRunDebugLevel()
 	{
 		String level = properties.getProperty("runDebugLevel");
-		return Integer.parseInt(level);
+		if (level != null)
+		{
+			return Integer.parseInt(level);
+		}
+
+		return 0;
 	}
 
 	public void setOutputPath(String value)

@@ -15,7 +15,7 @@ public class CTypeMap
 	 */
 	public CTypeMap()
 	{
-		Types = new DataMap();
+		Types = DataMap.newDataMapInstance();
 	}
 
 	/**

@@ -1,18 +1,23 @@
 package Composestar.Java.COMP;
 
-import Composestar.Core.COMP.LangCompiler;
-import Composestar.Core.COMP.CompilerException;
-import Composestar.Core.Master.Config.*;
-import Composestar.Utils.CommandLineExecutor;
-import Composestar.Utils.Debug;
-import Composestar.Utils.FileUtils;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import Composestar.Core.COMP.CompilerException;
+import Composestar.Core.COMP.LangCompiler;
+import Composestar.Core.Master.Config.CompilerAction;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Dependency;
+import Composestar.Core.Master.Config.Language;
+import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.Config.Source;
+import Composestar.Utils.CommandLineExecutor;
+import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 
 /**
  * Triggers <i>javac</i> and <i>jar</i> commands. Used for compiling dummies

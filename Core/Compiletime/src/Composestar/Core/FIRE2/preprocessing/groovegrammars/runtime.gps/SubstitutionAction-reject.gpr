@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n8594"/>
+        <node id="n8593"/>
+        <node id="n8596"/>
+        <node id="n8597"/>
+        <node id="n8595"/>
+        <edge from="n8594" to="n8595">
+            <attr name="label">
+                <string>substitutionTarget</string>
+            </attr>
+        </edge>
+        <edge from="n8596" to="n8597">
+            <attr name="label">
+                <string>flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n8597" to="n8597">
+            <attr name="label">
+                <string>not:FilterAction</string>
+            </attr>
+        </edge>
+        <edge from="n8593" to="n8593">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n8595" to="n8595">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n8597" to="n8597">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n8594" to="n8594">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n8594" to="n8597">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n8594" to="n8593">
+            <attr name="label">
+                <string>substitutionSelector</string>
+            </attr>
+        </edge>
+        <edge from="n8594" to="n8596">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n8596" to="n8596">
+            <attr name="label">
+                <string>SubstitutedMessageAction</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>
