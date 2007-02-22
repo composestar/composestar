@@ -6,6 +6,7 @@ import java.util.Hashtable;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
+import Composestar.RuntimeCore.FLIRT.Debugger.Debugger;
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
@@ -43,7 +44,7 @@ class DefaultFilterPolicy extends FilterPolicy
 		aMessage.setInternals(fm.getInternals());
 		aMessage.setExternals(fm.getExternals());
 
-//		Debugger.getInstance().event(Debugger.MESSAGE_PROCESSING_START, null, aMessage, null);
+		Debugger.getInstance().event(Debugger.MESSAGE_PROCESSING_START, null, aMessage, null);
 		if (Debug.SHOULD_DEBUG)
 		{
 			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tProcessing default filter policy...");
@@ -54,7 +55,7 @@ class DefaultFilterPolicy extends FilterPolicy
 			FilterRuntime f = (FilterRuntime) filterList.get(j);
 			MessageList originalMessage = new MessageList(aMessage);
 
-			//Debugger.getInstance().event(Debugger.FILTER_EVALUATION_START, null, aMessage, null);
+			Debugger.getInstance().event(Debugger.FILTER_EVALUATION_START, null, aMessage, null);
 			if (Debug.SHOULD_DEBUG)
 			{
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tEvaluating filter '"
@@ -67,12 +68,12 @@ class DefaultFilterPolicy extends FilterPolicy
 
 			if (eval)
 			{
-				//Debugger.getInstance().event(Debugger.FILTER_ACCEPTED, f, modifiedMessage, null);
+				Debugger.getInstance().event(Debugger.FILTER_ACCEPTED, f, modifiedMessage, null);
 				csa = f.getAcceptAction(originalMessage, modifiedMessage, context);
 			}
 			else
 			{
-				//Debugger.getInstance().event(Debugger.FILTER_REJECTED, f, modifiedMessage, null);
+				Debugger.getInstance().event(Debugger.FILTER_REJECTED, f, modifiedMessage, null);
 				csa = f.getRejectAction(originalMessage, modifiedMessage, context);
 			}
 

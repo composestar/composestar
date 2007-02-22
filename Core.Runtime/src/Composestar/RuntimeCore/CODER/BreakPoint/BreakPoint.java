@@ -1,14 +1,16 @@
 package Composestar.RuntimeCore.CODER.BreakPoint;
 
-import Composestar.RuntimeCore.CODER.ExecutionStackItem;
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.*;
+
+import java.util.ArrayList;
+import java.util.Dictionary;
 
 /**
- * Created by IntelliJ IDEA.
- * User: reddog
- * Date: 18-feb-2007
- * Time: 23:14:46
- * To change this template use File | Settings | File Templates.
+ * Summary description for BreakPoint.
  */
-public abstract class BreakPoint {
-    public abstract boolean check(ExecutionStackItem status);
+public interface BreakPoint {
+    public abstract boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point);
 }

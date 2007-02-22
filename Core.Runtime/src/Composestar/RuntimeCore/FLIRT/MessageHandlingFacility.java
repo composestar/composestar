@@ -18,7 +18,7 @@ import Composestar.RuntimeCore.FLIRT.Reflection.MessageInfoProxy;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.RuntimeCore.Utils.Invoker;
 import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
-import Composestar.RuntimeCore.CODER.DebuggerRuntime;
+
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
  * Copyright (C) 2003 University of Twente. Licensed under LGPL v2.1 or (at your
@@ -48,7 +48,11 @@ public abstract class MessageHandlingFacility
 	public synchronized static void handleInstanceCreation(Object creator, Object createdObject, Object[] args)
 	{
 		String shortname = createdObject.getClass().getName();
-		shortname = shortname.substring(shortname.lastIndexOf(".") + 1); // get the class name only
+		shortname = shortname.substring(shortname.lastIndexOf(".") + 1); // get
+		// the
+		// class
+		// name
+		// only
 		Message msg = new Message(shortname /* createdObject.GetType().get_Name() */, args);
 		msg.setSender(creator);
 		msg.setTarget(createdObject);
@@ -794,8 +798,6 @@ public abstract class MessageHandlingFacility
 		Debug.setMode(debug);
 
 		provider.instantiatePlatform();
-
-		DebuggerRuntime.getInstance(); //Boot up the debugger
 
 		if (Debug.SHOULD_DEBUG)
 		{

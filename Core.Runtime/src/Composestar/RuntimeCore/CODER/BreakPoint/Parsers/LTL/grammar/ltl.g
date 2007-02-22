@@ -15,10 +15,11 @@ header {
 /**
  * Parser / lexer class for LTL files
  */
-package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.LTL;
-import Composestar.RuntimeCore.CODER.BreakPoint.Value.*;
+package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Ltl;
+import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
+import Composestar.RuntimeCore.CODER.Value.*;
 }
 
 class LtlParser extends Parser;
@@ -31,12 +32,16 @@ formula returns [BreakPoint result = null]
 	{BreakPoint right = null;}
 	: GLOBAL result = formula { result = new BreakPointGlobal(result);}
 	| FUTURE result = formula { result = new BreakPointFuture(result);}
-	| result = subformula OR right = formula {result = new BreakPointOr(result,right);}
-	| result = subformula AND right = formula {result = new BreakPointAnd(result,right);}
-	| result = subformula RELEASE right = formula {result = new BreakPointRelease(result,right);}
-	| result = subformula Until right = formula {result = new BreakPointRelease(result,right);}
+	| result = subformula ( right = rightpart {((BreakPointBi)right).setLeft(result); result = right;})?
 	;
-	
+
+rightpart returns [BreakPoint result = null]
+	: OR result = formula {result = new BreakPointOr(result);}
+	| AND result = formula {result = new BreakPointAnd(result);}
+	| UNTIL result = formula { result = new BreakPointUntil(result);} 
+	| RELEASE result = formula { result = new BreakPointRelease(result);}
+	;
+
 subformula returns [BreakPoint result = null]
 	{Value left = null; Value right = null;int operatorType = 0;}
 	: LPARENTHESIS result = formula RPARENTHESIS

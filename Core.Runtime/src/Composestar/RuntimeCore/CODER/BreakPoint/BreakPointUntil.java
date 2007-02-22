@@ -1,24 +1,24 @@
 package Composestar.RuntimeCore.CODER.BreakPoint;
 
-import Composestar.RuntimeCore.CODER.ExecutionStackItem;
+import Composestar.RuntimeCore.CODER.Halter;
+import Composestar.RuntimeCore.CODER.BreakPoint.*;
+import Composestar.RuntimeCore.FLIRT.*;
 
 /**
  * Summary description for BreakPointBiLTL.
  */
-public class BreakPointUntil extends BreakPoint
+public class BreakPointUntil extends BreakPointBi
 {
 	private boolean first = true;
-	private BreakPoint left;
-	private BreakPoint right;
 
-	public BreakPointUntil(BreakPoint left, BreakPoint right)
+	public BreakPointUntil(BreakPoint right)
 	{
-		this.left = left;
-		this.right = right;
+		super(right);
 	}
 
-	public boolean check(ExecutionStackItem status){
-		first &= left.check(status);
-		return (!first) && right.check(status);
+	public boolean check(boolean isLeft,boolean isRight)
+	{
+		first &= isLeft;
+		return (!first) && isRight;
 	}
 }

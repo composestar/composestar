@@ -6,6 +6,7 @@ package Composestar.RuntimeCore.Utils;
 public class Debug
 {
 	public static boolean SHOULD_DEBUG = true;
+
 	private static int currentMode = 0;
 
 	public static final int MODE_ERROR = 0; // 0;
