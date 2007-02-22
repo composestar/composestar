@@ -51,6 +51,7 @@
 			
 			<merge file="${composestar.path}\Core\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\DotNET\qa\checkstyle-result.xml" />
+			<merge file="${composestar.path}\StarLight\QualityAssurance\checkstyle-result.xml" />
 			<merge file="${composestar.path}\Java\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\C\qa\checkstyle-result.xml" />
 			
@@ -67,6 +68,7 @@
 				returnaddress="pascal_durr@users.sourceforge.net"
 			>
 				<always address="composestar-developers@lists.sourceforge.net" />
+				<always address="composestar-starlight@lists.sourceforge.net" />
 				
 				<parameter name="buildresultsurl" value="http://${cchost}:8080/buildresults/${project.name}" />
 				<parameter name="standalonehtml" value="1" />
@@ -80,10 +82,18 @@
 					antWorkingDir="${composestar.path}" 
 					usedebug="false" 
 				/>
+				
+				<!-- Installers -->
 				<artifactspublisher
 					dir="${composestar.path}/DotNET/Installer/dist"
 					dest="artifacts/${project.name}/"
 				/>
+				<artifactspublisher
+					dir="${starlight.path}/Starlight/Setup/Releases"
+					dest="artifacts/${project.name}/"
+				/>
+				
+				<!-- QA -->
 				<artifactspublisher
 					dir="${composestar.path}/Core/qa"
 					dest="artifacts/${project.name}/"
@@ -104,6 +114,11 @@
 					dest="artifacts/${project.name}/"
 					subdirectory="qa_c"
 				/>
+				<artifactspublisher
+					dir="${starlight.path}/Starlight/QualityAssurance"
+					dest="artifacts/${project.name}/"
+					subdirectory="qa_starlight"
+				/>
 					
 				<!-- clean up old artifacts, e.a. -->			
 				<antpublisher 
@@ -119,7 +134,8 @@
 	
 	</project>
 
-	<project name="starlight" buildafterfailed="false">
+	<!-- deprecated project, is now included with compose* -->
+	<project name="starlight" buildafterfailed="false" forceOnly="true">
 		
 		<!-- set this to the location of the starlight root -->
 		<!-- 

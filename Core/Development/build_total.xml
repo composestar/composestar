@@ -86,7 +86,7 @@
 	</target>
 
 	<target name="install_starlight" depends="init" if="enabled.starlight">
-		<ant target="install" dir="${build.starlight}" inheritRefs="true" />
+		<ant target="deploy" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 
 	<target name="install_java" depends="init" if="enabled.java">
@@ -104,12 +104,12 @@
 		<antcall target="publish_starlight" inheritRefs="true" />
 	</target>
 
-	<target name="publish_dotnet" depends="init,build_dotnet" if="enabled.dotnet" description="Create installer for Compose* .NET">
+	<target name="publish_dotnet" depends="init" if="enabled.dotnet" description="Create installer for Compose* .NET">
 		<ant target="publish" dir="${build.dotnet}/Installer" inheritRefs="true" />
 	</target>
 	
-	<target name="publish_starlight" depends="init,build_starlight" if="enabled.starlight" description="Create installer for Compose* StarLight">
-		<ant target="build" dir="${build.starlight}/Setup" inheritRefs="true" />
+	<target name="publish_starlight" depends="init" if="enabled.starlight" description="Create installer for Compose* StarLight">
+		<ant target="build_installer" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 	
 	<!-- uninstall tasks -->
@@ -140,7 +140,7 @@
 	</target>
 	
 	<!-- QA tasks -->
-	<target name="qa" depends="findbugs,checkstyle" description="Execute Quality Assurance tasks" />
+	<target name="qa" depends="findbugs,checkstyle,qa_starlight" description="Execute Quality Assurance tasks" />
 
 	<target name="qa_starlight" description="Execute Quality Assurance tasks">
 		<antcall target="fxcop_starlight" inheritRefs="true" />
@@ -148,12 +148,12 @@
 		<antcall target="checkstyle_starlight" inheritRefs="true" />
 	</target>
 
-  <!-- execute FXCop tools -->
-  <target name="fxcop" depends="init" description="Analyse the .net code using FxCop.">
+	<!-- execute FXCop tools -->
+	<target name="fxcop" depends="init" description="Analyse the .net code using FxCop.">
 		<antcall target="fxcop_starlight" inheritRefs="true" />
 	</target>
 
-  <target name="fxcop_starlight" depends="init" if="enabled.starlight">
+	<target name="fxcop_starlight" depends="init" if="enabled.starlight">
 		<ant target="fxcop" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 
@@ -308,6 +308,7 @@
 		<antcall target="qa" inheritRefs="true" />
 	</target>
 	
+	<!-- deprecated
 	<target name="integration_starlight">
 		<property name="build.integration.core" value="c:\starlight\core" />
 		<property name="build.integration.starlight" value="c:\starlight\starlight" />
@@ -326,6 +327,7 @@
 		<antcall target="findbugs_core" inheritRefs="true" />
 		<antcall target="checkstyle_core" inheritRefs="true" />
 	</target>
+	-->
 
 	<target name="integration_publish">
 		<antcall target="publish" inheritRefs="true" />

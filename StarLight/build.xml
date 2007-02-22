@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight" default="build" xmlns:dn="antlib:org.apache.ant.dotnet" xmlns:cs="antlib:Composestar">
 
+	<echo>${ant.file} ${ant.file.ComposeStarCommon}</echo>
+
+	<condition property="imply.core" value="true"><!-- if set Compose*/Core parts will also be executed -->
+		<not>
+			<available file="${ant.file.ComposeStarCommon}" />
+		</not>
+	</condition>
+
 	<property name="build.core" location="${basedir}/../Core"/>
 	<import file="${build.core}/common.xml"/>
 
@@ -55,7 +63,6 @@
 	</target>
 
 	<target name="build_compiletime" depends="init" description="Build Compose* StarLight Compiletime">
-		<ant target="build" dir="${build.core}/Compiletime" inheritRefs="true"/>
 		<ant target="build" dir="Source/Compiletime" inheritRefs="true"/>
 	</target>
 

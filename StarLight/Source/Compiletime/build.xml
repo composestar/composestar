@@ -16,8 +16,6 @@
 
 	<target name="clean" depends="init" description="clean the compilation results">
 		
-		<ant target="clean" dir="${build.core}/Compiletime" inheritRefs="true"/>
-
 		<!-- Java build files -->
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
@@ -30,6 +28,10 @@
 		<!-- xml beans -->
 		<delete dir="${out.xmltypes}"/>
 		
+	</target>
+	
+	<target name="clean_core" depends="init" if="imply.core">
+		<ant target="clean" dir="${build.core}/Compiletime" inheritRefs="true"/>
 	</target>
 	
 	<target name="init_local" depends="init">
@@ -53,7 +55,7 @@
 
 	<target name="build" depends="init_local,build_core,compile,jar" description="Build the StarLight compiletime"/>
 
-	<target name="build_core" depends="init">
+	<target name="build_core" depends="init" if="imply.core">
 		<ant target="build" dir="${build.core}/Compiletime" inheritRefs="true"/>
 	</target>
 	
