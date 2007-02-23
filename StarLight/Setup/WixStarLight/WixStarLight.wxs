@@ -107,6 +107,7 @@
         <ComponentRef Id='InstallFolderCoreFiles' Primary ='yes' />        
         <ComponentRef Id='CoreElements' Primary ='yes' />
         <ComponentRef Id='WeaveStrategies' Primary ='yes' />
+        <ComponentRef Id='Libraries'/>
         <ComponentRef Id='Prolog'/>
         <ComponentRef Id='xmlbeans'/>
         <ComponentRef Id='Groove'/>
