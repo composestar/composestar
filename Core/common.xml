@@ -206,13 +206,12 @@ Common routines. Always include this file in every build.xml file
 			<attribute name="reportfile"/>
 								
 			<sequential>
-				<echo message="Running FxCop" level="info"/>
 				<exec executable="${bin.fxcop}" failonerror="false">
 					<arg value="/f:@{files}"/>					
-					<arg value="/o:@{reportfile}"/>			
-				<!--	<arg value="/sf" />		-->
+					<arg value="/o:@{reportfile}"/>
 					<arg value="/q" />
 					<arg value="/summary" />
+					<arg value="/axsl" />
 					<arg value="/outxsl:${build.core}${file.separator}Development${file.separator}fxcop${file.separator}xml${file.separator}FxCopReport.xsl"/>
 				</exec>
 			</sequential>

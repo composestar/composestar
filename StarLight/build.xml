@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight" default="build" xmlns:dn="antlib:org.apache.ant.dotnet" xmlns:cs="antlib:Composestar">
 
-	<echo>${ant.file} ${ant.file.ComposeStarCommon}</echo>
-
 	<condition property="imply.core" value="true"><!-- if set Compose*/Core parts will also be executed -->
 		<not>
 			<available file="${ant.file.ComposeStarCommon}" />
