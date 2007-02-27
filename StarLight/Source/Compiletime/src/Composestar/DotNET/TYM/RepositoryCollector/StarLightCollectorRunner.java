@@ -200,7 +200,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 		// collect and iterate over all objects from previous compilation runs
 		
 		int typecount = 0;
-		for (Object obj : incre.history.getObjects())
+		for (Object obj : incre.history.getDataStore().getObjects())
 		{
 			// Only restore PrimitiveConcerns and CpsConcerns
 			if (obj instanceof PrimitiveConcern || obj instanceof CpsConcern)

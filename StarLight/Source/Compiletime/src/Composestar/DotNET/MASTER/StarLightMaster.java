@@ -191,7 +191,7 @@ public class StarLightMaster extends Master
 			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, TITLE + " " + VERSION);
 
 			// Create new resources
-			CommonResources resources = CommonResources.instance();
+			CommonResources resources = new CommonResources();
 
 			// Initialize INCRE
 			logger.debug("Initializing INCRE...");

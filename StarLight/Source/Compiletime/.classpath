@@ -4,10 +4,11 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jsr173_1.0_api.jar"/>
 	<classpathentry kind="lib" path="lib/xbean.jar"/>
-	<classpathentry sourcepath="lib/xmltypes-src.zip" kind="lib" path="lib/xmltypes.jar"/>
+	<classpathentry kind="lib" path="lib/xmltypes.jar" sourcepath="lib/xmltypes-src.zip"/>
 	<classpathentry kind="lib" path="lib/resolver.jar"/>
 	<classpathentry kind="lib" path="lib/xbean_xpath.jar"/>
 	<classpathentry kind="lib" path="lib/xmlpublic.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/binaries/log4j/log4j-1.2.14.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
