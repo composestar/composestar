@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.xml.parsers.SAXParserFactory;
@@ -29,6 +30,7 @@ import org.xml.sax.XMLReader;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.Core.Action;
 import Composestar.Core.FILTH.Core.Graph;
 import Composestar.Core.FILTH.Core.Node;
@@ -45,11 +47,11 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
-import Composestar.Utils.Debug;
 
 public class FILTHServiceImpl extends FILTHService
 {
 	private boolean outputEnabled;
+
 	private String specFilename;
 
 	protected FILTHServiceImpl() throws ConfigurationException
@@ -109,8 +111,7 @@ public class FILTHServiceImpl extends FILTHService
 				{
 					filename = c.getName();
 				}
-				filename = file.getAbsolutePath() + "\\FILTH_" + URLEncoder.encode(filename, "UTF-8")
-						+ ".html";
+				filename = file.getAbsolutePath() + "\\FILTH_" + URLEncoder.encode(filename, "UTF-8") + ".html";
 
 				if (outputEnabled)
 				{
@@ -134,8 +135,7 @@ public class FILTHServiceImpl extends FILTHService
 			// e.printStackTrace();
 			// throw new ModuleException("SECRET","FILTH report file creation
 			// failed (" + filename + "), with reason: " + e.getMessage());
-			Debug.out(Debug.MODE_INFORMATION, FILTH.MODULE_NAME, "FILTH report file creation failed (" + filename
-					+ "), with reason: " + e.getMessage());
+			logger.info("FILTH report file creation failed (" + filename + "), with reason: " + e.getMessage(), e);
 		}
 
 		// String composestarpath = props.getProperty("ComposestarPath");
@@ -280,8 +280,7 @@ public class FILTHServiceImpl extends FILTHService
 
 		if (alt > 2)
 		{
-			Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Multiple Filter Module orderings possible for concern "
-					+ c.getQualifiedName(), filename, 0);
+			logger.warn("Multiple Filter Module orderings possible for concern " + c.getQualifiedName());
 		}
 
 		return forders; // arrange this according to the output required!!
@@ -322,8 +321,8 @@ public class FILTHServiceImpl extends FILTHService
 
 	private void processOrderingSpecifications(Graph g)
 	{
-		HashMap map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
-		Debug.out(Debug.MODE_INFORMATION, FILTH.MODULE_NAME, "FilterModule ordering constraints: " + map);
+		Map map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
+		logger.info("FilterModule ordering constraints: " + map);
 
 		String left, right;
 		Iterator it = map.values().iterator();
@@ -342,7 +341,7 @@ public class FILTHServiceImpl extends FILTHService
 
 	private void printOrderingSpecifications()
 	{
-		HashMap map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
+		Map map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
 		Iterator it = map.values().iterator();
 
 		while (it.hasNext())
@@ -417,63 +416,45 @@ public class FILTHServiceImpl extends FILTHService
 				}
 				else
 				{
-					Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Could not read/find Filter Module Order specification ("
-							+ specFilename + ").", c);
+					logger.warn("Could not read/find Filter Module Order specification (" + specFilename + ").", c);
 				}
 			}
 		}
 		catch (SAXException se)
 		{
-			Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Problems parsing file: " + specFilename + ", message: "
-					+ se.getMessage());
-
-			Debug.out(Debug.MODE_DEBUG, FILTH.MODULE_NAME, Debug.stackTrace(se));
+			logger.warn("Problems parsing file: " + specFilename + ", message: " + se.getMessage(), se);
 		}
 		catch (Exception ioe)
 		{
-			Debug.out(Debug.MODE_WARNING, FILTH.MODULE_NAME, "Could not read/find Filter Module Order specification (" + specFilename
-					+ ").", c);
+			logger.warn("Could not read/find Filter Module Order specification (" + specFilename + ").", c);
 		}
 	}
 
-	public void copyOperation(Concern c, INCRE inc)
+	public void copyOperation(Concern c, INCRE inc) throws ModuleException
 	{
 		/* Copy dynamic objects 'FilterModuleOrders' and 'SingleOrder' */
 		Concern cop = (Concern) inc.findHistoryObject(c);
 
 		LinkedList forders = (LinkedList) cop.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 
+		// make sure the proper default inner dispatch is as last of all orders
+		Iterator it = forders.iterator();
+		while (it.hasNext())
+		{
+			LinkedList anOrder = (LinkedList) it.next();
+			FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) anOrder.removeLast();
+			if (InnerDispatcher.isDefaultDispatch(fmsi.getFilterModule().getRef().getName()))
+			{
+				inc.deleteHistory();
+				throw new ModuleException("Unable to restore filter module orders. Last filter module is not the default dispatcher", FILTH.MODULE_NAME);				
+			}
+			anOrder.addLast(new FilterModuleSuperImposition(InnerDispatcher.getInnerDispatchReference()));
+		}
+
 		c.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY, forders);
 		FilterModuleOrder fmorder = new FilterModuleOrder((LinkedList) forders.getFirst());
 		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmorder);
 
-		Debug.out(Debug.MODE_DEBUG, "FILTH [INCRE]", "Restored " + forders.size()
-				+ " Filter Module Order(s) for concern " + c.getName());
+		logger.debug("Restored " + forders.size() + " Filter Module Order(s) for concern " + c.getName());
 	}
-
-	// public List getOrder(CpsConcern c)
-	// {
-	// LinkedList forder = new LinkedList();
-	// LinkedList modulrefs;
-	// Graph g = new Graph();
-	// g.setRoot(new Node((Object) "root"));
-	// modulrefs = processModules(c, g);
-	// processXML(c, g);
-	// OrderTraverser ot = new OrderTraverser();
-	// LinkedList order = ot.traverse(g);
-	// Action a;
-	// Iterator i = order.iterator();
-	// i.next();
-	// while (i.hasNext())
-	// {
-	// a = (Action) ((Node) i.next()).getElement();
-	// for (Iterator j = modulrefs.iterator(); j.hasNext();)
-	// {
-	// FilterModuleReference fr = ((FilterModuleReference) j.next());
-	// System.out.println("FILTH ordering>>>" + a + "::" + fr.getName());
-	// if (a.getName().equals(fr.getName())) forder.addLast(fr);
-	// }
-	// }
-	// return forder;
-	// }
 }

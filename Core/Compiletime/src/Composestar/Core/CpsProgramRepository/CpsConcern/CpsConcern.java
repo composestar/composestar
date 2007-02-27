@@ -27,7 +27,7 @@ public class CpsConcern extends Concern
 {
 	private static final long serialVersionUID = 7396365167133765237L;
 
-	private transient Implementation implementation;
+	public Implementation implementation;
 
 	/**
 	 * @modelguid {D83B8E0F-0DD6-435B-80D8-67C6EC1DC456}

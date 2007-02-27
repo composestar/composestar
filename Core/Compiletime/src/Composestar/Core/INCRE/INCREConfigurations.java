@@ -36,10 +36,11 @@ public class INCREConfigurations
 	public void initConfig(Configuration config, Properties props)
 	{
 		/* SECRETMode */
-		props.setProperty("SECRETMode", config.getModuleProperty("SECRET", "mode", "EMPTY_CONFIG"));
+		props.setProperty("SECRETMode", ""+config.getModuleProperty("SECRET", "mode", 0));
 
 		/* FILTH_INPUT */
-		props.setProperty("FILTH_INPUT", config.getModuleProperty("FILTH", "input", "EMPTY_CONFIG"));
+		String filthInput = config.getModuleProperty("FILTH", "input", "EMPTY_CONFIG");
+		props.setProperty("FILTH_INPUT", filthInput == null ? "EMPTY_CONFIG" : filthInput);
 
 		/* Dependencies */
 		StringBuffer deps = new StringBuffer();

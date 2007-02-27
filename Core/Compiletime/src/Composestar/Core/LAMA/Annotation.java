@@ -102,6 +102,10 @@ public class Annotation implements Serializable
 	{
 		// m_type = (Type)in.readObject();
 		m_typename = in.readUTF();
+		if (m_typename.length() == 0)
+		{
+			m_typename = null;
+		}
 		m_target = (ProgramElement) in.readObject();
 		m_value = in.readUTF();
 		if (m_value.length() == 0)
@@ -119,7 +123,7 @@ public class Annotation implements Serializable
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		// out.writeObject(m_type);
-		out.writeUTF(m_typename);
+		out.writeUTF(m_typename == null ? "" : m_typename);
 		out.writeObject(m_target);
 		out.writeUTF(m_value == null ? "" : m_value);
 		out.writeBoolean(m_isSuperImposed);

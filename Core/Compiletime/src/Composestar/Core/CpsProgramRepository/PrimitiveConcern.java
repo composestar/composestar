@@ -16,14 +16,8 @@ package Composestar.Core.CpsProgramRepository;
  */
 public class PrimitiveConcern extends Concern
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7730136747082190101L;
 
-	/**
-	 * @roseuid 404C4B660391
-	 */
 	public PrimitiveConcern()
 	{
 		super();

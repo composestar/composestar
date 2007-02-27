@@ -24,11 +24,11 @@ public class CKRETReport implements Serializable
 {
 	private static final long serialVersionUID = -6635419458687692484L;
 
-	private transient FilterModuleOrder order;
+	private FilterModuleOrder order;
 
-	private transient FilterSetAnalysis analysis;
+	private FilterSetAnalysis analysis;
 
-	private transient boolean selected;
+	private boolean selected;
 
 	public CKRETReport(FilterModuleOrder inorder, FilterSetAnalysis inanalysis, boolean inselected)
 	{

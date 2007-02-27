@@ -1,9 +1,13 @@
 package Composestar.Core.EMBEX;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -11,6 +15,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Implementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
@@ -89,7 +94,10 @@ public class EMBEX implements CTCommonModule
 
 				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Added embedded code to project: " + prj.getName());
 
-				this.saveToFile(target, sourceCode);
+				if (sourceCode.getSource() != null)
+				{
+					saveToFile(target, sourceCode);
+				}
 			}
 		}
 	}

@@ -20,13 +20,18 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Utils.Logging.CPSLogger;
 
 public abstract class FILTHService
 {
+	protected final static CPSLogger logger = CPSLogger.getCPSLogger(FILTH.MODULE_NAME);
+
 	public static final int HTML = 1;
+
 	public static final int NORMAL = 2;
 
 	protected static PrintStream log = System.out;
+
 	protected static int printMode = FILTHService.HTML;
 
 	public static FILTHService getInstance(CommonResources cr) throws ModuleException
@@ -89,5 +94,5 @@ public abstract class FILTHService
 
 	public abstract List getMultipleOrder(Concern c);
 
-	public abstract void copyOperation(Concern c, INCRE inc);
+	public abstract void copyOperation(Concern c, INCRE inc)  throws ModuleException;
 }

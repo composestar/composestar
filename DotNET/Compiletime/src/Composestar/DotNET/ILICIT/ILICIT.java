@@ -356,7 +356,7 @@ public class ILICIT implements WEAVER
 		ArrayList list = new ArrayList();
 		INCRE incre = INCRE.instance();
 		DataStore ds = incre.getCurrentRepository();
-		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
+		List concernsWithFMO = incre.getConcernsWithFMO();
 
 		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
 		String target = FileUtils.removeExtension(orig.getTarget());
@@ -474,7 +474,7 @@ public class ILICIT implements WEAVER
 		ArrayList concerns = new ArrayList();
 		INCRE incre = INCRE.instance();
 		DataStore ds = incre.getCurrentRepository();
-		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
+		List concernsWithFMO = incre.getConcernsWithFMO();
 
 		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
 		String target = FileUtils.removeExtension(orig.getTarget());

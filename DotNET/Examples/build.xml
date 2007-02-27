@@ -30,7 +30,8 @@
 			<include name="*/filelist.peweaver" />
 			<include name="*/filelist.ilweaver" />
 			<include name="*/attributes.xml" />
-			<include name="*/langmap.pro" />			
+			<include name="*/langmap.pro" />
+			<include name="*/ComposestarHistory.cchz" unless="keep.buildconfiguration" />
 			<include name="*/*.gst" />
 			<include name="*/obj/**" />
 		</patternset>

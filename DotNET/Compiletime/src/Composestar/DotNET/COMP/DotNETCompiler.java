@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import Composestar.Core.COMP.CompilerException;
@@ -343,13 +344,13 @@ public class DotNETCompiler implements LangCompiler
 	 * ADDED/REMOVED methodwrappers) of concerns extracted from external linked
 	 * source files Used by INCRE
 	 */
-	public ArrayList fullSignatures(Source src) throws ModuleException
+	public List fullSignatures(Source src) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
-		ArrayList extSources = new ArrayList();
-		ArrayList signatures = new ArrayList();
-		ArrayList concernsToCheck;
-		HashSet concernsCheckedByKey = new HashSet();
+		List extSources = new ArrayList();
+		List signatures = new ArrayList();
+		List concernsToCheck;
+		Set concernsCheckedByKey = new HashSet();
 
 		String buildPath = Configuration.instance().getPathSettings().getPath("Base") + "obj/";
 		concernsToCheck = incre.getConcernsWithModifiedSignature();

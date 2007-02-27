@@ -33,6 +33,7 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 import antlr.RecognitionException;
 
 /**
@@ -42,44 +43,52 @@ public class COPPER implements CTCommonModule
 {
 	public static final String MODULE_NAME = "COPPER";
 
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
 	private static final int ALL_PHASES = 0;
+
 	private static final int PARSE_PHASES = 1;
 
 	public void run(CommonResources resources) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
 		Configuration config = Configuration.instance();
-		
+
 		if (LegacyFilterTypes.useLegacyFilterTypes)
 		{
 			LegacyFilterTypes.addLegacyFilterTypes();
 		}
 
-		for (Object o : config.getProjects().getConcernSources())
-		{
-			ConcernSource concern = (ConcernSource) o;
+		List<String> loadFromHistory = new ArrayList<String>();
 
+		for (ConcernSource concern : config.getProjects().getConcernSources())
+		{
 			if (incre.isProcessedByModule(concern, MODULE_NAME))
 			{
-				INCRETimer copyTimer = incre.getReporter().openProcess(
-						MODULE_NAME, concern.getFileName(), INCRETimer.TYPE_INCREMENTAL);
-				copyOperation(concern.getFileName());
-				copyTimer.stop();
+				loadFromHistory.add(concern.getFileName());
 			}
 			else
 			{
-				INCRETimer runTimer = incre.getReporter().openProcess(
-						MODULE_NAME, concern.getFileName(), INCRETimer.TYPE_NORMAL);
+				INCRETimer runTimer = incre.getReporter().openProcess(MODULE_NAME, concern.getFileName(),
+						INCRETimer.TYPE_NORMAL);
 				parseCpsFile(concern.getFileName(), ALL_PHASES);
 				runTimer.stop();
 			}
+		}
+
+		if (loadFromHistory.size() > 0)
+		{
+			INCRETimer copyTimer = incre.getReporter().openProcess(MODULE_NAME, "Loading from history",
+					INCRETimer.TYPE_INCREMENTAL);
+			copyOperation(loadFromHistory);
+			copyTimer.stop();
 		}
 	}
 
 	private void parseCpsFile(String filename, int phase) throws ModuleException
 	{
 		// 1. parsing
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Parsing phase");		
+		logger.debug("Parsing phase");
 		CPSFileParser parser = new CPSFileParser();
 		ParseResult pr = parser.parse(filename);
 
@@ -91,7 +100,7 @@ public class COPPER implements CTCommonModule
 			// se.extractSource();
 
 			// 3. create first version of objects
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Parse building phase");
+			logger.debug("Parse building phase");
 			walkTree(pr);
 
 			// 4. remove syntactic sugar
@@ -107,24 +116,23 @@ public class COPPER implements CTCommonModule
 			CpsRepositoryBuilder builder = new CpsRepositoryBuilder();
 			builder.setFilename(pr.filename);
 			builder.setEmbeddedCode(pr.embeddedCode);
-			
+
 			CpsTreeWalker walker = new CpsTreeWalker(builder);
 			walker.setASTNodeClass("Composestar.Core.COPPER.CpsAST");
 			walker.concern(pr.ast);
 		}
 		catch (RecognitionException r)
 		{
-			throw new ModuleException(
-					"AST Error: " + r.getMessage(), MODULE_NAME, r.getFilename(), r.getLine());
+			throw new ModuleException("AST Error: " + r.getMessage(), MODULE_NAME, r.getFilename(), r.getLine());
 		}
 	}
 
-	public void copyOperation(String filename) throws ModuleException
+	public void copyOperation(List<String> filenames) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
 
 		// collect and iterate over all objects from previous compilation runs
-		Iterator it = incre.history.getIterator();
+		Iterator it = incre.history.getDataStore().getIterator();
 		while (it.hasNext())
 		{
 			Object obj = it.next();
@@ -134,11 +142,13 @@ public class COPPER implements CTCommonModule
 				// COPPER only adds RepositoryEntities
 				RepositoryEntity entity = (RepositoryEntity) obj;
 
+				//logger.debug("Visit RE: " + entity.repositoryKey + " of type: " + entity.getClass());
+
 				if (!entity.dynamicmap.isEmpty())
 				{
 					// remove dynamic object REFERENCED
-						entity.dynamicmap.remove("REFERENCED");
-					}
+					entity.dynamicmap.remove("REFERENCED");
+				}
 
 				if (obj instanceof Reference)
 				{
@@ -163,9 +173,8 @@ public class COPPER implements CTCommonModule
 				if (obj instanceof FilterType)
 				{
 					DataStore.instance().addObject(obj);
-					// fixme: somehow filename is not persistent for FilterType
 				}
-				else if (entity.getDescriptionFileName() != null && entity.getDescriptionFileName().equals(filename))
+				else if (entity.getDescriptionFileName() != null && filenames.contains(entity.getDescriptionFileName()))
 				{
 					if (obj instanceof CpsConcern)
 					{
@@ -184,12 +193,13 @@ public class COPPER implements CTCommonModule
 					{
 						DataStore.instance().addObject(obj);
 
-						// don't forget to update repositoryKey due to different hashcodes
+						// don't forget to update repositoryKey due to different
+						// hashcodes
 						entity.setRepositoryKey(entity.getUniqueID());
-			}
+					}
+				}
 			}
 		}
-	}
 	}
 
 	public static void main(String[] args)
@@ -262,7 +272,8 @@ public class COPPER implements CTCommonModule
 			System.out.println("\t Options:\t --test   | -t\tParse all the files and write the XML file");
 			System.out.println("\t\t\t --verify | -v\tOnly parse the concerns to see if there are syntax errors");
 			System.out.println("\t\t\t --debug | -d\tPrint debug messages");
-			System.out.println("\t\t\t @<filename>\tResponse file, contains a semicolon separated list of all cps files");
+			System.out
+					.println("\t\t\t @<filename>\tResponse file, contains a semicolon separated list of all cps files");
 			System.exit(-1);
 		}
 		if (test)

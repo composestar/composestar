@@ -128,7 +128,7 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 
 	public void setRepositoryKey(String newKey)
 	{
-		System.err.println("Updating repo key from " + repositoryKey + " to " + newKey);
+		//System.err.println("Updating repo key from " + repositoryKey + " to " + newKey);
 		repositoryKey = newKey;
 	}
 

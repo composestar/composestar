@@ -94,13 +94,12 @@ public abstract class Master
 		initEvironment();
 	}
 
-	
 	public Master(String[] args)
 	{
 		this();
 		processCmdArgs(args);
 	}
-	
+
 	/**
 	 * Called to initialize certain evironment settings
 	 */
@@ -209,7 +208,7 @@ public abstract class Master
 
 		// create the repository and common resources
 		DataStore.instance();
-		resources = CommonResources.instance();
+		resources = new CommonResources();
 
 		// load the project configuration file
 		try
@@ -310,7 +309,8 @@ public abstract class Master
 			// display number of warnings
 			if ((logMetrics.numWarnings() > 0) || (logMetrics.numErrors() > 0) || (logMetrics.numFatals() > 0))
 			{
-				// TODO: shouldn't print to stdout or anywhere else for that matter
+				// TODO: shouldn't print to stdout or anywhere else for that
+				// matter
 				System.out.println("Warnings: " + logMetrics.numWarnings() + "; Errors: " + logMetrics.numErrors());
 			}
 
@@ -333,7 +333,7 @@ public abstract class Master
 		{
 			logger.error("Internal compiler error: " + e, e);
 
-//			 TODO: shouldn't use stack trace
+			// TODO: shouldn't use stack trace
 			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
 			return EFAIL;
 		}

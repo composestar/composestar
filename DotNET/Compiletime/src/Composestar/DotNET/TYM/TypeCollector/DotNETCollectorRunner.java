@@ -192,7 +192,7 @@ public class DotNETCollectorRunner implements CollectorRunner
 		while (asmItr.hasNext())
 		{
 			String asm = (String) asmItr.next();
-			Iterator objects = incre.history.getAllInstancesOf(PrimitiveConcern.class);
+			Iterator objects = incre.history.getDataStore().getAllInstancesOf(PrimitiveConcern.class);
 			while (objects.hasNext())
 			{
 				PrimitiveConcern pc = (PrimitiveConcern) objects.next();

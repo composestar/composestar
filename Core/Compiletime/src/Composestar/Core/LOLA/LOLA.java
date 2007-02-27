@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import tarau.jinni.Builtins;
 import tarau.jinni.Init;
@@ -16,9 +17,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSe
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SimpleSelExpression;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.INCRE.INCREComparator;
+import Composestar.Core.INCRE.INCREModule;
+import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
@@ -341,8 +342,8 @@ public abstract class LOLA implements CTCommonModule
 				INCRETimer.TYPE_OVERHEAD);
 		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "Splitting selectors based on type information changes...");
 		Iterator predicateIterStep3 = toBeSkipped.iterator();
-		ArrayList currentTYM = incre.getAllModifiedPrimitiveConcerns(DataStore.instance());
-		ArrayList historyTYM = incre.getAllModifiedPrimitiveConcerns(incre.history);
+		List currentTYM = incre.getAllModifiedPrimitiveConcerns(DataStore.instance());
+		List historyTYM = incre.getAllModifiedPrimitiveConcerns(incre.history.getDataStore());
 		INCREModule lola = incre.getConfigManager().getModuleByID(MODULE_NAME);
 		INCREComparator comparator = new INCREComparator(MODULE_NAME);
 		while (predicateIterStep3.hasNext())

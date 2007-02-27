@@ -9,8 +9,10 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
+import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCREModule;
 import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Class responsible for parsing configuration files created for the incremental
@@ -18,20 +20,22 @@ import Composestar.Utils.Debug;
  */
 public class ConfigManager
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(INCRE.MODULE_NAME);
+
 	private INCREXMLParser xmlparser;
 
 	private XMLReader xmlreader;
 
 	/**
-	 * Map containing modules. The keys are the names of the modules. The
-	 * values are the module objects.
+	 * Map containing modules. The keys are the names of the modules. The values
+	 * are the module objects.
 	 */
-	public Map modules = new LinkedHashMap();
+	public Map<String,INCREModule> modules = new LinkedHashMap<String,INCREModule>();
 
 	public ConfigManager()
 	{
-		this.xmlparser = new INCREXMLParser(this);
-		this.xmlreader = null;
+		xmlparser = new INCREXMLParser(this);
+		xmlreader = null;
 	}
 
 	public void parseXML(String filename) throws java.io.IOException, org.xml.sax.SAXException,
@@ -42,27 +46,27 @@ public class ConfigManager
 		xmlreader = saxFactory.newSAXParser().getXMLReader();
 		xmlreader.setContentHandler(this.xmlparser);
 
-		Debug.out(Debug.MODE_DEBUG, "INCRE", "Parsing configuration file '" + filename + "'...");
+		logger.debug("Parsing configuration file '" + filename + "'...");
 		xmlreader.parse(new InputSource(filename));
 	}
 
 	public XMLReader getXMLReader()
 	{
-		return this.xmlreader;
+		return xmlreader;
 	}
 
 	public void addModule(String id, INCREModule m)
 	{
-		this.modules.put(id, m);
+		modules.put(id, m);
 	}
 
 	public INCREModule getModuleByID(String id)
 	{
-		return (INCREModule) modules.get(id);
+		return modules.get(id);
 	}
 
-	public Map getModules()
+	public Map<String,INCREModule> getModules()
 	{
-		return this.modules;
+		return modules;
 	}
 }

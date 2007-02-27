@@ -40,11 +40,11 @@ public class DataStore implements Serializable, Cloneable
 	private static final long serialVersionUID = -1235392544932797436L;
 
 	private static DataStore instance = null;
+
 	private static final boolean DEBUG = false;
 
-	private ILogger logger;
+	private transient ILogger logger;
 
-	private String filename = "ComposeStarDataStore.ser";
 	public DataMap map;
 
 	/**
@@ -104,7 +104,7 @@ public class DataStore implements Serializable, Cloneable
 	{
 		return map.keySet().iterator();
 	}
-	
+
 	/**
 	 * Returns a collection of all objects in this datastore.
 	 */
@@ -255,103 +255,5 @@ public class DataStore implements Serializable, Cloneable
 	public void excludeUnreferenced(Class c)
 	{
 		map.excludeUnreferenced(c);
-		/*
-		 * List removeKeys = new ArrayList(); Iterator it =
-		 * map.entrySet().iterator(); while (it.hasNext()) { Map.Entry entry =
-		 * (Map.Entry)it.next(); Object key = entry.getKey(); Object value =
-		 * entry.getValue(); if (value.getClass().equals(c) && value instanceof
-		 * RepositoryEntity) { RepositoryEntity re = (RepositoryEntity)value; if
-		 * (re.getDynObject("REFERENCED") == null) removeKeys.add(key); } }
-		 * Iterator rkIt = removeKeys.iterator(); while (rkIt.hasNext()) {
-		 * Object key = rkIt.next(); map.remove(key); }
-		 */
-	}
-
-	/**
-	 * Reads a serialized object from the given file.
-	 * 
-	 * @param filename String The name of the file to read from.
-	 * @return Object The object that was read, or null if unsuccesfull.
-	 */
-	public Object readObject(String filename)
-	{
-		try
-		{
-			if (DEBUG)
-			{
-				logger.info("Reading object from file '" + filename + "'... ");
-			}
-			FileInputStream fis;
-			if (filename == null)
-			{
-				fis = new FileInputStream(this.filename);
-			}
-			else
-			{
-				fis = new FileInputStream(filename);
-			}
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Object obj = ois.readObject();
-			ois.close();
-			if (DEBUG)
-			{
-				logger.info("Done reading object '" + obj + "'.");
-			}
-			return obj;
-		}
-		catch (Exception e)
-		{
-			if (DEBUG)
-			{
-				logger.warn("Failed reading object from file '" + filename + "'.");
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-
-	/**
-	 * Write an object in a serialezed form to the given file.
-	 * 
-	 * @param filename String The name of the file to write to.
-	 * @param obj Object The object to be written.
-	 * @return boolean The result, true if succesfull, false if not.
-	 */
-	public boolean writeObject(String filename, Object obj)
-	{
-		try
-		{
-			if (DEBUG)
-			{
-				logger.info("Writing object '" + obj + "' to file '" + filename + "'...");
-			}
-			FileOutputStream fos;
-			if (filename == null)
-			{
-				fos = new FileOutputStream(this.filename);
-			}
-			else
-			{
-				fos = new FileOutputStream(filename);
-			}
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(obj);
-			oos.flush();
-			oos.close();
-			if (DEBUG)
-			{
-				logger.info("Done writing object '" + obj + "'.");
-			}
-			return true;
-		}
-		catch (Exception e)
-		{
-			if (DEBUG)
-			{
-				logger.warn("Failed writing object '" + obj + "' to file '" + filename + "'.");
-				e.printStackTrace();
-			}
-			return false;
-		}
 	}
 }
