@@ -118,6 +118,7 @@ public class Viewport extends JFrame
 			{
 				public void actionPerformed(java.awt.event.ActionEvent e)
 				{
+					/*
 					JFileChooser fc = new JFileChooser();
 					fc.addChoosableFileFilter(new FileNameExtensionFilter("Compose* Compile History",
 							CompileHistory.EXT_NORMAL, CompileHistory.EXT_COMPRESSED));
@@ -126,6 +127,7 @@ public class Viewport extends JFrame
 						controller.openCompileHistory(fc.getSelectedFile());
 						// TODO: handle
 					}
+					*/
 				}
 			});
 		}
