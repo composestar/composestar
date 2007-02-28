@@ -19,6 +19,8 @@ import org.apache.log4j.PatternLayout;
 
 import Composestar.Core.Master.CompileHistory;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Visualization.Model.ViewManager;
+import Composestar.Visualization.UI.Viewport;
 
 /**
  * VISualization of COMposestar Programs.
@@ -31,9 +33,46 @@ public class VisCom
 
 	protected CompileHistory compileHistory;
 
+	protected ViewManager viewManager;
+
 	public VisCom()
 	{
 		initialize();
+	}
+
+	/**
+	 * Dispose the current compile history and load a new one.
+	 * 
+	 * @param histFile
+	 * @return
+	 */
+	public boolean openCompileHistory(File histFile)
+	{
+		try
+		{
+			viewManager = null;
+			long startTime = System.currentTimeMillis();
+			compileHistory = CompileHistory.load(histFile);
+			logger.debug("loaded compile history from '" + histFile + "' in "
+					+ (System.currentTimeMillis() - startTime) + "ms");
+			viewManager = new ViewManager(compileHistory);
+		}
+		catch (Exception e)
+		{
+			logger.fatal("Unable to load history file from " + histFile, e);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Get the current view manager
+	 * 
+	 * @return
+	 */
+	public ViewManager getViewManager()
+	{
+		return viewManager;
 	}
 
 	/**
@@ -66,23 +105,6 @@ public class VisCom
 			// one more argument left, assume it's the compile history file
 			openCompileHistory(new File(args[i]));
 		}
-	}
-
-	protected boolean openCompileHistory(File histFile)
-	{
-		try
-		{
-			long startTime = System.currentTimeMillis();
-			compileHistory = CompileHistory.load(histFile);
-			logger.debug("loaded compile history from '" + histFile + "' in "
-					+ (System.currentTimeMillis() - startTime) + "ms");
-		}
-		catch (Exception e)
-		{
-			logger.fatal("Unable to load history file from " + histFile, e);
-			return false;
-		}
-		return true;
 	}
 
 	/**

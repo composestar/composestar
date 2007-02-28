@@ -8,7 +8,7 @@
  * $Id$
  */
 
-package Composestar.Visualization;
+package Composestar.Visualization.UI;
 
 import java.awt.Dimension;
 import java.awt.HeadlessException;
@@ -19,11 +19,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
-//import javax.swing.filechooser.FileNameExtensionFilter;
 
-import Composestar.Core.Master.CompileHistory;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Visualization.VisCom;
 
 /**
  * The main viewport of the visualizer
@@ -46,13 +46,19 @@ public class Viewport extends JFrame
 
 	private JMenuItem miClose = null;
 
-	private JScrollPane view = null;
+	private JTabbedPane views = null;
 
 	public Viewport(VisCom inController) throws HeadlessException
 	{
 		logger.debug("Creating viewport");
 		controller = inController;
 		initialize();
+
+		// TODO: dev only
+		if (controller.getViewManager() != null)
+		{
+			views.add("Program view", new JScrollPane(controller.getViewManager().getProgramView().getGraph()));
+		}
 	}
 
 	/**
@@ -63,10 +69,10 @@ public class Viewport extends JFrame
 	private void initialize()
 	{
 		this.setTitle("Compose* Visualization");
+		this.setContentPane(getViews());
+		this.setJMenuBar(getMainMenu());
 		this.setSize(new Dimension(627, 484));
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		this.setJMenuBar(getMainMenu());
-		this.setContentPane(getView());
 		this.setVisible(true);
 	}
 
@@ -118,16 +124,16 @@ public class Viewport extends JFrame
 			{
 				public void actionPerformed(java.awt.event.ActionEvent e)
 				{
-					/*
+					views.removeAll();
 					JFileChooser fc = new JFileChooser();
-					fc.addChoosableFileFilter(new FileNameExtensionFilter("Compose* Compile History",
-							CompileHistory.EXT_NORMAL, CompileHistory.EXT_COMPRESSED));
+
+					fc.addChoosableFileFilter(new CompileHistoryFilter());
 					if (fc.showOpenDialog(miOpen) == JFileChooser.APPROVE_OPTION)
 					{
 						controller.openCompileHistory(fc.getSelectedFile());
 						// TODO: handle
 					}
-					*/
+
 				}
 			});
 		}
@@ -172,16 +178,16 @@ public class Viewport extends JFrame
 	}
 
 	/**
-	 * This method initializes view
+	 * This method initializes views
 	 * 
-	 * @return javax.swing.JScrollPane
+	 * @return javax.swing.JTabbedPane
 	 */
-	private JScrollPane getView()
+	private JTabbedPane getViews()
 	{
-		if (view == null)
+		if (views == null)
 		{
-			view = new JScrollPane();
+			views = new JTabbedPane();
 		}
-		return view;
+		return views;
 	}
 } // @jve:decl-index=0:visual-constraint="10,10"
