@@ -25,6 +25,7 @@ import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -35,10 +36,24 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class CompileHistory implements Serializable
 {
+	private static final long serialVersionUID = -4212046702631432965L;
+
 	private static final CPSLogger logger = CPSLogger.getCPSLogger("CompileHistory");
 
-	// cchz = Composestar Compile History gZip
-	public static final String DEFAULT_FILENAME = "ComposestarHistory.cchz";
+	/**
+	 * Extention of uncompressed composestar compile history
+	 */
+	public static final String EXT_NORMAL = "cch";
+
+	/**
+	 * Compressed composestar compile history
+	 */
+	public static final String EXT_COMPRESSED = EXT_NORMAL + "z";
+
+	/**
+	 * Default filename for composestar compile history
+	 */
+	public static final String DEFAULT_FILENAME = "ComposestarHistory." + EXT_COMPRESSED;
 
 	/**
 	 * Date this history was saved on
@@ -76,7 +91,7 @@ public class CompileHistory implements Serializable
 	public static CompileHistory load(File source) throws IOException
 	{
 		InputStream is = new FileInputStream(source);
-		if (source.getName().endsWith(".cchz"))
+		if (FileUtils.getExtension(source.getName()).equalsIgnoreCase(EXT_COMPRESSED))
 		{
 			is = new GZIPInputStream(is);
 		}
@@ -92,7 +107,7 @@ public class CompileHistory implements Serializable
 	public void save(File destination) throws IOException
 	{
 		OutputStream os = new FileOutputStream(destination);
-		if (destination.getName().endsWith(".cchz"))
+		if (FileUtils.getExtension(destination.getName()).equalsIgnoreCase(EXT_COMPRESSED))
 		{
 			os = new GZIPOutputStream(os);
 		}
@@ -122,7 +137,7 @@ public class CompileHistory implements Serializable
 			logger.warn("Unable to restore compile history. Received exception: " + e, e);
 			return null;
 		}
-		finally 
+		finally
 		{
 			DataStore.setIsDeserializing(false);
 		}
