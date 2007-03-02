@@ -12,9 +12,11 @@ package Composestar.Visualization.Model.Elements;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
 import org.jgraph.graph.DefaultGraphCell;
+import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -24,7 +26,11 @@ import Composestar.Core.CpsProgramRepository.Concern;
  */
 public abstract class ConcernNode extends DefaultGraphCell
 {
+	protected DefaultPort defaultPort;
+	
 	protected DefaultGraphCell title;
+	
+	protected DefaultPort titlePort;
 
 	protected DefaultGraphCell properties;
 
@@ -33,25 +39,37 @@ public abstract class ConcernNode extends DefaultGraphCell
 	public ConcernNode(Concern concern)
 	{
 		super(concern);
-		GraphConstants.setAutoSize(attributes, true);
+		defaultPort = new DefaultPort();
+		add(defaultPort);
+		defaultPort.setParent(this);
+		
+		//GraphConstants.setAutoSize(attributes, true);
 		// title part
 		title = new DefaultGraphCell(concern.getName());
 		Map attr = title.getAttributes();
 		GraphConstants.setOpaque(attr, true);
 		GraphConstants.setAutoSize(attr, true);
 		GraphConstants.setBorderColor(attr, Color.BLACK);
+		GraphConstants.setBounds(attr, new Rectangle2D.Double(0, 0, 80, 20));
 		Font fnt = GraphConstants.getFont(attr);
 		fnt = fnt.deriveFont(Font.BOLD);
 		GraphConstants.setFont(attr, fnt);
 		add(title);
+		title.setParent(this);
+		
+		titlePort = new DefaultPort();
+		title.add(titlePort);
+		titlePort.setParent(title);
 		
 		// properties part
 		properties = new DefaultGraphCell(null);
 		attr = properties.getAttributes();
 		GraphConstants.setOpaque(attr, true);
 		GraphConstants.setAutoSize(attr, true);
-		GraphConstants.setBorderColor(attr, Color.BLACK);		
+		GraphConstants.setBorderColor(attr, Color.BLACK);	
+		GraphConstants.setBounds(attr, new Rectangle2D.Double(0, 20, 80, 10));
 		add(properties);
+		properties.setParent(this);
 		
 		// methods part
 		methods = new DefaultGraphCell(null);
@@ -59,6 +77,18 @@ public abstract class ConcernNode extends DefaultGraphCell
 		GraphConstants.setOpaque(attr, true);
 		GraphConstants.setAutoSize(attr, true);
 		GraphConstants.setBorderColor(attr, Color.BLACK);
+		GraphConstants.setBounds(attr, new Rectangle2D.Double(0, 30, 80, 10));
 		add(methods);
+		methods.setParent(this);
+		
+		DefaultPort dp = new DefaultPort("DefaultPort");
+		attr = dp.getAttributes();
+		GraphConstants.setOpaque(attr, true);
+		add(dp);
+	}
+	
+	public DefaultPort getPort()
+	{
+		return titlePort;
 	}
 }

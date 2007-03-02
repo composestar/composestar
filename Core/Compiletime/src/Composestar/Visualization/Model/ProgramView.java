@@ -10,17 +10,23 @@
 
 package Composestar.Visualization.Model;
 
+import java.awt.Color;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultCellViewFactory;
-import org.jgraph.graph.DefaultGraphCell;
+import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphModel;
+import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
+import org.jgraph.graph.DefaultEdge.DefaultRouting;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Master.CompileHistory;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Visualization.Model.Elements.ConcernNode;
 import Composestar.Visualization.Model.Elements.PVConcernNode;
 
 /**
@@ -32,8 +38,11 @@ public class ProgramView extends View
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VizCom.View.ProgramView");
 	
+	protected Map<Concern,ConcernNode> cells;
+	
 	public ProgramView(CompileHistory data)
 	{
+		cells = new HashMap<Concern,ConcernNode>();
 		model = new DefaultGraphModel();
 		layout = new GraphLayoutCache(model, new DefaultCellViewFactory());
 		graph = new JGraph(model, layout);
@@ -54,11 +63,28 @@ public class ProgramView extends View
 			logger.debug("Adding concern: "+concern.getName());
 			addConcern(concern);
 		}
+		
+		for (ConcernNode source : cells.values())
+		{
+			for (ConcernNode dest : cells.values())
+			{
+				if (source != dest)
+				{
+					DefaultEdge edge = new DefaultEdge();
+					edge.setSource(source.getPort());
+					edge.setTarget(dest.getPort());
+					GraphConstants.setLineColor(edge.getAttributes(), Color.BLACK);
+					GraphConstants.setRouting(edge.getAttributes(), GraphConstants.ROUTING_DEFAULT);
+					layout.insert(edge);
+				}
+			}
+		}
 	}
 	
 	public void addConcern(Concern concern)
 	{
-		DefaultGraphCell cell = new PVConcernNode(concern);
+		ConcernNode cell = new PVConcernNode(concern);
 		layout.insert(cell);
+		cells.put(concern, cell);
 	}
 }
