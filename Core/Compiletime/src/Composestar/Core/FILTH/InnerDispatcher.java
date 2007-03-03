@@ -33,6 +33,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleR
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
+ * Produces the default inner dispatch filter module
+ * 
  * @author Staijen
  */
 public class InnerDispatcher
@@ -50,32 +52,49 @@ public class InnerDispatcher
 		}
 		return innerDispatchReference;
 	}
-	
+
+	/**
+	 * @param fmName Fully Qualified FilterModule name
+	 * @return true if the name eqausl to the expected DefaultDispatcher
+	 *         filtermodule name
+	 */
 	public static boolean isDefaultDispatch(String fmName)
 	{
 		if (fmName == null)
 		{
 			return false;
 		}
+		else if (innerDispatchReference == null)
+		{
+			return fmName.equals(DefaultInnerDispatchNames.FQN_FILTER_MODULE);
+		}
 		return innerDispatchReference.getQualifiedName().equals(fmName);
 	}
-	
+
 	public static boolean isDefaultDispatch(FilterModule fm)
 	{
-		if (innerDispatchReference == null)
+		if (fm == null)
 		{
 			return false;
 		}
+		else if (innerDispatchReference == null)
+		{
+			return isDefaultDispatch(fm.getQualifiedName());
+		}
 		return innerDispatchReference.getRef().equals(fm);
 	}
-	
+
 	public static boolean isDefaultDispatch(FilterModuleReference fmr)
 	{
 		if (fmr == null)
 		{
 			return false;
 		}
-		return fmr.equals(innerDispatchReference);
+		else if (innerDispatchReference == null)
+		{
+			return isDefaultDispatch(fmr.getRef());
+		}
+		return innerDispatchReference.equals(fmr);
 	}
 
 	private static FilterModule createInnerDispatchFilterModule()

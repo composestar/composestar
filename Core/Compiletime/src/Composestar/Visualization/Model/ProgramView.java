@@ -16,18 +16,17 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.jgraph.JGraph;
-import org.jgraph.graph.DefaultCellViewFactory;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
-import org.jgraph.graph.DefaultEdge.DefaultRouting;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Master.CompileHistory;
 import Composestar.Utils.Logging.CPSLogger;
-import Composestar.Visualization.Model.Elements.ConcernNode;
-import Composestar.Visualization.Model.Elements.PVConcernNode;
+import Composestar.Visualization.Model.CellViews.VisComCellViewFactory;
+import Composestar.Visualization.Model.Cells.ConcernNode;
+import Composestar.Visualization.Model.Cells.PVConcernNode;
 
 /**
  * Highest view level. Shows the program layout.
@@ -37,16 +36,16 @@ import Composestar.Visualization.Model.Elements.PVConcernNode;
 public class ProgramView extends View
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VizCom.View.ProgramView");
-	
-	protected Map<Concern,ConcernNode> cells;
-	
+
+	protected Map<Concern, ConcernNode> cells;
+
 	public ProgramView(CompileHistory data)
 	{
-		cells = new HashMap<Concern,ConcernNode>();
+		cells = new HashMap<Concern, ConcernNode>();
 		model = new DefaultGraphModel();
-		layout = new GraphLayoutCache(model, new DefaultCellViewFactory());
+		layout = new GraphLayoutCache(model, new VisComCellViewFactory());
 		graph = new JGraph(model, layout);
-		
+
 		Iterator it = data.getDataStore().getAllInstancesOf(Concern.class);
 		while (it.hasNext())
 		{
@@ -60,10 +59,10 @@ public class ProgramView extends View
 			{
 				continue;
 			}
-			logger.debug("Adding concern: "+concern.getName());
+			logger.debug("Adding concern: " + concern.getName());
 			addConcern(concern);
 		}
-		
+
 		for (ConcernNode source : cells.values())
 		{
 			for (ConcernNode dest : cells.values())
@@ -80,7 +79,7 @@ public class ProgramView extends View
 			}
 		}
 	}
-	
+
 	public void addConcern(Concern concern)
 	{
 		ConcernNode cell = new PVConcernNode(concern);
