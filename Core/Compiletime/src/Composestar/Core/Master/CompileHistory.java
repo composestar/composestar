@@ -124,7 +124,7 @@ public class CompileHistory implements Serializable
 
 	public static CompileHistory load(InputStream source) throws IOException
 	{
-		ObjectInputStream ois = new ObjectInputStream(source);
+		ObjectInputStream ois = getOIS(source);
 		CompileHistory history;
 		try
 		{
@@ -142,6 +142,15 @@ public class CompileHistory implements Serializable
 			DataStore.setIsDeserializing(false);
 		}
 		return history;
+	}
+	
+	protected static ObjectInputStream getOIS(InputStream is) throws IOException
+	{
+		if (is instanceof ObjectInputStream)
+		{
+			return (ObjectInputStream) is;
+		}
+		return new ObjectInputStream(is);
 	}
 
 	public Date getSavedOn()

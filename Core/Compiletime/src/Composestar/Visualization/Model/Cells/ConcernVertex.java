@@ -21,15 +21,14 @@ import Composestar.Core.LAMA.Type;
  * 
  * @author Michiel Hendriks
  */
-//TODO: rename to ConcernVertex
-public abstract class ConcernNode extends BaseGraphCell
+public abstract class ConcernVertex extends BaseGraphCell
 {
 	/**
 	 * The class vertex
 	 */
 	protected ClassVertex classVertex;
 
-	public ConcernNode(Concern concern)
+	public ConcernVertex(Concern concern)
 	{
 		super(concern);
 

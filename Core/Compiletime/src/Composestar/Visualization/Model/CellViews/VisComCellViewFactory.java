@@ -14,6 +14,8 @@ import org.jgraph.graph.CellView;
 import org.jgraph.graph.DefaultCellViewFactory;
 import org.jgraph.graph.GraphModel;
 
+import Composestar.Visualization.Model.Cells.ClassVertex;
+
 /**
  * Creates the proper CellView instances for our custom cells
  * 
@@ -31,7 +33,10 @@ public class VisComCellViewFactory extends DefaultCellViewFactory
 	 */
 	public CellView createView(GraphModel model, Object cell)
 	{
-		// TODO Auto-generated method stub
+		if (cell instanceof ClassVertex) 
+		{
+			return new ClassVertexView(cell);
+		}
 		return super.createView(model, cell);
 	}
 

@@ -34,7 +34,8 @@ public class CompileHistoryFilter extends FileFilter
 	public boolean accept(File filename)
 	{
 		String ext = FileUtils.getExtension(filename.toString());
-		return (CompileHistory.EXT_NORMAL.equalsIgnoreCase(ext) || CompileHistory.EXT_COMPRESSED.equalsIgnoreCase(ext));
+		return (CompileHistory.EXT_NORMAL.equalsIgnoreCase(ext) || CompileHistory.EXT_COMPRESSED.equalsIgnoreCase(ext))
+				|| filename.isDirectory();
 	}
 
 	/*

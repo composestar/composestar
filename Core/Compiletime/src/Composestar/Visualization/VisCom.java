@@ -11,6 +11,9 @@
 package Composestar.Visualization;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.LogManager;
@@ -18,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 import Composestar.Core.Master.CompileHistory;
+import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.Model.ViewManager;
 import Composestar.Visualization.UI.Viewport;
@@ -52,7 +56,13 @@ public class VisCom
 		{
 			viewManager = null;
 			long startTime = System.currentTimeMillis();
-			compileHistory = CompileHistory.load(histFile);
+			
+			InputStream is = new FileInputStream(histFile);
+			if (FileUtils.getExtension(histFile.getName()).equalsIgnoreCase(CompileHistory.EXT_COMPRESSED))
+			{
+				is = new GZIPInputStream(is);
+			}			
+			compileHistory = CompileHistory.load(new VisComObjectInputStream(is));
 			logger.debug("loaded compile history from '" + histFile + "' in "
 					+ (System.currentTimeMillis() - startTime) + "ms");
 			viewManager = new ViewManager(compileHistory);

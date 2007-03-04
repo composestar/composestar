@@ -22,6 +22,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
+import org.apache.log4j.Logger;
+
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.VisCom;
 
@@ -32,6 +34,8 @@ import Composestar.Visualization.VisCom;
  */
 public class Viewport extends JFrame
 {
+	private static final long serialVersionUID = 7472894955484974785L;
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.Viewport");
 
 	protected VisCom controller;
@@ -50,6 +54,7 @@ public class Viewport extends JFrame
 
 	public Viewport(VisCom inController) throws HeadlessException
 	{
+		Logger.getRootLogger().addAppender(new MessageBoxAppender(this));
 		logger.debug("Creating viewport");
 		controller = inController;
 		initialize();

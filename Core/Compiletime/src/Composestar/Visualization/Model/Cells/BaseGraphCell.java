@@ -21,8 +21,10 @@ import org.jgraph.graph.DefaultPort;
  * 
  * @author Michiel Hendriks
  */
-public abstract class BaseGraphCell extends DefaultGraphCell
+public class BaseGraphCell extends DefaultGraphCell
 {
+	private static final long serialVersionUID = 3870314973085521163L;
+
 	protected DefaultPort defaultPort;
 
 	public BaseGraphCell()

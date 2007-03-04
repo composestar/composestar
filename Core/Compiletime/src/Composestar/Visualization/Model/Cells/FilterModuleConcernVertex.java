@@ -29,20 +29,19 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-//TODO: rename to FilterModuleConcernVertex
-public class PVConcernNode extends ConcernNode
+public class FilterModuleConcernVertex extends ConcernVertex
 {
 	private static final long serialVersionUID = -6066054436195352608L;
 
-	private static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.Cells.PVConcernVertex");
+	private static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.Cells.FilterModuleConcernVertex");
 
 	protected Map<String, FilterModuleVertex> fmPorts;
 
-	public PVConcernNode(Concern concern)
+	public FilterModuleConcernVertex(Concern concern)
 	{
 		super(concern);
 		fmPorts = new HashMap<String, FilterModuleVertex>();
-		addFmPorts(concern);
+		//addFmPorts(concern);
 	}
 
 	@Override
@@ -72,7 +71,10 @@ public class PVConcernNode extends ConcernNode
 	protected void addFmPorts(Concern concern)
 	{
 		FilterModuleOrder fmOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-		if (fmOrder == null) {return;}
+		if (fmOrder == null)
+		{
+			return;
+		}
 		for (FilterModuleSuperImposition fmsi : (List<FilterModuleSuperImposition>) fmOrder.filterModuleSIList())
 		{
 			FilterModule fm = fmsi.getFilterModule().getRef();

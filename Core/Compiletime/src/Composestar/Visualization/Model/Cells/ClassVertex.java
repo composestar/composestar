@@ -11,6 +11,9 @@
 package Composestar.Visualization.Model.Cells;
 
 import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.JLabel;
 
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.GraphConstants;
@@ -27,21 +30,52 @@ public class ClassVertex extends BaseGraphCell
 	private static final long serialVersionUID = -8859175705375540286L;
 
 	protected Type platformRep;
-	
-	/**
-	 * @param userObject
-	 */
-	public ClassVertex(Type platformRep)
+
+	protected ClassFieldsVertex fields;
+
+	protected ClassMethodsVertex methods;
+
+	public ClassVertex(Type inPlatformRep)
 	{
-		super(platformRep);
+		super(inPlatformRep);
+		platformRep = inPlatformRep;
 
 		AttributeMap attrs = getAttributes();
 		GraphConstants.setBorderColor(attrs, Color.BLACK);
+		GraphConstants.setVerticalAlignment(attrs, JLabel.TOP);
+		GraphConstants.setFont(attrs, GraphConstants.DEFAULTFONT.deriveFont(Font.BOLD, 12));
+		GraphConstants.setGroupOpaque(attrs, true);
 		GraphConstants.setOpaque(attrs, true);
+		GraphConstants.setBackground(attrs, new Color(0xeeeeff));
+		GraphConstants.setInset(attrs, 2);
+		GraphConstants.setSizeableAxis(attrs, GraphConstants.X_AXIS);
+
+		fields = new ClassFieldsVertex(platformRep);
+		add(fields);
+		fields.setParent(this);
+
+		methods = new ClassMethodsVertex(platformRep);
+		add(methods);
+		methods.setParent(this);
 	}
 	
+	public ClassFieldsVertex getFields()
+	{
+		return fields;
+	}
+	
+	public ClassMethodsVertex getMethods()
+	{
+		return methods;
+	}
+
 	public String getClassName()
 	{
 		return platformRep.fullName();
+	}
+	
+	public String toString()
+	{
+		return getClassName();
 	}
 }
