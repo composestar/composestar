@@ -1,8 +1,8 @@
-%using Composestar.StarLight.VisualStudio.Babel.ParserGenerator;
-%using Composestar.StarLight.VisualStudio.Babel;
-%using Composestar.StarLight.VisualStudio.Babel.Parser;
+%using Composestar.StarLight.VisualStudio.LanguageServices.ParserGenerator;
+%using Composestar.StarLight.VisualStudio.LanguageServices;
+%using Composestar.StarLight.VisualStudio.LanguageServices.Parser;
 
-%namespace Composestar.StarLight.VisualStudio.Babel.Lexer
+%namespace Composestar.StarLight.VisualStudio.LanguageServices.Lexer
 
 
 %x COMMENT
@@ -59,7 +59,7 @@
                     break;
             }
             
-            if (Composestar.StarLight.VisualStudio.Babel.Resolver.IsPrologFunction(txt))
+            if (Composestar.StarLight.VisualStudio.LanguageServices.Resolver.IsPrologFunction(txt))
                 return (int)Tokens.KWPROLOGFUN;
             
             return (int)Tokens.IDENTIFIER;

@@ -1,9 +1,9 @@
 /*  Grammar based on the Compose* Grammar v 0.5f */
 
 %using Microsoft.VisualStudio.TextManager.Interop
-%using Composestar.StarLight.VisualStudio.Babel.ParserGenerator
+%using Composestar.StarLight.VisualStudio.LanguageServices.ParserGenerator
 
-%namespace Composestar.StarLight.VisualStudio.Babel.Parser
+%namespace Composestar.StarLight.VisualStudio.LanguageServices.Parser
 %valuetype LexValue
 %partial
 
