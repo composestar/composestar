@@ -37,9 +37,22 @@ public class ClassVertex extends BaseGraphCell
 
 	public ClassVertex(Type inPlatformRep)
 	{
+		this(inPlatformRep, 0);
+	}
+
+	public ClassVertex(Type inPlatformRep, int filter)
+	{
 		super(inPlatformRep);
 		platformRep = inPlatformRep;
+		addChildren(0);
+	}
 
+	protected void addChildren(int filter)
+	{
+		// filter
+		// none
+		// relevate
+		// all (e.g. show nothing)
 		AttributeMap attrs = getAttributes();
 		GraphConstants.setBorderColor(attrs, Color.BLACK);
 		GraphConstants.setVerticalAlignment(attrs, JLabel.TOP);
@@ -58,12 +71,12 @@ public class ClassVertex extends BaseGraphCell
 		add(methods);
 		methods.setParent(this);
 	}
-	
+
 	public ClassFieldsVertex getFields()
 	{
 		return fields;
 	}
-	
+
 	public ClassMethodsVertex getMethods()
 	{
 		return methods;
@@ -73,7 +86,7 @@ public class ClassVertex extends BaseGraphCell
 	{
 		return platformRep.fullName();
 	}
-	
+
 	public String toString()
 	{
 		return getClassName();
