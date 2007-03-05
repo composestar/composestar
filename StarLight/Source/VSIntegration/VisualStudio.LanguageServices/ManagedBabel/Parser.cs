@@ -20,7 +20,7 @@ namespace Babel.ParserGenerator
 	class EmptyClass { }
 }
 
-namespace Composestar.StarLight.VisualStudio.Babel.Parser
+namespace Composestar.StarLight.VisualStudio.LanguageServices.Parser
 {
 	public partial class Parser
 	{

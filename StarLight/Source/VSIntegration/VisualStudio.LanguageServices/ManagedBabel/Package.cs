@@ -17,7 +17,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using MPF = Microsoft.VisualStudio.Package;
 using System.ComponentModel.Design;
 
-namespace Composestar.StarLight.VisualStudio.Babel
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
     public class BabelPackage : Microsoft.VisualStudio.Shell.Package, IOleComponent
 	{

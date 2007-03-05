@@ -11,7 +11,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 using System;
 
-namespace Composestar.StarLight.VisualStudio.Babel.Parser
+namespace Composestar.StarLight.VisualStudio.LanguageServices.Parser
 {
     //
     // These are the dummy declarations for stand-alone lex applications

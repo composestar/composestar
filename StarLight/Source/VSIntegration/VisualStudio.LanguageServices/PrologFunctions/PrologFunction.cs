@@ -35,7 +35,7 @@
 #endregion
 
 #region Using directives
-using Composestar.StarLight.VisualStudio.Babel;
+using Composestar.StarLight.VisualStudio.LanguageServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -138,8 +138,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 	public class PrologFunctions
 	{
 		private List<PrologFunction> _functions = new List<PrologFunction>();
-		private List<Babel.Method> _babelMethods;
-		private List<Babel.Declaration> _babelCompletions;
+		private List<LanguageServices.Method> _babelMethods;
+		private List<LanguageServices.Declaration> _babelCompletions;
 
 		/// <summary>
 		/// Determines whether the specified function name is contained in the list of functions.
@@ -167,24 +167,24 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		/// </summary>
 		/// <param name="startsWith">The starts with.</param>
 		/// <returns></returns>
-		public List<Babel.Method> RetrieveFunctions(string startsWith)
+		public List<LanguageServices.Method> RetrieveFunctions(string startsWith)
 		{
 			if (_babelMethods == null && string.IsNullOrEmpty(startsWith))
 			{
-				_babelMethods = new List<Babel.Method>();
+				_babelMethods = new List<LanguageServices.Method>();
 
 				foreach (PrologFunction function in _functions)
 				{
-					Babel.Method meth = new Composestar.StarLight.VisualStudio.Babel.Method();
+					LanguageServices.Method meth = new Composestar.StarLight.VisualStudio.LanguageServices.Method();
 
 					meth.Description = function.Description;
 					meth.Name = function.FunctionName;
 					meth.Type = "PrologFunction";
-					meth.Parameters = new List<Babel.Parameter>();
+					meth.Parameters = new List<LanguageServices.Parameter>();
 
 					foreach (PrologParameter param in function.Parameters)
 					{
-						Babel.Parameter item = new Parameter();
+						LanguageServices.Parameter item = new Parameter();
 						item.Description = param.Description;
 						item.Display = param.Name;
 						item.Name = param.Name;
@@ -200,22 +200,22 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 			}
 			else
 			{
-				List<Babel.Method> babelMethods = new List<Babel.Method>();
+				List<LanguageServices.Method> babelMethods = new List<LanguageServices.Method>();
 
 				foreach (PrologFunction function in _functions)
 				{
 					if (function.FunctionName.StartsWith(startsWith))
 					{
-						Babel.Method meth = new Composestar.StarLight.VisualStudio.Babel.Method();
+						LanguageServices.Method meth = new Composestar.StarLight.VisualStudio.LanguageServices.Method();
 
 						meth.Description = function.Description;
 						meth.Name = function.FunctionName;
 						meth.Type = "PrologFunction";
-						meth.Parameters = new List<Babel.Parameter>();
+						meth.Parameters = new List<LanguageServices.Parameter>();
 
 						foreach (PrologParameter param in function.Parameters)
 						{
-							Babel.Parameter item = new Parameter();
+							LanguageServices.Parameter item = new Parameter();
 							item.Description = param.Description;
 							item.Display = param.Name;
 							item.Name = param.Name;
@@ -236,11 +236,11 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Prolog
 		/// Retrieves the completions.
 		/// </summary>
 		/// <returns></returns>
-		public List<Babel.Declaration> RetrieveCompletions()
+		public List<LanguageServices.Declaration> RetrieveCompletions()
 		{
 			if (_babelCompletions == null)
 			{
-				_babelCompletions = new List<Babel.Declaration>();
+				_babelCompletions = new List<LanguageServices.Declaration>();
 
 				foreach (PrologFunction function in _functions)
 				{

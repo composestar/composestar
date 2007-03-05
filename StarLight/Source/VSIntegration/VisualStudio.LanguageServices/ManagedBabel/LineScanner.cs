@@ -10,10 +10,10 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System;
-using Composestar.StarLight.VisualStudio.Babel.Parser;
+using Composestar.StarLight.VisualStudio.LanguageServices.Parser;
 using Microsoft.VisualStudio.Package;
 
-namespace Composestar.StarLight.VisualStudio.Babel
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
 	/// <summary>
 	/// LineScanner wraps the GPLEX scanner to provide the IScanner interface
@@ -22,11 +22,11 @@ namespace Composestar.StarLight.VisualStudio.Babel
 	/// </summary>
 	public class LineScanner : IScanner
 	{
-		Babel.Parser.IColorScan lex = null;
+		LanguageServices.Parser.IColorScan lex = null;
 
 		public LineScanner()
 		{
-			this.lex = new Babel.Lexer.Scanner();
+			this.lex = new LanguageServices.Lexer.Scanner();
 		}
 
 		public bool ScanTokenAndProvideInfoAboutIt(TokenInfo tokenInfo, ref int state)

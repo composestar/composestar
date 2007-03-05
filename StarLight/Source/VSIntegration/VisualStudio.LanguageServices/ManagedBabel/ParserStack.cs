@@ -10,7 +10,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 
-namespace Composestar.StarLight.VisualStudio.Babel.ParserGenerator
+namespace Composestar.StarLight.VisualStudio.LanguageServices.ParserGenerator
 {
     public class ParserStack<T>
     {

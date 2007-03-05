@@ -15,7 +15,7 @@ using System.Text;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Package;
 
-namespace Composestar.StarLight.VisualStudio.Babel
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
 	public class Declarations : Microsoft.VisualStudio.Package.Declarations
 	{

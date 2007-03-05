@@ -13,7 +13,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 using System.Collections.Generic;
 
 
-namespace Composestar.StarLight.VisualStudio.Babel.ParserGenerator
+namespace Composestar.StarLight.VisualStudio.LanguageServices.ParserGenerator
 {
     public class State
     {

@@ -35,7 +35,7 @@
 #endregion
 
 #region Using directives
-using Composestar.StarLight.VisualStudio.Babel;
+using Composestar.StarLight.VisualStudio.LanguageServices;
 using Composestar.StarLight.VisualStudio.LanguageServices;
 using Composestar.StarLight.VisualStudio.LanguageServices.Prolog;
 using Microsoft.VisualStudio.Package;
@@ -51,12 +51,12 @@ using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 using VSConstants = Microsoft.VisualStudio.VSConstants;
 #endregion
 
-namespace Composestar.StarLight.VisualStudio.Babel
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
 	/// <summary>
 	/// Resolver
 	/// </summary>
-	public class Resolver : Babel.IASTResolver
+	public class Resolver : LanguageServices.IASTResolver
 	{
 
 		/// <summary>
@@ -161,7 +161,7 @@ namespace Composestar.StarLight.VisualStudio.Babel
 		/// </summary>
 		/// <param name="declarations">Declarations</param>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045")]
-		public void AddSnippets(ref List<Babel.Declaration> declarations)
+		public void AddSnippets(ref List<LanguageServices.Declaration> declarations)
 		{
 			if (null == this.expansionsList)
 			{
@@ -180,13 +180,13 @@ namespace Composestar.StarLight.VisualStudio.Babel
 		/// <param name="line">The line.</param>
 		/// <param name="col">The col.</param>
 		/// <returns></returns>
-		public IList<Babel.Declaration> FindCompletions(object result, int line, int col)
+		public IList<LanguageServices.Declaration> FindCompletions(object result, int line, int col)
 		{
 			if (result != null)
 				System.Diagnostics.Trace.WriteLine(result.ToString());
 
 			// Add prolog functions
-			List<Babel.Declaration> members = new List<Babel.Declaration>();
+			List<LanguageServices.Declaration> members = new List<LanguageServices.Declaration>();
 
 			members.AddRange(_prologFunctions.RetrieveCompletions() );
 		
@@ -241,14 +241,14 @@ namespace Composestar.StarLight.VisualStudio.Babel
 		/// <param name="line">The line.</param>
 		/// <param name="col">The col.</param>
 		/// <returns></returns>
-		public IList<Babel.Declaration> FindMembers(object result, int line, int col)
+		public IList<LanguageServices.Declaration> FindMembers(object result, int line, int col)
 		{
 			if (result != null)
 				System.Diagnostics.Trace.WriteLine(result.ToString());
 			else
 				result = "";
 
-			List<Babel.Declaration> members = new List<Babel.Declaration>();
+			List<LanguageServices.Declaration> members = new List<LanguageServices.Declaration>();
 					
 
 			string sel = ((string)result);
@@ -303,14 +303,14 @@ namespace Composestar.StarLight.VisualStudio.Babel
 		/// <param name="col">The col.</param>
 		/// <param name="name">The name.</param>
 		/// <returns></returns>
-		public IList<Babel.Method> FindMethods(object result, int line, int col, string name)
+		public IList<LanguageServices.Method> FindMethods(object result, int line, int col, string name)
 		{
 			if (result != null)
 				System.Diagnostics.Trace.WriteLine(name);
 			else
 				result = "";
 
-			List<Babel.Method> members = new List<Babel.Method>();
+			List<LanguageServices.Method> members = new List<LanguageServices.Method>();
 
 			if (types.Count == 0)
 			{

@@ -15,7 +15,7 @@ using System.Text;
 using System.Diagnostics;
 
 
-namespace Composestar.StarLight.VisualStudio.Babel.ParserGenerator
+namespace Composestar.StarLight.VisualStudio.LanguageServices.ParserGenerator
 {
 	public abstract class ShiftReduceParser<YYSTYPE,YYLTYPE> 
         where YYSTYPE : struct

@@ -35,14 +35,14 @@
 #endregion
 
 #region Using directives
-using Composestar.StarLight.VisualStudio.Babel.Parser;
+using Composestar.StarLight.VisualStudio.LanguageServices.Parser;
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.TextManager.Interop;
 using System;
 using System.Collections.Generic;
 #endregion
 
-namespace Composestar.StarLight.VisualStudio.Babel
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
 	/// <summary>
 	/// Configuration

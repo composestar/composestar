@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TextManager.Interop;
 
 
-namespace Composestar.StarLight.VisualStudio.Babel
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
 	public struct Declaration : IComparable
 	{

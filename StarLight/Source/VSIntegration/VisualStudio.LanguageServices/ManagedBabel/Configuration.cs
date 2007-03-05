@@ -12,10 +12,10 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Package;
-using Composestar.StarLight.VisualStudio.Babel.Parser;
+using Composestar.StarLight.VisualStudio.LanguageServices.Parser;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace Composestar.StarLight.VisualStudio.Babel
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
 	public static partial class Configuration
 	{

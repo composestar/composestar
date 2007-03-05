@@ -20,7 +20,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Composestar.StarLight.VisualStudio.Babel;
+using Composestar.StarLight.VisualStudio.LanguageServices;
 
 namespace Composestar.StarLight.VisualStudio.LanguageServices
 {

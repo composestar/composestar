@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace Composestar.StarLight.VisualStudio.Babel.ParserGenerator
+namespace Composestar.StarLight.VisualStudio.LanguageServices.ParserGenerator
 {
     /// <summary>
     /// Classes implementing this interface must supply a

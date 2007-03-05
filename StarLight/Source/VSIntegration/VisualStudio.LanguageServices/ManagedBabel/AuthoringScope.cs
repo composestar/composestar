@@ -15,7 +15,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Package;
 
-namespace Composestar.StarLight.VisualStudio.Babel
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
 	public class AuthoringScope : Microsoft.VisualStudio.Package.AuthoringScope
 	{

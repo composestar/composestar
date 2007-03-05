@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
 using VSConstants = Microsoft.VisualStudio.VSConstants;
-using Composestar.StarLight.VisualStudio.Babel;
+using Composestar.StarLight.VisualStudio.LanguageServices;
 
 namespace Composestar.StarLight.VisualStudio.LanguageServices
 {

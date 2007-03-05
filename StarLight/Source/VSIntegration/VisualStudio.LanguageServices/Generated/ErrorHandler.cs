@@ -13,9 +13,9 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
-using Composestar.StarLight.VisualStudio.Babel.ParserGenerator;
+using Composestar.StarLight.VisualStudio.LanguageServices.ParserGenerator;
 
-namespace Composestar.StarLight.VisualStudio.Babel.Parser
+namespace Composestar.StarLight.VisualStudio.LanguageServices.Parser
 {
     public class Error : IComparable<Error>
     {

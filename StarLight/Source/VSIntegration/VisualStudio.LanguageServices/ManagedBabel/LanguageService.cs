@@ -15,7 +15,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Package;
 
-namespace Composestar.StarLight.VisualStudio.Babel
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
 	public class BabelLanguageService : Microsoft.VisualStudio.Package.LanguageService, IVsLanguageLineIndent
 	{
@@ -101,8 +101,8 @@ namespace Composestar.StarLight.VisualStudio.Babel
             if (req.DirtySpan.iStartIndex != req.DirtySpan.iEndIndex
                 || req.DirtySpan.iStartLine != req.DirtySpan.iEndLine)
 			{
-                Babel.Parser.ErrorHandler handler = new Babel.Parser.ErrorHandler();
-                Babel.Lexer.Scanner scanner = new Babel.Lexer.Scanner(); // string interface
+                LanguageServices.Parser.ErrorHandler handler = new LanguageServices.Parser.ErrorHandler();
+                LanguageServices.Lexer.Scanner scanner = new LanguageServices.Lexer.Scanner(); // string interface
                 Parser.Parser parser = new Parser.Parser();  // use noarg constructor
 
                 parser.scanner = scanner;
@@ -122,7 +122,7 @@ namespace Composestar.StarLight.VisualStudio.Babel
 				// for the time being, just pull errors back from the error handler
                 if (handler.ErrNum > 0)
                 {
-                    foreach (Babel.Parser.Error error in handler.SortedErrorList())
+                    foreach (LanguageServices.Parser.Error error in handler.SortedErrorList())
                     {
                         TextSpan span = new TextSpan();
                         span.iStartLine = span.iEndLine = error.line - 1;
