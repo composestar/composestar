@@ -15,8 +15,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,14 +38,17 @@ public class VisComObjectInputStream extends ObjectInputStream
 	/**
 	 * Composestar package to jar file table
 	 */
-	protected static Map<String, String> jarNames;
+	private static Map<String, String[]> pkgToJar;
 
 	static
 	{
-		jarNames = new HashMap<String, String>();
-		jarNames.put("DotNET", "ComposestarDotNET.jar");
-		jarNames.put("Java", "ComposestarJava.jar");
-		jarNames.put("C", "ComposestarC.jar");
+		pkgToJar = new HashMap<String, String[]>();
+		String[] jars = new String[] { "ComposestarDotNET.jar", "Starlight.jar" };
+		pkgToJar.put("DotNET", jars);
+		jars = new String[] { "ComposestarJava.jar" };
+		pkgToJar.put("Java", jars);
+		jars = new String[] { "ComposestarC.jar" };
+		pkgToJar.put("C", jars);
 	}
 
 	protected Map<String, URLClassLoader> loaders = new HashMap<String, URLClassLoader>();
@@ -53,9 +58,9 @@ public class VisComObjectInputStream extends ObjectInputStream
 		super();
 	}
 
-	public VisComObjectInputStream(InputStream arg0) throws IOException
+	public VisComObjectInputStream(InputStream is) throws IOException
 	{
-		super(arg0);
+		super(is);
 	}
 
 	/*
@@ -78,36 +83,84 @@ public class VisComObjectInputStream extends ObjectInputStream
 				String[] pkg = desc.getName().split("\\.");
 				if (pkg.length >= 2)
 				{
-					// our packages have the form: Composestar<Port>.jar
-					String jarName = jarNames.get(pkg[1]);
-					if (jarName == null)
+					ClassLoader loader = getLoader(pkg[1]);
+					if (loader == null)
 					{
-						logger.fatal("Unregistered jar archive for Composestar package: Composestar." + pkg[1]);
 						throw e;
 					}
-
-					logger.debug("Jar name: " + jarName);
-					if (!loaders.containsKey(jarName))
-					{
-						URL[] urls = new URL[1];
-						File fl = new File(jarName);
-						logger.debug(fl);
-						urls[0] = fl.toURI().toURL();
-						if (urls[0] == null)
-						{
-							logger.fatal("Unable to load required JAR file: " + jarName);
-							throw e;
-						}
-						else
-						{
-							loaders.put(jarName, new URLClassLoader(urls));
-						}
-					}
-					URLClassLoader loader = loaders.get(jarName);
 					return loader.loadClass(desc.getName());
 				}
 			}
 			throw e;
 		}
+	}
+
+	/**
+	 * Returns an class loader for the specified composestar package
+	 * 
+	 * @param pkg
+	 * @return
+	 */
+	protected ClassLoader getLoader(String pkg)
+	{
+		String[] jars = pkgToJar.get(pkg);
+		if (jars == null)
+		{
+			logger.fatal("Unregistered jar archive for Composestar package: Composestar." + pkg);
+			return null;
+		}
+		logger.debug("Found jars: " + jars);
+
+		// find an existing loader
+		URLClassLoader loader = null;
+		for (String jar : jars)
+		{
+			if (loaders.containsKey(jar))
+			{
+				loader = loaders.get(jar);
+				break;
+			}
+		}
+
+		// create a new loader
+		if (loader == null)
+		{
+			ArrayList<URL> urls = new ArrayList<URL>();
+			for (String jar : jars)
+			{
+				File fl = new File(jar);
+				URL url = null;
+				try
+				{
+					url = fl.toURI().toURL();
+				}
+				catch (MalformedURLException e)
+				{
+					// nop
+				}
+				if (url != null)
+				{
+					urls.add(url);
+				}
+
+			}
+
+			if (urls.size() == 0)
+			{
+				logger.fatal("Unable to load any of the suggested jars: " + jars);
+				return null;
+			}
+
+			// register loader for this package
+			URL[] urlsArray = new URL[urls.size()];
+			urls.toArray(urlsArray);
+			loader = URLClassLoader.newInstance(urlsArray);
+			for (String jar : jars)
+			{
+				loaders.put(jar, loader);
+			}
+		}
+
+		return loader;
 	}
 }

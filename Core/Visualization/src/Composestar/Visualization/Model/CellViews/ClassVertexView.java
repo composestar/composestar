@@ -26,6 +26,8 @@ import org.jgraph.graph.VertexView;
 public class ClassVertexView extends VertexView
 {
 	private static final long serialVersionUID = 249471576219357145L;
+	
+	protected static final ClassVertexRenderer RENDERER = new ClassVertexRenderer();
 
 	/**
 	 * Height of the class name
@@ -47,8 +49,6 @@ public class ClassVertexView extends VertexView
 		super(cell);
 	}
 
-	protected static final ClassVertexRenderer renderer = new ClassVertexRenderer();
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -57,7 +57,7 @@ public class ClassVertexView extends VertexView
 	@Override
 	public CellViewRenderer getRenderer()
 	{
-		return renderer;
+		return RENDERER;
 	}
 
 	/**

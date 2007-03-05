@@ -38,19 +38,19 @@ public class Viewport extends JFrame
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.Viewport");
 
-	protected VisCom controller;
+	protected transient VisCom controller;
 
-	private JMenuBar mainMenu = null;
+	private JMenuBar mainMenu;
 
-	private JMenu miFile = null;
+	private JMenu miFile;
 
-	private JMenuItem miOpen = null;
+	private JMenuItem miOpen;
 
-	private JMenuItem miExport = null;
+	private JMenuItem miExport;
 
-	private JMenuItem miClose = null;
+	private JMenuItem miClose;
 
-	private JTabbedPane views = null;
+	private JTabbedPane views;
 
 	public Viewport(VisCom inController) throws HeadlessException
 	{

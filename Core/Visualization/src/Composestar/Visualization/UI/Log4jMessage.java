@@ -24,15 +24,15 @@ public class Log4jMessage extends JDialog
 {
 	private static final long serialVersionUID = 108194530699529795L;
 
-	private JPanel content = null;
+	private JPanel content;
 
-	private JOptionPane message = null;
+	private JOptionPane message;
 
-	private JTabbedPane tabs = null;
+	private JTabbedPane tabs;
 
-	private JTextPane trace = null;
+	private JTextPane trace;
 
-	private JScrollPane traceScroll = null;
+	private JScrollPane traceScroll;
 
 	/**
 	 * @param owner
@@ -119,7 +119,7 @@ public class Log4jMessage extends JDialog
 			{
 				public void propertyChange(java.beans.PropertyChangeEvent e)
 				{
-					if ((e.getPropertyName().equals("value")))
+					if (e.getPropertyName().equals("value"))
 					{
 						dispose(); 
 					}
