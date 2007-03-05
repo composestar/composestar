@@ -29,6 +29,36 @@ public class ClassVertex extends BaseGraphCell
 {
 	private static final long serialVersionUID = -8859175705375540286L;
 
+	/**
+	 * just show the class object without any members
+	 */
+	public static final int MEMBERS_NONE = 0;
+
+	/**
+	 * include all members
+	 */
+	public static final int MEMBERS_ALL = 255;
+
+	/**
+	 * include all public members
+	 */
+	public static final int MEMBERS_PUBLIC = 1;
+
+	/**
+	 * include all protected members
+	 */
+	public static final int MEMBERS_PROTECTED = 2;
+
+	/**
+	 * include all private members
+	 */
+	public static final int MEMBERS_PRIVATE = 4;
+
+	/**
+	 * force inclusion of members that are touched by compose* in any way
+	 */
+	public static final int MEMBERS_FORCE_RELEVANT = 128;
+
 	protected Type platformRep;
 
 	protected ClassFieldsVertex fields;
@@ -37,37 +67,40 @@ public class ClassVertex extends BaseGraphCell
 
 	public ClassVertex(Type inPlatformRep)
 	{
-		this(inPlatformRep, 0);
+		this(inPlatformRep, MEMBERS_ALL);
 	}
 
+	/**
+	 * @param inPlatformRep
+	 * @param filter inclusion of class members
+	 */
 	public ClassVertex(Type inPlatformRep, int filter)
 	{
 		super(inPlatformRep);
 		platformRep = inPlatformRep;
-		addChildren(0);
+		addChildren(filter);
 	}
 
 	protected void addChildren(int filter)
 	{
-		// filter
-		// none
-		// relevate
-		// all (e.g. show nothing)
 		AttributeMap attrs = getAttributes();
+		GraphConstants.setEditable(attrs, false);
+		GraphConstants.setChildrenSelectable(attrs, false);
 		GraphConstants.setBorderColor(attrs, Color.BLACK);
 		GraphConstants.setVerticalAlignment(attrs, JLabel.TOP);
 		GraphConstants.setFont(attrs, GraphConstants.DEFAULTFONT.deriveFont(Font.BOLD, 12));
 		GraphConstants.setGroupOpaque(attrs, true);
 		GraphConstants.setOpaque(attrs, true);
-		GraphConstants.setBackground(attrs, new Color(0xeeeeff));
-		GraphConstants.setInset(attrs, 2);
+		GraphConstants.setBackground(attrs, new Color(0xEEEEFF));
+		GraphConstants.setInset(attrs, 4);
 		GraphConstants.setSizeableAxis(attrs, GraphConstants.X_AXIS);
+		GraphConstants.setHorizontalAlignment(attrs, JLabel.CENTER);
 
-		fields = new ClassFieldsVertex(platformRep);
+		fields = new ClassFieldsVertex(platformRep, filter);
 		add(fields);
 		fields.setParent(this);
 
-		methods = new ClassMethodsVertex(platformRep);
+		methods = new ClassMethodsVertex(platformRep, filter);
 		add(methods);
 		methods.setParent(this);
 	}

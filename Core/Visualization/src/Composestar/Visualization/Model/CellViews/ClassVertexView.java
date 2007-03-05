@@ -12,10 +12,10 @@ package Composestar.Visualization.Model.CellViews;
 
 import java.awt.geom.Rectangle2D;
 
-import org.jgraph.graph.CellMapper;
+import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.CellViewRenderer;
-import org.jgraph.graph.GraphModel;
+import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.VertexView;
 
 /**
@@ -25,7 +25,17 @@ import org.jgraph.graph.VertexView;
  */
 public class ClassVertexView extends VertexView
 {
+	private static final long serialVersionUID = 249471576219357145L;
+
+	/**
+	 * Height of the class name
+	 */
 	protected double labelHeight = 20.0;
+
+	/**
+	 * Location between fields and methods
+	 */
+	protected double separatorPos = 40.0;
 
 	public ClassVertexView()
 	{
@@ -50,6 +60,22 @@ public class ClassVertexView extends VertexView
 		return renderer;
 	}
 
+	/**
+	 * @see #labelHeight
+	 */
+	public double getLabelHeight()
+	{
+		return labelHeight;
+	}
+
+	/**
+	 * @see #separatorPos
+	 */
+	public double getSeparatorPos()
+	{
+		return separatorPos;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -58,12 +84,6 @@ public class ClassVertexView extends VertexView
 	@Override
 	protected void updateGroupBounds()
 	{
-		// CellView[] childViews = getChildViews();
-		// Rectangle2D fBounds = childViews[0].getBounds();
-		// Rectangle2D mBounds = childViews[1].getBounds();
-		// mBounds.setFrame(mBounds.getX(), mBounds.getY()-20,
-		// mBounds.getWidth(), mBounds.getHeight());
-
 		super.updateGroupBounds();
 
 		// update the bounds to include the label area
@@ -72,4 +92,24 @@ public class ClassVertexView extends VertexView
 				+ labelHeight);
 	}
 
+	@Override
+	public void update()
+	{
+		super.update();
+		CellView[] childViews = getChildViews();
+		if (childViews.length >= 2)
+		{
+			Rectangle2D fBounds = childViews[0].getBounds();
+			int inset = GraphConstants.getInset(getAllAttributes());
+			separatorPos = labelHeight + fBounds.getHeight() + inset * 2 - 1;
+			// 1 is for the border
+
+			Rectangle2D mBounds = childViews[1].getBounds();
+			double dy = fBounds.getY() + fBounds.getHeight() + inset - mBounds.getY();			
+			if (dy != 0)
+			{
+				((AbstractCellView) childViews[1]).translate(0, dy);
+			}
+		}
+	}
 }

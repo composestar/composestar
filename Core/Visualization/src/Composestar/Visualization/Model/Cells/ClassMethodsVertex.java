@@ -10,13 +10,7 @@
 
 package Composestar.Visualization.Model.Cells;
 
-import java.awt.geom.Rectangle2D;
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.JLabel;
-
-import org.jgraph.graph.GraphConstants;
 
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
@@ -27,16 +21,24 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-public class ClassMethodsVertex extends ClassPartVertex
+public class ClassMethodsVertex extends ClassMembersVertex
 {
 	private static final long serialVersionUID = 5614673482878309394L;
 
 	private static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.Cells.ClassMethodsVertex");
 
-	public ClassMethodsVertex(Type platformRep)
+	public ClassMethodsVertex(Type platformRep, int filter)
 	{
 		super();
-		addMethods(platformRep);
+		if (filter != ClassVertex.MEMBERS_NONE)
+		{
+			addMethods(platformRep);
+		}
+		if (members.size() == 0)
+		{
+			// empty, add dummy entry
+			addDummy();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -48,10 +50,6 @@ public class ClassMethodsVertex extends ClassPartVertex
 			logger.debug("Adding method " + meth.getName());
 			addEntry(getStringRep(meth), idx);
 			idx++;
-		}
-		if (idx == 0)
-		{
-			addDummy();
 		}
 	}
 

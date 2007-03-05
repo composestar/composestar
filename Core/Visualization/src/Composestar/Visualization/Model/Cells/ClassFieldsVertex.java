@@ -10,14 +10,7 @@
 
 package Composestar.Visualization.Model.Cells;
 
-import java.awt.Color;
-import java.awt.geom.Rectangle2D;
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.JLabel;
-
-import org.jgraph.graph.GraphConstants;
 
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.Type;
@@ -28,20 +21,24 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-public class ClassFieldsVertex extends ClassPartVertex
+public class ClassFieldsVertex extends ClassMembersVertex
 {
 	private static final long serialVersionUID = 4721958173085369567L;
 
 	private static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.Cells.ClassFieldsVertex");
 
-	public ClassFieldsVertex(Type platformRep)
+	public ClassFieldsVertex(Type platformRep, int filter)
 	{
 		super();
-		Map attr = getAttributes();
-		GraphConstants.setOpaque(attr, true);
-		GraphConstants.setBackground(attr, Color.GREEN);
-
-		addFields(platformRep);
+		if (filter != ClassVertex.MEMBERS_NONE)
+		{
+			addFields(platformRep);
+		}
+		if (members.size() == 0)
+		{
+			// empty, add dummy entry
+			addDummy();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,11 +50,6 @@ public class ClassFieldsVertex extends ClassPartVertex
 			logger.debug("Adding field " + field.getUnitName());
 			addEntry(field.getUnitName() + ": " + field.getUnitType(), idx);
 			idx++;
-		}
-		if (idx == 0)
-		{
-			// empty, add dummy entry
-			addDummy();
 		}
 	}
 }

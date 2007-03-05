@@ -12,9 +12,7 @@ package Composestar.Visualization.Model.CellViews;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
 
-import org.jgraph.graph.CellView;
 import org.jgraph.graph.VertexRenderer;
 
 /**
@@ -22,6 +20,8 @@ import org.jgraph.graph.VertexRenderer;
  */
 public class ClassVertexRenderer extends VertexRenderer
 {
+	private static final long serialVersionUID = -5036490366123202126L;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -31,9 +31,9 @@ public class ClassVertexRenderer extends VertexRenderer
 	public void paint(Graphics g)
 	{
 		super.paint(g);
-		CellView[] views = view.getChildViews();
-		Rectangle2D bounds = views[0].getBounds();
+		ClassVertexView classView = (ClassVertexView) view;
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawLine(0, 20, getWidth(), 20);
+		g2d.drawLine(0, (int) classView.getLabelHeight(), getWidth(), (int) classView.getLabelHeight());
+		g2d.drawLine(0, (int) classView.getSeparatorPos(), getWidth(), (int) classView.getSeparatorPos());
 	}
 }
