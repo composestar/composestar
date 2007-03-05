@@ -23,12 +23,14 @@
 		<ant target="clean" dir="Compiletime" inheritRefs="true" />
 		<ant target="clean" dir="Runtime" inheritRefs="true" />
 		<ant target="clean" dir="Plugin" inheritRefs="true" />
+		<ant target="clean" dir="Visualization" inheritRefs="true" />
 	</target>
 	
 	
 	<target name="build">
 		<ant target="build" dir="Compiletime" inheritRefs="true" />
 		<ant target="build" dir="Runtime" inheritRefs="true" />
+		<ant target="build" dir="Visualization" inheritRefs="true" />
 	</target>
 	
 	<target name="plugin">
@@ -39,6 +41,7 @@
 		<ant target="install" dir="Compiletime" inheritRefs="true" />
 		<ant target="install" dir="Runtime" inheritRefs="true" />
 		<ant target="install" dir="Plugin" inheritRefs="true" />
+		<ant target="install" dir="Visualization" inheritRefs="true" />
 	</target>
 	
 	<target name="init_qa" depends="init">
@@ -49,6 +52,7 @@
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.core}${file.separator}Compiletime${file.separator}${out.build}" />
 			<class location="${build.core}${file.separator}Runtime${file.separator}${out.build}" />
+			<class location="${build.core}${file.separator}Visualization${file.separator}${out.build}" />
 			<sourcePath path="${build.core}${file.separator}Compiletime${file.separator}src" />
 			<sourcePath path="${build.core}${file.separator}Runtime${file.separator}src" />
 			<auxClasspath refid="lib.core" />
@@ -72,6 +76,9 @@
 			<FileSet dir="${build.core}${file.separator}Runtime${file.separator}src">
 				<include name="**/*.java" />
 				<exclude name="Composestar/RuntimeCore/CODER/BreakPoint/Parsers/*/*.java" />
+			</FileSet>
+			<FileSet dir="${build.core}${file.separator}Visualization${file.separator}src">
+				<include name="**/*.java" />
 			</FileSet>
 		</checkstyle>
 		<xslt in="${out.qa}${file.separator}checkstyle-result.xml" out="${out.qa}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
