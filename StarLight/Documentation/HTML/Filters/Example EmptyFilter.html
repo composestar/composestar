@@ -58,9 +58,9 @@
                             {<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterActionAttribute</span>(<span
                                 style="color: maroon">"StartEmptyAction"</span>, <span style="color: #2b91af">FilterActionAttribute</span>.<span
-                                    style="color: #2b91af">FilterFlowBehaviour</span>.Continue,<br />
+                                    style="color: #2b91af">FilterFlowBehavior</span>.Continue,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">FilterActionAttribute</span>.<span
-                                style="color: #2b91af">MessageSubstitutionBehaviour</span>.Original)]<br />
+                                style="color: #2b91af">MessageSubstitutionBehavior</span>.Original)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
                                 class</span> <span style="color: #2b91af">StartEmptyAction</span> : <span style="color: #2b91af">
                                     FilterAction</span><br />
@@ -86,9 +86,9 @@
                             {<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterActionAttribute</span>(<span
                                 style="color: maroon">"StopEmptyAction"</span>, <span style="color: #2b91af">FilterActionAttribute</span>.<span
-                                    style="color: #2b91af">FilterFlowBehaviour</span>.Continue,<br />
+                                    style="color: #2b91af">FilterFlowBehavior</span>.Continue,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">FilterActionAttribute</span>.<span
-                                style="color: #2b91af">MessageSubstitutionBehaviour</span>.Original)]<br />
+                                style="color: #2b91af">MessageSubstitutionBehavior</span>.Original)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
                                 class</span> <span style="color: #2b91af">StopEmptyAction</span> : <span style="color: #2b91af">
                                     FilterAction</span><br />
@@ -112,7 +112,7 @@
                         <code><span style="color: blue">inputfilters</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af"> do_nothing</span> : <span style="color: #2b91af">
                                 Empty</span> = { <span style="color: #2b91af">True</span> => [*.*]
-                            }; </code>
+                            } </code>
                     </td>
                 </tr>
             </table>

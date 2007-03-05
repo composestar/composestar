@@ -67,9 +67,9 @@
                             {<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterActionAttribute</span>(<span
                                 style="color: maroon">"StartTimerAction"</span>, <span style="color: #2b91af">FilterActionAttribute</span>.<span
-                                    style="color: #2b91af">FilterFlowBehaviour</span>.Continue,<br />
+                                    style="color: #2b91af">FilterFlowBehavior</span>.Continue,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">FilterActionAttribute</span>.<span
-                                style="color: #2b91af">MessageSubstitutionBehaviour</span>.Original)]<br />
+                                style="color: #2b91af">MessageSubstitutionBehavior</span>.Original)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
                                 class</span> <span style="color: #2b91af">StartTimerAction</span> : <span style="color: #2b91af">
                                     FilterAction</span><br />
@@ -138,9 +138,9 @@
                             {<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterActionAttribute</span>(<span
                                 style="color: maroon">"StopTimerAction"</span>, <span style="color: #2b91af">FilterActionAttribute</span>.<span
-                                    style="color: #2b91af">FilterFlowBehaviour</span>.Continue,<br />
+                                    style="color: #2b91af">FilterFlowBehavior</span>.Continue,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">FilterActionAttribute</span>.<span
-                                style="color: #2b91af">MessageSubstitutionBehaviour</span>.Original)]<br />
+                                style="color: #2b91af">MessageSubstitutionBehavior</span>.Original)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public class</span> <span style="color: #2b91af">
                                 StopTimerAction</span> : <span style="color: #2b91af">FilterAction</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -255,13 +255,13 @@
                 </tr>
             </table>
             <p>
-                Using the EmptyFilter in a concern</p>
+                Using the Profiling Filter in a concern</p>
             <table border="1" width="95%">
                 <tr>
                     <td>
                         <code><span style="color: blue">inputfilters</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">do_timing</span> : <span style="color: #2b91af">
-                                Profiling</span> = { <span style="color: #2b91af">True</span> => [*.*] }; </code>
+                                Profiling</span> = { <span style="color: #2b91af">True</span> => [*.*] } </code>
                     </td>
                 </tr>
             </table>
