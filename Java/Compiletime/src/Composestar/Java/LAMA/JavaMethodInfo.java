@@ -34,6 +34,11 @@ public class JavaMethodInfo extends MethodInfo
 	{
 		super();
 	}
+	
+	public JavaMethodInfo(boolean dummy)
+	{
+		super(dummy);
+	}
 
 	/**
 	 * Constructor.
@@ -66,7 +71,7 @@ public class JavaMethodInfo extends MethodInfo
 	 */
 	public MethodInfo getClone(String name, Type actualParent)
 	{
-		JavaMethodInfo mi = new JavaMethodInfo();
+		JavaMethodInfo mi = new JavaMethodInfo(true);
 		mi.setName(name);
 
 		// set MethodInfo variables

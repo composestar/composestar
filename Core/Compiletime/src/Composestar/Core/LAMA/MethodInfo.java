@@ -30,7 +30,19 @@ public abstract class MethodInfo extends ProgramElement
 
 	public MethodInfo()
 	{
-		UnitRegister.instance().registerLanguageUnit(this);
+		this(false);
+	}
+
+	/**
+	 * @param dummy if true don't register this language unit, should be used
+	 *            when temporary clones are needed
+	 */
+	public MethodInfo(boolean dummy)
+	{
+		if (!dummy)
+		{
+			UnitRegister.instance().registerLanguageUnit(this);
+		}
 		Parameters = new ArrayList();
 		CallsToOtherMethods = new HashSet();
 		ReifiedMessageBehavior = new HashSet();
@@ -49,7 +61,8 @@ public abstract class MethodInfo extends ProgramElement
 	/**
 	 * This method should make a clone of the MethodInfo with the name and
 	 * parentType changed to the given name and actualParent. The parameters and
-	 * return type should stay the same.
+	 * return type should stay the same. The clone is NOT added to the
+	 * UnitRegister.
 	 * 
 	 * @param name
 	 * @param actualParent
@@ -220,7 +233,8 @@ public abstract class MethodInfo extends ProgramElement
 			if (ReturnType == null)
 			{
 				return null;
-				// throw new RuntimeException("Unable to find type specification for
+				// throw new RuntimeException("Unable to find type specification
+				// for
 				// '" + ReturnTypeString + "'");
 			}
 		}

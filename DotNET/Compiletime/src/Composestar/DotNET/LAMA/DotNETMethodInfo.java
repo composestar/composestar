@@ -67,11 +67,16 @@ public class DotNETMethodInfo extends MethodInfo
 	public boolean IsDeclaredHere;
 
 	/**
-	 * @roseuid 401B84CF0212
+	 * 
 	 */
 	public DotNETMethodInfo()
 	{
 		super();
+	}
+	
+	public DotNETMethodInfo(boolean dummy)
+	{
+		super(dummy);
 	}
 
 	// add clone: currently used to support selector name conversion
@@ -79,7 +84,7 @@ public class DotNETMethodInfo extends MethodInfo
 	// the parent
 	public MethodInfo getClone(String n, Type actualParent)
 	{
-		DotNETMethodInfo mi = new DotNETMethodInfo();
+		DotNETMethodInfo mi = new DotNETMethodInfo(true);
 		mi.setName(n);
 		// set MethodInfo variables
 		// mi.Parent = this.Parent;

@@ -44,6 +44,11 @@ public class CMethodInfo extends MethodInfo
 	{
 		super();
 	}
+	
+	public CMethodInfo(boolean dummy)
+	{
+		super(dummy);
+	}
 
 	public int callingConvention()
 	{
@@ -72,7 +77,7 @@ public class CMethodInfo extends MethodInfo
 
 	public MethodInfo getClone(String n, Type actualParent)
 	{
-		CMethodInfo mi = new CMethodInfo();
+		CMethodInfo mi = new CMethodInfo(true);
 		mi.setName(n);
 		mi.Parent = actualParent;
 		mi.Parameters = Parameters;

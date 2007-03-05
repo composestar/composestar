@@ -33,7 +33,7 @@ public class MasterManager
 	/**
 	 * The JVM options
 	 */
-	protected String jvmOptions = "";
+	protected String jvmOptions = "-Xmx128m";
 
 	/**
 	 * If true the output is logged to a file.
