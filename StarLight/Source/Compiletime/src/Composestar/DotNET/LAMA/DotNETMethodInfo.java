@@ -120,6 +120,11 @@ public class DotNETMethodInfo extends MethodInfo
 	{
 		this.isPublic = isPublic;
 	}
+	
+	public boolean isProtected()
+	{
+		return false; // TODO: should return the isFamily value     
+	}
 
 	public boolean isStatic()
 	{
