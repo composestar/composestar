@@ -100,6 +100,24 @@ public class JavaFieldInfo extends FieldInfo
 
 		return null;
 	}
+	
+	@Override
+	public boolean isPrivate()
+	{
+		return javassist.Modifier.isPrivate(theField.getModifiers());
+	}
+
+	@Override
+	public boolean isProtected()
+	{
+		return javassist.Modifier.isProtected(theField.getModifiers());
+	}
+
+	@Override
+	public boolean isPublic()
+	{
+		return javassist.Modifier.isPublic(theField.getModifiers());
+	}
 
 	/**
 	 * Custom deserialization of this object

@@ -339,4 +339,10 @@ public abstract class MethodInfo extends ProgramElement
 
 		return true;
 	}
+	
+	public abstract boolean isPublic();
+	
+	public abstract boolean isPrivate();
+	
+	public abstract boolean isProtected();
 }

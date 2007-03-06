@@ -11,9 +11,12 @@
 package Composestar.Visualization.Model.Cells;
 
 import java.awt.geom.Rectangle2D;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.tree.MutableTreeNode;
 
@@ -27,6 +30,8 @@ import org.jgraph.graph.GraphConstants;
  */
 public abstract class ClassMembersVertex extends BaseGraphCell
 {
+	private static Map<Integer,Icon> iconMap;
+	
 	protected static final double BASE_X = 100;
 
 	protected static final double BASE_Y = 100;
@@ -68,15 +73,20 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 	 * @param idx position of the entry
 	 * @return
 	 */
-	protected BaseGraphCell addEntry(Object userObject, int idx)
+	protected BaseGraphCell addEntry(Object userObject, int idx, int visibility)
 	{
 		BaseGraphCell cell = new BaseGraphCell(userObject);
 		Rectangle2D bounds = new Rectangle2D.Double(BASE_X, BASE_Y + idx * entryHeight, entryWidth, entryHeight);
 		Map map = cell.getAttributes();
 		GraphConstants.setBounds(map, bounds);
 		GraphConstants.setHorizontalAlignment(map, JLabel.LEFT);
-		// GraphConstants.setAutoSize(map, true); // Hmmm....
-		// TODO: set icon
+		GraphConstants.setHorizontalTextPosition(map, JLabel.RIGHT);
+
+		Icon ico = ClassMembersVertex.getIcon(visibility);
+		if (ico != null)
+		{
+			GraphConstants.setIcon(map, ico);
+		}
 
 		add(cell);
 		cell.setParent(this);
@@ -96,6 +106,47 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 		GraphConstants.setHorizontalAlignment(map, JLabel.LEFT);
 		add(cell);
 		cell.setParent(this);
+	}
+
+	/**
+	 * Returns an icon for the provided visibility. Uses the MEMBERS_PUBLIC,
+	 * MEMBERS_PRIVATE, MEMBERS_PROTECTED contstants of ClassVertex
+	 * 
+	 * @param visibility
+	 * @return
+	 */
+	public static Icon getIcon(int visibility)
+	{
+		if (iconMap == null)
+		{
+			iconMap = new HashMap<Integer,Icon>();
+		}
+		if (!iconMap.containsKey(visibility))
+		{
+			URL resUrl = null;
+			switch (visibility)
+			{
+				case ClassVertex.MEMBERS_PUBLIC:
+					resUrl = ClassMembersVertex.class.getResource("Graphics/field_public.png");
+					break;
+				case ClassVertex.MEMBERS_PRIVATE:
+					resUrl = ClassMembersVertex.class.getResource("Graphics/field_private.png");
+					break;
+				case ClassVertex.MEMBERS_PROTECTED:
+					resUrl = ClassMembersVertex.class.getResource("Graphics/field_protected.png");
+					break;
+				default:
+					// no icon
+			}
+			System.out.println(resUrl);
+			Icon ico = null;
+			if (resUrl != null)
+			{
+				ico = new ImageIcon(resUrl);
+			}
+			iconMap.put(visibility, ico);
+		}
+		return iconMap.get(visibility);
 	}
 
 }

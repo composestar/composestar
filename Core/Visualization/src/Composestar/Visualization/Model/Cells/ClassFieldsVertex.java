@@ -48,7 +48,17 @@ public class ClassFieldsVertex extends ClassMembersVertex
 		for (FieldInfo field : (List<FieldInfo>) platformRep.getFields())
 		{
 			logger.debug("Adding field " + field.getUnitName());
-			addEntry(field.getUnitName() + ": " + field.getUnitType(), idx);
+			// is most cases the default visibility is "package protected"
+			int vis = ClassVertex.MEMBERS_PROTECTED;
+			if (field.isPublic())
+			{
+				vis = ClassVertex.MEMBERS_PUBLIC;
+			}
+			if (field.isPrivate())
+			{
+				vis = ClassVertex.MEMBERS_PRIVATE;
+			}
+			addEntry(field.getUnitName() + ": " + field.getUnitType(), idx, vis);
 			idx++;
 		}
 	}

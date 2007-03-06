@@ -308,6 +308,12 @@ public class DotNETMethodInfo extends MethodInfo
 	{
 		IsPublic = isPublic;
 	}
+	
+	public boolean isProtected()
+	{
+		// "family" means protected in .NET
+		return isFamily();
+	}
 
 	/**
 	 * @return boolean

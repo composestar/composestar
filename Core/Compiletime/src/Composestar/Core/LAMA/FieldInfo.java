@@ -86,6 +86,12 @@ public abstract class FieldInfo extends ProgramElement
 	{
 		return getUnitAttributes().contains(attribute);
 	}
+	
+	public abstract boolean isPublic();
+	
+	public abstract boolean isPrivate();
+	
+	public abstract boolean isProtected();
 
 	/**
 	 * Custom deserialization of this object

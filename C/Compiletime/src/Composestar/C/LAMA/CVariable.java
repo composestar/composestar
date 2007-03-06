@@ -246,4 +246,25 @@ public class CVariable extends FieldInfo
 		out.writeUTF(Name);
 		out.writeObject(ParentFile);
 	}
+
+	@Override
+	public boolean isPrivate()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isProtected()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isPublic()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -154,6 +154,12 @@ public class DotNETFieldInfo extends FieldInfo
 	{
 		this.IsPublic = isPublic;
 	}
+	
+	public boolean isProtected()
+	{
+		// "family" means protected in .NET
+		return isFamily();
+	}
 
 	public boolean isStatic()
 	{

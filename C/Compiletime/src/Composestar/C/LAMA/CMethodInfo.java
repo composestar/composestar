@@ -165,4 +165,25 @@ public class CMethodInfo extends MethodInfo
 		out.writeObject(Variables);
 		out.writeObject(Parent);
 	}
+
+	@Override
+	public boolean isPrivate()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isProtected()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isPublic()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

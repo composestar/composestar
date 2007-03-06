@@ -48,7 +48,17 @@ public class ClassMethodsVertex extends ClassMembersVertex
 		for (MethodInfo meth : (List<MethodInfo>) platformRep.getMethods())
 		{
 			logger.debug("Adding method " + meth.getName());
-			addEntry(getStringRep(meth), idx);
+			// is most cases the default visibility is "package protected"
+			int vis = ClassVertex.MEMBERS_PROTECTED;
+			if (meth.isPublic())
+			{
+				vis = ClassVertex.MEMBERS_PUBLIC;
+			}
+			if (meth.isPrivate())
+			{
+				vis = ClassVertex.MEMBERS_PRIVATE;
+			}
+			addEntry(getStringRep(meth), idx, vis);
 			idx++;
 		}
 	}

@@ -158,6 +158,24 @@ public class JavaMethodInfo extends MethodInfo
 
 		return null;
 	}
+	
+	@Override
+	public boolean isPrivate()
+	{
+		return javassist.Modifier.isPrivate(theMethod.getModifiers());
+	}
+
+	@Override
+	public boolean isProtected()
+	{
+		return javassist.Modifier.isProtected(theMethod.getModifiers());
+	}
+
+	@Override
+	public boolean isPublic()
+	{
+		return javassist.Modifier.isPublic(theMethod.getModifiers());
+	}
 
 	/**
 	 * Custom deserialization of this object
