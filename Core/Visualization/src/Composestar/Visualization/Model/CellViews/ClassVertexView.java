@@ -95,7 +95,6 @@ public class ClassVertexView extends VertexView
 	@Override
 	public void update()
 	{
-		super.update();
 		CellView[] childViews = getChildViews();
 		if (childViews.length >= 2)
 		{
@@ -111,5 +110,6 @@ public class ClassVertexView extends VertexView
 				((AbstractCellView) childViews[1]).translate(0, dy);
 			}
 		}
+		super.update();
 	}
 }

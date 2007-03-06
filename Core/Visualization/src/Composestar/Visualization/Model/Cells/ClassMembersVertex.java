@@ -31,10 +31,6 @@ import org.jgraph.graph.GraphConstants;
 public abstract class ClassMembersVertex extends BaseGraphCell
 {
 	private static Map<Integer,Icon> iconMap;
-	
-	protected static final double BASE_X = 100;
-
-	protected static final double BASE_Y = 100;
 
 	protected double entryHeight = 14;
 
@@ -76,7 +72,7 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 	protected BaseGraphCell addEntry(Object userObject, int idx, int visibility)
 	{
 		BaseGraphCell cell = new BaseGraphCell(userObject);
-		Rectangle2D bounds = new Rectangle2D.Double(BASE_X, BASE_Y + idx * entryHeight, entryWidth, entryHeight);
+		Rectangle2D bounds = new Rectangle2D.Double(0, idx * entryHeight, entryWidth, entryHeight);
 		Map map = cell.getAttributes();
 		GraphConstants.setBounds(map, bounds);
 		GraphConstants.setHorizontalAlignment(map, JLabel.LEFT);
@@ -100,7 +96,7 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 	protected void addDummy()
 	{
 		BaseGraphCell cell = new BaseGraphCell();
-		Rectangle2D bounds = new Rectangle2D.Double(BASE_X, BASE_Y, entryWidth, 4);
+		Rectangle2D bounds = new Rectangle2D.Double(0, 0, entryWidth, 4);
 		Map map = cell.getAttributes();
 		GraphConstants.setBounds(map, bounds);
 		GraphConstants.setHorizontalAlignment(map, JLabel.LEFT);

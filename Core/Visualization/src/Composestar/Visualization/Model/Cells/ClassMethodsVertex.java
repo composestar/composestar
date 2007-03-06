@@ -58,7 +58,8 @@ public class ClassMethodsVertex extends ClassMembersVertex
 			{
 				vis = ClassVertex.MEMBERS_PRIVATE;
 			}
-			addEntry(getStringRep(meth), idx, vis);
+			BaseGraphCell entry = addEntry(getStringRep(meth), idx, vis);
+			members.put(meth.getName(), entry);
 			idx++;
 		}
 	}

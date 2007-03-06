@@ -36,6 +36,12 @@
 	</target>
 
 	<target name="jar" depends="compile">
+	   <copy todir="${out.build}">
+			<fileset dir="src">
+				<include name="**/*.png"/>
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
 		<jar destfile="${out.jar.visualization}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
 

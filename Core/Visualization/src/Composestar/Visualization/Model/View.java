@@ -10,10 +10,7 @@
 
 package Composestar.Visualization.Model;
 
-import java.awt.Font;
-
 import org.jgraph.JGraph;
-import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 
@@ -30,7 +27,6 @@ public abstract class View
 	
 	public View()
 	{
-		GraphConstants.DEFAULTFONT = new Font("sansserif", Font.PLAIN, 10);
 	}
 
 	/**

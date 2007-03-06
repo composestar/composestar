@@ -37,7 +37,10 @@
 
 		<!-- Checks	for	Naming Conventions.					 -->
 		<!-- See http://checkstyle.sf.net/config_naming.html -->
-		<module	name="ConstantName"/>
+		<module	name="ConstantName">
+			<!-- all caps, exceptions: logger (for log4j) -->
+			<property name="format" value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$|^logger$"/>
+		</module>
 		<module	name="LocalFinalVariableName"/>
 		<module	name="LocalVariableName"/>
 		<module	name="MemberName"/>
@@ -46,10 +49,7 @@
 			<!-- package names start with a	Captial	-->
 			<property name="format"	value="^([A-Z][a-zA-Z0-9_]*)(\.[A-Z][a-zA-Z0-9_]*)*$"/>
 		</module>
-		<module	name="ParameterName">
-			<!-- allow '_' in parameters; for example: in_param, out_param -->
-			<property name="format"	value="^[a-z][a-zA-Z0-9_]*$"/>
-		</module>
+		<module	name="ParameterName"/>
 		<module	name="StaticVariableName"/>
 		<module	name="TypeName"/>
 
@@ -144,7 +144,9 @@
 		</module>
 		<module	name="StringLiteralEquality"/>
 		<module	name="PackageDeclaration"/>
-		<module	name="ExplicitInitialization"/>
+		<module	name="ExplicitInitialization">
+			<property name="severity" value="warning"/>
+		</module>
 		<module	name="DefaultComesLast">
 			<property name="severity" value="warning"/>
 		</module>
@@ -179,7 +181,7 @@
 		-->
 		<module	name="UpperEll"/>
 		<!--<module	name="Indentation"/>-->
-
+		
 	</module>
 
 </module>

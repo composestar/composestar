@@ -12,6 +12,7 @@ package Composestar.Visualization.Model.Cells;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JLabel;
 
@@ -65,6 +66,8 @@ public class ClassVertex extends BaseGraphCell
 
 	protected ClassMethodsVertex methods;
 
+	public static final int INSET = 4;
+
 	public ClassVertex(Type inPlatformRep)
 	{
 		this(inPlatformRep, MEMBERS_ALL);
@@ -79,23 +82,28 @@ public class ClassVertex extends BaseGraphCell
 		super(inPlatformRep);
 		platformRep = inPlatformRep;
 		addChildren(filter);
+		translate(10, 10 + 20); // TODO: must store label height somewhere
 	}
 
-	protected void addChildren(int filter)
+	@Override
+	protected void setDefaults()
 	{
 		AttributeMap attrs = getAttributes();
 		GraphConstants.setEditable(attrs, false);
 		GraphConstants.setChildrenSelectable(attrs, false);
 		GraphConstants.setBorderColor(attrs, Color.BLACK);
 		GraphConstants.setVerticalAlignment(attrs, JLabel.TOP);
-		GraphConstants.setFont(attrs, GraphConstants.DEFAULTFONT.deriveFont(Font.BOLD, 12));
+		GraphConstants.setFont(attrs, GraphConstants.getFont(attrs).deriveFont(Font.BOLD, 12));
 		GraphConstants.setGroupOpaque(attrs, true);
 		GraphConstants.setOpaque(attrs, true);
 		GraphConstants.setBackground(attrs, new Color(0xEEEEFF));
-		GraphConstants.setInset(attrs, 4);
+		GraphConstants.setInset(attrs, INSET);
 		GraphConstants.setSizeableAxis(attrs, GraphConstants.X_AXIS);
 		GraphConstants.setHorizontalAlignment(attrs, JLabel.CENTER);
+	}
 
+	protected void addChildren(int filter)
+	{
 		fields = new ClassFieldsVertex(platformRep, filter);
 		add(fields);
 		fields.setParent(this);
@@ -103,6 +111,8 @@ public class ClassVertex extends BaseGraphCell
 		methods = new ClassMethodsVertex(platformRep, filter);
 		add(methods);
 		methods.setParent(this);
+		Rectangle2D fBounds = fields.calcBounds();
+		methods.translate(0, INSET+fBounds.getHeight());
 	}
 
 	public ClassFieldsVertex getFields()
