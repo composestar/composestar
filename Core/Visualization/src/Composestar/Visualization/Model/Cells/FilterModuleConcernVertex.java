@@ -41,7 +41,7 @@ public class FilterModuleConcernVertex extends ConcernVertex
 	{
 		super(concern);
 		fmPorts = new HashMap<String, FilterModuleVertex>();
-		//addFmPorts(concern);
+		addFmPorts(concern);
 	}
 
 	@Override
@@ -75,6 +75,7 @@ public class FilterModuleConcernVertex extends ConcernVertex
 		{
 			return;
 		}
+		int idx = 0;
 		for (FilterModuleSuperImposition fmsi : (List<FilterModuleSuperImposition>) fmOrder.filterModuleSIList())
 		{
 			FilterModule fm = fmsi.getFilterModule().getRef();
@@ -83,10 +84,17 @@ public class FilterModuleConcernVertex extends ConcernVertex
 				continue;
 			}
 			FilterModuleVertex fmPort = new FilterModuleVertex(fm);
+			fmPort.translate(60, idx * 19);
+
 			fmPorts.put(fm.getQualifiedName(), fmPort);
 			add(fmPort);
 			fmPort.setParent(this);
-			logger.debug("Adding port " + fm.getQualifiedName() + " for " + concern);
+			idx++;
+			logger.debug("Adding FilterModuleVertex " + fm.getQualifiedName() + " for " + concern);
+		}
+		if (idx > 0)
+		{
+			classVertex.translate(0, (idx-1) * 20 + 10);
 		}
 	}
 }

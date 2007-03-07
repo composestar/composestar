@@ -10,6 +10,7 @@
 
 package Composestar.Visualization.Model.Cells;
 
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.tree.MutableTreeNode;
 
 import org.jgraph.graph.AttributeMap;
+import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
 
 /**
@@ -62,6 +64,15 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 		members = new HashMap<String, BaseGraphCell>();
 	}
 
+	
+	
+	@Override
+	public DefaultPort getPort()
+	{
+		// this cell doesn't have a default port
+		return null;
+	}
+
 	/**
 	 * Add a child cell
 	 * 
@@ -83,6 +94,11 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 		{
 			GraphConstants.setIcon(map, ico);
 		}
+		
+		// update the default port to be placed at the left
+		DefaultPort port = cell.getPort();
+		Point2D portOffset = new Point2D.Double(0, GraphConstants.PERMILLE/2);
+		GraphConstants.setOffset(port.getAttributes(), portOffset);
 
 		add(cell);
 		cell.setParent(this);

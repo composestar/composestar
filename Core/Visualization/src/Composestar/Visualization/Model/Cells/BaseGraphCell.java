@@ -29,6 +29,10 @@ public class BaseGraphCell extends DefaultGraphCell
 {
 	private static final long serialVersionUID = 3870314973085521163L;
 
+	/**
+	 * The default port for this vertex. It will be returned by the getPort()
+	 * method.
+	 */
 	protected DefaultPort defaultPort;
 
 	public BaseGraphCell()
@@ -55,21 +59,33 @@ public class BaseGraphCell extends DefaultGraphCell
 		setDefaults();
 	}
 
+	/**
+	 * Sets the default cell attributes. Called by the constructor of
+	 * BaseGraphCell
+	 */
 	protected void setDefaults()
 	{
 		GraphConstants.setFont(getAttributes(), new Font("sansserif", Font.PLAIN, 10));
 	}
 
 	/**
-	 * Get the floating port
+	 * Creates the default port
+	 */
+	protected void addDefaultPort()
+	{
+		defaultPort = new DefaultPort();
+		add(defaultPort);
+		defaultPort.setParent(this);
+	}
+
+	/**
+	 * Get the default port
 	 */
 	public DefaultPort getPort()
 	{
 		if (defaultPort == null)
 		{
-			defaultPort = new DefaultPort();
-			add(defaultPort);
-			defaultPort.setParent(this);
+			addDefaultPort();
 		}
 		return defaultPort;
 	}
@@ -85,6 +101,13 @@ public class BaseGraphCell extends DefaultGraphCell
 		return getPort();
 	}
 
+	/**
+	 * Move all child vertices. This will affect the model, and should only be
+	 * used for fixed positition of child elements.
+	 * 
+	 * @param dx
+	 * @param dy
+	 */
 	public void translate(double dx, double dy)
 	{
 		for (Object o : getChildren())
@@ -102,6 +125,12 @@ public class BaseGraphCell extends DefaultGraphCell
 		getAttributes().translate(dx, dy);
 	}
 
+	/**
+	 * Calculate the bounds of this cell. This is more or less the same as the
+	 * getBounds method on JGraph.
+	 * 
+	 * @return
+	 */
 	public Rectangle2D calcBounds()
 	{
 		if (getChildCount() > 0)
@@ -118,7 +147,8 @@ public class BaseGraphCell extends DefaultGraphCell
 				{
 					r = GraphConstants.getBounds(((DefaultGraphCell) o).getAttributes());
 				}
-				else {
+				else
+				{
 					r = null;
 				}
 				if (r != null)

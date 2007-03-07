@@ -11,6 +11,7 @@
 package Composestar.Visualization.Model.Cells;
 
 import java.awt.Color;
+import java.awt.geom.Rectangle2D;
 
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.GraphConstants;
@@ -18,7 +19,7 @@ import org.jgraph.graph.GraphConstants;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 
 /**
- * A port for a PVConcernNode with an assigned filtermodule
+ * A vertex for a FilterModuleConcernVertex with an assigned filtermodule
  * 
  * @author Michiel Hendriks
  */
@@ -31,6 +32,8 @@ public class FilterModuleVertex extends BaseGraphCell
 		super(fm);
 		
 		AttributeMap attrs = getAttributes();
+		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 80, 20);
+		GraphConstants.setBounds(attrs, bounds);
 		GraphConstants.setBorderColor(attrs, Color.BLACK);
 		GraphConstants.setOpaque(attrs, true);
 	}
@@ -38,5 +41,10 @@ public class FilterModuleVertex extends BaseGraphCell
 	public FilterModule getFilterModule()
 	{
 		return (FilterModule) getUserObject();
+	}
+	
+	public String toString()
+	{
+		return getFilterModule().getOriginalQualifiedName();
 	}
 }
