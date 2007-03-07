@@ -608,12 +608,32 @@ public class FilterModule extends DeclaredRepositoryEntity
 
 	public String getName()
 	{
-		return (name + '!' + uniqueToken);
+		return name + '!' + uniqueToken;
 	}
 
 	public String getOriginalName()
 	{
 		return name;
+	}
+
+	/**
+	 * Returns the Qualified name without the uniqueToken, this is the real
+	 * qualified name as it's found in the source code.
+	 * 
+	 * @return
+	 */
+	public String getOriginalQualifiedName()
+	{
+		StringBuffer sb = new StringBuffer();
+		DeclaredRepositoryEntity p = (DeclaredRepositoryEntity) getParent();
+		if (p != null)
+		{
+			sb.append(p.getQualifiedName());
+			sb.append(".");
+		}
+		sb.append(name);
+		return sb.toString();
+
 	}
 
 }

@@ -100,7 +100,7 @@ public class RepositoryLinker
 			Iterator filterModuleIter = cc.getFilterModuleIterator();
 			while (filterModuleIter.hasNext())
 			{
-				String fullname = cc.getName();
+				String fullname = cc.getQualifiedName();
 				FilterModule fm = (FilterModule) filterModuleIter.next();
 				fullname = fullname + '.' + fm.getName();
 				if (Debug.SHOULD_DEBUG)

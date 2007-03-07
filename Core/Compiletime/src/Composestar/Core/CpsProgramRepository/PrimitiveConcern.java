@@ -36,6 +36,6 @@ public class PrimitiveConcern extends Concern
 
 	public String toString()
 	{
-		return "PrimitiveConcern[" + platformRepr + "]";
+		return "PrimitiveConcern[" + getName() + "]";
 	}
 }

@@ -1,5 +1,5 @@
 //case specific concern
-concern Superimpose{
+concern Superimpose in Composestar.Patterns.Observer{
 	superimposition{
 		selectors
 			point = { C | isClassWithName(C, 'Composestar.Patterns.Observer.Point') };

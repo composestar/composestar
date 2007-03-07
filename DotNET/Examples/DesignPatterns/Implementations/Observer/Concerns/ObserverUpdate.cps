@@ -1,5 +1,5 @@
 //generic concern
-concern ObserverUpdate{
+concern ObserverUpdate in Composestar.Patterns.Observer{
 	filtermodule Action
 	{
 		internals

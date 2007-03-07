@@ -96,7 +96,7 @@ public class CpsRepositoryBuilder
 
 	private String embeddedCode;
 
-	private String namespace = null;
+	public Vector namespace = new Vector();
 
 	private boolean parsingInput = true; // whether we're parsing an input-
 
@@ -195,22 +195,9 @@ public class CpsRepositoryBuilder
 		// ds.addObject(cpsc);
 	}
 
-	public void finalizeNamespace()
+	public void finalizeNamespace(String namespace)
 	{
-		cpsc.setQualifiedName(namespace + '.' + cpsc.getName());
-	}
-
-	public void addToNamespace(String name)
-	{
-		if (namespace == null)
-		{
-			namespace = name;
-		}
-		else
-		{
-			namespace += '.' + name;
-		}
-		// System.out.println("Namespace: "+this.namespace);
+		cpsc.setNamespace(namespace);
 	}
 
 	/**
@@ -486,6 +473,7 @@ public class CpsRepositoryBuilder
 				// Reference to an internal or an external
 				DeclaredObjectReference dor = new DeclaredObjectReference();
 				dor.setName(splitter.getConcern());
+				dor.setPackage(namespace);
 				dor.setConcern(cpsc.getName());
 				dor.setFilterModule(fm.getName());
 				c.setShortref(dor);

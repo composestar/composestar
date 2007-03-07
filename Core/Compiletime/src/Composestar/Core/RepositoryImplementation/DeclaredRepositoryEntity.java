@@ -58,35 +58,37 @@ public class DeclaredRepositoryEntity extends ContextRepositoryEntity
 	}
 
 	/**
-	 * return a string with the names along the full path of parents
+	 * Return a string with the names along the full path of parents
 	 * 
 	 * @return java.lang.String
 	 */
 	public String getQualifiedName()
-	{
-		String out = "";
+	{		
+		StringBuffer out = new StringBuffer();
 		DeclaredRepositoryEntity o;
 
 		o = this;
 		while (o != null)
 		{
-			if (!out.equals(""))
+			if (out.length() > 0)
 			{
-				out = "." + out;
+				out.insert(0, ".");
 			}
-			out = o.getName() + out;
-
+			
 			if (o instanceof Concern)
 			{
+				// concern overwrites getQualifiedName
+				out.insert(0, o.getQualifiedName());
 				// stop when we reach the concern
 				break;
 			}
 			else
 			{
+				out.insert(0, o.getName());
 				o = (DeclaredRepositoryEntity) o.getParent();
 			}
 		}
-		return out;
+		return out.toString();
 	}
 
 	public String getUniqueID()

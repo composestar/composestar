@@ -39,8 +39,11 @@ public class CpsConcern extends Concern
 	public Vector filterModulesAST;
 
 	public Vector formalParameters;
-
-	public String qualifiedName;
+	
+	/**
+	 * The namespace/package
+	 */
+	public String namespace;
 
 	/**
 	 * @modelguid {E0CC63BC-2E96-432B-8132-8C0ADC2BDBA7}
@@ -199,21 +202,21 @@ public class CpsConcern extends Concern
 		return (LabeledConcernReference) formalParameters.elementAt(index);
 	}
 
-	public void setQualifiedName(String inName)
+	public void setNamespace(String inName)
 	{
-		qualifiedName = inName;
+		namespace = inName;
 		updateRepositoryReference();
 	}
 
 	public String getQualifiedName()
 	{
-		if (qualifiedName == null)
+		if (namespace == null)
 		{
 			return super.getQualifiedName();
 		}
 		else
 		{
-			return qualifiedName;
+			return namespace + "." + getName();
 		}
 	}
 
@@ -240,6 +243,6 @@ public class CpsConcern extends Concern
 
 	public String toString()
 	{
-		return "CpsConcern[" + qualifiedName + "]";
+		return "CpsConcern[" + getQualifiedName() + "]";
 	}
 }

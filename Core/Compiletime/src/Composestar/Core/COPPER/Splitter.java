@@ -106,6 +106,10 @@ public class Splitter
 
 		if (fillindefaults)
 		{
+			if (pack == null)
+			{
+				pack = (Vector) builder.namespace.clone();
+			}
 			if (concern == null)
 			{
 				concern = builder.getCpsc();

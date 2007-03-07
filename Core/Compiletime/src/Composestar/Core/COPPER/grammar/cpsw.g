@@ -53,13 +53,21 @@ options {
   }
 }
 
-concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalParameters)? (namespace {b.finalizeNamespace();})? (filterModule)* (superImposition)? (implementation)? {b.finish();});
+concern 
+  {String ns = null;}
+  : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalParameters)? (ns=namespace {b.finalizeNamespace(ns);})? (filterModule)* (superImposition)? (implementation)? {b.finish();})
+  ;
 
   formalParameters : #(FPMSET_ ({namev.clear(); typev.clear();} formalParameterDef {b.addConcernFormalParameters(namev, typev);})+);
 
     formalParameterDef : #(FPMDEF_ (n:NAME {namev.add(n.getText());} )* type);
 
-    namespace : (ns:NAME{b.addToNamespace(ns.getText());})+;
+    namespace returns [String s = null]
+      {StringBuffer sb = new StringBuffer();}
+      : n:NAME {sb.append(n.getText()); b.namespace.add(n.getText());} 
+      (d:DOT n2:NAME {sb.append(d.getText()); sb.append(n2.getText()); b.namespace.add(n2.getText());})*
+      {s = sb.toString();}
+      ;
 
   //////////////////////////////////////////////////////////////////////////
     filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.getLine());} (filterModuleParameters)? (internals)? (externals)? (conditions)? (inputFilters)? (outputFilters)?);       //fixme: include arguments? (not really used)
@@ -111,30 +119,30 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
                              } messagePatternSet);
 
               orExpr returns [ConditionExpression r=null]
-              { ConditionExpression lhs, rhs; }
-              :   #(OR lhs=orExpr rhs=orExpr)
-                  { r = b.addOr(lhs, rhs); }
-              |   r=andExpr
-              ;
+                { ConditionExpression lhs, rhs; }
+                :   #(OR lhs=orExpr rhs=orExpr)
+                    { r = b.addOr(lhs, rhs); }
+                |   r=andExpr
+                ;
 
               andExpr returns [ConditionExpression r=null]
-              { ConditionExpression lhs, rhs; }
-              :   #(AND lhs=orExpr rhs=orExpr)
-                  { r = b.addAnd(lhs, rhs); }
-              |   r=unaryExpr
-              ;
+                { ConditionExpression lhs, rhs; }
+                :   #(AND lhs=orExpr rhs=orExpr)
+                    { r = b.addAnd(lhs, rhs); }
+                |   r=unaryExpr
+                ;
 
               unaryExpr returns [ConditionExpression r=null]
-              { ConditionExpression e; }
-              :   #(NOT e=orExpr)
-                  { r = b.addNot(e); }
-              |   r=operandExpr
-              ;
+                { ConditionExpression e; }
+                :   #(NOT e=orExpr)
+                    { r = b.addNot(e); }
+                |   r=operandExpr
+                ;
 
               operandExpr returns [ConditionExpression r=null]
-              :   na:NAME
-                  { r = b.addConditionOperand(na.getText()); }
-              ;
+                :   na:NAME
+                    { r = b.addConditionOperand(na.getText()); }
+                ;
 
               messagePatternSet : #(MPSET_ messagePattern);
 

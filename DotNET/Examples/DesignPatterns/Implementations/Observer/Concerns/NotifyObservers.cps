@@ -1,6 +1,6 @@
 //notification of observers for all subjects is grouped
 //case specific concern
-concern NotifyObservers{
+concern NotifyObservers in Composestar.Patterns.Observer{
 	filtermodule NotifyDisplay
 	{
 		externals

@@ -68,6 +68,11 @@ public class Concern extends DeclaredRepositoryEntity
 	{
 		return signature;
 	}
+	
+	public String getQualifiedName()
+	{
+		return getName();
+	}
 
 	public Object clone() throws CloneNotSupportedException
 	{

@@ -105,7 +105,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
     formalParameterDef : NAME (COMMA! NAME)* COLON!type
     { #formalParameterDef = #([FPMDEF_, "formal parameter definition"], #formalParameterDef);} ;
 
-  ns : NAME (DOT! NAME)*;
+  ns : NAME (DOT NAME)*;
 
   concernBlock : LCURLY! (filterModule)* (superImposition)? concernEnd;
 
