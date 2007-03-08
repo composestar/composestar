@@ -25,6 +25,8 @@ import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
 
+import Composestar.Visualization.Model.Cells.ClassVertex.MemberFlags;
+
 /**
  * General class for parts of the ClassVertex
  * 
@@ -32,7 +34,7 @@ import org.jgraph.graph.GraphConstants;
  */
 public abstract class ClassMembersVertex extends BaseGraphCell
 {
-	private static Map<Integer,Icon> iconMap;
+	private static Map<MemberFlags, Icon> iconMap;
 
 	protected double entryHeight = 14;
 
@@ -64,8 +66,6 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 		members = new HashMap<String, BaseGraphCell>();
 	}
 
-	
-	
 	@Override
 	public DefaultPort getPort()
 	{
@@ -80,7 +80,7 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 	 * @param idx position of the entry
 	 * @return
 	 */
-	protected BaseGraphCell addEntry(Object userObject, int idx, int visibility)
+	protected BaseGraphCell addEntry(Object userObject, int idx, MemberFlags visibility)
 	{
 		BaseGraphCell cell = new BaseGraphCell(userObject);
 		Rectangle2D bounds = new Rectangle2D.Double(0, idx * entryHeight, entryWidth, entryHeight);
@@ -94,10 +94,10 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 		{
 			GraphConstants.setIcon(map, ico);
 		}
-		
+
 		// update the default port to be placed at the left
 		DefaultPort port = cell.getPort();
-		Point2D portOffset = new Point2D.Double(0, GraphConstants.PERMILLE/2);
+		Point2D portOffset = new Point2D.Double(0, GraphConstants.PERMILLE / 2);
 		GraphConstants.setOffset(port.getAttributes(), portOffset);
 
 		add(cell);
@@ -127,28 +127,26 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 	 * @param visibility
 	 * @return
 	 */
-	public static Icon getIcon(int visibility)
+	public static Icon getIcon(MemberFlags visibility)
 	{
 		if (iconMap == null)
 		{
-			iconMap = new HashMap<Integer,Icon>();
+			iconMap = new HashMap<MemberFlags, Icon>();
 		}
 		if (!iconMap.containsKey(visibility))
 		{
 			URL resUrl = null;
-			switch (visibility)
+			if (visibility == MemberFlags.PUBLIC)
 			{
-				case ClassVertex.MEMBERS_PUBLIC:
-					resUrl = ClassMembersVertex.class.getResource("Graphics/field_public.png");
-					break;
-				case ClassVertex.MEMBERS_PRIVATE:
-					resUrl = ClassMembersVertex.class.getResource("Graphics/field_private.png");
-					break;
-				case ClassVertex.MEMBERS_PROTECTED:
-					resUrl = ClassMembersVertex.class.getResource("Graphics/field_protected.png");
-					break;
-				default:
-					// no icon
+				resUrl = ClassMembersVertex.class.getResource("Graphics/field_public.png");
+			}
+			else if (visibility == MemberFlags.PRIVATE)
+			{
+				resUrl = ClassMembersVertex.class.getResource("Graphics/field_private.png");
+			}
+			else if (visibility == MemberFlags.PROTECTED)
+			{
+				resUrl = ClassMembersVertex.class.getResource("Graphics/field_protected.png");
 			}
 			System.out.println(resUrl);
 			Icon ico = null;

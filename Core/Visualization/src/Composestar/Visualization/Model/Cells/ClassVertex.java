@@ -13,6 +13,7 @@ package Composestar.Visualization.Model.Cells;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
+import java.util.EnumSet;
 
 import javax.swing.JLabel;
 
@@ -31,34 +32,18 @@ public class ClassVertex extends BaseGraphCell
 	private static final long serialVersionUID = -8859175705375540286L;
 
 	/**
-	 * just show the class object without any members
+	 * Various flags for members.
 	 */
-	public static final int MEMBERS_NONE = 0;
-
-	/**
-	 * include all members
-	 */
-	public static final int MEMBERS_ALL = 255;
-
-	/**
-	 * include all public members
-	 */
-	public static final int MEMBERS_PUBLIC = 1;
-
-	/**
-	 * include all protected members
-	 */
-	public static final int MEMBERS_PROTECTED = 2;
-
-	/**
-	 * include all private members
-	 */
-	public static final int MEMBERS_PRIVATE = 4;
-
-	/**
-	 * force inclusion of members that are touched by compose* in any way
-	 */
-	public static final int MEMBERS_FORCE_RELEVANT = 128;
+	public enum MemberFlags
+	{
+		PUBLIC, PROTECTED, PRIVATE,
+		/**
+		 * flags the member as being relevate for the current cause. Which
+		 * usually means the member is being used as a source or target for a
+		 * filter.
+		 */
+		RELEVANT,
+	}
 
 	protected Type platformRep;
 
@@ -70,14 +55,14 @@ public class ClassVertex extends BaseGraphCell
 
 	public ClassVertex(Type inPlatformRep)
 	{
-		this(inPlatformRep, MEMBERS_ALL);
+		this(inPlatformRep, EnumSet.allOf(MemberFlags.class));
 	}
 
 	/**
 	 * @param inPlatformRep
 	 * @param filter inclusion of class members
 	 */
-	public ClassVertex(Type inPlatformRep, int filter)
+	public ClassVertex(Type inPlatformRep, EnumSet<MemberFlags> filter)
 	{
 		super(inPlatformRep);
 		platformRep = inPlatformRep;
@@ -102,7 +87,7 @@ public class ClassVertex extends BaseGraphCell
 		GraphConstants.setHorizontalAlignment(attrs, JLabel.CENTER);
 	}
 
-	protected void addChildren(int filter)
+	protected void addChildren(EnumSet<MemberFlags> filter)
 	{
 		fields = new ClassFieldsVertex(platformRep, filter);
 		add(fields);
@@ -112,7 +97,7 @@ public class ClassVertex extends BaseGraphCell
 		add(methods);
 		methods.setParent(this);
 		Rectangle2D fBounds = fields.calcBounds();
-		methods.translate(0, INSET+fBounds.getHeight());
+		methods.translate(0, INSET + fBounds.getHeight());
 	}
 
 	public ClassFieldsVertex getFields()

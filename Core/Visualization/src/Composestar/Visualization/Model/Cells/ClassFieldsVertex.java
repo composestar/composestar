@@ -10,11 +10,13 @@
 
 package Composestar.Visualization.Model.Cells;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Visualization.Model.Cells.ClassVertex.MemberFlags;
 
 /**
  * Vertex for the ClassVertex' fields
@@ -27,10 +29,10 @@ public class ClassFieldsVertex extends ClassMembersVertex
 
 	private static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.Cells.ClassFieldsVertex");
 
-	public ClassFieldsVertex(Type platformRep, int filter)
+	public ClassFieldsVertex(Type platformRep, EnumSet<MemberFlags> filter)
 	{
 		super();
-		if (filter != ClassVertex.MEMBERS_NONE)
+		if (filter.size() != 0)
 		{
 			addFields(platformRep);
 		}
@@ -49,14 +51,14 @@ public class ClassFieldsVertex extends ClassMembersVertex
 		{
 			logger.debug("Adding field " + field.getUnitName());
 			// is most cases the default visibility is "package protected"
-			int vis = ClassVertex.MEMBERS_PROTECTED;
+			MemberFlags vis = MemberFlags.PROTECTED;
 			if (field.isPublic())
 			{
-				vis = ClassVertex.MEMBERS_PUBLIC;
+				vis = MemberFlags.PUBLIC;
 			}
 			if (field.isPrivate())
 			{
-				vis = ClassVertex.MEMBERS_PRIVATE;
+				vis = MemberFlags.PRIVATE;
 			}
 			BaseGraphCell entry = addEntry(field.getUnitName() + ": " + field.getUnitType(), idx, vis);
 			members.put(field.getUnitName(), entry);
