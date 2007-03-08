@@ -23,9 +23,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
 import org.apache.log4j.Logger;
+import org.jgraph.JGraph;
 
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.VisCom;
+import Composestar.Visualization.UI.Actions.FileExportAction;
+import Composestar.Visualization.UI.Utils.CompileHistoryFilter;
 
 /**
  * The main viewport of the visualizer
@@ -36,7 +39,7 @@ public class Viewport extends JFrame
 {
 	private static final long serialVersionUID = 7472894955484974785L;
 
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.Viewport");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.UI.Viewport");
 
 	protected transient VisCom controller;
 
@@ -64,6 +67,21 @@ public class Viewport extends JFrame
 		{
 			views.add("Program view", new JScrollPane(controller.getViewManager().getProgramView().getGraph()));
 		}
+	}
+
+	/**
+	 * Returns the currently active JGraph (if any)
+	 * 
+	 * @return
+	 */
+	public JGraph getActiveGraph()
+	{
+		JScrollPane activeTab = (JScrollPane) getViews().getSelectedComponent();
+		if (activeTab == null)
+		{
+			return null;
+		}
+		return (JGraph) activeTab.getViewport().getView();
 	}
 
 	/**
@@ -156,6 +174,15 @@ public class Viewport extends JFrame
 		{
 			miExport = new JMenuItem();
 			miExport.setText("Export");
+			miExport.addActionListener(new java.awt.event.ActionListener()
+			{
+				FileExportAction action = new FileExportAction();
+
+				public void actionPerformed(java.awt.event.ActionEvent e)
+				{
+					action.execute(getActiveGraph());
+				}
+			});
 		}
 		return miExport;
 	}

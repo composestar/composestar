@@ -8,7 +8,7 @@
  * $Id$
  */
 
-package Composestar.Visualization.UI;
+package Composestar.Visualization.UI.Utils;
 
 import java.io.File;
 
@@ -33,7 +33,7 @@ public class CompileHistoryFilter extends FileFilter
 	@Override
 	public boolean accept(File filename)
 	{
-		String ext = FileUtils.getExtension(filename.toString());
+		String ext = FileUtils.getExtension(filename);
 		return (CompileHistory.EXT_NORMAL.equalsIgnoreCase(ext) || CompileHistory.EXT_COMPRESSED.equalsIgnoreCase(ext))
 				|| filename.isDirectory();
 	}

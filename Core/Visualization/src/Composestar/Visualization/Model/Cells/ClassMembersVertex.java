@@ -97,8 +97,9 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 
 		// update the default port to be placed at the left
 		DefaultPort port = cell.getPort();
-		Point2D portOffset = new Point2D.Double(0, GraphConstants.PERMILLE / 2);
+		Point2D portOffset = new Point2D.Double(ClassVertex.INSET * -1, GraphConstants.PERMILLE / 2);
 		GraphConstants.setOffset(port.getAttributes(), portOffset);
+		GraphConstants.setAbsoluteX(port.getAttributes(), true);
 
 		add(cell);
 		cell.setParent(this);

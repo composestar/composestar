@@ -42,6 +42,11 @@ public abstract class ConcernVertex extends BaseGraphCell
 	{
 		return classVertex.getPort();
 	}
+	
+	public DefaultPort getClassPort()
+	{
+		return classVertex.getPort();
+	}
 
 	/**
 	 * Return the associated concern

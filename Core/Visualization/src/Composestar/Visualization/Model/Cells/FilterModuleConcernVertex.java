@@ -12,6 +12,7 @@ package Composestar.Visualization.Model.Cells;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,12 @@ public class FilterModuleConcernVertex extends ConcernVertex
 			return getPort();
 		}
 	}
-
+	
+	public Collection<FilterModuleVertex> getFmVertices()
+	{
+		return fmVertices.values();
+	}
+	
 	/**
 	 * @return true if this concern has filter modules
 	 */

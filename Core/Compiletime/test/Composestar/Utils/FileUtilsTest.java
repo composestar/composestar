@@ -47,6 +47,7 @@ public class FileUtilsTest extends TestCase
 
 	public void testGetExtension()
 	{
+		/*
 		try
 		{
 			FileUtils.getExtension(null);
@@ -55,6 +56,7 @@ public class FileUtilsTest extends TestCase
 		catch (IllegalArgumentException e)
 		{
 		}
+		*/
 
 		assertEquals(null, FileUtils.getExtension("foo"));
 		assertEquals("bar", FileUtils.getExtension("foo.bar"));

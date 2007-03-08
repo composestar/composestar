@@ -179,6 +179,15 @@ public final class FileUtils
 		int lastdot = filename.lastIndexOf('.');		
 		return (lastdot == -1 ? null : filename.substring(lastdot + 1));
 	}
+	
+	public static String getExtension(File filename)
+	{
+		if (filename == null)
+		{
+			throw new IllegalArgumentException("filename can not be null");
+		}
+		return getExtension(filename.toString());
+	}
 
 	public static String removeExtension(String filename)
 	{

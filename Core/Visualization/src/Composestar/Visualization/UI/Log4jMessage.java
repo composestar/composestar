@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2007 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Visualization.UI;
 
 import java.awt.BorderLayout;
@@ -85,7 +94,7 @@ public class Log4jMessage extends JDialog
 		this.setSize(400, 200);
 		this.setContentPane(getContent());
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		this.setModal(true);		
+		this.setModal(true);
 	}
 
 	/**
@@ -121,10 +130,10 @@ public class Log4jMessage extends JDialog
 				{
 					if (e.getPropertyName().equals("value"))
 					{
-						dispose(); 
+						dispose();
 					}
 				}
-			});			
+			});
 		}
 		return message;
 	}
@@ -164,9 +173,9 @@ public class Log4jMessage extends JDialog
 	}
 
 	/**
-	 * This method initializes traceScroll	
-	 * 	
-	 * @return javax.swing.JScrollPane	
+	 * This method initializes traceScroll
+	 * 
+	 * @return javax.swing.JScrollPane
 	 */
 	private JScrollPane getTraceScroll()
 	{
@@ -180,4 +189,4 @@ public class Log4jMessage extends JDialog
 		return traceScroll;
 	}
 
-}  //  @jve:decl-index=0:visual-constraint="10,10"
+} // @jve:decl-index=0:visual-constraint="10,10"

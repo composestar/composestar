@@ -11,6 +11,7 @@
 package Composestar.Visualization.Model.Cells;
 
 import java.awt.Color;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.jgraph.graph.AttributeMap;
@@ -30,19 +31,23 @@ public class FilterModuleVertex extends BaseGraphCell
 	public FilterModuleVertex(FilterModule fm)
 	{
 		super(fm);
-		
+
 		AttributeMap attrs = getAttributes();
 		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 80, 20);
 		GraphConstants.setBounds(attrs, bounds);
 		GraphConstants.setBorderColor(attrs, Color.BLACK);
+		GraphConstants.setBackground(attrs, new Color(0xDDEEFF));
 		GraphConstants.setOpaque(attrs, true);
+
+		Point2D pt = new Point2D.Double(GraphConstants.PERMILLE, GraphConstants.PERMILLE / 2);
+		GraphConstants.setOffset(getPort().getAttributes(), pt);
 	}
 
 	public FilterModule getFilterModule()
 	{
 		return (FilterModule) getUserObject();
 	}
-	
+
 	public String toString()
 	{
 		return getFilterModule().getOriginalQualifiedName();
