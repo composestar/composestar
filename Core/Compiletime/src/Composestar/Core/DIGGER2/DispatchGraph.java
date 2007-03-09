@@ -10,6 +10,7 @@
 
 package Composestar.Core.DIGGER2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,8 +29,10 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-public class DispatchGraph
+public class DispatchGraph implements Serializable
 {
+	private static final long serialVersionUID = -177580149534040349L;
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DIGGER.MODULE_NAME);
 
 	public static final String REPOSITORY_KEY = "DispatchGraph";
@@ -63,7 +66,7 @@ public class DispatchGraph
 	 * Handle to the resolve class used to resolve the breadcrumbs from the
 	 * input data.
 	 */
-	protected/* transient */Resolver resolver;
+	protected transient Resolver resolver;
 
 	public DispatchGraph(int inMode)
 	{
@@ -116,6 +119,16 @@ public class DispatchGraph
 			crumbs.put(crumb.getConcern(), concernCrumbs);
 		}
 		concernCrumbs.addCrumb(crumb);
+	}
+	
+	/**
+	 * Returns the ConcernCrumbs structure for the given concern
+	 * @param concern
+	 * @return
+	 */
+	public ConcernCrumbs getConcernCrumbs(Concern concern)
+	{
+		return crumbs.get(concern);
 	}
 
 	/**

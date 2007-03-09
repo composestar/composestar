@@ -15,6 +15,7 @@
 	<module fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" />
 	<module fulltype="Composestar.Core.CORE2.Core" />
 	<module fulltype="Composestar.Core.SIGN2.Sign" />
+	<module fulltype="Composestar.Core.DIGGER2.DIGGER" />
 	<module fulltype="Composestar.DotNET.ASTRA.ASTRA" />
 	<module fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" />
 	<module fulltype="Composestar.DotNET.CONE.DotNETWeaveFileGenerator" />

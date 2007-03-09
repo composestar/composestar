@@ -10,6 +10,7 @@
 
 package Composestar.Core.DIGGER2;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -23,8 +24,10 @@ import Composestar.Core.FIRE2.model.Message;
  * 
  * @author Michiel Hendriks
  */
-public class ConcernCrumbs
+public class ConcernCrumbs implements Serializable
 {
+	private static final long serialVersionUID = -3745374019301536089L;
+
 	protected Concern concern;
 
 	protected Map<String, Breadcrumb> inputCrumbs;

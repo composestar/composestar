@@ -72,6 +72,7 @@
 	<module name="SIGN" fulltype="Composestar.Core.SIGN2.Sign" enabled="true" incremental="false" summary="Generating signatures...">
 		<dependencies></dependencies>	
 	</module>
+	<module fulltype="Composestar.Core.DIGGER2.DIGGER" />
 	<module name="CONE-IS" fulltype="Composestar.DotNET.CONE.DotNETWeaveFileGenerator" enabled="true" incremental="false" summary="Generating weave specification file...">
 		<dependencies></dependencies>	
 	</module>	

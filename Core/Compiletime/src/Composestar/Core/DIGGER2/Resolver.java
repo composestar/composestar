@@ -14,7 +14,6 @@ import java.util.Iterator;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
@@ -195,7 +194,7 @@ public class Resolver
 			}
 			else if (idx > 1)
 			{
-				logger.debug("[resolver] Branched into " + idx + " trails");
+				logger.trace("[resolver] Branched into " + idx + " trails");
 			}
 		}
 	}

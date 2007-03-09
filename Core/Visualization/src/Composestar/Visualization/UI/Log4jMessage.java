@@ -64,8 +64,8 @@ public class Log4jMessage extends JDialog
 			message.setMessageType(JOptionPane.INFORMATION_MESSAGE);
 		}
 
-		setTitle(event.getLevel().toString());
-		message.setMessage(event.getMessage());
+		setTitle(captialize(event.getLevel().toString()));
+		message.setMessage(wordWrap(event.getMessage().toString(), 50));
 		if (event.getThrowableInformation() != null)
 		{
 			StringBuffer sb = new StringBuffer();
@@ -79,9 +79,39 @@ public class Log4jMessage extends JDialog
 		}
 		else
 		{
-			traceScroll.setVisible(false);
+			tabs.remove(1);
 		}
 		setVisible(true);
+	}
+	
+	public static String captialize(String input)
+	{
+		return input.substring(0, 1).toUpperCase()+input.substring(1).toLowerCase();
+	}
+	
+	/**
+	 * Crappy wordwrap implementation
+	 * @param input
+	 * @param chars
+	 * @return
+	 */
+	public static String wordWrap(String input, int chars)
+	{
+		StringBuffer res = new StringBuffer(input.length() + (input.length()/chars));
+		int idx = 0;
+		String[] data = input.split(" ");
+		for (String s : data)
+		{
+			idx += s.length();
+			if (idx >= chars)
+			{
+				res.append("\n");
+				idx = 0;
+			}
+			res.append(s);
+			res.append(" ");
+		}
+		return res.toString();
 	}
 
 	/**

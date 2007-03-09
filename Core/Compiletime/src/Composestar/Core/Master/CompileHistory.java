@@ -24,6 +24,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
@@ -36,7 +37,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class CompileHistory implements Serializable
 {
-	private static final long serialVersionUID = -4212046702631432965L;
+	private static final long serialVersionUID = 758860680471199813L;
 
 	private static final CPSLogger logger = CPSLogger.getCPSLogger("CompileHistory");
 
@@ -69,7 +70,7 @@ public class CompileHistory implements Serializable
 	 * DataStore containing the compilation results
 	 */
 	protected DataStore datastore;
-
+	
 	/**
 	 * The common resources. Contains data not required for runtime.
 	 */

@@ -21,6 +21,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionE
  */
 public class RecursiveFilterException extends Exception
 {
+	private static final long serialVersionUID = -5605757703463661566L;
+
 	protected int vars;
 
 	protected Breadcrumb crumb;

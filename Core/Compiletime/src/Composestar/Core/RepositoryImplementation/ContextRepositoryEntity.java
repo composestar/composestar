@@ -58,6 +58,27 @@ public class ContextRepositoryEntity extends RepositoryEntity
 		this.parent = parentValue;
 		this.updateRepositoryReference();
 	}
+	
+	/**
+	 * Return the ancestor that matches the given class, or null if no such
+	 * ancestor
+	 * 
+	 * @param reqClass
+	 * @return
+	 */
+	public Object getAncestorOfClass(Class reqClass)
+	{
+		Object o = getParent();
+		while (o instanceof ContextRepositoryEntity)
+		{
+			if (o.getClass().equals(reqClass))
+			{
+				return o;
+			}
+			o = ((ContextRepositoryEntity) o).getParent();
+		}
+		return null;
+	}
 
 	public Object clone() throws CloneNotSupportedException
 	{

@@ -10,6 +10,8 @@
 
 package Composestar.Core.DIGGER2;
 
+import java.io.Serializable;
+
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.FIRE2.model.Message;
@@ -20,8 +22,10 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  * 
  * @author Michiel Hendriks
  */
-public class Trail
+public class Trail implements Serializable
 {
+	private static final long serialVersionUID = -4319936184486374241L;
+
 	/**
 	 * The owner of this trail
 	 */

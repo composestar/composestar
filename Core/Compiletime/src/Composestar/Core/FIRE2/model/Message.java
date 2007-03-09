@@ -4,6 +4,8 @@
  */
 package Composestar.Core.FIRE2.model;
 
+import java.io.Serializable;
+
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.LAMA.MethodInfo;
@@ -11,8 +13,10 @@ import Composestar.Core.LAMA.MethodInfo;
 /**
  * @author Arjan de Roo
  */
-public class Message
+public class Message implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The target of the message, or "*" to indicate an unknown target.
 	 */

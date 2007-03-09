@@ -21,6 +21,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 import Composestar.Core.Master.CompileHistory;
+import Composestar.Core.RepositoryImplementation.DataMap;
+import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.Model.ViewManager;
@@ -41,6 +43,7 @@ public class VisCom
 
 	public VisCom()
 	{
+		DataMap.setDataMapClass(DataMapImpl.class);
 		initialize();
 	}
 

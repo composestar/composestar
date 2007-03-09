@@ -32,10 +32,12 @@ import Composestar.Core.Annotations.Out;
  */
 public class CommonResources implements Serializable
 {
+	private static final long serialVersionUID = -4099474761502163870L;
+
 	/**
 	 * Map holding all the resources
 	 */
-	private transient Map<String, Object> resources;
+	private Map<String, Object> resources;
 
 	/**
 	 * Default constructor.
@@ -68,7 +70,7 @@ public class CommonResources implements Serializable
 	 * @return An object pointer if an object with the specified key was found
 	 *         or null if the key is invalid.
 	 */
-	public Object get(Object key)
+	public Object get(String key)
 	{
 		return resources.get(key);
 	}
@@ -79,7 +81,7 @@ public class CommonResources implements Serializable
 	 * @throws RuntimeException if there is no resource with the specified name,
 	 *             or if it is not a Boolean.
 	 */
-	public boolean getBoolean(Object key)
+	public boolean getBoolean(String key)
 	{
 		Object resource = get(key);
 

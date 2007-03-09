@@ -105,15 +105,18 @@ public class DIGGER implements CTCommonModule
 		filthinit.stop();
 
 		// step 1: breadcrumb creation, the crumbs will not be resolved
+		logger.info("Step 1: breadcrumb creation");
 		createBreadcrumbs();
 
 		// step 2: resolve and check the created crumbs
 		if (moduleInfo.getBooleanSetting("resolve"))
 		{
+			logger.info("Step 2: resolving breadcrumbs");
 			resolveBreadcrumbs();
 			recursionCheckDepth = moduleInfo.getIntSetting("recursionCheck");
 			if (recursionCheckDepth > 0)
 			{
+				logger.info("Step 2b: checking recursion");
 				checkRecursion();
 			}
 		}
@@ -121,8 +124,11 @@ public class DIGGER implements CTCommonModule
 		// step 3: export the generated data
 		if (moduleInfo.getBooleanSetting("exportXml"))
 		{
+			/*
+			logger.info("Step 2b: exporting result");
 			DispatchGraphExporter exporter = new XMLDispatchGraphExporter(graph);
 			exporter.export();
+			*/
 		}
 
 		// cleanup

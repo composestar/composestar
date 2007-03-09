@@ -2,7 +2,6 @@ package Composestar.Core.RepositoryImplementation;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,8 +16,6 @@ import java.util.Set;
  */
 public abstract class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 {
-	private static final long serialVersionUID = -6486304623601718657L;
-
 	protected static Class dataMapClass;
 	
 	public static boolean setDataMapClass(Class newClass)
@@ -29,6 +26,11 @@ public abstract class DataMap implements Map, SerializableRepositoryEntity, Clon
 			return true;
 		}
 		return false;
+	}
+	
+	public static Class getDataMapClass()
+	{
+		return dataMapClass;
 	}
 
 	public static DataMap newDataMapInstance()

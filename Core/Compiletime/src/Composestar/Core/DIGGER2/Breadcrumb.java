@@ -10,6 +10,7 @@
 
 package Composestar.Core.DIGGER2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,8 +26,10 @@ import Composestar.Core.FIRE2.model.Message;
  * 
  * @author Michiel Hendriks
  */
-public class Breadcrumb
+public class Breadcrumb implements Serializable
 {
+	private static final long serialVersionUID = -8442493609569837628L;
+
 	protected Concern concern;
 
 	/**
@@ -44,7 +47,7 @@ public class Breadcrumb
 	/**
 	 * Resolved status of the trails.
 	 */
-	protected/* transient */boolean resolvedStatus;
+	protected transient boolean resolvedStatus;
 
 	public Breadcrumb(Concern inConcern, Message inMessage, int inFilterPosition)
 	{
