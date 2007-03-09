@@ -136,7 +136,11 @@ public class BaseGraphCell extends DefaultGraphCell
 		if (getChildCount() > 0)
 		{
 			Rectangle2D r = GraphConstants.getBounds(getAttributes());
-			Rectangle2D ret = (r != null) ? (Rectangle2D) r.clone() : null;
+			Rectangle2D ret = null;
+			if (r != null)
+			{
+				ret = (Rectangle2D) r.clone();
+			}
 			for (Object o : getChildren())
 			{
 				if (o instanceof BaseGraphCell)
@@ -155,7 +159,10 @@ public class BaseGraphCell extends DefaultGraphCell
 				{
 					if (ret == null)
 					{
-						ret = (r != null) ? (Rectangle2D) r.clone() : null;
+						if (r != null)
+						{
+							ret = (Rectangle2D) r.clone();
+						}
 					}
 					else
 					{

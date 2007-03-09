@@ -19,8 +19,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Map.Entry;
 
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -36,31 +39,43 @@ public class VisComObjectInputStream extends ObjectInputStream
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.ObjectInputStream");
 
 	/**
-	 * Composestar package to jar file table
+	 * Composestar package to jar file table. Loaded from the
+	 * packages.properties file
 	 */
-	private static Map<String, String[]> pkgToJar;
-
-	static
-	{
-		pkgToJar = new HashMap<String, String[]>();
-		String[] jars = new String[] { "ComposestarDotNET.jar", "Starlight.jar" };
-		pkgToJar.put("DotNET", jars);
-		jars = new String[] { "ComposestarJava.jar" };
-		pkgToJar.put("Java", jars);
-		jars = new String[] { "ComposestarC.jar" };
-		pkgToJar.put("C", jars);
-	}
+	protected Map<String, String[]> packageMapping;
 
 	protected Map<String, URLClassLoader> loaders = new HashMap<String, URLClassLoader>();
 
-	protected VisComObjectInputStream() throws IOException, SecurityException
+	protected VisComObjectInputStream() throws IOException
 	{
 		super();
+		loadPackageMapping();
 	}
 
 	public VisComObjectInputStream(InputStream is) throws IOException
 	{
 		super(is);
+		loadPackageMapping();
+	}
+
+	protected void loadPackageMapping()
+	{
+		packageMapping = new HashMap<String, String[]>();
+		Properties props = new Properties();
+		try
+		{
+			props.load(VisComObjectInputStream.class.getResourceAsStream("packages.properties"));
+		}
+		catch (IOException e)
+		{
+			logger.error("Unable to load packages.properties", e);
+			return;
+		}
+		for (Entry<Object, Object> entry : props.entrySet())
+		{
+			String[] value = ((String) entry.getValue()).split(" ");
+			packageMapping.put((String) entry.getKey(), value);
+		}
 	}
 
 	/*
@@ -77,21 +92,13 @@ public class VisComObjectInputStream extends ObjectInputStream
 		}
 		catch (ClassNotFoundException e)
 		{
-			if (desc.getName().startsWith("Composestar."))
+			logger.info("Resolving class " + desc.getName());
+			ClassLoader loader = getLoader(desc.getName());
+			if (loader == null)
 			{
-				logger.info("Resolving class " + desc.getName());
-				String[] pkg = desc.getName().split("\\.");
-				if (pkg.length >= 2)
-				{
-					ClassLoader loader = getLoader(pkg[1]);
-					if (loader == null)
-					{
-						throw e;
-					}
-					return loader.loadClass(desc.getName());
-				}
+				throw e;
 			}
-			throw e;
+			return loader.loadClass(desc.getName());
 		}
 	}
 
@@ -101,15 +108,25 @@ public class VisComObjectInputStream extends ObjectInputStream
 	 * @param pkg
 	 * @return
 	 */
-	protected ClassLoader getLoader(String pkg)
+	protected ClassLoader getLoader(String className)
 	{
-		String[] jars = pkgToJar.get(pkg);
+		String[] jars = null;
+		String pkg = className.substring(0, className.lastIndexOf('.'));
+		while ((pkg != null) && (pkg.length() > 0))
+		{
+			if (packageMapping.containsKey(pkg))
+			{
+				jars = packageMapping.get(pkg);
+				break;
+			}
+			pkg = pkg.substring(0, pkg.lastIndexOf('.'));
+		}
 		if (jars == null)
 		{
-			logger.fatal("Unregistered jar archive for Composestar package: Composestar." + pkg);
+			logger.fatal("Unable to find package jar file for class " + className);
 			return null;
 		}
-		logger.debug("Found jars: " + jars);
+		logger.debug("Found jars: " + Arrays.toString(jars) + " for package: " + pkg);
 
 		// find an existing loader
 		URLClassLoader loader = null;
@@ -129,14 +146,14 @@ public class VisComObjectInputStream extends ObjectInputStream
 			for (String jar : jars)
 			{
 				File fl = new File(jar);
-				URL url = null;
+				URL url;
 				try
 				{
 					url = fl.toURI().toURL();
 				}
 				catch (MalformedURLException e)
 				{
-					// nop
+					url = null;
 				}
 				if (url != null)
 				{
@@ -147,7 +164,7 @@ public class VisComObjectInputStream extends ObjectInputStream
 
 			if (urls.size() == 0)
 			{
-				logger.fatal("Unable to load any of the suggested jars: " + jars);
+				logger.fatal("Unable to load any of the suggested jars: " + Arrays.toString(jars));
 				return null;
 			}
 

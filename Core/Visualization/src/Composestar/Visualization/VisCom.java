@@ -45,6 +45,7 @@ public class VisCom
 	{
 		DataMap.setDataMapClass(DataMapImpl.class);
 		initialize();
+		logger.info("Starting Compose* Visualizer");
 	}
 
 	/**

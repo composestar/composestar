@@ -162,28 +162,30 @@ public class ProgramView extends View
 						Trail trail = trailIt.next();
 						FilterModule fm = (FilterModule) ((ContextRepositoryEntity) trail.getRE())
 								.getAncestorOfClass(FilterModule.class);
+						if (fm == null)
+						{
+							logger.warn("Trail has an repository entity without an FilterModule parent", trail.getRE());
+							continue;
+						}
 						if (InnerDispatcher.isDefaultDispatch(fm.getQualifiedName()))
 						{
 							// don't include the default dispatcher
 							continue;
 						}
-						if (fm != null)
+						Concern targetC = trail.getTargetConcern();
+						if (targetC == null)
 						{
-							Concern targetC = trail.getTargetConcern();
-							if (targetC == null)
-							{
-								targetC = concern;
-							}
-							logger.debug("Target concern for " + fm.getOriginalQualifiedName() + " : "
-									+ trail.getTargetConcern());
-							Set<Concern> fcMapping = fcMap.get(fm);
-							if (fcMapping == null)
-							{
-								fcMapping = new HashSet<Concern>();
-								fcMap.put(fm, fcMapping);
-							}
-							fcMapping.add(targetC);
+							targetC = concern;
 						}
+						logger.debug("Target concern for " + fm.getOriginalQualifiedName() + " : " + concern);
+						Set<Concern> fcMapping = fcMap.get(fm);
+						if (fcMapping == null)
+						{
+							fcMapping = new HashSet<Concern>();
+							fcMap.put(fm, fcMapping);
+						}
+						fcMapping.add(targetC);
+
 					}
 				}
 			}
@@ -218,7 +220,7 @@ public class ProgramView extends View
 		}
 		GraphConstants.setEndFill(map, type != ProgramViewEdge.EXTERNAL);
 		// GraphConstants.setEndSize(map, 15);
-		//GraphConstants.setLineStyle(map, GraphConstants.STYLE_SPLINE);
+		// GraphConstants.setLineStyle(map, GraphConstants.STYLE_BEZIER);
 		GraphConstants.setRouting(map, GraphConstants.ROUTING_SIMPLE);
 
 		layout.insert(edge);

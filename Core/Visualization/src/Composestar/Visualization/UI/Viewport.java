@@ -55,7 +55,7 @@ public class Viewport extends JFrame
 
 	private JTabbedPane views;
 
-	public Viewport(VisCom inController) throws HeadlessException
+	public Viewport(VisCom inController)
 	{
 		Logger.getRootLogger().addAppender(new MessageBoxAppender(this));
 		logger.debug("Creating viewport");
