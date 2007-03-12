@@ -31,7 +31,11 @@ public class FilterModuleVertex extends BaseGraphCell
 	public FilterModuleVertex(FilterModule fm)
 	{
 		super(fm);
-
+	}
+	
+	protected void setDefaults()
+	{
+		super.setDefaults();
 		AttributeMap attrs = getAttributes();
 		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 80, 20);
 		GraphConstants.setBounds(attrs, bounds);

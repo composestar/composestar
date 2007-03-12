@@ -18,11 +18,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphConstants;
-import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.Port;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -37,9 +34,9 @@ import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.Master.CompileHistory;
 import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
-import Composestar.Visualization.Model.CellViews.VisComCellViewFactory;
 import Composestar.Visualization.Model.Cells.FilterModuleConcernVertex;
 import Composestar.Visualization.Model.Cells.FilterModuleVertex;
+import Composestar.Visualization.Model.Routing.JGraphParallelRouter;
 
 /**
  * Highest view level. Shows the program layout.
@@ -57,7 +54,7 @@ public class ProgramView extends View
 	/**
 	 * Defines the type of edge
 	 * 
-	 * @author elmuerte
+	 * @author Michiel Hendriks
 	 */
 	public enum ProgramViewEdge
 	{
@@ -79,10 +76,6 @@ public class ProgramView extends View
 	{
 		super();
 		cells = new HashMap<Concern, FilterModuleConcernVertex>();
-		model = new DefaultGraphModel();
-		layout = new GraphLayoutCache(model, new VisComCellViewFactory());
-		graph = new JGraph(model, layout);
-		graph.setAntiAliased(true);
 
 		Iterator it = data.getDataStore().getAllInstancesOf(Concern.class);
 		while (it.hasNext())
@@ -220,8 +213,9 @@ public class ProgramView extends View
 		}
 		GraphConstants.setEndFill(map, type != ProgramViewEdge.EXTERNAL);
 		// GraphConstants.setEndSize(map, 15);
-		// GraphConstants.setLineStyle(map, GraphConstants.STYLE_BEZIER);
-		GraphConstants.setRouting(map, GraphConstants.ROUTING_SIMPLE);
+
+		GraphConstants.setLineStyle(map, GraphConstants.STYLE_SPLINE);
+		GraphConstants.setRouting(map, JGraphParallelRouter.getSharedInstance());
 
 		layout.insert(edge);
 	}

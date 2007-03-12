@@ -10,6 +10,10 @@
 
 package Composestar.Visualization.Model;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Master.CompileHistory;
 
 /**
@@ -20,14 +24,22 @@ import Composestar.Core.Master.CompileHistory;
 public class ViewManager
 {
 	protected CompileHistory history;
-	
+
 	protected ProgramView programView;
-	
+
+	protected Map<Concern, FilterView> filterViews;
+
 	public ViewManager(CompileHistory inHistory)
 	{
+		filterViews = new HashMap<Concern, FilterView>();
 		history = inHistory;
 	}
-	
+
+	/**
+	 * Get the main/program view
+	 * 
+	 * @return
+	 */
 	public ProgramView getProgramView()
 	{
 		if (programView == null)
@@ -35,5 +47,20 @@ public class ViewManager
 			programView = new ProgramView(history);
 		}
 		return programView;
+	}
+
+	/**
+	 * Get a filter view for a given concern
+	 * 
+	 * @param concern
+	 * @return
+	 */
+	public FilterView getFilterView(Concern concern)
+	{
+		if (!filterViews.containsKey(concern))
+		{
+			filterViews.put(concern, new FilterView(history, concern));
+		}
+		return filterViews.get(concern);
 	}
 }

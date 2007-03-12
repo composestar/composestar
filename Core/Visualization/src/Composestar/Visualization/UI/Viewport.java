@@ -11,7 +11,7 @@
 package Composestar.Visualization.UI;
 
 import java.awt.Dimension;
-import java.awt.HeadlessException;
+import java.awt.Rectangle;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -24,11 +24,15 @@ import javax.swing.WindowConstants;
 
 import org.apache.log4j.Logger;
 import org.jgraph.JGraph;
+import org.jgraph.plugins.layouts.CircleGraphLayout;
+import org.jgraph.plugins.layouts.JGraphLayoutAlgorithm;
 
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.VisCom;
+import Composestar.Visualization.Layout.SpringEmbeddedLayoutAlgorithm;
 import Composestar.Visualization.UI.Actions.FileExportAction;
 import Composestar.Visualization.UI.Utils.CompileHistoryFilter;
+import javax.swing.JPopupMenu;
 
 /**
  * The main viewport of the visualizer
@@ -55,6 +59,16 @@ public class Viewport extends JFrame
 
 	private JTabbedPane views;
 
+	private JMenu miLayout = null;
+
+	private JMenuItem miLayoutSpring = null;
+
+	private JMenuItem miLayoutCircle = null;
+
+	private JPopupMenu pmProgramView = null;  //  @jve:decl-index=0:visual-constraint="666,124"
+
+	private JMenuItem miFilterView = null;
+
 	public Viewport(VisCom inController)
 	{
 		Logger.getRootLogger().addAppender(new MessageBoxAppender(this));
@@ -65,7 +79,9 @@ public class Viewport extends JFrame
 		// TODO: dev only
 		if (controller.getViewManager() != null)
 		{
-			views.add("Program view", new JScrollPane(controller.getViewManager().getProgramView().getGraph()));
+			JGraph pv = controller.getViewManager().getProgramView().getGraph();
+			views.add("Program view", new JScrollPane(pv));
+			pv.add(getPmProgramView());
 		}
 	}
 
@@ -110,6 +126,7 @@ public class Viewport extends JFrame
 		{
 			mainMenu = new JMenuBar();
 			mainMenu.add(getMiFile());
+			mainMenu.add(getMiLayout());
 		}
 		return mainMenu;
 	}
@@ -221,5 +238,108 @@ public class Viewport extends JFrame
 			views = new JTabbedPane();
 		}
 		return views;
+	}
+
+	/**
+	 * This method initializes miLayout
+	 * 
+	 * @return javax.swing.JMenu
+	 */
+	private JMenu getMiLayout()
+	{
+		if (miLayout == null)
+		{
+			miLayout = new JMenu();
+			miLayout.setText("Layout");
+			miLayout.add(getMiLayoutSpring());
+			miLayout.add(getMiLayoutCircle());
+		}
+		return miLayout;
+	}
+
+	/**
+	 * This method initializes miLayoutSpring
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	private JMenuItem getMiLayoutSpring()
+	{
+		if (miLayoutSpring == null)
+		{
+			miLayoutSpring = new JMenuItem();
+			miLayoutSpring.setText("Spring");
+			miLayoutSpring.addActionListener(new java.awt.event.ActionListener()
+			{
+				public void actionPerformed(java.awt.event.ActionEvent e)
+				{
+					Object[] layoutCells = controller.getViewManager().getProgramView().getLayoutCells();
+					JGraphLayoutAlgorithm.applyLayout(controller.getViewManager().getProgramView().getGraph(),
+							new SpringEmbeddedLayoutAlgorithm(new Rectangle(300, 300), 30), layoutCells);
+				}
+			});
+		}
+		return miLayoutSpring;
+	}
+
+	/**
+	 * This method initializes miLayoutCircle
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	private JMenuItem getMiLayoutCircle()
+	{
+		if (miLayoutCircle == null)
+		{
+			miLayoutCircle = new JMenuItem();
+			miLayoutCircle.setText("Circle");
+			miLayoutCircle.addActionListener(new java.awt.event.ActionListener()
+			{
+				public void actionPerformed(java.awt.event.ActionEvent e)
+				{
+					Object[] layoutCells = controller.getViewManager().getProgramView().getLayoutCells();
+					JGraphLayoutAlgorithm.applyLayout(controller.getViewManager().getProgramView().getGraph(),
+							new CircleGraphLayout(), layoutCells);
+				}
+			});
+		}
+		return miLayoutCircle;
+	}
+
+	/**
+	 * This method initializes pmProgramView	
+	 * 	
+	 * @return javax.swing.JPopupMenu	
+	 */
+	private JPopupMenu getPmProgramView()
+	{
+		if (pmProgramView == null)
+		{
+			pmProgramView = new JPopupMenu();
+			pmProgramView.setVisible(true);
+			pmProgramView.add(getMiFilterView());
+		}
+		return pmProgramView;
+	}
+
+	/**
+	 * This method initializes miFilterView	
+	 * 	
+	 * @return javax.swing.JMenuItem	
+	 */
+	private JMenuItem getMiFilterView()
+	{
+		if (miFilterView == null)
+		{
+			miFilterView = new JMenuItem();
+			miFilterView.setText("Show filter view");
+			miFilterView.addActionListener(new java.awt.event.ActionListener()
+			{
+				public void actionPerformed(java.awt.event.ActionEvent e)
+				{
+					
+				}
+			});
+		}
+		return miFilterView;
 	}
 } // @jve:decl-index=0:visual-constraint="10,10"

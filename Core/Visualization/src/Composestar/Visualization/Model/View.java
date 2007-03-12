@@ -11,8 +11,11 @@
 package Composestar.Visualization.Model;
 
 import org.jgraph.JGraph;
+import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
+
+import Composestar.Visualization.Model.CellViews.VisComCellViewFactory;
 
 /**
  * @author Michiel Hendriks
@@ -24,9 +27,10 @@ public abstract class View
 	protected GraphLayoutCache layout;
 
 	protected JGraph graph;
-	
+
 	public View()
 	{
+		setGraphDefaults();
 	}
 
 	/**
@@ -37,5 +41,30 @@ public abstract class View
 	public JGraph getGraph()
 	{
 		return graph;
+	}
+
+	/**
+	 * Return the list of cells that may be positioned through layout
+	 * algorithms.
+	 * 
+	 * @return
+	 */
+	public Object[] getLayoutCells()
+	{
+		return graph.getRoots();
+	}
+	
+	protected void setGraphDefaults()
+	{
+		model = new DefaultGraphModel();
+		layout = new GraphLayoutCache(model, new VisComCellViewFactory());
+		graph = new JGraph(model, layout);
+		
+		graph.setAntiAliased(true);
+		graph.setBendable(false);
+		graph.setConnectable(false);
+		graph.setDisconnectable(false);
+		graph.setEditable(false);
+		graph.setGridVisible(true); // meh
 	}
 }

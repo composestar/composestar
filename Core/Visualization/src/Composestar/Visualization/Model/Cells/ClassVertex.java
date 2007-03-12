@@ -42,7 +42,17 @@ public class ClassVertex extends BaseGraphCell
 		 * usually means the member is being used as a source or target for a
 		 * filter.
 		 */
-		RELEVANT,
+		RELEVANT;
+		
+		public static EnumSet<MemberFlags> all()
+		{
+			return EnumSet.allOf(MemberFlags.class);
+		}
+		
+		public static EnumSet<MemberFlags> none()
+		{
+			return EnumSet.noneOf(MemberFlags.class);
+		}
 	}
 
 	protected Type platformRep;
@@ -55,7 +65,7 @@ public class ClassVertex extends BaseGraphCell
 
 	public ClassVertex(Type inPlatformRep)
 	{
-		this(inPlatformRep, EnumSet.allOf(MemberFlags.class));
+		this(inPlatformRep, MemberFlags.all());
 	}
 
 	/**
