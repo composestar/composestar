@@ -32,7 +32,7 @@ public abstract class ConcernVertex extends BaseGraphCell
 	 * The class vertex
 	 */
 	protected ClassVertex classVertex;
-	
+
 	public ConcernVertex(Concern concern)
 	{
 		super(concern);
@@ -44,7 +44,7 @@ public abstract class ConcernVertex extends BaseGraphCell
 		super(concern);
 		addClassVertex(concern, filter);
 	}
-	
+
 	protected void addClassVertex(Concern concern, EnumSet<MemberFlags> filter)
 	{
 		classVertex = new ClassVertex((Type) concern.getPlatformRepresentation(), filter);
@@ -82,4 +82,11 @@ public abstract class ConcernVertex extends BaseGraphCell
 	{
 		return (Concern) getUserObject();
 	}
+
+	@Override
+	public String getToolTipString()
+	{
+		return null;
+	}
+
 }

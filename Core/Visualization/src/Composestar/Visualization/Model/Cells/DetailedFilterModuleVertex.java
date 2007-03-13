@@ -11,8 +11,6 @@
 package Composestar.Visualization.Model.Cells;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.jgraph.graph.AttributeMap;
@@ -21,15 +19,30 @@ import org.jgraph.graph.GraphConstants;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 
 /**
- * A vertex for a FilterModuleConcernVertex with an assigned filtermodule
+ * Shows the inner details of the filtermodule. Used by the FilterConcernVertex.
  * 
  * @author Michiel Hendriks
  */
-public class FilterModuleVertex extends BaseGraphCell
+public class DetailedFilterModuleVertex extends FilterModuleVertex
 {
-	private static final long serialVersionUID = -2474091449484054983L;
+	private static final long serialVersionUID = 1346991495621474334L;
 
-	public FilterModuleVertex(FilterModule fm)
+	/**
+	 * Cell that contains all inputfilters cells
+	 */
+	protected BaseGraphCell inputFilters;
+
+	/**
+	 * Cell that contains all outputfilter cells
+	 */
+	protected BaseGraphCell outputFilters;
+
+	/**
+	 * Cell that contains all internals, externals and conditions
+	 */
+	protected BaseGraphCell members;
+
+	public DetailedFilterModuleVertex(FilterModule fm)
 	{
 		super(fm);
 	}
@@ -37,24 +50,10 @@ public class FilterModuleVertex extends BaseGraphCell
 	protected void setDefaults()
 	{
 		AttributeMap attrs = getAttributes();
-		GraphConstants.setFont(getAttributes(), new Font("sansserif", Font.PLAIN, 11));
 		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 80, 20);
 		GraphConstants.setBounds(attrs, bounds);
 		GraphConstants.setBorderColor(attrs, Color.BLACK);
 		GraphConstants.setBackground(attrs, new Color(0xDDEEFF));
-		GraphConstants.setOpaque(attrs, true);
-
-		Point2D pt = new Point2D.Double(GraphConstants.PERMILLE, GraphConstants.PERMILLE / 2);
-		GraphConstants.setOffset(getPort().getAttributes(), pt);
-	}
-
-	public FilterModule getFilterModule()
-	{
-		return (FilterModule) getUserObject();
-	}
-
-	public String toString()
-	{
-		return getFilterModule().getOriginalQualifiedName();
+		GraphConstants.setGroupOpaque(attrs, true);
 	}
 }

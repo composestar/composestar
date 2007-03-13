@@ -16,9 +16,11 @@ import java.awt.Graphics2D;
 import org.jgraph.graph.VertexRenderer;
 
 /**
+ * Normal vertex renderer but adds seperator lines at set positions.
+ * 
  * @author Michiel Hendriks
  */
-public class ClassVertexRenderer extends VertexRenderer
+public class LineSeparationRenderer extends VertexRenderer
 {
 	private static final long serialVersionUID = -5036490366123202126L;
 
@@ -31,9 +33,12 @@ public class ClassVertexRenderer extends VertexRenderer
 	public void paint(Graphics g)
 	{
 		super.paint(g);
-		ClassVertexView classView = (ClassVertexView) view;
+		LineSeparationView lineSepView = (LineSeparationView) view;
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawLine(0, (int) classView.getLabelHeight(), getWidth(), (int) classView.getLabelHeight());
-		g2d.drawLine(0, (int) classView.getSeparatorPos(), getWidth(), (int) classView.getSeparatorPos());
+		double[] seps = lineSepView.getSeperators();
+		for (double pos : seps)
+		{
+			g2d.drawLine(0, (int) pos, getWidth(), (int) pos);
+		}
 	}
 }

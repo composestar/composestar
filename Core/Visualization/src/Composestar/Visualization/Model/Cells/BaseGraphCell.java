@@ -61,7 +61,7 @@ public class BaseGraphCell extends DefaultGraphCell
 
 	/**
 	 * Sets the default cell attributes. Called by the constructor of
-	 * BaseGraphCell
+	 * BaseGraphCell.
 	 */
 	protected void setDefaults()
 	{
@@ -173,5 +173,20 @@ public class BaseGraphCell extends DefaultGraphCell
 			return ret;
 		}
 		return GraphConstants.getBounds(getAttributes());
+	}
+
+	/**
+	 * Return a tool tip if any
+	 * 
+	 * @return
+	 */
+	public String getToolTipString()
+	{
+		String tt = toString();
+		if (tt == null || tt.length() == 0)
+		{
+			return null;
+		}
+		return tt;
 	}
 }

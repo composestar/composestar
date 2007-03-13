@@ -14,11 +14,12 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Visualization.Model.Cells.ClassVertex.MemberFlags;
 
 /**
- * A concern vertex with detailed filter module information. Used by the FilterViewF
+ * A concern vertex with detailed filter module information. Used by the
+ * FilterViewF
  * 
  * @author Michiel Hendriks
  */
-public class FilterConcernVertex extends ConcernVertex
+public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 {
 	private static final long serialVersionUID = 5214277399628413966L;
 
@@ -28,5 +29,11 @@ public class FilterConcernVertex extends ConcernVertex
 	public FilterConcernVertex(Concern concern)
 	{
 		super(concern, MemberFlags.all());
+	}
+
+	@Override
+	protected void addFmVertices(Concern concern)
+	{
+	// TODO Auto-generated method stub
 	}
 }

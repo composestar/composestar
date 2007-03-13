@@ -14,66 +14,29 @@ import java.awt.geom.Rectangle2D;
 
 import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.CellView;
-import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.GraphConstants;
-import org.jgraph.graph.VertexView;
+
+import Composestar.Visualization.Model.Cells.ClassVertex;
 
 /**
  * Renders the ClassVertex
  * 
  * @author Michiel Hendriks
  */
-public class ClassVertexView extends VertexView
+public class ClassVertexView extends LineSeparationView
 {
 	private static final long serialVersionUID = 249471576219357145L;
-	
-	protected static final ClassVertexRenderer RENDERER = new ClassVertexRenderer();
-
-	/**
-	 * Height of the class name
-	 */
-	protected double labelHeight = 20.0;
-
-	/**
-	 * Location between fields and methods
-	 */
-	protected double separatorPos = 40.0;
 
 	public ClassVertexView()
 	{
 		super();
+		separators = new double[2];
 	}
 
 	public ClassVertexView(Object cell)
 	{
 		super(cell);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jgraph.graph.VertexView#getRenderer()
-	 */
-	@Override
-	public CellViewRenderer getRenderer()
-	{
-		return RENDERER;
-	}
-
-	/**
-	 * @see #labelHeight
-	 */
-	public double getLabelHeight()
-	{
-		return labelHeight;
-	}
-
-	/**
-	 * @see #separatorPos
-	 */
-	public double getSeparatorPos()
-	{
-		return separatorPos;
+		separators = new double[2];
 	}
 
 	/*
@@ -87,24 +50,24 @@ public class ClassVertexView extends VertexView
 		super.updateGroupBounds();
 
 		// update the bounds to include the label area
-		groupBounds.setFrame(groupBounds.getX(), groupBounds.getY() - labelHeight, groupBounds.getWidth(), groupBounds
-				.getHeight()
-				+ labelHeight);
+		groupBounds.setFrame(groupBounds.getX(), groupBounds.getY() - separators[0], groupBounds.getWidth(),
+				groupBounds.getHeight() + separators[0]);
 	}
 
 	@Override
 	public void update()
 	{
+		separators[0] = (Double) allAttributes.get(ClassVertex.LABEL_HEIGHT);
 		CellView[] childViews = getChildViews();
 		if (childViews.length >= 2)
 		{
 			Rectangle2D fBounds = childViews[0].getBounds();
 			int inset = GraphConstants.getInset(getAllAttributes());
-			separatorPos = labelHeight + fBounds.getHeight() + inset * 2 - 1;
+			separators[1] = separators[0] + fBounds.getHeight() + inset * 2 - 1;
 			// 1 is for the border
 
 			Rectangle2D mBounds = childViews[1].getBounds();
-			double dy = fBounds.getY() + fBounds.getHeight() + inset - mBounds.getY();			
+			double dy = fBounds.getY() + fBounds.getHeight() + inset - mBounds.getY();
 			if (dy != 0)
 			{
 				((AbstractCellView) childViews[1]).translate(0, dy);

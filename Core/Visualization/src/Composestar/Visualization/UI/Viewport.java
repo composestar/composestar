@@ -12,12 +12,15 @@ package Composestar.Visualization.UI;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
@@ -27,12 +30,13 @@ import org.jgraph.JGraph;
 import org.jgraph.plugins.layouts.CircleGraphLayout;
 import org.jgraph.plugins.layouts.JGraphLayoutAlgorithm;
 
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.VisCom;
 import Composestar.Visualization.Layout.SpringEmbeddedLayoutAlgorithm;
+import Composestar.Visualization.Model.Cells.ConcernVertex;
 import Composestar.Visualization.UI.Actions.FileExportAction;
 import Composestar.Visualization.UI.Utils.CompileHistoryFilter;
-import javax.swing.JPopupMenu;
 
 /**
  * The main viewport of the visualizer
@@ -65,7 +69,7 @@ public class Viewport extends JFrame
 
 	private JMenuItem miLayoutCircle = null;
 
-	private JPopupMenu pmProgramView = null;  //  @jve:decl-index=0:visual-constraint="666,124"
+	private JPopupMenu pmProgramView = null; // @jve:decl-index=0:visual-constraint="666,124"
 
 	private JMenuItem miFilterView = null;
 
@@ -79,9 +83,33 @@ public class Viewport extends JFrame
 		// TODO: dev only
 		if (controller.getViewManager() != null)
 		{
+			getPmProgramView();
 			JGraph pv = controller.getViewManager().getProgramView().getGraph();
 			views.add("Program view", new JScrollPane(pv));
-			pv.add(getPmProgramView());
+			pv.addMouseListener(new MouseAdapter()
+			{
+				public void mousePressed(MouseEvent e)
+				{
+					maybeShowPopup(e);
+				}
+
+				public void mouseReleased(MouseEvent e)
+				{
+					maybeShowPopup(e);
+				}
+
+				private void maybeShowPopup(MouseEvent e)
+				{
+					if (e.isPopupTrigger())
+					{
+						JGraph pvGraph = getActiveGraph();
+						if (pvGraph.getSelectionCell() instanceof ConcernVertex)
+						{
+							pmProgramView.show(e.getComponent(), e.getX(), e.getY());
+						}
+					}
+				}
+			});
 		}
 	}
 
@@ -107,7 +135,7 @@ public class Viewport extends JFrame
 	 */
 	private void initialize()
 	{
-		this.setTitle("Compose* Visualization");
+		this.setTitle("Compose* Visualization [alpha]");
 		this.setContentPane(getViews());
 		this.setJMenuBar(getMainMenu());
 		this.setSize(new Dimension(627, 484));
@@ -306,9 +334,9 @@ public class Viewport extends JFrame
 	}
 
 	/**
-	 * This method initializes pmProgramView	
-	 * 	
-	 * @return javax.swing.JPopupMenu	
+	 * This method initializes pmProgramView
+	 * 
+	 * @return javax.swing.JPopupMenu
 	 */
 	private JPopupMenu getPmProgramView()
 	{
@@ -322,9 +350,9 @@ public class Viewport extends JFrame
 	}
 
 	/**
-	 * This method initializes miFilterView	
-	 * 	
-	 * @return javax.swing.JMenuItem	
+	 * This method initializes miFilterView
+	 * 
+	 * @return javax.swing.JMenuItem
 	 */
 	private JMenuItem getMiFilterView()
 	{
@@ -336,7 +364,14 @@ public class Viewport extends JFrame
 			{
 				public void actionPerformed(java.awt.event.ActionEvent e)
 				{
-					
+					JGraph pvGraph = getActiveGraph();
+					if (pvGraph.getSelectionCell() instanceof ConcernVertex)
+					{
+						Concern concern = ((ConcernVertex) pvGraph.getSelectionCell()).getConcern();
+						logger.info("Adding Filter View for " + concern);
+						views.add(concern.getQualifiedName(), new JScrollPane(controller.getViewManager()
+								.getFilterView(concern).getGraph()));
+					}
 				}
 			});
 		}

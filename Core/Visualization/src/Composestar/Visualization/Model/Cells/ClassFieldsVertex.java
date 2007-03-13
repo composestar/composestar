@@ -60,9 +60,18 @@ public class ClassFieldsVertex extends ClassMembersVertex
 			{
 				vis = MemberFlags.PRIVATE;
 			}
-			BaseGraphCell entry = addEntry(field.getUnitName() + ": " + field.getUnitType(), idx, vis);
+			BaseGraphCell entry = addEntry(getStringRep(field), idx, vis);
 			members.put(field.getUnitName(), entry);
 			idx++;
 		}
+	}
+
+	protected String getStringRep(FieldInfo fi)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(fi.name());
+		sb.append(": ");
+		sb.append(fi.getFieldTypeString());
+		return sb.toString();
 	}
 }

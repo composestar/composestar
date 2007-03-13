@@ -14,6 +14,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.Model.Cells.ClassVertex.MemberFlags;
@@ -66,15 +67,26 @@ public class ClassMethodsVertex extends ClassMembersVertex
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected String getStringRep(MethodInfo meth)
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append(meth.getName());
 		sb.append("(");
-		if (meth.getParameters().size() > 0)
+		
+		int parcnt = 0;
+		for (ParameterInfo pi : (List<ParameterInfo>) meth.getParameters())
 		{
-			sb.append("...");
+			if (parcnt > 0)
+			{
+				sb.append(", ");
+			}
+			sb.append(pi.name());
+			sb.append(": ");
+			sb.append(pi.getParameterTypeString());
+			parcnt++;
 		}
+		
 		sb.append(")");
 		String ret = meth.returnTypeName();
 		if (ret != null && !ret.toLowerCase().endsWith(".void"))

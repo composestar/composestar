@@ -58,7 +58,7 @@ public abstract class View
 	{
 		model = new DefaultGraphModel();
 		layout = new GraphLayoutCache(model, new VisComCellViewFactory());
-		graph = new JGraph(model, layout);
+		graph = new CpsJGraph(model, layout);
 		
 		graph.setAntiAliased(true);
 		graph.setBendable(false);

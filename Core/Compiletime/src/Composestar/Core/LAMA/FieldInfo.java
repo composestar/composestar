@@ -39,6 +39,11 @@ public abstract class FieldInfo extends ProgramElement
 		}
 		return FieldType;
 	}
+	
+	public String getFieldTypeString()
+	{
+		return FieldTypeString;
+	}
 
 	public void setFieldType(String fieldtype)
 	{

@@ -32,6 +32,13 @@ public class ClassVertex extends BaseGraphCell
 	private static final long serialVersionUID = -8859175705375540286L;
 
 	/**
+	 * AttributeMap entry for the height of the vertex label
+	 */
+	public static final String LABEL_HEIGHT = "labelHeight";
+
+	public static final int INSET = 4;
+
+	/**
 	 * Various flags for members.
 	 */
 	public enum MemberFlags
@@ -43,12 +50,12 @@ public class ClassVertex extends BaseGraphCell
 		 * filter.
 		 */
 		RELEVANT;
-		
+
 		public static EnumSet<MemberFlags> all()
 		{
 			return EnumSet.allOf(MemberFlags.class);
 		}
-		
+
 		public static EnumSet<MemberFlags> none()
 		{
 			return EnumSet.noneOf(MemberFlags.class);
@@ -60,8 +67,6 @@ public class ClassVertex extends BaseGraphCell
 	protected ClassFieldsVertex fields;
 
 	protected ClassMethodsVertex methods;
-
-	public static final int INSET = 4;
 
 	public ClassVertex(Type inPlatformRep)
 	{
@@ -81,6 +86,7 @@ public class ClassVertex extends BaseGraphCell
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void setDefaults()
 	{
 		AttributeMap attrs = getAttributes();
@@ -95,6 +101,7 @@ public class ClassVertex extends BaseGraphCell
 		GraphConstants.setInset(attrs, INSET);
 		GraphConstants.setSizeableAxis(attrs, GraphConstants.X_AXIS);
 		GraphConstants.setHorizontalAlignment(attrs, JLabel.CENTER);
+		attrs.put(LABEL_HEIGHT, new Double(20));
 	}
 
 	protected void addChildren(EnumSet<MemberFlags> filter)

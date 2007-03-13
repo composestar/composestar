@@ -35,5 +35,8 @@ public class FilterView extends View
 	{
 		super();
 		focusVertex = new FilterConcernVertex(focusConcern);
+		layout.insert(focusVertex);
+
+		// TODO: add neighbouring cells with edges
 	}
 }
