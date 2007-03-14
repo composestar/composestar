@@ -44,7 +44,10 @@ import org.jgraph.graph.VertexView;
 /**
  * Algorithm which create intermediates points for parallel edges
  */
-public class JGraphParallelRouter extends DefaultEdge.LoopRouting {
+public class JGraphParallelRouter extends DefaultEdge.LoopRouting
+{
+
+	private static final long serialVersionUID = -4245958828141816411L;
 
 	/**
 	 * Singleton to reach parallel edge router
@@ -54,7 +57,7 @@ public class JGraphParallelRouter extends DefaultEdge.LoopRouting {
 	/**
 	 * Default model
 	 */
-	private static final GraphModel emptyModel = new DefaultGraphModel();
+	private static final GraphModel EMPTY_MODEL = new DefaultGraphModel();
 
 	/**
 	 * Distance between each parallel edge
@@ -71,41 +74,46 @@ public class JGraphParallelRouter extends DefaultEdge.LoopRouting {
 	 * 
 	 * @return JGraphParallelRouter for parallel edges
 	 */
-	public static JGraphParallelRouter getSharedInstance() {
+	public static JGraphParallelRouter getSharedInstance()
+	{
 		return JGraphParallelRouter.sharedInstance;
 	}
 
 	/**
 	 * Calc of intermediates points
 	 * 
-	 * @param edge
-	 *            Edge for which routing is demanding
+	 * @param edge Edge for which routing is demanding
 	 */
-	public List routeEdge(EdgeView edge) {
-		List newPoints = new ArrayList();
+	public List routeEdge(EdgeView edge)
+	{
+		List<Object> newPoints = new ArrayList<Object>();
 
 		// Check presence of source/target nodes
-		if ((null == edge.getSource()) || (null == edge.getTarget())
-				|| (null == edge.getSource().getParentView())
-				|| (null == edge.getTarget().getParentView())) {
+		if ((null == edge.getSource()) || (null == edge.getTarget()) || (null == edge.getSource().getParentView())
+				|| (null == edge.getTarget().getParentView()))
+		{
 			return null;
 		}
 		newPoints.add(edge.getSource());
 
 		// Check presence of parallel edges
 		Object[] edges = getParallelEdges(edge);
-		if (edges == null) {
+		if (edges == null)
+		{
 			return null;
 		}
 
 		// For one edge, no intermediate point
-		if (edges.length >= 2) {
+		if (edges.length >= 2)
+		{
 
 			// Looking for position of edge
 			int position = 0;
-			for (int i = 0; i < edges.length; i++) {
+			for (int i = 0; i < edges.length; i++)
+			{
 				Object e = edges[i];
-				if (e == edge.getCell()) {
+				if (e == edge.getCell())
+				{
 					position = i + 1;
 				}
 			}
@@ -116,7 +124,8 @@ public class JGraphParallelRouter extends DefaultEdge.LoopRouting {
 			Point2D from = AbstractCellView.getCenterPoint(nodeFrom);
 			Point2D to = AbstractCellView.getCenterPoint(nodeTo);
 
-			if (from != null && to != null) {
+			if (from != null && to != null)
+			{
 				double dy = from.getY() - to.getY();
 				double dx = from.getX() - to.getX();
 
@@ -127,15 +136,11 @@ public class JGraphParallelRouter extends DefaultEdge.LoopRouting {
 				double ry = dy / Math.sqrt(dx * dx + dy * dy);
 
 				// Memorize size of source/target nodes
-				double sizeFrom = Math.max(nodeFrom.getBounds().getWidth(),
-						nodeFrom.getBounds().getHeight()) / 2.;
-				double sizeTo = Math.max(nodeTo.getBounds().getWidth(), nodeTo
-						.getBounds().getHeight()) / 2.;
+				double sizeFrom = Math.max(nodeFrom.getBounds().getWidth(), nodeFrom.getBounds().getHeight()) / 2.;
+				double sizeTo = Math.max(nodeTo.getBounds().getWidth(), nodeTo.getBounds().getHeight()) / 2.;
 
 				// Calc position of central point
-				double edgeMiddleDeparture = (Math.sqrt(dx * dx + dy * dy)
-						- sizeFrom - sizeTo)
-						/ 2 + sizeFrom;
+				double edgeMiddleDeparture = (Math.sqrt(dx * dx + dy * dy) - sizeFrom - sizeTo) / 2 + sizeFrom;
 
 				// Calc position of intermediates points
 				double edgeFromDeparture = edgeDeparture + sizeFrom;
@@ -143,7 +148,8 @@ public class JGraphParallelRouter extends DefaultEdge.LoopRouting {
 
 				// Calc distance between edge and mediane source/target
 				double r = edgeSeparation * Math.floor(position / 2);
-				if (0 == (position % 2)) {
+				if (0 == (position % 2))
+				{
 					r = -r;
 				}
 
@@ -152,25 +158,25 @@ public class JGraphParallelRouter extends DefaultEdge.LoopRouting {
 				double ey = r * Math.sin(theta);
 
 				// Check if is not better to have only one intermediate point
-				if (edgeMiddleDeparture <= edgeFromDeparture) {
+				if (edgeMiddleDeparture <= edgeFromDeparture)
+				{
 					double midX = from.getX() - rx * edgeMiddleDeparture;
 					double midY = from.getY() - ry * edgeMiddleDeparture;
 
-					Point2D controlPoint = new Point2D.Double(ex + midX, ey
-							+ midY);
+					Point2D controlPoint = new Point2D.Double(ex + midX, ey + midY);
 
 					// Add intermediate point
 					newPoints.add(controlPoint);
-				} else {
+				}
+				else
+				{
 					double midXFrom = from.getX() - rx * edgeFromDeparture;
 					double midYFrom = from.getY() - ry * edgeFromDeparture;
 					double midXTo = to.getX() + rx * edgeToDeparture;
 					double midYTo = to.getY() + ry * edgeToDeparture;
 
-					Point2D controlPointFrom = new Point2D.Double(
-							ex + midXFrom, ey + midYFrom);
-					Point2D controlPointTo = new Point2D.Double(ex + midXTo, ey
-							+ midYTo);
+					Point2D controlPointFrom = new Point2D.Double(ex + midXFrom, ey + midYFrom);
+					Point2D controlPointTo = new Point2D.Double(ex + midXTo, ey + midYTo);
 
 					// Add intermediates points
 					newPoints.add(controlPointFrom);
@@ -187,17 +193,18 @@ public class JGraphParallelRouter extends DefaultEdge.LoopRouting {
 	 * 
 	 * @return Distance
 	 */
-	public static double getEdgeSeparation() {
+	public static double getEdgeSeparation()
+	{
 		return JGraphParallelRouter.edgeSeparation;
 	}
 
 	/**
 	 * Setter to define distance between each parallel edge
 	 * 
-	 * @param edgeSeparation
-	 *            New distance
+	 * @param edgeSeparation New distance
 	 */
-	public static void setEdgeSeparation(double edgeSeparation) {
+	public static void setEdgeSeparation(double edgeSeparation)
+	{
 		JGraphParallelRouter.edgeSeparation = edgeSeparation;
 	}
 
@@ -207,34 +214,34 @@ public class JGraphParallelRouter extends DefaultEdge.LoopRouting {
 	 * 
 	 * @return Distance
 	 */
-	public static double getEdgeDeparture() {
+	public static double getEdgeDeparture()
+	{
 		return JGraphParallelRouter.edgeDeparture;
 	}
 
 	/**
 	 * Setter to define distance between intermediate and source/target points
 	 * 
-	 * @param edgeDeparture
-	 *            New distance
+	 * @param edgeDeparture New distance
 	 */
-	public static void setEdgeDeparture(double edgeDeparture) {
+	public static void setEdgeDeparture(double edgeDeparture)
+	{
 		JGraphParallelRouter.edgeDeparture = edgeDeparture;
 	}
 
 	/**
 	 * Getter to obtain the list of parallel edges
 	 * 
-	 * @param edge
-	 *            Edge on which one wants to know parallel edges
+	 * @param edge Edge on which one wants to know parallel edges
 	 * @return Object[] Array of parallel edges (include edge passed on
 	 *         argument)
 	 */
-	private Object[] getParallelEdges(EdgeView edge) {
+	private Object[] getParallelEdges(EdgeView edge)
+	{
 		// FIXME: The model is stored in the cells only in the default
 		// implementations. Otherwise we must use the real model here.
-		return DefaultGraphModel.getEdgesBetween(emptyModel, edge.getSource()
-				.getParentView().getCell(), edge.getTarget().getParentView()
-				.getCell(), false);
+		return DefaultGraphModel.getEdgesBetween(EMPTY_MODEL, edge.getSource().getParentView().getCell(), edge
+				.getTarget().getParentView().getCell(), false);
 	}
 
 }

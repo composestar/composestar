@@ -16,7 +16,7 @@ import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.GraphConstants;
 
-import Composestar.Visualization.Model.Cells.ClassVertex;
+import Composestar.Visualization.Model.CpsGraphConstants;
 
 /**
  * Renders the ClassVertex
@@ -57,7 +57,7 @@ public class ClassVertexView extends LineSeparationView
 	@Override
 	public void update()
 	{
-		separators[0] = (Double) allAttributes.get(ClassVertex.LABEL_HEIGHT);
+		separators[0] = CpsGraphConstants.getLabelHeight(getAllAttributes());
 		CellView[] childViews = getChildViews();
 		if (childViews.length >= 2)
 		{

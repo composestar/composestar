@@ -92,7 +92,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 
 	public static final String SPRING_EMBEDDED_ORIGPOS = "SpringEmbeddedOrigPos";
 
-	private Rectangle myFrame = null;
+	private Rectangle myFrame;
 
 	private int myMaxIterations = -1;
 
@@ -221,11 +221,11 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 	 * The implementation of the layout algorithm.
 	 * 
 	 * @param graph : JGraph instance
-	 * @param dynamic_cells : List of all nodes the layout should move
-	 * @param static_cells : List of node the layout should not move but allow
+	 * @param dynamicCells : List of all nodes the layout should move
+	 * @param staticCells : List of node the layout should not move but allow
 	 *            for
 	 */
-	public void run(JGraph graph, Object[] dynamic_cells, Object[] static_cells)
+	public void run(JGraph graph, Object[] dynamicCells, Object[] staticCells)
 	{
 
 		// ---------------------------------------------------------------------------
@@ -234,10 +234,9 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		GraphLayoutCache layoutCache = graph.getGraphLayoutCache();
 		List<VertexView> vertices = new ArrayList<VertexView>(); // vertices
 		List<EdgeView> edges = new ArrayList<EdgeView>(); // Edges
-		List<VertexView> verticesWithOutEdges = new ArrayList<VertexView>();
 
 		// Take all cells
-		CellView[] cellviews = layoutCache.getMapping(dynamic_cells, false);
+		CellView[] cellviews = layoutCache.getMapping(dynamicCells, false);
 
 		// System.out.println("Number of Cells = " + cellviews.length);
 
@@ -246,10 +245,10 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		// System.out.println("Number of vertices = " + vertices.size());
 		// System.out.println("Number of Edges = " + edges.size());
 
-		double FrameWidth = myFrame.getWidth(); // Width of the selectionFrame
-		double FrameHeight = myFrame.getHeight(); // Height of the
+		double frameWidth = myFrame.getWidth(); // Width of the selectionFrame
+		double frameHeight = myFrame.getHeight(); // Height of the
 		// selectionFrame
-		double FrameArea = FrameWidth * FrameHeight; // area of the
+		double frameArea = frameWidth * frameHeight; // area of the
 		// selectionFrame
 		/*
 		 * System.out.println( " W = " + FrameWidth ) ; System.out.println( " H = " +
@@ -262,14 +261,14 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		// ---------------------------------------------------------------------------
 
 		// calculate the field length for the area
-		double AreaFieldLength = Math.sqrt((FrameArea) / (vertices.size()));
+		double areaFieldLength = Math.sqrt(frameArea / (vertices.size()));
 
-		verticesWithOutEdges = findVertexWithoutEdges(edges, vertices);
+		List<VertexView> verticesWithOutEdges = findVertexWithoutEdges(edges, vertices);
 
 		for (int loop = 0; loop < myMaxIterations; loop++)
 		{
-			calculateRepulsiveForces(vertices, AreaFieldLength);
-			calculateAttractiveForces(edges, verticesWithOutEdges, AreaFieldLength);
+			calculateRepulsiveForces(vertices, areaFieldLength);
+			calculateAttractiveForces(edges, verticesWithOutEdges, areaFieldLength);
 			calculateNewPositions(vertices, loop);
 		}
 
@@ -289,7 +288,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 
 		int movementY = (int) (myFrame.y - calculateFrame.getY());
 
-		Map viewMap = drawGraph(layoutCache.getMapping(dynamic_cells, false), movementX, stretchX, movementY, stretchY);
+		Map viewMap = drawGraph(layoutCache.getMapping(dynamicCells, false), movementX, stretchX, movementY, stretchY);
 
 		layoutCache.edit(viewMap, null, null, null);
 	}
@@ -359,7 +358,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		}
 	}
 
-	private void calculateRepulsiveForces(List<VertexView> vertices, double AreaFieldLength)
+	private void calculateRepulsiveForces(List<VertexView> vertices, double areaFieldLength)
 	{
 		// ---------------------------------------------------------------------------
 		// calculate the repulsive forces
@@ -394,7 +393,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 					delta.x = (int) (vPos.getX() - uPos.getX());
 					delta.y = (int) (vPos.getY() - uPos.getY());
 
-					double fr = fr(norm(delta), AreaFieldLength);
+					double fr = fr(norm(delta), areaFieldLength);
 					// System.out.println("FR = " + fr);
 
 					// fr = fr - fr*0.20;
@@ -416,7 +415,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 	}
 
 	private void calculateAttractiveForces(List<EdgeView> edges, List<VertexView> verticesWithoutEdges,
-			double AreaFieldLength)
+			double areaFieldLength)
 	{
 		// ---------------------------------------------------------------------------
 		// calculate the attractive forces
@@ -475,7 +474,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 				delta.y = (int) (vPos.getY() - uPos.getY());
 
 				// calculate the attractive forces
-				double fa = fa(norm(delta), AreaFieldLength);
+				double fa = fa(norm(delta), areaFieldLength);
 				// System.out.println("FA = " + fa);
 
 				double deltaNormX = delta.x / norm(delta);
@@ -592,8 +591,8 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 
 		// limit the maximum displacement to the temperature buttonText
 		// and then prevent from being displacement outside frame
-		double Temperature = Math.sqrt(Math.pow(myFrame.width, 2) + Math.pow(myFrame.height, 2))
-				* ((((double) myMaxIterations) / ((curIteration + 1))) / (myMaxIterations));
+		double temperature = Math.sqrt(Math.pow(myFrame.width, 2) + Math.pow(myFrame.height, 2))
+				* ((((double) myMaxIterations) / (curIteration + 1)) / myMaxIterations);
 
 		for (int vCount = 0; vCount < vertices.size(); vCount++)
 		{
@@ -607,10 +606,10 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 			// vPos ) ;
 
 			double dispNormX = vDisp.getX() / norm(vDisp);
-			double minX = Math.min(Math.abs(vDisp.getX()), Temperature);
+			double minX = Math.min(Math.abs(vDisp.getX()), temperature);
 
 			double dispNormY = vDisp.getY() / norm(vDisp);
-			double minY = Math.min(Math.abs(vDisp.getY()), Temperature);
+			double minY = Math.min(Math.abs(vDisp.getY()), temperature);
 
 			vPos.setFrame(vPos.getX() + dispNormX * minX, vPos.getY() + dispNormY * minY, vPos.getWidth(), vPos
 					.getHeight());
@@ -756,11 +755,12 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		return viewMap;
 	}
 
-	private void updateVertexPosition(CellView vert, String PosField, Rectangle2D Position)
+	@SuppressWarnings("unchecked")
+	private void updateVertexPosition(CellView vert, String posField, Rectangle2D position)
 	{
 		AttributeMap vertAttrib = vert.getAllAttributes();
 
-		vertAttrib.put(PosField, Position);
+		vertAttrib.put(posField, position);
 
 		/*
 		 * There is no contractual guarantee that the Attribute Map returned by
@@ -772,20 +772,20 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		vert.changeAttributes(vertAttrib);
 	}
 
-	private Rectangle2D getVertexPosition(CellView vert, String PosField)
+	private Rectangle2D getVertexPosition(CellView vert, String posField)
 	{
 		AttributeMap vertAttrib = vert.getAllAttributes();
 
-		Rectangle2D result = (Rectangle2D) vertAttrib.get(PosField);
+		Rectangle2D result = (Rectangle2D) vertAttrib.get(posField);
 
-		return (result);
+		return result;
 	}
 
-	private Rectangle2D removeVertexPosition(CellView vert, String PosField)
+	private Rectangle2D removeVertexPosition(CellView vert, String posField)
 	{
 		AttributeMap vertAttrib = vert.getAllAttributes();
 
-		Rectangle2D result = (Rectangle2D) vertAttrib.remove(PosField);
+		Rectangle2D result = (Rectangle2D) vertAttrib.remove(posField);
 
 		/*
 		 * There is no contractual guarantee that the Attribute Map returned by
@@ -796,7 +796,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		 */
 		vert.changeAttributes(vertAttrib);
 
-		return (result);
+		return result;
 	}
 
 	/**
@@ -804,7 +804,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 	 */
 	protected double fa(double x, double k)
 	{
-		double force = (x * x / k);
+		double force = x * x / k;
 		return force;
 	}
 

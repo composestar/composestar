@@ -13,7 +13,10 @@ package Composestar.Visualization.Model.CellViews;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import org.jgraph.graph.CellView;
 import org.jgraph.graph.VertexRenderer;
+
+import Composestar.Visualization.Model.CpsGraphConstants;
 
 /**
  * Normal vertex renderer but adds seperator lines at set positions.
@@ -24,6 +27,35 @@ public class LineSeparationRenderer extends VertexRenderer
 {
 	private static final long serialVersionUID = -5036490366123202126L;
 
+	private static final double[] EMPTY_ARRAY = new double[0];
+
+	protected double[] seps;
+
+	protected CpsGraphConstants.Layout layout;
+
+	@Override
+	protected void installAttributes(CellView view)
+	{
+		super.installAttributes(view);
+		layout = CpsGraphConstants.getSeparatorLayout(view.getAllAttributes());
+		if (view instanceof LineSeparationView)
+		{
+			seps = ((LineSeparationView) view).getSeperators();
+		}
+		else
+		{
+			seps = EMPTY_ARRAY;
+		}
+	}
+
+	@Override
+	protected void resetAttributes()
+	{
+		super.resetAttributes();
+		seps = EMPTY_ARRAY;
+		layout = CpsGraphConstants.Layout.HORIZONTAL;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -33,12 +65,17 @@ public class LineSeparationRenderer extends VertexRenderer
 	public void paint(Graphics g)
 	{
 		super.paint(g);
-		LineSeparationView lineSepView = (LineSeparationView) view;
 		Graphics2D g2d = (Graphics2D) g;
-		double[] seps = lineSepView.getSeperators();
 		for (double pos : seps)
 		{
-			g2d.drawLine(0, (int) pos, getWidth(), (int) pos);
+			if (layout == CpsGraphConstants.Layout.VERTICAL)
+			{
+				g2d.drawLine((int) pos, 0, (int) pos, getHeight());
+			}
+			else
+			{
+				g2d.drawLine(0, (int) pos, getWidth(), (int) pos);
+			}
 		}
 	}
 }

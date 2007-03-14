@@ -48,6 +48,6 @@ public abstract class LineSeparationView extends VertexView
 
 	public double[] getSeperators()
 	{
-		return separators;
+		return separators.clone();
 	}
 }

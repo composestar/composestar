@@ -61,7 +61,14 @@
 	</target>
 	
 	<target name="checkstyle" depends="init_qa">
-		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false" classpathref="lib.dotnet">
+		<path id="lib.qa">
+			<path refid="lib.core" />
+			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
+			<fileset dir="${build.core}${file.separator}Runtime${file.separator}${out.build}" includes="**/*.class" />
+			<fileset dir="${build.core}${file.separator}Visualization" includes="${out.jar.visualization}" />
+		</path>
+		
+		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false" classpathref="lib.qa">
 			<formatter type="xml" toFile="${out.qa}${file.separator}checkstyle-result.xml" />
 			<property key="config_loc" value="${bin.checkstyle}" />
 			<FileSet dir="${build.core}${file.separator}Compiletime${file.separator}src">
@@ -77,7 +84,7 @@
 				<include name="**/*.java" />
 				<exclude name="Composestar/RuntimeCore/CODER/BreakPoint/Parsers/*/*.java" />
 			</FileSet>
-			<FileSet dir="${build.core}${file.separator}Visualization${file.separator}src">
+			<FileSet dir="${build.core}${file.separator}Visualization${file.separator}src/Composestar">
 				<include name="**/*.java" />
 			</FileSet>
 		</checkstyle>

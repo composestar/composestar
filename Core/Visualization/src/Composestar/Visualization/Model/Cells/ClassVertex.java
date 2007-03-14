@@ -21,6 +21,7 @@ import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.GraphConstants;
 
 import Composestar.Core.LAMA.Type;
+import Composestar.Visualization.Model.CpsGraphConstants;
 
 /**
  * Implements an UML like Class shape.
@@ -31,12 +32,9 @@ public class ClassVertex extends BaseGraphCell
 {
 	private static final long serialVersionUID = -8859175705375540286L;
 
-	/**
-	 * AttributeMap entry for the height of the vertex label
-	 */
-	public static final String LABEL_HEIGHT = "labelHeight";
-
 	public static final int INSET = 4;
+
+	protected static final double LABELHEIGHT = 20.0;
 
 	/**
 	 * Various flags for members.
@@ -82,11 +80,10 @@ public class ClassVertex extends BaseGraphCell
 		super(inPlatformRep);
 		platformRep = inPlatformRep;
 		addChildren(filter);
-		translate(INSET, 20 + INSET); // 20 = label height
+		translate(INSET, LABELHEIGHT + INSET); // 20 = label height
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected void setDefaults()
 	{
 		AttributeMap attrs = getAttributes();
@@ -101,7 +98,7 @@ public class ClassVertex extends BaseGraphCell
 		GraphConstants.setInset(attrs, INSET);
 		GraphConstants.setSizeableAxis(attrs, GraphConstants.X_AXIS);
 		GraphConstants.setHorizontalAlignment(attrs, JLabel.CENTER);
-		attrs.put(LABEL_HEIGHT, new Double(20));
+		CpsGraphConstants.setLabelHeight(attrs, LABELHEIGHT);
 	}
 
 	protected void addChildren(EnumSet<MemberFlags> filter)
