@@ -209,13 +209,13 @@ public class Signature implements SerializableRepositoryEntity
 		StringBuffer sb = new StringBuffer();
 
 		sb.append(methodInfo.getName()).append('%');
-		sb.append(methodInfo.returnTypeName()).append('%');
+		sb.append(methodInfo.getReturnTypeString()).append('%');
 
 		List pars = methodInfo.getParameters();
 		for (int i = 0; i < pars.size(); i++)
 		{
 			ParameterInfo pi = (ParameterInfo) pars.get(i);
-			sb.append(pi.ParameterTypeString).append('%');
+			sb.append(pi.parameterTypeString).append('%');
 		}
 
 		return sb.toString();

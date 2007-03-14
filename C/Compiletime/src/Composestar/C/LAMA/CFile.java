@@ -39,9 +39,6 @@ public class CFile extends Type
 	private CDirectory parent;
 
 	// private boolean isAnnotation;
-	public String Name;
-
-	public String FullName;
 
 	public CFile()
 	{
@@ -64,20 +61,10 @@ public class CFile extends Type
 		variable.setParent(this);
 	}
 
-	public void setName(String Name)
+	public void setName(String inName)
 	{
-		this.Name = Name;
-		FullName = Name;
-	}
-
-	public String getFullName()
-	{
-		return FullName;
-	}
-
-	public String fullname()
-	{
-		return FullName;
+		name = inName;
+		fullName = inName;
 	}
 
 	public void setDirectory(CDirectory dir)
@@ -100,7 +87,7 @@ public class CFile extends Type
 	public CMethodInfo getMethodInfo(String name)
 	{
 		CMethodInfo method = null;
-		for (ListIterator iter = m_methods.listIterator(); iter.hasNext();)
+		for (ListIterator iter = methods.listIterator(); iter.hasNext();)
 		{
 			method = (CMethodInfo) iter.next();
 			// if same name && param length
@@ -153,11 +140,11 @@ public class CFile extends Type
 		{
 			if (argumentName.equals("ChildMethods"))
 			{
-				return new UnitResult(filterDeclaredHere(m_methods));
+				return new UnitResult(filterDeclaredHere(methods));
 			}
 			else if (argumentName.equals("ChildFields"))
 			{
-				return new UnitResult(filterDeclaredHere(m_fields));
+				return new UnitResult(filterDeclaredHere(fields));
 			}
 		}
 		else if (getUnitType().equals("Annotation"))
@@ -211,8 +198,8 @@ public class CFile extends Type
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		HashCode = in.readInt();
-		m_methods = (ArrayList) in.readObject();
-		m_fields = (ArrayList) in.readObject();
+		methods = (ArrayList) in.readObject();
+		fields = (ArrayList) in.readObject();
 		parent = (CDirectory) in.readObject();
 		// isAnnotation = in.readBoolean();
 	}
@@ -223,8 +210,8 @@ public class CFile extends Type
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeInt(HashCode);
-		out.writeObject(m_fields);
-		out.writeObject(m_methods);
+		out.writeObject(fields);
+		out.writeObject(methods);
 		out.writeObject(parent);
 		// out.writeBoolean(isAnnotation);
 	}

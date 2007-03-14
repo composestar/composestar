@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.LAMA;
 
 import java.io.IOException;
@@ -6,13 +15,13 @@ import java.io.ObjectOutputStream;
 
 public abstract class ParameterInfo extends ProgramElement
 {
-	public String ParameterTypeString;
+	public String parameterTypeString;
 
-	private Type ParameterType;
+	private Type parameterType;
 
-	public String Name;
+	public String name;
 
-	public MethodInfo Parent;
+	public MethodInfo parent;
 
 	public ParameterInfo()
 	{
@@ -21,34 +30,31 @@ public abstract class ParameterInfo extends ProgramElement
 
 	/**
 	 * @return java.lang.String
-	 * @roseuid 401B84CF021C
 	 */
-	public String name()
+	public String getName()
 	{
-		return Name;
+		return name;
 	}
 
 	/**
-	 * @param name
-	 * @roseuid 402A072800EE
+	 * @param inName
 	 */
-	public void setName(String name)
+	public void setName(String inName)
 	{
-		Name = name;
+		name = inName;
 	}
 
 	/**
 	 * @return Composestar.Core.LAMA.Type
-	 * @roseuid 401B84CF021D
 	 */
 	public Type parameterType()
 	{
-		if (ParameterType == null)
+		if (parameterType == null)
 		{
 			TypeMap map = TypeMap.instance();
-			ParameterType = map.getType(ParameterTypeString);
+			parameterType = map.getType(parameterTypeString);
 		}
-		return ParameterType;
+		return parameterType;
 	}
 
 	/**
@@ -56,16 +62,15 @@ public abstract class ParameterInfo extends ProgramElement
 	 */
 	public String getParameterTypeString()
 	{
-		return ParameterTypeString;
+		return parameterTypeString;
 	}
 
 	/**
 	 * @param paramType
-	 * @roseuid 402A0736033D
 	 */
 	public void setParameterType(String paramType)
 	{
-		ParameterTypeString = paramType;
+		parameterTypeString = paramType;
 	}
 
 	/**
@@ -73,27 +78,27 @@ public abstract class ParameterInfo extends ProgramElement
 	 */
 	public MethodInfo getParent()
 	{
-		return Parent;
+		return parent;
 	}
 
 	/**
-	 * @param parent The parent to set.
+	 * @param inParent The parent to set.
 	 */
-	public void setParent(MethodInfo parent)
+	public void setParent(MethodInfo inParent)
 	{
-		Parent = parent;
+		parent = inParent;
 	}
 
 	public String toString()
 	{
-		return ParameterTypeString + " " + Name;
+		return parameterTypeString + " " + name;
 	}
 
 	// Stuff for LOLA
 
 	public String getUnitName()
 	{
-		return name();
+		return getName();
 	}
 
 	public String getUnitType()
@@ -113,9 +118,9 @@ public abstract class ParameterInfo extends ProgramElement
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		Name = in.readUTF();
-		ParameterTypeString = in.readUTF();
-		Parent = (MethodInfo) in.readObject();
+		name = in.readUTF();
+		parameterTypeString = in.readUTF();
+		parent = (MethodInfo) in.readObject();
 	}
 
 	/**
@@ -125,8 +130,8 @@ public abstract class ParameterInfo extends ProgramElement
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeUTF(Name);
-		out.writeUTF(ParameterTypeString);
-		out.writeObject(Parent);
+		out.writeUTF(name);
+		out.writeUTF(parameterTypeString);
+		out.writeObject(parent);
 	}
 }

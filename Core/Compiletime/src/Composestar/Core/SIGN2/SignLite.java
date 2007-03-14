@@ -325,7 +325,7 @@ public class SignLite implements CTCommonModule
 			}
 
 			ParameterInfo parameter = (ParameterInfo) parameters.get(i);
-			buffer.append(parameter.ParameterTypeString);
+			buffer.append(parameter.parameterTypeString);
 		}
 		buffer.append(')');
 

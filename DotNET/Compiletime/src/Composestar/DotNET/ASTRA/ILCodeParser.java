@@ -56,7 +56,7 @@ public class ILCodeParser extends TransformerBase
 	{
 		if (concern.getPlatformRepresentation() != null)
 		{
-			String fullName = ((DotNETType) concern.getPlatformRepresentation()).fullName();
+			String fullName = ((DotNETType) concern.getPlatformRepresentation()).getFullName();
 			concerns.put(fullName, new ConcernHolder(concern));
 		}
 

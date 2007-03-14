@@ -170,7 +170,7 @@ public class ClassModifier extends TransformerBase
 		write(".method public hidebysig strict virtual");
 		writenn("instance ");
 
-		writenn(((DotNETType) dnmi.returnType()).ilType());
+		writenn(((DotNETType) dnmi.getReturnType()).ilType());
 		writenn(" " + mi.getName() + "(");
 
 		Iterator it = mi.getParameters().iterator();
@@ -181,7 +181,7 @@ public class ClassModifier extends TransformerBase
 			if (paramType != null)
 			{
 				String iltype = ((DotNETType) paramType).ilType();
-				writenn(iltype + " " + param.name());
+				writenn(iltype + " " + param.getName());
 
 				if (it.hasNext())
 				{
@@ -190,7 +190,7 @@ public class ClassModifier extends TransformerBase
 			}
 			else
 			{
-				Debug.out(Debug.MODE_WARNING, "ASTRA", "Unresolvable parameter type: " + param.ParameterTypeString);
+				Debug.out(Debug.MODE_WARNING, "ASTRA", "Unresolvable parameter type: " + param.parameterTypeString);
 			}
 		}
 

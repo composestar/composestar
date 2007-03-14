@@ -193,7 +193,7 @@ public abstract class Semantic
 			 * the type of a file annotation is a special one, being file,
 			 * however because we know that we return the file name here
 			 */
-			return ((CFile) anno.getType()).Name;
+			return ((CFile) anno.getType()).getName();
 		}
 		if (anno.getType() instanceof CType)
 		{

@@ -14,10 +14,6 @@ import Composestar.Core.LAMA.UnitResult;
 
 public class CDirectory extends LangNamespace
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8508596176425673433L;
 
 	private String dirName;

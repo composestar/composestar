@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 
 /**
@@ -55,10 +56,6 @@ public class DotNETFieldInfo extends FieldInfo
 	public boolean IsStatic; // Static field ('global')?
 
 	public boolean IsDeclaredHere; // Declared in this Type, or inherited from
-
-	// parent type?
-
-	private DotNETType Parent; // Type that this field belongs to.
 
 	public DotNETFieldInfo()
 	{
@@ -192,19 +189,19 @@ public class DotNETFieldInfo extends FieldInfo
 	{
 		if ("ParentType".equals(argumentName))
 		{
-			return new UnitResult(Parent);
+			return new UnitResult(parent);
 		}
-		else if ("Class".equals(argumentName) && "Class".equals(fieldType().getUnitType()))
+		else if ("Class".equals(argumentName) && "Class".equals(getFieldType().getUnitType()))
 		{
-			return new UnitResult(fieldType());
+			return new UnitResult(getFieldType());
 		}
-		else if ("Interface".equals(argumentName) && "Interface".equals(fieldType().getUnitType()))
+		else if ("Interface".equals(argumentName) && "Interface".equals(getFieldType().getUnitType()))
 		{
-			return new UnitResult(fieldType());
+			return new UnitResult(getFieldType());
 		}
-		else if ("Annotation".equals(argumentName) && "Annotation".equals(fieldType().getUnitType()))
+		else if ("Annotation".equals(argumentName) && "Annotation".equals(getFieldType().getUnitType()))
 		{
-			return new UnitResult(fieldType());
+			return new UnitResult(getFieldType());
 		}
 		else if ("Annotations".equals(argumentName))
 		{
@@ -262,6 +259,7 @@ public class DotNETFieldInfo extends FieldInfo
 		IsPublic = in.readBoolean();
 		IsStatic = in.readBoolean();
 		IsDeclaredHere = in.readBoolean();
+		parent = (Type) in.readObject();
 	}
 
 	/**
@@ -282,6 +280,6 @@ public class DotNETFieldInfo extends FieldInfo
 		out.writeBoolean(IsPublic);
 		out.writeBoolean(IsStatic);
 		out.writeBoolean(IsDeclaredHere);
-		out.writeObject(Parent);
+		out.writeObject(parent);
 	}
 }

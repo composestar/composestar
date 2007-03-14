@@ -16,22 +16,13 @@ import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
 
-/**
- * Corresponds to the ParameterInfo class in the .NET framework. For more
- * information on the methods and their meaning please refer to the microsoft
- * documentation:
- * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
- * fsystemreflectionparameterinfoclasstopic.asp
- */
 public class CParameterInfo extends ParameterInfo
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -527486572514730318L;
 
 	private int HashCode;
@@ -43,25 +34,13 @@ public class CParameterInfo extends ParameterInfo
 	// public boolean IsOptional;
 	// public boolean IsOut;
 	// public boolean IsRetval;
-	public CMethodInfo Parent;
-
-	public String Name;
 
 	/**
-	 * @roseuid 401B84CF0220
+
 	 */
 	public CParameterInfo()
 	{
 		UnitRegister.instance().registerLanguageUnit(this);
-	}
-
-	/**
-	 * @param name
-	 * @roseuid 402A072800EE
-	 */
-	public void setName(String name)
-	{
-		Name = name;
 	}
 
 	// public CType parameterType()
@@ -76,12 +55,11 @@ public class CParameterInfo extends ParameterInfo
 
 	public void setParameterType(String paramType)
 	{
-		ParameterTypeString = paramType;
+		parameterTypeString = paramType;
 	}
 
 	/**
 	 * @return int
-	 * @roseuid 401B84CF021E
 	 */
 	public int position()
 	{
@@ -90,7 +68,6 @@ public class CParameterInfo extends ParameterInfo
 
 	/**
 	 * @param pos
-	 * @roseuid 402A074A0061
 	 */
 	public void setPosition(int pos)
 	{
@@ -99,7 +76,6 @@ public class CParameterInfo extends ParameterInfo
 
 	/**
 	 * @return int
-	 * @roseuid 401B84CF021F
 	 */
 	public int getHashCode()
 	{
@@ -108,34 +84,13 @@ public class CParameterInfo extends ParameterInfo
 
 	/**
 	 * @param code
-	 * @roseuid 402A075602A3
 	 */
 	public void setHashCode(int code)
 	{
 		HashCode = code;
 	}
 
-	public void setParent(CMethodInfo parent)
-	{
-		Parent = parent;
-	}
-
 	/** **** Implementation of Language Unit interface ********* */
-
-	public String getUnitName()
-	{
-		return Name;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.LAMA.ProgramElement#getUnitType()
-	 */
-	public String getUnitType()
-	{
-		return "Parameter";
-	}
 
 	public boolean hasUnitAttribute(String attribute)
 	{
@@ -144,7 +99,7 @@ public class CParameterInfo extends ParameterInfo
 
 	public String getParameterTypeString()
 	{
-		return ParameterTypeString;
+		return parameterTypeString;
 	}
 
 	public UnitResult getUnitRelation(String argumentName)
@@ -158,7 +113,7 @@ public class CParameterInfo extends ParameterInfo
 		 **********************************************************************/
 		if (argumentName.equals("ParentMethod"))
 		{
-			return new UnitResult(Parent);
+			return new UnitResult(parent);
 		}
 		return null;
 	}
@@ -179,10 +134,10 @@ public class CParameterInfo extends ParameterInfo
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		HashCode = in.readInt();
-		Name = in.readUTF();
+		name = in.readUTF();
 		Position = in.readInt();
-		ParameterTypeString = in.readUTF();
-		Parent = (CMethodInfo) in.readObject();
+		parameterTypeString = in.readUTF();
+		parent = (MethodInfo) in.readObject();
 	}
 
 	/**
@@ -191,9 +146,9 @@ public class CParameterInfo extends ParameterInfo
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeInt(HashCode);
-		out.writeUTF(Name);
+		out.writeUTF(name);
 		out.writeInt(Position);
-		out.writeUTF(ParameterTypeString);
-		out.writeObject(Parent);
+		out.writeUTF(parameterTypeString);
+		out.writeObject(parent);
 	}
 }

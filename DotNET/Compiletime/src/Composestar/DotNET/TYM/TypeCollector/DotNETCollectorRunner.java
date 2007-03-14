@@ -162,10 +162,10 @@ public class DotNETCollectorRunner implements CollectorRunner
 		{
 			DotNETType type = (DotNETType) it.next();
 			PrimitiveConcern pc = new PrimitiveConcern();
-			pc.setName(type.fullName());
+			pc.setName(type.getFullName());
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
-			dataStore.addObject(type.fullName(), pc);
+			dataStore.addObject(type.getFullName(), pc);
 		}
 
 		// add skipped types in case harvester was incremental
@@ -212,11 +212,11 @@ public class DotNETCollectorRunner implements CollectorRunner
 					}
 
 					type.setParentConcern(pcclone);
-					dataStore.addObject(type.fullName(), pcclone);
+					dataStore.addObject(type.getFullName(), pcclone);
 
 					// also add the type to the type map
 					type.reset(); // reset hashsets of type and register
-					map.addType(type.fullName(), type);
+					map.addType(type.getFullName(), type);
 				}
 			}
 		}

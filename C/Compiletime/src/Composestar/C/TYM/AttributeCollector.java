@@ -168,7 +168,7 @@ public class AttributeCollector extends DefaultHandler
 			for (Object field1 : fields)
 			{
 				FieldInfo field = (FieldInfo) field1;
-				if (field.Name.equals(fieldName))
+				if (field.name.equals(fieldName))
 				{
 					return field;
 				}

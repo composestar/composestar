@@ -123,7 +123,7 @@ options
 			pcFile.setName( file.getFullName() );
 			pcFile.setPlatformRepresentation(file);
 			file.setParentConcern(pcFile);
-			Debug.out(Debug.MODE_INFORMATION,"WRAPPER","Treeparser added concern: "+file.getFullName() + " & " + cf.fullname());
+			Debug.out(Debug.MODE_INFORMATION,"WRAPPER","Treeparser added concern: "+file.getFullName() + " & " + cf.getFullName());
 			dataStore.addObject( file.getFullName(), pcFile );
 		}
 		

@@ -464,7 +464,7 @@ public class AnnotationSuperImposition
 					}
 					if (!doubleAnnot)
 					{
-						Debug.out(Debug.MODE_DEBUG, "LOLA", "Attaching annotation '" + action.annotation.name()
+						Debug.out(Debug.MODE_DEBUG, "LOLA", "Attaching annotation '" + action.annotation.getName()
 								+ "' to program element '" + elem.toString());
 
 						Annotation annotInst = new Annotation(true); // true

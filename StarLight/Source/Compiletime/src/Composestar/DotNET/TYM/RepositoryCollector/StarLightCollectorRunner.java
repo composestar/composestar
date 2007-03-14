@@ -218,7 +218,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 					Composestar.Core.LAMA.UnitRegister.instance().registerLanguageUnit(t);
 
 					// Add the type to the TypeMap
-					TypeMap.instance().addType(t.fullName(), t);
+					TypeMap.instance().addType(t.getFullName(), t);
 					typecount++;
 				}
 			}
@@ -321,10 +321,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 			
 			// Add type to repository as primitive concern
 			PrimitiveConcern pc = new PrimitiveConcern();
-			pc.setName(type.fullName());
+			pc.setName(type.getFullName());
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
-			DataStore.instance().addObject(type.fullName(), pc);
+			DataStore.instance().addObject(type.getFullName(), pc);
 			
 		//	logger.debug("Adding primitive concern '" + pc.getName() + "'");
 		}
@@ -364,13 +364,13 @@ public class StarLightCollectorRunner implements CTCommonModule
 				
 				// Add this attribute type to the repository as a primitive concern
 				PrimitiveConcern pc_attribute = new PrimitiveConcern();
-				pc_attribute.setName(attributeType.fullName());
+				pc_attribute.setName(attributeType.getFullName());
 				pc_attribute.setPlatformRepresentation(attributeType);
 				attributeType.setParentConcern(pc_attribute);
-				DataStore.instance().addObject(attributeType.fullName(), pc_attribute);
+				DataStore.instance().addObject(attributeType.getFullName(), pc_attribute);
 				
 				// Add this attribute type to the list of added types
-				newAttributeTypes.put(attributeType.fullName(), attributeType);
+				newAttributeTypes.put(attributeType.getFullName(), attributeType);
 			}
 		}
 	
@@ -430,7 +430,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			collectMethods(te, dnt);
 
 			// Add the DotNETType to the TypeMap
-			TypeMap.instance().addType(dnt.fullName(), dnt);
+			TypeMap.instance().addType(dnt.getFullName(), dnt);
 		}
 		
 		long elapsed = System.currentTimeMillis() - starttime;
@@ -576,7 +576,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			call.setCallElement(storedCall);
 
 			// TODO: is this mapping correct ?
-			call.OperationName = storedCall.getMethodReference();
+			call.operationName = storedCall.getMethodReference();
 
 			method.getCallsToOtherMethods().add(call);
 

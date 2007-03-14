@@ -58,7 +58,7 @@ class PartialClassEmitter
 	public void addMethod(DotNETType dnt, DotNETMethodInfo mi)
 	{
 		String ns = dnt.namespace();
-		String tn = dnt.name();
+		String tn = dnt.getName();
 
 		ExpandedType et = getExpandedType(tn);
 		getNamespace(ns).addType(et);

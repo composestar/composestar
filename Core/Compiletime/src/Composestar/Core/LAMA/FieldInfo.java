@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.LAMA;
 
 import java.io.IOException;
@@ -7,57 +16,57 @@ import java.io.ObjectOutputStream;
 public abstract class FieldInfo extends ProgramElement
 {
 
-	public String Name;
+	public String name;
 
-	public Type Parent;
+	public Type parent;
 
-	public String FieldTypeString;
+	public String fieldTypeString;
 
-	private Type FieldType;
+	private Type fieldType;
 
 	public FieldInfo()
 	{
 		UnitRegister.instance().registerLanguageUnit(this);
 	}
 
-	public String name()
+	public String getName()
 	{
-		return Name;
+		return name;
 	}
 
-	public void setName(String name)
+	public void setName(String inName)
 	{
-		Name = name;
+		name = inName;
 	}
 
-	public Type fieldType()
+	public Type getFieldType()
 	{
-		if (this.FieldType == null)
+		if (this.fieldType == null)
 		{
 			TypeMap map = TypeMap.instance();
-			FieldType = map.getType(FieldTypeString);
+			fieldType = map.getType(fieldTypeString);
 		}
-		return FieldType;
+		return fieldType;
 	}
 	
 	public String getFieldTypeString()
 	{
-		return FieldTypeString;
+		return fieldTypeString;
 	}
 
 	public void setFieldType(String fieldtype)
 	{
-		this.FieldTypeString = fieldtype;
+		this.fieldTypeString = fieldtype;
 	}
 
-	public Type parent()
+	public Type getParent()
 	{
-		return Parent;
+		return parent;
 	}
 
-	public void setParent(Type parent)
+	public void setParent(Type inParent)
 	{
-		Parent = parent;
+		parent = inParent;
 	}
 
 	/** Stuff for LOLA * */
@@ -69,7 +78,7 @@ public abstract class FieldInfo extends ProgramElement
 	 */
 	public String getUnitName()
 	{
-		return name();
+		return getName();
 	}
 
 	/*
@@ -105,9 +114,9 @@ public abstract class FieldInfo extends ProgramElement
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		Name = in.readUTF();
-		Parent = (Type) in.readObject();
-		FieldTypeString = in.readUTF();
+		name = in.readUTF();
+		parent = (Type) in.readObject();
+		fieldTypeString = in.readUTF();
 	}
 
 	/**
@@ -117,8 +126,8 @@ public abstract class FieldInfo extends ProgramElement
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeUTF(Name);
-		out.writeObject(Parent);
-		out.writeUTF(FieldTypeString);
+		out.writeUTF(name);
+		out.writeObject(parent);
+		out.writeUTF(fieldTypeString);
 	}
 }

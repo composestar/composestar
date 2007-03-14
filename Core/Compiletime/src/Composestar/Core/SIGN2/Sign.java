@@ -327,7 +327,7 @@ public class Sign implements CTCommonModule
 				{
 					// remove parameters:
 					MethodInfo m = method.getClone(method.getName(), method.parent());
-					m.Parameters = new ArrayList();
+					m.parameters = new ArrayList();
 
 					if (!signature.hasMethod(m))
 					{
@@ -1274,7 +1274,7 @@ public class Sign implements CTCommonModule
 			}
 
 			ParameterInfo parameter = (ParameterInfo) parameters.get(i);
-			buffer.append(parameter.ParameterTypeString);
+			buffer.append(parameter.parameterTypeString);
 		}
 		buffer.append(')');
 
@@ -1369,7 +1369,7 @@ public class Sign implements CTCommonModule
 						for (Object o : mi.getParameters())
 					{
 							ParameterInfo pi = (ParameterInfo) o;
-						paramNames.add(pi.name());
+						paramNames.add(pi.getName());
 					}
 
 					Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "\t[ " + relation + " ] " + "(" + returntype + ") "

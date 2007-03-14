@@ -160,10 +160,10 @@ public class JavaCollectorRunner implements CollectorRunner
 		{
 			JavaType type = (JavaType) o1;
 			PrimitiveConcern pc = new PrimitiveConcern();
-			pc.setName(type.fullName());
+			pc.setName(type.getFullName());
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
-			dataStore.addObject(type.fullName(), pc);
+			dataStore.addObject(type.getFullName(), pc);
 		}
 	}
 
@@ -187,16 +187,16 @@ public class JavaCollectorRunner implements CollectorRunner
 		JavaType jtype = new JavaType(c);
 		jtype.setFullName(c.getName());
 
-		map.addType(jtype.fullName(), jtype);
+		map.addType(jtype.getFullName(), jtype);
 
 		// set name
-		if (jtype.fullName().lastIndexOf(".") > 0)
+		if (jtype.getFullName().lastIndexOf(".") > 0)
 		{
-			jtype.setName(jtype.fullName().substring(jtype.fullName().lastIndexOf(".") + 1, jtype.fullName().length()));
+			jtype.setName(jtype.getFullName().substring(jtype.getFullName().lastIndexOf(".") + 1, jtype.getFullName().length()));
 		}
 		else
 		{
-			jtype.setName(jtype.fullName());
+			jtype.setName(jtype.getFullName());
 		}
 
 		// add superclass

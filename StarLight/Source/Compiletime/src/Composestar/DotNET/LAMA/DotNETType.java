@@ -244,7 +244,7 @@ public class DotNETType extends Type
 	public List getConstructors()
 	{
 		List constructors = new ArrayList();
-		for (Iterator it = m_methods.iterator(); it.hasNext(); /* nop */)
+		for (Iterator it = methods.iterator(); it.hasNext(); /* nop */)
 		{
 			DotNETMethodInfo method = (DotNETMethodInfo)it.next();
 			if (method.isConstructor())
@@ -257,7 +257,7 @@ public class DotNETType extends Type
 
 	public DotNETMethodInfo getConstructor(String[] types)
 	{
-		for (Iterator it = m_methods.iterator(); it.hasNext(); /* nop */)
+		for (Iterator it = methods.iterator(); it.hasNext(); /* nop */)
 		{
 			DotNETMethodInfo method = (DotNETMethodInfo)it.next();
 			if (method.isConstructor() && method.hasParameters(types))
@@ -270,10 +270,10 @@ public class DotNETType extends Type
 
 	public DotNETFieldInfo getField(String name)
 	{
-		for (Iterator it = m_fields.iterator(); it.hasNext(); /* nop */)
+		for (Iterator it = fields.iterator(); it.hasNext(); /* nop */)
 		{
 			DotNETFieldInfo field = (DotNETFieldInfo)it.next();
-			if (field.name().equals(name))
+			if (field.getName().equals(name))
 			{
 				return field;
 			}
@@ -317,8 +317,8 @@ public class DotNETType extends Type
 		if (argumentName.equals("ParentNamespace")) return new UnitResult(parentNS);
 		else if (argumentName.equals("ParentClass")) return new UnitResult(baseType()); // can be null!
 		else if (argumentName.equals("ChildClasses")) return new UnitResult(childTypes);
-		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(m_methods));
-		else if (argumentName.equals("ChildFields")) return new UnitResult(filterDeclaredHere(m_fields));
+		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(methods));
+		else if (argumentName.equals("ChildFields")) return new UnitResult(filterDeclaredHere(fields));
 		else if (argumentName.equals("ParameterClass")) return new UnitResult(parameterTypes);
 		else if (argumentName.equals("MethodReturnClass")) return new UnitResult(methodReturnTypes);
 		else if (argumentName.equals("FieldClass")) return new UnitResult(fieldTypes);
@@ -340,7 +340,7 @@ public class DotNETType extends Type
 		if (argumentName.equals("ParentNamespace")) return new UnitResult(parentNS);
 		else if (argumentName.equals("ParentInterface")) return new UnitResult(baseType()); // can be null!
 		else if (argumentName.equals("ChildInterfaces")) return new UnitResult(childTypes);
-		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(m_methods));
+		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(methods));
 		else if (argumentName.equals("ParameterInterface")) return new UnitResult(parameterTypes);
 		else if (argumentName.equals("MethodReturnInterface")) return new UnitResult(methodReturnTypes);
 		else if (argumentName.equals("FieldInterface")) return new UnitResult(fieldTypes);
@@ -490,7 +490,7 @@ public class DotNETType extends Type
 		UnitRegister.instance().registerLanguageUnit(this);
 
 		// register fields
-		Iterator fiter = m_fields.iterator();
+		Iterator fiter = fields.iterator();
 		while (fiter.hasNext())
 		{
 			DotNETFieldInfo field = (DotNETFieldInfo)fiter.next();
@@ -498,7 +498,7 @@ public class DotNETType extends Type
 		}
 
 		// register methods and its parameters
-		Iterator miter = m_methods.iterator();
+		Iterator miter = methods.iterator();
 		while (miter.hasNext())
 		{
 			DotNETMethodInfo method = (DotNETMethodInfo)miter.next();
@@ -518,7 +518,7 @@ public class DotNETType extends Type
 	 */
 	public String toString()
 	{
-		return m_fullName;
+		return fullName;
 	}
 
 	/**

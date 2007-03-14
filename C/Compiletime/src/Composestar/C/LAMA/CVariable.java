@@ -25,15 +25,11 @@ public class CVariable extends FieldInfo
 
 	private static final long serialVersionUID = 235924601234730641L;
 
-	public int HashCode;
+	public int hashCode;
 
-	public String Name;
+	private CFile parent;
 
-	public String FieldTypeString;
-
-	private CFile ParentFile;
-
-	public boolean IsStatic;
+	public boolean isStaticVar;
 
 	private int pointerLevel;
 
@@ -52,12 +48,12 @@ public class CVariable extends FieldInfo
 
 	public int getHashCode()
 	{
-		return HashCode;
+		return hashCode;
 	}
 
 	public void setHashCode(int hashcode)
 	{
-		HashCode = hashcode;
+		hashCode = hashcode;
 	}
 
 	/**
@@ -66,14 +62,9 @@ public class CVariable extends FieldInfo
 	 * (CType)map.getType( FieldTypeString ); } return FieldType; }
 	 */
 
-	public void setFieldType(String fieldtype)
-	{
-		FieldTypeString = fieldtype;
-	}
-
 	public boolean isStatic()
 	{
-		return IsStatic;
+		return isStaticVar;
 	}
 
 	public void setIsInline(boolean isInline)
@@ -96,9 +87,9 @@ public class CVariable extends FieldInfo
 		return isExtern;
 	}
 
-	public void setIsStatic(boolean isStatic)
+	public void setIsStatic(boolean inIsStatic)
 	{
-		IsStatic = isStatic;
+		isStaticVar = inIsStatic;
 	}
 
 	public boolean isPointer()
@@ -141,29 +132,24 @@ public class CVariable extends FieldInfo
 		this.isGlobal = isGlobal;
 	}
 
-	public String name()
+	public void setParent(CFile inParent)
 	{
-		return Name;
+		parent = inParent;
 	}
-
-	public void setName(String name)
+	
+	public CFile getParent()
 	{
-		Name = name;
-	}
-
-	public void setParent(CFile parent)
-	{
-		ParentFile = parent;
+		return parent;
 	}
 
 	public String getUnitName()
 	{
-		return name();
+		return getName();
 	}
 
 	public boolean hasUnitAttribute(String attribute)
 	{
-		if (attribute.equals("static") && IsStatic)
+		if (attribute.equals("static") && isStaticVar)
 		{
 			return true;
 		}
@@ -190,11 +176,11 @@ public class CVariable extends FieldInfo
 		 **********************************************************************/
 		if ("ParentType".equals(argumentName))
 		{
-			return new UnitResult(ParentFile);
+			return new UnitResult(parent);
 		}
-		else if ("Class".equals(argumentName) && "Class".equals(fieldType().getUnitType()))
+		else if ("Class".equals(argumentName) && "Class".equals(getFieldType().getUnitType()))
 		{
-			return new UnitResult(fieldType());
+			return new UnitResult(getFieldType());
 		}
 		return null;
 	}
@@ -222,14 +208,14 @@ public class CVariable extends FieldInfo
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		HashCode = in.readInt();
-		FieldTypeString = in.readUTF();
-		IsStatic = in.readBoolean();
+		hashCode = in.readInt();
+		fieldTypeString = in.readUTF();
+		isStaticVar = in.readBoolean();
 		isGlobal = in.readBoolean();
 		pointerLevel = in.readInt();
 		arrayLevel = in.readInt();
-		Name = in.readUTF();
-		ParentFile = (CFile) in.readObject();
+		name = in.readUTF();
+		parent = (CFile) in.readObject();
 	}
 
 	/**
@@ -237,14 +223,14 @@ public class CVariable extends FieldInfo
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeInt(HashCode);
-		out.writeUTF(FieldTypeString);
-		out.writeBoolean(IsStatic);
+		out.writeInt(hashCode);
+		out.writeUTF(fieldTypeString);
+		out.writeBoolean(isStaticVar);
 		out.writeBoolean(isGlobal);
 		out.writeInt(pointerLevel);
 		out.writeInt(arrayLevel);
-		out.writeUTF(Name);
-		out.writeObject(ParentFile);
+		out.writeUTF(name);
+		out.writeObject(parent);
 	}
 
 	@Override

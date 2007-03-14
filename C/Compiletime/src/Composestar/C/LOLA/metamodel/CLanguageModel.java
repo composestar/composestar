@@ -302,10 +302,10 @@ public class CLanguageModel extends LanguageModel
 			for (Object o : methods.multiValue())
 			{
 				CMethodInfo method = (CMethodInfo) o;
-				if (method.returnType() != null)
+				if (method.getReturnType() != null)
 				{
 					ProgramElement methodReturnType = method.getUnitRelation(
-							"Return" + method.returnType().getUnitType()).singleValue();
+							"Return" + method.getReturnType().getUnitType()).singleValue();
 					if ((null != methodReturnType) && (methodReturnType instanceof CMethodInfo))
 					{
 						// method
@@ -331,9 +331,9 @@ public class CLanguageModel extends LanguageModel
 			for (Object o : fields.multiValue())
 			{
 				CVariable field = (CVariable) o;
-				if (null != field.fieldType())
+				if (null != field.getFieldType())
 				{
-					ProgramElement fieldType = field.getUnitRelation(field.fieldType().getUnitType()).singleValue();
+					ProgramElement fieldType = field.getUnitRelation(field.getFieldType().getUnitType()).singleValue();
 					if ((null != fieldType) && (fieldType instanceof CVariable))
 					{
 						// method

@@ -82,7 +82,7 @@ public class ClassVertex extends BaseGraphCell
 		super(inPlatformRep);
 		platformRep = inPlatformRep;
 		addChildren(filter);
-		translate(10, 10 + 20); // TODO: must store label height somewhere
+		translate(INSET, 20 + INSET); // 20 = label height
 	}
 
 	@Override
@@ -129,11 +129,12 @@ public class ClassVertex extends BaseGraphCell
 
 	public String getClassName()
 	{
-		return platformRep.fullName();
+		return platformRep.getFullName();
 	}
 
 	public String toString()
 	{
 		return getClassName();
 	}
+
 }

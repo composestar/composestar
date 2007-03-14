@@ -79,8 +79,8 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 			String className = amap.getValue("className");
 
 			CallToOtherMethod ctom = new CallToOtherMethod();
-			ctom.OperationName = operationName;
-			ctom.ClassName = className;
+			ctom.operationName = operationName;
+			ctom.className = className;
 
 			callsToOtherMethods.add(ctom);
 		}
@@ -91,9 +91,9 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 			String accessOccurence = amap.getValue("accessOccurence");
 
 			ResourceUsage ru = new ResourceUsage();
-			ru.ResourceName = resourceName;
-			ru.AccessType = accessType;
-			ru.AccessOccurence = accessOccurence;
+			ru.resourceName = resourceName;
+			ru.accessType = accessType;
+			ru.accessOccurence = accessOccurence;
 
 			resourceUsages.add(ru);
 		}

@@ -435,9 +435,9 @@ public class DotNETLanguageModel extends LanguageModel
 			while (methodIter.hasNext())
 			{
 				DotNETMethodInfo method = (DotNETMethodInfo)methodIter.next();
-				if (method.returnType() != null)
+				if (method.getReturnType() != null)
 				{
-					ProgramElement methodReturnType = method.getUnitRelation("Return" + method.returnType().getUnitType()).singleValue();
+					ProgramElement methodReturnType = method.getUnitRelation("Return" + method.getReturnType().getUnitType()).singleValue();
 					if ((null != methodReturnType) && (methodReturnType instanceof DotNETType)) // The method has a registered return Type
 						((DotNETType)methodReturnType).addMethodReturnType(method); // So also add the link the other way round.
 				}
@@ -452,9 +452,9 @@ public class DotNETLanguageModel extends LanguageModel
 			while (fieldIter.hasNext())
 			{
 				DotNETFieldInfo field = (DotNETFieldInfo)fieldIter.next();
-				if (null != field.fieldType())
+				if (null != field.getFieldType())
 				{
-					ProgramElement fieldType = field.getUnitRelation(field.fieldType().getUnitType()).singleValue();
+					ProgramElement fieldType = field.getUnitRelation(field.getFieldType().getUnitType()).singleValue();
 					if ((null != fieldType) && (fieldType instanceof DotNETType)) // The method has a registered return Type
 						((DotNETType)fieldType).addFieldType(field); // So also add the link the other way round.
 				}

@@ -149,7 +149,7 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 			while (it.hasNext())
 			{
 				FieldInfo field = (FieldInfo) it.next();
-				if (field.name().equals(fieldName))
+				if (field.getName().equals(fieldName))
 				{
 					return field;
 				}

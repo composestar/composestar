@@ -50,10 +50,11 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 	protected void setDefaults()
 	{
 		AttributeMap attrs = getAttributes();
-		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 80, 20);
+		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 160, 20);
 		GraphConstants.setBounds(attrs, bounds);
 		GraphConstants.setBorderColor(attrs, Color.BLACK);
 		GraphConstants.setBackground(attrs, new Color(0xDDEEFF));
 		GraphConstants.setGroupOpaque(attrs, true);
 	}
+
 }

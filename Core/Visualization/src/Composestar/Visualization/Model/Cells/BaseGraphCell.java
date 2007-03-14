@@ -12,6 +12,7 @@ package Composestar.Visualization.Model.Cells;
 
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
+import java.util.Map;
 
 import javax.swing.tree.MutableTreeNode;
 
@@ -149,7 +150,14 @@ public class BaseGraphCell extends DefaultGraphCell
 				}
 				else if (o instanceof DefaultGraphCell)
 				{
-					r = GraphConstants.getBounds(((DefaultGraphCell) o).getAttributes());
+					Map map = ((DefaultGraphCell) o).getAttributes();
+					int inset = GraphConstants.getInset(map);
+					r = GraphConstants.getBounds(map);
+					if (inset > 0)
+					{
+						r = (Rectangle2D) r.clone();
+						r.setFrame(r.getX() - inset, r.getY() - inset, r.getWidth() + inset, r.getHeight() + inset);
+					}
 				}
 				else
 				{
@@ -170,9 +178,22 @@ public class BaseGraphCell extends DefaultGraphCell
 					}
 				}
 			}
+			int inset = GraphConstants.getInset(getAttributes());
+			if (inset > 0)
+			{
+				ret = (Rectangle2D) ret.clone();
+				ret.setFrame(ret.getX() + inset, ret.getY() + inset, ret.getWidth() + inset, ret.getHeight() + inset);
+			}
 			return ret;
 		}
-		return GraphConstants.getBounds(getAttributes());
+		Rectangle2D ret = GraphConstants.getBounds(getAttributes());
+		int inset = GraphConstants.getInset(getAttributes());
+		if (inset > 0)
+		{
+			ret = (Rectangle2D) ret.clone();
+			ret.setFrame(ret.getX() + inset, ret.getY() + inset, ret.getWidth() + inset, ret.getHeight() + inset);
+		}
+		return ret;
 	}
 
 	/**

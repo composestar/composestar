@@ -42,7 +42,7 @@ public class JavaFieldInfo extends FieldInfo
 	 */
 	public boolean isDeclaredHere()
 	{
-		if ((Parent.fullName()).equals(theField.getDeclaringClass().getName())) 
+		if ((parent.getFullName()).equals(theField.getDeclaringClass().getName())) 
 		{
 			return true;
 		}
@@ -73,19 +73,19 @@ public class JavaFieldInfo extends FieldInfo
 
 		if ("ParentType".equals(argumentName)) 
 		{
-			return new UnitResult(Parent);
+			return new UnitResult(parent);
 		}
-		else if ("Class".equals(argumentName) && "Class".equals(fieldType().getUnitType())) 
+		else if ("Class".equals(argumentName) && "Class".equals(getFieldType().getUnitType())) 
 		{
-			return new UnitResult(fieldType());
+			return new UnitResult(getFieldType());
 		}
-		else if ("Interface".equals(argumentName) && "Interface".equals(fieldType().getUnitType())) 
+		else if ("Interface".equals(argumentName) && "Interface".equals(getFieldType().getUnitType())) 
 		{
-			return new UnitResult(fieldType());
+			return new UnitResult(getFieldType());
 		}
-		else if ("Annotation".equals(argumentName) && "Annotation".equals(fieldType().getUnitType())) 
+		else if ("Annotation".equals(argumentName) && "Annotation".equals(getFieldType().getUnitType())) 
 		{
-			return new UnitResult(fieldType());
+			return new UnitResult(getFieldType());
 		}
 		else if ("Annotations".equals(argumentName))
 		{

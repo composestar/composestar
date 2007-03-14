@@ -126,7 +126,7 @@ public class DotNETTypeHandler extends DefaultHandler implements ContentHandler
 		{
 			type.setFullName(lastCharData);
 			TypeMap map = TypeMap.instance();
-			map.addType(type.fullName(), type);
+			map.addType(type.getFullName(), type);
 		}
 		// <!ELEMENT IsAbstract (#PCDATA)>
 		else if ("IsAbstract".equals(rawName))

@@ -202,13 +202,13 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 													CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
 															.get(methodName)).getMethodInfo();
 													// file=(CFile)((CFunction)method.Parent).Parent;
-													CFile fl = (CFile) mi.Parent;
+													CFile fl = (CFile) mi.parent;
 													methods.put(mi, fl);
 													Debug.out(Debug.MODE_INFORMATION, "cone",
 															"Need to weave on function: "
 																	+ ((MethodWrapper) c.getSignature().methodByName
 																			.get(methodName)).getMethodInfo().Name
-																	+ " in file " + file.FullName + "/" + file.Name);
+																	+ " in file " + file.getFullName() + "/" + file.getName());
 												}
 												else if ("*".equals(((MatchingPart) (filter.getFilterElement(x)
 														.getMatchingPattern().getMatchingParts().elementAt(0)))
@@ -217,7 +217,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 													CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
 															.get(methodName)).getMethodInfo();// (CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();
 													// file=(CFile)((CFunction)method.Parent).Parent;
-													CFile fl = (CFile) mi.Parent;
+													CFile fl = (CFile) mi.parent;
 													methods.put(mi, fl);
 												}
 											}
@@ -240,7 +240,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 										method = (CMethodInfo) methodsIter.next();
 										file = (CFile) methods.get(method);
 										Debug.out(Debug.MODE_INFORMATION, "CCONE", "Superimposed on file "
-												+ file.FullName + " and  function " + method.Name + " size of methods "
+												+ file.getFullName() + " and  function " + method.Name + " size of methods "
 												+ methods.size());
 										int priority = order.size() - i;
 										Pointcut pointcut = createPointcut(filter, c, x, pointcutNumber);
@@ -333,13 +333,13 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 													CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
 															.get(methodName)).getMethodInfo();
 													// file=(CFile)((CFunction)method.Parent).Parent;
-													CFile fl = (CFile) mi.Parent;
+													CFile fl = (CFile) mi.parent;
 													methods.put(mi, fl);
 													Debug.out(Debug.MODE_INFORMATION, "cone",
 															"Need to weave on function: "
 																	+ ((MethodWrapper) c.getSignature().methodByName
 																			.get(methodName)).getMethodInfo().Name
-																	+ " in file " + file.FullName + "/" + file.Name);
+																	+ " in file " + file.getFullName() + "/" + file.getName());
 												}
 												else if ("*".equals(((MatchingPart) (filter.getFilterElement(x)
 														.getMatchingPattern().getMatchingParts().elementAt(0)))
@@ -348,7 +348,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 													CMethodInfo mi = (CMethodInfo) ((MethodWrapper) c.getSignature().methodByName
 															.get(methodName)).getMethodInfo();// (CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();
 													// file=(CFile)((CFunction)method.Parent).Parent;
-													CFile fl = (CFile) mi.Parent;
+													CFile fl = (CFile) mi.parent;
 													methods.put(mi, fl);
 												}
 											}
@@ -374,7 +374,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 										method = (CMethodInfo) methodsIter.next();
 										file = (CFile) methods.get(method);
 										Debug.out(Debug.MODE_INFORMATION, "CCONE", "Superimposed on file "
-												+ file.FullName + " and  function " + method.Name + " size of methods "
+												+ file.getFullName() + " and  function " + method.Name + " size of methods "
 												+ methods.size());
 										int priority = order.size() - i;
 										Pointcut pointcut = createPointcut(filter, c, x, pointcutNumber);
@@ -673,8 +673,8 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 			Pointcut pointcut = new Pointcut(file + "Assert");
 			int type = GeneralUtils.HEADER;
 			Functions functions = new Functions();
-			functions.setFile(file.fullname() + ".c");
-			functions.setData(file.fullname() + ".c");
+			functions.setFile(file.getFullName() + ".c");
+			functions.setData(file.getFullName() + ".c");
 
 			functions.setType(type);
 			functions.setParent(pointcut);
@@ -721,32 +721,32 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 
 		Aspect aspect = new Aspect();
 
-		aspect.setId(conditionFile + cfile.FullName + "CH");
+		aspect.setId(conditionFile + cfile.getFullName() + "CH");
 		AdviceApplication aa = new AdviceApplication();
 
-		aa.setId(conditionFile + cfile.FullName + "CH");
+		aa.setId(conditionFile + cfile.getFullName() + "CH");
 		aa.setType(GeneralUtils.BEFORE);
-		Pointcut pointcut = new Pointcut(conditionFile + cfile.FullName + "CH");
+		Pointcut pointcut = new Pointcut(conditionFile + cfile.getFullName() + "CH");
 		int type = GeneralUtils.HEADER;
 		Functions functions = new Functions();
-		functions.setFile(cfile.fullname() + ".c");
-		functions.setData(cfile.fullname() + ".c");
+		functions.setFile(cfile.getFullName() + ".c");
+		functions.setData(cfile.getFullName() + ".c");
 
 		functions.setType(type);
 		functions.setParent(pointcut);
 
 		Advice advice = new Advice();
 		int ttype = GeneralUtils.HEADER_INTRODUCTION;
-		advice.setId(conditionFile + cfile.FullName + "CH");
+		advice.setId(conditionFile + cfile.getFullName() + "CH");
 		advice.setType(ttype);
 		advice.setPriority(1);
-		advice.setCode("#include \"" + conditionFile.fullname() + ".h\"");
+		advice.setCode("#include \"" + conditionFile.getFullName() + ".h\"");
 		aspect.addAdvice(advice);
 		pointcut.addAdviceApplication(aa);
 		pointcut.setParent(aspect);
 		pointcut.addFunctions(functions);
 		aspect.addPointcut(pointcut);
-		aspects.put(conditionFile + cfile.FullName + "CH", aspect);
+		aspects.put(conditionFile + cfile.getFullName() + "CH", aspect);
 
 	}
 
@@ -755,7 +755,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 		Aspect aspect = new Aspect();
 
 		String matchingFunction = method.getName();
-		String matchingFile = file.FullName;
+		String matchingFile = file.getFullName();
 		Debug.out(Debug.MODE_INFORMATION, "CCONE", "Header added to file:" + matchingFile + "For function"
 				+ matchingFunction);
 		aspect.setId(matchingFunction + filename + "STH");
@@ -793,7 +793,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 				.getSubstitutionParts().elementAt(0));
 		String substitutionFunction = sub.getSelector().getName();
 		String matchingFunction = method.getName();
-		String matchingFile = file.FullName;
+		String matchingFile = file.getFullName();
 
 		CFile cfile = null;
 		CFile substitutionFile = null;

@@ -18,10 +18,6 @@ public class CType extends Type
 
 	public int HashCode;
 
-	public String name;
-
-	public String fullName;
-
 	public boolean isStruct = false;
 
 	public boolean isEnum = false;
@@ -59,11 +55,6 @@ public class CType extends Type
 	public void setTypeDef(boolean isTypeDef)
 	{
 		this.isTypeDef = isTypeDef;
-	}
-
-	public void setFullName(String fullName)
-	{
-		this.fullName = fullName;
 	}
 
 	public void setPointerLevel(int pointerLevel)

@@ -55,19 +55,9 @@ public class CMethodInfo extends MethodInfo
 		return CallingConvention;
 	}
 
-	public List getParameters()
-	{
-		return Parameters;
-	}
-
 	public void setCallingConvention(int cv)
 	{
 		CallingConvention = cv;
-	}
-
-	public void setReturnType(String type)
-	{
-		ReturnTypeString = type;
 	}
 
 	public int getHashCode()
@@ -79,10 +69,10 @@ public class CMethodInfo extends MethodInfo
 	{
 		CMethodInfo mi = new CMethodInfo(true);
 		mi.setName(n);
-		mi.Parent = actualParent;
-		mi.Parameters = Parameters;
-		mi.ReturnType = ReturnType;
-		mi.ReturnTypeString = ReturnTypeString;
+		mi.parent = actualParent;
+		mi.parameters = parameters;
+		mi.returnType = returnType;
+		mi.returnTypeString = returnTypeString;
 		mi.CallingConvention = CallingConvention;
 		return mi;
 	}
@@ -105,13 +95,8 @@ public class CMethodInfo extends MethodInfo
 
 	public void addParameter(ParameterInfo param)
 	{
-		Parameters.add(param);
+		parameters.add(param);
 		param.setParent(this);
-	}
-
-	public void setParent(Type parent)
-	{
-		Parent = parent;
 	}
 
 	public UnitResult getUnitRelation(String argumentName)
@@ -129,7 +114,7 @@ public class CMethodInfo extends MethodInfo
 		 **********************************************************************/
 		if (argumentName.equals("ParentClass"))
 		{
-			return new UnitResult(Parent);
+			return new UnitResult(parent);
 		}
 		return null;
 	}
@@ -139,20 +124,15 @@ public class CMethodInfo extends MethodInfo
 		return null;
 	}
 
-	public void setName(String name)
-	{
-		Name = name;
-	}
-
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		CallingConvention = in.readInt();
 		HashCode = in.readInt();
 		Name = in.readUTF();
-		ReturnTypeString = in.readUTF();
-		Parameters = (ArrayList) in.readObject();
+		returnTypeString = in.readUTF();
+		parameters = (ArrayList) in.readObject();
 		Variables = (ArrayList) in.readObject();
-		Parent = (CFile) in.readObject();
+		parent = (CFile) in.readObject();
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException
@@ -160,10 +140,10 @@ public class CMethodInfo extends MethodInfo
 		out.writeInt(CallingConvention);
 		out.writeInt(HashCode);
 		out.writeUTF(Name);
-		out.writeUTF(ReturnTypeString);
-		out.writeObject(Parameters);
+		out.writeUTF(returnTypeString);
+		out.writeObject(parameters);
 		out.writeObject(Variables);
-		out.writeObject(Parent);
+		out.writeObject(parent);
 	}
 
 	@Override

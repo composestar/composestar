@@ -350,11 +350,11 @@ public class JavaType extends Type
 		}
 		else if (argumentName.equals("ChildMethods")) 
 		{
-			return new UnitResult(filterDeclaredHere(this.m_methods));
+			return new UnitResult(filterDeclaredHere(this.methods));
 		}
 		else if (argumentName.equals("ChildFields")) 
 		{
-			return new UnitResult(filterDeclaredHere(this.m_fields));
+			return new UnitResult(filterDeclaredHere(this.fields));
 		}
 		else if (argumentName.equals("ParameterClass")) 
 		{
@@ -402,7 +402,7 @@ public class JavaType extends Type
 		}
 		else if (argumentName.equals("ChildMethods")) 
 		{
-			return new UnitResult(filterDeclaredHere(this.m_methods));
+			return new UnitResult(filterDeclaredHere(this.methods));
 		}
 		else if (argumentName.equals("ParameterInterface")) 
 		{

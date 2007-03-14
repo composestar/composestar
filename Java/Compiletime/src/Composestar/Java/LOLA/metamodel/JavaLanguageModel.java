@@ -453,10 +453,10 @@ public class JavaLanguageModel extends LanguageModel
 			for (Object o : methods.multiValue())
 			{
 				JavaMethodInfo method = (JavaMethodInfo) o;
-				if (method.returnType() != null)
+				if (method.getReturnType() != null)
 				{
 					ProgramElement methodReturnType = method.getUnitRelation(
-							"Return" + method.returnType().getUnitType()).singleValue();
+							"Return" + method.getReturnType().getUnitType()).singleValue();
 					if ((null != methodReturnType) && (methodReturnType instanceof JavaType))
 					{
 						// The method has a registered return Type
@@ -474,9 +474,9 @@ public class JavaLanguageModel extends LanguageModel
 			for (Object o : fields.multiValue())
 			{
 				JavaFieldInfo field = (JavaFieldInfo) o;
-				if (null != field.fieldType())
+				if (null != field.getFieldType())
 				{
-					ProgramElement fieldType = field.getUnitRelation(field.fieldType().getUnitType()).singleValue();
+					ProgramElement fieldType = field.getUnitRelation(field.getFieldType().getUnitType()).singleValue();
 					if ((null != fieldType) && (fieldType instanceof JavaType))
 					{
 						// The method has a registered return Type

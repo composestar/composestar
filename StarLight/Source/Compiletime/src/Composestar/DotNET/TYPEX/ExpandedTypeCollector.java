@@ -69,26 +69,26 @@ class ExpandedTypeCollector
 		ExpandedType et = getExpandedType(dnt);
 		MethodElement me = et.getExtraMethods().addNewMethod();
 		me.setName(mi.getName());
-		me.setReturnType(mi.returnTypeName());
+		me.setReturnType(mi.getReturnTypeString());
 		
 		ArrayOfParameterElement pa = me.addNewParameters();
 		List<DotNETParameterInfo> paramInfos = mi.getParameters();
 		for (DotNETParameterInfo pi : paramInfos)
 		{
 			ParameterElement pe = pa.addNewParameter();
-			pe.setName(pi.name());
+			pe.setName(pi.getName());
 			pe.setType(pi.getParameterTypeString());
 		}
 	}
 	
 	private ExpandedType getExpandedType(DotNETType dnt)
 	{
-		String name = dnt.name();
+		String name = dnt.getName();
 		ExpandedType et = types.get(name);
 		if (et == null)
 		{
 			types.put(name, et = createExpandedType(dnt));
-			et.setName(dnt.fullName());
+			et.setName(dnt.getFullName());
 			et.addNewExtraMethods();
 		}
 

@@ -17,16 +17,12 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
  */
 public class CallToOtherMethod implements SerializableRepositoryEntity
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1718642064472551590L;
 
 	/**
 	 * The fully qualified name
 	 */
-	public String OperationName;
+	public String operationName;
 
 	/**
 	 * The name of the method
@@ -35,9 +31,9 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 
 	public MethodInfo calledMethod;
 
-	public String ClassName;
+	public String className;
 
-	public Type Parent;
+	public Type parent;
 
 	public CallToOtherMethod()
 	{
@@ -46,7 +42,7 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 
 	public Type parent()
 	{
-		return Parent;
+		return parent;
 	}
 
 	/**
@@ -58,11 +54,11 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 	}
 
 	/**
-	 * @param calledMethod the calledMethod to set
+	 * @param inCalledMethod the calledMethod to set
 	 */
-	public void setCalledMethod(MethodInfo calledMethod)
+	public void setCalledMethod(MethodInfo inCalledMethod)
 	{
-		this.calledMethod = calledMethod;
+		this.calledMethod = inCalledMethod;
 	}
 
 	/**
@@ -70,15 +66,15 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 	 */
 	public String getClassName()
 	{
-		return ClassName;
+		return className;
 	}
 
 	/**
-	 * @param className the className to set
+	 * @param inClassName the className to set
 	 */
-	public void setClassName(String className)
+	public void setClassName(String inClassName)
 	{
-		ClassName = className;
+		className = inClassName;
 	}
 
 	/**
@@ -86,15 +82,15 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 	 */
 	public String getOperationName()
 	{
-		return OperationName;
+		return operationName;
 	}
 
 	/**
-	 * @param operationName the operationName to set
+	 * @param inOperationName the operationName to set
 	 */
-	public void setOperationName(String operationName)
+	public void setOperationName(String inOperationName)
 	{
-		OperationName = operationName;
+		operationName = inOperationName;
 	}
 
 	/**
@@ -102,12 +98,12 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 	 */
 	public Type getParent()
 	{
-		return Parent;
+		return parent;
 	}
 
-	public void setParent(Type parent)
+	public void setParent(Type inParent)
 	{
-		Parent = parent;
+		parent = inParent;
 	}
 
 	/**
@@ -119,11 +115,11 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 	}
 
 	/**
-	 * @param methodName the methodName to set
+	 * @param inMethodName the methodName to set
 	 */
-	public void setMethodName(String methodName)
+	public void setMethodName(String inMethodName)
 	{
-		this.methodName = methodName;
+		this.methodName = inMethodName;
 	}
 
 	/**
@@ -133,9 +129,9 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		OperationName = in.readUTF();
-		Parent = (Type) in.readObject();
-		ClassName = in.readUTF();
+		operationName = in.readUTF();
+		parent = (Type) in.readObject();
+		className = in.readUTF();
 	}
 
 	/**
@@ -145,9 +141,9 @@ public class CallToOtherMethod implements SerializableRepositoryEntity
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeUTF(OperationName);
-		out.writeObject(Parent);
-		out.writeUTF(ClassName);
+		out.writeUTF(operationName);
+		out.writeObject(parent);
+		out.writeUTF(className);
 	}
 
 }

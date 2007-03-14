@@ -57,7 +57,7 @@ public class JavaMethodInfo extends MethodInfo
 	 */
 	public boolean isDeclaredHere()
 	{
-		if ((Parent.fullName()).equals(theMethod.getDeclaringClass().getName())) 
+		if ((parent.getFullName()).equals(theMethod.getDeclaringClass().getName())) 
 		{
 			return true;
 		}
@@ -75,10 +75,10 @@ public class JavaMethodInfo extends MethodInfo
 		mi.setName(name);
 
 		// set MethodInfo variables
-		mi.Parent = actualParent;
-		mi.Parameters = this.Parameters;
-		mi.ReturnType = this.ReturnType;
-		mi.ReturnTypeString = this.ReturnTypeString;
+		mi.parent = actualParent;
+		mi.parameters = this.parameters;
+		mi.returnType = this.returnType;
+		mi.returnTypeString = this.returnTypeString;
 
 		// set JavaMethodInfo variables
 		mi.theMethod = this.theMethod;
@@ -121,29 +121,29 @@ public class JavaMethodInfo extends MethodInfo
 	 */
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentClass") && Parent.getUnitType().equals("Class")) 
+		if (argumentName.equals("ParentClass") && parent.getUnitType().equals("Class")) 
 		{
-			return new UnitResult(Parent);
+			return new UnitResult(parent);
 		}
-		else if (argumentName.equals("ParentInterface") && Parent.getUnitType().equals("Interface")) 
+		else if (argumentName.equals("ParentInterface") && parent.getUnitType().equals("Interface")) 
 		{
-			return new UnitResult(Parent);
+			return new UnitResult(parent);
 		}
 		else if (argumentName.equals("ChildParameters")) 
 		{
-			return new UnitResult(toHashSet(Parameters));
+			return new UnitResult(toHashSet(parameters));
 		}
-		else if (argumentName.equals("ReturnClass") && returnType().getUnitType().equals("Class")) 
+		else if (argumentName.equals("ReturnClass") && getReturnType().getUnitType().equals("Class")) 
 		{	
-			return new UnitResult(returnType());
+			return new UnitResult(getReturnType());
 		}
-		else if (argumentName.equals("ReturnInterface") && returnType().getUnitType().equals("Interface")) 
+		else if (argumentName.equals("ReturnInterface") && getReturnType().getUnitType().equals("Interface")) 
 		{
-			return new UnitResult(returnType());
+			return new UnitResult(getReturnType());
 		}
-		else if (argumentName.equals("ReturnAnnotation") && returnType().getUnitType().equals("Annotation")) 
+		else if (argumentName.equals("ReturnAnnotation") && getReturnType().getUnitType().equals("Annotation")) 
 		{
-			return new UnitResult(returnType());
+			return new UnitResult(getReturnType());
 		}	
 		else if (argumentName.equals("Annotations"))
 		{

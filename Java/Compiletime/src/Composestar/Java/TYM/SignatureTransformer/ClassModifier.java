@@ -63,13 +63,13 @@ public class ClassModifier
 			JavaMethodInfo m = (JavaMethodInfo) method;
 			int modifiers = m.theMethod.getModifiers();
 			CtClass returnClass = null;
-			if (!m.ReturnTypeString.equals(""))
+			if (!m.returnTypeString.equals(""))
 			{
-				returnClass = findClass(m.ReturnTypeString);
+				returnClass = findClass(m.returnTypeString);
 			}
 			String methodName = m.getName();
-			CtClass[] parameters = new CtClass[m.Parameters.size()];
-			if (m.Parameters.size() > 0)
+			CtClass[] parameters = new CtClass[m.parameters.size()];
+			if (m.parameters.size() > 0)
 			{
 				Class[] params = m.theMethod.getParameterTypes();
 				for (int i = 0; i < params.length; i++)
@@ -100,8 +100,8 @@ public class ClassModifier
 		for (Object method1 : methods)
 		{
 			JavaMethodInfo m = (JavaMethodInfo) method1;
-			CtClass[] parameters = new CtClass[m.Parameters.size()];
-			if (m.Parameters.size() > 0)
+			CtClass[] parameters = new CtClass[m.parameters.size()];
+			if (m.parameters.size() > 0)
 			{
 				Class[] params = m.theMethod.getParameterTypes();
 				for (int i = 0; i < params.length; i++)

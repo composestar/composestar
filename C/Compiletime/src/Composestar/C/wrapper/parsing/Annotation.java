@@ -217,7 +217,7 @@ public class Annotation
 			for (Object field1 : fields)
 			{
 				CVariable field = (CVariable) field1;
-				if (field.Name.equals(fieldName))
+				if (field.name.equals(fieldName))
 				{
 					return field;
 				}
@@ -233,7 +233,7 @@ public class Annotation
 		for (Object o : method.getParameters())
 		{
 			CParameterInfo param = (CParameterInfo) o;
-			if (param.Name.equals(paramName))
+			if (param.name.equals(paramName))
 			{
 				return param;
 			}

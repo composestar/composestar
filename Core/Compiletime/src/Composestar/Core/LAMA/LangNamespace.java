@@ -6,15 +6,13 @@ package Composestar.Core.LAMA;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author havingaw Namespace unit type
  */
 public class LangNamespace extends ProgramElement
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -9184363245232975615L;
 
 	private HashSet childClasses;
@@ -25,7 +23,7 @@ public class LangNamespace extends ProgramElement
 
 	private HashSet childNamespaces;
 
-	String name;
+	private String name;
 
 	/**
 	 * @param id
@@ -35,9 +33,9 @@ public class LangNamespace extends ProgramElement
 		this(null);
 	}
 
-	public LangNamespace(String name)
+	public LangNamespace(String inName)
 	{
-		this.name = name;
+		this.name = inName;
 		this.childClasses = new HashSet();
 		this.childInterfaces = new HashSet();
 		this.parentNamespace = null;
@@ -58,19 +56,19 @@ public class LangNamespace extends ProgramElement
 	}
 
 	/**
-	 * @param parentNamespace The parentNamespace to set.
+	 * @param inParentNamespace The parentNamespace to set.
 	 */
-	public void setParentNamespace(LangNamespace parentNamespace)
+	public void setParentNamespace(LangNamespace inParentNamespace)
 	{
-		this.parentNamespace = parentNamespace;
+		this.parentNamespace = inParentNamespace;
 	}
 
 	/**
-	 * @param childClasses The childClasses to set.
+	 * @param inChildClasses The childClasses to set.
 	 */
-	public void setChildClasses(HashSet childClasses)
+	public void setChildClasses(HashSet inChildClasses)
 	{
-		this.childClasses = childClasses;
+		this.childClasses = inChildClasses;
 	}
 
 	/**
@@ -82,11 +80,11 @@ public class LangNamespace extends ProgramElement
 	}
 
 	/**
-	 * @param childInterfaces The childInterfaces to set.
+	 * @param inChildInterfaces The childInterfaces to set.
 	 */
-	public void setChildInterfaces(HashSet childInterfaces)
+	public void setChildInterfaces(HashSet inChildInterfaces)
 	{
-		this.childInterfaces = childInterfaces;
+		this.childInterfaces = inChildInterfaces;
 	}
 
 	public void addChildClass(ProgramElement childClass)
@@ -102,7 +100,7 @@ public class LangNamespace extends ProgramElement
 	/**
 	 * @return Returns the childNamespaces.
 	 */
-	public HashSet getChildNamespaces()
+	public Set getChildNamespaces()
 	{
 		return childNamespaces;
 	}

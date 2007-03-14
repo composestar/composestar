@@ -60,10 +60,10 @@ public class DotNETMethodInfo extends MethodInfo
 		mi.setName(n);
 
 		// set MethodInfo variables
-		mi.Parent = actualParent;
-		mi.Parameters = this.Parameters;
-		mi.ReturnType = this.ReturnType;
-		mi.ReturnTypeString = this.ReturnTypeString;
+		mi.parent = actualParent;
+		mi.parameters = this.parameters;
+		mi.returnType = this.returnType;
+		mi.returnTypeString = this.returnTypeString;
 
 		// set DotNETMethodInfo variables
 		mi.isConstructor = this.isConstructor;
@@ -210,18 +210,18 @@ public class DotNETMethodInfo extends MethodInfo
 
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentClass") && Parent.getUnitType().equals("Class"))
-			return new UnitResult(Parent);
-		else if (argumentName.equals("ParentInterface") && Parent.getUnitType().equals("Interface"))
-			return new UnitResult(Parent);      
+		if (argumentName.equals("ParentClass") && parent.getUnitType().equals("Class"))
+			return new UnitResult(parent);
+		else if (argumentName.equals("ParentInterface") && parent.getUnitType().equals("Interface"))
+			return new UnitResult(parent);      
 		else if (argumentName.equals("ChildParameters"))
-			return new UnitResult(toHashSet(Parameters));
-		else if (argumentName.equals("ReturnClass") && returnType().getUnitType().equals("Class"))
-			return new UnitResult(returnType());
-		else if (argumentName.equals("ReturnInterface") && returnType().getUnitType().equals("Interface"))
-			return new UnitResult(returnType());
-		else if (argumentName.equals("ReturnAnnotation") && returnType().getUnitType().equals("Annotation"))
-			return new UnitResult(returnType());
+			return new UnitResult(toHashSet(parameters));
+		else if (argumentName.equals("ReturnClass") && getReturnType().getUnitType().equals("Class"))
+			return new UnitResult(getReturnType());
+		else if (argumentName.equals("ReturnInterface") && getReturnType().getUnitType().equals("Interface"))
+			return new UnitResult(getReturnType());
+		else if (argumentName.equals("ReturnAnnotation") && getReturnType().getUnitType().equals("Annotation"))
+			return new UnitResult(getReturnType());
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();

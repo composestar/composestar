@@ -90,7 +90,7 @@ public class FilterModuleConcernVertex extends AbstractFilterModuleConcernVertex
 			FilterModuleVertex fmVertex = new FilterModuleVertex(fm);
 			if (last != null)
 			{
-				Rectangle2D bounds = GraphConstants.getBounds(last.getAttributes());
+				Rectangle2D bounds = last.calcBounds();
 				fmVertex.translate(60, bounds.getY() + bounds.getHeight() - 1);
 			}
 			else
@@ -119,8 +119,8 @@ public class FilterModuleConcernVertex extends AbstractFilterModuleConcernVertex
 		if (last != null)
 		{
 			// nudge the class vertex
-			Rectangle2D bounds = GraphConstants.getBounds(last.getAttributes());
-			classVertex.translate(0, bounds.getY() + bounds.getHeight() - 10);
+			Rectangle2D bounds = last.calcBounds();
+			classVertex.translate(0, bounds.getY() + bounds.getHeight()-4);
 		}
 	}
 }

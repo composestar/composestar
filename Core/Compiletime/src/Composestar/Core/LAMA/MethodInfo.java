@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.LAMA;
 
 import java.io.IOException;
@@ -14,19 +23,19 @@ public abstract class MethodInfo extends ProgramElement
 
 	public String Name;
 
-	public String ReturnTypeString;
+	public String returnTypeString;
 
-	public Type ReturnType;
+	public Type returnType;
 
-	public ArrayList Parameters;
+	public ArrayList parameters;
 
-	public Type Parent;
+	public Type parent;
 
-	private HashSet CallsToOtherMethods;
+	private HashSet callsToOtherMethods;
 
-	private HashSet ReifiedMessageBehavior;
+	private HashSet reifiedMessageBehavior;
 
-	private HashSet ResourceUsage;
+	private HashSet resourceUsage;
 
 	public MethodInfo()
 	{
@@ -43,10 +52,10 @@ public abstract class MethodInfo extends ProgramElement
 		{
 			UnitRegister.instance().registerLanguageUnit(this);
 		}
-		Parameters = new ArrayList();
-		CallsToOtherMethods = new HashSet();
-		ReifiedMessageBehavior = new HashSet();
-		ResourceUsage = new HashSet();
+		parameters = new ArrayList();
+		callsToOtherMethods = new HashSet();
+		reifiedMessageBehavior = new HashSet();
+		resourceUsage = new HashSet();
 	}
 
 	/**
@@ -54,7 +63,7 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	public void addParameter(ParameterInfo param)
 	{
-		Parameters.add(param);
+		parameters.add(param);
 		// param.setParent(this);
 	}
 
@@ -71,17 +80,6 @@ public abstract class MethodInfo extends ProgramElement
 
 	/**
 	 * @return java.lang.String
-	 * @roseuid 401B84CF020E
-	 * @deprecated Use {@link #getName()} instead
-	 */
-	public String name()
-	{
-		return getName();
-	}
-
-	/**
-	 * @return java.lang.String
-	 * @roseuid 401B84CF020E
 	 */
 	public String getName()
 	{
@@ -89,21 +87,19 @@ public abstract class MethodInfo extends ProgramElement
 	}
 
 	/**
-	 * @param name
-	 * @roseuid 402A028601CF
+	 * @param inName
 	 */
-	public void setName(String name)
+	public void setName(String inName)
 	{
-		Name = name;
+		Name = inName;
 	}
 
 	/**
 	 * @return java.util.List
-	 * @roseuid 401B84CF0211
 	 */
 	public List getParameters()
 	{
-		return Parameters;
+		return parameters;
 	}
 
 	/**
@@ -114,12 +110,12 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	public HashSet getCallsToOtherMethods()
 	{
-		return CallsToOtherMethods;
+		return callsToOtherMethods;
 	}
 
 	public void setCallsToOtherMethods(HashSet value)
 	{
-		CallsToOtherMethods = value;
+		callsToOtherMethods = value;
 	}
 
 	/**
@@ -130,7 +126,7 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	public boolean hasCallsToOtherMethodsInformation()
 	{
-		return !CallsToOtherMethods.isEmpty();
+		return !callsToOtherMethods.isEmpty();
 	}
 
 	/**
@@ -140,12 +136,12 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	public HashSet getResourceUsage()
 	{
-		return ResourceUsage;
+		return resourceUsage;
 	}
 
 	public void setResourceUsage(HashSet value)
 	{
-		ResourceUsage = value;
+		resourceUsage = value;
 	}
 
 	/**
@@ -155,7 +151,7 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	public boolean hasResourceUsage()
 	{
-		return !ResourceUsage.isEmpty();
+		return !resourceUsage.isEmpty();
 	}
 
 	/**
@@ -165,12 +161,12 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	public HashSet getReifiedMessageBehavior()
 	{
-		return ReifiedMessageBehavior;
+		return reifiedMessageBehavior;
 	}
 
 	public void setReifiedMessageBehavior(HashSet value)
 	{
-		ReifiedMessageBehavior = value;
+		reifiedMessageBehavior = value;
 	}
 
 	/**
@@ -181,24 +177,23 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	public boolean hasReifiedMessageBehavior()
 	{
-		return !ReifiedMessageBehavior.isEmpty();
+		return !reifiedMessageBehavior.isEmpty();
 	}
 
 	/**
 	 * @param types Check if the methods has these types
 	 * @return true if there is a signature match. False otherwise
-	 * @roseuid 402C9CE401C5
 	 */
 	public boolean hasParameters(String[] types)
 	{
-		if (Parameters.size() != types.length)
+		if (parameters.size() != types.length)
 		{
 			return false;
 		}
 
 		for (int i = 0; i < types.length; i++)
 		{
-			ParameterInfo parameter = (ParameterInfo) Parameters.get(i);
+			ParameterInfo parameter = (ParameterInfo) parameters.get(i);
 			if (!parameter.getParameterTypeString().equals(types[i]))
 			{
 				return false;
@@ -210,27 +205,22 @@ public abstract class MethodInfo extends ProgramElement
 
 	public Type parent()
 	{
-		return Parent;
+		return parent;
 	}
 
-	public void setParent(Type parent)
+	public void setParent(Type inParent)
 	{
-		Parent = parent;
+		parent = inParent;
 	}
 
-	public String returnTypeName()
+	public Type getReturnType()
 	{
-		return ReturnTypeString;
-	}
-
-	public Type returnType()
-	{
-		if (ReturnType == null)
+		if (returnType == null)
 		{
 			TypeMap map = TypeMap.instance();
-			ReturnType = map.getType(ReturnTypeString);
+			returnType = map.getType(returnTypeString);
 
-			if (ReturnType == null)
+			if (returnType == null)
 			{
 				return null;
 				// throw new RuntimeException("Unable to find type specification
@@ -239,24 +229,24 @@ public abstract class MethodInfo extends ProgramElement
 			}
 		}
 
-		return ReturnType;
+		return returnType;
 	}
 
 	public void setReturnType(String type)
 	{
-		ReturnTypeString = type;
+		returnTypeString = type;
 	}
 
 	public String getReturnTypeString()
 	{
-		return ReturnTypeString;
+		return returnTypeString;
 	}
 
 	public String toString()
 	{
 		String atts = StringUtils.join(getUnitAttributes(), " ");
-		String params = StringUtils.join(Parameters, ", ");
-		return atts + " " + ReturnTypeString + " " + Name + "(" + params + ")";
+		String params = StringUtils.join(parameters, ", ");
+		return atts + " " + returnTypeString + " " + Name + "(" + params + ")";
 	}
 
 	// Stuff for LOLA
@@ -286,12 +276,12 @@ public abstract class MethodInfo extends ProgramElement
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		Name = in.readUTF();
-		ReturnTypeString = in.readUTF();
-		Parameters = (ArrayList) in.readObject();
-		Parent = (Type) in.readObject();
-		CallsToOtherMethods = (HashSet) in.readObject();
-		ReifiedMessageBehavior = (HashSet) in.readObject();
-		ResourceUsage = (HashSet) in.readObject();
+		returnTypeString = in.readUTF();
+		parameters = (ArrayList) in.readObject();
+		parent = (Type) in.readObject();
+		callsToOtherMethods = (HashSet) in.readObject();
+		reifiedMessageBehavior = (HashSet) in.readObject();
+		resourceUsage = (HashSet) in.readObject();
 	}
 
 	/**
@@ -302,12 +292,12 @@ public abstract class MethodInfo extends ProgramElement
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeUTF(Name);
-		out.writeUTF(ReturnTypeString);
-		out.writeObject(Parameters);
-		out.writeObject(Parent);
-		out.writeObject(CallsToOtherMethods);
-		out.writeObject(ReifiedMessageBehavior);
-		out.writeObject(ResourceUsage);
+		out.writeUTF(returnTypeString);
+		out.writeObject(parameters);
+		out.writeObject(parent);
+		out.writeObject(callsToOtherMethods);
+		out.writeObject(reifiedMessageBehavior);
+		out.writeObject(resourceUsage);
 	}
 
 	public boolean checkEquals(MethodInfo method)
@@ -317,21 +307,21 @@ public abstract class MethodInfo extends ProgramElement
 			return false;
 		}
 
-		if (!method.ReturnTypeString.equals(this.ReturnTypeString))
+		if (!method.returnTypeString.equals(this.returnTypeString))
 		{
 			return false;
 		}
 
-		if (this.Parameters.size() != method.Parameters.size())
+		if (this.parameters.size() != method.parameters.size())
 		{
 			return false;
 		}
 
-		for (int i = 0; i < this.Parameters.size(); i++)
+		for (int i = 0; i < this.parameters.size(); i++)
 		{
-			ParameterInfo thisPar = (ParameterInfo) this.Parameters.get(i);
-			ParameterInfo objPar = (ParameterInfo) method.Parameters.get(i);
-			if (!thisPar.ParameterTypeString.equals(objPar.ParameterTypeString))
+			ParameterInfo thisPar = (ParameterInfo) this.parameters.get(i);
+			ParameterInfo objPar = (ParameterInfo) method.parameters.get(i);
+			if (!thisPar.parameterTypeString.equals(objPar.parameterTypeString))
 			{
 				return false;
 			}
@@ -339,10 +329,10 @@ public abstract class MethodInfo extends ProgramElement
 
 		return true;
 	}
-	
+
 	public abstract boolean isPublic();
-	
+
 	public abstract boolean isPrivate();
-	
+
 	public abstract boolean isProtected();
 }

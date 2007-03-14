@@ -217,7 +217,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			weaveType.addNewExternals();
 			weaveType.addNewInternals();
 			weaveType.addNewMethods();
-			weaveType.setName(type.fullName());
+			weaveType.setName(type.getFullName());
 
 			Iterator filterModules = order.filterModuleSIList().iterator();
 			while (filterModules.hasNext())

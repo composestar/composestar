@@ -228,7 +228,7 @@ public class CWrapper implements CTCommonModule
 			// absolutepaths" );
 			if (absolutePaths.put(cf.getFullName(), cf) != null)
 			{
-				System.out.println("Already contained object" + cf.FullName);
+				System.out.println("Already contained object" + cf.getFullName());
 			}
 			list.add(dir.getAbsolutePath());
 		}

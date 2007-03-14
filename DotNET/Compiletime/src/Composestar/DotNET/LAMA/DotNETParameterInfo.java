@@ -52,7 +52,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @return boolean
-	 * @roseuid 401B84CF0217
 	 */
 	public boolean isIn()
 	{
@@ -61,7 +60,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @param isln
-	 * @roseuid 402A06EE014F
 	 */
 	public void setIsln(boolean isln)
 	{
@@ -70,7 +68,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @return boolean
-	 * @roseuid 401B84CF0218
 	 */
 	public boolean isLcid()
 	{
@@ -79,7 +76,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @param isLcid
-	 * @roseuid 402A070000BE
 	 */
 	public void setIsLcid(boolean isLcid)
 	{
@@ -88,7 +84,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @return boolean
-	 * @roseuid 401B84CF0219
 	 */
 	public boolean isOptional()
 	{
@@ -97,7 +92,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @param isOptional
-	 * @roseuid 402A070A020D
 	 */
 	public void setIsOptional(boolean isOptional)
 	{
@@ -106,7 +100,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @return boolean
-	 * @roseuid 401B84CF021A
 	 */
 	public boolean isOut()
 	{
@@ -115,7 +108,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @param isOut
-	 * @roseuid 402A07140077
 	 */
 	public void setIsOut(boolean isOut)
 	{
@@ -124,7 +116,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @return boolean
-	 * @roseuid 401B84CF021B
 	 */
 	public boolean isRetval()
 	{
@@ -133,7 +124,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @param isRetval
-	 * @roseuid 402A071C000A
 	 */
 	public void setIsRetVal(boolean isRetval)
 	{
@@ -142,7 +132,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @return int
-	 * @roseuid 401B84CF021E
 	 */
 	public int position()
 	{
@@ -151,7 +140,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @param pos
-	 * @roseuid 402A074A0061
 	 */
 	public void setPosition(int pos)
 	{
@@ -160,7 +148,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @return int
-	 * @roseuid 401B84CF021F
 	 */
 	public int getHashCode()
 	{
@@ -169,7 +156,6 @@ public class DotNETParameterInfo extends ParameterInfo
 
 	/**
 	 * @param code
-	 * @roseuid 402A075602A3
 	 */
 	public void setHashCode(int code)
 	{
@@ -182,7 +168,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	{
 		if (argumentName.equals("ParentMethod"))
 		{
-			return new UnitResult(Parent);
+			return new UnitResult(parent);
 		}
 		else if (argumentName.equals("Class") && parameterType().getUnitType().equals("Class"))
 		{

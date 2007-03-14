@@ -81,14 +81,14 @@ public class ClassMethodsVertex extends ClassMembersVertex
 			{
 				sb.append(", ");
 			}
-			sb.append(pi.name());
+			sb.append(pi.getName());
 			sb.append(": ");
 			sb.append(pi.getParameterTypeString());
 			parcnt++;
 		}
 		
 		sb.append(")");
-		String ret = meth.returnTypeName();
+		String ret = meth.getReturnTypeString();
 		if (ret != null && !ret.toLowerCase().endsWith(".void"))
 		{
 			sb.append(": ");

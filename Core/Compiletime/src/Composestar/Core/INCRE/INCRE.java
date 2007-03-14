@@ -744,7 +744,7 @@ public final class INCRE
 			if (unit instanceof Type)
 			{
 				Type dtype = (Type) unit;
-				String sourceFile = locations.getSourceByType(dtype.m_fullName);
+				String sourceFile = locations.getSourceByType(dtype.fullName);
 				if (sourceFile != null && !isFileAdded(sourceFile, null) && !isFileModified(sourceFile))
 				{
 					/* skip because sourcefile unmodified */
@@ -796,13 +796,13 @@ public final class INCRE
 		if (repr instanceof Type)
 		{
 			Type type = (Type) repr;
-			if (type.m_isNestedPrivate || type.m_isNestedPublic)
+			if (type.nestedPrivate || type.nestedPublic)
 			{
 				/* undecided yet, safety first */
 				return true;
 			}
 
-			String location = locations.getSourceByType(type.m_fullName);
+			String location = locations.getSourceByType(type.fullName);
 			if (location != null)
 			{
 				location = FileUtils.normalizeFilename(location);

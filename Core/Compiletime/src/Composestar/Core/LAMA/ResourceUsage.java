@@ -1,8 +1,11 @@
 /*
- * Created on 26-apr-2006
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.LAMA;
 
@@ -17,33 +20,27 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
  */
 public class ResourceUsage implements SerializableRepositoryEntity
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4560235679437768784L;
 
-	public String ResourceName;
+	public String resourceName;
 
-	public String AccessType;
+	public String accessType;
 
-	public String AccessOccurence;
+	public String accessOccurence;
 
-	public Type Parent;
+	public Type parent;
 
 	public ResourceUsage()
-	{
-
-	}
+	{}
 
 	public Type parent()
 	{
-		return Parent;
+		return parent;
 	}
 
-	public void setParent(Type parent)
+	public void setParent(Type inParent)
 	{
-		Parent = parent;
+		parent = inParent;
 	}
 
 	/**
@@ -53,10 +50,10 @@ public class ResourceUsage implements SerializableRepositoryEntity
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		ResourceName = in.readUTF();
-		Parent = (Type) in.readObject();
-		AccessType = in.readUTF();
-		AccessOccurence = in.readUTF();
+		resourceName = in.readUTF();
+		parent = (Type) in.readObject();
+		accessType = in.readUTF();
+		accessOccurence = in.readUTF();
 	}
 
 	/**
@@ -66,9 +63,9 @@ public class ResourceUsage implements SerializableRepositoryEntity
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeUTF(ResourceName);
-		out.writeObject(Parent);
-		out.writeUTF(AccessType);
-		out.writeUTF(AccessOccurence);
+		out.writeUTF(resourceName);
+		out.writeObject(parent);
+		out.writeUTF(accessType);
+		out.writeUTF(accessOccurence);
 	}
 }

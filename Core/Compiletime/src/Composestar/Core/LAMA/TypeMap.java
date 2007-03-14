@@ -20,12 +20,9 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
  */
 public class TypeMap implements SerializableRepositoryEntity
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3742264878434693439L;
 
-	private DataMap Types;
+	private DataMap types;
 
 	private static TypeMap Instance;
 
@@ -34,7 +31,7 @@ public class TypeMap implements SerializableRepositoryEntity
 	 */
 	public TypeMap()
 	{
-		Types = DataMap.newDataMapInstance();
+		types = DataMap.newDataMapInstance();
 	}
 
 	/**
@@ -46,7 +43,7 @@ public class TypeMap implements SerializableRepositoryEntity
 	 */
 	public void addType(String name, Type type)
 	{
-		Types.put(name, type);
+		types.put(name, type);
 	}
 
 	/**
@@ -58,7 +55,7 @@ public class TypeMap implements SerializableRepositoryEntity
 	 */
 	public Type getType(String name)
 	{
-		return (Type) Types.get(name);
+		return (Type) types.get(name);
 	}
 
 	/**
@@ -82,7 +79,7 @@ public class TypeMap implements SerializableRepositoryEntity
 	 */
 	public Collection values()
 	{
-		return Types.values();
+		return types.values();
 	}
 
 	/**
@@ -91,6 +88,6 @@ public class TypeMap implements SerializableRepositoryEntity
 	 */
 	public java.util.HashMap map()
 	{
-		return Types.toHashMap();
+		return types.toHashMap();
 	}
 }

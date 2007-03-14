@@ -1,13 +1,18 @@
 /*
- * UnitRelation.java - Created on 22-okt-2004 by havingaw
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
-
 package Composestar.Core.LAMA;
 
 import java.util.Set;
 
 /**
- * @author havingaw TODO: Insert description of class here
+ * @author havingaw
  */
 public class UnitResult
 {

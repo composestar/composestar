@@ -51,7 +51,7 @@ public class JavaParameterInfo extends ParameterInfo
 	{
 		if (argumentName.equals("ParentMethod")) 
 		{
-			return new UnitResult(Parent);
+			return new UnitResult(parent);
 		}
 		else if (argumentName.equals("Class") && parameterType().getUnitType().equals("Class")) 
 		{

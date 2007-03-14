@@ -185,15 +185,15 @@ public class ResourceOperationLabeler implements Labeler
 					for (Object attribute : attributes)
 					{
 						Annotation dna = (Annotation) attribute;
-						if (dna.getType().fullName().startsWith("Composestar.")
-								&& dna.getType().fullName().endsWith("Semantics"))
+						if (dna.getType().getFullName().startsWith("Composestar.")
+								&& dna.getType().getFullName().endsWith("Semantics"))
 						{
 							// System.err.println(dna.getValue());
 							String spec = dna.getValue().replaceAll("\"", "");
 							if (!grammer.matcher(spec).matches())
 							{
 								MethodInfo dnmi = (MethodInfo) dna.getTarget();
-								String fullMethodName = dnmi.parent().m_fullName + '.' + dnmi.getName();
+								String fullMethodName = dnmi.parent().fullName + '.' + dnmi.getName();
 								throw new ModuleException("Error in annotation semantics of method " + fullMethodName,
 										CKRET.MODULE_NAME);
 							}

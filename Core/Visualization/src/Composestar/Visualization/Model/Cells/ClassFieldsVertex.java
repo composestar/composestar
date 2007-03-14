@@ -69,7 +69,7 @@ public class ClassFieldsVertex extends ClassMembersVertex
 	protected String getStringRep(FieldInfo fi)
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append(fi.name());
+		sb.append(fi.getName());
 		sb.append(": ");
 		sb.append(fi.getFieldTypeString());
 		return sb.toString();
