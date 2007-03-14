@@ -102,7 +102,6 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 		GraphConstants.setAbsoluteX(port.getAttributes(), true);
 
 		add(cell);
-		cell.setParent(this);
 		return cell;
 	}
 
@@ -118,7 +117,6 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 		GraphConstants.setBounds(map, bounds);
 		GraphConstants.setHorizontalAlignment(map, JLabel.LEFT);
 		add(cell);
-		cell.setParent(this);
 	}
 
 	/**

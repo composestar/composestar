@@ -15,6 +15,7 @@ import org.jgraph.graph.DefaultCellViewFactory;
 import org.jgraph.graph.GraphModel;
 
 import Composestar.Visualization.Model.Cells.ClassVertex;
+import Composestar.Visualization.Model.Cells.DetailedFilterModuleVertex;
 
 /**
  * Creates the proper CellView instances for our custom cells
@@ -33,9 +34,13 @@ public class VisComCellViewFactory extends DefaultCellViewFactory
 	 */
 	public CellView createView(GraphModel model, Object cell)
 	{
-		if (cell instanceof ClassVertex) 
+		if (cell instanceof ClassVertex)
 		{
 			return new ClassVertexView(cell);
+		}
+		else if (cell instanceof DetailedFilterModuleVertex)
+		{
+			return new DetailedFilterModuleView(cell);
 		}
 		return super.createView(model, cell);
 	}

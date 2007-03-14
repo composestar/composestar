@@ -68,8 +68,8 @@ public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 			DetailedFilterModuleVertex fmVertex = new DetailedFilterModuleVertex(fm);
 			if (last != null)
 			{
-				Rectangle2D bounds = GraphConstants.getBounds(last.getAttributes());
-				fmVertex.translate(0, bounds.getY() + bounds.getHeight() - 1);
+				Rectangle2D bounds = last.calcBounds();
+				if (bounds != null) fmVertex.translate(0, bounds.getY() + bounds.getHeight() - 1);
 			}
 
 			if (idx == 0)
@@ -85,7 +85,6 @@ public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 
 			fmVertices.put(fm.getQualifiedName(), fmVertex);
 			add(fmVertex);
-			fmVertex.setParent(this);
 
 			idx++;
 			last = fmVertex;
@@ -93,10 +92,9 @@ public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 		if (last != null)
 		{
 			// nudge the class vertex
-			Rectangle2D bounds = GraphConstants.getBounds(last.getAttributes());
-			// Rectangle2D cvBounds =
-			// GraphConstants.getBounds(classVertex.getAttributes());
-			classVertex.translate(0, bounds.getY() + bounds.getHeight());
+			Rectangle2D bounds = last.calcBounds();
+			Rectangle2D cvBounds = classVertex.calcBounds();
+			classVertex.translate((bounds.getWidth() - cvBounds.getWidth()) / 2, bounds.getY() + bounds.getHeight() - 1);
 		}
 	}
 }

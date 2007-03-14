@@ -49,7 +49,6 @@ public abstract class ConcernVertex extends BaseGraphCell
 	{
 		classVertex = new ClassVertex((Type) concern.getPlatformRepresentation(), filter);
 		add(classVertex);
-		classVertex.setParent(this);
 	}
 
 	@Override
@@ -57,8 +56,7 @@ public abstract class ConcernVertex extends BaseGraphCell
 	{
 		super.setDefaults();
 		AttributeMap attrs = getAttributes();
-		GraphConstants.setEditable(attrs, false);
-		GraphConstants.setChildrenSelectable(attrs, false);
+		//GraphConstants.setChildrenSelectable(attrs, false);
 		GraphConstants.setSizeableAxis(attrs, GraphConstants.X_AXIS);
 	}
 

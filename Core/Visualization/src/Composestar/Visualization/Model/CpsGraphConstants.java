@@ -31,6 +31,11 @@ public class CpsGraphConstants extends GraphConstants
 	 */
 	public static final String SEPARATOR_LAYOUT = "cpsSeparatorLayout";
 
+	/**
+	 * Line style for the seperator
+	 */
+	public static final String SEPARATOR_PATTERN = "cpsSeparatorPattern";
+
 	public enum Layout
 	{
 		HORIZONTAL, VERTICAL
@@ -61,8 +66,18 @@ public class CpsGraphConstants extends GraphConstants
 		return res;
 	}
 
-	public static final void getSeparatorLayout(Map map, Layout layout)
+	public static final void setSeparatorLayout(Map map, Layout layout)
 	{
 		map.put(SEPARATOR_LAYOUT, layout);
+	}
+
+	public static final void setSeparatorPattern(Map map, float[] value)
+	{
+		map.put(SEPARATOR_PATTERN, value);
+	}
+
+	public static final float[] getSeparatorPattern(Map map)
+	{
+		return (float[]) map.get(SEPARATOR_PATTERN);
 	}
 }

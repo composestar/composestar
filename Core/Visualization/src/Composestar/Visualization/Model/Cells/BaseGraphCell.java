@@ -66,7 +66,9 @@ public class BaseGraphCell extends DefaultGraphCell
 	 */
 	protected void setDefaults()
 	{
-		GraphConstants.setFont(getAttributes(), new Font("sansserif", Font.PLAIN, 10));
+		Map map = getAttributes();
+		GraphConstants.setEditable(map, false);
+		GraphConstants.setFont(map, new Font("sansserif", Font.PLAIN, 10));
 	}
 
 	/**
@@ -76,7 +78,6 @@ public class BaseGraphCell extends DefaultGraphCell
 	{
 		defaultPort = new DefaultPort();
 		add(defaultPort);
-		defaultPort.setParent(this);
 	}
 
 	/**
@@ -156,7 +157,7 @@ public class BaseGraphCell extends DefaultGraphCell
 					if (inset > 0)
 					{
 						r = (Rectangle2D) r.clone();
-						r.setFrame(r.getX() - inset, r.getY() - inset, r.getWidth() + inset, r.getHeight() + inset);
+						r.setFrame(r.getX() - inset, r.getY() - inset, r.getWidth(), r.getHeight());
 					}
 				}
 				else
@@ -182,7 +183,7 @@ public class BaseGraphCell extends DefaultGraphCell
 			if (inset > 0)
 			{
 				ret = (Rectangle2D) ret.clone();
-				ret.setFrame(ret.getX() + inset, ret.getY() + inset, ret.getWidth() + inset, ret.getHeight() + inset);
+				ret.setFrame(ret.getX() + inset, ret.getY() + inset, ret.getWidth(), ret.getHeight());
 			}
 			return ret;
 		}
@@ -191,7 +192,7 @@ public class BaseGraphCell extends DefaultGraphCell
 		if (inset > 0)
 		{
 			ret = (Rectangle2D) ret.clone();
-			ret.setFrame(ret.getX() + inset, ret.getY() + inset, ret.getWidth() + inset, ret.getHeight() + inset);
+			ret.setFrame(ret.getX() + inset, ret.getY() + inset, ret.getWidth(), ret.getHeight());
 		}
 		return ret;
 	}

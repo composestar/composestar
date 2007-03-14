@@ -109,7 +109,6 @@ public class ClassVertex extends BaseGraphCell
 
 		methods = new ClassMethodsVertex(platformRep, filter);
 		add(methods);
-		methods.setParent(this);
 		Rectangle2D fBounds = fields.calcBounds();
 		methods.translate(0, INSET + fBounds.getHeight());
 	}

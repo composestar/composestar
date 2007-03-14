@@ -10,8 +10,10 @@
 
 package Composestar.Visualization.Model.CellViews;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.Map;
 
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.VertexRenderer;
@@ -29,15 +31,19 @@ public class LineSeparationRenderer extends VertexRenderer
 
 	private static final double[] EMPTY_ARRAY = new double[0];
 
-	protected double[] seps;
+	protected transient double[] seps;
 
-	protected CpsGraphConstants.Layout layout;
+	protected transient CpsGraphConstants.Layout layout;
+
+	protected transient float[] pattern;
 
 	@Override
 	protected void installAttributes(CellView view)
 	{
 		super.installAttributes(view);
-		layout = CpsGraphConstants.getSeparatorLayout(view.getAllAttributes());
+		Map map = view.getAllAttributes();
+		layout = CpsGraphConstants.getSeparatorLayout(map);
+		pattern = CpsGraphConstants.getSeparatorPattern(map);
 		if (view instanceof LineSeparationView)
 		{
 			seps = ((LineSeparationView) view).getSeperators();
@@ -54,6 +60,7 @@ public class LineSeparationRenderer extends VertexRenderer
 		super.resetAttributes();
 		seps = EMPTY_ARRAY;
 		layout = CpsGraphConstants.Layout.HORIZONTAL;
+		pattern = null;
 	}
 
 	/*
@@ -66,6 +73,12 @@ public class LineSeparationRenderer extends VertexRenderer
 	{
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
+		if (pattern != null)
+		{
+			g2d
+					.setStroke(new BasicStroke(borderWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+							pattern, 0));
+		}
 		for (double pos : seps)
 		{
 			if (layout == CpsGraphConstants.Layout.VERTICAL)

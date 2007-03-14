@@ -111,7 +111,6 @@ public class FilterModuleConcernVertex extends AbstractFilterModuleConcernVertex
 
 			fmVertices.put(fm.getQualifiedName(), fmVertex);
 			add(fmVertex);
-			fmVertex.setParent(this);
 
 			idx++;
 			last = fmVertex;

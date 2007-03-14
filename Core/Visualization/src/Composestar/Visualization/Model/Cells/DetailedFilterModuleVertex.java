@@ -11,12 +11,19 @@
 package Composestar.Visualization.Model.Cells;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.geom.Rectangle2D;
+import java.util.Iterator;
+
+import javax.swing.JLabel;
 
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.GraphConstants;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Visualization.Model.CpsGraphConstants;
 
 /**
  * Shows the inner details of the filtermodule. Used by the FilterConcernVertex.
@@ -42,19 +49,101 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 	 */
 	protected BaseGraphCell members;
 
+	protected final static int INSET = 4;
+
 	public DetailedFilterModuleVertex(FilterModule fm)
 	{
 		super(fm);
+
+		inputFilters = new BaseGraphCell("input filters");
+		add(inputFilters);
+		members = new BaseGraphCell("members");
+		add(members);
+		outputFilters = new BaseGraphCell("output filters");
+		add(outputFilters);
+
+		addFilters(inputFilters, fm.getInputFilterIterator(), FireModel.INPUT_FILTERS);
+		addFilters(outputFilters, fm.getOutputFilterIterator(), FireModel.OUTPUT_FILTERS);
+
+		// calculat the max bounds
+		Rectangle2D bounds = calcBounds();
+		if (inputFilters.isLeaf())
+		{
+			setEmptyCell(inputFilters, "no input", bounds.getHeight());
+		}
+		if (outputFilters.isLeaf())
+		{
+			setEmptyCell(outputFilters, "no output", bounds.getHeight());
+		}
+		if (members.isLeaf())
+		{
+			setEmptyCell(members, null, bounds.getHeight());
+		}
+		bounds = inputFilters.calcBounds();
+		members.translate(bounds.getWidth() + INSET, 0);
+		bounds = members.calcBounds();
+		outputFilters.translate(bounds.getX() + bounds.getWidth() + INSET, 0);
+
+		translate(INSET, INSET); // inset
+	}
+
+	public String toString()
+	{
+		return null;
 	}
 
 	protected void setDefaults()
 	{
 		AttributeMap attrs = getAttributes();
-		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 160, 20);
-		GraphConstants.setBounds(attrs, bounds);
 		GraphConstants.setBorderColor(attrs, Color.BLACK);
 		GraphConstants.setBackground(attrs, new Color(0xDDEEFF));
+		GraphConstants.setOpaque(attrs, true);
 		GraphConstants.setGroupOpaque(attrs, true);
+		GraphConstants.setInset(attrs, INSET);
+		CpsGraphConstants.setSeparatorLayout(attrs, CpsGraphConstants.Layout.VERTICAL);
+		float[] dash = { 5f, 5f };
+		CpsGraphConstants.setSeparatorPattern(attrs, dash);
+	}
+
+	protected void addFilters(BaseGraphCell parentVertex, Iterator filterIterator, int direction)
+	{
+		int idx = 0;
+		FilterVertex last = null;
+		while (filterIterator.hasNext())
+		{
+			FilterVertex vertex = new FilterVertex((Filter) filterIterator.next(), direction);
+			if (last != null)
+			{
+				Rectangle2D bounds = last.calcBounds();
+				if (bounds != null) vertex.translate(0, bounds.getY() + bounds.getHeight() - 1);
+			}
+
+			parentVertex.add(vertex);
+			last = vertex;
+			idx++;
+		}
+	}
+
+	/**
+	 * Makes the given cell behave as an empty cell
+	 * 
+	 * @param cell
+	 * @param msg
+	 */
+	protected void setEmptyCell(BaseGraphCell cell, String msg, double destHeight)
+	{
+		AttributeMap map = cell.getAttributes();
+		cell.setUserObject(msg);
+		GraphConstants.setForeground(map, Color.GRAY);
+		GraphConstants.setHorizontalAlignment(map, JLabel.CENTER);
+		GraphConstants.setFont(map, new Font("sansserif", Font.ITALIC, 10));
+		int width = 10;
+		if (msg != null)
+		{
+			width = msg.length() * 6;
+		}
+		Rectangle2D bounds = new Rectangle2D.Double(0, 0, width, destHeight);
+		GraphConstants.setBounds(map, bounds);
 	}
 
 }
