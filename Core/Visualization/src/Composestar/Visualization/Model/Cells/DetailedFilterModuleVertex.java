@@ -78,20 +78,21 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 
 		// calculat the max bounds
 		Rectangle2D bounds = calcBounds();
+		logger.debug("FilterModule bounds: " + bounds);
 		if (inputFilters.isLeaf())
 		{
 			logger.info("No input filters for " + fm);
-			setEmptyCell(inputFilters, "no input", bounds.getHeight());
+			setEmptyCell(inputFilters, "no input", bounds.getHeight() - INSET * 2);
 		}
 		if (outputFilters.isLeaf())
 		{
 			logger.info("No output filters for " + fm);
-			setEmptyCell(outputFilters, "no output", bounds.getHeight());
+			setEmptyCell(outputFilters, "no output", bounds.getHeight() - INSET * 2);
 		}
 		if (members.isLeaf())
 		{
 			logger.info("No members for " + fm);
-			setEmptyCell(members, null, bounds.getHeight());
+			setEmptyCell(members, null, bounds.getHeight() - INSET * 2);
 		}
 		bounds = inputFilters.calcBounds();
 		members.translate(bounds.getWidth() + INSET, 0);
@@ -99,6 +100,8 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 		outputFilters.translate(bounds.getX() + bounds.getWidth() + INSET, 0);
 
 		translate(INSET, INSET); // inset
+		bounds = calcBounds();
+		logger.debug("FilterModule bounds (2): " + bounds);
 	}
 
 	public String toString()
@@ -119,6 +122,38 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 	public BaseGraphCell getMemberVertex()
 	{
 		return members;
+	}
+
+	/**
+	 * Set the widths of the cells to the given value
+	 * 
+	 * @param widths array with 3 items for: input, members, output
+	 */
+	public void setWidthSpec(double[] widths)
+	{
+		Rectangle2D bounds;
+		bounds = GraphConstants.getBounds(inputFilters.getAttributes());
+		if (bounds != null)
+		{
+			bounds.setFrame(bounds.getX(), bounds.getY(), widths[0], bounds.getHeight());
+			GraphConstants.setBounds(inputFilters.getAttributes(), bounds);
+		}
+		bounds = GraphConstants.getBounds(members.getAttributes());
+		if (bounds != null)
+		{
+			bounds.setFrame(bounds.getX(), bounds.getY(), widths[1], bounds.getHeight());
+			GraphConstants.setBounds(members.getAttributes(), bounds);
+		}
+		bounds = GraphConstants.getBounds(outputFilters.getAttributes());
+		if (bounds != null)
+		{
+			bounds.setFrame(bounds.getX(), bounds.getY(), widths[0], bounds.getHeight());
+			GraphConstants.setBounds(outputFilters.getAttributes(), bounds);
+		}
+
+		members.translate(inputFilters.calcBounds().getWidth() - members.calcBounds().getX() + INSET * 2, 0);
+		bounds = members.calcBounds();
+		outputFilters.translate(bounds.getX() + bounds.getWidth() - outputFilters.calcBounds().getX() + INSET, 0);
 	}
 
 	protected void setDefaults()

@@ -38,7 +38,7 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 
 	protected double entryHeight = 14;
 
-	protected double entryWidth = 80;
+	protected double entryWidth = 100;
 
 	protected Map<String, BaseGraphCell> members;
 

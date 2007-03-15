@@ -157,7 +157,8 @@ public class BaseGraphCell extends DefaultGraphCell
 					if (inset > 0)
 					{
 						r = (Rectangle2D) r.clone();
-						r.setFrame(r.getX() - inset, r.getY() - inset, r.getWidth(), r.getHeight());
+						r.setFrame(r.getX() - inset, r.getY() - inset, r.getWidth() + inset * 2, r.getHeight() + inset
+								* 2);
 					}
 				}
 				else
@@ -183,7 +184,8 @@ public class BaseGraphCell extends DefaultGraphCell
 			if (inset > 0)
 			{
 				ret = (Rectangle2D) ret.clone();
-				ret.setFrame(ret.getX() + inset, ret.getY() + inset, ret.getWidth(), ret.getHeight());
+				ret.setFrame(ret.getX() - inset, ret.getY() - inset, ret.getWidth() + inset * 2, ret.getHeight()
+						+ inset * 2);
 			}
 			return ret;
 		}
@@ -192,7 +194,8 @@ public class BaseGraphCell extends DefaultGraphCell
 		if (inset > 0)
 		{
 			ret = (Rectangle2D) ret.clone();
-			ret.setFrame(ret.getX() + inset, ret.getY() + inset, ret.getWidth(), ret.getHeight());
+			ret.setFrame(ret.getX() - inset, ret.getY() - inset, ret.getWidth() + inset * 2, ret.getHeight() + inset
+					* 2);
 		}
 		return ret;
 	}

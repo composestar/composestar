@@ -13,6 +13,7 @@ package Composestar.Visualization.Model.CellViews;
 import java.awt.geom.Rectangle2D;
 
 import org.jgraph.graph.CellView;
+import org.jgraph.graph.GraphConstants;
 
 /**
  * @author Michiel Hendriks
@@ -36,13 +37,14 @@ public class DetailedFilterModuleView extends LineSeparationView
 	public void update()
 	{
 		CellView[] childViews = getChildViews();
+		int inset = GraphConstants.getInset(getAllAttributes());
 		if (childViews.length > 1)
 		{
 			Rectangle2D left = childViews[0].getBounds();
 			for (int i = 1; (i < 3) && (i < childViews.length); i++)
 			{
 				Rectangle2D right = childViews[i].getBounds();
-				separators[i - 1] = right.getX() - left.getX();
+				separators[i - 1] = right.getX() - left.getX() + (inset / 2);
 			}
 		}
 		super.update();

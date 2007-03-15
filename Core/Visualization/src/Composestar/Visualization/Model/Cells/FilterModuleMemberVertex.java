@@ -73,7 +73,7 @@ public class FilterModuleMemberVertex extends BaseGraphCell
 		GraphConstants.setFont(map, new Font("sansserif", Font.PLAIN, 11));
 		GraphConstants.setHorizontalAlignment(map, JLabel.LEFT);
 		GraphConstants.setHorizontalTextPosition(map, JLabel.RIGHT);
-		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 80, 14);
+		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 100, 14);
 		GraphConstants.setBounds(map, bounds);
 	}
 

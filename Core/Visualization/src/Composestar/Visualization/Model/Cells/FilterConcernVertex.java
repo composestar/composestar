@@ -56,8 +56,8 @@ public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 		}
 		int idx = 0;
 		DetailedFilterModuleVertex last = null;
-		DetailedFilterModuleVertex largest = null;
-		double largestWidth = 0;
+		// max width for each of the sub cells
+		double[] maxWidth = { 0, 0, 0 };
 		for (FilterModuleSuperImposition fmsi : (List<FilterModuleSuperImposition>) fmOrder.filterModuleSIList())
 		{
 			FilterModule fm = fmsi.getFilterModule().getRef();
@@ -90,31 +90,35 @@ public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 			idx++;
 			last = fmVertex;
 
-			// find the largest vertex
-			Rectangle2D bounds = fmVertex.calcBounds();
-			if (bounds.getWidth() > largestWidth)
+			// find largest widths
+			double w;
+			w = last.getInputVertex().calcBounds().getWidth();
+			if (w > maxWidth[0])
 			{
-				largestWidth = bounds.getWidth();
-				largest = fmVertex;
+				maxWidth[0] = w;
+			}
+			w = last.getMemberVertex().calcBounds().getWidth();
+			if (w > maxWidth[1])
+			{
+				maxWidth[1] = w;
+			}
+			w = last.getOutputVertex().calcBounds().getWidth();
+			if (w > maxWidth[2])
+			{
+				maxWidth[2] = w;
 			}
 		}
-		if ((largest != null) && (fmVertices.size() > 0))
+		// align all vertices
+		if (fmVertices.size() > 1)
 		{
-			Rectangle2D mBounds = largest.getMemberVertex().calcBounds();
-			Rectangle2D oBounds = largest.getOutputVertex().calcBounds();
 			for (FilterModuleVertex v : fmVertices.values())
 			{
-				/*
-				 * DetailedFilterModuleVertex dv = v; if (dv == largest) {
-				 * continue; } Rectangle2D lmb =
-				 * dv.getMemberVertex().calcBounds(); Rectangle2D lob =
-				 * dv.getOutputVertex().calcBounds();
-				 */
+				((DetailedFilterModuleVertex) v).setWidthSpec(maxWidth);
 			}
 		}
+		// nudge the class vertex
 		if (last != null)
 		{
-			// nudge the class vertex
 			Rectangle2D bounds = last.calcBounds();
 			Rectangle2D cvBounds = classVertex.calcBounds();
 			classVertex
