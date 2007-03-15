@@ -60,12 +60,12 @@ public class VisCom
 		{
 			viewManager = null;
 			long startTime = System.currentTimeMillis();
-			
+
 			InputStream is = new FileInputStream(histFile);
 			if (FileUtils.getExtension(histFile.getName()).equalsIgnoreCase(CompileHistory.EXT_COMPRESSED))
 			{
 				is = new GZIPInputStream(is);
-			}			
+			}
 			compileHistory = CompileHistory.load(new VisComObjectInputStream(is));
 			logger.debug("loaded compile history from '" + histFile + "' in "
 					+ (System.currentTimeMillis() - startTime) + "ms");

@@ -93,4 +93,23 @@ public class Condition extends DeclaredRepositoryEntity
 	{
 		return longref;
 	}
+	
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(getName());
+		sb.append(": ");
+		if (shortref != null)
+		{
+			sb.append(shortref.getName());
+		}
+		else if (longref != null)
+		{
+			sb.append("#LONGREF#"); // TODO:
+		}
+		sb.append(".");
+		sb.append(getDynObject("selector"));
+		sb.append("()");
+		return sb.toString();
+	}
 }

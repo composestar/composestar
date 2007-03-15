@@ -54,4 +54,14 @@ public class TypedDeclaration extends DeclaredRepositoryEntity
 	{
 		return type;
 	}
+
+	/**
+	 * Returns the plain text declaration of this element just like you would see in the source code
+	 * 
+	 * @return
+	 */
+	public String toString()
+	{
+		return getName()+": "+type.getQualifiedName();
+	}
 }

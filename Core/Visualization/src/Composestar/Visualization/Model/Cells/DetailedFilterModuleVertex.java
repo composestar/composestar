@@ -14,25 +14,35 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.JLabel;
 
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.GraphConstants;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
+import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.Model.CpsGraphConstants;
 
 /**
  * Shows the inner details of the filtermodule. Used by the FilterConcernVertex.
+ * Note: not resizeable because it contains only group vertices
  * 
  * @author Michiel Hendriks
  */
 public class DetailedFilterModuleVertex extends FilterModuleVertex
 {
 	private static final long serialVersionUID = 1346991495621474334L;
+
+	private static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.Cells.DetailedFilterModuleVertex");
 
 	/**
 	 * Cell that contains all inputfilters cells
@@ -64,19 +74,23 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 
 		addFilters(inputFilters, fm.getInputFilterIterator(), FireModel.INPUT_FILTERS);
 		addFilters(outputFilters, fm.getOutputFilterIterator(), FireModel.OUTPUT_FILTERS);
+		addMembers(fm);
 
 		// calculat the max bounds
 		Rectangle2D bounds = calcBounds();
 		if (inputFilters.isLeaf())
 		{
+			logger.info("No input filters for " + fm);
 			setEmptyCell(inputFilters, "no input", bounds.getHeight());
 		}
 		if (outputFilters.isLeaf())
 		{
+			logger.info("No output filters for " + fm);
 			setEmptyCell(outputFilters, "no output", bounds.getHeight());
 		}
 		if (members.isLeaf())
 		{
+			logger.info("No members for " + fm);
 			setEmptyCell(members, null, bounds.getHeight());
 		}
 		bounds = inputFilters.calcBounds();
@@ -90,6 +104,21 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 	public String toString()
 	{
 		return null;
+	}
+
+	public BaseGraphCell getInputVertex()
+	{
+		return inputFilters;
+	}
+
+	public BaseGraphCell getOutputVertex()
+	{
+		return outputFilters;
+	}
+
+	public BaseGraphCell getMemberVertex()
+	{
+		return members;
 	}
 
 	protected void setDefaults()
@@ -107,20 +136,57 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 
 	protected void addFilters(BaseGraphCell parentVertex, Iterator filterIterator, int direction)
 	{
-		int idx = 0;
 		FilterVertex last = null;
 		while (filterIterator.hasNext())
 		{
 			FilterVertex vertex = new FilterVertex((Filter) filterIterator.next(), direction);
+			logger.debug("Added filter vertex for " + vertex.toString());
 			if (last != null)
 			{
 				Rectangle2D bounds = last.calcBounds();
-				if (bounds != null) vertex.translate(0, bounds.getY() + bounds.getHeight() - 1);
+				vertex.translate(0, bounds.getY() + bounds.getHeight() - 1);
 			}
 
 			parentVertex.add(vertex);
 			last = vertex;
-			idx++;
+		}
+	}
+
+	protected void addMembers(FilterModule fm)
+	{
+		Map<String, DeclaredRepositoryEntity> entries = new TreeMap<String, DeclaredRepositoryEntity>(
+				String.CASE_INSENSITIVE_ORDER);
+		Iterator it = fm.getInternalIterator();
+		while (it.hasNext())
+		{
+			Internal internal = (Internal) it.next();
+			entries.put(internal.getName(), internal);
+		}
+		it = fm.getExternalIterator();
+		while (it.hasNext())
+		{
+			External external = (External) it.next();
+			entries.put(external.getName(), external);
+		}
+		it = fm.getConditionIterator();
+		while (it.hasNext())
+		{
+			Condition condition = (Condition) it.next();
+			entries.put(condition.getName(), condition);
+		}
+
+		FilterModuleMemberVertex last = null;
+		for (DeclaredRepositoryEntity entry : entries.values())
+		{
+			logger.debug("Adding member " + entry.getName());
+			FilterModuleMemberVertex vertex = new FilterModuleMemberVertex(entry);
+			if (last != null)
+			{
+				Rectangle2D bounds = last.calcBounds();
+				vertex.translate(0, bounds.getY() + bounds.getHeight() - 1);
+			}
+			members.add(vertex);
+			last = vertex;
 		}
 	}
 

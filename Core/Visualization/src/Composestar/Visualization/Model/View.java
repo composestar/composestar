@@ -53,17 +53,17 @@ public abstract class View
 	{
 		return graph.getRoots();
 	}
-	
+
 	protected void setGraphDefaults()
 	{
 		model = new DefaultGraphModel();
 		layout = new GraphLayoutCache(model, new VisComCellViewFactory());
 		graph = new CpsJGraph(model, layout);
-		
+
 		graph.setAntiAliased(true);
-		graph.setBendable(false);
-		graph.setConnectable(false);
-		graph.setDisconnectable(false);
+		// graph.setBendable(false);
+		// graph.setConnectable(false);
+		// graph.setDisconnectable(false);
 		graph.setEditable(false);
 		graph.setGridVisible(true); // meh
 	}

@@ -104,7 +104,6 @@ public class FilterModuleConcernVertex extends AbstractFilterModuleConcernVertex
 				// move the inputfilter port here
 				filterInputPort = new DefaultPort("Filter Entry Point");
 				fmVertex.add(filterInputPort);
-				filterInputPort.setParent(fmVertex);
 				Point2D pt = new Point2D.Double(GraphConstants.PERMILLE / 2, 0);
 				GraphConstants.setOffset(filterInputPort.getAttributes(), pt);
 			}
@@ -119,7 +118,7 @@ public class FilterModuleConcernVertex extends AbstractFilterModuleConcernVertex
 		{
 			// nudge the class vertex
 			Rectangle2D bounds = last.calcBounds();
-			classVertex.translate(0, bounds.getY() + bounds.getHeight()-4);
+			classVertex.translate(0, bounds.getY() + bounds.getHeight() - 4);
 		}
 	}
 }

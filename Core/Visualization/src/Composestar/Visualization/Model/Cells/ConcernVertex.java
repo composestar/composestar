@@ -56,7 +56,7 @@ public abstract class ConcernVertex extends BaseGraphCell
 	{
 		super.setDefaults();
 		AttributeMap attrs = getAttributes();
-		//GraphConstants.setChildrenSelectable(attrs, false);
+		// GraphConstants.setChildrenSelectable(attrs, false);
 		GraphConstants.setSizeableAxis(attrs, GraphConstants.X_AXIS);
 	}
 

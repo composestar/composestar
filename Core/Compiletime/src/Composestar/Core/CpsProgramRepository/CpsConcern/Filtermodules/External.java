@@ -135,4 +135,22 @@ public class External extends TypedDeclaration
 	{
 		this.shortinit = cref;
 	}
+
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(" = ");
+		if (shortinit != null)
+		{
+			sb.append(shortinit.getInitTarget());
+			sb.append(".");
+			sb.append(shortinit.getInitSelector());
+			sb.append("()");
+		}
+		else if (longinit != null)
+		{
+			sb.append("#LONGREF#"); // TODO:
+		}
+		return sb.toString();
+	}
 }

@@ -12,6 +12,8 @@ package Composestar.Visualization.Model.Cells;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.Type;
@@ -47,7 +49,13 @@ public class ClassFieldsVertex extends ClassMembersVertex
 	public void addFields(Type platformRep)
 	{
 		int idx = 0;
+		Map<String, FieldInfo> fields = new TreeMap<String, FieldInfo>(String.CASE_INSENSITIVE_ORDER);
+		// sort the list
 		for (FieldInfo field : (List<FieldInfo>) platformRep.getFields())
+		{
+			fields.put(field.getName(), field);
+		}
+		for (FieldInfo field : fields.values())
 		{
 			logger.debug("Adding field " + field.getUnitName());
 			// is most cases the default visibility is "package protected"

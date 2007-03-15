@@ -147,7 +147,6 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 			{
 				resUrl = ClassMembersVertex.class.getResource("Graphics/field_protected.png");
 			}
-			System.out.println(resUrl);
 			Icon ico = null;
 			if (resUrl != null)
 			{

@@ -24,7 +24,7 @@ import Composestar.Visualization.Export.FileGraphExporter;
 public class FileGraphExporterFilter extends FileFilter
 {
 	protected FileGraphExporter exporter;
-	
+
 	protected Set<String> exts;
 
 	protected boolean allowDirectories = true;
@@ -35,7 +35,7 @@ public class FileGraphExporterFilter extends FileFilter
 		// cache the formats
 		exts = exporter.getFormats();
 	}
-	
+
 	public FileGraphExporter getExporter()
 	{
 		return exporter;

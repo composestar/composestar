@@ -11,6 +11,7 @@
 package Composestar.Visualization.Model.Cells;
 
 import java.awt.Font;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
@@ -31,7 +32,8 @@ public class FilterVertex extends BaseGraphCell
 	private static final long serialVersionUID = 5395354686350397849L;
 
 	/**
-	 * The string representation of this vertex
+	 * The string representation of this vertex. Because the Filter object
+	 * doesn't return a nice enough string we use this.
 	 */
 	protected String label;
 
@@ -41,10 +43,17 @@ public class FilterVertex extends BaseGraphCell
 	{
 		super(filter);
 		direction = inDirection;
+		Point2D offset;
 		if (direction == FireModel.OUTPUT_FILTERS)
 		{
 			GraphConstants.setHorizontalAlignment(getAttributes(), JLabel.RIGHT);
+			offset = new Point2D.Double(GraphConstants.PERMILLE, GraphConstants.PERMILLE / 2);
 		}
+		else
+		{
+			offset = new Point2D.Double(0, GraphConstants.PERMILLE / 2);
+		}
+		GraphConstants.setOffset(getPort().getAttributes(), offset);
 		setLabel(filter);
 	}
 
@@ -68,6 +77,11 @@ public class FilterVertex extends BaseGraphCell
 		GraphConstants.setBounds(map, bounds);
 	}
 
+	/**
+	 * Sets the string representation of this vertex using info from the filter.
+	 * 
+	 * @param filter
+	 */
 	protected void setLabel(Filter filter)
 	{
 		StringBuffer sb = new StringBuffer();

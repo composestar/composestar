@@ -27,7 +27,7 @@ import Composestar.Visualization.Model.Cells.ClassVertex.MemberFlags;
 
 /**
  * A concern vertex with detailed filter module information. Used by the
- * FilterViewF
+ * FilterView
  * 
  * @author Michiel Hendriks
  */
@@ -56,6 +56,8 @@ public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 		}
 		int idx = 0;
 		DetailedFilterModuleVertex last = null;
+		DetailedFilterModuleVertex largest = null;
+		double largestWidth = 0;
 		for (FilterModuleSuperImposition fmsi : (List<FilterModuleSuperImposition>) fmOrder.filterModuleSIList())
 		{
 			FilterModule fm = fmsi.getFilterModule().getRef();
@@ -77,8 +79,7 @@ public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 				logger.debug("Adding filter entry point");
 				// move the inputfilter port here
 				filterInputPort = new DefaultPort("Filter Entry Point");
-				fmVertex.add(filterInputPort);
-				filterInputPort.setParent(fmVertex);
+				fmVertex.getInputVertex().add(filterInputPort);
 				Point2D pt = new Point2D.Double(GraphConstants.PERMILLE / 2, 0);
 				GraphConstants.setOffset(filterInputPort.getAttributes(), pt);
 			}
@@ -88,13 +89,36 @@ public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 
 			idx++;
 			last = fmVertex;
+
+			// find the largest vertex
+			Rectangle2D bounds = fmVertex.calcBounds();
+			if (bounds.getWidth() > largestWidth)
+			{
+				largestWidth = bounds.getWidth();
+				largest = fmVertex;
+			}
+		}
+		if ((largest != null) && (fmVertices.size() > 0))
+		{
+			Rectangle2D mBounds = largest.getMemberVertex().calcBounds();
+			Rectangle2D oBounds = largest.getOutputVertex().calcBounds();
+			for (FilterModuleVertex v : fmVertices.values())
+			{
+				/*
+				 * DetailedFilterModuleVertex dv = v; if (dv == largest) {
+				 * continue; } Rectangle2D lmb =
+				 * dv.getMemberVertex().calcBounds(); Rectangle2D lob =
+				 * dv.getOutputVertex().calcBounds();
+				 */
+			}
 		}
 		if (last != null)
 		{
 			// nudge the class vertex
 			Rectangle2D bounds = last.calcBounds();
 			Rectangle2D cvBounds = classVertex.calcBounds();
-			classVertex.translate((bounds.getWidth() - cvBounds.getWidth()) / 2, bounds.getY() + bounds.getHeight() - 1);
+			classVertex
+					.translate((bounds.getWidth() - cvBounds.getWidth()) / 2, bounds.getY() + bounds.getHeight() - 1);
 		}
 	}
 }

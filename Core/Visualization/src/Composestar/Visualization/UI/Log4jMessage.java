@@ -83,21 +83,22 @@ public class Log4jMessage extends JDialog
 		}
 		setVisible(true);
 	}
-	
+
 	public static String captialize(String input)
 	{
-		return input.substring(0, 1).toUpperCase()+input.substring(1).toLowerCase();
+		return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
 	}
-	
+
 	/**
 	 * Crappy wordwrap implementation
+	 * 
 	 * @param input
 	 * @param chars
 	 * @return
 	 */
 	public static String wordWrap(String input, int chars)
 	{
-		StringBuffer res = new StringBuffer(input.length() + (input.length()/chars));
+		StringBuffer res = new StringBuffer(input.length() + (input.length() / chars));
 		int idx = 0;
 		String[] data = input.split(" ");
 		for (String s : data)

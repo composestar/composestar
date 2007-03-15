@@ -105,7 +105,6 @@ public class ClassVertex extends BaseGraphCell
 	{
 		fields = new ClassFieldsVertex(platformRep, filter);
 		add(fields);
-		fields.setParent(this);
 
 		methods = new ClassMethodsVertex(platformRep, filter);
 		add(methods);

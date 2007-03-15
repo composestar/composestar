@@ -25,7 +25,7 @@ import org.apache.log4j.varia.LevelRangeFilter;
 public class MessageBoxAppender extends AppenderSkeleton
 {
 	protected Frame owner;
-	
+
 	public MessageBoxAppender(Frame inOwner)
 	{
 		LevelRangeFilter flt = new LevelRangeFilter();
@@ -35,7 +35,7 @@ public class MessageBoxAppender extends AppenderSkeleton
 		addFilter(flt);
 		owner = inOwner;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

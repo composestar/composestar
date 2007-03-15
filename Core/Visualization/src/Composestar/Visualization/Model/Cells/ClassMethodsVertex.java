@@ -12,6 +12,8 @@ package Composestar.Visualization.Model.Cells;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
@@ -48,7 +50,13 @@ public class ClassMethodsVertex extends ClassMembersVertex
 	protected void addMethods(Type platformRep)
 	{
 		int idx = 0;
+		Map<String, MethodInfo> methods = new TreeMap<String, MethodInfo>(String.CASE_INSENSITIVE_ORDER);
+		// sort the list
 		for (MethodInfo meth : (List<MethodInfo>) platformRep.getMethods())
+		{
+			methods.put(meth.getName(), meth);
+		}
+		for (MethodInfo meth : methods.values())
 		{
 			logger.debug("Adding method " + meth.getName());
 			// is most cases the default visibility is "package protected"
@@ -73,7 +81,7 @@ public class ClassMethodsVertex extends ClassMembersVertex
 		StringBuffer sb = new StringBuffer();
 		sb.append(meth.getName());
 		sb.append("(");
-		
+
 		int parcnt = 0;
 		for (ParameterInfo pi : (List<ParameterInfo>) meth.getParameters())
 		{
@@ -86,7 +94,7 @@ public class ClassMethodsVertex extends ClassMembersVertex
 			sb.append(pi.getParameterTypeString());
 			parcnt++;
 		}
-		
+
 		sb.append(")");
 		String ret = meth.getReturnTypeString();
 		if (ret != null && !ret.toLowerCase().endsWith(".void"))

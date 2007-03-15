@@ -30,6 +30,6 @@ public abstract class AbstractAction implements java.awt.event.ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		
+
 	}
 }
