@@ -17,12 +17,11 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.jgraph.JGraph;
-
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.Export.ExportException;
 import Composestar.Visualization.Export.FileGraphExporter;
 import Composestar.Visualization.Export.ImageExporter;
+import Composestar.Visualization.Model.CpsJGraph;
 import Composestar.Visualization.UI.Utils.FileGraphExporterFilter;
 
 /**
@@ -30,16 +29,19 @@ import Composestar.Visualization.UI.Utils.FileGraphExporterFilter;
  * 
  * @author Michiel Hendriks
  */
-public class FileExportAction extends AbstractAction
+public class FileExportAction extends ActiveGraphAction
 {
+	private static final long serialVersionUID = -3225822720564783420L;
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.UI.Actions.FileExport");
 
-	protected List<FileGraphExporter> exporters;
+	protected transient List<FileGraphExporter> exporters;
 
-	protected JFileChooser fc;
+	protected transient JFileChooser fc;
 
 	public FileExportAction()
 	{
+		super("Export");
 		fc = new JFileChooser();
 		exporters = new LinkedList<FileGraphExporter>();
 		addExporter(new ImageExporter());
@@ -51,7 +53,7 @@ public class FileExportAction extends AbstractAction
 		fc.addChoosableFileFilter(new FileGraphExporterFilter(newExporter));
 	}
 
-	public boolean execute(JGraph activeGraph)
+	public void execute(CpsJGraph activeGraph)
 	{
 		if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
 		{
@@ -65,23 +67,24 @@ public class FileExportAction extends AbstractAction
 					dest = exporter.setDefaultExtention(dest);
 					if (!confirmOverwrite(dest))
 					{
-						return false;
+						return;
 					}
 					logger.info("Exporting graph to " + dest + " using exporter " + exporter);
-					return exporter.tryExport(activeGraph, dest);
+					exporter.tryExport(activeGraph, dest);
+					return;
 				}
 				else
 				{
 					if (!confirmOverwrite(dest))
 					{
-						return false;
+						return;
 					}
 					for (FileGraphExporter exporter : exporters)
 					{
 						if (exporter.tryExport(activeGraph, dest))
 						{
 							logger.info("Exported graph to " + dest + " using exporter " + exporter);
-							return true;
+							return;
 						}
 					}
 				}
@@ -93,7 +96,7 @@ public class FileExportAction extends AbstractAction
 			JOptionPane.showMessageDialog(null, "No exporter available that can export to the given extention: "
 					+ dest.getName(), "Export", JOptionPane.ERROR_MESSAGE);
 		}
-		return false;
+		return;
 	}
 
 	/**

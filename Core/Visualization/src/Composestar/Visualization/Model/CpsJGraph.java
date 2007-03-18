@@ -31,6 +31,8 @@ public class CpsJGraph extends JGraph
 {
 	private static final long serialVersionUID = 2641264269098532193L;
 
+	protected CpsView cpsView;
+
 	public CpsJGraph()
 	{
 		super();
@@ -65,6 +67,25 @@ public class CpsJGraph extends JGraph
 	{
 		super(model);
 		init();
+	}
+
+	public CpsView getCpsView()
+	{
+		return cpsView;
+	}
+
+	public void setCpsView(CpsView inView)
+	{
+		cpsView = inView;
+	}
+
+	public String getName()
+	{
+		if (cpsView == null)
+		{
+			return null;
+		}
+		return cpsView.getName();
 	}
 
 	protected void init()

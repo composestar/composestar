@@ -10,12 +10,13 @@
 
 package Composestar.Visualization.UI;
 
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -33,23 +34,30 @@ import org.jgraph.plugins.layouts.JGraphLayoutAlgorithm;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.VisCom;
-import Composestar.Visualization.Layout.SpringEmbeddedLayoutAlgorithm;
+import Composestar.Visualization.Model.CpsJGraph;
+import Composestar.Visualization.Model.CpsView;
+import Composestar.Visualization.Model.ProgramView;
 import Composestar.Visualization.Model.Cells.ConcernVertex;
+import Composestar.Visualization.UI.Actions.ActionManager;
 import Composestar.Visualization.UI.Actions.FileExportAction;
-import Composestar.Visualization.UI.Utils.CompileHistoryFilter;
+import Composestar.Visualization.UI.Actions.FileOpenAction;
+import Composestar.Visualization.UI.Actions.FileQuitAction;
+import Composestar.Visualization.UI.Actions.LayoutAction;
 
 /**
  * The main viewport of the visualizer
  * 
  * @author Michiel Hendriks
  */
-public class Viewport extends JFrame
+public class Viewport extends JFrame implements CpsJGraphProvider
 {
 	private static final long serialVersionUID = 7472894955484974785L;
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VisCom.UI.Viewport");
 
 	protected transient VisCom controller;
+
+	protected ActionManager actionManager;
 
 	private JMenuBar mainMenu;
 
@@ -77,55 +85,15 @@ public class Viewport extends JFrame
 	{
 		Logger.getRootLogger().addAppender(new MessageBoxAppender(this));
 		logger.debug("Creating viewport");
+		actionManager = new ActionManager(this);
 		controller = inController;
 		initialize();
 
 		// TODO: dev only
 		if (controller.getViewManager() != null)
 		{
-			getPmProgramView();
-			JGraph pv = controller.getViewManager().getProgramView().getGraph();
-			views.add("Program view", new JScrollPane(pv));
-			pv.addMouseListener(new MouseAdapter()
-			{
-				public void mousePressed(MouseEvent e)
-				{
-					maybeShowPopup(e);
-				}
-
-				public void mouseReleased(MouseEvent e)
-				{
-					maybeShowPopup(e);
-				}
-
-				private void maybeShowPopup(MouseEvent e)
-				{
-					if (e.isPopupTrigger())
-					{
-						JGraph pvGraph = getActiveGraph();
-						if (pvGraph.getSelectionCell() instanceof ConcernVertex)
-						{
-							pmProgramView.show(e.getComponent(), e.getX(), e.getY());
-						}
-					}
-				}
-			});
+			openProgramView(controller.getViewManager().getProgramView().getGraph());
 		}
-	}
-
-	/**
-	 * Returns the currently active JGraph (if any)
-	 * 
-	 * @return
-	 */
-	public JGraph getActiveGraph()
-	{
-		JScrollPane activeTab = (JScrollPane) getViews().getSelectedComponent();
-		if (activeTab == null)
-		{
-			return null;
-		}
-		return (JGraph) activeTab.getViewport().getView();
 	}
 
 	/**
@@ -186,24 +154,7 @@ public class Viewport extends JFrame
 	{
 		if (miOpen == null)
 		{
-			miOpen = new JMenuItem();
-			miOpen.setText("Open");
-			miOpen.addActionListener(new java.awt.event.ActionListener()
-			{
-				public void actionPerformed(java.awt.event.ActionEvent e)
-				{
-					views.removeAll();
-					JFileChooser fc = new JFileChooser();
-
-					fc.addChoosableFileFilter(new CompileHistoryFilter());
-					if (fc.showOpenDialog(miOpen) == JFileChooser.APPROVE_OPTION)
-					{
-						controller.openCompileHistory(fc.getSelectedFile());
-						// TODO: handle
-					}
-
-				}
-			});
+			miOpen = new JMenuItem(actionManager.getAction(FileOpenAction.class));
 		}
 		return miOpen;
 	}
@@ -217,17 +168,7 @@ public class Viewport extends JFrame
 	{
 		if (miExport == null)
 		{
-			miExport = new JMenuItem();
-			miExport.setText("Export");
-			miExport.addActionListener(new java.awt.event.ActionListener()
-			{
-				FileExportAction action = new FileExportAction();
-
-				public void actionPerformed(java.awt.event.ActionEvent e)
-				{
-					action.execute(getActiveGraph());
-				}
-			});
+			miExport = new JMenuItem(actionManager.getAction(FileExportAction.class));
 		}
 		return miExport;
 	}
@@ -241,15 +182,7 @@ public class Viewport extends JFrame
 	{
 		if (miClose == null)
 		{
-			miClose = new JMenuItem();
-			miClose.setText("Close");
-			miClose.addActionListener(new java.awt.event.ActionListener()
-			{
-				public void actionPerformed(java.awt.event.ActionEvent e)
-				{
-					dispose();
-				}
-			});
+			miClose = new JMenuItem(new FileQuitAction(this));
 		}
 		return miClose;
 	}
@@ -294,17 +227,7 @@ public class Viewport extends JFrame
 	{
 		if (miLayoutSpring == null)
 		{
-			miLayoutSpring = new JMenuItem();
-			miLayoutSpring.setText("Spring");
-			miLayoutSpring.addActionListener(new java.awt.event.ActionListener()
-			{
-				public void actionPerformed(java.awt.event.ActionEvent e)
-				{
-					Object[] layoutCells = controller.getViewManager().getProgramView().getLayoutCells();
-					JGraphLayoutAlgorithm.applyLayout(controller.getViewManager().getProgramView().getGraph(),
-							new SpringEmbeddedLayoutAlgorithm(new Rectangle(300, 300), 30), layoutCells);
-				}
-			});
+			miLayoutSpring = new JMenuItem(actionManager.getAction(LayoutAction.class));
 		}
 		return miLayoutSpring;
 	}
@@ -364,17 +287,127 @@ public class Viewport extends JFrame
 			{
 				public void actionPerformed(java.awt.event.ActionEvent e)
 				{
-					JGraph pvGraph = getActiveGraph();
+					JGraph pvGraph = getCurrentGraph();
 					if (pvGraph.getSelectionCell() instanceof ConcernVertex)
 					{
 						Concern concern = ((ConcernVertex) pvGraph.getSelectionCell()).getConcern();
 						logger.info("Adding Filter View for " + concern);
-						views.add(concern.getQualifiedName(), new JScrollPane(controller.getViewManager()
-								.getFilterView(concern).getGraph()));
+						openGraph(controller.getViewManager().getFilterView(concern).getGraph());
 					}
 				}
 			});
 		}
 		return miFilterView;
+	}
+
+	public VisCom getController()
+	{
+		return controller;
+	}
+
+	public List<CpsJGraph> getAllGraphs()
+	{
+		List<CpsJGraph> list = new ArrayList<CpsJGraph>();
+		for (int i = 0; i < views.getTabCount(); i++)
+		{
+			Component c = views.getComponentAt(i);
+			if (c instanceof JScrollPane)
+			{
+				if (((JScrollPane) c).getViewport().getView() instanceof CpsJGraph)
+				{
+					list.add((CpsJGraph) ((JScrollPane) c).getViewport().getView());
+				}
+			}
+		}
+		return list;
+	}
+
+	public CpsJGraph getCurrentGraph()
+	{
+		JScrollPane activeTab = (JScrollPane) getViews().getSelectedComponent();
+		if (activeTab == null)
+		{
+			return null;
+		}
+		return (CpsJGraph) activeTab.getViewport().getView();
+	}
+
+	public void closeAllGraphs()
+	{
+		views.removeAll();
+	}
+
+	public void closeGraph(CpsJGraph graph)
+	{
+		int idx = indexOfGraph(graph);
+		if (idx > -1)
+		{
+			views.remove(idx);
+		}
+	}
+
+	protected int indexOfGraph(CpsJGraph newGraph)
+	{
+		for (int i = 0; i < views.getTabCount(); i++)
+		{
+			Component c = views.getComponentAt(i);
+			if (c instanceof JScrollPane)
+			{
+				if (((JScrollPane) c).getViewport().getView().equals(newGraph))
+				{
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+
+	public void openGraph(CpsJGraph newGraph)
+	{
+		int idx = indexOfGraph(newGraph);
+		if (idx > -1)
+		{
+			views.setSelectedIndex(idx);
+			return;
+		}
+		CpsView view = newGraph.getCpsView();
+		if (view instanceof ProgramView)
+		{
+			openProgramView(newGraph);
+		}
+		else
+		{
+			views.setSelectedComponent(views.add(view.getName(), new JScrollPane(newGraph)));
+		}
+	}
+
+	public void openProgramView(CpsJGraph newGraph)
+	{
+		getPmProgramView();
+		views.setSelectedComponent(views.add(newGraph.getName(), new JScrollPane(newGraph)));
+		newGraph.addMouseListener(new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent e)
+			{
+				maybeShowPopup(e);
+			}
+
+			public void mouseReleased(MouseEvent e)
+			{
+				maybeShowPopup(e);
+			}
+
+			private void maybeShowPopup(MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					JGraph pvGraph = getCurrentGraph();
+					if (pvGraph.getSelectionCell() instanceof ConcernVertex)
+					{
+						pmProgramView.show(e.getComponent(), e.getX(), e.getY());
+					}
+				}
+			}
+		});
 	}
 } // @jve:decl-index=0:visual-constraint="10,10"

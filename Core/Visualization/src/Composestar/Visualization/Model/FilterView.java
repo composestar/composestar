@@ -23,7 +23,7 @@ import Composestar.Visualization.Model.Cells.FilterModuleConcernVertex;
  * 
  * @author Michiel Hendriks
  */
-public class FilterView extends View
+public class FilterView extends CpsView
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VizCom.View.FilterView");
 
@@ -38,5 +38,11 @@ public class FilterView extends View
 		layout.insert(focusVertex);
 
 		// TODO: add neighbouring cells with edges
+	}
+
+	@Override
+	public String getName()
+	{
+		return focusVertex.getConcern().getQualifiedName();
 	}
 }

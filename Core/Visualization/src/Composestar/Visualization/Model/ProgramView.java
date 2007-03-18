@@ -43,7 +43,7 @@ import Composestar.Visualization.Model.Routing.JGraphParallelRouter;
  * 
  * @author Michiel Hendriks
  */
-public class ProgramView extends View
+public class ProgramView extends CpsView
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VizCom.View.ProgramView");
 
@@ -102,6 +102,12 @@ public class ProgramView extends View
 		{
 			addEdges(entry.getKey(), entry.getValue());
 		}
+	}
+
+	@Override
+	public String getName()
+	{
+		return "Program View";
 	}
 
 	protected void addConcern(Concern concern)

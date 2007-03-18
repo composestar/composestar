@@ -10,7 +10,6 @@
 
 package Composestar.Visualization.Model;
 
-import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
@@ -20,15 +19,15 @@ import Composestar.Visualization.Model.CellViews.VisComCellViewFactory;
 /**
  * @author Michiel Hendriks
  */
-public abstract class View
+public abstract class CpsView
 {
 	protected GraphModel model;
 
 	protected GraphLayoutCache layout;
 
-	protected JGraph graph;
+	protected CpsJGraph graph;
 
-	public View()
+	public CpsView()
 	{
 		setGraphDefaults();
 	}
@@ -38,7 +37,7 @@ public abstract class View
 	 * 
 	 * @return
 	 */
-	public JGraph getGraph()
+	public CpsJGraph getGraph()
 	{
 		return graph;
 	}
@@ -59,6 +58,7 @@ public abstract class View
 		model = new DefaultGraphModel();
 		layout = new GraphLayoutCache(model, new VisComCellViewFactory());
 		graph = new CpsJGraph(model, layout);
+		graph.setCpsView(this);
 
 		graph.setAntiAliased(true);
 		// graph.setBendable(false);
@@ -67,4 +67,6 @@ public abstract class View
 		graph.setEditable(false);
 		graph.setGridVisible(true); // meh
 	}
+	
+	public abstract String getName();
 }
