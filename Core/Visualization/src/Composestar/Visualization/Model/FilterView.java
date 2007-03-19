@@ -10,12 +10,14 @@
 
 package Composestar.Visualization.Model;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.Edge;
+import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.Port;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -32,6 +34,8 @@ import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.Model.Cells.AbstractFilterModuleConcernVertex;
 import Composestar.Visualization.Model.Cells.FilterConcernVertex;
 import Composestar.Visualization.Model.Cells.FilterModuleConcernVertex;
+import Composestar.Visualization.Model.Cells.ClassVertex.MemberFlags;
+import Composestar.Visualization.Model.Routing.JGraphParallelRouter;
 
 /**
  * The filter view. Show filter usage for a single concern.
@@ -101,25 +105,33 @@ public class FilterView extends CpsView
 						fmcVertex = cells.get(targetC);
 						if (fmcVertex == null)
 						{
-							fmcVertex = new FilterModuleConcernVertex(targetC);
+							fmcVertex = new FilterModuleConcernVertex(targetC, MemberFlags.all());
 							cells.put(targetC, fmcVertex);
 							layout.insert(fmcVertex);
 						}
 					}
-					Port sourcePort = focusVertex.getPortFor(fm);
-					addEdge(sourcePort, fmcVertex, trail);
+					addEdge(fmcVertex, trail);
 				}
 			}
 		}
 	}
 
-	protected void addEdge(Port sourcePort, AbstractFilterModuleConcernVertex target, Trail trail)
+	protected void addEdge(AbstractFilterModuleConcernVertex target, Trail trail)
 	{
 		FilterElement fe = (FilterElement) trail.getRE();
+		Port sourcePort = focusVertex.getPortFor(fe.getParent());
 		Port targetPort = target.getPortFor(trail.getResultMessage());
 		Edge edge = new DefaultEdge(fe.asSourceCode());
 		edge.setSource(sourcePort);
 		edge.setTarget(targetPort);
+		
+		Map map = edge.getAttributes();
+		GraphConstants.setLineColor(map, Color.BLACK);
+		GraphConstants.setEndFill(map, true);
+		GraphConstants.setLineEnd(map, GraphConstants.ARROW_CLASSIC);
+		GraphConstants.setLineStyle(map, GraphConstants.STYLE_SPLINE);
+		GraphConstants.setRouting(map, JGraphParallelRouter.getSharedInstance());
+		
 		layout.insert(edge);
 	}
 }

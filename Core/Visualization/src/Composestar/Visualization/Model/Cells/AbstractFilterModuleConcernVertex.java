@@ -18,6 +18,7 @@ import java.util.Map;
 import org.jgraph.graph.DefaultPort;
 
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.FIRE2.model.Message;
 import Composestar.Visualization.Model.Cells.ClassVertex.MemberFlags;
 
 /**
@@ -59,10 +60,10 @@ public abstract class AbstractFilterModuleConcernVertex extends ConcernVertex
 		addFmVertices(concern);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Visualization.Model.Cells.ConcernVertex#getPort()
+	/**
+	 * If this FilterModuleVertex has filter modules it will return the input
+	 * filter port. Otherwise it will return the default ConcernVertex port
+	 * which would be the default port of the ClassVertex.
 	 */
 	@Override
 	public DefaultPort getPort()
@@ -72,6 +73,25 @@ public abstract class AbstractFilterModuleConcernVertex extends ConcernVertex
 			return filterInputPort;
 		}
 		return super.getPort();
+	}
+
+	/**
+	 * Also accepts a Fire2 Message object in which case it will check in the
+	 * target is inner, if the target is not inner it will return the input
+	 * filter port, otherwise the default behavior will be used.
+	 */
+	@Override
+	public DefaultPort getPortFor(Object obj)
+	{
+		if (obj instanceof Message)
+		{
+			Message msg = (Message) obj;
+			if (!Message.checkEquals(msg.getTarget(), Message.INNER_TARGET))
+			{
+				return filterInputPort;
+			}
+		}
+		return super.getPortFor(obj);
 	}
 
 	public Collection<FilterModuleVertex> getFmVertices()

@@ -16,6 +16,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.jgraph.graph.AttributeMap;
+import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
@@ -44,8 +45,12 @@ public class FilterModuleVertex extends BaseGraphCell
 		GraphConstants.setBackground(attrs, new Color(0xDDEEFF));
 		GraphConstants.setOpaque(attrs, true);
 
-		Point2D pt = new Point2D.Double(GraphConstants.PERMILLE, GraphConstants.PERMILLE / 2);
-		GraphConstants.setOffset(getPort().getAttributes(), pt);
+		DefaultPort port = getPort();
+		if (port != null)
+		{
+			Point2D pt = new Point2D.Double(GraphConstants.PERMILLE, GraphConstants.PERMILLE / 2);
+			GraphConstants.setOffset(port.getAttributes(), pt);
+		}
 	}
 
 	public FilterModule getFilterModule()

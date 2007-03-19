@@ -74,6 +74,24 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 	}
 
 	/**
+	 * Returns the default port of the member cell with the given name as the
+	 * input Object. Will return null when nothing was found.
+	 */
+	@Override
+	public DefaultPort getPortFor(Object obj)
+	{
+		if (obj instanceof String)
+		{
+			BaseGraphCell cell = members.get(obj);
+			if (cell != null)
+			{
+				return cell.getPort();
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Add a child cell
 	 * 
 	 * @param userObject

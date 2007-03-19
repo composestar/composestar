@@ -60,10 +60,28 @@ public abstract class ConcernVertex extends BaseGraphCell
 		GraphConstants.setSizeableAxis(attrs, GraphConstants.X_AXIS);
 	}
 
+	/**
+	 * Returns the default port of the ClassVertex.
+	 */
 	@Override
 	public DefaultPort getPort()
 	{
 		return classVertex.getPort();
+	}
+
+	/**
+	 * Returns a matching port from the ClassVertex. Otherwise it will return
+	 * the default port of getPort().
+	 */
+	@Override
+	public DefaultPort getPortFor(Object obj)
+	{
+		DefaultPort port = classVertex.getPortFor(obj);
+		if (port != null)
+		{
+			return port;
+		}
+		return super.getPortFor(obj);
 	}
 
 	public DefaultPort getClassPort()

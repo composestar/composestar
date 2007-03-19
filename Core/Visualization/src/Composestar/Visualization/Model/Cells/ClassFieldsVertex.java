@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.jgraph.graph.DefaultPort;
+
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Utils.Logging.CPSLogger;
@@ -43,6 +45,20 @@ public class ClassFieldsVertex extends ClassMembersVertex
 			// empty, add dummy entry
 			addDummy();
 		}
+	}
+
+	/**
+	 * Return the port for the given FieldInfo or String. Returns null when not
+	 * match was found.
+	 */
+	@Override
+	public DefaultPort getPortFor(Object obj)
+	{
+		if (obj instanceof FieldInfo)
+		{
+			return super.getPortFor(((FieldInfo) obj).getName());
+		}
+		return super.getPortFor(obj);
 	}
 
 	@SuppressWarnings("unchecked")

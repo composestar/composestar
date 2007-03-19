@@ -12,6 +12,7 @@ package Composestar.Visualization.Model.Cells;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.EnumSet;
 import java.util.List;
 
 import org.jgraph.graph.DefaultPort;
@@ -23,6 +24,7 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Visualization.Model.Cells.ClassVertex.MemberFlags;
 
 /**
  * ConcernVertex class for the ProgramView. The class view shows no class
@@ -41,6 +43,16 @@ public class FilterModuleConcernVertex extends AbstractFilterModuleConcernVertex
 		super(concern);
 	}
 
+	public FilterModuleConcernVertex(Concern concern, EnumSet<MemberFlags> filter)
+	{
+		super(concern, filter);
+	}
+
+	/**
+	 * Accepts the Qualified Name of a FilterModule or a FilterModule and
+	 * returns the accosiated port. Otherwise it will perform the default
+	 * behavior of the AbstractFilterModuleConcernVertex.
+	 */
 	@Override
 	public DefaultPort getPortFor(Object obj)
 	{
@@ -59,7 +71,7 @@ public class FilterModuleConcernVertex extends AbstractFilterModuleConcernVertex
 		}
 		else
 		{
-			return getPort();
+			return super.getPortFor(obj);
 		}
 	}
 

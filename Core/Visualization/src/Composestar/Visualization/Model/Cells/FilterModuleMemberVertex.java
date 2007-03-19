@@ -64,6 +64,7 @@ public class FilterModuleMemberVertex extends BaseGraphCell
 	@Override
 	public DefaultPort getPort()
 	{
+		// no port
 		return null;
 	}
 

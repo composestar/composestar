@@ -18,8 +18,12 @@ import java.util.EnumSet;
 import javax.swing.JLabel;
 
 import org.jgraph.graph.AttributeMap;
+import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
 
+import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Visualization.Model.CpsGraphConstants;
 
@@ -122,6 +126,44 @@ public class ClassVertex extends BaseGraphCell
 		return methods;
 	}
 
+	/**
+	 * Accepts MethodInfo, FieldInfo for the respectively method and field port.
+	 * Fire2 message for a method port (uses the selector of the message). In
+	 * case of a string input it first tries to find the method then the field.
+	 * Otherwise it performs the default behavior of getPortFor() which would
+	 * return the default class vertex port.
+	 */
+	@Override
+	public DefaultPort getPortFor(Object obj)
+	{
+		if (obj instanceof MethodInfo)
+		{
+			return methods.getPortFor(obj);
+		}
+		else if (obj instanceof FieldInfo)
+		{
+			return fields.getPortFor(obj);
+		}
+		else if (obj instanceof Message)
+		{
+			return methods.getPortFor(((Message) obj).getSelector());
+		}
+		else if (obj instanceof String)
+		{
+			DefaultPort port = methods.getPortFor(obj);
+			if (port != null)
+			{
+				return port;
+			}
+			port = fields.getPortFor(obj);
+			if (port != null)
+			{
+				return port;
+			}
+		}
+		return super.getPortFor(obj);
+	}
+
 	public String getClassName()
 	{
 		return platformRep.getFullName();
@@ -131,5 +173,4 @@ public class ClassVertex extends BaseGraphCell
 	{
 		return getClassName();
 	}
-
 }

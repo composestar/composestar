@@ -13,6 +13,7 @@ package Composestar.Visualization.Model.Cells;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -20,6 +21,7 @@ import java.util.TreeMap;
 import javax.swing.JLabel;
 
 import org.jgraph.graph.AttributeMap;
+import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
@@ -61,9 +63,12 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 
 	protected final static int INSET = 4;
 
+	protected Map<Filter, FilterVertex> filterVertices;
+
 	public DetailedFilterModuleVertex(FilterModule fm)
 	{
 		super(fm);
+		filterVertices = new HashMap<Filter, FilterVertex>();
 
 		inputFilters = new BaseGraphCell("input filters");
 		add(inputFilters);
@@ -78,7 +83,6 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 
 		// calculat the max bounds
 		Rectangle2D bounds = calcBounds();
-		logger.debug("FilterModule bounds: " + bounds);
 		if (inputFilters.isLeaf())
 		{
 			logger.info("No input filters for " + fm);
@@ -101,7 +105,42 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 
 		translate(INSET, INSET); // inset
 		bounds = calcBounds();
-		logger.debug("FilterModule bounds (2): " + bounds);
+	}
+
+	@Override
+	public DefaultPort getPort()
+	{
+		// no default port
+		return null;
+	}
+
+	/**
+	 * Accepts a Filter object and returns the port associated with the given
+	 * Filter. Otherwise it will return null.
+	 */
+	@Override
+	public DefaultPort getPortFor(Object obj)
+	{
+		if (obj instanceof Filter)
+		{
+			FilterVertex vertex = filterVertices.get(obj);
+			if (vertex != null)
+			{
+				return vertex.getPort();
+			}
+		}
+		else if (obj instanceof String)
+		{
+			String fname = (String) obj;
+			for (FilterVertex vertex : filterVertices.values())
+			{
+				if (vertex.getFilter().getName().equals(fname))
+				{
+					return vertex.getPort();
+				}
+			}
+		}
+		return null;
 	}
 
 	public String toString()
@@ -174,7 +213,8 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 		FilterVertex last = null;
 		while (filterIterator.hasNext())
 		{
-			FilterVertex vertex = new FilterVertex((Filter) filterIterator.next(), direction);
+			Filter filter = (Filter) filterIterator.next();
+			FilterVertex vertex = new FilterVertex(filter, direction);
 			logger.debug("Added filter vertex for " + vertex.toString());
 			if (last != null)
 			{
@@ -183,6 +223,7 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 			}
 
 			parentVertex.add(vertex);
+			filterVertices.put(filter, vertex);
 			last = vertex;
 		}
 	}

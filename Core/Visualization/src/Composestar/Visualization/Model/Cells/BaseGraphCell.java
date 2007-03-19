@@ -93,7 +93,8 @@ public class BaseGraphCell extends DefaultGraphCell
 	}
 
 	/**
-	 * Get a specific port for the input object.
+	 * Get a specific port for the input object. By default it returns the
+	 * defaultPort given by getPort();
 	 * 
 	 * @param obj
 	 * @return

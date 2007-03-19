@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.jgraph.graph.DefaultPort;
+
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
@@ -44,6 +46,20 @@ public class ClassMethodsVertex extends ClassMembersVertex
 			// empty, add dummy entry
 			addDummy();
 		}
+	}
+
+	/**
+	 * Return the port for the given MethodInfo or String. Returns null when not
+	 * match was found.
+	 */
+	@Override
+	public DefaultPort getPortFor(Object obj)
+	{
+		if (obj instanceof MethodInfo)
+		{
+			return super.getPortFor(((MethodInfo) obj).getName());
+		}
+		return super.getPortFor(obj);
 	}
 
 	@SuppressWarnings("unchecked")

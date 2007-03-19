@@ -18,6 +18,7 @@ import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
 
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
@@ -43,6 +44,25 @@ public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 	public FilterConcernVertex(Concern concern)
 	{
 		super(concern, MemberFlags.all());
+	}
+
+	/**
+	 * Accepts Filter objects which will be redirected to the appropaite
+	 * FilterModuleVertex.
+	 */
+	@Override
+	public DefaultPort getPortFor(Object obj)
+	{
+		if (obj instanceof Filter)
+		{
+			FilterModule fm = (FilterModule) ((Filter) obj).getParent();
+			FilterModuleVertex vertex = fmVertices.get(fm.getQualifiedName());
+			if (vertex != null)
+			{
+				return vertex.getPortFor(obj);
+			}
+		}
+		return super.getPortFor(obj);
 	}
 
 	@SuppressWarnings("unchecked")
