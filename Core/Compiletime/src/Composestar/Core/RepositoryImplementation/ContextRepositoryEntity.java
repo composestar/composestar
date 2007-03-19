@@ -19,13 +19,10 @@ public class ContextRepositoryEntity extends RepositoryEntity
 	private static final long serialVersionUID = 9219062801100391060L;
 
 	/**
-	 * = null; //name of object
+	 * owner of this entity
 	 */
 	private Object parent;
 
-	/**
-	 * @roseuid 404C4B6503AD
-	 */
 	public ContextRepositoryEntity()
 	{
 		super();
@@ -33,7 +30,6 @@ public class ContextRepositoryEntity extends RepositoryEntity
 
 	/**
 	 * @param parent
-	 * @roseuid 402CB721025D
 	 */
 	public ContextRepositoryEntity(RepositoryEntity parent)
 	{
@@ -42,7 +38,6 @@ public class ContextRepositoryEntity extends RepositoryEntity
 
 	/**
 	 * @return java.lang.Object
-	 * @roseuid 401FAA620319
 	 */
 	public Object getParent()
 	{
@@ -51,14 +46,13 @@ public class ContextRepositoryEntity extends RepositoryEntity
 
 	/**
 	 * @param parentValue
-	 * @roseuid 401FAA62031A
 	 */
 	public void setParent(Object parentValue)
 	{
 		this.parent = parentValue;
 		this.updateRepositoryReference();
 	}
-	
+
 	/**
 	 * Return the ancestor that matches the given class, or null if no such
 	 * ancestor
@@ -91,5 +85,17 @@ public class ContextRepositoryEntity extends RepositoryEntity
 		// copy of data, you must clone this data yourself.
 
 		return newObject;
+	}
+
+	/**
+	 * Returns the string representation of this element as source code. The
+	 * result should be semantical identical to the original code, it does not
+	 * have to be the same as the original since the syntactic sugar has been
+	 * applied. Returns null when this element can not be translated to a source
+	 * code representation.
+	 */
+	public String asSourceCode()
+	{
+		return null;
 	}
 }

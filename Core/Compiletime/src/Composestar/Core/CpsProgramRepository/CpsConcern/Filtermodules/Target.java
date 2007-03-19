@@ -20,7 +20,7 @@ import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 public class Target extends ContextRepositoryEntity
 {
 	private static final long serialVersionUID = 4238743031003419298L;
-	
+
 	public static final String INNER = "inner";
 
 	/**
@@ -33,8 +33,6 @@ public class Target extends ContextRepositoryEntity
 
 	/**
 	 * identifier?
-	 * 
-	 * @roseuid 401FAA6902AB
 	 */
 	public Target()
 	{
@@ -43,7 +41,6 @@ public class Target extends ContextRepositoryEntity
 
 	/**
 	 * @return java.lang.String
-	 * @roseuid 401FAA6902AC
 	 */
 	public String getName()
 	{
@@ -52,7 +49,6 @@ public class Target extends ContextRepositoryEntity
 
 	/**
 	 * @param targetValue
-	 * @roseuid 401FAA6902B5
 	 */
 	public void setName(String targetValue)
 	{
@@ -62,7 +58,6 @@ public class Target extends ContextRepositoryEntity
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleElem
 	 *         entReference
-	 * @roseuid 40ADDC9D0206
 	 */
 	public FilterModuleElementReference getRef()
 	{
@@ -71,10 +66,14 @@ public class Target extends ContextRepositoryEntity
 
 	/**
 	 * @param refValue
-	 * @roseuid 40ADDCA10090
 	 */
 	public void setRef(FilterModuleElementReference refValue)
 	{
 		this.ref = refValue;
+	}
+
+	public String asSourceCode()
+	{
+		return ref.getName();
 	}
 }

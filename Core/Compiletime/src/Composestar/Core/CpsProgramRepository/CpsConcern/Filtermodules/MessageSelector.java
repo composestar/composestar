@@ -102,4 +102,9 @@ public class MessageSelector extends ContextRepositoryEntity
 	{
 		return msAST;
 	}
+
+	public String asSourceCode()
+	{
+		return msAST.asSourceCode();
+	}
 }

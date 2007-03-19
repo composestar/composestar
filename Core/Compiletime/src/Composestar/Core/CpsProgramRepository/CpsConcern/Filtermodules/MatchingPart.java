@@ -11,16 +11,12 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 public class MatchingPart extends AbstractPattern
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7242696850818180538L;
 
 	// public MatchingType matchType; -> get from MatchingPartAST
 	public MatchingPartAST mpa;
 
 	/**
-	 * @roseuid 401FAA66001C
 	 * @deprecated
 	 */
 	public MatchingPart()
@@ -50,7 +46,6 @@ public class MatchingPart extends AbstractPattern
 
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingType
-	 * @roseuid 401FAA66001D
 	 */
 	public MatchingType getMatchType()
 	{
@@ -59,7 +54,6 @@ public class MatchingPart extends AbstractPattern
 
 	/**
 	 * @param matchTypeValue
-	 * @roseuid 401FAA660030
 	 */
 	public void setMatchType(MatchingType matchTypeValue)
 	{

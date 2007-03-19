@@ -11,9 +11,6 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 public class And extends BinaryOperator
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7814675298436028745L;
 
 	public And()
@@ -34,5 +31,10 @@ public class And extends BinaryOperator
 			return RESULT_FALSE;
 		}
 		return resl + resr;
+	}
+
+	public String asSourceCode()
+	{
+		return "(" + left.asSourceCode() + " & " + right.asSourceCode() + ")";
 	}
 }

@@ -13,13 +13,10 @@ import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
- * @modelguid {5976EB5C-BFC4-46BF-995B-AD41D42C48C7}
+ * 
  */
 public class FilterElement extends ContextRepositoryEntity
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3420736618255579131L;
 
 	public FilterElementAST filterElementAST;
@@ -33,8 +30,6 @@ public class FilterElement extends ContextRepositoryEntity
 	public MatchingPattern matchingPattern;
 
 	/**
-	 * @modelguid {51317331-0B65-4CD1-AE8A-20C987FD14D0}
-	 * @roseuid 401FAA63027A
 	 * @deprecated
 	 */
 	public FilterElement()
@@ -60,7 +55,6 @@ public class FilterElement extends ContextRepositoryEntity
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpr
 	 *         ession
-	 * @roseuid 401FAA630284
 	 */
 	public ConditionExpression getConditionPart()
 	{
@@ -69,7 +63,6 @@ public class FilterElement extends ContextRepositoryEntity
 
 	/**
 	 * @param conditionValue
-	 * @roseuid 401FAA63028E
 	 */
 	public void setConditionPart(ConditionExpression conditionValue)
 	{
@@ -79,7 +72,6 @@ public class FilterElement extends ContextRepositoryEntity
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperato
 	 *         rType
-	 * @roseuid 401FAA6302A3
 	 */
 	public EnableOperatorType getEnableOperatorType()
 	{
@@ -88,7 +80,6 @@ public class FilterElement extends ContextRepositoryEntity
 
 	/**
 	 * @param enableOperatorTypeValue
-	 * @roseuid 401FAA6302B6
 	 */
 	public void setEnableOperatorType(EnableOperatorType enableOperatorTypeValue)
 	{
@@ -108,7 +99,6 @@ public class FilterElement extends ContextRepositoryEntity
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement
 	 *         CompOper
-	 * @roseuid 402AB5780268
 	 */
 	public FilterElementCompOper getRightOperator()
 	{
@@ -117,7 +107,6 @@ public class FilterElement extends ContextRepositoryEntity
 
 	/**
 	 * @param rightOperatorValue
-	 * @roseuid 402AB57C02DB
 	 */
 	public void setRightOperator(FilterElementCompOper rightOperatorValue)
 	{
@@ -127,5 +116,10 @@ public class FilterElement extends ContextRepositoryEntity
 	public FilterElementAST getFilterElementAST()
 	{
 		return filterElementAST;
+	}
+
+	public String asSourceCode()
+	{
+		return filterElementAST.asSourceCode();
 	}
 }

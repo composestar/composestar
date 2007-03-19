@@ -17,9 +17,6 @@ public abstract class AbstractPatternAST extends ContextRepositoryEntity
 
 	public MessageSelectorAST selector;
 
-	/**
-	 * @roseuid 404DDA71039C
-	 */
 	public AbstractPatternAST()
 	{
 		super();
@@ -27,7 +24,6 @@ public abstract class AbstractPatternAST extends ContextRepositoryEntity
 
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target
-	 * @roseuid 401FAA670136
 	 */
 	public Target getTarget()
 	{
@@ -36,7 +32,6 @@ public abstract class AbstractPatternAST extends ContextRepositoryEntity
 
 	/**
 	 * @param targetValue
-	 * @roseuid 401FAA670140
 	 */
 	public void setTarget(Target targetValue)
 	{
@@ -46,7 +41,6 @@ public abstract class AbstractPatternAST extends ContextRepositoryEntity
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelect
 	 *         or
-	 * @roseuid 401FAA670154
 	 */
 	public MessageSelectorAST getSelector()
 	{
@@ -55,10 +49,14 @@ public abstract class AbstractPatternAST extends ContextRepositoryEntity
 
 	/**
 	 * @param selectorValue
-	 * @roseuid 401FAA67015E
 	 */
 	public void setSelector(MessageSelectorAST selectorValue)
 	{
 		this.selector = selectorValue;
+	}
+
+	public String asSourceCode()
+	{
+		return target.asSourceCode() + "." + selector.asSourceCode();
 	}
 }

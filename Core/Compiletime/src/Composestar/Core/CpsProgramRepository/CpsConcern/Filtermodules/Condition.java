@@ -14,19 +14,12 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 
 /**
- * @modelguid {BBEF58A4-13F3-4D33-8CAA-F77A11B5E453}
+ * 
  */
 public class Condition extends DeclaredRepositoryEntity
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4642502845696125975L;
 
-	/**
-	 * @modelguid {87B0B644-6B80-4544-8BCA-9E2AE2244340}
-	 */
 	// public String name; // declared in parent class
 	public BooleanOclExpression ocl;
 
@@ -34,10 +27,6 @@ public class Condition extends DeclaredRepositoryEntity
 
 	public FilterModuleElementReference longref;
 
-	/**
-	 * @modelguid {53F220EC-C531-4B22-923B-0A7C997FDF41}
-	 * @roseuid 401FAA570309
-	 */
 	public Condition()
 	{
 		super();
@@ -56,8 +45,6 @@ public class Condition extends DeclaredRepositoryEntity
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BooleanOclExp
 	 *         ression
-	 * @modelguid {234C75EC-E80B-43EF-9FF3-93DE2332FA23}
-	 * @roseuid 401FAA57031E
 	 */
 	public BooleanOclExpression getOCL()
 	{
@@ -66,8 +53,6 @@ public class Condition extends DeclaredRepositoryEntity
 
 	/**
 	 * @param oCL
-	 * @modelguid {3CC7CDC6-7FA8-4EA3-9DD6-82740C1E1411}
-	 * @roseuid 401FAA570327
 	 */
 	public void setOCL(BooleanOclExpression inocl)
 	{
@@ -93,8 +78,8 @@ public class Condition extends DeclaredRepositoryEntity
 	{
 		return longref;
 	}
-	
-	public String toString()
+
+	public String asSourceCode()
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append(getName());

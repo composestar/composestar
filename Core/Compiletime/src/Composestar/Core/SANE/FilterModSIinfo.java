@@ -1,7 +1,3 @@
-//Source file: C:\\local\\staijen\\composestar\\src\\Composestar\\core\\SANE\\FilterModSIinfo.java
-
-//Source file: D:\\Lodewijk\\software\\ComposeStar\\composestar\\src\\Composestar\\core\\SANE\\FilterModSIinfo.java
-
 package Composestar.Core.SANE;
 
 import java.util.Iterator;

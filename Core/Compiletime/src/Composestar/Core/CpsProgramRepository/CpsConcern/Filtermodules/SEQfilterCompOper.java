@@ -15,17 +15,15 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
  */
 public class SEQfilterCompOper extends FilterCompOper
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3420786736732121171L;
 
-	/**
-	 * @roseuid 404C4B6A0378
-	 */
 	public SEQfilterCompOper()
 	{
 		super();
+	}
+
+	public String asSourceCode()
+	{
+		return ";";
 	}
 }

@@ -18,9 +18,6 @@ import Composestar.Utils.CPSIterator;
 
 public class MatchingPattern extends ContextRepositoryEntity
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -84062663527092510L;
 
 	public MatchingPatternAST mpa;
@@ -30,7 +27,6 @@ public class MatchingPattern extends ContextRepositoryEntity
 	public Vector substitutionParts;
 
 	/**
-	 * @roseuid 404C4B6B0167
 	 * @depricated
 	 */
 	public MatchingPattern()
@@ -80,7 +76,6 @@ public class MatchingPattern extends ContextRepositoryEntity
 
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart
-	 * @roseuid 401FAA65006B
 	 */
 	public Vector getMatchingParts()
 	{
@@ -94,17 +89,15 @@ public class MatchingPattern extends ContextRepositoryEntity
 
 	/**
 	 * @param matchingPartValue
-	 * @roseuid 401FAA65007E
 	 */
 	public void addMatchingPart(MatchingPart matchingPartValue)
 	{
-		this.matchingParts.addElement(matchingPartValue);
+		matchingParts.addElement(matchingPartValue);
 	}
 
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionP
 	 *         art
-	 * @roseuid 401FAA65008A
 	 */
 	public Vector getSubstitutionParts()
 	{
@@ -118,15 +111,19 @@ public class MatchingPattern extends ContextRepositoryEntity
 
 	/**
 	 * @param substitutionPartValue
-	 * @roseuid 401FAA65009D
 	 */
 	public void addSubstitutionPart(SubstitutionPart substitutionPartValue)
 	{
-		this.substitutionParts.addElement(substitutionPartValue);
+		substitutionParts.addElement(substitutionPartValue);
 	}
 
 	public MatchingPatternAST getMpa()
 	{
 		return mpa;
+	}
+	
+	public String asSourceCode()
+	{
+		return mpa.asSourceCode();
 	}
 }

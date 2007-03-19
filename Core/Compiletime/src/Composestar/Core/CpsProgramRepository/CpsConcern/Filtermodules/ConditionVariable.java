@@ -20,9 +20,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionRefe
  */
 public class ConditionVariable extends ConditionExpression
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3303327628885059583L;
 
 	public ConditionReference condition;
@@ -51,5 +48,10 @@ public class ConditionVariable extends ConditionExpression
 	public int simulateResult()
 	{
 		return 1;
+	}
+	
+	public String asSourceCode()
+	{
+		return condition.getName();
 	}
 }

@@ -25,16 +25,10 @@ public class MessageSelectorAST extends ContextRepositoryEntity
 {
 	private static final long serialVersionUID = -4560974741705816846L;
 
-	/**
-	 * 
-	 */
 	public String name;
 
 	public Vector typeList;
 
-	/**
-	 * 
-	 */
 	public MessageSelectorAST()
 	{
 		super();
@@ -95,5 +89,10 @@ public class MessageSelectorAST extends ContextRepositoryEntity
 	public Iterator getParameterTypeIterator()
 	{
 		return new CPSIterator(typeList);
+	}
+
+	public String asSourceCode()
+	{
+		return name;
 	}
 }

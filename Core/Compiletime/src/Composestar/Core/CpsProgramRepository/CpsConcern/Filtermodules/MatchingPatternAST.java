@@ -16,10 +16,6 @@ import Composestar.Utils.CPSIterator;
 
 public class MatchingPatternAST extends ContextRepositoryEntity
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2971508659284806511L;
 
 	public Vector matchingParts;
@@ -36,7 +32,7 @@ public class MatchingPatternAST extends ContextRepositoryEntity
 	public boolean isMessageList;
 
 	/**
-	 * @roseuid 404C4B6B0167
+	 * 
 	 */
 	public MatchingPatternAST()
 	{
@@ -57,7 +53,6 @@ public class MatchingPatternAST extends ContextRepositoryEntity
 
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart
-	 * @roseuid 401FAA65006B
 	 */
 	public Vector getMatchingParts()
 	{
@@ -71,17 +66,15 @@ public class MatchingPatternAST extends ContextRepositoryEntity
 
 	/**
 	 * @param matchingPartValue
-	 * @roseuid 401FAA65007E
 	 */
 	public void addMatchingPart(MatchingPartAST matchingPartValue)
 	{
-		this.matchingParts.addElement(matchingPartValue);
+		matchingParts.addElement(matchingPartValue);
 	}
 
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionP
 	 *         art
-	 * @roseuid 401FAA65008A
 	 */
 	public Vector getSubstitutionParts()
 	{
@@ -95,7 +88,6 @@ public class MatchingPatternAST extends ContextRepositoryEntity
 
 	/**
 	 * @param substitutionPartValue
-	 * @roseuid 401FAA65009D
 	 */
 	public void addSubstitutionPart(SubstitutionPartAST substitutionPartValue)
 	{
@@ -110,5 +102,71 @@ public class MatchingPatternAST extends ContextRepositoryEntity
 	public void setSubstitutionParts(Vector inSubstitutionParts)
 	{
 		substitutionParts = inSubstitutionParts;
+	}
+
+	public String asSourceCode()
+	{
+		StringBuffer sb = new StringBuffer();
+		// matching parts
+		if (matchingParts.size() > 0)
+		{
+			if (isMessageList)
+			{
+				sb.append("#(");
+			}
+			else if (matchingParts.size() > 1)
+			{
+				sb.append("{");
+			}
+			for (int i = 0; i < matchingParts.size(); i++)
+			{
+				if (i > 0)
+				{
+					if (isMessageList)
+					{
+						sb.append("; ");
+					}
+					else
+					{
+						sb.append(", ");
+					}
+				}
+				sb.append(((MatchingPartAST) matchingParts.get(i)).asSourceCode());
+			}
+			if (isMessageList)
+			{
+				sb.append(")");
+			}
+			else if (matchingParts.size() > 1)
+			{
+				sb.append("}");
+			}
+		}
+
+		// substitution parts
+		if (substitutionParts.size() > 0)
+		{
+			if (sb.length() > 0)
+			{
+				sb.append(" ");
+			}
+			if (isMessageList)
+			{
+				sb.append("#(");
+			}
+			for (int i = 0; i < substitutionParts.size(); i++)
+			{
+				if ((i > 0) && isMessageList)
+				{
+					sb.append("; ");
+				}
+				sb.append(((SubstitutionPartAST) substitutionParts.get(i)).asSourceCode());
+			}
+			if (isMessageList)
+			{
+				sb.append(")");
+			}
+		}
+		return sb.toString();
 	}
 }

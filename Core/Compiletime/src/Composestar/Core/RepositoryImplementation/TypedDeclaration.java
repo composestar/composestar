@@ -20,18 +20,13 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
  */
 public class TypedDeclaration extends DeclaredRepositoryEntity
 {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -1939895305879861259L;
 
 	public ConcernReference type;
 
 	public Reference theReference;
 
-	/**
-	 * @roseuid 404C4B650353
-	 */
 	public TypedDeclaration()
 	{
 		super();
@@ -39,7 +34,6 @@ public class TypedDeclaration extends DeclaredRepositoryEntity
 
 	/**
 	 * @param type
-	 * @roseuid 40EBD2DE0350
 	 */
 	public void setType(ConcernReference type)
 	{
@@ -48,20 +42,14 @@ public class TypedDeclaration extends DeclaredRepositoryEntity
 
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference
-	 * @roseuid 40EBD2E70043
 	 */
 	public ConcernReference getType()
 	{
 		return type;
 	}
 
-	/**
-	 * Returns the plain text declaration of this element just like you would see in the source code
-	 * 
-	 * @return
-	 */
-	public String toString()
+	public String asSourceCode()
 	{
-		return getName()+": "+type.getQualifiedName();
+		return getName() + ": " + type.getQualifiedName();
 	}
 }

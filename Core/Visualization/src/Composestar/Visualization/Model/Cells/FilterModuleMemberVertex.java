@@ -82,17 +82,17 @@ public class FilterModuleMemberVertex extends BaseGraphCell
 		Icon ico = null;
 		if (entity instanceof External)
 		{
-			label = entity.toString();
+			label = entity.asSourceCode();
 			ico = getIcon(MemberType.EXTERNAL);
 		}
 		else if (entity instanceof Internal)
 		{
-			label = entity.toString();
+			label = entity.asSourceCode();
 			ico = getIcon(MemberType.INTERNAL);
 		}
 		else if (entity instanceof Condition)
 		{
-			label = entity.toString();
+			label = entity.asSourceCode();
 			ico = getIcon(MemberType.CONDITION);
 		}
 		else

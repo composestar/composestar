@@ -19,9 +19,6 @@ public abstract class FilterCompOper extends ContextRepositoryEntity
 {
 	public Filter rightArgument;
 
-	/**
-	 * @roseuid 404C4B6A03D3
-	 */
 	public FilterCompOper()
 	{
 		super();
@@ -29,7 +26,6 @@ public abstract class FilterCompOper extends ContextRepositoryEntity
 
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter
-	 * @roseuid 402AA817028B
 	 */
 	public Filter getRightArgument()
 	{
@@ -38,7 +34,6 @@ public abstract class FilterCompOper extends ContextRepositoryEntity
 
 	/**
 	 * @param rightArgumentValue
-	 * @roseuid 402AA822004C
 	 */
 	public void setRightArgument(Filter rightArgumentValue)
 	{

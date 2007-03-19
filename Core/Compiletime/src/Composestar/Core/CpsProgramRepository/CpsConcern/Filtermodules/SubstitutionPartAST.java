@@ -11,15 +11,8 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 public class SubstitutionPartAST extends AbstractPatternAST
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 788608380579257446L;
 
-	/**
-	 * @roseuid 401FAA6900AD
-	 */
 	public SubstitutionPartAST()
 	{
 		super();

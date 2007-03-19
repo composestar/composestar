@@ -11,9 +11,6 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 public class SubstitutionPart extends AbstractPattern
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7806329462233206287L;
 
 	public SubstitutionPartAST spAST;

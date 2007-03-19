@@ -11,9 +11,6 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 public class False extends CondLiteral
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2079825319816646771L;
 
 	public False()
@@ -24,5 +21,10 @@ public class False extends CondLiteral
 	public int simulateResult()
 	{
 		return RESULT_FALSE;
+	}
+	
+	public String asSourceCode()
+	{
+		return "False";
 	}
 }
