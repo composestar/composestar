@@ -15,6 +15,8 @@ import Composestar.Visualization.Model.CpsJGraph;
  */
 public class LayoutAction extends ActiveGraphAction
 {
+	private static final long serialVersionUID = 1678508313397718304L;
+
 	public LayoutAction()
 	{
 		super("Spring");

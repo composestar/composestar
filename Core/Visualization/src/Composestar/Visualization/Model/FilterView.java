@@ -96,8 +96,10 @@ public class FilterView extends CpsView
 
 					Concern targetC = trail.getTargetConcern();
 					AbstractFilterModuleConcernVertex fmcVertex;
-					if (targetC == null)
+					if ((targetC == null) || (targetC == focusConcern))
 					{
+						// targetC == null -> dispatch to inner
+						// targetC == focusConcern -> dispatch to *
 						fmcVertex = focusVertex;
 					}
 					else
@@ -120,7 +122,7 @@ public class FilterView extends CpsView
 	{
 		FilterElement fe = (FilterElement) trail.getRE();
 		Port sourcePort = focusVertex.getPortFor(fe.getParent());
-		Port targetPort = target.getPortFor(trail.getResultMessage());
+		Port targetPort = target.getPortFor(trail.getResultMessage(true));
 		Edge edge = new DefaultEdge(fe.asSourceCode());
 		edge.setSource(sourcePort);
 		edge.setTarget(targetPort);

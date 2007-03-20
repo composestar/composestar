@@ -62,6 +62,16 @@ public abstract class ExecutionState
 	}
 
 	/**
+	 * @return the original substitution message that hasn't been updated with
+	 *         information from the original message. This means that the target
+	 *         and selector could contain an '*'.
+	 */
+	public Message getBaseSubstitutionMessage()
+	{
+		return getSubstitutionMessage();
+	}
+
+	/**
 	 * @return Returns the stateType.
 	 */
 	public int getStateType()

@@ -1142,6 +1142,14 @@ public class FireModel
 			return outTransitions.iterator();
 		}
 
+		public Message getBaseSubstitutionMessage()
+		{
+			if (baseState != null)
+			{
+				return baseState.getSubstitutionMessage();
+			}
+			return super.getBaseSubstitutionMessage();
+		}
 	}
 
 	private class ExtendedExecutionTransition extends ExecutionTransition

@@ -129,6 +129,20 @@ public class Trail implements Serializable
 		return resultMessage;
 	}
 
+	/**
+	 * @param resolveSelector if true resolve the selector when it's a star
+	 *            selector
+	 * @return
+	 */
+	public Message getResultMessage(boolean resolveSelector)
+	{
+		if (Message.STAR_SELECTOR.equals(resultMessage.getSelector()))
+		{
+			return new Message(resultMessage.getTarget(), owner.getMessage().getSelector());
+		}
+		return resultMessage;
+	}
+
 	public void setTargetConcern(Concern inConcern)
 	{
 		targetConcern = inConcern;

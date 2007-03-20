@@ -130,8 +130,9 @@ public class Resolver
 			}
 			else if (flowNode.containsName("DispatchAction"))
 			{
-				Message newMsg = new Message(state.getSubstitutionMessage().getTarget(), state.getSubstitutionMessage()
-						.getSelector());
+				//Message newMsg = new Message(state.getSubstitutionMessage().getTarget(), state.getSubstitutionMessage()
+				//		.getSelector());
+				Message newMsg = state.getBaseSubstitutionMessage();
 				trail.setResultMessage(newMsg);
 				Concern targetConcern = findTargetConcern(crumb, newMsg.getTarget());
 				trail.setTargetConcern(targetConcern);

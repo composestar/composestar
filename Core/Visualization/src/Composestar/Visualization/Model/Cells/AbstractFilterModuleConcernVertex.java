@@ -77,8 +77,8 @@ public abstract class AbstractFilterModuleConcernVertex extends ConcernVertex
 
 	/**
 	 * Also accepts a Fire2 Message object in which case it will check in the
-	 * target is inner, if the target is not inner it will return the input
-	 * filter port, otherwise the default behavior will be used.
+	 * target is *, if the target is * it will return the input filter port,
+	 * otherwise the default behavior will be used.
 	 */
 	@Override
 	public DefaultPort getPortFor(Object obj)
@@ -86,7 +86,7 @@ public abstract class AbstractFilterModuleConcernVertex extends ConcernVertex
 		if (obj instanceof Message)
 		{
 			Message msg = (Message) obj;
-			if (!Message.checkEquals(msg.getTarget(), Message.INNER_TARGET))
+			if (Message.checkEquals(msg.getTarget(), Message.STAR_TARGET) && (filterInputPort != null))
 			{
 				return filterInputPort;
 			}
