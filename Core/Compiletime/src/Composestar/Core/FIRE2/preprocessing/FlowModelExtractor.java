@@ -11,9 +11,6 @@ import groove.graph.Edge;
 import groove.graph.Graph;
 import groove.graph.Label;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -150,11 +147,8 @@ public class FlowModelExtractor
 		return node;
 	}
 
-	private static class BasicFlowModel extends RepositoryEntity implements FlowModel
+	private static class BasicFlowModel implements FlowModel
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -8015349976168852314L;
 
 		private FlowNode startNode;
@@ -224,26 +218,12 @@ public class FlowModelExtractor
 		{
 			return transitions.iterator();
 		}
-
-		/**
-		 * Custom deserialization of this object
-		 */
-		private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-		{
-
-		}
-
-		/**
-		 * Custom serialization of this object
-		 */
-		private void writeObject(ObjectOutputStream out) throws IOException
-		{
-
-		}
 	}
 
 	private static class BasicFlowNode implements FlowNode
 	{
+		private static final long serialVersionUID = 8046439221416988053L;
+
 		private HashSet names;
 
 		private RepositoryEntity repositoryLink;
@@ -331,6 +311,8 @@ public class FlowModelExtractor
 
 	private static class BasicFlowTransition implements FlowTransition
 	{
+		private static final long serialVersionUID = -6477106037510629001L;
+
 		/**
 		 * The type of the transition;
 		 */

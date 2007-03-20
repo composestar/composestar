@@ -1,37 +1,27 @@
 <!-- INCRE configuration for Java -->
 <modules>
-	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true" summary="Parsing concerns...">
+	<module fulltype="Composestar.Core.COPPER.COPPER" />
+	<module fulltype="Composestar.Core.EMBEX.EMBEX" />
+	<module fulltype="Composestar.Core.DUMMER.DummyManager" />
+	<module name="HARVESTER" fulltype="Composestar.Java.TYM.TypeHarvester.JavaHarvestRunner" input="java.lang.String"
+		enabled="true" incremental="false" summary="Harvesting type information...">
 		<dependencies>
-			<dependency type="FILE" name="cpsfile">
-			<path>
-				<node type="FIELD" nodevalue="fileName"></node>
-			</path>
-			</dependency>
+			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>
 	</module>
-	<module name="EMBEX" fulltype="Composestar.Core.EMBEX.EMBEX" enabled="true" incremental="false" summary="Extracting embedded sources...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="DUMMER" fulltype="Composestar.Core.DUMMER.DummyManager" enabled="true" incremental="false" summary="Generating dummy sources...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="HARVESTER" fulltype="Composestar.Java.TYM.TypeHarvester.JavaHarvestRunner" input="java.lang.String" enabled="true" incremental="false" summary="Harvesting type information...">
+	<module name="COLLECTOR" fulltype="Composestar.Java.TYM.TypeCollector.JavaCollectorRunner" enabled="true"
+		incremental="false" summary="Collecting type information...">
 		<dependencies>
 			<dependency type="FILE" name="assembly"></dependency>
-		</dependencies>		
+		</dependencies>
 	</module>
-	<module name="COLLECTOR" fulltype="Composestar.Java.TYM.TypeCollector.JavaCollectorRunner" enabled="true" incremental="false" summary="Collecting type information...">
-		<dependencies>
-			<dependency type="FILE" name="assembly"></dependency>
-		</dependencies>		
+	<module name="AnnotationCollector" fulltype="Composestar.Java.TYM.TypeCollector.AnnotationCollector" enabled="true"
+		incremental="false" summary="Collecting annotations...">
+		<dependencies></dependencies>
 	</module>
-	<module name="AnnotationCollector" fulltype="Composestar.Java.TYM.TypeCollector.AnnotationCollector" enabled="true" incremental="false" summary="Collecting annotations...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="LOLA" fulltype="Composestar.Java.LOLA.JavaLOLA" enabled="true" incremental="false" summary="Evaluating predicate selectors...">
+	<module fulltype="Composestar.Core.REXREF.Main" />
+	<module name="LOLA" fulltype="Composestar.Java.LOLA.JavaLOLA" enabled="true" incremental="false"
+		summary="Evaluating predicate selectors...">
 		<dependencies></dependencies>
 		<comparisons>
 			<type fullname="Composestar.Core.CpsProgramRepository.PrimitiveConcern">
@@ -41,238 +31,31 @@
 				<field name="multiRes"></field>
 				<field name="singleRes"></field>
 			</type>
-		</comparisons>		
-	</module>
-	<module name="CHKREP" fulltype="Composestar.Core.CHKREP.Main" enabled="true" incremental="false" summary="Checking repository...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" enabled="true" incremental="false" summary="Resolving superimpositions...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.Core.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
-		<dependencies>
-			<dependency type="FILE" name="specfile">
-				<path>
-					<node type="CONFIG" nodevalue="FILTH_INPUT"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="fmodules">
-				<path>
-					<node type="DYNAMIC" nodevalue="superImpInfo"></node>
-					<node type="FIELD" nodevalue="theFmSIinfo"></node>
-				</path>
-			</dependency>	
-		</dependencies>	
-		<comparisons>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
-				<field name="name"></field>
-			</type>
 		</comparisons>
 	</module>
-	<module name="FIRE" fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" enabled="true" incremental="false" summary="FIRE Preprocessing...">
-		<dependencies></dependencies>	
+	<module fulltype="Composestar.Core.CHKREP.Main" />
+	<module fulltype="Composestar.Core.SANE.SANE" />
+	<module fulltype="Composestar.Core.FILTH.FILTH" />
+	<module fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" />
+	<module fulltype="Composestar.Core.CORE2.Core" />
+	<module fulltype="Composestar.Core.SIGN2.Sign" />
+	<module fulltype="Composestar.Core.DIGGER2.DIGGER" />
+	<module fulltype="Composestar.Core.CKRET.CKRET" />
+	<module name="ASTRA" fulltype="Composestar.Java.TYM.SignatureTransformer.JavaSignatureTransformer" enabled="true"
+		incremental="false" summary="">
+		<dependencies></dependencies>
 	</module>
-	<module name="CORE" fulltype="Composestar.Core.CORE2.Core" enabled="true" incremental="false" summary="Detecting conflicts...">
-		<dependencies></dependencies>	
-	</module>
-	<module name="SIGN" fulltype="Composestar.Core.SIGN2.Sign" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Generating signatures..." >
-		<dependencies>
-			<dependency type="OBJECT" name="signature" store="true" lookup="true">
-				<path>
-					<node type="FIELD" nodevalue="platformRepr"></node>
-					<node type="FIELD" nodevalue="Methods"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="zmodules" store="true" lookup="true">
-				<path>
-					<node type="DYNAMIC" nodevalue="superImpInfo"></node>
-					<node type="FIELD" nodevalue="theFmSIinfo"></node>
-				</path>
-			</dependency>
-		</dependencies>
-		<comparisons>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
-				<field name="name"></field>
-				<field name="ref"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
-				<field name="internals"></field>
-				<field name="externals"></field>
-				<field name="inputFilters"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal">
-				<path>
-					<method name="getName"></method>
-				</path>
-				<path>
-					<method name="getType"></method>
-					<method name="getQualifiedName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External">
-				<path>
-					<method name="getName"></method>
-				</path>
-				<path>
-					<method name="getType"></method>
-					<method name="getQualifiedName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
-				<field name="filterElements"></field>
-				<path>
-					<field name="type"></field>
-					<method name="getType"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
-				<field name="conditionPart"></field>
-				<field name="enableOperatorType"></field>
-				<field name="matchingPatterns"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
-				<field name="left"></field>
-				<field name="right"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
-				<field name="matchType"></field>
-				<path>
-					<method name="getTarget"></method>
-					<method name="getName"></method>
-				</path>
-				<path>
-					<method name="getSelector"></method>
-					<method name="getName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
-				<path>
-					<method name="getTarget"></method>
-					<method name="getName"></method>
-				</path>
-				<path>
-					<method name="getSelector"></method>
-					<method name="getName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.DotNET.LAMA.DotNETMethodInfo">
-				<field name="Name"></field>
-				<field name="ReturnTypeString"></field>
-				<field name="Parameters"></field>
-			</type> 
-			<type fullname="Composestar.DotNET.LAMA.DotNETParameterInfo">
-				<field name="Name"></field>
-				<field name="ParameterTypeString"></field>
-			</type>
-		</comparisons>
-	</module>
-	<module name="SECRET" fulltype="Composestar.Core.CKRET.CKRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
-		<dependencies>
-			<dependency type="FILE" name="SECRETConfigFile">
-				<path>
-					<node type="CONFIG" nodevalue="SECRETConfigFile"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="SECRETMode" store="true" lookup="true">
-				<path>
-					<node type="CONFIG" nodevalue="SECRETMode"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="filtermoduleorders">
-				<path>
-					<node type="DYNAMIC" nodevalue="FilterModuleOrders"></node>
-				</path>		
-			</dependency>
-		</dependencies>	
-		<comparisons>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
-				<field name="name"></field>
-				<field name="ref"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
-				<field name="inputFilters"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
-				<field name="filterElements"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
-				<field name="conditionPart"></field>
-				<field name="matchingPatterns"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral">
-				<path>
-					<method name="getCondition"></method>
-					<method name="getRef"></method>
-					<method name="getQualifiedName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
-				<field name="left"></field>
-				<field name="right"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
-				<path>
-					<method name="getTarget"></method>
-					<method name="getName"></method>
-				</path>
-				<path>
-					<method name="getSelector"></method>
-					<method name="getName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
-				<path>
-					<method name="getTarget"></method>
-					<method name="getName"></method>
-				</path>
-				<path>
-					<method name="getSelector"></method>
-					<method name="getName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector">
-				<field name="typeList"></field>
-			</type>
-		</comparisons>
-	</module>
-	<module name="ASTRA" fulltype="Composestar.Java.TYM.SignatureTransformer.JavaSignatureTransformer" enabled="true" incremental="false" summary="">
-		<dependencies></dependencies>	
-	</module>
-	<module name="RECOMA" fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" input="java.lang.String" enabled="true" incremental="false" summary="Compiling all sources...">
-		<dependencies>
-			<dependency type="FILE" name="source"></dependency>
-			<dependency type="FILE" name="xternals">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.Core.TYM.SrcCompiler.RealSourceManager.externalSources"></node>
-				</path>
-			</dependency>
-			<dependency type="FILE" name="CompileLibsDependencies">
-				<path>
-					<node type="CONFIG" nodevalue="Dependencies"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="fullsignatures">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.Core.TYM.SrcCompiler.RealSourceManager.fullSignatures"></node>
-				</path>
-			</dependency>
-		</dependencies>
-		<comparisons>
-			<type fullname="Composestar.Core.CpsProgramRepository.Signature">
-				<field name="methodByKey"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.MethodWrapper">
-				<field name="RelationType"></field>
-			</type>
-		</comparisons>
-	</module>
+	<module fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" />
 	<module name="CONE" fulltype="Composestar.Java.CONE.JavaCONE" enabled="true" incremental="false" summary="">
-		<dependencies></dependencies>	
+		<dependencies></dependencies>
 	</module>
-	<module name="WEAVER" fulltype="Composestar.Java.WEAVER.JavaWeaver" enabled="true" incremental="false" summary="Weaving classes...">
-		<dependencies></dependencies>	
+	<module name="WEAVER" fulltype="Composestar.Java.WEAVER.JavaWeaver" enabled="true" incremental="false"
+		summary="Weaving classes...">
+		<dependencies></dependencies>
 	</module>
-	<module name="BACO" fulltype="Composestar.Java.BACO.JavaBACO" enabled="true" incremental="false" summary="copying libraries...">
-		<dependencies></dependencies>	
+	<module name="BACO" fulltype="Composestar.Java.BACO.JavaBACO" enabled="true" incremental="false"
+		summary="copying libraries...">
+		<dependencies></dependencies>
 	</module>
+	<module fulltype="Composestar.Core.INCRE.INCRESerializer" />
 </modules>

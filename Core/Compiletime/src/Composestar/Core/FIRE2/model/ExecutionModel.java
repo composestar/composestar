@@ -6,13 +6,14 @@
  */
 package Composestar.Core.FIRE2.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
 
 /**
  * @author Arjan de Roo
  */
-public interface ExecutionModel
+public interface ExecutionModel extends Serializable
 {
 
 	public Iterator getEntranceStates();

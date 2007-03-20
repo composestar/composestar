@@ -6,12 +6,13 @@
  */
 package Composestar.Core.FIRE2.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
  * @author Arjan de Roo
  */
-public abstract class ExecutionState
+public abstract class ExecutionState implements Serializable
 {
 	private FlowNode flowNode;
 

@@ -6,10 +6,12 @@
  */
 package Composestar.Core.FIRE2.model;
 
+import java.io.Serializable;
+
 /**
  * @author Arjan
  */
-public interface FlowTransition
+public interface FlowTransition extends Serializable
 {
 	public static final int FLOW_NEXT_TRANSITION = 1;
 

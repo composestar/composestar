@@ -23,7 +23,7 @@
 	<module fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexRunner" />
 	<module fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexCollector" />
 	<module fulltype="Composestar.Core.CKRET.CKRET" />
-	<module fulltype="Composestar.Core.INCRE.INCRESerializer" />
 	<module fulltype="Composestar.DotNET.CONE.DotNETRepositorySerializer" />
 	<module fulltype="Composestar.DotNET.BACO.DotNETBACO" />
+	<module fulltype="Composestar.Core.INCRE.INCRESerializer" />
 </modules>

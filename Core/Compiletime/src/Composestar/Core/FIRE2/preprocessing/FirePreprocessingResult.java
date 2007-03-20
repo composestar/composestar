@@ -6,22 +6,16 @@
  */
 package Composestar.Core.FIRE2.preprocessing;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FlowModel;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * @author Arjan de Roo
  */
-public class FirePreprocessingResult extends RepositoryEntity
+public class FirePreprocessingResult implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4193686682386435353L;
 
 	private FlowModel flowModelInputFilters;
@@ -74,21 +68,5 @@ public class FirePreprocessingResult extends RepositoryEntity
 	public FlowModel getFlowModelOutputFilters()
 	{
 		return flowModelOutputFilters;
-	}
-
-	/**
-	 * Custom deserialization of this object
-	 */
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-	{
-
-	}
-
-	/**
-	 * Custom serialization of this object
-	 */
-	private void writeObject(ObjectOutputStream out) throws IOException
-	{
-
 	}
 }

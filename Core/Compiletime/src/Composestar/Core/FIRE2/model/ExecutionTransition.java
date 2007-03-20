@@ -6,10 +6,12 @@
  */
 package Composestar.Core.FIRE2.model;
 
+import java.io.Serializable;
+
 /**
  * @author Arjan de Roo
  */
-public abstract class ExecutionTransition
+public abstract class ExecutionTransition implements Serializable
 {
 	/*
 	 * Transition labels

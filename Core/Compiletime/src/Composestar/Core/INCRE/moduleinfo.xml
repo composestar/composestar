@@ -28,7 +28,7 @@
 		<settings>
 			<setting id="force" type="boolean">
 				<name>Force serialization even if INCRE is not enabled.</name>
-				<default>False</default>
+				<default>True</default>
 			</setting>
 		</settings>
 		<incre>

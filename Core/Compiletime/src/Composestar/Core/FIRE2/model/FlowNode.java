@@ -4,6 +4,7 @@
  */
 package Composestar.Core.FIRE2.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
@@ -13,7 +14,7 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  * 
  * @author Arjan de Roo
  */
-public interface FlowNode
+public interface FlowNode extends Serializable
 {
 	/*
 	 * Names (labels) a FlowNode can have

@@ -15,9 +15,6 @@ import groove.lts.DefaultGraphState;
 import groove.lts.DefaultGraphTransition;
 import groove.lts.GTS;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -34,7 +31,6 @@ import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
 import Composestar.Core.FIRE2.model.Message;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * @author Arjan de Roo
@@ -258,11 +254,8 @@ public class ExecutionModelExtractor
 		stateTable.put(state, executionState);
 	}
 
-	private static class BasicExecutionModel extends RepositoryEntity implements ExecutionModel
+	private static class BasicExecutionModel implements ExecutionModel
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 5744523627232722542L;
 
 		private Hashtable entranceStates;
@@ -310,7 +303,8 @@ public class ExecutionModelExtractor
 
 			if (state == null)
 			{
-				//FIXME Undistinguishable target/selector instead of star target/selector
+				// FIXME Undistinguishable target/selector instead of star
+				// target/selector
 				state = (ExecutionState) entranceStates.get(new Message(Message.STAR_TARGET, message.getSelector()));
 			}
 			if (state == null)
@@ -370,27 +364,12 @@ public class ExecutionModelExtractor
 		{
 			return entranceStates.containsKey(message);
 		}
-
-		/**
-		 * Custom deserialization of this object
-		 */
-		private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-		{
-
-		}
-
-		/**
-		 * Custom serialization of this object
-		 */
-		private void writeObject(ObjectOutputStream out) throws IOException
-		{
-
-		}
-
 	}
 
 	private static class BasicExecutionState extends ExecutionState
 	{
+		private static final long serialVersionUID = 8401857631585252335L;
+
 		private Vector outTransitions;
 
 		private Vector inTransitions;
@@ -436,6 +415,8 @@ public class ExecutionModelExtractor
 
 	private static class BasicExecutionTransition extends ExecutionTransition
 	{
+		private static final long serialVersionUID = 1390340320821654085L;
+
 		/**
 		 * The startState
 		 */

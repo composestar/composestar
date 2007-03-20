@@ -6,12 +6,13 @@
  */
 package Composestar.Core.FIRE2.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
  * @author Arjan
  */
-public interface FlowModel
+public interface FlowModel extends Serializable
 {
 
 	/**
