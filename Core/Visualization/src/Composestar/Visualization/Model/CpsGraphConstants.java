@@ -42,6 +42,13 @@ public class CpsGraphConstants extends GraphConstants
 	public static final String LANE_WIDTH = "cpsLaneWidth";
 
 	public static final int DEFAULT_LANE_WIDTH = 10;
+	
+	/**
+	 * Skew used by the parallelogramvie
+	 */
+	public static final String SKEW = "cpsSkew";
+
+	public static final int DEFAULT_SKEW = 10;
 
 	public enum Layout
 	{
@@ -101,5 +108,20 @@ public class CpsGraphConstants extends GraphConstants
 	public static final void setLaneWidth(Map map, int width)
 	{
 		map.put(LANE_WIDTH, Integer.valueOf(width));
+	}
+	
+	public static final int getSkew(Map map)
+	{
+		Integer res = (Integer) map.get(SKEW);
+		if (res == null)
+		{
+			return DEFAULT_SKEW;
+		}
+		return res.intValue();
+	}
+
+	public static final void setSkew(Map map, int width)
+	{
+		map.put(SKEW, Integer.valueOf(width));
 	}
 }
