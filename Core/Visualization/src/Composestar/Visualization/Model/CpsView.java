@@ -67,6 +67,6 @@ public abstract class CpsView
 		graph.setEditable(false);
 		graph.setGridVisible(true); // meh
 	}
-	
+
 	public abstract String getName();
 }

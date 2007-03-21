@@ -18,7 +18,7 @@ import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 import javax.swing.tree.MutableTreeNode;
 
 import org.jgraph.graph.AttributeMap;
@@ -104,8 +104,8 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 		Rectangle2D bounds = new Rectangle2D.Double(0, idx * entryHeight, entryWidth, entryHeight);
 		Map map = cell.getAttributes();
 		GraphConstants.setBounds(map, bounds);
-		GraphConstants.setHorizontalAlignment(map, JLabel.LEFT);
-		GraphConstants.setHorizontalTextPosition(map, JLabel.RIGHT);
+		GraphConstants.setHorizontalAlignment(map, SwingConstants.LEFT);
+		GraphConstants.setHorizontalTextPosition(map, SwingConstants.RIGHT);
 
 		Icon ico = ClassMembersVertex.getIcon(visibility);
 		if (ico != null)
@@ -133,7 +133,7 @@ public abstract class ClassMembersVertex extends BaseGraphCell
 		Rectangle2D bounds = new Rectangle2D.Double(0, 0, entryWidth, 4);
 		Map map = cell.getAttributes();
 		GraphConstants.setBounds(map, bounds);
-		GraphConstants.setHorizontalAlignment(map, JLabel.LEFT);
+		GraphConstants.setHorizontalAlignment(map, SwingConstants.LEFT);
 		add(cell);
 	}
 

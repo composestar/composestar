@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 import org.apache.log4j.Level;
@@ -70,9 +72,9 @@ public class Log4jMessage extends JDialog
 		{
 			StringBuffer sb = new StringBuffer();
 			String[] traceMsg = event.getThrowableStrRep();
-			for (int i = 0; i < traceMsg.length; i++)
+			for (String element : traceMsg)
 			{
-				sb.append(traceMsg[i]);
+				sb.append(element);
 				sb.append("\n");
 			}
 			trace.setText(sb.toString());
@@ -123,9 +125,9 @@ public class Log4jMessage extends JDialog
 	private void initialize()
 	{
 		this.setSize(400, 200);
-		this.setContentPane(getContent());
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		this.setModal(true);
+		setContentPane(getContent());
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setModal(true);
 	}
 
 	/**
@@ -179,7 +181,7 @@ public class Log4jMessage extends JDialog
 		if (tabs == null)
 		{
 			tabs = new JTabbedPane();
-			tabs.setTabPlacement(JTabbedPane.TOP);
+			tabs.setTabPlacement(SwingConstants.TOP);
 			tabs.addTab("Message", null, getMessage(), null);
 			tabs.addTab("Trace", null, getTraceScroll(), null);
 		}
@@ -213,8 +215,8 @@ public class Log4jMessage extends JDialog
 		if (traceScroll == null)
 		{
 			traceScroll = new JScrollPane();
-			traceScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-			traceScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			traceScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+			traceScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			traceScroll.setViewportView(getTrace());
 		}
 		return traceScroll;

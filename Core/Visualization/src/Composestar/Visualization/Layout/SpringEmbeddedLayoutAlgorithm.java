@@ -182,6 +182,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 	/**
 	 * Returns the name of this algorithm in human readable form.
 	 */
+	@Override
 	public String toString()
 	{
 		return "Spring Embedded";
@@ -225,6 +226,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 	 * @param staticCells : List of node the layout should not move but allow
 	 *            for
 	 */
+	@Override
 	public void run(JGraph graph, Object[] dynamicCells, Object[] staticCells)
 	{
 
@@ -295,11 +297,8 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 
 	private void partitionCells(CellView[] cells, List<VertexView> vertices, List<EdgeView> edges)
 	{
-		// Partition the list of cells into list of vertices and list of edges
-		for (int loop = 0; loop < cells.length; loop++)
+		for (CellView cell : cells)
 		{
-			CellView cell = cells[loop];
-
 			if (cell == null)
 			{
 				// Skip over null cells
@@ -327,7 +326,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		Random random = new Random();
 		for (int loop = 0; loop < vertices.size(); loop++)
 		{
-			VertexView vertex = (VertexView) vertices.get(loop);
+			VertexView vertex = vertices.get(loop);
 			Rectangle2D bounds = vertex.getBounds();
 			updateVertexPosition(vertex, SPRING_EMBEDDED_ORIGPOS, bounds);
 			vertW = (int) bounds.getWidth();
@@ -367,7 +366,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		// calculate the repulsive forces
 		for (int vCount = 0; vCount < vertices.size(); vCount++)
 		{
-			VertexView v = (VertexView) vertices.get(vCount);
+			VertexView v = vertices.get(vCount);
 
 			Rectangle2D vPos = getVertexPosition(v, SPRING_EMBEDDED_POS);
 
@@ -377,7 +376,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 			Rectangle vDisp = new Rectangle(0, 0);
 			for (int uCount = 0; uCount < vertices.size(); uCount++)
 			{
-				VertexView u = (VertexView) vertices.get(uCount);
+				VertexView u = vertices.get(uCount);
 
 				if (u != v)
 				{
@@ -431,7 +430,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 
 		for (int cellCount = 0; cellCount < edges.size(); cellCount++)
 		{
-			e = (EdgeView) edges.get(cellCount);
+			e = edges.get(cellCount);
 
 			if (e.getSource() != null && e.getTarget() != null && e.getSource() != e.getTarget())
 			{
@@ -500,7 +499,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		// vertices without edges
 		for (int cellCount = 0; cellCount < verticesWithoutEdges.size(); cellCount++)
 		{
-			VertexView vertex = (VertexView) verticesWithoutEdges
+			VertexView vertex = verticesWithoutEdges
 
 			.get(cellCount);
 
@@ -556,7 +555,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		// Remove all vertices of edges
 		for (int i = 0; i < edges.size(); i++)
 		{
-			EdgeView e = (EdgeView) edges.get(i);
+			EdgeView e = edges.get(i);
 			CellView source = e.getSource().getParentView();
 			CellView target = e.getTarget().getParentView();
 
@@ -596,7 +595,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 
 		for (int vCount = 0; vCount < vertices.size(); vCount++)
 		{
-			VertexView v = (VertexView) vertices.get(vCount);
+			VertexView v = vertices.get(vCount);
 			Rectangle2D vDisp = getVertexPosition(v, SPRING_EMBEDDED_DISP);
 			Rectangle2D vPos = getVertexPosition(v, SPRING_EMBEDDED_POS);
 
@@ -634,7 +633,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 
 		for (int vCount = 0; vCount < vertices.size(); vCount++)
 		{
-			VertexView v = (VertexView) vertices.get(vCount);
+			VertexView v = vertices.get(vCount);
 			Rectangle2D vPos = getVertexPosition(v, SPRING_EMBEDDED_POS);
 
 			// System.out.println( "vertex get: vPos = " + vPos ) ;
@@ -683,9 +682,9 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		// ---------------------------------------------------------------------------
 		Map<CellView, AttributeMap> viewMap = new Hashtable<CellView, AttributeMap>();
 
-		for (int loop = 0; loop < cells.length; loop++)
+		for (CellView element : cells)
 		{
-			CellView cell = cells[loop];
+			CellView cell = element;
 
 			if (cell == null)
 			{
@@ -721,7 +720,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 					vertex.changeAttributes(vertAttrib);
 					// The statement above fixes a bug in the original code
 
-					viewMap.put(cells[loop], vertAttrib);
+					viewMap.put(element, vertAttrib);
 				}
 				else
 				{

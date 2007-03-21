@@ -15,7 +15,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
-import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import org.jgraph.graph.GraphConstants;
 
@@ -46,7 +46,7 @@ public class FilterVertex extends BaseGraphCell
 		Point2D offset;
 		if (direction == FireModel.OUTPUT_FILTERS)
 		{
-			GraphConstants.setHorizontalAlignment(getAttributes(), JLabel.RIGHT);
+			GraphConstants.setHorizontalAlignment(getAttributes(), SwingConstants.RIGHT);
 			offset = new Point2D.Double(GraphConstants.PERMILLE, GraphConstants.PERMILLE / 2);
 		}
 		else
@@ -62,6 +62,7 @@ public class FilterVertex extends BaseGraphCell
 		return (Filter) getUserObject();
 	}
 
+	@Override
 	public String toString()
 	{
 		return label;
@@ -72,7 +73,7 @@ public class FilterVertex extends BaseGraphCell
 	{
 		Map map = getAttributes();
 		GraphConstants.setFont(map, new Font("sansserif", Font.PLAIN, 11));
-		GraphConstants.setHorizontalAlignment(map, JLabel.LEFT);
+		GraphConstants.setHorizontalAlignment(map, SwingConstants.LEFT);
 		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 80, 14);
 		GraphConstants.setBounds(map, bounds);
 	}

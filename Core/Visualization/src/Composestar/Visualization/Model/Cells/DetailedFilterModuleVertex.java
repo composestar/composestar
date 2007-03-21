@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultPort;
@@ -143,6 +143,7 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 		return null;
 	}
 
+	@Override
 	public String toString()
 	{
 		return null;
@@ -195,6 +196,7 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 		outputFilters.translate(bounds.getX() + bounds.getWidth() - outputFilters.calcBounds().getX() + INSET, 0);
 	}
 
+	@Override
 	protected void setDefaults()
 	{
 		AttributeMap attrs = getAttributes();
@@ -277,7 +279,7 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 		AttributeMap map = cell.getAttributes();
 		cell.setUserObject(msg);
 		GraphConstants.setForeground(map, Color.GRAY);
-		GraphConstants.setHorizontalAlignment(map, JLabel.CENTER);
+		GraphConstants.setHorizontalAlignment(map, SwingConstants.CENTER);
 		GraphConstants.setFont(map, new Font("sansserif", Font.ITALIC, 10));
 		int width = 10;
 		if (msg != null)

@@ -80,6 +80,7 @@ public class FilterModuleConcernVertex extends AbstractFilterModuleConcernVertex
 	 * 
 	 * @param concern
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected void addFmVertices(Concern concern)
 	{

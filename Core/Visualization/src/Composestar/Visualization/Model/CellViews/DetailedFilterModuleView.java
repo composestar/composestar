@@ -34,6 +34,7 @@ public class DetailedFilterModuleView extends LineSeparationView
 		separators = new double[2];
 	}
 
+	@Override
 	public void update()
 	{
 		CellView[] childViews = getChildViews();

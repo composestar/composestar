@@ -15,7 +15,7 @@ import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.EnumSet;
 
-import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultPort;
@@ -94,14 +94,14 @@ public class ClassVertex extends BaseGraphCell
 		GraphConstants.setEditable(attrs, false);
 		GraphConstants.setChildrenSelectable(attrs, false);
 		GraphConstants.setBorderColor(attrs, Color.BLACK);
-		GraphConstants.setVerticalAlignment(attrs, JLabel.TOP);
+		GraphConstants.setVerticalAlignment(attrs, SwingConstants.TOP);
 		GraphConstants.setFont(attrs, GraphConstants.getFont(attrs).deriveFont(Font.BOLD, 12));
 		GraphConstants.setGroupOpaque(attrs, true);
 		GraphConstants.setOpaque(attrs, true);
 		GraphConstants.setBackground(attrs, new Color(0xEEEEFF));
 		GraphConstants.setInset(attrs, INSET);
 		GraphConstants.setSizeableAxis(attrs, GraphConstants.X_AXIS);
-		GraphConstants.setHorizontalAlignment(attrs, JLabel.CENTER);
+		GraphConstants.setHorizontalAlignment(attrs, SwingConstants.CENTER);
 		CpsGraphConstants.setLabelHeight(attrs, LABELHEIGHT);
 	}
 
@@ -169,6 +169,7 @@ public class ClassVertex extends BaseGraphCell
 		return platformRep.getFullName();
 	}
 
+	@Override
 	public String toString()
 	{
 		return getClassName();

@@ -35,6 +35,7 @@ public class FilterModuleVertex extends BaseGraphCell
 		super(fm);
 	}
 
+	@Override
 	protected void setDefaults()
 	{
 		AttributeMap attrs = getAttributes();
@@ -58,6 +59,7 @@ public class FilterModuleVertex extends BaseGraphCell
 		return (FilterModule) getUserObject();
 	}
 
+	@Override
 	public String toString()
 	{
 		return getFilterModule().getOriginalQualifiedName();

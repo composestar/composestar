@@ -36,6 +36,7 @@ import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.VisCom;
 import Composestar.Visualization.Model.CpsJGraph;
 import Composestar.Visualization.Model.CpsView;
+import Composestar.Visualization.Model.FilterActionView;
 import Composestar.Visualization.Model.ProgramView;
 import Composestar.Visualization.Model.Cells.ConcernVertex;
 import Composestar.Visualization.UI.Actions.ActionManager;
@@ -92,7 +93,10 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 		// TODO: dev only
 		if (controller.getViewManager() != null)
 		{
-			openProgramView(controller.getViewManager().getProgramView().getGraph());
+			// just for testing
+			openGraph((new FilterActionView(null, null, null)).getGraph());
+
+			//openProgramView(controller.getViewManager().getProgramView().getGraph());
 		}
 	}
 
@@ -103,12 +107,12 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 	 */
 	private void initialize()
 	{
-		this.setTitle("Compose* Visualization [alpha]");
-		this.setContentPane(getViews());
-		this.setJMenuBar(getMainMenu());
+		setTitle("Compose* Visualization [alpha]");
+		setContentPane(getViews());
+		setJMenuBar(getMainMenu());
 		this.setSize(new Dimension(627, 484));
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		this.setVisible(true);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setVisible(true);
 	}
 
 	/**
@@ -387,11 +391,13 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 		views.setSelectedComponent(views.add(newGraph.getName(), new JScrollPane(newGraph)));
 		newGraph.addMouseListener(new MouseAdapter()
 		{
+			@Override
 			public void mousePressed(MouseEvent e)
 			{
 				maybeShowPopup(e);
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e)
 			{
 				maybeShowPopup(e);

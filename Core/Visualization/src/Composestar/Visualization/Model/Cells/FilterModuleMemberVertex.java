@@ -18,7 +18,7 @@ import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
@@ -56,6 +56,7 @@ public class FilterModuleMemberVertex extends BaseGraphCell
 		processEntity(entity);
 	}
 
+	@Override
 	public String toString()
 	{
 		return label;
@@ -68,12 +69,13 @@ public class FilterModuleMemberVertex extends BaseGraphCell
 		return null;
 	}
 
+	@Override
 	protected void setDefaults()
 	{
 		Map map = getAttributes();
 		GraphConstants.setFont(map, new Font("sansserif", Font.PLAIN, 11));
-		GraphConstants.setHorizontalAlignment(map, JLabel.LEFT);
-		GraphConstants.setHorizontalTextPosition(map, JLabel.RIGHT);
+		GraphConstants.setHorizontalAlignment(map, SwingConstants.LEFT);
+		GraphConstants.setHorizontalTextPosition(map, SwingConstants.RIGHT);
 		Rectangle2D bounds = new Rectangle2D.Double(0, 0, 100, 14);
 		GraphConstants.setBounds(map, bounds);
 	}

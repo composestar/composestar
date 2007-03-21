@@ -126,14 +126,14 @@ public class FilterView extends CpsView
 		Edge edge = new DefaultEdge(fe.asSourceCode());
 		edge.setSource(sourcePort);
 		edge.setTarget(targetPort);
-		
+
 		Map map = edge.getAttributes();
 		GraphConstants.setLineColor(map, Color.BLACK);
 		GraphConstants.setEndFill(map, true);
 		GraphConstants.setLineEnd(map, GraphConstants.ARROW_CLASSIC);
 		GraphConstants.setLineStyle(map, GraphConstants.STYLE_SPLINE);
 		GraphConstants.setRouting(map, JGraphParallelRouter.getSharedInstance());
-		
+
 		layout.insert(edge);
 	}
 }

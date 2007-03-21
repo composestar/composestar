@@ -77,6 +77,7 @@ public class ImageExporter extends FileGraphExporter
 	/**
 	 * Defaults to PNG
 	 */
+	@Override
 	public File setDefaultExtention(File filename)
 	{
 		String format = FileUtils.getExtension(filename);
@@ -87,6 +88,7 @@ public class ImageExporter extends FileGraphExporter
 		return filename;
 	}
 
+	@Override
 	public String getDescription()
 	{
 		return "Image files";

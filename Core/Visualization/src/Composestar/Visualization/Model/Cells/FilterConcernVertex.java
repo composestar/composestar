@@ -91,7 +91,10 @@ public class FilterConcernVertex extends AbstractFilterModuleConcernVertex
 			if (last != null)
 			{
 				Rectangle2D bounds = last.calcBounds();
-				if (bounds != null) fmVertex.translate(0, bounds.getY() + bounds.getHeight() - 1);
+				if (bounds != null)
+				{
+					fmVertex.translate(0, bounds.getY() + bounds.getHeight() - 1);
+				}
 			}
 
 			if (idx == 0)

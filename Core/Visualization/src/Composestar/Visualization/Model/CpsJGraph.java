@@ -79,6 +79,7 @@ public class CpsJGraph extends JGraph
 		cpsView = inView;
 	}
 
+	@Override
 	public String getName()
 	{
 		if (cpsView == null)
@@ -96,6 +97,7 @@ public class CpsJGraph extends JGraph
 	/**
 	 * Returns the most relevant tooltip
 	 */
+	@Override
 	public String getToolTipText(MouseEvent event)
 	{
 		double x = event.getX();

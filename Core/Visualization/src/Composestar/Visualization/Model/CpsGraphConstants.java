@@ -36,6 +36,13 @@ public class CpsGraphConstants extends GraphConstants
 	 */
 	public static final String SEPARATOR_PATTERN = "cpsSeparatorPattern";
 
+	/**
+	 * Lane width, used by the LaneRectView/Renderer
+	 */
+	public static final String LANE_WIDTH = "cpsLaneWidth";
+
+	public static final int DEFAULT_LANE_WIDTH = 10;
+
 	public enum Layout
 	{
 		HORIZONTAL, VERTICAL
@@ -79,5 +86,20 @@ public class CpsGraphConstants extends GraphConstants
 	public static final float[] getSeparatorPattern(Map map)
 	{
 		return (float[]) map.get(SEPARATOR_PATTERN);
+	}
+
+	public static final int getLaneWidth(Map map)
+	{
+		Integer res = (Integer) map.get(LANE_WIDTH);
+		if (res == null)
+		{
+			return DEFAULT_LANE_WIDTH;
+		}
+		return res.intValue();
+	}
+
+	public static final void setLaneWidth(Map map, int width)
+	{
+		map.put(LANE_WIDTH, Integer.valueOf(width));
 	}
 }
