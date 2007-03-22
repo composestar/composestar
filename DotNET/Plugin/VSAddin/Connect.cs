@@ -3,6 +3,7 @@ using Microsoft.Office.Core;
 using Extensibility;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.ComponentModel;
 using EnvDTE;
 using Ini;
 using System.Collections;
@@ -82,12 +83,14 @@ namespace ComposestarVSAddin
 		private readonly string   m_commandNameBuild;
 		private readonly string   m_commandNameRun;
 		private readonly string   m_commandNameDebugRun;
+		private readonly string   m_commandNameVisualization;
 		private readonly string   m_commandNameSettings;
 		private readonly string   m_commandNameClean;
 
 		private const string ADDIN_BUILD        = "Build";
 		private const string ADDIN_RUN          = "Run";
 		private const string ADDIN_DEBUGRUN     = "Debug";
+		private const string ADDIN_VISUALIZATION= "Visualization";
 		private const string ADDIN_CLEAN        = "Clean";
 		private const string ADDIN_SETTINGS     = "Settings";
 
@@ -95,17 +98,20 @@ namespace ComposestarVSAddin
 		private const int    BITMAP_ID_CLEAN    = 1786;    // 1088 1786 67 
 		private const int    BITMAP_ID_RUN      = 2945; // alternatives: 186 2997 3820
 		private const int    BITMAP_ID_DEBUGRUN = 3820; // alternatives: 186 2997 3820
+		private const int    BITMAP_ID_VISUALIZATION = 3484; // alt: 190 523 1048 3484 6074
 		private const int    BITMAP_ID_SETTINGS = 642;  // alternatives: 1951 2597 2770
 
 		private string m_captionBuild ="&Build" ;
 		private string m_captionRun = "&Run";
 		private string m_captionDebugRun = "&Debug";
+		private string m_captionVisualization = "&Visualization";
 		private string m_captionSettings = "&Settings";
 		private string m_captionClean = "&Clean";
 
 		private string m_toolTipBuild = "Will invoke Compose* to build the current solution";
 		private string m_toolTipRun = "Will invoke application build with Compose*";
 		private string m_toolTipDebugRun = "Will debug application build with Compose*";
+		private string m_toolTipVisualization = "Open the visualization of the Compose* program";
 		private string m_toolTipSettings = "Opens the Compose* settings dialog";
 		private string m_toolTipClean = "Cleans the previous Compose* build information";
 		
@@ -142,6 +148,7 @@ namespace ComposestarVSAddin
 			m_commandNameBuild = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_BUILD;
 			m_commandNameRun = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_RUN;
 			m_commandNameDebugRun = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_DEBUGRUN;
+			m_commandNameVisualization = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_VISUALIZATION;
 			m_commandNameSettings = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_SETTINGS;
 			m_commandNameClean = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_CLEAN;
 		}
@@ -214,6 +221,7 @@ namespace ComposestarVSAddin
 					AddCommand((AddIn)addInInst, ADDIN_BUILD, m_captionBuild, m_toolTipBuild, true, BITMAP_ID_BUILD, false, true);
 					AddCommand((AddIn)addInInst, ADDIN_RUN, m_captionRun, m_toolTipRun, true, BITMAP_ID_RUN, false, true);
 					AddCommand((AddIn)addInInst, ADDIN_DEBUGRUN, m_captionDebugRun, m_toolTipDebugRun, true, BITMAP_ID_DEBUGRUN, false, true);
+					AddCommand((AddIn)addInInst, ADDIN_VISUALIZATION, m_captionVisualization, m_toolTipVisualization, true, BITMAP_ID_VISUALIZATION, false, true);
 					AddCommand((AddIn)addInInst, ADDIN_CLEAN, m_captionClean, m_toolTipClean, true, BITMAP_ID_CLEAN, false, false);
 					AddCommand((AddIn)addInInst, ADDIN_SETTINGS, m_captionSettings, m_toolTipSettings, true, BITMAP_ID_SETTINGS, true, true);
 						
@@ -253,7 +261,7 @@ namespace ComposestarVSAddin
 
 			if (neededText == EnvDTE.vsCommandStatusTextWanted.vsCommandStatusTextWantedNone) 
 			{
-				if (commandName == m_commandNameBuild || commandName == m_commandNameRun || commandName == m_commandNameDebugRun || commandName == m_commandNameSettings || commandName == m_commandNameClean) 
+				if (commandName == m_commandNameBuild || commandName == m_commandNameRun || commandName == m_commandNameDebugRun || commandName == m_commandNameVisualization || commandName == m_commandNameSettings || commandName == m_commandNameClean) 
 				{
 					UpdateStatus(commandName, ref status);
 				}
@@ -270,6 +278,7 @@ namespace ComposestarVSAddin
 			QueryStatus(m_commandNameBuild, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameRun, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameDebugRun, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
+			QueryStatus(m_commandNameVisualization, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameSettings, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameClean, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 		}
@@ -292,6 +301,22 @@ namespace ComposestarVSAddin
 			{
 				// Build is only enabled when there is a project loaded
 				if (m_referenceBuildCommand.IsAvailable && (!m_referenceCancelBuildCommand.IsAvailable)) 
+					status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
+				else 
+					status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported & ~(vsCommandStatus)vsCommandStatus.vsCommandStatusEnabled;
+			}
+			else if (commandName == m_commandNameVisualization)
+			{
+				bool cchzAvail = false;
+
+				if (m_referenceBuildCommand.IsAvailable && (!m_referenceCancelBuildCommand.IsAvailable))
+				{
+					string solutionfile = applicationObject.Solution.Properties.Item("Path").Value.ToString();
+					string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1).Replace("\\", "/");				
+					cchzAvail = File.Exists(Path.Combine(tempfolder, "ComposestarHistory.cchz"));
+				}
+
+				if (cchzAvail) 
 					status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
 				else 
 					status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported & ~(vsCommandStatus)vsCommandStatus.vsCommandStatusEnabled;
@@ -346,6 +371,12 @@ namespace ComposestarVSAddin
 				else if(commandName ==  m_commandNameDebugRun)
 				{
 					this.OnDebugRun();
+					handled = true;
+					return;
+				}
+				else if(commandName ==  m_commandNameVisualization)
+				{
+					this.OnVisualization();
 					handled = true;
 					return;
 				}
@@ -562,6 +593,25 @@ namespace ComposestarVSAddin
 			System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(lcid);
 		}
 
+		private string getComposestarPath()
+		{
+			// First get the composestar path from the registry
+			string path = "";
+			try
+			{
+				path = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Microsoft").OpenSubKey("VisualStudio").OpenSubKey("7.1").OpenSubKey("Addins").OpenSubKey("ComposestarVSAddin.Connect").GetValue("ComposestarPath").ToString();
+				return path;
+			}
+			catch (Exception)
+			{
+				//System.Windows.Forms.MessageBox.Show("Missing registry key 'ComposestarPath'. Please reinstall the Composestar tool.");
+				Debug.Instance.AddTaskItem(String.Format(CultureInfo.CurrentCulture,"Composestar; Composestar installpath not found. Please reinstall the Composestar tool."), 
+					vsTaskPriority.vsTaskPriorityHigh, vsTaskIcon.vsTaskIconUser );  
+				Debug.Instance.ActivateTaskListWindow(); 
+				return null;
+			}
+		}
+
 		/// <summary>
 		/// Performs a check for the existens of the composestar ini file using the registry.
 		/// </summary>
@@ -569,13 +619,11 @@ namespace ComposestarVSAddin
 		private bool ComposestarIniFileExists()
 		{
 			// First get the composestar path from the registry
-			string path = "";
 			string fullname;
 			string iniFileName = "Composestar.ini";
 			try
 			{
-				path = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Microsoft").OpenSubKey("VisualStudio").OpenSubKey("7.1").OpenSubKey("Addins").OpenSubKey("ComposestarVSAddin.Connect").GetValue("ComposestarPath").ToString();
-				fullname = System.IO.Path.Combine(path, iniFileName); 
+				fullname = System.IO.Path.Combine(getComposestarPath(), iniFileName); 
 
 				if (!System.IO.File.Exists(fullname)) 
 				{
@@ -1208,8 +1256,11 @@ namespace ComposestarVSAddin
 			Debug.Instance.Log("  removing repository.xml");
 			DeleteFile(Path.Combine(tempfolder, "repository.xml") );
 
-			Debug.Instance.Log("  removing history.dat");
-			DeleteFile(Path.Combine(tempfolder, "history.dat") );
+			Debug.Instance.Log("  removing repository.xml.gz");
+			DeleteFile(Path.Combine(tempfolder, "repository.xml.gz") );
+
+			Debug.Instance.Log("  removing ComposestarHistory.cchz");
+			DeleteFile(Path.Combine(tempfolder, "ComposestarHistory.cchz") );
 
 			Debug.Instance.Log("  removing filth.html");
 			DeleteFile(Path.Combine(tempfolder, "filth.html") );
@@ -1439,6 +1490,58 @@ namespace ComposestarVSAddin
 			}
 		
 			Debug.Instance.HideAnimation();
+		}
+
+		private void OnVisualization()
+		{
+			System.Diagnostics.Process p = new System.Diagnostics.Process();
+			//if (BuildConfigurationManager.Instance.Settings.Paths["JavaBin"] != null)
+			//{
+			//	p.StartInfo.FileName = Path.Combine(BuildConfigurationManager.Instance.Settings.Paths["JavaBin"], "java.exe");
+			//}
+			//else
+			//{
+				p.StartInfo.FileName = "java";
+			//}
+
+			string workdir = Path.Combine(getComposestarPath(), "Binaries");
+			
+			string composestarJar = "\"" + Path.Combine(workdir, "ComposestarVisualization.jar") + "\"";
+
+			string jvmOptions = "";
+			//string jvmOptions = BuildConfigurationManager.Instance.DotNetPlatform.Options;  
+
+			string solutionfile = applicationObject.Solution.Properties.Item("Path").Value.ToString();
+			string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1).Replace("\\", "/");				
+			string compHist = Path.Combine(tempfolder, "ComposestarHistory.cchz");
+			
+			p.StartInfo.Arguments = jvmOptions + " -jar " + composestarJar + " " + "\"" + compHist + "\"";
+			p.StartInfo.WorkingDirectory = workdir;
+			p.StartInfo.CreateNoWindow = true;
+			p.StartInfo.RedirectStandardOutput = false;
+			p.StartInfo.UseShellExecute = false;
+
+			try
+			{
+				p.Start();
+			}
+			catch (Win32Exception e)
+			{
+				if(e.NativeErrorCode == MasterManager.ERROR_FILE_NOT_FOUND)
+				{
+					//Console.WriteLine(e.Message + ". Check the path.");
+					Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", is not found, please add the Java executable to your path!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
+					Debug.Instance.ActivateTaskListWindow();
+				} 
+
+				else if (e.NativeErrorCode == MasterManager.ERROR_ACCESS_DENIED)
+				{
+					// Note that if your word processor might generate exceptions
+					// such as this, which are handled first.
+					Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", can not be accessed!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
+					Debug.Instance.ActivateTaskListWindow();
+				}
+			}
 		}
 
 		#endregion

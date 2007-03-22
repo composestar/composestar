@@ -655,6 +655,15 @@ namespace BuildConfiguration
 				ilicitModule.Elements.Add("verifyAssemblies", VerifyAssemblies)  ;
 				Settings.SetModule(ilicitModule);
 			}
+
+			String ForceSerialization = ini.ReadString("Common", "ForceINCRESerialization", "") ;
+			if (ForceSerialization.Length > 0)
+			{
+				ModuleSetting IncreSer = new ModuleSetting ();
+				IncreSer.Name = "INCRESerializer";
+				IncreSer.Elements.Add("force", ForceSerialization)  ;
+				Settings.SetModule(IncreSer);
+			}
 				
 			// Debugger
 			String DebuggerType = ini.ReadString("Global Composestar configuration", "DebuggerType", "") ;

@@ -17,8 +17,8 @@ namespace ComposestarVSAddin
 	{
 		private bool mSuccess = false;
 		private string moduleName = "Compose* Master; {0}";
-		const int ERROR_FILE_NOT_FOUND =2;
-		const int ERROR_ACCESS_DENIED = 5;
+		public const int ERROR_FILE_NOT_FOUND =2;
+		public const int ERROR_ACCESS_DENIED = 5;
 
 		public MasterManager() : base ()
 		{

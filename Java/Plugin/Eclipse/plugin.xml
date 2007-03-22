@@ -34,6 +34,12 @@
        		path="additions">
        		<separator name="slot1"/>
        	</menu>
+        <action
+              class="ComposestarEclipsePlugin.Core.Actions.VisAction"
+              enablesFor="1"
+              id="composestar.eclipse.plugin.java.action.visualization"
+              label="%COMPOSESTAR_POPUP_LABEL_VIS"
+              menubarPath="composestar.eclipse.plugin.java.popupmenu/slot1"/>
        	<action
             label="%COMPOSESTAR_POPUP_LABEL_RUN"
             menubarPath="composestar.eclipse.plugin.java.popupmenu/slot1" 

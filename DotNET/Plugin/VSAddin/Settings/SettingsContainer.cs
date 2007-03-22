@@ -33,6 +33,7 @@ namespace ComposestarVSAddin
 		private DebugModes _buildDebugLevel = DebugModes.NotSet;
 		private DebugModes _runDebugLevel = DebugModes.NotSet;
 		private TriStateBooleanModes _incremental = TriStateBooleanModes.NotSet;
+		private TriStateBooleanModes _forceSerialization = TriStateBooleanModes.NotSet;
 
 
 		[CategoryAttribute("User defined settings"),  
@@ -144,6 +145,22 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._incremental = value;
+				SetIsDirty(true);
+			}
+		}
+
+		[CategoryAttribute("User defined settings"),  
+		DescriptionAttribute("Force serialization of the compile time information. This is required for visualization."),
+		IniSettingFieldAttribute("ForceINCRESerialization", "Common")]
+		public TriStateBooleanModes ForceSerialization
+		{
+			get
+			{
+				return this._forceSerialization;
+			}
+			set 
+			{
+				this._forceSerialization = value;
 				SetIsDirty(true);
 			}
 		}
