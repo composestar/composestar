@@ -1,10 +1,10 @@
 package $rootnamespace$;
 
-import System;
-import System.Collections.Generic;
-import System.Text;
+import System.*;
+import System.Collections.Generic.*;
+import System.Text.*;
 
-import Composestar.StarLight.ContextInfo;
+import Composestar.StarLight.ContextInfo.*;
 
 class $safeitemname$
 {
