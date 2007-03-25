@@ -45,6 +45,8 @@ import Composestar.Visualization.Model.Routing.JGraphParallelRouter;
  */
 public class ProgramView extends CpsView
 {
+	private static final long serialVersionUID = 116245353850660900L;
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VizCom.View.ProgramView");
 
 	protected Map<Concern, FilterModuleConcernVertex> cells;

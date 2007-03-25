@@ -146,7 +146,7 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 	@Override
 	public String toString()
 	{
-		return null;
+		return "";
 	}
 
 	public BaseGraphCell getInputVertex()

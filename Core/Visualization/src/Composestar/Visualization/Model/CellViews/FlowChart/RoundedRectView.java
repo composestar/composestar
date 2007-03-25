@@ -15,7 +15,10 @@ import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
+import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.VertexRenderer;
@@ -64,6 +67,33 @@ public class RoundedRectView extends VertexView
 			Dimension res = super.getPreferredSize();
 			res.setSize(res.getWidth() * 1.2, res.getHeight() * 1.5);
 			return res;
+		}
+
+		@Override
+		public Point2D getPerimeterPoint(VertexView view, Point2D source, Point2D p)
+		{
+			Rectangle2D bounds = view.getBounds();
+			double off = bounds.getHeight() / 2.0;
+			Point2D pt = super.getPerimeterPoint(view, source, p);
+			if ((pt.getX() > bounds.getX() + off) && (pt.getX() < bounds.getX() + bounds.getWidth() - off))
+			{
+				return pt;
+			}
+			else
+			{
+				//TODO:!!!
+				/*
+				Point2D center = AbstractCellView.getCenterPoint(view);
+				double dx = p.getX() - center.getX();
+				double dy = p.getY() - center.getY();
+				double t = Math.tan(dy/dx);
+				System.err.println(dx + "," + dy+ " "+ t);
+				System.err.println("sin: "+Math.sin(t) * off);
+				System.err.println("cos: "+Math.cos(t) * off);
+				pt.setLocation(pt.getX() + (Math.cos(t) * off)-off, pt.getY() + (Math.sin(t) * off)-off);
+				*/
+				return pt;
+			}
 		}
 
 		@Override

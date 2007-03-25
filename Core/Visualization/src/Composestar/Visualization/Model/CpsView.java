@@ -10,6 +10,8 @@
 
 package Composestar.Visualization.Model;
 
+import java.io.Serializable;
+
 import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
@@ -19,7 +21,7 @@ import Composestar.Visualization.Model.CellViews.VisComCellViewFactory;
 /**
  * @author Michiel Hendriks
  */
-public abstract class CpsView
+public abstract class CpsView implements Serializable
 {
 	protected GraphModel model;
 

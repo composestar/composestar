@@ -48,7 +48,7 @@ public class ExitFlowVertex extends BaseGraphCell
 	@Override
 	public String toString()
 	{
-		return null;
+		return "";
 	}
 
 }

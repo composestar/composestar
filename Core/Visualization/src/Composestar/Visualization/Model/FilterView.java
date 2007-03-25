@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.Edge;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.Port;
@@ -33,6 +32,7 @@ import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.Model.Cells.AbstractFilterModuleConcernVertex;
 import Composestar.Visualization.Model.Cells.FilterConcernVertex;
+import Composestar.Visualization.Model.Cells.TrailEdge;
 import Composestar.Visualization.Model.Cells.FilterModuleConcernVertex;
 import Composestar.Visualization.Model.Cells.ClassVertex.MemberFlags;
 import Composestar.Visualization.Model.Routing.JGraphParallelRouter;
@@ -44,6 +44,8 @@ import Composestar.Visualization.Model.Routing.JGraphParallelRouter;
  */
 public class FilterView extends CpsView
 {
+	private static final long serialVersionUID = -3148135838165522197L;
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VizCom.View.FilterView");
 
 	protected Map<Concern, AbstractFilterModuleConcernVertex> cells;
@@ -123,7 +125,7 @@ public class FilterView extends CpsView
 		FilterElement fe = (FilterElement) trail.getRE();
 		Port sourcePort = focusVertex.getPortFor(fe.getParent());
 		Port targetPort = target.getPortFor(trail.getResultMessage(true));
-		Edge edge = new DefaultEdge(fe.asSourceCode());
+		Edge edge = new TrailEdge(trail);
 		edge.setSource(sourcePort);
 		edge.setTarget(targetPort);
 

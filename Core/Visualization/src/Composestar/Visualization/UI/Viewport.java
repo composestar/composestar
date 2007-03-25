@@ -12,6 +12,7 @@ package Composestar.Visualization.UI;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -31,19 +32,21 @@ import org.jgraph.JGraph;
 import org.jgraph.plugins.layouts.CircleGraphLayout;
 import org.jgraph.plugins.layouts.JGraphLayoutAlgorithm;
 
-import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.VisCom;
 import Composestar.Visualization.Model.CpsJGraph;
 import Composestar.Visualization.Model.CpsView;
-import Composestar.Visualization.Model.FilterActionView;
+import Composestar.Visualization.Model.FilterView;
 import Composestar.Visualization.Model.ProgramView;
 import Composestar.Visualization.Model.Cells.ConcernVertex;
+import Composestar.Visualization.Model.Cells.TrailEdge;
 import Composestar.Visualization.UI.Actions.ActionManager;
 import Composestar.Visualization.UI.Actions.FileExportAction;
 import Composestar.Visualization.UI.Actions.FileOpenAction;
 import Composestar.Visualization.UI.Actions.FileQuitAction;
 import Composestar.Visualization.UI.Actions.LayoutAction;
+import Composestar.Visualization.UI.Actions.OpenFilterActionView;
+import Composestar.Visualization.UI.Actions.OpenFilterView;
 
 /**
  * The main viewport of the visualizer
@@ -58,45 +61,39 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 
 	protected transient VisCom controller;
 
-	protected ActionManager actionManager;
+	protected transient ActionManager actionManager;
 
 	private JMenuBar mainMenu;
 
 	private JMenu miFile;
 
-	private JMenuItem miOpen;
-
-	private JMenuItem miExport;
-
-	private JMenuItem miClose;
-
 	private JTabbedPane views;
 
-	private JMenu miLayout = null;
+	private JMenu miLayout;
 
-	private JMenuItem miLayoutSpring = null;
+	private JMenuItem miLayoutCircle;
 
-	private JMenuItem miLayoutCircle = null;
+	private JPopupMenu pmProgramView; // @jve:decl-index=0:visual-constraint="666,124"
 
-	private JPopupMenu pmProgramView = null; // @jve:decl-index=0:visual-constraint="666,124"
+	private JPopupMenu pmFilterView; // @jve:decl-index=0:visual-constraint="712,183"
 
-	private JMenuItem miFilterView = null;
-
-	public Viewport(VisCom inController)
+	public Viewport()
 	{
 		Logger.getRootLogger().addAppender(new MessageBoxAppender(this));
 		logger.debug("Creating viewport");
 		actionManager = new ActionManager(this);
-		controller = inController;
 		initialize();
+	}
+
+	public Viewport(VisCom inController)
+	{
+		this();
+		controller = inController;
 
 		// TODO: dev only
 		if (controller.getViewManager() != null)
 		{
-			// just for testing
-			openGraph((new FilterActionView(null, null, null)).getGraph());
-
-			//openProgramView(controller.getViewManager().getProgramView().getGraph());
+			openProgramView(controller.getViewManager().getProgramView().getGraph());
 		}
 	}
 
@@ -108,9 +105,11 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 	private void initialize()
 	{
 		setTitle("Compose* Visualization [alpha]");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(
+				getClass().getResource("/Composestar/Visualization/UI/Graphics/logo.png")));
 		setContentPane(getViews());
 		setJMenuBar(getMainMenu());
-		this.setSize(new Dimension(627, 484));
+		setSize(new Dimension(627, 484));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
@@ -142,53 +141,11 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 		{
 			miFile = new JMenu();
 			miFile.setText("File");
-			miFile.add(getMiOpen());
-			miFile.add(getMiExport());
-			miFile.add(getMiClose());
+			miFile.add(new JMenuItem(actionManager.getAction(FileOpenAction.class)));
+			miFile.add(new JMenuItem(actionManager.getAction(FileExportAction.class)));
+			miFile.add(new JMenuItem(new FileQuitAction(this)));
 		}
 		return miFile;
-	}
-
-	/**
-	 * This method initializes miOpen
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getMiOpen()
-	{
-		if (miOpen == null)
-		{
-			miOpen = new JMenuItem(actionManager.getAction(FileOpenAction.class));
-		}
-		return miOpen;
-	}
-
-	/**
-	 * This method initializes miExport
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getMiExport()
-	{
-		if (miExport == null)
-		{
-			miExport = new JMenuItem(actionManager.getAction(FileExportAction.class));
-		}
-		return miExport;
-	}
-
-	/**
-	 * This method initializes miClose
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getMiClose()
-	{
-		if (miClose == null)
-		{
-			miClose = new JMenuItem(new FileQuitAction(this));
-		}
-		return miClose;
 	}
 
 	/**
@@ -216,24 +173,10 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 		{
 			miLayout = new JMenu();
 			miLayout.setText("Layout");
-			miLayout.add(getMiLayoutSpring());
+			miLayout.add(new JMenuItem(actionManager.getAction(LayoutAction.class)));
 			miLayout.add(getMiLayoutCircle());
 		}
 		return miLayout;
-	}
-
-	/**
-	 * This method initializes miLayoutSpring
-	 * 
-	 * @return javax.swing.JMenuItem
-	 */
-	private JMenuItem getMiLayoutSpring()
-	{
-		if (miLayoutSpring == null)
-		{
-			miLayoutSpring = new JMenuItem(actionManager.getAction(LayoutAction.class));
-		}
-		return miLayoutSpring;
 	}
 
 	/**
@@ -271,37 +214,25 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 		{
 			pmProgramView = new JPopupMenu();
 			pmProgramView.setVisible(true);
-			pmProgramView.add(getMiFilterView());
+			pmProgramView.add(new JMenuItem(actionManager.getAction(OpenFilterView.class)));
 		}
 		return pmProgramView;
 	}
 
 	/**
-	 * This method initializes miFilterView
+	 * This method initializes pmFilterView
 	 * 
-	 * @return javax.swing.JMenuItem
+	 * @return javax.swing.JPopupMenu
 	 */
-	private JMenuItem getMiFilterView()
+	private JPopupMenu getPmFilterView()
 	{
-		if (miFilterView == null)
+		if (pmFilterView == null)
 		{
-			miFilterView = new JMenuItem();
-			miFilterView.setText("Show filter view");
-			miFilterView.addActionListener(new java.awt.event.ActionListener()
-			{
-				public void actionPerformed(java.awt.event.ActionEvent e)
-				{
-					JGraph pvGraph = getCurrentGraph();
-					if (pvGraph.getSelectionCell() instanceof ConcernVertex)
-					{
-						Concern concern = ((ConcernVertex) pvGraph.getSelectionCell()).getConcern();
-						logger.info("Adding Filter View for " + concern);
-						openGraph(controller.getViewManager().getFilterView(concern).getGraph());
-					}
-				}
-			});
+			pmFilterView = new JPopupMenu();
+			pmFilterView.setVisible(true);
+			pmFilterView.add(new JMenuItem(actionManager.getAction(OpenFilterActionView.class)));
 		}
-		return miFilterView;
+		return pmFilterView;
 	}
 
 	public VisCom getController()
@@ -375,9 +306,14 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 			return;
 		}
 		CpsView view = newGraph.getCpsView();
+		logger.info("Opening new graph of type " + view.getClass().toString() + ": " + view.getName());
 		if (view instanceof ProgramView)
 		{
 			openProgramView(newGraph);
+		}
+		else if (view instanceof FilterView)
+		{
+			openFilterView(newGraph);
 		}
 		else
 		{
@@ -416,4 +352,37 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 			}
 		});
 	}
+
+	public void openFilterView(CpsJGraph newGraph)
+	{
+		getPmFilterView();
+		views.setSelectedComponent(views.add(newGraph.getName(), new JScrollPane(newGraph)));
+		newGraph.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				maybeShowPopup(e);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{
+				maybeShowPopup(e);
+			}
+
+			private void maybeShowPopup(MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					JGraph pvGraph = getCurrentGraph();
+					if (pvGraph.getSelectionCell() instanceof TrailEdge)
+					{
+						pmFilterView.show(e.getComponent(), e.getX(), e.getY());
+					}
+				}
+			}
+		});
+	}
+
 } // @jve:decl-index=0:visual-constraint="10,10"

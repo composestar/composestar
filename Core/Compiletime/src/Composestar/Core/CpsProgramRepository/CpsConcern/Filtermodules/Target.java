@@ -76,4 +76,49 @@ public class Target extends ContextRepositoryEntity
 	{
 		return ref.getName();
 	}
+
+	public int hashCode()
+	{
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + ((name == null) ? 0 : name.hashCode());
+		result = PRIME * result + ((ref == null) ? 0 : ref.hashCode());
+		return result;
+	}
+
+	public boolean equals(Object obj)
+	{
+		if ((this == obj) || (obj == null))
+		{
+			return true;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		final Target other = (Target) obj;
+		if (name == null)
+		{
+			if (other.name != null)
+			{
+				return false;
+			}
+		}
+		else if (!name.equals(other.name))
+		{
+			return false;
+		}
+		if (ref == null)
+		{
+			if (other.ref != null)
+			{
+				return false;
+			}
+		}
+		else if (!ref.equals(other.ref))
+		{
+			return false;
+		}
+		return true;
+	}
 }

@@ -13,7 +13,10 @@ package Composestar.Visualization.Model;
 import org.jgraph.graph.DefaultEdge;
 
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.FIRE2.model.ExecutionModel;
+import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.Master.CompileHistory;
+import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.Model.Cells.BaseGraphCell;
 import Composestar.Visualization.Model.Cells.FlowChart.DecisionVertex;
 import Composestar.Visualization.Model.Cells.FlowChart.ExitFlowVertex;
@@ -27,9 +30,18 @@ import Composestar.Visualization.Model.Cells.FlowChart.SIMethodExecutionVertex;
  */
 public class FilterActionView extends CpsView
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("VizCom.View.FilterActionView");
+
+	private static final long serialVersionUID = -8843085075899150582L;
+
 	public FilterActionView(CompileHistory data, Concern focusConcern, String selector)
 	{
 		super();
+
+		FireModel fireModel = new FireModel(focusConcern);
+		// TODO:
+		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, selector);
+		logger.debug("ExecutionModel = " + execModel);
 
 		BaseGraphCell cell;
 		cell = new DecisionVertex("DecisionVertex");

@@ -63,4 +63,16 @@ public class ViewManager
 		}
 		return filterViews.get(concern);
 	}
+
+	/**
+	 * Return a filter action view for the given input
+	 * 
+	 * @param concern
+	 * @param selector
+	 * @return
+	 */
+	public FilterActionView getFilterActionView(Concern concern, String selector)
+	{
+		return new FilterActionView(history, concern, selector);
+	}
 }

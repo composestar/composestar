@@ -45,7 +45,7 @@ public class DetailedFilterModuleView extends LineSeparationView
 			for (int i = 1; (i < 3) && (i < childViews.length); i++)
 			{
 				Rectangle2D right = childViews[i].getBounds();
-				separators[i - 1] = right.getX() - left.getX() + (inset / 2);
+				separators[i - 1] = right.getX() - left.getX() + (inset / 2.0);
 			}
 		}
 		super.update();
