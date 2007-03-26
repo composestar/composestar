@@ -18,7 +18,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.VertexRenderer;
@@ -65,7 +64,12 @@ public class RoundedRectView extends VertexView
 		public Dimension getPreferredSize()
 		{
 			Dimension res = super.getPreferredSize();
-			res.setSize(res.getWidth() * 1.2, res.getHeight() * 1.5);
+			double w = res.getWidth();
+			if (w < res.getHeight() * 2)
+			{
+				w = res.getHeight() * 2;
+			}
+			res.setSize(w * 1.2, res.getHeight() * 1.5);
 			return res;
 		}
 

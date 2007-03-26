@@ -18,6 +18,7 @@ import java.util.EnumSet;
 import javax.swing.SwingConstants;
 
 import org.jgraph.graph.AttributeMap;
+import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
 
@@ -85,6 +86,11 @@ public class ClassVertex extends BaseGraphCell
 		platformRep = inPlatformRep;
 		addChildren(filter);
 		translate(INSET, LABELHEIGHT + INSET); // 20 = label height
+
+		// dummy cell for padding
+		DefaultGraphCell dummy = new DefaultGraphCell();
+		GraphConstants.setBounds(dummy.getAttributes(), new Rectangle2D.Double(INSET, INSET, 1, 1));
+		add(dummy);
 	}
 
 	@Override

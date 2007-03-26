@@ -199,26 +199,6 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 	}
 
 	/**
-	 * Replace all cells inside the frame because have cells with valeu negative
-	 * for x and y
-	 * 
-	 * @param vertices : list all vertices
-	 * @param frameRectangle : Rectangle where x and y have the minX and minY
-	 *            the all cells in the graph.
-	 */
-	private void replaceInsideFrame(List vertices, Rectangle2D frameRectangle)
-	{
-		for (int i = 0; i < vertices.size(); i++)
-		{
-			VertexView vertex = (VertexView) vertices.get(i);
-			Rectangle2D vPos = getVertexPosition(vertex, SPRING_EMBEDDED_POS);
-			Rectangle2D newRandomPosition = new Rectangle2D.Double(vPos.getX() - frameRectangle.getX(), vPos.getY()
-					- frameRectangle.getY(), vPos.getWidth(), vPos.getHeight());
-			updateVertexPosition(vertex, SPRING_EMBEDDED_POS, newRandomPosition);
-		}
-	}
-
-	/**
 	 * The implementation of the layout algorithm.
 	 * 
 	 * @param graph : JGraph instance
@@ -277,10 +257,6 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		// calculate the stretch factor and the movement factor
 		// to fit the calculated frame to the selected Frame
 		Rectangle2D calculateFrame = calculateNewFrame(vertices);
-		replaceInsideFrame(vertices, calculateFrame);
-
-		calculateFrame.setFrame(0, 0, 900, 900);// this is necessary because
-		// the frame have w=500 and h=500
 
 		double stretchX = (myFrame.width) / (calculateFrame.getWidth());
 
@@ -626,52 +602,20 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 
 	private Rectangle2D calculateNewFrame(List<VertexView> vertices)
 	{
-		double x = 0, y = 0, w = 0, h = 0;
-		// find the new positions for the
-		// calculated frame
-		Rectangle2D calculatedFrame = new Rectangle2D.Double();
-
-		for (int vCount = 0; vCount < vertices.size(); vCount++)
+		Rectangle2D calculatedFrame = null;
+		for (VertexView v : vertices)
 		{
-			VertexView v = vertices.get(vCount);
 			Rectangle2D vPos = getVertexPosition(v, SPRING_EMBEDDED_POS);
-
-			// System.out.println( "vertex get: vPos = " + vPos ) ;
-
-			x = calculatedFrame.getX();
-			y = calculatedFrame.getY();
-			w = calculatedFrame.getWidth();
-			h = calculatedFrame.getHeight();
-
-			if (vPos.getX() < calculatedFrame.getX())
+			if (calculatedFrame != null)
 			{
-				x = vPos.getX();
+				calculatedFrame = calculatedFrame.createUnion(vPos);
 			}
-			if (vPos.getY() < calculatedFrame.getY())
+			else
 			{
-				y = vPos.getY();
+				calculatedFrame = (Rectangle2D) vPos.clone();
 			}
-
-			double width = vPos.getX() - calculatedFrame.getX();
-			if (width > calculatedFrame.getWidth())
-			{
-				w = width;
-			}
-
-			double height = vPos.getY() - calculatedFrame.getY();
-			if (height > calculatedFrame.getHeight())
-			{
-				h = height;
-			}
-
-			// System.out.println( "vertex =" + v.getCell());
-			// System.out.println("x = " + x + " y = " + y + " w = " + w + " h =
-			// " + h);
-
-			calculatedFrame.setFrame(x, y, w, h);
-
 		}
-		return (calculatedFrame);
+		return calculatedFrame;
 	}
 
 	private Map<CellView, AttributeMap> drawGraph(CellView[] cells, int movementX, double stretchX, int movementY,
@@ -682,10 +626,8 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		// ---------------------------------------------------------------------------
 		Map<CellView, AttributeMap> viewMap = new Hashtable<CellView, AttributeMap>();
 
-		for (CellView element : cells)
+		for (CellView cell : cells)
 		{
-			CellView cell = element;
-
 			if (cell == null)
 			{
 				continue;
@@ -704,6 +646,8 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 
 				removeVertexPosition(vertex, SPRING_EMBEDDED_DISP);
 
+				Rectangle2D oldPosition = removeVertexPosition(vertex, SPRING_EMBEDDED_ORIGPOS);
+
 				// System.out.println( "vertex" + vertex.getCell() + "children =
 				// " + vertex.getChildViews().length+ " newPosition = " +
 				// newPosition);
@@ -712,7 +656,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 				newPosition.setFrame((newPosition.getX() + movementX) * stretchX, (newPosition.getY() + movementY)
 						* stretchY, newPosition.getWidth(), newPosition.getHeight());
 
-				if (vertex.isLeaf() && groupAware)
+				if (vertex.isLeaf() || !groupAware)
 				{
 					// update the view
 					AttributeMap vertAttrib = new AttributeMap();
@@ -720,13 +664,11 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 					vertex.changeAttributes(vertAttrib);
 					// The statement above fixes a bug in the original code
 
-					viewMap.put(element, vertAttrib);
+					viewMap.put(cell, vertAttrib);
 				}
 				else
 				{
 					// is a group, update the group
-					Rectangle2D oldPosition = removeVertexPosition(vertex, SPRING_EMBEDDED_ORIGPOS);
-
 					CellView[] p = { vertex };
 					CellView[] childs = AbstractCellView.getDescendantViews(p);
 					for (CellView v : childs)
@@ -741,9 +683,9 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 						double ddx = oldBounds.getX() - oldPosition.getX();
 						double ddy = oldBounds.getY() - oldPosition.getY();
 
-						oldBounds.setFrame(newPosition.getX() + ddx, newPosition.getY() + ddy, oldBounds.getWidth(),
-								oldBounds.getHeight());
-						GraphConstants.setBounds(vertAttrib, oldBounds);
+						Rectangle2D newBounds = new Rectangle2D.Double(newPosition.getX() + ddx, newPosition.getY()
+								+ ddy, oldBounds.getWidth(), oldBounds.getHeight());
+						GraphConstants.setBounds(vertAttrib, newBounds);
 						v.changeAttributes(vertAttrib);
 						viewMap.put(v, vertAttrib);
 					}

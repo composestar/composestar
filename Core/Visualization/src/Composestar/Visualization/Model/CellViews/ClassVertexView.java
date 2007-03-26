@@ -38,7 +38,7 @@ public class ClassVertexView extends LineSeparationView
 		super(cell);
 		separators = new double[2];
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -50,8 +50,8 @@ public class ClassVertexView extends LineSeparationView
 		super.updateGroupBounds();
 
 		// update the bounds to include the label area
-		groupBounds.setFrame(groupBounds.getX(), groupBounds.getY() - separators[0], groupBounds.getWidth(),
-				groupBounds.getHeight() + separators[0]);
+		//groupBounds.setFrame(groupBounds.getX(), groupBounds.getY() - separators[0], groupBounds.getWidth(),
+		//		groupBounds.getHeight() + separators[0]);
 	}
 
 	@Override
