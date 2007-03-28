@@ -532,17 +532,30 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		for (int i = 0; i < edges.size(); i++)
 		{
 			EdgeView e = edges.get(i);
-			CellView source = e.getSource().getParentView();
-			CellView target = e.getTarget().getParentView();
-
+			CellView source = null;
+			CellView target = null;
+			if (e.getSource() != null)
+			{
+				source = e.getSource().getParentView();
+			}
+			if (e.getTarget() != null)
+			{
+				target = e.getTarget().getParentView();
+			}
 			vertexWithoutEdges.remove(source);
 			vertexWithoutEdges.remove(target);
 
 			if (groupAware)
 			{
 				// TODO: this can probably be improved
-				removeWithParents(vertexWithoutEdges, source.getParentView());
-				removeWithParents(vertexWithoutEdges, target.getParentView());
+				if (source != null)
+				{
+					removeWithParents(vertexWithoutEdges, source.getParentView());
+				}
+				if (target != null)
+				{
+					removeWithParents(vertexWithoutEdges, target.getParentView());
+				}
 			}
 		}
 

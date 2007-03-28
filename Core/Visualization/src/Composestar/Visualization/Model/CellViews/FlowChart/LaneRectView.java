@@ -67,7 +67,7 @@ public class LaneRectView extends VertexView
 		public Dimension getPreferredSize()
 		{
 			Dimension res = super.getPreferredSize();
-			res.setSize(res.getWidth() * 1.05, res.getHeight() * 1.5);
+			res.setSize(res.getWidth() * 1.05, res.getHeight());
 			return res;
 		}
 

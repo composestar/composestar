@@ -10,12 +10,6 @@
 
 package Composestar.Visualization.Model.Cells.FlowChart;
 
-import java.awt.Color;
-import java.util.Map;
-
-import org.jgraph.graph.GraphConstants;
-
-import Composestar.Visualization.Model.Cells.BaseGraphCell;
 
 /**
  * A final method execution vertex. Will be used for the execution of the actual
@@ -24,23 +18,12 @@ import Composestar.Visualization.Model.Cells.BaseGraphCell;
  * 
  * @author Michiel Hendriks
  */
-public class MethodExecutionVertex extends BaseGraphCell
+public class MethodExecutionVertex extends BaseFlowChartVertex
 {
 	private static final long serialVersionUID = 1306224399479728431L;
 
 	public MethodExecutionVertex(Object userObject)
 	{
 		super(userObject);
-	}
-
-	@Override
-	protected void setDefaults()
-	{
-		super.setDefaults();
-		Map map = getAttributes();
-		GraphConstants.setOpaque(map, true);
-		GraphConstants.setBackground(map, Color.WHITE);
-		GraphConstants.setBorderColor(map, Color.BLACK);
-		GraphConstants.setAutoSize(map, true);
 	}
 }

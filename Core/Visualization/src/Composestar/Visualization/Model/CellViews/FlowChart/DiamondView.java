@@ -25,6 +25,8 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.VertexRenderer;
 import org.jgraph.graph.VertexView;
 
+import Composestar.Visualization.Model.CellViews.RenderUtils;
+
 /**
  * Based on JGraphDiamondView.java of GraphPad CE.
  * 
@@ -63,86 +65,107 @@ public class DiamondView extends VertexView
 		public Dimension getPreferredSize()
 		{
 			Dimension res = super.getPreferredSize();
-			res.setSize(res.getWidth() * 1.5, res.getHeight() * 2.5);
+			res.setSize(res.getWidth() * 1.5, res.getHeight() * 2.25);
 			return res;
 		}
 
 		@Override
 		public Point2D getPerimeterPoint(VertexView view, Point2D source, Point2D p)
 		{
-			Rectangle2D bounds = view.getBounds();
 			Point2D center = AbstractCellView.getCenterPoint(view);
-			double halfwidth = bounds.getWidth() / 2;
-			double halfheight = bounds.getHeight() / 2;
-
-			Point2D top = new Point2D.Double(center.getX(), center.getY() - halfheight);
-			Point2D bottom = new Point2D.Double(center.getX(), center.getY() + halfheight);
-			Point2D left = new Point2D.Double(center.getX() - halfwidth, center.getY());
-			Point2D right = new Point2D.Double(center.getX() + halfwidth, center.getY());
-
-			// Special case for intersecting the diamond's points
-			if (center.getX() == p.getX())
-			{
-				if (center.getY() > p.getY())
-				{
-					return (top);
-				}
-				return bottom;
-			}
-			if (center.getY() == p.getY())
-			{
-				if (center.getX() > p.getX())
-				{
-					return (left);
-				}
-				// right point
-				return right;
-			}
-
-			// In which quadrant will the intersection be?
-			// set the slope and offset of the border line accordingly
-			Point2D res;
-			if (p.getX() < center.getX())
-			{
-				if (p.getY() < center.getY())
-				{
-					res = intersection(view, p, center, top, left);
-				}
-				else
-				{
-					res = intersection(view, p, center, bottom, left);
-				}
-			}
-			else if (p.getY() < center.getY())
-			{
-				res = intersection(view, p, center, top, right);
-			}
-			else
-			{
-				res = intersection(view, p, center, bottom, right);
-			}
+			Rectangle2D bounds = view.getBounds();
+			int x = (int) bounds.getX();
+			int y = (int) bounds.getY();
+			int width = (int) bounds.getWidth();
+			int height = (int) bounds.getHeight();
+			int[] xcoords = { x + width / 2, x + width, x + width / 2, x };
+			int[] ycoords = { y, y + height / 2, y + height, y + height / 2 };
+			Polygon diamond = new Polygon(xcoords, ycoords, 4);
+			Point2D res = view.getAllAttributes().createPoint();
+			RenderUtils.intersectLinePolygon(p, center, diamond, res);
 			return res;
+
+			// Rectangle2D bounds = view.getBounds();
+			// Point2D center = AbstractCellView.getCenterPoint(view);
+			// double halfwidth = bounds.getWidth() / 2;
+			// double halfheight = bounds.getHeight() / 2;
+			//
+			// Point2D top = new Point2D.Double(center.getX(), center.getY() -
+			// halfheight);
+			// Point2D bottom = new Point2D.Double(center.getX(), center.getY()
+			// + halfheight);
+			// Point2D left = new Point2D.Double(center.getX() - halfwidth,
+			// center.getY());
+			// Point2D right = new Point2D.Double(center.getX() + halfwidth,
+			// center.getY());
+			//
+			// // Special case for intersecting the diamond's points
+			// if (center.getX() == p.getX())
+			// {
+			// if (center.getY() > p.getY())
+			// {
+			// return (top);
+			// }
+			// return bottom;
+			// }
+			// if (center.getY() == p.getY())
+			// {
+			// if (center.getX() > p.getX())
+			// {
+			// return (left);
+			// }
+			// // right point
+			// return right;
+			// }
+			//
+			// // In which quadrant will the intersection be?
+			// // set the slope and offset of the border line accordingly
+			// Point2D res;
+			// if (p.getX() < center.getX())
+			// {
+			// if (p.getY() < center.getY())
+			// {
+			// res = intersection(view, p, center, top, left);
+			// }
+			// else
+			// {
+			// res = intersection(view, p, center, bottom, left);
+			// }
+			// }
+			// else if (p.getY() < center.getY())
+			// {
+			// res = intersection(view, p, center, top, right);
+			// }
+			// else
+			// {
+			// res = intersection(view, p, center, bottom, right);
+			// }
+			// return res;
 		}
 
-		/**
-		 * Find the point of intersection of two straight lines (which follow
-		 * the equation y=mx+b) one line is an incoming edge and the other is
-		 * one side of the diamond.
-		 */
-		private Point2D intersection(VertexView view, Point2D lineOneStart, Point2D lineOneEnd, Point2D lineTwoStart,
-				Point2D lineTwoEnd)
-		{
-			// m = delta y / delta x, the slope of a line
-			// b = y - mx, the axis intercept
-			double m1 = (lineOneEnd.getY() - lineOneStart.getY()) / (lineOneEnd.getX() - lineOneStart.getX());
-			double b1 = lineOneStart.getY() - m1 * lineOneStart.getX();
-			double m2 = (lineTwoEnd.getY() - lineTwoStart.getY()) / (lineTwoEnd.getX() - lineTwoStart.getX());
-			double b2 = lineTwoStart.getY() - m2 * lineTwoStart.getX();
-			double xinter = (b1 - b2) / (m2 - m1);
-			double yinter = m1 * xinter + b1;
-			Point2D intersection = view.getAttributes().createPoint(xinter, yinter);
-			return intersection;
-		}
+		// /**
+		// * Find the point of intersection of two straight lines (which follow
+		// * the equation y=mx+b) one line is an incoming edge and the other is
+		// * one side of the diamond.
+		// */
+		// private Point2D intersection(VertexView view, Point2D lineOneStart,
+		// Point2D lineOneEnd, Point2D lineTwoStart,
+		// Point2D lineTwoEnd)
+		// {
+		// // m = delta y / delta x, the slope of a line
+		// // b = y - mx, the axis intercept
+		// double m1 = (lineOneEnd.getY() - lineOneStart.getY()) /
+		// (lineOneEnd.getX() - lineOneStart.getX());
+		// double b1 = lineOneStart.getY() - m1 * lineOneStart.getX();
+		// double m2 = (lineTwoEnd.getY() - lineTwoStart.getY()) /
+		// (lineTwoEnd.getX() - lineTwoStart.getX());
+		// double b2 = lineTwoStart.getY() - m2 * lineTwoStart.getX();
+		// double xinter = (b1 - b2) / (m2 - m1);
+		// double yinter = m1 * xinter + b1;
+		// Point2D intersection = view.getAttributes().createPoint(xinter,
+		// yinter);
+		//			return intersection;
+		//		}
 
 		@Override
 		public void paint(Graphics g)

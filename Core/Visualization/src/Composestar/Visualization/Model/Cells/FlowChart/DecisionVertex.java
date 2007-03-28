@@ -10,12 +10,7 @@
 
 package Composestar.Visualization.Model.Cells.FlowChart;
 
-import java.awt.Color;
-import java.util.Map;
-
-import org.jgraph.graph.GraphConstants;
-
-import Composestar.Visualization.Model.Cells.BaseGraphCell;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 
 /**
  * Vertex used for branches. The only actual branch occures in case of
@@ -23,23 +18,22 @@ import Composestar.Visualization.Model.Cells.BaseGraphCell;
  * 
  * @author Michiel Hendriks
  */
-public class DecisionVertex extends BaseGraphCell
+public class DecisionVertex extends BaseFlowChartVertex
 {
 	private static final long serialVersionUID = -7492348198269898716L;
 
-	public DecisionVertex(Object userObject)
+	public DecisionVertex(ConditionExpression condition)
 	{
-		super(userObject);
+		super(condition);
 	}
 
-	@Override
-	protected void setDefaults()
+	public ConditionExpression getCondition()
 	{
-		super.setDefaults();
-		Map map = getAttributes();
-		GraphConstants.setOpaque(map, true);
-		GraphConstants.setBackground(map, Color.WHITE);
-		GraphConstants.setBorderColor(map, Color.BLACK);
-		GraphConstants.setAutoSize(map, true);
-	}	
+		return (ConditionExpression) getUserObject();
+	}
+
+	public String toString()
+	{
+		return getCondition().asSourceCode();
+	}
 }

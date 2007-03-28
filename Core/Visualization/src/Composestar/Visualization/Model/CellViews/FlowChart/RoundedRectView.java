@@ -65,11 +65,11 @@ public class RoundedRectView extends VertexView
 		{
 			Dimension res = super.getPreferredSize();
 			double w = res.getWidth();
-			if (w < res.getHeight() * 2)
+			if (w < res.getHeight() * 1.5)
 			{
-				w = res.getHeight() * 2;
+				w = res.getHeight() * 1.5;
 			}
-			res.setSize(w * 1.2, res.getHeight() * 1.5);
+			res.setSize(w * 1.10, res.getHeight());
 			return res;
 		}
 

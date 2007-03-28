@@ -18,11 +18,12 @@ import java.io.ObjectStreamClass;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import Composestar.Utils.Logging.CPSLogger;
@@ -142,14 +143,30 @@ public class VisComObjectInputStream extends ObjectInputStream
 		// create a new loader
 		if (loader == null)
 		{
-			ArrayList<URL> urls = new ArrayList<URL>();
+			Set<URL> urls = new HashSet<URL>();
 			for (String jar : jars)
 			{
-				File fl = new File(jar);
+				// add jar in current dir
+				File f = new File(jar);
 				URL url;
 				try
 				{
-					url = fl.toURI().toURL();
+					url = f.toURI().toURL();
+				}
+				catch (MalformedURLException e)
+				{
+					url = null;
+				}
+				if (url != null)
+				{
+					urls.add(url);
+				}
+
+				// add jar in program dir
+				try
+				{
+					url = new URL(VisComObjectInputStream.class.getProtectionDomain().getCodeSource().getLocation(),
+							jar);
 				}
 				catch (MalformedURLException e)
 				{

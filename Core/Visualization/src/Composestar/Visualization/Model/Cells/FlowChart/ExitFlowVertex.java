@@ -16,15 +16,13 @@ import java.util.Map;
 
 import org.jgraph.graph.GraphConstants;
 
-import Composestar.Visualization.Model.Cells.BaseGraphCell;
-
 /**
  * Basic vertex used for the exit flow. It's nothing more than an black
  * horizontal bar.
  * 
  * @author Michiel Hendriks
  */
-public class ExitFlowVertex extends BaseGraphCell
+public class ExitFlowVertex extends BaseFlowChartVertex
 {
 	private static final long serialVersionUID = -786649285564268678L;
 

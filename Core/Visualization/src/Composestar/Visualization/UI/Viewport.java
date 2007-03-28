@@ -15,6 +15,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,15 +86,30 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 		initialize();
 	}
 
-	public Viewport(VisCom inController)
+	public Viewport(VisCom inController, File historyFile)
 	{
 		this();
 		controller = inController;
 
-		// TODO: dev only
-		if (controller.getViewManager() != null)
+		if (controller.openCompileHistory(historyFile))
 		{
 			openProgramView(controller.getViewManager().getProgramView().getGraph());
+			for (String fv : controller.openFilterViews)
+			{
+				CpsView view = controller.getViewManager().getFilterView(fv);
+				if (view != null)
+				{
+					openGraph(view.getGraph());
+				}
+			}
+			for (String fav : controller.openFilterActionViews)
+			{
+				CpsView view = controller.getViewManager().getFilterActionView(fav);
+				if (view != null)
+				{
+					openGraph(view.getGraph());
+				}
+			}
 		}
 	}
 
@@ -109,7 +125,7 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 				getClass().getResource("/Composestar/Visualization/UI/Graphics/logo.png")));
 		setContentPane(getViews());
 		setJMenuBar(getMainMenu());
-		setSize(new Dimension(627, 484));
+		setSize(new Dimension(640, 480));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}

@@ -13,6 +13,8 @@ package Composestar.Visualization;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.log4j.ConsoleAppender;
@@ -41,8 +43,20 @@ public class VisCom
 
 	protected ViewManager viewManager;
 
+	/**
+	 * FilterViews to open
+	 */
+	public List<String> openFilterViews;
+
+	/**
+	 * FilterActionViews to open
+	 */
+	public List<String> openFilterActionViews;
+
 	public VisCom()
 	{
+		openFilterViews = new ArrayList<String>();
+		openFilterActionViews = new ArrayList<String>();
 		DataMap.setDataMapClass(DataMapImpl.class);
 		initialize();
 		logger.info("Starting Compose* Visualizer");
@@ -101,38 +115,48 @@ public class VisCom
 	}
 
 	/**
-	 * Process the commandline arguments
+	 * Process the commandline arguments. Returns the CompileHistory file to
+	 * open, if any.
 	 * 
 	 * @param args
 	 */
-	protected void processCmdArguments(String[] args)
+	protected File processCmdArguments(String[] args)
 	{
 		int i = 0;
 		while (i < args.length - 1)
 		{
-			// process ...
+			if (args[i].equals("-fv"))
+			{
+				i++;
+				openFilterViews.add(args[i]);
+			}
+			else if (args[i].equals("-fav"))
+			{
+				i++;
+				openFilterActionViews.add(args[i]);
+			}
 			i++;
 		}
 
 		if (i == args.length - 1)
 		{
 			// one more argument left, assume it's the compile history file
-			openCompileHistory(new File(args[i]));
+			return new File(args[i]);
 		}
+		return null;
 	}
 
 	/**
 	 * Start the stuff
 	 */
-	protected void run()
+	protected void run(File historyFile)
 	{
-		new Viewport(this);
+		new Viewport(this, historyFile);
 	}
 
 	public static void main(String[] args)
 	{
 		VisCom vs = new VisCom();
-		vs.processCmdArguments(args);
-		vs.run();
+		vs.run(vs.processCmdArguments(args));
 	}
 }

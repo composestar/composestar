@@ -21,7 +21,6 @@ import Composestar.Visualization.Model.CpsJGraph;
  */
 public abstract class ActiveGraphAction extends VisComAction
 {
-
 	public ActiveGraphAction()
 	{
 		super();

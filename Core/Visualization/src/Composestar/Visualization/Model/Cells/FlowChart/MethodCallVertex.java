@@ -10,12 +10,6 @@
 
 package Composestar.Visualization.Model.Cells.FlowChart;
 
-import java.awt.Color;
-import java.util.Map;
-
-import org.jgraph.graph.GraphConstants;
-
-import Composestar.Visualization.Model.Cells.BaseGraphCell;
 
 /**
  * Represents the call to a method, it's the start of the inputfilter stack. One
@@ -23,23 +17,12 @@ import Composestar.Visualization.Model.Cells.BaseGraphCell;
  * 
  * @author Michiel Hendriks
  */
-public class MethodCallVertex extends BaseGraphCell
+public class MethodCallVertex extends BaseFlowChartVertex
 {
 	private static final long serialVersionUID = 4654173103966723608L;
 
 	public MethodCallVertex(Object userObject)
 	{
 		super(userObject);
-	}
-
-	@Override
-	protected void setDefaults()
-	{
-		super.setDefaults();
-		Map map = getAttributes();
-		GraphConstants.setOpaque(map, true);
-		GraphConstants.setBackground(map, Color.WHITE);
-		GraphConstants.setBorderColor(map, Color.BLACK);
-		GraphConstants.setAutoSize(map, true);
 	}
 }

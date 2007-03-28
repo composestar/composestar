@@ -65,7 +65,7 @@ public class ParallelogramView extends VertexView
 		public Dimension getPreferredSize()
 		{
 			Dimension res = super.getPreferredSize();
-			res.setSize(res.getWidth() * 1.1, res.getHeight() * 1.5);
+			res.setSize(res.getWidth() * 1.1, res.getHeight());
 			return res;
 		}
 
