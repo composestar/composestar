@@ -22,9 +22,6 @@ import Composestar.Core.RepositoryImplementation.TypedDeclaration;
  */
 public class DeclaredObjectReference extends FilterModuleElementReference
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2837147165031845744L;
 
 	private TypedDeclaration ref;
@@ -53,25 +50,5 @@ public class DeclaredObjectReference extends FilterModuleElementReference
 	public void setRef(TypedDeclaration refValue)
 	{
 		this.ref = refValue;
-	}
-
-	/**
-	 * Custom deserialization of this object
-	 * 
-	 * @param in
-	 */
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-	{
-	// nothing yet
-	}
-
-	/**
-	 * Custom serialization of this object
-	 * 
-	 * @param out
-	 */
-	private void writeObject(ObjectOutputStream out) throws IOException
-	{
-	// nothing yet
 	}
 }

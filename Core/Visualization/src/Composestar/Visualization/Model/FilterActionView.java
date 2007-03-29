@@ -13,7 +13,6 @@ package Composestar.Visualization.Model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +22,8 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
+import Composestar.Core.DIGGER2.Resolver;
+import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
@@ -31,7 +32,7 @@ import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.Master.CompileHistory;
 import Composestar.Utils.Logging.CPSLogger;
-import Composestar.Visualization.Model.Cells.BaseGraphCell;
+import Composestar.Visualization.Model.Cells.FlowChart.BaseFlowChartVertex;
 import Composestar.Visualization.Model.Cells.FlowChart.DecisionVertex;
 import Composestar.Visualization.Model.Cells.FlowChart.ExecCollectionEdge;
 import Composestar.Visualization.Model.Cells.FlowChart.ExitFlowVertex;
@@ -53,9 +54,20 @@ public class FilterActionView extends CpsView
 
 	protected String selector;
 
-	protected String name;
+	/**
+	 * Cache to lookup existing vertices for states, will be used to resolve
+	 * loops.
+	 */
+	protected Map<ExecutionState, BaseFlowChartVertex> stateVertices;
 
-	protected Map<ExecutionState, BaseGraphCell> stateVertices;
+	/**
+	 * Swimlane lookup
+	 */
+	protected Map<Concern, SwimlaneVertex> swimlanes;
+
+	protected SwimlaneVertex mainLane;
+
+	protected int filterPos = FireModel.INPUT_FILTERS;
 
 	public FilterActionView(CompileHistory data, Concern inFocusConcern, String inSelector)
 	{
@@ -63,16 +75,18 @@ public class FilterActionView extends CpsView
 
 		focusConcern = inFocusConcern;
 		selector = inSelector;
-		name = focusConcern.getQualifiedName() + "." + selector;
 
 		// addTestCells();
 
 		FireModel fireModel = new FireModel(focusConcern);
 		// TODO: IF/OF
-		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, selector);
+		ExecutionModel execModel = fireModel.getExecutionModel(filterPos, selector);
 		logger.debug("ExecutionModel = " + execModel);
 
-		stateVertices = new HashMap<ExecutionState, BaseGraphCell>();
+		stateVertices = new HashMap<ExecutionState, BaseFlowChartVertex>();
+		swimlanes = new HashMap<Concern, SwimlaneVertex>();
+		mainLane = getSwimlane(focusConcern);
+
 		Iterator it = execModel.getEntranceStates();
 		if (it.hasNext())
 		{
@@ -80,12 +94,14 @@ public class FilterActionView extends CpsView
 		}
 		else
 		{
-			logger.error("Execution model for " + name + " has no entrace state");
+			logger.error("Execution model for " + getName() + " has no entrace state");
 		}
 		if (it.hasNext())
 		{
-			logger.error("Execution model for " + name + " has multiple entrance states");
+			logger.error("Execution model for " + getName() + " has multiple entrance states");
 		}
+
+		// TODO: align swimlanes
 	}
 
 	/*
@@ -96,7 +112,7 @@ public class FilterActionView extends CpsView
 	@Override
 	public String getName()
 	{
-		return name;
+		return focusConcern.getQualifiedName() + "." + selector;
 	}
 
 	/**
@@ -104,7 +120,7 @@ public class FilterActionView extends CpsView
 	 */
 	protected void addTestCells()
 	{
-		BaseGraphCell cell;
+		// BaseFlowChartVertex cell;
 		// cell = new DecisionVertex(new True());
 		// cell.getPort();
 		// layout.insert(cell);
@@ -123,22 +139,23 @@ public class FilterActionView extends CpsView
 		// cell = new SIMethodExecutionVertex("SIMethodExecutionVertex");
 		// cell.getPort();
 		// layout.insert(cell);
-		cell = new SwimlaneVertex("SwimlaneVertex");
-		cell.getPort();
-		layout.insert(cell);
+		// cell = new SwimlaneVertex("SwimlaneVertex");
+		// cell.getPort();
+		// layout.insert(cell);
 		layout.insert(new DefaultEdge());
 	}
 
 	protected void createFlowChart(ExecutionState state)
 	{
-		BaseGraphCell cell = new MethodCallVertex(selector);
-		layout.insert(cell);
+		BaseFlowChartVertex cell = new MethodCallVertex(selector);
+		// layout.insert(cell);
+		mainLane.addVertex(cell);
 		ExecCollectionEdge edge = new ExecCollectionEdge();
 		edge.setSource(cell.getPort());
 		createFlowChart(state, cell, edge, new ArrayList<ExecutionState>());
 	}
 
-	protected void createFlowChart(ExecutionState state, BaseGraphCell sourceCell, ExecCollectionEdge edge,
+	protected void createFlowChart(ExecutionState state, BaseFlowChartVertex sourceCell, ExecCollectionEdge edge,
 			List<ExecutionState> returnActions)
 	{
 		while (state != null)
@@ -158,7 +175,7 @@ public class FilterActionView extends CpsView
 			logger.debug("Visiting state with names: " + sb.toString());
 
 			boolean loop = true;
-			BaseGraphCell _cell = stateVertices.get(state);
+			BaseFlowChartVertex _cell = stateVertices.get(state);
 			if (_cell == null)
 			{
 				if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE)
@@ -167,17 +184,44 @@ public class FilterActionView extends CpsView
 					logger.info("Adding decision node");
 					ConditionExpression ce = (ConditionExpression) flowNode.getRepositoryLink();
 					_cell = new DecisionVertex(ce);
+					mainLane.addVertex(_cell);
 				}
 				else if (flowNode.containsName(FlowNode.STOP_NODE))
 				{
 					logger.info("Adding exit node");
 					_cell = new ExitFlowVertex();
+					mainLane.addVertex(_cell);
 				}
 				else if (flowNode.containsName(FlowNode.RETURN_NODE))
 				{
 					logger.info("Adding method execution call");
 					Message msg = state.getSubstitutionMessage();
-					_cell = new MethodExecutionVertex(msg);
+
+					Concern targetConcern = null;
+					if (msg.getTarget().equals(Message.INNER_TARGET))
+					{
+						targetConcern = focusConcern;
+						_cell = new MethodExecutionVertex(msg);
+					}
+					else if (msg.getTarget().equals(Message.STAR_TARGET))
+					{
+						targetConcern = focusConcern;
+						_cell = new MethodExecutionVertex(msg);
+					}
+					else
+					{
+						try
+						{
+							targetConcern = Resolver.findTargetConcern(focusConcern, filterPos, msg.getTarget());
+							_cell = new MethodExecutionVertex(msg);
+						}
+						catch (ModuleException e)
+						{
+							logger.error(e);
+						}
+					}
+					SwimlaneVertex lane = getSwimlane(targetConcern);
+					lane.addVertex(_cell);
 					// TODO:
 					// if (target == inner)
 					// ..use MEV
@@ -205,6 +249,10 @@ public class FilterActionView extends CpsView
 					{
 						logger.info("Setting filter action label");
 						FilterAction faction = getFilterAction(flowNode);
+						if (faction != null)
+						{
+							edge.addAction(faction);
+						}
 					}
 				}
 				else if (flowNode.containsName(FlowNode.SUBSTITUTED_MESSAGE_ACTION_NODE))
@@ -223,7 +271,7 @@ public class FilterActionView extends CpsView
 				}
 				if (_cell != null)
 				{
-					layout.insert(_cell);
+					// layout.insert(_cell);
 					stateVertices.put(state, _cell);
 					loop = false;
 				}
@@ -247,47 +295,32 @@ public class FilterActionView extends CpsView
 
 			// traverse execution transitions
 			Iterator transitions = state.getOutTransitions();
-			List<ExecutionTransition> outTrans = null;
-			int cnt = 0;
+			ExecutionTransition firstTrans = null;
 			while (transitions.hasNext())
 			{
 				ExecutionTransition trans = (ExecutionTransition) transitions.next();
-				if (cnt == 0)
+				if (firstTrans == null)
 				{
-					edge.addTransition(trans);
-					state = trans.getEndState();
-					processTransition(sourceCell, edge, trans);
+					firstTrans = trans;
 				}
 				else
 				{
-					if (outTrans == null)
-					{
-						outTrans = new LinkedList<ExecutionTransition>();
-					}
-					outTrans.add(trans);
-				}
-				cnt++;
-			}
-			if (outTrans != null)
-			{
-				for (ExecutionTransition trans : outTrans)
-				{
 					// create a new edge with the same source
-					// copy all but last, because that's the first exec state
-					List<ExecutionTransition> execLst = edge.getTransitions();
-					ExecCollectionEdge newEdge = new ExecCollectionEdge(new LinkedList<ExecutionTransition>(execLst
-							.subList(0, execLst.size() - 1)));
-
+					ExecCollectionEdge newEdge = new ExecCollectionEdge(edge);
 					newEdge.setSource(edge.getSource());
 					newEdge.addTransition(trans);
-
 					processTransition(sourceCell, newEdge, trans);
 					createFlowChart(trans.getEndState(), sourceCell, newEdge, new ArrayList<ExecutionState>(
 							returnActions));
 				}
 			}
-
-			if (cnt == 0)
+			if (firstTrans != null)
+			{
+				edge.addTransition(firstTrans);
+				state = firstTrans.getEndState();
+				processTransition(sourceCell, edge, firstTrans);
+			}
+			else
 			{
 				return;
 			}
@@ -302,10 +335,12 @@ public class FilterActionView extends CpsView
 	 * @param edge
 	 * @param trans
 	 */
-	protected void processTransition(BaseGraphCell source, ExecCollectionEdge edge, ExecutionTransition trans)
+	protected void processTransition(BaseFlowChartVertex source, ExecCollectionEdge edge, ExecutionTransition trans)
 	{
-		if (source instanceof DecisionVertex)
+		if ((source instanceof DecisionVertex) && (edge.getEdgeType() == EdgeType.NORMAL))
 		{
+			// only change edgetype when it's normal, subsequent acepts/rejects
+			// are usually redundant or not bound to the previous DecisionVertex
 			if (trans.getLabel().equals(ExecutionTransition.CONDITION_EXPRESSION_TRUE))
 			{
 				edge.setEdgeType(EdgeType.ACCEPT);
@@ -347,5 +382,17 @@ public class FilterActionView extends CpsView
 			return filter.getFilterType().getRejectReturnAction();
 		}
 		return null;
+	}
+
+	protected SwimlaneVertex getSwimlane(Concern concern)
+	{
+		if (!swimlanes.containsKey(concern))
+		{
+			SwimlaneVertex vert = new SwimlaneVertex(concern);
+			swimlanes.put(concern, vert);
+			layout.insert(vert);
+			return vert;
+		}
+		return swimlanes.get(concern);
 	}
 }

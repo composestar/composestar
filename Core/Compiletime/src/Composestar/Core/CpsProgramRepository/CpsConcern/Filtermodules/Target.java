@@ -108,17 +108,17 @@ public class Target extends ContextRepositoryEntity
 		{
 			return false;
 		}
-		if (ref == null)
-		{
-			if (other.ref != null)
-			{
-				return false;
-			}
-		}
-		else if (!ref.equals(other.ref))
-		{
-			return false;
-		}
+		// if (ref == null)
+		// {
+		// if (other.ref != null)
+		// {
+		// return false;
+		// }
+		// }
+		// else if (!ref.equals(other.ref))
+		// {
+		// return false;
+		// }
 		return true;
 	}
 }

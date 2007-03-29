@@ -12,6 +12,7 @@ package Composestar.Visualization.Model.Cells.FlowChart;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
 import javax.swing.tree.MutableTreeNode;
@@ -55,7 +56,9 @@ public abstract class BaseFlowChartVertex extends BaseGraphCell
 		GraphConstants.setOpaque(map, true);
 		GraphConstants.setBackground(map, Color.WHITE);
 		GraphConstants.setBorderColor(map, Color.BLACK);
-		GraphConstants.setAutoSize(map, true);
+		//GraphConstants.setAutoSize(map, true);
+		GraphConstants.setResize(map, true);
 		GraphConstants.setInset(map, 5);
+		GraphConstants.setBounds(map, new Rectangle2D.Double(0, 0, 15, 15));
 	}
 }

@@ -223,6 +223,11 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm
 		// System.out.println("Number of Cells = " + cellviews.length);
 
 		partitionCells(cellviews, vertices, edges);
+		
+		if (vertices.size() < 2)
+		{
+			return;
+		}
 
 		// System.out.println("Number of vertices = " + vertices.size());
 		// System.out.println("Number of Edges = " + edges.size());

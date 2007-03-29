@@ -14,18 +14,21 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType
 
 /**
  * Legacy Custom Filter Type
+ * 
  * @author Michiel Hendriks
  */
 public class LegacyCustomFilterType extends FilterType
 {
+	private static final long serialVersionUID = -3777972978684555L;
+
 	public String name;
-	
+
 	public LegacyCustomFilterType()
 	{
 		super();
 		setType(FilterTypeNames.CUSTOM);
 	}
-	
+
 	public LegacyCustomFilterType(String inName)
 	{
 		this();

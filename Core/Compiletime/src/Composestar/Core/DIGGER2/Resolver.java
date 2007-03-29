@@ -130,8 +130,10 @@ public class Resolver
 			}
 			else if (flowNode.containsName("DispatchAction"))
 			{
-				//Message newMsg = new Message(state.getSubstitutionMessage().getTarget(), state.getSubstitutionMessage()
-				//		.getSelector());
+				// Message newMsg = new
+				// Message(state.getSubstitutionMessage().getTarget(),
+				// state.getSubstitutionMessage()
+				// .getSelector());
 				Message newMsg = state.getBaseSubstitutionMessage();
 				trail.setResultMessage(newMsg);
 				Concern targetConcern = findTargetConcern(crumb, newMsg.getTarget());
@@ -172,7 +174,7 @@ public class Resolver
 			}
 			if (idx == 0)
 			{
-				if (!flowNode.containsName(FlowNode.STOP_NODE) && !flowNode.containsName(FlowNode.RETURN_NODE) )
+				if (!flowNode.containsName(FlowNode.STOP_NODE) && !flowNode.containsName(FlowNode.RETURN_NODE))
 				{
 					StringBuffer sb = new StringBuffer();
 					Iterator nameit = flowNode.getNames();
@@ -184,7 +186,9 @@ public class Resolver
 						}
 						sb.append(nameit.next());
 					}
-					logger.debug("[resolver] reached the end of a trail without a STOP or RETURN node. Contains labels: "+sb);
+					logger
+							.debug("[resolver] reached the end of a trail without a STOP or RETURN node. Contains labels: "
+									+ sb);
 				}
 				if (trail.getResultMessage() == null)
 				{
@@ -201,27 +205,38 @@ public class Resolver
 	}
 
 	/**
-	 * Resolve the traget to a concern. Returns null when there is no target
-	 * concern (for example in case of inner.* for input filters)
-	 * 
+	 * @see #findTargetConcern(Breadcrumb, Target)
 	 * @param concern
 	 * @param target
 	 * @return
 	 * @throws ModuleException
 	 */
-	protected Concern findTargetConcern(Breadcrumb crumb, Target target) throws ModuleException
+	public static Concern findTargetConcern(Breadcrumb crumb, Target target) throws ModuleException
 	{
-		Concern concern = crumb.getConcern();
+		return findTargetConcern(crumb.getConcern(), crumb.getFilterPosition(), target);
+	}
+
+	/**
+	 * Resolve the traget to a concern. Returns null when there is no target
+	 * concern (for example in case of inner.* for input filters)
+	 * 
+	 * @param concern
+	 * @param filterPosition
+	 * @param target
+	 * @return
+	 * @throws ModuleException
+	 */
+	public static Concern findTargetConcern(Concern concern, int filterPosition, Target target) throws ModuleException
+	{
 		String targetString = target.getName();
-		int direction = crumb.filterPosition;
 		if ("*".equals(targetString))
 		{
-			if (direction == FireModel.INPUT_FILTERS)
+			if (filterPosition == FireModel.INPUT_FILTERS)
 			{
 				// send to itself
 				return concern;
 			}
-			else if (direction == FireModel.OUTPUT_FILTERS)
+			else if (filterPosition == FireModel.OUTPUT_FILTERS)
 			{
 				// TODO: unresolved target; need data from concern internals
 				return null;
@@ -229,12 +244,12 @@ public class Resolver
 		}
 		else if (Target.INNER.equals(targetString))
 		{
-			if (direction == FireModel.INPUT_FILTERS)
+			if (filterPosition == FireModel.INPUT_FILTERS)
 			{
 				// actual method is executed
 				return null;
 			}
-			else if (direction == FireModel.OUTPUT_FILTERS)
+			else if (filterPosition == FireModel.OUTPUT_FILTERS)
 			{
 				// like *+INPUT
 				return concern;
@@ -255,6 +270,7 @@ public class Resolver
 				throw new ModuleException("Unresolved internal/external: " + targetString, DIGGER.MODULE_NAME);
 			}
 		}
-		throw new ModuleException("Unresolved target: " + targetString, DIGGER.MODULE_NAME);
+		throw new ModuleException("Unresolved target: " + targetString + " in " + concern.getQualifiedName()
+				+ " filterPosition:" + filterPosition, DIGGER.MODULE_NAME);
 	}
 }

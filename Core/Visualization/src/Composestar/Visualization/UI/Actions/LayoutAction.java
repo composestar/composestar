@@ -36,10 +36,7 @@ public class LayoutAction extends ActiveGraphAction
 	public void execute(CpsJGraph activeGraph)
 	{
 		Object[] layoutCells = activeGraph.getCpsView().getLayoutCells();
-		if (layoutCells.length > 1)
-		{
-			JGraphLayoutAlgorithm.applyLayout(activeGraph, algorithm, layoutCells);
-		}
+		JGraphLayoutAlgorithm.applyLayout(activeGraph, algorithm, layoutCells);
 	}
 
 }

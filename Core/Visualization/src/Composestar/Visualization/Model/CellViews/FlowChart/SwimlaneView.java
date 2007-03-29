@@ -234,15 +234,15 @@ public class SwimlaneView extends VertexView
 			setForeground((foreground != null) ? foreground : graph.getForeground());
 
 			Color background = GraphConstants.getBackground(attributes);
+			setOpaque(GraphConstants.isOpaque(attributes));
 			if (GraphConstants.isGroupOpaque(attributes))
-			{
-				setOpaque(GraphConstants.isOpaque(attributes));
+			{				
 				setBackground((background != null) ? background : graph.getBackground());
 			}
 			else
 			{
 				setOpaque(false);
-				setBackground(graph.getBackground());
+				setBackground(null);
 				label.setOpaque(GraphConstants.isOpaque(attributes));
 				label.setBackground((background != null) ? background : graph.getBackground());
 			}

@@ -10,6 +10,8 @@
 
 package Composestar.Visualization.Model.Cells.FlowChart;
 
+import java.awt.Font;
+import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.Map;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.GraphConstants;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -54,19 +57,25 @@ public class ExecCollectionEdge extends DefaultEdge
 	 */
 	protected EdgeType edgeType = EdgeType.NORMAL;
 
+	/**
+	 * List of filter actions
+	 */
+	protected List<FilterAction> actions;
+
 	public ExecCollectionEdge()
 	{
-		this(new LinkedList<ExecutionTransition>(), null);
+		this(new LinkedList<ExecutionTransition>(), new LinkedList<FilterAction>());
 	}
 
-	public ExecCollectionEdge(List<ExecutionTransition> inExecList)
+	public ExecCollectionEdge(ExecCollectionEdge base)
 	{
-		this(inExecList, null);
+		this(new LinkedList<ExecutionTransition>(base.execList), new LinkedList<FilterAction>(base.actions));
 	}
 
-	public ExecCollectionEdge(List<ExecutionTransition> inExecList, Object label)
+	public ExecCollectionEdge(List<ExecutionTransition> inExecList, List<FilterAction> inActions)
 	{
-		super(label);
+		super();
+		actions = inActions;
 		execList = inExecList;
 		setDefaults();
 	}
@@ -74,9 +83,12 @@ public class ExecCollectionEdge extends DefaultEdge
 	protected void setDefaults()
 	{
 		Map map = getAttributes();
+		GraphConstants.setFont(map, new Font("sansserif", Font.PLAIN, 11));
 		GraphConstants.setLineEnd(map, GraphConstants.ARROW_TECHNICAL);
 		GraphConstants.setEndFill(map, true);
-		GraphConstants.setRouting(map, GraphConstants.ROUTING_SIMPLE);
+		GraphConstants.setEndSize(map, 8);
+		GraphConstants.setLabelPosition(map, new Point2D.Double(GraphConstants.PERMILLE / 2, -11));
+		// GraphConstants.setRouting(map, GraphConstants.ROUTING_SIMPLE);
 	}
 
 	/**
@@ -91,6 +103,33 @@ public class ExecCollectionEdge extends DefaultEdge
 	}
 
 	/**
+	 * Add a filter action to the node.
+	 * 
+	 * @param action
+	 */
+	public void addAction(FilterAction action)
+	{
+		logger.info("Adding action " + action.getName());
+		actions.add(action);
+	}
+
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		for (FilterAction action : actions)
+		{
+			if (sb.length() > 0)
+			{
+				sb.append(" \n");
+			}
+			sb.append("<");
+			sb.append(action.getName());
+			sb.append(">");
+		}
+		return sb.toString();
+	}
+
+	/**
 	 * Set the edge type.
 	 * 
 	 * @param newType
@@ -99,6 +138,26 @@ public class ExecCollectionEdge extends DefaultEdge
 	{
 		logger.info("Setting edge type to " + newType.toString());
 		edgeType = newType;
+		Map map = getAttributes();
+		Object[] labels = GraphConstants.getExtraLabels(map);
+		if (labels == null)
+		{
+			labels = new Object[1];
+		}
+		labels[0] = edgeType;
+		GraphConstants.setExtraLabels(map, labels);
+		Point2D[] positions = GraphConstants.getExtraLabelPositions(map);
+		if (positions == null)
+		{
+			positions = new Point2D[1];
+			positions[0] = new Point2D.Double(GraphConstants.PERMILLE / 10, -20);
+			GraphConstants.setExtraLabelPositions(map, positions);
+		}
+	}
+
+	public EdgeType getEdgeType()
+	{
+		return edgeType;
 	}
 
 	/**
@@ -109,5 +168,15 @@ public class ExecCollectionEdge extends DefaultEdge
 	public List<ExecutionTransition> getTransitions()
 	{
 		return Collections.unmodifiableList(execList);
+	}
+
+	/**
+	 * Return a readonly copy of the ections
+	 * 
+	 * @return
+	 */
+	public List<FilterAction> getActions()
+	{
+		return Collections.unmodifiableList(actions);
 	}
 }
