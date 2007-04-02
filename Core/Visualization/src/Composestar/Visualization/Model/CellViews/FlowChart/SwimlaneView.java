@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import org.jgraph.JGraph;
+import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.EdgeView;
@@ -69,6 +70,41 @@ public class SwimlaneView extends VertexView
 	public void scale(double sx, double sy, Point2D origin)
 	{
 		getAttributes().scale(sx, sy, origin);
+	}
+
+	@Override
+	public Rectangle2D getBounds()
+	{
+		return GraphConstants.getBounds(getAllAttributes());
+	}
+
+	@Override
+	public void setBounds(Rectangle2D newBounds)
+	{
+		GraphConstants.setBounds(getAllAttributes(), newBounds);
+	}
+
+	@Override
+	public void translate(double dx, double dy)
+	{
+		getAllAttributes().translate(dx, dy);
+		int moveableAxis = GraphConstants.getMoveableAxis(getAllAttributes());
+		if (moveableAxis == GraphConstants.X_AXIS)
+		{
+			dy = 0;
+		}
+		else if (moveableAxis == GraphConstants.Y_AXIS)
+		{
+			dx = 0;
+		}
+		for (Object view : childViews)
+		{
+			if (view instanceof AbstractCellView)
+			{
+				AbstractCellView child = (AbstractCellView) view;
+				child.translate(dx, dy);
+			}
+		}
 	}
 
 	@Override
@@ -124,9 +160,9 @@ public class SwimlaneView extends VertexView
 		 */
 		protected transient JGraph graph;
 
-		protected transient static JLabel label = new JLabel();
+		protected static final JLabel label = new JLabel();
 
-		protected transient static JLabel container = new JLabel();
+		protected static final JLabel container = new JLabel();
 
 		protected transient Rectangle2D rect;
 
@@ -137,7 +173,7 @@ public class SwimlaneView extends VertexView
 		protected transient int borderWidth;
 
 		/** Cached hasFocus and selected value. */
-		transient protected boolean focus, selected, preview, filterlane;
+		protected transient boolean focus, selected, preview, filterlane;
 
 		public SwimlaneRenderer()
 		{
@@ -196,7 +232,8 @@ public class SwimlaneView extends VertexView
 					float[] pattern = { 10, 10 };
 					g2d.setStroke(new BasicStroke(borderWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
 							pattern, 0));
-					g2d.drawLine(getWidth() / 2, 25, getWidth() / 2, getHeight());
+					// TODO: Use attribute thingy
+					g2d.drawLine(75, 25, 75, getHeight());
 				}
 			}
 			catch (IllegalArgumentException e)
@@ -236,7 +273,7 @@ public class SwimlaneView extends VertexView
 			Color background = GraphConstants.getBackground(attributes);
 			setOpaque(GraphConstants.isOpaque(attributes));
 			if (GraphConstants.isGroupOpaque(attributes))
-			{				
+			{
 				setBackground((background != null) ? background : graph.getBackground());
 			}
 			else

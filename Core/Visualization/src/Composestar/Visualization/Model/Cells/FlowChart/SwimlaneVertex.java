@@ -46,6 +46,8 @@ public class SwimlaneVertex extends BaseFlowChartVertex
 	protected int lastReportPort = -1;
 
 	protected static final int INSET = 10;
+	
+	protected Rectangle2D.Double bounds;
 
 	public SwimlaneVertex(Concern concern)
 	{
@@ -110,7 +112,9 @@ public class SwimlaneVertex extends BaseFlowChartVertex
 		{
 			lastReportPort = grid.size();
 			DefaultPort port = new DefaultPort();
-			GraphConstants.setOffset(port.getAttributes(), new Point2D.Double(0, lastReportPort * 100));
+			Map map = port.getAttributes();
+			GraphConstants.setOffset(map, new Point2D.Double(0, lastReportPort * 100));
+			GraphConstants.setAbsoluteY(map, true);
 			add(port);
 			returnPorts.add(port);
 			return port;
@@ -125,8 +129,10 @@ public class SwimlaneVertex extends BaseFlowChartVertex
 		GraphConstants.setEditable(map, false);
 		GraphConstants.setFont(map, new Font("sansserif", Font.PLAIN, 12));
 		GraphConstants.setOpaque(map, true);
-		GraphConstants.setBackground(map, Color.WHITE);
+		GraphConstants.setBackground(map, new Color(0xEEF0FF));
 		GraphConstants.setBorderColor(map, Color.BLACK);
 		GraphConstants.setInset(map, INSET);
+		bounds = new Rectangle2D.Double(0, 0, 300, 100);
+		GraphConstants.setBounds(map, bounds);
 	}
 }

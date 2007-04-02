@@ -61,7 +61,7 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 	 */
 	protected BaseGraphCell members;
 
-	protected final static int INSET = 4;
+	protected static final int INSET = 4;
 
 	protected Map<Filter, FilterVertex> filterVertices;
 

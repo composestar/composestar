@@ -10,6 +10,10 @@
 
 package Composestar.Visualization.Model.Cells.FlowChart;
 
+import java.awt.Color;
+
+import org.jgraph.graph.GraphConstants;
+
 
 /**
  * Like an Method Execution Vertex but the method execution is not definitive,
@@ -24,5 +28,12 @@ public class SIMethodExecutionVertex extends MethodExecutionVertex
 	public SIMethodExecutionVertex(Object userObject)
 	{
 		super(userObject);
+	}
+	
+	@Override
+	protected void setDefaults()
+	{
+		super.setDefaults();
+		GraphConstants.setBackground(getAttributes(), new Color(0xFCEEFF));
 	}
 }

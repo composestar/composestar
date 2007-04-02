@@ -88,28 +88,11 @@ public class ParallelogramView extends VertexView
 		{
 			Point2D center = AbstractCellView.getCenterPoint(view);
 			Rectangle2D bounds = view.getBounds();
-			Polygon parallel = getParallelogram((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(),
-					(int) bounds.getHeight(), CpsGraphConstants.getSkew(view.getAllAttributes()));
+			Polygon parallel = RenderUtils.getParallelogram((int) bounds.getX(), (int) bounds.getY(), (int) bounds
+					.getWidth(), (int) bounds.getHeight(), CpsGraphConstants.getSkew(view.getAllAttributes()), 0);
 			Point2D res = view.getAllAttributes().createPoint();
 			RenderUtils.intersectLinePolygon(p, center, parallel, res);
 			return res;
-		}
-
-		/**
-		 * Creates our parallelogram.
-		 * 
-		 * @param x
-		 * @param y
-		 * @param width
-		 * @param height
-		 * @param skew
-		 * @return
-		 */
-		protected Polygon getParallelogram(int x, int y, int width, int height, int skew)
-		{
-			int[] xcoords = { x + skew, x + width, x + width - skew, x };
-			int[] ycoords = { y, y, y + height, y + height };
-			return new Polygon(xcoords, ycoords, 4);
 		}
 
 		@Override
@@ -121,7 +104,7 @@ public class ParallelogramView extends VertexView
 			Dimension dim = getSize();
 			int width = dim.width - borderWidth;
 			int height = dim.height - borderWidth;
-			Polygon parallel = getParallelogram(0, 0, width, height, skew);
+			Polygon parallel = RenderUtils.getParallelogram(0, 0, width, height, skew, 0);
 
 			if (isOpaque())
 			{

@@ -18,6 +18,9 @@ import java.awt.geom.Point2D;
  */
 public final class RenderUtils
 {
+	private RenderUtils()
+	{}
+
 	/**
 	 * Compute the intersection of two line segments. From perfuse -
 	 * http://prefuse.org/
@@ -37,14 +40,14 @@ public final class RenderUtils
 	public static int intersectLineLine(double a1x, double a1y, double a2x, double a2y, double b1x, double b1y,
 			double b2x, double b2y, Point2D intersect)
 	{
-		double ua_t = (b2x - b1x) * (a1y - b1y) - (b2y - b1y) * (a1x - b1x);
-		double ub_t = (a2x - a1x) * (a1y - b1y) - (a2y - a1y) * (a1x - b1x);
-		double u_b = (b2y - b1y) * (a2x - a1x) - (b2x - b1x) * (a2y - a1y);
+		double uaT = (b2x - b1x) * (a1y - b1y) - (b2y - b1y) * (a1x - b1x);
+		double ubT = (a2x - a1x) * (a1y - b1y) - (a2y - a1y) * (a1x - b1x);
+		double uB = (b2y - b1y) * (a2x - a1x) - (b2x - b1x) * (a2y - a1y);
 
-		if (u_b != 0)
+		if (uB != 0)
 		{
-			double ua = ua_t / u_b;
-			double ub = ub_t / u_b;
+			double ua = uaT / uB;
+			double ub = ubT / uB;
 
 			if (0 <= ua && ua <= 1 && 0 <= ub && ub <= 1)
 			{
@@ -58,7 +61,7 @@ public final class RenderUtils
 		}
 		else
 		{
-			return (ua_t == 0 || ub_t == 0 ? 1 : 2);
+			return (uaT == 0 || ubT == 0 ? 1 : 2);
 		}
 	}
 
@@ -95,5 +98,42 @@ public final class RenderUtils
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * Creates a parallelogram.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param hSkew
+	 * @return
+	 */
+	public static Polygon getParallelogram(int x, int y, int width, int height, int hSkew, int vSkew)
+	{
+		// 1....2
+		// ......
+		// ......
+		// 4....3
+		int[] xcoords = { x + hSkew, x + width, x + width - hSkew, x };
+		int[] ycoords = { y, y + vSkew, y + height, y + height - vSkew };
+		return new Polygon(xcoords, ycoords, 4);
+	}
+
+	/**
+	 * Create a diamon
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @return
+	 */
+	public static Polygon getDiamond(int x, int y, int width, int height)
+	{
+		int[] xcoords = { x + width / 2, x + width, x + width / 2, x };
+		int[] ycoords = { y, y + height / 2, y + height, y + height / 2 };
+		return new Polygon(xcoords, ycoords, 4);
 	}
 }

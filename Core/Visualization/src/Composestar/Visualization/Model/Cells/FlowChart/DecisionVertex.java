@@ -10,6 +10,10 @@
 
 package Composestar.Visualization.Model.Cells.FlowChart;
 
+import java.awt.Color;
+
+import org.jgraph.graph.GraphConstants;
+
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 
 /**
@@ -36,4 +40,12 @@ public class DecisionVertex extends BaseFlowChartVertex
 	{
 		return getCondition().asSourceCode();
 	}
+
+	@Override
+	protected void setDefaults()
+	{
+		super.setDefaults();
+		GraphConstants.setBackground(getAttributes(), new Color(0xFFFCEF));
+	}
+
 }

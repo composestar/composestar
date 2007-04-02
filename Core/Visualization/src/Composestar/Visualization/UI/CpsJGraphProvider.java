@@ -12,13 +12,13 @@ import Composestar.Visualization.Model.CpsJGraph;
  */
 public interface CpsJGraphProvider
 {
-	public CpsJGraph getCurrentGraph();
+	CpsJGraph getCurrentGraph();
 
-	public List<CpsJGraph> getAllGraphs();
+	List<CpsJGraph> getAllGraphs();
 
-	public void openGraph(CpsJGraph newGraph);
+	void openGraph(CpsJGraph newGraph);
 
-	public void closeGraph(CpsJGraph graph);
+	void closeGraph(CpsJGraph graph);
 
-	public void closeAllGraphs();
+	void closeAllGraphs();
 }

@@ -10,6 +10,10 @@
 
 package Composestar.Visualization.Model.Cells.FlowChart;
 
+import java.awt.Color;
+
+import org.jgraph.graph.GraphConstants;
+
 
 /**
  * A final method execution vertex. Will be used for the execution of the actual
@@ -25,5 +29,12 @@ public class MethodExecutionVertex extends BaseFlowChartVertex
 	public MethodExecutionVertex(Object userObject)
 	{
 		super(userObject);
+	}
+	
+	@Override
+	protected void setDefaults()
+	{
+		super.setDefaults();
+		GraphConstants.setBackground(getAttributes(), new Color(0xFFEEFD));
 	}
 }

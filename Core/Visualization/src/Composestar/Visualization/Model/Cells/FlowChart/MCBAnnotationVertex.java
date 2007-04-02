@@ -10,6 +10,10 @@
 
 package Composestar.Visualization.Model.Cells.FlowChart;
 
+import java.awt.Color;
+
+import org.jgraph.graph.GraphConstants;
+
 
 /**
  * the vertex for a Message Change Behavior annotation. Will be used when the
@@ -25,5 +29,12 @@ public class MCBAnnotationVertex extends BaseFlowChartVertex
 	public MCBAnnotationVertex(Object userObject)
 	{
 		super(userObject);
+	}
+	
+	@Override
+	protected void setDefaults()
+	{
+		super.setDefaults();
+		GraphConstants.setBackground(getAttributes(), new Color(0xFCFFEE));
 	}
 }

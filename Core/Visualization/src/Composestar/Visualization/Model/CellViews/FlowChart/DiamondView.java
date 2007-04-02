@@ -74,13 +74,8 @@ public class DiamondView extends VertexView
 		{
 			Point2D center = AbstractCellView.getCenterPoint(view);
 			Rectangle2D bounds = view.getBounds();
-			int x = (int) bounds.getX();
-			int y = (int) bounds.getY();
-			int width = (int) bounds.getWidth();
-			int height = (int) bounds.getHeight();
-			int[] xcoords = { x + width / 2, x + width, x + width / 2, x };
-			int[] ycoords = { y, y + height / 2, y + height, y + height / 2 };
-			Polygon diamond = new Polygon(xcoords, ycoords, 4);
+			Polygon diamond = RenderUtils.getDiamond((int) bounds.getX(), (int) bounds.getY(), (int) bounds.getWidth(),
+					(int) bounds.getHeight());
 			Point2D res = view.getAllAttributes().createPoint();
 			RenderUtils.intersectLinePolygon(p, center, diamond, res);
 			return res;
@@ -164,8 +159,8 @@ public class DiamondView extends VertexView
 		// double yinter = m1 * xinter + b1;
 		// Point2D intersection = view.getAttributes().createPoint(xinter,
 		// yinter);
-		//			return intersection;
-		//		}
+		// return intersection;
+		// }
 
 		@Override
 		public void paint(Graphics g)
@@ -174,11 +169,7 @@ public class DiamondView extends VertexView
 
 			// construct the diamond
 			Dimension dim = getSize();
-			int width = dim.width - borderWidth;
-			int height = dim.height - borderWidth;
-			int[] xcoords = { width / 2, width, width / 2, 0 };
-			int[] ycoords = { 0, height / 2, height, height / 2 };
-			Polygon diamond = new Polygon(xcoords, ycoords, 4);
+			Polygon diamond = RenderUtils.getDiamond(0, 0, dim.width - borderWidth, dim.height - borderWidth);
 
 			if (isOpaque())
 			{

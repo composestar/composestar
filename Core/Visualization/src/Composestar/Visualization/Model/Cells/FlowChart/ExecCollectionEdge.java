@@ -87,7 +87,7 @@ public class ExecCollectionEdge extends DefaultEdge
 		GraphConstants.setLineEnd(map, GraphConstants.ARROW_TECHNICAL);
 		GraphConstants.setEndFill(map, true);
 		GraphConstants.setEndSize(map, 8);
-		GraphConstants.setLabelPosition(map, new Point2D.Double(GraphConstants.PERMILLE / 2, -11));
+		GraphConstants.setOpaque(map, true);
 		// GraphConstants.setRouting(map, GraphConstants.ROUTING_SIMPLE);
 	}
 

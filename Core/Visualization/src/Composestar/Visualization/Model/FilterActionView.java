@@ -175,22 +175,22 @@ public class FilterActionView extends CpsView
 			logger.debug("Visiting state with names: " + sb.toString());
 
 			boolean loop = true;
-			BaseFlowChartVertex _cell = stateVertices.get(state);
-			if (_cell == null)
+			BaseFlowChartVertex nextCell = stateVertices.get(state);
+			if (nextCell == null)
 			{
 				if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE)
 						&& !flowNode.containsName(FlowNode.TRUE_NODE))
 				{
 					logger.info("Adding decision node");
 					ConditionExpression ce = (ConditionExpression) flowNode.getRepositoryLink();
-					_cell = new DecisionVertex(ce);
-					mainLane.addVertex(_cell);
+					nextCell = new DecisionVertex(ce);
+					mainLane.addVertex(nextCell);
 				}
 				else if (flowNode.containsName(FlowNode.STOP_NODE))
 				{
 					logger.info("Adding exit node");
-					_cell = new ExitFlowVertex();
-					mainLane.addVertex(_cell);
+					nextCell = new ExitFlowVertex();
+					mainLane.addVertex(nextCell);
 				}
 				else if (flowNode.containsName(FlowNode.RETURN_NODE))
 				{
@@ -201,19 +201,19 @@ public class FilterActionView extends CpsView
 					if (msg.getTarget().equals(Message.INNER_TARGET))
 					{
 						targetConcern = focusConcern;
-						_cell = new MethodExecutionVertex(msg);
+						nextCell = new MethodExecutionVertex(msg);
 					}
 					else if (msg.getTarget().equals(Message.STAR_TARGET))
 					{
 						targetConcern = focusConcern;
-						_cell = new MethodExecutionVertex(msg);
+						nextCell = new MethodExecutionVertex(msg);
 					}
 					else
 					{
 						try
 						{
 							targetConcern = Resolver.findTargetConcern(focusConcern, filterPos, msg.getTarget());
-							_cell = new MethodExecutionVertex(msg);
+							nextCell = new MethodExecutionVertex(msg);
 						}
 						catch (ModuleException e)
 						{
@@ -221,7 +221,7 @@ public class FilterActionView extends CpsView
 						}
 					}
 					SwimlaneVertex lane = getSwimlane(targetConcern);
-					lane.addVertex(_cell);
+					lane.addVertex(nextCell);
 					// TODO:
 					// if (target == inner)
 					// ..use MEV
@@ -269,18 +269,18 @@ public class FilterActionView extends CpsView
 					// set MCB to edge
 					// convert edge
 				}
-				if (_cell != null)
+				if (nextCell != null)
 				{
 					// layout.insert(_cell);
-					stateVertices.put(state, _cell);
+					stateVertices.put(state, nextCell);
 					loop = false;
 				}
 			}
 
 			// if _cell was set link the edge to it
-			if (_cell != null)
+			if (nextCell != null)
 			{
-				edge.setTarget(_cell.getPort());
+				edge.setTarget(nextCell.getPort());
 				layout.insert(edge);
 				if (loop)
 				{
@@ -289,8 +289,22 @@ public class FilterActionView extends CpsView
 					return;
 				}
 				edge = new ExecCollectionEdge();
-				edge.setSource(_cell.getPort());
-				sourceCell = _cell;
+				edge.setSource(nextCell.getPort());
+				sourceCell = nextCell;
+			}
+			
+			if (flowNode.containsName(FlowNode.RETURN_NODE))
+			{
+				logger.info("Adding return edge");
+				edge.setTarget(mainLane.getReturnPort());
+				layout.insert(edge);
+				for (ExecutionState returnAction : returnActions)
+				{
+					FilterAction faction = getFilterAction(returnAction.getFlowNode());
+					edge.addAction(faction);
+				}
+				returnActions.clear();
+				// beyond this point there should be no more edges
 			}
 
 			// traverse execution transitions

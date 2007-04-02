@@ -202,11 +202,11 @@ public class JGraphParallelRouter extends DefaultEdge.LoopRouting
 	/**
 	 * Setter to define distance between each parallel edge
 	 * 
-	 * @param edgeSeparation New distance
+	 * @param newEdgeSeparation New distance
 	 */
-	public static void setEdgeSeparation(double edgeSeparation)
+	public static void setEdgeSeparation(double newEdgeSeparation)
 	{
-		JGraphParallelRouter.edgeSeparation = edgeSeparation;
+		JGraphParallelRouter.edgeSeparation = newEdgeSeparation;
 	}
 
 	/**
@@ -223,11 +223,11 @@ public class JGraphParallelRouter extends DefaultEdge.LoopRouting
 	/**
 	 * Setter to define distance between intermediate and source/target points
 	 * 
-	 * @param edgeDeparture New distance
+	 * @param newEdgeDeparture New distance
 	 */
-	public static void setEdgeDeparture(double edgeDeparture)
+	public static void setEdgeDeparture(double newEdgeDeparture)
 	{
-		JGraphParallelRouter.edgeDeparture = edgeDeparture;
+		JGraphParallelRouter.edgeDeparture = newEdgeDeparture;
 	}
 
 	/**

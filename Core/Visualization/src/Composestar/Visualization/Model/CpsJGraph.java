@@ -119,7 +119,7 @@ public class CpsJGraph extends JGraph
 			{
 				// now go back up the tree to find the first hint
 				String res = null;
-				BaseGraphCell curCell = ((BaseGraphCell) cell);
+				BaseGraphCell curCell = (BaseGraphCell) cell;
 				while ((res == null) && (curCell != null))
 				{
 					res = curCell.getToolTipString();
