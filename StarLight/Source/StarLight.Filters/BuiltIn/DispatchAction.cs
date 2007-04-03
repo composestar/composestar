@@ -46,7 +46,7 @@ namespace Composestar.StarLight.Filters.BuiltIn
 	///  Dispatches to another method.
 	/// </summary>
 	[FilterActionAttribute(FilterAction.DispatchAction, FilterActionAttribute.FilterFlowBehavior.Return,
-	   FilterActionAttribute.MessageSubstitutionBehavior.Original)]
+	   FilterActionAttribute.MessageSubstitutionBehavior.Substituted)]
 	public class DispatchAction : FilterAction
 	{
 		/// <summary>

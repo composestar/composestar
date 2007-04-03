@@ -24,35 +24,44 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 
 /**
- * Corresponds to the MethodInfo class in the .NET framework. For more information 
- * on the methods and their meaning please refer to the microsoft documentation:
+ * Corresponds to the MethodInfo class in the .NET framework. For more
+ * information on the methods and their meaning please refer to the microsoft
+ * documentation:
  * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
  * fsystemreflectionmethodinfoclasstopic.asp
  */
-public class DotNETMethodInfo extends MethodInfo 
+public class DotNETMethodInfo extends MethodInfo
 {
 	private static final long serialVersionUID = -1303615818393508196L;
 
 	private boolean isConstructor;
+
 	private boolean isPrivate;
+
 	private boolean isAssembly;
+
 	private boolean isPublic;
+
 	private boolean isStatic;
+
 	private boolean isFinal;
+
 	private boolean isAbstract;
+
 	private boolean isVirtual;
+
 	private boolean isDeclaredHere;
+
 	private String signature;
 
-	public DotNETMethodInfo() 
+	public DotNETMethodInfo()
 	{
 		super();
 	}
 
 	/**
-	 * Currently used to support selector name conversion.
-	 * Copy only stuff that applies to a method signature.
-	 * This excludes e.g. the parent.
+	 * Currently used to support selector name conversion. Copy only stuff that
+	 * applies to a method signature. This excludes e.g. the parent.
 	 */
 	public MethodInfo getClone(String n, Type actualParent)
 	{
@@ -77,7 +86,36 @@ public class DotNETMethodInfo extends MethodInfo
 		mi.isVirtual = this.isVirtual;
 
 		mi.isDeclaredHere = this.isDeclaredHere;
-		mi.signature = this.signature;
+
+		// Create new signature:
+		StringBuffer newSignature = new StringBuffer();
+		int index1 = this.signature.indexOf("::");
+		if (!actualParent.equals(this.parent))
+		{
+			int index0 = this.signature.indexOf(' ');
+			newSignature.append(this.signature.substring(0, index0));
+			String oldType = this.signature.substring(index0, index1);
+			String newType = oldType.replace(this.parent.getFullName(), actualParent.getFullName());
+			newSignature.append(newType);
+		}
+		else
+		{
+			newSignature.append(this.signature.substring(0, index1));
+		}
+		int index2 = this.signature.indexOf('(');
+		if (!n.equals(this.Name))
+		{
+			String oldName = this.signature.substring(index1, index2);
+			String newName = oldName.replace(this.Name, n);
+			newSignature.append(newName);
+		}
+		else
+		{
+			newSignature.append(this.signature.substring(index1, index2));
+		}
+		newSignature.append(this.signature.substring(index2));
+
+		mi.signature = newSignature.toString();
 		return mi;
 	}
 
@@ -120,10 +158,10 @@ public class DotNETMethodInfo extends MethodInfo
 	{
 		this.isPublic = isPublic;
 	}
-	
+
 	public boolean isProtected()
 	{
-		return false; // TODO: should return the isFamily value     
+		return false; // TODO: should return the isFamily value
 	}
 
 	public boolean isStatic()
@@ -185,20 +223,13 @@ public class DotNETMethodInfo extends MethodInfo
 	{
 		this.signature = sig;
 	}
-/*
-	public void addParameter(DotNETParameterInfo param)
-	{
-		Parameters.add(param);
-		// param.setParent(this);
-	}
 
-	public void setParent(DotNETType parent)
-	{
-		Parent = parent;
-	}
-*/
+	/*
+	 * public void addParameter(DotNETParameterInfo param) {
+	 * Parameters.add(param); // param.setParent(this); } public void
+	 * setParent(DotNETType parent) { Parent = parent; }
+	 */
 	// Stuff for LOLA
-
 	private HashSet toHashSet(Collection c)
 	{
 		HashSet result = new HashSet();
@@ -210,26 +241,24 @@ public class DotNETMethodInfo extends MethodInfo
 
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentClass") && parent.getUnitType().equals("Class"))
-			return new UnitResult(parent);
-		else if (argumentName.equals("ParentInterface") && parent.getUnitType().equals("Interface"))
-			return new UnitResult(parent);      
-		else if (argumentName.equals("ChildParameters"))
-			return new UnitResult(toHashSet(parameters));
-		else if (argumentName.equals("ReturnClass") && getReturnType().getUnitType().equals("Class"))
-			return new UnitResult(getReturnType());
-		else if (argumentName.equals("ReturnInterface") && getReturnType().getUnitType().equals("Interface"))
-			return new UnitResult(getReturnType());
-		else if (argumentName.equals("ReturnAnnotation") && getReturnType().getUnitType().equals("Annotation"))
-			return new UnitResult(getReturnType());
+		if (argumentName.equals("ParentClass") && parent.getUnitType().equals("Class")) return new UnitResult(parent);
+		else if (argumentName.equals("ParentInterface") && parent.getUnitType().equals("Interface")) return new UnitResult(
+				parent);
+		else if (argumentName.equals("ChildParameters")) return new UnitResult(toHashSet(parameters));
+		else if (argumentName.equals("ReturnClass") && getReturnType().getUnitType().equals("Class")) return new UnitResult(
+				getReturnType());
+		else if (argumentName.equals("ReturnInterface") && getReturnType().getUnitType().equals("Interface")) return new UnitResult(
+				getReturnType());
+		else if (argumentName.equals("ReturnAnnotation") && getReturnType().getUnitType().equals("Annotation")) return new UnitResult(
+				getReturnType());
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
-				res.add(((Annotation)i.next()).getType());
+				res.add(((Annotation) i.next()).getType());
 			return new UnitResult(res);
-		}        
+		}
 
 		return null;
 	}
@@ -237,29 +266,22 @@ public class DotNETMethodInfo extends MethodInfo
 	public Collection getUnitAttributes()
 	{
 		Set result = new HashSet();
-		if (isPrivate())
-			result.add("private");
-		if (isAssembly())
-			result.add("assembly");
-		if (isPublic())
-			result.add("public");
-	//	if (isProtected())
-	//		result.add("protected");
-		if (isStatic())
-			result.add("static");
-		if (isFinal())
-			result.add("final");
-		if (isAbstract())
-			result.add("abstract");
-		if (isVirtual())
-			result.add("virtual");
+		if (isPrivate()) result.add("private");
+		if (isAssembly()) result.add("assembly");
+		if (isPublic()) result.add("public");
+		// if (isProtected())
+		// result.add("protected");
+		if (isStatic()) result.add("static");
+		if (isFinal()) result.add("final");
+		if (isAbstract()) result.add("abstract");
+		if (isVirtual()) result.add("virtual");
 		return result;
 	}
 
 	/**
 	 * Custom deserialization of this object
 	 */
-	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		isConstructor = in.readBoolean();
 		isPrivate = in.readBoolean();

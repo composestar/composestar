@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Font Name="Tahoma" Size="8.4" />
   <Class Name="Composestar.StarLight.Entities.WeaveSpec.External">
-    <Position X="4.75" Y="2.5" Width="1.5" />
+    <Position X="4.75" Y="2.5" Width="1.75" />
     <TypeIdentifier>
       <FileName>WeaveSpec\External.cs</FileName>
       <NewMemberFileName>WeaveSpec\Internal.cs</NewMemberFileName>
@@ -13,7 +13,7 @@
     </Compartments>
   </Class>
   <Class Name="Composestar.StarLight.Entities.WeaveSpec.Internal">
-    <Position X="10.25" Y="3" Width="1.5" />
+    <Position X="10.25" Y="3" Width="1.75" />
     <TypeIdentifier>
       <FileName>WeaveSpec\Internal.cs</FileName>
       <HashCode>AAAAIAAAEAAAAAQAAAAAAAQAAAAIIIAAAQBAAAAACAA=</HashCode>
@@ -23,7 +23,7 @@
     </Compartments>
   </Class>
   <Class Name="Composestar.StarLight.Entities.WeaveSpec.WeaveType">
-    <Position X="7.5" Y="2.75" Width="1.5" />
+    <Position X="7.5" Y="2.75" Width="2.25" />
     <TypeIdentifier>
       <FileName>WeaveSpec\WeaveType.cs</FileName>
       <HashCode>QAAAMCAAAgCAAIAAIJAAAAQAAAAABAAAAAAAIAAACEA=</HashCode>
@@ -54,10 +54,10 @@
     </AssociationLine>
   </Class>
   <Class Name="Composestar.StarLight.Entities.WeaveSpec.WeaveMethod">
-    <Position X="7.5" Y="6.25" Width="1.5" />
+    <Position X="7.5" Y="6.25" Width="1.75" />
     <TypeIdentifier>
       <FileName>WeaveSpec\WeaveMethod.cs</FileName>
-      <HashCode>AAACAAAAAAAAAAAAICBAAAwAAABAAAAAAgAAIAAAAAE=</HashCode>
+      <HashCode>AAACAgAAAAAAAAAAICBAAAwAAAAAAAAQAAAAIAAAAAE=</HashCode>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Calls" />
@@ -66,19 +66,8 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
-  <Class Name="Composestar.StarLight.Entities.WeaveSpec.Instructions.InlineInstruction">
-    <Position X="10.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>WeaveSpec\Instructions\InlineInstruction.cs</FileName>
-      <HashCode>AIAAAAAAEAAAAAAEABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="Composestar.StarLight.Entities.WeaveSpec.Condition">
-    <Position X="4.75" Y="4.75" Width="1.5" />
+    <Position X="4.75" Y="4.75" Width="1.75" />
     <TypeIdentifier>
       <FileName>WeaveSpec\Condition.cs</FileName>
       <HashCode>AAAAIACAAAAAAAABAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
@@ -88,24 +77,24 @@
     </Compartments>
   </Class>
   <Class Name="Composestar.StarLight.Entities.WeaveSpec.WeaveCall">
-    <Position X="10.25" Y="6.25" Width="1.5" />
+    <Position X="10.25" Y="6.25" Width="1.75" />
     <TypeIdentifier>
       <FileName>WeaveSpec\WeaveCall.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAACQAAAEAA=</HashCode>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAQAAACQAAAAAA=</HashCode>
     </TypeIdentifier>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
   <Class Name="Composestar.StarLight.Entities.WeaveSpec.WeaveSpecification">
-    <Position X="7.25" Y="0.75" Width="1.75" />
+    <Position X="7.75" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <FileName>WeaveSpec\WeaveSpecification.cs</FileName>
-      <HashCode>IACAAAAAAAAAAAAAAQABEAICAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>IACAAAAAAAAAAAAAAIIBEAACAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="WeaveTypes" />
-      <Property Name="GeneralizedAIMs" />
+      <Property Name="GeneralizedFilterCodes" />
     </ShowAsCollectionAssociation>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -115,5 +104,16 @@
         <Position X="0.11" Y="0.175" Height="0.16" Width="0.948" />
       </MemberNameLabel>
     </AssociationLine>
+  </Class>
+  <Class Name="Composestar.StarLight.Entities.WeaveSpec.Instructions.FilterCode">
+    <Position X="11.25" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>WeaveSpec\Instructions\FilterCode.cs</FileName>
+      <HashCode>AIAAAAAAAAAAAAAAACBAAAAAAABIAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <Lollipop Position="0.2" />
   </Class>
 </ClassDiagram>

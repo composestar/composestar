@@ -104,10 +104,10 @@ class InstructionTranslator implements Visitor
 
 		// create contained instructions:
 		Vector inlineInstructions = new Vector();
-		Enumeration instructions = block.getInstructions();
-		while (instructions.hasMoreElements())
+		Iterator<Instruction> instructions = block.getInstructions();
+		while (instructions.hasNext())
 		{
-			Instruction instruction = (Instruction) instructions.nextElement();
+			Instruction instruction = instructions.next();
 
 			InlineInstruction inlineInstruction = (InlineInstruction) instruction.accept(this);
 			inlineInstructions.add(inlineInstruction);

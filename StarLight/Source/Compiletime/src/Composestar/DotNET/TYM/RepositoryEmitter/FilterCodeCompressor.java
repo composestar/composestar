@@ -4,7 +4,6 @@
  */
 package Composestar.DotNET.TYM.RepositoryEmitter;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -197,25 +196,25 @@ public class FilterCodeCompressor
 			}
 
 			// Check whether instructions within block equal
-			Enumeration blockEnum = block.getInstructions();
-			Enumeration checkBlockEnum = checkBlock.getInstructions();
+			Iterator<Instruction> blockEnum = block.getInstructions();
+			Iterator<Instruction> checkBlockEnum = checkBlock.getInstructions();
 
-			while (blockEnum.hasMoreElements())
+			while (blockEnum.hasNext())
 			{
-				if (!checkBlockEnum.hasMoreElements())
+				if (!checkBlockEnum.hasNext())
 				{
 					return Boolean.FALSE;
 				}
 
-				currentCheckInstruction = (Instruction) checkBlockEnum.nextElement();
-				Instruction nextInstruction = (Instruction) blockEnum.nextElement();
+				currentCheckInstruction = checkBlockEnum.next();
+				Instruction nextInstruction = blockEnum.next();
 				if (nextInstruction.accept(this).equals(Boolean.FALSE))
 				{
 					return Boolean.FALSE;
 				}
 			}
 
-			if (!checkBlockEnum.hasMoreElements())
+			if (!checkBlockEnum.hasNext())
 			{
 				return Boolean.TRUE;
 			}
@@ -381,11 +380,11 @@ public class FilterCodeCompressor
 			int value = 0;
 
 			// Check whether instructions within block equal
-			Enumeration blockEnum = block.getInstructions();
+			Iterator<Instruction> blockEnum = block.getInstructions();
 
-			while (blockEnum.hasMoreElements())
+			while (blockEnum.hasNext())
 			{
-				Instruction nextInstruction = (Instruction) blockEnum.nextElement();
+				Instruction nextInstruction = blockEnum.next();
 				value += ((Integer) nextInstruction.accept(this)).intValue();
 			}
 
@@ -485,11 +484,11 @@ public class FilterCodeCompressor
 			copyLabel(block, copy);
 
 			// Instructions in block
-			Enumeration blockEnum = block.getInstructions();
+			Iterator<Instruction> blockEnum = block.getInstructions();
 
-			while (blockEnum.hasMoreElements())
+			while (blockEnum.hasNext())
 			{
-				Instruction nextInstruction = (Instruction) blockEnum.nextElement();
+				Instruction nextInstruction = blockEnum.next();
 				Instruction copyInstruction = (Instruction) nextInstruction.accept(this);
 				copy.addInstruction(copyInstruction);
 			}

@@ -12,7 +12,7 @@ concern FilterTestsConcern in BasicTests
 		conditions
 			doError : inner.getProduceError();
 		inputfilters
-			proderrdisp : Dispatch = { True => [*.getProduceError] };
+			proderrdisp : Dispatch = { True => [*.getProduceError] inner.getProduceError };
 			logging     : Logging = { True => [*.*] };
 			profiling   : Profiling = { True => [*.*] };
 			error1      : NotImplemented = { doError ~> [*.makeError], !doError => [*.*] };
@@ -32,7 +32,7 @@ concern FilterTestsConcern in BasicTests
 	filtermodule FM2
 	{
 		inputfilters
-			dispstatic  : Dispatch = { True => [*.func11], True => [*.func12] };
+			dispstatic  : Dispatch = { True => [*.func11] inner.func11, True => [*.func12] inner.func12 };
 			logging     : Tracing = { True => [*.*] }
 	}
 
