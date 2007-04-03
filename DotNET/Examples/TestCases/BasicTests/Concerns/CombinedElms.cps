@@ -13,10 +13,10 @@ concern CombinedElms in BasicTests
 			// don't only allow these methods, report is actually allowed because of the previous filter
 			mpat1 : Error = { True ~> {[*.quux], [*.NonExistant], [*.report]} };
 			mpat2 : Dispatch = { 
-									[*.foo] *.bar, 
-									[*.bar] *.quux 
+									[*.foo] inner.bar, 
+									[*.bar] inner.quux 
 								};
-			bogus : Dispatch = { {[*.quux2], [*.quux3]} *.quux }
+			bogus : Dispatch = { {[*.quux2], [*.quux3]} inner.quux }
 	}
 
 	superimposition
