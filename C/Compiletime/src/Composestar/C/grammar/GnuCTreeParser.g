@@ -966,7 +966,7 @@ functionDef
 		file.addMethod(method);
 		//function.addMethod(method);
 		//method.addFunction(function);
-		sig.add(method,MethodWrapper.UNKNOWN);
+		sig.addMethodWrapper(new MethodWrapper(method, MethodWrapper.UNKNOWN));
 		pcFile.setSignature(sig);
 	
 		if(firstfunction)

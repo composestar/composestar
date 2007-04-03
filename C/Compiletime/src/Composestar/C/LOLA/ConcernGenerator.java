@@ -124,7 +124,7 @@ public class ConcernGenerator extends DefaultHandler
 					{
 						CMethodInfo methodInfo = (CMethodInfo) method;
 						Debug.out(Debug.MODE_INFORMATION, "CLOLA", "Method: " + methodInfo.Name);
-						sig.add(methodInfo, MethodWrapper.ADDED);
+						sig.addMethodWrapper(new MethodWrapper(methodInfo, MethodWrapper.ADDED));
 						// By doing addMethod, I'm overwriting the original
 						// parent
 						// that's probably not good, because then the filename
