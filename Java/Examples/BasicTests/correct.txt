@@ -40,6 +40,6 @@ BasicTests.FilterTests.makeOutsideTrip()
 BasicTests.FilterTestsHelper.makeTrip()
 BasicTests.FooBarQuux.ctor()
 BasicTests.TestsBase.ctor()
-An ErrorFilterException was raised.
-An ErrorFilterException was raised.
+BasicTests.FooBarQuux.bar()
+BasicTests.FooBarQuux.quux()
 BasicTests.FooBarQuux.success()

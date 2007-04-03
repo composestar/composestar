@@ -7,6 +7,7 @@ concern AnotherFilterTestsConcern in BasicTests
 		conditions
 			enoughVisits : visitor.isEnough();
 		inputfilters
+			error : Error = { True ~> [*.makeTrip], True => <inner.*> };
 			makeVisit : Dispatch = { !enoughVisits => [*.makeTrip] *.doVisit };
 			countVisit : Meta = { [*.doVisit] visitor.visit };
 			makeTrip : Dispatch = { [*.doVisit] *.makeTrip }
