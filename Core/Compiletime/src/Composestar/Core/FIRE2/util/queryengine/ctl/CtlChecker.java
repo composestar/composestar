@@ -5,11 +5,13 @@
 package Composestar.Core.FIRE2.util.queryengine.ctl;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -24,6 +26,7 @@ import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.util.queryengine.Predicate;
+import Composestar.Core.FIRE2.util.queryengine.QueryEngine;
 import Composestar.Core.FIRE2.util.viewer.Viewer;
 
 public class CtlChecker
@@ -46,7 +49,7 @@ public class CtlChecker
 
 	private Hashtable simplifierMap;
 
-	public CtlChecker(ExecutionModel model, String formula, Dictionary predicates)
+	public CtlChecker(ExecutionModel model, String formula, Dictionary<String, Predicate> predicates)
 	{
 		this(model, CtlParser.parse(formula, predicates));
 	}
@@ -86,9 +89,9 @@ public class CtlChecker
 		return satSet.contains(formula);
 	}
 
-	public Enumeration matchingStates()
+	public List<ExecutionState> matchingStates()
 	{
-		Vector v = new Vector();
+		ArrayList<ExecutionState> list = new ArrayList<ExecutionState>();
 
 		Enumeration e = backwardStateVector.elements();
 		while (e.hasMoreElements())
@@ -96,11 +99,11 @@ public class CtlChecker
 			ExecutionState state = (ExecutionState) e.nextElement();
 			if (matchesState(state))
 			{
-				v.addElement(state);
+				list.add(state);
 			}
 		}
 
-		return v.elements();
+		return list;
 	}
 
 	private void initialize()

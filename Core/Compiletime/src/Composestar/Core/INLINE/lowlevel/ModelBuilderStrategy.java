@@ -143,7 +143,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#startInline(Composestar.Core.FILTH.FilterModuleOrder,
 	 *      Composestar.Core.LAMA.MethodInfo, java.lang.String[])
 	 */
-	public void startInline(FilterModuleOrder filterSet, MethodInfo method, String[] argReferences)
+	public void startInline(FilterModuleOrder filterSet, MethodInfo method)
 	{
 		filterCode = new FilterCode();
 
@@ -394,7 +394,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		Instruction instruction = new FilterAction(
 				action.getName(),
 				state.getMessage(),
-				getSubstitutedMessage(state),
+				state.getSubstitutionMessage(),
 				true,
 				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
 
@@ -414,7 +414,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		Instruction instruction = new FilterAction(
 				action.getName(),
 				state.getMessage(),
-				getSubstitutedMessage(state),
+				state.getSubstitutionMessage(),
 				false,
 				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
 
@@ -431,7 +431,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private void generateDispatchAction(ExecutionState state)
 	{
-		Message callMessage = getSubstitutedMessage(state);
+		Message callMessage = state.getSubstitutionMessage();
 
 		FilterAction action = new FilterAction("DispatchAction", state.getMessage(), callMessage, true, true);
 		currentBlock.addInstruction(action);
@@ -464,31 +464,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		currentBlock = (Block) blockStack.pop();
 	}
 
-	/**
-	 * Creates the message that is called out of the original message and the
-	 * substitution selector and target
-	 * 
-	 * @param state
-	 * @return
-	 */
-	private Message getSubstitutedMessage(ExecutionState state)
-	{
-		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
-		{
-			dispTarget = state.getMessage().getTarget();
-		}
-
-		// get the dispatch selector:
-		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
-		{
-			dispSelector = state.getMessage().getSelector();
-		}
-
-		return new Message(dispTarget, dispSelector);
-	}
+	
 
 	/**
 	 * Returns the label corresponding with the given labelId. If the label

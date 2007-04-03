@@ -35,7 +35,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
 import Composestar.Core.FIRE2.model.FlowNode;
-import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
@@ -105,8 +104,7 @@ public class GrooveASTBuilder
 	public final static String TARGET_EDGE = "target";
 
 	public GrooveASTBuilder()
-	{
-	}
+	{}
 
 	public Graph buildAST(FilterModule filterModule, boolean forInputFilters)
 	{
@@ -390,11 +388,11 @@ public class GrooveASTBuilder
 				graph.addEdge(edge);
 				break;
 			case FilterAction.MESSAGE_SUBSTITUTED:
-				edge = new AnnotatedEdge(actionNode, FlowNode.EXIT_ACTION_NODE, actionNode);
+				edge = new AnnotatedEdge(actionNode, FlowNode.SUBSTITUTED_MESSAGE_ACTION_NODE, actionNode);
 				graph.addEdge(edge);
 				break;
 			case FilterAction.MESSAGE_ANY:
-				edge = new AnnotatedEdge(actionNode, FlowNode.RETURN_ACTION_NODE, actionNode);
+				edge = new AnnotatedEdge(actionNode, FlowNode.ANY_MESSAGE_ACTION_NODE, actionNode);
 				graph.addEdge(edge);
 				break;
 			default:
@@ -473,42 +471,10 @@ public class GrooveASTBuilder
 		edge = new AnnotatedEdge(filterElementNode, CONDITION_OPERATOR_EDGE, conditionOperatorNode);
 		graph.addEdge(edge);
 
-		// iterate over matchingpatterns::
-		// !!! FilterElements only have one MatchingPattern now
-
-		// !!! Iterator it = filterElement.getMatchingPatternIterator();
-		MatchingPattern pattern;
-		Node patternNode;
-		Node previousPatternNode = null;
-		int i = 0;
-		// !!! while(it.hasNext()){
-		// !!! pattern = (MatchingPattern) it.next();
-		pattern = filterElement.getMatchingPattern();
-
-		// create patternNode:
-		patternNode = buildMatchingPatternNode(pattern, graph);
-		// patternNode already added to graph by the buildMatchingPatternNode
-		// method!
-
+		// matching pattern:
+		AnnotatedNode patternNode = buildMatchingPatternNode(filterElement.getMatchingPattern(), graph);
 		edge = new AnnotatedEdge(filterElementNode, MATCHING_PATTERN_EDGE, patternNode);
 		graph.addEdge(edge);
-
-		if (i == 0)
-		{
-			// create 'orderFirst' edge:
-			i++;
-			edge = new AnnotatedEdge(filterElementNode, ORDER_FIRST_EDGE, patternNode);
-			graph.addEdge(edge);
-		}
-		else
-		{
-			// create 'orderNext' edge:
-			edge = new AnnotatedEdge(previousPatternNode, ORDER_NEXT_EDGE, patternNode);
-			graph.addEdge(edge);
-		}
-
-		previousPatternNode = patternNode;
-		// !!! }
 
 		return filterElementNode;
 	}
@@ -518,7 +484,7 @@ public class GrooveASTBuilder
 	 * @param graph
 	 * @return
 	 */
-	private Node buildMatchingPatternNode(MatchingPattern pattern, Graph graph)
+	private AnnotatedNode buildMatchingPatternNode(MatchingPattern pattern, Graph graph)
 	{
 		AnnotatedNode patternNode = new AnnotatedNode();
 		patternNode.addAnnotation(REPOSITORY_LINK_ANNOTATION, pattern);
@@ -527,11 +493,30 @@ public class GrooveASTBuilder
 		AnnotatedEdge edge = new AnnotatedEdge(patternNode, FlowNode.MATCHING_PATTERN_NODE, patternNode);
 		graph.addEdge(edge);
 
-		// matchingpart:
-		MatchingPart matchingPart = (MatchingPart) pattern.getMatchingParts().elementAt(0);
-		Node matchingPartNode = buildMatchingPartNode(matchingPart, graph);
-		edge = new AnnotatedEdge(patternNode, MATCHING_PART_EDGE, matchingPartNode);
-		graph.addEdge(edge);
+		// matchingparts:
+		Iterator matchingParts = pattern.getMatchingPartsIterator();
+		Node previousNode = null;
+		while (matchingParts.hasNext())
+		{
+			MatchingPart matchingPart = (MatchingPart) matchingParts.next();
+			Node matchingPartNode = buildMatchingPartNode(matchingPart, graph);
+			edge = new AnnotatedEdge(patternNode, MATCHING_PART_EDGE, matchingPartNode);
+			graph.addEdge(edge);
+			if (previousNode == null)
+			{
+				// Give first matching part 'orderFirst' edge
+				edge = new AnnotatedEdge(patternNode, ORDER_FIRST_EDGE, matchingPartNode);
+				graph.addEdge(edge);
+			}
+			else
+			{
+				// Create 'orderNext' edge from previous matching part to this
+				// matching part.
+				edge = new AnnotatedEdge(previousNode, ORDER_NEXT_EDGE, matchingPartNode);
+				graph.addEdge(edge);
+			}
+			previousNode = matchingPartNode;
+		}
 
 		// substitutionpart:
 		Node substitutionPartNode;
@@ -542,7 +527,7 @@ public class GrooveASTBuilder
 		{
 			// If substitution part does not exist, use matching part as
 			// substitution part
-			substitutionPartNode = buildSubstitutionPartNode(matchingPart, graph);
+			substitutionPartNode = buildSubstitutionPartNode((MatchingPart) pattern.getMatchingParts().get(0), graph);
 		}
 		else
 		{
@@ -592,7 +577,7 @@ public class GrooveASTBuilder
 		graph.addEdge(edge);
 
 		// target:
-		Node targetNode = (Node) targetTable.get(target.name);
+		Node targetNode = (Node) targetTable.get(target.getName());
 		if (targetNode == null)
 		{
 			targetNode = buildTargetNode(target, graph);
@@ -642,7 +627,7 @@ public class GrooveASTBuilder
 
 		// target:
 		Target target = matchingPart.getTarget();
-		Node targetNode = (Node) targetTable.get(target.name);
+		Node targetNode = (Node) targetTable.get(target.getName());
 		if (targetNode == null)
 		{
 			targetNode = buildTargetNode(target, graph);

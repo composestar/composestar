@@ -5,15 +5,16 @@
 package Composestar.Core.SIGN2;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Dictionary;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
@@ -22,24 +23,29 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPa
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
+import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
+import Composestar.Core.FIRE2.model.FlowTransition;
 import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
+import Composestar.Core.FIRE2.util.iterator.OrderedExecutionStateIterator;
+import Composestar.Core.FIRE2.util.queryengine.Predicate;
 import Composestar.Core.FIRE2.util.queryengine.ctl.CtlChecker;
-import Composestar.Core.FIRE2.util.queryengine.predicates.IsState;
 import Composestar.Core.FIRE2.util.queryengine.predicates.StateType;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
+import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.SANE.SIinfo;
-import Composestar.Utils.Debug;
 import Composestar.Utils.StringUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * @author Arjan de Roo
@@ -48,32 +54,36 @@ public class Sign implements CTCommonModule
 {
 	private final static String MODULE_NAME = "SIGN";
 
-	private final static int IN_SIGNATURE = 1;
-
-	private final static int POSSIBLE = 2;
-
-	private final static int NOT_IN_SIGNATURE = 3;
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	private final static String DISPATCH_FORMULA = "isDispatch";
 
-	private final static String META_FORMULA = "isMeta";
+	private final static int SIGNATURE_MATCHING_SET = 1;
 
-	private final static String MATCHPART_FORMULA = "EXEXEXisState";
+	private final static int TYPE_MATCHING_SET = 2;
 
-	private final static String SIGMATCH_FORMULA = "E[!sigMatch U isState]";
+	/**
+	 * The star target. Only used in matching parts and substitution parts.
+	 */
+	public final static String STAR_TARGET = "*";
 
-	private final static String[] META_PARAMS = { "Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage" };
+	private HashSet<Concern> superimposedConcerns;
 
-	private final static MethodInfo[] EmptyMethodInfoArray = {};
+	private Hashtable<Concern, FireModel> fireModels;
 
-	private HashSet unsolvedConcerns;
+	private Hashtable<Concern, Set<String>> distinguishableSets;
 
-	private Hashtable analysisModels;
+	private HashSet<MethodWrapper> cyclicDispatchSet;
+
+	private boolean change;
+
+	/**
+	 * Indicates whether an error has happend
+	 */
+	private boolean error;
 
 	// ctl-reusable fields:
-	private Dictionary dictionary;
-
-	private IsState isStatePredicate;
+	private Dictionary<String, Predicate> dictionary;
 
 	public Sign()
 	{
@@ -83,20 +93,9 @@ public class Sign implements CTCommonModule
 	private void init()
 	{
 		// creating dictionary
-		dictionary = new Hashtable();
+		dictionary = new Hashtable<String, Predicate>();
 
 		dictionary.put("isDispatch", new StateType("DispatchAction"));
-		// TODO Should be changed later in FlowChartNames.RETURN_ACTION_NODE,
-		// but then the checks whether
-		// the dispatchtarget exists need to be turned of for other return
-		// actions than the DispatchAction.
-
-		dictionary.put("isMeta", new StateType("###disabled###"));
-
-		isStatePredicate = new IsState(null);
-		dictionary.put("isState", isStatePredicate);
-
-		dictionary.put("sigMatch", new StateType("SignatureMatchingPart"));
 	}
 
 	/**
@@ -104,23 +103,47 @@ public class Sign implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Start signature generation and checking");
+		try
+		{
+			error = false;
+			logger.debug("Start signature generation and checking");
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase0");
-		phase0();
+			logger.debug("Initialization");
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase1");
-		phase1();
+			initialize();
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase2");
-		phase2();
+			logger.debug("Start signatures");
+			startSignatures();
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase3");
-		phase3();
+			if (error)
+			{
+				logger.fatal("Sign encountered errors");
+				return;
+			}
 
-		printConcernMethods(resources);
+			logger.debug("Final signatures");
+			finalSignatures();
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "signature generation and checking done");
+			logger.debug("Checking");
+			checking();
+
+			if (error)
+			{
+				logger.fatal("Sign encountered errors");
+				return;
+			}
+
+			logger.debug("Finishing");
+			finishing();
+
+			printConcernMethods(resources);
+
+			logger.debug("signature generation and checking done");
+		}
+		catch (Exception exc)
+		{
+			exc.printStackTrace();
+		}
 	}
 
 	protected void runLight(CommonResources resources) throws ModuleException
@@ -130,1110 +153,713 @@ public class Sign implements CTCommonModule
 
 	// /////////////////////////////////////////////////////////////////////////
 	// // ////
-	// // PHASE0 ////
+	// // Initialization ////
 	// // ////
 	// /////////////////////////////////////////////////////////////////////////
 
-	private void phase0()
+	private void initialize()
 	{
-		unsolvedConcerns = new HashSet();
-		HashSet solvedConcerns = new HashSet();
-		analysisModels = new Hashtable();
-		FilterModuleOrder filterModules;
-		FireModel model;
+		superimposedConcerns = new HashSet<Concern>();
+		fireModels = new Hashtable<Concern, FireModel>();
+		distinguishableSets = new Hashtable<Concern, Set<String>>();
 
+		initializeSignatures();
+	}
+
+	private void initializeSignatures()
+	{
 		Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
 		{
 			Concern concern = (Concern) conIter.next();
-
-			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
-			{
-				filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-				model = new FireModel(concern, filterModules);
-				analysisModels.put(concern, model);
-
-				unsolvedConcerns.add(concern);
-			}
-			else
+			if (concern.getDynObject(SIinfo.DATAMAP_KEY) == null)
 			{
 				Signature signature = getSignature(concern);
 				List methods = getMethodList(concern);
 
 				// Add all (usr src) methods to the signature with status
-				// unknown.
+				// existing.
 				for (Object method : methods)
 				{
-					signature.add((MethodInfo) method, MethodWrapper.NORMAL);
+					signature.addMethodWrapper(new MethodWrapper((MethodInfo) method, MethodWrapper.EXISTING));
 				}
+			}
+			else
+			{
+				FireModel model = new FireModel(concern);
+				fireModels.put(concern, model);
 
-				signature.setStatus(Signature.SOLVED);
+				// initialize distinguishable set:
+				distinguishableSets.put(concern, model.getDistinguishableSelectors(FireModel.INPUT_FILTERS));
 
-				solvedConcerns.add(concern);
+				superimposedConcerns.add(concern);
 			}
 		}
 	}
 
-	// /////////////////////////////////////////////////////////////////////////
-	// // ////
-	// // PHASE1 ////
-	// // ////
-	// /////////////////////////////////////////////////////////////////////////
+	// ####################################################
+	// 
+	// Start signatures
+	// 
+	// ####################################################
 
-	private void phase1()
+	private void startSignatures()
 	{
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase1-Resolve");
-		phase1Resolve();
-
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase1-Check");
-		phase1Check();
-	}
-
-	private void phase1Resolve()
-	{
-		boolean changed = true;
-		Iterator iter;
-		Concern concern;
-		FireModel model;
-		Set distinguishable;
-		Iterator messages;
-		String message;
-
-		// build signatures:
-		while (changed)
+		do
 		{
-			changed = false;
+			change = false;
 
-			iter = unsolvedConcerns.iterator();
-			while (iter.hasNext())
+			for (Concern concern : superimposedConcerns)
 			{
-				concern = (Concern) iter.next();
-				model = (FireModel) analysisModels.get(concern);
-				distinguishable = model.getDistinguishableSelectors(FireModel.INPUT_FILTERS);
-				messages = distinguishable.iterator();
-
-				// first distinguishable:
-				while (messages.hasNext())
-				{
-					message = (String) messages.next();
-					changed = checkMessage(concern, model, message, distinguishable) || changed;
-				}
-
-				// then undistinguishable:
-				// use Method.UNDISTINGUISHABLE_SELECTOR as selector,
-				// because "*" as a selector causes
-				// problems because it is treated as a generalization and not
-				// as an undistinguishable selector.
-				changed = checkMessage(concern, model, Message.UNDISTINGUISHABLE_SELECTOR, distinguishable) || changed;
+				startSignature(concern);
 			}
-		}
+
+		} while (change);
 	}
 
-	private boolean checkMessage(Concern concern, FireModel fireModel, String messageSelector, Set distinguishable)
+	private void startSignature(Concern concern)
 	{
-		boolean changed = false;
-		ExecutionModel execModel;
-		ExecutionState entranceState, state;
-		Signature signature;
-		MethodInfo[] methods;
-		boolean earlierSignatureMatch;
-		boolean dispatch = false;
+		startSignatureDistinguishable(concern);
+		startSignatureUndistinguishable(concern);
+	}
 
-		signature = getSignature(concern);
+	private void startSignatureDistinguishable(Concern concern)
+	{
+		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
 
-		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, messageSelector);
-		entranceState = (ExecutionState) execModel.getEntranceStates().next();
+		FireModel fireModel = fireModels.get(concern);
 
-		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
-		Enumeration dispatchStates = checker.matchingStates();
-
-		while (dispatchStates.hasMoreElements())
+		String[] selectors = (String[]) distinguishableSets.get(concern).toArray(new String[0]);
+		for (String sel : selectors)
 		{
-			state = (ExecutionState) dispatchStates.nextElement();
+			ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, sel);
 
-			// get matchingparts:
-			isStatePredicate.setState(state);
-			CtlChecker matchingPartChecker = new CtlChecker(execModel, MATCHPART_FORMULA, dictionary);
-			Enumeration matchingparts = matchingPartChecker.matchingStates();
+			Map<ExecutionState, List<MethodInfo>> typeSet = createTypeSet(concern, execModel);
 
-			while (matchingparts.hasMoreElements())
+			for (ExecutionState state : dispatchStates(execModel))
 			{
-				ExecutionState matchingpartState = (ExecutionState) matchingparts.nextElement();
-
-				// check whether there is a trace from the startstate to the
-				// matchingstate without a signaturematch:
-
-				isStatePredicate.setState(matchingpartState);
-				CtlChecker reachableChecker = new CtlChecker(execModel, SIGMATCH_FORMULA, dictionary);
-				earlierSignatureMatch = !reachableChecker.matchesState(entranceState);
-
-				// add methods:
-				methods = getMethods(concern, messageSelector, state, matchingpartState, distinguishable);
-
-				// check whether there are dispatch methods. When there are none
-				// this might mean that flow might never reach this part, due to
-				// a meta
-				// filter and so the default methods must be added for the
-				// meta-dispatch
-				if (methods.length != 0)
+				if (typeSet.get(state) == null)
 				{
-					dispatch = true;
+					sig.addAll(startSignatureClass1(concern, sel, state));
 				}
-
-				for (MethodInfo method : methods)
+				else
 				{
-					if (!signature.hasMethod(method))
+					sig.addAll(startSignatureClass2(concern, sel, state, typeSet.get(state)));
+				}
+			}
+
+		}
+
+		// Add new methods to the signature:
+		addToSignature(concern, sig);
+	}
+
+	private List<MethodInfo> startSignatureClass1(Concern concern, String selector, ExecutionState state)
+	{
+		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
+
+		Message substMessage = state.getSubstitutionMessage();
+		Target substTarget = substMessage.getTarget();
+		String substSelector = substMessage.getSelector();
+
+		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
+		{
+			// Add method 'selector' with all types the dispatch method has
+			// in the dispatch target
+			MethodInfo newMethod = cloneMethod(method, concern, selector, concern);
+			sig.add(newMethod);
+		}
+
+		// Add the probe method for cyclic dependency conflict check
+		MethodInfo probeMethod = new ProbeMethodInfo(selector, "?");
+		sig.add(probeMethod);
+
+		// Add dispatch selector to distinguishable set of dispatch target:
+		addDistinguishableSelector(concern, substTarget, substSelector);
+
+		return sig;
+	}
+
+	private List<MethodInfo> startSignatureClass2(Concern concern, String selector, ExecutionState state,
+			List<MethodInfo> typeSet)
+	{
+		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
+
+		Message substMessage = state.getSubstitutionMessage();
+		Target substTarget = substMessage.getTarget();
+		String substSelector = substMessage.getSelector();
+
+		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
+		{
+			// Add method 'selector' with all types the dispatch method has
+			// in the dispatch target
+			MethodInfo newMethod = cloneMethod(method, concern, selector, concern);
+			sig.add(newMethod);
+		}
+
+		// Add the probe methods for cyclic dependency conflict check
+		for (MethodInfo typeMethod : typeSet)
+		{
+			MethodInfo probeMethod = cloneMethod(typeMethod, "?", typeMethod.parent());
+			sig.add(probeMethod);
+		}
+		MethodInfo probeMethod = new ProbeMethodInfo(selector, "?");
+		sig.add(probeMethod);
+
+		// Add dispatch selector to distinguishable set of dispatch target:
+		addDistinguishableSelector(concern, substTarget, substSelector);
+
+		return sig;
+	}
+
+	private void startSignatureUndistinguishable(Concern concern)
+	{
+		FireModel fireModel = fireModels.get(concern);
+		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS,
+				Message.UNDISTINGUISHABLE_SELECTOR);
+
+		Map<ExecutionState, List<MethodInfo>> signatureSets = createSignatureSet(concern, execModel);
+		Map<ExecutionState, List<MethodInfo>> typeSets = createTypeSet(concern, execModel);
+
+		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
+
+		for (ExecutionState state : dispatchStates(execModel))
+		{
+			if (state.getSubstitutionMessage().getSelector().equals(Message.UNDISTINGUISHABLE_SELECTOR))
+			{
+				if (signatureSets.get(state) == null)
+				{
+					sig.addAll(startSignatureClass3(concern, state));
+				}
+				else
+				{
+					sig.addAll(startSignatureClass4(concern, state, signatureSets.get(state)));
+				}
+			}
+			else
+			{
+				if (signatureSets.get(state) == null)
+				{
+					error("Infinite signature found in concern '" + concern.getQualifiedName() + "'!");
+				}
+				else
+				{
+					if (typeSets.get(state) == null)
 					{
-						signature.add(method, earlierSignatureMatch ? MethodWrapper.UNKNOWN : MethodWrapper.NORMAL);
-						changed = true;
+						sig.addAll(startSignatureClass6(concern, state, signatureSets.get(state)));
+					}
+					else
+					{
+						sig.addAll(startSignatureClass7(concern, state, signatureSets.get(state), typeSets.get(state)));
 					}
 				}
 			}
 		}
 
-		if (dispatch || true)
+		// Probe methods for cyclic dependency conflict check:
+		sig.add(new ProbeMethodInfo("?", "?"));
+
+		addToSignature(concern, sig);
+	}
+
+	private List<MethodInfo> startSignatureClass3(Concern concern, ExecutionState state)
+	{
+		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
+
+		Message substMessage = state.getSubstitutionMessage();
+		Target substTarget = substMessage.getTarget();
+		String substSelector = substMessage.getSelector();
+
+		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
 		{
-			return changed;
+			sig.add(method);
 		}
 
-		// do the same for metastates:
-		checker = new CtlChecker(execModel, META_FORMULA, dictionary);
-		dispatchStates = checker.matchingStates();
+		// Add the probe methods for cyclic dependency conflict check
+		MethodInfo probeMethod = new ProbeMethodInfo("?", "?");
+		sig.add(probeMethod);
 
-		while (dispatchStates.hasMoreElements())
+		return sig;
+	}
+
+	private List<MethodInfo> startSignatureClass4(Concern concern, ExecutionState state, List<MethodInfo> signatureSet)
+	{
+		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
+
+		Message substMessage = state.getSubstitutionMessage();
+		Target substTarget = substMessage.getTarget();
+		String substSelector = substMessage.getSelector();
+
+		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
 		{
-			state = (ExecutionState) dispatchStates.nextElement();
+			sig.add(method);
+		}
 
-			// get matchingparts:
-			isStatePredicate.setState(state);
-			CtlChecker matchingPartChecker = new CtlChecker(execModel, MATCHPART_FORMULA, dictionary);
-			Enumeration matchingparts = matchingPartChecker.matchingStates();
+		// Add the probe methods for cyclic dependency conflict check
+		for (MethodInfo method : signatureSet)
+		{
+			sig.add(method);
+		}
+		MethodInfo probeMethod = new ProbeMethodInfo("?", "?");
+		sig.add(probeMethod);
 
-			while (matchingparts.hasMoreElements())
+		return sig;
+	}
+
+	private List<MethodInfo> startSignatureClass6(Concern concern, ExecutionState state, List<MethodInfo> signatureSet)
+	{
+		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
+
+		Message substMessage = state.getSubstitutionMessage();
+		Target substTarget = substMessage.getTarget();
+		String substSelector = substMessage.getSelector();
+
+		for (MethodInfo method : signatureSet)
+		{
+			sig.add(method);
+		}
+
+		// Add the probe methods for cyclic dependency conflict check
+		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
+		{
+			sig.add(cloneMethod(method, "?", method.parent()));
+		}
+		MethodInfo probeMethod = new ProbeMethodInfo("?", "?");
+		sig.add(probeMethod);
+
+		// Add dispatch selector to distinguishable set of dispatch target:
+		addDistinguishableSelector(concern, substTarget, substSelector);
+
+		return sig;
+	}
+
+	private List<MethodInfo> startSignatureClass7(Concern concern, ExecutionState state, List<MethodInfo> signatureSet,
+			List<MethodInfo> typeSet)
+	{
+		ArrayList<MethodInfo> sig = new ArrayList<MethodInfo>();
+
+		Message substMessage = state.getSubstitutionMessage();
+		Target substTarget = substMessage.getTarget();
+		String substSelector = substMessage.getSelector();
+
+		for (MethodInfo method : signatureSet)
+		{
+			sig.add(method);
+		}
+
+		// Add the probe methods for cyclic dependency conflict check
+		for (MethodInfo method : targetMethods(concern, substTarget, substSelector))
+		{
+			sig.add(cloneMethod(method, "?", method.parent()));
+		}
+		for (MethodInfo method : typeSet)
+		{
+			sig.add(cloneMethod(method, "?", method.parent()));
+		}
+		MethodInfo probeMethod = new ProbeMethodInfo("?", "?");
+		sig.add(probeMethod);
+
+		// Add dispatch selector to distinguishable set of dispatch target:
+		addDistinguishableSelector(concern, substTarget, substSelector);
+
+		return sig;
+	}
+
+	// ####################################################
+	// 
+	// Signature/Type set
+	// 
+	// ####################################################
+
+	private Map<ExecutionState, List<MethodInfo>> createSignatureSet(Concern concern, ExecutionModel execModel)
+	{
+		return createMatchingSet(concern, execModel, SIGNATURE_MATCHING_SET);
+	}
+
+	private Map<ExecutionState, List<MethodInfo>> createTypeSet(Concern concern, ExecutionModel execModel)
+	{
+		return createMatchingSet(concern, execModel, TYPE_MATCHING_SET);
+	}
+
+	private Map<ExecutionState, List<MethodInfo>> createMatchingSet(Concern concern, ExecutionModel execModel, int type)
+	{
+		HashMap<ExecutionState, List<MethodInfo>> matchingSets = new HashMap<ExecutionState, List<MethodInfo>>();
+
+		// Create in-transition map
+		HashMap<ExecutionState, List<ExecutionTransition>> inTransitionMap = new HashMap<ExecutionState, List<ExecutionTransition>>();
+		Iterator stateIter = new ExecutionStateIterator(execModel);
+		while (stateIter.hasNext())
+		{
+			ExecutionState state = (ExecutionState) stateIter.next();
+			Iterator transitionIter = state.getOutTransitions();
+			while (transitionIter.hasNext())
 			{
-				ExecutionState matchingpartState = (ExecutionState) matchingparts.nextElement();
-
-				// check whether there is a trace from the startstate to the
-				// matchingstate without a signaturematch:
-
-				isStatePredicate.setState(matchingpartState);
-				CtlChecker reachableChecker = new CtlChecker(execModel, SIGMATCH_FORMULA, dictionary);
-				earlierSignatureMatch = !reachableChecker.matchesState(entranceState);
-
-				// add methods:
-				methods = getMethods(concern, messageSelector, state, matchingpartState, distinguishable);
-
-				for (MethodInfo method : methods)
+				ExecutionTransition transition = (ExecutionTransition) transitionIter.next();
+				ExecutionState endState = transition.getEndState();
+				if (inTransitionMap.containsKey(endState))
 				{
-					// remove parameters:
-					MethodInfo m = method.getClone(method.getName(), method.parent());
-					m.parameters = new ArrayList();
+					inTransitionMap.get(endState).add(transition);
+				}
+				else
+				{
+					ArrayList<ExecutionTransition> transitionList = new ArrayList<ExecutionTransition>();
+					transitionList.add(transition);
+					inTransitionMap.put(endState, transitionList);
+				}
+			}
+		}
 
-					if (!signature.hasMethod(m))
+		// Iterate ordered over the states:
+		stateIter = new OrderedExecutionStateIterator(execModel);
+		while (stateIter.hasNext())
+		{
+			ExecutionState state = (ExecutionState) stateIter.next();
+
+			// Check whether the state has in-transitions:
+			if (!inTransitionMap.containsKey(state))
+			{
+				matchingSets.put(state, null);
+			}
+			else
+			{
+				List<MethodInfo> matchingSet = new ArrayList<MethodInfo>();
+
+				List<ExecutionTransition> inTransitions = inTransitionMap.get(state);
+
+				// Iterate over all in-transitions to create the matching set of
+				// the state
+				for (ExecutionTransition transition : inTransitions)
+				{
+					// Create the matching set of the transition:
+					List<MethodInfo> transitionMatchingSet = new ArrayList<MethodInfo>();
+
+					ExecutionState startState = transition.getStartState();
+					List<MethodInfo> startStateMatchingSet = matchingSets.get(startState);
+					// Add the matching set of the start state to the matching
+					// set of the transition
+					if (startStateMatchingSet != null)
 					{
-						signature.add(m, earlierSignatureMatch ? MethodWrapper.UNKNOWN : MethodWrapper.NORMAL);
-						changed = true;
+						transitionMatchingSet.addAll(startStateMatchingSet);
+					}
+
+					// Check whether the start state is a signature matching
+					// state and add the
+					// matched methods from the signature to the matching set:
+					if (checkCorrectSignatureMatchingState(state, type))
+					{
+						if (transition.getFlowTransition().getType() == FlowTransition.FLOW_TRUE_TRANSITION)
+						{
+							MatchingPart matchingPart = (MatchingPart) startState.getFlowNode().getRepositoryLink();
+
+							// get the matching target:
+							Target matchTarget = matchingPart.getTarget();
+							if (matchTarget.getName().equals(STAR_TARGET))
+							{
+								matchTarget = startState.getMessage().getTarget();
+							}
+
+							// get the matching selector:
+							String matchSelector = startState.getMessage().getSelector();
+
+							transitionMatchingSet.addAll(targetMethods(concern, matchTarget, matchSelector));
+						}
+						else if (startStateMatchingSet == null)
+						{
+							// set transition matching set to undefined for the
+							// false-transition, if the matching set of the
+							// start state is undefined
+							transitionMatchingSet = null;
+						}
+					}
+					else
+					// no signature matching part
+					{
+						if (startStateMatchingSet == null)
+						{
+							// set the matching set of the transition to
+							// undefined, if the matching set of the start state
+							// is undefined
+							transitionMatchingSet = null;
+						}
+					}
+
+					if (transitionMatchingSet == null)
+					{
+						// set the matching set of the state to undefined of the
+						// matching set of the incoming transition is undefined,
+						// and do not iterate over the other transitions anymore
+						matchingSet = null;
+						break;
+					}
+					else
+					{
+						// Add the matching set of the incoming transition to
+						// the matching set of the state
+						matchingSet.addAll(transitionMatchingSet);
 					}
 				}
-			}
-		}
 
-		return changed;
-	}
-
-	private MethodInfo[] getMethods(Concern concern, String selector, ExecutionState dispatchState,
-			ExecutionState matchingState, Set distinguishable)
-	{
-		FlowNode node = matchingState.getFlowNode();
-		if (node.containsName("NameMatchingPart"))
-		{
-			return getMethods(concern, selector, dispatchState, true, null, distinguishable);
-		}
-		else if (node.containsName("SignatureMatchingPart"))
-		{
-			MatchingPart matchingPart = (MatchingPart) node.getRepositoryLink();
-			Target signatureMatchingTarget = matchingPart.getTarget();
-			if (Message.checkEquals(signatureMatchingTarget, Message.STAR_TARGET))
-			{
-				signatureMatchingTarget = dispatchState.getMessage().getTarget();
-			}
-			return getMethods(concern, selector, dispatchState, false, signatureMatchingTarget, distinguishable);
-		}
-		else
-		{
-			throw new RuntimeException("Unknown matchingpart-type");
-		}
-	}
-
-	private MethodInfo[] getMethods(Concern concern, String selector, ExecutionState state, boolean nameMatching,
-			Target signatureMatchingTarget, Set distinguishable)
-	{
-		// case 2:
-		if (!selector.equals(Message.UNDISTINGUISHABLE_SELECTOR))
-		{
-			return createFromTarget(concern, state, selector);
-		}
-		// case 7:
-		else if (!Message.checkEquals(state.getMessage().getSelector(), Message.UNDISTINGUISHABLE_SELECTOR))
-		{
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Dispatch structure " + "in the filterset on concern '"
-					+ concern.getName() + "' leads to infinite signature!", state.getFlowNode().getRepositoryLink());
-
-			return EmptyMethodInfoArray;
-		}
-		// case 3:
-		else if (nameMatching
-				&& !Message.checkEquals(state.getSubstitutionMessage().getSelector(), Message.STAR_SELECTOR))
-		{
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Dispatch structure " + "in the filterset on concern '"
-					+ concern.getName() + "' leads to infinite signature!", state.getFlowNode().getRepositoryLink());
-
-			return EmptyMethodInfoArray;
-		}
-		// case 4:
-		else if (nameMatching
-				&& Message.checkEquals(state.getSubstitutionMessage().getSelector(), Message.STAR_SELECTOR))
-		{
-			if (state.getMessage().getTarget().getName().equals(Target.INNER))
-			{
-				return getInnerMethods(concern, state, distinguishable);
-			}
-			else
-			{
-				return getTargetMethods(concern, state, distinguishable);
-			}
-
-		}
-		// case 5 and 6
-		else if (!nameMatching)
-		{
-			if (signatureMatchingTarget.getName().equals(Target.INNER))
-			{
-				return getInnerMethods(concern, state, distinguishable);
-			}
-			else
-			{
-				return getTargetMethods(concern, state, signatureMatchingTarget, distinguishable);
-			}
-		}
-		// case 1:
-		else
-		{
-			return EmptyMethodInfoArray;
-		}
-	}
-
-	private MethodInfo[] createFromTarget(Concern concern, ExecutionState state, String selector)
-	{
-		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
-		{
-			dispTarget = state.getMessage().getTarget();
-		}
-
-		// get the dispatch selector:
-		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
-		{
-			dispSelector = state.getMessage().getSelector();
-		}
-
-		// get dispatchtarget concern and methods:
-		List methods;
-		if (dispTarget.name.equals(Target.INNER))
-		{
-			methods = getMethodList(concern);
-		}
-		else
-		{
-			DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
-			Concern targetConcern = ref.getRef().getType().getRef();
-
-			Signature signature = getSignature(targetConcern);
-			methods = signature.getMethods();
-		}
-
-		Vector result = new Vector();
-		for (Object method1 : methods)
-		{
-			MethodInfo method = (MethodInfo) method1;
-			if (method.Name.equals(dispSelector))
-			{
-				MethodInfo newMethod = method.getClone(selector, (Type) concern.getPlatformRepresentation());
-				result.addElement(newMethod);
-			}
-		}
-
-		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
-	}
-
-	private MethodInfo[] getInnerMethods(Concern concern, ExecutionState state, Set distinguishable)
-	{
-		Vector result = new Vector();
-
-		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
-		{
-			dispTarget = state.getMessage().getTarget();
-		}
-
-		// get the dispatch selector:
-		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
-		{
-			dispSelector = state.getMessage().getSelector();
-		}
-
-		// get the targetconcern:
-		Concern targetConcern;
-		if (dispTarget.name.equals(Target.INNER))
-		{
-			targetConcern = concern;
-		}
-		else
-		{
-			DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
-			targetConcern = ref.getRef().getType().getRef();
-		}
-		Type targetType = (Type) targetConcern.getPlatformRepresentation();
-
-		// get the inner methods:
-		List methods = getMethodList(concern);
-
-		// check for each method whether it is not distinguishable and
-		// whether the corresponding dispatchselector is in the dispatchtarget:
-		for (int i = 0; i < methods.size(); i++)
-		{
-			MethodInfo method = (MethodInfo) methods.get(i);
-
-			// check not distinguishable:
-			if (distinguishable.contains(method.Name))
-			{
-				continue;
-			}
-
-			// check dispatchselector in dispatchtarget:
-			MethodInfo targetMethod;
-			if (Message.checkEquals(dispSelector, Message.UNDISTINGUISHABLE_SELECTOR))
-			{
-				targetMethod = method.getClone(method.Name, targetType);
-			}
-			else
-			{
-				targetMethod = method.getClone(dispSelector, targetType);
-			}
-
-			if (dispTarget.name.equals(Target.INNER))
-			{
-				// if inner, check inner methods:
-
-				if (containsMethod(methods, targetMethod))
+				if (inTransitions.size() == 0)
 				{
-					result.addElement(method);
+					matchingSets.put(state, null);
 				}
-			}
-			else
-			{
-				// get the signature of the dispatch target:
-				Signature targetSignature = getSignature(targetConcern);
-
-				// else check signature methods:
-				if (targetSignature.hasMethod(targetMethod))
+				else
 				{
-					result.addElement(method);
+					matchingSets.put(state, matchingSet);
 				}
 			}
 		}
 
-		// return the result:
-		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
+		return matchingSets;
 	}
 
-	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, Set distinguishable)
+	/**
+	 * Check whether the given state is a signature matching state which the
+	 * matchingset tries to find. If the type is a signature matching set, then
+	 * this must be a signature matching part at which the selector of the
+	 * message is the undistinguishable placeholder. If the type is a type
+	 * matching set, then this must be a signature matching part at which the
+	 * selector of the message is not the undistinguishable placeholder.
+	 * 
+	 * @param state
+	 * @param type
+	 * @return
+	 */
+	private boolean checkCorrectSignatureMatchingState(ExecutionState state, int type)
 	{
-		Vector result = new Vector();
-		Type type = (Type) concern.getPlatformRepresentation();
-
-		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		if (!state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING_NODE))
 		{
-			dispTarget = state.getMessage().getTarget();
+			return false;
 		}
 
-		// get the methods in the targetsignature:
-		DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
-		Concern targetConcern = ref.getRef().getType().getRef();
-		Signature targetSignature = getSignature(targetConcern);
-		List methods = targetSignature.getMethods();
-
-		// check for each method whether it is not distinguishable and
-		// add it to the signature of the concern:
-		for (Object method1 : methods)
+		String selector = state.getMessage().getSelector();
+		if (selector.equals(Message.UNDISTINGUISHABLE_SELECTOR) && type == SIGNATURE_MATCHING_SET)
 		{
-			MethodInfo method = (MethodInfo) method1;
-
-			if (distinguishable.contains(method.Name))
-			{
-				continue;
-			}
-
-			MethodInfo newMethod = method.getClone(method.Name, type);
-			result.addElement(newMethod);
+			return true;
 		}
 
-		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
+		if (!selector.equals(Message.UNDISTINGUISHABLE_SELECTOR) && type == TYPE_MATCHING_SET)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
-	private MethodInfo[] getTargetMethods(Concern concern, ExecutionState state, Target donor, Set distinguishable)
+	// ####################################################
+	// 
+	// Final signatures
+	// 
+	// ####################################################
+
+	private void finalSignatures()
 	{
-		Vector result = new Vector();
-
-		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		do
 		{
-			dispTarget = state.getMessage().getTarget();
-		}
+			change = false;
 
-		// get the dispatch selector:
-		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
-		{
-			dispSelector = state.getMessage().getSelector();
-		}
-
-		// get target signature or innermethods:
-		Concern targetConcern;
-		if (dispTarget.name.equals(Target.INNER))
-		{
-			targetConcern = concern;
-		}
-		else
-		{
-			DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
-			targetConcern = ref.getRef().getType().getRef();
-		}
-
-		Type targetType = (Type) targetConcern.getPlatformRepresentation();
-		Signature targetSignature = null;
-		List innerMethods = null;
-		// signature only relevant when dispatchTarget != inner
-		if (!dispTarget.name.equals(Target.INNER))
-		{
-			targetSignature = getSignature(targetConcern);
-		}
-		// innermethods only relevant when dispatchTarget == inner
-		else
-		{
-			innerMethods = getMethodList(targetConcern);
-		}
-
-		// get donor methods:
-		DeclaredObjectReference ref = (DeclaredObjectReference) donor.getRef();
-		Concern donorConcern = ref.getRef().getType().getRef();
-		Signature donorSignature = getSignature(donorConcern);
-		List methods = donorSignature.getMethods();
-
-		for (Object method1 : methods)
-		{
-			MethodInfo method = (MethodInfo) method1;
-
-			// check not distinguishable:
-			if (distinguishable.contains(method.Name))
+			for (Concern concern : superimposedConcerns)
 			{
-				continue;
+				finalSignature(concern);
 			}
 
-			// check dispatchselector in dispatchtarget:
+		} while (change);
+	}
 
-			// first create targetMethod:
-			MethodInfo targetMethod;
-			// this makes the distinction between case 6 and 5:
-			if (Message.checkEquals(dispSelector, Message.UNDISTINGUISHABLE_SELECTOR))
+	private void finalSignature(Concern concern)
+	{
+		for (MethodWrapper method : methods(concern))
+		{
+			if (method.getStatus() == MethodWrapper.UNKNOWN)
 			{
-				targetMethod = method.getClone(method.Name, targetType);
+				checkDispatchable(method, concern);
 			}
-			else
-			{
-				targetMethod = method.getClone(dispSelector, targetType);
-			}
+		}
+	}
 
-			// then do the check:
-			if (dispTarget.name.equals(Target.INNER))
+	private void checkDispatchable(MethodWrapper method, Concern concern)
+	{
+		FireModel fireModel = fireModels.get(concern);
+		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, method.getMethodInfo(),
+				FireModel.STRICT_SIGNATURE_CHECK);
+
+		// Check whether it can be marked EXISTING
+		for (ExecutionState state : dispatchStates(execModel))
+		{
+			if (getDispatchTargetStatus(concern, method.getMethodInfo(), state) == MethodWrapper.EXISTING)
 			{
-				// if inner, check inner methods:
-				if (containsMethod(innerMethods, targetMethod))
+				method.setStatus(MethodWrapper.EXISTING);
+				change = true;
+				return;
+			}
+		}
+
+		// Check whether it can keep the marking UNKNOWN
+		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, method.getMethodInfo(),
+				FireModel.LOOSE_SIGNATURE_CHECK);
+
+		for (ExecutionState state : dispatchStates(execModel))
+		{
+			if (getDispatchTargetStatus(concern, method.getMethodInfo(), state) != MethodWrapper.NOT_EXISTING)
+			{
+				return;
+			}
+		}
+
+		// When it cannot be marked EXISTING and it does not keep the
+		// UNKNOWN marking, mark it NOT_EXISTING
+		method.setStatus(MethodWrapper.NOT_EXISTING);
+		change = true;
+	}
+
+	// ####################################################
+	// 
+	// Checking
+	// 
+	// ####################################################
+
+	private void checking()
+	{
+		cyclicDependencyConflictCheck();
+		typeCheck();
+		cyclicDispatchConflictCheck();
+	}
+
+	private void cyclicDependencyConflictCheck()
+	{
+		for (Concern concern : superimposedConcerns)
+		{
+			for (MethodWrapper method : methods(concern))
+			{
+				if (method.getStatus() == MethodWrapper.UNKNOWN)
 				{
-					result.addElement(method);
-				}
-			}
-			else
-			{
-				// else check signature methods:
-				if (targetSignature.hasMethod(targetMethod))
-				{
-					result.addElement(method);
+					error("Cyclic dependency conflict found in concern '" + concern.getQualifiedName()
+							+ "' on method '" + methodInfoString(method.getMethodInfo()) + "'!");
 				}
 			}
 		}
-
-		return (MethodInfo[]) result.toArray(new MethodInfo[result.size()]);
 	}
 
-	private void phase1Check()
+	private void typeCheck()
 	{
-		Iterator iter;
-		Concern concern;
-		FireModel model;
-		Set distinguishable;
-		Iterator selectors;
-		String selector;
-		MethodInfo method;
-
-		// check for nondispatchable of distinguishable and inner selectors:
-		iter = unsolvedConcerns.iterator();
-		while (iter.hasNext())
+		for (Concern concern : superimposedConcerns)
 		{
-			concern = (Concern) iter.next();
-			model = (FireModel) analysisModels.get(concern);
-			distinguishable = model.getDistinguishableSelectors(FireModel.INPUT_FILTERS);
-			selectors = distinguishable.iterator();
-
-			// first distinguishable:
-			while (selectors.hasNext())
+			FireModel fireModel = fireModels.get(concern);
+			for (MethodWrapper method : methods(concern))
 			{
-				selector = (String) selectors.next();
-				checkNonDispatchable(concern, model, selector);
-			}
-
-			// then inner undistinguishable:
-			HashSet checkedSelectors = new HashSet();
-			List methods = getMethodList(concern);
-			for (Object method1 : methods)
-			{
-				method = (MethodInfo) method1;
-				selector = method.getName();
-				if (!distinguishable.contains(selector) && !checkedSelectors.contains(selector))
+				if (method.getStatus() != MethodWrapper.EXISTING)
 				{
-					checkNonDispatchable(concern, model, selector);
-					checkedSelectors.add(selector);
+					// Check only existing methods
+					continue;
+				}
+
+				ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, method.getMethodInfo());
+
+				for (ExecutionState state : dispatchStates(execModel))
+				{
+					if (!existsDispatchTarget(concern, method.getMethodInfo(), state))
+					{
+						warning("The methodcall to method '" + methodInfoString(method.getMethodInfo())
+								+ "' in concern '" + concern.name + "' might be dispatched to the unresolved method '"
+								+ state.getSubstitutionMessage().getSelector() + "' in '"
+								+ targetInfoString(state.getSubstitutionMessage().getTarget()) + "'!", state
+								.getFlowNode().getRepositoryLink());
+					}
 				}
 			}
 		}
 	}
 
 	/**
-	 * Checks whether a given selector is not added to the signature because of
-	 * an not existing dispatch.
+	 * Check whether the dispatch selector exists in the dispatch target with
+	 * the type information from the given method
 	 * 
-	 * @param selector
-	 * @param concern
-	 * @param fireModel
+	 * @param concern The concern containing the original method
+	 * @param method The original method
+	 * @param state The dispatch state
+	 * @return <code>true</code> when the dispatch target method exists.
 	 */
-	private void checkNonDispatchable(Concern concern, FireModel fireModel, String selector)
+	private boolean existsDispatchTarget(Concern concern, MethodInfo method, ExecutionState state)
 	{
-		ExecutionState state;
-		ExecutionModel execModel;
-		Signature signature;
-
-		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, selector);
-		signature = getSignature(concern);
-
-		// don't do the check when the signature has the given selector:
-		if (signature.hasMethod(selector))
-		{
-			return;
-		}
-
-		CtlChecker checker = new CtlChecker(execModel, "isDispatch  ||  isMeta", dictionary);
-		Enumeration enu = checker.matchingStates();
-
-		while (enu.hasMoreElements())
-		{
-			state = (ExecutionState) enu.nextElement();
-
-			// get the dispatch target:
-			Target dispTarget = state.getSubstitutionMessage().getTarget();
-			if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
-			{
-				dispTarget = state.getMessage().getTarget();
-			}
-
-			// get the dispatch selector:
-			String dispSelector = state.getSubstitutionMessage().getSelector();
-			if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
-			{
-				dispSelector = state.getMessage().getSelector();
-			}
-
-			// get the dispatch target:
-			Concern targetConcern;
-			if (dispTarget.name.equals(Target.INNER))
-			{
-				targetConcern = concern;
-			}
-			else
-			{
-				DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
-				targetConcern = ref.getRef().getType().getRef();
-			}
-
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME,
-					"Selector '" + selector + "' is not added" + " to the signature of concern '" + concern.name + "' "
-							+ "because the dispatch target '" + dispTarget.name + '(' + targetConcern.name
-							+ ")' does not contain method '" + dispSelector + '\'', state.getFlowNode()
-							.getRepositoryLink());
-		}
+		int status = getDispatchTargetStatus(concern, method, state);
+		return (status != MethodWrapper.NOT_EXISTING);
 	}
 
-	// /////////////////////////////////////////////////////////////////////////
-	// // ////
-	// // PHASE2 ////
-	// // ////
-	// /////////////////////////////////////////////////////////////////////////
-
-	private void phase2()
+	private void cyclicDispatchConflictCheck()
 	{
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase2-Resolve");
-		phase2Resolve();
-
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase2-Check");
-		phase2Check();
+		cyclicDispatchConflictCheckInit();
+		cyclicDispatchConflictCheckProcess();
+		cyclicDispatchConflictCheckFinal();
 	}
 
-	private void phase2Resolve()
+	private void cyclicDispatchConflictCheckInit()
 	{
-		boolean changed = true;
-		Iterator iter, iter2;
-		Concern concern;
-		FireModel model;
-		MethodWrapper wrapper;
-
-		// build signatures:
-		while (changed)
+		cyclicDispatchSet = new HashSet<MethodWrapper>();
+		for (Concern concern : superimposedConcerns)
 		{
-			changed = false;
-			iter = unsolvedConcerns.iterator();
-
-			while (iter.hasNext())
+			for (MethodWrapper method : methods(concern))
 			{
-				concern = (Concern) iter.next();
-				Signature signature = getSignature(concern);
-				model = (FireModel) analysisModels.get(concern);
-
-				iter2 = signature.getMethodWrapperIterator();
-
-				while (iter2.hasNext())
+				if (method.getStatus() == MethodWrapper.EXISTING)
 				{
-					wrapper = (MethodWrapper) iter2.next();
-					if (wrapper.relationType == MethodWrapper.UNKNOWN)
-					{
-						int result = resolveMethodDispatch(concern, model, wrapper.methodInfo);
+					cyclicDispatchSet.add(method);
+				}
+			}
+		}
+	}
 
-						if (result == IN_SIGNATURE)
+	private void cyclicDispatchConflictCheckProcess()
+	{
+		boolean change = false;
+		do
+		{
+			change = false;
+			for (Concern concern : superimposedConcerns)
+			{
+				FireModel fireModel = fireModels.get(concern);
+				for (MethodWrapper wrapper : methods(concern))
+				{
+					boolean cyclDisp = false;
+					ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, wrapper
+							.getMethodInfo());
+					MethodInfo methodInfo = wrapper.getMethodInfo();
+					for (ExecutionState state : dispatchStates(execModel))
+					{
+						MethodWrapper targetMethod = getTargetMethod(concern, methodInfo, state
+								.getSubstitutionMessage().getTarget(), state.getSubstitutionMessage().getSelector());
+						if (cyclicDispatchSet.contains(targetMethod))
 						{
-							wrapper.relationType = MethodWrapper.NORMAL;
-							changed = true;
+							cyclDisp = true;
+							break;
 						}
-						else if (result == NOT_IN_SIGNATURE)
-						{
-							wrapper.relationType = MethodWrapper.REMOVED;
-							// signature.removeMethodWrapper( wrapper );
-							changed = true;
-						}
+					}
+
+					// Cyclic dispatch status can only turn from true to false,
+					// not from false to true
+					if (cyclicDispatchSet.contains(wrapper) && !cyclDisp)
+					{
+						cyclicDispatchSet.remove(wrapper);
+						change = true;
 					}
 				}
 			}
-		}
+		} while (change);
+
 	}
 
-	private int resolveMethodDispatch(Concern concern, FireModel fireModel, MethodInfo methodInfo)
+	private void cyclicDispatchConflictCheckFinal()
 	{
-		ExecutionState state;
-		ExecutionModel execModel;
-
-		// first check with strict signature checks:
-		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
-		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
-		Enumeration enu = checker.matchingStates();
-
-		while (enu.hasMoreElements())
+		for (Concern concern : superimposedConcerns)
 		{
-			state = (ExecutionState) enu.nextElement();
-			int result = resolveDispatchExistence(concern, methodInfo, state);
-			if (result == IN_SIGNATURE)
+			for (MethodWrapper method : methods(concern))
 			{
-				return IN_SIGNATURE;
-			}
-		}
-
-		checker = new CtlChecker(execModel, META_FORMULA, dictionary);
-		enu = checker.matchingStates();
-
-		while (enu.hasMoreElements())
-		{
-			state = (ExecutionState) enu.nextElement();
-			int result = resolveMetaExistence(concern, methodInfo, state);
-			if (result == IN_SIGNATURE)
-			{
-				return IN_SIGNATURE;
-			}
-		}
-
-		// then check again with loose signature checks:
-
-		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo, FireModel.LOOSE_SIGNATURE_CHECK);
-		checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
-		enu = checker.matchingStates();
-
-		while (enu.hasMoreElements())
-		{
-			state = (ExecutionState) enu.nextElement();
-			int result = resolveDispatchExistence(concern, methodInfo, state);
-			if (result != NOT_IN_SIGNATURE)
-			{
-				return POSSIBLE;
-			}
-		}
-
-		checker = new CtlChecker(execModel, META_FORMULA, dictionary);
-		enu = checker.matchingStates();
-
-		while (enu.hasMoreElements())
-		{
-			state = (ExecutionState) enu.nextElement();
-			int result = resolveMetaExistence(concern, methodInfo, state);
-			if (result != NOT_IN_SIGNATURE)
-			{
-				return POSSIBLE;
-			}
-		}
-
-		// else return not in signature:
-		return NOT_IN_SIGNATURE;
-	}
-
-	private int resolveDispatchExistence(Concern concern, MethodInfo method, ExecutionState state)
-	{
-		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
-		{
-			dispTarget = state.getMessage().getTarget();
-		}
-
-		// get the dispatch selector:
-		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
-		{
-			dispSelector = state.getMessage().getSelector();
-		}
-
-		// get dispatchtarget concern and methods:
-		if (dispTarget.name.equals(Target.INNER))
-		{
-			Type type = (Type) concern.getPlatformRepresentation();
-			MethodInfo targetMethod = method.getClone(dispSelector, type);
-
-			List methods = getMethodList(concern);
-			if (containsMethod(methods, targetMethod))
-			{
-				return IN_SIGNATURE;
-			}
-		}
-		else
-		{
-			DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
-			Concern targetConcern = ref.getRef().getType().getRef();
-
-			Type type = (Type) concern.getPlatformRepresentation();
-			MethodInfo targetMethod = method.getClone(dispSelector, type);
-
-			Signature signature = getSignature(targetConcern);
-			if (signature.hasMethod(targetMethod))
-			{
-				MethodWrapper wrapper = signature.getMethodWrapper(targetMethod);
-				if (wrapper.getRelationType() == MethodWrapper.UNKNOWN)
+				if (cyclicDispatchSet.contains(method))
 				{
-					return POSSIBLE;
-				}
-				else if (wrapper.getRelationType() == MethodWrapper.REMOVED)
-				{
-					return NOT_IN_SIGNATURE;
-				}
-				else
-				{
-					return IN_SIGNATURE;
+					warning("Cyclic dispatch conflict found in concern '" + concern.getQualifiedName()
+							+ "' on method '" + methodInfoString(method.getMethodInfo()) + "'!");
+					break;
 				}
 			}
 		}
-
-		return NOT_IN_SIGNATURE;
-	}
-
-	private int resolveMetaExistence(Concern concern, MethodInfo method, ExecutionState state)
-	{
-		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
-		{
-			dispTarget = state.getMessage().getTarget();
-		}
-
-		// get the dispatch selector:
-		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
-		{
-			dispSelector = state.getMessage().getSelector();
-		}
-
-		// get dispatchtarget concern and methods:
-		if (dispTarget.name.equals(Target.INNER))
-		{
-			Type type = (Type) concern.getPlatformRepresentation();
-
-			MethodInfo m = type.getMethod(dispSelector, META_PARAMS);
-			if (m != null)
-			{
-				return IN_SIGNATURE;
-			}
-		}
-		else
-		{
-			DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
-			Concern targetConcern = ref.getRef().getType().getRef();
-
-			Signature signature = getSignature(targetConcern);
-
-			MethodWrapper wrapper = getMethodWrapper(signature, dispSelector, META_PARAMS);
-
-			if (wrapper != null)
-			{
-				if (wrapper.getRelationType() == MethodWrapper.UNKNOWN)
-				{
-					return POSSIBLE;
-				}
-				else if (wrapper.getRelationType() == MethodWrapper.REMOVED)
-				{
-					return NOT_IN_SIGNATURE;
-				}
-				else
-				{
-					return IN_SIGNATURE;
-				}
-			}
-		}
-
-		return NOT_IN_SIGNATURE;
-	}
-
-	private void phase2Check()
-	{
-		Concern concern;
-		FireModel model;
-		MethodWrapper wrapper;
-		Iterator iter, iter2;
-
-		iter = unsolvedConcerns.iterator();
-
-		while (iter.hasNext())
-		{
-			concern = (Concern) iter.next();
-			Signature signature = getSignature(concern);
-			model = (FireModel) analysisModels.get(concern);
-
-			iter2 = signature.getMethodWrapperIterator();
-
-			while (iter2.hasNext())
-			{
-				wrapper = (MethodWrapper) iter2.next();
-
-				// check for cyclic dependancies:
-				if (wrapper.relationType == MethodWrapper.UNKNOWN)
-				{
-					Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Cyclic signature " + "dependancy found on method '"
-							+ concern.getName() + '.' + wrapper.methodInfo.Name + '\'');
-				}
-
-				// check for unexisting dispatches:
-				MethodInfo info = wrapper.getMethodInfo();
-				checkMethodDispatch(concern, model, info);
-			}
-		}
-	}
-
-	private void checkMethodDispatch(Concern concern, FireModel fireModel, MethodInfo methodInfo)
-	{
-		ExecutionState state;
-		ExecutionModel execModel;
-
-		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
-
-		CtlChecker checker = new CtlChecker(execModel, DISPATCH_FORMULA, dictionary);
-		Enumeration enu = checker.matchingStates();
-
-		while (enu.hasMoreElements())
-		{
-			state = (ExecutionState) enu.nextElement();
-			checkDispatchExistence(concern, methodInfo, state);
-
-		}
-
-		checker = new CtlChecker(execModel, META_FORMULA, dictionary);
-		enu = checker.matchingStates();
-		while (enu.hasMoreElements())
-		{
-			state = (ExecutionState) enu.nextElement();
-			checkMetaExistence(concern, methodInfo, state);
-		}
-	}
-
-	private void checkDispatchExistence(Concern concern, MethodInfo method, ExecutionState state)
-	{
-		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
-		{
-			dispTarget = state.getMessage().getTarget();
-		}
-
-		// get the dispatch selector:
-		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
-		{
-			dispSelector = state.getMessage().getSelector();
-		}
-
-		// get dispatchtarget concern and methods:
-		if (dispTarget.name.equals(Target.INNER))
-		{
-			Type type = (Type) concern.getPlatformRepresentation();
-			MethodInfo targetMethod = method.getClone(dispSelector, type);
-
-			List methods = getMethodList(concern);
-			if (!containsMethod(methods, targetMethod))
-			{
-				for (Object method1 : methods)
-				{
-					MethodInfo m = (MethodInfo) method1;
-					if (m.getName().equals(targetMethod.getName()))
-					{
-						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method "
-								+ methodInfoString(method) + " in concern " + concern.name
-								+ " might be dispatched to method " + m.getName()
-								+ " in inner with the wrong parameters " + "and/or return type!", state.getFlowNode()
-								.getRepositoryLink());
-						return;
-					}
-				}
-
-				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method " + methodInfoString(method)
-						+ " in concern " + concern.name + " might be dispatched to the unresolved " + "method "
-						+ targetMethod.getName() + " in inner", state.getFlowNode().getRepositoryLink());
-			}
-		}
-		else
-		{
-			DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
-			Concern targetConcern = ref.getRef().getType().getRef();
-
-			Type type = (Type) concern.getPlatformRepresentation();
-			MethodInfo targetMethod = method.getClone(dispSelector, type);
-
-			Signature signature = getSignature(targetConcern);
-			if (!signature.hasMethod(targetMethod))
-			{
-				if (signature.hasMethod(targetMethod.getName()))
-				{
-					Debug
-							.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method "
-									+ methodInfoString(method) + " in concern " + concern.name
-									+ " might be dispatched to method " + targetMethod.getName() + " in concern "
-									+ targetConcern.getName() + " with the wrong parameters and/or return type!", state
-									.getFlowNode().getRepositoryLink());
-				}
-				else
-				{
-					Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method " + methodInfoString(method)
-							+ " in concern " + concern.name + " might be dispatched to the unresolved " + "method "
-							+ targetMethod.getName() + " in concern " + targetConcern.getName(), state.getFlowNode()
-							.getRepositoryLink());
-				}
-			}
-		}
-	}
-
-	private void checkMetaExistence(Concern concern, MethodInfo method, ExecutionState state)
-	{
-		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionMessage().getTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
-		{
-			dispTarget = state.getMessage().getTarget();
-		}
-
-		// get the dispatch selector:
-		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
-		{
-			dispSelector = state.getMessage().getSelector();
-		}
-
-		// get dispatchtarget concern and methods:
-		// String dispatchMethodName = dispSelector.getName();
-		// List methods;
-		if (dispTarget.name.equals(Target.INNER))
-		{
-			Type type = (Type) concern.getPlatformRepresentation();
-
-			MethodInfo m = type.getMethod(dispSelector, META_PARAMS);
-			if (m == null)
-			{
-				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method '" + methodInfoString(method)
-						+ "' in concern '" + concern.name + "' might lead to a meta-call to an"
-						+ " unresolved meta-method '" + dispSelector 
-						// michielh:
-						// this used to be "m.name()" but m is null
-						+ "' in inner!", state.getFlowNode().getRepositoryLink());
-			}
-		}
-		else
-		{
-			DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
-			Concern targetConcern = ref.getRef().getType().getRef();
-
-			Signature signature = getSignature(targetConcern);
-
-			MethodWrapper wrapper = getMethodWrapper(signature, dispSelector, META_PARAMS);
-
-			if (wrapper == null)
-			{
-				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method '" + methodInfoString(method)
-						+ "' in concern '" + concern.name + "' might lead to a meta-call to an"
-						+ " unresolved meta-method '" + dispSelector + "' in concern '" + targetConcern.getName()
-						+ "'!", state.getFlowNode().getRepositoryLink());
-			}
-		}
-	}
-
-	private MethodWrapper getMethodWrapper(Signature signature, String name, String[] types)
-	{
-		Iterator iter = signature.getMethodWrapperIterator();
-		while (iter.hasNext())
-		{
-			MethodWrapper wrapper = (MethodWrapper) iter.next();
-			MethodInfo method = wrapper.getMethodInfo();
-
-			// if same name && param length
-			if (method.getName().equals(name) && method.hasParameters(types))
-			{
-				return wrapper;
-			}
-		}
-		return null;
 	}
 
 	private List getMethodList(Concern c)
@@ -1247,7 +873,7 @@ public class Sign implements CTCommonModule
 		return new LinkedList(dt.getMethods());
 	}
 
-	private Signature getSignature(Concern c)
+	private static Signature getSignature(Concern c)
 	{
 		Signature signature = c.getSignature();
 		if (signature == null)
@@ -1281,7 +907,31 @@ public class Sign implements CTCommonModule
 		return buffer.toString();
 	}
 
-	public void phase3()
+	private String targetInfoString(Target target)
+	{
+		if (target.getName().equals(Target.SELF))
+		{
+			return "self";
+		}
+		else if (target.getName().equals(Target.INNER))
+		{
+			return "inner";
+		}
+		else
+		{
+			DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
+			Concern targetConcern = ref.getRef().getType().getRef();
+			return target.getName() + '(' + targetConcern.getQualifiedName() + ')';
+		}
+	}
+
+	// ####################################################
+	// 
+	// Some finishing stuff
+	// 
+	// ####################################################
+
+	public void finishing()
 	{
 		DataStore datastore = DataStore.instance();
 		Iterator conIter = datastore.getAllInstancesOf(Concern.class);
@@ -1300,22 +950,35 @@ public class Sign implements CTCommonModule
 
 				if (wrapper == null)
 				{
-					signature.add(methodInfo, MethodWrapper.REMOVED);
+					wrapper = new MethodWrapper(methodInfo, MethodWrapper.NOT_EXISTING);
+					wrapper.setRelationType(MethodWrapper.REMOVED);
+					signature.addMethodWrapper(wrapper);
 				}
-				else if (wrapper.getRelationType() == MethodWrapper.ADDED)
+				else if (wrapper.getStatus() == MethodWrapper.NOT_EXISTING)
+				{
+					wrapper.setRelationType(MethodWrapper.REMOVED);
+					signature.addMethodWrapper(wrapper);
+				}
+				else
 				{
 					wrapper.setRelationType(MethodWrapper.NORMAL);
+					signature.addMethodWrapper(wrapper);
 				}
 			}
 
-			List normal = signature.getMethodWrappers(MethodWrapper.NORMAL);
-			for (Object aNormal : normal)
+			for (MethodWrapper wrapper : methods(concern))
 			{
-				MethodWrapper mw = (MethodWrapper) aNormal;
-				MethodInfo minfo = mw.getMethodInfo();
+				MethodInfo minfo = wrapper.getMethodInfo();
 				if (!containsMethod(dnmi, minfo))
 				{
-					mw.setRelationType(MethodWrapper.ADDED);
+					if (wrapper.getStatus() == MethodWrapper.EXISTING)
+					{
+						wrapper.setRelationType(MethodWrapper.ADDED);
+					}
+					else
+					{
+						signature.removeMethodWrapper(wrapper);
+					}
 				}
 			}
 		}
@@ -1335,45 +998,45 @@ public class Sign implements CTCommonModule
 			Signature st = concern.getSignature();
 			if (st != null && concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
 			{
-				Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, 
-						"\tSignature for concern: " + concern.getQualifiedName());
+				logger.info("\tSignature for concern: " + concern.getQualifiedName());
 
 				// Show them your goodies.
-				Iterator mwIt = st.getMethodWrapperIterator();
-				while (mwIt.hasNext())
+				Iterator wrapperIter = st.getMethodWrapperIterator();
+				while (wrapperIter.hasNext())
 				{
-					MethodWrapper mw = (MethodWrapper) mwIt.next();
-					if (mw.getRelationType() == MethodWrapper.REMOVED || mw.getRelationType() == MethodWrapper.ADDED)
+					MethodWrapper wrapper = (MethodWrapper) wrapperIter.next();
+					if (wrapper.getRelationType() == MethodWrapper.REMOVED
+							|| wrapper.getRelationType() == MethodWrapper.ADDED)
 					{
 						signaturesmodified = true;
 					}
 
 					String relation = "?";
-					if (mw.getRelationType() == MethodWrapper.ADDED)
+					if (wrapper.getRelationType() == MethodWrapper.ADDED)
 					{
 						relation = "added";
 					}
-					if (mw.getRelationType() == MethodWrapper.REMOVED)
+					if (wrapper.getRelationType() == MethodWrapper.REMOVED)
 					{
 						relation = "removed";
 					}
-					if (mw.getRelationType() == MethodWrapper.NORMAL)
+					if (wrapper.getRelationType() == MethodWrapper.NORMAL)
 					{
 						relation = "kept";
 					}
 
-					MethodInfo mi = mw.getMethodInfo();
+					MethodInfo mi = wrapper.getMethodInfo();
 					String returntype = mi.getReturnTypeString();
 
 					List paramNames = new ArrayList();
-						for (Object o : mi.getParameters())
+					for (Object o : mi.getParameters())
 					{
-							ParameterInfo pi = (ParameterInfo) o;
+						ParameterInfo pi = (ParameterInfo) o;
 						paramNames.add(pi.getName());
 					}
 
-					Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "\t[ " + relation + " ] " + "(" + returntype + ") "
-							+ mi.getName() + "(" + StringUtils.join(paramNames, ", ") + ")");
+					logger.info("\t[ " + relation + " ] " + "(" + returntype + ") " + mi.getName() + "("
+							+ StringUtils.join(paramNames, ", ") + ")");
 				}
 			}
 		}
@@ -1381,7 +1044,179 @@ public class Sign implements CTCommonModule
 		resources.addBoolean("signaturesmodified", signaturesmodified);
 	}
 
-	private boolean containsMethod(List methods, MethodInfo method)
+	// ####################################################
+	// 
+	// Helper methods/classes
+	// 
+	// ####################################################
+
+	/**
+	 * Notifies an error
+	 */
+	private void error(String msg)
+	{
+		logger.error(msg);
+		error = true;
+	}
+
+	/**
+	 * Notifies a warning
+	 */
+	private void warning(String msg)
+	{
+		logger.warn(msg);
+	}
+
+	/**
+	 * Notifies a warning
+	 */
+	private void warning(String msg, RepositoryEntity entity)
+	{
+		logger.warn(msg, entity);
+	}
+
+	private MethodInfo cloneMethod(MethodInfo method, Concern concern, String selector, Concern newConcern)
+	{
+		if (selector.equals(method.getName()) && concern.equals(newConcern))
+		{
+			return method;
+		}
+		else
+		{
+			return method.getClone(selector, (Type) newConcern.getPlatformRepresentation());
+		}
+	}
+
+	private MethodInfo cloneMethod(MethodInfo method, String selector, Type parent)
+	{
+		if (selector.equals(method.getName()) && parent.equals(method.parent()))
+		{
+			return method;
+		}
+		else
+		{
+			return method.getClone(selector, parent);
+		}
+	}
+
+	/**
+	 * Returns a list containing all dispatch states in the execution model.
+	 * 
+	 * @param model
+	 * @return
+	 */
+	private List<ExecutionState> dispatchStates(ExecutionModel model)
+	{
+		CtlChecker checker = new CtlChecker(model, DISPATCH_FORMULA, dictionary);
+		return checker.matchingStates();
+	}
+
+	/**
+	 * Returns a list containing all methods from the target that have the same
+	 * name is the selector. If the selector is the undistinguishable selector,
+	 * then all methods with an undistinguishable name are returned
+	 * 
+	 * @param concern The current concern
+	 * @param target The target from which the methods are requested
+	 * @param selector The selector to test.
+	 * @return A list containing the requested methods from the target.
+	 */
+	private List<MethodInfo> targetMethods(Concern concern, Target target, String selector)
+	{
+		// get dispatchtarget concern and methods:
+		List methods;
+		if (target.getName().equals(Target.INNER))
+		{
+			methods = getMethodList(concern);
+		}
+		else
+		{
+			Concern targetConcern;
+
+			if (target.getName().equals(Target.SELF))
+			{
+				targetConcern = concern;
+			}
+			else
+			{
+				DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
+				targetConcern = ref.getRef().getType().getRef();
+			}
+
+			Signature signature = getSignature(targetConcern);
+			methods = signature.getMethods();
+		}
+
+		Set<String> distinguishableSelectors = fireModels.get(concern).getDistinguishableSelectors(
+				FireModel.INPUT_FILTERS);
+
+		ArrayList<MethodInfo> targetMethods = new ArrayList<MethodInfo>();
+		for (Object method1 : methods)
+		{
+			MethodInfo method = (MethodInfo) method1;
+			if (selector.equals(Message.UNDISTINGUISHABLE_SELECTOR))
+			{
+				if (!distinguishableSelectors.contains(method.getName()))
+				{
+					targetMethods.add(method);
+				}
+			}
+			else
+			{
+				if (method.getName().equals(selector))
+				{
+					targetMethods.add(method);
+				}
+			}
+
+		}
+
+		return targetMethods;
+	}
+
+	/**
+	 * Adds the given list of methods to the signature of the given concern. If
+	 * new methods are added, the flag 'change' is set to true.
+	 * 
+	 * @param concern
+	 * @param sig
+	 */
+	private void addToSignature(Concern concern, List<MethodInfo> sig)
+	{
+		Signature signature = getSignature(concern);
+		for (MethodInfo method : sig)
+		{
+			if (!signature.hasMethod(method))
+			{
+				MethodInfo newMethod = cloneMethod(method, method.getName(), (Type) concern.getPlatformRepresentation());
+				MethodWrapper wrapper = new MethodWrapper(newMethod, MethodWrapper.UNKNOWN);
+				signature.addMethodWrapper(wrapper);
+				change = true;
+			}
+		}
+	}
+
+	private void addDistinguishableSelector(Concern concern, Target target, String selector)
+	{
+		Concern targetConcern;
+
+		if (target.getName().equals(Target.INNER) || target.getName().equals(Target.SELF))
+		{
+			targetConcern = concern;
+		}
+		else
+		{
+			DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
+			targetConcern = ref.getRef().getType().getRef();
+		}
+
+		if (distinguishableSets.containsKey(targetConcern))
+		{
+			distinguishableSets.get(targetConcern).add(selector);
+		}
+	}
+
+	private static boolean containsMethod(List methods, MethodInfo method)
 	{
 		for (Object method1 : methods)
 		{
@@ -1393,5 +1228,214 @@ public class Sign implements CTCommonModule
 		}
 
 		return false;
+	}
+
+	private List<MethodWrapper> methods(Concern concern)
+	{
+		Signature signature = getSignature(concern);
+		ArrayList<MethodWrapper> list = new ArrayList<MethodWrapper>();
+		Iterator wrapperIter = signature.getMethodWrapperIterator();
+		while (wrapperIter.hasNext())
+		{
+			list.add((MethodWrapper) wrapperIter.next());
+		}
+		return list;
+	}
+
+	/**
+	 * Returns the status of the dispatch target.
+	 * 
+	 * @param concern The concern containing the original method
+	 * @param method The original method
+	 * @param state The dispatch state
+	 * @return The status of the dispatch target method.
+	 */
+	private int getDispatchTargetStatus(Concern concern, MethodInfo method, ExecutionState state)
+	{
+		// get the dispatch target:
+		Target dispTarget = state.getSubstitutionMessage().getTarget();
+
+		// get the dispatch selector:
+		String dispSelector = state.getSubstitutionMessage().getSelector();
+
+		return getMethodStatus(concern, method, dispTarget, dispSelector);
+	}
+
+	/**
+	 * Returns the status of the target method
+	 * 
+	 * @param concern The concern containing the original method
+	 * @param method The original method
+	 * @param target The target concern of the target method
+	 * @param selector The name of the target method
+	 * @return The status of the dispatch target method.
+	 */
+	public static int getMethodStatus(Concern concern, MethodInfo method, Target target, String selector)
+	{
+		// get the methods from the dispatch target
+		List methods;
+		Type type;
+		if (target.getName().equals(Target.INNER))
+		{
+			type = (Type) concern.getPlatformRepresentation();
+			methods = type.getMethods();
+
+			// Check whether the dispatchmethod is contained in the dispatch
+			// target
+			MethodInfo dispatchMethod = method.getClone(selector, type);
+			if (containsMethod(methods, dispatchMethod))
+			{
+				return MethodWrapper.EXISTING;
+			}
+			else
+			{
+				return MethodWrapper.NOT_EXISTING;
+			}
+		}
+		else
+		{
+			Concern targetConcern;
+
+			if (target.getName().equals(Target.SELF))
+			{
+				targetConcern = concern;
+			}
+			else
+			{
+				DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
+				targetConcern = ref.getRef().getType().getRef();
+			}
+
+			type = (Type) targetConcern.getPlatformRepresentation();
+			MethodInfo dispatchMethod = method.getClone(selector, type);
+
+			// get the method wrapper
+			Signature signature = getSignature(targetConcern);
+			MethodWrapper wrapper = signature.getMethodWrapper(dispatchMethod);
+			if (wrapper == null)
+			{
+				return MethodWrapper.NOT_EXISTING;
+			}
+			else
+			{
+				return wrapper.getStatus();
+			}
+		}
+	}
+
+	private MethodWrapper getTargetMethod(Concern concern, MethodInfo methodInfo, Target target, String selector)
+	{
+		// get the methods from the dispatch target
+		List methods;
+		Type type;
+		if (target.getName().equals(Target.INNER))
+		{
+			return null;
+		}
+		else
+		{
+			Concern targetConcern;
+
+			if (target.getName().equals(Target.SELF))
+			{
+				targetConcern = concern;
+			}
+			else
+			{
+				DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
+				targetConcern = ref.getRef().getType().getRef();
+			}
+
+			type = (Type) targetConcern.getPlatformRepresentation();
+			MethodInfo dispatchMethod = methodInfo.getClone(selector, type);
+
+			// get the method wrapper
+			Signature signature = getSignature(targetConcern);
+			MethodWrapper wrapper = signature.getMethodWrapper(dispatchMethod);
+			return wrapper;
+		}
+	}
+
+	private class ProbeMethodInfo extends MethodInfo
+	{
+
+		public ProbeMethodInfo(String name, String type)
+		{
+			super.setName(name);
+			super.setReturnType(type);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.LAMA.MethodInfo#getClone(java.lang.String,
+		 *      Composestar.Core.LAMA.Type)
+		 */
+		@Override
+		public MethodInfo getClone(String name, Type actualParent)
+		{
+			return new ProbeMethodInfo(name, this.getReturnTypeString());
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
+		 */
+		@Override
+		public Collection getUnitAttributes()
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
+		 */
+		@Override
+		public UnitResult getUnitRelation(String argumentName)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.LAMA.MethodInfo#isPrivate()
+		 */
+		@Override
+		public boolean isPrivate()
+		{
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.LAMA.MethodInfo#isProtected()
+		 */
+		@Override
+		public boolean isProtected()
+		{
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.LAMA.MethodInfo#isPublic()
+		 */
+		@Override
+		public boolean isPublic()
+		{
+			// TODO Auto-generated method stub
+			return false;
+		}
+
 	}
 }

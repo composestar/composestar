@@ -50,7 +50,7 @@ public abstract class MethodInfo extends ProgramElement
 	{
 		if (!dummy)
 		{
-			UnitRegister.instance().registerLanguageUnit(this);
+		UnitRegister.instance().registerLanguageUnit(this);
 		}
 		parameters = new ArrayList();
 		callsToOtherMethods = new HashSet();
@@ -335,4 +335,21 @@ public abstract class MethodInfo extends ProgramElement
 	public abstract boolean isPrivate();
 
 	public abstract boolean isProtected();
+	
+	public String getHashKey()
+	{
+		StringBuffer sb = new StringBuffer();
+
+		sb.append(this.getName()).append('%');
+		sb.append(this.getReturnTypeString()).append('%');
+
+		List pars = this.getParameters();
+		for (int i = 0; i < pars.size(); i++)
+		{
+			ParameterInfo pi = (ParameterInfo) pars.get(i);
+			sb.append(pi.getParameterTypeString()).append('%');
+		}
+
+		return sb.toString();
+	}
 }

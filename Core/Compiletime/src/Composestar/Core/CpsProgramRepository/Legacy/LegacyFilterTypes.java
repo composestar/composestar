@@ -72,7 +72,7 @@ public final class LegacyFilterTypes
 		action.setName("DispatchAction");
 		action.setFullName("DispatchAction");
 		action.setFlowBehaviour(FilterAction.FLOW_RETURN);
-		action.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		action.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
 		return action;
 	}
 

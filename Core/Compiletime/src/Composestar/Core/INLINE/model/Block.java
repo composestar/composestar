@@ -4,8 +4,8 @@
  */
 package Composestar.Core.INLINE.model;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * A Block instruction is a container for other instructions
@@ -17,14 +17,14 @@ public class Block extends Instruction
 	/**
 	 * The instructions contained in this block.
 	 */
-	private Vector instructions;
+	private ArrayList<Instruction> instructions;
 
 	/**
 	 * The constructor
 	 */
 	public Block()
 	{
-		instructions = new Vector();
+		instructions = new ArrayList<Instruction>();
 	}
 
 	/**
@@ -34,15 +34,15 @@ public class Block extends Instruction
 	 */
 	public void addInstruction(Instruction instruction)
 	{
-		instructions.addElement(instruction);
+		instructions.add(instruction);
 	}
 
 	/**
 	 * @return An enumeration of the instructions in this block.
 	 */
-	public Enumeration getInstructions()
+	public Iterator<Instruction> getInstructions()
 	{
-		return instructions.elements();
+		return instructions.iterator();
 	}
 
 	/**

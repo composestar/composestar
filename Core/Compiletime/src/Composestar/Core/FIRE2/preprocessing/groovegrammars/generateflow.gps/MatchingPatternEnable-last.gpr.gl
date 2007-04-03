@@ -1,15 +1,15 @@
-# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\generateflow.gps\MatchingPatternEnable-last.gpr
+# Layout information for D:\composestar\Core\Compiletime\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\MatchingPatternEnable-last.gpr
 # Each line contains layout information about a node or edge
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-n n928 690 364 18 18 
-e n930 n926 "new:flowNext" 865 616 253 83 148 250 226 419 12
-n n925 312 202 18 18 
-n n930 213 74 18 18 
-e n925 n925 "del:Enable" 500 500 364 211 402 163 380 108 380 108 12
-n n926 46 314 18 18 
-n n931 393 650 18 18 
-n n927 548 82 18 18 
-e n925 n928 "del:flowNext" 500 500 363 211 657 275 730 373 11
-e n926 n928 "new:flowFalse" 793 718 88 323 725 411 11
-n n929 138 467 18 18 
+n n4701 548 82 18 18 
+e n4699 n4697 "new:flowNext" 865 616 253 83 148 250 226 419 12
+e n4700 n4703 "del:flowNext" 500 500 363 211 657 275 730 373 11
+n n4700 312 202 18 18 
+n n4702 138 467 18 18 
+n n4703 690 364 18 18 
+n n4697 46 314 18 18 
+n n4698 393 650 18 18 
+e n4700 n4700 "del:Enable" 500 500 364 211 402 163 380 108 380 108 12
+e n4697 n4703 "new:flowFalse" 793 718 88 323 725 411 11
+n n4699 213 74 18 18 

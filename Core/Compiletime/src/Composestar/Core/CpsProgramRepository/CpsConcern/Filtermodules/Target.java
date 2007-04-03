@@ -22,6 +22,8 @@ public class Target extends ContextRepositoryEntity
 	private static final long serialVersionUID = 4238743031003419298L;
 
 	public static final String INNER = "inner";
+	
+	public static final String SELF = "self";
 
 	/**
 	 * fixme: same information twice, name kept for compatibility, should only

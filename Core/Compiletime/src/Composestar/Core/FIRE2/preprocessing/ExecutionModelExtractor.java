@@ -191,7 +191,7 @@ public class ExecutionModelExtractor
 		}
 		else
 		{
-			selector = Message.STAR_SELECTOR;
+			selector = Message.UNDISTINGUISHABLE_SELECTOR;
 		}
 
 		if (targetNode instanceof AnnotatedNode)
@@ -200,7 +200,7 @@ public class ExecutionModelExtractor
 		}
 		else
 		{
-			target = Message.STAR_TARGET;
+			target = Message.UNDISTINGUISHABLE_TARGET;
 		}
 
 		Message message = new Message(target, selector);
@@ -214,7 +214,7 @@ public class ExecutionModelExtractor
 		}
 		else
 		{
-			substitutionSelector = Message.STAR_SELECTOR;
+			substitutionSelector = Message.UNDISTINGUISHABLE_SELECTOR;
 		}
 
 		if (substitutionTargetNode != null && substitutionTargetNode instanceof AnnotatedNode)
@@ -224,7 +224,7 @@ public class ExecutionModelExtractor
 		}
 		else
 		{
-			substitutionTarget = Message.STAR_TARGET;
+			substitutionTarget = Message.UNDISTINGUISHABLE_TARGET;
 		}
 
 		Message substitutionMessage = new Message(substitutionTarget, substitutionSelector);
@@ -305,15 +305,15 @@ public class ExecutionModelExtractor
 			{
 				// FIXME Undistinguishable target/selector instead of star
 				// target/selector
-				state = (ExecutionState) entranceStates.get(new Message(Message.STAR_TARGET, message.getSelector()));
+				state = (ExecutionState) entranceStates.get(new Message(Message.UNDISTINGUISHABLE_TARGET, message.getSelector()));
 			}
 			if (state == null)
 			{
-				state = (ExecutionState) entranceStates.get(new Message(message.getTarget(), Message.STAR_SELECTOR));
+				state = (ExecutionState) entranceStates.get(new Message(message.getTarget(), Message.UNDISTINGUISHABLE_SELECTOR));
 			}
 			if (state == null)
 			{
-				state = (ExecutionState) entranceStates.get(Message.STAR_MESSAGE);
+				state = (ExecutionState) entranceStates.get(Message.UNDISTINGUISHABLE_MESSAGE);
 			}
 
 			return state;

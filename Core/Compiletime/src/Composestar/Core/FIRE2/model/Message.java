@@ -5,12 +5,12 @@
 package Composestar.Core.FIRE2.model;
 
 import java.io.Serializable;
-
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
+ * Represents a message in the FIRE models
+ * 
  * @author Arjan de Roo
  */
 public class Message implements Serializable
@@ -18,32 +18,57 @@ public class Message implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The target of the message, or "*" to indicate an unknown target.
+	 * The target of the message.
 	 */
 	private Target target;
 
 	/**
-	 * The selector of the message, or "*" to indicate an unknown selector.
+	 * The selector of the message.
 	 */
 	private String selector;
 
+	/**
+	 * The star target. Only used in matching parts and substitution parts.
+	 * @deprecated
+	 */
 	public final static Target STAR_TARGET = getStarTarget();
-
+	
+	/**
+	 * The star selector. Only used in matching parts and substitution parts.
+	 * @deprecated
+	 */
+	public final static String STAR_SELECTOR = "*";
+	
+	/**
+	 * The inner target
+	 */
 	public final static Target INNER_TARGET = getInnerTarget();
 
+	/**
+	 * The self target
+	 */
 	public final static Target SELF_TARGET = getSelfTarget();
 
+	/**
+	 * Placeholder for an undistinguishable target
+	 */
 	public final static Target UNDISTINGUISHABLE_TARGET = getUndistinguishableTarget();
 
-	public final static String STAR_SELECTOR = "*";
-
+	/**
+	 * Placeholder for an undistinguishable selector
+	 */
 	public final static String UNDISTINGUISHABLE_SELECTOR = "+";
 
 	/**
-	 * The STAR-message
+	 * Placeholder for an undistinguishable message
 	 */
-	public final static Message STAR_MESSAGE = new Message(STAR_TARGET, STAR_SELECTOR);
+	public final static Message UNDISTINGUISHABLE_MESSAGE = new Message(UNDISTINGUISHABLE_TARGET,
+			UNDISTINGUISHABLE_SELECTOR);
 
+	/**
+	 * @deprecated
+	 * @return
+	 */
 	private static Target getStarTarget()
 	{
 		Target target = new Target();
@@ -122,7 +147,8 @@ public class Message implements Serializable
 	 */
 	public boolean isGeneralization()
 	{
-		return checkEquals(selector, Message.STAR_SELECTOR) || checkEquals(target, Message.STAR_TARGET);
+		return checkEquals(selector, Message.UNDISTINGUISHABLE_SELECTOR)
+				|| checkEquals(target, Message.UNDISTINGUISHABLE_TARGET);
 	}
 
 	/**
@@ -147,21 +173,26 @@ public class Message implements Serializable
 		return selector.hashCode() + target.hashCode();
 	}
 
-	public static boolean checkEquals(MessageSelector selector1, MessageSelector selector2)
-	{
-		return selector1.getName().equals(selector2.getName());
-	}
-
-	public static boolean checkEquals(MessageSelector selector1, String selector2)
-	{
-		return selector1.getName().equals(selector2);
-	}
-
+	/**
+	 * Checks the equality between two selectors.
+	 * 
+	 * @param selector1 The first selector to check.
+	 * @param selector2 The second selector to check.
+	 * @return <code>true</code> if both selectors are equal.
+	 */
 	public static boolean checkEquals(String selector1, String selector2)
 	{
 		return selector1.equals(selector2);
 	}
 
+	/**
+	 * Checks the equality between to targets. This is done by checking the
+	 * equality of the names.
+	 * 
+	 * @param target1 The first target to check.
+	 * @param target2 The second target to check.
+	 * @return <code>true</code> if both targets are equal.
+	 */
 	public static boolean checkEquals(Target target1, Target target2)
 	{
 		return target1.getName().equals(target2.getName());

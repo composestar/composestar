@@ -9,27 +9,23 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.preprocessing.FirePreprocessingResult;
 import Composestar.Core.FIRE2.preprocessing.Preprocessor;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.Type;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
+import Composestar.Core.SIGN2.Sign;
 
 /**
  * @author Arjan de Roo
@@ -79,12 +75,6 @@ public class FireModel
 	 * status 'UNKNOWN' are assumed not to be in the signature.
 	 */
 	public final static int STRICT_SIGNATURE_CHECK = 2;
-
-	private final static int SIGNATURE_MATCH_TRUE = 1;
-
-	private final static int SIGNATURE_MATCH_FALSE = 2;
-
-	private final static int SIGNATURE_MATCH_UNKNOWN = 3;
 
 	private final static String[] FM_COND_NODE_NAMES = { FlowNode.FM_CONDITION_NODE, FlowNode.PREDICATE_NODE,
 			FlowNode.FLOW_ELEMENT_NODE };
@@ -345,9 +335,9 @@ public class FireModel
 		}
 	}
 
-	private Vector getOutTransitions(ExtendedExecutionState state)
+	private List<ExecutionTransition> getOutTransitions(ExtendedExecutionState state)
 	{
-		if (state.getStateType() == ExecutionState.EXIT_STATE)
+		if (state.baseState != null && state.baseState.getFlowNode().containsName(FlowNode.END_NODE))
 		{
 			return getOutTransitionsCrossLayer(state);
 		}
@@ -357,11 +347,16 @@ public class FireModel
 		}
 	}
 
-	private Vector getOutTransitionsCurrentLayer(ExtendedExecutionState state)
+	private List<ExecutionTransition> getOutTransitionsCurrentLayer(ExtendedExecutionState state)
 	{
 		if (state.baseState == null)
 		{
 			return getOutTransitionsCurrentLayerFMCond(state);
+		}
+		else if (state.signatureCheck != NO_SIGNATURE_CHECK
+				&& state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING_NODE))
+		{
+			return getOutTransitionsCurrentLayerSignatureCheck(state);
 		}
 		else
 		{
@@ -369,78 +364,111 @@ public class FireModel
 		}
 	}
 
-	private Vector getOutTransitionsCurrentLayerNormal(ExtendedExecutionState state)
+	private List<ExecutionTransition> getOutTransitionsCurrentLayerNormal(ExtendedExecutionState state)
 	{
-		ExecutionTransition transition;
-		int signatureCheck = state.signatureCheck;
-		MethodInfo methodInfo = state.signatureCheckInfo;
 		ExecutionState baseState = state.baseState;
-		Iterator baseIt;
-
-		if (signatureCheck != NO_SIGNATURE_CHECK && state.getFlowNode().containsName(FlowNode.SIGNATURE_MATCHING_NODE))
-		{
-			int result = signatureCheck(state, signatureCheck, methodInfo);
-			if (result == SIGNATURE_MATCH_UNKNOWN)
-			{
-				if (signatureCheck == STRICT_SIGNATURE_CHECK)
-				{
-					Vector v = new Vector();
-					baseIt = v.iterator();
-				}
-				else
-				{
-					baseIt = baseState.getOutTransitions();
-				}
-			}
-			else if (result == SIGNATURE_MATCH_TRUE)
-			{
-				Vector v = new Vector();
-				Iterator it = baseState.getOutTransitions();
-				while (it.hasNext())
-				{
-					transition = (ExecutionTransition) it.next();
-					if (transition.getFlowTransition().getType() == FlowTransition.FLOW_TRUE_TRANSITION)
-					{
-						v.addElement(transition);
-					}
-				}
-				baseIt = v.iterator();
-			}
-			else
-			{
-				Vector v = new Vector();
-				Iterator it = baseState.getOutTransitions();
-				while (it.hasNext())
-				{
-					transition = (ExecutionTransition) it.next();
-					if (transition.getFlowTransition().getType() == FlowTransition.FLOW_FALSE_TRANSITION)
-					{
-						v.addElement(transition);
-					}
-				}
-				baseIt = v.iterator();
-			}
-		}
-		else
-		{
-			baseIt = baseState.getOutTransitions();
-		}
+		Iterator transitionIter = baseState.getOutTransitions();
 
 		// create ExtendedExecutionTransitions:
-		Vector outTransitions = new Vector();
-		while (baseIt.hasNext())
+		ArrayList<ExecutionTransition> outTransitions = new ArrayList<ExecutionTransition>();
+		while (transitionIter.hasNext())
 		{
-			ExecutionTransition baseTransition = (ExecutionTransition) baseIt.next();
+			ExecutionTransition baseTransition = (ExecutionTransition) transitionIter.next();
 			ExtendedExecutionState endState = deriveState(baseTransition.getEndState(), state, state.layer);
-			outTransitions.addElement(new ExtendedExecutionTransition(state, endState, baseTransition));
+			outTransitions.add(new ExtendedExecutionTransition(state, endState, baseTransition));
 		}
 
 		return outTransitions;
 	}
 
-	private Vector getOutTransitionsCurrentLayerFMCond(ExtendedExecutionState state)
+	private List<ExecutionTransition> getOutTransitionsCurrentLayerSignatureCheck(ExtendedExecutionState state)
 	{
-		Vector outTransitions = new Vector();
+		Iterator transitionIter;
+		ExecutionState baseState = state.baseState;
+
+		// First count the number of outtransitions. If it is one, the
+		// selector did not match, so the signature matching part is always
+		// false.
+		transitionIter = baseState.getOutTransitions();
+		int transitionCount = 0;
+		while (transitionIter.hasNext())
+		{
+			transitionCount++;
+			transitionIter.next();
+		}
+
+		if (transitionCount == 1)
+		{
+			// Selector did not match, so signature matching part always
+			// rejects.
+			transitionIter = baseState.getOutTransitions();
+		}
+		else
+		{
+			// There are more than one options (two), so signature matching. Try
+			// to find the correct out-transitions
+			int result = signatureCheck(state, state.signatureCheck, state.signatureCheckInfo);
+			if (result == MethodWrapper.UNKNOWN)
+			{
+				if (state.signatureCheck == STRICT_SIGNATURE_CHECK)
+				{
+					// If UNKNOWN and strict signature check, no outgoing
+					// transitions
+					return new ArrayList<ExecutionTransition>();
+				}
+				else
+				{
+					// If loose signature check, all outgoing transition
+					transitionIter = baseState.getOutTransitions();
+				}
+			}
+			else if (result == MethodWrapper.EXISTING)
+			{
+				// If existing, only the true-transition
+				ArrayList a = new ArrayList();
+				Iterator it = baseState.getOutTransitions();
+				while (it.hasNext())
+				{
+					ExecutionTransition transition = (ExecutionTransition) it.next();
+					if (transition.getFlowTransition().getType() == FlowTransition.FLOW_TRUE_TRANSITION)
+					{
+						a.add(transition);
+					}
+				}
+				transitionIter = a.iterator();
+			}
+			else
+			{
+				// If not existing, only the false transition
+				ArrayList a = new ArrayList();
+				Iterator it = baseState.getOutTransitions();
+				while (it.hasNext())
+				{
+					ExecutionTransition transition = (ExecutionTransition) it.next();
+					if (transition.getFlowTransition().getType() == FlowTransition.FLOW_FALSE_TRANSITION)
+					{
+						a.add(transition);
+					}
+				}
+				transitionIter = a.iterator();
+			}
+		}
+
+		// create ExtendedExecutionTransitions:
+		ArrayList<ExecutionTransition> outTransitions = new ArrayList<ExecutionTransition>();
+		while (transitionIter.hasNext())
+		{
+			ExecutionTransition baseTransition = (ExecutionTransition) transitionIter.next();
+			ExtendedExecutionState endState = deriveState(baseTransition.getEndState(), state, state.layer);
+			outTransitions.add(new ExtendedExecutionTransition(state, endState, baseTransition));
+		}
+
+		return outTransitions;
+	}
+
+	private List<ExecutionTransition> getOutTransitionsCurrentLayerFMCond(ExtendedExecutionState state)
+	{
+		List<ExecutionTransition> outTransitions = new ArrayList<ExecutionTransition>();
 
 		ExecutionTransition transition;
 		int signatureCheck = state.signatureCheck;
@@ -502,27 +530,29 @@ public class FireModel
 			}
 		}
 
-		ExecutionState state = (ExecutionState) endStates.get(new Message(Message.STAR_TARGET, message.getSelector()));
+		ExecutionState state = (ExecutionState) endStates.get(new Message(Message.UNDISTINGUISHABLE_TARGET, message
+				.getSelector()));
 
 		if (state == null)
 		{
-			state = (ExecutionState) endStates.get(new Message(message.getTarget(), Message.STAR_SELECTOR));
+			state = (ExecutionState) endStates
+					.get(new Message(message.getTarget(), Message.UNDISTINGUISHABLE_SELECTOR));
 		}
 		if (state == null)
 		{
-			state = (ExecutionState) endStates.get(Message.STAR_MESSAGE);
+			state = (ExecutionState) endStates.get(Message.UNDISTINGUISHABLE_MESSAGE);
 		}
 
 		return state;
 	}
 
-	private Vector getOutTransitionsCrossLayer(ExtendedExecutionState startState)
+	private List<ExecutionTransition> getOutTransitionsCrossLayer(ExtendedExecutionState startState)
 	{
 		int layer = startState.layer;
 
 		if (layer == filterModules.length - 1)
 		{
-			return new Vector();
+			return new ArrayList<ExecutionTransition>();
 		}
 
 		ExtendedExecutionState extendedNextState = getStartStateNextLayer(startState);
@@ -533,8 +563,8 @@ public class FireModel
 			throw new RuntimeException("No next state found, while there should have been one!");
 		}
 
-		Vector result = new Vector();
-		result.addElement(new ExtendedExecutionTransition(startState, extendedNextState));
+		ArrayList<ExecutionTransition> result = new ArrayList<ExecutionTransition>();
+		result.add(new ExtendedExecutionTransition(startState, extendedNextState));
 		return result;
 	}
 
@@ -576,77 +606,20 @@ public class FireModel
 
 			// get the matching target:
 			Target matchTarget = matchingPart.getTarget();
-			if (Message.checkEquals(matchTarget, Message.STAR_TARGET))
+			if (Message.checkEquals(matchTarget, Message.UNDISTINGUISHABLE_TARGET))
 			{
 				matchTarget = state.getMessage().getTarget();
 			}
 
 			// get the matching selector:
-			String matchSelector = matchingPart.getSelector().getName();
-			if (Message.checkEquals(matchSelector, Message.STAR_SELECTOR))
-			{
-				matchSelector = state.getMessage().getSelector();
-			}
+			String matchSelector = state.getMessage().getSelector();
 
-			if (matchTarget.name.equals(Target.INNER))
-			{
-				List methods;
-				Type matchType = (Type) concern.getPlatformRepresentation();
-				if (matchType == null)
-				{
-					methods = new LinkedList();
-				}
-				else
-				{
-					methods = matchType.getMethods();
-				}
-
-				MethodInfo matchMethodInfo = methodInfo.getClone(matchSelector, matchType);
-
-				if (containsMethod(methods, matchMethodInfo))
-				{
-					return SIGNATURE_MATCH_TRUE;
-				}
-				else
-				{
-					return SIGNATURE_MATCH_FALSE;
-				}
-			}
-			else
-			{
-				DeclaredObjectReference ref = (DeclaredObjectReference) matchTarget.getRef();
-				Concern matchConcern = ref.getRef().getType().getRef();
-				Signature signature = matchConcern.getSignature();
-				if (signature == null)
-				{
-					signature = new Signature();
-				}
-				Type matchType = (Type) matchConcern.getPlatformRepresentation();
-				MethodInfo matchMethodInfo = methodInfo.getClone(matchSelector, matchType);
-
-				if (!signature.hasMethod(matchMethodInfo))
-				{
-					return SIGNATURE_MATCH_FALSE;
-				}
-				else
-				{
-					MethodWrapper wrapper = signature.getMethodWrapper(matchMethodInfo);
-					if (wrapper.relationType == MethodWrapper.UNKNOWN)
-					{
-						return SIGNATURE_MATCH_UNKNOWN;
-					}
-					else
-					{
-						return SIGNATURE_MATCH_TRUE;
-					}
-				}
-			}
+			return Sign.getMethodStatus(concern, methodInfo, matchTarget, matchSelector);
 		}
 		else
 		{
-			return SIGNATURE_MATCH_UNKNOWN;
+			return MethodWrapper.UNKNOWN;
 		}
-
 	}
 
 	private boolean containsMethod(List methods, MethodInfo method)
@@ -751,13 +724,12 @@ public class FireModel
 			return null;
 		}
 
-		Target derivedTarget = (Message.checkEquals(generalizedMessage.getTarget(), Message.STAR_TARGET) ? exampleMessage
+		Target derivedTarget = (Message.checkEquals(generalizedMessage.getTarget(), Message.UNDISTINGUISHABLE_TARGET) ? exampleMessage
 				.getTarget()
 				: generalizedMessage.getTarget());
 
-		String derivedSelector = (Message.checkEquals(generalizedMessage.getSelector(), Message.STAR_SELECTOR) ? exampleMessage
-				.getSelector()
-				: generalizedMessage.getSelector());
+		String derivedSelector = (Message.checkEquals(generalizedMessage.getSelector(),
+				Message.UNDISTINGUISHABLE_SELECTOR) ? exampleMessage.getSelector() : generalizedMessage.getSelector());
 
 		return new Message(derivedTarget, derivedSelector);
 	}
@@ -824,6 +796,21 @@ public class FireModel
 	}
 
 	/**
+	 * Returns the ExecutionModel for a given methodInfo with strict signature
+	 * checking.
+	 * 
+	 * @param filterPosition Indicates for which filters the executionmodel
+	 *            should be returned, for the input filters (<code>INPUT_FILTERS</code>)
+	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
+	 * @param methodInfo The methodinfo
+	 * @return
+	 */
+	public ExecutionModel getExecutionModel(int filterPosition, MethodInfo methodInfo)
+	{
+		return getExecutionModel(filterPosition, methodInfo, STRICT_SIGNATURE_CHECK);
+	}
+
+	/**
 	 * Returns the ExecutionModel for a given methodInfo.
 	 * 
 	 * @param filterPosition Indicates for which filters the executionmodel
@@ -858,7 +845,7 @@ public class FireModel
 
 	/**
 	 * Returns a message object with the given selector and the target set to
-	 * 'inner'.
+	 * 'self'.
 	 * 
 	 * @param selector
 	 * @return
@@ -866,7 +853,7 @@ public class FireModel
 	private Message getEntranceMessage(String selector)
 	{
 		// start with inner target:
-		return new Message(Message.INNER_TARGET, selector);
+		return new Message(Message.SELF_TARGET, selector);
 	}
 
 	/**
@@ -890,9 +877,9 @@ public class FireModel
 	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
 	 * @return The distinguishable selectors.
 	 */
-	public Set getDistinguishableSelectors(int filterPosition)
+	public Set<String> getDistinguishableSelectors(int filterPosition)
 	{
-		HashSet distinguishable = new HashSet();
+		HashSet<String> distinguishable = new HashSet<String>();
 		for (int i = 0; i < filterModules.length; i++)
 		{
 			Set selectors = executionModels[filterPosition][i].getEntranceMessages();
@@ -900,7 +887,7 @@ public class FireModel
 			for (Object selector : selectors)
 			{
 				Message message = (Message) selector;
-				if (!Message.checkEquals(message.getSelector(), Message.STAR_SELECTOR))
+				if (!Message.checkEquals(message.getSelector(), Message.UNDISTINGUISHABLE_SELECTOR))
 				{
 					distinguishable.add(message.getSelector());
 				}
@@ -1076,7 +1063,7 @@ public class FireModel
 
 		private int layer;
 
-		private Vector outTransitions;
+		private List<ExecutionTransition> outTransitions;
 
 		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, Message message,
 				int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
@@ -1140,15 +1127,6 @@ public class FireModel
 			}
 
 			return outTransitions.iterator();
-		}
-
-		public Message getBaseSubstitutionMessage()
-		{
-			if (baseState != null)
-			{
-				return baseState.getSubstitutionMessage();
-			}
-			return super.getBaseSubstitutionMessage();
 		}
 	}
 

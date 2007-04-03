@@ -114,7 +114,7 @@ public interface FlowNode extends Serializable
 	 * Continue action. Examples of actions that return the flow are the
 	 * Dispatch action and the Skip action.
 	 */
-	public final static String STOP_NODE = "Stop";
+	public final static String STOP_NODE = "Exit";
 
 	/**
 	 * The return node marks the return through the filterset. Examples of

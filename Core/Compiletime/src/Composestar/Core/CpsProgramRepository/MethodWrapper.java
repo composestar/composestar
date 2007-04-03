@@ -23,17 +23,24 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	 */
 	private static final long serialVersionUID = 3283145732364930465L;
 
-	public int relationType;
-
+	// relation type constants
 	public static final int NORMAL = 1;
 
 	public static final int ADDED = 2;
 
 	public static final int REMOVED = 4;
 
+	// status constants
 	public static final int UNKNOWN = 8;
 
-	public static final int ALL = 255;
+	public static final int EXISTING = 16;
+
+	public static final int NOT_EXISTING = 32;
+
+	private int relationType;
+
+	private int status;
+	
 
 	public MethodInfo methodInfo;
 
@@ -41,10 +48,11 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	 * @param inRelationType
 	 * @param inMethodInfo
 	 */
-	public MethodWrapper(int inRelationType, MethodInfo inMethodInfo)
+	public MethodWrapper(MethodInfo inMethodInfo, int status)
 	{
-		relationType = inRelationType;
-		methodInfo = inMethodInfo;
+		this.relationType = NORMAL;
+		this.methodInfo = inMethodInfo;
+		this.status = status;
 	}
 
 	public MethodWrapper()
@@ -69,6 +77,22 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	public void setRelationType(int type)
 	{
 		relationType = type;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public int getStatus()
+	{
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(int status)
+	{
+		this.status = status;
 	}
 
 	public String toString()

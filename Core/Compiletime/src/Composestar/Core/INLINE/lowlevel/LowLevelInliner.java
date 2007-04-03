@@ -95,7 +95,7 @@ public class LowLevelInliner
 	 */
 	private void inline(List blocks, FilterModuleOrder filterSet, MethodInfo method)
 	{
-		strategy.startInline(filterSet, method, new String[0]);
+		strategy.startInline(filterSet, method);
 
 		for (int i = 0; i < blocks.size(); i++)
 		{

@@ -366,6 +366,13 @@ public class ViewPanel extends JPanel
 			}
 			g.drawString(label, node.xPos - width / 2, node.yPos + (int) (metrics.getHeight() * 1.25));
 		}
+		if (node.state != null)
+		{
+			g.drawString(node.state.getMessage().toString(), node.xPos - width / 2, node.yPos + 2
+					* (int) (metrics.getHeight() * 1.25));
+			g.drawString(node.state.getSubstitutionMessage().toString(), node.xPos - width / 2, node.yPos + 3
+					* (int) (metrics.getHeight() * 1.25));
+		}
 
 		// paint edges:
 		paintEdges(g, node);

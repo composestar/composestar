@@ -15,7 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
@@ -35,51 +34,41 @@ public class Signature implements SerializableRepositoryEntity
 
 	public DataMap methodByName;
 
-	public static final int RECALCMAXSIG = -1;
-
-	public static final int UNKNOWN = 0;
-
-	public static final int UNSOLVED = 1;
-
-	public static final int SOLVING = 2;
-
-	public static final int SOLVED = 3;
-
-	protected int status = Signature.UNKNOWN;
-
 	/**
 	 * @roseuid 404C4B67007B
 	 */
 	public Signature()
 	{
 		super();
-		empty();
-	}
-
-	/**
-	 * Empty the symboltable.
-	 */
-	public void empty()
-	{
 		methodByKey = DataMap.newDataMapInstance();
 		methodByName = DataMap.newDataMapInstance();
 	}
 
 	/**
-	 * @param method
-	 * @roseuid 404C458900F3
-	 * @param type
-	 * @param methodInfo
+	 * Adds a method wrapper to the signature.
+	 * 
+	 * @param wrapper
 	 */
-	public boolean add(MethodInfo methodInfo, int type)
+	public boolean addMethodWrapper(MethodWrapper wrapper)
 	{
-		MethodWrapper mw = new MethodWrapper(type, methodInfo);
-		String key = getHashKey(methodInfo);
+		String key = wrapper.getMethodInfo().getHashKey();
 
 		if (!methodByKey.containsKey(key))
 		{
-			methodByKey.put(key, mw);
-			methodByName.put(methodInfo.getName(), mw);
+			methodByKey.put(key, wrapper);
+
+			String name = wrapper.getMethodInfo().getName();
+			if (methodByName.containsKey(name))
+			{
+				Integer i = (Integer) methodByName.get(name);
+				methodByName.put(name, new Integer(i.intValue() + 1));
+			}
+			else
+			{
+				Integer i = new Integer(1);
+				methodByName.put(name, i);
+			}
+
 			return true;
 		}
 
@@ -143,91 +132,41 @@ public class Signature implements SerializableRepositoryEntity
 		return methodByKey.values().iterator();
 	}
 
-	/** @deprecated: use iterator instead */
-	public List getMethodWrappers()
-	{
-		List typeOnlyList = new LinkedList();
-		Iterator itr = methodByKey.values().iterator();
-		while (itr.hasNext())
-		{
-			MethodWrapper mw = (MethodWrapper) itr.next();
-			typeOnlyList.add(mw);
-		}
-		return typeOnlyList;
-	}
-
 	public MethodWrapper getMethodWrapper(MethodInfo methodInfo)
 	{
-		String key = getHashKey(methodInfo);
+		String key = methodInfo.getHashKey();
 		return (MethodWrapper) methodByKey.get(key);
 	}
 
 	public void removeMethodWrapper(MethodWrapper mw)
 	{
 		MethodInfo minfo = mw.getMethodInfo();
-		String key = getHashKey(minfo);
+		String key = minfo.getHashKey();
 		if (methodByKey.containsKey(key))
 		{
 			methodByKey.remove(key);
-		}
-		if (methodByName.containsKey(minfo.getName()))
-		{
-			methodByName.remove(minfo.getName());
+
+			String name = mw.getMethodInfo().getName();
+			Integer count = (Integer) methodByName.get(name);
+			if (count.intValue() <= 1)
+			{
+				methodByName.remove(name);
+			}
+			else
+			{
+				methodByName.put(name, new Integer(count.intValue() - 1));
+			}
 		}
 	}
 
 	public boolean hasMethod(MethodInfo dnmi)
 	{
-		String key = getHashKey(dnmi);
+		String key = dnmi.getHashKey();
 		return (methodByKey.containsKey(key));
 	}
 
 	public boolean hasMethod(String methodName)
 	{
-		return (methodByName.containsKey(methodName));
-	}
-
-	public int getMethodStatus(String name)
-	{
-		MethodWrapper mw = (MethodWrapper) methodByName.get(name);
-		if (mw == null)
-		{
-			return MethodWrapper.REMOVED;
-		}
-
-		return mw.getRelationType();
-	}
-
-	public MethodInfo getNamedMethod()
-	{
-		return null;
-	}
-
-	// FIXME: move to MethodInfo
-	public String getHashKey(MethodInfo methodInfo)
-	{
-		StringBuffer sb = new StringBuffer();
-
-		sb.append(methodInfo.getName()).append('%');
-		sb.append(methodInfo.getReturnTypeString()).append('%');
-
-		List pars = methodInfo.getParameters();
-		for (int i = 0; i < pars.size(); i++)
-		{
-			ParameterInfo pi = (ParameterInfo) pars.get(i);
-			sb.append(pi.parameterTypeString).append('%');
-		}
-
-		return sb.toString();
-	}
-
-	public void setStatus(int _status)
-	{
-		status = _status;
-	}
-
-	public int getStatus()
-	{
-		return status;
+		return methodByName.containsKey(methodName);
 	}
 }

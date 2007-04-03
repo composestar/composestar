@@ -6,8 +6,9 @@ package Composestar.Core.FIRE2.util.queryengine.ctl;
 
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.util.queryengine.Predicate;
+import Composestar.Core.FIRE2.util.queryengine.Query;
 
-public interface CtlFormula
+public interface CtlFormula extends Query
 {
 	public Object visit(CtlFormulaVisitor visitor, Object arg);
 }

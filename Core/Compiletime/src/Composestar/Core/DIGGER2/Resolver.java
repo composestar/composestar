@@ -134,7 +134,7 @@ public class Resolver
 				// Message(state.getSubstitutionMessage().getTarget(),
 				// state.getSubstitutionMessage()
 				// .getSelector());
-				Message newMsg = state.getBaseSubstitutionMessage();
+				Message newMsg = state.getSubstitutionMessage();
 				trail.setResultMessage(newMsg);
 				Concern targetConcern = findTargetConcern(crumb, newMsg.getTarget());
 				trail.setTargetConcern(targetConcern);
@@ -229,7 +229,7 @@ public class Resolver
 	public static Concern findTargetConcern(Concern concern, int filterPosition, Target target) throws ModuleException
 	{
 		String targetString = target.getName();
-		if ("*".equals(targetString))
+		if (Target.SELF.equals(targetString))
 		{
 			if (filterPosition == FireModel.INPUT_FILTERS)
 			{

@@ -26,7 +26,7 @@ public interface LowLevelInlineStrategy
 	 * @param method The method for which inlining is done
 	 * @param argReferences
 	 */
-	public void startInline(FilterModuleOrder filterSet, MethodInfo method, String[] argReferences);
+	public void startInline(FilterModuleOrder filterSet, MethodInfo method);
 
 	/**
 	 * Called when inlining is done.

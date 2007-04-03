@@ -1,137 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph id="graph" role="graph" edgeids="false" edgemode="directed">
-        <node id="n1863"/>
-        <node id="n1864"/>
-        <node id="n1865"/>
-        <node id="n1862"/>
-        <node id="n1860"/>
-        <node id="n1858"/>
-        <node id="n1859"/>
-        <node id="n1861"/>
-        <edge from="n1858" to="n1858">
-            <attr name="label">
-                <string>FlowTmp</string>
-            </attr>
-        </edge>
-        <edge from="n1862" to="n1861">
-            <attr name="label">
-                <string>new:flowNext</string>
-            </attr>
-        </edge>
-        <edge from="n1865" to="n1865">
+        <node id="n11550"/>
+        <node id="n11551"/>
+        <node id="n11549"/>
+        <node id="n11547"/>
+        <node id="n11546"/>
+        <node id="n11548"/>
+        <edge from="n11548" to="n11548">
             <attr name="label">
                 <string>FlowElement</string>
             </attr>
         </edge>
-        <edge from="n1859" to="n1863">
+        <edge from="n11550" to="n11548">
             <attr name="label">
-                <string>orderNext</string>
+                <string>new:flowTrue</string>
             </attr>
         </edge>
-        <edge from="n1858" to="n1858">
+        <edge from="n11547" to="n11547">
             <attr name="label">
-                <string>FlowElement</string>
+                <string>del:Disable</string>
             </attr>
         </edge>
-        <edge from="n1860" to="n1858">
-            <attr name="label">
-                <string>flowTrue</string>
-            </attr>
-        </edge>
-        <edge from="n1859" to="n1859">
-            <attr name="label">
-                <string>MatchingPattern</string>
-            </attr>
-        </edge>
-        <edge from="n1860" to="n1860">
-            <attr name="label">
-                <string>MatchingPart</string>
-            </attr>
-        </edge>
-        <edge from="n1859" to="n1862">
+        <edge from="n11547" to="n11551">
             <attr name="label">
                 <string>substitutionPart</string>
             </attr>
         </edge>
-        <edge from="n1864" to="n1860">
-            <attr name="label">
-                <string>new:flowNext</string>
-            </attr>
-        </edge>
-        <edge from="n1864" to="n1864">
-            <attr name="label">
-                <string>FlowElement</string>
-            </attr>
-        </edge>
-        <edge from="n1859" to="n1865">
-            <attr name="label">
-                <string>del:flowNext</string>
-            </attr>
-        </edge>
-        <edge from="n1861" to="n1861">
-            <attr name="label">
-                <string>FlowElement</string>
-            </attr>
-        </edge>
-        <edge from="n1863" to="n1861">
-            <attr name="label">
-                <string>new:flowAccept</string>
-            </attr>
-        </edge>
-        <edge from="n1862" to="n1862">
-            <attr name="label">
-                <string>SubstitutionPart</string>
-            </attr>
-        </edge>
-        <edge from="n1863" to="n1863">
-            <attr name="label">
-                <string>new:Disable</string>
-            </attr>
-        </edge>
-        <edge from="n1859" to="n1861">
-            <attr name="label">
-                <string>flowAccept</string>
-            </attr>
-        </edge>
-        <edge from="n1858" to="n1858">
-            <attr name="label">
-                <string>new:</string>
-            </attr>
-        </edge>
-        <edge from="n1859" to="n1860">
-            <attr name="label">
-                <string>matchingPart</string>
-            </attr>
-        </edge>
-        <edge from="n1858" to="n1863">
-            <attr name="label">
-                <string>flowIn</string>
-            </attr>
-        </edge>
-        <edge from="n1860" to="n1862">
-            <attr name="label">
-                <string>new:flowFalse</string>
-            </attr>
-        </edge>
-        <edge from="n1864" to="n1859">
-            <attr name="label">
-                <string>del:flowIn</string>
-            </attr>
-        </edge>
-        <edge from="n1863" to="n1865">
-            <attr name="label">
-                <string>new:flowNext</string>
-            </attr>
-        </edge>
-        <edge from="n1863" to="n1863">
+        <edge from="n11547" to="n11547">
             <attr name="label">
                 <string>MatchingPattern</string>
             </attr>
         </edge>
-        <edge from="n1859" to="n1859">
+        <edge from="n11547" to="n11550">
             <attr name="label">
-                <string>del:Disable</string>
+                <string>orderFirst</string>
+            </attr>
+        </edge>
+        <edge from="n11547" to="n11548">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n11550" to="n11550">
+            <attr name="label">
+                <string>MatchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n11551" to="n11551">
+            <attr name="label">
+                <string>SubstitutionPart</string>
+            </attr>
+        </edge>
+        <edge from="n11546" to="n11547">
+            <attr name="label">
+                <string>del:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n11547" to="n11549">
+            <attr name="label">
+                <string>flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n11546" to="n11547">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n11551" to="n11549">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n11546" to="n11546">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n11550" to="n11551">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n11547" to="n11550">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n11549" to="n11549">
+            <attr name="label">
+                <string>FlowElement</string>
             </attr>
         </edge>
     </graph>

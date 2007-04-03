@@ -1,15 +1,15 @@
-# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\generateflow.gps\MatchingPatternDisable-last.gpr
+# Layout information for D:\composestar\Core\Compiletime\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\MatchingPatternDisable-last.gpr
 # Each line contains layout information about a node or edge
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-n n2329 690 364 18 18 
-n n2330 393 650 18 18 
-e n2327 n2325 "new:flowNext" 865 616 253 83 148 250 226 419 12
-n n2327 213 74 18 18 
-e n2324 n2329 "del:flowNext" 500 500 363 211 657 275 730 373 11
-e n2325 n2329 "new:flowTrue" 793 718 88 323 730 373 11
-n n2328 548 82 18 18 
-n n2325 46 314 18 18 
-n n2326 138 467 18 18 
-n n2324 312 202 18 18 
-e n2324 n2324 "del:Disable" 500 500 363 210 395 167 376 119 376 119 12
+e n4171 n4176 "new:flowNext" 865 616 253 83 148 250 226 419 12
+e n4176 n4173 "new:flowTrue" 793 718 88 323 730 373 11
+n n4171 213 74 18 18 
+n n4176 46 314 18 18 
+n n4173 690 364 18 18 
+n n4172 138 467 18 18 
+e n4175 n4173 "del:flowNext" 500 500 363 211 657 275 730 373 11
+n n4174 548 82 18 18 
+n n4177 393 650 18 18 
+e n4175 n4175 "del:Disable" 500 500 363 210 395 167 376 119 376 119 12
+n n4175 312 202 18 18 
