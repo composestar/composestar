@@ -11,19 +11,24 @@ package Composestar.Core.CHKREP;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * BaseChecker is the common interface for all the checks of CHKREP
  */
 
-public interface BaseChecker
+public abstract class BaseChecker
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Main.MODULE_NAME);
+	
+	protected DataStore ds;
+	
 	/**
 	 * Performs the actual checks.
 	 * 
 	 * @return return non-fatal, so fatal == false!
 	 */
-	boolean performCheck();
+	protected abstract boolean performCheck();
 
 	/**
 	 * This is the function to perform the check It also gives the debug
@@ -32,5 +37,5 @@ public interface BaseChecker
 	 * @param newDs The DataStore that needs to be checked
 	 * @throws ModuleException
 	 */
-	void check(DataStore newDs) throws ModuleException;
+	public abstract void check(DataStore newDs) throws ModuleException;
 }

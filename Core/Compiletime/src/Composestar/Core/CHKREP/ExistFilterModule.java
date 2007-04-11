@@ -16,7 +16,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleR
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.FilterModuleBinding;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 
 /**
  * ExistFiltermodule checks whether the filtermodules used at the
@@ -26,10 +25,8 @@ import Composestar.Utils.Debug;
  * 
  * @author DoornenbalD
  */
-public class ExistFilterModule implements BaseChecker
+public class ExistFilterModule extends BaseChecker
 {
-	private DataStore ds;
-
 	private boolean checkFilterMethodBinding()
 	{
 		boolean nonFatal = true;
@@ -65,7 +62,7 @@ public class ExistFilterModule implements BaseChecker
 				}
 				if (!filterModuleReferenceExists)
 				{
-					Debug.out(Debug.MODE_ERROR, "CHKREP", "FilterModule " + filterModuleName + " is not declared", fmb);
+					logger.error("FilterModule " + filterModuleName + " is not declared", fmb);
 					nonFatal = true;
 				}
 			}

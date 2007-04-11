@@ -130,6 +130,7 @@ public class Sign implements CTCommonModule
 			if (error)
 			{
 				logger.fatal("Sign encountered errors");
+				cleanProbes();
 				return;
 			}
 
@@ -142,7 +143,7 @@ public class Sign implements CTCommonModule
 		}
 		catch (Exception exc)
 		{
-			exc.printStackTrace();
+			logger.error(exc);
 		}
 	}
 
@@ -1042,6 +1043,31 @@ public class Sign implements CTCommonModule
 		}
 
 		resources.addBoolean("signaturesmodified", signaturesmodified);
+	}
+
+	/**
+	 * Removes the ProbeMethodInfo classes
+	 */
+	public void cleanProbes()
+	{
+		DataStore datastore = DataStore.instance();
+		Iterator conIter = datastore.getAllInstancesOf(Concern.class);
+
+		while (conIter.hasNext())
+		{
+			Concern concern = (Concern) conIter.next();
+
+			Signature signature = concern.getSignature();
+
+			for (MethodWrapper wrapper : methods(concern))
+			{
+				MethodInfo minfo = wrapper.getMethodInfo();
+				if (minfo instanceof ProbeMethodInfo)
+				{
+					signature.removeMethodWrapper(wrapper);
+				}
+			}
+		}
 	}
 
 	// ####################################################

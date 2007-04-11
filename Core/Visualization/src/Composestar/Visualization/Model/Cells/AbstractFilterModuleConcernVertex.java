@@ -86,7 +86,7 @@ public abstract class AbstractFilterModuleConcernVertex extends ConcernVertex
 		if (obj instanceof Message)
 		{
 			Message msg = (Message) obj;
-			if (Message.checkEquals(msg.getTarget(), Message.STAR_TARGET) && (filterInputPort != null))
+			if (Message.checkEquals(msg.getTarget(), Message.SELF_TARGET) && (filterInputPort != null))
 			{
 				return filterInputPort;
 			}

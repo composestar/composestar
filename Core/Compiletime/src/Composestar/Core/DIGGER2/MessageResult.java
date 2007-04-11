@@ -53,10 +53,6 @@ public class MessageResult
 		trail = inTrail;
 
 		selector = trail.getResultMessage().getSelector();
-		if (Message.STAR_SELECTOR.equals(selector))
-		{
-			selector = crumb.getMessage().getSelector();
-		}
 		if (Message.UNDISTINGUISHABLE_SELECTOR.equals(selector))
 		{
 			selector = initialSelector;

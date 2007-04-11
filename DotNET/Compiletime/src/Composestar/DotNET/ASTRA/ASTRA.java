@@ -7,6 +7,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.ResourceException;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
@@ -25,7 +26,15 @@ public class ASTRA implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		// only run ASTRA when SIGN found ADDED or REMOVED methods
-		if (!resources.getBoolean("signaturesmodified"))
+		try
+		{
+			if (!resources.getBoolean("signaturesmodified"))
+			{
+				Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "No need to transform assemblies");
+				return;
+			}
+		}
+		catch (ResourceException e)
 		{
 			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "No need to transform assemblies");
 			return;

@@ -12,7 +12,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 
 /**
  * Checks whether a Condtion which is used in a Input or outpurfilter is
@@ -22,11 +21,8 @@ import Composestar.Utils.Debug;
  * @author DoornenbalD
  */
 
-public class ExistCondition implements BaseChecker
+public class ExistCondition extends BaseChecker
 {
-	// Standard private DataStore
-	private DataStore ds;
-
 	/**
 	 * Performs the checks, sends the check to both input and outputfilters uses
 	 * checkConditionInFilter twice
@@ -37,14 +33,14 @@ public class ExistCondition implements BaseChecker
 		boolean nonFatal = true;
 		// first get all filtermodules
 		Iterator filterModuleIterator = ds.getAllInstancesOf(FilterModule.class);
-		while (filterModuleIterator.hasNext() && nonFatal)
+		while (filterModuleIterator.hasNext())
 		{
 			FilterModule fm = (FilterModule) filterModuleIterator.next();
 			// then perform the checks on both inputfilters and outputfilters
 			// also sends the paranet filtermodule to save parent calls further
 			// on
-			nonFatal = checkConditionInFilter(fm.getInputFilterIterator(), fm)
-					&& checkConditionInFilter(fm.getOutputFilterIterator(), fm);
+			nonFatal &= isFilterConditionValid(fm.getInputFilterIterator(), fm);
+			nonFatal &= isFilterConditionValid(fm.getOutputFilterIterator(), fm);
 		}
 
 		return nonFatal;
@@ -72,7 +68,7 @@ public class ExistCondition implements BaseChecker
 	 * @param fm the filetrModule
 	 * @return
 	 */
-	private boolean checkConditionInFilter(Iterator filterIterator, FilterModule fm)
+	private boolean isFilterConditionValid(Iterator filterIterator, FilterModule fm)
 	{
 		// standard true;
 		boolean nonFatal = true;
@@ -91,7 +87,7 @@ public class ExistCondition implements BaseChecker
 					if (ce != null)
 					{
 						// puts the check in the root of the condition tree
-						boolean temp = checkConditionInConditionExpression(ce, fm);
+						boolean temp = isConditionExpressionValid(ce, fm);
 
 						// if one tree gives a fatal then nonFatal = false
 						if (!temp)
@@ -115,11 +111,8 @@ public class ExistCondition implements BaseChecker
 	 * @param fm
 	 * @return
 	 */
-	private boolean checkConditionInConditionExpression(ConditionExpression ce, FilterModule fm)
+	private boolean isConditionExpressionValid(ConditionExpression ce, FilterModule fm)
 	{
-		// standard non fatal
-		boolean nonFatal = true;
-
 		if (ce instanceof ConditionVariable)
 		{
 			ConditionVariable cl = (ConditionVariable) ce;
@@ -127,26 +120,20 @@ public class ExistCondition implements BaseChecker
 			if (!doesConditionExists(conditionName, fm))
 			{
 				ConditionVariable tempCe = (ConditionVariable) ce;
-				Debug.out(Debug.MODE_ERROR, "CHKREP", "Condition " + conditionName + " is not declared in Conditions",
-						tempCe);
-				nonFatal = false;
+				logger.error("Condition " + conditionName + " is not declared in Conditions", tempCe);
+				return false;
 			}
 		}
-
-		// Checks on a UnaryOperators
-		if (ce instanceof UnaryOperator)
+		else if (ce instanceof UnaryOperator)
 		{
-			nonFatal = checkConditionInConditionExpression(((UnaryOperator) ce).getOperand(), fm);
+			return isConditionExpressionValid(((UnaryOperator) ce).getOperand(), fm);
 		}
-
-		// checks in BinaryOperators
-		if (ce instanceof BinaryOperator)
+		else if (ce instanceof BinaryOperator)
 		{
-			nonFatal = checkConditionInConditionExpression(((BinaryOperator) ce).getLeft(), fm)
-					&& checkConditionInConditionExpression(((BinaryOperator) ce).getRight(), fm);
+			return isConditionExpressionValid(((BinaryOperator) ce).getLeft(), fm)
+					&& isConditionExpressionValid(((BinaryOperator) ce).getRight(), fm);
 		}
-
-		return nonFatal;
+		return true;
 	}
 
 	/**
@@ -159,9 +146,6 @@ public class ExistCondition implements BaseChecker
 	 */
 	private boolean doesConditionExists(String name, FilterModule fm)
 	{
-		// standra it does not exist
-		boolean exists = false;
-
 		Iterator conditionIterator = fm.getConditionIterator();
 
 		if (conditionIterator != null)
@@ -171,12 +155,12 @@ public class ExistCondition implements BaseChecker
 				Condition condition = (Condition) conditionIterator.next();
 				if (condition.getName().equals(name))
 				{
-					exists = true;
+					return true;
 				}
 			}
 		}
 
-		return exists;
+		return false;
 	}
 
 }

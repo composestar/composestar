@@ -57,6 +57,8 @@ public final class LegacyFilterTypes
 	public static FilterType createCustomFilterType(String name)
 	{
 		LegacyCustomFilterType custom = new LegacyCustomFilterType(name);
+		// use 'continueActions' because these kind of CustomFilters have
+		// unknown behaviors, unable to reason about them.
 		custom.setAcceptCallAction(continueAction);
 		custom.setRejectCallAction(continueAction);
 		custom.setAcceptReturnAction(continueAction);
@@ -96,14 +98,15 @@ public final class LegacyFilterTypes
 		return action;
 	}
 
-	/*
-	 * private static FilterAction createSubstitutionAction() { FilterAction
-	 * action = new FilterAction(); action.setName("SubstitutionAction");
-	 * action.setFullName("SubstitutionAction");
-	 * action.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-	 * action.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
-	 * return action; }
-	 */
+	// private static FilterAction createSubstitutionAction()
+	// {
+	// FilterAction action = new FilterAction();
+	// action.setName("SubstitutionAction");
+	// action.setFullName("SubstitutionAction");
+	// action.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
+	// action.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
+	// return action;
+	// }
 
 	private static FilterAction createAdviceAction()
 	{
@@ -121,7 +124,7 @@ public final class LegacyFilterTypes
 		action.setName("MetaAction");
 		action.setFullName("MetaAction");
 		action.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		// should actually be MESSAGE_ANY, but that doesn't compile
+		// TODO: this should actually be MESSAGE_ANY, but it breaks various things during the compose* compile process
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
 		return action;
 	}
@@ -170,36 +173,34 @@ public final class LegacyFilterTypes
 
 	private static void addBeforeFilterType()
 	{
-	/*
-	 * FilterType type = new FilterType(); type.setType(FilterTypeNames.BEFORE);
-	 * type.setAcceptCallAction(adviceAction);
-	 * type.setRejectCallAction(continueAction);
-	 * type.setAcceptReturnAction(continueAction);
-	 * type.setRejectReturnAction(continueAction);
-	 */
+	// does not exist in the legacy system
+	// FilterType type = new FilterType(); type.setType(FilterTypeNames.BEFORE);
+	// type.setAcceptCallAction(adviceAction);
+	// type.setRejectCallAction(continueAction);
+	// type.setAcceptReturnAction(continueAction);
+	// type.setRejectReturnAction(continueAction);
 	}
 
 	private static void addAfterFilterType()
 	{
-	/*
-	 * FilterType type = new FilterType(); type.setType(FilterTypeNames.AFTER);
-	 * type.setAcceptCallAction(continueAction);
-	 * type.setRejectCallAction(continueAction);
-	 * type.setAcceptReturnAction(adviceAction);
-	 * type.setRejectReturnAction(continueAction);
-	 */
+	// does not exist in the legacy system
+	// FilterType type = new FilterType();
+	// type.setType(FilterTypeNames.AFTER);
+	// type.setAcceptCallAction(continueAction);
+	// type.setRejectCallAction(continueAction);
+	// type.setAcceptReturnAction(adviceAction);
+	// type.setRejectReturnAction(continueAction);
 	}
 
 	private static void addSubstitutionFilterType()
 	{
-	/*
-	 * FilterType type = new FilterType();
-	 * type.setType(FilterTypeNames.SUBSTITUTION);
-	 * type.setAcceptCallAction(substitutionAction);
-	 * type.setRejectCallAction(continueAction);
-	 * type.setAcceptReturnAction(continueAction);
-	 * type.setRejectReturnAction(continueAction);
-	 */
+	// does not exist in the legacy system
+	// FilterType type = new FilterType();
+	// type.setType(FilterTypeNames.SUBSTITUTION);
+	// type.setAcceptCallAction(substitutionAction);
+	// type.setRejectCallAction(continueAction);
+	// type.setAcceptReturnAction(continueAction);
+	// type.setRejectReturnAction(continueAction);
 	}
 
 	private static void addPrependFilterType()

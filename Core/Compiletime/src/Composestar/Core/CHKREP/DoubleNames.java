@@ -12,7 +12,7 @@ package Composestar.Core.CHKREP;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
-public class DoubleNames implements BaseChecker
+public class DoubleNames extends BaseChecker
 {
 
 	public boolean performCheck()
@@ -21,7 +21,5 @@ public class DoubleNames implements BaseChecker
 	}
 
 	public void check(DataStore ds) throws ModuleException
-	{
-
-	}
+	{}
 }

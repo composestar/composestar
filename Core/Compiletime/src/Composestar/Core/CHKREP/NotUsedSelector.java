@@ -20,7 +20,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.Selector
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImposition;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 
 /**
  * Checks if a Selector which is declared in selectors is used in the
@@ -29,10 +28,8 @@ import Composestar.Utils.Debug;
  * 
  * @author DoornenbalD
  */
-public class NotUsedSelector implements BaseChecker
+public class NotUsedSelector extends BaseChecker
 {
-	private DataStore ds;
-
 	/*
 	 * @see Composestar.Core.CHKREP.BaseChecker#performCheck() Chnaged the check
 	 *      to check in all four bindings instead of one, code might be more
@@ -108,8 +105,7 @@ public class NotUsedSelector implements BaseChecker
 			 */
 			if (!isUsed && !selDef.getName().equals("self"))
 			{
-				Debug.out(Debug.MODE_WARNING, "CHKREP", "Selector " + selDef.getName() + " is declared but never used",
-						selDef);
+				logger.warn("Selector " + selDef.getName() + " is declared but never used", selDef);
 			}
 		}
 		return false;

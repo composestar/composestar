@@ -98,7 +98,7 @@ public class DIGGER implements CTCommonModule
 		incre = INCRE.instance();
 		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Main", INCRETimer.TYPE_OVERHEAD);
 		moduleInfo = ModuleInfoManager.get(DIGGER.class);
-		graph = new DispatchGraph(moduleInfo.getIntSetting("mode"));
+		graph = new DispatchGraph( 0 );//moduleInfo.getIntSetting("mode"));
 		graph.setAutoResolve(false);
 		resources.add(DispatchGraph.REPOSITORY_KEY, graph);
 		allCrumbs = new ArrayList<Breadcrumb>();

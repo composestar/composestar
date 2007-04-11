@@ -18,9 +18,6 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
  */
 public class MethodWrapper implements SerializableRepositoryEntity
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3283145732364930465L;
 
 	// relation type constants
@@ -40,7 +37,6 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	private int relationType;
 
 	private int status;
-	
 
 	public MethodInfo methodInfo;
 
@@ -56,9 +52,7 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	}
 
 	public MethodWrapper()
-	{
-
-	}
+	{}
 
 	public MethodInfo getMethodInfo()
 	{
@@ -67,7 +61,6 @@ public class MethodWrapper implements SerializableRepositoryEntity
 
 	/**
 	 * @return int
-	 * @roseuid 4050504F0289
 	 */
 	public int getRelationType()
 	{

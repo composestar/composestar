@@ -203,7 +203,7 @@ public class FilterActionView extends CpsView
 						targetConcern = focusConcern;
 						nextCell = new MethodExecutionVertex(msg);
 					}
-					else if (msg.getTarget().equals(Message.STAR_TARGET))
+					else if (msg.getTarget().equals(Message.SELF_TARGET))
 					{
 						targetConcern = focusConcern;
 						nextCell = new MethodExecutionVertex(msg);

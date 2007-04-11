@@ -7,12 +7,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.Selector
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImposition;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 
-public class ExistSelector implements BaseChecker
+public class ExistSelector extends BaseChecker
 {
-	private DataStore ds;
-
 	public boolean performCheck()
 	{
 		Iterator fmbi = ds.getAllInstancesOf(FilterModuleBinding.class);
@@ -37,8 +34,7 @@ public class ExistSelector implements BaseChecker
 
 			if (!exist)
 			{
-				Debug.out(Debug.MODE_ERROR, "CHKREP", "Selector " + selector + " is used but not declared", fmb
-						.getSelector());
+				logger.error("Selector " + selector + " is used but not declared", fmb);
 				nonFatal = false;
 			}
 		}

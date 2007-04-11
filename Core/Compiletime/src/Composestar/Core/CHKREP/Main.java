@@ -22,6 +22,8 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  */
 public class Main implements CTCommonModule
 {
+	public static final String MODULE_NAME = "CHKREP";
+	
 	/**
 	 * Constructor
 	 */
@@ -35,7 +37,30 @@ public class Main implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		DoCheck dc = new DoCheck();
-		dc.go(DataStore.instance());
+		DataStore ds = DataStore.instance();
+
+		// Testbench
+		NotUsedInternals nui = new NotUsedInternals();
+		nui.check(ds);
+
+		NotUsedExternals nue = new NotUsedExternals();
+		nue.check(ds);
+
+		NotUsedCondition nuc = new NotUsedCondition();
+		nuc.check(ds);
+
+		NotUsedSelector nus = new NotUsedSelector();
+		nus.check(ds);
+
+		// Allready checked by REXREF
+		// ExistFilterModule efm = new ExistFilterModule();
+		// efm.check(ds);
+
+		// Allready checked by REXREF
+		// ExistSelector es = new ExistSelector();
+		// es.check(ds);
+
+		ExistCondition ec = new ExistCondition();
+		ec.check(ds);
 	}
 }

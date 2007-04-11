@@ -136,10 +136,11 @@ public class Trail implements Serializable
 	 */
 	public Message getResultMessage(boolean resolveSelector)
 	{
-		if (Message.STAR_SELECTOR.equals(resultMessage.getSelector()))
-		{
-			return new Message(resultMessage.getTarget(), owner.getMessage().getSelector());
-		}
+		// if (Message.STAR_SELECTOR.equals(resultMessage.getSelector()))
+		// {
+		// return new Message(resultMessage.getTarget(),
+		// owner.getMessage().getSelector());
+		// }
 		return resultMessage;
 	}
 

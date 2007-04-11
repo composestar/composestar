@@ -29,7 +29,7 @@ public class Message implements Serializable
 
 	/**
 	 * The star target. Only used in matching parts and substitution parts.
-	 * @deprecated
+	 * @deprecated Use SELF_TARGET or INNER_TARGET
 	 */
 	public final static Target STAR_TARGET = getStarTarget();
 	

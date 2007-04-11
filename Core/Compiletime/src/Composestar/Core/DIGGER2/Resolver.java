@@ -11,6 +11,7 @@
 package Composestar.Core.DIGGER2;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -57,7 +58,7 @@ public class Resolver
 		Message msg = state.getMessage();
 		logger.debug("[resolver] entrance message: " + msg.toString());
 		Breadcrumb crumb = new Breadcrumb(concern, msg, filterChain);
-		traverseState(state, crumb, crumb.addTrail());
+		traverseState(state, crumb, crumb.addTrail(), new LinkedList<ExecutionState>());
 		Iterator<Trail> results = crumb.getTrails();
 		while (results.hasNext())
 		{
@@ -85,11 +86,12 @@ public class Resolver
 			{
 				// crumbs always refer to input crumbs
 				String selector = trail.getResultMessage().getSelector();
-				if (Message.STAR_SELECTOR.equals(selector))
-				{
-					selector = crumb.getMessage().getSelector();
-				}
+				// if (Message.STAR_SELECTOR.equals(selector))
+				// {
+				// selector = crumb.getMessage().getSelector();
+				//				}
 				Breadcrumb toCrumb = graph.getInputCrumb(trail.getTargetConcern(), selector);
+				// is `null' when destination has no input crumbs
 				logger.debug("[resolver]  leads to crumb: " + toCrumb);
 				trail.setDestinationCrumb(toCrumb);
 			}
@@ -109,10 +111,17 @@ public class Resolver
 	 * @param trail
 	 * @throws ModuleException
 	 */
-	protected void traverseState(ExecutionState state, Breadcrumb crumb, Trail trail) throws ModuleException
+	protected void traverseState(ExecutionState state, Breadcrumb crumb, Trail trail, LinkedList<ExecutionState> pastStates) throws ModuleException
 	{
 		while (state != null)
 		{
+			if (pastStates.contains(state))
+			{
+				logger.trace("[resolver] Loop detected, ignoring path");
+				crumb.removeTrail(trail);
+				return;
+			}
+			pastStates.add(state);
 			FlowNode flowNode = state.getFlowNode();
 			if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE))
 			{
@@ -169,7 +178,7 @@ public class Resolver
 					// branch all additional states, clone the trails from the
 					// current one because there is no guarantee that the first
 					// state will be the "short" state.
-					traverseState(trans.getEndState(), crumb, crumb.addTrail(trail));
+					traverseState(trans.getEndState(), crumb, crumb.addTrail(trail), pastStates);
 				}
 			}
 			if (idx == 0)
@@ -187,7 +196,7 @@ public class Resolver
 						sb.append(nameit.next());
 					}
 					logger
-							.debug("[resolver] reached the end of a trail without a STOP or RETURN node. Contains labels: "
+							.info("[resolver] reached the end of a trail without a STOP or RETURN node. Contains labels: "
 									+ sb);
 				}
 				if (trail.getResultMessage() == null)

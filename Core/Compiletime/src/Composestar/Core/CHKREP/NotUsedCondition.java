@@ -21,7 +21,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 
 /**
  * Checks on not used Conditions. Iterates on the FilerModules to get the
@@ -29,10 +28,8 @@ import Composestar.Utils.Debug;
  * 
  * @author DoornenbalD
  */
-public class NotUsedCondition implements BaseChecker
+public class NotUsedCondition extends BaseChecker
 {
-	private DataStore ds;
-
 	/**
 	 * Performs the check. Calls isUsedInFilters for both input and output
 	 * filters.
@@ -53,8 +50,7 @@ public class NotUsedCondition implements BaseChecker
 
 				if (!used)
 				{
-					Debug.out(Debug.MODE_WARNING, "CHKREP",
-							"Condition " + c.getName() + " is declared, but never used", c);
+					logger.warn("Condition " + c.getName() + " is declared, but never used", c);
 				}
 			}
 		}

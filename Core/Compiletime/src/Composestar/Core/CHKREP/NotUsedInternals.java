@@ -22,18 +22,14 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Substituti
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 
 /**
  * Test whether all internals are used. Generates non-fatal warnings.
  * 
  * @author DoornenbalD
  */
-public class NotUsedInternals implements BaseChecker
+public class NotUsedInternals extends BaseChecker
 {
-
-	private DataStore ds;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -163,8 +159,7 @@ public class NotUsedInternals implements BaseChecker
 				 */
 				if (!isInternalUsed)
 				{
-					Debug.out(Debug.MODE_WARNING, "CHKREP", "Internal " + internalID + " is declared but never used",
-							internal);
+					logger.warn("Internal " + internalID + " is declared but never used", internal);
 				}
 			}
 		}

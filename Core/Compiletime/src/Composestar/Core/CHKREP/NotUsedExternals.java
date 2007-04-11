@@ -22,17 +22,14 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Substituti
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 
 /**
  * Checks on unused Externals.
  * 
  * @author DoornenbalD
  */
-public class NotUsedExternals implements BaseChecker
+public class NotUsedExternals extends BaseChecker
 {
-	private DataStore ds;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -81,7 +78,7 @@ public class NotUsedExternals implements BaseChecker
 								}
 							}
 						}
-						
+
 						Iterator matchpi = mp.getMatchingPartsIterator();
 						while (matchpi.hasNext() && !isExternalUsed)
 						{
@@ -157,8 +154,7 @@ public class NotUsedExternals implements BaseChecker
 				 */
 				if (!isExternalUsed)
 				{
-					Debug.out(Debug.MODE_WARNING, "CHKREP", "External " + externalID + " is declared but never used",
-							external);
+					logger.warn("External " + externalID + " is declared but never used", external);
 				}
 			}
 		}
