@@ -199,7 +199,7 @@ public class DispatchGraph implements Serializable
 	 * @return list with MessageResult instances in the order of appearance
 	 * @throws RecursiveFilterException
 	 */
-	public List<MessageResult> getResultingMessages(Breadcrumb crumb) throws RecursiveFilterException
+	public List<AbstractMessageResult> getResultingMessages(Breadcrumb crumb)
 	{
 		return getResultingMessages(crumb, new ArrayList<Trail>(), crumb.getMessage().getSelector());
 	}
@@ -214,10 +214,10 @@ public class DispatchGraph implements Serializable
 	 * @return list with MessageResult instances in the order of appearance
 	 * @throws RecursiveFilterException
 	 */
-	protected List<MessageResult> getResultingMessages(Breadcrumb crumb, List<Trail> stack,
-			String initialSelector) throws RecursiveFilterException
+	protected List<AbstractMessageResult> getResultingMessages(Breadcrumb crumb, List<Trail> stack,
+			String initialSelector)
 	{
-		List<MessageResult> results = new ArrayList<MessageResult>();
+		List<AbstractMessageResult> results = new ArrayList<AbstractMessageResult>();
 		boolean freshCrumb = true;
 		while ((crumb != null) && freshCrumb)
 		{
@@ -240,8 +240,9 @@ public class DispatchGraph implements Serializable
 					{
 						// trail was already encountered, the result is
 						// recursive
-						throw new RecursiveFilterException(crumb, stack.subList(idx, stack.size()));
-					}
+						results.add(new RecursiveMessageResult(crumb, stack.subList(idx, stack.size())));
+						continue;
+					}					
 					Breadcrumb nextCrumb = trail.getDestinationCrumb();
 					if (cnt == 1)
 					{

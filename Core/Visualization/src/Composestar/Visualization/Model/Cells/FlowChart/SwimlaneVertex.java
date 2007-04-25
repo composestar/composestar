@@ -132,7 +132,7 @@ public class SwimlaneVertex extends BaseFlowChartVertex
 		GraphConstants.setBackground(map, new Color(0xEEF0FF));
 		GraphConstants.setBorderColor(map, Color.BLACK);
 		GraphConstants.setInset(map, INSET);
-		bounds = new Rectangle2D.Double(0, 0, 300, 100);
+		bounds = new Rectangle2D.Double(0, 0, 300, 300);
 		GraphConstants.setBounds(map, bounds);
 	}
 }

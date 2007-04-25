@@ -18,13 +18,8 @@ import Composestar.Core.FIRE2.model.Message;
  * 
  * @author Michiel Hendriks
  */
-public class MessageResult
+public class MessageResult extends AbstractMessageResult
 {
-	/**
-	 * The breadcrumb related to the result.
-	 */
-	protected Breadcrumb crumb;
-
 	/**
 	 * The trail in the breadcrumb that leads to the resulting message.
 	 */
@@ -58,10 +53,11 @@ public class MessageResult
 			selector = initialSelector;
 		}
 	}
-
-	public Breadcrumb getBreadcrumb()
+	
+	@Override
+	public boolean isValidResult()
 	{
-		return crumb;
+		return true;
 	}
 
 	public Trail getTrail()
@@ -73,6 +69,7 @@ public class MessageResult
 	 * @return the resulting concern. In case of a dispatch to inner the concern
 	 *         of the breadcrumb otherwise it's the target of the concern.
 	 */
+	@Override
 	public Concern getConcern()
 	{
 		if (trail.getTargetConcern() != null)

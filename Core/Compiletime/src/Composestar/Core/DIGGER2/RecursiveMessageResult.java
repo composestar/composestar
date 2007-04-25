@@ -15,40 +15,25 @@ import java.util.List;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 
 /**
- * Exception thrown in case of a recursive filter definition.
+ * A special MessageResult that signals a recursive message.
  * 
  * @author Michiel Hendriks
  */
-public class RecursiveFilterException extends Exception
+public class RecursiveMessageResult extends AbstractMessageResult
 {
-	private static final long serialVersionUID = -5605757703463661566L;
-
+	/**
+	 * Number of variable conditions enocuntered in the trail
+	 */
 	protected int vars;
-
-	protected Breadcrumb crumb;
 
 	protected List<Trail> trace;
 
 	/**
-	 * Unconditional recursive filter definition.
-	 * 
-	 * @param inMessage
-	 * @param inTrace
+	 * @param inCrumb the start/end of the recursion
+	 * @param inTrace the complete trail of the recursion
 	 */
-	public RecursiveFilterException(Breadcrumb inCrumb, List<Trail> inTrace)
+	public RecursiveMessageResult(Breadcrumb inCrumb, List<Trail> inTrace)
 	{
-		this("Recursive filter definition", inCrumb, inTrace);
-	}
-
-	/**
-	 * Unconditional recursive filter definition.
-	 * 
-	 * @param inMessage
-	 * @param inTrace
-	 */
-	public RecursiveFilterException(String inMessage, Breadcrumb inCrumb, List<Trail> inTrace)
-	{
-		super(inMessage);
 		crumb = inCrumb;
 		trace = inTrace;
 
@@ -63,14 +48,10 @@ public class RecursiveFilterException extends Exception
 		}
 	}
 
-	/**
-	 * Returns the originating breadcrumb
-	 * 
-	 * @return
-	 */
-	public Breadcrumb getCrumb()
+	@Override
+	public boolean isValidResult()
 	{
-		return crumb;
+		return false;
 	}
 
 	/**

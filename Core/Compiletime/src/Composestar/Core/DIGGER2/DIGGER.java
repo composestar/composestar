@@ -98,7 +98,7 @@ public class DIGGER implements CTCommonModule
 		incre = INCRE.instance();
 		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Main", INCRETimer.TYPE_OVERHEAD);
 		moduleInfo = ModuleInfoManager.get(DIGGER.class);
-		graph = new DispatchGraph( 0 );//moduleInfo.getIntSetting("mode"));
+		graph = new DispatchGraph(moduleInfo.getIntSetting("mode"));
 		graph.setAutoResolve(false);
 		resources.add(DispatchGraph.REPOSITORY_KEY, graph);
 		allCrumbs = new ArrayList<Breadcrumb>();
@@ -125,10 +125,10 @@ public class DIGGER implements CTCommonModule
 		if (moduleInfo.getBooleanSetting("exportXml"))
 		{
 			/*
-			logger.info("Step 2b: exporting result");
-			DispatchGraphExporter exporter = new XMLDispatchGraphExporter(graph);
-			exporter.export();
-			*/
+			 * logger.info("Step 2b: exporting result"); DispatchGraphExporter
+			 * exporter = new XMLDispatchGraphExporter(graph);
+			 * exporter.export();
+			 */
 		}
 
 		// cleanup
@@ -211,22 +211,24 @@ public class DIGGER implements CTCommonModule
 				INCRETimer.TYPE_NORMAL);
 		for (Breadcrumb crumb : allCrumbs)
 		{
-			try
+			List<AbstractMessageResult> results = graph.getResultingMessages(crumb);
+			if (results.size() > 0)
 			{
-				List<MessageResult> results = graph.getResultingMessages(crumb);
-				if (results.size() > 0)
+				logger.debug("" + crumb + " results in:");
+				for (AbstractMessageResult msgResult : results)
 				{
-					logger.debug("" + crumb + " results in:");
-					for (MessageResult msgResult : results)
+					if (msgResult.isValidResult())
 					{
-						logger.debug(" " + msgResult.getConcern().getName() + "." + msgResult.getSelector());
+						logger.debug(" " + msgResult.getConcern().getName() + "."
+								+ ((MessageResult) msgResult).getSelector());
+					}
+					else
+					{
+						reportRecursion((RecursiveMessageResult) msgResult);
 					}
 				}
 			}
-			catch (RecursiveFilterException e)
-			{
-				reportRecursion(e);
-			}
+
 		}
 		timer.stop();
 	}
@@ -237,7 +239,7 @@ public class DIGGER implements CTCommonModule
 	 * 
 	 * @param e
 	 */
-	public void reportRecursion(RecursiveFilterException e)
+	public void reportRecursion(RecursiveMessageResult e)
 	{
 		StringBuffer sb = new StringBuffer();
 
@@ -267,7 +269,7 @@ public class DIGGER implements CTCommonModule
 		}
 		else
 		{
-			logger.warn("Possibly infitite recursive filter definition (depended on ~" + e.numVars()
+			logger.warn("Possibly infitite recursive filter definition (depends on ~" + e.numVars()
 					+ " conditionals): " + sb.toString(), re);
 		}
 	}

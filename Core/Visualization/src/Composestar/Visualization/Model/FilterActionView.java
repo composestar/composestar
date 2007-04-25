@@ -31,13 +31,16 @@ import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.Master.CompileHistory;
+import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.Model.Cells.FlowChart.BaseFlowChartVertex;
 import Composestar.Visualization.Model.Cells.FlowChart.DecisionVertex;
 import Composestar.Visualization.Model.Cells.FlowChart.ExecCollectionEdge;
 import Composestar.Visualization.Model.Cells.FlowChart.ExitFlowVertex;
+import Composestar.Visualization.Model.Cells.FlowChart.MCBEdge;
 import Composestar.Visualization.Model.Cells.FlowChart.MethodCallVertex;
 import Composestar.Visualization.Model.Cells.FlowChart.MethodExecutionVertex;
+import Composestar.Visualization.Model.Cells.FlowChart.SIMethodExecutionVertex;
 import Composestar.Visualization.Model.Cells.FlowChart.SwimlaneVertex;
 import Composestar.Visualization.Model.Cells.FlowChart.ExecCollectionEdge.EdgeType;
 
@@ -101,7 +104,21 @@ public class FilterActionView extends CpsView
 			logger.error("Execution model for " + getName() + " has multiple entrance states");
 		}
 
-		// TODO: align swimlanes
+		/*
+		double x = 0;
+		for (SwimlaneVertex sl : swimlanes.values())
+		{
+			//Map map = sl.getAttributes();
+			//Rectangle2D bounds = GraphConstants.getBounds(map);
+			//bounds.setFrame(x, bounds.getY(), bounds.getWidth(), bounds.getHeight());
+			//x += bounds.getWidth();
+			logger.info(swimlanes);
+			sl.translate(x, 0);
+			Map map = sl.getAttributes();
+			Rectangle2D bounds = GraphConstants.getBounds(map);
+			x += bounds.getWidth();
+		}
+		*/
 	}
 
 	/*
@@ -178,6 +195,15 @@ public class FilterActionView extends CpsView
 			BaseFlowChartVertex nextCell = stateVertices.get(state);
 			if (nextCell == null)
 			{
+				if (flowNode.containsName(FlowNode.SUBSTITUTED_MESSAGE_ACTION_NODE) || flowNode.containsName(FlowNode.ANY_MESSAGE_ACTION_NODE))
+				{
+					logger.info("Adding MCB Annotation");
+					ExecCollectionEdge oldEdge = edge;
+					edge = new MCBEdge(oldEdge);
+					edge.setSource(oldEdge.getSource());
+					// TODO: add MCB annotation
+				}
+				
 				if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE)
 						&& !flowNode.containsName(FlowNode.TRUE_NODE))
 				{
@@ -206,14 +232,20 @@ public class FilterActionView extends CpsView
 					else if (msg.getTarget().equals(Message.SELF_TARGET))
 					{
 						targetConcern = focusConcern;
-						nextCell = new MethodExecutionVertex(msg);
+						nextCell = new SIMethodExecutionVertex(msg);
 					}
 					else
 					{
 						try
 						{
 							targetConcern = Resolver.findTargetConcern(focusConcern, filterPos, msg.getTarget());
-							nextCell = new MethodExecutionVertex(msg);
+							if (targetConcern.getDynObject(SIinfo.DATAMAP_KEY) == null)
+							{
+								nextCell = new MethodExecutionVertex(msg);
+							}
+							else {
+								nextCell = new SIMethodExecutionVertex(msg);
+							}							
 						}
 						catch (ModuleException e)
 						{
@@ -222,18 +254,6 @@ public class FilterActionView extends CpsView
 					}
 					SwimlaneVertex lane = getSwimlane(targetConcern);
 					lane.addVertex(nextCell);
-					// TODO:
-					// if (target == inner)
-					// ..use MEV
-					// else
-					// ..use SIMEV
-					// if (target == inner || *)
-					// ..in this swimlane
-					// else
-					// ..fetch result swimlane
-					// add outedge to "return" port
-					// process return actions
-
 				}
 				else if (flowNode.containsName(FlowNode.FILTER_ACTION_NODE)
 						&& !flowNode.containsName(FlowNode.CONTINUE_ACTION_NODE))
@@ -255,20 +275,9 @@ public class FilterActionView extends CpsView
 						}
 					}
 				}
-				else if (flowNode.containsName(FlowNode.SUBSTITUTED_MESSAGE_ACTION_NODE))
-				{
-					logger.info("Adding MCB Annotation");
-					// TODO:
-					// set MCB to edge
-					// convert edge
-				}
-				else if (flowNode.containsName(FlowNode.ANY_MESSAGE_ACTION_NODE))
-				{
-					logger.info("Adding Any MCB Annotation");
-					// TODO:
-					// set MCB to edge
-					// convert edge
-				}
+				
+				
+				
 				if (nextCell != null)
 				{
 					// layout.insert(_cell);
