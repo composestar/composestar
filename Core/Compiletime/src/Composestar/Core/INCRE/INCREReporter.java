@@ -203,7 +203,9 @@ public class INCREReporter
 			buffer2.append(elapsed);
 			buffer2.append('\n');
 			buffer.append("	ms (");
-			double percentage = ((double) elapsed * 100d / (double) totalElapsed);
+			double percentage = 0.0;
+			if (totalElapsed > 0)
+				percentage = ((double) elapsed * 100d / (double) totalElapsed);
 			BigDecimal percDec = new BigDecimal(percentage);
 			percDec = percDec.setScale(1, BigDecimal.ROUND_HALF_UP);
 			buffer.append(percDec.toString());
