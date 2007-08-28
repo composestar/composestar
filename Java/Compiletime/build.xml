@@ -55,7 +55,13 @@
 	</target>
 			
 	<target name="jar" depends="compile_java">
-		<jar destfile="${out.jar.java}" basedir="${out.build}" manifest="src/MANIFEST.MF"/>
+	  <copy todir="${out.build}"> <!-- copy moduleinfo files -->
+		<fileset dir="src">
+		    <include name="**/moduleinfo.xml"/>
+		</fileset>
+	  </copy>
+		
+	  <jar destfile="${out.jar.java}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
 	
 	<target name="install" depends="init_eclipse,build" description="Install the Java compiletime">
