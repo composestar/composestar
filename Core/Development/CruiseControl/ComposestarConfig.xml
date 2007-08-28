@@ -55,7 +55,7 @@
 			<merge file="${composestar.path}\Java\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\C\qa\checkstyle-result.xml" />
 			
-			<delete every="1" unit="MONTH" ignoreSuffix="false" />
+			<!--<delete every="1" unit="MONTH" ignoreSuffix="false" />-->
 		</log>
 		
 		<publishers>
@@ -133,102 +133,68 @@
 		</publishers>
 	
 	</project>
-
-	<!-- deprecated project, is now included with compose* -->
-	<project name="starlight" buildafterfailed="false" forceOnly="true">
-		
-		<!-- set this to the location of the starlight root -->
-		<!-- 
-		     Note: currently starlight is build as a seperate project by cruisecontrol
-					but it does use the same core as the rest of compose*. It's just that
-					the integration targets must be joined
-		-->
-		<property name="starlight.path" value="c:\composestar" />
-		
-		<!-- set this to the location of the composestar root -->
-		<property name="composestar.path" value="c:\composestar" />
 	
-
-		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
-		
-		<listeners>
-			<!-- used by the reporting interface -->
-			<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
-		</listeners>
-
-		<!-- wait 5 minutes after the last commit before continuing -->
-		<modificationset quietperiod="300">			
-			<!-- note: svn action needs svn commandline client in the path  -->
-			<svn LocalWorkingCopy="${starlight.path}\Core" property="composestar.modified" />
-			<svn LocalWorkingCopy="${starlight.path}\Starlight" property="composestar.modified" />
-		</modificationset>
-		
-		<!-- waits 5 (default) minutes before trying another build (only if files have changed) -->
-		<schedule>
-			<ant 
-				target="integration_starlight" 
-				buildfile="${starlight.path}\Core\Development\build_total.xml" 
-				uselogger="true" 
-				anthome="${composestar.ant}" 
-				antWorkingDir="${composestar.path}" 
-				usedebug="false" 
-			/>
-		</schedule>
-		
-		<log>
-			<delete every="1" unit="MONTH" ignoreSuffix="false" />
-		</log>
-		
-		<publishers>
-			<htmlemail buildresultsurl="http://${cchost}:8080/buildresults/${project.name}" 
-				xslfile="${starlight.path}\Core\Development\CruiseControl\buildresults.xslt" 
-				mailhost="smtp.utwente.nl" 
-				reportsuccess="fixes" 
-				skipusers="true"
-				returnname="Continuous Integration Server"
-				returnaddress="pascal_durr@users.sourceforge.net"
-			>
-				<always address="composestar-starlight@lists.sourceforge.net" />
-				
-				<parameter name="buildresultsurl" value="http://${cchost}:8080/buildresults/${project.name}" />
-				<parameter name="standalonehtml" value="1" />
-			</htmlemail>
-			<onsuccess>
-				<antpublisher 
-					target="integration_publish_starlight" 
-					buildfile="${starlight.path}\Core\Development\build_total.xml" 
-					uselogger="true" 
-					anthome="${composestar.ant}" 
-					antWorkingDir="${composestar.path}" 
-					usedebug="false" 
-				/>			
-				<artifactspublisher
-					dir="${starlight.path}/Starlight/Setup/Releases"
-					dest="artifacts/${project.name}/"
-					subdirectory="releases"
-				/>
-				<artifactspublisher
-					dir="${starlight.path}/Core/qa"
-					dest="artifacts/${project.name}/"
-					subdirectory="qa_core"
-				/>
-				<artifactspublisher
-					dir="${starlight.path}/Starlight/QualityAssurance"
-					dest="artifacts/${project.name}/"
-					subdirectory="qa_starlight"
-				/>
-					
-				<!-- clean up old artifacts, e.a. -->			
-				<antpublisher 
-					target="onsuccess" 
-					buildfile="${starlight.path}\Core\Development\CruiseControl\antextra.xml" 
-					uselogger="true" 
-					anthome="${composestar.ant}" 
-					antWorkingDir="${composestar.path}" 
-					usedebug="false" 
-				/>
-			</onsuccess>
-		</publishers>
 	
-	</project>
+	<!-- THE GROOVE PROJECT -->
+	
+	<project name="groove" buildafterfailed="false" requireModification="true">
+		
+	<!-- set this to the location of the groove root -->
+	<property name="groove.path" value="c:\Groove" />
+		
+    <!-- path to the ant install directory -->
+	<property name="groove.ant" value="${groove.path}\AntInstall\" />
+    
+ 	<listeners>
+		<!-- used by the reporting interface -->
+		<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+	</listeners>
+
+
+	<modificationset>
+		<cvs localworkingcopy="C:\Groove\release\run\groove" property="groove.modified"/>
+	</modificationset>
+    
+	<!-- performs a build every night at 03:17 -->
+	<schedule>
+		<ant time="0317" 
+			 target="default" 
+			 buildfile="${groove.path}\build-nightly.xml"
+			 uselogger="true" 
+			 usequiet="true" 
+			 anthome="${groove.ant}" 
+			 antWorkingDir="${groove.path}"
+			 usedebug="false" />
+	</schedule>
+	
+	
+	<log>
+		<merge file="${groove.path}\workdir\tests\test.log.xml" />
+		<gzip every="1" unit="WEEK" />
+		<delete every="1" unit="MONTH" ignoreSuffix="false" />	
+	</log>
+
+
+    <!-- Notifications -->
+	<publishers>
+		<!-- TODO : xslfile attr needed ?-->
+		<onfailure>
+			<email buildresultsurl="http://${cchost}:8080/buildresults/${project.name}"
+				   mailhost="smtp.utwente.nl"
+				   reportsuccess="never"
+				   returnname="Continuous Integration Server"
+                   returnaddress="bonevai@ewi.utwente.nl" >
+				<failure address="bonevai@ewi.utwente.nl" />
+				<map alias="rensink" address="rensink@cs.utwente.nl"></map>
+				<map alias="iovka" address="bonevai@ewi.utwente.nl"></map>
+				<map alias="kastenberg" address="h.kastenberg@cs.utwente.nl"></map>
+				<map alias="fladder" address="t.staijen@ewi.utwente.nl"></map>
+			</email>
+		</onfailure>
+      
+	</publishers>
+	
+</project>
+	
+	
 </cruisecontrol>
