@@ -126,6 +126,8 @@ public final class FileUtils
 	{
 		InputStream is = null;
 		OutputStream os = null;
+		if (source.equals(dest))
+			return;
 		try
 		{
 			is = new BufferedInputStream(new FileInputStream(source));
