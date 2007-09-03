@@ -265,8 +265,10 @@ public class CstarTest extends BaseTask
 
 			EclipseRunner runner = new EclipseRunner(getProject(), eclipseHome);
 			runner.setApplication(application);
-			String[] args = new String[1];
+			String[] args = new String[3];
 			args[0] = projectname;
+			args[1] = "-customfilter";
+			args[2] = customfilterString;
 			runner.setAppArgs(args);
 			runner.setWorkspace(workspace);
 
