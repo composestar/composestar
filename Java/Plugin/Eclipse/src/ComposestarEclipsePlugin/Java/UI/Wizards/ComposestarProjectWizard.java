@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
+import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -27,7 +28,7 @@ public class ComposestarProjectWizard extends Wizard implements INewWizard
 
 	private ComposestarProjectWizardFirstPage fFirstPage;
 
-	private ComposestarProjectWizardSecondPage fSecondPage;
+	private ComposestarProjectWizardSecondPageEx fSecondPage;
 
 	private static String ComposestarProjectWizard_title = "New Compose* Java Project";
 
@@ -53,7 +54,7 @@ public class ComposestarProjectWizard extends Wizard implements INewWizard
 		super.addPages();
 		fFirstPage = new ComposestarProjectWizardFirstPage();
 		addPage(fFirstPage);
-		fSecondPage = new ComposestarProjectWizardSecondPage(fFirstPage);
+		fSecondPage = new ComposestarProjectWizardSecondPageEx(fFirstPage);
 		addPage(fSecondPage);
 	}
 
