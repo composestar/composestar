@@ -490,10 +490,9 @@ public class ComposestarProjectWizardSecondPage extends JavaCapabilityConfigurat
 			// use default
 			return defaultJRELibrary;
 		}
-		IVMInstall inst = fFirstPage.getJVM();
-		if (inst != null)
+		IPath newPath = fFirstPage.getJREContainerPath();
+		if (newPath != null)
 		{
-			IPath newPath = jreContainerPath.append(inst.getVMInstallType().getId()).append(inst.getName());
 			return new IClasspathEntry[] { JavaCore.newContainerEntry(newPath) };
 		}
 		return defaultJRELibrary;

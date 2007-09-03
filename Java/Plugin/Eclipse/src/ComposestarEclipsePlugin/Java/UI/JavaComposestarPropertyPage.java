@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.debug.internal.ui.SWTUtil;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IJavaProject;
@@ -254,7 +253,6 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		GridData data = new GridData();
 		button.setLayoutData(data);
 		button.setFont(parent.getFont());
-		SWTUtil.setButtonDimensionHint(button);
 		return button;
 	}
 
@@ -384,9 +382,10 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 			runDebugLevel.select(1);
 			secretMode.select(0);
 
-			BuildConfigurationManager.instance().setPlatformConfigFile(ComposestarEclipsePluginPlugin.getAbsolutePath(
-					"/PlatformConfigurations.xml", IComposestarJavaConstants.BUNDLE_ID));
-			
+			BuildConfigurationManager.instance().setPlatformConfigFile(
+					ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml",
+							IComposestarJavaConstants.BUNDLE_ID));
+
 			Platform p = BuildConfigurationManager.instance().getPlatform("Java");
 			classpathText.setText(p.getClassPath());
 
