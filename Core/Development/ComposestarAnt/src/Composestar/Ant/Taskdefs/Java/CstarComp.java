@@ -14,6 +14,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline.Argument;
 import org.apache.tools.ant.types.PatternSet.NameEntry;
 
+import Composestar.Ant.EclipseRunner;
 import Composestar.Ant.TestOutput;
 import Composestar.Ant.Taskdefs.BaseTask;
 
@@ -175,6 +176,15 @@ public class CstarComp extends BaseTask
 
 		try
 		{
+			EclipseRunner runner = new EclipseRunner(getProject(), eclipseHome);
+			runner.setApplication(application);
+			String[] args = new String[1];
+			args[0] = projectName;
+			runner.setAppArgs(args);
+			runner.setWorkspace(workspace);
+			int err = runner.execute();
+			
+			/*
 			Java java = (Java) getProject().createTask("java");
 			java.init();
 			java.setDir(new File(eclipseHome));
@@ -204,6 +214,8 @@ public class CstarComp extends BaseTask
 			java.setFork(true);
 
 			int err = java.executeJava();
+			*/
+			
 			if (err != 0)
 			{
 				throw new Exception("Exit code is not zero: " + err

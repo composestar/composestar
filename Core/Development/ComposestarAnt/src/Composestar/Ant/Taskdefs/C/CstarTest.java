@@ -19,6 +19,7 @@ import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.DirSet;
 
+import Composestar.Ant.EclipseRunner;
 import Composestar.Ant.TestOutput;
 import Composestar.Ant.Taskdefs.BaseTask;
 
@@ -262,24 +263,15 @@ public class CstarTest extends BaseTask
 			execute.setSpawn(false);
 			execute.setWorkingDirectory(new File(eclipseHome));
 
-			/*******************************************************************
-			 * run: make run
-			 */
-			String[] cmd = { "java", "-cp", eclipseHome + "/startup.jar", launcher, "-application", application,
-					projectname, "-customfilter", customfilterString, "-data", workspace };
-			// {"make", "run", "-C", workspace+"\\"+projectname};
+			EclipseRunner runner = new EclipseRunner(getProject(), eclipseHome);
+			runner.setApplication(application);
+			String[] args = new String[1];
+			args[0] = projectname;
+			runner.setAppArgs(args);
+			runner.setWorkspace(workspace);
 
-			log("make command= " + "make run -C " + workspace + "\\" + projectname);
-			// Thread.sleep(15000);
-			execute.setCommandline(cmd);
-			// for(int i =0;i<cmd.length; i++)
-			// {
-			// commandline += cmd[i];
-			// }
-			// log("Debug1:"+projectname + commandline);
-
+			execute.setCommandline(runner.getCmdLine());
 			int err = execute.execute();
-			// log("Debug2:"+projectname+err);
 
 			outputStream.close();
 

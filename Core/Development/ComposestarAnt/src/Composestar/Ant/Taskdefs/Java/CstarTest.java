@@ -19,6 +19,7 @@ import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.DirSet;
 
+import Composestar.Ant.EclipseRunner;
 import Composestar.Ant.TestOutput;
 import Composestar.Ant.Taskdefs.BaseTask;
 
@@ -216,10 +217,15 @@ public class CstarTest extends BaseTask
 			execute.setAntRun(getProject());
 			execute.setSpawn(false);
 			execute.setWorkingDirectory(new File(eclipseHome));
+			
+			EclipseRunner runner = new EclipseRunner(getProject(), eclipseHome);
+			runner.setApplication(application);
+			String[] args = new String[1];
+			args[0] = projectname;
+			runner.setAppArgs(args);
+			runner.setWorkspace(workspace);
 
-			String[] cmd = { "java", "-cp", eclipseHome + File.separator + "startup.jar", launcher, "-application",
-					application, projectname, "-data", workspace, "-clean" };
-			execute.setCommandline(cmd);
+			execute.setCommandline(runner.getCmdLine());
 
 			int err = execute.execute();
 
