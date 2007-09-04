@@ -77,7 +77,7 @@
 				<antpublisher 
 					target="integration_publish" 
 					buildfile="${composestar.path}\Core\Development\build_total.xml" 
-					uselogger="true" 
+					uselogger="false" 
 					anthome="${composestar.ant}" 
 					antWorkingDir="${composestar.path}" 
 					usedebug="false" 
@@ -124,7 +124,7 @@
 				<antpublisher 
 					target="onsuccess" 
 					buildfile="${composestar.path}\Core\Development\CruiseControl\antextra.xml" 
-					uselogger="true" 
+					uselogger="false" 
 					anthome="${composestar.ant}" 
 					antWorkingDir="${composestar.path}" 
 					usedebug="false" 
