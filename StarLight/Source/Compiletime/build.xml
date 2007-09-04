@@ -38,6 +38,8 @@
 	
 		<!-- default path to xsd.exe (can be overridden in build.ini) -->
 		<property name="xsd.exe" value="xsd.exe"/>
+		<!-- be sure it's .NET 2 or 3 -->
+		<assertDotNetUtil util="${xsd.exe}" version="[23]\." />				
 
 		<property name="out.xmltypes"     location="../StarLightEntities/obj/xmltypes"/>
 		<property name="core.jar"         location="${build.core}/Compiletime/${out.jar.core}"/>
@@ -69,7 +71,7 @@
 	
 	<target name="create_xsd" depends="init_local">
 		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build" config="${msbuild.config}"/>
-		<exec executable="${xsd.exe}" dir="..\StarLightEntities\bin\${msbuild.config}">
+		<exec executable="${xsd.exe}" dir="..\StarLightEntities\bin\${msbuild.config}" failonerror="true">
 			<arg line="Composestar.StarLight.Entities.dll"/>
 			<arg line="/outputdir:'${out.xmltypes}'"/>
 		</exec>

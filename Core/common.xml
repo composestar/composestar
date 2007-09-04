@@ -109,7 +109,12 @@ Common routines. Always include this file in every build.xml file
 		</condition>
 		
 		<!-- resolve system variables -->	
-		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper.exe" failifexecutionfails="false" osfamily="windows">
+		<property name="env.SYSTEMROOT" value="${env.SystemRoot}"/>
+		<condition property="anthelper.version" value="" else="2">
+			<available file="${env.SYSTEMROOT}\Microsoft.NET\Framework\v1.1.4322" type="dir" />
+		</condition>
+		
+		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper${anthelper.version}.exe" failifexecutionfails="false" osfamily="windows">
 			<arg value="getsystemproperties"/>
 			<arg value="${build.core}${file.separator}Development${file.separator}system.properties"/>
 		</exec>
@@ -155,6 +160,22 @@ Common routines. Always include this file in every build.xml file
 				</exec>
 			</sequential>
 
+		</macrodef>
+					
+		<!-- Macro to detect and assert the .NET version of a .NET utility -->
+		<macrodef name="assertDotNetUtil">
+			<attribute name="util"/><!-- executable -->
+			<attribute name="version"/><!-- regex -->
+			<sequential>
+				<exec executable="@{util}" failifexecutionfails="false" outputproperty="assertDotNetUtil.@{util}">
+					<arg value="/?" />
+				</exec>
+				<fail message="@{util}'s version does not match: Version @{version}">
+					<condition>
+						<not><matches string="${assertDotNetUtil.@{util}}" pattern="Version @{version}" /></not>
+					</condition>
+				</fail>
+			</sequential>
 		</macrodef>
 
 		<!-- NSIS path -->
