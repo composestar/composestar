@@ -1,15 +1,16 @@
 <FindBugsFilter>
 	<!-- auto generated classes by ANTLR -->
-	<Match classregex=".*TreeWalker" />
+	<Match><Class name="~.*TreeWalker" /></Match>
 	
-	<Match classregex="Composestar\.Core\.COPPER\.CpsLexer" />
-	<Match classregex="Composestar\.Core\.COPPER\.CpsParser" />
+	<Match><Class name="Composestar.Core.COPPER.CpsLexer" /></Match>
+	<Match><Class name="Composestar.Core.COPPER.CpsParser" /></Match>
 	
-	<Match classregex="Composestar\.C\.wrapper\.parsing\.GnuC.*" />
-	<Match classregex="Composestar\.C\.wrapper\.parsing\.StdC.*" />
+	<Match><Package name="Composestar.C.wrapper.parsing.GnuC" /></Match>
+	<Match><Package name="Composestar.C.wrapper.parsing.StdC" /></Match>
 	
 	<!-- don't check for leading lowercase in these classes -->
-	<Match classregex="Composestar\.DotNET\.LAMA\..*">
-		<BugCode name="Nm" />
+	<Match>
+		<Package name="Composestar.DotNET.LAMA" />
+		<Bug code="Nm" />
 	</Match>
 </FindBugsFilter>

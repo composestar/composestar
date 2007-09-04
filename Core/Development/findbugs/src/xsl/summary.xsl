@@ -44,7 +44,14 @@
 	 -->
    <head><title><xsl:value-of select="$PAGE.TITLE" /></title></head>
   <body>
-  <h1 align="center"><xsl:value-of select="$SUMMARY.HEADER" /></h1>
+    <h1 align="center"><a href="http://findbugs.sourceforge.net"><xsl:value-of select="$SUMMARY.HEADER" /></a></h1>
+    <h2 align="center"> Analysis for 
+    <xsl:choose>
+      <xsl:when test='string-length(/BugCollection/Project/@projectName)>0'>
+          <xsl:value-of select="/BugCollection/Project/@projectName" /></xsl:when>
+      <xsl:otherwise><xsl:value-of select="/BugCollection/Project/@filename" /></xsl:otherwise>
+    </xsl:choose>
+      </h2>
   <h2 align="center"><xsl:value-of select="$SUMMARY.LABEL" /> 
       <i><xsl:value-of select="//FindBugsSummary/@timestamp" /></i></h2>
   <xsl:apply-templates select="//FindBugsSummary" />

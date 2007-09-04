@@ -102,7 +102,7 @@
 					<tr>
 						<td class="bannercell" rowspan="2">
 							<a href="http://composestar.sf.net">
-								<img src="http://janus.cs.utwente.nl:8000/twiki/pub/logo.gif" alt="" align="left"
+								<img src="http://composestar.svn.sourceforge.net/viewvc/*checkout*/composestar/trunk/Core/Development/logo.png" alt="" align="left"
 									border="0" />
 							</a>
 						</td>
