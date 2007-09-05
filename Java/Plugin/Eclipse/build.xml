@@ -52,18 +52,21 @@
 	<!-- install -->	
 	<target name="install" depends="build" description="install the eclipse plugin">
 		
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarJava">
+		<copy todir="${eclipse.pluginsdir.java}">
 			<fileset dir="${out.dist}" />
 		</copy>
 		
 		<!-- plugin files -->
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarJava">
+		<copy todir="${eclipse.pluginsdir.java}">
 			<fileset dir=".">
 				<include name="plugin.*" />
 				<include name="META-INF/*" />
 			</fileset>
 		</copy>
 	
+		<manifest file="${eclipse.pluginsdir.java}/META-INF/MANIFEST.MF" mode="update">
+			<attribute name="Bundle-Version" value="${version.java}"/>
+		</manifest>
 	</target>
 	
 </project>

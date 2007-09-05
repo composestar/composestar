@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Composestar Eclipse Plugin Java
 Bundle-SymbolicName: Composestar.Eclipse.Plugin.Java;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 0.0.0
 Bundle-Localization: plugin
 Bundle-ClassPath: ComposestarEclipseJava.jar
 Require-Bundle: org.eclipse.ui,

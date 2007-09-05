@@ -47,11 +47,14 @@
 	
 	<!-- install -->	
 	<target name="install" depends="init_local,build" description="">	
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarCore">
+		<copy todir="${eclipse.pluginsdir.core}">
 			<fileset dir="${out.dist}" />
 		</copy>
-		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarCore/META-INF">
+		<copy todir="${eclipse.pluginsdir.core}${file.separator}META-INF">
 			<fileset dir="META-INF" />
-		</copy>	
+		</copy>
+		<manifest file="${eclipse.pluginsdir.core}/META-INF/MANIFEST.MF" mode="update">
+			<attribute name="Bundle-Version" value="${version.core}"/>
+		</manifest>
 	</target>
 </project>

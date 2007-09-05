@@ -52,7 +52,7 @@
 	
 	<!-- install -->	
 	<target name="install" depends="init_local,build" description="install the eclipse plugin">
-		<copy todir="${eclipse.pluginsdir}/ComposestarC">
+		<copy todir="${eclipse.pluginsdir.c}">
 			<fileset dir="${out.dist}" />
 			<fileset dir="${basedir}">
 				<include name="META-INF/**" />
@@ -63,7 +63,10 @@
 				
 				<exclude name="**/.svn" />
 			</fileset>
-		</copy>	
+		</copy>
+		<manifest file="${eclipse.pluginsdir.c}/META-INF/MANIFEST.MF" mode="update">
+			<attribute name="Bundle-Version" value="${version.c}"/>
+		</manifest>
 	</target>
 	
 </project>

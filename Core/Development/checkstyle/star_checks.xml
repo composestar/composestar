@@ -122,7 +122,7 @@
 			<property name="severity" value="warning"/>
 		</module>
 		<module	name="AvoidInlineConditionals"/>
-		<module	name="DoubleCheckedLocking"/>	 <!-- MY FAVOURITE -->
+		<module	name="DoubleCheckedLocking"/>
 		<module	name="EmptyStatement">
 			<property name="severity" value="warning"/>
 		</module>

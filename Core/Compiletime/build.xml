@@ -150,7 +150,7 @@
 	</target>	
 	
 	<target name="-install_eclipse" depends="init_eclipse">
-		<install_core todir="${eclipse.pluginsdir}/ComposestarCore" />
+		<install_core todir="${eclipse.pluginsdir.core}" />
 	</target>
 	
 	
