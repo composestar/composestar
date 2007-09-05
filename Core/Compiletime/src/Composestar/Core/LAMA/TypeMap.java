@@ -14,6 +14,13 @@ import java.util.Collection;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * TypeMap holds all the Types. It is used by the various classes to resolve
  * their type dependencies.

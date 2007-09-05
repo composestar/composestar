@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Utils;
 
 import java.io.BufferedReader;
@@ -17,7 +26,7 @@ public class StreamGobbler extends Thread
 {
 	private InputStream is;
 
-	private List output;
+	private List<String> output;
 
 	/**
 	 * Constructor.
@@ -27,7 +36,7 @@ public class StreamGobbler extends Thread
 	public StreamGobbler(InputStream inis)
 	{
 		is = inis;
-		output = new ArrayList(32);
+		output = new ArrayList<String>(32);
 	}
 
 	/**
@@ -36,10 +45,10 @@ public class StreamGobbler extends Thread
 	public String result()
 	{
 		StringBuffer out = new StringBuffer();
-		Iterator it = output.iterator();
+		Iterator<String> it = output.iterator();
 		while (it.hasNext())
 		{
-			out.append((String) it.next());
+			out.append(it.next());
 			out.append('\n');
 		}
 		return out.toString();
@@ -48,7 +57,7 @@ public class StreamGobbler extends Thread
 	/**
 	 * Returns a list containing the lines of the data from the stream.
 	 */
-	public List getResultLines()
+	public List<String> getResultLines()
 	{
 		return output;
 	}

@@ -9,16 +9,19 @@
  */
 package Composestar.Core.FILTH;
 
-/**
- * @author Isti
- */
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
+
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
 
 public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity
 {

@@ -1,4 +1,12 @@
-//Created on Nov 11, 2004 by wilke
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Utils;
 
 import java.io.BufferedInputStream;
@@ -20,7 +28,7 @@ import java.io.Writer;
 public final class FileUtils
 {
 	private static final int BUFSIZE = 1024;
-	
+
 	private FileUtils()
 	{}
 
@@ -127,7 +135,9 @@ public final class FileUtils
 		InputStream is = null;
 		OutputStream os = null;
 		if (source.equals(dest))
+		{
 			return;
+		}
 		try
 		{
 			is = new BufferedInputStream(new FileInputStream(source));
@@ -141,34 +151,39 @@ public final class FileUtils
 			close(os);
 		}
 	}
-	
+
 	public static void copy(InputStream is, OutputStream os) throws IOException
 	{
 		byte[] buffer = new byte[BUFSIZE];
-		
+
 		int read;
 		while ((read = is.read(buffer)) > 0)
+		{
 			os.write(buffer, 0, read);
+		}
 	}
 
 	public static void copy(Reader r, Writer w) throws IOException
 	{
 		char[] buffer = new char[BUFSIZE];
-		
+
 		int read;
 		while ((read = r.read(buffer)) > 0)
-			w.write(buffer, 0, read);		
+		{
+			w.write(buffer, 0, read);
+		}
 	}
 
 	public static void copy(Reader r, Writer w, int count) throws IOException
 	{
 		char[] buffer = new char[count];
-		
+
 		int read = 0;
 		while (read != count)
+		{
 			read += r.read(buffer, read, count - read);
-
-		w.write(buffer);		
+		}
+		w.write(buffer);
 	}
 
 	public static String getExtension(String filename)
@@ -178,10 +193,17 @@ public final class FileUtils
 			throw new IllegalArgumentException("filename can not be null");
 		}
 
-		int lastdot = filename.lastIndexOf('.');		
-		return (lastdot == -1 ? null : filename.substring(lastdot + 1));
+		int lastdot = filename.lastIndexOf('.');
+		if (lastdot == -1)
+		{
+			return null;
+		}
+		else
+		{
+			return filename.substring(lastdot + 1);
+		}
 	}
-	
+
 	public static String getExtension(File filename)
 	{
 		if (filename == null)
@@ -199,7 +221,14 @@ public final class FileUtils
 		}
 
 		int lastdot = filename.lastIndexOf('.');
-		return (lastdot == -1 ? filename : filename.substring(0, lastdot));
+		if (lastdot == -1)
+		{
+			return filename;
+		}
+		else
+		{
+			return filename.substring(0, lastdot);
+		}
 	}
 
 	public static String replaceExtension(String filename, String newext)
@@ -243,8 +272,8 @@ public final class FileUtils
 	{
 		if (!sourceName.startsWith(basePath))
 		{
-			throw new IllegalArgumentException(
-					"File + '" + sourceName + "' should be within the project basePath '" + basePath + "'");
+			throw new IllegalArgumentException("File + '" + sourceName + "' should be within the project basePath '"
+					+ basePath + "'");
 		}
 
 		return basePath + prefix + sourceName.substring(basePath.length());
@@ -290,7 +319,7 @@ public final class FileUtils
 	}
 
 	/**
-	 * Get a file stream for the SAX parser whitout the Root element could not
+	 * Get a file stream for the SAX parser without the Root element could not
 	 * be found exception. This is caused by a BOM character which is skipped by
 	 * this file reader.
 	 * 
@@ -341,7 +370,7 @@ public final class FileUtils
 		}
 		catch (IOException e)
 		{
-			// this shouldnt happen
+			// this should not happen
 			throw new RuntimeException("Unable to close reader: " + e.getMessage());
 		}
 	}
@@ -360,7 +389,7 @@ public final class FileUtils
 		}
 		catch (IOException e)
 		{
-			// this shouldnt happen
+			// this should not happen
 			throw new RuntimeException("Unable to close writer: " + e.getMessage());
 		}
 	}
@@ -379,7 +408,7 @@ public final class FileUtils
 		}
 		catch (IOException e)
 		{
-			// this shouldnt happen
+			// this should not happen
 			throw new RuntimeException("Unable to close stream: " + e.getMessage());
 		}
 	}
@@ -398,7 +427,7 @@ public final class FileUtils
 		}
 		catch (IOException e)
 		{
-			// this shouldnt happen
+			// this should not happen
 			throw new RuntimeException("Unable to close stream: " + e.getMessage());
 		}
 	}

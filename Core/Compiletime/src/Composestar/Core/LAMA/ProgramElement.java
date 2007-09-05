@@ -15,6 +15,13 @@ import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 public abstract class ProgramElement extends PlatformRepresentation
 {
 	/**

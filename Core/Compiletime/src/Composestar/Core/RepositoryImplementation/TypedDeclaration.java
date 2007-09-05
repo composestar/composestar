@@ -12,6 +12,13 @@ package Composestar.Core.RepositoryImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * This defines a declaration of an entity, together with its type (e.g.
  * variable, parameters, etc.), such as "newThing : ItsType"; It combines a

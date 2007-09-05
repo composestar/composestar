@@ -11,6 +11,13 @@ package Composestar.Core.RepositoryImplementation;
 
 import java.util.Iterator;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 {
 	private static final long serialVersionUID = -7445401465568382172L;

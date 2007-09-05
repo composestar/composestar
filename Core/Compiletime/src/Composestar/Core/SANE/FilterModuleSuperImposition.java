@@ -4,6 +4,13 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * Contains the superimposition of one filter module. This consists of the
  * FilterModule instance and the optional Condition instance.

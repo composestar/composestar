@@ -13,6 +13,13 @@ import java.util.HashSet;
 
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * Contains a set of registered program elements. Separated from UnitDictionary
  * because the Runtime only needs this part; not the entire dictionary. Created

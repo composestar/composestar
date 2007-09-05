@@ -8,8 +8,17 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
- * @author havingaw Namespace unit type
+ * Namespace unit type
+ * 
+ * @author havingaw
  */
 public class LangNamespace extends ProgramElement
 {

@@ -13,6 +13,13 @@ package Composestar.Utils.Logging;
 import java.util.HashMap;
 import java.util.Map;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * Factory to produce runtime loggers
  * 

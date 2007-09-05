@@ -9,6 +9,13 @@
  */
 package Composestar.Core.RepositoryImplementation;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * This is a RepositoryEntity that is context-sensitive in the sense that it
  * contains a reference to its encapsulating parent. This parent is typically

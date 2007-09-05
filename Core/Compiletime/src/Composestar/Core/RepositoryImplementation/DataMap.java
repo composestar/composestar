@@ -5,6 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * The DataMap is in implementation of the java.util.Map interface that uses two
  * public Vectors as storage, one for keys, and one for values.
@@ -17,7 +24,7 @@ import java.util.Set;
 public abstract class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 {
 	protected static Class dataMapClass;
-	
+
 	public static boolean setDataMapClass(Class newClass)
 	{
 		if (DataMap.class.isAssignableFrom(newClass))
@@ -27,7 +34,7 @@ public abstract class DataMap implements Map, SerializableRepositoryEntity, Clon
 		}
 		return false;
 	}
-	
+
 	public static Class getDataMapClass()
 	{
 		return dataMapClass;
@@ -82,7 +89,7 @@ public abstract class DataMap implements Map, SerializableRepositoryEntity, Clon
 	public abstract void excludeUnreferenced(Class c);
 
 	public abstract HashMap toHashMap();
-	
+
 	public Object clone() throws CloneNotSupportedException
 	{
 		return super.clone();

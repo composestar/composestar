@@ -68,7 +68,7 @@ public class Concern extends DeclaredRepositoryEntity
 	{
 		return signature;
 	}
-	
+
 	public String getQualifiedName()
 	{
 		return getName();

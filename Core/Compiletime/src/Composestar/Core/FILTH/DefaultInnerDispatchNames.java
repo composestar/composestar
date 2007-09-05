@@ -10,6 +10,13 @@
 
 package Composestar.Core.FILTH;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * Names used for the default inner dispatch. It's in a seperate class because
  * it's also used for the runtime.

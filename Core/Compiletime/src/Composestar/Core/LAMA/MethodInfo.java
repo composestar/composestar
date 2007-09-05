@@ -18,6 +18,13 @@ import java.util.List;
 
 import Composestar.Utils.StringUtils;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 public abstract class MethodInfo extends ProgramElement
 {
 
@@ -50,7 +57,7 @@ public abstract class MethodInfo extends ProgramElement
 	{
 		if (!dummy)
 		{
-		UnitRegister.instance().registerLanguageUnit(this);
+			UnitRegister.instance().registerLanguageUnit(this);
 		}
 		parameters = new ArrayList();
 		callsToOtherMethods = new HashSet();
@@ -335,7 +342,7 @@ public abstract class MethodInfo extends ProgramElement
 	public abstract boolean isPrivate();
 
 	public abstract boolean isProtected();
-	
+
 	public String getHashKey()
 	{
 		StringBuffer sb = new StringBuffer();

@@ -11,6 +11,13 @@ package Composestar.Core.RepositoryImplementation;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * A repository entity with a qualified name. The qualified name is the defines
  * the value of the unique ID
@@ -63,7 +70,7 @@ public class DeclaredRepositoryEntity extends ContextRepositoryEntity
 	 * @return java.lang.String
 	 */
 	public String getQualifiedName()
-	{		
+	{
 		StringBuffer out = new StringBuffer();
 		DeclaredRepositoryEntity o;
 
@@ -74,7 +81,7 @@ public class DeclaredRepositoryEntity extends ContextRepositoryEntity
 			{
 				out.insert(0, ".");
 			}
-			
+
 			if (o instanceof Concern)
 			{
 				// concern overwrites getQualifiedName

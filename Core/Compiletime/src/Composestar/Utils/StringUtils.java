@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Utils;
 
 import java.util.ArrayList;
@@ -5,7 +14,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
+ * Used in the runtime, conform it to Java 2.0 or below.
+ * 
  * @see Composestar.Utils.StringUtilsTest
  */
 public final class StringUtils

@@ -10,6 +10,13 @@
 
 package Composestar.Utils.Logging;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * An logger creator class that produces the most suitable logger for the
  * current environment. For compiletime this should be an Log4jLogger and during

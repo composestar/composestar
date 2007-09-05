@@ -13,6 +13,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 public abstract class Type extends ProgramElement
 {
 	// note: it must be an implemented type and not an interface (for .net 1.1

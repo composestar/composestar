@@ -92,7 +92,7 @@ public class CommandLineExecutor
 		}
 	}
 
-	public int exec(List cmdList)
+	public int exec(List<String> cmdList)
 	{
 		String[] cmdArray = new String[cmdList.size()];
 		cmdList.toArray(cmdArray);

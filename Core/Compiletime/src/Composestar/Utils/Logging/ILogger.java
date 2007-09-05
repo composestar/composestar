@@ -10,6 +10,13 @@
 
 package Composestar.Utils.Logging;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * Helper interface to allow the mixing of the runtime safe logger and normal
  * log4j logger. The ILogger should only be used by classes that are also used

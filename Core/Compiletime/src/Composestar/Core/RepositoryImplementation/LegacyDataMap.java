@@ -13,6 +13,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * The DataMap is in implementation of the java.util.Map interface that uses two
  * public Vectors as storage, one for keys, and one for values.
@@ -38,7 +45,7 @@ public class LegacyDataMap extends DataMap
 		m_keys = new Vector();
 		m_values = new Vector();
 	}
-	
+
 	public LegacyDataMap(DataMap dataMap)
 	{
 		m_keys = new Vector(dataMap.size());
@@ -80,19 +87,16 @@ public class LegacyDataMap extends DataMap
 
 	public Object put(Object key, Object value)
 	{
-		// At runtime elements are added that are not serializable (and don't have to be)
+		// At runtime elements are added that are not serializable (and don't
+		// have to be)
 		/*
-		if ((key != null) && !(value instanceof Serializable))
-		{
-			throw new UnsupportedOperationException(
-					"Value must implement Serializable or use CommonResources otherwise");
-		}
-		if ((key != null) && !(key instanceof Serializable))
-		{
-			throw new UnsupportedOperationException(
-					"Value must implement Serializable or use CommonResources otherwise");
-		}
-		*/
+		 * if ((key != null) && !(value instanceof Serializable)) { throw new
+		 * UnsupportedOperationException( "Value must implement Serializable or
+		 * use CommonResources otherwise"); } if ((key != null) && !(key
+		 * instanceof Serializable)) { throw new UnsupportedOperationException(
+		 * "Value must implement Serializable or use CommonResources
+		 * otherwise"); }
+		 */
 
 		int index = m_keys.indexOf(key);
 		if (index < 0)

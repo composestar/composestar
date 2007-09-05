@@ -22,6 +22,13 @@ import java.util.List;
 import Composestar.Utils.Logging.ILogger;
 import Composestar.Utils.Logging.SafeLogger;
 
+//
+// !! Compose* Runtime Warning !!
+//
+// This class is referenced in the Compose* Runtime for .NET 1.1
+// Do not use Java features added after Java 2.0
+//
+
 /**
  * The Repository part of the Compose* project. It supports reading and writing
  * objects. It allows for basic store and restore operations
