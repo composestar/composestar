@@ -48,7 +48,7 @@
 			</condition>
 		</fail>
 		
-		<cs:c_test workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="Composestar.Eclipse.Plugin.C.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar;${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Parametercheck.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Timing.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Tracing.jar" resultOutput="${basedir}/TEST-Total.xml">
+		<cs:c_test workspace="${build.c}/Examples" eclipseHome="${eclipse.home}" application="composestar.c.headlessCEPTest" customfilterString="${build.c}\Examples\EncryptionExample\CustomFilters\Decryption.jar;${build.c}\Examples\EncryptionExample\CustomFilters\Encryption.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Parametercheck.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Timing.jar;${build.c}\Examples\PolishCalculator\CustomFilters\Tracing.jar" resultOutput="${basedir}/TEST-Total.xml">
 			<DirSet dir="${build.c}/Examples">
 				<include name="EncryptionExample"/> 
 				<include name="PolishCalculator"/> 

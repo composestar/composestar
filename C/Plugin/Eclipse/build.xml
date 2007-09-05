@@ -45,7 +45,11 @@
 	
 	<!-- create jar -->
 	<target name="jar" depends="compile">
-		<jar destfile="${out.dist}/ComposestarEclipseC.jar">
+		<copy file="META-INF/MANIFEST.MF" tofile="${out.build}/META-INF/MANIFEST.MF"/>
+		<manifest file="${out.build}/META-INF/MANIFEST.MF" mode="update">
+			<attribute name="Bundle-Version" value="${version.c}"/>
+		</manifest>
+		<jar destfile="${out.dist}/ComposestarEclipseC.jar" manifest="${out.build}/META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}" />
 		</jar>
 	</target>
@@ -54,8 +58,10 @@
 	<target name="install" depends="init_local,build" description="install the eclipse plugin">
 		<copy todir="${eclipse.pluginsdir.c}">
 			<fileset dir="${out.dist}" />
+			<fileset dir="${out.build}">
+				<include name="META-INF/*" />
+			</fileset>
 			<fileset dir="${basedir}">
-				<include name="META-INF/**" />
 				<include name="plugin.*" />
 				<include name="message.*" />
 				<include name="PlatformConfigurations.xml" />
@@ -64,9 +70,6 @@
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>
-		<manifest file="${eclipse.pluginsdir.c}/META-INF/MANIFEST.MF" mode="update">
-			<attribute name="Bundle-Version" value="${version.c}"/>
-		</manifest>
 	</target>
 	
 </project>

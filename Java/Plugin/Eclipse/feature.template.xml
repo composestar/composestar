@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature id="composestar.java" label="Compose*/Java" version="@version.java@" provider-name="University of Twente">
+	<description url="http://composestar.sourceforge.net">
+		%description
+	</description>
+   
+	<copyright url="http://trese.ewi.utwente.nl/">
+		(c) 2007, University of Twente
+	</copyright>
+
+	<license url="lgpl-2.1.txt">
+		%license
+	</license>
+
+	<url>
+		<update label="%updateSiteName" url="http://composestar.sourceforge.net"/>
+	</url>
+
+	<requires>
+		<import feature="org.eclipse.jdt" version="3.2" match="greaterOrEqual"/>
+	</requires>
+
+	<plugin id="composestar.core" download-size="0" install-size="0" version="@version.core@"/>
+	<plugin id="composestar.java" download-size="0" install-size="0" version="@version.java@"/>
+</feature>

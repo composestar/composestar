@@ -40,7 +40,11 @@
 	
 	<!-- jar -->
 	<target name="jar" depends="compile">
-		<jar destfile="${out.dist}/ComposestarEclipseCore.jar" manifest="META-INF/MANIFEST.MF">
+		<copy file="META-INF/MANIFEST.MF" tofile="${out.build}/META-INF/MANIFEST.MF"/>	 
+		<manifest file="${out.build}/META-INF/MANIFEST.MF" mode="update">
+			<attribute name="Bundle-Version" value="${version.core}"/>
+		</manifest>
+		<jar destfile="${out.dist}/ComposestarEclipseCore.jar" manifest="${out.build}/META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}" />
 		</jar>
 	</target>
@@ -51,10 +55,7 @@
 			<fileset dir="${out.dist}" />
 		</copy>
 		<copy todir="${eclipse.pluginsdir.core}${file.separator}META-INF">
-			<fileset dir="META-INF" />
+			<fileset dir="${out.build}/META-INF" />
 		</copy>
-		<manifest file="${eclipse.pluginsdir.core}/META-INF/MANIFEST.MF" mode="update">
-			<attribute name="Bundle-Version" value="${version.core}"/>
-		</manifest>
 	</target>
 </project>

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Composestar Eclipse Plugin C
-Bundle-SymbolicName: Composestar.Eclipse.Plugin.C;singleton:=true
+Bundle-SymbolicName: composestar.c;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-ClassPath: ComposestarEclipseC.jar
 Bundle-Activator: ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin
@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.ui.console,
  org.eclipse.jdt.core,
- Composestar.Eclipse.Plugin.Core
+ composestar.core
 Eclipse-LazyStart: true
 Eclipse-AutoStart: true
 Bundle-Vendor: University of Twente

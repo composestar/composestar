@@ -41,8 +41,15 @@ public class ComposestarProjectWizardSecondPageEx extends JavaProjectWizardSecon
 		{
 			List cpEntries = new ArrayList(Arrays.asList(defaultEntries));
 
-			final IPath composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
+			IPath composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
 					.getAbsolutePath("/binaries/ComposestarRuntimeInterpreter.jar")));
+			cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null));
+			
+			composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
+					.getAbsolutePath("/binaries/ComposestarCore.jar")));
+			cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null));
+			composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
+					.getAbsolutePath("/binaries/ComposestarJava.jar")));
 			cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null));
 
 			defaultEntries = (IClasspathEntry[]) cpEntries.toArray(new IClasspathEntry[cpEntries.size()]);

@@ -398,9 +398,9 @@ Common routines. Always include this file in every build.xml file
 			<fileset dir="${eclipse.pluginsdir}" includes="*.jar"/>
 		</path>
 		
-		<property name="eclipse.pluginsdir.core"	value="${eclipse.home}${file.separator}plugins${file.separator}Composestar.Core_${version.core}"/>
-		<property name="eclipse.pluginsdir.java"	value="${eclipse.home}${file.separator}plugins${file.separator}Composestar.Java_${version.core}"/>
-		<property name="eclipse.pluginsdir.c"		value="${eclipse.home}${file.separator}plugins${file.separator}Composestar.C_${version.core}"/>
+		<property name="eclipse.pluginsdir.core"	value="${eclipse.home}${file.separator}plugins${file.separator}composestar.core_${version.core}"/>
+		<property name="eclipse.pluginsdir.java"	value="${eclipse.home}${file.separator}plugins${file.separator}composestar.java_${version.java}"/>
+		<property name="eclipse.pluginsdir.c"		value="${eclipse.home}${file.separator}plugins${file.separator}composestar.c_${version.c}"/>
 	</target>
 	
 	<!-- generic target to rebuild all -->

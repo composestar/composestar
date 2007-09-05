@@ -203,11 +203,14 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 				.getAbsolutePath("/binaries/ComposestarCORE.jar"));
 		String cstarjava = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
 				.getAbsolutePath("/binaries/ComposestarJava.jar"));
+		String cstarrt = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
+				.getAbsolutePath("/binaries/ComposestarRuntimeInterpreter.jar"));
 		String prolog = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
 				.getAbsolutePath("/binaries/prolog/prolog.jar"));
 
 		classpath.add(cstarcore);
 		classpath.add(cstarjava);
+		classpath.add(cstarrt);
 		classpath.add(prolog);
 	}
 

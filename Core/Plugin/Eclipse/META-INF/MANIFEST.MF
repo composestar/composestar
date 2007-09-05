@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Composestar Eclipse Plugin Core
-Bundle-SymbolicName: Composestar.Eclipse.Plugin.Core
+Bundle-Name: Compose*/Core
+Bundle-SymbolicName: composestar.core
 Bundle-Version: 0.0.0
 Bundle-Localization: plugin
 Bundle-ClassPath: ComposestarEclipseCore.jar

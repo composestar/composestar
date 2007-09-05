@@ -93,18 +93,22 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 		projectConfig.addProperty("name", selectedProjects[0].getName());
 
 		// make sure ComposestarRuntimeInterpreter.jar is properly referenced
-		for (int i = 0; i < projectConfig.getDependencies().size(); i++)
+		final String[] cstarDeps = { "composestarruntimeinterpreter.jar", "composestarcore.jar", "composestarjava.jar" };
+		for (String csdep : cstarDeps)
 		{
-			String dep = (String) projectConfig.getDependencies().get(i);
-			if (dep.toLowerCase().endsWith("composestarruntimeinterpreter.jar"))
+			for (int i = 0; i < projectConfig.getDependencies().size(); i++)
 			{
-				File runtime = new File(dep);
-				if (!runtime.exists())
+				String dep = (String) projectConfig.getDependencies().get(i);
+				if (dep.toLowerCase().endsWith(csdep))
 				{
-					dep = ComposestarEclipsePluginPlugin.getAbsolutePath("/binaries/ComposestarRuntimeInterpreter.jar");
-					projectConfig.getDependencies().set(i, dep);
+					File runtime = new File(dep);
+					if (!runtime.exists())
+					{
+						dep = ComposestarEclipsePluginPlugin.getAbsolutePath("/binaries/" + csdep);
+						projectConfig.getDependencies().set(i, dep);
+					}
+					break;
 				}
-				break;
 			}
 		}
 
@@ -274,7 +278,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 					projectConfig.addDependency(FileUtils.fixFilename(classpaths[i].getPath().toOSString()));
 				}
 				else if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_VARIABLE)
-				{					
+				{
 					IClasspathEntry entry = JavaCore.getResolvedClasspathEntry(classpaths[i]);
 					if (entry != null)
 					{

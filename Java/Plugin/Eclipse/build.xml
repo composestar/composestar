@@ -30,7 +30,7 @@
 	
 	
 	<!-- build -->	
-	<target name="build" depends="init_local,compile,jar" description="compile the eclipse plugin" />
+	<target name="build" depends="init_local,compile,jar,feature" description="compile the eclipse plugin" />
 
 	<!-- compile -->
 	<target name="compile" depends="init_local" >
@@ -44,9 +44,21 @@
 	
 	<!-- create jar -->
 	<target name="jar">
-		<jar destfile="${out.dist}/ComposestarEclipseJava.jar" manifest="META-INF/MANIFEST.MF">
+		<copy file="META-INF/MANIFEST.MF" tofile="${out.build}/META-INF/MANIFEST.MF"/>
+		<manifest file="${out.build}/META-INF/MANIFEST.MF" mode="update">
+			<attribute name="Bundle-Version" value="${version.java}"/>
+		</manifest>		
+		<jar destfile="${out.dist}/ComposestarEclipseJava.jar" manifest="${out.build}/META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}" />
 		</jar>
+	</target>
+	
+	<target name="feature" depends="init_local" description="Create the eclipse feature.xml file">
+		<copy file="feature.template.xml" tofile="feature.xml" overwrite="true"/>
+		<replace file="feature.xml" >
+			<replacefilter token="@version.core@" value="${version.core}"/>
+			<replacefilter token="@version.java@" value="${version.java}"/>
+		</replace>
 	</target>
 	
 	<!-- install -->	
@@ -60,13 +72,26 @@
 		<copy todir="${eclipse.pluginsdir.java}">
 			<fileset dir=".">
 				<include name="plugin.*" />
+				<include name="about.*" />
+			</fileset>
+			<fileset dir="${out.build}">
 				<include name="META-INF/*" />
 			</fileset>
+			<fileset dir="${build.core}/Resources">
+				<include name="logo-32x32.gif" />
+			</fileset>
 		</copy>
-	
-		<manifest file="${eclipse.pluginsdir.java}/META-INF/MANIFEST.MF" mode="update">
-			<attribute name="Bundle-Version" value="${version.java}"/>
-		</manifest>
+
+		<!-- feature -->
+		<copy todir="${eclipse.home}/features/composestar.java_${version.java}">
+			<fileset dir=".">
+				<include name="feature.xml" />
+				<include name="feature.properties" />
+			</fileset>
+			<fileset dir="${build.core}/Resources">
+				<include name="lgpl-2.1.txt" />
+			</fileset>
+		</copy>			
 	</target>
 	
 </project>

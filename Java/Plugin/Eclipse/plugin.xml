@@ -7,7 +7,7 @@
 	--------------------------------------------------
   	<extension point="org.eclipse.ui.preferencePages">
  		<page
- 			id="composestar.eclipse.plugin.java.preferencepage"
+ 			id="composestar.java.preferencepage"
  			name="%COMPOSESTAR"
  			class="ComposestarEclipsePlugin.Java.UI.JavaComposestarPreferencePage">
  		</page>
@@ -15,7 +15,7 @@
 
  	<extension point="org.eclipse.ui.propertyPages">
  		<page
- 			id="composestar.eclipse.plugin.java.propertypage"
+ 			id="composestar.java.propertypage"
  			name="%COMPOSESTAR"
  			objectClass="org.eclipse.core.resources.IProject"
  			class="ComposestarEclipsePlugin.Java.UI.JavaComposestarPropertyPage"
@@ -27,9 +27,9 @@
       <objectContribution
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
-            id="composestar.eclipse.plugin.java.c1">
+            id="composestar.java.c1">
         <menu
-        	id="composestar.eclipse.plugin.java.popupmenu"
+        	id="composestar.java.popupmenu"
        		label="%COMPOSESTAR"
        		path="additions">
        		<separator name="slot1"/>
@@ -37,36 +37,36 @@
         <action
               class="ComposestarEclipsePlugin.Core.Actions.VisAction"
               enablesFor="1"
-              id="composestar.eclipse.plugin.java.action.visualization"
+              id="composestar.java.action.visualization"
               label="%COMPOSESTAR_POPUP_LABEL_VIS"
-              menubarPath="composestar.eclipse.plugin.java.popupmenu/slot1"/>
+              menubarPath="composestar.java.popupmenu/slot1"/>
        	<action
             label="%COMPOSESTAR_POPUP_LABEL_RUN"
-            menubarPath="composestar.eclipse.plugin.java.popupmenu/slot1" 
+            menubarPath="composestar.java.popupmenu/slot1" 
             class="ComposestarEclipsePlugin.Java.Actions.JavaRunAction"
             enablesFor="1"
-            id="composestar.eclipse.plugin.java.action.run">
+            id="composestar.java.action.run">
         </action>
         <action
             label="%COMPOSESTAR_POPUP_LABEL_BUILD"
-            menubarPath="composestar.eclipse.plugin.java.popupmenu/slot1" 
+            menubarPath="composestar.java.popupmenu/slot1" 
             class="ComposestarEclipsePlugin.Java.Actions.JavaBuildAction"
             enablesFor="1"
-            id="composestar.eclipse.plugin.java.action.build">
+            id="composestar.java.action.build">
         </action>
       </objectContribution>
     </extension>
     
     <extension point="org.eclipse.ui.newWizards"> 
       <category 
-        id="composestar.eclipse.plugin.java.category.wizards" 
+        id="composestar.java.category.wizards" 
         name="%COMPOSESTAR"> 
       </category> 
       <wizard 
-          id="composestar.eclipse.plugin.java.wizards.project" 
+          id="composestar.java.wizards.project" 
           name="%COMPOSESTAR_JAVA_PROJECT" 
-          category="composestar.eclipse.plugin.java.category.wizards"
-          icon="icons/logo.gif" 
+          category="composestar.java.category.wizards"
+          icon="logo-32x32.gif" 
           class="ComposestarEclipsePlugin.Java.UI.Wizards.ComposestarProjectWizard"
           project="true"> 
       </wizard> 
@@ -75,10 +75,10 @@
     <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            type="composestar.eclipse.plugin.java.launching.application"
+            type="composestar.java.launching.application"
             helpContextId="org.eclipse.jdt.debug.ui.launchConfigHelpContext.local_java_application"
             class="ComposestarEclipsePlugin.Java.UI.ComposestarJavaApplicationTabGroup"
-            id="composestar.eclipse.plugin.java.launchConfigurationTabGroup">
+            id="composestar.java.launchConfigurationTabGroup">
             <launchMode
                   mode="run"
                   description="%COMPOSESTAR_JAVA_LAUNCH_DESCRIPTION">
@@ -89,8 +89,8 @@
     <!-- <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     	<launchConfigurationTypeImage
         	icon="icons/logo.gif"
-        	configTypeID="composestar.eclipse.plugin.java.launching.application"
-        	id="composestar.eclipse.plugin.java.launchConfigurationTypeImage">
+        	configTypeID="composestar.java.launching.application"
+        	id="composestar.java.launchConfigurationTypeImage">
     	</launchConfigurationTypeImage>
 	</extension> -->
 
@@ -102,7 +102,7 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="org.eclipse.jdt.launching.JavaLaunchDelegate"
-            id="composestar.eclipse.plugin.java.launching.application"
+            id="composestar.java.launching.application"
             migrationDelegate="org.eclipse.jdt.internal.launching.JavaMigrationDelegate"
             modes="run"
             name="%COMPOSESTAR_JAVA_APPLICATION"
@@ -114,7 +114,7 @@
     <extension point="org.eclipse.jdt.launching.classpathProviders">
   		<classpathProvider
    			class="ComposestarEclipsePlugin.Java.ComposestarClasspathProvider"
-   			id="composestar.eclipse.plugin.java.runtime.libraries">
+   			id="composestar.java.runtime.libraries">
   		</classpathProvider>
  	</extension>
     
