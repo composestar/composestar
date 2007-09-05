@@ -85,23 +85,8 @@
 	</target>
 	
 	<target name="dump-runtime-classes" depends="init" description="Produce a list of classes used in the .NET runtime">
-		<xslt basedir="${build.core}/Compiletime/src" destdir="tmp" extension=".txt" force="true">
+		<xslt basedir="${build.core}/Compiletime/src" destdir="tmp" style="vsjclasses.xslt" extension=".txt" force="true">
 			<include name="**/*.vjsproj" />
-			<style>
-				<?xml version="1.0" encoding="UTF-8"?>
-				<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-					
-					<xsl:output method="text" indent="yes"/>
-					
-					<xsl:template match="/">
-						<xsl:for-each select="VisualStudioProject/VISUALJSHARP/Files/Include/File">
-							<xsl:value-of select="@RelPath" />
-							<xsl:text>&#10;</xsl:text>					
-						</xsl:for-each>
-					</xsl:template>
-					
-				</xsl:stylesheet>
-			</style>
 		</xslt>
 		<concat destfile="RuntimeClasses.txt">
 			<fileset dir="tmp" includes="**/*.txt"/>
