@@ -29,7 +29,7 @@
 	</target>
 
 	<!-- build -->	
-	<target name="build" depends="init_local,compile,jar" description="compile the eclipse plugin">
+	<target name="build" depends="init_local,compile,jar,-distmisc" description="compile the eclipse plugin">
 	</target>
 		
 	
@@ -54,10 +54,8 @@
 		</jar>
 	</target>
 	
-	<!-- install -->	
-	<target name="install" depends="init_local,build" description="install the eclipse plugin">
-		<copy todir="${eclipse.pluginsdir.c}">
-			<fileset dir="${out.dist}" />
+	<target name="-distmisc" depends="init_local">
+		<copy todir="${out.dist}">
 			<fileset dir="${out.build}">
 				<include name="META-INF/*" />
 			</fileset>
@@ -69,6 +67,13 @@
 				
 				<exclude name="**/.svn" />
 			</fileset>
+		</copy>
+	</target>
+	
+	<!-- install -->	
+	<target name="install" depends="init_local,build" description="install the eclipse plugin">
+		<copy todir="${eclipse.pluginsdir.c}">
+			<fileset dir="${out.dist}" />
 		</copy>
 	</target>
 	

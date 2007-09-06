@@ -18,19 +18,23 @@
 	</description>
 	
 	<target name="init_local" depends="init_eclipse">
+		<property name="out.dist.feature"  value="${out.dist}-feature"/>
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
+		<mkdir dir="${out.dist.feature}"/>
 	</target>
 	
 	<!-- clean -->
 	<target name="clean" depends="init">
+		<property name="out.dist.feature"  value="${out.dist}-feature"/>
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
+		<delete dir="${out.dist.feature}"/>
 	</target>
 	
 	
 	<!-- build -->	
-	<target name="build" depends="init_local,compile,jar,feature" description="compile the eclipse plugin" />
+	<target name="build" depends="init_local,compile,jar,-distmisc,feature" description="compile the eclipse plugin" />
 
 	<!-- compile -->
 	<target name="compile" depends="init_local" >
@@ -54,22 +58,24 @@
 	</target>
 	
 	<target name="feature" depends="init_local" description="Create the eclipse feature.xml file">
-		<copy file="feature.template.xml" tofile="feature.xml" overwrite="true"/>
-		<replace file="feature.xml" >
+		<copy file="feature.template.xml" tofile="${out.dist.feature}/feature.xml" overwrite="true"/>
+		<replace file="${out.dist.feature}/feature.xml" >
 			<replacefilter token="@version.core@" value="${version.core}"/>
 			<replacefilter token="@version.java@" value="${version.java}"/>
 		</replace>
+		
+		<copy todir="${out.dist.feature}">
+			<fileset dir=".">
+				<include name="feature.properties" />
+			</fileset>
+			<fileset dir="${build.core}/Resources">
+				<include name="Licenses/*" />
+			</fileset>
+		</copy>	
 	</target>
 	
-	<!-- install -->	
-	<target name="install" depends="build" description="install the eclipse plugin">
-		
-		<copy todir="${eclipse.pluginsdir.java}">
-			<fileset dir="${out.dist}" />
-		</copy>
-		
-		<!-- plugin files -->
-		<copy todir="${eclipse.pluginsdir.java}">
+	<target name="-distmisc" depends="init_local">
+		<copy todir="${out.dist}">
 			<fileset dir=".">
 				<include name="plugin.*" />
 				<include name="about.*" />
@@ -78,19 +84,18 @@
 				<include name="META-INF/*" />
 			</fileset>
 			<fileset dir="${build.core}/Resources">
-				<include name="logo-32x32.gif" />
+				<include name="logo-32x32.png" />
 			</fileset>
 		</copy>
-
-		<!-- feature -->
+	</target>
+	
+	<!-- install -->	
+	<target name="install" depends="build" description="install the eclipse plugin">
+		<copy todir="${eclipse.pluginsdir.java}">
+			<fileset dir="${out.dist}" />
+		</copy>
 		<copy todir="${eclipse.home}/features/composestar.java_${version.java}">
-			<fileset dir=".">
-				<include name="feature.xml" />
-				<include name="feature.properties" />
-			</fileset>
-			<fileset dir="${build.core}/Resources">
-				<include name="lgpl-2.1.txt" />
-			</fileset>
+			<fileset dir="${out.dist.feature}" />
 		</copy>			
 	</target>
 	

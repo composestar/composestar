@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+  <title>search | Open Source Initiative</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css" media="all">@import "/misc/drupal.css";</style><script type="text/javascript" src="/misc/drupal.js"></script>
+<script type="text/javascript" src="/misc/collapse.js"></script>
+<link rel="shortcut icon" href="/themes/os/favicon.ico" type="image/x-icon" />
+ <style type="text/css" media="all">@import "/themes/os/style.css";</style>  <script type="text/javascript"> 
+</script> 
+  <script type="text/javascript"> </script>
+ <!--[if lte IE 6]>
+ <style type="text/css" media="screen">
+   /* IE min-width trick */
+   div#wrapper1 { 
+     width:expression(((document.compatMode && document.compatMode=='CSS1Compat') ? document.documentElement.clientWidth : document.body.clientWidth) < 720 ? "720px" : "auto"); 
+     }
+  </style>
+  <![endif]-->
+</head>
+
+<body>
+<div class="hide">
+  <a href="#content" title="Skip the site navigation to go directly to the content">Skip to content</a>
+</div>
+<!-- closes #header-->
+<!-- START: HEADER -->
+<div id="wrapper1"> 
+ <div id="wrapper2">
+  <div class="header" id="header">
+<div class="headerpadding">  
+<!-- add change -->
+<img  src="/themes/os/images/bg_header_top_right.gif" id="header_corner_right_left"/>
+<!-- end of  
+change -->           <div id="site-name"><a href="/" title="Home"><img
+      src="/files/logo.gif" alt="Open Source Initiative Logo" /></a></div>
+            
+    <form action="/search/node"  method="post" id="search_theme_form">
+<div><div id="search" class="container-inline"><div class="form-item">
+ <input type="text" maxlength="128" name="edit[search_theme_form_keys]" id="edit-search_theme_form_keys"  size="15" value="" title="Enter the terms you wish to search for." class="form-text" />
+</div>
+<input type="submit" name="op" value="Search"  class="form-submit" />
+<input type="hidden" name="edit[form_id]" id="edit-search-theme-form" value="search_theme_form"  />
+</div>
+</div></form>
+    </div>
+   </div>
+<!-- orange line under header -->
+<div class="or_line">&nbsp;
+</div>
+
+<!-- END: HEADER-->
+<hr class="hide" />  
+    <div class="columns">
+            <div class="leftcolumn sidebar" id="sidebar-left">
+        <div class="leftpadding">
+            <div class="block block-user" id="block-user-1">
+<h2 class="title"><span>Navigation </span></h2>
+<div class="content">
+
+<ul class="menu">
+<li class="collapsed"><a href="/docs/osd" title="The actual OSD defining what constitutes an Open Source licence">The Open Source Definition</a></li>
+<li class="collapsed"><a href="/licenses">Open Source Licenses</a></li>
+<li class="collapsed"><a href="/projects" title="Current undertakings of the OSI">Projects/Initiatives</a></li>
+<li class="collapsed"><a href="/node/6" title="Mailing lists, events, donating">How to get involved with OSI</a></li>
+<li class="leaf"><a href="/links" title="Links and References to Open Source">Links</a></li>
+<li class="collapsed"><a href="/about">About</a></li>
+<li class="collapsed"><a href="/forum" title="Public forums for discussing things OSI">Forums</a></li>
+<li class="leaf"><a href="/sitemap" title="Quick guide to finding pages on the OSI site">OpenSource.Org Site Map</a></li>
+<li class="leaf"><a href="/blog" title="A group blog / aggregation point for OSI Board Member blogs">OSI Board Blog</a></li>
+
+</ul>
+<div class="bottom"> </div>
+</div>
+</div>
+
+<div class="block block-block" id="block-block-2">
+<h2 class="title"><span>Contact </span></h2>
+<div class="content">
+<ul>
+<li class="leaf">OSI Board <a href="mailto:osi@opensource.org">email</a></li>
+<li class="leaf">Site Admin <a href="mailto:webmaster@opensource.org">email</a></li>
+</ul><div class="bottom"> </div>
+</div>
+</div>
+
+<div class="block block-user" id="block-user-0">
+<h2 class="title"><span>User login </span></h2>
+<div class="content">
+<form action="/search/node?destination=search%2Fnode"  method="post" id="user-login-form">
+<div><div class="form-item">
+ <label for="edit-name">Username: <span class="form-required" title="This field is required.">*</span></label>
+ <input type="text" maxlength="60" name="edit[name]" id="edit-name"  size="15" value="" class="form-text required" />
+</div>
+<div class="form-item">
+ <label for="edit-pass">Password: <span class="form-required" title="This field is required.">*</span></label>
+ <input type="password" name="edit[pass]" id="edit-pass"  maxlength="60"  size="15"  class="form-text required" />
+</div>
+<input type="submit" name="op" value="Log in"  class="form-submit" />
+<div class="item-list"><ul><li><a href="/user/register" title="Create a new user account.">Create new account</a></li><li><a href="/user/password" title="Request new password via e-mail.">Request new password</a></li></ul></div><input type="hidden" name="edit[form_id]" id="edit-user-login-block" value="user_login_block"  />
+
+</div></form>
+<div class="bottom"> </div>
+</div>
+</div>
+
+<div class="block block-block" id="block-block-1">
+<h2 class="title"><span>Open Source News </span></h2>
+<div class="content">
+<ul>
+<li class="leaf"><a href="http://osdir.com">OSDir.com</a></li>
+<li class="leaf"><a href="http://lxer.com">LXer</a></li>
+<li class="leaf"><a href="http://newsforge.com">NewsForge</a></li>
+<li class="leaf"><a href="http://fossplanet.com">FOSSPlanet</a></li>
+<li class="leaf"><a href="http://lwn.net/">LWN</a></li>
+</ul>
+<div class="bottom"> </div>
+</div>
+</div>
+
+          </div>
+        </div>
+                  <hr class="hide" />  
+      <div class="centercolumn">
+        <div class="centerpadding">
+          <div class="main-content" id="main">
+            
+                              <div id="breadcrumbs">
+                  <div class="breadcrumb"><a href="/">Home</a></div> <span class="breadcrumb">  &raquo;  Search</span>
+                </div>
+                                                                <h1 id="title">search</h1>
+                                    	    
+            <!-- start main content -->
+            <!-- begin content --><form action="/search/node"  method="post" id="search_form" class="search-form">
+<div><div class="form-item">
+ <label>Enter your keywords: </label>
+ <div class="container-inline"><div class="form-item">
+ <input type="text" maxlength="255" name="edit[keys]" id="edit-keys"  size="40" value="" class="form-text" />
+</div>
+<input type="submit" name="op" value="Search"  class="form-submit" />
+</div>
+</div>
+<input type="hidden" name="edit[form_id]" id="edit-search-form" value="search_form"  />
+<fieldset class="search-advanced collapsible collapsed"><legend>Advanced search</legend><div class="criterion"><div class="form-item">
+ <label for="edit-or">Containing any of the words: </label>
+ <input type="text" maxlength="255" name="edit[or]" id="edit-or"  size="30" value="" class="form-text" />
+</div>
+<div class="form-item">
+ <label for="edit-phrase">Containing the phrase: </label>
+ <input type="text" maxlength="255" name="edit[phrase]" id="edit-phrase"  size="30" value="" class="form-text" />
+</div>
+<div class="form-item">
+ <label for="edit-negative">Containing none of the words: </label>
+ <input type="text" maxlength="255" name="edit[negative]" id="edit-negative"  size="30" value="" class="form-text" />
+</div>
+</div><div class="criterion"><div class="form-item">
+ <label for="edit-category">Only in the category(s): </label>
+ <select name="edit[category][]" multiple="multiple"  class="form-select" id="edit-category"  size="10"><optgroup label="forums"><option value="1">general</option><option value="3">Membership</option><option value="4">-Sandbox</option><option value="2">site help</option></optgroup></select>
+</div>
+</div><div class="criterion"><div class="form-item">
+ <label>Only of the type(s): </label>
+ <div class="form-item">
+ <label class="option"><input type="checkbox" name="edit[type][blog]" id="edit-type-blog" value="blog"   class="form-checkbox" /> blog entry</label>
+</div>
+<div class="form-item">
+ <label class="option"><input type="checkbox" name="edit[type][forum]" id="edit-type-forum" value="forum"   class="form-checkbox" /> forum topic</label>
+</div>
+<div class="form-item">
+ <label class="option"><input type="checkbox" name="edit[type][page]" id="edit-type-page" value="page"   class="form-checkbox" /> page</label>
+</div>
+
+</div>
+</div><div class="action"><input type="submit" name="op" value="Advanced search"  class="form-submit" />
+</div><br class="clear" /></fieldset>
+
+</div></form>
+<!-- end content -->            <!-- end main content -->
+          </div><!-- main -->
+        </div>
+      </div>
+    </div>
+    <div class="clearing">&nbsp;</div>
+    <hr class="hide" />
+<!-- START: FOOTER-->
+    <div id="footer" class="footer" >
+             <a rel="license" href="http://creativecommons.org/licenses/by/2.5/"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by/2.5/88x31.png" /></a><br />Opensource.org site content is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5  License</a>.
+	
+		
+	
+	|  <a href="../ToS">Terms of Service</a>
+                </div>
+<!-- END: FOOTER -->
+	</div><!-- wrapper -->
+</div><!-- outer_wrapper -->
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-2283663-1";
+urchinTracker();
+</script> 
+</body>
+</html>
+

@@ -47,15 +47,15 @@
 		<jar destfile="${out.dist}/ComposestarEclipseCore.jar" manifest="${out.build}/META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}" />
 		</jar>
+		<copy todir="${out.dist}/META-INF">
+			<fileset dir="${out.build}/META-INF" />
+		</copy>
 	</target>
 	
 	<!-- install -->	
 	<target name="install" depends="init_local,build" description="">	
 		<copy todir="${eclipse.pluginsdir.core}">
 			<fileset dir="${out.dist}" />
-		</copy>
-		<copy todir="${eclipse.pluginsdir.core}${file.separator}META-INF">
-			<fileset dir="${out.build}/META-INF" />
 		</copy>
 	</target>
 </project>

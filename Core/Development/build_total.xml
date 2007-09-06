@@ -337,7 +337,7 @@
 	<!-- fancy selection -->	
 	<target name="select">	
 		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar"/>
-		<antmenu image="${basedir}/logo.png" title="Compose* Build">
+		<antmenu image="${basedir}/../Resources/logo-64x64.png" title="Compose* Build">
 		
 			<antMenuItem name="Advanced" >
 				<antMenuItem name="Report" target="report"/>

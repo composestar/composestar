@@ -1,0 +1,22 @@
+GNU Lesser Public License 2.1
+  Compose*
+  JGraph
+  
+GNU General Public License 2.0
+  Kernel Prolog
+
+Apache License 2.0
+  Groove
+  log4j
+  Castor 0.9.7+ (part of groove)
+  Cerces (part of groove)
+
+BSD Like
+  Castor pre-0.9.7 (part of groove)
+
+Mozilla Public License 1.1
+  Javassist
+  
+Public Domain
+  ANTLR
+  
