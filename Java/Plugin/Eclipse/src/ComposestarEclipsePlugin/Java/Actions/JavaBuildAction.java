@@ -1,6 +1,5 @@
 package ComposestarEclipsePlugin.Java.Actions;
 
-import java.io.File;
 import java.util.HashSet;
 
 import org.eclipse.core.resources.IProject;
@@ -93,24 +92,16 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 		projectConfig.addProperty("language", language);
 		projectConfig.addProperty("name", selectedProjects[0].getName());
 
-		// make sure ComposestarRuntimeInterpreter.jar is properly referenced
-		for (String csdep : IComposestarJavaConstants.COMPILETIME_LIBS)
-		{
-			for (int i = 0; i < projectConfig.getDependencies().size(); i++)
-			{
-				String dep = (String) projectConfig.getDependencies().get(i);
-				if (dep.toLowerCase().endsWith(csdep))
-				{
-					File runtime = new File(dep);
-					if (!runtime.exists())
-					{
-						dep = ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.BIN_DIR + csdep);
-						projectConfig.getDependencies().set(i, dep);
-					}
-					break;
-				}
-			}
-		}
+		/*
+		 * CStarJavaRuntimeContainer runtimeCon = new
+		 * CStarJavaRuntimeContainer(); String[] runtimeLibs =
+		 * runtimeCon.getClasspath(); for (String rtlibPath : runtimeLibs) {
+		 * String rtlib = (new File(rtlibPath)).getName(); for (int i = 0; i <
+		 * projectConfig.getDependencies().size(); i++) { String dep = (String)
+		 * projectConfig.getDependencies().get(i); if
+		 * (dep.toLowerCase().endsWith(rtlib)) {
+		 * projectConfig.getDependencies().set(i, rtlibPath); break; } } }
+		 */
 
 		// load project compose* settings
 		loadDialogSettings(projectLocation.toOSString());
@@ -297,7 +288,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 						}
 					}
 				}
-			}			
+			}
 		}
 		catch (JavaModelException jme)
 		{

@@ -24,9 +24,6 @@
 
 package ComposestarEclipsePlugin.Java;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathContainer;
@@ -50,14 +47,36 @@ public class CStarJavaRuntimeContainer implements IClasspathContainer
 
 	public IClasspathEntry[] getClasspathEntries()
 	{
-		List<IClasspathEntry> cpEntries = new ArrayList<IClasspathEntry>();
-		for (String lib : IComposestarJavaConstants.COMPILETIME_LIBS)
+		String[] cp = getClasspath();
+		IClasspathEntry[] cpEntries = new IClasspathEntry[cp.length];
+		for (int i = 0; i < cp.length; i++)
 		{
-			IPath composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-					.getAbsolutePath(IComposestarConstants.BIN_DIR + lib)));
-			cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null, false));
+			cpEntries[i] = JavaCore.newLibraryEntry(new Path(cp[i]), null, null, false);
 		}
-		return (IClasspathEntry[]) cpEntries.toArray(new IClasspathEntry[cpEntries.size()]);
+		return cpEntries;
+	}
+
+	/**
+	 * Return the classpath entries
+	 */
+	public String[] getClasspath()
+	{
+		String[] cp = new String[3];
+		// Compiletime Core
+		// TODO: shouldn't be needed
+		cp[0] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
+				+ "ComposestarCORE.jar"));
+
+		// Compiletime Java
+		// TODO: shouldn't be needed
+		cp[1] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
+				+ "ComposestarJava.jar", IComposestarJavaConstants.BUNDLE_ID));
+
+		// Runtime Java
+		cp[2] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
+				+ "ComposestarRuntimeInterpreter.jar", IComposestarJavaConstants.BUNDLE_ID));
+
+		return cp;
 	}
 
 	public String getDescription()

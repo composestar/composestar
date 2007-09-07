@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Compose*">
-	<item key="classpath" value="%composestar%/lib/ComposestarCORE.jar;%composestar%/lib/ComposestarJava.jar;%composestar%/lib/antlr.jar;%composestar%/lib/log4j-1.2.14.jar;%composestar%/lib/prolog.jar;%composestar%/lib/castor-0_9_5_2-xml.jar;%composestar%/lib/groove-1_2_0.jar;%composestar%/lib/jgraph.jar;%composestar%/lib/xerces-2_6_0-xercesImpl.jar;%composestar%/lib/xerces-2_6_0-xml-apis.jar;%composestar%/lib/javassist.jar;%composestar%/lib/ComposestarRuntimeInterpreter.jar"/>
+	<item key="classpath" value=""/>
 	<item key="incremental" value="False"/>
 	<item key="runDebugLevel" value="1"/>
 	<item key="mainClass" value="BasicTests.MainClass"/>

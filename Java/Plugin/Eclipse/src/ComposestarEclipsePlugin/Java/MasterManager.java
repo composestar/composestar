@@ -1,5 +1,7 @@
 package ComposestarEclipsePlugin.Java;
 
+import java.util.List;
+
 import org.eclipse.jface.dialogs.IDialogSettings;
 
 import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
@@ -66,9 +68,24 @@ public class MasterManager
 		String basePath = FileUtils.getDirectoryPart(bcmanager.buildconfigFile);
 		try
 		{
+			List<String> cp = ComposestarEclipsePluginPlugin.getJarClassPath(ComposestarEclipsePluginPlugin
+					.getAbsolutePath(IComposestarConstants.LIB_DIR + "ComposestarCORE.jar"));
+			cp.addAll(ComposestarEclipsePluginPlugin.getJarClassPath(ComposestarEclipsePluginPlugin.getAbsolutePath(
+					IComposestarConstants.LIB_DIR + "ComposestarJava.jar", IComposestarJavaConstants.BUNDLE_ID)));
+
+			StringBuilder defaultCp = new StringBuilder();
+			for (String cpEntry : cp)
+			{
+				defaultCp.append(cpEntry);
+				defaultCp.append(";");
+			}
+
 			String pluginPath = ComposestarEclipsePluginPlugin.getAbsolutePath("");
 			String classPath = settings.get("classpath");
-			classPath = classPath.replaceAll("%composestar%", pluginPath);
+			classPath = defaultCp.toString() + classPath.replaceAll("%composestar%", pluginPath);
+
+			Debug.instance().Log("Classpath = " + classPath);
+
 			String command = "java " + jvmOptions + " -cp \"" + classPath + "\" " + mainClass + " " + "\""
 					+ bcmanager.buildconfigFile + "\"";
 			if (logOutput)

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Platforms>
-  <Platform name="Java" mainClass="Composestar.Java.MASTER.JavaMaster" classPath="%composestar%/lib/ComposestarCORE.jar;%composestar%/lib/ComposestarJava.jar;%composestar%/lib/antlr.jar;%composestar%/lib/log4j-1.2.14.jar;%composestar%/lib/prolog.jar;%composestar%/lib/castor-0_9_5_2-xml.jar;%composestar%/lib/groove-1_2_0.jar;%composestar%/lib/groove/jgraph.jar;%composestar%/lib/xerces-2_6_0-xercesImpl.jar;%composestar%/lib/xerces-2_6_0-xml-apis.jar;%composestar%/lib/javassist.jar" options="">
+  <Platform name="Java" mainClass="Composestar.Java.MASTER.JavaMaster" classPath="" options="">
     <Languages defaultLanguage="Java">
       <Language name="Java">
-        <Compiler name="JavaCompiler" executable="javac.exe" options="" implementedBy="Composestar.Java.COMP.JavaCompiler">
+        <Compiler name="JavaCompiler" executable="javac" options="" implementedBy="Composestar.Java.COMP.JavaCompiler">
           <Actions>
             <Action name="Compile" argument="{OPTIONS} {SOURCES}" />
             <Action name="CreateJar" argument="jar {OPTIONS} {NAME} {CLASSES}" />

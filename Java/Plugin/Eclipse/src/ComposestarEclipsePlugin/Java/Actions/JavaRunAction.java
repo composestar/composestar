@@ -138,9 +138,6 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 	{
 		// get dependencies
 		getDependencies();
-
-		// get composestar binaries
-		getCStarBinaries();
 	}
 
 	/**
@@ -194,17 +191,6 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 			Debug.instance().Log("Program run failure reported: " + e.getCause().getMessage(),
 					IComposestarConstants.MSG_ERROR);
 			completed = false;
-		}
-	}
-
-	private void getCStarBinaries()
-	{
-		// FIXME: why is this necessary? should not be hardcoded...
-		for (String lib : IComposestarJavaConstants.RUNTIME_LIBS)
-		{
-			String rsolvedlib = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-					.getAbsolutePath(IComposestarConstants.BIN_DIR + lib));
-			classpath.add(rsolvedlib);
 		}
 	}
 

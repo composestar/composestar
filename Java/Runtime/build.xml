@@ -48,7 +48,7 @@
 	</target>
 		
 	<target name="install" depends="init_eclipse,build" description="install the java runtime">
-		<copy todir="${eclipse.pluginsdir.core}${file.separator}lib">
+		<copy todir="${eclipse.pluginsdir.java}${file.separator}lib">
 			<fileset dir="${out.dist}"/>
 		</copy>
 	</target>

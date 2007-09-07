@@ -26,27 +26,15 @@ package ComposestarEclipsePlugin.Java;
 
 /**
  * Constants used in the Compose* /Java Eclipse Plugin
+ * 
  * @author Michiel Hendriks
  */
 public interface IComposestarJavaConstants
 {
 	public static final String BUNDLE_ID = "composestar.java";
-	
-	public static final String[] RUNTIME_LIBS = {
-		"ComposestarCORE.jar",
-		"ComposestarJava.jar",
-		"ComposestarRuntimeInterpreter.jar",
-		"prolog.jar"
-	};
-	
-	public static final String[] COMPILETIME_LIBS = {
-		"ComposestarCORE.jar",
-		"ComposestarJava.jar",
-		"ComposestarRuntimeInterpreter.jar"
-	};
-	
+
 	/**
 	 * Base classpath container name
-	 */   	
+	 */
 	public static final String CP_CONTAINER = "composestar.java.classpath";
 }

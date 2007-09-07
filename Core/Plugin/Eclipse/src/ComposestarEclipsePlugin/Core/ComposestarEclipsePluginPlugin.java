@@ -3,6 +3,11 @@ package ComposestarEclipsePlugin.Core;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.jar.JarFile;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
@@ -192,5 +197,40 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 		{
 			// spec'ed to ignore problems
 		}
+	}
+
+	public static Map<String, List<String>> jarClassPaths = new HashMap<String, List<String>>();
+
+	public static List<String> getJarClassPath(String jar)
+	{
+		if (!jarClassPaths.containsKey(jar))
+		{
+			List<String> lst = new ArrayList<String>();
+			try
+			{
+				File jarf = new File(jar);
+				JarFile jarFile = new JarFile(jarf);
+				String cp = jarFile.getManifest().getMainAttributes().getValue("Class-Path");
+				lst.add(jarf.getAbsolutePath());
+				if (cp != null)
+				{
+					Debug.instance().Log("Class-Path: " + cp);
+					for (String entry : cp.split(" "))
+					{
+						File cpentry = new File(jarf.getParentFile(), entry);
+						if (cpentry.exists())
+						{
+							lst.add(cpentry.getAbsolutePath());
+						}
+					}
+				}
+			}
+			catch (IOException e)
+			{
+			}
+			Debug.instance().Log("result: " + lst);
+			jarClassPaths.put(jar, lst);
+		}
+		return jarClassPaths.get(jar);
 	}
 }
