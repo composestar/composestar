@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IJavaProject;
@@ -228,6 +229,18 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 					if (entry != null)
 					{
 						classpath.add(FileUtils.fixFilename(entry.getPath().toOSString()));
+					}
+				}
+				else if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_CONTAINER)
+				{
+					IClasspathContainer con = JavaCore.getClasspathContainer(classpaths[i].getPath(), javaProject);
+					if (con.getKind() != IClasspathContainer.K_DEFAULT_SYSTEM)
+					{
+						IClasspathEntry[] concps = con.getClasspathEntries();
+						for (IClasspathEntry cp : concps)
+						{
+							classpath.add(FileUtils.fixFilename(cp.getPath().toOSString()));
+						}
 					}
 				}
 			}
