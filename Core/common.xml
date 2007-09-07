@@ -133,11 +133,11 @@ Common routines. Always include this file in every build.xml file
 		<macrodef name="make">
 			<attribute name="target" default=""/>
 			<sequential>
-				<condition property="bin.make" value="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}make${file.separator}make" else="make">
+				<condition property="bin.make" value="${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}make${file.separator}make" else="make">
 					<os family="windows"/>
 				</condition>
 				<exec executable="${bin.make}" searchpath="true">
-					<env key="PATH" path="${env.PATH};${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}make${file.separator}"/>
+					<env key="PATH" path="${env.PATH};${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}make${file.separator}"/>
 					<arg value="@{target}"/>
 				</exec>
 			</sequential>
@@ -280,7 +280,7 @@ Common routines. Always include this file in every build.xml file
 		
 		<!-- register additional libraries -->
 		<path id="lib.core">
-			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries" includes="*/*.jar"/>
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib" includes="*/*.jar"/>
 		</path>
 		
 		<path id="lib.dotnet">
@@ -291,7 +291,7 @@ Common routines. Always include this file in every build.xml file
 		<path id="lib.java">
 			<path refid="lib.core"/>
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
-			<fileset dir="${build.java}${file.separator}Compiletime${file.separator}binaries" includes="*/*.jar"/>
+			<fileset dir="${build.java}${file.separator}Compiletime${file.separator}lib" includes="*/*.jar"/>
 		</path>
 		
 		<path id="lib.starlight">
@@ -337,7 +337,7 @@ Common routines. Always include this file in every build.xml file
 		<!-- checkstyle jars -->
 		<path id="lib.checkstyle">	  
 			<fileset dir="${build.core}${file.separator}Development${file.separator}checkstyle${file.separator}lib" includes="*.jar"/>
-			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}antlr" includes="*.jar"/>
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}antlr" includes="*.jar"/>
 		</path>
 		
 		<!-- register checkstyle task -->

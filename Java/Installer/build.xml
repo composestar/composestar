@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/Java/Installer" default="publish">
+
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
+		<and>
+			<not><isset property="build.core"/></not>
+			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml"/>
+		</and>
+	</condition>
+	
+	<import file="${build.core}${file.separator}common.xml"/>
+	
+	<target name="clean" description="clean intermediate files">
+		<ant target="clean" dir="eclipse" inheritRefs="true" />
+	</target>
+	
+	<target name="build"/>
+	
+	<target name="publish" description="publish installers">
+		<ant target="publish" dir="eclipse" inheritRefs="true" if="available.eclipse" />
+	</target>
+
+</project>

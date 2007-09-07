@@ -30,7 +30,7 @@ public class VisAction extends Action implements IWorkbenchWindowActionDelegate
 
 	protected void showViz()
 	{
-		String path = ComposestarEclipsePluginPlugin.getAbsolutePath("/Binaries");
+		String path = ComposestarEclipsePluginPlugin.getAbsolutePath("/lib");
 		String projectLocation = selectedProjects[0].getProject().getLocation().toOSString();
 		File cchz = new File(projectLocation, "ComposestarHistory.cchz");
 		if (!cchz.exists())

@@ -66,9 +66,9 @@
 	
 	<target name="install" depends="init_eclipse,build" description="Install the Java compiletime">
 		<!-- install to eclipse dir -->
-		<copy todir="${eclipse.pluginsdir.core}${file.separator}binaries">
+		<copy todir="${eclipse.pluginsdir.core}${file.separator}lib">
 			<fileset dir="${out.dist}"/>
-			<fileset dir="binaries${file.separator}javassist"/>
+			<fileset dir="lib${file.separator}javassist"/>
 		</copy>
 		<copy todir="${eclipse.pluginsdir.java}">
 			<fileset dir="src/Composestar/Java/INCRE/">

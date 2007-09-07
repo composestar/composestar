@@ -212,7 +212,7 @@ public class ILICIT implements WEAVER
 	private String getExecutable() throws ModuleException
 	{
 		String cpsPath = config.getPathSettings().getPath("Composestar");
-		File exe = new File(cpsPath, "binaries/peweaver.exe");
+		File exe = new File(cpsPath, "bin/peweaver.exe");
 
 		if (!exe.exists())
 		{

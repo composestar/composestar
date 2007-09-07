@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry excluding="**/.svn/" including="**/*.java|**/moduleinfo.xml" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/ComposestarCORE/binaries/antlr/antlr.jar"/>
-	<classpathentry kind="lib" path="binaries/javassist/javassist.jar"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/lib/antlr/antlr.jar"/>
+	<classpathentry kind="lib" path="lib/javassist/javassist.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
-	<classpathentry kind="lib" path="/ComposestarCORE/binaries/log4j/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/lib/log4j/log4j-1.2.14.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

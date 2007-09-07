@@ -51,7 +51,7 @@ public class DotNETSemTexRunner implements CTCommonModule
 				cmdList.add(FileUtils.quote(lib));
 			}
 
-			cmdList.add("/plugin:" + FileUtils.quote(cpsPath + "binaries/SemanticComposestarPlugins.dll"));
+			cmdList.add("/plugin:" + FileUtils.quote(cpsPath + "bin/SemanticComposestarPlugins.dll"));
 			cmdList.add("/exportFilename:" + FileUtils.quote(projectPath + "obj/semtex.xml"));
 
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Command for .NET SemTex: " + StringUtils.join(cmdList));
@@ -71,7 +71,7 @@ public class DotNETSemTexRunner implements CTCommonModule
 	{
 		Configuration config = Configuration.instance();
 		String cpsPath = config.getPathSettings().getPath("Composestar");
-		File exe = new File(cpsPath, "binaries/SemanticExtractorConsole.exe");
+		File exe = new File(cpsPath, "bin/SemanticExtractorConsole.exe");
 
 		if (exe.exists())
 		{

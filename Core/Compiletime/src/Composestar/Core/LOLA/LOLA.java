@@ -107,10 +107,10 @@ public abstract class LOLA implements CTCommonModule
 		/* Get the names of special files (containing base predicate libraries) */
 		String prologLibraryFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath(
 				"Composestar")
-				+ "binaries/prolog/lib.pro");
+				+ "lib/prolog/lib.pro");
 		String prologConnectorFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings()
 				.getPath("Composestar")
-				+ "binaries/prolog/connector.pro");
+				+ "lib/prolog/connector.pro");
 
 		/* Initialize the prolog engine */
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Initializing the prolog interpreter");

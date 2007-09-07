@@ -109,29 +109,28 @@
 			<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="@{todir}"/>
 			<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="@{todir}"/>
 
-			<copy todir="@{todir}/binaries">
+			<copy todir="@{todir}/lib">
 				<fileset dir="${out.dist}"/>
 			</copy>
-			<copy file="binaries/antlr/antlr.jar" todir="@{todir}/binaries"/>
-			<copy file="binaries/log4j/log4j-1.2.14.jar" todir="@{todir}/binaries"/>
+			<copy file="lib/antlr/antlr.jar" todir="@{todir}/lib"/>
+			<copy file="lib/log4j/log4j-1.2.14.jar" todir="@{todir}/lib"/>
+			<copy file="lib/prolog/prolog.jar" todir="@{todir}/lib"/>
 
-			<copy todir="@{todir}/binaries/prolog">
-			<fileset dir="binaries/prolog">
-				<include name="prolog.jar"/>
-				<include name="lib.pro"/>
-				<include name="connector.pro"/>
-			</fileset>
-		</copy>
+			<copy todir="@{todir}/lib/prolog">
+				<fileset dir="lib/prolog">
+					<include name="*.pro"/>
+				</fileset>
+			</copy>
 
-			<copy todir="@{todir}/binaries/groove">
-			<fileset dir="binaries/groove">
-				<include name="groove-1_2_0.jar"/>
-				<include name="castor-0_9_5_2-xml.jar"/>
-				<include name="jgraph.jar"/>
-				<include name="xerces-2_6_0-xercesImpl.jar"/>
-				<include name="xerces-2_6_0-xml-apis.jar"/>
-			</fileset>
-		</copy>
+			<copy todir="@{todir}/lib">
+				<fileset dir="lib/groove">
+					<include name="groove-1_2_0.jar"/>
+					<include name="castor-0_9_5_2-xml.jar"/>
+					<include name="jgraph.jar"/>
+					<include name="xerces-2_6_0-xercesImpl.jar"/>
+					<include name="xerces-2_6_0-xml-apis.jar"/>
+				</fileset>
+			</copy>
 		</sequential>
 	</macrodef>
 	
@@ -160,7 +159,7 @@
 		<path id="lib.test">
 			<path refid="lib.core"/>
 			<pathelement path="${out.build}"/>
-			<pathelement location="${build.core}\Compiletime\binaries\junit\junit.jar"/>
+			<pathelement location="${build.core}\Compiletime\lib\junit\junit.jar"/>
 		</path>
 		<javac srcdir="test" destdir="test" classpathref="lib.test" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<include name="**/*.java"/>

@@ -136,22 +136,22 @@
 			-->			
 			<mkdir dir="@{todir}" />
 			
-			<copy todir="@{todir}/binaries">
+			<copy todir="@{todir}/lib">
 			<fileset dir="${out.dist}"/>
-			<fileset file="${build.core}/Compiletime/binaries/antlr/antlr.jar"/>
+			<fileset file="${build.core}/Compiletime/lib/antlr/antlr.jar"/>
 		</copy>
-			<copy file="${build.core}/Compiletime/binaries/log4j/log4j-1.2.14.jar" todir="@{todir}/binaries"/>
+			<copy file="${build.core}/Compiletime/lib/log4j/log4j-1.2.14.jar" todir="@{todir}/lib"/>
 
-			<copy todir="@{todir}/binaries/prolog">
-			<fileset dir="${build.core}/Compiletime/binaries/prolog">
+			<copy todir="@{todir}/lib/prolog">
+			<fileset dir="${build.core}/Compiletime/lib/prolog">
 				<include name="prolog.jar"/>
 				<include name="lib.pro"/>
 				<include name="connector.pro"/>
 			</fileset>
 		</copy>
 
-			<copy todir="@{todir}/binaries/groove">
-			<fileset dir="${build.core}/Compiletime/binaries/groove">
+			<copy todir="@{todir}/lib/groove">
+			<fileset dir="${build.core}/Compiletime/lib/groove">
 				<include name="groove-1_2_0.jar"/>
 				<include name="castor-0_9_5_2-xml.jar"/>
 				<include name="jgraph.jar"/>

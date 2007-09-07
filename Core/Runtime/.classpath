@@ -4,6 +4,6 @@
 	<classpathentry kind="lib" path="dist/ComposestarRuntimeInterpreter.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
-	<classpathentry kind="lib" path="/ComposestarCORE/binaries/antlr/antlr.jar" sourcepath="C:/antlr"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/lib/antlr/antlr.jar" sourcepath="C:/antlr"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry excluding="**/.svn/|AssemblyInfo.java|Composestar/DotNET/DUMMER/CSharpDummyGenerator/|Composestar/DotNET/ILICIT/Weaver/|bin/|obj/" including="**/*.java|**/moduleinfo.xml|MANIFEST.MF" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/ComposestarCORE/binaries/prolog/prolog.jar"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/lib/prolog/prolog.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
-	<classpathentry kind="lib" path="/ComposestarCORE/binaries/antlr/antlr.jar"/>
-	<classpathentry kind="lib" path="/ComposestarCORE/binaries/log4j/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/lib/antlr/antlr.jar"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/lib/log4j/log4j-1.2.14.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

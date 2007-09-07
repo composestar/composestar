@@ -95,7 +95,7 @@ public class DotNETHarvestRunner implements HarvestRunner
 	private String getExecutable() throws ModuleException
 	{
 		File cs = new File(config.getPathSettings().getPath("Composestar"));
-		File exe = new File(cs, "binaries/TypeHarvester.exe");
+		File exe = new File(cs, "bin/TypeHarvester.exe");
 		if (!exe.exists())
 		{
 			throw new ModuleException("TypeHarvester not found on it's expected location: " + exe, MODULE_NAME);

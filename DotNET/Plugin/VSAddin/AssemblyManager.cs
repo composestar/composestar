@@ -38,7 +38,7 @@ namespace ComposestarVSAddin
 				System.IO.Directory.CreateDirectory(outputPath);
 
 				// Copy the required runtime assemblies
-				string binaryPath = System.IO.Path.Combine(BuildConfigurationManager.Instance.Settings.Paths["Composestar"], "binaries\\");
+				string binaryPath = System.IO.Path.Combine(BuildConfigurationManager.Instance.Settings.Paths["Composestar"], "lib\\");
 				StringCollection dlls = new StringCollection();
 
 				foreach (String str in BuildConfigurationManager.Instance.DotNetPlatform.RequiredFiles)

@@ -63,7 +63,7 @@ public abstract class BACO implements CTCommonModule
 		for (Object o : config.getPlatform().getRequiredFiles())
 		{
 			String requiredFile = (String) o;
-			String filename = cpsPath + "binaries/" + requiredFile;
+			String filename = cpsPath + "lib/" + requiredFile;
 
 			logger.debug("Adding required file: '" + filename + "'");
 			filesToCopy.add(filename);

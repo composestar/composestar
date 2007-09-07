@@ -131,7 +131,7 @@ class ExternalCSharpDummyGenerator
 	{
 		Configuration config = Configuration.instance();
 		String cps = config.getPathSettings().getPath("Composestar");
-		File exe = new File(cps, "binaries/CSharpDummyGenerator.exe");
+		File exe = new File(cps, "bin/CSharpDummyGenerator.exe");
 		if (!exe.exists())
 		{
 			throw new ProcessExecutionException("Executable does not exist: " + exe.getAbsolutePath());

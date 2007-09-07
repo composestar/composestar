@@ -67,12 +67,12 @@
 	
 	<target name="install" depends="init_eclipse,build" description="Install the C compiletime">
 		<!-- jar files -->
-		<copy todir="${eclipse.pluginsdir.core}${file.separator}binaries">
+		<copy todir="${eclipse.pluginsdir.core}${file.separator}lib">
 			<fileset dir="${out.dist}"/>
 		</copy>
 		
-		<copy todir="${eclipse.pluginsdir.core}${file.separator}binaries">
-			<fileset dir="${basedir}/binaries" />
+		<copy todir="${eclipse.pluginsdir.core}${file.separator}lib">
+			<fileset dir="${basedir}/lib" />
 		</copy>
 
 	</target>

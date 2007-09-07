@@ -1504,7 +1504,7 @@ namespace ComposestarVSAddin
 				p.StartInfo.FileName = "java";
 			//}
 
-			string workdir = Path.Combine(getComposestarPath(), "Binaries");
+			string workdir = Path.Combine(getComposestarPath(), "lib");
 			
 			string composestarJar = "\"" + Path.Combine(workdir, "ComposestarVisualization.jar") + "\"";
 

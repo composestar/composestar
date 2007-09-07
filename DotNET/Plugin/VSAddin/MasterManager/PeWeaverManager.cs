@@ -27,7 +27,7 @@ namespace ComposestarVSAddin
 			this.mApplicationObject = applicationObject;
 
 			System.Diagnostics.Process p = new System.Diagnostics.Process();
-			p.StartInfo.FileName = this.readIniValue("Global Composestar configuration", "ComposestarPath") + "binaries/peweaver.exe";
+			p.StartInfo.FileName = this.readIniValue("Global Composestar configuration", "ComposestarPath") + "bin/peweaver.exe";
 
 			p.StartInfo.Arguments = "/nologo /quiet";
 

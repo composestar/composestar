@@ -65,7 +65,7 @@
 			<auxClasspath refid="lib.core" />
 			<auxClasspath>
 				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
-				<pathelement path="${build.java}${file.separator}Compiletime${file.separator}binaries${file.separator}javassist${file.separator}javassist.jar" />
+				<pathelement path="${build.java}${file.separator}Compiletime${file.separator}lib${file.separator}javassist${file.separator}javassist.jar" />
 				<pathelement path="${build.core}${file.separator}Runtime${file.separator}${out.build}" />
 			</auxClasspath>
 		</findbugs>

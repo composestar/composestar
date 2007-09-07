@@ -154,7 +154,7 @@ public final class CstarBuildGen extends TransformTask
 	private void registerCstarAsms()
 	{
 		FileSet cstarAsms = new FileSet();
-		cstarAsms.setDir(new File(m_composestarBase, "binaries"));
+		cstarAsms.setDir(new File(m_composestarBase, "lib"));
 		NameEntry inc = cstarAsms.createInclude();
 		inc.setName("*.dll");
 

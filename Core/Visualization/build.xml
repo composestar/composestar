@@ -50,7 +50,7 @@
 	<macrodef name="install_core" description="Install the core to a given directory">
 		<attribute name="todir" description="Directory to copy the files to" />
 		<sequential>
-			<copy todir="@{todir}/binaries">
+			<copy todir="@{todir}/lib">
 				<fileset dir="${out.dist}" />
 			</copy>
 		</sequential>

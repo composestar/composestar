@@ -137,12 +137,12 @@ public class CLOLA extends LOLA
 		/* Get the names of special files (containing base predicate libraries) */
 		String prologLibraryFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath(
 				"Composestar")
-				+ "binaries/prolog/lib.pro");
+				+ "lib/prolog/lib.pro");
 		String prologConnectorFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings()
 				.getPath("Composestar")
-				+ "binaries/prolog/connector.pro");
+				+ "lib/prolog/connector.pro");
 		String CLangMap = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath("Composestar")
-				+ "binaries/prolog/clangmap.pro");
+				+ "lib/prolog/clangmap.pro");
 
 		/* Initialize the prolog engine */
 		Debug.out(Debug.MODE_DEBUG, "LOLA", "Initializing the prolog interpreter");

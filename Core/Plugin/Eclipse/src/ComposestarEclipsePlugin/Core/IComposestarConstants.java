@@ -4,7 +4,7 @@ public interface IComposestarConstants
 {
 	public static final String BUNDLE_ID = "composestar.core";
 	
-	public static final String BIN_DIR = "/binaries/";
+	public static final String BIN_DIR = "/lib/";
 	
 	// Console
 	public static final String CONSOLE_TITLE = "Compose* Console";

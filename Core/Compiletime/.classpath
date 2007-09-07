@@ -2,16 +2,16 @@
 <classpath>
 	<classpathentry excluding="**/.svn/|AssemblyInfo.java|Composestar/AssemblyInfo.java|bin/|obj/" including="**/*.gpr|**/*.java|**/moduleinfo.xml|Composestar/Core/DIGGER/Xslt/|MANIFEST.MF" kind="src" path="src"/>
 	<classpathentry excluding="**/.svn/|TEST-*.txt" kind="src" output="test" path="test"/>
-	<classpathentry kind="lib" path="binaries/antlr/antlr.jar"/>
-	<classpathentry kind="lib" path="binaries/junit/junit.jar"/>
-	<classpathentry kind="lib" path="binaries/prolog/prolog.jar"/>
-	<classpathentry kind="lib" path="binaries/prolog/prolog-src.jar"/>
+	<classpathentry kind="lib" path="lib/antlr/antlr.jar"/>
+	<classpathentry kind="lib" path="lib/junit/junit.jar"/>
+	<classpathentry kind="lib" path="lib/prolog/prolog.jar"/>
+	<classpathentry kind="lib" path="lib/prolog/prolog-src.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="binaries/groove/castor-0_9_5_2-xml.jar"/>
-	<classpathentry kind="lib" path="binaries/groove/groove-1_2_0.jar"/>
-	<classpathentry kind="lib" path="binaries/groove/jgraph.jar"/>
-	<classpathentry kind="lib" path="binaries/groove/xerces-2_6_0-xercesImpl.jar"/>
-	<classpathentry kind="lib" path="binaries/groove/xerces-2_6_0-xml-apis.jar"/>
-	<classpathentry kind="lib" path="binaries/log4j/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="lib/groove/castor-0_9_5_2-xml.jar"/>
+	<classpathentry kind="lib" path="lib/groove/groove-1_2_0.jar"/>
+	<classpathentry kind="lib" path="lib/groove/jgraph.jar"/>
+	<classpathentry kind="lib" path="lib/groove/xerces-2_6_0-xercesImpl.jar"/>
+	<classpathentry kind="lib" path="lib/groove/xerces-2_6_0-xml-apis.jar"/>
+	<classpathentry kind="lib" path="lib/log4j/log4j-1.2.14.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

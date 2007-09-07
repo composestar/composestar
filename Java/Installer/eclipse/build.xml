@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/Java/Installer/eclipse" default="publish">
+
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}..${file.separator}Core">
+		<and>
+			<not><isset property="build.core"/></not>
+			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml"/>
+		</and>
+	</condition>
+	
+	<import file="${build.core}${file.separator}common.xml"/>
+	
+	<target name="local_init" depends="init">
+		<mkdir dir="${out.build}"/>
+		<mkdir dir="${out.dist}"/>
+		<mkdir dir="${out.dist}/features"/>
+		<mkdir dir="${out.dist}/plugins"/>
+	</target>
+	
+	<target name="clean" depends="init" description="clean intermediate files">
+		<delete dir="${out.build}"/>
+		<delete dir="${out.dist}"/>
+	</target>
+	
+	<target name="build"/>
+	
+	<target name="copy_files" depends="local_init">
+		<!-- composestar.java package -->
+		<copy todir="${out.build}/composestar.java">
+			<fileset dir="${build.java}/Plugin/Eclipse/dist" />
+		</copy>
+		<copy todir="${out.build}/composestar.java${file.separator}lib">
+			<fileset dir="${build.java}/Compiletime/${out.dist}"/>
+			<fileset dir="${build.java}/Compiletime/lib${file.separator}javassist"/>
+		</copy>
+		<copy todir="${out.build}/composestar.java">
+			<fileset dir="${build.java}/Compiletime/src/Composestar/Java/INCRE/">
+				<include name="*.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="${out.build}/composestar.java${file.separator}lib">
+			<fileset dir="${build.java}/Runtime/${out.dist}"/>
+		</copy>
+		
+		<!-- composestar.core package -->
+		<property name="destdir.jei" value="${out.build}/composestar.core" />
+		
+		<copy todir="${destdir.jei}">
+			<fileset dir="${build.core}/Plugin/Eclipse/dist" />
+		</copy>
+		
+		<copy file="${build.core}/Compiletime/src/Composestar/Core/INCRE/INCRE.css" todir="${destdir.jei}"/>
+		<copy file="${build.core}/Compiletime/src/Composestar/Core/CKRET/CKRET.css" todir="${destdir.jei}"/>
+		<copy file="${build.core}/Compiletime/src/Composestar/Core/CKRET/filterdesc.xml" todir="${destdir.jei}"/>
+
+		<copy todir="${destdir.jei}/lib">
+			<fileset dir="${build.core}/Compiletime/${out.dist}"/>
+		</copy>
+		<copy file="${build.core}/Compiletime/lib/antlr/antlr.jar" todir="${destdir.jei}/lib"/>
+		<copy file="${build.core}/Compiletime/lib/log4j/log4j-1.2.14.jar" todir="${destdir.jei}/lib"/>
+
+		<copy todir="${destdir.jei}/lib">
+			<fileset dir="${build.core}/Compiletime/lib/prolog">
+				<include name="prolog.jar"/>
+				<include name="lib.pro"/>
+				<include name="connector.pro"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${destdir.jei}/lib">
+			<fileset dir="${build.core}/Compiletime/lib/groove">
+				<include name="groove-1_2_0.jar"/>
+				<include name="castor-0_9_5_2-xml.jar"/>
+				<include name="jgraph.jar"/>
+				<include name="xerces-2_6_0-xercesImpl.jar"/>
+				<include name="xerces-2_6_0-xml-apis.jar"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="publish" depends="local_init,copy_files" description="create eclipse packages">
+		<jar destfile="${out.dist}/features/composestar.java_${version.java}.jar">
+			<fileset dir="${build.java}/Plugin/Eclipse/dist-feature" />
+		</jar>
+		<jar destfile="${out.dist}/plugins/composestar.java_${version.java}.jar">
+			<fileset dir="${out.build}/composestar.java" />
+		</jar>
+		<jar destfile="${out.dist}/plugins/composestar.core_${version.core}.jar">
+			<fileset dir="${out.build}/composestar.core" />
+		</jar>
+	</target>
+
+</project>

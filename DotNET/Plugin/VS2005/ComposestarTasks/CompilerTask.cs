@@ -55,7 +55,7 @@ namespace Trese.ComposestarTasks
 
 		private String GetCompilerArguments()
 		{
-			String mainjar = @"C:\Program Files\ComposeStar\binaries\ComposestarDotNET.jar";
+			String mainjar = @"C:\Program Files\ComposeStar\lib\ComposestarDotNET.jar";
 
 			StringBuilder sb = new StringBuilder();
 			sb.Append("-jar ");

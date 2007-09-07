@@ -36,7 +36,7 @@ public class CstarComp extends BaseTask
 
 	/**
 	 * The location of ComposeStar; assumes the jar files are in
-	 * composestarBase+"/binaries"
+	 * composestarBase+"/lib"
 	 */
 	protected String composestarBase;
 
@@ -181,7 +181,7 @@ public class CstarComp extends BaseTask
 			java.setDir(projectDir);
 
 			// set jar file to execute
-			File binaries = new File(composestarBase, "binaries");
+			File binaries = new File(composestarBase, "lib");
 			java.setJar(new File(binaries, mainJar));
 			
 			// add arguments

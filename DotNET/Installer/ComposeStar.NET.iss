@@ -62,7 +62,8 @@ Name: examples; Description: Examples; Types: full
 Source: src\*; DestDir: {app}; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: core
 Source: build\*; DestDir: {app}; Flags: ignoreversion; Excludes: .svn; Components: core
 Source: build\documentation\*; DestDir: {app}\documentation; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: docs
-Source: build\binaries\*; DestDir: {app}\binaries; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: core; AfterInstall: RegAsm
+Source: build\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: core;
+Source: build\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: core; AfterInstall: RegAsm
 Source: build\ComposestarVSAddin\*; DestDir: {app}\ComposestarVSAddin; Flags: ignoreversion; Excludes: .svn; Components: core\addin; AfterInstall: RegAsm
 Source: build\examplesDotNET\*; DestDir: {app}\examplesDotNET; Flags: ignoreversion recursesubdirs; Excludes: .svn,build.xml,TestCases; Components: examples
 
@@ -105,7 +106,7 @@ Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddi
 Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps; ValueData: {{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}; ValueType: string; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
 
 ; Add a key so assemblies can be seen in VS .NET
-Root: HKLM; Subkey: "Software\Microsoft\.NETFramework\AssemblyFolders\{#SAFE_NAME}"; ValueType: string; ValueData: "{app}\binaries"; Flags: deletekey uninsdeletekey noerror
+Root: HKLM; Subkey: "Software\Microsoft\.NETFramework\AssemblyFolders\{#SAFE_NAME}"; ValueType: string; ValueData: "{app}\lib"; Flags: deletekey uninsdeletekey noerror
 
 [Code]
 procedure kwadd(lst: TStringList; s: String);

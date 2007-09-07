@@ -9,7 +9,7 @@
 		<property name="dist"        location="${basedir}/dist"/>
 		
 		<property name="build.core"  location="${basedir}/../.."/>
-		<property name="antlr.lib"   location="${build.core}/Compiletime/binaries/antlr"/>
+		<property name="antlr.lib"   location="${build.core}/Compiletime/lib/antlr"/>
 		
 		<property name="antlr.jar"   location="${antlr.lib}/antlr.jar"/>
 		<property name="aat.jar"     location="${dist}/aat.jar"/>

@@ -8,7 +8,7 @@
 		<property name="ant.base"    location="${build.core}/Development/Ant"/>
 		<property name="ant.lib"     location="${ant.base}/lib"/>
 		
-		<property name="antlr.lib"   location="${build.core}/Compiletime/binaries/antlr"/>
+		<property name="antlr.lib"   location="${build.core}/Compiletime/lib/antlr"/>
 		
 		<property name="tasks.base"  location="${basedir}"/>
 		<property name="tasks.src"   location="${tasks.base}/src"/>
