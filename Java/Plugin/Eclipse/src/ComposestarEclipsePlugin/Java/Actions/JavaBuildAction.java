@@ -6,6 +6,7 @@ import java.util.HashSet;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IJavaProject;
@@ -93,8 +94,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 		projectConfig.addProperty("name", selectedProjects[0].getName());
 
 		// make sure ComposestarRuntimeInterpreter.jar is properly referenced
-		final String[] cstarDeps = { "composestarruntimeinterpreter.jar", "composestarcore.jar", "composestarjava.jar" };
-		for (String csdep : cstarDeps)
+		for (String csdep : IComposestarJavaConstants.COMPILETIME_LIBS)
 		{
 			for (int i = 0; i < projectConfig.getDependencies().size(); i++)
 			{
@@ -104,7 +104,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 					File runtime = new File(dep);
 					if (!runtime.exists())
 					{
-						dep = ComposestarEclipsePluginPlugin.getAbsolutePath("/binaries/" + csdep);
+						dep = ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.BIN_DIR + csdep);
 						projectConfig.getDependencies().set(i, dep);
 					}
 					break;
@@ -285,7 +285,19 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 						projectConfig.addDependency(FileUtils.fixFilename(entry.getPath().toOSString()));
 					}
 				}
-			}
+				else if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_CONTAINER)
+				{
+					IClasspathContainer con = JavaCore.getClasspathContainer(classpaths[i].getPath(), javaProject);
+					if (con.getKind() != IClasspathContainer.K_DEFAULT_SYSTEM)
+					{
+						IClasspathEntry[] concps = con.getClasspathEntries();
+						for (IClasspathEntry cp : concps)
+						{
+							projectConfig.addDependency(FileUtils.fixFilename(cp.getPath().toOSString()));
+						}
+					}
+				}
+			}			
 		}
 		catch (JavaModelException jme)
 		{

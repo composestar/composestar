@@ -85,6 +85,7 @@
 			</fileset>
 			<fileset dir="${build.core}/Resources">
 				<include name="logo-32x32.png" />
+				<include name="logo-16x16.png" />
 			</fileset>
 		</copy>
 	</target>

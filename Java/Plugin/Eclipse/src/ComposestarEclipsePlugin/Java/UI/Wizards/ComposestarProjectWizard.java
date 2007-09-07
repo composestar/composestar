@@ -30,11 +30,11 @@ public class ComposestarProjectWizard extends Wizard implements INewWizard
 
 	private ComposestarProjectWizardSecondPageEx fSecondPage;
 
-	private static String ComposestarProjectWizard_title = "New Compose* Java Project";
+	private static String ComposestarProjectWizard_title = "New Compose*/Java Project";
 
-	private static String ComposestarProjectWizard_op_error_title = "Error Creating Compose* Java Project";
+	private static String ComposestarProjectWizard_op_error_title = "Error Creating Compose*/Java Project";
 
-	private static String ComposestarProjectWizard_op_error_message = "An error occurred while creating the Compose* Java project";
+	private static String ComposestarProjectWizard_op_error_message = "An error occurred while creating the Compose*/Java project";
 
 	public ComposestarProjectWizard()
 	{

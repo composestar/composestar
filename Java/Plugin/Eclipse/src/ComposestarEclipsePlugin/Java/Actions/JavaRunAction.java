@@ -23,6 +23,7 @@ import ComposestarEclipsePlugin.Core.IComposestarConstants;
 import ComposestarEclipsePlugin.Core.Actions.Action;
 import ComposestarEclipsePlugin.Core.Utils.CommandLineExecutor;
 import ComposestarEclipsePlugin.Core.Utils.FileUtils;
+import ComposestarEclipsePlugin.Java.IComposestarJavaConstants;
 
 /**
  * Action for running a Java project with Compose*
@@ -173,17 +174,17 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 		try
 		{
 			CommandLineExecutor cmdExec = new CommandLineExecutor();
-			int result = cmdExec.exec(/*"call " +*/ command, new File(project.getLocation().toOSString()));
+			int result = cmdExec.exec(/* "call " + */command, new File(project.getLocation().toOSString()));
 
 			if (result == 0)
 			{
-				//System.out.print(cmdExec.outputNormal());
+				// System.out.print(cmdExec.outputNormal());
 				completed = true;
 			}
 			else
 			{
-				//System.out.print(cmdExec.outputNormal());
-				//System.err.print(cmdExec.outputError());
+				// System.out.print(cmdExec.outputNormal());
+				// System.err.print(cmdExec.outputError());
 				Debug.instance().Log("Program run failure reported by process. Exit code is " + result,
 						IComposestarConstants.MSG_ERROR);
 			}
@@ -199,19 +200,12 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 	private void getCStarBinaries()
 	{
 		// FIXME: why is this necessary? should not be hardcoded...
-		String cstarcore = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-				.getAbsolutePath("/binaries/ComposestarCORE.jar"));
-		String cstarjava = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-				.getAbsolutePath("/binaries/ComposestarJava.jar"));
-		String cstarrt = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-				.getAbsolutePath("/binaries/ComposestarRuntimeInterpreter.jar"));
-		String prolog = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-				.getAbsolutePath("/binaries/prolog/prolog.jar"));
-
-		classpath.add(cstarcore);
-		classpath.add(cstarjava);
-		classpath.add(cstarrt);
-		classpath.add(prolog);
+		for (String lib : IComposestarJavaConstants.RUNTIME_LIBS)
+		{
+			String rsolvedlib = FileUtils.fixFilename(ComposestarEclipsePluginPlugin
+					.getAbsolutePath(IComposestarConstants.BIN_DIR + lib));
+			classpath.add(rsolvedlib);
+		}
 	}
 
 	/**
@@ -243,7 +237,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 					classpath.add(FileUtils.fixFilename(classpaths[i].getPath().toOSString()));
 				}
 				else if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_VARIABLE)
-				{					
+				{
 					IClasspathEntry entry = JavaCore.getResolvedClasspathEntry(classpaths[i]);
 					if (entry != null)
 					{

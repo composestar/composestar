@@ -9,14 +9,16 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizardFirstPage;
 import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizardSecondPage;
 
-import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
-import ComposestarEclipsePlugin.Core.Utils.FileUtils;
+import ComposestarEclipsePlugin.Java.CStarJavaRuntimeContainer;
+import ComposestarEclipsePlugin.Java.IComposestarJavaConstants;
 
 /**
  * @author Michiel Hendriks
@@ -39,22 +41,10 @@ public class ComposestarProjectWizardSecondPageEx extends JavaProjectWizardSecon
 	{
 		if (!fFirstPageEx.getDetect())
 		{
-			List cpEntries = new ArrayList(Arrays.asList(defaultEntries));
-
-			IPath composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-					.getAbsolutePath("/binaries/ComposestarRuntimeInterpreter.jar")));
-			cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null));
-			
-			composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-					.getAbsolutePath("/binaries/ComposestarCore.jar")));
-			cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null));
-			composestarLibPath = new Path(FileUtils.fixFilename(ComposestarEclipsePluginPlugin
-					.getAbsolutePath("/binaries/ComposestarJava.jar")));
-			cpEntries.add(JavaCore.newLibraryEntry(composestarLibPath, null, null));
-
+			List<IClasspathEntry> cpEntries = new ArrayList<IClasspathEntry>(Arrays.asList(defaultEntries));
+			cpEntries.add(JavaCore.newContainerEntry(CStarJavaRuntimeContainer.PATH));
 			defaultEntries = (IClasspathEntry[]) cpEntries.toArray(new IClasspathEntry[cpEntries.size()]);
 		}
 		super.init(jproject, defaultOutputLocation, defaultEntries, defaultsOverrideExistingClasspath);
 	}
-
 }
