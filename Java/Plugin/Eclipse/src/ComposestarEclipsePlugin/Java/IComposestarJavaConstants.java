@@ -36,7 +36,7 @@ public interface IComposestarJavaConstants
 		"ComposestarCORE.jar",
 		"ComposestarJava.jar",
 		"ComposestarRuntimeInterpreter.jar",
-		"prolog/prolog.jar"
+		"prolog.jar"
 	};
 	
 	public static final String[] COMPILETIME_LIBS = {
