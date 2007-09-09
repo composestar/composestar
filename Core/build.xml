@@ -55,6 +55,7 @@
 			<class location="${build.core}${file.separator}Visualization${file.separator}${out.build}" />
 			<sourcePath path="${build.core}${file.separator}Compiletime${file.separator}src" />
 			<sourcePath path="${build.core}${file.separator}Runtime${file.separator}src" />
+      <sourcePath path="${build.core}${file.separator}Visualization${file.separator}src" />
 			<auxClasspath refid="lib.core" />
 		</findbugs>
 		<xslt in="${out.qa}${file.separator}findbugs-result.xml" out="${out.qa}${file.separator}findbugs-result.html" style="${findbugs.style}" />

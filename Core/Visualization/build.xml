@@ -20,13 +20,13 @@
 	<target name="local_init" depends="init">
 		<mkdir dir="${out.build}" />
 		<mkdir dir="${out.dist}" />
+    <mkdir dir="${out.dist}/lib" />
 
 		<path id="lib.visualization">
 			<path refid="lib.core" />
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
 		</path>
 	</target>
-
 
 	<target name="build" depends="local_init,compile,jar" description="Compile the code and create the jar file" />
 
@@ -47,31 +47,26 @@
 
 	<target name="install" depends="build,install_system,install_eclipse" description="Install the core files" />
 
-	<macrodef name="install_core" description="Install the core to a given directory">
-		<attribute name="todir" description="Directory to copy the files to" />
-		<sequential>
-			<copy todir="@{todir}/lib">
-				<fileset dir="${out.dist}" />
-			</copy>
-		</sequential>
-	</macrodef>
-
 	<target name="install_system" depends="build" if="available.dotnet">
 		<!-- install the core files for the system, currently this is only used for dotnet -->
-		<install_core todir="${composestar.installdir}" />
-	</target>
+    <copy todir="${composestar.installdir}">
+      <fileset dir="${out.dist}" />
+    </copy>
+  </target>
 
-	<target name="install_eclipse" depends="build" if="available.eclipse">
-		<!-- copy files to eclipse -->
-		<!-- 
+  <target name="install_eclipse" depends="build" if="available.eclipse">
+    <!-- copy files to eclipse -->
+    <!-- 
 			this construction is intentional to create a fail safe method to 
 			install the eclipse files even when eclipse is not available 
 		-->
-		<antcall target="-install_eclipse" inheritRefs="true" />
+		<antcall target="-install_eclipse" inheritRefs="true" />    
 	</target>
 
 	<target name="-install_eclipse" depends="init_eclipse">
-		<install_core todir="${eclipse.pluginsdir.core}" />
+    <copy todir="${eclipse.pluginsdir.core}">
+      <fileset dir="${out.dist}" />
+    </copy>
 	</target>
 
 </project>

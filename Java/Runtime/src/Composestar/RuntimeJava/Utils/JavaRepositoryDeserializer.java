@@ -1,5 +1,6 @@
 package Composestar.RuntimeJava.Utils;
 
+import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.RuntimeCore.Utils.Debug;
@@ -12,6 +13,7 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 
 	public DataStore deserialize(String file)
 	{
+		DataMap.setRtSerialization(true);
 		DataStore ds = DataStore.instance();
 
 		ObjectInputStream ois = null;
@@ -50,6 +52,7 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 		}
 		finally
 		{
+			DataMap.setRtSerialization(false);
 			try
 			{
 				if (ois != null)

@@ -24,6 +24,11 @@ import java.util.Set;
 public abstract class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 {
 	protected static Class dataMapClass;
+	
+	/**
+	 * If true this object is serialized for runtime.
+	 */
+	protected static boolean rtSerialization;
 
 	public static boolean setDataMapClass(Class newClass)
 	{
@@ -33,6 +38,11 @@ public abstract class DataMap implements Map, SerializableRepositoryEntity, Clon
 			return true;
 		}
 		return false;
+	}
+	
+	public static void setRtSerialization(boolean newVal)
+	{
+		//rtSerialization = newVal;
 	}
 
 	public static Class getDataMapClass()

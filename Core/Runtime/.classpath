@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="dist/ComposestarRuntimeInterpreter.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
 	<classpathentry kind="lib" path="/ComposestarCORE/lib/antlr/antlr.jar" sourcepath="C:/antlr"/>

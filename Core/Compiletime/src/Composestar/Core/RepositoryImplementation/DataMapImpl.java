@@ -1,10 +1,15 @@
 package Composestar.Core.RepositoryImplementation;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 /**
  * The DataMap is in implementation of the java.util.Map interface that uses two
@@ -169,5 +174,57 @@ public class DataMapImpl extends DataMap
 	public HashMap toHashMap()
 	{
 		return map;
+	}
+
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		if (!DataMap.rtSerialization)
+		{
+			in.defaultReadObject();
+			return;
+		}
+		else
+		{
+			map = (HashMap) in.readObject();
+		}
+	}
+
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+		if (!DataMap.rtSerialization)
+		{
+			out.defaultWriteObject();
+			return;
+		}
+		else
+		{
+			HashMap rtmap = new HashMap(map);
+			Iterator it = rtmap.entrySet().iterator();
+			while (it.hasNext())
+			{
+				Entry entry = (Entry) it.next();
+				Object obj = entry.getValue();
+				if (obj instanceof String)
+				{
+					continue;
+				}
+				if (obj instanceof Integer)
+				{
+					continue;
+				}
+				if (obj instanceof Vector)
+				{
+					continue;
+				}
+				if (obj instanceof SerializableRepositoryEntity)
+				{
+					continue;
+				}
+				System.err.println("Not serializing object of type: " + obj.getClass().getName());
+				System.err.println(" " + entry.getKey() + " = " + obj.toString());
+				it.remove();
+			}
+			out.writeObject(rtmap);
+		}
 	}
 }

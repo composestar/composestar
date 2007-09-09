@@ -47,20 +47,44 @@
 	<target name="local_init" depends="init">
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
+    <mkdir dir="${out.dist}/lib"/>
 	</target>
 	
 	<target name="java-versionclass">
 		<copy file="src/Composestar/Utils/Version.j" tofile="src/Composestar/Utils/Version.java" overwrite="true"/>
 		<tstamp>
-		    <format property="BUILD_DATE" pattern="EEE, d MMM yyyy HH:mm:ss Z" locale="en"/>
-  		</tstamp>		
-		<echo>Setting Build date to: ${BUILD_DATE}</echo>   
+      <format property="BUILD_DATE" pattern="EEE, d MMM yyyy HH:mm:ss Z" locale="en"/>
+    </tstamp>		
 		<replace file="src/Composestar/Utils/Version.java"
 			token="@BUILD_DATE@"
 			value="${BUILD_DATE}"/>
 	</target>
 
-	<target name="build" depends="java-versionclass,local_init,antlr,compile,jar" description="Compile the code and create the jar file"/>
+  <target name="build" depends="java-versionclass,local_init,antlr,compile,jar" description="Compile the code and create the jar file">
+    <copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${out.dist}"/>
+    <copy file="src/Composestar/Core/CKRET/CKRET.css" todir="${out.dist}"/>
+    <copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${out.dist}"/>
+
+    <copy file="lib/antlr/antlr.jar" todir="${out.dist}/lib"/>
+    <copy file="lib/log4j/log4j-1.2.14.jar" todir="${out.dist}/lib"/>
+    <copy file="lib/prolog/prolog.jar" todir="${out.dist}/lib"/>
+
+    <copy todir="${out.dist}/lib/prolog">
+      <fileset dir="lib/prolog">
+        <include name="*.pro"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${out.dist}/lib">
+      <fileset dir="lib/groove">
+        <include name="groove-1_2_0.jar"/>
+        <include name="castor-0_9_5_2-xml.jar"/>
+        <include name="jgraph.jar"/>
+        <include name="xerces-2_6_0-xercesImpl.jar"/>
+        <include name="xerces-2_6_0-xml-apis.jar"/>
+      </fileset>
+    </copy>
+  </target>
 	
 	<target name="antlr" depends="local_init">
 		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java" inheritRefs="true" />
@@ -91,52 +115,11 @@
 	
 	<target name="install" depends="build,install_system,install_eclipse" description="Install the core files" />
 	
-	<macrodef name="install_core" description="Install the core to a given directory">
-		<attribute name="todir" description="Directory to copy the files to" />		
-		<sequential>
-			<!--
-			<fail message="The destination directory @{todir} does not exist.">
-				<condition>
-					<not>
-						<available file="@{todir}" />
-					</not>
-				</condition>
-			</fail>
-			-->			
-			<mkdir dir="@{todir}" />
-			
-			<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="@{todir}"/>
-			<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="@{todir}"/>
-			<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="@{todir}"/>
-
-			<copy todir="@{todir}/lib">
-				<fileset dir="${out.dist}"/>
-			</copy>
-			<copy file="lib/antlr/antlr.jar" todir="@{todir}/lib"/>
-			<copy file="lib/log4j/log4j-1.2.14.jar" todir="@{todir}/lib"/>
-			<copy file="lib/prolog/prolog.jar" todir="@{todir}/lib"/>
-
-			<copy todir="@{todir}/lib/prolog">
-				<fileset dir="lib/prolog">
-					<include name="*.pro"/>
-				</fileset>
-			</copy>
-
-			<copy todir="@{todir}/lib">
-				<fileset dir="lib/groove">
-					<include name="groove-1_2_0.jar"/>
-					<include name="castor-0_9_5_2-xml.jar"/>
-					<include name="jgraph.jar"/>
-					<include name="xerces-2_6_0-xercesImpl.jar"/>
-					<include name="xerces-2_6_0-xml-apis.jar"/>
-				</fileset>
-			</copy>
-		</sequential>
-	</macrodef>
-	
 	<target name="install_system" depends="build" if="available.dotnet">
 		<!-- install the core files for the system, currently this is only used for dotnet -->
-		<install_core todir="${composestar.installdir}" />
+    <copy todir="${composestar.installdir}">
+      <fileset dir="${out.dist}"/>
+    </copy>
 	</target>
 	
 	<target name="install_eclipse" depends="build" if="available.eclipse">
@@ -149,7 +132,9 @@
 	</target>	
 	
 	<target name="-install_eclipse" depends="init_eclipse">
-		<install_core todir="${eclipse.pluginsdir.core}" />
+    <copy todir="${eclipse.pluginsdir.core}">
+      <fileset dir="${out.dist}"/>
+    </copy>
 	</target>
 	
 	

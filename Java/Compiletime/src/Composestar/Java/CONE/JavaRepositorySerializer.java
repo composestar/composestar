@@ -2,19 +2,24 @@ package Composestar.Java.CONE;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.Iterator;
 
+import Composestar.Core.CONE.CONE;
 import Composestar.Core.CONE.RepositorySerializer;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Serializes the repository.
@@ -23,6 +28,8 @@ import Composestar.Utils.FileUtils;
  */
 public class JavaRepositorySerializer implements RepositorySerializer
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("CONE");
+
 	/**
 	 * run method.
 	 * 
@@ -33,7 +40,7 @@ public class JavaRepositorySerializer implements RepositorySerializer
 	{
 		String repositoryFilename = Configuration.instance().getPathSettings().getPath("Base") + "repository.dat";
 
-		Debug.out(Debug.MODE_DEBUG, "CONE", "writing repository to file " + repositoryFilename + " ...");
+		logger.info("writing repository to file " + repositoryFilename + " ...");
 
 		DataStore ds = DataStore.instance();
 
@@ -42,6 +49,8 @@ public class JavaRepositorySerializer implements RepositorySerializer
 		ObjectOutputStream oos = null;
 		try
 		{
+			DataMap.setRtSerialization(true);
+			
 			FileOutputStream fos = new FileOutputStream(repositoryFilename);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			oos = new ObjectOutputStream(bos);
@@ -56,7 +65,7 @@ public class JavaRepositorySerializer implements RepositorySerializer
 				oos.writeObject(item);
 			}
 
-			Debug.out(Debug.MODE_DEBUG, "CONE", "repository has been serialized");
+			logger.info("repository has been serialized");
 		}
 		catch (StackOverflowError ex)
 		{
@@ -72,6 +81,7 @@ public class JavaRepositorySerializer implements RepositorySerializer
 		}
 		finally
 		{
+			DataMap.setRtSerialization(false);
 			FileUtils.close(oos);
 		}
 	}

@@ -30,6 +30,7 @@
 	<target name="local_init" depends="init">
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
+    <mkdir dir="${out.dist}/lib"/>
 	</target>
 	
 	<target name="build" depends="init,antlr,jar" description="Create CODER parsers"/>
@@ -51,7 +52,7 @@
 	</target>
 			
 	<target name="jar" depends="compile_java">
-		<jar destfile="${out.dist}/ComposestarRuntimeInterpreter.jar" basedir="${out.build}" excludes="*.jar"/>
+		<jar destfile="${out.dist}/lib/ComposestarRuntimeInterpreter.jar" basedir="${out.build}" excludes="*.jar"/>
 	</target>
 
 	<target name="install" depends="build" description=""/>

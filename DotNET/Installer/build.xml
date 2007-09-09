@@ -41,79 +41,13 @@
 		<mkdir dir="${destdir.dni}${file.separator}lib"/>
 		<mkdir dir="${destdir.dni}${file.separator}lib${file.separator}prolog"/>
 		<mkdir dir="${destdir.dni}${file.separator}ComposestarVSAddin"/>
+
+    <copy todir="${destdir.dni}">
+      <fileset dir="${build.core}${file.separator}Compiletime${file.separator}${out.dist}" />
+      <fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}${out.dist}" />
+      <fileset dir="${build.dotnet}${file.separator}Runtime${file.separator}${out.dist}" />
+    </copy>
 		
-		<!-- Compose* .NET .CSS and .XML files -->
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}INCRE${file.separator}INCRE.css" todir="${destdir.dni}"/>
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}CKRET.css" todir="${destdir.dni}"/>
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}filterdesc.xml" todir="${destdir.dni}"/>
-
-		<!-- Compose* .NET ANTLR libs -->
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}antlr${file.separator}antlr.jar" todir="${destdir.dni}${file.separator}lib"/>
-		
-		<!-- Compose* Log4j libs -->
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}log4j${file.separator}log4j-1.2.14.jar" todir="${destdir.dni}${file.separator}lib"/>
-		
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}prolog${file.separator}prolog.jar" todir="${destdir.dni}${file.separator}lib"/>
-
-		<!-- Compose* .NET prolog libs -->
-		<copy todir="${destdir.dni}${file.separator}lib${file.separator}prolog">
-			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}prolog">
-				<include name="*.pro"/>
-			</fileset>
-		</copy>
-
-		<!-- Compose* .NET Compiletime libs -->
-		<copy todir="${destdir.dni}${file.separator}lib">
-			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}dist"/>
-		</copy>
-
-		<!-- Compose* .NET Groove libs -->
-		<copy todir="${destdir.dni}${file.separator}lib">
-			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib${file.separator}groove">
-				<include name="groove-1_2_0.jar"/>
-				<include name="castor-0_9_5_2-xml.jar"/>
-				<include name="jgraph.jar"/>
-				<include name="xerces-2_6_0-xercesImpl.jar"/>
-				<include name="xerces-2_6_0-xml-apis.jar"/>
-			</fileset>
-		</copy>
-
-		<!-- Compose* .NET Compiletime libs -->
-		<copy todir="${destdir.dni}${file.separator}lib">
-			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}dist"/>
-		</copy>
-
-		<!-- Compose* .NET C# Dummygenerator -->
-		<copy todir="${destdir.dni}${file.separator}bin">
-			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}DUMMER${file.separator}CSharpDummyGenerator${file.separator}bin">
-				<include name="CSharpDummyGenerator.exe"/>
-				<include name="antlr.runtime.dll"/>
-			</fileset>
-		</copy>
-		
-		<!-- Compose* .NET Weavers -->
-		<copy todir="${destdir.dni}${file.separator}bin">
-			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}ILICIT${file.separator}Weaver${file.separator}bin${file.separator}Release">
-				<include name="IlWeaver.exe"/>
-				<include name="PeWeaver.exe"/>
-				<include name="WeaveLibrary.dll"/>
-			</fileset>
-		</copy>
-
-		<!-- Compose* .NET INCRE configs -->
-		<copy todir="${destdir.dni}">
-			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}INCRE">
-				<include name="*.xml"/>
-			</fileset>
-		</copy>
-
-		<!-- Compose* .NET Runtime libs -->
-		<copy todir="${destdir.dni}/lib">
-			<fileset dir="${build.dotnet}${file.separator}Runtime${file.separator}src${file.separator}FLIRT${file.separator}bin${file.separator}Release">
-				<include name="*.dll"/>
-			</fileset>
-		</copy>
-
 		<!-- Compose* .NET Plugin -->
 		<copy todir="${destdir.dni}${file.separator}ComposestarVSAddin"> 
 			<fileset dir="${build.dotnet}${file.separator}Plugin${file.separator}VSAddin${file.separator}bin">

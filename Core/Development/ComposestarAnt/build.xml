@@ -31,7 +31,7 @@
 		<javac srcdir="${tasks.src}" 
 		       destdir="${tasks.build}" 
 		       classpath="${ant.jar};${antlr.jar}"
-		       source="1.4" target="1.4"/>
+		       source="1.5" target="1.5"/>
 		<copy todir="${tasks.build}">
 			<fileset dir="${tasks.src}">
 				<include name="Composestar/antlib.xml" />

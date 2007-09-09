@@ -28,14 +28,17 @@
 	</target>
 	
 	<target name="init_local" depends="init">
-		<!--
-		<mkdir dir="${out.dist}"/>
-		-->
+		<mkdir dir="${out.dist}/lib"/>
 	</target>
 	
 	<target name="build" depends="init_local" description="build the .net runtime">
 		<antcall target="build_devenv"/>
 		<antcall target="build_msbuild"/>
+    <copy todir="${out.dist}/lib">
+      <fileset dir="src/FLIRT/bin/Release/">
+        <include name="*.dll"/>
+      </fileset>
+    </copy>
 	</target>
 	
 	<target name="build_devenv" if="available.devenv">
@@ -47,15 +50,8 @@
 	</target>
 	
 	<target name="install" depends="build" unless="ignore.runtime" description="install the .net runtime">
-		<!--
-		<copy todir="${composestar.installdir}/lib">
-			<fileset dir="${out.dist}"/>
-		</copy>
-		-->
-		<copy todir="${composestar.installdir}/lib">
-			<fileset dir="src/FLIRT/bin/Release/">
-				<include name="*.dll"/>
-			</fileset>
+		<copy todir="${composestar.installdir}">
+      <fileset dir="${out.dist}" />
 		</copy>
 		
 		<echo message="Registering assemblies" level="info"/>

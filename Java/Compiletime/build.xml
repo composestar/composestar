@@ -39,9 +39,19 @@
 	<target name="init_local" depends="init">
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
+    <mkdir dir="${out.dist}/lib"/>
 	</target>
-	
-	<target name="build" depends="init_local,antlr,compile_java,jar" description="build the Java compiletime"/>
+
+  <target name="build" depends="init_local,antlr,compile_java,jar" description="build the Java compiletime">
+    <copy todir="${out.dist}${file.separator}lib">
+      <fileset dir="lib${file.separator}javassist"/>
+    </copy>
+    <copy todir="${out.dist}">
+      <fileset dir="src/Composestar/Java/INCRE/">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+  </target>
 	
 	<target name="antlr">
 		<antlr target="${Dummer.dir}/grammar/java.g" outputdirectory="${Dummer.dir}">
@@ -56,9 +66,9 @@
 			
 	<target name="jar" depends="compile_java">
 	  <copy todir="${out.build}"> <!-- copy moduleinfo files -->
-		<fileset dir="src">
-		    <include name="**/moduleinfo.xml"/>
-		</fileset>
+		  <fileset dir="src">
+		      <include name="**/moduleinfo.xml"/>
+		  </fileset>
 	  </copy>
 		
 	  <jar destfile="${out.jar.java}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
@@ -66,14 +76,8 @@
 	
 	<target name="install" depends="init_eclipse,build" description="Install the Java compiletime">
 		<!-- install to eclipse dir -->
-		<copy todir="${eclipse.pluginsdir.java}${file.separator}lib">
+		<copy todir="${eclipse.pluginsdir.java}${file.separator}">
 			<fileset dir="${out.dist}"/>
-			<fileset dir="lib${file.separator}javassist"/>
-		</copy>
-		<copy todir="${eclipse.pluginsdir.java}">
-			<fileset dir="src/Composestar/Java/INCRE/">
-				<include name="*.xml"/>
-			</fileset>
 		</copy>
 	</target>
 

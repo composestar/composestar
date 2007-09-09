@@ -67,9 +67,18 @@
 	<target name="init_local" depends="init">
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
+		<mkdir dir="${out.dist}/bin"/>
+		<mkdir dir="${out.dist}/lib"/>
 	</target>
-	
-	<target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet" description="Build the .NET Compiletime"/>
+
+  <target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet" description="Build the .NET Compiletime">
+    <!-- INCRE configurations -->
+    <copy todir="${out.dist}">
+      <fileset dir="src/Composestar/DotNET/INCRE/">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+  </target>
 	
 	<target name="antlr">
 		<!--
@@ -92,14 +101,30 @@
 	</target>
 			
 	<target name="compile_dotnet">
-		<dn:csc targettype="exe" debug="false" destfile="${out.dist}\AttributeHarvester.exe">
+		<dn:csc targettype="exe" debug="false" destfile="${out.dist}/lib/AttributeHarvester.exe">
 			<src dir="src\Composestar\DotNET\TYM\TypeHarvester" includes="AttributeHarvester.cs"/>
 		</dn:csc>
-		<dn:csc targettype="exe" debug="false" destfile="${out.dist}\TypeHarvester.exe">
+		<dn:csc targettype="exe" debug="false" destfile="${out.dist}/lib/TypeHarvester.exe">
 			<src dir="src\Composestar\DotNET\TYM\TypeHarvester" includes="TypeHarvester.cs"/>
 		</dn:csc>
 		<antcall target="compile_dotnet_devenv"/>
 		<antcall target="compile_dotnet_msbuild"/>
+
+    <!-- C# DummyGen -->
+    <copy todir="${out.dist}/bin">
+      <fileset dir="${CSharpDummyGenerator.dir}/bin">
+        <include name="CSharpDummyGenerator.exe"/>
+        <include name="antlr.runtime.dll"/>
+      </fileset>
+    </copy>
+    <!-- ILICIT Weavers -->
+    <copy todir="${out.dist}\bin">
+      <fileset dir="${Weaver.dir}\bin\Release">
+        <include name="IlWeaver.exe"/>
+        <include name="PeWeaver.exe"/>
+        <include name="WeaveLibrary.dll"/>
+      </fileset>
+    </copy>
 	</target>
 	
 	<target name="compile_dotnet_devenv" if="available.devenv">
@@ -132,31 +157,9 @@
 	</target>
 	
 	<target name="install" depends="build" description="Install the .NET compiletime">
-		<!-- jar files -->
-		<copy todir="${composestar.installdir}\lib">
-			<fileset dir="${out.dist}"/>
-		</copy>
-		<!-- C# DummyGen -->
-		<copy todir="${composestar.installdir}\bin">
-			<fileset dir="${CSharpDummyGenerator.dir}\bin">
-				<include name="CSharpDummyGenerator.exe"/>
-				<include name="antlr.runtime.dll"/>
-			</fileset>
-		</copy>
-		<!-- ILICIT Weavers -->
-		<copy todir="${composestar.installdir}\bin">
-			<fileset dir="${Weaver.dir}\bin\Release">
-				<include name="IlWeaver.exe"/>
-				<include name="PeWeaver.exe"/>
-				<include name="WeaveLibrary.dll"/>
-			</fileset>
-		</copy>
-		<!-- INCRE configurations -->
 		<copy todir="${composestar.installdir}">
-			<fileset dir="src/Composestar/DotNET/INCRE/">
-				<include name="*.xml"/>
-			</fileset>
-		</copy>
+			<fileset dir="${out.dist}"/>
+		</copy>		
 	</target>
 	
 	<target name="test" depends="validate_moduleinfo" description="Run tests" />

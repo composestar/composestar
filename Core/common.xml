@@ -35,11 +35,11 @@ Common routines. Always include this file in every build.xml file
 		<property name="out.dist"  value="dist"/>
 		<property name="out.qa"    value="qa"/>
 		
-		<property name="out.jar.core"      value="${out.dist}${file.separator}ComposestarCORE.jar"/>
-		<property name="out.jar.dotnet"    value="${out.dist}${file.separator}ComposestarDotNET.jar"/>
-		<property name="out.jar.java"      value="${out.dist}${file.separator}ComposestarJava.jar"/>
+		<property name="out.jar.core"      value="${out.dist}${file.separator}lib${file.separator}ComposestarCORE.jar"/>
+		<property name="out.jar.dotnet"    value="${out.dist}${file.separator}lib${file.separator}ComposestarDotNET.jar"/>
+		<property name="out.jar.java"      value="${out.dist}${file.separator}lib${file.separator}ComposestarJava.jar"/>
 		<property name="out.jar.starlight" value="${out.dist}${file.separator}StarLight.jar"/>
-		<property name="out.jar.visualization" value="${out.dist}${file.separator}ComposestarVisualization.jar"/>
+		<property name="out.jar.visualization" value="${out.dist}${file.separator}lib${file.separator}ComposestarVisualization.jar"/>
 		
 		<!-- options for javac -->
 		<property name="build.java.version" value="1.5"/>
