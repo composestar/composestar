@@ -9,14 +9,17 @@
  */
 package Composestar.Core.Master.Config;
 
+import java.io.File;
 import java.io.Serializable;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 /**
  * Singleton containing the build configuration
- *
+ * 
  * @author elmuerte
  */
 public class Configuration implements Serializable
@@ -41,7 +44,7 @@ public class Configuration implements Serializable
 	 * Temporary storage of module settings. ModuleInfo uses this to populate
 	 * it's settings when it's loaded.
 	 */
-	private Map<String,Map> tmpModuleSettings;
+	private Map<String, Map> tmpModuleSettings;
 
 	public Configuration()
 	{
@@ -52,7 +55,7 @@ public class Configuration implements Serializable
 		libraries = new BuiltLibraries();
 		filters = new CustomFilters();
 
-		tmpModuleSettings = new HashMap<String,Map>();
+		tmpModuleSettings = new HashMap<String, Map>();
 	}
 
 	public static Configuration instance()
@@ -133,6 +136,33 @@ public class Configuration implements Serializable
 	public PathSettings getPathSettings()
 	{
 		return pathSettings;
+	}
+
+	protected static String LIB_PATH = "lib";
+
+	/**
+	 * @return get a File instance to a file in the compose* lib directory
+	 */
+	public File getLibFile(String file)
+	{
+		URL s = Configuration.class.getResource("/");
+		File res;
+		try
+		{
+			res = new File(s.toURI());
+		}
+		catch (URISyntaxException e)
+		{
+			// TODO: report error
+			return null;
+		}
+		res = new File(res, file);
+		if (!res.exists())
+		{
+			// fall back to the "installed" files
+			res = new File(pathSettings.getPath("Composestar") + LIB_PATH, file);
+		}
+		return res;
 	}
 
 	public Platform getPlatform()

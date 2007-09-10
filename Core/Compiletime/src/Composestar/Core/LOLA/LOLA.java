@@ -105,12 +105,17 @@ public abstract class LOLA implements CTCommonModule
 	public void initPrologEngine(CommonResources resources, String generatedPredicatesFilename) throws ModuleException
 	{
 		/* Get the names of special files (containing base predicate libraries) */
+		/*
 		String prologLibraryFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath(
 				"Composestar")
 				+ "lib/prolog/lib.pro");
 		String prologConnectorFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings()
 				.getPath("Composestar")
 				+ "lib/prolog/connector.pro");
+		*/
+		
+		String prologLibraryFilename = FileUtils.normalizeFilename(Configuration.instance().getLibFile("prolog/lib.pro").getAbsolutePath());
+		String prologConnectorFilename = FileUtils.normalizeFilename(Configuration.instance().getLibFile("prolog/connector.pro").getAbsolutePath());
 
 		/* Initialize the prolog engine */
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Initializing the prolog interpreter");
