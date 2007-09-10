@@ -57,6 +57,19 @@
 		</jar>
 	</target>
 	
+	<target name="quicklaunch" depends="init_local">
+		<copy file="quicklaunch/MANIFEST.MF.template" tofile="quicklaunch/MANIFEST.MF" overwrite="true"/>
+		<replace file="quicklaunch/MANIFEST.MF" >
+			<replacefilter token="@core@" value="../composestar.core_${version.core}/lib"/>
+			<replacefilter token="@java@" value="lib"/>
+		</replace>
+		<jar destfile="${out.dist}/compiler.jar" manifest="quicklaunch/MANIFEST.MF">
+			<fileset dir="quicklaunch">
+				<include name="README" />
+			</fileset>
+		</jar>
+	</target>
+	
 	<target name="feature" depends="init_local" description="Create the eclipse feature.xml file">
 		<loadfile property="license" srcFile="${build.core}/Resources/Licenses/lgpl-2.1.txt">
 			<filterchain>
@@ -83,7 +96,7 @@
 		</copy>	
 	</target>
 	
-	<target name="-distmisc" depends="init_local">
+	<target name="-distmisc" depends="init_local,quicklaunch">
 		<copy todir="${out.dist}">
 			<fileset dir=".">
 				<include name="plugin.*" />

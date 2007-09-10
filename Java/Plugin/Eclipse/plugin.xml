@@ -2,9 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-	--------------------------------------------------
-							UI
-	--------------------------------------------------
   	<extension point="org.eclipse.ui.preferencePages">
  		<page
  			id="composestar.java.preferencepage"
@@ -34,12 +31,14 @@
        		path="additions">
        		<separator name="slot1"/>
        	</menu>
+       	<!--
         <action
               class="ComposestarEclipsePlugin.Core.Actions.VisAction"
               enablesFor="1"
               id="composestar.java.action.visualization"
               label="%COMPOSESTAR_POPUP_LABEL_VIS"
               menubarPath="composestar.java.popupmenu/slot1"/>
+        -->
        	<action
             label="%COMPOSESTAR_POPUP_LABEL_RUN"
             menubarPath="composestar.java.popupmenu/slot1" 
@@ -73,24 +72,6 @@
       </wizard> 
    	</extension> 
     
-    
-    <!-- <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
-    	<launchConfigurationTypeImage
-        	icon="icons/logo.gif"
-        	configTypeID="composestar.java.launching.application"
-        	id="composestar.java.launchConfigurationTypeImage">
-    	</launchConfigurationTypeImage>
-	</extension> -->
-
-	-------------------------------------------------
-				Launch Configuration
-	------------------------------------------------- 
-	
-    
-    
-    -------------------------------------------------
-					Headless Mode
-	------------------------------------------------- 
     <extension
         id="testbuild"
         point="org.eclipse.core.runtime.applications">

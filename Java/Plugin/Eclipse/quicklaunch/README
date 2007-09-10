@@ -1,0 +1,4 @@
+This is a quicklauncher for the Compose*/Java compiler when shipped with Eclipse
+Simply use:
+  java -jar <eclipse>/plugins/composestar.java_<version>/compiler.jar ...
+  
