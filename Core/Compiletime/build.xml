@@ -69,11 +69,13 @@
     <copy file="lib/log4j/log4j-1.2.14.jar" todir="${out.dist}/lib"/>
     <copy file="lib/prolog/prolog.jar" todir="${out.dist}/lib"/>
 
+    <!--
     <copy todir="${out.dist}/lib/prolog">
       <fileset dir="lib/prolog">
         <include name="*.pro"/>
       </fileset>
     </copy>
+    -->
 
     <copy todir="${out.dist}/lib">
       <fileset dir="lib/groove">
@@ -105,6 +107,7 @@
 		<copy todir="${out.build}"><!-- copy groove grammars -->
 			<fileset dir="src">
 				<include name="**/*.gpr"/>
+				<include name="**/*.pro"/>
 				<include name="**/*.properties"/>
 				<include name="**/moduleinfo.xml"/>
 				<include name="Composestar/Core/DIGGER/Xslt/*.xslt"/>

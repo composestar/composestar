@@ -2,6 +2,8 @@ package Composestar.Core.LOLA;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import tarau.jinni.Builtins;
+import tarau.jinni.DataBase;
 import tarau.jinni.Init;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.AnnotationBinding;
@@ -105,17 +108,6 @@ public abstract class LOLA implements CTCommonModule
 	public void initPrologEngine(CommonResources resources, String generatedPredicatesFilename) throws ModuleException
 	{
 		/* Get the names of special files (containing base predicate libraries) */
-		/*
-		String prologLibraryFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath(
-				"Composestar")
-				+ "lib/prolog/lib.pro");
-		String prologConnectorFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings()
-				.getPath("Composestar")
-				+ "lib/prolog/connector.pro");
-		*/
-		
-		String prologLibraryFilename = FileUtils.normalizeFilename(Configuration.instance().getLibFile("prolog/lib.pro").getAbsolutePath());
-		String prologConnectorFilename = FileUtils.normalizeFilename(Configuration.instance().getLibFile("prolog/connector.pro").getAbsolutePath());
 
 		/* Initialize the prolog engine */
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Initializing the prolog interpreter");
@@ -130,16 +122,9 @@ public abstract class LOLA implements CTCommonModule
 
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Consulting base predicate libraries");
 
-		if (Init.askJinni("reconsult('" + prologLibraryFilename + "')").equals("no"))
-		{
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Could not load prolog base library! Expected location: "
-					+ prologLibraryFilename);
-		}
-		if (Init.askJinni("reconsult('" + prologConnectorFilename + "')").equals("no"))
-		{
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Could not load prolog connector library! Expected location: "
-					+ prologConnectorFilename);
-		}
+		reconsult("lib.pro");
+		reconsult("connector.pro");
+
 		if (Init.askJinni("reconsult('" + generatedPredicatesFilename + "')").equals("no"))
 		{
 			Debug
@@ -152,6 +137,35 @@ public abstract class LOLA implements CTCommonModule
 		{
 			throw new ModuleException("FATAL: Prolog interpreter could not be initialized!", MODULE_NAME);
 		}
+	}
+
+	/**
+	 * Call `reconsult' for internal files
+	 * 
+	 * @param proFile
+	 * @return
+	 */
+	protected boolean reconsult(String proFile)
+	{
+		InputStream s = LOLA.class.getResourceAsStream(proFile);
+		if ((s != null) && DataBase.streamToProg(new InputStreamReader(s), true))
+		{
+			return true;
+		}
+
+		// fall back, shouldn't be used
+		// File f = Configuration.instance().getLibFile("prolog/" + proFile);
+		// if (f != null)
+		// {
+		// String fs = FileUtils.normalizeFilename(f.getAbsolutePath());
+		// if (Init.askJinni("reconsult('" + fs + "')").equals("no"))
+		// {
+		// return true;
+		// }
+		// }
+
+		Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Could not load prolog library: " + proFile);
+		return false;
 	}
 
 	/**
