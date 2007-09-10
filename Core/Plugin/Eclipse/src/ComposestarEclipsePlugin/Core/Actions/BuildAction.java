@@ -40,13 +40,13 @@ public class BuildAction extends Action
 	 * The concerns found in the project. The HashSet contains filenames
 	 * (Strings).
 	 */
-	protected HashSet concerns = new HashSet();
+	protected HashSet<IPath> concerns = new HashSet<IPath>();
 
 	/**
 	 * The sources found in the project. The HashSet contains filenames
 	 * (Strings).
 	 */
-	protected HashSet sources = new HashSet();
+	protected HashSet<IPath> sources = new HashSet<IPath>();
 
 	/**
 	 * The project to be built. Contains only information that is needed in the
@@ -85,13 +85,13 @@ public class BuildAction extends Action
 	 * @param list - a list of concernsources
 	 * @param projectBase - base location of project
 	 */
-	public void setConcernSources(HashSet list, IPath projectBase)
+	public void setConcernSources(HashSet<IPath> list, IPath projectBase)
 	{
-		Iterator l = list.iterator();
+		Iterator<IPath> l = list.iterator();
 		projectBase = projectBase.removeLastSegments(1);
 		while (l.hasNext())
 		{
-			IPath path = (IPath) l.next();
+			IPath path = l.next();
 			path = projectBase.append(path);
 			BuildConfigurationManager.instance().setConcernSources(FileUtils.fixFilename(path.toOSString()));
 		}
@@ -103,13 +103,13 @@ public class BuildAction extends Action
 	 * @param list - a list of sources
 	 * @param projectBase - base location of project
 	 */
-	public void setSources(HashSet list, IPath projectBase)
+	public void setSources(HashSet<IPath> list, IPath projectBase)
 	{
-		Iterator l = list.iterator();
+		Iterator<IPath> l = list.iterator();
 		projectBase = projectBase.removeLastSegments(1);
 		while (l.hasNext())
 		{
-			IPath path = (IPath) l.next();
+			IPath path = l.next();
 			path = projectBase.append(path);
 			projectConfig.addSource(FileUtils.fixFilename(path.toOSString()));
 		}

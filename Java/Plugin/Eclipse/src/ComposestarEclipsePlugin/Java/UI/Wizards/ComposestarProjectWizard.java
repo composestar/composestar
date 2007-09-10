@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -49,6 +48,7 @@ public class ComposestarProjectWizard extends Wizard implements INewWizard
 	 * wizard the opportunity to add any lazily created pages.
 	 * </p>
 	 */
+	@Override
 	public void addPages()
 	{
 		super.addPages();
@@ -88,6 +88,7 @@ public class ComposestarProjectWizard extends Wizard implements INewWizard
 	 *         and <code>false</code> to indicate that the cancel request was
 	 *         refused
 	 */
+	@Override
 	public boolean performCancel()
 	{
 		fSecondPage.performCancel();
@@ -107,6 +108,7 @@ public class ComposestarProjectWizard extends Wizard implements INewWizard
 	 *         and <code>false</code> to indicate that the finish request was
 	 *         refused
 	 */
+	@Override
 	public boolean performFinish()
 	{
 		IWorkspaceRunnable op = new IWorkspaceRunnable()

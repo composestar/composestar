@@ -68,6 +68,7 @@ public class MasterManager
 		String basePath = FileUtils.getDirectoryPart(bcmanager.buildconfigFile);
 		try
 		{
+			// automatically resolve classpath
 			List<String> cp = ComposestarEclipsePluginPlugin.getJarClassPath(ComposestarEclipsePluginPlugin
 					.getAbsolutePath(IComposestarConstants.LIB_DIR + "ComposestarCORE.jar"));
 			cp.addAll(ComposestarEclipsePluginPlugin.getJarClassPath(ComposestarEclipsePluginPlugin.getAbsolutePath(

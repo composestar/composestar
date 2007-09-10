@@ -20,7 +20,7 @@ public class TestBuild implements IPlatformRunnable
 		try
 		{
 			Debug.instance().setLogToStd(true);
-			
+
 			// log compile results
 			MasterManager m = MasterManager.getInstance();
 			m.logOutput = true;

@@ -30,7 +30,7 @@ public class TestRun implements IPlatformRunnable
 		try
 		{
 			Debug.instance().setLogToStd(true);
-			
+
 			// disable debugging
 			Debug.instance().setEnabled(false);
 

@@ -31,15 +31,15 @@ public class Sources
 		this.selectedProjects = selectedProjects;
 	}
 	
-	public HashSet getSources(String extension)
+	public HashSet<IPath> getSources(String extension)
 	{
-		return getSources(extension, new HashSet());
+		return getSources(extension, new HashSet<String>());
 	}
 
-	public HashSet getSources(String extension, HashSet skiplist)
+	public HashSet<IPath> getSources(String extension, HashSet<String> skiplist)
 	{
 		String languageTest = null;
-		HashSet list = new HashSet();
+		HashSet<IPath> list = new HashSet<IPath>();
 		String folder = "";
 
 		if (selectedProjects.length == 1)
@@ -82,31 +82,31 @@ public class Sources
 		return list;
 	}
 
-	public void setSources(HashSet list, IPath workspace)
+	public void setSources(HashSet<IPath> list, IPath workspace)
 	{
-		Iterator l = list.iterator();
+		Iterator<IPath> l = list.iterator();
 		workspace = workspace.removeLastSegments(1);
 		while (l.hasNext())
 		{
-			IPath test = (IPath) l.next();
+			IPath test = l.next();
 			test = workspace.append(test);
 			projectConfig.addSource(test.toOSString());
 		}
 	}
 
-	public void setConcernSources(HashSet list, IPath workspace)
+	public void setConcernSources(HashSet<IPath> list, IPath workspace)
 	{
-		Iterator l = list.iterator();
+		Iterator<IPath> l = list.iterator();
 		workspace = workspace.removeLastSegments(1);
 		while (l.hasNext())
 		{
-			IPath test = (IPath) l.next();
+			IPath test = l.next();
 			test = workspace.append(test);
 			BuildConfigurationManager.instance().setConcernSources(test.toOSString());
 		}
 	}
 
-	public HashSet getAllFilesFromDirectory(IResource dir, HashSet list, String extension)
+	public HashSet<IPath> getAllFilesFromDirectory(IResource dir, HashSet<IPath> list, String extension)
 	{
 		String languageTest = null;
 		if (dir.getType() == IResource.FOLDER)

@@ -79,6 +79,7 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 
 	private WidgetListener fListener = new WidgetListener();
 
+	@Override
 	public Control createContents(Composite parent)
 	{
 
@@ -140,12 +141,12 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		mainClass.setLayoutData(gd);
 
 		fSearchExternalJarsCheckButton = createCheckButton(group, "Include libraries when searching for a main class");
-		Label empty = new Label(group, SWT.NULL);
+		new Label(group, SWT.NULL);
 		fSearchExternalJarsCheckButton.setLayoutData(gd);
 
 		fConsiderInheritedMainButton = createCheckButton(group,
 				"Include inherited main when searching for a main class");
-		empty = new Label(group, SWT.NULL);
+		new Label(group, SWT.NULL);
 		fConsiderInheritedMainButton.setLayoutData(gd);
 
 		return controls;
@@ -173,7 +174,7 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		runDebugLevel.add("Warning");
 		runDebugLevel.add("Information");
 		runDebugLevel.add("Debug");
-		Label empty = new Label(group, SWT.NULL);
+		new Label(group, SWT.NULL);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		runDebugLevel.setLayoutData(gd);
 
@@ -185,7 +186,7 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		buildDebugLevel.add("Warning");
 		buildDebugLevel.add("Information");
 		buildDebugLevel.add("Debug");
-		empty = new Label(group, SWT.NULL);
+		new Label(group, SWT.NULL);
 		buildDebugLevel.setLayoutData(gd);
 
 		label = new Label(group, SWT.NULL);
@@ -195,7 +196,7 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		secretMode.add("SelectedOrder");
 		secretMode.add("AllOrders");
 		secretMode.add("AllOrdersAndSelect");
-		empty = new Label(group, SWT.NULL);
+		new Label(group, SWT.NULL);
 		secretMode.setLayoutData(gd);
 
 		label = new Label(group, SWT.NULL);
@@ -203,7 +204,7 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		incremental = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		incremental.add("False");
 		incremental.add("True");
-		empty = new Label(group, SWT.NULL);
+		new Label(group, SWT.NULL);
 		incremental.setLayoutData(gd);
 
 		label = new Label(group, SWT.NULL);
@@ -232,7 +233,7 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		label = new Label(group, SWT.NULL);
 		label.setText(CLASSPATH_TITLE);
 		classpathText = new Text(group, SWT.BORDER | SWT.SINGLE);
-		empty = new Label(group, SWT.NULL);
+		new Label(group, SWT.NULL);
 		classpathText.setLayoutData(gd);
 
 		return controls;
@@ -365,6 +366,7 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 	 * Performs special processing when this page's Defaults button has been
 	 * pressed.
 	 */
+	@Override
 	public void performDefaults()
 	{
 

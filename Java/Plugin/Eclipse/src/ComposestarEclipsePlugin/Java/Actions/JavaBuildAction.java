@@ -261,24 +261,24 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 
 			IClasspathEntry[] classpaths = javaProject.getRawClasspath();
 
-			for (int i = 0; i < classpaths.length; i++)
+			for (IClasspathEntry element : classpaths)
 			{
 				// dependencies
-				if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_LIBRARY)
+				if (element.getEntryKind() == IClasspathEntry.CPE_LIBRARY)
 				{
-					projectConfig.addDependency(FileUtils.fixFilename(classpaths[i].getPath().toOSString()));
+					projectConfig.addDependency(FileUtils.fixFilename(element.getPath().toOSString()));
 				}
-				else if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_VARIABLE)
+				else if (element.getEntryKind() == IClasspathEntry.CPE_VARIABLE)
 				{
-					IClasspathEntry entry = JavaCore.getResolvedClasspathEntry(classpaths[i]);
+					IClasspathEntry entry = JavaCore.getResolvedClasspathEntry(element);
 					if (entry != null)
 					{
 						projectConfig.addDependency(FileUtils.fixFilename(entry.getPath().toOSString()));
 					}
 				}
-				else if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_CONTAINER)
+				else if (element.getEntryKind() == IClasspathEntry.CPE_CONTAINER)
 				{
-					IClasspathContainer con = JavaCore.getClasspathContainer(classpaths[i].getPath(), javaProject);
+					IClasspathContainer con = JavaCore.getClasspathContainer(element.getPath(), javaProject);
 					if (con.getKind() != IClasspathContainer.K_DEFAULT_SYSTEM)
 					{
 						IClasspathEntry[] concps = con.getClasspathEntries();
@@ -306,7 +306,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 	public void setSources()
 	{
 		// skip folderlist
-		HashSet skiplist = new HashSet();
+		HashSet<String> skiplist = new HashSet<String>();
 		skiplist.add(outputPath);
 		skiplist.add(buildPath);
 

@@ -13,6 +13,7 @@ public class JavaComposestarPreferencePage extends ComposestarPreferencePage
 	 * Performs special processing when this page's Defaults button has been
 	 * pressed.
 	 */
+	@Override
 	public void performDefaults()
 	{
 
@@ -21,9 +22,10 @@ public class JavaComposestarPreferencePage extends ComposestarPreferencePage
 		runDebugLevel.select(1);
 		secretMode.select(0);
 
-		BuildConfigurationManager.instance().setPlatformConfigFile(ComposestarEclipsePluginPlugin.getAbsolutePath(
-				"/PlatformConfigurations.xml", IComposestarJavaConstants.BUNDLE_ID));
-		
+		BuildConfigurationManager.instance().setPlatformConfigFile(
+				ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml",
+						IComposestarJavaConstants.BUNDLE_ID));
+
 		Platform p = BuildConfigurationManager.instance().getPlatform("Java");
 		classpathText.setText(p.getClassPath());
 

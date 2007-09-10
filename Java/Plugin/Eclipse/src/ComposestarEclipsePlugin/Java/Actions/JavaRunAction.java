@@ -24,7 +24,6 @@ import ComposestarEclipsePlugin.Core.IComposestarConstants;
 import ComposestarEclipsePlugin.Core.Actions.Action;
 import ComposestarEclipsePlugin.Core.Utils.CommandLineExecutor;
 import ComposestarEclipsePlugin.Core.Utils.FileUtils;
-import ComposestarEclipsePlugin.Java.IComposestarJavaConstants;
 
 /**
  * Action for running a Java project with Compose*
@@ -59,7 +58,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 	/**
 	 * Classpath of project (this includes dependencies). Contains Strings.
 	 */
-	private HashSet classpath = new HashSet();
+	private HashSet<String> classpath = new HashSet<String>();
 
 	/**
 	 * If true, run proces is finished properly
@@ -110,7 +109,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 			return;
 		}
 
-		classpath = new HashSet();
+		classpath = new HashSet<String>();
 		command = "";
 		arguments = "";
 
@@ -149,10 +148,10 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 		command += "java ";
 		command += "-cp ";
 
-		Iterator cpIt = classpath.iterator();
+		Iterator<String> cpIt = classpath.iterator();
 		while (cpIt.hasNext())
 		{
-			command += '"' + ((String) cpIt.next()) + '"';
+			command += '"' + (cpIt.next()) + '"';
 			if (cpIt.hasNext())
 			{
 				command += ";";
@@ -216,24 +215,24 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 
 			IClasspathEntry[] classpaths = javaProject.getRawClasspath();
 
-			for (int i = 0; i < classpaths.length; i++)
+			for (IClasspathEntry element : classpaths)
 			{
 				// dependencies
-				if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_LIBRARY)
+				if (element.getEntryKind() == IClasspathEntry.CPE_LIBRARY)
 				{
-					classpath.add(FileUtils.fixFilename(classpaths[i].getPath().toOSString()));
+					classpath.add(FileUtils.fixFilename(element.getPath().toOSString()));
 				}
-				else if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_VARIABLE)
+				else if (element.getEntryKind() == IClasspathEntry.CPE_VARIABLE)
 				{
-					IClasspathEntry entry = JavaCore.getResolvedClasspathEntry(classpaths[i]);
+					IClasspathEntry entry = JavaCore.getResolvedClasspathEntry(element);
 					if (entry != null)
 					{
 						classpath.add(FileUtils.fixFilename(entry.getPath().toOSString()));
 					}
 				}
-				else if (classpaths[i].getEntryKind() == IClasspathEntry.CPE_CONTAINER)
+				else if (element.getEntryKind() == IClasspathEntry.CPE_CONTAINER)
 				{
-					IClasspathContainer con = JavaCore.getClasspathContainer(classpaths[i].getPath(), javaProject);
+					IClasspathContainer con = JavaCore.getClasspathContainer(element.getPath(), javaProject);
 					if (con.getKind() != IClasspathContainer.K_DEFAULT_SYSTEM)
 					{
 						IClasspathEntry[] concps = con.getClasspathEntries();

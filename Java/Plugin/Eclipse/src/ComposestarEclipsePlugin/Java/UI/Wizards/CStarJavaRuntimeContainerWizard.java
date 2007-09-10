@@ -106,6 +106,7 @@ public class CStarJavaRuntimeContainerWizard extends WizardPage implements IClas
 	 * 
 	 * @see org.eclipse.jface.dialogs.IDialogPage#getImage()
 	 */
+	@Override
 	public Image getImage()
 	{
 		return JavaDebugImages.get(JavaDebugImages.IMG_WIZBAN_LIBRARY);
