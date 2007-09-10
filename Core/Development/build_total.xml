@@ -101,11 +101,16 @@
 	
 	<target name="publish">
 		<antcall target="publish_dotnet" inheritRefs="true" />
+		<antcall target="publish_java" inheritRefs="true" />
 		<antcall target="publish_starlight" inheritRefs="true" />
 	</target>
 
 	<target name="publish_dotnet" depends="init" if="enabled.dotnet" description="Create installer for Compose* .NET">
 		<ant target="publish" dir="${build.dotnet}/Installer" inheritRefs="true" />
+	</target>
+	
+	<target name="publish_java" depends="init" if="enabled.java" description="Create installer for Compose*/Java">
+		<ant target="publish" dir="${build.java}/Installer" inheritRefs="true" />
 	</target>
 	
 	<target name="publish_starlight" depends="init" if="enabled.starlight" description="Create installer for Compose* StarLight">

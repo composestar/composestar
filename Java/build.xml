@@ -25,6 +25,7 @@
 		<ant target="clean" dir="Examples" inheritRefs="true" />
 		<ant target="clean" dir="Testing" inheritRefs="true" />
 		<ant target="clean" dir="Plugin" inheritRefs="true" />
+		<ant target="clean" dir="Installer" inheritRefs="true" />
 	</target>	
 	
 	<target name="build" description="Build the .Net implementation of Compose*">

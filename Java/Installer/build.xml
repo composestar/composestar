@@ -16,8 +16,11 @@
 	
 	<target name="build"/>
 	
-	<target name="publish" description="publish installers">
-		<ant target="publish" dir="eclipse" inheritRefs="true" if="available.eclipse" />
+	<target name="publish" depends="init,-publish_eclipse" description="publish installers">
+	</target>
+	
+	<target name="-publish_eclipse" description="publish installers" if="available.eclipse">
+		<ant target="publish" dir="eclipse" inheritRefs="true" />
 	</target>
 
 </project>

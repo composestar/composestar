@@ -7,19 +7,18 @@
 	<copyright url="http://trese.ewi.utwente.nl/">
 		(c) 2007, University of Twente
 	</copyright>
-
-	<license url="Licenses/lgpl-2.1.txt">
-		%license
-	</license>
+	
+	<license url="Licenses/lgpl-2.1.txt"><![CDATA[@license@]]></license>
 
 	<url>
-		<update label="%updateSiteName" url="http://composestar.sourceforge.net"/>
+		<update label="%updateSiteName" url="http://composestar.sourceforge.net/eclipse"/>
+		<discovery label="%discoverySiteName" url="http://composestar.sourceforge.net/eclipse"/>
 	</url>
 
 	<requires>
 		<import feature="org.eclipse.jdt" version="3.2" match="greaterOrEqual"/>
 	</requires>
 
-	<plugin id="composestar.core" download-size="0" install-size="0" version="@version.core@"/>
-	<plugin id="composestar.java" download-size="0" install-size="0" version="@version.java@"/>
+	<plugin id="composestar.core" version="@version.core@"/>
+	<plugin id="composestar.java" version="@version.java@"/>
 </feature>

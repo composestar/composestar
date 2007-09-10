@@ -405,7 +405,7 @@ Common routines. Always include this file in every build.xml file
 	
 	<!-- generic target to rebuild all -->
 	<target name="rebuild" depends="init,clean,build" description="Clean and then compile"/>
-	
+		
 	<target name="svn-update" depends="init" description="Update the sources from the SVN repository">
 		<svn>
 			<update dir="${basedir}" />

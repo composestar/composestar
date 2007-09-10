@@ -58,10 +58,19 @@
 	</target>
 	
 	<target name="feature" depends="init_local" description="Create the eclipse feature.xml file">
+		<loadfile property="license" srcFile="${build.core}/Resources/Licenses/lgpl-2.1.txt">
+			<filterchain>
+				<tokenfilter>
+					<deletecharacters chars="\f"/> <!-- form feed is invalid in XML -->
+				</tokenfilter>
+			</filterchain>
+		</loadfile>
+	
 		<copy file="feature.template.xml" tofile="${out.dist.feature}/feature.xml" overwrite="true"/>
 		<replace file="${out.dist.feature}/feature.xml" >
 			<replacefilter token="@version.core@" value="${version.core}"/>
 			<replacefilter token="@version.java@" value="${version.java}"/>
+			<replacefilter token="@license@" value="${license}"/>
 		</replace>
 		
 		<copy todir="${out.dist.feature}">
