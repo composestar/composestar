@@ -58,6 +58,7 @@ namespace Composestar.StarLight.Entities.Concerns
 		private string _pathName;
 		private bool _hasOutputFilters;
 		private List<string> _types = new List<string>();
+        private string _embeddedFileName;
 
 		/// <summary>
 		/// Gets or sets the types used in the internals or externals.
@@ -137,5 +138,16 @@ namespace Composestar.StarLight.Entities.Concerns
 		{
 			get { return Path.Combine(_pathName, _fileName); }
 		}
+
+        /// <summary>
+        /// Gets or sets the filename of the embedded source, if any.
+        /// </summary>
+        /// <value>The embedded source filename.</value>
+        [XmlAttribute]
+        public string EmbeddedFileName
+        {
+            get { return _embeddedFileName; }
+            set { _embeddedFileName = value; }
+        }
 	}
 }

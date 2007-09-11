@@ -211,7 +211,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						ce.HasOutputFilters = parser.HasOutputFilters;
 
 						// Store the embedded code (if any)
-						StoreEmbeddedCode(concernFile, parser.EmbeddedCode);
+						ce.EmbeddedFileName = StoreEmbeddedCode(concernFile, parser.EmbeddedCode);
 
 						// Add the referenced types
 						ce.ReferencedTypes.AddRange(parser.ReferencedTypes);
@@ -226,6 +226,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 					{
 						Log.LogMessageFromResources("AddingConcernFile", concernFile);
 					}
+
+                    if (!string.IsNullOrEmpty(ce.EmbeddedFileName))
+                    {
+                        _extraSources.Add(new TaskItem(ce.EmbeddedFileName));
+                    }
 
 					_hasOutputFilters |= ce.HasOutputFilters;
 
@@ -305,21 +310,21 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// Writes the specified embedded code to a file.
 		/// </summary>
 		/// <param name="ec">The embedded code.</param>
-		private void StoreEmbeddedCode(string concern, EmbeddedCode ec)
+		private string StoreEmbeddedCode(string concern, EmbeddedCode ec)
 		{
 			if (ec == null)
-				return;
+				return null;
 
 			if (_codeLanguage == null)
 			{
 				Log.LogWarningFromResources("EmbeddedCodeNotSupported", concern);
-				return;
+				return null;
 			}
 
 			if (!_codeLanguage.Equals(ec.Language))
 			{
 				Log.LogWarningFromResources("EmbeddedCodeLanguageWrong", concern, ec.Language, _codeLanguage);
-				return;
+                return null;
 			}
 
 			string embeddedDir = Path.Combine(_baseDir, EmbeddedFolderName);
@@ -333,8 +338,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				Log.LogMessageFromResources("WritingEmbeddedCode", filename);
 
 				sw.Write(ec.Code);
-				_extraSources.Add(new TaskItem(filename));
+				//_extraSources.Add(new TaskItem(filename));
+                return filename;
 			}
+            return null;
 		}
 
 		/// <summary>
