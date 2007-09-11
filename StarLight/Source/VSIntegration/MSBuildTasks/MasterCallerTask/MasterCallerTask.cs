@@ -339,10 +339,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
 					case "crucial": 
 						mode = DebugMode.Crucial; 
 						break;
-					case "warning": 
+					case "warning":
+                    case "warn": 
 						mode = DebugMode.Warning; 
 						break;
-					case "information": 
+					case "information":
+                    case "info": 
 						mode = DebugMode.Information; 
 						break;
 					case "debug": 

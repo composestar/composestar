@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -314,15 +314,15 @@
   </PropertyGroup>
 	
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Visual Studio SDK\Microsoft.VsSDK.targets" />
+  <Import Project="..\Target Files\VS2005SDK\Microsoft.VsSDK.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
 	
   <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying..." />
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion" DefaultValue="0.0">
       <Output TaskParameter="Value" PropertyName="StarLightVersion"/>
     </RegistryRead>
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(StarLightVersion)" ValueName="StarLightInstallFolder">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(StarLightVersion)" ValueName="StarLightInstallFolder" DefaultValue="$(ProgramFiles)\StarLight\">
       <Output TaskParameter="Value" PropertyName="StarLightInstallFolder" />
     </RegistryRead>
     <CreateProperty Value="$(StarLightInstallFolder)\VSIntegration">

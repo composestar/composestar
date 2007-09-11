@@ -129,6 +129,14 @@ Common routines. Always include this file in every build.xml file
 		<!-- final fallback -->
 		<property name="composestar.installdir" value="${user.home}${file.separator}ComposeStar"/>
 		
+		<!-- location of the Compose* installation -->
+		<condition property="starlight.installdir" value="C:${file.separator}Program Files${file.separator}StarLight">
+			<os family="windows" />
+		</condition>
+		
+		<!-- final fallback -->
+		<property name="starlight.installdir" value="${user.home}${file.separator}StarLight"/>
+		
 		<!-- make macro -->
 		<macrodef name="make">
 			<attribute name="target" default=""/>

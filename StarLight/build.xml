@@ -25,6 +25,8 @@
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		
+		<ant target="clean" dir="Source/VSIntegration/" inheritRefs="true"/>
+		
 		<!-- run clean on all msbuild project files -->
 		<cs:dn_msbatch target="clean">
 			<fileset dir="Source">
@@ -56,8 +58,7 @@
 		<antcall target="build_core_elements" inheritRefs="true"/>
 		<antcall target="build_weaving" inheritRefs="true"/>
 		<antcall target="build_expansion" inheritRefs="true"/>
-		<antcall target="build_msbuild" inheritRefs="true"/>
-		<antcall target="build_vs" inheritRefs="true"/>
+		<antcall target="build_vsi" inheritRefs="true"/>
 	</target>
 
 	<target name="build_compiletime" depends="init" description="Build Compose* StarLight Compiletime">
@@ -76,13 +77,8 @@
 		<ant target="build" dir="Source/SigExpander" inheritRefs="true"/>
 	</target>
 
-  <target name="build_msbuild" description="Build Compose* StarLight MSBuild tasks">
-		<ant target="build" dir="Source/VSIntegration/MSBuildTasks" inheritRefs="true"/>
-	</target>
-
-	<target name="build_vs" description="Build Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
-		<ant target="build" dir="Source/VSIntegration/VisualStudio.Project" inheritRefs="true"/>
-		<ant target="build" dir="Source/VSIntegration/VisualStudio.LanguageServices" inheritRefs="true"/>
+	<target name="build_vsi" description="Build Compose* StarLight VS Integration">
+		<ant target="build" dir="Source/VSIntegration/" inheritRefs="true"/>
 	</target>
 
 	<!-- deploy -->
@@ -92,8 +88,7 @@
 		<antcall target="deploy_core_elements" inheritRefs="true"/>
 		<antcall target="deploy_weaving" inheritRefs="true"/>
 		<antcall target="deploy_expansion" inheritRefs="true"/>
-		<antcall target="deploy_msbuild" inheritRefs="true"/>
-		<antcall target="deploy_vs" inheritRefs="true"/>
+		<antcall target="deploy_vsi" inheritRefs="true"/>
 		<antcall target="deploy_misc" inheritRefs="true"/>
 	</target>
 
@@ -113,12 +108,8 @@
 		<ant target="deploy" dir="Source/SigExpander" inheritRefs="true" />
 	</target>
 
-	<target name="deploy_msbuild" description="Deploy Compose* StarLight MSBuild tasks">
-		<ant target="deploy" dir="Source/VSIntegration/MSBuildTasks" inheritRefs="true" />
-	</target>
-
-	<target name="deploy_vs" description="Deploy Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
-		<ant target="deploy" dir="Source/VSIntegration/VisualStudio.Project" inheritRefs="true" />
+	<target name="deploy_vsi" description="Deploy Compose* StarLight VS Integration">
+		<ant target="deploy" dir="Source/VSIntegration/" inheritRefs="true" />
 	</target>
 
 	<target name="deploy_misc" depends="init"  description="Deploy misc files">

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/StarLight/VSIntegration" default="build">
+
+	<condition property="build.core" value="${basedir}/../../../Core">
+		<and>
+			<not><isset property="build.core"/></not>
+			<available file="${basedir}/../../../Core/common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}/common.xml" />
+
+	<echo>Processing: ${ant.project.name} ...</echo>
+	<description>The Compose* StarLight VisualStudio integration</description>
+
+	<target name="clean" depends="init,vssdktargets" description="Clean compile results">
+    <ant target="clean" dir="MSBuildTasks" inheritRefs="true"/>
+		<ant target="clean" dir="VisualStudio.Project" inheritRefs="true"/>
+		<ant target="clean" dir="VisualStudio.LanguageServices" inheritRefs="true"/>
+	</target>
+
+	<target name="build" depends="build_msbuild,build_vs" description="Build the VSIntegration projects">
+	</target>
+
+	<target name="deploy" depends="deploy_msbuild,deploy_vs" description="Deploy the VSIntegration projects">
+	</target>
+	
+	<target name="build_msbuild" description="Build Compose* StarLight MSBuild tasks">
+		<ant target="build" dir="MSBuildTasks" inheritRefs="true"/>
+	</target>
+	
+	<target name="vssdktargets" depends="init" description="retrieves the visual studio SDK targets">
+	 <available property="msbuild.vssdk.targets" file="Target Files/VS2005SDK/Microsoft.VsSDK.targets" />
+	 <antcall target="-vssdktargets" inheritRefs="true"/>
+	</target>
+	
+	<target name="-vssdktargets" unless="msbuild.vssdk.targets" description="retrieves the visual studio SDK targets">
+	 <mkdir dir="Target Files/VS2005SDK" />
+	 <copy todir="Target Files/VS2005SDK" flatten="true">
+	   <fileset dir="${env.ProgramFiles}/Visual Studio 2005 SDK/">
+	     <include name="*/VisualStudioIntegration/Tools/Build/*" />
+	   </fileset>
+	 </copy>
+	</target>
+
+	<target name="build_vs" depends="vssdktargets" description="Build Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
+		<ant target="build" dir="VisualStudio.Project" inheritRefs="true"/>
+		<ant target="build" dir="VisualStudio.LanguageServices" inheritRefs="true"/>
+	</target>
+	
+	<target name="deploy_msbuild" description="Deploy Compose* StarLight MSBuild tasks">
+		<ant target="deploy" dir="MSBuildTasks" inheritRefs="true" />
+	</target>
+
+	<target name="deploy_vs" description="Deploy Compose* StarLight VS Integration" unless="ignore.plugin.starlight">
+		<ant target="deploy" dir="VisualStudio.Project" inheritRefs="true" />
+	</target>
+
+</project>

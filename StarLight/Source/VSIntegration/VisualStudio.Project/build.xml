@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight/Project" default="build">
 
-	<condition property="build.core" value="${basedir}/../../../..">
+	<condition property="build.core" value="${basedir}/../../../../Core">
 		<and>
 			<not><isset property="build.core"/></not>
-			<available file="${basedir}/../../../../common.xml" />
+			<available file="${basedir}/../../../../Core/common.xml" />
 		</and>
 	</condition>
 	<import file="${build.core}/common.xml" />

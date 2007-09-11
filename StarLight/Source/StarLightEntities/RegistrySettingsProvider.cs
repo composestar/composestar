@@ -135,8 +135,11 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 			// Get the path to the current version
 			string registryPath = RetrieveCurrentVersionPath();
 
-			if (string.IsNullOrEmpty(registryPath))
-				throw new ConfigurationErrorsException(Resources.CouldNotReadRegistryValues);
+            if (string.IsNullOrEmpty(registryPath))
+            {
+                return DefaultValues();
+                //throw new ConfigurationErrorsException(Resources.CouldNotReadRegistryValues);
+            }
 
 			// Open the hive with the correct version specific settings
 			RegistryKey regKey = Registry.LocalMachine.OpenSubKey(registryPath);
@@ -197,5 +200,39 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 
 			return String.Format(CultureInfo.CurrentCulture, @"Software\ComposeStar\StarLight\{0}", currentversion);
 		}
+
+        private SettingsPropertyValueCollection DefaultValues()
+        {
+            SettingsPropertyValueCollection values = new SettingsPropertyValueCollection();
+
+            SettingsPropertyValue value;
+            SettingsProperty setting;
+
+            setting = new SettingsProperty("StarLightInstallFolder");
+            setting.DefaultValue = "C:\\Program Files\\StarLight\\";
+            setting.PropertyType = "string".GetType();
+            value = new SettingsPropertyValue(setting);
+            values.Add(value);
+
+            setting = new SettingsProperty("WeaveStrategiesFolder");
+            setting.DefaultValue = "C:\\Program Files\\StarLight\\WeaveStrategies\\";
+            setting.PropertyType = "string".GetType();
+            value = new SettingsPropertyValue(setting);
+            values.Add(value);
+
+            setting = new SettingsProperty("JavaLocation");
+            setting.DefaultValue = "";
+            setting.PropertyType = "string".GetType();
+            value = new SettingsPropertyValue(setting);
+            values.Add(value);
+
+            setting = new SettingsProperty("JavaOptions");
+            setting.DefaultValue = "-Xmx512M";
+            setting.PropertyType = "string".GetType();
+            value = new SettingsPropertyValue(setting);
+            values.Add(value);
+
+            return values;
+        }
 	}
 }
