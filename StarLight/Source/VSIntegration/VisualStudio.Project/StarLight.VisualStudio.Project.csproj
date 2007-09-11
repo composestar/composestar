@@ -315,7 +315,7 @@
 	
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\Target Files\VS2005SDK\Microsoft.VsSDK.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <Import Project="..\..\..\Development\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
 	
   <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying..." />
