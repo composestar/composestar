@@ -1,0 +1,123 @@
+Only in cecil: key.snk
+diff -r -u -x .svn cecil-0.5\Mono.Cecil\BaseAssemblyResolver.cs cecil\Mono.Cecil\BaseAssemblyResolver.cs
+--- cecil-0.5\Mono.Cecil\BaseAssemblyResolver.cs	Wed Nov 08 22:07:02 2006
++++ cecil\Mono.Cecil\BaseAssemblyResolver.cs	Tue Sep 11 14:51:32 2007
+@@ -66,7 +66,7 @@
+ 		}
+ 
+ #if !CF_1_0 && !CF_2_0
+-		AssemblyDefinition GetCorlib (AssemblyNameReference reference)
++		public AssemblyDefinition GetCorlib (AssemblyNameReference reference)
+ 		{
+ 			SR.AssemblyName corlib = typeof (object).Assembly.GetName ();
+ 			if (corlib.Version == reference.Version)
+@@ -103,7 +103,7 @@
+ 			return typeof (object).Assembly.GetType ("System.MonoType", false) != null;
+ 		}
+ 
+-		static AssemblyDefinition GetAssemblyInGac (AssemblyNameReference reference)
++		public static AssemblyDefinition GetAssemblyInGac (AssemblyNameReference reference)
+ 		{
+ 			if (reference.PublicKeyToken == null || reference.PublicKeyToken.Length == 0)
+ 				return null;
+diff -r -u -x .svn cecil-0.5\Mono.Cecil\ReflectionWriter.cs cecil\Mono.Cecil\ReflectionWriter.cs
+--- cecil-0.5\Mono.Cecil\ReflectionWriter.cs	Thu Feb 22 23:21:26 2007
++++ cecil\Mono.Cecil\ReflectionWriter.cs	Tue Sep 11 14:44:46 2007
+@@ -1315,9 +1315,6 @@
+ 			elem.ElemType = type;
+ 			elem.FieldOrPropType = GetCorrespondingType (type.FullName);
+ 
+-			if (elem.FieldOrPropType == ElementType.Class)
+-				throw new NotImplementedException ("Writing enums");
+-
+ 			switch (elem.FieldOrPropType) {
+ 			case ElementType.Boolean :
+ 			case ElementType.Char :
+@@ -1347,6 +1344,13 @@
+ 					elem.FieldOrPropType = GetCorrespondingType (
+ 						GetObjectTypeName (value));
+ 				break;
++			case ElementType.Class:
++				// Handle enums
++				elem.Enum = true;
++
++				// Get the underlying type of the enum (int16, uint16, int32, uint32, etc)
++				elem.FieldOrPropType = GetCorrespondingType(GetObjectTypeName(value));
++				break;				
+ 			}
+ 
+ 			return elem;
+diff -r -u -x .svn cecil-0.5\Mono.Cecil.csproj cecil\Mono.Cecil.csproj
+--- cecil-0.5\Mono.Cecil.csproj	Fri Mar 16 19:02:14 2007
++++ cecil\Mono.Cecil.csproj	Tue Sep 11 14:48:46 2007
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -13,7 +13,7 @@
+     <StartupObject>
+     </StartupObject>
+     <SignAssembly>true</SignAssembly>
+-    <AssemblyOriginatorKeyFile>..\..\mcs\class\mono.snk</AssemblyOriginatorKeyFile>
++    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+@@ -357,4 +357,4 @@
+   <ItemGroup>
+     <Reference Include="System" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff -r -u -x .svn cecil-0.5\Mono.Cecil.Signatures\CustomAttrib.cs cecil\Mono.Cecil.Signatures\CustomAttrib.cs
+--- cecil-0.5\Mono.Cecil.Signatures\CustomAttrib.cs	Thu Oct 06 15:50:46 2005
++++ cecil\Mono.Cecil.Signatures\CustomAttrib.cs	Tue Sep 11 14:35:32 2007
+@@ -60,6 +60,7 @@
+ 			public bool String;
+ 			public bool Type;
+ 			public bool BoxedValueType;
++			public bool Enum;
+ 
+ 			public ElementType FieldOrPropType;
+ 			public object Value;
+diff -r -u -x .svn cecil-0.5\Mono.Cecil.Signatures\SignatureWriter.cs cecil\Mono.Cecil.Signatures\SignatureWriter.cs
+--- cecil-0.5\Mono.Cecil.Signatures\SignatureWriter.cs	Wed Feb 21 23:37:50 2007
++++ cecil\Mono.Cecil.Signatures\SignatureWriter.cs	Tue Sep 11 14:41:25 2007
+@@ -376,7 +376,7 @@
+ 
+ 			writer.Write (ca.NumNamed);
+ 
+-			for (int i = 0; i < ca.NumNamed; i++)
++			for (int i = ca.NumNamed-1; i >=0; i--)
+ 				Write (ca.NamedArgs [i], writer);
+ 		}
+ 
+@@ -401,8 +401,11 @@
+ 			if (na.FixedArg.SzArray)
+ 				writer.Write ((byte) ElementType.SzArray);
+ 
+-			writer.Write ((byte) na.FieldOrPropType);
+-
++			if (na.FieldOrPropType == ElementType.Class)
++				writer.Write((byte)ElementType.Boxed); // Enum support, mark the FieldOrPropType of the NamedArg as boxed
++			else
++				writer.Write((byte)na.FieldOrPropType);
++            
+ 			if (na.FieldOrPropType == ElementType.Enum)
+ 				Write (na.FixedArg.Elems [0].ElemType.FullName);
+ 
+@@ -419,6 +422,11 @@
+ 				elem.FieldOrPropType = ElementType.Type;
+ 			else if (elem.BoxedValueType)
+ 				Write (elem.FieldOrPropType);
++			else if (elem.Enum)
++			{         
++				Write(ElementType.Enum);  // Write the FieldOrPropType of the Elem as enum
++				Write(elem.ElemType.FullName);   // Write the FullName of the Enum type
++			}
+ 
+ 			switch (elem.FieldOrPropType) {
+ 			case ElementType.Boolean :
