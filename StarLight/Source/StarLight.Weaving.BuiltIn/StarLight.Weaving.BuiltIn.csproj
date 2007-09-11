@@ -87,7 +87,11 @@
   </ItemGroup>
   
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\Development\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  
+  <PropertyGroup>
+    <MSBuildCommunityTasksPath Condition="'$(MSBuildCommunityTasksPath)' == ''">$(MSBuildProjectDirectory)\..\..\Development\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
 
   <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying..." />
