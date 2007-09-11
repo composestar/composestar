@@ -4,7 +4,7 @@
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2005 - 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -52,10 +52,10 @@ namespace Mono.Cecil {
 		string m_asmOutput;
 		ISymbolWriter m_symbolWriter;
 
-		IList m_typeDefStack;
-		IList m_methodStack;
-		IList m_fieldStack;
-		IList m_genericParamStack;
+		ArrayList m_typeDefStack;
+		ArrayList m_methodStack;
+		ArrayList m_fieldStack;
+		ArrayList m_genericParamStack;
 		IDictionary m_typeSpecCache;
 
 		uint m_methodIndex;
@@ -69,17 +69,9 @@ namespace Mono.Cecil {
 		public StructureWriter StructureWriter {
 			get { return m_structureWriter; }
 			set {
-				m_structureWriter = value;
-				m_mdWriter = new MetadataWriter (
-					m_mod.Assembly,
-					m_mod.Image.MetadataRoot,
-					m_structureWriter.Assembly.Kind,
-					m_mod.Assembly.Runtime,
-					m_structureWriter.GetWriter ());
-				m_tableWriter = m_mdWriter.GetTableVisitor ();
-				m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
-				m_sigWriter = new SignatureWriter (m_mdWriter);
-				m_codeWriter = new CodeWriter (this, m_mdWriter.CilWriter);
+				 m_structureWriter = value;
+
+				Initialize ();
 			}
 		}
 
@@ -122,6 +114,20 @@ namespace Mono.Cecil {
 		public ReflectionWriter (ModuleDefinition mod)
 		{
 			m_mod = mod;
+		}
+
+		void Initialize ()
+		{
+			m_mdWriter = new MetadataWriter (
+				m_mod.Assembly,
+				m_mod.Image.MetadataRoot,
+				m_structureWriter.Assembly.Kind,
+				m_mod.Assembly.Runtime,
+				m_structureWriter.GetWriter ());
+			m_tableWriter = m_mdWriter.GetTableVisitor ();
+			m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
+			m_sigWriter = new SignatureWriter (m_mdWriter);
+			m_codeWriter = new CodeWriter (this, m_mdWriter.CilWriter);
 
 			m_typeDefStack = new ArrayList ();
 			m_methodStack = new ArrayList ();
@@ -143,7 +149,7 @@ namespace Mono.Cecil {
 			return m_mod.Controller.Reader.SearchCoreType (name);
 		}
 
-		public uint GetRidFor (IMetadataTokenProvider tp)
+		public static uint GetRidFor (IMetadataTokenProvider tp)
 		{
 			return tp.MetadataToken.RID;
 		}
@@ -163,7 +169,7 @@ namespace Mono.Cecil {
 			return (uint) m_mod.ModuleReferences.IndexOf (modRef) + 1;
 		}
 
-		bool IsTypeSpec (TypeReference type)
+		static bool IsTypeSpec (TypeReference type)
 		{
 			return type is TypeSpecification || type is GenericParameter;
 		}
@@ -173,7 +179,7 @@ namespace Mono.Cecil {
 			if (IsTypeSpec (type)) {
 				uint sig = m_sigWriter.AddTypeSpec (GetTypeSpecSig (type));
 				if (m_typeSpecCache.Contains (sig))
-					return (m_typeSpecCache [sig] as TypeReference).MetadataToken;
+					return ((TypeReference) m_typeSpecCache [sig]).MetadataToken;
 
 				TypeSpecTable tsTable = m_tableWriter.GetTypeSpecTable ();
 				TypeSpecRow tsRow = m_rowWriter.CreateTypeSpecRow (sig);
@@ -222,7 +228,7 @@ namespace Mono.Cecil {
 			foreach (TypeDefinition t in types)
 				m_typeDefStack.Add (t);
 
-			(m_typeDefStack as ArrayList).Sort (TableComparers.TypeDef.Instance);
+			m_typeDefStack.Sort (TableComparers.TypeDef.Instance);
 
 			for (int i = 0; i < m_typeDefStack.Count; i++) {
 				TypeDefinition t = (TypeDefinition) m_typeDefStack [i];
@@ -342,7 +348,8 @@ namespace Mono.Cecil {
 				if (member is FieldReference)
 					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as FieldReference));
 				else if (member is MethodReference)
-					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as MethodReference));
+					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig ((MethodReference) member));
+
 				MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
 					GetTypeDefOrRefToken (member.DeclaringType),
 					m_mdWriter.AddString (member.Name),
@@ -449,7 +456,7 @@ namespace Mono.Cecil {
 			m_paramIndex++;
 		}
 
-		bool RequiresParameterRow (MethodReturnType mrt)
+		static bool RequiresParameterRow (MethodReturnType mrt)
 		{
 			return mrt.HasConstant || mrt.MarshalSpec != null ||
 				mrt.CustomAttributes.Count > 0 || mrt.Parameter.Attributes != (ParameterAttributes) 0;
@@ -653,6 +660,11 @@ namespace Mono.Cecil {
 			} else
 				et = GetCorrespondingType (type.FullName);
 
+			if (et == ElementType.Object)
+				et = hc.Constant == null ?
+					ElementType.Class :
+					GetCorrespondingType (hc.Constant.GetType ().FullName);
+
 			ConstantRow cRow = m_rowWriter.CreateConstantRow (
 				et,
 				hc.MetadataToken,
@@ -769,7 +781,7 @@ namespace Mono.Cecil {
 			GenericParamTable gpTable = m_tableWriter.GetGenericParamTable ();
 			GenericParamConstraintTable gpcTable = m_tableWriter.GetGenericParamConstraintTable ();
 
-			(m_genericParamStack as ArrayList).Sort (TableComparers.GenericParam.Instance);
+			m_genericParamStack.Sort (TableComparers.GenericParam.Instance);
 
 			foreach (GenericParameter gp in m_genericParamStack) {
 				GenericParamRow gpRow = m_rowWriter.CreateGenericParamRow (
@@ -844,7 +856,7 @@ namespace Mono.Cecil {
 			m_mod.Image.MetadataRoot.Accept (m_mdWriter);
 		}
 
-		public ElementType GetCorrespondingType (string fullName)
+		public static ElementType GetCorrespondingType (string fullName)
 		{
 			switch (fullName) {
 			case Constants.Boolean :
@@ -1001,15 +1013,16 @@ namespace Mono.Cecil {
 				gi.Type = GetTypeDefOrRefToken (git.ElementType);
 				gi.Signature = new GenericInstSignature ();
 				gi.Signature.Arity = git.GenericArguments.Count;
-				gi.Signature.Types = new SigType [gi.Signature.Arity];
+				gi.Signature.Types = new GenericArg [gi.Signature.Arity];
 				for (int i = 0; i < git.GenericArguments.Count; i++)
-					gi.Signature.Types [i] = GetSigType (git.GenericArguments [i]);
+					gi.Signature.Types [i] = GetGenericArgSig (git.GenericArguments [i]);
 
 				return gi;
 			} else if (type is ArrayType) {
 				ArrayType aryType = type as ArrayType;
 				if (aryType.IsSizedArray) {
 					SZARRAY szary = new SZARRAY ();
+					szary.CustomMods = GetCustomMods (aryType.ElementType);
 					szary.Type = GetSigType (aryType.ElementType);
 					return szary;
 				}
@@ -1038,6 +1051,7 @@ namespace Mono.Cecil {
 
 				ARRAY ary = new ARRAY ();
 				ary.Shape = shape;
+				ary.CustomMods = GetCustomMods (aryType.ElementType);
 				ary.Type = GetSigType (aryType.ElementType);
 				return ary;
 			} else if (type is PointerType) {
@@ -1050,7 +1064,16 @@ namespace Mono.Cecil {
 				}
 				return p;
 			} else if (type is FunctionPointerType) {
-				throw new NotImplementedException ("Function pointer are not implemented"); // TODO
+				FNPTR fp = new FNPTR ();
+				FunctionPointerType fptr = type as FunctionPointerType;
+
+				int sentinel = fptr.GetSentinel ();
+				if (sentinel < 0)
+					fp.Method = GetMethodDefSig (fptr);
+				else
+					fp.Method = GetMethodRefSig (fptr);
+
+				return fp;
 			} else if (type is TypeSpecification) {
 				return GetSigType ((type as TypeSpecification).ElementType);
 			} else if (type.IsValueType) {
@@ -1062,6 +1085,13 @@ namespace Mono.Cecil {
 				c.Type = GetTypeDefOrRefToken (type);
 				return c;
 			}
+		}
+
+		public GenericArg GetGenericArgSig (TypeReference type)
+		{
+			GenericArg arg = new GenericArg (GetSigType (type));
+			arg.CustomMods = GetCustomMods (type);
+			return arg;
 		}
 
 		public CustomMod [] GetCustomMods (TypeReference type)
@@ -1117,10 +1147,9 @@ namespace Mono.Cecil {
 				p.CustomMods = GetCustomMods (pDef.ParameterType);
 				if (pDef.ParameterType.FullName == Constants.TypedReference)
 					p.TypedByRef = true;
-				else if (pDef.ParameterType is ReferenceType) {
+				else if (IsByReferenceType (pDef.ParameterType)) {
 					p.ByRef = true;
-					p.Type = GetSigType (
-						(pDef.ParameterType as ReferenceType).ElementType);
+					p.Type = GetSigType (pDef.ParameterType);
 				} else
 					p.Type = GetSigType (pDef.ParameterType);
 				ret [i] = p;
@@ -1128,7 +1157,7 @@ namespace Mono.Cecil {
 			return ret;
 		}
 
-		void CompleteMethodSig (MethodReference meth, MethodSig sig)
+		void CompleteMethodSig (IMethodSignature meth, MethodSig sig)
 		{
 			sig.HasThis = meth.HasThis;
 			sig.ExplicitThis = meth.ExplicitThis;
@@ -1150,24 +1179,39 @@ namespace Mono.Cecil {
 				rtSig.Void = true;
 			else if (meth.ReturnType.ReturnType.FullName == Constants.TypedReference)
 				rtSig.TypedByRef = true;
-			else if (meth.ReturnType.ReturnType is ReferenceType) {
+			else if (IsByReferenceType (meth.ReturnType.ReturnType)) {
 				rtSig.ByRef = true;
-				rtSig.Type = GetSigType (
-					(meth.ReturnType.ReturnType as ReferenceType).ElementType);
+				rtSig.Type = GetSigType (meth.ReturnType.ReturnType);
 			} else
 				rtSig.Type = GetSigType (meth.ReturnType.ReturnType);
 
 			sig.RetType = rtSig;
 		}
 
-		public MethodRefSig GetMethodRefSig (MethodReference meth)
+		static bool IsByReferenceType (TypeReference type)
 		{
-			if (meth.GenericParameters.Count > 0)
+			TypeSpecification ts = type as TypeSpecification;
+			while (ts != null) {
+				if (ts is ReferenceType)
+					return true;
+				ts = ts.ElementType as TypeSpecification;
+			}
+			return false;
+		}
+
+		public MethodRefSig GetMethodRefSig (IMethodSignature meth)
+		{
+			MethodReference methodRef = meth as MethodReference;
+			if (methodRef != null && methodRef.GenericParameters.Count > 0)
 				return GetMethodDefSig (meth);
 
 			MethodRefSig methSig = new MethodRefSig ();
 
 			CompleteMethodSig (meth, methSig);
+
+			int sentinel = meth.GetSentinel ();
+			if (sentinel >= 0)
+				methSig.Sentinel = sentinel;
 
 			if ((meth.CallingConvention & MethodCallingConvention.C) != 0)
 				methSig.CallingConvention |= 0x1;
@@ -1181,15 +1225,16 @@ namespace Mono.Cecil {
 			return methSig;
 		}
 
-		public MethodDefSig GetMethodDefSig (MethodReference meth)
+		public MethodDefSig GetMethodDefSig (IMethodSignature meth)
 		{
 			MethodDefSig sig = new MethodDefSig ();
 
 			CompleteMethodSig (meth, sig);
 
-			if (meth.GenericParameters.Count > 0) {
+			MethodReference methodRef = meth as MethodReference;
+			if (methodRef != null && methodRef.GenericParameters.Count > 0) {
 				sig.CallingConvention |= 0x10;
-				sig.GenericParameterCount = meth.GenericParameters.Count;
+				sig.GenericParameterCount = methodRef.GenericParameters.Count;
 			}
 
 			return sig;
@@ -1234,7 +1279,7 @@ namespace Mono.Cecil {
 
 			ps.ParamCount = paramCount;
 			ps.Parameters = GetParametersSig (parameters);
-
+			ps.CustomMods = GetCustomMods (prop.PropertyType);
 			ps.Type = GetSigType (prop.PropertyType);
 
 			return ps;
@@ -1250,33 +1295,27 @@ namespace Mono.Cecil {
 		{
 			GenericInstSignature gis = new GenericInstSignature ();
 			gis.Arity = gim.GenericArguments.Count;
-			gis.Types = new SigType [gis.Arity];
+			gis.Types = new GenericArg [gis.Arity];
 			for (int i = 0; i < gis.Arity; i++)
-				gis.Types [i] = GetSigType (gim.GenericArguments [i]);
+				gis.Types [i] = GetGenericArgSig (gim.GenericArguments [i]);
 
 			return new MethodSpec (gis);
 		}
 
-		string GetObjectTypeName (object o)
+		static string GetObjectTypeName (object o)
 		{
 			Type t = o.GetType ();
 			return string.Concat (t.Namespace, ".", t.Name);
 		}
 
-		CustomAttrib.Elem CreateElem (TypeReference type, object value)
+		static CustomAttrib.Elem CreateElem (TypeReference type, object value)
 		{
 			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
 			elem.Value = value;
 			elem.ElemType = type;
 			elem.FieldOrPropType = GetCorrespondingType (type.FullName);
 
-            
-            //if (elem.FieldOrPropType == ElementType.Class)
-            //{
-                //throw new NotImplementedException ("Writing enums; enum type is "+type.FullName+", enum value is "+value.ToString());
-            //}
-
-            switch (elem.FieldOrPropType) {
+			switch (elem.FieldOrPropType) {
 			case ElementType.Boolean :
 			case ElementType.Char :
 			case ElementType.R4 :
@@ -1305,20 +1344,19 @@ namespace Mono.Cecil {
 					elem.FieldOrPropType = GetCorrespondingType (
 						GetObjectTypeName (value));
 				break;
-            case ElementType.Class:
-                // Handle enums
-                elem.Enum = true;
+			case ElementType.Class:
+				// Handle enums
+				elem.Enum = true;
 
-                // Get the underlying type of the enum (int16, uint16, int32, uint32, etc)
-                elem.FieldOrPropType = GetCorrespondingType(
-                    GetObjectTypeName(value));
-                break;
+				// Get the underlying type of the enum (int16, uint16, int32, uint32, etc)
+				elem.FieldOrPropType = GetCorrespondingType(GetObjectTypeName(value));
+				break;				
 			}
 
 			return elem;
 		}
 
-		CustomAttrib.FixedArg CreateFixedArg (TypeReference type, object value)
+		static CustomAttrib.FixedArg CreateFixedArg (TypeReference type, object value)
 		{
 			CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
 			if (value is object []) {
@@ -1337,7 +1375,7 @@ namespace Mono.Cecil {
 			return fa;
 		}
 
-		CustomAttrib.NamedArg CreateNamedArg (TypeReference type, string name,
+		static CustomAttrib.NamedArg CreateNamedArg (TypeReference type, string name,
 			object value, bool field)
 		{
 			CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
@@ -1384,7 +1422,7 @@ namespace Mono.Cecil {
 			return cas;
 		}
 
-		public MarshalSig GetMarshalSig (MarshalSpec mSpec)
+		static MarshalSig GetMarshalSig (MarshalSpec mSpec)
 		{
 			MarshalSig ms = new MarshalSig (mSpec.NativeIntrinsic);
 

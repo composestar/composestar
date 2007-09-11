@@ -47,12 +47,21 @@ namespace Mono.Cecil.Cil {
 		internal static readonly OpCode [] TwoBytesOpCode = new OpCode [<%=tboc[tboc.length - 1].op2%> + 1];
 
 <% $ops.each { |op| %>		public static readonly OpCode <%=op.field_name%> = new OpCode (
-			"<%=op.name%>", <%=op.op1%>, <%=op.op2%>, <%=op.size%>, <%=op.flowcontrol%>,
+			"<%=op.name%>", <%=op.op1%>, <%=op.op2%>, <%=op.size%>,
+			Code.<%=op.field_name%>, <%=op.flowcontrol%>,
 			<%=op.opcodetype%>, <%=op.operandtype%>,
 			<%=op.stackbehaviourpop%>, <%=op.stackbehaviourpush%>);
 
 <% } %>		OpCodes()
 		{
+		}
+
+		public static OpCode GetOpCode (Code code)
+		{
+			switch (code) {
+<% $ops.each { |op| %>			case Code.<%=op.field_name%> : return OpCodes.<%=op.field_name%>;
+<% } %>			default : return OpCodes.Nop;
+			}
 		}
 	}
 }

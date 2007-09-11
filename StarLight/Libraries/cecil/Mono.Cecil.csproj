@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -69,6 +69,7 @@
     <Compile Include="Mono.Cecil.Binary\SubSystem.cs" />
     <Compile Include="Mono.Cecil.Cil\BaseCodeVisitor.cs" />
     <Compile Include="Mono.Cecil.Cil\CilWorker.cs" />
+    <Compile Include="Mono.Cecil.Cil\Code.cs" />
     <Compile Include="Mono.Cecil.Cil\CodeReader.cs" />
     <Compile Include="Mono.Cecil.Cil\CodeWriter.cs" />
     <Compile Include="Mono.Cecil.Cil\DocumentType.cs" />
@@ -122,10 +123,12 @@
     <Compile Include="Mono.Cecil.Metadata\ElementType.cs" />
     <Compile Include="Mono.Cecil.Metadata\Event.cs" />
     <Compile Include="Mono.Cecil.Metadata\EventMap.cs" />
+    <Compile Include="Mono.Cecil.Metadata\EventPtr.cs" />
     <Compile Include="Mono.Cecil.Metadata\ExportedType.cs" />
     <Compile Include="Mono.Cecil.Metadata\Field.cs" />
     <Compile Include="Mono.Cecil.Metadata\FieldLayout.cs" />
     <Compile Include="Mono.Cecil.Metadata\FieldMarshal.cs" />
+    <Compile Include="Mono.Cecil.Metadata\FieldPtr.cs" />
     <Compile Include="Mono.Cecil.Metadata\FieldRVA.cs" />
     <Compile Include="Mono.Cecil.Metadata\File.cs" />
     <Compile Include="Mono.Cecil.Metadata\GenericParam.cs" />
@@ -154,14 +157,17 @@
     <Compile Include="Mono.Cecil.Metadata\MetadataWriter.cs" />
     <Compile Include="Mono.Cecil.Metadata\Method.cs" />
     <Compile Include="Mono.Cecil.Metadata\MethodImpl.cs" />
+    <Compile Include="Mono.Cecil.Metadata\MethodPtr.cs" />
     <Compile Include="Mono.Cecil.Metadata\MethodSemantics.cs" />
     <Compile Include="Mono.Cecil.Metadata\MethodSpec.cs" />
     <Compile Include="Mono.Cecil.Metadata\Module.cs" />
     <Compile Include="Mono.Cecil.Metadata\ModuleRef.cs" />
     <Compile Include="Mono.Cecil.Metadata\NestedClass.cs" />
     <Compile Include="Mono.Cecil.Metadata\Param.cs" />
+    <Compile Include="Mono.Cecil.Metadata\ParamPtr.cs" />
     <Compile Include="Mono.Cecil.Metadata\Property.cs" />
     <Compile Include="Mono.Cecil.Metadata\PropertyMap.cs" />
+    <Compile Include="Mono.Cecil.Metadata\PropertyPtr.cs" />
     <Compile Include="Mono.Cecil.Metadata\RowCollection.cs" />
     <Compile Include="Mono.Cecil.Metadata\StandAloneSig.cs" />
     <Compile Include="Mono.Cecil.Metadata\StringsHeap.cs" />
@@ -182,6 +188,7 @@
     <Compile Include="Mono.Cecil.Signatures\CustomMod.cs" />
     <Compile Include="Mono.Cecil.Signatures\FieldSig.cs" />
     <Compile Include="Mono.Cecil.Signatures\FnPtr.cs" />
+    <Compile Include="Mono.Cecil.Signatures\GenericArg.cs" />
     <Compile Include="Mono.Cecil.Signatures\GenericInst.cs" />
     <Compile Include="Mono.Cecil.Signatures\GenericInstSignature.cs" />
     <Compile Include="Mono.Cecil.Signatures\InputOutputItem.cs" />
@@ -318,6 +325,7 @@
     <Compile Include="Mono.Cecil\SecurityDeclaration.cs" />
     <Compile Include="Mono.Cecil\SecurityDeclarationCollection.cs" />
     <Compile Include="Mono.Cecil\SecurityDeclarationReader.cs" />
+    <Compile Include="Mono.Cecil\SentinelType.cs" />
     <Compile Include="Mono.Cecil\StructureReader.cs" />
     <Compile Include="Mono.Cecil\StructureWriter.cs" />
     <Compile Include="Mono.Cecil\TableComparers.cs" />
@@ -334,13 +342,19 @@
     <Compile Include="Mono.Xml\SmallXmlParser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="key.snk" />
+    <None Include="AUTHORS" />
+    <None Include="ChangeLog" />
+    <None Include="configure" />
+    <None Include="default.build" />
+    <None Include="Makefile" />
+    <None Include="mono-cecil.pc.in" />
+    <None Include="Mono.Cecil.dll.sources" />
     <None Include="Mono.Xml\ChangeLog" />
+    <None Include="NEWS" />
+    <None Include="README" />
+    <None Include="TODO" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
 </Project>

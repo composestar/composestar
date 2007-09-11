@@ -110,6 +110,7 @@
 ./Mono.Cecil/SecurityDeclaration.cs
 ./Mono.Cecil/SecurityDeclarationCollection.cs
 ./Mono.Cecil/SecurityDeclarationReader.cs
+./Mono.Cecil/SentinelType.cs
 ./Mono.Cecil/StructureReader.cs
 ./Mono.Cecil/StructureWriter.cs
 ./Mono.Cecil/TableComparers.cs
@@ -171,10 +172,12 @@
 ./Mono.Cecil.Metadata/ElementType.cs
 ./Mono.Cecil.Metadata/Event.cs
 ./Mono.Cecil.Metadata/EventMap.cs
+./Mono.Cecil.Metadata/EventPtr.cs
 ./Mono.Cecil.Metadata/ExportedType.cs
 ./Mono.Cecil.Metadata/Field.cs
 ./Mono.Cecil.Metadata/FieldLayout.cs
 ./Mono.Cecil.Metadata/FieldMarshal.cs
+./Mono.Cecil.Metadata/FieldPtr.cs
 ./Mono.Cecil.Metadata/FieldRVA.cs
 ./Mono.Cecil.Metadata/File.cs
 ./Mono.Cecil.Metadata/GenericParam.cs
@@ -203,14 +206,17 @@
 ./Mono.Cecil.Metadata/MetadataWriter.cs
 ./Mono.Cecil.Metadata/Method.cs
 ./Mono.Cecil.Metadata/MethodImpl.cs
+./Mono.Cecil.Metadata/MethodPtr.cs
 ./Mono.Cecil.Metadata/MethodSemantics.cs
 ./Mono.Cecil.Metadata/MethodSpec.cs
 ./Mono.Cecil.Metadata/Module.cs
 ./Mono.Cecil.Metadata/ModuleRef.cs
 ./Mono.Cecil.Metadata/NestedClass.cs
 ./Mono.Cecil.Metadata/Param.cs
+./Mono.Cecil.Metadata/ParamPtr.cs
 ./Mono.Cecil.Metadata/Property.cs
 ./Mono.Cecil.Metadata/PropertyMap.cs
+./Mono.Cecil.Metadata/PropertyPtr.cs
 ./Mono.Cecil.Metadata/RowCollection.cs
 ./Mono.Cecil.Metadata/StandAloneSig.cs
 ./Mono.Cecil.Metadata/StringsHeap.cs
@@ -224,6 +230,7 @@
 ./Mono.Cecil.Metadata/Utilities.cs
 ./Mono.Cecil.Cil/BaseCodeVisitor.cs
 ./Mono.Cecil.Cil/CilWorker.cs
+./Mono.Cecil.Cil/Code.cs
 ./Mono.Cecil.Cil/CodeReader.cs
 ./Mono.Cecil.Cil/CodeWriter.cs
 ./Mono.Cecil.Cil/Document.cs
@@ -269,6 +276,7 @@
 ./Mono.Cecil.Signatures/CustomMod.cs
 ./Mono.Cecil.Signatures/FieldSig.cs
 ./Mono.Cecil.Signatures/FnPtr.cs
+./Mono.Cecil.Signatures/GenericArg.cs
 ./Mono.Cecil.Signatures/GenericInst.cs
 ./Mono.Cecil.Signatures/GenericInstSignature.cs
 ./Mono.Cecil.Signatures/InputOutputItem.cs

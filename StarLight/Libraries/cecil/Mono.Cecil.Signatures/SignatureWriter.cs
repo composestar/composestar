@@ -4,7 +4,7 @@
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2005 - 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -152,6 +152,7 @@ namespace Mono.Cecil.Signatures {
 		{
 			m_sigWriter.Write (property.CallingConvention);
 			Write (property.ParamCount);
+			Write (property.CustomMods);
 			Write (property.Type);
 			Write (property.Parameters);
 		}
@@ -235,6 +236,7 @@ namespace Mono.Cecil.Signatures {
 				break;
 			case ElementType.Array :
 				ARRAY ary = (ARRAY) t;
+				Write (ary.CustomMods);
 				ArrayShape shape = ary.Shape;
 				Write (ary.Type);
 				Write (shape.Rank);
@@ -246,7 +248,9 @@ namespace Mono.Cecil.Signatures {
 					Write (loBound);
 				break;
 			case ElementType.SzArray :
-				Write (((SZARRAY) t).Type);
+				SZARRAY sa = (SZARRAY) t;
+				Write (sa.CustomMods);
+				Write (sa.Type);
 				break;
 			case ElementType.Var :
 				Write (((VAR) t).Index);
@@ -280,6 +284,12 @@ namespace Mono.Cecil.Signatures {
 			Write (gis.Arity);
 			for (int i = 0; i < gis.Arity; i++)
 				Write (gis.Types [i]);
+		}
+
+		void Write (GenericArg arg)
+		{
+			Write (arg.CustomMods);
+			Write (arg.Type);
 		}
 
 		void Write (Param p)
@@ -391,34 +401,34 @@ namespace Mono.Cecil.Signatures {
 			if (na.FixedArg.SzArray)
 				writer.Write ((byte) ElementType.SzArray);
 
-            if (na.FieldOrPropType == ElementType.Class)
-                writer.Write((byte)ElementType.Boxed); // Enum support, mark the FieldOrPropType of the NamedArg as boxed
-            else
-                writer.Write((byte)na.FieldOrPropType);
+			if (na.FieldOrPropType == ElementType.Class)
+				writer.Write((byte)ElementType.Boxed); // Enum support, mark the FieldOrPropType of the NamedArg as boxed
+			else
+				writer.Write((byte)na.FieldOrPropType);
             
-  			if (na.FieldOrPropType == ElementType.Enum)
+			if (na.FieldOrPropType == ElementType.Enum)
 				Write (na.FixedArg.Elems [0].ElemType.FullName);
 
-            Write (na.FieldOrPropName);
-            
+			Write (na.FieldOrPropName);
+
 			Write (na.FixedArg, writer);
 		}
 
 		void Write (CustomAttrib.Elem elem, MemoryBinaryWriter writer) // TODO
 		{
-            if (elem.String)
-                elem.FieldOrPropType = ElementType.String;
-            else if (elem.Type)
-                elem.FieldOrPropType = ElementType.Type;
-            else if (elem.BoxedValueType)
-                Write(elem.FieldOrPropType);
-            else if (elem.Enum)
-            {         
-                Write(ElementType.Enum);  // Write the FieldOrPropType of the Elem as enum
-                Write(elem.ElemType.FullName);   // Write the FullName of the Enum type
-            }
-            
-            switch (elem.FieldOrPropType) {
+			if (elem.String)
+				elem.FieldOrPropType = ElementType.String;
+			else if (elem.Type)
+				elem.FieldOrPropType = ElementType.Type;
+			else if (elem.BoxedValueType)
+				Write (elem.FieldOrPropType);
+			else if (elem.Enum)
+			{         
+				Write(ElementType.Enum);  // Write the FieldOrPropType of the Elem as enum
+				Write(elem.ElemType.FullName);   // Write the FullName of the Enum type
+			}
+
+			switch (elem.FieldOrPropType) {
 			case ElementType.Boolean :
 				writer.Write ((byte) ((bool) elem.Value ? 1 : 0));
 				break;

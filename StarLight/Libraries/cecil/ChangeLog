@@ -1,3 +1,201 @@
+2007-03-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyInfo.cs:
+		Bump to 0.5.0.0 for the sake of our packagers friends.
+
+	* Mono.Cecil/StructureWriter.cs:
+		Throw a NotSupportedException instead of a NIE
+		for mixed mode assemblies.
+
+2007-03-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/MetadataWriter.cs:
+		Correct epilog for unicode user strings heap.
+
+2007-03-16  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/MethodBody.cs:
+		Add a MethodBody.Simplify method to expand
+		macros.
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil.csproj
+	  Mono.Cecil.Cil/OpCode.cs
+	  Mono.Cecil.Cil/OpCodes.cs
+	  Mono.Cecil.Cil/Code.cs
+	  CodeGen/cecil-gen.rb
+	  CodeGen/templates/OpCodes.cs
+	  CodeGen/templates/Code.cs:
+		Add a Code enumeration to simplify working with
+		OpCodes.
+
+2007-03-12  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/UserStringsHeap.cs:
+		Avoid trailing blank on some systems.
+
+2007-02-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Deal with sentinels on simple methodrefs.
+
+2007-02-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil.csproj
+	  CodeGen/cecil.xml
+	  Mono.Cecil.Metadata/ParamPtr.cs
+	  Mono.Cecil.Metadata/MethodSpec.cs
+	  Mono.Cecil.Metadata/BaseMetadataVisitor.cs
+	  Mono.Cecil.Metadata/EventPtr.cs
+	  Mono.Cecil.Metadata/MetadataTableReader.cs
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataRowReader.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/PropertyPtr.cs
+	  Mono.Cecil.Metadata/FieldPtr.cs
+	  Mono.Cecil.Metadata/MethodPtr.cs
+	  Mono.Cecil.Metadata/IMetadataVisitor.cs:
+		Add *Ptr table definitions.
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil.csproj
+	  Mono.Cecil/CallSite.cs
+	  Mono.Cecil/IMethodSignature.cs
+	  Mono.Cecil/SentinelType.cs
+	  Mono.Cecil/FunctionPointerType.cs
+	  Mono.Cecil/MethodReference.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs:
+		Implement support for writing function pointers.
+		Based on a patch by Argiris Kirtzidis <akyrtzi@gmail.com>
+
+	* Mono.Cecil/Constants.cs:
+		Make it public due to some demands.
+
+2007-02-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		do not read enums if the resolution is not forced until
+		cecil knows how to write them.
+
+	* Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/SzArray.cs
+	  Mono.Cecil.Signatures/Array.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Signatures/TypeSpec.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		handle custom mods on arrays signatures.
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Handle fields TypeSpecs that have an initial value.
+		Based on a patch by Argiris Kirtzidis <akyrtzi@gmail.com>
+
+2007-01-29  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/MetadataWriter.cs:
+		Save a byte ! Yeah !
+
+2006-12-18  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Fix a bug in reading MemberRef pointing to MethodDef.
+
+2006-12-16  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/StructureReader.cs:
+		Prevent a NRE if we're reading a multi module
+		assembly through a stream if a module is not find.
+		Fix #80273.
+
+2006-12-07  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Allow an AssemblyDefinition to be written
+		more than once.
+
+2006-12-05  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Deal with nullref default parameters.
+
+2006-12-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Handle constant where the parameter is object
+		and the signature is something else.
+
+2006-11-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/TypeDefinitionCollection.cs
+	  CodeGen/templates/NamedCollection.cs:
+		Allow multiple typedefs with the same namespace+name
+		to be able to read unvalid assemblies.
+
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/PropertySig.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		- Deal with modifiers on properties.
+		- Deal with non standard signatures when the byref
+		flag is placed after the custom modifiers.
+	  Mono.Cecil/StructureReader.cs:
+		- Properly detect wether an assembli is a dll or not.
+
+		Based on a patch by Argiris Kirtzidis <akyrtzi@gmail.com>.
+
+2006-11-25  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/GenericArg.cs
+	  Mono.Cecil.Signatures/GenericInstSignature.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Deal with modifiers for generic arguments.
+		Based on a patch by Argiris Kirtzidis <akyrtzi@gmail.com>.
+
+	* Mono.Cecil.Binary/ImageWriter.cs:
+		Fix a bug in writing rsrc sections.
+
+	* Mono.Cecil.Cil/CodeReader.cs:
+		Do some refactoring.
+
+	* Mono.Cecil.Metadata/MetadataToken.cs:
+		Add a ctor to get a MetadataToken
+		from an integer token.
+
+2006-11-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/GuidAttribute.cs:
+		Fix for CF compilation.
+
+2006-11-16  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/StructureReader.cs:
+		If an assembly has no managed assembly defined,
+		consider it as a dll.
+
+2006-11-08  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/BaseAssemblyResolver.cs:
+		Handles different kind of GAC on Windows.
+
+2006-11-07  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionHelper.cs:
+		Don't import the flags of an assembly name reference.
+
+2006-11-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/PropertyDefinition.cs:
+		Fix property cloning.
+		Patch by Alex Prudkiy <prudkiy@mail.ru>
+
 2006-10-26  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionReader.cs:

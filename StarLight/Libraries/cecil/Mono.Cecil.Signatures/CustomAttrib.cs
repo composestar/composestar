@@ -60,7 +60,7 @@ namespace Mono.Cecil.Signatures {
 			public bool String;
 			public bool Type;
 			public bool BoxedValueType;
-            public bool Enum;
+			public bool Enum;
 
 			public ElementType FieldOrPropType;
 			public object Value;

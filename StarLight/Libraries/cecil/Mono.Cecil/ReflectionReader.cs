@@ -4,7 +4,7 @@
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2005 - 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -191,7 +191,7 @@ namespace Mono.Cecil {
 						GetTypeRefFromSig (fs.Type, nc));
 				} else {
 					string name = m_root.Streams.StringsHeap [mrefRow.Name];
-					MethodSig ms = sig as MethodSig;
+					MethodSig ms = (MethodSig) sig;
 
 					MethodReference methref = new MethodReference (
 						name, ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
@@ -222,10 +222,15 @@ namespace Mono.Cecil {
 			case TokenType.Method :
 				// really not sure about this
 				MethodDefinition methdef = GetMethodDefAt (mrefRow.Class.RID);
-				member = new MethodReference (
+				MethodReference methRef = new MethodReference (
 					methdef.Name, methdef.HasThis,
 					methdef.ExplicitThis, methdef.CallingConvention);
-				member.DeclaringType = methdef.DeclaringType;
+
+				methRef.DeclaringType = methdef.DeclaringType;
+				methRef.ReturnType = methdef.ReturnType;
+				foreach (ParameterDefinition param in methdef.Parameters)
+					methRef.Parameters.Add (param);
+				member = methRef;
 				break;
 			case TokenType.ModuleRef :
 				break; // TODO, implement that, or not
@@ -279,8 +284,8 @@ namespace Mono.Cecil {
 				throw new ReflectionException ("Unknown method type for method spec");
 
 			gim = new GenericInstanceMethod (meth);
-			foreach (SigType st in sig.Signature.Types)
-				gim.GenericArguments.Add (GetTypeRefFromSig (st, context));
+			foreach (GenericArg arg in sig.Signature.Types)
+				gim.GenericArguments.Add (GetGenericArg (arg, context));
 
 			m_methodSpecs [index] = gim;
 
@@ -750,7 +755,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		object GetFixedArgValue (CustomAttrib.FixedArg fa)
+		static object GetFixedArgValue (CustomAttrib.FixedArg fa)
 		{
 			if (fa.SzArray) {
 				object [] vals = new object [fa.NumElem];
@@ -974,6 +979,11 @@ namespace Mono.Cecil {
 							i, (ParameterAttributes) 0,
 							p, context));
 				}
+
+				MethodRefSig refSig = funcptr.Method as MethodRefSig;
+				if (refSig != null && refSig.Sentinel >= 0)
+					CreateSentinel (fnptr, refSig.Sentinel);
+
 				return fnptr;
 			case ElementType.Var:
 				VAR var = t as VAR;
@@ -996,7 +1006,7 @@ namespace Mono.Cecil {
 				instance.IsValueType = ginst.ValueType;
 
 				for (int i = 0; i < ginst.Signature.Arity; i++)
-					instance.GenericArguments.Add (GetTypeRefFromSig (
+					instance.GenericArguments.Add (GetGenericArg (
 						ginst.Signature.Types [i], context));
 
 				return instance;
@@ -1006,7 +1016,24 @@ namespace Mono.Cecil {
 			return null;
 		}
 
-		void CheckGenericParameters (GenericContext context, VAR v)
+		public static void CreateSentinel (IMethodSignature meth, int sentinel)
+		{
+			if (sentinel < 0 || sentinel >= meth.Parameters.Count)
+				throw new ArgumentException ("Invalid sentinel");
+
+			ParameterDefinition param = meth.Parameters [sentinel];
+			param.ParameterType = new SentinelType (param.ParameterType);
+		}
+
+		TypeReference GetGenericArg (GenericArg arg, GenericContext context)
+		{
+			TypeReference type = GetTypeRefFromSig (arg.Type, context);
+			if (arg.CustomMods != null && arg.CustomMods.Length > 0)
+				type = GetModifierType (arg.CustomMods, type);
+			return type;
+		}
+
+		static void CheckGenericParameters (GenericContext context, VAR v)
 		{
 			for (int i = context.Type.GenericParameters.Count; i <= v.Index; i++)
 				context.Type.GenericParameters.Add (new GenericParameter (i, context.Type));
@@ -1056,7 +1083,8 @@ namespace Mono.Cecil {
 		protected void SetInitialValue (FieldDefinition field)
 		{
 			int size = 0;
-			switch (field.FieldType.FullName) {
+			TypeReference fieldType = field.FieldType;
+			switch (fieldType.FullName) {
 			case Constants.Byte:
 			case Constants.SByte:
 				size = 1;
@@ -1077,9 +1105,13 @@ namespace Mono.Cecil {
 				size = 8;
 				break;
 			default:
-				TypeDefinition fieldType = field.FieldType as TypeDefinition;
-				if (fieldType != null)
-					size = (int) fieldType.ClassSize;
+				while (fieldType is TypeSpecification)
+					fieldType = ((TypeSpecification) fieldType).ElementType;
+
+				TypeDefinition fieldTypeDef = fieldType as TypeDefinition;
+
+				if (fieldTypeDef != null)
+					size = (int) fieldTypeDef.ClassSize;
 				break;
 			}
 

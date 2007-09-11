@@ -104,7 +104,7 @@ namespace Mono.Cecil {
 				break;
 			}
 
-			if (m_img.HintNameTable.RuntimeMain == HintNameTable.RuntimeMainDll || m_img.CLIHeader.EntryPointToken == 0)
+			if ((m_img.PEFileHeader.Characteristics & ImageCharacteristics.Dll) != 0)
 				asm.Kind = AssemblyKind.Dll;
 			else if (m_img.PEOptionalHeader.NTSpecificFields.SubSystem == SubSystem.WindowsGui ||
 				m_img.PEOptionalHeader.NTSpecificFields.SubSystem == SubSystem.WindowsCeGui)
@@ -157,15 +157,13 @@ namespace Mono.Cecil {
 			ManifestResourceTable mrTable = m_tableReader.GetManifestResourceTable ();
 			FileTable fTable = m_tableReader.GetFileTable ();
 
-			BinaryReader br;
-
 			for (int i = 0; i < mrTable.Rows.Count; i++) {
 				ManifestResourceRow mrRow = mrTable [i];
 				if (mrRow.Implementation.RID == 0) {
 					EmbeddedResource eres = new EmbeddedResource (
 						ReadString (mrRow.Name), mrRow.Flags);
 
-					br = m_ir.MetadataReader.GetDataReader (
+					BinaryReader br = m_ir.MetadataReader.GetDataReader (
 						m_img.CLIHeader.Resources.VirtualAddress);
 					br.BaseStream.Position += mrRow.Offset;
 
@@ -202,7 +200,7 @@ namespace Mono.Cecil {
 			if (mt == null || mt.Rows.Count != 1)
 				throw new ReflectionException ("Can not read main module");
 
-			ModuleRow mr = mt.Rows [0] as ModuleRow;
+			ModuleRow mr = mt [0];
 			string name = ReadString (mr.Name);
 			ModuleDefinition main = new ModuleDefinition (name, m_asmDef, this, true);
 			main.Mvid = m_streams.GuidHeap [mr.Mvid];
@@ -212,33 +210,36 @@ namespace Mono.Cecil {
 			m_module.Accept (this);
 
 			FileTable ftable = m_tableReader.GetFileTable ();
-			if (ftable != null && ftable.Rows.Count > 0) {
-				foreach (FileRow frow in ftable.Rows) {
-					if (frow.Flags == Mono.Cecil.FileAttributes.ContainsMetaData) {
-						name = ReadString (frow.Name);
-						FileInfo location = new FileInfo (Path.Combine(m_img.FileInformation.DirectoryName, name));
-						if (!File.Exists (location.FullName))
-							throw new FileNotFoundException ("Module not found : " + name);
+			if (ftable == null || ftable.Rows.Count == 0)
+				return;
 
-						try {
-							ImageReader module = ImageReader.Read (location.FullName);
-							mt = module.Image.MetadataRoot.Streams.TablesHeap [ModuleTable.RId] as ModuleTable;
-							if (mt == null || mt.Rows.Count != 1)
-								throw new ReflectionException ("Can not read module : " + name);
+			foreach (FileRow frow in ftable.Rows) {
+				if (frow.Flags != FileAttributes.ContainsMetaData)
+					continue;
 
-							mr = mt.Rows [0] as ModuleRow;
-							ModuleDefinition modext = new ModuleDefinition (name, m_asmDef,
-								new StructureReader (module, m_manifestOnly), false);
-							modext.Mvid = module.Image.MetadataRoot.Streams.GuidHeap [mr.Mvid];
+				name = ReadString (frow.Name);
+				FileInfo location = new FileInfo (
+					m_img.FileInformation != null ? Path.Combine (m_img.FileInformation.DirectoryName, name) : name);
+				if (!File.Exists (location.FullName))
+					throw new FileNotFoundException ("Module not found : " + name);
 
-							modules.Add (modext);
-							modext.Accept (this);
-						} catch (ReflectionException) {
-							throw;
-						} catch (Exception e) {
-							throw new ReflectionException ("Can not read module : " + name, e);
-						}
-					}
+				try {
+					ImageReader module = ImageReader.Read (location.FullName);
+					mt = module.Image.MetadataRoot.Streams.TablesHeap [ModuleTable.RId] as ModuleTable;
+					if (mt == null || mt.Rows.Count != 1)
+						throw new ReflectionException ("Can not read module : " + name);
+
+					mr = mt [0];
+					ModuleDefinition modext = new ModuleDefinition (name, m_asmDef,
+						new StructureReader (module, m_manifestOnly), false);
+					modext.Mvid = module.Image.MetadataRoot.Streams.GuidHeap [mr.Mvid];
+
+					modules.Add (modext);
+					modext.Accept (this);
+				} catch (ReflectionException) {
+					throw;
+				} catch (Exception e) {
+					throw new ReflectionException ("Can not read module : " + name, e);
 				}
 			}
 		}

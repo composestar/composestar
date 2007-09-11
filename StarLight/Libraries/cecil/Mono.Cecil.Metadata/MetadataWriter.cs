@@ -102,14 +102,14 @@ namespace Mono.Cecil.Metadata {
 
 			m_stringCache = new Hashtable ();
 			m_stringWriter = new MemoryBinaryWriter (Encoding.UTF8);
-			m_stringWriter.Write ('\0');
+			m_stringWriter.Write ((byte) 0);
 
 			m_guidCache = new Hashtable ();
 			m_guidWriter = new MemoryBinaryWriter ();
 
 			m_usCache = new Hashtable ();
 			m_usWriter = new MemoryBinaryWriter (Encoding.Unicode);
-			m_usWriter.Write ('\0');
+			m_usWriter.Write ((byte) 0);
 
 			m_blobCache = new Hashtable ();
 			m_blobWriter = new MemoryBinaryWriter ();
@@ -211,8 +211,34 @@ namespace Mono.Cecil.Metadata {
 			byte [] us = Encoding.Unicode.GetBytes (str);
 			Utilities.WriteCompressedInteger (m_usWriter, us.Length + 1);
 			m_usWriter.Write (us);
-			m_usWriter.Write ('\0');
+			m_usWriter.Write ((byte) (RequiresSpecialHandling (us) ? 1 : 0));
 			return pointer;
+		}
+
+		static bool RequiresSpecialHandling (byte [] chars)
+		{
+			for (int i = 0; i < chars.Length; i++) {
+				byte c = chars [i];
+				if ((i % 2) == 1)
+					if (c != 0)
+						return true;
+
+				if (InRange (0x01, 0x08, c) ||
+					InRange (0x0e, 0x1f, c) ||
+					c == 0x27 ||
+					c == 0x2d ||
+					c == 0x7f) {
+
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		static bool InRange (int left, int right, int value)
+		{
+			return left <= value && value <= right;
 		}
 
 		void CreateStream (string name)
