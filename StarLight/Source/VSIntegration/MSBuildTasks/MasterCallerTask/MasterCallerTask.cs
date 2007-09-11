@@ -331,7 +331,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				string msg = parsed[4];
 
 				DebugMode mode;
-				switch (level)
+				switch (level.ToLower())
 				{
 					case "error": 
 						mode = DebugMode.Error;
@@ -340,11 +340,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						mode = DebugMode.Crucial; 
 						break;
 					case "warning":
-                    case "warn": 
+						case "warn": 
 						mode = DebugMode.Warning; 
 						break;
 					case "information":
-                    case "info": 
+						case "info": 
 						mode = DebugMode.Information; 
 						break;
 					case "debug": 
