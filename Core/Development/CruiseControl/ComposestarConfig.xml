@@ -92,6 +92,10 @@
 					dir="${composestar.path}/Starlight/Setup/Releases"
 					dest="artifacts/${project.name}/"
 				/>
+				<artifactspublisher
+					dir="${composestar.path}/Java/Installer/eclipse/dist"
+					dest="artifacts/${project.name}/"
+				/>
 				
 				<!-- QA -->
 				<artifactspublisher
