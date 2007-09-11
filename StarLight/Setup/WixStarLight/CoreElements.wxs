@@ -34,7 +34,7 @@
         </Component>
       <Directory Id="CompileTime" Name="comptime" LongName="Compiletime">
         <Component Id='CoreFiles' Guid='8BAEEC8F-694C-42d4-A5C4-FBB18F5F4C36'>          
-          <File Id='ComposeStarCoreJar' Name='Core.jar' LongName='ComposestarCORE.jar' DiskId='1' Source='../../../Core/Compiletime/dist/ComposestarCORE.jar' Vital='yes'></File>
+          <File Id='ComposeStarCoreJar' Name='Core.jar' LongName='ComposestarCORE.jar' DiskId='1' Source='../../../Core/Compiletime/dist/lib/ComposestarCORE.jar' Vital='yes'></File>
           <File Id='StarLightJar' Name='StrLght.jar' LongName='StarLight.jar' DiskId='1' Source='../../Source/Compiletime/dist/StarLight.jar' Vital='yes'></File>
           <File Id='xmltypesjar' Name='xmltypes.jar' LongName='xmltypes.jar' DiskId='1' Source='../../Source/Compiletime/lib/xmltypes.jar' Vital='yes'></File>
         </Component>
