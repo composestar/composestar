@@ -24,21 +24,24 @@
 
 package ComposestarEclipsePlugin.Java;
 
+import org.eclipse.osgi.util.NLS;
+
 /**
- * Constants used in the Compose* /Java Eclipse Plugin
- * 
  * @author Michiel Hendriks
  */
-public interface IComposestarJavaConstants
+public class CStarJavaMessages extends NLS
 {
-	public static final String BUNDLE_ID = "composestar.java";
+	private static final String BUNDLE_NAME = "ComposestarEclipsePlugin.Java.CStarJavaMessages";
 
-	public static final String NATURE_ID = BUNDLE_ID + ".nature";
-	
-	public static final String BUILDER_ID = BUNDLE_ID + ".builder";
+	private CStarJavaMessages()
+	{}
 
-	/**
-	 * Base classpath container name
-	 */
-	public static final String CP_CONTAINER = "composestar.java.classpath";
+	public static String NewProjectWizard_title;
+	public static String NewProjectWizard_error_title;
+	public static String NewProjectWizard_error_create_message;
+
+	static
+	{
+		NLS.initializeMessages(BUNDLE_NAME, CStarJavaMessages.class);
+	}
 }

@@ -24,21 +24,32 @@
 
 package ComposestarEclipsePlugin.Java;
 
+import java.util.Map;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+
+import ComposestarEclipsePlugin.Core.ComposestarBuilder;
+
 /**
- * Constants used in the Compose* /Java Eclipse Plugin
- * 
  * @author Michiel Hendriks
  */
-public interface IComposestarJavaConstants
+public class ComposestarJavaBuilder extends ComposestarBuilder
 {
-	public static final String BUNDLE_ID = "composestar.java";
+	public ComposestarJavaBuilder()
+	{}
 
-	public static final String NATURE_ID = BUNDLE_ID + ".nature";
-	
-	public static final String BUILDER_ID = BUNDLE_ID + ".builder";
-
-	/**
-	 * Base classpath container name
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int,
+	 *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public static final String CP_CONTAINER = "composestar.java.classpath";
+	@Override
+	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException
+	{
+		return null;
+	}
+
 }

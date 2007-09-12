@@ -3,9 +3,9 @@ package ComposestarEclipsePlugin.Core;
 public interface IComposestarConstants
 {
 	public static final String BUNDLE_ID = "composestar.core";
-	
+
 	public static final String LIB_DIR = "/lib/";
-	
+
 	// Console
 	public static final String CONSOLE_TITLE = "Compose* Console";
 

@@ -17,6 +17,10 @@
          id="composestar.java.propertypage"
          name="%COMPOSESTAR"
          objectClass="org.eclipse.core.resources.IProject">
+      <filter
+            name="nature"
+            value="composestar.java.nature">
+      </filter>
  		</page>
  	</extension>
 
@@ -30,6 +34,9 @@
        		label="%COMPOSESTAR"
        		path="additions">
        		<separator name="slot1"/>
+         <separator
+               name="slot2">
+         </separator>
        	</menu>
        	<!--
         <action
@@ -54,6 +61,52 @@
               label="%COMPOSESTAR_POPUP_LABEL_BUILD"
               menubarPath="composestar.java.popupmenu/slot1">
         </action>
+        <action
+              class="ComposestarEclipsePlugin.Java.Actions.ToggleCStarJavaNature"
+              enablesFor="1"
+              id="composestar.java.action.remove_nature"
+              label="%COMPOSESTAR_POPUP_LABEL_REMOVE_NATURE"
+              menubarPath="composestar.java.popupmenu/slot2"
+              tooltip="%COMPOSESTAR_POPUP_LABEL_REMOVE_NATURE_HINT">
+        </action>
+        <filter
+              name="nature"
+              value="composestar.java.nature">
+        </filter>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="composestar.java.c2"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu
+               id="composestar.java.popupmenu2"
+               label="%COMPOSESTAR"
+               path="additions">
+            <separator
+                  name="slot1">
+            </separator>
+         </menu>
+         <action
+               class="ComposestarEclipsePlugin.Java.Actions.ToggleCStarJavaNature"
+               id="composestar.java.action.add_nature"
+               label="%COMPOSESTAR_POPUP_LABEL_ADD_NATURE"
+               menubarPath="composestar.java.popupmenu2/slot1"
+               tooltip="%COMPOSESTAR_POPUP_LABEL_ADD_NATURE_HINT">
+         </action>
+         <visibility>
+            <and>
+               <not>
+                  <objectState
+                        name="nature"
+                        value="composestar.java.nature">
+                  </objectState>
+               </not>
+               <objectState
+                     name="nature"
+                     value="org.eclipse.jdt.core.javanature">
+               </objectState>
+            </and>
+         </visibility>
       </objectContribution>
     </extension>
     
@@ -67,7 +120,7 @@
           name="%COMPOSESTAR_JAVA_PROJECT" 
           category="composestar.java.category.wizards"
           icon="logo-16x16.png" 
-          class="ComposestarEclipsePlugin.Java.UI.Wizards.ComposestarProjectWizard"
+          class="ComposestarEclipsePlugin.Java.UI.Wizards.ComposestarProjectWizardEx"
           project="true"> 
       </wizard> 
    	</extension> 
@@ -103,6 +156,34 @@
           id="composestar.java.classpath.runtime"
           name="%CSTAR_JAVA_RUNTIME">
     </classpathContainerPage>
+ </extension>
+ <extension
+       id="composestar.java.nature"
+       name="Compose*/Java Nature"
+       point="org.eclipse.core.resources.natures">
+    <runtime>
+       <run
+             class="ComposestarEclipsePlugin.Java.CStarJavaProject">
+       </run>
+    </runtime>
+    <requires-nature
+          id="org.eclipse.jdt.core.javanature">
+    </requires-nature>
+    <builder
+          id="composestar.java.builder">
+    </builder>
+ </extension>
+ <extension
+       id="composestar.java.builder"
+       name="Compose*/Java Builder"
+       point="org.eclipse.core.resources.builders">
+    <builder
+          hasNature="true"
+          isConfigurable="false">
+       <run
+             class="ComposestarEclipsePlugin.Java.ComposestarJavaBuilder">
+       </run>
+    </builder>
  </extension>
    	
 </plugin>

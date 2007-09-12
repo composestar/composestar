@@ -22,23 +22,15 @@
  * $Id$
  */
 
-package ComposestarEclipsePlugin.Java;
+package ComposestarEclipsePlugin.Core;
+
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 
 /**
- * Constants used in the Compose* /Java Eclipse Plugin
- * 
  * @author Michiel Hendriks
  */
-public interface IComposestarJavaConstants
+public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 {
-	public static final String BUNDLE_ID = "composestar.java";
-
-	public static final String NATURE_ID = BUNDLE_ID + ".nature";
-	
-	public static final String BUILDER_ID = BUNDLE_ID + ".builder";
-
-	/**
-	 * Base classpath container name
-	 */
-	public static final String CP_CONTAINER = "composestar.java.classpath";
+	public ComposestarBuilder()
+	{}
 }

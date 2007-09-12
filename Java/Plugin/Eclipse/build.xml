@@ -52,6 +52,11 @@
 		<manifest file="${out.build}/META-INF/MANIFEST.MF" mode="update">
 			<attribute name="Bundle-Version" value="${version.java}"/>
 		</manifest>		
+		<copy todir="${out.build}">
+			<fileset dir="src">
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
 		<jar destfile="${out.dist}/ComposestarEclipseJava.jar" manifest="${out.build}/META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}" />
 		</jar>
