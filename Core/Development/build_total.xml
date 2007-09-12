@@ -229,6 +229,7 @@
 	<target name="test" description="Execute system tests.">
 		<antcall target="test_core" inheritRefs="true" />
 		<antcall target="test_dotnet" inheritRefs="true" />
+		<antcall target="test_starlight" inheritRefs="true" />
 		<antcall target="test_java" inheritRefs="true" />
 		<antcall target="test_c" inheritRefs="true" />
 	</target>
@@ -247,6 +248,10 @@
 	
 	<target name="test_c" depends="init" if="enabled.c">
 		<ant target="test" dir="${build.c}" inheritRefs="true" />
+	</target>
+	
+	<target name="test_starlight" depends="init" if="enabled.starlight">
+		<ant target="test" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 	
 	<!-- SVN tasks -->
