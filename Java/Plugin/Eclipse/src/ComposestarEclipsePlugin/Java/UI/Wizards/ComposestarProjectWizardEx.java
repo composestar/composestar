@@ -39,7 +39,7 @@ import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 import org.eclipse.jdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.jdt.internal.ui.workingsets.JavaWorkingSetUpdater;
 import org.eclipse.jdt.internal.ui.workingsets.ViewActionGroup;
-import org.eclipse.jdt.internal.ui.workingsets.WorkingSetConfigurationBlock;
+//import org.eclipse.jdt.internal.ui.workingsets.WorkingSetConfigurationBlock;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -120,11 +120,11 @@ public class ComposestarProjectWizardEx extends NewElementWizard
 			{
 				public void run()
 				{
-					PackageExplorerPart activePackageExplorer = getActivePackageExplorer();
-					if (activePackageExplorer != null)
-					{
-						activePackageExplorer.tryToReveal(newElement);
-					}
+					//PackageExplorerPart activePackageExplorer = getActivePackageExplorer();
+					//if (activePackageExplorer != null)
+					//{
+					//	activePackageExplorer.tryToReveal(newElement);
+					//}
 				}
 			});
 		}
@@ -168,67 +168,68 @@ public class ComposestarProjectWizardEx extends NewElementWizard
 		return JavaCore.create(fFirstPage.getProjectHandle());
 	}
 
-	private IWorkingSet[] getWorkingSets(IStructuredSelection selection)
-	{
-		IWorkingSet[] selected = WorkingSetConfigurationBlock.getSelectedWorkingSet(selection);
-		if (selected != null && selected.length > 0)
-		{
-			for (int i = 0; i < selected.length; i++)
-			{
-				if (!isValidWorkingSet(selected[i])) return null;
-			}
-			return selected;
-		}
-
-		PackageExplorerPart explorerPart = getActivePackageExplorer();
-		if (explorerPart == null) return null;
-
-		if (explorerPart.getRootMode() == ViewActionGroup.SHOW_PROJECTS)
-		{
-			// Get active filter
-			IWorkingSet filterWorkingSet = explorerPart.getFilterWorkingSet();
-			if (filterWorkingSet == null) return null;
-
-			if (!isValidWorkingSet(filterWorkingSet)) return null;
-
-			return new IWorkingSet[] { filterWorkingSet };
-		}
-		else if (explorerPart.getRootMode() == ViewActionGroup.SHOW_WORKING_SETS)
-		{
-			// If we have been gone into a working set return the working set
-			Object input = explorerPart.getViewPartInput();
-			if (!(input instanceof IWorkingSet)) return null;
-
-			IWorkingSet workingSet = (IWorkingSet) input;
-			if (!isValidWorkingSet(workingSet)) return null;
-
-			return new IWorkingSet[] { workingSet };
-		}
-
-		return null;
-	}
-
-	private PackageExplorerPart getActivePackageExplorer()
-	{
-		PackageExplorerPart explorerPart = PackageExplorerPart.getFromActivePerspective();
-		if (explorerPart == null) return null;
-
-		IWorkbenchPage activePage = explorerPart.getViewSite().getWorkbenchWindow().getActivePage();
-		if (activePage == null) return null;
-
-		if (activePage.getActivePart() != explorerPart) return null;
-
-		return explorerPart;
-	}
-
-	private boolean isValidWorkingSet(IWorkingSet workingSet)
-	{
-		String id = workingSet.getId();
-		if (!JavaWorkingSetUpdater.ID.equals(id) && !"org.eclipse.ui.resourceWorkingSetPage".equals(id)) //$NON-NLS-1$
-		return false;
-
-		if (workingSet.isAggregateWorkingSet()) return false;
-
-		return true;
-	}
+//	private IWorkingSet[] getWorkingSets(IStructuredSelection selection)
+//	{
+//		IWorkingSet[] selected = WorkingSetConfigurationBlock.getSelectedWorkingSet(selection);
+//		if (selected != null && selected.length > 0)
+//		{
+//			for (int i = 0; i < selected.length; i++)
+//			{
+//				if (!isValidWorkingSet(selected[i])) return null;
+//			}
+//			return selected;
+//		}
+//
+//		PackageExplorerPart explorerPart = getActivePackageExplorer();
+//		if (explorerPart == null) return null;
+//
+//		if (explorerPart.getRootMode() == ViewActionGroup.SHOW_PROJECTS)
+//		{
+//			// Get active filter
+//			IWorkingSet filterWorkingSet = explorerPart.getFilterWorkingSet();
+//			if (filterWorkingSet == null) return null;
+//
+//			if (!isValidWorkingSet(filterWorkingSet)) return null;
+//
+//			return new IWorkingSet[] { filterWorkingSet };
+//		}
+//		else if (explorerPart.getRootMode() == ViewActionGroup.SHOW_WORKING_SETS)
+//		{
+//			// If we have been gone into a working set return the working set
+//			Object input = explorerPart.getViewPartInput();
+//			if (!(input instanceof IWorkingSet)) return null;
+//
+//			IWorkingSet workingSet = (IWorkingSet) input;
+//			if (!isValidWorkingSet(workingSet)) return null;
+//
+//			return new IWorkingSet[] { workingSet };
+//		}
+//
+//		return null;
+//	}
+//
+//	private PackageExplorerPart getActivePackageExplorer()
+//	{
+//		PackageExplorerPart explorerPart = PackageExplorerPart.getFromActivePerspective();
+//		if (explorerPart == null) return null;
+//
+//		IWorkbenchPage activePage = explorerPart.getViewSite().getWorkbenchWindow().getActivePage();
+//		if (activePage == null) return null;
+//
+//		if (activePage.getActivePart() != explorerPart) return null;
+//
+//		return explorerPart;
+//	}
+//
+//	private boolean isValidWorkingSet(IWorkingSet workingSet)
+//	{
+//		String id = workingSet.getId();
+//		if (!JavaWorkingSetUpdater.ID.equals(id) && !"org.eclipse.ui.resourceWorkingSetPage".equals(id)) //$NON-NLS-1$
+//		return false;
+//
+//		if (workingSet.isAggregateWorkingSet()) return false;
+//
+//		return true;
+//	}
+//	
 }
