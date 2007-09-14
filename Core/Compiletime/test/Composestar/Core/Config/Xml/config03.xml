@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<buildconfiguration xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration">
+  <!-- various settings values -->
+  <settings>
+    <setting name="Key" /><!-- empty value -->
+    <setting name="Empty"></setting><!-- also empty -->
+    <setting name="Key" /><!-- duplicate key is allowed -->
+    <setting name="Value">Value</setting>
+    <setting name="RawValue"><![CDATA[<raw> data </raw>]]></setting>
+  </settings>
+  <project name="test" platform="dotNet" language="JSharp" base="." mainclass="foo.bar">
+    <sources />
+    <concerns />
+    <dependencies />
+  </project>
+</buildconfiguration>

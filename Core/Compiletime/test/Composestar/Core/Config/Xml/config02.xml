@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<buildconfiguration xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration">
+  <!-- no extra settings -->
+  <settings>
+  </settings>
+  <project name="test" platform="dotNet" language="JSharp" base="." mainclass="foo.bar">
+    <sources />
+    <concerns />
+  </project>
+</buildconfiguration>

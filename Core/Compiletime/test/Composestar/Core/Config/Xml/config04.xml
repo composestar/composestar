@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<buildconfiguration xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration">
+  <!-- basic source configurations -->
+  <project name="test" platform="dotNet" language="JSharp" base="." mainclass="foo.bar">
+    <sources>
+      <source /><!-- should be ingored -->
+      <source>relative/file.java</source>
+      <source>c:/absolte/file.java</source>
+      <source language="CSharp">alt/language.cs</source>
+    </sources>
+    <concerns>
+      <concern /><!-- ignore me -->
+      <concern>come/concern.cps</concern>
+      <concern enabled="false">disabled/concern.cps</concern>
+      <concern enabled="true">enabled/concern.cps</concern>
+    </concerns>
+    <dependencies>
+      <file>relative/dependency.dll</file>
+      <file>C:/windows/gac/abolsute.dll</file>
+    </dependencies>
+    <resources>
+      <file>simple/file/resource.ico</file>
+      <dir path="res" />
+      <dir path="test">
+        <exclude>**/.svn/</exclude>
+        <exclude>junit-noframes.html</exclude>
+        <exclude>/Composestar/Core/Config/*/config01.xml</exclude>
+        <exclude>/Composestar/Core/*/config02.xml</exclude>
+        <exclude>/Composestar/Core/**/config03.xml</exclude>
+        <exclude>/Composestar/Core/Config/Xml/?onfig04.xml</exclude>
+      </dir>
+    </resources>
+  </project>
+</buildconfiguration>

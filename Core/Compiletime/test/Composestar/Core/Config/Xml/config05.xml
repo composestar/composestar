@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<buildconfiguration xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration">
+  <!-- most basic example -->
+  <project name="test" platform="dotNet" language="JSharp" base="." mainclass="foo.bar" output="output/" intermediate="intermediate/">
+    <sources />
+    <concerns />
+    <dependencies />
+  </project>
+</buildconfiguration>

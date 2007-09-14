@@ -1,0 +1,54 @@
+Two configuration files:
+  - build configuration for projects
+  - platform configurations for the various platforms
+
+
+---- build configuration ----
+
+Settings:
+  - compiletime debug level
+  - runtime debug level
+  - module settings
+
+Project
+  - Settings
+    - output destination
+    - intermediate output path
+    - main class
+    - platform  
+    - Name
+    - Default Language
+    - BasePath
+    
+    - Sources
+      - Language override?
+      - relative/absolute file
+    - Dependencies
+      - file
+      - other?
+    - Concerns
+      - relative/absolute file
+  - Filters
+    - ... RT filter     
+    - filter types  
+      
+      
+---- Platform configuration ----      
+
+Platform
+  - Properties
+    - id
+    - os.name (regex)
+    - jar?
+  - languages
+    - language
+      - name
+      - extentions
+      - compiler
+        - actions
+          - id
+          - executable
+          - arguments
+            - ... complex
+      - DummyGeneration
+  - RT libs      

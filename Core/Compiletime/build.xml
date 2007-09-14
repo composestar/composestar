@@ -141,7 +141,16 @@
 	</target>
 	
 	
-	<target name="test" depends="unittest,validate_moduleinfo" description="Run tests" />
+	<target name="test" depends="config_tests,unittest,validate_moduleinfo" description="Run tests" />
+
+  <target name="config_tests" depends="init" description="Validate the configuration system">
+    <schemavalidate>
+      <schema namespace="http://composestar.sourceforget.net/schema/BuildConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/BuildConfiguration.xsd" />
+      <fileset dir="test/Composestar/Core/Config/xml/">
+        <include name="*.xml" />
+      </fileset>
+    </schemavalidate>
+  </target>
 
 	<target name="compile_tests" depends="local_init,compile">
 		<path id="lib.test">

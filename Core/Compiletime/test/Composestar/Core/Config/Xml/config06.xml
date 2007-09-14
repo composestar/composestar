@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<buildconfiguration xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration">
+  <!-- most basic example -->
+  <project name="test" platform="dotNet" language="JSharp" base="." mainclass="foo.bar">
+    <sources />
+    <concerns />
+    <dependencies />
+  </project>
+  <filters>
+    <customfilter>locatetion/to/custom/filter.dll</customfilter>
+    <customfilter>another/custom/filter.dll</customfilter>
+    <filtertype name="foo"/><!-- the rest defaults to ContinueAction -->
+    <filtertype name="bar" acceptcallaction="BarAction" acceptreturnaction="ContinueAction"/>
+    <filteraction name="ContinueAction" fullname="filter.actions.ContinueAction">builtin.filters.jar</filteraction>
+    <filteraction name="BarAction" fullname="myactions.BarAction" createjpc="true" flowbehavior="1" messagechangebehavior="2">
+      myactions, Version=1.0.0.0, Culture=neutral, blabla
+    </filteraction>
+  </filters>
+</buildconfiguration>

@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.0"
+	targetNamespace="http://composestar.sourceforget.net/schema/BuildConfiguration" elementFormDefault="qualified">
+	<xsd:annotation>
+		<xsd:documentation>
+			The specification for the new BuildConfiguration for Compose*. The new build configuration only contains
+			information unique to the current project. The platform configuration is no longer stored in the build
+			configuration. There was no need for this information to be included in every build configuration. However,
+			there is support to include a specific platform configuration for this project.
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:element name="buildconfiguration" type="BuildConfiguration">
+		<xsd:annotation>
+			<xsd:documentation>A build configration must start with a buildconfiguration element.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:simpleType name="versionString">
+		<xsd:annotation>
+			<xsd:documentation>
+				A string that represents a version number. It contains up to 4 numeric fields delimited by periods. It
+				can end with a dash and release tag (-beta, -RC3, etc).
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]+(\.[0-9]+(\.[0-9]+(\.[0-9]+)?)?)?(-[0-9a-zZ-Z]+)?" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="BuildConfiguration">
+		<xsd:annotation>
+			<xsd:documentation>
+				This is the entry node for the configuration file. It must contain a project element. The settings
+				element is optional. And so is the filter element.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="settings" type="Settings" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Settings intended to override the default configuration of the compiler and it's modules. These
+						settings can also be passed on the commandline, but it is adviced to store them in the
+						configuration file.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="project" type="Project" maxOccurs="1" minOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						The project to compile. The previous spec supported multiple projects, however the compiler was
+						not designed to handle multiple projects at once. The compiler will need to be executed for
+						every project independenty.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="filters" type="Filters" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						The specification of filters used by this project. The legality of the subelement is subject to
+						the used platform. The legacy platforms will only use the customfilter elements. But StarLight
+						makes use of the filtertype and filteraction definitions.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="version" type="versionString" default="2.0" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					Configuration format version of this build configuration file. It provides support for future
+					changes to the specification.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="Settings">
+		<xsd:annotation>
+			<xsd:documentation>
+				Collection of key=value pairs used for various settings. The key is set in the name attribute of the
+				element. The value is set as the body of the element, therefore providing more freedom for the input. It
+				is adviced to use CDATA in order to prevent breaking the XML well formedness requirement. The format of
+				the key is not very specific, but it is adviced to use the form of "Module.Variable" for module settings
+				and "Variable" for global settings.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="setting" maxOccurs="unbounded" minOccurs="0">
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string">
+							<xsd:attribute name="name" type="xsd:NCName" use="required" />
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Project">
+		<xsd:annotation>
+			<xsd:documentation>The project to compile.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="sources" minOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>A collection of source files for this project.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+
+						<xsd:group ref="SourceTypes" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation></xsd:documentation>
+							</xsd:annotation>
+						</xsd:group>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="concerns" minOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>A collection of Compose* concern files.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="concern" type="ConcernFile" minOccurs="0" maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="dependencies" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						A list of external dependencies required to build this project.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:group ref="DependencyTypes" minOccurs="0" maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="resources" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Additional resources to be copied to the output directory after completion.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+
+						<xsd:group ref="ResourceTypes" maxOccurs="unbounded" minOccurs="0"></xsd:group>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:NCName" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The name of this project. Only used as an information resource.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="platform" type="xsd:NCName" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The identifier to the platform to use. This is usually predetermined by the Master instance that is
+					called. This refers to the ID defined for a platform in a platform configurations file.
+					Alternatively a custom platform can be specified in the build configuration.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="language" type="xsd:NCName" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The default programming language for the source files. This is used by the platform to make decision
+					on the compiler to execute.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="base" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The base path to the project. This path is used to resolve the relative paths used in this
+					configuration.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="mainclass" type="xsd:NMTOKEN" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The mainclass is the fully qualified name to the class that serves as entry point for this solution
+					(the main executable).
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="output" type="xsd:string" use="optional" default="bin/">
+			<xsd:annotation>
+				<xsd:documentation>
+					The directory where the compiler results will be copied to (the compiled program). This path is
+					relative to the project's base path. It defaults to "bin/"
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="intermediate" type="xsd:string" use="optional" default="obj/">
+			<xsd:annotation>
+				<xsd:documentation>
+					The directory to use to store the intermediate files of the compiler. This directory is relative to
+					the project's base directory and it defaults to "obj/"
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="SourceFile">
+		<xsd:annotation>
+			<xsd:documentation>
+				A source file of the project. It has an optional language attribute that can override the default
+				porject langauage. However, not all platforms may support this. The value of this element is either a
+				relative path to the source (from the base of the project) or an absolute path.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="language" type="xsd:NCName" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>
+							Override the language for this specific file. Most platforms do not support mixing of source
+							languages.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="ConcernFile">
+		<xsd:annotation>
+			<xsd:documentation>
+				A concern file. The optional attribute "enabled" can be set to disable this concern for compilation. The
+				value is either a relative or absolute path.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="enabled" type="xsd:boolean" use="optional" default="true">
+					<xsd:annotation>
+						<xsd:documentation>
+							If false or 0 this concern will be ignored in compilation.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:group name="DependencyTypes">
+		<xsd:annotation>
+			<xsd:documentation>Group of available dependency types.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element name="file" type="FileResource" />
+		</xsd:choice>
+	</xsd:group>
+	<xsd:complexType name="FileResource">
+		<xsd:annotation>
+			<xsd:documentation>
+				A file resource, the body defines either a absolute or relative (from the projec's base path) path to
+				the file.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string"></xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="Filters">
+		<xsd:annotation>
+			<xsd:documentation>Defines various filters used during compilation or runtime.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:group ref="FilterDefinitions" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:group name="FilterDefinitions">
+		<xsd:choice>
+			<xsd:element name="customfilter" type="CustomFilter" />
+			<xsd:element name="filtertype" type="FilterType" />
+			<xsd:element name="filteraction" type="FilterAction" />
+		</xsd:choice>
+	</xsd:group>
+	<xsd:complexType name="CustomFilter">
+		<xsd:annotation>
+			<xsd:documentation>
+				A legacy custom filters. The name attribute is optional and not always used.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="name" type="xsd:Name" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="FilterType">
+		<xsd:annotation>
+			<xsd:documentation>
+				A filter type definition. A filter type definition contains references to defined filter actions.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence></xsd:sequence>
+		<xsd:attribute name="name" type="xsd:NCName" use="required" />
+		<xsd:attribute name="acceptcallaction" type="xsd:NCName" use="optional" default="ContinueAction" />
+		<xsd:attribute name="rejectcallaction" type="xsd:NCName" use="optional" default="ContinueAction" />
+		<xsd:attribute name="acceptreturnaction" type="xsd:NCName" use="optional" default="ContinueAction" />
+		<xsd:attribute name="rejectreturnaction" type="xsd:NCName" use="optional" default="ContinueAction" />
+	</xsd:complexType>
+	<xsd:complexType name="FilterAction">
+		<xsd:annotation>
+			<xsd:documentation>
+				Definition of a filter action, these are used by the declared filtertypes. The value of this element
+				defines the location/library/assembly/etc of the filter action. This content is platform depended. For
+				example StarLight uses the assembly's strong name.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="name" type="xsd:NCName" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Short name of this action as used by the filter type declaration.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="fullname" type="xsd:NCName" use="required">
+					<xsd:annotation>
+						<xsd:documentation>The full (class-)name of the filter action.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attributeGroup ref="FilterActionProps" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:attributeGroup name="FilterActionProps">
+		<xsd:annotation>
+			<xsd:documentation>
+				Group for filter action properties, required for reasoning and processing.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="createjpc" type="xsd:boolean" />
+		<xsd:attribute name="flowbehavior" type="xsd:integer" />
+		<xsd:attribute name="messagechangebehavior" type="xsd:integer" />
+	</xsd:attributeGroup>
+
+	<xsd:group name="SourceTypes">
+		<xsd:annotation>
+			<xsd:documentation>Group of available source types.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element name="source" type="SourceFile"></xsd:element>
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="ResourceTypes">
+		<xsd:annotation>
+			<xsd:documentation>
+				A groupd of resource elements that can be used in the Project's resource list.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element name="file" type="FileResource"></xsd:element>
+			<xsd:element name="dir" type="DirectoryResource"></xsd:element>
+		</xsd:choice>
+	</xsd:group>
+
+
+	<xsd:complexType name="DirectoryResource">
+		<xsd:annotation>
+			<xsd:documentation>
+				A directory resource. You can filters to include or exclude files. By default all files are included
+				except for SVN/CVS control files and various temprory files.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="include" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						A mask applied to the filenames. The mask can contain the following wildcards: ? matches a
+						single character. * matches zero or more characters but not /. ** matches zero or more include
+						/. You should use forward slashes as directory delimiters.
+					</xsd:documentation>
+				</xsd:annotation></xsd:element>
+			<xsd:element name="exclude" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>See include for the mask specification.</xsd:documentation>
+				</xsd:annotation></xsd:element>
+		</xsd:choice>
+		<xsd:attribute name="path" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The path to the directory</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+</xsd:schema>
