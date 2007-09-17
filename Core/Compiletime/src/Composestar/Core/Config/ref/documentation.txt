@@ -1,3 +1,48 @@
+$Id$
+
+The new build configuration format has been split up into two sections:
+	- project build configuration
+	- platform configuration
+	
+The project build configuration only contains information important for
+the current project. The platform configuration is something that is 
+common amongst all projects that share the same platform, there is no
+need to repeat this information for every platform.
+
+The build configuration describes all details about the project. It 
+contains three sections:
+	- compiler settings
+	- project description
+	- filter definitions
+The compiler settings are used to override the default parameters. 
+These settings could be considered as global settings and not project
+specific. The same settings section could be shared by several 
+projects.
+The project description contains an overview of the project's sources, 
+concern sources, dependencies and additional resources. Additional
+resources are files that are required by the compiled program but are
+not required during the compilation process. For example image files.
+These files will be copied to the output directory on a successful 
+compilation. The project also contains some attributes that define the
+platform, base directory and used programming language. The paths
+used in this section may be relative paths. In this case they will be
+resolved using the project's base directory. The project's base 
+directory may also be a relative path, it will then be resolved to an
+absolute path using the current working directory.
+The third section is used to provide filter information like custom
+filters or filter type and action declarations. The usage of this block
+depends on the platform. It can be omitted if the platform has other
+methods to get a hold on this information. Relative paths used in this
+section will also be resolved using the project's base directory.
+
+
+
+
+
+-- old stuff --	
+
+
+
 Two configuration files:
   - build configuration for projects
   - platform configurations for the various platforms

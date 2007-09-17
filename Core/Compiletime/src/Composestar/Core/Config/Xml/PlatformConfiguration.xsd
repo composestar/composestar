@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://composestar.sourceforget.net/schema/PlatformConfiguration"
+	elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://composestar.sourceforget.net/schema/PlatformConfiguration">
+	<xsd:include schemaLocation="ComposestarConfigCommon.xsd"></xsd:include>
+	<xsd:annotation>
+		<xsd:documentation>
+			Configuration file for the platforms. Each port has it's own platform configuration that contains one or
+			more platform specifications.
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:complexType name="Platform">
+		<xsd:annotation>
+			<xsd:documentation>
+				The definition of a platform. A platform is defined by an ID and an optional OS filter.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="osfilter" type="OSFilter" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Defines an operating system filter. The current operating system has to match this filter in
+						order to be active. If this filter is empty it will always match. If more than one platform with
+						the same ID has been defined the most suitable platform for the current OS will be selected.
+						This means that first the platforms with a filter will be considered. The first matching
+						platform will be selected.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="languages" maxOccurs="1" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						Collection of programming languages supported by this platform.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="language" type="Language" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="resources" maxOccurs="1" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						Resources that should also be copied to the output directory of the project. These resources
+						should include required runtime libraries which are usually not a direct project dependency.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:group ref="ResourceTypes" maxOccurs="unbounded" minOccurs="0"></xsd:group>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:NCName" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					A unique identifier for this platform. Multiple platform specifications with the same ID value van
+					be used but only when they match different operating systems (see: osfilter).
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:element name="platforms">
+		<xsd:annotation>
+			<xsd:documentation>
+				Base for the platform configuration file. Multiple platform instances can be defined in a single
+				configuration.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="platform" type="Platform" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="OSFilter">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines a filter for the current operating system. Each attribute is a regular expression that will be
+				matched with the Java os.* properties. When the attribute value is empty it will be ignored for
+				matching. If all attributes are empty this filter will always match.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="name" type="xsd:string" use="optional"></xsd:attribute>
+		<xsd:attribute name="version" type="xsd:string" use="optional"></xsd:attribute>
+		<xsd:attribute name="arch" type="xsd:string" use="optional"></xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="Language">
+		<xsd:annotation>
+			<xsd:documentation>
+				Specification of a supported programming language in this platform. The language is refered to by the
+				project.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="extensions" maxOccurs="1" minOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Defines a set of filename extentions to which this language applies to. This is an informative
+						directive that can be used to determine the language identifier for a project.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="extension" maxOccurs="unbounded" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>
+									A filename extention. This is the content after the last period in the filename. For
+									example for the file "foo.bar.quux.java" the extension is "java"
+								</xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:pattern value="[^.].*"></xsd:pattern>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="compiler" type="Compiler" maxOccurs="1" minOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>The source code compiler for this language</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dummygenerator" type="xsd:NCName" maxOccurs="1" minOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>The class for the dummy generator.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:NCName" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The name of the language and refered to by the project.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="CompilerAction">
+		<xsd:annotation>
+			<xsd:documentation>A compiler action. Child elements contain the commandline arguments.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:group ref="CmdLineArgs" maxOccurs="unbounded" minOccurs="0"></xsd:group>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:NCName" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The name for this action.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="executable" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>the name of the executable to execute.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="Compiler">
+		<xsd:annotation>
+			<xsd:documentation>
+				The specification for the compiler for a language. The compiler can have multiple actions, how these are
+				used is determined by the class that handles the compilation.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="action" type="CompilerAction" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="class" type="xsd:NCName" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The class that handles the compilation process.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+
+
+	<xsd:group name="SimpleCmdLineArgs">
+		<xsd:annotation>
+			<xsd:documentation>Simple single command line argument values.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element name="arg" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						An commandline argument. Variables can be included using a special notation: ${varname} refers
+						to a compiler set variable, what variables are set depends on the class that handles the
+						compiler execution. %{varname} will be replaced by an environment variable with the given name.
+						@{varname} can be used to refer to system properties (java.lang.System.getSystemProperty). A
+						default value, for when the variable can not be resolved, can be given by appending a colon to
+						the varname like: ${varname:default value}.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+
+
+		</xsd:choice>
+	</xsd:group>
+
+
+	<xsd:group name="CmdLineArgs">
+		<xsd:choice>
+			<xsd:group ref="SimpleCmdLineArgs"></xsd:group>
+			<xsd:element name="sources">
+				<xsd:annotation>
+					<xsd:documentation>
+						A for-each source file commandline argument. For each source file a commandline argument will be
+						added. This type will automatically register the argument ${SOURCE} with the current source file
+						that is being processed.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+
+					<xsd:sequence>
+						<xsd:group ref="SimpleCmdLineArgs" maxOccurs="unbounded" minOccurs="1"></xsd:group>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="deps">
+				<xsd:annotation>
+					<xsd:documentation>
+						Similar to the sources list, but for the project dependencies. It will register the argument
+						${DEP} for the current dependency.
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+
+						<xsd:group ref="SimpleCmdLineArgs" maxOccurs="unbounded" minOccurs="1"></xsd:group>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:group>
+</xsd:schema>

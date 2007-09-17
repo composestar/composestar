@@ -40,7 +40,7 @@ import Composestar.Core.Config.Dependency;
  * 
  * @author Michiel Hendriks
  */
-public class DependencyTypeHandler extends DefaultBuildConfigHandler
+public class DependencyTypeHandler extends CpsBaseHandler
 {
 	protected static final int STATE_MULTI = 1;
 

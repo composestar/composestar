@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platforms xmlns="http://composestar.sourceforget.net/schema/PlatformConfiguration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://composestar.sourceforget.net/schema/PlatformConfiguration ../../../../../src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd ">
+	<platform id="test">
+		<resources>
+			<file>some/filename</file>
+			<dir path="resx">
+				<include>**/*.gif</include>
+			</dir>
+		</resources>
+	</platform>
+</platforms>

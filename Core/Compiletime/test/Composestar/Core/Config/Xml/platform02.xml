@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platforms xmlns="http://composestar.sourceforget.net/schema/PlatformConfiguration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://composestar.sourceforget.net/schema/PlatformConfiguration ../../../../../src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd ">
+	<platform id="test">
+		<osfilter name="Windows.*"/>
+	</platform>
+	<platform id="test">
+		<osfilter name="Linux.*" arch="(x86(_[0-9]?))|(i[3-6]86)|"/>
+	</platform>
+</platforms>

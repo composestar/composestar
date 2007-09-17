@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platforms xmlns="http://composestar.sourceforget.net/schema/PlatformConfiguration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://composestar.sourceforget.net/schema/PlatformConfiguration ../../../../../src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd ">
+	<platform id="test">
+		<languages>
+			<language name="CSharp">
+				<extensions>
+					<extension>cs</extension>
+				</extensions>
+				<compiler class="Composestar.DotNET.COMP.DotNETCompiler">
+					<action name="CompileLibrary" executable="csc.exe">
+						<arg>/debug</arg>
+						<arg>/nologo</arg>
+						<arg>/t:library</arg>
+						<arg>/out:${OUT}</arg>
+						<deps>
+							<arg>/r:${DEP}</arg>
+						</deps>
+						<sources>
+							<arg>${SOURCE}</arg>
+						</sources>
+					</action>
+					<action name="CompileExecutable" executable="csc.exe">
+						<arg>/debug</arg>
+						<arg>/nologo</arg>
+						<arg>/t:exe</arg>
+						<arg>/out:${OUT}</arg>
+						<deps>
+							<arg>/r:${DEP}</arg>
+						</deps>
+						<sources>
+							<arg>${SOURCE}</arg>
+						</sources>
+					</action>
+				</compiler>
+				<dummygenerator>Composestar.DotNET.DUMMER.CSharpDummyEmitter</dummygenerator>
+			</language>
+		</languages>
+	</platform>
+</platforms>

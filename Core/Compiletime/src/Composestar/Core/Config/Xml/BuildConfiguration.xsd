@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsd:schema xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.0"
-	targetNamespace="http://composestar.sourceforget.net/schema/BuildConfiguration" elementFormDefault="qualified">
+<xsd:schema version="2.0" targetNamespace="http://composestar.sourceforget.net/schema/BuildConfiguration"
+	elementFormDefault="qualified" xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:include schemaLocation="ComposestarConfigCommon.xsd"></xsd:include>
 	<xsd:annotation>
 		<xsd:documentation>
 			The specification for the new BuildConfiguration for Compose*. The new build configuration only contains
@@ -15,22 +16,11 @@
 			<xsd:documentation>A build configration must start with a buildconfiguration element.</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
-	<xsd:simpleType name="versionString">
-		<xsd:annotation>
-			<xsd:documentation>
-				A string that represents a version number. It contains up to 4 numeric fields delimited by periods. It
-				can end with a dash and release tag (-beta, -RC3, etc).
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:restriction base="xsd:string">
-			<xsd:pattern value="[0-9]+(\.[0-9]+(\.[0-9]+(\.[0-9]+)?)?)?(-[0-9a-zZ-Z]+)?" />
-		</xsd:restriction>
-	</xsd:simpleType>
 	<xsd:complexType name="BuildConfiguration">
 		<xsd:annotation>
 			<xsd:documentation>
-				This is the entry node for the configuration file. It must contain a project element. The settings
-				element is optional. And so is the filter element.
+				This is the entry node for the configuration file. It must contain a project element. The settings and
+				filter elements are optional.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:sequence>
@@ -57,7 +47,8 @@
 					<xsd:documentation>
 						The specification of filters used by this project. The legality of the subelement is subject to
 						the used platform. The legacy platforms will only use the customfilter elements. But StarLight
-						makes use of the filtertype and filteraction definitions.
+						makes use of the filtertype and filteraction definitions. Relative paths used in this section
+						will be resolved using the project's base path, but under the discreation of the used platform.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
@@ -104,7 +95,6 @@
 				</xsd:annotation>
 				<xsd:complexType>
 					<xsd:sequence>
-
 						<xsd:group ref="SourceTypes" minOccurs="0" maxOccurs="unbounded">
 							<xsd:annotation>
 								<xsd:documentation></xsd:documentation>
@@ -143,7 +133,6 @@
 				</xsd:annotation>
 				<xsd:complexType>
 					<xsd:sequence>
-
 						<xsd:group ref="ResourceTypes" maxOccurs="unbounded" minOccurs="0"></xsd:group>
 					</xsd:sequence>
 				</xsd:complexType>
@@ -175,7 +164,8 @@
 			<xsd:annotation>
 				<xsd:documentation>
 					The base path to the project. This path is used to resolve the relative paths used in this
-					configuration.
+					configuration. If the path defined in this attribute is relative it will be resolved to an absolute
+					path using the current working directory.
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
@@ -244,25 +234,6 @@
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
-	<xsd:group name="DependencyTypes">
-		<xsd:annotation>
-			<xsd:documentation>Group of available dependency types.</xsd:documentation>
-		</xsd:annotation>
-		<xsd:choice>
-			<xsd:element name="file" type="FileResource" />
-		</xsd:choice>
-	</xsd:group>
-	<xsd:complexType name="FileResource">
-		<xsd:annotation>
-			<xsd:documentation>
-				A file resource, the body defines either a absolute or relative (from the projec's base path) path to
-				the file.
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:simpleContent>
-			<xsd:extension base="xsd:string"></xsd:extension>
-		</xsd:simpleContent>
-	</xsd:complexType>
 	<xsd:complexType name="Filters">
 		<xsd:annotation>
 			<xsd:documentation>Defines various filters used during compilation or runtime.</xsd:documentation>
@@ -281,7 +252,8 @@
 	<xsd:complexType name="CustomFilter">
 		<xsd:annotation>
 			<xsd:documentation>
-				A legacy custom filters. The name attribute is optional and not always used.
+				A custom filters. The name attribute is optional and not always used. It can be used to load additional
+				files that contain custom filters.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:simpleContent>
@@ -293,11 +265,19 @@
 	<xsd:complexType name="FilterType">
 		<xsd:annotation>
 			<xsd:documentation>
-				A filter type definition. A filter type definition contains references to defined filter actions.
+				A filter type definition. A filter type definition contains references to defined filter actions. The
+				filter actions can be refered to by their short and long name. Filter type and action sets will be used
+				when the platform can not directly resolve the filter information during the compilation process (e.g.
+				StarLight).
 			</xsd:documentation>
 		</xsd:annotation>
-		<xsd:sequence></xsd:sequence>
-		<xsd:attribute name="name" type="xsd:NCName" use="required" />
+		<xsd:attribute name="name" type="xsd:NCName" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The name of this filter. This name will be used in the concern sources to refer to this filter.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
 		<xsd:attribute name="acceptcallaction" type="xsd:NCName" use="optional" default="ContinueAction" />
 		<xsd:attribute name="rejectcallaction" type="xsd:NCName" use="optional" default="ContinueAction" />
 		<xsd:attribute name="acceptreturnaction" type="xsd:NCName" use="optional" default="ContinueAction" />
@@ -339,7 +319,6 @@
 		<xsd:attribute name="flowbehavior" type="xsd:integer" />
 		<xsd:attribute name="messagechangebehavior" type="xsd:integer" />
 	</xsd:attributeGroup>
-
 	<xsd:group name="SourceTypes">
 		<xsd:annotation>
 			<xsd:documentation>Group of available source types.</xsd:documentation>
@@ -348,45 +327,4 @@
 			<xsd:element name="source" type="SourceFile"></xsd:element>
 		</xsd:choice>
 	</xsd:group>
-
-	<xsd:group name="ResourceTypes">
-		<xsd:annotation>
-			<xsd:documentation>
-				A groupd of resource elements that can be used in the Project's resource list.
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:choice>
-			<xsd:element name="file" type="FileResource"></xsd:element>
-			<xsd:element name="dir" type="DirectoryResource"></xsd:element>
-		</xsd:choice>
-	</xsd:group>
-
-
-	<xsd:complexType name="DirectoryResource">
-		<xsd:annotation>
-			<xsd:documentation>
-				A directory resource. You can filters to include or exclude files. By default all files are included
-				except for SVN/CVS control files and various temprory files.
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:choice minOccurs="0" maxOccurs="unbounded">
-			<xsd:element name="include" type="xsd:string">
-				<xsd:annotation>
-					<xsd:documentation>
-						A mask applied to the filenames. The mask can contain the following wildcards: ? matches a
-						single character. * matches zero or more characters but not /. ** matches zero or more include
-						/. You should use forward slashes as directory delimiters.
-					</xsd:documentation>
-				</xsd:annotation></xsd:element>
-			<xsd:element name="exclude" type="xsd:string">
-				<xsd:annotation>
-					<xsd:documentation>See include for the mask specification.</xsd:documentation>
-				</xsd:annotation></xsd:element>
-		</xsd:choice>
-		<xsd:attribute name="path" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>The path to the directory</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-	</xsd:complexType>
 </xsd:schema>

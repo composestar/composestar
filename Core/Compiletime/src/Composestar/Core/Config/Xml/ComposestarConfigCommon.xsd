@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema version="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:annotation>
+		<xsd:documentation>
+			Command types and groups shared between the build configuration and platform configuration specs.
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:simpleType name="versionString">
+		<xsd:annotation>
+			<xsd:documentation>
+				A string that represents a version number. It contains up to 4 numeric fields delimited by periods. It
+				can end with a dash and release tag (-beta, -RC3, etc).
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]+(\.[0-9]+(\.[0-9]+(\.[0-9]+)?)?)?(-[0-9a-zZ-Z]+)?" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:group name="DependencyTypes">
+		<xsd:annotation>
+			<xsd:documentation>Group of available dependency types.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element name="file" type="FileResource" />
+		</xsd:choice>
+	</xsd:group>
+	<xsd:complexType name="FileResource">
+		<xsd:annotation>
+			<xsd:documentation>
+				A file resource, the body defines either a absolute or relative (from the projec's base path) path to
+				the file.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string"></xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:group name="ResourceTypes">
+		<xsd:annotation>
+			<xsd:documentation>
+				A grouped of resource elements that can be used in the Project's resource list.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element name="file" type="FileResource"></xsd:element>
+			<xsd:element name="dir" type="DirectoryResource"></xsd:element>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:complexType name="DirectoryResource">
+		<xsd:annotation>
+			<xsd:documentation>
+				A directory resource. You can filters to include or exclude files. By default all files are included
+				except for SVN/CVS control files and various temprory files.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="include" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						A mask applied to the filenames. The mask can contain the following wildcards: ? matches a
+						single character. * matches zero or more characters but not /. ** matches zero or more include
+						/. You should use forward slashes as directory delimiters.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="exclude" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>See include for the mask specification.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:choice>
+		<xsd:attribute name="path" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The path to the directory</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+</xsd:schema>

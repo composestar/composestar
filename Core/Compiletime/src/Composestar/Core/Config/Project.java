@@ -59,7 +59,13 @@ public class Project implements Serializable
 	/**
 	 * The platform identifier
 	 */
-	protected String platform;
+	protected String platformId;
+
+	/**
+	 * The platform used for this project. Will be set after the first call to
+	 * getPlatform().
+	 */
+	protected Platform platform;
 
 	/**
 	 * The base path to the project
@@ -154,9 +160,18 @@ public class Project implements Serializable
 		name = inName.trim();
 	}
 
-	public String getPlatform()
+	public Platform getPlatform()
 	{
+		if (platform == null)
+		{
+			platform = PlatformManager.getPlatform(platformId);
+		}
 		return platform;
+	}
+
+	public String getPlatformId()
+	{
+		return platformId;
 	}
 
 	public void setPlatform(String inPlatform)
@@ -165,7 +180,8 @@ public class Project implements Serializable
 		{
 			throw new IllegalArgumentException("Platform can not be null or empty");
 		}
-		platform = inPlatform.trim();
+		platformId = inPlatform.trim();
+		platform = null;
 	}
 
 	public File getBase()

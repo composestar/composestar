@@ -41,7 +41,7 @@ import Composestar.Core.Config.FileCollection;
  * 
  * @author Michiel Hendriks
  */
-public class ResourceTypeHandler extends DefaultBuildConfigHandler
+public class ResourceTypeHandler extends CpsBaseHandler
 {
 	protected static final int STATE_MULTI = 1;
 

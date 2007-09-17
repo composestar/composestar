@@ -39,7 +39,7 @@ import Composestar.Core.Config.Source;
  * 
  * @author Michiel Hendriks
  */
-public class SourceTypeHandler extends DefaultBuildConfigHandler
+public class SourceTypeHandler extends CpsBaseHandler
 {
 	protected static final int STATE_MULTI = 1;
 
