@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platforms xmlns="http://composestar.sourceforget.net/schema/PlatformConfiguration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://composestar.sourceforget.net/schema/PlatformConfiguration ../../ComposestarCORE/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd ">
+	<platform id="dotNET">
+		<osfilter name="Windows .*" />
+		<languages>
+			<language name="CSharp">
+				<extensions>
+					<extension>cs</extension>
+				</extensions>
+				<compiler class="Composestar.DotNET.COMP.DotNETCompiler">
+					<action name="CompileExecutable" executable="csc.exe">
+						<arg>/debug</arg>
+						<arg>/nologo</arg>
+						<arg>/t:exe</arg>
+						<arg>/out:${OUT}</arg>
+						<deps>
+							<arg>/r:${DEP}</arg>
+						</deps>
+						<sources>
+							<arg>${SOURCE}</arg>
+						</sources>
+					</action>
+					<action name="CompileLibrary" executable="csc.exe">
+						<arg>/debug</arg>
+						<arg>/nologo</arg>
+						<arg>/t:library</arg>
+						<arg>/out:${OUT}</arg>
+						<deps>
+							<arg>/r:${DEP}</arg>
+						</deps>
+						<sources>
+							<arg>${SOURCE}</arg>
+						</sources>
+					</action>
+				</compiler>
+				<dummygenerator>Composestar.DotNET.DUMMER.CSharpDummyEmitter</dummygenerator>
+			</language>
+			<language name="JSharp">
+				<extensions>
+					<extension>jsl</extension>
+					<extension>java</extension>
+				</extensions>
+				<compiler class="Composestar.DotNET.COMP.DotNETCompiler">
+					<action name="CompileExecutable" executable="vjc.exe">
+						<arg>/debug</arg>
+						<arg>/nologo</arg>
+						<arg>/t:exe</arg>
+						<arg>/out:${OUT}</arg>
+						<deps>
+							<arg>/r:${DEP}</arg>
+						</deps>
+						<sources>
+							<arg>${SOURCE}</arg>
+						</sources>
+					</action>
+					<action name="CompileLibrary" executable="vjc.exe">
+						<arg>/debug</arg>
+						<arg>/nologo</arg>
+						<arg>/t:library</arg>
+						<arg>/out:${OUT}</arg>
+						<deps>
+							<arg>/r:${DEP}</arg>
+						</deps>
+						<sources>
+							<arg>${SOURCE}</arg>
+						</sources>
+					</action>
+				</compiler>
+				<dummygenerator>Composestar.DotNET.DUMMER.JSharpDummyEmitter</dummygenerator>
+			</language>
+		</languages>
+		<resources>
+			<file>AntlrDotNet.dll</file>
+			<file>ComposestarCore.dll</file>
+			<file>ComposestarCoreDotNET.dll</file>
+			<file>ComposeStarDotNETRuntimeInterpreter.dll</file>
+			<file>ComposeStarDotNETUtilities.dll</file>
+			<file>ComposeStarFilterDebugger.dll</file>
+			<file>ComposeStarRuntimeInterpreter.dll</file>
+			<file>ComposeStarUtilities.dll</file>
+			<file>DotNETPlatformInterface.dll</file>
+		</resources>
+	</platform>
+</platforms>

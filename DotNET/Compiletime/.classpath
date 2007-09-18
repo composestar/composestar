@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**/.svn/|AssemblyInfo.java|Composestar/DotNET/DUMMER/CSharpDummyGenerator/|Composestar/DotNET/ILICIT/Weaver/|bin/|obj/" including="**/*.java|**/moduleinfo.xml|MANIFEST.MF" kind="src" path="src"/>
+	<classpathentry excluding="**/.svn/|AssemblyInfo.java|Composestar/DotNET/DUMMER/CSharpDummyGenerator/|Composestar/DotNET/ILICIT/Weaver/|bin/|obj/" including="**/*.java|**/moduleinfo.xml|MANIFEST.MF|Platforms.xml" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/ComposestarCORE/lib/prolog/prolog.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>

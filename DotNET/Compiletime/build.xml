@@ -3,83 +3,91 @@
 
 	<condition property="build.core" value="../../Core">
 		<and>
-			<not><isset property="build.core"/></not>
-			<available file="../../Core/common.xml"/>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="../../Core/common.xml" />
 		</and>
 	</condition>
-	
-	<import file="${build.core}/common.xml"/>
-	
-	<property name="Weaver.dir" location="src\Composestar\DotNET\ILICIT\Weaver"/>
-	<property name="Dummer.dir" location="src\Composestar\DotNET\DUMMER"/>
-	<property name="CSharpDummyGenerator.dir" location="${Dummer.dir}\CSharpDummyGenerator"/>
-	<property name="antlr-2.7.2.exe" location="${CSharpDummyGenerator.dir}\Parse\antlr-2.7.2.exe"/>
-	
-	<echo>Processing: ${ant.project.name} ...</echo>	
+
+	<import file="${build.core}/common.xml" />
+
+	<property name="Weaver.dir" location="src\Composestar\DotNET\ILICIT\Weaver" />
+	<property name="Dummer.dir" location="src\Composestar\DotNET\DUMMER" />
+	<property name="CSharpDummyGenerator.dir" location="${Dummer.dir}\CSharpDummyGenerator" />
+	<property name="antlr-2.7.2.exe" location="${CSharpDummyGenerator.dir}\Parse\antlr-2.7.2.exe" />
+
+	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The Compose* DotNET Compiletime</description>
 
 	<target name="clean" depends="init" description="clean the compilation results">
-		
+
 		<!-- Java build files -->
-		<delete dir="${out.build}"/>
-		<delete dir="${out.dist}"/>
+		<delete dir="${out.build}" />
+		<delete dir="${out.dist}" />
 		<delete>
 			<fileset dir="src">
-				<include name="**/*.class"/>
+				<include name="**/*.class" />
 			</fileset>
 		</delete>
-		
+
 		<!-- C# DummyGen -->
 		<delete>
 			<fileset dir="${CSharpDummyGenerator.dir}\Parse">
-				<include name="CSharpLexer.cs"/>
-				<include name="CSharpParser.cs"/>
-				<include name="CSharpTokenTypes.*"/>
-				<include name="*.smap"/>
+				<include name="CSharpLexer.cs" />
+				<include name="CSharpParser.cs" />
+				<include name="CSharpTokenTypes.*" />
+				<include name="*.smap" />
 			</fileset>
 		</delete>
-		
+
 		<!-- J# DummyGen -->
 		<delete>
 			<fileset dir="${Dummer.dir}">
-				<include name="JSharpLexer.java"/>
-				<include name="JSharpRecognizer.java"/>
-				<include name="JSharpTokenTypes.*"/>
-				<include name="*.smap"/>
+				<include name="JSharpLexer.java" />
+				<include name="JSharpRecognizer.java" />
+				<include name="JSharpTokenTypes.*" />
+				<include name="*.smap" />
 			</fileset>
 		</delete>
-		
-		<antcall target="clean_devenv"/>
-		<antcall target="clean_msbuild"/>
-		
+
+		<antcall target="clean_devenv" />
+		<antcall target="clean_msbuild" />
+
 	</target>
 
 	<target name="clean_devenv" if="available.devenv">
-		<devenv solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.sln" action="clean"/>
-		<devenv solution="${Weaver.dir}\Weavers.sln" action="clean"/>		
+		<devenv solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.sln" action="clean" />
+		<devenv solution="${Weaver.dir}\Weavers.sln" action="clean" />
 	</target>
 
 	<target name="clean_msbuild" if="available.msbuild">
-		<msbuild solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.vs2005.sln" target="clean"/>
-		<msbuild solution="${Weaver.dir}\Weavers.vs2005.sln" target="clean"/>		
-	</target>
-	
-	<target name="init_local" depends="init">
-		<mkdir dir="${out.build}"/>
-		<mkdir dir="${out.dist}"/>
-		<mkdir dir="${out.dist}/bin"/>
-		<mkdir dir="${out.dist}/lib"/>
+		<msbuild solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.vs2005.sln" target="clean" />
+		<msbuild solution="${Weaver.dir}\Weavers.vs2005.sln" target="clean" />
 	</target>
 
-  <target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet" description="Build the .NET Compiletime">
-    <!-- INCRE configurations -->
-    <copy todir="${out.dist}">
-      <fileset dir="src/Composestar/DotNET/INCRE/">
-        <include name="*.xml"/>
-      </fileset>
-    </copy>
-  </target>
-	
+	<target name="init_local" depends="init">
+		<mkdir dir="${out.build}" />
+		<mkdir dir="${out.dist}" />
+		<mkdir dir="${out.dist}/bin" />
+		<mkdir dir="${out.dist}/lib" />
+	</target>
+
+	<target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet" description="Build the .NET Compiletime">
+		<schemavalidate>
+			<schema namespace="http://composestar.sourceforget.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
+			<fileset dir="src">
+				<include name="Platforms.xml" />
+			</fileset>
+		</schemavalidate>
+		<!-- INCRE configurations -->
+		<copy todir="${out.dist}">
+			<fileset dir="src/Composestar/DotNET/INCRE/">
+				<include name="*.xml" />
+			</fileset>
+		</copy>
+	</target>
+
 	<target name="antlr">
 		<!--
 		<antlr target="${CSharpDummyGenerator}/Parse/csharp.g" outputdirectory="${CSharpDummyGenerator}/Parse">
@@ -87,81 +95,82 @@
 		</antlr>
 		-->
 		<exec executable="${antlr-2.7.2.exe}" dir="${CSharpDummyGenerator.dir}/Parse">
-			<arg value="csharp.g"/>
+			<arg value="csharp.g" />
 		</exec>
 		<antlr target="${Dummer.dir}/jsharp.g" outputdirectory="${Dummer.dir}">
-			<classpath refid="lib.dotnet"/>
+			<classpath refid="lib.dotnet" />
 		</antlr>
 	</target>
-	
+
 	<target name="compile_java">
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.dotnet" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
-			<exclude name="**/AssemblyInfo.java"/>
+			<exclude name="**/AssemblyInfo.java" />
 		</javac>
 	</target>
-			
+
 	<target name="compile_dotnet">
 		<dn:csc targettype="exe" debug="false" destfile="${out.dist}/lib/AttributeHarvester.exe">
-			<src dir="src\Composestar\DotNET\TYM\TypeHarvester" includes="AttributeHarvester.cs"/>
+			<src dir="src\Composestar\DotNET\TYM\TypeHarvester" includes="AttributeHarvester.cs" />
 		</dn:csc>
 		<dn:csc targettype="exe" debug="false" destfile="${out.dist}/lib/TypeHarvester.exe">
-			<src dir="src\Composestar\DotNET\TYM\TypeHarvester" includes="TypeHarvester.cs"/>
+			<src dir="src\Composestar\DotNET\TYM\TypeHarvester" includes="TypeHarvester.cs" />
 		</dn:csc>
-		<antcall target="compile_dotnet_devenv"/>
-		<antcall target="compile_dotnet_msbuild"/>
+		<antcall target="compile_dotnet_devenv" />
+		<antcall target="compile_dotnet_msbuild" />
 
-    <!-- C# DummyGen -->
-    <copy todir="${out.dist}/bin">
-      <fileset dir="${CSharpDummyGenerator.dir}/bin">
-        <include name="CSharpDummyGenerator.exe"/>
-        <include name="antlr.runtime.dll"/>
-      </fileset>
-    </copy>
-    <!-- ILICIT Weavers -->
-    <copy todir="${out.dist}\bin">
-      <fileset dir="${Weaver.dir}\bin\Release">
-        <include name="IlWeaver.exe"/>
-        <include name="PeWeaver.exe"/>
-        <include name="WeaveLibrary.dll"/>
-      </fileset>
-    </copy>
+		<!-- C# DummyGen -->
+		<copy todir="${out.dist}/bin">
+			<fileset dir="${CSharpDummyGenerator.dir}/bin">
+				<include name="CSharpDummyGenerator.exe" />
+				<include name="antlr.runtime.dll" />
+			</fileset>
+		</copy>
+		<!-- ILICIT Weavers -->
+		<copy todir="${out.dist}\bin">
+			<fileset dir="${Weaver.dir}\bin\Release">
+				<include name="IlWeaver.exe" />
+				<include name="PeWeaver.exe" />
+				<include name="WeaveLibrary.dll" />
+			</fileset>
+		</copy>
 	</target>
-	
+
 	<target name="compile_dotnet_devenv" if="available.devenv">
 
 		<!-- C# DummyGen -->
-		<devenv solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.sln" action="build"/>
+		<devenv solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.sln" action="build" />
 
 		<!-- Weavers -->
-		<devenv solution="${Weaver.dir}\Weavers.sln" action="build"/>
-		
+		<devenv solution="${Weaver.dir}\Weavers.sln" action="build" />
+
 	</target>
 
 	<target name="compile_dotnet_msbuild" if="available.msbuild">
 
 		<!-- C# DummyGen -->
-		<msbuild solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.vs2005.sln"/>
+		<msbuild solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.vs2005.sln" />
 
 		<!-- Weavers -->
-		<msbuild solution="${Weaver.dir}\Weavers.vs2005.sln"/>
-	
+		<msbuild solution="${Weaver.dir}\Weavers.vs2005.sln" />
+
 	</target>
 
 	<target name="jar">
 		<copy todir="${out.build}">
 			<fileset dir="src">
-				<include name="**/moduleinfo.xml"/>
+				<include name="**/moduleinfo.xml" />
+				<include name="Platforms.xml" />
 			</fileset>
 		</copy>
-		<jar destfile="${out.jar.dotnet}" basedir="${out.build}" manifest="src/MANIFEST.MF"/>
+		<jar destfile="${out.jar.dotnet}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
-	
+
 	<target name="install" depends="build" description="Install the .NET compiletime">
 		<copy todir="${composestar.installdir}">
-			<fileset dir="${out.dist}"/>
-		</copy>		
+			<fileset dir="${out.dist}" />
+		</copy>
 	</target>
-	
+
 	<target name="test" depends="validate_moduleinfo" description="Run tests" />
 
 </project>

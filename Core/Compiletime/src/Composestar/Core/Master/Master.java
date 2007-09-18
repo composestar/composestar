@@ -11,6 +11,7 @@
 package Composestar.Core.Master;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.apache.log4j.varia.LevelRangeFilter;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
+import Composestar.Core.Config.Xml.PlatformConfigHandler;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
@@ -80,6 +82,12 @@ public abstract class Master
 	protected MetricAppender logMetrics = new MetricAppender();
 
 	protected String configFilename;
+
+	/**
+	 * Platform configuration override. Set via the commandline arguments:
+	 * -P=[file]
+	 */
+	protected File platformConfiguration;
 
 	protected int debugOverride = -1;
 
@@ -181,6 +189,12 @@ public abstract class Master
 				PropertyConfigurator.configure(arg);
 				Logger.getRootLogger().addAppender(logMetrics);
 			}
+			else if (arg.startsWith("-P="))
+			{
+				// override the platform configuration
+				arg = arg.substring(3);
+				platformConfiguration = new File(arg);
+			}
 			else if (arg.equals("-LN"))
 			{
 				// log to net
@@ -188,7 +202,7 @@ public abstract class Master
 			}
 			else if (arg.startsWith("-"))
 			{
-				System.out.println("Unknown option " + arg);
+				System.err.println("Unknown option " + arg);
 			}
 			else
 			{
@@ -198,7 +212,62 @@ public abstract class Master
 		}
 	}
 
-	public void loadConfiguration() throws Exception
+	/**
+	 * Loads the platform configuration.
+	 */
+	protected void loadPlatform() throws Exception
+	{
+		if (platformConfiguration != null)
+		{
+			if (platformConfiguration.exists())
+			{
+				logger.info("Loading custom platform config from: " + platformConfiguration.toString());
+				try
+				{
+					PlatformConfigHandler.loadPlatformConfig(platformConfiguration);
+					return;
+				}
+				catch (Exception e)
+				{
+					logger.error(e);
+				}
+			}
+			else
+			{
+				logger.error("Platform configuration file does not exist: " + platformConfiguration.toString());
+			}
+		}
+
+		// try <portdir>/Platforms.xml
+		// jar file is in <portdir>/lib/
+		File base = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+		platformConfiguration = new File(base.getParentFile().getParentFile(), "Platforms.xml");
+		if (platformConfiguration.exists())
+		{
+			logger.info("Loading platform config from: " + platformConfiguration.toString());
+			try
+			{
+				PlatformConfigHandler.loadPlatformConfig(platformConfiguration);
+				return;
+			}
+			catch (Exception e)
+			{
+				logger.error(e);
+			}
+		}
+
+		// use Platforms.xml in the port's jar file
+		InputStream is = getClass().getResourceAsStream("/Platforms.xml");
+		if (is != null)
+		{
+			logger.info("Loading internal platform config");
+			PlatformConfigHandler.loadPlatformConfig(is);
+			return;
+		}
+		throw new Exception("Unable to find the platform configuration.");
+	}
+
+	protected void loadConfiguration() throws Exception
 	{
 		File configFile = new File(configFilename);
 		if (!configFile.canRead())
@@ -371,6 +440,7 @@ public abstract class Master
 		master.processCmdArgs(args);
 		try
 		{
+			// master.loadPlatform(); // not yet
 			master.loadConfiguration();
 		}
 		catch (Exception e)
