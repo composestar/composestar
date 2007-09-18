@@ -69,4 +69,39 @@ public class Filters implements Serializable
 	{
 		return Collections.unmodifiableMap(filterActions);
 	}
+
+	public void add(CustomFilter filter)
+	{
+		if (filter == null)
+		{
+			return;
+		}
+		customFilters.add(filter);
+	}
+
+	public void add(FilterType filter)
+	{
+		if (filter == null)
+		{
+			return;
+		}
+		if (filter.getName() == null)
+		{
+			throw new IllegalArgumentException("FilterType does not have a valid name");
+		}
+		filterTypes.put(filter.getName(), filter);
+	}
+
+	public void add(FilterAction filter)
+	{
+		if (filter == null)
+		{
+			return;
+		}
+		if (filter.getName() == null)
+		{
+			throw new IllegalArgumentException("FilterAction does not have a valid name");
+		}
+		filterActions.put("", filter);
+	}
 }

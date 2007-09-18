@@ -8,9 +8,8 @@
  * $Id$
  */
 
-package Composestar.Core.Master.Config;
+package Composestar.Core.Exception;
 
-import Composestar.Core.Exception.ModuleException;
 
 /**
  * A configuration exception

@@ -93,8 +93,7 @@ public class DependencyTypeHandler extends CpsBaseHandler
 		super.endElement(uri, localName, name);
 		if (state == STATE_MULTI && supportMulti && groupTag.equals(name))
 		{
-			returnHandler();
-			parent.endElement(uri, localName, name);
+			returnHandler(uri, localName, name);
 		}
 		else if (state == STATE_MULTI && "file".equals(name))
 		{

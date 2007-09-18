@@ -44,7 +44,7 @@ public class Platform implements Serializable
 {
 	private static final long serialVersionUID = 7218107389529628503L;
 
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger("PlatformConfig");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.Platform");
 
 	/**
 	 * The platform identifier
@@ -71,8 +71,9 @@ public class Platform implements Serializable
 	 */
 	protected transient Set<File> resourceFiles;
 
-	public Platform()
+	public Platform(String newId)
 	{
+		setId(newId);
 		languages = new HashMap<String, Language>();
 		resources = new HashSet<FileCollection>();
 	}
@@ -82,7 +83,7 @@ public class Platform implements Serializable
 		return id;
 	}
 
-	public void setId(String newId)
+	protected void setId(String newId)
 	{
 		if (newId == null || newId.trim().length() == 0)
 		{

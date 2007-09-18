@@ -24,6 +24,7 @@
 
 package Composestar.Core.Config;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,7 +40,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class PlatformManager
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger("PlatformConfig.Manager");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.Platform.Manager");
 
 	protected static final PlatformManager instance = new PlatformManager();
 
@@ -48,6 +49,16 @@ public class PlatformManager
 	protected PlatformManager()
 	{
 		platforms = new HashMap<String, Set<Platform>>();
+	}
+
+	public static final Set<Platform> getPlatforms()
+	{
+		Set<Platform> pfs = new HashSet<Platform>();
+		for (Set<Platform> platformSet : instance.platforms.values())
+		{
+			pfs.addAll(platformSet);
+		}
+		return Collections.unmodifiableSet(pfs);
 	}
 
 	/**

@@ -37,7 +37,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Project implements Serializable
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger("BuildConfig.Project");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.Build.Project");
 
 	private static final long serialVersionUID = 8368201695632416337L;
 
@@ -134,9 +134,6 @@ public class Project implements Serializable
 	 */
 	protected transient Set<File> resourceFiles;
 
-	/**
-	 * 
-	 */
 	public Project()
 	{
 		sources = new HashSet<Source>();

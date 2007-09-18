@@ -74,6 +74,7 @@ public class OSFilter implements Serializable
 		if (expr == null || expr.trim().length() == 0)
 		{
 			expr = null;
+			return;
 		}
 		name = Pattern.compile(expr);
 	}
@@ -83,6 +84,7 @@ public class OSFilter implements Serializable
 		if (expr == null || expr.trim().length() == 0)
 		{
 			expr = null;
+			return;
 		}
 		arch = Pattern.compile(expr);
 	}
@@ -92,6 +94,7 @@ public class OSFilter implements Serializable
 		if (expr == null || expr.trim().length() == 0)
 		{
 			expr = null;
+			return;
 		}
 		version = Pattern.compile(expr);
 	}
@@ -136,5 +139,40 @@ public class OSFilter implements Serializable
 			if (!arch.matcher(os[2]).matches()) return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("{");
+		if (name != null)
+		{
+			sb.append("name=\"");
+			sb.append(name);
+			sb.append("\"");
+		}
+		if (version != null)
+		{
+			if (sb.length() > 1)
+			{
+				sb.append("; ");
+			}
+			sb.append("version=\"");
+			sb.append(version);
+			sb.append("\"");
+		}
+		if (arch != null)
+		{
+			if (sb.length() > 1)
+			{
+				sb.append("; ");
+			}
+			sb.append("arch=\"");
+			sb.append(arch);
+			sb.append("\"");
+		}
+		sb.append("}");
+		return sb.toString();
 	}
 }

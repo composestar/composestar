@@ -25,17 +25,20 @@
 package Composestar.Core.Config;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
+ * The configuration for the current project that will be compiled.
+ * 
  * @author Michiel Hendriks
  */
 public class BuildConfig implements Serializable
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger("BuildConfig");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.Build");
 
 	private static final long serialVersionUID = 5759753577247818565L;
 
@@ -61,7 +64,21 @@ public class BuildConfig implements Serializable
 
 	public void addSetting(String key, String value)
 	{
+		if (key == null || key.trim().length() == 0)
+		{
+			throw new IllegalArgumentException("Key can not be null or empty");
+		}
 		settings.put(key, value);
+	}
+
+	public String getSetting(String key)
+	{
+		return settings.get(key);
+	}
+
+	public Map<String, String> getSettings()
+	{
+		return Collections.unmodifiableMap(settings);
 	}
 
 	/**

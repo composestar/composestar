@@ -27,6 +27,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.INCRE.Config.ModulesHandler;
 import Composestar.Utils.Debug;

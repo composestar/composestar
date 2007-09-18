@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -104,8 +105,8 @@ public class ResourceTypeHandler extends CpsBaseHandler
 		super.endElement(uri, localName, name);
 		if (state == STATE_MULTI && supportMulti && groupTag.equals(name))
 		{
-			returnHandler();
-			parent.endElement(uri, localName, name);
+			returnHandler(uri, localName, name);
+			resources = new HashSet<FileCollection>();
 		}
 		else if (state == STATE_MULTI && "file".equals(name))
 		{
@@ -137,7 +138,14 @@ public class ResourceTypeHandler extends CpsBaseHandler
 			String mask = charData.toString().trim();
 			if (mask.length() > 0)
 			{
-				dr.addInclude(mask);
+				try
+				{
+					dr.addInclude(mask);
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new SAXParseException(e.getMessage(), locator);
+				}
 			}
 			state = STATE_DIR;
 		}
@@ -146,7 +154,14 @@ public class ResourceTypeHandler extends CpsBaseHandler
 			String mask = charData.toString().trim();
 			if (mask.length() > 0)
 			{
-				dr.addExclude(mask);
+				try
+				{
+					dr.addExclude(mask);
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new SAXParseException(e.getMessage(), locator);
+				}
 			}
 			state = STATE_DIR;
 		}
@@ -172,7 +187,14 @@ public class ResourceTypeHandler extends CpsBaseHandler
 		{
 			state = STATE_DIR;
 			dr = new DirectoryResource();
-			dr.setPath(new File(attributes.getValue("path")));
+			try
+			{
+				dr.setPath(new File(attributes.getValue("path")));
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new SAXParseException(e.getMessage(), locator);
+			}
 			resources.add(dr);
 		}
 		else if (state == STATE_DIR && "include".equals(name))

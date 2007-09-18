@@ -42,19 +42,22 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Config.Platform;
+import Composestar.Core.Config.PlatformManager;
 import Composestar.Core.Exception.ConfigurationException;
 
 /**
- * BuildConfig loader, loads from an XML source.
+ * Handles the <platforms> tag
  * 
  * @author Michiel Hendriks
  */
-public class BuildConfigHandler extends DefaultBuildConfigHandler
+public class PlatformConfigHandler extends CpsBaseHandler
 {
-	protected String version;
+	protected static final int STATE_PLATFORMS = 1;
 
-	public static BuildConfig loadBuildConfig(File file) throws ConfigurationException
+	protected PlatformHandler platformHandler;
+
+	public static void loadPlatformConfig(File file) throws ConfigurationException
 	{
 		if (file == null)
 		{
@@ -74,29 +77,27 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 					throw new ConfigurationException("IOException: " + e.getMessage());
 				}
 			}
-			return loadBuildConfig(is);
+			loadPlatformConfig(is);
 		}
 		catch (FileNotFoundException e)
 		{
-			throw new ConfigurationException("Build configuration file not found: " + file);
+			throw new ConfigurationException("Platform configuration file not found: " + file);
 		}
 	}
 
-	public static BuildConfig loadBuildConfig(InputStream stream) throws ConfigurationException
+	public static void loadPlatformConfig(InputStream stream) throws ConfigurationException
 	{
-		return loadBuildConfig(new InputSource(stream));
+		loadPlatformConfig(new InputSource(stream));
 	}
 
-	public static BuildConfig loadBuildConfig(InputSource source) throws ConfigurationException
+	public static void loadPlatformConfig(InputSource source) throws ConfigurationException
 	{
 		try
 		{
-			BuildConfig config = new BuildConfig();
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			// factory.setNamespaceAware(true);
 			SAXParser parser = factory.newSAXParser();
-			parser.parse(source, new BuildConfigHandler(config, parser.getXMLReader()));
-			return config;
+			parser.parse(source, new PlatformConfigHandler(parser.getXMLReader(), null));
 		}
 		catch (ParserConfigurationException e)
 		{
@@ -117,30 +118,47 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		}
 	}
 
-	public BuildConfigHandler(XMLReader inReader, DefaultHandler inParent)
+	public PlatformConfigHandler(XMLReader inReader, DefaultHandler inParent)
 	{
 		super(inReader, inParent);
 	}
 
-	protected BuildConfigHandler(BuildConfig inConfig, XMLReader inReader)
+	@Override
+	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
-		super(inReader, null);
-		config = inConfig;
+		super.startElement(uri, localName, name, attributes);
+		if (state == 0 && "platforms".equals(name))
+		{
+			state = STATE_PLATFORMS;
+		}
+		else if (state == STATE_PLATFORMS && "platform".equals(name))
+		{
+			if (platformHandler == null)
+			{
+				platformHandler = new PlatformHandler(reader, this);
+			}
+			reader.setContentHandler(platformHandler);
+			platformHandler.startElement(uri, localName, name, attributes);
+		}
+		else
+		{
+			startUnknownElement(uri, localName, name, attributes);
+		}
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
 		super.endElement(uri, localName, name);
-		if (version != null)
+		if (state == STATE_PLATFORMS && "platforms".equals(name))
 		{
-			if ("buildconfiguration".equals(name))
+			returnHandler();
+		}
+		else if (state == STATE_PLATFORMS && "platform".equals(name))
+		{
+			if (platformHandler != null)
 			{
-				returnHandler();
-			}
-			else
-			{
-				endUnknownElement(uri, localName, name);
+				PlatformManager.addPlatform(platformHandler.getPlatform());
 			}
 		}
 		else
@@ -149,61 +167,16 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		}
 	}
 
-	@Override
-	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
-	{
-		super.startElement(uri, localName, name, attributes);
-		if (version == null)
-		{
-			if ("buildconfiguration".equals(name))
-			{
-				version = attributes.getValue("version");
-				if (version == null)
-				{
-					version = "2.0";
-				}
-			}
-			else
-			{
-				startUnknownElement(uri, localName, name, attributes);
-			}
-		}
-		else
-		{
-			// don't process anything else unless a version has been defined
-			if ("settings".equals(name))
-			{
-				reader.setContentHandler(new SettingsHandler(reader, this));
-				reader.getContentHandler().startElement(uri, localName, name, attributes);
-			}
-			else if ("project".equals(name))
-			{
-				reader.setContentHandler(new ProjectHandler(reader, this));
-				reader.getContentHandler().startElement(uri, localName, name, attributes);
-			}
-			else if ("filters".equals(name))
-			{
-				reader.setContentHandler(new FilterHandler(reader, this));
-				reader.getContentHandler().startElement(uri, localName, name, attributes);
-			}
-			else
-			{
-				startUnknownElement(uri, localName, name, attributes);
-			}
-		}
-	}
-
 	public static void main(String[] args)
 	{
 		try
 		{
 			org.apache.log4j.BasicConfigurator.configure();
-			BuildConfig cfg = loadBuildConfig(new File(args[0]));
-			System.out.println("Sources:      " + cfg.getProject().getSourceFiles());
-			System.out.println("Concerns:     " + cfg.getProject().getConcernFiles());
-			System.out.println("Dependencies: " + cfg.getProject().getFilesDependencies());
-			System.out.println("Resources:    " + cfg.getProject().getResourceFiles());
-			System.out.println("");
+			loadPlatformConfig(new File(args[0]));
+			for (Platform platform : PlatformManager.getPlatforms())
+			{
+				System.out.println("Platform: " + platform.getId());
+			}
 		}
 		catch (ConfigurationException e)
 		{

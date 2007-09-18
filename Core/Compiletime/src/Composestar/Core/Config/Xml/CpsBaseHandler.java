@@ -25,9 +25,12 @@
 package Composestar.Core.Config.Xml;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * The default handler for the configuration files. Automatically processes the
@@ -37,7 +40,11 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public abstract class CpsBaseHandler extends DefaultHandler
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.XML");
+
 	protected XMLReader reader;
+
+	protected Locator locator;
 
 	protected DefaultHandler parent;
 
@@ -76,6 +83,9 @@ public abstract class CpsBaseHandler extends DefaultHandler
 		charData.append(ch, start, length);
 	}
 
+	/**
+	 * Return to the parent handler
+	 */
 	protected void returnHandler()
 	{
 		state = 0;
@@ -85,11 +95,29 @@ public abstract class CpsBaseHandler extends DefaultHandler
 		}
 	}
 
+	/**
+	 * Return to the parent handler and send the current end tag data
+	 * 
+	 * @param uri
+	 * @param localName
+	 * @param name
+	 * @throws SAXException
+	 */
+	protected void returnHandler(String uri, String localName, String name) throws SAXException
+	{
+		returnHandler();
+		if (parent != null)
+		{
+			parent.endElement(uri, localName, name);
+		}
+	}
+
 	public void startUnknownElement(String uri, String localName, String name, Attributes attributes)
 			throws SAXException
 	{
-		System.err.println(getClass().getSimpleName() + " encountered unknown element uri:" + uri + " localName:"
-				+ localName + " name:" + name + " state=" + state);
+		String msg = String.format("%s encountered an unknown element at %d:%d qname=%s, localName=%s, uri=%s",
+				getClass().getSimpleName(), locator.getLineNumber(), locator.getColumnNumber(), name, localName, uri);
+		logger.info(msg);
 	}
 
 	public void endUnknownElement(String uri, String localName, String name) throws SAXException
@@ -97,4 +125,12 @@ public abstract class CpsBaseHandler extends DefaultHandler
 	// System.err.println("Encountered unknown element uri:" + uri + "
 	// localName:" + localName + " name:" + name);
 	}
+
+	@Override
+	public void setDocumentLocator(Locator loc)
+	{
+		super.setDocumentLocator(loc);
+		locator = loc;
+	}
+
 }

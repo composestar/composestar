@@ -26,6 +26,7 @@ package Composestar.Core.Config.Xml;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -76,15 +77,52 @@ public class FilterHandler extends DefaultBuildConfigHandler
 		else if (state == STATE_FILTERS && "customfilter".equals(name))
 		{
 			state = STATE_CUSTOM_FILTER;
+			currentCustomFilter = new CustomFilter();
 			currentCustomFilter.setName(attributes.getValue("name"));
 		}
 		else if (state == STATE_FILTERS && "filtertype".equals(name))
 		{
 			state = STATE_FILTER_TYPE;
+			currentFilterType = new FilterType();
+			try
+			{
+				currentFilterType.setName(attributes.getValue("name"));
+				currentFilterType.setAcceptCallAction(attributes.getValue("acceptcallaction"));
+				currentFilterType.setRejectCallAction(attributes.getValue("rejectcallaction"));
+				currentFilterType.setAcceptReturnAction(attributes.getValue("acceptreturnaction"));
+				currentFilterType.setRejectReturnAction(attributes.getValue("rejectreturnaction"));
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new SAXParseException(e.getMessage(), locator);
+			}
+			filters.add(currentFilterType);
 		}
 		else if (state == STATE_FILTERS && "filteraction".equals(name))
 		{
 			state = STATE_FILTER_ACTION;
+			currentFilterAction = new FilterAction();
+			try
+			{
+				currentFilterAction.setName(attributes.getValue("name"));
+				currentFilterAction.setFullName(attributes.getValue("fullname"));
+				currentFilterAction.setCreateJpc(Boolean.parseBoolean(attributes.getValue("createjpc")));
+				String val;
+				val = attributes.getValue("flowbehavior");
+				if (val != null)
+				{
+					currentFilterAction.setFlowBehavior(Integer.parseInt(val));
+				}
+				val = attributes.getValue("messagechangebehavior");
+				if (val != null)
+				{
+					currentFilterAction.setMessageChangeBehavior(Integer.parseInt(val));
+				}
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new SAXParseException(e.getMessage(), locator);
+			}
 		}
 	}
 
@@ -102,8 +140,15 @@ public class FilterHandler extends DefaultBuildConfigHandler
 			String lib = charData.toString();
 			if (lib.length() > 0)
 			{
-				currentCustomFilter.setLibrary(lib);
-				// filters.add(...)
+				try
+				{
+					currentCustomFilter.setLibrary(lib);
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new SAXParseException(e.getMessage(), locator);
+				}
+				filters.add(currentCustomFilter);
 			}
 			currentCustomFilter = null;
 
@@ -115,6 +160,20 @@ public class FilterHandler extends DefaultBuildConfigHandler
 		else if (state == STATE_FILTER_ACTION && "filteraction".equals(name))
 		{
 			state = STATE_FILTERS;
+			String lib = charData.toString();
+			if (lib.length() > 0)
+			{
+				try
+				{
+					currentFilterAction.setLibrary(lib);
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new SAXParseException(e.getMessage(), locator);
+				}
+				filters.add(currentFilterAction);
+			}
+			currentFilterAction = null;
 		}
 	}
 

@@ -104,4 +104,12 @@ public class CmdLineArgument implements Serializable
 		m.appendTail(res);
 		return res.toString();
 	}
+
+	@Override
+	public String toString()
+	{
+		return value;
+	}
+	
+	
 }

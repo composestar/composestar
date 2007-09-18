@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**

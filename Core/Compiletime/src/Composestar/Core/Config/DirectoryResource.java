@@ -41,7 +41,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class DirectoryResource extends FileCollection implements FileFilter
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger("BuildConfig.DirectoryResource");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.DirectoryResource");
 
 	private static final long serialVersionUID = 7389476188523500459L;
 

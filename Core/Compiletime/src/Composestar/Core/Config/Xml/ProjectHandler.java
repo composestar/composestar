@@ -26,6 +26,7 @@ package Composestar.Core.Config.Xml;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -43,17 +44,17 @@ public class ProjectHandler extends DefaultBuildConfigHandler
 	protected static final int STATE_CONCERNS = 2;
 
 	protected static final int STATE_SOURCES = 3;
-	
+
 	protected static final int STATE_DEPENDENCIES = 4;
-	
+
 	protected static final int STATE_RESOURCES = 5;
 
 	protected Project project;
 
 	protected SourceTypeHandler sourceTypeHandler;
-	
+
 	protected DependencyTypeHandler dependencyTypeHandler;
-	
+
 	protected ResourceTypeHandler resourceTypeHandler;
 
 	protected boolean concernEnabled;
@@ -115,13 +116,20 @@ public class ProjectHandler extends DefaultBuildConfigHandler
 		{
 			state = STATE_PROJECT;
 			project = config.getNewProject();
-			project.setName(attributes.getValue("name"));
-			project.setPlatform(attributes.getValue("platform"));
-			project.setLanguage(attributes.getValue("language"));
-			project.setBase(attributes.getValue("base"));
-			project.setMainclass(attributes.getValue("mainclass"));
-			project.setOutput(attributes.getValue("output"));
-			project.setIntermediate(attributes.getValue("intermediate"));
+			try
+			{
+				project.setName(attributes.getValue("name"));
+				project.setPlatform(attributes.getValue("platform"));
+				project.setLanguage(attributes.getValue("language"));
+				project.setBase(attributes.getValue("base"));
+				project.setMainclass(attributes.getValue("mainclass"));
+				project.setOutput(attributes.getValue("output"));
+				project.setIntermediate(attributes.getValue("intermediate"));
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new SAXParseException(e.getMessage(), locator);
+			}
 		}
 		else if ("sources".equals(name) && state == STATE_PROJECT)
 		{

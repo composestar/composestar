@@ -63,4 +63,113 @@ public class FilterAction implements Serializable
 
 	public FilterAction()
 	{}
+
+	/**
+	 * @return the name
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * @param inName the name to set
+	 */
+	public void setName(String inName)
+	{
+		if (inName == null || inName.trim().length() == 0)
+		{
+			throw new IllegalArgumentException("Name can not be null or empty");
+		}
+		name = inName.trim();
+	}
+
+	/**
+	 * @return the fullName
+	 */
+	public String getFullName()
+	{
+		return fullName;
+	}
+
+	/**
+	 * @param inFullName the fullName to set
+	 */
+	public void setFullName(String inFullName)
+	{
+		if (inFullName == null || inFullName.trim().length() == 0)
+		{
+			throw new IllegalArgumentException("FullName can not be null or empty");
+		}
+		fullName = inFullName.trim();
+	}
+
+	/**
+	 * @return the library
+	 */
+	public String getLibrary()
+	{
+		return library;
+	}
+
+	/**
+	 * @param library the library to set
+	 */
+	public void setLibrary(String inLibrary)
+	{
+		if (inLibrary == null || inLibrary.trim().length() == 0)
+		{
+			throw new IllegalArgumentException("Library can not be null or empty");
+		}
+		library = inLibrary.trim();
+	}
+
+	/**
+	 * @return the createJpc
+	 */
+	public boolean isCreateJpc()
+	{
+		return createJpc;
+	}
+
+	/**
+	 * @param inCreateJpc the createJpc to set
+	 */
+	public void setCreateJpc(boolean inCreateJpc)
+	{
+		createJpc = inCreateJpc;
+	}
+
+	/**
+	 * @return the flowBehavior
+	 */
+	public int getFlowBehavior()
+	{
+		return flowBehavior;
+	}
+
+	/**
+	 * @param inFlowBehavior the flowBehavior to set
+	 */
+	public void setFlowBehavior(int inFlowBehavior)
+	{
+		flowBehavior = inFlowBehavior;
+	}
+
+	/**
+	 * @return the messageChangeBehavior
+	 */
+	public int getMessageChangeBehavior()
+	{
+		return messageChangeBehavior;
+	}
+
+	/**
+	 * @param inMessageChangeBehavior the messageChangeBehavior to set
+	 */
+	public void setMessageChangeBehavior(int inMessageChangeBehavior)
+	{
+		messageChangeBehavior = inMessageChangeBehavior;
+	}
+
 }

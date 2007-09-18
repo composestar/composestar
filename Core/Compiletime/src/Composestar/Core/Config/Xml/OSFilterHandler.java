@@ -29,60 +29,59 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.Config.OSFilter;
+
 /**
- * Processes the settings element in the build configuration.
- * 
  * @author Michiel Hendriks
  */
-public class SettingsHandler extends DefaultBuildConfigHandler
+public class OSFilterHandler extends CpsBaseHandler
 {
-	protected String curSetting;
+	protected static final int STATE_OSFILTER = 1;
 
-	/**
-	 * @param inReader
-	 * @param inParent
-	 */
-	public SettingsHandler(XMLReader inReader, DefaultHandler inParent)
+	protected OSFilter osfilter;
+
+	public OSFilterHandler(XMLReader inReader, DefaultHandler inParent)
 	{
 		super(inReader, inParent);
 	}
 
-	@Override
-	public void endElement(String uri, String localName, String name) throws SAXException
+	public OSFilter getOSFilter()
 	{
-		super.endElement(uri, localName, name);
-		if ("settings".equals(name))
-		{
-			returnHandler();
-		}
-		else if ("setting".equals(name))
-		{
-			if (curSetting != null)
-			{
-				config.addSetting(curSetting.trim(), charData.toString());
-			}
-		}
-		else
-		{
-			endUnknownElement(uri, localName, name);
-		}
+		return osfilter;
 	}
 
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
 		super.startElement(uri, localName, name, attributes);
-		if ("settings".equals(name))
+		if (state == 0 && "osfilter".equals(name))
 		{
-			config.clearSettings();
-		}
-		else if ("setting".equals(name))
-		{
-			curSetting = attributes.getValue("name");
+			state = STATE_OSFILTER;
+			osfilter = new OSFilter();
+			osfilter.setName(attributes.getValue("name"));
+			osfilter.setVersion(attributes.getValue("version"));
+			osfilter.setArch(attributes.getValue("arch"));
 		}
 		else
 		{
 			startUnknownElement(uri, localName, name, attributes);
 		}
 	}
+
+	@Override
+	public void endElement(String uri, String localName, String name) throws SAXException
+	{
+		super.endElement(uri, localName, name);
+		if (state == STATE_OSFILTER && "osfilter".equals(name))
+		{
+			returnHandler(uri, localName, name);
+			osfilter = null;
+		}
+		else
+		{
+			endUnknownElement(uri, localName, name);
+		}
+
+	}
+
 }

@@ -30,6 +30,7 @@ import org.xml.sax.XMLReader;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.Core.Action;
 import Composestar.Core.FILTH.Core.Graph;
@@ -40,7 +41,6 @@ import Composestar.Core.FILTH.Core.SoftPreRule;
 import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.ConfigurationException;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;

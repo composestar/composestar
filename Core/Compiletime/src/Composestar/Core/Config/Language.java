@@ -49,15 +49,16 @@ public class Language implements Serializable
 	/**
 	 * The compiler information associated with this language.
 	 */
-	protected Compiler compiler;
+	protected SourceCompiler compiler;
 
 	/**
 	 * The dummyGenerator's classname
 	 */
 	protected String dummyGenerator;
 
-	public Language()
+	public Language(String inName)
 	{
+		setName(inName);
 		extensions = new HashSet<String>();
 	}
 
@@ -66,7 +67,7 @@ public class Language implements Serializable
 		return name;
 	}
 
-	public void setName(String inName)
+	protected void setName(String inName)
 	{
 		if (inName == null || inName.trim().length() == 0)
 		{
@@ -117,7 +118,7 @@ public class Language implements Serializable
 		return dummyGenerator;
 	}
 
-	public void setCompiler(Compiler comp)
+	public void setCompiler(SourceCompiler comp)
 	{
 		if (comp == null)
 		{
@@ -126,7 +127,7 @@ public class Language implements Serializable
 		compiler = comp;
 	}
 
-	public Compiler getCompiler()
+	public SourceCompiler getCompiler()
 	{
 		return compiler;
 	}

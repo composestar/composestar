@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * @author Michiel Hendriks
  */
-public class Compiler implements Serializable
+public class SourceCompiler implements Serializable
 {
 	private static final long serialVersionUID = 6182815168461588844L;
 
@@ -42,7 +42,7 @@ public class Compiler implements Serializable
 
 	protected Map<String, CompilerAction> actions;
 
-	public Compiler()
+	public SourceCompiler()
 	{
 		actions = new HashMap<String, CompilerAction>();
 	}

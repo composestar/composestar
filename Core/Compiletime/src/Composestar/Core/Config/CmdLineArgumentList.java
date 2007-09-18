@@ -1,6 +1,5 @@
 package Composestar.Core.Config;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -27,6 +26,10 @@ public class CmdLineArgumentList extends CmdLineArgument
 
 	public void addArgument(CmdLineArgument arg)
 	{
+		if (arg == null)
+		{
+			return;
+		}
 		args.add(arg);
 	}
 
@@ -39,36 +42,19 @@ public class CmdLineArgumentList extends CmdLineArgument
 		}
 	}
 
-	public class SourcesCmdLineArgumentList extends CmdLineArgumentList
+	@Override
+	public String toString()
 	{
-		private static final long serialVersionUID = 4967203235807658445L;
-
-		@Override
-		public void addArgs(List<String> tolist, Project proj, Properties prop)
+		StringBuffer sb = new StringBuffer();
+		for (CmdLineArgument arg : args)
 		{
-			for (File file : proj.getSourceFiles())
+			if (sb.length() > 0)
 			{
-				prop.setProperty("SOURCE", file.toString());
-				super.addArgs(tolist, proj, prop);
+				sb.append(" ");
 			}
-			prop.remove("SOURCE");
+			sb.append(arg.toString());
 		}
-
+		return sb.toString();
 	}
 
-	public class DepsCmdLineArgumentList extends CmdLineArgumentList
-	{
-		private static final long serialVersionUID = 2465539159360682422L;
-
-		@Override
-		public void addArgs(List<String> tolist, Project proj, Properties prop)
-		{
-			for (File file : proj.getFilesDependencies())
-			{
-				prop.setProperty("DEP", file.toString());
-				super.addArgs(tolist, proj, prop);
-			}
-			prop.remove("DEP");
-		}
-	}
 }

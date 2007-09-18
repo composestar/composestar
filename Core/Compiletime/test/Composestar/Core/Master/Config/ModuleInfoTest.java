@@ -11,6 +11,7 @@
 package Composestar.Core.Master.Config;
 
 import junit.framework.TestCase;
+import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.INCRE.INCREModule;
 
 /**
