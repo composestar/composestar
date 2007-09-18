@@ -51,7 +51,12 @@ namespace AntHelper
 
 		private static void writeComposestarDir(TextWriter writer)
 		{
-			string path = getRegistryString("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Composestar", "UninstallString");
+			string path = getRegistryString("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{7ED194F6-701D-4A30-88FE-A87B3EF156B3}_is1", "InstallLocation");
+			if (path == null)
+			{
+				// old installer
+				path = getRegistryString("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Composestar", "UninstallString");
+			}
 			if (path != null)
 			{
 				path = strReplace(path.Substring(0, path.LastIndexOf("\\")), "\\", "/");
