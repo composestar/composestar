@@ -45,6 +45,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Config.Platform;
 import Composestar.Core.Config.PlatformManager;
 import Composestar.Core.Exception.ConfigurationException;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Handles the <platforms> tag
@@ -53,6 +54,8 @@ import Composestar.Core.Exception.ConfigurationException;
  */
 public class PlatformConfigHandler extends CpsBaseHandler
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.Platform");
+
 	protected static final int STATE_PLATFORMS = 1;
 
 	protected PlatformHandler platformHandler;
@@ -158,7 +161,9 @@ public class PlatformConfigHandler extends CpsBaseHandler
 		{
 			if (platformHandler != null)
 			{
-				PlatformManager.addPlatform(platformHandler.getPlatform());
+				Platform platform = platformHandler.getPlatform();
+				logger.info("Loaded platform: " + platform.getId());
+				PlatformManager.addPlatform(platform);
 			}
 		}
 		else

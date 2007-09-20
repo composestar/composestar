@@ -1,4 +1,4 @@
-$Id$
+Information about the Compose* configuration changes
 
 The new build configuration format has been split up into two sections:
 	- project build configuration
@@ -34,66 +34,41 @@ filters or filter type and action declarations. The usage of this block
 depends on the platform. It can be omitted if the platform has other
 methods to get a hold on this information. Relative paths used in this
 section will also be resolved using the project's base directory.
+The new build configuration does not contain a paths sections. Most of
+the paths should be based on the project's output or intermediate 
+directories. If a module needs a configurable path setting it needs to
+user the settings section for that. No paths section also means that 
+there is no reference to the Compose* base directory. This is something
+that the different ports will need to figure out themselves when needed.
+The reason for this is that the Compose* might not be located at a 
+single location. This is the case with the eclipse distributions of
+Compose*. It is not possible to have the core libraries and the platform
+libraries in the same location.
+TODO: provide a path resolver class?
 
+The platform configuration will no longer be included with the build
+configuration. It is however inteded to include a local copy of the
+platform configuration with the serialized build configuration (for
+incremental compilation).
+The platform configuration is not much different from the previous
+format. Only a few elements have had a significant changes.
+The master will try to load the platform from three different 
+locations:
+1) user specified location as a commandline argument
+2) the Compose* base directory
+3) an internal copy stored in the platform's jar file.
+This will allow the user to change the configuration for the current 
+platform.
+One of the new features in the platform configuration is the osfilter.
+This allows the developer to specify different configurations for the
+same platform on different operating systems.
+An other big change is the definition of the compiler actions. Each
+argument must be defined using a seperate element. This way it is 
+possible to construct a safe commandline argument using a string array.
+Special enumerator elements have been defined to handle sources and
+dependencies.
+Platform execution information, like mainclass and classpath, have been
+dropped. Launchers should figure this out themselves. This is done to
+reduce the system depended information in the configuration.
 
-
-
-
--- old stuff --	
-
-
-
-Two configuration files:
-  - build configuration for projects
-  - platform configurations for the various platforms
-
-
----- build configuration ----
-
-Settings:
-  - compiletime debug level
-  - runtime debug level
-  - module settings
-
-Project
-  - Settings
-    - output destination
-    - intermediate output path
-    - main class
-    - platform  
-    - Name
-    - Default Language
-    - BasePath
-    
-    - Sources
-      - Language override?
-      - relative/absolute file
-    - Dependencies
-      - file
-      - other?
-    - Concerns
-      - relative/absolute file
-  - Filters
-    - ... RT filter     
-    - filter types  
-      
-      
----- Platform configuration ----      
-
-Platform
-  - Properties
-    - id
-    - os.name (regex)
-    - jar?
-  - languages
-    - language
-      - name
-      - extentions
-      - compiler
-        - actions
-          - id
-          - executable
-          - arguments
-            - ... complex
-      - DummyGeneration
-  - RT libs      
+$Id$

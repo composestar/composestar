@@ -213,7 +213,14 @@ public abstract class Master
 	}
 
 	/**
-	 * Loads the platform configuration.
+	 * Loads the platform configuration. The platform configuration is loaded
+	 * from three locations, in the following order:
+	 * <ol>
+	 * <li> file provided through via a commandline argument </li>
+	 * <li> Platforms.xml in the compose* base directory </li>
+	 * <li> Platforms.xml provided in the port's Jar file </li>
+	 * </ol>
+	 * When non of these files can be loaded a fatal exception will be raised.
 	 */
 	protected void loadPlatform() throws Exception
 	{
@@ -440,8 +447,10 @@ public abstract class Master
 		master.processCmdArgs(args);
 		try
 		{
-			// master.loadPlatform(); // not yet
+			//master.loadPlatform(); // not yet
 			master.loadConfiguration();
+			
+			System.exit(ECONFIG);
 		}
 		catch (Exception e)
 		{

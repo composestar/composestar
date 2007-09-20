@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -43,6 +44,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Config.Xml.Legacy.ConvertBuildConfig;
 import Composestar.Core.Exception.ConfigurationException;
 
 /**
@@ -53,6 +55,8 @@ import Composestar.Core.Exception.ConfigurationException;
 public class BuildConfigHandler extends DefaultBuildConfigHandler
 {
 	protected String version;
+
+	protected InputSource source;
 
 	public static BuildConfig loadBuildConfig(File file) throws ConfigurationException
 	{
@@ -95,7 +99,9 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			// factory.setNamespaceAware(true);
 			SAXParser parser = factory.newSAXParser();
-			parser.parse(source, new BuildConfigHandler(config, parser.getXMLReader()));
+			BuildConfigHandler rootHandler = new BuildConfigHandler(config, parser.getXMLReader());
+			rootHandler.source = source;
+			parser.parse(source, rootHandler);
 			return config;
 		}
 		catch (ParserConfigurationException e)
@@ -162,6 +168,14 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 				{
 					version = "2.0";
 				}
+			}
+			else if ("BuildConfiguration".equals(name))
+			{
+				logger.info("BuildConfiguration version 1 detected. Converting to version 2");
+				ConvertBuildConfig converter = new ConvertBuildConfig();
+				
+				System.exit(123);
+				
 			}
 			else
 			{
