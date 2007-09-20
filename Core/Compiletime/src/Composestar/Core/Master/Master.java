@@ -449,8 +449,6 @@ public abstract class Master
 		{
 			//master.loadPlatform(); // not yet
 			master.loadConfiguration();
-			
-			System.exit(ECONFIG);
 		}
 		catch (Exception e)
 		{
