@@ -1,5 +1,7 @@
 <Include>
 
+<!-- michielh: what is this? there is no such file -->
+<!--
   <Registry Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\Packages\{e2a460f9-dbec-31b2-a7bb-13f18b712dd6}" Value="Composestar.StarLight.VisualStudio.Babel.BabelPackage, Composestar.StarLight.VisualStudio.LanguageServices, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3" Type="string">
     <Registry Name="InprocServer32" Value="[SystemFolder]mscoree.dll" Type="string" />
     <Registry Name="Class" Value="Composestar.StarLight.VisualStudio.Babel.BabelPackage" Type="string" />
@@ -10,6 +12,7 @@
     <Registry Name="Path" Value="[$ComponentPath]" Type="string" />
     <Registry Name="DllName" Value="Composestar.StarLight.VisualStudio.LanguageServicesUI.dll" Type="string" />
   </Registry>
+-->    
 
   <Registry Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\Packages\{a58025eb-8f26-4633-acb2-b990a691f36d}" Value="Composestar.StarLight.VisualStudio.LanguageServices.ComposeStarPackage, Composestar.StarLight.VisualStudio.LanguageServices, Version=0.2.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3" Type="string">
     <Registry Name="InprocServer32" Value="[SystemFolder]mscoree.dll" Type="string" />
