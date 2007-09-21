@@ -17,7 +17,7 @@ using Microsoft.VisualStudio.Package;
 
 namespace Babel.ParserGenerator
 {
-	class EmptyClass { }
+	
 }
 
 namespace Composestar.StarLight.VisualStudio.LanguageServices.Parser
