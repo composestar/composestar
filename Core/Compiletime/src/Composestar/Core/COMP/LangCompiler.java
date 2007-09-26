@@ -1,11 +1,20 @@
 package Composestar.Core.COMP;
 
+import java.util.Set;
+
+import Composestar.Core.Config.Project;
+import Composestar.Core.Config.Source;
+import Composestar.Core.Config.SourceCompiler;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.CommonResources;
 
 public interface LangCompiler
 {
-	void compileSources(Project p) throws CompilerException, ModuleException;
+	void setCompilerConfig(SourceCompiler compilerConfig);
+	
+	void setCommonResources(CommonResources resc);
+	
+	void compileSources(Project p, Set<Source> sources) throws CompilerException, ModuleException;
 
-	void compileDummies(Project p) throws CompilerException;
+	void compileDummies(Project p, Set<Source> sources) throws CompilerException;
 }

@@ -25,7 +25,6 @@ import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.DotNET.LAMA.DotNETType;
@@ -47,7 +46,6 @@ public class DotNETCollectorRunner implements CollectorRunner
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
 		try
 		{
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
@@ -56,7 +54,7 @@ public class DotNETCollectorRunner implements CollectorRunner
 
 			DocumentHandler handler = new DocumentHandler(parser);
 			parser.setContentHandler(handler);
-			File typesXml = new File(tempFolder + "types.xml");
+			File typesXml = new File(resources.configuration().getProject().getIntermediate(), "types.xml");
 			parser.parse(new InputSource(new FileInputStream(typesXml)));
 			if (!INCRE.instance().isIncremental())
 			{

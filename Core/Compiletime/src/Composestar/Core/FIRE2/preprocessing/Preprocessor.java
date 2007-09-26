@@ -59,7 +59,7 @@ public class Preprocessor implements CTCommonModule
 
 	private final static String RUNTIME_GRAMMAR_PATH = "groovegrammars/runtime.gps";
 
-	private final static boolean GROOVE_DEBUG = true;
+	private final static boolean GROOVE_DEBUG = false;
 
 	private final static File AST_OUT = new File("./ast.gst");
 

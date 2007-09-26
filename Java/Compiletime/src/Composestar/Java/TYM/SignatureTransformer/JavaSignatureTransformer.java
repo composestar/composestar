@@ -1,11 +1,11 @@
 package Composestar.Java.TYM.SignatureTransformer;
 
-import java.util.ArrayList;
+import java.io.File;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.TYM.SignatureTransformer.SignatureTransformer;
+import Composestar.Java.COMP.JavaCompiler;
 
 /**
  * Starting point for the signature transformer module. This module transforms
@@ -33,14 +33,9 @@ public class JavaSignatureTransformer implements SignatureTransformer
 		boolean signaturesmodified = (Boolean) (resources.get("signaturesmodified"));
 		if (signaturesmodified) // process only if signatures are modified
 		{
-			// Iterate over dummy jarfiles
-			ArrayList dummies = (ArrayList) Configuration.instance().getProjects().getCompiledDummies();
-			for (Object dummy : dummies)
-			{
-				String name = (String) dummy;
-				JarTransformer transformer = new JarTransformer(name);
-				transformer.run();
-			}
+			File dummies = (File) resources.get(JavaCompiler.DUMMY_JAR);
+			JarTransformer transformer = new JarTransformer(dummies);
+			transformer.run();
 		}
 	}
 }

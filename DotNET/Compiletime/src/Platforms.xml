@@ -72,15 +72,15 @@
 			</language>
 		</languages>
 		<resources>
-			<file>AntlrDotNet.dll</file>
-			<file>ComposestarCore.dll</file>
-			<file>ComposestarCoreDotNET.dll</file>
-			<file>ComposeStarDotNETRuntimeInterpreter.dll</file>
-			<file>ComposeStarDotNETUtilities.dll</file>
-			<file>ComposeStarFilterDebugger.dll</file>
-			<file>ComposeStarRuntimeInterpreter.dll</file>
-			<file>ComposeStarUtilities.dll</file>
-			<file>DotNETPlatformInterface.dll</file>
+			<file>lib/AntlrDotNet.dll</file>
+			<file>lib/ComposestarCore.dll</file>
+			<file>lib/ComposestarCoreDotNET.dll</file>
+			<file>lib/ComposeStarDotNETRuntimeInterpreter.dll</file>
+			<file>lib/ComposeStarDotNETUtilities.dll</file>
+			<file>lib/ComposeStarFilterDebugger.dll</file>
+			<file>lib/ComposeStarRuntimeInterpreter.dll</file>
+			<file>lib/ComposeStarUtilities.dll</file>
+			<file>lib/DotNETPlatformInterface.dll</file>
 		</resources>
 	</platform>
 </platforms>

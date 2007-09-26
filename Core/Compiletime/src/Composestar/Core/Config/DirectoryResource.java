@@ -216,7 +216,7 @@ public class DirectoryResource extends FileCollection implements FileFilter
 				excludePatterns.add(convertPattern("**/CVS/**"));
 				excludePatterns.add(convertPattern("**/.cvsignore"));
 				excludePatterns.add(convertPattern("**/.svn/**"));
-				
+
 				excludePatterns.add(convertPattern("**/#*#"));
 				excludePatterns.add(convertPattern("**/*~"));
 				excludePatterns.add(convertPattern("**/%*%"));

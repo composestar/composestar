@@ -1,23 +1,18 @@
 package Composestar.Java.CONE;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.Iterator;
 
-import Composestar.Core.CONE.CONE;
 import Composestar.Core.CONE.RepositorySerializer;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -38,7 +33,9 @@ public class JavaRepositorySerializer implements RepositorySerializer
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		String repositoryFilename = Configuration.instance().getPathSettings().getPath("Base") + "repository.dat";
+		File repositoryFilename = new File(resources.configuration().getProject().getIntermediate(), "repository.dat");
+
+		resources.add(REPOSITORY_FILE_KEY, repositoryFilename);
 
 		logger.info("writing repository to file " + repositoryFilename + " ...");
 
@@ -50,7 +47,7 @@ public class JavaRepositorySerializer implements RepositorySerializer
 		try
 		{
 			DataMap.setRtSerialization(true);
-			
+
 			FileOutputStream fos = new FileOutputStream(repositoryFilename);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			oos = new ObjectOutputStream(bos);

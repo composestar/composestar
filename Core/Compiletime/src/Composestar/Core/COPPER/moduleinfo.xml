@@ -9,7 +9,7 @@
 		</description>
 
 		<incre>
-			<module input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true"
+			<module input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="false"
 				summary="Parsing concerns...">
 				<dependencies>
 					<dependency type="FILE" name="cpsfile">

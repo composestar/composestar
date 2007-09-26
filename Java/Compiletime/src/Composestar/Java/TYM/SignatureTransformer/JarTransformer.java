@@ -27,7 +27,7 @@ import Composestar.Utils.FileUtils;
  */
 public class JarTransformer
 {
-	private String jarFile;
+	private File jarFile;
 
 	private HashMap unmodifiedEntries;
 
@@ -38,9 +38,9 @@ public class JarTransformer
 	 * 
 	 * @param jarFile the path of a jarfile.
 	 */
-	public JarTransformer(String jarFile)
+	public JarTransformer(File inJarFile)
 	{
-		this.jarFile = jarFile;
+		jarFile = inJarFile;
 		unmodifiedEntries = new HashMap();
 		modifiedClasses = new HashMap();
 	}
@@ -88,7 +88,7 @@ public class JarTransformer
 				else
 				{
 					// add to unmodified list
-					if (!name.equals("META-INF/")) 
+					if (!name.equals("META-INF/"))
 					{
 						unmodifiedEntries.put(name, entry);
 					}
@@ -213,9 +213,7 @@ public class JarTransformer
 		File tempJar = null;
 		try
 		{
-			String dummyPath = "";
-			dummyPath = jarFile.substring(0, jarFile.lastIndexOf(JarLoader.JAR_SEPARATOR));
-			tempJar = File.createTempFile("dummies", null, new File(dummyPath));
+			tempJar = File.createTempFile("CstarJavaDummies", ".tmp.jar");
 		}
 		catch (IOException ignored)
 		{
@@ -296,9 +294,8 @@ public class JarTransformer
 
 		if (success)
 		{
-			File origFile = new File(jarFile);
-			origFile.delete();
-			success = tempJar.renameTo(origFile);
+			jarFile.delete();
+			success = tempJar.renameTo(jarFile);
 			if (!success)
 			{
 				Debug.out(Debug.MODE_DEBUG, "SITRA", "Renaming jar not successfull (jarfile: " + jarFile + ")");
@@ -307,7 +304,7 @@ public class JarTransformer
 				{
 					Debug.out(Debug.MODE_DEBUG, "SITRA", "Copying '" + jarFile + "' to '" + tempJar.getAbsolutePath()
 							+ "'");
-					FileUtils.copyFile(jarFile, tempJar.getAbsolutePath());
+					FileUtils.copyFile(jarFile, tempJar);
 					tempJar.delete();
 				}
 				catch (IOException e)

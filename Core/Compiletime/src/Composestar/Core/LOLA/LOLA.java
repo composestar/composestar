@@ -1,5 +1,6 @@
 package Composestar.Core.LOLA;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,10 +33,8 @@ import Composestar.Core.LOLA.metamodel.ModelException;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
-import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 /*
  * LOgic predicate LAnguage Facade/API 
@@ -47,6 +46,8 @@ import Composestar.Utils.FileUtils;
 public abstract class LOLA implements CTCommonModule
 {
 	public static final String MODULE_NAME = "LOLA";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	public boolean initialized; // Initialize only once
 
@@ -68,32 +69,28 @@ public abstract class LOLA implements CTCommonModule
 	 * @throws ModuleException when it is detected that the model is invalid, or
 	 *             when the predicate library can not be written to the temp dir
 	 */
-	public String initLanguageModel() throws ModuleException
+	public File initLanguageModel(CommonResources resources) throws ModuleException
 	{
-		String generatedPredicatesFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings()
-				.getPath("Base")
-				+ "langmap.pro");
+		File langmap = new File(resources.configuration().getProject().getIntermediate(), "langmap.pro");
 		try
 		{
 			langModel.createMetaModel();
 
-			PrintStream languagePredicateFile = new PrintStream(new FileOutputStream(generatedPredicatesFilename));
+			PrintStream languagePredicateFile = new PrintStream(new FileOutputStream(langmap));
 			ModelGenerator.prologGenerator(langModel, languagePredicateFile);
 			languagePredicateFile.close();
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME,
-					"Can not write language predicates to temporary directory! Filename: "
-							+ generatedPredicatesFilename);
+			logger.warn("Can not write language predicates to temporary directory! Filename: " + langmap);
 		}
 		catch (ModelException e)
 		{
 			e.printStackTrace();
 			throw new ModuleException(e.getMessage(), MODULE_NAME);
 		}
-		return generatedPredicatesFilename;
+		return langmap;
 	}
 
 	/**
@@ -105,12 +102,12 @@ public abstract class LOLA implements CTCommonModule
 	 * @throws ModuleException when the prolog engine can not be initialized at
 	 *             all
 	 */
-	public void initPrologEngine(CommonResources resources, String generatedPredicatesFilename) throws ModuleException
+	public void initPrologEngine(CommonResources resources, File generatedPredicatesFilename) throws ModuleException
 	{
 		/* Get the names of special files (containing base predicate libraries) */
 
 		/* Initialize the prolog engine */
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Initializing the prolog interpreter");
+		logger.debug("Initializing the prolog interpreter");
 
 		if (!Init.startJinni())
 		{
@@ -120,17 +117,16 @@ public abstract class LOLA implements CTCommonModule
 		ComposestarBuiltins.setUnitDictionary(unitDict);
 		Init.builtinDict.putAll(new ComposestarBuiltins(langModel));
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Consulting base predicate libraries");
+		logger.debug("Consulting base predicate libraries");
 
 		reconsult("lib.pro");
 		reconsult("connector.pro");
 
-		if (Init.askJinni("reconsult('" + generatedPredicatesFilename + "')").equals("no"))
+		if (Init.askJinni("reconsult('" + generatedPredicatesFilename.getAbsolutePath().replace("\\", "/") + "')")
+				.equals("no"))
 		{
-			Debug
-					.out(Debug.MODE_WARNING, MODULE_NAME,
-							"Could not load prolog language-mapping library! Expected location: "
-									+ generatedPredicatesFilename);
+			logger.warn("Could not load prolog language-mapping library! Expected location: "
+					+ generatedPredicatesFilename);
 		}
 
 		if (!Init.run(new String[] {}))
@@ -164,7 +160,7 @@ public abstract class LOLA implements CTCommonModule
 		// }
 		// }
 
-		Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Could not load prolog library: " + proFile);
+		logger.warn("Could not load prolog library: " + proFile);
 		return false;
 	}
 
@@ -191,8 +187,7 @@ public abstract class LOLA implements CTCommonModule
 		 * UnitRegister thing where units register themselves.
 		 */
 		HashSet registeredUnits = UnitRegister.instance().getRegisteredUnits();
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Useless information: " + registeredUnits.size()
-				+ " language units have been registered.");
+		logger.debug("Useless information: " + registeredUnits.size() + " language units have been registered.");
 
 		/*
 		 * Depending on the language model, it may have to do some 'finishing
@@ -203,14 +198,13 @@ public abstract class LOLA implements CTCommonModule
 		{
 			langModel.createIndex(registeredUnits, unitDict);
 			langModel.completeModel(unitDict);
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Useless information: " + unitDict.getAll().multiValue().size()
+			logger.debug("Useless information: " + unitDict.getAll().multiValue().size()
 					+ " language units have been kept in the dictionary.");
 		}
 		catch (ModelException e)
 		{
 			e.printStackTrace();
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME,
-					"An error occurred while creating a model of the static language units");
+			logger.warn("An error occurred while creating a model of the static language units");
 		}
 
 	}
@@ -256,7 +250,7 @@ public abstract class LOLA implements CTCommonModule
 		{
 			INCRETimer initprolog = incre.getReporter().openProcess(MODULE_NAME, "Initialize prolog engine",
 					INCRETimer.TYPE_NORMAL);
-			String predicateFile = initLanguageModel();
+			File predicateFile = initLanguageModel(resources);
 			initPrologEngine(resources, predicateFile);
 			initprolog.stop();
 			initialized = true;
@@ -311,18 +305,18 @@ public abstract class LOLA implements CTCommonModule
 		INCRETimer step1 = incre.getReporter().openProcess(MODULE_NAME, "Split selectors based on toBeCheckedByINCRE",
 				INCRETimer.TYPE_OVERHEAD);
 		Iterator predicateIterStep1 = inSelectors.iterator();
-		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "Splitting selectors based on attribute toBeCheckedByINCRE...");
+		logger.debug("Splitting selectors based on attribute toBeCheckedByINCRE...");
 		while (predicateIterStep1.hasNext())
 		{
 			PredicateSelector predSel = (PredicateSelector) predicateIterStep1.next();
 			if (predSel.getToBeCheckedByINCRE())
 			{
-				Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "[PotentialSkip] " + predSel.getQuery());
+				logger.debug("[PotentialSkip] " + predSel.getQuery());
 				toBeSkipped.add(predSel);
 			}
 			else
 			{
-				Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "[ToBeProcessed] " + predSel.getQuery());
+				logger.debug("[ToBeProcessed] " + predSel.getQuery());
 				toBeProcessed.add(predSel); // no need to check further
 			}
 		}
@@ -332,7 +326,7 @@ public abstract class LOLA implements CTCommonModule
 		// When query modified => process selector
 		INCRETimer step2 = incre.getReporter().openProcess(MODULE_NAME, "Checking query syntax",
 				INCRETimer.TYPE_OVERHEAD);
-		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "Splitting selectors based on syntax query...");
+		logger.debug("Splitting selectors based on syntax query...");
 		Iterator predicateIterStep2 = toBeSkipped.iterator();
 		for (Object aToBeSkipped : toBeSkipped)
 		{
@@ -359,7 +353,7 @@ public abstract class LOLA implements CTCommonModule
 		// When type information modified => process selector
 		INCRETimer step3 = incre.getReporter().openProcess(MODULE_NAME, "Checking modifications in type information",
 				INCRETimer.TYPE_OVERHEAD);
-		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "Splitting selectors based on type information changes...");
+		logger.debug("Splitting selectors based on type information changes...");
 		Iterator predicateIterStep3 = toBeSkipped.iterator();
 		List currentTYM = incre.getAllModifiedPrimitiveConcerns(DataStore.instance());
 		List historyTYM = incre.getAllModifiedPrimitiveConcerns(incre.history.getDataStore());
@@ -381,7 +375,7 @@ public abstract class LOLA implements CTCommonModule
 		step3.stop();
 
 		// Step 4: split based on dependent selectors
-		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "Splitting selectors based on dependencies between selectors...");
+		logger.debug("Splitting selectors based on dependencies between selectors...");
 		INCRETimer step4 = incre.getReporter().openProcess(MODULE_NAME, "Checking dependencies between selectors",
 				INCRETimer.TYPE_OVERHEAD);
 		ArrayList depSelectorsList = new ArrayList();
@@ -459,7 +453,7 @@ public abstract class LOLA implements CTCommonModule
 
 		// Step 5: resolve answers of skipped selectors
 		INCRETimer step5 = incre.getReporter().openProcess(MODULE_NAME, "Resolving answers", INCRETimer.TYPE_OVERHEAD);
-		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "Resolving answers...");
+		logger.debug("Resolving answers...");
 		Iterator predicateIterStep5 = toBeSkipped.iterator();
 		for (Object aToBeSkipped1 : toBeSkipped)
 		{
@@ -468,12 +462,12 @@ public abstract class LOLA implements CTCommonModule
 			{
 				// answers cannot be resolved, re-calculate selector
 				toBeMoved.add(predSel);
-				Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "[Cannot resolve answers] " + predSel.getQuery());
+				logger.debug("[Cannot resolve answers] " + predSel.getQuery());
 			}
 			else
 			{
 				// successfully skipped
-				Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "[Succesfully Skip] " + predSel.getQuery());
+				logger.debug("[Succesfully Skip] " + predSel.getQuery());
 			}
 		}
 		moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
@@ -523,7 +517,7 @@ public abstract class LOLA implements CTCommonModule
 			from.remove(predSel);
 		}
 
-		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "[Moved] " + predSel.getQuery());
+		logger.debug("[Moved] " + predSel.getQuery());
 	}
 
 }

@@ -15,14 +15,14 @@ import java.io.IOException;
 
 import org.apache.xmlbeans.XmlException;
 
+import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Config.Project;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
-import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;
@@ -164,12 +164,14 @@ public class StarLightMaster extends Master
 		// Create the repository
 		DataStore.instance();
 
-		// Set the paths
-		Configuration config = Configuration.instance();
-		PathSettings ps = config.getPathSettings();
-
-		ps.addPath("Base", getSettingValue("IntermediateOutputPath"));
-		ps.addPath("Composestar", getSettingValue("InstallFolder") + "\\");
+		resources = new CommonResources();
+		resources.setPathResolver(getPathResolver());
+		BuildConfig config = new BuildConfig();
+		resources.setConfiguration(config);
+		Project project = config.getNewProject();
+		File intermPath = new File(getSettingValue("IntermediateOutputPath"));
+		project.setBase(intermPath.getParentFile());
+		project.setIntermediate(intermPath.getName());
 
 		// Set INCRE options
 		ModuleInfo incre = ModuleInfoManager.get(INCRE.class);
@@ -190,13 +192,10 @@ public class StarLightMaster extends Master
 
 			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, TITLE + " " + VERSION);
 
-			// Create new resources
-			CommonResources resources = new CommonResources();
-
 			// Initialize INCRE
 			logger.debug("Initializing INCRE...");
 			INCRE incre = INCRE.instance();
-			incre.init();
+			incre.init(resources);
 
 			// Set FILTH options (must be done after INCRE is initialized)
 			ModuleInfo filth = ModuleInfoManager.get("FILTH");

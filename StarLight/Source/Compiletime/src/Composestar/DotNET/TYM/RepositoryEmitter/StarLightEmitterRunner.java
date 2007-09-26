@@ -35,8 +35,6 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
@@ -70,6 +68,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private FilterCodeCompressor currentCompressor;
 
+	private CommonResources resources;
+
 	public StarLightEmitterRunner()
 	{
 		this.dataStore = DataStore.instance();
@@ -77,8 +77,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 		this.compressors = new HashMap();
 	}
 
-	public void run(CommonResources resources) throws ModuleException
+	public void run(CommonResources resc) throws ModuleException
 	{
+		resources = resc;
 		// Emit all types to persistent repository
 		try
 		{
@@ -125,9 +126,6 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private void writeWeaveSpecs() throws ModuleException
 	{
-		Configuration config = Configuration.instance();
-		PathSettings pathSettings = config.getPathSettings();
-
 		ArrayOfAssemblyConfig assemblies = StarLightMaster.getConfigContainer().getAssemblies();
 		for (int i = 0; i < assemblies.sizeOfAssemblyConfigArray(); i++)
 		{
@@ -139,9 +137,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
 
-				File baseDir = new File(pathSettings.getPath("Base"), "Starlight");
+				File baseDir = new File(resources.configuration().getProject().getIntermediate(), "Starlight");
 				File file = new File(baseDir, ac.getId() + "_weavespec.xml.gzip");
-				
+
 				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing '" + file + "'...");
 
 				OutputStream outputStream = null;
@@ -152,8 +150,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				}
 				catch (IOException e)
 				{
-					throw new ModuleException(
-							"IOException while writing weave spec '" + file + "'", MODULE_NAME);
+					throw new ModuleException("IOException while writing weave spec '" + file + "'", MODULE_NAME);
 				}
 				finally
 				{
@@ -167,6 +164,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	/**
 	 * Adds the generalized filtercodes from the compressor to the weavespec.
+	 * 
 	 * @param weaveSpec
 	 */
 	private void addGeneralizedFilterCodes(WeaveSpecification weaveSpec)

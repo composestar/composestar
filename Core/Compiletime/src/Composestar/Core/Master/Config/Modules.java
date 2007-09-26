@@ -16,6 +16,7 @@ import java.util.Map;
 /**
  * @deprecated
  */
+@Deprecated
 public class Modules implements Serializable
 {
 	/**
@@ -23,11 +24,11 @@ public class Modules implements Serializable
 	 */
 	private static final long serialVersionUID = 4868992763327704934L;
 
-	private Map<String,ModuleSettings> modules;
+	private Map<String, ModuleSettings> modules;
 
 	public Modules()
 	{
-		modules = new HashMap<String,ModuleSettings>();
+		modules = new HashMap<String, ModuleSettings>();
 	}
 
 	public ModuleSettings getModule(String key)

@@ -7,12 +7,12 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
+import Composestar.Java.COMP.JavaCompiler;
 import Composestar.Utils.Debug;
 
 /**
@@ -20,7 +20,6 @@ import Composestar.Utils.Debug;
  */
 public class JavaHarvestRunner implements HarvestRunner
 {
-
 	private ClassMap cm; // contains the harvested classes.
 
 	/**
@@ -36,18 +35,25 @@ public class JavaHarvestRunner implements HarvestRunner
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
+		List<File> toBeHarvested = new ArrayList<File>();
 
-		ArrayList dummyList = (ArrayList) Configuration.instance().getProjects().getCompiledDummies();
-		ArrayList dependencyList = (ArrayList) Configuration.instance().getProjects().getDependencies();
-		ArrayList toBeHarvested = new ArrayList();
-
-		for (Object aDummyList : dummyList)
+		File dummies = (File) resources.get(JavaCompiler.DUMMY_JAR);
+		try
 		{
-			String library = (String) aDummyList;
+			ClassPathModifier.addFile(dummies);
+			toBeHarvested.add(dummies);
+		}
+		catch (Exception e)
+		{
+			throw new ModuleException("Error while updating classpath" + e.toString(), MODULE_NAME);
+		}
+
+		for (File deps : resources.configuration().getProject().getFilesDependencies())
+		{
 			try
 			{
-				ClassPathModifier.addFile(library);
-				toBeHarvested.add(library);
+				ClassPathModifier.addFile(deps);
+				toBeHarvested.add(deps);
 			}
 			catch (Exception e)
 			{
@@ -55,27 +61,11 @@ public class JavaHarvestRunner implements HarvestRunner
 			}
 		}
 
-		for (Object aDependencyList : dependencyList)
+		for (File file : toBeHarvested)
 		{
-			Dependency dep = (Dependency) aDependencyList;
-			String library = (String) dep.getFileName();
 			try
 			{
-				ClassPathModifier.addFile(library);
-				toBeHarvested.add(library);
-			}
-			catch (Exception e)
-			{
-				throw new ModuleException("Error while updating classpath" + e.toString(), "HARVESTER");
-			}
-		}
-
-		for (Object aToBeHarvested : toBeHarvested)
-		{
-			String library = (String) aToBeHarvested;
-			try
-			{
-				JarLoader jl = new JarLoader(library);
+				JarLoader jl = new JarLoader(file);
 				HashMap classen = jl.getLoadedClasses();
 				for (Object o : classen.values())
 				{
@@ -86,7 +76,7 @@ public class JavaHarvestRunner implements HarvestRunner
 			}
 			catch (JarLoaderException e)
 			{
-				throw new ModuleException("Error while loading classes from " + library + ": " + e.getMessage(),
+				throw new ModuleException("Error while loading classes from " + file + ": " + e.getMessage(),
 						"HARVESTER");
 			}
 		}
@@ -97,7 +87,7 @@ public class JavaHarvestRunner implements HarvestRunner
 	 */
 	private static class ClassPathModifier
 	{
-		
+
 		private static Class[] parameters = new Class[] { URL.class };
 
 		public static void addFile(String s) throws IOException

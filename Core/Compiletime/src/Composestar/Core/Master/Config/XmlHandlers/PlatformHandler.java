@@ -21,6 +21,7 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Language;
 import Composestar.Core.Master.Config.Project;
 
+@Deprecated
 public class PlatformHandler extends DefaultHandler implements ContentHandler
 {
 	protected XMLReader parser;

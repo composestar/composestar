@@ -1,5 +1,6 @@
 package Composestar.DotNET.ASTRA;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,15 +16,15 @@ public class MSAssembler implements Assembler
 	// FIXME: location should be configurable like with csc and vjc
 	private final static String s_basepath = ""; // "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\";
 
-	public void assemble(String inputFile, String outputFile) throws AssemblerException
+	public void assemble(File inputFile, File outputFile) throws AssemblerException
 	{
-		List cmdList = new ArrayList();
+		List<String> cmdList = new ArrayList<String>();
 		cmdList.add(s_basepath + "ilasm");
 		cmdList.add("/debug");
 		cmdList.add("/quiet");
-		cmdList.add(outputFile.endsWith(".dll") ? "/dll" : "/exe");
-		cmdList.add("/output=" + outputFile);
-		cmdList.add(inputFile);
+		cmdList.add(outputFile.toString().endsWith(".dll") ? "/dll" : "/exe");
+		cmdList.add("/output=" + outputFile.toString());
+		cmdList.add(inputFile.toString());
 
 		debug("Command: " + StringUtils.join(cmdList));
 
@@ -35,15 +36,15 @@ public class MSAssembler implements Assembler
 		}
 	}
 
-	public void disassemble(String inputFile, String outputFile) throws AssemblerException
+	public void disassemble(File inputFile, File outputFile) throws AssemblerException
 	{
-		List cmdList = new ArrayList();
+		List<String> cmdList = new ArrayList<String>();
 		cmdList.add(s_basepath + "ildasm");
 		cmdList.add("/linenum");
 		cmdList.add("/nobar");
 		// cmdList.add("/raweh"); // for .NET 2
-		cmdList.add("/out=" + outputFile);
-		cmdList.add(inputFile);
+		cmdList.add("/out=" + outputFile.toString());
+		cmdList.add(inputFile.toString());
 
 		debug("Command: " + StringUtils.join(cmdList));
 
@@ -57,6 +58,6 @@ public class MSAssembler implements Assembler
 
 	private void debug(String msg)
 	{
-		Debug.out(Debug.MODE_DEBUG, "ASTRA", msg);
+		Debug.out(Debug.MODE_DEBUG, ASTRA.MODULE_NAME, msg);
 	}
 }

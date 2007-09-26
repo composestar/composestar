@@ -1,9 +1,13 @@
 package Composestar.C.LOLA;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import tarau.jinni.Builtins;
+import tarau.jinni.DataBase;
 import tarau.jinni.Init;
 import Composestar.C.LOLA.metamodel.CLanguageModel;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
@@ -15,13 +19,14 @@ import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
-import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class CLOLA extends LOLA
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
 	// CLanguageModel langModel;
 	/**
 	 * Default constructor; uses the .NET language model
@@ -89,7 +94,7 @@ public class CLOLA extends LOLA
 		{
 			INCRETimer initprolog = incre.getReporter().openProcess("LOLA", "Initialize prolog engine",
 					INCRETimer.TYPE_NORMAL);
-			String predicateFile = initLanguageModel();
+			File predicateFile = initLanguageModel(resources);
 			initPrologEngine(resources, predicateFile);
 			initprolog.stop();
 			initialized = true;
@@ -110,11 +115,12 @@ public class CLOLA extends LOLA
 			 * we can define it as Primitive concern/&set of Functions At last
 			 * the specified concerns need to be evaluated
 			 */
-			if (new java.io.File(Configuration.instance().getPathSettings().getPath("Base") + "CConcern.xml").exists())
+			File concernXml = new File(resources.configuration().getProject().getBase(), "CConcern.xml");
+			if (concernXml.exists())
 			{
 				Debug.out(Debug.MODE_INFORMATION, "CCone", "Create concerns from CConcern.xml ");
 				ConcernGenerator cg = new ConcernGenerator();
-				cg.run();
+				cg.run(concernXml);
 				cg.evaluateConcerns();
 				cg.createConcerns();
 			}
@@ -132,20 +138,11 @@ public class CLOLA extends LOLA
 
 	}
 
-	public void initPrologEngine(CommonResources resources, String generatedPredicatesFilename) throws ModuleException
+	@Override
+	public void initPrologEngine(CommonResources resources, File generatedPredicatesFilename) throws ModuleException
 	{
-		/* Get the names of special files (containing base predicate libraries) */
-		String prologLibraryFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath(
-				"Composestar")
-				+ "lib/prolog/lib.pro");
-		String prologConnectorFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings()
-				.getPath("Composestar")
-				+ "lib/prolog/connector.pro");
-		String CLangMap = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath("Composestar")
-				+ "lib/prolog/clangmap.pro");
-
 		/* Initialize the prolog engine */
-		Debug.out(Debug.MODE_DEBUG, "LOLA", "Initializing the prolog interpreter");
+		logger.debug("Initializing the prolog interpreter");
 
 		if (!Init.startJinni())
 		{
@@ -155,27 +152,20 @@ public class CLOLA extends LOLA
 		ComposestarBuiltins.setUnitDictionary(unitDict);
 		Init.builtinDict.putAll(new ComposestarBuiltins(langModel));
 
-		Debug.out(Debug.MODE_DEBUG, "LOLA", "Consulting base predicate libraries");
+		logger.debug("Consulting base predicate libraries");
 
-		if (Init.askJinni("reconsult('" + prologLibraryFilename + "')").equals("no"))
+		reconsult("lib.pro");
+		reconsult("connector.pro");
+		if (Init.askJinni("reconsult('" + generatedPredicatesFilename.toString().replace("\\", "/") + "')")
+				.equals("no"))
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", "Could not load prolog base library! Expected location: "
-					+ prologLibraryFilename);
-		}
-		if (Init.askJinni("reconsult('" + prologConnectorFilename + "')").equals("no"))
-		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", "Could not load prolog connector library! Expected location: "
-					+ prologConnectorFilename);
-		}
-		if (Init.askJinni("reconsult('" + generatedPredicatesFilename + "')").equals("no"))
-		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", "Could not load prolog language-mapping library! Expected location: "
+			logger.warn("Could not load prolog language-mapping library! Expected location: "
 					+ generatedPredicatesFilename);
 		}
-		if (Init.askJinni("reconsult('" + CLangMap + "')").equals("no"))
+		InputStream s = CLOLA.class.getResourceAsStream("clangmap.pro");
+		if ((s == null) || DataBase.streamToProg(new InputStreamReader(s), true))
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", "Could not load prolog connector library! Expected location: "
-					+ CLangMap);
+			logger.warn("Could not load prolog library: clangmap.pro");
 		}
 		if (!Init.run(new String[] {}))
 		{

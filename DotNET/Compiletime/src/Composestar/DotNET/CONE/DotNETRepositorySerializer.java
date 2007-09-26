@@ -38,8 +38,8 @@ import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * This class creates a dump of the entire datastore. The dump is deserialized
@@ -53,7 +53,9 @@ import Composestar.Utils.FileUtils;
 public class DotNETRepositorySerializer extends CONE implements RepositorySerializer
 {
 	public static final String MODULE_NAME = "CONE-XML";
-	
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
 	private Map<Class, List<Field>> orderedFieldInfo;
 
 	private PrintWriter out = null;
@@ -73,7 +75,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		ModuleInfo mi = ModuleInfoManager.get(DotNETRepositorySerializer.MODULE_NAME);
 		File destination = (File) resources.get(REPOSITORY_FILE_KEY);
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing repository to file '" + destination.getName() + "'...");
+		logger.debug("Writing repository to file '" + destination.getName() + "'...");
 
 		orderedFieldInfo = new HashMap<Class, List<Field>>();
 		try
@@ -175,7 +177,8 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		fieldEndElement(field);
 	}
 
-	private void handleVectorField(Field field, Object obj, Vector vector, int depth) throws IllegalAccessException, ModuleException
+	private void handleVectorField(Field field, Object obj, Vector vector, int depth) throws IllegalAccessException,
+			ModuleException
 	{
 		if (vector.size() <= 0)
 		{
@@ -294,7 +297,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 				}
 				catch (Exception ex)
 				{
-					throw new ModuleException(ex.getClass().getName()+": "+ex.getMessage(), MODULE_NAME);
+					throw new ModuleException(ex.getClass().getName() + ": " + ex.getMessage(), MODULE_NAME);
 				}
 			}
 		}
@@ -324,8 +327,8 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		}
 		else if (fieldValue instanceof Serializable)
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Ignored serializable object " + obj.getClass().getName() + "."
-					+ field.getName() + " of type " + fieldValue.getClass().getName());
+			logger.debug("Ignored serializable object " + obj.getClass().getName() + "." + field.getName()
+					+ " of type " + fieldValue.getClass().getName());
 		}
 		else if (fieldValue != null)
 		{
@@ -363,9 +366,9 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 				int modifier = declaredField.getModifiers();
 
 				if (Modifier.isPublic(modifier) /*
-												 * &&
-												 * !Modifier.isTransient(modifier)
-												 */)
+				 * &&
+				 * !Modifier.isTransient(modifier)
+				 */)
 				{
 					fields.add(declaredField);
 				}

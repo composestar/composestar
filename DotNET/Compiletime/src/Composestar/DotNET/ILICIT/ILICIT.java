@@ -16,28 +16,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
+import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FilterModuleOrder;
-import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Source;
+import Composestar.Core.Master.Config.ModuleInfo;
+import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.WEAVER.WEAVER;
+import Composestar.DotNET.COMP.DotNETCompiler;
 import Composestar.Utils.CommandLineExecutor;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Applies the changes as specified by CONE-IS to the assemblies in order to
@@ -49,27 +43,27 @@ public class ILICIT implements WEAVER
 
 	public static final String MODULE_NAME = "ILICIT";
 
-	private Configuration config;
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
+	protected Composestar.Core.Config.BuildConfig config;
+
+	protected CommonResources resources;
 
 	public ILICIT()
-	{
-		config = Configuration.instance();
-	}
+	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public void run(CommonResources inresources) throws ModuleException
 	{
-		String basePath = config.getPathSettings().getPath("Base");
-
-		File weaveDir = new File(basePath, "obj/weaver");
+		resources = inresources;
+		config = resources.configuration();
+		File weaveDir = new File(config.getProject().getIntermediate(), "weaver");
 		if (!weaveDir.exists())
 		{
 			weaveDir.mkdir();
 		}
 
 		// determine the assemblies to weave
-		List toBeWoven = new ArrayList();
-		List compiledSources = config.getProjects().getCompiledSources();
-		addBuiltAssemblies(weaveDir, compiledSources, toBeWoven);
+		Set<File> toBeWoven = addBuiltAssemblies(weaveDir);
 
 		// also copy dummies
 		copyDummies(weaveDir);
@@ -77,124 +71,109 @@ public class ILICIT implements WEAVER
 		// start the weaver
 		if (toBeWoven.size() > 0)
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "To be woven file list: " + toBeWoven);
-			invokeWeaver(basePath, toBeWoven);
+			logger.debug("To be woven file list: " + toBeWoven);
+			invokeWeaver(config.getProject().getIntermediate(), toBeWoven);
 		}
 		else
 		{
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "No files to weave");
+			logger.warn("No files to weave");
 		}
 	}
 
-	private void addBuiltAssemblies(File weaveDir, List compiledSources, List toBeWoven) throws ModuleException
+	/**
+	 * Returns a list of files to be woven
+	 * 
+	 * @param weaveDir
+	 * @return
+	 * @throws ModuleException
+	 */
+	private Set<File> addBuiltAssemblies(File weaveDir) throws ModuleException
 	{
-		List builtAssemblies = new ArrayList();
+		Set<File> result = new HashSet<File>();
+		List<File> builtAssemblies = new ArrayList<File>();
 		DataStore.instance().addObject("BuiltLibs", builtAssemblies);
 
-		Iterator it = compiledSources.iterator();
-		while (it.hasNext())
+		for (Source src : config.getProject().getSources())
 		{
-			String asm = (String) it.next();
+			File asm = src.getAssembly();
+			File target = new File(weaveDir, asm.getName());
 
-			File source = new File(asm);
-			File target = new File(weaveDir, source.getName());
-
-			String sourceFilename = source.getAbsolutePath();
-			String targetFilename = target.getAbsolutePath();
-
-			if (!INCRE.instance().isProcessedByModule(asm, MODULE_NAME))
+			try
 			{
+				logger.debug("Copying '" + asm + "' to Weaver directory");
+				FileUtils.copyFile(target, asm);
+			}
+			catch (IOException e)
+			{
+				throw new ModuleException("Unable to copy assembly: " + e.getMessage(), MODULE_NAME);
+			}
+
+			File pdbFile = new File(FileUtils.replaceExtension(src.toString(), "pdb"));
+			if (pdbFile.exists())
+			{
+				logger.debug("Copying '" + pdbFile + "' to Weaver directory");
+				File pdbTarget = new File(weaveDir, pdbFile.getName());
 				try
 				{
-					Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Copying '" + sourceFilename + "' to Weaver directory");
-					FileUtils.copyFile(targetFilename, sourceFilename);
+					FileUtils.copyFile(pdbTarget, pdbFile);
 				}
 				catch (IOException e)
 				{
-					throw new ModuleException("Unable to copy assembly: " + e.getMessage(), MODULE_NAME);
+					throw new ModuleException("Unable to copy PDB: " + e.getMessage(), MODULE_NAME);
 				}
-
-				String pdbFile = FileUtils.replaceExtension(sourceFilename, "pdb");
-				if (FileUtils.fileExist(pdbFile))
-				{
-					Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Copying '" + pdbFile + "' to Weaver directory");
-
-					String pdbSourceFilename = new File(pdbFile).getAbsolutePath();
-					String pdbTargetFilename = FileUtils.replaceExtension(targetFilename, "pdb");
-
-					try
-					{
-						FileUtils.copyFile(pdbTargetFilename, pdbSourceFilename);
-					}
-					catch (IOException e)
-					{
-						throw new ModuleException("Unable to copy PDB: " + e.getMessage(), MODULE_NAME);
-					}
-				}
-
-				builtAssemblies.add(targetFilename);
-				toBeWoven.add(targetFilename);
 			}
-			else
-			{
-				// no need to weave the file
-				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "No need to re-weave " + asm);
-				builtAssemblies.add(targetFilename);
-			}
+
+			builtAssemblies.add(target);
+			result.add(target);
 		}
+		return result;
 	}
 
 	private void copyDummies(File weaveDir) throws ModuleException
 	{
-		List dummies = config.getProjects().getCompiledDummies();
-		Iterator dumIt = dummies.iterator();
-		while (dumIt.hasNext())
+		File dummies = (File) resources.get(DotNETCompiler.DUMMY_ASSEMBLY);
+		File destFile = new File(weaveDir, dummies.getName());
+		try
 		{
-			String source = (String) dumIt.next();
-			File destFile = new File(weaveDir, FileUtils.getFilenamePart(source));
-
-			try
-			{
-				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Copying '" + source + "' to Weaver directory");
-				FileUtils.copyFile(destFile.getAbsolutePath(), source);
-			}
-			catch (IOException e)
-			{
-				throw new ModuleException("Unable to copy dummy: " + e.getMessage(), MODULE_NAME);
-			}
+			logger.debug("Copying '" + dummies + "' to Weaver directory");
+			FileUtils.copyFile(destFile, dummies);
+		}
+		catch (IOException e)
+		{
+			throw new ModuleException("Unable to copy dummy: " + e.getMessage(), MODULE_NAME);
 		}
 	}
 
-	private void invokeWeaver(String basePath, List toBeWoven) throws ModuleException
+	private void invokeWeaver(File basePath, Set<File> toBeWoven) throws ModuleException
 	{
 		// build command line
-		List cmdList = new ArrayList();
+		List<String> cmdList = new ArrayList<String>();
 		cmdList.add(getExecutable());
 		cmdList.add("/nologo");
 
 		// verify libraries?
-		boolean va = config.getModuleProperty(MODULE_NAME, "verifyAssemblies", false);
-		if (va)
+		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
+		if (mi.getBooleanSetting("verifyAssemblies", false))
 		{
 			cmdList.add("/verify");
 		}
 
 		// if debugging supply the /debug switch
-		if (Debug.getMode() == Debug.MODE_DEBUG)
+		if (logger.isDebugEnabled())
 		{
 			cmdList.add("/debug");
 		}
 
 		// add weave specification
-		String weaveFile = basePath + "weavespec.xml";
+		File weaveFile = new File(basePath, "weavespec.xml");
 		cmdList.add("/ws=" + weaveFile);
 
 		// add build file
-		String buildfile = basePath + "filelist.peweaver";
+		File buildfile = new File(basePath, "filelist.peweaver");
 		createBuildfile(buildfile, toBeWoven);
 		cmdList.add("/filelist=" + buildfile);
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Command: " + StringUtils.join(cmdList));
+		logger.debug("Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
 		int exitcode = cle.exec(cmdList);
@@ -211,28 +190,24 @@ public class ILICIT implements WEAVER
 
 	private String getExecutable() throws ModuleException
 	{
-		String cpsPath = config.getPathSettings().getPath("Composestar");
-		File exe = new File(cpsPath, "bin/peweaver.exe");
-
-		if (!exe.exists())
+		File exe = resources.getPathResolver().getResource("bin/peweaver.exe");
+		if (exe == null)
 		{
-			throw new ModuleException("Unable to locate the executable '" + exe + "'!", MODULE_NAME);
+			throw new ModuleException("Unable to locate the executable bin/peweaver.exe", MODULE_NAME);
 		}
 
 		return exe.getAbsolutePath();
 	}
 
-	private void createBuildfile(String buildfile, List toBeWoven) throws ModuleException
+	private void createBuildfile(File buildfile, Set<File> toBeWoven) throws ModuleException
 	{
 		PrintWriter out = null;
 		try
 		{
 			out = new PrintWriter(new BufferedWriter(new FileWriter(buildfile)));
-
-			Iterator it = toBeWoven.iterator();
-			while (it.hasNext())
+			for (File file : toBeWoven)
 			{
-				out.println((String) it.next());
+				out.println(file.toString());
 			}
 		}
 		catch (IOException e)
@@ -312,199 +287,215 @@ public class ILICIT implements WEAVER
 		}
 	}
 
-	/**
-	 * @param src Absolute path of a sourcefile
-	 * @return ArrayList containing all concerns with FMO and extracted from the
-	 *         source and its external linked sources Used by INCRE
-	 */
-	public List getConcernsWithFMO(String src)
-	{
-		INCRE incre = INCRE.instance();
-		List concerns = new ArrayList();
-		List concernsWithFMO = incre.getConcernsWithFMO();
-
-		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
-		String target = FileUtils.removeExtension(orig.getTarget());
-		ArrayList sources = new ArrayList((Collection) incre.externalSourcesBySource.get(orig));
-		sources.add(0, orig.getFileName());
-
-		if (!concernsWithFMO.isEmpty())
-		{
-			Iterator iterConcerns = concernsWithFMO.iterator();
-
-			while (iterConcerns.hasNext())
-			{
-				Concern c = (Concern) iterConcerns.next();
-				if (incre.declaredInSources(c, sources))
-				{
-					concerns.add(c.getQualifiedName());
-				}
-			}
-		}
-
-		return concerns;
-	}
-
-	/**
-	 * @param src Absolute path of a sourcefile
-	 * @return ArrayList containing all concerns recognized as a casting
-	 *         interception Only concerns extracted from the source and its
-	 *         external linked sources are returned Used by INCRE
-	 */
-	public List castingInterceptions(String src) throws ModuleException
-	{
-		ArrayList list = new ArrayList();
-		INCRE incre = INCRE.instance();
-		DataStore ds = incre.getCurrentRepository();
-		List concernsWithFMO = incre.getConcernsWithFMO();
-
-		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
-		String target = FileUtils.removeExtension(orig.getTarget());
-		ArrayList sources = new ArrayList((Collection) incre.externalSourcesBySource.get(orig));
-		sources.add(0, orig.getFileName());
-
-		if (!concernsWithFMO.isEmpty())
-		{
-			Iterator iterConcerns = concernsWithFMO.iterator();
-			while (iterConcerns.hasNext())
-			{
-				Concern c = (Concern) iterConcerns.next();
-				boolean castConcern = false;
-
-				if (incre.declaredInSources(c, sources))
-				{
-					FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-
-					Iterator iterFilterModules = fmo.orderAsList().iterator();
-					while (iterFilterModules.hasNext())
-					{
-						String fmref = (String) iterFilterModules.next();
-						FilterModule fm = (FilterModule) ds.getObjectByID(fmref);
-
-						Iterator iterInternals = fm.getInternalIterator();
-						while (iterInternals.hasNext())
-						{
-							Internal internal = (Internal) iterInternals.next();
-							if (!list.contains(internal.type.getQualifiedName()))
-							{
-								castConcern = true;
-								list.add(internal.type.getQualifiedName());
-							}
-						}
-					}
-
-					if (castConcern)
-					{
-						if (!list.contains(c.getQualifiedName()))
-						{
-							list.add(c.getQualifiedName());
-						}
-					}
-				}
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * @param src Absolute path of a sourcefile
-	 * @return ArrayList containing all concerns which instantiation should be
-	 *         intercepted Only concerns extracted from the source and its
-	 *         external linked sources are returned Used by INCRE
-	 */
-	public List getAfterInstantiationClasses(String src) throws ModuleException
-	{
-		INCRE incre = INCRE.instance();
-		ArrayList result = new ArrayList();
-
-		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
-		String target = FileUtils.removeExtension(orig.getTarget());
-		ArrayList sources = new ArrayList((Collection) incre.externalSourcesBySource.get(orig));
-		sources.add(0, orig.getFileName());
-
-		Iterator it = incre.getAllInstancesOfOrdered(CompiledImplementation.class);
-		while (it.hasNext())
-		{
-			CompiledImplementation ci = (CompiledImplementation) it.next();
-			String className = ci.getClassName();
-			if (className != null)
-			{
-				result.add(className);
-			}
-		}
-
-		it = incre.getAllInstancesOfOrdered(CpsConcern.class);
-		while (it.hasNext())
-		{
-			CpsConcern c = (CpsConcern) it.next();
-			Object o = c.getDynObject("IMPLEMENTATION");
-			if (o != null)
-			{
-
-				PrimitiveConcern pc = (PrimitiveConcern) o;
-				result.add(pc.getQualifiedName());
-			}
-		}
-
-		it = incre.getAllInstancesOfOrdered(Concern.class);
-		while (it.hasNext())
-		{
-			Concern c = (Concern) it.next();
-			if (incre.declaredInSources(c, sources))
-			{
-				if (c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
-				{
-					result.add(c.getQualifiedName());
-				}
-			}
-		}
-
-		return result;
-	}
-
-	/**
-	 * @param src Absolute path of a sourcefile
-	 * @return ArrayList containing all concerns with outputfilter(s) Only
-	 *         concerns extracted from the source and its external linked
-	 *         sources are returned Used by INCRE
-	 */
-	public List getConcernsWithOutputFilters(String src) throws ModuleException
-	{
-		ArrayList concerns = new ArrayList();
-		INCRE incre = INCRE.instance();
-		DataStore ds = incre.getCurrentRepository();
-		List concernsWithFMO = incre.getConcernsWithFMO();
-
-		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
-		String target = FileUtils.removeExtension(orig.getTarget());
-		ArrayList sources = new ArrayList((Collection) incre.externalSourcesBySource.get(orig));
-		sources.add(0, orig.getFileName());
-
-		if (!concernsWithFMO.isEmpty())
-		{
-			Iterator iterConcerns = concernsWithFMO.iterator();
-			while (iterConcerns.hasNext())
-			{
-				Concern c = (Concern) iterConcerns.next();
-				if (incre.declaredInSources(c, sources))
-				{
-					FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-
-					Iterator iterFilterModules = fmo.orderAsList().iterator();
-					while (iterFilterModules.hasNext())
-					{
-						FilterModule fm = (FilterModule) ds.getObjectByID((String) iterFilterModules.next());
-
-						if (!fm.getOutputFilters().isEmpty())
-						{
-							concerns.add(c.getQualifiedName());
-						}
-					}
-				}
-			}
-		}
-
-		return concerns;
-	}
+	// TODO michieh: this isn't used?
+	// /**
+	// * @param src Absolute path of a sourcefile
+	// * @return ArrayList containing all concerns with FMO and extracted from
+	// the
+	// * source and its external linked sources Used by INCRE
+	// */
+	// public List getConcernsWithFMO(String src)
+	// {
+	// INCRE incre = INCRE.instance();
+	// List concerns = new ArrayList();
+	// List concernsWithFMO = incre.getConcernsWithFMO();
+	//
+	// // Source orig =
+	// // Configuration.instance().getProjects().getSourceOfBinary(src);
+	// String target = FileUtils.removeExtension(orig.getTarget());
+	// ArrayList sources = new ArrayList((Collection)
+	// incre.externalSourcesBySource.get(orig));
+	// sources.add(0, orig.getFileName());
+	//
+	// if (!concernsWithFMO.isEmpty())
+	// {
+	// Iterator iterConcerns = concernsWithFMO.iterator();
+	//
+	// while (iterConcerns.hasNext())
+	// {
+	// Concern c = (Concern) iterConcerns.next();
+	// if (incre.declaredInSources(c, sources))
+	// {
+	// concerns.add(c.getQualifiedName());
+	// }
+	// }
+	// }
+	//
+	// return concerns;
+	// }
+	//
+	// /**
+	// * @param src Absolute path of a sourcefile
+	// * @return ArrayList containing all concerns recognized as a casting
+	// * interception Only concerns extracted from the source and its
+	// * external linked sources are returned Used by INCRE
+	// */
+	// public List castingInterceptions(String src) throws ModuleException
+	// {
+	// ArrayList list = new ArrayList();
+	// INCRE incre = INCRE.instance();
+	// DataStore ds = incre.getCurrentRepository();
+	// List concernsWithFMO = incre.getConcernsWithFMO();
+	//
+	// // Source orig =
+	// // Configuration.instance().getProjects().getSourceOfBinary(src);
+	// String target = FileUtils.removeExtension(orig.getTarget());
+	// ArrayList sources = new ArrayList((Collection)
+	// incre.externalSourcesBySource.get(orig));
+	// sources.add(0, orig.getFileName());
+	//
+	// if (!concernsWithFMO.isEmpty())
+	// {
+	// Iterator iterConcerns = concernsWithFMO.iterator();
+	// while (iterConcerns.hasNext())
+	// {
+	// Concern c = (Concern) iterConcerns.next();
+	// boolean castConcern = false;
+	//
+	// if (incre.declaredInSources(c, sources))
+	// {
+	// FilterModuleOrder fmo = (FilterModuleOrder)
+	// c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+	//
+	// Iterator iterFilterModules = fmo.orderAsList().iterator();
+	// while (iterFilterModules.hasNext())
+	// {
+	// String fmref = (String) iterFilterModules.next();
+	// FilterModule fm = (FilterModule) ds.getObjectByID(fmref);
+	//
+	// Iterator iterInternals = fm.getInternalIterator();
+	// while (iterInternals.hasNext())
+	// {
+	// Internal internal = (Internal) iterInternals.next();
+	// if (!list.contains(internal.type.getQualifiedName()))
+	// {
+	// castConcern = true;
+	// list.add(internal.type.getQualifiedName());
+	// }
+	// }
+	// }
+	//
+	// if (castConcern)
+	// {
+	// if (!list.contains(c.getQualifiedName()))
+	// {
+	// list.add(c.getQualifiedName());
+	// }
+	// }
+	// }
+	// }
+	// }
+	//
+	// return list;
+	// }
+	//
+	// /**
+	// * @param src Absolute path of a sourcefile
+	// * @return ArrayList containing all concerns which instantiation should be
+	// * intercepted Only concerns extracted from the source and its
+	// * external linked sources are returned Used by INCRE
+	// */
+	// public List getAfterInstantiationClasses(String src) throws
+	// ModuleException
+	// {
+	// INCRE incre = INCRE.instance();
+	// ArrayList result = new ArrayList();
+	//
+	// // Source orig =
+	// // Configuration.instance().getProjects().getSourceOfBinary(src);
+	// String target = FileUtils.removeExtension(orig.getTarget());
+	// ArrayList sources = new ArrayList((Collection)
+	// incre.externalSourcesBySource.get(orig));
+	// sources.add(0, orig.getFileName());
+	//
+	// Iterator it =
+	// incre.getAllInstancesOfOrdered(CompiledImplementation.class);
+	// while (it.hasNext())
+	// {
+	// CompiledImplementation ci = (CompiledImplementation) it.next();
+	// String className = ci.getClassName();
+	// if (className != null)
+	// {
+	// result.add(className);
+	// }
+	// }
+	//
+	// it = incre.getAllInstancesOfOrdered(CpsConcern.class);
+	// while (it.hasNext())
+	// {
+	// CpsConcern c = (CpsConcern) it.next();
+	// Object o = c.getDynObject("IMPLEMENTATION");
+	// if (o != null)
+	// {
+	//
+	// PrimitiveConcern pc = (PrimitiveConcern) o;
+	// result.add(pc.getQualifiedName());
+	// }
+	// }
+	//
+	// it = incre.getAllInstancesOfOrdered(Concern.class);
+	// while (it.hasNext())
+	// {
+	// Concern c = (Concern) it.next();
+	// if (incre.declaredInSources(c, sources))
+	// {
+	// if (c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
+	// {
+	// result.add(c.getQualifiedName());
+	// }
+	// }
+	// }
+	//
+	// return result;
+	// }
+	//
+	// /**
+	// * @param src Absolute path of a sourcefile
+	// * @return ArrayList containing all concerns with outputfilter(s) Only
+	// * concerns extracted from the source and its external linked
+	// * sources are returned Used by INCRE
+	// */
+	// public List getConcernsWithOutputFilters(String src) throws
+	// ModuleException
+	// {
+	// ArrayList concerns = new ArrayList();
+	// INCRE incre = INCRE.instance();
+	// DataStore ds = incre.getCurrentRepository();
+	// List concernsWithFMO = incre.getConcernsWithFMO();
+	//
+	// // Source orig =
+	// // Configuration.instance().getProjects().getSourceOfBinary(src);
+	// String target = FileUtils.removeExtension(orig.getTarget());
+	// ArrayList sources = new ArrayList((Collection)
+	// incre.externalSourcesBySource.get(orig));
+	// sources.add(0, orig.getFileName());
+	//
+	// if (!concernsWithFMO.isEmpty())
+	// {
+	// Iterator iterConcerns = concernsWithFMO.iterator();
+	// while (iterConcerns.hasNext())
+	// {
+	// Concern c = (Concern) iterConcerns.next();
+	// if (incre.declaredInSources(c, sources))
+	// {
+	// FilterModuleOrder fmo = (FilterModuleOrder)
+	// c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+	//
+	// Iterator iterFilterModules = fmo.orderAsList().iterator();
+	// while (iterFilterModules.hasNext())
+	// {
+	// FilterModule fm = (FilterModule) ds.getObjectByID((String)
+	// iterFilterModules.next());
+	//
+	// if (!fm.getOutputFilters().isEmpty())
+	// {
+	// concerns.add(c.getQualifiedName());
+	// }
+	// }
+	// }
+	// }
+	// }
+	//
+	// return concerns;
+	// }
 }

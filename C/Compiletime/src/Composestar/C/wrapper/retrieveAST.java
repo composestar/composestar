@@ -18,7 +18,6 @@ import Composestar.C.wrapper.parsing.PreprocessorInfoChannel;
 import Composestar.C.wrapper.parsing.TNode;
 import Composestar.C.wrapper.parsing.WrappedAST;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Utils.Debug;
 import antlr.CommonAST;
 import antlr.RecognitionException;
@@ -234,7 +233,7 @@ public class retrieveAST
 
 	public void setObjectName(String filename, CommonResources resources)
 	{
-		objectname = Configuration.instance().getPathSettings().getPath("Base");
+		objectname = resources.configuration().getProject().getBase().toString();
 		objectname = objectname.replace('/', '\\');
 		objectname = filename.substring(objectname.length());
 		objectname = objectname.substring(0, objectname.lastIndexOf(".ccc"));
@@ -243,7 +242,7 @@ public class retrieveAST
 
 	public void setNameSpace(String filename, CommonResources resources)
 	{
-		namespace = Configuration.instance().getPathSettings().getPath("Base");
+		namespace = resources.configuration().getProject().getBase().toString();
 		namespace = namespace.replace('/', '\\');
 		namespace = namespace.substring(0, namespace.lastIndexOf("\\"));
 		namespace = namespace.substring(0, namespace.lastIndexOf("\\"));

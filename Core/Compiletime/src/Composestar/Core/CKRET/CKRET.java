@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
@@ -27,14 +28,11 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
-import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
-import Composestar.Utils.FileUtils;
 
 // FIXME: rename package to SECRET
 /**
@@ -56,7 +54,7 @@ public class CKRET implements CTCommonModule
 
 	private static Reporter reporter;
 
-	private String reportFile = "";
+	private File reportFile;
 
 	public static int getMode()
 	{
@@ -66,14 +64,13 @@ public class CKRET implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
-		Configuration config = Configuration.instance();
 
 		// make sure it has been initialized at least once...
 		try
 		{
 			INCRETimer initckret = incre.getReporter().openProcess(MODULE_NAME, "Initializing CKRET repository",
 					INCRETimer.TYPE_NORMAL);
-			Repository.instance().init();
+			Repository.instance().init(resources);
 			initckret.stop();
 		}
 		catch (ModuleException me)
@@ -98,26 +95,28 @@ public class CKRET implements CTCommonModule
 
 		try
 		{
-			PathSettings ps = config.getPathSettings();
-			String basedir = ps.getPath("Base");
-
-			File file = new File(basedir, "analyses");
+			BuildConfig config = resources.configuration();
+			File file = new File(config.getProject().getIntermediate(), "Analyses");
 			if (!file.exists())
 			{
-				file.mkdir();
+				file.mkdirs();
 			}
 
 			if (file.isDirectory())
 			{
-				reportFile = file.getAbsolutePath() + "\\CKRET.html";
+				reportFile = new File(file, "CKRET.html");
 
-				String cssFile = "file://" + basedir + "CKRET.css";
-				if (!FileUtils.fileExist(cssFile))
-				{
-					cssFile = "file://" + ps.getPath("Composestar") + "CKRET.css";
-				}
+				// TODO CSS should be inlined? or resolve path
+				String cssFile = file.toURL().toString() + "/CKRET.css";
 
-				reporter = new HTMLReporter(reportFile, cssFile, resources);
+				// String cssFile = "file://" + basedir + "CKRET.css";
+				// if (!FileUtils.fileExist(cssFile))
+				// {
+				// cssFile = "file://" + ps.getPath("Composestar") +
+				// "CKRET.css";
+				// }
+
+				reporter = new HTMLReporter(resources, reportFile, cssFile);
 				reporter.open();
 
 				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "CKRET report file (" + reportFile + ") created...");
@@ -170,7 +169,7 @@ public class CKRET implements CTCommonModule
 					if (!ca.checkOrder(singleOrder, true))
 					{
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Semantic conflict(s) detected on concern "
-								+ concern.getQualifiedName(), reportFile, 0);
+								+ concern.getQualifiedName(), reportFile.toString(), 0);
 					}
 					break;
 
@@ -178,7 +177,7 @@ public class CKRET implements CTCommonModule
 					if (!ca.checkOrder(singleOrder, true))
 					{
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Semantic conflict(s) detected on concern "
-								+ concern.getQualifiedName(), reportFile, 0);
+								+ concern.getQualifiedName(), reportFile.toString(), 0);
 					}
 					for (Object aFmolist1 : fmolist)
 					{

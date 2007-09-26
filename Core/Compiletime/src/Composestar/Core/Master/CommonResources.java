@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 
 import Composestar.Core.Annotations.In;
 import Composestar.Core.Annotations.Out;
+import Composestar.Core.Config.BuildConfig;
 
 /**
  * This class holds the shared resources between the modules e.g the repository
@@ -39,12 +40,46 @@ public class CommonResources implements Serializable
 	 */
 	private Map<String, Object> resources;
 
+	protected BuildConfig config;
+
+	protected PathResolver pathResolver;
+
 	/**
 	 * Default constructor.
 	 */
 	public CommonResources()
 	{
 		resources = new HashMap<String, Object>();
+	}
+
+	public void setConfiguration(BuildConfig inConfig)
+	{
+		config = inConfig;
+	}
+
+	/**
+	 * Return the current build configuration
+	 * 
+	 * @return
+	 */
+	public BuildConfig configuration()
+	{
+		return config;
+	}
+
+	/**
+	 * Return the path resolver.
+	 * 
+	 * @param inResolver
+	 */
+	public void setPathResolver(PathResolver inResolver)
+	{
+		pathResolver = inResolver;
+	}
+
+	public PathResolver getPathResolver()
+	{
+		return pathResolver;
 	}
 
 	/**

@@ -25,8 +25,12 @@
 package Composestar.Core.Config;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+
+import Composestar.Utils.StringUtils;
 
 /**
  * @author Michiel Hendriks
@@ -41,14 +45,36 @@ public class SourcesCmdLineArgumentList extends CmdLineArgumentList
 	}
 
 	@Override
-	public void addArgs(List<String> tolist, Project proj, Properties prop)
+	public void addArgs(List<String> tolist, Project proj, Set<File> sources, Properties prop)
 	{
-		for (File file : proj.getSourceFiles())
+		if (args.size() == 0)
 		{
-			prop.setProperty("SOURCE", file.toString());
-			super.addArgs(tolist, proj, prop);
+			addArgument(new CmdLineArgument("${SOURCE}"));
+		}
+		List<String> argList;
+		boolean isMerge = merge;
+		if (isMerge)
+		{
+			// first collect all arguments for all sources and then merge
+			// it all into a single argument.
+			merge = false;
+			argList = new ArrayList<String>();
+		}
+		else
+		{
+			argList = tolist;
+		}
+		for (File source : sources)
+		{
+			prop.setProperty("SOURCE", source.toString());
+			super.addArgs(argList, proj, sources, prop);
 		}
 		prop.remove("SOURCE");
+		if (isMerge)
+		{
+			tolist.add(StringUtils.join(argList, delimiter));
+			merge = isMerge;
+		}
 	}
 
 }

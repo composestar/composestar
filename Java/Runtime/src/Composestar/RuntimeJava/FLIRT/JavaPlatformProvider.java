@@ -10,9 +10,11 @@ import Composestar.RuntimeJava.Utils.JavaRepositoryDeserializer;
 
 public class JavaPlatformProvider extends PlatformProvider
 {
+	protected Class<?> mainclass;
 
-	public JavaPlatformProvider()
+	public JavaPlatformProvider(Class<?> mclass)
 	{
+		mainclass = mclass;
 		DataMap.setDataMapClass(DataMapImpl.class);
 	}
 
@@ -25,7 +27,7 @@ public class JavaPlatformProvider extends PlatformProvider
 
 	public RepositoryDeserializer getRepositoryDeserializer()
 	{
-		return new JavaRepositoryDeserializer();
+		return new JavaRepositoryDeserializer(mainclass);
 	}
 
 }

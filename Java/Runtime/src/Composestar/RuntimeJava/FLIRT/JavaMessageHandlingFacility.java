@@ -6,9 +6,7 @@ public class JavaMessageHandlingFacility extends MessageHandlingFacility
 {
 
 	public JavaMessageHandlingFacility()
-	{
-
-	}
+	{}
 
 	/**
 	 * When the application starts this method is called to deserialize and link
@@ -17,8 +15,8 @@ public class JavaMessageHandlingFacility extends MessageHandlingFacility
 	 * @param filename String The location of the xml file
 	 * @param debug int The debug level
 	 */
-	public static synchronized void handleJavaApplicationStart(String filename, int debug)
+	public static synchronized void handleJavaApplicationStart(String filename, int debug, Class<?> mainclass)
 	{
-		handleApplicationStart(filename, debug, new JavaPlatformProvider());
+		handleApplicationStart(filename, debug, new JavaPlatformProvider(mainclass));
 	}
 }

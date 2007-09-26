@@ -61,7 +61,6 @@ import Composestar.C.wrapper.parsing.WrappedAST;
 import Composestar.C.wrapper.utils.GeneralUtils;
 import Composestar.C.wrapper.utils.StaticVariableReplacer;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Utils.Debug;
 
 public class WeaverEngine
@@ -503,9 +502,9 @@ public class WeaverEngine
 		}
 	}
 
-	public void emitFiles()
+	public void emitFiles(CommonResources resources)
 	{
-		String tempFolder = Configuration.instance().getPathSettings().getPath("Output");
+		File tempFolder = resources.configuration().getProject().getOutput();
 		FileMap fm = FileMap.instance();
 		Map<String, retrieveAST> fileASTMap = fm.getFileASTs();
 
@@ -520,7 +519,7 @@ public class WeaverEngine
 			Debug.out(Debug.MODE_INFORMATION, "CONE", "Writing file: " + tempFolder + file + "...");
 			try
 			{
-				wast.emiteToFile(tempFolder + file);
+				wast.emiteToFile(new File(tempFolder, file));
 			}
 			catch (Exception e)
 			{

@@ -26,7 +26,7 @@ public class DotNETMaster extends Master
 		DataMap.setDataMapClass(LegacyDataMap.class);
 		LegacyFilterTypes.useLegacyFilterTypes = true;
 	}
-	
+
 	/**
 	 * Compose* main function. Creates the Master object and invokes the run
 	 * method.

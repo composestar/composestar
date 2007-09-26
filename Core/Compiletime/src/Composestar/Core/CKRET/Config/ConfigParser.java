@@ -9,9 +9,18 @@
  */
 package Composestar.Core.CKRET.Config;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
@@ -28,15 +37,11 @@ public class ConfigParser extends DefaultHandler
 
 	private XMLReader parser;
 
-	public void parse(String filename, Repository inrepository)
+	public void parse(File filename, Repository inrepository)
 	{
 		try
 		{
-			repository = inrepository;
-
-			parser = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
-			parser.setContentHandler(this);
-			parser.parse(filename);
+			parse(new BufferedInputStream(new FileInputStream(filename)), inrepository);
 		}
 		catch (SAXException e)
 		{
@@ -47,6 +52,15 @@ public class ConfigParser extends DefaultHandler
 			Debug.out(Debug.MODE_WARNING, CKRET.MODULE_NAME, "Error parsing " + filename + ": " + e.getMessage());
 			Debug.out(Debug.MODE_DEBUG, CKRET.MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
 		}
+	}
+
+	public void parse(InputStream stream, Repository inrepository) throws ParserConfigurationException, SAXException,
+			IOException
+	{
+		repository = inrepository;
+		SAXParser saxparser = SAXParserFactory.newInstance().newSAXParser();
+		parser = saxparser.getXMLReader();
+		saxparser.parse(new InputSource(stream), this);
 	}
 
 	/**

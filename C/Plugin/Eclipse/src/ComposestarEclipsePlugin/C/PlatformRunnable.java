@@ -63,7 +63,7 @@ public class PlatformRunnable implements IPlatformRunnable
 	public Object run(Object args) throws Exception
 	{
 		Debug.instance().setLogToStd(true);
-		
+
 		String[] cmdArgs = (String[]) args;
 		HashSet sources = new HashSet();
 		HashSet concerns = new HashSet();
@@ -121,6 +121,7 @@ public class PlatformRunnable implements IPlatformRunnable
 			Debug.instance().Log("ProjectLocation:" + projectLocation.toOSString() + " of project " + cmdArgs[0]);
 
 			/** Settings for BuildConfiguration * */
+			projectConfig.addProperty("name", selectedProjects[0].getProject().getName());
 			projectConfig.addProperty("language", "C");
 			projectConfig.addProperty("basePath", projectLocation.toOSString() + java.io.File.separatorChar);
 			projectConfig.addProperty("outputPath", projectLocation.toOSString() + java.io.File.separatorChar + "bin"
@@ -193,7 +194,7 @@ public class PlatformRunnable implements IPlatformRunnable
 
 			ModuleSetting secret = new ModuleSetting();
 			secret.setName("SECRET");
-			//secret.addSetting("mode", "NotSet");
+			// secret.addSetting("mode", "NotSet");
 			BuildConfigurationManager.instance().addModuleSettings(secret);
 
 			ModuleSetting filth = new ModuleSetting();

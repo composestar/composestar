@@ -3,81 +3,91 @@
 
 	<condition property="build.core" value="../../Core">
 		<and>
-			<not><isset property="build.core"/></not>
-			<available file="../../Core/common.xml"/>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="../../Core/common.xml" />
 		</and>
 	</condition>
-	
-	<import file="${build.core}/common.xml"/>
-	
-	<property name="Dummer.dir" location="src/Composestar/Java/DUMMER"/>
-		
-	<echo>Processing: ${ant.project.name} ...</echo>	
+
+	<import file="${build.core}/common.xml" />
+
+	<property name="Dummer.dir" location="src/Composestar/Java/DUMMER" />
+
+	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The Compose* Java Compiletime</description>
 
 	<target name="clean" depends="init" description="clean the compilation results">
 		<!-- Java build files -->
-		<delete dir="${out.build}"/>
-		<delete dir="${out.dist}"/>
+		<delete dir="${out.build}" />
+		<delete dir="${out.dist}" />
 		<delete>
 			<fileset dir="src">
-				<include name="**/*.class"/>
+				<include name="**/*.class" />
 			</fileset>
 		</delete>
-		
+
 		<!-- Java DummyGen -->
 		<delete>
 			<fileset dir="${Dummer.dir}">
-				<include name="JavaLexer.java"/>
-				<include name="JavaRecognizer.java"/>
-				<include name="JavaTokenTypes.*"/>
-				<include name="*.smap"/>
+				<include name="JavaLexer.java" />
+				<include name="JavaRecognizer.java" />
+				<include name="JavaTokenTypes.*" />
+				<include name="*.smap" />
 			</fileset>
 		</delete>
 	</target>
 
 	<target name="init_local" depends="init">
-		<mkdir dir="${out.build}"/>
-		<mkdir dir="${out.dist}"/>
-    <mkdir dir="${out.dist}/lib"/>
+		<mkdir dir="${out.build}" />
+		<mkdir dir="${out.dist}" />
+		<mkdir dir="${out.dist}/lib" />
 	</target>
 
-  <target name="build" depends="init_local,antlr,compile_java,jar" description="build the Java compiletime">
-    <copy todir="${out.dist}${file.separator}lib">
-      <fileset dir="lib${file.separator}javassist"/>
-    </copy>
-    <copy todir="${out.dist}">
-      <fileset dir="src/Composestar/Java/INCRE/">
-        <include name="*.xml"/>
-      </fileset>
-    </copy>
-  </target>
-	
+	<target name="build" depends="init_local,antlr,compile_java,jar" description="build the Java compiletime">
+		<schemavalidate>
+			<schema namespace="http://composestar.sourceforget.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
+			<fileset dir="src">
+				<include name="Platforms.xml" />
+			</fileset>
+		</schemavalidate>
+		<copy todir="${out.dist}${file.separator}lib">
+			<fileset dir="lib${file.separator}javassist" />
+		</copy>
+		<copy todir="${out.dist}">
+			<fileset dir="src">
+				<include name="INCREconfig.xml" />
+			</fileset>
+		</copy>
+	</target>
+
 	<target name="antlr">
 		<antlr target="${Dummer.dir}/grammar/java.g" outputdirectory="${Dummer.dir}">
-			<classpath refid="lib.core"/>
+			<classpath refid="lib.core" />
 		</antlr>
 	</target>
-	
+
 	<target name="compile_java" depends="init_local,antlr">
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.java" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 		</javac>
 	</target>
-			
+
 	<target name="jar" depends="compile_java">
-	  <copy todir="${out.build}"> <!-- copy moduleinfo files -->
-		  <fileset dir="src">
-		      <include name="**/moduleinfo.xml"/>
-		  </fileset>
-	  </copy>
-		
-	  <jar destfile="${out.jar.java}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
+		<copy todir="${out.build}">
+			<fileset dir="src">
+				<include name="**/moduleinfo.xml" />
+				<include name="Platforms.xml" />
+				<include name="INCREconfig.xml" />
+			</fileset>
+		</copy>
+
+		<jar destfile="${out.jar.java}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
-	
+
 	<target name="install" depends="init_eclipse,build" description="Install the Java compiletime">
 		<!-- install to eclipse dir -->
 		<copy todir="${eclipse.pluginsdir.java}${file.separator}">
-			<fileset dir="${out.dist}"/>
+			<fileset dir="${out.dist}" />
 		</copy>
 	</target>
 

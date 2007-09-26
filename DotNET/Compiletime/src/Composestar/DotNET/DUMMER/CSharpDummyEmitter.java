@@ -3,69 +3,68 @@ package Composestar.DotNET.DUMMER;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import Composestar.Core.Config.Project;
+import Composestar.Core.Config.Source;
 import Composestar.Core.DUMMER.DummyEmitter;
+import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Project;
-import Composestar.Core.Master.Config.Source;
-import Composestar.Core.Master.Config.TypeSource;
-import Composestar.Utils.Debug;
+import Composestar.Core.Master.CommonResources;
 import Composestar.Utils.StreamGobbler;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class CSharpDummyEmitter implements DummyEmitter
 {
-	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DummyManager.MODULE_NAME);
+
+	protected Map<String, Source> srcmapping;
+
+	protected CommonResources resources;
+
+	public void createDummies(Project project, Set<Source> sources) throws ModuleException
 	{
-		List sources = new ArrayList();
-		sources.add(source);
-
-		List outputFilenames = new ArrayList();
-		outputFilenames.add(outputFilename);
-
-		createDummies(project, sources, outputFilenames);
-	}
-
-	public void createDummies(Project project, List sources, List outputFilenames) throws ModuleException
-	{
+		srcmapping = new HashMap<String, Source>();
 		try
 		{
-			String attributesFile = project.getBasePath() + "attributes.xml";
-			ExternalCSharpDummyGenerator dg = new ExternalCSharpDummyGenerator(attributesFile);
+			File attributesFile = new File(project.getIntermediate(), "attributes.xml");
+			ExternalCSharpDummyGenerator dg = new ExternalCSharpDummyGenerator(resources, attributesFile);
 
-			Iterator srcIter = sources.iterator();
-			Iterator outputIter = outputFilenames.iterator();
-			while (srcIter.hasNext())
+			for (Source src : sources)
 			{
-				Source source = (Source) srcIter.next();
-				String sourceFilename = source.getFileName();
-				String targetFilename = (String) outputIter.next();
-
-				dg.addDummy(sourceFilename, targetFilename);
+				dg.addDummy(src.getFile(), src.getStub());
+				srcmapping.put(src.getFile().toString(), src);
 			}
 
 			ProcessResult pr = dg.go();
 			if (pr.code != 0)
 			{
-				Debug.out(Debug.MODE_DEBUG, "DUMMER", "CSharpDummyGenerator failed. Output follows:");
-				Iterator it = pr.stdout.iterator();
+				logger.debug("CSharpDummyGenerator failed. Output follows:");
+				Iterator<String> it = pr.stdout.iterator();
 				while (it.hasNext())
 				{
-					Debug.out(Debug.MODE_DEBUG, "DUMMER", "  " + it.next());
+					logger.debug("  " + it.next());
 				}
 
-				throw new ModuleException("Error creating dummies: CSharpDummyGenerator failed.", "DUMMER");
+				throw new ModuleException("Error creating dummies: CSharpDummyGenerator failed.",
+						DummyManager.MODULE_NAME);
 			}
 
-			createTypeLocationMapping(project, pr.stdout);
+			createTypeLocationMapping(project, sources, pr.stdout);
 		}
 		catch (ProcessExecutionException e)
 		{
 			throw new ModuleException("Error creating dummies: " + e.getMessage(), "DUMMER");
 		}
+	}
+
+	public void setCommonResources(CommonResources resc)
+	{
+		resources = resc;
 	}
 
 	/**
@@ -76,23 +75,26 @@ public class CSharpDummyEmitter implements DummyEmitter
 	 * @param lines
 	 * @param project
 	 */
-	private void createTypeLocationMapping(Project project, List lines)
+	private void createTypeLocationMapping(Project project, Set<Source> sources, List<String> lines)
 	{
-		Iterator it = lines.iterator();
+		Iterator<String> it = lines.iterator();
 		while (it.hasNext())
 		{
-			String line = (String) it.next();
+			String line = it.next();
 			if (line.startsWith("TypeLocation"))
 			{
 				String filename = (String) it.next();
 				String classname = (String) it.next();
-				Debug.out(Debug.MODE_DEBUG, "DUMMER", "Defined mapping: " + filename + "=> " + classname);
-
-				TypeSource srcLocation = new TypeSource();
-				srcLocation.setFileName(filename);
-				srcLocation.setName(classname);
-
-				project.addTypeSource(srcLocation);
+				logger.debug("Defined mapping: " + filename + "=> " + classname);
+				Source src = srcmapping.get(filename);
+				if (src != null)
+				{
+					project.getTypeMapping().addType(classname, src);
+				}
+				else
+				{
+					logger.error(String.format("Type %s refers to unknown source: %s", classname, filename));
+				}
 			}
 		}
 	}
@@ -106,11 +108,12 @@ class ExternalCSharpDummyGenerator
 
 	private Process process;
 
-	public ExternalCSharpDummyGenerator(String attributesFile) throws ProcessExecutionException
+	public ExternalCSharpDummyGenerator(CommonResources resources, File attributesFile)
+			throws ProcessExecutionException
 	{
 		String[] command = new String[2];
-		command[0] = getExecutable();
-		command[1] = attributesFile;
+		command[0] = getExecutable(resources);
+		command[1] = attributesFile.toString();
 
 		try
 		{
@@ -127,23 +130,20 @@ class ExternalCSharpDummyGenerator
 		}
 	}
 
-	private String getExecutable() throws ProcessExecutionException
+	private String getExecutable(CommonResources resources) throws ProcessExecutionException
 	{
-		Configuration config = Configuration.instance();
-		String cps = config.getPathSettings().getPath("Composestar");
-		File exe = new File(cps, "bin/CSharpDummyGenerator.exe");
-		if (!exe.exists())
+		File exe = resources.getPathResolver().getResource("bin/CSharpDummyGenerator.exe");
+		if (exe == null)
 		{
-			throw new ProcessExecutionException("Executable does not exist: " + exe.getAbsolutePath());
+			throw new ProcessExecutionException("bin/CSharpDummyGenerator.exe does not exist");
 		}
-
 		return exe.getAbsolutePath();
 	}
 
-	public void addDummy(String sourceFilename, String targetFilename)
+	public void addDummy(File sourceFilename, File targetFilename)
 	{
-		stdout.println(sourceFilename);
-		stdout.println(targetFilename);
+		stdout.println(sourceFilename.toString());
+		stdout.println(targetFilename.toString());
 	}
 
 	public ProcessResult go() throws ProcessExecutionException
@@ -167,11 +167,11 @@ class ProcessResult
 {
 	public final int code;
 
-	public final List stdout;
+	public final List<String> stdout;
 
-	public final List stderr;
+	public final List<String> stderr;
 
-	public ProcessResult(int code, List stdout, List stderr)
+	public ProcessResult(int code, List<String> stdout, List<String> stderr)
 	{
 		this.code = code;
 		this.stdout = stdout;

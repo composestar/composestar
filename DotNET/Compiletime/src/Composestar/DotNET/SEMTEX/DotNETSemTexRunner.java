@@ -8,12 +8,11 @@ import java.util.List;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.CommandLineExecutor;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Calls the SemanticAnalyser with the just created assemblies and the
@@ -25,6 +24,8 @@ public class DotNETSemTexRunner implements CTCommonModule
 {
 	public static final String MODULE_NAME = "SEMTEX";
 
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
 	public DotNETSemTexRunner()
 	{}
 
@@ -33,14 +34,10 @@ public class DotNETSemTexRunner implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		Configuration config = Configuration.instance();
-		String cpsPath = config.getPathSettings().getPath("Composestar");
-		String projectPath = config.getPathSettings().getPath("Base");
-
-		String exe = getExecutable();
+		String exe = getExecutable(resources);
 		if (exe != null)
 		{
-			List cmdList = new ArrayList();
+			List<String> cmdList = new ArrayList<String>();
 			cmdList.add(exe);
 
 			List builtLibs = (List) DataStore.instance().getObjectByID("BuiltLibs");
@@ -51,10 +48,11 @@ public class DotNETSemTexRunner implements CTCommonModule
 				cmdList.add(FileUtils.quote(lib));
 			}
 
-			cmdList.add("/plugin:" + FileUtils.quote(cpsPath + "bin/SemanticComposestarPlugins.dll"));
-			cmdList.add("/exportFilename:" + FileUtils.quote(projectPath + "obj/semtex.xml"));
+			cmdList.add("/plugin:" + resources.getPathResolver().getResource("bin/SemanticComposestarPlugins.dll"));
+			File xml = new File(resources.configuration().getProject().getIntermediate(), "semtex.xml");
+			cmdList.add("/exportFilename:" + xml.toString());
 
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Command for .NET SemTex: " + StringUtils.join(cmdList));
+			logger.debug("Command for .NET SemTex: " + StringUtils.join(cmdList));
 
 			CommandLineExecutor cle = new CommandLineExecutor();
 			int result = cle.exec(cmdList);
@@ -63,30 +61,24 @@ public class DotNETSemTexRunner implements CTCommonModule
 				throw new ModuleException("SemTex Analyzer failed with error: " + cle.outputError(), MODULE_NAME);
 			}
 
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "SemTex Analyzer completed.");
+			logger.debug("SemTex Analyzer completed.");
 		}
 	}
 
-	private String getExecutable()
+	private String getExecutable(CommonResources resources)
 	{
-		Configuration config = Configuration.instance();
-		String cpsPath = config.getPathSettings().getPath("Composestar");
-		File exe = new File(cpsPath, "bin/SemanticExtractorConsole.exe");
-
-		if (exe.exists())
+		File exe = resources.getPathResolver().getResource("bin/SemanticExtractorConsole.exe");
+		if (exe != null)
 		{
 			return exe.getAbsolutePath();
 		}
 		else
 		{
-			Debug
-					.out(
-							Debug.MODE_INFORMATION,
-							MODULE_NAME,
-							"SemTex Analyzer not found on its expected location: "
-									+ exe
-									+ ". Semantic Analyzing will be skipped. "
-									+ "See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");
+			logger
+					.info("SemTex Analyzer not found on its expected location: "
+							+ resources.getPathResolver().getResource("bin")
+							+ ". Semantic Analyzing will be skipped. "
+							+ "See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");
 
 			return null;
 		}

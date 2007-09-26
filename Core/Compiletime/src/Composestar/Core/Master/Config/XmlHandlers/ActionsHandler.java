@@ -18,6 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Master.Config.CompilerAction;
 import Composestar.Core.Master.Config.Language;
 
+@Deprecated
 public class ActionsHandler extends DefaultHandler
 {
 	protected XMLReader parser;

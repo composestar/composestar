@@ -17,6 +17,7 @@ import java.util.Properties;
 import Composestar.Core.COMP.LangCompiler;
 import Composestar.Core.Exception.ModuleException;
 
+@Deprecated
 public class CompilerSettings implements Serializable
 {
 	private static final long serialVersionUID = 1834476176562717483L;
@@ -73,7 +74,8 @@ public class CompilerSettings implements Serializable
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("Error while creating compiler defined by class "+getProperty("implementedBy"), "Master");
+			throw new ModuleException("Error while creating compiler defined by class " + getProperty("implementedBy"),
+					"Master");
 		}
 	}
 

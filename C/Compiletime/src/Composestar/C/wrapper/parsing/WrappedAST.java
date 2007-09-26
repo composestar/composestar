@@ -34,6 +34,7 @@
 package Composestar.C.wrapper.parsing;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -207,10 +208,10 @@ public class WrappedAST
 		emitter.translationUnit(node);
 	}
 
-	public void emiteToFile(String filename) throws FileNotFoundException, RecognitionException
+	public void emiteToFile(File filename) throws FileNotFoundException, RecognitionException
 	{
 		smartIncreaseNumberInfoChannel();
-		emitter.setCurrentOutputToFile(filename);
+		emitter.setCurrentOutputToFile(filename.toString());
 		emitter.translationUnit(node);
 	}
 

@@ -24,20 +24,22 @@
 
 package Composestar.Core.Config.Xml;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.TransformerException;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
@@ -46,6 +48,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.Xml.Legacy.ConvertBuildConfig;
 import Composestar.Core.Exception.ConfigurationException;
+import Composestar.Utils.IOStream;
 
 /**
  * BuildConfig loader, loads from an XML source.
@@ -54,19 +57,73 @@ import Composestar.Core.Exception.ConfigurationException;
  */
 public class BuildConfigHandler extends DefaultBuildConfigHandler
 {
+	protected static final String CURRENT_VERSION = "2.0";
+
 	protected String version;
 
-	protected InputSource source;
+	/**
+	 * Handle required for build configuration conversion.
+	 */
+	protected InputStream source;
 
+	protected SAXParser parser;
+
+	/**
+	 * Load the build configuration from the specified file. If it's an outdated
+	 * format it will try to convert the file before parsing it.
+	 * 
+	 * @param file
+	 * @return
+	 * @throws ConfigurationException
+	 */
 	public static BuildConfig loadBuildConfig(File file) throws ConfigurationException
 	{
 		if (file == null)
 		{
 			throw new IllegalArgumentException("file can not be null");
 		}
+
+		InputStream is = getInputStream(file);
 		try
 		{
-			InputStream is = new FileInputStream(file);
+			return loadBuildConfig(is);
+		}
+		catch (OutdatedFormatException e)
+		{
+			return convertAndLoad(file, e);
+		}
+
+	}
+
+	/**
+	 * Loads the build configuration from the stream. This loading mechanism
+	 * does not support automatic conversion of the input data to the current
+	 * format.
+	 * 
+	 * @param stream
+	 * @return
+	 * @throws ConfigurationException
+	 * @throws OutdatedFormatException
+	 */
+	public static BuildConfig loadBuildConfig(InputStream stream) throws ConfigurationException,
+			OutdatedFormatException
+	{
+		BuildConfigHandler handler = new BuildConfigHandler(stream);
+		return handler.getBuildConfig();
+	}
+
+	/**
+	 * Get the inputstream, will detect if it's a gzip compressed file.
+	 * 
+	 * @param file
+	 * @return
+	 * @throws ConfigurationException
+	 */
+	protected static InputStream getInputStream(File file) throws ConfigurationException
+	{
+		try
+		{
+			InputStream is = new BufferedInputStream(new FileInputStream(file));
 			if (file.getName().endsWith(".gz"))
 			{
 				try
@@ -78,7 +135,7 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 					throw new ConfigurationException("IOException: " + e.getMessage());
 				}
 			}
-			return loadBuildConfig(is);
+			return is;
 		}
 		catch (FileNotFoundException e)
 		{
@@ -86,27 +143,84 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		}
 	}
 
-	public static BuildConfig loadBuildConfig(InputStream stream) throws ConfigurationException
+	/**
+	 * Convert the file and try loading it again.
+	 * 
+	 * @param file
+	 * @param formatEx
+	 * @return
+	 * @throws ConfigurationException
+	 */
+	protected static BuildConfig convertAndLoad(File file, OutdatedFormatException formatEx)
+			throws ConfigurationException
 	{
-		return loadBuildConfig(new InputSource(stream));
-	}
-
-	public static BuildConfig loadBuildConfig(InputSource source) throws ConfigurationException
-	{
+		logger.info("Attempting conversion of build configuration from " + formatEx.getDetectedVersion() + " to "
+				+ formatEx.getNeedVersion());
+		InputStream is = getInputStream(file);
+		IOStream iostream = new IOStream(false);
+		ConvertBuildConfig converter = ConvertBuildConfig.getInstance();
 		try
 		{
-			BuildConfig config = new BuildConfig();
-			SAXParserFactory factory = SAXParserFactory.newInstance();
-			// factory.setNamespaceAware(true);
-			SAXParser parser = factory.newSAXParser();
-			BuildConfigHandler rootHandler = new BuildConfigHandler(config, parser.getXMLReader());
-			rootHandler.source = source;
-			parser.parse(source, rootHandler);
-			return config;
+			converter.convert(is, iostream.getOutputStream(), formatEx.getDetectedVersion());
+		}
+		catch (TransformerException e)
+		{
+			throw new ConfigurationException("BuildConfig conversion exception: " + e.getMessageAndLocation());
+		}
+		try
+		{
+			return loadBuildConfig(iostream.getInputStream());
+		}
+		catch (OutdatedFormatException e)
+		{
+			throw new ConfigurationException("Unable to convert build configuration: " + file.toString());
+		}
+	}
+
+	/**
+	 * Method to be used when the build configuration is nested in an other XML
+	 * source. The normal way to load a buildconfiguration from an XML file is
+	 * by using the static loadBuildConfig methods.
+	 * 
+	 * @param inReader
+	 * @param inParent
+	 */
+	public BuildConfigHandler(XMLReader inReader, DefaultHandler inParent)
+	{
+		super(inReader, inParent);
+	}
+
+	/**
+	 * The main constructor that will parse the input source to a BuildConfig
+	 * instance. Use the getBuildConfig() method to get the build configuration.
+	 * 
+	 * @param inConfig
+	 * @param inSource
+	 * @throws ConfigurationException
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+	protected BuildConfigHandler(InputStream inSource) throws ConfigurationException, OutdatedFormatException
+	{
+		super(null, null);
+		config = new BuildConfig();
+		source = inSource;
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		try
+		{
+			parser = factory.newSAXParser();
+			reader = parser.getXMLReader();
+			parser.parse(source, this);
 		}
 		catch (ParserConfigurationException e)
 		{
 			throw new ConfigurationException("Parser Configuration Exception: " + e.getMessage());
+		}
+		catch (OutdatedFormatException e)
+		{
+			// continue throwing it.
+			throw e;
 		}
 		catch (SAXParseException e)
 		{
@@ -121,17 +235,6 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		{
 			throw new ConfigurationException("Exception reading configuration: " + e.getMessage());
 		}
-	}
-
-	public BuildConfigHandler(XMLReader inReader, DefaultHandler inParent)
-	{
-		super(inReader, inParent);
-	}
-
-	protected BuildConfigHandler(BuildConfig inConfig, XMLReader inReader)
-	{
-		super(inReader, null);
-		config = inConfig;
 	}
 
 	@Override
@@ -168,14 +271,12 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 				{
 					version = "2.0";
 				}
+				// TODO: check version
 			}
 			else if ("BuildConfiguration".equals(name))
 			{
-				logger.info("BuildConfiguration version 1 detected. Converting to version 2");
-				ConvertBuildConfig converter = new ConvertBuildConfig();
-				
-				System.exit(123);
-				
+				logger.info("BuildConfiguration version 1 detected.");
+				throw new OutdatedFormatException("1.0", CURRENT_VERSION);
 			}
 			else
 			{
@@ -212,6 +313,7 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		try
 		{
 			org.apache.log4j.BasicConfigurator.configure();
+			Logger.getRootLogger().setLevel(Level.ALL);
 			BuildConfig cfg = loadBuildConfig(new File(args[0]));
 			System.out.println("Sources:      " + cfg.getProject().getSourceFiles());
 			System.out.println("Concerns:     " + cfg.getProject().getConcernFiles());

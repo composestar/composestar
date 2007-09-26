@@ -65,6 +65,10 @@ public abstract class CpsBaseHandler extends DefaultHandler
 		reader = inReader;
 		parent = inParent;
 		charData = new StringBuffer();
+		if (parent instanceof CpsBaseHandler)
+		{
+			setDocumentLocator(((CpsBaseHandler) parent).locator);
+		}
 	}
 
 	@Override
@@ -115,8 +119,10 @@ public abstract class CpsBaseHandler extends DefaultHandler
 	public void startUnknownElement(String uri, String localName, String name, Attributes attributes)
 			throws SAXException
 	{
-		String msg = String.format("%s encountered an unknown element at %d:%d qname=%s, localName=%s, uri=%s",
-				getClass().getSimpleName(), locator.getLineNumber(), locator.getColumnNumber(), name, localName, uri);
+		String msg = String.format(
+				"%s encountered an unknown element at %d:%d qname=%s, localName=%s, uri=%s, state=%d", getClass()
+						.getSimpleName(), locator.getLineNumber(), locator.getColumnNumber(), name, localName, uri,
+				state);
 		logger.info(msg);
 	}
 

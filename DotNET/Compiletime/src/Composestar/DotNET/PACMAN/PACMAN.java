@@ -12,7 +12,6 @@ import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETType;
@@ -28,14 +27,11 @@ public class PACMAN implements CTCommonModule
 {
 	private static final String MODULE_NAME = "PACMAN";
 
-	private Configuration m_config;
-
-	private DataStore m_dataStore;
+	private DataStore dataStore;
 
 	public PACMAN()
 	{
-		m_config = Configuration.instance();
-		m_dataStore = DataStore.instance();
+		dataStore = DataStore.instance();
 	}
 
 	/**
@@ -47,9 +43,7 @@ public class PACMAN implements CTCommonModule
 	{
 		try
 		{
-			String outputDir = m_config.getPathSettings().getPath("Base");
-			File objPath = new File(outputDir, "obj");
-			File target = new File(objPath, "PartialClasses.cs");
+			File target = new File(resources.configuration().getProject().getIntermediate(), "PartialClasses.cs");
 
 			PartialClassEmitter pce = new PartialClassEmitter(target);
 			collectExpandedTypes(pce);
@@ -63,7 +57,7 @@ public class PACMAN implements CTCommonModule
 
 	private void collectExpandedTypes(PartialClassEmitter pce)
 	{
-		Iterator concernIt = m_dataStore.getAllInstancesOf(Concern.class);
+		Iterator concernIt = dataStore.getAllInstancesOf(Concern.class);
 		while (concernIt.hasNext())
 		{
 			Concern concern = (Concern) concernIt.next();

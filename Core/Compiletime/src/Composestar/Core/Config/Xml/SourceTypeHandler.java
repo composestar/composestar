@@ -24,6 +24,7 @@
 
 package Composestar.Core.Config.Xml;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -101,7 +102,7 @@ public class SourceTypeHandler extends CpsBaseHandler
 			String file = charData.toString().trim();
 			if (file.length() > 0)
 			{
-				currentSource.addFile(file);
+				currentSource.setFile(new File(file));
 				sources.add(currentSource);
 				currentSource = null;
 			}

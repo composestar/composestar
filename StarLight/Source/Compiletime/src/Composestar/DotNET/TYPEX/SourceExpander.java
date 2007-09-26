@@ -11,8 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.PathSettings;
+import Composestar.Core.Master.CommonResources;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -22,12 +21,16 @@ import composestar.dotNET.tym.entities.MethodElement;
 class SourceExpander
 {
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(TYPEX.MODULE_NAME);
-	
+
 	private File destDir;
 
-	public SourceExpander()
+	public SourceExpander(CommonResources resources)
 	{
-		destDir = createDestDir();
+		destDir = new File(resources.configuration().getProject().getIntermediate(), "Starlight/Expanded");
+		if (!destDir.exists())
+		{
+			destDir.mkdirs();
+		}
 	}
 
 	public List<File> process(Collection<ExpandedSource> sources) throws ModuleException
@@ -40,79 +43,67 @@ class SourceExpander
 				File destFile = expand(source);
 				es.add(destFile);
 			}
-			
+
 			return es;
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException(
-					"IOException: " + e.getMessage(), TYPEX.MODULE_NAME);
+			throw new ModuleException("IOException: " + e.getMessage(), TYPEX.MODULE_NAME);
 		}
 	}
-	
+
 	private File expand(ExpandedSource source) throws IOException
 	{
 		String sourceFilename = source.getFilename();
 		File destFile = getDestFile(source);
 
 		String ext = FileUtils.getExtension(sourceFilename);
-		MethodEmitter me = getMethodEmitter(ext); 
+		MethodEmitter me = getMethodEmitter(ext);
 
 		logger.debug("Expanding '" + sourceFilename + "'...");
 
 		BufferedReader reader = null;
 		BufferedWriter writer = null;
-		try {
+		try
+		{
 			reader = new BufferedReader(new FileReader(sourceFilename));
 			writer = new BufferedWriter(new FileWriter(destFile));
 			int curPos = 0;
-			
+
 			for (ExpandedType et : source.sortedTypes())
 			{
 				int skip = et.getEndPos() - curPos;
 				curPos += skip;
-				
+
 				FileUtils.copy(reader, writer, skip);
-				
+
 				for (MethodElement method : et.getExtraMethods().getMethodList())
 					me.emit(method, writer);
 			}
-			
+
 			FileUtils.copy(reader, writer);
 
 			return destFile;
 		}
-		finally {
+		finally
+		{
 			FileUtils.close(reader);
 			FileUtils.close(writer);
 		}
 	}
-	
-	private File createDestDir()
-	{
-		PathSettings ps = Configuration.instance().getPathSettings();
-		File starlightFolder = new File(ps.getPath("Base"), "Starlight");
-		File destDir = new File(starlightFolder, "Expanded");
-		destDir.mkdirs();
-		
-		return destDir;
-	}
 
 	private File getDestFile(ExpandedSource source)
 	{
-		File input = new File(source.getFilename());		
+		File input = new File(source.getFilename());
 		return new File(destDir, input.getName());
 	}
 
 	private MethodEmitter getMethodEmitter(String ext)
 	{
-		if ("java".equals(ext) || "jsl".equals(ext))
-			return new JSharpMethodEmitter();
-		
-		if ("cs".equals(ext))
-			return new CSharpMethodEmitter();
+		if ("java".equals(ext) || "jsl".equals(ext)) return new JSharpMethodEmitter();
 
-		throw new IllegalArgumentException(
-				"Unknown extension '" + ext + "'");
+		if ("cs".equals(ext)) return new CSharpMethodEmitter();
+
+		throw new IllegalArgumentException("Unknown extension '" + ext + "'");
 	}
 }

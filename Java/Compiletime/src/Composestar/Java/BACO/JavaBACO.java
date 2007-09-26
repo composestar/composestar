@@ -1,104 +1,101 @@
 package Composestar.Java.BACO;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 import Composestar.Core.BACO.BACO;
+import Composestar.Core.CONE.RepositorySerializer;
+import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Dependency;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
+import Composestar.Java.WEAVER.JavaWeaver;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class JavaBACO extends BACO
 {
-	protected void addRepository(Set filesToCopy)
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
+	protected void addRepository(Set<File> filesToCopy)
 	{
-		Configuration config = Configuration.instance();
-
 		// add repository.dat
-		String projectPath = config.getPathSettings().getPath("Base");
-		String repository = projectPath + "repository.dat";
-
-		Debug.out(Debug.MODE_DEBUG, "BACO", "Adding repository: '" + repository + "'");
+		File repository = (File) resources.get(RepositorySerializer.REPOSITORY_FILE_KEY);
+		logger.debug("Adding repository: '" + repository + "'");
 		filesToCopy.add(repository);
 	}
 
-	protected void addBuiltLibraries(Set filesToCopy)
+	protected void addBuiltLibraries(Set<File> filesToCopy)
 	{
-		List weavedClasses = (List) DataStore.instance().getObjectByID("WeavedClasses");
-		for (Object weavedClass : weavedClasses)
+		List<File> weavedClasses = (List<File>) resources.get(JavaWeaver.WOVEN_CLASSES);// DataStore.instance().getObjectByID("WeavedClasses");
+		for (File weavedClass : weavedClasses)
 		{
-			String clazz = (String) weavedClass;
-
-			Debug.out(Debug.MODE_DEBUG, "BACO", "Adding weaved class: '" + clazz + "'");
-			filesToCopy.add(FileUtils.unquote(clazz));
+			logger.debug("Adding weaved class: '" + weavedClass + "'");
+			filesToCopy.add(weavedClass);
 		}
 	}
 
-	protected void addRequiredFiles(Set filesToCopy)
+	protected void addRequiredFiles(Set<File> filesToCopy)
 	{
 	// Required files don't need to be copied, since it only contains jar-files.
 	// Therefore they still have to be added to the classpath.
 	// So this is a redundant operation.
 	}
 
-	protected void copyFile(String outputPath, String source, boolean fatal) throws ModuleException
+	protected void copyFile(File outputDir, File source, boolean fatal) throws ModuleException
 	{
-		String dest;
-		Configuration config = Configuration.instance();
-		String objPath = config.getPathSettings().getPath("Base") + "obj/";
-		String weavedPath = objPath + "weaver/";
-		if (source.startsWith(weavedPath))
+		File dest;
+		File weaverPath = new File(config.getProject().getIntermediate(), JavaWeaver.WEAVE_PATH);
+		if (source.getAbsolutePath().startsWith(weaverPath.getAbsolutePath()))
 		{
-			dest = outputPath + source.substring(weavedPath.length());
-			if (!FileUtils.createFullPath(FileUtils.getDirectoryPart(dest)))
-			{
-				throw new ModuleException("Unable to create destination directory: '"
-						+ FileUtils.getDirectoryPart(dest) + "'", "BACO");
-			}
-		}
-		else if (source.startsWith(objPath))
-		{
-			// FIXME: temp special case added for embbedded sources
-			dest = outputPath + source.substring(objPath.length());
-			if (!FileUtils.createFullPath(FileUtils.getDirectoryPart(dest)))
-			{
-				throw new ModuleException("Unable to create destination directory: '"
-						+ FileUtils.getDirectoryPart(dest) + "'", "BACO");
-			}
+			dest = FileUtils.relocateFile(weaverPath, source, outputDir);
 		}
 		else
 		{
-			dest = outputPath + FileUtils.getFilenamePart(source);
+			dest = new File(outputDir, source.getName());
+		}
+
+		if (!dest.getParentFile().exists() && !dest.getParentFile().mkdirs())
+		{
+			throw new ModuleException("Unable to create destination directory: '" + dest.getParent() + "'", "BACO");
 		}
 
 		try
 		{
-			Debug.out(Debug.MODE_DEBUG, "BACO", "Copying '" + source + "' to '" + dest + "'");
+			logger.debug("Copying '" + source + "' to '" + dest + "'");
 			FileUtils.copyFile(dest, source);
 		}
 		catch (IOException e)
 		{
 			String msg = "Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage();
-			if (fatal) 
-			{	
+			if (fatal)
+			{
 				throw new ModuleException(msg, MODULE_NAME);
 			}
-			else 
+			else
 			{
-				Debug.out(Debug.MODE_WARNING, MODULE_NAME, msg);
+				logger.warn(msg);
 			}
 		}
 	}
 
-	protected boolean isNeededDependency(Dependency dependency)
+	@Override
+	protected boolean isNeededDependency(File dependency)
 	{
 		// TODO: dependencies that are already in the required files list are
 		// not needed.
 		return true;
+	}
+
+	@Override
+	protected File resolveCustomFilter(CustomFilter filter)
+	{
+		File file = new File(filter.getLibrary());
+		if (!file.isAbsolute())
+		{
+			file = new File(config.getProject().getBase(), file.toString());
+		}
+		return file;
 	}
 
 }

@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class Platform implements Serializable
 {
 	private static final long serialVersionUID = 6326989729059538537L;

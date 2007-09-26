@@ -41,11 +41,22 @@ import javax.xml.transform.stream.StreamSource;
  */
 public class ConvertBuildConfig
 {
+	protected static ConvertBuildConfig instance;
+
 	protected TransformerFactory factory;
 
 	protected Transformer xform;
 
-	public ConvertBuildConfig()
+	public static ConvertBuildConfig getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new ConvertBuildConfig();
+		}
+		return instance;
+	}
+
+	protected ConvertBuildConfig()
 	{}
 
 	protected void getTransformer() throws TransformerConfigurationException
@@ -62,7 +73,15 @@ public class ConvertBuildConfig
 		xform = factory.newTransformer(source);
 	}
 
-	public void convert(InputStream is, OutputStream os) throws TransformerException
+	/**
+	 * Convert the source input to the latest version of the Build Configuration
+	 * 
+	 * @param is
+	 * @param os
+	 * @param sourceVersion
+	 * @throws TransformerException
+	 */
+	public void convert(InputStream is, OutputStream os, String sourceVersion) throws TransformerException
 	{
 		getTransformer();
 		Source source = new StreamSource(is);

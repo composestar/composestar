@@ -19,6 +19,7 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Projects;
 import Composestar.Utils.Debug;
 
+@Deprecated
 public class ProjectsHandler extends DefaultHandler implements ContentHandler
 {
 	protected XMLReader parser;
@@ -48,10 +49,9 @@ public class ProjectsHandler extends DefaultHandler implements ContentHandler
 				}
 				catch (NumberFormatException e)
 				{
-					Debug.out(Debug.MODE_WARNING, "MASTER", 
-							"Invalid run debug level '" + runDebugLevel + "'. " +
-							"Expecting a number between 0 and 4. Reverting to default level 1.");
-					
+					Debug.out(Debug.MODE_WARNING, "MASTER", "Invalid run debug level '" + runDebugLevel + "'. "
+							+ "Expecting a number between 0 and 4. Reverting to default level 1.");
+
 					projects.setRunDebugLevel(1);
 				}
 			}
@@ -66,10 +66,9 @@ public class ProjectsHandler extends DefaultHandler implements ContentHandler
 				}
 				catch (NumberFormatException e)
 				{
-					Debug.out(Debug.MODE_WARNING, "MASTER", 
-							"Invalid build debug level '" + runDebugLevel + "'. " +
-							"Expecting a number between 0 and 4. Reverting to default level 1.");
-					
+					Debug.out(Debug.MODE_WARNING, "MASTER", "Invalid build debug level '" + runDebugLevel + "'. "
+							+ "Expecting a number between 0 and 4. Reverting to default level 1.");
+
 					projects.setRunDebugLevel(1);
 				}
 			}

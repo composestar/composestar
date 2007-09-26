@@ -1,8 +1,10 @@
 package Composestar.Core.Config;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,7 +52,7 @@ public class CmdLineArgument implements Serializable
 	 * @param args
 	 * @param p
 	 */
-	public void addArgs(List<String> tolist, Project proj, Properties prop)
+	public void addArgs(List<String> tolist, Project proj, Set<File> sources, Properties prop)
 	{
 		if (value == null)
 		{

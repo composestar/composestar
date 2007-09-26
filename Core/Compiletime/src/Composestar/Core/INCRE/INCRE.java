@@ -1,7 +1,9 @@
 package Composestar.Core.INCRE;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,13 +13,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Config.Source;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.Config.ConfigManager;
@@ -26,19 +29,12 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.CompileHistory;
-import Composestar.Core.Master.Config.ConcernSource;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
-import Composestar.Core.Master.Config.PathSettings;
-import Composestar.Core.Master.Config.Source;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.TYM.TypeLocations;
 import Composestar.Utils.FileUtils;
-import Composestar.Utils.StringConverter;
 import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -61,7 +57,9 @@ public final class INCRE
 	 */
 	private boolean enabled;
 
-	private Configuration config;
+	private CommonResources resources;
+
+	private BuildConfig config;
 
 	private DataStore currentRepository;
 
@@ -107,9 +105,6 @@ public final class INCRE
 	private INCRE()
 	{
 		moduleInfo = ModuleInfoManager.get(INCRE.class);
-		config = Configuration.instance();
-		reporter = new INCREReporter();
-		reporter.open();
 		filesCheckedOnTimeStamp = new HashMap<String, Boolean>();
 		filesCheckedOnProjectConfig = new HashMap<String, Boolean>();
 		dsObjectsOrdered = new HashMap<String, List<RepositoryEntity>>();
@@ -129,12 +124,18 @@ public final class INCRE
 		return instance;
 	}
 
-	public void init() throws ModuleException
+	public void init(CommonResources inRsources) throws ModuleException
 	{
+		resources = inRsources;
+		reporter = new INCREReporter(resources);
+		reporter.open();
+		config = resources.configuration();
 		// check whether incremental compilation is enabled
-		enabled = moduleInfo.getBooleanSetting("enabled");
 
-		historyFile = new File(config.getPathSettings().getPath("Base"), CompileHistory.DEFAULT_FILENAME);
+		// TODO Incre is disabled by default, it does not work properly
+		enabled = moduleInfo.getBooleanSetting("enabled") && false;
+
+		historyFile = new File(config.getProject().getIntermediate(), CompileHistory.DEFAULT_FILENAME);
 
 		// non-incremental compilation so clean history
 		if (!enabled)
@@ -146,37 +147,40 @@ public final class INCRE
 		INCRETimer increinit = getReporter().openProcess(MODULE_NAME, "", INCRETimer.TYPE_ALL);
 
 		// parse the XML configuration file containing the modules
-		String configFile = getConfigFile();
-		loadConfiguration(configFile);
+		loadConfiguration(getConfigFile());
 
 		// get the filenames of all sources
 		List sourceFilenames = getSourceFilenames();
 		projectSources = StringUtils.join(sourceFilenames, ",");
 
-		enabled = historyFile.exists();
-		if (enabled)
-		{
-			// load data of previous compilation run (history)
-			// time the loading process
-			INCRETimer loadhistory = this.getReporter().openProcess(MODULE_NAME, "Loading history",
-					INCRETimer.TYPE_OVERHEAD);
-			try
-			{
-				history = CompileHistory.load(historyFile);
-				configurations.historyconfig = history.getConfiguration();
-			}
-			catch (IOException e)
-			{
-				history = null;
-				logger.warn("Exception while loading compile history: " + e.getMessage(), e);
-			}
-			enabled = history != null;
-			if (!enabled)
-			{
-				logger.warn("Failed to load compile history, incremental compilation disabled.");
-			}
-			loadhistory.stop();
-		}
+		// TODO reneable
+		// enabled = historyFile.exists();
+		// if (enabled)
+		// {
+		// // load data of previous compilation run (history)
+		// // time the loading process
+		// INCRETimer loadhistory = this.getReporter().openProcess(MODULE_NAME,
+		// "Loading history",
+		// INCRETimer.TYPE_OVERHEAD);
+		// try
+		// {
+		// history = CompileHistory.load(historyFile);
+		// configurations.historyconfig = history.getConfiguration();
+		// }
+		// catch (IOException e)
+		// {
+		// history = null;
+		// logger.warn("Exception while loading compile history: " +
+		// e.getMessage(), e);
+		// }
+		// enabled = history != null;
+		// if (!enabled)
+		// {
+		// logger.warn("Failed to load compile history, incremental compilation
+		// disabled.");
+		// }
+		// loadhistory.stop();
+		// }
 
 		if (enabled)
 		{
@@ -203,38 +207,44 @@ public final class INCRE
 		}
 	}
 
-	private String getConfigFile() throws ModuleException
+	private InputStream getConfigFile() throws ModuleException
 	{
-		PathSettings ps = config.getPathSettings();
 		String filename = moduleInfo.getStringSetting("config");
-
-		// try in project directory
-		String projectBase = ps.getPath("Base");
-		File file = new File(projectBase, filename);
-		if (file.exists())
+		try
 		{
-			return file.getAbsolutePath();
+
+			File file = new File(filename);
+			if (file.isAbsolute())
+			{
+				return new FileInputStream(file);
+			}
+			file = new File(config.getProject().getBase(), filename);
+			if (file.exists())
+			{
+				return new FileInputStream(file);
+			}
+			file = resources.getPathResolver().getResource(filename);
+			if (file != null)
+			{
+				return new FileInputStream(file);
+			}
+		}
+		catch (FileNotFoundException e)
+		{
+			throw new ModuleException("No configuration file found with name '" + filename + "'", MODULE_NAME);
 		}
 
-		// try in Compose* installation directory
-		String cps = ps.getPath("Composestar");
-		file = new File(cps, filename);
-		if (file.exists())
+		// get internal file
+		InputStream is = resources.getPathResolver().getInternalResourceStream("/INCREconfig.xml");
+		if (is != null)
 		{
-			return file.getAbsolutePath();
+			return is;
 		}
-
-		// try as absolute path
-		file = new File(filename);
-		if (file.exists())
-		{
-			return file.getAbsolutePath();
-		}
-
-		throw new ModuleException("No configuration file found with name '" + filename + "'", MODULE_NAME);
+		throw new ModuleException("No configuration file found with name '" + filename
+				+ "' and failed loading the internal configuration.", MODULE_NAME);
 	}
 
-	private void loadConfiguration(String configfile) throws ModuleException
+	private void loadConfiguration(InputStream configfile) throws ModuleException
 	{
 		INCRETimer increparse = this.getReporter().openProcess(MODULE_NAME, "Parsing configuration file",
 				INCRETimer.TYPE_OVERHEAD);
@@ -253,14 +263,13 @@ public final class INCRE
 		}
 	}
 
-	private List<String> getSourceFilenames()
+	private List<File> getSourceFilenames()
 	{
-		List<String> result = new ArrayList<String>();
+		List<File> result = new ArrayList<File>();
 
-		for (Object o : config.getProjects().getSources())
+		for (Source s : config.getProject().getSources())
 		{
-			Source s = (Source) o;
-			result.add(s.getFileName());
+			result.add(s.getFile());
 		}
 
 		return result;
@@ -497,59 +506,64 @@ public final class INCRE
 	 */
 	public Object findHistoryObject(Object obj)
 	{
-		try
-		{
-			if (obj.getClass().equals(String.class))
-			{
-				// special case, return string
-				return obj;
-			}
-
-			if (obj instanceof Source)
-			{
-				// special case, look in history configurations
-				Source s = (Source) obj;
-				List<Source> historysources = configurations.historyconfig.getProjects().getSources();
-				for (Source historysource : historysources)
-				{
-					if (s.getFileName().equals(historysource.getFileName()))
-					{
-						return historysource;
-					}
-				}
-			}
-
-			Iterator objIter = history.getDataStore().getAllInstancesOf(obj.getClass());
-			while (objIter.hasNext())
-			{
-				Object nextobject = objIter.next();
-				if (obj instanceof DeclaredRepositoryEntity)
-				{
-					DeclaredRepositoryEntity dre = (DeclaredRepositoryEntity) nextobject;
-					if (dre.getQualifiedName().equals(((DeclaredRepositoryEntity) obj).getQualifiedName()))
-					{
-						return dre;
-					}
-				}
-				else if (obj instanceof PredicateSelector)
-				{
-					PredicateSelector ps = (PredicateSelector) nextobject;
-					if (ps.getUniqueID().equals(((PredicateSelector) obj).getUniqueID()))
-					{
-						return ps;
-					}
-				}
-			}
-
-			return null;
-		}
-		catch (Exception ex)
-		{
-			// too bad, but not fatal
-			logger.debug("Cannot find history object for object " + obj.getClass().getName() + " due to "
-					+ ex.toString());
-			return null;
-		}
+		return null; // disabled for now
+		// try
+		// {
+		// if (obj.getClass().equals(String.class))
+		// {
+		// // special case, return string
+		// return obj;
+		// }
+		//
+		// if (obj instanceof Source)
+		// {
+		// // special case, look in history configurations
+		// Source s = (Source) obj;
+		// List<Source> historysources =
+		// configurations.historyconfig.getProject().getSources();
+		// for (Source historysource : historysources)
+		// {
+		// if (s.getFileName().equals(historysource.getFileName()))
+		// {
+		// return historysource;
+		// }
+		// }
+		// }
+		//
+		// Iterator objIter =
+		// history.getDataStore().getAllInstancesOf(obj.getClass());
+		// while (objIter.hasNext())
+		// {
+		// Object nextobject = objIter.next();
+		// if (obj instanceof DeclaredRepositoryEntity)
+		// {
+		// DeclaredRepositoryEntity dre = (DeclaredRepositoryEntity) nextobject;
+		// if (dre.getQualifiedName().equals(((DeclaredRepositoryEntity)
+		// obj).getQualifiedName()))
+		// {
+		// return dre;
+		// }
+		// }
+		// else if (obj instanceof PredicateSelector)
+		// {
+		// PredicateSelector ps = (PredicateSelector) nextobject;
+		// if (ps.getUniqueID().equals(((PredicateSelector) obj).getUniqueID()))
+		// {
+		// return ps;
+		// }
+		// }
+		// }
+		//
+		// return null;
+		// }
+		// catch (Exception ex)
+		// {
+		// // too bad, but not fatal
+		// logger.debug("Cannot find history object for object " +
+		// obj.getClass().getName() + " due to "
+		// + ex.toString());
+		// return null;
+		// }
 	}
 
 	public boolean isFileModified(String filename)
@@ -604,97 +618,107 @@ public final class INCRE
 	 */
 	public boolean isFileAdded(String filename, FileDependency fdep) throws ModuleException
 	{
-		// checked before
-		if (filesCheckedOnProjectConfig.containsKey(filename))
-		{
-			return filesCheckedOnProjectConfig.get(filename);
-		}
-
-		boolean isAdded = true;
-		String fixedFile = FileUtils.normalizeFilename(filename).toLowerCase();
-		StringBuffer searchBuffer = new StringBuffer("");
-
-		// As an optimalization:
-		// do not look in all configurations but only in the interesting part(s)
-		// thus set searchstring dependent of type of file
-		if (fixedFile.endsWith(".cs") || fixedFile.endsWith(".jsl") || fixedFile.endsWith(".vb")
-				|| fixedFile.endsWith(".java"))
-		{
-			// TODO: use configurable SupportedLanguages (xml)
-			searchBuffer.append(this.projectSources);// look in project
-			// sources
-		}
-		else if (fixedFile.endsWith(".cps"))
-		{
-			// searchStr = prop.getProperty("ConcernSources");// look in concern
-			// sources
-			List conList = configurations.historyconfig.getProjects().getConcernSources();
-			for (Object aConList : conList)
-			{
-				ConcernSource cs = (ConcernSource) aConList;
-				searchBuffer.append(cs.getFileName());
-			}
-		}
-		else if (fixedFile.endsWith(".dll") || fixedFile.endsWith(".exe"))
-		{
-			// TODO: use SupportedLanguages and move/replace .NET specific code
-			// special case, never added to project configurations
-			// TODO: add to project configurations
-			if (fixedFile.indexOf("mscorlib.dll") >= 0)
-			{
-				return false;
-			}
-
-			if (fixedFile.indexOf("/gac/") > 0)
-			{
-				// Global Assembly Cache
-				fixedFile = fixedFile.substring(fixedFile.lastIndexOf('/') + 1);
-			}
-
-			// look in configurations "Dependencies" and "Assemblies"
-			// TODO: possible naming conflict when JAVA platform is there
-			// searchStr = prop.getProperty("Dependencies");
-			List depList = configurations.historyconfig.getProjects().getDependencies();
-			for (Object aDepList : depList)
-			{
-				Dependency d = (Dependency) aDepList;
-				searchBuffer.append(d.getFileName());
-			}
-
-			// searchStr += prop.getProperty("Assemblies");
-			List dummies = configurations.historyconfig.getProjects().getCompiledDummies();
-			String[] dummyPaths = (String[]) dummies.toArray(new String[dummies.size()]);
-			searchBuffer.append(StringConverter.stringListToString(dummyPaths));
-
-		}
-		else
-		{
-			// file could be referenced by a ConfigNode of the FileDependency
-			Path p = fdep.getPath();
-			if (!p.isEmpty())
-			{
-				Node n = p.getFirstNode();
-				if (n instanceof ConfigNode)
-				{
-					searchBuffer.append(configurations.getHistory().getProperty(n.getReference()));
-				}
-			}
-		}
-
-		// file in old project configurations?
-		String searchStr = FileUtils.normalizeFilename(searchBuffer.toString()).toLowerCase();
-		if (searchStr.indexOf(fixedFile) != -1)
-		{
-			isAdded = false; // file not added to project
-		}
-
-		if (isAdded)
-		{
-			logger.debug("File " + fixedFile + " added to project since last compilation run");
-		}
-
-		filesCheckedOnProjectConfig.put(filename, isAdded);
-		return isAdded;
+		return false; // partially broken because it's system depended
+		// // checked before
+		// if (filesCheckedOnProjectConfig.containsKey(filename))
+		// {
+		// return filesCheckedOnProjectConfig.get(filename);
+		// }
+		//
+		// boolean isAdded = true;
+		// String fixedFile =
+		// FileUtils.normalizeFilename(filename).toLowerCase();
+		// StringBuffer searchBuffer = new StringBuffer("");
+		//
+		// // As an optimalization:
+		// // do not look in all configurations but only in the interesting
+		// part(s)
+		// // thus set searchstring dependent of type of file
+		// if (fixedFile.endsWith(".cs") || fixedFile.endsWith(".jsl") ||
+		// fixedFile.endsWith(".vb")
+		// || fixedFile.endsWith(".java"))
+		// {
+		// // TODO: use configurable SupportedLanguages (xml)
+		// searchBuffer.append(this.projectSources);// look in project
+		// // sources
+		// }
+		// else if (fixedFile.endsWith(".cps"))
+		// {
+		// // searchStr = prop.getProperty("ConcernSources");// look in concern
+		// // sources
+		// List conList =
+		// configurations.historyconfig.getProjects().getConcernSources();
+		// for (Object aConList : conList)
+		// {
+		// ConcernSource cs = (ConcernSource) aConList;
+		// searchBuffer.append(cs.getFileName());
+		// }
+		// }
+		// else if (fixedFile.endsWith(".dll") || fixedFile.endsWith(".exe"))
+		// {
+		// // TODO: use SupportedLanguages and move/replace .NET specific code
+		// // special case, never added to project configurations
+		// // TODO: add to project configurations
+		// if (fixedFile.indexOf("mscorlib.dll") >= 0)
+		// {
+		// return false;
+		// }
+		//
+		// if (fixedFile.indexOf("/gac/") > 0)
+		// {
+		// // Global Assembly Cache
+		// fixedFile = fixedFile.substring(fixedFile.lastIndexOf('/') + 1);
+		// }
+		//
+		// // look in configurations "Dependencies" and "Assemblies"
+		// // TODO: possible naming conflict when JAVA platform is there
+		// // searchStr = prop.getProperty("Dependencies");
+		// List depList =
+		// configurations.historyconfig.getProjects().getDependencies();
+		// for (Object aDepList : depList)
+		// {
+		// Dependency d = (Dependency) aDepList;
+		// searchBuffer.append(d.getFileName());
+		// }
+		//
+		// // searchStr += prop.getProperty("Assemblies");
+		// List dummies =
+		// configurations.historyconfig.getProjects().getCompiledDummies();
+		// String[] dummyPaths = (String[]) dummies.toArray(new
+		// String[dummies.size()]);
+		// searchBuffer.append(StringConverter.stringListToString(dummyPaths));
+		//
+		// }
+		// else
+		// {
+		// // file could be referenced by a ConfigNode of the FileDependency
+		// Path p = fdep.getPath();
+		// if (!p.isEmpty())
+		// {
+		// Node n = p.getFirstNode();
+		// if (n instanceof ConfigNode)
+		// {
+		// searchBuffer.append(configurations.getHistory().getProperty(n.getReference()));
+		// }
+		// }
+		// }
+		//
+		// // file in old project configurations?
+		// String searchStr =
+		// FileUtils.normalizeFilename(searchBuffer.toString()).toLowerCase();
+		// if (searchStr.indexOf(fixedFile) != -1)
+		// {
+		// isAdded = false; // file not added to project
+		// }
+		//
+		// if (isAdded)
+		// {
+		// logger.debug("File " + fixedFile + " added to project since last
+		// compilation run");
+		// }
+		//
+		// filesCheckedOnProjectConfig.put(filename, isAdded);
+		// return isAdded;
 	}
 
 	/**

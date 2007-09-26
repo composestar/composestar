@@ -10,6 +10,7 @@
 package Composestar.Core.CKRET;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,6 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 
 public class HTMLReporter implements Reporter
 {
@@ -28,11 +28,14 @@ public class HTMLReporter implements Reporter
 
 	private String cssFile;
 
-	public HTMLReporter(String path, String incssFile, CommonResources resources) throws Exception
+	private CommonResources resources;
+
+	public HTMLReporter(CommonResources resc, File path, String incssFile) throws Exception
 	{
 		writer = new BufferedWriter(new FileWriter(path));
 		buffer = new StringBuffer("");
 		cssFile = incssFile;
+		resources = resc;
 	}
 
 	public void openConcern(Concern concern)
@@ -149,7 +152,7 @@ public class HTMLReporter implements Reporter
 
 		buffer.append("<h3>").append((new Date()).toString());
 		buffer.append("<BR>");
-		buffer.append("Platform: ").append(Configuration.instance().getPlatformName());
+		buffer.append("Platform: ").append(resources.configuration().getProject().getPlatformId());
 		buffer.append("<BR>");
 		buffer.append("Runmode: ").append(CKRET.MODES[CKRET.getMode()]);
 		buffer.append("</h3>\n");

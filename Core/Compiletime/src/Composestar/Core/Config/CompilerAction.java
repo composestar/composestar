@@ -24,10 +24,12 @@
 
 package Composestar.Core.Config;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * A compiler action.
@@ -88,11 +90,19 @@ public class CompilerAction implements Serializable
 		args.addArgument(arg);
 	}
 
-	public String[] getCmdLine(Project proj, Properties prop)
+	/**
+	 * Return the commandline for the given rpoject and source files.
+	 * 
+	 * @param proj
+	 * @param source
+	 * @param prop
+	 * @return
+	 */
+	public String[] getCmdLine(Project proj, Set<File> sources, Properties prop)
 	{
 		List<String> result = new ArrayList<String>();
 		result.add(executable);
-		args.addArgs(result, proj, prop);
+		args.addArgs(result, proj, sources, prop);
 		String[] argsArray = result.toArray(new String[result.size()]);
 		return argsArray;
 	}

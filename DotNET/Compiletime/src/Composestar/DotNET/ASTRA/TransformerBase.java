@@ -2,6 +2,7 @@ package Composestar.DotNET.ASTRA;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -46,7 +47,7 @@ abstract class TransformerBase
 	 * 
 	 * @param fileName
 	 */
-	protected void openOut(String fileName) throws ModifierException
+	protected void openOut(File fileName) throws ModifierException
 	{
 		try
 		{

@@ -28,6 +28,10 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import Composestar.Core.COMP.LangCompiler;
+import Composestar.Core.DUMMER.DummyManager;
+import Composestar.Core.Exception.ModuleException;
+
 /**
  * @author Michiel Hendriks
  */
@@ -39,6 +43,8 @@ public class SourceCompiler implements Serializable
 	 * The class that manages the compilation stuff
 	 */
 	protected String classname;
+
+	protected transient LangCompiler compiler;
 
 	protected Map<String, CompilerAction> actions;
 
@@ -73,6 +79,30 @@ public class SourceCompiler implements Serializable
 			throw new IllegalArgumentException("Action has an invalid name");
 		}
 		actions.put(name, action);
+	}
+	
+	public CompilerAction getAction(String name)
+	{
+		return actions.get(name);
+	}
+
+	public LangCompiler getCompiler() throws ModuleException
+	{
+		if (compiler == null)
+		{
+			try
+			{
+				Class<?> emittedClass = Class.forName(classname);
+				compiler = (LangCompiler) emittedClass.newInstance();
+				compiler.setCompilerConfig(this);
+			}
+			catch (Exception e)
+			{
+				throw new ModuleException("Error while instantiating LangCompiler: " + classname,
+						DummyManager.MODULE_NAME);
+			}
+		}
+		return compiler;
 	}
 
 }

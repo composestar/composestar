@@ -196,6 +196,11 @@
 			</xsd:element>
 
 
+			<xsd:element name="rcfile" type="RCFile">
+				<xsd:annotation>
+					<xsd:documentation>See the RCFile type documentation for more information.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:choice>
 	</xsd:group>
 
@@ -203,35 +208,84 @@
 	<xsd:group name="CmdLineArgs">
 		<xsd:choice>
 			<xsd:group ref="SimpleCmdLineArgs"></xsd:group>
-			<xsd:element name="sources">
+			<xsd:element name="sources" type="CmdLineArgList">
 				<xsd:annotation>
 					<xsd:documentation>
 						A for-each source file commandline argument. For each source file a commandline argument will be
 						added. This type will automatically register the argument ${SOURCE} with the current source file
-						that is being processed.
+						that is being processed. When it does not contain any arguments it will simply add an entry for
+						every source file. This element performs a deep merge, meaing that when merge=true all argument
+						lists of all sources will be merged into a single argument.
 					</xsd:documentation>
 				</xsd:annotation>
-				<xsd:complexType>
 
-					<xsd:sequence>
-						<xsd:group ref="SimpleCmdLineArgs" maxOccurs="unbounded" minOccurs="1"></xsd:group>
-					</xsd:sequence>
-				</xsd:complexType>
 			</xsd:element>
-			<xsd:element name="deps">
+			<xsd:element name="deps" type="CmdLineArgList">
 				<xsd:annotation>
 					<xsd:documentation>
 						Similar to the sources list, but for the project dependencies. It will register the argument
-						${DEP} for the current dependency.
+						${DEP} for the current dependency. When it does not contain any arguments it will simply add an
+						entry for every dependency file. This element performs a deep merge, meaing that when merge=true
+						all argument lists of all dependencies will be merged into a single argument.
 					</xsd:documentation>
 				</xsd:annotation>
-				<xsd:complexType>
-					<xsd:sequence>
 
-						<xsd:group ref="SimpleCmdLineArgs" maxOccurs="unbounded" minOccurs="1"></xsd:group>
-					</xsd:sequence>
-				</xsd:complexType>
 			</xsd:element>
+
 		</xsd:choice>
 	</xsd:group>
+
+	<xsd:complexType name="CmdLineArgList">
+		<xsd:annotation>
+			<xsd:documentation>
+				A collection of commandline arguments. It accepts zero or more arg elements. If no arg elements are used
+				the default list generation will be performed. The default list generation is depended on the list type.
+				For example in case of the sources list it will simply produce a list of source files each as a single
+				argument.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+
+			<xsd:group ref="SimpleCmdLineArgs" maxOccurs="unbounded" minOccurs="0"></xsd:group>
+		</xsd:sequence>
+		<xsd:attribute name="merge" type="xsd:boolean" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					If true merge all arguments to a single argument. Uses the value of delimiter as delimiter.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="delimiter" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					The delimiter to use when merging the arguments to a single argument
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="RCFile">
+		<xsd:annotation>
+			<xsd:documentation>
+				Collects child arguments and saves them to a temporary file which will be returned as a commandline
+				argument. The prefix and suffex can be used to append strings to the resulting file for. For example a
+				lot of tools required the prefix @ to identify a file reference that contains a list of additional
+				arguments. The temporary file will be delected when the VM shuts down. Each argument is saved as a
+				single line int he created file.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:group ref="CmdLineArgs" maxOccurs="unbounded" minOccurs="1"></xsd:group>
+		</xsd:sequence>
+		<xsd:attribute name="prefix" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="suffix" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="merge" type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					If true merge the arguments to a single line using delimiter as deimiter.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="delimiter" type="xsd:string"></xsd:attribute>
+	</xsd:complexType>
 </xsd:schema>

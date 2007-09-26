@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import Composestar.Core.Master.PathResolver;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -162,12 +163,13 @@ public class Platform implements Serializable
 	}
 
 	/**
-	 * Return a list of fully resolved source files for this project
+	 * Return a list of resources files.
 	 * 
 	 * @return
 	 */
-	public Set<File> getResourceFiles()
+	public Set<File> getResourceFiles(PathResolver resolver)
 	{
+		// TODO: add resolving
 		if (resourceFiles == null)
 		{
 			resourceFiles = new HashSet<File>();
@@ -175,7 +177,8 @@ public class Platform implements Serializable
 			{
 				for (File file : col.getFiles())
 				{
-					if (!file.exists())
+					File resfile = resolver.getResource(file);
+					if (resfile == null)
 					{
 						logger.warn("Resource file does not exist: " + file.toString());
 					}
@@ -188,5 +191,4 @@ public class Platform implements Serializable
 		}
 		return Collections.unmodifiableSet(resourceFiles);
 	}
-
 }

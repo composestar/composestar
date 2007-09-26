@@ -11,6 +11,7 @@ package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
 
+@Deprecated
 public class TypeSource implements Serializable
 {
 	private static final long serialVersionUID = 3478303188238617896L;

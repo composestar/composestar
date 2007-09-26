@@ -11,6 +11,7 @@ package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
 
+@Deprecated
 public class Dependency implements Serializable
 {
 	private static final long serialVersionUID = -710749427319025140L;

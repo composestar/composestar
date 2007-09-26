@@ -1,8 +1,12 @@
 package Composestar.Core.Config;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+
+import Composestar.Utils.StringUtils;
 
 /**
  * A list of arguments
@@ -17,6 +21,16 @@ public class CmdLineArgumentList extends CmdLineArgument
 	 * The list of arguments
 	 */
 	protected List<CmdLineArgument> args;
+
+	/**
+	 * If true the list will be merged to a single argument
+	 */
+	protected boolean merge;
+
+	/**
+	 * The delimiter string to use during merging.
+	 */
+	protected String delimiter = "";
 
 	public CmdLineArgumentList()
 	{
@@ -33,12 +47,52 @@ public class CmdLineArgumentList extends CmdLineArgument
 		args.add(arg);
 	}
 
-	@Override
-	public void addArgs(List<String> tolist, Project proj, Properties prop)
+	public void setMerge(boolean inMerge)
 	{
+		merge = inMerge;
+	}
+
+	public boolean getMerge()
+	{
+		return merge;
+	}
+
+	public void setDelimiter(String dim)
+	{
+		if (dim == null)
+		{
+			delimiter = "";
+		}
+		else
+		{
+			delimiter = dim;
+		}
+	}
+
+	public String getDlimiter()
+	{
+		return delimiter;
+	}
+
+	@Override
+	public void addArgs(List<String> tolist, Project proj, Set<File> sources, Properties prop)
+	{
+		List<String> argList;
+		if (merge)
+		{
+			argList = new ArrayList<String>();
+		}
+		else
+		{
+			argList = tolist;
+		}
 		for (CmdLineArgument arg : args)
 		{
-			arg.addArgs(tolist, proj, prop);
+			arg.addArgs(argList, proj, sources, prop);
+		}
+		if (merge)
+		{
+			tolist.add(StringUtils.join(argList, delimiter));
 		}
 	}
 

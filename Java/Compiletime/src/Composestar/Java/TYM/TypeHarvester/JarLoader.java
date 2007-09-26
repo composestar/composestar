@@ -1,5 +1,6 @@
 package Composestar.Java.TYM.TypeHarvester;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -7,11 +8,15 @@ import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
+import Composestar.Utils.Logging.CPSLogger;
+
 /**
  * Utility class to load classes from a jar resource.
  */
 public class JarLoader extends ClassLoader
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(HarvestRunner.MODULE_NAME);
 
 	private HashMap classesFromJar = new HashMap();
 
@@ -31,7 +36,7 @@ public class JarLoader extends ClassLoader
 	 * @param jarFile - path to jar resource.
 	 * @throws JarLoaderException
 	 */
-	public JarLoader(String jarFile) throws JarLoaderException
+	public JarLoader(File jarFile) throws JarLoaderException
 	{
 		try
 		{
@@ -96,6 +101,8 @@ public class JarLoader extends ClassLoader
 			this.findSystemClass(name);
 			this.redundant = true;
 		}
+		// note: UnsupportedClassVersionError is thrown when JRE and JDK are not
+		// the same major version
 		catch (ClassNotFoundException e)
 		{
 			this.redundant = false;
@@ -126,6 +133,8 @@ public class JarLoader extends ClassLoader
 		{
 			return (Class) this.classesDefined.get(name);
 		}
+
+		logger.debug(String.format("defineLoadedClass(%s)", name));
 
 		byte[] classData = getClassData(name);
 		Class resultClass = null;
@@ -193,6 +202,6 @@ public class JarLoader extends ClassLoader
 	{
 		return this.classesDefined;
 	}
-	
+
 }// end class JarLoader
 

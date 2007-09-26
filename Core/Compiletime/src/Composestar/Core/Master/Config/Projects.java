@@ -21,6 +21,7 @@ import java.util.Set;
 
 import Composestar.Utils.FileUtils;
 
+@Deprecated
 public class Projects implements Serializable
 {
 	private static final long serialVersionUID = 4696163750932369815L;

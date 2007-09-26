@@ -1,5 +1,6 @@
 package Composestar.Java.WEAVER;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +8,9 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import Composestar.Core.Config.Project;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Project;
-import Composestar.Core.Master.Config.Source;
-import Composestar.Core.Master.Config.TypeSource;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.TYM.TypeLocations;
-import Composestar.Utils.FileUtils;
+import Composestar.Core.Master.CommonResources;
 
 /**
  * A Class Weaver. Uses Javassist to transform a class.
@@ -25,13 +21,16 @@ public class ClassWeaver
 {
 	private ClassPool classpool;
 
+	protected CommonResources resources;
+
 	/**
 	 * Constructor. Creates a ClassPool.
 	 * 
 	 * @see javassist.ClassPool
 	 */
-	public ClassWeaver()
+	public ClassWeaver(CommonResources resc)
 	{
+		resources = resc;
 		classpool = new ClassPool();
 		classpool.appendSystemPath();
 	}
@@ -43,15 +42,15 @@ public class ClassWeaver
 	 * @see javassist.ClassPool#insertClassPath(java.lang.String)
 	 * @throws ModuleException : When the specified classpath cannot be found.
 	 */
-	public void addClasspath(String classpath) throws ModuleException
+	public void addClasspath(File classpath) throws ModuleException
 	{
 		try
 		{
-			classpool.insertClassPath(classpath);
+			classpool.insertClassPath(classpath.toString());
 		}
 		catch (NotFoundException n)
 		{
-			throw new ModuleException("Classpath (" + classpath + ") not found.", "WEAVER");
+			throw new ModuleException("Classpath (" + classpath + ") not found.", JavaWeaver.MODULE_NAME);
 		}
 	}
 
@@ -62,13 +61,11 @@ public class ClassWeaver
 	 * @param baseDir base directory
 	 * @param clazz CtClass
 	 */
-	public String getOutputFile(String baseDir, CtClass clazz)
+	public File getOutputFile(File baseDir, CtClass clazz)
 	{
-		String outputFile = baseDir;
 		String fqName = clazz.getName();
-		fqName = fqName.replace('.', java.io.File.separatorChar);
-		outputFile += fqName + ".class";
-		return FileUtils.normalizeFilename(outputFile);
+		fqName = fqName.replace('.', File.separatorChar);
+		return new File(baseDir, fqName + ".class");
 	}
 
 	/**
@@ -82,74 +79,47 @@ public class ClassWeaver
 	 * @param p the project to be weaved
 	 * @throws ModuleException : When instrumenting a class fails, e.g. wrong
 	 *             source code added.
-	 * @see Composestar.Core.Master.Config.TypeSource
-	 * @see Composestar.Core.Master.Config.Project
 	 * @see Composestar.Java.WEAVER.MethodBodyTransformer
 	 */
 	public void weave(Project p) throws ModuleException
 	{
-		TypeSource type;
-		String name;
-		String outputDir;
-
-		List weavedClasses = new ArrayList();
-		DataStore.instance().addObject("WeavedClasses", weavedClasses);
+		List<File> weavedClasses = new ArrayList<File>();
+		resources.add(JavaWeaver.WOVEN_CLASSES, weavedClasses);
 
 		// write applicationStart
 		writeApplicationStart();
 
-		// FIXME: this is added because somehow javassist prunes and frozens
-		// types from embedded sources. So temporarily disabled weaving on
-		// embedded types.
-		boolean isEmbeddedType = false;
-		TypeLocations types = TypeLocations.instance();
-
-		for (Object o1 : p.getTypeSources())
+		for (String typeName : p.getTypeMapping().getTypes())
 		{
-			type = (TypeSource) o1;
-			name = type.getName();
-
-			// FIXME: this is added because somehow javassist prunes and frozens
-			// types from embedded sources. So temporarily disabled weaving on
-			// embedded types.
-			String s = FileUtils.normalizeFilename(types.getSourceByType(name));
-			for (Object o : p.getSources())
-			{
-				Source source = (Source) o;
-				if (s.equals(source.getFileName()))
-				{
-					if (source.isEmbedded())
-					{
-						isEmbeddedType = true;
-					}
-				}
-			}
-
-			// create outputFile
-			outputDir = p.getBasePath();
-			outputDir += "obj/weaver/";
+			File outputDir = new File(p.getIntermediate(), JavaWeaver.WEAVE_PATH);
 
 			// weave the class and write to disk
 			try
 			{
-				CtClass clazz = classpool.get(name);
-				if (!isEmbeddedType) // FIXME: enable weaving on embedded
-										// types
-				{
-					clazz.instrument(new MethodBodyTransformer(classpool));
-					clazz.writeFile(outputDir);
-					weavedClasses.add(getOutputFile(outputDir, clazz));
-				}
-				else
-				{
-					weavedClasses.add(getOutputFile(p.getBasePath() + "obj/", clazz));
-					isEmbeddedType = false;
-				}
+				CtClass clazz = classpool.get(typeName);
+				// FIXME: this is added because somehow javassist prunes and
+				// frozens types from embedded sources. So temporarily disabled
+				// weaving on embedded types.
+				// if (!p.getTypeMapping().getSource(typeName).isEmbedded())
+				// {
+				clazz.instrument(new MethodBodyTransformer(classpool));
+				clazz.writeFile(outputDir.toString());
+				weavedClasses.add(getOutputFile(outputDir, clazz));
+				// }
+				// else
+				// {
+				// // simply copy the original file (for now)
+				// File srcPath = (File) resources.get(JavaCompiler.SOURCE_OUT);
+				// File dest = getOutputFile(outputDir, clazz);
+				// FileUtils.copyFile(dest, getOutputFile(srcPath, clazz));
+				// weavedClasses.add(dest);
+				// }
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
-				throw new ModuleException("Error while instrumenting " + name + ": " + e.getMessage(), "WEAVER");
+				throw new ModuleException("Error while instrumenting " + typeName + ": " + e.getMessage(),
+						JavaWeaver.MODULE_NAME);
 			}
 		}
 	}
@@ -161,15 +131,14 @@ public class ClassWeaver
 	 */
 	public void writeApplicationStart() throws ModuleException
 	{
-		Configuration config = Configuration.instance();
-		String startobject = config.getProjects().getProperty("applicationStart");
-		String rundebuglevel = config.getProjects().getProperty("runDebugLevel");
+		String startobject = resources.configuration().getProject().getMainclass();
+		String rundebuglevel = resources.configuration().getSetting("runDebugLevel");
 		try
 		{
 			CtClass clazz = classpool.get(startobject);
 			CtMethod mainmethod = clazz.getMethod("main", "([Ljava/lang/String;)V");
 			String src = "Composestar.RuntimeJava.FLIRT.JavaMessageHandlingFacility.handleJavaApplicationStart("
-					+ "\"repository.dat\"" + "," + rundebuglevel + ");";
+					+ "\"repository.dat\"" + "," + rundebuglevel + ", " + clazz.getName() + ".class);";
 			mainmethod.insertBefore(src);
 		}
 		catch (Exception e)

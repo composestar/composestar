@@ -6,6 +6,8 @@
  */
 package Composestar.C.REXREF;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +28,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernRefere
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.REXREF.DoResolve;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
@@ -53,18 +54,19 @@ public class Main extends DefaultHandler implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		if (new java.io.File(Configuration.instance().getPathSettings().getPath("Base") + "CConcern.xml").exists())
+		File concernXml = new File(resources.configuration().getProject().getBase(), "CConcern.xml");
+		if (concernXml.exists())
 		{
-			resolveConcernReferences();
+			resolveConcernReferences(concernXml);
 		}
 		DoResolve dr = new DoResolve();
 		dr.go(DataStore.instance());
 	}
 
-	private void resolveConcernReferences() throws ModuleException
+	private void resolveConcernReferences(File concernXml) throws ModuleException
 	{
 		// iterate over all instances of ConcernReference
-		checkCConcern();
+		checkCConcern(concernXml);
 		for (Iterator it = DataStore.instance().getAllInstancesOf(ConcernReference.class); it.hasNext();)
 		{
 			ConcernReference ref = (ConcernReference) it.next();
@@ -120,7 +122,7 @@ public class Main extends DefaultHandler implements CTCommonModule
 		}
 	}
 
-	public void checkCConcern() throws ModuleException
+	public void checkCConcern(File concernXml) throws ModuleException
 	{
 		try
 		{
@@ -128,7 +130,7 @@ public class Main extends DefaultHandler implements CTCommonModule
 			SAXParser saxParser = saxParserFactory.newSAXParser();
 			XMLReader parser = saxParser.getXMLReader();
 			parser.setContentHandler(this);
-			parser.parse(new InputSource(Configuration.instance().getPathSettings().getPath("Base") + "CConcern.xml"));
+			parser.parse(new InputSource(new FileInputStream(concernXml)));
 		}
 		catch (Exception e)
 		{

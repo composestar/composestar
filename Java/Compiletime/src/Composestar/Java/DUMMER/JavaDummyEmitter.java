@@ -1,22 +1,19 @@
 package Composestar.Java.DUMMER;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
+import Composestar.Core.Config.Project;
+import Composestar.Core.Config.Source;
 import Composestar.Core.DUMMER.DefaultEmitter;
 import Composestar.Core.DUMMER.DummyEmitter;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Project;
-import Composestar.Core.Master.Config.Source;
-import Composestar.Core.Master.Config.TypeSource;
-import Composestar.Core.TYM.TypeLocations;
 import Composestar.Utils.FileUtils;
 import antlr.ASTFactory;
 import antlr.CommonAST;
@@ -65,6 +62,14 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		setupTokenNames();
 	}
 
+	public void createDummies(Project project, Set<Source> sources) throws ModuleException
+	{
+		for (Source source : sources)
+		{
+			createDummy(project, source);
+		}
+	}
+
 	/**
 	 * Creates a dummy.
 	 * 
@@ -74,29 +79,30 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 * @see Composestar.Core.DUMMER.DummyEmitter#createDummy(Project, Source,
 	 *      String)
 	 */
-	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException
+	public void createDummy(Project project, Source source) throws ModuleException
 	{
-		if (source.isEmbedded())
-		{
-			Configuration config = Configuration.instance();
-			String dummyPath = config.getPathSettings().getPath("Dummy");
-			String basePath = project.getBasePath();
-			StringBuffer outputfile = new StringBuffer(basePath).append("obj/").append(dummyPath);
-			
-			// change outputFilename
-			TypeLocations types = TypeLocations.instance();
-			for (Object o : types.getTypesBySource(source.getFileName()))
-			{
-				String type = (String) o;
-				outputfile.append(type);
-				outputFilename = outputfile.toString().replace('.', '/');
-				outputfile = new StringBuffer(outputFilename);
-				outputfile.append(".java");
-				outputFilename = outputfile.toString();
-				source.setDummy(outputFilename);
-				source.setFileName(FileUtils.normalizeFilename(source.getFileName()));
-			}
-		}
+		// if (source.isEmbedded())
+		// {
+		// Configuration config = Configuration.instance();
+		// String dummyPath = config.getPathSettings().getPath("Dummy");
+		// String basePath = project.getBasePath();
+		// StringBuffer outputfile = new
+		// StringBuffer(basePath).append("obj/").append(dummyPath);
+		//
+		// // change outputFilename
+		// TypeLocations types = TypeLocations.instance();
+		// for (Object o : types.getTypesBySource(source.getFileName()))
+		// {
+		// String type = (String) o;
+		// outputfile.append(type);
+		// outputFilename = outputfile.toString().replace('.', '/');
+		// outputfile = new StringBuffer(outputFilename);
+		// outputfile.append(".java");
+		// outputFilename = outputfile.toString();
+		// source.setDummy(outputFilename);
+		// source.setFileName(FileUtils.normalizeFilename(source.getFileName()));
+		// }
+		// }
 
 		currentSource = source;
 		packageName = "";
@@ -108,14 +114,14 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 		try
 		{
-			FileInputStream fis = new FileInputStream(source.getFileName());
+			FileInputStream fis = new FileInputStream(source.getFile());
 			// Create a scanner that reads from the input stream passed to us
 			JavaLexer lexer = new JavaLexer(fis);
-			lexer.setFilename(source.getFileName());
+			lexer.setFilename(source.getFile().toString());
 
 			// Create a parser that reads from the scanner
 			JavaRecognizer parser = new JavaRecognizer(lexer);
-			parser.setFilename(source.getFileName());
+			parser.setFilename(source.getFile().toString());
 
 			// start parsing at the compilationUnit rule
 			parser.compilationUnit();
@@ -134,9 +140,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		// emit dummy to file
 		try
 		{
-			File f = (new File(outputFilename)).getParentFile();
-			f.mkdirs();
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outputFilename));
+			source.getStub().getParentFile().mkdirs();
+			BufferedWriter bw = new BufferedWriter(new FileWriter(source.getStub()));
 			bw.write(dummy.toString());
 			bw.close();
 		}
@@ -157,8 +162,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	{
 		if (this.currentSource != null)
 		{
-			String filename = FileUtils.getFilenamePart(currentSource.getFileName());
-			String sourcename = FileUtils.removeExtension(filename);
+			String sourcename = FileUtils.removeExtension(currentSource.getFile().getName());
 			String fqn = this.getPackageName();
 			if (!fqn.equals(""))
 			{
@@ -176,10 +180,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				fqn += classname;
 			}
 			Project p = currentSource.getProject();
-			TypeSource ts = new TypeSource();
-			ts.setName(fqn);
-			ts.setFileName(currentSource.getFileName());
-			p.addTypeSource(ts);
+			p.getTypeMapping().addType(fqn, currentSource);
 		}
 	}
 
@@ -197,7 +198,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 */
 	private AST filterChildren(AST ast, String remove)
 	{
-		if (ast == null) 
+		if (ast == null)
 		{
 			throw new IllegalArgumentException("ast cannot be null");
 		}
@@ -766,7 +767,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				{
 					visit(child3);
 				}
-				else 
+				else
 				{
 					visit(child2);
 				}
@@ -967,12 +968,12 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				out("new ");
 				// skip TYPE_ARGS
 				visit(child2);
-				if (child3.getType() != ARRAY_DECLARATOR) 
+				if (child3.getType() != ARRAY_DECLARATOR)
 				{
 					out("(");
 				}
 				visit(getChild(ast, ELIST));
-				if (child3.getType() != ARRAY_DECLARATOR) 
+				if (child3.getType() != ARRAY_DECLARATOR)
 				{
 					out(")");
 				}
@@ -1044,7 +1045,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			case STRING_LITERAL:
 			case NUM_FLOAT:
 			case NUM_DOUBLE:
-				if (this.packageDefinition) 
+				if (this.packageDefinition)
 				{
 					this.packages.add(ast.getText());
 				}
@@ -1244,33 +1245,4 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		return ret;
 	}
 
-	/**
-	 * For testing.
-	 */
-	public static void main(String[] args)
-	{
-		if (args.length != 1)
-		{
-			System.out.println("Usage: JavaDummyEmitter <filename>");
-			System.exit(-1);
-		}
-
-		try
-		{
-			File input = new File(args[0]);
-
-			File dummyDir = new File(input.getParent(), "dummies");
-			File output = new File(dummyDir, input.getName());
-
-			Source source = new Source();
-			source.setFileName(input.getAbsolutePath());
-
-			JavaDummyEmitter jde = new JavaDummyEmitter();
-			jde.createDummy(null, source, output.getAbsolutePath());
-		}
-		catch (Throwable e)
-		{
-			e.printStackTrace();
-		}
-	}
 }

@@ -6,6 +6,7 @@ import java.util.Properties;
 /**
  * @deprecated
  */
+@Deprecated
 public class ModuleSettings implements Serializable
 {
 	/**

@@ -1,94 +1,122 @@
 package Composestar.Core.DUMMER;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.COMP.LangCompiler;
+import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Config.Language;
+import Composestar.Core.Config.Project;
+import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Project;
-import Composestar.Core.Master.Config.Source;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
+/**
+ * Dummy manager module. This will set up the information for dummy generation
+ * and then call the appropriate dummy emitters.
+ */
 public class DummyManager implements CTCommonModule
 {
 	public static final String MODULE_NAME = "DUMMER";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
+	/**
+	 * The directory name for the stubs
+	 */
+	public static final String DUMMY_PATH = "dummies";
+
+	protected BuildConfig config;
+
+	protected CommonResources resc;
 
 	public DummyManager()
 	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
+		resc = resources;
+		config = resources.configuration();
 		createDummies();
 	}
 
 	private void createDummies() throws ModuleException
 	{
-		Configuration config = Configuration.instance();
-		String dummyPath = config.getPathSettings().getPath("Dummy");
-
-		List projects = config.getProjects().getProjects();
-		Iterator projIt = projects.iterator();
-		for (Object project1 : projects)
+		File dummyPath = new File(config.getProject().getIntermediate(), DUMMY_PATH);
+		if (!dummyPath.exists() && !dummyPath.mkdirs())
 		{
-			Project project = (Project) project1;
-			createProjectDummies(dummyPath, project);
+			throw new ModuleException(String.format("Unable to create directory: %s", dummyPath.toString()),
+					MODULE_NAME);
 		}
+		createProjectDummies(dummyPath, config.getProject());
 	}
 
-	private void createProjectDummies(String dummyPath, Project project) throws ModuleException
+	private void createProjectDummies(File dummyPath, Project project) throws ModuleException
 	{
-		List sources = project.getSources();
-		List outputFilenames = new ArrayList(sources.size());
-
-		File baseDir = new File(project.getBasePath());
-		File dummyDir = new File(baseDir, "obj/" + dummyPath);
-
-		// Make sure the directory exists
-		dummyDir.mkdirs();
-
-		Iterator sourceIt = sources.iterator();
-		for (Object source1 : sources)
+		Map<String, Set<Source>> dummies = new HashMap<String, Set<Source>>();
+		logger.info("Constructing dummy list");
+		for (Source source : project.getSources())
 		{
-			Source source = (Source) source1;
+			File sourceFile = source.getFile();
+			if (!sourceFile.exists())
+			{
+				logger.warn(String.format("Source file does not exist: %s", sourceFile.toString()));
+				continue;
+			}
+			File target = FileUtils.relocateFile(project.getBase(), sourceFile, dummyPath);
+			if (!target.getParentFile().exists() && !target.getParentFile().mkdirs())
+			{
+				throw new ModuleException(String.format("Unable to create parent directories for: %s", target
+						.toString()), MODULE_NAME);
+			}
+			source.setStub(target);
+
+			String language = source.getLanguage();
+			if (language == null)
+			{
+				language = project.getLanguage();
+			}
+			Set<Source> ldummies = dummies.get(language);
+			if (ldummies == null)
+			{
+				ldummies = new HashSet<Source>();
+				dummies.put(language, ldummies);
+			}
+			ldummies.add(source);
+		}
+		for (String language : dummies.keySet())
+		{
+			Language lang = project.getPlatform().getLanguage(language);
+			if (lang == null)
+			{
+				throw new ModuleException(String.format("No language called %s in platform %s", language, project
+						.getPlatform().getId()), MODULE_NAME);
+			}
+			Set<Source> sources = dummies.get(language);
+
+			logger.info("Constructing dummies");
+			DummyEmitter emitter = lang.getDummyEmitter();
+			emitter.setCommonResources(resc);
+			emitter.createDummies(project, sources);
+
+			logger.info("Compiling dummies");
+			LangCompiler comp = lang.getCompiler().getCompiler();
+			comp.setCommonResources(resc);
 			try
 			{
-				File sourceFile = new File(source.getFileName());
-				String target = FileUtils.createOutputFilename(baseDir.getAbsolutePath(), "/obj/" + dummyPath,
-						sourceFile.getAbsolutePath());
-				String targetPath = FileUtils.getDirectoryPart(target);
-				FileUtils.createFullPath(targetPath); // Make sure the
-				// directory exists
-
-				File dummyFile = new File(target);
-				String absolutePath = dummyFile.getAbsolutePath();
-				outputFilenames.add(absolutePath);
-				source.setDummy(absolutePath);
+				comp.compileDummies(project, sources);
 			}
-			catch (Exception e)
+			catch (CompilerException e)
 			{
-				throw new ModuleException("Error while creating targetfile of dummy: " + e.getMessage(), MODULE_NAME);
+				throw new ModuleException(String.format("Error compiling dummies: %s", e.getMessage()), MODULE_NAME);
 			}
-		}
-
-		// Create all dummies in one go.
-		DummyEmitter emitter = project.getLanguage().getEmitter();
-		emitter.createDummies(project, sources, outputFilenames);
-
-		// compile dummies
-		try
-		{
-			LangCompiler comp = project.getLanguage().getCompilerSettings().getCompiler();
-			comp.compileDummies(project);
-		}
-		catch (CompilerException e)
-		{
-			throw new ModuleException("Cannot compile dummies: " + e.getMessage(), MODULE_NAME);
 		}
 	}
 }

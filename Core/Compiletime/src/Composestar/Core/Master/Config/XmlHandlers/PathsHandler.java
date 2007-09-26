@@ -17,6 +17,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Master.Config.Configuration;
 
+@Deprecated
 public class PathsHandler extends DefaultHandler
 {
 	protected XMLReader parser;

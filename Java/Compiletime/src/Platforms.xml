@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platforms xmlns="http://composestar.sourceforget.net/schema/PlatformConfiguration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://composestar.sourceforget.net/schema/PlatformConfiguration ../../ComposestarCORE/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd ">
+	<platform id="Java">
+		<languages>
+			<language name="Java">
+				<extensions>
+					<extension>java</extension>
+				</extensions>
+				<compiler class="Composestar.Java.COMP.JavaCompiler">
+					<action name="Compile" executable="javac">
+						<arg>-d</arg>
+						<arg>${OUT}</arg>
+						<arg>-cp</arg>
+						<deps merge="true" delimiter=";">
+							<arg>${DEP}</arg>
+						</deps>
+						<arg>-implicit:none</arg><!-- this prevents overwriting of already existing files -->
+						<sources>
+							<arg>${SOURCE}</arg>
+						</sources>
+					</action>
+					<action name="CreateJar" executable="jar">
+						<arg>cf</arg>
+						<arg>${JAR}</arg>
+						<arg>-C</arg>
+						<arg>${SOURCEDIR}</arg>
+						<arg>.</arg>
+					</action>
+				</compiler>
+				<dummygenerator>Composestar.Java.DUMMER.JavaDummyEmitter</dummygenerator>
+			</language>
+		</languages>
+		<resources>
+			<file>lib/ComposestarCore.jar</file>
+			<file>lib/ComposestarJava.jar</file>
+			<file>lib/ComposestarRuntimeInterpreter.jar</file>
+			<file>lib/prolog.jar</file>
+		</resources>
+	</platform>
+</platforms>

@@ -1,6 +1,7 @@
 package Composestar.C.wrapper.parsing;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class AttributeWriter
 		return (Instance);
 	}
 
-	public void saveToXML(String fileName)
+	public void saveToXML(File fileName)
 	{
 		try
 		{

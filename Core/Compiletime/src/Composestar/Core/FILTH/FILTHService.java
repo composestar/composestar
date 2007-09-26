@@ -36,7 +36,7 @@ public abstract class FILTHService
 
 	public static FILTHService getInstance(CommonResources cr) throws ModuleException
 	{
-		return new FILTHServiceImpl();
+		return new FILTHServiceImpl(cr);
 	}
 
 	public static void setLog(PrintStream stream)
@@ -94,5 +94,5 @@ public abstract class FILTHService
 
 	public abstract List getMultipleOrder(Concern c);
 
-	public abstract void copyOperation(Concern c, INCRE inc)  throws ModuleException;
+	public abstract void copyOperation(Concern c, INCRE inc) throws ModuleException;
 }

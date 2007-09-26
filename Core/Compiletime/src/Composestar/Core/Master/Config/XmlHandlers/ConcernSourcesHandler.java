@@ -18,6 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Master.Config.ConcernSource;
 import Composestar.Core.Master.Config.Configuration;
 
+@Deprecated
 public class ConcernSourcesHandler extends DefaultHandler
 {
 	protected XMLReader parser;

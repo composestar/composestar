@@ -51,7 +51,6 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.LangNamespace;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
@@ -66,11 +65,11 @@ public class CWrapper implements CTCommonModule
 
 	private Vector functions = null;
 
-	private String filename = null;
+	private File filename = null;
 
 	private Hashtable absolutePaths = new Hashtable();
 
-	private String tempFolder = null;
+	private File tempFolder = null;
 
 	public String objectname = null;
 
@@ -88,8 +87,8 @@ public class CWrapper implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		filename = Configuration.instance().getPathSettings().getPath("Base");
-		tempFolder = Configuration.instance().getPathSettings().getPath("Base");
+		filename = resources.configuration().getProject().getBase();
+		tempFolder = filename;
 		/***********************************************************************
 		 * here a new file(typ): Semantics of the annotations is instantiaded
 		 * just as the xml file where the annotion information will be saved
@@ -119,7 +118,7 @@ public class CWrapper implements CTCommonModule
 
 		// createDirectoryStructure(new File(filename),true,new
 		// InputFileNameFilter(), resources);
-		cfiles = getAllFilesFromDirectory(new File(filename), true, new InputFileNameFilter(), null);
+		cfiles = getAllFilesFromDirectory(filename, true, new InputFileNameFilter(), null);
 
 		for (Object cfile : cfiles)
 		{
@@ -130,8 +129,8 @@ public class CWrapper implements CTCommonModule
 		Iterator it = fileASTMap.keySet().iterator();
 		for (Object o : fileASTMap.keySet())
 		{
-			filename = (String) o;
-			String cfName = filename.substring(filename.lastIndexOf("\\") + 1, filename.indexOf(".ccc"));
+			String fn = (String) o;
+			String cfName = fn.substring(fn.lastIndexOf("\\") + 1, fn.indexOf(".ccc"));
 			CFile cf = (CFile) absolutePaths.get(cfName);
 			// filename
 			// =((File)absolutePaths.get(filename)).getAbsolutePath();//(String)cfiles.get(i);
@@ -150,11 +149,11 @@ public class CWrapper implements CTCommonModule
 				 **************************************************************/
 				retrieveAST wrapper = new retrieveAST();
 
-				setObjectName(filename, resources);
-				setNameSpace(filename, resources);
-				wrapper.createWrappedAST(filename, objectname, namespace, usedTypes, cf, this);
-				fileASTMap.put(filename, wrapper);
-				FileMap.instance().addFileAST(filename, wrapper);// createWrappedAST(filename,
+				setObjectName(fn, resources);
+				setNameSpace(fn, resources);
+				wrapper.createWrappedAST(fn, objectname, namespace, usedTypes, cf, this);
+				fileASTMap.put(fn, wrapper);
+				FileMap.instance().addFileAST(fn, wrapper);// createWrappedAST(filename,
 				// objectname,
 				// namespace,
 				// out,
@@ -167,7 +166,7 @@ public class CWrapper implements CTCommonModule
 			}
 		}
 		/** Write annotations to attributes.xml* */
-		AttributeWriter.instance().saveToXML(tempFolder + "attributes.xml");
+		AttributeWriter.instance().saveToXML(new File(tempFolder, "attributes.xml"));
 
 		// Iterator i = usedTypes.values().iterator();
 		// while(i.hasNext()){
@@ -181,7 +180,8 @@ public class CWrapper implements CTCommonModule
 		CDirectory cdir = null;
 		if (dir.isDirectory())
 		{
-			if (dir.getName().startsWith(".")) // skip directories with leading dot's
+			if (dir.getName().startsWith(".")) // skip directories with leading
+			// dot's
 			{
 				return list;
 			}
@@ -285,7 +285,7 @@ public class CWrapper implements CTCommonModule
 		return functions;
 	}
 
-	public void setFilename(String filename)
+	public void setFilename(File filename)
 	{
 		this.filename = filename;
 	}
@@ -307,26 +307,33 @@ public class CWrapper implements CTCommonModule
 
 	public void setObjectName(String filename, CommonResources resources)
 	{
-		objectname = Configuration.instance().getPathSettings().getPath("Base");
+		objectname = resources.configuration().getProject().getBase().toString();
 		objectname = objectname.replace('/', '\\');
-		objectname = filename.substring(objectname.length());
+		objectname = filename.substring(objectname.length() + 1); // because
+																	// there
+		// is no
+		// trailing
+		// slash
 		objectname = objectname.substring(0, objectname.lastIndexOf(".ccc"));
 		objectname = objectname.replace('\\', '.');
 	}
 
 	public void setNameSpace(String filename, CommonResources resources)
 	{
-		namespace = Configuration.instance().getPathSettings().getPath("Base");
+		namespace = resources.configuration().getProject().getBase().toString();
 		namespace = namespace.replace('/', '\\');
 		namespace = namespace.substring(0, namespace.lastIndexOf("\\"));
 		namespace = namespace.substring(0, namespace.lastIndexOf("\\"));
-		namespace = filename.substring(namespace.length());
+		namespace = filename.substring(namespace.length() + 1); // because there
+		// is no
+		// trailing
+		// slash
 		namespace = namespace.substring(0, namespace.lastIndexOf("\\"));
 		namespace = namespace.substring(namespace.indexOf("\\") + 1, namespace.length());
 		namespace = namespace.replace('\\', '.');
 	}
 
-	public String getFilename()
+	public File getFilename()
 	{
 		return filename;
 	}

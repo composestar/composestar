@@ -3,78 +3,90 @@
 
 	<condition property="build.core" value="../../Core">
 		<and>
-			<not><isset property="build.core"/></not>
-			<available file="../../Core/common.xml"/>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="../../Core/common.xml" />
 		</and>
 	</condition>
-	
-	<import file="${build.core}/common.xml"/>
 
-	<echo>Processing: ${ant.project.name} ...</echo>	
+	<import file="${build.core}/common.xml" />
+
+	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The Compose* C Compiletime</description>
 
 	<target name="clean" depends="init" description="clean the compilation results">
-		<delete dir="${out.build}"/>
-		<delete dir="${out.dist}"/>
-		
+		<delete dir="${out.build}" />
+		<delete dir="${out.dist}" />
+
 		<delete>
 			<fileset dir="src/Composestar/C/wrapper/parsing">
-				<include name="GnuCEmitter.*"/>
-				<include name="GnuCEmitterTokenTypes.*"/>
-				<include name="GnuCLexer.*"/>
-				<include name="GnuCLexerTokenTypes.*"/>
-				<include name="GnuCParser.*"/>
-				<include name="GnuCTokenTypes.*"/>
-				<include name="GnuCTreeParser.*"/>
-				<include name="GnuCTreeParserTokenTypes.*"/>
-				<include name="StdCLexer.*"/>
-				<include name="StdCParser.*"/>
-				<include name="STDCTokenTypes.*"/>
-				<include name="*.smap"/>
+				<include name="GnuCEmitter.*" />
+				<include name="GnuCEmitterTokenTypes.*" />
+				<include name="GnuCLexer.*" />
+				<include name="GnuCLexerTokenTypes.*" />
+				<include name="GnuCParser.*" />
+				<include name="GnuCTokenTypes.*" />
+				<include name="GnuCTreeParser.*" />
+				<include name="GnuCTreeParserTokenTypes.*" />
+				<include name="StdCLexer.*" />
+				<include name="StdCParser.*" />
+				<include name="STDCTokenTypes.*" />
+				<include name="*.smap" />
 			</fileset>
 		</delete>
 	</target>
 
 	<target name="init_local" depends="init">
-		<mkdir dir="${out.build}"/>
-		<mkdir dir="${out.dist}"/>
+		<mkdir dir="${out.build}" />
+		<mkdir dir="${out.dist}" />
 	</target>
-	
-	<target name="build" depends="init_local,antlr,compile,jar" description="build the C compiletime"/>
-	
-	<target name="antlr" depends="init_local">		
+
+	<target name="build" depends="init_local,antlr,compile,jar" description="build the C compiletime">
+		<schemavalidate>
+			<schema namespace="http://composestar.sourceforget.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
+			<fileset dir="src">
+				<include name="Platforms.xml" />
+			</fileset>
+		</schemavalidate>
+	</target>
+
+	<target name="antlr" depends="init_local">
 		<cs:antlr target="src/Composestar/C/grammar/StdCParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
-			<classpath refid="lib.c"/>
+			<classpath refid="lib.c" />
 		</cs:antlr>
 		<cs:antlr target="src/Composestar/C/grammar/GnuCParser.g" glib="src/Composestar/C/grammar/StdCParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
-			<classpath refid="lib.c"/>
+			<classpath refid="lib.c" />
 		</cs:antlr>
 		<cs:antlr target="src/Composestar/C/grammar/GnuCTreeParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
-			<classpath refid="lib.c"/>
+			<classpath refid="lib.c" />
 		</cs:antlr>
 		<cs:antlr target="src/Composestar/C/grammar/GnuCEmitter.g" glib="src/Composestar/C/grammar/GnuCTreeParser.g" outputdirectory="src/Composestar/C/wrapper/parsing">
-			<classpath refid="lib.c"/>
+			<classpath refid="lib.c" />
 		</cs:antlr>
 	</target>
-	
+
 	<target name="compile" depends="init_local,antlr">
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.c" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}" />
 	</target>
-			
+
 	<target name="jar" depends="compile">
-		<jar destfile="${out.dist}/ComposestarC.jar" basedir="${out.build}" manifest="src/MANIFEST.MF"/>
+		<copy todir="${out.build}">
+			<fileset dir="src">
+				<include name="**/moduleinfo.xml" />
+				<include name="**/*.pro" />
+				<include name="INCREconfig.xml" />
+				<include name="Platforms.xml" />
+			</fileset>
+		</copy>
+		<jar destfile="${out.dist}/ComposestarC.jar" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
-	
+
 	<target name="install" depends="init_eclipse,build" description="Install the C compiletime">
 		<!-- jar files -->
 		<copy todir="${eclipse.pluginsdir.core}${file.separator}lib">
-			<fileset dir="${out.dist}"/>
+			<fileset dir="${out.dist}" />
 		</copy>
-		
-		<copy todir="${eclipse.pluginsdir.core}${file.separator}lib">
-			<fileset dir="${basedir}/lib" />
-		</copy>
-
 	</target>
 
 </project>

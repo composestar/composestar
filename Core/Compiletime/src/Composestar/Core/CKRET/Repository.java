@@ -10,14 +10,20 @@
 package Composestar.Core.CKRET;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import Composestar.Core.CKRET.Config.ConfigParser;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Utils.Debug;
 
@@ -60,26 +66,34 @@ public class Repository
 		return constraints;
 	}
 
-	protected void init() throws ModuleException
+	protected void init(CommonResources resources) throws ModuleException
 	{
 		// CommonResources resources = (CommonResources)
 		// DataStore.instance().getObjectByID(Master.RESOURCES_KEY);
-		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
-		String ckretconfigfile = tempFolder + CKRET_CONFIG;
-		if (!(new File(ckretconfigfile).exists()))
+		File ckretconfigfile = new File(resources.configuration().getProject().getBase(), CKRET_CONFIG);
+		if (!ckretconfigfile.exists())
 		{
-			ckretconfigfile = Configuration.instance().getPathSettings().getPath("Composestar") + CKRET_CONFIG;
-			if (!(new File(ckretconfigfile).exists()))
+			ckretconfigfile = resources.getPathResolver().getResource(CKRET_CONFIG);
+		}
+		ConfigParser parser = new ConfigParser();
+		if (ckretconfigfile != null)
+		{
+			INCRE.instance().addConfiguration("CKRETConfigFile", ckretconfigfile.toString());
+			Debug.out(Debug.MODE_INFORMATION, CKRET.MODULE_NAME, "Using filter specification in " + ckretconfigfile);
+			parser.parse(ckretconfigfile, this);
+		}
+		else
+		{
+			try
 			{
-				throw new ModuleException("Filter specification (" + CKRET_CONFIG + ") not found.", CKRET.MODULE_NAME);
+				parser.parse(Repository.class.getResourceAsStream("/" + CKRET_CONFIG), this);
+			}
+			catch (Exception e)
+			{
+				Debug.out(Debug.MODE_WARNING, CKRET.MODULE_NAME, "Error parsing interal config: " + e.getMessage());
+				Debug.out(Debug.MODE_DEBUG, CKRET.MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
 			}
 		}
-		INCRE.instance().addConfiguration("CKRETConfigFile", ckretconfigfile);
-
-		Debug.out(Debug.MODE_INFORMATION, CKRET.MODULE_NAME, "Using filter specification in " + ckretconfigfile);
-
-		ConfigParser parser = new ConfigParser();
-		parser.parse(ckretconfigfile, this);
 
 	}
 }

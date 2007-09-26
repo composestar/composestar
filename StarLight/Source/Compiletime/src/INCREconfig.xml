@@ -1,0 +1,80 @@
+<!-- INCRE configuration for StarLight -->
+<modules>
+  <module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.RepositoryCollector.StarLightCollectorRunner" input="composestar.dotNET.tym.entities.AssemblyConfig" enabled="true" incremental="true" summary="Harvesting type information...">
+		<dependencies>
+			<dependency type="FILE" name="xmlfile" isAdded="false">
+			<path>
+				<node type="METHOD" nodevalue="getSerializedFilename"></node>
+			</path>
+			</dependency>	
+		</dependencies>	
+	</module>
+	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true" summary="Parsing concerns...">
+		<dependencies>
+			<dependency type="FILE" name="cpsfile">
+				<path>
+					<node type="FIELD" nodevalue="fileName"/>
+				</path>
+			</dependency>
+		</dependencies>
+	</module>
+	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
+		<dependencies></dependencies>
+	</module>
+	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" enabled="true" incremental="true" summary="Evaluating predicate selectors...">
+		<dependencies></dependencies>
+		<comparisons>
+			<type fullname="Composestar.Core.CpsProgramRepository.PrimitiveConcern">
+				<field name="platformRepr"/>
+			</type>
+			<type fullname="Composestar.Core.LAMA.UnitResult">
+				<field name="multiRes"/>
+				<field name="singleRes"/>
+			</type>
+		</comparisons>
+	</module>
+	<module name="CHKREP" fulltype="Composestar.Core.CHKREP.Main" enabled="true" incremental="false" summary="Checking repository...">
+		<dependencies></dependencies>
+	</module>
+	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" enabled="true" incremental="false" summary="Resolving superimpositions...">
+		<dependencies></dependencies>
+	</module>
+	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="false" summary="Determining order of filter modules at shared join points...">
+		<dependencies>
+			<dependency type="FILE" name="specfile">
+				<path>
+					<node type="CONFIG" nodevalue="FILTH_INPUT"/>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="fmodules">
+				<path>
+					<node type="DYNAMIC" nodevalue="superImpInfo"/>
+					<node type="FIELD" nodevalue="theFmSIinfo"/>
+				</path>
+			</dependency>
+		</dependencies>
+		<comparisons>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+				<field name="name"/>
+			</type>
+		</comparisons>
+	</module>
+	<module name="FIRE" fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" enabled="true" incremental="false" summary="FIRE Preprocessing...">
+		<dependencies></dependencies>
+	</module>
+	<module name="CORE" fulltype="Composestar.Core.CORE2.Core" enabled="true" incremental="false" summary="Detecting conflicts...">
+		<dependencies></dependencies>
+	</module>
+	<module name="SIGN" fulltype="Composestar.Core.SIGN2.SignLite" enabled="true" incremental="false" summary="Generating signatures...">
+		<dependencies></dependencies>
+	</module>
+	<module name="INLINE" fulltype="Composestar.Core.INLINE.lowlevel.ModelBuilder" enabled="true" incremental="false" summary="Generating inline information...">
+		<dependencies></dependencies>
+	</module>
+	<module name="EMITTER" fulltype="Composestar.DotNET.TYM.RepositoryEmitter.StarLightEmitterRunner" enabled="true" incremental="false" summary="Emitting weaving information...">
+		<dependencies></dependencies>
+	</module>
+	<module name="INCRESerializer" fulltype="Composestar.Core.INCRE.INCRESerializer" enabled="true" incremental="false" summary="Serializing repository for incremental compilation...">
+		<dependencies></dependencies>
+	</module>
+</modules>

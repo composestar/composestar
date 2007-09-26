@@ -18,6 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Project;
 
+@Deprecated
 public class ProjectDependenciesHandler extends DefaultHandler
 {
 	protected XMLReader parser;

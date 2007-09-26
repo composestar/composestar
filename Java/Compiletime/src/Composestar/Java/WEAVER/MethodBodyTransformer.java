@@ -24,7 +24,7 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Java.LAMA.JavaMethodInfo;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * A transformer for method bodies.
@@ -35,6 +35,7 @@ import Composestar.Utils.Debug;
  */
 public class MethodBodyTransformer extends ExprEditor
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(JavaWeaver.MODULE_NAME);
 
 	private ClassPool classpool;
 
@@ -61,7 +62,7 @@ public class MethodBodyTransformer extends ExprEditor
 		}
 		catch (NotFoundException nfe)
 		{
-			Debug.out(Debug.MODE_DEBUG, "WEAVER", "Class not found: " + nfe.getMessage());
+			logger.debug("Class not found: " + nfe.getMessage());
 		}
 	}
 
@@ -136,7 +137,7 @@ public class MethodBodyTransformer extends ExprEditor
 		}
 		catch (NotFoundException nfe)
 		{
-			Debug.out(Debug.MODE_DEBUG, "WEAVER", "Method not found: " + nfe.getMessage());
+			logger.debug("Method not found: " + nfe.getMessage());
 		}
 	}
 
@@ -337,7 +338,7 @@ public class MethodBodyTransformer extends ExprEditor
 		catch (NotFoundException nfe)
 		{
 			// should not happen!
-			Debug.out(Debug.MODE_ERROR, "WEAVER", "NotFoundException: " + nfe.getMessage());
+			logger.debug("NotFoundException: " + nfe.getMessage());
 		}
 		return true;
 	}

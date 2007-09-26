@@ -138,6 +138,7 @@ public class BuildAction implements IWorkbenchWindowActionDelegate
 				Debug.instance().Log("Use default location" + (selectedProjects[0]).getFullPath().toOSString());
 				projectLocation = (selectedProjects[0]).getFullPath();
 			}
+			projectConfig.addProperty("name", selectedProjects[0].getProject().getName());
 			projectConfig.addProperty("language", language);
 			projectConfig.addProperty("basePath", dialog.getBasePath());
 			projectConfig.addProperty("outputPath", dialog.getOutputPath());

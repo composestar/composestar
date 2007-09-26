@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+@Deprecated
 public class SettingsHandler extends DefaultHandler
 {
 	protected XMLReader parser;

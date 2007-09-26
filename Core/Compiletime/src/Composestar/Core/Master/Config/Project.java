@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+@Deprecated
 public class Project implements Serializable
 {
 	private static final long serialVersionUID = 8492654317711347755L;

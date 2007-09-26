@@ -1,11 +1,12 @@
 package Composestar.Java.WEAVER;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.Config.Project;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
@@ -17,12 +18,11 @@ import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Dependency;
-import Composestar.Core.Master.Config.Project;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.SANE.SIinfo;
 import Composestar.Core.WEAVER.WEAVER;
-import Composestar.Utils.Debug;
+import Composestar.Java.COMP.JavaCompiler;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Weaver starting point
@@ -31,14 +31,25 @@ import Composestar.Utils.Debug;
  */
 public class JavaWeaver implements WEAVER
 {
+	public static final String MODULE_NAME = "WEAVER";
+
+	/**
+	 * The Weaver output directory
+	 */
+	public static final String WEAVE_PATH = "weaver";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
+	/**
+	 * key used to store information in the resources.
+	 */
+	public static final String WOVEN_CLASSES = "JavaWovenClasses";
 
 	/**
 	 * Constructor
 	 */
 	public JavaWeaver()
-	{
-
-	}
+	{}
 
 	/**
 	 * Run this module. This module does the following tasks:
@@ -58,33 +69,16 @@ public class JavaWeaver implements WEAVER
 		// create the hook dictionary...
 		createHookDictionary(resources);
 
-		// local variables
-		ClassWeaver c;
-		Project p;
-		ArrayList deps;
-		Iterator depsIt;
-		String dependency;
-
-		Configuration config = Configuration.instance();
-		List projects = config.getProjects().getProjects();
-		for (Object project : projects)
+		Project project = resources.configuration().getProject();
+		ClassWeaver c = new ClassWeaver(resources);
+		for (File file : project.getFilesDependencies())
 		{
-			c = new ClassWeaver();
-
-			// add classpaths
-			p = (Project) project;
-			deps = (ArrayList) p.getDependencies();
-			depsIt = deps.iterator();
-			while (depsIt.hasNext())
-			{
-				dependency = ((Dependency) depsIt.next()).getFileName();
-				c.addClasspath(dependency);
-			}
-			c.addClasspath(p.getBasePath() + "obj/");
-
-			// weave
-			c.weave(p);
+			c.addClasspath(file);
 		}
+		c.addClasspath((File) resources.get(JavaCompiler.SOURCE_OUT));
+		// weave
+		c.weave(project);
+
 	}
 
 	public void createHookDictionary(CommonResources resources) throws ModuleException
@@ -124,7 +118,7 @@ public class JavaWeaver implements WEAVER
 		while (it.hasNext())
 		{
 			Concern c = (Concern) it.next();
-			if (c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
+			if (c.getDynObject(SIinfo.DATAMAP_KEY) != null && !(c instanceof CpsConcern))
 			{
 				hd.addAfterInstantationInterception(c.getQualifiedName());
 			}
@@ -142,9 +136,9 @@ public class JavaWeaver implements WEAVER
 		{
 			Concern c = (Concern) iterConcerns.next();
 			boolean castConcern = false;
-			if (c.getDynObject("SingleOrder") != null)
+			if (c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null)
 			{
-				FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject("SingleOrder");
+				FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 				for (Object o : fmo.orderAsList())
 				{
 					String fmn = (String) o;
@@ -187,14 +181,12 @@ public class JavaWeaver implements WEAVER
 				Iterator iterFilterModules = list.iterator();
 				if (hasInputFilters(iterFilterModules))
 				{
-					Debug.out(Debug.MODE_DEBUG, "WEAVER", " method calls to " + c.getQualifiedName()
-							+ " added to hook dictionary...");
+					logger.debug(" method calls to " + c.getQualifiedName() + " added to hook dictionary...");
 					HookDictionary.instance().addIncomingMethodInterception(c.getQualifiedName());
 				}
 				if (hasOutputFilters(iterFilterModules))
 				{
-					Debug.out(Debug.MODE_DEBUG, "WEAVER", " method calls from " + c.getQualifiedName()
-							+ " added to hook dictionary...");
+					logger.debug(" method calls from " + c.getQualifiedName() + " added to hook dictionary...");
 					HookDictionary.instance().addOutgoingMethodInterception(c.getQualifiedName());
 				}
 			}
@@ -220,7 +212,7 @@ public class JavaWeaver implements WEAVER
 		while (iterFilterModules.hasNext())
 		{
 			FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) iterFilterModules.next());
-			
+
 			if (InnerDispatcher.isDefaultDispatch(fm))
 			{
 				continue;

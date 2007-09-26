@@ -2,6 +2,8 @@
 
 package Composestar.C.TYM;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,7 +25,6 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 public class AttributeCollector extends DefaultHandler
@@ -42,14 +43,14 @@ public class AttributeCollector extends DefaultHandler
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
+		File file = new File(resources.configuration().getProject().getBase(), "attributes.xml");
 		try
 		{
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
 			XMLReader parser = saxParser.getXMLReader();
 			parser.setContentHandler(this);
-			parser.parse(new InputSource(tempFolder + "attributes.xml"));
+			parser.parse(new InputSource(new FileInputStream(file)));
 		}
 		catch (Exception e)
 		{

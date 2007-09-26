@@ -16,24 +16,28 @@ import java.util.List;
 import java.util.Set;
 
 import Composestar.Core.CONE.RepositorySerializer;
+import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.CustomFilter;
-import Composestar.Core.Master.Config.Dependency;
-import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.PathResolver;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
+/**
+ * Copies files to the output directory
+ */
 public abstract class BACO implements CTCommonModule
 {
 	public static final String MODULE_NAME = "BACO";
 
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
-	
+
 	protected CommonResources resources;
+
+	protected BuildConfig config;
 
 	public BACO()
 	{}
@@ -41,10 +45,11 @@ public abstract class BACO implements CTCommonModule
 	public void run(CommonResources inResources) throws ModuleException
 	{
 		logger.debug("Copying files to output directory...");
-		
-		resources = inResources;
 
-		Set<String> filesToCopy = new HashSet<String>();
+		resources = inResources;
+		config = resources.configuration();
+
+		Set<File> filesToCopy = new HashSet<File>();
 		addRequiredFiles(filesToCopy);
 		addBuiltLibraries(filesToCopy);
 		addCustomFilters(filesToCopy);
@@ -54,103 +59,102 @@ public abstract class BACO implements CTCommonModule
 		copyFiles(filesToCopy, false);
 	}
 
-	protected void addRequiredFiles(Set<String> filesToCopy)
+	/**
+	 * Copy platform files
+	 * 
+	 * @param filesToCopy
+	 */
+	protected void addRequiredFiles(Set<File> filesToCopy)
 	{
-		Configuration config = Configuration.instance();
-		String cpsPath = config.getPathSettings().getPath("Composestar");
-		logger.debug("ComposestarHome: '" + cpsPath + "'");
-
-		for (Object o : config.getPlatform().getRequiredFiles())
+		PathResolver resolver = resources.getPathResolver();
+		for (File file : config.getProject().getPlatform().getResourceFiles(resources.getPathResolver()))
 		{
-			String requiredFile = (String) o;
-			String filename = cpsPath + "lib/" + requiredFile;
-
-			logger.debug("Adding required file: '" + filename + "'");
-			filesToCopy.add(filename);
-		}
-	}
-
-	protected void addBuiltLibraries(Set<String> filesToCopy)
-	{
-		List builtLibs = (List) DataStore.instance().getObjectByID("BuiltLibs");
-		for (Object builtLib : builtLibs)
-		{
-			String lib = (String) builtLib;
-
-			logger.debug("Adding built library: '" + lib + "'");
-			filesToCopy.add(FileUtils.unquote(lib));
-		}
-	}
-
-	protected void addCustomFilters(Set<String> filesToCopy)
-	{
-		Configuration config = Configuration.instance();
-		for (Object o : config.getFilters().getCustomFilters())
-		{
-			CustomFilter filter = (CustomFilter) o;
-			String lib = filter.getLibrary();
-
-			logger.debug("Adding custom filter: '" + lib + "'");
-			filesToCopy.add(FileUtils.unquote(lib));
-		}
-	}
-
-	protected void addDependencies(Set<String> filesToCopy)
-	{
-		Configuration config = Configuration.instance();
-		for (Object o1 : config.getProjects().getProjects())
-		{
-			Project project = (Project) o1;
-
-			// add deps
-			for (Object o : project.getDependencies())
+			logger.debug("Adding required file: " + file.toString());
+			if (!file.isAbsolute())
 			{
-				Dependency dependency = (Dependency) o;
-				if (isNeededDependency(dependency))
-				{
-					String depFilename = dependency.getFileName();
-					filesToCopy.add(FileUtils.unquote(depFilename));
-
-					logger.debug("Adding dependency: '" + depFilename + "'");
-				}
+				file = resolver.getResource(file);
+			}
+			if (file != null)
+			{
+				filesToCopy.add(file);
+			}
+			else
+			{
+				logger.warn("Unable to resolved required file");
 			}
 		}
 	}
 
-	protected void addRepository(Set<String> filesToCopy)
+	protected void addBuiltLibraries(Set<File> filesToCopy)
 	{
-		File repository = (File) resources.get(RepositorySerializer.REPOSITORY_FILE_KEY); 
+		// TODO: where is this stored, and why like this? use resources?
+		List builtLibs = (List) DataStore.instance().getObjectByID("BuiltLibs");
+		for (Object builtLib : builtLibs)
+		{
+			String lib = ((File) builtLib).toString();
+			File file = new File(FileUtils.unquote(lib));
+			logger.debug("Adding built library: " + file.toString());
+			filesToCopy.add(file);
+		}
+	}
+
+	protected void addCustomFilters(Set<File> filesToCopy)
+	{
+		for (CustomFilter cf : config.getFilters().getCustomFilters())
+		{
+			File file = resolveCustomFilter(cf);
+			if (file != null)
+			{
+				logger.debug("Adding custom filter: " + file.toString());
+				filesToCopy.add(file);
+			}
+		}
+	}
+
+	protected void addDependencies(Set<File> filesToCopy)
+	{
+		for (File file : config.getProject().getFilesDependencies())
+		{
+			if (isNeededDependency(file))
+			{
+				logger.debug("Adding dependency: " + file.toString());
+				filesToCopy.add(file);
+			}
+		}
+	}
+
+	protected void addRepository(Set<File> filesToCopy)
+	{
+		File repository = (File) resources.get(RepositorySerializer.REPOSITORY_FILE_KEY);
 		if (repository != null)
 		{
 			logger.debug("Adding repository: '" + repository + "'");
-			filesToCopy.add(repository.getAbsoluteFile().toString());
-		}		
+			filesToCopy.add(repository);
+		}
 	}
 
-	private void copyFiles(Set<String> filesToCopy, boolean fatal) throws ModuleException
+	private void copyFiles(Set<File> filesToCopy, boolean fatal) throws ModuleException
 	{
-		Configuration config = Configuration.instance();
-
 		// determine output dir:
-		String outputPath = config.getProjects().getOutputPath();
-		logger.debug("OutputPath: '" + outputPath + "'");
+		File outputDir = config.getProject().getOutput();
+		logger.debug("OutputPath: " + outputDir.toString());
 
 		// create the output dir if needed
-		if (!FileUtils.createFullPath(outputPath))
+		if (!outputDir.exists() && !outputDir.mkdirs())
 		{
-			throw new ModuleException("Unable to create output directory: '" + outputPath + "'", MODULE_NAME);
+			throw new ModuleException("Unable to create output directory: " + outputDir.toString(), MODULE_NAME);
 		}
 
 		// start the actual copying
-		for (String source : filesToCopy)
+		for (File file : filesToCopy)
 		{
-			copyFile(outputPath, source, fatal);
+			copyFile(outputDir, file, fatal);
 		}
 	}
 
-	protected void copyFile(String outputPath, String source, boolean fatal) throws ModuleException
+	protected void copyFile(File outputDir, File source, boolean fatal) throws ModuleException
 	{
-		String dest = outputPath + FileUtils.getFilenamePart(source);
+		File dest = new File(outputDir, source.getName());
 		try
 		{
 			logger.debug("Copying '" + source + "' to '" + dest + "'");
@@ -170,5 +174,7 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
-	protected abstract boolean isNeededDependency(Dependency dependency);
+	protected abstract boolean isNeededDependency(File dependency);
+
+	protected abstract File resolveCustomFilter(CustomFilter filter);
 }

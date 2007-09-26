@@ -11,6 +11,7 @@ package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
 
+@Deprecated
 public class ConcernSource implements Serializable
 {
 	private static final long serialVersionUID = 1046241361643868704L;

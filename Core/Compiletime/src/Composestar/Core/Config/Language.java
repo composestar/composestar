@@ -29,6 +29,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import Composestar.Core.DUMMER.DummyEmitter;
+import Composestar.Core.DUMMER.DummyManager;
+import Composestar.Core.Exception.ModuleException;
+
 /**
  * @author Michiel Hendriks
  */
@@ -55,6 +59,8 @@ public class Language implements Serializable
 	 * The dummyGenerator's classname
 	 */
 	protected String dummyGenerator;
+
+	protected transient DummyEmitter dummyEmitter;
 
 	public Language(String inName)
 	{
@@ -132,4 +138,21 @@ public class Language implements Serializable
 		return compiler;
 	}
 
+	public DummyEmitter getDummyEmitter() throws ModuleException
+	{
+		if (dummyEmitter == null)
+		{
+			try
+			{
+				Class<?> emittedClass = Class.forName(dummyGenerator);
+				dummyEmitter = (DummyEmitter) emittedClass.newInstance();
+			}
+			catch (Exception e)
+			{
+				throw new ModuleException("Error while instantiating DummyEmitter: " + dummyGenerator,
+						DummyManager.MODULE_NAME);
+			}
+		}
+		return dummyEmitter;
+	}
 }

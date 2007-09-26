@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class BuiltLibraries implements Serializable
 {
 	private static final long serialVersionUID = -2556429479287190711L;

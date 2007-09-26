@@ -27,6 +27,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.INCRE.Config.ModulesHandler;
@@ -245,14 +246,23 @@ public class ModuleInfo implements Serializable
 	 */
 	public void initConfig()
 	{
-		Map config = Configuration.instance().getTmpModuleSettings(id);
-		if (config == null) return;
-		for (Object o : config.entrySet())
+		// FIXME do not use the singleton
+		BuildConfig bcfg = BuildConfig.instance();
+		if (bcfg == null)
 		{
-			Entry entry = (Entry) o;
+			return;
+		}
+		Map<String, String> config = bcfg.getSettings();
+		for (Entry<String, String> entry : config.entrySet())
+		{
+			if (!entry.getKey().startsWith(id + "."))
+			{
+				continue;
+			}
+			String key = entry.getKey().substring(id.length() + 1);
 			try
 			{
-				setSettingValue((String) entry.getKey(), (String) entry.getValue());
+				setSettingValue(key, entry.getValue());
 			}
 			catch (ConfigurationException e)
 			{

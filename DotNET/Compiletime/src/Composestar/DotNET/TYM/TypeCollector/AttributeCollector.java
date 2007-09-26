@@ -1,5 +1,7 @@
 package Composestar.DotNET.TYM.TypeCollector;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,51 +23,42 @@ import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Project;
-import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
-import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class AttributeCollector extends DefaultHandler implements CTCommonModule
 {
-	public static final String MODULE_NAME = "TAC";
+	public static final String MODULE_NAME = "AttributeCollector";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	public AttributeCollector()
 	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		Projects prjs = Configuration.instance().getProjects();
-		List projectList = prjs.getProjects();
-		Iterator prjIt = projectList.iterator();
-		while (prjIt.hasNext())
-		{
-			Project p = (Project) prjIt.next();
-			String projectFolder = p.getBasePath();
-			String xmlFile = projectFolder + "attributes.xml";
+		File xmlFile = new File(resources.configuration().getProject().getIntermediate(), "attributes.xml");
 
-			if (FileUtils.fileExist(xmlFile))
+		if (xmlFile.exists())
+		{
+			try
 			{
-				try
-				{
-					SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-					SAXParser saxParser = saxParserFactory.newSAXParser();
-					XMLReader parser = saxParser.getXMLReader();
-					parser.setContentHandler(this);
-					parser.parse(new InputSource(xmlFile));
-				}
-				catch (Exception e)
-				{
-					throw new ModuleException("Unable to collect attributes: " + e.getMessage(), MODULE_NAME);
-				}
+				SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+				SAXParser saxParser = saxParserFactory.newSAXParser();
+				XMLReader parser = saxParser.getXMLReader();
+				parser.setContentHandler(this);
+				parser.parse(new InputSource(new FileInputStream(xmlFile)));
 			}
-			else
+			catch (Exception e)
 			{
-				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Attribute file not found: " + xmlFile);
+				throw new ModuleException("Unable to collect attributes: " + e.getMessage(), MODULE_NAME);
 			}
 		}
+		else
+		{
+			logger.warn("Attribute file not found: " + xmlFile);
+		}
+
 	}
 
 	public void startElement(String uri, String localName, String qName, Attributes attr) throws SAXException

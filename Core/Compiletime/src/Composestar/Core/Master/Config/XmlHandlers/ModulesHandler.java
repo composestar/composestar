@@ -19,6 +19,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Master.Config.Configuration;
 
+@Deprecated
 public class ModulesHandler extends DefaultHandler
 {
 	protected XMLReader parser;
@@ -39,7 +40,7 @@ public class ModulesHandler extends DefaultHandler
 			if (amap.getValue("name") != null)
 			{
 				String name = amap.getValue("name");
-				HashMap<String,String> props = new HashMap<String,String>();
+				HashMap<String, String> props = new HashMap<String, String>();
 
 				for (int i = 0; i < amap.getLength(); i++)
 				{

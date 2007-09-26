@@ -13,5 +13,4 @@ import Composestar.Core.Master.CTCommonModule;
 
 public abstract class CONE implements CTCommonModule
 {
-
 }

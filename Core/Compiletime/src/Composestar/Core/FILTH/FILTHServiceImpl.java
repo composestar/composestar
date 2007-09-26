@@ -40,7 +40,7 @@ import Composestar.Core.FILTH.Core.Rule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
 import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -54,8 +54,11 @@ public class FILTHServiceImpl extends FILTHService
 
 	private String specFilename;
 
-	protected FILTHServiceImpl() throws ConfigurationException
+	protected CommonResources resources;
+
+	protected FILTHServiceImpl(CommonResources cr) throws ConfigurationException
 	{
+		resources = cr;
 		ModuleInfo mi = ModuleInfoManager.get(FILTH.MODULE_NAME);
 		outputEnabled = mi.getBooleanSetting("outputEnabled");
 		specFilename = mi.getStringSetting("input");
@@ -82,8 +85,7 @@ public class FILTHServiceImpl extends FILTHService
 		String cssFile = "";
 		try
 		{
-			String basedir = Configuration.instance().getPathSettings().getPath("Base");
-			File file = new File(basedir + "Analyses/");
+			File file = new File(resources.configuration().getProject().getIntermediate(), "Analyses");
 			if (!file.exists())
 			{
 				file.mkdir();
@@ -121,11 +123,15 @@ public class FILTHServiceImpl extends FILTHService
 				{
 					FILTHService.setLog(new PrintStream(new DevNullOutputStream()));
 				}
-				cssFile = "file://" + Configuration.instance().getPathSettings().getPath("base") + "SECRET.css";
+				// TODO: bad path usage
+				cssFile = resources.configuration().getProject().getBase().toURI().toString() + "/Analysis/SECRET.css";
 				if (!(new File(cssFile).exists()))
 				{
-					cssFile = "file://" + Configuration.instance().getPathSettings().getPath("Composestar")
-							+ "SECRET.css";
+					File css = resources.getPathResolver().getResource("SECRET.css");
+					if (css != null)
+					{
+						cssFile = css.toURI().toString();
+					}
 				}
 			}
 		}
@@ -151,9 +157,14 @@ public class FILTHServiceImpl extends FILTHService
 				"\"/>\n");
 		buffer.append("</head>\n");
 		buffer.append("<body>\n");
-		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"" + "file://").append(
-				Configuration.instance().getPathSettings().getPath("Composestar")).append(
-				"/logo.gif\"/>  /TRESE/Compose*/FILTH</i></b></font></div>\n");
+		// TODO bad path usage
+		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"");
+		File logoFile = resources.getPathResolver().getResource("logo.gif");
+		if (logoFile != null)
+		{
+			buffer.append(logoFile.toURI().toString());
+		}
+		buffer.append("\"/>  /TRESE/Compose*/FILTH</i></b></font></div>\n");
 		buffer.append("<h3>Report generated on:  ").append(new Date().toString()).append("</h3>\n");
 
 		FILTHService.log.print(buffer.toString());
@@ -446,7 +457,9 @@ public class FILTHServiceImpl extends FILTHService
 			if (InnerDispatcher.isDefaultDispatch(fmsi.getFilterModule().getRef().getName()))
 			{
 				inc.deleteHistory();
-				throw new ModuleException("Unable to restore filter module orders. Last filter module is not the default dispatcher", FILTH.MODULE_NAME);				
+				throw new ModuleException(
+						"Unable to restore filter module orders. Last filter module is not the default dispatcher",
+						FILTH.MODULE_NAME);
 			}
 			anOrder.addLast(new FilterModuleSuperImposition(InnerDispatcher.getInnerDispatchReference()));
 		}

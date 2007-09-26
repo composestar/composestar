@@ -17,9 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
@@ -28,17 +25,14 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.varia.LevelRangeFilter;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
+import Composestar.Core.Config.Xml.BuildConfigHandler;
 import Composestar.Core.Config.Xml.PlatformConfigHandler;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.ModuleInfo;
 import Composestar.Core.Master.Config.ModuleInfoManager;
-import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -139,6 +133,13 @@ public abstract class Master
 			root.addAppender(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
 		}
 		Logger.getRootLogger().addAppender(logMetrics);
+
+		String logLevel = System.getenv("LOG4J_LEVEL");
+		if (logLevel != null)
+		{
+			Logger.getRootLogger().setLevel(Level.toLevel(logLevel));
+			logger.info("Log4j level override from environment");
+		}
 	}
 
 	public void processCmdArgs(String[] args)
@@ -274,42 +275,43 @@ public abstract class Master
 		throw new Exception("Unable to find the platform configuration.");
 	}
 
+	/**
+	 * Will be called retrieve the path resolved.
+	 * 
+	 * @return
+	 */
+	protected PathResolver getPathResolver()
+	{
+		return new PathResolver(getClass());
+	}
+
 	protected void loadConfiguration() throws Exception
 	{
 		File configFile = new File(configFilename);
 		if (!configFile.canRead())
 		{
-			throw new Exception("Unable to open configuration file: '" + configFilename + "'");
+			throw new Exception("Unable to open configuration file: '" + configFile.toString() + "'");
 		}
 
 		// create the repository and common resources
 		DataStore.instance();
 		resources = new CommonResources();
+		resources.setConfiguration(BuildConfigHandler.loadBuildConfig(configFile));
+		resources.setPathResolver(getPathResolver());
 
-		// load the project configuration file
-		try
-		{
-			logger.debug("Reading build configuration from: " + configFilename);
-
-			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-			SAXParser saxParser = saxParserFactory.newSAXParser();
-			XMLReader parser = saxParser.getXMLReader();
-
-			BuildConfigHandler handler = new BuildConfigHandler(parser);
-			parser.setContentHandler(handler);
-			parser.parse(new InputSource(configFilename));
-		}
-		catch (Exception e)
-		{
-			throw new Exception("An error occured while reading the build configuration file '" + configFilename
-					+ "': " + e.getMessage());
-		}
-
-		// Set debug level
-		if (debugOverride == -1)
-		{
-			Debug.setMode(Configuration.instance().getBuildDebugLevel());
-		}
+		/*
+		 * // load the project configuration file try { logger.debug("Reading
+		 * build configuration from: " + configFilename); SAXParserFactory
+		 * saxParserFactory = SAXParserFactory.newInstance(); SAXParser
+		 * saxParser = saxParserFactory.newSAXParser(); XMLReader parser =
+		 * saxParser.getXMLReader(); BuildConfigHandler handler = new
+		 * BuildConfigHandler(parser); parser.setContentHandler(handler);
+		 * parser.parse(new InputSource(configFilename)); } catch (Exception e) {
+		 * throw new Exception("An error occured while reading the build
+		 * configuration file '" + configFilename + "': " + e.getMessage()); } //
+		 * Set debug level if (debugOverride == -1) {
+		 * Debug.setMode(Configuration.instance().getBuildDebugLevel()); }
+		 */
 	}
 
 	/**
@@ -341,7 +343,7 @@ public abstract class Master
 
 			// initialize INCRE
 			INCRE incre = INCRE.instance();
-			incre.init();
+			incre.init(resources);
 
 			// load override settings
 			for (Entry<String, Map<String, String>> entry : settingsOverride.entrySet())
@@ -447,7 +449,7 @@ public abstract class Master
 		master.processCmdArgs(args);
 		try
 		{
-			//master.loadPlatform(); // not yet
+			master.loadPlatform();
 			master.loadConfiguration();
 		}
 		catch (Exception e)

@@ -17,6 +17,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Master.Config.Language;
 
+@Deprecated
 public class FileExtensionsHandler extends DefaultHandler
 {
 	protected XMLReader parser;

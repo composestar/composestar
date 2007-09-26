@@ -37,7 +37,10 @@ public class BuildConfigurationManager
 
 	public String buildconfigFile = "";
 
-	public String applicationStart = "";
+	/**
+	 * Required but not used
+	 */
+	public String applicationStart = "bogus";
 
 	public String runDebugLevel = "";
 
@@ -199,7 +202,7 @@ public class BuildConfigurationManager
 			String s;
 			StringBuffer buffer = new StringBuffer();
 			boolean skip = true;
-			
+
 			String pluginPath = ComposestarEclipsePluginPlugin.getAbsolutePath("");
 			while ((s = in.readLine()) != null)
 			{

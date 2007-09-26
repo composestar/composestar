@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.CommonResources;
 import Composestar.Utils.Debug;
 
 public class INCREReporter
@@ -25,24 +25,23 @@ public class INCREReporter
 
 	private long timeStart, timeEnd, totalElapsed;
 
-	public INCREReporter()
+	public INCREReporter(CommonResources resources)
 	{
 		// find INCRE stylesheet and create html report file
 		// DataStore ds = DataStore.instance();
 		// Properties resources = (Properties)ds.getObjectByID("config");
-		Configuration config = Configuration.instance();
 
 		// this.cssFile = resources.getProperty( "ComposestarPath", "ERROR" ) +
 		// "INCRE.css";
-		File cssFile1 = new File(config.getPathSettings().getPath("Base") + "INCRE.css");
-		File cssFile2 = new File(config.getPathSettings().getPath("Composestar") + "INCRE.css");
+		File cssFile1 = new File(resources.configuration().getProject().getIntermediate(), "INCRE.css");
+		File cssFile2 = new File(resources.getPathResolver().getCore(), "INCRE.css");
 		if (cssFile1.exists())
 		{
-			this.cssFile = config.getPathSettings().getPath("Base") + "INCRE.css";
+			cssFile = resources.configuration().getProject().getBase() + "/INCRE.css";
 		}
 		else if (cssFile2.exists())
 		{
-			this.cssFile = config.getPathSettings().getPath("Composestar") + "INCRE.css";
+			cssFile = resources.getPathResolver().getCore() + "/INCRE.css";
 		}
 		else
 		{
@@ -51,8 +50,12 @@ public class INCREReporter
 
 		// String reportFile = resources.getProperty("TempFolder") +
 		// "INCRE.html";
-		String reportFile = config.getPathSettings().getPath("Base") + "INCRE.html";
-		String reportFile2 = config.getPathSettings().getPath("Base") + "INCRE.txt";
+		if (!resources.configuration().getProject().getIntermediate().exists())
+		{
+			resources.configuration().getProject().getIntermediate().mkdirs();
+		}
+		String reportFile = resources.configuration().getProject().getIntermediate() + "/INCRE.html";
+		String reportFile2 = resources.configuration().getProject().getIntermediate() + "/INCRE.txt";
 		try
 		{
 			writer = new BufferedWriter(new FileWriter(reportFile));
@@ -110,15 +113,13 @@ public class INCREReporter
 		// DataStore ds = DataStore.instance();
 		// Properties resources = (Properties)ds.getObjectByID("config");
 		// String tempPath = resources.getProperty( "TempFolder", "ERROR" );
-		Configuration config = Configuration.instance();
-		String tempPath = config.getPathSettings().getPath("Base");
 
 		buffer.append("<html><head><title>INCRE Report</title></head>");
 		buffer.append("<link rel=stylesheet href=");
 		buffer.append("\"file://").append(this.cssFile).append('\"');
 		buffer.append(" type=\"text/css\">");
 		buffer.append("<body bgcolor=#EEEEEE><b>INCRE REPORT</b><br><b>Date: </b>").append(new Date().toString())
-				.append("<br><b>Project:</b> ").append(tempPath).append(
+				.append("<br><b>Project:</b> ").append(".").append(
 						"<br><br><table width=90% border=0 cellspacing=0 cellpadding=2>");
 		buffer.append("<tr><td class=maincell colspan=3></td></tr>");
 	}
@@ -204,8 +205,7 @@ public class INCREReporter
 			buffer2.append('\n');
 			buffer.append("	ms (");
 			double percentage = 0.0;
-			if (totalElapsed > 0)
-				percentage = ((double) elapsed * 100d / (double) totalElapsed);
+			if (totalElapsed > 0) percentage = ((double) elapsed * 100d / (double) totalElapsed);
 			BigDecimal percDec = new BigDecimal(percentage);
 			percDec = percDec.setScale(1, BigDecimal.ROUND_HALF_UP);
 			buffer.append(percDec.toString());

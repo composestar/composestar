@@ -12,9 +12,8 @@ import javax.xml.parsers.SAXParserFactory;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Imports the semtex.xml file and stores the information in this file into the
@@ -26,19 +25,18 @@ public class DotNETSemTexCollector implements CTCommonModule
 {
 	public static final String MODULE_NAME = "SEMTEX";
 
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
 	/*
 	 * Checks if the semtex.xml file is available and imports this file.
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
 		// Read the generated xml file and store the data in the repository
-		String filename = Configuration.instance().getPathSettings().getPath("Base") + "obj/semtex.xml";
-
-		File semTexFile = new File(filename);
+		File semTexFile = new File(resources.configuration().getProject().getIntermediate(), "semtex.xml");
 		if (!semTexFile.exists())
 		{
-			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "The SemTex file " + filename
-					+ " does not exists. Skipping SemTex Collector.");
+			logger.info("The SemTex file " + semTexFile + " does not exists. Skipping SemTex Collector.");
 		}
 		else
 		{
@@ -51,7 +49,7 @@ public class DotNETSemTexCollector implements CTCommonModule
 
 				// We use the getCleanInputStream because the SAX parser has
 				// some problems with UTF-8
-				FileInputStream in = FileUtils.getCleanInputStream(new File(filename));
+				FileInputStream in = FileUtils.getCleanInputStream(semTexFile);
 				saxParser.parse(in, sch);
 			}
 			catch (Exception e)

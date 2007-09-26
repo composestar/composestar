@@ -10,14 +10,15 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
-import Composestar.Core.DUMMER.DefaultEmitter;
+import Composestar.Core.Config.Project;
+import Composestar.Core.Config.Source;
+import Composestar.Core.DUMMER.DummyEmitter;
 import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.Config.Project;
-import Composestar.Core.Master.Config.Source;
-import Composestar.Core.Master.Config.TypeSource;
+import Composestar.Core.Master.CommonResources;
 import Composestar.Utils.FileUtils;
 import antlr.ASTFactory;
 import antlr.CommonAST;
@@ -25,7 +26,7 @@ import antlr.RecognitionException;
 import antlr.TokenStreamException;
 import antlr.collections.AST;
 
-public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTypes
+public class JSharpDummyEmitter implements DummyEmitter, JSharpTokenTypes
 {
 	private final static String MODULE_NAME = DummyManager.MODULE_NAME;
 
@@ -41,7 +42,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 
 	private ASTFactory factory = new ASTFactory();
 
-	private Stack stack = new Stack();
+	private Stack<AST> stack = new Stack<AST>();
 
 	private int tabs = 0;
 
@@ -49,7 +50,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 
 	private PrintStream debug = System.err;
 
-	private List packages = new ArrayList();
+	private List<String> packages = new ArrayList<String>();
 
 	private boolean packageDefinition = false;
 
@@ -73,23 +74,35 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		setupTokenNames();
 	}
 
-	public void createDummy(Project project, Source source, String target) throws ModuleException
+	public void createDummies(Project project, Set<Source> sources) throws ModuleException
+	{
+		for (Source source : sources)
+		{
+			createDummy(project, source);
+		}
+		writeAttributes(new File(project.getIntermediate(), "attributes.xml"));
+	}
+
+	public void setCommonResources(CommonResources resc)
+	{}
+
+	public void createDummy(Project project, Source source) throws ModuleException
 	{
 		dummy = new StringBuffer();
 		packageName = "";
-		packages = new ArrayList();
+		packages = new ArrayList<String>();
 		currentSource = source;
 
 		try
 		{
-			FileInputStream fis = new FileInputStream(source.getFileName());
+			FileInputStream fis = new FileInputStream(source.getFile());
 			// Create a scanner that reads from the input stream passed to us
 			JSharpLexer lexer = new JSharpLexer(fis);
-			lexer.setFilename(source.getFileName());
+			lexer.setFilename(source.getFile().toString());
 
 			// Create a parser that reads from the scanner
 			JSharpRecognizer parser = new JSharpRecognizer(lexer);
-			parser.setFilename(source.getFileName());
+			parser.setFilename(source.getFile().toString());
 
 			// start parsing at the compilationUnit rule
 			parser.compilationUnit();
@@ -99,30 +112,22 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			// af.show();
 
 			visit(root);
-			emit(target);
+			emit(source.getStub());
 		}
 		catch (FileNotFoundException e)
 		{
-			throw new ModuleException("File not found: " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException(String.format("File not found: %s", e.getMessage()), MODULE_NAME);
 		}
 		catch (TokenStreamException e)
 		{
-			throw new ModuleException("Error reading from " + source.getFileName() + ": " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException(String.format("Error reading from %s : %s", source.getFile(), e.getMessage()),
+					MODULE_NAME);
 		}
 		catch (RecognitionException e)
 		{
-			throw new ModuleException("Syntax error: " + e.getMessage(), MODULE_NAME, e.getFilename(), e.getLine());
+			throw new ModuleException(String.format("Syntax error: %s", e.getMessage()), MODULE_NAME, e.getFilename(),
+					e.getLine());
 		}
-	}
-
-	public void createDummies(Project project, List sources, List targets) throws ModuleException
-	{
-		super.createDummies(project, sources, targets);
-
-		// write attributes.xml
-		String basePath = project.getBasePath();
-		File attsFile = new File(basePath, "attributes.xml");
-		writeAttributes(attsFile);
 	}
 
 	public void writeAttributes(File target) throws ModuleException
@@ -139,7 +144,8 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("ERROR while trying to write attributes: " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException(String.format("ERROR while trying to write attributes: %s", e.getMessage()),
+					MODULE_NAME);
 		}
 		finally
 		{
@@ -153,21 +159,16 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	{
 		if (currentSource != null && currentSource.getProject() != null)
 		{
-			TypeSource ts = new TypeSource();
-			ts.setName(type);
-			ts.setFileName(currentSource.getFileName());
-
 			Project p = currentSource.getProject();
-			p.addTypeSource(ts);
+			p.getTypeMapping().addType(type, currentSource);
 		}
 	}
 
-	public void emit(String target) throws ModuleException
+	public void emit(File target) throws ModuleException
 	{
 		try
 		{
-			File f = (new File(target)).getParentFile();
-			f.mkdirs();
+			target.getParentFile().mkdirs();
 			BufferedWriter bw = new BufferedWriter(new FileWriter(target));
 			bw.write("// Generated by JSharpDummyPrinter\r\n");
 			bw.write(dummy.toString());
@@ -175,7 +176,8 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("ERROR while trying to emit dummy source: " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException(String.format("ERROR while trying to emit dummy source: %s", e.getMessage()),
+					MODULE_NAME);
 		}
 	}
 
@@ -190,21 +192,21 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 
 	private String getPackageName()
 	{
-		String name = packageName;
+		StringBuffer name = new StringBuffer(packageName);
 		if (packages.size() > 0)
 		{
 			// iterate over packages
-			Iterator packageIt = packages.iterator();
+			Iterator<String> packageIt = packages.iterator();
 			while (packageIt.hasNext())
 			{
-				name += packageIt.next();
+				name.append(packageIt.next());
 				if (packageIt.hasNext())
 				{
-					name += ".";
+					name.append(".");
 				}
 			}
 		}
-		return name;
+		return name.toString();
 	}
 
 	private void endBlock()
@@ -1263,35 +1265,5 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			child = child.getNextSibling();
 		}
 		return result;
-	}
-
-	/**
-	 * For testing.
-	 */
-	public static void main(String[] args)
-	{
-		if (args.length != 1)
-		{
-			System.out.println("Usage: JSharpDummyEmitter <filename>");
-			System.exit(-1);
-		}
-
-		try
-		{
-			File input = new File(args[0]);
-
-			File dummyDir = new File(input.getParent(), "dummies");
-			File output = new File(dummyDir, input.getName());
-
-			Source source = new Source();
-			source.setFileName(input.getAbsolutePath());
-
-			JSharpDummyEmitter jde = new JSharpDummyEmitter();
-			jde.createDummy(null, source, output.getAbsolutePath());
-		}
-		catch (Throwable e)
-		{
-			e.printStackTrace();
-		}
 	}
 }

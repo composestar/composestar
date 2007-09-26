@@ -1,5 +1,8 @@
 package Composestar.Core.INCRE.Config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,7 +14,6 @@ import org.xml.sax.XMLReader;
 
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCREModule;
-import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -30,7 +32,7 @@ public class ConfigManager
 	 * Map containing modules. The keys are the names of the modules. The values
 	 * are the module objects.
 	 */
-	public Map<String,INCREModule> modules = new LinkedHashMap<String,INCREModule>();
+	public Map<String, INCREModule> modules = new LinkedHashMap<String, INCREModule>();
 
 	public ConfigManager()
 	{
@@ -38,7 +40,14 @@ public class ConfigManager
 		xmlreader = null;
 	}
 
-	public void parseXML(String filename) throws java.io.IOException, org.xml.sax.SAXException,
+	public void parseXML(File filename) throws java.io.IOException, org.xml.sax.SAXException,
+			ParserConfigurationException
+	{
+		logger.debug("Parsing configuration file '" + filename + "'...");
+		parseXML(new FileInputStream(filename));
+	}
+
+	public void parseXML(InputStream is) throws java.io.IOException, org.xml.sax.SAXException,
 			ParserConfigurationException
 	{
 		SAXParserFactory saxFactory = SAXParserFactory.newInstance();
@@ -46,8 +55,7 @@ public class ConfigManager
 		xmlreader = saxFactory.newSAXParser().getXMLReader();
 		xmlreader.setContentHandler(this.xmlparser);
 
-		logger.debug("Parsing configuration file '" + filename + "'...");
-		xmlreader.parse(new InputSource(filename));
+		xmlreader.parse(new InputSource(is));
 	}
 
 	public XMLReader getXMLReader()
@@ -65,7 +73,7 @@ public class ConfigManager
 		return modules.get(id);
 	}
 
-	public Map<String,INCREModule> getModules()
+	public Map<String, INCREModule> getModules()
 	{
 		return modules;
 	}

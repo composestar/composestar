@@ -20,8 +20,9 @@ import java.util.Properties;
 /**
  * Singleton containing the build configuration
  * 
- * @author elmuerte
+ * @deprecated
  */
+@Deprecated
 public class Configuration implements Serializable
 {
 	private static final long serialVersionUID = -8812125434498730547L;

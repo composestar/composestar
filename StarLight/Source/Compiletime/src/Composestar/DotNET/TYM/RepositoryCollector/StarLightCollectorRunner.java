@@ -31,8 +31,6 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.ConcernSource;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.DotNET.LAMA.DotNETAttribute;
 import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
@@ -64,40 +62,47 @@ import composestar.dotNET.tym.entities.TypeElement;
 
 public class StarLightCollectorRunner implements CTCommonModule
 {
-	public static final String MODULE_NAME = "COLLECTOR";	
+	public static final String MODULE_NAME = "COLLECTOR";
+
 	private static CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
-	
+
 	private boolean processBodies = false;
+
 	private List<DotNETCallToOtherMethod> callsToOtherMethods = new ArrayList<DotNETCallToOtherMethod>();
-	
+
 	private ConfigurationContainer configContainer = StarLightMaster.getConfigContainer();
+
 	private INCRE incre = INCRE.instance();
-	
-	public void run(CommonResources resources) throws ModuleException
+
+	private CommonResources resources;
+
+	public void run(CommonResources resc) throws ModuleException
 	{
+		resources = resc;
+
 		// Collect filtertypes and filteractions
 		collectFilterTypesAndActions();
-		
+
 		// Collect the type information from assemblies
 		collectAssemblies();
-		
+
 		// Collection cps concern sources
 		collectConcernSources();
-		
+
 		// Collect primitive concerns
 		collectPrimitiveConcerns();
-		
+
 		// resolve the MethodInfo reference in the calls within a method
 		resolveCallsToOtherMethods();
 	}
-	
+
 	private void collectFilterTypesAndActions() throws ModuleException
 	{
 		long starttime = System.currentTimeMillis();
 
 		// create mapping from strings to filteractions, to use later to resolve
 		// the actions in a filtertype
-		Map<String,FilterAction> actionMapping = new HashMap<String,FilterAction>();
+		Map<String, FilterAction> actionMapping = new HashMap<String, FilterAction>();
 
 		// get FilterActions
 		List<FilterActionElement> storedActions = configContainer.getFilterActions().getFilterActionList();
@@ -123,9 +128,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 			FilterAction acceptCallAction = (FilterAction) actionMapping.get(storedType.getAcceptCallAction());
 			if (acceptCallAction == null)
 			{
-				throw new ModuleException(
-						"AcceptCallAction '" + storedType.getAcceptCallAction() +
-						"' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+				throw new ModuleException("AcceptCallAction '" + storedType.getAcceptCallAction()
+						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
 			}
 			filterType.setAcceptCallAction(acceptCallAction);
 
@@ -133,9 +137,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 			FilterAction rejectCallAction = (FilterAction) actionMapping.get(storedType.getRejectCallAction());
 			if (rejectCallAction == null)
 			{
-				throw new ModuleException(
-						"RejectCallAction '" + storedType.getRejectCallAction() +
-						"' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+				throw new ModuleException("RejectCallAction '" + storedType.getRejectCallAction()
+						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
 			}
 			filterType.setRejectCallAction(rejectCallAction);
 
@@ -143,9 +146,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 			FilterAction acceptReturnAction = (FilterAction) actionMapping.get(storedType.getAcceptReturnAction());
 			if (acceptReturnAction == null)
 			{
-				throw new ModuleException(
-						"AcceptReturnAction '" + storedType.getAcceptReturnAction() +
-						"' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+				throw new ModuleException("AcceptReturnAction '" + storedType.getAcceptReturnAction()
+						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
 			}
 			filterType.setAcceptReturnAction(acceptReturnAction);
 
@@ -153,64 +155,62 @@ public class StarLightCollectorRunner implements CTCommonModule
 			FilterAction rejectReturnAction = (FilterAction) actionMapping.get(storedType.getRejectReturnAction());
 			if (rejectReturnAction == null)
 			{
-				throw new ModuleException(
-						"RejectReturnAction '" + storedType.getRejectReturnAction() +
-						"' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+				throw new ModuleException("RejectReturnAction '" + storedType.getRejectReturnAction()
+						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
 			}
 			filterType.setRejectReturnAction(rejectReturnAction);
 		}
 
-		logger.debug(
-				storedTypes.size() + " filters with " +
-				actionMapping.size() + " filter actions read from database in " +
-				(System.currentTimeMillis() - starttime) + " ms.");
+		logger.debug(storedTypes.size() + " filters with " + actionMapping.size()
+				+ " filter actions read from database in " + (System.currentTimeMillis() - starttime) + " ms.");
 	}
-	
+
 	private void collectAssemblies() throws ModuleException
 	{
 		for (AssemblyConfig ac : configContainer.getAssemblies().getAssemblyConfigList())
 		{
 			String assemblyName = ac.getName();
-			
+
 			logger.debug("Processing assembly '" + assemblyName + "'...");
-			
+
 			if (incre.isProcessedByModule(ac, MODULE_NAME))
 			{
-				INCRETimer copyTimer = incre.getReporter().openProcess(
-						MODULE_NAME, assemblyName, INCRETimer.TYPE_INCREMENTAL);
-				
+				INCRETimer copyTimer = incre.getReporter().openProcess(MODULE_NAME, assemblyName,
+						INCRETimer.TYPE_INCREMENTAL);
+
 				copyAssemblies(assemblyName);
 				copyTimer.stop();
 			}
 			else
 			{
-				INCRETimer runTimer = incre.getReporter().openProcess(
-						MODULE_NAME, assemblyName, INCRETimer.TYPE_NORMAL);
-				
+				INCRETimer runTimer = incre.getReporter()
+						.openProcess(MODULE_NAME, assemblyName, INCRETimer.TYPE_NORMAL);
+
 				collectAssembly(ac);
 				runTimer.stop();
 			}
 		}
 	}
-	
+
 	private void copyAssemblies(String assemblyName) throws ModuleException
 	{
 		logger.debug("Restoring type information for assembly '" + assemblyName + "'");
 
 		// collect and iterate over all objects from previous compilation runs
-		
+
 		int typecount = 0;
 		for (Object obj : incre.history.getDataStore().getObjects())
 		{
 			// Only restore PrimitiveConcerns and CpsConcerns
 			if (obj instanceof PrimitiveConcern || obj instanceof CpsConcern)
 			{
-				Concern c = (Concern)obj;
+				Concern c = (Concern) obj;
 
 				// Get the .NET platform representation for this concern
-				DotNETType t = (DotNETType)c.getPlatformRepresentation();
+				DotNETType t = (DotNETType) c.getPlatformRepresentation();
 
-				// Add to datastore if type belongs to the assembly we are restoring
+				// Add to datastore if type belongs to the assembly we are
+				// restoring
 				if (t != null && assemblyName.equals(t.assemblyName()))
 				{
 					// Register the type with LAMA
@@ -226,68 +226,62 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 		logger.debug(typecount + " types restored");
 	}
-    
+
 	private void collectAssembly(AssemblyConfig assembly) throws ModuleException
 	{
 		String filename = assembly.getTypeSpecificationFile();
 
 		logger.debug("Loading type information from '" + filename + "'...");
-		
+
 		InputStream is = null;
 		try
 		{
-			INCRETimer deserializeTimer = incre.getReporter().openProcess(
-					MODULE_NAME, "XML deserialize", INCRETimer.TYPE_NORMAL);
-			
+			INCRETimer deserializeTimer = incre.getReporter().openProcess(MODULE_NAME, "XML deserialize",
+					INCRETimer.TYPE_NORMAL);
+
 			is = new FileInputStream(filename);
-			if (filename.endsWith(".gzip"))
-				is = new GZIPInputStream(is);
-			
+			if (filename.endsWith(".gzip")) is = new GZIPInputStream(is);
+
 			AssemblyDocument doc = AssemblyDocument.Factory.parse(is);
-			
+
 			deserializeTimer.stop();
-			
+
 			collectTypes(doc.getAssembly());
 		}
 		catch (XmlException e)
 		{
 			throw new ModuleException(
-					"CollectorRunner: XmlException while parsing " + filename +
-					": " + e.getMessage(), MODULE_NAME);
+					"CollectorRunner: XmlException while parsing " + filename + ": " + e.getMessage(), MODULE_NAME);
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException(
-					"CollectorRunner: IOException while parsing " + filename + 
-					": " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException("CollectorRunner: IOException while parsing " + filename + ": " + e.getMessage(),
+					MODULE_NAME);
 		}
 		finally
 		{
 			FileUtils.close(is);
 		}
 	}
-	
+
 	private void collectConcernSources()
 	{
 		List<ConcernElement> concerns = configContainer.getConcerns().getConcernList();
 		for (ConcernElement ce : concerns)
 		{
-			ConcernSource concern = new ConcernSource();
 			File concernFile = new File(ce.getPathName(), ce.getFileName());
-			concern.setFileName(concernFile.getAbsolutePath());
-
-			Configuration.instance().getProjects().addConcernSource(concern);
+			resources.configuration().getProject().addConcern(concernFile);
 		}
 	}
-	
+
 	private void collectPrimitiveConcerns()
-	{		
+	{
 		logger.debug("Processing primitive concerns...");
 		long starttime = System.currentTimeMillis();
-		
+
 		Set<Annotation> unresolvedAttributeTypes = new HashSet<Annotation>();
-		
-		Map<String,DotNETType> typeMap = TypeMap.instance().map();
+
+		Map<String, DotNETType> typeMap = TypeMap.instance().map();
 		for (DotNETType type : typeMap.values())
 		{
 			// Collect type attributes
@@ -296,10 +290,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 			{
 				unresolvedAttributeTypes.addAll(typeAnnos);
 			}
-			
+
 			// Collect field attributes
 			List<DotNETFieldInfo> fields = type.getFields();
-			for (DotNETFieldInfo field : fields) 
+			for (DotNETFieldInfo field : fields)
 			{
 				List<Annotation> fieldAnnos = field.getAnnotations();
 				if (fieldAnnos != null)
@@ -307,7 +301,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 					unresolvedAttributeTypes.addAll(fieldAnnos);
 				}
 			}
-			
+
 			// Collect method attributes
 			List<DotNETMethodInfo> methods = type.getMethods();
 			for (DotNETMethodInfo method : methods)
@@ -318,66 +312,68 @@ public class StarLightCollectorRunner implements CTCommonModule
 					unresolvedAttributeTypes.addAll(methodAnnos);
 				}
 			}
-			
+
 			// Add type to repository as primitive concern
 			PrimitiveConcern pc = new PrimitiveConcern();
 			pc.setName(type.getFullName());
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
 			DataStore.instance().addObject(type.getFullName(), pc);
-			
-		//	logger.debug("Adding primitive concern '" + pc.getName() + "'");
+
+			// logger.debug("Adding primitive concern '" + pc.getName() + "'");
 		}
-		
+
 		long elapsed = System.currentTimeMillis() - starttime;
 		logger.debug(typeMap.size() + " primitive concerns added in " + elapsed + " ms.");
 
 		// Resolve attribute types
 		resolveAttributeTypes(unresolvedAttributeTypes);
 	}
-	
+
 	private void resolveAttributeTypes(Set<Annotation> unresolvedAttributeTypes)
 	{
 		logger.debug("Resolving " + unresolvedAttributeTypes.size() + " attribute types...");
 		long starttime = System.currentTimeMillis();
-		
-		Map<String,DotNETType> typeMap = TypeMap.instance().map();
-		Map<String,DotNETType> newAttributeTypes = new HashMap<String,DotNETType>();
-		
+
+		Map<String, DotNETType> typeMap = TypeMap.instance().map();
+		Map<String, DotNETType> newAttributeTypes = new HashMap<String, DotNETType>();
+
 		for (Annotation annotation : unresolvedAttributeTypes)
 		{
 			if (typeMap.containsKey(annotation.getTypeName()))
 			{
 				// Attribute type has been resolved by the analyzer
-				annotation.setType((Type)typeMap.get(annotation.getTypeName()));
+				annotation.setType((Type) typeMap.get(annotation.getTypeName()));
 			}
 			else if (newAttributeTypes.containsKey(annotation.getTypeName()))
 			{
-				// Attribute type has been encountered before, use previously created type
-				annotation.setType((Type)newAttributeTypes.get(annotation.getTypeName()));
+				// Attribute type has been encountered before, use previously
+				// created type
+				annotation.setType((Type) newAttributeTypes.get(annotation.getTypeName()));
 			}
 			else
 			{
 				// Create a new DotNETType element
 				DotNETType attributeType = new DotNETType();
 				attributeType.setFullName(annotation.getTypeName());
-				
-				// Add this attribute type to the repository as a primitive concern
+
+				// Add this attribute type to the repository as a primitive
+				// concern
 				PrimitiveConcern pc_attribute = new PrimitiveConcern();
 				pc_attribute.setName(attributeType.getFullName());
 				pc_attribute.setPlatformRepresentation(attributeType);
 				attributeType.setParentConcern(pc_attribute);
 				DataStore.instance().addObject(attributeType.getFullName(), pc_attribute);
-				
+
 				// Add this attribute type to the list of added types
 				newAttributeTypes.put(attributeType.getFullName(), attributeType);
 			}
 		}
-	
+
 		long elapsed = System.currentTimeMillis() - starttime;
 		logger.debug("Attribute types resolved in " + elapsed + " ms.");
 	}
-	
+
 	/**
 	 * Process all types, i.e. map them to LAMA
 	 */
@@ -385,14 +381,14 @@ public class StarLightCollectorRunner implements CTCommonModule
 	{
 		List<TypeElement> types = assembly.getTypes().getTypeList();
 
-		logger.debug("Generating language model with " + types.size() + " types...");		
+		logger.debug("Generating language model with " + types.size() + " types...");
 		long starttime = System.currentTimeMillis();
-		
+
 		for (TypeElement te : types)
 		{
 			String fullName = getFullName(te);
 
-		//	logger.debug("Processing type '" + fullName + "'...");
+			// logger.debug("Processing type '" + fullName + "'...");
 
 			DotNETType dnt = new DotNETType();
 			dnt.setName(te.getName());
@@ -402,14 +398,14 @@ public class StarLightCollectorRunner implements CTCommonModule
 			dnt.setAssemblyName(assembly.getName());
 			dnt.setFromSource(te.getFromSource());
 			dnt.setEndPos(te.getEndPos());
-			
+
 			// Set the implemented interfaces
 			List<String> interfaces = te.getInterfaces().getInterfaceList();
 			for (String iface : interfaces)
 			{
 				dnt.addImplementedInterface(iface);
 			}
-			
+
 			dnt.setIsClass(te.getIsClass());
 			dnt.setIsInterface(te.getIsInterface());
 			dnt.setIsEnum(te.getIsEnum());
@@ -418,7 +414,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			dnt.setIsPublic(te.getIsPublic());
 			dnt.setIsAbstract(te.getIsAbstract());
 			dnt.setIsSealed(te.getIsSealed());
-			
+
 			// Set the attributes for this type
 			List<DotNETAttribute> attributes = collectAttributes(te.getAttributes());
 			for (DotNETAttribute attribute : attributes)
@@ -432,19 +428,18 @@ public class StarLightCollectorRunner implements CTCommonModule
 			// Add the DotNETType to the TypeMap
 			TypeMap.instance().addType(dnt.getFullName(), dnt);
 		}
-		
+
 		long elapsed = System.currentTimeMillis() - starttime;
 		logger.debug("Language model generated in " + elapsed + " ms.");
 	}
-	
+
 	private String getFullName(TypeElement te) throws ModuleException
 	{
 		String name = te.getName();
 		String ns = te.getNamespace();
 
-		if (te.getName() == null)
-			throw new ModuleException("Type must have a name attribute", MODULE_NAME);
-		
+		if (te.getName() == null) throw new ModuleException("Type must have a name attribute", MODULE_NAME);
+
 		// see rev. 2806
 		return (ns.endsWith("+") ? (ns + name) : (ns + "." + name));
 	}
@@ -452,16 +447,15 @@ public class StarLightCollectorRunner implements CTCommonModule
 	private List<DotNETAttribute> collectAttributes(ArrayOfAttributeElement attributes)
 	{
 		if (attributes == null) return Collections.EMPTY_LIST;
-		
+
 		List<DotNETAttribute> result = new ArrayList<DotNETAttribute>();
 		for (AttributeElement ae : attributes.getAttributeList())
 		{
 			DotNETAttribute attribute = new DotNETAttribute();
-			attribute.setTypeName(ae.getAttributeType());	
-			
-			// Set value for this attribute			
-			if (ae.getValues().sizeOfValueArray() >= 1) 
-				attribute.setValue(ae.getValues().getValueArray(0).getValue());
+			attribute.setTypeName(ae.getAttributeType());
+
+			// Set value for this attribute
+			if (ae.getValues().sizeOfValueArray() >= 1) attribute.setValue(ae.getValues().getValueArray(0).getValue());
 
 			result.add(attribute);
 		}
@@ -474,7 +468,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 		List<FieldElement> fields = storedType.getFields().getFieldList();
 		for (FieldElement storedField : fields)
 		{
-		//	logger.debug("Processing field '" + storedField.getName() + "'...");
+			// logger.debug("Processing field '" + storedField.getName() +
+			// "'...");
 
 			DotNETFieldInfo field = new DotNETFieldInfo();
 			field.setIsDeclaredHere(true);
@@ -484,11 +479,11 @@ public class StarLightCollectorRunner implements CTCommonModule
 			field.setIsPublic(storedField.getIsPublic());
 			field.setIsStatic(storedField.getIsStatic());
 
-			//Set the attributes for this field
+			// Set the attributes for this field
 			List<DotNETAttribute> attributes = collectAttributes(storedField.getAttributes());
 			for (DotNETAttribute attribute : attributes)
 				field.addAnnotation(attribute);
-			
+
 			type.addField(field);
 		}
 	}
@@ -500,10 +495,9 @@ public class StarLightCollectorRunner implements CTCommonModule
 		{
 			String name = storedMethod.getName();
 
-		//	logger.debug("Processing method '" + name + "'...");
+			// logger.debug("Processing method '" + name + "'...");
 
-			if (name == null)
-				throw new ModuleException("Method must have a name attribute", MODULE_NAME);
+			if (name == null) throw new ModuleException("Method must have a name attribute", MODULE_NAME);
 
 			DotNETMethodInfo method = new DotNETMethodInfo();
 			method.setIsDeclaredHere(true);
@@ -518,15 +512,14 @@ public class StarLightCollectorRunner implements CTCommonModule
 			method.setIsVirtual(storedMethod.getIsVirtual());
 
 			collectParameters(storedMethod, method);
-			
-			if (processBodies && storedMethod.isSetBody())
-				collectMethodBody(storedMethod.getBody(), method);
 
-			//Set the attributes for this method
+			if (processBodies && storedMethod.isSetBody()) collectMethodBody(storedMethod.getBody(), method);
+
+			// Set the attributes for this method
 			List<DotNETAttribute> attributes = collectAttributes(storedMethod.getAttributes());
 			for (DotNETAttribute attribute : attributes)
 				method.addAnnotation(attribute);
-			
+
 			type.addMethod(method);
 		}
 	}
@@ -544,10 +537,9 @@ public class StarLightCollectorRunner implements CTCommonModule
 			ParameterElement storedParameter = storedParameters.getParameterArray(i);
 			String name = storedParameter.getName();
 
-		//	logger.debug("Retrieving parameter '" + name + "'");
-			
-			if (name == null)
-				throw new ModuleException("ParameterInfo must have a name attribute.", MODULE_NAME);
+			// logger.debug("Retrieving parameter '" + name + "'");
+
+			if (name == null) throw new ModuleException("ParameterInfo must have a name attribute.", MODULE_NAME);
 
 			DotNETParameterInfo parameter = new DotNETParameterInfo();
 			parameter.setName(name);
@@ -585,7 +577,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 	}
 
 	/**
-	 * Resolve the MethodInfo of the called method for all calls to other methods.
+	 * Resolve the MethodInfo of the called method for all calls to other
+	 * methods.
 	 */
 	private void resolveCallsToOtherMethods()
 	{
@@ -598,7 +591,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			{
 				call.setCalledMethod(getMethodInfo(call));
 			}
-			
+
 			long elapsed = System.currentTimeMillis() - starttime;
 			logger.debug("Method references resolved in " + elapsed + " ms.");
 		}
@@ -610,7 +603,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 		// separate returntype part:
 		int pos1 = operation.indexOf(' ');
-	//	String returnType = operation.substring(0, pos1);
+		// String returnType = operation.substring(0, pos1);
 
 		// separate type:
 		int pos2 = operation.indexOf(':');

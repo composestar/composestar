@@ -28,8 +28,6 @@ import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.ConcernSource;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Debug;
@@ -52,7 +50,6 @@ public class COPPER implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
-		Configuration config = Configuration.instance();
 
 		if (LegacyFilterTypes.useLegacyFilterTypes)
 		{
@@ -61,19 +58,19 @@ public class COPPER implements CTCommonModule
 
 		List<String> loadFromHistory = new ArrayList<String>();
 
-		for (ConcernSource concern : config.getProjects().getConcernSources())
+		for (File file : resources.configuration().getProject().getConcernFiles())
 		{
-			if (incre.isProcessedByModule(concern, MODULE_NAME))
-			{
-				loadFromHistory.add(concern.getFileName());
-			}
-			else
-			{
-				INCRETimer runTimer = incre.getReporter().openProcess(MODULE_NAME, concern.getFileName(),
-						INCRETimer.TYPE_NORMAL);
-				parseCpsFile(concern.getFileName(), ALL_PHASES);
-				runTimer.stop();
-			}
+			// TODO: disabled INCRE for COPPER
+			// if (incre.isProcessedByModule(concern, MODULE_NAME))
+			// {
+			// loadFromHistory.add(concern.getFileName());
+			// }
+			// else
+			// {
+			INCRETimer runTimer = incre.getReporter().openProcess(MODULE_NAME, file.toString(), INCRETimer.TYPE_NORMAL);
+			parseCpsFile(file.toString(), ALL_PHASES);
+			runTimer.stop();
+			// }
 		}
 
 		if (loadFromHistory.size() > 0)
@@ -142,7 +139,8 @@ public class COPPER implements CTCommonModule
 				// COPPER only adds RepositoryEntities
 				RepositoryEntity entity = (RepositoryEntity) obj;
 
-				//logger.debug("Visit RE: " + entity.repositoryKey + " of type: " + entity.getClass());
+				// logger.debug("Visit RE: " + entity.repositoryKey + " of type:
+				// " + entity.getClass());
 
 				if (!entity.dynamicmap.isEmpty())
 				{

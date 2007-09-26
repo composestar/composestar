@@ -1,77 +1,61 @@
 package Composestar.DotNET.VERIFY;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Project;
-import Composestar.Core.Master.Config.Projects;
 import Composestar.Utils.CommandLineExecutor;
-import Composestar.Utils.Debug;
 import Composestar.Utils.StringUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class VERIFY implements CTCommonModule
 {
 	public static final String MODULE_NAME = "VERIFY";
 
-	private Configuration config;
+	public static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	public VERIFY()
-	{
-		config = Configuration.instance();
-	}
+	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		List assemblies = new ArrayList();
-
-		Projects solution = config.getProjects();
-		File outDir = new File(solution.getOutputPath());
-
-		Iterator it = solution.getProjects().iterator();
-		while (it.hasNext())
+		List<String> assemblies = new ArrayList<String>();
+		for (Source source : resources.configuration().getProject().getSources())
 		{
-			Project project = (Project) it.next();
-			File outFile = new File(outDir, project.getName() + ".exe");
-			assemblies.add(outFile.getAbsolutePath());
+			if (source.getAssembly() == null) continue;
+			assemblies.add(source.getAssembly().toString());
 		}
 
 		verify(assemblies);
 	}
 
-	private void verify(List assemblies) throws ModuleException
+	private void verify(List<String> assemblies) throws ModuleException
 	{
 		CommandLineExecutor cle = new CommandLineExecutor();
-		List cmdList = new ArrayList();
+		List<String> cmdList = new ArrayList<String>();
 		cmdList.add("peverify");
 		cmdList.add("/nologo");
 		cmdList.add("<assembly>");
 
-		Iterator it = assemblies.iterator();
+		Iterator<String> it = assemblies.iterator();
 		while (it.hasNext())
 		{
 			String asmPath = (String) it.next();
 			cmdList.set(2, asmPath);
 
-			debug("Command: " + StringUtils.join(cmdList));
+			logger.debug("Command: " + StringUtils.join(cmdList));
 
 			if (cle.exec(cmdList) != 0)
 			{
 				String stdout = cle.outputNormal();
-				debug(stdout);
+				logger.debug(stdout);
 
 				throw new ModuleException("Error verifying assembly '" + asmPath + "'", MODULE_NAME);
 			}
 		}
-	}
-
-	private void debug(String msg)
-	{
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, msg);
 	}
 }

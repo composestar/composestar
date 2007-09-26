@@ -17,7 +17,9 @@ import Composestar.Utils.FileUtils;
 
 /**
  * @author Staijen
+ * @deprecated Use Project.getTypeMapping()
  */
+@Deprecated
 public class TypeLocations
 {
 	private static TypeLocations instance;

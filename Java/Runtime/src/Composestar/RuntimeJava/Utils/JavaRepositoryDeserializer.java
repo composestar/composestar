@@ -1,15 +1,28 @@
 package Composestar.RuntimeJava.Utils;
 
+import java.io.BufferedInputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
 
-import java.io.*;
-
 public class JavaRepositoryDeserializer extends RepositoryDeserializer
 {
+	protected Class<?> mainclass;
+
+	public JavaRepositoryDeserializer(Class<?> mclass)
+	{
+		mainclass = mclass;
+	}
 
 	public DataStore deserialize(String file)
 	{
@@ -19,17 +32,23 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 		ObjectInputStream ois = null;
 		try
 		{
-			FileInputStream fis = new FileInputStream(file);
-			BufferedInputStream bis = new BufferedInputStream(fis);
+			InputStream is = mainclass.getResourceAsStream("/" + file);
+			if (is == null)
+			{
+				is = new FileInputStream(new File(file));
+			}
+			BufferedInputStream bis = new BufferedInputStream(is);
 			ois = new ObjectInputStream(bis);
 
-			while (true /*fis.available() != 0*/) //available() isn't reliable
+			while (true /* fis.available() != 0 */) // available() isn't
+			// reliable
 			{
 				Object o = ois.readObject();
-				//System.err.println("Adding object '"+o+"'");
+				// System.err.println("Adding object '"+o+"'");
 				if (o instanceof RepositoryEntity)
 				{
-					//System.err.println("Adding RE with key: " + ((RepositoryEntity) o).repositoryKey);
+					// System.err.println("Adding RE with key: " +
+					// ((RepositoryEntity) o).repositoryKey);
 					ds.addObject(((RepositoryEntity) o).repositoryKey, o);
 				}
 				else
@@ -66,8 +85,8 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 			}
 		}
 
-		//fixing not needed for native serialization
-		//RepositoryFixer.fixRepository(ds);
+		// fixing not needed for native serialization
+		// RepositoryFixer.fixRepository(ds);
 		return ds;
 	}
 

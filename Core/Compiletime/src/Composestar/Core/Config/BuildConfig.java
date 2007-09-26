@@ -42,6 +42,8 @@ public class BuildConfig implements Serializable
 
 	private static final long serialVersionUID = 5759753577247818565L;
 
+	protected static BuildConfig cfgInstance;
+
 	/**
 	 * Contains the project specific settings for the compiler.
 	 */
@@ -51,8 +53,19 @@ public class BuildConfig implements Serializable
 
 	protected Filters filters;
 
+	/**
+	 * Should not be used. Not Thread safe.
+	 * 
+	 * @return
+	 */
+	public static BuildConfig instance()
+	{
+		return cfgInstance;
+	}
+
 	public BuildConfig()
 	{
+		BuildConfig.cfgInstance = this;
 		settings = new HashMap<String, String>();
 		filters = new Filters();
 	}

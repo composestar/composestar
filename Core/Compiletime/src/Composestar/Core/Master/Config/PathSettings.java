@@ -12,6 +12,7 @@ package Composestar.Core.Master.Config;
 import java.io.Serializable;
 import java.util.Properties;
 
+@Deprecated
 public class PathSettings implements Serializable
 {
 	private static final long serialVersionUID = 4406357801604000841L;

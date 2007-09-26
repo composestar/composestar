@@ -16,6 +16,7 @@ import java.util.List;
 import Composestar.Core.DUMMER.DummyEmitter;
 import Composestar.Core.Exception.ModuleException;
 
+@Deprecated
 public class Language implements Serializable
 {
 	private static final long serialVersionUID = 1180338061120207509L;

@@ -1,5 +1,6 @@
 package Composestar.Java.TYM.SignatureTransformer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,13 +147,13 @@ public class ClassModifier
 	 * @param classpath - classpath.
 	 * @throws Exception - e.g. when class cannot be found.
 	 */
-	public void modifyClass(ClassWrapper c, String classpath) throws Exception
+	public void modifyClass(ClassWrapper c, File classpath) throws Exception
 	{
 
 		if (!pathList.contains(classpath))
 		{
 			// insert classpath
-			classpool.insertClassPath(classpath);
+			classpool.insertClassPath(classpath.toString());
 		}
 
 		// load class

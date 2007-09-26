@@ -26,6 +26,11 @@ package Composestar.Core.Config;
 
 import java.io.Serializable;
 
+/**
+ * A custom filter definition
+ * 
+ * @author Michiel Hendriks
+ */
 public class CustomFilter implements Serializable
 {
 	private static final long serialVersionUID = -6773322662826146455L;
@@ -36,8 +41,8 @@ public class CustomFilter implements Serializable
 	protected String name;
 
 	/**
-	 * The library associated with this custom filter. Semantics of the
-	 * value depend on the platform.
+	 * The library associated with this custom filter. Semantics of the value
+	 * depend on the platform.
 	 */
 	protected String library;
 

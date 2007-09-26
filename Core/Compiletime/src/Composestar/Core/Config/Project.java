@@ -102,6 +102,11 @@ public class Project implements Serializable
 	 */
 	protected Set<File> concernFiles;
 
+	/**
+	 * The fully resolved concern files
+	 */
+	protected transient Set<File> concernFilesCache;
+
 	protected Set<File> disabledConcernFiles;
 
 	/**
@@ -134,6 +139,11 @@ public class Project implements Serializable
 	 */
 	protected transient Set<File> resourceFiles;
 
+	/**
+	 * The type mapping for this project
+	 */
+	protected TypeMapping typeMapping;
+
 	public Project()
 	{
 		sources = new HashSet<Source>();
@@ -141,6 +151,7 @@ public class Project implements Serializable
 		disabledConcernFiles = new HashSet<File>();
 		dependencies = new HashSet<Dependency>();
 		resources = new HashSet<FileCollection>();
+		typeMapping = new TypeMapping();
 	}
 
 	public String getName()
@@ -299,12 +310,7 @@ public class Project implements Serializable
 		{
 			return;
 		}
-		File concernFile = new File(inConcern);
-		if (!concernFile.isAbsolute())
-		{
-			concernFile = new File(base, inConcern);
-		}
-		addConcern(concernFile, isEnabled);
+		addConcern(new File(inConcern), isEnabled);
 	}
 
 	public void addConcern(File inConcern)
@@ -318,26 +324,39 @@ public class Project implements Serializable
 		{
 			throw new IllegalArgumentException("Concern can not be null");
 		}
-		if (!inConcern.exists())
+		if (isEnabled)
 		{
-			logger.warn("Concern file does not exist: " + inConcern.toString());
+			concernFiles.add(inConcern);
+			concernFilesCache = null;
 		}
 		else
 		{
-			if (isEnabled)
-			{
-				concernFiles.add(inConcern);
-			}
-			else
-			{
-				disabledConcernFiles.add(inConcern);
-			}
+			disabledConcernFiles.add(inConcern);
 		}
 	}
 
 	public Set<File> getConcernFiles()
 	{
-		return Collections.unmodifiableSet(concernFiles);
+		if (concernFilesCache == null)
+		{
+			concernFilesCache = new HashSet<File>();
+			for (File file : concernFiles)
+			{
+				if (!file.isAbsolute())
+				{
+					file = new File(base, file.toString());
+				}
+				if (!file.exists())
+				{
+					logger.warn("Concern file does not exist: " + file.toString());
+				}
+				else
+				{
+					concernFilesCache.add(file);
+				}
+			}
+		}
+		return Collections.unmodifiableSet(concernFilesCache);
 	}
 
 	public Set<File> getDisabledConcernFiles()
@@ -351,16 +370,23 @@ public class Project implements Serializable
 		{
 			return;
 		}
-		sources.add(source);
-		sourceFiles = null;
+		if (sources.add(source))
+		{
+			source.setProject(this);
+			sourceFiles = null;
+		}
 	}
 
-	public void removeSource(Source source)
+	public boolean removeSource(Source source)
 	{
 		if (sources.remove(source))
 		{
+			source.setProject(null);
+			typeMapping.removeSource(source);
 			sourceFiles = null;
+			return true;
 		}
+		return false;
 	}
 
 	public void addSources(Set<Source> inSources)
@@ -369,9 +395,9 @@ public class Project implements Serializable
 		{
 			return;
 		}
-		if (sources.addAll(inSources))
+		for (Source source : inSources)
 		{
-			sourceFiles = null;
+			addSource(source);
 		}
 	}
 
@@ -387,20 +413,14 @@ public class Project implements Serializable
 			sourceFiles = new HashSet<File>();
 			for (Source src : sources)
 			{
-				for (File file : src.getFiles())
+				File file = src.getFile(base);
+				if (!file.exists())
 				{
-					if (!file.isAbsolute())
-					{
-						file = new File(base, file.toString());
-					}
-					if (!file.exists())
-					{
-						logger.warn("Source file does not exist: " + file.toString());
-					}
-					else
-					{
-						sourceFiles.add(file);
-					}
+					logger.warn("Source file does not exist: " + file.toString());
+				}
+				else
+				{
+					sourceFiles.add(file);
 				}
 			}
 		}
@@ -440,16 +460,14 @@ public class Project implements Serializable
 				// doesn't match language
 				continue;
 			}
-			for (File file : src.getFiles(base))
+			File file = src.getFile(base);
+			if (!file.exists())
 			{
-				if (!file.exists())
-				{
-					logger.warn("Source file does not exist: " + file.toString());
-				}
-				else
-				{
-					files.add(file);
-				}
+				logger.warn("Source file does not exist: " + file.toString());
+			}
+			else
+			{
+				files.add(file);
 			}
 		}
 		return Collections.unmodifiableSet(files);
@@ -598,4 +616,18 @@ public class Project implements Serializable
 		return Collections.unmodifiableSet(resourceFiles);
 	}
 
+	public TypeMapping getTypeMapping()
+	{
+		return typeMapping;
+	}
+
+	/**
+	 * Get the reference to the Source instance that contains the mainclass
+	 * 
+	 * @return
+	 */
+	public Source getMainSource()
+	{
+		return typeMapping.getSource(mainclass);
+	}
 }

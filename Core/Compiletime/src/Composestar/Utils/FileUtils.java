@@ -132,6 +132,11 @@ public final class FileUtils
 
 	public static void copyFile(String dest, String source) throws IOException
 	{
+		copyFile(new File(dest), new File(source));
+	}
+
+	public static void copyFile(File dest, File source) throws IOException
+	{
 		InputStream is = null;
 		OutputStream os = null;
 		if (source.equals(dest))
@@ -277,6 +282,35 @@ public final class FileUtils
 		}
 
 		return basePath + prefix + sourceName.substring(basePath.length());
+	}
+
+	/**
+	 * Create a file in destDir based on source with the same relative path as
+	 * source has in base. If base is "/foo/bar", source is
+	 * "/foo/bar/src/test/file", and destDir is "/target" the returned file will
+	 * be "/target/src/test/file"
+	 * 
+	 * @param base the base directory where source resides in
+	 * @param source the source file to use to create the result. This file is
+	 *            relative it will be assumed to be relative to the given base
+	 *            directory.
+	 * @param destDirectory the destination directory where the source file
+	 * @return
+	 */
+	public static File relocateFile(File base, File source, File destDir)
+	{
+		if (source.toString().startsWith(base.toString()))
+		{
+			return new File(destDir, source.toString().substring(base.toString().length()));
+		}
+		else if (!source.isAbsolute())
+		{
+			return new File(destDir, source.toString());
+		}
+		else
+		{
+			throw new IllegalArgumentException("Source file is not contained with the base directory");
+		}
 	}
 
 	/**

@@ -4,6 +4,8 @@
  */
 package Composestar.C.LOLA;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -24,20 +26,18 @@ import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * @author johan TODO To change the template for this generated type comment go
- *         to Window - Preferences - Java - Code Style - Code Templates
+ * @author johan
  */
 public class ConcernGenerator extends DefaultHandler
 {
 
 	private HashMap concerns = new HashMap();
 
-	public void run() throws ModuleException
+	public void run(File concernXml) throws ModuleException
 	{
 		try
 		{
@@ -45,7 +45,7 @@ public class ConcernGenerator extends DefaultHandler
 			SAXParser saxParser = saxParserFactory.newSAXParser();
 			XMLReader parser = saxParser.getXMLReader();
 			parser.setContentHandler(this);
-			parser.parse(new InputSource(Configuration.instance().getPathSettings().getPath("Base") + "CConcern.xml"));
+			parser.parse(new InputSource(new FileInputStream(concernXml)));
 		}
 		catch (Exception e)
 		{

@@ -62,8 +62,6 @@
 			<fileset dir="${basedir}">
 				<include name="plugin.*" />
 				<include name="message.*" />
-				<include name="PlatformConfigurations.xml" />
-				<include name="INCREconfig.xml" />
 				
 				<exclude name="**/.svn" />
 			</fileset>

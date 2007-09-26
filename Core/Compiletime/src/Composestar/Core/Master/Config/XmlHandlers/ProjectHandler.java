@@ -19,6 +19,7 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Utils.Debug;
 
+@Deprecated
 public class ProjectHandler extends DefaultHandler
 {
 	protected XMLReader parser;

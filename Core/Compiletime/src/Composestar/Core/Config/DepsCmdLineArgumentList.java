@@ -25,12 +25,14 @@
 package Composestar.Core.Config;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+
+import Composestar.Utils.StringUtils;
 
 /**
- * 
- *
  * @author Michiel Hendriks
  */
 public class DepsCmdLineArgumentList extends CmdLineArgumentList
@@ -43,13 +45,36 @@ public class DepsCmdLineArgumentList extends CmdLineArgumentList
 	}
 
 	@Override
-	public void addArgs(List<String> tolist, Project proj, Properties prop)
+	public void addArgs(List<String> tolist, Project proj, Set<File> sources, Properties prop)
 	{
+		if (args.size() == 0)
+		{
+			addArgument(new CmdLineArgument("${DEP}"));
+		}
+		List<String> argList;
+		boolean isMerge = merge;
+		if (isMerge)
+		{
+			// first collect all arguments for all dependencies and then merge
+			// it all into a single argument. This is useful for things like the
+			// Java classpath
+			merge = false;
+			argList = new ArrayList<String>();
+		}
+		else
+		{
+			argList = tolist;
+		}
 		for (File file : proj.getFilesDependencies())
 		{
 			prop.setProperty("DEP", file.toString());
-			super.addArgs(tolist, proj, prop);
+			super.addArgs(argList, proj, sources, prop);
 		}
 		prop.remove("DEP");
+		if (isMerge)
+		{
+			tolist.add(StringUtils.join(argList, delimiter));
+			merge = isMerge;
+		}
 	}
 }

@@ -18,6 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.CustomFilter;
 
+@Deprecated
 public class CustomFiltersHandler extends DefaultHandler
 {
 	protected XMLReader parser;

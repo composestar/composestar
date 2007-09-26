@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platforms xmlns="http://composestar.sourceforget.net/schema/PlatformConfiguration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://composestar.sourceforget.net/schema/PlatformConfiguration ../../ComposestarCORE/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd ">
+	<platform id="C">
+		<languages>		
+			<language name="C">
+				<extensions />
+				<compiler class="bogus">
+					<action name="bogus" executable="gcc" />
+				</compiler>
+				<dummygenerator>Composestar.C.DUMMER.CDummyEmitter</dummygenerator>
+			</language>
+		</languages>
+	</platform>
+</platforms>

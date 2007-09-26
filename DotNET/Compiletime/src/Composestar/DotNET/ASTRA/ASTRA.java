@@ -1,16 +1,16 @@
 package Composestar.DotNET.ASTRA;
 
+import java.io.File;
 import java.util.Iterator;
-import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.ResourceException;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
+import Composestar.DotNET.COMP.DotNETCompiler;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * ASTRA applies the signature changes determined by SIGN to the dummies
@@ -19,6 +19,8 @@ import Composestar.Utils.Debug;
 public class ASTRA implements CTCommonModule
 {
 	public static final String MODULE_NAME = "ASTRA";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	public ASTRA()
 	{}
@@ -30,13 +32,13 @@ public class ASTRA implements CTCommonModule
 		{
 			if (!resources.getBoolean("signaturesmodified"))
 			{
-				Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "No need to transform assemblies");
+				logger.debug("No need to transform assemblies");
 				return;
 			}
 		}
 		catch (ResourceException e)
 		{
-			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "No need to transform assemblies");
+			logger.info("No need to transform assemblies");
 			return;
 		}
 
@@ -52,15 +54,8 @@ public class ASTRA implements CTCommonModule
 
 		try
 		{
-			Configuration config = Configuration.instance();
-			List dummies = config.getProjects().getCompiledDummies();
-			Iterator dumIt = dummies.iterator();
-			while (dumIt.hasNext())
-			{
-				String name = (String) dumIt.next();
-				codeParser.setAssemblyName(name);
-				codeParser.run();
-			}
+			codeParser.setAssemblyName((File) resources.get(DotNETCompiler.DUMMY_ASSEMBLY));
+			codeParser.run();
 		}
 		catch (ModifierException e)
 		{
