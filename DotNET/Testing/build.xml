@@ -153,7 +153,7 @@
 				
 				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Builder/bin/Composestar.Patterns.Builder.Main.exe"/>
-				<include name="DesignPatterns/Implementations/Decorator/bin/Composestar.Patterns.Decorator.Main.exe"/>
+				<!--<include name="DesignPatterns/Implementations/Decorator/bin/Composestar.Patterns.Decorator.Main.exe"/>-->
 				<include name="DesignPatterns/Implementations/Facade/bin/Composestar.Patterns.Facade.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Interpreter/bin/Composestar.Patterns.Interpreter.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Iterator/bin/Composestar.Patterns.Iterator.Main.exe"/>
