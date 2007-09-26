@@ -16,13 +16,13 @@ import java.io.IOException;
 import org.apache.xmlbeans.XmlException;
 
 import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Config.ModuleInfo;
+import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
-import Composestar.Core.Master.Config.ModuleInfo;
-import Composestar.Core.Master.Config.ModuleInfoManager;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;

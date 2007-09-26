@@ -8,7 +8,7 @@
  * $Id$
  */
 
-package Composestar.Core.Master.Config;
+package Composestar.Core.Config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +39,7 @@ public class ModuleInfoManager
 
 	private static ModuleInfoManager instance;
 
-	protected Map<Class, ModuleInfo> classCache;
+	protected Map<Class<?>, ModuleInfo> classCache;
 
 	protected Map<String, ModuleInfo> idCache;
 
@@ -95,7 +95,7 @@ public class ModuleInfoManager
 	 * @param forClass
 	 * @return
 	 */
-	public static ModuleInfo get(Class forClass)
+	public static ModuleInfo get(Class<?> forClass)
 	{
 		ModuleInfoManager mim = getInstance();
 		if (mim.classCache.containsKey(forClass))
@@ -149,7 +149,7 @@ public class ModuleInfoManager
 	 * 
 	 * @param mi
 	 */
-	public static void remove(Class forClass)
+	public static void remove(Class<?> forClass)
 	{
 		ModuleInfoManager mim = getInstance();
 		mim.classCache.remove(forClass);
@@ -205,7 +205,7 @@ public class ModuleInfoManager
 
 	protected ModuleInfoManager()
 	{
-		classCache = new HashMap<Class, ModuleInfo>();
+		classCache = new HashMap<Class<?>, ModuleInfo>();
 		idCache = new HashMap<String, ModuleInfo>();
 	}
 

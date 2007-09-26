@@ -48,15 +48,10 @@ public class FileUtilsTest extends TestCase
 	public void testGetExtension()
 	{
 		/*
-		try
-		{
-			FileUtils.getExtension(null);
-			throw new AssertionFailedError("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException e)
-		{
-		}
-		*/
+		 * try { FileUtils.getExtension(null); throw new
+		 * AssertionFailedError("IllegalArgumentException expected"); } catch
+		 * (IllegalArgumentException e) { }
+		 */
 
 		assertEquals(null, FileUtils.getExtension("foo"));
 		assertEquals("bar", FileUtils.getExtension("foo.bar"));
@@ -136,7 +131,9 @@ public class FileUtilsTest extends TestCase
 	{
 		byte[] input = new byte[1337];
 		for (int i = 0; i < input.length; i++)
+		{
 			input[i] = (byte) (i % 256);
+		}
 
 		ByteArrayInputStream bis = null;
 		ByteArrayOutputStream bos = null;

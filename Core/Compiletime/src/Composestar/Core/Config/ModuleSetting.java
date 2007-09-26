@@ -8,7 +8,7 @@
  * $Id$
  */
 
-package Composestar.Core.Master.Config;
+package Composestar.Core.Config;
 
 import java.io.Serializable;
 
@@ -42,7 +42,7 @@ public class ModuleSetting implements Serializable
 	/**
 	 * Type of the setting
 	 */
-	protected Class type = String.class;
+	protected Class<?> type = String.class;
 
 	/**
 	 * Current value
@@ -88,7 +88,7 @@ public class ModuleSetting implements Serializable
 	 * @param inDefault
 	 * @throws ConfigurationException
 	 */
-	public ModuleSetting(String inId, Class inType, Object inDefault) throws ConfigurationException
+	public ModuleSetting(String inId, Class<?> inType, Object inDefault) throws ConfigurationException
 	{
 		id = inId;
 		name = id;
@@ -102,7 +102,7 @@ public class ModuleSetting implements Serializable
 		this(inId, inName, inDefault.getClass(), inDefault);
 	}
 
-	public ModuleSetting(String inId, String inName, Class inType, Object inDefault) throws ConfigurationException
+	public ModuleSetting(String inId, String inName, Class<?> inType, Object inDefault) throws ConfigurationException
 	{
 		this(inId, inType, inDefault);
 		name = inName;
@@ -261,7 +261,7 @@ public class ModuleSetting implements Serializable
 		return defaultValue;
 	}
 
-	public Class getType()
+	public Class<?> getType()
 	{
 		return type;
 	}

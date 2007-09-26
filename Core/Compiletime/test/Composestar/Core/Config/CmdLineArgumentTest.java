@@ -27,7 +27,6 @@ package Composestar.Core.Config;
 import java.util.Properties;
 
 import junit.framework.TestCase;
-import Composestar.Core.Master.Config.ModuleInfoManager;
 
 /**
  * @author Michiel Hendriks
@@ -36,26 +35,28 @@ public class CmdLineArgumentTest extends TestCase
 {
 	protected CmdLineArgument arg;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
 		arg = new CmdLineArgument();
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		ModuleInfoManager.clear();
 		arg = null;
 	}
-	
+
 	public void testReplacements()
 	{
 		assertEquals("foo", arg.resolve("foo", null));
-		
+
 		Properties prop = new Properties();
 		prop.setProperty("foo", "quux");
 		prop.setProperty("backslashes", "\\-\\");
-		
+
 		assertEquals("quux", arg.resolve("${foo}", prop));
 		assertEquals("", arg.resolve("${bar}", prop));
 		assertEquals("quux", arg.resolve("${bar:quux}", prop));

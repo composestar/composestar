@@ -1,5 +1,5 @@
 <modules>
-	<moduleinfo id="test" class="Composestar.Core.Master.Config.TestDummy">
+	<moduleinfo id="test" class="Composestar.Core.Config.TestDummy">
 		<name>ModuleInfo Name</name>
 		<description>ModuleInfo Description</description>
 		
@@ -27,7 +27,7 @@
 		</incre>
 	</moduleinfo>
 	
-	<moduleinfo class="Composestar.Core.Master.Config.TestDummyEx" extends="Composestar.Core.Master.Config.TestDummy">
+	<moduleinfo class="Composestar.Core.Config.TestDummyEx" extends="Composestar.Core.Config.TestDummy">
 		<settings>
 			<setting id="extraString">
 				<default>Additional Setting</default>

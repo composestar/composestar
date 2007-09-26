@@ -8,7 +8,7 @@
  * $Id$
  */
 
-package Composestar.Core.Master.Config;
+package Composestar.Core.Config;
 
 import junit.framework.TestCase;
 import Composestar.Core.Exception.ConfigurationException;
@@ -21,6 +21,7 @@ public class ModuleInfoTest extends TestCase
 {
 	protected ModuleInfo mi;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -28,6 +29,7 @@ public class ModuleInfoTest extends TestCase
 		mi = ModuleInfoManager.get(TestDummy.class);
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		ModuleInfoManager.clear();

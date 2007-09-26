@@ -8,7 +8,7 @@
  * $Id$
  */
 
-package Composestar.Core.Master.Config;
+package Composestar.Core.Config;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,7 +27,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.INCRE.Config.ModulesHandler;
