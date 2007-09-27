@@ -17,7 +17,6 @@ import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETType;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
 /**
@@ -30,16 +29,16 @@ public class ILCodeParser extends TransformerBase
 {
 	private File assemblyName;
 
-	private Set linkedAssemblies;
+	private Set<String> linkedAssemblies;
 
-	private Map concerns;
+	private Map<String, ConcernHolder> concerns;
 
 	public ILCodeParser()
 	{
 		super(null, null);
 		assemblyName = null;
-		linkedAssemblies = new HashSet();
-		concerns = new HashMap();
+		linkedAssemblies = new HashSet<String>();
+		concerns = new HashMap<String, ConcernHolder>();
 	}
 
 	/**
@@ -92,7 +91,7 @@ public class ILCodeParser extends TransformerBase
 			return; // nothing to do
 		}
 
-		Debug.out(Debug.MODE_DEBUG, "ASTRA", "Running ASTRA Transformer");
+		logger.debug("Running ASTRA Transformer");
 
 		// il file before transformation
 		File preIl = new File(assemblyName + ".pre.il");
@@ -115,7 +114,7 @@ public class ILCodeParser extends TransformerBase
 		// remove the old .post.il file
 		if (postIl.exists() && !postIl.delete())
 		{
-			Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + postIl + "'");
+			logger.warn("Unable to delete '" + postIl + "'");
 		}
 
 		// open dissassembled file
@@ -142,14 +141,14 @@ public class ILCodeParser extends TransformerBase
 		// remove the old assembly
 		if (!assemblyName.delete())
 		{
-			Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + assemblyName + "'");
+			logger.warn("Unable to delete '" + assemblyName + "'");
 		}
 
 		// remove the old pdb file
 		File pdb = new File(FileUtils.replaceExtension(assemblyName.toString(), "pdb"));
 		if (!pdb.delete())
 		{
-			Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + pdb + "'");
+			logger.warn("Unable to delete '" + pdb + "'");
 		}
 
 		// re-assemble
@@ -194,7 +193,7 @@ public class ILCodeParser extends TransformerBase
 				while (it.hasNext())
 				{
 					String asm = (String) it.next();
-					Debug.out(Debug.MODE_DEBUG, "ASTRA", "Adding reference to assembly" + asm);
+					logger.debug("Adding reference to assembly" + asm);
 
 					write(" .assembly extern " + asm + '\n');
 					write("{\n\t.ver 0:0:0:0\n}\n");

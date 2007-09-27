@@ -298,6 +298,7 @@ public abstract class Master
 		resources = new CommonResources();
 		resources.setConfiguration(BuildConfigHandler.loadBuildConfig(configFile));
 		resources.setPathResolver(getPathResolver());
+		ModuleInfoManager.getInstance().setBuildConfig(resources.configuration());
 
 		/*
 		 * // load the project configuration file try { logger.debug("Reading

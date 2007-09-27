@@ -172,6 +172,7 @@ public class StarLightMaster extends Master
 		File intermPath = new File(getSettingValue("IntermediateOutputPath"));
 		project.setBase(intermPath.getParentFile());
 		project.setIntermediate(intermPath.getName());
+		ModuleInfoManager.getInstance().setBuildConfig(resources.configuration());
 
 		// Set INCRE options
 		ModuleInfo incre = ModuleInfoManager.get(INCRE.class);

@@ -5,14 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Composestar.Utils.CommandLineExecutor;
-import Composestar.Utils.Debug;
 import Composestar.Utils.StringUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Implementation of the Assembler interface for Microsft ilasm and ildasm.
  */
 public class MSAssembler implements Assembler
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ASTRA.MODULE_NAME);
+
 	// FIXME: location should be configurable like with csc and vjc
 	private final static String s_basepath = ""; // "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\";
 
@@ -26,12 +28,12 @@ public class MSAssembler implements Assembler
 		cmdList.add("/output=" + outputFile.toString());
 		cmdList.add(inputFile.toString());
 
-		debug("Command: " + StringUtils.join(cmdList));
+		logger.debug("Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
 		if (cle.exec(cmdList) != 0)
 		{
-			debug("Output from ilasm:\n" + cle.outputNormal());
+			logger.debug("Output from ilasm:\n" + cle.outputNormal());
 			throw new AssemblerException("There was a fatal assembler error");
 		}
 	}
@@ -46,18 +48,13 @@ public class MSAssembler implements Assembler
 		cmdList.add("/out=" + outputFile.toString());
 		cmdList.add(inputFile.toString());
 
-		debug("Command: " + StringUtils.join(cmdList));
+		logger.debug("Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
 		if (cle.exec(cmdList) != 0)
 		{
-			debug("Output from ildasm:\n" + cle.outputNormal());
+			logger.debug("Output from ildasm:\n" + cle.outputNormal());
 			throw new AssemblerException("There was a fatal disassembler error");
 		}
-	}
-
-	private void debug(String msg)
-	{
-		Debug.out(Debug.MODE_DEBUG, ASTRA.MODULE_NAME, msg);
 	}
 }

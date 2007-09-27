@@ -30,7 +30,7 @@ public class CmdLineArgumentList extends CmdLineArgument
 	/**
 	 * The delimiter string to use during merging.
 	 */
-	protected String delimiter = "";
+	protected String delimiter = " ";
 
 	public CmdLineArgumentList()
 	{

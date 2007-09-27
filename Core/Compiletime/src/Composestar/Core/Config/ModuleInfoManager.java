@@ -43,6 +43,8 @@ public class ModuleInfoManager
 
 	protected Map<String, ModuleInfo> idCache;
 
+	protected BuildConfig buildConfig;
+
 	/**
 	 * Return the current instance of the ModuleInfoManager
 	 * 
@@ -201,6 +203,21 @@ public class ModuleInfoManager
 			// registered is the active one
 		}
 		idCache.put(id, newMi);
+		newMi.initConfig(buildConfig);
+	}
+
+	/**
+	 * Set the buildconfiguration
+	 * 
+	 * @param newConfig
+	 */
+	public void setBuildConfig(BuildConfig newConfig)
+	{
+		buildConfig = newConfig;
+		for (ModuleInfo mi : classCache.values())
+		{
+			mi.initConfig(buildConfig);
+		}
 	}
 
 	protected ModuleInfoManager()
@@ -254,7 +271,6 @@ public class ModuleInfoManager
 			{
 				if (curMi != null)
 				{
-					curMi.initConfig();
 					manager.addModuleInfo(curMi);
 					curMi = null;
 				}

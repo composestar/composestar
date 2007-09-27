@@ -6,12 +6,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import Composestar.Utils.Logging.CPSLogger;
+
 /**
  * Base class for assembly modifiers. It provides the means necessary to read
  * from and write to the asm fille.
  */
 abstract class TransformerBase
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ASTRA.MODULE_NAME);
+
 	private BufferedReader in;
 
 	private BufferedWriter out;

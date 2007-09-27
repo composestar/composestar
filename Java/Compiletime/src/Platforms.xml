@@ -12,14 +12,21 @@
 					<action name="Compile" executable="javac">
 						<arg>-d</arg>
 						<arg>${OUT}</arg>
-						<arg>-cp</arg>
-						<deps merge="true" delimiter=";">
-							<arg>${DEP}</arg>
-						</deps>
 						<arg>-implicit:none</arg><!-- this prevents overwriting of already existing files -->
-						<sources>
-							<arg>${SOURCE}</arg>
-						</sources>
+						<!-- 
+							Reduce possibility of too large command lines. classpath and source files will 
+							be stored in separate temp files that will be read by the compiler.
+							These temp files will be deleted when the VM shuts down. 
+						-->
+						<rcfile prefix="@">
+							<arg>-cp</arg>
+							<deps merge="true" delimiter=";">
+								<arg>${DEP}</arg>
+							</deps>
+							<sources>
+								<arg>${SOURCE}</arg>
+							</sources>
+						</rcfile>
 					</action>
 					<action name="CreateJar" executable="jar">
 						<arg>cf</arg>

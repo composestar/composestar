@@ -30,7 +30,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.INCRE.Config.ModulesHandler;
-import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -45,8 +44,6 @@ public class ModuleInfo implements Serializable
 {
 	private static final long serialVersionUID = -818944551130427548L;
 
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger("ModuleInfo");
-
 	/**
 	 * Module identifier
 	 */
@@ -55,7 +52,7 @@ public class ModuleInfo implements Serializable
 	/**
 	 * The class of the module
 	 */
-	protected Class moduleClass;
+	protected Class<?> moduleClass;
 
 	/**
 	 * Human-readable name of the module
@@ -77,6 +74,8 @@ public class ModuleInfo implements Serializable
 	 */
 	protected INCREModule increModule;
 
+	protected transient CPSLogger moduleLogger;
+
 	/**
 	 * Load ModuleInfo through SAX. This is used by the ModuleInfoManager
 	 * 
@@ -96,7 +95,7 @@ public class ModuleInfo implements Serializable
 		return id;
 	}
 
-	public Class getModuleClass()
+	public Class<?> getModuleClass()
 	{
 		return moduleClass;
 	}
@@ -145,6 +144,17 @@ public class ModuleInfo implements Serializable
 	public void removeSetting(String key)
 	{
 		settings.remove(key);
+	}
+
+	/**
+	 * Reset the settings to their default values
+	 */
+	public void resetSettings()
+	{
+		for (ModuleSetting ms : settings.values())
+		{
+			ms.reset();
+		}
 	}
 
 	public void setSettingValue(String key, Object newValue) throws ConfigurationException
@@ -243,10 +253,9 @@ public class ModuleInfo implements Serializable
 	/**
 	 * Initialize the configuration
 	 */
-	public void initConfig()
+	public void initConfig(BuildConfig bcfg)
 	{
-		// FIXME do not use the singleton
-		BuildConfig bcfg = BuildConfig.instance();
+		resetSettings();
 		if (bcfg == null)
 		{
 			return;
@@ -265,8 +274,12 @@ public class ModuleInfo implements Serializable
 			}
 			catch (ConfigurationException e)
 			{
-				Debug.out(Debug.MODE_ERROR, id, "Error setting config option '" + entry.getKey() + "' to '"
-						+ entry.getValue() + "': " + e.getMessage());
+				if (moduleLogger == null)
+				{
+					moduleLogger = CPSLogger.getCPSLogger(id);
+				}
+				moduleLogger.error("Error setting config option '" + entry.getKey() + "' to '" + entry.getValue()
+						+ "': " + e.getMessage());
 			}
 		}
 	}
@@ -283,6 +296,7 @@ public class ModuleInfo implements Serializable
 	 */
 	static class ModuleInfoHandler extends DefaultHandler
 	{
+		protected static final CPSLogger logger = CPSLogger.getCPSLogger("ModuleInfo");
 
 		protected static final byte STATE_INIT = 0;
 
@@ -323,7 +337,7 @@ public class ModuleInfo implements Serializable
 		protected void processExtends(String source)
 		{
 			ModuleInfo extMi;
-			Class extClass = null;
+			Class<?> extClass = null;
 			try
 			{
 				extClass = Class.forName(source);

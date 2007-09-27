@@ -81,29 +81,6 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 */
 	public void createDummy(Project project, Source source) throws ModuleException
 	{
-		// if (source.isEmbedded())
-		// {
-		// Configuration config = Configuration.instance();
-		// String dummyPath = config.getPathSettings().getPath("Dummy");
-		// String basePath = project.getBasePath();
-		// StringBuffer outputfile = new
-		// StringBuffer(basePath).append("obj/").append(dummyPath);
-		//
-		// // change outputFilename
-		// TypeLocations types = TypeLocations.instance();
-		// for (Object o : types.getTypesBySource(source.getFileName()))
-		// {
-		// String type = (String) o;
-		// outputfile.append(type);
-		// outputFilename = outputfile.toString().replace('.', '/');
-		// outputfile = new StringBuffer(outputFilename);
-		// outputfile.append(".java");
-		// outputFilename = outputfile.toString();
-		// source.setDummy(outputFilename);
-		// source.setFileName(FileUtils.normalizeFilename(source.getFileName()));
-		// }
-		// }
-
 		currentSource = source;
 		packageName = "";
 		packages = new ArrayList();

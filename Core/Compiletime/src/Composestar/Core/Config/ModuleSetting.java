@@ -267,6 +267,14 @@ public class ModuleSetting implements Serializable
 	}
 
 	/**
+	 * Reset the value of this setting to the default
+	 */
+	public void reset()
+	{
+		value = defaultValue;
+	}
+
+	/**
 	 * Constructs the SAX Handler
 	 * 
 	 * @param reader

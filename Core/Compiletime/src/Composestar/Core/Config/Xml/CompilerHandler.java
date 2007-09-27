@@ -146,7 +146,7 @@ public class CompilerHandler extends CpsBaseHandler
 		{
 			pushState(STATE_ARG);
 		}
-		else if (state == STATE_ACTION && "sources".equals(name))
+		else if ((state == STATE_ACTION || state == STATE_RCFILE) && "sources".equals(name))
 		{
 			pushState(STATE_ARG_LIST);
 			SourcesCmdLineArgumentList currentArgList = new SourcesCmdLineArgumentList();
@@ -155,7 +155,7 @@ public class CompilerHandler extends CpsBaseHandler
 			addArgument(currentArgList);
 			argList.push(currentArgList);
 		}
-		else if (state == STATE_ACTION && "deps".equals(name))
+		else if ((state == STATE_ACTION || state == STATE_RCFILE) && "deps".equals(name))
 		{
 			pushState(STATE_ARG_LIST);
 			DepsCmdLineArgumentList currentArgList = new DepsCmdLineArgumentList();
@@ -216,9 +216,9 @@ public class CompilerHandler extends CpsBaseHandler
 		else if (state == STATE_RCFILE && "rcfile".equals(name))
 		{
 			popState( /*
-			 * STATE_ACTION | STATE_ARG_LIST | STATE_ARG_LIST |
-			 * STATE_RCFILE
-			 */);
+						 * STATE_ACTION | STATE_ARG_LIST | STATE_ARG_LIST |
+						 * STATE_RCFILE
+						 */);
 			argList.pop();
 		}
 		else

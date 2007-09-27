@@ -73,7 +73,14 @@ public class CmdLineArgListFile extends CmdLineArgumentList
 	 */
 	public void setPrefix(String inPrefix)
 	{
-		prefix = inPrefix;
+		if (inPrefix == null)
+		{
+			prefix = "";
+		}
+		else
+		{
+			prefix = inPrefix;
+		}
 	}
 
 	/**
@@ -89,7 +96,14 @@ public class CmdLineArgListFile extends CmdLineArgumentList
 	 */
 	public void setSuffix(String inSuffix)
 	{
-		suffix = inSuffix;
+		if (inSuffix == null)
+		{
+			suffix = "";
+		}
+		else
+		{
+			suffix = inSuffix;
+		}
 	}
 
 	/*
@@ -106,7 +120,7 @@ public class CmdLineArgListFile extends CmdLineArgumentList
 		super.addArgs(fileArgs, proj, sources, prop);
 		try
 		{
-			File tmpFile = File.createTempFile("cstar_", null);
+			File tmpFile = File.createTempFile("cstar", null);
 			PrintStream w = new PrintStream(tmpFile);
 			for (String s : fileArgs)
 			{
@@ -123,4 +137,14 @@ public class CmdLineArgListFile extends CmdLineArgumentList
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.CmdLineArgumentList#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return prefix + "file.tmp" + suffix;
+	}
 }

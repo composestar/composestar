@@ -11,7 +11,6 @@ import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETType;
-import Composestar.Utils.Debug;
 
 /**
  * This class does the transformation of an actual class, physically present in
@@ -173,7 +172,7 @@ public class ClassModifier extends TransformerBase
 		writenn(((DotNETType) dnmi.getReturnType()).ilType());
 		writenn(" " + mi.getName() + "(");
 
-		Iterator it = mi.getParameters().iterator();
+		Iterator<?> it = mi.getParameters().iterator();
 		while (it.hasNext())
 		{
 			ParameterInfo param = (ParameterInfo) it.next();
@@ -190,7 +189,7 @@ public class ClassModifier extends TransformerBase
 			}
 			else
 			{
-				Debug.out(Debug.MODE_WARNING, "ASTRA", "Unresolvable parameter type: " + param.parameterTypeString);
+				logger.warn("Unresolvable parameter type: " + param.parameterTypeString);
 			}
 		}
 
