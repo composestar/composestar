@@ -9,22 +9,14 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import tarau.jinni.Builtins;
 import tarau.jinni.DataBase;
 import tarau.jinni.Init;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.AnnotationBinding;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SimpleSelExpression;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCREComparator;
-import Composestar.Core.INCRE.INCREModule;
 import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
 import Composestar.Core.LOLA.connector.ModelGenerator;
@@ -235,7 +227,7 @@ public abstract class LOLA implements CTCommonModule
 
 		if (incremental && !selectors.isEmpty())
 		{
-			selectors = splitSelectors(selectors); // which selectors to
+			// selectors = splitSelectors(selectors); // which selectors to
 			// skip/process?
 		}
 
@@ -283,199 +275,216 @@ public abstract class LOLA implements CTCommonModule
 		// System.setErr(stderr);
 	}
 
-	/**
-	 * @param inSelectors All predicate selectors
-	 * @return ArrayList containing selectors to be processed by LOLA Splits the
-	 *         selectors into two groups Group #1: toBeSkipped, selectors that
-	 *         can be skipped These selectors have been processed in an earlier
-	 *         compilation run. The interpretation of these selectors will be
-	 *         exactly the same! Group #2: toBeProcessed, selectors to be
-	 *         processed by LOLA
-	 */
-	public ArrayList splitSelectors(ArrayList inSelectors) throws ModuleException
-	{
-
-		INCRE incre = INCRE.instance();
-
-		// Step 1: whether selector needs to be checked by INCRE
-		// First split is based on the selector's attribute toBeCheckedByINCRE
-		ArrayList toBeProcessed = new ArrayList();
-		ArrayList toBeSkipped = new ArrayList();
-		ArrayList toBeMoved = new ArrayList();
-		INCRETimer step1 = incre.getReporter().openProcess(MODULE_NAME, "Split selectors based on toBeCheckedByINCRE",
-				INCRETimer.TYPE_OVERHEAD);
-		Iterator predicateIterStep1 = inSelectors.iterator();
-		logger.debug("Splitting selectors based on attribute toBeCheckedByINCRE...");
-		while (predicateIterStep1.hasNext())
-		{
-			PredicateSelector predSel = (PredicateSelector) predicateIterStep1.next();
-			if (predSel.getToBeCheckedByINCRE())
-			{
-				logger.debug("[PotentialSkip] " + predSel.getQuery());
-				toBeSkipped.add(predSel);
-			}
-			else
-			{
-				logger.debug("[ToBeProcessed] " + predSel.getQuery());
-				toBeProcessed.add(predSel); // no need to check further
-			}
-		}
-		step1.stop();
-
-		// Step 2: split based on syntax of query
-		// When query modified => process selector
-		INCRETimer step2 = incre.getReporter().openProcess(MODULE_NAME, "Checking query syntax",
-				INCRETimer.TYPE_OVERHEAD);
-		logger.debug("Splitting selectors based on syntax query...");
-		Iterator predicateIterStep2 = toBeSkipped.iterator();
-		for (Object aToBeSkipped : toBeSkipped)
-		{
-			PredicateSelector predSel = (PredicateSelector) aToBeSkipped;
-			PredicateSelector copySel = (PredicateSelector) incre.findHistoryObject(predSel);
-
-			if (copySel != null)
-			{
-				// check query syntax
-				if (!(predSel.getQuery()).equals(copySel.getQuery()))
-				{
-					toBeMoved.add(predSel);
-				}
-			}
-			else
-			{
-				toBeMoved.add(predSel);
-			}
-		}
-		moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
-		step2.stop();
-
-		// Step 3: split based on query specific type information
-		// When type information modified => process selector
-		INCRETimer step3 = incre.getReporter().openProcess(MODULE_NAME, "Checking modifications in type information",
-				INCRETimer.TYPE_OVERHEAD);
-		logger.debug("Splitting selectors based on type information changes...");
-		Iterator predicateIterStep3 = toBeSkipped.iterator();
-		List currentTYM = incre.getAllModifiedPrimitiveConcerns(DataStore.instance());
-		List historyTYM = incre.getAllModifiedPrimitiveConcerns(incre.history.getDataStore());
-		INCREModule lola = incre.getConfigManager().getModuleByID(MODULE_NAME);
-		INCREComparator comparator = new INCREComparator(MODULE_NAME);
-		while (predicateIterStep3.hasNext())
-		{
-			// check TYM information
-			PredicateSelector predSel = (PredicateSelector) predicateIterStep3.next();
-			lola.addComparableObjects(predSel.getTymInfo());
-			comparator.clearComparisons();
-			if (!comparator.compare(currentTYM, historyTYM))
-			{
-				toBeMoved.add(predSel);
-			}
-			lola.removeComparableObjects(predSel.getTymInfo());
-		}
-		moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
-		step3.stop();
-
-		// Step 4: split based on dependent selectors
-		logger.debug("Splitting selectors based on dependencies between selectors...");
-		INCRETimer step4 = incre.getReporter().openProcess(MODULE_NAME, "Checking dependencies between selectors",
-				INCRETimer.TYPE_OVERHEAD);
-		ArrayList depSelectorsList = new ArrayList();
-		boolean restart = true;
-		while (restart)
-		{
-
-			restart = false;
-			depSelectorsList.clear();
-
-			if (!toBeSkipped.isEmpty())
-			{
-				Iterator predicateIterStep4 = toBeSkipped.iterator();
-				for (Object aToBeSkipped : toBeSkipped)
-				{ // for each selector gather dependent selectors
-					PredicateSelector predSel = (PredicateSelector) aToBeSkipped;
-					if (!predSel.getAnnotations().isEmpty())
-					{
-						Iterator annots = predSel.getAnnotations().iterator();
-						for (Object o : predSel.getAnnotations())
-						{
-							// for each annotation find selectors superimposing
-							// it
-							String annotToFind = (String) o;
-							Iterator annotBindingIter = dataStore.getAllInstancesOf(AnnotationBinding.class);
-							while (annotBindingIter.hasNext())
-							{
-								AnnotationBinding annotBind = (AnnotationBinding) annotBindingIter.next();
-								Iterator annotRefs = annotBind.annotationList.iterator();
-								for (Object anAnnotationList : annotBind.annotationList)
-								{
-									ConcernReference annotRef = (ConcernReference) anAnnotationList;
-									Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
-									if (annotation.getUnitName().equals(annotToFind))
-									{
-										depSelectorsList.add(annotBind.getSelector().getRef());
-									}
-								}
-							}
-						}
-					}
-
-					// check whether dependent selectors are in toBeSkipped
-					// If not, restart
-					if (!depSelectorsList.isEmpty())
-					{
-						Iterator depSelectors = depSelectorsList.iterator();
-						for (Object aDepSelectorsList : depSelectorsList)
-						{
-							SelectorDefinition depSelector = (SelectorDefinition) aDepSelectorsList;
-							Iterator selExpressions = depSelector.selExpressionList.iterator();
-							for (Object aSelExpressionList : depSelector.selExpressionList)
-							{
-								SimpleSelExpression simpleSel = (SimpleSelExpression) aSelExpressionList;
-								if (simpleSel instanceof PredicateSelector)
-								{
-									if (toBeProcessed.contains(simpleSel) && toBeSkipped.contains(predSel))
-									{
-										moveSelector(predSel, toBeSkipped, toBeProcessed);
-										restart = true;
-									}
-								}
-							}
-						}
-					}
-
-					if (restart)
-					{
-						break;
-					}
-				} // end selector iteration
-			}
-		} // end step 4
-		step4.stop();
-
-		// Step 5: resolve answers of skipped selectors
-		INCRETimer step5 = incre.getReporter().openProcess(MODULE_NAME, "Resolving answers", INCRETimer.TYPE_OVERHEAD);
-		logger.debug("Resolving answers...");
-		Iterator predicateIterStep5 = toBeSkipped.iterator();
-		for (Object aToBeSkipped1 : toBeSkipped)
-		{
-			PredicateSelector predSel = (PredicateSelector) aToBeSkipped1;
-			if (!predSel.resolveAnswers())
-			{
-				// answers cannot be resolved, re-calculate selector
-				toBeMoved.add(predSel);
-				logger.debug("[Cannot resolve answers] " + predSel.getQuery());
-			}
-			else
-			{
-				// successfully skipped
-				logger.debug("[Succesfully Skip] " + predSel.getQuery());
-			}
-		}
-		moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
-		step5.stop();
-
-		// return the list containing all selectors still to be processed
-		return toBeProcessed;
-	}
+	// michielh : unused incremental stuff
+	// /**
+	// * @param inSelectors All predicate selectors
+	// * @return ArrayList containing selectors to be processed by LOLA Splits
+	// the
+	// * selectors into two groups Group #1: toBeSkipped, selectors that
+	// * can be skipped These selectors have been processed in an earlier
+	// * compilation run. The interpretation of these selectors will be
+	// * exactly the same! Group #2: toBeProcessed, selectors to be
+	// * processed by LOLA
+	// */
+	// public ArrayList splitSelectors(ArrayList inSelectors) throws
+	// ModuleException
+	// {
+	//
+	// INCRE incre = INCRE.instance();
+	//
+	// // Step 1: whether selector needs to be checked by INCRE
+	// // First split is based on the selector's attribute toBeCheckedByINCRE
+	// ArrayList toBeProcessed = new ArrayList();
+	// ArrayList toBeSkipped = new ArrayList();
+	// ArrayList toBeMoved = new ArrayList();
+	// INCRETimer step1 = incre.getReporter().openProcess(MODULE_NAME, "Split
+	// selectors based on toBeCheckedByINCRE",
+	// INCRETimer.TYPE_OVERHEAD);
+	// Iterator predicateIterStep1 = inSelectors.iterator();
+	// logger.debug("Splitting selectors based on attribute
+	// toBeCheckedByINCRE...");
+	// while (predicateIterStep1.hasNext())
+	// {
+	// PredicateSelector predSel = (PredicateSelector)
+	// predicateIterStep1.next();
+	// if (predSel.getToBeCheckedByINCRE())
+	// {
+	// logger.debug("[PotentialSkip] " + predSel.getQuery());
+	// toBeSkipped.add(predSel);
+	// }
+	// else
+	// {
+	// logger.debug("[ToBeProcessed] " + predSel.getQuery());
+	// toBeProcessed.add(predSel); // no need to check further
+	// }
+	// }
+	// step1.stop();
+	//
+	// // Step 2: split based on syntax of query
+	// // When query modified => process selector
+	// INCRETimer step2 = incre.getReporter().openProcess(MODULE_NAME, "Checking
+	// query syntax",
+	// INCRETimer.TYPE_OVERHEAD);
+	// logger.debug("Splitting selectors based on syntax query...");
+	// Iterator predicateIterStep2 = toBeSkipped.iterator();
+	// for (Object aToBeSkipped : toBeSkipped)
+	// {
+	// PredicateSelector predSel = (PredicateSelector) aToBeSkipped;
+	// PredicateSelector copySel = (PredicateSelector)
+	// incre.findHistoryObject(predSel);
+	//
+	// if (copySel != null)
+	// {
+	// // check query syntax
+	// if (!(predSel.getQuery()).equals(copySel.getQuery()))
+	// {
+	// toBeMoved.add(predSel);
+	// }
+	// }
+	// else
+	// {
+	// toBeMoved.add(predSel);
+	// }
+	// }
+	// moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
+	// step2.stop();
+	//
+	// // Step 3: split based on query specific type information
+	// // When type information modified => process selector
+	// INCRETimer step3 = incre.getReporter().openProcess(MODULE_NAME, "Checking
+	// modifications in type information",
+	// INCRETimer.TYPE_OVERHEAD);
+	// logger.debug("Splitting selectors based on type information changes...");
+	// Iterator predicateIterStep3 = toBeSkipped.iterator();
+	// List currentTYM =
+	// incre.getAllModifiedPrimitiveConcerns(DataStore.instance());
+	// List historyTYM =
+	// incre.getAllModifiedPrimitiveConcerns(incre.history.getDataStore());
+	// INCREModule lola = incre.getConfigManager().getModuleByID(MODULE_NAME);
+	// INCREComparator comparator = new INCREComparator(MODULE_NAME);
+	// while (predicateIterStep3.hasNext())
+	// {
+	// // check TYM information
+	// PredicateSelector predSel = (PredicateSelector)
+	// predicateIterStep3.next();
+	// lola.addComparableObjects(predSel.getTymInfo());
+	// comparator.clearComparisons();
+	// if (!comparator.compare(currentTYM, historyTYM))
+	// {
+	// toBeMoved.add(predSel);
+	// }
+	// lola.removeComparableObjects(predSel.getTymInfo());
+	// }
+	// moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
+	// step3.stop();
+	//
+	// // Step 4: split based on dependent selectors
+	// logger.debug("Splitting selectors based on dependencies between
+	// selectors...");
+	// INCRETimer step4 = incre.getReporter().openProcess(MODULE_NAME, "Checking
+	// dependencies between selectors",
+	// INCRETimer.TYPE_OVERHEAD);
+	// ArrayList depSelectorsList = new ArrayList();
+	// boolean restart = true;
+	// while (restart)
+	// {
+	//
+	// restart = false;
+	// depSelectorsList.clear();
+	//
+	// if (!toBeSkipped.isEmpty())
+	// {
+	// Iterator predicateIterStep4 = toBeSkipped.iterator();
+	// for (Object aToBeSkipped : toBeSkipped)
+	// { // for each selector gather dependent selectors
+	// PredicateSelector predSel = (PredicateSelector) aToBeSkipped;
+	// if (!predSel.getAnnotations().isEmpty())
+	// {
+	// Iterator annots = predSel.getAnnotations().iterator();
+	// for (Object o : predSel.getAnnotations())
+	// {
+	// // for each annotation find selectors superimposing
+	// // it
+	// String annotToFind = (String) o;
+	// Iterator annotBindingIter =
+	// dataStore.getAllInstancesOf(AnnotationBinding.class);
+	// while (annotBindingIter.hasNext())
+	// {
+	// AnnotationBinding annotBind = (AnnotationBinding)
+	// annotBindingIter.next();
+	// Iterator annotRefs = annotBind.annotationList.iterator();
+	// for (Object anAnnotationList : annotBind.annotationList)
+	// {
+	// ConcernReference annotRef = (ConcernReference) anAnnotationList;
+	// Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
+	// if (annotation.getUnitName().equals(annotToFind))
+	// {
+	// depSelectorsList.add(annotBind.getSelector().getRef());
+	// }
+	// }
+	// }
+	// }
+	// }
+	//
+	// // check whether dependent selectors are in toBeSkipped
+	// // If not, restart
+	// if (!depSelectorsList.isEmpty())
+	// {
+	// Iterator depSelectors = depSelectorsList.iterator();
+	// for (Object aDepSelectorsList : depSelectorsList)
+	// {
+	// SelectorDefinition depSelector = (SelectorDefinition) aDepSelectorsList;
+	// Iterator selExpressions = depSelector.selExpressionList.iterator();
+	// for (Object aSelExpressionList : depSelector.selExpressionList)
+	// {
+	// SimpleSelExpression simpleSel = (SimpleSelExpression) aSelExpressionList;
+	// if (simpleSel instanceof PredicateSelector)
+	// {
+	// if (toBeProcessed.contains(simpleSel) && toBeSkipped.contains(predSel))
+	// {
+	// moveSelector(predSel, toBeSkipped, toBeProcessed);
+	// restart = true;
+	// }
+	// }
+	// }
+	// }
+	// }
+	//
+	// if (restart)
+	// {
+	// break;
+	// }
+	// } // end selector iteration
+	// }
+	// } // end step 4
+	// step4.stop();
+	//
+	// // Step 5: resolve answers of skipped selectors
+	// INCRETimer step5 = incre.getReporter().openProcess(MODULE_NAME,
+	// "Resolving answers", INCRETimer.TYPE_OVERHEAD);
+	// logger.debug("Resolving answers...");
+	// Iterator predicateIterStep5 = toBeSkipped.iterator();
+	// for (Object aToBeSkipped1 : toBeSkipped)
+	// {
+	// PredicateSelector predSel = (PredicateSelector) aToBeSkipped1;
+	// if (!predSel.resolveAnswers())
+	// {
+	// // answers cannot be resolved, re-calculate selector
+	// toBeMoved.add(predSel);
+	// logger.debug("[Cannot resolve answers] " + predSel.getQuery());
+	// }
+	// else
+	// {
+	// // successfully skipped
+	// logger.debug("[Succesfully Skip] " + predSel.getQuery());
+	// }
+	// }
+	// moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
+	// step5.stop();
+	//
+	// // return the list containing all selectors still to be processed
+	// return toBeProcessed;
+	// }
 
 	/**
 	 * * helper method: moving selectors between lists

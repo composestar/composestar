@@ -77,7 +77,7 @@ public class CLOLA extends LOLA
 
 		if (incremental && !selectors.isEmpty())
 		{
-			selectors = splitSelectors(selectors); // which
+			// selectors = splitSelectors(selectors); // which
 			// selectors
 			// to
 			// skip/process?

@@ -24,7 +24,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.Config.BuildConfig;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
@@ -70,7 +69,7 @@ public class CompileHistory implements Serializable
 	 * DataStore containing the compilation results
 	 */
 	protected DataStore datastore;
-	
+
 	/**
 	 * The common resources. Contains data not required for runtime.
 	 */
@@ -144,7 +143,7 @@ public class CompileHistory implements Serializable
 		}
 		return history;
 	}
-	
+
 	protected static ObjectInputStream getOIS(InputStream is) throws IOException
 	{
 		if (is instanceof ObjectInputStream)

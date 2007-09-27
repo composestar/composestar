@@ -19,22 +19,17 @@ import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Source;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.Config.ConfigManager;
-import Composestar.Core.LAMA.ProgramElement;
-import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.CompileHistory;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
-import Composestar.Core.TYM.TypeLocations;
-import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -743,129 +738,132 @@ public final class INCRE
 		return (m != null) && m.isIncremental();
 	}
 
-	/**
-	 * Returns all primitive concerns potentially modified primitive concerns
-	 * from unmodified libraries/sources are excluded If this information is not
-	 * available then the primitive concern is included
-	 * 
-	 * @param ds Datastore to search
-	 * @return
-	 */
-	public List<PrimitiveConcern> getAllModifiedPrimitiveConcerns(DataStore ds) throws ModuleException
-	{
-		TypeLocations locations = TypeLocations.instance();
-		List<PrimitiveConcern> list = new ArrayList<PrimitiveConcern>();
+	// /**
+	// * Returns all primitive concerns potentially modified primitive concerns
+	// * from unmodified libraries/sources are excluded If this information is
+	// not
+	// * available then the primitive concern is included
+	// *
+	// * @param ds Datastore to search
+	// * @return
+	// */
+	// public List<PrimitiveConcern> getAllModifiedPrimitiveConcerns(DataStore
+	// ds) throws ModuleException
+	// {
+	// TypeLocations locations = TypeLocations.instance();
+	// List<PrimitiveConcern> list = new ArrayList<PrimitiveConcern>();
+	//
+	// Iterator concerns = ds.getAllInstancesOf(PrimitiveConcern.class);
+	// while (concerns.hasNext())
+	// {
+	// PrimitiveConcern pc = (PrimitiveConcern) concerns.next();
+	// ProgramElement unit = (ProgramElement) pc.platformRepr;
+	//
+	// // Only add primitive concerns in case:
+	// // 1. concern extracted from modified source file
+	// // 2. concern extracted from modified assembly
+	// if (unit instanceof Type)
+	// {
+	// Type dtype = (Type) unit;
+	// String sourceFile = locations.getSourceByType(dtype.fullName);
+	// if (sourceFile != null && !isFileAdded(sourceFile, null) &&
+	// !isFileModified(sourceFile))
+	// {
+	// /* skip because sourcefile unmodified */
+	// }
+	// // TODO: check this
+	// // else
+	// // if(!incre.isFileAdded(dtype.Module.FullyQualifiedName,null)
+	// // && !incre.isFileModified(dtype.Module.FullyQualifiedName)){
+	// /* skip because assembly unmodified */
+	// // }
+	// else
+	// {
+	// list.add(pc); /* safety first */
+	// }
+	// }
+	// else
+	// {
+	// list.add(pc);
+	// }
+	// }
+	//
+	// /* sort primitive concerns by id */
+	// Collections.sort(list, new Comparator<PrimitiveConcern>()
+	// {
+	// public int compare(PrimitiveConcern o1, PrimitiveConcern o2)
+	// {
+	// String s1 = o1.getUniqueID();
+	// String s2 = o2.getUniqueID();
+	// return s1.compareTo(s2);
+	// }
+	// });
+	//
+	// return list;
+	// }
 
-		Iterator concerns = ds.getAllInstancesOf(PrimitiveConcern.class);
-		while (concerns.hasNext())
-		{
-			PrimitiveConcern pc = (PrimitiveConcern) concerns.next();
-			ProgramElement unit = (ProgramElement) pc.platformRepr;
+	// /**
+	// * Returns true if concern is possible declared in a sourcefile
+	// *
+	// * @param c - The concern possible declared in sourcefile
+	// * @param src - Fullpath of sourcefile
+	// * @param source
+	// */
+	// public boolean declaredInSource(Concern c, String source)
+	// {
+	// /* Sourcefile format: C:/Program Files/ComposeStar/... */
+	// TypeLocations locations = TypeLocations.instance();
+	// PlatformRepresentation repr = c.getPlatformRepresentation();
+	//
+	// if (repr instanceof Type)
+	// {
+	// Type type = (Type) repr;
+	// if (type.nestedPrivate || type.nestedPublic)
+	// {
+	// /* undecided yet, safety first */
+	// return true;
+	// }
+	//
+	// String location = locations.getSourceByType(type.fullName);
+	// if (location != null)
+	// {
+	// location = FileUtils.normalizeFilename(location);
+	// source = FileUtils.normalizeFilename(source);
+	//
+	// if (location.equals(source))
+	// {
+	// return true;
+	// }
+	// }
+	// }
+	// else
+	// {
+	// /* undecided yet, safety first */
+	// return true;
+	// }
+	//
+	// return false;
+	// }
 
-			// Only add primitive concerns in case:
-			// 1. concern extracted from modified source file
-			// 2. concern extracted from modified assembly
-			if (unit instanceof Type)
-			{
-				Type dtype = (Type) unit;
-				String sourceFile = locations.getSourceByType(dtype.fullName);
-				if (sourceFile != null && !isFileAdded(sourceFile, null) && !isFileModified(sourceFile))
-				{
-					/* skip because sourcefile unmodified */
-				}
-				// TODO: check this
-				// else
-				// if(!incre.isFileAdded(dtype.Module.FullyQualifiedName,null)
-				// && !incre.isFileModified(dtype.Module.FullyQualifiedName)){
-				/* skip because assembly unmodified */
-				// }
-				else
-				{
-					list.add(pc); /* safety first */
-				}
-			}
-			else
-			{
-				list.add(pc);
-			}
-		}
-
-		/* sort primitive concerns by id */
-		Collections.sort(list, new Comparator<PrimitiveConcern>()
-		{
-			public int compare(PrimitiveConcern o1, PrimitiveConcern o2)
-			{
-				String s1 = o1.getUniqueID();
-				String s2 = o2.getUniqueID();
-				return s1.compareTo(s2);
-			}
-		});
-
-		return list;
-	}
-
-	/**
-	 * Returns true if concern is possible declared in a sourcefile
-	 * 
-	 * @param c - The concern possible declared in sourcefile
-	 * @param src - Fullpath of sourcefile
-	 * @param source
-	 */
-	public boolean declaredInSource(Concern c, String source)
-	{
-		/* Sourcefile format: C:/Program Files/ComposeStar/... */
-		TypeLocations locations = TypeLocations.instance();
-		PlatformRepresentation repr = c.getPlatformRepresentation();
-
-		if (repr instanceof Type)
-		{
-			Type type = (Type) repr;
-			if (type.nestedPrivate || type.nestedPublic)
-			{
-				/* undecided yet, safety first */
-				return true;
-			}
-
-			String location = locations.getSourceByType(type.fullName);
-			if (location != null)
-			{
-				location = FileUtils.normalizeFilename(location);
-				source = FileUtils.normalizeFilename(source);
-
-				if (location.equals(source))
-				{
-					return true;
-				}
-			}
-		}
-		else
-		{
-			/* undecided yet, safety first */
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Returns true if concern is possible declared in one of the source files
-	 * 
-	 * @param c - The concern possible declared in sourcefile
-	 * @param sources - Fullpath of sourcefile
-	 */
-	public boolean declaredInSources(Concern c, List sources)
-	{
-		for (Object source : sources)
-		{
-			String src = (String) source;
-			if (declaredInSource(c, src))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
+	// /**
+	// * Returns true if concern is possible declared in one of the source files
+	// *
+	// * @param c - The concern possible declared in sourcefile
+	// * @param sources - Fullpath of sourcefile
+	// */
+	// public boolean declaredInSources(Concern c, List sources)
+	// {
+	// for (Object source : sources)
+	// {
+	// String src = (String) source;
+	// if (declaredInSource(c, src))
+	// {
+	// return true;
+	// }
+	// }
+	//
+	// return false;
+	// }
 
 	/**
 	 * Returns true in case all dependencies have not been modified, return
