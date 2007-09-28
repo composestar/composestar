@@ -5,6 +5,7 @@
 	<taskdef name="test"				classname="Composestar.Ant.Taskdefs.CstarTest"/>
 	<taskdef name="pruneDir"			classname="Composestar.Ant.Taskdefs.PruneDir"/>
 	<taskdef name="antlr"				classname="Composestar.Ant.Taskdefs.Antlr"/>
+	<taskdef name="jarpackages"			classname="Composestar.Ant.Taskdefs.PackagesInJar"/>
 	
 	<!-- dotnet -->
 	<taskdef name="dn_convert"			classname="Composestar.Ant.Taskdefs.DotNet.CstarConvert"/>
