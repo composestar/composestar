@@ -24,13 +24,30 @@
 
 package ComposestarEclipsePlugin.Core;
 
+import java.util.Set;
+
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * @author Michiel Hendriks
  */
 public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 {
+	protected IProject currentProject;
+	
+	protected Set<IPath> sources;
+	
+	protected Set<IPath> concerns;
+	
 	public ComposestarBuilder()
 	{}
+	
+	protected IProject[] fullBuild(IProgressMonitor monitor) throws CoreException
+	{
+		return null;
+	}
 }

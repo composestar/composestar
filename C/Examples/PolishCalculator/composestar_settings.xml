@@ -6,7 +6,7 @@
 	<item value="CustomFilters\Parametercheck.jar&#x0A;CustomFilters\Timing.jar&#x0A;CustomFilters\Tracing.jar" key="customFilter"/>
 	<item value="3" key="runDebugLevel"/>
 	<item value="ExampleRunner" key="applicationStart"/>
-	<item value="C:/sandbox/C/Examples/EncryptionExample" key="basePath"/>
+	<item value="C:/local/mhendrik/composestar/C/Examples/PolishCalculator" key="basePath"/>
 	<item value="3" key="buildDebugLevel"/>
 	<item value="" key="secretMode"/>
 	<item value="" key="debugger"/>

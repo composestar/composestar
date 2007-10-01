@@ -119,7 +119,7 @@
 	
 	<!-- install -->	
 	<target name="install" depends="build" description="install the eclipse plugin">
-		<copy todir="${eclipse.pluginsdir.java}">
+		<copy todir="${eclipse.pluginsdir.java.plugin}">
 			<fileset dir="${out.dist}" />
 		</copy>
 		<copy todir="${eclipse.home}/features/composestar.java_${version.java}">

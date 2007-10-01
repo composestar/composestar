@@ -1,15 +1,15 @@
 package ComposestarEclipsePlugin.Java;
 
+import java.io.File;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import org.eclipse.jface.dialogs.IDialogSettings;
 
 import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.IComposestarConstants;
-import ComposestarEclipsePlugin.Core.BuildConfiguration.BuildConfigurationManager;
 import ComposestarEclipsePlugin.Core.Utils.CommandLineExecutor;
-import ComposestarEclipsePlugin.Core.Utils.FileUtils;
 
 /**
  * Class for triggering the compose* compiler
@@ -35,7 +35,7 @@ public class MasterManager
 	/**
 	 * The JVM options
 	 */
-	protected String jvmOptions = "-Xmx128m";
+	protected String[] jvmOptions = { "-Xmx128m" };
 
 	/**
 	 * If true the output is logged to a file.
@@ -45,7 +45,7 @@ public class MasterManager
 	/**
 	 * The name of the logfile.
 	 */
-	protected String logFile = "buildlog.txt";
+	public File logFile;
 
 	public MasterManager()
 	{
@@ -61,11 +61,8 @@ public class MasterManager
 		return Instance;
 	}
 
-	public void run(IDialogSettings settings)
+	public void run(File buildconfig)
 	{
-
-		BuildConfigurationManager bcmanager = BuildConfigurationManager.instance();
-		String basePath = FileUtils.getDirectoryPart(bcmanager.buildconfigFile);
 		try
 		{
 			// automatically resolve classpath
@@ -81,20 +78,23 @@ public class MasterManager
 				defaultCp.append(";");
 			}
 
-			String pluginPath = ComposestarEclipsePluginPlugin.getAbsolutePath("");
-			String classPath = settings.get("classpath");
-			classPath = defaultCp.toString() + classPath.replaceAll("%composestar%", pluginPath);
+			Debug.instance().Log("Classpath = " + defaultCp.toString());
 
-			Debug.instance().Log("Classpath = " + classPath);
+			List<String> cmdLine = new ArrayList<String>();
+			cmdLine.add("java");
+			cmdLine.addAll(Arrays.asList(jvmOptions));
+			cmdLine.add("-cp");
+			cmdLine.add(defaultCp.toString());
+			cmdLine.add(mainClass);
+			cmdLine.add(buildconfig.toString());
 
-			String command = "java " + jvmOptions + " -cp \"" + classPath + "\" " + mainClass + " " + "\""
-					+ bcmanager.buildconfigFile + "\"";
-			if (logOutput)
+			PrintStream outStream = null;
+			if (logOutput && logFile != null)
 			{
-				command += " > " + basePath + java.io.File.separator + logFile;
+				outStream = new PrintStream(logFile);
 			}
-			CommandLineExecutor cmdExec = new CommandLineExecutor();
-			int result = cmdExec.exec("call " + command);
+			CommandLineExecutor cmdExec = new CommandLineExecutor(outStream);
+			int result = cmdExec.exec(cmdLine.toArray(new String[cmdLine.size()]));
 
 			if (result == 0)
 			{

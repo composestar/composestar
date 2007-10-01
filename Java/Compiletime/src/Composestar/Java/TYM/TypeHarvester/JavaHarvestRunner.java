@@ -12,7 +12,7 @@ import java.util.List;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
-import Composestar.Java.COMP.JavaCompiler;
+import Composestar.Java.COMP.CStarJavaCompiler;
 import Composestar.Utils.Debug;
 
 /**
@@ -37,7 +37,7 @@ public class JavaHarvestRunner implements HarvestRunner
 	{
 		List<File> toBeHarvested = new ArrayList<File>();
 
-		File dummies = (File) resources.get(JavaCompiler.DUMMY_JAR);
+		File dummies = (File) resources.get(CStarJavaCompiler.DUMMY_JAR);
 		try
 		{
 			ClassPathModifier.addFile(dummies);

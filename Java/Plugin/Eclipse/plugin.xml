@@ -185,5 +185,12 @@
        </run>
     </builder>
  </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <scope
+          class="ComposestarEclipsePlugin.Core.CStarProjectPreferences"
+          name="project">
+    </scope>
+ </extension>
    	
 </plugin>

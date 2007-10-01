@@ -17,6 +17,7 @@ import ComposestarEclipsePlugin.Core.IComposestarConstants;
 /**
  * This class is responsible for creating a buildconfigurationfile
  */
+@Deprecated
 public class BuildConfigurationManager
 {
 
@@ -35,13 +36,13 @@ public class BuildConfigurationManager
 	private String applicationStart = "";
 
 	private String buildDebugLevel = "";
-	
+
 	private String runDebugLevel = "";
 
 	private String outputPath = "";
-	
+
 	private String platformConfigFile = "";
-	
+
 	public BuildConfigurationManager()
 	{
 
@@ -55,7 +56,7 @@ public class BuildConfigurationManager
 		}
 		return (Instance);
 	}
-	
+
 	public void setPlatformConfigFile(String pcf)
 	{
 		platformConfigFile = pcf;
@@ -78,8 +79,9 @@ public class BuildConfigurationManager
 			bw.write("<BuildConfiguration version=\"1.00\">\n");
 
 			// projects
-			bw.write(spacePad(1) + "<Projects buildDebugLevel=\"" + buildDebugLevel + "\" applicationStart=\"" 
-					+ applicationStart + "\" runDebugLevel=\"" + runDebugLevel + "\" outputPath=\"" + outputPath + "\">\n");
+			bw.write(spacePad(1) + "<Projects buildDebugLevel=\"" + buildDebugLevel + "\" applicationStart=\""
+					+ applicationStart + "\" runDebugLevel=\"" + runDebugLevel + "\" outputPath=\"" + outputPath
+					+ "\">\n");
 			Iterator projIt = projects.iterator();
 			while (projIt.hasNext())
 			{
@@ -202,13 +204,14 @@ public class BuildConfigurationManager
 			String s;
 			StringBuffer buffer = new StringBuffer();
 			boolean skip = true;
-			
+
 			String pluginPath = ComposestarEclipsePluginPlugin.getAbsolutePath("");
 			while ((s = in.readLine()) != null)
 			{
 				if (s.startsWith("<Platforms>"))
 				{
-					// Replace %composestar% with the core plugin path (where the binaries are)
+					// Replace %composestar% with the core plugin path (where
+					// the binaries are)
 					s = s.replaceAll("%composestar%", pluginPath);
 					buffer.append(spacePad(1) + "" + s + "\n");
 					skip = false;
@@ -311,7 +314,7 @@ public class BuildConfigurationManager
 	{
 		this.buildDebugLevel = buildDebugLevel;
 	}
-	
+
 	public void setRunDebugLevel(String runDebugLevel)
 	{
 		this.runDebugLevel = runDebugLevel;

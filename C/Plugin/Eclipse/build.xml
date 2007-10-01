@@ -10,50 +10,50 @@
 		</and>
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
-	
+
 	<echo>Processing: ${ant.project.name} ...</echo>
-	
+
 	<description>
 	The Compose* Eclipse C Plugin
 	</description>
-	
+
 	<target name="init_local" depends="init_eclipse">
-		<mkdir dir="${out.build}"/>
-		<mkdir dir="${out.dist}"/>
-	</target>
-	
-	<!-- clean -->
-	<target name="clean" depends="init">
-		<delete dir="${out.build}"/>
-		<delete dir="${out.dist}"/>
+		<mkdir dir="${out.build}" />
+		<mkdir dir="${out.dist}" />
 	</target>
 
-	<!-- build -->	
+	<!-- clean -->
+	<target name="clean" depends="init">
+		<delete dir="${out.build}" />
+		<delete dir="${out.dist}" />
+	</target>
+
+	<!-- build -->
 	<target name="build" depends="init_local,compile,jar,-distmisc" description="compile the eclipse plugin">
 	</target>
-		
-	
+
+
 	<!-- compile -->
-	<target name="compile" depends="init_local" >
+	<target name="compile" depends="init_local">
 		<javac srcdir="src" destdir="${out.build}" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<classpath>
-				<pathelement location="${build.core}/Plugin/Eclipse/${out.dist}/ComposestarEclipseCore.jar"/>
+				<pathelement location="${build.core}/Plugin/Eclipse/${out.dist}/ComposestarEclipseCore.jar" />
 			</classpath>
 			<classpath refid="lib.eclipse" />
 		</javac>
 	</target>
-	
+
 	<!-- create jar -->
 	<target name="jar" depends="compile">
-		<copy file="META-INF/MANIFEST.MF" tofile="${out.build}/META-INF/MANIFEST.MF"/>
+		<copy file="META-INF/MANIFEST.MF" tofile="${out.build}/META-INF/MANIFEST.MF" />
 		<manifest file="${out.build}/META-INF/MANIFEST.MF" mode="update">
-			<attribute name="Bundle-Version" value="${version.c}"/>
+			<attribute name="Bundle-Version" value="${version.c}" />
 		</manifest>
 		<jar destfile="${out.dist}/ComposestarEclipseC.jar" manifest="${out.build}/META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}" />
 		</jar>
 	</target>
-	
+
 	<target name="-distmisc" depends="init_local">
 		<copy todir="${out.dist}">
 			<fileset dir="${out.build}">
@@ -62,17 +62,17 @@
 			<fileset dir="${basedir}">
 				<include name="plugin.*" />
 				<include name="message.*" />
-				
+
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>
 	</target>
-	
-	<!-- install -->	
+
+	<!-- install -->
 	<target name="install" depends="init_local,build" description="install the eclipse plugin">
 		<copy todir="${eclipse.pluginsdir.c}">
 			<fileset dir="${out.dist}" />
 		</copy>
 	</target>
-	
+
 </project>

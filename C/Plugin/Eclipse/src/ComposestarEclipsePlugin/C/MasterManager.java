@@ -1,5 +1,7 @@
 package ComposestarEclipsePlugin.C;
 
+import java.util.Arrays;
+
 import ComposestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
 import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.Utils.CommandLineExecutor;
@@ -29,19 +31,23 @@ public class MasterManager
 		try
 		{
 
-			String command = "make.exe build -C" + basePath;
-			Debug.instance().Log("Calling command: " + command);
+			String[] command = new String[4];
+			command[0] = "make";
+			command[1] = "build";
+			command[2] = "-C";
+			command[3] = basePath;
+			Debug.instance().Log("Calling command: " + Arrays.toString(command));
 			CommandLineExecutor cmdExec = new CommandLineExecutor();
-			int result = cmdExec.exec("call " + command);
+			int result = cmdExec.exec(command);
 
 			if (result == 0)
 			{
-				//Debug.instance().Log(cmdExec.outputNormal());
+				// Debug.instance().Log(cmdExec.outputNormal());
 				completed = true;
 			}
 			else
 			{
-				//Debug.instance().Log(cmdExec.outputError());
+				// Debug.instance().Log(cmdExec.outputError());
 				Debug.instance().Log("Master run failure reported by process. Exit code is " + result, Debug.MSG_ERROR);
 			}
 		}

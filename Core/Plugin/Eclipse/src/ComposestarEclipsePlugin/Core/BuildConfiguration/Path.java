@@ -4,6 +4,7 @@ package ComposestarEclipsePlugin.Core.BuildConfiguration;
  * Class representing a compose* path. Used by BuildConfigurationManager to
  * build configuration-file.
  */
+@Deprecated
 public class Path
 {
 

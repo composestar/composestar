@@ -6,6 +6,7 @@ import java.util.HashMap;
  * Class representing a compose*-module setting. Used by
  * BuildConfigurationManager to build configuration-file.
  */
+@Deprecated
 public class ModuleSetting
 {
 

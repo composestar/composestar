@@ -140,7 +140,6 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 
 	public void loadDialogSettings(IDialogSettings settings)
 	{
-
 		buildDebugLevel.select(settings.getInt("buildDebugLevel"));
 		incremental.select(incremental.indexOf(settings.get("incremental")));
 		runDebugLevel.select(settings.getInt("runDebugLevel"));

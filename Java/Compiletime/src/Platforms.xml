@@ -8,7 +8,7 @@
 				<extensions>
 					<extension>java</extension>
 				</extensions>
-				<compiler class="Composestar.Java.COMP.JavaCompiler">
+				<compiler class="Composestar.Java.COMP.CStarJavaCompiler">
 					<action name="Compile" executable="javac">
 						<arg>-d</arg>
 						<arg>${OUT}</arg>

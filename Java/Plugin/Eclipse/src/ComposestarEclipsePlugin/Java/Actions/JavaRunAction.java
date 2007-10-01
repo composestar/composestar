@@ -1,13 +1,15 @@
 package ComposestarEclipsePlugin.Java.Actions;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaModel;
@@ -15,10 +17,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.IComposestarConstants;
 import ComposestarEclipsePlugin.Core.Actions.Action;
@@ -31,19 +31,9 @@ import ComposestarEclipsePlugin.Core.Utils.FileUtils;
 public class JavaRunAction extends Action implements IWorkbenchWindowActionDelegate
 {
 	/**
-	 * The java command
-	 */
-	private String command = "";
-
-	/**
 	 * The project to run.
 	 */
 	private IProject project;
-
-	/**
-	 * The location of the project.
-	 */
-	private IPath projectLocation;
 
 	/**
 	 * The Main class of the project.
@@ -53,7 +43,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 	/**
 	 * Main class arguments.
 	 */
-	private String arguments = "";
+	private List<String> cmdline;
 
 	/**
 	 * Classpath of project (this includes dependencies). Contains Strings.
@@ -70,7 +60,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 	 */
 	public JavaRunAction()
 	{
-
+		cmdline = new ArrayList<String>();
 	}
 
 	/**
@@ -110,14 +100,19 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 		}
 
 		classpath = new HashSet<String>();
-		command = "";
-		arguments = "";
+		cmdline.clear();
 
 		project = selectedProjects[0];
-		projectLocation = project.getProject().getLocation();
 
-		// main class can be retrieved from dialog settings.
-		loadDialogSettings();
+		IScopeContext projectScope = new ProjectScope(project);
+		IEclipsePreferences settings = projectScope.getNode(IComposestarConstants.BUNDLE_ID);
+
+		mainClass = settings.get("mainclass", null);
+		if (mainClass == null || mainClass.trim().length() == 0)
+		{
+			Debug.instance().Log("No mainclass configured for this project", Debug.MSG_ERROR);
+			return;
+		}
 
 		// create classpath
 		createClassPath();
@@ -145,21 +140,21 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 	 */
 	private void createCommand()
 	{
-		command += "java ";
-		command += "-cp ";
+		cmdline.add("java");
+		cmdline.add("-cp");
 
-		Iterator<String> cpIt = classpath.iterator();
-		while (cpIt.hasNext())
+		StringBuffer sb = new StringBuffer();
+		for (String cp : classpath)
 		{
-			command += '"' + (cpIt.next()) + '"';
-			if (cpIt.hasNext())
+			if (sb.length() > 0)
 			{
-				command += ";";
+				sb.append(";");
 			}
+			sb.append(cp);
 		}
-
-		command += " " + mainClass;
-		command += " " + arguments;
+		cmdline.add(sb.toString());
+		cmdline.add(mainClass);
+		// command += " " + arguments;
 	}
 
 	/**
@@ -171,7 +166,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 		try
 		{
 			CommandLineExecutor cmdExec = new CommandLineExecutor();
-			int result = cmdExec.exec(/* "call " + */command, new File(project.getLocation().toOSString()));
+			int result = cmdExec.exec(cmdline.toArray(new String[cmdline.size()]), project.getLocation().toFile());
 
 			if (result == 0)
 			{
@@ -208,7 +203,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 		try
 		{
 			// outputPath
-			String outputPath = projectLocation.removeLastSegments(1).append(javaProject.getOutputLocation())
+			String outputPath = project.getLocation().removeLastSegments(1).append(javaProject.getOutputLocation())
 					.addTrailingSeparator().toPortableString().toString();
 
 			classpath.add(outputPath);
@@ -277,34 +272,5 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 	private IWorkspaceRoot getWorkspaceRoot()
 	{
 		return ResourcesPlugin.getWorkspace().getRoot();
-	}
-
-	/**
-	 * Loads the dialog settings. Also sets the main class.
-	 */
-	private void loadDialogSettings()
-	{
-		String location = project.getLocation().toOSString();
-
-		ComposestarEclipsePluginPlugin plugin = ComposestarEclipsePluginPlugin.getDefault();
-		IDialogSettings settings = plugin.getDialogSettings(location);
-
-		if (plugin.dialogSettingsFound)
-		{
-			if (settings.get("mainClass") == null)
-			{
-				// mainClass not set!
-				Debug.instance().Log("Main class not set.", IComposestarConstants.MSG_ERROR);
-			}
-			else
-			{
-				mainClass = settings.get("mainClass");
-			}
-		}
-		else
-		{
-			// composestar settings not set!
-			Debug.instance().Log("Compose* settings not set.", IComposestarConstants.MSG_ERROR);
-		}
 	}
 }

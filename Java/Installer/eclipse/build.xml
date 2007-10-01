@@ -3,63 +3,75 @@
 
 	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}..${file.separator}Core">
 		<and>
-			<not><isset property="build.core"/></not>
-			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml"/>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml" />
 		</and>
 	</condition>
-	
-	<import file="${build.core}${file.separator}common.xml"/>
-	
+
+	<import file="${build.core}${file.separator}common.xml" />
+
 	<target name="local_init" depends="init">
-		<mkdir dir="${out.build}"/>
-		<mkdir dir="${out.dist}"/>
-		<mkdir dir="${out.dist}/www/features"/>
-		<mkdir dir="${out.dist}/www/plugins"/>
+		<mkdir dir="${out.build}" />
+		<mkdir dir="${out.dist}" />
+		<mkdir dir="${out.dist}/www/features" />
+		<mkdir dir="${out.dist}/www/plugins" />
 	</target>
-	
+
 	<target name="clean" depends="init" description="clean intermediate files">
-		<delete dir="${out.build}"/>
-		<delete dir="${out.dist}"/>
+		<delete dir="${out.build}" />
+		<delete dir="${out.dist}" />
 	</target>
-	
-	<target name="build"/>
-	
+
+	<target name="build" />
+
 	<target name="copy_files" depends="local_init">
 		<copy todir="${out.build}/features/composestar.java_${version.java}">
 			<fileset dir="${build.java}/Plugin/Eclipse/dist-feature" />
 		</copy>
-	
+
 		<!-- composestar.java package -->
 		<copy todir="${out.build}/plugins/composestar.java_${version.java}">
-			<fileset dir="${build.java}/Compiletime/${out.dist}"/>
-			<fileset dir="${build.java}/Plugin/eclipse/${out.dist}"/>
-			<fileset dir="${build.java}/Runtime/${out.dist}"/>
+			<fileset dir="${build.java}/Compiletime/${out.dist}" />
+			<fileset dir="${build.java}/Runtime/${out.dist}" />
 		</copy>
-		
+		<copy todir="${out.build}/plugins/composestar.java.plugin_${version.java}">
+			<fileset dir="${build.java}/Plugin/eclipse/${out.dist}" />
+		</copy>
+
 		<!-- composestar.core package -->
 		<copy todir="${out.build}/plugins/composestar.core_${version.java}">
-			<fileset dir="${build.core}/Compiletime/${out.dist}"/>
-			<fileset dir="${build.core}/Plugin/eclipse/${out.dist}"/>
+			<fileset dir="${build.core}/Compiletime/${out.dist}" />
+		</copy>
+		<copy todir="${out.build}/plugins/composestar.core.plugin_${version.java}">
+			<fileset dir="${build.core}/Plugin/eclipse/${out.dist}" />
 		</copy>
 	</target>
-	
-	<target name="publish" depends="local_init,copy_files" description="create eclipse packages">	
+
+	<target name="publish" depends="local_init,copy_files" description="create eclipse packages">
 		<jar destfile="${out.dist}/www/features/composestar.java_${version.java}.jar">
 			<fileset dir="${out.build}/features/composestar.java_${version.java}" />
 		</jar>
 		<jar destfile="${out.dist}/www/plugins/composestar.java_${version.java}.jar" manifest="${out.build}/plugins/composestar.java_${version.java}/META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}/plugins/composestar.java_${version.java}" />
 		</jar>
+		<jar destfile="${out.dist}/www/plugins/composestar.java.plugin_${version.java}.jar" manifest="${out.build}/plugins/composestar.java.plugin_${version.java}/META-INF/MANIFEST.MF">
+			<fileset dir="${out.build}/plugins/composestar.java.plugin_${version.java}" />
+		</jar>
 		<jar destfile="${out.dist}/www/plugins/composestar.core_${version.core}.jar" manifest="${out.build}/plugins/composestar.core_${version.core}/META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}/plugins/composestar.core_${version.java}" />
 		</jar>
-		
-		<copy file="site.template.xml" tofile="${out.dist}/www/site.xml" overwrite="true"/>
-		<replace file="${out.dist}/www/site.xml" >
-			<replacefilter token="@version.core@" value="${version.core}"/>
-			<replacefilter token="@version.java@" value="${version.java}"/>
+		<jar destfile="${out.dist}/www/plugins/composestar.core.plugin_${version.core}.jar" manifest="${out.build}/plugins/composestar.core.plugin_${version.core}/META-INF/MANIFEST.MF">
+			<fileset dir="${out.build}/plugins/composestar.core.plugin_${version.java}" />
+		</jar>
+
+		<copy file="site.template.xml" tofile="${out.dist}/www/site.xml" overwrite="true" />
+		<replace file="${out.dist}/www/site.xml">
+			<replacefilter token="@version.core@" value="${version.core}" />
+			<replacefilter token="@version.java@" value="${version.java}" />
 		</replace>
-		
+
 		<zip destfile="${out.dist}/composestar.java_${version.java}.zip">
 			<fileset dir="${out.build}" />
 		</zip>

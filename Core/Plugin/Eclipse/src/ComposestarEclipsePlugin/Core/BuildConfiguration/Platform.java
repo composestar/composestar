@@ -15,6 +15,7 @@ import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.IComposestarConstants;
 import ComposestarEclipsePlugin.Core.Utils.FileUtils;
 
+@Deprecated
 public class Platform extends DefaultHandler
 {
 

@@ -1,33 +1,30 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Compose*/Java
-Bundle-SymbolicName: composestar.java;singleton:=true
+Bundle-Name: Compose*/Java Eclipse Integration
+Bundle-SymbolicName: composestar.java.plugin;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Localization: plugin
-Bundle-ClassPath: ComposestarEclipseJava.jar
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.core.resources,
  org.eclipse.debug.ui,
  org.eclipse.jdt.core,
  org.eclipse.jdt.debug.ui,
  org.eclipse.jdt.ui,
  org.eclipse.ui.ide,
- org.eclipse.core.filesystem,
- org.eclipse.jdt.launching,
- org.eclipse.debug.core,
- composestar.core
+ composestar.core.plugin,
+ composestar.java
 Eclipse-LazyStart: true
 Eclipse-AutoStart: true
 Bundle-Vendor: University of Twente
-Export-Package: 
- ComposestarEclipsePlugin.Java,
- ComposestarEclipsePlugin.Java.Actions,
- ComposestarEclipsePlugin.Java.UI,
- ComposestarEclipsePlugin.Java.UI.Wizards
 Import-Package: ComposestarEclipsePlugin.Core,
  ComposestarEclipsePlugin.Core.Actions,
  ComposestarEclipsePlugin.Core.BuildConfiguration,
  ComposestarEclipsePlugin.Core.UI,
  ComposestarEclipsePlugin.Core.Utils 
 Bundle-Activator: ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin
+Export-Package: ComposestarEclipsePlugin.Java,
+ ComposestarEclipsePlugin.Java.Actions,
+ ComposestarEclipsePlugin.Java.UI,
+ ComposestarEclipsePlugin.Java.UI.Wizards
+Bundle-ClassPath: ComposestarEclipseJava.jar,
+ .

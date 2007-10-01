@@ -460,13 +460,21 @@
 
 		<!-- eclipse libraries -->
 		<path id="lib.eclipse">
+		  <path refid="lib.core" />
+		  <fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
 			<fileset dir="${eclipse.pluginsdir}" includes="*.jar" />
 		</path>
 
 		<property name="eclipse.pluginsdir.core"
 			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.core_${version.core}" />
+		<property name="eclipse.pluginsdir.core.plugin"
+			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.core.plugin_${version.core}" />
+			
 		<property name="eclipse.pluginsdir.java"
 			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.java_${version.java}" />
+		<property name="eclipse.pluginsdir.java.plugin"
+			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.java.plugin_${version.java}" />
+
 		<property name="eclipse.pluginsdir.c"
 			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.c_${version.c}" />
 	</target>

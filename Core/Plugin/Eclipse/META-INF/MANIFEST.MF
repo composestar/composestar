@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Compose*/Core
-Bundle-SymbolicName: composestar.core
+Bundle-Name: Compose*/Core Eclipse Integration
+Bundle-SymbolicName: composestar.core.plugin
 Bundle-Version: 0.0.0
 Bundle-Localization: plugin
-Bundle-ClassPath: ComposestarEclipseCore.jar
-Require-Bundle: org.eclipse.core.resources,
+Require-Bundle: composestar.core;visibility:=reexport,
+ org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.console
@@ -19,3 +19,5 @@ Export-Package:
 Eclipse-LazyStart: true
 Eclipse-AutoStart: true
 Bundle-Activator: ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin
+Bundle-ClassPath: ComposestarEclipseCore.jar,
+ .

@@ -86,6 +86,14 @@
 		<!-- jar files -->
 		<copy todir="${eclipse.pluginsdir.core}${file.separator}lib">
 			<fileset dir="${out.dist}" />
+			<fileset dir="src">
+				<include name="INCREconfig.xml" />
+			</fileset>
+		</copy>
+		<copy todir="${eclipse.pluginsdir.c}">
+			<fileset dir="src">
+				<include name="INCREconfig.xml" />
+			</fileset>
 		</copy>
 	</target>
 

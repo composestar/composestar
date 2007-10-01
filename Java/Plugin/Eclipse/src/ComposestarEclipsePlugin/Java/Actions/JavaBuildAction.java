@@ -1,30 +1,16 @@
 package ComposestarEclipsePlugin.Java.Actions;
 
-import java.util.HashSet;
+import java.io.File;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jdt.core.IClasspathContainer;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaModel;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
+import Composestar.Core.Exception.ConfigurationException;
 import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.IComposestarConstants;
 import ComposestarEclipsePlugin.Core.Actions.BuildAction;
-import ComposestarEclipsePlugin.Core.Actions.Sources;
-import ComposestarEclipsePlugin.Core.BuildConfiguration.ModuleSetting;
-import ComposestarEclipsePlugin.Core.BuildConfiguration.Project;
-import ComposestarEclipsePlugin.Core.Utils.FileUtils;
 import ComposestarEclipsePlugin.Core.Utils.Timer;
-import ComposestarEclipsePlugin.Java.IComposestarJavaConstants;
+import ComposestarEclipsePlugin.Java.JavaBuildConfigGenerator;
 import ComposestarEclipsePlugin.Java.MasterManager;
 
 /**
@@ -32,19 +18,11 @@ import ComposestarEclipsePlugin.Java.MasterManager;
  */
 public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActionDelegate
 {
-
-	/**
-	 * The language (used in BuildConfiguration file)
-	 */
-	private final String language = "Java";
-
 	/**
 	 * Constructor.
 	 */
 	public JavaBuildAction()
-	{
-
-	}
+	{}
 
 	/**
 	 * Performs the Action.
@@ -78,60 +56,34 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 
 		Debug.instance().clear();
 		Debug.instance().Log("------ Composestar build started ------\n");
-		Debug.instance().Log("Preprocessing...");
+		Debug.instance().Log("Creating configuration");
 
 		builtOk = true;
-		projectConfig = new Project();
-		projectLocation = selectedProjects[0].getProject().getLocation();
 
-		setDependencies();
-		setPaths();
-		setSources();
-
-		// project settings
-		projectConfig.addProperty("language", language);
-		projectConfig.addProperty("name", selectedProjects[0].getName());
-
-		/*
-		 * CStarJavaRuntimeContainer runtimeCon = new
-		 * CStarJavaRuntimeContainer(); String[] runtimeLibs =
-		 * runtimeCon.getClasspath(); for (String rtlibPath : runtimeLibs) {
-		 * String rtlib = (new File(rtlibPath)).getName(); for (int i = 0; i <
-		 * projectConfig.getDependencies().size(); i++) { String dep = (String)
-		 * projectConfig.getDependencies().get(i); if
-		 * (dep.toLowerCase().endsWith(rtlib)) {
-		 * projectConfig.getDependencies().set(i, rtlibPath); break; } } }
-		 */
-
-		// load project compose* settings
-		loadDialogSettings(projectLocation.toOSString());
-
-		if (builtOk)
+		JavaBuildConfigGenerator bconfiggen = new JavaBuildConfigGenerator();
+		try
 		{
-			// set project
-			buildConfig.setProject(projectConfig);
-			String projectPath = selectedProjects[0].getProject().getLocation().toOSString();
-			projectPath += java.io.File.separatorChar;
-
-			buildConfig.setPlatformConfigFile(ComposestarEclipsePluginPlugin.getAbsolutePath(
-					"/PlatformConfigurations.xml", IComposestarJavaConstants.BUNDLE_ID));
-
-			// create buildconfig and save to disk
-			buildConfig.saveToXML(FileUtils.fixFilename(projectPath + "BuildConfiguration.xml"));
-
-			// clean
-			buildConfig.clearConfigManager();
+			bconfiggen.addProject(selectedProjects[0]);
+		}
+		catch (ConfigurationException e)
+		{
+			Debug.instance().Log("Configuration exception: " + e.getMessage(), Debug.MSG_ERROR);
+			return;
+		}
+		File buildConfigFile = new File(selectedProjects[0].getLocation().toFile(), "BuildConfiguartion.xml");
+		if (!bconfiggen.generate(buildConfigFile))
+		{
+			// TODO improve
+			Debug.instance().Log("Could not generate build config", Debug.MSG_ERROR);
+			return;
 		}
 
 		MasterManager m = MasterManager.getInstance();
 		if (builtOk)
 		{
-			// start compile-proces
-			IDialogSettings settings = ComposestarEclipsePluginPlugin.getDefault().getDialogSettings(
-					projectLocation.toOSString());
-			Debug.instance().Log("Invoking Master...\n");
+			Debug.instance().Log("Invoking Master...");
 
-			m.run(settings);
+			m.run(buildConfigFile);
 			if (!m.completed)
 			{
 				builtOk = false;
@@ -156,169 +108,5 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 			Debug.instance().Log("");
 			Debug.instance().Log("");
 		}
-	}
-
-	/**
-	 * Loads the dialog settings. Prints a debug message if the dialog settings
-	 * cannot be found.
-	 * 
-	 * @param location - absolute directory path.
-	 */
-	public void loadDialogSettings(String location)
-	{
-
-		// locate project compose*-settings
-		ComposestarEclipsePluginPlugin plugin = ComposestarEclipsePluginPlugin.getDefault();
-		IDialogSettings settings = plugin.getDialogSettings(location);
-
-		if (plugin.dialogSettingsFound)
-		{
-			buildConfig.setApplicationStart(settings.get("mainClass"));
-			buildConfig.setBuildDebugLevel(settings.get("buildDebugLevel"));
-			buildConfig.setRunDebugLevel(settings.get("runDebugLevel"));
-
-			if (settings.get("filterModuleOrder") != null)
-			{
-				ModuleSetting filth = new ModuleSetting();
-				filth.setName("FILTH");
-				filth.addSetting("input", settings.get("filterModuleOrder"));
-				buildConfig.addModuleSetting(filth);
-			}
-
-			if (settings.get("incremental") != null)
-			{
-				ModuleSetting incre = new ModuleSetting();
-				incre.setName("INCRE");
-				incre.addSetting("enabled", settings.get("incremental"));
-				incre.addSetting("config", ComposestarEclipsePluginPlugin.getAbsolutePath("/INCREconfig.xml",
-						IComposestarJavaConstants.BUNDLE_ID));
-				buildConfig.addModuleSetting(incre);
-			}
-
-			if (settings.get("secretMode") != null)
-			{
-				ModuleSetting secret = new ModuleSetting();
-				secret.setName("SECRET");
-				secret.addSetting("mode", settings.get("secretMode"));
-				buildConfig.addModuleSetting(secret);
-			}
-		}
-		else
-		{
-			builtOk = false;
-			Debug.instance().Log("The compose* project settings are not set! (See properties page of project)\n",
-					IComposestarConstants.MSG_ERROR);
-		}
-	}
-
-	/**
-	 * Returns the IJavaProject corresponding to the project name
-	 */
-	protected IJavaProject getJavaProject(IProject p)
-	{
-		String projectName = p.getName();
-		if (projectName.length() < 1)
-		{
-			return null;
-		}
-		return getJavaModel().getJavaProject(projectName);
-	}
-
-	/**
-	 * Convenience method to get access to the java model.
-	 */
-	private IJavaModel getJavaModel()
-	{
-		return JavaCore.create(getWorkspaceRoot());
-	}
-
-	/**
-	 * Convenience method to get the workspace root.
-	 */
-	private IWorkspaceRoot getWorkspaceRoot()
-	{
-		return ResourcesPlugin.getWorkspace().getRoot();
-	}
-
-	/**
-	 * Adds the dependencies to a project configuration.
-	 * <p>
-	 * The dependencies are retrieved by using IJavaProject.getRawClasspath().
-	 * <p>
-	 * This method also sets the outputPath.
-	 * 
-	 * @see IJavaProject#getRawClasspath()
-	 */
-	public void setDependencies()
-	{
-		IJavaProject javaProject = getJavaProject(selectedProjects[0]);
-
-		try
-		{
-			// outputPath
-			outputPath = projectLocation.removeLastSegments(1).append(javaProject.getOutputLocation())
-					.addTrailingSeparator().toPortableString().toString();
-
-			IClasspathEntry[] classpaths = javaProject.getRawClasspath();
-
-			for (IClasspathEntry element : classpaths)
-			{
-				// dependencies
-				if (element.getEntryKind() == IClasspathEntry.CPE_LIBRARY)
-				{
-					projectConfig.addDependency(FileUtils.fixFilename(element.getPath().toOSString()));
-				}
-				else if (element.getEntryKind() == IClasspathEntry.CPE_VARIABLE)
-				{
-					IClasspathEntry entry = JavaCore.getResolvedClasspathEntry(element);
-					if (entry != null)
-					{
-						projectConfig.addDependency(FileUtils.fixFilename(entry.getPath().toOSString()));
-					}
-				}
-				else if (element.getEntryKind() == IClasspathEntry.CPE_CONTAINER)
-				{
-					IClasspathContainer con = JavaCore.getClasspathContainer(element.getPath(), javaProject);
-					if (con.getKind() != IClasspathContainer.K_DEFAULT_SYSTEM)
-					{
-						IClasspathEntry[] concps = con.getClasspathEntries();
-						for (IClasspathEntry cp : concps)
-						{
-							projectConfig.addDependency(FileUtils.fixFilename(cp.getPath().toOSString()));
-						}
-					}
-				}
-			}
-		}
-		catch (JavaModelException jme)
-		{
-			Debug.instance().Log("Java Model Exception: " + jme.getMessage(), IComposestarConstants.MSG_ERROR);
-		}
-	}
-
-	/**
-	 * Adds the sources to a project configuration.
-	 * <p>
-	 * The implementation uses the class Sources to find the sources.
-	 * 
-	 * @see Sources
-	 */
-	public void setSources()
-	{
-		// skip folderlist
-		HashSet<String> skiplist = new HashSet<String>();
-		skiplist.add(outputPath);
-		skiplist.add(buildPath);
-
-		// sources from base program
-		Sources source = new Sources(selectedProjects);
-		sources.clear();
-		sources.addAll(source.getSources("java", skiplist));
-		setSources(sources, projectLocation);
-
-		// concerns
-		concerns.clear();
-		concerns.addAll(source.getSources("cps", skiplist));
-		setConcernSources(concerns, projectLocation);
 	}
 }

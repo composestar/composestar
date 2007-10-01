@@ -245,6 +245,11 @@ public class Project implements Serializable
 		return outputPath;
 	}
 
+	public String getOutputRaw()
+	{
+		return output;
+	}
+
 	public void setOutput(String inOutput)
 	{
 		if (inOutput == null || inOutput.trim().length() == 0)
@@ -265,6 +270,11 @@ public class Project implements Serializable
 			intermediatePath = new File(base, intermediate);
 		}
 		return intermediatePath;
+	}
+
+	public String getIntermediateRaw()
+	{
+		return intermediate;
 	}
 
 	public void setIntermediate(String inIntermediate)
@@ -359,7 +369,17 @@ public class Project implements Serializable
 		return Collections.unmodifiableSet(concernFilesCache);
 	}
 
+	public Set<File> getConcernFilesRaw()
+	{
+		return Collections.unmodifiableSet(concernFiles);
+	}
+
 	public Set<File> getDisabledConcernFiles()
+	{
+		return Collections.unmodifiableSet(disabledConcernFiles);
+	}
+
+	public Set<File> getDisabledConcernFilesRaw()
 	{
 		return Collections.unmodifiableSet(disabledConcernFiles);
 	}

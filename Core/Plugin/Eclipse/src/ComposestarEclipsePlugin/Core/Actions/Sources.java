@@ -15,6 +15,7 @@ import ComposestarEclipsePlugin.Core.IComposestarConstants;
 import ComposestarEclipsePlugin.Core.BuildConfiguration.BuildConfigurationManager;
 import ComposestarEclipsePlugin.Core.BuildConfiguration.Project;
 
+@Deprecated
 public class Sources
 {
 
@@ -30,7 +31,7 @@ public class Sources
 	{
 		this.selectedProjects = selectedProjects;
 	}
-	
+
 	public HashSet<IPath> getSources(String extension)
 	{
 		return getSources(extension, new HashSet<String>());

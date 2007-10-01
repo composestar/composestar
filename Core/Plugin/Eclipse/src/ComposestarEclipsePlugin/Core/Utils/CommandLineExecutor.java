@@ -1,6 +1,7 @@
 package ComposestarEclipsePlugin.Core.Utils;
 
 import java.io.File;
+import java.io.PrintStream;
 
 import ComposestarEclipsePlugin.Core.Debug;
 
@@ -17,11 +18,38 @@ public class CommandLineExecutor
 
 	private StreamGobbler OutputGobbler;
 
+	protected PrintStream fwdOut;
+
+	protected PrintStream fwdErr;
+
+	public CommandLineExecutor()
+	{
+		fwdErr = Debug.instance().getErrorStream();
+		fwdOut = Debug.instance().getOutputStream();
+	}
+
+	public CommandLineExecutor(PrintStream toOut)
+	{
+		this();
+		if (toOut != null)
+		{
+			fwdOut = toOut;
+		}
+	}
+
+	public CommandLineExecutor(PrintStream toOut, PrintStream toErr)
+	{
+		this(toOut);
+		if (toErr != null)
+		{
+			fwdErr = toErr;
+		}
+	}
+
 	/**
 	 * Get the program output to STDOUT.
 	 * 
 	 * @return java.lang.String
-	 * @roseuid 404DCCF500D4
 	 */
 	public String outputNormal()
 	{
@@ -32,13 +60,12 @@ public class CommandLineExecutor
 	 * Get the program output to STDERR.
 	 * 
 	 * @return java.lang.String
-	 * @roseuid 404DCCF500F3
 	 */
 	public String outputError()
 	{
 		return ErrorGobbler.result();
 	}
-	
+
 	/**
 	 * Execute command. exec executes the command and waits for it to return.
 	 * WARNING: If the program hangs this function will never return. Please
@@ -47,41 +74,26 @@ public class CommandLineExecutor
 	 * 
 	 * @param execString The command to execute.
 	 * @return The exit code of the program to run.
-	 * @roseuid 404DCCF50112
 	 */
-	public int exec(String execString)
+	public int exec(String[] cmdLine)
 	{
-		return exec(execString, null);
+		return exec(cmdLine, null);
 	}
 
-	public int exec(String execString, File dir)
+	public int exec(String[] cmdLine, File dir)
 	{
 		try
 		{
-			String osName = System.getProperty("os.name");
-			// "some" OSs need special treatment to be able to use built in
-			// functions
-			if (osName.equals("Windows NT") || osName.equals("Windows 2000") || osName.equals("Windows CE")
-					|| osName.equals("Windows XP"))
-			{
-				execString = "cmd.exe /C " + execString;
-			}
-			else if (osName.equals("Windows 95") || osName.equals("Windows 98") || osName.equals("Windows ME"))
-			{
-				execString = "command.exe /C " + execString;
-			}
-			// else real operating systems handle this flawlessly
-
 			Runtime rt = Runtime.getRuntime();
 
-			Process proc = rt.exec(execString, null, dir);
+			Process proc = rt.exec(cmdLine, null, dir);
 
 			// connect error and output filters
 			// these are threads because the buffers used to hold the output
 			// data
 			// could otherwise overrun which blocks the program.
-			ErrorGobbler = new StreamGobbler(proc.getErrorStream(), Debug.instance().getErrorStream());
-			OutputGobbler = new StreamGobbler(proc.getInputStream(), Debug.instance().getOutputStream());
+			ErrorGobbler = new StreamGobbler(proc.getErrorStream(), fwdErr);
+			OutputGobbler = new StreamGobbler(proc.getInputStream(), fwdOut);
 			ErrorGobbler.start();
 			OutputGobbler.start();
 
@@ -98,18 +110,5 @@ public class CommandLineExecutor
 			t.printStackTrace();
 		}
 		return -1;
-	}
-
-	/**
-	 * just for testing purposes
-	 * 
-	 * @param args[]
-	 * @roseuid 404DCCF50170
-	 */
-	public static void main(String args[])
-	{
-		CommandLineExecutor e = new CommandLineExecutor();
-		e.exec(args[0]);
-		//System.out.println(e.outputNormal());
 	}
 }

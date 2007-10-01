@@ -1,7 +1,9 @@
 package ComposestarEclipsePlugin.Core.UI;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -9,8 +11,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.osgi.service.prefs.BackingStoreException;
 
-import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
+import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.IComposestarConstants;
 
 public class ComposestarPropertyPage extends PropertyPage implements IComposestarConstants
@@ -44,43 +47,44 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 
 	protected String location;
 
+	protected IEclipsePreferences settings;
+
 	public Control createContents(Composite parent)
 	{
 		return null;
 	}
 
-	public void performApply()
+	public void load(IProject project)
 	{
-		ComposestarEclipsePluginPlugin plugin = ComposestarEclipsePluginPlugin.getDefault();
-		IDialogSettings settings = plugin.getDialogSettings(location);
-		settings.put("mainClass", mainClass.getText());
-		settings.put("buildDebugLevel", buildDebugLevel.indexOf(buildDebugLevel.getText()));
-		settings.put("incremental", incremental.getText());
-		settings.put("runDebugLevel", runDebugLevel.indexOf(runDebugLevel.getText()));
-		settings.put("secretMode", secretMode.indexOf(secretMode.getText()) - 1);
-		settings.put("filterModuleOrder", filterModuleOrder.getText());
-		settings.put("classpath", classpathText.getText());
-		plugin.saveDialogSettings(location);
+		IScopeContext projectScope = new ProjectScope(project);
+		settings = projectScope.getNode(IComposestarConstants.BUNDLE_ID);
+		mainClass.setText(settings.get("mainclass", ""));
+		buildDebugLevel.select(settings.getInt("buildDebugLevel", 2)); // 2=warn
+		runDebugLevel.select(settings.getInt("runDebugLevel", 1)); // 1=error
+		incremental.select(settings.getBoolean("incremental", false) ? 1 : 0);
+		secretMode.select(settings.getInt("SECRET.mode", 1));
+		filterModuleOrder.setText(settings.get("FILTH.input", ""));
 	}
 
-	public void loadDialogSettings(IDialogSettings settings)
+	public void save()
 	{
-
-		if (settings.get("mainClass") != null)
+		if (settings != null)
 		{
-			mainClass.setText(settings.get("mainClass"));
+			settings.put("mainclass", mainClass.getText().trim());
+			settings.putInt("buildDebugLevel", buildDebugLevel.getSelectionIndex());
+			settings.putInt("runDebugLevel", runDebugLevel.getSelectionIndex());
+			settings.putBoolean("incremental", incremental.getSelectionIndex() == 1);
+			settings.putInt("SECRET.mode", secretMode.getSelectionIndex());
+			settings.put("FILTH.input", filterModuleOrder.getText());
+			try
+			{
+				settings.flush();
+			}
+			catch (BackingStoreException e)
+			{
+				Debug.instance().Log("Error saving project settings: " + e.getMessage(), Debug.MSG_ERROR);
+				// TODO nice error
+			}
 		}
-
-		buildDebugLevel.select(settings.getInt("buildDebugLevel"));
-		incremental.select(incremental.indexOf(settings.get("incremental")));
-		runDebugLevel.select(settings.getInt("runDebugLevel"));
-		secretMode.select(settings.getInt("secretMode") + 1);
-		classpathText.setText(settings.get("classpath"));
-
-		if (settings.get("filterModuleOrder") != null)
-		{
-			filterModuleOrder.setText(settings.get("filterModuleOrder"));
-		}
-
 	}
 }

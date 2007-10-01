@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<feature id="composestar.java" label="Compose*/Java" version="@version.java@" provider-name="University of Twente">
+<feature id="composestar.java" plugin="composestar.java.plugin" label="Compose*/Java" version="@version.java@" provider-name="University of Twente">
 	<description url="http://composestar.sourceforge.net">
 		%description
 	</description>
@@ -20,5 +20,7 @@
 	</requires>
 
 	<plugin id="composestar.core" version="@version.core@"/>
+	<plugin id="composestar.core.plugin" version="@version.core@"/>
 	<plugin id="composestar.java" version="@version.java@"/>
+	<plugin id="composestar.java.plugin" version="@version.java@"/>
 </feature>

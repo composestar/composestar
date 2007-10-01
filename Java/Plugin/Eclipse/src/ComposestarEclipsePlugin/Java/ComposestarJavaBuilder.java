@@ -49,6 +49,17 @@ public class ComposestarJavaBuilder extends ComposestarBuilder
 	@Override
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException
 	{
+		currentProject = getProject();
+		if (currentProject == null || !currentProject.isAccessible())
+		{
+			return new IProject[0];
+		}
+
+		switch (kind)
+		{
+			case FULL_BUILD:
+				fullBuild(monitor);
+		}
 		return null;
 	}
 

@@ -128,6 +128,7 @@ public class PlatformRunnable implements IPlatformRunnable
 					+ java.io.File.separatorChar);
 			projectConfig.addProperty("buildPath", projectLocation.toOSString() + java.io.File.separatorChar + "bin"
 					+ java.io.File.separatorChar);
+			projectConfig.addProperty("platform", "C");
 
 			// BuildConfigurationManager.instance().setRunDebugLevel(rundlString);
 			BuildConfigurationManager.instance().setOutputPath(
@@ -183,8 +184,11 @@ public class PlatformRunnable implements IPlatformRunnable
 			ModuleSetting incre = new ModuleSetting();
 			incre.setName("INCRE");
 			incre.addSetting("enabled", "False");
-			incre.addSetting("config", ComposestarEclipsePluginPlugin.getAbsolutePath("/INCREconfig.xml",
-					IComposestarCConstants.BUNDLE_ID));
+			/*
+			 * incre.addSetting("config",
+			 * ComposestarEclipsePluginPlugin.getAbsolutePath("/INCREconfig.xml",
+			 * IComposestarCConstants.BUNDLE_ID));
+			 */
 			BuildConfigurationManager.instance().addModuleSettings(incre);
 
 			ModuleSetting ilicit = new ModuleSetting();

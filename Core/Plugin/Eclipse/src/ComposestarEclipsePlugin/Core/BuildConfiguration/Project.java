@@ -7,6 +7,7 @@ import java.util.Properties;
  * Class representing a project. Used by BuildConfigurationManager to build
  * configuration-file.
  */
+@Deprecated
 public class Project
 {
 

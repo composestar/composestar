@@ -23,7 +23,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * Triggers <i>javac</i> and <i>jar</i> commands. Used for compiling dummies
  * and sources.
  */
-public class JavaCompiler implements LangCompiler
+public class CStarJavaCompiler implements LangCompiler
 {
 	public static final String MODULE_NAME = "COMP";
 
@@ -57,9 +57,7 @@ public class JavaCompiler implements LangCompiler
 
 	public void compileSources(Project p, Set<Source> sources) throws CompilerException, ModuleException
 	{
-		// TODO this might need to be compiled per file
-
-		Properties prop = new Properties();
+		long time = System.currentTimeMillis();
 		// add the dummy jar to the classpath for expanded signatures
 		Dependency dummyDep = new Dependency((File) resources.get(DUMMY_JAR));
 		p.addDependency(dummyDep);
@@ -72,37 +70,60 @@ public class JavaCompiler implements LangCompiler
 						.toString()), MODULE_NAME);
 			}
 			resources.add(SOURCE_OUT, sourceOut);
-			prop.put("OUT", sourceOut.toString());
-			CompilerAction action = compConfig.getAction("Compile");
 
-			for (Source source : sources)
+			if (false)
 			{
-				Set<File> files = new HashSet<File>();
-				files.add(source.getFile());
+				// Set<File> files = new HashSet<File>();
+				// for (Source source : sources)
+				// {
+				// files.add(source.getFile());
+				// }
+				// InternalCompiler icomp = new InternalCompiler();
+				// if (!icomp.compileSources(files, sourceOut,
+				// p.getFilesDependencies(), true))
+				// {
+				// throw new CompilerException("COMP reported errors during
+				// compilation.");
+				// }
+			}
+			else
+			{
 
-				String[] cmdline = action.getCmdLine(p, files, prop);
-				logger.debug(Arrays.toString(cmdline));
-				CommandLineExecutor cmdExec = new CommandLineExecutor();
-				int result = cmdExec.exec(cmdline);
-				compilerOutput = cmdExec.outputError();
+				Properties prop = new Properties();
+				prop.put("OUT", sourceOut.toString());
+				CompilerAction action = compConfig.getAction("Compile");
 
-				if (result != 0)
+				// has to be executed for each source independently because of
+				// possible signature expansion
+				for (Source source : sources)
 				{
-					// there was an error
-					try
+					Set<File> files = new HashSet<File>();
+					files.add(source.getFile());
+
+					String[] cmdline = action.getCmdLine(p, files, prop);
+					logger.debug(Arrays.toString(cmdline));
+					CommandLineExecutor cmdExec = new CommandLineExecutor();
+					int result = cmdExec.exec(cmdline);
+					compilerOutput = cmdExec.outputError();
+
+					if (result != 0)
 					{
-						java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
-						String lastToken = null;
-						while (st.hasMoreTokens())
+						// there was an error
+						try
 						{
-							lastToken = st.nextToken();
-							logger.error(lastToken);
+							java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
+							String lastToken = null;
+							while (st.hasMoreTokens())
+							{
+								lastToken = st.nextToken();
+								logger.error(lastToken);
+							}
+							throw new CompilerException("COMP reported errors during compilation.");
 						}
-						throw new CompilerException("COMP reported errors during compilation.");
-					}
-					catch (Exception ex)
-					{
-						throw new CompilerException(ex.getMessage());
+						catch (Exception ex)
+						{
+							throw new CompilerException(ex.getMessage());
+						}
 					}
 				}
 			}
@@ -110,6 +131,7 @@ public class JavaCompiler implements LangCompiler
 		finally
 		{
 			p.removeDependency(dummyDep);
+			logger.debug(String.format("Sources compiled in %d ms", (System.currentTimeMillis() - time)));
 		}
 	}
 
@@ -117,58 +139,73 @@ public class JavaCompiler implements LangCompiler
 	{
 		logger.info("Compiling dummies");
 
-		Properties prop = new Properties();
 		File dummiesDir = new File(p.getIntermediate(), "dummies");
-		prop.put("OUT", dummiesDir.toString());
-		CompilerAction action = compConfig.getAction("Compile");
-
 		Set<File> files = new HashSet<File>();
 		for (Source source : sources)
 		{
 			files.add(source.getStub());
 		}
 
-		String[] cmdline = action.getCmdLine(p, files, prop);
-		logger.debug(Arrays.toString(cmdline));
-		CommandLineExecutor cmdExec = new CommandLineExecutor();
-		int result = cmdExec.exec(cmdline);
-		compilerOutput = cmdExec.outputError();
-
-		if (result != 0)
+		long time = System.currentTimeMillis();
+		if (false)
 		{
-			// there was an error
-			try
+			// InternalCompiler icomp = new InternalCompiler();
+			// if (!icomp.compileSources(files, dummiesDir,
+			// p.getFilesDependencies(), false))
+			// {
+			// throw new CompilerException("COMP reported errors during
+			// compilation.");
+			// }
+		}
+		else
+		{
+
+			Properties prop = new Properties();
+			prop.put("OUT", dummiesDir.toString());
+			CompilerAction action = compConfig.getAction("Compile");
+			String[] cmdline = action.getCmdLine(p, files, prop);
+			logger.debug(Arrays.toString(cmdline));
+			CommandLineExecutor cmdExec = new CommandLineExecutor();
+			int result = cmdExec.exec(cmdline);
+			compilerOutput = cmdExec.outputError();
+
+			if (result != 0)
 			{
-				java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
-				String lastToken = null;
-				while (st.hasMoreTokens())
+				// there was an error
+				try
 				{
-					lastToken = st.nextToken();
-					logger.error(lastToken);
+					java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
+					String lastToken = null;
+					while (st.hasMoreTokens())
+					{
+						lastToken = st.nextToken();
+						logger.error(lastToken);
+					}
+					throw new CompilerException("COMP reported errors during compilation.");
 				}
-				throw new CompilerException("COMP reported errors during compilation.");
-			}
-			catch (Exception ex)
-			{
-				throw new CompilerException(ex.getMessage());
+				catch (Exception ex)
+				{
+					throw new CompilerException(ex.getMessage());
+				}
 			}
 		}
+		logger.debug(String.format("Dummies compiled in %d ms", (System.currentTimeMillis() - time)));
 
 		// create archive
 
 		logger.info("Creating dummies jar file");
 
-		prop = new Properties();
+		Properties prop = new Properties();
 		File dummiesJar = new File(p.getIntermediate(), p.getName() + ".dummies.jar");
 		prop.put("JAR", dummiesJar.toString());
 		prop.put("SOURCEDIR", dummiesDir.toString());
-		action = compConfig.getAction("CreateJar");
+		CompilerAction action = compConfig.getAction("CreateJar");
 
 		files = Collections.emptySet();
-		cmdline = action.getCmdLine(p, files, prop);
+		String[] cmdline = action.getCmdLine(p, files, prop);
 		logger.debug(Arrays.toString(cmdline));
-		cmdExec = new CommandLineExecutor();
-		result = cmdExec.exec(cmdline);
+		CommandLineExecutor cmdExec = new CommandLineExecutor();
+		int result = cmdExec.exec(cmdline);
 		compilerOutput = cmdExec.outputError();
 
 		if (result != 0)

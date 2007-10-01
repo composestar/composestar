@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+  <!--
+    This is a bogu Eclipse plugin specification. It's used to get rid of the 
+    previous plugin.xml that came with the with compose*/Java plugin. It is now
+    located in: composestar.java.plugin
+  -->
+</plugin>

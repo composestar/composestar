@@ -18,7 +18,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import ComposestarEclipsePlugin.C.IComposestarCConstants;
 import ComposestarEclipsePlugin.C.MasterManager;
 import ComposestarEclipsePlugin.C.BuildConfiguration.BuildConfigurationManager;
 import ComposestarEclipsePlugin.C.Dialogs.BuildDialog;
@@ -140,6 +139,7 @@ public class BuildAction implements IWorkbenchWindowActionDelegate
 			}
 			projectConfig.addProperty("name", selectedProjects[0].getProject().getName());
 			projectConfig.addProperty("language", language);
+			projectConfig.addProperty("platform", "C");
 			projectConfig.addProperty("basePath", dialog.getBasePath());
 			projectConfig.addProperty("outputPath", dialog.getOutputPath());
 			projectConfig.addProperty("buildPath", dialog.getBuildPath());
@@ -186,8 +186,11 @@ public class BuildAction implements IWorkbenchWindowActionDelegate
 			ModuleSetting incre = new ModuleSetting();
 			incre.setName("INCRE");
 			incre.addSetting("enabled", dialog.getIncrementalString());
-			incre.addSetting("config", ComposestarEclipsePluginPlugin.getAbsolutePath("/INCREconfig.xml",
-					IComposestarCConstants.BUNDLE_ID));
+			/*
+			 * incre.addSetting("config",
+			 * ComposestarEclipsePluginPlugin.getAbsolutePath("/INCREconfig.xml",
+			 * IComposestarCConstants.BUNDLE_ID));
+			 */
 			BuildConfigurationManager.instance().addModuleSettings(incre);
 
 			ModuleSetting ilicit = new ModuleSetting();

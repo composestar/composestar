@@ -1,8 +1,6 @@
 package ComposestarEclipsePlugin.C.BuildConfiguration;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,8 +8,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 
-import ComposestarEclipsePlugin.C.IComposestarCConstants;
-import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
 import ComposestarEclipsePlugin.Core.Debug;
 import ComposestarEclipsePlugin.Core.BuildConfiguration.ModuleSetting;
 import ComposestarEclipsePlugin.Core.BuildConfiguration.Path;
@@ -75,7 +71,7 @@ public class BuildConfigurationManager
 
 			// projects
 			bw.write(spacePad(1) + "<Projects applicationStart=\"" + applicationStart + "\" runDebugLevel=\""
-					+ runDebugLevel + "\" outputPath=\"" + outputPath + "\">\n");
+					+ runDebugLevel + "\" outputPath=\"" + outputPath + "\" platform=\"C\">\n");
 			Iterator projIt = projects.iterator();
 			while (projIt.hasNext())
 			{
@@ -185,10 +181,6 @@ public class BuildConfigurationManager
 				Path p = (Path) paths.next();
 				bw.write(spacePad(3) + "<Path name=\"" + p.getName() + "\" pathName=\"" + p.getPath() + "\" />\n");
 			}
-			bw.write(spacePad(3) + "<Path name=\"NET\" pathName=\"C:/WINDOWS/Microsoft.NET/Framework/v1.1.4322\" />\n");
-			bw
-					.write(spacePad(3)
-							+ "<Path name=\"NETSDK\" pathName=\"C:/Program Files/Microsoft Visual Studio .NET 2003/SDK/v1.1/Bin/\" />\n");
 			bw.write(spacePad(3) + "<Path name=\"EmbeddedSources\" pathName=\"embedded/\" />\n");
 			bw.write(spacePad(3) + "<Path name=\"Dummy\" pathName=\"dummies/\" />\n");
 
@@ -196,31 +188,22 @@ public class BuildConfigurationManager
 
 			bw.write(spacePad(1) + "</Settings>\n");
 
-			String path = ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml",
-					IComposestarCConstants.BUNDLE_ID);
-			BufferedReader in = new BufferedReader(new FileReader(path));
-			String s;
-			StringBuffer buffer = new StringBuffer();
-			boolean skip = true;
+			bw.write("<Platforms><Platform name=\"C\" /></Platforms>\n");
 
-			String pluginPath = ComposestarEclipsePluginPlugin.getAbsolutePath("");
-			while ((s = in.readLine()) != null)
-			{
-				if (s.startsWith("<Platforms>"))
-				{
-					// Replace %composestar% with the core plugin path (where
-					// the binaries are)
-					s = s.replaceAll("%composestar%", pluginPath);
-					buffer.append(spacePad(1) + "" + s + "\n");
-					skip = false;
-				}
-				else if (!skip)
-				{
-					buffer.append(s + "\n");
-				}
-			}
-			bw.write(buffer.toString());
-
+			/*
+			 * String path =
+			 * ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml",
+			 * IComposestarCConstants.BUNDLE_ID); BufferedReader in = new
+			 * BufferedReader(new FileReader(path)); String s; StringBuffer
+			 * buffer = new StringBuffer(); boolean skip = true; String
+			 * pluginPath = ComposestarEclipsePluginPlugin.getAbsolutePath("");
+			 * while ((s = in.readLine()) != null) { if (s.startsWith("<Platforms>")) { //
+			 * Replace %composestar% with the core plugin path (where // the
+			 * binaries are) s = s.replaceAll("%composestar%", pluginPath);
+			 * buffer.append(spacePad(1) + "" + s + "\n"); skip = false; } else
+			 * if (!skip) { buffer.append(s + "\n"); } }
+			 * bw.write(buffer.toString());
+			 */
 			bw.write("</BuildConfiguration>\n");
 			bw.close();
 		}

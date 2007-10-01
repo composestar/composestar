@@ -54,7 +54,7 @@
 	
 	<!-- install -->	
 	<target name="install" depends="init_local,build" description="">	
-		<copy todir="${eclipse.pluginsdir.core}">
+		<copy todir="${eclipse.pluginsdir.core.plugin}">
 			<fileset dir="${out.dist}" />
 		</copy>
 	</target>

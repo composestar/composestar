@@ -59,7 +59,7 @@
 			</condition>
 		</fail>
 	
-		<cs:j_comp workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="composestar.java.testbuild" resultOutput="${basedir}/TEST-Compilation.xml">
+		<cs:j_comp workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="composestar.java.plugin.testbuild" resultOutput="${basedir}/TEST-Compilation.xml">
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>
 				<include name="ConditionTests"/>
@@ -76,7 +76,7 @@
 	
 	<!-- execute tests -->
 	<target name="test_exec" depends="test_comp,init_eclipse">
-		<cs:j_test workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="composestar.java.testrun" resultOutput="${basedir}/TEST-Execution.xml">
+		<cs:j_test workspace="${build.java}/Examples" eclipseHome="${eclipse.home}" application="composestar.java.plugin.testrun" resultOutput="${basedir}/TEST-Execution.xml">
 			<DirSet dir="${build.java}/Examples">
 				<include name="BasicTests"/>
 				<include name="ConditionTests"/>

@@ -120,17 +120,20 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 		return result.replace('\\', '/');
 	}
 
+	@Deprecated
 	public IDialogSettings getDialogSettings()
 	{
 		return getDialogSettings("");
 	}
 
+	@Deprecated
 	public IDialogSettings getDialogSettings(String location)
 	{
 		loadDialogSettings(location);
 		return dialogSettings;
 	}
 
+	@Deprecated
 	protected void loadDialogSettings(String location)
 	{
 		dialogSettings = new DialogSettings("Compose*"); //$NON-NLS-1$
@@ -167,6 +170,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 		}
 	}
 
+	@Deprecated
 	public void saveDialogSettings(String location)
 	{
 		if (dialogSettings == null)

@@ -16,7 +16,6 @@ import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.internal.debug.ui.launcher.MainMethodSearchEngine;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
@@ -39,12 +38,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
-import ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin;
-import ComposestarEclipsePlugin.Core.BuildConfiguration.BuildConfigurationManager;
-import ComposestarEclipsePlugin.Core.BuildConfiguration.Platform;
 import ComposestarEclipsePlugin.Core.UI.ComposestarPropertyPage;
 import ComposestarEclipsePlugin.Core.Utils.FileUtils;
-import ComposestarEclipsePlugin.Java.IComposestarJavaConstants;
 
 public class JavaComposestarPropertyPage extends ComposestarPropertyPage implements IRunnableContext
 {
@@ -96,25 +91,7 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		createFirstSection(controls);
 		createSecondSection(controls);
 
-		// set the field values
-		ComposestarEclipsePluginPlugin plugin = ComposestarEclipsePluginPlugin.getDefault();
-		IDialogSettings settings = plugin.getDialogSettings(location);
-		if (plugin.dialogSettingsFound)
-		{
-			loadDialogSettings(settings);
-		}
-		else
-		{
-			settings = plugin.getDialogSettings();
-			if (!plugin.dialogSettingsFound)
-			{
-				performDefaults();
-			}
-			else
-			{
-				loadDialogSettings(settings);
-			}
-		}
+		load(project);
 
 		return controls;
 	}
@@ -169,8 +146,8 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		Label label = new Label(group, SWT.NULL);
 		label.setText(RUN_DEBUG_TITLE);
 		runDebugLevel = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		runDebugLevel.add("Error");
 		runDebugLevel.add("Crucial");
+		runDebugLevel.add("Error");
 		runDebugLevel.add("Warning");
 		runDebugLevel.add("Information");
 		runDebugLevel.add("Debug");
@@ -181,8 +158,8 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		label = new Label(group, SWT.NULL);
 		label.setText(BUILD_DEBUG_TITLE);
 		buildDebugLevel = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		buildDebugLevel.add("Error");
 		buildDebugLevel.add("Crucial");
+		buildDebugLevel.add("Error");
 		buildDebugLevel.add("Warning");
 		buildDebugLevel.add("Information");
 		buildDebugLevel.add("Debug");
@@ -369,31 +346,19 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 	@Override
 	public void performDefaults()
 	{
-
-		ComposestarEclipsePluginPlugin plugin = ComposestarEclipsePluginPlugin.getDefault();
-		IDialogSettings settings = plugin.getDialogSettings();
-		if (plugin.dialogSettingsFound)
-		{
-			loadDialogSettings(settings);
-		}
-		else
-		{
-			mainClass.setText(DEFAULT_TEXT_VALUE);
-			buildDebugLevel.select(1);
-			incremental.select(0);
-			runDebugLevel.select(1);
-			secretMode.select(0);
-
-			BuildConfigurationManager.instance().setPlatformConfigFile(
-					ComposestarEclipsePluginPlugin.getAbsolutePath("/PlatformConfigurations.xml",
-							IComposestarJavaConstants.BUNDLE_ID));
-
-			Platform p = BuildConfigurationManager.instance().getPlatform("Java");
-			classpathText.setText(p.getClassPath());
-
-			filterModuleOrder.setText(DEFAULT_TEXT_VALUE);
-		}
 		performApply();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
+	 */
+	@Override
+	public boolean performOk()
+	{
+		save();
+		return super.performOk();
 	}
 
 	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InvocationTargetException,

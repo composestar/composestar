@@ -21,7 +21,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Core.WEAVER.WEAVER;
-import Composestar.Java.COMP.JavaCompiler;
+import Composestar.Java.COMP.CStarJavaCompiler;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -75,7 +75,7 @@ public class JavaWeaver implements WEAVER
 		{
 			c.addClasspath(file);
 		}
-		c.addClasspath((File) resources.get(JavaCompiler.SOURCE_OUT));
+		c.addClasspath((File) resources.get(CStarJavaCompiler.SOURCE_OUT));
 		// weave
 		c.weave(project);
 
