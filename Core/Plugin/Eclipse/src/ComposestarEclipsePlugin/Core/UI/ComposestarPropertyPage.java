@@ -37,8 +37,6 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 
 	protected Combo secretMode;
 
-	protected Text classpathText;
-
 	protected Text filterModuleOrder;
 
 	protected GridData gd;
@@ -60,7 +58,7 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 		settings = projectScope.getNode(IComposestarConstants.BUNDLE_ID);
 		mainClass.setText(settings.get("mainclass", ""));
 		buildDebugLevel.select(settings.getInt("buildDebugLevel", 2)); // 2=warn
-		runDebugLevel.select(settings.getInt("runDebugLevel", 1)); // 1=error
+		runDebugLevel.select(settings.getInt("runDebugLevel", 0)); // 0=error
 		incremental.select(settings.getBoolean("incremental", false) ? 1 : 0);
 		secretMode.select(settings.getInt("SECRET.mode", 1));
 		filterModuleOrder.setText(settings.get("FILTH.input", ""));

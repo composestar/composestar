@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -31,8 +30,6 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 	protected Combo secretMode;
 
 	protected GridData gd;
-
-	protected Text classpathText;
 
 	public void init(IWorkbench workbench)
 	{
@@ -118,11 +115,6 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 		empty = new Label(group, SWT.NULL);
 		incremental.setLayoutData(gd);
 
-		label = new Label(group, SWT.NULL);
-		label.setText(CLASSPATH_TITLE);
-		classpathText = new Text(group, SWT.BORDER | SWT.SINGLE);
-		empty = new Label(group, SWT.NULL);
-		classpathText.setLayoutData(gd);
 		return controls;
 	}
 
@@ -134,7 +126,6 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 		settings.put("incremental", incremental.getText());
 		settings.put("runDebugLevel", runDebugLevel.indexOf(runDebugLevel.getText()));
 		settings.put("secretMode", secretMode.indexOf(secretMode.getText()) - 1);
-		settings.put("classpath", classpathText.getText());
 		plugin.saveDialogSettings("");
 	}
 
@@ -144,7 +135,5 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 		incremental.select(incremental.indexOf(settings.get("incremental")));
 		runDebugLevel.select(settings.getInt("runDebugLevel"));
 		secretMode.select(settings.getInt("secretMode") + 1);
-		classpathText.setText(settings.get("classpath"));
-
 	}
 }

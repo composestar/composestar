@@ -41,6 +41,11 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 import ComposestarEclipsePlugin.Core.UI.ComposestarPropertyPage;
 import ComposestarEclipsePlugin.Core.Utils.FileUtils;
 
+/**
+ * Project preferences page
+ * 
+ * @author Michiel Hendriks
+ */
 public class JavaComposestarPropertyPage extends ComposestarPropertyPage implements IRunnableContext
 {
 
@@ -146,11 +151,11 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		Label label = new Label(group, SWT.NULL);
 		label.setText(RUN_DEBUG_TITLE);
 		runDebugLevel = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		runDebugLevel.add("Crucial");
-		runDebugLevel.add("Error");
-		runDebugLevel.add("Warning");
-		runDebugLevel.add("Information");
-		runDebugLevel.add("Debug");
+		runDebugLevel.add("Error"); // 0
+		runDebugLevel.add("Crucial"); // 1
+		runDebugLevel.add("Warning"); // 2
+		runDebugLevel.add("Information"); // 3
+		runDebugLevel.add("Debug"); // 4
 		new Label(group, SWT.NULL);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		runDebugLevel.setLayoutData(gd);
@@ -158,8 +163,8 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		label = new Label(group, SWT.NULL);
 		label.setText(BUILD_DEBUG_TITLE);
 		buildDebugLevel = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		buildDebugLevel.add("Crucial");
 		buildDebugLevel.add("Error");
+		buildDebugLevel.add("Crucial");
 		buildDebugLevel.add("Warning");
 		buildDebugLevel.add("Information");
 		buildDebugLevel.add("Debug");
@@ -206,12 +211,6 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 			}
 		});
 		filterModuleOrder.setLayoutData(gd);
-
-		label = new Label(group, SWT.NULL);
-		label.setText(CLASSPATH_TITLE);
-		classpathText = new Text(group, SWT.BORDER | SWT.SINGLE);
-		new Label(group, SWT.NULL);
-		classpathText.setLayoutData(gd);
 
 		return controls;
 	}

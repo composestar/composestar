@@ -2,13 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-  	<extension point="org.eclipse.ui.preferencePages">
- 		<page
- 			id="composestar.java.preferencepage"
- 			name="%COMPOSESTAR"
- 			class="ComposestarEclipsePlugin.Java.UI.JavaComposestarPreferencePage">
- 		</page>
- 	</extension>
 
  	<extension point="org.eclipse.ui.propertyPages">
  		<page
