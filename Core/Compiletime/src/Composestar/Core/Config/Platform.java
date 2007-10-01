@@ -37,7 +37,9 @@ import Composestar.Core.Master.PathResolver;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * A platform configuration.
+ * A platform configuration. This defines all information for a platform that
+ * various modules need to proper operate. This include information about
+ * required libraries and supported languages.
  * 
  * @author Michiel Hendriks
  */
@@ -190,5 +192,15 @@ public class Platform implements Serializable
 			}
 		}
 		return Collections.unmodifiableSet(resourceFiles);
+	}
+
+	/**
+	 * Return an readonly reference to the platform resources.
+	 * 
+	 * @return
+	 */
+	public Set<FileCollection> getResources()
+	{
+		return Collections.unmodifiableSet(resources);
 	}
 }

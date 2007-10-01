@@ -33,6 +33,9 @@ import java.util.Set;
 import Composestar.Utils.StringUtils;
 
 /**
+ * Just like DepsCmdLineArgumentList this is a specialized list, but it iterates
+ * through the list of files.
+ * 
  * @author Michiel Hendriks
  */
 public class SourcesCmdLineArgumentList extends CmdLineArgumentList

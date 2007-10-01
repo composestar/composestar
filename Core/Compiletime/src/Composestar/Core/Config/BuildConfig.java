@@ -43,12 +43,22 @@ public class BuildConfig implements Serializable
 	private static final long serialVersionUID = 5759753577247818565L;
 
 	/**
-	 * Contains the project specific settings for the compiler.
+	 * Contains the project specific settings for the compiler. These settings
+	 * should be considered to apply to all projects. Modules should use the
+	 * ModuleInfo structures to get their settings.
+	 * 
+	 * @see ModuleInfo
 	 */
 	protected Map<String, String> settings;
 
+	/**
+	 * {@link Project}
+	 */
 	protected Project project;
 
+	/**
+	 * {@link Filters}
+	 */
 	protected Filters filters;
 
 	public BuildConfig()
@@ -57,11 +67,20 @@ public class BuildConfig implements Serializable
 		filters = new Filters();
 	}
 
+	/**
+	 * Clear the settings table
+	 */
 	public void clearSettings()
 	{
 		settings.clear();
 	}
 
+	/**
+	 * Add or set a setting. The key may not be empty or null.
+	 * 
+	 * @param key
+	 * @param value
+	 */
 	public void addSetting(String key, String value)
 	{
 		if (key == null || key.trim().length() == 0)
@@ -71,11 +90,23 @@ public class BuildConfig implements Serializable
 		settings.put(key, value);
 	}
 
+	/**
+	 * Return the value of the given setting. The result will be null when no
+	 * value is set.
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public String getSetting(String key)
 	{
 		return settings.get(key);
 	}
 
+	/**
+	 * Get a readonly copy of the settings map
+	 * 
+	 * @return
+	 */
 	public Map<String, String> getSettings()
 	{
 		return Collections.unmodifiableMap(settings);
@@ -98,11 +129,23 @@ public class BuildConfig implements Serializable
 		return project;
 	}
 
+	/**
+	 * Return the current project. Modules should also use this method to get a
+	 * hold on the current project then their run method is executed. They
+	 * should not cache the return value.
+	 * 
+	 * @return
+	 */
 	public Project getProject()
 	{
 		return project;
 	}
 
+	/**
+	 * Return the filters object.
+	 * 
+	 * @return
+	 */
 	public Filters getFilters()
 	{
 		return filters;

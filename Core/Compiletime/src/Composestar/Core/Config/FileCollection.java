@@ -74,9 +74,12 @@ public class FileCollection implements Serializable
 		{
 			if (!file.isAbsolute())
 			{
-				file = new File(base, file.toString());
+				basedfiles.add(new File(base, file.toString()));
 			}
-			basedfiles.add(file);
+			else
+			{
+				basedfiles.add(file);
+			}
 		}
 		return basedfiles;
 	}

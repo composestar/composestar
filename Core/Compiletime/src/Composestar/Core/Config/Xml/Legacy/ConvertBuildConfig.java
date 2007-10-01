@@ -37,11 +37,13 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 /**
+ * Convert an old buildconfig to the new format
+ * 
  * @author Michiel Hendriks
  */
 public class ConvertBuildConfig
 {
-	protected static ConvertBuildConfig instance;
+	static ConvertBuildConfig instance;
 
 	protected TransformerFactory factory;
 

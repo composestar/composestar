@@ -33,6 +33,10 @@ import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
 
 /**
+ * Information about the compiler that is used to compile the associated
+ * language. It does not refer to the actual compiler, but rather to a class
+ * that handles compilation.
+ * 
  * @author Michiel Hendriks
  */
 public class SourceCompiler implements Serializable
@@ -44,8 +48,14 @@ public class SourceCompiler implements Serializable
 	 */
 	protected String classname;
 
+	/**
+	 * Cached handle to an instance of the compiler
+	 */
 	protected transient LangCompiler compiler;
 
+	/**
+	 * List of actions the compiler handler will use
+	 */
 	protected Map<String, CompilerAction> actions;
 
 	public SourceCompiler()
@@ -80,12 +90,18 @@ public class SourceCompiler implements Serializable
 		}
 		actions.put(name, action);
 	}
-	
+
 	public CompilerAction getAction(String name)
 	{
 		return actions.get(name);
 	}
 
+	/**
+	 * Get the instance to the LangCompiler that managed this compilation stuff.
+	 * 
+	 * @return
+	 * @throws ModuleException
+	 */
 	public LangCompiler getCompiler() throws ModuleException
 	{
 		if (compiler == null)
@@ -99,7 +115,7 @@ public class SourceCompiler implements Serializable
 			catch (Exception e)
 			{
 				throw new ModuleException("Error while instantiating LangCompiler: " + classname,
-						DummyManager.MODULE_NAME);
+						DummyManager.MODULE_NAME, e);
 			}
 		}
 		return compiler;

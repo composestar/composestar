@@ -54,7 +54,7 @@ public class ModuleSetting implements Serializable
 	 */
 	protected Object defaultValue;
 
-	protected transient DefaultHandler SAXHandler;
+	protected transient DefaultHandler saxHandler;
 
 	/**
 	 * Constructor to use with the SAX parser
@@ -283,11 +283,11 @@ public class ModuleSetting implements Serializable
 	 */
 	protected DefaultHandler getSAXHandler(XMLReader reader, ContentHandler inReturnHandler)
 	{
-		if (SAXHandler == null)
+		if (saxHandler == null)
 		{
-			SAXHandler = new ModuleSettingHandler(this, reader, inReturnHandler);
+			saxHandler = new ModuleSettingHandler(this, reader, inReturnHandler);
 		}
-		return SAXHandler;
+		return saxHandler;
 	}
 
 	/**
@@ -298,7 +298,7 @@ public class ModuleSetting implements Serializable
 	 */
 	public DefaultHandler getSAXHandler()
 	{
-		return SAXHandler;
+		return saxHandler;
 	}
 
 	/**
@@ -419,7 +419,10 @@ public class ModuleSetting implements Serializable
 
 		public void characters(char[] ch, int start, int length) throws SAXException
 		{
-			if (length <= 0) return;
+			if (length <= 0)
+			{
+				return;
+			}
 			if (state == STATE_NAME)
 			{
 				ms.name += new String(ch, start, length);

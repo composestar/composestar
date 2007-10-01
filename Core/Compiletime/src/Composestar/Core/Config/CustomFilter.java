@@ -27,7 +27,7 @@ package Composestar.Core.Config;
 import java.io.Serializable;
 
 /**
- * A custom filter definition
+ * A custom filter definition.
  * 
  * @author Michiel Hendriks
  */
@@ -54,6 +54,10 @@ public class CustomFilter implements Serializable
 		return name;
 	}
 
+	/**
+	 * @see #name
+	 * @param inName
+	 */
 	public void setName(String inName)
 	{
 		if (inName == null || inName.trim().length() == 0)
@@ -71,6 +75,10 @@ public class CustomFilter implements Serializable
 		return library;
 	}
 
+	/**
+	 * @see #library
+	 * @param inLibrary
+	 */
 	public void setLibrary(String inLibrary)
 	{
 		if (inLibrary == null || inLibrary.trim().length() == 0)

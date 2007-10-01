@@ -26,6 +26,15 @@ package Composestar.Core.Config;
 
 import java.io.Serializable;
 
+/**
+ * A filter type specification. This is used when the compiletime has no other
+ * (better) way to retrieve information about the filter types and actions. All
+ * actions default to the ContinueAction. The FilterType and FilterAction
+ * configuration instances are not directly converted to the CpsRepository
+ * elements.
+ * 
+ * @author Michiel Hendriks
+ */
 public class FilterType implements Serializable
 {
 	private static final long serialVersionUID = -8825182248197802610L;
@@ -37,12 +46,28 @@ public class FilterType implements Serializable
 	 */
 	protected String name;
 
+	/**
+	 * The filter action for the accept-call event. This name refers to a
+	 * FilterAction
+	 */
 	protected String acceptCallAction = DEFAULT_ACTION;
 
+	/**
+	 * The filter action for the reject-call event. This name refers to a
+	 * FilterAction
+	 */
 	protected String rejectCallAction = DEFAULT_ACTION;
 
+	/**
+	 * The filter action for the accept-return event. This name refers to a
+	 * FilterAction
+	 */
 	protected String acceptReturnAction = DEFAULT_ACTION;
 
+	/**
+	 * The filter action for the reject-return event. This name refers to a
+	 * FilterAction
+	 */
 	protected String rejectReturnAction = DEFAULT_ACTION;
 
 	public FilterType()

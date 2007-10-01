@@ -40,13 +40,13 @@ import Composestar.Core.Config.Filters;
  */
 public class FilterHandler extends DefaultBuildConfigHandler
 {
-	protected final static int STATE_FILTERS = 1;
+	protected static final int STATE_FILTERS = 1;
 
-	protected final static int STATE_CUSTOM_FILTER = 2;
+	protected static final int STATE_CUSTOM_FILTER = 2;
 
-	protected final static int STATE_FILTER_TYPE = 3;
+	protected static final int STATE_FILTER_TYPE = 3;
 
-	protected final static int STATE_FILTER_ACTION = 4;
+	protected static final int STATE_FILTER_ACTION = 4;
 
 	protected Filters filters;
 

@@ -52,7 +52,7 @@ public class SourceTypeHandler extends CpsBaseHandler
 	/**
 	 * If true multiple source are supported
 	 */
-	protected boolean supportMulti = false;
+	protected boolean supportMulti;
 
 	protected Source currentSource;
 
@@ -72,7 +72,7 @@ public class SourceTypeHandler extends CpsBaseHandler
 		{
 			groupTag = inGroupTag.trim();
 		}
-		supportMulti = (groupTag != null && groupTag.length() > 0);
+		supportMulti = groupTag != null && groupTag.length() > 0;
 		if (supportMulti)
 		{
 			state = 0;

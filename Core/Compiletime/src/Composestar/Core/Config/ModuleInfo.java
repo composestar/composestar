@@ -337,13 +337,14 @@ public class ModuleInfo implements Serializable
 		protected void processExtends(String source)
 		{
 			ModuleInfo extMi;
-			Class<?> extClass = null;
+			Class<?> extClass;
 			try
 			{
 				extClass = Class.forName(source);
 			}
 			catch (ClassNotFoundException e)
 			{
+				extClass = null;
 			}
 			if (extClass != null)
 			{
@@ -525,7 +526,10 @@ public class ModuleInfo implements Serializable
 
 		public void characters(char[] ch, int start, int length) throws SAXException
 		{
-			if (length <= 0) return;
+			if (length <= 0)
+			{
+				return;
+			}
 			if (state == STATE_NAME)
 			{
 				mi.name += new String(ch, start, length);

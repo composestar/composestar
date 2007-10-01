@@ -26,6 +26,12 @@ package Composestar.Core.Config;
 
 import java.io.Serializable;
 
+/**
+ * A filter action specification. Referred to by the FilterType class.
+ * 
+ * @author Michiel Hendrik
+ * @see FilterType
+ */
 public class FilterAction implements Serializable
 {
 	private static final long serialVersionUID = 7354266551225465392L;

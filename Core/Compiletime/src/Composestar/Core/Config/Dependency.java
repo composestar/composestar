@@ -40,7 +40,7 @@ public class Dependency implements Serializable
 	private static final long serialVersionUID = 1125518139523979925L;
 
 	/**
-	 * Handle to the filename
+	 * Handle to the file dependency
 	 */
 	protected File file;
 

@@ -217,7 +217,7 @@ public class Source implements Serializable
 		{
 			throw new IllegalArgumentException("Stub can not be identical to the source file");
 		}
-		if (!file.isAbsolute())
+		if (file != null && !file.isAbsolute())
 		{
 			logger.warn(String.format("Stub file for %s is not absolute: %s", file, inStub));
 		}

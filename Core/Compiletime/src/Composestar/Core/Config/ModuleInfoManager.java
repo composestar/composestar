@@ -141,7 +141,10 @@ public class ModuleInfoManager
 	 */
 	public static void remove(ModuleInfo mi)
 	{
-		if (mi == null) return;
+		if (mi == null)
+		{
+			return;
+		}
 		// TODO: remove from idCache
 		remove(mi.getModuleClass());
 	}
@@ -198,7 +201,7 @@ public class ModuleInfoManager
 		String id = newMi.getId();
 		if (idCache.containsKey(id))
 		{
-			// logger.warn("Already a module registered with id: " + id);
+			logger.debug("Already a module registered with id: " + id);
 			// TODO: properly handle this, we now assume that the last module
 			// registered is the active one
 		}

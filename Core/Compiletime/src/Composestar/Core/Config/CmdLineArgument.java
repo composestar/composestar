@@ -9,7 +9,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A compiler action argument
+ * A compiler action argument. This represents a single commandline argument.
+ * Spaces should be safe to be used. The value can contain variables that will
+ * be resolved when the commandline is requested through the addArgs method.
+ * There are three types of variables:
+ * <dl>
+ * <dt>${foo}</dt>
+ * <dd>A module provided variable</dd>
+ * <dt>\@{foo}</dt>
+ * <dd>A Java System property</dd>
+ * <dt>%{foo}</dt>
+ * <dd>A environment variable</dd>
+ * </dl>
  * 
  * @author Michiel Hendriks
  */
@@ -17,7 +28,10 @@ public class CmdLineArgument implements Serializable
 {
 	private static final long serialVersionUID = 5033444261781683182L;
 
-	protected static final Pattern pattern = Pattern.compile("([$@%])\\{([^:}]+(:([^}]+))?)\\}");
+	/**
+	 * The regular expression that captures all three forms variables.
+	 */
+	protected static final Pattern PATTERN = Pattern.compile("([$@%])\\{([^:}]+(:([^}]+))?)\\}");
 
 	/**
 	 * The argument template. Used for simple arguments.
@@ -33,6 +47,11 @@ public class CmdLineArgument implements Serializable
 		setValue(inValue);
 	}
 
+	/**
+	 * Set the current value of the commandline argument
+	 * 
+	 * @param inValue
+	 */
 	public void setValue(String inValue)
 	{
 		if (inValue == null || inValue.length() == 0)
@@ -63,8 +82,9 @@ public class CmdLineArgument implements Serializable
 
 	/**
 	 * Resolve the variables in the string. ${x} resolves to an item in the prop
-	 * argument. %{x} resolves to an environment variable. @ {x} resolves to a
+	 * argument. %{x} resolves to an environment variable. \@{x} resolves to a
 	 * system property.
+	 * 
 	 * @param str
 	 * @param prop
 	 * @return
@@ -72,7 +92,7 @@ public class CmdLineArgument implements Serializable
 	public String resolve(String str, Properties prop)
 	{
 		StringBuffer res = new StringBuffer(str.length());
-		Matcher m = pattern.matcher(str);
+		Matcher m = PATTERN.matcher(str);
 		while (m.find())
 		{
 			String type = m.group(1);
@@ -112,6 +132,5 @@ public class CmdLineArgument implements Serializable
 	{
 		return value;
 	}
-	
-	
+
 }

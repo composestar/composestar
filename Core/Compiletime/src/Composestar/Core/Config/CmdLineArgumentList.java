@@ -9,7 +9,8 @@ import java.util.Set;
 import Composestar.Utils.StringUtils;
 
 /**
- * A list of arguments
+ * A list of arguments. The list can be merged to a single commandline argument
+ * when the merge property is set.
  * 
  * @author Michiel Hendriks
  */
@@ -38,6 +39,11 @@ public class CmdLineArgumentList extends CmdLineArgument
 		args = new ArrayList<CmdLineArgument>();
 	}
 
+	/**
+	 * Add a single child argument
+	 * 
+	 * @param arg
+	 */
 	public void addArgument(CmdLineArgument arg)
 	{
 		if (arg == null)
@@ -47,6 +53,12 @@ public class CmdLineArgumentList extends CmdLineArgument
 		args.add(arg);
 	}
 
+	/**
+	 * Set the merge flag. When set the child arguments will be converted to a
+	 * single commandline argument.
+	 * 
+	 * @param inMerge
+	 */
 	public void setMerge(boolean inMerge)
 	{
 		merge = inMerge;
@@ -57,6 +69,12 @@ public class CmdLineArgumentList extends CmdLineArgument
 		return merge;
 	}
 
+	/**
+	 * Sets the delimiter to be used when the list is merged to a single
+	 * argument.
+	 * 
+	 * @param dim
+	 */
 	public void setDelimiter(String dim)
 	{
 		if (dim == null)

@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 /**
- * Keeps track of the mappings between types and Sources
+ * Keeps track of the mappings between types and Sources.
  * 
  * @author Michiel Hendriks
  */
@@ -42,6 +42,10 @@ public class TypeMapping implements Serializable
 {
 	private static final long serialVersionUID = -5930101525680788205L;
 
+	/**
+	 * The mapping of types (as strings) to the Source instances. More than one
+	 * type can refer to a Source instance.
+	 */
 	protected Map<String, Source> mapping;
 
 	public TypeMapping()
@@ -77,11 +81,22 @@ public class TypeMapping implements Serializable
 		return result;
 	}
 
+	/**
+	 * Get a list of all types
+	 * 
+	 * @return
+	 */
 	public Set<String> getTypes()
 	{
 		return Collections.unmodifiableSet(mapping.keySet());
 	}
 
+	/**
+	 * Get all types associated with a given Source
+	 * 
+	 * @param source
+	 * @return
+	 */
 	public List<String> getTypes(Source source)
 	{
 		List<String> result = new ArrayList<String>();
@@ -99,11 +114,23 @@ public class TypeMapping implements Serializable
 		return result;
 	}
 
+	/**
+	 * Get the source for the given type. Can return null when no such type
+	 * exists.
+	 * 
+	 * @param type
+	 * @return
+	 */
 	public Source getSource(String type)
 	{
 		return mapping.get(type);
 	}
 
+	/**
+	 * Get a readonly copy of the type mapping
+	 * 
+	 * @return
+	 */
 	public Map<String, Source> getMapping()
 	{
 		return Collections.unmodifiableMap(mapping);

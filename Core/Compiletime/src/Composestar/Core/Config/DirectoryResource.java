@@ -35,7 +35,20 @@ import java.util.regex.Pattern;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * A FileCollection that scans a directory for files.
+ * A FileCollection that scans a directory for files. This behaves much like the
+ * fileset construction of Ant. By default it will include all files in the
+ * given directory. The following wildcards are allowed:
+ * <dl>
+ * <dt>?</dt>
+ * <dd>Match a single character</dd>
+ * <dt>*</dt>
+ * <dd>Match any number of characters except for file separator: /.</dd>
+ * <dt>**</dt>
+ * <dd>Match all characters include /.</dd>
+ * </dl>
+ * <em>Always use forward slashes for directories.</em> Common temporary files
+ * and CVS/SVN files will always be ignored. Include patterns take preference
+ * over exclude patterns.
  * 
  * @author Michiel Hendriks
  */
@@ -45,6 +58,11 @@ public class DirectoryResource extends FileCollection implements FileFilter
 
 	private static final long serialVersionUID = 7389476188523500459L;
 
+	/**
+	 * The base path, the directory to scan for files. It can be relative. In
+	 * this case it is required to provide an absolute base directory in the
+	 * getFiles() method.
+	 */
 	protected File path;
 
 	/**
@@ -57,12 +75,25 @@ public class DirectoryResource extends FileCollection implements FileFilter
 	 */
 	protected Set<String> excludes;
 
+	/**
+	 * Cached list of found files. Chaning the patterns, path when a different
+	 * absolute base is given this list will be purged.
+	 */
 	protected transient Set<File> cache;
 
+	/**
+	 * The cached absolute base used to populate the current cache.
+	 */
 	protected transient File cacheBase;
 
+	/**
+	 * Cache of compiled patterns.
+	 */
 	protected transient Set<Pattern> includePatterns;
 
+	/**
+	 * Cache of compiled patterns.
+	 */
 	protected transient Set<Pattern> excludePatterns;
 
 	public DirectoryResource()
@@ -80,6 +111,11 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		path = newPath;
 	}
 
+	/**
+	 * Return the base path. Can be absolute or relative
+	 * 
+	 * @return
+	 */
 	public File getPath()
 	{
 		return path;
@@ -137,11 +173,21 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		}
 	}
 
+	/**
+	 * Returns a readonly list of include patterns.
+	 * 
+	 * @return
+	 */
 	public Set<String> getIncludes()
 	{
 		return Collections.unmodifiableSet(includes);
 	}
 
+	/**
+	 * Returns a readonly list of exclude patterns.
+	 * 
+	 * @return
+	 */
 	public Set<String> getExcludes()
 	{
 		return Collections.unmodifiableSet(excludes);
@@ -153,11 +199,22 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		throw new UnsupportedOperationException("DirectoryResource does not support adding files.");
 	}
 
+	/**
+	 * Retrieve a list of files. This will assume the set path value is
+	 * absolute. Otherwise an empty set will be returned.
+	 */
 	public Set<File> getFiles()
 	{
 		return getFiles(null);
 	}
 
+	/**
+	 * Return a list of files matching the pattern that are contained within the
+	 * current base+path combination. The provided base will be used to resolve
+	 * the relative path to an absolute path before scanning. When neither an
+	 * absolute base or absolute path are available an empty set is returned.
+	 * The returned files are all absolute.
+	 */
 	public Set<File> getFiles(File base)
 	{
 		if ((cache == null) || (!cacheBase.equals(base)))
@@ -244,6 +301,9 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		}
 	}
 
+	/**
+	 * If true the current file matches the filters, e.g. is accepted
+	 */
 	public boolean accept(File file)
 	{
 		String str = file.toString().substring(cacheBase.toString().length()).replace("\\", "/");
@@ -271,6 +331,9 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		return includes.size() == 0;
 	}
 
+	/**
+	 * Compiles the pattern to a regular expression.
+	 */
 	protected Pattern convertPattern(String inpattern)
 	{
 		String pattern = inpattern;

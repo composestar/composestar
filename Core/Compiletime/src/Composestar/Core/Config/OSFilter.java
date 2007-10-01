@@ -29,7 +29,9 @@ import java.util.regex.Pattern;
 
 /**
  * Defines an OS filter. It checks if the OS matches the defined regular
- * expressions.
+ * expressions. Each filter item is a regular expression that is matched against
+ * the java system properties for the OS and architecture. Unless filters will
+ * default to true.
  * 
  * @author Michiel Hendriks
  */
@@ -106,7 +108,6 @@ public class OSFilter implements Serializable
 	 */
 	public boolean matches()
 	{
-
 		return matches(null);
 	}
 
@@ -128,15 +129,24 @@ public class OSFilter implements Serializable
 		}
 		if (name != null)
 		{
-			if (!name.matcher(os[0]).matches()) return false;
+			if (!name.matcher(os[0]).matches())
+			{
+				return false;
+			}
 		}
 		if (version != null)
 		{
-			if (!version.matcher(os[1]).matches()) return false;
+			if (!version.matcher(os[1]).matches())
+			{
+				return false;
+			}
 		}
 		if (arch != null)
 		{
-			if (!arch.matcher(os[2]).matches()) return false;
+			if (!arch.matcher(os[2]).matches())
+			{
+				return false;
+			}
 		}
 		return true;
 	}

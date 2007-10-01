@@ -34,7 +34,8 @@ import java.util.Set;
 
 /**
  * Collects the commandline arguments and saves it to a file. This file will in
- * turn be returns as a commandline argument.
+ * turn be returned as a commandline argument. The created file will be flagged
+ * to be deleted when the VM shuts down.
  * 
  * @author Michiel Hendriks
  */

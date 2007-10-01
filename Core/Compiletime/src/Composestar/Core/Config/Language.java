@@ -34,14 +34,20 @@ import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
 
 /**
+ * Defines an accepted programming language/dialect for the current platform. A
+ * project is allows associated with at least one language. Depending on the
+ * platform different source files might be associated with an other language.
+ * 
  * @author Michiel Hendriks
+ * @see Platform
+ * @see Project
  */
 public class Language implements Serializable
 {
 	private static final long serialVersionUID = 2488167651016666956L;
 
 	/**
-	 * The language name
+	 * The language name.
 	 */
 	protected String name;
 
@@ -60,6 +66,10 @@ public class Language implements Serializable
 	 */
 	protected String dummyGenerator;
 
+	/**
+	 * Resolved instance to the dummy generator. It will be resolved on the
+	 * first time it is used.
+	 */
 	protected transient DummyEmitter dummyEmitter;
 
 	public Language(String inName)
@@ -73,6 +83,12 @@ public class Language implements Serializable
 		return name;
 	}
 
+	/**
+	 * Set the name of the language. The name can not be null or empty. The name
+	 * may not be changed when the language has been associated with a project.
+	 * 
+	 * @param inName
+	 */
 	protected void setName(String inName)
 	{
 		if (inName == null || inName.trim().length() == 0)
@@ -105,6 +121,11 @@ public class Language implements Serializable
 		return extensions.remove(ext);
 	}
 
+	/**
+	 * Get a read only list with all accepted extensions.
+	 * 
+	 * @return
+	 */
 	public Set<String> getExtensions()
 	{
 		return Collections.unmodifiableSet(extensions);
@@ -117,8 +138,16 @@ public class Language implements Serializable
 			throw new IllegalArgumentException("DummyGenerator can not be null or empty");
 		}
 		dummyGenerator = classname.trim();
+		dummyEmitter = null;
 	}
 
+	/**
+	 * Get the value of the dummy generator. To get an instance to the dummy
+	 * generator use the getDummyEmitter method.
+	 * 
+	 * @return
+	 * @see #getDummyEmitter()
+	 */
 	public String getDummyGenerator()
 	{
 		return dummyGenerator;
@@ -133,11 +162,25 @@ public class Language implements Serializable
 		compiler = comp;
 	}
 
+	/**
+	 * Get access to the compiler for this language. Used by the DUMMER module
+	 * to compile the dummies and my the TYM module to compile the original
+	 * sources with against the dummies to produce the pre-weaving assemblies.
+	 * 
+	 * @return
+	 */
 	public SourceCompiler getCompiler()
 	{
 		return compiler;
 	}
 
+	/**
+	 * Get a reference to the dummy generator/emitter. Used by the DUMMER
+	 * module.
+	 * 
+	 * @return
+	 * @throws ModuleException
+	 */
 	public DummyEmitter getDummyEmitter() throws ModuleException
 	{
 		if (dummyEmitter == null)

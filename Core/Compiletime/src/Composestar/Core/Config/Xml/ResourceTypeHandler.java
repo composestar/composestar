@@ -60,7 +60,7 @@ public class ResourceTypeHandler extends CpsBaseHandler
 	/**
 	 * If true multiple source are supported
 	 */
-	protected boolean supportMulti = false;
+	protected boolean supportMulti;
 
 	protected Set<FileCollection> resources;
 
@@ -82,7 +82,7 @@ public class ResourceTypeHandler extends CpsBaseHandler
 		{
 			groupTag = inGroupTag.trim();
 		}
-		supportMulti = (groupTag != null && groupTag.length() > 0);
+		supportMulti = groupTag != null && groupTag.length() > 0;
 		if (supportMulti)
 		{
 			state = 0;

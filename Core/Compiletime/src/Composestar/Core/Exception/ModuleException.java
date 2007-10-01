@@ -13,7 +13,8 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Logging.LocationProvider;
 
 /**
- * this exception must be thrown by all modules when they encounter a fatal error.
+ * this exception must be thrown by all modules when they encounter a fatal
+ * error.
  */
 public class ModuleException extends Exception implements LocationProvider
 {
@@ -33,9 +34,22 @@ public class ModuleException extends Exception implements LocationProvider
 		errorLocationFilename = "";
 	}
 
+	public ModuleException(String message, String inmodule, Throwable throwable)
+	{
+		super(message, throwable);
+		module = inmodule;
+		errorLocationLineNumber = 0;
+		errorLocationFilename = "";
+	}
+
 	public ModuleException(String message, String inmodule, RepositoryEntity errorLocation)
 	{
-		this(message, inmodule);
+		this(message, inmodule, errorLocation, null);
+	}
+
+	public ModuleException(String message, String inmodule, RepositoryEntity errorLocation, Throwable throwable)
+	{
+		this(message, inmodule, throwable);
 		errorLocationFilename = errorLocation.getDescriptionFileName();
 		errorLocationLineNumber = errorLocation.getDescriptionLineNumber();
 	}
@@ -43,7 +57,13 @@ public class ModuleException extends Exception implements LocationProvider
 	public ModuleException(String message, String inmodule, String inerrorLocationFilename,
 			int inerrorLocationLineNumber)
 	{
-		this(message, inmodule);
+		this(message, inmodule, inerrorLocationFilename, inerrorLocationLineNumber, null);
+	}
+
+	public ModuleException(String message, String inmodule, String inerrorLocationFilename,
+			int inerrorLocationLineNumber, Throwable throwable)
+	{
+		this(message, inmodule, throwable);
 		errorLocationFilename = inerrorLocationFilename;
 		errorLocationLineNumber = inerrorLocationLineNumber;
 	}
@@ -85,14 +105,8 @@ public class ModuleException extends Exception implements LocationProvider
 	{
 		return getMessage();
 		/*
-		if (module != null)
-		{
-			return module + " ERROR: " + getMessage();
-		}
-		else
-		{
-			return "UNDEFINED-MODULE ERROR: " + getMessage();
-		}
-		*/
+		 * if (module != null) { return module + " ERROR: " + getMessage(); }
+		 * else { return "UNDEFINED-MODULE ERROR: " + getMessage(); }
+		 */
 	}
 }

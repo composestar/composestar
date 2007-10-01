@@ -55,6 +55,9 @@ public class BuildConfigXmlWriter
 
 	protected static final String XMLNS = "http://composestar.sourceforget.net/schema/BuildConfiguration";
 
+	protected BuildConfigXmlWriter()
+	{}
+
 	public static final boolean write(BuildConfig config, OutputStream stream)
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -77,6 +80,7 @@ public class BuildConfigXmlWriter
 		root.setAttribute("xmlns", XMLNS);
 		writeSettings(config, xmlDoc, root);
 		writeProject(config, xmlDoc, root);
+		writeFilters(config, xmlDoc, root);
 
 		OutputFormat format = new OutputFormat();
 		format.setIndenting(true);
@@ -164,11 +168,11 @@ public class BuildConfigXmlWriter
 			// endif
 		}
 
-		// TODO resources
+		// FIXME resources
 	}
 
 	protected static final void writeFilters(BuildConfig config, Document xmlDoc, Node root)
 	{
-	// TODO not yet implemented
+	// FIXME not yet implemented
 	}
 }

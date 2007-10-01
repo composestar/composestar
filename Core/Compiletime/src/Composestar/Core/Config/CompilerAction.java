@@ -32,7 +32,10 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * A compiler action.
+ * A compiler action. These instances are used by the compiler implementation as
+ * specified in the language. It's used by the COMP modules. A compiler action
+ * contains instructions of an external application to be executed. Internal
+ * actions should be handled manually by the language compiler.
  * 
  * @author Michiel Hendriks
  */
@@ -41,15 +44,21 @@ public class CompilerAction implements Serializable
 	private static final long serialVersionUID = -3489491657540648030L;
 
 	/**
-	 * The name of the action
+	 * The name of the action. It is used by the compiler implementation to
+	 * retrieve a specific action.
 	 */
 	protected String name;
 
 	/**
-	 * The executable to execute
+	 * The executable to execute.
 	 */
 	protected String executable;
 
+	/**
+	 * The commandline arguments for this executable.
+	 * 
+	 * @see CmdLineArgumentList
+	 */
 	protected CmdLineArgumentList args;
 
 	public CompilerAction()
@@ -76,6 +85,12 @@ public class CompilerAction implements Serializable
 		return executable;
 	}
 
+	/**
+	 * Set the executable for this action. The executable can not be null or
+	 * empty.
+	 * 
+	 * @param exec
+	 */
 	public void setExecutable(String exec)
 	{
 		if (exec == null || exec.trim().length() == 0)
@@ -91,12 +106,17 @@ public class CompilerAction implements Serializable
 	}
 
 	/**
-	 * Return the commandline for the given rpoject and source files.
+	 * Returns the command line to execute this action for the given project and
+	 * source files. The properties contain the values for the variables that
+	 * will be expanded when processing the argument list. The return value can
+	 * be used in the created Process
 	 * 
 	 * @param proj
 	 * @param source
 	 * @param prop
 	 * @return
+	 * @see CmdLineArgument
+	 * @see Process
 	 */
 	public String[] getCmdLine(Project proj, Set<File> sources, Properties prop)
 	{

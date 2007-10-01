@@ -33,6 +33,9 @@ import java.util.Set;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
+ * A single project. It contains information about source files, concerns and
+ * dependencies.
+ * 
  * @author Michiel Hendriks
  */
 public class Project implements Serializable
@@ -52,7 +55,8 @@ public class Project implements Serializable
 	protected static final String DEFAULT_INTERMEDIATE = "obj";
 
 	/**
-	 * The name of the project
+	 * The name of the project. This is often used by modules to create
+	 * intermediate files.
 	 */
 	protected String name;
 
@@ -168,6 +172,12 @@ public class Project implements Serializable
 		name = inName.trim();
 	}
 
+	/**
+	 * Get the platform for this project. This might be null when no suitable
+	 * platform can be found.
+	 * 
+	 * @return
+	 */
 	public Platform getPlatform()
 	{
 		if (platform == null)
@@ -177,6 +187,13 @@ public class Project implements Serializable
 		return platform;
 	}
 
+	/**
+	 * Return the platform id. This could also be retrieved through
+	 * getPlatform().getId(). But getPlatform() might return null when no
+	 * suitable platform is available.
+	 * 
+	 * @return
+	 */
 	public String getPlatformId()
 	{
 		return platformId;
@@ -192,6 +209,14 @@ public class Project implements Serializable
 		platform = null;
 	}
 
+	/**
+	 * The project's base directory. Never use this as base for storing compiler
+	 * data/results. Use the output or intermediate paths for that.
+	 * 
+	 * @return
+	 * @see #getOutput()
+	 * @see #getIntermediate()
+	 */
 	public File getBase()
 	{
 		return base;
@@ -222,6 +247,14 @@ public class Project implements Serializable
 		intermediatePath = null;
 	}
 
+	/**
+	 * Get the language identifier associated with this project. An instance to
+	 * the Language object should be retrieved through the
+	 * getPlatform().getLangauge() method.
+	 * 
+	 * @return
+	 * @see Platform#getLanguage(String)
+	 */
 	public String getLanguage()
 	{
 		return language;
@@ -236,6 +269,12 @@ public class Project implements Serializable
 		language = inLanguage.trim();
 	}
 
+	/**
+	 * Get the fully resolved path to the directory destined for the final
+	 * compiler output. Should only be used by the BACO module.
+	 * 
+	 * @return
+	 */
 	public File getOutput()
 	{
 		if (outputPath == null)
@@ -245,6 +284,11 @@ public class Project implements Serializable
 		return outputPath;
 	}
 
+	/**
+	 * Return relative location to the output directory.
+	 * 
+	 * @return
+	 */
 	public String getOutputRaw()
 	{
 		return output;
@@ -263,6 +307,12 @@ public class Project implements Serializable
 		outputPath = null;
 	}
 
+	/**
+	 * Return the path to the location meant for storing intermediate files.
+	 * Never store data in the project's base directory.
+	 * 
+	 * @return
+	 */
 	public File getIntermediate()
 	{
 		if (intermediatePath == null)
@@ -290,6 +340,11 @@ public class Project implements Serializable
 		inIntermediate = null;
 	}
 
+	/**
+	 * Get the name of the class that contains the project's entry point.
+	 * 
+	 * @return
+	 */
 	public String getMainclass()
 	{
 		return mainclass;
@@ -345,6 +400,11 @@ public class Project implements Serializable
 		}
 	}
 
+	/**
+	 * Get the set fully resolved file handles to the concern files.
+	 * 
+	 * @return
+	 */
 	public Set<File> getConcernFiles()
 	{
 		if (concernFilesCache == null)
@@ -636,6 +696,11 @@ public class Project implements Serializable
 		return Collections.unmodifiableSet(resourceFiles);
 	}
 
+	/**
+	 * Get the type mapping information.
+	 * 
+	 * @return
+	 */
 	public TypeMapping getTypeMapping()
 	{
 		return typeMapping;
