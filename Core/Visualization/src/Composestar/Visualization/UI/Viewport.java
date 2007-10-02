@@ -78,8 +78,9 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 
 	private JPopupMenu pmFilterView; // @jve:decl-index=0:visual-constraint="712,183"
 
-	public Viewport()
+	public Viewport(VisCom inController)
 	{
+		controller = inController;
 		Logger.getRootLogger().addAppender(new MessageBoxAppender(this));
 		logger.debug("Creating viewport");
 		actionManager = new ActionManager(this);
@@ -88,8 +89,7 @@ public class Viewport extends JFrame implements CpsJGraphProvider
 
 	public Viewport(VisCom inController, File historyFile)
 	{
-		this();
-		controller = inController;
+		this(inController);
 
 		if (controller.openCompileHistory(historyFile))
 		{

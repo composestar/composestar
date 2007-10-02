@@ -12,7 +12,7 @@
 ; image to use for the splash screen
 #define SPLASH_IMAGE "EschersRelativity.bmp"
 
-#define NAME "Compose*.NET"
+#define NAME "Compose*/.NET"
 #define SAFE_NAME "ComposeStar.NET"
 
 ; if defined use the slow fade-in
@@ -289,11 +289,11 @@ begin
     StringChangeEx(cfg, '{app_r}', app_r, true);
     SaveStringToFile(ExpandConstant('{app}\Composestar.ini'), cfg, false);
   end;
-  if LoadStringFromFile(ExpandConstant('{app}\PlatformConfigurations.xml'), cfg) then begin
-    StringChangeEx(cfg, '{app}', app, true);
-    StringChangeEx(cfg, '{app_r}', app_r, true);
-    SaveStringToFile(ExpandConstant('{app}\PlatformConfigurations.xml'), cfg, false);
-  end;
+  //if LoadStringFromFile(ExpandConstant('{app}\PlatformConfigurations.xml'), cfg) then begin
+  //  StringChangeEx(cfg, '{app}', app, true);
+  //  StringChangeEx(cfg, '{app_r}', app_r, true);
+  //  SaveStringToFile(ExpandConstant('{app}\PlatformConfigurations.xml'), cfg, false);
+  //end;
   
   if (IsAdminLoggedOn() and IsComponentSelected('core\addin')) then begin
     if RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\VisualStudio\7.1', 'InstallDir', cfg) then

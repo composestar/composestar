@@ -44,20 +44,17 @@ namespace ComposestarVSAddin
 			
 			string composestarJar = BuildConfigurationManager.Instance.Settings.Paths["Composestar"];   
 			composestarJar = composestarJar.Replace("\"", "");
-			composestarJar = "\"" + composestarJar + "Composestar.jar\"";
-
-			string classPath = BuildConfigurationManager.Instance.DotNetPlatform.ClassPath; 
-			string mainClass = BuildConfigurationManager.Instance.DotNetPlatform.MainClass;  
-			string jvmOptions = BuildConfigurationManager.Instance.DotNetPlatform.Options;  
+			composestarJar = composestarJar + "lib\\ComposestarDotNET.jar";
 
 			string projectIni = BuildConfigurationManager.Instance.Settings.Paths["Base"];
 			projectIni = projectIni.Replace("\"", "");
-			projectIni = "\"" + projectIni + "BuildConfiguration.xml\"";
+			projectIni = projectIni + "BuildConfiguration.xml";
 
 			//p.StartInfo.Arguments = "-cp " + composestarJar + " Composestar.CTCommon.Master.Master " + projectIni;
 			//p.StartInfo.Arguments = "-cp \"" + classPath + "\" " + mainClass + " " + projectIni;
 			
-			p.StartInfo.Arguments = jvmOptions + " -cp \"" + classPath + "\" " + mainClass + " " + projectIni;
+			p.StartInfo.Arguments = "-Xmx256m -jar \"" + composestarJar + "\" \"" + projectIni + "\"";
+			//Debug.Instance.Log(p.StartInfo.Arguments);
 			p.StartInfo.CreateNoWindow = true;
 			p.StartInfo.RedirectStandardOutput = true;
 			p.StartInfo.UseShellExecute = false;

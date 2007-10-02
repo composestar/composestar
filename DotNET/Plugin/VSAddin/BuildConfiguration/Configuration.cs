@@ -366,11 +366,15 @@ namespace BuildConfiguration
 				
 				// Include the PlatformConfiguration file
 				writer.WriteStartElement("Platforms"); 
-				string filePlatformConfig = Path.Combine(Settings.Paths["Composestar"] , "PlatformConfigurations.xml");
-				XmlTextReader reader = new XmlTextReader(filePlatformConfig) ;
-				reader.MoveToContent(); 
-				writer.WriteRaw(reader.ReadInnerXml());
-				reader.Close();
+				//string filePlatformConfig = Path.Combine(Settings.Paths["Composestar"] , "PlatformConfigurations.xml");
+				//XmlTextReader reader = new XmlTextReader(filePlatformConfig) ;
+				//reader.MoveToContent(); 
+				//writer.WriteRaw(reader.ReadInnerXml());
+				//reader.Close();
+				writer.WriteStartElement("Platform"); 
+				writer.WriteAttributeString("name", "dotNET");
+				writer.WriteEndElement();
+
 				writer.WriteEndElement();
 	 
 				// Close the root
@@ -403,8 +407,9 @@ namespace BuildConfiguration
 
 		public void ReadDotNetPlatform()
 		{
-			string filePlatformConfig = Path.Combine(Settings.Paths["Composestar"] , "PlatformConfigurations.xml");
-			ReadDotNetPlatform(filePlatformConfig);
+			//string filePlatformConfig = Path.Combine(Settings.Paths["Composestar"] , "PlatformConfigurations.xml");
+			//ReadDotNetPlatform(filePlatformConfig);
+			DotNetPlatform = new Platform();
 		}
 
 		public void ReadDotNetPlatform(string fileName)

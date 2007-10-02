@@ -26,9 +26,9 @@
         	id="composestar.java.popupmenu"
        		label="%COMPOSESTAR"
        		path="additions">
-       		<separator name="slot1"/>
+       		<separator name="basic"/>
          <separator
-               name="slot2">
+               name="administrative">
          </separator>
        	</menu>
        	<!--
@@ -41,7 +41,7 @@
         -->
        	<action
             label="%COMPOSESTAR_POPUP_LABEL_RUN"
-            menubarPath="composestar.java.popupmenu/slot1" 
+            menubarPath="composestar.java.popupmenu/basic" 
             class="ComposestarEclipsePlugin.Java.Actions.JavaRunAction"
             enablesFor="1"
             id="composestar.java.action.run">
@@ -52,14 +52,14 @@
               icon="logo-16x16.png"
               id="composestar.java.action.build"
               label="%COMPOSESTAR_POPUP_LABEL_BUILD"
-              menubarPath="composestar.java.popupmenu/slot1">
+              menubarPath="composestar.java.popupmenu/basic">
         </action>
         <action
               class="ComposestarEclipsePlugin.Java.Actions.ToggleCStarJavaNature"
               enablesFor="1"
               id="composestar.java.action.remove_nature"
               label="%COMPOSESTAR_POPUP_LABEL_REMOVE_NATURE"
-              menubarPath="composestar.java.popupmenu/slot2"
+              menubarPath="composestar.java.popupmenu/administrative"
               tooltip="%COMPOSESTAR_POPUP_LABEL_REMOVE_NATURE_HINT">
         </action>
         <filter

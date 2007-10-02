@@ -148,7 +148,10 @@
 				
 			</xsl:element><!-- /Settings -->
 			
+			<!--
 			<xsl:copy-of select="document(concat($composestarpath, 'PlatformConfigurations.xml'))" />
+			-->
+			<Platforms><Platform name="dotNET" /></Platforms>
 		</xsl:element><!-- /BuildConfiguration -->
 	</xsl:template>
 	

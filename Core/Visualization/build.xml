@@ -20,7 +20,7 @@
 	<target name="local_init" depends="init">
 		<mkdir dir="${out.build}" />
 		<mkdir dir="${out.dist}" />
-    <mkdir dir="${out.dist}/lib" />
+		<mkdir dir="${out.dist}/lib" />
 
 		<path id="lib.visualization">
 			<path refid="lib.core" />
@@ -36,10 +36,10 @@
 	</target>
 
 	<target name="jar" depends="compile">
-	   <copy todir="${out.build}">
+		<copy todir="${out.build}">
 			<fileset dir="src">
-				<include name="**/*.png"/>
-				<include name="**/*.properties"/>
+				<include name="**/*.png" />
+				<include name="**/*.properties" />
 			</fileset>
 		</copy>
 		<jar destfile="${out.jar.visualization}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
@@ -49,24 +49,26 @@
 
 	<target name="install_system" depends="build" if="available.dotnet">
 		<!-- install the core files for the system, currently this is only used for dotnet -->
-    <copy todir="${composestar.installdir}">
-      <fileset dir="${out.dist}" />
-    </copy>
-  </target>
+		<copy todir="${composestar.installdir}">
+			<fileset dir="${out.dist}" />
+		</copy>
+	</target>
 
-  <target name="install_eclipse" depends="build" if="available.eclipse">
-    <!-- copy files to eclipse -->
-    <!-- 
+	<target name="install_eclipse" depends="build" if="available.eclipse">
+		<!-- copy files to eclipse -->
+		<!-- 
 			this construction is intentional to create a fail safe method to 
 			install the eclipse files even when eclipse is not available 
 		-->
-		<antcall target="-install_eclipse" inheritRefs="true" />    
+		<antcall target="-install_eclipse" inheritRefs="true" />
 	</target>
 
 	<target name="-install_eclipse" depends="init_eclipse">
+		<!-- need it's own location
     <copy todir="${eclipse.pluginsdir.core}">
       <fileset dir="${out.dist}" />
     </copy>
+  		-->
 	</target>
 
 </project>

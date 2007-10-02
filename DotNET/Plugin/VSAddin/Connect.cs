@@ -221,7 +221,8 @@ namespace ComposestarVSAddin
 					AddCommand((AddIn)addInInst, ADDIN_BUILD, m_captionBuild, m_toolTipBuild, true, BITMAP_ID_BUILD, false, true);
 					AddCommand((AddIn)addInInst, ADDIN_RUN, m_captionRun, m_toolTipRun, true, BITMAP_ID_RUN, false, true);
 					AddCommand((AddIn)addInInst, ADDIN_DEBUGRUN, m_captionDebugRun, m_toolTipDebugRun, true, BITMAP_ID_DEBUGRUN, false, true);
-					AddCommand((AddIn)addInInst, ADDIN_VISUALIZATION, m_captionVisualization, m_toolTipVisualization, true, BITMAP_ID_VISUALIZATION, false, true);
+					// visualization is broken
+					//AddCommand((AddIn)addInInst, ADDIN_VISUALIZATION, m_captionVisualization, m_toolTipVisualization, true, BITMAP_ID_VISUALIZATION, false, true);
 					AddCommand((AddIn)addInInst, ADDIN_CLEAN, m_captionClean, m_toolTipClean, true, BITMAP_ID_CLEAN, false, false);
 					AddCommand((AddIn)addInInst, ADDIN_SETTINGS, m_captionSettings, m_toolTipSettings, true, BITMAP_ID_SETTINGS, true, true);
 						
@@ -278,7 +279,7 @@ namespace ComposestarVSAddin
 			QueryStatus(m_commandNameBuild, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameRun, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameDebugRun, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
-			QueryStatus(m_commandNameVisualization, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
+			//QueryStatus(m_commandNameVisualization, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameSettings, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameClean, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 		}

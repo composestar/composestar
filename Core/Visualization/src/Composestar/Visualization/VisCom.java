@@ -72,6 +72,10 @@ public class VisCom
 	{
 		try
 		{
+			if (histFile == null)
+			{
+				return false;
+			}
 			viewManager = null;
 			long startTime = System.currentTimeMillis();
 

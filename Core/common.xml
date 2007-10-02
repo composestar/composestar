@@ -24,11 +24,11 @@
 		<cs:extractBuildNumber label="${label}" property="version.build" syntax="build.#" />
 
 		<!-- version numbers, used in installers e.a. Note: must be: [major].[minor].[release] -->
-		<property name="version.core" value="0.6.3" />
+		<property name="version.core" value="0.7.0" />
 		<property name="version.dotnet" value="${version.core}" />
 		<property name="version.java" value="${version.core}" />
 		<property name="version.c" value="${version.core}" />
-		<property name="version.starlight" value="0.3.0" />
+		<property name="version.starlight" value="${version.core}" />
 
 		<!-- various config items -->
 		<property name="out.build" value="build" />
