@@ -11,13 +11,13 @@ Require-Bundle: composestar.core;visibility:=reexport,
  org.eclipse.ui.console
 Bundle-Vendor: University of Twente
 Export-Package: 
- ComposestarEclipsePlugin.Core,
- ComposestarEclipsePlugin.Core.Actions,
- ComposestarEclipsePlugin.Core.BuildConfiguration,
- ComposestarEclipsePlugin.Core.UI,
- ComposestarEclipsePlugin.Core.Utils
+ Composestar.Eclipse.Core,
+ Composestar.Eclipse.Core.Actions,
+ Composestar.Eclipse.Core.BuildConfiguration,
+ Composestar.Eclipse.Core.UI,
+ Composestar.Eclipse.Core.Utils
 Eclipse-LazyStart: true
 Eclipse-AutoStart: true
-Bundle-Activator: ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin
+Bundle-Activator: Composestar.Eclipse.Core.ComposestarEclipsePluginPlugin
 Bundle-ClassPath: ComposestarEclipseCore.jar,
  .

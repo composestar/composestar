@@ -6,7 +6,7 @@
  	<extension point="org.eclipse.ui.propertyPages">
  		<page
          adaptable="true"
-         class="ComposestarEclipsePlugin.Java.UI.JavaComposestarPropertyPage"
+         class="Composestar.Eclipse.Java.UI.JavaComposestarPropertyPage"
          id="composestar.java.propertypage"
          name="%COMPOSESTAR"
          objectClass="org.eclipse.core.resources.IProject">
@@ -33,7 +33,7 @@
        	</menu>
        	<!--
         <action
-              class="ComposestarEclipsePlugin.Core.Actions.VisAction"
+              class="Composestar.Eclipse.Core.Actions.VisAction"
               enablesFor="1"
               id="composestar.java.action.visualization"
               label="%COMPOSESTAR_POPUP_LABEL_VIS"
@@ -42,12 +42,12 @@
        	<action
             label="%COMPOSESTAR_POPUP_LABEL_RUN"
             menubarPath="composestar.java.popupmenu/basic" 
-            class="ComposestarEclipsePlugin.Java.Actions.JavaRunAction"
+            class="Composestar.Eclipse.Java.Actions.JavaRunAction"
             enablesFor="1"
             id="composestar.java.action.run">
         </action>
         <action
-              class="ComposestarEclipsePlugin.Java.Actions.JavaBuildAction"
+              class="Composestar.Eclipse.Java.Actions.JavaBuildAction"
               enablesFor="1"
               icon="logo-16x16.png"
               id="composestar.java.action.build"
@@ -55,7 +55,7 @@
               menubarPath="composestar.java.popupmenu/basic">
         </action>
         <action
-              class="ComposestarEclipsePlugin.Java.Actions.ToggleCStarJavaNature"
+              class="Composestar.Eclipse.Java.Actions.ToggleCStarJavaNature"
               enablesFor="1"
               id="composestar.java.action.remove_nature"
               label="%COMPOSESTAR_POPUP_LABEL_REMOVE_NATURE"
@@ -80,7 +80,7 @@
             </separator>
          </menu>
          <action
-               class="ComposestarEclipsePlugin.Java.Actions.ToggleCStarJavaNature"
+               class="Composestar.Eclipse.Java.Actions.ToggleCStarJavaNature"
                id="composestar.java.action.add_nature"
                label="%COMPOSESTAR_POPUP_LABEL_ADD_NATURE"
                menubarPath="composestar.java.popupmenu2/slot1"
@@ -113,7 +113,7 @@
           name="%COMPOSESTAR_JAVA_PROJECT" 
           category="composestar.java.category.wizards"
           icon="logo-16x16.png" 
-          class="ComposestarEclipsePlugin.Java.UI.Wizards.ComposestarProjectWizardEx"
+          class="Composestar.Eclipse.Java.UI.Wizards.ComposestarProjectWizardEx"
           project="true"> 
       </wizard> 
    	</extension> 
@@ -122,7 +122,7 @@
         id="testbuild"
         point="org.eclipse.core.runtime.applications">
       	<application> 
-         	<run class="ComposestarEclipsePlugin.Java.Actions.TestBuild"> 
+         	<run class="Composestar.Eclipse.Java.Actions.TestBuild"> 
          	</run> 
       	</application>
    	</extension>
@@ -131,21 +131,21 @@
         id="testrun"
         point="org.eclipse.core.runtime.applications">
       	<application> 
-         	<run class="ComposestarEclipsePlugin.Java.Actions.TestRun"> 
+         	<run class="Composestar.Eclipse.Java.Actions.TestRun"> 
          	</run> 
       	</application>
    	</extension>
  <extension
        point="org.eclipse.jdt.core.classpathContainerInitializer">
     <classpathContainerInitializer
-          class="ComposestarEclipsePlugin.Java.CStarClasspathContainerInitializer"
+          class="Composestar.Eclipse.Java.CStarClasspathContainerInitializer"
           id="composestar.java.classpath.runtime">
     </classpathContainerInitializer>
  </extension>
  <extension
        point="org.eclipse.jdt.ui.classpathContainerPage">
     <classpathContainerPage
-          class="ComposestarEclipsePlugin.Java.UI.Wizards.CStarJavaRuntimeContainerWizard"
+          class="Composestar.Eclipse.Java.UI.Wizards.CStarJavaRuntimeContainerWizard"
           id="composestar.java.classpath.runtime"
           name="%CSTAR_JAVA_RUNTIME">
     </classpathContainerPage>
@@ -156,7 +156,7 @@
        point="org.eclipse.core.resources.natures">
     <runtime>
        <run
-             class="ComposestarEclipsePlugin.Java.CStarJavaProject">
+             class="Composestar.Eclipse.Java.CStarJavaProject">
        </run>
     </runtime>
     <requires-nature
@@ -174,14 +174,14 @@
           hasNature="true"
           isConfigurable="false">
        <run
-             class="ComposestarEclipsePlugin.Java.ComposestarJavaBuilder">
+             class="Composestar.Eclipse.Java.ComposestarJavaBuilder">
        </run>
     </builder>
  </extension>
  <extension
        point="org.eclipse.core.runtime.preferences">
     <scope
-          class="ComposestarEclipsePlugin.Core.CStarProjectPreferences"
+          class="Composestar.Eclipse.Core.CStarProjectPreferences"
           name="project">
     </scope>
  </extension>

@@ -17,15 +17,15 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-LazyStart: true
 Eclipse-AutoStart: true
 Bundle-Vendor: University of Twente
-Import-Package: ComposestarEclipsePlugin.Core,
- ComposestarEclipsePlugin.Core.Actions,
- ComposestarEclipsePlugin.Core.BuildConfiguration,
- ComposestarEclipsePlugin.Core.UI,
- ComposestarEclipsePlugin.Core.Utils 
-Bundle-Activator: ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin
-Export-Package: ComposestarEclipsePlugin.Java,
- ComposestarEclipsePlugin.Java.Actions,
- ComposestarEclipsePlugin.Java.UI,
- ComposestarEclipsePlugin.Java.UI.Wizards
+Import-Package: Composestar.Eclipse.Core,
+ Composestar.Eclipse.Core.Actions,
+ Composestar.Eclipse.Core.BuildConfiguration,
+ Composestar.Eclipse.Core.UI,
+ Composestar.Eclipse.Core.Utils
+Bundle-Activator: Composestar.Eclipse.Core.ComposestarEclipsePluginPlugin
+Export-Package: Composestar.Eclipse.Java,
+ Composestar.Eclipse.Java.Actions,
+ Composestar.Eclipse.Java.UI,
+ Composestar.Eclipse.Java.UI.Wizards
 Bundle-ClassPath: ComposestarEclipseJava.jar,
  .

@@ -5,7 +5,7 @@ Bundle-SymbolicName: composestar.c;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-ClassPath: ComposestarEclipseC.jar,
  .
-Bundle-Activator: ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin
+Bundle-Activator: Composestar.Eclipse.Core.ComposestarEclipsePluginPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -17,13 +17,13 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-LazyStart: true
 Eclipse-AutoStart: true
 Bundle-Vendor: University of Twente
-Export-Package: ComposestarEclipsePlugin.C,
- ComposestarEclipsePlugin.C.Actions,
- ComposestarEclipsePlugin.C.BuildConfiguration,
- ComposestarEclipsePlugin.C.Dialogs,
- ComposestarEclipsePlugin.C.Makefile
-Import-Package: ComposestarEclipsePlugin.Core,
- ComposestarEclipsePlugin.Core.Actions,
- ComposestarEclipsePlugin.Core.BuildConfiguration,
- ComposestarEclipsePlugin.Core.UI,
- ComposestarEclipsePlugin.Core.Utils
+Export-Package: Composestar.Eclipse.C,
+ Composestar.Eclipse.C.Actions,
+ Composestar.Eclipse.C.BuildConfiguration,
+ Composestar.Eclipse.C.Dialogs,
+ Composestar.Eclipse.C.Makefile
+Import-Package: Composestar.Eclipse.Core,
+ Composestar.Eclipse.Core.Actions,
+ Composestar.Eclipse.Core.BuildConfiguration,
+ Composestar.Eclipse.Core.UI,
+ Composestar.Eclipse.Core.Utils
