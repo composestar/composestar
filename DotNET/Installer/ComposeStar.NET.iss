@@ -10,7 +10,7 @@
 #endif
 
 ; image to use for the splash screen
-#define SPLASH_IMAGE "EschersRelativity.bmp"
+#define SPLASH_IMAGE "ComposestarLogo.bmp"
 
 #define NAME "Compose*/.NET"
 #define SAFE_NAME "ComposeStar.NET"
