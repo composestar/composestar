@@ -243,6 +243,7 @@
 		<antcall target="test_ntime" /> 
 		Disabled, because the tests do not work correctly
 		-->
+		<ant dir="Examples" target="versioncheck" inheritRefs="true"/> 
 		<antcall target="systemtest" inheritRefs="true"/> 
 	</target>
 

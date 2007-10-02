@@ -1,0 +1,29 @@
+<project name="ComposeStar/StarLight/Examples" default="versioncheck">
+
+	<property name="build.core" location="${basedir}/../../Core" />
+	<import file="${build.core}/common.xml" />
+
+	<target name="clean" />
+	<target name="build" />
+
+	<target name="versioncheck" depends="init" description="Checks the version of the examples with the currently configured version number for starlight.">
+		<xslt style="versioncheck.xslt" destdir="tmp" extension=".txt" force="true" filenameparameter="curfile" filedirparameter="curdir">
+			<include name="**/*.cpsproj" />
+			<include name="**/*.csproj" />
+			<include name="**/*.vjsproj" />
+			<param name="version" expression="${version.starlight}" />
+		</xslt>
+		<concat destfile="ExamplesVersionCheck.txt">
+			<fileset dir="tmp" includes="**/*.txt" />
+		</concat>
+		<delete dir="tmp" />
+		<fail message="StarLight examples refer to incorrect libraries. See StarLight/Examples/ExamplesVersionCheck.txt for details">
+			<condition>
+				<not>
+					<length file="ExamplesVersionCheck.txt" length="0" />
+				</not>
+			</condition>
+		</fail>
+	</target>
+
+</project>

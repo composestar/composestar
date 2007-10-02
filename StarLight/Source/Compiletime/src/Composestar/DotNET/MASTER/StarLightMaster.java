@@ -40,7 +40,7 @@ public class StarLightMaster extends Master
 {
 	private static final String MODULE_NAME = "MASTER";
 
-	private static final String VERSION = "0.2 beta";
+	private static final String VERSION = "0.7 beta";
 
 	private static final String AUTHOR = "University of Twente";
 

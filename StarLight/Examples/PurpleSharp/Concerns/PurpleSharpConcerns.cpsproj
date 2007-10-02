@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Name>"PurpleSharpConcerns"</Name>
@@ -22,10 +22,10 @@
   </PropertyGroup>
   <ItemGroup>
 		<Reference Include="mscorlib" />
-    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.7.0.0, Culture=neutral, PublicKeyToken=null">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
-      <HintPath>$(MSBuildExtensionsPath)\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.7\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -38,5 +38,5 @@
   </ItemGroup>
     <!--Import the standards targets-->
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.7\StarLight.targets" />
 </Project>

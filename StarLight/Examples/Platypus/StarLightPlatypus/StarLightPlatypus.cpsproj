@@ -30,5 +30,5 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.2\StarLight.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.7\StarLight.targets" />
 </Project>

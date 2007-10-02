@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -119,17 +119,23 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  
   <PropertyGroup>
-    <Deploy>true</Deploy>
-    <DeployDestination>$(MSBuildExtensionsPath)\StarLight\0.2\</DeployDestination>
+    <MSBuildCommunityTasksPath Condition="'$(MSBuildCommunityTasksPath)' == ''">$(MSBuildProjectDirectory)\..\..\..\Development\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
   </PropertyGroup>
-  <ItemGroup>
-    <DeployFiles Include="..\Target Files\StarLight\0.2\StarLight.targets">
-      <Visible>false</Visible>
-    </DeployFiles>
-  </ItemGroup>
+  <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
+  
   <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying..." />
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion" DefaultValue="0.0">
+      <Output TaskParameter="Value" PropertyName="StarLightVersion"/>
+    </RegistryRead>
+    <CreateProperty Value="$(MSBuildExtensionsPath)\StarLight\$(StarLightVersion)\">
+      <Output TaskParameter="Value" PropertyName="DeployDestination" />
+    </CreateProperty>
+    <CreateItem Include="..\Target Files\StarLight\$(StarLightVersion)\StarLight.targets" AdditionalMetadata="Visible=false">
+      <Output TaskParameter="Include" ItemName="DeployFiles" />
+    </CreateItem>    
     <CreateItem Include="$(OutputPath)\*.dll" AdditionalMetadata="Visible=false">
       <Output TaskParameter="Include" ItemName="DeployFiles" />
     </CreateItem>

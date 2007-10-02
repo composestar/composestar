@@ -1,0 +1,471 @@
+<!--
+***********************************************************************************************
+Composestar StarLight weave targets version 0.7 (beta)
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or weave your projects from the command-line or the IDE.
+
+This file defines the steps in the weave process for .NET projects in combination with
+the Composestar StarLight software.
+
+Copyright (C) University of Twente, 2006
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Weave">
+
+  <!--Reference the assembly where our tasks are defined-->
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll"/>
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.CpsParserTask"    AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll"/>
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILAnalyzerTask"   AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll"/>
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll"/>
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll"/>
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.TypeAnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll"/>
+
+  <PropertyGroup>
+    <StarLightFolder>$(ProjectDir)$(BaseIntermediateOutputPath)StarLight</StarLightFolder>
+    <DefaultLanguageSourceExtension>.cps</DefaultLanguageSourceExtension>
+    <Language>StarLight</Language>
+    <!-- Provide a facility to override UseHostCompilerIfAvailable-->
+    <UseHostCompilerIfAvailable Condition="'$(UseHostCompilerIfAvailable)' == ''">
+      false
+    </UseHostCompilerIfAvailable>
+  </PropertyGroup>
+
+  <!--
+    ============================================================
+                                        Weave
+
+    The main build entry point.
+    ============================================================
+    -->
+  <PropertyGroup>
+    <WeaveDependsOn>
+      BeforeWeave;
+      CompileCode;
+      CoreWeave;
+      AfterWeave
+    </WeaveDependsOn>
+  </PropertyGroup>
+  <Target
+      Name="Weave"
+      Condition=" '$(_InvalidConfigurationWarning)' != 'true' "
+      Outputs="$(TargetPath)"  
+      DependsOnTargets="$(WeaveDependsOn)">
+  </Target>
+  <!--
+    ============================================================
+                                        BeforeWeave
+    
+    Redefine this target in your project in order to run tasks just before Weave
+    ============================================================
+    -->
+  <Target Name="BeforeWeave"/>
+
+  <!--
+    ============================================================
+                                        AfterWeave
+
+    Redefine this target in your project in order to run tasks just after Weave 
+    ============================================================
+    -->
+  <Target Name="AfterWeave"/>
+
+  <!--
+    ============================================================
+                                        Clean section
+
+    Redefine this target in your project in order to run tasks just after clean 
+    ============================================================
+    -->
+  <PropertyGroup>
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      CleanStarLight;
+    </CleanDependsOn>
+  </PropertyGroup>
+
+  <!-- Removes the generated files from StarLight if they still exist. -->
+  <Target Name="CleanStarLight">
+    <CreateItem Include="$(RepositoryFilename)">
+      <Output TaskParameter="Include" ItemName="TempRepository"/>
+    </CreateItem>
+    <Delete Files="@(TempRepository)"/>
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)INCRE.*;$(ProjectDir)$(BaseIntermediateOutputPath)history.dat">
+      <Output TaskParameter="Include" ItemName="TempIncre"/>
+    </CreateItem>
+    <Delete Files="@(TempIncre)"/>
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)langmap.pro">
+      <Output TaskParameter="Include" ItemName="TempProlog"/>
+    </CreateItem>
+    <Delete Files="@(TempProlog)"/>
+    <CreateItem Include="$(OutDir)*.weaved">
+      <Output TaskParameter="Include" ItemName="TempBackupWeave"/>
+    </CreateItem>
+    <Delete Files="@(TempBackupWeave)"/>
+    <CreateItem Include="$(StarLightFolder)/*.xml;$(StarLightFolder)/*.xml.gzip">
+      <Output TaskParameter="Include" ItemName="TempXmlFiles"/>
+    </CreateItem>
+    <Delete Files="@(TempXmlFiles)"/>
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)Analyses/*.*">
+      <Output TaskParameter="Include" ItemName="TempAnalyses"/>
+    </CreateItem>
+    <Delete Files="@(TempAnalyses)"/>
+    <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)Analyses" ContinueOnError="true"/>
+    <RemoveDir Directories="$(StarLightFolder)" ContinueOnError="true"/>
+  </Target>
+
+  <!--
+    ============================================================
+                                        Reweave
+
+    Delete all intermediate and final build outputs, and then weave the project from scratch.
+    ============================================================
+    -->
+
+  <!-- Override of rebuild to start reweave -->
+  <Target
+        Name="Rebuild"
+        Condition=" '$(_InvalidConfigurationWarning)' != 'true' "
+        DependsOnTargets="$(ReweaveDependsOn)"
+        Outputs="$(TargetPath)"/>
+
+  <PropertyGroup>
+    <ReweaveDependsOn>
+      BeforeReweave;
+      Clean;
+      $(MSBuildProjectDefaultTargets);
+      AfterReweave;
+    </ReweaveDependsOn>
+    <ReweaveDependsOn Condition=" '$(MSBuildProjectDefaultTargets)' == 'Rebuild' " >
+      BeforeRebuild;
+      Clean;
+      Build;
+      AfterRebuild;
+    </ReweaveDependsOn>
+  </PropertyGroup>
+
+  <Target
+      Name="Reweave"
+      Condition=" '$(_InvalidConfigurationWarning)' != 'true' "
+      DependsOnTargets="$(ReweaveDependsOn)"
+      Outputs="$(TargetPath)"/>
+
+  <!--
+    ============================================================
+                                        BeforeReweave
+
+    Redefine this target in your project in order to run tasks just before Reweave 
+    ============================================================
+    -->
+  <Target Name="BeforeReweave"/>
+
+  <!--
+    ============================================================
+                                        AfterReweave
+
+    Redefine this target in your project in order to run tasks just after Reweave 
+    ============================================================
+    -->
+  <Target Name="AfterReweave"/>
+
+  <!--
+    ============================================================
+                                        CompileCode
+
+    The core build step calls each of the compile targets.
+    ============================================================
+    -->
+  <PropertyGroup>
+    <TargetExt Condition="'$(OutputType)'=='exe'">.exe</TargetExt>
+    <TargetExt Condition="'$(OutputType)'=='winexe'">.exe</TargetExt>
+    <TargetExt Condition="'$(OutputType)'=='library'">.dll</TargetExt>
+    <TargetExt Condition="'$(OutputType)'=='module'">.netmodule</TargetExt>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CompileCodeDependsOn>
+      BuildOnlySettings;
+      PrepareForBuild;
+      PreBuildEvent;
+      UnmanagedUnregistration;
+      ResolveReferences;
+      PrepareResources;
+      ResolveKeySource;
+      ParseConcerns;
+      Compile;
+      GenerateSerializationAssemblies;
+      CreateSatelliteAssemblies;
+      GenerateManifests;
+      GetTargetPath;
+      PrepareForRun;
+    </CompileCodeDependsOn>
+  </PropertyGroup>
+  <Target
+      Name="CompileCode"
+      DependsOnTargets="$(CompileCodeDependsOn)"
+      Condition ="'$(CodeLanguage)'!=''" >
+    <OnError ExecuteTargets="_TimeStampAfterCompile;PostBuildEvent" Condition="'$(RunPostBuildEvent)'=='Always' or '$(RunPostBuildEvent)'=='OnOutputUpdated'"/>
+    <OnError ExecuteTargets="_CleanRecordFileWrites"/>
+  </Target>
+
+
+  <!--
+    ============================================================
+                                        CoreWeave
+
+    The core build step calls each of the weave targets.
+    ============================================================
+    -->
+  <PropertyGroup>
+    <CoreWeaveDependsOn>
+      CreateStarLightFolder;
+      BuildOnlySettings;
+      PrepareForBuild;
+      ResolveReferences;
+      GetTargetPath;
+      CopyFilesToOutputDirectory;
+      ParseConcerns;
+      AnalyzeTypes;
+      AnalyzeAssemblies;
+      MasterCaller;
+      ILWeaverRunner;
+      VerifyAssemblies;
+      CleanBackup;
+      IncrementalClean;
+    </CoreWeaveDependsOn>
+  </PropertyGroup>
+  <Target
+      Name="CoreWeave"
+      DependsOnTargets="$(CoreWeaveDependsOn)">
+    <OnError ExecuteTargets="_TimeStampAfterCompile;PostBuildEvent" Condition="'$(RunPostBuildEvent)'=='Always' or '$(RunPostBuildEvent)'=='OnOutputUpdated'"/>
+    <OnError ExecuteTargets="_CleanRecordFileWrites"/>
+  </Target>
+
+  <!--
+    ============================================================
+  -->
+  
+  <PropertyGroup>
+    <!-- "None" is not technically a valid DebugType, so we can't pass it in as such
+             to the compiler.  So here, we modify the properties so they make sense. -->
+    <DebugSymbols Condition=" '$(DebugType)' == 'none' ">false</DebugSymbols>
+    <DebugType    Condition=" '$(DebugType)' == 'none' "></DebugType>
+
+    <_DisabledWarnings>$(NoWarn)</_DisabledWarnings>
+
+  </PropertyGroup>
+
+  <Target Name="CreateManifestResourceNames"/>
+
+  <!--This is an override of targets-->
+  <Target
+        Name="CopyFilesToOutputDirectory"
+        DependsOnTargets="
+            ComputeIntermediateSatelliteAssemblies;
+            _CopyFilesMarkedCopyLocal;
+            _CopySourceItemsToOutputDirectory;
+            _CopyAppConfigFile;
+            _CopyManifestFiles;
+            _CheckForCompileOutputs;
+            _SGenCheckForOutputs">
+
+    <!-- Copy the build product (.dll or .exe). But only when we have a CodeLanguage -->
+    <Copy
+        SourceFiles="@(IntermediateAssembly)"
+        DestinationFolder="$(OutDir)"
+        SkipUnchangedFiles="true"
+        Condition="'$(CodeLanguage)'!=''">
+
+      <Output TaskParameter="DestinationFiles" ItemName="MainAssembly"/>
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- Copy the additional modules. -->
+    <Copy
+        SourceFiles="@(AddModules)"
+        DestinationFolder="$(OutDir)"
+        SkipUnchangedFiles="true">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- Copy the serialization assembly if it exists. -->
+    <Copy
+        SourceFiles="$(IntermediateOutputPath)$(_SGenDllName)"
+        DestinationFiles="$(OutDir)$(_SGenDllName)"
+        SkipUnchangedFiles="true"
+        Condition="'$(_SGenDllCreated)'=='true'">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- Copy the debug information file (.pdb), if any -->
+    <Copy
+        SourceFiles="$(IntermediateOutputPath)$(TargetName).pdb"
+        DestinationFiles="$(OutDir)$(TargetName).pdb"
+        SkipUnchangedFiles="true"
+        Condition="'$(_DebugSymbolsProduced)'=='true'">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- Copy the resulting XML documentation file, if any. -->
+    <Copy
+        SourceFiles="@(DocFileItem)"
+        DestinationFiles="@(FinalDocFile)"
+        SkipUnchangedFiles="true"
+        Condition="'$(_DocumentationFileProduced)'=='true'">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- Copy satellite assemblies. -->
+    <Copy
+        SourceFiles="@(IntermediateSatelliteAssembliesWithTargetPath)"
+        DestinationFiles="@(IntermediateSatelliteAssembliesWithTargetPath->'$(OutDir)%(Culture)\$(TargetName).resources.dll')"
+        SkipUnchangedFiles="true">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- 
+        Copy COM reference wrappers, isolated COM references, COM references included by 
+        native (manifest) references, native (manifest) reference files themselves. 
+    -->
+    <Copy
+        SourceFiles="@(ReferenceComWrappersToCopyLocal); @(ResolvedIsolatedComModules); @(_DeploymentLooseManifestFile); @(NativeReferenceFile)"
+        DestinationFolder="$(OutDir)"
+        SkipUnchangedFiles="true">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWritesShareable"/>
+
+    </Copy>
+
+  </Target>
+
+  <Target Name="CreateStarLightFolder" >
+    <MakeDir Directories="$(StarLightFolder)"/>
+  </Target>
+
+  <Target Name="BackupFiles">
+    <Message Text="Creating backup of already weaved files."/>
+    <CreateItem
+      Include="$(OutDir)*.exe;$(OutDir)*.dll" 
+      Exclude="$(OutDir)Composestar.StarLight*.*">
+      <Output TaskParameter="Include" ItemName="BackupFiles"/>
+    </CreateItem>
+    <Copy SourceFiles="@(BackupFiles)"
+    DestinationFiles="@(BackupFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension).weaved')" ContinueOnError ="true"/>
+  </Target>
+
+  <Target Name="CleanBackup">
+    <Message Text="Cleaning of backup (weave) files."/>
+    <Delete Files="@(BackupFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension).weaved')" ContinueOnError="true"/>
+  </Target>
+
+  <!-- ParseConcerns target -->
+  <Target Name="ParseConcerns">
+    <Message Text="Collecting and parsing concern files."/>
+    <CpsParserTask ContinueOnError="false"
+                   BaseDir="$(StarLightFolder)"
+                   RepositoryFilename="$(RepositoryFilename)"
+                   CodeLanguage="$(CodeLanguage)"
+                   ConcernFiles="@(Concern->'%(FullPath)')">
+      <Output TaskParameter="ConcernsDirty" PropertyName="ConcernsDirty"/>
+      <Output TaskParameter="HasOutputFilters" PropertyName="HasOutputFilters"/>
+      <Output TaskParameter="ReferencedTypes" ItemName="ReferencedTypes"/>
+      <Output TaskParameter="ExtraSources" ItemName="ExtraSources"/>
+    </CpsParserTask>
+    <CreateItem Include="@(ExtraSources)">
+      <Output TaskParameter="Include" ItemName="Compile"/>
+    </CreateItem>
+    <OnError ExecuteTargets="CleanBackup"/>
+  </Target>
+  
+  <!--AnalyzeAssemblies target -->
+  <Target Name="AnalyzeAssemblies">
+    <Message Text="Collecting and analyzing assemblies."/>
+
+    <!-- Collect the files to analyze and weave on -->
+    <CreateItem Include="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')">
+      <Output TaskParameter="Include" ItemName="WeavableAssemblies"/>
+    </CreateItem>
+
+    <CreateItem Include="@(MainAssembly->'%(FullPath)')" Condition=" '$(CodeLanguage)' != '' ">
+      <Output TaskParameter="Include" ItemName="WeavableAssemblies"/>
+    </CreateItem>
+
+    <IlAnalyzerTask
+      ContinueOnError="false"
+      RepositoryFilename="$(RepositoryFilename)"
+      WeavableAssemblies="@(WeavableAssemblies)"
+      ReferencedAssemblies="@(ReferencePath)"
+      ReferencedTypes="@(ReferencedTypes)"
+      BinFolder="$(ProjectDir)$(OutDir)"
+      DoMethodCallAnalysis="$(HasOutputFilters)"
+      IntermediateOutputPath="$(StarLightFolder)">
+      <Output TaskParameter="AssembliesDirty" PropertyName="AssembliesDirty"/>
+    </IlAnalyzerTask>
+    <OnError ExecuteTargets="CleanBackup"/>
+  </Target>
+
+  <Target Name="AnalyzeTypes" Condition="'$(CodeLanguage)' != '' And '$(ExpandSignatures)' == 'True'">
+    <Message Text="Extracting type information"/>
+
+    <Message Text="ReferencePath=@(ReferencePath)"/>                       <!-- Paths to resolved primary files -->
+    <Message Text="ReferenceDependencyPaths=@(ReferenceDependencyPaths)"/> <!-- Paths to resolved dependency files -->
+    <Message Text="ReferenceCopyLocalPaths=@(ReferenceCopyLocalPaths)"/>   <!-- Paths to files that should be copied to the local directory -->
+<!--
+    <CreateItem Include="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')">
+      <Output TaskParameter="Include" ItemName="WeavableAssemblies"/>
+    </CreateItem>
+-->
+    <TypeAnalyzerTask
+      AssemblyName="$(AssemblyName)" 
+      CodeLanguage="$(CodeLanguage)"
+      Concerns="@(Concern->'%(FullPath)')"
+      Sources="@(Compile->'%(FullPath)')"      
+      ReferencedAssemblies="@(ReferencePath)"/>
+  
+  </Target>
+
+  <!--MasterCaller target -->  
+  <Target Name="MasterCaller" Condition="'$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False'">
+    <Message Text="Executing Composestar Master."/>
+    
+    <CreateProperty Value="incre-normal.xml" Condition="'$(ExpandSignatures)' == 'True'">
+      <Output TaskParameter="Value" PropertyName="IncreConfig"/>
+    </CreateProperty>
+    
+    <MasterCallerTask 
+      ContinueOnError="false"
+      RepositoryFilename="$(ProjectDir)$(RepositoryFilename)" 
+      JavaDebugLevel="$(DebugLevel)" 
+      IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" 
+      IncreConfig="$(IncreConfig)" 
+      FilthOutput="$(FILTHOutput)">
+    </MasterCallerTask>
+    
+    <OnError ExecuteTargets="CleanBackup"/>
+  </Target>
+
+  <!--ILWeaverRunner target -->
+  <Target Name="ILWeaverRunner">
+    <Message Text="Performing IL weaving."/>
+    <ILWeaverTask RepositoryFilename="$(RepositoryFilename)" WeaveDebug="$(WeaveDebugLevel)" BinFolder="$(ProjectDir)$(OutDir)" ConcernsDirty="$(ConcernsDirty)"/>
+  </Target>
+
+  <Target Name ="VerifyAssemblies" Condition="'$(VerifyIL)'=='True' And ('$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False')">
+    <Message Text ="Verifying generated assemblies."/>
+    <ILVerifyTask RepositoryFilename="$(RepositoryFilename)"/>
+  </Target>
+
+</Project>
