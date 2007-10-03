@@ -45,7 +45,7 @@ namespace Composestar.StarLight.Entities
 	/// </summary>
 	public sealed class Constants
 	{
-		public const string NS = "Entities.TYM.DotNET.Composestar";
+		public const string NS = "Entities.TYM.DotNET2.Composestar";
 
 		private Constants() { }
 	}

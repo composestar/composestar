@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platforms xmlns="http://composestar.sourceforget.net/schema/PlatformConfiguration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://composestar.sourceforget.net/schema/PlatformConfiguration ../../ComposestarCORE/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd ">
+	<platform id="dotNET2" />
+	<!-- 
+		e.g. StarLight
+		Doesn't contain a platform spec because starlight doesn't use the 
+		standard buildconfig or platform config information. 
+	-->
+</platforms>

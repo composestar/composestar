@@ -49,7 +49,7 @@ namespace Composestar.StarLight.Entities.Configuration
 	/// Contains a key and value to store settings
 	/// </summary>
 	[Serializable]
-	[XmlType("KeyValueSetting", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlType("KeyValueSetting", Namespace = Constants.NS)]
 	public class KeyValueSetting
 	{
 		private string _key;

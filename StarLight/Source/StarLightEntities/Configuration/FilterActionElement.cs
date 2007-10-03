@@ -47,7 +47,7 @@ namespace Composestar.StarLight.Entities.Configuration
 	/// Filter action element describes a single filter action to be used in a filter type.
 	/// </summary>
 	[Serializable]
-	[XmlType("FilterActionElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlType("FilterActionElement", Namespace = Constants.NS)]
 	public class FilterActionElement
 	{
 		public const int FlowContinue = 1;

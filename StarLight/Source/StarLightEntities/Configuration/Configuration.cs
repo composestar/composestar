@@ -51,7 +51,7 @@ namespace Composestar.StarLight.Entities.Configuration
 	/// Contains all the settings for the current starlight project that is currently building.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("ConfigurationContainer", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlRoot("ConfigurationContainer", Namespace = Constants.NS)]
 	public class ConfigurationContainer
 	{
 		/// <summary>

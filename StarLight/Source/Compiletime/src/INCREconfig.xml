@@ -1,6 +1,6 @@
 <!-- INCRE configuration for StarLight -->
 <modules>
-  <module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.RepositoryCollector.StarLightCollectorRunner" input="composestar.dotNET.tym.entities.AssemblyConfig" enabled="true" incremental="true" summary="Harvesting type information...">
+  <module name="COLLECTOR" fulltype="Composestar.DotNET2.TYM.RepositoryCollector.StarLightCollectorRunner" input="composestar.dotNET2.tym.entities.AssemblyConfig" enabled="true" incremental="true" summary="Harvesting type information...">
 		<dependencies>
 			<dependency type="FILE" name="xmlfile" isAdded="false">
 			<path>
@@ -21,7 +21,7 @@
 	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
 		<dependencies></dependencies>
 	</module>
-	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" enabled="true" incremental="true" summary="Evaluating predicate selectors...">
+	<module name="LOLA" fulltype="Composestar.DotNET2.LOLA.DotNETLOLA" enabled="true" incremental="true" summary="Evaluating predicate selectors...">
 		<dependencies></dependencies>
 		<comparisons>
 			<type fullname="Composestar.Core.CpsProgramRepository.PrimitiveConcern">
@@ -71,7 +71,7 @@
 	<module name="INLINE" fulltype="Composestar.Core.INLINE.lowlevel.ModelBuilder" enabled="true" incremental="false" summary="Generating inline information...">
 		<dependencies></dependencies>
 	</module>
-	<module name="EMITTER" fulltype="Composestar.DotNET.TYM.RepositoryEmitter.StarLightEmitterRunner" enabled="true" incremental="false" summary="Emitting weaving information...">
+	<module name="EMITTER" fulltype="Composestar.DotNET2.TYM.RepositoryEmitter.StarLightEmitterRunner" enabled="true" incremental="false" summary="Emitting weaving information...">
 		<dependencies></dependencies>
 	</module>
 	<module name="INCRESerializer" fulltype="Composestar.Core.INCRE.INCRESerializer" enabled="true" incremental="false" summary="Serializing repository for incremental compilation...">

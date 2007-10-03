@@ -34,6 +34,9 @@
 	</target>
    
 	<target name="build" depends="local_init,clean,compile_sources" description="Compile the installer files" >
+    <copy todir="installed">
+      <fileset file="${basedir}/../Source/Compiletime/src/INCREconfig.xml" />
+    </copy>
 	    <echo>Building MSI file using WIX</echo>
 			<echo>Running Candle for preprocessing</echo>
 	    <exec executable="${path.wix}candle.exe" failonerror="true">

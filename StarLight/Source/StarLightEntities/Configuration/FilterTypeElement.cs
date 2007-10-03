@@ -48,7 +48,7 @@ namespace Composestar.StarLight.Entities.Configuration
 	/// Filter type element
 	/// </summary>
 	[Serializable]
-	[XmlType("FilterTypeElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlType("FilterTypeElement", Namespace = Constants.NS)]
 	public class FilterTypeElement
 	{
 		private string _name;

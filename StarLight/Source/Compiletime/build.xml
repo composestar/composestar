@@ -107,6 +107,7 @@
 			<fileset dir="src">
 				<include name="**/moduleinfo.xml" />
 				<include name="INCREconfig.xml" />
+				<include name="Platforms.xml" />
 			</fileset>
 		</copy>
 		<jar destfile="${starlight.jar}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
@@ -119,6 +120,9 @@
 			<fileset file="${core.jar}" />
 			<fileset file="${starlight.jar}" />
 			<fileset file="${xmltypes.jar}" />
+		</copy>
+		<copy todir="${starlight.installdir}">
+			<fileset file="src/INCREconfig.xml" />
 		</copy>
 		<install_core todir="${starlight.installdir}" />
 	</target>
