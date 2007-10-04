@@ -5,7 +5,7 @@ using System.Globalization;
 using System.util;
 
 /*
- * $Id: GlyphList.cs,v 1.3 2006/08/27 16:38:03 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

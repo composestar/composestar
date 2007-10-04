@@ -2,7 +2,7 @@ using System;
 using System.IO;
 
 /*
- * $Id: PdfString.cs,v 1.2 2005/06/18 08:17:04 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

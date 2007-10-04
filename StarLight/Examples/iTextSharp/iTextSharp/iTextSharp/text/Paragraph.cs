@@ -5,7 +5,7 @@ using System.util;
 using iTextSharp.text.markup;
 
 /*
- * $Id: Paragraph.cs,v 1.4 2005/06/29 14:40:18 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

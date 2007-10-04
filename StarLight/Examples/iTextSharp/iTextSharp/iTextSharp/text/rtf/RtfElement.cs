@@ -2,7 +2,7 @@ using System;
 using iTextSharp.text.rtf.document;
 using iTextSharp.text;
 /*
- * $Id: RtfElement.cs,v 1.1 2005/07/04 22:51:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall
@@ -56,7 +56,7 @@ namespace iTextSharp.text.rtf {
     /**
     * RtfElement is the base class for all RTF Element classes
     *
-    * Version: $Id: RtfElement.cs,v 1.1 2005/07/04 22:51:35 psoares33 Exp $
+    * Version: $Id$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfElement : IRtfBasicElement {

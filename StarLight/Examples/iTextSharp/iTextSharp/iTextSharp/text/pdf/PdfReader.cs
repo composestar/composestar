@@ -7,7 +7,7 @@ using iTextSharp.text;
 using System.util;
 using System.util.zlib;
 /*
- * $Id: PdfReader.cs,v 1.18 2006/09/10 15:34:58 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

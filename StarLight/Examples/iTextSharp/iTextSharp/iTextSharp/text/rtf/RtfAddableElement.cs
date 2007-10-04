@@ -2,7 +2,7 @@ using System;
 using iTextSharp.text;
 using iTextSharp.text.rtf.document;
 /*
- * $Id: RtfAddableElement.cs,v 1.1 2006/06/19 17:02:48 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall
@@ -61,7 +61,7 @@ namespace iTextSharp.text.rtf {
     * and it also implements RtfBasicElement. It is an abstract class thus it
     * cannot be instantiated itself and has to be subclassed to be used.
     * 
-    * @version $Revision: 1.1 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public abstract class RtfAddableElement : Chunk, IRtfBasicElement {

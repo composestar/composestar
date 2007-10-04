@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: PdfBoolean.cs,v 1.3 2005/11/30 15:32:15 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

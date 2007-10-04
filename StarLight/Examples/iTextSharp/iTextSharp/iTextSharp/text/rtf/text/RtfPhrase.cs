@@ -8,7 +8,7 @@ using iTextSharp.text.rtf.style;
 using ST = iTextSharp.text.rtf.style;
 
 /*
- * $Id: RtfPhrase.cs,v 1.3 2006/02/10 22:48:19 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall
@@ -62,7 +62,7 @@ namespace iTextSharp.text.rtf.text {
     /**
     * The RtfPhrase contains multiple RtfChunks
     * 
-    * @version $Id: RtfPhrase.cs,v 1.3 2006/02/10 22:48:19 psoares33 Exp $
+    * @version $Id$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfPhrase : RtfElement {

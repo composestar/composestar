@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: ElementTags.cs,v 1.3 2006/08/05 20:57:30 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright (c) 2001, 2002 Bruno Lowagie.

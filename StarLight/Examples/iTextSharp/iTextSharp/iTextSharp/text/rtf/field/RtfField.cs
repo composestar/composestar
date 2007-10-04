@@ -4,7 +4,7 @@ using iTextSharp.text;
 using ST = iTextSharp.text.rtf.style;
 using iTextSharp.text.rtf.document;
 /*
- * $Id: RtfField.cs,v 1.2 2005/09/05 16:40:28 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2004 by Mark Hall

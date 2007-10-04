@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: PdfNumber.cs,v 1.3 2005/06/18 08:27:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

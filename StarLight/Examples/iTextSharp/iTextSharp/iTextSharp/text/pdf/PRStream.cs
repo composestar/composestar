@@ -4,7 +4,7 @@ using System.IO;
 using System.util.zlib;
 
 /*
- * $Id: PRStream.cs,v 1.3 2006/06/16 10:56:27 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Paulo Soares.

@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using iTextSharp.text;
 /*
- * $Id: PdfImage.cs,v 1.2 2005/06/18 08:05:21 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

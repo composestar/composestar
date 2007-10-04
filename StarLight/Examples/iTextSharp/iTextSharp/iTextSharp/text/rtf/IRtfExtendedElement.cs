@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: IRtfExtendedElement.cs,v 1.1 2005/07/04 22:51:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall
@@ -55,7 +55,7 @@ namespace iTextSharp.text.rtf {
     /**
     * The RtfExtendedElement interface is to be used for elements that also
     * write data into the definition part of the rtf document
-    * Version: $Id: IRtfExtendedElement.cs,v 1.1 2005/07/04 22:51:35 psoares33 Exp $
+    * Version: $Id$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public interface IRtfExtendedElement : IRtfBasicElement {

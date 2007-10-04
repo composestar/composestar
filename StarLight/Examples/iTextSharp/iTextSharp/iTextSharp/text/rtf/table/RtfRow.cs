@@ -5,7 +5,7 @@ using iTextSharp.text;
 using iTextSharp.text.rtf;
 using iTextSharp.text.rtf.document;
 /*
- * $Id: RtfRow.cs,v 1.3 2006/07/21 14:47:48 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004, 2005 by Mark Hall

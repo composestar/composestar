@@ -8,7 +8,7 @@ using iTextSharp.text.rtf.text;
 using iTextSharp.text.rtf.style;
 using iTextSharp.text.pdf.codec.wmf;
 /*
- * $Id: RtfImage.cs,v 1.4 2005/12/26 09:57:29 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall

@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using iTextSharp.text;
 /*
- * $Id: Barcode128.cs,v 1.4 2006/07/31 13:51:38 psoares33 Exp $
+ * $Id$
  *
  * Copyright 2002-2006 by Paulo Soares.
  *

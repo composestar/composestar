@@ -4,7 +4,7 @@ using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.rtf.document;
 /**
- * $Id: RtfParser.cs,v 1.2 2006/08/28 20:22:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2006 by Mark Hall
@@ -61,7 +61,7 @@ namespace iTextSharp.text.rtf.direct {
     * font and color definitions corrected and then added to
     * the document being written.
     * 
-    * @version $Revision: 1.2 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfParser {

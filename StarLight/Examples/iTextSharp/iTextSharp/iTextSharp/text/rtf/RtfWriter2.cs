@@ -5,7 +5,7 @@ using iTextSharp.text.rtf.document;
 using iTextSharp.text.rtf.text;
 using iTextSharp.text.rtf.direct;
 /*
- * $Id: RtfWriter2.cs,v 1.3 2006/08/26 23:18:25 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall
@@ -59,7 +59,7 @@ namespace iTextSharp.text.rtf {
     /**
     * The RtfWriter allows the creation of rtf documents via the iText system
     *
-    * Version: $Id: RtfWriter2.cs,v 1.3 2006/08/26 23:18:25 psoares33 Exp $
+    * Version: $Id$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfWriter2 : DocWriter, IDocListener {

@@ -4,7 +4,7 @@ using System.Text;
 using System.Globalization;
 
 /*
- * $Id: ByteBuffer.cs,v 1.5 2006/01/31 18:07:32 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2000, 2001, 2002 by Paulo Soares.

@@ -8,7 +8,7 @@ using iTextSharp.text.rtf.field;
 using FD = iTextSharp.text.rtf.field;
 using iTextSharp.text.rtf;
 /*
- * $Id: RtfSection.cs,v 1.4 2006/07/27 15:39:13 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall

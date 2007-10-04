@@ -3,7 +3,7 @@ using System.Collections;
 using System.util;
 
 /*
- * $Id: Row.cs,v 1.4 2006/08/05 20:51:49 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

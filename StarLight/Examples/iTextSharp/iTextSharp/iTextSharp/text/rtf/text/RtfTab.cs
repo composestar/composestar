@@ -3,7 +3,7 @@ using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.rtf;
 /*
- * $Id: RtfTab.cs,v 1.1 2006/06/19 17:02:49 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall
@@ -67,7 +67,7 @@ namespace iTextSharp.text.rtf.text {
     * para.Add(tab);<br />
     * para.Add("This paragraph has a\ttab defined.");</code>
     * 
-    * @version $Revision: 1.1 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfTab : RtfAddableElement {

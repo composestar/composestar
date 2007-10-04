@@ -6,7 +6,7 @@ using System.Collections;
 using iTextSharp.text;
 
 /*
- * $Id: TrueTypeFont.cs,v 1.5 2006/08/27 16:40:22 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

@@ -8,7 +8,7 @@ using System.util;
 using iTextSharp.text;
 using iTextSharp.text.pdf.codec.wmf;
 /*
- * $Id: RtfWriter.cs,v 1.3 2005/08/20 16:12:57 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Mark Hall

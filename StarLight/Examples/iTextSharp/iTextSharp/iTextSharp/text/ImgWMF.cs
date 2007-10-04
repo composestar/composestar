@@ -6,7 +6,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.codec.wmf;
 
 /*
- * $Id: ImgWMF.cs,v 1.3 2005/08/19 16:07:53 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Paulo Soares.

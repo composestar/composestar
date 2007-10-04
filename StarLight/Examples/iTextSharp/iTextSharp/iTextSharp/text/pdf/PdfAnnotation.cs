@@ -3,7 +3,7 @@ using System.Collections;
 using System.util;
 using iTextSharp.text;
 /*
- * $Id: PdfAnnotation.cs,v 1.6 2006/09/10 15:34:58 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

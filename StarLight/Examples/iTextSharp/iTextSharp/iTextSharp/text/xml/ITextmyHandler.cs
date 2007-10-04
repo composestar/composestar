@@ -5,7 +5,7 @@ using System.util;
 using iTextSharp.text;
 
 /*
- * $Id: ITextmyHandler.cs,v 1.3 2005/12/13 18:08:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

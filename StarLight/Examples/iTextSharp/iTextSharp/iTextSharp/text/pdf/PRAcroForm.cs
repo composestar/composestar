@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 /*
- * $Id: PRAcroForm.cs,v 1.4 2006/09/10 15:34:58 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Paulo Soares.

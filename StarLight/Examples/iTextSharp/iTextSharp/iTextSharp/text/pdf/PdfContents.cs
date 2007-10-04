@@ -6,7 +6,7 @@ using iTextSharp.text;
 using System.util.zlib;
 
 /*
- * $Id: PdfContents.cs,v 1.3 2006/06/16 10:56:27 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

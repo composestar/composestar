@@ -460,8 +460,8 @@
 
 		<!-- eclipse libraries -->
 		<path id="lib.eclipse">
-		  <path refid="lib.core" />
-		  <fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
+			<path refid="lib.core" />
+			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
 			<fileset dir="${eclipse.pluginsdir}" includes="*.jar" />
 		</path>
 
@@ -469,7 +469,7 @@
 			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.core_${version.core}" />
 		<property name="eclipse.pluginsdir.core.plugin"
 			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.core.plugin_${version.core}" />
-			
+
 		<property name="eclipse.pluginsdir.java"
 			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.java_${version.java}" />
 		<property name="eclipse.pluginsdir.java.plugin"
@@ -492,9 +492,24 @@
 		<svn>
 			<keywordsadd keywords="HeadURL Id LastChangedBy LastChangedDate LastChangedRevision">
 				<fileset dir="${basedir}">
+					<not>
+						<svnUnversioned />
+					</not>
+					<not>
+						<svnIgnored />
+					</not>
+
 					<include name="**/*.java" />
 					<include name="**/*.cs" />
 					<include name="**/*.jsl" />
+					<include name="**/*.cps" />
+					
+					<include name="**/*.xml" />
+					<include name="**/*.txt" />
+					<include name="**/*.html" />
+
+					<exclude name="**/.svn" />
+					<exclude name="**/_svn" />
 				</fileset>
 			</keywordsadd>
 		</svn>

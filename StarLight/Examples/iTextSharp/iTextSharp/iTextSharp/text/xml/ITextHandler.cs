@@ -9,7 +9,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.html;
 
 /*
- * $Id: ITextHandler.cs,v 1.8 2006/06/02 10:44:17 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: MazeCell.java 1790 2006-10-01 16:58:23Z elmuerte $
+ * @version $Id$
  */
 package PacmanTwo;
 

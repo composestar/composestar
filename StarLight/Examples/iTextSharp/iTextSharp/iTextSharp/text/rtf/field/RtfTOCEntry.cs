@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using iTextSharp.text;
 /*
- * $Id: RtfTOCEntry.cs,v 1.2 2006/07/27 15:39:14 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2004 by Mark Hall

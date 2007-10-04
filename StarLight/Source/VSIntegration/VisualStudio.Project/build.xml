@@ -3,7 +3,9 @@
 
 	<condition property="build.core" value="${basedir}/../../../../Core">
 		<and>
-			<not><isset property="build.core"/></not>
+			<not>
+				<isset property="build.core" />
+			</not>
 			<available file="${basedir}/../../../../Core/common.xml" />
 		</and>
 	</condition>
@@ -12,18 +14,42 @@
 	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The Compose* StarLight Project and Language integration. Generates the MSBuild tasks.</description>
 
-	<property name="buildfile" value="StarLight.VisualStudio.Project.csproj"/>
+	<property name="buildfile" value="StarLight.VisualStudio.Project.csproj" />
 
 	<target name="clean" depends="init" description="Clean compile results">
-		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}"/>
+		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}" />
 	</target>
 
 	<target name="build" depends="init" description="Build the VSIntegration project">
-		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}"/>
+		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}" />
 	</target>
 
 	<target name="deploy" depends="init" description="Deploy the VSIntegration project">
 		<msbuild solution="${buildfile}" target="deploy" config="${msbuild.config}" />
+	</target>
+
+	<target name="test" depends="versioncheck">
+	</target>
+
+	<target name="versioncheck" depends="init" description="Checks the version of the examples with the currently configured version number for starlight.">
+		<xslt style="../../../Examples/versioncheck.xslt" destdir="tmp" extension=".txt" force="true" filenameparameter="curfile" filedirparameter="curdir">
+			<include name="**/*.cpsproj" />
+			<include name="**/*.csproj" />
+			<include name="**/*.vjsproj" />
+			<param name="version" expression="${version.starlight}" />
+		</xslt>
+		<concat destfile="TemplateVersionCheck.txt">
+			<fileset dir="tmp" includes="**/*.txt" />
+		</concat>
+		<delete dir="tmp" />
+		<fail message="StarLight examples refer to incorrect libraries. See StarLight/Source/VSIntegration/VisualStudio.Project/TemplateVersionCheck.txt for details">
+			<condition>
+				<not>
+					<length file="TemplateVersionCheck.txt" length="0" />
+				</not>
+			</condition>
+		</fail>
+		<delete file="TemplateVersionCheck.txt" />
 	</target>
 
 </project>

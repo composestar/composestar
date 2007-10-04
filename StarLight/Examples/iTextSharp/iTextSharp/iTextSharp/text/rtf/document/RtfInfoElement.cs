@@ -3,7 +3,7 @@ using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.rtf;
 /*
- * $Id: RtfInfoElement.cs,v 1.1 2005/07/04 22:51:36 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2003, 2004 by Mark Hall

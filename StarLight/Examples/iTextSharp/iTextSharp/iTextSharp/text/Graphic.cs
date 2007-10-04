@@ -5,7 +5,7 @@ using System.util;
 using iTextSharp.text.pdf;
 
 /*
- * $Id: Graphic.cs,v 1.3 2005/06/22 22:50:48 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

@@ -5,7 +5,7 @@ using System.Collections;
 using System.util;
 
 /*
- * $Id: CJKFont.cs,v 1.3 2005/12/22 20:23:43 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2000, 2001, 2002 by Paulo Soares.

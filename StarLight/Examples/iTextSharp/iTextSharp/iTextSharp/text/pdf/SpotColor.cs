@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: SpotColor.cs,v 1.3 2005/12/11 15:31:39 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

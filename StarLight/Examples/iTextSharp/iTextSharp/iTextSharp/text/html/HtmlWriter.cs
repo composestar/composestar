@@ -10,7 +10,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.markup;
 
 /*
- * $Id: HtmlWriter.cs,v 1.9 2006/07/21 15:15:29 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

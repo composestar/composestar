@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 
 /*
- * $Id: PdfEncryption.cs,v 1.5 2006/07/12 15:40:58 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: GrayColor.cs,v 1.4 2006/02/22 10:52:32 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Paulo Soares.

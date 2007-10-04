@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: ColorDetails.cs,v 1.2 2005/06/18 08:17:03 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Paulo Soares.

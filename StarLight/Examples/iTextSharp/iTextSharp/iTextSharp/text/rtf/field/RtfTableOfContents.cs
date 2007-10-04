@@ -1,7 +1,7 @@
 using System;
 using iTextSharp.text;
 /*
- * $Id: RtfTableOfContents.cs,v 1.2 2006/07/27 15:39:14 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2004 by Mark Hall

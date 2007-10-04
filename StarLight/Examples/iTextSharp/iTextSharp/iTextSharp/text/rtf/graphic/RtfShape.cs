@@ -4,7 +4,7 @@ using System.Collections;
 using iTextSharp.text;
 using iTextSharp.text.rtf;
 /**
- * $Id: RtfShape.cs,v 1.2 2006/08/28 20:22:36 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2006 by Mark Hall
@@ -69,7 +69,7 @@ namespace iTextSharp.text.rtf.graphic {
     * in the standard iText point, but in EMU where 1 inch = 914400 EMU
     * or 1 cm = 360000 EMU. 
     * 
-    * @version $Revision: 1.2 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfShape : RtfAddableElement {

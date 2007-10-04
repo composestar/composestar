@@ -5,7 +5,7 @@ using iTextSharp.text;
 using System.Collections;
 
 /*
- * $Id: MetaDo.cs,v 1.3 2005/12/01 16:55:51 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

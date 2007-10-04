@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: BonusPickup.java 1741 2006-09-29 10:47:59Z elmuerte $
+ * @version $Id$
  */
 package PacmanTwo.Bonus;
 

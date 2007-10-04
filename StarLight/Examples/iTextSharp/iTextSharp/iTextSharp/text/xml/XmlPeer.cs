@@ -5,7 +5,7 @@ using System.util;
 using iTextSharp.text;
 
 /*
- * $Id: XmlPeer.cs,v 1.4 2006/03/23 18:14:28 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

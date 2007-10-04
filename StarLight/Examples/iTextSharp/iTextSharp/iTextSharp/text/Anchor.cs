@@ -5,7 +5,7 @@ using System.util;
 using iTextSharp.text.markup;
 
 /*
- * $Id: Anchor.cs,v 1.3 2005/06/18 08:17:00 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

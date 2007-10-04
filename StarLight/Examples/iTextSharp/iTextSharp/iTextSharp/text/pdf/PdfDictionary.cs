@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections;
 
 /*
- * $Id: PdfDictionary.cs,v 1.4 2006/09/10 15:33:32 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

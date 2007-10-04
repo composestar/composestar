@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections;
 using iTextSharp.text.pdf;
 /*
- * $Id: XmpWriter.cs,v 1.2 2005/09/10 19:06:00 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2005 by Bruno Lowagie.

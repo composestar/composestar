@@ -4,7 +4,7 @@ using System.Collections;
 using System.util;
 
 /*
- * $Id: PdfArray.cs,v 1.4 2006/09/10 15:33:12 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 
 /*
- * $Id: PageResources.cs,v 1.5 2006/09/10 15:34:58 psoares33 Exp $
+ * $Id$
  *
  * Copyright 2003-2005 by Paulo Soares.
  *

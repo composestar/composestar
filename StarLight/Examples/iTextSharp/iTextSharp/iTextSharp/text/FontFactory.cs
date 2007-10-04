@@ -9,7 +9,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text;
 
 /*
- * $Id: FontFactory.cs,v 1.11 2006/05/29 11:01:02 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2002 by Bruno Lowagie.

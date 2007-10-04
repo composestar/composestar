@@ -7,7 +7,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.markup;
 
 /*
- * $Id: Chunk.cs,v 1.8 2005/12/08 14:56:28 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

@@ -1,7 +1,7 @@
 using System;
 using iTextSharp.text;
 /**
- * $Id: RtfColorTableParser.cs,v 1.3 2006/08/28 20:22:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2006 by Mark Hall
@@ -56,7 +56,7 @@ namespace iTextSharp.text.rtf.direct {
     * by the RtfTokeniser while the RTF color table is
     * being parsed.
     * 
-    * @version $Revision: 1.3 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfColorTableParser {

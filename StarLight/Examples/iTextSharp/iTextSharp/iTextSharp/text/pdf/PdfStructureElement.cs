@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: PdfStructureElement.cs,v 1.3 2005/11/02 12:24:06 psoares33 Exp $
+ * $Id$
  *
  * Copyright 2005 by Paulo Soares.
  *

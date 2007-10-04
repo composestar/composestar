@@ -2,7 +2,7 @@ using System;
 using iTextSharp.text;
 
 /*
- * $Id: MetaPen.cs,v 1.2 2005/06/18 08:05:23 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

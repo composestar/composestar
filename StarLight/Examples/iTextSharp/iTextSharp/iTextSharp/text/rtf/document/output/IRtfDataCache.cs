@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 /*
- * $Id: IRtfDataCache.cs,v 1.1 2005/07/04 22:51:36 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2005 by Mark Hall
@@ -56,7 +56,7 @@ namespace iTextSharp.text.rtf.document.output {
     * The RtfDataCache interface must be implemented by classes wishing to
     * act as caches for the rtf document data.
     * 
-    * @version $Revision: 1.1 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public interface IRtfDataCache {

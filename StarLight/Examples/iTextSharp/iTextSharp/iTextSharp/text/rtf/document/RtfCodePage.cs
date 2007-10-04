@@ -3,7 +3,7 @@ using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.rtf;
 /*
- * $Id: RtfCodePage.cs,v 1.1 2005/07/04 22:51:36 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2003, 2004 by Mark Hall
@@ -58,7 +58,7 @@ namespace iTextSharp.text.rtf.document {
     * The RtfCodePage class allows different code pages to be used in the rtf document.
     * Currently always ansi / ansicpg1252
     *
-    * Version: $Id: RtfCodePage.cs,v 1.1 2005/07/04 22:51:36 psoares33 Exp $
+    * Version: $Id$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfCodePage : RtfElement, IRtfExtendedElement {

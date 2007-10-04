@@ -4,7 +4,7 @@ using System.Drawing;
 using iTextSharp.text;
 using iTextSharp.text.rtf;
 /**
- * $Id: RtfShapeProperty.cs,v 1.2 2006/08/28 20:22:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2006 by Mark Hall
@@ -74,7 +74,7 @@ namespace iTextSharp.text.rtf.graphic {
     *   <li>Point[]</li>
     * </ul>
     * 
-    * @version $Revision: 1.2 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfShapeProperty : RtfAddableElement {

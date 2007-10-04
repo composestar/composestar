@@ -4,7 +4,7 @@ using System.Collections;
 using System.util;
 
 /*
- * $Id: Meta.cs,v 1.3 2006/01/20 14:45:30 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

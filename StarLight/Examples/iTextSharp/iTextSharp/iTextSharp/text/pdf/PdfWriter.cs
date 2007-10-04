@@ -7,7 +7,7 @@ using System.util;
 using iTextSharp.text;
 using iTextSharp.text.pdf.events;
 /*
- * $Id: PdfWriter.cs,v 1.21 2006/06/04 22:25:26 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

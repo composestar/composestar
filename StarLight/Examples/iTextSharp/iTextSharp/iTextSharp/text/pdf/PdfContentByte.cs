@@ -4,7 +4,7 @@ using System.Text;
 using iTextSharp.text.pdf;
 
 /*
- * $Id: PdfContentByte.cs,v 1.16 2006/05/18 09:44:20 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

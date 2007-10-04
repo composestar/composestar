@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: HtmlTags.cs,v 1.3 2005/06/29 14:38:03 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

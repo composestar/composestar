@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 /*
- * $Id: RtfDiskCache.cs,v 1.1 2005/07/04 22:51:36 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2005 by Mark Hall
@@ -57,7 +57,7 @@ namespace iTextSharp.text.rtf.document.output {
     * to store the rtf document data. Not so fast, but doesn't use any
     * memory (just disk space).
     * 
-    * @version $Revision: 1.1 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfDiskCache : IRtfDataCache {

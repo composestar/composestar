@@ -6,7 +6,7 @@ using iTextSharp.text.markup;
 using iTextSharp.text.pdf;
 
 /*
- * $Id: Cell.cs,v 1.8 2006/08/05 20:51:49 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

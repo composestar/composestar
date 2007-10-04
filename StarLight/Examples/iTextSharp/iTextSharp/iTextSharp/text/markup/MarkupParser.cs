@@ -7,7 +7,7 @@ using System.Globalization;
 using iTextSharp.text;
 
 /*
- * $Id: MarkupParser.cs,v 1.6 2006/09/03 22:07:38 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

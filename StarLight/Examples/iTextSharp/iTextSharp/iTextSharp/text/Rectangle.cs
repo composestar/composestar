@@ -5,7 +5,7 @@ using System.util;
 using iTextSharp.text.pdf;
 
 /*
- * $Id: Rectangle.cs,v 1.11 2005/12/13 18:07:07 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

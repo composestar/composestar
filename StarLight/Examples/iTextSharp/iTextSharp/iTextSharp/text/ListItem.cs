@@ -5,7 +5,7 @@ using System.util;
 using iTextSharp.text.markup;
 
 /*
- * $Id: ListItem.cs,v 1.4 2006/04/12 16:26:09 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

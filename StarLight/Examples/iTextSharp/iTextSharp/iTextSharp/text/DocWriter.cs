@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections;
 using iTextSharp.text.pdf;
 /*
- * $Id: DocWriter.cs,v 1.3 2005/07/04 22:51:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

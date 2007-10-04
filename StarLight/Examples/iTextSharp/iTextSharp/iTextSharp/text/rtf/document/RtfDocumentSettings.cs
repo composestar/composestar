@@ -3,7 +3,7 @@ using iTextSharp.text.rtf.style;
 using iTextSharp.text.rtf.document.output;
 
 /*
- * $Id: RtfDocumentSettings.cs,v 1.5 2006/08/26 23:18:25 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2003, 2004, 2005 by Mark Hall
@@ -59,7 +59,7 @@ namespace iTextSharp.text.rtf.document {
     * how the actual document is then generated and some settings may mean that some
     * RTF readers can't read the document or render it wrongly.
     * 
-    * @version $Revision: 1.5 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfDocumentSettings {

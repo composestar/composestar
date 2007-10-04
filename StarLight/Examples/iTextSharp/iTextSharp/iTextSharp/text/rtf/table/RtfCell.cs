@@ -8,7 +8,7 @@ using iTextSharp.text.rtf.document;
 using iTextSharp.text.rtf.style;
 using iTextSharp.text.rtf.text;
 /*
- * $Id: RtfCell.cs,v 1.5 2006/07/21 14:47:48 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall
@@ -64,7 +64,7 @@ namespace iTextSharp.text.rtf.table {
     * The RtfCell is an extension of Cell, that supports a multitude of different
     * borderstyles.
     * 
-    * @version $Id: RtfCell.cs,v 1.5 2006/07/21 14:47:48 psoares33 Exp $
+    * @version $Id$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     * @author Steffen Stundzig
     * @author Benoit WIART <b.wiart@proxiad.com>

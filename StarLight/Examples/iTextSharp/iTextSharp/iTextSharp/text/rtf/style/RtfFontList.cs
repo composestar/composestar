@@ -5,7 +5,7 @@ using iTextSharp.text;
 using iTextSharp.text.rtf;
 using iTextSharp.text.rtf.document;
 /*
- * $Id: RtfFontList.cs,v 1.2 2005/12/26 09:57:30 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall
@@ -60,7 +60,7 @@ namespace iTextSharp.text.rtf.style {
     * The RtfFontList stores the list of fonts used in the rtf document. It also
     * has methods for writing this list to the document
     *
-    * Version: $Id: RtfFontList.cs,v 1.2 2005/12/26 09:57:30 psoares33 Exp $
+    * Version: $Id$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfFontList : RtfElement, IRtfExtendedElement {

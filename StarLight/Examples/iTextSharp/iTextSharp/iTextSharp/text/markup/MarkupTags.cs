@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: MarkupTags.cs,v 1.3 2005/06/18 13:54:43 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

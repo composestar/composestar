@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using iTextSharp.text;
 /**
- * $Id: GenericRtfField.cs,v 1.1 2005/07/04 22:51:35 psoares33 Exp $
+ * $Id$
  *
  * Copyright 2002 by 
  * <a href="http://www.smb-tec.com">SMB</a> 
@@ -63,7 +63,7 @@ namespace iTextSharp.text.rtf {
     * ONLY FOR USE WITH THE RtfWriter NOT with the RtfWriter2.
     *
     * @author <a href="mailto:Dirk.Weigenand@smb-tec.com">Dirk Weigenand</a>
-    * @version $Id: GenericRtfField.cs,v 1.1 2005/07/04 22:51:35 psoares33 Exp $
+    * @version $Id$
     * @since Mon Aug 19 14:50:39 2002
     */
     public class GenericRtfField : AbstractRtfField, IRtfField {

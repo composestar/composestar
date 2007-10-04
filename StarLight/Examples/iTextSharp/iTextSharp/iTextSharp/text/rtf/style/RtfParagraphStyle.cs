@@ -14,7 +14,7 @@ namespace iTextSharp.text.rtf.style {
     * it needs to be set as the font of a Paragraph. Otherwise it will work like a
     * RtfFont. It also supports inheritance of styles.
     * 
-    * @version $Revision: 1.2 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfParagraphStyle : RtfFont {

@@ -7,7 +7,7 @@ using iTextSharp.text.rtf.list;
 using TB = iTextSharp.text.rtf.table;
 using iTextSharp.text.rtf.text;
 /*
- * $Id: RtfMapper.cs,v 1.1 2005/07/04 22:51:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2003, 2004 by Mark Hall

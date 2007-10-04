@@ -5,7 +5,7 @@ using System.Drawing;
 using iTextSharp.text;
 
 /*
- * $Id: HtmlEncoder.cs,v 1.2 2005/06/18 08:17:22 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

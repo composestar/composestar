@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Controller.java 1889 2006-10-08 16:15:25Z elmuerte $
+ * @version $Id$
  */
 package PacmanTwo;
 

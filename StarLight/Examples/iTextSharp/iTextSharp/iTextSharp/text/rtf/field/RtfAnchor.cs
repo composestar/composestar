@@ -4,7 +4,7 @@ using iTextSharp.text;
 using iTextSharp.text.rtf.text;
 using iTextSharp.text.rtf.document;
 /*
- * $Id: RtfAnchor.cs,v 1.2 2005/07/08 10:43:11 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2004 by Mark Hall

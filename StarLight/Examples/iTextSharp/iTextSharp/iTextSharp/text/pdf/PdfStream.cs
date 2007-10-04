@@ -4,7 +4,7 @@ using System.IO;
 using System.util.zlib;
 
 /*
- * $Id: PdfStream.cs,v 1.6 2006/06/16 10:56:27 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

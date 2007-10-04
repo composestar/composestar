@@ -5,7 +5,7 @@ using iTextSharp.text;
 using iTextSharp.text.markup;
 
 /*
- * $Id: HtmlTagMap.cs,v 1.1 2005/07/15 11:45:58 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

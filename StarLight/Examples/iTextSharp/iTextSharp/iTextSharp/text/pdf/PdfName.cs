@@ -2,7 +2,7 @@ using System;
 using System.Text;
 
 /*
- * $Id: PdfName.cs,v 1.13 2006/08/21 15:32:34 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

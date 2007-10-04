@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using iTextSharp.text;
 /**
- * $Id: RtfTOCEntry.cs,v 1.1 2005/07/04 22:51:35 psoares33 Exp $
+ * $Id$
  *
  * Copyright 2002 by 
  * <a href="http://www.smb-tec.com">SMB</a> 
@@ -62,7 +62,7 @@ namespace iTextSharp.text.rtf {
  *
  * This class is based on the RtfWriter-package from Mark Hall.
  * @author <a href="mailto:Steffen.Stundzig@smb-tec.com">Steffen.Stundzig@smb-tec.com</a> 
- * @version $Revision: 1.1 $Date: 2005/07/04 22:51:35 $
+ * @version $Revision$Date: 2005/07/04 22:51:35 $
  */
 public class RtfTOCEntry : Chunk, IRtfField {
 

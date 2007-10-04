@@ -4,7 +4,7 @@ using System.Net;
 using System.util;
 
 /*
- * $Id: Jpeg.cs,v 1.4 2005/08/19 16:07:53 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

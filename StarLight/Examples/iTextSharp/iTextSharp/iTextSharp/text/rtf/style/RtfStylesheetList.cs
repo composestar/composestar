@@ -9,7 +9,7 @@ namespace iTextSharp.text.rtf.style {
     /**
     * The RtfStylesheetList stores the RtfParagraphStyles that are used in the document.
     * 
-    * @version $Revision: 1.1 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfStylesheetList : RtfElement, IRtfExtendedElement {

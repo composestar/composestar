@@ -6,7 +6,7 @@ using org.bouncycastle.x509;
 using org.bouncycastle.crypto;
 using iTextSharp.text;
 /*
- * $Id: PdfSignatureAppearance.cs,v 1.7 2006/07/21 10:55:49 psoares33 Exp $
+ * $Id$
  * 
  * Copyright 2004-2006 by Paulo Soares.
  *

@@ -3,7 +3,7 @@ using System.Collections;
 using System.util;
 
 /*
- * $Id: List.cs,v 1.6 2006/01/20 14:45:30 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

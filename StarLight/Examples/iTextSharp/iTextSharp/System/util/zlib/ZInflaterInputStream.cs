@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 /*
- * $Id: ZInflaterInputStream.cs,v 1.2 2006/07/31 14:32:07 psoares33 Exp $
+ * $Id$
  *
  * Copyright 2006 by Paulo Soares.
  *

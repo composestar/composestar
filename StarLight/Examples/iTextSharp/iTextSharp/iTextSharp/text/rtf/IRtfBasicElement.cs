@@ -1,7 +1,7 @@
 using System;
 using iTextSharp.text.rtf.document;
 /*
- * $Id: IRtfBasicElement.cs,v 1.1 2005/07/04 22:51:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall

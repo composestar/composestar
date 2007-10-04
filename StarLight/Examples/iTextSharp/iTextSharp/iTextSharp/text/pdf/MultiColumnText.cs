@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using iTextSharp.text;
 /*
- * $Id: MultiColumnText.cs,v 1.10 2006/03/20 16:38:32 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2004 Steve Appling

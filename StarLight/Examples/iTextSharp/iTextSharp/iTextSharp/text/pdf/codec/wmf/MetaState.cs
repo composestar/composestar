@@ -3,7 +3,7 @@ using System.Collections;
 using iTextSharp.text;
 
 /*
- * $Id: MetaState.cs,v 1.5 2005/12/01 16:55:51 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

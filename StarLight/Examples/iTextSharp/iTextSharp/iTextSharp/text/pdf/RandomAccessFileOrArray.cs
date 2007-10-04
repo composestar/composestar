@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Net;
 /*
- * $Id: RandomAccessFileOrArray.cs,v 1.5 2005/09/12 16:19:28 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

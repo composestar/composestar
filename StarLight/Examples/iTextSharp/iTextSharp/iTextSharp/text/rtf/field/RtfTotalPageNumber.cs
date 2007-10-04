@@ -3,7 +3,7 @@ using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.rtf.document;
 /*
- * $Id: RtfTotalPageNumber.cs,v 1.1 2005/07/04 22:51:36 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2005 Jose Hurtado <a href="mailto:jose.hurtado@gft.com">jose.hurtado@gft.com</a>

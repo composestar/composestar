@@ -11,7 +11,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.codec;
 
 /*
- * $Id: Image.cs,v 1.16 2006/05/04 16:36:28 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

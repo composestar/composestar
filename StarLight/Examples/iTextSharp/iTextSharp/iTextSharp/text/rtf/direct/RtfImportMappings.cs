@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using iTextSharp.text;
 /**
- * $Id: RtfImportMappings.cs,v 1.2 2006/08/28 20:22:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2006 by Mark Hall
@@ -63,7 +63,7 @@ namespace iTextSharp.text.rtf.direct {
     * The font mappings are fontNr -&gt; fontName and the color
     * mappigns are colorNr -&gt; Color.
     * 
-    * @version $Revision: 1.2 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfImportMappings {

@@ -5,7 +5,7 @@ using iTextSharp.text;
 using iTextSharp.text.rtf;
 using iTextSharp.text.rtf.document;
 /*
- * $Id: RtfFont.cs,v 1.7 2006/02/10 22:48:17 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall
@@ -62,7 +62,7 @@ namespace iTextSharp.text.rtf.style {
     * BaseFont fontname handling contributed by Craig Fleming. Various fixes
     * Renaud Michel, Werner Daehn.
     *
-    * Version: $Id: RtfFont.cs,v 1.7 2006/02/10 22:48:17 psoares33 Exp $
+    * Version: $Id$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     * @author Craig Fleming (rythos@rhana.dhs.org)
     * @author Renaud Michel (r.michel@immedia.be)

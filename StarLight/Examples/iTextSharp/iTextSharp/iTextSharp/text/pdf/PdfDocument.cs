@@ -7,7 +7,7 @@ using iTextSharp.text.xml.xmp;
 using System.util;
 /*
  * $Name:  $
- * $Id: PdfDocument.cs,v 1.29 2006/06/26 11:24:42 psoares33 Exp $
+ * $Id$
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.
  *

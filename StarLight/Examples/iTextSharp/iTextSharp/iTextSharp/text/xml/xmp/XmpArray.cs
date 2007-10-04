@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Text;
 /*
- * $Id: XmpArray.cs,v 1.1 2005/09/04 23:21:30 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2005 by Bruno Lowagie.

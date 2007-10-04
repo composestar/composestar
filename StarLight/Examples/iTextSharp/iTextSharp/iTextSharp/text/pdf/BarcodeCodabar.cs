@@ -1,7 +1,7 @@
 using System;
 using iTextSharp.text;
 /*
- * $Id: BarcodeCodabar.cs,v 1.5 2006/07/31 13:51:38 psoares33 Exp $
+ * $Id$
  *
  * Copyright 2002-2006 by Paulo Soares.
  *

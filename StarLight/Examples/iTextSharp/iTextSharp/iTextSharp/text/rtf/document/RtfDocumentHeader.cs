@@ -9,7 +9,7 @@ using HF = iTextSharp.text.rtf.headerfooter;
 using iTextSharp.text.rtf.headerfooter;
 //using iTextSharp.text.rtf;
 /*
- * $Id: RtfDocumentHeader.cs,v 1.4 2006/09/09 15:20:55 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2003, 2004 by Mark Hall

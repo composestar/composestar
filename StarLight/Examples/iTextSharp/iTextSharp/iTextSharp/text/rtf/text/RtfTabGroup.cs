@@ -4,7 +4,7 @@ using System.Collections;
 using iTextSharp.text;
 using iTextSharp.text.rtf;
 /*
- * $Id: RtfTabGroup.cs,v 1.1 2006/06/19 17:02:49 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall
@@ -70,7 +70,7 @@ namespace iTextSharp.text.rtf.text {
     * para.Add(tabs);<br />
     * para.Add("\tLeft aligned\tCentre aligned\t12,45\tRight aligned");</code>
     * 
-    * @version $Revision: 1.1 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfTabGroup : RtfAddableElement {

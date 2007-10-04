@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.Xml;
 /*
- * $Id: XfaForm.cs,v 1.2 2006/09/10 15:34:58 psoares33 Exp $
+ * $Id$
  *
  * Copyright 2006 Paulo Soares
  *

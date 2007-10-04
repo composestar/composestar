@@ -3,7 +3,7 @@ using System;
 using iTextSharp.text;
 
 /*
- * $Id: ExtendedColor.cs,v 1.2 2005/06/18 08:05:20 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Paulo Soares.

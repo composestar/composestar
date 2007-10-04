@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: PacmanView.java 1431 2006-09-18 09:41:22Z elmuerte $
+ * @version $Id$
  */
 package PacmanTwo.GUI;
 

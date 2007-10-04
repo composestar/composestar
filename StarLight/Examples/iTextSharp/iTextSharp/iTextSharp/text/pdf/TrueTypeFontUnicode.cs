@@ -4,7 +4,7 @@ using System.Text;
 using System.Collections;
 
 /*
- * $Id: TrueTypeFontUnicode.cs,v 1.6 2006/02/23 16:46:28 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

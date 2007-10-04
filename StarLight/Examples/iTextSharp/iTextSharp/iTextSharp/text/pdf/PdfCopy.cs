@@ -3,7 +3,7 @@ using System.Collections;
 using System.IO;
 using iTextSharp.text;
 /*
- * $Id: PdfCopy.cs,v 1.10 2006/09/10 15:34:58 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

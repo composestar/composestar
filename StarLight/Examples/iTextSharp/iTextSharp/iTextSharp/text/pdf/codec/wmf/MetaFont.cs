@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: MetaFont.cs,v 1.3 2005/11/02 18:04:48 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 Paulo Soares

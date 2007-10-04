@@ -3,7 +3,7 @@ using System.Collections;
 using System.IO;
 
 /*
- * $Id: PdfContentParser.cs,v 1.3 2006/05/27 11:10:11 psoares33 Exp $
+ * $Id$
  *
  * Copyright 2005 by Paulo Soares.
  *

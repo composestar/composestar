@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 
 /*
- * $Id: Document.cs,v 1.18 2006/08/28 20:23:45 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

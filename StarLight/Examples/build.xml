@@ -24,6 +24,7 @@
 				</not>
 			</condition>
 		</fail>
+		<delete file="ExamplesVersionCheck.txt" />
 	</target>
 
 </project>

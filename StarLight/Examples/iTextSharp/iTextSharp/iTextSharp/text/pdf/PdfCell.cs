@@ -4,7 +4,7 @@ using System.Collections;
 using iTextSharp.text;
 
 /*
- * $Id: PdfCell.cs,v 1.6 2005/11/02 12:24:06 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 Bruno Lowagie

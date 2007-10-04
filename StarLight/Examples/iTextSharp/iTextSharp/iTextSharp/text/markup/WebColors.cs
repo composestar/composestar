@@ -3,7 +3,7 @@ using System.Collections;
 using System.Globalization;
 using iTextSharp.text;
 /*
- * $Id: WebColors.cs,v 1.1 2005/08/24 12:05:42 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

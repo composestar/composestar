@@ -16,7 +16,7 @@ namespace iTextSharp.text.rtf.headerfooter {
     * The RtfHeaderFooter represents one header or footer. This class can be used
     * directly.
     * 
-    * @version $Id: RtfHeaderFooter.cs,v 1.3 2006/07/21 14:46:59 psoares33 Exp $
+    * @version $Id$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfHeaderFooter : HeaderFooter, IRtfBasicElement {

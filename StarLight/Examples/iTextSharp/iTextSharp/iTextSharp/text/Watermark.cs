@@ -1,7 +1,7 @@
 using System;
 
 /*
- * $Id: Watermark.cs,v 1.2 2005/06/18 08:17:00 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2000, 2001, 2002 by Bruno Lowagie.

@@ -7,7 +7,7 @@ using iTextSharp.text.xml;
 using iTextSharp.text.pdf;
 
 /*
- * $Id: ITextmyHtmlHandler.cs,v 1.4 2006/03/23 18:14:22 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

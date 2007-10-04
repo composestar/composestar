@@ -3,7 +3,7 @@ using System.Collections;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 /*
- * $Id: PdfPageEventForwarder.cs,v 1.1 2005/10/07 19:05:32 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2005 Bruno Lowagie

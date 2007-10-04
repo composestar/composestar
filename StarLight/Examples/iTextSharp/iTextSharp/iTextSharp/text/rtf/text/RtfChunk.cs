@@ -6,7 +6,7 @@ using iTextSharp.text.rtf.document;
 using iTextSharp.text.rtf.style;
 using ST = iTextSharp.text.rtf.style;
 /*
- * $Id: RtfChunk.cs,v 1.2 2005/07/23 11:46:13 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004 by Mark Hall

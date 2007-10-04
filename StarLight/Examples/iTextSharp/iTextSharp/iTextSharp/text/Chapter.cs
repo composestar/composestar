@@ -3,7 +3,7 @@ using System.Collections;
 using System.util;
 
 /*
- * $Id: Chapter.cs,v 1.3 2005/06/18 08:27:34 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

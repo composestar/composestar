@@ -7,7 +7,7 @@ using iTextSharp.text.rtf.document;
 using ST = iTextSharp.text.rtf.style;
 using iTextSharp.text.rtf.text;
 /*
- * $Id: RtfList.cs,v 1.6 2006/04/05 14:32:54 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002, 2003, 2004, 2005 by Mark Hall

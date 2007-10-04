@@ -8,7 +8,7 @@ using iTextSharp.text;
 using iTextSharp.text.markup;
 
 /*
- * $Id: XmlWriter.cs,v 1.6 2006/06/26 11:24:42 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

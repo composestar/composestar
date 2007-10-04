@@ -3,7 +3,7 @@ using System.Collections;
 using System.util;
 
 /*
- * $Id: PdfAction.cs,v 1.4 2006/07/21 09:58:45 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

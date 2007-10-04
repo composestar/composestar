@@ -3,7 +3,7 @@ using System.IO;
 using System.util;
 using iTextSharp.text;
 /**
- * $Id: RtfCell.cs,v 1.3 2005/12/09 12:34:52 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Mark Hall

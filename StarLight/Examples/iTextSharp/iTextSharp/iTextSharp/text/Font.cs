@@ -5,7 +5,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.markup;
 
 /*
- * $Id: Font.cs,v 1.6 2005/07/08 10:42:18 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 1999, 2000, 2001, 2002 by Bruno Lowagie.

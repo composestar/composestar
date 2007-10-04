@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight" default="build" xmlns:dn="antlib:org.apache.ant.dotnet" xmlns:cs="antlib:Composestar">
 
-	<condition property="imply.core" value="true"><!-- if set Compose*/Core parts will also be executed -->
+	<condition property="imply.core" value="true">
+		<!-- if set Compose*/Core parts will also be executed -->
 		<not>
 			<available file="${ant.file.ComposeStarCommon}" />
 		</not>
 	</condition>
 
-	<property name="build.core" location="${basedir}/../Core"/>
-	<import file="${build.core}/common.xml"/>
+	<property name="build.core" location="${basedir}/../Core" />
+	<import file="${build.core}/common.xml" />
 
 	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The StarLight implementation of Compose*</description>
 
-	<property name="out.qa.starlight"    value="QualityAssurance"/>
-	<property name="out.fxcop.starlight" value="QualityAssurance"/>
-	<property name="out.nunit" value="Source${file.separator}Tests${file.separator}TestResults"/>
+	<property name="out.qa.starlight" value="QualityAssurance" />
+	<property name="out.fxcop.starlight" value="QualityAssurance" />
+	<property name="out.nunit" value="Source${file.separator}Tests${file.separator}TestResults" />
 
-	<property name="MSBuildTasks.dir" location="Source/VSIntegration/MSBuildTasks"/>
+	<property name="MSBuildTasks.dir" location="Source/VSIntegration/MSBuildTasks" />
 	<property name="path.nunitprojects" value="Source${file.separator}Tests${file.separator}UnitTests${file.separator}" />
 	<property name="path.ntimeprojects" value="Source${file.separator}Tests${file.separator}PerformanceTests${file.separator}" />
 
 	<!-- clean -->
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
-		
-		<ant target="clean" dir="Source/VSIntegration/" inheritRefs="true"/>
-		
+
+		<ant target="clean" dir="Source/VSIntegration/" inheritRefs="true" />
+
 		<!-- run clean on all msbuild project files -->
 		<cs:dn_msbatch target="clean">
 			<fileset dir="Source">
-				<include name="**/*.csproj"/>
+				<include name="**/*.csproj" />
 			</fileset>
 		</cs:dn_msbatch>
 
 		<!-- clean java code -->
-		<ant target="clean" dir="Source/Compiletime" inheritRefs="true"/>
+		<ant target="clean" dir="Source/Compiletime" inheritRefs="true" />
 
 		<!-- clean qa -->
 		<delete dir="${out.qa.starlight}" />
@@ -47,49 +48,49 @@
 		<delete file="Documentation\LastBuild.log" />
 
 		<!-- clean installer -->
-		<ant target="clean" dir="Setup" inheritRefs="true"/>
-		
+		<ant target="clean" dir="Setup" inheritRefs="true" />
+
 	</target>
 
 	<!-- build -->
 
 	<target name="build" depends="init" description="Build the StarLight implementation of Compose*">
-		<antcall target="build_compiletime" inheritRefs="true"/>
-		<antcall target="build_core_elements" inheritRefs="true"/>
-		<antcall target="build_weaving" inheritRefs="true"/>
-		<antcall target="build_expansion" inheritRefs="true"/>
-		<antcall target="build_vsi" inheritRefs="true"/>
+		<antcall target="build_compiletime" inheritRefs="true" />
+		<antcall target="build_core_elements" inheritRefs="true" />
+		<antcall target="build_weaving" inheritRefs="true" />
+		<antcall target="build_expansion" inheritRefs="true" />
+		<antcall target="build_vsi" inheritRefs="true" />
 	</target>
 
 	<target name="build_compiletime" depends="init" description="Build Compose* StarLight Compiletime">
-		<ant target="build" dir="Source/Compiletime" inheritRefs="true"/>
+		<ant target="build" dir="Source/Compiletime" inheritRefs="true" />
 	</target>
 
 	<target name="build_core_elements" description="Build Compose* StarLight CoreElements">
-		<ant target="build" dir="Source/StarLight.Weaving" inheritRefs="true"/>
+		<ant target="build" dir="Source/StarLight.Weaving" inheritRefs="true" />
 	</target>
 
 	<target name="build_weaving" description="Build Compose* StarLight Weaving Strategies">
-		<ant target="build" dir="Source/StarLight.Weaving.BuiltIn" inheritRefs="true"/>
+		<ant target="build" dir="Source/StarLight.Weaving.BuiltIn" inheritRefs="true" />
 	</target>
 
 	<target name="build_expansion" description="Build Compose* StarLight Weaving Strategies">
-		<ant target="build" dir="Source/SigExpander" inheritRefs="true"/>
+		<ant target="build" dir="Source/SigExpander" inheritRefs="true" />
 	</target>
 
 	<target name="build_vsi" description="Build Compose* StarLight VS Integration">
-		<ant target="build" dir="Source/VSIntegration/" inheritRefs="true"/>
+		<ant target="build" dir="Source/VSIntegration/" inheritRefs="true" />
 	</target>
 
 	<!-- deploy -->
 
 	<target name="deploy" depends="init" description="Deploy the StarLight implementation of Compose*">
-		<antcall target="deploy_compiletime" inheritRefs="true"/>
-		<antcall target="deploy_core_elements" inheritRefs="true"/>
-		<antcall target="deploy_weaving" inheritRefs="true"/>
-		<antcall target="deploy_expansion" inheritRefs="true"/>
-		<antcall target="deploy_vsi" inheritRefs="true"/>
-		<antcall target="deploy_misc" inheritRefs="true"/>
+		<antcall target="deploy_compiletime" inheritRefs="true" />
+		<antcall target="deploy_core_elements" inheritRefs="true" />
+		<antcall target="deploy_weaving" inheritRefs="true" />
+		<antcall target="deploy_expansion" inheritRefs="true" />
+		<antcall target="deploy_vsi" inheritRefs="true" />
+		<antcall target="deploy_misc" inheritRefs="true" />
 	</target>
 
 	<target name="deploy_compiletime" description="Deploy Compose* StarLight Compiletime">
@@ -97,7 +98,7 @@
 	</target>
 
 	<target name="deploy_core_elements" description="Deploy Compose* StarLight CoreElements">
-		<ant target="deploy" dir="Source/StarLight.Weaving" inheritRefs="true"/>
+		<ant target="deploy" dir="Source/StarLight.Weaving" inheritRefs="true" />
 	</target>
 
 	<target name="deploy_weaving" description="Deploy Compose* StarLight Weaving Strategies">
@@ -112,11 +113,11 @@
 		<ant target="deploy" dir="Source/VSIntegration/" inheritRefs="true" />
 	</target>
 
-	<target name="deploy_misc" depends="init"  description="Deploy misc files">
+	<target name="deploy_misc" depends="init" description="Deploy misc files">
 		<copy todir="${starlight.installdir}">
 			<fileset dir="Setup/installed">
-				<include name="*.xml"/>
-				<include name="*.css"/>
+				<include name="*.xml" />
+				<include name="*.css" />
 			</fileset>
 		</copy>
 	</target>
@@ -158,13 +159,12 @@
 		<msbuild solution="${MSBuildTasks.dir}/StarLight.MSBuild.Tasks.csproj" target="build" config="Debug" />
 	</target>
 
-	<target name="fxcop_init" >
+	<target name="fxcop_init">
 		<mkdir dir="${out.fxcop.starlight}" />
 	</target>
 
-	<target name="fxcop" depends="build_codeanalysis,fxcop_init"  description="Build all the outputs and run fxcop">
-		<fxcop reportfile="${out.fxcop.starlight}/fxcop.html" 
-		       files="${MSBuildTasks.dir}/Bin/Debug/Composestar*.dll"/>
+	<target name="fxcop" depends="build_codeanalysis,fxcop_init" description="Build all the outputs and run fxcop">
+		<fxcop reportfile="${out.fxcop.starlight}/fxcop.html" files="${MSBuildTasks.dir}/Bin/Debug/Composestar*.dll" />
 	</target>
 
 	<!-- documentation -->
@@ -196,7 +196,7 @@
 	<target name="documentation" description="Create StarLight documentation" depends="documentation.init,documentation.build">
 		<!-- Run Sandcastle -->
 		<exec dir="${build.starlight}${file.separator}documentation" executable="${bin.sandcastle}">
-			<arg value="${build.starlight}${file.separator}documentation${file.separator}SandcastleHelpStarLight.shfb"/>
+			<arg value="${build.starlight}${file.separator}documentation${file.separator}SandcastleHelpStarLight.shfb" />
 		</exec>
 	</target>
 
@@ -243,16 +243,17 @@
 		<antcall target="test_ntime" /> 
 		Disabled, because the tests do not work correctly
 		-->
-		<ant dir="Examples" target="versioncheck" inheritRefs="true"/> 
-		<antcall target="systemtest" inheritRefs="true"/> 
+		<ant dir="Examples" target="versioncheck" inheritRefs="true" />
+		<ant dir="Source/VSIntegration" target="test" inheritRefs="true" />
+		<antcall target="systemtest" inheritRefs="true" />
 	</target>
 
-	<target name="init_test" >
+	<target name="init_test">
 		<mkdir dir="${out.nunit}" />
 	</target>
 
 	<target name="test_junit">
-		<ant target="unittest" dir="${build.core}/Compiletime" inheritRefs="true"/>    
+		<ant target="unittest" dir="${build.core}/Compiletime" inheritRefs="true" />
 	</target>
 
 	<target name="init_nunit" depends="init" description="Build the NUnit projects">
@@ -296,70 +297,70 @@
 	</target>
 
 	<target name="systemtest" description="Runs the system test">
-		<antcall target="systemtest_build" inheritRefs="true"/>
-		<antcall target="systemtest_exec" inheritRefs="true"/>
+		<antcall target="systemtest_build" inheritRefs="true" />
+		<antcall target="systemtest_exec" inheritRefs="true" />
 	</target>
 
 	<target name="systemtest_build" depends="init">
-		
+
 		<fileset id="systemtest.solutions" dir="${build.starlight}/Examples">
-			<include name="Testing/Concerns.sln"/>
-			<include name="iTextSharp/iTextSharp.sln"/>
-			<include name="Pacman/Pacman.sln"/>
-			<include name="PacmanTwo/PacmanTwo.sln"/>
+			<include name="Testing/Concerns.sln" />
+			<include name="iTextSharp/iTextSharp.sln" />
+			<include name="Pacman/Pacman.sln" />
+			<include name="PacmanTwo/PacmanTwo.sln" />
 		</fileset>
-		
+
 		<echo level="info">Cleaning tests</echo>
 		<cs:dn_msbatch target="Clean">
-			<fileset refid="systemtest.solutions"/>
+			<fileset refid="systemtest.solutions" />
 		</cs:dn_msbatch>
-		
+
 		<echo level="info">Building tests</echo>
 		<cs:dn_msbatch failOnError="true">
-			<fileset refid="systemtest.solutions"/>
+			<fileset refid="systemtest.solutions" />
 		</cs:dn_msbatch>
-		
+
 	</target>
 
 	<target name="systemtest_exec" depends="init">
-		
+
 		<echo level="info">Running tests</echo>
 		<cs:test>
 			<fileset dir="${build.starlight}/Examples">
-				<include name="**/systemtest.bat"/>
+				<include name="**/systemtest.bat" />
 			</fileset>
 		</cs:test>
-		
+
 	</target>
 
 	<!-- fancy menu -->
 
-	<target name="clean_deploy" depends="clean,deploy"/>
-	<target name="clean_deploy_test" depends="clean,deploy,test"/>
+	<target name="clean_deploy" depends="clean,deploy" />
+	<target name="clean_deploy_test" depends="clean,deploy,test" />
 
 	<target name="select">
-		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar"/>
+		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar" />
 		<antmenu image="images/logos/logofull.png">
 
 			<antMenuItem name="Advanced">
-				<antMenuItem name="Clean"  target="clean"/>
+				<antMenuItem name="Clean" target="clean" />
 				<antMenuItem name="Build">
-					<antMenuItem name="Build all"     target="build"/>
-					<antMenuItem name="Rebuild all"   target="rebuild"/>
-					<antMenuItem name="Compiletime"   target="build_compiletime"/>
-					<antMenuItem name="CoreElement"   target="build_core_elements"/>
-					<antMenuItem name="WeaveStrategy" target="build_weaving"/>
-					<antMenuItem name="MSBuildTasks"  target="build_msbuild"/>
-					<antMenuItem name="VSIntegration" target="build_vs"/>
-					<antMenuItem name="Installer"     target="build_installer"/>
+					<antMenuItem name="Build all" target="build" />
+					<antMenuItem name="Rebuild all" target="rebuild" />
+					<antMenuItem name="Compiletime" target="build_compiletime" />
+					<antMenuItem name="CoreElement" target="build_core_elements" />
+					<antMenuItem name="WeaveStrategy" target="build_weaving" />
+					<antMenuItem name="MSBuildTasks" target="build_msbuild" />
+					<antMenuItem name="VSIntegration" target="build_vs" />
+					<antMenuItem name="Installer" target="build_installer" />
 				</antMenuItem>
 				<antMenuItem name="Deployment">
-					<antMenuItem name="Deploy all"    target="deploy"/>
-					<antMenuItem name="Compiletime"   target="deploy_compiletime"/>
-					<antMenuItem name="CoreElements"  target="deploy_core_elements"/>
-					<antMenuItem name="WeaveStrategy" target="deploy_weaving"/>
-					<antMenuItem name="MSBuildTasks"  target="deploy_msbuild"/>
-					<antMenuItem name="VSIntegration" target="deploy_vs"/>
+					<antMenuItem name="Deploy all" target="deploy" />
+					<antMenuItem name="Compiletime" target="deploy_compiletime" />
+					<antMenuItem name="CoreElements" target="deploy_core_elements" />
+					<antMenuItem name="WeaveStrategy" target="deploy_weaving" />
+					<antMenuItem name="MSBuildTasks" target="deploy_msbuild" />
+					<antMenuItem name="VSIntegration" target="deploy_vs" />
 				</antMenuItem>
 				<!--
 				<antMenuItem name="Publish">
@@ -369,30 +370,30 @@
 				</antMenuItem>
 				-->
 				<antMenuItem name="Run tests">
-					<antMenuItem name="All"           target="test"/>
-					<antMenuItem name="JUnit"         target="test_junit"/>
-					<antMenuItem name="NUnit"         target="test_nunit"/>
-					<antMenuItem name="NTime"         target="test_ntime"/>
-					<antMenuItem name="Systemtest"    target="systemtest"/>
+					<antMenuItem name="All" target="test" />
+					<antMenuItem name="JUnit" target="test_junit" />
+					<antMenuItem name="NUnit" target="test_nunit" />
+					<antMenuItem name="NTime" target="test_ntime" />
+					<antMenuItem name="Systemtest" target="systemtest" />
 				</antMenuItem>
 				<antMenuItem name="QA">
-					<antMenuItem name="All"           target="qa"/>
-					<antMenuItem name="FxCop"         target="fxcop_starlight"/>
-					<antMenuItem name="FindBugs"      target="findbugs_starlight"/>
-					<antMenuItem name="CheckStyle"    target="checkstyle_starlight"/>
+					<antMenuItem name="All" target="qa" />
+					<antMenuItem name="FxCop" target="fxcop_starlight" />
+					<antMenuItem name="FindBugs" target="findbugs_starlight" />
+					<antMenuItem name="CheckStyle" target="checkstyle_starlight" />
 				</antMenuItem>
 				<antMenuItem name="Documentation">
-					<antMenuItem name="StarLight"     target="documentation"/>
+					<antMenuItem name="StarLight" target="documentation" />
 				</antMenuItem>
 			</antMenuItem>
 
-			<link label="Build" target="build"/>
-			<link label="Clean, deploy" target="clean_deploy"/>
-			<link label="Clean, deploy, test" target="clean_deploy_test"/>
-			<link label="Quality Assurance" target="qa"/>
-			<link label="Documentation" target="documentation"/>
-			<separator/>
-			<link label="Cancel" target="cancel"/>
+			<link label="Build" target="build" />
+			<link label="Clean, deploy" target="clean_deploy" />
+			<link label="Clean, deploy, test" target="clean_deploy_test" />
+			<link label="Quality Assurance" target="qa" />
+			<link label="Documentation" target="documentation" />
+			<separator />
+			<link label="Cancel" target="cancel" />
 
 		</antmenu>
 	</target>

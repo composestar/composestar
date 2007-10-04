@@ -6,7 +6,7 @@ using System.Collections;
 using iTextSharp.text;
 
 /*
- * $Id: XmlParser.cs,v 1.4 2005/07/15 11:45:59 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2001, 2002 by Bruno Lowagie.

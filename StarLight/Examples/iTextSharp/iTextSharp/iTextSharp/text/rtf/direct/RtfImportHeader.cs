@@ -4,7 +4,7 @@ using iTextSharp.text;
 using iTextSharp.text.rtf.document;
 using iTextSharp.text.rtf.style;
 /**
- * $Id: RtfImportHeader.cs,v 1.2 2006/08/28 20:22:35 psoares33 Exp $
+ * $Id$
  * $Name:  $
  *
  * Copyright 2006 by Mark Hall
@@ -63,7 +63,7 @@ namespace iTextSharp.text.rtf.direct {
     * the RTF document that is the target of the import. This guarantees
     * that the merged document has the correct font and color settings.
     * 
-    * @version $Revision: 1.2 $
+    * @version $Revision$
     * @author Mark Hall (mhall@edu.uni-klu.ac.at)
     */
     public class RtfImportHeader {
