@@ -324,7 +324,10 @@
 
 		<!-- register additional libraries -->
 		<path id="lib.core">
-			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib" includes="*/*.jar" />
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib">
+			  <include name="**/*.jar" />
+        <exclude name="antrl/antlr-runtime-3.jar" /><!-- is included in the tool -->
+			</fileset>
 		</path>
 
 		<path id="lib.dotnet">

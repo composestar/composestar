@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/groove/xerces-2_6_0-xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/groove/xerces-2_6_0-xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/log4j/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="lib/antlr/antlr-3.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

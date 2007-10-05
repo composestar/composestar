@@ -36,7 +36,7 @@ concern correct05_filters in ConcernExamples
 			f4 : Dispatch = { cond1 | cond2 => [*.foo] };
 			f5 : Dispatch = { (cond1 & cond2) => [*.foo] };
 			f6 : Dispatch = { cond1 & (cond2 | cond3) => [*.foo] };
-			f7 : Dispatch = { !cond1 & !(!cond2 | !cond3) => [*.foo] };
+			f7 : Dispatch = { !cond1 & !(!cond2 | !cond3) => [*.foo] }
 	}
 	
 	filtermodule elmlists
@@ -50,7 +50,7 @@ concern correct05_filters in ConcernExamples
 			};
 			// matching pattern list
 			f2 : Dispatch = {
-				{[*.foo], [*.bar], [(.baz]} *.quux
+				{[*.foo], [*.bar], [*.baz]} *.quux
 			}			
 	}
 }
