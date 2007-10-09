@@ -254,7 +254,7 @@ public class CpsRepositoryBuilder
 			fmp.setDescriptionLineNumber(lineNumber);
 			fmp.setName((String) idv.elementAt(j));
 			fmp.setParent(fm);
-			if (!fm.doesParameterExists(fmp))
+			if (!fm.parameterExists(fmp))
 			{
 				fm.addParameter(fmp);
 				this.addToRepository(fmp);

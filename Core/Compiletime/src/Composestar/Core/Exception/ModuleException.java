@@ -26,11 +26,14 @@ public class ModuleException extends Exception implements LocationProvider
 
 	private int errorLocationLineNumber;
 
+	private int errorLocationLinePosition;
+
 	public ModuleException(String message, String inmodule)
 	{
 		super(message);
 		module = inmodule;
 		errorLocationLineNumber = 0;
+		errorLocationLinePosition = 0;
 		errorLocationFilename = "";
 	}
 
@@ -39,6 +42,7 @@ public class ModuleException extends Exception implements LocationProvider
 		super(message, throwable);
 		module = inmodule;
 		errorLocationLineNumber = 0;
+		errorLocationLinePosition = 0;
 		errorLocationFilename = "";
 	}
 
@@ -49,23 +53,35 @@ public class ModuleException extends Exception implements LocationProvider
 
 	public ModuleException(String message, String inmodule, RepositoryEntity errorLocation, Throwable throwable)
 	{
-		this(message, inmodule, throwable);
-		errorLocationFilename = errorLocation.getDescriptionFileName();
-		errorLocationLineNumber = errorLocation.getDescriptionLineNumber();
+		this(message, inmodule, errorLocation.getDescriptionFileName(), errorLocation.getDescriptionLineNumber(),
+				errorLocation.getDescriptionLinePosition(), throwable);
 	}
 
 	public ModuleException(String message, String inmodule, String inerrorLocationFilename,
 			int inerrorLocationLineNumber)
 	{
-		this(message, inmodule, inerrorLocationFilename, inerrorLocationLineNumber, null);
+		this(message, inmodule, inerrorLocationFilename, inerrorLocationLineNumber, 0, null);
 	}
 
 	public ModuleException(String message, String inmodule, String inerrorLocationFilename,
 			int inerrorLocationLineNumber, Throwable throwable)
 	{
+		this(message, inmodule, inerrorLocationFilename, inerrorLocationLineNumber, 0, null);
+	}
+
+	public ModuleException(String message, String inmodule, String inerrorLocationFilename,
+			int inerrorLocationLineNumber, int inerrorLocationLinePosition)
+	{
+		this(message, inmodule, inerrorLocationFilename, inerrorLocationLineNumber, inerrorLocationLinePosition, null);
+	}
+
+	public ModuleException(String message, String inmodule, String inerrorLocationFilename,
+			int inerrorLocationLineNumber, int inerrorLocationLinePosition, Throwable throwable)
+	{
 		this(message, inmodule, throwable);
 		errorLocationFilename = inerrorLocationFilename;
 		errorLocationLineNumber = inerrorLocationLineNumber;
+		errorLocationLinePosition = inerrorLocationLinePosition;
 	}
 
 	/**
@@ -99,6 +115,11 @@ public class ModuleException extends Exception implements LocationProvider
 	public int getLineNumber()
 	{
 		return errorLocationLineNumber;
+	}
+
+	public int getLinePosition()
+	{
+		return errorLocationLinePosition;
 	}
 
 	public String toString()

@@ -1,3 +1,18 @@
 Manifest-Version: 1.0
 Main-Class: Composestar.DotNET2.MASTER.StarLightMaster
-Class-Path: ComposestarCORE.jar xmltypes.jar ../Binaries/antlr.jar ../Binaries/prolog.jar ../Binaries/xmlbeans/jsr173_1.0_api.jar ../Binaries/xmlbeans/resolver.jar ../Binaries/xmlbeans/xbean.jar ../Binaries/xmlbeans/xbean_xpath.jar ../Binaries/xmlbeans/xmlpublic.jar ../Binaries/groove-1_2_0.jar ../Binaries/castor-0_9_5_2-xml.jar ../Binaries/xerces-2_6_0-xml-apis.jar ../Binaries/xerces-2_6_0-xercesImpl.jar ../Binaries/jgraph.jar ../Binaries/log4j-1.2.14.jar
+Class-Path: ComposestarCORE.jar 
+ xmltypes.jar 
+ ../Binaries/antlr.jar 
+ ../Binaries/antlr-runtime-3.jar 
+ ../Binaries/prolog.jar 
+ ../Binaries/xmlbeans/jsr173_1.0_api.jar 
+ ../Binaries/xmlbeans/resolver.jar 
+ ../Binaries/xmlbeans/xbean.jar 
+ ../Binaries/xmlbeans/xbean_xpath.jar 
+ ../Binaries/xmlbeans/xmlpublic.jar 
+ ../Binaries/groove-1_2_0.jar 
+ ../Binaries/castor-0_9_5_2-xml.jar 
+ ../Binaries/xerces-2_6_0-xml-apis.jar 
+ ../Binaries/xerces-2_6_0-xercesImpl.jar 
+ ../Binaries/jgraph.jar 
+ ../Binaries/log4j-1.2.14.jar

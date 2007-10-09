@@ -328,22 +328,21 @@ public class FilterModuleAST extends DeclaredRepositoryEntity
 	}
 
 	/**
-	 * @ return boolean Checks whether a parameter does already exists. Fixme:
-	 *   no difference yet between ?foo and ??foo
+	 * @return boolean Checks whether a parameter does already exists. Fixme: no
+	 *         difference yet between ?foo and ??foo
 	 * @param fmp
 	 */
-	public boolean doesParameterExists(FilterModuleParameterAST fmp)
+	public boolean parameterExists(FilterModuleParameterAST fmp)
 	{
-		boolean exist = false;
 		for (int i = 0; i < parameters.size(); i++)
 		{
 			FilterModuleParameterAST temp = (FilterModuleParameterAST) parameters.elementAt(i);
 			if (temp.getName().equals(fmp.getName()))
 			{
-				exist = true;
+				return true;
 			}
 		}
-		return exist;
+		return false;
 	}
 
 	/**
@@ -369,6 +368,34 @@ public class FilterModuleAST extends DeclaredRepositoryEntity
 	public Vector getOutputFilters()
 	{
 		return outputFilters;
+	}
+
+	public boolean isExternal(String name)
+	{
+		Iterator it = externals.iterator();
+		while (it.hasNext())
+		{
+			External ext = (External) it.next();
+			if (ext != null && ext.getName().equals(name))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isInternal(String name)
+	{
+		Iterator it = internals.iterator();
+		while (it.hasNext())
+		{
+			InternalAST ext = (InternalAST) it.next();
+			if (ext != null && ext.getName().equals(name))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
 

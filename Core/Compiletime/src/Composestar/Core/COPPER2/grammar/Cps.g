@@ -1,54 +1,68 @@
+/*
+ * Parser (Tree generator) and Lexer specification for the Compose* language
+ * $Id$
+ *
+ * Changes:
+ * (2007-10-05) michielh	Dropped single target.selector which implies
+ *				signature matching (too confusing).
+ * (2007-10-08) michielh	Added the filter module parameter
+ * (2007-10-09) michielh	Renamed magic tokens to prevent naming collision 
+ *				with types.
+ */
 grammar Cps;
 
 options {
-	k=1;
-	output=AST;
-	//language=CSharp;
+	k = 1;
+	output = AST;
+	language = Java;
+	superClass = CpsParserBase;
 }
 
+// Magic tokes used for tree construction
 tokens {
-	// keywords
-	Concern;	
-	Fqn;
-	ConcernParameters;
-	Param;
-	In;
+	CONCERN;	
+	FQN;
+	CONCERN_PARAMETERS;
+	PARAM;
+	IN;
 	
-	FilterModule;
-	Internal;
-	Names;
-	External;
-	Init;
-	Condition;
-	InputFilters;
-	OutputFilters;	
-	Filter;
-	FilterElement;
-	Expression;
-	Operator;
-	MatchingPart;
-	SubstPart;
-	List;
-	MessageList;
-	Name;
-	Sign;
-	Target;
-	Selector;
+	FILTER_MODULE;
+	PARAMS;
+	FM_PARAM_SINGLE;
+	FM_PARAM_LIST;	
+	INTERNAL;
+	NAMES;
+	EXTERNAL;
+	INIT;
+	CONDITION;
+	INPUT_FILTERS;
+	OUTPUT_FILTERS;	
+	FILTER;
+	FILTER_ELEMENT;
+	EXPRESSION;
+	OPERATOR;
+	MATCHING_PART;
+	SUBST_PART;
+	LIST;
+	MESSAGE_LIST;
+	NAME;
+	SIGN;
+	TARGET;
+	SELECTOR;
 	
-	Superimposition;
-	LegacySelector;
-	PredicateSelector;
-	PrologExpr;
-	FMBindings;
-	Params;
-	Binding;
-	AnnotationBindings;
-	Constraint;
-	Pre;
+	SUPERIMPOSITION;
+	LEGACY_SELECTOR;
+	PREDICATE_SELECTOR;
+	PROLOG_EXPR;
+	FM_BINDINGS;
+	BINDING;
+	ANNOTATION_BINDINGS;
+	CONSTRAINT;
+	PRE;
 	
-	Implementation;
-	Filename;
-	CodeBlock;
+	IMPLEMENTATION;
+	FILENAME;
+	CODE_BLOCK;
 }
 
 @header {
@@ -72,99 +86,214 @@ tokens {
  * <http://www.gnu.org/licenses/>.
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
- *
- * \$Id$
  */
  
- package Composestar.Core.COPPER2;
+package Composestar.Core.COPPER2;
 }
 
-@members{
-	/**
-	 * Stream location in the CPS file where the embedded source starts
-	 */
-	protected int embeddedSourceLoc;
-	public int getEmbeddedSourceLoc() { return embeddedSourceLoc; }
+@lexer::header {
+/*
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2007 University of Twente.
+ *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ */
+ 
+package Composestar.Core.COPPER2;
 }
 
+/**
+ * Start of a CPS source file. It will always start with a concern declaration.
+ * This rule contains a partial hack for the implementation part. The implementation
+ * rule will eat all remaining tokens therefore a concern will either end with an RCURCLY
+ * or an implementation rule.
+ */
 concern
-	: 'concern' IDENTIFIER concernParameters? ('in' fqn)? LCURLY filtermodule* superimposition? (implementation | RCURLY)
-	-> ^(Concern IDENTIFIER concernParameters? ^(In fqn)? filtermodule* superimposition? implementation?)
+	: 'concern' IDENTIFIER concernParameters? (in='in' fqn)? LCURLY filtermodule* superimposition? (implementation | RCURLY)
+	-> ^(CONCERN[$start] IDENTIFIER concernParameters? ^(IN[$in] fqn)? filtermodule* superimposition? implementation?)
 	;
 
+/**
+ * A generic fully qualified name. Each section is separated by a '.'. Each part is
+ * individually available (including the dot). This way the FQN is available AS IS through
+ * the text value but still available for modifications
+ */
 fqn
 	: IDENTIFIER (PERIOD IDENTIFIER)*
-	-> ^(Fqn IDENTIFIER (PERIOD IDENTIFIER)*)
+	-> ^(FQN[$text] IDENTIFIER (PERIOD IDENTIFIER)*)
 	;	
 	
+/**
+ * Formal concern parameters. Similar to a class constructor.
+ */	
 concernParameters
 	: LROUND IDENTIFIER COLON fqn (COMMA IDENTIFIER COLON fqn)* RROUND
-	-> ^(ConcernParameters ^(Param IDENTIFIER fqn)*)
+	-> ^(CONCERN_PARAMETERS ^(PARAM IDENTIFIER fqn)*)
 	;	
 	
 // $<Filter Module
 
+/**
+ * A filter module. A concern can contain multiple filtermodule declarations. 
+ * The filtermodule will contain a list of internals/externals/conditions and an inputfilter
+ * and outputfilter child node. The internals/externals/conditions are not grouped
+ * under a specific node but directly available from this node. These FM elements can be
+ * identified by their node type.
+ */
 filtermodule
-	: 'filtermodule' IDENTIFIER LCURLY internals? externals? conditions? inputfilters? outputfilters? RCURLY
-	-> ^(FilterModule internals? externals? conditions? inputfilters? outputfilters?)
+	: 'filtermodule' IDENTIFIER filtermoduleParameters? LCURLY 
+		internals? externals? conditions? inputfilters? outputfilters? 
+	  RCURLY
+	-> ^(FILTER_MODULE[$start] IDENTIFIER filtermoduleParameters? internals? externals? conditions? inputfilters? outputfilters?)
+	;
+	
+/**
+ * Filter module parameters. See the thesis of Dirk Doornenbal for datails.
+ */	
+filtermoduleParameters
+	: LROUND fmParamEntry (COMMA fmParamEntry)* RROUND
+	-> ^(PARAMS fmParamEntry+)
+	;
+	
+fmParamEntry
+	: singleFmParam | fmParamList
+	;	
+	
+singleFmParam
+	: QUESTION IDENTIFIER
+	-> ^(FM_PARAM_SINGLE[$start] IDENTIFIER)
 	;
 
+fmParamList
+	: DOUBLEQUESTION IDENTIFIER
+	-> ^(FM_PARAM_LIST[$start] IDENTIFIER)
+	;		
+
+/**
+ * Shorthand for either a fqn or singleFmParam. This constructions is often used.
+ */
+fqnOrSingleFmParam
+	: fqn | singleFmParam
+	;
+	
+identifierOrSingleFmParam
+	: IDENTIFIER | singleFmParam
+	;	
+
+/**
+ * List of internals. No root node is created. Child elements can be identifier by
+ * their corresponding root node.
+ */
 internals
 	: 'internals'! internal+
 	;
 	
+/**
+ * An internal can contain a list of names and a single type identifier. The
+ * type is placed first because it will be easier to use in the walker
+ */	
 internal
-	: IDENTIFIER (COMMA IDENTIFIER)* COLON fqn SEMICOLON
-	-> ^(Internal ^(Names IDENTIFIER+) fqn)
+	: IDENTIFIER (COMMA IDENTIFIER)* COLON fqnOrSingleFmParam SEMICOLON
+	-> ^(INTERNAL fqnOrSingleFmParam  ^(NAMES IDENTIFIER+))
 	;
 
+/**
+ * List of externals. No root node is created.
+ */
 externals
 	: 'externals'! external+
 	;
 
+/**
+ * An external can contain an optional initialization expression.
+ * Without an initialization expression the external should be considered
+ * as an static object reference rather than an instance.
+ * Note: currently paramaters are not supported in the init expression
+ */
 external
-	: IDENTIFIER COLON type=fqn (EQUALS init=fqn LROUND /* params */ RROUND)? SEMICOLON
-	-> ^(External IDENTIFIER $type ^(Init $init /* params */))
+	: IDENTIFIER COLON type=fqnOrSingleFmParam (eq=EQUALS init=fqnOrSingleFmParam LROUND /* params */ RROUND)? SEMICOLON
+	-> ^(EXTERNAL IDENTIFIER $type ^(INIT[$eq] $init /* params */))
 	;	
 
+/**
+ * List of conditions. No root node is created.
+ */
 conditions
 	: 'conditions'! condition+
 	;
-	
+
+/**
+ * Note: currently paramaters are not supported in the expression
+ */	
 condition
-	: IDENTIFIER COLON fqn LROUND /* params */ RROUND SEMICOLON
-	-> ^(Condition IDENTIFIER fqn /* params */ )
+	: IDENTIFIER COLON fqnOrSingleFmParam LROUND /* params */ RROUND SEMICOLON
+	-> ^(CONDITION IDENTIFIER fqnOrSingleFmParam /* params */ )
 	;	
 	
+/**
+ * Creates a node with child elements containing filters and filter operations.
+ * Inputfilters and outputfilter chains do not contain a closing semicolon 
+ * (confusing with a filter operator)
+ */	
 inputfilters
 	: 'inputfilters' filter (filterOperator filter)*
-	-> ^(InputFilters filter (filterOperator filter)*)
+	-> ^(INPUT_FILTERS[$start] filter (filterOperator filter)*)
 	;
 	
 outputfilters
 	: 'outputfilters' filter (filterOperator filter)*
-	-> ^(OutputFilters filter (filterOperator filter)*)
+	-> ^(OUTPUT_FILTERS[$start] filter (filterOperator filter)*)
 	;
 
 // $<Filter
 
+/**
+ * Currerently there is only one filter operator, the semicolon.
+ */
 filterOperator
 	: SEMICOLON
 	;
-	
+
+/**
+ * Generic filter rules. Used by both input and outputfilters.
+ */	
 filter
-	: name=IDENTIFIER COLON type=IDENTIFIER EQUALS LCURLY filterElement (COMMA filterElement)* RCURLY
-	-> ^(Filter $name $type filterElement+)
+	: name=IDENTIFIER COLON type=identifierOrSingleFmParam EQUALS LCURLY filterElement (COMMA filterElement)* RCURLY
+	-> ^(FILTER $name $type filterElement+)
 	;
 	
+/**
+ * This rule contains a predicate in order to keep the grammar LL(1). The conditionExpression
+ * and messagePatternSet can both start with an IDENTIFIER, the predicate will see if there's an
+ * optional conditionExpression.
+ */	
 filterElement
 	: (conditionExpression matchingOperator)=> conditionExpression matchingOperator messagePatternSet
-	-> ^(FilterElement ^(Expression conditionExpression) ^(Operator matchingOperator) messagePatternSet)
+	-> ^(FILTER_ELEMENT ^(EXPRESSION conditionExpression) ^(OPERATOR matchingOperator) messagePatternSet)
 	| messagePatternSet
-	-> ^(FilterElement messagePatternSet)
+	-> ^(FILTER_ELEMENT messagePatternSet)
 	;
 
-// $<Condition Expression	
+// $<Condition Expression
+
+/**
+ * Condition expressions only contain boolean operators
+ */
 conditionExpression
 	: andExpr ( OR^ conditionExpression )?
 	;
@@ -179,7 +308,7 @@ unaryExpr
 	
 operandExpr
 	: LROUND! conditionExpression RROUND!
-	| IDENTIFIER // literals are resolved by the walker
+	| IDENTIFIER // literals (True, False) are resolved by the tree walker
 	;		
 // $> Condition Expression
 
@@ -187,65 +316,97 @@ matchingOperator
 	: ENABLE | DISABLE
 	;
 	
-// Matching and optional Substitution
-// or only target.selector which is a signature matching
+/** 
+ * Matching and optional Substitution
+ * or only target.selector which is a signature matching.
+ * A matchingMatchingPattern set creates two root nodes, a MatchingPart and optional SubstPart.
+ * These nodes will be a child node of a FilterElement node
+ */
 messagePatternSet
 	: matchingPart substitutionPart?
-	-> ^(MatchingPart matchingPart) ^(SubstPart substitutionPart)?
-	// only target.selector alternative dropped per 2007-10-05 (MichielH+Lodewijk)
+	-> ^(MATCHING_PART matchingPart) ^(SUBST_PART substitutionPart)?
+	// single target.selector alternative dropped per 2007-10-05 (MichielH+Lodewijk)
 	//| targetSelector
 	//-> ^(MatchingPart ^(Sign targetSelector))
 	;	
 	
+/**
+ * The matching part can be a list of patterns
+ */	
 matchingPart
 	: LCURLY matchingPatternList (COMMA matchingPatternList)* RCURLY
-	-> ^(List matchingPatternList+)
+	-> ^(LIST matchingPatternList+)
 	| matchingPatternList
 	;
 
+/**
+ * This rule provides message list support: #( pattern, pattern, ...)
+ * To remove message list support in parsing simply change the matchingPart
+ * rule to use matchingPattern instead of matchingPatternList
+ */
 matchingPatternList 
 	: HASH LROUND matchingPattern (COMMA matchingPattern)* RROUND
-	-> ^(MessageList matchingPattern+)
+	-> ^(MESSAGE_LIST matchingPattern+)
 	| matchingPattern
 	;
 
-// Either name or signature matching.
-// Note that a 2nd notation for signature matching is defined in the messagePatternSet rule
+/** 
+ * Either name or signature matching.
+ * Note that a 2nd notation for signature matching is defined in the messagePatternSet rule
+ */
 matchingPattern
 	: (
 		LSQUARE targetSelector RSQUARE
-	  //|	DOUBLEQUOTE targetSelector DOUBLEQUOTE // "target.selector" no longer available
+	  // "target.selector" no longer available. support for this construction
+	  // has been dropped before version 0.5
+	  //|	DOUBLEQUOTE targetSelector DOUBLEQUOTE 
 	  )
-	  -> ^(Name targetSelector)
+	  -> ^(NAME targetSelector)
 	| (
 		LANGLE targetSelector RANGLE
 	  )
-	  -> ^(Sign targetSelector)
+	  -> ^(SIGN targetSelector)
 	;
 	
+/**
+ * Substitution part of the filter element. The second rule provides message list
+ * support.
+ */	
 substitutionPart
-	: HASH  LROUND targetSelector (COMMA targetSelector)* RROUND
-	-> ^(MessageList targetSelector+)
-	| targetSelector
+	: targetSelector
+	| HASH  LROUND targetSelector (COMMA targetSelector)* RROUND
+	-> ^(MESSAGE_LIST targetSelector+)
 	;		
 	
+/**
+ * The target is optional. However the target and selector contain similar constructions,
+ * therefor a predicate is used to check if the target is present.
+ */	
 targetSelector
 	: (target PERIOD)=> target PERIOD! selector
 	| selector
 	;
-	
+
+/**
+ * The target part of the targeSelector. The target can also be a single filter module parameter.
+ */		
 target
-	: IDENTIFIER
-	-> ^(Target IDENTIFIER)
+	: identifierOrSingleFmParam
+	-> ^(TARGET identifierOrSingleFmParam)
 	| ASTERISK
-	-> ^(Target ASTERISK)
+	-> ^(TARGET ASTERISK)
 	;
 
+/**
+ * The selector. The selector may contain both filter module parameter types.
+ */
 selector
 	: IDENTIFIER
-	-> ^(Selector IDENTIFIER)
+	-> ^(SELECTOR IDENTIFIER)
 	| ASTERISK
-	-> ^(Selector ASTERISK)
+	-> ^(SELECTOR ASTERISK)
+	| fmParamEntry
+	-> ^(SELECTOR fmParamEntry)
 	;
 
 // $> Filter
@@ -255,41 +416,63 @@ selector
 	
 // $<Superimposition
 
+/**
+ * Superimposition block. This node will contain a collection of specific childnodes rather than grouping
+ * nodes. So it will be simply a list of conditions, selectors, etc.
+ */
 superimposition
 	: 'superimposition' LCURLY conditionalSi? selectors? filtermodules? annotations? constraints? RCURLY
-	-> ^(Superimposition conditionalSi? selectors? filtermodules? annotations? constraints?)
+	-> ^(SUPERIMPOSITION[$start] conditionalSi? selectors? filtermodules? annotations? constraints?)
 	;
-	
+
+/**
+ * A conditional superimposition declaration. 
+ * (michielh 2007-10-08) Initially the condital declaration did not support the parenthesis, but I've
+ * added it for conformity.
+ */	
 conditionalSi
-	: 'conditions' (IDENTIFIER COLON fqn SEMICOLON)+
-	-> ^(Condition IDENTIFIER fqn)+
+	: 'conditions' (IDENTIFIER COLON fqn  (LROUND /* params */ RROUND)? SEMICOLON)+
+	-> ^(CONDITION IDENTIFIER fqn)+
 	;
 	
 selectors
 	: 'selectors'! (selectorSi SEMICOLON!)+
 	;
-	
+
+/**
+ * There are two form of selectors, legacy selectors or using prolog predicates.
+ */	
 selectorSi
 	: name=IDENTIFIER EQUALS LCURLY 
 	  ( leg=selectorExprLegacy
-	  -> ^(Selector $name $leg)
+	  -> ^(SELECTOR $name $leg)
 	  | expr=selectorExprPredicate
-	  -> ^(Selector $name $expr)
+	  -> ^(SELECTOR $name $expr)
 	  )
 	;
 	
+/**
+ * Legacy selector language. Always starts with a star
+ */	
 selectorExprLegacy
 	: ASTERISK (EQUALS | COLON) fqn RCURLY
-	-> ^(LegacySelector fqn)
+	-> ^(LEGACY_SELECTOR[$start] fqn)
 	;
 	
+/**
+ * Prolog predicate selector. The prolog expression is not parsed, all tokens until the
+ * ending RCURLY are accepted and after that a new token is created that contains the expression
+ * AS IS.
+ */	
 selectorExprPredicate
 	: id=IDENTIFIER '|' expr=allButRcurly RCURLY
-	-> ^(PredicateSelector $id { adaptor.create(PrologExpr, input.toString($expr.start, $expr.stop)) } )
+	-> ^(PREDICATE_SELECTOR $id { adaptor.create(PROLOG_EXPR, input.toString($expr.start, $expr.stop)) } )
 	;	
 
-// A dirty hack to get the prolog expression, this will asume that prolog doesn't
-// use the } in any of it's expressions.
+/**
+ * A dirty hack to get the prolog expression, this will asume that prolog doesn't
+ * use the } in any of it's expressions.
+ */
 allButRcurly
 	: ~RCURLY*
 	//-> ^(PrologExpr[$text])
@@ -299,83 +482,125 @@ filtermodules
 	: 'filtermodules'! (filtermoduleSi SEMICOLON!)+
 	;
 	
-// sel <- FM1, FM2, FM3	
+/**
+ * Filter module binding. It uses a subrule for the conditional superimposition.
+ * After the weave operator (see condBinding) there is a list of filter modules
+ * references. The curly braces are optional.
+ */
 filtermoduleSi
 	: sel=condBinding
 	( LCURLY fmBinding (COMMA fmBinding)* RCURLY
 	| fmBinding (COMMA fmBinding)*
 	)
-	-> ^(FMBindings $sel fmBinding+)
+	-> ^(FM_BINDINGS $sel fmBinding+)
 	;
 
-// optional conditional binding of filter modules
+/** 
+ * Optional conditional binding of filter modules. Uses a predicate to check if
+ * there is a condition. The ENABLE token is only used for form, it does not imply
+ * the ENABLE operator functionality
+ */
 condBinding
 	: (IDENTIFIER ENABLE)=> cond=IDENTIFIER ENABLE sel=IDENTIFIER WEAVE
-	-> $sel ^(Condition $cond)
+	-> $sel ^(CONDITION $cond)
 	| sel=IDENTIFIER WEAVE
 	-> $sel
 	;	
 	
-// A single filter module binding	
+/** 
+ * A single filter module binding. Contains optional filter module parameters.
+ */
 fmBinding
-	: ref=concernFmRef (LROUND param (COMMA param) RROUND)?
-	-> ^(Binding $ref ^(Params param+)?)
+	: ref=concernFmRef (LROUND param (COMMA param)* RROUND)?
+	-> ^(BINDING $ref ^(PARAMS param+)?)
 	;	
 	
-// reference to a filtermodule
-// this can be a local reference (just IDENTIFIER) 
-// or a reference to a filter module in a external concern (fqn::IDENTIFIER)
+/**
+ * reference to a filtermodule
+ * this can be a local reference (just IDENTIFIER) 
+ * or a reference to a filter module in a external concern (fqn::IDENTIFIER)
+ */
 concernFmRef
 	: fqn (DOUBLECOLON IDENTIFIER)?
 	;		
 	
-// A filter module parameter
+/**
+ * A filter module parameter, used in the fmBinding rule
+ */
 param
-	: IDENTIFIER // | STRING ???
-	;	
+	: LCURLY fqn (COMMA fqn)* RCURLY
+	-> ^(LIST fqn+)
+	| fqn
+	;		
 	
-// annotation binding, a bit like filter module binding, except that it uses annotation classes	
+/**
+ * Annotation binding, a bit like filter module binding, except that it uses annotation classes	
+ */
 annotations
 	: 'annotations'! (annotationSi SEMICOLON!)+
 	;
 	
+/**
+ * A list of annotation classes bound to a selector
+ */	
 annotationSi
 	: sel=IDENTIFIER WEAVE
 	( LCURLY fqn (COMMA fqn)* RCURLY
 	| fqn (COMMA fqn)*
 	)
-	-> ^(AnnotationBindings $sel fqn+)
+	-> ^(ANNOTATION_BINDINGS $sel fqn+)
 	;	
 	
-// filter module orderning constraints	
+/**
+ * filter module orderning constraints	
+ */
 constraints
 	: 'constraints'! (constraint SEMICOLON!)+
 	;
-	
+
+/**
+ * The available orderning constrains. Currently only a pre constraint.
+ */	
 constraint
 	: preConstraint
-	-> ^(Constraint preConstraint)
+	-> ^(CONSTRAINT preConstraint)
 	;
-	
+
+/**
+ * The pre(lhs, rhs)  filter module ordering constraint
+ */	
 preConstraint
 	: 'pre' LROUND lhs=concernFmRef COMMA rhs=concernFmRef  RROUND
-	-> ^(Pre $lhs $rhs)
+	-> ^(PRE[$start] $lhs $rhs)
 	;				
 
 // $>
 	
 // $<Implementation
 
+/**
+ * The implementation section. This contains a hack to copy with the variable 
+ * content of the code implementation. The code block is not added as a token element.
+ * (MichielH+Lodewijk 2007-10-08) "implementation by class" has been dropped, it did not 
+ * provide any functionality
+ */
 implementation
 	: 'implementation' 'in' lang=IDENTIFIER 'by' cls=IDENTIFIER 'as' DOUBLEQUOTE fn=filename DOUBLEQUOTE code=codeBlock
-	-> ^(Implementation $lang $cls $fn)
+	-> ^(IMPLEMENTATION[$start] $lang $cls $fn)
 	;
 
+/**
+ * Creates a filename token.
+ */
 filename
 	: (IDENTIFIER | '-')+ (PERIOD (PERIOD | IDENTIFIER | '-')+)?
-	-> ^(Filename[$text])
+	-> ^(FILENAME[$text])
 	;	
 	
+/**
+ * The code block will eat everything after the left curly. The EMBEX module will eventually extract
+ * the content.
+ */	
 codeBlock
 	: LCURLY! .*
 	{ embeddedSourceLoc = $start.getTokenIndex(); }
@@ -408,7 +633,10 @@ COMMA		: ',';
 PERIOD		: '.';
 ASTERISK	: '*';
 HASH		: '#';
+QUOTE		: '\'';
 DOUBLEQUOTE	: '"';
+QUESTION	: '?';
+DOUBLEQUESTION	: '??';
 
 // matching operators
 ENABLE		: '=>';

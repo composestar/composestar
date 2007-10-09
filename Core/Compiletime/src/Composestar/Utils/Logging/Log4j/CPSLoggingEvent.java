@@ -24,7 +24,7 @@ import Composestar.Utils.Logging.LocationProvider;
 public class CPSLoggingEvent extends LoggingEvent implements LocationProvider
 {
 	/**
-	 * Source filename where this event happend. This is not the program source
+	 * Source filename where this event happened. This is not the program source
 	 * location.
 	 */
 	protected String filename;
@@ -34,6 +34,11 @@ public class CPSLoggingEvent extends LoggingEvent implements LocationProvider
 	 */
 	protected int lineNumber;
 
+	/**
+	 * The position on the line
+	 */
+	protected int linePosition;
+
 	public CPSLoggingEvent(String fqnOfCategoryClass, Category logger, Priority level, Object message,
 			Throwable throwable)
 	{
@@ -42,11 +47,13 @@ public class CPSLoggingEvent extends LoggingEvent implements LocationProvider
 		{
 			filename = ((LocationProvider) message).getFilename();
 			lineNumber = ((LocationProvider) message).getLineNumber();
+			linePosition = ((LocationProvider) message).getLinePosition();
 		}
 		else if (throwable instanceof LocationProvider)
 		{
 			filename = ((LocationProvider) throwable).getFilename();
 			lineNumber = ((LocationProvider) throwable).getLineNumber();
+			linePosition = ((LocationProvider) throwable).getLinePosition();
 		}
 	}
 
@@ -58,11 +65,13 @@ public class CPSLoggingEvent extends LoggingEvent implements LocationProvider
 		{
 			filename = ((LocationProvider) message).getFilename();
 			lineNumber = ((LocationProvider) message).getLineNumber();
+			linePosition = ((LocationProvider) message).getLinePosition();
 		}
 		else if (throwable instanceof LocationProvider)
 		{
 			filename = ((LocationProvider) throwable).getFilename();
 			lineNumber = ((LocationProvider) throwable).getLineNumber();
+			linePosition = ((LocationProvider) throwable).getLinePosition();
 		}
 	}
 
@@ -90,5 +99,18 @@ public class CPSLoggingEvent extends LoggingEvent implements LocationProvider
 	public int getLineNumber()
 	{
 		return lineNumber;
+	}
+
+	public void setLinePosition(int inval)
+	{
+		linePosition = inval;
+	}
+
+	/**
+	 * The line in the input source
+	 */
+	public int getLinePosition()
+	{
+		return linePosition;
 	}
 }

@@ -325,8 +325,11 @@
 		<!-- register additional libraries -->
 		<path id="lib.core">
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib">
-			  <include name="**/*.jar" />
-        <exclude name="antrl/antlr-runtime-3.jar" /><!-- is included in the tool -->
+				<include name="**/*.jar" />
+				
+				<!-- these are only needed for the antlr tool -->
+				<exclude name="antrl/antlr-3.jar" />
+				<exclude name="antrl/stringtemplate-3.1b1.jar" />
 			</fileset>
 		</path>
 
@@ -506,7 +509,7 @@
 					<include name="**/*.cs" />
 					<include name="**/*.jsl" />
 					<include name="**/*.cps" />
-					
+
 					<include name="**/*.xml" />
 					<include name="**/*.txt" />
 					<include name="**/*.html" />

@@ -9,6 +9,8 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
+import java.util.List;
+
 public class LabeledConcernReference extends ConcernReference
 {
 	/**
@@ -24,6 +26,12 @@ public class LabeledConcernReference extends ConcernReference
 	public LabeledConcernReference()
 	{
 		super();
+	}
+
+	public LabeledConcernReference(String inLabel, List inConcern)
+	{
+		super(inConcern);
+		setLabel(inLabel);
 	}
 
 	/**

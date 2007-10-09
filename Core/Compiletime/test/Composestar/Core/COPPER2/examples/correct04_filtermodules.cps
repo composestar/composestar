@@ -37,7 +37,7 @@ concern correct04_filtermodules in Concern.Examples
 		externals
 			ext : FooBarQuux = FooBarQuux.instance();
 		inputfilters
-			toext : Dispatch { <ext.*> ext.* }
+			toext : Dispatch = { <ext.*> ext.* }
 	}
 	
 	filtermodule cond
@@ -58,7 +58,7 @@ concern correct04_filtermodules in Concern.Examples
 			isactive : inner.isActive();			
 		inputfilters
 			one : Dispatch = { <vect.*> vect.* };
-			toext : Dispatch { <ext.*> ext.* };
+			toext : Dispatch = { <ext.*> ext.* };
 			accept : Error = { isactive => <inner.*>}
 		outputfilters
 			two : Send = { <inner.*> inner.* }
@@ -78,7 +78,7 @@ concern correct04_filtermodules in Concern.Examples
 			isactive3 : Concern.Examples.Base.isActive();
 		inputfilters
 			one : Dispatch = { <vect.*> vect.* };
-			toext : Dispatch { <ext.*> ext.* };
+			toext : Dispatch = { <ext.*> ext.* };
 			accept : Error = { isactive => <inner.*>}
 		outputfilters
 			two : Send = { <inner.*> inner.* }

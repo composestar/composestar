@@ -27,6 +27,8 @@ public class SourcePatternConverter extends PatternConverter
 
 	public static final int FIELD_LINE = 1;
 
+	public static final int FIELD_LINEPOS = 2;
+
 	protected int sourceField;
 
 	public SourcePatternConverter(FormattingInfo fi, int inSourceField)
@@ -61,6 +63,8 @@ public class SourcePatternConverter extends PatternConverter
 				return lp.getFilename();
 			case FIELD_LINE:
 				return "" + lp.getLineNumber();
+			case FIELD_LINEPOS:
+				return "" + lp.getLinePosition();
 		}
 		return "";
 	}

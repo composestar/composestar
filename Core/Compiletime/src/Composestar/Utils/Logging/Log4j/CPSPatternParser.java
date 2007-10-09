@@ -13,7 +13,6 @@ package Composestar.Utils.Logging.Log4j;
 import org.apache.log4j.helpers.PatternConverter;
 import org.apache.log4j.helpers.PatternParser;
 
-
 /**
  * PatternParser subclass to add support for source location formatting rules:
  * <dl>
@@ -21,6 +20,8 @@ import org.apache.log4j.helpers.PatternParser;
  * <dd>source filename</dd>
  * <dt>%S</dt>
  * <dd>source line number</dd>
+ * <dt>%$</dt>
+ * <dd>source line position</dd>
  * </dl>
  * 
  * @author Michiel Hendriks
@@ -52,6 +53,12 @@ public class CPSPatternParser extends PatternParser
 			// source line
 			case 'S':
 				pc = new SourcePatternConverter(formattingInfo, SourcePatternConverter.FIELD_LINE);
+				currentLiteral.setLength(0);
+				addConverter(pc);
+				break;
+			// source line
+			case '$':
+				pc = new SourcePatternConverter(formattingInfo, SourcePatternConverter.FIELD_LINEPOS);
 				currentLiteral.setLength(0);
 				addConverter(pc);
 				break;

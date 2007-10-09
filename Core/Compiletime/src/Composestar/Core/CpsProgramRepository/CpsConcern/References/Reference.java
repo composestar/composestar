@@ -9,6 +9,7 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
+import java.util.List;
 import java.util.Vector;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
@@ -47,6 +48,16 @@ public abstract class Reference extends RepositoryEntity
 		super();
 		resolved = false;
 		this.pack = new Vector();
+	}
+
+	public Reference(List pkg)
+	{
+		this();
+		if (pkg.size() > 0)
+		{
+			pack.addAll(pkg.subList(0, pkg.size() - 1));
+			name = (String) pkg.get(pkg.size() - 1);
+		}
 	}
 
 	/**

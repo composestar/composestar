@@ -11,8 +11,8 @@ concern correct03_basic in Concern.Examples
 	{
 		selectors
 			sel = { C | isClassWithName(C, 'AClass') };
-		superimposition
-			sel <- FM1
+		filtermodules
+			sel <- FM1;
 	}
 	
 	implementation in CSharp by AClass as "AClass.cs"

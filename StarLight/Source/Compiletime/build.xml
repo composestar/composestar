@@ -145,6 +145,7 @@
 			<copy todir="@{todir}/Binaries">
 				<fileset dir="${out.dist}" />
 				<fileset file="${build.core}/Compiletime/lib/antlr/antlr.jar" />
+				<fileset file="${build.core}/Compiletime/lib/antlr/antlr-runtime-3.jar" />
 			</copy>
 
 			<copy file="${build.core}/Compiletime/lib/log4j/log4j-1.2.14.jar" todir="@{todir}/Binaries" />

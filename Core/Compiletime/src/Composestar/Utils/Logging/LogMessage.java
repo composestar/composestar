@@ -36,6 +36,8 @@ public class LogMessage implements LocationProvider, Serializable
 
 	protected int sourceLine;
 
+	protected int sourceLinePos;
+
 	public LogMessage(Object inMsg)
 	{
 		message = inMsg;
@@ -43,6 +45,7 @@ public class LogMessage implements LocationProvider, Serializable
 		{
 			sourceFilename = ((LocationProvider) message).getFilename();
 			sourceLine = ((LocationProvider) message).getLineNumber();
+			sourceLinePos = ((LocationProvider) message).getLinePosition();
 		}
 	}
 
@@ -53,25 +56,32 @@ public class LogMessage implements LocationProvider, Serializable
 		{
 			sourceFilename = ((LocationProvider) t).getFilename();
 			sourceLine = ((LocationProvider) t).getLineNumber();
+			sourceLinePos = ((LocationProvider) t).getLinePosition();
 		}
 	}
 
-	public LogMessage(Object inMsg, String inFN, int inLN)
+	public LogMessage(Object inMsg, String inFN, int inLN, int onLine)
 	{
 		this(inMsg);
 		sourceFilename = inFN;
 		sourceLine = inLN;
+		sourceLinePos = onLine;
+	}
+
+	public LogMessage(Object inMsg, String inFN, int inLN)
+	{
+		this(inMsg, inFN, inLN, 0);
 	}
 
 	public LogMessage(Object inMsg, RepositoryEntity re)
 	{
-		this(inMsg, re.getDescriptionFileName(), re.getDescriptionLineNumber());
+		this(inMsg, re.getDescriptionFileName(), re.getDescriptionLineNumber(), re.getDescriptionLinePosition());
 		repoEntity = re;
 	}
 
 	public LogMessage(Object inMsg, LocationProvider lp)
 	{
-		this(inMsg, lp.getFilename(), lp.getLineNumber());
+		this(inMsg, lp.getFilename(), lp.getLineNumber(), lp.getLinePosition());
 	}
 
 	public Object getMessage()
@@ -87,6 +97,11 @@ public class LogMessage implements LocationProvider, Serializable
 	public int getLineNumber()
 	{
 		return sourceLine;
+	}
+
+	public int getLinePosition()
+	{
+		return sourceLinePos;
 	}
 
 	public RepositoryEntity getRepositoryEntity()

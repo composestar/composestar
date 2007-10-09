@@ -31,6 +31,14 @@
 				<include name="CpsTreeWalkerTokenTypes.*" />
 				<include name="*.smap" />
 			</fileset>
+			<fileset dir="src/Composestar/Core/COPPER2">
+				<include name="CpsLexer.java" />
+				<include name="CpsParser.java" />
+				<include name="Cps__.g" />
+				<include name="Cps.tokens" />
+				<include name="CpsTreeWalker.java" />
+				<include name="CpsTreeWalker.tokens" />
+			</fileset>
 			<fileset dir="src/Composestar/Utils">
 				<include name="Version.java" />
 			</fileset>
@@ -85,12 +93,21 @@
 				<include name="xerces-2_6_0-xml-apis.jar" />
 			</fileset>
 		</copy>
-		
+
 		<antcall target="eclipse_manifest" inheritRefs="true" />
 	</target>
 
 	<target name="antlr" depends="local_init">
 		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java" inheritRefs="true" />
+
+		<java classname="org.antlr.Tool" classpath="${basedir}/lib/antlr/antlr.jar;${basedir}/lib/antlr/antlr-3.jar;${basedir}/lib/antlr/stringtemplate-3.jar" failonerror="true">
+			<arg value="-o" />
+			<arg file="src/Composestar/CORE/COPPER2" />
+			<arg value="-lib" />
+			<arg file="src/Composestar/CORE/COPPER2" />
+			<arg file="src/Composestar/CORE/COPPER2/grammar/Cps.g" />
+			<arg file="src/Composestar/CORE/COPPER2/grammar/CpsTreeWalker.g" />
+		</java>
 	</target>
 
 	<target name="compile" depends="local_init,antlr">

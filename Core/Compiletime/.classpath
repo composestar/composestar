@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**/.svn/|AssemblyInfo.java|Composestar/AssemblyInfo.java|bin/|obj/" including="**/*.gpr|**/*.java|**/*.pro|**/*.xslt|**/moduleinfo.xml|MANIFEST.MF" kind="src" path="src"/>
+	<classpathentry excluding="**/.svn/|AssemblyInfo.java|Composestar/AssemblyInfo.java|bin/|obj/|Composestar/Core/COPPER2/grammar/build/" including="**/*.gpr|**/*.java|**/*.pro|**/*.xslt|**/moduleinfo.xml|MANIFEST.MF" kind="src" path="src"/>
 	<classpathentry excluding="**/.svn/|TEST-*.txt" kind="src" output="test" path="test"/>
 	<classpathentry kind="lib" path="lib/antlr/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/junit/junit.jar"/>
@@ -12,6 +12,6 @@
 	<classpathentry kind="lib" path="lib/groove/xerces-2_6_0-xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/groove/xerces-2_6_0-xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/log4j/log4j-1.2.14.jar"/>
-	<classpathentry kind="lib" path="lib/antlr/antlr-3.jar"/>
+	<classpathentry kind="lib" path="lib/antlr/antlr-runtime-3.jar" sourcepath="lib/antlr/antlr-3.0.1/src"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

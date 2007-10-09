@@ -11,5 +11,13 @@ public interface LocationProvider
 {
 	String getFilename();
 
+	/**
+	 * @return the line number
+	 */
 	int getLineNumber();
+
+	/**
+	 * @return the character position on the line
+	 */
+	int getLinePosition();
 }

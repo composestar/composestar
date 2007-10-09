@@ -45,6 +45,7 @@ public class Condition extends DeclaredRepositoryEntity
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BooleanOclExp
 	 *         ression
+	 * @deprecated what is this?
 	 */
 	public BooleanOclExpression getOCL()
 	{
@@ -53,6 +54,7 @@ public class Condition extends DeclaredRepositoryEntity
 
 	/**
 	 * @param oCL
+	 * @deprecated what is this?
 	 */
 	public void setOCL(BooleanOclExpression inocl)
 	{

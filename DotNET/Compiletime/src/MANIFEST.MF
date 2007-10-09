@@ -1,3 +1,12 @@
 Manifest-Version: 1.0
 Main-Class: Composestar.DotNET.MASTER.DotNETMaster
-Class-Path: ComposestarCORE.jar antlr.jar log4j-1.2.14.jar prolog.jar castor-0_9_5_2-xml.jar groove-1_2_0.jar jgraph.jar xerces-2_6_0-xml-apis.jar xerces-2_6_0-xercesImpl.jar
+Class-Path: ComposestarCORE.jar 
+ antlr.jar
+ antlr-runtime-3.jar
+ log4j-1.2.14.jar 
+ prolog.jar 
+ castor-0_9_5_2-xml.jar 
+ groove-1_2_0.jar 
+ jgraph.jar 
+ xerces-2_6_0-xml-apis.jar 
+ xerces-2_6_0-xercesImpl.jar

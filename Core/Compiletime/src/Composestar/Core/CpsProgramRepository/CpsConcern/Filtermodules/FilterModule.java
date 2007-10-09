@@ -478,9 +478,9 @@ public class FilterModule extends DeclaredRepositoryEntity
 	 *         difference yet between ?foo and ??foo
 	 * @param fmp
 	 */
-	public boolean doesParameterASTExists(FilterModuleParameterAST fmp)
+	public boolean parameterASTExists(FilterModuleParameterAST fmp)
 	{
-		return fmAst.doesParameterExists(fmp);
+		return fmAst.parameterExists(fmp);
 	}
 
 	/**

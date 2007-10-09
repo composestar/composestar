@@ -29,9 +29,6 @@ public class CpsConcern extends Concern
 
 	public Implementation implementation;
 
-	/**
-	 * @modelguid {D83B8E0F-0DD6-435B-80D8-67C6EC1DC456}
-	 */
 	public SuperImposition superImposition;
 
 	public Vector filterModules; // instances
@@ -39,7 +36,7 @@ public class CpsConcern extends Concern
 	public Vector filterModulesAST;
 
 	public Vector formalParameters;
-	
+
 	/**
 	 * The namespace/package
 	 */
@@ -117,6 +114,20 @@ public class CpsConcern extends Concern
 	{
 		filterModulesAST.addElement(filtermodule);
 		return true;
+	}
+
+	public FilterModuleAST getFilterModuleAST(String name)
+	{
+		Iterator it = filterModulesAST.iterator();
+		while (it.hasNext())
+		{
+			FilterModuleAST fmast = (FilterModuleAST) it.next();
+			if (fmast != null && fmast.getName().equals(name))
+			{
+				return fmast;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -206,6 +217,11 @@ public class CpsConcern extends Concern
 	{
 		namespace = inName;
 		updateRepositoryReference();
+	}
+
+	public String getNamespace()
+	{
+		return namespace;
 	}
 
 	public String getQualifiedName()

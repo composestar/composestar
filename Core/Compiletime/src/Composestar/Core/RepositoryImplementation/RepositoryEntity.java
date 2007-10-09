@@ -55,6 +55,11 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 	 */
 	public int descriptionLineNumber;
 
+	/**
+	 * Line number where this entity was declared
+	 */
+	public int descriptionLinePosition;
+
 	public RepositoryEntity()
 	{
 		dynamicmap = DataMap.newDataMapInstance();
@@ -67,7 +72,7 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 		}
 	}
 
-	private static int getCounter()
+	private static synchronized int getCounter()
 	{
 		return counter++;
 	}
@@ -80,6 +85,16 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 	public void setDescriptionLineNumber(int newLineNumber)
 	{
 		descriptionLineNumber = newLineNumber;
+	}
+
+	public int getDescriptionLinePosition()
+	{
+		return descriptionLinePosition;
+	}
+
+	public void setDescriptionLinePosition(int newLineNumber)
+	{
+		descriptionLinePosition = newLineNumber;
 	}
 
 	public String getDescriptionFileName()
