@@ -2,6 +2,7 @@ Manifest-Version: 1.0
 Main-Class: Composestar.Java.MASTER.JavaMaster
 Class-Path: @core@/ComposestarCORE.jar 
   @core@/antlr.jar 
+  @core@/antlr-runtime-3.jar
   @core@/log4j-1.2.14.jar 
   @core@/prolog.jar
   @core@/castor-0_9_5_2-xml.jar

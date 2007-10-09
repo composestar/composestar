@@ -66,7 +66,7 @@
 		<copy file="quicklaunch/MANIFEST.MF.template" tofile="quicklaunch/MANIFEST.MF" overwrite="true"/>
 		<replace file="quicklaunch/MANIFEST.MF" >
 			<replacefilter token="@core@" value="../composestar.core_${version.core}/lib"/>
-			<replacefilter token="@java@" value="lib"/>
+			<replacefilter token="@java@" value="../composestar.java_${version.java}/lib"/>
 		</replace>
 		<jar destfile="${out.dist}/compiler.jar" manifest="quicklaunch/MANIFEST.MF">
 			<fileset dir="quicklaunch">
