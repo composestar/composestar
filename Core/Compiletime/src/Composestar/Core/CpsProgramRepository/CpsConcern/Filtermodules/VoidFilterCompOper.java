@@ -23,7 +23,7 @@ public class VoidFilterCompOper extends FilterCompOper
 	 * 
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter
 	 */
-	public Filter getRightArgument()
+	public FilterAST getRightArgument()
 	{
 		return null;
 	}
@@ -33,7 +33,7 @@ public class VoidFilterCompOper extends FilterCompOper
 	 * 
 	 * @param filter
 	 */
-	public void setRightArgument(Filter filter)
+	public void setRightArgument(FilterAST filter)
 	{
 
 	}

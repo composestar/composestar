@@ -24,10 +24,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOper
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperatorType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElementAST;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameterAST;
@@ -48,7 +46,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureM
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
@@ -1809,104 +1806,110 @@ public class CpsRepositoryBuilder
 	 * Makes sure the rightOperator fields in all inputfilters point to the
 	 * correct objects
 	 */
+	// Note: this is broken, FilterModule instances are not available until
+	// REXREF
 	private void completeInputFilters()
 	{
-		// int i;
-		FilterModule temp;
-		Filter current;
-		Filter next;
-
-		for (Iterator it = ds.getAllInstancesOf(FilterModule.class); it.hasNext();)
-		{
-			temp = (FilterModule) it.next();
-			Iterator it1 = temp.getInputFilterIterator();
-			Iterator it2 = temp.getInputFilterIterator();
-			if (it2.hasNext())
-			{
-				it2.next(); // increase by 1, so it is one ahead of it
-			}
-			while (it1.hasNext())
-			{
-				current = (Filter) it1.next();
-				if (it2.hasNext())
-				{
-					next = (Filter) it2.next(); // check for next filter
-				}
-				else
-				{
-					next = null;
-				}
-
-				if (next != null)
-				{
-					current.getRightOperator().setRightArgument(next);
-				}
-				else
-				{
-					// we're at the last element. replace the current
-					// rightoperator
-					// we couldn't do this before this point in the code
-					VoidFilterCompOper vfco = new VoidFilterCompOper();
-					vfco.setParent(current);
-					vfco.setRightArgument(null); // nothing after this
-					current.setRightOperator(vfco);
-					vfco.setDescriptionFileName(current.getDescriptionFileName());
-					ds.addObject(vfco);
-				}
-			}
-		}
+	// // int i;
+	// FilterModule temp;
+	// Filter current;
+	// Filter next;
+	//
+	// for (Iterator it = ds.getAllInstancesOf(FilterModule.class);
+	// it.hasNext();)
+	// {
+	// temp = (FilterModule) it.next();
+	// Iterator it1 = temp.getInputFilterIterator();
+	// Iterator it2 = temp.getInputFilterIterator();
+	// if (it2.hasNext())
+	// {
+	// it2.next(); // increase by 1, so it is one ahead of it
+	// }
+	// while (it1.hasNext())
+	// {
+	// current = (Filter) it1.next();
+	// if (it2.hasNext())
+	// {
+	// next = (Filter) it2.next(); // check for next filter
+	// }
+	// else
+	// {
+	// next = null;
+	// }
+	//
+	// if (next != null)
+	// {
+	// current.getRightOperator().setRightArgument(next);
+	// }
+	// else
+	// {
+	// // we're at the last element. replace the current
+	// // rightoperator
+	// // we couldn't do this before this point in the code
+	// VoidFilterCompOper vfco = new VoidFilterCompOper();
+	// vfco.setParent(current);
+	// vfco.setRightArgument(null); // nothing after this
+	// current.setRightOperator(vfco);
+	// vfco.setDescriptionFileName(current.getDescriptionFileName());
+	// ds.addObject(vfco);
+	// }
+	// }
+	// }
 	}
 
 	/**
 	 * Makes sure the rightOperator fields in all outputfilters point to the
 	 * correct objects
 	 */
+	// Note: this is broken, FilterModule instances are not available until
+	// REXREF
 	private void completeOutputFilters()
 	{
-		// int i;
-		FilterModule temp;
-		Filter current;
-		Filter next;
-
-		for (Iterator it = ds.getAllInstancesOf(FilterModule.class); it.hasNext();)
-		{
-			temp = (FilterModule) it.next();
-			Iterator it1 = temp.getOutputFilterIterator();
-			Iterator it2 = temp.getOutputFilterIterator();
-			if (it2.hasNext())
-			{
-				it2.next(); // increase by 1, so it is one ahead of it
-			}
-			while (it1.hasNext())
-			{
-				current = (Filter) it1.next();
-				if (it2.hasNext())
-				{
-					next = (Filter) it2.next(); // check for next filter
-				}
-				else
-				{
-					next = null;
-				}
-
-				if (next != null)
-				{
-					current.getRightOperator().setRightArgument(next);
-				}
-				else
-				{
-					// we're at the last element. replace the current
-					// rightoperator
-					// we couldn't do this before
-					VoidFilterCompOper vfco = new VoidFilterCompOper();
-					vfco.setParent(current);
-					vfco.setRightArgument(null); // nothing after this
-					current.setRightOperator(vfco);
-					vfco.setDescriptionFileName(current.getDescriptionFileName());
-					ds.addObject(vfco);
-				}
-			}
-		}
+	// // int i;
+	// FilterModule temp;
+	// Filter current;
+	// Filter next;
+	//
+	// for (Iterator it = ds.getAllInstancesOf(FilterModule.class);
+	// it.hasNext();)
+	// {
+	// temp = (FilterModule) it.next();
+	// Iterator it1 = temp.getOutputFilterIterator();
+	// Iterator it2 = temp.getOutputFilterIterator();
+	// if (it2.hasNext())
+	// {
+	// it2.next(); // increase by 1, so it is one ahead of it
+	// }
+	// while (it1.hasNext())
+	// {
+	// current = (Filter) it1.next();
+	// if (it2.hasNext())
+	// {
+	// next = (Filter) it2.next(); // check for next filter
+	// }
+	// else
+	// {
+	// next = null;
+	// }
+	//
+	// if (next != null)
+	// {
+	// current.getRightOperator().setRightArgument(next);
+	// }
+	// else
+	// {
+	// // we're at the last element. replace the current
+	// // rightoperator
+	// // we couldn't do this before
+	// VoidFilterCompOper vfco = new VoidFilterCompOper();
+	// vfco.setParent(current);
+	// vfco.setRightArgument(null); // nothing after this
+	// current.setRightOperator(vfco);
+	// vfco.setDescriptionFileName(current.getDescriptionFileName());
+	// ds.addObject(vfco);
+	// }
+	// }
+	// }
 	}
 
 	/**

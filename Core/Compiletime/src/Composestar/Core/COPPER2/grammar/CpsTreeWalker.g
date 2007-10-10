@@ -42,6 +42,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
 import Composestar.Core.Exception.*;
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 
 import java.util.Vector;
 }
@@ -51,7 +52,7 @@ concern returns [CpsConcern c = new CpsConcern();]
 	: ^(strt=CONCERN {setLocInfo(c, strt);}
 		name=IDENTIFIER {c.setName($name.text);}
 		(concernParameters[c])?
-		(^(IN ns=fqn {c.setNamespace(ns);}))?
+		(^(IN ns=fqnAsList {c.setNamespace(ns);}))?
 		(filtermodule[c])*
 		(superimposition[c])?
 		(implementation[c])?
@@ -303,10 +304,7 @@ condition [FilterModuleAST fm]
 			dor.setFilterModule(fm.getName());
 			CpsConcern conc = (CpsConcern) fm.getParent();
 			dor.setConcern(conc.getName());
-			Vector ns = new Vector();
-			String[] ns_ = conc.getNamespace().split("\\.");
-			for (String s : ns_) ns.add(s);
-			dor.setPackage(ns);
+			dor.setPackage(conc.getNamespace());
 			setLocInfo(dor, $first);
 			cond.setShortref(dor);
 		}
@@ -327,93 +325,428 @@ condition [FilterModuleAST fm]
 	;	
 	
 inputfilters [FilterModuleAST fm]
-	: ^(INPUT_FILTERS lhs=filter[fm] (op=filterOperator rhs=filter[fm])*)
+// throws CpsSemanticException
+	: ^(INPUT_FILTERS lhs=filter[fm] 
+	  {
+	  	if (!fm.addInputFilter(lhs))
+		{
+			throw new CpsSemanticException(String.format("Inputfilter name \%s is not unqiue in filter module \%s", 
+				lhs.getName(), fm.getQualifiedName()), lhs);
+		}
+	  }
+	  (op=filterOperator rhs=filter[fm]
+	    {
+	  	lhs.setRightOperator(op);
+	  	op.setParent(lhs);
+	  	op.setRightArgument(rhs);
+		if (!fm.addInputFilter(rhs))
+		{
+			throw new CpsSemanticException(String.format("Inputfilter name \%s is not unqiue in filter module \%s", 
+				rhs.getName(), fm.getQualifiedName()), rhs);
+		}
+		lhs = rhs;
+	    }
+	  )*
+	  {
+		FilterCompOper voidop = new VoidFilterCompOper();
+		lhs.setRightOperator(voidop);
+		voidop.setParent(lhs);		
+	  }
+	  )
 	;
 	
 outputfilters [FilterModuleAST fm]
-	: ^(OUTPUT_FILTERS lhs=filter[fm] (op=filterOperator rhs=filter[fm])*)
+// throws CpsSemanticException
+	: ^(OUTPUT_FILTERS lhs=filter[fm] 
+	  {
+	  	if (!fm.addOutputFilter(lhs))
+		{
+			throw new CpsSemanticException(String.format("Outputfilter name \%s is not unqiue in filter module \%s", 
+				lhs.getName(), fm.getQualifiedName()), lhs);
+		}
+	  }
+	  (op=filterOperator rhs=filter[fm]
+	    {
+	  	lhs.setRightOperator(op);
+	  	op.setParent(lhs);
+	  	op.setRightArgument(rhs);
+	 	if (!fm.addOutputFilter(rhs))
+		{
+			throw new CpsSemanticException(String.format("Outputfilter name \%s is not unqiue in filter module \%s", 
+				rhs.getName(), fm.getQualifiedName()), rhs);
+		}
+	  	lhs = rhs;
+	    }
+	  )*
+	  {
+		FilterCompOper voidop = new VoidFilterCompOper();
+		lhs.setRightOperator(voidop);
+		voidop.setParent(lhs);		
+	  }
+	  )
 	;
 
 // $<Filter
 
-
-filterOperator
-	: SEMICOLON
+filterOperator returns [FilterCompOper op]
+	: seq=SEMICOLON 
+	  {
+	  	op = new SEQfilterCompOper();
+	  	setLocInfo(op, $seq);
+	  }
 	;
 
-filter [FilterModuleAST fm] returns [FilterAST filter]
-	: ^(FILTER IDENTIFIER identifierOrSingleFmParam filterElement+)
+/**
+ * Filter module passed to resolve FM elements, parent of various elements are not set yet
+ */
+filter [FilterModuleAST fm] returns [FilterAST filter = new FilterAST();]
+// throws CpsSemanticException
+	: ^(frst=FILTER name=IDENTIFIER ft=filterType 
+	  {
+	  	setLocInfo(filter, $frst);
+	  	filter.setName($name.text);
+	  	filter.setParent(fm);
+	  	filter.setFilterType(ft);
+	  }
+	  (^(PARAMS (prm=singleFmParam
+	    {
+	  	// fm params
+	  	filter.addParameter($prm.text);
+	    }
+	  )+))?
+	  lhs=filterElement[fm] 
+	  {
+	  	lhs.setParent(filter);
+	  	filter.addFilterElement(lhs);
+	  }
+	  (op=filterElementOperator rhs=filterElement[fm]
+	    {
+		lhs.setRightOperator(op);
+		op.setParent(lhs);
+		op.setRightArgument(rhs);
+		rhs.setParent(filter);
+		filter.addFilterElement(rhs);
+		lhs=rhs;
+	    }
+	  )*
+	  {
+	  	VoidFilterElementCompOper vop = new VoidFilterElementCompOper();
+	  	lhs.setRightOperator(vop);
+	  	vop.setParent(lhs);
+	  }
+	  )
 	;
 	
-filterElement
-	: ^(FILTER_ELEMENT (^(EXPRESSION conditionExpression))? (^(OPERATOR matchingOperator))? messagePatternSet)
+filterType returns [FilterType ft]
+// throws CpsSemanticException
+	: name=IDENTIFIER
+	  {
+	  	String ftName = $name.text;
+	  	ft = FilterType.getFilterType(ftName);
+	  	if ((ft == null) && LegacyFilterTypes.useLegacyFilterTypes)
+		{
+			logger.info(String.format("Creating legacy custom filter with name: \%s", ftName));
+			ft = LegacyFilterTypes.createCustomFilterType(ftName);
+		}
+		if (ft == null)
+		{
+			throw new CpsSemanticException(String.format("Undefined filter type: \%s", ftName), sourceFile, name);
+		}
+	  }
+	| prm=singleFmParam
+	  {if (prm != null) throw new CpsSemanticException(String.format("Filter Module Parameters are not supported as filter type"), sourceFile, $prm.start);}
+	;	
+	
+filterElementOperator returns [FilterElementCompOper op]
+	: or=COMMA 
+	  {
+	  	op = new CORfilterElementCompOper();
+	  	setLocInfo(op, $or);
+	  }
+	;	
+
+/**
+ * Filter module passed to resolve FM elements, parent of various elements are not set yet
+ */
+filterElement [FilterModuleAST fm] returns [FilterElementAST fe = new FilterElementAST();]
+// throws CpsSemanticException
+	: ^(frst=FILTER_ELEMENT 
+	  {
+	  	setLocInfo(fe, $frst);
+	  }
+	  (^(EXPRESSION ex=conditionExpression[fm]))? 
+	  (^(OPERATOR op=matchingOperator))?
+	  {
+	  	if (ex == null)
+	  	{
+	  		ex = new True();
+	  		setLocInfo(ex, $frst);
+	  	}
+	  	ex.setParent(fe);
+	  	fe.setConditionPart(ex);
+	  	
+	  	if (op == null)
+	  	{
+	  		op = new EnableOperator();
+	  		setLocInfo(op, $frst);
+	  	}
+	  	op.setParent(fe);
+	  	fe.setEnableOperatorType(op);
+	  }
+	  mp=messagePatternSet[fm]
+	  {
+	  	mp.setParent(fe);
+	  	fe.setMatchingPattern(mp);
+	  }
+	  )
 	;
 
 // $<Condition Expression
 
-conditionExpression
-	: ^(OR conditionExpression conditionExpression )
-	| andExpr
+conditionExpression [FilterModuleAST fm] returns [ConditionExpression ex]
+	: ^(frst=OR lhs=conditionExpression[fm] rhs=conditionExpression[fm] 
+	    {
+	    	ex = new And();
+	    	setLocInfo(ex, $frst);
+	    	lhs.setParent(ex);
+	    	rhs.setParent(ex);
+	    	((BinaryOperator) ex).setLeft(lhs);
+	    	((BinaryOperator) ex).setRight(rhs);
+	    }
+	  )
+	| andex=andExpr[fm] {ex = andex;}
 	;
 
-andExpr
-	: ^(AND conditionExpression conditionExpression )
-	| unaryExpr
+andExpr [FilterModuleAST fm] returns [ConditionExpression ex]
+	: ^(frst=AND lhs=conditionExpression[fm] rhs=conditionExpression[fm] 
+	    {
+	    	ex = new And();
+	    	setLocInfo(ex, $frst);
+	    	lhs.setParent(ex);
+	    	rhs.setParent(ex);
+	    	((BinaryOperator) ex).setLeft(lhs);
+	    	((BinaryOperator) ex).setRight(rhs);
+	    }
+	  )
+	| unex=unaryExpr[fm] {ex = unex;}
 	;
 	
-unaryExpr
-	: ^(NOT conditionExpression)
-	| operandExpr
+unaryExpr [FilterModuleAST fm] returns [ConditionExpression ex]
+	: ^(frst=NOT oper=conditionExpression[fm]
+	    {
+	  	ex = new Not();
+	  	setLocInfo(ex, $frst);
+	  	oper.setParent(ex);
+	  	((Not) ex).setOperand(oper);
+	    }
+	  )
+	| oex=operandExpr[fm] {ex = oex;}
 	;
 	
-operandExpr
-	: IDENTIFIER // literals (True, False) are resolved by the tree walker
+operandExpr [FilterModuleAST fm] returns [ConditionExpression ex]
+	: name=IDENTIFIER // literals (True, False) are resolved by the tree walker
+	  {
+	  	String oper = $name.text;
+	  	if ("true".equalsIgnoreCase(oper))
+	  	{
+	  		ex = new True();
+	  	}
+	  	else if ("false".equalsIgnoreCase(oper))
+	  	{
+	  		ex = new False();
+	  	}
+	  	else {
+	  		ex = new ConditionVariable();
+	  		ConditionReference cref = new ConditionReference();
+	  		cref.setName(oper);
+	  		cref.setFilterModule(fm.getName());
+	  		CpsConcern cpsc = (CpsConcern) fm.getParent();
+	  		cref.setConcern(cpsc.getName());
+	  		cref.setPackage(cpsc.getNamespace());
+	  		setLocInfo(cref, name);
+	  		((ConditionVariable) ex).setCondition(cref);
+	  	}
+	  	setLocInfo(ex, $name);
+	  }
 	;
 
 // $> Condition Expression
 
-matchingOperator
-	: ENABLE | DISABLE
+matchingOperator returns [EnableOperatorType op]
+	: en=ENABLE {op = new EnableOperator(); setLocInfo(op, $en);}
+	| di=DISABLE {op = new DisableOperator(); setLocInfo(op, $di);}
 	;
 	
-messagePatternSet
-	: ^(MATCHING_PART matchingPart) (^(SUBST_PART substitutionPart))?
+messagePatternSet [FilterModuleAST fm] returns [MatchingPatternAST mp = new MatchingPatternAST();]
+// throws CpsSemanticException
+	: ^(frst=MATCHING_PART matchingPart[mp,fm]) (^(SUBST_PART substitutionPart[mp,fm]))?
+	  {
+	  	setLocInfo(mp, $frst);
+	  }
 	;	
 	
-matchingPart
-	: ^(LIST matchingPatternList+)
-	| matchingPatternList
+matchingPart [MatchingPatternAST mp, FilterModuleAST fm]
+// throws CpsSemanticException
+	: ^(LIST (m1=matchingPattern[fm]
+	    {
+	    	m1.setParent(mp);
+	    	mp.addMatchingPart(m1);
+	    }
+	  )+)
+	| ^(MESSAGE_LIST 
+	    (m2=matchingPattern[fm]
+	      {
+	      	m2.setParent(mp);
+	      	mp.addMatchingPart(m2);
+	      }
+	    )+
+	    {
+	    	mp.setIsMessageList(true);
+	    }
+	  )
+	| m3=matchingPattern[fm]
+	  {
+	  	m3.setParent(mp);
+	  	mp.addMatchingPart(m3);
+	  }
 	;
 
-matchingPatternList 
-	: ^(MESSAGE_LIST matchingPattern+)
-	| matchingPattern
-	;
-
-matchingPattern
-	: ^(NAME targetSelector)
-	| ^(SIGN targetSelector)
+matchingPattern [FilterModuleAST fm] returns [MatchingPartAST mp = new MatchingPartAST()]
+// throws CpsSemanticException
+	: ^(nm=NAME 
+	  {
+	  	MatchingType mt = new NameMatchingType();
+	  	setLocInfo(mt, $nm);
+	  	mt.setParent(mp);
+	  	mp.setMatchType(mt);
+	  	setLocInfo(mp, $nm);
+	  }
+	    targetSelector[mp,fm]
+	  )
+	| ^(sm=SIGN 
+	  {
+	  	MatchingType mt = new SignatureMatchingType();
+	  	setLocInfo(mt, $sm);
+	  	mt.setParent(mp);
+	  	mp.setMatchType(mt);
+	  	setLocInfo(mp, $sm);
+	  }
+	    targetSelector[mp,fm]
+	  )
 	;
 	
-substitutionPart
-	: targetSelector
-	| ^(MESSAGE_LIST targetSelector+)
+substitutionPart [MatchingPatternAST mp, FilterModuleAST fm]
+// throws CpsSemanticException
+@init {
+	SubstitutionPartAST sp;
+}
+	: {sp = new SubstitutionPartAST();}
+	  targetSelector[sp,fm]
+	  {
+	  	if (mp.getIsMessageList())
+	  	{
+	  		throw new CpsSemanticException("Substitution part can notbe a message list", sp);
+	  	}
+	  	setLocInfo(sp, $start);
+	  	sp.setParent(mp);
+		mp.addSubstitutionPart(sp);
+	  }
+	| ^(strt=MESSAGE_LIST 
+	  {
+	  	if (!mp.getIsMessageList())
+	  	{
+	  		throw new CpsSemanticException("Substitution part must also be a message list", sourceFile, strt);
+	  	}
+	  }
+	    ({sp = new SubstitutionPartAST();}
+	      targetSelector[sp,fm]
+		{
+			setLocInfo(sp, $start);
+			sp.setParent(mp);
+	      		mp.addSubstitutionPart(sp);
+		}
+	    )
+	  +)
 	;		
 	
-targetSelector
-	: target selector
-	| selector
+targetSelector [AbstractPatternAST ap, FilterModuleAST fm]
+	: t=target[fm] s=selector
+	  {
+	  	t.setParent(ap);
+	  	ap.setTarget(t);
+	  	s.setParent(ap);
+	  	ap.setSelector(s);
+	  }
+	| ss=selector
+	  {
+	  	Target tt = new Target();
+	  	tt.setName("*");
+	  	tt.setParent(ap);
+	  	ap.setTarget(tt);
+	  	
+	  	ss.setParent(ap);
+	  	ap.setSelector(ss);
+	  }
 	;
 
-target
-	: ^(TARGET identifierOrSingleFmParam)
-	| ^(TARGET ASTERISK)
+target [FilterModuleAST fm] returns [Target t = new Target();]
+// throws CpsSemanticException
+	: ^(TARGET ident=IDENTIFIER
+	    {
+	    	setLocInfo(t, $ident);
+	    	if (Target.INNER.equals($ident.text))
+	    	{
+	    		t.setName(Target.INNER);
+	    	}
+	    	else {
+	    		DeclaredObjectReference dor = new DeclaredObjectReference();
+	    		dor.setName($ident.text);
+	    		dor.setFilterModule(fm.getName());
+	    		CpsConcern cpsc = (CpsConcern) fm.getParent();
+	    		dor.setConcern(cpsc.getName());
+	    		dor.setPackage(cpsc.getNamespace());
+	    		t.setRef(dor);
+	    	}
+	    }
+	  )
+	| ^(TARGET p=singleFmParam
+	    {
+	    	if (p != null) throw new CpsSemanticException("Filter module parameters have not been implemented for targets", sourceFile, $p.start);
+	    }
+	  )
+	| ^(TARGET a=ASTERISK {t.setName($a.text); setLocInfo(t, $a); })
 	;
 
-selector
-	: ^(SELECTOR IDENTIFIER)
-	| ^(SELECTOR ASTERISK)
-	| ^(SELECTOR fmParamEntry)
+selector returns [MessageSelectorAST s]
+	: ^(SELECTOR ident=IDENTIFIER
+	    {
+	    	s = new MessageSelectorAST();
+	    	s.setName($ident.text); 
+	    	setLocInfo(s, $ident);
+	    }
+	  )
+	| ^(SELECTOR a=ASTERISK
+	    {
+	    	s = new MessageSelectorAST();
+	    	s.setName($a.text); 
+	    	setLocInfo(s, $a);
+	    }
+	  )
+	| ^(SELECTOR sp=singleFmParam
+	    {
+		s = new ParameterizedMessageSelectorAST();
+		s.setName($sp.text); 
+	    	setLocInfo(s, $sp.start);
+	    }
+	  )
+	| ^(SELECTOR pl=fmParamList
+	    {
+		s = new ParameterizedMessageSelectorAST();
+		s.setName($sp.text); 
+		((ParameterizedMessageSelectorAST) s).setList(true);
+	    	setLocInfo(s, $sp.start);
+	    }
+	  )
 	;
 
 // $> Filter

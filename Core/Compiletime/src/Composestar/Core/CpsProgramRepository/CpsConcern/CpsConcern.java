@@ -10,6 +10,7 @@
 package Composestar.Core.CpsProgramRepository.CpsConcern;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -19,6 +20,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Implement
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.LabeledConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImposition;
 import Composestar.Utils.CPSIterator;
+import Composestar.Utils.StringUtils;
 
 /**
  * we can reason about the implementation here.
@@ -40,7 +42,7 @@ public class CpsConcern extends Concern
 	/**
 	 * The namespace/package
 	 */
-	public String namespace;
+	public Vector namespace;
 
 	/**
 	 * @modelguid {E0CC63BC-2E96-432B-8132-8C0ADC2BDBA7}
@@ -52,6 +54,7 @@ public class CpsConcern extends Concern
 		filterModules = new Vector();
 		filterModulesAST = new Vector();
 		formalParameters = new Vector();
+		namespace = new Vector();
 	}
 
 	/**
@@ -215,11 +218,23 @@ public class CpsConcern extends Concern
 
 	public void setNamespace(String inName)
 	{
-		namespace = inName;
+		Vector vect = new Vector();
+		String[] str = StringUtils.split(inName, '.');
+		for (int i = 0; i < str.length; i++)
+		{
+			vect.add(str);
+		}
+		setNamespace(vect);
+	}
+
+	public void setNamespace(List inName)
+	{
+		namespace.clear();
+		namespace.addAll(inName);
 		updateRepositoryReference();
 	}
 
-	public String getNamespace()
+	public Vector getNamespace()
 	{
 		return namespace;
 	}
@@ -232,7 +247,21 @@ public class CpsConcern extends Concern
 		}
 		else
 		{
-			return namespace + "." + getName();
+			StringBuffer ns = new StringBuffer();
+			for (int i = 0; i < namespace.size(); i++)
+			{
+				if (ns.length() > 0)
+				{
+					ns.append(".");
+				}
+				ns.append(namespace.get(i));
+			}
+			if (ns.length() > 0)
+			{
+				ns.append(".");
+			}
+			ns.append(getName());
+			return ns.toString();
 		}
 	}
 

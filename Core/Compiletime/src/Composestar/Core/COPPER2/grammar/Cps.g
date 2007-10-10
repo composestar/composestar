@@ -8,6 +8,11 @@
  * (2007-10-08) michielh	Added the filter module parameter
  * (2007-10-09) michielh	Renamed magic tokens to prevent naming collision 
  *				with types.
+ * (2007-10-10) michielh	Forgot filter element operators. Added filter 
+ *				type arguments. MatchingPart is now either a
+ *				list, message list or single entry. No longer
+ *				a list of message lists. FM Param list not
+ *				allowed in selector of subst parts.
  */
 grammar Cps;
 
@@ -273,9 +278,32 @@ filterOperator
  * Generic filter rules. Used by both input and outputfilters.
  */	
 filter
-	: name=IDENTIFIER COLON type=identifierOrSingleFmParam EQUALS LCURLY filterElement (COMMA filterElement)* RCURLY
-	-> ^(FILTER $name $type filterElement+)
+	: name=IDENTIFIER COLON filterType filterParams? EQUALS LCURLY filterElement (filterElementOperator filterElement)* RCURLY
+	-> ^(FILTER $name filterType filterParams? filterElement (filterElementOperator filterElement)*)
 	;
+
+/**
+ * Filter type for the filter
+ */
+filterType
+	: type=identifierOrSingleFmParam
+	-> $type
+	;
+
+/**
+ * filter parameters
+ */
+filterParams
+	: (LROUND singleFmParam (COMMA singleFmParam)* RROUND)
+	-> ^(PARAMS singleFmParam+)
+	;
+
+/**
+ * Operators that link the filter elements
+ */	
+filterElementOperator
+	: COMMA
+	;	
 	
 /**
  * This rule contains a predicate in order to keep the grammar LL(1). The conditionExpression
@@ -331,21 +359,12 @@ messagePatternSet
 	;	
 	
 /**
- * The matching part can be a list of patterns
+ * The matching part can be a list of patterns, or a message list or a single pattern.
  */	
 matchingPart
-	: LCURLY matchingPatternList (COMMA matchingPatternList)* RCURLY
-	-> ^(LIST matchingPatternList+)
-	| matchingPatternList
-	;
-
-/**
- * This rule provides message list support: #( pattern, pattern, ...)
- * To remove message list support in parsing simply change the matchingPart
- * rule to use matchingPattern instead of matchingPatternList
- */
-matchingPatternList 
-	: HASH LROUND matchingPattern (COMMA matchingPattern)* RROUND
+	: LCURLY matchingPattern (COMMA matchingPattern)* RCURLY
+	-> ^(LIST matchingPattern+)
+	| HASH LROUND matchingPattern (COMMA matchingPattern)* RROUND
 	-> ^(MESSAGE_LIST matchingPattern+)
 	| matchingPattern
 	;
@@ -356,14 +375,14 @@ matchingPatternList
  */
 matchingPattern
 	: (
-		LSQUARE targetSelector RSQUARE
+		LSQUARE targetSelector[true] RSQUARE
 	  // "target.selector" no longer available. support for this construction
 	  // has been dropped before version 0.5
 	  //|	DOUBLEQUOTE targetSelector DOUBLEQUOTE 
 	  )
 	  -> ^(NAME targetSelector)
 	| (
-		LANGLE targetSelector RANGLE
+		LANGLE targetSelector[true] RANGLE
 	  )
 	  -> ^(SIGN targetSelector)
 	;
@@ -373,8 +392,8 @@ matchingPattern
  * support.
  */	
 substitutionPart
-	: targetSelector
-	| HASH  LROUND targetSelector (COMMA targetSelector)* RROUND
+	: targetSelector[false]
+	| HASH  LROUND targetSelector[false] (COMMA targetSelector[false])* RROUND
 	-> ^(MESSAGE_LIST targetSelector+)
 	;		
 	
@@ -382,9 +401,9 @@ substitutionPart
  * The target is optional. However the target and selector contain similar constructions,
  * therefor a predicate is used to check if the target is present.
  */	
-targetSelector
-	: (target PERIOD)=> target PERIOD! selector
-	| selector
+targetSelector [boolean allowParamList]
+	: (target PERIOD)=> target PERIOD! selector[allowParamList]
+	| selector[allowParamList]
 	;
 
 /**
@@ -400,13 +419,15 @@ target
 /**
  * The selector. The selector may contain both filter module parameter types.
  */
-selector
+selector [boolean allowParamList]
 	: IDENTIFIER
 	-> ^(SELECTOR IDENTIFIER)
 	| ASTERISK
 	-> ^(SELECTOR ASTERISK)
-	| fmParamEntry
-	-> ^(SELECTOR fmParamEntry)
+	| singleFmParam
+	-> ^(SELECTOR singleFmParam)
+	| {allowParamList}? fmParamList // TODO: fmParamList not allowed in subst
+	-> ^(SELECTOR fmParamList)
 	;
 
 // $> Filter

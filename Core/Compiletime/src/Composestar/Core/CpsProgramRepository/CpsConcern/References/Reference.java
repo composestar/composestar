@@ -111,7 +111,8 @@ public abstract class Reference extends RepositoryEntity
 			packValue = new Vector();
 		}
 
-		this.pack = packValue;
+		pack.clear();
+		pack.addAll(packValue);
 	}
 
 	/**

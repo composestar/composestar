@@ -17,7 +17,7 @@ import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
  */
 public abstract class FilterCompOper extends ContextRepositoryEntity
 {
-	public Filter rightArgument;
+	public FilterAST rightArgument;
 
 	public FilterCompOper()
 	{
@@ -27,7 +27,7 @@ public abstract class FilterCompOper extends ContextRepositoryEntity
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter
 	 */
-	public Filter getRightArgument()
+	public FilterAST getRightArgument()
 	{
 		return rightArgument;
 	}
@@ -35,7 +35,7 @@ public abstract class FilterCompOper extends ContextRepositoryEntity
 	/**
 	 * @param rightArgumentValue
 	 */
-	public void setRightArgument(Filter rightArgumentValue)
+	public void setRightArgument(FilterAST rightArgumentValue)
 	{
 		this.rightArgument = rightArgumentValue;
 	}

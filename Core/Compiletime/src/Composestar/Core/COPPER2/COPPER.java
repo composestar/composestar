@@ -130,6 +130,8 @@ public class COPPER implements CTCommonModule
 	{
 		BasicConfigurator.configure();
 		DataMap.setDataMapClass(DataMapImpl.class);
+		LegacyFilterTypes.useLegacyFilterTypes = true;
+		LegacyFilterTypes.addLegacyFilterTypes();
 		COPPER c = new COPPER();
 		try
 		{
