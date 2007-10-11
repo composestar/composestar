@@ -109,4 +109,9 @@ public class Source extends Implementation
 			className += '.' + (String) qualifiedClass.elementAt(i);
 		}
 	}
+
+	public void setClassName(String qualifiedClass)
+	{
+		className = qualifiedClass;
+	}
 }

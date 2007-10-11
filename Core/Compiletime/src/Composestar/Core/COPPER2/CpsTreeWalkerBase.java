@@ -24,6 +24,7 @@
 
 package Composestar.Core.COPPER2;
 
+import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.Tree;
 import org.antlr.runtime.tree.TreeNodeStream;
@@ -31,6 +32,7 @@ import org.antlr.runtime.tree.TreeParser;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Logging.LogMessage;
 
 /**
  * Base class for the Cps tree walker.
@@ -58,6 +60,18 @@ public class CpsTreeWalkerBase extends TreeParser
 	public void setEmbeddedSourceLoc(int loc)
 	{
 		embeddedSourceLoc = loc;
+	}
+
+	public void displayRecognitionError(String[] tokenNames, RecognitionException e)
+	{
+		String hdr = getErrorHeader(e);
+		String msg = getErrorMessage(e, tokenNames);
+		logger.error(new LogMessage(hdr + " " + msg, sourceFile, e.line, e.charPositionInLine));
+	}
+
+	public void emitErrorMessage(String msg)
+	{
+		logger.error(msg);
 	}
 
 	/**

@@ -40,7 +40,10 @@ package Composestar.Core.COPPER2;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.*;
 import Composestar.Core.Exception.*;
 import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 
@@ -124,7 +127,7 @@ filtermoduleParameters [FilterModuleAST fm]
 	
 fmParamEntry returns [FilterModuleParameterAST param = new FilterModuleParameterAST()]
 	: sn=singleFmParam 
-	  {//FIXME needs to be tested
+	  {
 		param.setName($sn.text); 
 		setLocInfo(param, $sn.start);
 	  }
@@ -742,9 +745,9 @@ selector returns [MessageSelectorAST s]
 	| ^(SELECTOR pl=fmParamList
 	    {
 		s = new ParameterizedMessageSelectorAST();
-		s.setName($sp.text); 
+		s.setName($pl.text); 
 		((ParameterizedMessageSelectorAST) s).setList(true);
-	    	setLocInfo(s, $sp.start);
+	    	setLocInfo(s, $pl.start);
 	    }
 	  )
 	;
@@ -757,53 +760,259 @@ selector returns [MessageSelectorAST s]
 // $<Superimposition
 
 superimposition [CpsConcern c]
-	: ^(SUPERIMPOSITION conditionalSi* selectorSi* filtermoduleSi* annotationSi* constraint*)
+// throws CpsSemanticException
+	: ^(strt=SUPERIMPOSITION 
+	  {
+	  	SuperImposition si = new SuperImposition();
+	  	setLocInfo(si, $strt);
+	  	si.setParent(c);
+	  	c.setSuperImposition(si);
+	  	
+	  	// default selector
+	  	SelectorDefinition defs = new SelectorDefinition();
+	  	defs.setName("self");
+	  	defs.setParent(si);
+	  	setLocInfo(defs, $strt);
+	  	
+	  	SelClass selc = new SelClass();
+	  	setLocInfo(selc, strt);
+	  	Vector v = new Vector(c.getNamespace());
+	  	v.add(c.getName());
+	  	ConcernReference cref = new ConcernReference(v);	  	
+	  	setLocInfo(cref, strt);
+	  	selc.setClass(cref);
+	  	selc.setClassName(c.getName());
+	  	selc.setParent(defs);
+	  	defs.addSelExpression(selc);
+	  	
+	  	si.addSelectorDefinition(defs);
+	  }
+	  conditionalSi[si]* selectorSi[si]* filtermoduleSi[si]* annotationSi[si]* constraint[si]*
+	  )
 	;
 
-conditionalSi
-	: ^(CONDITION IDENTIFIER fqn)
+conditionalSi [SuperImposition si]
+// throws CpsSemanticException
+	: ^(strt=CONDITION name=IDENTIFIER expr=fqnAsList
+	  {
+		Condition cond = new Condition();
+		setLocInfo(cond, $strt);
+		cond.setName($name.text);
+		ConcernReference ref = new ConcernReference(expr.subList(0, expr.size()-1));
+		setLocInfo(ref, $strt.getChild(1)); // should be FQN token
+		cond.setShortref(ref);
+		cond.addDynObject("selector", expr.get(expr.size()-1));
+		
+		cond.setParent(si);
+		if (!si.addFilterModuleCondition(cond))
+		{
+			throw new CpsSemanticException(String.format("Condition name \%s is not unqiue within superimposition for \%s",
+				cond.getName(), si.getQualifiedName()), cond);
+		}
+	  }
+	  )
 	;
 	
-selectorSi
-	: ^(SELECTOR IDENTIFIER selectorExprLegacy)
-	| ^(SELECTOR IDENTIFIER selectorExprPredicate)
+selectorSi [SuperImposition si]
+// throws CpsSemanticException
+	: ^(SELECTOR nm1=IDENTIFIER sel=selectorExprLegacy
+	  {
+	  	SelectorDefinition defs = new SelectorDefinition();
+	  	defs.setName($nm1.text);
+	  	defs.setParent(si);
+	  	setLocInfo(defs, $nm1);
+	  	sel.setParent(defs);
+	  	defs.addSelExpression(sel);
+	  		
+	  	if (!si.addSelectorDefinition(defs))
+	  	{
+	  		throw new CpsSemanticException(String.format("Selector name \%s is not unqiue within superimposition for \%s",
+				defs.getName(), si.getQualifiedName()), defs);
+	  	}
+	  }
+	  )
+	| ^(SELECTOR nm2=IDENTIFIER ^(PREDICATE_SELECTOR var=IDENTIFIER expr=PROLOG_EXPR)
+	  {
+	  	SelectorDefinition defs = new SelectorDefinition();
+	  	defs.setName($nm2.text);
+	  	defs.setParent(si);
+	  	setLocInfo(defs, $nm2);
+	  	PredicateSelector ps = new PredicateSelector($var.text, $expr.text);
+	  	ps.setParent(defs);
+	  	setLocInfo(ps, $var);
+	  	defs.addSelExpression(ps);
+	  		
+	  	if (!si.addSelectorDefinition(defs))
+	  	{
+	  		throw new CpsSemanticException(String.format("Selector name \%s is not unqiue within superimposition for \%s",
+				defs.getName(), si.getQualifiedName()), defs);
+	  	}
+	  }
+	  )
 	;
 
-selectorExprLegacy
-	: ^(LEGACY_SELECTOR fqn)
+selectorExprLegacy returns [SimpleSelExpression sse]
+	: ^(LEGACY_SELECTOR (eq=EQUALS | co=COLON) expr=fqnAsList
+	  {
+	  	if (eq != null)
+	  	{
+	  		SelClass sc = new SelClass();
+	  		setLocInfo(sc, $eq);
+	  		ConcernReference cref = new ConcernReference(expr);	  	
+		  	setLocInfo(cref, $eq);
+		  	sc.setClass(cref);
+		  	sc.setClassName(expr.get(expr.size()-1));
+	  		sse = sc;
+	  	}
+	  	else if (co != null)
+	  	{
+	  		SelClassAndSubClasses scsc = new SelClassAndSubClasses();
+	  		setLocInfo(scsc, $co);
+	  		ConcernReference cref = new ConcernReference(expr);	  	
+		  	setLocInfo(cref, $co);
+		  	scsc.setClass(cref);
+		  	scsc.setClassName(expr.get(expr.size()-1));
+	  		sse = scsc;
+	  	}	  	
+	  }
+	  )
 	;
 	
-selectorExprPredicate
-	: ^(PREDICATE_SELECTOR IDENTIFIER PROLOG_EXPR )
-	;		
-	
-filtermoduleSi
-	: ^(FM_BINDINGS IDENTIFIER (^(CONDITION IDENTIFIER))? fmBinding+)
+selectorRef [SuperImposition si] returns [SelectorReference sref = new SelectorReference()]
+	: sel=IDENTIFIER
+	  {
+	  	setLocInfo(sref, $sel);
+	  	sref.setName($sel.text);
+    		CpsConcern cpsc = (CpsConcern) si.getParent();
+    		sref.setConcern(cpsc.getName());
+    		sref.setPackage(cpsc.getNamespace());
+	  }
 	;
 	
-fmBinding
-	: ^(BINDING concernFmRef (^(PARAMS param+))?)
+filtermoduleSi [SuperImposition si]
+// throws CpsSemanticException
+	: ^(strt=FM_BINDINGS sel=selectorRef[si] 
+	  {
+	  	FilterModuleBinding fmb = new FilterModuleBinding();
+	  	setLocInfo(fmb, strt);
+	  	fmb.setParent(si);
+	  	fmb.setSelector(sel);
+	  	si.addFilterModuleBinding(fmb);	  	
+	  }
+	  (^(CONDITION cond=IDENTIFIER
+	    {
+	    	Condition condition = si.getFilterModuleCondition($cond.text);
+	    	if (condition == null)
+		{
+			throw new CpsSemanticException(String.format("No condition with the name \%s in \%s",
+			$cond.text, si.getQualifiedName()), sourceFile, cond);
+		}
+	    	fmb.setFilterModuleCondition(condition);
+	    }
+	  ))? 
+	  (bnd=fmBinding[si]
+	    {
+	    	fmb.addFilterModule(bnd);
+	    }
+	  )+)
+	;
+	
+fmBinding [SuperImposition si] returns [FilterModuleReference fmr = new FilterModuleReference();]
+// throws CpsSemanticException
+	: ^(strt=BINDING cref=fqnAsList (DOUBLECOLON fmName=IDENTIFIER)? 
+	  {
+	  	setLocInfo(fmr, $strt);
+	  	// if elm is set it's the filter module, otherwise fqn can only be
+	  	// a single element
+	  	if ((fmName == null) && cref.size() > 1)
+	  	{
+	  		StringBuffer fqns = new StringBuffer();
+	  		for (String elm : cref)
+	  		{
+	  			if (fqns.length() > 0)
+	  			{
+	  				fqns.append(".");
+	  			}
+	  			fqns.append(elm);
+	  		}
+	  		throw new CpsSemanticException(String.format("\%s is not a valid filter module reference", fqns.toString()), fmr);
+	  	}
+	  	String fm;
+	  	if (fmName == null)
+	  	{
+	  		fm = cref.get(0);
+	  		CpsConcern cpsc = (CpsConcern) si.getParent();
+	  		cref = new ArrayList<String>();
+	  		cref.addAll(cpsc.getNamespace());
+	  		cref.add(cpsc.getName());
+	  	}
+	  	else {
+	  		fm = $fmName.text;
+	  	}
+	  	fmr.setName(fm);
+	  	fmr.setConcern(cref.get(cref.size() - 1));
+	  	fmr.setPackage(cref.subList(0, cref.size() - 1));
+	  }
+	  (^(PARAMS (prm=param
+	    {
+	    	fmr.addArg(prm);
+	    }
+	  )+))?)
 	;	
 
 concernFmRef
 	: fqn (DOUBLECOLON IDENTIFIER)?
 	;		
 	
-param
-	: ^(LIST fqn+)
-	| fqn
+param returns [FilterModuleParameter fmp = new FilterModuleParameter();]
+@init {
+	Vector v = new Vector();
+}
+	: ^(strt=LIST (lp=fqn
+	    {
+	    	v.add(lp);
+	    }
+	  )+
+	  {
+	  	setLocInfo(fmp, $strt);
+	  	fmp.setValue(v);
+	  }
+	  )
+	| ^(strt=PARAM sp=fqn
+	  {
+	  	setLocInfo(fmp, $strt);
+	  	v.add(sp);
+	  	fmp.setValue(v);
+	  }
+	  )
 	;		
 
-annotationSi
-	: ^(ANNOTATION_BINDINGS IDENTIFIER fqn+)
+annotationSi [SuperImposition si]
+	: ^(strt=ANNOTATION_BINDINGS sel=selectorRef[si]
+	  {
+	  	AnnotationBinding ab = new AnnotationBinding();
+	  	setLocInfo(ab, $strt);
+	  	ab.setSelector(sel);
+	  	ab.setParent(si);
+	  	si.addAnnotationBinding(ab);
+	  }
+	  (at=concernReference
+	  {
+		ab.addAnnotation(at);  	
+	  }
+	  )+)
 	;	
 	
-constraint
-	: ^(CONSTRAINT preConstraint)
+constraint [SuperImposition si]
+	: ^(CONSTRAINT preConstraint[si])
 	;
 
-preConstraint
-	: ^(PRE concernFmRef concernFmRef)
+preConstraint [SuperImposition si]
+	: ^(PRE concernFmRef concernFmRef
+	  {
+	  	// TODO: need more info and/or adjustments
+	  }
+	  )
 	;				
 
 // $>
@@ -811,7 +1020,18 @@ preConstraint
 // $<Implementation
 
 implementation [CpsConcern c]
-	: ^(IMPLEMENTATION IDENTIFIER IDENTIFIER FILENAME)
+	: ^(strt=IMPLEMENTATION lang=IDENTIFIER cls=fqn fn=FILENAME
+	  {
+	  	Source src = new Source();
+	  	setLocInfo(src, $strt);
+		src.setLanguage($lang.text);
+		src.setClassName(cls);
+		src.setSourceFile($fn.text);
+		// TODO extract
+		// src.setSource(embeddedCode);
+		c.setImplementation(src);
+	  }
+	  )
 	;
 		
 // $>

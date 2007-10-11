@@ -43,7 +43,7 @@ public abstract class CpsParserBase extends Parser
 	/**
 	 * Stream location in the CPS file where the embedded source starts
 	 */
-	protected int embeddedSourceLoc;
+	protected int embeddedSourceLoc = -1;
 
 	/**
 	 * Used for error reporting

@@ -104,7 +104,7 @@ public abstract class Reference extends RepositoryEntity
 	 * @param packValue
 	 * @roseuid 40ADE4B50151
 	 */
-	public void setPackage(Vector packValue)
+	public void setPackage(List packValue)
 	{
 		if (packValue == null)
 		{

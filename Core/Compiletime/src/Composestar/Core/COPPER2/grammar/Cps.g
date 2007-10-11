@@ -13,6 +13,9 @@
  *				list, message list or single entry. No longer
  *				a list of message lists. FM Param list not
  *				allowed in selector of subst parts.
+ * (2007-10-11) michielh	Added legacy selector operator to AST (=, :).
+ *				Added PARAM token to a single FM parameter in
+ *				the params rule, needed for walker.
  */
 grammar Cps;
 
@@ -477,7 +480,7 @@ selectorSi
  */	
 selectorExprLegacy
 	: ASTERISK (EQUALS | COLON) fqn RCURLY
-	-> ^(LEGACY_SELECTOR[$start] fqn)
+	-> ^(LEGACY_SELECTOR[$start] EQUALS? COLON? fqn)
 	;
 	
 /**
@@ -552,6 +555,7 @@ param
 	: LCURLY fqn (COMMA fqn)* RCURLY
 	-> ^(LIST fqn+)
 	| fqn
+	-> ^(PARAM fqn)
 	;		
 	
 /**
@@ -606,7 +610,7 @@ preConstraint
  * provide any functionality
  */
 implementation
-	: 'implementation' 'in' lang=IDENTIFIER 'by' cls=IDENTIFIER 'as' DOUBLEQUOTE fn=filename DOUBLEQUOTE code=codeBlock
+	: 'implementation' 'in' lang=IDENTIFIER 'by' cls=fqn 'as' DOUBLEQUOTE fn=filename DOUBLEQUOTE code=codeBlock
 	-> ^(IMPLEMENTATION[$start] $lang $cls $fn)
 	;
 

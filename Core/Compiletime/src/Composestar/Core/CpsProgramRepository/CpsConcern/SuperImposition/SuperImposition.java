@@ -59,7 +59,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 		conditions = new Vector();
 		selectors = new Vector();
 		filterModuleConditions = new HashMap();
-		setName("superimposition");
+		setName("@superimposition");
 	}
 
 	/**

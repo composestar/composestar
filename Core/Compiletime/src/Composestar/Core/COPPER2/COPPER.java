@@ -32,7 +32,7 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.runtime.tree.Tree;
-import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
 
 import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.Exception.CpsSemanticException;
@@ -108,6 +108,7 @@ public class COPPER implements CTCommonModule
 
 		logger.debug("Walking AST");
 		CommonTreeNodeStream nodes = new CommonTreeNodeStream(rootNode);
+		nodes.setTokenStream(tokens);
 		CpsTreeWalker w = new CpsTreeWalker(nodes);
 		w.setSourceFile(file.toString());
 		w.setEmbeddedSourceLoc(p.getEmbeddedSourceLoc());
@@ -117,6 +118,7 @@ public class COPPER implements CTCommonModule
 		}
 		catch (CpsSemanticException se)
 		{
+			// TODO: hanlde more gracefully by using RecognitionException's?
 			throw new ModuleException(se.getMessage(), MODULE_NAME, se.getFilename(), se.getLineNumber(), se
 					.getLinePosition(), se);
 		}
@@ -128,7 +130,8 @@ public class COPPER implements CTCommonModule
 
 	public static void main(String[] args)
 	{
-		BasicConfigurator.configure();
+		// BasicConfigurator.configure();
+		CPSLogger.getRootLogger().setLevel(Level.DEBUG);
 		DataMap.setDataMapClass(DataMapImpl.class);
 		LegacyFilterTypes.useLegacyFilterTypes = true;
 		LegacyFilterTypes.addLegacyFilterTypes();
