@@ -222,7 +222,7 @@ public class CpsConcern extends Concern
 		String[] str = StringUtils.split(inName, '.');
 		for (int i = 0; i < str.length; i++)
 		{
-			vect.add(str);
+			vect.add(str[i]);
 		}
 		setNamespace(vect);
 	}
