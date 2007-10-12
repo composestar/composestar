@@ -1,10 +1,17 @@
 /*
  * Tree Walker. uses the output of Cps.g
+ *
+ * Important note concerning throwing CpsSemanticException :
+ * ALWAYS include a catch, report, recover in the same code scope.
+ * this way multiple errors can be reported at a single parse 
+ * iteration.
+ *
  * $Id$
  *
  * Changes:
  * (2007-10-12) michielh	Added source code extraction from the
- *				implementation block.
+ *				implementation block. Added graceful
+ *				error recovery.
  */
 tree grammar CpsTreeWalker;
 
@@ -92,15 +99,21 @@ filtermodule [CpsConcern c] returns [FilterModuleAST fm = new FilterModuleAST()]
 	: ^(strt=FILTER_MODULE 
 		name=IDENTIFIER
 		{
+		try {
 			fm.setName($name.text);
 			setLocInfo(fm, strt);
 			if (c.getFilterModuleAST(fm.getName()) != null)
 			{
-				throw new CpsSemanticException(String.format("Duplicate filter module name \%s in concern \%s", 
-					fm.getName(), c.getQualifiedName()), fm);
+				throw new CpsSemanticException(String.format("Duplicate filter module name \"\%s\" in concern: \%s", 
+					fm.getName(), c.getQualifiedName()), input, $name);
 			}
 			fm.setParent(c);
 			c.addFilterModuleAST(fm);
+		}
+		catch (RecognitionException re) {
+			reportError(re);
+			recover(input,re);
+		}
 		}
 		(filtermoduleParameters[fm])? 
 		(internal[fm])* 
@@ -113,16 +126,23 @@ filtermodule [CpsConcern c] returns [FilterModuleAST fm = new FilterModuleAST()]
 	
 filtermoduleParameters [FilterModuleAST fm]
 // throws CpsSemanticException
-	: ^(PARAMS (prm=fmParamEntry
+	: ^(PARAMS ({Tree errTok = (Tree) input.LT(1);} prm=fmParamEntry
 	  {
+	  try {
 	  	if (!fm.parameterExists(prm))
 	  	{
 	  		prm.setParent(fm);
 	  		fm.addParameter(prm);
 	  	}
 	  	else {
-	  		throw new CpsSemanticException(String.format("Parameter \%s not unique within filtermodule \%s", prm.getName(), fm.getQualifiedName()), prm);
+	  		throw new CpsSemanticException(String.format("Parameter \"\%s\" not unique within filtermodule: \%s", 
+	  			prm.getName(), fm.getQualifiedName()), input, errTok);
 	  	}
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
 	  }
 	  )+)
 	;
@@ -178,6 +198,7 @@ internal [FilterModuleAST fm]
 	: ^(INTERNAL (ref=concernReference | prm=singleFmParam) ^(NAMES (
 		name=IDENTIFIER
 		{
+		try {
 			InternalAST internal;
 			if (ref != null)
 			{
@@ -190,17 +211,22 @@ internal [FilterModuleAST fm]
 				((ParameterizedInternalAST) internal).setParameter($prm.text);
 			}
 			else {
-				throw new CpsSemanticException(String.format("Internal \%s is not an qualified name or parameter", 
-					$name.text), sourceFile, name);
+				throw new CpsSemanticException(String.format("Internal \"\%s\" is not an qualified name or parameter", 
+					$name.text), input, name);
 			}
 			internal.setName($name.text);
 			internal.setParent(fm);
 			setLocInfo(internal, $name);
 			if (!fm.addInternal(internal))
 			{
-				throw new CpsSemanticException(String.format("Internal name \%s is not unqiue in filter module \%s", 
-					internal.getName(), fm.getQualifiedName()), internal);
+				throw new CpsSemanticException(String.format("Internal name \"\%s\" is not unqiue in filter module: \%s", 
+					internal.getName(), fm.getQualifiedName()), input, name);
 			}
+		}
+		catch (RecognitionException re) {
+			reportError(re);
+			recover(input,re);
+		}
 		}
 	  )+))
 	;
@@ -212,9 +238,11 @@ externalConcernReference returns [ExternalConcernReference ecr]
 }
 	: ^(FQN first=IDENTIFIER {lst.add($first.text);} (PERIOD nxt=IDENTIFIER {lst.add($nxt.text);})*
 	  {
+	  try {
 		if (lst.size() < 2)
 		{
-			throw new CpsSemanticException(String.format("Invalid external initializer: \%s", lst.toString()), sourceFile, first);
+			throw new CpsSemanticException(String.format("Invalid external initializer: \%s", lst.toString()), 
+				input, first);
 		}
 		// the fqn is: ns.type.method
 		// concern reference should point to: ns.type
@@ -231,8 +259,22 @@ externalConcernReference returns [ExternalConcernReference ecr]
 		ecr.setInitTarget(sb.toString());
 		setLocInfo(ecr, $first);
 	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
+	  }
 	  )
-	| prm=singleFmParam {if (prm != null) throw new CpsSemanticException(String.format("Filter Module Parameters are not supported in the external initializer"), sourceFile, $prm.start);}
+	| prm=singleFmParam 
+	  {
+	  try {
+		throw new CpsSemanticException(String.format("Filter Module Parameters are not supported in the external initializer"), input, $prm.start);
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
+	  }
 	/* params */
 	;
 
@@ -240,6 +282,7 @@ external [FilterModuleAST fm]
 // throws CpsSemanticException
 	: ^(EXTERNAL name=IDENTIFIER (ref=concernReference | prm=singleFmParam) (^(INIT init=externalConcernReference))?
 	  {
+	  try {
 	  	External external = new External();
 	  	if (ref != null)
 		{
@@ -249,11 +292,11 @@ external [FilterModuleAST fm]
 		{
 			// apperently there is no special External instance of parameterized externals!?
 			throw new CpsSemanticException(String.format("Parameterized externals are currently not supported"), 
-				sourceFile, name);
+				input, name);
 		}
 		else {
-			throw new CpsSemanticException(String.format("External \%s is not an qualified name or parameter", 
-				$name.text), sourceFile, name);
+			throw new CpsSemanticException(String.format("External \"\%s\" is not an qualified name or parameter", 
+				$name.text), input, name);
 		}
 		external.setName($name.text);
 		external.setParent(fm);
@@ -264,9 +307,14 @@ external [FilterModuleAST fm]
 		setLocInfo(external, $name);
 		if (!fm.addExternal(external))
 		{
-			throw new CpsSemanticException(String.format("External name \%s is not unqiue in filter module \%s", 
-				external.getName(), fm.getQualifiedName()), external);
+			throw new CpsSemanticException(String.format("External name \"\%s\" is not unqiue in filter module: \%s", 
+				external.getName(), fm.getQualifiedName()), input, name);
 		}
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
 	  }
 	  )
 	;	
@@ -287,9 +335,11 @@ condition [FilterModuleAST fm]
 	    } 
 		(PERIOD nxt=IDENTIFIER {lst.add($nxt.text);})*
 	    {
+	    try {
 	    	if (lst.size() < 2)
 		{
-			throw new CpsSemanticException(String.format("Invalid conditionalSi method: \%s", lst.toString()), sourceFile, first);
+			throw new CpsSemanticException(String.format("Invalid conditional method: \%s", lst.toString()), 
+				input, first);
 		}
 		String tar = lst.get(0);
 		String sel = lst.get(lst.size()-1);
@@ -322,34 +372,61 @@ condition [FilterModuleAST fm]
 		}
 		cond.addDynObject("selector", sel);
 	    }
+	    catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	    }
+	    }
 	    )
 	  | prm=singleFmParam 
-	    {if (prm != null) throw new CpsSemanticException(String.format("Filter Module Parameters are not supported in conditionals"), sourceFile, $prm.start);}
+	    {
+	    try {
+	    	throw new CpsSemanticException(String.format("Filter Module Parameters are not supported in conditionals"), input, $prm.start);
+	    }
+	    catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	    }
+	    }
 	  )
 	  /* params */ )
 	;	
 	
 inputfilters [FilterModuleAST fm]
 // throws CpsSemanticException
-	: ^(INPUT_FILTERS lhs=filter[fm] 
+	: ^(INPUT_FILTERS ({Tree errTok = (Tree) input.LT(1);} 
+	  lhs=filter[fm]
 	  {
+	  try {
 	  	if (!fm.addInputFilter(lhs))
 		{
-			throw new CpsSemanticException(String.format("Inputfilter name \%s is not unqiue in filter module \%s", 
-				lhs.getName(), fm.getQualifiedName()), lhs);
+			throw new CpsSemanticException(String.format("Inputfilter name \"\%s\" is not unqiue in filter module: \%s", 
+				lhs.getName(), fm.getQualifiedName()), input, errTok);
 		}
 	  }
-	  (op=filterOperator rhs=filter[fm]
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
+	  }
+	  )
+	  (op=filterOperator {Tree errTok = (Tree) input.LT(1);} rhs=filter[fm]
 	    {
+	    try {
 	  	lhs.setRightOperator(op);
 	  	op.setParent(lhs);
 	  	op.setRightArgument(rhs);
 		if (!fm.addInputFilter(rhs))
 		{
-			throw new CpsSemanticException(String.format("Inputfilter name \%s is not unqiue in filter module \%s", 
-				rhs.getName(), fm.getQualifiedName()), rhs);
+			throw new CpsSemanticException(String.format("Inputfilter name \"\%s\" is not unqiue in filter module: \%s", 
+				rhs.getName(), fm.getQualifiedName()), input, errTok);
 		}
 		lhs = rhs;
+	    }
+	    catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	    }
 	    }
 	  )*
 	  {
@@ -362,25 +439,39 @@ inputfilters [FilterModuleAST fm]
 	
 outputfilters [FilterModuleAST fm]
 // throws CpsSemanticException
-	: ^(OUTPUT_FILTERS lhs=filter[fm] 
+	: ^(OUTPUT_FILTERS ({Tree errTok = (Tree) input.LT(1);} 
+	  lhs=filter[fm] 
 	  {
+	  try {
 	  	if (!fm.addOutputFilter(lhs))
 		{
-			throw new CpsSemanticException(String.format("Outputfilter name \%s is not unqiue in filter module \%s", 
-				lhs.getName(), fm.getQualifiedName()), lhs);
+			throw new CpsSemanticException(String.format("Outputfilter name \"\%s\" is not unqiue in filter module: \%s", 
+				lhs.getName(), fm.getQualifiedName()), input, errTok);
 		}
 	  }
-	  (op=filterOperator rhs=filter[fm]
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
+	  }
+	  )
+	  (op=filterOperator {Tree errTok = (Tree) input.LT(1);} rhs=filter[fm]
 	    {
+	    try {
 	  	lhs.setRightOperator(op);
 	  	op.setParent(lhs);
 	  	op.setRightArgument(rhs);
 	 	if (!fm.addOutputFilter(rhs))
 		{
-			throw new CpsSemanticException(String.format("Outputfilter name \%s is not unqiue in filter module \%s", 
-				rhs.getName(), fm.getQualifiedName()), rhs);
+			throw new CpsSemanticException(String.format("Outputfilter name \"\%s\" is not unqiue in filter module: \%s", 
+				rhs.getName(), fm.getQualifiedName()), input, errTok);
 		}
 	  	lhs = rhs;
+	    }
+	    catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	    }
 	    }
 	  )*
 	  {
@@ -446,6 +537,7 @@ filterType returns [FilterType ft]
 // throws CpsSemanticException
 	: name=IDENTIFIER
 	  {
+	  try {
 	  	String ftName = $name.text;
 	  	ft = FilterType.getFilterType(ftName);
 	  	if ((ft == null) && LegacyFilterTypes.useLegacyFilterTypes)
@@ -455,11 +547,24 @@ filterType returns [FilterType ft]
 		}
 		if (ft == null)
 		{
-			throw new CpsSemanticException(String.format("Undefined filter type: \%s", ftName), sourceFile, name);
+			throw new CpsSemanticException(String.format("Undefined filter type: \%s", ftName), input, name);
 		}
 	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
+	  }
 	| prm=singleFmParam
-	  {if (prm != null) throw new CpsSemanticException(String.format("Filter Module Parameters are not supported as filter type"), sourceFile, $prm.start);}
+	  {
+	  try {
+	  	throw new CpsSemanticException(String.format("Filter Module Parameters are not supported as filter type"), input, $prm.start);
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
+	  }
 	;	
 	
 filterElementOperator returns [FilterElementCompOper op]
@@ -646,22 +751,34 @@ substitutionPart [MatchingPatternAST mp, FilterModuleAST fm]
 	SubstitutionPartAST sp;
 }
 	: {sp = new SubstitutionPartAST();}
-	  targetSelector[sp,fm]
+	  ts=targetSelector[sp,fm]
 	  {
+	  try {
 	  	if (mp.getIsMessageList())
 	  	{
-	  		throw new CpsSemanticException("Substitution part can notbe a message list", sp);
+	  		throw new CpsSemanticException("Substitution part can not be a message list", input, $start);
 	  	}
 	  	setLocInfo(sp, $start);
 	  	sp.setParent(mp);
 		mp.addSubstitutionPart(sp);
 	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
+	  }
 	| ^(strt=MESSAGE_LIST 
 	  {
+	  try {
 	  	if (!mp.getIsMessageList())
 	  	{
-	  		throw new CpsSemanticException("Substitution part must also be a message list", sourceFile, strt);
+	  		throw new CpsSemanticException("Substitution part must also be a message list", input, strt);
 	  	}
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
 	  }
 	    ({sp = new SubstitutionPartAST();}
 	      targetSelector[sp,fm]
@@ -716,7 +833,14 @@ target [FilterModuleAST fm] returns [Target t = new Target();]
 	  )
 	| ^(TARGET p=singleFmParam
 	    {
-	    	if (p != null) throw new CpsSemanticException("Filter module parameters have not been implemented for targets", sourceFile, $p.start);
+	    try {
+	    	throw new CpsSemanticException("Filter module parameters have not been implemented for targets", 
+	    		input, $p.start);
+	    }
+	    catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	    }
 	    }
 	  )
 	| ^(TARGET a=ASTERISK {t.setName($a.text); setLocInfo(t, $a); })
@@ -797,6 +921,7 @@ conditionalSi [SuperImposition si]
 // throws CpsSemanticException
 	: ^(strt=CONDITION name=IDENTIFIER expr=fqnAsList
 	  {
+	  try {
 		Condition cond = new Condition();
 		setLocInfo(cond, $strt);
 		cond.setName($name.text);
@@ -808,9 +933,14 @@ conditionalSi [SuperImposition si]
 		cond.setParent(si);
 		if (!si.addFilterModuleCondition(cond))
 		{
-			throw new CpsSemanticException(String.format("Condition name \%s is not unqiue within superimposition for \%s",
-				cond.getName(), si.getQualifiedName()), cond);
+			throw new CpsSemanticException(String.format("Condition name \"\%s\" is not unqiue within superimposition for: \%s",
+				cond.getName(), si.getQualifiedName()), input, $strt);
 		}
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
 	  }
 	  )
 	;
@@ -819,6 +949,7 @@ selectorSi [SuperImposition si]
 // throws CpsSemanticException
 	: ^(SELECTOR nm1=IDENTIFIER sel=selectorExprLegacy
 	  {
+	  try {
 	  	SelectorDefinition defs = new SelectorDefinition();
 	  	defs.setName($nm1.text);
 	  	defs.setParent(si);
@@ -828,13 +959,19 @@ selectorSi [SuperImposition si]
 	  		
 	  	if (!si.addSelectorDefinition(defs))
 	  	{
-	  		throw new CpsSemanticException(String.format("Selector name \%s is not unqiue within superimposition for \%s",
-				defs.getName(), si.getQualifiedName()), defs);
+	  		throw new CpsSemanticException(String.format("Selector name \"\%s\" is not unqiue within superimposition for: \%s",
+				defs.getName(), si.getQualifiedName()), input, nm1);
 	  	}
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
 	  }
 	  )
 	| ^(SELECTOR nm2=IDENTIFIER ^(PREDICATE_SELECTOR var=IDENTIFIER expr=PROLOG_EXPR)
 	  {
+	  try {
 	  	SelectorDefinition defs = new SelectorDefinition();
 	  	defs.setName($nm2.text);
 	  	defs.setParent(si);
@@ -846,9 +983,14 @@ selectorSi [SuperImposition si]
 	  		
 	  	if (!si.addSelectorDefinition(defs))
 	  	{
-	  		throw new CpsSemanticException(String.format("Selector name \%s is not unqiue within superimposition for \%s",
-				defs.getName(), si.getQualifiedName()), defs);
+	  		throw new CpsSemanticException(String.format("Selector name \"\%s\" is not unqiue within superimposition for: \%s",
+				defs.getName(), si.getQualifiedName()), input, nm2);
 	  	}
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
 	  }
 	  )
 	;
@@ -903,19 +1045,25 @@ filtermoduleSi [SuperImposition si]
 	  }
 	  (^(CONDITION cond=IDENTIFIER
 	    {
+	    try {
 	    	Condition condition = si.getFilterModuleCondition($cond.text);
 	    	if (condition == null)
 		{
-			throw new CpsSemanticException(String.format("No condition with the name \%s in \%s",
-			$cond.text, si.getQualifiedName()), sourceFile, cond);
+			throw new CpsSemanticException(String.format("No condition with the name \"\%s\" in: \%s",
+			$cond.text, si.getQualifiedName()), input, cond);
 		}
 	    	fmb.setFilterModuleCondition(condition);
+	    }
+	    catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	    }
 	    }
 	  ))? 
 	  (bnd=fmBinding[si]
 	    {
 	    	fmb.addFilterModule(bnd);
-	    }
+	    		    }
 	  )+)
 	;
 	
@@ -923,6 +1071,7 @@ fmBinding [SuperImposition si] returns [FilterModuleReference fmr = new FilterMo
 // throws CpsSemanticException
 	: ^(strt=BINDING cref=fqnAsList (DOUBLECOLON fmName=IDENTIFIER)? 
 	  {
+	  try {
 	  	setLocInfo(fmr, $strt);
 	  	// if elm is set it's the filter module, otherwise fqn can only be
 	  	// a single element
@@ -937,7 +1086,8 @@ fmBinding [SuperImposition si] returns [FilterModuleReference fmr = new FilterMo
 	  			}
 	  			fqns.append(elm);
 	  		}
-	  		throw new CpsSemanticException(String.format("\%s is not a valid filter module reference", fqns.toString()), fmr);
+	  		throw new CpsSemanticException(String.format("\"\%s\" is not a valid filter module reference", 
+	  			fqns.toString()), input, strt);
 	  	}
 	  	String fm;
 	  	if (fmName == null)
@@ -954,6 +1104,11 @@ fmBinding [SuperImposition si] returns [FilterModuleReference fmr = new FilterMo
 	  	fmr.setName(fm);
 	  	fmr.setConcern(cref.get(cref.size() - 1));
 	  	fmr.setPackage(cref.subList(0, cref.size() - 1));
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
 	  }
 	  (^(PARAMS (prm=param
 	    {

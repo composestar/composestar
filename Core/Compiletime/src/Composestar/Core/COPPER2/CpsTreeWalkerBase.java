@@ -31,6 +31,7 @@ import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
 
 import Composestar.Core.COPPER.COPPER;
+import Composestar.Core.Exception.CpsSemanticException;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
@@ -44,7 +45,16 @@ public class CpsTreeWalkerBase extends TreeParser
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(COPPER.MODULE_NAME);
 
+	/**
+	 * Used for error reporting
+	 */
 	protected String sourceFile;
+
+	/**
+	 * Number of reported errors. Must be 0 or else COPPER will raise an
+	 * exception.
+	 */
+	protected int errorCnt;
 
 	public CpsTreeWalkerBase(TreeNodeStream input)
 	{
@@ -56,16 +66,33 @@ public class CpsTreeWalkerBase extends TreeParser
 		sourceFile = srcfl;
 	}
 
+	public int getErrorCnt()
+	{
+		return errorCnt;
+	}
+
 	public void displayRecognitionError(String[] tokenNames, RecognitionException e)
 	{
-		String hdr = getErrorHeader(e);
+		++errorCnt;
+		// String hdr = getErrorHeader(e);
 		String msg = getErrorMessage(e, tokenNames);
-		logger.error(new LogMessage(hdr + " " + msg, sourceFile, e.line, e.charPositionInLine));
+		logger.error(new LogMessage(msg, sourceFile, e.line, e.charPositionInLine));
 	}
 
 	public void emitErrorMessage(String msg)
 	{
+		++errorCnt;
 		logger.error(msg);
+	}
+
+	public String getErrorMessage(RecognitionException e, String[] tokenNames)
+	{
+		String res = super.getErrorMessage(e, tokenNames);
+		if (e instanceof CpsSemanticException)
+		{
+			res = e.toString();
+		}
+		return res;
 	}
 
 	/**

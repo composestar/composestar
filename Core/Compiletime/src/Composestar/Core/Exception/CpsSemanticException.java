@@ -24,130 +24,66 @@
 
 package Composestar.Core.Exception;
 
-import org.antlr.runtime.Token;
+import org.antlr.runtime.IntStream;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
-
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
-import Composestar.Utils.Logging.LocationProvider;
 
 /**
  * An exception thrown by the CpsTreeWalker (COPPER) when there's a semantic
- * error in the AST. This is a RuntimeException because ANTLRv3.01 does not
- * support the "throws" construction preventing use to throw our preferred
- * exception type. COPPER will catch this exception and rethrow it as a
- * ModuleException.
+ * error in the AST. When you throw an instance of this exception always make
+ * sure you surround it with a try..catch in the same code scope:
+ * 
+ * <pre>
+ * try 
+ * {
+ *  ...
+ *  ...
+ * 	throw new CpsSemanticException(...);
+ * }
+ * catch (RecognitionException re) {
+ * 	reportError(re);
+ * 	recover(input,re);
+ * }
+ * </pre>
+ * 
+ * This way there will be proper error recovery and multiple semnatic errors can
+ * be reported in a single parse iteration.
  * 
  * @author Michiel Hendriks
  */
-public class CpsSemanticException extends RuntimeException implements LocationProvider
+public class CpsSemanticException extends RecognitionException
 {
 	private static final long serialVersionUID = 1678078507939703989L;
 
-	protected String filename;
-
-	protected int line;
-
-	protected int charOnLine;
+	protected String message;
 
 	/**
 	 * @param message
 	 */
-	public CpsSemanticException(String message)
+	public CpsSemanticException(String inMessage, IntStream input)
 	{
-		super(message);
+		super(input);
+		message = inMessage;
 	}
 
-	/**
-	 * @param message
-	 * @param throwable
-	 */
-	public CpsSemanticException(String message, Throwable throwable)
+	public CpsSemanticException(String inMessage, IntStream inInput, Tree tree)
 	{
-		super(message, throwable);
-	}
-
-	/**
-	 * @param message
-	 * @param re
-	 */
-	public CpsSemanticException(String message, RepositoryEntity re)
-	{
-		this(message, re, null);
-	}
-
-	/**
-	 * @param message
-	 * @param re
-	 * @param throwable
-	 */
-	public CpsSemanticException(String message, RepositoryEntity re, Throwable throwable)
-	{
-		super(message, throwable);
-		filename = re.getDescriptionFileName();
-		line = re.getDescriptionLineNumber();
-		charOnLine = re.getDescriptionLinePosition();
-	}
-
-	public CpsSemanticException(String message, String filename, Token token)
-	{
-		this(message, filename, token, null);
-	}
-
-	public CpsSemanticException(String message, String infn, Token token, Throwable throwable)
-	{
-		super(message, throwable);
-		filename = infn;
-		line = token.getLine();
-		charOnLine = token.getCharPositionInLine();
-	}
-
-	public CpsSemanticException(String message, String filename, Tree tree)
-	{
-		this(message, filename, tree, null);
-	}
-
-	public CpsSemanticException(String message, String infn, Tree tree, Throwable throwable)
-	{
-		super(message, throwable);
-		filename = infn;
+		super();
+		message = inMessage;
+		input = inInput;
+		node = tree;
 		line = tree.getLine();
-		charOnLine = tree.getCharPositionInLine();
+		charPositionInLine = tree.getCharPositionInLine();
+		if (node instanceof CommonTree)
+		{
+			token = ((CommonTree) node).token;
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Throwable#toString()
-	 */
 	@Override
 	public String toString()
 	{
-		StringBuffer sb = new StringBuffer();
-		if (filename != null)
-		{
-			sb.append(filename);
-			sb.append(" #");
-			sb.append(line);
-			sb.append(",");
-			sb.append(charOnLine);
-			sb.append(": ");
-		}
-		sb.append(getMessage());
-		return sb.toString();
-	}
-
-	public String getFilename()
-	{
-		return filename;
-	}
-
-	public int getLineNumber()
-	{
-		return line;
-	}
-
-	public int getLinePosition()
-	{
-		return charOnLine;
+		return message;
 	}
 }

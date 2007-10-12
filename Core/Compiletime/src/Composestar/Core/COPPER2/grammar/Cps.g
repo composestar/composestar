@@ -133,7 +133,7 @@ package Composestar.Core.COPPER2;
  * or an implementation rule.
  */
 concern
-	: 'concern' IDENTIFIER concernParameters? (in='in' fqn)? LCURLY filtermodule* superimposition? implementation
+	: 'concern' IDENTIFIER concernParameters? (in='in' fqn)? LCURLY filtermodule* superimposition? implementation?
 	-> ^(CONCERN[$start] IDENTIFIER concernParameters? ^(IN[$in] fqn)? filtermodule* superimposition? implementation?)
 	;
 

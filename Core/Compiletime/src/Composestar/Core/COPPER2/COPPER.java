@@ -35,7 +35,6 @@ import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Level;
 
 import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
-import Composestar.Core.Exception.CpsSemanticException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
@@ -115,15 +114,15 @@ public class COPPER implements CTCommonModule
 		{
 			w.concern();
 		}
-		catch (CpsSemanticException se)
-		{
-			// TODO: hanlde more gracefully by using RecognitionException's?
-			throw new ModuleException(se.getMessage(), MODULE_NAME, se.getFilename(), se.getLineNumber(), se
-					.getLinePosition(), se);
-		}
 		catch (RecognitionException e)
 		{
 			throw new ModuleException(e.getMessage(), MODULE_NAME, file.toString(), e.line, e.charPositionInLine, e);
+		}
+
+		int errorCnt = p.getErrorCnt() + w.getErrorCnt();
+		if (errorCnt > 0)
+		{
+			throw new ModuleException(String.format("%s contains %d errors", file.toString(), errorCnt), MODULE_NAME);
 		}
 	}
 

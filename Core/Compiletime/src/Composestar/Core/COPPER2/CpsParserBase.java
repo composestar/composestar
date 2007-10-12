@@ -47,9 +47,20 @@ public abstract class CpsParserBase extends Parser
 	 */
 	protected String sourceFile;
 
+	/**
+	 * Number of reported errors. Must be 0 or else COPPER will raise an
+	 * exception.
+	 */
+	protected int errorCnt;
+
 	public CpsParserBase(TokenStream input)
 	{
 		super(input);
+	}
+
+	public int getErrorCnt()
+	{
+		return errorCnt;
 	}
 
 	public void setSourceFile(String srcfl)
@@ -59,13 +70,15 @@ public abstract class CpsParserBase extends Parser
 
 	public void displayRecognitionError(String[] tokenNames, RecognitionException e)
 	{
-		String hdr = getErrorHeader(e);
+		++errorCnt;
+		// String hdr = getErrorHeader(e);
 		String msg = getErrorMessage(e, tokenNames);
-		logger.error(new LogMessage(hdr + " " + msg, sourceFile, e.line, e.charPositionInLine));
+		logger.error(new LogMessage(msg, sourceFile, e.line, e.charPositionInLine));
 	}
 
 	public void emitErrorMessage(String msg)
 	{
+		++errorCnt;
 		logger.error(msg);
 	}
 
