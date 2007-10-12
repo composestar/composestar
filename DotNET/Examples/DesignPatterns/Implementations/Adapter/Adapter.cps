@@ -8,7 +8,7 @@ concern AdapterConcern
 		inputfilters
 			adapt_write  : Dispatch = { [*.write] *.printToSystemOut };
 			adapt_arg    : Meta		= { [*.printText] adapter.printDefaultText };
-			adapt_square : Dispatch = { [*.printSquare] #(inner.printHorizontal;inner.printVertical;inner.printHorizontal) }
+			adapt_square : Dispatch = { #([*.printSquare]) #(inner.printHorizontal;inner.printVertical;inner.printHorizontal) }
 	}
 	superimposition
 	{

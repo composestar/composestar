@@ -16,7 +16,9 @@
  * (2007-10-11) michielh	Added legacy selector operator to AST (=, :).
  *				Added PARAM token to a single FM parameter in
  *				the params rule, needed for walker.
- * (2007-10-12) michielh	CodeBlock now included in the tree.
+ * (2007-10-12) michielh	CodeBlock now included in the tree. Allowed naked
+ *				target.selector sign matching, but generate a 
+ *				warning.
  */
 grammar Cps;
 
@@ -151,7 +153,7 @@ fqn
  * Formal concern parameters. Similar to a class constructor.
  */	
 concernParameters
-	: LROUND IDENTIFIER COLON fqn (COMMA IDENTIFIER COLON fqn)* RROUND
+	: LROUND IDENTIFIER COLON fqn (SEMICOLON IDENTIFIER COLON fqn)* RROUND
 	-> ^(CONCERN_PARAMETERS ^(PARAM IDENTIFIER fqn)*)
 	;	
 	
@@ -209,7 +211,7 @@ identifierOrSingleFmParam
  * their corresponding root node.
  */
 internals
-	: 'internals'! internal+
+	: 'internals'! internal*
 	;
 	
 /**
@@ -225,7 +227,7 @@ internal
  * List of externals. No root node is created.
  */
 externals
-	: 'externals'! external+
+	: 'externals'! external*
 	;
 
 /**
@@ -243,7 +245,7 @@ external
  * List of conditions. No root node is created.
  */
 conditions
-	: 'conditions'! condition+
+	: 'conditions'! condition*
 	;
 
 /**
@@ -298,8 +300,8 @@ filterType
  * filter parameters
  */
 filterParams
-	: (LROUND singleFmParam (COMMA singleFmParam)* RROUND)
-	-> ^(PARAMS singleFmParam+)
+	: (LROUND identifierOrSingleFmParam (COMMA identifierOrSingleFmParam)* RROUND)
+	-> ^(PARAMS identifierOrSingleFmParam+)
 	;
 
 /**
@@ -358,8 +360,11 @@ messagePatternSet
 	: matchingPart substitutionPart?
 	-> ^(MATCHING_PART matchingPart) ^(SUBST_PART substitutionPart)?
 	// single target.selector alternative dropped per 2007-10-05 (MichielH+Lodewijk)
-	//| targetSelector
-	//-> ^(MatchingPart ^(Sign targetSelector))
+	| targetSelector[true] 
+	  {
+	  	logger.warn(createLogMessage("Naked target.selector signature matching has been deprecated.", $start));
+	  }
+	-> ^(MATCHING_PART ^(SIGN targetSelector))
 	;	
 	
 /**
@@ -368,7 +373,7 @@ messagePatternSet
 matchingPart
 	: LCURLY matchingPattern (COMMA matchingPattern)* RCURLY
 	-> ^(LIST matchingPattern+)
-	| HASH LROUND matchingPattern (COMMA matchingPattern)* RROUND
+	| HASH LROUND matchingPattern (SEMICOLON matchingPattern)* RROUND
 	-> ^(MESSAGE_LIST matchingPattern+)
 	| matchingPattern
 	;
@@ -397,7 +402,7 @@ matchingPattern
  */	
 substitutionPart
 	: targetSelector[false]
-	| HASH  LROUND targetSelector[false] (COMMA targetSelector[false])* RROUND
+	| HASH  LROUND targetSelector[false] (SEMICOLON targetSelector[false])* RROUND
 	-> ^(MESSAGE_LIST targetSelector+)
 	;		
 	
@@ -611,8 +616,12 @@ preConstraint
  * provide any functionality
  */
 implementation
-	: 'implementation' 'in' lang=IDENTIFIER 'by' cls=fqn 'as' DOUBLEQUOTE fn=filename DOUBLEQUOTE code=codeBlock
+	: 'implementation' 
+	( 'by' asm=fqn
+	-> ^(IMPLEMENTATION[$start] $asm)
+	| 'in' lang=IDENTIFIER 'by' cls=fqn 'as' DOUBLEQUOTE fn=filename DOUBLEQUOTE code=codeBlock
 	-> ^(IMPLEMENTATION[$start] $lang $cls $fn $code)
+	)
 	;
 
 /**
@@ -628,8 +637,8 @@ filename
  */	
 codeBlock
 @init {String codeTxt = "";}
-	: strt=LCURLY
-	  {codeTxt = extractEmbeddedCode(adaptor, CODE_BLOCK);}
+	: strt=LCURLY 
+	  {codeTxt = extractEmbeddedCode(adaptor);}
 	  RCURLY
 	  -> ^(CODE_BLOCK[$strt, codeTxt])
 	;	
@@ -673,12 +682,7 @@ DISABLE		: '~>';
 // weaving operators
 WEAVE		: '<-';
 
-// token fragment, just for ease of use
-fragment DIGIT	: '0' .. '9';
-fragment LETTER	: 'a' .. 'z' | 'A' .. 'Z';
-fragment SPECIAL: '_';
-
-IDENTIFIER	: (LETTER | SPECIAL) (LETTER | SPECIAL | DIGIT)*;
+IDENTIFIER	: ('a' .. 'z' | 'A' .. 'Z' | '_') ('a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9')*;
 
 // Whitespace
 WS 		:  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;};
@@ -686,5 +690,9 @@ WS 		:  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;};
 COMMENT		:   '/*' .* '*/' {$channel=HIDDEN;};
 // Single line comment
 LINE_COMMENT    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;} ;
+
+// this token is needed to include garbage data in the tokenizer/lexer
+// without it ANTLR will simply ingore all garbage
+ALLTOKENS : '\u0000' .. '\uffff';
 
 // $>

@@ -86,7 +86,7 @@ public abstract class CpsParserBase extends Parser
 	 * This will consume all tokens up to: } } EOF. It returns the content up to
 	 * the end token as a string.
 	 */
-	protected String extractEmbeddedCode(TreeAdaptor adaptor, int tokenType)
+	protected String extractEmbeddedCode(TreeAdaptor adaptor)
 	{
 		Token start = (Token) input.LT(-1);
 		matchAny(input);
@@ -102,5 +102,10 @@ public abstract class CpsParserBase extends Parser
 
 		String result = input.toString(start.getTokenIndex() + 1, stop.getTokenIndex() - 1);
 		return result;
+	}
+
+	protected LogMessage createLogMessage(String msg, Token t)
+	{
+		return new LogMessage(msg, sourceFile, t.getLine(), t.getCharPositionInLine());
 	}
 }

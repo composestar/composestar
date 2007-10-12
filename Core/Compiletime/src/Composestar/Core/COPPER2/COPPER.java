@@ -26,6 +26,7 @@ package Composestar.Core.COPPER2;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -36,6 +37,7 @@ import org.apache.log4j.Level;
 
 import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.FILTH.DevNullOutputStream;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CTCommonModule;
@@ -55,6 +57,8 @@ public class COPPER implements CTCommonModule
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
+	protected int errorCnt;
+
 	public COPPER()
 	{}
 
@@ -72,16 +76,30 @@ public class COPPER implements CTCommonModule
 			LegacyFilterTypes.addLegacyFilterTypes();
 		}
 
+		errorCnt = 0;
+
 		for (File file : resources.configuration().getProject().getConcernFiles())
 		{
 			INCRETimer runTimer = incre.getReporter().openProcess(MODULE_NAME, file.toString(), INCRETimer.TYPE_NORMAL);
 			parseConcernFile(file);
 			runTimer.stop();
 		}
+
+		if (errorCnt > 0)
+		{
+			throw new ModuleException(String.format("%d error(s) detected in the concern sources.", errorCnt),
+					MODULE_NAME);
+		}
 	}
 
 	protected void parseConcernFile(File file) throws ModuleException
 	{
+		// workaround for some ANTLRv3 debug output
+		PrintStream oldErr = System.err;
+		System.setErr(new PrintStream(new DevNullOutputStream()));
+
+		int localErrCnt = 0;
+
 		logger.info(String.format("Parsing file %s", file.toString()));
 		CpsLexer lex;
 		try
@@ -102,8 +120,10 @@ public class COPPER implements CTCommonModule
 		}
 		catch (RecognitionException e)
 		{
+			System.setErr(oldErr);
 			throw new ModuleException(e.getMessage(), MODULE_NAME, file.toString(), e.line, e);
 		}
+		localErrCnt += p.getErrorCnt();
 
 		logger.debug("Walking AST");
 		CommonTreeNodeStream nodes = new CommonTreeNodeStream(rootNode);
@@ -116,13 +136,17 @@ public class COPPER implements CTCommonModule
 		}
 		catch (RecognitionException e)
 		{
+			System.setErr(oldErr);
 			throw new ModuleException(e.getMessage(), MODULE_NAME, file.toString(), e.line, e.charPositionInLine, e);
 		}
+		System.setErr(oldErr);
 
-		int errorCnt = p.getErrorCnt() + w.getErrorCnt();
-		if (errorCnt > 0)
+		localErrCnt += w.getErrorCnt();
+		errorCnt += localErrCnt;
+
+		if (localErrCnt > 0)
 		{
-			throw new ModuleException(String.format("%s contains %d errors", file.toString(), errorCnt), MODULE_NAME);
+			logger.error(String.format("%s contains %d error(s)", file.toString(), localErrCnt));
 		}
 	}
 

@@ -326,6 +326,7 @@ condition [FilterModuleAST fm]
 	  	Condition cond = new Condition();
 	  	cond.setName($name.text);
 		cond.setParent(fm);
+		fm.addCondition(cond);
 		setLocInfo(cond, $name);
 	  } 
 	  ( ^(FQN first=IDENTIFIER 
@@ -504,7 +505,7 @@ filter [FilterModuleAST fm] returns [FilterAST filter = new FilterAST();]
 	  	filter.setParent(fm);
 	  	filter.setFilterType(ft);
 	  }
-	  (^(PARAMS (prm=singleFmParam
+	  (^(PARAMS (prm=identifierOrSingleFmParam
 	    {
 	  	// fm params
 	  	filter.addParameter($prm.text);
@@ -768,6 +769,14 @@ substitutionPart [MatchingPatternAST mp, FilterModuleAST fm]
 	  }
 	  }
 	| ^(strt=MESSAGE_LIST 
+	    ({sp = new SubstitutionPartAST();}
+	      targetSelector[sp,fm]
+		{
+			setLocInfo(sp, $start);
+			sp.setParent(mp);
+	      		mp.addSubstitutionPart(sp);
+		}
+	    )+
 	  {
 	  try {
 	  	if (!mp.getIsMessageList())
@@ -780,15 +789,7 @@ substitutionPart [MatchingPatternAST mp, FilterModuleAST fm]
 		recover(input,re);
 	  }
 	  }
-	    ({sp = new SubstitutionPartAST();}
-	      targetSelector[sp,fm]
-		{
-			setLocInfo(sp, $start);
-			sp.setParent(mp);
-	      		mp.addSubstitutionPart(sp);
-		}
-	    )
-	  +)
+	  )
 	;		
 	
 targetSelector [AbstractPatternAST ap, FilterModuleAST fm]
@@ -821,6 +822,7 @@ target [FilterModuleAST fm] returns [Target t = new Target();]
 	    		t.setName(Target.INNER);
 	    	}
 	    	else {
+	    		t.setName($ident.text);
 	    		DeclaredObjectReference dor = new DeclaredObjectReference();
 	    		dor.setName($ident.text);
 	    		dor.setFilterModule(fm.getName());
@@ -1177,7 +1179,15 @@ preConstraint [SuperImposition si]
 // $<Implementation
 
 implementation [CpsConcern c]
-	: ^(strt=IMPLEMENTATION lang=IDENTIFIER cls=fqn fn=FILENAME code=CODE_BLOCK
+	: ^(astr=IMPLEMENTATION asm=fqn
+	  {
+	  	CompiledImplementation compimp = new CompiledImplementation();
+	  	setLocInfo(compimp, $astr);
+	  	compimp.setClassName(asm);
+	  	c.setImplementation(compimp);	  	
+	  }
+	  )
+	| ^(strt=IMPLEMENTATION lang=IDENTIFIER cls=fqn fn=FILENAME code=CODE_BLOCK
 	  {
 	  	Source src = new Source();
 	  	setLocInfo(src, $strt);

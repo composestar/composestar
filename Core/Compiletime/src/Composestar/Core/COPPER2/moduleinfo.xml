@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<moduleinfo id="COPPER" class="Composestar.Core.COPPER2.COPPER">
+
+		<description>
+			COPPER parses the concern sources and produces the repository entries that will be used by other modules.
+			During processing the so called syntactic sugar is applied that expands the repository entries to their
+			complete form. Only the concern source syntax will be validated.
+		</description>
+
+		<incre>
+			<module enabled="true" incremental="false" summary="Parsing concerns sources..."></module>
+		</incre>
+	</moduleinfo>
+</modules>

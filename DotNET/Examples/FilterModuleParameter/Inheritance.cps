@@ -15,7 +15,7 @@ concern inheritance in FilterModuleParameter
 				['FilterModuleParameter.Cat', 'FilterModuleParameter.Iguanidae'])};
 		filtermodules
 			Pet <- genericInheritance( FilterModuleParameter.Animal );
-			Pet <- logging::log( FilterModuleParameter.Logger, {walk, makeNoise});
+			Pet <- FilterModuleParameter.logging::log( FilterModuleParameter.Logger, {walk, makeNoise});
 		constraints
 			pre (genericInheritance, logger::log);
 	}

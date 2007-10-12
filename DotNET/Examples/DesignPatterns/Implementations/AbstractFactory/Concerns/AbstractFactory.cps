@@ -8,7 +8,7 @@ concern AbstractFactory
 			cf1 : Composestar.Patterns.AbstractFactory.ColoredFactory;
 
 		inputfilters
-			concreteFactory : Dispatch = { cf1.* }
+			concreteFactory : Dispatch = { <cf1.*> }
 	}
 	superimposition
 	{

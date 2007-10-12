@@ -333,6 +333,10 @@ public class FILTHServiceImpl extends FILTHService
 	private void processOrderingSpecifications(Graph g)
 	{
 		Map map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
+		if (map == null)
+		{
+			return;
+		}
 		logger.info("FilterModule ordering constraints: " + map);
 
 		String left, right;
@@ -353,6 +357,10 @@ public class FILTHServiceImpl extends FILTHService
 	private void printOrderingSpecifications()
 	{
 		Map map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
+		if (map == null)
+		{
+			return;
+		}
 		Iterator it = map.values().iterator();
 
 		while (it.hasNext())

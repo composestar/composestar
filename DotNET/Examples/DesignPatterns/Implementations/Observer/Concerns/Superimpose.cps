@@ -7,15 +7,15 @@ concern Superimpose in Composestar.Patterns.Observer{
 
 		filtermodules
 			//add and remove observers; is generic
-			point <- AddRemoveObservers::AddRemoveObservers;
-			screen <- AddRemoveObservers::AddRemoveObservers;
+			point <- Composestar.Patterns.Observer.AddRemoveObservers::AddRemoveObservers;
+			screen <- Composestar.Patterns.Observer.AddRemoveObservers::AddRemoveObservers;
 
 			//notify observers; is case specific
-			point <- NotifyObservers::NotifyPosition;
-			point <- NotifyObservers::NotifyColor;
-			screen <- NotifyObservers::NotifyDisplay;
+			point <- Composestar.Patterns.Observer.NotifyObservers::NotifyPosition;
+			point <- Composestar.Patterns.Observer.NotifyObservers::NotifyColor;
+			screen <- Composestar.Patterns.Observer.NotifyObservers::NotifyDisplay;
 
 			//perform observer action; is case specific
-			screen <- ObserverUpdate::Action;
+			screen <- Composestar.Patterns.Observer.ObserverUpdate::Action;
 	}
 }

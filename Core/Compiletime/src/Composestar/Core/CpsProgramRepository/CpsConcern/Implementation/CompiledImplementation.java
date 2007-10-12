@@ -81,6 +81,11 @@ public class CompiledImplementation extends Implementation
 		return className;
 	}
 
+	public void setClassName(String qualifiedClass)
+	{
+		className = qualifiedClass;
+	}
+
 	public void setClassName(Vector qualifiedClass)
 	{
 		if (!qualifiedClass.isEmpty())
