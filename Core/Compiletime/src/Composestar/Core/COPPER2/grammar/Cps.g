@@ -16,6 +16,7 @@
  * (2007-10-11) michielh	Added legacy selector operator to AST (=, :).
  *				Added PARAM token to a single FM parameter in
  *				the params rule, needed for walker.
+ * (2007-10-12) michielh	CodeBlock now included in the tree.
  */
 grammar Cps;
 
@@ -132,7 +133,7 @@ package Composestar.Core.COPPER2;
  * or an implementation rule.
  */
 concern
-	: 'concern' IDENTIFIER concernParameters? (in='in' fqn)? LCURLY filtermodule* superimposition? (implementation | RCURLY)
+	: 'concern' IDENTIFIER concernParameters? (in='in' fqn)? LCURLY filtermodule* superimposition? implementation
 	-> ^(CONCERN[$start] IDENTIFIER concernParameters? ^(IN[$in] fqn)? filtermodule* superimposition? implementation?)
 	;
 
@@ -611,7 +612,7 @@ preConstraint
  */
 implementation
 	: 'implementation' 'in' lang=IDENTIFIER 'by' cls=fqn 'as' DOUBLEQUOTE fn=filename DOUBLEQUOTE code=codeBlock
-	-> ^(IMPLEMENTATION[$start] $lang $cls $fn)
+	-> ^(IMPLEMENTATION[$start] $lang $cls $fn $code)
 	;
 
 /**
@@ -623,13 +624,15 @@ filename
 	;	
 	
 /**
- * The code block will eat everything after the left curly. The EMBEX module will eventually extract
- * the content.
+ * extractEmbeddedCode method will manually scan to the end of the codeblock
  */	
 codeBlock
-	: LCURLY! .*
-	{ embeddedSourceLoc = $start.getTokenIndex(); }
-	;		
+@init {String codeTxt = "";}
+	: strt=LCURLY
+	  {codeTxt = extractEmbeddedCode(adaptor, CODE_BLOCK);}
+	  RCURLY
+	  -> ^(CODE_BLOCK[$strt, codeTxt])
+	;	
 // $>
 		
 

@@ -111,7 +111,6 @@ public class COPPER implements CTCommonModule
 		nodes.setTokenStream(tokens);
 		CpsTreeWalker w = new CpsTreeWalker(nodes);
 		w.setSourceFile(file.toString());
-		w.setEmbeddedSourceLoc(p.getEmbeddedSourceLoc());
 		try
 		{
 			w.concern();

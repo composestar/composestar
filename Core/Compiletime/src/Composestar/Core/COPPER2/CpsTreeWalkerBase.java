@@ -30,6 +30,7 @@ import org.antlr.runtime.tree.Tree;
 import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
 
+import Composestar.Core.COPPER.COPPER;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
@@ -45,8 +46,6 @@ public class CpsTreeWalkerBase extends TreeParser
 
 	protected String sourceFile;
 
-	protected int embeddedSourceLoc;
-
 	public CpsTreeWalkerBase(TreeNodeStream input)
 	{
 		super(input);
@@ -55,11 +54,6 @@ public class CpsTreeWalkerBase extends TreeParser
 	public void setSourceFile(String srcfl)
 	{
 		sourceFile = srcfl;
-	}
-
-	public void setEmbeddedSourceLoc(int loc)
-	{
-		embeddedSourceLoc = loc;
 	}
 
 	public void displayRecognitionError(String[] tokenNames, RecognitionException e)
@@ -78,7 +72,7 @@ public class CpsTreeWalkerBase extends TreeParser
 	 * Sets the location information on the repository entity according to the
 	 * token
 	 */
-	public void setLocInfo(RepositoryEntity re, Token t)
+	protected void setLocInfo(RepositoryEntity re, Token t)
 	{
 		re.setDescriptionFileName(sourceFile);
 		if (t != null)
@@ -92,7 +86,7 @@ public class CpsTreeWalkerBase extends TreeParser
 	 * Sets the location information on the repository entity according to the
 	 * token
 	 */
-	public void setLocInfo(RepositoryEntity re, Tree t)
+	protected void setLocInfo(RepositoryEntity re, Tree t)
 	{
 		re.setDescriptionFileName(sourceFile);
 		if (t != null)

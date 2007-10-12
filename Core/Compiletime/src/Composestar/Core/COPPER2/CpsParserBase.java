@@ -26,7 +26,9 @@ package Composestar.Core.COPPER2;
 
 import org.antlr.runtime.Parser;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
+import org.antlr.runtime.tree.TreeAdaptor;
 
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
@@ -41,11 +43,6 @@ public abstract class CpsParserBase extends Parser
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(COPPER.MODULE_NAME);
 
 	/**
-	 * Stream location in the CPS file where the embedded source starts
-	 */
-	protected int embeddedSourceLoc = -1;
-
-	/**
 	 * Used for error reporting
 	 */
 	protected String sourceFile;
@@ -53,15 +50,6 @@ public abstract class CpsParserBase extends Parser
 	public CpsParserBase(TokenStream input)
 	{
 		super(input);
-	}
-
-	/**
-	 * Get the byte offset in the source file where the embedded source starts.
-	 * When there is no embedded source this value will be 0.
-	 */
-	public int getEmbeddedSourceLoc()
-	{
-		return embeddedSourceLoc;
 	}
 
 	public void setSourceFile(String srcfl)
@@ -79,5 +67,27 @@ public abstract class CpsParserBase extends Parser
 	public void emitErrorMessage(String msg)
 	{
 		logger.error(msg);
+	}
+
+	/**
+	 * This will consume all tokens up to: } } EOF. It returns the content up to
+	 * the end token as a string.
+	 */
+	protected String extractEmbeddedCode(TreeAdaptor adaptor, int tokenType)
+	{
+		Token start = (Token) input.LT(-1);
+		matchAny(input);
+		Token stop = null;
+
+		while (input.LA(3) != Token.EOF)
+		{
+			stop = (Token) input.LT(1);
+			matchAny(input);
+		}
+		stop = (Token) input.LT(1); // this should be a '}' will be matched by
+		// the parser
+
+		String result = input.toString(start.getTokenIndex() + 1, stop.getTokenIndex() - 1);
+		return result;
 	}
 }

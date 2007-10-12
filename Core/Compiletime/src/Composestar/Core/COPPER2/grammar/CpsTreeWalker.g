@@ -3,6 +3,8 @@
  * $Id$
  *
  * Changes:
+ * (2007-10-12) michielh	Added source code extraction from the
+ *				implementation block.
  */
 tree grammar CpsTreeWalker;
 
@@ -1020,15 +1022,14 @@ preConstraint [SuperImposition si]
 // $<Implementation
 
 implementation [CpsConcern c]
-	: ^(strt=IMPLEMENTATION lang=IDENTIFIER cls=fqn fn=FILENAME
+	: ^(strt=IMPLEMENTATION lang=IDENTIFIER cls=fqn fn=FILENAME code=CODE_BLOCK
 	  {
 	  	Source src = new Source();
 	  	setLocInfo(src, $strt);
 		src.setLanguage($lang.text);
 		src.setClassName(cls);
 		src.setSourceFile($fn.text);
-		// TODO extract
-		// src.setSource(embeddedCode);
+		src.setSource($code.text);
 		c.setImplementation(src);
 	  }
 	  )
