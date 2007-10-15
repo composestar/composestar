@@ -76,14 +76,6 @@
 		<copy file="lib/log4j/log4j-1.2.14.jar" todir="${out.dist}/lib" />
 		<copy file="lib/prolog/prolog.jar" todir="${out.dist}/lib" />
 
-		<!--
-    <copy todir="${out.dist}/lib/prolog">
-      <fileset dir="lib/prolog">
-        <include name="*.pro"/>
-      </fileset>
-    </copy>
-    -->
-
 		<copy todir="${out.dist}/lib">
 			<fileset dir="lib/groove">
 				<include name="groove-1_2_0.jar" />
