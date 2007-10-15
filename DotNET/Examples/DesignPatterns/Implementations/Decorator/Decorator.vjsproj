@@ -115,6 +115,10 @@
                     RelPath = "Concerns\StarDecorator.cps"
                     BuildAction = "None"
                 />
+                <File
+                    RelPath = "Concerns\FilterModuleOrdering.cps"
+                    BuildAction = "None"
+                />
             </Include>
         </Files>
     </VISUALJSHARP>

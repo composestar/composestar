@@ -9,15 +9,7 @@
 			</dependency>	
 		</dependencies>	
 	</module>
-	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true" summary="Parsing concerns...">
-		<dependencies>
-			<dependency type="FILE" name="cpsfile">
-				<path>
-					<node type="FIELD" nodevalue="fileName"/>
-				</path>
-			</dependency>
-		</dependencies>
-	</module>
+	<module fulltype="Composestar.Core.COPPER2.COPPER" />
 	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
 		<dependencies></dependencies>
 	</module>

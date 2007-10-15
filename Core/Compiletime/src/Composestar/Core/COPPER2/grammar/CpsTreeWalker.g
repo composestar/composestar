@@ -12,6 +12,7 @@
  * (2007-10-12) michielh	Added source code extraction from the
  *				implementation block. Added graceful
  *				error recovery.
+ * (2007-10-15) michielh	Added constraint processing.
  */
 tree grammar CpsTreeWalker;
 
@@ -53,8 +54,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.*;
-import Composestar.Core.Exception.*;
 import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
+import Composestar.Core.Exception.*;
+import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 
 import java.util.Vector;
 }
@@ -617,7 +619,7 @@ filterElement [FilterModuleAST fm] returns [FilterElementAST fe = new FilterElem
 conditionExpression [FilterModuleAST fm] returns [ConditionExpression ex]
 	: ^(frst=OR lhs=conditionExpression[fm] rhs=conditionExpression[fm] 
 	    {
-	    	ex = new And();
+	    	ex = new Or();
 	    	setLocInfo(ex, $frst);
 	    	lhs.setParent(ex);
 	    	rhs.setParent(ex);
@@ -1118,10 +1120,6 @@ fmBinding [SuperImposition si] returns [FilterModuleReference fmr = new FilterMo
 	    }
 	  )+))?)
 	;	
-
-concernFmRef
-	: fqn (DOUBLECOLON IDENTIFIER)?
-	;		
 	
 param returns [FilterModuleParameter fmp = new FilterModuleParameter();]
 @init {
@@ -1160,16 +1158,68 @@ annotationSi [SuperImposition si]
 		ab.addAnnotation(at);  	
 	  }
 	  )+)
-	;	
-	
-constraint [SuperImposition si]
-	: ^(CONSTRAINT preConstraint[si])
 	;
+	
 
-preConstraint [SuperImposition si]
-	: ^(PRE concernFmRef concernFmRef
+concernFmRef [SuperImposition si] returns [String res]
+// throws CpsSemanticException	
+	: {Tree errTok = (Tree) input.LT(1);}
+	  fr=fqn (DOUBLECOLON id=IDENTIFIER)?
 	  {
-	  	// TODO: need more info and/or adjustments
+	  try {
+	  	if (fr.indexOf(".") > -1 && id == null)
+	  	{
+	  		throw new CpsSemanticException(String.format("\"\%s\" must refer to a local or external filter module", 
+	  			fr), input, errTok);
+	  	}
+	  	// note keep the DOUBLECOLON -> . in sync with the naming convention
+	  	if (id == null)
+	  	{
+	  		// local concern
+	  		CpsConcern cpsc = (CpsConcern) si.getParent();
+	  		res = cpsc.getQualifiedName() + "." + fr;
+	  	}
+	  	else {
+	  		// external reference
+	  		res = fr + "." + $id.text;
+	  	}
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
+	  }
+	;				
+
+constraint [SuperImposition si]
+// throws CpsSemanticException
+	: ^(CONSTRAINT opr=IDENTIFIER lhs=concernFmRef[si] rhs=concernFmRef[si]
+	  {
+	  try {
+	  	if (!"pre".equalsIgnoreCase($opr.text))
+	  	{
+	  		throw new CpsSemanticException(String.format("Unknown filter module constraint type \"\%s\"", 
+	  			$opr.text), input, opr);
+	  	}
+	  			
+	  	// TODO: See part 2 of: http://www.mail-archive.com/composestar-developers@lists.sourceforge.net/msg00083.html
+	  	
+	  	SyntacticOrderingConstraint constraint = orderingconstraints.get(lhs);
+		if (constraint == null)
+		{
+			constraint = new SyntacticOrderingConstraint(lhs);
+			constraint.addRightFilterModule(rhs);
+			orderingconstraints.put(lhs, constraint);
+		}
+		else
+		{
+			constraint.addRightFilterModule(rhs);
+		}
+	  }
+	  catch (RecognitionException re) {
+		reportError(re);
+		recover(input,re);
+	  }
 	  }
 	  )
 	;				

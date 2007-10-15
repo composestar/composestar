@@ -1,6 +1,6 @@
 <!-- INCRE configuration for .NET 1.1 -->
 <modules>
-	<module fulltype="Composestar.Core.COPPER.COPPER" />
+	<module fulltype="Composestar.Core.COPPER2.COPPER" />
 	<module fulltype="Composestar.Core.EMBEX.EMBEX" />
 	<module fulltype="Composestar.Core.DUMMER.DummyManager" />
 	<module fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" />

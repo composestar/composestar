@@ -1,9 +1,5 @@
 <modules>
-	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="java.lang.String" enabled="true" incremental="true" summary="Parsing concerns...">
-		<dependencies>
-			<dependency type="FILE" name="cpsfile"></dependency>
-		</dependencies>
-	</module>
+	<module fulltype="Composestar.Core.COPPER2.COPPER" />
 	<module name="EMBEX" fulltype="Composestar.Core.EMBEX.EMBEX" phase="one" enabled="true" incremental="false" summary="Extracting embedded sources...">
 		<dependencies></dependencies>	
 	</module>

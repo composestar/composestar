@@ -220,13 +220,13 @@ public class FILTHServiceImpl extends FILTHService
 					fmsi = (FilterModuleSuperImposition) j.next();
 					// System.out.println("FILTH
 					// ordering>>>"+a+"::"+fr.getName() );
-					if (a.getName().equals(fmsi.getFilterModule().getName()))
+					if (a.getName().equals(fmsi.getFilterModule().getQualifiedName()))
 					{
+						anOrder.addLast(fmsi);
 						break;
 					}
 
 				}
-				anOrder.addLast(fmsi);
 				// System.out.println(count++);
 			}
 			anOrder.addLast(new FilterModuleSuperImposition(InnerDispatcher.getInnerDispatchReference()));
@@ -319,7 +319,7 @@ public class FILTHServiceImpl extends FILTHService
 		{
 			FilterModuleSuperImposition fms = (FilterModuleSuperImposition) i.next();
 			FilterModuleReference fr = fms.getFilterModule();
-			Action a = new Action(fr.getName(), Boolean.TRUE, true);
+			Action a = new Action(fr.getQualifiedName(), Boolean.TRUE, true);
 			Action.insert(a, g);
 
 			// FILTHService.print("FILTH::adding module> "+fr.getName()+"|");
@@ -339,7 +339,7 @@ public class FILTHServiceImpl extends FILTHService
 		}
 		logger.info("FilterModule ordering constraints: " + map);
 
-		String left, right;
+		String left;
 		Iterator it = map.values().iterator();
 		while (it.hasNext())
 		{
@@ -348,7 +348,7 @@ public class FILTHServiceImpl extends FILTHService
 			Iterator socit = soc.getRightFilterModules();
 			while (socit.hasNext())
 			{
-				right = (String) socit.next();
+				String right = (String) socit.next();
 				this.processRule(left, right, g);
 			}
 		}

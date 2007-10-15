@@ -19,6 +19,7 @@
  * (2007-10-12) michielh	CodeBlock now included in the tree. Allowed naked
  *				target.selector sign matching, but generate a 
  *				warning.
+ * (2007-10-15) michielh	Constraints are no longer hardcoded
  */
 grammar Cps;
 
@@ -69,7 +70,6 @@ tokens {
 	BINDING;
 	ANNOTATION_BINDINGS;
 	CONSTRAINT;
-	PRE;
 	
 	IMPLEMENTATION;
 	FILENAME;
@@ -238,7 +238,7 @@ externals
  */
 external
 	: IDENTIFIER COLON type=fqnOrSingleFmParam (eq=EQUALS init=fqnOrSingleFmParam LROUND /* params */ RROUND)? SEMICOLON
-	-> ^(EXTERNAL IDENTIFIER $type ^(INIT[$eq] $init /* params */))
+	-> ^(EXTERNAL IDENTIFIER $type ^(INIT[$eq] $init /* params */)?)
 	;	
 
 /**
@@ -593,17 +593,9 @@ constraints
  * The available orderning constrains. Currently only a pre constraint.
  */	
 constraint
-	: preConstraint
-	-> ^(CONSTRAINT preConstraint)
-	;
-
-/**
- * The pre(lhs, rhs)  filter module ordering constraint
- */	
-preConstraint
-	: 'pre' LROUND lhs=concernFmRef COMMA rhs=concernFmRef  RROUND
-	-> ^(PRE[$start] $lhs $rhs)
-	;				
+	: oper=IDENTIFIER LROUND lhs=concernFmRef COMMA rhs=concernFmRef RROUND
+	-> ^(CONSTRAINT $oper $lhs $rhs)
+	;			
 
 // $>
 	

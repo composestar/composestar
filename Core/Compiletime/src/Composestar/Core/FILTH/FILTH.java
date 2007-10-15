@@ -20,7 +20,7 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.SIinfo;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Calculates orders of the superimposed filtermodules
@@ -28,7 +28,10 @@ import Composestar.Utils.Debug;
 public class FILTH implements CTCommonModule
 {
 	public static final String MODULE_NAME = "FILTH";
+
 	public static final String FILTER_ORDERING_SPEC = "FILTER_ORDERING_SPEC";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	public FILTH()
 	{}
@@ -38,11 +41,12 @@ public class FILTH implements CTCommonModule
 		/* get a INCRE instance */
 		INCRE incre = INCRE.instance();
 
-		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Init FILTH service", INCRETimer.TYPE_NORMAL);
-		
+		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Init FILTH service",
+				INCRETimer.TYPE_NORMAL);
+
 		/* first set the ordering spec file!!!!! */
 		resources.add("ConstraintFile", "XMLTest.xml");
-		
+
 		/* get a FILTHService instance */
 		FILTHService filthservice = FILTHService.getInstance(resources);
 		InnerDispatcher.getInnerDispatchReference();
@@ -71,15 +75,15 @@ public class FILTH implements CTCommonModule
 				else
 				{
 					/* Calculate FilterModuleOrders */
-					INCRETimer filthrun = incre.getReporter().openProcess(MODULE_NAME, c.getUniqueID(), INCRETimer.TYPE_NORMAL);
+					INCRETimer filthrun = incre.getReporter().openProcess(MODULE_NAME, c.getUniqueID(),
+							INCRETimer.TYPE_NORMAL);
 					list = filthservice.getMultipleOrder(c);
 					filthrun.stop();
 				}
 
 				if (list.size() > 1)
 				{
-					Debug.out(Debug.MODE_INFORMATION, MODULE_NAME,
-							"Encountered shared join point: " + c.getQualifiedName(), c);
+					logger.info("Encountered shared join point: " + c.getQualifiedName(), c);
 
 					FilterModuleOrder singleOrder = (FilterModuleOrder) c
 							.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
@@ -96,7 +100,7 @@ public class FILTH implements CTCommonModule
 							if (i != last) sb.append(" --> ");
 						}
 					}
-					Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Selecting filter module order: " + sb);
+					logger.debug("Selecting filter module order: " + sb.toString());
 				}
 			}
 		}
