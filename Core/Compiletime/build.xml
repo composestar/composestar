@@ -50,6 +50,8 @@
 				<include name="TESTS-*.xml" />
 			</fileset>
 		</delete>
+		
+		<ant dir="${build.core}/Compiletime/grammar" target="clean" inheritRefs="true" />
 	</target>
 
 	<target name="local_init" depends="init">
@@ -92,14 +94,16 @@
 	<target name="antlr" depends="local_init">
 		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java" inheritRefs="true" />
 
-		<java classname="org.antlr.Tool" classpath="${basedir}/lib/antlr/antlr.jar;${basedir}/lib/antlr/antlr-3.jar;${basedir}/lib/antlr/stringtemplate-3.jar" failonerror="true">
-			<arg value="-o" />
-			<arg file="src/Composestar/CORE/COPPER2" />
-			<arg value="-lib" />
-			<arg file="src/Composestar/CORE/COPPER2" />
-			<arg file="src/Composestar/CORE/COPPER2/grammar/Cps.g" />
-			<arg file="src/Composestar/CORE/COPPER2/grammar/CpsTreeWalker.g" />
-		</java>
+		<!--
+		<cs:antlr3 outputDirectory="src/Composestar/CORE/COPPER2" libDirectory="src/Composestar/CORE/COPPER2">
+			<classpath>
+				<pathelement path="${basedir}/lib/antlr/antlr.jar;${basedir}/lib/antlr/antlr-3.jar;${basedir}/lib/antlr/stringtemplate-3.jar" />
+			</classpath>
+			<fileset dir="src/Composestar/CORE/COPPER2/grammar/">
+				<include name="*.g" />
+			</fileset>
+		</cs:antlr3>
+		-->
 	</target>
 
 	<target name="compile" depends="local_init,antlr">
@@ -110,6 +114,7 @@
 		</propertyfile>
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java" />
+			<exclude name="Composestar/Core/COPPER/**" />
 		</javac>
 	</target>
 

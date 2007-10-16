@@ -33,7 +33,6 @@ import org.antlr.runtime.tree.Tree;
 import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
 
-import Composestar.Core.COPPER.COPPER;
 import Composestar.Core.Exception.CpsSemanticException;
 import Composestar.Core.FILTH.FILTH;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;

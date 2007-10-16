@@ -1,3 +1,7 @@
+//
+// @Warning@
+//
+
 /*
  * Parser (Tree generator) and Lexer specification for the Compose* language
  * $Id$
@@ -26,8 +30,8 @@ grammar Cps;
 options {
 	k = 1;
 	output = AST;
-	language = Java;
 	superClass = CpsParserBase;
+	language = @TargetLanguage@;
 }
 
 // Magic tokes used for tree construction
@@ -99,7 +103,7 @@ tokens {
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  */
  
-package Composestar.Core.COPPER2;
+@Java@package Composestar.Core.COPPER2;
 }
 
 @lexer::header {
@@ -125,8 +129,13 @@ package Composestar.Core.COPPER2;
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  */
  
-package Composestar.Core.COPPER2;
+@Java@package Composestar.Core.COPPER2;
 }
+
+// Namespace for C# targets
+@lexer::namespace {Composestar.StarLight.CpsParser}
+@parser::namespace {Composestar.StarLight.CpsParser}
+
 
 /**
  * Start of a CPS source file. It will always start with a concern declaration.
@@ -135,8 +144,8 @@ package Composestar.Core.COPPER2;
  * or an implementation rule.
  */
 concern
-	: 'concern' IDENTIFIER concernParameters? (in='in' fqn)? LCURLY filtermodule* superimposition? implementation?
-	-> ^(CONCERN[$start] IDENTIFIER concernParameters? ^(IN[$in] fqn)? filtermodule* superimposition? implementation?)
+	: 'concern' IDENTIFIER concernParameters? (inToken='in' fqn)? LCURLY filtermodule* superimposition? implementation?
+	-> ^(CONCERN[$start] IDENTIFIER concernParameters? ^(IN[$inToken] fqn)? filtermodule* superimposition? implementation?)
 	;
 
 /**
@@ -211,14 +220,14 @@ identifierOrSingleFmParam
  * their corresponding root node.
  */
 internals
-	: 'internals'! internal*
+	: 'internals'! fmInternal*
 	;
 	
 /**
  * An internal can contain a list of names and a single type identifier. The
  * type is placed first because it will be easier to use in the walker
  */	
-internal
+fmInternal
 	: IDENTIFIER (COMMA IDENTIFIER)* COLON fqnOrSingleFmParam SEMICOLON
 	-> ^(INTERNAL fqnOrSingleFmParam  ^(NAMES IDENTIFIER+))
 	;
@@ -227,7 +236,7 @@ internal
  * List of externals. No root node is created.
  */
 externals
-	: 'externals'! external*
+	: 'externals'! fmExternal*
 	;
 
 /**
@@ -236,7 +245,7 @@ externals
  * as an static object reference rather than an instance.
  * Note: currently paramaters are not supported in the init expression
  */
-external
+fmExternal
 	: IDENTIFIER COLON type=fqnOrSingleFmParam (eq=EQUALS init=fqnOrSingleFmParam LROUND /* params */ RROUND)? SEMICOLON
 	-> ^(EXTERNAL IDENTIFIER $type ^(INIT[$eq] $init /* params */)?)
 	;	
@@ -360,9 +369,9 @@ messagePatternSet
 	: matchingPart substitutionPart?
 	-> ^(MATCHING_PART matchingPart) ^(SUBST_PART substitutionPart)?
 	// single target.selector alternative dropped per 2007-10-05 (MichielH+Lodewijk)
-	| targetSelector[true] 
+	| targetSelector[1] 
 	  {
-	  	logger.warn(createLogMessage("Naked target.selector signature matching has been deprecated.", $start));
+	  	@Java@logger.warn(createLogMessage("Naked target.selector signature matching has been deprecated.", $start));
 	  }
 	-> ^(MATCHING_PART ^(SIGN targetSelector))
 	;	
@@ -384,14 +393,14 @@ matchingPart
  */
 matchingPattern
 	: (
-		LSQUARE targetSelector[true] RSQUARE
+		LSQUARE targetSelector[1] RSQUARE
 	  // "target.selector" no longer available. support for this construction
 	  // has been dropped before version 0.5
 	  //|	DOUBLEQUOTE targetSelector DOUBLEQUOTE 
 	  )
 	  -> ^(NAME targetSelector)
 	| (
-		LANGLE targetSelector[true] RANGLE
+		LANGLE targetSelector[1] RANGLE
 	  )
 	  -> ^(SIGN targetSelector)
 	;
@@ -401,8 +410,8 @@ matchingPattern
  * support.
  */	
 substitutionPart
-	: targetSelector[false]
-	| HASH  LROUND targetSelector[false] (SEMICOLON targetSelector[false])* RROUND
+	: targetSelector[0]
+	| HASH  LROUND targetSelector[0] (SEMICOLON targetSelector[0])* RROUND
 	-> ^(MESSAGE_LIST targetSelector+)
 	;		
 	
@@ -410,7 +419,7 @@ substitutionPart
  * The target is optional. However the target and selector contain similar constructions,
  * therefor a predicate is used to check if the target is present.
  */	
-targetSelector [boolean allowParamList]
+targetSelector [int allowParamList]
 	: (target PERIOD)=> target PERIOD! selector[allowParamList]
 	| selector[allowParamList]
 	;
@@ -428,14 +437,14 @@ target
 /**
  * The selector. The selector may contain both filter module parameter types.
  */
-selector [boolean allowParamList]
+selector [int allowParamList]
 	: IDENTIFIER
 	-> ^(SELECTOR IDENTIFIER)
 	| ASTERISK
 	-> ^(SELECTOR ASTERISK)
 	| singleFmParam
 	-> ^(SELECTOR singleFmParam)
-	| {allowParamList}? fmParamList // TODO: fmParamList not allowed in subst
+	| {allowParamList != 0}? fmParamList
 	-> ^(SELECTOR fmParamList)
 	;
 
@@ -496,7 +505,8 @@ selectorExprLegacy
  */	
 selectorExprPredicate
 	: id=IDENTIFIER '|' expr=allButRcurly RCURLY
-	-> ^(PREDICATE_SELECTOR $id { adaptor.create(PROLOG_EXPR, input.toString($expr.start, $expr.stop)) } )
+	@Java@-> ^(PREDICATE_SELECTOR $id { adaptor.create(PROLOG_EXPR, input.toString($expr.start, $expr.stop)) } )
+	@CSharp@-> ^(PREDICATE_SELECTOR $id { adaptor.Create(PROLOG_EXPR, input.ToString($expr.start, $expr.stop)) } )
 	;	
 
 /**
@@ -541,8 +551,8 @@ condBinding
  * A single filter module binding. Contains optional filter module parameters.
  */
 fmBinding
-	: ref=concernFmRef (LROUND param (COMMA param)* RROUND)?
-	-> ^(BINDING $ref ^(PARAMS param+)?)
+	: fmref=concernFmRef (LROUND param (COMMA param)* RROUND)?
+	-> ^(BINDING $fmref ^(PARAMS param+)?)
 	;	
 	
 /**

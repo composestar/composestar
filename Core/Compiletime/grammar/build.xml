@@ -1,59 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Compose* grammar" xmlns:cs="antlib:Composestar">
+<project name="Compose* grammar" xmlns:cs="antlib:Composestar" default="build">
 
-	<property name="build.core" location="../.."/>
-	<import file="${build.core}/common.xml"/>
+	<property name="build.core" location="../.." />
+	<import file="${build.core}/common.xml" />
+
+	<target name="clean">
+		<delete dir="${basedir}/java" />
+		<delete dir="${basedir}/csharp" />
+	</target>
 
 	<target name="init_local" depends="init">
-		<property name="grammar.dir"     location="${basedir}"/>
-		<property name="copper.dir"      location="${build.core}/Compiletime/src/Composestar/Core/COPPER"/>
-		<property name="CpsParser.dir"   location="${build.starlight}/Source/CpsParser"/>
-		
-		<!-- TODO: move cps.g and cpsw.g to ${basedir} after StarLight branch of Core is merged into the trunk -->
-		<property name="cps.g"           location="${copper.dir}/grammar/cps.g"/>
-		<property name="cpsw.g"          location="${copper.dir}/grammar/cpsw.g"/>
-		<property name="cps-java.g"      location="${basedir}/cps-java.g"/>
-		<property name="cps-csharp.g"    location="${basedir}/cps-csharp.g"/>
+		<property name="antlr3.classpath" location="${basedir}/../lib/antlr/antlr.jar;${basedir}/../lib/antlr/antlr-3.jar;${basedir}/../lib/antlr/stringtemplate-3.jar" />
 
-		<property name="warning" value="This file was generated from ${cps.g}. Do not modify!"/>
+		<property name="grammar.dir" location="${basedir}" />
+		<property name="copper.dir" location="${build.core}/Compiletime/src/Composestar/Core/COPPER2" />
+		<property name="CpsParser.dir" location="${build.starlight}/Source/CpsParser" />
+
+		<property name="cps.g" location="${copper.dir}/grammar/Cps.g" />
+		<property name="cpsw.g" location="${copper.dir}/grammar/CpsTreeWalker.g" />
+		<property name="cps-java.g" location="${basedir}/java/Cps.g" />
+		<property name="cps-csharp.g" location="${basedir}/csharp/Cps.g" />
+
+		<mkdir dir="${basedir}/java" />
+		<mkdir dir="${basedir}/csharp" />
+
+		<property name="warning" value="This file was generated from ${cps.g}. Do not modify!" />
 	</target>
 
 	<target name="antlr_cps_java" depends="init_local" description="Generates the Java version of the Cps grammar">
-		<copy file="${cps.g}" tofile="${cps-java.g}"/>
+		<copy file="${cps.g}" tofile="${cps-java.g}" />
 
 		<replace file="${cps-java.g}">
-			<replacefilter token="$W"  value="${warning}"/>
-			<replacefilter token="$J:" value=""/>
-			<replacefilter token="$C:" value="//"/>
+			<replacefilter token="@Warning@" value="${warning}" />
+			<replacefilter token="@TargetLanguage@" value="Java" />
+			<replacefilter token="@Java@" value="" />
+			<replacefilter token="@CSharp@" value="//" />
 		</replace>
-		
-		<cs:antlr target="${cps-java.g}" 
-		          outputdirectory="${copper.dir}"
-		          classpathref="lib.core"/>
-		
-		<cs:antlr target="${cpsw.g}"
-		          outputdirectory="${copper.dir}"
-		          classpathref="lib.core"/>
-	
+
+		<cs:antlr3 outputDirectory="${copper.dir}" libDirectory="${copper.dir}">
+			<classpath>
+				<pathelement path="${antlr3.classpath}" />
+			</classpath>
+			<fileset file="${cps-java.g}" />
+			<fileset file="${cpsw.g}" />
+		</cs:antlr3>
+
 	</target>
 
 	<target name="antlr_cps_dotnet" depends="init_local" description="Generates the C# version of the Cps grammar">
-		<copy file="${cps.g}" tofile="${cps-csharp.g}"/>
+		<copy file="${cps.g}" tofile="${cps-csharp.g}" />
 
 		<replace file="${cps-csharp.g}">
-			<replacefilter token="$W"  value="${warning}"/>
-			<replacefilter token="$C:" value=""/>
-			<replacefilter token="$J:" value="//"/>
+			<replacefilter token="@Warning@" value="${warning}" />
+			<replacefilter token="@TargetLanguage@" value="CSharp" />
+			<replacefilter token="@CSharp@" value="" />
+			<replacefilter token="@Java@" value="//" />
 		</replace>
 
-		<cs:antlr target="${cps-csharp.g}" 
-		          outputdirectory="${CpsParser.dir}"
-		          classpathref="lib.core"/>
-		
+		<!--<cs:antlr target="${cps-csharp.g}" outputdirectory="${CpsParser.dir}" classpathref="lib.core" />-->
+
+		<cs:antlr3 outputDirectory="${CpsParser.dir}" libDirectory="${CpsParser.dir}">
+			<classpath>
+				<pathelement path="${antlr3.classpath}" />
+			</classpath>
+			<fileset file="${cps-csharp.g}" />
+		</cs:antlr3>
 	</target>
 
-	<!-- dummy tasks -->
-	<target name="build"/>
-	<target name="clean"/>
+	<target name="build" depends="antlr_cps_java,antlr_cps_dotnet" />
 
 </project>

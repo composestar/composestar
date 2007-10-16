@@ -20,6 +20,8 @@
  *  2007-05-16  Added -depend and -XdbgST options
  *              Removed -trace, -traceLexer and -traceParser options
  *              Recompiled with source 1.5 and target 1.5
+ *              
+ *  2007-10-15: Added support for multiple targets
  */
 
 package Composestar.Ant.Taskdefs;

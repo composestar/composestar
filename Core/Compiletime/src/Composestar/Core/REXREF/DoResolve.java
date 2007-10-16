@@ -3,7 +3,6 @@ package Composestar.Core.REXREF;
 import java.util.Iterator;
 import java.util.Vector;
 
-import Composestar.Core.COPPER.Splitter;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
@@ -171,7 +170,7 @@ public class DoResolve
 			FilterModuleAST fm_ast = (FilterModuleAST) ds.getObjectByID(ref.getQualifiedName());
 			if (fm_ast != null)
 			{
-				String uniqueID = ""+(fmCounter++);
+				String uniqueID = "" + (fmCounter++);
 
 				// Create an unique ID for this FM instance, based on the
 				// SelectorReference for the FilterModuleReference
@@ -903,4 +902,90 @@ public class DoResolve
 		copy.setRightOperator(copy.getRightOperator());
 		return copy;
 	}
+
+	public class Splitter
+	{
+		private Vector pack;
+
+		private String concern;
+
+		private String concernelem;
+
+		private String fm;
+
+		private String fmelem;
+
+		private int i, j;
+
+		public Splitter()
+		{
+			reset();
+		}
+
+		// resets all the previous work
+		public void reset()
+		{
+			pack = null;
+			concern = null;
+			concernelem = null;
+			fm = null;
+			fmelem = null;
+			i = 0;
+			j = 0;
+		}
+
+		// split a concernReference (i.e. a.b.c.concern)
+		public void splitConcernReference(Vector in)
+		{
+			reset();
+			i = in.size();
+			switch (i)
+			{
+				case 0: // nothing, just null
+					break;
+				case 1: // we just have n
+					concern = (String) in.elementAt(0);
+					break;
+				default: // we have a.b.c.n
+					concern = (String) in.elementAt(i - 1);
+					for (j = 0; j <= i - 2; j++)
+					{ // now add the package
+						if (pack == null)
+						{
+							pack = new Vector(); // only create pack if
+													// actually
+							// used
+						}
+						pack.add(in.elementAt(j));
+					}
+					break;
+			}
+		}
+
+		public Vector getPack()
+		{
+			return pack;
+		}
+
+		public String getConcern()
+		{
+			return concern;
+		}
+
+		public String getFm()
+		{
+			return fm;
+		}
+
+		public String getFmelem()
+		{
+			return fmelem;
+		}
+
+		public String getConcernelem()
+		{
+			return concernelem;
+		}
+	}
+
 }

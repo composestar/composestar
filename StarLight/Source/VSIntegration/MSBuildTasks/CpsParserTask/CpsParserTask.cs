@@ -202,7 +202,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 						Log.LogMessageFromResources("ParsingConcernFile", concernFile);
 
 						// File is changed, we might not have the correct data
-						ICpsParser parser = new CpsFileParser(concernFile);
+						ICpsParser parser = new CpsFileParserEx(concernFile);
 
 						// Parse the concern file
 						parser.Parse();
