@@ -306,6 +306,10 @@ external [FilterModuleAST fm]
 		{
 			external.setShortinit(init);
 		}
+		else {
+			throw new CpsSemanticException(String.format("Static object references are not implemented. An initialization expression is required."), 
+				input, name);
+		}
 		setLocInfo(external, $name);
 		if (!fm.addExternal(external))
 		{
