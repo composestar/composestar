@@ -34,7 +34,14 @@ import junit.framework.TestCase;
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.tree.CommonTreeNodeStream;
+import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.BasicConfigurator;
+
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
+import Composestar.Core.RepositoryImplementation.DataMap;
+import Composestar.Core.RepositoryImplementation.DataMapImpl;
+import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
  * @author Michiel Hendriks
@@ -56,6 +63,9 @@ public class CpsParserTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
+		DataMap.setDataMapClass(DataMapImpl.class);
+		LegacyFilterTypes.useLegacyFilterTypes = true;
+
 		URL url = CpsParserTest.class.getResource("examples");
 		File exampleDir = new File(url.toURI());
 		if (!exampleDir.isDirectory())
@@ -88,6 +98,9 @@ public class CpsParserTest extends TestCase
 	private int testCpsFile(File file)
 	{
 		System.out.println("Parsing file " + file.toString());
+
+		DataStore.setInstance(new DataStore());
+
 		CpsLexer lex;
 		try
 		{
@@ -100,16 +113,31 @@ public class CpsParserTest extends TestCase
 		}
 		CommonTokenStream tokens = new CommonTokenStream(lex);
 		CpsParser parser = new CpsParser(tokens);
+		Tree rootNode;
 		try
 		{
-			parser.concern();
+			rootNode = (Tree) parser.concern().getTree();
 		}
 		catch (RecognitionException e)
 		{
 			fail(String.format("Parsing of \"%s\" failed: %s", file.toString(), e.getMessage()));
 			return -1;
 		}
-		return parser.getErrorCnt();
+
+		CommonTreeNodeStream nodes = new CommonTreeNodeStream(rootNode);
+		nodes.setTokenStream(tokens);
+		CpsTreeWalker w = new CpsTreeWalker(nodes);
+		w.setSourceFile(file.toString());
+		try
+		{
+			w.concern();
+		}
+		catch (RecognitionException e)
+		{
+			fail(String.format("Parsing of \"%s\" failed: %s", file.toString(), e.getMessage()));
+		}
+
+		return parser.getErrorCnt() + w.getErrorCnt();
 	}
 
 	public void testCorrect()
