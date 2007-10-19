@@ -4,10 +4,12 @@
  */
 package Composestar.Core.INLINE.lowlevel;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
@@ -22,7 +24,7 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Creates an abstract code object model for all methods in all concerns. It
@@ -33,6 +35,8 @@ import Composestar.Utils.Debug;
 public class ModelBuilder implements CTCommonModule
 {
 	public static final String MODULE_NAME = "INLINE";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	/**
 	 * The LowLevelInliner used to translate an inputfilterset to code.
@@ -58,7 +62,7 @@ public class ModelBuilder implements CTCommonModule
 	 * Contains the methodId's of methods that have inputfilters inlined. Used
 	 * to check whether an setInnerCall contextInstruction is necessary.
 	 */
-	private HashSet inlinedMethodSet;
+	private Set<Integer> inlinedMethodSet;
 
 	/**
 	 * All filtermodules in the filterset.
@@ -84,13 +88,13 @@ public class ModelBuilder implements CTCommonModule
 	 * Contains a mapping from MethodInfo to the code objectmodel of the
 	 * inputfilters that need to be inlined in the method.
 	 */
-	private static Hashtable inputFilterCode;
+	private static Map<MethodInfo, FilterCode> inputFilterCode;
 
 	/**
 	 * Contains a mapping from CallToOtherMethod to the code objectmodel of the
 	 * outputfilters that need to be inlined on the call.
 	 */
-	private static Hashtable outputFilterCode;
+	private static Map<CallToOtherMethod, FilterCode> outputFilterCode;
 
 	/**
 	 * The current selector being processed.
@@ -102,10 +106,10 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	public ModelBuilder()
 	{
-		this.inputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.INPUT_FILTERS);
-		this.inputFilterInliner = new LowLevelInliner(inputFilterBuilderStrategy);
-		this.outputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.OUTPUT_FILTERS);
-		this.outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy);
+		inputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.INPUT_FILTERS);
+		inputFilterInliner = new LowLevelInliner(inputFilterBuilderStrategy);
+		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.OUTPUT_FILTERS);
+		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy);
 	}
 
 	/**
@@ -128,7 +132,7 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	public static FilterCode getInputFilterCode(MethodInfo method)
 	{
-		return (FilterCode) inputFilterCode.get(method);
+		return inputFilterCode.get(method);
 	}
 
 	/**
@@ -141,7 +145,7 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	public static FilterCode getOutputFilterCode(CallToOtherMethod call)
 	{
-		return (FilterCode) outputFilterCode.get(call);
+		return outputFilterCode.get(call);
 	}
 
 	/**
@@ -169,8 +173,8 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	private void initialize()
 	{
-		inputFilterCode = new Hashtable();
-		outputFilterCode = new Hashtable();
+		inputFilterCode = new HashMap<MethodInfo, FilterCode>();
+		outputFilterCode = new HashMap<CallToOtherMethod, FilterCode>();
 	}
 
 	/**
@@ -200,10 +204,10 @@ public class ModelBuilder implements CTCommonModule
 			return;
 		}
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing concern " + concern.getName());
+		logger.debug("Processing concern " + concern.getName());
 
 		// initialize:
-		inlinedMethodSet = new HashSet();
+		inlinedMethodSet = new HashSet<Integer>();
 
 		// get filtermodules:
 		modules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
@@ -215,9 +219,9 @@ public class ModelBuilder implements CTCommonModule
 		Signature sig = concern.getSignature();
 		List methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
 
-		for (Object aList : methods)
+		for (Object o : methods)
 		{
-			MethodInfo method = (MethodInfo) aList;
+			MethodInfo method = (MethodInfo) o;
 			processMethod(method);
 		}
 	}
@@ -232,7 +236,7 @@ public class ModelBuilder implements CTCommonModule
 		// Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing " + methodInfo);
 
 		// set current selector:
-		this.currentSelector = methodInfo.getName();
+		currentSelector = methodInfo.getName();
 
 		// create executionmodel:
 		ExecutionModel execModel = currentFireModelIF.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo,
@@ -246,15 +250,14 @@ public class ModelBuilder implements CTCommonModule
 		if (filterCode != null)
 		{
 			inputFilterCode.put(methodInfo, filterCode);
-			inlinedMethodSet.add(new Integer(ModelBuilderStrategy.getMethodId(methodInfo)));
+			inlinedMethodSet.add(Integer.valueOf(ModelBuilderStrategy.getMethodId(methodInfo)));
 		}
 
 		// process calls:
-		HashSet calls = methodInfo.getCallsToOtherMethods();
-		Iterator iter = calls.iterator();
-		while (iter.hasNext())
+		Set calls = methodInfo.getCallsToOtherMethods();
+		for (Object o : calls)
 		{
-			CallToOtherMethod call = (CallToOtherMethod) iter.next();
+			CallToOtherMethod call = (CallToOtherMethod) o;
 			processCall(call);
 		}
 	}
@@ -267,7 +270,7 @@ public class ModelBuilder implements CTCommonModule
 	private void processCall(CallToOtherMethod call)
 	{
 		// set current selector:
-		this.currentSelector = call.getMethodName();
+		currentSelector = call.getMethodName();
 
 		// retrieve target methodinfo:
 		MethodInfo methodInfo = call.getCalledMethod();
@@ -302,6 +305,6 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	protected String getCurrentSelector()
 	{
-		return this.currentSelector;
+		return currentSelector;
 	}
 }

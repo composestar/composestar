@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
@@ -41,9 +42,9 @@ import Composestar.DotNET2.LAMA.DotNETCallToOtherMethod;
 import Composestar.DotNET2.LAMA.DotNETMethodInfo;
 import Composestar.DotNET2.LAMA.DotNETType;
 import Composestar.DotNET2.MASTER.StarLightMaster;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 import composestar.dotNET2.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET2.tym.entities.AssemblyConfig;
@@ -58,11 +59,13 @@ public class StarLightEmitterRunner implements CTCommonModule
 {
 	public static final String MODULE_NAME = "EMITTER";
 
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
 	private DataStore dataStore;
 
-	private Map weaveSpecs;
+	private Map<String, WeaveSpecification> weaveSpecs;
 
-	private Map compressors;
+	private Map<WeaveSpecification, FilterCodeCompressor> compressors;
 
 	private InstructionTranslator instructionTranslater = new InstructionTranslator();
 
@@ -72,9 +75,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	public StarLightEmitterRunner()
 	{
-		this.dataStore = DataStore.instance();
-		this.weaveSpecs = new HashMap();
-		this.compressors = new HashMap();
+		dataStore = DataStore.instance();
+		weaveSpecs = new HashMap<String, WeaveSpecification>();
+		compressors = new HashMap<WeaveSpecification, FilterCodeCompressor>();
 	}
 
 	public void run(CommonResources resc) throws ModuleException
@@ -105,8 +108,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 	{
 		if (weaveSpecs.containsKey(assemblyName))
 		{
-			WeaveSpecification weaveSpec = (WeaveSpecification) weaveSpecs.get(assemblyName);
-			currentCompressor = (FilterCodeCompressor) compressors.get(weaveSpec);
+			WeaveSpecification weaveSpec = weaveSpecs.get(assemblyName);
+			currentCompressor = compressors.get(weaveSpec);
 
 			return weaveSpec;
 		}
@@ -132,7 +135,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			AssemblyConfig ac = assemblies.getAssemblyConfigArray(i);
 			if (weaveSpecs.containsKey(ac.getName()))
 			{
-				WeaveSpecification weaveSpec = (WeaveSpecification) weaveSpecs.get(ac.getName());
+				WeaveSpecification weaveSpec = weaveSpecs.get(ac.getName());
 				addGeneralizedFilterCodes(weaveSpec);
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
@@ -140,7 +143,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				File baseDir = new File(resources.configuration().getProject().getIntermediate(), "Starlight");
 				File file = new File(baseDir, ac.getId() + "_weavespec.xml.gzip");
 
-				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing '" + file + "'...");
+				logger.debug("Writing '" + file + "'...");
 
 				OutputStream outputStream = null;
 				try
@@ -169,7 +172,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 	 */
 	private void addGeneralizedFilterCodes(WeaveSpecification weaveSpec)
 	{
-		FilterCodeCompressor compressor = (FilterCodeCompressor) compressors.get(weaveSpec);
+		FilterCodeCompressor compressor = compressors.get(weaveSpec);
 
 		FilterCode[] filterCodes = compressor.getGeneralizedFilterCodes();
 
@@ -197,12 +200,15 @@ public class StarLightEmitterRunner implements CTCommonModule
 	private void processConcern(Concern concern) throws ModuleException
 	{
 		DotNETType type = (DotNETType) concern.getPlatformRepresentation();
-		if (type == null) return;
+		if (type == null)
+		{
+			return;
+		}
 
 		if (concern.getDynObject("superImpInfo") != null)
 		{
 			// HashSet to prevent the same condition from being stored twice.
-			HashSet storedConditions = new HashSet();
+			Set<Condition> storedConditions = new HashSet<Condition>();
 
 			// get weavespec:
 			WeaveSpecification weaveSpec = getWeaveSpec(type.assemblyName());
@@ -229,7 +235,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 				{
 					// store internal:
 					Internal internal = (Internal) internals.next();
-					composestar.dotNET2.tym.entities.Internal storedInternal = weaveType.getInternals().addNewInternal();
+					composestar.dotNET2.tym.entities.Internal storedInternal = weaveType.getInternals()
+							.addNewInternal();
 
 					// name:
 					storedInternal.setName(internal.getName());
@@ -252,7 +259,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 				{
 					// store external
 					External external = (External) externals.next();
-					composestar.dotNET2.tym.entities.External storedExternal = weaveType.getExternals().addNewExternal();
+					composestar.dotNET2.tym.entities.External storedExternal = weaveType.getExternals()
+							.addNewExternal();
 
 					// name:
 					storedExternal.setName(external.getName());
@@ -384,9 +392,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 		List methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
 
 		boolean hasFilters;
-		List weaveMethods = new ArrayList();
+		List<WeaveMethod> weaveMethods = new ArrayList<WeaveMethod>();
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Processing concern: " + concern);
+		logger.debug("Processing concern: " + concern);
 
 		Iterator methodIter = methods.iterator();
 		while (methodIter.hasNext())
@@ -448,7 +456,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				int id = currentCompressor.addFilterCode(filterCode, call.getMethodName());
 				weaveCall.setFilterCodeId(id);
 
-				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Storing call" + weaveCall.toString());
+				logger.debug("Storing call" + weaveCall.toString());
 
 				// set hasfilters to true to indicate that the method has
 				// filters

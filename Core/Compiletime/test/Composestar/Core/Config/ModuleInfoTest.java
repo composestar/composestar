@@ -40,23 +40,23 @@ public class ModuleInfoTest extends TestCase
 	public void testInfo()
 	{
 		assertNotNull(mi);
-		assertEquals(mi.getId(), "test");
-		assertEquals(mi.getName(), "ModuleInfo Name");
-		assertEquals(mi.getDescription(), "ModuleInfo Description");
+		assertEquals("test", mi.getId());
+		assertEquals("ModuleInfo Name", mi.getName());
+		assertEquals("ModuleInfo Description", mi.getDescription());
 	}
 
 	public void testSettings()
 	{
 		assertTrue(mi.getBooleanSetting("aBool", false));
 		assertFalse(mi.getBooleanSetting("anotherBool", true));
-		assertEquals(mi.getIntSetting("anInteger", 12345), 12345);
-		assertEquals(mi.getStringSetting("AString", "This is a string value"), "This is a string value");
+		assertEquals(12345, mi.getIntSetting("anInteger", 0));
+		assertEquals("This is a string value", mi.getStringSetting("AString", "wrong"));
 
 		try
 		{
 			ModuleSetting ms = mi.getSetting("anInteger");
 			ms.setValue(54321);
-			assertEquals(ms.getIntValue(), 54321);
+			assertEquals(54321, ms.getIntValue());
 
 			try
 			{
@@ -76,9 +76,9 @@ public class ModuleInfoTest extends TestCase
 		try
 		{
 			mi.setSettingValue("AString", "newValue");
-			assertEquals(mi.getStringSetting("AString"), "newValue");
+			assertEquals("newValue", mi.getStringSetting("AString"));
 			mi.setSettingValue("AString", null); // back to default
-			assertEquals(mi.getStringSetting("AString"), "This is a string value");
+			assertEquals("This is a string value", mi.getStringSetting("AString"));
 		}
 		catch (ConfigurationException e)
 		{
@@ -99,9 +99,9 @@ public class ModuleInfoTest extends TestCase
 	{
 		INCREModule m = mi.getIncreModule();
 		assertNotNull(m);
-		assertEquals(m.getName(), "test");
-		assertEquals(m.getModuleClass(), mi.getModuleClass());
-		assertEquals(m.isIncremental(), false);
+		assertEquals("test", m.getName());
+		assertEquals(mi.getModuleClass(), m.getModuleClass());
+		assertEquals(false, m.isIncremental());
 	}
 
 	public void testNestedLoading()
@@ -109,10 +109,10 @@ public class ModuleInfoTest extends TestCase
 		try
 		{
 			ModuleInfo emi = ModuleInfoManager.get(TestDummyEx.class);
-			assertEquals(emi.getModuleClass(), TestDummyEx.class);
-			assertNotSame(emi, mi);
-			assertEquals(emi.getStringSetting("AString"), "This is a string value");
-			assertEquals(emi.getStringSetting("extraString", "wrong"), "Additional Setting");
+			assertEquals(TestDummyEx.class, emi.getModuleClass());
+			assertNotSame(mi, emi);
+			assertEquals("This is a string value", emi.getStringSetting("AString"));
+			assertEquals("Additional Setting", emi.getStringSetting("extraString", "wrong"));
 
 			mi.setSettingValue("anInteger", new Integer(54321));
 			if (mi.getIntSetting("anInteger") == emi.getIntSetting("anInteger"))
@@ -122,8 +122,8 @@ public class ModuleInfoTest extends TestCase
 
 			INCREModule m = emi.getIncreModule();
 			assertNotNull(m);
-			assertEquals(m.getName(), "test");
-			assertEquals(m.isIncremental(), false);
+			assertEquals("test", m.getName());
+			assertEquals(false, m.isIncremental());
 			assertEquals(m.getModuleClass(), emi.getModuleClass());
 		}
 		catch (ConfigurationException e)

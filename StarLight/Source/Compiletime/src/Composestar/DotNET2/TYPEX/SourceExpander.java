@@ -78,7 +78,9 @@ class SourceExpander
 				FileUtils.copy(reader, writer, skip);
 
 				for (MethodElement method : et.getExtraMethods().getMethodList())
+				{
 					me.emit(method, writer);
+				}
 			}
 
 			FileUtils.copy(reader, writer);
@@ -100,9 +102,15 @@ class SourceExpander
 
 	private MethodEmitter getMethodEmitter(String ext)
 	{
-		if ("java".equals(ext) || "jsl".equals(ext)) return new JSharpMethodEmitter();
+		if ("java".equals(ext) || "jsl".equals(ext))
+		{
+			return new JSharpMethodEmitter();
+		}
 
-		if ("cs".equals(ext)) return new CSharpMethodEmitter();
+		if ("cs".equals(ext))
+		{
+			return new CSharpMethodEmitter();
+		}
 
 		throw new IllegalArgumentException("Unknown extension '" + ext + "'");
 	}

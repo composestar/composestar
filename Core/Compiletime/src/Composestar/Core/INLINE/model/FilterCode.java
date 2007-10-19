@@ -2,6 +2,7 @@ package Composestar.Core.INLINE.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 
@@ -15,7 +16,7 @@ public class FilterCode implements Visitable
 	/**
 	 * The conditions to check before filter code execution.
 	 */
-	private ArrayList checkConditions;
+	private List<Condition> checkConditions;
 
 	/**
 	 * The filter code instructions
@@ -27,7 +28,7 @@ public class FilterCode implements Visitable
 	 */
 	public FilterCode()
 	{
-		checkConditions = new ArrayList();
+		checkConditions = new ArrayList<Condition>();
 	}
 
 	/**
@@ -46,7 +47,7 @@ public class FilterCode implements Visitable
 	 * 
 	 * @return
 	 */
-	public Iterator getCheckConditions()
+	public Iterator<Condition> getCheckConditions()
 	{
 		return checkConditions.iterator();
 	}

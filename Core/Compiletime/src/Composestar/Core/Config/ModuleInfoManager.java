@@ -22,9 +22,12 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.Config.Xml.CpsBaseHandler;
+import Composestar.Core.Config.Xml.ModuleInfoHandler;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -75,6 +78,11 @@ public class ModuleInfoManager
 		catch (ParserConfigurationException e)
 		{
 			throw new ConfigurationException("Parser Configuration Exception: " + e.getMessage());
+		}
+		catch (SAXParseException e)
+		{
+			throw new ConfigurationException(String.format("SAX Parse Exception at #%d,%d : %s", e.getLineNumber(), e
+					.getColumnNumber(), e.getMessage()));
 		}
 		catch (SAXException e)
 		{
@@ -245,16 +253,15 @@ public class ModuleInfoManager
 	 * 
 	 * @author Michiel Hendriks
 	 */
-	static class ModuleInfosHandler extends DefaultHandler
+	static class ModuleInfosHandler extends CpsBaseHandler
 	{
 		protected ModuleInfoManager manager;
 
-		protected XMLReader reader;
-
-		protected ModuleInfo curMi;
+		protected ModuleInfoHandler miHandler;
 
 		public ModuleInfosHandler(ModuleInfoManager inManager, XMLReader inReader)
 		{
+			super(inReader, null);
 			manager = inManager;
 			reader = inReader;
 		}
@@ -263,8 +270,9 @@ public class ModuleInfoManager
 		{
 			if (qName.equals("moduleinfo"))
 			{
-				curMi = ModuleInfo.loadSax(reader, this);
-				reader.getContentHandler().startElement(uri, localName, qName, attributes);
+				miHandler = new ModuleInfoHandler(reader, this);
+				reader.setContentHandler(miHandler);
+				miHandler.startElement(uri, localName, qName, attributes);
 			}
 		}
 
@@ -272,10 +280,9 @@ public class ModuleInfoManager
 		{
 			if (qName.endsWith("moduleinfo"))
 			{
-				if (curMi != null)
+				if (miHandler != null)
 				{
-					manager.addModuleInfo(curMi);
-					curMi = null;
+					manager.addModuleInfo(miHandler.getModuleInfo());
 				}
 			}
 		}

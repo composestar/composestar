@@ -156,21 +156,33 @@ public class DotNETParameterInfo extends ParameterInfo
 	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
 	 */
+	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentMethod")) return new UnitResult(parent);
-		else if (argumentName.equals("Class") && parameterType().getUnitType().equals("Class")) return new UnitResult(
-				parameterType());
-		else if (argumentName.equals("Interface") && parameterType().getUnitType().equals("Interface")) return new UnitResult(
-				parameterType());
-		else if (argumentName.equals("Annotation") && parameterType().getUnitType().equals("Annotation")) return new UnitResult(
-				parameterType());
+		if (argumentName.equals("ParentMethod"))
+		{
+			return new UnitResult(parent);
+		}
+		else if (argumentName.equals("Class") && parameterType().getUnitType().equals("Class"))
+		{
+			return new UnitResult(parameterType());
+		}
+		else if (argumentName.equals("Interface") && parameterType().getUnitType().equals("Interface"))
+		{
+			return new UnitResult(parameterType());
+		}
+		else if (argumentName.equals("Annotation") && parameterType().getUnitType().equals("Annotation"))
+		{
+			return new UnitResult(parameterType());
+		}
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((Annotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 
@@ -182,6 +194,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 	 */
+	@Override
 	public Collection getUnitAttributes()
 	{
 		return new HashSet();

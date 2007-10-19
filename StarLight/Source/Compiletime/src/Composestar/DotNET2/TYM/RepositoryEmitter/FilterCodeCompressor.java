@@ -22,7 +22,7 @@ import Composestar.Core.INLINE.model.Visitor;
 public class FilterCodeCompressor
 {
 	private final static String GENERALIZATION_SELECTOR = "+";
-	
+
 	private HashMap<EqualizedFilterCode, Integer> generalizedIdMap;
 
 	public FilterCodeCompressor()
@@ -108,7 +108,7 @@ public class FilterCodeCompressor
 
 			EqualizedFilterCode eqFilterCode = (EqualizedFilterCode) obj;
 			EqualsVisitor visitor = new EqualsVisitor(eqFilterCode.filterCode);
-			Boolean equals = (Boolean) this.filterCode.accept(visitor);
+			Boolean equals = (Boolean) filterCode.accept(visitor);
 			return equals.booleanValue();
 		}
 
@@ -131,7 +131,7 @@ public class FilterCodeCompressor
 
 		public EqualsVisitor(Visitable visitable)
 		{
-			this.currentCheckInstruction = visitable;
+			currentCheckInstruction = visitable;
 		}
 
 		/**
@@ -147,8 +147,8 @@ public class FilterCodeCompressor
 			FilterCode filterCode2 = (FilterCode) currentCheckInstruction;
 
 			// Iterate the checkConditions to check whether they are equal
-			Iterator iter1 = filterCode.getCheckConditions();
-			Iterator iter2 = filterCode2.getCheckConditions();
+			Iterator<Condition> iter1 = filterCode.getCheckConditions();
+			Iterator<Condition> iter2 = filterCode2.getCheckConditions();
 			while (iter1.hasNext())
 			{
 				if (!iter2.hasNext())
@@ -157,8 +157,8 @@ public class FilterCodeCompressor
 				}
 				else
 				{
-					Condition cond1 = (Condition) iter1.next();
-					Condition cond2 = (Condition) iter2.next();
+					Condition cond1 = iter1.next();
+					Condition cond2 = iter2.next();
 					if (cond1 != cond2)
 					{
 						return Boolean.FALSE;
@@ -459,10 +459,10 @@ public class FilterCodeCompressor
 			FilterCode copy = new FilterCode();
 
 			// Check conditions
-			Iterator condIter = filterCode.getCheckConditions();
+			Iterator<Condition> condIter = filterCode.getCheckConditions();
 			while (condIter.hasNext())
 			{
-				Condition condition = (Condition) condIter.next();
+				Condition condition = condIter.next();
 				copy.addCheckCondition(condition);
 			}
 
@@ -572,8 +572,8 @@ public class FilterCodeCompressor
 
 		private Message generalize(Message message)
 		{
-			return new Message(message.getTarget(),
-					(message.getSelector().equals(selector)) ? GENERALIZATION_SELECTOR : message.getSelector());
+			return new Message(message.getTarget(), (message.getSelector().equals(selector)) ? GENERALIZATION_SELECTOR
+					: message.getSelector());
 
 		}
 

@@ -37,6 +37,13 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="settings" type="Settings" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="dependson" maxOccurs="1" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="module" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="incre" type="IncreConfig" minOccurs="0" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>
@@ -44,7 +51,7 @@
 						extends this will completely replace the previous definition.
 					</xs:documentation>
 				</xs:annotation>
-			</xs:element>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="optional">
 			<xs:annotation>

@@ -8,35 +8,37 @@
 package Composestar.DotNET2.MASTER;
 
 /**
- * @author Michiel
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * @author Michiel TODO To change the template for this generated type comment
+ *         go to Window - Preferences - Java - Code Style - Code Templates
  */
-public class StarLightServer {
+public class StarLightServer
+{
 
 	public StarLightServer()
-	{	
-	
+	{
+
 	}
-		
+
 	public void startServer()
 	{
 		while (true)
 		{
-			try {
+			try
+			{
 				Thread.sleep(1000);
-				System.out.println("message from server. still running"); 
-			} catch (InterruptedException e) {
+				System.out.println("message from server. still running");
+			}
+			catch (InterruptedException e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
+			}
 		}
 	}
-	
-	public static void main(String[] args) 
+
+	public static void main(String[] args)
 	{
 		StarLightServer server = new StarLightServer();
-		server.startServer(); 	
+		server.startServer();
 	}
 }

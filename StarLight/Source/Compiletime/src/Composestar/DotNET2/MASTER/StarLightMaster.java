@@ -66,11 +66,11 @@ public class StarLightMaster extends Master
 		processCmdArgs(args);
 	}
 
+	@Override
 	public void processCmdArgs(String[] args)
 	{
-		for (int i = 0; i < args.length; i++)
+		for (String arg : args)
 		{
-			String arg = args[i];
 			if (arg.startsWith("-i"))
 			{
 				increConfig = arg.substring(2).trim();
@@ -82,7 +82,7 @@ public class StarLightMaster extends Master
 			else
 			{
 				// assume it's the config file
-				configFileName = args[i];
+				configFileName = arg;
 			}
 		}
 	}
@@ -123,7 +123,10 @@ public class StarLightMaster extends Master
 		for (int i = 0; i < settings.sizeOfSettingArray(); i++)
 		{
 			KeyValueSetting kv = settings.getSettingArray(i);
-			if (kv.getKey().equalsIgnoreCase(key)) return kv.getValue();
+			if (kv.getKey().equalsIgnoreCase(key))
+			{
+				return kv.getValue();
+			}
 		}
 
 		return null;
@@ -132,8 +135,14 @@ public class StarLightMaster extends Master
 	private int getSettingValue(String key, int def)
 	{
 		String value = getSettingValue(key);
-		if (value == null) return def;
-		else return Integer.parseInt(value);
+		if (value == null)
+		{
+			return def;
+		}
+		else
+		{
+			return Integer.parseInt(value);
+		}
 	}
 
 	/**
@@ -185,6 +194,7 @@ public class StarLightMaster extends Master
 	/**
 	 * Calls run on all modules added to the master.
 	 */
+	@Override
 	public int run()
 	{
 		try

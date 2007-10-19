@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 import Composestar.Core.Annotations.In;
 import Composestar.Core.Annotations.Out;
 import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Resources.ModuleResourceManager;
 
 /**
  * This class holds the shared resources between the modules e.g the repository
@@ -31,6 +32,7 @@ import Composestar.Core.Config.BuildConfig;
  * implement Serializable. Information that is important for incremental
  * compilation or visualization should be made serializable.
  */
+// TODO: Move to Composestar.Core.Resources
 public class CommonResources implements Serializable
 {
 	private static final long serialVersionUID = -4099474761502163870L;
@@ -38,11 +40,20 @@ public class CommonResources implements Serializable
 	/**
 	 * Map holding all the resources
 	 */
-	private Map<String, Object> resources;
+	protected Map<String, Object> resources;
 
+	/**
+	 * The build configuration for the current project
+	 */
 	protected BuildConfig config;
 
+	/**
+	 * Reference to the path resolver. The path resolver provides means to
+	 * resolve the paths for external compiler resources.
+	 */
 	protected PathResolver pathResolver;
+
+	protected Map<Class<? extends ModuleResourceManager>, ModuleResourceManager> resourceManagers;
 
 	/**
 	 * Default constructor.
@@ -87,8 +98,20 @@ public class CommonResources implements Serializable
 	 * 
 	 * @param key An identifier for this resource.
 	 * @param object The object to store for this key.
+	 * @deprecated Use {@link #put(String,Object)} instead
 	 */
 	public void add(String key, Object object)
+	{
+		put(key, object);
+	}
+
+	/**
+	 * Add a resource with a key.
+	 * 
+	 * @param key An identifier for this resource.
+	 * @param object The object to store for this key.
+	 */
+	public void put(String key, Object object)
 	{
 		resources.put(key, object);
 	}
@@ -133,10 +156,49 @@ public class CommonResources implements Serializable
 		return (Boolean) resource;
 	}
 
+	/**
+	 * Get a specific resource manager
+	 * 
+	 * @param <T>
+	 * @param type
+	 * @return
+	 */
+	public <T extends ModuleResourceManager> T getResourceManager(Class<T> type)
+	{
+		try
+		{
+			return type.cast(resourceManagers.get(type));
+		}
+		catch (ClassCastException e)
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Register a resource manager
+	 * 
+	 * @param value
+	 */
+	public void addResourceManager(ModuleResourceManager value)
+	{
+		resourceManagers.put(value.getClass(), value);
+	}
+
+	public void removeResourceManager(ModuleResourceManager key)
+	{
+		removeResourceManager(key.getClass());
+	}
+
+	public void removeResourceManager(Class<? extends ModuleResourceManager> key)
+	{
+		resourceManagers.remove(key.getClass());
+	}
+
 	public <T> T create(String key, Class<T> c)
 	{
 		T resource = create(c);
-		add(key, resource);
+		put(key, resource);
 		return resource;
 	}
 
@@ -160,7 +222,7 @@ public class CommonResources implements Serializable
 
 	public void inject(Object object)
 	{
-		Class c = object.getClass();
+		Class<?> c = object.getClass();
 		for (Field field : c.getFields())
 		{
 			In in = field.getAnnotation(In.class);
@@ -225,7 +287,7 @@ public class CommonResources implements Serializable
 				{
 					field.setAccessible(true);
 					Object value = field.get(object);
-					add(out.value(), value);
+					put(out.value(), value);
 				}
 				catch (IllegalAccessException e)
 				{

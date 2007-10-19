@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -45,7 +46,7 @@ public class LowLevelInliner
 
 	private StateType isFMCondition;
 
-	private HashMap jumpMap;
+	private Map<ExecutionState, TopLevelBlock> jumpMap;
 
 	/**
 	 * The constructor
@@ -79,9 +80,9 @@ public class LowLevelInliner
 	public void inline(ExecutionModel model, FilterModuleOrder filterSet, MethodInfo method)
 
 	{
-		jumpMap = new HashMap();
+		jumpMap = new HashMap<ExecutionState, TopLevelBlock>();
 
-		List blocks = identifyTopLevelElements(model);
+		List<TopLevelBlock> blocks = identifyTopLevelElements(model);
 
 		inline(blocks, filterSet, method);
 	}
@@ -93,13 +94,12 @@ public class LowLevelInliner
 	 * @param filterSet
 	 * @param method
 	 */
-	private void inline(List blocks, FilterModuleOrder filterSet, MethodInfo method)
+	private void inline(List<TopLevelBlock> blocks, FilterModuleOrder filterSet, MethodInfo method)
 	{
 		strategy.startInline(filterSet, method);
 
-		for (int i = 0; i < blocks.size(); i++)
+		for (TopLevelBlock block : blocks)
 		{
-			TopLevelBlock block = (TopLevelBlock) blocks.get(i);
 			if (block instanceof FilterBlock)
 			{
 				inlineFilterBlock((FilterBlock) block);
@@ -127,7 +127,7 @@ public class LowLevelInliner
 	{
 		strategy.startFilter(filterBlock.filter, filterBlock.label);
 
-		Iterator filterElements = filterBlock.filterElements.iterator();
+		Iterator<FilterElementBlock> filterElements = filterBlock.filterElements.iterator();
 
 		if (filterElements.hasNext())
 		{
@@ -142,9 +142,9 @@ public class LowLevelInliner
 	 * 
 	 * @param filterElements
 	 */
-	private void inlineFilterElements(Iterator filterElements)
+	private void inlineFilterElements(Iterator<FilterElementBlock> filterElements)
 	{
-		FilterElementBlock filterElement = (FilterElementBlock) filterElements.next();
+		FilterElementBlock filterElement = filterElements.next();
 
 		ExecutionState flowFalseExitState = filterElement.flowFalseExitState;
 		ExecutionState flowTrueExitState = filterElement.flowTrueExitState;
@@ -275,7 +275,7 @@ public class LowLevelInliner
 
 		if (currentState != null)
 		{
-			TopLevelBlock block = (TopLevelBlock) jumpMap.get(currentState);
+			TopLevelBlock block = jumpMap.get(currentState);
 			strategy.jump(block.label);
 		}
 		else
@@ -291,12 +291,12 @@ public class LowLevelInliner
 	 * @param model
 	 * @return
 	 */
-	private List identifyTopLevelElements(ExecutionModel model)
+	private List<TopLevelBlock> identifyTopLevelElements(ExecutionModel model)
 	{
 		ExecutionStateIterator iterator = new ExecutionStateIterator(model);
 		ExecutionState state;
 		int label = 0;
-		ArrayList result = new ArrayList();
+		List<TopLevelBlock> result = new ArrayList<TopLevelBlock>();
 		while (iterator.hasNext())
 		{
 			state = (ExecutionState) iterator.next();
@@ -373,7 +373,7 @@ public class LowLevelInliner
 	private void identifyFilterElementBlocks(ExecutionState filterState, FilterBlock filterBlock)
 	{
 		ExecutionState nextState = getNextState(filterState);
-		ArrayList result = new ArrayList();
+		List<FilterElementBlock> result = new ArrayList<FilterElementBlock>();
 
 		while (nextState != null)
 		{
@@ -511,7 +511,7 @@ public class LowLevelInliner
 		/**
 		 * A vector containing the filterelement blocks.
 		 */
-		public List filterElements;
+		public List<FilterElementBlock> filterElements;
 	}
 
 	/**

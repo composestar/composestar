@@ -19,7 +19,7 @@ public class Label
 
 	public Label()
 	{
-		this.id = -1;
+		id = -1;
 	}
 
 	public Label(int id)

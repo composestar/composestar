@@ -12,12 +12,6 @@ package Composestar.Core.Config;
 
 import java.io.Serializable;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-
 import Composestar.Core.Exception.ConfigurationException;
 
 /**
@@ -54,18 +48,16 @@ public class ModuleSetting implements Serializable
 	 */
 	protected Object defaultValue;
 
-	protected transient DefaultHandler saxHandler;
-
 	/**
-	 * Constructor to use with the SAX parser
+	 * Constructor to add settings at runtime
 	 * 
-	 * @param inReader
-	 * @param inReturnHandler
+	 * @param inId
+	 * @param inDefault
 	 * @throws ConfigurationException
 	 */
-	public ModuleSetting(XMLReader inReader, ContentHandler inReturnHandler) throws ConfigurationException
+	public ModuleSetting(String inId, Class<?> inType) throws ConfigurationException
 	{
-		getSAXHandler(inReader, inReturnHandler);
+		this(inId, inType, null);
 	}
 
 	/**
@@ -111,6 +103,46 @@ public class ModuleSetting implements Serializable
 	public String getId()
 	{
 		return id;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String newName)
+	{
+		if (newName == null)
+		{
+			throw new IllegalArgumentException("Name can not be null");
+		}
+		name = newName;
+	}
+
+	public void setDefault(Object defVal)
+	{
+		try
+		{
+			setValue(defVal);
+			defaultValue = value;
+		}
+		catch (ConfigurationException e)
+		{
+			defaultValue = null;
+		}
+	}
+
+	public void setDefault(String defVal)
+	{
+		try
+		{
+			setValue(defVal);
+			defaultValue = value;
+		}
+		catch (ConfigurationException e)
+		{
+			defaultValue = null;
+		}
 	}
 
 	public Object getValue()
@@ -272,165 +304,5 @@ public class ModuleSetting implements Serializable
 	public void reset()
 	{
 		value = defaultValue;
-	}
-
-	/**
-	 * Constructs the SAX Handler
-	 * 
-	 * @param reader
-	 * @param inReturnHandler
-	 * @return
-	 */
-	protected DefaultHandler getSAXHandler(XMLReader reader, ContentHandler inReturnHandler)
-	{
-		if (saxHandler == null)
-		{
-			saxHandler = new ModuleSettingHandler(this, reader, inReturnHandler);
-		}
-		return saxHandler;
-	}
-
-	/**
-	 * Returns the SAX handler. Will only have a value when this instance was
-	 * created using the SAX constructor.
-	 * 
-	 * @return
-	 */
-	public DefaultHandler getSAXHandler()
-	{
-		return saxHandler;
-	}
-
-	/**
-	 * SAX Handler for the ModuleSetting
-	 * 
-	 * @author Composer
-	 */
-	static class ModuleSettingHandler extends DefaultHandler
-	{
-		protected ModuleSetting ms;
-
-		protected XMLReader reader;
-
-		protected ContentHandler returnHandler;
-
-		protected byte state;
-
-		protected static final byte STATE_INIT = 0;
-
-		protected static final byte STATE_SETTING = 1;
-
-		protected static final byte STATE_NAME = 2;
-
-		protected static final byte STATE_DEFAULT = 3;
-
-		protected String defValue;
-
-		public ModuleSettingHandler(ModuleSetting inMs, XMLReader inReader)
-		{
-			ms = inMs;
-			reader = inReader;
-		}
-
-		public ModuleSettingHandler(ModuleSetting inMs, XMLReader inReader, ContentHandler inReturnHandler)
-		{
-			this(inMs, inReader);
-			returnHandler = inReturnHandler;
-		}
-
-		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
-		{
-			if ((state == STATE_INIT) && qName.equalsIgnoreCase("setting"))
-			{
-				state = STATE_SETTING;
-				ms.id = attributes.getValue("id");
-				ms.name = ms.id;
-
-				if (attributes.getValue("type") != null)
-				{
-					String prefType = attributes.getValue("type");
-					if (prefType.equalsIgnoreCase("integer") || prefType.equalsIgnoreCase("int"))
-					{
-						prefType = Integer.class.getName();
-					}
-					else if (prefType.equalsIgnoreCase("boolean") || prefType.equalsIgnoreCase("bool"))
-					{
-						prefType = Boolean.class.getName();
-					}
-					else if (prefType.equalsIgnoreCase("string"))
-					{
-						prefType = String.class.getName();
-					}
-					else if (prefType.equalsIgnoreCase("float"))
-					{
-						prefType = Float.class.getName();
-					}
-					try
-					{
-						ms.type = Class.forName(prefType);
-					}
-					catch (ClassNotFoundException e)
-					{
-						throw new SAXException(new ConfigurationException("Invalid type: " + prefType));
-					}
-				}
-			}
-			else if ((state == STATE_SETTING) && qName.equalsIgnoreCase("name"))
-			{
-				state = STATE_NAME;
-				ms.name = "";
-			}
-			else if ((state == STATE_SETTING) && qName.equalsIgnoreCase("default"))
-			{
-				state = STATE_DEFAULT;
-				defValue = "";
-			}
-		}
-
-		public void endElement(String uri, String localName, String qName) throws SAXException
-		{
-			if ((state == STATE_SETTING) && qName.equalsIgnoreCase("setting"))
-			{
-				state = STATE_INIT;
-				if (returnHandler != null)
-				{
-					reader.setContentHandler(returnHandler);
-					returnHandler.endElement(uri, localName, qName);
-				}
-			}
-			else if ((state == STATE_NAME) && qName.equalsIgnoreCase("name"))
-			{
-				state = STATE_SETTING;
-			}
-			else if ((state == STATE_DEFAULT) && qName.equalsIgnoreCase("default"))
-			{
-				state = STATE_SETTING;
-				try
-				{
-					ms.setValue(defValue);
-				}
-				catch (ConfigurationException e)
-				{
-					throw new SAXException(e);
-				}
-				ms.defaultValue = ms.value;
-			}
-		}
-
-		public void characters(char[] ch, int start, int length) throws SAXException
-		{
-			if (length <= 0)
-			{
-				return;
-			}
-			if (state == STATE_NAME)
-			{
-				ms.name += new String(ch, start, length);
-			}
-			else if (state == STATE_DEFAULT)
-			{
-				defValue += new String(ch, start, length);
-			}
-		}
 	}
 }

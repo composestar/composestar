@@ -21,15 +21,17 @@ import composestar.dotNET2.tym.entities.ParameterElement;
 
 class ExpandedTypeCollector
 {
-	private Map<String,ExpandedType> types;
-	private Map<String,ExpandedAssembly> assemblies;
-	private Map<String,ExpandedSource> sources;
-	
+	private Map<String, ExpandedType> types;
+
+	private Map<String, ExpandedAssembly> assemblies;
+
+	private Map<String, ExpandedSource> sources;
+
 	public ExpandedTypeCollector()
 	{
-		types = new HashMap<String,ExpandedType>();
-		assemblies = new HashMap<String,ExpandedAssembly>();
-		sources = new HashMap<String,ExpandedSource>();
+		types = new HashMap<String, ExpandedType>();
+		assemblies = new HashMap<String, ExpandedAssembly>();
+		sources = new HashMap<String, ExpandedSource>();
 	}
 
 	public void process(List<Concern> concerns)
@@ -39,14 +41,15 @@ class ExpandedTypeCollector
 			PlatformRepresentation pr = concern.getPlatformRepresentation();
 
 			if (pr == null || !(pr instanceof DotNETType))
+			{
 				continue;
+			}
 
 			DotNETType dnt = (DotNETType) pr;
 			Signature sig = concern.getSignature();
-			
-			List<DotNETMethodInfo> methods 
-				= sig.getMethods(MethodWrapper.ADDED);
-			
+
+			List<DotNETMethodInfo> methods = sig.getMethods(MethodWrapper.ADDED);
+
 			for (DotNETMethodInfo mi : methods)
 			{
 				addExtraMethod(dnt, mi);
@@ -58,7 +61,7 @@ class ExpandedTypeCollector
 	{
 		return assemblies.values();
 	}
-	
+
 	public Collection<ExpandedSource> getExpandedSources()
 	{
 		return sources.values();
@@ -70,7 +73,7 @@ class ExpandedTypeCollector
 		MethodElement me = et.getExtraMethods().addNewMethod();
 		me.setName(mi.getName());
 		me.setReturnType(mi.getReturnTypeString());
-		
+
 		ArrayOfParameterElement pa = me.addNewParameters();
 		List<DotNETParameterInfo> paramInfos = mi.getParameters();
 		for (DotNETParameterInfo pi : paramInfos)
@@ -80,7 +83,7 @@ class ExpandedTypeCollector
 			pe.setType(pi.getParameterTypeString());
 		}
 	}
-	
+
 	private ExpandedType getExpandedType(DotNETType dnt)
 	{
 		String name = dnt.getName();
@@ -94,7 +97,7 @@ class ExpandedTypeCollector
 
 		return et;
 	}
-	
+
 	private ExpandedType createExpandedType(DotNETType dnt)
 	{
 		if (dnt.isFromSource())
@@ -111,7 +114,7 @@ class ExpandedTypeCollector
 			return et;
 		}
 	}
-	
+
 	private ExpandedAssembly getExpandedAssembly(String assemblyName)
 	{
 		ExpandedAssembly ea = assemblies.get(assemblyName);
@@ -121,7 +124,7 @@ class ExpandedTypeCollector
 			ea.setName(assemblyName);
 			ea.addNewTypes();
 		}
-		
+
 		return ea;
 	}
 

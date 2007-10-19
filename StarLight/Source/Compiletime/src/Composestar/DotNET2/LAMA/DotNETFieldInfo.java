@@ -41,7 +41,8 @@ public class DotNETFieldInfo extends FieldInfo
 	private boolean IsStatic; // Static field ('global')?
 
 	private boolean IsDeclaredHere; // Declared in this Type, or inherited from
-									// parent type?
+
+	// parent type?
 
 	public DotNETFieldInfo()
 	{
@@ -50,44 +51,47 @@ public class DotNETFieldInfo extends FieldInfo
 
 	public int getHashCode()
 	{
-		return this.HashCode;
+		return HashCode;
 	}
 
 	public void setHashCode(int hashcode)
 	{
-		this.HashCode = hashcode;
+		HashCode = hashcode;
 	}
 
 	public boolean isAssembly()
 	{
-		return this.IsAssembly;
+		return IsAssembly;
 	}
 
 	public void setIsAssembly(boolean isAssembly)
 	{
-		this.IsAssembly = isAssembly;
+		IsAssembly = isAssembly;
 	}
 
+	@Override
 	public boolean isPrivate()
 	{
-		return this.IsPrivate;
+		return IsPrivate;
 	}
 
 	public void setIsPrivate(boolean isPrivate)
 	{
-		this.IsPrivate = isPrivate;
+		IsPrivate = isPrivate;
 	}
 
+	@Override
 	public boolean isPublic()
 	{
-		return this.IsPublic;
+		return IsPublic;
 	}
 
 	public void setIsPublic(boolean isPublic)
 	{
-		this.IsPublic = isPublic;
+		IsPublic = isPublic;
 	}
 
+	@Override
 	public boolean isProtected()
 	{
 		return false; // TODO: should return the isFamily value
@@ -95,12 +99,12 @@ public class DotNETFieldInfo extends FieldInfo
 
 	public boolean isStatic()
 	{
-		return this.IsStatic;
+		return IsStatic;
 	}
 
 	public void setIsStatic(boolean isStatic)
 	{
-		this.IsStatic = isStatic;
+		IsStatic = isStatic;
 	}
 
 	public boolean isDeclaredHere()
@@ -120,21 +124,33 @@ public class DotNETFieldInfo extends FieldInfo
 	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
 	 */
+	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if ("ParentType".equals(argumentName)) return new UnitResult(parent);
-		else if ("Class".equals(argumentName) && "Class".equals(getFieldType().getUnitType())) return new UnitResult(
-				getFieldType());
-		else if ("Interface".equals(argumentName) && "Interface".equals(getFieldType().getUnitType())) return new UnitResult(
-				getFieldType());
-		else if ("Annotation".equals(argumentName) && "Annotation".equals(getFieldType().getUnitType())) return new UnitResult(
-				getFieldType());
+		if ("ParentType".equals(argumentName))
+		{
+			return new UnitResult(parent);
+		}
+		else if ("Class".equals(argumentName) && "Class".equals(getFieldType().getUnitType()))
+		{
+			return new UnitResult(getFieldType());
+		}
+		else if ("Interface".equals(argumentName) && "Interface".equals(getFieldType().getUnitType()))
+		{
+			return new UnitResult(getFieldType());
+		}
+		else if ("Annotation".equals(argumentName) && "Annotation".equals(getFieldType().getUnitType()))
+		{
+			return new UnitResult(getFieldType());
+		}
 		else if ("Annotations".equals(argumentName))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((Annotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 
@@ -146,13 +162,23 @@ public class DotNETFieldInfo extends FieldInfo
 	 * 
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 	 */
+	@Override
 	public Collection getUnitAttributes()
 	{
 		HashSet result = new HashSet();
-		if (isPublic()) result.add("public");
-		if (isPrivate()) result.add("private");
+		if (isPublic())
+		{
+			result.add("public");
+		}
+		if (isPrivate())
+		{
+			result.add("private");
+		}
 		// TODO: For some reasons, there is no 'protected' attr for fields?
-		if (isStatic()) result.add("static");
+		if (isStatic())
+		{
+			result.add("static");
+		}
 		return result;
 	}
 

@@ -20,11 +20,11 @@ public class DotNETModule implements SerializableRepositoryEntity
 	private static final long serialVersionUID = 9147930667863841248L;
 
 	private String name;
+
 	private String fullyQualifiedName;
 
 	public DotNETModule()
-	{
-	}
+	{}
 
 	public String name()
 	{
@@ -44,6 +44,6 @@ public class DotNETModule implements SerializableRepositoryEntity
 	public void setFullyQualifiedName(String name)
 	{
 		// TODO: Rename
-		this.fullyQualifiedName = name;
+		fullyQualifiedName = name;
 	}
 }

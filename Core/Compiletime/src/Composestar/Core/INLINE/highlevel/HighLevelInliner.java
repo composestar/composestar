@@ -4,11 +4,13 @@
  */
 package Composestar.Core.INLINE.highlevel;
 
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -60,7 +62,7 @@ public class HighLevelInliner
 	{
 		try
 		{
-			Vector blocks = identifyFilterModuleBlocks(model);
+			List<FilterModuleBlock> blocks = identifyFilterModuleBlocks(model);
 
 			inline(blocks, modules, method);
 		}
@@ -73,13 +75,13 @@ public class HighLevelInliner
 		}
 	}
 
-	private void inline(Vector blocks, FilterModule[] modules, MethodInfo method)
+	private void inline(List<FilterModuleBlock> blocks, FilterModule[] modules, MethodInfo method)
 	{
 		strategy.startInline(modules, method);
 
-		for (int i = 0; i < blocks.size(); i++)
+		for (FilterModuleBlock block : blocks)
 		{
-			inlineFilterModuleBlock((FilterModuleBlock) blocks.elementAt(i));
+			inlineFilterModuleBlock(block);
 		}
 
 		strategy.endInline();
@@ -89,9 +91,9 @@ public class HighLevelInliner
 	{
 		strategy.startFilterModule((FilterModule) fmBlock.fmState.getFlowNode().getRepositoryLink());
 
-		for (int i = 0; i < fmBlock.filters.size(); i++)
+		for (FilterBlock filter : fmBlock.filters)
 		{
-			inlineFilterBlock((FilterBlock) fmBlock.filters.elementAt(i));
+			inlineFilterBlock(filter);
 		}
 
 		strategy.endFilterModule();
@@ -99,17 +101,17 @@ public class HighLevelInliner
 
 	private void inlineFilterBlock(FilterBlock filterBlock)
 	{
-		Enumeration filterElements = filterBlock.filterElements.elements();
+		Iterator<FilterElementBlock> filterElements = filterBlock.filterElements.iterator();
 
-		if (filterElements.hasMoreElements())
+		if (filterElements.hasNext())
 		{
 			inlineFilterElements(filterElements);
 		}
 	}
 
-	private void inlineFilterElements(Enumeration filterElements)
+	private void inlineFilterElements(Iterator<FilterElementBlock> filterElements)
 	{
-		FilterElementBlock filterElement = (FilterElementBlock) filterElements.nextElement();
+		FilterElementBlock filterElement = filterElements.next();
 
 		ExecutionState flowFalseExitState = filterElement.flowFalseExitState;
 		ExecutionState flowTrueExitState = filterElement.flowTrueExitState;
@@ -194,9 +196,9 @@ public class HighLevelInliner
 		}
 	}
 
-	private Vector identifyFilterModuleBlocks(ExecutionModel model)
+	private List<FilterModuleBlock> identifyFilterModuleBlocks(ExecutionModel model)
 	{
-		Vector result = new Vector();
+		List<FilterModuleBlock> result = new ArrayList<FilterModuleBlock>();
 
 		Iterator it = model.getEntranceStates();
 		if (!it.hasNext())
@@ -213,7 +215,7 @@ public class HighLevelInliner
 		return result;
 	}
 
-	private ExecutionState identifyFilterModuleBlock(ExecutionState fmState, Vector result)
+	private ExecutionState identifyFilterModuleBlock(ExecutionState fmState, List<FilterModuleBlock> result)
 	{
 		FilterModuleBlock block = new FilterModuleBlock();
 		block.fmState = fmState;
@@ -224,7 +226,7 @@ public class HighLevelInliner
 	private ExecutionState identifyFilterBlocks(FilterModuleBlock fmBlock)
 	{
 		ExecutionState state = getNextState(fmBlock.fmState);
-		Vector result = new Vector();
+		List<FilterBlock> result = new ArrayList<FilterBlock>();
 		while (state != null && !isFilterModule.isTrue(state))
 		{
 			state = identifyFilterBlock(state, result);
@@ -234,7 +236,7 @@ public class HighLevelInliner
 		return state;
 	}
 
-	private ExecutionState identifyFilterBlock(ExecutionState startState, Vector result)
+	private ExecutionState identifyFilterBlock(ExecutionState startState, List<FilterBlock> result)
 	{
 		ExecutionState state = startState;
 		while (state != null && !isFilter.isTrue(state) && !isFilterModule.isTrue(state))
@@ -256,7 +258,7 @@ public class HighLevelInliner
 	{
 		ExecutionState nextFilterState = null;
 		ExecutionState nextState = getNextState(filterState);
-		Vector result = new Vector();
+		List<FilterElementBlock> result = new ArrayList<FilterElementBlock>();
 
 		while (nextState != null)
 		{
@@ -409,7 +411,7 @@ public class HighLevelInliner
 	{
 		public ExecutionState fmState;
 
-		public Vector filters;
+		public List<FilterBlock> filters;
 
 		public FilterModuleBlock()
 		{}
@@ -417,7 +419,7 @@ public class HighLevelInliner
 
 	private class FilterBlock
 	{
-		public Vector filterElements;
+		public List<FilterElementBlock> filterElements;
 
 		public FilterBlock()
 		{}
@@ -439,13 +441,13 @@ public class HighLevelInliner
 	{
 		private HighLevelInlineStrategy strategy;
 
-		private HashSet states;
+		private Set<ExecutionState> states;
 
-		private Vector backwardStateVector;
+		private List<ExecutionState> backwardStateVector;
 
-		private Hashtable reverseTable;
+		private Map<ExecutionState, List<ExecutionTransition>> reverseTable;
 
-		private Hashtable conditionTable;
+		private Map<ExecutionState, ConditionExpression> conditionTable;
 
 		public ConditionalInliner(HighLevelInlineStrategy strategy)
 		{
@@ -455,10 +457,10 @@ public class HighLevelInliner
 
 		private void initialize(ExecutionModel model)
 		{
-			states = new HashSet();
-			backwardStateVector = new Vector();
-			reverseTable = new Hashtable();
-			conditionTable = new Hashtable();
+			states = new HashSet<ExecutionState>();
+			backwardStateVector = new ArrayList<ExecutionState>();
+			reverseTable = new HashMap<ExecutionState, List<ExecutionTransition>>();
+			conditionTable = new HashMap<ExecutionState, ConditionExpression>();
 
 			Iterator startStates = model.getEntranceStates();
 			while (startStates.hasNext())
@@ -476,7 +478,7 @@ public class HighLevelInliner
 
 			states.add(state);
 
-			reverseTable.put(state, new Vector());
+			reverseTable.put(state, new ArrayList<ExecutionTransition>());
 
 			Iterator it = state.getOutTransitions();
 			while (it.hasNext())
@@ -485,11 +487,11 @@ public class HighLevelInliner
 				ExecutionState nextState = transition.getEndState();
 				addState(nextState);
 
-				Vector v = (Vector) reverseTable.get(nextState);
-				v.addElement(transition);
+				List<ExecutionTransition> v = reverseTable.get(nextState);
+				v.add(transition);
 			}
 
-			backwardStateVector.addElement(state);
+			backwardStateVector.add(state);
 		}
 
 		public void inline(ExecutionModel model, FilterModule[] modules, MethodInfo method)
@@ -506,20 +508,20 @@ public class HighLevelInliner
 			ExecutionState state;
 			for (int i = backwardStateVector.size() - 1; i >= 0; i--)
 			{
-				state = (ExecutionState) backwardStateVector.elementAt(i);
+				state = backwardStateVector.get(i);
 				calculateCondition(state);
 			}
 		}
 
 		private void calculateCondition(ExecutionState state)
 		{
-			Vector transitions = (Vector) reverseTable.get(state);
+			List<ExecutionTransition> transitions = reverseTable.get(state);
 			ExecutionTransition transition;
 
 			ConditionExpression currentExpr = null;
 			for (int i = 0; i < transitions.size(); i++)
 			{
-				transition = (ExecutionTransition) transitions.elementAt(i);
+				transition = transitions.get(i);
 
 				if (currentExpr == null)
 				{
@@ -554,7 +556,7 @@ public class HighLevelInliner
 			// expression
 			if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE))
 			{
-				ConditionExpression expr1 = (ConditionExpression) conditionTable.get(startState);
+				ConditionExpression expr1 = conditionTable.get(startState);
 				ConditionExpression expr2 = (ConditionExpression) flowNode.getRepositoryLink();
 
 				if (transition.getLabel().equals(ExecutionTransition.CONDITION_EXPRESSION_FALSE))
@@ -582,7 +584,7 @@ public class HighLevelInliner
 			}
 			else
 			{
-				return (ConditionExpression) conditionTable.get(startState);
+				return conditionTable.get(startState);
 			}
 		}
 
@@ -593,7 +595,7 @@ public class HighLevelInliner
 			ExecutionState state;
 			for (int i = backwardStateVector.size() - 1; i >= 0; i--)
 			{
-				state = (ExecutionState) backwardStateVector.elementAt(i);
+				state = backwardStateVector.get(i);
 				if (state.getFlowNode().containsName(FlowNode.ACTION_NODE))
 				{
 					inlineState(state);
@@ -615,7 +617,7 @@ public class HighLevelInliner
 			// return;
 			// }
 
-			ConditionExpression expr = (ConditionExpression) conditionTable.get(state);
+			ConditionExpression expr = conditionTable.get(state);
 
 			if (expr != null)
 			{
@@ -633,15 +635,8 @@ public class HighLevelInliner
 
 	private class InlineException extends RuntimeException
 	{
-
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -761683949137294910L;
 
-		/**
-		 * 
-		 */
 		public InlineException()
 		{
 			super();

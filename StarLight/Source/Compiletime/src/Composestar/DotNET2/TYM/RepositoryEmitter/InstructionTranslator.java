@@ -1,10 +1,10 @@
 package Composestar.DotNET2.TYM.RepositoryEmitter;
 
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
@@ -35,7 +35,7 @@ import composestar.dotNET2.tym.entities.TrueCondition;
 
 class InstructionTranslator implements Visitor
 {
-	private Map fullNameMap = new HashMap();
+	private Map<String, String> fullNameMap = new HashMap<String, String>();
 
 	public InstructionTranslator()
 	{
@@ -97,13 +97,14 @@ class InstructionTranslator implements Visitor
 
 	public Object visitBlock(Block block)
 	{
-		composestar.dotNET2.tym.entities.Block weaveBlock = composestar.dotNET2.tym.entities.Block.Factory.newInstance();
+		composestar.dotNET2.tym.entities.Block weaveBlock = composestar.dotNET2.tym.entities.Block.Factory
+				.newInstance();
 		weaveBlock.addNewInstructions();
 
 		setLabel(block, weaveBlock);
 
 		// create contained instructions:
-		Vector inlineInstructions = new Vector();
+		List<InlineInstruction> inlineInstructions = new ArrayList<InlineInstruction>();
 		Iterator<Instruction> instructions = block.getInstructions();
 		while (instructions.hasNext())
 		{
@@ -114,8 +115,7 @@ class InstructionTranslator implements Visitor
 		}
 
 		// add contained instructions to the weaveBlock:
-		weaveBlock.getInstructions().setInstructionArray(
-				(InlineInstruction[]) inlineInstructions.toArray(new InlineInstruction[0]));
+		weaveBlock.getInstructions().setInstructionArray(inlineInstructions.toArray(new InlineInstruction[0]));
 
 		return weaveBlock;
 	}
@@ -151,7 +151,7 @@ class InstructionTranslator implements Visitor
 
 		weaveAction.setType(filterAction.getType());
 
-		weaveAction.setFullName((String) fullNameMap.get(filterAction.getType()));
+		weaveAction.setFullName(fullNameMap.get(filterAction.getType()));
 
 		weaveAction.setSelector(filterAction.getMessage().getSelector());
 		weaveAction.setTarget(filterAction.getMessage().getTarget().getName());

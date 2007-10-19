@@ -4,8 +4,9 @@
  */
 package Composestar.Core.INLINE.lowlevel;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
@@ -61,7 +62,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	/**
 	 * Contains all outer scope blocks of the current scope, the closest on top.
 	 */
-	private Stack blockStack;
+	private Stack<Block> blockStack;
 
 	/**
 	 * Indicates the current condition branch.
@@ -72,12 +73,12 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * Hashtable containing a mapping from integer labelid's to the
 	 * corresponding Label object.
 	 */
-	private Hashtable labelTable;
+	private Map<Integer, Label> labelTable;
 
 	/**
 	 * Hashtable containing a mapping from MethodInfo to integer id's
 	 */
-	private static Hashtable methodTable;
+	private static Map<MethodInfo, Integer> methodTable;
 
 	/**
 	 * The last generated methodid.
@@ -116,7 +117,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	{
 		this.builder = builder;
 		this.filterSetType = filterSetType;
-		methodTable = new Hashtable();
+		methodTable = new HashMap();
 		lastMethodId = 0;
 
 	}
@@ -147,13 +148,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	{
 		filterCode = new FilterCode();
 
-		this.currentMethod = method;
+		currentMethod = method;
 
 		inlineBlock = new Block();
 		filterCode.setInstruction(inlineBlock);
 
-		blockStack = new Stack();
-		labelTable = new Hashtable();
+		blockStack = new Stack<Block>();
+		labelTable = new HashMap<Integer, Label>();
 		currentLabelId = -1;
 
 		empty = true;
@@ -236,20 +237,20 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		popBlock();
 	}
 
-	
-	
-	
-	/** (non-Javadoc)
-	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#evalCondition(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition, int)
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#evalCondition(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition,
+	 *      int)
 	 */
 	public void evalCondition(Condition condition, int jumpLabel)
 	{
 		Branch branch = new Branch(condition);
 		branch.setLabel(new Label(jumpLabel));
-		this.currentBlock.addInstruction(branch);
-		this.currentLabelId = jumpLabel;
+		currentBlock.addInstruction(branch);
+		currentLabelId = jumpLabel;
 
-		this.currentBranch = branch;
+		currentBranch = branch;
 	}
 
 	/**
@@ -258,9 +259,9 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	public void evalCondExpr(ConditionExpression condition)
 	{
 		Branch branch = new Branch(condition);
-		this.currentBlock.addInstruction(branch);
+		currentBlock.addInstruction(branch);
 
-		this.currentBranch = branch;
+		currentBranch = branch;
 	}
 
 	/**
@@ -269,7 +270,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	public void beginTrueBranch()
 	{
 		Block block = new Block();
-		this.currentBranch.setTrueBlock(block);
+		currentBranch.setTrueBlock(block);
 
 		pushBlock(block);
 	}
@@ -288,7 +289,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	public void beginFalseBranch()
 	{
 		Block block = new Block();
-		this.currentBranch.setFalseBlock(block);
+		currentBranch.setFalseBlock(block);
 
 		pushBlock(block);
 	}
@@ -322,7 +323,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 
 		Jump jump = new Jump(label);
 
-		this.currentBlock.addInstruction(jump);
+		currentBlock.addInstruction(jump);
 	}
 
 	/**
@@ -330,8 +331,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	public void generateAction(ExecutionState state)
 	{
-		Instruction instruction;
-
 		FlowNode node = state.getFlowNode();
 
 		Filter filter = (Filter) node.getRepositoryLink();
@@ -452,8 +451,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private void pushBlock(Block newBlock)
 	{
-		this.blockStack.push(this.currentBlock);
-		this.currentBlock = newBlock;
+		blockStack.push(currentBlock);
+		currentBlock = newBlock;
 	}
 
 	/**
@@ -461,10 +460,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private void popBlock()
 	{
-		currentBlock = (Block) blockStack.pop();
+		currentBlock = blockStack.pop();
 	}
-
-	
 
 	/**
 	 * Returns the label corresponding with the given labelId. If the label
@@ -478,7 +475,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		Integer wrapper = labelId;
 		if (labelTable.containsKey(wrapper))
 		{
-			return (Label) labelTable.get(wrapper);
+			return labelTable.get(wrapper);
 		}
 		else
 		{
@@ -501,7 +498,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			return -1;
 		}
 
-		Integer id = (Integer) methodTable.get(method);
+		Integer id = methodTable.get(method);
 		if (id == null)
 		{
 			id = lastMethodId++;

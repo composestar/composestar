@@ -10,14 +10,15 @@ import composestar.dotNET2.tym.entities.ExpandedType;
 class ExpandedSource
 {
 	private String filename;
+
 	private List<ExpandedType> types;
-	
+
 	public ExpandedSource(String filename)
 	{
 		this.filename = filename;
-		this.types = new ArrayList<ExpandedType>();
+		types = new ArrayList<ExpandedType>();
 	}
-	
+
 	public String getFilename()
 	{
 		return filename;
@@ -29,7 +30,7 @@ class ExpandedSource
 		types.add(et);
 		return et;
 	}
-	
+
 	public Iterable<ExpandedType> sortedTypes()
 	{
 		Comparator<ExpandedType> c = new Comparator<ExpandedType>()
@@ -38,10 +39,12 @@ class ExpandedSource
 			{
 				int endPosA = a.getEndPos();
 				int endPosB = b.getEndPos();
-				
+
 				if (endPosA == endPosB)
+				{
 					throw new IllegalArgumentException();
-				
+				}
+
 				return (endPosA < endPosB ? -1 : 1);
 			}
 		};

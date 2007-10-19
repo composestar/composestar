@@ -125,7 +125,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			filterType.setType(storedType.getName());
 
 			// get acceptCallAction:
-			FilterAction acceptCallAction = (FilterAction) actionMapping.get(storedType.getAcceptCallAction());
+			FilterAction acceptCallAction = actionMapping.get(storedType.getAcceptCallAction());
 			if (acceptCallAction == null)
 			{
 				throw new ModuleException("AcceptCallAction '" + storedType.getAcceptCallAction()
@@ -134,7 +134,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			filterType.setAcceptCallAction(acceptCallAction);
 
 			// get rejectCallAction:
-			FilterAction rejectCallAction = (FilterAction) actionMapping.get(storedType.getRejectCallAction());
+			FilterAction rejectCallAction = actionMapping.get(storedType.getRejectCallAction());
 			if (rejectCallAction == null)
 			{
 				throw new ModuleException("RejectCallAction '" + storedType.getRejectCallAction()
@@ -143,7 +143,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			filterType.setRejectCallAction(rejectCallAction);
 
 			// get acceptReturnAction:
-			FilterAction acceptReturnAction = (FilterAction) actionMapping.get(storedType.getAcceptReturnAction());
+			FilterAction acceptReturnAction = actionMapping.get(storedType.getAcceptReturnAction());
 			if (acceptReturnAction == null)
 			{
 				throw new ModuleException("AcceptReturnAction '" + storedType.getAcceptReturnAction()
@@ -152,7 +152,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			filterType.setAcceptReturnAction(acceptReturnAction);
 
 			// get rejectReturnAction:
-			FilterAction rejectReturnAction = (FilterAction) actionMapping.get(storedType.getRejectReturnAction());
+			FilterAction rejectReturnAction = actionMapping.get(storedType.getRejectReturnAction());
 			if (rejectReturnAction == null)
 			{
 				throw new ModuleException("RejectReturnAction '" + storedType.getRejectReturnAction()
@@ -240,7 +240,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 					INCRETimer.TYPE_NORMAL);
 
 			is = new FileInputStream(filename);
-			if (filename.endsWith(".gzip")) is = new GZIPInputStream(is);
+			if (filename.endsWith(".gzip"))
+			{
+				is = new GZIPInputStream(is);
+			}
 
 			AssemblyDocument doc = AssemblyDocument.Factory.parse(is);
 
@@ -343,13 +346,13 @@ public class StarLightCollectorRunner implements CTCommonModule
 			if (typeMap.containsKey(annotation.getTypeName()))
 			{
 				// Attribute type has been resolved by the analyzer
-				annotation.setType((Type) typeMap.get(annotation.getTypeName()));
+				annotation.setType(typeMap.get(annotation.getTypeName()));
 			}
 			else if (newAttributeTypes.containsKey(annotation.getTypeName()))
 			{
 				// Attribute type has been encountered before, use previously
 				// created type
-				annotation.setType((Type) newAttributeTypes.get(annotation.getTypeName()));
+				annotation.setType(newAttributeTypes.get(annotation.getTypeName()));
 			}
 			else
 			{
@@ -438,7 +441,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 		String name = te.getName();
 		String ns = te.getNamespace();
 
-		if (te.getName() == null) throw new ModuleException("Type must have a name attribute", MODULE_NAME);
+		if (te.getName() == null)
+		{
+			throw new ModuleException("Type must have a name attribute", MODULE_NAME);
+		}
 
 		// see rev. 2806
 		return (ns.endsWith("+") ? (ns + name) : (ns + "." + name));
@@ -446,7 +452,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 	private List<DotNETAttribute> collectAttributes(ArrayOfAttributeElement attributes)
 	{
-		if (attributes == null) return Collections.EMPTY_LIST;
+		if (attributes == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
 
 		List<DotNETAttribute> result = new ArrayList<DotNETAttribute>();
 		for (AttributeElement ae : attributes.getAttributeList())
@@ -455,7 +464,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 			attribute.setTypeName(ae.getAttributeType());
 
 			// Set value for this attribute
-			if (ae.getValues().sizeOfValueArray() >= 1) attribute.setValue(ae.getValues().getValueArray(0).getValue());
+			if (ae.getValues().sizeOfValueArray() >= 1)
+			{
+				attribute.setValue(ae.getValues().getValueArray(0).getValue());
+			}
 
 			result.add(attribute);
 		}
@@ -482,7 +494,9 @@ public class StarLightCollectorRunner implements CTCommonModule
 			// Set the attributes for this field
 			List<DotNETAttribute> attributes = collectAttributes(storedField.getAttributes());
 			for (DotNETAttribute attribute : attributes)
+			{
 				field.addAnnotation(attribute);
+			}
 
 			type.addField(field);
 		}
@@ -497,7 +511,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 			// logger.debug("Processing method '" + name + "'...");
 
-			if (name == null) throw new ModuleException("Method must have a name attribute", MODULE_NAME);
+			if (name == null)
+			{
+				throw new ModuleException("Method must have a name attribute", MODULE_NAME);
+			}
 
 			DotNETMethodInfo method = new DotNETMethodInfo();
 			method.setIsDeclaredHere(true);
@@ -513,12 +530,17 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 			collectParameters(storedMethod, method);
 
-			if (processBodies && storedMethod.isSetBody()) collectMethodBody(storedMethod.getBody(), method);
+			if (processBodies && storedMethod.isSetBody())
+			{
+				collectMethodBody(storedMethod.getBody(), method);
+			}
 
 			// Set the attributes for this method
 			List<DotNETAttribute> attributes = collectAttributes(storedMethod.getAttributes());
 			for (DotNETAttribute attribute : attributes)
+			{
 				method.addAnnotation(attribute);
+			}
 
 			type.addMethod(method);
 		}
@@ -539,7 +561,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 			// logger.debug("Retrieving parameter '" + name + "'");
 
-			if (name == null) throw new ModuleException("ParameterInfo must have a name attribute.", MODULE_NAME);
+			if (name == null)
+			{
+				throw new ModuleException("ParameterInfo must have a name attribute.", MODULE_NAME);
+			}
 
 			DotNETParameterInfo parameter = new DotNETParameterInfo();
 			parameter.setName(name);
@@ -549,9 +574,9 @@ public class StarLightCollectorRunner implements CTCommonModule
 			parameters[parameter.position() - 1] = parameter;
 		}
 
-		for (int i = 0; i < parameters.length; i++)
+		for (DotNETParameterInfo element : parameters)
 		{
-			method.addParameter(parameters[i]);
+			method.addParameter(element);
 		}
 	}
 

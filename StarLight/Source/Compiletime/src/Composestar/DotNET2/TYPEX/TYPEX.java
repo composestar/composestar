@@ -53,6 +53,6 @@ public class TYPEX implements CTCommonModule
 
 		SourceExpander se = new SourceExpander(resources);
 		expandedSources = se.process(te.getExpandedSources());
-		resources.add("sources.expanded.files", expandedSources);
+		resources.put("sources.expanded.files", expandedSources);
 	}
 }

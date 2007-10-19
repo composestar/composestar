@@ -45,7 +45,7 @@ public class FILTH implements CTCommonModule
 				INCRETimer.TYPE_NORMAL);
 
 		/* first set the ordering spec file!!!!! */
-		resources.add("ConstraintFile", "XMLTest.xml");
+		resources.put("ConstraintFile", "XMLTest.xml");
 
 		/* get a FILTHService instance */
 		FILTHService filthservice = FILTHService.getInstance(resources);

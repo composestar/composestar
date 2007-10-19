@@ -63,6 +63,7 @@ public class DotNETMethodInfo extends MethodInfo
 	 * Currently used to support selector name conversion. Copy only stuff that
 	 * applies to a method signature. This excludes e.g. the parent.
 	 */
+	@Override
 	public MethodInfo getClone(String n, Type actualParent)
 	{
 		DotNETMethodInfo mi = new DotNETMethodInfo();
@@ -70,50 +71,50 @@ public class DotNETMethodInfo extends MethodInfo
 
 		// set MethodInfo variables
 		mi.parent = actualParent;
-		mi.parameters = this.parameters;
-		mi.returnType = this.returnType;
-		mi.returnTypeString = this.returnTypeString;
+		mi.parameters = parameters;
+		mi.returnType = returnType;
+		mi.returnTypeString = returnTypeString;
 
 		// set DotNETMethodInfo variables
-		mi.isConstructor = this.isConstructor;
-		mi.isPrivate = this.isPrivate;
-		mi.isAssembly = this.isAssembly;
-		mi.isPublic = this.isPublic;
-		mi.isDeclaredHere = this.isDeclaredHere;
-		mi.isStatic = this.isStatic;
-		mi.isFinal = this.isFinal;
-		mi.isAbstract = this.isAbstract;
-		mi.isVirtual = this.isVirtual;
+		mi.isConstructor = isConstructor;
+		mi.isPrivate = isPrivate;
+		mi.isAssembly = isAssembly;
+		mi.isPublic = isPublic;
+		mi.isDeclaredHere = isDeclaredHere;
+		mi.isStatic = isStatic;
+		mi.isFinal = isFinal;
+		mi.isAbstract = isAbstract;
+		mi.isVirtual = isVirtual;
 
-		mi.isDeclaredHere = this.isDeclaredHere;
+		mi.isDeclaredHere = isDeclaredHere;
 
 		// Create new signature:
 		StringBuffer newSignature = new StringBuffer();
-		int index1 = this.signature.indexOf("::");
-		if (!actualParent.equals(this.parent))
+		int index1 = signature.indexOf("::");
+		if (!actualParent.equals(parent))
 		{
-			int index0 = this.signature.indexOf(' ');
-			newSignature.append(this.signature.substring(0, index0));
-			String oldType = this.signature.substring(index0, index1);
-			String newType = oldType.replace(this.parent.getFullName(), actualParent.getFullName());
+			int index0 = signature.indexOf(' ');
+			newSignature.append(signature.substring(0, index0));
+			String oldType = signature.substring(index0, index1);
+			String newType = oldType.replace(parent.getFullName(), actualParent.getFullName());
 			newSignature.append(newType);
 		}
 		else
 		{
-			newSignature.append(this.signature.substring(0, index1));
+			newSignature.append(signature.substring(0, index1));
 		}
-		int index2 = this.signature.indexOf('(');
-		if (!n.equals(this.Name))
+		int index2 = signature.indexOf('(');
+		if (!n.equals(Name))
 		{
-			String oldName = this.signature.substring(index1, index2);
-			String newName = oldName.replace(this.Name, n);
+			String oldName = signature.substring(index1, index2);
+			String newName = oldName.replace(Name, n);
 			newSignature.append(newName);
 		}
 		else
 		{
-			newSignature.append(this.signature.substring(index1, index2));
+			newSignature.append(signature.substring(index1, index2));
 		}
-		newSignature.append(this.signature.substring(index2));
+		newSignature.append(signature.substring(index2));
 
 		mi.signature = newSignature.toString();
 		return mi;
@@ -129,6 +130,7 @@ public class DotNETMethodInfo extends MethodInfo
 		this.isConstructor = isConstructor;
 	}
 
+	@Override
 	public boolean isPrivate()
 	{
 		return isPrivate;
@@ -149,6 +151,7 @@ public class DotNETMethodInfo extends MethodInfo
 		this.isAssembly = isAssembly;
 	}
 
+	@Override
 	public boolean isPublic()
 	{
 		return isPublic;
@@ -159,6 +162,7 @@ public class DotNETMethodInfo extends MethodInfo
 		this.isPublic = isPublic;
 	}
 
+	@Override
 	public boolean isProtected()
 	{
 		return false; // TODO: should return the isFamily value
@@ -221,7 +225,7 @@ public class DotNETMethodInfo extends MethodInfo
 
 	public void setSignature(String sig)
 	{
-		this.signature = sig;
+		signature = sig;
 	}
 
 	/*
@@ -235,46 +239,87 @@ public class DotNETMethodInfo extends MethodInfo
 		HashSet result = new HashSet();
 		Iterator iter = c.iterator();
 		while (iter.hasNext())
+		{
 			result.add(iter.next());
+		}
 		return result;
 	}
 
+	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentClass") && parent.getUnitType().equals("Class")) return new UnitResult(parent);
-		else if (argumentName.equals("ParentInterface") && parent.getUnitType().equals("Interface")) return new UnitResult(
-				parent);
-		else if (argumentName.equals("ChildParameters")) return new UnitResult(toHashSet(parameters));
-		else if (argumentName.equals("ReturnClass") && getReturnType().getUnitType().equals("Class")) return new UnitResult(
-				getReturnType());
-		else if (argumentName.equals("ReturnInterface") && getReturnType().getUnitType().equals("Interface")) return new UnitResult(
-				getReturnType());
-		else if (argumentName.equals("ReturnAnnotation") && getReturnType().getUnitType().equals("Annotation")) return new UnitResult(
-				getReturnType());
+		if (argumentName.equals("ParentClass") && parent.getUnitType().equals("Class"))
+		{
+			return new UnitResult(parent);
+		}
+		else if (argumentName.equals("ParentInterface") && parent.getUnitType().equals("Interface"))
+		{
+			return new UnitResult(parent);
+		}
+		else if (argumentName.equals("ChildParameters"))
+		{
+			return new UnitResult(toHashSet(parameters));
+		}
+		else if (argumentName.equals("ReturnClass") && getReturnType().getUnitType().equals("Class"))
+		{
+			return new UnitResult(getReturnType());
+		}
+		else if (argumentName.equals("ReturnInterface") && getReturnType().getUnitType().equals("Interface"))
+		{
+			return new UnitResult(getReturnType());
+		}
+		else if (argumentName.equals("ReturnAnnotation") && getReturnType().getUnitType().equals("Annotation"))
+		{
+			return new UnitResult(getReturnType());
+		}
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((Annotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 
 		return null;
 	}
 
+	@Override
 	public Collection getUnitAttributes()
 	{
 		Set result = new HashSet();
-		if (isPrivate()) result.add("private");
-		if (isAssembly()) result.add("assembly");
-		if (isPublic()) result.add("public");
+		if (isPrivate())
+		{
+			result.add("private");
+		}
+		if (isAssembly())
+		{
+			result.add("assembly");
+		}
+		if (isPublic())
+		{
+			result.add("public");
+		}
 		// if (isProtected())
 		// result.add("protected");
-		if (isStatic()) result.add("static");
-		if (isFinal()) result.add("final");
-		if (isAbstract()) result.add("abstract");
-		if (isVirtual()) result.add("virtual");
+		if (isStatic())
+		{
+			result.add("static");
+		}
+		if (isFinal())
+		{
+			result.add("final");
+		}
+		if (isAbstract())
+		{
+			result.add("abstract");
+		}
+		if (isVirtual())
+		{
+			result.add("virtual");
+		}
 		return result;
 	}
 

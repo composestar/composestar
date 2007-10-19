@@ -36,12 +36,17 @@ class AssemblyExpander
 		assemblyConfigs = new HashMap<String, AssemblyConfig>();
 		ArrayOfAssemblyConfig acs = StarLightMaster.getConfigContainer().getAssemblies();
 		for (AssemblyConfig ac : acs.getAssemblyConfigList())
+		{
 			assemblyConfigs.put(ac.getName(), ac);
+		}
 	}
 
 	public void process(Collection<ExpandedAssembly> assemblies) throws ModuleException
 	{
-		if (assemblies.size() == 0) return;
+		if (assemblies.size() == 0)
+		{
+			return;
+		}
 
 		writeExpansionSpecs(assemblies);
 		invokeExpander();
@@ -111,7 +116,10 @@ class AssemblyExpander
 		File baseDir = new File("C:\\CPS\\StarLight\\Source\\SigExpander\\bin\\Debug");
 		File exe = new File(baseDir, "Composestar.StarLight.SigExpander.exe");
 
-		if (!exe.exists()) throw new RuntimeException("Executable does not exist: " + exe);
+		if (!exe.exists())
+		{
+			throw new RuntimeException("Executable does not exist: " + exe);
+		}
 
 		return exe.getAbsolutePath();
 	}
