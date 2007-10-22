@@ -11,27 +11,24 @@ package Composestar.Core.CKRET;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import Composestar.Core.CKRET.Config.ConfigParser;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * 
  */
 public class Repository
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CKRET.MODULE_NAME);
 
 	private static Repository instance;
 
 	public static final String CKRET_CONFIG = "filterdesc.xml";
-
-	private Map filters;
 
 	private List<Constraint> constraints;
 
@@ -46,7 +43,6 @@ public class Repository
 
 	private Repository()
 	{
-		filters = new HashMap();
 		constraints = new ArrayList<Constraint>();
 	}
 
@@ -73,7 +69,7 @@ public class Repository
 		if (ckretconfigfile != null)
 		{
 			INCRE.instance().addConfiguration("CKRETConfigFile", ckretconfigfile.toString());
-			Debug.out(Debug.MODE_INFORMATION, CKRET.MODULE_NAME, "Using filter specification in " + ckretconfigfile);
+			logger.info("Using filter specification in " + ckretconfigfile);
 			parser.parse(ckretconfigfile, this);
 		}
 		else
@@ -84,8 +80,7 @@ public class Repository
 			}
 			catch (Exception e)
 			{
-				Debug.out(Debug.MODE_WARNING, CKRET.MODULE_NAME, "Error parsing interal config: " + e.getMessage());
-				Debug.out(Debug.MODE_DEBUG, CKRET.MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
+				logger.warn("Error parsing interal config: " + e.getMessage(), e);
 			}
 		}
 

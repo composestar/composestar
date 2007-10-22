@@ -15,12 +15,15 @@ import groove.lts.DefaultGraphState;
 import groove.lts.DefaultGraphTransition;
 import groove.lts.GTS;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
@@ -37,7 +40,7 @@ import Composestar.Core.FIRE2.model.Message;
  */
 public class ExecutionModelExtractor
 {
-	private Hashtable stateTable;
+	private Map<DefaultGraphState, BasicExecutionState> stateTable;
 
 	private final static Label PC_LABEL = new DefaultLabel("pc");
 
@@ -54,18 +57,18 @@ public class ExecutionModelExtractor
 
 	public ExecutionModel extract(GTS gts, FlowModel flowModel)
 	{
-		stateTable = new Hashtable();
+		stateTable = new HashMap<DefaultGraphState, BasicExecutionState>();
 
 		BasicExecutionModel executionModel = new BasicExecutionModel();
 
 		DefaultGraphState startState = (DefaultGraphState) gts.startState();
-		Iterator iter = startState.getOutTransitionIter();
+		Iterator<DefaultGraphTransition> iter = startState.getOutTransitionIter();
 		DefaultGraphTransition transition;
 		DefaultGraphState nextState;
 
 		while (iter.hasNext())
 		{
-			transition = (DefaultGraphTransition) iter.next();
+			transition = iter.next();
 			nextState = (DefaultGraphState) transition.target();
 
 			if (!stateTable.containsKey(nextState))
@@ -85,7 +88,7 @@ public class ExecutionModelExtractor
 
 	private void analyseState(DefaultGraphState state, BasicExecutionModel executionModel, FlowModel flowModel)
 	{
-		Iterator iter = state.getOutTransitionIter();
+		Iterator<DefaultGraphTransition> iter = state.getOutTransitionIter();
 
 		DefaultGraphTransition transition;
 		DefaultGraphState nextState;
@@ -93,7 +96,7 @@ public class ExecutionModelExtractor
 
 		while (iter.hasNext())
 		{
-			transition = (DefaultGraphTransition) iter.next();
+			transition = iter.next();
 			nextState = (DefaultGraphState) transition.target();
 			if (!stateTable.containsKey(nextState))
 			{
@@ -101,8 +104,8 @@ public class ExecutionModelExtractor
 				analyseState(nextState, executionModel, flowModel);
 			}
 
-			startState = (BasicExecutionState) stateTable.get(state);
-			endState = (BasicExecutionState) stateTable.get(nextState);
+			startState = stateTable.get(state);
+			endState = stateTable.get(nextState);
 
 			addTransition(startState, endState, transition, executionModel);
 		}
@@ -130,15 +133,15 @@ public class ExecutionModelExtractor
 		Target target, substitutionTarget;
 
 		Graph graph = state.getGraph();
-		Collection pcEdges = graph.labelEdgeSet(2, PC_LABEL);
-		Iterator iter = pcEdges.iterator();
+		Collection<Edge> pcEdges = graph.labelEdgeSet(2, PC_LABEL);
+		Iterator<Edge> iter = pcEdges.iterator();
 		if (!iter.hasNext())
 		{
 			// should never happen.
 			throw new RuntimeException("pc-edge not found!");
 		}
 
-		Edge edge = (Edge) iter.next();
+		Edge edge = iter.next();
 
 		// FlowNode:
 		AnnotatedNode targetFlowNode = (AnnotatedNode) edge.opposite();
@@ -153,7 +156,7 @@ public class ExecutionModelExtractor
 		iter = graph.outEdgeSet(edge.source()).iterator();
 		while (iter.hasNext())
 		{
-			edge = (Edge) iter.next();
+			edge = iter.next();
 			if (edge.label().equals(SELECTOR_LABEL))
 			{
 				selectorNode = edge.opposite();
@@ -258,19 +261,19 @@ public class ExecutionModelExtractor
 	{
 		private static final long serialVersionUID = 5744523627232722542L;
 
-		private Hashtable entranceStates;
+		private Map<Message, ExecutionState> entranceStates;
 
-		private HashSet states;
+		private Set<ExecutionState> states;
 
-		private HashSet transitions;
+		private Set<ExecutionTransition> transitions;
 
 		public BasicExecutionModel()
 		{
 			super();
 
-			entranceStates = new Hashtable();
-			states = new HashSet();
-			transitions = new HashSet();
+			entranceStates = new HashMap<Message, ExecutionState>();
+			states = new HashSet<ExecutionState>();
+			transitions = new HashSet<ExecutionTransition>();
 		}
 
 		/**
@@ -284,9 +287,14 @@ public class ExecutionModelExtractor
 			entranceStates.put(state.getMessage(), state);
 		}
 
-		public Iterator getEntranceStates()
+		public Iterator<ExecutionState> getEntranceStates()
 		{
-			return entranceStates.values().iterator();
+			return getEntranceStatesEx().iterator();
+		}
+
+		public Collection<ExecutionState> getEntranceStatesEx()
+		{
+			return Collections.unmodifiableCollection(entranceStates.values());
 		}
 
 		/**
@@ -299,21 +307,21 @@ public class ExecutionModelExtractor
 		 */
 		public ExecutionState getEntranceState(Message message)
 		{
-			ExecutionState state = (ExecutionState) entranceStates.get(message);
+			ExecutionState state = entranceStates.get(message);
 
 			if (state == null)
 			{
 				// FIXME Undistinguishable target/selector instead of star
 				// target/selector
-				state = (ExecutionState) entranceStates.get(new Message(Message.UNDISTINGUISHABLE_TARGET, message.getSelector()));
+				state = entranceStates.get(new Message(Message.UNDISTINGUISHABLE_TARGET, message.getSelector()));
 			}
 			if (state == null)
 			{
-				state = (ExecutionState) entranceStates.get(new Message(message.getTarget(), Message.UNDISTINGUISHABLE_SELECTOR));
+				state = entranceStates.get(new Message(message.getTarget(), Message.UNDISTINGUISHABLE_SELECTOR));
 			}
 			if (state == null)
 			{
-				state = (ExecutionState) entranceStates.get(Message.UNDISTINGUISHABLE_MESSAGE);
+				state = entranceStates.get(Message.UNDISTINGUISHABLE_MESSAGE);
 			}
 
 			return state;
@@ -353,11 +361,11 @@ public class ExecutionModelExtractor
 		 * 
 		 * @return
 		 */
-		public Set getEntranceMessages()
+		public Set<Message> getEntranceMessages()
 		{
 			// return (String[]) entranceStates.keySet().toArray( new String[0]
 			// );
-			return entranceStates.keySet();
+			return Collections.unmodifiableSet(entranceStates.keySet());
 		}
 
 		public boolean isEntranceMessage(Message message)
@@ -370,46 +378,47 @@ public class ExecutionModelExtractor
 	{
 		private static final long serialVersionUID = 8401857631585252335L;
 
-		private Vector outTransitions;
+		private List<ExecutionTransition> outTransitions;
 
-		private Vector inTransitions;
+		private List<ExecutionTransition> inTransitions;
 
 		public BasicExecutionState(FlowNode flowNode, Message message, Message substitutionMessage, int stateType)
 		{
 			super(flowNode, message, substitutionMessage, stateType);
 
-			outTransitions = new Vector();
-			inTransitions = new Vector();
+			outTransitions = new ArrayList<ExecutionTransition>();
+			inTransitions = new ArrayList<ExecutionTransition>();
 		}
 
 		public void addOutTransition(ExecutionTransition transition)
 		{
-			outTransitions.addElement(transition);
+			outTransitions.add(transition);
 		}
 
 		public void removeOutTransition(ExecutionTransition transition)
 		{
-			outTransitions.removeElement(transition);
+			outTransitions.remove(transition);
 		}
 
-		public Iterator getOutTransitions()
+		@Override
+		public List<ExecutionTransition> getOutTransitionsEx()
 		{
-			return outTransitions.iterator();
+			return Collections.unmodifiableList(outTransitions);
 		}
 
 		public void addInTransition(ExecutionTransition transition)
 		{
-			inTransitions.addElement(transition);
+			inTransitions.add(transition);
 		}
 
 		public void removeInTransition(ExecutionTransition transition)
 		{
-			inTransitions.removeElement(transition);
+			inTransitions.remove(transition);
 		}
 
-		public Iterator getInTransitions()
+		public List<ExecutionTransition> getInTransitionsEx()
 		{
-			return inTransitions.iterator();
+			return Collections.unmodifiableList(inTransitions);
 		}
 	}
 
@@ -442,6 +451,7 @@ public class ExecutionModelExtractor
 		/**
 		 * @return Returns the endState.
 		 */
+		@Override
 		public ExecutionState getEndState()
 		{
 			return endState;
@@ -450,6 +460,7 @@ public class ExecutionModelExtractor
 		/**
 		 * @return Returns the startState.
 		 */
+		@Override
 		public ExecutionState getStartState()
 		{
 			return startState;

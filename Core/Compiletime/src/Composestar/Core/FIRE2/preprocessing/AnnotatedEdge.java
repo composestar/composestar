@@ -11,34 +11,31 @@ import groove.graph.DefaultEdge;
 import groove.graph.Label;
 import groove.graph.Node;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Arjan de Roo
  */
 public class AnnotatedEdge extends DefaultEdge
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2512401433673944080L;
 
 	/**
 	 * Dictionary containing the annotations.
 	 */
-	private Dictionary annotations;
+	private Map<String, Object> annotations;
 
 	public AnnotatedEdge(Node startNode, String label, Node endNode)
 	{
 		super(startNode, label, endNode);
-		annotations = new Hashtable();
+		annotations = new HashMap<String, Object>();
 	}
 
 	public AnnotatedEdge(Node startNode, Label label, Node endNode)
 	{
 		super(startNode, label, endNode);
-		annotations = new Hashtable();
+		annotations = new HashMap<String, Object>();
 	}
 
 	/**
@@ -94,6 +91,7 @@ public class AnnotatedEdge extends DefaultEdge
 	/**
 	 * This implementation returns a {@link AnnotatedEdge}.
 	 */
+	@Override
 	public BinaryEdge newEdge(Node source, Label label, Node target)
 	{
 		return new AnnotatedEdge(source, label, target);

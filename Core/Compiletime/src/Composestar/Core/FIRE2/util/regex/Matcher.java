@@ -5,9 +5,13 @@
 package Composestar.Core.FIRE2.util.regex;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -26,9 +30,9 @@ public class Matcher
 
 	private Labeler labeler;
 
-	private HashSet processedStates;
+	private Set<CombinedState> processedStates;
 
-	private Stack unvisitedStates;
+	private Stack<CombinedState> unvisitedStates;
 
 	private CombinedState endState;
 
@@ -58,14 +62,14 @@ public class Matcher
 	 */
 	private void initialize()
 	{
-		processedStates = new HashSet();
-		unvisitedStates = new Stack();
+		processedStates = new HashSet<CombinedState>();
+		unvisitedStates = new Stack<CombinedState>();
 
-		Iterator states = model.getEntranceStates();
+		Iterator<ExecutionState> states = model.getEntranceStates();
 		RegularState regularState = pattern.getStartState();
 		while (states.hasNext())
 		{
-			ExecutionState state = (ExecutionState) states.next();
+			ExecutionState state = states.next();
 			addState(new CombinedState(state, regularState));
 		}
 	}
@@ -74,7 +78,7 @@ public class Matcher
 	{
 		while (!unvisitedStates.empty())
 		{
-			CombinedState state = (CombinedState) unvisitedStates.pop();
+			CombinedState state = unvisitedStates.pop();
 			if (process(state))
 			{
 				return true;
@@ -86,12 +90,12 @@ public class Matcher
 
 	private boolean process(CombinedState state)
 	{
-		Enumeration regularTransitions;
+		Enumeration<RegularTransition> regularTransitions;
 		RegularState regularState;
 		RegularTransition regularTransition;
 		RegularState[] nextStates;
 
-		Iterator executionTransitions;
+		Iterator<ExecutionTransition> executionTransitions;
 		ExecutionState executionState;
 		ExecutionTransition executionTransition;
 
@@ -104,7 +108,7 @@ public class Matcher
 		regularTransitions = regularState.getOutTransitions();
 		while (regularTransitions.hasMoreElements())
 		{
-			regularTransition = (RegularTransition) regularTransitions.nextElement();
+			regularTransition = regularTransitions.nextElement();
 			if (regularTransition.isEmpty())
 			{
 				newState = new CombinedState(state.executionState, regularTransition.getEndState(), state);
@@ -124,7 +128,7 @@ public class Matcher
 		executionTransitions = executionState.getOutTransitions();
 		while (executionTransitions.hasNext())
 		{
-			executionTransition = (ExecutionTransition) executionTransitions.next();
+			executionTransition = executionTransitions.next();
 			sequence = labeler.getLabels(executionTransition);
 			if (sequence.isEmpty())
 			{
@@ -164,7 +168,7 @@ public class Matcher
 	private RegularState[] getNextStates(RegularState state, LabelSequence sequence)
 	{
 		RegularState[] currentStates = { state };
-		Vector v = new Vector();
+		List<RegularState> v = new Vector<RegularState>();
 
 		Iterator<String> labelSeq = sequence.getLabels();
 		while (labelSeq.hasNext())
@@ -176,19 +180,19 @@ public class Matcher
 				v.addAll(getNextStates(currentState, label));
 			}
 
-			currentStates = (RegularState[]) v.toArray(new RegularState[v.size()]);
+			currentStates = v.toArray(new RegularState[v.size()]);
 		}
 
 		return currentStates;
 	}
 
-	private Collection getNextStates(RegularState state, String label)
+	private Collection<RegularState> getNextStates(RegularState state, String label)
 	{
-		Enumeration transitions = state.getOutTransitions();
-		HashSet result = new HashSet();
+		Enumeration<RegularTransition> transitions = state.getOutTransitions();
+		Set<RegularState> result = new HashSet<RegularState>();
 		while (transitions.hasMoreElements())
 		{
-			RegularTransition transition = (RegularTransition) transitions.nextElement();
+			RegularTransition transition = transitions.nextElement();
 			if (transition.match(label))
 			{
 				result.addAll(lambdaClosure(transition.getEndState()));
@@ -206,27 +210,27 @@ public class Matcher
 	 * @param state The starting state.
 	 * @return The lambda closure of the given state.
 	 */
-	private Collection lambdaClosure(RegularState state)
+	private Collection<RegularState> lambdaClosure(RegularState state)
 	{
 		RegularTransition transition;
-		Enumeration transitions;
-		HashSet result;
-		Stack checkNext;
+		Enumeration<RegularTransition> transitions;
+		Set<RegularState> result;
+		Stack<RegularState> checkNext;
 		RegularState currentState, nextState;
 
-		result = new HashSet();
+		result = new HashSet<RegularState>();
 		result.add(state);
 
-		checkNext = new Stack();
+		checkNext = new Stack<RegularState>();
 		checkNext.push(state);
 
 		while (!checkNext.isEmpty())
 		{
-			currentState = (RegularState) checkNext.pop();
+			currentState = checkNext.pop();
 			transitions = currentState.getOutTransitions();
 			while (transitions.hasMoreElements())
 			{
-				transition = (RegularTransition) transitions.nextElement();
+				transition = transitions.nextElement();
 				nextState = transition.getEndState();
 				if (transition.isEmpty() && !result.contains(nextState))
 				{
@@ -261,7 +265,7 @@ public class Matcher
 		}
 	}
 
-	public Enumeration matchTrace()
+	public List<ExecutionTransition> matchTrace()
 	{
 		if (!matchDone)
 		{
@@ -270,7 +274,7 @@ public class Matcher
 
 		if (endState != null)
 		{
-			return endState.trace.toVector().elements();
+			return Collections.unmodifiableList(endState.trace.toList());
 		}
 		else
 		{
@@ -315,6 +319,7 @@ public class Matcher
 			// trace.add( transition );
 		}
 
+		@Override
 		public boolean equals(Object obj)
 		{
 			if (!(obj instanceof CombinedState))
@@ -324,9 +329,10 @@ public class Matcher
 
 			CombinedState state = (CombinedState) obj;
 
-			return this.executionState.equals(state.executionState) && this.regularState.equals(state.regularState);
+			return executionState.equals(state.executionState) && regularState.equals(state.regularState);
 		}
 
+		@Override
 		public int hashCode()
 		{
 			return executionState.hashCode() + regularState.hashCode();
@@ -356,16 +362,16 @@ public class Matcher
 			this.last = last;
 		}
 
-		public Vector toVector()
+		public List<ExecutionTransition> toList()
 		{
 			if (heading == null)
 			{
-				return new Vector();
+				return new LinkedList<ExecutionTransition>();
 			}
 			else
 			{
-				Vector v = heading.toVector();
-				v.addElement(last);
+				List<ExecutionTransition> v = heading.toList();
+				v.add(last);
 				return v;
 			}
 		}

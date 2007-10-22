@@ -45,7 +45,7 @@ public class ConstraintsHandler extends DefaultHandler
 	{
 		try
 		{
-			if (local_name.equalsIgnoreCase("conflict"))
+			if (raw_name.equalsIgnoreCase("conflict"))
 			{
 				String resource = amap.getValue("resource");
 				String pattern = amap.getValue("pattern");
@@ -53,7 +53,7 @@ public class ConstraintsHandler extends DefaultHandler
 
 				repository.addConstraint(new Constraint(resource, pattern, message, Constraint.CONFLICT));
 			}
-			else if (local_name.equalsIgnoreCase("require"))
+			else if (raw_name.equalsIgnoreCase("require"))
 			{
 				String resource = amap.getValue("resource");
 				String pattern = amap.getValue("pattern");
@@ -76,7 +76,7 @@ public class ConstraintsHandler extends DefaultHandler
 	 */
 	public void endElement(String uri, String local_name, String raw_name)
 	{
-		if (local_name.equalsIgnoreCase("constraints"))
+		if (raw_name.equalsIgnoreCase("constraints"))
 		{
 			this.parser.setContentHandler(this.returnhandler);
 		}

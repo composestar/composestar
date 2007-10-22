@@ -6,6 +6,8 @@ package Composestar.Core.FIRE2.model;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
@@ -86,7 +88,7 @@ public interface FlowNode extends Serializable
 	public final static String FE_VOID_COMP_OPER_NODE = "VoidCompOper";
 
 	public final static String FM_CONDITION_NODE = "FilterModuleCondition";
-	
+
 	/**
 	 * In the flowmodel of a filter module, this node marks the end of the flow
 	 * in the current module, proceeding to the next filter module. This node is
@@ -131,7 +133,14 @@ public interface FlowNode extends Serializable
 
 	public final static String PREDICATE_NODE = "PredicateNode";
 
-	public Iterator getTransitions();
+	/**
+	 * @deprecated use getTransitionsEx();
+	 * @return
+	 */
+	@Deprecated
+	public Iterator<FlowTransition> getTransitions();
+
+	public List<FlowTransition> getTransitionsEx();
 
 	/**
 	 * Returns the (first) transition from this startnode to the given endnode,
@@ -144,8 +153,12 @@ public interface FlowNode extends Serializable
 
 	/**
 	 * @return Returns the names.
+	 * @deprecated use getNamesEx();
 	 */
-	public Iterator getNames();
+	@Deprecated
+	public Iterator<String> getNames();
+
+	public Set<String> getNamesEx();
 
 	public boolean containsName(String name);
 

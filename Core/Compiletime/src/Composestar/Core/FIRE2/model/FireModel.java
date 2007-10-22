@@ -5,11 +5,13 @@
 package Composestar.Core.FIRE2.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -46,11 +48,6 @@ public class FireModel
 	 * Indicates that an execution model should be created without signature
 	 * checks
 	 */
-	/**
-	 * Cache of messages to prevent the creation of equal messagesSelectors when
-	 * a getExecutionModel method is called.
-	 */
-	private static Hashtable messageSelectorCache = new Hashtable();
 
 	public final static int NO_SIGNATURE_CHECK = 0;
 
@@ -110,7 +107,7 @@ public class FireModel
 	 * HashMap that maps the basic FlowNodes to the corresponding
 	 * ExtendedFlowNodes.
 	 */
-	private HashMap flowNodeMap;
+	private Map<FlowNode, ExtendedFlowNode> flowNodeMap;
 
 	private ExtendedFlowNode[][] fmConditionFlowNodes;
 
@@ -137,12 +134,12 @@ public class FireModel
 		this.concern = concern;
 
 		// List v = order.orderAsList();
-		List v = order.filterModuleSIList();
+		List<FilterModuleSuperImposition> v = order.filterModuleSIList();
 
 		FilterModuleSuperImposition[] modules = new FilterModuleSuperImposition[v.size()];
 		for (int i = 0; i < v.size(); i++)
 		{
-			modules[i] = (FilterModuleSuperImposition) v.get(i);
+			modules[i] = v.get(i);
 		}
 
 		initialize(modules);
@@ -185,7 +182,7 @@ public class FireModel
 
 	private void initialize(FilterModuleSuperImposition[] modules)
 	{
-		this.filterModules = modules;
+		filterModules = modules;
 
 		initializeBaseModels();
 		createFlowModel();
@@ -193,8 +190,8 @@ public class FireModel
 
 	private void initializeBaseModels()
 	{
-		this.flowModels = new FlowModel[2][filterModules.length];
-		this.executionModels = new ExecutionModel[2][filterModules.length];
+		flowModels = new FlowModel[2][filterModules.length];
+		executionModels = new ExecutionModel[2][filterModules.length];
 
 		// Get the FlowModels and ExecutionModels of each FilterModule
 		for (int i = 0; i < filterModules.length; i++)
@@ -214,7 +211,7 @@ public class FireModel
 
 	private void createFlowModel()
 	{
-		flowNodeMap = new HashMap();
+		flowNodeMap = new HashMap<FlowNode, ExtendedFlowNode>();
 		extendedFlowModels = new ExtendedFlowModel[2];
 
 		fmConditionFlowNodes = new ExtendedFlowNode[2][filterModules.length];
@@ -236,10 +233,8 @@ public class FireModel
 
 		for (int i = 0; i < filterModules.length; i++)
 		{
-			Iterator nodeIter = flowModels[filterLocation][i].getNodes();
-			while (nodeIter.hasNext())
+			for (FlowNode node : flowModels[filterLocation][i].getNodesEx())
 			{
-				FlowNode node = (FlowNode) nodeIter.next();
 				ExtendedFlowNode extendedNode = new ExtendedFlowNode(node);
 				extendedFlowModels[filterLocation].nodes.add(extendedNode);
 				flowNodeMap.put(node, extendedNode);
@@ -253,15 +248,13 @@ public class FireModel
 				fmConditionFlowNodes[filterLocation][i] = fmCondNode;
 
 				// true transition
-				ExtendedFlowNode startNode = (ExtendedFlowNode) flowNodeMap.get(flowModels[filterLocation][i]
-						.getStartNode());
+				ExtendedFlowNode startNode = flowNodeMap.get(flowModels[filterLocation][i].getStartNode());
 				ExtendedFlowTransition trueTransition = new ExtendedFlowTransition(fmCondNode, startNode);
 				fmCondNode.transitions.add(trueTransition);
 				extendedFlowModels[filterLocation].transitions.add(trueTransition);
 
 				// false transition
-				ExtendedFlowNode endNode = (ExtendedFlowNode) flowNodeMap.get(flowModels[filterLocation][i]
-						.getEndNode());
+				ExtendedFlowNode endNode = flowNodeMap.get(flowModels[filterLocation][i].getEndNode());
 				ExtendedFlowTransition falseTransition = new ExtendedFlowTransition(fmCondNode, endNode);
 				fmCondNode.transitions.add(falseTransition);
 				extendedFlowModels[filterLocation].transitions.add(falseTransition);
@@ -285,13 +278,13 @@ public class FireModel
 			else
 			{
 				FlowNode startNode = flowModels[filterLocation][0].getStartNode();
-				ExtendedFlowNode extendedStartNode = (ExtendedFlowNode) flowNodeMap.get(startNode);
+				ExtendedFlowNode extendedStartNode = flowNodeMap.get(startNode);
 				extendedFlowModels[filterLocation].startNode = extendedStartNode;
 			}
 
 			// End node
 			FlowNode endNode = flowModels[filterLocation][filterModules.length - 1].getEndNode();
-			ExtendedFlowNode extendedEndNode = (ExtendedFlowNode) flowNodeMap.get(endNode);
+			ExtendedFlowNode extendedEndNode = flowNodeMap.get(endNode);
 			extendedFlowModels[filterLocation].endNode = extendedEndNode;
 		}
 	}
@@ -300,21 +293,17 @@ public class FireModel
 	{
 		for (int i = 0; i < filterModules.length; i++)
 		{
-			Iterator nodeIter = flowModels[filterLocation][i].getNodes();
-			while (nodeIter.hasNext())
+			for (FlowNode node : flowModels[filterLocation][i].getNodesEx())
 			{
-				FlowNode node = (FlowNode) nodeIter.next();
-				ExtendedFlowNode extendedNode = (ExtendedFlowNode) flowNodeMap.get(node);
+				ExtendedFlowNode extendedNode = flowNodeMap.get(node);
 
 				if (!node.containsName(FlowNode.END_NODE))
 				{
 					// Not an end node
-					Iterator transitionIter = node.getTransitions();
-					while (transitionIter.hasNext())
+					for (FlowTransition transition : node.getTransitionsEx())
 					{
-						FlowTransition transition = (FlowTransition) transitionIter.next();
 						FlowNode endNode = transition.getEndNode();
-						ExtendedFlowNode endExtendedNode = (ExtendedFlowNode) flowNodeMap.get(endNode);
+						ExtendedFlowNode endExtendedNode = flowNodeMap.get(endNode);
 						ExtendedFlowTransition extendedTransition = new ExtendedFlowTransition(extendedNode,
 								endExtendedNode, transition);
 						extendedNode.transitions.add(extendedTransition);
@@ -325,7 +314,7 @@ public class FireModel
 				{
 					// An end node
 					FlowNode endNode = flowModels[filterLocation][i + 1].getStartNode();
-					ExtendedFlowNode endExtendedNode = (ExtendedFlowNode) flowNodeMap.get(endNode);
+					ExtendedFlowNode endExtendedNode = flowNodeMap.get(endNode);
 					ExtendedFlowTransition extendedTransition = new ExtendedFlowTransition(extendedNode,
 							endExtendedNode);
 					extendedNode.transitions.add(extendedTransition);
@@ -367,13 +356,11 @@ public class FireModel
 	private List<ExecutionTransition> getOutTransitionsCurrentLayerNormal(ExtendedExecutionState state)
 	{
 		ExecutionState baseState = state.baseState;
-		Iterator transitionIter = baseState.getOutTransitions();
 
 		// create ExtendedExecutionTransitions:
 		ArrayList<ExecutionTransition> outTransitions = new ArrayList<ExecutionTransition>();
-		while (transitionIter.hasNext())
+		for (ExecutionTransition baseTransition : baseState.getOutTransitionsEx())
 		{
-			ExecutionTransition baseTransition = (ExecutionTransition) transitionIter.next();
 			ExtendedExecutionState endState = deriveState(baseTransition.getEndState(), state, state.layer);
 			outTransitions.add(new ExtendedExecutionTransition(state, endState, baseTransition));
 		}
@@ -383,25 +370,17 @@ public class FireModel
 
 	private List<ExecutionTransition> getOutTransitionsCurrentLayerSignatureCheck(ExtendedExecutionState state)
 	{
-		Iterator transitionIter;
 		ExecutionState baseState = state.baseState;
 
-		// First count the number of outtransitions. If it is one, the
-		// selector did not match, so the signature matching part is always
-		// false.
-		transitionIter = baseState.getOutTransitions();
-		int transitionCount = 0;
-		while (transitionIter.hasNext())
-		{
-			transitionCount++;
-			transitionIter.next();
-		}
+		int transitionCount = baseState.getOutTransitionsEx().size();
+
+		List<ExecutionTransition> transitions = null;
 
 		if (transitionCount == 1)
 		{
 			// Selector did not match, so signature matching part always
 			// rejects.
-			transitionIter = baseState.getOutTransitions();
+			transitions = baseState.getOutTransitionsEx();
 		}
 		else
 		{
@@ -419,46 +398,39 @@ public class FireModel
 				else
 				{
 					// If loose signature check, all outgoing transition
-					transitionIter = baseState.getOutTransitions();
+					transitions = baseState.getOutTransitionsEx();
 				}
 			}
 			else if (result == MethodWrapper.EXISTING)
 			{
 				// If existing, only the true-transition
-				ArrayList a = new ArrayList();
-				Iterator it = baseState.getOutTransitions();
-				while (it.hasNext())
+				transitions = new ArrayList<ExecutionTransition>();
+				for (ExecutionTransition transition : baseState.getOutTransitionsEx())
 				{
-					ExecutionTransition transition = (ExecutionTransition) it.next();
 					if (transition.getFlowTransition().getType() == FlowTransition.FLOW_TRUE_TRANSITION)
 					{
-						a.add(transition);
+						transitions.add(transition);
 					}
 				}
-				transitionIter = a.iterator();
 			}
 			else
 			{
 				// If not existing, only the false transition
-				ArrayList a = new ArrayList();
-				Iterator it = baseState.getOutTransitions();
-				while (it.hasNext())
+				transitions = new ArrayList<ExecutionTransition>();
+				for (ExecutionTransition transition : baseState.getOutTransitionsEx())
 				{
-					ExecutionTransition transition = (ExecutionTransition) it.next();
 					if (transition.getFlowTransition().getType() == FlowTransition.FLOW_FALSE_TRANSITION)
 					{
-						a.add(transition);
+						transitions.add(transition);
 					}
 				}
-				transitionIter = a.iterator();
 			}
 		}
 
 		// create ExtendedExecutionTransitions:
 		ArrayList<ExecutionTransition> outTransitions = new ArrayList<ExecutionTransition>();
-		while (transitionIter.hasNext())
+		for (ExecutionTransition baseTransition : transitions)
 		{
-			ExecutionTransition baseTransition = (ExecutionTransition) transitionIter.next();
 			ExtendedExecutionState endState = deriveState(baseTransition.getEndState(), state, state.layer);
 			outTransitions.add(new ExtendedExecutionTransition(state, endState, baseTransition));
 		}
@@ -469,11 +441,6 @@ public class FireModel
 	private List<ExecutionTransition> getOutTransitionsCurrentLayerFMCond(ExtendedExecutionState state)
 	{
 		List<ExecutionTransition> outTransitions = new ArrayList<ExecutionTransition>();
-
-		ExecutionTransition transition;
-		int signatureCheck = state.signatureCheck;
-		MethodInfo methodInfo = state.signatureCheckInfo;
-		Iterator baseIt;
 
 		// True transition:
 		ExecutionState endState = executionModels[state.filterPosition][state.layer].getEntranceState(state
@@ -493,7 +460,7 @@ public class FireModel
 			// There is no base end state corresponding with the end state, so
 			// create extendedEndState from scratch:
 			FlowNode endNode = flowModels[state.filterPosition][state.layer].getEndNode();
-			ExtendedFlowNode extendedEndNode = (ExtendedFlowNode) flowNodeMap.get(endNode);
+			ExtendedFlowNode extendedEndNode = flowNodeMap.get(endNode);
 
 			extendedEndState = new ExtendedExecutionState(state.model, extendedEndNode, state.getMessage(), state
 					.getMessage(), ExecutionState.EXIT_STATE, state.signatureCheck, state.signatureCheckInfo,
@@ -511,12 +478,12 @@ public class FireModel
 	private ExecutionState getEndState(ExecutionModel model, Message message)
 	{
 		// Build end state set:
-		HashMap endStates = new HashMap();
+		Map<Message, ExecutionState> endStates = new HashMap<Message, ExecutionState>();
 
-		Iterator stateIter = new ExecutionStateIterator(model);
+		Iterator<ExecutionState> stateIter = new ExecutionStateIterator(model);
 		while (stateIter.hasNext())
 		{
-			ExecutionState state = (ExecutionState) stateIter.next();
+			ExecutionState state = stateIter.next();
 			if (state.getStateType() == ExecutionState.EXIT_STATE)
 			{
 				if (state.getMessage().equals(message))
@@ -530,17 +497,15 @@ public class FireModel
 			}
 		}
 
-		ExecutionState state = (ExecutionState) endStates.get(new Message(Message.UNDISTINGUISHABLE_TARGET, message
-				.getSelector()));
+		ExecutionState state = endStates.get(new Message(Message.UNDISTINGUISHABLE_TARGET, message.getSelector()));
 
 		if (state == null)
 		{
-			state = (ExecutionState) endStates
-					.get(new Message(message.getTarget(), Message.UNDISTINGUISHABLE_SELECTOR));
+			state = endStates.get(new Message(message.getTarget(), Message.UNDISTINGUISHABLE_SELECTOR));
 		}
 		if (state == null)
 		{
-			state = (ExecutionState) endStates.get(Message.UNDISTINGUISHABLE_MESSAGE);
+			state = endStates.get(Message.UNDISTINGUISHABLE_MESSAGE);
 		}
 
 		return state;
@@ -622,20 +587,20 @@ public class FireModel
 		}
 	}
 
-	private boolean containsMethod(List methods, MethodInfo method)
-	{
-		Iterator iterator = methods.iterator();
-		for (Object method1 : methods)
-		{
-			MethodInfo containedMethod = (MethodInfo) method1;
-			if (containedMethod.checkEquals(method))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
+	// private boolean containsMethod(List methods, MethodInfo method)
+	// {
+	// Iterator iterator = methods.iterator();
+	// for (Object method1 : methods)
+	// {
+	// MethodInfo containedMethod = (MethodInfo) method1;
+	// if (containedMethod.checkEquals(method))
+	// {
+	// return true;
+	// }
+	// }
+	//
+	// return false;
+	// }
 
 	/**
 	 * Derives the correct state. If the oldState has not a generalized message
@@ -750,7 +715,7 @@ public class FireModel
 		ExtendedExecutionModel model = state.model;
 		if (model.stateCache.containsKey(state))
 		{
-			return (ExtendedExecutionState) model.stateCache.get(state);
+			return model.stateCache.get(state);
 		}
 		else
 		{
@@ -764,7 +729,7 @@ public class FireModel
 	{
 		ExecutionState startState = baseTransition.getStartState();
 		FlowNode startNode = startState.getFlowNode();
-		ExtendedFlowNode extendedStartNode = (ExtendedFlowNode) flowNodeMap.get(startNode);
+		ExtendedFlowNode extendedStartNode = flowNodeMap.get(startNode);
 		if (extendedStartNode == null)
 		{
 			return null;
@@ -772,7 +737,7 @@ public class FireModel
 
 		ExecutionState endState = baseTransition.getEndState();
 		FlowNode endNode = endState.getFlowNode();
-		ExtendedFlowNode extendedEndNode = (ExtendedFlowNode) flowNodeMap.get(endNode);
+		ExtendedFlowNode extendedEndNode = flowNodeMap.get(endNode);
 		if (extendedEndNode == null)
 		{
 			return null;
@@ -879,14 +844,11 @@ public class FireModel
 	 */
 	public Set<String> getDistinguishableSelectors(int filterPosition)
 	{
-		HashSet<String> distinguishable = new HashSet<String>();
+		Set<String> distinguishable = new HashSet<String>();
 		for (int i = 0; i < filterModules.length; i++)
 		{
-			Set selectors = executionModels[filterPosition][i].getEntranceMessages();
-			Iterator iter = selectors.iterator();
-			for (Object selector : selectors)
+			for (Message message : executionModels[filterPosition][i].getEntranceMessages())
 			{
-				Message message = (Message) selector;
 				if (!Message.checkEquals(message.getSelector(), Message.UNDISTINGUISHABLE_SELECTOR))
 				{
 					distinguishable.add(message.getSelector());
@@ -900,15 +862,20 @@ public class FireModel
 	private class ExtendedExecutionModel implements ExecutionModel
 	{
 		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2790476607699047697L;
+
+		/**
 		 * Indicates whether the ExecutionModel is for the input filters or for
 		 * the output filters. The value can be <code>INPUT_FILTERS</code> or
 		 * <code>OUTPUT_FILTERS</code>
 		 */
 		private int filterPosition;
 
-		private Hashtable entranceTable = new Hashtable();
+		private Map<Message, ExecutionState> entranceTable = new HashMap<Message, ExecutionState>();
 
-		private Hashtable stateCache = new Hashtable();
+		private Map<ExtendedExecutionState, ExtendedExecutionState> stateCache = new HashMap<ExtendedExecutionState, ExtendedExecutionState>();
 
 		/**
 		 * Indicates whether this ExecutionModel is a full model for the
@@ -920,16 +887,12 @@ public class FireModel
 		{
 			this.filterPosition = filterPosition;
 
-			String selector;
 			Message message;
 			ExecutionState state;
 			ExtendedExecutionState extendedState;
 
-			Set distinguishable = getDistinguishableSelectors(filterPosition);
-			Iterator iter = distinguishable.iterator();
-			for (Object aDistinguishable : distinguishable)
+			for (String selector : getDistinguishableSelectors(filterPosition))
 			{
-				selector = (String) aDistinguishable;
 				message = getEntranceMessage(selector);
 
 				state = executionModels[filterPosition][0].getEntranceState(message);
@@ -1016,16 +979,16 @@ public class FireModel
 			fullModel = false;
 		}
 
-		public Set getEntranceMessages()
+		public Set<Message> getEntranceMessages()
 		{
-			return entranceTable.keySet();
+			return Collections.unmodifiableSet(entranceTable.keySet());
 		}
 
 		public ExecutionState getEntranceState(Message message)
 		{
 			if (!fullModel || entranceTable.containsKey(message))
 			{
-				return (ExecutionState) entranceTable.get(message);
+				return entranceTable.get(message);
 			}
 			else
 			{
@@ -1038,9 +1001,18 @@ public class FireModel
 			}
 		}
 
-		public Iterator getEntranceStates()
+		/**
+		 * @deprecated use getEntranceStatesEx();
+		 */
+		@Deprecated
+		public Iterator<ExecutionState> getEntranceStates()
 		{
-			return entranceTable.values().iterator();
+			return getEntranceStatesEx().iterator();
+		}
+
+		public Collection<ExecutionState> getEntranceStatesEx()
+		{
+			return Collections.unmodifiableCollection(entranceTable.values());
 		}
 
 		public boolean isEntranceMessage(Message message)
@@ -1051,6 +1023,11 @@ public class FireModel
 
 	private class ExtendedExecutionState extends ExecutionState
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8073044026350947570L;
+
 		private ExtendedExecutionModel model;
 
 		private ExecutionState baseState;
@@ -1068,7 +1045,7 @@ public class FireModel
 		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, Message message,
 				int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
 		{
-			super((FlowNode) flowNodeMap.get(baseState.getFlowNode()), message, deriveMessage(message, baseState
+			super(flowNodeMap.get(baseState.getFlowNode()), message, deriveMessage(message, baseState
 					.getSubstitutionMessage()), baseState.getStateType());
 
 			this.model = model;
@@ -1095,7 +1072,7 @@ public class FireModel
 		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, Message message,
 				int stateType, int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int layer)
 		{
-			super((FlowNode) flowNodeMap.get(baseState.getFlowNode()), message, deriveMessage(message, baseState
+			super(flowNodeMap.get(baseState.getFlowNode()), message, deriveMessage(message, baseState
 					.getSubstitutionMessage()), stateType);
 
 			this.model = model;
@@ -1119,19 +1096,22 @@ public class FireModel
 			this.layer = layer;
 		}
 
-		public Iterator getOutTransitions()
+		@Override
+		public List<ExecutionTransition> getOutTransitionsEx()
 		{
 			if (outTransitions == null)
 			{
 				outTransitions = FireModel.this.getOutTransitions(this);
 			}
 
-			return outTransitions.iterator();
+			return Collections.unmodifiableList(outTransitions);
 		}
 	}
 
 	private class ExtendedExecutionTransition extends ExecutionTransition
 	{
+		private static final long serialVersionUID = -3865405947451006013L;
+
 		private ExtendedExecutionState startState;
 
 		private ExecutionTransition baseTransition;
@@ -1156,11 +1136,13 @@ public class FireModel
 			this.endState = endState;
 		}
 
+		@Override
 		public ExecutionState getStartState()
 		{
 			return startState;
 		}
 
+		@Override
 		public ExecutionState getEndState()
 		{
 			return endState;
@@ -1169,6 +1151,11 @@ public class FireModel
 
 	private class ExtendedFlowModel implements FlowModel
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 404106440986002390L;
+
 		/**
 		 * The start node.
 		 */
@@ -1182,17 +1169,17 @@ public class FireModel
 		/**
 		 * List containing all nodes
 		 */
-		private List nodes;
+		private List<FlowNode> nodes;
 
 		/**
 		 * List containing all transitions
 		 */
-		private List transitions;
+		private List<FlowTransition> transitions;
 
 		public ExtendedFlowModel()
 		{
-			this.nodes = new ArrayList();
-			this.transitions = new ArrayList();
+			nodes = new ArrayList<FlowNode>();
+			transitions = new ArrayList<FlowTransition>();
 		}
 
 		/**
@@ -1213,24 +1200,42 @@ public class FireModel
 
 		/**
 		 * @see Composestar.Core.FIRE2.model.FlowModel#getNodes()
+		 * @deprecated use getNodesEx();
 		 */
-		public Iterator getNodes()
+		@Deprecated
+		public Iterator<FlowNode> getNodes()
 		{
-			return nodes.iterator();
+			return getNodesEx().iterator();
+		}
+
+		public List<FlowNode> getNodesEx()
+		{
+			return Collections.unmodifiableList(nodes);
 		}
 
 		/**
 		 * @see Composestar.Core.FIRE2.model.FlowModel#getTransitions()
+		 * @deprecated use getTransitionsEx();
 		 */
-		public Iterator getTransitions()
+		@Deprecated
+		public Iterator<FlowTransition> getTransitions()
 		{
-			return transitions.iterator();
+			return getTransitionsEx().iterator();
 		}
 
+		public List<FlowTransition> getTransitionsEx()
+		{
+			return Collections.unmodifiableList(transitions);
+		}
 	}
 
 	private class ExtendedFlowNode implements FlowNode
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8744555097570198099L;
+
 		/**
 		 * The base FlowNode.
 		 */
@@ -1239,12 +1244,12 @@ public class FireModel
 		/**
 		 * The transitions originating from this node.
 		 */
-		private List transitions = new ArrayList();
+		private List<FlowTransition> transitions = new ArrayList<FlowTransition>();
 
 		/**
 		 * The names used when baseNode is <code>null</code>
 		 */
-		private HashSet names;
+		private Set<String> names;
 
 		/**
 		 * The repository entity when baseNode is <code>null</code>
@@ -1265,10 +1270,10 @@ public class FireModel
 		 */
 		public ExtendedFlowNode(String[] names, RepositoryEntity entity)
 		{
-			this.names = new HashSet();
-			for (int i = 0; i < names.length; i++)
+			this.names = new HashSet<String>();
+			for (String element : names)
 			{
-				this.names.add(names[i]);
+				this.names.add(element);
 			}
 
 			this.entity = entity;
@@ -1295,20 +1300,27 @@ public class FireModel
 
 		/**
 		 * @see Composestar.Core.FIRE2.model.FlowNode#getNames()
+		 * @deprecated use getNamesEx()
 		 */
-		public Iterator getNames()
+		@Deprecated
+		public Iterator<String> getNames()
+		{
+			return getNamesEx().iterator();
+		}
+
+		public Set<String> getNamesEx()
 		{
 			if (baseNode == null)
 			{
-				return names.iterator();
+				return Collections.unmodifiableSet(names);
 			}
 			else if (baseNode.containsName(FlowNode.END_NODE) && transitions.size() > 0)
 			{
-				return new ArrayList(0).iterator();
+				return Collections.emptySet();
 			}
 			else
 			{
-				return baseNode.getNames();
+				return baseNode.getNamesEx();
 			}
 		}
 
@@ -1332,7 +1344,7 @@ public class FireModel
 		 */
 		public FlowTransition getTransition(FlowNode endNode)
 		{
-			Iterator transitionIter = getTransitions();
+			Iterator<FlowTransition> transitionIter = getTransitions();
 			while (transitionIter.hasNext())
 			{
 				ExtendedFlowTransition transition = (ExtendedFlowTransition) transitionIter.next();
@@ -1347,16 +1359,28 @@ public class FireModel
 
 		/**
 		 * @see Composestar.Core.FIRE2.model.FlowNode#getTransitions()
+		 * @deprecated use getTransitions
 		 */
-		public Iterator getTransitions()
+		@Deprecated
+		public Iterator<FlowTransition> getTransitions()
 		{
-			return transitions.iterator();
+			return getTransitionsEx().iterator();
+		}
+
+		public List<FlowTransition> getTransitionsEx()
+		{
+			return Collections.unmodifiableList(transitions);
 		}
 
 	}
 
 	private class ExtendedFlowTransition implements FlowTransition
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 4920308529043611725L;
+
 		private FlowTransition baseTransition;
 
 		private ExtendedFlowNode startNode;

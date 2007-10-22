@@ -36,26 +36,26 @@ public class Operation implements Serializable
 
 	public String getResource()
 	{
-		return this.resource;
+		return resource;
 	}
 
 	public String getName()
 	{
-		return this.name;
+		return name;
 	}
 
 	public boolean isFork()
 	{
-		return this.getName().equals("fork") && this.getResource().equals("message");
+		return getName().equals("fork") && getResource().equals("message");
 	}
 
 	public boolean isProceed()
 	{
-		return this.getName().equals("proceed") && this.getResource().equals("message");
+		return getName().equals("proceed") && getResource().equals("message");
 	}
 
 	public boolean isReturn()
 	{
-		return this.getName().equals("return") && this.getResource().equals("message");
+		return getName().equals("return") && getResource().equals("message");
 	}
 }

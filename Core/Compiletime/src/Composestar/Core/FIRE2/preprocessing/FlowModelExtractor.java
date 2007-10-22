@@ -11,11 +11,13 @@ import groove.graph.Edge;
 import groove.graph.Graph;
 import groove.graph.Label;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
+import java.util.Set;
 
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
@@ -126,7 +128,7 @@ public class FlowModelExtractor
 
 		Collection col = graph.edgeSet(graphNode);
 		Iterator iter = col.iterator();
-		HashSet names = new HashSet();
+		Set<String> names = new HashSet<String>();
 		String label;
 		while (iter.hasNext())
 		{
@@ -155,26 +157,26 @@ public class FlowModelExtractor
 
 		private FlowNode endNode;
 
-		private Vector nodes;
+		private List<FlowNode> nodes;
 
-		private Vector transitions;
+		private List<FlowTransition> transitions;
 
 		public BasicFlowModel()
 		{
 			super();
 
-			nodes = new Vector();
-			transitions = new Vector();
+			nodes = new ArrayList<FlowNode>();
+			transitions = new ArrayList<FlowTransition>();
 		}
 
 		public void addNode(FlowNode node)
 		{
-			nodes.addElement(node);
+			nodes.add(node);
 		}
 
 		public void addTransition(FlowTransition transition)
 		{
-			transitions.addElement(transition);
+			transitions.add(transition);
 		}
 
 		/**
@@ -209,14 +211,32 @@ public class FlowModelExtractor
 			this.endNode = endNode;
 		}
 
-		public Iterator getNodes()
+		/**
+		 * @deprecated use getNodesEx()
+		 */
+		@Deprecated
+		public Iterator<FlowNode> getNodes()
 		{
-			return nodes.iterator();
+			return getNodesEx().iterator();
 		}
 
-		public Iterator getTransitions()
+		public List<FlowNode> getNodesEx()
 		{
-			return transitions.iterator();
+			return Collections.unmodifiableList(nodes);
+		}
+
+		/**
+		 * @deprecated use getTransitionsEx();
+		 */
+		@Deprecated
+		public Iterator<FlowTransition> getTransitions()
+		{
+			return getTransitionsEx().iterator();
+		}
+
+		public List<FlowTransition> getTransitionsEx()
+		{
+			return Collections.unmodifiableList(transitions);
 		}
 	}
 
@@ -224,14 +244,14 @@ public class FlowModelExtractor
 	{
 		private static final long serialVersionUID = 8046439221416988053L;
 
-		private HashSet names;
+		private Set<String> names;
 
 		private RepositoryEntity repositoryLink;
 
 		/**
 		 * Contains all transitions originating from this node.
 		 */
-		private Vector transitions;
+		private List<FlowTransition> transitions;
 
 		/**
 		 * Default constructor
@@ -239,29 +259,38 @@ public class FlowModelExtractor
 		 * @param names
 		 * @param repositoryLink
 		 */
-		public BasicFlowNode(HashSet names, RepositoryEntity repositoryLink)
+		public BasicFlowNode(Set<String> names, RepositoryEntity repositoryLink)
 		{
 			super();
 
 			this.names = names;
 			this.repositoryLink = repositoryLink;
 
-			transitions = new Vector();
+			transitions = new ArrayList<FlowTransition>();
 		}
 
 		public void addTransition(FlowTransition transition)
 		{
-			transitions.addElement(transition);
+			transitions.add(transition);
 		}
 
 		public void removeTransition(FlowTransition transition)
 		{
-			transitions.removeElement(transition);
+			transitions.remove(transition);
 		}
 
-		public Iterator getTransitions()
+		/**
+		 * @deprecated use getTransitionsEx()
+		 */
+		@Deprecated
+		public Iterator<FlowTransition> getTransitions()
 		{
-			return transitions.iterator();
+			return getTransitionsEx().iterator();
+		}
+
+		public List<FlowTransition> getTransitionsEx()
+		{
+			return Collections.unmodifiableList(transitions);
 		}
 
 		/**
@@ -272,12 +301,8 @@ public class FlowModelExtractor
 		 */
 		public FlowTransition getTransition(FlowNode endNode)
 		{
-			FlowTransition transition;
-			Enumeration enumer = transitions.elements();
-
-			while (enumer.hasMoreElements())
+			for (FlowTransition transition : transitions)
 			{
-				transition = (FlowTransition) enumer.nextElement();
 				if (transition.getEndNode().equals(endNode))
 				{
 					return transition;
@@ -289,10 +314,20 @@ public class FlowModelExtractor
 
 		/**
 		 * @return Returns the names.
+		 * @deprecated use getNamesEx();
 		 */
-		public Iterator getNames()
+		@Deprecated
+		public Iterator<String> getNames()
 		{
-			return names.iterator();
+			return getNamesEx().iterator();
+		}
+
+		/**
+		 * @return Returns the names.
+		 */
+		public Set<String> getNamesEx()
+		{
+			return Collections.unmodifiableSet(names);
 		}
 
 		public boolean containsName(String name)

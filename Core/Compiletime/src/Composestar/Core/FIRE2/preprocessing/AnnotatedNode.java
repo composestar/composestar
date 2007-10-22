@@ -9,28 +9,24 @@ package Composestar.Core.FIRE2.preprocessing;
 import groove.graph.DefaultNode;
 import groove.graph.Node;
 
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Arjan de Roo
  */
 public class AnnotatedNode extends DefaultNode
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4652113596047195818L;
 
 	/**
 	 * Dictionary containing the annotations.
 	 */
-	private Dictionary annotations;
+	private Map<String, Object> annotations;
 
 	public AnnotatedNode()
 	{
-		annotations = new Hashtable();
+		annotations = new HashMap<String, Object>();
 	}
 
 	/**
@@ -86,22 +82,22 @@ public class AnnotatedNode extends DefaultNode
 	/**
 	 * @see groove.graph.Node#newNode()
 	 */
+	@Override
 	public Node newNode()
 	{
 		return new AnnotatedNode();
 	}
 
+	@Override
 	public String toString()
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("AnnotatedNode\n");
 		buffer.append("  Annotations:\n");
-		// enum gives problems in JDK1.5
-		Enumeration enumer = annotations.elements();
-		while (enumer.hasMoreElements())
+		for (String key : annotations.keySet())
 		{
 			buffer.append("  - ");
-			buffer.append(enumer.nextElement());
+			buffer.append(key);
 			buffer.append('\n');
 		}
 

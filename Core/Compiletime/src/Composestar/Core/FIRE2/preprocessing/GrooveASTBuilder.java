@@ -8,8 +8,9 @@ import groove.graph.DefaultGraph;
 import groove.graph.Graph;
 import groove.graph.Node;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -53,18 +54,18 @@ public class GrooveASTBuilder
 	public final static String STAR_REPRESENTATION = "'*'";
 
 	/**
-	 * Hashtable containing a mapping from the String representation of the
+	 * Map containing a mapping from the String representation of the
 	 * MessageSelector to the corresponding selector-node, to make sure that
 	 * each distinct selector has only one node
 	 */
-	private Hashtable selectorTable;
+	private Map<String, Node> selectorTable;
 
 	/**
-	 * Hashtable containing a mapping from the String representation of the
-	 * Target to the corresponding target-node, to make sure that each distinct
-	 * target has only one node
+	 * Map containing a mapping from the String representation of the Target to
+	 * the corresponding target-node, to make sure that each distinct target has
+	 * only one node
 	 */
-	private Hashtable targetTable;
+	private Map<String, Node> targetTable;
 
 	/*
 	 * Edge labels in the AST
@@ -108,8 +109,8 @@ public class GrooveASTBuilder
 
 	public Graph buildAST(FilterModule filterModule, boolean forInputFilters)
 	{
-		selectorTable = new Hashtable();
-		targetTable = new Hashtable();
+		selectorTable = new HashMap<String, Node>();
+		targetTable = new HashMap<String, Node>();
 
 		Graph graph = new DefaultGraph();
 
@@ -121,7 +122,7 @@ public class GrooveASTBuilder
 		graph.addEdge(edge);
 
 		// iterate over filters:
-		Iterator filters;
+		Iterator<Filter> filters;
 		if (forInputFilters)
 		{
 			filters = filterModule.getInputFilterIterator();
@@ -137,7 +138,7 @@ public class GrooveASTBuilder
 		int i = 0; // vague leftover of the for loop
 		while (filters.hasNext())
 		{
-			filter = (Filter) filters.next();
+			filter = filters.next();
 
 			// create filternode:
 			filterNode = buildFilterNode(filter, graph);
@@ -310,14 +311,14 @@ public class GrooveASTBuilder
 		addActionInformation(graph, rejectReturnNode, filterType.getRejectReturnAction());
 
 		// iterate over filterelements:
-		Iterator filters = filter.getFilterElementIterator();
+		Iterator<FilterElement> filters = filter.getFilterElementIterator();
 		FilterElement filterElement;
 		Node filterElementNode;
 		AnnotatedNode operatorNode = null;
 		int i = 0;
 		while (filters.hasNext())
 		{
-			filterElement = (FilterElement) filters.next();
+			filterElement = filters.next();
 
 			// create filternode:
 			filterElementNode = buildFilterElementNode(filterElement, graph);
@@ -494,11 +495,11 @@ public class GrooveASTBuilder
 		graph.addEdge(edge);
 
 		// matchingparts:
-		Iterator matchingParts = pattern.getMatchingPartsIterator();
+		Iterator<MatchingPart> matchingParts = pattern.getMatchingPartsIterator();
 		Node previousNode = null;
 		while (matchingParts.hasNext())
 		{
-			MatchingPart matchingPart = (MatchingPart) matchingParts.next();
+			MatchingPart matchingPart = matchingParts.next();
 			Node matchingPartNode = buildMatchingPartNode(matchingPart, graph);
 			edge = new AnnotatedEdge(patternNode, MATCHING_PART_EDGE, matchingPartNode);
 			graph.addEdge(edge);
@@ -567,7 +568,7 @@ public class GrooveASTBuilder
 		graph.addEdge(edge);
 
 		// selector:
-		Node selectorNode = (Node) selectorTable.get(selector.getName());
+		Node selectorNode = selectorTable.get(selector.getName());
 		if (selectorNode == null)
 		{
 			selectorNode = buildSelectorNode(selector, graph);
@@ -577,7 +578,7 @@ public class GrooveASTBuilder
 		graph.addEdge(edge);
 
 		// target:
-		Node targetNode = (Node) targetTable.get(target.getName());
+		Node targetNode = targetTable.get(target.getName());
 		if (targetNode == null)
 		{
 			targetNode = buildTargetNode(target, graph);
@@ -616,7 +617,7 @@ public class GrooveASTBuilder
 
 		// selector:
 		MessageSelector selector = matchingPart.getSelector();
-		Node selectorNode = (Node) selectorTable.get(selector.getName());
+		Node selectorNode = selectorTable.get(selector.getName());
 		if (selectorNode == null)
 		{
 			selectorNode = buildSelectorNode(selector, graph);
@@ -627,7 +628,7 @@ public class GrooveASTBuilder
 
 		// target:
 		Target target = matchingPart.getTarget();
-		Node targetNode = (Node) targetTable.get(target.getName());
+		Node targetNode = targetTable.get(target.getName());
 		if (targetNode == null)
 		{
 			targetNode = buildTargetNode(target, graph);

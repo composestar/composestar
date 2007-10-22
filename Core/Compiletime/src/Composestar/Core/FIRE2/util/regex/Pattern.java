@@ -4,8 +4,10 @@
  */
 package Composestar.Core.FIRE2.util.regex;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -19,7 +21,7 @@ public class Pattern
 
 	private Pattern(String pattern) throws PatternParseException
 	{
-		this.patternString = pattern;
+		patternString = pattern;
 		automaton = Parser.parse(pattern);
 	}
 
@@ -51,6 +53,7 @@ public class Pattern
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return patternString;
@@ -229,7 +232,7 @@ public class Pattern
 			{
 				lexer.nextToken();
 
-				Vector result = new Vector();
+				List<String> result = new ArrayList<String>();
 
 				while (token.type != Token.RIGHT_BRACKET)
 				{
@@ -240,7 +243,7 @@ public class Pattern
 								+ ". Expected word.");
 					}
 
-					result.addElement(token.getValue());
+					result.add(token.getValue());
 
 					token = lexer.nextToken();
 					if (token.type != Token.RIGHT_BRACKET && token.type != Token.UNION_OPERATOR)
@@ -250,7 +253,7 @@ public class Pattern
 					}
 				}
 
-				return (String[]) result.toArray(new String[result.size()]);
+				return result.toArray(new String[result.size()]);
 			}
 			else
 			{
@@ -271,7 +274,7 @@ public class Pattern
 		public Lexer(String pattern)
 		{
 			this.pattern = pattern.replaceAll("\\s", "");
-			this.pos = 0;
+			pos = 0;
 		}
 
 		public boolean hasMoreTokens()

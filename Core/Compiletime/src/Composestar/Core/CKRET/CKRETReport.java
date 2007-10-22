@@ -36,7 +36,7 @@ public class CKRETReport implements Serializable
 		analysis = inanalysis;
 		selected = inselected;
 
-		this.addToConcern();
+		addToConcern();
 	}
 
 	/**
@@ -45,8 +45,8 @@ public class CKRETReport implements Serializable
 	 */
 	public void addToConcern()
 	{
-		Concern c = this.analysis.getConcern();
-		List reports = (ArrayList) c.getDynObject("CKRETReports");
+		Concern c = analysis.getConcern();
+		List reports = (List) c.getDynObject("CKRETReports");
 		// if this is not available yet, create it
 		if (reports == null)
 		{
@@ -59,16 +59,16 @@ public class CKRETReport implements Serializable
 
 	public FilterModuleOrder getOrder()
 	{
-		return this.order;
+		return order;
 	}
 
 	public boolean getSelected()
 	{
-		return this.selected;
+		return selected;
 	}
 
 	public FilterSetAnalysis getAnalysis()
 	{
-		return this.analysis;
+		return analysis;
 	}
 }

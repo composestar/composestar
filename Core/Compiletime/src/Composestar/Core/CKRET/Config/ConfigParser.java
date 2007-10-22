@@ -73,25 +73,25 @@ public class ConfigParser extends DefaultHandler
 	 */
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
-		if (local_name.equalsIgnoreCase("filters"))
+		if (raw_name.equalsIgnoreCase("filters"))
 		{
 			// System.err.println("Found filters section...");
 			FiltersHandler sfxmlhandler = new FiltersHandler(this, parser, this.repository);
 			this.parser.setContentHandler(sfxmlhandler);
 		}
-		else if (local_name.equalsIgnoreCase("actions"))
+		else if (raw_name.equalsIgnoreCase("actions"))
 		{
 			// System.err.println("Found actions section...");
 			ActionsHandler saxmlhandler = new ActionsHandler(this, parser, this.repository);
 			this.parser.setContentHandler(saxmlhandler);
 		}
-		else if (local_name.equalsIgnoreCase("constraints"))
+		else if (raw_name.equalsIgnoreCase("constraints"))
 		{
 			// System.err.println("Found constraints section...");
 			ConstraintsHandler nonconflicthandler = new ConstraintsHandler(this, parser, this.repository);
 			this.parser.setContentHandler(nonconflicthandler);
 		}
-		else if (local_name.equalsIgnoreCase("resources"))
+		else if (raw_name.equalsIgnoreCase("resources"))
 		{
 			// System.err.println("Found resources section...");
 			ResourceHandler nonconflicthandler = new ResourceHandler(this, parser, this.repository);

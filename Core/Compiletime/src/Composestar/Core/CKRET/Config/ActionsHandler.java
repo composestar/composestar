@@ -48,14 +48,14 @@ public class ActionsHandler extends DefaultHandler
 	 */
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
-		if (local_name.equalsIgnoreCase("action"))
+		if (raw_name.equalsIgnoreCase("action"))
 		{
 			// this.action = repository.getAction(amap.getValue("name"));
 			// String endOfSet = amap.getValue("endofset");
 			// if( "true".equals(endOfSet))
 			// this.action.setEndOfSet();
 		}
-		else if (local_name.equalsIgnoreCase("operation"))
+		else if (raw_name.equalsIgnoreCase("operation"))
 		{
 			Operation op = new Operation(amap.getValue("name"), amap.getValue("resource"));
 			// this.action.addOperation(op);
@@ -70,7 +70,7 @@ public class ActionsHandler extends DefaultHandler
 	 */
 	public void endElement(String uri, String local_name, String raw_name)
 	{
-		if (local_name.equalsIgnoreCase("actions"))
+		if (raw_name.equalsIgnoreCase("actions"))
 		{
 			this.parser.setContentHandler(this.returnhandler);
 		}

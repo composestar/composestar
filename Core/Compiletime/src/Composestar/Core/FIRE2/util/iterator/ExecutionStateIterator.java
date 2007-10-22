@@ -7,7 +7,9 @@ package Composestar.Core.FIRE2.util.iterator;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.Stack;
 
 import Composestar.Core.FIRE2.model.ExecutionModel;
@@ -17,18 +19,18 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
 /**
  * @author Arjan de Roo
  */
-public class ExecutionStateIterator implements Iterator
+public class ExecutionStateIterator implements Iterator<ExecutionState>
 {
-	public Stack unvisitedStates = new Stack();
+	public Stack<ExecutionState> unvisitedStates = new Stack<ExecutionState>();
 
-	public HashSet iteratedStates = new HashSet();
+	public Set<ExecutionState> iteratedStates = new HashSet<ExecutionState>();
 
 	public ExecutionStateIterator(ExecutionModel model)
 	{
-		Iterator it = model.getEntranceStates();
+		Iterator<ExecutionState> it = model.getEntranceStates();
 		while (it.hasNext())
 		{
-			Object obj = it.next();
+			ExecutionState obj = it.next();
 			unvisitedStates.push(obj);
 			iteratedStates.add(obj);
 		}
@@ -45,7 +47,7 @@ public class ExecutionStateIterator implements Iterator
 	/**
 	 * @see java.util.Iterator#next()
 	 */
-	public Object next()
+	public ExecutionState next()
 	{
 		ExecutionState state;
 
@@ -71,12 +73,9 @@ public class ExecutionStateIterator implements Iterator
 	private void addNextStates(ExecutionState state)
 	{
 		ExecutionState nextState;
-
-		Iterator it = state.getOutTransitions();
-		ArrayList addStates = new ArrayList();
-		while (it.hasNext())
+		List<ExecutionState> addStates = new ArrayList<ExecutionState>();
+		for (ExecutionTransition transition : state.getOutTransitionsEx())
 		{
-			ExecutionTransition transition = (ExecutionTransition) it.next();
 			nextState = transition.getEndState();
 
 			if (!iteratedStates.contains(nextState))
@@ -89,7 +88,8 @@ public class ExecutionStateIterator implements Iterator
 		// Add states to unvisitedStates stack in reversed order of the
 		// transition iterator, to ensure that the endstate of an earlier
 		// transition is visited before the endstate of a later transition.
-		for (int i=addStates.size()-1; i>=0; i--){
+		for (int i = addStates.size() - 1; i >= 0; i--)
+		{
 			unvisitedStates.push(addStates.get(i));
 		}
 	}

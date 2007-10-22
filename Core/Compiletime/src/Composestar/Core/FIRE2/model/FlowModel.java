@@ -8,6 +8,7 @@ package Composestar.Core.FIRE2.model;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Arjan
@@ -27,11 +28,25 @@ public interface FlowModel extends Serializable
 
 	/**
 	 * @return Returns all nodes
+	 * @deprecated use getNodesEx()
 	 */
-	public Iterator getNodes();
+	@Deprecated
+	public Iterator<FlowNode> getNodes();
+
+	/**
+	 * @return returns readonly list of all nodes
+	 */
+	public List<FlowNode> getNodesEx();
+
+	/**
+	 * @return Returns all transitions
+	 * @deprecated use getTransitionsEx();
+	 */
+	@Deprecated
+	public Iterator<FlowTransition> getTransitions();
 
 	/**
 	 * @return Returns all transitions
 	 */
-	public Iterator getTransitions();
+	public List<FlowTransition> getTransitionsEx();
 }

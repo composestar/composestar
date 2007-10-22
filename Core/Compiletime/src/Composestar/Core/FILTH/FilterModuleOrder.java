@@ -9,7 +9,6 @@
  */
 package Composestar.Core.FILTH;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -59,7 +58,7 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 		orderQN = new Vector();
 	}
 
-	public FilterModuleOrder(LinkedList inOrder)
+	public FilterModuleOrder(List inOrder)
 	{
 		order = new Vector();
 		orderQN = new Vector();

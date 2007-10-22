@@ -43,12 +43,12 @@ public class Constraint
 
 	public String getResource()
 	{
-		return this.resource;
+		return resource;
 	}
 
 	public String getMessage()
 	{
-		return this.message;
+		return message;
 	}
 
 	// public boolean conflicts(String sequence)

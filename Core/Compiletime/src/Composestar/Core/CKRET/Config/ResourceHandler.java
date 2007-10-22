@@ -66,7 +66,7 @@ public class ResourceHandler extends DefaultHandler
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
 		Resource resource;
-		if (local_name.equalsIgnoreCase("resource"))
+		if (raw_name.equalsIgnoreCase("resource"))
 		{
 			resource = new Resource(amap.getValue("name"));
 			resources.add(resource);
@@ -86,7 +86,7 @@ public class ResourceHandler extends DefaultHandler
 	 */
 	public void endElement(String uri, String local_name, String raw_name)
 	{
-		if (local_name.equalsIgnoreCase("resources"))
+		if (raw_name.equalsIgnoreCase("resources"))
 		{
 			this.parser.setContentHandler(this.returnhandler);
 		}

@@ -18,10 +18,9 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.FILTH.FilterModuleOrder;
-import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FireModel;
-import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 
 /**
  *
@@ -36,16 +35,13 @@ public class FilterSetAnalysis implements Serializable
 
 	private List<Filter> filters;
 
-	private List executions;
-
-	private List<List> conflictingExecutions;
+	private List<List<Conflict>> conflictingExecutions;
 
 	public FilterSetAnalysis(Concern inconcern, FilterModuleOrder inorder)
 	{
 		concern = inconcern;
 		order = inorder;
-		executions = new ArrayList();
-		conflictingExecutions = new ArrayList<List>();
+		conflictingExecutions = new ArrayList<List<Conflict>>();
 	}
 
 	public List<Filter> getFilters()
@@ -55,14 +51,14 @@ public class FilterSetAnalysis implements Serializable
 
 	public void analyze()
 	{
-		filters = getFilterList(order.orderAsList());
+		filters = getFilterList(order.filterModuleSIList());
 
 		FireModel fireModel = new FireModel(concern, order);
 
 		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS);
-		
+
 		AbstractVM avm = new AbstractVM();
-		List conflicts = avm.analyze(concern, execModel);
+		List<Conflict> conflicts = avm.analyze(concern, execModel);
 		if (!conflicts.isEmpty())
 		{
 			conflictingExecutions.add(conflicts);
@@ -74,21 +70,20 @@ public class FilterSetAnalysis implements Serializable
 		return conflictingExecutions.size();
 	}
 
-	public List executionConflicts()
+	public List<List<Conflict>> executionConflicts()
 	{
 		return conflictingExecutions;
 	}
 
-	protected static List<Filter> getFilterList(List filterModules)
+	protected static List<Filter> getFilterList(List<FilterModuleSuperImposition> filterModules)
 	{
 		List<Filter> list = new ArrayList<Filter>();
 
-		for (Object filterModule : filterModules)
+		for (FilterModuleSuperImposition fmsi : filterModules)
 		{
-			String name = (String) filterModule;
-			//if (!InnerDispatcher.isDefaultDispatch(name))
+			// if (!InnerDispatcher.isDefaultDispatch(name))
 			{
-				FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID(name);
+				FilterModule fm = fmsi.getFilterModule().getRef();
 				Iterator ifItr = fm.getInputFilterIterator();
 
 				while (ifItr.hasNext())

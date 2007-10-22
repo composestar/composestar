@@ -1,9 +1,10 @@
 package Composestar.Core.CKRET;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
@@ -23,7 +24,9 @@ import Composestar.Core.LAMA.Type;
 
 public class ResourceOperationLabeler implements Labeler
 {
-	private Hashtable operationTable;
+	private static final Pattern grammer = Pattern.compile("[a-zA-Z]+\\.[a-zA-Z]+(,[a-zA-Z]+\\.[a-zA-Z]+)*");
+
+	private Map<LabelResourcePair, LabelSequence> operationTable;
 
 	private LabelSequence defaultSeq = new LabelSequence();
 
@@ -31,7 +34,7 @@ public class ResourceOperationLabeler implements Labeler
 
 	public ResourceOperationLabeler()
 	{
-		operationTable = new Hashtable();
+		operationTable = new HashMap<LabelResourcePair, LabelSequence>();
 
 		// condition:
 		LabelSequence seq = new LabelSequence();
@@ -106,7 +109,7 @@ public class ResourceOperationLabeler implements Labeler
 
 	public void setCurrentResource(String resource)
 	{
-		this.currentResource = resource;
+		currentResource = resource;
 	}
 
 	public LabelSequence getLabels(ExecutionTransition transition)
@@ -127,8 +130,9 @@ public class ResourceOperationLabeler implements Labeler
 		}
 		else
 		{
-			LabelSequence seq = (LabelSequence) operationTable.get(new LabelResourcePair(transition.getLabel(),
-					currentResource));
+			// To get filter actions, check startState
+
+			LabelSequence seq = operationTable.get(new LabelResourcePair(transition.getLabel(), currentResource));
 
 			if (seq == null)
 			{
@@ -141,11 +145,17 @@ public class ResourceOperationLabeler implements Labeler
 		}
 	}
 
+	/**
+	 * Get labels for a Meta filter action.
+	 * 
+	 * @param transition
+	 * @return
+	 * @throws ModuleException
+	 */
 	private LabelSequence getMetaLabels(ExecutionTransition transition) throws ModuleException
 	{
 		ExecutionState metaState = transition.getStartState();
 
-		Pattern grammer = Pattern.compile("[a-zA-Z]+\\.[a-zA-Z]+(,[a-zA-Z]+\\.[a-zA-Z]+)*");
 		// DataStore datastore = DataStore.instance();
 		// for (Iterator it = datastore.getAllInstancesOf(Filter.class);
 		// it.hasNext();)
@@ -198,7 +208,7 @@ public class ResourceOperationLabeler implements Labeler
 										CKRET.MODULE_NAME);
 							}
 							StringTokenizer st = new StringTokenizer(dna.getValue().replaceAll("\"", ""), ",");
-							List metaOperations = new ArrayList();
+							List<Operation> metaOperations = new ArrayList<Operation>();
 
 							while (st.hasMoreTokens())
 							{
@@ -236,7 +246,7 @@ public class ResourceOperationLabeler implements Labeler
 
 						StringTokenizer st = new StringTokenizer(refMes.replaceAll("\"", ""), ",");
 
-						List metaOperations = new ArrayList();
+						List<Operation> metaOperations = new ArrayList<Operation>();
 
 						while (st.hasMoreTokens())
 						{
@@ -287,6 +297,7 @@ public class ResourceOperationLabeler implements Labeler
 			resource = inresource;
 		}
 
+		@Override
 		public boolean equals(Object obj)
 		{
 			if (!(obj instanceof LabelResourcePair))
@@ -296,9 +307,10 @@ public class ResourceOperationLabeler implements Labeler
 
 			LabelResourcePair pair = (LabelResourcePair) obj;
 
-			return this.label.equals(pair.label) && this.resource.equals(pair.resource);
+			return label.equals(pair.label) && resource.equals(pair.resource);
 		}
 
+		@Override
 		public int hashCode()
 		{
 			return label.hashCode() + resource.hashCode();

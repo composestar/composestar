@@ -29,16 +29,20 @@ public class Message implements Serializable
 
 	/**
 	 * The star target. Only used in matching parts and substitution parts.
+	 * 
 	 * @deprecated Use SELF_TARGET or INNER_TARGET
 	 */
+	@Deprecated
 	public final static Target STAR_TARGET = getStarTarget();
-	
+
 	/**
 	 * The star selector. Only used in matching parts and substitution parts.
+	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public final static String STAR_SELECTOR = "*";
-	
+
 	/**
 	 * The inner target
 	 */
@@ -69,6 +73,7 @@ public class Message implements Serializable
 	 * @deprecated
 	 * @return
 	 */
+	@Deprecated
 	private static Target getStarTarget()
 	{
 		Target target = new Target();
@@ -154,6 +159,7 @@ public class Message implements Serializable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj == null || !(obj instanceof Message))
@@ -168,6 +174,7 @@ public class Message implements Serializable
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return selector.hashCode() + target.hashCode();
@@ -198,6 +205,7 @@ public class Message implements Serializable
 		return target1.getName().equals(target2.getName());
 	}
 
+	@Override
 	public String toString()
 	{
 		return target.getName() + "." + selector;

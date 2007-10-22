@@ -30,7 +30,7 @@ import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * @author Arjan de Roo
@@ -38,6 +38,8 @@ import Composestar.Utils.Debug;
 public class Preprocessor implements CTCommonModule
 {
 	private final static String MODULE_NAME = "FIRE";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	private LayedOutXml graphLoader;
 
@@ -89,22 +91,22 @@ public class Preprocessor implements CTCommonModule
 
 	public void preprocess()
 	{
-		Iterator moduleIter = DataStore.instance().getAllInstancesOf(FilterModule.class);
+		Iterator<FilterModule> moduleIter = DataStore.instance().getAllInstancesOf(FilterModule.class);
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Starting FIRE Preprocessing");
+		logger.debug("Starting FIRE Preprocessing");
 
 		while (moduleIter.hasNext())
 		{
-			FilterModule module = (FilterModule) moduleIter.next();
+			FilterModule module = moduleIter.next();
 			preprocessModule(module);
 		}
 
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "FIRE Preprocessing done");
+		logger.debug("FIRE Preprocessing done");
 	}
 
 	private void preprocessModule(FilterModule module)
 	{
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Preprocessing Filter Module: " + module.getName());
+		logger.debug("Preprocessing Filter Module: " + module.getName());
 
 		// build AST:
 		Graph grooveAstIF = buildAst(module, true);
@@ -140,14 +142,14 @@ public class Preprocessor implements CTCommonModule
 		{
 			URL genUrl = this.getClass().getResource(GENERATE_FLOW_GRAMMAR_PATH);
 			String fileName = genUrl.getFile().replaceAll("%20", " ");
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Loading grammar: " + fileName);
+			logger.debug("Loading grammar: " + fileName);
 			if (fileName.indexOf('!') >= 0)
 			{
 				// load from jar:
 				JarGpsGrammar jarGpsLoader = new JarGpsGrammar();
 
-				this.generateFlowGrammar = (RuleViewGrammar) jarGpsLoader.unmarshal(GENERATE_FLOW_GRAMMAR_PATH);
-				this.runtimeGrammar = (RuleViewGrammar) jarGpsLoader.unmarshal(RUNTIME_GRAMMAR_PATH);
+				generateFlowGrammar = (RuleViewGrammar) jarGpsLoader.unmarshal(GENERATE_FLOW_GRAMMAR_PATH);
+				runtimeGrammar = (RuleViewGrammar) jarGpsLoader.unmarshal(RUNTIME_GRAMMAR_PATH);
 			}
 			else
 			{
@@ -157,11 +159,11 @@ public class Preprocessor implements CTCommonModule
 				File f = new File(genUrl.getFile().replaceAll("%20", " "));
 				RuleViewGrammar rvg = (RuleViewGrammar) gpsLoader.unmarshal(f);
 
-				this.generateFlowGrammar = rvg;
+				generateFlowGrammar = rvg;
 
 				URL runUrl = this.getClass().getResource(RUNTIME_GRAMMAR_PATH);
-				this.runtimeGrammar = (RuleViewGrammar) gpsLoader.unmarshal(new File(runUrl.getFile().replaceAll("%20",
-						" ")));
+				runtimeGrammar = (RuleViewGrammar) gpsLoader
+						.unmarshal(new File(runUrl.getFile().replaceAll("%20", " ")));
 			}
 		}
 		catch (Exception exc)

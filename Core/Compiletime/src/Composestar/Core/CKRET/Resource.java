@@ -26,7 +26,7 @@ public class Resource
 
 	public Resource(String inname)
 	{
-		this.name = inname;
+		name = inname;
 		// this.history = new StringBuffer();
 		// this.fancyhistory = new StringBuffer();
 	}
@@ -46,7 +46,7 @@ public class Resource
 
 	public String getName()
 	{
-		return this.name;
+		return name;
 	}
 
 	// public String sequence()
@@ -61,7 +61,7 @@ public class Resource
 	//	
 	public boolean operationIsInAlphabet(String operation)
 	{
-		for (Object anAlphabet : this.alphabet)
+		for (Object anAlphabet : alphabet)
 		{
 			String str = (String) anAlphabet;
 			if (str.equals(operation))
@@ -74,6 +74,6 @@ public class Resource
 
 	public void addToAlphabet(String operation)
 	{
-		this.alphabet.add(operation);
+		alphabet.add(operation);
 	}
 }

@@ -22,12 +22,12 @@ public class ConcernAnalysis
 {
 	private Concern concern;
 
-	private Map<FilterModuleOrder,FilterSetAnalysis> orders;
+	private Map<FilterModuleOrder, FilterSetAnalysis> orders;
 
 	public ConcernAnalysis(Concern inconcern)
 	{
 		concern = inconcern;
-		orders = new HashMap<FilterModuleOrder,FilterSetAnalysis>();
+		orders = new HashMap<FilterModuleOrder, FilterSetAnalysis>();
 	}
 
 	public Concern getConcern()

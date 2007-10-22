@@ -8,6 +8,7 @@ package Composestar.Core.FIRE2.model;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Arjan de Roo
@@ -62,7 +63,6 @@ public abstract class ExecutionState implements Serializable
 		return substitutionMessage;
 	}
 
-
 	/**
 	 * @return Returns the stateType.
 	 */
@@ -71,8 +71,19 @@ public abstract class ExecutionState implements Serializable
 		return stateType;
 	}
 
-	public abstract Iterator getOutTransitions();
+	/**
+	 * @deprecated use getOutTransitionsEx()
+	 * @return
+	 */
+	@Deprecated
+	public final Iterator<ExecutionTransition> getOutTransitions()
+	{
+		return getOutTransitionsEx().iterator();
+	}
 
+	public abstract List<ExecutionTransition> getOutTransitionsEx();
+
+	@Override
 	public int hashCode()
 	{
 		int hashCode = flowNode.hashCode() + message.hashCode();
@@ -80,6 +91,7 @@ public abstract class ExecutionState implements Serializable
 		return hashCode;
 	}
 
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (!(obj instanceof ExecutionState))
@@ -88,17 +100,17 @@ public abstract class ExecutionState implements Serializable
 		}
 
 		ExecutionState state = (ExecutionState) obj;
-		if (this.flowNode != state.flowNode)
+		if (flowNode != state.flowNode)
 		{
 			return false;
 		}
 
-		if (!this.message.equals(state.message))
+		if (!message.equals(state.message))
 		{
 			return false;
 		}
 
-		if (!this.substitutionMessage.equals(state.substitutionMessage))
+		if (!substitutionMessage.equals(state.substitutionMessage))
 		{
 			return false;
 		}

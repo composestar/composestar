@@ -51,20 +51,20 @@ public class FiltersHandler extends DefaultHandler
 	 */
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
-		if (local_name.equalsIgnoreCase("filter"))
+		if (raw_name.equalsIgnoreCase("filter"))
 		{
 			String type = amap.getValue("type");
 			// System.err.println("Reading filter " + type);
 			// fad = repository.getDescription(type);
 		}
-		else if (local_name.equalsIgnoreCase("accept"))
+		else if (raw_name.equalsIgnoreCase("accept"))
 		{
 			// System.err.println("Accept action for " + fad.getFilterType() + "
 			// is " + amap.getValue("action"));
 			// fad.setAction(amap.getValue("action"), true);
 
 		}
-		else if (local_name.equalsIgnoreCase("reject"))
+		else if (raw_name.equalsIgnoreCase("reject"))
 		{
 			// fad.setAction(amap.getValue("action"), false);
 			// System.err.println("Reject action for " + fad.getFilterType() + "
@@ -80,7 +80,7 @@ public class FiltersHandler extends DefaultHandler
 	 */
 	public void endElement(String uri, String local_name, String raw_name)
 	{
-		if (local_name.equalsIgnoreCase("filters"))
+		if (raw_name.equalsIgnoreCase("filters"))
 		{
 			this.parser.setContentHandler(this.returnhandler);
 		}
