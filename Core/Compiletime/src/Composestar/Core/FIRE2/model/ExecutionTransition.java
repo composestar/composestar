@@ -28,11 +28,12 @@ public abstract class ExecutionTransition implements Serializable
 
 	public final static String CONTINUE_ACTION_REJECT = "<ContinueAction-reject>";
 
-	public final static String CONTINUE_ACTION_GENERALIZATION = "ContinueAction";
-
-	public final static String DISPATCH_ACTION = "<DispatchAction>";
-
-	public final static String ERROR_ACTION = "<ErrorAction>";
+	// No longer used
+	// public final static String CONTINUE_ACTION_GENERALIZATION =
+	// "ContinueAction";
+	// public final static String DISPATCH_ACTION = "<DispatchAction>";
+	// public final static String ERROR_ACTION = "<ErrorAction>";
+	// public final static String META_ACTION = "<MetaAction>";
 
 	public final static String FILTER = "<Filter>";
 
@@ -47,8 +48,6 @@ public abstract class ExecutionTransition implements Serializable
 	public final static String INIT_VALUE_VALUE = "<Init-value-value>";
 
 	public final static String INIT_GENERALIZATION = "Init";
-
-	public final static String META_ACTION = "<MetaAction>";
 
 	public final static String NAME_MATCHING_PART_ANY_FALSE = "<NameMatchingPart-any-false>";
 

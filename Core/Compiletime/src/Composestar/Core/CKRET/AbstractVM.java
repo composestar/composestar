@@ -22,13 +22,25 @@ import Composestar.Core.FIRE2.util.regex.Matcher;
  */
 public class AbstractVM
 {
+	// TODO should be stored in common resources
+	protected static ResourceOperationLabeler labeler;
 
 	public AbstractVM()
-	{}
+	{
+		if (labeler == null)
+		{
+			createLabeler();
+		}
+	}
+
+	protected static void createLabeler()
+	{
+		labeler = new ResourceOperationLabeler();
+	}
 
 	public List<Conflict> analyze(Concern concern, ExecutionModel model)
 	{
-		ResourceOperationLabeler labeler = new ResourceOperationLabeler();
+		labeler.setCurrentConcern(concern);
 
 		List<Conflict> conflicts = new ArrayList<Conflict>();
 

@@ -11,11 +11,15 @@ import java.util.regex.Pattern;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
+import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.util.regex.LabelSequence;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.LAMA.Annotation;
@@ -31,6 +35,18 @@ public class ResourceOperationLabeler implements Labeler
 	private LabelSequence defaultSeq = new LabelSequence();
 
 	private String currentResource;
+
+	private Concern concern;
+
+	// private static final String CONTINUE_ACTION = "ContinueAction";
+
+	private static final String DISPATCH_ACTION = "DispatchAction";
+
+	private static final String META_ACTION = "MetaAction";
+
+	private static final String SUBSTITUTION_ACTION = "SubstitutionAction";
+
+	private static final String ERROR_ACTION = "ErrorAction";
 
 	public ResourceOperationLabeler()
 	{
@@ -72,39 +88,39 @@ public class ResourceOperationLabeler implements Labeler
 		// error-action:
 		seq = new LabelSequence();
 		seq.addLabel("discard");
-		operationTable.put(new LabelResourcePair(ExecutionTransition.ERROR_ACTION, "args"), seq);
+		operationTable.put(new LabelResourcePair(ERROR_ACTION, "args"), seq);
 
 		seq = new LabelSequence();
 		seq.addLabel("error");
 		seq.addLabel("return");
-		operationTable.put(new LabelResourcePair(ExecutionTransition.ERROR_ACTION, "message"), seq);
+		operationTable.put(new LabelResourcePair(ERROR_ACTION, "message"), seq);
 
 		// dispatch-action:
 		seq = new LabelSequence();
 		seq.addLabel("dispatch");
 		seq.addLabel("return");
-		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "message"), seq);
+		operationTable.put(new LabelResourcePair(DISPATCH_ACTION, "message"), seq);
 
 		seq = new LabelSequence();
 		seq.addLabel("write");
-		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "target"), seq);
+		operationTable.put(new LabelResourcePair(DISPATCH_ACTION, "target"), seq);
 
 		seq = new LabelSequence();
 		seq.addLabel("write");
-		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "selector"), seq);
+		operationTable.put(new LabelResourcePair(DISPATCH_ACTION, "selector"), seq);
 
 		seq = new LabelSequence();
 		seq.addLabel("read");
-		operationTable.put(new LabelResourcePair(ExecutionTransition.DISPATCH_ACTION, "args"), seq);
+		operationTable.put(new LabelResourcePair(DISPATCH_ACTION, "args"), seq);
 
 		// substitution action:
 		seq = new LabelSequence();
 		seq.addLabel("write");
-		operationTable.put(new LabelResourcePair(ExecutionTransition.SUBSTITUTION_ACTION, "target"), seq);
+		operationTable.put(new LabelResourcePair(SUBSTITUTION_ACTION, "target"), seq);
 
 		seq = new LabelSequence();
 		seq.addLabel("write");
-		operationTable.put(new LabelResourcePair(ExecutionTransition.SUBSTITUTION_ACTION, "selector"), seq);
+		operationTable.put(new LabelResourcePair(SUBSTITUTION_ACTION, "selector"), seq);
 	}
 
 	public void setCurrentResource(String resource)
@@ -112,9 +128,38 @@ public class ResourceOperationLabeler implements Labeler
 		currentResource = resource;
 	}
 
+	public void setCurrentConcern(Concern curConcern)
+	{
+		concern = curConcern;
+	}
+
 	public LabelSequence getLabels(ExecutionTransition transition)
 	{
-		if (transition.getLabel().equals(ExecutionTransition.META_ACTION))
+		// get action name
+		String actionName = null;
+		FlowNode fnode = transition.getStartState().getFlowNode();
+		if ((fnode != null) && (fnode.containsName(FlowNode.FILTER_ACTION_NODE)))
+		{
+			FilterType ftype = ((Filter) fnode.getRepositoryLink()).getFilterType();
+			if (fnode.containsName(FlowNode.ACCEPT_CALL_ACTION_NODE))
+			{
+				actionName = ftype.getAcceptCallAction().getName();
+			}
+			else if (fnode.containsName(FlowNode.REJECT_CALL_ACTION_NODE))
+			{
+				actionName = ftype.getRejectCallAction().getName();
+			}
+			else if (fnode.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE))
+			{
+				actionName = ftype.getAcceptReturnAction().getName();
+			}
+			else if (fnode.containsName(FlowNode.REJECT_RETURN_ACTION_NODE))
+			{
+				actionName = ftype.getRejectReturnAction().getName();
+			}
+		}
+
+		if (actionName != null && actionName.equals(META_ACTION))
 		{
 			try
 			{
@@ -130,9 +175,15 @@ public class ResourceOperationLabeler implements Labeler
 		}
 		else
 		{
-			// To get filter actions, check startState
-
-			LabelSequence seq = operationTable.get(new LabelResourcePair(transition.getLabel(), currentResource));
+			LabelSequence seq = null;
+			if (actionName != null)
+			{
+				seq = operationTable.get(new LabelResourcePair(actionName, currentResource));
+			}
+			if (seq == null)
+			{
+				seq = operationTable.get(new LabelResourcePair(transition.getLabel(), currentResource));
+			}
 
 			if (seq == null)
 			{
@@ -168,15 +219,26 @@ public class ResourceOperationLabeler implements Labeler
 		// SubstitutionPart sp = (SubstitutionPart)
 		// filter.getFilterElement(0).getMatchingPattern()
 		// .getSubstitutionParts().firstElement();
-		DeclaredObjectReference dor = (DeclaredObjectReference) metaState.getSubstitutionMessage().getTarget().getRef();
-		Object o = dor.getRef();
-		if (o instanceof Internal)
+		Target tgt = metaState.getSubstitutionMessage().getTarget();
+		if (tgt.equals(Target.INNER))
 		{
-			target = ((Internal) o).getType().getRef();
+			target = concern;
 		}
-		else if (o instanceof External)
+		else
 		{
-			target = ((External) o).getType().getRef();
+			DeclaredObjectReference dor = (DeclaredObjectReference) tgt.getRef();
+			if (dor != null)
+			{
+				Object o = dor.getRef();
+				if (o instanceof Internal)
+				{
+					target = ((Internal) o).getType().getRef();
+				}
+				else if (o instanceof External)
+				{
+					target = ((External) o).getType().getRef();
+				}
+			}
 		}
 
 		if (target != null)
@@ -187,8 +249,32 @@ public class ResourceOperationLabeler implements Labeler
 				Type dnt = (Type) pr;
 				String selector = metaState.getSubstitutionMessage().getSelector();
 
-				String[] params = { "Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage" };
-				MethodInfo method = dnt.getMethod(selector, params);
+				MethodInfo method = null;
+				for (Object mo : dnt.getMethods())
+				{
+					method = (MethodInfo) mo;
+					if (method.getName().equals(selector))
+					{
+						String[] params = { "Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage" };
+						if (method.hasParameters(params))
+						{
+							break;
+						}
+						params[0] = "System.Object"; // also valid (for .net)
+						if (method.hasParameters(params))
+						{
+							break;
+						}
+						params[0] = "java.lang.Object"; // also valid (for Java)
+						if (method.hasParameters(params))
+						{
+							break;
+						}
+						method = null;
+						break;
+					}
+				}
+
 				if (method != null)
 				{
 					List attributes = method.getAnnotations();
@@ -314,6 +400,11 @@ public class ResourceOperationLabeler implements Labeler
 		public int hashCode()
 		{
 			return label.hashCode() + resource.hashCode();
+		}
+
+		public String toString()
+		{
+			return label + " @ " + resource;
 		}
 	}
 }

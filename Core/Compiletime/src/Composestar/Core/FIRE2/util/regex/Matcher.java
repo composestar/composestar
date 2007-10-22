@@ -95,10 +95,6 @@ public class Matcher
 		RegularTransition regularTransition;
 		RegularState[] nextStates;
 
-		Iterator<ExecutionTransition> executionTransitions;
-		ExecutionState executionState;
-		ExecutionTransition executionTransition;
-
 		LabelSequence sequence;
 
 		CombinedState newState;
@@ -124,11 +120,9 @@ public class Matcher
 		}
 
 		// empty and non-empty transition in ExecutionModel:
-		executionState = state.executionState;
-		executionTransitions = executionState.getOutTransitions();
-		while (executionTransitions.hasNext())
+		ExecutionState executionState = state.executionState;
+		for (ExecutionTransition executionTransition : executionState.getOutTransitionsEx())
 		{
-			executionTransition = executionTransitions.next();
 			sequence = labeler.getLabels(executionTransition);
 			if (sequence.isEmpty())
 			{
@@ -254,7 +248,7 @@ public class Matcher
 
 	private boolean isEndState(CombinedState state)
 	{
-		if (state.regularState.equals(pattern.getEndState()) && !state.executionState.getOutTransitions().hasNext())
+		if (state.regularState.equals(pattern.getEndState()) && state.executionState.getOutTransitionsEx().size() == 0)
 		{
 			endState = state;
 			return true;
