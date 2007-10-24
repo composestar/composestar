@@ -743,6 +743,10 @@ namespace Composestar.StarLight.ILWeaver
 			// Weave the innercall check task:
 			Instruction resetInstruction = WeaveCheckInnerCall(targetAssembly, method, weaveMethod, worker, instructions);
 
+            // @michielh: if (doBookKeeping) enterJP();
+            // could also be done visitor.DoWeave(filterCode);
+            // but doBookKeeping is joint point depended
+
 			// Visit the elements in the block
 			try
 			{
@@ -754,6 +758,10 @@ namespace Composestar.StarLight.ILWeaver
 				throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException,
 											_configuration.OutputImagePath, ex);
 			}
+
+            // @michielh: if (doBookKeeping) leaveJP();
+            // what about thrown exception?
+            // should be put before "ret" instruction added in visitor.DoWeave(filterCode);
 
 			// Add the reset instruction:
 			instructions.Add(resetInstruction);

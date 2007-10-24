@@ -6,6 +6,7 @@ package Composestar.Core.INLINE.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * A Block instruction is a container for other instructions
@@ -17,7 +18,7 @@ public class Block extends Instruction
 	/**
 	 * The instructions contained in this block.
 	 */
-	private ArrayList<Instruction> instructions;
+	private List<Instruction> instructions;
 
 	/**
 	 * The constructor

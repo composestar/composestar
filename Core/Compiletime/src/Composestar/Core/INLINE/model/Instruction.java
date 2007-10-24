@@ -21,9 +21,7 @@ public abstract class Instruction implements Visitable
 	 * Creates an instruction without a label.
 	 */
 	public Instruction()
-	{
-
-	}
+	{}
 
 	/**
 	 * Creates an instruction with a label.

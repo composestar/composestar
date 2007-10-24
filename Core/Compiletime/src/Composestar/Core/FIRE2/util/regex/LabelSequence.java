@@ -5,14 +5,18 @@
 package Composestar.Core.FIRE2.util.regex;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
+ * Sequence of lablels
+ * 
  * @author Arjan de Roo
  */
 public class LabelSequence
 {
-	private ArrayList<String> labels;
+	private List<String> labels;
 
 	public LabelSequence()
 	{
@@ -24,9 +28,18 @@ public class LabelSequence
 		labels.add(label);
 	}
 
+	/**
+	 * @deprecated use getLabelsEx()
+	 * @return
+	 */
 	public Iterator<String> getLabels()
 	{
-		return labels.iterator();
+		return getLabelsEx().iterator();
+	}
+
+	public List<String> getLabelsEx()
+	{
+		return Collections.unmodifiableList(labels);
 	}
 
 	public boolean isEmpty()

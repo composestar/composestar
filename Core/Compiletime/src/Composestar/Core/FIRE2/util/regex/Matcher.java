@@ -95,8 +95,6 @@ public class Matcher
 		RegularTransition regularTransition;
 		RegularState[] nextStates;
 
-		LabelSequence sequence;
-
 		CombinedState newState;
 
 		// empty transition in regular machine:
@@ -123,7 +121,7 @@ public class Matcher
 		ExecutionState executionState = state.executionState;
 		for (ExecutionTransition executionTransition : executionState.getOutTransitionsEx())
 		{
-			sequence = labeler.getLabels(executionTransition);
+			LabelSequence sequence = labeler.getLabels(executionTransition);
 			if (sequence.isEmpty())
 			{
 				newState = new CombinedState(executionTransition.getEndState(), state.regularState, state,
@@ -164,11 +162,8 @@ public class Matcher
 		RegularState[] currentStates = { state };
 		List<RegularState> v = new Vector<RegularState>();
 
-		Iterator<String> labelSeq = sequence.getLabels();
-		while (labelSeq.hasNext())
+		for (String label : sequence.getLabelsEx())
 		{
-			String label = labelSeq.next();
-
 			for (RegularState currentState : currentStates)
 			{
 				v.addAll(getNextStates(currentState, label));
