@@ -5,6 +5,8 @@
 	<Match><Class name="Composestar.Core.COPPER.CpsLexer" /></Match>
 	<Match><Class name="Composestar.Core.COPPER.CpsParser" /></Match>
 	
+	<Match><Class name="Composestar.Core.COPPER2.CpsParser" /></Match>
+	
 	<Match><Package name="Composestar.C.wrapper.parsing.GnuC" /></Match>
 	<Match><Package name="Composestar.C.wrapper.parsing.StdC" /></Match>
 	

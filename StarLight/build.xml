@@ -135,7 +135,8 @@
 			<auxClasspath refid="lib.core" />
 			<auxClasspath>
 				<pathelement path="${build.core}/Compiletime/${out.jar.core}" />
-				<pathelement path="${build.starlight}/libraries/xmltypes.jar" />
+				<pathelement path="${build.starlight}/Source/Compiletime/lib/xmltypes.jar" />
+				<pathelement path="${build.starlight}/Source/Compiletime/lib/xbean.jar" />
 			</auxClasspath>
 		</findbugs>
 		<xslt in="${out.qa.starlight}/findbugs-result.xml" out="${out.qa.starlight}/findbugs-result.html" style="${findbugs.style}" />
