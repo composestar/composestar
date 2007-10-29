@@ -23,6 +23,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.helpers.NullEnumeration;
 import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.varia.LevelRangeFilter;
 
@@ -118,21 +119,28 @@ public abstract class Master
 	 */
 	protected void loggerSetup()
 	{
-		URL propfile = Master.class.getResource("/log4j.properties");
-		if (propfile != null)
+		// automatically done by log4j
+		Logger root = Logger.getRootLogger();
+		if (root.getAllAppenders() instanceof NullEnumeration)
 		{
-			PropertyConfigurator.configure(propfile);
+			URL propfile = Master.class.getResource("/log4j.properties");
+			if (propfile != null)
+			{
+				PropertyConfigurator.configure(propfile);
+			}
+			else
+			{
+				// fallback in case log4j.properties could not be found
+				// this produces the legacy output:
+				// module~LEVEL~CPS File~CPS Line~message\n
+				Layout layout = new CPSPatternLayout("%c~%p~%s~%S~%m%n");
+				root.addAppender(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
+			}
 		}
-		else
+		if (!Logger.getRootLogger().isAttached(logMetrics))
 		{
-			// fallback in case log4j.properties could not be found
-			Logger root = Logger.getRootLogger();
-			// this produces the legacy output:
-			// module~LEVEL~CPS File~CPS Line~message\n
-			Layout layout = new CPSPatternLayout("%c~%p~%s~%S~%m%n");
-			root.addAppender(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
+			Logger.getRootLogger().addAppender(logMetrics);
 		}
-		Logger.getRootLogger().addAppender(logMetrics);
 
 		String logLevel = System.getenv("LOG4J_LEVEL");
 		if (logLevel != null)
@@ -188,7 +196,10 @@ public abstract class Master
 				arg = arg.substring(3);
 				LogManager.resetConfiguration();
 				PropertyConfigurator.configure(arg);
-				Logger.getRootLogger().addAppender(logMetrics);
+				if (!Logger.getRootLogger().isAttached(logMetrics))
+				{
+					Logger.getRootLogger().addAppender(logMetrics);
+				}
 			}
 			else if (arg.startsWith("-P="))
 			{
@@ -419,7 +430,7 @@ public abstract class Master
 		return 0;
 	}
 
-	protected static void main(Class masterClass, String[] args)
+	protected static void main(Class<? extends Master> masterClass, String[] args)
 	{
 		if (args.length == 0)
 		{
@@ -438,7 +449,7 @@ public abstract class Master
 		Master master;
 		try
 		{
-			master = (Master) masterClass.newInstance();
+			master = masterClass.newInstance();
 		}
 		catch (Exception e)
 		{

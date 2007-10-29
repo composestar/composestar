@@ -10,13 +10,8 @@
 		</and>
 	</condition>
 	<import file="common.xml" />
-
-	<echo>Processing: ${ant.project.name} ...</echo>
 	
-	<description>
-	The Compose* Core
-	Everything else depends on the core
-	</description>
+	<description>The main functionality of Compose*</description>
 
 	<target name="clean" depends="init">
 		<delete dir="${out.qa}" />

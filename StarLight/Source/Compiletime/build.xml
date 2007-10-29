@@ -11,8 +11,7 @@
 	</condition>
 	<import file="${build.core}/common.xml" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The Compose* StarLight Compiletime</description>
+	<description>StarLight Compiletime</description>
 
 	<!-- clean -->
 

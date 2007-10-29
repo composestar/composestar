@@ -4,7 +4,6 @@
 	<property name="build.core" location=".." />
 	<import file="${build.core}/common.xml" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The Compose* Core Compiletime. This is the core of the Compose* compiler.</description>
 
 	<target name="clean" depends="init" description="Clean compile results">
@@ -39,9 +38,6 @@
 				<include name="CpsTreeWalker.java" />
 				<include name="CpsTreeWalker.tokens" />
 			</fileset>
-			<fileset dir="src/Composestar/Utils">
-				<include name="Version.java" />
-			</fileset>
 		</delete>
 
 		<delete>
@@ -60,15 +56,7 @@
 		<mkdir dir="${out.dist}/lib" />
 	</target>
 
-	<target name="java-versionclass">
-		<copy file="src/Composestar/Utils/Version.j" tofile="src/Composestar/Utils/Version.java" overwrite="true" />
-		<tstamp>
-			<format property="BUILD_DATE" pattern="EEE, d MMM yyyy HH:mm:ss Z" locale="en" />
-		</tstamp>
-		<replace file="src/Composestar/Utils/Version.java" token="@BUILD_DATE@" value="${BUILD_DATE}" />
-	</target>
-
-	<target name="build" depends="java-versionclass,local_init,antlr,compile,jar" description="Compile the code and create the jar file">
+	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file">
 		<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${out.dist}" />
 		<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="${out.dist}" />
 		<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${out.dist}" />

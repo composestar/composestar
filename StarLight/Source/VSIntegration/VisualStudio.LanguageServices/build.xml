@@ -9,8 +9,7 @@
 	</condition>
 	<import file="${build.core}/common.xml" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The Compose* StarLight Project and Language integration. Generates the MSBuild tasks.</description>
+	<description>StarLight Project and Language integration. Generates the MSBuild tasks.</description>
 
 	<property name="buildfile" value="StarLight.VisualStudio.LanguageServices.csproj"/>
 

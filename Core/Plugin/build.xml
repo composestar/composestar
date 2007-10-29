@@ -11,11 +11,7 @@
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
 	
-	<echo>Processing: ${ant.project.name} ...</echo>
-	
-	<description>
-	The Compose* Core Plugin
-	</description>
+	<description>Common code shared between port specific IDE plugins</description>
 	
 	<target name="clean" depends="clean_eclipse" />
 

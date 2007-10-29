@@ -10,12 +10,8 @@
 		</and>
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
-	
-	<echo>Processing: ${ant.project.name} ...</echo>
-	
-	<description>
-	The Compose* DotNET Plugins
-	</description>
+		
+	<description>Compose*/.NET IDE Plugins</description>
 	
 	<target name="init_local" depends="init">
 		<condition property="plugin.vs2003">

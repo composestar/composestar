@@ -4,8 +4,7 @@
   <property name="build.core" location="${basedir}/../../../Core"/>
   <import file="${build.core}/common.xml"/>
 
-  <echo>Processing: ${ant.project.name} ...</echo>
-  <description>...</description>
+  <!--<description>...</description>-->
 
   <target name="init_local" depends="init">
   </target>

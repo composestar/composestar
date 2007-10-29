@@ -9,9 +9,7 @@
 	</condition>
 	<import file="${build.core}/common.xml"/>
 	
-	<echo>Processing: ${ant.project.name} ...</echo>
-	
-	<description>The Compose* Java Runtime</description>
+	<description>Compose*/Java Runtime</description>
 
 	<target name="clean" depends="init" description="clean the compilation results">		
 		<!-- Java build files -->

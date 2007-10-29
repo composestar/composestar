@@ -11,11 +11,7 @@
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
 	
-	<echo>Processing: ${ant.project.name} ...</echo>
-	
-	<description>
-	The Compose* Eclipse Java Plugin
-	</description>
+	<description>Compose*/Java Eclipse Plugin</description>
 	
 	<target name="init_local" depends="init_eclipse">
 		<property name="out.dist.feature"  value="${out.dist}-feature"/>

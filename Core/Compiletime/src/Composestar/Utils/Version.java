@@ -82,7 +82,7 @@ public final class Version
 		{
 			// note: this must match the format used by the ant script
 			SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
-			instance.compileDate = sdf.parse("@BUILD_DATE@");
+			instance.compileDate = sdf.parse(instance.props.getProperty("version.compiledate", "0"));
 		}
 		catch (ParseException e)
 		{

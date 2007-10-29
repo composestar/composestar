@@ -9,8 +9,6 @@
 	</condition>
 	<import file="../common.xml"/>
 	
-	<echo>Processing: ${ant.project.name} ...</echo>
-	
 	<description>The core of the Compose* runtime</description>
 
 	<target name="clean" depends="init" description="clean up CODER parsers">

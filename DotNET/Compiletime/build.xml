@@ -17,8 +17,7 @@
 	<property name="CSharpDummyGenerator.dir" location="${Dummer.dir}\CSharpDummyGenerator" />
 	<property name="antlr-2.7.2.exe" location="${CSharpDummyGenerator.dir}\Parse\antlr-2.7.2.exe" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The Compose* DotNET Compiletime</description>
+	<description>Compose*/.NET Compiletime</description>
 
 	<target name="clean" depends="init" description="clean the compilation results">
 

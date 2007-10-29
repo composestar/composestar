@@ -9,11 +9,9 @@
 			<available file="../../Core/common.xml" />
 		</and>
 	</condition>
-
 	<import file="${build.core}/common.xml" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The Compose* C Compiletime</description>
+	<description>Compose*/C Compiletime</description>
 
 	<target name="clean" depends="init" description="clean the compilation results">
 		<delete dir="${out.build}" />

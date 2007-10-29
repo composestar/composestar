@@ -11,12 +11,7 @@
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
 
-	<echo message="Processing: ${ant.project.name}" />
-	
-	<description>
-	The Compose* Java Examples
-	Clean the examples.
-	</description>
+	<description>Compose*/Java Examples</description>
 	
 	<target name="build" />
 	

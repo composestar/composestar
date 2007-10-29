@@ -11,8 +11,7 @@
 	</condition>
 	<import file="${build.core}/common.xml" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The Compose* StarLight VisualStudio integration</description>
+	<description>StarLight VisualStudio integration</description>
 
 	<target name="clean" depends="init,vssdktargets" description="Clean compile results">
 		<ant target="clean" dir="MSBuildTasks" inheritRefs="true" />

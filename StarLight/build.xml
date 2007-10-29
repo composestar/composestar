@@ -11,8 +11,7 @@
 	<property name="build.core" location="${basedir}/../Core" />
 	<import file="${build.core}/common.xml" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The StarLight implementation of Compose*</description>
+	<description>The StarLight (.NET 2+) implementation of Compose*</description>
 
 	<property name="out.qa.starlight" value="QualityAssurance" />
 	<property name="out.fxcop.starlight" value="QualityAssurance" />

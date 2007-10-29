@@ -10,13 +10,8 @@
 		</and>
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
-
-	<echo>Processing: ${ant.project.name} ...</echo>
 	
-	<description>
-	The Compose* Java
-	The Java implementation of Compose*
-	</description>
+	<description>The Java implementation of Compose*</description>
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<delete dir="${out.qa}" />

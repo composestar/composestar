@@ -4,8 +4,7 @@
 	<property name="build.core" location=".." />
 	<import file="${build.core}/common.xml" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The Compose* Visualization.</description>
+	<description>Visualization of Compose* projects</description>
 
 	<target name="clean" depends="init" description="Clean compile results">
 		<delete dir="${out.build}" />

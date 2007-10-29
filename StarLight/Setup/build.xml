@@ -11,8 +11,7 @@
 	</condition>
 	<import file="${build.core}/common.xml" />
    
-	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The Compose* StarLight Setup build. Generates the MSI installer.</description>
+	<description>Compose*/StarLight Setup. Generates the MSI installer.</description>
  
 	<target name="clean" depends="init" description="Clean compile results">
 		<echo>Cleaning WIX object files</echo>

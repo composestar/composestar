@@ -4,8 +4,7 @@
 	<property name="build.core" location="../../../Core"/>
 	<import file="${build.core}/common.xml" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The Compose* StarLight Signature Expander.</description>
+	<description>StarLight Signature Expander.</description>
 
 	<property name="buildfile" value="SigExpander.csproj"/>
 

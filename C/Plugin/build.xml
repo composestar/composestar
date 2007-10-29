@@ -10,12 +10,8 @@
 		</and>
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
-	
-	<echo>Processing: ${ant.project.name} ...</echo>
-	
-	<description>
-	The Compose* C Plugin
-	</description>
+		
+	<description>Compose*/C IDE Plugins</description>
 
 	<target name="clean">
 		<ant target="clean" dir="Eclipse" inheritRefs="true" />

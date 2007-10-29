@@ -14,8 +14,7 @@
 
 	<property name="Dummer.dir" location="src/Composestar/Java/DUMMER" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The Compose* Java Compiletime</description>
+	<description>Compose*/Java Compiletime</description>
 
 	<target name="clean" depends="init" description="clean the compilation results">
 		<!-- Java build files -->

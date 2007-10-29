@@ -11,11 +11,7 @@
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
 
-	<echo>Processing: ${ant.project.name} ...</echo>
-
-	<description>
-	The Compose* Eclipse C Plugin
-	</description>
+	<description>Compose*/C Eclipse Plugin</description>
 
 	<target name="init_local" depends="init_eclipse">
 		<mkdir dir="${out.build}" />
