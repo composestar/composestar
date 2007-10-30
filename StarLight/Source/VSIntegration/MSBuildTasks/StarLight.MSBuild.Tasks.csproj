@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -61,10 +61,9 @@
     <Compile Include="ILVerifyTask\ILVerifyTask.cs" />
     <Compile Include="ILWeaverTask\BuilderConfigurator.cs" />
     <Compile Include="ILWeaverTask\ILWeaverTask.cs" />
-    <None Include="..\Target Files\StarLight\0.2\StarLight.targets">
-      <Link>StarLight.targets</Link>
-    </None>
     <None Include="MasterCallerTask\JavaServerTask.cs" />
+    <None Include="Target\StarLight.targets" />
+    <None Include="Target\StarLightImpl.targets" />
     <Compile Include="MasterCallerTask\MasterCallerTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -72,6 +71,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="StarlightTask.cs" />
     <Compile Include="TypeAnalyzerTask\TypeAnalyzerTask.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -119,23 +119,21 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  
   <PropertyGroup>
     <MSBuildCommunityTasksPath Condition="'$(MSBuildCommunityTasksPath)' == ''">$(MSBuildProjectDirectory)\..\..\..\Development\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
   </PropertyGroup>
   <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
-  
   <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying..." />
     <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion" DefaultValue="0.0">
-      <Output TaskParameter="Value" PropertyName="StarLightVersion"/>
+      <Output TaskParameter="Value" PropertyName="StarLightVersion" />
     </RegistryRead>
     <CreateProperty Value="$(MSBuildExtensionsPath)\StarLight\$(StarLightVersion)\">
       <Output TaskParameter="Value" PropertyName="DeployDestination" />
     </CreateProperty>
-    <CreateItem Include="..\Target Files\StarLight\$(StarLightVersion)\StarLight.targets" AdditionalMetadata="Visible=false">
+    <CreateItem Include="Target\StarLightImpl.targets" AdditionalMetadata="Visible=false">
       <Output TaskParameter="Include" ItemName="DeployFiles" />
-    </CreateItem>    
+    </CreateItem>
     <CreateItem Include="$(OutputPath)\*.dll" AdditionalMetadata="Visible=false">
       <Output TaskParameter="Include" ItemName="DeployFiles" />
     </CreateItem>
@@ -143,5 +141,7 @@
       <Output TaskParameter="Include" ItemName="DeployFiles" />
     </CreateItem>
     <Copy SourceFiles="%(DeployFiles.Identity)" DestinationFolder="$(DeployDestination)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="Target\StarLight.targets" DestinationFolder="$(MSBuildExtensionsPath)\StarLight" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="Target\StarLightVersion.targets" DestinationFolder="$(MSBuildExtensionsPath)\StarLight" SkipUnchangedFiles="true" />
   </Target>
 </Project>

@@ -61,7 +61,7 @@ using Composestar.StarLight.TypeAnalyzer;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
-	public class TypeAnalyzerTask : Task
+    public class TypeAnalyzerTask : StarlightTask
 	{
 		// inputs
 		private string _assemblyName;
@@ -102,6 +102,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 		public override bool Execute()
 		{
+            base.Execute();
 			Log.LogMessage("AssemblyName={0}", _assemblyName);
 			Log.LogMessage("CodeLanguage={0}", _codeLanguage);
 

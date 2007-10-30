@@ -1,0 +1,10 @@
+<!--
+	Compose* Starlight Version Constant
+	Include this target when you only need to use the default version and not
+	the actual starlight build targets.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<StarlightVersion Condition="'$(StarlightVersion)' == ''">@version.starlight@</StarlightVersion>
+	</PropertyGroup>
+</Project>

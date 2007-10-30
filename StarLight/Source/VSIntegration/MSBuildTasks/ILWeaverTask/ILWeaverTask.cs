@@ -51,6 +51,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using Composestar.StarLight.CoreServices.Settings.Providers;
 #endregion
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -62,7 +63,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// <summary>
 	/// ILWeaver task
 	/// </summary>	
-	public class ILWeaverTask : Task 
+	public class ILWeaverTask : StarlightTask 
 	{
 		private const string ContextInfoFileName = "Composestar.StarLight.ContextInfo.dll";
 
@@ -128,7 +129,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			get { return _weaveDebug; }
 			set { _weaveDebug = value; }
 		}
-
 		#endregion
 
 		#region ctor
@@ -149,6 +149,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </returns>
 		public override bool Execute()
 		{
+            base.Execute();
 			Log.LogMessageFromResources("WeavingStartText");
 
 			// Get the configuration container

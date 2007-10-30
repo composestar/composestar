@@ -11,7 +11,7 @@
 			<include name="**/*.cpsproj" />
 			<include name="**/*.csproj" />
 			<include name="**/*.vjsproj" />
-			<param name="version" expression="${version.starlight}" />
+			<param name="version" expression="$(StarlightVersion)" />
 		</xslt>
 		<concat destfile="ExamplesVersionCheck.txt">
 			<fileset dir="tmp" includes="**/*.txt" />

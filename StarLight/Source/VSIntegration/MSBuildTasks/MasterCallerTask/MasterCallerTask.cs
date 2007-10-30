@@ -52,6 +52,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using Composestar.StarLight.CoreServices.Settings.Providers;
 #endregion
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -59,7 +60,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// <summary>
 	/// Calls the Master to perform the actual analyzing of concerns by composestar.
 	/// </summary>
-	public class MasterCallerTask : Task
+	public class MasterCallerTask : StarlightTask
 	{
 		#region Constructor
 		/// <summary>
@@ -155,6 +156,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </returns>
 		public override bool Execute()
 		{
+            base.Execute();
 			Stopwatch sw = Stopwatch.StartNew();
 		
 			// Open DB

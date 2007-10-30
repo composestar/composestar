@@ -4,7 +4,7 @@
   <!-- General settings -->
   <?define ProductShortName = "StarLight" ?>
   <?define ProductVersion = "0.7.0" ?>
-  <?define ProductVersionText = "0.7" ?>
+  <?define ProductVersionText = "$(var.ProductVersion)" ?>
   <?define Manufacturer = "University of Twente" ?>
   <?define UpgradeCode = "D7A4BED9-24C4-42f8-9C20-4CB905F54488" ?>
   <?define LICENSE_TYPE = "commercial" ?>
@@ -14,7 +14,8 @@
   <?define Comp_Project_Guid=ED32407E-181E-4d16-95C8-5A188067FA03?>
   <?define Comp_ProjectTemplates_Guid=AFE8D70C-FE5C-4e1f-B0A6-CD0EF12E98D2?>
   <?define Comp_ItemTemplates_Guid=560FABD4-398E-4ab7-A541-2D56F33A0B48?>
-  <?define Comp_MSBuild_Guid=1F225D31-3FC2-4893-8A0D-2AF0DEEC7CD2?>
+  <?define Comp_MSBuild_Guid=EABCA146-3522-4339-B67B-961B037DC41B?>
+  <?define Comp_MSBuildVer_Guid=1F225D31-3FC2-4893-8A0D-2AF0DEEC7CD2?>
   <?define Comp_SnippetsIndex_Guid=1EE0BB66-5303-4043-9DBE-DC572C6FA669?>
   <?define Comp_Snippets_Guid=925EFE13-5C9E-4f8d-AB3F-71DAE0DADA73?>
 

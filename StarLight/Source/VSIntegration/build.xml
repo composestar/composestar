@@ -29,7 +29,7 @@
 	<target name="deploy" depends="deploy_msbuild,deploy_vs" description="Deploy the VSIntegration projects">
 	</target>
 
-	<target name="build_msbuild" description="Build Compose* StarLight MSBuild tasks">
+	<target name="build_msbuild" description="Build Compose* StarLight MSBuild tasks"> 
 		<ant target="build" dir="MSBuildTasks" inheritRefs="true" />
 	</target>
 

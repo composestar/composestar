@@ -63,7 +63,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// <summary>
 	/// MSBuild tasks to start the analyzer.
 	/// </summary>
-	public class ILAnalyzerTask : Task
+	public class ILAnalyzerTask : StarlightTask
 	{
 		#region Constants
 		
@@ -200,6 +200,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </returns>
 		public override bool Execute()
 		{
+            base.Execute();
 			Log.LogMessageFromResources("AnalyzerStartText");
 
 			//

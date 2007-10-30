@@ -32,6 +32,7 @@ using Antlr.Runtime.Tree;
 
 namespace Composestar.StarLight.CpsParser
 {
+    [CLSCompliant(false)]
     public class CpsParserBase : Parser
     {
         public CpsParserBase(ITokenStream input)

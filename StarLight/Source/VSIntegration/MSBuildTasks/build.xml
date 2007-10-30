@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight/MSBuild" default="build">
 
-	<property name="build.core" location="../../../../Core"/>
+	<property name="build.core" location="../../../../Core" />
 	<import file="${build.core}/common.xml" />
 
 	<description>StarLight MSBuild Tasks. Generates the MSBuild tasks.</description>
 
-	<property name="buildfile" value="StarLight.MSBuild.Tasks.csproj"/>
+	<property name="buildfile" value="StarLight.MSBuild.Tasks.csproj" />
 
 	<target name="clean" depends="init" description="Clean compile results">
-		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}"/>
+		<delete file="Target/StarLightVersion.targets" />
+		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}" />
 	</target>
 
-	<target name="build" depends="init,antlr" description="Build the Tasks project">
+	<target name="build" depends="init,starlight_version_target,antlr" description="Build the Tasks project">
 		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}" />
 	</target>
 
-	<target name="deploy" depends="init,antlr" description="Deploy the Tasks project">
+	<target name="deploy" depends="init,starlight_version_target,antlr" description="Deploy the Tasks project">
 		<msbuild solution="${buildfile}" target="deploy" config="${msbuild.config}" />
 	</target>
 
 	<target name="antlr">
-		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_dotnet" inheritRefs="true"/>
-		<ant dir="../../TypeAnalyzer" target="antlr" inheritRefs="true"/>
+		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_dotnet" inheritRefs="true" />
+		<ant dir="../../TypeAnalyzer" target="antlr" inheritRefs="true" />
 	</target>
+
+  <target name="starlight_version_target">
+    <copy file="Target/StarLightVersion.targets.template" tofile="Target/StarLightVersion.targets" />
+		<replace file="Target/StarLightVersion.targets">
+			<replacefilter token="@version.starlight@" value="${version.starlight}" />
+		</replace>
+  </target>
 
 </project>

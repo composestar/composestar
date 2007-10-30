@@ -58,7 +58,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// <summary>
 	/// Task to parse the Cps files.
 	/// </summary>
-	public class CpsParserTask : Task
+	public class CpsParserTask : StarlightTask
 	{
 		private const string EmbeddedFolderName = "Embedded";
 
@@ -175,6 +175,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </returns>
 		public override bool Execute()
 		{
+            base.Execute();
 			List<string> refTypes = new List<string>();
 			Stopwatch sw = Stopwatch.StartNew();
 		

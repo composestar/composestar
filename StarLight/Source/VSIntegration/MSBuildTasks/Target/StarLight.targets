@@ -1,0 +1,9 @@
+<!--
+	Compose* Starlight generic MSBuild targets.
+  This will include version specific msbuild targets. To use a different version
+  simply define the StarlightVersion property: /p:StarlightVersion=0.7.1
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildExtensionsPath)\StarLight\StarLightVersion.targets" />
+	<Import Project="$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\StarLightImpl.targets" />
+</Project>

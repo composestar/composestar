@@ -15,7 +15,7 @@
 		<xsl:variable name="results">
 			<xsl:for-each select="//*">
 				<xsl:if test="contains(@Project, '\StarLight.targets') and (name() = 'Import')">
-					<xsl:if test="not(contains(@Project, concat($shortversion, '\StarLight.targets')))">
+					<xsl:if test="not(contains(@Project, 'StarLight\StarLight.targets'))">
 						<xsl:text>Uses outdated targets: </xsl:text>
 						<xsl:value-of select="@Project" />
 						<xsl:text>&#10;</xsl:text>
@@ -29,7 +29,7 @@
 					</xsl:if>
 				</xsl:if>
 				<xsl:if test="contains(text(), '\Composestar.') and (name() = 'HintPath')">
-					<xsl:if test="not(contains(text(), concat($shortversion, '\Composestar.')))">
+					<xsl:if test="not(contains(text(), concat($version, '\Composestar.')))">
 						<xsl:text>Uses invalid hintpath: </xsl:text>
 						<xsl:value-of select="text()" />
 						<xsl:text>&#10;</xsl:text>

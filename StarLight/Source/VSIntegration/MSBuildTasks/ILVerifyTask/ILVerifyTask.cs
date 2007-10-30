@@ -55,7 +55,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 	/// <summary>
 	/// Execute the PEVerify application to check if the generated IL code is valid.
 	/// </summary>
-	public class ILVerifyTask : Task
+	public class ILVerifyTask : StarlightTask
 	{
 		private const string PEVerifyExecutable = "PEVerify.exe";
 
@@ -101,6 +101,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </returns>
 		public override bool Execute()
 		{
+            base.Execute();
 			Stopwatch sw = Stopwatch.StartNew();
 
 			// Get the location of PEVerify

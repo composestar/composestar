@@ -22,10 +22,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.7.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=null">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
-      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.7\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -56,5 +56,5 @@
   </ItemGroup>
   <!--Import the standards targets-->
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.7\StarLight.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\StarLight.targets" />
 </Project>

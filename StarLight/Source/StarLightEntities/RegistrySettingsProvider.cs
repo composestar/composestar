@@ -76,6 +76,23 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 		private const string ProviderDescription = "StarLight Registry Settings Provider";
 		private const string ProviderApplicationName = "StarLight RegistrySettingsProvider";
 
+        protected static string CurrentVersion = null;
+
+        /// <summary>
+        /// Sets a version override to use.
+        /// </summary>
+        public static string UseVersion
+        {
+            set
+            {
+                CurrentVersion = value;
+            }
+            get
+            {
+                return CurrentVersion;
+            }
+        }
+
 		public RegistrySettingsProvider()
 		{
 		}
@@ -182,23 +199,23 @@ namespace Composestar.StarLight.CoreServices.Settings.Providers
 		[RegistryPermissionAttribute(SecurityAction.Demand, Read = "HKEY_LOCAL_MACHINE\\Software\\ComposeStar\\StarLight")]
 		private static string RetrieveCurrentVersionPath()
 		{
-			RegistryKey regKeyVersion = Registry.LocalMachine.OpenSubKey(@"Software\ComposeStar\StarLight");
+            if (string.IsNullOrEmpty(CurrentVersion))
+            {
+                RegistryKey regKeyVersion = Registry.LocalMachine.OpenSubKey(@"Software\ComposeStar\StarLight");
+                if (regKeyVersion != null)
+                {
+                    CurrentVersion = (string)regKeyVersion.GetValue("CurrentVersion", "");
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
 
-			string currentversion;
-
-			if (regKeyVersion != null)
-			{
-				currentversion = (string)regKeyVersion.GetValue("CurrentVersion", "");
-			}
-			else
-			{
+            if (string.IsNullOrEmpty(CurrentVersion))
 				return string.Empty;
-			}
 
-			if (string.IsNullOrEmpty(currentversion))
-				return string.Empty;
-
-			return String.Format(CultureInfo.CurrentCulture, @"Software\ComposeStar\StarLight\{0}", currentversion);
+            return String.Format(CultureInfo.CurrentCulture, @"Software\ComposeStar\StarLight\{0}", CurrentVersion);
 		}
 
         private SettingsPropertyValueCollection DefaultValues()

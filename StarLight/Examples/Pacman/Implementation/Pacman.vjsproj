@@ -51,20 +51,21 @@
     <Compile Include="World.jsl" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.7.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
-      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.7\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Composestar.StarLight.Filters, Version=0.7.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+    <Reference Include="Composestar.StarLight.Filters, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
       <Name>Composestar.StarLight.Filters</Name>
       <AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>
-      <HintPath>$(MSBuildExtensionsPath)\StarLight\0.7\Composestar.StarLight.Filters.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.Filters.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\StarLightVersion.targets" />
 </Project>
