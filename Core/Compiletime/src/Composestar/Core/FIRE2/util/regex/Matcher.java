@@ -23,7 +23,7 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
  */
 public class Matcher
 {
-	private LegacyPattern pattern;
+	private Pattern pattern;
 
 	private ExecutionModel model;
 
@@ -37,7 +37,7 @@ public class Matcher
 
 	private boolean matchDone = false;
 
-	public Matcher(LegacyPattern pattern, ExecutionModel model, Labeler labeler)
+	public Matcher(Pattern pattern, ExecutionModel model, Labeler labeler)
 	{
 		this.pattern = pattern;
 		this.model = model;

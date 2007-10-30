@@ -10,15 +10,13 @@ import java.util.List;
 /**
  * @author Arjan de Roo
  */
-public class LegacyPattern
+public class LegacyPattern extends Pattern
 {
 	private RegularAutomaton automaton;
 
-	private String patternString;
-
 	private LegacyPattern(String pattern) throws PatternParseException
 	{
-		patternString = pattern;
+		super(pattern);
 		automaton = Parser.parse(pattern);
 	}
 
@@ -32,6 +30,7 @@ public class LegacyPattern
 	 * 
 	 * @see Composestar.Core.FIRE2.util.regex.IPattern#getStartState()
 	 */
+	@Override
 	public RegularState getStartState()
 	{
 		return automaton.getStartState();
@@ -42,30 +41,10 @@ public class LegacyPattern
 	 * 
 	 * @see Composestar.Core.FIRE2.util.regex.IPattern#getEndState()
 	 */
+	@Override
 	public RegularState getEndState()
 	{
 		return automaton.getEndState();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FIRE2.util.regex.IPattern#getPatternString()
-	 */
-	public String getPatternString()
-	{
-		return patternString;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return patternString;
 	}
 
 	private static class Parser
