@@ -82,7 +82,7 @@ public class JavaType extends Type
 		methodReturnTypes = new HashSet();
 		fieldTypes = new HashSet();
 		implementedBy = new HashSet();
-		isAnnotation = false;
+		isAnnotation = c.isAnnotation();
 	}
 
 	/**
@@ -439,13 +439,13 @@ public class JavaType extends Type
 	 */
 	public String getUnitType()
 	{
-		if (isInterface()) 
-		{
-			return "Interface";
-		}
-		else if (isAnnotation()) 
+		if (isAnnotation()) 
 		{
 			return "Annotation";
+		}
+		else if (isInterface())
+		{
+			return "Interface";
 		}
 		else 
 		{
