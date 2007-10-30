@@ -636,6 +636,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				newline();
 				visit(getChild(ast, CLASS_DEF));
 				visit(getChild(ast, INTERFACE_DEF));
+				visit(getChild(ast, ANNOTATION_DEF));
 				newline();
 				break;
 
@@ -698,6 +699,19 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				newline();
 				break;
 
+			case ANNOTATION_DEF: // added WH-20071029
+				visit(getChild(ast, MODIFIERS));				
+				out("@interface ");
+				AST c2 = getChild(ast, IDENT);
+				this.addTypeSource(c2.getText());
+				visit(c2);
+				
+				startBlock();
+				visit(getChild(ast, OBJBLOCK));
+				endBlock();
+				newline();
+				break;
+				
 			case TYPE_ARGS: // added 1.5
 				break;
 
@@ -1221,5 +1235,6 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		}
 		return ret;
 	}
-
 }
+
+
