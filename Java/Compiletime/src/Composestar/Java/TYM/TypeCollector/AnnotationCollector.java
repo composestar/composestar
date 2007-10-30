@@ -35,6 +35,7 @@ public class AnnotationCollector implements CTCommonModule
 			{
 				try
 				{
+					fetchTypeAnnotations(c);
 					fetchMethodAnnotations(c);
 				}
 				catch (Throwable t)
@@ -58,7 +59,6 @@ public class AnnotationCollector implements CTCommonModule
 	 */
 	public void fetchMethodAnnotations(Class c) throws Throwable
 	{
-
 		Method[] methods = c.getMethods();
 		for (Method method : methods)
 		{
@@ -82,6 +82,23 @@ public class AnnotationCollector implements CTCommonModule
 		}
 	}
 
+	public void fetchTypeAnnotations(Class c)
+	{
+		//Debug.out(Debug.MODE_CRUCIAL, "AnnotationCollector", "Collecting annotations for type " + c.getName());
+		Annotation[] annots = c.getAnnotations();
+		for (Annotation annotation : annots)
+		{
+			Debug.out(Debug.MODE_CRUCIAL, "AnnotationCollector", "Found annotation " + annotation.annotationType().getName() + "(on " + c.getName() + ")");
+			JavaAnnotation annot = new JavaAnnotation();
+			Type annotType = getTypeLocation(annotation.annotationType().getName());
+			if (annotType != null)
+			{
+				Debug.out(Debug.MODE_CRUCIAL, "AnnotationCollector", "Registering: " + annotType.getName() + " to " + getTypeLocation(c.getName()).getName());
+				annot.register(annotType, getTypeLocation(c.getName()));
+			}
+		}
+	}
+	
 	/**
 	 * Locates a method. Returns a <code>MethodInfo</code> instance or null if
 	 * not found.
