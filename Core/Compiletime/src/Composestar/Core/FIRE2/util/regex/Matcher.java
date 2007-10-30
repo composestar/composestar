@@ -6,7 +6,6 @@ package Composestar.Core.FIRE2.util.regex;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,7 +23,7 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
  */
 public class Matcher
 {
-	private Pattern pattern;
+	private LegacyPattern pattern;
 
 	private ExecutionModel model;
 
@@ -38,7 +37,7 @@ public class Matcher
 
 	private boolean matchDone = false;
 
-	public Matcher(Pattern pattern, ExecutionModel model, Labeler labeler)
+	public Matcher(LegacyPattern pattern, ExecutionModel model, Labeler labeler)
 	{
 		this.pattern = pattern;
 		this.model = model;
@@ -90,19 +89,15 @@ public class Matcher
 
 	private boolean process(CombinedState state)
 	{
-		Enumeration<RegularTransition> regularTransitions;
 		RegularState regularState;
-		RegularTransition regularTransition;
 		RegularState[] nextStates;
 
 		CombinedState newState;
 
 		// empty transition in regular machine:
 		regularState = state.regularState;
-		regularTransitions = regularState.getOutTransitions();
-		while (regularTransitions.hasMoreElements())
+		for (RegularTransition regularTransition : regularState.getOutTransitions())
 		{
-			regularTransition = regularTransitions.nextElement();
 			if (regularTransition.isEmpty())
 			{
 				newState = new CombinedState(state.executionState, regularTransition.getEndState(), state);
@@ -177,11 +172,9 @@ public class Matcher
 
 	private Collection<RegularState> getNextStates(RegularState state, String label)
 	{
-		Enumeration<RegularTransition> transitions = state.getOutTransitions();
 		Set<RegularState> result = new HashSet<RegularState>();
-		while (transitions.hasMoreElements())
+		for (RegularTransition transition : state.getOutTransitions())
 		{
-			RegularTransition transition = transitions.nextElement();
 			if (transition.match(label))
 			{
 				result.addAll(lambdaClosure(transition.getEndState()));
@@ -201,8 +194,6 @@ public class Matcher
 	 */
 	private Collection<RegularState> lambdaClosure(RegularState state)
 	{
-		RegularTransition transition;
-		Enumeration<RegularTransition> transitions;
 		Set<RegularState> result;
 		Stack<RegularState> checkNext;
 		RegularState currentState, nextState;
@@ -216,10 +207,8 @@ public class Matcher
 		while (!checkNext.isEmpty())
 		{
 			currentState = checkNext.pop();
-			transitions = currentState.getOutTransitions();
-			while (transitions.hasMoreElements())
+			for (RegularTransition transition : currentState.getOutTransitions())
 			{
-				transition = transitions.nextElement();
 				nextState = transition.getEndState();
 				if (transition.isEmpty() && !result.contains(nextState))
 				{

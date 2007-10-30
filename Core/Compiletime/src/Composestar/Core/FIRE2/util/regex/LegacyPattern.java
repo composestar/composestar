@@ -5,43 +5,52 @@
 package Composestar.Core.FIRE2.util.regex;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * @author Arjan de Roo
  */
-public class Pattern
+public class LegacyPattern
 {
 	private RegularAutomaton automaton;
 
 	private String patternString;
 
-	private Pattern(String pattern) throws PatternParseException
+	private LegacyPattern(String pattern) throws PatternParseException
 	{
 		patternString = pattern;
 		automaton = Parser.parse(pattern);
 	}
 
-	public static Pattern compile(String pattern) throws PatternParseException
+	public static LegacyPattern compile(String pattern) throws PatternParseException
 	{
-		return new Pattern(pattern);
+		return new LegacyPattern(pattern);
 	}
 
-	protected RegularState getStartState()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.FIRE2.util.regex.IPattern#getStartState()
+	 */
+	public RegularState getStartState()
 	{
 		return automaton.getStartState();
 	}
 
-	protected RegularState getEndState()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.FIRE2.util.regex.IPattern#getEndState()
+	 */
+	public RegularState getEndState()
 	{
 		return automaton.getEndState();
 	}
 
-	/**
-	 * @return the patternString
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.FIRE2.util.regex.IPattern#getPatternString()
 	 */
 	public String getPatternString()
 	{
@@ -437,121 +446,4 @@ public class Pattern
 		}
 	}
 
-}
-
-class RegularAutomaton
-{
-	private RegularState startState;
-
-	private RegularState endState;
-
-	public RegularAutomaton()
-	{}
-
-	public void setStartState(RegularState startState)
-	{
-		this.startState = startState;
-	}
-
-	public RegularState getStartState()
-	{
-		return startState;
-	}
-
-	public void setEndState(RegularState endState)
-	{
-		this.endState = endState;
-	}
-
-	public RegularState getEndState()
-	{
-		return endState;
-	}
-}
-
-class RegularState
-{
-	private Vector<RegularTransition> outTransitions;
-
-	public RegularState()
-	{
-		outTransitions = new Vector<RegularTransition>();
-	}
-
-	public void addOutTransition(RegularTransition transition)
-	{
-		outTransitions.addElement(transition);
-	}
-
-	public Enumeration<RegularTransition> getOutTransitions()
-	{
-		return outTransitions.elements();
-	}
-}
-
-class RegularTransition
-{
-	private RegularState startState;
-
-	private RegularState endState;
-
-	private HashSet<String> labels;
-
-	private boolean negation;
-
-	public RegularTransition(RegularState startState, RegularState endState)
-	{
-		this.startState = startState;
-		this.endState = endState;
-
-		startState.addOutTransition(this);
-
-		labels = new HashSet<String>();
-	}
-
-	public void setNegation(boolean negation)
-	{
-		this.negation = negation;
-	}
-
-	public boolean isNegation()
-	{
-		return negation;
-	}
-
-	public void addLabel(String label)
-	{
-		labels.add(label);
-	}
-
-	public boolean match(String word)
-	{
-		if (labels.contains("_"))
-		{
-			return !negation;
-		}
-		else if (negation)
-		{
-			return !labels.contains(word);
-		}
-		else
-		{
-			return labels.contains(word);
-		}
-	}
-
-	public boolean isEmpty()
-	{
-		return labels.isEmpty();
-	}
-
-	public RegularState getEndState()
-	{
-		return endState;
-	}
-
-	public RegularState getStartState()
-	{
-		return startState;
-	}
 }
