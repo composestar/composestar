@@ -25,7 +25,7 @@ import Composestar.Java.LAMA.JavaFieldInfo;
 import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Java.LAMA.JavaParameterInfo;
 import Composestar.Java.LAMA.JavaType;
-import Composestar.Java.TYM.TypeHarvester.ClassMap;
+import Composestar.Java.TYM.TypeHarvester.JavaHarvestRunner;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -56,8 +56,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		try
 		{
 			// iterate over classes
-			ClassMap cm = ClassMap.instance();
-			Map<String, Class> classes = cm.map();
+			Map<String, Class> classes = (Map<String,Class>)resources.get(JavaHarvestRunner.CLASS_MAP);
 			for (Class c : classes.values())
 			{
 				try

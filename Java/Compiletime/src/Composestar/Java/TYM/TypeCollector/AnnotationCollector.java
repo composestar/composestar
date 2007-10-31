@@ -13,7 +13,7 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Java.LAMA.JavaAnnotation;
-import Composestar.Java.TYM.TypeHarvester.ClassMap;
+import Composestar.Java.TYM.TypeHarvester.JavaHarvestRunner;
 import Composestar.Utils.Debug;
 
 /**
@@ -29,8 +29,7 @@ public class AnnotationCollector implements CTCommonModule
 	{
 		try
 		{
-			ClassMap classmap = ClassMap.instance();
-			Map<String,Class> classes = classmap.map();
+			Map<String,Class> classes = (Map<String,Class>)resources.get(JavaHarvestRunner.CLASS_MAP);
 			for (Class c : classes.values())
 			{
 				try

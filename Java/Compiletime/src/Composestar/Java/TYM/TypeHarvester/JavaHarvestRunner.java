@@ -20,16 +20,8 @@ import Composestar.Utils.Debug;
  */
 public class JavaHarvestRunner implements HarvestRunner
 {
-	private ClassMap cm; // contains the harvested classes.
-
-	/**
-	 * Default constructor.
-	 */
-	public JavaHarvestRunner()
-	{
-		cm = ClassMap.instance();
-	}
-
+	public static final String CLASS_MAP = "ClassMap";  
+	
 	/**
 	 * Module run method.
 	 */
@@ -61,6 +53,9 @@ public class JavaHarvestRunner implements HarvestRunner
 			}
 		}
 
+		HashMap<String,Class> classMap = new HashMap<String,Class>();
+		resources.put(JavaHarvestRunner.CLASS_MAP, classMap);
+		
 		for (File file : toBeHarvested)
 		{
 			try
@@ -70,7 +65,7 @@ public class JavaHarvestRunner implements HarvestRunner
 				for (Object o : classen.values())
 				{
 					Class c = (Class) o;
-					cm.addClass(c);
+					classMap.put(c.getName(), c);
 					Debug.out(Debug.MODE_DEBUG, "HARVESTER", "Class extracted:" + c.getName());
 				}
 			}
