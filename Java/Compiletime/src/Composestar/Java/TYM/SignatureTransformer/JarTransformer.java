@@ -17,8 +17,7 @@ import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Java.TYM.TypeHarvester.JarLoader;
-import Composestar.Java.TYM.TypeHarvester.JarLoaderException;
+import Composestar.Java.TYM.TypeHarvester.JavaHarvestRunner;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
@@ -54,8 +53,8 @@ public class JarTransformer
 	 */
 	public String convertPackageToJar(String name)
 	{
-		String entry = name.replace(JarLoader.PACKAGE_SEPARATOR, JarLoader.JAR_SEPARATOR);
-		entry += JarLoader.CLASS_EXTENSION;
+		String entry = name.replace('.', '/');
+		entry += ".class";
 		return entry;
 	}
 
@@ -105,8 +104,7 @@ public class JarTransformer
 		// extract classes
 		try
 		{
-			JarLoader jl = new JarLoader(jarFile);
-			HashMap classen = jl.getLoadedClasses();
+			HashMap<String,Class> classen = JavaHarvestRunner.harvest(jarFile.toURL());
 			for (Object o : classen.keySet())
 			{
 
@@ -141,7 +139,7 @@ public class JarTransformer
 				}
 			}
 		}
-		catch (JarLoaderException e)
+		catch (Exception e)
 		{
 			throw new ModuleException("Error while loading classes from jar: " + e.getMessage(), "SITRA");
 		}
