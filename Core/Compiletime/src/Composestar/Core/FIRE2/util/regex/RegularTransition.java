@@ -28,6 +28,11 @@ import java.util.HashSet;
 
 class RegularTransition
 {
+	/**
+	 * Wildcard, matches always
+	 */
+	public static final String WILDCARD = "ÿÿÿ";
+
 	private RegularState startState;
 
 	private RegularState endState;
@@ -36,14 +41,26 @@ class RegularTransition
 
 	private boolean negation;
 
-	public RegularTransition(RegularState startState, RegularState endState)
+	public RegularTransition(RegularState mystart, RegularState myend)
 	{
-		this.startState = startState;
-		this.endState = endState;
-
-		startState.addOutTransition(this);
-
+		setStartState(mystart);
+		setEndState(myend);
 		labels = new HashSet<String>();
+	}
+
+	public void setStartState(RegularState newStart)
+	{
+		if (startState != null)
+		{
+			startState.removeOutTransition(this);
+		}
+		startState = newStart;
+		startState.addOutTransition(this);
+	}
+
+	public void setEndState(RegularState newEnd)
+	{
+		endState = newEnd;
 	}
 
 	public void setNegation(boolean negation)
@@ -63,7 +80,7 @@ class RegularTransition
 
 	public boolean match(String word)
 	{
-		if (labels.contains("_"))
+		if (labels.contains(WILDCARD))
 		{
 			return !negation;
 		}
@@ -90,5 +107,26 @@ class RegularTransition
 	public RegularState getStartState()
 	{
 		return startState;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("{ ");
+		if (negation)
+		{
+			sb.append("~");
+		}
+		sb.append(labels.toString());
+		sb.append(" -> ");
+		sb.append(endState.toString());
+		sb.append(" }");
+		return sb.toString();
 	}
 }

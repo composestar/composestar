@@ -42,8 +42,34 @@ class RegularState
 		outTransitions.add(transition);
 	}
 
+	public void removeOutTransition(RegularTransition transition)
+	{
+		outTransitions.remove(transition);
+	}
+
 	public List<RegularTransition> getOutTransitions()
 	{
 		return Collections.unmodifiableList(outTransitions);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		for (RegularTransition transition : outTransitions)
+		{
+			sb.append(transition.toString());
+		}
+		if (outTransitions.size() == 0)
+		{
+			sb.append("<END>");
+		}
+		return sb.toString();
+	}
+
 }
