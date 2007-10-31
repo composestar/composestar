@@ -26,15 +26,30 @@ package Composestar.Core.FIRE2.util.regex;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 class RegularState
 {
+	private static int currentId;
+
+	/**
+	 * Used in toString() for state names
+	 */
+	private String stateId;
+
 	private List<RegularTransition> outTransitions;
 
 	public RegularState()
 	{
+		stateId = getStateId();
 		outTransitions = new ArrayList<RegularTransition>();
+	}
+
+	private static final String getStateId()
+	{
+		return "s" + (currentId++);
 	}
 
 	public void addOutTransition(RegularTransition transition)
@@ -60,16 +75,43 @@ class RegularState
 	@Override
 	public String toString()
 	{
+		Set<RegularState> states = new HashSet<RegularState>();
+		getAllStats(states);
 		StringBuffer sb = new StringBuffer();
-		for (RegularTransition transition : outTransitions)
+		for (RegularState state : states)
 		{
-			sb.append(transition.toString());
-		}
-		if (outTransitions.size() == 0)
-		{
-			sb.append("<END>");
+			if (state.outTransitions.size() == 0)
+			{
+				sb.append(state.stateId);
+				sb.append(" -> ");
+				sb.append("<END>");
+				sb.append("\n");
+			}
+			else
+			{
+				for (RegularTransition rt : state.outTransitions)
+				{
+					sb.append(state.stateId);
+					sb.append(" -> ");
+					sb.append(rt.toString());
+					sb.append(" -> ");
+					sb.append(rt.getEndState().stateId);
+					sb.append("\n");
+				}
+			}
 		}
 		return sb.toString();
 	}
 
+	private void getAllStats(Set<RegularState> states)
+	{
+		states.add(this);
+		for (RegularTransition transition : outTransitions)
+		{
+			if (!states.contains(transition.getEndState()))
+			{
+				transition.getEndState().getAllStats(states);
+			}
+		}
+	}
 }

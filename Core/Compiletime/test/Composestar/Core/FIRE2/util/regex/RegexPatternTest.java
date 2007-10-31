@@ -44,52 +44,131 @@ public class RegexPatternTest extends TestCase
 		super(name);
 	}
 
-	public void testBasic()
+	public void testBasic() throws PatternParseException
 	{
-		Pattern pat = RegexPattern.compile("test");
-		Pattern pat2 = RegexPattern.compile("(test)(bar)");
+		Pattern pat0 = RegexPattern.compile("");
+		Pattern pat = RegexPattern.compile("aa");
+		Pattern pat2 = RegexPattern.compile("(aa)(bb)");
+		Pattern pat3 = RegexPattern.compile("(aa)bb(cc)");
+		Pattern pat4 = RegexPattern.compile("aa(bb)cc");
 	}
 
-	public void testAlts()
+	public void testInvalid()
 	{
-		Pattern pat = RegexPattern.compile("foo|bar|quux|frop");
-		Pattern pat2 = RegexPattern.compile("(foo)|(bar)|(quux)|(frop)");
-		Pattern pat3 = RegexPattern.compile("foo|(bar|quux|frop)");
-		Pattern pat4 = RegexPattern.compile("foo|(bar|(quux|frop))");
-		Pattern pat5 = RegexPattern.compile("(foo)(bar)(quux|frop)(friep)");
+		try
+		{
+			Pattern pat = RegexPattern.compile("aa:");
+		}
+		catch (PatternParseException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			Pattern pat = RegexPattern.compile("aa(");
+		}
+		catch (PatternParseException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			Pattern pat = RegexPattern.compile("aa(aa");
+		}
+		catch (PatternParseException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			Pattern pat = RegexPattern.compile(")");
+		}
+		catch (PatternParseException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			Pattern pat = RegexPattern.compile("*+?");
+		}
+		catch (PatternParseException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
-	public void testNeq()
+	public void testAlts() throws PatternParseException
 	{
-		// bar
-		// quux
-		// xxx
-		Pattern pat = RegexPattern.compile("(?foo)");
-		// quux
-		// xxx
-		Pattern pat2 = RegexPattern.compile("(?foo|bar)");
-		// foo
-		// quux
-		// xxx
-		Pattern pat3 = RegexPattern.compile("foo|(?bar)");
-		// foo
-		// quux
-		// frop
-		// xxx
-		Pattern pat4 = RegexPattern.compile("foo|(?bar|(?quux|frop))");
-		// foo
-		// bar
-		// foo foo
-		// foo xxx bar
-		Pattern pat5 = RegexPattern.compile("(?(foo)(bar))"); // is BROKEN
-		// foo frop
-		// foo xxx frop
-		Pattern pat6 = RegexPattern.compile("(foo)(?bar|quux)(frop)");
+		// pat1 == pat2 == pat3 == pat4
+		// "aa" "bb" "cc" "dd"
+		Pattern pat = RegexPattern.compile("aa|bb|cc|dd");
+		Pattern pat2 = RegexPattern.compile("(aa)|(bb)|(cc)|(dd)");
+		Pattern pat3 = RegexPattern.compile("aa|(bb|cc|dd)");
+		Pattern pat4 = RegexPattern.compile("aa|(bb|(cc|dd))");
+
+		// "aa bb cc ee" "aa bb dd ee"
+		Pattern pat5 = RegexPattern.compile("(aa)(bb)(cc|dd)(ee)");
+	}
+
+	public void testNeq() throws PatternParseException
+	{
+		// "bb" "cc" "dd"
+		Pattern pat = RegexPattern.compile("(?!aa)");
+		// "cc" "dd"
+		Pattern pat2 = RegexPattern.compile("(?!aa|bb)");
+		// "aa" "cc" "dd"
+		Pattern pat3 = RegexPattern.compile("aa|(?!bb)");
+		// "aa" "cc" "dd"
+		Pattern pat4 = RegexPattern.compile("aa|(?!bb|(?!cc|dd))");
+		// "bb aa" "aa aa" "aa cc"
+		Pattern pat5 = RegexPattern.compile("(?!(aa)(bb))"); // is BROKEN
+		// "aa dd dd" "aa aa dd"
+		Pattern pat6 = RegexPattern.compile("(aa)(?!bb|cc)(dd)");
+	}
+
+	public void testDot() throws PatternParseException
+	{
+		// "aa" "bb cc aa"
+		Pattern pat = RegexPattern.compile(".*aa");
+		// "bb aa" "bb cc dd aa"
+		Pattern pat2 = RegexPattern.compile(".+aa");
+	}
+
+	public void testMult() throws PatternParseException
+	{
+		// "bb" or ""
+		Pattern pat1 = RegexPattern.compile("(bb)?");
+		// "aa bb cc" or "aa cc"
+		Pattern pat1a = RegexPattern.compile("aa(bb)?cc");
+		// "bb bb" "bb" ""
+		Pattern pat2 = RegexPattern.compile("(bb)*");
+		// "aa bb bb cc" "aa bb cc" "aa cc"
+		Pattern pat2a = RegexPattern.compile("aa(bb)*cc");
+		// "bb bb" "bb"
+		Pattern pat3 = RegexPattern.compile("(bb)+");
+		// "aa bb bb bb cc" "aa bb cc"
+		Pattern pat3a = RegexPattern.compile("aa(bb)+cc");
+
+		// "aa bb dd cc" "aa cc"
+		Pattern pat1b = RegexPattern.compile("aa((bb)(dd))?cc");
+		// "aa bb cc" "aa dd cc" "aa cc"
+		Pattern pat1c = RegexPattern.compile("aa((bb)|(dd))?cc");
+		// "aa bb dd bb dd cc" "aa bb dd cc" "aa cc"
+		Pattern pat2b = RegexPattern.compile("aa((bb)(dd))*cc");
+		// "aa bb bb dd cc" "aa dd cc" "aa bb cc" "aa dd bb dd cc"
+		Pattern pat2c = RegexPattern.compile("aa((bb)|(dd))*cc");
 	}
 
 	public static void main(String[] args)
 	{
 		RegexPatternTest t = new RegexPatternTest();
-		t.testAlts();
+		try
+		{
+			t.testMult();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

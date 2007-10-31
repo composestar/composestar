@@ -24,7 +24,9 @@
 
 package Composestar.Core.FIRE2.util.regex;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 class RegularTransition
 {
@@ -37,7 +39,7 @@ class RegularTransition
 
 	private RegularState endState;
 
-	private HashSet<String> labels;
+	private Set<String> labels;
 
 	private boolean negation;
 
@@ -76,6 +78,16 @@ class RegularTransition
 	public void addLabel(String label)
 	{
 		labels.add(label);
+	}
+
+	public void addLabels(Set<String> label)
+	{
+		labels.addAll(label);
+	}
+
+	public Set<String> getLabels()
+	{
+		return Collections.unmodifiableSet(labels);
 	}
 
 	public boolean match(String word)
@@ -118,15 +130,11 @@ class RegularTransition
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append("{ ");
 		if (negation)
 		{
 			sb.append("~");
 		}
 		sb.append(labels.toString());
-		sb.append(" -> ");
-		sb.append(endState.toString());
-		sb.append(" }");
 		return sb.toString();
 	}
 }

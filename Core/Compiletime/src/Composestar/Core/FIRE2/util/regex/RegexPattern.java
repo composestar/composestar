@@ -28,16 +28,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
- * A basic regualr expression pattern. Only a small subset of regex is
- * supported.
+ * A basic regular expression pattern. Only a small subset of regex is
+ * supported. And not in the usual flexibility. There are no character matches,
+ * just words. All whitespace is ignored. Multiplicity is only allowed for
+ * subexpressions and not for characters. For example <code>ab*c</code> is not
+ * allowed, use <code>(a)(b)*(c)</code>. Matching always happens on the whole
+ * sentence (i.e. pattern => ^pattern$ ). The dot wildcard may only be used in
+ * conjuction with + or * multipliers. ENBF grammar of the accepted expressions:
  * 
  * <pre>
- * alt		=	mult { '|' mult };
- * mult		=	seq [ '?' | '*' ];
- * seq		=	word | rseq {rseq};
- * rseq		=	'(' ['?'] alt ')';
+ * alt		= seq { '|' seq };
+ * seq		= (word | subExpr | not) { (word | subExpr | not) };
+ * word		= letterOrDigit {letterOrDigit};
+ * not		= '(?!' alt ')';
+ * subExpr	= '(' alt ')' [ '?' | '*' | '+' ];
  * </pre>
  * 
  * @author Michiel Hendriks
@@ -46,12 +53,12 @@ public class RegexPattern extends Pattern
 {
 	private RegularAutomaton automaton;
 
-	public static RegexPattern compile(String pattern)
+	public static RegexPattern compile(String pattern) throws PatternParseException
 	{
 		return new RegexPattern(pattern);
 	}
 
-	private RegexPattern(String pattern)
+	private RegexPattern(String pattern) throws PatternParseException
 	{
 		super(pattern);
 		automaton = Parser.parse(pattern);
@@ -81,136 +88,325 @@ public class RegexPattern extends Pattern
 
 	private static class Parser
 	{
-		public static RegularAutomaton parse(String pattern)
+		protected static RegularState END_STATE;
+
+		public static RegularAutomaton parse(String pattern) throws PatternParseException
 		{
 			Lexer lexer = new Lexer(pattern);
-			return pAlt(lexer);
-		}
-
-		private static List<RegularTransition> getCompactStates(RegularState st)
-		{
-			List<RegularTransition> res = new ArrayList<RegularTransition>();
-			for (RegularTransition rt : st.getOutTransitions())
+			END_STATE = new FinalRegularState();
+			RegularState start = pAlt(lexer);
+			RegularAutomaton auto = new RegularAutomaton();
+			auto.setStartState(start);
+			auto.setEndState(END_STATE);
+			if (lexer.token().type != Token.EOF)
 			{
-				if (rt.isEmpty())
-				{
-					res.addAll(getCompactStates(rt.getEndState()));
-				}
-				else
-				{
-					res.add(rt);
-				}
+				throw new PatternParseException(String.format("Garbage token '%s' at #%d", lexer.token().text, lexer
+						.charPos()));
 			}
-			return res;
+			return auto;
 		}
 
-		private static RegularAutomaton pAlt(Lexer lexer)
+		private static RegularState pAlt(Lexer lexer) throws PatternParseException
 		{
-			List<RegularAutomaton> alts = new ArrayList<RegularAutomaton>();
-			alts.add(pMultp(lexer));
+			List<RegularState> alts = new ArrayList<RegularState>();
+			alts.add(pSeq(lexer));
 
 			while (lexer.token().type == Token.OR)
 			{
 				lexer.nextToken();
-				alts.add(pMultp(lexer));
+				alts.add(pSeq(lexer));
 			}
 
 			if (alts.size() == 1)
 			{
 				return alts.get(0);
 			}
+			// combine transitions with identical destinations and negation
 
-			RegularAutomaton result = new RegularAutomaton();
-			RegularState startState = new RegularState();
-			result.setStartState(startState);
-			RegularState endState = new RegularState();
-			result.setEndState(endState);
-
-			for (RegularAutomaton alt : alts)
+			RegularState result = new RegularState();
+			Map<RegularState, List<RegularTransition>> destMap = new HashMap<RegularState, List<RegularTransition>>();
+			for (RegularState state : alts)
 			{
-				// TODO: combine similar transitions
-				for (RegularTransition rt : getCompactStates(alt.getStartState()))
+				for (RegularTransition rt : state.getOutTransitions())
 				{
-					rt.setStartState(startState);
-					rt.setEndState(endState);
+					List<RegularTransition> dst = destMap.get(rt.getEndState());
+					if (dst == null)
+					{
+						dst = new ArrayList<RegularTransition>();
+						destMap.put(rt.getEndState(), dst);
+					}
+					dst.add(rt);
+				}
+			}
+			for (Entry<RegularState, List<RegularTransition>> entry : destMap.entrySet())
+			{
+				RegularTransition regrt = null;
+				RegularTransition neqrt = null;
+				for (RegularTransition rt : entry.getValue())
+				{
+					if (rt.isNegation())
+					{
+						if (neqrt == null)
+						{
+							neqrt = new RegularTransition(result, entry.getKey());
+							neqrt.setNegation(true);
+						}
+						neqrt.addLabels(rt.getLabels());
+					}
+					else
+					{
+						if (regrt == null)
+						{
+							regrt = new RegularTransition(result, entry.getKey());
+						}
+						regrt.addLabels(rt.getLabels());
+					}
 				}
 			}
 			return result;
 		}
 
-		private static RegularAutomaton pMultp(Lexer lexer)
+		private static RegularState pSeq(Lexer lexer) throws PatternParseException
 		{
-			RegularAutomaton expr = pSeq(lexer);
-			Token t = lexer.token();
-			if (t.type == Token.STAR)
+			RegularState result = null;
+			RegularState lhs = null;
+			while (lexer.token().type == Token.WORD || lexer.token().type == Token.NEQ
+					|| lexer.token().type == Token.PLEFT || lexer.token().type == Token.DOT)
 			{
-				lexer.nextToken();
-				// TODO:
-			}
-			else if (t.type == Token.OPT)
-			{
-				lexer.nextToken();
-				// TODO:
-			}
-			return expr;
-		}
-
-		private static RegularAutomaton pSeq(Lexer lexer)
-		{
-			Token t = lexer.token();
-			if (t.type == Token.WORD)
-			{
-				lexer.nextToken();
-
-				RegularAutomaton result = new RegularAutomaton();
-				RegularState startState = new RegularState();
-				result.setStartState(startState);
-				RegularState endState = new RegularState();
-				result.setEndState(endState);
-
-				RegularTransition transition = new RegularTransition(startState, endState);
-				transition.addLabel(t.toString());
-				return result;
-			}
-			else if (t.type == Token.NEQ || t.type == Token.PLEFT)
-			{
-				RegularAutomaton lhs = pRseq(lexer);
-				RegularAutomaton result = lhs;
-				while (lexer.token().type == Token.NEQ || lexer.token().type == Token.PLEFT)
+				RegularState rhs;
+				if (lexer.token().type == Token.WORD)
 				{
-					RegularAutomaton rhs = pRseq(lexer);
-					new RegularTransition(lhs.getEndState(), rhs.getStartState());
-					lhs = rhs;
+					rhs = pWord(lexer);
 				}
-				return result;
+				else if (lexer.token().type == Token.DOT)
+				{
+					Token t = lexer.nextToken();
+					if (t.type != Token.STAR && t.type != Token.PLUS)
+					{
+						throw new PatternParseException(String.format(
+								"Dot may only be used in conjuction with the star or plus multiplier (.* or .+)",
+								lexer.charPos));
+					}
+					lexer.nextToken();
+					result = new RegularState();
+					rhs = result;
+					RegularTransition transition;
+					if (t.type == Token.PLUS)
+					{
+						// state for the first word
+						rhs = new RegularState();
+						transition = new RegularTransition(result, rhs);
+						transition.addLabel(RegularTransition.WILDCARD);
+					}
+					// lambda
+					transition = new RegularTransition(rhs, END_STATE);
+					// wildcard to self
+					transition = new RegularTransition(rhs, rhs);
+					transition.addLabel(RegularTransition.WILDCARD);
+				}
+				else
+				{
+					rhs = pSubexp(lexer);
+				}
+				if (result == null)
+				{
+					// first item in the sequence is the return value;
+					result = rhs;
+				}
+				if (lhs != null)
+				{
+					// link end state of previous item in the list to current
+					// item
+					for (RegularTransition rt : lhs.getOutTransitions())
+					{
+						if (rt.getEndState().equals(END_STATE))
+						{
+							rt.setEndState(rhs);
+						}
+					}
+				}
+				lhs = rhs;
 			}
-			// throw exception
-			return null;
+			if (lexer.token().type == Token.EOF && result == null)
+			{
+				// empty regex
+				return END_STATE;
+			}
+			if (result == null)
+			{
+				throw new PatternParseException(String.format("Unexpected token '%s' at #%d", lexer.token().text, lexer
+						.charPos()));
+			}
+			return result;
 		}
 
-		private static RegularAutomaton pRseq(Lexer lexer)
+		private static RegularState pWord(Lexer lexer) throws PatternParseException
 		{
 			Token t = lexer.token();
 			lexer.nextToken();
-			RegularAutomaton result = pAlt(lexer);
+			RegularState result = new RegularState();
+			RegularTransition transition = new RegularTransition(result, END_STATE);
+			transition.addLabel(t.toString());
+			return result;
+		}
+
+		private static RegularState pSubexp(Lexer lexer) throws PatternParseException
+		{
+			Token t = lexer.token();
+			lexer.nextToken();
+			RegularState result = pAlt(lexer);
 
 			if (t.type == Token.NEQ)
 			{
-				// FIXME: this doesn't negate sequence, just the first node
-				// Expected: not(x y z)
-				// Currently: not(x) y z
-				for (RegularTransition rt : getCompactStates(result.getStartState()))
-				{
-					rt.setNegation(!rt.isNegation());
-				}
+				notTransform(result);
 			}
 
 			if (lexer.token().type != Token.PRIGHT)
 			{
-				// throw exception
+				throw new PatternParseException(String.format("Missing right paranthesis at #%d", lexer.charPos()));
 			}
 			lexer.nextToken();
+
+			if (t.type != Token.NEQ)
+			{
+				multTransform(result, lexer);
+			}
 			return result;
+		}
+
+		/**
+		 * Process multiplication
+		 * 
+		 * @param expr
+		 * @param lexer
+		 * @throws PatternParseException
+		 */
+		private static void multTransform(RegularState expr, Lexer lexer) throws PatternParseException
+		{
+			Token t = lexer.token();
+			if (t.type == Token.STAR)
+			{
+				if (lexer.LL(-1).type != Token.PRIGHT)
+				{
+					throw new PatternParseException(String.format("Multiplication only supported for subexpressions",
+							lexer.charPos()));
+				}
+				lexer.nextToken();
+				// replace the end states with self
+				replaceStates(expr, END_STATE, expr, true);
+				// lambda makes it optional
+				new RegularTransition(expr, END_STATE);
+			}
+			else if (t.type == Token.OPT)
+			{
+				if (lexer.LL(-1).type != Token.PRIGHT)
+				{
+					throw new PatternParseException(String.format("Multiplication only supported for subexpressions",
+							lexer.charPos()));
+				}
+				lexer.nextToken();
+				// simply add lambda
+				new RegularTransition(expr, END_STATE);
+			}
+			else if (t.type == Token.PLUS)
+			{
+				if (lexer.LL(-1).type != Token.PRIGHT)
+				{
+					throw new PatternParseException(String.format("Multiplication only supported for subexpressions",
+							lexer.charPos()));
+				}
+				lexer.nextToken();
+				// replace the end states with this state
+				RegularState newEnd = new RegularState();
+				replaceStates(expr, END_STATE, newEnd, true);
+				// lambda to begin of expression
+				new RegularTransition(newEnd, expr);
+				// or to end state (had 1 iteration)
+				new RegularTransition(newEnd, END_STATE);
+			}
+		}
+
+		/**
+		 * @param base
+		 * @param from
+		 * @param to
+		 * @param endState
+		 */
+		private static void replaceStates(RegularState base, RegularState from, RegularState to, boolean endState)
+		{
+			for (RegularTransition rt : base.getOutTransitions())
+			{
+				if (endState)
+				{
+					if (rt.getEndState().equals(from))
+					{
+						rt.setEndState(to);
+					}
+					else
+					{
+						replaceStates(rt.getEndState(), from, to, endState);
+					}
+				}
+				else
+				{
+					if (rt.getStartState().equals(from))
+					{
+						rt.setStartState(to);
+					}
+					else
+					{
+						replaceStates(rt.getEndState(), from, to, endState);
+					}
+				}
+			}
+		}
+
+		// FIXME: this doesn't negate sequence, just the first node
+		// Expected: not(x y z)
+		// Currently: not(x) y z
+		private static void notTransform(RegularState base)
+		{
+			for (RegularTransition rt : base.getOutTransitions())
+			{
+				// dirty invert negation (only works for
+				rt.setNegation(!rt.isNegation());
+			}
+			/*
+			 * To properly support negation of a sequence the sequence needs to
+			 * be copied and each segment needs to get a negation edge to the
+			 * actual end state. The above dirty hack only works for
+			 * alternatives, not sequences.
+			 */
+		}
+	}
+
+	/**
+	 * Used for the final/end state
+	 * 
+	 * @author Michiel Hendriks
+	 */
+	private static class FinalRegularState extends RegularState
+	{
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.util.regex.RegularState#addOutTransition(Composestar.Core.FIRE2.util.regex.RegularTransition)
+		 */
+		@Override
+		public void addOutTransition(RegularTransition transition)
+		{
+			throw new IllegalArgumentException("FinalRegularState can not contains transition");
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.util.regex.RegularState#removeOutTransition(Composestar.Core.FIRE2.util.regex.RegularTransition)
+		 */
+		@Override
+		public void removeOutTransition(RegularTransition transition)
+		{
+			throw new IllegalArgumentException("FinalRegularState can not contains transition");
 		}
 	}
 
@@ -218,7 +414,7 @@ public class RegexPattern extends Pattern
 	 * Parses the input string and returns tokens. Character sequences are
 	 * automatically converted to a single token.
 	 * 
-	 * @author mhendrik
+	 * @author Michiel Hendriks
 	 */
 	private static class Lexer
 	{
@@ -285,6 +481,11 @@ public class RegexPattern extends Pattern
 			{
 				bufferToken();
 			}
+			if (i < 0)
+			{
+				throw new IllegalArgumentException(String.format("LL(%d) results in a negative token index", i
+						- tokenPos));
+			}
 			return tokenBuffer.get(i);
 		}
 
@@ -298,9 +499,10 @@ public class RegexPattern extends Pattern
 			char c = buffer.charAt(charPos++);
 			if (c == Token.PLEFT)
 			{
-				if (buffer.charAt(charPos) == Token.OPT)
+				if (buffer.length() >= charPos + 2 && buffer.charAt(charPos) == Token.OPT
+						&& buffer.charAt(charPos + 1) == 0x21) // !
 				{
-					charPos++;
+					charPos += 2;
 					tokenBuffer.add(NEQ_TOKEN);
 				}
 				else
@@ -346,6 +548,11 @@ public class RegexPattern extends Pattern
 		}
 	}
 
+	/**
+	 * Tokens used by this expression
+	 * 
+	 * @author Michiel Hendriks
+	 */
 	private static class Token
 	{
 		public static final int EOF = -1;
@@ -356,13 +563,23 @@ public class RegexPattern extends Pattern
 
 		public static final int STAR = 0x2A; // *
 
+		public static final int PLUS = 0x2B; // *
+
 		public static final int OPT = 0x3F; // ?
 
 		public static final int PLEFT = 0x28; // (
 
 		public static final int PRIGHT = 0x29; // )
 
-		public static final int NEQ = -3; // (?
+		public static final int CLEFT = 0x7B8; // {
+
+		public static final int CRIGHT = 0x7D; // }
+
+		public static final int COMMA = 0x2C; // )
+
+		public static final int DOT = 0x2E; // .
+
+		public static final int NEQ = -3; // (?!
 
 		public int type;
 
