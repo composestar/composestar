@@ -44,9 +44,9 @@ class RegularAutomaton
 		endState = inEnd;
 	}
 
-	public void setStartState(RegularState startState)
+	public void setStartState(RegularState newStartState)
 	{
-		this.startState = startState;
+		startState = newStartState;
 	}
 
 	public RegularState getStartState()
@@ -54,9 +54,9 @@ class RegularAutomaton
 		return startState;
 	}
 
-	public void setEndState(RegularState endState)
+	public void setEndState(RegularState newEndState)
 	{
-		this.endState = endState;
+		endState = newEndState;
 	}
 
 	public RegularState getEndState()

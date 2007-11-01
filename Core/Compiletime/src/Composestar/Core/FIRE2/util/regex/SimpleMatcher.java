@@ -100,7 +100,7 @@ public class SimpleMatcher
 		while (words.size() > 0)
 		{
 			String word = words.remove();
-			if (word == "")
+			if ("".equals(word))
 			{
 				continue;
 			}

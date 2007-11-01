@@ -65,9 +65,9 @@ class RegularTransition
 		endState = newEnd;
 	}
 
-	public void setNegation(boolean negation)
+	public void setNegation(boolean value)
 	{
-		this.negation = negation;
+		negation = value;
 	}
 
 	public boolean isNegation()

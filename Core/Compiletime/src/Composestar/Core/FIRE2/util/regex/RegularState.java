@@ -47,7 +47,7 @@ class RegularState
 		outTransitions = new ArrayList<RegularTransition>();
 	}
 
-	private static final String getStateId()
+	private static String getStateId()
 	{
 		return "s" + (currentId++);
 	}

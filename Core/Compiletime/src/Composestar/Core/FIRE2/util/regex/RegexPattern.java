@@ -52,7 +52,7 @@ import java.util.Map.Entry;
  * 
  * @author Michiel Hendriks
  */
-public class RegexPattern extends Pattern
+public final class RegexPattern extends Pattern
 {
 	private RegularAutomaton automaton;
 
@@ -89,9 +89,12 @@ public class RegexPattern extends Pattern
 		return automaton.getEndState();
 	}
 
-	private static class Parser
+	private static final class Parser
 	{
-		public static final RegularAutomaton parse(String pattern) throws PatternParseException
+		private Parser()
+		{}
+
+		public static RegularAutomaton parse(String pattern) throws PatternParseException
 		{
 			Lexer lexer = new Lexer(pattern);
 			RegularState end = new FinalRegularState();
@@ -117,7 +120,7 @@ public class RegexPattern extends Pattern
 		 * @return
 		 * @throws PatternParseException
 		 */
-		private static final RegularState pAlt(Lexer lexer, RegularState endState) throws PatternParseException
+		private static RegularState pAlt(Lexer lexer, RegularState endState) throws PatternParseException
 		{
 			List<RegularState> alts = new ArrayList<RegularState>();
 			alts.add(pSeq(lexer, endState));
@@ -198,7 +201,7 @@ public class RegexPattern extends Pattern
 		 * @param self
 		 * @return
 		 */
-		private static final boolean hasSelfReference(RegularState self)
+		private static boolean hasSelfReference(RegularState self)
 		{
 			Stack<RegularState> states = new Stack<RegularState>();
 			states.push(self);
@@ -226,7 +229,7 @@ public class RegexPattern extends Pattern
 		 * @return
 		 * @throws PatternParseException
 		 */
-		private static final RegularState pSeq(Lexer lexer, RegularState endState) throws PatternParseException
+		private static RegularState pSeq(Lexer lexer, RegularState endState) throws PatternParseException
 		{
 			RegularState result = null;
 			RegularState lhs = null;
@@ -259,7 +262,7 @@ public class RegexPattern extends Pattern
 						transition.addLabel(RegularTransition.WILDCARD);
 					}
 					// lambda
-					transition = new RegularTransition(self, endState);
+					new RegularTransition(self, endState);
 					// wildcard to self
 					transition = new RegularTransition(self, self);
 					transition.addLabel(RegularTransition.WILDCARD);
@@ -302,7 +305,7 @@ public class RegexPattern extends Pattern
 		 * @return
 		 * @throws PatternParseException
 		 */
-		private static final RegularState pWord(Lexer lexer, RegularState endState) throws PatternParseException
+		private static RegularState pWord(Lexer lexer, RegularState endState) throws PatternParseException
 		{
 			Token t = lexer.token();
 			lexer.nextToken();
@@ -320,7 +323,7 @@ public class RegexPattern extends Pattern
 		 * @return
 		 * @throws PatternParseException
 		 */
-		private static final RegularState pSubexp(Lexer lexer, RegularState endState) throws PatternParseException
+		private static RegularState pSubexp(Lexer lexer, RegularState endState) throws PatternParseException
 		{
 			Token t = lexer.token();
 			lexer.nextToken();
@@ -351,14 +354,14 @@ public class RegexPattern extends Pattern
 		 * @param lexer
 		 * @throws PatternParseException
 		 */
-		private static final void multTransform(RegularState expr, Lexer lexer, RegularState endState)
+		private static void multTransform(RegularState expr, Lexer lexer, RegularState endState)
 				throws PatternParseException
 		{
 			// TODO: breaks for subexpressions
 			Token t = lexer.token();
 			if (t.type == Token.STAR)
 			{
-				if (lexer.LL(-1).type != Token.PRIGHT)
+				if (lexer.ll(-1).type != Token.PRIGHT)
 				{
 					throw new PatternParseException(String.format("Multiplication only supported for subexpressions",
 							lexer.charPos()));
@@ -371,7 +374,7 @@ public class RegexPattern extends Pattern
 			}
 			else if (t.type == Token.OPT)
 			{
-				if (lexer.LL(-1).type != Token.PRIGHT)
+				if (lexer.ll(-1).type != Token.PRIGHT)
 				{
 					throw new PatternParseException(String.format("Multiplication only supported for subexpressions",
 							lexer.charPos()));
@@ -382,7 +385,7 @@ public class RegexPattern extends Pattern
 			}
 			else if (t.type == Token.PLUS)
 			{
-				if (lexer.LL(-1).type != Token.PRIGHT)
+				if (lexer.ll(-1).type != Token.PRIGHT)
 				{
 					throw new PatternParseException(String.format("Multiplication only supported for subexpressions",
 							lexer.charPos()));
@@ -405,7 +408,7 @@ public class RegexPattern extends Pattern
 		 * @param from
 		 * @param to
 		 */
-		private static final void replaceStates(RegularState base, RegularState from, RegularState to)
+		private static void replaceStates(RegularState base, RegularState from, RegularState to)
 		{
 			Stack<RegularState> states = new Stack<RegularState>();
 			states.push(base);
@@ -441,7 +444,7 @@ public class RegexPattern extends Pattern
 		// FIXME: this doesn't negate sequence, just the first node
 		// Expected: not(x y z)
 		// Currently: not(x) y z
-		private static final void notTransform(RegularState base, RegularState endState)
+		private static void notTransform(RegularState base, RegularState endState)
 		{
 			for (RegularTransition rt : base.getOutTransitions())
 			{
@@ -462,24 +465,14 @@ public class RegexPattern extends Pattern
 	 * 
 	 * @author Michiel Hendriks
 	 */
-	private static class FinalRegularState extends RegularState
+	private static final class FinalRegularState extends RegularState
 	{
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see Composestar.Core.FIRE2.util.regex.RegularState#addOutTransition(Composestar.Core.FIRE2.util.regex.RegularTransition)
-		 */
 		@Override
 		public void addOutTransition(RegularTransition transition)
 		{
 			throw new IllegalArgumentException("FinalRegularState can not contains transition");
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see Composestar.Core.FIRE2.util.regex.RegularState#removeOutTransition(Composestar.Core.FIRE2.util.regex.RegularTransition)
-		 */
 		@Override
 		public void removeOutTransition(RegularTransition transition)
 		{
@@ -493,7 +486,7 @@ public class RegexPattern extends Pattern
 	 * 
 	 * @author Michiel Hendriks
 	 */
-	private static class Lexer
+	private static final class Lexer
 	{
 		private StringBuffer buffer;
 
@@ -551,7 +544,7 @@ public class RegexPattern extends Pattern
 		 * @param i
 		 * @return
 		 */
-		public Token LL(int i)
+		public Token ll(int i)
 		{
 			i += tokenPos;
 			while (tokenBuffer.size() < tokenPos)
@@ -605,9 +598,9 @@ public class RegexPattern extends Pattern
 		// flyweight
 		private static Map<Character, Token> toks = new HashMap<Character, Token>();
 
-		private static Token EOF_TOKEN = new Token(Token.EOF, "<EOF>");
+		private static final Token EOF_TOKEN = new Token(Token.EOF, "<EOF>");
 
-		private static Token NEQ_TOKEN = new Token(Token.NEQ, "(?");
+		private static final Token NEQ_TOKEN = new Token(Token.NEQ, "(?");
 
 		private static Token mktok(char c)
 		{
@@ -630,7 +623,7 @@ public class RegexPattern extends Pattern
 	 * 
 	 * @author Michiel Hendriks
 	 */
-	private static class Token
+	private static final class Token
 	{
 		public static final int EOF = -1;
 
