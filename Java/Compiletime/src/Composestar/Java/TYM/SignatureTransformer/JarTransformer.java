@@ -1,24 +1,15 @@
 package Composestar.Java.TYM.SignatureTransformer;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Java.TYM.TypeHarvester.JavaHarvestRunner;
-import Composestar.Utils.Debug;
+import Composestar.Java.TYM.TypeHarvester.JarHelper;
 import Composestar.Utils.FileUtils;
 
 /**
@@ -28,10 +19,6 @@ public class JarTransformer
 {
 	private File jarFile;
 
-	private HashMap unmodifiedEntries;
-
-	private HashMap modifiedClasses;
-
 	/**
 	 * Constructor.
 	 * 
@@ -40,109 +27,6 @@ public class JarTransformer
 	public JarTransformer(File inJarFile)
 	{
 		jarFile = inJarFile;
-		unmodifiedEntries = new HashMap();
-		modifiedClasses = new HashMap();
-	}
-
-	/**
-	 * Helper method. Converts a package name (contains '.') to a jar entry name
-	 * (contains '/' and ends with .class)
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public String convertPackageToJar(String name)
-	{
-		String entry = name.replace('.', '/');
-		entry += ".class";
-		return entry;
-	}
-
-	/**
-	 * Extracts the contents of a jarfile.
-	 * <p>
-	 * Classes are added to a modified list. All other files don't need to be
-	 * transformed so they are added to an unmodified list.
-	 * 
-	 * @throws ModuleException - e.g.when jarfile cannot be found.
-	 */
-	public void read() throws ModuleException
-	{
-		HashMap temp = new HashMap();
-
-		// extract files
-		try
-		{
-			JarFile jar = new JarFile(jarFile);
-			Enumeration entries = jar.entries();
-			while (entries.hasMoreElements())
-			{
-				JarEntry entry = (JarEntry) entries.nextElement();
-				String name = entry.getName();
-				if (name.endsWith(".class"))
-				{
-					// add to temporary list
-					temp.put(name, entry);
-				}
-				else
-				{
-					// add to unmodified list
-					if (!name.equals("META-INF/"))
-					{
-						unmodifiedEntries.put(name, entry);
-					}
-				}
-			}
-		}
-		catch (IOException io)
-		{
-			throw new ModuleException("Error while reading jar: " + io.getMessage(), "SITRA");
-		}
-
-		boolean modify = false;
-
-		// extract classes
-		try
-		{
-			HashMap<String,Class> classen = JavaHarvestRunner.harvest(jarFile.toURL());
-			for (Object o : classen.keySet())
-			{
-
-				String classname = (String) o;
-				Class clazz = (Class) classen.get(classname);
-
-				DataStore ds = DataStore.instance();
-				Concern concern = (Concern) ds.getObjectByID(clazz.getName());
-				Signature signature = concern.getSignature();
-				if (signature != null)
-				{
-					List methodsAdded = signature.getMethods(MethodWrapper.ADDED);
-					List methodsRemoved = signature.getMethods(MethodWrapper.REMOVED);
-					if (methodsAdded.size() > 0 || methodsRemoved.size() > 0)
-					{
-						modify = true;
-					}
-				}
-
-				// convert classname to jarentry
-				String entry = convertPackageToJar(classname);
-				if (modify)
-				{
-					ClassWrapper c = new ClassWrapper(clazz, concern, null);
-					modifiedClasses.put(entry, c);
-					modify = false;
-				}
-				else
-				{
-					JarEntry je = (JarEntry) temp.get(entry);
-					unmodifiedEntries.put(entry, je);
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			throw new ModuleException("Error while loading classes from jar: " + e.getMessage(), "SITRA");
-		}
 	}
 
 	/**
@@ -159,158 +43,45 @@ public class JarTransformer
 	 */
 	public void run() throws ModuleException
 	{
-
-		read();
-
-		try
-		{
-			transform();
-		}
-		catch (Exception e)
-		{
-			throw new ModuleException("Exception occured while transforming classes in jar: " + e.getMessage(), "SITRA");
-		}
-
-		write();
-	}
-
-	/**
-	 * Calls <code>ClassModifier</code> to transform the classes retrieved
-	 * from the jar resource.
-	 * 
-	 * @throws Exception - when an error occurs while transforming a class.
-	 */
-	public void transform() throws Exception
-	{
-
-		for (Object o : modifiedClasses.keySet())
-		{
-			String key = (String) o;
-			ClassWrapper c = (ClassWrapper) modifiedClasses.get(key);
-			ClassModifier.instance().modifyClass(c, jarFile);
-		}
-	}
-
-	/**
-	 * Writes the changes back to the original jarfile.
-	 */
-	public void write() throws ModuleException
-	{
-
-		// original file
-		JarFile jar = null;
-		try
-		{
-			jar = new JarFile(jarFile);
-		}
-		catch (IOException ignored)
-		{
-		}
-
-		// create temporary file
 		File tempJar = null;
 		try
 		{
-			tempJar = File.createTempFile("CstarJavaDummies", ".tmp.jar");
-		}
-		catch (IOException ignored)
-		{
-		}
-
-		// Only rename file at end on success
-		boolean success = false;
-
-		try
-		{
-			JarOutputStream newJar = new JarOutputStream(new FileOutputStream(tempJar));
-
-			byte buffer[] = new byte[1024];
-			int bytesRead;
-
-			try
+			JarHelper yarr = new JarHelper(jarFile.toURL());
+			Collection<Class> classes = yarr.getClasses();
+			for (Class c : classes)
 			{
-				// add original unmodified files
-				for (Object o : unmodifiedEntries.keySet())
+				String className = c.getName();
+
+				DataStore ds = DataStore.instance();
+				Concern concern = (Concern) ds.getObjectByID(className);
+				Signature signature = concern.getSignature();
+				if (signature != null)
 				{
-					String key = (String) o;
-					JarEntry entry = (JarEntry) unmodifiedEntries.get(key);
-					InputStream is = jar.getInputStream(entry);
-					newJar.putNextEntry(entry);
-					while ((bytesRead = is.read(buffer)) != -1)
+					List methodsAdded = signature.getMethods(MethodWrapper.ADDED);
+					List methodsRemoved = signature.getMethods(MethodWrapper.REMOVED);
+					if (methodsAdded.size() > 0 || methodsRemoved.size() > 0)
 					{
-						newJar.write(buffer, 0, bytesRead);
+						ClassWrapper cw = new ClassWrapper(c, concern, null);
+
+						// Execute the transformation
+						ClassModifier.instance().modifyClass(cw, jarFile);
+						yarr.modifyClass(cw.getClazz(),cw.getByteCode());
 					}
-					is.close();
-				}
-
-				// add modified entries
-				Iterator keyset = modifiedClasses.keySet().iterator();
-				while (keyset.hasNext())
-				{
-					String key = (String) keyset.next();
-					ClassWrapper c = (ClassWrapper) modifiedClasses.get(key);
-					JarEntry entry = new JarEntry(key);
-					newJar.putNextEntry(entry);
-					newJar.write(c.getByteCode(), 0, c.getByteCode().length);
-				}
-				success = true;
-			}
-			catch (IOException io)
-			{
-				throw new ModuleException("Error occured while updating contents of jarfile: " + io.getMessage(),
-						"SITRA");
-			}
-			finally
-			{
-				try
-				{
-					newJar.close();
-				}
-				catch (IOException ignored)
-				{
 				}
 			}
+			tempJar = File.createTempFile("CStarJavaDummies", ".tmp.jar");
+			yarr.writeToFile(tempJar);
+			// delete orig/rename temp to orig does not work on Windows (as we cannot delete files that may still be in use)
+			// so instead use the following workaround.
+			FileUtils.copyFile(jarFile, tempJar);
+			tempJar.delete();
 		}
-		catch (IOException ignored)
+		catch (Exception e)
 		{
-		}
-		finally
-		{
-			try
-			{
-				jar.close();
-			}
-			catch (IOException ignored)
-			{
-			}
-
-			if (!success)
-			{
-				tempJar.delete();
-			}
-		}
-
-		if (success)
-		{
-			jarFile.delete();
-			success = tempJar.renameTo(jarFile);
-			if (!success)
-			{
-				Debug.out(Debug.MODE_DEBUG, "SITRA", "Renaming jar not successfull (jarfile: " + jarFile + ")");
-				// fix copy temp file and delete temp file
-				try
-				{
-					Debug.out(Debug.MODE_DEBUG, "SITRA", "Copying '" + jarFile + "' to '" + tempJar.getAbsolutePath()
-							+ "'");
-					FileUtils.copyFile(jarFile, tempJar);
-					tempJar.delete();
-				}
-				catch (IOException e)
-				{
-					Debug.out(Debug.MODE_WARNING, "SITRA", "Unable to copy '" + jarFile + "' to '"
-							+ tempJar.getAbsolutePath() + "': " + e.getMessage());
-				}
-			}
+			if (tempJar != null)
+				tempJar.delete(); // at least clean up temp stuff when things go wrong
+			e.printStackTrace();
+			throw new ModuleException("Error while transforming classes: " + e.getMessage(), "SITRA");
 		}
 	}
 }

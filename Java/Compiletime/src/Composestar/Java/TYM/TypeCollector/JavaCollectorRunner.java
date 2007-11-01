@@ -3,6 +3,7 @@ package Composestar.Java.TYM.TypeCollector;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -56,8 +57,8 @@ public class JavaCollectorRunner implements CollectorRunner
 		try
 		{
 			// iterate over classes
-			Map<String, Class> classes = (Map<String,Class>)resources.get(JavaHarvestRunner.CLASS_MAP);
-			for (Class c : classes.values())
+			Collection<Class> classes = (Collection<Class>)resources.get(JavaHarvestRunner.CLASS_MAP);
+			for (Class c : classes)
 			{
 				try
 				{

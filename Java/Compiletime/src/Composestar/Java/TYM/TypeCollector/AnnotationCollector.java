@@ -2,8 +2,8 @@ package Composestar.Java.TYM.TypeCollector;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
@@ -29,8 +29,8 @@ public class AnnotationCollector implements CTCommonModule
 	{
 		try
 		{
-			Map<String,Class> classes = (Map<String,Class>)resources.get(JavaHarvestRunner.CLASS_MAP);
-			for (Class c : classes.values())
+			Collection<Class> classes = (Collection<Class>)resources.get(JavaHarvestRunner.CLASS_MAP);
+			for (Class c : classes)
 			{
 				try
 				{
