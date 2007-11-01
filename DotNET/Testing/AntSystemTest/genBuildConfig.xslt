@@ -14,7 +14,7 @@
 	<xsl:param name="runDebugLevel" select="'1'" />
 	<xsl:param name="buildDebugLevel" select="'4'" />
 	
-	<xsl:param name="SECRET_mode" select="'2'" />
+	<xsl:param name="SECRET_mode" select="'0'" />
 	<xsl:param name="INCRE_config" select="'INCREconfig.xml'" />
 	<xsl:param name="INCRE_enabled" select="'false'" />
 	<xsl:param name="INCRESerializer_force" select="'false'" />
