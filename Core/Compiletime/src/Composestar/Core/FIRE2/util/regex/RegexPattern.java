@@ -248,20 +248,20 @@ public class RegexPattern extends Pattern
 								lexer.charPos));
 					}
 					lexer.nextToken();
-					result = new RegularState();
-					rhs = result;
+					rhs = new RegularState();
+					RegularState self = rhs;
 					RegularTransition transition;
 					if (t.type == Token.PLUS)
 					{
 						// state for the first word
-						rhs = new RegularState();
-						transition = new RegularTransition(result, rhs);
+						self = new RegularState();
+						transition = new RegularTransition(rhs, self);
 						transition.addLabel(RegularTransition.WILDCARD);
 					}
 					// lambda
-					transition = new RegularTransition(rhs, endState);
+					transition = new RegularTransition(self, endState);
 					// wildcard to self
-					transition = new RegularTransition(rhs, rhs);
+					transition = new RegularTransition(self, self);
 					transition.addLabel(RegularTransition.WILDCARD);
 				}
 				else

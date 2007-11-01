@@ -228,6 +228,19 @@ public class RegexPatternTest extends TestCase
 		assertFalse(SimpleMatcher.matches(pat2, "aa"));
 		assertFalse(SimpleMatcher.matches(pat2, "bb"));
 		assertFalse(SimpleMatcher.matches(pat2, "aa bb"));
+
+		Pattern pat3 = RegexPattern.compile("aa.*aa");
+		assertTrue(SimpleMatcher.matches(pat3, "aa aa"));
+		assertTrue(SimpleMatcher.matches(pat3, "aa bb aa"));
+		assertTrue(SimpleMatcher.matches(pat3, "aa aa aa aa"));
+		assertFalse(SimpleMatcher.matches(pat3, "bb aa"));
+
+		Pattern pat4 = RegexPattern.compile("aa.+aa");
+		assertTrue(SimpleMatcher.matches(pat4, "aa bb aa"));
+		assertTrue(SimpleMatcher.matches(pat4, "aa aa aa aa"));
+		assertFalse(SimpleMatcher.matches(pat4, "aa aa"));
+		assertFalse(SimpleMatcher.matches(pat4, "bb aa"));
+		assertFalse(SimpleMatcher.matches(pat4, "bb bb aa"));
 	}
 
 	public void testMult() throws PatternParseException
@@ -341,7 +354,7 @@ public class RegexPatternTest extends TestCase
 		RegexPatternTest t = new RegexPatternTest();
 		try
 		{
-			t.testMultEx();
+			t.testDot();
 		}
 		catch (Exception e)
 		{

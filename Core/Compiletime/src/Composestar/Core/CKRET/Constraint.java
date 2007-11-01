@@ -9,9 +9,9 @@
  */
 package Composestar.Core.CKRET;
 
-import Composestar.Core.FIRE2.util.regex.LegacyPattern;
 import Composestar.Core.FIRE2.util.regex.Pattern;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
+import Composestar.Core.FIRE2.util.regex.RegexPattern;
 
 /**
  * 
@@ -33,7 +33,7 @@ public class Constraint
 			throws PatternParseException
 	{
 		resource = inresource;
-		pattern = LegacyPattern.compile(patternString);
+		pattern = RegexPattern.compile(patternString);
 		message = inmessage;
 	}
 

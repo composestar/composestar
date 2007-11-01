@@ -54,11 +54,11 @@
 	</actions>
 	
 	<constraints>
-		<conflict pattern="[rR][rR]*.*e" resource="message" message="Message is returned before it could error.."/>
-		<conflict pattern="l[rw][rw]*" resource="args" message="Locked resources can not be written."/>
-		<conflict pattern="[rw][rw]*.*c" resource="*" message="Resource has been used where it's required untouched."/>
-		<conflict pattern="rd" resource="args" message="Arguments should be decrypted before logging!" />
-		<conflict pattern="Er" resource="args" message="Arguments should be encrypted after logging!" />
+		<conflict pattern="((r)(R))+.*e" resource="message" message="Message is returned before it could error.."/>
+		<conflict pattern="l((r)(w))+" resource="args" message="Locked resources can not be written."/>
+		<conflict pattern="((r)(w))+.*c" resource="*" message="Discarded resource has been used"/>
+		<conflict pattern="(r)(d)" resource="args" message="Arguments should be decrypted before logging!" />
+		<conflict pattern="(E)(r)" resource="args" message="Arguments should be encrypted after logging!" />
 	</constraints>
 
 </secret>
