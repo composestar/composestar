@@ -30,7 +30,7 @@ public class JavaHarvestRunner implements HarvestRunner
 	 * Iterates over all elements in a JARfile, loading those that end in .class
 	 * (This is the only way to load classes in a JARfile without knowing their names in advance)
 	 */
-	public HashMap<String,Class> harvest(URL jarURL) throws URISyntaxException, ClassNotFoundException, IOException
+	public static HashMap<String,Class> harvest(URL jarURL) throws URISyntaxException, ClassNotFoundException, IOException
 	{
 		ClassLoader classLoader = new URLClassLoader(new URL[] { jarURL });
 		HashMap<String,Class> map = new HashMap<String,Class>();
