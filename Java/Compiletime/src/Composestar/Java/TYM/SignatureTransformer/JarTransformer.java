@@ -80,7 +80,6 @@ public class JarTransformer
 		{
 			if (tempJar != null)
 				tempJar.delete(); // at least clean up temp stuff when things go wrong
-			e.printStackTrace();
 			throw new ModuleException("Error while transforming classes: " + e.getMessage(), "SITRA");
 		}
 	}
