@@ -26,8 +26,11 @@ package Composestar.Core.FIRE2.util.regex;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 import java.util.Map.Entry;
 
 /**
@@ -88,16 +91,14 @@ public class RegexPattern extends Pattern
 
 	private static class Parser
 	{
-		protected static RegularState END_STATE;
-
-		public static RegularAutomaton parse(String pattern) throws PatternParseException
+		public static final RegularAutomaton parse(String pattern) throws PatternParseException
 		{
 			Lexer lexer = new Lexer(pattern);
-			END_STATE = new FinalRegularState();
-			RegularState start = pAlt(lexer);
+			RegularState end = new FinalRegularState();
+			RegularState start = pAlt(lexer, end);
 			RegularAutomaton auto = new RegularAutomaton();
 			auto.setStartState(start);
-			auto.setEndState(END_STATE);
+			auto.setEndState(end);
 			if (lexer.token().type != Token.EOF)
 			{
 				throw new PatternParseException(String.format("Garbage token '%s' at #%d", lexer.token().text, lexer
@@ -106,15 +107,25 @@ public class RegexPattern extends Pattern
 			return auto;
 		}
 
-		private static RegularState pAlt(Lexer lexer) throws PatternParseException
+		/**
+		 * Process alternatives. This will optimize the state machine where
+		 * possible. Edges with identical destinations will be merged, but only
+		 * when they are not a lambda transition or contain a self reference.
+		 * 
+		 * @param lexer
+		 * @param endState
+		 * @return
+		 * @throws PatternParseException
+		 */
+		private static final RegularState pAlt(Lexer lexer, RegularState endState) throws PatternParseException
 		{
 			List<RegularState> alts = new ArrayList<RegularState>();
-			alts.add(pSeq(lexer));
+			alts.add(pSeq(lexer, endState));
 
 			while (lexer.token().type == Token.OR)
 			{
 				lexer.nextToken();
-				alts.add(pSeq(lexer));
+				alts.add(pSeq(lexer, endState));
 			}
 
 			if (alts.size() == 1)
@@ -127,6 +138,12 @@ public class RegexPattern extends Pattern
 			Map<RegularState, List<RegularTransition>> destMap = new HashMap<RegularState, List<RegularTransition>>();
 			for (RegularState state : alts)
 			{
+				if (hasSelfReference(state))
+				{
+					// add lambda to self referencing states
+					new RegularTransition(result, state);
+					continue;
+				}
 				for (RegularTransition rt : state.getOutTransitions())
 				{
 					List<RegularTransition> dst = destMap.get(rt.getEndState());
@@ -142,9 +159,18 @@ public class RegexPattern extends Pattern
 			{
 				RegularTransition regrt = null;
 				RegularTransition neqrt = null;
+				RegularTransition lambda = null;
 				for (RegularTransition rt : entry.getValue())
 				{
-					if (rt.isNegation())
+					if (rt.isEmpty())
+					{
+						// don't combine lambda transitions with others
+						if (lambda == null)
+						{
+							lambda = new RegularTransition(result, entry.getKey());
+						}
+					}
+					else if (rt.isNegation())
 					{
 						if (neqrt == null)
 						{
@@ -166,7 +192,41 @@ public class RegexPattern extends Pattern
 			return result;
 		}
 
-		private static RegularState pSeq(Lexer lexer) throws PatternParseException
+		/**
+		 * Return true when the provided state has a path to itself
+		 * 
+		 * @param self
+		 * @return
+		 */
+		private static final boolean hasSelfReference(RegularState self)
+		{
+			Stack<RegularState> states = new Stack<RegularState>();
+			states.push(self);
+			Set<RegularState> visited = new HashSet<RegularState>();
+			while (states.size() > 0)
+			{
+				RegularState state = states.pop();
+				visited.add(state);
+				for (RegularTransition rt : state.getOutTransitions())
+				{
+					if (rt.getEndState().equals(self))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Process sequences of words and subexpressions
+		 * 
+		 * @param lexer
+		 * @param endState
+		 * @return
+		 * @throws PatternParseException
+		 */
+		private static final RegularState pSeq(Lexer lexer, RegularState endState) throws PatternParseException
 		{
 			RegularState result = null;
 			RegularState lhs = null;
@@ -176,7 +236,7 @@ public class RegexPattern extends Pattern
 				RegularState rhs;
 				if (lexer.token().type == Token.WORD)
 				{
-					rhs = pWord(lexer);
+					rhs = pWord(lexer, endState);
 				}
 				else if (lexer.token().type == Token.DOT)
 				{
@@ -199,14 +259,14 @@ public class RegexPattern extends Pattern
 						transition.addLabel(RegularTransition.WILDCARD);
 					}
 					// lambda
-					transition = new RegularTransition(rhs, END_STATE);
+					transition = new RegularTransition(rhs, endState);
 					// wildcard to self
 					transition = new RegularTransition(rhs, rhs);
 					transition.addLabel(RegularTransition.WILDCARD);
 				}
 				else
 				{
-					rhs = pSubexp(lexer);
+					rhs = pSubexp(lexer, endState);
 				}
 				if (result == null)
 				{
@@ -217,20 +277,14 @@ public class RegexPattern extends Pattern
 				{
 					// link end state of previous item in the list to current
 					// item
-					for (RegularTransition rt : lhs.getOutTransitions())
-					{
-						if (rt.getEndState().equals(END_STATE))
-						{
-							rt.setEndState(rhs);
-						}
-					}
+					replaceStates(lhs, endState, rhs);
 				}
 				lhs = rhs;
 			}
 			if (lexer.token().type == Token.EOF && result == null)
 			{
 				// empty regex
-				return END_STATE;
+				return endState;
 			}
 			if (result == null)
 			{
@@ -240,25 +294,41 @@ public class RegexPattern extends Pattern
 			return result;
 		}
 
-		private static RegularState pWord(Lexer lexer) throws PatternParseException
+		/**
+		 * Process a word.
+		 * 
+		 * @param lexer
+		 * @param endState
+		 * @return
+		 * @throws PatternParseException
+		 */
+		private static final RegularState pWord(Lexer lexer, RegularState endState) throws PatternParseException
 		{
 			Token t = lexer.token();
 			lexer.nextToken();
 			RegularState result = new RegularState();
-			RegularTransition transition = new RegularTransition(result, END_STATE);
+			RegularTransition transition = new RegularTransition(result, endState);
 			transition.addLabel(t.toString());
 			return result;
 		}
 
-		private static RegularState pSubexp(Lexer lexer) throws PatternParseException
+		/**
+		 * Process a subexpression or negation (which implies a subexpr).
+		 * 
+		 * @param lexer
+		 * @param endState
+		 * @return
+		 * @throws PatternParseException
+		 */
+		private static final RegularState pSubexp(Lexer lexer, RegularState endState) throws PatternParseException
 		{
 			Token t = lexer.token();
 			lexer.nextToken();
-			RegularState result = pAlt(lexer);
+			RegularState result = pAlt(lexer, endState);
 
 			if (t.type == Token.NEQ)
 			{
-				notTransform(result);
+				notTransform(result, endState);
 			}
 
 			if (lexer.token().type != Token.PRIGHT)
@@ -269,20 +339,22 @@ public class RegexPattern extends Pattern
 
 			if (t.type != Token.NEQ)
 			{
-				multTransform(result, lexer);
+				multTransform(result, lexer, endState);
 			}
 			return result;
 		}
 
 		/**
-		 * Process multiplication
+		 * Process multiplication (?,*,+) of subexpressions.
 		 * 
 		 * @param expr
 		 * @param lexer
 		 * @throws PatternParseException
 		 */
-		private static void multTransform(RegularState expr, Lexer lexer) throws PatternParseException
+		private static final void multTransform(RegularState expr, Lexer lexer, RegularState endState)
+				throws PatternParseException
 		{
+			// TODO: breaks for subexpressions
 			Token t = lexer.token();
 			if (t.type == Token.STAR)
 			{
@@ -293,9 +365,9 @@ public class RegexPattern extends Pattern
 				}
 				lexer.nextToken();
 				// replace the end states with self
-				replaceStates(expr, END_STATE, expr, true);
+				replaceStates(expr, endState, expr);
 				// lambda makes it optional
-				new RegularTransition(expr, END_STATE);
+				new RegularTransition(expr, endState);
 			}
 			else if (t.type == Token.OPT)
 			{
@@ -306,7 +378,7 @@ public class RegexPattern extends Pattern
 				}
 				lexer.nextToken();
 				// simply add lambda
-				new RegularTransition(expr, END_STATE);
+				new RegularTransition(expr, endState);
 			}
 			else if (t.type == Token.PLUS)
 			{
@@ -318,53 +390,58 @@ public class RegexPattern extends Pattern
 				lexer.nextToken();
 				// replace the end states with this state
 				RegularState newEnd = new RegularState();
-				replaceStates(expr, END_STATE, newEnd, true);
+				replaceStates(expr, endState, newEnd);
 				// lambda to begin of expression
 				new RegularTransition(newEnd, expr);
 				// or to end state (had 1 iteration)
-				new RegularTransition(newEnd, END_STATE);
+				new RegularTransition(newEnd, endState);
 			}
 		}
 
 		/**
+		 * Replace end states in all transitions starting from base
+		 * 
 		 * @param base
 		 * @param from
 		 * @param to
-		 * @param endState
 		 */
-		private static void replaceStates(RegularState base, RegularState from, RegularState to, boolean endState)
+		private static final void replaceStates(RegularState base, RegularState from, RegularState to)
 		{
-			for (RegularTransition rt : base.getOutTransitions())
+			Stack<RegularState> states = new Stack<RegularState>();
+			states.push(base);
+			Set<RegularState> visited = new HashSet<RegularState>();
+			while (states.size() > 0)
 			{
-				if (endState)
+				RegularState state = states.pop();
+				visited.add(state);
+				for (RegularTransition rt : state.getOutTransitions())
 				{
+
 					if (rt.getEndState().equals(from))
 					{
 						rt.setEndState(to);
+						continue;
 					}
-					else
+
+					RegularState st = rt.getEndState();
+					if (!visited.contains(st))
 					{
-						replaceStates(rt.getEndState(), from, to, endState);
-					}
-				}
-				else
-				{
-					if (rt.getStartState().equals(from))
-					{
-						rt.setStartState(to);
-					}
-					else
-					{
-						replaceStates(rt.getEndState(), from, to, endState);
+						states.push(st);
 					}
 				}
 			}
 		}
 
+		/**
+		 * Perform the nagation transformation of a subexpression
+		 * 
+		 * @param base
+		 * @param endState
+		 */
 		// FIXME: this doesn't negate sequence, just the first node
 		// Expected: not(x y z)
 		// Currently: not(x) y z
-		private static void notTransform(RegularState base)
+		private static final void notTransform(RegularState base, RegularState endState)
 		{
 			for (RegularTransition rt : base.getOutTransitions())
 			{

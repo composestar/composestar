@@ -33,6 +33,17 @@ class RegularAutomaton
 	public RegularAutomaton()
 	{}
 
+	public RegularAutomaton(RegularState inStart)
+	{
+		this(inStart, new RegularState());
+	}
+
+	public RegularAutomaton(RegularState inStart, RegularState inEnd)
+	{
+		startState = inStart;
+		endState = inEnd;
+	}
+
 	public void setStartState(RegularState startState)
 	{
 		this.startState = startState;

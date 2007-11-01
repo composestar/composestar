@@ -9,7 +9,9 @@ import java.util.List;
 
 /**
  * @author Arjan de Roo
+ * @deprecated Switch to RegexPattern is more regular expression conform
  */
+@Deprecated
 public class LegacyPattern extends Pattern
 {
 	private RegularAutomaton automaton;
