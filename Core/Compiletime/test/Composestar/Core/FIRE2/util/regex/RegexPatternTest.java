@@ -77,43 +77,43 @@ public class RegexPatternTest extends TestCase
 	{
 		try
 		{
-			Pattern pat = RegexPattern.compile("aa:");
+			RegexPattern.compile("aa:");
+			fail("No PatternParseException");
 		}
 		catch (PatternParseException e)
 		{
-			e.printStackTrace();
 		}
 		try
 		{
-			Pattern pat = RegexPattern.compile("aa(");
+			RegexPattern.compile("aa(");
+			fail("No PatternParseException");
 		}
 		catch (PatternParseException e)
 		{
-			e.printStackTrace();
 		}
 		try
 		{
-			Pattern pat = RegexPattern.compile("aa(aa");
+			RegexPattern.compile("aa(aa");
+			fail("No PatternParseException");
 		}
 		catch (PatternParseException e)
 		{
-			e.printStackTrace();
 		}
 		try
 		{
-			Pattern pat = RegexPattern.compile(")");
+			RegexPattern.compile(")");
+			fail("No PatternParseException");
 		}
 		catch (PatternParseException e)
 		{
-			e.printStackTrace();
 		}
 		try
 		{
-			Pattern pat = RegexPattern.compile("*+?");
+			RegexPattern.compile("*+?");
+			fail("No PatternParseException");
 		}
 		catch (PatternParseException e)
 		{
-			e.printStackTrace();
 		}
 	}
 
