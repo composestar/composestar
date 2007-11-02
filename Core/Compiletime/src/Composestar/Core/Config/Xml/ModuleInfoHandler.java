@@ -233,7 +233,7 @@ public class ModuleInfoHandler extends CpsBaseHandler
 					try
 					{
 						currentMi.removeSetting(moduleSetting.getModuleSetting().getId()); // overloading
-						currentMi.addSetting(moduleSetting.getModuleSetting());
+						currentMi.addModuleSetting(moduleSetting.getModuleSetting());
 					}
 					catch (ConfigurationException e)
 					{

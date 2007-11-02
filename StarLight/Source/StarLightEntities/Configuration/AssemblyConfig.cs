@@ -196,7 +196,7 @@ namespace Composestar.StarLight.Entities.Configuration
 		/// </summary>
 		public void GenerateTypeSpecificationFileName(string baseDir)
 		{
-			_typeSpec = Path.Combine(baseDir, string.Concat(Id, ".xml.gzip"));
+			_typeSpec = Path.Combine(baseDir, string.Concat(Id, ".xml.gz"));
 		}
 
 		/// <summary>

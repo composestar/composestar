@@ -146,6 +146,11 @@ public class FilterCodeCompressor
 
 			FilterCode filterCode2 = (FilterCode) currentCheckInstruction;
 
+			if (filterCode.getBookKeeping() != filterCode2.getBookKeeping())
+			{
+				return Boolean.FALSE;
+			}
+
 			// Iterate the checkConditions to check whether they are equal
 			Iterator<Condition> iter1 = filterCode.getCheckConditions();
 			Iterator<Condition> iter2 = filterCode2.getCheckConditions();
@@ -281,6 +286,11 @@ public class FilterCodeCompressor
 
 			FilterAction checkFilterAction = (FilterAction) currentCheckInstruction;
 
+			if (checkFilterAction.getBookKeeping() != filterAction.getBookKeeping())
+			{
+				return Boolean.FALSE;
+			}
+
 			// Check whether label equals
 			if (!checkLabel(filterAction, checkFilterAction))
 			{
@@ -369,7 +379,13 @@ public class FilterCodeCompressor
 		 */
 		public Object visitFilterCode(FilterCode filterCode)
 		{
-			return filterCode.getInstruction().accept(this);
+			int value = 0;
+			if (filterCode.getBookKeeping())
+			{
+				value = 1;
+			}
+			value += (Integer) filterCode.getInstruction().accept(this);
+			return value;
 		}
 
 		/**
@@ -424,6 +440,10 @@ public class FilterCodeCompressor
 		{
 			int value = 0;
 
+			if (filterAction.getBookKeeping())
+			{
+				value = 1;
+			}
 			value += filterAction.getType().hashCode();
 			value += filterAction.getMessage().hashCode();
 			value += filterAction.getSubstitutedMessage().hashCode();
@@ -469,6 +489,7 @@ public class FilterCodeCompressor
 			// Instructions
 			Instruction instrCopy = (Instruction) filterCode.getInstruction().accept(this);
 			copy.setInstruction(instrCopy);
+			copy.setBookKeeping(filterCode.getBookKeeping());
 
 			return copy;
 		}
@@ -540,6 +561,7 @@ public class FilterCodeCompressor
 					.isOnCall(), filterAction.isReturning());
 
 			copyLabel(filterAction, copy);
+			copy.setBookKeeping(filterAction.getBookKeeping());
 
 			return copy;
 		}

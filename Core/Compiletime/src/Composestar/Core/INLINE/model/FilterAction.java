@@ -41,6 +41,13 @@ public class FilterAction extends Instruction
 	private boolean returning;
 
 	/**
+	 * If true perform resource operation bookkeeping for this action.
+	 * BookKeeping in the FilterAction is subject to the bookkeeping of the
+	 * parent FilterCode.
+	 */
+	private boolean bookkeeping;
+
+	/**
 	 * The constructor
 	 * 
 	 * @param type The type of the filteraction.
@@ -99,6 +106,24 @@ public class FilterAction extends Instruction
 	public boolean isReturning()
 	{
 		return returning;
+	}
+
+	/**
+	 * @param value
+	 * @see #bookkeeping
+	 */
+	public void setBookKeeping(boolean value)
+	{
+		bookkeeping = value;
+	}
+
+	/**
+	 * @return
+	 * @see #bookkeeping
+	 */
+	public boolean getBookKeeping()
+	{
+		return bookkeeping;
 	}
 
 	/**

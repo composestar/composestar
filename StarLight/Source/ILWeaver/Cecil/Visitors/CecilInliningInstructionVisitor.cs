@@ -396,7 +396,7 @@ namespace Composestar.StarLight.ILWeaver
 			_returnInstruction = Worker.Create(OpCodes.Nop);
 
 			// Create the join point context
-			CreateJoinPointContext();
+            CreateJoinPointContext(instructionSet.BookKeeping);
 
 			// Generate the filterset instructions
 			instructionSet.Accept(this);
@@ -411,11 +411,11 @@ namespace Composestar.StarLight.ILWeaver
 				CreateActionStore(currentIndex);
 
 				// Weave the return actions:
-				WeaveReturnActions();
+                WeaveReturnActions();
 			}
 
 			// Restore the join point context
-			RestoreJoinPointContext();
+            RestoreJoinPointContext(instructionSet.BookKeeping);
 
 			// If inputfilters are weaved, do a return
 			if (FilterType == FilterType.InputFilter)
@@ -777,7 +777,7 @@ namespace Composestar.StarLight.ILWeaver
 		/// return-value, and not use for example the LdParam opcode, because this value might not be up to date
 		/// or might be entirely wrong, because the action is in an outputfilter.
 		/// </summary>
-		public void CreateJoinPointContext()
+		public void CreateJoinPointContext(bool bookKeeping)
 		{
 			// Create a new or use an existing local variable for the JoinPointContext
 			VariableDefinition jpcVar = CreateJoinPointContextLocal();
@@ -1001,16 +1001,40 @@ namespace Composestar.StarLight.ILWeaver
 			// Assign name to MethodName
 			Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetStartSelector)));
 
+
+            if (bookKeeping)
+            {
+                //
+                // Activate resource operation book keeping
+                //
+
+                // Load joinpointcontext first
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+                // "true" constant
+                Instructions.Add(Worker.Create(OpCodes.Ldc_I4_1));
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetBookKeeping)));
+            }
 		}
 
 		/// <summary>
 		/// Restores the JoinPointContext at the end of the filtercode. It puts, for example, the returnvalue on the
 		/// stack.
 		/// </summary>
-		public void RestoreJoinPointContext()
+        public void RestoreJoinPointContext(bool bookKeeping)
 		{
 			// Get JoinPointContext
 			VariableDefinition jpcVar = CreateJoinPointContextLocal();
+
+            if (bookKeeping)
+            {
+                //
+                // Finalize resource operation book keeping
+                //
+
+                // Load joinpointcontext first
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextFinalizeBookKeeping)));
+            }
 
 			//
 			// Restore out/ref parameters

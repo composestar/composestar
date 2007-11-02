@@ -252,7 +252,7 @@ public class StarLightMaster extends Master
 		}
 		catch (Exception e)
 		{
-			// logger.stackTrace(e);
+			e.printStackTrace();
 			return EFAIL;
 		}
 

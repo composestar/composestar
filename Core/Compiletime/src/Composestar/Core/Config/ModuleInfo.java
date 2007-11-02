@@ -63,7 +63,7 @@ public class ModuleInfo implements Serializable
 	/**
 	 * Contains the module settings
 	 */
-	protected Map<String, ModuleSetting> settings;
+	protected Map<String, ModuleSetting<?>> settings;
 
 	/**
 	 * List of modules this module depends on;
@@ -80,7 +80,7 @@ public class ModuleInfo implements Serializable
 	public ModuleInfo(String moduleId)
 	{
 		setId(moduleId);
-		settings = new HashMap<String, ModuleSetting>();
+		settings = new HashMap<String, ModuleSetting<?>>();
 		dependson = new HashSet<String>();
 	}
 
@@ -203,7 +203,7 @@ public class ModuleInfo implements Serializable
 		return Collections.unmodifiableSet(dependson);
 	}
 
-	public void addSetting(ModuleSetting ms) throws ConfigurationException
+	public void addModuleSetting(ModuleSetting<?> ms) throws ConfigurationException
 	{
 		if (settings.containsKey(ms.getId()))
 		{
@@ -212,19 +212,18 @@ public class ModuleInfo implements Serializable
 		settings.put(ms.getId(), ms);
 	}
 
-	public ModuleSetting getSetting(String key) throws ConfigurationException
+	@SuppressWarnings("unchecked")
+	public <T extends Serializable> ModuleSetting<T> getModuleSetting(String key) throws ConfigurationException
 	{
 		if (settings.containsKey(key))
 		{
-			// logger.debug("Request module setting '" + key + "' for module '"
-			// + id + "'");
-			ModuleSetting ms = settings.get(key);
+			ModuleSetting<T> ms = (ModuleSetting<T>) settings.get(key);
 			return ms;
 		}
 		throw new ConfigurationException("Requested unknown module setting '" + key + "' for module '" + id + "'");
 	}
 
-	public Iterator<ModuleSetting> getSettings()
+	public Iterator<ModuleSetting<?>> getSettings()
 	{
 		return settings.values().iterator();
 	}
@@ -239,98 +238,116 @@ public class ModuleInfo implements Serializable
 	 */
 	public void resetSettings()
 	{
-		for (ModuleSetting ms : settings.values())
+		for (ModuleSetting<?> ms : settings.values())
 		{
 			ms.reset();
 		}
 	}
 
-	public void setSettingValue(String key, Object newValue) throws ConfigurationException
+	public <T extends Serializable> void setSettingValue(String key, T newValue) throws ConfigurationException
 	{
-		ModuleSetting ms = getSetting(key);
-		ms.setValue(newValue);
-	}
-
-	public void setSettingValue(String key, String newValue) throws ConfigurationException
-	{
-		ModuleSetting ms = getSetting(key);
+		ModuleSetting<T> ms = getModuleSetting(key);
 		ms.setValue(newValue);
 	}
 
 	public void setSettingValue(String key, int newValue) throws ConfigurationException
 	{
-		ModuleSetting ms = getSetting(key);
-		ms.setValue(newValue);
+		setSettingValue(key, Integer.valueOf(newValue));
 	}
 
 	public void setSettingValue(String key, boolean newValue) throws ConfigurationException
 	{
-		ModuleSetting ms = getSetting(key);
-		ms.setValue(newValue);
+		setSettingValue(key, Boolean.valueOf(newValue));
 	}
 
 	public void setSettingValue(String key, float newValue) throws ConfigurationException
 	{
-		ModuleSetting ms = getSetting(key);
-		ms.setValue(newValue);
+		setSettingValue(key, Float.valueOf(newValue));
 	}
 
+	public <T extends Serializable> T getSetting(String key) throws ConfigurationException
+	{
+		ModuleSetting<T> ms;
+		ms = getModuleSetting(key);
+		return ms.getValue();
+	}
+
+	public <T extends Serializable> T getSetting(String key, T defval)
+	{
+		try
+		{
+			ModuleSetting<T> ms;
+			ms = getModuleSetting(key);
+			return ms.getValue();
+		}
+		catch (ConfigurationException e)
+		{
+			return defval;
+		}
+	}
+
+	/**
+	 * @deprecated use getSetting(key,def)
+	 */
+	@Deprecated
+	public String getStringSetting(String key, String def)
+	{
+		return getSetting(key, def);
+	}
+
+	/**
+	 * @deprecated use getSetting(key,def)
+	 */
+	@Deprecated
+	public int getIntSetting(String key, int def)
+	{
+		return getSetting(key, def);
+	}
+
+	/**
+	 * @deprecated use getSetting(key,def)
+	 */
+	@Deprecated
+	public boolean getBooleanSetting(String key, boolean def)
+	{
+		return getSetting(key, def);
+	}
+
+	/**
+	 * @deprecated use getSetting(key,def)
+	 */
+	@Deprecated
+	public float getFloatSetting(String key, float def)
+	{
+		return getSetting(key, def);
+	}
+
+	/**
+	 * @throws ConfigurationException
+	 * @deprecated use getSetting(key)
+	 */
+	@Deprecated
 	public String getStringSetting(String key) throws ConfigurationException
 	{
-		ModuleSetting ms = getSetting(key);
-		return ms.getStringValue();
+		return getSetting(key);
 	}
 
 	public int getIntSetting(String key) throws ConfigurationException
 	{
-		ModuleSetting ms = getSetting(key);
-		return ms.getIntValue();
+		Integer val = getSetting(key);
+		return val;
 	}
 
 	public boolean getBooleanSetting(String key) throws ConfigurationException
 	{
-		ModuleSetting ms = getSetting(key);
-		return ms.getBooleanValue();
+		Boolean val = getSetting(key);
+		return val;
 	}
 
-	public String getStringSetting(String key, String def)
+	public float getFloatSetting(String key) throws ConfigurationException
 	{
-		try
-		{
-			ModuleSetting ms;
-			ms = getSetting(key);
-			return ms.getStringValue();
-		}
-		catch (ConfigurationException e)
-		{
-			return def;
-		}
-	}
-
-	public int getIntSetting(String key, int def)
-	{
-		try
-		{
-			ModuleSetting ms = getSetting(key);
-			return ms.getIntValue();
-		}
-		catch (ConfigurationException e)
-		{
-			return def;
-		}
-	}
-
-	public boolean getBooleanSetting(String key, boolean def)
-	{
-		try
-		{
-			ModuleSetting ms = getSetting(key);
-			return ms.getBooleanValue();
-		}
-		catch (ConfigurationException e)
-		{
-			return def;
-		}
+		Float val = getSetting(key);
+		return val;
 	}
 
 	/**

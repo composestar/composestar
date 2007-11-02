@@ -60,6 +60,8 @@ class InstructionTranslator implements Visitor
 		composestar.dotNET2.tym.entities.FilterCode weaveFilterCode = composestar.dotNET2.tym.entities.FilterCode.Factory
 				.newInstance();
 
+		weaveFilterCode.setBookKeeping(filterCode.getBookKeeping());
+
 		// Instructions
 		InlineInstruction instruction = (InlineInstruction) filterCode.getInstruction().accept(this);
 		weaveFilterCode.setInstructions(instruction);
@@ -161,6 +163,8 @@ class InstructionTranslator implements Visitor
 
 		weaveAction.setOnCall(filterAction.isOnCall());
 		weaveAction.setReturning(filterAction.isReturning());
+
+		weaveAction.setBookKeeping(filterAction.getBookKeeping());
 
 		return weaveAction;
 	}

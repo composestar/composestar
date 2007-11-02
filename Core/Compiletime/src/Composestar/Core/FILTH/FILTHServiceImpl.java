@@ -61,7 +61,7 @@ public class FILTHServiceImpl extends FILTHService
 		resources = cr;
 		ModuleInfo mi = ModuleInfoManager.get(FILTH.MODULE_NAME);
 		outputEnabled = mi.getBooleanSetting("outputEnabled");
-		specFilename = mi.getStringSetting("input");
+		specFilename = mi.getSetting("input");
 	}
 
 	public List getOrder(Concern c)

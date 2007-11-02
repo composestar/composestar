@@ -204,7 +204,7 @@ public final class INCRE
 
 	private InputStream getConfigFile() throws ModuleException
 	{
-		String filename = moduleInfo.getStringSetting("config");
+		String filename = moduleInfo.getSetting("config");
 		try
 		{
 

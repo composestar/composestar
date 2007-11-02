@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import Composestar.Core.Config.ModuleInfo;
+import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
@@ -101,15 +103,14 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	private String currentSelector;
 
+	private ModuleInfo moduleinfo;
+
 	/**
 	 * Creates the ModelBuilder.
 	 */
 	public ModelBuilder()
 	{
-		inputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.INPUT_FILTERS);
-		inputFilterInliner = new LowLevelInliner(inputFilterBuilderStrategy);
-		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.OUTPUT_FILTERS);
-		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy);
+
 	}
 
 	/**
@@ -117,9 +118,17 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
+		moduleinfo = ModuleInfoManager.get(MODULE_NAME);
+
+		BookKeepingMode bkmode = moduleinfo.getSetting("bookkeeping", BookKeepingMode.Never);
+
+		inputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.INPUT_FILTERS, bkmode);
+		inputFilterInliner = new LowLevelInliner(inputFilterBuilderStrategy);
+		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.OUTPUT_FILTERS, bkmode);
+		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy);
+
 		dataStore = DataStore.instance();
 		startInliner();
-
 	}
 
 	/**

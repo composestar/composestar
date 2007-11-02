@@ -65,6 +65,11 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		/// </summary>
 		private InlineInstruction _instructions;
 
+        /// <summary>
+        /// If true resource operation book keeping should be included.
+        /// </summary>
+        private bool _bookkeeping;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:FilterCode"/> class.
 		/// </summary>
@@ -93,6 +98,15 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 			get { return _instructions; } // get
 			set { _instructions = value; } // set
 		}
+
+        /// <summary>
+        /// Sets the bookkeeping property.
+        /// </summary>
+        public bool BookKeeping
+        {
+            get { return _bookkeeping; }
+            set { _bookkeeping = value; }
+        }
 
 		/// <summary>
 		/// Accepts the specified visitor.

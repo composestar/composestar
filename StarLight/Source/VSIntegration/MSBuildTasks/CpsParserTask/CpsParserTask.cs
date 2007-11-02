@@ -342,7 +342,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				//_extraSources.Add(new TaskItem(filename));
                 return filename;
 			}
-            return null;
 		}
 
 		/// <summary>

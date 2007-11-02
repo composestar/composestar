@@ -31,7 +31,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Config.ModuleSetting;
-import Composestar.Core.Exception.ConfigurationException;
 
 /**
  * @author Michiel Hendriks
@@ -44,7 +43,7 @@ public class ModuleSettingHandler extends CpsBaseHandler
 
 	protected static final int STATE_DEFAULT = 3;
 
-	protected ModuleSetting ms;
+	protected ModuleSetting<?> ms;
 
 	/**
 	 * @param inReader
@@ -55,7 +54,7 @@ public class ModuleSettingHandler extends CpsBaseHandler
 		super(inReader, inParent);
 	}
 
-	public ModuleSetting getModuleSetting()
+	public ModuleSetting<?> getModuleSetting()
 	{
 		return ms;
 	}
@@ -71,43 +70,50 @@ public class ModuleSettingHandler extends CpsBaseHandler
 				state = STATE_SETTING;
 
 				String id = attributes.getValue("id");
-				Class<?> stype = String.class;
 				if (attributes.getValue("type") != null)
 				{
 					String prefType = attributes.getValue("type");
 					if (prefType.equalsIgnoreCase("integer") || prefType.equalsIgnoreCase("int"))
 					{
-						prefType = Integer.class.getName();
+						ms = new ModuleSetting<Integer>(id, Integer.class);
 					}
 					else if (prefType.equalsIgnoreCase("boolean") || prefType.equalsIgnoreCase("bool"))
 					{
-						prefType = Boolean.class.getName();
+						ms = new ModuleSetting<Boolean>(id, Boolean.class);
 					}
 					else if (prefType.equalsIgnoreCase("string"))
 					{
-						prefType = String.class.getName();
+						ms = new ModuleSetting<String>(id, String.class);
 					}
 					else if (prefType.equalsIgnoreCase("float"))
 					{
-						prefType = Float.class.getName();
+						ms = new ModuleSetting<Float>(id, Float.class);
 					}
-					try
+					else
 					{
-						stype = Class.forName(prefType);
-					}
-					catch (ClassNotFoundException e)
-					{
-						throw new SAXParseException(String.format("Invalid configuration type %s", prefType), locator);
+						try
+						{
+							Class<?> stype = Class.forName(prefType);
+							if (Enum.class.isAssignableFrom(stype))
+							{
+								ms = new ModuleSetting<Enum<?>>(id, (Class<Enum<?>>) stype);
+							}
+							else
+							{
+								throw new SAXParseException(String.format("%s is not an enumerated type", prefType),
+										locator);
+							}
+						}
+						catch (ClassNotFoundException e)
+						{
+							throw new SAXParseException(String.format("Invalid configuration type %s", prefType),
+									locator);
+						}
 					}
 				}
-				try
+				else
 				{
-					ms = new ModuleSetting(id, stype);
-				}
-				catch (ConfigurationException e)
-				{
-					throw new SAXParseException(String.format("Unable to create module setting: %s", e.toString()),
-							locator);
+					ms = new ModuleSetting<String>(id, String.class);
 				}
 			}
 			else if (state == STATE_SETTING && "name".equals(name))
@@ -147,14 +153,14 @@ public class ModuleSettingHandler extends CpsBaseHandler
 			else if (state == STATE_DEFAULT && "default".equals(name))
 			{
 				state = STATE_SETTING;
-				ms.setDefault(charData.toString());
+				ms.setDefaultFromString(charData.toString());
 			}
 			else
 			{
 				endUnknownElement(uri, localName, name);
 			}
 		}
-		catch (IllegalArgumentException e)
+		catch (Exception e)
 		{
 			throw new SAXParseException(e.getMessage(), locator);
 		}

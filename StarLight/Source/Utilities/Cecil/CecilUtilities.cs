@@ -277,6 +277,8 @@ namespace Composestar.StarLight.Utilities
 			AddMethodToCache(CachedMethodDefinition.JoinPointContextSetArgumentValue, typeof(JoinPointContext).GetMethod("SetArgumentValue", new Type[] { typeof(Int16), typeof(object) }));
 			AddMethodToCache(CachedMethodDefinition.JoinPointContextSetSubstitutionSelector, typeof(JoinPointContext).GetMethod("set_SubstitutionSelector", new Type[] { typeof(string) }));
 			AddMethodToCache(CachedMethodDefinition.JoinPointContextSetReturnValue, typeof(JoinPointContext).GetMethod("SetReturnValue", new Type[] { typeof(object), typeof(JoinPointContext) }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetBookKeeping, typeof(JoinPointContext).GetMethod("set_BookKeeping", new Type[] { typeof(bool) }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextFinalizeBookKeeping, typeof(JoinPointContext).GetMethod("FinalizeBookKeeping", new Type[] { }));
 			AddMethodToCache(CachedMethodDefinition.HasMoreStoredActions, typeof(FilterContext).GetMethod("HasMoreStoredActions", new Type[] { }));
 			AddMethodToCache(CachedMethodDefinition.NextStoredAction, typeof(FilterContext).GetMethod("NextStoredAction", new Type[] { }));
 			AddMethodToCache(CachedMethodDefinition.ExceptionConstructor, typeof(Exception).GetConstructors()[0]);
@@ -1013,6 +1015,14 @@ namespace Composestar.StarLight.Utilities
 		/// Set the return value in the JoinPoinContext.
 		/// </summary>
 		JoinPointContextSetReturnValue,
+        /// <summary>
+        /// Set the bookkeeping property in the JoinPoinContext.
+        /// </summary>
+        JoinPointContextSetBookKeeping,
+        /// <summary>
+        /// Finalizes resource operating bookkeeping for the current JPC
+        /// </summary>
+        JoinPointContextFinalizeBookKeeping,
 		/// <summary>
 		/// Call the Type.GetType function.
 		/// </summary>

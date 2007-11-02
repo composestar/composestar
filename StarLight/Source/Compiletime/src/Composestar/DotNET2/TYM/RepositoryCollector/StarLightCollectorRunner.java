@@ -240,7 +240,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 					INCRETimer.TYPE_NORMAL);
 
 			is = new FileInputStream(filename);
-			if (filename.endsWith(".gzip"))
+			if (filename.endsWith(".gz"))
 			{
 				is = new GZIPInputStream(is);
 			}

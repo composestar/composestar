@@ -141,7 +141,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				doc.setWeaveSpecification(weaveSpec);
 
 				File baseDir = new File(resources.configuration().getProject().getIntermediate(), "Starlight");
-				File file = new File(baseDir, ac.getId() + "_weavespec.xml.gzip");
+				File file = new File(baseDir, ac.getId() + "_weavespec.xml.gz");
 
 				logger.debug("Writing '" + file + "'...");
 

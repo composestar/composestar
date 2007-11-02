@@ -24,6 +24,11 @@ public class FilterCode implements Visitable
 	private Instruction instruction;
 
 	/**
+	 * If true perform resource operation bookkeeping for this code block.
+	 */
+	private boolean bookkeeping;
+
+	/**
 	 * The constructor
 	 */
 	public FilterCode()
@@ -66,6 +71,24 @@ public class FilterCode implements Visitable
 	public void setInstruction(Instruction instruction)
 	{
 		this.instruction = instruction;
+	}
+
+	/**
+	 * @param value
+	 * @see #bookkeeping
+	 */
+	public void setBookKeeping(boolean value)
+	{
+		bookkeeping = value;
+	}
+
+	/**
+	 * @return
+	 * @see #bookkeeping
+	 */
+	public boolean getBookKeeping()
+	{
+		return bookkeeping;
 	}
 
 	/**

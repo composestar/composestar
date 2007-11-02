@@ -22,7 +22,6 @@ import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.INLINE.model.FilterCode;
-import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.LAMA.MethodInfo;
@@ -105,6 +104,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 
 	private Label endLabel = new Label(-1);
 
+	private BookKeepingMode bookKeepingMode;
+
 	/**
 	 * The constructor
 	 * 
@@ -113,13 +114,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 *            (constant INPUT_FILTERS) or for outputfilters (constant
 	 *            OUTPUT_FILTERS)
 	 */
-	public ModelBuilderStrategy(ModelBuilder builder, int filterSetType)
+	public ModelBuilderStrategy(ModelBuilder builder, int filterSetType, BookKeepingMode inBookKeepingMode)
 	{
 		this.builder = builder;
 		this.filterSetType = filterSetType;
 		methodTable = new HashMap();
 		lastMethodId = 0;
-
+		bookKeepingMode = inBookKeepingMode;
 	}
 
 	/**
@@ -390,12 +391,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private void generateCallAction(ExecutionState state,
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action)
 	{
-		Instruction instruction = new FilterAction(
+		FilterAction instruction = new FilterAction(
 				action.getName(),
 				state.getMessage(),
 				state.getSubstitutionMessage(),
 				true,
 				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
+		setBookKeeping(instruction, state);
 
 		empty = false;
 		currentBlock.addInstruction(instruction);
@@ -410,12 +412,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private void generateReturnAction(ExecutionState state,
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action)
 	{
-		Instruction instruction = new FilterAction(
+		FilterAction instruction = new FilterAction(
 				action.getName(),
 				state.getMessage(),
 				state.getSubstitutionMessage(),
 				false,
 				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
+		setBookKeeping(instruction, state);
 
 		empty = false;
 		currentBlock.addInstruction(instruction);
@@ -433,6 +436,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		Message callMessage = state.getSubstitutionMessage();
 
 		FilterAction action = new FilterAction("DispatchAction", state.getMessage(), callMessage, true, true);
+		setBookKeeping(action, state);
 		currentBlock.addInstruction(action);
 
 		Target target = callMessage.getTarget();
@@ -482,6 +486,33 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			Label label = new Label(labelId);
 			labelTable.put(wrapper, label);
 			return label;
+		}
+	}
+
+	/**
+	 * Sets the bookkeeping value of the given action.
+	 * 
+	 * @param forAction
+	 */
+	private void setBookKeeping(FilterAction forAction, ExecutionState state)
+	{
+		boolean val;
+		switch (bookKeepingMode)
+		{
+			case Always:
+				val = true;
+				break;
+			case ConflictPaths:
+				// FIXME: implement
+				val = false;
+				break;
+			default:
+				val = false;
+		}
+		if (val)
+		{
+			forAction.setBookKeeping(true);
+			filterCode.setBookKeeping(true);
 		}
 	}
 

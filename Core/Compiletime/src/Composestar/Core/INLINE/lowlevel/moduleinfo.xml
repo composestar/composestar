@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Config/Xml/ModuleInfo.xsd">
+  <moduleinfo class="Composestar.Core.INLINE.lowlevel.ModelBuilder" id="INLINE">
+    <name>name</name>
+    <description>Produces the code model for filter inlining.</description>
+    <settings>
+      <setting id="bookkeeping" type="Composestar.Core.INLINE.lowlevel.BookKeepingMode">
+        <name>Resource Operation Book Keeping</name>
+        <default>ConflictPaths</default>
+      </setting>
+    </settings>
+  </moduleinfo>
+</modules>

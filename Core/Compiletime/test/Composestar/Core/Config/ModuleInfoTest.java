@@ -47,26 +47,18 @@ public class ModuleInfoTest extends TestCase
 
 	public void testSettings()
 	{
-		assertTrue(mi.getBooleanSetting("aBool", false));
-		assertFalse(mi.getBooleanSetting("anotherBool", true));
-		assertEquals(12345, mi.getIntSetting("anInteger", 0));
-		assertEquals("This is a string value", mi.getStringSetting("AString", "wrong"));
+		assertTrue(mi.getSetting("aBool", false));
+		assertFalse(mi.getSetting("anotherBool", true));
+		int x = mi.getSetting("anInteger", 0);
+		assertEquals(12345, x);
+		assertEquals("This is a string value", mi.getSetting("AString", "wrong"));
 
 		try
 		{
-			ModuleSetting ms = mi.getSetting("anInteger");
+			ModuleSetting<Integer> ms = mi.getModuleSetting("anInteger");
 			ms.setValue(54321);
-			assertEquals(54321, ms.getIntValue());
-
-			try
-			{
-				ms.setValue(false);
-				fail("No exception on invalid setValue");
-			}
-			catch (ConfigurationException e)
-			{
-			}
-
+			x = ms.getValue();
+			assertEquals(54321, x);
 		}
 		catch (ConfigurationException e)
 		{
@@ -76,9 +68,9 @@ public class ModuleInfoTest extends TestCase
 		try
 		{
 			mi.setSettingValue("AString", "newValue");
-			assertEquals("newValue", mi.getStringSetting("AString"));
+			assertEquals("newValue", mi.getSetting("AString"));
 			mi.setSettingValue("AString", null); // back to default
-			assertEquals("This is a string value", mi.getStringSetting("AString"));
+			assertEquals("This is a string value", mi.getSetting("AString"));
 		}
 		catch (ConfigurationException e)
 		{
@@ -111,11 +103,11 @@ public class ModuleInfoTest extends TestCase
 			ModuleInfo emi = ModuleInfoManager.get(TestDummyEx.class);
 			assertEquals(TestDummyEx.class, emi.getModuleClass());
 			assertNotSame(mi, emi);
-			assertEquals("This is a string value", emi.getStringSetting("AString"));
-			assertEquals("Additional Setting", emi.getStringSetting("extraString", "wrong"));
+			assertEquals("This is a string value", emi.getSetting("AString"));
+			assertEquals("Additional Setting", emi.getSetting("extraString", "wrong"));
 
 			mi.setSettingValue("anInteger", new Integer(54321));
-			if (mi.getIntSetting("anInteger") == emi.getIntSetting("anInteger"))
+			if (mi.getSetting("anInteger") == emi.getSetting("anInteger"))
 			{
 				fail("emi.settings.anInteger should not be equal to mi.settings.anInteger");
 			}

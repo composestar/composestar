@@ -100,7 +100,7 @@
       <Output TaskParameter="Include" ItemName="TempBackupWeave" />
     </CreateItem>
     <Delete Files="@(TempBackupWeave)" />
-    <CreateItem Include="$(StarLightFolder)/*.xml;$(StarLightFolder)/*.xml.gzip">
+    <CreateItem Include="$(StarLightFolder)/*.xml;$(StarLightFolder)/*.xml.gz">
       <Output TaskParameter="Include" ItemName="TempXmlFiles" />
     </CreateItem>
     <Delete Files="@(TempXmlFiles)" />
