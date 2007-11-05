@@ -43,6 +43,7 @@
 		<delete dir="${out.nunit}" />
 
 		<!-- clean documentation -->
+		<delete file="Documentation\ARM.pdf" />
 		<delete file="Documentation\ComposeStar-StarLight.chm" />
 		<delete file="Documentation\LastBuild.log" />
 
@@ -193,11 +194,17 @@
 		<msbuild solution="Source\Utilities\Cecil\CecilUtilities.csproj" target="build" config="release" />
 	</target>
 
-	<target name="documentation" description="Create StarLight documentation" depends="documentation.init,documentation.build">
+	<target name="documentation" description="Create StarLight documentation" depends="documentation.init,documentation.build">	
 		<!-- Run Sandcastle -->
 		<exec dir="${build.starlight}${file.separator}documentation" executable="${bin.sandcastle}">
 			<arg value="${build.starlight}${file.separator}documentation${file.separator}SandcastleHelpStarLight.shfb" />
 		</exec>
+		
+		<!-- ARM -->
+		<delete file="Documentation/ARM.pdf" />
+		<svn>
+			<export srcUrl="https://composestar.svn.sourceforge.net/svnroot/composestar/documentation/ARM/ARM.pdf" destPath="Documentation" />
+		</svn>
 	</target>
 
 	<!-- QA tasks -->

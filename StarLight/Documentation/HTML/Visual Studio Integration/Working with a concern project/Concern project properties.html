@@ -87,7 +87,7 @@
                     <td>
                         <div class="summary">
                             The debug level of the StarLight Java part. Can be one of the following choices;
-                            Error, Crucial, Warning, Information, Debug.
+                            Error, Crucial, Warning, Information, Debug, Trace.
                         </div>
                     </td>
                 </tr>
@@ -120,6 +120,17 @@
                             <div class="code">
                                 <pre>MSBuild Tracing.cpsproj /p:WeaveDebugLevel=Detailed</pre>
                             </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Resource Book Keeping</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Defines if resource operations should be tracked and verified in the final application.
+                            Book keeping code has a performance hit on the program execution.
+                            With <code>ConflictPaths</code> book keeping code will only be added to program sections that contain possible conflicting resource operations.
                         </div>
                     </td>
                 </tr>
