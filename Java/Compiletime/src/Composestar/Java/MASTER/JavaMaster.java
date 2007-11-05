@@ -9,7 +9,9 @@ import Composestar.Core.Master.Master;
  */
 public class JavaMaster extends Master
 {
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see Composestar.Core.Master.Master#initEvironment()
 	 */
 	@Override
@@ -29,7 +31,7 @@ public class JavaMaster extends Master
 	{
 		if (args.length == 0)
 		{
-			System.out.println("Usage: java -jar ComposestarJava.jar <config file>");
+			System.out.println("Usage: java -jar ComposestarJava.jar [options] <config file>");
 			return;
 		}
 		main(JavaMaster.class, args);

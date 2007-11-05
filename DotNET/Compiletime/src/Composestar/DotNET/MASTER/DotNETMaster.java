@@ -37,7 +37,7 @@ public class DotNETMaster extends Master
 	{
 		if (args.length == 0)
 		{
-			System.out.println("Usage: java -jar ComposestarDotNET.jar <config file>");
+			System.out.println("Usage: java -jar ComposestarDotNET.jar [options] <config file>");
 			return;
 		}
 		main(DotNETMaster.class, args);

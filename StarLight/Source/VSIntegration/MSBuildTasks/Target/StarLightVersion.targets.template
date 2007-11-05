@@ -5,6 +5,7 @@
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<StarlightVersion Condition="'$(StarlightVersion)' == ''">@version.starlight@</StarlightVersion>
+    <StarlightVersion Condition="'$(ActiveStarlightVersion)' != ''">$(ActiveStarlightVersion)</StarlightVersion>
+    <StarlightVersion Condition="'$(StarlightVersion)' == ''">@version.starlight@</StarlightVersion>
 	</PropertyGroup>
 </Project>

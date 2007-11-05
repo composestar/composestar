@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -312,19 +312,16 @@
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-	
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\Target Files\VS2005SDK\Microsoft.VsSDK.targets" />
-  
   <PropertyGroup>
     <MSBuildCommunityTasksPath Condition="'$(MSBuildCommunityTasksPath)' == ''">$(MSBuildProjectDirectory)\..\..\..\Development\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
   </PropertyGroup>
   <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
-	
   <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying..." />
     <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion" DefaultValue="0.0">
-      <Output TaskParameter="Value" PropertyName="StarLightVersion"/>
+      <Output TaskParameter="Value" PropertyName="StarLightVersion" />
     </RegistryRead>
     <RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(StarLightVersion)" ValueName="StarLightInstallFolder" DefaultValue="$(ProgramFiles)\StarLight\">
       <Output TaskParameter="Value" PropertyName="StarLightInstallFolder" />
@@ -340,5 +337,4 @@
     </CreateItem>
     <Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(DeployDestination)" />
   </Target>
-	
 </Project>

@@ -20,6 +20,7 @@ import Composestar.Utils.StringUtils;
 
 import composestar.dotNET2.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET2.tym.entities.AssemblyConfig;
+import composestar.dotNET2.tym.entities.ConfigurationContainer;
 import composestar.dotNET2.tym.entities.ExpandedAssembly;
 import composestar.dotNET2.tym.entities.ExpandedAssemblyDocument;
 
@@ -29,12 +30,18 @@ class AssemblyExpander
 
 	private Map<String, AssemblyConfig> assemblyConfigs;
 
-	public AssemblyExpander(CommonResources resources)
+	private CommonResources resources;
+
+	private ConfigurationContainer configContainer;
+
+	public AssemblyExpander(CommonResources inresources)
 	{
+		resources = inresources;
 		baseDir = new File(resources.configuration().getProject().getIntermediate(), "Starlight");
 
 		assemblyConfigs = new HashMap<String, AssemblyConfig>();
-		ArrayOfAssemblyConfig acs = StarLightMaster.getConfigContainer().getAssemblies();
+		configContainer = (ConfigurationContainer) resources.get(StarLightMaster.RESOURCE_CONFIGCONTAINER);
+		ArrayOfAssemblyConfig acs = configContainer.getAssemblies();
 		for (AssemblyConfig ac : acs.getAssemblyConfigList())
 		{
 			assemblyConfigs.put(ac.getName(), ac);
@@ -80,22 +87,23 @@ class AssemblyExpander
 				FileUtils.close(os);
 			}
 		}
-
-		try
-		{
-			StarLightMaster.storeConfigContainer();
-		}
-		catch (IOException e)
-		{
-			throw new ModuleException("IOException while writing configuration: " + e.getMessage(), TYPEX.MODULE_NAME);
-		}
+		//
+		// try
+		// {
+		// StarLightMaster.storeConfigContainer();
+		// }
+		// catch (IOException e)
+		// {
+		// throw new ModuleException("IOException while writing configuration: "
+		// + e.getMessage(), TYPEX.MODULE_NAME);
+		// }
 	}
 
 	private void invokeExpander() throws ModuleException
 	{
 		List<String> cmd = new ArrayList<String>();
 		cmd.add(getExecutable());
-		cmd.add(StarLightMaster.getConfigFileName());
+		cmd.add((String) resources.get(StarLightMaster.RESOURCE_CONFIGFILE));
 
 		Debug.out(Debug.MODE_DEBUG, TYPEX.MODULE_NAME, "Command line: " + StringUtils.join(cmd));
 

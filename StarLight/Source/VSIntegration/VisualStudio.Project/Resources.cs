@@ -78,10 +78,14 @@ namespace Composestar.StarLight.VisualStudio.Project
         internal const string DebugLevelDescription = "DebugLevelDescription";
         internal const string WeaveDebugLevel = "WeaveDebugLevel";
         internal const string WeaveDebugLevelDescription = "WeaveDebugLevelDescription";
+        internal const string BookKeepingMode = "BookKeepingMode";
+        internal const string BookKeepingModeDescription = "BookKeepingModeDescription";
         internal const string VerifyIL = "VerifyIL";
         internal const string VerifyILDescription = "VerifyILDescription";
 		internal const string FilthOutput = "FilthOutput";
 		internal const string FilthOutputDescription = "FilthOutputDescription";
+        internal const string ActiveStarlightVersion = "ActiveStarlightVersion";
+        internal const string ActiveStarlightVersionDescription = "ActiveStarlightVersionDescription";
         internal const string GeneralCaption = "GeneralCaption";
         internal const string BuildCaption = "BuildCaption";
         internal const string Project = "Project";

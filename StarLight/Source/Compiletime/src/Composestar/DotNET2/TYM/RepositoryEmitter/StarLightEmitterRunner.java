@@ -48,6 +48,7 @@ import Composestar.Utils.Logging.CPSLogger;
 
 import composestar.dotNET2.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET2.tym.entities.AssemblyConfig;
+import composestar.dotNET2.tym.entities.ConfigurationContainer;
 import composestar.dotNET2.tym.entities.Reference;
 import composestar.dotNET2.tym.entities.WeaveCall;
 import composestar.dotNET2.tym.entities.WeaveMethod;
@@ -129,7 +130,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private void writeWeaveSpecs() throws ModuleException
 	{
-		ArrayOfAssemblyConfig assemblies = StarLightMaster.getConfigContainer().getAssemblies();
+		ConfigurationContainer configContainer = (ConfigurationContainer) resources
+				.get(StarLightMaster.RESOURCE_CONFIGCONTAINER);
+		ArrayOfAssemblyConfig assemblies = configContainer.getAssemblies();
 		for (int i = 0; i < assemblies.sizeOfAssemblyConfigArray(); i++)
 		{
 			AssemblyConfig ac = assemblies.getAssemblyConfigArray(i);

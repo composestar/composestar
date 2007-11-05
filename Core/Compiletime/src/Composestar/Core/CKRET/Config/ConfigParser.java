@@ -50,7 +50,8 @@ public class ConfigParser extends DefaultHandler
 		catch (Exception e)
 		{
 			Debug.out(Debug.MODE_WARNING, CKRET.MODULE_NAME, "Error parsing " + filename + ": " + e.getMessage());
-			Debug.out(Debug.MODE_DEBUG, CKRET.MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
+			// Debug.out(Debug.MODE_DEBUG, CKRET.MODULE_NAME, "StackTrace: " +
+			// Debug.stackTrace(e));
 		}
 	}
 

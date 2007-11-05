@@ -12,6 +12,8 @@ package Composestar.Core.Master;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,20 +29,19 @@ import org.apache.log4j.helpers.NullEnumeration;
 import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.varia.LevelRangeFilter;
 
-import Composestar.Core.Config.ModuleInfo;
+import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Xml.BuildConfigHandler;
 import Composestar.Core.Config.Xml.PlatformConfigHandler;
-import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
 import Composestar.Utils.Version;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.Log4j.CPSPatternLayout;
+import Composestar.Utils.Logging.Log4j.CrucialLevel;
 import Composestar.Utils.Logging.Log4j.MetricAppender;
 
 /**
@@ -50,6 +51,8 @@ import Composestar.Utils.Logging.Log4j.MetricAppender;
 public abstract class Master
 {
 	public static final String MODULE_NAME = "Master";
+
+	public static final String RESOURCE_CONFIGFILE = MODULE_NAME + ".Config";
 
 	/**
 	 * Compile process failed (e.g. a ModuleException was thrown)
@@ -86,13 +89,13 @@ public abstract class Master
 
 	protected int debugOverride = -1;
 
-	protected Map<String, Map<String, String>> settingsOverride;
+	protected Map<String, String> settingsOverride;
 
 	protected CommonResources resources;
 
 	public Master()
 	{
-		settingsOverride = new HashMap<String, Map<String, String>>();
+		settingsOverride = new HashMap<String, String>();
 		loggerSetup();
 		initEvironment();
 	}
@@ -145,19 +148,85 @@ public abstract class Master
 		String logLevel = System.getenv("LOG4J_LEVEL");
 		if (logLevel != null)
 		{
-			Logger.getRootLogger().setLevel(Level.toLevel(logLevel));
+			setLogLevel(logLevel);
 			logger.info("Log4j level override from environment");
 		}
 	}
 
+	/**
+	 * Convert a legacy debug mode to a Level
+	 * 
+	 * @param mode
+	 * @return
+	 */
+	public static Level debugModeToLevel(int mode)
+	{
+		switch (mode)
+		{
+			case 0:
+				return Level.ERROR;
+			case 1:
+				return CrucialLevel.CRUCIAL;
+			case 2:
+				return Level.WARN;
+			case 3:
+				return Level.INFO;
+			case 4:
+				return Level.DEBUG;
+			case 5:
+				return Level.TRACE;
+			default:
+				return Level.WARN;
+		}
+	}
+
+	/**
+	 * Set the current logging level
+	 * 
+	 * @param level
+	 */
+	public static void setLogLevel(String level)
+	{
+		if (level == null || level.trim().length() == 0)
+		{
+			return;
+		}
+		Level lvl = null;
+		try
+		{
+			int nlevel = Integer.parseInt(level.trim());
+			if (nlevel < 6)
+			{
+				lvl = debugModeToLevel(nlevel);
+			}
+			else
+			{
+				lvl = Level.toLevel(nlevel, null);
+			}
+		}
+		catch (NumberFormatException e)
+		{
+			lvl = Level.toLevel(level.trim(), null);
+		}
+		if (lvl == null)
+		{
+			return;
+		}
+		Logger.getRootLogger().setLevel(lvl);
+	}
+
+	/**
+	 * Processes the commandline argument
+	 * 
+	 * @param args
+	 */
 	public void processCmdArgs(String[] args)
 	{
 		for (String arg : args)
 		{
 			if (arg.startsWith("-d"))
 			{
-				debugOverride = Integer.parseInt(arg.substring(2));
-				Debug.setMode(debugOverride);
+				setLogLevel(arg.substring(2));
 			}
 			else if (arg.startsWith("-t"))
 			{
@@ -168,7 +237,7 @@ public abstract class Master
 						ConsoleAppender.SYSTEM_ERR);
 				LevelRangeFilter rangeFilter = new LevelRangeFilter();
 				rangeFilter.setLevelMax(Level.FATAL);
-				rangeFilter.setLevelMin(Debug.debugModeToLevel(et));
+				rangeFilter.setLevelMin(debugModeToLevel(et));
 				errAppender.addFilter(rangeFilter);
 				root.addAppender(errAppender);
 			}
@@ -181,13 +250,7 @@ public abstract class Master
 					System.err.println("Correct format is: -D<module>.<setting>=<value>");
 					continue;
 				}
-				Map<String, String> ms = settingsOverride.get(setting[0]);
-				if (ms == null)
-				{
-					ms = new HashMap<String, String>();
-					settingsOverride.put(setting[0], ms);
-				}
-				ms.put(setting[1], setting[2]);
+				settingsOverride.put(setting[0] + "." + setting[1], setting[3]);
 			}
 			else if (arg.startsWith("-L="))
 			{
@@ -207,10 +270,32 @@ public abstract class Master
 				arg = arg.substring(3);
 				platformConfiguration = new File(arg);
 			}
-			else if (arg.equals("-LN"))
+			else if (arg.startsWith("-LN"))
 			{
 				// log to net
-				Logger.getRootLogger().addAppender(new SocketAppender("127.0.0.1", 4445));
+				String host = "127.0.0.1";
+				int port = 4445;
+				if (arg.startsWith("-LN="))
+				{
+					String[] hp = arg.substring(4).split(":");
+					if (hp.length > 1)
+					{
+						host = hp[0];
+					}
+					if (hp.length > 2)
+					{
+						try
+						{
+							port = Integer.parseInt(hp[1]);
+						}
+						catch (NumberFormatException nfe)
+						{
+							System.err.println(String.format("%s is not a valid host:port", arg.substring(4)));
+							port = 4445;
+						}
+					}
+				}
+				Logger.getRootLogger().addAppender(new SocketAppender(host, port));
 			}
 			else if (arg.startsWith("-"))
 			{
@@ -296,6 +381,11 @@ public abstract class Master
 		return new PathResolver(getClass());
 	}
 
+	/**
+	 * Load the current project configuration and initialize common resources
+	 * 
+	 * @throws Exception
+	 */
 	protected void loadConfiguration() throws Exception
 	{
 		File configFile = new File(configFilename);
@@ -307,24 +397,30 @@ public abstract class Master
 		// create the repository and common resources
 		DataStore.instance();
 		resources = new CommonResources();
-		resources.setConfiguration(BuildConfigHandler.loadBuildConfig(configFile));
+		resources.put(RESOURCE_CONFIGFILE, configFilename);
+		BuildConfig config = BuildConfigHandler.loadBuildConfig(configFile);
+		resources.setConfiguration(config);
 		resources.setPathResolver(getPathResolver());
-		ModuleInfoManager.getInstance().setBuildConfig(resources.configuration());
+		setLogLevel(config.getSetting("buildDebugLevel"));
+		ModuleInfoManager.getInstance().setBuildConfig(config);
 
-		/*
-		 * // load the project configuration file try { logger.debug("Reading
-		 * build configuration from: " + configFilename); SAXParserFactory
-		 * saxParserFactory = SAXParserFactory.newInstance(); SAXParser
-		 * saxParser = saxParserFactory.newSAXParser(); XMLReader parser =
-		 * saxParser.getXMLReader(); BuildConfigHandler handler = new
-		 * BuildConfigHandler(parser); parser.setContentHandler(handler);
-		 * parser.parse(new InputSource(configFilename)); } catch (Exception e) {
-		 * throw new Exception("An error occured while reading the build
-		 * configuration file '" + configFilename + "': " + e.getMessage()); } //
-		 * Set debug level if (debugOverride == -1) {
-		 * Debug.setMode(Configuration.instance().getBuildDebugLevel()); }
-		 */
+		for (Entry<String, String> override : settingsOverride.entrySet())
+		{
+			config.addSetting(override.getKey(), override.getValue());
+		}
 	}
+
+	/**
+	 * Called just before building and after initialization
+	 */
+	protected void preBuild() throws Exception
+	{}
+
+	/**
+	 * Called after building is complete
+	 */
+	protected void postBuild() throws Exception
+	{}
 
 	/**
 	 * Calls run on all modules added to the master.
@@ -335,62 +431,19 @@ public abstract class Master
 		{
 			long beginTime = System.currentTimeMillis();
 
-			ModuleInfo mi = ModuleInfoManager.get(INCRE.class);
-			Map<String, String> overrideSet = settingsOverride.get(INCRE.MODULE_NAME);
-			if ((overrideSet != null) && (mi != null))
-			{
-				for (Entry<String, String> entry : overrideSet.entrySet())
-				{
-					try
-					{
-						mi.setSettingValue(entry.getKey(), entry.getValue());
-					}
-					catch (ConfigurationException ce)
-					{
-						CPSLogger log = CPSLogger.getCPSLogger(INCRE.MODULE_NAME);
-						log.error("Configuration override error: " + ce.getMessage(), ce);
-					}
-				}
-			}
+			preBuild();
 
 			// initialize INCRE
 			INCRE incre = INCRE.instance();
 			incre.init(resources);
-
-			// load override settings
-			for (Entry<String, Map<String, String>> entry : settingsOverride.entrySet())
-			{
-				if (entry.getKey().equals(INCRE.MODULE_NAME))
-				{
-					continue;
-				}
-				mi = ModuleInfoManager.get(entry.getKey());
-				if (mi != null)
-				{
-					for (Entry<String, String> se : entry.getValue().entrySet())
-					{
-						try
-						{
-							mi.setSettingValue(se.getKey(), se.getValue());
-						}
-						catch (ConfigurationException ce)
-						{
-							CPSLogger log = CPSLogger.getCPSLogger(entry.getKey());
-							log.error("Configuration override error: " + ce.getMessage(), ce);
-						}
-					}
-				}
-				else
-				{
-					logger.error("Configuration override error: no such module: " + entry.getKey());
-				}
-			}
 
 			// execute enabled modules one by one
 			incre.runModules(resources);
 
 			// close the incre reporter
 			incre.getReporter().close();
+
+			postBuild();
 
 			// display total time elapsed
 			long total = System.currentTimeMillis() - beginTime;
@@ -414,17 +467,17 @@ public abstract class Master
 		{
 			CPSLogger mLogger = CPSLogger.getCPSLogger(e.getModule());
 			mLogger.error(e, e);
-
-			// TODO: shouldn't use stack trace
-			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + Debug.stackTrace(e));
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			mLogger.debug(sw.toString());
 			return ECOMPILE;
 		}
 		catch (Exception e)
 		{
 			logger.error("Internal compiler error: " + e, e);
-
-			// TODO: shouldn't use stack trace
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			logger.debug(sw.toString());
 			return EFAIL;
 		}
 		return 0;

@@ -237,4 +237,16 @@
   <data name="CompanyName" xml:space="preserve">
     <value>University of Twente</value>
   </data>
+  <data name="ActiveStarlightVersion" xml:space="preserve">
+    <value>Starlight Version</value>
+  </data>
+  <data name="ActiveStarlightVersionDescription" xml:space="preserve">
+    <value>The starlight version to use for compilation. Use this setting to use a different version that the last installed version.</value>
+  </data>
+  <data name="BookKeepingMode" xml:space="preserve">
+    <value>Resource book keeping</value>
+  </data>
+  <data name="BookKeepingModeDescription" xml:space="preserve">
+    <value>Defines when to keep track of operations on message resources.</value>
+  </data>
 </root>

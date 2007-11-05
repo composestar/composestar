@@ -70,7 +70,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 	private List<DotNETCallToOtherMethod> callsToOtherMethods = new ArrayList<DotNETCallToOtherMethod>();
 
-	private ConfigurationContainer configContainer = StarLightMaster.getConfigContainer();
+	private ConfigurationContainer configContainer;
 
 	private INCRE incre = INCRE.instance();
 
@@ -79,6 +79,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 	public void run(CommonResources resc) throws ModuleException
 	{
 		resources = resc;
+		configContainer = (ConfigurationContainer) resources.get(StarLightMaster.RESOURCE_CONFIGCONTAINER);
 
 		// Collect filtertypes and filteractions
 		collectFilterTypesAndActions();

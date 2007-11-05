@@ -376,7 +376,8 @@
 
     <MasterCallerTask ContinueOnError="false" RepositoryFilename="$(ProjectDir)$(RepositoryFilename)"
 			JavaDebugLevel="$(DebugLevel)" IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)"
-			IncreConfig="$(IncreConfig)" FilthOutput="$(FILTHOutput)" UseVersion="$(StarlightVersion)">
+			IncreConfig="$(IncreConfig)" FilthOutput="$(FILTHOutput)" BookKeepingMode="$(BookKeepingMode)" 
+      UseVersion="$(StarlightVersion)">
     </MasterCallerTask>
 
     <OnError ExecuteTargets="CleanBackup" />

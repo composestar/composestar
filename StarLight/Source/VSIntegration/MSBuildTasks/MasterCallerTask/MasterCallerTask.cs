@@ -76,6 +76,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		private string _debugLevel;
 		private string _intermediateOutputPath;
 		private string _increConfig;
+        private string _bookKeepingMode;
 		private bool _filthOutput = true;
 
 		/// <summary>
@@ -124,6 +125,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		{
 			set { _filthOutput = value; }
 		}
+
+        /// <summary>
+        /// Sets the resource operating book keeping mode
+        /// </summary>
+        public string BookKeepingMode
+        {
+            set { _bookKeepingMode = value; }
+        }
 		#endregion
 
 		#region Declarations
@@ -132,20 +141,21 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		private const string StarLightJar = "Compiletime\\StarLight.jar";
 
 		private bool BuildErrorsEncountered;
-		private DebugMode CurrentDebugMode;
+        private DebugLevel CurrentDebugMode;
 
 		private const int ErrorFileNotFound = 2;
 		private const int ErrorAccessDenied = 5;
 
-		public enum DebugMode
-		{
-			NotSet = -1,
-			Error = 0,
-			Crucial = 1,
-			Warning = 2,
-			Information = 3,
-			Debug = 4
-		}
+        public enum DebugLevel
+        {
+            NotSet = -1,
+            Error = 0,
+            Crucial = 1,
+            Warning = 2,
+            Information = 3,
+            Debug = 4,
+            Trace = 5
+        }
 		#endregion
 
 		/// <summary>
@@ -177,13 +187,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			Log.LogMessageFromResources("StoreDebugLevel", _debugLevel);
 
 			// Set the Common Configuration
-			short debugLevelValue = -1;
+			string debugLevelValue = "";
 			if (!string.IsNullOrEmpty(_debugLevel))
 			{
 				try
 				{
-					CurrentDebugMode = (DebugMode)Enum.Parse(typeof(DebugMode), _debugLevel);
-					debugLevelValue = (short)CurrentDebugMode;
+                    CurrentDebugMode = (DebugLevel)Enum.Parse(typeof(DebugLevel), _debugLevel);
+                    debugLevelValue = DebugLevelToLog4j(CurrentDebugMode);
 				}
 				catch (ArgumentException)
 				{
@@ -192,7 +202,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				}
 			}
 
-			configContainer.AddSetting("CompiletimeDebugLevel", debugLevelValue.ToString(CultureInfo.InvariantCulture));
+            if (!String.IsNullOrEmpty(debugLevelValue))
+            {
+                configContainer.AddSetting("buildDebugLevel", debugLevelValue);
+            }
 			configContainer.AddSetting("IntermediateOutputPath", _intermediateOutputPath);
 			configContainer.AddSetting("InstallFolder", StarLightSettings.Instance.StarLightInstallFolder);
 
@@ -202,8 +215,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			{
 				filthFile = Path.Combine(StarLightSettings.Instance.StarLightInstallFolder, filthFile);
 			}
-			configContainer.AddSetting("SpecificationFILTH", filthFile);
-			configContainer.AddSetting("OutputEnabledFILTH", _filthOutput.ToString(CultureInfo.InvariantCulture));
+            configContainer.AddSetting("FILTH.input", filthFile);
+            configContainer.AddSetting("FILTH.outputEnabled", _filthOutput.ToString(CultureInfo.InvariantCulture));
+
+            if (!String.IsNullOrEmpty(_bookKeepingMode))
+            {
+                configContainer.AddSetting("INLINE.bookkeeping", _bookKeepingMode);
+            }
 
 			// Save common config
 			entitiesAccessor.SaveConfiguration(_repositoryFileName, configContainer);
@@ -229,7 +247,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			IList<string> args = new List<string>();
 			args.Add(StarLightSettings.Instance.JavaOptions);
 			args.Add("-jar " + Quote(jarFile));
-			if (_increConfig != null) args.Add("-i" + _increConfig);
+            if (_increConfig != null) args.Add("-DINCRE.config=" + _increConfig);
 			args.Add(Quote(_repositoryFileName));
 
 			process.StartInfo.Arguments = Join(args, " ");
@@ -332,28 +350,31 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				string line = parsed[3];
 				string msg = parsed[4];
 
-				DebugMode mode;
+                DebugLevel mode;
 				switch (level.ToLower())
 				{
-					case "error": 
-						mode = DebugMode.Error;
+					case "error":
+                        mode = DebugLevel.Error;
 						break;
-					case "crucial": 
-						mode = DebugMode.Crucial; 
+					case "crucial":
+                        mode = DebugLevel.Crucial; 
 						break;
 					case "warning":
-						case "warn": 
-						mode = DebugMode.Warning; 
+					case "warn":
+                        mode = DebugLevel.Warning; 
 						break;
 					case "information":
-						case "info": 
-						mode = DebugMode.Information; 
+					case "info":
+                        mode = DebugLevel.Information; 
 						break;
-					case "debug": 
-						mode = DebugMode.Debug; 
+					case "debug":
+                        mode = DebugLevel.Debug; 
 						break;
-					default: 
-						mode = DebugMode.NotSet; 
+                    case "trace":
+                        mode = DebugLevel.Trace;
+                        break;
+					default:
+                        mode = DebugLevel.NotSet; 
 						break;
 				}
 
@@ -381,28 +402,28 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// <param name="message">The message.</param>
 		/// <param name="filename">The filename.</param>
 		/// <param name="line">The line.</param>
-		private void LogMessage(DebugMode debugMode, string module, string message, string filename, int line)
+        private void LogMessage(DebugLevel debugMode, string module, string message, string filename, int line)
 		{
 			if (CurrentDebugMode >= debugMode)
 			{
-				string modeDescription = GetModeDescription(debugMode);
+                string modeDescription = DebugLevelToLog4j(debugMode);
 				string fm = string.Format(CultureInfo.CurrentCulture, "{0} ({1}): {2}", module, modeDescription, message);
 
 				switch (debugMode)
 				{
-					case DebugMode.Error:
+                    case DebugLevel.Error:
 						Log.LogError(module, "", "", filename, line, 0, 0, 0, message);
 						break;
-					case DebugMode.Warning:
+                    case DebugLevel.Warning:
 						Log.LogWarning(module, "", "", filename, line, 0, 0, 0, message);
 						break;
-					case DebugMode.Crucial:
+                    case DebugLevel.Crucial:
 						Log.LogMessage(MessageImportance.Normal, fm);
 						break;
-					case DebugMode.Information:
+                    case DebugLevel.Information:
 						Log.LogMessage(MessageImportance.Normal, fm);
 						break;
-					case DebugMode.Debug:
+                    case DebugLevel.Debug:
 						Log.LogMessage(MessageImportance.Normal, fm);
 						break;
 				}
@@ -424,20 +445,22 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		/// </summary>
 		/// <param name="mode">The mode.</param>
 		/// <returns></returns>
-		private static string GetModeDescription(DebugMode mode)
+        private static string DebugLevelToLog4j(DebugLevel mode)
 		{
 			switch (mode)
 			{
-				case DebugMode.Error: 
-					return "error";
-				case DebugMode.Crucial: 
-					return "crucial";
-				case DebugMode.Warning: 
-					return "warning";
-				case DebugMode.Information: 
-					return "info";
-				case DebugMode.Debug: 
-					return "debug";
+                case DebugLevel.Error: 
+					return "ERROR";
+                case DebugLevel.Warning: 
+					return "WARN";
+                case DebugLevel.Information: 
+					return "INFO";
+                case DebugLevel.Debug: 
+					return "DEBUG";
+                case DebugLevel.Trace:
+                    return "TRACE";
+                case DebugLevel.Crucial:
+                    return "CRUCIAL";
 				default: 
 					return "unknown";
 			}

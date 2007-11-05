@@ -96,7 +96,7 @@ public final class Version
 	 */
 	public static String getTitle()
 	{
-		return instance.props.getProperty("application.title", "Composestar Compile-Time");
+		return instance.props.getProperty("application.title", "Compose* Compiletime");
 	}
 
 	/**
@@ -137,10 +137,10 @@ public final class Version
 	 */
 	public static void reportVersion(PrintStream os)
 	{
-		os.println(Version.getTitle()+" "+Version.getVersion());
-		os.println("Developed by "+Version.getAuthor());
+		os.println(Version.getTitle() + " " + Version.getVersion());
+		os.println("Developed by " + Version.getAuthor());
 		os.println(Version.getWebsite());
-		os.println("Compiled on "+Version.getCompileDate().toString());
+		os.println("Compiled on " + Version.getCompileDate().toString());
 		os.println("");
 		os.println(Version.getLicenseStub());
 	}

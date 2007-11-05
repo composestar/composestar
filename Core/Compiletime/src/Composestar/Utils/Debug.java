@@ -9,12 +9,7 @@
  */
 package Composestar.Utils;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.StringTokenizer;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
@@ -45,53 +40,6 @@ public final class Debug
 	private static int warnings;
 
 	private static int errors;
-
-	public static void setMode(int mode)
-	{
-		currentMode = mode;
-		Logger root = Logger.getRootLogger();
-		root.setLevel(debugModeToLevel(mode));
-	}
-
-	/**
-	 * Return the level for the given legacy debug mode
-	 * 
-	 * @param mode
-	 * @return
-	 */
-	public static Level debugModeToLevel(int mode)
-	{
-		switch (mode)
-		{
-			case MODE_ERROR:
-				return Level.ERROR;
-			case MODE_CRUCIAL:
-				return CrucialLevel.CRUCIAL;
-			case MODE_WARNING:
-				return Level.WARN;
-			case MODE_INFORMATION:
-				return Level.INFO;
-			case MODE_DEBUG:
-				return Level.DEBUG;
-			case 5:
-				return Level.TRACE;
-			default:
-				return Level.WARN;
-		}
-	}
-
-	public static int getMode()
-	{
-		return currentMode;
-	}
-
-	/**
-	 * Return true if this message will be logged with Debug.out(...) is called
-	 */
-	public static boolean willLog(int mode)
-	{
-		return currentMode >= mode;
-	}
 
 	/**
 	 * Returns the mode level that correspondends to the specified description.
@@ -164,9 +112,6 @@ public final class Debug
 		}
 	}
 
-	/**
-	 * @deprecated
-	 */
 	public static void out(int mode, String module, String msg, String filename)
 	{
 		out(mode, module, msg, filename, 0);
@@ -216,29 +161,4 @@ public final class Debug
 		}
 	}
 
-	public static void outWarnings()
-	{
-		if ((warnings > 0) || (errors > 0))
-		{
-			System.out.println("Warnings: " + warnings + "; Errors: " + errors);
-		}
-	}
-
-	public static int numErrors()
-	{
-		return errors;
-	}
-
-	public static int numWarnings()
-	{
-		return warnings;
-	}
-
-	public static String stackTrace(Throwable t)
-	{
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		t.printStackTrace(pw);
-		return sw.toString();
-	}
 }
