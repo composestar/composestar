@@ -599,6 +599,8 @@ namespace Composestar.StarLight.ILWeaver
 				degenFilterAction.SubstitutionTarget = filterAction.SubstitutionTarget;
 				degenFilterAction.Target = filterAction.Target;
 				degenFilterAction.Type = filterAction.Type;
+                degenFilterAction.BookKeeping = filterAction.BookKeeping;
+                degenFilterAction.ResourceOperations = filterAction.ResourceOperations;
 
 				return degenFilterAction;
 			}

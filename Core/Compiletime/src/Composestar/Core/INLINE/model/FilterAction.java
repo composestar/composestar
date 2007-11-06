@@ -48,6 +48,12 @@ public class FilterAction extends Instruction
 	private boolean bookkeeping;
 
 	/**
+	 * A string containing the resource operations that lead to this filter
+	 * action as harvested from the execution model.
+	 */
+	private String resourceOperations = "";
+
+	/**
 	 * The constructor
 	 * 
 	 * @param type The type of the filteraction.
@@ -124,6 +130,28 @@ public class FilterAction extends Instruction
 	public boolean getBookKeeping()
 	{
 		return bookkeeping;
+	}
+
+	/**
+	 * @param value
+	 * @see #resourceOperations
+	 */
+	public void setResourceOperations(String value)
+	{
+		if (value == null)
+		{
+			value = "";
+		}
+		resourceOperations = value;
+	}
+
+	/**
+	 * @see #resourceOperations
+	 * @return
+	 */
+	public String getResourceOperations()
+	{
+		return resourceOperations;
 	}
 
 	/**

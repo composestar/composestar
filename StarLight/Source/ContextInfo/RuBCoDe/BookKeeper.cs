@@ -11,12 +11,12 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
     /// This class will keep track of resource operations of a single resource
     /// </summary>
     [DebuggerNonUserCode()]
-    public class BookKeeper
+    public abstract class BookKeeper
     {
         /// <summary>
         /// If true print debug output on StdErr
         /// </summary>
-        private static readonly bool DEBUG = true;
+        protected static readonly bool DEBUG = true;
 
         /// <summary>
         /// Read operation
@@ -28,59 +28,39 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         public static readonly string WRITE = "write";
 
         /// <summary>
-        /// The type of resource this BookKeeper keeps track off
+        /// Convert a string to the proper resource type
         /// </summary>
-        protected ResourceType resType;
-
-        /// <summary>
-        /// List of performed operations
-        /// </summary>
-        protected List<String> operations;
-
-        /// <summary>
-        /// Cerate a new resource book keeper for a given type
-        /// </summary>
-        /// <param name="type">the type this bookkeeper tracks</param>
-        public BookKeeper(ResourceType type)
-        {
-            resType = type;
-            operations = new List<String>();
-        }
-
-        /// <summary>
-        /// Add an operation to the current list.
-        /// </summary>
-        /// <param name="op"></param>
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public void AddOperation(String op)
-        {
-            if (DEBUG)
-            {
-                lock (Console.Error)
-                {
-                    Console.Error.WriteLine("[RescOp] in thread #{0} : {1}.{2}", Thread.CurrentThread.ManagedThreadId,
-                        Enum.GetName(typeof(ResourceType), resType), op);
-                }
-            }
-            operations.Add(op);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <param name="type"></param>
         /// <returns></returns>
-        public override string ToString()
+        public static ResourceType getResourceType(string type)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(Enum.GetName(typeof(ResourceType), resType));
-            sb.Append(" = ");
-            foreach (String s in operations)
+            switch (type.ToLower())
             {
-                sb.Append(s);
-                sb.Append(", ");
+                case "msg":
+                case "message":
+                    return ResourceType.Message;
+                case "target":
+                    return ResourceType.Target;
+                case "selector":
+                    return ResourceType.Selector;
+                case "return":
+                    return ResourceType.Return;
+                case "args":
+                case "arglist":
+                    return ResourceType.ArgumentList;
             }
-            return sb.ToString();
+            // arg0, arg1, arg2, ...
+            if (type.ToLower().StartsWith("arg"))
+            {
+                return ResourceType.ArgumentEntry;
+            }
+            return ResourceType.Unknown;
         }
+
+        /// <summary>
+        /// Validate the resource operations. When not validate a runtime exception is thrown.
+        /// </summary>
+        public abstract void validate();
     }
 
     /// <summary>
@@ -88,6 +68,10 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
     /// </summary>
     public enum ResourceType
     {
+        /// <summary>
+        /// Unknown resource type
+        /// </summary>
+        Unknown = -1,
         /// <summary>
         /// The message. This resource does not actually exist in memory?
         /// </summary>

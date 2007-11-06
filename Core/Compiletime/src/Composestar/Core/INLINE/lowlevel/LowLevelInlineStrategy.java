@@ -4,6 +4,8 @@
  */
 package Composestar.Core.INLINE.lowlevel;
 
+import java.util.List;
+
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
@@ -94,5 +96,5 @@ public interface LowLevelInlineStrategy
 	 * 
 	 * @param state The executionstate corresponding with the filteraction.
 	 */
-	public void generateAction(ExecutionState state);
+	public void generateAction(ExecutionState state, List<String> resourceOps);
 }

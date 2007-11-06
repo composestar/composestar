@@ -5,11 +5,13 @@
 package Composestar.Core.INLINE.lowlevel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import Composestar.Core.CKRET.ResourceOperationLabeler;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
@@ -21,6 +23,7 @@ import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.queryengine.predicates.StateType;
+import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
@@ -48,6 +51,10 @@ public class LowLevelInliner
 
 	private Map<ExecutionState, TopLevelBlock> jumpMap;
 
+	private List<String> resourceOperations;
+
+	private Labeler labeler;
+
 	/**
 	 * The constructor
 	 * 
@@ -56,7 +63,7 @@ public class LowLevelInliner
 	public LowLevelInliner(LowLevelInlineStrategy strategy)
 	{
 		this.strategy = strategy;
-
+		labeler = new ResourceOperationLabeler();
 		initialize();
 	}
 
@@ -144,6 +151,8 @@ public class LowLevelInliner
 	 */
 	private void inlineFilterElements(Iterator<FilterElementBlock> filterElements)
 	{
+		final List<String> nop = Collections.emptyList();
+
 		FilterElementBlock filterElement = filterElements.next();
 
 		ExecutionState flowFalseExitState = filterElement.flowFalseExitState;
@@ -160,8 +169,8 @@ public class LowLevelInliner
 			}
 			else
 			{
-				strategy.generateAction(filterElement.flowTrueAction1);
-				strategy.generateAction(filterElement.flowTrueAction2);
+				strategy.generateAction(filterElement.flowTrueAction1, nop);
+				strategy.generateAction(filterElement.flowTrueAction2, filterElement.flowTrueRescOps);
 				generateJump(flowTrueExitState);
 			}
 		}
@@ -185,8 +194,8 @@ public class LowLevelInliner
 				strategy.evalCondExpr((ConditionExpression) condExprFlowNode.getRepositoryLink());
 				strategy.beginTrueBranch();
 
-				strategy.generateAction(filterElement.flowTrueAction1);
-				strategy.generateAction(filterElement.flowTrueAction2);
+				strategy.generateAction(filterElement.flowTrueAction1, nop);
+				strategy.generateAction(filterElement.flowTrueAction2, filterElement.flowTrueRescOps);
 				generateJump(flowTrueExitState);
 
 				strategy.endTrueBranch();
@@ -202,8 +211,8 @@ public class LowLevelInliner
 		{
 			if (flowTrueExitState == null)
 			{
-				strategy.generateAction(filterElement.flowFalseAction1);
-				strategy.generateAction(filterElement.flowFalseAction2);
+				strategy.generateAction(filterElement.flowFalseAction1, nop);
+				strategy.generateAction(filterElement.flowFalseAction2, filterElement.flowFalseRescOps);
 				generateJump(flowFalseExitState);
 			}
 			else if (isCondExpr.isTrue(flowTrueExitState))
@@ -214,8 +223,8 @@ public class LowLevelInliner
 			{
 				if (flowFalseExitState.equals(flowTrueExitState))
 				{
-					strategy.generateAction(filterElement.flowFalseAction1);
-					strategy.generateAction(filterElement.flowFalseAction2);
+					strategy.generateAction(filterElement.flowFalseAction1, nop);
+					strategy.generateAction(filterElement.flowFalseAction2, filterElement.flowFalseRescOps);
 					generateJump(flowFalseExitState);
 				}
 				else
@@ -226,15 +235,15 @@ public class LowLevelInliner
 					strategy.evalCondExpr((ConditionExpression) condExprFlowNode.getRepositoryLink());
 					strategy.beginTrueBranch();
 
-					strategy.generateAction(filterElement.flowTrueAction1);
-					strategy.generateAction(filterElement.flowTrueAction2);
+					strategy.generateAction(filterElement.flowTrueAction1, nop);
+					strategy.generateAction(filterElement.flowTrueAction2, filterElement.flowTrueRescOps);
 					generateJump(flowTrueExitState);
 
 					strategy.endTrueBranch();
 					strategy.beginFalseBranch();
 
-					strategy.generateAction(filterElement.flowFalseAction1);
-					strategy.generateAction(filterElement.flowFalseAction2);
+					strategy.generateAction(filterElement.flowFalseAction1, nop);
+					strategy.generateAction(filterElement.flowFalseAction2, filterElement.flowFalseRescOps);
 					generateJump(flowFalseExitState);
 
 					strategy.endFalseBranch();
@@ -297,6 +306,7 @@ public class LowLevelInliner
 		ExecutionState state;
 		int label = 0;
 		List<TopLevelBlock> result = new ArrayList<TopLevelBlock>();
+		resourceOperations = null;
 		while (iterator.hasNext())
 		{
 			state = (ExecutionState) iterator.next();
@@ -407,13 +417,20 @@ public class LowLevelInliner
 	private FilterElementBlock identifyFilterElementBlock(ExecutionState condExpr)
 	{
 		FilterElementBlock block = new FilterElementBlock();
+
 		block.conditionExprState = condExpr;
 
-		Iterator outTransitions = condExpr.getOutTransitions();
-		// enumeration has 1 or 2 elements
-		while (outTransitions.hasNext())
+		// enumeration has 1 or 2 elements (True and False branch)
+		for (ExecutionTransition transition : condExpr.getOutTransitionsEx())
 		{
-			ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
+			if (labeler != null)
+			{
+				if (resourceOperations == null)
+				{
+					resourceOperations = new ArrayList<String>();
+				}
+				resourceOperations.addAll(labeler.getResourceOperations(transition));
+			}
 
 			ExecutionState exitState = getExitState(transition.getEndState());
 
@@ -424,6 +441,8 @@ public class LowLevelInliner
 				{
 					block.flowTrueAction1 = exitState;
 					block.flowTrueAction2 = getNextState(exitState);
+					block.flowTrueRescOps = resourceOperations;
+					resourceOperations = new ArrayList<String>();
 				}
 			}
 			else
@@ -433,6 +452,8 @@ public class LowLevelInliner
 				{
 					block.flowFalseAction1 = exitState;
 					block.flowFalseAction2 = getNextState(exitState);
+					block.flowFalseRescOps = resourceOperations;
+					resourceOperations = new ArrayList<String>();
 				}
 			}
 		}
@@ -449,10 +470,14 @@ public class LowLevelInliner
 	 */
 	private ExecutionState getNextState(ExecutionState state)
 	{
-		Iterator transitions = state.getOutTransitions();
-		if (transitions.hasNext())
+		List<ExecutionTransition> transitions = state.getOutTransitionsEx();
+		if (transitions.size() > 0)
 		{
-			ExecutionTransition transition = (ExecutionTransition) transitions.next();
+			ExecutionTransition transition = transitions.get(0);
+			if ((labeler != null) && (resourceOperations != null))
+			{
+				resourceOperations.addAll(labeler.getResourceOperations(transition));
+			}
 			return transition.getEndState();
 		}
 		else
@@ -476,8 +501,11 @@ public class LowLevelInliner
 		while (!isExitState(currentState))
 		{
 			// get the next state:
-			Iterator outTransitions = currentState.getOutTransitions();
-			ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
+			ExecutionTransition transition = currentState.getOutTransitionsEx().get(0);
+			if (labeler != null)
+			{
+				resourceOperations.addAll(labeler.getResourceOperations(transition));
+			}
 			currentState = transition.getEndState();
 		}
 
@@ -543,6 +571,8 @@ public class LowLevelInliner
 		 */
 		public ExecutionState flowTrueAction2;
 
+		public List<String> flowTrueRescOps;
+
 		/**
 		 * The exit(last) state of this filterelement when the
 		 * conditionexpression was false.
@@ -558,6 +588,8 @@ public class LowLevelInliner
 		 * The second (on call) action when the conditionexpression was false.
 		 */
 		public ExecutionState flowFalseAction2;
+
+		public List<String> flowFalseRescOps;
 
 	}
 

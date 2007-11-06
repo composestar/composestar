@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -133,33 +134,63 @@ public class ResourceOperationLabeler implements Labeler
 		concern = curConcern;
 	}
 
-	public LabelSequence getLabels(ExecutionTransition transition)
+	/**
+	 * Return the label to use as look up for the operation table
+	 * 
+	 * @param transition
+	 * @return
+	 */
+	protected String getLookupLabel(ExecutionTransition transition)
 	{
 		// get action name
-		String actionName = null;
 		FlowNode fnode = transition.getStartState().getFlowNode();
 		if ((fnode != null) && (fnode.containsName(FlowNode.FILTER_ACTION_NODE)))
 		{
 			FilterType ftype = ((Filter) fnode.getRepositoryLink()).getFilterType();
 			if (fnode.containsName(FlowNode.ACCEPT_CALL_ACTION_NODE))
 			{
-				actionName = ftype.getAcceptCallAction().getName();
+				return ftype.getAcceptCallAction().getName();
 			}
 			else if (fnode.containsName(FlowNode.REJECT_CALL_ACTION_NODE))
 			{
-				actionName = ftype.getRejectCallAction().getName();
+				return ftype.getRejectCallAction().getName();
 			}
 			else if (fnode.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE))
 			{
-				actionName = ftype.getAcceptReturnAction().getName();
+				return ftype.getAcceptReturnAction().getName();
 			}
 			else if (fnode.containsName(FlowNode.REJECT_RETURN_ACTION_NODE))
 			{
-				actionName = ftype.getRejectReturnAction().getName();
+				return ftype.getRejectReturnAction().getName();
 			}
 		}
+		// if no filter action, return the normal label
+		return transition.getLabel();
+	}
 
-		if (actionName != null && actionName.equals(META_ACTION))
+	public List<String> getResourceOperations(ExecutionTransition transition)
+	{
+		List<String> result = new ArrayList<String>();
+		String lookupLabel = getLookupLabel(transition);
+		for (Entry<LabelResourcePair, LabelSequence> entry : operationTable.entrySet())
+		{
+			if (entry.getKey().label.equals(lookupLabel))
+			{
+				for (String op : entry.getValue().getLabelsEx())
+				{
+					result.add(entry.getKey().resource + "." + op);
+				}
+			}
+		}
+		return result;
+	}
+
+	public LabelSequence getLabels(ExecutionTransition transition)
+	{
+		// get action name
+		String lookupLabel = getLookupLabel(transition);
+
+		if (lookupLabel != null && lookupLabel.equals(META_ACTION))
 		{
 			try
 			{
@@ -176,14 +207,7 @@ public class ResourceOperationLabeler implements Labeler
 		else
 		{
 			LabelSequence seq = null;
-			if (actionName != null)
-			{
-				seq = operationTable.get(new LabelResourcePair(actionName, currentResource));
-			}
-			if (seq == null)
-			{
-				seq = operationTable.get(new LabelResourcePair(transition.getLabel(), currentResource));
-			}
+			seq = operationTable.get(new LabelResourcePair(lookupLabel, currentResource));
 
 			if (seq == null)
 			{

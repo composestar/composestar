@@ -62,6 +62,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Composestar.StarLight.ContextInfo.RuBCoDe;
 #endregion
 
 namespace Composestar.StarLight.ILWeaver
@@ -214,6 +215,8 @@ namespace Composestar.StarLight.ILWeaver
 			}
 
 			StoreTimeStamp(swTotal.Elapsed, "Loaded assembly");
+
+            WeaveAssembly(targetAssembly);
 					
 			// Get only the types we have info for
 			foreach (WeaveType weaveType in _currentWeaveSpec.WeaveTypes)
@@ -425,6 +428,29 @@ namespace Composestar.StarLight.ILWeaver
 
 
 		#endregion
+
+        /// <summary>
+        /// Weave elements on assembly level.
+        /// </summary>
+        /// <param name="targetAssembly"></param>
+        private void WeaveAssembly(AssemblyDefinition targetAssembly)
+        {
+            #region Check for null
+            if (targetAssembly == null)
+                throw new ArgumentNullException("targetAssembly");
+            #endregion
+
+            MethodReference tr = targetAssembly.MainModule.Import(typeof(ConflictRuleAttribute).GetConstructor(new Type[] { typeof(string), typeof(string), typeof(bool) }));
+
+            foreach (ConflictRule rule in _currentWeaveSpec.ConflictRules)
+            {
+                CustomAttribute ca = new CustomAttribute(tr);
+                ca.ConstructorParameters.Add(rule.Resource);
+                ca.ConstructorParameters.Add(rule.Expression);
+                ca.ConstructorParameters.Add(rule.Constraint);
+                targetAssembly.CustomAttributes.Add(ca);
+            }      
+        }
 
 		/// <summary>
 		/// Weaves the internals.
@@ -743,10 +769,6 @@ namespace Composestar.StarLight.ILWeaver
 			// Weave the innercall check task:
 			Instruction resetInstruction = WeaveCheckInnerCall(targetAssembly, method, weaveMethod, worker, instructions);
 
-            // @michielh: if (doBookKeeping) enterJP();
-            // could also be done visitor.DoWeave(filterCode);
-            // but doBookKeeping is joint point depended
-
 			// Visit the elements in the block
 			try
 			{
@@ -758,10 +780,6 @@ namespace Composestar.StarLight.ILWeaver
 				throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException,
 											_configuration.OutputImagePath, ex);
 			}
-
-            // @michielh: if (doBookKeeping) leaveJP();
-            // what about thrown exception?
-            // should be put before "ret" instruction added in visitor.DoWeave(filterCode);
 
 			// Add the reset instruction:
 			instructions.Add(resetInstruction);

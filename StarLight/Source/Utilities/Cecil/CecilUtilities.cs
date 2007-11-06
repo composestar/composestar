@@ -279,6 +279,7 @@ namespace Composestar.StarLight.Utilities
 			AddMethodToCache(CachedMethodDefinition.JoinPointContextSetReturnValue, typeof(JoinPointContext).GetMethod("SetReturnValue", new Type[] { typeof(object), typeof(JoinPointContext) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextSetBookKeeping, typeof(JoinPointContext).GetMethod("set_BookKeeping", new Type[] { typeof(bool) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextFinalizeBookKeeping, typeof(JoinPointContext).GetMethod("FinalizeBookKeeping", new Type[] { }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextAddResourceOperationList, typeof(JoinPointContext).GetMethod("AddResourceOperationList", new Type[] { typeof(string) }));
 			AddMethodToCache(CachedMethodDefinition.HasMoreStoredActions, typeof(FilterContext).GetMethod("HasMoreStoredActions", new Type[] { }));
 			AddMethodToCache(CachedMethodDefinition.NextStoredAction, typeof(FilterContext).GetMethod("NextStoredAction", new Type[] { }));
 			AddMethodToCache(CachedMethodDefinition.ExceptionConstructor, typeof(Exception).GetConstructors()[0]);
@@ -1023,6 +1024,10 @@ namespace Composestar.StarLight.Utilities
         /// Finalizes resource operating bookkeeping for the current JPC
         /// </summary>
         JoinPointContextFinalizeBookKeeping,
+        /// <summary>
+        /// Emit a string of resource operations
+        /// </summary>
+        JoinPointContextAddResourceOperationList,
 		/// <summary>
 		/// Call the Type.GetType function.
 		/// </summary>

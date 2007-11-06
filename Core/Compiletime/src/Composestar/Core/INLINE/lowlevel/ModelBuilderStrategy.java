@@ -26,6 +26,7 @@ import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
+import Composestar.Utils.StringUtils;
 
 public class ModelBuilderStrategy implements LowLevelInlineStrategy
 {
@@ -330,7 +331,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	/**
 	 * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#generateAction(Composestar.Core.FIRE2.model.ExecutionState)
 	 */
-	public void generateAction(ExecutionState state)
+	public void generateAction(ExecutionState state, List<String> resourceOps)
 	{
 		FlowNode node = state.getFlowNode();
 
@@ -348,7 +349,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 		else if (node.containsName("DispatchAction"))
 		{
-			generateDispatchAction(state);
+			generateDispatchAction(state, resourceOps);
 		}
 		else if (node.containsName("SkipAction"))
 		{
@@ -360,25 +361,25 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		{
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
 					.getAcceptCallAction();
-			generateCallAction(state, action);
+			generateCallAction(state, action, resourceOps);
 		}
 		else if (node.containsName(FlowNode.REJECT_CALL_ACTION_NODE))
 		{
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
 					.getRejectCallAction();
-			generateCallAction(state, action);
+			generateCallAction(state, action, resourceOps);
 		}
 		else if (node.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE))
 		{
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
 					.getAcceptReturnAction();
-			generateReturnAction(state, action);
+			generateReturnAction(state, action, resourceOps);
 		}
 		else if (node.containsName(FlowNode.REJECT_RETURN_ACTION_NODE))
 		{
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = filterType
 					.getRejectReturnAction();
-			generateReturnAction(state, action);
+			generateReturnAction(state, action, resourceOps);
 		}
 	}
 
@@ -389,7 +390,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * @param action The action
 	 */
 	private void generateCallAction(ExecutionState state,
-			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action)
+			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action, List<String> resourceOps)
 	{
 		FilterAction instruction = new FilterAction(
 				action.getName(),
@@ -397,7 +398,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 				state.getSubstitutionMessage(),
 				true,
 				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
-		setBookKeeping(instruction, state);
+		setBookKeeping(instruction, state, resourceOps);
 
 		empty = false;
 		currentBlock.addInstruction(instruction);
@@ -410,7 +411,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * @param action The action
 	 */
 	private void generateReturnAction(ExecutionState state,
-			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action)
+			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action, List<String> resourceOps)
 	{
 		FilterAction instruction = new FilterAction(
 				action.getName(),
@@ -418,7 +419,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 				state.getSubstitutionMessage(),
 				false,
 				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
-		setBookKeeping(instruction, state);
+		setBookKeeping(instruction, state, resourceOps);
 
 		empty = false;
 		currentBlock.addInstruction(instruction);
@@ -431,12 +432,12 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * 
 	 * @param state The state corresponding with the action
 	 */
-	private void generateDispatchAction(ExecutionState state)
+	private void generateDispatchAction(ExecutionState state, List<String> resourceOps)
 	{
 		Message callMessage = state.getSubstitutionMessage();
 
 		FilterAction action = new FilterAction("DispatchAction", state.getMessage(), callMessage, true, true);
-		setBookKeeping(action, state);
+		setBookKeeping(action, state, resourceOps);
 		currentBlock.addInstruction(action);
 
 		Target target = callMessage.getTarget();
@@ -494,7 +495,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 * 
 	 * @param forAction
 	 */
-	private void setBookKeeping(FilterAction forAction, ExecutionState state)
+	private void setBookKeeping(FilterAction forAction, ExecutionState state, List<String> resourceOps)
 	{
 		boolean val;
 		switch (bookKeepingMode)
@@ -511,6 +512,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 		if (val)
 		{
+			forAction.setResourceOperations(StringUtils.join(resourceOps, ";"));
 			forAction.setBookKeeping(true);
 			filterCode.setBookKeeping(true);
 		}

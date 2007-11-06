@@ -82,7 +82,7 @@ namespace Composestar.StarLight.ContextInfo
 
         #region BookKeeping
         private bool _bookkeeping;
-        private BookKeeper bkMessage, bkTarget, bkSelector, bkReturn, bkArgsList;
+        private LocalBookKeeper bkLocal;
         /// <summary>
         /// BookKeepers for the arguments in the list
         /// </summary>
@@ -185,7 +185,11 @@ namespace Composestar.StarLight.ContextInfo
             }
             set
             {
-                if (_bookkeeping) AddResourceOperation(ResourceType.Selector, BookKeeper.WRITE);
+                if (_bookkeeping)
+                {
+                    AddResourceOperation(ResourceType.Selector, BookKeeper.WRITE);
+                    AddResourceOperationList("msg.dummy;target.dummy;selector.dummy;return.dummy;");
+                }
                 _currentSelector = value;
             }
         }
@@ -256,62 +260,76 @@ namespace Composestar.StarLight.ContextInfo
         public void FinalizeBookKeeping()
         {
             if (!_bookkeeping) return;
-
-            // temp code
-            if (bkMessage != null)
-            {
-                Console.Error.WriteLine("[RescOp] Resource String: {0}", bkMessage.ToString());
-            }
-            if (bkTarget != null)
-            {
-                Console.Error.WriteLine("[RescOp] Resource String: {0}", bkTarget.ToString());
-            }
-            if (bkSelector != null)
-            {
-                Console.Error.WriteLine("[RescOp] Resource String: {0}", bkSelector.ToString());
-            }
-            if (bkArgsList != null)
-            {
-                Console.Error.WriteLine("[RescOp] Resource String: {0}", bkArgsList.ToString());
-            }
-            if (bkReturn != null)
-            {
-                Console.Error.WriteLine("[RescOp] Resource String: {0}", bkReturn.ToString());
-            }
+            if (bkLocal != null) bkLocal.report();
+            bkLocal.validate();
         }
 
         /// <summary>
-        /// Add a resource operation to a given resource type. This will also instantiate the bookkeeper 
-        /// for the given resource. This can not be used for argumentlist entries.
+        /// Add a resource operation to a given local resource type. This is not used for argument info.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="op"></param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void AddResourceOperation(ResourceType type, String op)
+        public void AddResourceOperation(ResourceType type, string op)
         {
             if (!_bookkeeping) return;
-            switch (type)
+            if (bkLocal == null)
             {
-                case ResourceType.Message:
-                    if (bkMessage == null) bkMessage = new BookKeeper(type);
-                    bkMessage.AddOperation(op);
+                bkLocal = new LocalBookKeeper();
+            }
+            bkLocal.AddOperation(type, op);
+        }
+
+        /// <summary>
+        /// Add a list of resource operations. Each operation has the form of: type.operation and it divided by semicolons.
+        /// </summary>
+        /// <param name="op"></param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void AddResourceOperationList(string op)
+        {
+            if (!_bookkeeping) return;
+            if (bkLocal == null)
+            {
+                bkLocal = new LocalBookKeeper();
+            }
+
+            int startIdx = 0;
+            int idx = op.IndexOf(";", startIdx);
+            if (idx < 0)
+            {
+                idx = op.Length;
+            }
+            while (idx > startIdx)
+            {
+                string[] sop = op.Substring(startIdx, idx - startIdx).Trim().Split('.');
+                if (sop.Length == 2)
+                {
+                    ResourceType rtype = BookKeeper.getResourceType(sop[0]);
+                    switch (rtype)
+                    {
+                        case ResourceType.Message:
+                        case ResourceType.Target:
+                        case ResourceType.Selector:
+                        case ResourceType.Return:
+                        case ResourceType.ArgumentList:
+                            bkLocal.AddOperation(rtype, sop[1]);
+                            break;
+                        case ResourceType.ArgumentEntry:
+                            //FIXME: detect index
+                            break;
+                    }
+                }
+
+                startIdx = idx + 1;
+                if (startIdx >= op.Length)
+                {
                     break;
-                case ResourceType.Target:
-                    if (bkTarget == null) bkTarget = new BookKeeper(type);
-                    bkTarget.AddOperation(op);
-                    break;
-                case ResourceType.Selector:
-                    if (bkSelector == null) bkSelector = new BookKeeper(type);
-                    bkSelector.AddOperation(op);
-                    break;
-                case ResourceType.ArgumentList:
-                    if (bkArgsList == null) bkArgsList = new BookKeeper(type);
-                    bkArgsList.AddOperation(op);
-                    break;
-                case ResourceType.Return:
-                    if (bkReturn == null) bkReturn = new BookKeeper(type);
-                    bkReturn.AddOperation(op);
-                    break;
+                }
+                idx = op.IndexOf(";", startIdx);
+                if (idx < 0)
+                {
+                    idx = op.Length;
+                }
             }
         }
         #endregion

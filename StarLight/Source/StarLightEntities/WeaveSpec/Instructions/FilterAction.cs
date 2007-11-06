@@ -82,7 +82,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 		private string _target;
 		private string _substitutionSelector;
 		private string _substitutionTarget;
+
         private bool _bookkeeping;
+        private string _resourceOperations;
 
 		/// <summary>
 		/// Indicates whether this filter action instruction should be executed on call or on return.
@@ -193,6 +195,17 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
             get { return _bookkeeping; }
             set { _bookkeeping = value; }
         }
+
+        /// <summary>
+        /// A list of resource operations before the execution of this filter action.
+        /// These are implied resource operations as extracted from the execution model.
+        /// </summary>
+        [XmlAttribute]
+        public string ResourceOperations
+        {
+            get { return _resourceOperations; }
+            set { _resourceOperations = value; }
+        }
 		#endregion
 
 		#region Constructors
@@ -278,6 +291,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 			fa.OnCall = this.OnCall;
 			fa.Returning = this.Returning;
             fa.BookKeeping = this.BookKeeping;
+            fa.ResourceOperations = this.ResourceOperations;
 
 			return fa;
 		}

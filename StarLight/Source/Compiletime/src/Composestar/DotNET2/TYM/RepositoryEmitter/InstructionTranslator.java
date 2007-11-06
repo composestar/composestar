@@ -165,6 +165,7 @@ class InstructionTranslator implements Visitor
 		weaveAction.setReturning(filterAction.isReturning());
 
 		weaveAction.setBookKeeping(filterAction.getBookKeeping());
+		weaveAction.setResourceOperations(filterAction.getResourceOperations());
 
 		return weaveAction;
 	}

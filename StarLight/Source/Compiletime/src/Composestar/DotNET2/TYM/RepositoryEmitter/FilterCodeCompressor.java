@@ -323,6 +323,11 @@ public class FilterCodeCompressor
 				return Boolean.FALSE;
 			}
 
+			if (!checkFilterAction.getResourceOperations().equals(filterAction.getResourceOperations()))
+			{
+				return Boolean.FALSE;
+			}
+
 			return Boolean.TRUE;
 		}
 
@@ -447,6 +452,7 @@ public class FilterCodeCompressor
 			value += filterAction.getType().hashCode();
 			value += filterAction.getMessage().hashCode();
 			value += filterAction.getSubstitutedMessage().hashCode();
+			value += filterAction.getResourceOperations().hashCode();
 
 			return value;
 		}
@@ -562,6 +568,7 @@ public class FilterCodeCompressor
 
 			copyLabel(filterAction, copy);
 			copy.setBookKeeping(filterAction.getBookKeeping());
+			copy.setResourceOperations(filterAction.getResourceOperations());
 
 			return copy;
 		}

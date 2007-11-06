@@ -57,6 +57,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		private string _assemblyName;
 		private List<WeaveType> _weaveTypes;
 		private List<FilterCode> _generalizedFilterCodes;
+        private List<ConflictRule> _conflictRules;
 
 		/// <summary>
 		/// Gets or sets the name of the assembly this weave file applies to.
@@ -105,5 +106,18 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 			get { return _generalizedFilterCodes; }
 			set { _generalizedFilterCodes = value; }
 		}
+
+        /// <summary>
+        /// Gets or sets the conflict rules
+        /// </summary>
+        /// <value>The generalized abstract instruction models</value>
+        [XmlArray("ConflictRules")]
+        [XmlArrayItem("ConflictRule")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        public List<ConflictRule> ConflictRules
+        {
+            get { return _conflictRules; }
+            set { _conflictRules = value; }
+        }
 	}
 }
