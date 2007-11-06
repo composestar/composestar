@@ -19,12 +19,12 @@
 							These temp files will be deleted when the VM shuts down. 
 						-->
 						<rcfile prefix="@">
-							<arg>-cp</arg>
-							<deps merge="true" delimiter=";">
-								<arg>${DEP}</arg>
+						    <arg>-cp</arg>
+							<deps merge="true" delimiter=";" useQuotes="true">
+								<arg useUnixSlashes="true">${DEP}</arg>
 							</deps>
 							<sources>
-								<arg>${SOURCE}</arg>
+								<arg useUnixSlashes="true">"${SOURCE}"</arg>
 							</sources>
 						</rcfile>
 					</action>
