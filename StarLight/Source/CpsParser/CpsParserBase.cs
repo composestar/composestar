@@ -20,7 +20,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: CpsParserBase.java 3868 2007-10-12 15:47:14Z elmuerte $
+ * $Id$
  */
 #endregion
 
