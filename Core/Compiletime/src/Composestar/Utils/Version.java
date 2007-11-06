@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Version.java 2735 2006-11-14 19:39:01Z elmuerte $
+ * $Id$
  */
 package Composestar.Utils;
 
