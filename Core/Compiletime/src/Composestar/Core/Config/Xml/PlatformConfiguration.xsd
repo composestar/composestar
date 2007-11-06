@@ -175,6 +175,22 @@
 		</xsd:attribute>
 	</xsd:complexType>
 
+	<xsd:complexType name="Argument">
+		<xsd:annotation>
+			<xsd:documentation>
+				A command line argument
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="useUnixSlashes" type="xsd:boolean">
+			  <xsd:annotation>
+				<xsd:documentation>Whether to convert any backslashes to normal (forward) slashes</xsd:documentation>
+			  </xsd:annotation>
+ 		    </xsd:attribute>
+          </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
 
 
 	<xsd:group name="SimpleCmdLineArgs">
@@ -182,7 +198,7 @@
 			<xsd:documentation>Simple single command line argument values.</xsd:documentation>
 		</xsd:annotation>
 		<xsd:choice>
-			<xsd:element name="arg" type="xsd:string">
+			<xsd:element name="arg" type="Argument">
 				<xsd:annotation>
 					<xsd:documentation>
 						An commandline argument. Variables can be included using a special notation: ${varname} refers
@@ -194,7 +210,6 @@
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-
 
 			<xsd:element name="rcfile" type="RCFile">
 				<xsd:annotation>
@@ -259,6 +274,13 @@
 			<xsd:annotation>
 				<xsd:documentation>
 					The delimiter to use when merging the arguments to a single argument
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="useQuotes" type="xsd:boolean" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					Whether to place quotes around the completely constructed argument
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>

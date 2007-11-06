@@ -77,7 +77,10 @@ public class DepsCmdLineArgumentList extends CmdLineArgumentList
 		prop.remove("DEP");
 		if (isMerge)
 		{
-			tolist.add(StringUtils.join(argList, delimiter));
+			String quote = "";
+			if (isUseQuote())
+				quote = "\"";
+			tolist.add(quote + StringUtils.join(argList, delimiter) + quote);
 			merge = isMerge;
 		}
 	}

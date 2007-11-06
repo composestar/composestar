@@ -59,6 +59,8 @@ public class CompilerHandler extends CpsBaseHandler
 	protected SourceCompiler compiler;
 
 	protected CompilerAction currentAction;
+	
+	protected CmdLineArgument currentArgument;
 
 	protected Stack<CmdLineArgumentList> argList;
 
@@ -145,6 +147,8 @@ public class CompilerHandler extends CpsBaseHandler
 		else if ((state == STATE_ACTION || state == STATE_ARG_LIST || state == STATE_RCFILE) && "arg".equals(name))
 		{
 			pushState(STATE_ARG);
+			currentArgument = new CmdLineArgument();
+			currentArgument.setUseUnixSlashes(Boolean.parseBoolean(attributes.getValue("useUnixSlashes")));
 		}
 		else if ((state == STATE_ACTION || state == STATE_RCFILE) && "sources".equals(name))
 		{
@@ -160,6 +164,7 @@ public class CompilerHandler extends CpsBaseHandler
 			pushState(STATE_ARG_LIST);
 			DepsCmdLineArgumentList currentArgList = new DepsCmdLineArgumentList();
 			currentArgList.setMerge(Boolean.parseBoolean(attributes.getValue("merge")));
+			currentArgList.setUseQuote(Boolean.parseBoolean(attributes.getValue("useQuotes")));
 			currentArgList.setDelimiter(attributes.getValue("delimiter"));
 			addArgument(currentArgList);
 			argList.push(currentArgList);
@@ -198,9 +203,9 @@ public class CompilerHandler extends CpsBaseHandler
 		}
 		else if (state == STATE_ARG && "arg".equals(name))
 		{
-			CmdLineArgument arg = new CmdLineArgument();
-			arg.setValue(charData.toString());
-			addArgument(arg);
+			currentArgument.setValue(charData.toString());
+			addArgument(currentArgument);
+			currentArgument = null;
 			popState(/* STATE_ACTION | STATE_ARG_LIST | STATE_RCFILE */);
 		}
 		else if (state == STATE_ARG_LIST && "sources".equals(name))
