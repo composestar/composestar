@@ -83,10 +83,6 @@ namespace Composestar.StarLight.ContextInfo
         #region BookKeeping
         private bool _bookkeeping;
         private LocalBookKeeper bkLocal;
-        /// <summary>
-        /// BookKeepers for the arguments in the list
-        /// </summary>
-        private Dictionary<short, BookKeeper> bkArguments;
         #endregion
 
         #region Properties
@@ -185,11 +181,7 @@ namespace Composestar.StarLight.ContextInfo
             }
             set
             {
-                if (_bookkeeping)
-                {
-                    AddResourceOperation(ResourceType.Selector, BookKeeper.WRITE);
-                    AddResourceOperationList("msg.dummy;target.dummy;selector.dummy;return.dummy;");
-                }
+                if (_bookkeeping) AddResourceOperation(ResourceType.Selector, BookKeeper.WRITE);
                 _currentSelector = value;
             }
         }
@@ -250,7 +242,17 @@ namespace Composestar.StarLight.ContextInfo
         public bool BookKeeping
         {
             get { return _bookkeeping; }
-            set { _bookkeeping = value; }
+            set 
+            {
+                if (_bookkeeping != value)
+                {
+                    _bookkeeping = value;
+                    foreach (ArgumentInfo ai in _arguments.Values)
+                    {
+                        ai.BookKeeping = value;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -260,8 +262,17 @@ namespace Composestar.StarLight.ContextInfo
         public void FinalizeBookKeeping()
         {
             if (!_bookkeeping) return;
-            if (bkLocal != null) bkLocal.report();
-            bkLocal.validate();
+            if (bkLocal != null)
+            {
+                bkLocal.report();
+                bkLocal.validate();
+                BookKeeperPool.releaseLocalBK(bkLocal);
+            }
+            foreach (ArgumentInfo ai in _arguments.Values)
+            {
+                ai.ArgumentBookKeeper.report();
+                ai.ArgumentBookKeeper.validate();
+            }
         }
 
         /// <summary>
@@ -275,7 +286,7 @@ namespace Composestar.StarLight.ContextInfo
             if (!_bookkeeping) return;
             if (bkLocal == null)
             {
-                bkLocal = new LocalBookKeeper();
+                bkLocal = BookKeeperPool.getLocalBK();
             }
             bkLocal.AddOperation(type, op);
         }
@@ -347,7 +358,10 @@ namespace Composestar.StarLight.ContextInfo
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddArgument(short ordinal, Type argumentType, object value)
         {
-            if (_bookkeeping) AddResourceOperation(ResourceType.ArgumentList, BookKeeper.WRITE);
+            if (_bookkeeping)
+            {
+                AddResourceOperation(ResourceType.ArgumentList, "add");
+            }
             if (_arguments.ContainsKey(ordinal))
                 _arguments[ordinal] = new ArgumentInfo(argumentType, value);
             else
@@ -364,7 +378,10 @@ namespace Composestar.StarLight.ContextInfo
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddArgument(short ordinal, Type argumentType, ArgumentAttributes argumentAttributes, object value)
         {
-            if (_bookkeeping) AddResourceOperation(ResourceType.ArgumentList, BookKeeper.WRITE);
+            if (_bookkeeping)
+            {
+                AddResourceOperation(ResourceType.ArgumentList, "add");
+            }
             if (_arguments.ContainsKey(ordinal))
                 _arguments[ordinal] = new ArgumentInfo(argumentType, value, argumentAttributes);
             else
@@ -431,7 +448,9 @@ namespace Composestar.StarLight.ContextInfo
         {
             ArgumentInfo ai;
             if (_arguments.TryGetValue(ordinal, out ai))
+            {
                 return ai.Value;
+            }
             else
                 throw new ArgumentOutOfRangeException("ordinal", Properties.Resources.OrdinalCouldNotBeFound);
         }
@@ -833,6 +852,51 @@ namespace Composestar.StarLight.ContextInfo
             _argumentAttributes = argumentAttributes;
         }
 
+        private bool bookkeeping = false;
+        private SingleResourceBK book = null;
+
+        /// <summary>
+        /// Set/get the current bookkeeping state
+        /// </summary>
+        public bool BookKeeping
+        {
+            get 
+            { 
+                return bookkeeping; 
+            }
+            set
+            {
+                bookkeeping = value;
+            }
+        }
+
+        /// <summary>
+        /// Get the bookkeeper for this object
+        /// </summary>
+        public SingleResourceBK ArgumentBookKeeper
+        {
+            get { return book; }
+        }
+
+        private void createBookKeeping()
+        {
+            // TODO: check for global or local presence
+            if (IsOut())
+            {
+                // when "out" _value is null
+                book = new SingleResourceBK(ResourceType.ArgumentEntry, _type.Name + "#out");
+            }
+            else if (_type.IsPrimitive)
+            {
+                // don't track primitive
+                book = new SingleResourceBK(ResourceType.ArgumentEntry, _type.Name + "#" +_value.GetHashCode());
+            }
+            else
+            {
+                book = GlobalResourceManager.getBookKeeper(_value);
+            }
+        }
+
         private Type _type;
 
         /// <summary>
@@ -853,8 +917,24 @@ namespace Composestar.StarLight.ContextInfo
         /// <value>The value.</value>
         public object Value
         {
-            get { return _value; }
-            set { _value = value; }
+            get 
+            {
+                if (bookkeeping)
+                {
+                    if (book == null) createBookKeeping();
+                    book.AddOperation(BookKeeper.READ);
+                }
+                return _value;
+            }
+            set 
+            { 
+                _value = value;
+                if (bookkeeping) 
+                {
+                    if (book == null) createBookKeeping();
+                    book.AddOperation(BookKeeper.WRITE); 
+                }
+            }
         }
 
         /// <summary>

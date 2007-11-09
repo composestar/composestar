@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Composestar.StarLight.ContextInfo.RuBCoDe
 {
@@ -18,8 +19,8 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
 
         private List<string> loadedAsms;
 
-        private Dictionary<ResourceType, List<string>> constraints;
-        private Dictionary<ResourceType, List<string>> assertions;
+        private Dictionary<ResourceType, List<Regex>> constraints;
+        private Dictionary<ResourceType, List<Regex>> assertions;
 
         /// <summary>
         /// Get the instance of the resource validator
@@ -45,15 +46,46 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         /// </summary>
         /// <param name="rt"></param>
         /// <param name="operations"></param>
-        public void validate(ResourceType rt, List<string> operations)
+        /// <param name="bk"></param>
+        public void validate(ResourceType rt, List<string> operations, BookKeeper bk)
         {
-            // TODO
+            if (operations.Count == 0) return;
+
+            StringBuilder sb = new StringBuilder();
+            foreach (String s in operations)
+            {
+                sb.Append(s);
+            }
+            string ops = sb.ToString();
+            sb = null;
+
+            List<Regex> lst;
+            if (constraints.TryGetValue(rt, out lst))
+            {
+                foreach (Regex rgx in lst)
+                {
+                    if (rgx.IsMatch(ops))
+                    {
+                        throw new ResourceOperationException(rt, ops, rgx.ToString(), true, bk);
+                    }
+                }
+            }
+            if (assertions.TryGetValue(rt, out lst))
+            {
+                foreach (Regex rgx in lst)
+                {
+                    if (!rgx.IsMatch(ops))
+                    {
+                        throw new ResourceOperationException(rt, ops, rgx.ToString(), false, bk);
+                    }
+                }
+            }
         }
 
         private ResourceValidator()
         {
-            constraints = new Dictionary<ResourceType, List<string>>();
-            assertions = new Dictionary<ResourceType, List<string>>();
+            constraints = new Dictionary<ResourceType, List<Regex>>();
+            assertions = new Dictionary<ResourceType, List<Regex>>();
             loadedAsms = new List<string>();
             loadRules();
         }
@@ -79,12 +111,12 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
             {
                 ConflictRuleAttribute cae = (ConflictRuleAttribute)ca;
                 ResourceType rt = BookKeeper.getResourceType(cae.Resource);
-                List<string> lst;
-                if (cae.Constraint) // is constraint
+                List<Regex> lst;
+                if (cae.Constraint)
                 {
                     if (!constraints.TryGetValue(rt, out lst))
                     {
-                        lst = new List<string>();
+                        lst = new List<Regex>();
                         constraints.Add(rt,lst);
                     }
                 }
@@ -92,12 +124,20 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
                 {
                     if (!assertions.TryGetValue(rt, out lst))
                     {
-                        lst = new List<string>();
+                        lst = new List<Regex>();
                         assertions.Add(rt, lst);
                     }
                 }
-                lst.Add(cae.Expression);
-                Console.Error.WriteLine("New conflict rule for {0}: {1}", cae.Resource, cae.Expression);
+                try
+                {
+                    lst.Add(new Regex(cae.Expression));
+                    Console.Error.WriteLine("New conflict rule for {0}: {1}", cae.Resource, cae.Expression);
+                }
+                catch (ArgumentException e)
+                {
+                    // TODO: how to handle?
+                }
+
             }
         }
     }

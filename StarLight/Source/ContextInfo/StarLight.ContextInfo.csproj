@@ -49,10 +49,13 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RuBCoDe\BookKeeper.cs" />
+    <Compile Include="RuBCoDe\BookKeeperPool.cs" />
     <Compile Include="RuBCoDe\ConflictRuleAttribute.cs" />
     <Compile Include="RuBCoDe\GlobalResourceManager.cs" />
     <Compile Include="RuBCoDe\LocalBookKeeper.cs" />
+    <Compile Include="RuBCoDe\ResourceOperationException.cs" />
     <Compile Include="RuBCoDe\ResourceValidator.cs" />
+    <Compile Include="RuBCoDe\SingleResourceBK.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />

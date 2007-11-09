@@ -58,6 +58,11 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         }
 
         /// <summary>
+        /// Print the current details to the standard output (for debugging)
+        /// </summary>
+        public abstract void report();
+
+        /// <summary>
         /// Validate the resource operations. When not validate a runtime exception is thrown.
         /// </summary>
         public abstract void validate();

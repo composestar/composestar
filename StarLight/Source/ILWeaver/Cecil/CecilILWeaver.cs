@@ -449,7 +449,7 @@ namespace Composestar.StarLight.ILWeaver
                 ca.ConstructorParameters.Add(rule.Expression);
                 ca.ConstructorParameters.Add(rule.Constraint);
                 targetAssembly.CustomAttributes.Add(ca);
-            }      
+            }
         }
 
 		/// <summary>
