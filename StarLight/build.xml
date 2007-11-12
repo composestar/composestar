@@ -162,7 +162,7 @@
 
 	<!-- deploy -->
 
-	<target name="deploy" depends="init" description="Deploy the StarLight implementation of Compose*">
+	<target name="deploy" depends="init,msbuild_init" description="Deploy the StarLight implementation of Compose*">
 		<antcall target="deploy_compiletime" inheritRefs="true" />
 		<antcall target="deploy_core_elements" inheritRefs="true" />
 		<antcall target="deploy_weaving" inheritRefs="true" />
