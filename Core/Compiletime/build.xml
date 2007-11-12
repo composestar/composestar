@@ -22,14 +22,6 @@
 
 		<!-- COPPER parser -->
 		<delete>
-			<fileset dir="src/Composestar/Core/COPPER">
-				<include name="CpsLexer.java" />
-				<include name="CpsParser.java" />
-				<include name="CpsTokenTypes.*" />
-				<include name="CpsTreeWalker.java" />
-				<include name="CpsTreeWalkerTokenTypes.*" />
-				<include name="*.smap" />
-			</fileset>
 			<fileset dir="src/Composestar/Core/COPPER2">
 				<include name="CpsLexer.java" />
 				<include name="CpsParser.java" />
@@ -81,17 +73,6 @@
 
 	<target name="antlr" depends="local_init">
 		<ant dir="${build.core}/Compiletime/grammar" target="antlr_cps_java" inheritRefs="true" />
-
-		<!--
-		<cs:antlr3 outputDirectory="src/Composestar/CORE/COPPER2" libDirectory="src/Composestar/CORE/COPPER2">
-			<classpath>
-				<pathelement path="${basedir}/lib/antlr/antlr.jar;${basedir}/lib/antlr/antlr-3.jar;${basedir}/lib/antlr/stringtemplate-3.jar" />
-			</classpath>
-			<fileset dir="src/Composestar/CORE/COPPER2/grammar/">
-				<include name="*.g" />
-			</fileset>
-		</cs:antlr3>
-		-->
 	</target>
 
 	<target name="compile" depends="local_init,antlr">
@@ -102,7 +83,6 @@
 		</propertyfile>
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java" />
-			<exclude name="Composestar/Core/COPPER/**" />
 		</javac>
 	</target>
 
