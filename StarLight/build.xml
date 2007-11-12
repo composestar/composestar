@@ -53,8 +53,86 @@
 	</target>
 
 	<!-- build -->
+	
+	<target name="msbuild_init" depends="init" description="Perform soms system initializing through msbuild">
+    <dn:msbuild>
+      <target name="init" />
+      <property name="StarlightVersion" value="${version.starlight}"/>
+      <property name="basedir" value="${basedir}"/>
+      <build>
+        <Project DefaultTargets="empty" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+          <PropertyGroup>
+              <MSBuildCommunityTasksPath Condition="'$(MSBuildCommunityTasksPath)' == ''">$(basedir)\Development\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
+          </PropertyGroup>
+          <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
+          <Target Name="init">     
+            <Error Text="The StarlightVersion property is not set." Condition="$(StarlightVersion) == ''" />
+            <RegistryRead 
+                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" 
+                ValueName="CurrentVersion">
+              <Output TaskParameter="Value" PropertyName="CurrentStarlightVersion" />
+            </RegistryRead>
+          
+            <!-- get old values -->
+            <RegistryRead 
+                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(CurrentStarlightVersion)" 
+                ValueName="StarLightInstallFolder" 
+                DefaultValue="$(ProgramFiles)\StarLight"
+                Condition="$(StarlightVersion) != $(CurrentStarlightVersion)">
+              <Output TaskParameter="Value" PropertyName="StarLightInstallFolder" />
+            </RegistryRead>
+            <RegistryRead 
+                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(CurrentStarlightVersion)" 
+                ValueName="WeaveStrategiesFolder" 
+                DefaultValue="$(ProgramFiles)\StarLight\WeaveStrategies\"
+                Condition="$(StarlightVersion) != $(CurrentStarlightVersion)">
+              <Output TaskParameter="Value" PropertyName="WeaveStrategiesFolder"/>
+            </RegistryRead>
+            
+            <!-- update registry -->
+            <RegistryWrite
+                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" 
+                ValueName="CurrentVersion"
+                Value="$(StarlightVersion)" 
+                Condition="$(StarlightVersion) != $(CurrentStarlightVersion)"
+            />
+            <RegistryWrite
+                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" 
+                ValueName="StarLightInstallFolder"
+                Value="$(StarLightInstallFolder)" 
+                Condition="$(StarlightVersion) != $(CurrentStarlightVersion)"
+            />
+            <RegistryWrite
+                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" 
+                ValueName="WeaveStrategiesFolder"
+                Value="$(WeaveStrategiesFolder)" 
+                Condition="$(StarlightVersion) != $(CurrentStarlightVersion)"
+            />
+          </Target>
+        </Project>
+      </build>
+    </dn:msbuild>
+    
+    <fileset dir="Source" id="AssemblyInfoFiles">
+      <exclude name="Compiletime/**"/>
+      <exclude name="Tests/**"/>
+      <include name="**/AssemblyInfo.cs"/>
+    </fileset>
+    
+    <replaceregexp>
+      <regexp pattern="(\[assembly: AssemblyVersion\(&quot;)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(&quot;\)\])" />
+      <substitution expression="\1${version.starlight}.0\2" />
+      <fileset refid="AssemblyInfoFiles" />
+    </replaceregexp>
+    <replaceregexp>
+      <regexp pattern="(\[assembly: AssemblyFileVersion\(&quot;)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(&quot;\)\])" />
+      <substitution expression="\1${version.starlight}.0\2" />
+      <fileset refid="AssemblyInfoFiles" />
+    </replaceregexp>
+    
+	</target>
 
-	<target name="build" depends="init" description="Build the StarLight implementation of Compose*">
+	<target name="build" depends="init,msbuild_init" description="Build the StarLight implementation of Compose*">
 		<antcall target="build_compiletime" inheritRefs="true" />
 		<antcall target="build_core_elements" inheritRefs="true" />
 		<antcall target="build_weaving" inheritRefs="true" />
