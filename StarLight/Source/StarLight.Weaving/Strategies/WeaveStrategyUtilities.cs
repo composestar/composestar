@@ -86,19 +86,6 @@ namespace Composestar.StarLight.Weaving.Strategies
 
 			VariableDefinition jpcVar = visitor.CreateJoinPointContextLocal();
 
-            // Deactivate bookkeeping during initialization
-            // FilterElement operations will be added in a single batch
-            if (filterAction.BookKeeping)
-            {
-                // Load joinpointcontext first
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-                // "false" constant
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4_0));
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
-                    CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, 
-                    CachedMethodDefinition.JoinPointContextSetBookKeeping)));
-            }
-
 			// Store current target
 			if (filterAction.Target.Equals(FilterAction.InnerTarget) ||
 				filterAction.Target.Equals(FilterAction.SelfTarget))
@@ -195,14 +182,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             // Reactivate bookkeeping after initialization
             if (filterAction.BookKeeping)
             {
-                // Load joinpointcontext first
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-                // "false" constant
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4_1));
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
-                    CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, 
-                    CachedMethodDefinition.JoinPointContextSetBookKeeping)));
-
+                // FIXME: enable or disable auto bookkeeping
                 if (!String.IsNullOrEmpty(filterAction.ResourceOperations))
                 {
                     // Load joinpointcontext first

@@ -47,6 +47,7 @@ namespace Composestar.StarLight.Filters.BuiltIn
 	/// </summary>
 	[FilterActionAttribute(FilterAction.DispatchAction, FilterActionAttribute.FilterFlowBehavior.Return,
 	   FilterActionAttribute.MessageSubstitutionBehavior.Substituted)]
+    [ResourceOperation("msg.dispatch;arg.read;")]
 	public class DispatchAction : FilterAction
 	{
 		/// <summary>

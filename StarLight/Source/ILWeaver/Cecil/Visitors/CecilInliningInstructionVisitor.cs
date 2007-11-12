@@ -1027,17 +1027,6 @@ namespace Composestar.StarLight.ILWeaver
 			// Get JoinPointContext
 			VariableDefinition jpcVar = CreateJoinPointContextLocal();
 
-            if (bookKeeping)
-            {
-                //
-                // Finalize resource operation book keeping
-                //
-
-                // Load joinpointcontext first
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextFinalizeBookKeeping)));
-            }
-
 			//
 			// Restore out/ref parameters
 			//
@@ -1111,6 +1100,16 @@ namespace Composestar.StarLight.ILWeaver
 					Instructions.Add(Worker.Create(OpCodes.Castclass, CalledMethod.ReturnType.ReturnType));
 				}
 			}
+
+            if (bookKeeping)
+            {
+                //
+                // Finalize resource operation book keeping
+                //
+
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextFinalizeBookKeeping)));
+            }
 		}
 
 		#endregion

@@ -81,8 +81,9 @@ namespace Composestar.StarLight.ContextInfo
         #endregion
 
         #region BookKeeping
-        private bool _bookkeeping;
-        private LocalBookKeeper bkLocal;
+        private bool _bookkeeping = false;
+        private bool _autobk = true;
+        private SimpleBK _returnBK = null;
         #endregion
 
         #region Properties
@@ -158,12 +159,10 @@ namespace Composestar.StarLight.ContextInfo
         {
             get
             {
-                if (_bookkeeping) AddResourceOperation(ResourceType.Target, BookKeeper.READ);
                 return _currentTarget;
             }
             set
             {
-                if (_bookkeeping) AddResourceOperation(ResourceType.Target, BookKeeper.WRITE);
                 _currentTarget = value;
             }
         }
@@ -176,12 +175,10 @@ namespace Composestar.StarLight.ContextInfo
         {
             get
             {
-                if (_bookkeeping) AddResourceOperation(ResourceType.Selector, BookKeeper.READ);
                 return _currentSelector;
             }
             set
             {
-                if (_bookkeeping) AddResourceOperation(ResourceType.Selector, BookKeeper.WRITE);
                 _currentSelector = value;
             }
         }
@@ -231,6 +228,14 @@ namespace Composestar.StarLight.ContextInfo
             _properties = new Dictionary<string, object>();
         }
 
+        /// <summary>
+        /// Release the bookkeeper to the pool
+        /// </summary>
+        ~JoinPointContext()
+        {
+            ReleaseBK();
+        }
+
         #endregion
 
         #region BookKeeping
@@ -256,39 +261,126 @@ namespace Composestar.StarLight.ContextInfo
         }
 
         /// <summary>
+        /// Sets/gets the value of automatic book keeping. When automatic book keeping is true (default)
+        /// all read and write operations will automatically be captured.
+        /// </summary>
+        public bool AutoBookKeeping
+        {
+            get { return _autobk; }
+            set
+            {
+                if (_autobk != value)
+                {
+                    _autobk = value;
+                    foreach (ArgumentInfo ai in _arguments.Values)
+                    {
+                        ai.AutoBookKeeping = value;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// This will check the current resource operation books for conflicts
         /// </summary>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void FinalizeBookKeeping()
         {
             if (!_bookkeeping) return;
-            if (bkLocal != null)
+            if (_returnBK != null)
             {
-                bkLocal.report();
-                bkLocal.validate();
-                BookKeeperPool.releaseLocalBK(bkLocal);
+                _returnBK.report();
+                _returnBK.validate();
             }
             foreach (ArgumentInfo ai in _arguments.Values)
             {
-                ai.ArgumentBookKeeper.report();
-                ai.ArgumentBookKeeper.validate();
+                if (ai.ArgumentBK != null)
+                {
+                    ai.ArgumentBK.report();
+                    ai.ArgumentBK.validate();
+                }
+            }
+            ReleaseBK();
+        }
+
+        /// <summary>
+        /// Releases the book keeping instances to the pool. Should never be called during processing.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void ReleaseBK()
+        {
+            if (_returnBK != null)
+            {
+                BookKeeperPool.release(ref _returnBK);
+            }
+            foreach (ArgumentInfo ai in _arguments.Values)
+            {
+                ai.ReleaseBK();
             }
         }
 
         /// <summary>
-        /// Add a resource operation to a given local resource type. This is not used for argument info.
+        /// Get the book keeper for the return value; Returns null when bookkeeping is disabled.
         /// </summary>
-        /// <param name="type"></param>
+        public SimpleBK ReturnValueBK
+        {
+            get 
+            {
+                if (_returnBK == null && _bookkeeping)
+                {
+                    _returnBK = BookKeeperPool.getSimpleBK(ResourceType.Return, "return");
+                }
+                return _returnBK;
+            }
+        }
+
+        /// <summary>
+        /// Add a single resource operation to a resource. Calling this method with the resource type set to  
+        /// ArgumentEntry will add this operation to all entries.
+        /// </summary>
+        /// <param name="rt"></param>
         /// <param name="op"></param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void AddResourceOperation(ResourceType type, string op)
+        public void AddResourceOp(ResourceType rt, string op)
         {
             if (!_bookkeeping) return;
-            if (bkLocal == null)
-            {
-                bkLocal = BookKeeperPool.getLocalBK();
+            switch (rt)
+            {                    
+                case ResourceType.Message:
+                case ResourceType.Target:
+                case ResourceType.Selector:
+                case ResourceType.ArgumentList:
+                    // ignore these, operations not tracked
+                    break;
+                case ResourceType.Return:
+                    ReturnValueBK.AddOperation(op);
+                    break;
+                case ResourceType.ArgumentEntry:
+                    foreach (ArgumentInfo ai in _arguments.Values)
+                    {
+                        ai.ArgumentBK.AddOperation(op);
+                    }
+                    break;
             }
-            bkLocal.AddOperation(type, op);
+        }
+
+        /// <summary>
+        /// Add a single resource operation to a specific argument
+        /// </summary>
+        /// <param name="ordinal"></param>
+        /// <param name="op"></param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void AddResourceOp(short ordinal, string op)
+        {
+            if (!_bookkeeping) return;
+            if (_arguments.ContainsKey(ordinal))
+            {
+                _arguments[ordinal].ArgumentBK.AddOperation(op);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("ordinal", Properties.Resources.OrdinalCouldNotBeFound);
+            }
         }
 
         /// <summary>
@@ -299,10 +391,6 @@ namespace Composestar.StarLight.ContextInfo
         public void AddResourceOperationList(string op)
         {
             if (!_bookkeeping) return;
-            if (bkLocal == null)
-            {
-                bkLocal = new LocalBookKeeper();
-            }
 
             int startIdx = 0;
             int idx = op.IndexOf(";", startIdx);
@@ -315,18 +403,31 @@ namespace Composestar.StarLight.ContextInfo
                 string[] sop = op.Substring(startIdx, idx - startIdx).Trim().Split('.');
                 if (sop.Length == 2)
                 {
-                    ResourceType rtype = BookKeeper.getResourceType(sop[0]);
+                    short ord;
+                    ResourceType rtype = BookKeeper.getResourceType(sop[0], out ord);
                     switch (rtype)
                     {
                         case ResourceType.Message:
                         case ResourceType.Target:
                         case ResourceType.Selector:
-                        case ResourceType.Return:
                         case ResourceType.ArgumentList:
-                            bkLocal.AddOperation(rtype, sop[1]);
+                            // ignore these, operations not tracked
+                            break;
+                        case ResourceType.Return:
+                            ReturnValueBK.AddOperation(sop[1]);
                             break;
                         case ResourceType.ArgumentEntry:
-                            //FIXME: detect index
+                            if (ord == -1)
+                            {
+                                foreach (ArgumentInfo ai in _arguments.Values)
+                                {
+                                    ai.ArgumentBK.AddOperation(sop[1]);
+                                }
+                            }
+                            else
+                            {
+                                _arguments[ord].ArgumentBK.AddOperation(sop[1]);
+                            }
                             break;
                     }
                 }
@@ -358,14 +459,17 @@ namespace Composestar.StarLight.ContextInfo
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddArgument(short ordinal, Type argumentType, object value)
         {
-            if (_bookkeeping)
-            {
-                AddResourceOperation(ResourceType.ArgumentList, "add");
-            }
+            ArgumentInfo ai = new ArgumentInfo(argumentType, value);
+            ai.BookKeeping = _bookkeeping;
+            ai.AutoBookKeeping = _autobk;
             if (_arguments.ContainsKey(ordinal))
-                _arguments[ordinal] = new ArgumentInfo(argumentType, value);
+            {
+                _arguments[ordinal] = ai;
+            }
             else
-                _arguments.Add(ordinal, new ArgumentInfo(argumentType, value));
+            {
+                _arguments.Add(ordinal, ai);
+            }
         }
 
         /// <summary>
@@ -378,14 +482,17 @@ namespace Composestar.StarLight.ContextInfo
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddArgument(short ordinal, Type argumentType, ArgumentAttributes argumentAttributes, object value)
         {
-            if (_bookkeeping)
-            {
-                AddResourceOperation(ResourceType.ArgumentList, "add");
-            }
+            ArgumentInfo ai = new ArgumentInfo(argumentType, value, argumentAttributes);
+            ai.BookKeeping = _bookkeeping;
+            ai.AutoBookKeeping = _autobk;
             if (_arguments.ContainsKey(ordinal))
-                _arguments[ordinal] = new ArgumentInfo(argumentType, value, argumentAttributes);
+            {
+                _arguments[ordinal] = ai;
+            }
             else
-                _arguments.Add(ordinal, new ArgumentInfo(argumentType, value, argumentAttributes));
+            {
+                _arguments.Add(ordinal, ai);
+            }
         }
 
         /// <summary>
@@ -452,7 +559,9 @@ namespace Composestar.StarLight.ContextInfo
                 return ai.Value;
             }
             else
+            {
                 throw new ArgumentOutOfRangeException("ordinal", Properties.Resources.OrdinalCouldNotBeFound);
+            }
         }
 
         /// <summary>
@@ -481,7 +590,9 @@ namespace Composestar.StarLight.ContextInfo
                 ai.Value = value;
             }
             else
+            {
                 throw new ArgumentOutOfRangeException("ordinal", Properties.Resources.OrdinalCouldNotBeFound);
+            }
         }
 
         /// <summary>
@@ -497,9 +608,13 @@ namespace Composestar.StarLight.ContextInfo
         {
             ArgumentInfo ai;
             if (_arguments.TryGetValue(ordinal, out ai))
+            {
                 return ai.Attributes;
+            }
             else
+            {
                 throw new ArgumentOutOfRangeException("ordinal", Properties.Resources.OrdinalCouldNotBeFound);
+            }
         }
 
         /// <summary>
@@ -582,7 +697,6 @@ namespace Composestar.StarLight.ContextInfo
         {
             get
             {
-                if (_bookkeeping) AddResourceOperation(ResourceType.ArgumentList, BookKeeper.READ);
                 return _arguments;
             }
         }
@@ -635,16 +749,24 @@ namespace Composestar.StarLight.ContextInfo
             get
             {
                 if (_returnValue != null)
+                {
                     return _returnValue.Type;
+                }
                 else
+                {
                     return null;
+                }
             }
             set
             {
                 if (_returnValue == null)
+                {
                     _returnValue = new ArgumentInfo(value, null);
+                }
                 else
+                {
                     _returnValue.Type = value;
+                }
             }
         }
 
@@ -661,19 +783,29 @@ namespace Composestar.StarLight.ContextInfo
             {
                 if (HasReturnValue)
                 {
-                    if (_bookkeeping) AddResourceOperation(ResourceType.Return, BookKeeper.READ);
+                    if (_bookkeeping && _autobk)
+                    {
+                        ReturnValueBK.AddOperation(BookKeeper.READ);
+                    }
                     return _returnValue.Value;
                 }
                 else
+                {
                     return null;
+                }
             }
             set
             {
                 if (_returnValue == null)
+                {
                     throw new ArgumentNullException("returnType");
+                }
                 else
                 {
-                    if (_bookkeeping) AddResourceOperation(ResourceType.Return, BookKeeper.WRITE);
+                    if (_bookkeeping && _autobk)
+                    {
+                        ReturnValueBK.AddOperation(BookKeeper.READ);
+                    }
                     _returnValue.Value = value;
                     _hasReturnValueSet = true;
                 }
@@ -852,50 +984,77 @@ namespace Composestar.StarLight.ContextInfo
             _argumentAttributes = argumentAttributes;
         }
 
-        private bool bookkeeping = false;
-        private SingleResourceBK book = null;
+        /// <summary>
+        /// Release the bookkeeper to the pool
+        /// </summary>
+        ~ArgumentInfo()
+        {
+            ReleaseBK();
+        }
+
+        #region Book Keeping
+        private bool _bookkeeping = false;
+        private bool _autobk = true;
+        private SimpleBK _book = null;
 
         /// <summary>
         /// Set/get the current bookkeeping state
         /// </summary>
         public bool BookKeeping
         {
-            get 
-            { 
-                return bookkeeping; 
-            }
-            set
+            get { return _bookkeeping; }
+            set { _bookkeeping = value; }
+        }
+
+
+        /// <summary>
+        /// Sets/gets the value of automatic book keeping. When automatic book keeping is true (default)
+        /// all read and write operations will automatically be captured.
+        /// </summary>
+        public bool AutoBookKeeping
+        {
+            get { return _autobk; }
+            set { _autobk = value; }
+        }
+
+        /// <summary>
+        /// Release bookkeeping records from this instance
+        /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void ReleaseBK()
+        {
+            if (_book != null)
             {
-                bookkeeping = value;
+                BookKeeperPool.release(ref _book);
             }
         }
 
         /// <summary>
         /// Get the bookkeeper for this object
         /// </summary>
-        public SingleResourceBK ArgumentBookKeeper
+        public SimpleBK ArgumentBK
         {
-            get { return book; }
+            get
+            {
+                if (_book == null && _bookkeeping)
+                {
+                    _book = BookKeeperPool.getSimpleBK(ResourceType.ArgumentEntry, _type.Name);
+                }
+                return _book;
+            }
         }
 
-        private void createBookKeeping()
+        /// <summary>
+        /// Quick method to add a resource operation to the book keeper of this instance.
+        /// </summary>
+        /// <param name="op"></param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void AddResourceOp(string op)
         {
-            // TODO: check for global or local presence
-            if (IsOut())
-            {
-                // when "out" _value is null
-                book = new SingleResourceBK(ResourceType.ArgumentEntry, _type.Name + "#out");
-            }
-            else if (_type.IsPrimitive)
-            {
-                // don't track primitive
-                book = new SingleResourceBK(ResourceType.ArgumentEntry, _type.Name + "#" +_value.GetHashCode());
-            }
-            else
-            {
-                book = GlobalResourceManager.getBookKeeper(_value);
-            }
+            if (!_bookkeeping) return;
+            ArgumentBK.AddOperation(op);
         }
+        #endregion
 
         private Type _type;
 
@@ -919,20 +1078,18 @@ namespace Composestar.StarLight.ContextInfo
         {
             get 
             {
-                if (bookkeeping)
+                if (_bookkeeping)
                 {
-                    if (book == null) createBookKeeping();
-                    book.AddOperation(BookKeeper.READ);
+                    ArgumentBK.AddOperation(BookKeeper.READ);
                 }
                 return _value;
             }
             set 
             { 
                 _value = value;
-                if (bookkeeping) 
+                if (_bookkeeping) 
                 {
-                    if (book == null) createBookKeeping();
-                    book.AddOperation(BookKeeper.WRITE); 
+                    ArgumentBK.AddOperation(BookKeeper.WRITE); 
                 }
             }
         }

@@ -1,3 +1,29 @@
+#region License
+/*
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2007 University of Twente.
+ *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
+ */
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -55,6 +81,29 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
                 return ResourceType.ArgumentEntry;
             }
             return ResourceType.Unknown;
+        }
+
+        /// <summary>
+        /// Convert a string to the proper resource type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="ordinal">contains the value of the argument entry ordinal if present, -1 otherwise</param>
+        /// <returns></returns>
+        public static ResourceType getResourceType(string type, out short ordinal)
+        {
+            ResourceType res = getResourceType(type);
+            if (res == ResourceType.ArgumentEntry && type.Length > 3)
+            {
+                if (!short.TryParse(type.Substring(3), out ordinal))
+                {
+                    ordinal = -1;
+                }
+            }
+            else
+            {
+                ordinal = -1;
+            }
+            return res;
         }
 
         /// <summary>
