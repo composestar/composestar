@@ -24,13 +24,9 @@
 
 package Composestar.Core.Config.Xml;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.zip.GZIPInputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -110,37 +106,6 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 	{
 		BuildConfigHandler handler = new BuildConfigHandler(stream);
 		return handler.getBuildConfig();
-	}
-
-	/**
-	 * Get the inputstream, will detect if it's a gzip compressed file.
-	 * 
-	 * @param file
-	 * @return
-	 * @throws ConfigurationException
-	 */
-	protected static InputStream getInputStream(File file) throws ConfigurationException
-	{
-		try
-		{
-			InputStream is = new BufferedInputStream(new FileInputStream(file));
-			if (file.getName().endsWith(".gz"))
-			{
-				try
-				{
-					is = new GZIPInputStream(is);
-				}
-				catch (IOException e)
-				{
-					throw new ConfigurationException("IOException: " + e.getMessage());
-				}
-			}
-			return is;
-		}
-		catch (FileNotFoundException e)
-		{
-			throw new ConfigurationException("Build configuration file not found: " + file);
-		}
 	}
 
 	/**

@@ -24,12 +24,21 @@
 
 package Composestar.Core.Config.Xml;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -58,6 +67,37 @@ public abstract class CpsBaseHandler extends DefaultHandler
 	 * element.
 	 */
 	protected StringBuffer charData;
+
+	/**
+	 * Get the inputstream, will detect if it's a gzip compressed file.
+	 * 
+	 * @param file
+	 * @return
+	 * @throws ConfigurationException
+	 */
+	protected static InputStream getInputStream(File file) throws ConfigurationException
+	{
+		try
+		{
+			InputStream is = new BufferedInputStream(new FileInputStream(file));
+			if (file.getName().endsWith(".gz"))
+			{
+				try
+				{
+					is = new GZIPInputStream(is);
+				}
+				catch (IOException e)
+				{
+					throw new ConfigurationException("IOException: " + e.getMessage());
+				}
+			}
+			return is;
+		}
+		catch (FileNotFoundException e)
+		{
+			throw new ConfigurationException("Build configuration file not found: " + file);
+		}
+	}
 
 	public CpsBaseHandler(XMLReader inReader, DefaultHandler inParent)
 	{

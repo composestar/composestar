@@ -3,6 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://composestar.sourceforge.net/schema/PlatformConfiguration ../../ComposestarCORE/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd ">
 	<platform id="Java">
+		<osfilter name="^Windows.*" />
 		<languages>
 			<language name="Java">
 				<extensions>
@@ -21,6 +22,52 @@
 						<rcfile prefix="@">
 							<arg>-cp</arg>
 							<deps merge="true" delimiter=";" useQuotes="true">
+								<arg useUnixSlashes="true">${DEP}</arg>
+							</deps>
+							<sources>
+								<arg useUnixSlashes="true">"${SOURCE}"</arg>
+							</sources>
+						</rcfile>
+					</action>
+					<action name="CreateJar" executable="jar">
+						<arg>cf</arg>
+						<arg>${JAR}</arg>
+						<arg>-C</arg>
+						<arg>${SOURCEDIR}</arg>
+						<arg>.</arg>
+					</action>
+				</compiler>
+				<dummygenerator>Composestar.Java.DUMMER.JavaDummyEmitter</dummygenerator>
+			</language>
+		</languages>
+		<resources>
+			<file>lib/ComposestarCore.jar</file>
+			<file>lib/ComposestarJava.jar</file>
+			<file>lib/ComposestarRuntimeInterpreter.jar</file>
+			<file>lib/prolog.jar</file>
+		</resources>
+	</platform>
+	
+	<platform id="Java">
+		<!-- The fall back for all other operation systems -->
+		<languages>
+			<language name="Java">
+				<extensions>
+					<extension>java</extension>
+				</extensions>
+				<compiler class="Composestar.Java.COMP.CStarJavaCompiler">
+					<action name="Compile" executable="javac">
+						<arg>-d</arg>
+						<arg>${OUT}</arg>
+						<arg>-implicit:none</arg><!-- this prevents overwriting of already existing files -->
+						<!-- 
+							Reduce possibility of too large command lines. classpath and source files will 
+							be stored in separate temp files that will be read by the compiler.
+							These temp files will be deleted when the VM shuts down. 
+						-->
+						<rcfile prefix="@">
+							<arg>-cp</arg>
+							<deps merge="true" delimiter=":" useQuotes="true">
 								<arg useUnixSlashes="true">${DEP}</arg>
 							</deps>
 							<sources>

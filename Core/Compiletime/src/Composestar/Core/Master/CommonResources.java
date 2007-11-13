@@ -22,6 +22,7 @@ import Composestar.Core.Annotations.In;
 import Composestar.Core.Annotations.Out;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Resources.ModuleResourceManager;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * This class holds the shared resources between the modules e.g the repository
@@ -36,6 +37,8 @@ import Composestar.Core.Resources.ModuleResourceManager;
 public class CommonResources implements Serializable
 {
 	private static final long serialVersionUID = -4099474761502163870L;
+
+	protected CPSLogger logger = CPSLogger.getCPSLogger("Resources");
 
 	/**
 	 * Map holding all the resources
@@ -173,6 +176,35 @@ public class CommonResources implements Serializable
 		{
 			return null;
 		}
+	}
+
+	/**
+	 * Get a specific resource manager
+	 * 
+	 * @param <T>
+	 * @param type
+	 * @return
+	 */
+	public <T extends ModuleResourceManager> T getResourceManager(Class<T> type, boolean bCreate)
+	{
+		T result = getResourceManager(type);
+		if (result == null && bCreate)
+		{
+			try
+			{
+				result = type.newInstance();
+				addResourceManager(result);
+			}
+			catch (InstantiationException e)
+			{
+				logger.error(e);
+			}
+			catch (IllegalAccessException e)
+			{
+				logger.error(e);
+			}
+		}
+		return result;
 	}
 
 	/**
