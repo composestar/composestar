@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsd:schema version="2.0" targetNamespace="http://composestar.sourceforget.net/schema/BuildConfiguration"
-	elementFormDefault="qualified" xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration"
+<xsd:schema version="2.0" targetNamespace="http://composestar.sourceforge.net/schema/BuildConfiguration"
+	elementFormDefault="qualified" xmlns="http://composestar.sourceforge.net/schema/BuildConfiguration"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<xsd:include schemaLocation="ComposestarConfigCommon.xsd"></xsd:include>
 	<xsd:annotation>

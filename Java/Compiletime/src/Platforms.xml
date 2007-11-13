@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<platforms xmlns="http://composestar.sourceforget.net/schema/PlatformConfiguration"
+<platforms xmlns="http://composestar.sourceforge.net/schema/PlatformConfiguration"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://composestar.sourceforget.net/schema/PlatformConfiguration ../../ComposestarCORE/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd ">
+	xsi:schemaLocation="http://composestar.sourceforge.net/schema/PlatformConfiguration ../../ComposestarCORE/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd ">
 	<platform id="Java">
 		<languages>
 			<language name="Java">
@@ -19,7 +19,7 @@
 							These temp files will be deleted when the VM shuts down. 
 						-->
 						<rcfile prefix="@">
-						    <arg>-cp</arg>
+							<arg>-cp</arg>
 							<deps merge="true" delimiter=";" useQuotes="true">
 								<arg useUnixSlashes="true">${DEP}</arg>
 							</deps>

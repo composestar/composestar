@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<buildconfiguration xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration">
+<buildconfiguration xmlns="http://composestar.sourceforge.net/schema/BuildConfiguration">
   <!-- various settings values -->
   <settings>
     <setting name="Key" /><!-- empty value -->

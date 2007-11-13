@@ -42,7 +42,7 @@
 
 	<target name="build" depends="init_local,antlr,compile,jar" description="build the C compiletime">
 		<schemavalidate>
-			<schema namespace="http://composestar.sourceforget.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
+			<schema namespace="http://composestar.sourceforge.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
 			<fileset dir="src">
 				<include name="Platforms.xml" />
 			</fileset>

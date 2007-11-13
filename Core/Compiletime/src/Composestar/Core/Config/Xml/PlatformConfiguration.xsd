@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema targetNamespace="http://composestar.sourceforget.net/schema/PlatformConfiguration"
+<xsd:schema targetNamespace="http://composestar.sourceforge.net/schema/PlatformConfiguration"
 	elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://composestar.sourceforget.net/schema/PlatformConfiguration">
+	xmlns="http://composestar.sourceforge.net/schema/PlatformConfiguration">
 	<xsd:include schemaLocation="ComposestarConfigCommon.xsd"></xsd:include>
 	<xsd:annotation>
 		<xsd:documentation>
@@ -177,20 +177,20 @@
 
 	<xsd:complexType name="Argument">
 		<xsd:annotation>
-			<xsd:documentation>
-				A command line argument
-			</xsd:documentation>
+			<xsd:documentation>A command line argument</xsd:documentation>
 		</xsd:annotation>
 		<xsd:simpleContent>
-          <xsd:extension base="xsd:string">
-            <xsd:attribute name="useUnixSlashes" type="xsd:boolean">
-			  <xsd:annotation>
-				<xsd:documentation>Whether to convert any backslashes to normal (forward) slashes</xsd:documentation>
-			  </xsd:annotation>
- 		    </xsd:attribute>
-          </xsd:extension>
-        </xsd:simpleContent>
-    </xsd:complexType>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="useUnixSlashes" type="xsd:boolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							Whether to convert any backslashes to normal (forward) slashes
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
 
 
 	<xsd:group name="SimpleCmdLineArgs">
