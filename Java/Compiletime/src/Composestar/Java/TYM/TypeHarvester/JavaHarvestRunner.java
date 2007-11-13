@@ -36,11 +36,11 @@ public class JavaHarvestRunner implements HarvestRunner
 
 		try {
 			// Harvest dummy classes
-			toBeHarvested.add(((File) resources.get(CStarJavaCompiler.DUMMY_JAR)).toURL());
+			toBeHarvested.add(((File) resources.get(CStarJavaCompiler.DUMMY_JAR)).toURI().toURL());
 	
 			// As well as all project dependencies
 			for (File deps : resources.configuration().getProject().getFilesDependencies())
-				toBeHarvested.add(deps.toURL());
+				toBeHarvested.add(deps.toURI().toURL());
 
 			// Now harvest these jarFiles for type information
 			for (URL jarFile : toBeHarvested)
