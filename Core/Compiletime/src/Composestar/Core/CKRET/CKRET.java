@@ -15,12 +15,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import Composestar.Core.CKRET.Config.OperationSequence;
+import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
+import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.INCRE;
@@ -45,21 +49,15 @@ public class CKRET implements CTCommonModule
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
-	public static final String[] MODES = { "NORMAL", "REDUNDANT", "PROGRESSIVE" };
-
-	public static final int NORMAL = 0;
-
-	public static final int REDUNDANT = 1;
-
-	public static final int PROGRESSIVE = 2;
-
-	protected static int mode;
+	protected static SECRETMode mode;
 
 	private static Reporter reporter;
 
 	private File reportFile;
 
-	public static int getMode()
+	private SECRETResources secretResources;
+
+	public static SECRETMode getMode()
 	{
 		return mode;
 	}
@@ -68,33 +66,8 @@ public class CKRET implements CTCommonModule
 	{
 		INCRE incre = INCRE.instance();
 
-		// make sure it has been initialized at least once...
-		try
-		{
-			INCRETimer initckret = incre.getReporter().openProcess(MODULE_NAME, "Initializing CKRET repository",
-					INCRETimer.TYPE_NORMAL);
-			Repository.instance().init(resources);
-			initckret.stop();
-		}
-		catch (ModuleException me)
-		{
-			logger.warn(me);
-			return;
-		}
-
-		// fetch the ckret runmode
-		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
-		int newMode = mi.getIntSetting("mode");
-		if (newMode >= 0 && newMode <= 2)
-		{
-			logger.info("CKRET mode set to " + MODES[newMode]);
-			mode = newMode;
-		}
-		else
-		{
-			logger.warn("Unknown CKRET mode: " + newMode + ", CKRET will run in " + MODES[mode] + " mode");
-		}
-
+		secretResources = resources.getResourceManager(SECRETResources.class, true);
+		loadConfiguration(resources);
 		try
 		{
 			BuildConfig config = resources.configuration();
@@ -130,6 +103,8 @@ public class CKRET implements CTCommonModule
 					+ "), with reason: " + e.getMessage());
 		}
 
+		secretResources.setLabeler(new ResourceOperationLabelerEx(secretResources));
+
 		Iterator conIt = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (conIt.hasNext())
 		{
@@ -137,21 +112,73 @@ public class CKRET implements CTCommonModule
 
 			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
 			{
-				// if (incre.isProcessedByModule(concern, MODULE_NAME))
-				// {
-				// copyOperation(concern);
-				// }
-				// else
-				// {
 				INCRETimer ckretrun = incre.getReporter().openProcess(MODULE_NAME, concern.getUniqueID(),
 						INCRETimer.TYPE_NORMAL);
 				this.run(concern);
 				ckretrun.stop();
-				// }
 			}
 		}
 
 		getReporter().close();
+	}
+
+	private void loadConfiguration(CommonResources resources) throws ConfigurationException
+	{
+		// fetch the ckret runmode
+		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
+		mode = mi.getSetting("mode", SECRETMode.Normal);
+
+		File configFile = null;
+		String cfgfile = mi.getSetting("config", "");
+		if (cfgfile != null && cfgfile.trim().length() > 0)
+		{
+			configFile = new File(cfgfile.trim());
+			if (!configFile.exists())
+			{
+				configFile = null;
+			}
+		}
+		if (configFile == null)
+		{
+			configFile = resources.getPathResolver().getResource("SECRETConfig.xml");
+		}
+		if (configFile != null)
+		{
+			logger.info(String.format("Loading SECRET config from: %s", configFile.toString()));
+			XmlConfiguration.loadBuildConfig(configFile, secretResources);
+		}
+		else
+		{
+			logger.debug("Loading internal SECRET configuration");
+			XmlConfiguration.loadBuildConfig(CKRET.class.getResourceAsStream("SECRETConfig.xml"), secretResources);
+		}
+
+		// load operation sequences from filter action
+		Iterator facts = DataStore.instance().getAllInstancesOf(FilterAction.class);
+		while (facts.hasNext())
+		{
+			FilterAction fact = (FilterAction) facts.next();
+			if (fact.getResourceOperations() == null || fact.getResourceOperations().length() == 0)
+			{
+				continue;
+			}
+			OperationSequence opseq = new OperationSequence();
+			String[] resops = fact.getResourceOperations().split(";");
+			for (String resop : resops)
+			{
+				String[] op = resop.split("\\.");
+				if (op.length != 2)
+				{
+					continue;
+				}
+				opseq.addOperations(op[0], op[1]);
+			}
+			if (opseq.getOperations().size() > 0)
+			{
+				opseq.addLabel(fact.getName(), "node");
+				secretResources.addOperationSequence(opseq);
+			}
+		}
 	}
 
 	private void run(Concern concern) throws ModuleException
@@ -162,12 +189,12 @@ public class CKRET implements CTCommonModule
 		if (singleOrder != null)
 		{
 			// ok need to do some checking
-			ConcernAnalysis ca = new ConcernAnalysis(concern);
+			ConcernAnalysis ca = new ConcernAnalysis(concern, secretResources);
 			List fmolist = (List) concern.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 
 			switch (CKRET.mode)
 			{
-				case NORMAL:
+				case Normal:
 					if (!ca.checkOrder(singleOrder, true))
 					{
 						logger.warn(new LogMessage("Semantic conflict(s) detected on concern "
@@ -175,7 +202,7 @@ public class CKRET implements CTCommonModule
 					}
 					break;
 
-				case REDUNDANT:
+				case Redundant:
 					if (!ca.checkOrder(singleOrder, true))
 					{
 						logger.warn(new LogMessage("Semantic conflict(s) detected on concern "
@@ -193,7 +220,7 @@ public class CKRET implements CTCommonModule
 					}
 					break;
 
-				case PROGRESSIVE:
+				case Progressive:
 					boolean foundGoodOrder = ca.checkOrder(singleOrder, true);
 
 					for (Object aFmolist : fmolist)
@@ -232,37 +259,6 @@ public class CKRET implements CTCommonModule
 
 		getReporter().closeConcern();
 	}
-
-	// private void copyOperation(Concern concern) throws ModuleException
-	// {
-	// INCRE incre = INCRE.instance();
-	// INCRETimer ckretcopy = incre.getReporter().openProcess(MODULE_NAME,
-	// concern.getUniqueID(),
-	// INCRETimer.TYPE_INCREMENTAL);
-	//
-	// // set singleorder from previous CKRET run
-	// Concern oldconcern = (Concern) incre.findHistoryObject(concern);
-	// concern.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, oldconcern
-	// .getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY));
-	//
-	// // get CKRET reports and let HTMLReporter print them
-	// List reports = (List) oldconcern.getDynObject("CKRETReports");
-	// if (reports != null)
-	// {
-	// logger.info("Skipping CKRET run for " + oldconcern.getQualifiedName());
-	// getReporter().openConcern(oldconcern);
-	// for (Object report1 : reports)
-	// {
-	// CKRETReport report = (CKRETReport) report1;
-	// getReporter().reportOrder(report.getOrder(), report.getAnalysis(),
-	// report.getSelected(), true);
-	// }
-	// getReporter().closeConcern();
-	// concern.addDynObject("CKRETReports", reports);
-	// }
-	//
-	// ckretcopy.stop();
-	// }
 
 	public List<Annotation> getSemanticAnnotations(PrimitiveConcern pc)
 	{
@@ -313,39 +309,4 @@ public class CKRET implements CTCommonModule
 	{
 		return reporter;
 	}
-
-	// public static void printState(ActionNode node)
-	// {
-	// System.out.print(node.getSelector());
-	// System.out.print(" ");
-	// Symbol[] conditions = node.getConditions();
-	// for (int i = 0; i < conditions.length; i++)
-	// {
-	// System.out.print("[" + conditions[i].getName() + "]");
-	// }
-	// System.out.println();
-	// }
-	//
-	// protected static List getFilterList(List filterModules)
-	// {
-	// List list = new ArrayList();
-	// Iterator itr = filterModules.iterator();
-	// while (itr.hasNext())
-	// {
-	// String name = (String) itr.next();
-	// FilterModule fm = (FilterModule)
-	// (DataStore.instance()).getObjectByID(name);
-	// Iterator ifItr = fm.inputFilters.iterator();
-	// while (ifItr.hasNext())
-	// {
-	// Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter f =
-	// (Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter)
-	// ifItr
-	// .next();
-	// list.add(f);
-	// }
-	// }
-	// return list;
-	// }
-
 }

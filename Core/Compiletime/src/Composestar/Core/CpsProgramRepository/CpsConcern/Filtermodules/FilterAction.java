@@ -24,6 +24,8 @@ public class FilterAction extends RepositoryEntity
 
 	private String fullName;
 
+	private String resourceOperations;
+
 	/**
 	 * @return the flowBehaviour
 	 */
@@ -88,4 +90,19 @@ public class FilterAction extends RepositoryEntity
 		this.fullName = fullName;
 	}
 
+	/**
+	 * @return
+	 */
+	public String getResourceOperations()
+	{
+		return resourceOperations;
+	}
+
+	/**
+	 * @param
+	 */
+	public void setResourceOperations(String resop)
+	{
+		resourceOperations = resop;
+	}
 }

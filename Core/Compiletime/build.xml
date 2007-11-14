@@ -95,6 +95,7 @@
 				<include name="**/*.properties" />
 				<include name="**/moduleinfo.xml" />
 				<include name="**/*.xslt" />
+				<include name="**/SECRETConfig.xml" />
 			</fileset>
 		</copy>
 		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF" />

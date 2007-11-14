@@ -49,7 +49,7 @@ public class FilterSetAnalysis implements Serializable
 		return filters;
 	}
 
-	public void analyze()
+	public void analyze(SECRETResources resources)
 	{
 		filters = getFilterList(order.filterModuleSIList());
 
@@ -57,8 +57,7 @@ public class FilterSetAnalysis implements Serializable
 
 		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS);
 
-		AbstractVM avm = new AbstractVM();
-		List<Conflict> conflicts = avm.analyze(concern, execModel);
+		List<Conflict> conflicts = AbstractVM.analyze(concern, execModel, resources);
 		if (!conflicts.isEmpty())
 		{
 			conflictingExecutions.add(conflicts);

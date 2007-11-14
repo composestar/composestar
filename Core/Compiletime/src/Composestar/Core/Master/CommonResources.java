@@ -64,6 +64,7 @@ public class CommonResources implements Serializable
 	public CommonResources()
 	{
 		resources = new HashMap<String, Object>();
+		resourceManagers = new HashMap<Class<? extends ModuleResourceManager>, ModuleResourceManager>();
 	}
 
 	public void setConfiguration(BuildConfig inConfig)
@@ -170,7 +171,12 @@ public class CommonResources implements Serializable
 	{
 		try
 		{
-			return type.cast(resourceManagers.get(type));
+			ModuleResourceManager res = resourceManagers.get(type);
+			if (res == null)
+			{
+				return null;
+			}
+			return type.cast(res);
 		}
 		catch (ClassCastException e)
 		{

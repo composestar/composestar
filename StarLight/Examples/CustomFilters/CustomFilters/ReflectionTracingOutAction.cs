@@ -11,6 +11,7 @@ namespace CustomFilters
 {
     [FilterActionAttribute("ReflectionTracingOutAction", FilterActionAttribute.FilterFlowBehavior.Continue,
        FilterActionAttribute.MessageSubstitutionBehavior.Original)]
+    [ResourceOperation("target.read;selector.read;arg.read;return.read", true)]
     public class ReflectionTracingOutAction : FilterAction
     {
         public override void Execute(JoinPointContext context)

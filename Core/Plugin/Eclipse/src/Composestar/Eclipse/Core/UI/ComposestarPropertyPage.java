@@ -57,10 +57,10 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 		IScopeContext projectScope = new ProjectScope(project);
 		settings = projectScope.getNode(IComposestarConstants.BUNDLE_ID);
 		mainClass.setText(settings.get("mainclass", ""));
-		buildDebugLevel.select(settings.getInt("buildDebugLevel", 2)); // 2=warn
+		buildDebugLevel.select(buildDebugLevel.indexOf(settings.get("buildDebugLevel", "WARN"))); // 2=warn
 		runDebugLevel.select(settings.getInt("runDebugLevel", 0)); // 0=error
 		incremental.select(settings.getBoolean("incremental", false) ? 1 : 0);
-		secretMode.select(settings.getInt("SECRET.mode", 1));
+		secretMode.select(secretMode.indexOf(settings.get("SECRET.mode", "Normal")));
 		filterModuleOrder.setText(settings.get("FILTH.input", ""));
 	}
 
@@ -69,10 +69,10 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 		if (settings != null)
 		{
 			settings.put("mainclass", mainClass.getText().trim());
-			settings.putInt("buildDebugLevel", buildDebugLevel.getSelectionIndex());
+			settings.put("buildDebugLevel", buildDebugLevel.getText());
 			settings.putInt("runDebugLevel", runDebugLevel.getSelectionIndex());
 			settings.putBoolean("incremental", incremental.getSelectionIndex() == 1);
-			settings.putInt("SECRET.mode", secretMode.getSelectionIndex());
+			settings.put("SECRET.mode", secretMode.getText());
 			settings.put("FILTH.input", filterModuleOrder.getText());
 			try
 			{

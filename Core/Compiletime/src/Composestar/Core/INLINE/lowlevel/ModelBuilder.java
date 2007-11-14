@@ -123,9 +123,9 @@ public class ModelBuilder implements CTCommonModule
 		BookKeepingMode bkmode = moduleinfo.getSetting("bookkeeping", BookKeepingMode.Never);
 
 		inputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.INPUT_FILTERS, bkmode);
-		inputFilterInliner = new LowLevelInliner(inputFilterBuilderStrategy);
+		inputFilterInliner = new LowLevelInliner(inputFilterBuilderStrategy, resources);
 		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.OUTPUT_FILTERS, bkmode);
-		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy);
+		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy, resources);
 
 		dataStore = DataStore.instance();
 		startInliner();

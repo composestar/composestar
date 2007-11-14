@@ -11,6 +11,7 @@ namespace CustomFilters
 {
     [FilterActionAttribute("TracingInAction", FilterActionAttribute.FilterFlowBehavior.Continue,
        FilterActionAttribute.MessageSubstitutionBehavior.Original)]
+    [ResourceOperation("target.read;selector.read;arg.read", true)]
     public sealed class TracingInAction : FilterAction
     {
         public override void Execute(JoinPointContext context)

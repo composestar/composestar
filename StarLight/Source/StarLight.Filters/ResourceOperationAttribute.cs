@@ -28,14 +28,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Composestar.StarLight.Filters
+namespace Composestar.StarLight.Filters.FilterTypes
 {
     /// <summary>
     /// Annotation for FilterActions to define their resource operation sequence. It is
     /// required for static resource operation conflict analysis.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    class ResourceOperationAttribute: Attribute
+    public class ResourceOperationAttribute: Attribute
     {
         private string _sequence;
         private bool _manualbk;
@@ -52,6 +52,11 @@ namespace Composestar.StarLight.Filters
             _autorw = false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sequence"></param>
+        /// <param name="manual"></param>
         public ResourceOperationAttribute(string sequence, bool manual)
         {
             _sequence = sequence;
@@ -59,6 +64,12 @@ namespace Composestar.StarLight.Filters
             _autorw = manual;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sequence"></param>
+        /// <param name="manual"></param>
+        /// <param name="autorw"></param>
         public ResourceOperationAttribute(string sequence, bool manual, bool autorw)
         {
             _sequence = sequence;

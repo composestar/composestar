@@ -6,6 +6,7 @@ package Composestar.Core.FIRE2.util.regex;
 
 import java.util.List;
 
+import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 
@@ -40,7 +41,7 @@ public interface Labeler
 	 * 
 	 * @param resource
 	 */
-	void setCurrentResource(String resource);
+	void setCurrentResource(Resource resource);
 
 	/**
 	 * Set the concern that is currently processed.

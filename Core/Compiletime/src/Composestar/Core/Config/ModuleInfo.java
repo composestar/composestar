@@ -370,7 +370,8 @@ public class ModuleInfo implements Serializable
 			String key = entry.getKey().substring(id.length() + 1);
 			try
 			{
-				setSettingValue(key, entry.getValue());
+				ModuleSetting<?> set = getModuleSetting(key);
+				set.setValueFromString(entry.getValue());
 			}
 			catch (ConfigurationException e)
 			{
@@ -378,7 +379,7 @@ public class ModuleInfo implements Serializable
 				{
 					moduleLogger = CPSLogger.getCPSLogger(id);
 				}
-				moduleLogger.error("Error setting config option '" + entry.getKey() + "' to '" + entry.getValue()
+				moduleLogger.warn("Error setting config option '" + entry.getKey() + "' to '" + entry.getValue()
 						+ "': " + e.getMessage());
 			}
 		}

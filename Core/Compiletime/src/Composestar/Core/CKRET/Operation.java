@@ -12,16 +12,10 @@ package Composestar.Core.CKRET;
 import java.io.Serializable;
 
 /**
- * @author Administrator To change the template for this generated type comment
- *         go to Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and
- *         Comments
+ * 
  */
 public class Operation implements Serializable
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1402987412844825501L;
 
 	private String name;

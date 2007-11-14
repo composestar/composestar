@@ -178,7 +178,16 @@ public class ModuleSetting<T extends Serializable> implements Serializable
 		}
 		else if (Enum.class.isAssignableFrom(type))
 		{
-			value = (T) Enum.valueOf((Class<Enum>) type, newValue);
+			try
+			{
+				value = (T) Enum.valueOf((Class<Enum>) type, newValue.trim());
+			}
+			catch (IllegalArgumentException e)
+			{
+				value = defaultValue;
+				throw new ConfigurationException(String.format("Unable to cast %s to an enum of type %s", newValue,
+						type.getName()));
+			}
 		}
 		else
 		{

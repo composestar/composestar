@@ -12,6 +12,7 @@ namespace CustomFilters
 {
     [FilterActionAttribute("StartTimerAction", FilterActionAttribute.FilterFlowBehavior.Continue, 
        FilterActionAttribute.MessageSubstitutionBehavior.Original)]
+    [ResourceOperation("frequency.write;starttime.write")]
     public class StartTimerAction : FilterAction
     {
         [DllImport("Kernel32.dll")]

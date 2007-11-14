@@ -63,6 +63,7 @@ namespace Composestar.StarLight.Entities.Configuration
 		private string _name;
 		private string _fullName;
 		private string _assembly;
+        private string _resourceops;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to create a JoinPointContext object.
@@ -130,5 +131,16 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _assembly; }
 			set { _assembly = value; }
 		}
+
+        /// <summary>
+        /// Gets or sets the assembly.
+        /// </summary>
+        /// <value>The assembly.</value>
+        [XmlAttribute]
+        public string ResourceOperations
+        {
+            get { return _resourceops; }
+            set { _resourceops = value; }
+        }
 	}
 }

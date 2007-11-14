@@ -12,9 +12,12 @@ package Composestar.Core.CKRET;
 import java.util.ArrayList;
 import java.util.List;
 
-import Composestar.Core.CKRET.Config.ResourceHandler;
+import Composestar.Core.CKRET.Config.ConflictRule;
+import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.FIRE2.model.ExecutionModel;
+import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.Matcher;
 
 /**
@@ -22,53 +25,34 @@ import Composestar.Core.FIRE2.util.regex.Matcher;
  */
 public class AbstractVM
 {
-	// TODO should be stored in common resources
-	protected static ResourceOperationLabeler labeler;
-
-	public AbstractVM()
+	public static List<Conflict> analyze(Concern concern, ExecutionModel model, SECRETResources resources)
 	{
-		if (labeler == null)
-		{
-			createLabeler();
-		}
-	}
-
-	protected static void createLabeler()
-	{
-		labeler = new ResourceOperationLabeler();
-	}
-
-	public List<Conflict> analyze(Concern concern, ExecutionModel model)
-	{
+		Labeler labeler = resources.getLabeler();
 		labeler.setCurrentConcern(concern);
 
 		List<Conflict> conflicts = new ArrayList<Conflict>();
 
-		for (Object o1 : Repository.instance().getConstraints())
+		for (ConflictRule rule : resources.getRules())
 		{
-			Constraint constraint = (Constraint) o1;
-
-			for (Object o : ResourceHandler.getResources())
+			for (Resource resource : resources.getResources())
 			{
-				Resource res = (Resource) o;
-				if (constraint.getResource().equals("*") || constraint.getResource().equals(res.getName()))
+				if (rule.getResource().getType() == ResourceType.Wildcard || rule.getResource().equals(resource))
 				{
-					labeler.setCurrentResource(res.getName());
-					Matcher matcher = new Matcher(constraint.getPattern(), model, labeler);
+					labeler.setCurrentResource(resource);
+					Matcher matcher = new Matcher(rule.getPattern(), model, labeler);
 
 					if (matcher.matches())
 					{
 						Conflict conflict = new Conflict();
-						conflict.setResource(res.getName());
-						conflict.setMsg(constraint.getMessage());
+						conflict.setResource(resource.getName());
+						conflict.setMsg(rule.getMessage());
 						// conflict.setSequence(matcher.matchTrace());
-						conflict.setExpr(constraint.getPattern().toString());
+						conflict.setExpr(rule.getPattern().toString());
 						conflicts.add(conflict);
 					}
 				}
 			}
 		}
-		// System.err.println("AVM: done...");
 		return conflicts;
 	}
 }

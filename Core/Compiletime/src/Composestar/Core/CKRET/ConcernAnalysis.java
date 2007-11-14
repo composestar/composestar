@@ -20,12 +20,15 @@ import Composestar.Core.FILTH.FilterModuleOrder;
  */
 public class ConcernAnalysis
 {
+	private SECRETResources resources;
+
 	private Concern concern;
 
 	private Map<FilterModuleOrder, FilterSetAnalysis> orders;
 
-	public ConcernAnalysis(Concern inconcern)
+	public ConcernAnalysis(Concern inconcern, SECRETResources inresources)
 	{
+		resources = inresources;
 		concern = inconcern;
 		orders = new HashMap<FilterModuleOrder, FilterSetAnalysis>();
 	}
@@ -39,20 +42,20 @@ public class ConcernAnalysis
 	{
 		FilterSetAnalysis oa = new FilterSetAnalysis(concern, order);
 
-		oa.analyze();
+		oa.analyze(resources);
 
 		orders.put(order, oa);
 
 		switch (CKRET.getMode())
 		{
-			case CKRET.NORMAL:
+			case Normal:
 				CKRET.getReporter().reportOrder(order, oa, isSelected, false);
 				break;
-			case CKRET.REDUNDANT:
+			case Redundant:
 				CKRET.getReporter().reportOrder(order, oa, isSelected, false);
 				break;
 
-			case CKRET.PROGRESSIVE:
+			case Progressive:
 				if (oa.numConflictingExecutions() == 0)
 				{
 					CKRET.getReporter().reportOrder(order, oa, isSelected, false);

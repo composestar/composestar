@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import Composestar.Core.CKRET.ResourceOperationLabeler;
+import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
@@ -25,6 +25,7 @@ import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.queryengine.predicates.StateType;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.Master.CommonResources;
 
 /**
  * The inlining engine which also uses lowlevel constructs like jumps. This
@@ -60,10 +61,14 @@ public class LowLevelInliner
 	 * 
 	 * @param strategy The strategy that does the actual code generation.
 	 */
-	public LowLevelInliner(LowLevelInlineStrategy strategy)
+	public LowLevelInliner(LowLevelInlineStrategy strategy, CommonResources resources)
 	{
 		this.strategy = strategy;
-		labeler = new ResourceOperationLabeler();
+		SECRETResources secretresc = resources.getResourceManager(SECRETResources.class);
+		if (secretresc != null)
+		{
+			labeler = secretresc.getLabeler();
+		}
 		initialize();
 	}
 

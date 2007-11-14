@@ -154,7 +154,7 @@ public class HTMLReporter implements Reporter
 		buffer.append("<BR>");
 		buffer.append("Platform: ").append(resources.configuration().getProject().getPlatformId());
 		buffer.append("<BR>");
-		buffer.append("Runmode: ").append(CKRET.MODES[CKRET.getMode()]);
+		buffer.append("Runmode: ").append(CKRET.getMode().toString());
 		buffer.append("</h3>\n");
 	}
 

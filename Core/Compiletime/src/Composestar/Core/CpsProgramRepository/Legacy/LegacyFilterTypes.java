@@ -23,18 +23,17 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType
  */
 public final class LegacyFilterTypes
 {
-	private static final FilterAction dispatchAction = createDispatchAction();
+	private static FilterAction dispatchAction;
 
-	private static final FilterAction continueAction = createContinueAction();
+	private static FilterAction continueAction;
 
-	private static final FilterAction errorAction = createErrorAction();
+	private static FilterAction errorAction;
 
-	// private static final FilterAction substitutionAction =
-	// createSubstitutionAction();
+	// private static FilterAction substitutionAction;
 
-	private static final FilterAction adviceAction = createAdviceAction();
+	private static FilterAction adviceAction;
 
-	private static final FilterAction metaAction = createMetaAction();
+	private static FilterAction metaAction;
 
 	/**
 	 * If true legacy filter types will be used
@@ -43,6 +42,13 @@ public final class LegacyFilterTypes
 
 	public static void addLegacyFilterTypes()
 	{
+		dispatchAction = createDispatchAction();
+		continueAction = createContinueAction();
+		errorAction = createErrorAction();
+		// substitutionAction = createSubstitutionAction();
+		adviceAction = createAdviceAction();
+		metaAction = createMetaAction();
+
 		addDispatchFilterType();
 		addSendFilterType();
 		addErrorFilterType();
@@ -75,6 +81,7 @@ public final class LegacyFilterTypes
 		action.setFullName("DispatchAction");
 		action.setFlowBehaviour(FilterAction.FLOW_RETURN);
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
+		action.setResourceOperations("msg.dispatch");
 		return action;
 	}
 
@@ -95,6 +102,7 @@ public final class LegacyFilterTypes
 		action.setFullName("ErrorAction");
 		action.setFlowBehaviour(FilterAction.FLOW_EXIT);
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		action.setResourceOperations("msg.discard;return.discard;arg.discard");
 		return action;
 	}
 
@@ -124,7 +132,8 @@ public final class LegacyFilterTypes
 		action.setName("MetaAction");
 		action.setFullName("MetaAction");
 		action.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
-		// TODO: this should actually be MESSAGE_ANY, but it breaks various things during the compose* compile process
+		// TODO: this should actually be MESSAGE_ANY, but it breaks various
+		// things during the compose* compile process
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
 		return action;
 	}

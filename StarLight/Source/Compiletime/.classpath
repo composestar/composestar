@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**/.svn/|**/_svn/|AssemblyInfo.*" including="**/*.java|INCREconfig.xml" kind="src" path="src"/>
+	<classpathentry excluding="**/.svn/|**/_svn/|AssemblyInfo.*" including="**/*.java|INCREconfig.xml|Platforms.xml" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jsr173_1.0_api.jar"/>
 	<classpathentry kind="lib" path="lib/xbean.jar"/>

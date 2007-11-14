@@ -114,6 +114,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			filterAction.setFullName(storedAction.getFullName());
 			filterAction.setFlowBehaviour(storedAction.getFlowBehavior());
 			filterAction.setMessageChangeBehaviour(storedAction.getMessageChangeBehavior());
+			filterAction.setResourceOperations(storedAction.getResourceOperations());
 
 			actionMapping.put(filterAction.getName(), filterAction);
 		}

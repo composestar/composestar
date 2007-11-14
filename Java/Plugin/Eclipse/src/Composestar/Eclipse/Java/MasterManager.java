@@ -75,7 +75,7 @@ public class MasterManager
 			for (String cpEntry : cp)
 			{
 				defaultCp.append(cpEntry);
-				defaultCp.append(";");
+				defaultCp.append(File.pathSeparatorChar);
 			}
 
 			Debug.instance().Log("Classpath = " + defaultCp.toString());

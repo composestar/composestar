@@ -163,21 +163,22 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		label = new Label(group, SWT.NULL);
 		label.setText(BUILD_DEBUG_TITLE);
 		buildDebugLevel = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		buildDebugLevel.add("Error");
-		buildDebugLevel.add("Crucial");
-		buildDebugLevel.add("Warning");
-		buildDebugLevel.add("Information");
-		buildDebugLevel.add("Debug");
+		buildDebugLevel.add("ERROR");
+		buildDebugLevel.add("CRUCIAL");
+		buildDebugLevel.add("WARN");
+		buildDebugLevel.add("INFO");
+		buildDebugLevel.add("DEBUG");
+		buildDebugLevel.add("TRACE");
 		new Label(group, SWT.NULL);
 		buildDebugLevel.setLayoutData(gd);
 
 		label = new Label(group, SWT.NULL);
 		label.setText(SECRET_TITLE);
 		secretMode = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		secretMode.add("NotSet");
-		secretMode.add("SelectedOrder");
-		secretMode.add("AllOrders");
-		secretMode.add("AllOrdersAndSelect");
+		secretMode.add("");
+		secretMode.add("Normal");
+		secretMode.add("Redundant");
+		secretMode.add("Progressive");
 		new Label(group, SWT.NULL);
 		secretMode.setLayoutData(gd);
 

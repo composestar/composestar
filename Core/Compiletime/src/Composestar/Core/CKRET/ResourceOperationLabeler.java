@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
@@ -124,9 +125,9 @@ public class ResourceOperationLabeler implements Labeler
 		operationTable.put(new LabelResourcePair(SUBSTITUTION_ACTION, "selector"), seq);
 	}
 
-	public void setCurrentResource(String resource)
+	public void setCurrentResource(Resource resource)
 	{
-		currentResource = resource;
+		currentResource = resource.getName().toLowerCase();
 	}
 
 	public void setCurrentConcern(Concern curConcern)
@@ -426,6 +427,7 @@ public class ResourceOperationLabeler implements Labeler
 			return label.hashCode() + resource.hashCode();
 		}
 
+		@Override
 		public String toString()
 		{
 			return label + " @ " + resource;

@@ -5,6 +5,7 @@
 package Composestar.Core.FIRE2.util.regex;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,11 @@ public class LabelSequence
 		labels.add(label);
 	}
 
+	public void addLabels(Collection<String> lbls)
+	{
+		labels.addAll(lbls);
+	}
+
 	/**
 	 * @deprecated use getLabelsEx()
 	 * @return
@@ -45,5 +51,10 @@ public class LabelSequence
 	public boolean isEmpty()
 	{
 		return labels.isEmpty();
+	}
+
+	public String toString()
+	{
+		return labels.toString();
 	}
 }

@@ -1,6 +1,6 @@
 #Fri Sep 28 15:05:53 CEST 2007
 FILTH.input=
-SECRET.mode=1
+SECRET.mode=
 buildDebugLevel=1
 eclipse.preferences.version=1
 incremental=false

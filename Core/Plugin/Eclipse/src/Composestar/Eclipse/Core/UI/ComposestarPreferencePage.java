@@ -89,21 +89,22 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 		label = new Label(group, SWT.NULL);
 		label.setText(BUILD_DEBUG_TITLE);
 		buildDebugLevel = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		buildDebugLevel.add("Error");
-		buildDebugLevel.add("Crucial");
-		buildDebugLevel.add("Warning");
-		buildDebugLevel.add("Information");
-		buildDebugLevel.add("Debug");
+		buildDebugLevel.add("ERROR");
+		buildDebugLevel.add("CRUCIAL");
+		buildDebugLevel.add("WARN");
+		buildDebugLevel.add("INFO");
+		buildDebugLevel.add("DEBUG");
+		buildDebugLevel.add("TRACE");
 		empty = new Label(group, SWT.NULL);
 		buildDebugLevel.setLayoutData(gd);
 
 		label = new Label(group, SWT.NULL);
 		label.setText(SECRET_TITLE);
 		secretMode = new Combo(group, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		secretMode.add("NotSet");
-		secretMode.add("SelectedOrder");
-		secretMode.add("AllOrders");
-		secretMode.add("AllOrdersAndSelect");
+		secretMode.add("");
+		secretMode.add("Normal");
+		secretMode.add("Redundant");
+		secretMode.add("Progressive");
 		empty = new Label(group, SWT.NULL);
 		secretMode.setLayoutData(gd);
 
@@ -122,18 +123,18 @@ public class ComposestarPreferencePage extends PreferencePage implements IWorkbe
 	{
 		ComposestarEclipsePluginPlugin plugin = ComposestarEclipsePluginPlugin.getDefault();
 		IDialogSettings settings = plugin.getDialogSettings();
-		settings.put("buildDebugLevel", buildDebugLevel.indexOf(buildDebugLevel.getText()));
+		settings.put("buildDebugLevel", buildDebugLevel.getText());
 		settings.put("incremental", incremental.getText());
 		settings.put("runDebugLevel", runDebugLevel.indexOf(runDebugLevel.getText()));
-		settings.put("secretMode", secretMode.indexOf(secretMode.getText()) - 1);
+		settings.put("secretMode", secretMode.getText());
 		plugin.saveDialogSettings("");
 	}
 
 	public void loadDialogSettings(IDialogSettings settings)
 	{
-		buildDebugLevel.select(settings.getInt("buildDebugLevel"));
+		buildDebugLevel.select(buildDebugLevel.indexOf(settings.get("buildDebugLevel")));
 		incremental.select(incremental.indexOf(settings.get("incremental")));
 		runDebugLevel.select(settings.getInt("runDebugLevel"));
-		secretMode.select(settings.getInt("secretMode") + 1);
+		secretMode.select(secretMode.indexOf(settings.get("secretMode")));
 	}
 }

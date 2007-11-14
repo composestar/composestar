@@ -617,10 +617,15 @@ namespace Composestar.StarLight.ILAnalyzer
 				throw new ILAnalyzerException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindType, type.FullName));
 			}
 
+            FilterActionElement faEl = null;
 			FilterActionAttribute[] faas = (FilterActionAttribute[])refType.GetCustomAttributes(typeof(FilterActionAttribute), true);
 			foreach (FilterActionAttribute faa in faas)
 			{
-				FilterActionElement faEl = new FilterActionElement();
+                if (faEl != null)
+                {
+                    continue;
+                }
+				faEl = new FilterActionElement();
 
 				faEl.FullName = type.FullName;
 				faEl.Name = faa.ActionName;
@@ -659,9 +664,17 @@ namespace Composestar.StarLight.ILAnalyzer
 				}
 
 				faEl.CreateJPC = faa.CreateJoinPointContext;
-
-				_filterActions.Add(faEl);
 			}
+
+            if (faEl != null)
+            {
+                ResourceOperationAttribute[] roas = (ResourceOperationAttribute[])refType.GetCustomAttributes(typeof(ResourceOperationAttribute), true);
+                foreach (ResourceOperationAttribute roa in roas)
+                {
+                    faEl.ResourceOperations = roa.Sequence;
+                }
+                _filterActions.Add(faEl);
+            }
 
 			type = null;
 			assembly = null;

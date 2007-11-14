@@ -47,7 +47,7 @@ namespace Composestar.StarLight.Filters.BuiltIn
 	/// </summary>
 	[FilterActionAttribute(FilterAction.ErrorAction, FilterActionAttribute.FilterFlowBehavior.Exit,
 	   FilterActionAttribute.MessageSubstitutionBehavior.Original)]
-    [ResourceOperation("msg.discard;")]
+    [ResourceOperation("msg.discard;return.discard;arg.discard;")]
 	public class ErrorAction : FilterAction
 	{
 		/// <summary>
