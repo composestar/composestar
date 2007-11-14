@@ -14,7 +14,6 @@
 	<xsl:param name="runDebugLevel" select="'1'" />
 	<xsl:param name="buildDebugLevel" select="'4'" />
 	
-	<xsl:param name="SECRET_mode" select="'0'" />
 	<xsl:param name="INCRE_config" select="'INCREconfig.xml'" />
 	<xsl:param name="INCRE_enabled" select="'false'" />
 	<xsl:param name="INCRESerializer_force" select="'false'" />
@@ -88,12 +87,6 @@
 					<xsl:element name="Module">
 						<xsl:attribute name="name">INCRESerializer</xsl:attribute>
 						<xsl:attribute name="force"><xsl:value-of select="$INCRESerializer_force"/></xsl:attribute>
-					</xsl:element>
-					<xsl:element name="Module">
-						<xsl:attribute name="name">SECRET</xsl:attribute>
-						<xsl:attribute name="mode">
-							<xsl:value-of select="$SECRET_mode" />
-						</xsl:attribute>
 					</xsl:element>
 					<xsl:element name="Module">
 						<xsl:attribute name="name">ILICIT</xsl:attribute>
