@@ -41,7 +41,9 @@ import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
+import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.util.regex.LabelSequence;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Utils.Logging.CPSLogger;
@@ -176,13 +178,56 @@ public class ResourceOperationLabelerEx implements Labeler
 	public List<String> getResourceOperations(ExecutionTransition transition)
 	{
 		List<String> result = new ArrayList<String>();
+
+		String filterAction = null;
+		if (transition.getStartState().getFlowNode().containsName(FlowNode.FILTER_ACTION_NODE))
+		{
+			// filter the operations for filter action (should be done during
+			// weaving).
+			FlowNode node = transition.getStartState().getFlowNode();
+			Filter filter = (Filter) node.getRepositoryLink();
+
+			if (node.containsName(FlowNode.ACCEPT_CALL_ACTION_NODE))
+			{
+				filterAction = filter.getFilterType().getAcceptCallAction().getName();
+			}
+			else if (node.containsName(FlowNode.REJECT_CALL_ACTION_NODE))
+			{
+				filterAction = filter.getFilterType().getRejectCallAction().getName();
+			}
+			else if (node.containsName(FlowNode.ACCEPT_RETURN_ACTION_NODE))
+			{
+				filterAction = filter.getFilterType().getAcceptReturnAction().getName();
+			}
+			else if (node.containsName(FlowNode.REJECT_RETURN_ACTION_NODE))
+			{
+				filterAction = filter.getFilterType().getRejectReturnAction().getName();
+			}
+		}
+
 		for (Entry<Resource, SortedMap<PrioGraphLabel, LabelSequence>> rmap : labelMapping.entrySet())
 		{
 			for (Entry<PrioGraphLabel, LabelSequence> entry : rmap.getValue().entrySet())
 			{
+				if (filterAction != null && filterAction.equals(entry.getKey().getLabel()))
+				{
+					if (!result.contains(FILTER_ACTION_SEPARATOR))
+					{
+						result.add(FILTER_ACTION_SEPARATOR);
+					}
+					else if (result.indexOf(FILTER_ACTION_SEPARATOR) != result.size() - 1)
+					{
+						logger
+								.error("Filter action separator is not the last in the operation list. Should never happen.");
+					}
+					continue;
+				}
 				if (hasLabel(transition, entry.getKey()))
 				{
-					result.addAll(entry.getValue().getLabelsEx());
+					for (String s : entry.getValue().getLabelsEx())
+					{
+						result.add(rmap.getKey().getName() + "." + s);
+					}
 				}
 			}
 		}

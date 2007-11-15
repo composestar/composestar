@@ -512,7 +512,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 		if (val)
 		{
-			forAction.setResourceOperations(StringUtils.join(resourceOps, ";"));
+			if (resourceOps != null && resourceOps.size() > 0)
+			{
+				forAction.setResourceOperations(StringUtils.join(resourceOps, ";"));
+			}
 			forAction.setBookKeeping(true);
 			filterCode.setBookKeeping(true);
 		}

@@ -11,6 +11,7 @@ namespace RuBCoDeTestFilters.Filters
 {
     [FilterActionAttribute("EncryptArgsAction", FilterActionAttribute.FilterFlowBehavior.Continue,
        FilterActionAttribute.MessageSubstitutionBehavior.Original)]
+    [ResourceOperation("arg.read;arg.encrypt;arg.write", true)]
     public class EncryptArgsAction : FilterAction
     {
         public override void Execute(JoinPointContext context)
@@ -18,7 +19,7 @@ namespace RuBCoDeTestFilters.Filters
             foreach (ArgumentInfo ai in context.GetArguments.Values)
             {
                 Object val = ai.Value;
-                ai.ArgumentBK.AddOperation("encrypt");
+                ai.AddResourceOp("encrypt");
                 ai.Value = val;
             }
         }

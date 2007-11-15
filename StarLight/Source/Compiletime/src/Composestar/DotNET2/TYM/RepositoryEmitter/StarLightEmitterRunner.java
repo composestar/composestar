@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
+import Composestar.Core.CKRET.SECRETResources;
+import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
@@ -139,6 +141,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			if (weaveSpecs.containsKey(ac.getName()))
 			{
 				WeaveSpecification weaveSpec = weaveSpecs.get(ac.getName());
+				addConflictRules(weaveSpec);
 				addGeneralizedFilterCodes(weaveSpec);
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
@@ -188,6 +191,26 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 		weaveSpec.addNewGeneralizedFilterCodes();
 		weaveSpec.getGeneralizedFilterCodes().setGeneralizedFilterCodeArray(translatedFilterCodes);
+	}
+
+	private void addConflictRules(WeaveSpecification weaveSpec) throws ModuleException
+	{
+		SECRETResources sresc = resources.getResourceManager(SECRETResources.class);
+		if (sresc == null)
+		{
+			return;
+		}
+		if (weaveSpec.getConflictRules() == null)
+		{
+			weaveSpec.addNewConflictRules();
+		}
+		for (ConflictRule cr : sresc.getRules())
+		{
+			composestar.dotNET2.tym.entities.ConflictRule rule = weaveSpec.getConflictRules().addNewConflictRule();
+			rule.setExpression(cr.getPattern().getPatternString());
+			rule.setResource(cr.getResource().getName());
+			rule.setConstraint(cr.getType() == ConflictRule.RuleType.Constraint);
+		}
 	}
 
 	private void processConcerns() throws ModuleException

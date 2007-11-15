@@ -278,6 +278,7 @@ namespace Composestar.StarLight.Utilities
 			AddMethodToCache(CachedMethodDefinition.JoinPointContextSetSubstitutionSelector, typeof(JoinPointContext).GetMethod("set_SubstitutionSelector", new Type[] { typeof(string) }));
 			AddMethodToCache(CachedMethodDefinition.JoinPointContextSetReturnValue, typeof(JoinPointContext).GetMethod("SetReturnValue", new Type[] { typeof(object), typeof(JoinPointContext) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextSetBookKeeping, typeof(JoinPointContext).GetMethod("set_BookKeeping", new Type[] { typeof(bool) }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetAutoBookKeeping, typeof(JoinPointContext).GetMethod("set_AutoBookKeeping", new Type[] { typeof(bool) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextFinalizeBookKeeping, typeof(JoinPointContext).GetMethod("FinalizeBookKeeping", new Type[] { }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextAddResourceOperationList, typeof(JoinPointContext).GetMethod("AddResourceOperationList", new Type[] { typeof(string) }));
 			AddMethodToCache(CachedMethodDefinition.HasMoreStoredActions, typeof(FilterContext).GetMethod("HasMoreStoredActions", new Type[] { }));
@@ -1028,6 +1029,10 @@ namespace Composestar.StarLight.Utilities
         /// Emit a string of resource operations
         /// </summary>
         JoinPointContextAddResourceOperationList,
+        /// <summary>
+        /// Set the value for automatic read/write bookkeeping
+        /// </summary>
+        JoinPointContextSetAutoBookKeeping,
 		/// <summary>
 		/// Call the Type.GetType function.
 		/// </summary>

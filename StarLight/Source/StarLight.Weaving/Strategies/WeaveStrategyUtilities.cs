@@ -178,22 +178,6 @@ namespace Composestar.StarLight.Weaving.Strategies
 			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
 				CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
 					CachedMethodDefinition.JoinPointContextSetSubstitutionSelector)));
-
-            // Reactivate bookkeeping after initialization
-            if (filterAction.BookKeeping)
-            {
-                // FIXME: enable or disable auto bookkeeping
-                if (!String.IsNullOrEmpty(filterAction.ResourceOperations))
-                {
-                    // Load joinpointcontext first
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-                    // resourceoperations list
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, filterAction.ResourceOperations));
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
-                        CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, 
-                        CachedMethodDefinition.JoinPointContextAddResourceOperationList)));
-                }
-            }
 		}
 
 		/// <summary>

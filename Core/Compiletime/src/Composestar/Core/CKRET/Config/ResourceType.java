@@ -9,7 +9,74 @@ import Composestar.Core.CKRET.MetaResource;
  */
 public enum ResourceType
 {
-	Unknown, Wildcard, Message, Target, Selector, Return, ArgumentList, ArgumentEntry, Custom;
+	/**
+	 * An unknown/unset type
+	 */
+	Unknown,
+	/**
+	 * A special type only allowed in rule definitions. A rule with this
+	 * resource type applies to all resources.
+	 */
+	Wildcard
+	{
+		@Override
+		public String toString()
+		{
+			return "*";
+		}
+	},
+	Message
+	{
+		@Override
+		public String toString()
+		{
+			return "message";
+		}
+	},
+	Target
+	{
+		@Override
+		public String toString()
+		{
+			return "target";
+		}
+	},
+	Selector
+	{
+		@Override
+		public String toString()
+		{
+			return "selector";
+		}
+	},
+	Return
+	{
+		@Override
+		public String toString()
+		{
+			return "return";
+		}
+	},
+	ArgumentList
+	{
+		@Override
+		public String toString()
+		{
+			return "args";
+		}
+	},
+	ArgumentEntry
+	{
+		@Override
+		public String toString()
+		{
+			return "arg";
+		}
+	},
+	/**
+	 * A custom type. The real name is stored in a CustomResource instance
+	 */
+	Custom;
 
 	/**
 	 * Returns true when this resource is a meta resource type like Unknown or

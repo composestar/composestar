@@ -95,6 +95,10 @@
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StarLight.Filters\StarLight.Filters.csproj">
+      <Project>{2E8080B8-CD6E-4AFC-AB32-6032ED9F99C5}</Project>
+      <Name>StarLight.Filters</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StarLight.Weaving\StarLight.Weaving.csproj">
       <Project>{B393DAD9-0D9F-441A-B269-5D23EF444410}</Project>
       <Name>StarLight.Weaving</Name>

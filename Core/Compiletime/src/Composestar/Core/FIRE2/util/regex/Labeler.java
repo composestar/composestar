@@ -19,6 +19,12 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
 public interface Labeler
 {
 	/**
+	 * Identifier used to identify the location of the filter action execution
+	 * in the resource operation list as returned by getResourceOperations()
+	 */
+	public static final String FILTER_ACTION_SEPARATOR = "<FilterAction>";
+
+	/**
 	 * Return label sequences for the given execution state
 	 * 
 	 * @param transition
@@ -27,7 +33,9 @@ public interface Labeler
 	LabelSequence getLabels(ExecutionTransition transition);
 
 	/**
-	 * Get a list of all operations for the given transition
+	 * Get a list of all operations for the given transition. It will ignore
+	 * filter action labels of the associated flow node. Used by INLINER to get
+	 * all non-filter action labels.
 	 * 
 	 * @param transition
 	 * @return
