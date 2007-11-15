@@ -17,8 +17,8 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Core.WEAVER.WEAVER;
 import Composestar.Java.COMP.CStarJavaCompiler;
@@ -60,7 +60,7 @@ public class JavaWeaver implements WEAVER
 	 * <p>
 	 * 3. Calling the ClassWeaver to weave the classes.
 	 * 
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 * @see Composestar.Java.WEAVER.HookDictionary
 	 * @see Composestar.Java.WEAVER.ClassWeaver
 	 */

@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.ResourceException;
+import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.Resources.ResourceException;
 import Composestar.Utils.Debug;
 
 public class INCREModule implements Serializable

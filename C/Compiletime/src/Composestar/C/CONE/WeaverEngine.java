@@ -60,7 +60,7 @@ import Composestar.C.wrapper.retrieveAST;
 import Composestar.C.wrapper.parsing.WrappedAST;
 import Composestar.C.wrapper.utils.GeneralUtils;
 import Composestar.C.wrapper.utils.StaticVariableReplacer;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Debug;
 
 public class WeaverEngine

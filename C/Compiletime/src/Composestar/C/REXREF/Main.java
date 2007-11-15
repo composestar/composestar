@@ -27,9 +27,9 @@ import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.REXREF.DoResolve;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Debug;
 
 /**

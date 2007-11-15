@@ -14,7 +14,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
 import Composestar.Java.COMP.CStarJavaCompiler;
 

@@ -10,7 +10,7 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 
 /**
  * A Class Weaver. Uses Javassist to transform a class.

@@ -24,8 +24,8 @@ import Composestar.Core.LOLA.metamodel.LanguageModel;
 import Composestar.Core.LOLA.metamodel.ModelException;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /*

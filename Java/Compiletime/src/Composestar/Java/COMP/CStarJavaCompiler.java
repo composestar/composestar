@@ -15,7 +15,7 @@ import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Config.SourceCompiler;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Logging.CPSLogger;
 

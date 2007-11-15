@@ -2,13 +2,13 @@ package Composestar.Core.SIGN2;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 
 public class SignLite implements CTCommonModule
 {
 
 	/**
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{

@@ -11,7 +11,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 

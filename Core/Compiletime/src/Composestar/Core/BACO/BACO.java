@@ -20,9 +20,9 @@ import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.PathResolver;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.Resources.PathResolver;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 

@@ -4,7 +4,7 @@ import Composestar.Core.CONE.CONE;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Debug;
 
 public class CCONE extends CONE

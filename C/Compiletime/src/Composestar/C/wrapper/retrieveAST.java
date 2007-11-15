@@ -17,7 +17,7 @@ import Composestar.C.wrapper.parsing.GnuCTreeParser;
 import Composestar.C.wrapper.parsing.PreprocessorInfoChannel;
 import Composestar.C.wrapper.parsing.TNode;
 import Composestar.C.wrapper.parsing.WrappedAST;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Debug;
 import antlr.CommonAST;
 import antlr.RecognitionException;

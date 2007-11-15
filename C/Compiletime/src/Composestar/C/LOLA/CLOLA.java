@@ -18,8 +18,8 @@ import Composestar.Core.LOLA.AnnotationSuperImposition;
 import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Logging.CPSLogger;
 

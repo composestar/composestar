@@ -40,9 +40,9 @@ import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
@@ -99,7 +99,7 @@ public class Sign implements CTCommonModule
 	}
 
 	/**
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{

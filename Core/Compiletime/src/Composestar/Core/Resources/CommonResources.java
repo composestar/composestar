@@ -8,7 +8,7 @@
  * $Id$
  */
 
-package Composestar.Core.Master;
+package Composestar.Core.Resources;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -21,7 +21,6 @@ import java.util.Map.Entry;
 import Composestar.Core.Annotations.In;
 import Composestar.Core.Annotations.Out;
 import Composestar.Core.Config.BuildConfig;
-import Composestar.Core.Resources.ModuleResourceManager;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -33,7 +32,6 @@ import Composestar.Utils.Logging.CPSLogger;
  * implement Serializable. Information that is important for incremental
  * compilation or visualization should be made serializable.
  */
-// TODO: Move to Composestar.Core.Resources
 public class CommonResources implements Serializable
 {
 	private static final long serialVersionUID = -4099474761502163870L;
@@ -307,7 +305,7 @@ public class CommonResources implements Serializable
 
 	public void extract(Object object)
 	{
-		Class c = object.getClass();
+		Class<?> c = object.getClass();
 		for (Field field : c.getFields())
 		{
 			In in = field.getAnnotation(In.class);

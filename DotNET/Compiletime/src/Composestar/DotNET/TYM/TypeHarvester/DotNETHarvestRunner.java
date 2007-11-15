@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
 import Composestar.DotNET.BACO.DotNETBACO;
 import Composestar.DotNET.COMP.DotNETCompiler;

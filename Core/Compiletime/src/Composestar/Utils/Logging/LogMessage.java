@@ -21,6 +21,8 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  */
 public class LogMessage implements LocationProvider, Serializable
 {
+	private static final long serialVersionUID = 6361259262102454445L;
+
 	/**
 	 * The message object, this is usually a string but could also be an object
 	 * that produces a human readable string

@@ -16,8 +16,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.Selector
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.CPSIterator;
 import Composestar.Utils.Debug;
 

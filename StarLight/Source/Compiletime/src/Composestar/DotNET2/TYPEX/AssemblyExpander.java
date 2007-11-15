@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.DotNET2.MASTER.StarLightMaster;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;

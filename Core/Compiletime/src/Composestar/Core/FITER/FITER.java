@@ -22,8 +22,8 @@ import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Debug;
 
 /**

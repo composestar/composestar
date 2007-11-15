@@ -25,7 +25,7 @@ import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.queryengine.predicates.StateType;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 
 /**
  * The inlining engine which also uses lowlevel constructs like jumps. This

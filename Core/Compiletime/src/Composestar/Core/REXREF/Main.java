@@ -2,8 +2,8 @@ package Composestar.Core.REXREF;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 
 /**
  * Resolves references to objects in the repository

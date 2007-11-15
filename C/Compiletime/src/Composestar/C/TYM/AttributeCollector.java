@@ -24,8 +24,8 @@ import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 
 public class AttributeCollector extends DefaultHandler
 {

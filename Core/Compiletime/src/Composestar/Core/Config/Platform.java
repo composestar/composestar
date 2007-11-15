@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import Composestar.Core.Master.PathResolver;
+import Composestar.Core.Resources.PathResolver;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**

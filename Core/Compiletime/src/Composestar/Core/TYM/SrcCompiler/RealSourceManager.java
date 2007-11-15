@@ -23,7 +23,7 @@ import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**

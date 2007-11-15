@@ -24,8 +24,8 @@ import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -114,7 +114,7 @@ public class ModelBuilder implements CTCommonModule
 	}
 
 	/**
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{

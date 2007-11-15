@@ -7,7 +7,7 @@ import java.util.List;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;

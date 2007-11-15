@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Debug;
 
 public class INCREReporter

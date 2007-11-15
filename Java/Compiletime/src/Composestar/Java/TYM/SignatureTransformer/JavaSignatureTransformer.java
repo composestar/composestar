@@ -3,7 +3,7 @@ package Composestar.Java.TYM.SignatureTransformer;
 import java.io.File;
 
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.SignatureTransformer.SignatureTransformer;
 import Composestar.Java.COMP.CStarJavaCompiler;
 

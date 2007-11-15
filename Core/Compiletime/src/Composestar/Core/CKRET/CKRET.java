@@ -33,8 +33,8 @@ import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
@@ -124,7 +124,6 @@ public class CKRET implements CTCommonModule
 
 	private void loadConfiguration(CommonResources resources) throws ConfigurationException
 	{
-		// fetch the ckret runmode
 		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
 		mode = mi.getSetting("mode", SECRETMode.Normal);
 

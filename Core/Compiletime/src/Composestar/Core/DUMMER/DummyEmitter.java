@@ -5,7 +5,7 @@ import java.util.Set;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 
 /**
  * Interface for dummy emitters.

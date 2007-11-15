@@ -50,8 +50,8 @@ import Composestar.C.wrapper.parsing.WrappedAST;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.LangNamespace;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 
 /**
  * Created by IntelliJ IDEA. User: ByelasH Date: 20-dec-2004 Time: 11:17:45 To

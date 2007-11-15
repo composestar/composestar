@@ -23,6 +23,8 @@ import Composestar.Utils.Logging.LocationProvider;
  */
 public class CPSLoggingEvent extends LoggingEvent implements LocationProvider
 {
+	private static final long serialVersionUID = 1040537920968451605L;
+
 	/**
 	 * Source filename where this event happened. This is not the program source
 	 * location.

@@ -16,9 +16,9 @@ import java.util.Map.Entry;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
 
 import composestar.dotNET2.tym.entities.ArrayOfKeyValueSetting;
 import composestar.dotNET2.tym.entities.ConfigurationContainer;

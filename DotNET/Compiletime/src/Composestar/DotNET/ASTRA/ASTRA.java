@@ -6,9 +6,9 @@ import java.util.Iterator;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.ResourceException;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.Resources.ResourceException;
 import Composestar.DotNET.COMP.DotNETCompiler;
 import Composestar.Utils.Logging.CPSLogger;
 

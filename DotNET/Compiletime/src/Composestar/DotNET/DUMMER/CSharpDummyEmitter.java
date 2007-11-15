@@ -14,7 +14,7 @@ import Composestar.Core.Config.Source;
 import Composestar.Core.DUMMER.DummyEmitter;
 import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.StreamGobbler;
 import Composestar.Utils.Logging.CPSLogger;
 

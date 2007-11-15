@@ -18,7 +18,7 @@ import java.util.List;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.FILTH.FilterModuleOrder;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 
 public class HTMLReporter implements Reporter
 {

@@ -26,10 +26,10 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.Config.ConfigManager;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.CompileHistory;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
 

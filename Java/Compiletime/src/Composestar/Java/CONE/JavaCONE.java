@@ -2,7 +2,7 @@ package Composestar.Java.CONE;
 
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 
 /**
  * Module that generates code. (<b>CO</b>de ge<b>NE</b>ration)

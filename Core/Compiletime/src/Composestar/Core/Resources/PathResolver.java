@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.Master;
+package Composestar.Core.Resources;
 
 import java.io.File;
 import java.io.InputStream;
@@ -41,7 +41,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class PathResolver
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger("MASTER.PathResolver");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Resources.PathResolver");
 
 	/**
 	 * Path skew is appended at the detected base and core paths. It's intended

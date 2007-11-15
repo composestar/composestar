@@ -11,6 +11,7 @@
 package Composestar.Core.Master;
 
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Resources.CommonResources;
 
 /**
  * Interface defining the run method for any modules that should be called from

@@ -19,6 +19,8 @@ import org.apache.log4j.Level;
  */
 public class CrucialLevel extends Level
 {
+	private static final long serialVersionUID = 4174175893263910427L;
+
 	public static final int CRUCIAL_INT = 55000;
 
 	public static final Level CRUCIAL = new CrucialLevel(CRUCIAL_INT, "CRUCIAL", 0);

@@ -6,7 +6,7 @@ import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Config.SourceCompiler;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Resources.CommonResources;
 
 public interface LangCompiler
 {
