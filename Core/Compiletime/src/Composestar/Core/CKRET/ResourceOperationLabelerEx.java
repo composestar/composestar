@@ -217,8 +217,8 @@ public class ResourceOperationLabelerEx implements Labeler
 					}
 					else if (result.indexOf(FILTER_ACTION_SEPARATOR) != result.size() - 1)
 					{
-						logger
-								.error("Filter action separator is not the last in the operation list. Should never happen.");
+						//logger
+						//		.error("Filter action separator is not the last in the operation list. Should never happen.");
 					}
 					continue;
 				}
