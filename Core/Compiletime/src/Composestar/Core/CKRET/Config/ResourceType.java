@@ -1,6 +1,5 @@
 package Composestar.Core.CKRET.Config;
 
-import Composestar.Core.CKRET.MetaResource;
 
 /**
  * The resource type
@@ -91,10 +90,11 @@ public enum ResourceType
 
 	public static ResourceType parse(String value)
 	{
-		if (value == null)
+		if (value == null || value.trim().length() == 0)
 		{
-			throw new IllegalArgumentException("Value can not be null");
+			throw new IllegalArgumentException("Value can not be null or empty");
 		}
+		value = value.trim();
 		if ("msg".equalsIgnoreCase(value) || "message".equalsIgnoreCase(value))
 		{
 			return Message;
@@ -130,6 +130,8 @@ public enum ResourceType
 		return Custom;
 	}
 
+	private static Resource wildcardResource;
+
 	public static Resource createResource(String name, boolean allowWildcard)
 	{
 		ResourceType rt;
@@ -144,7 +146,11 @@ public enum ResourceType
 		}
 		if (allowWildcard && rt == Wildcard)
 		{
-			return new MetaResource(rt);
+			if (wildcardResource == null)
+			{
+				wildcardResource = new MetaResource(rt);
+			}
+			return wildcardResource;
 		}
 		if (rt.isMeta())
 		{

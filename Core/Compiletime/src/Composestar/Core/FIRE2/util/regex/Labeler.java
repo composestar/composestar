@@ -20,9 +20,11 @@ public interface Labeler
 {
 	/**
 	 * Identifier used to identify the location of the filter action execution
-	 * in the resource operation list as returned by getResourceOperations()
+	 * in the resource operation list as returned by getResourceOperations().
+	 * Following this prefix is the short name of the filter action that is
+	 * being executed.
 	 */
-	public static final String FILTER_ACTION_SEPARATOR = "<FilterAction>";
+	public static final String FILTER_ACTION_PREFIX = "@";
 
 	/**
 	 * Return label sequences for the given execution state

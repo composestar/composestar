@@ -25,8 +25,6 @@
 package Composestar.Core.CKRET;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +33,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import Composestar.Core.CKRET.Config.CustomResource;
 import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
+import Composestar.Core.CKRET.Config.OperationSequence.LabelType;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
@@ -57,25 +54,40 @@ public class ResourceOperationLabelerEx implements Labeler
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CKRET.MODULE_NAME);
 
+	/**
+	 * Empty sequence
+	 */
 	protected static final LabelSequence defaultSequence = new LabelSequence();
 
 	protected Map<Resource, SortedMap<PrioGraphLabel, LabelSequence>> labelMapping;
 
+	/**
+	 * The operation map for the current resource.
+	 */
 	protected SortedMap<PrioGraphLabel, LabelSequence> currentMap;
 
+	/**
+	 * Current selected concern
+	 */
 	protected Concern currentConcern;
 
+	/**
+	 * Current active resource
+	 */
 	protected Resource currentResource;
+
+	protected SECRETResources resources;
 
 	public ResourceOperationLabelerEx()
 	{
 		labelMapping = new HashMap<Resource, SortedMap<PrioGraphLabel, LabelSequence>>();
 	}
 
-	public ResourceOperationLabelerEx(SECRETResources resources)
+	public ResourceOperationLabelerEx(SECRETResources inresources)
 	{
 		this();
-		configure(resources.getOperationSequences(), resources);
+		resources = inresources;
+		configure();
 	}
 
 	/**
@@ -83,43 +95,18 @@ public class ResourceOperationLabelerEx implements Labeler
 	 * 
 	 * @param opseq
 	 */
-	public void configure(Collection<OperationSequence> opseq, SECRETResources resources)
+	protected void configure()
 	{
-		List<OperationSequence> sorted = new ArrayList<OperationSequence>(opseq);
-		Collections.sort(sorted);
-		for (OperationSequence seq : sorted)
+		for (OperationSequence seq : resources.getOperationSequences())
 		{
 			Set<GraphLabel> lbls = seq.getLabels();
-			for (Entry<String, List<String>> resops : seq.getOperations().entrySet())
+			for (Entry<Resource, List<String>> resops : seq.getOperations().entrySet())
 			{
-				String resName = resops.getKey();
-				ResourceType rt = ResourceType.parse(resName);
-				if (rt.isMeta())
-				{
-					logger.warn(String.format("Meta resources can not be used in resource operations"));
-					continue;
-				}
-				Resource res;
-				if (rt == ResourceType.Custom)
-				{
-					res = resources.getResource(resName);
-				}
-				else
-				{
-					res = resources.getResource(rt.toString());
-				}
-				if (res == null)
-				{
-					logger.warn(String.format("Unknown resource used in operation sequence (check spelling): %s",
-							resName));
-					res = new CustomResource(resName);
-					resources.addResource(res);
-				}
-				SortedMap<PrioGraphLabel, LabelSequence> resmap = labelMapping.get(res);
+				SortedMap<PrioGraphLabel, LabelSequence> resmap = labelMapping.get(resops.getKey());
 				if (resmap == null)
 				{
 					resmap = new TreeMap<PrioGraphLabel, LabelSequence>();
-					labelMapping.put(res, resmap);
+					labelMapping.put(resops.getKey(), resmap);
 				}
 				for (GraphLabel lbl : lbls)
 				{
@@ -136,7 +123,7 @@ public class ResourceOperationLabelerEx implements Labeler
 		}
 	}
 
-	protected final boolean hasLabel(ExecutionTransition transition, PrioGraphLabel gl)
+	protected final boolean hasLabel(ExecutionTransition transition, GraphLabel gl)
 	{
 		switch (gl.getType())
 		{
@@ -205,28 +192,40 @@ public class ResourceOperationLabelerEx implements Labeler
 			}
 		}
 
-		for (Entry<Resource, SortedMap<PrioGraphLabel, LabelSequence>> rmap : labelMapping.entrySet())
+		for (OperationSequence seq : resources.getOperationSequences())
 		{
-			for (Entry<PrioGraphLabel, LabelSequence> entry : rmap.getValue().entrySet())
+			for (GraphLabel lbl : seq.getLabels())
 			{
-				if (filterAction != null && filterAction.equals(entry.getKey().getLabel()))
+				if (filterAction != null && lbl.getType() == LabelType.Node && lbl.getLabel().equals(filterAction))
 				{
-					if (!result.contains(FILTER_ACTION_SEPARATOR))
+					int idx = result.indexOf(FILTER_ACTION_PREFIX + filterAction);
+					if (idx > -1)
 					{
-						result.add(FILTER_ACTION_SEPARATOR);
+						if (idx != result.size() - 1)
+						{
+							logger
+									.error("Multiple operation sequences for this filter action with different precedence.");
+						}
+						else
+						{
+							logger.info("Multiple operation sequences for this filter action.");
+						}
 					}
-					else if (result.indexOf(FILTER_ACTION_SEPARATOR) != result.size() - 1)
+					else
 					{
-						//logger
-						//		.error("Filter action separator is not the last in the operation list. Should never happen.");
+						result.add(FILTER_ACTION_PREFIX + filterAction);
 					}
 					continue;
 				}
-				if (hasLabel(transition, entry.getKey()))
+
+				if (hasLabel(transition, lbl))
 				{
-					for (String s : entry.getValue().getLabelsEx())
+					for (Entry<Resource, List<String>> entry : seq.getOperations().entrySet())
 					{
-						result.add(rmap.getKey().getName() + "." + s);
+						for (String op : entry.getValue())
+						{
+							result.add(entry.getKey().getName() + "." + op);
+						}
 					}
 				}
 			}

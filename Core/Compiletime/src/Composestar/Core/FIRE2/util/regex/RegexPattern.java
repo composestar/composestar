@@ -54,6 +54,8 @@ import java.util.Map.Entry;
  */
 public final class RegexPattern extends Pattern
 {
+	private static final long serialVersionUID = -3870390515243330458L;
+
 	private RegularAutomaton automaton;
 
 	public static RegexPattern compile(String pattern) throws PatternParseException
@@ -467,6 +469,8 @@ public final class RegexPattern extends Pattern
 	 */
 	private static final class FinalRegularState extends RegularState
 	{
+		private static final long serialVersionUID = -5450856685894425275L;
+
 		@Override
 		public void addOutTransition(RegularTransition transition)
 		{

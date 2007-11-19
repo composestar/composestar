@@ -24,6 +24,7 @@
 
 package Composestar.Core.CKRET.Config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,8 +40,10 @@ import java.util.Set;
  * 
  * @author Michiel Hendriks
  */
-public class OperationSequence implements Comparable<OperationSequence>
+public class OperationSequence implements Comparable<OperationSequence>, Serializable
 {
+	private static final long serialVersionUID = -4277166345789156242L;
+
 	/**
 	 * The precedence of this sequence. Can be used in configuration files to
 	 * set a given order. FilterAction sequences always have the precedence of
@@ -50,12 +53,12 @@ public class OperationSequence implements Comparable<OperationSequence>
 
 	protected Set<GraphLabel> labels;
 
-	protected Map<String, List<String>> operations;
+	protected Map<Resource, List<String>> operations;
 
 	public OperationSequence()
 	{
 		labels = new HashSet<GraphLabel>();
-		operations = new HashMap<String, List<String>>();
+		operations = new HashMap<Resource, List<String>>();
 	}
 
 	public void setPriority(int prio)
@@ -108,11 +111,11 @@ public class OperationSequence implements Comparable<OperationSequence>
 		return Collections.unmodifiableSet(labels);
 	}
 
-	public void addOperations(String resource, List<String> opsequence)
+	public void addOperations(Resource resource, List<String> opsequence)
 	{
-		if (resource == null || resource.trim().length() == 0)
+		if (resource == null)
 		{
-			throw new IllegalArgumentException("Resource name can not be null or empty");
+			throw new IllegalArgumentException("Resource can not be null");
 		}
 		// remove empty operations
 		while (opsequence.remove(""))
@@ -132,7 +135,7 @@ public class OperationSequence implements Comparable<OperationSequence>
 		lst.addAll(opsequence);
 	}
 
-	public void addOperations(String resource, String[] opsequence)
+	public void addOperations(Resource resource, String[] opsequence)
 	{
 		addOperations(resource, Arrays.asList(opsequence));
 	}
@@ -144,7 +147,7 @@ public class OperationSequence implements Comparable<OperationSequence>
 	 * @param resource
 	 * @param opsequence
 	 */
-	public void addOperations(String resource, String opsequence)
+	public void addOperations(Resource resource, String opsequence)
 	{
 		if (opsequence == null || opsequence.trim().length() == 0)
 		{
@@ -153,7 +156,7 @@ public class OperationSequence implements Comparable<OperationSequence>
 		addOperations(resource, opsequence.trim().split(";"));
 	}
 
-	public Map<String, List<String>> getOperations()
+	public Map<Resource, List<String>> getOperations()
 	{
 		return Collections.unmodifiableMap(operations);
 	}
@@ -171,8 +174,10 @@ public class OperationSequence implements Comparable<OperationSequence>
 	/**
 	 * A single label in a graph
 	 */
-	public static class GraphLabel
+	public static class GraphLabel implements Serializable
 	{
+		private static final long serialVersionUID = -1471321128861061209L;
+
 		protected String label;
 
 		protected LabelType type;

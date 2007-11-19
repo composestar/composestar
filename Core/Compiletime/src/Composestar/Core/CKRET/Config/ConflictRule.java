@@ -9,6 +9,8 @@
  */
 package Composestar.Core.CKRET.Config;
 
+import java.io.Serializable;
+
 import Composestar.Core.FIRE2.util.regex.Pattern;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.FIRE2.util.regex.RegexPattern;
@@ -17,7 +19,7 @@ import Composestar.Core.FIRE2.util.regex.RegexPattern;
  * A conflict rule. Either an constraint (must not match) or an assertion (must
  * match).
  */
-public class ConflictRule
+public class ConflictRule implements Serializable
 {
 	public enum RuleType
 	{
@@ -30,6 +32,8 @@ public class ConflictRule
 		 */
 		Assertion
 	}
+
+	private static final long serialVersionUID = -3896746915950405852L;
 
 	/**
 	 * The resource name
@@ -53,6 +57,14 @@ public class ConflictRule
 
 	public ConflictRule(Resource inresource, RuleType intype)
 	{
+		if (inresource == null)
+		{
+			throw new IllegalArgumentException("Resource can not be null");
+		}
+		if (intype == null)
+		{
+			throw new IllegalArgumentException("RuleType can not be null");
+		}
 		resource = inresource;
 		type = intype;
 	}
@@ -80,11 +92,6 @@ public class ConflictRule
 		{
 			message = msg;
 		}
-	}
-
-	public void setResource(Resource newresc)
-	{
-		resource = newresc;
 	}
 
 	/**

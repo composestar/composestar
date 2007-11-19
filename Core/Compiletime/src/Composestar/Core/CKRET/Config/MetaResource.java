@@ -22,13 +22,11 @@
  * $Id$
  */
 
-package Composestar.Core.CKRET;
+package Composestar.Core.CKRET.Config;
 
 import java.util.Collection;
 import java.util.Set;
 
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.ResourceType;
 
 /**
  * Meta resource class, used for rules. MetaResources can not be added to the

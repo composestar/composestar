@@ -25,6 +25,10 @@
 			<setting id="config" type="string">
 				<name>Base configuration</name>
 			</setting>
+			<setting id="validate" type="boolean">
+				<name>Validate resources</name>
+				<default>true</default>
+			</setting>
 		</settings>
 
 		<incre>

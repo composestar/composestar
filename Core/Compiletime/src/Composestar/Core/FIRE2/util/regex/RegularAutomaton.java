@@ -24,8 +24,12 @@
 
 package Composestar.Core.FIRE2.util.regex;
 
-class RegularAutomaton
+import java.io.Serializable;
+
+class RegularAutomaton implements Serializable
 {
+	private static final long serialVersionUID = -5080084489074761193L;
+
 	private RegularState startState;
 
 	private RegularState endState;

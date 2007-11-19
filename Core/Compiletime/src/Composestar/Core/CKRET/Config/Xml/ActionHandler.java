@@ -30,7 +30,10 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CKRET.Config.OperationSequence;
+import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 
 /**
@@ -44,19 +47,22 @@ public class ActionHandler extends CpsBaseHandler
 
 	protected static final int STATE_SEQUENCE = 3;
 
+	protected SECRETResources resources;
+
 	protected OperationSequence action;
 
 	protected String currentLt;
 
-	protected String currentResource;
+	protected Resource currentResource;
 
 	/**
 	 * @param inReader
 	 * @param inParent
 	 */
-	public ActionHandler(XMLReader inReader, DefaultHandler inParent)
+	public ActionHandler(XMLReader inReader, DefaultHandler inParent, SECRETResources resc)
 	{
 		super(inReader, inParent);
+		resources = resc;
 	}
 
 	public OperationSequence getAction()
@@ -95,7 +101,32 @@ public class ActionHandler extends CpsBaseHandler
 		else if (state == STATE_ACTION && "sequence".equals(name))
 		{
 			state = STATE_SEQUENCE;
-			currentResource = attributes.getValue("resource");
+			try
+			{
+				String rescName = attributes.getValue("resource");
+				ResourceType rescType = ResourceType.parse(rescName);
+				if (rescType == ResourceType.Custom)
+				{
+					currentResource = resources.getResource(rescName.trim());
+				}
+				else if (!rescType.isMeta())
+				{
+					currentResource = resources.getResource(rescType.toString());
+				}
+
+				if (currentResource == null)
+				{
+					currentResource = ResourceType.createResource(rescName, false);
+					if (!currentResource.getType().isMeta())
+					{
+						resources.addResource(currentResource);
+					}
+				}
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new SAXParseException(e.toString(), locator);
+			}
 		}
 		else
 		{
@@ -115,7 +146,11 @@ public class ActionHandler extends CpsBaseHandler
 		super.endElement(uri, localName, name);
 		if (state == STATE_ACTION && "action".equals(name))
 		{
-			returnHandler(uri, localName, name);
+			if (action.getOperations().size() > 0 && action.getLabels().size() > 0)
+			{
+				resources.addOperationSequence(action);
+			}
+			returnHandler();
 		}
 		else if (state == STATE_LABEL && "label".equals(name))
 		{

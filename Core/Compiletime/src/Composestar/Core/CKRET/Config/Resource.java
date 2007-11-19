@@ -9,6 +9,7 @@
  */
 package Composestar.Core.CKRET.Config;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,8 +19,10 @@ import java.util.Set;
 /**
  * @author Michiel Hendriks
  */
-public class Resource
+public class Resource implements Serializable
 {
+	private static final long serialVersionUID = -7687830358361188988L;
+
 	protected ResourceType type;
 
 	protected Set<String> vocabulary;

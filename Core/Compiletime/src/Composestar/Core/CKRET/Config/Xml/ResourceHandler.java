@@ -30,6 +30,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
@@ -41,6 +42,8 @@ public class ResourceHandler extends CpsBaseHandler
 {
 	protected static final int STATE_RESC = 1;
 
+	protected SECRETResources resources;
+
 	protected Resource resc;
 
 	protected boolean replaceResc;
@@ -49,9 +52,10 @@ public class ResourceHandler extends CpsBaseHandler
 	 * @param inReader
 	 * @param inParent
 	 */
-	public ResourceHandler(XMLReader inReader, DefaultHandler inParent)
+	public ResourceHandler(XMLReader inReader, DefaultHandler inParent, SECRETResources resc)
 	{
 		super(inReader, inParent);
+		resources = resc;
 	}
 
 	public Resource getRecource()
@@ -109,7 +113,14 @@ public class ResourceHandler extends CpsBaseHandler
 		super.endElement(uri, localName, name);
 		if (state == STATE_RESC && "resource".equals(name))
 		{
-			returnHandler(uri, localName, name);
+			if (replaceResc)
+			{
+				Resource r2 = resources.getResource(resc.getName());
+				r2.clearVocabulary();
+			}
+			// will automatically merge if needed
+			resources.addResource(resc);
+			returnHandler();
 		}
 		else if (state == STATE_RESC && "operation".equals(name))
 		{

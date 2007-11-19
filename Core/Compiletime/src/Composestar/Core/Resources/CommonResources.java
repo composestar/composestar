@@ -10,13 +10,10 @@
 
 package Composestar.Core.Resources;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import Composestar.Core.Annotations.In;
 import Composestar.Core.Annotations.Out;
@@ -36,7 +33,7 @@ public class CommonResources implements Serializable
 {
 	private static final long serialVersionUID = -4099474761502163870L;
 
-	protected CPSLogger logger = CPSLogger.getCPSLogger("Resources");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Resources");
 
 	/**
 	 * Map holding all the resources
@@ -52,7 +49,7 @@ public class CommonResources implements Serializable
 	 * Reference to the path resolver. The path resolver provides means to
 	 * resolve the paths for external compiler resources.
 	 */
-	protected PathResolver pathResolver;
+	protected transient PathResolver pathResolver;
 
 	protected Map<Class<? extends ModuleResourceManager>, ModuleResourceManager> resourceManagers;
 
@@ -196,6 +193,7 @@ public class CommonResources implements Serializable
 		{
 			try
 			{
+				logger.debug(String.format("Creating new instance of %s", type.getName()));
 				result = type.newInstance();
 				addResourceManager(result);
 			}
@@ -333,24 +331,27 @@ public class CommonResources implements Serializable
 		}
 	}
 
-	private void writeObject(java.io.ObjectOutputStream stream) throws IOException
-	{
-		Map<String, Object> temp = new HashMap<String, Object>(resources);
-		Iterator<Entry<String, Object>> it = temp.entrySet().iterator();
-		while (it.hasNext())
-		{
-			Entry<String, Object> entry = it.next();
-			if (!(entry.getValue() instanceof Serializable))
-			{
-				it.remove();
-			}
-		}
-		stream.writeObject(temp);
-	}
+	// private void writeObject(java.io.ObjectOutputStream stream) throws
+	// IOException
+	// {
+	// Map<String, Object> temp = new HashMap<String, Object>(resources);
+	// Iterator<Entry<String, Object>> it = temp.entrySet().iterator();
+	// while (it.hasNext())
+	// {
+	// Entry<String, Object> entry = it.next();
+	// if (!(entry.getValue() instanceof Serializable))
+	// {
+	// it.remove();
+	// }
+	// }
+	// stream.writeObject(temp);
+	// }
+	//
+	// @SuppressWarnings("unchecked")
+	// private void readObject(java.io.ObjectInputStream stream) throws
+	// IOException, ClassNotFoundException
+	// {
+	// resources = (Map<String, Object>) stream.readObject();
+	// }
 
-	@SuppressWarnings("unchecked")
-	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException
-	{
-		resources = (Map<String, Object>) stream.readObject();
-	}
 }

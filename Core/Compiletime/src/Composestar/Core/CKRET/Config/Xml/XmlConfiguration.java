@@ -40,9 +40,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.CKRET.CKRET;
 import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.CKRET.Config.ConflictRule;
-import Composestar.Core.CKRET.Config.Resource;
-import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Utils.Logging.CPSLogger;
@@ -65,6 +62,8 @@ public class XmlConfiguration extends CpsBaseHandler
 	protected RuleHandler ruleh;
 
 	protected ActionHandler acth;
+
+	protected boolean[] hadSection = new boolean[3];
 
 	/**
 	 * Load the configuration from the specified file.
@@ -144,33 +143,47 @@ public class XmlConfiguration extends CpsBaseHandler
 		if (state == 0 && "secret".equals(name))
 		{
 			state = STATE_SECRET;
+			hadSection[0] = false;
+			hadSection[1] = false;
+			hadSection[2] = false;
 		}
 		else if (state == STATE_SECRET && "resource".equals(name))
 		{
+			if (hadSection[1] || hadSection[2])
+			{
+				throw new SAXParseException("Resource element not allowed after action and rule elements", locator);
+			}
+			hadSection[0] = true;
 			if (resh == null)
 			{
-				resh = new ResourceHandler(reader, this);
+				resh = new ResourceHandler(reader, this, resources);
 			}
 			reader.setContentHandler(resh);
 			resh.startElement(uri, localName, name, attributes);
 		}
-		else if (state == STATE_SECRET && "rule".equals(name))
-		{
-			if (ruleh == null)
-			{
-				ruleh = new RuleHandler(reader, this);
-			}
-			reader.setContentHandler(ruleh);
-			ruleh.startElement(uri, localName, name, attributes);
-		}
 		else if (state == STATE_SECRET && "action".equals(name))
 		{
+			if (hadSection[2])
+			{
+				throw new SAXParseException("Action element not allowed after rule elements", locator);
+			}
+			hadSection[1] = true;
 			if (acth == null)
 			{
-				acth = new ActionHandler(reader, this);
+				acth = new ActionHandler(reader, this, resources);
 			}
 			reader.setContentHandler(acth);
 			acth.startElement(uri, localName, name, attributes);
+		}
+		else if (state == STATE_SECRET && "rule".equals(name))
+		{
+			hadSection[2] = true;
+			if (ruleh == null)
+			{
+				ruleh = new RuleHandler(reader, this, resources);
+			}
+			reader.setContentHandler(ruleh);
+			ruleh.startElement(uri, localName, name, attributes);
 		}
 		else
 		{
@@ -191,59 +204,6 @@ public class XmlConfiguration extends CpsBaseHandler
 		if (state == STATE_SECRET && "secret".equals(name))
 		{
 			returnHandler(uri, localName, name);
-		}
-		else if (state == STATE_SECRET && "resource".equals(name))
-		{
-			Resource resc = resh.getRecource();
-			if (resh.replaceResource())
-			{
-				Resource r2 = resources.getResource(resc.getName());
-				r2.clearVocabulary();
-			}
-			// will automatically merge if needed
-			resources.addResource(resc);
-		}
-		else if (state == STATE_SECRET && "rule".equals(name))
-		{
-			ConflictRule rule = ruleh.getRule();
-			String resc = ruleh.getRecource();
-			if (rule != null)
-			{
-				ResourceType rt = ResourceType.parse(resc);
-				Resource r2;
-				if (rt == ResourceType.Custom)
-				{
-					r2 = resources.getResource(resc);
-				}
-				else
-				{
-					r2 = resources.getResource(rt.toString());
-				}
-
-				if (r2 == null)
-				{
-					// doesn't exist yet?
-					try
-					{
-						r2 = ResourceType.createResource(resc, true);
-					}
-					catch (IllegalArgumentException e)
-					{
-						throw new SAXParseException(e.toString(), locator);
-					}
-					if (!r2.getType().isMeta())
-					{
-						resources.addResource(r2);
-					}
-				}
-
-				rule.setResource(r2);
-				resources.addRule(rule);
-			}
-		}
-		else if (state == STATE_SECRET && "action".equals(name))
-		{
-			resources.addOperationSequence(acth.getAction());
 		}
 		else
 		{

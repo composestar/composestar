@@ -24,14 +24,17 @@
 
 package Composestar.Core.FIRE2.util.regex;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class RegularState
+class RegularState implements Serializable
 {
+	private static final long serialVersionUID = 2662274504980135336L;
+
 	private static int currentId;
 
 	/**

@@ -23,7 +23,9 @@
  */
 package Composestar.Core.FIRE2.util.regex;
 
-public abstract class Pattern
+import java.io.Serializable;
+
+public abstract class Pattern implements Serializable
 {
 	protected String patternString;
 

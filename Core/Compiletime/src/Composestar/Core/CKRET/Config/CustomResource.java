@@ -33,6 +33,8 @@ import java.util.Collection;
  */
 public class CustomResource extends Resource
 {
+	private static final long serialVersionUID = -6629060849011765123L;
+
 	/**
 	 * Custom name;
 	 */

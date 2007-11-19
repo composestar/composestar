@@ -12,10 +12,12 @@ package Composestar.Core.CKRET;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import Composestar.Core.CKRET.Config.OperationSequence;
+import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfo;
@@ -35,6 +37,7 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
@@ -68,6 +71,7 @@ public class CKRET implements CTCommonModule
 
 		secretResources = resources.getResourceManager(SECRETResources.class, true);
 		loadConfiguration(resources);
+
 		try
 		{
 			BuildConfig config = resources.configuration();
@@ -157,11 +161,19 @@ public class CKRET implements CTCommonModule
 		while (facts.hasNext())
 		{
 			FilterAction fact = (FilterAction) facts.next();
+			OperationSequence opseq = new OperationSequence();
+			opseq.addLabel(fact.getName(), "node");
+			secretResources.addOperationSequence(opseq);
 			if (fact.getResourceOperations() == null || fact.getResourceOperations().length() == 0)
 			{
+				if (!fact.getName().equals("ContinueAction") && !fact.getName().equals("SubstitutionAction")
+						&& !fact.getName().equals("AdviceAction") && !fact.getName().equals("MetaAction"))
+				{
+					logger.warn(String.format("Filter action \"%s\" has no resource operation information.", fact
+							.getName()));
+				}
 				continue;
 			}
-			OperationSequence opseq = new OperationSequence();
 			String[] resops = fact.getResourceOperations().split(";");
 			for (String resop : resops)
 			{
@@ -170,14 +182,83 @@ public class CKRET implements CTCommonModule
 				{
 					continue;
 				}
-				opseq.addOperations(op[0], op[1]);
+
+				Resource resc = null;
+				try
+				{
+					ResourceType rescType = ResourceType.parse(op[0]);
+					if (rescType == ResourceType.Custom)
+					{
+						resc = secretResources.getResource(op[0].trim());
+					}
+					else if (!rescType.isMeta())
+					{
+						resc = secretResources.getResource(rescType.toString());
+					}
+
+					if (resc == null)
+					{
+						resc = ResourceType.createResource(op[0], false);
+						if (!resc.getType().isMeta())
+						{
+							secretResources.addResource(resc);
+						}
+					}
+				}
+				catch (IllegalArgumentException e)
+				{
+					logger.error(String.format(
+							"%s used an invalid resource name \"%s\" in the resource operation list", fact.getName(),
+							op[0]), e);
+					continue;
+				}
+
+				opseq.addOperations(resc, op[1]);
 			}
-			if (opseq.getOperations().size() > 0)
+			if (opseq.getOperations().size() == 0)
 			{
-				opseq.addLabel(fact.getName(), "node");
-				secretResources.addOperationSequence(opseq);
+				logger.warn(String.format("Filter action \"%s\" has no valid resource operations.", fact.getName()));
 			}
 		}
+
+		if (mi.getSetting("validate", true))
+		{
+			validateResources();
+		}
+	}
+
+	/**
+	 * Validate the current SECRET resources. This will only produce log
+	 * warnings.
+	 */
+	private void validateResources()
+	{
+		for (Resource resc : secretResources.getResources())
+		{
+			if (resc.getVocabulary().size() == 0)
+			{
+				logger.warn(String.format("Resource \"%s\" has no defined vocabulary", resc.getName()));
+			}
+		}
+		for (OperationSequence opseq : secretResources.getOperationSequences())
+		{
+			for (Entry<Resource, List<String>> entry : opseq.getOperations().entrySet())
+			{
+				if (entry.getKey().getVocabulary().size() == 0)
+				{
+					continue;
+				}
+				List<String> copy = new ArrayList<String>(entry.getValue());
+				copy.removeAll(entry.getKey().getVocabulary());
+				if (copy.size() > 0)
+				{
+					logger.warn(String.format(
+							"Unknown resource operations used for resource \"%s\": %s; Used in actions for: %s", entry
+									.getKey().getName(), copy.toString(), opseq.getLabels().toString()));
+				}
+			}
+		}
+		// TODO: check rules
 	}
 
 	private void run(Concern concern) throws ModuleException
@@ -189,7 +270,8 @@ public class CKRET implements CTCommonModule
 		{
 			// ok need to do some checking
 			ConcernAnalysis ca = new ConcernAnalysis(concern, secretResources);
-			List fmolist = (List) concern.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
+			List<List<FilterModuleSuperImposition>> fmolist = (List<List<FilterModuleSuperImposition>>) concern
+					.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 
 			switch (CKRET.mode)
 			{
@@ -207,10 +289,9 @@ public class CKRET implements CTCommonModule
 						logger.warn(new LogMessage("Semantic conflict(s) detected on concern "
 								+ concern.getQualifiedName(), reportFile.toString(), 0));
 					}
-					for (Object aFmolist1 : fmolist)
+					for (List<FilterModuleSuperImposition> aFmolist1 : fmolist)
 					{
-						LinkedList order = (LinkedList) aFmolist1;
-						FilterModuleOrder fmo = new FilterModuleOrder(order);
+						FilterModuleOrder fmo = new FilterModuleOrder(aFmolist1);
 
 						if (!fmo.equals(singleOrder))
 						{
@@ -222,10 +303,9 @@ public class CKRET implements CTCommonModule
 				case Progressive:
 					boolean foundGoodOrder = ca.checkOrder(singleOrder, true);
 
-					for (Object aFmolist : fmolist)
+					for (List<FilterModuleSuperImposition> aFmolist : fmolist)
 					{
-						List order = (List) aFmolist;
-						FilterModuleOrder fmo = new FilterModuleOrder(order);
+						FilterModuleOrder fmo = new FilterModuleOrder(aFmolist);
 						if (!fmo.equals(singleOrder))
 						{
 							if (ca.checkOrder(fmo, !foundGoodOrder))

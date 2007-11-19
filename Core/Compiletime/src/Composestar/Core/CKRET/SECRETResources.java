@@ -30,8 +30,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import Composestar.Core.CKRET.Config.ConflictRule;
+import Composestar.Core.CKRET.Config.MetaResource;
 import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.FIRE2.util.regex.Labeler;
@@ -59,18 +62,18 @@ public class SECRETResources implements ModuleResourceManager
 	/**
 	 * Operation sequences extracted from the configuration sources.
 	 */
-	protected Set<OperationSequence> opSequences;
+	protected SortedSet<OperationSequence> opSequences;
 
 	/**
 	 * The execution model labeler to use
 	 */
-	protected Labeler labeler;
+	protected transient Labeler labeler;
 
 	public SECRETResources()
 	{
 		resources = new HashMap<String, Resource>();
 		rules = new HashSet<ConflictRule>();
-		opSequences = new HashSet<OperationSequence>();
+		opSequences = new TreeSet<OperationSequence>();
 	}
 
 	/*
@@ -151,9 +154,9 @@ public class SECRETResources implements ModuleResourceManager
 		opSequences.add(opesq);
 	}
 
-	public Set<OperationSequence> getOperationSequences()
+	public SortedSet<OperationSequence> getOperationSequences()
 	{
-		return Collections.unmodifiableSet(opSequences);
+		return Collections.unmodifiableSortedSet(opSequences);
 	}
 
 	/**

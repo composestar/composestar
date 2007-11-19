@@ -30,7 +30,10 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CKRET.Config.ConflictRule;
+import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.ConflictRule.RuleType;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
@@ -44,27 +47,23 @@ public class RuleHandler extends CpsBaseHandler
 {
 	protected static final int STATE_RULE = 1;
 
-	protected ConflictRule rule;
+	protected SECRETResources resources;
 
-	protected String resc;
+	protected ConflictRule rule;
 
 	/**
 	 * @param inReader
 	 * @param inParent
 	 */
-	public RuleHandler(XMLReader inReader, DefaultHandler inParent)
+	public RuleHandler(XMLReader inReader, DefaultHandler inParent, SECRETResources resc)
 	{
 		super(inReader, inParent);
+		resources = resc;
 	}
 
 	public ConflictRule getRule()
 	{
 		return rule;
-	}
-
-	public String getRecource()
-	{
-		return resc;
 	}
 
 	/*
@@ -85,13 +84,36 @@ public class RuleHandler extends CpsBaseHandler
 			{
 				rt = RuleType.Assertion;
 			}
-			resc = attributes.getValue("resource");
-			if (resc == null || resc.trim().length() == 0)
+
+			Resource resc = null;
+			try
 			{
-				throw new SAXParseException(String.format("Resource name is required"), locator);
+				String rescName = attributes.getValue("resource");
+				ResourceType rescType = ResourceType.parse(rescName);
+				if (rescType == ResourceType.Custom)
+				{
+					resc = resources.getResource(rescName.trim());
+				}
+				else if (!rescType.isMeta())
+				{
+					resc = resources.getResource(rescType.toString());
+				}
+
+				if (resc == null)
+				{
+					resc = ResourceType.createResource(rescName, true);
+					if (!resc.getType().isMeta())
+					{
+						resources.addResource(resc);
+					}
+				}
 			}
-			resc = resc.trim();
-			rule = new ConflictRule(null, rt);
+			catch (IllegalArgumentException e)
+			{
+				throw new SAXParseException(e.toString(), locator);
+			}
+
+			rule = new ConflictRule(resc, rt);
 		}
 		else if (state == STATE_RULE && "pattern".equals(name))
 		{
@@ -127,7 +149,8 @@ public class RuleHandler extends CpsBaseHandler
 			{
 				throw new SAXParseException("Rule does not have a pattern", locator);
 			}
-			returnHandler(uri, localName, name);
+			resources.addRule(rule);
+			returnHandler();
 		}
 		else if (state == STATE_RULE && "pattern".equals(name))
 		{
