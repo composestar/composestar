@@ -53,7 +53,7 @@ public class FilterSetAnalysis implements Serializable
 	{
 		filters = getFilterList(order.filterModuleSIList());
 
-		FireModel fireModel = new FireModel(concern, order);
+		FireModel fireModel = resources.getFIRE2Resources().getFireModel(concern, order);
 
 		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS);
 

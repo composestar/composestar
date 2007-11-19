@@ -29,6 +29,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterActi
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.Annotation;
@@ -70,6 +71,7 @@ public class CKRET implements CTCommonModule
 		INCRE incre = INCRE.instance();
 
 		secretResources = resources.getResourceManager(SECRETResources.class, true);
+		secretResources.setFIRE2Resources(resources.getResourceManager(FIRE2Resources.class));
 		loadConfiguration(resources);
 
 		try

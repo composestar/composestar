@@ -9,10 +9,6 @@
  */
 package Composestar.Core.RepositoryImplementation;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -165,7 +161,7 @@ public class DataStore implements Serializable, Cloneable
 				// OOPS this is very bad!!!
 				if (DEBUG)
 				{
-					logger.warn("Overwriting existing object '" + old + "' with id '" + id + "' with new object '"
+					logger.error("Overwriting existing object '" + old + "' with id '" + id + "' with new object '"
 							+ obj + "'...");
 				}
 				map.put(id, obj);

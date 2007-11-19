@@ -24,9 +24,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.DIGGER2.Resolver;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
+import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
@@ -80,8 +82,10 @@ public class FilterActionView extends CpsView
 		selector = inSelector;
 
 		// addTestCells();
+		FIRE2Resources f2res = data.getResources().getResourceManager(FIRE2Resources.class);
 
-		FireModel fireModel = new FireModel(focusConcern);
+		FireModel fireModel = f2res.getFireModel(focusConcern, (FilterModuleOrder) focusConcern
+				.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY));
 		// TODO: IF/OF
 		ExecutionModel execModel = fireModel.getExecutionModel(filterPos, selector);
 		logger.debug("ExecutionModel = " + execModel);
@@ -105,20 +109,14 @@ public class FilterActionView extends CpsView
 		}
 
 		/*
-		double x = 0;
-		for (SwimlaneVertex sl : swimlanes.values())
-		{
-			//Map map = sl.getAttributes();
-			//Rectangle2D bounds = GraphConstants.getBounds(map);
-			//bounds.setFrame(x, bounds.getY(), bounds.getWidth(), bounds.getHeight());
-			//x += bounds.getWidth();
-			logger.info(swimlanes);
-			sl.translate(x, 0);
-			Map map = sl.getAttributes();
-			Rectangle2D bounds = GraphConstants.getBounds(map);
-			x += bounds.getWidth();
-		}
-		*/
+		 * double x = 0; for (SwimlaneVertex sl : swimlanes.values()) { //Map
+		 * map = sl.getAttributes(); //Rectangle2D bounds =
+		 * GraphConstants.getBounds(map); //bounds.setFrame(x, bounds.getY(),
+		 * bounds.getWidth(), bounds.getHeight()); //x += bounds.getWidth();
+		 * logger.info(swimlanes); sl.translate(x, 0); Map map =
+		 * sl.getAttributes(); Rectangle2D bounds =
+		 * GraphConstants.getBounds(map); x += bounds.getWidth(); }
+		 */
 	}
 
 	/*
@@ -195,7 +193,8 @@ public class FilterActionView extends CpsView
 			BaseFlowChartVertex nextCell = stateVertices.get(state);
 			if (nextCell == null)
 			{
-				if (flowNode.containsName(FlowNode.SUBSTITUTED_MESSAGE_ACTION_NODE) || flowNode.containsName(FlowNode.ANY_MESSAGE_ACTION_NODE))
+				if (flowNode.containsName(FlowNode.SUBSTITUTED_MESSAGE_ACTION_NODE)
+						|| flowNode.containsName(FlowNode.ANY_MESSAGE_ACTION_NODE))
 				{
 					logger.info("Adding MCB Annotation");
 					ExecCollectionEdge oldEdge = edge;
@@ -203,7 +202,7 @@ public class FilterActionView extends CpsView
 					edge.setSource(oldEdge.getSource());
 					// TODO: add MCB annotation
 				}
-				
+
 				if (flowNode.containsName(FlowNode.CONDITION_EXPRESSION_NODE)
 						&& !flowNode.containsName(FlowNode.TRUE_NODE))
 				{
@@ -243,9 +242,10 @@ public class FilterActionView extends CpsView
 							{
 								nextCell = new MethodExecutionVertex(msg);
 							}
-							else {
+							else
+							{
 								nextCell = new SIMethodExecutionVertex(msg);
-							}							
+							}
 						}
 						catch (ModuleException e)
 						{
@@ -275,9 +275,7 @@ public class FilterActionView extends CpsView
 						}
 					}
 				}
-				
-				
-				
+
 				if (nextCell != null)
 				{
 					// layout.insert(_cell);
@@ -301,7 +299,7 @@ public class FilterActionView extends CpsView
 				edge.setSource(nextCell.getPort());
 				sourceCell = nextCell;
 			}
-			
+
 			if (flowNode.containsName(FlowNode.RETURN_NODE))
 			{
 				logger.info("Adding return edge");

@@ -19,6 +19,7 @@ import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
+import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.CallToOtherMethod;
@@ -105,6 +106,8 @@ public class ModelBuilder implements CTCommonModule
 
 	private ModuleInfo moduleinfo;
 
+	private FIRE2Resources f2res;
+
 	/**
 	 * Creates the ModelBuilder.
 	 */
@@ -128,6 +131,7 @@ public class ModelBuilder implements CTCommonModule
 		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy, resources);
 
 		dataStore = DataStore.instance();
+		f2res = resources.getResourceManager(FIRE2Resources.class);
 		startInliner();
 	}
 
@@ -221,7 +225,7 @@ public class ModelBuilder implements CTCommonModule
 		// get filtermodules:
 		modules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
 
-		currentFireModelIF = new FireModel(concern, modules);
+		currentFireModelIF = f2res.getFireModel(concern, modules);
 		currentFireModelOF = currentFireModelIF;
 
 		// iterate methods:

@@ -246,7 +246,13 @@ public class FlowModelExtractor
 
 		private Set<String> names;
 
-		private RepositoryEntity repositoryLink;
+		// /**
+		// * The reference to the repository item. Will be used to resolve the
+		// * transient repository entity.
+		// */
+		// private String repositoryLink;
+
+		private/* transient */RepositoryEntity repositoryEntity;
 
 		/**
 		 * Contains all transitions originating from this node.
@@ -259,13 +265,14 @@ public class FlowModelExtractor
 		 * @param names
 		 * @param repositoryLink
 		 */
-		public BasicFlowNode(Set<String> names, RepositoryEntity repositoryLink)
+		public BasicFlowNode(Set<String> innames, RepositoryEntity entity)
 		{
 			super();
 
-			this.names = names;
-			this.repositoryLink = repositoryLink;
-
+			names = innames;
+			repositoryEntity = entity;
+			// repositoryLink = repositoryEntity.getRepositoryKey();
+			// System.err.println("FlowNode: " + repositoryLink);
 			transitions = new ArrayList<FlowTransition>();
 		}
 
@@ -340,7 +347,7 @@ public class FlowModelExtractor
 		 */
 		public RepositoryEntity getRepositoryLink()
 		{
-			return repositoryLink;
+			return repositoryEntity;
 		}
 	}
 

@@ -26,6 +26,7 @@ import java.util.Iterator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.ExecutionModel;
+import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -37,7 +38,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Preprocessor implements CTCommonModule
 {
-	private final static String MODULE_NAME = "FIRE";
+	public final static String MODULE_NAME = "FIRE";
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
@@ -69,7 +70,9 @@ public class Preprocessor implements CTCommonModule
 
 	private final static File EXECUTION_OUT = new File("./execution.gst");
 
-	public final static String RESULT_ID = "FirePreprocessingResult";
+	// public final static String RESULT_ID = "FirePreprocessingResult";
+
+	protected FIRE2Resources fire2Resources;
 
 	public Preprocessor()
 	{
@@ -86,6 +89,7 @@ public class Preprocessor implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
+		fire2Resources = resources.getResourceManager(FIRE2Resources.class, true);
 		preprocess();
 	}
 
@@ -106,7 +110,7 @@ public class Preprocessor implements CTCommonModule
 
 	private void preprocessModule(FilterModule module)
 	{
-		logger.debug("Preprocessing Filter Module: " + module.getName());
+		logger.debug("Preprocessing Filter Module: " + module.getQualifiedName());
 
 		// build AST:
 		Graph grooveAstIF = buildAst(module, true);
@@ -131,7 +135,9 @@ public class Preprocessor implements CTCommonModule
 		// store result:
 		FirePreprocessingResult result = new FirePreprocessingResult(flowModelIF, executionModelIF, flowModelOF,
 				executionModelOF);
-		module.dynamicmap.put(RESULT_ID, result);
+
+		fire2Resources.addPreprocessingResult(module, result);
+		// module.dynamicmap.put(RESULT_ID, result);
 	}
 
 	private void loadGrammars()

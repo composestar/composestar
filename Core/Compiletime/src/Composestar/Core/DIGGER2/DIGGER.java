@@ -21,6 +21,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
+import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
@@ -84,6 +85,8 @@ public class DIGGER implements CTCommonModule
 	 */
 	protected List<Breadcrumb> allCrumbs;
 
+	protected FIRE2Resources f2res;
+
 	public DIGGER()
 	{}
 
@@ -103,6 +106,8 @@ public class DIGGER implements CTCommonModule
 		resources.put(DispatchGraph.REPOSITORY_KEY, graph);
 		allCrumbs = new ArrayList<Breadcrumb>();
 		filthinit.stop();
+
+		f2res = resources.getResourceManager(FIRE2Resources.class);
 
 		// step 1: breadcrumb creation, the crumbs will not be resolved
 		logger.info("Step 1: breadcrumb creation");
@@ -157,7 +162,7 @@ public class DIGGER implements CTCommonModule
 					logger.info("Generating dispatch graph for: " + concern.getQualifiedName());
 				}
 
-				FireModel fm = new FireModel(concern, fmOrder);
+				FireModel fm = f2res.getFireModel(concern, fmOrder);
 				switch (graph.getMode())
 				{
 					case DispatchGraph.MODE_BASIC:

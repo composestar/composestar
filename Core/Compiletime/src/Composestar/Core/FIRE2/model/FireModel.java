@@ -22,7 +22,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.preprocessing.FirePreprocessingResult;
-import Composestar.Core.FIRE2.preprocessing.Preprocessor;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
@@ -112,24 +111,13 @@ public class FireModel
 	private ExtendedFlowNode[][] fmConditionFlowNodes;
 
 	/**
-	 * Creates a fire model for the given concern. The FilterModuleOrder used
-	 * for this fire model is the 'SingleOrder' FilterModuleOrder.
-	 * 
-	 * @param concern The concern for which the fire model needs to be created.
-	 */
-	public FireModel(Concern concern)
-	{
-		this(concern, (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY));
-	}
-
-	/**
 	 * Creates a fire model for the given concern, using the given
 	 * FilterModuleOrder.
 	 * 
 	 * @param concern The concern for which the fire model needs to be created.
 	 * @param order The FilterModuleOrder to be used.
 	 */
-	public FireModel(Concern concern, FilterModuleOrder order)
+	protected FireModel(FIRE2Resources resources, Concern concern, FilterModuleOrder order)
 	{
 		this.concern = concern;
 
@@ -142,7 +130,7 @@ public class FireModel
 			modules[i] = v.get(i);
 		}
 
-		initialize(modules);
+		initialize(modules, resources);
 	}
 
 	/**
@@ -152,7 +140,7 @@ public class FireModel
 	 * @param concern
 	 * @param modules
 	 */
-	public FireModel(Concern concern, FilterModule[] modules)
+	protected FireModel(FIRE2Resources resources, Concern concern, FilterModule[] modules)
 	{
 		this.concern = concern;
 
@@ -164,7 +152,7 @@ public class FireModel
 			fmsi[i] = new FilterModuleSuperImposition(ref);
 		}
 
-		initialize(fmsi);
+		initialize(fmsi, resources);
 	}
 
 	/**
@@ -180,15 +168,15 @@ public class FireModel
 		return extendedFlowModels[filterPosition];
 	}
 
-	private void initialize(FilterModuleSuperImposition[] modules)
+	private void initialize(FilterModuleSuperImposition[] modules, FIRE2Resources fire2Resources)
 	{
 		filterModules = modules;
 
-		initializeBaseModels();
+		initializeBaseModels(fire2Resources);
 		createFlowModel();
 	}
 
-	private void initializeBaseModels()
+	private void initializeBaseModels(FIRE2Resources fire2Resources)
 	{
 		flowModels = new FlowModel[2][filterModules.length];
 		executionModels = new ExecutionModel[2][filterModules.length];
@@ -196,8 +184,10 @@ public class FireModel
 		// Get the FlowModels and ExecutionModels of each FilterModule
 		for (int i = 0; i < filterModules.length; i++)
 		{
-			FirePreprocessingResult result = (FirePreprocessingResult) filterModules[i].getFilterModule().getRef()
-					.getDynObject(Preprocessor.RESULT_ID);
+			// FirePreprocessingResult result = (FirePreprocessingResult)
+			// filterModules[i].getFilterModule().getRef()
+			// .getDynObject(Preprocessor.RESULT_ID);
+			FirePreprocessingResult result = fire2Resources.getPreprocessingResult(filterModules[i].getFilterModule());
 
 			// input filters
 			flowModels[INPUT_FILTERS][i] = result.getFlowModelInputFilters();

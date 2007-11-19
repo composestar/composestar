@@ -37,6 +37,7 @@ import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.MetaResource;
 import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.Resources.ModuleResourceManager;
 
@@ -68,6 +69,8 @@ public class SECRETResources implements ModuleResourceManager
 	 * The execution model labeler to use
 	 */
 	protected transient Labeler labeler;
+
+	protected transient FIRE2Resources fire2Resources;
 
 	public SECRETResources()
 	{
@@ -172,5 +175,15 @@ public class SECRETResources implements ModuleResourceManager
 	public Labeler getLabeler()
 	{
 		return labeler;
+	}
+
+	public FIRE2Resources getFIRE2Resources()
+	{
+		return fire2Resources;
+	}
+
+	public void setFIRE2Resources(FIRE2Resources res)
+	{
+		fire2Resources = res;
 	}
 }

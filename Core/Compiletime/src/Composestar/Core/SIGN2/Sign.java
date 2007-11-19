@@ -23,9 +23,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPa
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
+import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
@@ -85,6 +87,8 @@ public class Sign implements CTCommonModule
 	// ctl-reusable fields:
 	private Dictionary<String, Predicate> dictionary;
 
+	private FIRE2Resources fire2Resources;
+
 	public Sign()
 	{
 		init();
@@ -101,10 +105,11 @@ public class Sign implements CTCommonModule
 	/**
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public void run(CommonResources inresc) throws ModuleException
 	{
 		try
 		{
+			fire2Resources = inresc.getResourceManager(FIRE2Resources.class);
 			error = false;
 			logger.debug("Start signature generation and checking");
 
@@ -137,7 +142,7 @@ public class Sign implements CTCommonModule
 			logger.debug("Finishing");
 			finishing();
 
-			printConcernMethods(resources);
+			printConcernMethods(inresc);
 
 			logger.debug("signature generation and checking done");
 		}
@@ -187,7 +192,8 @@ public class Sign implements CTCommonModule
 			}
 			else
 			{
-				FireModel model = new FireModel(concern);
+				FireModel model = fire2Resources.getFireModel(concern, (FilterModuleOrder) concern
+						.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY));
 				fireModels.put(concern, model);
 
 				// initialize distinguishable set:

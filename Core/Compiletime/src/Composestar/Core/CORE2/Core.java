@@ -9,12 +9,13 @@ import java.util.Iterator;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * @author Arjan de Roo
@@ -23,6 +24,10 @@ public class Core implements CTCommonModule
 {
 	public static final String MODULE_NAME = "CORE";
 
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
+	private FIRE2Resources f2res;
+
 	private CoreConflictDetector detector = new CoreConflictDetector();
 
 	public Core()
@@ -30,6 +35,7 @@ public class Core implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
+		f2res = resources.getResourceManager(FIRE2Resources.class);
 		// Iterate over all concerns
 		Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
@@ -47,13 +53,11 @@ public class Core implements CTCommonModule
 
 	private void findConflicts(Concern concern)
 	{
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:   o/ ");
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:  /|   ... " + concern.getName() + " ...");
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:  / \\ ");
+		logger.debug("Checking concern: " + concern.getName() + " ...");
 
 		FilterModuleOrder filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
-		FireModel fireModel = new FireModel(concern, filterModules);
+		FireModel fireModel = f2res.getFireModel(concern, filterModules);
 
 		CoreConflict[] conflicts = detector.findConflicts(fireModel);
 		printConflicts(conflicts);
@@ -63,7 +67,7 @@ public class Core implements CTCommonModule
 	{
 		for (CoreConflict conflict : conflicts)
 		{
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, conflict.getDescription(), conflict.getLocation());
+			logger.warn(conflict.getDescription(), conflict.getLocation());
 		}
 	}
 }

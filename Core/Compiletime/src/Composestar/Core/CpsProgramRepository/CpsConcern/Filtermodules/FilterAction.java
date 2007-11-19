@@ -4,6 +4,8 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 public class FilterAction extends RepositoryEntity
 {
+	private static final long serialVersionUID = 1318091104465614214L;
+
 	public final static int FLOW_CONTINUE = 1;
 
 	public final static int FLOW_EXIT = 2;
