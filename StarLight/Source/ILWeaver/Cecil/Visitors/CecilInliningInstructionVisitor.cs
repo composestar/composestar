@@ -624,30 +624,44 @@ namespace Composestar.StarLight.ILWeaver
 
             if (filterAction.BookKeeping)
             {
-                WeaveBookKeeping(filterAction);
+                WeaveBookKeepingPre(filterAction);
             }
 
             FilterActionWeaveStrategy strategy = FilterActionStrategyDispatcher.GetFilterActionWeaveStrategy(filterAction.Type);
 
             strategy.Weave(this, filterAction, CalledMethod);
+
+            if (filterAction.BookKeeping)
+            {
+                WeaveBookKeepingPost(filterAction);
+            }
         }
+
+        #region Filter Action Resource Operation Book Keeping
+
+        private static string[] FILTER_ACTION_SEPARATOR = new string[1] { "<FilterAction>" };
 
         /// <summary>
         /// Adds bookkeeping information
         /// </summary>
         /// <param name="filterAction"></param>
-        private void WeaveBookKeeping(FilterAction filterAction)
+        private void WeaveBookKeepingPre(FilterAction filterAction)
         {
             VariableDefinition jpcVar = CreateJoinPointContextLocal();
 
             if (!String.IsNullOrEmpty(filterAction.ResourceOperations))
             {
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-                // resourceoperations list
-                Instructions.Add(Worker.Create(OpCodes.Ldstr, filterAction.ResourceOperations));
-                Instructions.Add(Worker.Create(OpCodes.Callvirt,
-                    CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
-                    CachedMethodDefinition.JoinPointContextAddResourceOperationList)));
+                string[] postops = filterAction.ResourceOperations.Split(FILTER_ACTION_SEPARATOR, 2, StringSplitOptions.RemoveEmptyEntries);
+                if (postops.Length >= 1 && !String.IsNullOrEmpty(postops[0]))
+                {
+
+                    Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+                    // resourceoperations list
+                    Instructions.Add(Worker.Create(OpCodes.Ldstr, postops[0].Trim()));
+                    Instructions.Add(Worker.Create(OpCodes.Callvirt,
+                        CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
+                        CachedMethodDefinition.JoinPointContextAddResourceOperationList)));
+                }
             }
 
             // Create FilterAction object:
@@ -724,6 +738,33 @@ namespace Composestar.StarLight.ILWeaver
                 }
             }
         }
+
+        /// <summary>
+        /// Adds bookkeeping information after the filter action. This only hadd the operations after the filter action execution (which could be none).
+        /// </summary>
+        /// <param name="filterAction"></param>
+        private void WeaveBookKeepingPost(FilterAction filterAction)
+        {
+            if (String.IsNullOrEmpty(filterAction.ResourceOperations))
+            {
+                return;
+            }
+
+            string[] postops = filterAction.ResourceOperations.Split(FILTER_ACTION_SEPARATOR, 2, StringSplitOptions.RemoveEmptyEntries);
+            if (postops.Length >= 2 && !String.IsNullOrEmpty(postops[1]))
+            {
+                VariableDefinition jpcVar = CreateJoinPointContextLocal();
+
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+                // resourceoperations list
+                Instructions.Add(Worker.Create(OpCodes.Ldstr, postops[1].Trim()));
+                Instructions.Add(Worker.Create(OpCodes.Callvirt,
+                    CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
+                    CachedMethodDefinition.JoinPointContextAddResourceOperationList)));
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Add a jump to another block

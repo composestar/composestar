@@ -198,7 +198,7 @@ public class ResourceOperationLabelerEx implements Labeler
 			{
 				if (filterAction != null && lbl.getType() == LabelType.Node && lbl.getLabel().equals(filterAction))
 				{
-					int idx = result.indexOf(FILTER_ACTION_PREFIX + filterAction);
+					int idx = result.indexOf(FILTER_ACTION_SEPARATOR);
 					if (idx > -1)
 					{
 						if (idx != result.size() - 1)
@@ -213,7 +213,7 @@ public class ResourceOperationLabelerEx implements Labeler
 					}
 					else
 					{
-						result.add(FILTER_ACTION_PREFIX + filterAction);
+						result.add(FILTER_ACTION_SEPARATOR);
 					}
 					continue;
 				}
