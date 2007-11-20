@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<buildconfiguration xmlns="http://composestar.sourceforge.net/schema/BuildConfiguration">
+	<!-- most basic example -->
+	<project name="test" platform="dotNet" language="JSharp" base="." mainclass="foo.bar">
+		<sources />
+		<concerns />
+	</project>
+	<secret xmlns:s="http://composestar.sourceforge.net/schema/SecretConfiguration">
+		<s:resource name="message">
+			<s:operation>discard</s:operation>
+			<s:operation>dispatch</s:operation>
+			<s:operation>exit</s:operation>
+			<s:operation>return</s:operation>
+		</s:resource>
+		<s:resource name="target">
+			<s:operation>read</s:operation>
+			<s:operation>write</s:operation>
+		</s:resource>
+		<s:resource name="selector">
+			<s:operation>read</s:operation>
+			<s:operation>write</s:operation>
+		</s:resource>
+		<s:resource name="return">
+			<s:operation>discard</s:operation>
+			<s:operation>read</s:operation>
+			<s:operation>write</s:operation>
+		</s:resource>
+		<s:resource name="arg">
+			<s:operation>discard</s:operation>
+			<s:operation>read</s:operation>
+			<s:operation>write</s:operation>
+		</s:resource>
+
+		<s:action priority="-100">
+			<!-- Matching part, always happens before a filter action can do anything -->
+			<s:label type="transition"><![CDATA[<NameMatchingPart-any-false>]]></s:label>
+			<s:label type="transition"><![CDATA[<NameMatchingPart-false-star>]]></s:label>
+			<s:label type="transition"><![CDATA[<NameMatchingPart-false-true>]]></s:label>
+			<s:label type="transition"><![CDATA[<NameMatchingPart-star-star>]]></s:label>
+			<s:label type="transition"><![CDATA[<NameMatchingPart-star-true>]]></s:label>
+			<s:label type="transition"><![CDATA[<NameMatchingPart-true-star>]]></s:label>
+			<s:label type="transition"><![CDATA[<NameMatchingPart-true-true>]]></s:label>
+			<s:label type="transition"><![CDATA[<SignatureMatchingPart-false>]]></s:label>
+			<s:label type="transition"><![CDATA[<SignatureMatchingPart-true-star>]]></s:label>
+			<s:label type="transition"><![CDATA[<SignatureMatchingPart-true-true>]]></s:label>
+			<s:sequence resource="target">read</s:sequence>
+			<s:sequence resource="selector">read</s:sequence>
+		</s:action>
+
+		<s:action priority="-1">
+			<!-- Message substitution happens before the execution of a filter action -->
+			<s:label type="node"><![CDATA[SubstitutedMessageAction]]></s:label>
+			<s:sequence resource="target">write</s:sequence>
+			<s:sequence resource="selector">write</s:sequence>
+		</s:action>
+
+		<s:action priority="1">
+			<!-- The flow is changed after the filter execution -->
+			<s:label type="node"><![CDATA[ReturnFlowAction]]></s:label>
+			<s:sequence resource="message">return</s:sequence>
+		</s:action>
+
+		<s:action priority="1">
+			<!-- The flow is changed after the filter execution -->
+			<s:label type="node"><![CDATA[ExitFlowAction]]></s:label>
+			<s:sequence resource="message">exit</s:sequence>
+		</s:action>
+
+
+		<s:rule resource="message" type="constraint">
+			<s:pattern>(exit)(return|dispatch)</s:pattern>
+			<s:message>Can not return or dispatch a message after an exit.</s:message>
+		</s:rule>
+
+		<s:rule resource="message" type="constraint">
+			<s:pattern>(return)(return)</s:pattern>
+			<s:message>A message can be returned only once.</s:message>
+		</s:rule>
+
+		<s:rule resource="*" type="constraint">
+			<s:pattern>(discard).+</s:pattern>
+			<s:message>Discarded resources can not be accessed.</s:message>
+		</s:rule>
+	</secret>
+</buildconfiguration>

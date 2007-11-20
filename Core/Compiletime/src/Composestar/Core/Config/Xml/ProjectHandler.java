@@ -72,31 +72,31 @@ public class ProjectHandler extends DefaultBuildConfigHandler
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
 		super.endElement(uri, localName, name);
-		if ("project".equals(name) && state == STATE_PROJECT)
+		if ("project".equals(currentName) && state == STATE_PROJECT)
 		{
 			returnHandler();
 		}
-		else if ("sources".equals(name) && state == STATE_SOURCES)
+		else if ("sources".equals(currentName) && state == STATE_SOURCES)
 		{
 			state = STATE_PROJECT;
 			project.addSources(sourceTypeHandler.getSources());
 			sourceTypeHandler = null;
 		}
-		else if ("concerns".equals(name) && state == STATE_CONCERNS)
+		else if ("concerns".equals(currentName) && state == STATE_CONCERNS)
 		{
 			state = STATE_PROJECT;
 		}
-		else if ("concern".equals(name) && state == STATE_CONCERNS)
+		else if ("concern".equals(currentName) && state == STATE_CONCERNS)
 		{
 			project.addConcern(charData.toString(), concernEnabled);
 		}
-		else if ("dependencies".equals(name) && state == STATE_DEPENDENCIES)
+		else if ("dependencies".equals(currentName) && state == STATE_DEPENDENCIES)
 		{
 			state = STATE_PROJECT;
 			project.addDependencies(dependencyTypeHandler.getDependencies());
 			dependencyTypeHandler = null;
 		}
-		else if ("resources".equals(name) && state == STATE_RESOURCES)
+		else if ("resources".equals(currentName) && state == STATE_RESOURCES)
 		{
 			state = STATE_PROJECT;
 			project.addResources(resourceTypeHandler.getResources());
@@ -112,7 +112,7 @@ public class ProjectHandler extends DefaultBuildConfigHandler
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
 		super.startElement(uri, localName, name, attributes);
-		if ("project".equals(name) && state == 0)
+		if ("project".equals(currentName) && state == 0)
 		{
 			state = STATE_PROJECT;
 			project = config.getNewProject();
@@ -131,18 +131,18 @@ public class ProjectHandler extends DefaultBuildConfigHandler
 				throw new SAXParseException(e.getMessage(), locator);
 			}
 		}
-		else if ("sources".equals(name) && state == STATE_PROJECT)
+		else if ("sources".equals(currentName) && state == STATE_PROJECT)
 		{
 			state = STATE_SOURCES;
 			sourceTypeHandler = new SourceTypeHandler(reader, this, "sources");
 			reader.setContentHandler(sourceTypeHandler);
 			sourceTypeHandler.startElement(uri, localName, name, attributes);
 		}
-		else if ("concerns".equals(name) && state == STATE_PROJECT)
+		else if ("concerns".equals(currentName) && state == STATE_PROJECT)
 		{
 			state = STATE_CONCERNS;
 		}
-		else if ("concern".equals(name) && state == STATE_CONCERNS)
+		else if ("concern".equals(currentName) && state == STATE_CONCERNS)
 		{
 			String en = attributes.getValue("enabled");
 			if (en == null)
@@ -155,14 +155,14 @@ public class ProjectHandler extends DefaultBuildConfigHandler
 				concernEnabled = "true".equalsIgnoreCase(en) || "1".equals(en) || (en.length() == 0);
 			}
 		}
-		else if ("dependencies".equals(name) && state == STATE_PROJECT)
+		else if ("dependencies".equals(currentName) && state == STATE_PROJECT)
 		{
 			state = STATE_DEPENDENCIES;
 			dependencyTypeHandler = new DependencyTypeHandler(reader, this, "dependencies");
 			reader.setContentHandler(dependencyTypeHandler);
 			dependencyTypeHandler.startElement(uri, localName, name, attributes);
 		}
-		else if ("resources".equals(name) && state == STATE_PROJECT)
+		else if ("resources".equals(currentName) && state == STATE_PROJECT)
 		{
 			state = STATE_RESOURCES;
 			resourceTypeHandler = new ResourceTypeHandler(reader, this, "resources");

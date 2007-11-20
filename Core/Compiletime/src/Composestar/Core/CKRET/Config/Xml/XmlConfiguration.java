@@ -53,6 +53,8 @@ public class XmlConfiguration extends CpsBaseHandler
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CKRET.MODULE_NAME + ".Config");
 
+	public static final String NAMESPACE = "http://composestar.sourceforge.net/schema/SecretConfiguration";
+
 	protected static final int STATE_SECRET = 1;
 
 	protected SECRETResources resources;
@@ -93,6 +95,7 @@ public class XmlConfiguration extends CpsBaseHandler
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		try
 		{
+			factory.setNamespaceAware(true);
 			SAXParser parser = factory.newSAXParser();
 			XmlConfiguration dh = new XmlConfiguration(parser.getXMLReader(), null, resc);
 			parser.parse(stream, dh);
@@ -127,6 +130,7 @@ public class XmlConfiguration extends CpsBaseHandler
 		{
 			throw new IllegalArgumentException("SECRETResources can not be null");
 		}
+		namespace = NAMESPACE;
 		resources = resc;
 	}
 
@@ -140,14 +144,14 @@ public class XmlConfiguration extends CpsBaseHandler
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
 		super.startElement(uri, localName, name, attributes);
-		if (state == 0 && "secret".equals(name))
+		if (state == 0 && ("secret".equals(name) || "secret".equals(localName)))
 		{
 			state = STATE_SECRET;
 			hadSection[0] = false;
 			hadSection[1] = false;
 			hadSection[2] = false;
 		}
-		else if (state == STATE_SECRET && "resource".equals(name))
+		else if (state == STATE_SECRET && "resource".equals(currentName))
 		{
 			if (hadSection[1] || hadSection[2])
 			{
@@ -161,7 +165,7 @@ public class XmlConfiguration extends CpsBaseHandler
 			reader.setContentHandler(resh);
 			resh.startElement(uri, localName, name, attributes);
 		}
-		else if (state == STATE_SECRET && "action".equals(name))
+		else if (state == STATE_SECRET && "action".equals(currentName))
 		{
 			if (hadSection[2])
 			{
@@ -175,7 +179,7 @@ public class XmlConfiguration extends CpsBaseHandler
 			reader.setContentHandler(acth);
 			acth.startElement(uri, localName, name, attributes);
 		}
-		else if (state == STATE_SECRET && "rule".equals(name))
+		else if (state == STATE_SECRET && "rule".equals(currentName))
 		{
 			hadSection[2] = true;
 			if (ruleh == null)
@@ -201,7 +205,7 @@ public class XmlConfiguration extends CpsBaseHandler
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
 		super.endElement(uri, localName, name);
-		if (state == STATE_SECRET && "secret".equals(name))
+		if (state == STATE_SECRET && ("secret".equals(name) || "secret".equals(localName)))
 		{
 			returnHandler(uri, localName, name);
 		}

@@ -41,6 +41,8 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.CKRET.SECRETResources;
+import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.Xml.Legacy.ConvertBuildConfig;
 import Composestar.Core.Exception.ConfigurationException;
@@ -53,7 +55,7 @@ import Composestar.Utils.IOStream;
  */
 public class BuildConfigHandler extends DefaultBuildConfigHandler
 {
-	protected static final String CURRENT_VERSION = "2.0";
+	public static final String CURRENT_VERSION = "2.0";
 
 	protected String version;
 
@@ -174,6 +176,7 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		try
 		{
+			factory.setNamespaceAware(true);
 			parser = factory.newSAXParser();
 			reader = parser.getXMLReader();
 			parser.parse(source, this);
@@ -208,9 +211,13 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		super.endElement(uri, localName, name);
 		if (version != null)
 		{
-			if ("buildconfiguration".equals(name))
+			if ("buildconfiguration".equals(name) || "buildconfiguration".equals(localName))
 			{
 				returnHandler();
+			}
+			else if ("secret".equals(currentName))
+			{
+				// nop
 			}
 			else
 			{
@@ -229,7 +236,7 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		super.startElement(uri, localName, name, attributes);
 		if (version == null)
 		{
-			if ("buildconfiguration".equals(name))
+			if ("buildconfiguration".equals(name) || "buildconfiguration".equals(localName))
 			{
 				version = attributes.getValue("version");
 				if (version == null)
@@ -238,7 +245,7 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 				}
 				// TODO: check version
 			}
-			else if ("BuildConfiguration".equals(name))
+			else if ("BuildConfiguration".equals(currentName))
 			{
 				logger.info("BuildConfiguration version 1 detected.");
 				throw new OutdatedFormatException("1.0", CURRENT_VERSION);
@@ -251,19 +258,26 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		else
 		{
 			// don't process anything else unless a version has been defined
-			if ("settings".equals(name))
+			if ("settings".equals(currentName))
 			{
 				reader.setContentHandler(new SettingsHandler(reader, this));
 				reader.getContentHandler().startElement(uri, localName, name, attributes);
 			}
-			else if ("project".equals(name))
+			else if ("project".equals(currentName))
 			{
 				reader.setContentHandler(new ProjectHandler(reader, this));
 				reader.getContentHandler().startElement(uri, localName, name, attributes);
 			}
-			else if ("filters".equals(name))
+			else if ("filters".equals(currentName))
 			{
 				reader.setContentHandler(new FilterHandler(reader, this));
+				reader.getContentHandler().startElement(uri, localName, name, attributes);
+			}
+			else if ("secret".equals(currentName))
+			{
+				SECRETResources resc = new SECRETResources();
+				config.setSecretResources(resc);
+				reader.setContentHandler(new XmlConfiguration(reader, this, resc));
 				reader.getContentHandler().startElement(uri, localName, name, attributes);
 			}
 			else

@@ -45,15 +45,16 @@ import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.Dependency;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
+import Composestar.Core.Config.Xml.BuildConfigHandler;
 
 /**
  * @author Michiel Hendriks
  */
 public class BuildConfigXmlWriter
 {
-	protected static final String VERSION = "2.0";
+	protected static final String VERSION = BuildConfigHandler.CURRENT_VERSION;
 
-	protected static final String XMLNS = "http://composestar.sourceforget.net/schema/BuildConfiguration";
+	protected static final String XMLNS = BuildConfigHandler.NAMESPACE;
 
 	protected BuildConfigXmlWriter()
 	{}
@@ -71,16 +72,8 @@ public class BuildConfigXmlWriter
 			return false;
 		}
 		Document xmlDoc = builder.newDocument();
-		xmlDoc.appendChild(xmlDoc.createComment(String.format("Created by %s on %s", BuildConfigXmlWriter.class,
-				SimpleDateFormat.getDateTimeInstance().format(new Date()))));
 
-		Element root = xmlDoc.createElement("buildconfiguration");
-		xmlDoc.appendChild(root);
-		root.setAttribute("version", VERSION);
-		root.setAttribute("xmlns", XMLNS);
-		writeSettings(config, xmlDoc, root);
-		writeProject(config, xmlDoc, root);
-		writeFilters(config, xmlDoc, root);
+		write(config, xmlDoc, null);
 
 		OutputFormat format = new OutputFormat();
 		format.setIndenting(true);
@@ -96,6 +89,31 @@ public class BuildConfigXmlWriter
 			return false;
 		}
 		return true;
+	}
+
+	public static final void write(BuildConfig config, Document xmlDoc, Node parent)
+	{
+		xmlDoc.appendChild(xmlDoc.createComment(String.format("Created by %s on %s", BuildConfigXmlWriter.class,
+				SimpleDateFormat.getDateTimeInstance().format(new Date()))));
+
+		Element root = xmlDoc.createElement("buildconfiguration");
+		if (parent == null)
+		{
+			xmlDoc.appendChild(root);
+		}
+		else
+		{
+			parent.appendChild(root);
+		}
+		root.setAttribute("version", VERSION);
+		root.setAttribute("xmlns", XMLNS);
+		writeSettings(config, xmlDoc, root);
+		writeProject(config, xmlDoc, root);
+		writeFilters(config, xmlDoc, root);
+		if (config.getSecretResources() != null)
+		{
+			// TODO: ...
+		}
 	}
 
 	protected static final void writeSettings(BuildConfig config, Document xmlDoc, Node root)

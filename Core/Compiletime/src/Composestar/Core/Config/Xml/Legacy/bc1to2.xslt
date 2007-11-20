@@ -2,7 +2,7 @@
 <!--
 	This XSLT will translate an version 1 Build Configuration to version 2
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://composestar.sourceforget.net/schema/BuildConfiguration">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://composestar.sourceforge.net/schema/BuildConfiguration">
 	<xsl:output method="xml" indent="yes"/>
 	
 	<xsl:template match="/BuildConfiguration">

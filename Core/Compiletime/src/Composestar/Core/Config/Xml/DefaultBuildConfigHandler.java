@@ -24,7 +24,6 @@
 
 package Composestar.Core.Config.Xml;
 
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -38,7 +37,7 @@ import Composestar.Core.Config.BuildConfig;
  */
 public abstract class DefaultBuildConfigHandler extends CpsBaseHandler
 {
-	public static final String NAMESPACE = "http://composestar.sourceforget.net/schema/BuildConfiguration";
+	public static final String NAMESPACE = "http://composestar.sourceforge.net/schema/BuildConfiguration";
 
 	protected BuildConfig config;
 
@@ -49,6 +48,7 @@ public abstract class DefaultBuildConfigHandler extends CpsBaseHandler
 	public DefaultBuildConfigHandler(XMLReader inReader, DefaultHandler inParent)
 	{
 		super(inReader, inParent);
+		namespace = NAMESPACE;
 		if (inParent instanceof DefaultBuildConfigHandler)
 		{
 			setBuildConfig(((DefaultBuildConfigHandler) inParent).getBuildConfig());
@@ -63,18 +63,5 @@ public abstract class DefaultBuildConfigHandler extends CpsBaseHandler
 	public void setBuildConfig(BuildConfig inConfig)
 	{
 		config = inConfig;
-	}
-
-	public String getName(String uri, String localName, String name) throws SAXException
-	{
-		if ("".equals(uri))
-		{
-			return name;
-		}
-		if (NAMESPACE.equals(uri))
-		{
-			return localName;
-		}
-		throw new SAXException("Unsupported namespace");
 	}
 }

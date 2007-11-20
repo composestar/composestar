@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsd:schema version="2.0" targetNamespace="http://composestar.sourceforge.net/schema/BuildConfiguration"
 	elementFormDefault="qualified" xmlns="http://composestar.sourceforge.net/schema/BuildConfiguration"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:secret="http://composestar.sourceforge.net/schema/SecretConfiguration">
 	<xsd:include schemaLocation="ComposestarConfigCommon.xsd"></xsd:include>
+	<xsd:import namespace="http://composestar.sourceforge.net/schema/SecretConfiguration" schemaLocation="../../CKRET/Config/Xml/SecretConfiguration.xsd"></xsd:import>
 	<xsd:annotation>
 		<xsd:documentation>
 			The specification for the new BuildConfiguration for Compose*. The new build configuration only contains
@@ -13,7 +14,7 @@
 	</xsd:annotation>
 	<xsd:element name="buildconfiguration" type="BuildConfiguration">
 		<xsd:annotation>
-			<xsd:documentation>A build configration must start with a buildconfiguration element.</xsd:documentation>
+			<xsd:documentation>A build configuration must start with a buildconfiguration element.</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
 	<xsd:complexType name="BuildConfiguration">
@@ -52,6 +53,10 @@
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="secret" type="secret:SecretConfig" maxOccurs="1" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Optional project specific secret configuration.</xsd:documentation>
+				</xsd:annotation></xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="version" type="versionString" default="2.0" use="optional">
 			<xsd:annotation>
@@ -318,6 +323,7 @@
 		<xsd:attribute name="createjpc" type="xsd:boolean" />
 		<xsd:attribute name="flowbehavior" type="xsd:integer" />
 		<xsd:attribute name="messagechangebehavior" type="xsd:integer" />
+		<xsd:attribute name="resourceoperations" type="xsd:string" />
 	</xsd:attributeGroup>
 	<xsd:group name="SourceTypes">
 		<xsd:annotation>

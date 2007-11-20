@@ -54,6 +54,8 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class PlatformConfigHandler extends CpsBaseHandler
 {
+	public static final String NAMESPACE = "http://composestar.sourceforge.net/schema/PlatformConfiguration";
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.Platform");
 
 	protected static final int STATE_PLATFORMS = 1;

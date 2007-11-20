@@ -51,11 +51,11 @@ public class SettingsHandler extends DefaultBuildConfigHandler
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
 		super.endElement(uri, localName, name);
-		if ("settings".equals(name))
+		if ("settings".equals(currentName))
 		{
 			returnHandler();
 		}
-		else if ("setting".equals(name))
+		else if ("setting".equals(currentName))
 		{
 			if (curSetting != null)
 			{
@@ -72,11 +72,11 @@ public class SettingsHandler extends DefaultBuildConfigHandler
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
 		super.startElement(uri, localName, name, attributes);
-		if ("settings".equals(name))
+		if ("settings".equals(currentName))
 		{
 			config.clearSettings();
 		}
-		else if ("setting".equals(name))
+		else if ("setting".equals(currentName))
 		{
 			curSetting = attributes.getValue("name");
 		}

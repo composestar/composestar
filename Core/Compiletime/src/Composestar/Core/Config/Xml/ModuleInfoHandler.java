@@ -44,6 +44,9 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class ModuleInfoHandler extends CpsBaseHandler
 {
+	// public static final String NAMESPACE =
+	// "http://composestar.sourceforge.net/schema/ModuleInfo";
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("ModuleInfo");
 
 	protected static final int STATE_MODULEINFO = 1;

@@ -62,6 +62,7 @@ public class ActionHandler extends CpsBaseHandler
 	public ActionHandler(XMLReader inReader, DefaultHandler inParent, SECRETResources resc)
 	{
 		super(inReader, inParent);
+		namespace = XmlConfiguration.NAMESPACE;
 		resources = resc;
 	}
 
@@ -80,7 +81,7 @@ public class ActionHandler extends CpsBaseHandler
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
 		super.startElement(uri, localName, name, attributes);
-		if (state == 0 && "action".equals(name))
+		if (state == 0 && "action".equals(currentName))
 		{
 			state = STATE_ACTION;
 			action = new OperationSequence();
@@ -93,12 +94,12 @@ public class ActionHandler extends CpsBaseHandler
 				action.setPriority(0);
 			}
 		}
-		else if (state == STATE_ACTION && "label".equals(name))
+		else if (state == STATE_ACTION && "label".equals(currentName))
 		{
 			state = STATE_LABEL;
 			currentLt = attributes.getValue("type");
 		}
-		else if (state == STATE_ACTION && "sequence".equals(name))
+		else if (state == STATE_ACTION && "sequence".equals(currentName))
 		{
 			state = STATE_SEQUENCE;
 			try
@@ -144,7 +145,7 @@ public class ActionHandler extends CpsBaseHandler
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
 		super.endElement(uri, localName, name);
-		if (state == STATE_ACTION && "action".equals(name))
+		if (state == STATE_ACTION && "action".equals(currentName))
 		{
 			if (action.getOperations().size() > 0 && action.getLabels().size() > 0)
 			{
@@ -152,7 +153,7 @@ public class ActionHandler extends CpsBaseHandler
 			}
 			returnHandler();
 		}
-		else if (state == STATE_LABEL && "label".equals(name))
+		else if (state == STATE_LABEL && "label".equals(currentName))
 		{
 			state = STATE_ACTION;
 			try
@@ -164,7 +165,7 @@ public class ActionHandler extends CpsBaseHandler
 				throw new SAXParseException(e.getMessage(), locator, e);
 			}
 		}
-		else if (state == STATE_SEQUENCE && "sequence".equals(name))
+		else if (state == STATE_SEQUENCE && "sequence".equals(currentName))
 		{
 			state = STATE_ACTION;
 			try

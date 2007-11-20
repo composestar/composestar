@@ -55,6 +55,7 @@ public class ResourceHandler extends CpsBaseHandler
 	public ResourceHandler(XMLReader inReader, DefaultHandler inParent, SECRETResources resc)
 	{
 		super(inReader, inParent);
+		namespace = XmlConfiguration.NAMESPACE;
 		resources = resc;
 	}
 
@@ -78,7 +79,7 @@ public class ResourceHandler extends CpsBaseHandler
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
 		super.startElement(uri, localName, name, attributes);
-		if (state == 0 && "resource".equals(name))
+		if (state == 0 && "resource".equals(currentName))
 		{
 			state = STATE_RESC;
 			try
@@ -91,7 +92,7 @@ public class ResourceHandler extends CpsBaseHandler
 			}
 			replaceResc = Boolean.parseBoolean(attributes.getValue("override"));
 		}
-		else if (state == STATE_RESC && "operation".equals(name))
+		else if (state == STATE_RESC && "operation".equals(currentName))
 		{
 			// nop
 		}
@@ -111,7 +112,7 @@ public class ResourceHandler extends CpsBaseHandler
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
 		super.endElement(uri, localName, name);
-		if (state == STATE_RESC && "resource".equals(name))
+		if (state == STATE_RESC && "resource".equals(currentName))
 		{
 			if (replaceResc)
 			{
@@ -122,7 +123,7 @@ public class ResourceHandler extends CpsBaseHandler
 			resources.addResource(resc);
 			returnHandler();
 		}
-		else if (state == STATE_RESC && "operation".equals(name))
+		else if (state == STATE_RESC && "operation".equals(currentName))
 		{
 			if (resc != null)
 			{

@@ -58,6 +58,7 @@ public class RuleHandler extends CpsBaseHandler
 	public RuleHandler(XMLReader inReader, DefaultHandler inParent, SECRETResources resc)
 	{
 		super(inReader, inParent);
+		namespace = XmlConfiguration.NAMESPACE;
 		resources = resc;
 	}
 
@@ -76,7 +77,7 @@ public class RuleHandler extends CpsBaseHandler
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
 		super.startElement(uri, localName, name, attributes);
-		if (state == 0 && "rule".equals(name))
+		if (state == 0 && "rule".equals(currentName))
 		{
 			state = STATE_RULE;
 			ConflictRule.RuleType rt = RuleType.Constraint;
@@ -115,15 +116,15 @@ public class RuleHandler extends CpsBaseHandler
 
 			rule = new ConflictRule(resc, rt);
 		}
-		else if (state == STATE_RULE && "pattern".equals(name))
+		else if (state == STATE_RULE && "pattern".equals(currentName))
 		{
 			// nop
 		}
-		else if (state == STATE_RULE && "message".equals(name))
+		else if (state == STATE_RULE && "message".equals(currentName))
 		{
 			// nop
 		}
-		else if (state == STATE_RULE && "scope".equals(name))
+		else if (state == STATE_RULE && "scope".equals(currentName))
 		{
 			// FIXME: implement
 		}
@@ -143,7 +144,7 @@ public class RuleHandler extends CpsBaseHandler
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
 		super.endElement(uri, localName, name);
-		if (state == STATE_RULE && "rule".equals(name))
+		if (state == STATE_RULE && "rule".equals(currentName))
 		{
 			if (rule.getPattern() == null)
 			{
@@ -152,7 +153,7 @@ public class RuleHandler extends CpsBaseHandler
 			resources.addRule(rule);
 			returnHandler();
 		}
-		else if (state == STATE_RULE && "pattern".equals(name))
+		else if (state == STATE_RULE && "pattern".equals(currentName))
 		{
 			try
 			{
@@ -163,11 +164,11 @@ public class RuleHandler extends CpsBaseHandler
 				throw new SAXParseException(String.format("Invalid pattern: %s", e.toString()), locator, e);
 			}
 		}
-		else if (state == STATE_RULE && "message".equals(name))
+		else if (state == STATE_RULE && "message".equals(currentName))
 		{
 			rule.setMessage(charData.toString().trim());
 		}
-		else if (state == STATE_RULE && "scope".equals(name))
+		else if (state == STATE_RULE && "scope".equals(currentName))
 		{
 			// FIXME: implement
 		}

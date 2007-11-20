@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -60,6 +61,11 @@ public class BuildConfig implements Serializable
 	 * {@link Filters}
 	 */
 	protected Filters filters;
+
+	/**
+	 * {@link SECRETResources}
+	 */
+	protected SECRETResources secretResources;
 
 	public BuildConfig()
 	{
@@ -149,5 +155,26 @@ public class BuildConfig implements Serializable
 	public Filters getFilters()
 	{
 		return filters;
+	}
+
+	/**
+	 * Optional SECRET resources set in the configuration file. When no secret
+	 * resource items were defined this will be null.
+	 * 
+	 * @return
+	 */
+	public SECRETResources getSecretResources()
+	{
+		return secretResources;
+	}
+
+	/**
+	 * Set the SECRET resources.
+	 * 
+	 * @param inresc
+	 */
+	public void setSecretResources(SECRETResources inresc)
+	{
+		secretResources = inresc;
 	}
 }

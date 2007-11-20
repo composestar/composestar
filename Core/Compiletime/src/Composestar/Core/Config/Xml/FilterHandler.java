@@ -69,18 +69,18 @@ public class FilterHandler extends DefaultBuildConfigHandler
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
 		super.startElement(uri, localName, name, attributes);
-		if (state == 0 && "filters".equals(name))
+		if (state == 0 && "filters".equals(currentName))
 		{
 			state = STATE_FILTERS;
 			filters = config.getFilters();
 		}
-		else if (state == STATE_FILTERS && "customfilter".equals(name))
+		else if (state == STATE_FILTERS && "customfilter".equals(currentName))
 		{
 			state = STATE_CUSTOM_FILTER;
 			currentCustomFilter = new CustomFilter();
 			currentCustomFilter.setName(attributes.getValue("name"));
 		}
-		else if (state == STATE_FILTERS && "filtertype".equals(name))
+		else if (state == STATE_FILTERS && "filtertype".equals(currentName))
 		{
 			state = STATE_FILTER_TYPE;
 			currentFilterType = new FilterType();
@@ -98,7 +98,7 @@ public class FilterHandler extends DefaultBuildConfigHandler
 			}
 			filters.add(currentFilterType);
 		}
-		else if (state == STATE_FILTERS && "filteraction".equals(name))
+		else if (state == STATE_FILTERS && "filteraction".equals(currentName))
 		{
 			state = STATE_FILTER_ACTION;
 			currentFilterAction = new FilterAction();

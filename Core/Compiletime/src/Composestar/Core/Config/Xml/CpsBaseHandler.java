@@ -69,6 +69,16 @@ public abstract class CpsBaseHandler extends DefaultHandler
 	protected StringBuffer charData;
 
 	/**
+	 * Must be set to the namespace this handler expects
+	 */
+	protected String namespace;
+
+	/**
+	 * Will contain the current normalized tagname
+	 */
+	protected String currentName;
+
+	/**
 	 * Get the inputstream, will detect if it's a gzip compressed file.
 	 * 
 	 * @param file
@@ -111,14 +121,53 @@ public abstract class CpsBaseHandler extends DefaultHandler
 		}
 	}
 
+	/**
+	 * Normalizes the current tag name. Returns the normalized an accepted name,
+	 * or null when not accepted.
+	 * 
+	 * @param uri
+	 * @param localName
+	 * @param name
+	 * @throws SAXException
+	 */
+	protected String normalizeName(String uri, String localName, String name)
+	{
+		if ("".equals(uri))
+		{
+			return name;
+		}
+		else if (namespace != null && namespace.equals(uri))
+		{
+			return localName;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
 		super.startElement(uri, localName, name, attributes);
+		currentName = normalizeName(uri, localName, name);
 		if (charData.length() > 0)
 		{
 			charData = new StringBuffer();
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void endElement(String uri, String localName, String name) throws SAXException
+	{
+		super.endElement(uri, localName, name);
+		currentName = normalizeName(uri, localName, name);
 	}
 
 	@Override
@@ -163,13 +212,16 @@ public abstract class CpsBaseHandler extends DefaultHandler
 				"%s encountered an unknown element at %d:%d qname=%s, localName=%s, uri=%s, state=%d", getClass()
 						.getSimpleName(), locator.getLineNumber(), locator.getColumnNumber(), name, localName, uri,
 				state);
-		logger.info(msg);
+		logger.warn(msg);
 	}
 
 	public void endUnknownElement(String uri, String localName, String name) throws SAXException
 	{
-	// System.err.println("Encountered unknown element uri:" + uri + "
-	// localName:" + localName + " name:" + name);
+		String msg = String.format(
+				"%s encountered an unknown end element at %d:%d qname=%s, localName=%s, uri=%s, state=%d", getClass()
+						.getSimpleName(), locator.getLineNumber(), locator.getColumnNumber(), name, localName, uri,
+				state);
+		logger.warn(msg);
 	}
 
 	@Override
