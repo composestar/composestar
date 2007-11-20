@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Composestar.StarLight.Entities.WeaveSpec
+namespace Composestar.StarLight.Entities.Configuration
 {
     /// <summary>
-    /// 
+    /// A conflict rule extracted from assemblies containing filter specifications.
     /// </summary>
     [Serializable]
-    [XmlType("ConflictRule", Namespace = Constants.NS)]
-    public class ConflictRule
+    [XmlType("ConflictRuleElement", Namespace = Constants.NS)]
+    public class ConflictRuleElement
     {
         private string _resource;
-        private string _expression;
+        private string _pattern;
         private bool _constraint;
+        private string _message;
 
         /// <summary>
         /// 
@@ -30,10 +31,10 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// 
         /// </summary>
         [XmlAttribute]
-        public string Expression
+        public string Pattern
         {
-            get { return _expression; }
-            set { _expression = value; }
+            get { return _pattern; }
+            set { _pattern = value; }
         }
 
         /// <summary>
@@ -44,6 +45,16 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         {
             get { return _constraint; }
             set { _constraint = value; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlAttribute]
+        public string Message
+        {
+            get { return _message; }
+            set { _message = value; }
         }
     }
 }

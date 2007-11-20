@@ -156,8 +156,8 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
                 }
                 try
                 {
-                    lst.Add(new Regex(cae.Expression));
-                    Console.Error.WriteLine("New conflict rule for {0}: {1}", cae.Resource, cae.Expression);
+                    lst.Add(new Regex(cae.Pattern));
+                    Console.Error.WriteLine("New conflict rule for {0}: {1}", cae.Resource, cae.Pattern);
                 }
                 catch (ArgumentException e)
                 {

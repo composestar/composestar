@@ -74,5 +74,16 @@ namespace Composestar.StarLight.CoreServices.Analyzer
 		/// <value>The filter actions.</value>
 		ReadOnlyCollection<FilterActionElement> FilterActions { get; }
 
+        /// <summary>
+        /// Custom resources
+        /// </summary>
+        /// <value></value>
+        ReadOnlyCollection<ResourceElement> Resources { get; }
+
+        /// <summary>
+        /// Conflict rules
+        /// </summary>
+        /// <value></value>
+        ReadOnlyCollection<ConflictRuleElement> ConflictRules { get; }
 	}
 }

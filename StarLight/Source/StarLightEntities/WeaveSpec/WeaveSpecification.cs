@@ -43,6 +43,7 @@ using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
 
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+using Composestar.StarLight.Entities.Configuration;
 #endregion
 
 namespace Composestar.StarLight.Entities.WeaveSpec
@@ -57,7 +58,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 		private string _assemblyName;
 		private List<WeaveType> _weaveTypes;
 		private List<FilterCode> _generalizedFilterCodes;
-        private List<ConflictRule> _conflictRules;
+        private List<ConflictRuleElement> _conflictRules;
 
 		/// <summary>
 		/// Gets or sets the name of the assembly this weave file applies to.
@@ -114,7 +115,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         [XmlArray("ConflictRules")]
         [XmlArrayItem("ConflictRule")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-        public List<ConflictRule> ConflictRules
+        public List<ConflictRuleElement> ConflictRules
         {
             get { return _conflictRules; }
             set { _conflictRules = value; }

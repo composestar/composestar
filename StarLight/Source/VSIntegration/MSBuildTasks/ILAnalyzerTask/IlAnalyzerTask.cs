@@ -85,6 +85,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 		private ConfigurationContainer _configContainer;
 		private List<FilterActionElement> _filterActions;
 		private List<FilterTypeElement> _filterTypes;
+        private List<ResourceElement> _resources;
+        private List<ConflictRuleElement> _conflictRules;
 		private List<AssemblyConfig> _assembliesInConfig;
 		private List<AssemblyConfig> _assembliesToStore;
 
@@ -215,6 +217,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			_configContainer = entitiesAccessor.LoadConfiguration(_repositoryFileName);
 			_filterActions = _configContainer.FilterActions;
 			_filterTypes = _configContainer.FilterTypes;
+            _resources = _configContainer.Resources;
+            _conflictRules = _configContainer.ConflictRules;
+
 			_assembliesInConfig = _configContainer.Assemblies;
 			_assembliesToStore = new List<AssemblyConfig>();
 
@@ -601,6 +606,30 @@ namespace Composestar.StarLight.MSBuild.Tasks
 				if (canAdd)
 					_filterActions.Add(fa);
 			}
+
+            // Add Resources
+            foreach (ResourceElement re in results.Resources)
+            {
+                _resources.Add(re);
+            }
+
+            // Add Conflict Rules
+            foreach (ConflictRuleElement cre in results.ConflictRules)
+            {
+                bool canAdd = true;
+                foreach (ConflictRuleElement creConfig in _conflictRules)
+                {
+                    if (creConfig.Resource.Equals(cre.Resource, StringComparison.CurrentCultureIgnoreCase) 
+                        && creConfig.Pattern.Equals(cre.Pattern, StringComparison.CurrentCultureIgnoreCase) 
+                        && creConfig.Constraint == cre.Constraint)
+                    {
+                        canAdd = false;
+                        continue;
+                    }
+                }
+                if (canAdd)
+                    _conflictRules.Add(cre);
+            }
 
 			// TODO: we miss a cleanup of the filtertypes and actions no longer in the assemblies. User has to use a rebuild.
 

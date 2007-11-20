@@ -61,6 +61,7 @@ using Composestar.StarLight.CoreServices.Logger;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Filters.FilterTypes;
+using Composestar.StarLight.ContextInfo.RuBCoDe;
 #endregion
 
 namespace Composestar.StarLight.ILAnalyzer
@@ -79,6 +80,8 @@ namespace Composestar.StarLight.ILAnalyzer
 
 		private string _skipWeavingAttribute = typeof(SkipWeavingAttribute).FullName;
 		private string _processPropertiesAttribute = typeof(ProcessPropertiesAttribute).FullName;
+        private string _resourceAttribute = typeof(ResourceAttribute).FullName;
+        private string _conflictRuleAttribute = typeof(ConflictRuleAttribute).FullName;
  
 		#endregion
 
@@ -105,6 +108,8 @@ namespace Composestar.StarLight.ILAnalyzer
 
 		private IList<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
 		private IList<FilterActionElement> _filterActions = new List<FilterActionElement>();
+        private IList<ResourceElement> _resources = new List<ResourceElement>();
+        private IList<ConflictRuleElement> _conflictRules = new List<ConflictRuleElement>();
 
 		private TypeElement _currentType;
 		#endregion
@@ -180,6 +185,22 @@ namespace Composestar.StarLight.ILAnalyzer
 		{
 			get { return _filterTypes; }
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IList<ResourceElement> Resources
+        {
+            get { return _resources; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IList<ConflictRuleElement> ConflictRules
+        {
+            get { return _conflictRules; }
+        }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to include fields.
@@ -302,6 +323,8 @@ namespace Composestar.StarLight.ILAnalyzer
 				// Log this occurrence
 				Results.Log.LogWarning(AnalyzerOrigin, Properties.Resources.ProcessPropertiesEnabled, LogSubCategory, "C00010", _assembly.Name); 
 			}
+
+            ExtractSecretData(_assembly.CustomAttributes);
 
 			// Get all the types defined in the main module. Typically you won't need
 			// to worry that your assembly contains more than one module
@@ -775,11 +798,48 @@ namespace Composestar.StarLight.ILAnalyzer
 
 		#endregion
 
-		#region Helper Functions
+        #region Conflict Rules and Resources
+        private void ExtractSecretData(CustomAttributeCollection attributes)
+		{
+            if (attributes == null || attributes.Count == 0) return;
 
-		#region Resolve and unresolved functions
+            foreach (CustomAttribute attribute in attributes)
+            {
+                if (attribute.Constructor.DeclaringType.FullName.Equals(_resourceAttribute))
+                {
+                    ResourceElement re = new ResourceElement();
+                    _resources.Add(re);
+                    re.Name = Convert.ToString(attribute.ConstructorParameters[0]);
+                    re.Operations = Convert.ToString(attribute.ConstructorParameters[1]);
+                }
+                else if (attribute.Constructor.DeclaringType.FullName.Equals(_conflictRuleAttribute))
+                {
+                    ConflictRuleElement cre = new ConflictRuleElement();
+                    _conflictRules.Add(cre);
+                    cre.Resource = Convert.ToString(attribute.ConstructorParameters[0]);
+                    cre.Pattern = Convert.ToString(attribute.ConstructorParameters[1]);
+                    if (attribute.ConstructorParameters.Count > 2)
+                    {
+                        cre.Constraint = Convert.ToBoolean(attribute.ConstructorParameters[2]);
+                    }
+                    else
+                    {
+                        cre.Constraint = true;
+                    }
+                    if (attribute.ConstructorParameters.Count > 3)
+                    {
+                        cre.Message = Convert.ToString(attribute.ConstructorParameters[3]);
+                    }
+                }
+            }
+        }
+        #endregion
 
-		/// <summary>
+        #region Helper Functions
+
+        #region Resolve and unresolved functions
+
+        /// <summary>
 		/// Adds the assembly to the resolved list.
 		/// </summary>
 		/// <param name="assemblyName">Assembly name</param>

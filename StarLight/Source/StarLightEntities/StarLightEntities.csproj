@@ -119,7 +119,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concerns\EmbeddedCode.cs" />
+    <Compile Include="Configuration\ConflictRuleElement.cs" />
     <Compile Include="Configuration\KeyValueSetting.cs" />
+    <Compile Include="Configuration\ResourceElement.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="LanguageModel\AttributeElement.cs" />
     <Compile Include="LanguageModel\ExpandedAssembly.cs" />
@@ -134,7 +136,6 @@
     </Compile>
     <Compile Include="LanguageModel\ExpandedType.cs" />
     <Compile Include="WeaveSpec\Condition.cs" />
-    <Compile Include="WeaveSpec\ConflictRule.cs" />
     <Compile Include="WeaveSpec\Instructions\FilterCode.cs" />
     <Compile Include="WeaveSpec\Reference.cs" />
     <Compile Include="WeaveSpec\WeaveCall.cs" />

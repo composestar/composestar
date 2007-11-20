@@ -74,6 +74,14 @@ namespace Composestar.StarLight.Entities.Configuration
 		/// List of filter actions.
 		/// </summary>
 		private List<FilterActionElement> _filterActions = new List<FilterActionElement>();
+        /// <summary>
+        /// List of filter actions.
+        /// </summary>
+        private List<ResourceElement> _resources = new List<ResourceElement>();
+        /// <summary>
+        /// List of filter actions.
+        /// </summary>
+        private List<ConflictRuleElement> _conflictRules = new List<ConflictRuleElement>();
 
 		/// <summary>
 		/// Gets the version.
@@ -149,6 +157,32 @@ namespace Composestar.StarLight.Entities.Configuration
 			get { return _filterActions; }
 			set { _filterActions = value; }
 		}
+
+        /// <summary>
+        /// Gets or sets the filter actions.
+        /// </summary>
+        /// <value>The filter actions.</value>
+        [XmlArray("ResourceElements")]
+        [XmlArrayItem("ResourceElement")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        public List<ResourceElement> Resources
+        {
+            get { return _resources; }
+            set { _resources = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the filter actions.
+        /// </summary>
+        /// <value>The filter actions.</value>
+        [XmlArray("ConflictRuleElements")]
+        [XmlArrayItem("ConflictRuleElement")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        public List<ConflictRuleElement> ConflictRules
+        {
+            get { return _conflictRules; }
+            set { _conflictRules = value; }
+        }
 
 		/// <summary>
 		/// Adds a setting to the list.

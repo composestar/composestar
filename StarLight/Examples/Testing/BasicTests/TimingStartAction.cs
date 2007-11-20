@@ -9,6 +9,7 @@ namespace BasicTests
 {
 	[FilterActionAttribute("TimingStartAction", FilterActionAttribute.FilterFlowBehavior.Continue,
 	   FilterActionAttribute.MessageSubstitutionBehavior.Original)]
+    [ResourceOperation("starttime.write")]
 	public class TimingStartAction : FilterAction
     {
         public override void Execute(JoinPointContext context)

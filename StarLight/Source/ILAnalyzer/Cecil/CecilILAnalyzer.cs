@@ -233,6 +233,8 @@ namespace Composestar.StarLight.ILAnalyzer
 			// Update the filtertypes
 			_analyzerResults.AddFilterType(visitor.FilterTypes);
 			_analyzerResults.AddFilterAction(visitor.FilterActions);
+            _analyzerResults.AddResource(visitor.Resources);
+            _analyzerResults.AddConflictRule(visitor.ConflictRules);
 
 			// Stop the timer
 			sw.Stop();

@@ -37,19 +37,21 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
     [AttributeUsage(AttributeTargets.Assembly, Inherited = false, AllowMultiple = true)]
     public sealed class ConflictRuleAttribute: Attribute
     {
-        private string _expression;
+        private string _pattern;
 
         private string _resource;
 
         private bool _constraint;
 
+        private string _message;
+
         /// <summary>
         /// The conflict regular expression
         /// </summary>
-        public string Expression
+        public string Pattern
         {
-            get { return _expression; }
-            set { _expression = value; }
+            get { return _pattern; }
+            set { _pattern = value; }
         }
 
         /// <summary>
@@ -71,28 +73,52 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         }
 
         /// <summary>
-        /// Create a new conflict expression
+        /// A "friendly" message explaining the conflict rule.
         /// </summary>
-        /// <param name="resc"></param>
-        /// <param name="expr"></param>
+        public string Message
+        {
+            get { return _message; }
+            set { _message = value; }
+        }
+
+        /// <summary>
+        /// Create a new conflict rule (a constraint)
+        /// </summary>
+        /// <param name="resc">The resource this rule applies to</param>
+        /// <param name="expr">The pattern to match</param>
         public ConflictRuleAttribute(String resc, String expr)
         {
             _resource = resc;
-            _expression = expr;
+            _pattern = expr;
             _constraint = true;
         }
 
         /// <summary>
-        /// Create a new conflict expression
+        /// Create a new conflict rule
         /// </summary>
-        /// <param name="resc"></param>
-        /// <param name="expr"></param>
-        /// <param name="cont"></param>
+        /// <param name="resc">The resource this rule applies to</param>
+        /// <param name="expr">The pattern to match</param>
+        /// <param name="cont">If true it's a constraint, otherwise an assertion</param>
         public ConflictRuleAttribute(String resc, String expr, bool cont)
         {
             _resource = resc;
-            _expression = expr;
+            _pattern = expr;
             _constraint = cont;
+        }
+
+        /// <summary>
+        /// Create a new conflict rule
+        /// </summary>
+        /// <param name="resc">The resource this rule applies to</param>
+        /// <param name="expr">The pattern to match</param>
+        /// <param name="cont">If true it's a constraint, otherwise an assertion</param>
+        /// <param name="msg">A friendly message</param>
+        public ConflictRuleAttribute(String resc, String expr, bool cont, string msg)
+        {
+            _resource = resc;
+            _pattern = expr;
+            _constraint = cont;
+            _message = msg;
         }
     }
 }

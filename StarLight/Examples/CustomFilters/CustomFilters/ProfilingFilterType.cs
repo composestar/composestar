@@ -9,6 +9,8 @@ using Composestar.StarLight.ContextInfo.RuBCoDe;
 
 [assembly: ConflictRule("frequency", "(write)(write)+(read)", true)]
 [assembly: ConflictRule("starttime", "(write)(write)+(read)", true)]
+[assembly: Resource("frequency", "read,write")]
+[assembly: Resource("starttime", "read,write")]
 namespace CustomFilters
 {
     [FilterTypeAttribute("Profiling", typeof(StartTimerAction), typeof(ContinueAction), 

@@ -8,6 +8,7 @@ using Composestar.StarLight.Filters.FilterTypes;
 namespace BasicTests
 {
 	[FilterActionAttribute("LoggingAction", FilterActionAttribute.FilterFlowBehavior.Continue, FilterActionAttribute.MessageSubstitutionBehavior.Original)]
+    [ResourceOperation("selector.read",true)]
 	public class LoggingAction : FilterAction
 	{
 		public override void Execute(JoinPointContext context)

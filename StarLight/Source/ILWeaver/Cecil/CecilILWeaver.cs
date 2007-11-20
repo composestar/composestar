@@ -440,14 +440,15 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ArgumentNullException("targetAssembly");
             #endregion
 
-            MethodReference tr = targetAssembly.MainModule.Import(typeof(ConflictRuleAttribute).GetConstructor(new Type[] { typeof(string), typeof(string), typeof(bool) }));
+            MethodReference tr = targetAssembly.MainModule.Import(typeof(ConflictRuleAttribute).GetConstructor(new Type[] { typeof(string), typeof(string), typeof(bool), typeof(string) }));
 
-            foreach (ConflictRule rule in _currentWeaveSpec.ConflictRules)
+            foreach (ConflictRuleElement rule in _currentWeaveSpec.ConflictRules)
             {
                 CustomAttribute ca = new CustomAttribute(tr);
                 ca.ConstructorParameters.Add(rule.Resource);
-                ca.ConstructorParameters.Add(rule.Expression);
+                ca.ConstructorParameters.Add(rule.Pattern);
                 ca.ConstructorParameters.Add(rule.Constraint);
+                ca.ConstructorParameters.Add(rule.Message);
                 targetAssembly.CustomAttributes.Add(ca);
             }
         }
