@@ -27,7 +27,6 @@ package Composestar.Core.CKRET.Config;
 import java.util.Collection;
 import java.util.Set;
 
-
 /**
  * Meta resource class, used for rules. MetaResources can not be added to the
  * resource resource list in the secret repository.
@@ -36,6 +35,8 @@ import java.util.Set;
  */
 public final class MetaResource extends Resource
 {
+	private static final long serialVersionUID = -6159814813704593170L;
+
 	/**
 	 * @param intype
 	 */

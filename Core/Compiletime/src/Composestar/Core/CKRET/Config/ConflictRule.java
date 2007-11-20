@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Constraint.java 3906 2007-11-01 12:35:06Z elmuerte $
+ * $Id$
  */
 package Composestar.Core.CKRET.Config;
 

@@ -158,6 +158,11 @@ public class CKRET implements CTCommonModule
 			XmlConfiguration.loadBuildConfig(CKRET.class.getResourceAsStream("SECRETConfig.xml"), secretResources);
 		}
 
+		if (resources.configuration().getSecretResources() != null)
+		{
+			secretResources.inheritConfiguration(resources.configuration().getSecretResources());
+		}
+
 		// load operation sequences from filter action
 		Iterator facts = DataStore.instance().getAllInstancesOf(FilterAction.class);
 		while (facts.hasNext())

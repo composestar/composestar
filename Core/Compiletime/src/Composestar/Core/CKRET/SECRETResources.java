@@ -24,21 +24,27 @@
 
 package Composestar.Core.CKRET;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.MetaResource;
 import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.CKRET.Config.ResourceType;
+import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.util.regex.Labeler;
+import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.Resources.ModuleResourceManager;
 
 /**
@@ -185,5 +191,70 @@ public class SECRETResources implements ModuleResourceManager
 	public void setFIRE2Resources(FIRE2Resources res)
 	{
 		fire2Resources = res;
+	}
+
+	/**
+	 * Inherit configuration elements (resources, conflict rules, operation
+	 * sequences) from a given SECRETResources instance. This is used to copy
+	 * the configuration from the BuildConfig instance.
+	 * 
+	 * @param from
+	 */
+	public void inheritConfiguration(SECRETResources from)
+	{
+		if (from == null)
+		{
+			return;
+		}
+		for (Resource r : from.resources.values())
+		{
+			Resource copyr = ResourceType.createResource(r.getName(), true);
+			copyr.addVocabulary(r.getVocabulary());
+			addResource(copyr);
+		}
+		for (OperationSequence os : from.opSequences)
+		{
+			OperationSequence copyos = new OperationSequence();
+			copyos.setPriority(os.getPriority());
+			for (GraphLabel lbl : os.getLabels())
+			{
+				copyos.addLabel(lbl.getLabel(), lbl.getType().toString());
+			}
+			for (Entry<Resource, List<String>> entry : os.getOperations().entrySet())
+			{
+				Resource r = getResource(entry.getKey().getName());
+				if (r == null)
+				{
+					r = ResourceType.createResource(entry.getKey().getName(), true);
+					if (!r.getType().isMeta())
+					{
+						addResource(r);
+					}
+				}
+				copyos.addOperations(r, new ArrayList<String>(entry.getValue()));
+			}
+			for (ConflictRule cr : from.rules)
+			{
+				Resource r = getResource(cr.getResource().getName());
+				if (r == null)
+				{
+					r = ResourceType.createResource(cr.getResource().getName(), true);
+					if (!r.getType().isMeta())
+					{
+						addResource(r);
+					}
+				}
+				try
+				{
+					ConflictRule copycr = new ConflictRule(r, cr.getPattern().getPatternString(), cr.getMessage(), cr
+							.getType());
+					addRule(copycr);
+				}
+				catch (PatternParseException e)
+				{
+					// TODO: handle error
+				}
+			}
+		}
 	}
 }
