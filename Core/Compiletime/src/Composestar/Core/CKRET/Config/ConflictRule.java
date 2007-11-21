@@ -69,7 +69,7 @@ public class ConflictRule implements Serializable
 		type = intype;
 	}
 
-	public ConflictRule(Resource inresource, String patternString, String inmessage, RuleType intype)
+	public ConflictRule(Resource inresource, RuleType intype, String patternString, String inmessage)
 			throws PatternParseException
 	{
 		this(inresource, intype);

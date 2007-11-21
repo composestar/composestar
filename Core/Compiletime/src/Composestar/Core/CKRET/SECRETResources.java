@@ -233,27 +233,27 @@ public class SECRETResources implements ModuleResourceManager
 				}
 				copyos.addOperations(r, new ArrayList<String>(entry.getValue()));
 			}
-			for (ConflictRule cr : from.rules)
+		}
+		for (ConflictRule cr : from.rules)
+		{
+			Resource r = getResource(cr.getResource().getName());
+			if (r == null)
 			{
-				Resource r = getResource(cr.getResource().getName());
-				if (r == null)
+				r = ResourceType.createResource(cr.getResource().getName(), true);
+				if (!r.getType().isMeta())
 				{
-					r = ResourceType.createResource(cr.getResource().getName(), true);
-					if (!r.getType().isMeta())
-					{
-						addResource(r);
-					}
+					addResource(r);
 				}
-				try
-				{
-					ConflictRule copycr = new ConflictRule(r, cr.getPattern().getPatternString(), cr.getMessage(), cr
-							.getType());
-					addRule(copycr);
-				}
-				catch (PatternParseException e)
-				{
-					// TODO: handle error
-				}
+			}
+			try
+			{
+				ConflictRule copycr = new ConflictRule(r, cr.getType(), cr.getPattern().getPatternString(), cr
+						.getMessage());
+				addRule(copycr);
+			}
+			catch (PatternParseException e)
+			{
+				// TODO: handle error
 			}
 		}
 	}

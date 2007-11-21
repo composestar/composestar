@@ -11,11 +11,18 @@
 package Composestar.DotNET2.MASTER;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Map.Entry;
 
+import Composestar.Core.CKRET.SECRETResources;
+import Composestar.Core.CKRET.Config.ConflictRule;
+import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.CKRET.Config.ResourceType;
+import Composestar.Core.CKRET.Config.ConflictRule.RuleType;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
+import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -23,7 +30,9 @@ import Composestar.Core.Resources.CommonResources;
 import composestar.dotNET2.tym.entities.ArrayOfKeyValueSetting;
 import composestar.dotNET2.tym.entities.ConfigurationContainer;
 import composestar.dotNET2.tym.entities.ConfigurationContainerDocument;
+import composestar.dotNET2.tym.entities.ConflictRuleElement;
 import composestar.dotNET2.tym.entities.KeyValueSetting;
+import composestar.dotNET2.tym.entities.ResourceElement;
 
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules and
@@ -107,6 +116,82 @@ public class StarLightMaster extends Master
 		for (Entry<String, String> override : settingsOverride.entrySet())
 		{
 			config.addSetting(override.getKey(), override.getValue());
+		}
+
+		// load SECRET config
+		SECRETResources sresc = null;
+		if (configContainer.getResourceElements() != null || configContainer.getConflictRuleElements() != null)
+		{
+			sresc = new SECRETResources();
+			config.setSecretResources(sresc);
+		}
+		if (configContainer.getResourceElements() != null)
+		{
+			for (ResourceElement re : configContainer.getResourceElements().getResourceElementList())
+			{
+				try
+				{
+					if (re.getOperations() == null || re.getName() == null || re.getName().trim().length() == 0
+							|| re.getOperations().trim().length() == 0)
+					{
+						continue;
+					}
+					Resource r = ResourceType.createResource(re.getName(), false);
+					String[] words = re.getOperations().split(",");
+					r.addVocabulary(Arrays.asList(words));
+					sresc.addResource(r);
+				}
+				catch (IllegalArgumentException e)
+				{
+					logger.warn(String.format("SECRET Resource \"%s\" is not valid", re.getName()));
+				}
+			}
+		}
+		if (configContainer.getConflictRuleElements() != null)
+		{
+			for (ConflictRuleElement cre : configContainer.getConflictRuleElements().getConflictRuleElementList())
+			{
+				try
+				{
+					ResourceType rt = ResourceType.parse(cre.getResource());
+					Resource r;
+					if (rt == ResourceType.Custom)
+					{
+						r = sresc.getResource(cre.getResource());
+					}
+					else
+					{
+						r = sresc.getResource(rt.toString());
+					}
+					if (r == null)
+					{
+						r = ResourceType.createResource(cre.getResource(), true);
+						if (!r.getType().isMeta())
+						{
+							sresc.addResource(r);
+						}
+					}
+					RuleType ruletype;
+					if (cre.getConstraint())
+					{
+						ruletype = RuleType.Constraint;
+					}
+					else
+					{
+						ruletype = RuleType.Assertion;
+					}
+					ConflictRule cr = new ConflictRule(r, ruletype, cre.getPattern(), cre.getMessage());
+					sresc.addRule(cr);
+				}
+				catch (PatternParseException pe)
+				{
+					logger.warn(String.format("Invalid regular expression \"%s\"", cre.getPattern()));
+				}
+				catch (IllegalArgumentException e)
+				{
+					logger.warn(String.format("SECRET Rule references an invalid resource \"%s\"", cre.getResource()));
+				}
+			}
 		}
 	}
 

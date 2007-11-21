@@ -72,6 +72,11 @@ public class Resource implements Serializable
 		vocabulary.clear();
 	}
 
+	/**
+	 * Add a single word to the vocabulary
+	 * 
+	 * @param word
+	 */
 	public void addVocabulary(String word)
 	{
 		vocabulary.add(word);

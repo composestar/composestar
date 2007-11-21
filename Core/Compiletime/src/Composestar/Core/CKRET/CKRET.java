@@ -176,7 +176,7 @@ public class CKRET implements CTCommonModule
 				if (!fact.getName().equals("ContinueAction") && !fact.getName().equals("SubstitutionAction")
 						&& !fact.getName().equals("AdviceAction") && !fact.getName().equals("MetaAction"))
 				{
-					logger.warn(String.format("Filter action \"%s\" has no resource operation information.", fact
+					logger.info(String.format("Filter action \"%s\" has no resource operation information.", fact
 							.getName()));
 				}
 				continue;
