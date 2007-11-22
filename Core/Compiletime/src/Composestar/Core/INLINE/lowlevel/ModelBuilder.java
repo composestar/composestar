@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -106,6 +107,7 @@ public class ModelBuilder implements CTCommonModule
 
 	private ModuleInfo moduleinfo;
 
+	@ResourceManager
 	private FIRE2Resources f2res;
 
 	/**
@@ -131,7 +133,7 @@ public class ModelBuilder implements CTCommonModule
 		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy, resources);
 
 		dataStore = DataStore.instance();
-		f2res = resources.getResourceManager(FIRE2Resources.class);
+		// f2res = resources.getResourceManager(FIRE2Resources.class);
 		startInliner();
 	}
 

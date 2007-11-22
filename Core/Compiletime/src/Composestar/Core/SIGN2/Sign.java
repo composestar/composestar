@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
@@ -87,6 +88,7 @@ public class Sign implements CTCommonModule
 	// ctl-reusable fields:
 	private Dictionary<String, Predicate> dictionary;
 
+	@ResourceManager
 	private FIRE2Resources fire2Resources;
 
 	public Sign()
@@ -109,7 +111,7 @@ public class Sign implements CTCommonModule
 	{
 		try
 		{
-			fire2Resources = inresc.getResourceManager(FIRE2Resources.class);
+			// fire2Resources = inresc.getResourceManager(FIRE2Resources.class);
 			error = false;
 			logger.debug("Start signature generation and checking");
 

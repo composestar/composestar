@@ -43,10 +43,9 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         private static Object locker = new Object();
         private static ResourceValidator _instance;
 
-        private List<string> loadedAsms;
+        private IList<string> loadedAsms;
 
-        private Dictionary<ResourceType, List<Regex>> constraints;
-        private Dictionary<ResourceType, List<Regex>> assertions;
+        private IList<ConflictRule> rules;
 
         /// <summary>
         /// Get the instance of the resource validator
@@ -70,10 +69,12 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         /// <summary>
         /// Validate the resource operation
         /// </summary>
-        /// <param name="rt"></param>
+        /// <param name="resource">the resource name</param>
+        /// <param name="altres">alternative name for the resource (used for arg vs arg0)</param>
         /// <param name="operations"></param>
         /// <param name="bk"></param>
-        public void validate(ResourceType rt, List<string> operations, BookKeeper bk)
+        /// <exception cref="ResourceOperationException">Thrown when a rule is violated.</exception>
+        public void validate(string resource, string altres, IList<string> operations, BookKeeper bk)
         {
             if (operations.Count == 0) return;
 
@@ -85,24 +86,25 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
             string ops = sb.ToString();
             sb = null;
 
-            List<Regex> lst;
-            if (constraints.TryGetValue(rt, out lst))
+            foreach (ConflictRule rule in rules)
             {
-                foreach (Regex rgx in lst)
+                if ("*".Equals(rule.Resource) || resource.Equals(rule.Resource) || 
+                    (!String.IsNullOrEmpty(altres) && altres.Equals(rule.Resource)))
                 {
-                    if (rgx.IsMatch(ops))
+                    if (rule.violatesRule(ops))
                     {
-                        throw new ResourceOperationException(rt, ops, rgx.ToString(), true, bk);
-                    }
-                }
-            }
-            if (assertions.TryGetValue(rt, out lst))
-            {
-                foreach (Regex rgx in lst)
-                {
-                    if (!rgx.IsMatch(ops))
-                    {
-                        throw new ResourceOperationException(rt, ops, rgx.ToString(), false, bk);
+                        sb = new StringBuilder();
+                        sb.Append("[");
+                        foreach (String s in operations)
+                        {
+                            if (sb.Length > 1)
+                            {
+                                sb.Append(", ");
+                            }
+                            sb.Append(s);
+                        }
+                        sb.Append("]");
+                        throw new ResourceOperationException(resource, sb.ToString(), rule, bk);
                     }
                 }
             }
@@ -110,8 +112,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
 
         private ResourceValidator()
         {
-            constraints = new Dictionary<ResourceType, List<Regex>>();
-            assertions = new Dictionary<ResourceType, List<Regex>>();
+            rules = new List<ConflictRule>();
             loadedAsms = new List<string>();
             loadRules();
         }
@@ -136,34 +137,51 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
             foreach (Object ca in asm.GetCustomAttributes(typeof(ConflictRuleAttribute), true))
             {
                 ConflictRuleAttribute cae = (ConflictRuleAttribute)ca;
-                ResourceType rt = BookKeeper.getResourceType(cae.Resource);
-                List<Regex> lst;
-                if (cae.Constraint)
+
+                string resname;
+                if ("*".Equals(cae.Resource))
                 {
-                    if (!constraints.TryGetValue(rt, out lst))
-                    {
-                        lst = new List<Regex>();
-                        constraints.Add(rt,lst);
-                    }
+                    resname = "*";
                 }
                 else
                 {
-                    if (!assertions.TryGetValue(rt, out lst))
+                    short ord;
+                    ResourceType rt = BookKeeper.getResourceType(cae.Resource, out ord);
+                    if (rt == ResourceType.Custom)
                     {
-                        lst = new List<Regex>();
-                        assertions.Add(rt, lst);
+                        resname = cae.Resource.ToLower();
+                    }
+                    else if (rt == ResourceType.ArgumentEntry && ord > -1)
+                    {
+                        resname = BookKeeper.resourceTypeAsString(rt) + ord;
+                    }
+                    else
+                    {
+                        resname = BookKeeper.resourceTypeAsString(rt);
                     }
                 }
-                try
-                {
-                    lst.Add(new Regex(cae.Pattern));
-                    Console.Error.WriteLine("New conflict rule for {0}: {1}", cae.Resource, cae.Pattern);
-                }
-                catch (ArgumentException e)
-                {
-                    // TODO: how to handle?
-                }
 
+                bool add = true;
+                foreach (ConflictRule cr in rules)
+                {
+                    if (cr.Constraint == cae.Constraint && cr.Resource.Equals(resname) && cr.Pattern.Equals(cae.Pattern))
+                    {
+                        add = false;
+                        break;
+                    }
+                }
+                if (add)
+                {
+                    try
+                    {
+                        ConflictRule cr = new ConflictRule(cae.Pattern, resname, cae.Constraint, cae.Message);
+                        rules.Add(cr);
+                    }
+                    catch (ArgumentException e)
+                    {
+                        // TODO: handle expression compile error
+                    }
+                }
             }
         }
     }

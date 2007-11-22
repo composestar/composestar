@@ -17,6 +17,7 @@ import java.util.Map;
 
 import Composestar.Core.Annotations.In;
 import Composestar.Core.Annotations.Out;
+import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -254,50 +255,86 @@ public class CommonResources implements Serializable
 		}
 	}
 
+	/**
+	 * Inject resources from the common resources
+	 * 
+	 * @param object
+	 */
 	public void inject(Object object)
 	{
 		Class<?> c = object.getClass();
-		for (Field field : c.getFields())
+		while (c != null)
 		{
-			In in = field.getAnnotation(In.class);
-			Out out = field.getAnnotation(Out.class);
-
-			if (in != null)
+			for (Field field : c.getDeclaredFields())
 			{
-				if (out != null)
+				ResourceManager rm = field.getAnnotation(ResourceManager.class);
+				if (rm != null)
 				{
-					throw new ResourceException("Field '" + field.getName() + "' "
-							+ "cannot have both an In and an Out annotation");
+					if (ModuleResourceManager.class.isAssignableFrom(field.getType()))
+					{
+						Class<? extends ModuleResourceManager> mrmType = (Class<? extends ModuleResourceManager>) field
+								.getType();
+						try
+						{
+							field.setAccessible(true);
+							field.set(object, getResourceManager(mrmType, rm.create()));
+						}
+						catch (IllegalAccessException e)
+						{
+							throw new ResourceException("Could not access field '" + field.getName() + "'");
+						}
+					}
+					else
+					{
+						logger
+								.warn(String
+										.format(
+												"Incorrect annotation on field %s.%s: %s is not a ModuleResourceManager implementation",
+												object.getClass().getName(), field.getName(), field.getType().getName()));
+					}
 				}
 
-				Object value = get(in.value());
+				In in = field.getAnnotation(In.class);
+				Out out = field.getAnnotation(Out.class);
 
-				if (value == null && in.required())
+				if (in != null)
 				{
-					throw new ResourceException("No value for required resource '" + in.value() + "'");
-				}
+					if (out != null)
+					{
+						throw new ResourceException("Field '" + field.getName() + "' "
+								+ "cannot have both an In and an Out annotation");
+					}
 
-				if (value == null)
-				{
-					continue;
-				}
+					Object value = get(in.value());
 
-				if (!field.getClass().isAssignableFrom(value.getClass()))
-				{
-					throw new ResourceException("Resource '" + in.value() + "' " + "is not assignable to field '"
-							+ field.getName() + "'");
-				}
+					if (value == null && in.required())
+					{
+						throw new ResourceException("No value for required resource '" + in.value() + "'");
+					}
 
-				try
-				{
-					field.setAccessible(true);
-					field.set(object, value);
-				}
-				catch (IllegalAccessException e)
-				{
-					throw new ResourceException("Could not access field '" + field.getName() + "'");
+					if (value == null)
+					{
+						continue;
+					}
+
+					if (!field.getClass().isAssignableFrom(value.getClass()))
+					{
+						throw new ResourceException("Resource '" + in.value() + "' " + "is not assignable to field '"
+								+ field.getName() + "'");
+					}
+
+					try
+					{
+						field.setAccessible(true);
+						field.set(object, value);
+					}
+					catch (IllegalAccessException e)
+					{
+						throw new ResourceException("Could not access field '" + field.getName() + "'");
+					}
 				}
 			}
+			c = c.getSuperclass();
 		}
 	}
 

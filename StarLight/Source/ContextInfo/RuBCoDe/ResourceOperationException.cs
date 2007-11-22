@@ -35,18 +35,17 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
     /// </summary>
     public class ResourceOperationException: Exception
     {
-        private ResourceType _resource;
+        private string _resource;
         private string _operations;
 
-        private string _rule;
-        private bool _ruleIsConstraint;
+        private ConflictRule _rule;
 
         private BookKeeper _bookkeeper;
 
         /// <summary>
         /// The resource on which the operations created a conflict
         /// </summary>
-        public ResourceType Resource
+        public string Resource
         {
             get { return _resource; }
         }
@@ -62,17 +61,9 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         /// <summary>
         /// The rule that was violated
         /// </summary>
-        public string Rule
+        public ConflictRule Rule
         {
             get { return _rule; }
-        }
-
-        /// <summary>
-        /// True if the rule was a conflict rule rather than an assertion
-        /// </summary>
-        public bool RuleIsContraint
-        {
-            get { return _ruleIsConstraint; }
         }
 
         /// <summary>
@@ -89,16 +80,14 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         /// <param name="resource"></param>
         /// <param name="operations"></param>
         /// <param name="rule"></param>
-        /// <param name="isConstraint"></param>
         /// <param name="bk"></param>
-        public ResourceOperationException(ResourceType resource, string operations, string rule, bool isConstraint, BookKeeper bk)
-            : base(String.Format("The operation sequence \"{1}\" on the resource \"{0}\" violates the rule \"{2}\" (constraint: {3})",
-                Enum.GetName(typeof(ResourceType), resource), operations, rule, isConstraint.ToString()))
+        public ResourceOperationException(string resource, string operations, ConflictRule rule, BookKeeper bk)
+            : base(String.Format("The operation sequence {1} on the resource \"{0}\" violates the {2}",
+                resource, operations, rule.ToString()))
         {
             _resource = resource;
             _operations = operations;
             _rule = rule;
-            _ruleIsConstraint = isConstraint;
             _bookkeeper = bk;
         }
     }

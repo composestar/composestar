@@ -54,6 +54,16 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         public static readonly string WRITE = "write";
 
         /// <summary>
+        /// Print the current details to the standard output (for debugging)
+        /// </summary>
+        public abstract void report();
+
+        /// <summary>
+        /// Validate the resource operations. When not validate a runtime exception is thrown.
+        /// </summary>
+        public abstract void validate();
+
+        /// <summary>
         /// Convert a string to the proper resource type
         /// </summary>
         /// <param name="type"></param>
@@ -80,7 +90,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
             {
                 return ResourceType.ArgumentEntry;
             }
-            return ResourceType.Unknown;
+            return ResourceType.Custom;
         }
 
         /// <summary>
@@ -107,14 +117,32 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         }
 
         /// <summary>
-        /// Print the current details to the standard output (for debugging)
+        /// Convert a resource type to a string representation. Don't use this method for the 
+        /// types Unknown and Custom. They don't have a valid string representation.
         /// </summary>
-        public abstract void report();
-
-        /// <summary>
-        /// Validate the resource operations. When not validate a runtime exception is thrown.
-        /// </summary>
-        public abstract void validate();
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string resourceTypeAsString(ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.ArgumentEntry:
+                    return "arg";
+                case ResourceType.ArgumentList:
+                    return "args";
+                case ResourceType.Message:
+                    return "message";
+                case ResourceType.Return:
+                    return "return";
+                case ResourceType.Selector:
+                    return "selector";
+                case ResourceType.Target:
+                    return "target";
+                case ResourceType.Custom:
+                    return "?CustomResource";
+            }
+            return "?UnknownResource";
+        }
     }
 
     /// <summary>
@@ -125,30 +153,34 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         /// <summary>
         /// Unknown resource type
         /// </summary>
-        Unknown = -1,
+        Unknown,
         /// <summary>
         /// The message. This resource does not actually exist in memory?
         /// </summary>
-        Message = 0,
+        Message,
         /// <summary>
         /// The target of a message
         /// </summary>
-        Target = 1,
+        Target,
         /// <summary>
         /// The selector of a message
         /// </summary>
-        Selector = 2,
+        Selector,
         /// <summary>
         /// The return value
         /// </summary>
-        Return = 3,
+        Return,
         /// <summary>
         /// The method call argument list itself
         /// </summary>
-        ArgumentList = 4,
+        ArgumentList,
         /// <summary>
         /// A method call argument entry
         /// </summary>
-        ArgumentEntry = 5,
+        ArgumentEntry,
+        /// <summary>
+        /// A custom resource
+        /// </summary>
+        Custom,
     }
 }

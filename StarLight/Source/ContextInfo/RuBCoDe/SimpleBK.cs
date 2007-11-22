@@ -52,8 +52,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         }
 
         /// <summary>
-        /// The type of resource. This will usually be ResourceType.ArgumentEntry because other 
-        /// resources are managed by the LocalBookKeeper.
+        /// The type of resource type.
         /// </summary>
         public ResourceType ResourceType
         {
@@ -85,11 +84,18 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         /// Initialize this bookkeeper
         /// </summary>
         /// <param name="rtype"></param>
-        /// <param name="rname"></param>
+        /// <param name="rname">if null a string representation of the type will be used</param>
         public void init(ResourceType rtype, string rname)
         {
             type = rtype;
-            name = rname;
+            if (String.IsNullOrEmpty(rname))
+            {
+                name = resourceTypeAsString(type);
+            }
+            else
+            {
+                name = rname;
+            }
         }
 
         /// <summary>
@@ -102,8 +108,8 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
             {
                 lock (Console.Error)
                 {
-                    Console.Error.WriteLine("[RescOp] in thread #{0} : [{3}] {1}.{2}", Thread.CurrentThread.ManagedThreadId,
-                        Enum.GetName(typeof(ResourceType), type), op, name);
+                    Console.Error.WriteLine("@BookKeeping in thread #{0} : [{3}] {1}.{2}", Thread.CurrentThread.ManagedThreadId,
+                        name, op, resourceTypeAsString(type));
                 }
             }
             operations.Add(op);
@@ -116,10 +122,10 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         public override void report()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("[");
-            sb.Append(name);
+            sb.Append("@BookKeeping [");
+            sb.Append(resourceTypeAsString(type));
             sb.Append("] ");
-            sb.Append(Enum.GetName(typeof(ResourceType), type));
+            sb.Append(name);
             sb.Append(" = ");
             foreach (String s in operations)
             {
@@ -136,7 +142,12 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         public override void validate()
         {
             ResourceValidator rv = ResourceValidator.instance();
-            rv.validate(type, operations, this);
+            string altname = null;
+            if (type == ResourceType.ArgumentEntry)
+            {
+                altname = resourceTypeAsString(type);
+            }
+            rv.validate(name, altname, operations, this);
         }
     }
 }

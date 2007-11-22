@@ -134,6 +134,16 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         private Instruction _returnInstruction;
 
+        /// <summary>
+        /// ExceptionHandler used during bookkeeping
+        /// </summary>
+        private ExceptionHandler bkExceptionHandler;
+
+        /// <summary>
+        /// Exception handler for the execution of a filter action, Used in case of post action operations.
+        /// </summary>
+        private ExceptionHandler faBkExceptionHandler;
+
         #endregion
 
         #region Properties
@@ -651,7 +661,11 @@ namespace Composestar.StarLight.ILWeaver
 
             if (!String.IsNullOrEmpty(filterAction.ResourceOperations))
             {
-                string[] postops = filterAction.ResourceOperations.Split(FILTER_ACTION_SEPARATOR, 2, StringSplitOptions.RemoveEmptyEntries);
+                string[] postops = filterAction.ResourceOperations.Split(FILTER_ACTION_SEPARATOR, 2, StringSplitOptions.None);
+                if (postops.Length >= 1)
+                {
+                    postops[0] = postops[0].Trim(';');
+                }
                 if (postops.Length >= 1 && !String.IsNullOrEmpty(postops[0]))
                 {
 
@@ -661,6 +675,18 @@ namespace Composestar.StarLight.ILWeaver
                     Instructions.Add(Worker.Create(OpCodes.Callvirt,
                         CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
                         CachedMethodDefinition.JoinPointContextAddResourceOperationList)));
+                }
+
+                if (postops.Length >= 2)
+                {
+                    postops[1] = postops[1].Trim(';');
+                }
+                if (postops.Length >= 2 && !String.IsNullOrEmpty(postops[1]))
+                {
+                    // start Try block
+                    faBkExceptionHandler = new ExceptionHandler(ExceptionHandlerType.Finally);
+                    faBkExceptionHandler.TryStart = Worker.Create(OpCodes.Nop);
+                    Instructions.Add(faBkExceptionHandler.TryStart);
                 }
             }
 
@@ -750,10 +776,27 @@ namespace Composestar.StarLight.ILWeaver
                 return;
             }
 
-            string[] postops = filterAction.ResourceOperations.Split(FILTER_ACTION_SEPARATOR, 2, StringSplitOptions.RemoveEmptyEntries);
+            string[] postops = filterAction.ResourceOperations.Split(FILTER_ACTION_SEPARATOR, 2, StringSplitOptions.None);
+            if (postops.Length >= 2)
+            {
+                postops[1] = postops[1].Trim(';');
+            }
             if (postops.Length >= 2 && !String.IsNullOrEmpty(postops[1]))
             {
                 VariableDefinition jpcVar = CreateJoinPointContextLocal();
+
+                // post operations are done in a try {} finally {} block so that these operations
+                // are added even if the filter action raises an exception (e.g. error action)
+                // post operations are very often empty, in that case no try finally will be added
+
+                // end try block
+                Instruction bkEHend = Worker.Create(OpCodes.Nop);
+                Instructions.Add(Worker.Create(OpCodes.Leave, bkEHend));
+
+                // start finally handler
+                faBkExceptionHandler.TryEnd = Worker.Create(OpCodes.Nop);
+                Instructions.Add(faBkExceptionHandler.TryEnd);
+                faBkExceptionHandler.HandlerStart = faBkExceptionHandler.TryEnd;
 
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
                 // resourceoperations list
@@ -761,6 +804,13 @@ namespace Composestar.StarLight.ILWeaver
                 Instructions.Add(Worker.Create(OpCodes.Callvirt,
                     CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
                     CachedMethodDefinition.JoinPointContextAddResourceOperationList)));
+
+                // end finally handler
+                Instructions.Add(Worker.Create(OpCodes.Endfinally));
+
+                faBkExceptionHandler.HandlerEnd = bkEHend;
+                Instructions.Add(faBkExceptionHandler.HandlerEnd);
+                Method.Body.ExceptionHandlers.Add(faBkExceptionHandler);
             }
         }
 
@@ -950,19 +1000,22 @@ namespace Composestar.StarLight.ILWeaver
                     CachedMethodDefinition.JoinPointContextSetSender)));
             }
 
-            //
-            // Store returnType                
-            //
+            if (!CalledMethod.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
+            {
+                //
+                // Store returnType                
+                //
 
-            // Load joinpointcontext object
-            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+                // Load joinpointcontext object
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
-            // Determine type
-            Instructions.Add(Worker.Create(OpCodes.Ldtoken, CalledMethod.ReturnType.ReturnType));
-            Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle)));
+                // Determine type
+                Instructions.Add(Worker.Create(OpCodes.Ldtoken, CalledMethod.ReturnType.ReturnType));
+                Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle)));
 
-            // Call set_ReturnType in JoinPointContext
-            Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetReturnType)));
+                // Call set_ReturnType in JoinPointContext
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetReturnType)));
+            }
 
             //
             // Add the arguments, these are stored at the top of the stack
@@ -1142,18 +1195,9 @@ namespace Composestar.StarLight.ILWeaver
             // Assign name to MethodName
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetStartSelector)));
 
-
             if (bookKeeping)
             {
-                //
-                // Activate resource operation book keeping
-                //
-
-                // Load joinpointcontext first
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-                // "true" constant
-                Instructions.Add(Worker.Create(OpCodes.Ldc_I4_1));
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetBookKeeping)));
+                JpcBookKeepingBegin();
             }
         }
 
@@ -1223,6 +1267,11 @@ namespace Composestar.StarLight.ILWeaver
             // Retrieve returnvalue
             if (!CalledMethod.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
             {
+                if (bookKeeping)
+                {
+                    JpcBookKeepingEnd(true);
+                }
+
                 // Load JoinPointContext
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
@@ -1239,16 +1288,67 @@ namespace Composestar.StarLight.ILWeaver
                     Instructions.Add(Worker.Create(OpCodes.Castclass, CalledMethod.ReturnType.ReturnType));
                 }
             }
-
-            if (bookKeeping)
+            else
             {
-                //
-                // Finalize resource operation book keeping
-                //
-
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextFinalizeBookKeeping)));
+                if (bookKeeping)
+                {
+                    JpcBookKeepingEnd(false);
+                }
             }
+        }
+
+        /// <summary>
+        /// Activate resource operation book keeping
+        /// </summary>
+        public void JpcBookKeepingBegin()
+        {
+            VariableDefinition jpcVar = CreateJoinPointContextLocal();
+
+            // Load joinpointcontext first
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+            // "true" constant
+            Instructions.Add(Worker.Create(OpCodes.Ldc_I4_1));
+            Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetBookKeeping)));
+
+            bkExceptionHandler = new ExceptionHandler(ExceptionHandlerType.Finally);
+            bkExceptionHandler.TryStart = Worker.Create(OpCodes.Nop);
+            Instructions.Add(bkExceptionHandler.TryStart);
+        }
+
+        /// <summary>
+        /// Finalize resource operation book keeping
+        /// </summary>
+        public void JpcBookKeepingEnd(bool withReturn)
+        {
+            VariableDefinition jpcVar = CreateJoinPointContextLocal();
+
+            if (withReturn)
+            {
+                // TODO: optimize
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+                Instructions.Add(Worker.Create(OpCodes.Ldstr, "return.read"));
+                Instructions.Add(Worker.Create(OpCodes.Callvirt,
+                    CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
+                    CachedMethodDefinition.JoinPointContextAddResourceOperationList)));
+            }
+
+            Instruction bkEHend = Worker.Create(OpCodes.Nop);
+
+            Instructions.Add(Worker.Create(OpCodes.Leave, bkEHend));
+
+            bkExceptionHandler.TryEnd = Worker.Create(OpCodes.Nop);
+            Instructions.Add(bkExceptionHandler.TryEnd);
+
+            bkExceptionHandler.HandlerStart = bkExceptionHandler.TryEnd;
+
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+            Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextFinalizeBookKeeping)));
+            Instructions.Add(Worker.Create(OpCodes.Endfinally));
+
+            bkExceptionHandler.HandlerEnd = bkEHend;
+            Instructions.Add(bkExceptionHandler.HandlerEnd);
+
+            Method.Body.ExceptionHandlers.Add(bkExceptionHandler);
         }
 
         #endregion

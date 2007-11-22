@@ -76,6 +76,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private CommonResources resources;
 
+	private boolean includeConflictRules;
+
 	public StarLightEmitterRunner()
 	{
 		dataStore = DataStore.instance();
@@ -141,8 +143,12 @@ public class StarLightEmitterRunner implements CTCommonModule
 			if (weaveSpecs.containsKey(ac.getName()))
 			{
 				WeaveSpecification weaveSpec = weaveSpecs.get(ac.getName());
-				addConflictRules(weaveSpec);
+				includeConflictRules = false;
 				addGeneralizedFilterCodes(weaveSpec);
+				if (includeConflictRules)
+				{
+					addConflictRules(weaveSpec);
+				}
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
 
@@ -187,6 +193,10 @@ public class StarLightEmitterRunner implements CTCommonModule
 		for (int i = 0; i < filterCodes.length; i++)
 		{
 			translatedFilterCodes[i] = translateFilterCode(filterCodes[i]);
+			if (translatedFilterCodes[i].getBookKeeping())
+			{
+				includeConflictRules = true;
+			}
 		}
 
 		weaveSpec.addNewGeneralizedFilterCodes();

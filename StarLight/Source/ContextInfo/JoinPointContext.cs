@@ -84,6 +84,7 @@ namespace Composestar.StarLight.ContextInfo
         private bool _bookkeeping = false;
         private bool _autobk = true;
         private SimpleBK _returnBK = null;
+        private IDictionary<string, SimpleBK> _customBKs = null;
         #endregion
 
         #region Properties
@@ -233,7 +234,7 @@ namespace Composestar.StarLight.ContextInfo
         /// </summary>
         ~JoinPointContext()
         {
-            ReleaseBK();
+            //ReleaseBK();
         }
 
         #endregion
@@ -247,15 +248,12 @@ namespace Composestar.StarLight.ContextInfo
         public bool BookKeeping
         {
             get { return _bookkeeping; }
-            set 
+            set
             {
-                if (_bookkeeping != value)
+                _bookkeeping = value;
+                foreach (ArgumentInfo ai in _arguments.Values)
                 {
-                    _bookkeeping = value;
-                    foreach (ArgumentInfo ai in _arguments.Values)
-                    {
-                        ai.BookKeeping = value;
-                    }
+                    ai.BookKeeping = value;
                 }
             }
         }
@@ -269,13 +267,10 @@ namespace Composestar.StarLight.ContextInfo
             get { return _autobk; }
             set
             {
-                if (_autobk != value)
+                _autobk = value;
+                foreach (ArgumentInfo ai in _arguments.Values)
                 {
-                    _autobk = value;
-                    foreach (ArgumentInfo ai in _arguments.Values)
-                    {
-                        ai.AutoBookKeeping = value;
-                    }
+                    ai.AutoBookKeeping = value;
                 }
             }
         }
@@ -287,6 +282,14 @@ namespace Composestar.StarLight.ContextInfo
         public void FinalizeBookKeeping()
         {
             if (!_bookkeeping) return;
+            if (_startTarget != null)
+            {
+                Console.Error.WriteLine("$$$ FinalizeBookKeeping for {0}.{1}", _startTarget.GetType(), _startSelector);
+            }
+            else
+            {
+                Console.Error.WriteLine("$$$ FinalizeBookKeeping for <static>.{0}", _startSelector);
+            }
             if (_returnBK != null)
             {
                 _returnBK.report();
@@ -300,6 +303,15 @@ namespace Composestar.StarLight.ContextInfo
                     ai.ArgumentBK.validate();
                 }
             }
+            if (_customBKs != null)
+            {
+                foreach (SimpleBK bk in _customBKs.Values)
+                {
+                    bk.report();
+                    bk.validate();
+                }
+            }
+            BookKeeping = false;
             ReleaseBK();
         }
 
@@ -317,6 +329,15 @@ namespace Composestar.StarLight.ContextInfo
             {
                 ai.ReleaseBK();
             }
+            if (_customBKs != null)
+            {
+                foreach (SimpleBK bk in _customBKs.Values)
+                {
+                    SimpleBK _bk = bk;
+                    BookKeeperPool.release(ref _bk);
+                }
+                _customBKs.Clear();
+            }
         }
 
         /// <summary>
@@ -324,9 +345,9 @@ namespace Composestar.StarLight.ContextInfo
         /// </summary>
         public SimpleBK ReturnValueBK
         {
-            get 
+            get
             {
-                if (_returnBK == null && _bookkeeping)
+                if (_returnBK == null && _bookkeeping && _returnValue != null)
                 {
                     _returnBK = BookKeeperPool.getSimpleBK(ResourceType.Return, "return");
                 }
@@ -345,7 +366,7 @@ namespace Composestar.StarLight.ContextInfo
         {
             if (!_bookkeeping) return;
             switch (rt)
-            {                    
+            {
                 case ResourceType.Message:
                 case ResourceType.Target:
                 case ResourceType.Selector:
@@ -353,13 +374,19 @@ namespace Composestar.StarLight.ContextInfo
                     // ignore these, operations not tracked
                     break;
                 case ResourceType.Return:
-                    ReturnValueBK.AddOperation(op);
+                    if (_returnValue != null)
+                    {
+                        ReturnValueBK.AddOperation(op);
+                    }
                     break;
                 case ResourceType.ArgumentEntry:
                     foreach (ArgumentInfo ai in _arguments.Values)
                     {
                         ai.ArgumentBK.AddOperation(op);
                     }
+                    break;
+                case ResourceType.Custom:
+                    // TODO: throw error
                     break;
             }
         }
@@ -381,6 +408,46 @@ namespace Composestar.StarLight.ContextInfo
             {
                 throw new ArgumentOutOfRangeException("ordinal", Properties.Resources.OrdinalCouldNotBeFound);
             }
+        }
+
+        /// <summary>
+        /// Adds a operation to a custom resource. Do not call this method for standard resources 
+        /// like arg, return, target, selector.
+        /// </summary>
+        /// <param name="resname"></param>
+        /// <param name="op"></param>
+        public void AddResourceOp(string resname, string op)
+        {
+            if (!_bookkeeping) return;
+            if (_customBKs == null)
+            {
+                _customBKs = new Dictionary<string, SimpleBK>();
+            }
+            SimpleBK bk;
+            if (!_customBKs.TryGetValue(resname.ToLower(), out bk))
+            {
+                /*
+                short ord;
+                ResourceType rtype = BookKeeper.getResourceType(resname, out ord);
+                if (rtype != ResourceType.Custom)
+                {
+                    if (ord > -1 && rtype == ResourceType.ArgumentEntry)
+                    {
+                        AddResourceOp(ord, op);
+                    }
+                    else
+                    {
+                        AddResourceOp(rtype, op);
+                    }
+                    return;
+                }
+                */
+
+                resname = resname.ToLower();
+                bk = BookKeeperPool.getSimpleBK(ResourceType.Custom, resname);
+                _customBKs.Add(resname, bk);
+            }
+            bk.AddOperation(op);
         }
 
         /// <summary>
@@ -412,9 +479,13 @@ namespace Composestar.StarLight.ContextInfo
                         case ResourceType.Selector:
                         case ResourceType.ArgumentList:
                             // ignore these, operations not tracked
+                            Console.Error.WriteLine("$$$ Not tracker operation: {0}.{1}", sop[0], sop[1]);
                             break;
                         case ResourceType.Return:
-                            ReturnValueBK.AddOperation(sop[1]);
+                            if (_returnValue != null)
+                            {
+                                ReturnValueBK.AddOperation(sop[1]);
+                            }
                             break;
                         case ResourceType.ArgumentEntry:
                             if (ord == -1)
@@ -428,6 +499,9 @@ namespace Composestar.StarLight.ContextInfo
                             {
                                 _arguments[ord].ArgumentBK.AddOperation(sop[1]);
                             }
+                            break;
+                        case ResourceType.Custom:
+                            AddResourceOp(sop[0], sop[1]);
                             break;
                     }
                 }
@@ -459,7 +533,7 @@ namespace Composestar.StarLight.ContextInfo
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddArgument(short ordinal, Type argumentType, object value)
         {
-            ArgumentInfo ai = new ArgumentInfo(argumentType, value);
+            ArgumentInfo ai = new ArgumentInfo(argumentType, value, ordinal);
             ai.BookKeeping = _bookkeeping;
             ai.AutoBookKeeping = _autobk;
             if (_arguments.ContainsKey(ordinal))
@@ -482,7 +556,7 @@ namespace Composestar.StarLight.ContextInfo
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddArgument(short ordinal, Type argumentType, ArgumentAttributes argumentAttributes, object value)
         {
-            ArgumentInfo ai = new ArgumentInfo(argumentType, value, argumentAttributes);
+            ArgumentInfo ai = new ArgumentInfo(argumentType, value, ordinal, argumentAttributes);
             ai.BookKeeping = _bookkeeping;
             ai.AutoBookKeeping = _autobk;
             if (_arguments.ContainsKey(ordinal))
@@ -761,7 +835,7 @@ namespace Composestar.StarLight.ContextInfo
             {
                 if (_returnValue == null)
                 {
-                    _returnValue = new ArgumentInfo(value, null);
+                    _returnValue = new ArgumentInfo(value, null, -1);
                 }
                 else
                 {
@@ -804,7 +878,7 @@ namespace Composestar.StarLight.ContextInfo
                 {
                     if (_bookkeeping && _autobk)
                     {
-                        ReturnValueBK.AddOperation(BookKeeper.READ);
+                        ReturnValueBK.AddOperation(BookKeeper.WRITE);
                     }
                     _returnValue.Value = value;
                     _hasReturnValueSet = true;
@@ -855,7 +929,10 @@ namespace Composestar.StarLight.ContextInfo
             {
                 throw new ArgumentNullException("key");
             }
-
+            if (_bookkeeping && _autobk)
+            {
+                AddResourceOp(key, BookKeeper.WRITE);
+            }
             _properties[key] = property;
         }
 
@@ -886,6 +963,11 @@ namespace Composestar.StarLight.ContextInfo
             if (string.IsNullOrEmpty(key))
             {
                 throw new ArgumentNullException("key");
+            }
+
+            if (_bookkeeping && _autobk)
+            {
+                AddResourceOp(key, BookKeeper.READ);
             }
 
             if (_properties.ContainsKey(key))
@@ -931,6 +1013,11 @@ namespace Composestar.StarLight.ContextInfo
                 throw new ArgumentNullException("key");
             }
 
+            if (_bookkeeping && _autobk)
+            {
+                AddResourceOp(key, BookKeeper.READ);
+            }
+
             if (_properties.ContainsKey(key))
             {
                 return ((T)_properties[key]);
@@ -965,10 +1052,12 @@ namespace Composestar.StarLight.ContextInfo
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="value">The value.</param>
-        internal ArgumentInfo(Type type, Object value)
+        /// <param name="ordinal">The ordinal.</param>
+        internal ArgumentInfo(Type type, Object value, short ordinal)
         {
             _type = type;
             _value = value;
+            _ordinal = ordinal;
         }
 
         /// <summary>
@@ -976,11 +1065,13 @@ namespace Composestar.StarLight.ContextInfo
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="value">The value.</param>
+        /// <param name="ordinal">The ordinal.</param>
         /// <param name="argumentAttributes">The argument attributes.</param>
-        internal ArgumentInfo(Type type, Object value, ArgumentAttributes argumentAttributes)
+        internal ArgumentInfo(Type type, Object value, short ordinal, ArgumentAttributes argumentAttributes)
         {
             _type = type;
             _value = value;
+            _ordinal = ordinal;
             _argumentAttributes = argumentAttributes;
         }
 
@@ -989,7 +1080,7 @@ namespace Composestar.StarLight.ContextInfo
         /// </summary>
         ~ArgumentInfo()
         {
-            ReleaseBK();
+            //ReleaseBK();
         }
 
         #region Book Keeping
@@ -1038,7 +1129,8 @@ namespace Composestar.StarLight.ContextInfo
             {
                 if (_book == null && _bookkeeping)
                 {
-                    _book = BookKeeperPool.getSimpleBK(ResourceType.ArgumentEntry, _type.Name);
+                    _book = BookKeeperPool.getSimpleBK(ResourceType.ArgumentEntry,
+                        BookKeeper.resourceTypeAsString(ResourceType.ArgumentEntry) + _ordinal);
                 }
                 return _book;
             }
@@ -1076,22 +1168,32 @@ namespace Composestar.StarLight.ContextInfo
         /// <value>The value.</value>
         public object Value
         {
-            get 
+            get
             {
-                if (_bookkeeping)
+                if (_bookkeeping && _autobk)
                 {
                     ArgumentBK.AddOperation(BookKeeper.READ);
                 }
                 return _value;
             }
-            set 
-            { 
+            set
+            {
                 _value = value;
-                if (_bookkeeping) 
+                if (_bookkeeping && _autobk)
                 {
-                    ArgumentBK.AddOperation(BookKeeper.WRITE); 
+                    ArgumentBK.AddOperation(BookKeeper.WRITE);
                 }
             }
+        }
+
+        private short _ordinal;
+
+        /// <summary>
+        /// The ordinal value of this argument info, the return argumentingo instance will have the ordinal -1
+        /// </summary>
+        public short Ordinal
+        {
+            get { return _ordinal; }
         }
 
         /// <summary>

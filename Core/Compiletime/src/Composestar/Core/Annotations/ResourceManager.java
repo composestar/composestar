@@ -21,6 +21,7 @@
  *
  * $Id$
  */
+
 package Composestar.Core.Annotations;
 
 import java.lang.annotation.ElementType;
@@ -29,14 +30,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Defines that a field in the module needs to be assigned with elements from
- * the CommonResources.
+ * A field with this annotation is considered as a ModuleResourceManager that
+ * needs to be loaded from the CommonResources.
+ * 
+ * @author Michiel Hendriks
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface In
+public @interface ResourceManager
 {
-	String value();
-
-	boolean required() default true;
+	/**
+	 * If set to true (default) the resource manager will automatically be
+	 * created when it doesn't exist.
+	 * 
+	 * @return
+	 */
+	boolean create() default true;
 }

@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
@@ -59,7 +60,8 @@ public class CKRET implements CTCommonModule
 
 	private File reportFile;
 
-	private SECRETResources secretResources;
+	@ResourceManager
+	protected SECRETResources secretResources;
 
 	public static SECRETMode getMode()
 	{
@@ -70,7 +72,8 @@ public class CKRET implements CTCommonModule
 	{
 		INCRE incre = INCRE.instance();
 
-		secretResources = resources.getResourceManager(SECRETResources.class, true);
+		// secretResources = resources.getResourceManager(SECRETResources.class,
+		// true);
 		secretResources.setFIRE2Resources(resources.getResourceManager(FIRE2Resources.class));
 		loadConfiguration(resources);
 

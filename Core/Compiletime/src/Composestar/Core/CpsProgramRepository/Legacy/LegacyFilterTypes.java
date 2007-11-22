@@ -81,7 +81,7 @@ public final class LegacyFilterTypes
 		action.setFullName("DispatchAction");
 		action.setFlowBehaviour(FilterAction.FLOW_RETURN);
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
-		action.setResourceOperations("msg.dispatch");
+		action.setResourceOperations("arg.read;message.dispatch;return.read;");
 		return action;
 	}
 
@@ -102,7 +102,7 @@ public final class LegacyFilterTypes
 		action.setFullName("ErrorAction");
 		action.setFlowBehaviour(FilterAction.FLOW_EXIT);
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
-		action.setResourceOperations("msg.discard;return.discard;arg.discard");
+		action.setResourceOperations("message.discard;return.discard;arg.discard");
 		return action;
 	}
 

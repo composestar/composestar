@@ -41,6 +41,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         private static Object locker = new Object();
         private static BookKeeperPool _instance;
 
+        private int poolSize = 0;
         private Queue<SimpleBK> freeSimple;
 
         /// <summary>
@@ -56,11 +57,13 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
             {
                 bk = ins.freeSimple.Dequeue();
                 bk.init(rtype, name);
+                Console.Error.WriteLine("### Releasing SimpleBK from queue for {1}, new size = {0} ###", instance().freeSimple.Count, name);
                 return bk;
             }
             else
             {
-                Console.Error.WriteLine("### Creating new SimpleBK, size = {0} ###", instance().freeSimple.Count);
+                Console.Error.WriteLine("### Creating new SimpleBK for {0} ###", name);
+                ins.poolSize++;
                 return new SimpleBK(rtype, name);
             }            
         }
@@ -75,7 +78,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
             bk.reset();
             instance().freeSimple.Enqueue(bk);
             bk = null;
-            Console.Error.WriteLine("### Adding SimpleBK to queue, size = {0} ###", instance().freeSimple.Count);
+            Console.Error.WriteLine("### Adding SimpleBK to queue, new size = {0} ###", instance().freeSimple.Count);
         }
 
         private static BookKeeperPool instance()
@@ -91,6 +94,17 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
                 }
             }
             return _instance;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        ~BookKeeperPool()
+        {
+            if (poolSize != freeSimple.Count)
+            {
+                throw new Exception(String.Format("BookKeeperPool is leaking. Created {0}; Recovered: {1}", poolSize, freeSimple.Count));
+            }
         }
 
         private BookKeeperPool()

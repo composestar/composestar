@@ -6,6 +6,7 @@ package Composestar.Core.CORE2;
 
 import java.util.Iterator;
 
+import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
@@ -26,6 +27,7 @@ public class Core implements CTCommonModule
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
+	@ResourceManager
 	private FIRE2Resources f2res;
 
 	private CoreConflictDetector detector = new CoreConflictDetector();
@@ -35,7 +37,7 @@ public class Core implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		f2res = resources.getResourceManager(FIRE2Resources.class);
+		// f2res = resources.getResourceManager(FIRE2Resources.class);
 		// Iterate over all concerns
 		Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -85,6 +86,7 @@ public class DIGGER implements CTCommonModule
 	 */
 	protected List<Breadcrumb> allCrumbs;
 
+	@ResourceManager
 	protected FIRE2Resources f2res;
 
 	public DIGGER()
@@ -107,7 +109,7 @@ public class DIGGER implements CTCommonModule
 		allCrumbs = new ArrayList<Breadcrumb>();
 		filthinit.stop();
 
-		f2res = resources.getResourceManager(FIRE2Resources.class);
+		// f2res = resources.getResourceManager(FIRE2Resources.class);
 
 		// step 1: breadcrumb creation, the crumbs will not be resolved
 		logger.info("Step 1: breadcrumb creation");
