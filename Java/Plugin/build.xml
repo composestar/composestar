@@ -15,17 +15,17 @@
 	
 	<!-- clean -->
 	<target name="clean">
-		<ant target="clean" dir="Eclipse" />
+		<ant target="clean" dir="Eclipse" inheritRefs="true" />
 	</target>
 	
 	<!-- build -->	
 	<target name="build" description="compiling the plugins">
-		<ant target="build" dir="Eclipse" />
+		<ant target="build" dir="Eclipse" inheritRefs="true" />
 	</target>
 	
 	<!-- install -->	
 	<target name="install" description="install the plugins">
-		<ant target="install" dir="Eclipse" />
+		<ant target="install" dir="Eclipse" inheritRefs="true" />
 	</target>
 	
 </project>

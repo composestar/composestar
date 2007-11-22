@@ -449,9 +449,6 @@
 	<target name="init_eclipse" depends="init" unless="build.eclipse.initialized">
 		<property name="build.eclipse.initialized" value="true" />
 
-		<!-- location of Eclipse pluginsfolder -->
-		<property name="eclipse.home" value="${env.ECLIPSE_HOME}" />
-
 		<fail
 			message="Eclipse was not found. Either set the 'eclipse.home' property or the 'ECLIPSE_HOME' environment variable.">
 			<condition>
@@ -472,17 +469,17 @@
 		</path>
 
 		<property name="eclipse.pluginsdir.core"
-			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.core_${version.core}" />
+			value="${eclipse.pluginsdir}${file.separator}composestar.core_${version.core}" />
 		<property name="eclipse.pluginsdir.core.plugin"
-			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.core.plugin_${version.core}" />
+			value="${eclipse.pluginsdir}${file.separator}composestar.core.plugin_${version.core}" />
 
 		<property name="eclipse.pluginsdir.java"
-			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.java_${version.java}" />
+			value="${eclipse.pluginsdir}${file.separator}composestar.java_${version.java}" />
 		<property name="eclipse.pluginsdir.java.plugin"
-			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.java.plugin_${version.java}" />
+			value="${eclipse.pluginsdir}${file.separator}composestar.java.plugin_${version.java}" />
 
 		<property name="eclipse.pluginsdir.c"
-			value="${eclipse.home}${file.separator}plugins${file.separator}composestar.c_${version.c}" />
+			value="${eclipse.pluginsdir}${file.separator}composestar.c_${version.c}" />
 	</target>
 
 	<!-- generic target to rebuild all -->

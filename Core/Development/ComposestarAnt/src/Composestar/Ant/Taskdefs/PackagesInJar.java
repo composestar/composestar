@@ -4,7 +4,6 @@
 package Composestar.Ant.Taskdefs;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -95,14 +94,18 @@ public class PackagesInJar extends Task
 				JarEntry entry = entries.nextElement();
 				if (entry.getName().endsWith(".class"))
 				{
-					String pkg = entry.getName().substring(0, entry.getName().lastIndexOf("/"));
-					packages.add(pkg.replace("/", "."));
+					int idx = entry.getName().lastIndexOf("/");
+					if (idx > 0)
+					{
+						String pkg = entry.getName().substring(0, idx);
+						packages.add(pkg.replace("/", "."));
+					}
 				}
 			}
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
-			log("Error reading jar file: " + e.getMessage(), Project.MSG_ERR);
+			log("Error reading jar file \"" + file.toString() + "\": " + e.getMessage(), Project.MSG_ERR);
 		}
 		return packages;
 	}
