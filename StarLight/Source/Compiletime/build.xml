@@ -94,7 +94,7 @@
 	</target>
 
 	<target name="compile" depends="init_local,build_xmltypes">
-		<javac srcdir="src/Composestar" destdir="${out.build}" classpathref="lib.starlight" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src/Composestar" destdir="${out.build}" classpathref="lib.starlight" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java" />
 			<exclude name="**/_svn" />
 			<exclude name="**/.svn" />

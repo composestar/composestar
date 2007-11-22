@@ -43,7 +43,8 @@
 			value="${out.dist}${file.separator}lib${file.separator}ComposestarVisualization.jar" />
 
 		<!-- options for javac -->
-		<property name="build.java.version" value="1.5" />
+		<property name="ant.build.javac.target" value="1.5" />
+		<property name="ant.build.javac.source" value="${ant.build.javac.target}" />
 		<property name="build.debug" value="true" />
 		<property name="build.deprecation" value="false" />
 
@@ -465,6 +466,8 @@
 		<path id="lib.eclipse">
 			<path refid="lib.core" />
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
+			
+			<fileset dir="${eclipse.home}${file.separator}plugins" includes="*.jar" />
 			<fileset dir="${eclipse.pluginsdir}" includes="*.jar" />
 		</path>
 
@@ -547,7 +550,8 @@
 		</condition>
 
 		<echo message="Settings:" />
-		<echo message="  build.java.version:     ${build.java.version}" />
+		<echo message="  ant.build.javac.target: ${ant.build.javac.target}" />
+		<echo message="  ant.build.javac.source: ${ant.build.javac.source}" />
 		<echo message="  build.debug:            ${build.debug}" />
 		<echo message="  build.deprecation:      ${build.deprecation}" />
 		<echo></echo>
@@ -558,7 +562,9 @@
 		<echo message="  build.c:                ${build.c}" />
 		<echo></echo>
 		<echo message="	 composestar.installdir: ${composestar.installdir}" />
+		<echo message="	 starlight.installdir:   ${starlight.installdir}" />
 		<echo message="	 eclipse.home:           ${eclipse.home}" />
+		<echo message="	 eclipse.pluginsdir:     ${eclipse.pluginsdir}" />
 		<echo></echo>
 		<echo message="Status of Compose* ports:" />
 		<echo message="  DotNET:    ${status.dotnet}	(version ${version.dotnet})" />

@@ -30,7 +30,7 @@
 	<target name="build" depends="local_init,compile,jar" description="Compile the code and create the jar file" />
 
 	<target name="compile" depends="local_init">
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.visualization" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.visualization" debug="${build.debug}" deprecation="${build.deprecation}">
 		</javac>
 	</target>
 

@@ -34,7 +34,7 @@
 			</fileset>
 		</copy>
 
-		<javadoc destdir="${destdir.dni}/documentation/MessageAPI" source="${build.java.version}">
+		<javadoc destdir="${destdir.dni}/documentation/MessageAPI">
 			<fileset dir="${build.core}/Runtime/src/Composestar/RuntimeCore/FLIRT/Reflection">
 				<include name="MessageInfo.java" />
 			</fileset>

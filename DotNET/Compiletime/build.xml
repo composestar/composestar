@@ -102,7 +102,7 @@
 	</target>
 
 	<target name="compile_java">
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.dotnet" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.dotnet" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java" />
 		</javac>
 	</target>

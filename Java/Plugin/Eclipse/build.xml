@@ -34,7 +34,7 @@
 
 	<!-- compile -->
 	<target name="compile" depends="init_local" >
-		<javac srcdir="src" destdir="${out.build}" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src" destdir="${out.build}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<classpath>
 				<pathelement location="${build.core}/Plugin/Eclipse/${out.dist}/ComposestarEclipseCore.jar"/>
 			</classpath>
@@ -118,7 +118,7 @@
 		<copy todir="${eclipse.pluginsdir.java.plugin}">
 			<fileset dir="${out.dist}" />
 		</copy>
-		<copy todir="${eclipse.home}/features/composestar.java_${version.java}">
+		<copy todir="${eclipse.pluginsdir}/../features/composestar.java_${version.java}">
 			<fileset dir="${out.dist.feature}" />
 		</copy>			
 	</target>

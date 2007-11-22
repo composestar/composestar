@@ -81,7 +81,7 @@
 			<entry key="version.build" value="${version.build}" />
 			<entry key="version.compiledate" type="date" value="now" pattern="EEE, d MMM yyyy HH:mm:ss Z" />
 		</propertyfile>
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java" />
 		</javac>
 	</target>
@@ -176,7 +176,7 @@
 			<pathelement path="${out.build}" />
 			<pathelement location="${build.core}\Compiletime\lib\junit\junit.jar" />
 		</path>
-		<javac srcdir="test" destdir="test" classpathref="lib.test" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="test" destdir="test" classpathref="lib.test" debug="${build.debug}" deprecation="${build.deprecation}">
 			<include name="**/*.java" />
 			<exclude name="**/AssemblyInfo.java" />
 		</javac>
