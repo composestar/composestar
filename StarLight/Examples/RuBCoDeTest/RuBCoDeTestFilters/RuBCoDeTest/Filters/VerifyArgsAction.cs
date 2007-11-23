@@ -8,22 +8,22 @@ using Composestar.StarLight.ContextInfo;
 using Composestar.StarLight.Filters.FilterTypes;
 using Composestar.StarLight.ContextInfo.RuBCoDe;
 
-[assembly: ConflictRule("arg", "(decrypt)(?!encrypt)*(decrypt)", true, "Argument is already decrypted")]
-[assembly: Resource("arg", "decrypt,encrypt")]
+[assembly: Resource("arg", "encrypt,decrypt,verify,expectPlain")]
+//[assembly: ConflictRule("arg", "((?!encrypt)(.*)|(encrypt)(.*)(decrypt))(expectPlain)", false, "Data may not be encrypted")]
 namespace RuBCoDeTestFilters.Filters
 {
-    [FilterActionAttribute("DecryptArgsAction", FilterActionAttribute.FilterFlowBehavior.Continue,
+    [FilterActionAttribute("VerifyArgsAction", FilterActionAttribute.FilterFlowBehavior.Continue,
        FilterActionAttribute.MessageSubstitutionBehavior.Original)]
-    [ResourceOperation("arg.read;arg.decrypt;arg.write", true)]
-    public class DecryptArgsAction : FilterAction
+    [ResourceOperation("arg.expectPlain;arg.read;arg.verify", true)]
+    public class VerifyArgsAction : FilterAction
     {
         public override void Execute(JoinPointContext context)
         {
             foreach (ArgumentInfo ai in context.GetArguments.Values)
             {
+                ai.AddResourceOp("expectPlain");
                 Object val = ai.Value;
-                ai.AddResourceOp("decrypt");
-                ai.Value = val;
+                ai.AddResourceOp("verify");
             }
         }
     }
