@@ -55,31 +55,116 @@ public class Automaton
 	 */
 	public boolean matches(MatchingBuffer buffer)
 	{
+		return matches(buffer, false);
+	}
+
+	/**
+	 * Returns true when the buffer matches this automaton (e.g. the end state
+	 * is in the resulting state collection).
+	 * 
+	 * @param buffer
+	 * @return
+	 */
+	public boolean matches(MatchingBuffer buffer, boolean matchSubString)
+	{
 		if (begin == end && buffer.current() == null)
 		{
 			return true;
 		}
-		Set<State> visited = new HashSet<State>();
+		Set<State> visited = new HashSet<State>(); // never used?
 		Queue<State> queue = new LinkedList<State>();
-		queue.add(begin);
-		while (!queue.isEmpty() && buffer.current() != null)
+
+		addStates(queue, visited, begin);
+
+		while (!buffer.atEnd() || !queue.isEmpty())
 		{
-			State current = queue.remove();
-			visited.add(current);
-			Set<State> result = current.nextStates(buffer);
-			buffer.consume();
-			if (result.contains(end) && buffer.current() == null)
+			if (buffer.atEnd() && queue.contains(end))
 			{
+				// might be added through a lambda transition
 				return true;
 			}
-			for (State state : result)
+			Queue<State> currentQueue = new LinkedList<State>(queue);
+			queue.clear();
+			// visited = new HashSet<State>();
+			while (!currentQueue.isEmpty())
 			{
-				if (!visited.contains(state))
+				State current = currentQueue.remove();
+				// visited.add(current);
+				Set<State> result = current.nextStates(buffer, false);
+				if (!result.isEmpty())
 				{
-					queue.add(state);
+					if (result.contains(end))
+					{
+						if (matchSubString)
+						{
+							return true;
+						}
+						// matching till the end
+						if (current.consuming() && buffer.next() == null)
+						{
+							// current should be the last token
+							return true;
+						}
+						else if (!current.consuming() && buffer.atEnd())
+						{
+							// non comsuning (lookaround), should match the end
+							// of the buffer
+							return true;
+						}
+					}
+				}
+
+				// FIXME: this fails when Lookahead state contains
+				// consuming edges (e.g. non lambda edges)
+				if (current.consuming())
+				{
+					for (State state : result)
+					{
+						addStates(queue, visited, state);
+					}
+				}
+				else
+				{
+					// non consuming adds to the current queue
+					for (State state : result)
+					{
+						addStates(currentQueue, visited, state);
+					}
+				}
+			}
+			// don't consume until all states had a chance at the current buffer
+			buffer.consume();
+		}
+		return false;
+	}
+
+	/**
+	 * Add states to the queue, including lambda transitions
+	 * 
+	 * @param toqueue
+	 * @param visited
+	 * @param state
+	 */
+	protected void addStates(Queue<State> toqueue, Set<State> visited, State state)
+	{
+		if (visited.contains(state))
+		{
+			return;
+		}
+		if (toqueue.contains(state))
+		{
+			return;
+		}
+		toqueue.add(state);
+		for (Transition t : state.getTransitions())
+		{
+			if (t.isLambda())
+			{
+				if (!visited.contains(t.getEndState()))
+				{
+					addStates(toqueue, visited, t.getEndState());
 				}
 			}
 		}
-		return false;
 	}
 }

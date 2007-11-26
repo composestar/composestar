@@ -32,28 +32,31 @@ package Composestar.Utils.Regex;
 public interface MatchingBuffer
 {
 	/**
-	 * The current token
+	 * The current token in the buffer. If there are no more tokens it should
+	 * return null.
 	 * 
 	 * @return
 	 */
 	String current();
 
 	/**
-	 * Get the next token. Return null when there is no next buffer.
+	 * The next token in the buffer, will become the current one after
+	 * consume().
 	 * 
 	 * @return
 	 */
 	String next();
 
 	/**
-	 * Get the previous token. Return null when there is no previous buffer.
+	 * Returns true when the end of the buffer has been reached. Current should
+	 * return null in this case.
 	 * 
 	 * @return
 	 */
-	String previous();
+	boolean atEnd();
 
 	/**
-	 * Consume the current token
+	 * Consume the current token and advances to the next token.
 	 */
 	void consume();
 

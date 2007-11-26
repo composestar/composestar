@@ -114,6 +114,11 @@ public class StringListBuffer implements MatchingBuffer
 		return new StringListBuffer(this);
 	}
 
+	public boolean atEnd()
+	{
+		return (currentLocation >= buffer.size());
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -124,20 +129,6 @@ public class StringListBuffer implements MatchingBuffer
 		if (currentLocation < buffer.size() - 1)
 		{
 			return buffer.get(currentLocation + 1);
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Utils.Regex.MatchingBuffer#previous()
-	 */
-	public String previous()
-	{
-		if (currentLocation > 0 && currentLocation < buffer.size())
-		{
-			return buffer.get(currentLocation - 1);
 		}
 		return null;
 	}

@@ -110,7 +110,7 @@ public class State
 	 * @param buffer
 	 * @return
 	 */
-	public Set<State> nextStates(MatchingBuffer buffer)
+	public Set<State> nextStates(MatchingBuffer buffer, boolean includeLambda)
 	{
 		if (transitions.isEmpty())
 		{
@@ -119,7 +119,7 @@ public class State
 		Set<State> result = new HashSet<State>();
 		for (Transition t : getTransitions())
 		{
-			if (t.isLambda())
+			if (t.isLambda() && includeLambda)
 			{
 				result.add(t.getEndState());
 				traverseLambdaStates(result, t.getEndState());
@@ -131,6 +131,16 @@ public class State
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Returns true when this state consumes the current buffer
+	 * 
+	 * @return
+	 */
+	public boolean consuming()
+	{
+		return true;
 	}
 
 	/**

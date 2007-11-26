@@ -336,8 +336,7 @@ public final class RegexPattern
 
 				State end = new FinalState();
 				State begin = pAlt(lexer, end);
-				((LookaheadState) result).setAutomaton(new Automaton(begin, end));
-				new Transition(result, endState);
+				((LookaheadState) result).setAutomaton(new Automaton(begin, end), endState);
 			}
 			else
 			{

@@ -24,7 +24,6 @@
 
 package Composestar.Utils.Regex;
 
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -39,6 +38,11 @@ public class LookaheadState extends State
 	 * The automaton that contains the subexpression
 	 */
 	protected Automaton automaton;
+
+	/**
+	 * The transition to use when the automaton matches.
+	 */
+	protected Transition automatonTransition;
 
 	/**
 	 * Negate the results of the automaton
@@ -72,10 +76,17 @@ public class LookaheadState extends State
 
 	/**
 	 * @param newAutomaton
+	 * @param endState the state to traverse to when the automaton matches
 	 */
-	public void setAutomaton(Automaton newAutomaton)
+	public void setAutomaton(Automaton newAutomaton, State endState)
 	{
+		if (automatonTransition != null)
+		{
+			transitions.remove(automatonTransition);
+		}
 		automaton = newAutomaton;
+		automatonTransition = new Transition(this, endState);
+		automatonTransition.addLabel("<ÿSubExpressionÿ>"); // never matches
 	}
 
 	public void setNegation(boolean value)
@@ -94,14 +105,25 @@ public class LookaheadState extends State
 	 * @see Composestar.Utils.Regex.State#nextStates(Composestar.Utils.Regex.MatchingBuffer)
 	 */
 	@Override
-	public Set<State> nextStates(MatchingBuffer buffer)
+	public Set<State> nextStates(MatchingBuffer buffer, boolean includeLambda)
 	{
-		boolean result = automaton.matches(buffer.fork());
+		Set<State> results = super.nextStates(buffer, includeLambda);
+		boolean result = automaton.matches(buffer.fork(), true);
 		if (result != negation)
 		{
-			return super.nextStates(buffer);
+			results.add(automatonTransition.getEndState());
 		}
-		return Collections.emptySet();
+		return results;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Utils.Regex.State#consuming()
+	 */
+	@Override
+	public boolean consuming()
+	{
+		return false;
+	}
 }
