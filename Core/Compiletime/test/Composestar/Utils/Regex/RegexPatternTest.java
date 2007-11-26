@@ -25,7 +25,6 @@
 package Composestar.Utils.Regex;
 
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import junit.framework.TestCase;
 
@@ -51,7 +50,7 @@ public class RegexPatternTest extends TestCase
 		super(name);
 	}
 
-	protected void compile(String pattern)
+	protected void compile(String pattern) throws PatternParseException
 	{
 		System.out.println("Testing pattern: " + pattern);
 		cpsPattern = RegexPattern.compile(pattern);
@@ -72,7 +71,7 @@ public class RegexPatternTest extends TestCase
 		return result1;
 	}
 
-	public void testBasic()
+	public void testBasic() throws PatternParseException
 	{
 		compile("");
 		assertTrue(matches(""));
@@ -105,18 +104,26 @@ public class RegexPatternTest extends TestCase
 	{
 		try
 		{
-			RegexPattern.compile("aa:");
+			RegexPattern.compile("aa(");
 			fail("No PatternParseException");
 		}
-		catch (PatternSyntaxException e)
+		catch (PatternParseException e)
 		{
 		}
 		try
 		{
-			RegexPattern.compile("aa(");
+			RegexPattern.compile("aa:");
 			fail("No PatternParseException");
 		}
-		catch (PatternSyntaxException e)
+		catch (PatternParseException e)
+		{
+		}
+		try
+		{
+			RegexPattern.compile("aa.");
+			fail("No PatternParseException");
+		}
+		catch (PatternParseException e)
 		{
 		}
 		try
@@ -124,7 +131,7 @@ public class RegexPatternTest extends TestCase
 			RegexPattern.compile("aa(aa");
 			fail("No PatternParseException");
 		}
-		catch (PatternSyntaxException e)
+		catch (PatternParseException e)
 		{
 		}
 		try
@@ -132,7 +139,7 @@ public class RegexPatternTest extends TestCase
 			RegexPattern.compile(")");
 			fail("No PatternParseException");
 		}
-		catch (PatternSyntaxException e)
+		catch (PatternParseException e)
 		{
 		}
 		try
@@ -140,12 +147,12 @@ public class RegexPatternTest extends TestCase
 			RegexPattern.compile("*+?");
 			fail("No PatternParseException");
 		}
-		catch (PatternSyntaxException e)
+		catch (PatternParseException e)
 		{
 		}
 	}
 
-	public void testAlts()
+	public void testAlts() throws PatternParseException
 	{
 		// pat1 == pat2 == pat3 == pat4
 		// "aa" "bb" "cc" "dd"
@@ -193,7 +200,7 @@ public class RegexPatternTest extends TestCase
 		assertFalse(matches("aa bb ee"));
 	}
 
-	public void testNeq()
+	public void testNeq() throws PatternParseException
 	{
 		// Matches an empty string
 		compile("(?!aa)");
@@ -255,7 +262,7 @@ public class RegexPatternTest extends TestCase
 		assertFalse(matches("aa aa bb"));
 	}
 
-	public void testDot()
+	public void testDot() throws PatternParseException
 	{
 		// "aa" "bb cc aa"
 		compile(".*aa");
@@ -291,7 +298,7 @@ public class RegexPatternTest extends TestCase
 		assertFalse(matches("bb bb aa"));
 	}
 
-	public void testMult()
+	public void testMult() throws PatternParseException
 	{
 		// "bb" or ""
 		compile("(bb)?");
@@ -340,7 +347,7 @@ public class RegexPatternTest extends TestCase
 		assertFalse(matches("aa dd cc"));
 	}
 
-	public void testMultEx()
+	public void testMultEx() throws PatternParseException
 	{
 		// "aa bb dd cc" "aa cc"
 		compile("aa((bb)(dd))?cc");
@@ -402,6 +409,12 @@ public class RegexPatternTest extends TestCase
 		RegexPatternTest t = new RegexPatternTest();
 		try
 		{
+			t.testBasic();
+			t.testInvalid();
+			t.testAlts();
+			t.testNeq();
+			t.testDot();
+			t.testMult();
 			t.testMultEx();
 		}
 		catch (Exception e)
