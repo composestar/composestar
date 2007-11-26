@@ -452,6 +452,7 @@ public final class RegexPattern implements Serializable
 			Stack<State> states = new Stack<State>();
 			states.push(base);
 			Set<State> visited = new HashSet<State>();
+			visited.add(to); // don't update self
 			while (states.size() > 0)
 			{
 				State state = states.pop();

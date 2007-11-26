@@ -24,7 +24,10 @@
 
 package Composestar.Core.FIRE2.util.regex;
 
+import java.util.Iterator;
+
 import Composestar.Core.FIRE2.model.ExecutionModel;
+import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Utils.Regex.MatchingBuffer;
 
 /**
@@ -47,7 +50,20 @@ public class RegexMatcher implements MatchingBuffer
 
 	public boolean matches()
 	{
+		Iterator<ExecutionState> states = model.getEntranceStates();
+		while (states.hasNext())
+		{
+			if (matches(states.next()))
+			{
+				return true;
+			}
+		}
 		return false;
+	}
+
+	protected boolean matches(ExecutionState startState)
+	{
+		return pattern.matches(this);
 	}
 
 	/*

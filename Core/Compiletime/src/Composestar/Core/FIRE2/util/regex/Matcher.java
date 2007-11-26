@@ -21,6 +21,7 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
 /**
  * @author Arjan de Roo
  */
+@Deprecated
 public class Matcher
 {
 	private Pattern pattern;

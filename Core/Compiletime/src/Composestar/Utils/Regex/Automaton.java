@@ -25,7 +25,6 @@
 package Composestar.Utils.Regex;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
@@ -74,10 +73,9 @@ public class Automaton implements Serializable
 		{
 			return true;
 		}
-		Set<State> visited = new HashSet<State>(); // never used?
 		Queue<State> queue = new LinkedList<State>();
 
-		addStates(queue, visited, begin);
+		addStates(queue, begin);
 
 		while (!buffer.atEnd() || !queue.isEmpty())
 		{
@@ -88,7 +86,6 @@ public class Automaton implements Serializable
 			}
 			Queue<State> currentQueue = new LinkedList<State>(queue);
 			queue.clear();
-			// visited = new HashSet<State>();
 			while (!currentQueue.isEmpty())
 			{
 				State current = currentQueue.remove();
@@ -123,7 +120,7 @@ public class Automaton implements Serializable
 				{
 					for (State state : result)
 					{
-						addStates(queue, visited, state);
+						addStates(queue, state);
 					}
 				}
 				else
@@ -131,7 +128,7 @@ public class Automaton implements Serializable
 					// non consuming adds to the current queue
 					for (State state : result)
 					{
-						addStates(currentQueue, visited, state);
+						addStates(currentQueue, state);
 					}
 				}
 			}
@@ -148,12 +145,8 @@ public class Automaton implements Serializable
 	 * @param visited
 	 * @param state
 	 */
-	protected void addStates(Queue<State> toqueue, Set<State> visited, State state)
+	protected void addStates(Queue<State> toqueue, State state)
 	{
-		if (visited.contains(state))
-		{
-			return;
-		}
 		if (toqueue.contains(state))
 		{
 			return;
@@ -163,10 +156,7 @@ public class Automaton implements Serializable
 		{
 			if (t.isLambda())
 			{
-				if (!visited.contains(t.getEndState()))
-				{
-					addStates(toqueue, visited, t.getEndState());
-				}
+				addStates(toqueue, t.getEndState());
 			}
 		}
 	}

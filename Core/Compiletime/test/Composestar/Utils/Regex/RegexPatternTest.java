@@ -37,29 +37,16 @@ public class RegexPatternTest extends TestCase
 
 	protected Pattern javaPattern;
 
-	public RegexPatternTest()
-	{
-		super();
-	}
-
-	/**
-	 * @param name
-	 */
-	public RegexPatternTest(String name)
-	{
-		super(name);
-	}
-
 	protected void compile(String pattern) throws PatternParseException
 	{
-		System.out.println("Testing pattern: " + pattern);
+		// System.out.println("Testing pattern: " + pattern);
 		cpsPattern = RegexPattern.compile(pattern);
 		javaPattern = Pattern.compile(pattern);
 	}
 
 	protected boolean matches(String input)
 	{
-		System.out.println("Testing input: " + input);
+		// System.out.println("Testing input: " + input);
 		boolean result1 = cpsPattern.matches(new StringListBuffer(input));
 		boolean result2 = javaPattern.matcher(input.replaceAll("\\s", "")).matches();
 		if (result1 != result2)
@@ -67,7 +54,7 @@ public class RegexPatternTest extends TestCase
 			fail(String.format("RegexPattern and java.util.regex.Pattern do not agree: %s vs %s for input: %s",
 					result1, result2, input));
 		}
-		System.out.println("      matches: " + result1);
+		// System.out.println(" matches: " + result1);
 		return result1;
 	}
 
@@ -100,7 +87,7 @@ public class RegexPatternTest extends TestCase
 		assertFalse(matches("aa cc dd"));
 	}
 
-	public void testInvalid()
+	public void testBadRegex()
 	{
 		try
 		{
@@ -410,7 +397,7 @@ public class RegexPatternTest extends TestCase
 		try
 		{
 			t.testBasic();
-			t.testInvalid();
+			t.testBadRegex();
 			t.testAlts();
 			t.testNeq();
 			t.testDot();
