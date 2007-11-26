@@ -34,6 +34,8 @@ import java.util.Set;
  */
 public class LookaheadState extends State
 {
+	private static final long serialVersionUID = -7220215173317245637L;
+
 	/**
 	 * The automaton that contains the subexpression
 	 */
@@ -65,6 +67,7 @@ public class LookaheadState extends State
 		super(stateLabel);
 	}
 
+	@Override
 	public String getName()
 	{
 		if (negation)

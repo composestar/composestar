@@ -24,6 +24,7 @@
 
 package Composestar.Utils.Regex;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,8 +34,10 @@ import java.util.Set;
  * 
  * @author Michiel Hendriks
  */
-public class State
+public class State implements Serializable
 {
+	private static final long serialVersionUID = -8637328782773046020L;
+
 	private static int cnt;
 
 	/**

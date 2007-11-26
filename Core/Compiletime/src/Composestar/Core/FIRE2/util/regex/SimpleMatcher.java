@@ -35,7 +35,9 @@ import java.util.Set;
  * A simple pattern matcher for the FIRE2 RegularAutomatons.
  * 
  * @author Michiel Hendriks
+ * @Deprecated Use Composestar.Utils.Regex
  */
+@Deprecated
 public class SimpleMatcher
 {
 	protected Pattern pattern;

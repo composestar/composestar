@@ -24,6 +24,7 @@
 
 package Composestar.Utils.Regex;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,8 +35,10 @@ import java.util.Set;
  * 
  * @author Michiel Hendriks
  */
-public class Transition
+public class Transition implements Serializable
 {
+	private static final long serialVersionUID = -8370677697516793898L;
+
 	/**
 	 * The wildcard label, always matches
 	 */

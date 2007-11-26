@@ -25,6 +25,10 @@ package Composestar.Core.FIRE2.util.regex;
 
 import java.io.Serializable;
 
+/**
+ * @Deprecated Use Composestar.Utils.Regex
+ */
+@Deprecated
 public abstract class Pattern implements Serializable
 {
 	protected String patternString;

@@ -24,6 +24,7 @@
 
 package Composestar.Utils.Regex;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -34,8 +35,10 @@ import java.util.Set;
  * 
  * @author Michiel Hendriks
  */
-public class Automaton
+public class Automaton implements Serializable
 {
+	private static final long serialVersionUID = 4633405911585613127L;
+
 	protected State begin;
 
 	protected State end;

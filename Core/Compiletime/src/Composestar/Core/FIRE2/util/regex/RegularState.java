@@ -31,6 +31,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @Deprecated Use Composestar.Utils.Regex
+ */
+@Deprecated
 class RegularState implements Serializable
 {
 	private static final long serialVersionUID = 2662274504980135336L;

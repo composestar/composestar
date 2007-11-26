@@ -24,6 +24,7 @@
 
 package Composestar.Utils.Regex;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,29 +33,37 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Map.Entry;
-
-import Composestar.Core.FIRE2.util.regex.PatternParseException;
+import java.util.regex.PatternSyntaxException;
 
 /**
- * A basic regular expression pattern. Only a small subset of regex is
- * supported. And not in the usual flexibility. There are no character matches,
- * just words. All whitespace is ignored. Multiplicity is only allowed for
- * subexpressions and not for characters. For example <code>ab*c</code> is not
- * allowed, use <code>(a)(b)*(c)</code>. Matching always happens on the whole
- * sentence (i.e. pattern => ^pattern$ ). The dot wildcard may only be used in
- * conjuction with + or * multipliers. ENBF grammar of the accepted expressions:
- * 
- * <pre>
- * alt		= seq { '|' seq };
- * seq		= (word | subExpr | not) { (word | subExpr | not) };
- * word		= letterOrDigit {letterOrDigit};
- * not		= '(?!' alt ')';
- * subExpr	= '(' alt ')' [ '?' | '*' | '+' ];
- * </pre>
+ * A simple regular expression evaluator. Only a subset of the standard regular
+ * expressions functionality is supported. Most important of all. This system
+ * does not function on individual characters, only words are allowed. So, in
+ * the expression all characters are combined into a single word. If you want to
+ * match individual characters you should change them to a sub expression:
+ * <code>(a)(b)(c)</code> and not <code>abc</code>. Because individual
+ * characters are not supported you can not use character classes. Matching is
+ * done using words instead of character streams, the input is read per word.
+ * Whitespace is not supported.
+ * <p>
+ * The following features are supported, see
+ * <href="http://www.regular-expressions.info/refflavors.html">regular-expressions.info</a>
+ * for more information.
+ * <ul>
+ * <li>dot (but only in conjection with * and +)</li>
+ * <li>Alternation</li>
+ * <li>Quantifier: ? (only for subexpresions, not for dot)</li>
+ * <li>Quantifier: *</li>
+ * <li>Quantifier: +</li>
+ * <li>Grouping: (regex)</li>
+ * <li>Positive lookahead</li>
+ * <li>Nagative lookahead</li>
+ * </ul>
+ * </p>
  * 
  * @author Michiel Hendriks
  */
-public final class RegexPattern
+public final class RegexPattern implements Serializable
 {
 	private static final long serialVersionUID = -3870390515243330458L;
 
@@ -62,12 +71,19 @@ public final class RegexPattern
 
 	private String pattern;
 
-	public static RegexPattern compile(String pattern) throws PatternParseException
+	/**
+	 * Compile a string pattern;
+	 * 
+	 * @param pattern
+	 * @return
+	 * @throws PatternSyntaxException
+	 */
+	public static RegexPattern compile(String pattern) throws PatternSyntaxException
 	{
 		return new RegexPattern(pattern);
 	}
 
-	private RegexPattern(String pattern) throws PatternParseException
+	private RegexPattern(String pattern) throws PatternSyntaxException
 	{
 		this.pattern = pattern;
 		automaton = Parser.parse(pattern);
@@ -78,6 +94,7 @@ public final class RegexPattern
 		return automaton.matches(buffer);
 	}
 
+	@Override
 	public String toString()
 	{
 		return pattern;
@@ -88,16 +105,25 @@ public final class RegexPattern
 		private Parser()
 		{}
 
-		public static Automaton parse(String pattern) throws PatternParseException
+		public static Automaton parse(String pattern) throws PatternSyntaxException
 		{
 			Lexer lexer = new Lexer(pattern);
 			State end = new FinalState();
-			State start = pAlt(lexer, end);
+			State start;
+			try
+			{
+				start = pAlt(lexer, end);
+
+			}
+			catch (PatternSyntaxException e)
+			{
+				throw new PatternSyntaxException(e.getDescription(), pattern, e.getIndex());
+			}
 			Automaton auto = new Automaton(start, end);
 			if (lexer.token().type != Token.EOF)
 			{
-				throw new PatternParseException(String.format("Garbage token '%s' at #%d", lexer.token().text, lexer
-						.charPos()));
+				throw new PatternSyntaxException(String.format("Garbage token '%s'", lexer.token().text), pattern,
+						lexer.charPos());
 			}
 			return auto;
 		}
@@ -110,9 +136,9 @@ public final class RegexPattern
 		 * @param lexer
 		 * @param endState
 		 * @return
-		 * @throws PatternParseException
+		 * @throws PatternSyntaxException
 		 */
-		private static State pAlt(Lexer lexer, State endState) throws PatternParseException
+		private static State pAlt(Lexer lexer, State endState) throws PatternSyntaxException
 		{
 			List<State> alts = new ArrayList<State>();
 			alts.add(pSeq(lexer, endState));
@@ -215,9 +241,9 @@ public final class RegexPattern
 		 * @param lexer
 		 * @param endState
 		 * @return
-		 * @throws PatternParseException
+		 * @throws PatternSyntaxException
 		 */
-		private static State pSeq(Lexer lexer, State endState) throws PatternParseException
+		private static State pSeq(Lexer lexer, State endState) throws PatternSyntaxException
 		{
 			State result = null;
 			State lhs = null;
@@ -234,9 +260,9 @@ public final class RegexPattern
 					Token t = lexer.nextToken();
 					if (t.type != Token.STAR && t.type != Token.PLUS)
 					{
-						throw new PatternParseException(String.format(
-								"Dot may only be used in conjuction with the star or plus multiplier (.* or .+)",
-								lexer.charPos));
+						throw new PatternSyntaxException(
+								"Dot may only be used in conjuction with the star or plus multiplier (.* or .+)", "",
+								lexer.charPos);
 					}
 					lexer.nextToken();
 					rhs = new State();
@@ -279,8 +305,8 @@ public final class RegexPattern
 			}
 			if (result == null)
 			{
-				throw new PatternParseException(String.format("Unexpected token '%s' at #%d", lexer.token().text, lexer
-						.charPos()));
+				throw new PatternSyntaxException(String.format("Unexpected token '%s'", lexer.token().text), "", lexer
+						.charPos());
 			}
 			return result;
 		}
@@ -291,9 +317,9 @@ public final class RegexPattern
 		 * @param lexer
 		 * @param endState
 		 * @return
-		 * @throws PatternParseException
+		 * @throws PatternSyntaxException
 		 */
-		private static State pWord(Lexer lexer, State endState) throws PatternParseException
+		private static State pWord(Lexer lexer, State endState) throws PatternSyntaxException
 		{
 			Token t = lexer.token();
 			lexer.nextToken();
@@ -309,9 +335,9 @@ public final class RegexPattern
 		 * @param lexer
 		 * @param endState
 		 * @return
-		 * @throws PatternParseException
+		 * @throws PatternSyntaxException
 		 */
-		private static State pSubexp(Lexer lexer, State endState) throws PatternParseException
+		private static State pSubexp(Lexer lexer, State endState) throws PatternSyntaxException
 		{
 			Token t = lexer.token();
 			lexer.nextToken();
@@ -330,7 +356,7 @@ public final class RegexPattern
 				}
 				else
 				{
-					throw new PatternParseException(String.format("Invalid lookahead type #%d", lexer.charPos()));
+					throw new PatternSyntaxException("Invalid lookahead type", "", lexer.charPos());
 				}
 				lexer.nextToken(); // eat the ! or =
 
@@ -346,7 +372,7 @@ public final class RegexPattern
 
 			if (lexer.token().type != Token.PRIGHT)
 			{
-				throw new PatternParseException(String.format("Missing right paranthesis at #%d", lexer.charPos()));
+				throw new PatternSyntaxException("Missing right paranthesis", "", lexer.charPos());
 			}
 			lexer.nextToken();
 
@@ -362,9 +388,9 @@ public final class RegexPattern
 		 * 
 		 * @param expr
 		 * @param lexer
-		 * @throws PatternParseException
+		 * @throws PatternSyntaxException
 		 */
-		private static void multTransform(State expr, Lexer lexer, State endState) throws PatternParseException
+		private static void multTransform(State expr, Lexer lexer, State endState) throws PatternSyntaxException
 		{
 			// TODO: breaks for subexpressions
 			Token t = lexer.token();
@@ -372,8 +398,8 @@ public final class RegexPattern
 			{
 				if (lexer.ll(-1).type != Token.PRIGHT)
 				{
-					throw new PatternParseException(String.format("Multiplication only supported for subexpressions",
-							lexer.charPos()));
+					throw new PatternSyntaxException("Multiplication only supported for subexpressions", "", lexer
+							.charPos());
 				}
 				lexer.nextToken();
 				// replace the end states with self
@@ -385,8 +411,8 @@ public final class RegexPattern
 			{
 				if (lexer.ll(-1).type != Token.PRIGHT)
 				{
-					throw new PatternParseException(String.format("Multiplication only supported for subexpressions",
-							lexer.charPos()));
+					throw new PatternSyntaxException("Multiplication only supported for subexpressions", "", lexer
+							.charPos());
 				}
 				lexer.nextToken();
 				// simply add lambda
@@ -396,8 +422,8 @@ public final class RegexPattern
 			{
 				if (lexer.ll(-1).type != Token.PRIGHT)
 				{
-					throw new PatternParseException(String.format("Multiplication only supported for subexpressions",
-							lexer.charPos()));
+					throw new PatternSyntaxException("Multiplication only supported for subexpressions", "", lexer
+							.charPos());
 				}
 				lexer.nextToken();
 				// replace the end states with this state
@@ -452,6 +478,12 @@ public final class RegexPattern
 	 */
 	private static final class FinalState extends State
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 4634154080044477451L;
+
+		@Override
 		public String getName()
 		{
 			return "(F)" + label;

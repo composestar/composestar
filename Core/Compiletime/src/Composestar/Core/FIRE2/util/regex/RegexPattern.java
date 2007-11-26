@@ -51,7 +51,9 @@ import java.util.Map.Entry;
  * </pre>
  * 
  * @author Michiel Hendriks
+ * @Deprecated Use Composestar.Utils.Regex
  */
+@Deprecated
 public final class RegexPattern extends Pattern
 {
 	private static final long serialVersionUID = -3870390515243330458L;

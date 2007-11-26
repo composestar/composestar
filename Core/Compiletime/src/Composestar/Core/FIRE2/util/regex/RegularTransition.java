@@ -29,6 +29,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @Deprecated Use Composestar.Utils.Regex
+ */
+@Deprecated
 class RegularTransition implements Serializable
 {
 	private static final long serialVersionUID = -8405459283288345064L;
