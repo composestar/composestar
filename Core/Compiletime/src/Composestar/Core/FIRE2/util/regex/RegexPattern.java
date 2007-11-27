@@ -51,7 +51,7 @@ import java.util.Map.Entry;
  * </pre>
  * 
  * @author Michiel Hendriks
- * @Deprecated Use Composestar.Utils.Regex
+ * @Deprecated "not" construction is broken
  */
 @Deprecated
 public final class RegexPattern extends Pattern
@@ -417,6 +417,7 @@ public final class RegexPattern extends Pattern
 			Stack<RegularState> states = new Stack<RegularState>();
 			states.push(base);
 			Set<RegularState> visited = new HashSet<RegularState>();
+			visited.add(to);
 			while (states.size() > 0)
 			{
 				RegularState state = states.pop();

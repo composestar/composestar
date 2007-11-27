@@ -9,43 +9,9 @@ namespace RuBCoDeTest.TestCase
 		public TargetClass()
 		{ }
 
-        public void noargs()
-        { }
-
-        public void simpleint(int value)
-        { }
-
-        public void simplestring(string value)
-        { }
-
-        public void simpleobject(StringValue value)
-        { }
-
-        public void outint(out int value)
+        public void sendMessage(string sender, string receiver, string message)
         {
-            value = 1;
+            Console.WriteLine("Sending message to {1} from {0}, test: {3}", sender, receiver, message);
         }
-
-        public void outstring(out string value)
-        {
-            value = "1";
-        }
-
-        public void outobject(out StringValue value)
-        {
-            value = new StringValue("1");
-        }
-
-        public void refint(ref int value)
-        { }
-
-        public void refstring(ref string value)
-        { }
-
-        public void refobject(ref StringValue value)
-        { }
-
-        public void combo(int v1, string v2, StringValue v3, StringValue v4)
-        { }
 	}
 }

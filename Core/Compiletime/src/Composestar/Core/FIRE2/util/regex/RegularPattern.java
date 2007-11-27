@@ -19,12 +19,11 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: RegexPattern.java 3936 2007-11-19 12:43:44Z elmuerte $
+ * $Id: RegexPattern.java 3949 2007-11-26 11:07:22Z elmuerte $
  */
 
-package Composestar.Utils.Regex;
+package Composestar.Core.FIRE2.util.regex;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,73 +34,58 @@ import java.util.Stack;
 import java.util.Map.Entry;
 
 /**
- * A simple regular expression evaluator. Only a subset of the standard regular
- * expressions functionality is supported. Most important of all. This system
- * does not function on individual characters, only words are allowed. So, in
- * the expression all characters are combined into a single word. If you want to
- * match individual characters you should change them to a sub expression:
- * <code>(a)(b)(c)</code> and not <code>abc</code>. Because individual
- * characters are not supported you can not use character classes. Matching is
- * done using words instead of character streams, the input is read per word.
- * Whitespace is not supported.
- * <p>
- * The following features are supported, see
- * <href="http://www.regular-expressions.info/refflavors.html">regular-expressions.info</a>
- * for more information.
- * <ul>
- * <li>dot (but only in conjection with * and +)</li>
- * <li>Alternation</li>
- * <li>Quantifier: ? (only for subexpresions, not for dot)</li>
- * <li>Quantifier: *</li>
- * <li>Quantifier: +</li>
- * <li>Grouping: (regex)</li>
- * <li>Positive lookahead</li>
- * <li>Nagative lookahead</li>
- * </ul>
- * </p>
+ * THIS IS NOT A REGULAR EXPRESSION (e.g. REGEX). But a more basic regular
+ * language. The EBNF below explains the syntax
+ * 
+ * <pre>
+ * pattern		= alt;
+ * alt			= seq {'|' seq};
+ * seq			= elm { elm };
+ * elm			= word | '.' [mult] | '(' pattern ')' [mult] | not [mult];
+ * word			= (* character and digit sequence *)
+ * mult			= '?' | '*' | '+';
+ * not			= '![' word { ',' word } ']';
+ * </pre>
  * 
  * @author Michiel Hendriks
- * @Deprecated matching contains a bug, but more important, it's not usable for
- *             FIRE2, it's way to complicated to define simple constraints using
- *             real regular expressions. FIRE2 uses the RegularPattern which is
- *             almost like regular expression.
  */
-@Deprecated
-public final class RegexPattern implements Serializable
+public final class RegularPattern extends Pattern
 {
 	private static final long serialVersionUID = -3870390515243330458L;
 
-	private Automaton automaton;
+	private RegularAutomaton automaton;
 
-	private String pattern;
-
-	/**
-	 * Compile a string pattern;
-	 * 
-	 * @param pattern
-	 * @return
-	 * @throws PatternParseException
-	 */
-	public static RegexPattern compile(String pattern) throws PatternParseException
+	public static RegularPattern compile(String pattern) throws PatternParseException
 	{
-		return new RegexPattern(pattern);
+		return new RegularPattern(pattern);
 	}
 
-	private RegexPattern(String pattern) throws PatternParseException
+	private RegularPattern(String pattern) throws PatternParseException
 	{
-		this.pattern = pattern;
+		super(pattern);
 		automaton = Parser.parse(pattern);
 	}
 
-	public boolean matches(MatchingBuffer buffer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.FIRE2.util.regex.IPattern#getStartState()
+	 */
+	@Override
+	public RegularState getStartState()
 	{
-		return automaton.matches(buffer);
+		return automaton.getStartState();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.FIRE2.util.regex.IPattern#getEndState()
+	 */
 	@Override
-	public String toString()
+	public RegularState getEndState()
 	{
-		return pattern;
+		return automaton.getEndState();
 	}
 
 	private static final class Parser
@@ -109,26 +93,18 @@ public final class RegexPattern implements Serializable
 		private Parser()
 		{}
 
-		public static Automaton parse(String pattern) throws PatternParseException
+		public static RegularAutomaton parse(String pattern) throws PatternParseException
 		{
 			Lexer lexer = new Lexer(pattern);
-			State end = new FinalState();
-			State start;
-			try
-			{
-				start = pAlt(lexer, end);
-			}
-			catch (PatternParseException e)
-			{
-				throw new PatternParseException("boo", "foo", -1);
-				// throw new PatternParseException(e.getDescription(), pattern,
-				// e.getIndex());
-			}
-			Automaton auto = new Automaton(start, end);
+			RegularState end = new FinalRegularState();
+			RegularState start = pAlt(lexer, end);
+			RegularAutomaton auto = new RegularAutomaton();
+			auto.setStartState(start);
+			auto.setEndState(end);
 			if (lexer.token().type != Token.EOF)
 			{
-				throw new PatternParseException(String.format("Garbage token '%s'", lexer.token().text), pattern, lexer
-						.charPos());
+				throw new PatternParseException(String.format("Garbage token '%s' at #%d", lexer.token().text, lexer
+						.charPos()));
 			}
 			return auto;
 		}
@@ -143,9 +119,9 @@ public final class RegexPattern implements Serializable
 		 * @return
 		 * @throws PatternParseException
 		 */
-		private static State pAlt(Lexer lexer, State endState) throws PatternParseException
+		private static RegularState pAlt(Lexer lexer, RegularState endState) throws PatternParseException
 		{
-			List<State> alts = new ArrayList<State>();
+			List<RegularState> alts = new ArrayList<RegularState>();
 			alts.add(pSeq(lexer, endState));
 
 			while (lexer.token().type == Token.OR)
@@ -158,54 +134,58 @@ public final class RegexPattern implements Serializable
 			{
 				return alts.get(0);
 			}
-			// combine transitions with identical destinations
+			// combine transitions with identical destinations and negation
 
-			State result = new State();
-			Map<State, List<Transition>> destMap = new HashMap<State, List<Transition>>();
-			for (State state : alts)
+			RegularState result = new RegularState();
+			Map<RegularState, List<RegularTransition>> destMap = new HashMap<RegularState, List<RegularTransition>>();
+			for (RegularState state : alts)
 			{
-				if (!state.getClass().equals(State.class))
-				{
-					// don't combine subclasses of State
-					new Transition(result, state);
-					continue;
-				}
-				else if (hasSelfReference(state))
+				if (hasSelfReference(state))
 				{
 					// add lambda to self referencing states
-					new Transition(result, state);
+					new RegularTransition(result, state);
 					continue;
 				}
-				for (Transition rt : state.getTransitions())
+				for (RegularTransition rt : state.getOutTransitions())
 				{
-					List<Transition> dst = destMap.get(rt.getEndState());
+					List<RegularTransition> dst = destMap.get(rt.getEndState());
 					if (dst == null)
 					{
-						dst = new ArrayList<Transition>();
+						dst = new ArrayList<RegularTransition>();
 						destMap.put(rt.getEndState(), dst);
 					}
 					dst.add(rt);
 				}
 			}
-			for (Entry<State, List<Transition>> entry : destMap.entrySet())
+			for (Entry<RegularState, List<RegularTransition>> entry : destMap.entrySet())
 			{
-				Transition regrt = null;
-				Transition lambda = null;
-				for (Transition rt : entry.getValue())
+				RegularTransition regrt = null;
+				RegularTransition neqrt = null;
+				RegularTransition lambda = null;
+				for (RegularTransition rt : entry.getValue())
 				{
-					if (rt.isLambda())
+					if (rt.isEmpty())
 					{
 						// don't combine lambda transitions with others
 						if (lambda == null)
 						{
-							lambda = new Transition(result, entry.getKey());
+							lambda = new RegularTransition(result, entry.getKey());
 						}
+					}
+					else if (rt.isNegation())
+					{
+						if (neqrt == null)
+						{
+							neqrt = new RegularTransition(result, entry.getKey());
+							neqrt.setNegation(true);
+						}
+						neqrt.addLabels(rt.getLabels());
 					}
 					else
 					{
 						if (regrt == null)
 						{
-							regrt = new Transition(result, entry.getKey());
+							regrt = new RegularTransition(result, entry.getKey());
 						}
 						regrt.addLabels(rt.getLabels());
 					}
@@ -220,16 +200,16 @@ public final class RegexPattern implements Serializable
 		 * @param self
 		 * @return
 		 */
-		private static boolean hasSelfReference(State self)
+		private static boolean hasSelfReference(RegularState self)
 		{
-			Stack<State> states = new Stack<State>();
+			Stack<RegularState> states = new Stack<RegularState>();
 			states.push(self);
-			Set<State> visited = new HashSet<State>();
+			Set<RegularState> visited = new HashSet<RegularState>();
 			while (states.size() > 0)
 			{
-				State state = states.pop();
+				RegularState state = states.pop();
 				visited.add(state);
-				for (Transition rt : state.getTransitions())
+				for (RegularTransition rt : state.getOutTransitions())
 				{
 					if (rt.getEndState().equals(self))
 					{
@@ -248,43 +228,49 @@ public final class RegexPattern implements Serializable
 		 * @return
 		 * @throws PatternParseException
 		 */
-		private static State pSeq(Lexer lexer, State endState) throws PatternParseException
+		private static RegularState pSeq(Lexer lexer, RegularState endState) throws PatternParseException
 		{
-			State result = null;
-			State lhs = null;
-			while (lexer.token().type == Token.WORD || lexer.token().type == Token.LOOKAHEAD
+			RegularState result = null;
+			RegularState lhs = null;
+			while (lexer.token().type == Token.WORD || lexer.token().type == Token.NOT
 					|| lexer.token().type == Token.PLEFT || lexer.token().type == Token.DOT)
 			{
-				State rhs;
+				RegularState rhs;
 				if (lexer.token().type == Token.WORD)
 				{
 					rhs = pWord(lexer, endState);
 				}
 				else if (lexer.token().type == Token.DOT)
 				{
-					Token t = lexer.nextToken();
-					if (t.type != Token.STAR && t.type != Token.PLUS)
+					lexer.nextToken();
+					rhs = new RegularState();
+					RegularTransition transition = new RegularTransition(rhs, endState);
+					transition.addLabel(RegularTransition.WILDCARD);
+					multTransform(rhs, lexer, endState);
+				}
+				else if (lexer.token().type == Token.NOT)
+				{
+					// ![word1,word2,word3,word4,...]
+					rhs = new RegularState();
+					RegularTransition transition = new RegularTransition(rhs, endState);
+					transition.setNegation(true);
+					lexer.nextToken();
+					while (lexer.token().type == Token.WORD)
 					{
-						throw new PatternParseException(
-								"Dot may only be used in conjuction with the star or plus multiplier (.* or .+)", "",
-								lexer.charPos);
+						transition.addLabel(lexer.token().toString());
+						lexer.nextToken();
+						if (lexer.token().type == Token.COMMA)
+						{
+							lexer.nextToken();
+						}
+					}
+					if (lexer.token().type != Token.SRIGHT)
+					{
+						throw new PatternParseException(String.format("Missing right square bracket at #%d", lexer
+								.charPos()));
 					}
 					lexer.nextToken();
-					rhs = new State();
-					State self = rhs;
-					Transition transition;
-					if (t.type == Token.PLUS)
-					{
-						// state for the first word
-						self = new State();
-						transition = new Transition(rhs, self);
-						transition.addLabel(Transition.WILDCARD);
-					}
-					// lambda
-					new Transition(self, endState);
-					// wildcard to self
-					transition = new Transition(self, self);
-					transition.addLabel(Transition.WILDCARD);
+					multTransform(rhs, lexer, endState);
 				}
 				else
 				{
@@ -310,8 +296,8 @@ public final class RegexPattern implements Serializable
 			}
 			if (result == null)
 			{
-				throw new PatternParseException(String.format("Unexpected token '%s'", lexer.token().text), "", lexer
-						.charPos());
+				throw new PatternParseException(String.format("Unexpected token '%s' at #%d", lexer.token().text, lexer
+						.charPos()));
 			}
 			return result;
 		}
@@ -324,12 +310,12 @@ public final class RegexPattern implements Serializable
 		 * @return
 		 * @throws PatternParseException
 		 */
-		private static State pWord(Lexer lexer, State endState) throws PatternParseException
+		private static RegularState pWord(Lexer lexer, RegularState endState) throws PatternParseException
 		{
 			Token t = lexer.token();
 			lexer.nextToken();
-			State result = new State();
-			Transition transition = new Transition(result, endState);
+			RegularState result = new RegularState();
+			RegularTransition transition = new RegularTransition(result, endState);
 			transition.addLabel(t.toString());
 			return result;
 		}
@@ -342,53 +328,17 @@ public final class RegexPattern implements Serializable
 		 * @return
 		 * @throws PatternParseException
 		 */
-		private static State pSubexp(Lexer lexer, State endState) throws PatternParseException
+		private static RegularState pSubexp(Lexer lexer, RegularState endState) throws PatternParseException
 		{
-			Token t = lexer.token();
 			lexer.nextToken();
-			State result;
-
-			if (t.type == Token.LOOKAHEAD)
-			{
-				result = new LookaheadState();
-				if (lexer.token().type == Token.EQUALS)
-				{
-					((LookaheadState) result).setNegation(false);
-				}
-				else if (lexer.token().type == Token.NOT)
-				{
-					((LookaheadState) result).setNegation(true);
-				}
-				else
-				{
-					throw new PatternParseException("Invalid lookahead type", "", lexer.charPos());
-				}
-				lexer.nextToken(); // eat the ! or =
-
-				State end = new FinalState();
-				State begin = pAlt(lexer, end);
-				((LookaheadState) result).setAutomaton(new Automaton(begin, end), endState);
-			}
-			else
-			{
-				// consuming subexpression
-				result = pAlt(lexer, endState);
-				if (result == endState)
-				{
-					throw new PatternParseException("Empty subexpression", "", lexer.charPos());
-				}
-			}
-
+			RegularState result = pAlt(lexer, endState);
 			if (lexer.token().type != Token.PRIGHT)
 			{
-				throw new PatternParseException("Missing right paranthesis", "", lexer.charPos());
+				throw new PatternParseException(String.format("Missing right paranthesis at #%d", lexer.charPos()));
 			}
 			lexer.nextToken();
 
-			if (t.type != Token.LOOKAHEAD)
-			{
-				multTransform(result, lexer, endState);
-			}
+			multTransform(result, lexer, endState);
 			return result;
 		}
 
@@ -399,49 +349,53 @@ public final class RegexPattern implements Serializable
 		 * @param lexer
 		 * @throws PatternParseException
 		 */
-		private static void multTransform(State expr, Lexer lexer, State endState) throws PatternParseException
+		private static void multTransform(RegularState expr, Lexer lexer, RegularState endState)
+				throws PatternParseException
 		{
 			// TODO: breaks for subexpressions
 			Token t = lexer.token();
 			if (t.type == Token.STAR)
 			{
-				if (lexer.ll(-1).type != Token.PRIGHT)
-				{
-					throw new PatternParseException("Multiplication only supported for subexpressions", "", lexer
-							.charPos());
-				}
+				// if (lexer.ll(-1).type != Token.PRIGHT)
+				// {
+				// throw new PatternParseException(String.format("Multiplication
+				// only supported for subexpressions",
+				// lexer.charPos()));
+				// }
 				lexer.nextToken();
 				// replace the end states with self
 				replaceStates(expr, endState, expr);
 				// lambda makes it optional
-				new Transition(expr, endState);
+				new RegularTransition(expr, endState);
 			}
 			else if (t.type == Token.OPT)
 			{
-				if (lexer.ll(-1).type != Token.PRIGHT)
-				{
-					throw new PatternParseException("Multiplication only supported for subexpressions", "", lexer
-							.charPos());
-				}
+				// if (lexer.ll(-1).type != Token.PRIGHT)
+				// {
+				// throw new PatternParseException(String.format("Multiplication
+				// only supported for subexpressions",
+				// lexer.charPos()));
+				// }
 				lexer.nextToken();
 				// simply add lambda
-				new Transition(expr, endState);
+				new RegularTransition(expr, endState);
 			}
 			else if (t.type == Token.PLUS)
 			{
-				if (lexer.ll(-1).type != Token.PRIGHT)
-				{
-					throw new PatternParseException("Multiplication only supported for subexpressions", "", lexer
-							.charPos());
-				}
+				// if (lexer.ll(-1).type != Token.PRIGHT)
+				// {
+				// throw new PatternParseException(String.format("Multiplication
+				// only supported for subexpressions",
+				// lexer.charPos()));
+				// }
 				lexer.nextToken();
 				// replace the end states with this state
-				State newEnd = new State();
+				RegularState newEnd = new RegularState();
 				replaceStates(expr, endState, newEnd);
 				// lambda to begin of expression
-				new Transition(newEnd, expr);
+				new RegularTransition(newEnd, expr);
 				// or to end state (had 1 iteration)
-				new Transition(newEnd, endState);
+				new RegularTransition(newEnd, endState);
 			}
 		}
 
@@ -452,17 +406,17 @@ public final class RegexPattern implements Serializable
 		 * @param from
 		 * @param to
 		 */
-		private static void replaceStates(State base, State from, State to)
+		private static void replaceStates(RegularState base, RegularState from, RegularState to)
 		{
-			Stack<State> states = new Stack<State>();
+			Stack<RegularState> states = new Stack<RegularState>();
 			states.push(base);
-			Set<State> visited = new HashSet<State>();
-			visited.add(to); // don't update self
+			Set<RegularState> visited = new HashSet<RegularState>();
+			visited.add(to);
 			while (states.size() > 0)
 			{
-				State state = states.pop();
+				RegularState state = states.pop();
 				visited.add(state);
-				for (Transition rt : state.getTransitions())
+				for (RegularTransition rt : state.getOutTransitions())
 				{
 
 					if (rt.getEndState().equals(from))
@@ -471,7 +425,7 @@ public final class RegexPattern implements Serializable
 						continue;
 					}
 
-					State st = rt.getEndState();
+					RegularState st = rt.getEndState();
 					if (!visited.contains(st))
 					{
 						states.push(st);
@@ -486,26 +440,20 @@ public final class RegexPattern implements Serializable
 	 * 
 	 * @author Michiel Hendriks
 	 */
-	private static final class FinalState extends State
+	private static final class FinalRegularState extends RegularState
 	{
-		private static final long serialVersionUID = 4634154080044477451L;
+		private static final long serialVersionUID = -5450856685894425275L;
 
 		@Override
-		public String getName()
+		public void addOutTransition(RegularTransition transition)
 		{
-			return "(F)" + label;
+			throw new IllegalArgumentException("FinalRegularState can not contains transition");
 		}
 
 		@Override
-		public void addTransition(Transition transition)
+		public void removeOutTransition(RegularTransition transition)
 		{
-			throw new IllegalArgumentException("FinalState can not contains transition");
-		}
-
-		@Override
-		public void removeTransition(Transition transition)
-		{
-			throw new IllegalArgumentException("FinalState can not contains transition");
+			throw new IllegalArgumentException("FinalRegularState can not contains transition");
 		}
 	}
 
@@ -596,20 +544,13 @@ public final class RegexPattern implements Serializable
 				return;
 			}
 			char c = buffer.charAt(charPos++);
-			if (c == Token.PLEFT)
+			if (c == Token.EXCL)
 			{
-				if (buffer.length() >= charPos + 1 && buffer.charAt(charPos) == Token.OPT)
+				if (buffer.length() >= charPos + 1 && buffer.charAt(charPos) == Token.SLEFT) // 
 				{
+					// ![
 					charPos++;
-					if (buffer.length() >= charPos + 1 && buffer.charAt(charPos) == 0x3C) // <
-					{
-						charPos++;
-						tokenBuffer.add(LOOKBEHIND_TOKEN);
-					}
-					else
-					{
-						tokenBuffer.add(LOOKAHEAD_TOKEN);
-					}
+					tokenBuffer.add(NOT_TOKEN);
 				}
 				else
 				{
@@ -636,9 +577,7 @@ public final class RegexPattern implements Serializable
 
 		private static final Token EOF_TOKEN = new Token(Token.EOF, "<EOF>");
 
-		private static final Token LOOKAHEAD_TOKEN = new Token(Token.LOOKAHEAD, "(?");
-
-		private static final Token LOOKBEHIND_TOKEN = new Token(Token.LOOKBEHIND, "(?<");
+		private static final Token NOT_TOKEN = new Token(Token.NOT, "![");
 
 		private static Token mktok(char c)
 		{
@@ -667,11 +606,13 @@ public final class RegexPattern implements Serializable
 
 		public static final int WORD = -2;
 
+		public static final int NOT = -3; // ![ ... , ... ]
+
 		public static final int OR = 0x7C; // |
 
 		public static final int STAR = 0x2A; // *
 
-		public static final int PLUS = 0x2B; // *
+		public static final int PLUS = 0x2B; // +
 
 		public static final int OPT = 0x3F; // ?
 
@@ -679,21 +620,19 @@ public final class RegexPattern implements Serializable
 
 		public static final int PRIGHT = 0x29; // )
 
-		public static final int CLEFT = 0x7B8; // {
+		public static final int CLEFT = 0x7B; // {
 
 		public static final int CRIGHT = 0x7D; // }
 
-		public static final int COMMA = 0x2C; // )
+		public static final int SLEFT = 0x5B; // [
+
+		public static final int SRIGHT = 0x5D; // ]
+
+		public static final int COMMA = 0x2C; // ,
 
 		public static final int DOT = 0x2E; // .
 
-		public static final int EQUALS = 0x3D; // =
-
-		public static final int NOT = 0x21; // !
-
-		public static final int LOOKAHEAD = -3; // (?
-
-		public static final int LOOKBEHIND = -4; // (?<
+		public static final int EXCL = 0x21; // !
 
 		public int type;
 

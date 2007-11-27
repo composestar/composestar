@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author Arjan de Roo
- * @deprecated Switch to RegexPattern is more regular expression conform
+ * @deprecated Use RegularPattern
  */
 @Deprecated
 public class LegacyPattern extends Pattern

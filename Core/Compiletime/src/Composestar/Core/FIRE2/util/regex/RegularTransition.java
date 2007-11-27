@@ -29,10 +29,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @Deprecated Use Composestar.Utils.Regex
- */
-@Deprecated
 class RegularTransition implements Serializable
 {
 	private static final long serialVersionUID = -8405459283288345064L;
@@ -40,7 +36,7 @@ class RegularTransition implements Serializable
 	/**
 	 * Wildcard, matches always
 	 */
-	public static final String WILDCARD = "ÿÿÿ";
+	public static final String WILDCARD = "<ÿÿÿ>";
 
 	private RegularState startState;
 
@@ -139,7 +135,7 @@ class RegularTransition implements Serializable
 		StringBuffer sb = new StringBuffer();
 		if (negation)
 		{
-			sb.append("~");
+			sb.append("!");
 		}
 		sb.append(labels.toString());
 		return sb.toString();

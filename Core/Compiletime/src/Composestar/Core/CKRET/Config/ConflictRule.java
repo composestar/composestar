@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 import Composestar.Core.FIRE2.util.regex.Pattern;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
-import Composestar.Core.FIRE2.util.regex.RegexPattern;
+import Composestar.Core.FIRE2.util.regex.RegularPattern;
 
 /**
  * A conflict rule. Either an constraint (must not match) or an assertion (must
@@ -79,7 +79,7 @@ public class ConflictRule implements Serializable
 
 	public void setPattern(String patternString) throws PatternParseException
 	{
-		pattern = RegexPattern.compile(patternString);
+		pattern = RegularPattern.compile(patternString);
 	}
 
 	public void setMessage(String msg)

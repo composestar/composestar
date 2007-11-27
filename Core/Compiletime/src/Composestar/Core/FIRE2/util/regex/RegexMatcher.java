@@ -33,6 +33,7 @@ import Composestar.Utils.Regex.MatchingBuffer;
 /**
  * @author Michiel Hendriks
  */
+@Deprecated
 public class RegexMatcher implements MatchingBuffer
 {
 	protected Composestar.Utils.Regex.RegexPattern pattern;

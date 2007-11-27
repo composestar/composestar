@@ -31,11 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @Deprecated Use Composestar.Utils.Regex
- */
-@Deprecated
-class RegularState implements Serializable
+public class RegularState implements Serializable
 {
 	private static final long serialVersionUID = 2662274504980135336L;
 
@@ -50,13 +46,18 @@ class RegularState implements Serializable
 
 	public RegularState()
 	{
-		stateId = getStateId();
+		stateId = getNewStateId();
 		outTransitions = new ArrayList<RegularTransition>();
 	}
 
-	private static String getStateId()
+	private static String getNewStateId()
 	{
 		return "s" + (currentId++);
+	}
+
+	public String getStateId()
+	{
+		return stateId;
 	}
 
 	public void addOutTransition(RegularTransition transition)

@@ -3,9 +3,11 @@ concern EncryptDecryptArgs in RuBCoDeTest.TestCase
 	filtermodule EncFltUsage
 	{
 		conditions
-			doEnc : RuBCoDeTest.TestCase.MainClass.doEncrypt();
+			enc1 : RuBCoDeTest.TestCase.MainClass.encrypt1();
+			enc2 : RuBCoDeTest.TestCase.MainClass.encrypt2();
 		inputfilters
-			encargs : EncryptArgs = { doEnc => [*.*] }
+			security : EncryptArgs = { enc1 => [*.*] };
+			encargs : EncryptArgs = { enc2 => [*.*] }
 	}
   
 	superimposition

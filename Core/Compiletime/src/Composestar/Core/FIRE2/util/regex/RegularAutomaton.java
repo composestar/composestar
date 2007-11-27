@@ -26,11 +26,7 @@ package Composestar.Core.FIRE2.util.regex;
 
 import java.io.Serializable;
 
-/**
- * @Deprecated Use Composestar.Utils.Regex
- */
-@Deprecated
-class RegularAutomaton implements Serializable
+public class RegularAutomaton implements Serializable
 {
 	private static final long serialVersionUID = -5080084489074761193L;
 
