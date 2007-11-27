@@ -49,6 +49,26 @@ public class Automaton implements Serializable
 	}
 
 	/**
+	 * Get the begin state
+	 * 
+	 * @return
+	 */
+	public State getBegin()
+	{
+		return begin;
+	}
+
+	/**
+	 * Get the ending state
+	 * 
+	 * @return
+	 */
+	public State getEnd()
+	{
+		return end;
+	}
+
+	/**
 	 * Returns true when the buffer matches this automaton (e.g. the end state
 	 * is in the resulting state collection).
 	 * 

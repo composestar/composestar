@@ -32,6 +32,8 @@ import java.util.Set;
  * 
  * @author Michiel Hendrik
  */
+// FIXME: automaton should be moved to a transition, this involves changing the
+// matching process
 public class LookaheadState extends State
 {
 	private static final long serialVersionUID = -7220215173317245637L;
@@ -92,11 +94,36 @@ public class LookaheadState extends State
 		automatonTransition.addLabel("<ÿSubExpressionÿ>"); // never matches
 	}
 
+	/**
+	 * Get the automaton of the subexpression
+	 * 
+	 * @return
+	 */
+	public Automaton getAutomaton()
+	{
+		return automaton;
+	}
+
+	/**
+	 * Get the transition associated with the success of the automaton
+	 * 
+	 * @return
+	 */
+	public Transition getAutomatonTransition()
+	{
+		return automatonTransition;
+	}
+
 	public void setNegation(boolean value)
 	{
 		negation = value;
 	}
 
+	/**
+	 * Return true when the automaton is a negation
+	 * 
+	 * @return
+	 */
 	public boolean isNegation()
 	{
 		return negation;

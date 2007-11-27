@@ -177,7 +177,7 @@ public class State implements Serializable
 	public String toString()
 	{
 		Set<State> states = new HashSet<State>();
-		getAllStats(states);
+		getAllStates(states);
 		StringBuffer sb = new StringBuffer();
 		for (State state : states)
 		{
@@ -204,14 +204,14 @@ public class State implements Serializable
 		return sb.toString();
 	}
 
-	private void getAllStats(Set<State> states)
+	private void getAllStates(Set<State> states)
 	{
 		states.add(this);
 		for (Transition transition : transitions)
 		{
 			if (!states.contains(transition.getEndState()))
 			{
-				transition.getEndState().getAllStats(states);
+				transition.getEndState().getAllStates(states);
 			}
 		}
 	}
