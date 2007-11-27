@@ -78,22 +78,14 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         {
             if (operations.Count == 0) return;
 
-            StringBuilder sb = new StringBuilder();
-            foreach (String s in operations)
-            {
-                sb.Append(s);
-            }
-            string ops = sb.ToString();
-            sb = null;
-
             foreach (ConflictRule rule in rules)
             {
                 if ("*".Equals(rule.Resource) || resource.Equals(rule.Resource) || 
                     (!String.IsNullOrEmpty(altres) && altres.Equals(rule.Resource)))
                 {
-                    if (rule.violatesRule(ops))
+                    if (rule.violatesRule(operations))
                     {
-                        sb = new StringBuilder();
+                        StringBuilder sb = new StringBuilder();
                         sb.Append("[");
                         foreach (String s in operations)
                         {

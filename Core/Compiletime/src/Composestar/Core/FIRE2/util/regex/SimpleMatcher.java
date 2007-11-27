@@ -44,8 +44,6 @@ public class SimpleMatcher
 
 	protected Set<RegularState> states;
 
-	protected Queue<String> window;
-
 	public static final boolean matches(Pattern pattern, Queue<String> words)
 	{
 		SimpleMatcher sm = new SimpleMatcher(pattern, words);

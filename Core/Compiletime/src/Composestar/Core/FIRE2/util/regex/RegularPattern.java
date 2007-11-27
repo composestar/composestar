@@ -321,7 +321,7 @@ public final class RegularPattern extends Pattern
 		}
 
 		/**
-		 * Process a subexpression or negation (which implies a subexpr).
+		 * Process a subexpression
 		 * 
 		 * @param lexer
 		 * @param endState
@@ -352,16 +352,9 @@ public final class RegularPattern extends Pattern
 		private static void multTransform(RegularState expr, Lexer lexer, RegularState endState)
 				throws PatternParseException
 		{
-			// TODO: breaks for subexpressions
 			Token t = lexer.token();
 			if (t.type == Token.STAR)
 			{
-				// if (lexer.ll(-1).type != Token.PRIGHT)
-				// {
-				// throw new PatternParseException(String.format("Multiplication
-				// only supported for subexpressions",
-				// lexer.charPos()));
-				// }
 				lexer.nextToken();
 				// replace the end states with self
 				replaceStates(expr, endState, expr);
@@ -370,24 +363,12 @@ public final class RegularPattern extends Pattern
 			}
 			else if (t.type == Token.OPT)
 			{
-				// if (lexer.ll(-1).type != Token.PRIGHT)
-				// {
-				// throw new PatternParseException(String.format("Multiplication
-				// only supported for subexpressions",
-				// lexer.charPos()));
-				// }
 				lexer.nextToken();
 				// simply add lambda
 				new RegularTransition(expr, endState);
 			}
 			else if (t.type == Token.PLUS)
 			{
-				// if (lexer.ll(-1).type != Token.PRIGHT)
-				// {
-				// throw new PatternParseException(String.format("Multiplication
-				// only supported for subexpressions",
-				// lexer.charPos()));
-				// }
 				lexer.nextToken();
 				// replace the end states with this state
 				RegularState newEnd = new RegularState();
@@ -471,7 +452,7 @@ public final class RegularPattern extends Pattern
 
 		private int tokenPos;
 
-		private int charPos;
+		private int chrPos;
 
 		public Lexer(String pattern)
 		{
@@ -502,7 +483,7 @@ public final class RegularPattern extends Pattern
 		 */
 		public int charPos()
 		{
-			return charPos;
+			return chrPos;
 		}
 
 		/**
@@ -538,18 +519,18 @@ public final class RegularPattern extends Pattern
 
 		private void bufferToken()
 		{
-			if (charPos >= buffer.length())
+			if (chrPos >= buffer.length())
 			{
 				tokenBuffer.add(EOF_TOKEN);
 				return;
 			}
-			char c = buffer.charAt(charPos++);
+			char c = buffer.charAt(chrPos++);
 			if (c == Token.EXCL)
 			{
-				if (buffer.length() >= charPos + 1 && buffer.charAt(charPos) == Token.SLEFT) // 
+				if (buffer.length() >= chrPos + 1 && buffer.charAt(chrPos) == Token.SLEFT) // 
 				{
 					// ![
-					charPos++;
+					chrPos++;
 					tokenBuffer.add(NOT_TOKEN);
 				}
 				else
@@ -559,12 +540,12 @@ public final class RegularPattern extends Pattern
 			}
 			else if (Character.isLetterOrDigit(c))
 			{
-				int start = charPos - 1;
-				while ((charPos < buffer.length()) && Character.isLetterOrDigit(buffer.charAt(charPos)))
+				int start = chrPos - 1;
+				while ((chrPos < buffer.length()) && Character.isLetterOrDigit(buffer.charAt(chrPos)))
 				{
-					charPos++;
+					chrPos++;
 				}
-				tokenBuffer.add(new Token(Token.WORD, buffer.substring(start, charPos)));
+				tokenBuffer.add(new Token(Token.WORD, buffer.substring(start, chrPos)));
 			}
 			else
 			{

@@ -1,3 +1,4 @@
+#region License
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
@@ -19,28 +20,27 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id$
+ * $Id: Pattern.java 3953 2007-11-27 11:26:28Z elmuerte $
  */
-package Composestar.Core.FIRE2.util.regex;
+#endregion
 
-import java.io.Serializable;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-public abstract class Pattern implements Serializable
+namespace Composestar.StarLight.ContextInfo.RuBCoDe.Pattern
 {
-	protected String patternString;
-
-	public abstract RegularState getEndState();
-
-	public abstract RegularState getStartState();
-
-	public Pattern(String pattern)
-	{
-		patternString = pattern;
-	}
-
-	@Override
-	public String toString()
-	{
-		return patternString;
-	}
+    /// <summary>
+    /// Exception thrown when the pattern could not be parsed
+    /// </summary>
+    public class PatternParseException : Exception
+    {
+        /// <summary>
+        /// create a new exception
+        /// </summary>
+        /// <param name="message"></param>
+        public PatternParseException(string message)
+            : base(message)
+        { }
+    }
 }

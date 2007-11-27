@@ -52,6 +52,14 @@
     <Compile Include="RuBCoDe\BookKeeperPool.cs" />
     <Compile Include="RuBCoDe\ConflictRule.cs" />
     <Compile Include="RuBCoDe\ConflictRuleAttribute.cs" />
+    <Compile Include="RuBCoDe\Pattern\Pattern.cs" />
+    <Compile Include="RuBCoDe\Pattern\PatternParseException.cs" />
+    <Compile Include="RuBCoDe\Pattern\RegularAutomaton.cs" />
+    <Compile Include="RuBCoDe\Pattern\RegularPattern.cs" />
+    <Compile Include="RuBCoDe\Pattern\RegularState.cs" />
+    <Compile Include="RuBCoDe\Pattern\RegularTransition.cs" />
+    <Compile Include="RuBCoDe\Pattern\Set.cs" />
+    <Compile Include="RuBCoDe\Pattern\SimpleMatcher.cs" />
     <Compile Include="RuBCoDe\ResourceOperationException.cs" />
     <Compile Include="RuBCoDe\ResourceValidator.cs" />
     <Compile Include="RuBCoDe\SimpleBK.cs" />

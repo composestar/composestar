@@ -247,8 +247,7 @@ public class SECRETResources implements ModuleResourceManager
 			}
 			try
 			{
-				ConflictRule copycr = new ConflictRule(r, cr.getType(), cr.getPattern().getPatternString(), cr
-						.getMessage());
+				ConflictRule copycr = new ConflictRule(r, cr.getType(), cr.getPattern().toString(), cr.getMessage());
 				addRule(copycr);
 			}
 			catch (PatternParseException e)

@@ -218,7 +218,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		{
 			composestar.dotNET2.tym.entities.ConflictRuleElement rule = weaveSpec.getConflictRules()
 					.addNewConflictRule();
-			rule.setPattern(cr.getPattern().getPatternString());
+			rule.setPattern(cr.getPattern().toString());
 			rule.setResource(cr.getResource().getName());
 			rule.setConstraint(cr.getType() == ConflictRule.RuleType.Constraint);
 			rule.setMessage(cr.getMessage());

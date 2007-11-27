@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using Composestar.StarLight.ContextInfo.RuBCoDe.Pattern;
 
 namespace Composestar.StarLight.ContextInfo.RuBCoDe
 {
@@ -38,7 +39,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
     [DebuggerNonUserCode()]
     public sealed class ConflictRule
     {
-        private Regex _pattern;
+        private RegularPattern _pattern;
         private string _resource;
         private bool _constraint;
         private string _message;
@@ -52,7 +53,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         /// <param name="message"></param>
         public ConflictRule(string pattern, string resource, bool isconstraint, string message)
         {
-            _pattern = new Regex("^" + pattern + "$");
+            _pattern = RegularPattern.compile(pattern); //new Regex("^" + pattern + "$");
             _resource = resource;
             _constraint = isconstraint;
             _message = message;
@@ -94,9 +95,9 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         /// Returns true when the operation sequences violates this rule.
         /// </summary>
         /// <returns></returns>
-        public bool violatesRule(string sequence)
+        public bool violatesRule(IList<string> sequence)
         {
-            return _pattern.IsMatch(sequence) == _constraint;
+            return SimpleMatcher.matches(_pattern, sequence) == _constraint;
         }
 
         /// <summary>
