@@ -19,7 +19,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: RegularPatternTest.java 3917 2007-11-06 15:45:31Z elmuerte $
+ * $Id$
  */
 
 package Composestar.Core.FIRE2.util.regex;

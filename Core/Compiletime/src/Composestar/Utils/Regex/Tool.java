@@ -19,7 +19,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: RegexPattern.java 3936 2007-11-19 12:43:44Z elmuerte $
+ * $Id$
  */
 
 package Composestar.Utils.Regex;
