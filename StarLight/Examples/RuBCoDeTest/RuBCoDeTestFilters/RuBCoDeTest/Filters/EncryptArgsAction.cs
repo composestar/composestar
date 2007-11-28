@@ -8,7 +8,7 @@ using Composestar.StarLight.ContextInfo;
 using Composestar.StarLight.Filters.FilterTypes;
 using Composestar.StarLight.ContextInfo.RuBCoDe;
 
-[assembly: ConflictRule("arg", "(encrypt)((decrypt)![encrypt]*(encrypt)|![decrypt])*(encrypt)", true, "Argument is already encrypted")]
+[assembly: ConflictRule("arg", "![encrypt]*(encrypt)((decrypt)![encrypt]*(encrypt)|![decrypt])*(encrypt).*", true, "Argument is already encrypted")]
 [assembly: Resource("arg", "encrypt,decrypt")]
 namespace RuBCoDeTestFilters.Filters
 {

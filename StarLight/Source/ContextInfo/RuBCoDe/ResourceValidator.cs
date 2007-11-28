@@ -83,6 +83,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
                 if ("*".Equals(rule.Resource) || resource.Equals(rule.Resource) || 
                     (!String.IsNullOrEmpty(altres) && altres.Equals(rule.Resource)))
                 {
+                    Console.Error.WriteLine("*** Validating resource {0} with rule {1}", resource, rule.ToString());
                     if (rule.violatesRule(operations))
                     {
                         StringBuilder sb = new StringBuilder();
@@ -169,9 +170,11 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
                         ConflictRule cr = new ConflictRule(cae.Pattern, resname, cae.Constraint, cae.Message);
                         rules.Add(cr);
                     }
-                    catch (ArgumentException e)
+                    catch (Exception e)
                     {
-                        // TODO: handle expression compile error
+                        Console.Error.WriteLine("Unable to create conflict rule with pattern {0} for resource {1}", cae.Pattern, resname);
+                        Console.Error.WriteLine(e.Message);
+                        Console.Error.WriteLine(e.StackTrace);
                     }
                 }
             }

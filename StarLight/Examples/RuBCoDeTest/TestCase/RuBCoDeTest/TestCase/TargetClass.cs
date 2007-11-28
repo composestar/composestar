@@ -11,7 +11,7 @@ namespace RuBCoDeTest.TestCase
 
         public void sendMessage(string sender, string receiver, string message)
         {
-            Console.WriteLine("Sending message to {1} from {0}, test: {3}", sender, receiver, message);
+            Console.WriteLine("Sending message to {1} from {0}, test: {2}", sender, receiver, message);
         }
 	}
 }
