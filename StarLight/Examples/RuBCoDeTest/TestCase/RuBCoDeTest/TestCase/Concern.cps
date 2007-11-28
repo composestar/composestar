@@ -6,8 +6,8 @@ concern EncryptDecryptArgs in RuBCoDeTest.TestCase
 			enc1 : RuBCoDeTest.TestCase.MainClass.encrypt1();
 			enc2 : RuBCoDeTest.TestCase.MainClass.encrypt2();
 		inputfilters
-			security : EncryptArgs = { enc1 => [*.*] };
-			encargs : EncryptArgs = { enc2 => [*.*] }
+			security : EncryptArgs = { enc1 => [*.sendMessage], enc1 => [*.archiveMessage] };
+			encargs : EncryptArgs = { enc2 => [*.sendMessage], enc2 => [*.archiveMessage] }
 	}
   
 	superimposition

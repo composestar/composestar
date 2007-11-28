@@ -22,17 +22,23 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
+import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.Matcher;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * A filter set analysis
  */
 public class FilterSetAnalysis
 {
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(CKRET.MODULE_NAME);
+
 	/**
 	 * The concern who's filters are being analysed
 	 */
@@ -156,11 +162,29 @@ public class FilterSetAnalysis
 
 					if (matcher.matches())
 					{
-						Conflict conflict = new Conflict();
-						conflict.setResource(resource);
-						conflict.setRule(rule);
-						// conflict.setSequence(matcher.matchTrace());
-						conflicts.add(conflict);
+						for (List<ExecutionTransition> trace : matcher.matchTraces())
+						{
+							Conflict conflict = new Conflict();
+							conflict.setResource(resource);
+							conflict.setRule(rule);
+							// conflict.setSequence(matcher.matchTrace());
+
+							logger.info("Conflict trace begin ---");
+							logger.info(String.format("For %s.%s", concern.getQualifiedName(), trace.get(0)
+									.getStartState().getMessage().getSelector()));
+							for (ExecutionTransition et : trace)
+							{
+								FlowNode fn = et.getStartState().getFlowNode();
+								if (fn.containsName(FlowNode.FILTER_NODE))
+								{
+									RepositoryEntity re = fn.getRepositoryLink();
+									logger.info(re.getRepositoryKey(), re);
+								}
+							}
+							logger.info("--- Conflict trace end");
+
+							conflicts.add(conflict);
+						}
 					}
 				}
 			}

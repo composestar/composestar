@@ -4,6 +4,7 @@
  */
 package Composestar.Core.FIRE2.util.regex;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ public class Matcher
 
 	private Stack<CombinedState> unvisitedStates;
 
-	private CombinedState endState;
+	private Set<CombinedState> endStates;
 
 	private boolean matchDone = false;
 
@@ -53,7 +54,7 @@ public class Matcher
 	{
 		matchDone = true;
 		initialize();
-		return process();
+		return endStates.size() > 0;
 	}
 
 	/**
@@ -61,30 +62,32 @@ public class Matcher
 	 */
 	private void initialize()
 	{
-		processedStates = new HashSet<CombinedState>();
-		unvisitedStates = new Stack<CombinedState>();
+		endStates = new HashSet<CombinedState>();
 
 		Iterator<ExecutionState> states = model.getEntranceStates();
 		RegularState regularState = pattern.getStartState();
 		while (states.hasNext())
 		{
+			processedStates = new HashSet<CombinedState>();
+			unvisitedStates = new Stack<CombinedState>();
+
 			ExecutionState state = states.next();
 			addState(new CombinedState(state, regularState));
+			process();
 		}
 	}
 
-	private boolean process()
+	private void process()
 	{
 		while (!unvisitedStates.empty())
 		{
 			CombinedState state = unvisitedStates.pop();
 			if (process(state))
 			{
-				return true;
+				return;
 			}
 		}
-
-		return false;
+		return;
 	}
 
 	private boolean process(CombinedState state)
@@ -234,7 +237,7 @@ public class Matcher
 	{
 		if (state.regularState.equals(pattern.getEndState()) && state.executionState.getOutTransitionsEx().size() == 0)
 		{
-			endState = state;
+			endStates.add(state);
 			return true;
 		}
 		else
@@ -243,21 +246,24 @@ public class Matcher
 		}
 	}
 
-	public List<ExecutionTransition> matchTrace()
+	public List<List<ExecutionTransition>> matchTraces()
 	{
 		if (!matchDone)
 		{
 			matches();
 		}
 
-		if (endState != null)
-		{
-			return Collections.unmodifiableList(endState.trace.toList());
-		}
-		else
+		if (endStates.isEmpty())
 		{
 			return null;
 		}
+
+		List<List<ExecutionTransition>> result = new ArrayList<List<ExecutionTransition>>();
+		for (CombinedState endState : endStates)
+		{
+			result.add(Collections.unmodifiableList(endState.trace.toList()));
+		}
+		return result;
 	}
 
 	private class CombinedState
