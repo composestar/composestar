@@ -32,6 +32,7 @@ import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.Master.CompileHistory;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
@@ -72,7 +73,7 @@ public class FilterActionView extends CpsView
 
 	protected SwimlaneVertex mainLane;
 
-	protected int filterPos = FireModel.INPUT_FILTERS;
+	protected FilterDirection filterPos = FilterDirection.Input;
 
 	public FilterActionView(CompileHistory data, Concern inFocusConcern, String inSelector)
 	{

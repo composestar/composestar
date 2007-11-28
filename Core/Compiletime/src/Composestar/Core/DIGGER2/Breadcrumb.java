@@ -17,6 +17,7 @@ import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 
 /**
  * A node in the dispatch graph. A concern has one or more breadcrumbs, for each
@@ -40,7 +41,7 @@ public class Breadcrumb implements Serializable
 	/**
 	 * input or output filter
 	 */
-	protected int filterPosition;
+	protected FilterDirection filterPosition;
 
 	protected List<Trail> trails;
 
@@ -49,7 +50,7 @@ public class Breadcrumb implements Serializable
 	 */
 	protected transient boolean resolvedStatus;
 
-	public Breadcrumb(Concern inConcern, Message inMessage, int inFilterPosition)
+	public Breadcrumb(Concern inConcern, Message inMessage, FilterDirection inFilterPosition)
 	{
 		concern = inConcern;
 		message = inMessage;
@@ -67,7 +68,7 @@ public class Breadcrumb implements Serializable
 		return message;
 	}
 
-	public int getFilterPosition()
+	public FilterDirection getFilterPosition()
 	{
 		return filterPosition;
 	}

@@ -39,17 +39,35 @@ public class FireModel
 	public enum FilterDirection
 	{
 		Input, Output;
+
+		/**
+		 * Return the index value for this direction. Use this value instead of
+		 * getOrdinal()
+		 * 
+		 * @return
+		 */
+		public int getIndex()
+		{
+			switch (this)
+			{
+				case Input:
+					return INPUT_FILTERS;
+				case Output:
+					return OUTPUT_FILTERS;
+			}
+			throw new IllegalStateException(String.format("No index value of FilterDirection value %s", this));
+		}
 	}
 
 	/**
 	 * Indicates the 'input filter' filter location.
 	 */
-	public final static int INPUT_FILTERS = 0;
+	private final static int INPUT_FILTERS = 0;
 
 	/**
 	 * Indicates the 'output filter' filter location
 	 */
-	public final static int OUTPUT_FILTERS = 1;
+	private final static int OUTPUT_FILTERS = 1;
 
 	/**
 	 * Indicates that an execution model should be created without signature
@@ -171,9 +189,9 @@ public class FireModel
 	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
 	 * @return
 	 */
-	public FlowModel getFlowModel(int filterPosition)
+	public FlowModel getFlowModel(FilterDirection filterPosition)
 	{
-		return extendedFlowModels[filterPosition];
+		return extendedFlowModels[filterPosition.getIndex()];
 	}
 
 	private void initialize(FilterModuleSuperImposition[] modules, FIRE2Resources fire2Resources)
@@ -753,7 +771,7 @@ public class FireModel
 	 * @param selector
 	 * @return
 	 */
-	public ExecutionModel getExecutionModel(int filterPosition, String selector)
+	public ExecutionModel getExecutionModel(FilterDirection filterPosition, String selector)
 	{
 		return new ExtendedExecutionModel(filterPosition, selector);
 	}
@@ -768,7 +786,7 @@ public class FireModel
 	 * @param methodInfo The methodinfo
 	 * @return
 	 */
-	public ExecutionModel getExecutionModel(int filterPosition, MethodInfo methodInfo)
+	public ExecutionModel getExecutionModel(FilterDirection filterPosition, MethodInfo methodInfo)
 	{
 		return getExecutionModel(filterPosition, methodInfo, STRICT_SIGNATURE_CHECK);
 	}
@@ -784,7 +802,7 @@ public class FireModel
 	 *            done.
 	 * @return
 	 */
-	public ExecutionModel getExecutionModel(int filterPosition, MethodInfo methodInfo, int signatureCheck)
+	public ExecutionModel getExecutionModel(FilterDirection filterPosition, MethodInfo methodInfo, int signatureCheck)
 	{
 		return new ExtendedExecutionModel(filterPosition, methodInfo, signatureCheck);
 	}
@@ -801,7 +819,8 @@ public class FireModel
 	 *            done.
 	 * @return
 	 */
-	public ExecutionModel getExecutionModel(int filterPosition, Target target, MethodInfo methodInfo, int signatureCheck)
+	public ExecutionModel getExecutionModel(FilterDirection filterPosition, Target target, MethodInfo methodInfo,
+			int signatureCheck)
 	{
 		return new ExtendedExecutionModel(filterPosition, target, methodInfo, signatureCheck);
 	}
@@ -827,22 +846,9 @@ public class FireModel
 	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
 	 * @return
 	 */
-	public ExecutionModel getExecutionModel(int filterPosition)
-	{
-		return new ExtendedExecutionModel(filterPosition);
-	}
-
-	/**
-	 * Returns the complete execution model.
-	 * 
-	 * @param filterPosition Indicates for which filters the execution model
-	 *            should be returned, for the input filters (<code>INPUT_FILTERS</code>)
-	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
-	 * @return
-	 */
 	public ExecutionModel getExecutionModel(FilterDirection filterPosition)
 	{
-		return new ExtendedExecutionModel(filterPosition.ordinal());
+		return new ExtendedExecutionModel(filterPosition);
 	}
 
 	/**
@@ -853,7 +859,7 @@ public class FireModel
 	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
 	 * @return The distinguishable selectors.
 	 */
-	public Set<String> getDistinguishableSelectors(int filterPosition)
+	private Set<String> getDistinguishableSelectors(int filterPosition)
 	{
 		Set<String> distinguishable = new HashSet<String>();
 		for (int i = 0; i < filterModules.length; i++)
@@ -868,6 +874,19 @@ public class FireModel
 		}
 
 		return distinguishable;
+	}
+
+	/**
+	 * Returns the distinguishable selectors.
+	 * 
+	 * @param filterPosition Indicates for which filters the distinguishable
+	 *            selectors should be returned, for the input filters (<code>INPUT_FILTERS</code>)
+	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
+	 * @return The distinguishable selectors.
+	 */
+	public Set<String> getDistinguishableSelectors(FilterDirection filterPosition)
+	{
+		return getDistinguishableSelectors(filterPosition.getIndex());
 	}
 
 	private class ExtendedExecutionModel implements ExecutionModel
@@ -894,9 +913,9 @@ public class FireModel
 		 */
 		private boolean fullModel;
 
-		public ExtendedExecutionModel(int filterPosition)
+		public ExtendedExecutionModel(FilterDirection filterDirection)
 		{
-			this.filterPosition = filterPosition;
+			filterPosition = filterDirection.getIndex();
 
 			Message message;
 			ExecutionState state;
@@ -933,9 +952,9 @@ public class FireModel
 			fullModel = true;
 		}
 
-		public ExtendedExecutionModel(int filterPosition, String selector)
+		public ExtendedExecutionModel(FilterDirection filterDirection, String selector)
 		{
-			this.filterPosition = filterPosition;
+			filterPosition = filterDirection.getIndex();
 
 			Message message = getEntranceMessage(selector);
 
@@ -953,9 +972,9 @@ public class FireModel
 			fullModel = false;
 		}
 
-		public ExtendedExecutionModel(int filterPosition, MethodInfo methodInfo, int signatureCheck)
+		public ExtendedExecutionModel(FilterDirection filterDirection, MethodInfo methodInfo, int signatureCheck)
 		{
-			this.filterPosition = filterPosition;
+			filterPosition = filterDirection.getIndex();
 
 			Message message = getEntranceMessage(methodInfo.getName());
 
@@ -969,9 +988,10 @@ public class FireModel
 			fullModel = false;
 		}
 
-		public ExtendedExecutionModel(int filterPosition, Target target, MethodInfo methodInfo, int signatureCheck)
+		public ExtendedExecutionModel(FilterDirection filterDirection, Target target, MethodInfo methodInfo,
+				int signatureCheck)
 		{
-			this.filterPosition = filterPosition;
+			filterPosition = filterDirection.getIndex();
 
 			Message message = new Message(target, methodInfo);
 

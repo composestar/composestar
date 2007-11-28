@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
 import org.jgraph.graph.GraphConstants;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 
 /**
  * A vertex for a Filter, used for the FilterView by the FilterConcernVertex
@@ -37,14 +37,14 @@ public class FilterVertex extends BaseGraphCell
 	 */
 	protected String label;
 
-	protected int direction;
+	protected FilterDirection direction;
 
-	public FilterVertex(Filter filter, int inDirection)
+	public FilterVertex(Filter filter, FilterDirection inDirection)
 	{
 		super(filter);
 		direction = inDirection;
 		Point2D offset;
-		if (direction == FireModel.OUTPUT_FILTERS)
+		if (direction == FilterDirection.Output)
 		{
 			GraphConstants.setHorizontalAlignment(getAttributes(), SwingConstants.RIGHT);
 			offset = new Point2D.Double(GraphConstants.PERMILLE, GraphConstants.PERMILLE / 2);

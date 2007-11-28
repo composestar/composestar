@@ -24,6 +24,7 @@ import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.MethodInfo;
@@ -171,11 +172,11 @@ public class DIGGER implements CTCommonModule
 
 						if (SHOW_GRAPH)
 						{
-							new Composestar.Core.FIRE2.util.viewer.Viewer(fm.getExecutionModel(FireModel.INPUT_FILTERS));
+							new Composestar.Core.FIRE2.util.viewer.Viewer(fm.getExecutionModel(FilterDirection.Input));
 						}
 
-						processFireModel(concern, fm.getExecutionModel(FireModel.INPUT_FILTERS).getEntranceStates(),
-								FireModel.INPUT_FILTERS);
+						processFireModel(concern, fm.getExecutionModel(FilterDirection.Input).getEntranceStates(),
+								FilterDirection.Input);
 						// no output filter support
 						// processFireModel(concern, fm,
 						// FireModel.OUTPUT_FILTERS);
@@ -290,7 +291,7 @@ public class DIGGER implements CTCommonModule
 	 * @param filterChain
 	 * @throws ModuleException
 	 */
-	protected void processFireModel(Concern concern, Iterator entranceStates, int filterPosition)
+	protected void processFireModel(Concern concern, Iterator entranceStates, FilterDirection filterPosition)
 			throws ModuleException
 	{
 		while (entranceStates.hasNext())
@@ -322,7 +323,7 @@ public class DIGGER implements CTCommonModule
 		while (it.hasNext())
 		{
 			MethodInfo methodInfo = (MethodInfo) it.next();
-			int filterPosition = FireModel.INPUT_FILTERS;
+			FilterDirection filterPosition = FilterDirection.Input;
 
 			ExecutionModel em = fm.getExecutionModel(filterPosition, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
 			if (em.getEntranceMessages().size() > 1)

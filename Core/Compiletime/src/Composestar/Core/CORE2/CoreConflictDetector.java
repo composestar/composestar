@@ -16,6 +16,7 @@ import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.iterator.OrderedFlowNodeIterator;
 
@@ -52,14 +53,14 @@ public class CoreConflictDetector
 	public CoreConflict[] findConflicts(FireModel fireModel)
 	{
 		// Input filters:
-		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS);
-		FlowModel flowModel = fireModel.getFlowModel(FireModel.INPUT_FILTERS);
+		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input);
+		FlowModel flowModel = fireModel.getFlowModel(FilterDirection.Input);
 		Set reachableParts = findReachableParts(execModel);
 		List conflicts = checkForConflicts(flowModel, reachableParts);
 
 		// Output filters:
-		execModel = fireModel.getExecutionModel(FireModel.OUTPUT_FILTERS);
-		flowModel = fireModel.getFlowModel(FireModel.OUTPUT_FILTERS);
+		execModel = fireModel.getExecutionModel(FilterDirection.Output);
+		flowModel = fireModel.getFlowModel(FilterDirection.Output);
 		reachableParts = findReachableParts(execModel);
 		conflicts.addAll(checkForConflicts(flowModel, reachableParts));
 

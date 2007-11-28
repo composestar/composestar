@@ -29,7 +29,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
-import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Visualization.Model.CpsGraphConstants;
@@ -77,8 +77,8 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 		outputFilters = new BaseGraphCell("output filters");
 		add(outputFilters);
 
-		addFilters(inputFilters, fm.getInputFilterIterator(), FireModel.INPUT_FILTERS);
-		addFilters(outputFilters, fm.getOutputFilterIterator(), FireModel.OUTPUT_FILTERS);
+		addFilters(inputFilters, fm.getInputFilterIterator(), FilterDirection.Input);
+		addFilters(outputFilters, fm.getOutputFilterIterator(), FilterDirection.Output);
 		addMembers(fm);
 
 		// calculat the max bounds
@@ -210,7 +210,7 @@ public class DetailedFilterModuleVertex extends FilterModuleVertex
 		CpsGraphConstants.setSeparatorPattern(attrs, dash);
 	}
 
-	protected void addFilters(BaseGraphCell parentVertex, Iterator filterIterator, int direction)
+	protected void addFilters(BaseGraphCell parentVertex, Iterator filterIterator, FilterDirection direction)
 	{
 		FilterVertex last = null;
 		while (filterIterator.hasNext())

@@ -22,6 +22,7 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
@@ -253,7 +254,7 @@ public class ModelBuilder implements CTCommonModule
 		currentSelector = methodInfo.getName();
 
 		// create executionmodel:
-		ExecutionModel execModel = currentFireModelIF.getExecutionModel(FireModel.INPUT_FILTERS, methodInfo,
+		ExecutionModel execModel = currentFireModelIF.getExecutionModel(FilterDirection.Input, methodInfo,
 				FireModel.STRICT_SIGNATURE_CHECK);
 
 		// create inlineModel:
@@ -293,12 +294,12 @@ public class ModelBuilder implements CTCommonModule
 		ExecutionModel execModel;
 		if (methodInfo != null)
 		{
-			execModel = currentFireModelOF.getExecutionModel(FireModel.OUTPUT_FILTERS, methodInfo,
+			execModel = currentFireModelOF.getExecutionModel(FilterDirection.Output, methodInfo,
 					FireModel.STRICT_SIGNATURE_CHECK);
 		}
 		else
 		{
-			execModel = currentFireModelOF.getExecutionModel(FireModel.OUTPUT_FILTERS, call.getMethodName());
+			execModel = currentFireModelOF.getExecutionModel(FilterDirection.Output, call.getMethodName());
 		}
 
 		// create inlineModel:

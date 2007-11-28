@@ -33,6 +33,7 @@ import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
 import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.iterator.OrderedExecutionStateIterator;
 import Composestar.Core.FIRE2.util.queryengine.Predicate;
@@ -199,7 +200,7 @@ public class Sign implements CTCommonModule
 				fireModels.put(concern, model);
 
 				// initialize distinguishable set:
-				distinguishableSets.put(concern, model.getDistinguishableSelectors(FireModel.INPUT_FILTERS));
+				distinguishableSets.put(concern, model.getDistinguishableSelectors(FilterDirection.Input));
 
 				superimposedConcerns.add(concern);
 			}
@@ -241,7 +242,7 @@ public class Sign implements CTCommonModule
 		String[] selectors = (String[]) distinguishableSets.get(concern).toArray(new String[0]);
 		for (String sel : selectors)
 		{
-			ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, sel);
+			ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, sel);
 
 			Map<ExecutionState, List<MethodInfo>> typeSet = createTypeSet(concern, execModel);
 
@@ -324,7 +325,7 @@ public class Sign implements CTCommonModule
 	private void startSignatureUndistinguishable(Concern concern)
 	{
 		FireModel fireModel = fireModels.get(concern);
-		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS,
+		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input,
 				Message.UNDISTINGUISHABLE_SELECTOR);
 
 		Map<ExecutionState, List<MethodInfo>> signatureSets = createSignatureSet(concern, execModel);
@@ -689,7 +690,7 @@ public class Sign implements CTCommonModule
 	private void checkDispatchable(MethodWrapper method, Concern concern)
 	{
 		FireModel fireModel = fireModels.get(concern);
-		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, method.getMethodInfo(),
+		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, method.getMethodInfo(),
 				FireModel.STRICT_SIGNATURE_CHECK);
 
 		// Check whether it can be marked EXISTING
@@ -704,7 +705,7 @@ public class Sign implements CTCommonModule
 		}
 
 		// Check whether it can keep the marking UNKNOWN
-		execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, method.getMethodInfo(),
+		execModel = fireModel.getExecutionModel(FilterDirection.Input, method.getMethodInfo(),
 				FireModel.LOOSE_SIGNATURE_CHECK);
 
 		for (ExecutionState state : dispatchStates(execModel))
@@ -762,7 +763,7 @@ public class Sign implements CTCommonModule
 					continue;
 				}
 
-				ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, method.getMethodInfo());
+				ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, method.getMethodInfo());
 
 				for (ExecutionState state : dispatchStates(execModel))
 				{
@@ -828,7 +829,7 @@ public class Sign implements CTCommonModule
 				for (MethodWrapper wrapper : methods(concern))
 				{
 					boolean cyclDisp = false;
-					ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS, wrapper
+					ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, wrapper
 							.getMethodInfo());
 					MethodInfo methodInfo = wrapper.getMethodInfo();
 					for (ExecutionState state : dispatchStates(execModel))
@@ -1182,7 +1183,7 @@ public class Sign implements CTCommonModule
 		}
 
 		Set<String> distinguishableSelectors = fireModels.get(concern).getDistinguishableSelectors(
-				FireModel.INPUT_FILTERS);
+				FilterDirection.Input);
 
 		ArrayList<MethodInfo> targetMethods = new ArrayList<MethodInfo>();
 		for (Object method1 : methods)

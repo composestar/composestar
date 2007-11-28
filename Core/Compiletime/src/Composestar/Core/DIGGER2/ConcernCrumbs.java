@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.Message;
 
 /**
@@ -45,7 +44,7 @@ public class ConcernCrumbs implements Serializable
 	{
 		switch (crumb.getFilterPosition())
 		{
-			case FireModel.OUTPUT_FILTERS:
+			case Output:
 				// TODO:
 				throw new UnsupportedOperationException();
 			default:

@@ -21,9 +21,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjec
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
-import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -53,7 +53,8 @@ public class Resolver
 	 * @return
 	 * @throws ModuleException
 	 */
-	public Breadcrumb resolve(Concern concern, ExecutionState state, int filterChain) throws ModuleException
+	public Breadcrumb resolve(Concern concern, ExecutionState state, FilterDirection filterChain)
+			throws ModuleException
 	{
 		Message msg = state.getMessage();
 		logger.debug("[resolver] entrance message: " + msg.toString());
@@ -89,7 +90,7 @@ public class Resolver
 				// if (Message.STAR_SELECTOR.equals(selector))
 				// {
 				// selector = crumb.getMessage().getSelector();
-				//				}
+				// }
 				Breadcrumb toCrumb = graph.getInputCrumb(trail.getTargetConcern(), selector);
 				// is `null' when destination has no input crumbs
 				logger.debug("[resolver]  leads to crumb: " + toCrumb);
@@ -111,7 +112,8 @@ public class Resolver
 	 * @param trail
 	 * @throws ModuleException
 	 */
-	protected void traverseState(ExecutionState state, Breadcrumb crumb, Trail trail, LinkedList<ExecutionState> pastStates) throws ModuleException
+	protected void traverseState(ExecutionState state, Breadcrumb crumb, Trail trail,
+			LinkedList<ExecutionState> pastStates) throws ModuleException
 	{
 		while (state != null)
 		{
@@ -235,17 +237,18 @@ public class Resolver
 	 * @return
 	 * @throws ModuleException
 	 */
-	public static Concern findTargetConcern(Concern concern, int filterPosition, Target target) throws ModuleException
+	public static Concern findTargetConcern(Concern concern, FilterDirection filterPosition, Target target)
+			throws ModuleException
 	{
 		String targetString = target.getName();
 		if (Target.SELF.equals(targetString))
 		{
-			if (filterPosition == FireModel.INPUT_FILTERS)
+			if (filterPosition == FilterDirection.Input)
 			{
 				// send to itself
 				return concern;
 			}
-			else if (filterPosition == FireModel.OUTPUT_FILTERS)
+			else if (filterPosition == FilterDirection.Output)
 			{
 				// TODO: unresolved target; need data from concern internals
 				return null;
@@ -253,12 +256,12 @@ public class Resolver
 		}
 		else if (Target.INNER.equals(targetString))
 		{
-			if (filterPosition == FireModel.INPUT_FILTERS)
+			if (filterPosition == FilterDirection.Input)
 			{
 				// actual method is executed
 				return null;
 			}
-			else if (filterPosition == FireModel.OUTPUT_FILTERS)
+			else if (filterPosition == FilterDirection.Output)
 			{
 				// like *+INPUT
 				return concern;
