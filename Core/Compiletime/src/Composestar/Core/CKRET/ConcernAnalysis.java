@@ -9,14 +9,17 @@
  */
 package Composestar.Core.CKRET;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 
 /**
- * 
+ * Contains filter analysis for a given concern. Depending on the analysis
+ * method it can contain multiple filter set analysis.
  */
 public class ConcernAnalysis
 {
@@ -24,13 +27,13 @@ public class ConcernAnalysis
 
 	private Concern concern;
 
-	private Map<FilterModuleOrder, FilterSetAnalysis> orders;
+	private List<FilterSetAnalysis> analysis;
 
 	public ConcernAnalysis(Concern inconcern, SECRETResources inresources)
 	{
 		resources = inresources;
 		concern = inconcern;
-		orders = new HashMap<FilterModuleOrder, FilterSetAnalysis>();
+		analysis = new ArrayList<FilterSetAnalysis>();
 	}
 
 	public Concern getConcern()
@@ -38,36 +41,23 @@ public class ConcernAnalysis
 		return concern;
 	}
 
-	protected boolean checkOrder(FilterModuleOrder order, boolean isSelected)
+	public List<FilterSetAnalysis> getAnalysis()
 	{
-		FilterSetAnalysis oa = new FilterSetAnalysis(concern, order);
-
-		oa.analyze(resources);
-
-		orders.put(order, oa);
-
-		switch (CKRET.getMode())
-		{
-			case Normal:
-				CKRET.getReporter().reportOrder(order, oa, isSelected, false);
-				break;
-			case Redundant:
-				CKRET.getReporter().reportOrder(order, oa, isSelected, false);
-				break;
-
-			case Progressive:
-				if (oa.numConflictingExecutions() == 0)
-				{
-					CKRET.getReporter().reportOrder(order, oa, isSelected, false);
-				}
-				else
-				{
-					CKRET.getReporter().reportOrder(order, oa, false, false);
-				}
-				break;
-		}
-
-		return oa.numConflictingExecutions() == 0;
+		return Collections.unmodifiableList(analysis);
 	}
 
+	/**
+	 * Analyse the given order. Returns true when it contains conflicts.
+	 * 
+	 * @param order
+	 * @param isSelected
+	 * @return
+	 */
+	protected boolean analyseOrder(FilterModuleOrder order, boolean isSelected)
+	{
+		FilterSetAnalysis oa = new FilterSetAnalysis(concern, order, FilterDirection.Input, isSelected);
+		oa.analyze(resources);
+		analysis.add(oa);
+		return oa.hasConflicts();
+	}
 }

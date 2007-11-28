@@ -9,94 +9,161 @@
  */
 package Composestar.Core.CKRET;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.CKRET.Config.ConflictRule;
+import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
+import Composestar.Core.FIRE2.util.regex.Labeler;
+import Composestar.Core.FIRE2.util.regex.Matcher;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 
 /**
- *
+ * A filter set analysis
  */
-public class FilterSetAnalysis implements Serializable
+public class FilterSetAnalysis
 {
-	private static final long serialVersionUID = -5154995474750593236L;
-
+	/**
+	 * The concern who's filters are being analysed
+	 */
 	private Concern concern;
 
+	/**
+	 * Order used to analyse
+	 */
 	private FilterModuleOrder order;
 
+	/**
+	 * Is this the selected order
+	 */
+	private boolean isSelectedOrder;
+
+	/**
+	 * input or output filters
+	 */
+	private FilterDirection filterDirection;
+
+	/**
+	 * The list of filters
+	 */
 	private List<Filter> filters;
 
-	private List<List<Conflict>> conflictingExecutions;
+	/**
+	 * A list of conflicts found
+	 */
+	private List<Conflict> conflicts;
 
-	public FilterSetAnalysis(Concern inconcern, FilterModuleOrder inorder)
+	public FilterSetAnalysis(Concern inconcern, FilterModuleOrder inorder, FilterDirection indir, boolean insel)
 	{
 		concern = inconcern;
 		order = inorder;
-		conflictingExecutions = new ArrayList<List<Conflict>>();
+		filterDirection = indir;
+		isSelectedOrder = insel;
+
+		filters = new ArrayList<Filter>();
+		conflicts = new ArrayList<Conflict>();
+
+		getFilterList();
 	}
 
 	public List<Filter> getFilters()
 	{
-		return filters;
+		return Collections.unmodifiableList(filters);
 	}
 
-	public void analyze(SECRETResources resources)
+	public List<Conflict> executionConflicts()
 	{
-		filters = getFilterList(order.filterModuleSIList());
-
-		FireModel fireModel = resources.getFIRE2Resources().getFireModel(concern, order);
-
-		ExecutionModel execModel = fireModel.getExecutionModel(FireModel.INPUT_FILTERS);
-
-		List<Conflict> conflicts = AbstractVM.analyze(concern, execModel, resources);
-		if (!conflicts.isEmpty())
-		{
-			conflictingExecutions.add(conflicts);
-		}
+		return Collections.unmodifiableList(conflicts);
 	}
 
-	public int numConflictingExecutions()
+	public boolean hasConflicts()
 	{
-		return conflictingExecutions.size();
-	}
-
-	public List<List<Conflict>> executionConflicts()
-	{
-		return conflictingExecutions;
-	}
-
-	protected static List<Filter> getFilterList(List<FilterModuleSuperImposition> filterModules)
-	{
-		List<Filter> list = new ArrayList<Filter>();
-
-		for (FilterModuleSuperImposition fmsi : filterModules)
-		{
-			// if (!InnerDispatcher.isDefaultDispatch(name))
-			{
-				FilterModule fm = fmsi.getFilterModule().getRef();
-				Iterator ifItr = fm.getInputFilterIterator();
-
-				while (ifItr.hasNext())
-				{
-					Filter f = (Filter) ifItr.next();
-					list.add(f);
-				}
-			}
-		}
-		return list;
+		return conflicts.size() > 0;
 	}
 
 	public Concern getConcern()
 	{
 		return concern;
+	}
+
+	public FilterDirection getFilterDirection()
+	{
+		return filterDirection;
+	}
+
+	public boolean isSelected()
+	{
+		return isSelectedOrder;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void getFilterList()
+	{
+		for (FilterModuleSuperImposition fmsi : (List<FilterModuleSuperImposition>) order.filterModuleSIList())
+		{
+			FilterModule fm = fmsi.getFilterModule().getRef();
+			Iterator ifItr;
+
+			if (filterDirection == FilterDirection.Output)
+			{
+				ifItr = fm.getOutputFilterIterator();
+			}
+			else
+			{
+				ifItr = fm.getInputFilterIterator();
+			}
+
+			while (ifItr.hasNext())
+			{
+				Filter f = (Filter) ifItr.next();
+				filters.add(f);
+			}
+		}
+	}
+
+	/**
+	 * Analyse the given concern and filter module order
+	 * 
+	 * @param resources
+	 */
+	public void analyze(SECRETResources resources)
+	{
+		conflicts.clear();
+		FireModel fileModel = resources.getFIRE2Resources().getFireModel(concern, order);
+		ExecutionModel execModel = fileModel.getExecutionModel(filterDirection);
+
+		Labeler labeler = resources.getLabeler();
+		labeler.setCurrentConcern(concern);
+
+		for (ConflictRule rule : resources.getRules())
+		{
+			for (Resource resource : resources.getResources())
+			{
+				if (rule.getResource().getType() == ResourceType.Wildcard || rule.getResource().equals(resource))
+				{
+					labeler.setCurrentResource(resource);
+					Matcher matcher = new Matcher(rule.getPattern(), execModel, labeler);
+
+					if (matcher.matches())
+					{
+						Conflict conflict = new Conflict();
+						conflict.setResource(resource);
+						conflict.setRule(rule);
+						// conflict.setSequence(matcher.matchTrace());
+						conflicts.add(conflict);
+					}
+				}
+			}
+		}
 	}
 }

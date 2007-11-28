@@ -20,7 +20,6 @@ import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
-import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -54,63 +53,17 @@ public class CKRET implements CTCommonModule
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
-	protected static SECRETMode mode;
-
-	private static Reporter reporter;
-
-	private File reportFile;
+	protected SECRETMode mode;
 
 	@ResourceManager
 	protected SECRETResources secretResources;
-
-	public static SECRETMode getMode()
-	{
-		return mode;
-	}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
 
-		// secretResources = resources.getResourceManager(SECRETResources.class,
-		// true);
 		secretResources.setFIRE2Resources(resources.getResourceManager(FIRE2Resources.class));
 		loadConfiguration(resources);
-
-		try
-		{
-			BuildConfig config = resources.configuration();
-			File file = new File(config.getProject().getIntermediate(), "Analyses");
-			if (!file.exists())
-			{
-				file.mkdirs();
-			}
-
-			if (file.isDirectory())
-			{
-				reportFile = new File(file, "CKRET.html");
-
-				// TODO CSS should be inlined? or resolve path
-				String cssFile = file.toURL().toString() + "/CKRET.css";
-
-				// String cssFile = "file://" + basedir + "CKRET.css";
-				// if (!FileUtils.fileExist(cssFile))
-				// {
-				// cssFile = "file://" + ps.getPath("Composestar") +
-				// "CKRET.css";
-				// }
-
-				reporter = new HTMLReporter(resources, reportFile, cssFile);
-				reporter.open();
-
-				logger.debug("CKRET report file (" + reportFile + ") created...");
-			}
-		}
-		catch (Exception e)
-		{
-			throw new ModuleException(MODULE_NAME, "CKRET report file creation failed (" + reportFile
-					+ "), with reason: " + e.getMessage());
-		}
 
 		secretResources.setLabeler(new ResourceOperationLabelerEx(secretResources));
 
@@ -127,8 +80,6 @@ public class CKRET implements CTCommonModule
 				ckretrun.stop();
 			}
 		}
-
-		getReporter().close();
 	}
 
 	private void loadConfiguration(CommonResources resources) throws ConfigurationException
@@ -273,8 +224,6 @@ public class CKRET implements CTCommonModule
 
 	private void run(Concern concern) throws ModuleException
 	{
-		getReporter().openConcern(concern);
-
 		FilterModuleOrder singleOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 		if (singleOrder != null)
 		{
@@ -283,21 +232,21 @@ public class CKRET implements CTCommonModule
 			List<List<FilterModuleSuperImposition>> fmolist = (List<List<FilterModuleSuperImposition>>) concern
 					.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 
-			switch (CKRET.mode)
+			switch (mode)
 			{
 				case Normal:
-					if (!ca.checkOrder(singleOrder, true))
+					if (!ca.analyseOrder(singleOrder, true))
 					{
 						logger.warn(new LogMessage("Semantic conflict(s) detected on concern "
-								+ concern.getQualifiedName(), reportFile.toString(), 0));
+								+ concern.getQualifiedName(), "", 0));
 					}
 					break;
 
 				case Redundant:
-					if (!ca.checkOrder(singleOrder, true))
+					if (!ca.analyseOrder(singleOrder, true))
 					{
 						logger.warn(new LogMessage("Semantic conflict(s) detected on concern "
-								+ concern.getQualifiedName(), reportFile.toString(), 0));
+								+ concern.getQualifiedName(), "", 0));
 					}
 					for (List<FilterModuleSuperImposition> aFmolist1 : fmolist)
 					{
@@ -305,20 +254,20 @@ public class CKRET implements CTCommonModule
 
 						if (!fmo.equals(singleOrder))
 						{
-							ca.checkOrder(fmo, false);
+							ca.analyseOrder(fmo, false);
 						}
 					}
 					break;
 
 				case Progressive:
-					boolean foundGoodOrder = ca.checkOrder(singleOrder, true);
+					boolean foundGoodOrder = ca.analyseOrder(singleOrder, true);
 
 					for (List<FilterModuleSuperImposition> aFmolist : fmolist)
 					{
 						FilterModuleOrder fmo = new FilterModuleOrder(aFmolist);
 						if (!fmo.equals(singleOrder))
 						{
-							if (ca.checkOrder(fmo, !foundGoodOrder))
+							if (ca.analyseOrder(fmo, !foundGoodOrder))
 							{
 								if (!foundGoodOrder)
 								{
@@ -345,20 +294,21 @@ public class CKRET implements CTCommonModule
 					break;
 			}
 		}
-
-		getReporter().closeConcern();
 	}
 
+	@Deprecated
 	public List<Annotation> getSemanticAnnotations(PrimitiveConcern pc)
 	{
 		return getSemanticAnnotations((Concern) pc);
 	}
 
+	@Deprecated
 	public List<Annotation> getSemanticAnnotations(CpsConcern cps)
 	{
 		return getSemanticAnnotations((Concern) cps);
 	}
 
+	@Deprecated
 	public List<Annotation> getSemanticAnnotations(Concern c)
 	{
 		List<Annotation> annos = new ArrayList<Annotation>();
@@ -392,10 +342,5 @@ public class CKRET implements CTCommonModule
 		}
 
 		return annos;
-	}
-
-	protected static Reporter getReporter()
-	{
-		return reporter;
 	}
 }

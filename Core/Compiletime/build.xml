@@ -50,8 +50,6 @@
 
 	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file">
 		<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${out.dist}" />
-		<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="${out.dist}" />
-		<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${out.dist}" />
 
 		<copy file="lib/antlr/antlr.jar" todir="${out.dist}/lib" />
 		<copy file="lib/antlr/antlr-runtime-3.jar" todir="${out.dist}/lib" />

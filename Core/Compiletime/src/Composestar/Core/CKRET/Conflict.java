@@ -11,24 +11,28 @@ package Composestar.Core.CKRET;
 
 import java.io.Serializable;
 
+import Composestar.Core.CKRET.Config.ConflictRule;
+import Composestar.Core.CKRET.Config.Resource;
+
+/**
+ * A detected conflict
+ */
 public class Conflict implements Serializable
 {
 	private static final long serialVersionUID = -7017897791526259274L;
 
-	private String resource = "";
+	private Resource resource;
 
-	private String sequence = "";
+	private String sequence;
 
-	private String msg = "";
+	private ConflictRule rule;
 
-	private String expr = "";
-
-	public void setResource(String inresource)
+	public void setResource(Resource inresource)
 	{
 		resource = inresource;
 	}
 
-	public String getResource()
+	public Resource getResource()
 	{
 		return resource;
 	}
@@ -43,23 +47,13 @@ public class Conflict implements Serializable
 		return sequence;
 	}
 
-	public void setMsg(String inmsg)
+	public void setRule(ConflictRule inrule)
 	{
-		msg = inmsg;
+		rule = inrule;
 	}
 
-	public String getMsg()
+	public ConflictRule getRule()
 	{
-		return msg;
-	}
-
-	public void setExpr(String inexpr)
-	{
-		expr = inexpr;
-	}
-
-	public String getExpr()
-	{
-		return expr;
+		return rule;
 	}
 }

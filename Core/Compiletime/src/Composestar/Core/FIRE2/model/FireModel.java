@@ -34,12 +34,20 @@ import Composestar.Core.SIGN2.Sign;
 public class FireModel
 {
 	/**
+	 * The filter set type
+	 */
+	public enum FilterDirection
+	{
+		Input, Output;
+	}
+
+	/**
 	 * Indicates the 'input filter' filter location.
 	 */
 	public final static int INPUT_FILTERS = 0;
 
 	/**
-	 * Indicates the ' output filter' filter location
+	 * Indicates the 'output filter' filter location
 	 */
 	public final static int OUTPUT_FILTERS = 1;
 
@@ -822,6 +830,19 @@ public class FireModel
 	public ExecutionModel getExecutionModel(int filterPosition)
 	{
 		return new ExtendedExecutionModel(filterPosition);
+	}
+
+	/**
+	 * Returns the complete execution model.
+	 * 
+	 * @param filterPosition Indicates for which filters the execution model
+	 *            should be returned, for the input filters (<code>INPUT_FILTERS</code>)
+	 *            or for the output filters (<code>OUTPUT_FILTERS</code>).
+	 * @return
+	 */
+	public ExecutionModel getExecutionModel(FilterDirection filterPosition)
+	{
+		return new ExtendedExecutionModel(filterPosition.ordinal());
 	}
 
 	/**

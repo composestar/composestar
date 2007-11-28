@@ -256,6 +256,8 @@ public class ResourceOperationLabelerEx implements Labeler
 
 	class PrioGraphLabel extends GraphLabel implements Comparable<PrioGraphLabel>
 	{
+		private static final long serialVersionUID = 3315141462371399026L;
+
 		protected int priority;
 
 		public PrioGraphLabel(GraphLabel base, int inpriority)
