@@ -521,7 +521,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe.Pattern
                     {
                         chrPos++;
                     }
-                    tokenBuffer.Add(new Token(Token.WORD, buffer.Substring(start, chrPos)));
+                    tokenBuffer.Add(new Token(Token.WORD, buffer.Substring(start, chrPos-start)));
                 }
                 else
                 {
