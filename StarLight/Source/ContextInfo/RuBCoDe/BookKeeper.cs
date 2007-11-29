@@ -40,11 +40,6 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
     public abstract class BookKeeper
     {
         /// <summary>
-        /// If true print debug output on StdErr
-        /// </summary>
-        protected static readonly bool DEBUG = true;
-
-        /// <summary>
         /// Read operation
         /// </summary>
         public static readonly string READ = "read";
@@ -53,10 +48,12 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         /// </summary>
         public static readonly string WRITE = "write";
 
+#if DEBUG
         /// <summary>
         /// Print the current details to the standard output (for debugging)
         /// </summary>
         public abstract void report();
+#endif
 
         /// <summary>
         /// Validate the resource operations. When not validate a runtime exception is thrown.

@@ -104,17 +104,17 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddOperation(String op)
         {
-            if (DEBUG)
+#if DEBUG
+            lock (Console.Error)
             {
-                lock (Console.Error)
-                {
-                    Console.Error.WriteLine("@BookKeeping in thread #{0} : [{3}] {1}.{2}", Thread.CurrentThread.ManagedThreadId,
-                        name, op, resourceTypeAsString(type));
-                }
+                Console.Error.WriteLine("@BookKeeping in thread #{0} : [{3}] {1}.{2}", Thread.CurrentThread.ManagedThreadId,
+                    name, op, resourceTypeAsString(type));
             }
+#endif
             operations.Add(op);
         }
 
+#if DEBUG
         /// <summary>
         /// Print a report of the current resource values.
         /// </summary>
@@ -133,8 +133,8 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
                 sb.Append(", ");
             }
             Console.Error.WriteLine(sb.ToString());
-
         }
+#endif
 
         /// <summary>
         /// Validate the current operation sequence

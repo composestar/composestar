@@ -83,7 +83,9 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
                 if ("*".Equals(rule.Resource) || resource.Equals(rule.Resource) || 
                     (!String.IsNullOrEmpty(altres) && altres.Equals(rule.Resource)))
                 {
-                    Console.Error.WriteLine("*** Validating resource {0} with rule {1}", resource, rule.ToString());
+#if DEBUG
+                    Console.Error.WriteLine("<ResourceValidator> Validating resource {0} with rule {1}", resource, rule.ToString());
+#endif
                     if (rule.violatesRule(operations))
                     {
                         StringBuilder sb = new StringBuilder();
@@ -172,9 +174,11 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
                     }
                     catch (Exception e)
                     {
-                        Console.Error.WriteLine("Unable to create conflict rule with pattern {0} for resource {1}", cae.Pattern, resname);
-                        Console.Error.WriteLine(e.Message);
-                        Console.Error.WriteLine(e.StackTrace);
+#if DEBUG
+                        Console.Error.WriteLine("<ResourceValidator> Unable to create conflict rule with pattern {0} for resource {1}", cae.Pattern, resname);
+                        Console.Error.WriteLine("<ResourceValidator> " + e.Message);
+                        Console.Error.WriteLine("<ResourceValidator> " + e.StackTrace);
+#endif
                     }
                 }
             }

@@ -57,12 +57,16 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
             {
                 bk = ins.freeSimple.Dequeue();
                 bk.init(rtype, name);
-                Console.Error.WriteLine("### Releasing SimpleBK from queue for {1}, new size = {0} ###", instance().freeSimple.Count, name);
+#if DEBUG
+                Console.Error.WriteLine("<BookKeeperPool> Releasing SimpleBK from queue for {1}, new size = {0}", instance().freeSimple.Count, name);
+#endif
                 return bk;
             }
             else
             {
-                Console.Error.WriteLine("### Creating new SimpleBK for {0} ###", name);
+#if DEBUG
+                Console.Error.WriteLine("<BookKeeperPool> Creating new SimpleBK for {0}", name);
+#endif
                 ins.poolSize++;
                 return new SimpleBK(rtype, name);
             }            
@@ -78,7 +82,9 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
             bk.reset();
             instance().freeSimple.Enqueue(bk);
             bk = null;
-            Console.Error.WriteLine("### Adding SimpleBK to queue, new size = {0} ###", instance().freeSimple.Count);
+#if DEBUG
+            Console.Error.WriteLine("<BookKeeperPool> Adding SimpleBK to queue, new size = {0}", instance().freeSimple.Count);
+#endif
         }
 
         private static BookKeeperPool instance()
@@ -96,6 +102,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
             return _instance;
         }
 
+#if DEBUG
         /// <summary>
         /// 
         /// </summary>
@@ -106,10 +113,13 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
                 throw new Exception(String.Format("BookKeeperPool is leaking. Created {0}; Recovered: {1}", poolSize, freeSimple.Count));
             }
         }
+#endif
 
         private BookKeeperPool()
         {
-            Console.Error.WriteLine("### Creating BookKeeperPool ###");
+#if DEBUG
+            Console.Error.WriteLine("<BookKeeperPool> Creating BookKeeperPool");
+#endif
             freeSimple = new Queue<SimpleBK>();
         }
     }

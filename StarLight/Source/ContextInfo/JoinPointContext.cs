@@ -234,7 +234,9 @@ namespace Composestar.StarLight.ContextInfo
         /// </summary>
         ~JoinPointContext()
         {
-            //ReleaseBK();
+#if !DEBUG
+            ReleaseBK();
+#endif
         }
 
         #endregion
@@ -282,24 +284,30 @@ namespace Composestar.StarLight.ContextInfo
         public void FinalizeBookKeeping()
         {
             if (!_bookkeeping) return;
+#if DEBUG
             if (_startTarget != null)
             {
-                Console.Error.WriteLine("$$$ FinalizeBookKeeping for {0}.{1}", _startTarget.GetType(), _startSelector);
+                Console.Error.WriteLine("<JoinPointContext> FinalizeBookKeeping for {0}.{1}", _startTarget.GetType(), _startSelector);
             }
             else
             {
-                Console.Error.WriteLine("$$$ FinalizeBookKeeping for <static>.{0}", _startSelector);
+                Console.Error.WriteLine("<JoinPointContext> FinalizeBookKeeping for <static>.{0}", _startSelector);
             }
+#endif
             if (_returnBK != null)
             {
+#if DEBUG
                 _returnBK.report();
+#endif
                 _returnBK.validate();
             }
             foreach (ArgumentInfo ai in _arguments.Values)
             {
                 if (ai.ArgumentBK != null)
                 {
+#if DEBUG
                     ai.ArgumentBK.report();
+#endif
                     ai.ArgumentBK.validate();
                 }
             }
@@ -307,7 +315,9 @@ namespace Composestar.StarLight.ContextInfo
             {
                 foreach (SimpleBK bk in _customBKs.Values)
                 {
+#if DEBUG
                     bk.report();
+#endif
                     bk.validate();
                 }
             }
@@ -479,7 +489,9 @@ namespace Composestar.StarLight.ContextInfo
                         case ResourceType.Selector:
                         case ResourceType.ArgumentList:
                             // ignore these, operations not tracked
-                            Console.Error.WriteLine("$$$ Not tracker operation: {0}.{1}", sop[0], sop[1]);
+#if DEBUG
+                            Console.Error.WriteLine("<JoinPointContext> Not tracking operation: {0}.{1}", sop[0], sop[1]);
+#endif
                             break;
                         case ResourceType.Return:
                             if (_returnValue != null)
@@ -1080,7 +1092,9 @@ namespace Composestar.StarLight.ContextInfo
         /// </summary>
         ~ArgumentInfo()
         {
-            //ReleaseBK();
+#if !DEBUG
+            ReleaseBK();
+#endif
         }
 
         #region Book Keeping
