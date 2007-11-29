@@ -1054,9 +1054,6 @@ public class FireModel
 
 	private class ExtendedExecutionState extends ExecutionState
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -8073044026350947570L;
 
 		private ExtendedExecutionModel model;

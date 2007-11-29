@@ -10,12 +10,16 @@
 package Composestar.Core.CKRET;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.FIRE2.model.ExecutionTransition;
 
 /**
- * A detected conflict
+ * A detected conflict. Conflicts are associated with a selector to a filterset,
+ * which is related to a concern.
  */
 public class Conflict implements Serializable
 {
@@ -23,9 +27,13 @@ public class Conflict implements Serializable
 
 	private Resource resource;
 
-	private String sequence;
-
 	private ConflictRule rule;
+
+	// FIXME: implement this in a serializable way, extended transitions/states
+	// shouldn't not be serialized and are also not runtime safe.
+	private transient List<ExecutionTransition> trace;
+
+	private String selector;
 
 	public void setResource(Resource inresource)
 	{
@@ -37,14 +45,14 @@ public class Conflict implements Serializable
 		return resource;
 	}
 
-	public void setSequence(String insequence)
+	public void setTrace(List<ExecutionTransition> intrace)
 	{
-		sequence = insequence;
+		trace = intrace;
 	}
 
-	public String getSequence()
+	public List<ExecutionTransition> getTrace()
 	{
-		return sequence;
+		return Collections.unmodifiableList(trace);
 	}
 
 	public void setRule(ConflictRule inrule)
@@ -55,5 +63,15 @@ public class Conflict implements Serializable
 	public ConflictRule getRule()
 	{
 		return rule;
+	}
+
+	public void setSelector(String sel)
+	{
+		selector = sel;
+	}
+
+	public String getSelector()
+	{
+		return selector;
 	}
 }

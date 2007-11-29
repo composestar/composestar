@@ -6,7 +6,7 @@ concern EncryptDecryptArgs in RuBCoDeTest.TestCase
 			enc1 : RuBCoDeTest.TestCase.MainClass.encrypt1();
 			enc2 : RuBCoDeTest.TestCase.MainClass.encrypt2();
 		inputfilters
-			security : EncryptArgs = { enc1 => [*.sendMessage], enc1 => [*.archiveMessage] };
+			security : EncryptArgs = { enc1 => [*.sendMessage], enc1 => [*.archiveMessage], enc1 => [*.discardMessage] };
 			encargs : EncryptArgs = { enc2 => [*.sendMessage], enc2 => [*.archiveMessage] }
 	}
   

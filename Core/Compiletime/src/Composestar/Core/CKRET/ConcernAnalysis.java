@@ -9,6 +9,7 @@
  */
 package Composestar.Core.CKRET;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,8 +22,10 @@ import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
  * Contains filter analysis for a given concern. Depending on the analysis
  * method it can contain multiple filter set analysis.
  */
-public class ConcernAnalysis
+public class ConcernAnalysis implements Serializable
 {
+	private static final long serialVersionUID = 1512786473548387129L;
+
 	private SECRETResources resources;
 
 	private Concern concern;
@@ -44,6 +47,37 @@ public class ConcernAnalysis
 	public List<FilterSetAnalysis> getAnalysis()
 	{
 		return Collections.unmodifiableList(analysis);
+	}
+
+	public boolean hasConflicts()
+	{
+		for (FilterSetAnalysis fsa : analysis)
+		{
+			if (fsa.hasConflicts())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Return the filter set analysis for the selected filter module ordering
+	 * and the given filter direction
+	 * 
+	 * @param direction
+	 * @return
+	 */
+	public FilterSetAnalysis getSelectedAnalysis(FilterDirection direction)
+	{
+		for (FilterSetAnalysis fsa : analysis)
+		{
+			if (fsa.isSelected() && fsa.getFilterDirection() == direction)
+			{
+				return fsa;
+			}
+		}
+		return null;
 	}
 
 	/**

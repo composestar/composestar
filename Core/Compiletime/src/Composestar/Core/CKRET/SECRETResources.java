@@ -42,6 +42,7 @@ import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
@@ -71,6 +72,8 @@ public class SECRETResources implements ModuleResourceManager
 	 */
 	protected SortedSet<OperationSequence> opSequences;
 
+	protected Map<String, ConcernAnalysis> concernAnalysis;
+
 	/**
 	 * The execution model labeler to use
 	 */
@@ -83,6 +86,7 @@ public class SECRETResources implements ModuleResourceManager
 		resources = new HashMap<String, Resource>();
 		rules = new HashSet<ConflictRule>();
 		opSequences = new TreeSet<OperationSequence>();
+		concernAnalysis = new HashMap<String, ConcernAnalysis>();
 	}
 
 	/*
@@ -166,6 +170,30 @@ public class SECRETResources implements ModuleResourceManager
 	public SortedSet<OperationSequence> getOperationSequences()
 	{
 		return Collections.unmodifiableSortedSet(opSequences);
+	}
+
+	public void addConcernAnalysis(ConcernAnalysis ca)
+	{
+		concernAnalysis.put(ca.getConcern().getQualifiedName(), ca);
+	}
+
+	public Collection<ConcernAnalysis> getConcernAnalysis()
+	{
+		return Collections.unmodifiableCollection(concernAnalysis.values());
+	}
+
+	public ConcernAnalysis getConcernAnalysis(String fqn)
+	{
+		return concernAnalysis.get(fqn);
+	}
+
+	public ConcernAnalysis getConcernAnalysis(Concern ca)
+	{
+		if (ca == null)
+		{
+			throw new IllegalArgumentException("Concern can not be null");
+		}
+		return getConcernAnalysis(ca.getQualifiedName());
 	}
 
 	/**

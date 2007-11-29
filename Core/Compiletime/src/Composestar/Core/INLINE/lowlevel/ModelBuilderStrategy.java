@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import Composestar.Core.CKRET.ConcernAnalysis;
+import Composestar.Core.CKRET.Conflict;
+import Composestar.Core.CKRET.FilterSetAnalysis;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
@@ -18,6 +21,7 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
 import Composestar.Core.INLINE.model.FilterAction;
@@ -30,10 +34,6 @@ import Composestar.Utils.StringUtils;
 
 public class ModelBuilderStrategy implements LowLevelInlineStrategy
 {
-	public final static int INPUT_FILTERS = 1;
-
-	public final static int OUTPUT_FILTERS = 2;
-
 	/**
 	 * The ModelBuilder
 	 */
@@ -42,7 +42,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	/**
 	 * The filtersettype;
 	 */
-	private int filterSetType;
+	private FilterDirection filterSetType;
 
 	/**
 	 * The FilterCode instance of the current inline.
@@ -108,6 +108,17 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private BookKeepingMode bookKeepingMode;
 
 	/**
+	 * The concern analysis, used when bookkeepingmode is set to ConflictPaths.
+	 * Will be null otherwise, will also be null when there are no conflicts
+	 */
+	private ConcernAnalysis concernAnalysis;
+
+	/**
+	 * List of conflicts for the current method. Will be set by startInline
+	 */
+	private List<Conflict> conflicts;
+
+	/**
 	 * The constructor
 	 * 
 	 * @param builder The modelbuilder.
@@ -115,13 +126,21 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 *            (constant INPUT_FILTERS) or for outputfilters (constant
 	 *            OUTPUT_FILTERS)
 	 */
-	public ModelBuilderStrategy(ModelBuilder builder, int filterSetType, BookKeepingMode inBookKeepingMode)
+	public ModelBuilderStrategy(ModelBuilder builder, FilterDirection filterSetType, BookKeepingMode inBookKeepingMode)
 	{
 		this.builder = builder;
 		this.filterSetType = filterSetType;
-		methodTable = new HashMap();
+		methodTable = new HashMap<MethodInfo, Integer>();
 		lastMethodId = 0;
 		bookKeepingMode = inBookKeepingMode;
+	}
+
+	public void setConcernAnalysis(ConcernAnalysis ca)
+	{
+		if (bookKeepingMode == BookKeepingMode.ConflictPaths)
+		{
+			concernAnalysis = ca;
+		}
 	}
 
 	/**
@@ -148,6 +167,20 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	public void startInline(FilterModuleOrder filterSet, MethodInfo method)
 	{
+		conflicts = null;
+		if (concernAnalysis != null)
+		{
+			FilterSetAnalysis fsa = concernAnalysis.getSelectedAnalysis(filterSetType);
+			if (fsa != null)
+			{
+				conflicts = fsa.executionConflicts(method.getName());
+				if (conflicts == null)
+				{
+					conflicts = fsa.executionConflicts(Message.UNDISTINGUISHABLE_SELECTOR);
+				}
+			}
+		}
+
 		filterCode = new FilterCode();
 
 		currentMethod = method;
@@ -192,7 +225,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	public void endInline()
 	{
-		if (filterSetType == INPUT_FILTERS)
+		if (filterSetType == FilterDirection.Input)
 		{
 			endInlineIF();
 		}
@@ -504,8 +537,14 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 				val = true;
 				break;
 			case ConflictPaths:
-				// FIXME: implement
-				val = false;
+				// this is a very basic check, runtime conflict detection is
+				// performed from the begin to the end of a join point, thefore
+				// if the current method has conflicts associated with it all
+				// filter actions should be monitored. runtime conflict
+				// detection could be improved by just monitoring the
+				// conflicting subpath, in that case this check will need to see
+				// if the filteraction is in a trace of the conflict list.
+				val = (concernAnalysis != null) && (conflicts != null);
 				break;
 			default:
 				val = false;

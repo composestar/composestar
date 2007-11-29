@@ -229,6 +229,7 @@ public class CKRET implements CTCommonModule
 		{
 			// ok need to do some checking
 			ConcernAnalysis ca = new ConcernAnalysis(concern, secretResources);
+			secretResources.addConcernAnalysis(ca);
 			List<List<FilterModuleSuperImposition>> fmolist = (List<List<FilterModuleSuperImposition>>) concern
 					.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 

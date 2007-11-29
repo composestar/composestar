@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.Annotations.ResourceManager;
+import Composestar.Core.CKRET.ConcernAnalysis;
+import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -111,6 +113,9 @@ public class ModelBuilder implements CTCommonModule
 	@ResourceManager
 	private FIRE2Resources f2res;
 
+	@ResourceManager
+	private SECRETResources secretRes;
+
 	/**
 	 * Creates the ModelBuilder.
 	 */
@@ -128,9 +133,9 @@ public class ModelBuilder implements CTCommonModule
 
 		BookKeepingMode bkmode = moduleinfo.getSetting("bookkeeping", BookKeepingMode.Never);
 
-		inputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.INPUT_FILTERS, bkmode);
+		inputFilterBuilderStrategy = new ModelBuilderStrategy(this, FilterDirection.Input, bkmode);
 		inputFilterInliner = new LowLevelInliner(inputFilterBuilderStrategy, resources);
-		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.OUTPUT_FILTERS, bkmode);
+		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, FilterDirection.Output, bkmode);
 		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy, resources);
 
 		dataStore = DataStore.instance();
@@ -230,6 +235,13 @@ public class ModelBuilder implements CTCommonModule
 
 		currentFireModelIF = f2res.getFireModel(concern, modules);
 		currentFireModelOF = currentFireModelIF;
+
+		ConcernAnalysis ca = secretRes.getConcernAnalysis(concern);
+		if (ca != null && !ca.hasConflicts())
+		{
+			ca = null;
+		}
+		inputFilterBuilderStrategy.setConcernAnalysis(ca);
 
 		// iterate methods:
 		Signature sig = concern.getSignature();
