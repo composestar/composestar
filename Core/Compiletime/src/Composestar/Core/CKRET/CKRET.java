@@ -20,6 +20,8 @@ import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
+import Composestar.Core.CKRET.Report.SECRETReport;
+import Composestar.Core.CKRET.Report.XMLReport;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -58,6 +60,8 @@ public class CKRET implements CTCommonModule
 	@ResourceManager
 	protected SECRETResources secretResources;
 
+	protected String reportClass;
+
 	public void run(CommonResources resources) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
@@ -80,12 +84,52 @@ public class CKRET implements CTCommonModule
 				ckretrun.stop();
 			}
 		}
+
+		if (reportClass != null && reportClass.trim().length() > 0)
+		{
+			if (reportClass.equalsIgnoreCase("true"))
+			{
+				reportClass = XMLReport.class.getName();
+			}
+			try
+			{
+				Class<?> reportCls = Class.forName(reportClass);
+				if (SECRETReport.class.isAssignableFrom(reportCls))
+				{
+					try
+					{
+						SECRETReport reporter = (SECRETReport) reportCls.newInstance();
+						reporter.report(resources, secretResources);
+					}
+					catch (InstantiationException e)
+					{
+						logger.warn(String.format("Unable to create report class %s: %s", reportClass, e
+								.getLocalizedMessage()));
+					}
+					catch (IllegalAccessException e)
+					{
+						logger.warn(String.format("Unable to create report class %s: %s", reportClass, e
+								.getLocalizedMessage()));
+					}
+				}
+				else
+				{
+					logger.warn(String.format("Report class %s does not implement the SECRETReport interface",
+							reportClass));
+				}
+			}
+			catch (ClassNotFoundException e)
+			{
+				logger.warn(String.format("Unable to create report class %s", reportClass));
+			}
+		}
 	}
 
 	private void loadConfiguration(CommonResources resources) throws ConfigurationException
 	{
 		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
 		mode = mi.getSetting("mode", SECRETMode.Normal);
+		reportClass = mi.getSetting("reportGenerator", "");
 
 		File configFile = null;
 		String cfgfile = mi.getSetting("config", "");

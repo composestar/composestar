@@ -143,6 +143,11 @@ public class FilterSetAnalysis implements Serializable
 		return isSelectedOrder;
 	}
 
+	public FilterModuleOrder getOrder()
+	{
+		return order;
+	}
+
 	@SuppressWarnings("unchecked")
 	protected void getFilterList()
 	{
@@ -218,18 +223,18 @@ public class FilterSetAnalysis implements Serializable
 		Message entranceMessage = trace.get(0).getStartState().getMessage();
 		conflict.setSelector(entranceMessage.getSelector());
 
-		logger.info("Conflict trace begin ---");
-		logger.info(String.format("For %s.%s", concern.getQualifiedName(), entranceMessage.getSelector()));
+		logger.warn(String.format("Resource operation conflict for \"%s.%s\". Trace:", concern.getQualifiedName(),
+				entranceMessage.getSelector()));
 		for (ExecutionTransition et : trace)
 		{
 			FlowNode fn = et.getStartState().getFlowNode();
 			if (fn.containsName(FlowNode.FILTER_NODE))
 			{
 				RepositoryEntity re = fn.getRepositoryLink();
-				logger.info(re.getRepositoryKey(), re);
+				logger.warn(re.getRepositoryKey(), re);
 			}
 		}
-		logger.info("--- Conflict trace end");
+		logger.warn(String.format("Violation of the conflict rule: %s", rule.toString()));
 
 		List<Conflict> lst = conflicts.get(conflict.getSelector());
 		if (lst == null)

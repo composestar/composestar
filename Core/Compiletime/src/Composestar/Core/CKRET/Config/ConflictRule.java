@@ -129,4 +129,11 @@ public class ConflictRule implements Serializable
 	{
 		return type;
 	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("%s on resource %s with pattern \"%s\". Reason: %s", type.toString(), resource.getName(),
+				pattern.toString(), message);
+	}
 }

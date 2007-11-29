@@ -29,6 +29,10 @@
 				<name>Validate resources</name>
 				<default>true</default>
 			</setting>
+			<setting id="reportGenerator" type="string">
+				<name>Report generator</name>
+				<default>true</default>
+			</setting>
 		</settings>
 
 		<incre>
