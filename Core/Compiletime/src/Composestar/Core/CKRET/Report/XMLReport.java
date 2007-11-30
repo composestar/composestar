@@ -61,6 +61,7 @@ import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -284,6 +285,10 @@ public class XMLReport implements SECRETReport
 					confElm.setAttribute("ruleid", ruleIds.get(conf.getRule()));
 					confElm.setAttribute("resource", conf.getResource().getName());
 					confElm.setAttribute("selector", conf.getSelector());
+
+					Element opsElm = xmlDoc.createElement("sequence");
+					opsElm.setTextContent(StringUtils.join(conf.getOperations(), ";"));
+					confElm.appendChild(opsElm);
 
 					for (ExecutionTransition et : conf.getTrace())
 					{

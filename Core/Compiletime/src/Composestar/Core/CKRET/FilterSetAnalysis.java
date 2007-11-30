@@ -32,6 +32,7 @@ import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.Matcher;
+import Composestar.Core.FIRE2.util.regex.Matcher.MatchTrace;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.Logging.CPSLogger;
@@ -198,13 +199,8 @@ public class FilterSetAnalysis implements Serializable
 
 					if (matcher.matches())
 					{
-						for (List<ExecutionTransition> trace : matcher.matchTraces())
+						for (MatchTrace trace : matcher.matchTraces())
 						{
-							if (trace.isEmpty())
-							{
-								// should never happen
-								continue;
-							}
 							addConflict(resource, rule, trace);
 						}
 					}
@@ -213,19 +209,21 @@ public class FilterSetAnalysis implements Serializable
 		}
 	}
 
-	protected void addConflict(Resource resource, ConflictRule rule, List<ExecutionTransition> trace)
+	protected void addConflict(Resource resource, ConflictRule rule, MatchTrace trace)
 	{
 		Conflict conflict = new Conflict();
 		conflict.setResource(resource);
 		conflict.setRule(rule);
-		conflict.setTrace(trace);
+		List<ExecutionTransition> trans = trace.getTransition();
+		conflict.setTrace(trans);
+		conflict.setOperations(trace.getOperations());
 		// first state has the entrance message
-		Message entranceMessage = trace.get(0).getStartState().getMessage();
+		Message entranceMessage = trans.get(0).getStartState().getMessage();
 		conflict.setSelector(entranceMessage.getSelector());
 
 		logger.warn(String.format("Resource operation conflict for \"%s.%s\". Trace:", concern.getQualifiedName(),
 				entranceMessage.getSelector()));
-		for (ExecutionTransition et : trace)
+		for (ExecutionTransition et : trans)
 		{
 			FlowNode fn = et.getStartState().getFlowNode();
 			if (fn.containsName(FlowNode.FILTER_NODE))

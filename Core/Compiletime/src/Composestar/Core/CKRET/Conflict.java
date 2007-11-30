@@ -10,7 +10,6 @@
 package Composestar.Core.CKRET;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 import Composestar.Core.CKRET.Config.ConflictRule;
@@ -35,6 +34,8 @@ public class Conflict implements Serializable
 
 	private String selector;
 
+	private List<String> operations;
+
 	public void setResource(Resource inresource)
 	{
 		resource = inresource;
@@ -52,7 +53,7 @@ public class Conflict implements Serializable
 
 	public List<ExecutionTransition> getTrace()
 	{
-		return Collections.unmodifiableList(trace);
+		return trace;
 	}
 
 	public void setRule(ConflictRule inrule)
@@ -73,5 +74,15 @@ public class Conflict implements Serializable
 	public String getSelector()
 	{
 		return selector;
+	}
+
+	public void setOperations(List<String> ops)
+	{
+		operations = ops;
+	}
+
+	public List<String> getOperations()
+	{
+		return operations;
 	}
 }

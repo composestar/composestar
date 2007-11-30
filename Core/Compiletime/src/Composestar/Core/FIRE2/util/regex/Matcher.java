@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
@@ -32,7 +33,7 @@ public class Matcher
 
 	private Set<CombinedState> processedStates;
 
-	private Stack<CombinedState> unvisitedStates;
+	private Queue<CombinedState> unvisitedStates;
 
 	private Set<CombinedState> endStates;
 
@@ -69,7 +70,7 @@ public class Matcher
 		while (states.hasNext())
 		{
 			processedStates = new HashSet<CombinedState>();
-			unvisitedStates = new Stack<CombinedState>();
+			unvisitedStates = new LinkedList<CombinedState>();
 
 			ExecutionState state = states.next();
 			addState(new CombinedState(state, regularState));
@@ -79,9 +80,9 @@ public class Matcher
 
 	private void process()
 	{
-		while (!unvisitedStates.empty())
+		while (!unvisitedStates.isEmpty())
 		{
-			CombinedState state = unvisitedStates.pop();
+			CombinedState state = unvisitedStates.remove();
 			if (process(state))
 			{
 				return;
@@ -123,7 +124,7 @@ public class Matcher
 			if (sequence.isEmpty())
 			{
 				newState = new CombinedState(executionTransition.getEndState(), state.regularState, state,
-						executionTransition);
+						executionTransition, null);
 				if (isEndState(newState))
 				{
 					return true;
@@ -139,7 +140,7 @@ public class Matcher
 				for (RegularState nextState : nextStates)
 				{
 					newState = new CombinedState(executionTransition.getEndState(), nextState, state,
-							executionTransition);
+							executionTransition, sequence);
 					if (isEndState(newState))
 					{
 						return true;
@@ -229,7 +230,7 @@ public class Matcher
 		if (!processedStates.contains(state))
 		{
 			processedStates.add(state);
-			unvisitedStates.push(state);
+			unvisitedStates.add(state);
 		}
 	}
 
@@ -246,7 +247,7 @@ public class Matcher
 		}
 	}
 
-	public List<List<ExecutionTransition>> matchTraces()
+	public List<MatchTrace> matchTraces()
 	{
 		if (!matchDone)
 		{
@@ -258,10 +259,11 @@ public class Matcher
 			return null;
 		}
 
-		List<List<ExecutionTransition>> result = new ArrayList<List<ExecutionTransition>>();
+		List<MatchTrace> result = new ArrayList<MatchTrace>();
 		for (CombinedState endState : endStates)
 		{
-			result.add(Collections.unmodifiableList(endState.trace.toList()));
+			MatchTrace mt = new MatchTrace(endState.trace.toList(), endState.trace.operationList());
+			result.add(mt);
 		}
 		return result;
 	}
@@ -293,11 +295,11 @@ public class Matcher
 		}
 
 		public CombinedState(ExecutionState executionState, RegularState regularState, CombinedState previousState,
-				ExecutionTransition transition)
+				ExecutionTransition transition, LabelSequence sequence)
 		{
 			this.executionState = executionState;
 			this.regularState = regularState;
-			trace = new TransitionTrace(previousState.trace, transition);
+			trace = new TransitionTrace(previousState.trace, transition, sequence);
 			// trace = new Vector();
 			// trace.addAll( previousState.trace );
 			// trace.add( transition );
@@ -335,15 +337,16 @@ public class Matcher
 
 		public ExecutionTransition last;
 
+		public LabelSequence operations;
+
 		public TransitionTrace()
-		{
+		{}
 
-		}
-
-		public TransitionTrace(TransitionTrace heading, ExecutionTransition last)
+		public TransitionTrace(TransitionTrace heading, ExecutionTransition last, LabelSequence operations)
 		{
 			this.heading = heading;
 			this.last = last;
+			this.operations = operations;
 		}
 
 		public List<ExecutionTransition> toList()
@@ -358,6 +361,46 @@ public class Matcher
 				v.add(last);
 				return v;
 			}
+		}
+
+		public List<String> operationList()
+		{
+			if (heading == null)
+			{
+				return new ArrayList<String>();
+			}
+			else
+			{
+				List<String> v = heading.operationList();
+				if (operations != null)
+				{
+					v.addAll(operations.getLabelsEx());
+				}
+				return v;
+			}
+		}
+	}
+
+	public class MatchTrace
+	{
+		private List<String> operations;
+
+		private List<ExecutionTransition> transitions;
+
+		public MatchTrace(List<ExecutionTransition> transitions, List<String> operations)
+		{
+			this.transitions = transitions;
+			this.operations = operations;
+		}
+
+		public List<String> getOperations()
+		{
+			return Collections.unmodifiableList(operations);
+		}
+
+		public List<ExecutionTransition> getTransition()
+		{
+			return Collections.unmodifiableList(transitions);
 		}
 	}
 }
