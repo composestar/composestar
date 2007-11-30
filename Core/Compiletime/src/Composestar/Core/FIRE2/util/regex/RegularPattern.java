@@ -35,7 +35,11 @@ import java.util.Map.Entry;
 
 /**
  * THIS IS NOT A REGULAR EXPRESSION (e.g. REGEX). But a more basic regular
- * language. The EBNF below explains the syntax
+ * language. The EBNF below explains the syntax. By default the pattern matches
+ * a substring of the input. To make the pattern match with the beginning of a
+ * string prefix it with a ^, to match it with the end of a string match it with
+ * a $. Not adding using a ^ or $ to the pattern will actually add a ".*" to the
+ * beginning and the end of a string.
  * 
  * <pre>
  * pattern		= alt;
@@ -95,6 +99,31 @@ public final class RegularPattern extends Pattern
 
 		public static RegularAutomaton parse(String pattern) throws PatternParseException
 		{
+			if (pattern == null)
+			{
+				throw new PatternParseException("Pattern can not be null");
+			}
+
+			if (!pattern.startsWith("^"))
+			{
+				pattern = ".*" + pattern;
+			}
+			else
+			{
+				pattern = pattern.substring(1);
+			}
+			if (!pattern.endsWith("$"))
+			{
+				pattern = pattern + ".*";
+			}
+			else
+			{
+				if (pattern.length() > 0)
+				{
+					pattern = pattern.substring(0, pattern.length() - 1);
+				}
+			}
+
 			Lexer lexer = new Lexer(pattern);
 			RegularState end = new FinalRegularState();
 			RegularState start = pAlt(lexer, end);

@@ -306,16 +306,18 @@ way to fit your requirements.
 															Filter set analysis #
 															<xsl:value-of select="position()" />
 														</a>
-														<ul>
-															<xsl:for-each select="conflict">
-																<li>
-																	<a href="#{generate-id(.)}">
-																		Conflict #
-																		<xsl:value-of select="position()" />
-																	</a>
-																</li>
-															</xsl:for-each>
-														</ul>
+														<xsl:if test="count(conflict) &gt; 0">
+															<ul>
+																<xsl:for-each select="conflict">
+																	<li>
+																		<a href="#{generate-id(.)}">
+																			Conflict #
+																			<xsl:value-of select="position()" />
+																		</a>
+																	</li>
+																</xsl:for-each>
+															</ul>
+														</xsl:if>
 													</li>
 												</xsl:for-each>
 											</ul>

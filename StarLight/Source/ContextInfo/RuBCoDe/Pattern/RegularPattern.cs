@@ -84,6 +84,31 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe.Pattern
             /// <returns></returns>
             public static RegularAutomaton parse(string pattern)
             {
+                if (pattern == null)
+                {
+                    throw new PatternParseException("Pattern can not be null");
+                }
+
+                if (!pattern.StartsWith("^"))
+                {
+                    pattern = ".*" + pattern;
+                }
+                else
+                {
+                    pattern = pattern.Substring(1);
+                }
+                if (!pattern.EndsWith("$"))
+                {
+                    pattern = pattern + ".*";
+                }
+                else
+                {
+                    if (pattern.Length > 0)
+                    {
+                        pattern = pattern.Substring(0, pattern.Length - 1);
+                    }
+                }
+
                 Lexer lexer = new Lexer(pattern);
                 RegularState end = new FinalRegularState();
                 RegularState start = pAlt(lexer, end);
