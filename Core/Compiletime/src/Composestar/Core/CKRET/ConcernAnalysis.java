@@ -81,7 +81,7 @@ public class ConcernAnalysis implements Serializable
 	}
 
 	/**
-	 * Analyse the given order. Returns true when it contains conflicts.
+	 * Analyse the given order. Returns true when there are no conflicts
 	 * 
 	 * @param order
 	 * @param isSelected
@@ -92,6 +92,6 @@ public class ConcernAnalysis implements Serializable
 		FilterSetAnalysis oa = new FilterSetAnalysis(concern, order, FilterDirection.Input, isSelected);
 		oa.analyze(resources);
 		analysis.add(oa);
-		return oa.hasConflicts();
+		return !oa.hasConflicts();
 	}
 }
