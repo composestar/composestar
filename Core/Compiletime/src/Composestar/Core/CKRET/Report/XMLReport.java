@@ -287,7 +287,7 @@ public class XMLReport implements SECRETReport
 					confElm.setAttribute("selector", conf.getSelector());
 
 					Element opsElm = xmlDoc.createElement("sequence");
-					opsElm.setTextContent(StringUtils.join(conf.getOperations(), ";"));
+					opsElm.setTextContent(StringUtils.join(conf.getOperations(), " "));
 					confElm.appendChild(opsElm);
 
 					for (ExecutionTransition et : conf.getTrace())

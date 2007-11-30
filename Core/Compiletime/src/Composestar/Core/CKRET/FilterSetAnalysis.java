@@ -221,8 +221,9 @@ public class FilterSetAnalysis implements Serializable
 		Message entranceMessage = trans.get(0).getStartState().getMessage();
 		conflict.setSelector(entranceMessage.getSelector());
 
-		logger.warn(String.format("Resource operation conflict for \"%s.%s\". Trace:", concern.getQualifiedName(),
-				entranceMessage.getSelector()));
+		logger.warn(String.format("Resource operation conflict for \"%s.%s\" on resource %s. ", concern
+				.getQualifiedName(), entranceMessage.getSelector(), resource.getName()));
+		logger.warn(String.format("Violating operation sequence: %s", conflict.getOperations()));
 		for (ExecutionTransition et : trans)
 		{
 			FlowNode fn = et.getStartState().getFlowNode();
