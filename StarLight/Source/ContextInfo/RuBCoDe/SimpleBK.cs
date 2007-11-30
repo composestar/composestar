@@ -107,7 +107,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe
 #if DEBUG
             lock (Console.Error)
             {
-                Console.Error.WriteLine("@BookKeeping in thread #{0} : [{3}] {1}.{2}", Thread.CurrentThread.ManagedThreadId,
+                Console.Error.WriteLine("<SimpleBK> in thread #{0} : [{3}] {1}.{2}", Thread.CurrentThread.ManagedThreadId,
                     name, op, resourceTypeAsString(type));
             }
 #endif
