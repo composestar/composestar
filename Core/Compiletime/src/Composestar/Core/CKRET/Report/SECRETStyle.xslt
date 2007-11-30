@@ -78,13 +78,13 @@ A:Hover {
 	left: 0;
 	width: 100%;
 	right: 0;
-	height: 5em;
+	height: 3.75em;
 	position: absolute;
 }
 
 #content {
 	position: fixed;
-	top: 5em;
+	top: 3.8em;
 	bottom: 0;
 	width: 98%;
 	left: 0;
@@ -99,7 +99,11 @@ A:Hover {
 }
 
 #timestamp {
-	font-size: 90%;
+	font-size: 0.9em;
+	text-align: right;
+	position: absolute;
+	right: 0;
+	top: 1em;
 }
 
 .filterset {
@@ -124,9 +128,11 @@ A:Hover {
 }
 
 #menu {
-	height: 25px;
+	height: 1.75em;
+	line-height: 1.75em;
 	background-color: menu;
 	color: menutext;
+	font-size: 0.9em;
 }
 
 #menu A {
@@ -136,7 +142,7 @@ A:Hover {
 	margin: 0;
 	border: 0;
 	background-color: transparent;
-	font-size: 1em;
+	font-size: 0.9em;
 }
 
 /* ================================================================ 
@@ -153,7 +159,6 @@ way to fit your requirements.
 	padding: 0;
 	margin: 0;
 	list-style: none;
-	font: 0.9em verdana, sans-serif;
 	border: 1px solid #000;
 	border-color: threedhighlight threedshadow threedshadow threedhighlight;
 	border-width: 1px 1px 1px 1px;
@@ -165,7 +170,6 @@ way to fit your requirements.
 
 #nav {
 	height: 1.75em;
-	padding: 0;
 }
 
 #nav table {
@@ -190,9 +194,9 @@ way to fit your requirements.
 	display: block;
 	float: left;
 	color: menutext;
-	height: 1.75em;
+	height: 1.85em;
 	padding-right: 0.25em;
-	line-height: 1.75em;
+	line-height: 1.85em;
 	text-decoration: none;
 	white-space: nowrap;
 }
@@ -284,8 +288,6 @@ way to fit your requirements.
 						<xsl:value-of select="secretreport/@timestamp" />
 					</span>
 
-
-
 					<div id="menu">
 						<ul id="nav">
 							<li>
@@ -338,6 +340,7 @@ way to fit your requirements.
 								<a href="#resources">resources</a>
 								<ul>
 									<xsl:for-each select="secretreport/resource">
+										<xsl:sort select="@name" />
 										<li>
 											<a href="#{generate-id(.)}">
 												<xsl:value-of select="@name" />
@@ -353,7 +356,7 @@ way to fit your requirements.
 					</div>
 				</div>
 				<div id="content">
-					<div id="analysis">
+					<div id="analyses">
 						<xsl:apply-templates select="secretreport/analysis">
 							<xsl:sort select="@concern" />
 						</xsl:apply-templates>

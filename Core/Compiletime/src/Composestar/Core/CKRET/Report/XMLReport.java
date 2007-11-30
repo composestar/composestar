@@ -85,7 +85,7 @@ public class XMLReport implements SECRETReport
 	 */
 	public void report(CommonResources resources, SECRETResources secretResources)
 	{
-		outputFile = new File(resources.configuration().getProject().getIntermediate(), "Analysis");
+		outputFile = new File(resources.configuration().getProject().getIntermediate(), "Analyses");
 		if (!outputFile.exists())
 		{
 			if (!outputFile.mkdirs())
@@ -173,7 +173,7 @@ public class XMLReport implements SECRETReport
 		writeActions(secretResources, xmlDoc, root);
 		writeRules(secretResources, xmlDoc, root);
 
-		writeAnalysis(secretResources, xmlDoc, root);
+		writeAnalyses(secretResources, xmlDoc, root);
 
 		xmlDoc.appendChild(root);
 	}
@@ -236,7 +236,7 @@ public class XMLReport implements SECRETReport
 			resElm.setAttribute("resource", rule.getResource().getName());
 			resElm.setAttribute("type", rule.getType().toString().toLowerCase());
 
-			String ruleId = "rule" + ruleIds.keySet().size();
+			String ruleId = "rule" + (ruleIds.keySet().size() + 1);
 			resElm.setAttribute("id", ruleId);
 			ruleIds.put(rule, ruleId);
 
@@ -252,9 +252,9 @@ public class XMLReport implements SECRETReport
 		}
 	}
 
-	protected void writeAnalysis(SECRETResources secretResources, Document xmlDoc, Element root)
+	protected void writeAnalyses(SECRETResources secretResources, Document xmlDoc, Element root)
 	{
-		for (ConcernAnalysis ca : secretResources.getConcernAnalysis())
+		for (ConcernAnalysis ca : secretResources.getConcernAnalyses())
 		{
 			Element caElm = xmlDoc.createElement("analysis");
 			caElm.setAttribute("concern", ca.getConcern().getQualifiedName());

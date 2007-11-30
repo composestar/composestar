@@ -72,7 +72,7 @@ public class SECRETResources implements ModuleResourceManager
 	 */
 	protected SortedSet<OperationSequence> opSequences;
 
-	protected Map<String, ConcernAnalysis> concernAnalysis;
+	protected Map<String, ConcernAnalysis> concernAnalyses;
 
 	/**
 	 * The execution model labeler to use
@@ -86,7 +86,7 @@ public class SECRETResources implements ModuleResourceManager
 		resources = new HashMap<String, Resource>();
 		rules = new HashSet<ConflictRule>();
 		opSequences = new TreeSet<OperationSequence>();
-		concernAnalysis = new HashMap<String, ConcernAnalysis>();
+		concernAnalyses = new HashMap<String, ConcernAnalysis>();
 	}
 
 	/*
@@ -174,17 +174,17 @@ public class SECRETResources implements ModuleResourceManager
 
 	public void addConcernAnalysis(ConcernAnalysis ca)
 	{
-		concernAnalysis.put(ca.getConcern().getQualifiedName(), ca);
+		concernAnalyses.put(ca.getConcern().getQualifiedName(), ca);
 	}
 
-	public Collection<ConcernAnalysis> getConcernAnalysis()
+	public Collection<ConcernAnalysis> getConcernAnalyses()
 	{
-		return Collections.unmodifiableCollection(concernAnalysis.values());
+		return Collections.unmodifiableCollection(concernAnalyses.values());
 	}
 
 	public ConcernAnalysis getConcernAnalysis(String fqn)
 	{
-		return concernAnalysis.get(fqn);
+		return concernAnalyses.get(fqn);
 	}
 
 	public ConcernAnalysis getConcernAnalysis(Concern ca)
