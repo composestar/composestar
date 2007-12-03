@@ -24,9 +24,11 @@
 
 package Composestar.Core.CKRET;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -85,7 +87,7 @@ public class SECRETResources implements ModuleResourceManager
 	{
 		resources = new HashMap<String, Resource>();
 		rules = new HashSet<ConflictRule>();
-		opSequences = new TreeSet<OperationSequence>();
+		opSequences = new TreeSet<OperationSequence>(new OperationSequenceComparator());
 		concernAnalyses = new HashMap<String, ConcernAnalysis>();
 	}
 
@@ -282,6 +284,26 @@ public class SECRETResources implements ModuleResourceManager
 			{
 				// TODO: handle error
 			}
+		}
+	}
+
+	/**
+	 * Comparator for the sorted operation sequence list
+	 * 
+	 * @author Michiel Hendriks
+	 */
+	public static final class OperationSequenceComparator implements Comparator<OperationSequence>, Serializable
+	{
+		private static final long serialVersionUID = 3545184344171267662L;
+
+		public int compare(OperationSequence o1, OperationSequence o2)
+		{
+			int r = o1.getPriority() - o2.getPriority();
+			if (r != 0)
+			{
+				return r;
+			}
+			return o1.hashCode() - o2.hashCode();
 		}
 	}
 }

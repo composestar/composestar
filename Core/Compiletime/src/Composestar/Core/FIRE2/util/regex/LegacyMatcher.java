@@ -4,9 +4,7 @@
  */
 package Composestar.Core.FIRE2.util.regex;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,7 +21,7 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
 /**
  * @author Arjan de Roo
  */
-public class Matcher
+public class LegacyMatcher extends AbstractMatcher
 {
 	private Pattern pattern;
 
@@ -35,12 +33,9 @@ public class Matcher
 
 	private Queue<CombinedState> unvisitedStates;
 
-	private Set<CombinedState> endStates;
-
-	private boolean matchDone = false;
-
-	public Matcher(Pattern pattern, ExecutionModel model, Labeler labeler)
+	public LegacyMatcher(Pattern pattern, ExecutionModel model, Labeler labeler)
 	{
+		super();
 		this.pattern = pattern;
 		this.model = model;
 		this.labeler = labeler;
@@ -51,6 +46,7 @@ public class Matcher
 		return processedStates.size();
 	}
 
+	@Override
 	public boolean matches()
 	{
 		matchDone = true;
@@ -63,8 +59,6 @@ public class Matcher
 	 */
 	private void initialize()
 	{
-		endStates = new HashSet<CombinedState>();
-
 		Iterator<ExecutionState> states = model.getEntranceStates();
 		RegularState regularState = pattern.getStartState();
 		while (states.hasNext())
@@ -244,163 +238,6 @@ public class Matcher
 		else
 		{
 			return false;
-		}
-	}
-
-	public List<MatchTrace> matchTraces()
-	{
-		if (!matchDone)
-		{
-			matches();
-		}
-
-		if (endStates.isEmpty())
-		{
-			return null;
-		}
-
-		List<MatchTrace> result = new ArrayList<MatchTrace>();
-		for (CombinedState endState : endStates)
-		{
-			MatchTrace mt = new MatchTrace(endState.trace.toList(), endState.trace.operationList());
-			result.add(mt);
-		}
-		return result;
-	}
-
-	private class CombinedState
-	{
-		public ExecutionState executionState;
-
-		public RegularState regularState;
-
-		// private Vector trace;
-		private TransitionTrace trace;
-
-		public CombinedState(ExecutionState executionState, RegularState regularState)
-		{
-			this.executionState = executionState;
-			this.regularState = regularState;
-			trace = new TransitionTrace();
-			// trace = new Vector();
-		}
-
-		public CombinedState(ExecutionState executionState, RegularState regularState, CombinedState previousState)
-		{
-			this.executionState = executionState;
-			this.regularState = regularState;
-			trace = previousState.trace;
-			// trace = new Vector();
-			// trace.addAll( previousState.trace );
-		}
-
-		public CombinedState(ExecutionState executionState, RegularState regularState, CombinedState previousState,
-				ExecutionTransition transition, LabelSequence sequence)
-		{
-			this.executionState = executionState;
-			this.regularState = regularState;
-			trace = new TransitionTrace(previousState.trace, transition, sequence);
-			// trace = new Vector();
-			// trace.addAll( previousState.trace );
-			// trace.add( transition );
-		}
-
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (!(obj instanceof CombinedState))
-			{
-				return false;
-			}
-
-			CombinedState state = (CombinedState) obj;
-
-			return executionState.equals(state.executionState) && regularState.equals(state.regularState);
-		}
-
-		@Override
-		public int hashCode()
-		{
-			return executionState.hashCode() + regularState.hashCode();
-		}
-	}
-
-	/**
-	 * LinkedList kind of class to efficiently construct the trace during
-	 * matching.
-	 * 
-	 * @author Arjan de Roo
-	 */
-	private class TransitionTrace
-	{
-		public TransitionTrace heading;
-
-		public ExecutionTransition last;
-
-		public LabelSequence operations;
-
-		public TransitionTrace()
-		{}
-
-		public TransitionTrace(TransitionTrace heading, ExecutionTransition last, LabelSequence operations)
-		{
-			this.heading = heading;
-			this.last = last;
-			this.operations = operations;
-		}
-
-		public List<ExecutionTransition> toList()
-		{
-			if (heading == null)
-			{
-				return new LinkedList<ExecutionTransition>();
-			}
-			else
-			{
-				List<ExecutionTransition> v = heading.toList();
-				v.add(last);
-				return v;
-			}
-		}
-
-		public List<String> operationList()
-		{
-			if (heading == null)
-			{
-				return new ArrayList<String>();
-			}
-			else
-			{
-				List<String> v = heading.operationList();
-				if (operations != null)
-				{
-					v.addAll(operations.getLabelsEx());
-				}
-				return v;
-			}
-		}
-	}
-
-	public class MatchTrace
-	{
-		private List<String> operations;
-
-		private List<ExecutionTransition> transitions;
-
-		public MatchTrace(List<ExecutionTransition> transitions, List<String> operations)
-		{
-			this.transitions = transitions;
-			this.operations = operations;
-		}
-
-		public List<String> getOperations()
-		{
-			return Collections.unmodifiableList(operations);
-		}
-
-		public List<ExecutionTransition> getTransition()
-		{
-			return Collections.unmodifiableList(transitions);
 		}
 	}
 }

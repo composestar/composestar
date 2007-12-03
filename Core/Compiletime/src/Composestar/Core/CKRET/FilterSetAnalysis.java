@@ -30,9 +30,10 @@ import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
+import Composestar.Core.FIRE2.util.regex.AbstractMatcher;
 import Composestar.Core.FIRE2.util.regex.Labeler;
-import Composestar.Core.FIRE2.util.regex.Matcher;
-import Composestar.Core.FIRE2.util.regex.Matcher.MatchTrace;
+import Composestar.Core.FIRE2.util.regex.MatcherEx;
+import Composestar.Core.FIRE2.util.regex.AbstractMatcher.MatchTrace;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.Logging.CPSLogger;
@@ -195,7 +196,7 @@ public class FilterSetAnalysis implements Serializable
 				if (rule.getResource().getType() == ResourceType.Wildcard || rule.getResource().equals(resource))
 				{
 					labeler.setCurrentResource(resource);
-					Matcher matcher = new Matcher(rule.getPattern(), execModel, labeler);
+					AbstractMatcher matcher = new MatcherEx(rule.getPattern(), execModel, labeler);
 
 					if (matcher.matches())
 					{

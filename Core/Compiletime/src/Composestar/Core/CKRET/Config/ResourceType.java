@@ -145,7 +145,7 @@ public enum ResourceType
 		{
 			return Wildcard;
 		}
-		if (value.trim() == "")
+		if (value.trim().length() == 0)
 		{
 			return Unknown;
 		}

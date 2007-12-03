@@ -40,7 +40,7 @@ import java.util.Set;
  * 
  * @author Michiel Hendriks
  */
-public class OperationSequence implements Comparable<OperationSequence>, Serializable
+public class OperationSequence implements Serializable
 {
 	private static final long serialVersionUID = -4277166345789156242L;
 
@@ -159,16 +159,6 @@ public class OperationSequence implements Comparable<OperationSequence>, Seriali
 	public Map<Resource, List<String>> getOperations()
 	{
 		return Collections.unmodifiableMap(operations);
-	}
-
-	public int compareTo(OperationSequence o)
-	{
-		int res = priority - o.getPriority();
-		if (res != 0)
-		{
-			return res;
-		}
-		return hashCode() - o.hashCode();
 	}
 
 	/**
