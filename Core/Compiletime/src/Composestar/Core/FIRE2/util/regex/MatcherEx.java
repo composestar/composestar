@@ -143,7 +143,9 @@ public class MatcherEx extends AbstractMatcher
 
 	private boolean isEndState(CombinedState state)
 	{
-		if (state.regularState.equals(pattern.getEndState()) && state.executionState.getOutTransitionsEx().size() == 0)
+		if (state.regularState.isGreedyEnd()
+				|| (state.regularState.equals(pattern.getEndState()) && state.executionState.getOutTransitionsEx()
+						.size() == 0))
 		{
 			endStates.add(state);
 			return true;

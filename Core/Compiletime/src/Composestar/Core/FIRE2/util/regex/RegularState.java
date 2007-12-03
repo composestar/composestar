@@ -44,6 +44,8 @@ public class RegularState implements Serializable
 
 	private List<RegularTransition> outTransitions;
 
+	private boolean greedyEnd;
+
 	public RegularState()
 	{
 		stateId = getNewStateId();
@@ -73,6 +75,60 @@ public class RegularState implements Serializable
 	public List<RegularTransition> getOutTransitions()
 	{
 		return Collections.unmodifiableList(outTransitions);
+	}
+
+	/**
+	 * If true this state is a greedy end state, meaning that it accepts all
+	 * input to the end state: ".*^".
+	 * 
+	 * @return
+	 */
+	public boolean isGreedyEnd()
+	{
+		return greedyEnd;
+	}
+
+	public void resolveGreedyEnd(Set<RegularState> visited)
+	{
+		boolean hasSelfRef = false;
+		boolean hasEndRef = false;
+		visited.add(this);
+		for (RegularTransition transition : outTransitions)
+		{
+			if (transition.getEndState() == this)
+			{
+				hasSelfRef = true;
+			}
+			else if (transition.getEndState().getOutTransitions().size() == 0)
+			{
+				// TODO: check for lambda transitions.
+				hasEndRef = true;
+			}
+
+			if (visited.contains(transition.getEndState()))
+			{
+				continue;
+			}
+			transition.getEndState().resolveGreedyEnd(visited);
+
+			if (greedyEnd)
+			{
+				continue;
+			}
+			if (transition.isEmpty())
+			{
+				if (transition.getEndState().isGreedyEnd())
+				{
+					// a lambda transition to a greedyEnd state makes this state
+					// also a greedyEnd state
+					greedyEnd = true;
+				}
+			}
+		}
+		if (!greedyEnd)
+		{
+			greedyEnd = hasSelfRef && hasEndRef;
+		}
 	}
 
 	/*

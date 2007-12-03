@@ -97,6 +97,8 @@ class RegularTransition implements Serializable
 	{
 		if (labels.contains(WILDCARD))
 		{
+			// "not anything" is an interesting concept, absolutely useless, but
+			// interesting nonetheless.
 			return !negation;
 		}
 		else if (negation)
@@ -112,6 +114,11 @@ class RegularTransition implements Serializable
 	public boolean isEmpty()
 	{
 		return labels.isEmpty();
+	}
+
+	public boolean isWildcard()
+	{
+		return labels.contains(WILDCARD);
 	}
 
 	public RegularState getEndState()
