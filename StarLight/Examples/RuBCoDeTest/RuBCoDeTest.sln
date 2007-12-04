@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{D0A7707A-04E2-4AA9-A44E-89783E5BD8A8}") = "TestCase", "TestCase.cpsproj", "{4E004E11-B92F-4953-ABDE-F78D260F6981}"
+Project("{D0A7707A-04E2-4AA9-A44E-89783E5BD8A8}") = "TestCase", "TestCase\TestCase.cpsproj", "{4E004E11-B92F-4953-ABDE-F78D260F6981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuBCoDeTestFilters", "..\RuBCoDeTestFilters\RuBCoDeTestFilters.csproj", "{C86D45DB-F5FE-4793-ABEC-0B0D1D42F078}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuBCoDeTestFilters", "RuBCoDeTestFilters\RuBCoDeTestFilters.csproj", "{C86D45DB-F5FE-4793-ABEC-0B0D1D42F078}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
