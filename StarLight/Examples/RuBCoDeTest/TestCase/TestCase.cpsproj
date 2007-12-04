@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Name>"TestCase"</Name>
@@ -30,10 +30,10 @@
     <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.7.1.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
-      <HintPath>..\..\..\..\..\Program Files\StarLight\CoreElements\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Composestar.StarLight.Filters, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
