@@ -161,6 +161,10 @@
 	</target>
 
 	<!-- deploy -->
+	
+	<target name="install">
+		<antcall target="deploy" inheritRefs="true" />
+	</target>
 
 	<target name="deploy" depends="init,msbuild_init" description="Deploy the StarLight implementation of Compose*">
 		<antcall target="deploy_compiletime" inheritRefs="true" />
@@ -393,6 +397,7 @@
 			<include name="iTextSharp/iTextSharp.sln" />
 			<include name="Pacman/Pacman.sln" />
 			<include name="PacmanTwo/PacmanTwo.sln" />
+			<include name="RuBCoDeTest/TestCase/TestCase.sln" />
 		</fileset>
 
 		<echo level="info">Cleaning tests</echo>
