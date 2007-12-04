@@ -21,9 +21,11 @@ namespace RuBCoDeTestFilters.Filters
         {
             foreach (ArgumentInfo ai in context.GetArguments.Values)
             {
-                ai.AddResourceOp("expectEncrypted");
-                Object val = ai.Value;
-                ai.AddResourceOp("verify");
+                if (ai.Type == typeof(string))
+                {
+                    ai.AddResourceOp("expectEncrypted");
+                    ai.AddResourceOp("verify");
+                }
             }
         }
     }

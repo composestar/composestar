@@ -9,7 +9,7 @@ using Composestar.StarLight.Filters.FilterTypes;
 using Composestar.StarLight.ContextInfo.RuBCoDe;
 
 [assembly: Resource("arg", "encrypt,decrypt,verify,expectPlain")]
-//[assembly: ConflictRule("arg", ...", false, "Data may not be encrypted")]
+[assembly: ConflictRule("arg", "(encrypt)(![decrypt]*(decrypt)![encrypt]*(encrypt))*(expectPlain)", true, "Data must NOT be encrypted")]
 namespace RuBCoDeTestFilters.Filters
 {
     [FilterActionAttribute("VerifyArgsAction", FilterActionAttribute.FilterFlowBehavior.Continue,
@@ -21,9 +21,11 @@ namespace RuBCoDeTestFilters.Filters
         {
             foreach (ArgumentInfo ai in context.GetArguments.Values)
             {
-                ai.AddResourceOp("expectPlain");
-                Object val = ai.Value;
-                ai.AddResourceOp("verify");
+                if (ai.Type == typeof(string))
+                {
+                    ai.AddResourceOp("expectPlain");
+                    ai.AddResourceOp("verify");
+                }
             }
         }
     }

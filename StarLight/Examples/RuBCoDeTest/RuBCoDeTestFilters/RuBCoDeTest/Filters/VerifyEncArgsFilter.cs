@@ -7,8 +7,13 @@ using Composestar.StarLight.Filters.FilterTypes;
 
 namespace RuBCoDeTestFilters.Filters
 {
-    [FilterTypeAttribute("VerifyEncArgs", "VerifyEncArgsAction", FilterAction.ContinueAction, FilterAction.ContinueAction, FilterAction.ContinueAction)]
-    public class VerifyEncArgsFilter : FilterType
+    [FilterTypeAttribute("VerifyEncBefore", "VerifyEncArgsAction", FilterAction.ContinueAction, FilterAction.ContinueAction, FilterAction.ContinueAction)]
+    public class VerifyEncBeforeFilter : FilterType
+    {
+    }
+
+    [FilterTypeAttribute("VerifyEncAfter", FilterAction.ContinueAction, FilterAction.ContinueAction, "VerifyEncArgsAction", FilterAction.ContinueAction)]
+    public class VerifyEncAfterFilter : FilterType
     {
     }
 }

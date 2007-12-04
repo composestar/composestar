@@ -21,9 +21,13 @@ namespace RuBCoDeTestFilters.Filters
         {
             foreach (ArgumentInfo ai in context.GetArguments.Values)
             {
-                Object val = ai.Value;
-                ai.AddResourceOp("decrypt");
-                ai.Value = val;
+                if (ai.Type == typeof(string))
+                {
+                    string val = (string)ai.Value;
+                    ai.AddResourceOp("decrypt");
+                    val = Encoding.UTF8.GetString(Convert.FromBase64String(val));
+                    ai.Value = val;
+                }
             }
         }
     }

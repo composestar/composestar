@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using Composestar.StarLight.ContextInfo;
+
 namespace RuBCoDeTest.TestCase
 {
 	public class TargetClass
@@ -11,17 +13,29 @@ namespace RuBCoDeTest.TestCase
 
         public void sendMessage(string sender, string receiver, string message)
         {
-            Console.WriteLine("Sending message to {1} from {0}, test: {2}", sender, receiver, message);
+            Console.WriteLine("\nSending message");
+            Console.WriteLine("Sender:   {0}", sender);
+            Console.WriteLine("Receiver: {0}", receiver);
+            Console.WriteLine("Message:  {0}", message);
         }
 
-        public void archiveMessage(string sender, string receiver, string message)
+        public void archiveMessage(JoinPointContext jpc)
         {
-            Console.WriteLine("Archiving message to {1} from {0}, test: {2}", sender, receiver, message);
+            string sender = (string)jpc.GetArgumentValue(0);
+            string receiver = (string)jpc.GetArgumentValue(1);
+            string message = (string)jpc.GetArgumentValue(2);
+            Console.WriteLine("\nArchiving message");
+            Console.WriteLine("Sender:   {0}", sender);
+            Console.WriteLine("Receiver: {0}", receiver);
+            Console.WriteLine("Message:  {0}", message);
         }
         
         public void discardMessage(string sender, string receiver, string message)
         {
-            Console.WriteLine("Discarding message to {1} from {0}, test: {2}", sender, receiver, message);
+            Console.WriteLine("\nDiscarding message");
+            Console.WriteLine("Sender:   {0}", sender);
+            Console.WriteLine("Receiver: {0}", receiver);
+            Console.WriteLine("Message:  {0}", message);
         }            
 	}
 }

@@ -6,21 +6,19 @@ namespace RuBCoDeTest.TestCase
 {
     public class MainClass
     {
-        private static bool _encrypt1 = true;
+        private static bool _encrypt1 = false;
         private static bool _encrypt2 = false;
 
         public MainClass()
 	    {
-            Console.WriteLine("RuBCoDe Test");
-            Console.WriteLine("------------");
             TargetClass t = new TargetClass();
 
-            Console.WriteLine("Sending a message with security");
-            t.sendMessage("foo", "bar", "Hello World!");
+            t.sendMessage("alice@example.org", "bob@example.org", "Hello World!");
 
-            Console.WriteLine("Enabling encrypt2");
+            Console.WriteLine("\n[ Increasing security ]");
             MainClass._encrypt2 = true;
-            t.sendMessage("foo", "bar", "Hello World!");
+
+            t.sendMessage("alice@example.org", "bob@example.org", "Hello World!");            
 	    }
 
         public static bool encrypt1()
@@ -37,7 +35,7 @@ namespace RuBCoDeTest.TestCase
         {
             if (args.Length > 0)
             {
-                _encrypt1 = false;
+                _encrypt1 = true;
             }
             new MainClass();
             return 0;
