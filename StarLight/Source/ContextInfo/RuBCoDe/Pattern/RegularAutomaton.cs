@@ -20,7 +20,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: Pattern.java 3953 2007-11-27 11:26:28Z elmuerte $
+ * $Id$
  */
 #endregion
 

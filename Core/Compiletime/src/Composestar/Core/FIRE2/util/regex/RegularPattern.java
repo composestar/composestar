@@ -127,7 +127,7 @@ public final class RegularPattern extends Pattern
 			Lexer lexer = new Lexer(pattern);
 			RegularState end = new FinalRegularState();
 			RegularState start = pAlt(lexer, end);
-			start.resolveGreedyEnd(new HashSet<RegularState>());
+			start.resolveGreedyEnd(new HashSet<RegularState>(), end);
 			RegularAutomaton auto = new RegularAutomaton();
 			auto.setStartState(start);
 			auto.setEndState(end);

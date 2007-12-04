@@ -88,20 +88,26 @@ public class RegularState implements Serializable
 		return greedyEnd;
 	}
 
-	public void resolveGreedyEnd(Set<RegularState> visited)
+	/**
+	 * Resolve greedy ends.
+	 * 
+	 * @param visited
+	 */
+	public void resolveGreedyEnd(Set<RegularState> visited, RegularState endState)
 	{
 		boolean hasSelfRef = false;
 		boolean hasEndRef = false;
 		visited.add(this);
 		for (RegularTransition transition : outTransitions)
 		{
-			if (transition.getEndState() == this)
+			if (transition.isWildcard() && transition.getEndState() == this)
 			{
 				hasSelfRef = true;
 			}
-			else if (transition.getEndState().getOutTransitions().size() == 0)
+			else if (transition.isEmpty() && transition.getEndState() == endState)
 			{
-				// TODO: check for lambda transitions.
+				// TODO: doesn't check if end state is reachable through lambda
+				// transitions
 				hasEndRef = true;
 			}
 
@@ -109,7 +115,7 @@ public class RegularState implements Serializable
 			{
 				continue;
 			}
-			transition.getEndState().resolveGreedyEnd(visited);
+			transition.getEndState().resolveGreedyEnd(visited, endState);
 
 			if (greedyEnd)
 			{

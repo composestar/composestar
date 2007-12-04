@@ -20,7 +20,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: Pattern.java 3953 2007-11-27 11:26:28Z elmuerte $
+ * $Id$
  */
 #endregion
 
@@ -44,6 +44,8 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe.Pattern
         private string stateId;
 
         private IList<RegularTransition> outTransitions;
+
+        private bool greedyEnd;
 
         /// <summary>
         /// Create a new state
@@ -94,6 +96,65 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe.Pattern
         {
             return new ReadOnlyCollection<RegularTransition>(outTransitions);
         }
+
+        /// <summary>
+        /// If true this state is a greedy end state, meaning that it accepts all input to the end state: ".*^".
+        /// </summary>
+        /// <returns></returns>
+        public bool isGreedyEnd()
+        {
+            return greedyEnd;
+        }
+
+        /// <summary>
+        /// Resolve greedy ends.
+        /// </summary>
+        /// <param name="visited"></param>
+        /// <param name="endState"></param>
+        public void resolveGreedyEnd(Set<RegularState> visited, RegularState endState)
+        {
+            bool hasSelfRef = false;
+            bool hasEndRef = false;
+            visited.Add(this);
+            foreach (RegularTransition transition in outTransitions)
+            {
+                if (transition.isWildcard() && transition.getEndState() == this)
+                {
+                    hasSelfRef = true;
+                }
+                else if (transition.isEmpty() && transition.getEndState() == endState)
+                {
+                    // TODO: doesn't check if end state is reachable through lambda
+                    // transitions
+                    hasEndRef = true;
+                }
+
+                if (visited.Contains(transition.getEndState()))
+                {
+                    continue;
+                }
+                transition.getEndState().resolveGreedyEnd(visited, endState);
+
+                if (greedyEnd)
+                {
+                    continue;
+                }
+                if (transition.isEmpty())
+                {
+                    if (transition.getEndState().isGreedyEnd())
+                    {
+                        // a lambda transition to a greedyEnd state makes this state
+                        // also a greedyEnd state
+                        greedyEnd = true;
+                    }
+                }
+            }
+            if (!greedyEnd)
+            {
+                greedyEnd = hasSelfRef && hasEndRef;
+            }
+        }
+
 
         /// <summary>
         /// Return a string representation of this state+transitions

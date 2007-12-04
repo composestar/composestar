@@ -44,6 +44,8 @@ public class SimpleMatcher
 
 	protected Set<RegularState> states;
 
+	protected boolean hasGreedyEnd;
+
 	public static final boolean matches(Pattern pattern, Queue<String> words)
 	{
 		SimpleMatcher sm = new SimpleMatcher(pattern, words);
@@ -97,7 +99,7 @@ public class SimpleMatcher
 
 	protected boolean matches()
 	{
-		while (words.size() > 0)
+		while (words.size() > 0 && !hasGreedyEnd)
 		{
 			String word = words.remove();
 			if ("".equals(word))
@@ -109,7 +111,7 @@ public class SimpleMatcher
 				break;
 			}
 		}
-		return (words.size() == 0) && (states.contains(pattern.getEndState()));
+		return hasGreedyEnd || ((words.size() == 0) && (states.contains(pattern.getEndState())));
 	}
 
 	protected int traverseStates(String word)
@@ -120,6 +122,11 @@ public class SimpleMatcher
 		while (queue.size() > 0)
 		{
 			RegularState state = queue.remove();
+			hasGreedyEnd = state.isGreedyEnd();
+			if (hasGreedyEnd)
+			{
+				return 0;
+			}
 			visited.add(state);
 			for (RegularTransition rt : state.getOutTransitions())
 			{

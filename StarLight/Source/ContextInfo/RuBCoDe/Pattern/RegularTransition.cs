@@ -20,7 +20,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: Pattern.java 3953 2007-11-27 11:26:28Z elmuerte $
+ * $Id$
  */
 #endregion
 
@@ -157,6 +157,15 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe.Pattern
         public bool isEmpty()
         {
             return labels.Count == 0;
+        }
+
+        /// <summary>
+        /// True if it's a wildcard transition
+        /// </summary>
+        /// <returns></returns>
+        public bool isWildcard()
+        {
+            return labels.Contains(WILDCARD);
         }
 
         /// <summary>

@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
-import java.util.Stack;
 
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
@@ -43,7 +42,6 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-// TODO: check for greedy end state: ".*^"
 public class MatcherEx extends AbstractMatcher
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Preprocessor.MODULE_NAME + ".regex");
@@ -56,7 +54,7 @@ public class MatcherEx extends AbstractMatcher
 
 	private Set<CombinedState> done;
 
-	private Stack<CombinedState> todo;
+	private Queue<CombinedState> todo;
 
 	public MatcherEx(Pattern inPattern, ExecutionModel inModel, Labeler inLabeler)
 	{
@@ -87,14 +85,14 @@ public class MatcherEx extends AbstractMatcher
 		logger.info("Processing exec module for " + startState.getMessage().toString() + " with pattern: "
 				+ pattern.toString());
 		done = new HashSet<CombinedState>();
-		todo = new Stack<CombinedState>();
+		todo = new LinkedList<CombinedState>();
 
 		CombinedState state = new CombinedState(startState, pattern.getStartState());
 		if (!addCheckedState(state))
 		{
 			while (!todo.isEmpty())
 			{
-				if (processState(todo.pop()))
+				if (processState(todo.remove()))
 				{
 					break;
 				}
@@ -121,7 +119,7 @@ public class MatcherEx extends AbstractMatcher
 		{
 			return true;
 		}
-		todo.push(state);
+		todo.add(state);
 		// not really done yet, but prevents duplicates from being added to
 		// the todo
 		done.add(state);

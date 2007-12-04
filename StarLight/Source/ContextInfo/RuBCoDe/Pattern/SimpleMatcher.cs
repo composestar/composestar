@@ -20,7 +20,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: Pattern.java 3953 2007-11-27 11:26:28Z elmuerte $
+ * $Id$
  */
 #endregion
 
@@ -41,6 +41,8 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe.Pattern
         private Queue<string> words;
 
         private Set<RegularState> states;
+
+        protected bool hasGreedyEnd;
 
         /// <summary>
         /// True if the word sequence matches the pattern
@@ -121,7 +123,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe.Pattern
 
         private bool matches()
         {
-            while (words.Count > 0)
+            while (words.Count > 0 && !hasGreedyEnd)
             {
                 string word = words.Dequeue();
                 if (String.IsNullOrEmpty(word))
@@ -133,7 +135,7 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe.Pattern
                     break;
                 }
             }
-            return (words.Count == 0) && (states.Contains(pattern.getEndState()));
+            return hasGreedyEnd || ((words.Count == 0) && (states.Contains(pattern.getEndState())));
         }
 
         private int traverseStates(string word)
@@ -144,6 +146,11 @@ namespace Composestar.StarLight.ContextInfo.RuBCoDe.Pattern
             while (queue.Count > 0)
             {
                 RegularState state = queue.Dequeue();
+                hasGreedyEnd = state.isGreedyEnd();
+                if (hasGreedyEnd)
+                {
+                    return 0;
+                }
                 visited.Add(state);
                 foreach (RegularTransition rt in state.getOutTransitions())
                 {

@@ -20,7 +20,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: ResourceValidator.cs 3939 2007-11-20 13:23:29Z elmuerte $
+ * $Id$
  */
 #endregion
 
