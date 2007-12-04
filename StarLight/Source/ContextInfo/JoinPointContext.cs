@@ -294,35 +294,49 @@ namespace Composestar.StarLight.ContextInfo
                 Console.Error.WriteLine("<JoinPointContext> FinalizeBookKeeping for <static>.{0}", _startSelector);
             }
 #endif
-            if (_returnBK != null)
+            try
             {
-#if DEBUG
-                _returnBK.report();
-#endif
-                _returnBK.validate();
-            }
-            foreach (ArgumentInfo ai in _arguments.Values)
-            {
-                if (ai.ArgumentBK != null)
+                try
                 {
+                    if (_returnBK != null)
+                    {
 #if DEBUG
-                    ai.ArgumentBK.report();
+                        _returnBK.report();
 #endif
-                    ai.ArgumentBK.validate();
+                        _returnBK.validate();
+                    }
+                    foreach (ArgumentInfo ai in _arguments.Values)
+                    {
+                        if (ai.ArgumentBK != null)
+                        {
+#if DEBUG
+                            ai.ArgumentBK.report();
+#endif
+                            ai.ArgumentBK.validate();
+                        }
+                    }
+                    if (_customBKs != null)
+                    {
+                        foreach (SimpleBK bk in _customBKs.Values)
+                        {
+#if DEBUG
+                            bk.report();
+#endif
+                            bk.validate();
+                        }
+                    }
                 }
-            }
-            if (_customBKs != null)
-            {
-                foreach (SimpleBK bk in _customBKs.Values)
+                catch (ResourceOperationException e)
                 {
-#if DEBUG
-                    bk.report();
-#endif
-                    bk.validate();
+                    // to minimize the stack trace
+                    throw e;
                 }
+            }    
+            finally
+            {
+                BookKeeping = false;
+                ReleaseBK();
             }
-            BookKeeping = false;
-            ReleaseBK();
         }
 
         /// <summary>

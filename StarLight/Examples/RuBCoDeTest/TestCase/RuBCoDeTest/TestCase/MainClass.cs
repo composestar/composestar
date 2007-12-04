@@ -10,16 +10,34 @@ namespace RuBCoDeTest.TestCase
         private static bool _encrypt2 = false;
 
         public MainClass()
-	    {
+        {
             TargetClass t = new TargetClass();
 
-            t.sendMessage("alice@example.org", "bob@example.org", "Hello World!");
+            try
+            {
+                t.sendMessage("alice@example.org", "bob@example.org", "Hello World!");
+            }
+            catch (Composestar.StarLight.ContextInfo.RuBCoDe.ResourceOperationException e)
+            {
+                Console.WriteLine("\n[ ResourceOperationException ]");
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
 
             Console.WriteLine("\n[ Increasing security ]");
             MainClass._encrypt2 = true;
 
-            t.sendMessage("alice@example.org", "bob@example.org", "Hello World!");            
-	    }
+            try
+            {
+                t.sendMessage("alice@example.org", "bob@example.org", "Hello World!");
+            }
+            catch (Composestar.StarLight.ContextInfo.RuBCoDe.ResourceOperationException e)
+            {
+                Console.WriteLine("\n[ ResourceOperationException ]");
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
+        }
 
         public static bool encrypt1()
         {
