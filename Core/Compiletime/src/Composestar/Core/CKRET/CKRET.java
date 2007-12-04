@@ -11,11 +11,16 @@ package Composestar.Core.CKRET;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import Composestar.Core.Annotations.ResourceManager;
+import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.ResourceType;
@@ -32,6 +37,8 @@ import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
+import Composestar.Core.FIRE2.util.regex.RegularState;
+import Composestar.Core.FIRE2.util.regex.RegularTransition;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.Annotation;
@@ -260,10 +267,54 @@ public class CKRET implements CTCommonModule
 					logger.warn(String.format(
 							"Unknown resource operations used for resource \"%s\": %s; Used in actions for: %s", entry
 									.getKey().getName(), copy.toString(), opseq.getLabels().toString()));
+					// add them to the resource, they might be used in rules
+					entry.getKey().addVocabulary(copy);
 				}
 			}
 		}
-		// TODO: check rules
+		for (ConflictRule rule : secretResources.getRules())
+		{
+			if (rule.getResource().getType().isMeta())
+			{
+				continue;
+			}
+			Set<String> ruleLabels = getAllRuleLabels(rule.getPattern().getStartState());
+			ruleLabels.removeAll(rule.getResource().getVocabulary());
+			if (ruleLabels.size() > 0)
+			{
+				logger.warn(String.format("Unknown resource operations \"%s\" used in conflict rule: %s", ruleLabels,
+						rule));
+			}
+		}
+	}
+
+	/**
+	 * Retrieves the set of labels used in the pattern
+	 * 
+	 * @param state
+	 * @return
+	 */
+	private Set<String> getAllRuleLabels(RegularState state)
+	{
+		Set<String> result = new HashSet<String>();
+		Set<RegularState> visited = new HashSet<RegularState>();
+		Queue<RegularState> queue = new LinkedList<RegularState>();
+		queue.add(state);
+		while (queue.size() > 0)
+		{
+			RegularState s = queue.remove();
+			visited.add(s);
+			for (RegularTransition t : s.getOutTransitions())
+			{
+				result.addAll(t.getLabels());
+				if (!visited.contains(t.getEndState()))
+				{
+					queue.add(t.getEndState());
+				}
+			}
+		}
+		result.remove(RegularTransition.WILDCARD);
+		return result;
 	}
 
 	private void run(Concern concern) throws ModuleException

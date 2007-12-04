@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-class RegularTransition implements Serializable
+public class RegularTransition implements Serializable
 {
 	private static final long serialVersionUID = -8405459283288345064L;
 
