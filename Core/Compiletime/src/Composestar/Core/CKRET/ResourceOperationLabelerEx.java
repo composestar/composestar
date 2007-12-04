@@ -162,7 +162,7 @@ public class ResourceOperationLabelerEx implements Labeler
 	 * 
 	 * @see Composestar.Core.FIRE2.util.regex.Labeler#getResourceOperations(Composestar.Core.FIRE2.model.ExecutionTransition)
 	 */
-	public List<String> getResourceOperations(ExecutionTransition transition)
+	public List<String> getResourceOperations(ExecutionTransition transition, Set<String> excludeResources)
 	{
 		List<String> result = new ArrayList<String>();
 
@@ -222,6 +222,10 @@ public class ResourceOperationLabelerEx implements Labeler
 				{
 					for (Entry<Resource, List<String>> entry : seq.getOperations().entrySet())
 					{
+						if (excludeResources != null && excludeResources.contains(entry.getKey().getName()))
+						{
+							continue;
+						}
 						for (String op : entry.getValue())
 						{
 							result.add(entry.getKey().getName() + "." + op);

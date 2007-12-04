@@ -194,7 +194,7 @@ way to fit your requirements.
 	display: block;
 	float: left;
 	color: menutext;
-	height: 1.85em;
+	height: 1.9em;
 	padding-right: 0.25em;
 	line-height: 1.85em;
 	text-decoration: none;
@@ -452,7 +452,16 @@ way to fit your requirements.
 					<dl>
 						<dt>Resource</dt>
 						<dd>
-							<xsl:value-of select="@resource" />
+							<xsl:choose>
+    						<xsl:when test="key('resourcekey', @resource)">
+    							<a href="#{generate-id(key('resourcekey', @resource))}">
+    								<xsl:value-of select="@resource" />
+    							</a>
+    						</xsl:when>
+    						<xsl:otherwise>
+    							<xsl:value-of select="@resource" />
+    						</xsl:otherwise>
+    					</xsl:choose>
 						</dd>
 						<dt>Selector</dt>
 						<dd>

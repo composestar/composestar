@@ -6,11 +6,14 @@ package Composestar.Core.INLINE.lowlevel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import Composestar.Core.CKRET.SECRETResources;
+import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
@@ -55,6 +58,8 @@ public class LowLevelInliner
 
 	private Labeler labeler;
 
+	private Set<String> excludeResources;
+
 	/**
 	 * The constructor
 	 * 
@@ -79,6 +84,11 @@ public class LowLevelInliner
 		isFilter = new StateType(FlowNode.FILTER_NODE);
 		isCondExpr = new StateType(FlowNode.CONDITION_EXPRESSION_NODE);
 		isFMCondition = new StateType(FlowNode.FM_CONDITION_NODE);
+
+		excludeResources = new HashSet<String>();
+		excludeResources.add(ResourceType.Message.toString());
+		excludeResources.add(ResourceType.Target.toString());
+		excludeResources.add(ResourceType.Selector.toString());
 	}
 
 	/**
@@ -431,7 +441,7 @@ public class LowLevelInliner
 				{
 					resourceOperations = new ArrayList<String>();
 				}
-				resourceOperations.addAll(labeler.getResourceOperations(transition));
+				resourceOperations.addAll(labeler.getResourceOperations(transition, excludeResources));
 			}
 
 			ExecutionState exitState = getExitState(transition.getEndState());
@@ -500,7 +510,7 @@ public class LowLevelInliner
 			ExecutionTransition transition = transitions.get(0);
 			if ((labeler != null) && (resourceOperations != null))
 			{
-				resourceOperations.addAll(labeler.getResourceOperations(transition));
+				resourceOperations.addAll(labeler.getResourceOperations(transition, excludeResources));
 			}
 			return transition.getEndState();
 		}
@@ -528,7 +538,7 @@ public class LowLevelInliner
 			ExecutionTransition transition = currentState.getOutTransitionsEx().get(0);
 			if (labeler != null)
 			{
-				resourceOperations.addAll(labeler.getResourceOperations(transition));
+				resourceOperations.addAll(labeler.getResourceOperations(transition, excludeResources));
 			}
 			currentState = transition.getEndState();
 		}

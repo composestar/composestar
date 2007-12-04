@@ -5,6 +5,7 @@
 package Composestar.Core.FIRE2.util.regex;
 
 import java.util.List;
+import java.util.Set;
 
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -45,7 +46,7 @@ public interface Labeler
 	 * @param transition
 	 * @return
 	 */
-	List<String> getResourceOperations(ExecutionTransition transition);
+	List<String> getResourceOperations(ExecutionTransition transition, Set<String> excludeResources);
 
 	/**
 	 * Set the current resource identifier. getLabels() needs this information
