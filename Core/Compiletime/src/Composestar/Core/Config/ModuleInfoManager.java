@@ -266,6 +266,7 @@ public class ModuleInfoManager
 			reader = inReader;
 		}
 
+		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
 		{
 			if (qName.equals("moduleinfo"))
@@ -276,6 +277,7 @@ public class ModuleInfoManager
 			}
 		}
 
+		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException
 		{
 			if (qName.endsWith("moduleinfo"))

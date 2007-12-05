@@ -3,7 +3,6 @@ package Composestar.Core.INCRE;
 import java.io.File;
 import java.io.IOException;
 
-import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Exception.ModuleException;
@@ -32,9 +31,9 @@ public class INCRESerializer implements CTCommonModule
 			INCRETimer increhistory = incre.getReporter().openProcess("INCRESerializer", "Creation of INCRE history",
 					INCRETimer.TYPE_OVERHEAD);
 
-			BuildConfig config = resources.configuration();
-			CompileHistory history = new CompileHistory(config, DataStore.instance(), resources);
-			File dest = new File(config.getProject().getIntermediate(), CompileHistory.DEFAULT_FILENAME);
+			CompileHistory history = new CompileHistory(DataStore.instance(), resources);
+			File dest = new File(resources.configuration().getProject().getIntermediate(),
+					CompileHistory.DEFAULT_FILENAME);
 			try
 			{
 				logger.info("Saving compile history to: " + dest.toString());

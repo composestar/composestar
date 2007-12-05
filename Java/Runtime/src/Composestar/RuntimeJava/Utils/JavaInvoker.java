@@ -1,10 +1,14 @@
 package Composestar.RuntimeJava.Utils;
 
-import Composestar.RuntimeCore.Utils.*;
-
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Dictionary;
-import java.lang.reflect.*;
+
+import Composestar.RuntimeCore.Utils.Debug;
+import Composestar.RuntimeCore.Utils.Invoker;
 
 public class JavaInvoker extends Invoker
 {
@@ -58,16 +62,19 @@ public class JavaInvoker extends Invoker
 		}
 		catch (IllegalAccessException e)
 		{
-			Debug.out(Debug.MODE_ERROR, "Util", "Cannot acces target:" + target);
+			Debug.out(Debug.MODE_ERROR, "Util", "Cannot acces target: " + target);
+			Debug.out(Debug.MODE_ERROR, "Util", e.getMessage());
 		}
 		catch (NoSuchMethodException e)
 		{
-			Debug.out(Debug.MODE_ERROR, "Util", "No such static method:" + selector + " - " + e.getMessage());
+			Debug.out(Debug.MODE_ERROR, "Util", "No such static method: " + selector + " - " + e.getMessage());
+			Debug.out(Debug.MODE_ERROR, "Util", e.getMessage());
 		}
 		catch (InvocationTargetException e)
 		{
-			Debug.out(Debug.MODE_ERROR, "Util", "Error while delegating to target:" + target + "selector: " + selector
-					+ " args: " + args);
+			Debug.out(Debug.MODE_ERROR, "Util", "Error while delegating to target: " + target + "selector: " + selector
+					+ " args: " + Arrays.toString(args));
+			Debug.out(Debug.MODE_ERROR, "Util", e.getMessage());
 		}
 		return null;
 	}
@@ -88,15 +95,18 @@ public class JavaInvoker extends Invoker
 		catch (IllegalAccessException e)
 		{
 			Debug.out(Debug.MODE_ERROR, "Util", "Cannot acces target:" + target);
+			Debug.out(Debug.MODE_ERROR, "Util", e.getMessage());
 		}
 		catch (NoSuchMethodException e)
 		{
 			Debug.out(Debug.MODE_ERROR, "Util", "No such method:" + selector + " - " + e.getMessage());
+			Debug.out(Debug.MODE_ERROR, "Util", e.getMessage());
 		}
 		catch (InvocationTargetException e)
 		{
-			Debug.out(Debug.MODE_ERROR, "Util", "Error while delegating to target:" + target + " selector: " + selector
-					+ " args: " + args);
+			Debug.out(Debug.MODE_ERROR, "Util", "Error while delegating to target: " + target + " selector: "
+					+ selector + " args: " + args);
+			Debug.out(Debug.MODE_ERROR, "Util", e.getMessage());
 		}
 		return null;
 	}
@@ -114,14 +124,14 @@ public class JavaInvoker extends Invoker
 	private Method getMethod(Class type, String name)
 	{
 		Method[] meths = type.getMethods();
-        for (Method meth : meths) 
-        {
-            if (meth.getName().equalsIgnoreCase(name)) 
-            {
-                return meth;
-            }
-        }
-        return null;
+		for (Method meth : meths)
+		{
+			if (meth.getName().equalsIgnoreCase(name))
+			{
+				return meth;
+			}
+		}
+		return null;
 	}
 
 	public boolean objectHasMethod(Object inner, String m_selector, Dictionary context)
@@ -141,18 +151,22 @@ public class JavaInvoker extends Invoker
 		catch (IllegalAccessException e)
 		{
 			Debug.out(Debug.MODE_ERROR, "Util", "Cannot acces target:" + target);
+			Debug.out(Debug.MODE_ERROR, "Util", e.getMessage());
 		}
 		catch (NoSuchMethodException e)
 		{
 			Debug.out(Debug.MODE_ERROR, "Util", "No such method:" + target);
+			Debug.out(Debug.MODE_ERROR, "Util", e.getMessage());
 		}
 		catch (InvocationTargetException e)
 		{
 			Debug.out(Debug.MODE_ERROR, "Util", "Error while delegating to target:" + target);
+			Debug.out(Debug.MODE_ERROR, "Util", e.getMessage());
 		}
 		catch (InstantiationException e)
 		{
 			Debug.out(Debug.MODE_ERROR, "Util", "Cannot instantiate:" + target);
+			Debug.out(Debug.MODE_ERROR, "Util", e.getMessage());
 		}
 		return null;
 	}

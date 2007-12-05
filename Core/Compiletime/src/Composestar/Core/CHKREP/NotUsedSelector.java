@@ -36,21 +36,22 @@ public class NotUsedSelector extends BaseChecker
 	 *      compact, whether it is doubtfull whether we would gain much when we
 	 *      compress the four search loops into one more reusable loop
 	 */
+	@Override
 	public boolean performCheck()
 	{
-		Iterator selectors = ds.getAllInstancesOf(SelectorDefinition.class);
+		Iterator<SelectorDefinition> selectors = ds.getAllInstancesOf(SelectorDefinition.class);
 		while (selectors.hasNext())
 		{
 			// Gets defintion to check
-			SelectorDefinition selDef = (SelectorDefinition) selectors.next();
+			SelectorDefinition selDef = selectors.next();
 			boolean isUsed = false;
 
 			// search where this definition is used in the filtermodulebindings
 			SuperImposition si = (SuperImposition) selDef.getParent();
-			Iterator fmbi = si.getFilterModuleBindingIterator();
+			Iterator<FilterModuleBinding> fmbi = si.getFilterModuleBindingIterator();
 			while (fmbi.hasNext())
 			{
-				FilterModuleBinding fmb = (FilterModuleBinding) fmbi.next();
+				FilterModuleBinding fmb = fmbi.next();
 				SelectorReference sf = fmb.getSelector();
 				if (sf.getName().equals(selDef.getName()))
 				{
@@ -74,10 +75,10 @@ public class NotUsedSelector extends BaseChecker
 
 			if (!isUsed)
 			{
-				Iterator mb = si.getMethodBindingIterator();
+				Iterator<MethodBinding> mb = si.getMethodBindingIterator();
 				while (mb.hasNext())
 				{
-					MethodBinding m = (MethodBinding) mb.next();
+					MethodBinding m = mb.next();
 					SelectorReference sf = m.getSelector();
 					if (sf.getName().equals(selDef.getName()))
 					{
@@ -88,10 +89,10 @@ public class NotUsedSelector extends BaseChecker
 
 			if (!isUsed)
 			{
-				Iterator cb = si.getMethodBindingIterator();
+				Iterator<ConditionBinding> cb = si.getMethodBindingIterator();
 				while (cb.hasNext())
 				{
-					ConditionBinding c = (ConditionBinding) cb.next();
+					ConditionBinding c = cb.next();
 					SelectorReference sf = c.getSelector();
 					if (sf.getName().equals(selDef.getName()))
 					{
@@ -116,6 +117,7 @@ public class NotUsedSelector extends BaseChecker
 	 * 
 	 * @see Composestar.Core.CHKREP.BaseChecker#check(Composestar.Core.RepositoryImplementation.DataStore)
 	 */
+	@Override
 	public void check(DataStore newDs) throws ModuleException
 	{
 		ds = newDs;

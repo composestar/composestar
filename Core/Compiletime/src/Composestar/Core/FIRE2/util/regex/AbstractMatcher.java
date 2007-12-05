@@ -197,7 +197,7 @@ public abstract class AbstractMatcher
 				return false;
 			}
 
-			return executionState.equals(executionState) && regularState.equals(state.regularState);
+			return executionState.equals(state.executionState) && regularState.equals(state.regularState);
 		}
 
 		@Override
@@ -208,7 +208,7 @@ public abstract class AbstractMatcher
 			{
 				res += returnOps.hashCode();
 			}
-			return executionState.hashCode() + regularState.hashCode();
+			return res + executionState.hashCode() + regularState.hashCode();
 		}
 	}
 

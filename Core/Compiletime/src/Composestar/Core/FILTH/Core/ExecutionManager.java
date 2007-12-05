@@ -17,11 +17,11 @@ import java.util.LinkedList;
 
 public class ExecutionManager
 {
-	LinkedList order;
+	LinkedList<Node> order;
 
 	// Graph graph;
 
-	public ExecutionManager(LinkedList inorder, Graph g)
+	public ExecutionManager(LinkedList<Node> inorder, Graph g)
 	{
 		order = inorder;
 		// graph = g;
@@ -33,12 +33,12 @@ public class ExecutionManager
 
 		Node currentNode;
 		Action currentAction;
-		LinkedList rules;
+		LinkedList<Rule> rules;
 		Rule crule;
 
 		while (!order.isEmpty())
 		{
-			currentNode = (Node) order.getFirst();
+			currentNode = order.getFirst();
 			currentAction = (Action) currentNode.getElement();
 
 			// get all of its rules and apply them
@@ -77,12 +77,12 @@ public class ExecutionManager
 	}
 
 	/* ordering the rules of an action according to the pref. table */
-	private LinkedList setPreferences(LinkedList rules)
+	private LinkedList<Rule> setPreferences(LinkedList<Rule> rules)
 	{
 		String prefix;
 		Rule r;
 
-		LinkedList preflist = new LinkedList();
+		LinkedList<String> preflist = new LinkedList<String>();
 
 		/*
 		 * currently the preferencetable of the operators is hard-wired & all
@@ -100,7 +100,7 @@ public class ExecutionManager
 
 		/* end of pref. table */
 
-		LinkedList newRules = new LinkedList();
+		LinkedList<Rule> newRules = new LinkedList<Rule>();
 		for (Object aPreflist : preflist)
 		{
 			prefix = (String) aPreflist;
@@ -118,21 +118,19 @@ public class ExecutionManager
 	}
 
 	/* detecting conflicts */
-	private void detectConflict(LinkedList rules)
+	private void detectConflict(LinkedList<Rule> rules)
 	{
 		/*
 		 * currently only one rule (skip)is defined & implemented, which
 		 */
 		SkipRule r1, r2;
-		LinkedList crules = new LinkedList();
+		LinkedList<SkipRule> crules = new LinkedList<SkipRule>();
 		/* collect the skip rules */
-		Rule r;
-		for (Object rule : rules)
+		for (Rule r : rules)
 		{
-			r = (Rule) rule;
 			if (r.getIdentifier().startsWith("skip"))
 			{
-				crules.add(r);
+				crules.add((SkipRule) r);
 			}
 		}
 		/*
@@ -144,12 +142,12 @@ public class ExecutionManager
 			if (crules.size() > 1)
 			{
 
-				for (Iterator i = crules.iterator(); i.hasNext();)
+				for (Iterator<SkipRule> i = crules.iterator(); i.hasNext();)
 				{
-					r1 = (SkipRule) i.next();
-					for (Iterator j = crules.iterator(); j.hasNext();)
+					r1 = i.next();
+					for (Iterator<SkipRule> j = crules.iterator(); j.hasNext();)
 					{
-						r2 = (SkipRule) i.next();
+						r2 = i.next();
 						/* i f the skip rules have the same skip value */
 						if (((r1.getNewValue() == null) && (r2.getNewValue() == null))
 								|| (r1.getNewValue().evaluate().booleanValue() != r2.getNewValue().evaluate()

@@ -32,6 +32,7 @@ public abstract class SkipRule extends Rule
 	 * 
 	 * @see Rule#apply()
 	 */
+	@Override
 	public abstract void apply();
 	// TODO Auto-generated method stub
 

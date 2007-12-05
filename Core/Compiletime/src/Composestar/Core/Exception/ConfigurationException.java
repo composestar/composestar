@@ -10,7 +10,6 @@
 
 package Composestar.Core.Exception;
 
-
 /**
  * A configuration exception
  * 

@@ -57,7 +57,7 @@ public class ResourceOperationLabelerEx implements Labeler
 	/**
 	 * Empty sequence
 	 */
-	protected static final LabelSequence defaultSequence = new LabelSequence();
+	protected static final LabelSequence DEFAULT_SEQUENCE = new LabelSequence();
 
 	protected Map<Resource, SortedMap<PrioGraphLabel, LabelSequence>> labelMapping;
 
@@ -144,7 +144,7 @@ public class ResourceOperationLabelerEx implements Labeler
 	{
 		if (currentMap == null)
 		{
-			return defaultSequence;
+			return DEFAULT_SEQUENCE;
 		}
 		LabelSequence seq = new LabelSequence();
 		for (Entry<PrioGraphLabel, LabelSequence> entry : currentMap.entrySet())

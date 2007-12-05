@@ -164,12 +164,10 @@ public class Resolver
 			// in most cases there is only one outgoing transition, this
 			// transition will be traversed inline, additional transitions will
 			// be branched (recursive call of this method).
-			Iterator it = state.getOutTransitions();
 			int idx = 0;
-			while (it.hasNext())
+			for (ExecutionTransition trans : state.getOutTransitionsEx())
 			{
 				idx++;
-				ExecutionTransition trans = (ExecutionTransition) it.next();
 				if (idx == 1)
 				{
 					// the first state will be traversed inline
@@ -188,14 +186,13 @@ public class Resolver
 				if (!flowNode.containsName(FlowNode.STOP_NODE) && !flowNode.containsName(FlowNode.RETURN_NODE))
 				{
 					StringBuffer sb = new StringBuffer();
-					Iterator nameit = flowNode.getNames();
-					while (nameit.hasNext())
+					for (String name : flowNode.getNamesEx())
 					{
 						if (sb.length() > 0)
 						{
 							sb.append(", ");
 						}
-						sb.append(nameit.next());
+						sb.append(name);
 					}
 					logger
 							.info("[resolver] reached the end of a trail without a STOP or RETURN node. Contains labels: "

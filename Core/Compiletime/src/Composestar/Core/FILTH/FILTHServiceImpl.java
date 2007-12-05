@@ -10,12 +10,12 @@
 package Composestar.Core.FILTH;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
-import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +33,6 @@ import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.Exception.ConfigurationException;
-import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.Core.Action;
 import Composestar.Core.FILTH.Core.Graph;
 import Composestar.Core.FILTH.Core.Node;
@@ -41,7 +40,6 @@ import Composestar.Core.FILTH.Core.OrderTraverser;
 import Composestar.Core.FILTH.Core.Rule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
 import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
-import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModSIinfo;
@@ -64,22 +62,24 @@ public class FILTHServiceImpl extends FILTHService
 		specFilename = mi.getSetting("input");
 	}
 
-	public List getOrder(Concern c)
+	@Override
+	public List<FilterModuleSuperImposition> getOrder(Concern c)
 	{
 		FilterModuleOrder fo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 		if (fo == null)
 		{
-			return new LinkedList();
+			return Collections.emptyList();
 		}
 
 		// getMultipleOrder(c);
 		// TODO: calling getMultipleOrder(c) generates lots of exceptions for
 		// CONE-IS (filenotfound & nullpointer)
 
-		return fo.orderAsList();
+		return fo.filterModuleSIList();
 	}
 
-	public List getMultipleOrder(Concern c)
+	@Override
+	public List<List<FilterModuleSuperImposition>> getMultipleOrder(Concern c)
 	{
 		String filename = "";
 		String cssFile = "";
@@ -113,7 +113,7 @@ public class FILTHServiceImpl extends FILTHService
 				{
 					filename = c.getName();
 				}
-				filename = file.getAbsolutePath() + "\\FILTH_" + URLEncoder.encode(filename, "UTF-8") + ".html";
+				filename = file.getAbsolutePath() + "\\FILTH_" + filename + ".html";
 
 				if (outputEnabled)
 				{
@@ -123,19 +123,9 @@ public class FILTHServiceImpl extends FILTHService
 				{
 					FILTHService.setLog(new PrintStream(new DevNullOutputStream()));
 				}
-				// TODO: bad path usage
-				cssFile = resources.configuration().getProject().getBase().toURI().toString() + "/Analysis/SECRET.css";
-				if (!(new File(cssFile).exists()))
-				{
-					File css = resources.getPathResolver().getResource("SECRET.css");
-					if (css != null)
-					{
-						cssFile = css.toURI().toString();
-					}
-				}
 			}
 		}
-		catch (Exception e)
+		catch (FileNotFoundException e)
 		{
 			// e.getMessage();
 			// e.printStackTrace();
@@ -172,9 +162,9 @@ public class FILTHServiceImpl extends FILTHService
 		FILTHService.log.print("<h4>Analyzing Filter Module Orders for shared join point: <u>" + c.getName()
 				+ "</u></h4>\n");
 
-		LinkedList forders = new LinkedList();
+		LinkedList<List<FilterModuleSuperImposition>> forders = new LinkedList<List<FilterModuleSuperImposition>>();
 
-		LinkedList modulrefs;
+		LinkedList<FilterModuleSuperImposition> modulrefs;
 
 		Graph g = new Graph();
 		g.setRoot(new Node("root"));
@@ -184,19 +174,19 @@ public class FILTHServiceImpl extends FILTHService
 		modulrefs = processModules(c, g);
 		FILTHService.log.print("</ul>\n");
 
-		this.processOrderingSpecifications(g);
+		processOrderingSpecifications(g);
 
 		FILTHService.log.print("<h4>Ordering constraints: </h4>\n");
 		FILTHService.log.print("<ul>\n");
 
-		this.printOrderingSpecifications();
-		this.processXML(c, g);
+		printOrderingSpecifications();
+		processXML(c, g);
 
 		FILTHService.log.print("</ul>\n");
 
 		// FILTHService.print("FILTH::generating alternatives\n");
 		OrderTraverser ot = new OrderTraverser();
-		LinkedList orders = ot.multiTraverse(g);
+		LinkedList<List<Node>> orders = ot.multiTraverse(g);
 		/*
 		 * System.out.println("<<INNER multiple-orders>>"); for (Iterator
 		 * j=orders.iterator();j.hasNext();){ for (Iterator
@@ -204,20 +194,18 @@ public class FILTHServiceImpl extends FILTHService
 		 * System.out.println(((Node)i.next()).getElement());
 		 * System.out.println("/n-----------"); }
 		 */
-		FilterModuleSuperImposition fmsi = null;
-		for (Iterator k = orders.iterator(); k.hasNext();)
+		for (List<Node> ord : orders)
 		{
-			Iterator i = ((List) k.next()).iterator();
+			Iterator<Node> i = ord.iterator();
 			/* skip the root */
 			i.next();
-			LinkedList anOrder = new LinkedList();
+			LinkedList<FilterModuleSuperImposition> anOrder = new LinkedList<FilterModuleSuperImposition>();
 			while (i.hasNext())
 			{
-				Action a = (Action) ((Node) i.next()).getElement();
+				Action a = (Action) i.next().getElement();
 
-				for (Iterator j = modulrefs.iterator(); j.hasNext();)
+				for (FilterModuleSuperImposition fmsi : modulrefs)
 				{
-					fmsi = (FilterModuleSuperImposition) j.next();
 					// System.out.println("FILTH
 					// ordering>>>"+a+"::"+fr.getName() );
 					if (a.getName().equals(fmsi.getFilterModule().getQualifiedName()))
@@ -239,9 +227,8 @@ public class FILTHServiceImpl extends FILTHService
 		FILTHService.log.print("<h4>Selected Order: </h4>\n");
 		FILTHService.log.print("<ol>\n");
 		// FILTHService.printTab(3,"<-- Alternative ("+ alt++ +") -->\n");
-		for (Iterator j = ((LinkedList) forders.getFirst()).iterator(); j.hasNext();)
+		for (FilterModuleSuperImposition fmsi : forders.getFirst())
 		{
-			fmsi = (FilterModuleSuperImposition) j.next();
 			FilterModuleReference fmr = fmsi.getFilterModule();
 			if (!InnerDispatcher.isDefaultDispatch(fmr))
 			{
@@ -253,13 +240,12 @@ public class FILTHServiceImpl extends FILTHService
 		FILTHService.log.print("<h4>Alternatives: </h4>\n");
 		// FILTHService.log.print("<ul>\n");
 
-		for (Iterator i = forders.iterator(); i.hasNext();)
+		for (List<FilterModuleSuperImposition> fmsiList : forders)
 		{
 			FILTHService.log.print("<h4>Alternative[" + alt + "]: </h4>\n");
 			FILTHService.log.print("<ol>\n");
-			for (Iterator j = ((List) i.next()).iterator(); j.hasNext();)
+			for (FilterModuleSuperImposition fmsi : fmsiList)
 			{
-				fmsi = (FilterModuleSuperImposition) j.next();
 				FilterModuleReference fmr = fmsi.getFilterModule();
 				if (!InnerDispatcher.isDefaultDispatch(fmr))
 				{
@@ -279,7 +265,7 @@ public class FILTHServiceImpl extends FILTHService
 		 * repository the list is encapsulated in FilterModuleOrder for the XML
 		 * generator
 		 */
-		FilterModuleOrder fmorder = new FilterModuleOrder((LinkedList) forders.getFirst());
+		FilterModuleOrder fmorder = new FilterModuleOrder(forders.getFirst());
 		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmorder);
 
 		// FILTHService.print("FILTH::order (1) added to the repository
@@ -297,14 +283,14 @@ public class FILTHServiceImpl extends FILTHService
 		return forders; // arrange this according to the output required!!
 	}
 
-	private LinkedList processModules(Concern c, Graph g)
+	private LinkedList<FilterModuleSuperImposition> processModules(Concern c, Graph g)
 	{
-		LinkedList modulerefs = new LinkedList();
+		LinkedList<FilterModuleSuperImposition> modulerefs = new LinkedList<FilterModuleSuperImposition>();
 
 		/* get the superimposition from the repository */
 		SIinfo sinfo = (SIinfo) c.getDynObject(SIinfo.DATAMAP_KEY);
 		/* get the firt altnernative */
-		Vector msalts = sinfo.getFilterModSIAlts();
+		Vector<FilterModSIinfo> msalts = sinfo.getFilterModSIAlts();
 
 		/*
 		 * System.out.print(">>>"+c.getName()); for (Iterator
@@ -312,12 +298,11 @@ public class FILTHServiceImpl extends FILTHService
 		 * System.out.println("@@@@"+i.next());
 		 */
 		/* get the vector of the superimposed filtermodules */
-		FilterModSIinfo fmsi = (FilterModSIinfo) msalts.get(0);
+		FilterModSIinfo fmsi = msalts.get(0);
 
 		/* add the name of each filtermodule into the graph */
-		for (Iterator i = fmsi.getIter(); i.hasNext();)
+		for (FilterModuleSuperImposition fms : (List<FilterModuleSuperImposition>) fmsi.getAll())
 		{
-			FilterModuleSuperImposition fms = (FilterModuleSuperImposition) i.next();
 			FilterModuleReference fr = fms.getFilterModule();
 			Action a = new Action(fr.getQualifiedName(), Boolean.TRUE, true);
 			Action.insert(a, g);
@@ -332,7 +317,8 @@ public class FILTHServiceImpl extends FILTHService
 
 	private void processOrderingSpecifications(Graph g)
 	{
-		Map map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
+		Map<String, SyntacticOrderingConstraint> map = (Map<String, SyntacticOrderingConstraint>) DataStore.instance()
+				.getObjectByID(FILTH.FILTER_ORDERING_SPEC);
 		if (map == null)
 		{
 			return;
@@ -340,32 +326,28 @@ public class FILTHServiceImpl extends FILTHService
 		logger.info("FilterModule ordering constraints: " + map);
 
 		String left;
-		Iterator it = map.values().iterator();
-		while (it.hasNext())
+		for (SyntacticOrderingConstraint soc : map.values())
 		{
-			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint) it.next();
 			left = soc.getLeft();
-			Iterator socit = soc.getRightFilterModules();
+			Iterator<String> socit = soc.getRightFilterModules();
 			while (socit.hasNext())
 			{
-				String right = (String) socit.next();
-				this.processRule(left, right, g);
+				String right = socit.next();
+				processRule(left, right, g);
 			}
 		}
 	}
 
 	private void printOrderingSpecifications()
 	{
-		Map map = (HashMap) DataStore.instance().getObjectByID(FILTH.FILTER_ORDERING_SPEC);
+		Map<String, SyntacticOrderingConstraint> map = (Map<String, SyntacticOrderingConstraint>) DataStore.instance()
+				.getObjectByID(FILTH.FILTER_ORDERING_SPEC);
 		if (map == null)
 		{
 			return;
 		}
-		Iterator it = map.values().iterator();
-
-		while (it.hasNext())
+		for (SyntacticOrderingConstraint soc : map.values())
 		{
-			SyntacticOrderingConstraint soc = (SyntacticOrderingConstraint) it.next();
 			FILTHService.log.print("<li><i>" + soc.toString() + "</i></li>\n");
 		}
 	}
@@ -447,35 +429,5 @@ public class FILTHServiceImpl extends FILTHService
 		{
 			logger.warn("Could not read/find Filter Module Order specification (" + specFilename + ").", c);
 		}
-	}
-
-	public void copyOperation(Concern c, INCRE inc) throws ModuleException
-	{
-		/* Copy dynamic objects 'FilterModuleOrders' and 'SingleOrder' */
-		Concern cop = (Concern) inc.findHistoryObject(c);
-
-		LinkedList forders = (LinkedList) cop.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
-
-		// make sure the proper default inner dispatch is as last of all orders
-		Iterator it = forders.iterator();
-		while (it.hasNext())
-		{
-			LinkedList anOrder = (LinkedList) it.next();
-			FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) anOrder.removeLast();
-			if (InnerDispatcher.isDefaultDispatch(fmsi.getFilterModule().getRef().getName()))
-			{
-				inc.deleteHistory();
-				throw new ModuleException(
-						"Unable to restore filter module orders. Last filter module is not the default dispatcher",
-						FILTH.MODULE_NAME);
-			}
-			anOrder.addLast(new FilterModuleSuperImposition(InnerDispatcher.getInnerDispatchReference()));
-		}
-
-		c.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY, forders);
-		FilterModuleOrder fmorder = new FilterModuleOrder((LinkedList) forders.getFirst());
-		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmorder);
-
-		logger.debug("Restored " + forders.size() + " Filter Module Order(s) for concern " + c.getName());
 	}
 }

@@ -27,7 +27,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -135,11 +134,6 @@ public class InnerDispatcher
 		// create the filtertype and set it in the filter (typeImplementation as
 		// well)
 		FilterType filterType = FilterType.getFilterType("Dispatch");
-		ConcernReference typeImplementation = new ConcernReference();
-		// typeImplementation.setName(filterType.getType());
-		// typeImplementation.setRef(filterType);
-		// typeImplementation.setResolved(true);
-		// f.setTypeImplementation(typeImplementation);
 		f.setFilterType(filterType);
 		f.setRightOperator(new VoidFilterCompOper());
 
@@ -181,7 +175,6 @@ public class InnerDispatcher
 		spart.setSelector(selector);
 		mpattern.addSubstitutionPart(spart);
 
-		// fe.addMatchingPattern(mpattern);
 		fe.setMatchingPattern(mpattern);
 
 		return f;

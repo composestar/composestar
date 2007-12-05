@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.FileUtils;
@@ -62,11 +61,6 @@ public class CompileHistory implements Serializable
 	protected Date savedOn;
 
 	/**
-	 * configuration used during compilation
-	 */
-	protected BuildConfig configuration;
-
-	/**
 	 * DataStore containing the compilation results
 	 */
 	protected DataStore datastore;
@@ -76,9 +70,8 @@ public class CompileHistory implements Serializable
 	 */
 	protected CommonResources resources;
 
-	public CompileHistory(BuildConfig inConfiguration, DataStore inDatastore, CommonResources inResources)
+	public CompileHistory(DataStore inDatastore, CommonResources inResources)
 	{
-		configuration = inConfiguration;
 		datastore = inDatastore;
 		resources = inResources;
 	}
@@ -156,12 +149,7 @@ public class CompileHistory implements Serializable
 
 	public Date getSavedOn()
 	{
-		return savedOn;
-	}
-
-	public BuildConfig getConfiguration()
-	{
-		return configuration;
+		return new Date(savedOn.getTime());
 	}
 
 	public DataStore getDataStore()

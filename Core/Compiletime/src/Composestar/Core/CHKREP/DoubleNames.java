@@ -15,11 +15,13 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 public class DoubleNames extends BaseChecker
 {
 
+	@Override
 	public boolean performCheck()
 	{
 		return true;
 	}
 
+	@Override
 	public void check(DataStore ds) throws ModuleException
 	{}
 }

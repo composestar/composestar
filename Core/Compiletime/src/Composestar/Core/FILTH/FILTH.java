@@ -19,6 +19,7 @@ import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -52,34 +53,21 @@ public class FILTH implements CTCommonModule
 		InnerDispatcher.getInnerDispatchReference();
 		filthinit.stop();
 
-		Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIter = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
 		{
-			Concern c = (Concern) conIter.next();
+			Concern c = conIter.next();
 
 			SIinfo sinfo = (SIinfo) c.getDynObject(SIinfo.DATAMAP_KEY);
 			if (sinfo != null)
 			{
-				List list;
+				List<List<FilterModuleSuperImposition>> list;
 
-				if (incre.isProcessedByModule(c, MODULE_NAME))
-				{
-					/* Copy FilterModuleOrders */
-					INCRETimer filthcopy = incre.getReporter().openProcess(MODULE_NAME, c.getUniqueID(),
-							INCRETimer.TYPE_INCREMENTAL);
-					filthservice.copyOperation(c, incre);
-					list = (List) c.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
-					filthcopy.stop();
-
-				}
-				else
-				{
-					/* Calculate FilterModuleOrders */
-					INCRETimer filthrun = incre.getReporter().openProcess(MODULE_NAME, c.getUniqueID(),
-							INCRETimer.TYPE_NORMAL);
-					list = filthservice.getMultipleOrder(c);
-					filthrun.stop();
-				}
+				/* Calculate FilterModuleOrders */
+				INCRETimer filthrun = incre.getReporter().openProcess(MODULE_NAME, c.getUniqueID(),
+						INCRETimer.TYPE_NORMAL);
+				list = filthservice.getMultipleOrder(c);
+				filthrun.stop();
 
 				if (list.size() > 1)
 				{
@@ -91,13 +79,15 @@ public class FILTH implements CTCommonModule
 					StringBuffer sb = new StringBuffer();
 					if (singleOrder != null)
 					{
-						List tmplist = singleOrder.orderAsList();
+						List<FilterModuleSuperImposition> tmplist = singleOrder.filterModuleSIList();
 						int last = tmplist.size() - 1;
 						for (int i = 0; i < tmplist.size(); i++)
 						{
-							String fmr = (String) tmplist.get(i);
-							sb.append(fmr);
-							if (i != last) sb.append(" --> ");
+							sb.append(tmplist.get(i).getFilterModule().getRef().getOriginalQualifiedName());
+							if (i != last)
+							{
+								sb.append(" --> ");
+							}
 						}
 					}
 					logger.debug("Selecting filter module order: " + sb.toString());

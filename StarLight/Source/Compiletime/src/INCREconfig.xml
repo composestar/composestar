@@ -23,7 +23,7 @@
 			</type>
 		</comparisons>
 	</module>
-	<module fulltype="Composestar.Core.CHKREP.Main" />
+	<module fulltype="Composestar.Core.CHKREP2.Check" />
 	<module fulltype="Composestar.Core.SANE.SANE" />
 	<module fulltype="Composestar.Core.FILTH.FILTH" />
 	<module fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" />

@@ -53,7 +53,7 @@ public class MessageResult extends AbstractMessageResult
 			selector = initialSelector;
 		}
 	}
-	
+
 	@Override
 	public boolean isValidResult()
 	{

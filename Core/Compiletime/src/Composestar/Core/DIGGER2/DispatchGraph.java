@@ -72,11 +72,14 @@ public class DispatchGraph implements Serializable
 	{
 		mode = inMode;
 		crumbs = new HashMap<Concern, ConcernCrumbs>();
-		resolver = new Resolver(this);
 	}
 
 	public Resolver getResolver()
 	{
+		if (resolver == null)
+		{
+			resolver = new Resolver(this);
+		}
 		return resolver;
 	}
 
@@ -120,9 +123,10 @@ public class DispatchGraph implements Serializable
 		}
 		concernCrumbs.addCrumb(crumb);
 	}
-	
+
 	/**
 	 * Returns the ConcernCrumbs structure for the given concern
+	 * 
 	 * @param concern
 	 * @return
 	 */
@@ -242,7 +246,7 @@ public class DispatchGraph implements Serializable
 						// recursive
 						results.add(new RecursiveMessageResult(crumb, stack.subList(idx, stack.size())));
 						continue;
-					}					
+					}
 					Breadcrumb nextCrumb = trail.getDestinationCrumb();
 					if (cnt == 1)
 					{

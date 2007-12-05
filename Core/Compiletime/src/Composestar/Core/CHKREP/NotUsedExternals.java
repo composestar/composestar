@@ -35,17 +35,18 @@ public class NotUsedExternals extends BaseChecker
 	 * 
 	 * @see Composestar.Core.CHKREP.BaseChecker#performCheck()
 	 */
+	@Override
 	public boolean performCheck()
 	{
-		Iterator filterModules = ds.getAllInstancesOf(FilterModule.class);
+		Iterator<FilterModule> filterModules = ds.getAllInstancesOf(FilterModule.class);
 		while (filterModules.hasNext())
 		{
-			FilterModule filterModule = (FilterModule) filterModules.next();
+			FilterModule filterModule = filterModules.next();
 			/*
 			 * If the filtermodule has any internals, o further, otherwise do
 			 * nothing
 			 */
-			Iterator externals = filterModule.getExternalIterator();
+			Iterator<External> externals = filterModule.getExternalIterator();
 			while (externals.hasNext())
 			{
 				/*
@@ -54,22 +55,22 @@ public class NotUsedExternals extends BaseChecker
 				 * conditions
 				 */
 				boolean isExternalUsed = false;
-				External external = (External) externals.next();
+				External external = externals.next();
 				String externalID = external.getName();
 
-				Iterator inputFilters = filterModule.getInputFilterIterator();
+				Iterator<Filter> inputFilters = filterModule.getInputFilterIterator();
 				while (inputFilters.hasNext() && !isExternalUsed)
 				{
-					Filter inputFilter = (Filter) inputFilters.next();
-					Iterator fei = inputFilter.getFilterElementIterator();
+					Filter inputFilter = inputFilters.next();
+					Iterator<FilterElement> fei = inputFilter.getFilterElementIterator();
 					while (fei.hasNext() && !isExternalUsed)
 					{
-						FilterElement fe = (FilterElement) fei.next();
+						FilterElement fe = fei.next();
 						MatchingPattern mp = fe.getMatchingPattern();
-						Iterator spi = mp.getSubstitutionPartsIterator();
+						Iterator<SubstitutionPart> spi = mp.getSubstitutionPartsIterator();
 						while (spi.hasNext() && !isExternalUsed)
 						{
-							SubstitutionPart sp = (SubstitutionPart) spi.next();
+							SubstitutionPart sp = spi.next();
 							if (!(sp == null))
 							{
 								if (externalID.equals(sp.getTarget().getName()))
@@ -79,10 +80,10 @@ public class NotUsedExternals extends BaseChecker
 							}
 						}
 
-						Iterator matchpi = mp.getMatchingPartsIterator();
+						Iterator<MatchingPart> matchpi = mp.getMatchingPartsIterator();
 						while (matchpi.hasNext() && !isExternalUsed)
 						{
-							MatchingPart matchp = (MatchingPart) matchpi.next();
+							MatchingPart matchp = matchpi.next();
 							if (!(matchp == null))
 							{
 								if (externalID.equals(matchp.getTarget().getName()))
@@ -94,22 +95,22 @@ public class NotUsedExternals extends BaseChecker
 					}
 				}
 
-				Iterator outputFilters = filterModule.getOutputFilterIterator();
+				Iterator<Filter> outputFilters = filterModule.getOutputFilterIterator();
 				while (outputFilters.hasNext() && !isExternalUsed)
 				{
-					Filter outputFilter = (Filter) outputFilters.next();
-					Iterator fei = outputFilter.getFilterElementIterator();
+					Filter outputFilter = outputFilters.next();
+					Iterator<FilterElement> fei = outputFilter.getFilterElementIterator();
 					while (fei.hasNext() && !isExternalUsed)
 					{
-						FilterElement fe = (FilterElement) fei.next();
+						FilterElement fe = fei.next();
 						MatchingPattern mp = fe.getMatchingPattern();
 						// Check whether the internal show up as matching target
 						// or substitution target (maybe the if statement is too
 						// long)
-						Iterator spi = mp.getSubstitutionPartsIterator();
+						Iterator<SubstitutionPart> spi = mp.getSubstitutionPartsIterator();
 						while (spi.hasNext() && !isExternalUsed)
 						{
-							SubstitutionPart sp = (SubstitutionPart) spi.next();
+							SubstitutionPart sp = spi.next();
 							if (!(sp == null))
 							{
 								if (externalID.equals(sp.getTarget().getName()))
@@ -119,10 +120,10 @@ public class NotUsedExternals extends BaseChecker
 							}
 						}
 
-						Iterator matchpi = mp.getMatchingPartsIterator();
+						Iterator<MatchingPart> matchpi = mp.getMatchingPartsIterator();
 						while (matchpi.hasNext() && !isExternalUsed)
 						{
-							MatchingPart matchp = (MatchingPart) matchpi.next();
+							MatchingPart matchp = matchpi.next();
 							if (!(matchp == null))
 							{
 								if (externalID.equals(matchp.getTarget().getName()))
@@ -137,10 +138,10 @@ public class NotUsedExternals extends BaseChecker
 				/*
 				 * The search into the conditions.
 				 */
-				Iterator conditions = filterModule.getConditionIterator();
+				Iterator<Condition> conditions = filterModule.getConditionIterator();
 				while (conditions.hasNext() && !isExternalUsed)
 				{
-					Condition condition = (Condition) conditions.next();
+					Condition condition = conditions.next();
 					Reference ref = condition.getShortref();
 					if (ref != null && ref.getName().equals(externalID))
 					{
@@ -166,6 +167,7 @@ public class NotUsedExternals extends BaseChecker
 	 * 
 	 * @see Composestar.Core.CHKREP.BaseChecker#check(Composestar.Core.RepositoryImplementation.DataStore)
 	 */
+	@Override
 	public void check(DataStore newDs) throws ModuleException
 	{
 		ds = newDs;

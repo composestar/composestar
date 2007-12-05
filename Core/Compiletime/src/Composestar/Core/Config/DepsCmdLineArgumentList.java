@@ -79,7 +79,9 @@ public class DepsCmdLineArgumentList extends CmdLineArgumentList
 		{
 			String quote = "";
 			if (isUseQuote())
+			{
 				quote = "\"";
+			}
 			tolist.add(quote + StringUtils.join(argList, delimiter) + quote);
 			merge = isMerge;
 		}

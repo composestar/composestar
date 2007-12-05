@@ -22,49 +22,42 @@
  * $Id$
  */
 
-package Composestar.Core.Config.Xml;
+package Composestar.Core.CHKREP2;
 
-import org.xml.sax.SAXException;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Exception thrown when the read configuration file format is not up to date.
- * The calling system should convert the the system first.
+ * Base class for all repository checkers
  * 
  * @author Michiel Hendriks
  */
-public class OutdatedFormatException extends SAXException
+public abstract class AbstractChecker
 {
-	private static final long serialVersionUID = -4043837721201726057L;
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Check.MODULE_NAME);
+
+	protected CheckResults results;
+
+	public AbstractChecker()
+	{
+		results = new CheckResults();
+	}
 
 	/**
-	 * The version that was detected
+	 * Will be called by the Check class when this module should perform it's
+	 * checks.
+	 * 
+	 * @param repository
 	 */
-	protected String detectedVersion;
+	public abstract void performCheck(DataStore repository);
 
 	/**
-	 * The version that is required.
+	 * Return the CheckResults instance.
+	 * 
+	 * @return
 	 */
-	protected String needVersion;
-
-	public OutdatedFormatException(String detected, String need)
+	public CheckResults getResults()
 	{
-		detectedVersion = detected;
-		needVersion = need;
-	}
-
-	public String getDetectedVersion()
-	{
-		return detectedVersion;
-	}
-
-	public String getNeedVersion()
-	{
-		return needVersion;
-	}
-
-	@Override
-	public String toString()
-	{
-		return String.format("Outdated Format Exception. Need %s; but detected %s", needVersion, detectedVersion);
+		return results;
 	}
 }

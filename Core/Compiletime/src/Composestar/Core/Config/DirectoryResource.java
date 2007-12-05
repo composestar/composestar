@@ -203,6 +203,7 @@ public class DirectoryResource extends FileCollection implements FileFilter
 	 * Retrieve a list of files. This will assume the set path value is
 	 * absolute. Otherwise an empty set will be returned.
 	 */
+	@Override
 	public Set<File> getFiles()
 	{
 		return getFiles(null);
@@ -215,6 +216,7 @@ public class DirectoryResource extends FileCollection implements FileFilter
 	 * absolute base or absolute path are available an empty set is returned.
 	 * The returned files are all absolute.
 	 */
+	@Override
 	public Set<File> getFiles(File base)
 	{
 		if ((cache == null) || (!cacheBase.equals(base)))

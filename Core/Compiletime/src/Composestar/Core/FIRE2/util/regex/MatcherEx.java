@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
@@ -54,7 +55,9 @@ public class MatcherEx extends AbstractMatcher
 
 	private Set<CombinedState> done;
 
-	private Queue<CombinedState> todo;
+	// both Stack or Queue can be used, but a Stack often results in a earlier
+	// match
+	private Stack<CombinedState> todo;
 
 	public MatcherEx(Pattern inPattern, ExecutionModel inModel, Labeler inLabeler)
 	{
@@ -85,14 +88,14 @@ public class MatcherEx extends AbstractMatcher
 		logger.info("Processing exec module for " + startState.getMessage().toString() + " with pattern: "
 				+ pattern.toString());
 		done = new HashSet<CombinedState>();
-		todo = new LinkedList<CombinedState>();
+		todo = new Stack<CombinedState>();
 
 		CombinedState state = new CombinedState(startState, pattern.getStartState());
 		if (!addCheckedState(state))
 		{
 			while (!todo.isEmpty())
 			{
-				if (processState(todo.remove()))
+				if (processState(todo.pop()))
 				{
 					break;
 				}
@@ -119,7 +122,7 @@ public class MatcherEx extends AbstractMatcher
 		{
 			return true;
 		}
-		todo.add(state);
+		todo.push(state);
 		// not really done yet, but prevents duplicates from being added to
 		// the todo
 		done.add(state);

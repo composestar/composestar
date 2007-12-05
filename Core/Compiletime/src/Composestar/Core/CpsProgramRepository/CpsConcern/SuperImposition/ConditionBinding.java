@@ -16,7 +16,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionRefe
 import Composestar.Utils.CPSIterator;
 
 /**
- * @modelguid {0BCB4921-FE88-4B0F-AB82-7D9BBACFC29B}
+ * @deprecated
  */
 public class ConditionBinding extends Binding
 {

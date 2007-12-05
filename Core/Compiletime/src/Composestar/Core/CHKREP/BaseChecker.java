@@ -20,9 +20,9 @@ import Composestar.Utils.Logging.CPSLogger;
 public abstract class BaseChecker
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Main.MODULE_NAME);
-	
+
 	protected DataStore ds;
-	
+
 	/**
 	 * Performs the actual checks.
 	 * 

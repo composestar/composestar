@@ -27,6 +27,7 @@ public class ExistCondition extends BaseChecker
 	 * Performs the checks, sends the check to both input and outputfilters uses
 	 * checkConditionInFilter twice
 	 */
+	@Override
 	public boolean performCheck()
 	{
 		// standard false
@@ -50,6 +51,7 @@ public class ExistCondition extends BaseChecker
 	 * Standard entry, calls performCheck and checks on a fatal error. Because a
 	 * missing condition lets the run-time crash an exception is cast.
 	 */
+	@Override
 	public void check(DataStore newDs) throws ModuleException
 	{
 		ds = newDs;
@@ -68,7 +70,7 @@ public class ExistCondition extends BaseChecker
 	 * @param fm the filetrModule
 	 * @return
 	 */
-	private boolean isFilterConditionValid(Iterator filterIterator, FilterModule fm)
+	private boolean isFilterConditionValid(Iterator<Filter> filterIterator, FilterModule fm)
 	{
 		// standard true;
 		boolean nonFatal = true;
@@ -77,7 +79,7 @@ public class ExistCondition extends BaseChecker
 		{
 			while (filterIterator.hasNext())
 			{
-				Filter filter = (Filter) filterIterator.next();
+				Filter filter = filterIterator.next();
 				Iterator filterElementIterator = filter.getFilterElementIterator();
 				while (filterElementIterator.hasNext())
 				{
@@ -146,13 +148,13 @@ public class ExistCondition extends BaseChecker
 	 */
 	private boolean doesConditionExists(String name, FilterModule fm)
 	{
-		Iterator conditionIterator = fm.getConditionIterator();
+		Iterator<Condition> conditionIterator = fm.getConditionIterator();
 
 		if (conditionIterator != null)
 		{
 			while (conditionIterator.hasNext())
 			{
-				Condition condition = (Condition) conditionIterator.next();
+				Condition condition = conditionIterator.next();
 				if (condition.getName().equals(name))
 				{
 					return true;

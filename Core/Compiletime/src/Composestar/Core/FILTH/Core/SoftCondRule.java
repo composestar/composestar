@@ -26,6 +26,7 @@ public class SoftCondRule extends Rule
 	 * 
 	 * @see Rule#apply()
 	 */
+	@Override
 	public void apply()
 	{
 

@@ -52,11 +52,11 @@ public class ResourceHandler extends CpsBaseHandler
 	 * @param inReader
 	 * @param inParent
 	 */
-	public ResourceHandler(XMLReader inReader, DefaultHandler inParent, SECRETResources resc)
+	public ResourceHandler(XMLReader inReader, DefaultHandler inParent, SECRETResources sresc)
 	{
 		super(inReader, inParent);
 		namespace = XmlConfiguration.NAMESPACE;
-		resources = resc;
+		resources = sresc;
 	}
 
 	public Resource getRecource()

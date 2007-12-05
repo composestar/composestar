@@ -84,7 +84,11 @@ public class CustomResource extends Resource
 	{
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result;
+		if (name != null)
+		{
+			result += name.hashCode();
+		}
 		return result;
 	}
 

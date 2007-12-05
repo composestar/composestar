@@ -29,7 +29,7 @@ public class RuntimeLoggerFactory implements ILoggerFactory
 {
 	private Map loggers = new HashMap();
 
-	protected static Class loggerClass = RuntimeLogger.class;
+	private static Class loggerClass = RuntimeLogger.class;
 
 	/**
 	 * Set the loggerClass to use, must be a RuntimeLogger subclass.

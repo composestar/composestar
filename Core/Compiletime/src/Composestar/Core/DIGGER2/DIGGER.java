@@ -153,10 +153,10 @@ public class DIGGER implements CTCommonModule
 	{
 		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME,
 				"Creating breadcrumbs in mode " + graph.getMode(), INCRETimer.TYPE_NORMAL);
-		Iterator concerns = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> concerns = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (concerns.hasNext())
 		{
-			Concern concern = (Concern) concerns.next();
+			Concern concern = concerns.next();
 			FilterModuleOrder fmOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 			if (fmOrder != null)
 			{
@@ -291,12 +291,12 @@ public class DIGGER implements CTCommonModule
 	 * @param filterChain
 	 * @throws ModuleException
 	 */
-	protected void processFireModel(Concern concern, Iterator entranceStates, FilterDirection filterPosition)
-			throws ModuleException
+	protected void processFireModel(Concern concern, Iterator<ExecutionState> entranceStates,
+			FilterDirection filterPosition) throws ModuleException
 	{
 		while (entranceStates.hasNext())
 		{
-			ExecutionState es = (ExecutionState) entranceStates.next();
+			ExecutionState es = entranceStates.next();
 			Breadcrumb crumb = graph.getResolver().resolve(concern, es, filterPosition);
 			graph.addCrumb(crumb);
 			allCrumbs.add(crumb);
@@ -319,10 +319,10 @@ public class DIGGER implements CTCommonModule
 		{
 			return;
 		}
-		Iterator it = type.getMethods().iterator();
+		Iterator<MethodInfo> it = type.getMethods().iterator();
 		while (it.hasNext())
 		{
-			MethodInfo methodInfo = (MethodInfo) it.next();
+			MethodInfo methodInfo = it.next();
 			FilterDirection filterPosition = FilterDirection.Input;
 
 			ExecutionModel em = fm.getExecutionModel(filterPosition, methodInfo, FireModel.STRICT_SIGNATURE_CHECK);
@@ -331,8 +331,8 @@ public class DIGGER implements CTCommonModule
 				logger.warn(concern.getName() + "." + methodInfo.getName() + " has " + em.getEntranceMessages().size()
 						+ " entrance messages");
 			}
-			Iterator entranceStates = em.getEntranceStates();
-			ExecutionState es = (ExecutionState) entranceStates.next();
+			Iterator<ExecutionState> entranceStates = em.getEntranceStates();
+			ExecutionState es = entranceStates.next();
 
 			if (SHOW_GRAPH)
 			{

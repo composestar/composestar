@@ -59,7 +59,7 @@ public class CompilerHandler extends CpsBaseHandler
 	protected SourceCompiler compiler;
 
 	protected CompilerAction currentAction;
-	
+
 	protected CmdLineArgument currentArgument;
 
 	protected Stack<CmdLineArgumentList> argList;
@@ -221,9 +221,9 @@ public class CompilerHandler extends CpsBaseHandler
 		else if (state == STATE_RCFILE && "rcfile".equals(name))
 		{
 			popState( /*
-						 * STATE_ACTION | STATE_ARG_LIST | STATE_ARG_LIST |
-						 * STATE_RCFILE
-						 */);
+			 * STATE_ACTION | STATE_ARG_LIST | STATE_ARG_LIST |
+			 * STATE_RCFILE
+			 */);
 			argList.pop();
 		}
 		else

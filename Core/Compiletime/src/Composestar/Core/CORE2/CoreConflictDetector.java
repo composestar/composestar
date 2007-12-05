@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.FIRE2.model.ExecutionModel;
@@ -22,7 +21,6 @@ import Composestar.Core.FIRE2.util.iterator.OrderedFlowNodeIterator;
 
 public class CoreConflictDetector
 {
-
 	private FlowNode currentFilterNode;
 
 	private int rejectingFilterElementCounter;
@@ -39,24 +37,23 @@ public class CoreConflictDetector
 
 	private FlowNode currentMatchingPatternNode;
 
-	private ArrayList currentActionNodes = new ArrayList();
+	private List<FlowNode> currentActionNodes = new ArrayList<FlowNode>();
 
-	private ArrayList unreachableActionNodes = new ArrayList();
+	private List<FlowNode> unreachableActionNodes = new ArrayList<FlowNode>();
 
 	private CoreConflict acceptingFilterElementConflict;
 
 	public CoreConflictDetector()
-	{
-
-	}
+	{}
 
 	public CoreConflict[] findConflicts(FireModel fireModel)
 	{
 		// Input filters:
 		ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input);
 		FlowModel flowModel = fireModel.getFlowModel(FilterDirection.Input);
-		Set reachableParts = findReachableParts(execModel);
-		List conflicts = checkForConflicts(flowModel, reachableParts);
+		// Set contains FlowNode and FlowTransition elements
+		Set<Object> reachableParts = findReachableParts(execModel);
+		List<CoreConflict> conflicts = checkForConflicts(flowModel, reachableParts);
 
 		// Output filters:
 		execModel = fireModel.getExecutionModel(FilterDirection.Output);
@@ -64,30 +61,27 @@ public class CoreConflictDetector
 		reachableParts = findReachableParts(execModel);
 		conflicts.addAll(checkForConflicts(flowModel, reachableParts));
 
-		return (CoreConflict[]) conflicts.toArray(new CoreConflict[conflicts.size()]);
+		return conflicts.toArray(new CoreConflict[conflicts.size()]);
 	}
 
-	private Set findReachableParts(ExecutionModel execModel)
+	private Set<Object> findReachableParts(ExecutionModel execModel)
 	{
 		// Create HashSet to store all reachable nodes and transitions
-		HashSet reachableParts = new HashSet();
+		Set<Object> reachableParts = new HashSet<Object>();
 
 		// Iterate over all states
-		Iterator stateIter = new ExecutionStateIterator(execModel);
+		Iterator<ExecutionState> stateIter = new ExecutionStateIterator(execModel);
 		while (stateIter.hasNext())
 		{
-			ExecutionState state = (ExecutionState) stateIter.next();
+			ExecutionState state = stateIter.next();
 
 			// Add corresponding FlowNode to reachable FlowNodes
 			FlowNode flowNode = state.getFlowNode();
 			reachableParts.add(flowNode);
 
 			// Traverse outgoing transitions
-			Iterator transitionIter = state.getOutTransitions();
-			while (transitionIter.hasNext())
+			for (ExecutionTransition transition : state.getOutTransitionsEx())
 			{
-				ExecutionTransition transition = (ExecutionTransition) transitionIter.next();
-
 				// Add corresponding FlowTransition to reachable FlowTransitions
 				FlowTransition flowTransition = transition.getFlowTransition();
 				reachableParts.add(flowTransition);
@@ -97,9 +91,9 @@ public class CoreConflictDetector
 		return reachableParts;
 	}
 
-	private List checkForConflicts(FlowModel flowModel, Set reachableParts)
+	private List<CoreConflict> checkForConflicts(FlowModel flowModel, Set<Object> reachableParts)
 	{
-		List conflicts = new ArrayList();
+		List<CoreConflict> conflicts = new ArrayList<CoreConflict>();
 
 		// Iterate over the flowModel
 		OrderedFlowNodeIterator nodeIter = new OrderedFlowNodeIterator(flowModel);
@@ -145,10 +139,8 @@ public class CoreConflictDetector
 			else
 			{
 				// Check whether outgoing transitions are unreachable
-				Iterator transitionIter = node.getTransitions();
-				while (transitionIter.hasNext())
+				for (FlowTransition transition : node.getTransitionsEx())
 				{
-					FlowTransition transition = (FlowTransition) transitionIter.next();
 					if (!reachableParts.contains(transition))
 					{
 						conflicts.addAll(identifyConflicts(transition));
@@ -161,13 +153,13 @@ public class CoreConflictDetector
 		return conflicts;
 	}
 
-	private List identifyFilterConflicts()
+	private List<CoreConflict> identifyFilterConflicts()
 	{
-		List conflicts = new ArrayList();
+		List<CoreConflict> conflicts = new ArrayList<CoreConflict>();
 
 		if (currentFilterNode != null && rejectingFilterElementCounter == filterElementCounter)
 		{
-			CoreConflict conflict = new CoreConflict(CoreConflict.FILTER_ALWAYS_REJECTS, (Filter) currentFilterNode
+			CoreConflict conflict = new CoreConflict(CoreConflict.FILTER_ALWAYS_REJECTS, currentFilterNode
 					.getRepositoryLink());
 			conflicts.add(conflict);
 
@@ -176,10 +168,8 @@ public class CoreConflictDetector
 		if (!unreachableActionNodes.isEmpty())
 		{
 			boolean onlyContinue = true;
-			Iterator actionIter = currentActionNodes.iterator();
-			for (Object currentActionNode : currentActionNodes)
+			for (FlowNode actionNode : currentActionNodes)
 			{
-				FlowNode actionNode = (FlowNode) currentActionNode;
 				if (!unreachableActionNodes.contains(actionNode)
 						&& !actionNode.containsName(FlowNode.CONTINUE_ACTION_NODE))
 				{
@@ -190,7 +180,7 @@ public class CoreConflictDetector
 
 			if (onlyContinue)
 			{
-				CoreConflict conflict = new CoreConflict(CoreConflict.FILTER_REDUNDANT, (Filter) currentFilterNode
+				CoreConflict conflict = new CoreConflict(CoreConflict.FILTER_REDUNDANT, currentFilterNode
 						.getRepositoryLink(), accRejFilterConflict);
 				conflicts.add(conflict);
 			}
@@ -205,9 +195,9 @@ public class CoreConflictDetector
 		return conflicts;
 	}
 
-	private List identifyConflicts(FlowNode unreachableNode)
+	private List<CoreConflict> identifyConflicts(FlowNode unreachableNode)
 	{
-		List conflicts = new ArrayList();
+		List<CoreConflict> conflicts = new ArrayList<CoreConflict>();
 
 		// If filter unreachable, just return instead of also notifying
 		// unreachable filter elements etc.
@@ -244,9 +234,9 @@ public class CoreConflictDetector
 		return conflicts;
 	}
 
-	private List identifyConflicts(FlowTransition unreachableTransition)
+	private List<CoreConflict> identifyConflicts(FlowTransition unreachableTransition)
 	{
-		List conflicts = new ArrayList();
+		List<CoreConflict> conflicts = new ArrayList<CoreConflict>();
 
 		// If filter unreachable, just return instead of also notifying
 		// unreachable filter elements etc.
@@ -375,120 +365,4 @@ public class CoreConflictDetector
 
 		return conflicts;
 	}
-
-	// public void check(Concern concern, FilterModuleOrder modules)
-	// {
-	// ExecutionState state;
-	// ExecutionTransition transition;
-	// FlowNode flowNode;
-	// FlowTransition flowTransition;
-	//
-	// HashSet visitedNodes = new HashSet();
-	// HashSet visitedTransitions = new HashSet();
-	// Hashtable filterContinueTable = new Hashtable();
-	//
-	// FireModel fireModel = new FireModel(concern, modules, true);
-	// ExecutionModel execModel = fireModel.getExecutionModel();
-	// ExecutionStateIterator iterator = new ExecutionStateIterator(execModel);
-	//
-	// Iterator it;
-	//
-	// while (iterator.hasNext())
-	// {
-	// state = (ExecutionState) iterator.next();
-	// flowNode = state.getFlowNode();
-	// visitedNodes.add(flowNode);
-	//
-	// if (flowNode.containsName(FlowNode.ACTION_NODE))
-	// {
-	// Filter filter = (Filter) flowNode.getRepositoryLink();
-	// if (flowNode.containsName("ContinueAction"))
-	// {
-	// if (!filterContinueTable.containsKey(filter))
-	// {
-	// // put boolean in the table indicating that for the
-	// // filter until now only continueactions are found:
-	// filterContinueTable.put(filter, Boolean.TRUE);
-	// }
-	// }
-	// else
-	// {
-	// // put boolean in the table indicating that for the
-	// // filter not only continueactions are found:
-	// filterContinueTable.put(filter, Boolean.FALSE);
-	// }
-	// }
-	//
-	// it = state.getOutTransitions();
-	// while (it.hasNext())
-	// {
-	// transition = (ExecutionTransition) it.next();
-	// visitedTransitions.add(transition.getFlowTransition());
-	// }
-	// }
-	//
-	// // check useless filters (filters that only continue):
-	// it = filterContinueTable.entrySet().iterator();
-	// while (it.hasNext())
-	// {
-	// Entry entry = (Entry) it.next();
-	// Filter filter = (Filter) entry.getKey();
-	// Boolean b = (Boolean) entry.getValue();
-	// if (b.booleanValue())
-	// {
-	// Debug.out(Debug.MODE_ERROR, Core.MODULE_NAME, "Redundant filter found!",
-	// filter);
-	// }
-	// }
-	//
-	// FlowModel[] flowModels = fireModel.getFlowModels();
-	// for (int i = 0; i < flowModels.length; i++)
-	// {
-	//
-	// // unreachable matchingparts:
-	// it = flowModels[i].getNodes();
-	// while (it.hasNext())
-	// {
-	// flowNode = (FlowNode) it.next();
-	//
-	// if (!visitedNodes.contains(flowNode) &&
-	// flowNode.containsName("MatchingPart"))
-	// {
-	// Debug.out(Debug.MODE_ERROR, Core.MODULE_NAME, "Unreachable matchingpart
-	// found!", flowNode
-	// .getRepositoryLink());
-	// }
-	// }
-	//
-	// // matchingparts that always accept or reject:
-	// it = flowModels[i].getTransitions();
-	// while (it.hasNext())
-	// {
-	// flowTransition = (FlowTransition) it.next();
-	// if (!visitedTransitions.contains(flowTransition))
-	// {
-	// FlowNode startNode = flowTransition.getStartNode();
-	// if (visitedNodes.contains(startNode) &&
-	// startNode.containsName("MatchingPart"))
-	// {
-	// MatchingPart part = (MatchingPart) startNode.getRepositoryLink();
-	// if (flowTransition.getType() == FlowTransition.FLOW_TRUE_TRANSITION)
-	// {
-	// Debug.out(Debug.MODE_WARNING, Core.MODULE_NAME, "Matchingpart never
-	// accepts!", startNode
-	// .getRepositoryLink());
-	// }
-	// else if (!part.getSelector().getName().equals("*") ||
-	// !part.getTarget().getName().equals("*"))
-	// {
-	// Debug.out(Debug.MODE_WARNING, Core.MODULE_NAME, "Matchingpart always
-	// accepts!", startNode
-	// .getRepositoryLink());
-	// }
-	//
-	// }
-	// }
-	// }
-	// }
-	// }
 }

@@ -30,6 +30,7 @@ public class XMLDispatchGraphExporter extends DispatchGraphExporter
 	 * 
 	 * @see Composestar.Core.DIGGER2.DispatchGraphExporter#export()
 	 */
+	@Override
 	public void export() throws ModuleException
 	{
 	// TODO: implement

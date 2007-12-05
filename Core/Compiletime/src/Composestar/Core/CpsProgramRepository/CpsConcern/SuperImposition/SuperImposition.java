@@ -35,8 +35,14 @@ public class SuperImposition extends DeclaredRepositoryEntity
 
 	private Vector annotationBindings;
 
+	/**
+	 * @deprecated
+	 */
 	private Vector methods;
 
+	/**
+	 * @deprecated
+	 */
 	public Vector conditions;
 
 	public Vector selectors;
@@ -131,8 +137,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	 * 
 	 * @param mehod
 	 * @return boolean
-	 * @modelguid {15AE1DD2-DD38-4C01-8685-C12B6F6527C0}
-	 * @roseuid 401FAA69017F
+	 * @deprecated
 	 */
 	public boolean addMethodBinding(MethodBinding mehod)
 	{
@@ -144,8 +149,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	 * @param index
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.MethodBindi
 	 *         ng
-	 * @modelguid {E886BCB7-BDDD-40A5-AA50-A18E4CB2B92C}
-	 * @roseuid 401FAA690193
+	 * @deprecated
 	 */
 	public MethodBinding removeMehodBinding(int index)
 	{
@@ -158,8 +162,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	 * @param index
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.MethodBindi
 	 *         ng
-	 * @modelguid {39C3F6DF-CF1A-4B5A-8C27-55B1E0DD988A}
-	 * @roseuid 401FAA69019E
+	 * @deprecated
 	 */
 	public MethodBinding getMethodBinding(int index)
 	{
@@ -168,8 +171,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 
 	/**
 	 * @return java.util.Iterator
-	 * @modelguid {57BD82D8-B981-42C3-9065-2C5AD37CEC96}
-	 * @roseuid 401FAA6901B2
+	 * @deprecated
 	 */
 	public Iterator getMethodBindingIterator()
 	{
@@ -181,8 +183,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	 * 
 	 * @param condition
 	 * @return boolean
-	 * @modelguid {6E53A7B6-5D04-485B-8C63-7263B4BF45ED}
-	 * @roseuid 401FAA6901C5
+	 * @deprecated
 	 */
 	public boolean addConditionBinding(ConditionBinding condition)
 	{
@@ -194,8 +195,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	 * @param index
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.ConditionBi
 	 *         nding
-	 * @modelguid {76EEDDD5-DCF1-4459-A9B0-6EE021EA3E59}
-	 * @roseuid 401FAA6901D0
+	 * @deprecated
 	 */
 	public ConditionBinding removeConditionBinding(int index)
 	{
@@ -208,8 +208,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	 * @param index
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.ConditionBi
 	 *         nding
-	 * @modelguid {8EE9338A-C983-4593-B31D-8214EE6D5ED0}
-	 * @roseuid 401FAA6901E4
+	 * @deprecated
 	 */
 	public ConditionBinding getConditionBinding(int index)
 	{
@@ -218,8 +217,7 @@ public class SuperImposition extends DeclaredRepositoryEntity
 
 	/**
 	 * @return java.util.Iterator
-	 * @modelguid {1A2848B6-B013-4A7F-B526-78E7C3DB5013}
-	 * @roseuid 401FAA6901F8
+	 * @deprecated
 	 */
 	public Iterator getConditionBindingIterator()
 	{

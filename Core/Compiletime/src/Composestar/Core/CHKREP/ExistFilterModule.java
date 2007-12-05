@@ -30,26 +30,26 @@ public class ExistFilterModule extends BaseChecker
 	private boolean checkFilterMethodBinding()
 	{
 		boolean nonFatal = true;
-		Iterator fmbs = ds.getAllInstancesOf(FilterModuleBinding.class);
+		Iterator<FilterModuleBinding> fmbs = ds.getAllInstancesOf(FilterModuleBinding.class);
 		while (fmbs.hasNext())
 		{
-			FilterModuleBinding fmb = (FilterModuleBinding) fmbs.next();
-			Iterator fms = fmb.getFilterModuleIterator();
+			FilterModuleBinding fmb = fmbs.next();
+			Iterator<FilterModuleReference> fms = fmb.getFilterModuleIterator();
 			while (fms.hasNext())
 			{
-				FilterModuleReference fm = (FilterModuleReference) fms.next();
+				FilterModuleReference fm = fms.next();
 				boolean filterModuleReferenceExists = false;
 				String filterModuleName = fm.getName();
-				Iterator concerns = ds.getAllInstancesOf(CpsConcern.class);
+				Iterator<CpsConcern> concerns = ds.getAllInstancesOf(CpsConcern.class);
 				while (concerns.hasNext())
 				{
-					CpsConcern concern = (CpsConcern) concerns.next();
-					Iterator fmi = concern.getFilterModuleIterator();
+					CpsConcern concern = concerns.next();
+					Iterator<FilterModule> fmi = concern.getFilterModuleIterator();
 					if (fmi != null)
 					{
 						while (fmi.hasNext())
 						{
-							FilterModule fm2 = (FilterModule) fmi.next();
+							FilterModule fm2 = fmi.next();
 							if (fm2.getName().equals(filterModuleName))
 							{
 								if (((CpsConcern) fm2.getParent()).getName().equals(fm.getConcern()))
@@ -70,6 +70,7 @@ public class ExistFilterModule extends BaseChecker
 		return nonFatal;
 	}
 
+	@Override
 	public boolean performCheck()
 	{
 		boolean nonFatal;
@@ -77,6 +78,7 @@ public class ExistFilterModule extends BaseChecker
 		return nonFatal;
 	}
 
+	@Override
 	public void check(DataStore newDs) throws ModuleException
 	{
 		ds = newDs;

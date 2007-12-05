@@ -46,8 +46,9 @@ public abstract class Rule
 
 	public void insert(Graph g)
 	{
-		g.addEdge(new Edge(getIdentifier(), Action.lookup((Action) this.getLeft(), g), Action.lookup((Action) this
-				.getRight(), g)));
+		g
+				.addEdge(new Edge(getIdentifier(), Action.lookup((Action) getLeft(), g), Action.lookup(
+						(Action) getRight(), g)));
 	}
 
 	public abstract void apply();

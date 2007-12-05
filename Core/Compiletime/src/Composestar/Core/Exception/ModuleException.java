@@ -87,6 +87,7 @@ public class ModuleException extends Exception implements LocationProvider
 	/**
 	 * @deprecated use ModuleException(String message, String module).
 	 */
+	@Deprecated
 	public ModuleException(String message)
 	{
 		super(message);
@@ -122,6 +123,7 @@ public class ModuleException extends Exception implements LocationProvider
 		return errorLocationLinePosition;
 	}
 
+	@Override
 	public String toString()
 	{
 		return getMessage();

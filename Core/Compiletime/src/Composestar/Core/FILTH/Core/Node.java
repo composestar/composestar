@@ -13,9 +13,9 @@ import java.util.LinkedList;
 
 public class Node
 {
-	private LinkedList incomingEdges = new LinkedList();
+	private LinkedList<Edge> incomingEdges = new LinkedList<Edge>();
 
-	private LinkedList outgoingEdges = new LinkedList();
+	private LinkedList<Edge> outgoingEdges = new LinkedList<Edge>();
 
 	private Object element;
 
@@ -39,12 +39,12 @@ public class Node
 		outgoingEdges.add(e);
 	}
 
-	public LinkedList getIncomingEdges()
+	public LinkedList<Edge> getIncomingEdges()
 	{
 		return incomingEdges;
 	}
 
-	public LinkedList getOutgoingEdges()
+	public LinkedList<Edge> getOutgoingEdges()
 	{
 		return outgoingEdges;
 	}

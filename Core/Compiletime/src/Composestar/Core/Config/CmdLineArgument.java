@@ -34,7 +34,7 @@ public class CmdLineArgument implements Serializable
 	protected static final Pattern PATTERN = Pattern.compile("([$@%])\\{([^:}]+(:([^}]+))?)\\}");
 
 	protected boolean useUnixSlashes;
-	
+
 	/**
 	 * The argument template. Used for simple arguments.
 	 */
@@ -126,11 +126,15 @@ public class CmdLineArgument implements Serializable
 			m.appendReplacement(res, Matcher.quoteReplacement(replacement));
 		}
 		m.appendTail(res);
-		
+
 		if (isUseUnixSlashes())
+		{
 			return res.toString().replace('\\', '/');
+		}
 		else
+		{
 			return res.toString();
+		}
 	}
 
 	@Override

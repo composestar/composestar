@@ -34,16 +34,17 @@ public class NotUsedCondition extends BaseChecker
 	 * Performs the check. Calls isUsedInFilters for both input and output
 	 * filters.
 	 */
+	@Override
 	public boolean performCheck()
 	{
-		Iterator filterModuleIterator = ds.getAllInstancesOf(FilterModule.class);
+		Iterator<FilterModule> filterModuleIterator = ds.getAllInstancesOf(FilterModule.class);
 		while (filterModuleIterator.hasNext())
 		{
-			FilterModule fm = (FilterModule) filterModuleIterator.next();
-			Iterator ci = fm.getConditionIterator();
+			FilterModule fm = filterModuleIterator.next();
+			Iterator<Condition> ci = fm.getConditionIterator();
 			while (ci.hasNext())
 			{
-				Condition c = (Condition) ci.next();
+				Condition c = ci.next();
 
 				boolean used = isUsedInFilters(c, fm.getInputFilterIterator())
 						|| isUsedInFilters(c, fm.getOutputFilterIterator());
@@ -63,6 +64,7 @@ public class NotUsedCondition extends BaseChecker
 	 * 
 	 * @see Composestar.Core.CHKREP.BaseChecker#check(Composestar.Core.RepositoryImplementation.DataStore)
 	 */
+	@Override
 	public void check(DataStore newDs) throws ModuleException
 	{
 		ds = newDs;
@@ -72,7 +74,7 @@ public class NotUsedCondition extends BaseChecker
 	/*
 	 * Does the check for a filter iterator, calls isUsedInConditionExpression
 	 */
-	private boolean isUsedInFilters(Condition c, Iterator fi)
+	private boolean isUsedInFilters(Condition c, Iterator<Filter> fi)
 	{
 		boolean used = false;
 
@@ -80,11 +82,11 @@ public class NotUsedCondition extends BaseChecker
 		{
 			while (fi.hasNext())
 			{
-				Filter f = (Filter) fi.next();
-				Iterator filterIterator = f.getFilterElementIterator();
+				Filter f = fi.next();
+				Iterator<FilterElement> filterIterator = f.getFilterElementIterator();
 				while (filterIterator.hasNext())
 				{
-					FilterElement fe = (FilterElement) filterIterator.next();
+					FilterElement fe = filterIterator.next();
 					ConditionExpression ce = fe.getConditionPart();
 					if (ce != null && !used)
 					{

@@ -10,22 +10,23 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 
 public class ExistSelector extends BaseChecker
 {
+	@Override
 	public boolean performCheck()
 	{
-		Iterator fmbi = ds.getAllInstancesOf(FilterModuleBinding.class);
+		Iterator<FilterModuleBinding> fmbi = ds.getAllInstancesOf(FilterModuleBinding.class);
 		boolean nonFatal = true;
 
 		while (fmbi.hasNext())
 		{
-			FilterModuleBinding fmb = (FilterModuleBinding) fmbi.next();
+			FilterModuleBinding fmb = fmbi.next();
 			String selector = fmb.getSelector().getName();
 			boolean exist = false;
 
 			SuperImposition si = (SuperImposition) fmb.getParent();
-			Iterator sels = si.getSelectorIterator();
+			Iterator<SelectorDefinition> sels = si.getSelectorIterator();
 			while (sels.hasNext())
 			{
-				SelectorDefinition sd = (SelectorDefinition) sels.next();
+				SelectorDefinition sd = sels.next();
 				if (sd.getName().equals(selector))
 				{
 					exist = true;
@@ -41,6 +42,7 @@ public class ExistSelector extends BaseChecker
 		return nonFatal;
 	}
 
+	@Override
 	public void check(DataStore newDs) throws ModuleException
 	{
 		ds = newDs;

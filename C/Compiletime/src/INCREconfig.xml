@@ -21,7 +21,7 @@
 			</type>
 		</comparisons>		
 	</module>
-	<module name="CHKREP" fulltype="Composestar.Core.CHKREP.Main" phase="one" enabled="true" incremental="false" summary="Checking repository...">
+	<module name="CHKREP" fulltype="Composestar.Core.CHKREP2.Check" phase="one" enabled="true" incremental="false" summary="Checking repository...">
 		<dependencies></dependencies>	
 	</module>
 	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" phase="one" enabled="true" incremental="false" summary="Resolving superimpositions...">

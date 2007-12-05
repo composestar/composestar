@@ -16,7 +16,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.MethodReferen
 import Composestar.Utils.CPSIterator;
 
 /**
- * @modelguid {9DCCFBCE-0F73-4C3D-BD81-99CCF4C9EF9B}
+ * @deprecated
  */
 public class MethodBinding extends Binding
 {

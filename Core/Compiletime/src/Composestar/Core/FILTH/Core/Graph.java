@@ -15,9 +15,9 @@ public class Graph
 {
 	private Node root;
 
-	private LinkedList nodes = new LinkedList();
+	private LinkedList<Node> nodes = new LinkedList<Node>();
 
-	private LinkedList edges = new LinkedList();
+	private LinkedList<Edge> edges = new LinkedList<Edge>();
 
 	public void setRoot(Node inroot)
 	{
@@ -30,12 +30,12 @@ public class Graph
 		return root;
 	}
 
-	public LinkedList getNodes()
+	public LinkedList<Node> getNodes()
 	{
 		return nodes;
 	}
 
-	public LinkedList getEdges()
+	public LinkedList<Edge> getEdges()
 	{
 		return edges;
 	}

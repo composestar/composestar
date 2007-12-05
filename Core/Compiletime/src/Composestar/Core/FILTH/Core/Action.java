@@ -12,7 +12,6 @@ package Composestar.Core.FILTH.Core;
 /**
  * @author nagyist
  */
-import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Action implements Parameter
@@ -27,7 +26,7 @@ public class Action implements Parameter
 
 	private boolean executable;
 
-	protected LinkedList rules = new LinkedList();
+	protected LinkedList<Rule> rules = new LinkedList<Rule>();
 
 	public Action(String inname, Boolean inrvalue, boolean inpresent)
 	{
@@ -36,7 +35,7 @@ public class Action implements Parameter
 		present = inpresent;
 		if (present)
 		{
-			this.setExecutable(true);
+			setExecutable(true);
 		}
 	}
 
@@ -80,11 +79,12 @@ public class Action implements Parameter
 		rules.add(rule);
 	}
 
-	public LinkedList getRules()
+	public LinkedList<Rule> getRules()
 	{
 		return rules;
 	}
 
+	@Override
 	public String toString()
 	{
 		return name;
@@ -136,7 +136,7 @@ public class Action implements Parameter
 
 	public Boolean evaluate()
 	{
-		if (this.isExecuted())
+		if (isExecuted())
 		{
 			return getReturnValue();
 		}

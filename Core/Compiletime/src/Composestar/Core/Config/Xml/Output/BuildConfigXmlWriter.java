@@ -27,7 +27,7 @@ package Composestar.Core.Config.Xml.Output;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Map.Entry;
 
@@ -46,6 +46,7 @@ import Composestar.Core.Config.Dependency;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Config.Xml.BuildConfigHandler;
+import Composestar.Core.Config.Xml.DefaultBuildConfigHandler;
 
 /**
  * @author Michiel Hendriks
@@ -54,7 +55,7 @@ public class BuildConfigXmlWriter
 {
 	protected static final String VERSION = BuildConfigHandler.CURRENT_VERSION;
 
-	protected static final String XMLNS = BuildConfigHandler.NAMESPACE;
+	protected static final String XMLNS = DefaultBuildConfigHandler.NAMESPACE;
 
 	protected BuildConfigXmlWriter()
 	{}
@@ -94,7 +95,7 @@ public class BuildConfigXmlWriter
 	public static final void write(BuildConfig config, Document xmlDoc, Node parent)
 	{
 		xmlDoc.appendChild(xmlDoc.createComment(String.format("Created by %s on %s", BuildConfigXmlWriter.class,
-				SimpleDateFormat.getDateTimeInstance().format(new Date()))));
+				DateFormat.getDateTimeInstance().format(new Date()))));
 
 		Element root = xmlDoc.createElement("buildconfiguration");
 		if (parent == null)

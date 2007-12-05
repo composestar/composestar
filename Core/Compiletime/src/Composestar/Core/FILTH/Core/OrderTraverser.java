@@ -11,26 +11,27 @@ package Composestar.Core.FILTH.Core;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
 public class OrderTraverser
 {
-	public static LinkedList cloneLinkedList(LinkedList l)
+	public static LinkedList<Node> cloneLinkedList(LinkedList<Node> l)
 	{
-		LinkedList temp = new LinkedList();
-		for (Object aL : l)
+		LinkedList<Node> temp = new LinkedList<Node>();
+		for (Node aL : l)
 		{
 			temp.add(aL);
 		}
 		return temp;
 	}
 
-	public LinkedList multiTraverse(Graph g)
+	public LinkedList<List<Node>> multiTraverse(Graph g)
 	{
-		LinkedList startingNodes = g.getNodes();
-		LinkedList multiOrder = new LinkedList();
-		LinkedList order = new LinkedList();
+		LinkedList<Node> startingNodes = g.getNodes();
+		LinkedList<List<Node>> multiOrder = new LinkedList<List<Node>>();
+		LinkedList<Node> order = new LinkedList<Node>();
 
 		Node current = g.getRoot();
 		multiOrder.add(takeOnePath(current, startingNodes, order, multiOrder));
@@ -38,7 +39,8 @@ public class OrderTraverser
 
 	}
 
-	private LinkedList takeOnePath(Node current, LinkedList nodes, LinkedList order, LinkedList multiOrder)
+	private List<Node> takeOnePath(Node current, LinkedList<Node> nodes, LinkedList<Node> order,
+			LinkedList<List<Node>> multiOrder)
 	{
 
 		while (true)
@@ -63,7 +65,7 @@ public class OrderTraverser
 				return order;
 			}
 
-			LinkedList candidates = selectCandidates(nodes, order);
+			LinkedList<Node> candidates = selectCandidates(nodes, order);
 
 			if (candidates == null)
 			{
@@ -82,12 +84,12 @@ public class OrderTraverser
 				 * way it works, ok ? select the next node into the execution
 				 * order
 				 */
-				current = (Node) candidates.getFirst();
+				current = candidates.getFirst();
 			}
 
 			if (candidates.size() > 1)
 			{
-				Iterator i = candidates.iterator();
+				Iterator<Node> i = candidates.iterator();
 
 				/*
 				 * multiple candidates -> the case of recursion, a new path is
@@ -95,15 +97,15 @@ public class OrderTraverser
 				 */
 				for (int c = 0; i.hasNext(); c++)
 				{
-					LinkedList newNodes = OrderTraverser.cloneLinkedList(nodes);
-					LinkedList newOrder = OrderTraverser.cloneLinkedList(order);
+					LinkedList<Node> newNodes = OrderTraverser.cloneLinkedList(nodes);
+					LinkedList<Node> newOrder = OrderTraverser.cloneLinkedList(order);
 					if (c == 0)
 					{
-						current = (Node) i.next();
+						current = i.next();
 					}
 					else
 					{
-						multiOrder.add(takeOnePath((Node) i.next(), newNodes, newOrder, multiOrder));
+						multiOrder.add(takeOnePath(i.next(), newNodes, newOrder, multiOrder));
 					}
 				}
 			}
@@ -113,20 +115,19 @@ public class OrderTraverser
 
 	}
 
-	private LinkedList selectCandidates(LinkedList available, LinkedList used)
+	private LinkedList<Node> selectCandidates(LinkedList<Node> available, LinkedList<Node> used)
 	{
-		LinkedList candidates = new LinkedList();
+		LinkedList<Node> candidates = new LinkedList<Node>();
 		boolean pc;
 
 		/* Iterating through all the available nodes */
-		for (Object anAvailable : available)
+		for (Node current : available)
 		{
-			Node current = (Node) anAvailable;
 			/* Checking all the incoming edges of a node */
 			pc = true;
-			for (Object o : current.getIncomingEdges())
+			for (Edge o : current.getIncomingEdges())
 			{
-				Node aParent = ((Edge) o).getLeft();
+				Node aParent = o.getLeft();
 				if (!used.contains(aParent))
 				{
 					pc = false;
@@ -155,10 +156,10 @@ public class OrderTraverser
 	}
 
 	// //////////////////////////////////////////////////
-	public LinkedList traverse(Graph g)
+	public LinkedList<Node> traverse(Graph g)
 	{
-		LinkedList nodes = g.getNodes();
-		LinkedList order = new LinkedList();
+		LinkedList<Node> nodes = g.getNodes();
+		LinkedList<Node> order = new LinkedList<Node>();
 
 		Node current;
 
@@ -206,20 +207,19 @@ public class OrderTraverser
 	}
 
 	/* ====== algorithm for selecting a node into the order ======= */
-	private Node selectOpenNode(LinkedList available, LinkedList used)
+	private Node selectOpenNode(LinkedList<Node> available, LinkedList<Node> used)
 	{
-		LinkedList candidates = new LinkedList();
+		LinkedList<Node> candidates = new LinkedList<Node>();
 		boolean pc;
 
 		/* Iterating through all the available nodes */
-		for (Object anAvailable : available)
+		for (Node current : available)
 		{
-			Node current = (Node) anAvailable;
 			/* Checking all the incoming edges of a node */
 			pc = true;
-			for (Object o : current.getIncomingEdges())
+			for (Edge o : current.getIncomingEdges())
 			{
-				Node aParent = ((Edge) o).getLeft();
+				Node aParent = o.getLeft();
 				if (!used.contains(aParent))
 				{
 					pc = false;
@@ -244,26 +244,24 @@ public class OrderTraverser
 		 * if there are more possible candidates are available select one
 		 * randomly ~ non-determinism
 		 */
-		return (Node) candidates.get(new Random().nextInt(candidates.size()));
+		return candidates.get(new Random().nextInt(candidates.size()));
 	}
 
 	/* ====== algoruthm for finding cycles ======= */
-	private void exploreCycle(LinkedList available, LinkedList used)
+	private void exploreCycle(LinkedList<Node> available, LinkedList<Node> used)
 	{
 		// System.out.println("exploring a cycle: going back ");
 
-		LinkedList cycle = new LinkedList();
+		LinkedList<Pair> cycle = new LinkedList<Pair>();
 		Node start = null, aParent;
 		Edge currentEdge = null;
 
 		/* select an available node that has a parent among the used nodes: */
-		for (Object anAvailable : available)
+		for (Node current : available)
 		{
-			Node current = (Node) anAvailable;
-
-			for (Iterator j = current.getIncomingEdges().iterator(); (start == null) && (j.hasNext());)
+			for (Edge cure : current.getIncomingEdges())
 			{
-				currentEdge = (Edge) j.next();
+				currentEdge = cure;
 				aParent = currentEdge.getLeft();
 				/* we've found a node with a parent already passed */
 				if (used.contains(aParent))
@@ -271,7 +269,6 @@ public class OrderTraverser
 					start = currentEdge.getRight();
 				}
 			}
-
 		}
 
 		if (start == null)
@@ -300,7 +297,7 @@ public class OrderTraverser
 				try
 				{
 					cycle.removeFirst();
-					current = (Pair) cycle.getFirst();
+					current = cycle.getFirst();
 					e = current.removeAnEdge();
 				}
 				catch (NoSuchElementException xe)
@@ -317,7 +314,7 @@ public class OrderTraverser
 			{
 				printCycle(cycle, current);
 				// go back in the database to the previous root
-				current = (Pair) cycle.getFirst();
+				current = cycle.getFirst();
 			}
 			else
 			{
@@ -328,11 +325,11 @@ public class OrderTraverser
 	}
 
 	/* ====== Pair: An Entity of the database for detecting cycles ======= */
-	public class Pair
+	public static class Pair
 	{
 		private Node node;
 
-		private LinkedList edges = new LinkedList();
+		private LinkedList<Edge> edges = new LinkedList<Edge>();
 
 		public Pair(Node innode)
 		{
@@ -349,7 +346,7 @@ public class OrderTraverser
 			Edge deleted = null;
 			if (edges.size() != 0)
 			{
-				deleted = (Edge) edges.removeFirst();
+				deleted = edges.removeFirst();
 			}
 			return deleted;
 		}
@@ -359,12 +356,11 @@ public class OrderTraverser
 			return node;
 		}
 
-		public boolean isInThePath(LinkedList path)
+		public boolean isInThePath(LinkedList<Pair> path)
 		{
-
-			for (Object aPath : path)
+			for (Pair aPath : path)
 			{
-				if (((Pair) aPath).getNode().getElement().equals(this.node.getElement()))
+				if ((aPath).getNode().getElement().equals(node.getElement()))
 				{
 					return true;
 				}
@@ -375,29 +371,18 @@ public class OrderTraverser
 
 	/* ====== End of Pair ======= */
 
-	private Pair extendPath(LinkedList db, Node n, Edge exc)
+	private Pair extendPath(LinkedList<Pair> db, Node n, Edge exc)
 	{
-		Edge e;
-
 		Pair p = new Pair(n);
-		for (Object o : n.getIncomingEdges())
+		for (Edge e : n.getIncomingEdges())
 		{
-			e = (Edge) o;
 			// we don't extend the database with the edges to the root node and
 			// the node from which we come
-			if ((!e.equals(exc)) && (!e.getLeft().getElement().equals("root"))) // not
-			// the
-			// exception
-			// edge
-			// and
-			// the
-			// edges
-			// referring
-			// back
-			// to
-			// the
-			// root
-			// node
+			if ((!e.equals(exc)) && (!e.getLeft().getElement().equals("root")))
+			/*
+			 * not the exception edge and the edges referring back to the root
+			 * node
+			 */
 			{
 				p.addEdge(e);
 			}
@@ -407,13 +392,12 @@ public class OrderTraverser
 		return p;
 	}
 
-	private void printCycle(LinkedList path, Pair stopPair)
+	private void printCycle(LinkedList<Pair> path, Pair stopPair)
 	{
-		Node n;
 		// System.out.println("<<<cycle-begin>>>");
-		for (Object aPath : path)
+		for (Pair aPath : path)
 		{
-			n = ((Pair) aPath).getNode();
+			Node n = (aPath).getNode();
 			// System.out.print(n.getElement()+" ");
 			if (stopPair.getNode().getElement().equals(n.getElement()))
 			{

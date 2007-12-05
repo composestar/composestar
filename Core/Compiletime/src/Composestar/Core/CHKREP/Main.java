@@ -23,7 +23,7 @@ import Composestar.Core.Resources.CommonResources;
 public class Main implements CTCommonModule
 {
 	public static final String MODULE_NAME = "CHKREP";
-	
+
 	/**
 	 * Constructor
 	 */

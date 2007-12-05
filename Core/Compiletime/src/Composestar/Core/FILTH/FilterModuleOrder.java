@@ -24,9 +24,6 @@ import Composestar.Core.SANE.FilterModuleSuperImposition;
 
 public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4642012441159613281L;
 
 	/**

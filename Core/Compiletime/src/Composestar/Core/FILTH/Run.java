@@ -13,7 +13,6 @@ package Composestar.Core.FILTH;
  * @author nagyist
  */
 import java.io.FileReader;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.xml.parsers.SAXParserFactory;
@@ -128,7 +127,7 @@ public class Run
 		p3.insert(g);
 
 		OrderTraverser ot = new OrderTraverser();
-		LinkedList order = ot.traverse(g);
+		LinkedList<Node> order = ot.traverse(g);
 
 		// System.out.print("\norder>> ");
 		// for (Iterator i=order.iterator();i.hasNext();)
@@ -156,7 +155,7 @@ public class Run
 		p1.insert(g);
 		p2.insert(g);
 		OrderTraverser ot = new OrderTraverser();
-		LinkedList order = ot.traverse(g);
+		LinkedList<Node> order = ot.traverse(g);
 		for (Object anOrder : order)
 		{
 			System.out.println(((Node) anOrder).getElement());
@@ -183,7 +182,7 @@ public class Run
 		p2.insert(g);
 
 		OrderTraverser ot = new OrderTraverser();
-		LinkedList order = ot.traverse(g);
+		LinkedList<Node> order = ot.traverse(g);
 
 		// System.out.print("\norder>> ");
 		// for (Iterator i=order.iterator();i.hasNext();)
@@ -215,7 +214,7 @@ public class Run
 		p2.insert(g);
 
 		OrderTraverser ot = new OrderTraverser();
-		LinkedList order = ot.traverse(g);
+		LinkedList<Node> order = ot.traverse(g);
 
 		// System.out.print("\norder>> ");
 		// for (Iterator i=order.iterator();i.hasNext();)
@@ -247,7 +246,7 @@ public class Run
 		p2.insert(g);
 
 		OrderTraverser ot = new OrderTraverser();
-		LinkedList order = ot.traverse(g);
+		LinkedList<Node> order = ot.traverse(g);
 
 		// System.out.print("\norder>> ");
 		// for (Iterator i=order.iterator();i.hasNext();)
@@ -278,7 +277,7 @@ public class Run
 		// p2.insert(g);
 
 		OrderTraverser ot = new OrderTraverser();
-		LinkedList order = ot.traverse(g);
+		LinkedList<Node> order = ot.traverse(g);
 
 		// System.out.print("\norder>> ");
 		// for (Iterator i=order.iterator();i.hasNext();)

@@ -49,6 +49,7 @@ public class MethodBodyTransformer extends ExprEditor
 	 * 
 	 * @see javassist.expr.ExprEditor#edit(Cast)
 	 */
+	@Override
 	public void edit(Cast c) throws CannotCompileException
 	{
 		HookDictionary hd = HookDictionary.instance();
@@ -72,6 +73,7 @@ public class MethodBodyTransformer extends ExprEditor
 	 * 
 	 * @see javassist.expr.ExprEditor#edit(ConstructorCall)
 	 */
+	@Override
 	public void edit(ConstructorCall c) throws CannotCompileException
 	{
 
@@ -82,6 +84,7 @@ public class MethodBodyTransformer extends ExprEditor
 	 * 
 	 * @see javassist.expr.ExprEditor#edit(FieldAccess)
 	 */
+	@Override
 	public void edit(FieldAccess f) throws CannotCompileException
 	{
 
@@ -92,6 +95,7 @@ public class MethodBodyTransformer extends ExprEditor
 	 * 
 	 * @see javassist.expr.ExprEditor#edit(Handler)
 	 */
+	@Override
 	public void edit(Handler h) throws CannotCompileException
 	{
 
@@ -102,6 +106,7 @@ public class MethodBodyTransformer extends ExprEditor
 	 * 
 	 * @see javassist.expr.ExprEditor#edit(Instanceof)
 	 */
+	@Override
 	public void edit(Instanceof i) throws CannotCompileException
 	{
 
@@ -112,6 +117,7 @@ public class MethodBodyTransformer extends ExprEditor
 	 * 
 	 * @see javassist.expr.ExprEditor#edit(MethodCall)
 	 */
+	@Override
 	public void edit(MethodCall m) throws CannotCompileException
 	{
 		HookDictionary hd = HookDictionary.instance();
@@ -146,6 +152,7 @@ public class MethodBodyTransformer extends ExprEditor
 	 * 
 	 * @see javassist.expr.ExprEditor#edit(NewArray)
 	 */
+	@Override
 	public void edit(NewArray a) throws CannotCompileException
 	{
 
@@ -156,6 +163,7 @@ public class MethodBodyTransformer extends ExprEditor
 	 * 
 	 * @see javassist.expr.ExprEditor#edit(NewExpr)
 	 */
+	@Override
 	public void edit(NewExpr e) throws CannotCompileException
 	{
 

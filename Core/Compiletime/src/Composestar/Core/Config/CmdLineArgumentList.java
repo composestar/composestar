@@ -31,13 +31,13 @@ public class CmdLineArgumentList extends CmdLineArgument
 	/**
 	 * If true, will place quotes ("..") around the merged argument
 	 */
-	
+
 	protected boolean useQuote;
 
 	/**
 	 * The delimiter string to use during merging.
 	 */
-	protected String delimiter = " ";	
+	protected String delimiter = " ";
 
 	public CmdLineArgumentList()
 	{
@@ -118,7 +118,9 @@ public class CmdLineArgumentList extends CmdLineArgument
 		{
 			String quote = "";
 			if (useQuote)
+			{
 				quote = "\"";
+			}
 			tolist.add(quote + StringUtils.join(argList, delimiter) + quote);
 		}
 	}

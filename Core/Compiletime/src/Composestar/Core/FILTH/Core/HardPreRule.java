@@ -26,6 +26,7 @@ public class HardPreRule extends Rule
 	 * 
 	 * @see Rule#apply()
 	 */
+	@Override
 	public void apply()
 	{
 		// System.out.print(" *applying: HardPre

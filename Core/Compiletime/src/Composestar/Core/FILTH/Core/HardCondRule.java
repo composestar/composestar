@@ -21,6 +21,7 @@ public class HardCondRule extends Rule
 		identifier = "cond_hard";
 	}
 
+	@Override
 	public void apply()
 	{
 		// System.out.print(" *applying: HardCond

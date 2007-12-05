@@ -14,11 +14,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Core.WEAVER.WEAVER;
 import Composestar.Java.COMP.CStarJavaCompiler;
@@ -93,20 +93,20 @@ public class JavaWeaver implements WEAVER
 
 		DataStore ds = DataStore.instance();
 		HookDictionary hd = HookDictionary.instance();
-		Iterator it = ds.getAllInstancesOf(CompiledImplementation.class);
+		Iterator<CompiledImplementation> it = ds.getAllInstancesOf(CompiledImplementation.class);
 		while (it.hasNext())
 		{
-			CompiledImplementation ci = (CompiledImplementation) it.next();
+			CompiledImplementation ci = it.next();
 			String className = ci.getClassName();
 			if (className != null)
 			{
 				hd.addAfterInstantationInterception(className);
 			}
 		}
-		it = ds.getAllInstancesOf(CpsConcern.class);
-		while (it.hasNext())
+		Iterator<CpsConcern> it2 = ds.getAllInstancesOf(CpsConcern.class);
+		while (it2.hasNext())
 		{
-			CpsConcern c = (CpsConcern) it.next();
+			CpsConcern c = it2.next();
 			Object impl = c.getDynObject("IMPLEMENTATION");
 			if (impl != null)
 			{
@@ -114,10 +114,10 @@ public class JavaWeaver implements WEAVER
 				hd.addAfterInstantationInterception(pc.getQualifiedName());
 			}
 		}
-		it = ds.getAllInstancesOf(Concern.class);
-		while (it.hasNext())
+		Iterator<Concern> it3 = ds.getAllInstancesOf(Concern.class);
+		while (it3.hasNext())
 		{
-			Concern c = (Concern) it.next();
+			Concern c = it3.next();
 			if (c.getDynObject(SIinfo.DATAMAP_KEY) != null && !(c instanceof CpsConcern))
 			{
 				hd.addAfterInstantationInterception(c.getQualifiedName());
@@ -130,23 +130,22 @@ public class JavaWeaver implements WEAVER
 
 		DataStore ds = DataStore.instance();
 		HookDictionary hd = HookDictionary.instance();
-		Set qns = new HashSet();
-		Iterator iterConcerns = ds.getAllInstancesOf(Concern.class);
+		Set<String> qns = new HashSet<String>();
+		Iterator<Concern> iterConcerns = ds.getAllInstancesOf(Concern.class);
 		while (iterConcerns.hasNext())
 		{
-			Concern c = (Concern) iterConcerns.next();
+			Concern c = iterConcerns.next();
 			boolean castConcern = false;
 			if (c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null)
 			{
 				FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-				for (Object o : fmo.orderAsList())
+				for (FilterModuleSuperImposition fmsi : (List<FilterModuleSuperImposition>) fmo.filterModuleSIList())
 				{
-					String fmn = (String) o;
-					FilterModule fm = (FilterModule) ds.getObjectByID(fmn);
-					Iterator iterInternals = fm.getInternalIterator();
+					FilterModule fm = fmsi.getFilterModule().getRef();
+					Iterator<Internal> iterInternals = fm.getInternalIterator();
 					while (iterInternals.hasNext())
 					{
-						Internal internal = (Internal) iterInternals.next();
+						Internal internal = iterInternals.next();
 						String internalQN = internal.getType().getQualifiedName();
 						castConcern = true;
 						if (!qns.contains(internalQN))
@@ -168,23 +167,24 @@ public class JavaWeaver implements WEAVER
 
 	public void getMethodInterceptions(CommonResources resources) throws ModuleException
 	{
-
-		FILTHService filthservice = FILTHService.getInstance(resources);
-
-		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (iterConcerns.hasNext())
 		{
-			Concern c = (Concern) iterConcerns.next();
-			List list = filthservice.getOrder(c);
+			Concern c = iterConcerns.next();
+			FilterModuleOrder fmo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+			if (fmo == null)
+			{
+				continue;
+			}
+			List<FilterModuleSuperImposition> list = (List<FilterModuleSuperImposition>) fmo.filterModuleSIList();
 			if (!list.isEmpty())
 			{
-				Iterator iterFilterModules = list.iterator();
-				if (hasInputFilters(iterFilterModules))
+				if (hasInputFilters(list))
 				{
 					logger.debug(" method calls to " + c.getQualifiedName() + " added to hook dictionary...");
 					HookDictionary.instance().addIncomingMethodInterception(c.getQualifiedName());
 				}
-				if (hasOutputFilters(iterFilterModules))
+				if (hasOutputFilters(list))
 				{
 					logger.debug(" method calls from " + c.getQualifiedName() + " added to hook dictionary...");
 					HookDictionary.instance().addOutgoingMethodInterception(c.getQualifiedName());
@@ -193,12 +193,11 @@ public class JavaWeaver implements WEAVER
 		}
 	}
 
-	private boolean hasInputFilters(Iterator iterFilterModules)
+	private boolean hasInputFilters(List<FilterModuleSuperImposition> iterFilterModules)
 	{
-		while (iterFilterModules.hasNext())
+		for (FilterModuleSuperImposition fmsi : iterFilterModules)
 		{
-			FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) iterFilterModules.next());
-
+			FilterModule fm = fmsi.getFilterModule().getRef();
 			if (fm.getInputFilterIterator().hasNext())
 			{
 				return true;
@@ -207,17 +206,15 @@ public class JavaWeaver implements WEAVER
 		return false;
 	}
 
-	private boolean hasOutputFilters(Iterator iterFilterModules)
+	private boolean hasOutputFilters(List<FilterModuleSuperImposition> iterFilterModules)
 	{
-		while (iterFilterModules.hasNext())
+		for (FilterModuleSuperImposition fmsi : iterFilterModules)
 		{
-			FilterModule fm = (FilterModule) DataStore.instance().getObjectByID((String) iterFilterModules.next());
-
+			FilterModule fm = fmsi.getFilterModule().getRef();
 			if (InnerDispatcher.isDefaultDispatch(fm))
 			{
 				continue;
 			}
-
 			if (!fm.getOutputFilters().isEmpty())
 			{
 				return true;

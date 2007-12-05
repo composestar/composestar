@@ -26,6 +26,7 @@ public class HardSkipRule extends SkipRule
 	 * 
 	 * @see Rule#apply()
 	 */
+	@Override
 	public void apply()
 	{
 

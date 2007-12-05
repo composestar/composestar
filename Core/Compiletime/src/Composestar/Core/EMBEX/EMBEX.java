@@ -46,11 +46,11 @@ public class EMBEX implements CTCommonModule
 		embeddedDir.mkdirs();
 
 		// iterate over all cps concerns
-		Iterator concernIt = ds.getAllInstancesOf(CpsConcern.class);
+		Iterator<CpsConcern> concernIt = ds.getAllInstancesOf(CpsConcern.class);
 		while (concernIt.hasNext())
 		{
 			// fetch implementation
-			CpsConcern cps = (CpsConcern) concernIt.next();
+			CpsConcern cps = concernIt.next();
 			Implementation imp = cps.getImplementation();
 
 			if (imp instanceof Source)

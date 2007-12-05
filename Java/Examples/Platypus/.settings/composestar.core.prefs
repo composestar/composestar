@@ -1,7 +1,7 @@
-#Mon Oct 01 10:47:12 CEST 2007
+#Wed Dec 05 15:31:17 CET 2007
 FILTH.input=
 SECRET.mode=
-buildDebugLevel=2
+buildDebugLevel=
 eclipse.preferences.version=1
 incremental=false
 mainclass=PlatypusExample.Main

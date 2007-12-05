@@ -33,7 +33,7 @@ public abstract class AbstractMessageResult
 	{
 		return crumb.getConcern();
 	}
-	
+
 	/**
 	 * @return true when it is a valid result, false if the result is errornous
 	 */

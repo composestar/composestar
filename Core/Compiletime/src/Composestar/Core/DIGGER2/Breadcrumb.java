@@ -134,6 +134,7 @@ public class Breadcrumb implements Serializable
 		return trails.size();
 	}
 
+	@Override
 	public String toString()
 	{
 		return concern.getQualifiedName() + " " + message.toString();

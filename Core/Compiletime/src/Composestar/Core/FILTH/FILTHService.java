@@ -18,8 +18,8 @@ import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.Logging.CPSLogger;
 
 public abstract class FILTHService
@@ -90,9 +90,7 @@ public abstract class FILTHService
 		}
 	}
 
-	public abstract List getOrder(Concern c);
+	public abstract List<FilterModuleSuperImposition> getOrder(Concern c);
 
-	public abstract List getMultipleOrder(Concern c);
-
-	public abstract void copyOperation(Concern c, INCRE inc) throws ModuleException;
+	public abstract List<List<FilterModuleSuperImposition>> getMultipleOrder(Concern c);
 }

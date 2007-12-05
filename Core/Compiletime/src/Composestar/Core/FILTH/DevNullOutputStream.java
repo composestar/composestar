@@ -20,6 +20,7 @@ public class DevNullOutputStream extends OutputStream
 	 * 
 	 * @see java.io.OutputStream#write(int)
 	 */
+	@Override
 	public void write(int b) throws IOException
 	{
 
