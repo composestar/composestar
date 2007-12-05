@@ -39,13 +39,6 @@
               label="%COMPOSESTAR_POPUP_LABEL_VIS"
               menubarPath="composestar.java.popupmenu/slot1"/>
         -->
-       	<action
-            label="%COMPOSESTAR_POPUP_LABEL_RUN"
-            menubarPath="composestar.java.popupmenu/basic" 
-            class="Composestar.Eclipse.Java.Actions.JavaRunAction"
-            enablesFor="1"
-            id="composestar.java.action.run">
-        </action>
         <action
               class="Composestar.Eclipse.Java.Actions.JavaBuildAction"
               enablesFor="1"

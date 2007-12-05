@@ -75,7 +75,7 @@ public class CStarJavaRuntimeContainer implements IClasspathContainer
 		// Runtime Java
 		cp[2] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
 				+ "ComposestarRuntimeInterpreter.jar", IComposestarJavaConstants.BUNDLE_ID));
-		
+
 		// Compiletime Core
 		// TODO: shouldn't be needed
 		cp[3] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
@@ -91,7 +91,7 @@ public class CStarJavaRuntimeContainer implements IClasspathContainer
 
 	public int getKind()
 	{
-		return K_SYSTEM;
+		return K_APPLICATION;
 	}
 
 	public IPath getPath()
