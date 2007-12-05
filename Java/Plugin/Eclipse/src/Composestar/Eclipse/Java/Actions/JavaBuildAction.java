@@ -70,7 +70,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 			Debug.instance().Log("Configuration exception: " + e.getMessage(), Debug.MSG_ERROR);
 			return;
 		}
-		File buildConfigFile = new File(selectedProjects[0].getLocation().toFile(), "BuildConfiguartion.xml");
+		File buildConfigFile = new File(selectedProjects[0].getLocation().toFile(), "BuildConfiguration.xml");
 		if (!bconfiggen.generate(buildConfigFile))
 		{
 			// TODO improve
