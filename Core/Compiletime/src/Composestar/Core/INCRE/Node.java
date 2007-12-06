@@ -12,12 +12,12 @@ public abstract class Node implements Serializable
 
 	public Node(String ref)
 	{
-		this.reference = ref;
+		reference = ref;
 	}
 
 	public String getReference()
 	{
-		return this.reference;
+		return reference;
 	}
 
 	// Gathers the referenced object (reference) from the input object (obj)

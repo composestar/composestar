@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.MethodNode;
@@ -379,10 +380,10 @@ public class DotNETLanguageModel extends LanguageModel
 				if (null != superType)
 				{
 					((DotNETType) superType).addChildType(concern); // So also
-																	// add the
-																	// link the
-																	// other way
-																	// round.
+					// add the
+					// link the
+					// other way
+					// round.
 				}
 
 				Collection implementedInterfaces = concern.getUnitRelation("Implements").multiValue();
@@ -416,10 +417,10 @@ public class DotNETLanguageModel extends LanguageModel
 				if (null != superType)
 				{
 					((DotNETType) superType).addChildType(concern); // So also
-																	// add the
-																	// link the
-																	// other way
-																	// round.
+					// add the
+					// link the
+					// other way
+					// round.
 				}
 			}
 		}
@@ -438,14 +439,14 @@ public class DotNETLanguageModel extends LanguageModel
 					if ((null != paramType) && (paramType instanceof DotNETType))
 					{
 						((DotNETType) paramType).addParameterType(param); // So
-																			// also
-																			// add
-																			// the
-																			// link
-																			// the
-																			// other
-																			// way
-																			// round.
+						// also
+						// add
+						// the
+						// link
+						// the
+						// other
+						// way
+						// round.
 					}
 				}
 			}
@@ -466,14 +467,14 @@ public class DotNETLanguageModel extends LanguageModel
 					if ((null != methodReturnType) && (methodReturnType instanceof DotNETType))
 					{
 						((DotNETType) methodReturnType).addMethodReturnType(method); // So
-																						// also
-																						// add
-																						// the
-																						// link
-																						// the
-																						// other
-																						// way
-																						// round.
+						// also
+						// add
+						// the
+						// link
+						// the
+						// other
+						// way
+						// round.
 					}
 				}
 			}
@@ -493,14 +494,14 @@ public class DotNETLanguageModel extends LanguageModel
 					if ((null != fieldType) && (fieldType instanceof DotNETType))
 					{
 						((DotNETType) fieldType).addFieldType(field); // So
-																		// also
-																		// add
-																		// the
-																		// link
-																		// the
-																		// other
-																		// way
-																		// round.
+						// also
+						// add
+						// the
+						// link
+						// the
+						// other
+						// way
+						// round.
 					}
 				}
 			}
@@ -547,8 +548,8 @@ public class DotNETLanguageModel extends LanguageModel
 					{
 						DotNETParameterInfo paramInfo = (DotNETParameterInfo) paramsIter.next();
 						paramInfo.setParent(method); // Have to set this, so
-														// we can later skip
-														// this unit altogether
+						// we can later skip
+						// this unit altogether
 					}
 					// System.out.println("Excluding: " + method.getUnitName());
 				}
@@ -578,8 +579,8 @@ public class DotNETLanguageModel extends LanguageModel
 				if ((null == param.getParent()) || ((DotNETMethodInfo) param.getParent()).isDeclaredHere())
 				{
 					dict.addLanguageUnit(unit); // The parameter does not belong
-												// to an inherited method, so
-												// add it.
+					// to an inherited method, so
+					// add it.
 				}
 			}
 			else if (!(unit instanceof DotNETMethodInfo))
@@ -613,7 +614,7 @@ public class DotNETLanguageModel extends LanguageModel
 	public HashMap getPathOfUnitRelations(String from, String to)
 	{
 		HashMap relations = new HashMap();
-		ArrayList params = new ArrayList();
+		List params = new ArrayList();
 		MethodNode m = new MethodNode("getUnitRelation");
 
 		try
@@ -690,7 +691,7 @@ public class DotNETLanguageModel extends LanguageModel
 		while (!lostMatch && !namespace.equals(currNS.getUnitName()))
 		{
 			lostMatch = true; // assume we are not going to find a child that
-								// matches
+			// matches
 			UnitResult children = currNS.getUnitRelation("ChildNamespaces");
 			Iterator childIter = children.multiValue().iterator();
 			while (childIter.hasNext())

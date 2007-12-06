@@ -26,12 +26,13 @@ public class TypeHandler extends DefaultHandler
 		returnhandler = inReturnhandler;
 	}
 
+	@Override
 	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
 		if (qName.equalsIgnoreCase("field"))
 		{
 			String fieldname = amap.getValue("name");
-			module.addComparableObject(this.fullname, new FieldNode(fieldname));
+			module.addComparableObject(fullname, new FieldNode(fieldname));
 		}
 		else if (qName.equalsIgnoreCase("path"))
 		{
@@ -41,6 +42,7 @@ public class TypeHandler extends DefaultHandler
 		}
 	}
 
+	@Override
 	public void endElement(String uri, String localName, String qName)
 	{
 		if (qName.equalsIgnoreCase("type"))

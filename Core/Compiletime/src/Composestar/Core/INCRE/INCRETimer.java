@@ -29,13 +29,13 @@ public class INCRETimer
 
 	public void start()
 	{
-		this.startTime = System.nanoTime();
+		startTime = System.nanoTime();
 	}
 
 	public void stop()
 	{
 		long stopTime = System.nanoTime();
-		this.elapsedTime = stopTime - this.startTime;
+		elapsedTime = stopTime - startTime;
 	}
 
 	/**
@@ -43,27 +43,27 @@ public class INCRETimer
 	 */
 	public long getElapsed()
 	{
-		return this.elapsedTime / 1000000;
+		return elapsedTime / 1000000;
 	}
 
 	public String getModule()
 	{
-		return this.module;
+		return module;
 	}
 
 	public String getDescription()
 	{
-		return this.description;
+		return description;
 	}
 
 	public int getType()
 	{
-		return this.type;
+		return type;
 	}
 
 	public String strType()
 	{
-		switch (this.type)
+		switch (type)
 		{
 			case 0:
 				return "all";

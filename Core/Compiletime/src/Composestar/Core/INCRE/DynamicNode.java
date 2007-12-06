@@ -15,6 +15,7 @@ public class DynamicNode extends Node
 	 * @return the referenced dynamic object of input
 	 * @param Object obj
 	 */
+	@Override
 	public Object visit(Object obj)
 	{
 		if (obj instanceof RepositoryEntity)
@@ -30,8 +31,9 @@ public class DynamicNode extends Node
 	/**
 	 * @return an unique id for a referenced dynamic object
 	 */
+	@Override
 	public String getUniqueID(Object obj)
 	{
-		return obj.hashCode() + "." + this.reference;
+		return obj.hashCode() + "." + reference;
 	}
 }

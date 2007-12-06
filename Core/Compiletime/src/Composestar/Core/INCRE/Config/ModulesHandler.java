@@ -9,10 +9,13 @@ import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCREModule;
-import Composestar.Utils.Debug;
+import Composestar.Core.Master.CTCommonModule;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class ModulesHandler extends DefaultHandler
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(INCRE.MODULE_NAME);
+
 	private ConfigManager configmanager;
 
 	private DefaultHandler returnHandler;
@@ -34,13 +37,14 @@ public class ModulesHandler extends DefaultHandler
 		returnHandler = inReturnhandler;
 	}
 
+	@Override
 	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
 		if (qName.equalsIgnoreCase("module"))
 		{
 			m = null;
 			String fullType = amap.getValue("fulltype");
-			Class fullTypeClass = null;
+			Class<?> fullTypeClass = null;
 			try
 			{
 				if (fullType != null)
@@ -50,7 +54,7 @@ public class ModulesHandler extends DefaultHandler
 			}
 			catch (ClassNotFoundException e)
 			{
-				Debug.out(Debug.MODE_ERROR, INCRE.MODULE_NAME, "Module class not found: " + fullType);
+				logger.error("Module class not found: " + fullType);
 			}
 
 			// if loaded from INCRE try to import existing settings through
@@ -73,7 +77,14 @@ public class ModulesHandler extends DefaultHandler
 
 			if (fullTypeClass != null)
 			{
-				m.setModuleClass(fullTypeClass);
+				if (!CTCommonModule.class.isAssignableFrom(fullTypeClass))
+				{
+					logger.error("Module class does not implement CTCommonModule: " + fullType);
+				}
+				else
+				{
+					m.setModuleClass((Class<? extends CTCommonModule>) fullTypeClass);
+				}
 			}
 			if (amap.getValue("input") != null)
 			{
@@ -111,6 +122,7 @@ public class ModulesHandler extends DefaultHandler
 		}
 	}
 
+	@Override
 	public void endElement(String uri, String localName, String qName)
 	{
 		if (qName.equalsIgnoreCase("module"))

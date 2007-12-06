@@ -10,9 +10,10 @@ public class INCREXMLParser extends DefaultHandler
 
 	public INCREXMLParser(ConfigManager cfg)
 	{
-		this.configmanager = cfg;
+		configmanager = cfg;
 	}
 
+	@Override
 	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
 		if (qName.equalsIgnoreCase("modules"))
@@ -22,6 +23,7 @@ public class INCREXMLParser extends DefaultHandler
 		}
 	}
 
+	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException
 	{
 

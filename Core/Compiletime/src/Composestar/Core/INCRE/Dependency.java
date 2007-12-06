@@ -37,16 +37,16 @@ public class Dependency implements Serializable
 
 	public String getName()
 	{
-		return this.name;
+		return name;
 	}
 
 	public Path getPath()
 	{
-		return this.mypath;
+		return mypath;
 	}
 
 	public void addNode(Node n)
 	{
-		this.mypath.addNode(n);
+		mypath.addNode(n);
 	}
 }

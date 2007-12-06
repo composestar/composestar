@@ -200,13 +200,13 @@ public class HighLevelInliner
 	{
 		List<FilterModuleBlock> result = new ArrayList<FilterModuleBlock>();
 
-		Iterator it = model.getEntranceStates();
+		Iterator<ExecutionState> it = model.getEntranceStates();
 		if (!it.hasNext())
 		{
 			return result;
 		}
 
-		ExecutionState fmState = (ExecutionState) it.next();
+		ExecutionState fmState = it.next();
 		while (fmState != null)
 		{
 			fmState = identifyFilterModuleBlock(fmState, result);
@@ -336,12 +336,8 @@ public class HighLevelInliner
 		FilterElementBlock block = new FilterElementBlock();
 		block.conditionExprState = condExpr;
 
-		Iterator outTransitions = condExpr.getOutTransitions();
-		// enumeration has 1 or 2 elements
-		while (outTransitions.hasNext())
+		for (ExecutionTransition transition : condExpr.getOutTransitionsEx())
 		{
-			ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
-
 			ExecutionState exitState = getExitState(transition.getEndState());
 
 			if (transition.getLabel().equals(ExecutionTransition.CONDITION_EXPRESSION_TRUE))
@@ -366,16 +362,11 @@ public class HighLevelInliner
 	 */
 	private ExecutionState getNextState(ExecutionState state)
 	{
-		Iterator transitions = state.getOutTransitions();
-		if (transitions.hasNext())
+		for (ExecutionTransition transition : state.getOutTransitionsEx())
 		{
-			ExecutionTransition transition = (ExecutionTransition) transitions.next();
 			return transition.getEndState();
 		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 
 	/**
@@ -393,8 +384,7 @@ public class HighLevelInliner
 		while (!isExitState(currentState))
 		{
 			// get the next state:
-			Iterator outTransitions = currentState.getOutTransitions();
-			ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
+			ExecutionTransition transition = currentState.getOutTransitionsEx().get(0);
 			currentState = transition.getEndState();
 		}
 
@@ -462,10 +452,10 @@ public class HighLevelInliner
 			reverseTable = new HashMap<ExecutionState, List<ExecutionTransition>>();
 			conditionTable = new HashMap<ExecutionState, ConditionExpression>();
 
-			Iterator startStates = model.getEntranceStates();
+			Iterator<ExecutionState> startStates = model.getEntranceStates();
 			while (startStates.hasNext())
 			{
-				addState((ExecutionState) startStates.next());
+				addState(startStates.next());
 			}
 		}
 
@@ -480,10 +470,8 @@ public class HighLevelInliner
 
 			reverseTable.put(state, new ArrayList<ExecutionTransition>());
 
-			Iterator it = state.getOutTransitions();
-			while (it.hasNext())
+			for (ExecutionTransition transition : state.getOutTransitionsEx())
 			{
-				ExecutionTransition transition = (ExecutionTransition) it.next();
 				ExecutionState nextState = transition.getEndState();
 				addState(nextState);
 

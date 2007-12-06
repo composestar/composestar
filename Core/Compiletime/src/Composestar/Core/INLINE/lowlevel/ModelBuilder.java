@@ -203,11 +203,11 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	private void process()
 	{
-		Iterator concerns = dataStore.getAllInstancesOf(Concern.class);
+		Iterator<Concern> concerns = dataStore.getAllInstancesOf(Concern.class);
 
 		while (concerns.hasNext())
 		{
-			Concern concern = (Concern) concerns.next();
+			Concern concern = concerns.next();
 			processConcern(concern);
 		}
 	}
@@ -281,10 +281,9 @@ public class ModelBuilder implements CTCommonModule
 		}
 
 		// process calls:
-		Set calls = methodInfo.getCallsToOtherMethods();
-		for (Object o : calls)
+		Set<CallToOtherMethod> calls = methodInfo.getCallsToOtherMethods();
+		for (CallToOtherMethod call : calls)
 		{
-			CallToOtherMethod call = (CallToOtherMethod) o;
 			processCall(call);
 		}
 	}

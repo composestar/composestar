@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -12,7 +13,8 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.Resources.ResourceException;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Logging.Log4j.CrucialLevel;
 
 public class INCREModule implements Serializable
 {
@@ -20,7 +22,7 @@ public class INCREModule implements Serializable
 
 	private String moduleName;
 
-	private Class moduleClass;
+	private Class<? extends CTCommonModule> moduleClass;
 
 	private String input;
 
@@ -33,12 +35,12 @@ public class INCREModule implements Serializable
 	/**
 	 * A map containing dependencies for the module.
 	 */
-	private Map deps = new LinkedHashMap();
+	private Map<String, Dependency> deps = new LinkedHashMap<String, Dependency>();
 
 	/**
 	 * A map containing objects to be compared by MyComparator.
 	 */
-	private Map comparableObjects = new HashMap();
+	private Map<String, List<Object>> comparableObjects = new HashMap<String, List<Object>>();
 
 	public INCREModule(String inName)
 	{
@@ -52,10 +54,14 @@ public class INCREModule implements Serializable
 
 	public void setFullType(String ftype) throws ClassNotFoundException
 	{
-		moduleClass = Class.forName(ftype);
+		Class<?> mclass = Class.forName(ftype);
+		if (CTCommonModule.class.isAssignableFrom(mclass))
+		{
+			moduleClass = (Class<? extends CTCommonModule>) mclass;
+		}
 	}
 
-	public void setModuleClass(Class ftype)
+	public void setModuleClass(Class<? extends CTCommonModule> ftype)
 	{
 		moduleClass = ftype;
 	}
@@ -88,14 +94,14 @@ public class INCREModule implements Serializable
 
 	public void addComparableObject(String key, Object obj)
 	{
-		ArrayList list;
+		List<Object> list;
 		if (comparableObjects.containsKey(key))
 		{
-			list = (ArrayList) comparableObjects.get(key);
+			list = comparableObjects.get(key);
 		}
 		else
 		{
-			list = new ArrayList();
+			list = new ArrayList<Object>();
 		}
 
 		list.add(obj);
@@ -104,40 +110,38 @@ public class INCREModule implements Serializable
 
 	public void removeComparableObject(String key, Object obj)
 	{
-		ArrayList list;
+		List<Object> list;
 		if (comparableObjects.containsKey(key))
 		{
-			list = (ArrayList) comparableObjects.get(key);
+			list = comparableObjects.get(key);
 		}
 		else
 		{
-			list = new ArrayList();
+			list = new ArrayList<Object>();
 		}
 
 		list.remove(obj);
 		comparableObjects.put(key, list);
 	}
 
-	public void addComparableObjects(HashMap map)
+	public void addComparableObjects(Map<String, Map<?, Object>> map)
 	{
-		for (Object o : map.entrySet())
+		for (Entry<String, Map<?, Object>> entry : map.entrySet())
 		{
-			Entry entry = (Entry) o;
-			for (Object o1 : ((HashMap) entry.getValue()).values())
+			for (Object o1 : entry.getValue().values())
 			{
-				addComparableObject((String) entry.getKey(), o1);
+				addComparableObject(entry.getKey(), o1);
 			}
 		}
 	}
 
-	public void removeComparableObjects(HashMap map)
+	public void removeComparableObjects(Map<String, Map<?, Object>> map)
 	{
-		for (Object o : map.entrySet())
+		for (Entry<String, Map<?, Object>> entry : map.entrySet())
 		{
-			Entry entry = (Entry) o;
-			for (Object o1 : ((HashMap) entry.getValue()).values())
+			for (Object o1 : entry.getValue().values())
 			{
-				removeComparableObject((String) entry.getKey(), o1);
+				removeComparableObject(entry.getKey(), o1);
 			}
 		}
 	}
@@ -147,9 +151,9 @@ public class INCREModule implements Serializable
 		return comparableObjects.containsKey(key);
 	}
 
-	public ArrayList getComparableObjects(String key)
+	public List<Object> getComparableObjects(String key)
 	{
-		return (ArrayList) comparableObjects.get(key);
+		return comparableObjects.get(key);
 	}
 
 	public void clearComparableObjects()
@@ -157,7 +161,7 @@ public class INCREModule implements Serializable
 		comparableObjects.clear();
 	}
 
-	public Iterator getDeps()
+	public Iterator<Composestar.Core.INCRE.Dependency> getDeps()
 	{
 		return deps.values().iterator();
 	}
@@ -172,7 +176,7 @@ public class INCREModule implements Serializable
 		return moduleClass.getName();
 	}
 
-	public Class getModuleClass()
+	public Class<? extends CTCommonModule> getModuleClass()
 	{
 		return moduleClass;
 	}
@@ -189,12 +193,12 @@ public class INCREModule implements Serializable
 
 	public boolean isIncremental()
 	{
-		return this.incremental;
+		return incremental;
 	}
 
 	public void setIncremental(boolean b)
 	{
-		this.incremental = b;
+		incremental = b;
 	}
 
 	/**
@@ -206,56 +210,54 @@ public class INCREModule implements Serializable
 	 */
 	public void execute(CommonResources resources) throws ModuleException
 	{
-		if (!enabled) return;
-
+		if (!enabled)
+		{
+			return;
+		}
 		if (summary.length() != 0)
 		{
-			Debug.out(Debug.MODE_CRUCIAL, this.moduleName, summary);
+			CPSLogger logger = CPSLogger.getCPSLogger(moduleName);
+			logger.log(CrucialLevel.CRUCIAL, summary);
 		}
 
 		if (moduleClass == null)
 		{
-			throw new ModuleException(
-					"Module class has not been assigned", moduleName);
+			throw new ModuleException("Module class has not been assigned", moduleName);
 		}
-		
+
 		if (!CTCommonModule.class.isAssignableFrom(moduleClass))
 		{
-			throw new ModuleException(
-					"Module " + moduleClass + " does not implement interface CTCommonModule", moduleName);
+			throw new ModuleException("Module " + moduleClass + " does not implement interface CTCommonModule",
+					moduleName);
 		}
 
 		try
 		{
-			CTCommonModule module = (CTCommonModule) moduleClass.newInstance();
-			INCRE.instance().addModuleByName(this.moduleName, module);
-			
+			CTCommonModule module = moduleClass.newInstance();
+			INCRE.instance().addModuleByName(moduleName, module);
+
 			resources.inject(module);
 
-			INCRETimer timer = INCRE.instance().getReporter().openProcess(
-					moduleName, moduleName, INCRETimer.TYPE_ALL);
-			
+			INCRETimer timer = INCRE.instance().getReporter().openProcess(moduleName, moduleName, INCRETimer.TYPE_ALL);
+
 			module.run(resources);
 			timer.stop();
-			
+
 			resources.extract(module);
 		}
 		catch (InstantiationException e)
 		{
-			throw new ModuleException(
-					"Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
+			throw new ModuleException("Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
 					"INCRE running " + moduleName);
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new ModuleException(
-					"Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
+			throw new ModuleException("Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
 					"INCRE running " + moduleName);
 		}
 		catch (ResourceException e)
 		{
-			throw new ModuleException(
-					"Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
+			throw new ModuleException("Could not create an instance of '" + moduleClass + "': " + e.getMessage(),
 					"INCRE running " + moduleName);
 		}
 	}

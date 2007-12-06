@@ -24,7 +24,7 @@ import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * This Compose* module checks whether the used filter types can acutally be
@@ -36,12 +36,14 @@ public class FITER implements CTCommonModule
 {
 	public static final String MODULE_NAME = "FITER";
 
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
 	public FITER()
 	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Verifying Filter Types...");
+		logger.info("Verifying Filter Types...");
 		List<LegacyCustomFilterType> customfilters = getCustomFilterTypes();
 		resolveCustomFilterTypes(customfilters);
 	}
@@ -50,7 +52,7 @@ public class FITER implements CTCommonModule
 	{
 		List<LegacyCustomFilterType> customfilters = new ArrayList<LegacyCustomFilterType>();
 		DataStore ds = DataStore.instance();
-		Iterator it = ds.getAllInstancesOf(LegacyCustomFilterType.class);
+		Iterator<LegacyCustomFilterType> it = ds.getAllInstancesOf(LegacyCustomFilterType.class);
 		while (it.hasNext())
 		{
 			LegacyCustomFilterType type = (LegacyCustomFilterType) it.next();
@@ -71,31 +73,27 @@ public class FITER implements CTCommonModule
 			if (ur != null && ur.singleValue() != null)
 			{
 				ProgramElement filterType = ur.singleValue();
-				Set allFilterTypes = getChildsofClass(filterType);
-				for (Object obj : allFilterTypes)
+				Set<ProgramElement> allFilterTypes = getChildsofClass(filterType);
+				for (ProgramElement customFilterType : allFilterTypes)
 				{
-					if (obj instanceof ProgramElement)
+					for (LegacyCustomFilterType ftype : working)
 					{
-						ProgramElement customFilterType = (ProgramElement) obj;
-						for (LegacyCustomFilterType ftype : working)
+						if (customFilterType.getUnitName().indexOf('.') < 0)
 						{
-							if (customFilterType.getUnitName().indexOf('.') < 0)
+							if (customFilterType.getUnitName().endsWith(ftype.getName()))
 							{
-								if (customFilterType.getUnitName().endsWith(ftype.getName()))
-								{
-									Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Resolved filter type: "
-											+ ftype.getName() + " to " + customFilterType.getUnitName());
-									result.remove(ftype);
-								}
+								logger.info("Resolved filter type: " + ftype.getName() + " to "
+										+ customFilterType.getUnitName());
+								result.remove(ftype);
 							}
-							else
+						}
+						else
+						{
+							if (customFilterType.getUnitName().endsWith("." + ftype.getName()))
 							{
-								if (customFilterType.getUnitName().endsWith("." + ftype.getName()))
-								{
-									Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Resolved filter type: "
-											+ ftype.getName() + " to " + customFilterType.getUnitName());
-									result.remove(ftype);
-								}
+								logger.info("Resolved filter type: " + ftype.getName() + " to "
+										+ customFilterType.getUnitName());
+								result.remove(ftype);
 							}
 						}
 					}
@@ -104,7 +102,7 @@ public class FITER implements CTCommonModule
 		}
 		for (LegacyCustomFilterType ftype : result)
 		{
-			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Unable to resolve filter type:" + ftype.getName() + "!");
+			logger.error("Unable to resolve filter type:" + ftype.getName() + "!");
 		}
 
 		if (!result.isEmpty())

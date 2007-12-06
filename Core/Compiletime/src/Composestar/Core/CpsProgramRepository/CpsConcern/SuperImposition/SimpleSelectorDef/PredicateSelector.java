@@ -8,10 +8,10 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
@@ -420,7 +420,7 @@ public class PredicateSelector extends SimpleSelExpression
 	 * @param methodname - Name of method
 	 * @param params - List of method parameters
 	 */
-	public void addTYMInfo(String type, String methodname, ArrayList params)
+	public void addTYMInfo(String type, String methodname, List params)
 	{
 		try
 		{
@@ -460,7 +460,7 @@ public class PredicateSelector extends SimpleSelExpression
 	 * @param methodname - Name of a method
 	 * @param params - List of method parameters
 	 */
-	public void addTYMInfo(ProgramElement unit, String methodname, ArrayList params)
+	public void addTYMInfo(ProgramElement unit, String methodname, List params)
 	{
 
 		if (unit.getUnitType().equals("Annotation"))

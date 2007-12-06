@@ -321,7 +321,7 @@ public class LowLevelInliner
 		resourceOperations = null;
 		while (iterator.hasNext())
 		{
-			state = (ExecutionState) iterator.next();
+			state = iterator.next();
 			if (isFilter.isTrue(state))
 			{
 				FilterBlock block = identifyFilterBlock(state);
@@ -354,10 +354,8 @@ public class LowLevelInliner
 		fmCond.filterModuleConditionState = state;
 
 		// Find true-exit and false-exit
-		Iterator transitionIter = state.getOutTransitions();
-		while (transitionIter.hasNext())
+		for (ExecutionTransition transition : state.getOutTransitionsEx())
 		{
-			ExecutionTransition transition = (ExecutionTransition) transitionIter.next();
 			if (transition.getFlowTransition().getType() == FlowTransition.FLOW_TRUE_TRANSITION)
 			{
 				fmCond.trueExit = transition.getEndState();

@@ -2,6 +2,7 @@ package Composestar.Core.INCRE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
 
@@ -23,9 +24,10 @@ public class FileDependency extends Dependency
 	/**
 	 * @roseuid 420A24BF0138
 	 */
+	@Override
 	public Object getDepObject(Object obj) throws ModuleException
 	{
-		ArrayList files = new ArrayList();
+		List<String> files = new ArrayList<String>();
 		Object dep = obj;
 
 		if (!mypath.isEmpty())
@@ -36,7 +38,7 @@ public class FileDependency extends Dependency
 		if (dep.getClass().equals(String.class))
 		{
 			String filename = ((String) dep).replaceAll("\"", "");
-			files = new ArrayList(Arrays.asList(filename.split(",")));
+			files = new ArrayList<String>(Arrays.asList(filename.split(",")));
 		}
 		else if (dep.getClass().equals(ArrayList.class))
 		{
@@ -52,11 +54,11 @@ public class FileDependency extends Dependency
 
 	public void setIsAdded(boolean b)
 	{
-		this.isAdded = b;
+		isAdded = b;
 	}
 
 	public boolean isAdded()
 	{
-		return this.isAdded;
+		return isAdded;
 	}
 }

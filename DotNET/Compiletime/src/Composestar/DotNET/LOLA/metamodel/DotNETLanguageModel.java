@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.MethodNode;
@@ -589,7 +590,7 @@ public class DotNETLanguageModel extends LanguageModel
 	public HashMap getPathOfUnitRelations(String from, String to)
 	{
 		HashMap relations = new HashMap();
-		ArrayList params = new ArrayList();
+		List params = new ArrayList();
 		MethodNode m = new MethodNode("getUnitRelation");
 
 		try

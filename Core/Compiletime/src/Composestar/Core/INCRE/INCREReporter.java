@@ -6,14 +6,17 @@ import java.io.FileWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class INCREReporter
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(INCRE.MODULE_NAME);
+
 	private BufferedWriter writer, writer2;
 
 	private StringBuffer buffer, buffer2;
@@ -21,7 +24,7 @@ public class INCREReporter
 	private String cssFile;
 
 	// private String reportFile;
-	private LinkedHashMap timings;
+	private Map<String, List<INCRETimer>> timings;
 
 	private long timeStart, timeEnd, totalElapsed;
 
@@ -45,7 +48,7 @@ public class INCREReporter
 		}
 		else
 		{
-			Debug.out(Debug.MODE_WARNING, "INCRE", "Could not find stylesheet for INCRE reporter: " + cssFile);
+			logger.warn("Could not find stylesheet for INCRE reporter: " + cssFile);
 		}
 
 		// String reportFile = resources.getProperty("TempFolder") +
@@ -63,22 +66,22 @@ public class INCREReporter
 		}
 		catch (Exception e)
 		{
-			Debug.out(Debug.MODE_WARNING, "INCRE", "INCRE report file creation failed (" + reportFile + ')');
+			logger.warn("INCRE report file creation failed (" + reportFile + ')');
 		}
 
 		buffer = new StringBuffer();
 		buffer2 = new StringBuffer();
-		timings = new LinkedHashMap();
+		timings = new HashMap<String, List<INCRETimer>>();
 	}
 
 	public void addTimer(INCRETimer timer)
 	{
 		String key = timer.getModule();
-		ArrayList list = new ArrayList();
+		List<INCRETimer> list = new ArrayList<INCRETimer>();
 
 		if (timings.containsKey(key))
 		{
-			list = (ArrayList) timings.get(key);
+			list = timings.get(key);
 		}
 
 		list.add(timer);
@@ -90,13 +93,11 @@ public class INCREReporter
 
 		long total = 0;
 
-		if (this.timings.containsKey(module))
+		if (timings.containsKey(module))
 		{
-			ArrayList list = (ArrayList) timings.get(module);
-			Iterator timerItr = list.iterator();
-			for (Object aList : list)
+			List<INCRETimer> list = timings.get(module);
+			for (INCRETimer timer : list)
 			{
-				INCRETimer timer = (INCRETimer) aList;
 				if (timer.getType() == type)
 				{
 					total += timer.getElapsed();
@@ -116,7 +117,7 @@ public class INCREReporter
 
 		buffer.append("<html><head><title>INCRE Report</title></head>");
 		buffer.append("<link rel=stylesheet href=");
-		buffer.append("\"file://").append(this.cssFile).append('\"');
+		buffer.append("\"file://").append(cssFile).append('\"');
 		buffer.append(" type=\"text/css\">");
 		buffer.append("<body bgcolor=#EEEEEE><b>INCRE REPORT</b><br><b>Date: </b>").append(new Date().toString())
 				.append("<br><b>Project:</b> ").append(".").append(
@@ -139,7 +140,7 @@ public class INCREReporter
 
 		INCRETimer timer = new INCRETimer(name, description, verifiedtype);
 		timer.start();
-		this.addTimer(timer);
+		addTimer(timer);
 		return timer;
 	}
 
@@ -150,11 +151,9 @@ public class INCREReporter
 		totalElapsed = timeEnd - timeStart;
 
 		// append all timings
-		Iterator modules = timings.keySet().iterator();
-		for (Object o : timings.keySet())
+		for (String modulename : timings.keySet())
 		{
-			String modulename = (String) o;
-			ArrayList moduletimings = (ArrayList) timings.get(modulename);
+			List<INCRETimer> moduletimings = timings.get(modulename);
 
 			// append header
 			buffer.append("<tr class=startmodulerow><td><b>");
@@ -167,11 +166,8 @@ public class INCREReporter
 			buffer2.append(":");
 
 			// append timings of processes
-			Iterator timerItr = moduletimings.iterator();
-			for (Object moduletiming : moduletimings)
+			for (INCRETimer timer : moduletimings)
 			{
-				INCRETimer timer = (INCRETimer) moduletiming;
-
 				if (timer.getType() != INCRETimer.TYPE_ALL)
 				{
 					buffer.append("<tr class=white><td>");
@@ -185,9 +181,9 @@ public class INCREReporter
 			}
 
 			// append summary of module
-			long incremental = this.getTotalForModule(modulename, INCRETimer.TYPE_INCREMENTAL);
-			long overhead = this.getTotalForModule(modulename, INCRETimer.TYPE_OVERHEAD);
-			long elapsed = this.getTotalForModule(modulename, INCRETimer.TYPE_ALL);
+			long incremental = getTotalForModule(modulename, INCRETimer.TYPE_INCREMENTAL);
+			long overhead = getTotalForModule(modulename, INCRETimer.TYPE_OVERHEAD);
+			long elapsed = getTotalForModule(modulename, INCRETimer.TYPE_ALL);
 			long normal = elapsed - incremental - overhead;
 
 			buffer.append("<tr class=endmodulerow><td align=right>Total Overhead</td><td></td><td>");
@@ -205,7 +201,10 @@ public class INCREReporter
 			buffer2.append('\n');
 			buffer.append("	ms (");
 			double percentage = 0.0;
-			if (totalElapsed > 0) percentage = ((double) elapsed * 100d / (double) totalElapsed);
+			if (totalElapsed > 0)
+			{
+				percentage = (elapsed * 100d / totalElapsed);
+			}
 			BigDecimal percDec = new BigDecimal(percentage);
 			percDec = percDec.setScale(1, BigDecimal.ROUND_HALF_UP);
 			buffer.append(percDec.toString());

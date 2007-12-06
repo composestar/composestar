@@ -1,9 +1,11 @@
 package Composestar.Core.INCRE;
 
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class ConfigNode extends Node
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(INCRE.MODULE_NAME);
+
 	private static final long serialVersionUID = 1676465661039216621L;
 
 	public ConfigNode(String objectref)
@@ -15,6 +17,7 @@ public class ConfigNode extends Node
 	 * @return the referenced configuration object
 	 * @param Object obj
 	 */
+	@Override
 	public Object visit(Object obj)
 	{
 		try
@@ -23,7 +26,7 @@ public class ConfigNode extends Node
 			String config = incre.getConfiguration(reference);
 			if (config.length() == 0)
 			{
-				Debug.out(Debug.MODE_DEBUG, "INCRE", "INCRE::ConfigNode EMPTY value for configuration " + reference);
+				logger.debug("INCRE::ConfigNode EMPTY value for configuration " + reference);
 				return "EMPTY_CONFIG";
 			}
 			else
@@ -34,8 +37,7 @@ public class ConfigNode extends Node
 		}
 		catch (Exception excep)
 		{
-			Debug.out(Debug.MODE_WARNING, "INCRE", "Cannot find value for config node " + reference + " due to "
-					+ excep.getMessage());
+			logger.warn("Cannot find value for config node " + reference + " due to " + excep.getMessage());
 			return null;
 		}
 	}
@@ -43,8 +45,9 @@ public class ConfigNode extends Node
 	/**
 	 * @return an unique id for a referenced configuration
 	 */
+	@Override
 	public String getUniqueID(Object obj)
 	{
-		return this.reference;
+		return reference;
 	}
 }

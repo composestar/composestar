@@ -1,7 +1,7 @@
 package Composestar.Core.INCRE.Config;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -9,8 +9,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.INCRE.FieldNode;
-import Composestar.Core.INCRE.MethodNode;
 import Composestar.Core.INCRE.INCREModule;
+import Composestar.Core.INCRE.MethodNode;
 import Composestar.Core.INCRE.Node;
 import Composestar.Core.INCRE.Path;
 
@@ -24,44 +24,46 @@ public class ComparisonsPathHandler extends DefaultHandler
 
 	private TypeHandler returnhandler;
 
-	private ArrayList nodes;
+	private List<Node> nodes;
 
-	public ComparisonsPathHandler(XMLReader inReader, INCREModule inModule, String inFullname, TypeHandler inReturnhandler)
+	public ComparisonsPathHandler(XMLReader inReader, INCREModule inModule, String inFullname,
+			TypeHandler inReturnhandler)
 	{
 		reader = inReader;
 		module = inModule;
 		fullname = inFullname;
 		returnhandler = inReturnhandler;
-		nodes = new ArrayList();
+		nodes = new ArrayList<Node>();
 	}
 
+	@Override
 	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
 		if (qName.equalsIgnoreCase("method"))
 		{
 			String methodname = amap.getValue("name");
 			MethodNode method = new MethodNode(methodname);
-			this.nodes.add(method);
+			nodes.add(method);
 		}
 		else if (qName.equalsIgnoreCase("field"))
 		{
 			String fieldname = amap.getValue("name");
 			FieldNode field = new FieldNode(fieldname);
-			this.nodes.add(field);
+			nodes.add(field);
 		}
 	}
 
+	@Override
 	public void endElement(String uri, String localName, String qName)
 	{
 		// next type between <comparisons> tags
 		if (qName.equalsIgnoreCase("path"))
 		{
 			Path path = new Path();
-			Iterator nodesIt = nodes.iterator();
 
-			for (Object node : nodes)
+			for (Node node : nodes)
 			{
-				path.addNode((Node) node);
+				path.addNode(node);
 			}
 
 			module.addComparableObject(fullname, path);

@@ -19,18 +19,19 @@ import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Source;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
+import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.Config.ConfigManager;
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CompileHistory;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -39,7 +40,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * run. This decision is based on the history which is being loaded and stored
  * by INCRE. This class is the heart of the incremental compilation process.
  */
-public final class INCRE
+public final class INCRE implements CTCommonModule
 {
 	public static final String MODULE_NAME = "INCRE";
 
@@ -71,17 +72,13 @@ public final class INCRE
 
 	private Map<String, Boolean> filesCheckedOnTimeStamp;
 
-	private Map<String, Boolean> filesCheckedOnProjectConfig;
-
 	private Map<String, CTCommonModule> modulesByName;
-
-	public Map externalSourcesBySource;
 
 	private Map<String, List<RepositoryEntity>> dsObjectsOrdered;
 
-	private Map historyObjectsOrdered;
+	private Map<String, List<RepositoryEntity>> historyObjectsOrdered;
 
-	private List historyTypes;
+	private List<PlatformRepresentation> historyTypes;
 
 	private List<Concern> currentConcernsWithFMO;
 
@@ -91,8 +88,6 @@ public final class INCRE
 
 	private List<Concern> historyConcernsWithModifiedSignatures;
 
-	private String projectSources;
-
 	private ModuleInfo moduleInfo;
 
 	private File historyFile;
@@ -101,10 +96,7 @@ public final class INCRE
 	{
 		moduleInfo = ModuleInfoManager.get(INCRE.class);
 		filesCheckedOnTimeStamp = new HashMap<String, Boolean>();
-		filesCheckedOnProjectConfig = new HashMap<String, Boolean>();
 		dsObjectsOrdered = new HashMap<String, List<RepositoryEntity>>();
-		historyObjectsOrdered = new HashMap();
-		externalSourcesBySource = new HashMap();
 		configurations = new INCREConfigurations();
 		modulesByName = new HashMap<String, CTCommonModule>();
 	}
@@ -145,8 +137,8 @@ public final class INCRE
 		loadConfiguration(getConfigFile());
 
 		// get the filenames of all sources
-		List sourceFilenames = getSourceFilenames();
-		projectSources = StringUtils.join(sourceFilenames, ",");
+		// List sourceFilenames = getSourceFilenames();
+		// projectSources = StringUtils.join(sourceFilenames, ",");
 
 		// TODO reneable
 		// enabled = historyFile.exists();
@@ -241,7 +233,7 @@ public final class INCRE
 
 	private void loadConfiguration(InputStream configfile) throws ModuleException
 	{
-		INCRETimer increparse = this.getReporter().openProcess(MODULE_NAME, "Parsing configuration file",
+		INCRETimer increparse = getReporter().openProcess(MODULE_NAME, "Parsing configuration file",
 				INCRETimer.TYPE_OVERHEAD);
 		try
 		{
@@ -301,7 +293,7 @@ public final class INCRE
 		return currentRepository;
 	}
 
-	public List getConcernsWithFMO()
+	public List<Concern> getConcernsWithFMO()
 	{
 		if (searchingHistory)
 		{
@@ -321,10 +313,10 @@ public final class INCRE
 		}
 
 		List<Concern> concerns = new ArrayList<Concern>();
-		Iterator concernIt = currentRepository.getAllInstancesOf(Concern.class);
+		Iterator<Concern> concernIt = currentRepository.getAllInstancesOf(Concern.class);
 		while (concernIt.hasNext())
 		{
-			Concern c = (Concern) concernIt.next();
+			Concern c = concernIt.next();
 			if (c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null)
 			{
 				concerns.add(c);
@@ -374,13 +366,13 @@ public final class INCRE
 		}
 
 		List<Concern> concerns = new ArrayList<Concern>();
-		Iterator iterConcerns = currentRepository.getAllInstancesOf(Concern.class);
+		Iterator<Concern> iterConcerns = currentRepository.getAllInstancesOf(Concern.class);
 		while (iterConcerns.hasNext())
 		{
-			Concern c = (Concern) iterConcerns.next();
+			Concern c = iterConcerns.next();
 			Signature signature = c.getSignature();
-			List added = signature.getMethods(MethodWrapper.ADDED);
-			List removed = signature.getMethods(MethodWrapper.REMOVED);
+			List<MethodInfo> added = signature.getMethods(MethodWrapper.ADDED);
+			List<MethodInfo> removed = signature.getMethods(MethodWrapper.REMOVED);
 			if (!added.isEmpty() || !removed.isEmpty())
 			{
 				concerns.add(c);
@@ -409,32 +401,32 @@ public final class INCRE
 		return concerns;
 	}
 
-	public List getHistoryTypes()
+	public List<PlatformRepresentation> getHistoryTypes()
 	{
 		if (historyTypes != null) /* set before */
 		{
 			return historyTypes;
 		}
 
-		historyTypes = new ArrayList();
-		Iterator iterConcerns = history.getDataStore().getAllInstancesOf(PrimitiveConcern.class);
+		historyTypes = new ArrayList<PlatformRepresentation>();
+		Iterator<PrimitiveConcern> iterConcerns = history.getDataStore().getAllInstancesOf(PrimitiveConcern.class);
 		while (iterConcerns.hasNext())
 		{
-			PrimitiveConcern pc = (PrimitiveConcern) iterConcerns.next();
+			PrimitiveConcern pc = iterConcerns.next();
 			historyTypes.add(pc.getPlatformRepresentation());
 		}
 
 		return historyTypes;
 	}
 
-	public Iterator getAllInstancesOfOrdered(Class c)
+	public Iterator<RepositoryEntity> getAllInstancesOfOrdered(Class<? extends RepositoryEntity> c)
 	{
 		if (searchingHistory)
 		{
 			// if set before, return it
 			if (historyObjectsOrdered.containsKey(c.getName()))
 			{
-				return ((List) historyObjectsOrdered.get(c.getName())).iterator();
+				return historyObjectsOrdered.get(c.getName()).iterator();
 			}
 		}
 		else
@@ -442,7 +434,7 @@ public final class INCRE
 			// if set before, return it
 			if (dsObjectsOrdered.containsKey(c.getName()))
 			{
-				return ((List) dsObjectsOrdered.get(c.getName())).iterator();
+				return dsObjectsOrdered.get(c.getName()).iterator();
 			}
 		}
 
@@ -565,7 +557,7 @@ public final class INCRE
 	{
 		if (filesCheckedOnTimeStamp.containsKey(filename))
 		{
-			return (Boolean) filesCheckedOnTimeStamp.get(filename);
+			return filesCheckedOnTimeStamp.get(filename);
 		}
 		else
 		{
@@ -914,12 +906,12 @@ public final class INCRE
 			throw new ModuleException("Could not find class " + mod.getInput(), "INCRE::isProcessedByModule");
 		}
 
-		Iterator dependencies = mod.getDeps();
+		Iterator<Composestar.Core.INCRE.Dependency> dependencies = mod.getDeps();
 		while (dependencies.hasNext())
 		{
 			currentRepository = DataStore.instance();
 			searchingHistory = false;
-			Composestar.Core.INCRE.Dependency dep = (Composestar.Core.INCRE.Dependency) dependencies.next();
+			Composestar.Core.INCRE.Dependency dep = dependencies.next();
 			try
 			{
 				depofinputobject = dep.getDepObject(input);
@@ -937,13 +929,13 @@ public final class INCRE
 				// check if file(s) have been modified
 				// stop process when a file has been modified
 				FileDependency fdep = (FileDependency) dep;
-				List files = (List) depofinputobject;
+				List<String> files = (List<String>) depofinputobject;
 				if (!files.isEmpty() && files.get(0).equals("EMPTY_CONFIG"))
 				{
 					// special case, file has not been configured
 					currentRepository = history.getDataStore();
 					searchingHistory = true;
-					List hfiles = (List) dep.getDepObject(input);
+					List<String> hfiles = (List<String>) dep.getDepObject(input);
 					if (!hfiles.get(0).equals("EMPTY_CONFIG"))
 					{
 						// configuration has been removed since last compilation
@@ -956,9 +948,8 @@ public final class INCRE
 				else
 				{
 					// iterate over all files
-					for (Object file : files)
+					for (String currentFile : files)
 					{
-						String currentFile = (String) file;
 						if (fdep.isAdded() && isFileAdded(currentFile, fdep))
 						{
 							// check files for added to project or not
@@ -1070,5 +1061,10 @@ public final class INCRE
 				historyFile.delete();
 			}
 		}
+	}
+
+	public void run(CommonResources resources) throws ModuleException
+	{
+		throw new UnsupportedOperationException("INCRE is not an actual CTCommonModule");
 	}
 }

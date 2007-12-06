@@ -24,6 +24,7 @@ public class DependencyHandler extends DefaultHandler
 		returnhandler = inReturnhandler;
 	}
 
+	@Override
 	public void startElement(String uri, String localName, String qName, Attributes amap) throws SAXException
 	{
 		if (qName.equalsIgnoreCase("dependency"))
@@ -74,11 +75,12 @@ public class DependencyHandler extends DefaultHandler
 		else if (qName.equalsIgnoreCase("comparisons"))
 		{
 			// look further in the xml file, between <comparisons> tags
-			ComparisonsHandler comphandler = new ComparisonsHandler(reader, this.module, this);
+			ComparisonsHandler comphandler = new ComparisonsHandler(reader, module, this);
 			reader.setContentHandler(comphandler);
 		}
 	}
 
+	@Override
 	public void endElement(String uri, String localName, String qName)
 	{
 		if (qName.equalsIgnoreCase("dependencies"))

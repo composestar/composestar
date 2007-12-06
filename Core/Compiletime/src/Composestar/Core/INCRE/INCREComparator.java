@@ -2,24 +2,24 @@ package Composestar.Core.INCRE;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.AbstractList;
-import java.util.AbstractSet;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class INCREComparator
 {
-	protected HashMap myFields = new HashMap();
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(INCRE.MODULE_NAME + ".Comparator");
 
-	protected HashMap comparisons = new HashMap();
+	protected Map<Class<?>, List<Field>> myFields = new HashMap<Class<?>, List<Field>>();
+
+	protected Map<String, Boolean> comparisons = new HashMap<String, Boolean>();
 
 	protected String module;
 
@@ -78,15 +78,15 @@ public class INCREComparator
 				// easy case
 				return a.equals(b);
 			}
-			else if (a instanceof AbstractList)
+			else if (a instanceof List)
 			{
 				// compare abstract list
-				return compareAbstractLists((AbstractList) a, (AbstractList) b);
+				return compareAbstractLists((List<Object>) a, (List<Object>) b);
 			}
-			else if (a instanceof HashSet)
+			else if (a instanceof Set)
 			{
 				// compare HashSets
-				return compareAbstractSets((HashSet) a, (HashSet) b);
+				return compareAbstractSets((Set<Object>) a, (Set<Object>) b);
 			}
 			else
 			{
@@ -101,10 +101,10 @@ public class INCREComparator
 				else
 				{
 					// iterate over all public fields
-					Enumeration enumFields = getFields(a.getClass()).elements();
-					while (enumFields.hasMoreElements())
+					Iterator<Field> enumFields = getFields(a.getClass()).iterator();
+					while (enumFields.hasNext())
 					{
-						Field field = (Field) enumFields.nextElement();
+						Field field = enumFields.next();
 
 						try
 						{
@@ -135,7 +135,7 @@ public class INCREComparator
 	 * @param a1
 	 * @param a2
 	 */
-	public boolean compareAbstractLists(AbstractList a1, AbstractList a2) throws ModuleException
+	public boolean compareAbstractLists(List<Object> a1, List<Object> a2) throws ModuleException
 	{
 		if (a1.size() != a2.size()) // compare sizes first
 		{
@@ -165,7 +165,7 @@ public class INCREComparator
 	 * @param s2
 	 * @param s1
 	 */
-	public boolean compareAbstractSets(AbstractSet s1, AbstractSet s2) throws ModuleException
+	public boolean compareAbstractSets(Set<Object> s1, Set<Object> s2) throws ModuleException
 	{
 		if (s1.size() != s2.size()) // compare sizes first
 		{
@@ -174,8 +174,8 @@ public class INCREComparator
 		else
 		{// compare all objects in the HashSet
 
-			Iterator iter1 = s1.iterator();
-			Iterator iter2 = s2.iterator();
+			Iterator<Object> iter1 = s1.iterator();
+			Iterator<Object> iter2 = s2.iterator();
 			while (iter1.hasNext())
 			{
 				Object obj1 = iter1.next();
@@ -196,16 +196,16 @@ public class INCREComparator
 	 * @return
 	 * @param c
 	 */
-	public Vector getFields(Class c)
+	public List<Field> getFields(Class<?> c)
 	{
 		if (myFields.containsKey(c))
 		{
-			return (Vector) myFields.get(c);
+			return myFields.get(c);
 		}
 
-		Vector fields = new Vector();
-		Stack stack = new Stack();
-		Class myClass = c;
+		List<Field> fields = new Vector<Field>();
+		Stack<Class<?>> stack = new Stack<Class<?>>();
+		Class<?> myClass = c;
 		// while( !myClass.equals(Object.class) )
 		// {
 		stack.push(myClass);
@@ -214,7 +214,7 @@ public class INCREComparator
 
 		while (!stack.empty())
 		{
-			myClass = (Class) stack.pop();
+			myClass = stack.pop();
 			Field[] declaredFields = myClass.getDeclaredFields();
 			for (Field declaredField : declaredFields)
 			{
@@ -251,7 +251,7 @@ public class INCREComparator
 		}
 		else
 		{
-			Debug.out(Debug.MODE_DEBUG, "INCRE::Comparator", "Key of comparison is null!");
+			logger.debug("Key of comparison is null!");
 		}
 	}
 
@@ -272,14 +272,14 @@ public class INCREComparator
 	 */
 	public boolean getComparison(String id)
 	{
-		return (Boolean) comparisons.get(id);
+		return comparisons.get(id);
 	}
 
 	public boolean hasComparableObjects(Object obj)
 	{
 		String fullname = obj.getClass().getName();
 		INCRE incre = INCRE.instance();
-		INCREModule m = incre.getConfigManager().getModuleByID(this.module);
+		INCREModule m = incre.getConfigManager().getModuleByID(module);
 
 		return m.hasComparableObjects(fullname);
 	}
@@ -297,8 +297,8 @@ public class INCREComparator
 		{
 			INCRE incre = INCRE.instance();
 			String fullname = a.getClass().getName();
-			INCREModule m = incre.getConfigManager().getModuleByID(this.module);
-			ArrayList compObjects = m.getComparableObjects(fullname);
+			INCREModule m = incre.getConfigManager().getModuleByID(module);
+			List<Object> compObjects = m.getComparableObjects(fullname);
 			boolean equal;
 			String key = null;
 

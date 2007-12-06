@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.MethodNode;
@@ -527,8 +528,8 @@ public class JavaLanguageModel extends LanguageModel
 					{
 						JavaParameterInfo paramInfo = (JavaParameterInfo) param;
 						paramInfo.setParent(method); // Have to set this, so
-														// we can later skip
-														// this unit altogether
+						// we can later skip
+						// this unit altogether
 					}
 				}
 			}
@@ -595,7 +596,7 @@ public class JavaLanguageModel extends LanguageModel
 	public HashMap getPathOfUnitRelations(String from, String to)
 	{
 		HashMap relations = new HashMap();
-		ArrayList params = new ArrayList();
+		List params = new ArrayList();
 		MethodNode m = new MethodNode("getUnitRelation");
 
 		try
@@ -669,7 +670,7 @@ public class JavaLanguageModel extends LanguageModel
 		while (!lostMatch && !namespace.equals(currNS.getUnitName()))
 		{
 			lostMatch = true; // assume we are not going to find a child that
-								// matches
+			// matches
 			UnitResult children = currNS.getUnitRelation("ChildNamespaces");
 			for (Object o : children.multiValue())
 			{
@@ -698,7 +699,7 @@ public class JavaLanguageModel extends LanguageModel
 					// While there are more parts, determine where this one
 					// ends, and add it to the dictionary.
 					int pos = nsToAdd.indexOf('.');
-					if (pos < 0) 
+					if (pos < 0)
 					{
 						pos = nsToAdd.length();
 					}
@@ -714,12 +715,12 @@ public class JavaLanguageModel extends LanguageModel
 						{
 							nsToAdd = nsToAdd.substring(pos + 1);
 							pos = nsToAdd.indexOf('.');
-							if (pos < 0) 
+							if (pos < 0)
 							{
 								pos = nsToAdd.length();
 							}
 						}
-						else 
+						else
 						{
 							pos = -1;
 						}

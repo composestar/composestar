@@ -53,7 +53,7 @@ public class ConfigManager
 		SAXParserFactory saxFactory = SAXParserFactory.newInstance();
 		saxFactory.setNamespaceAware(true);
 		xmlreader = saxFactory.newSAXParser().getXMLReader();
-		xmlreader.setContentHandler(this.xmlparser);
+		xmlreader.setContentHandler(xmlparser);
 
 		xmlreader.parse(new InputSource(is));
 	}

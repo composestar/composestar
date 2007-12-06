@@ -100,6 +100,6 @@ public class INCREConfigurations
 
 	public Properties getHistory()
 	{
-		return this.history;
+		return history;
 	}
 }

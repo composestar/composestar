@@ -15,6 +15,7 @@ public class FieldNode extends Node
 	 * @return the referenced field of the input object (obj)
 	 * @param Object obj
 	 */
+	@Override
 	public Object visit(Object obj)
 	{
 		try
@@ -44,8 +45,9 @@ public class FieldNode extends Node
 	/**
 	 * @return an unique id for a referenced field
 	 */
+	@Override
 	public String getUniqueID(Object obj)
 	{
-		return obj.hashCode() + "." + this.reference;
+		return obj.hashCode() + "." + reference;
 	}
 }

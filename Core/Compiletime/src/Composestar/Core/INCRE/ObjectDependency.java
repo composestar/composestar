@@ -11,6 +11,7 @@ public class ObjectDependency extends Dependency
 		super(name);
 	}
 
+	@Override
 	public Object getDepObject(Object obj) throws ModuleException
 	{
 		// follow the path and return final object

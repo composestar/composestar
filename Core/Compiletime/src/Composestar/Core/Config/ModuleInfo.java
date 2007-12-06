@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.INCRE.INCREModule;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -48,7 +49,7 @@ public class ModuleInfo implements Serializable
 	/**
 	 * The class of the module
 	 */
-	protected Class<?> moduleClass;
+	protected Class<? extends CTCommonModule> moduleClass;
 
 	/**
 	 * Human-readable name of the module
@@ -112,12 +113,12 @@ public class ModuleInfo implements Serializable
 		id = moduleId.trim();
 	}
 
-	public Class<?> getModuleClass()
+	public Class<? extends CTCommonModule> getModuleClass()
 	{
 		return moduleClass;
 	}
 
-	public void setModuleClass(Class<?> cls)
+	public void setModuleClass(Class<? extends CTCommonModule> cls)
 	{
 		if (cls == null)
 		{
@@ -138,7 +139,15 @@ public class ModuleInfo implements Serializable
 		}
 		try
 		{
-			setModuleClass(Class.forName(cls.trim()));
+			Class<?> clazz = Class.forName(cls.trim());
+			if (CTCommonModule.class.isAssignableFrom(clazz))
+			{
+				setModuleClass((Class<? extends CTCommonModule>) clazz);
+			}
+			else
+			{
+				throw new IllegalArgumentException(String.format("%s does not implement CTCommonModule", cls));
+			}
 		}
 		catch (ClassNotFoundException e)
 		{

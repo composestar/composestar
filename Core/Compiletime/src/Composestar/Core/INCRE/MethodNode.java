@@ -3,7 +3,6 @@ package Composestar.Core.INCRE;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
@@ -12,12 +11,12 @@ public class MethodNode extends Node
 {
 	private static final long serialVersionUID = -2857249370031652021L;
 
-	private List parameters;
+	private List<String> parameters;
 
 	public MethodNode(String ref)
 	{
 		super(ref);
-		parameters = new ArrayList();
+		parameters = new ArrayList<String>();
 	}
 
 	/**
@@ -26,6 +25,7 @@ public class MethodNode extends Node
 	 * @return object returned by the called method
 	 * @param Object obj
 	 */
+	@Override
 	public Object visit(Object obj) throws ModuleException
 	{
 		try
@@ -37,8 +37,8 @@ public class MethodNode extends Node
 				// reference => FULLNAME_OF_CLASS.NAME_OF_METHOD
 				String fullclassname = reference.substring(0, reference.lastIndexOf('.'));
 				String methodname = reference.substring(reference.lastIndexOf('.') + 1);
-				Class myclass = Class.forName(fullclassname);
-				Class[] paramclasses = { obj.getClass() };
+				Class<?> myclass = Class.forName(fullclassname);
+				Class<?>[] paramclasses = { obj.getClass() };
 				mymethod = myclass.getMethod(methodname, paramclasses);
 				Object[] paramobjects = { obj };
 				return mymethod.invoke(myclass.newInstance(), paramobjects);
@@ -66,25 +66,25 @@ public class MethodNode extends Node
 		}
 	}
 
-	public void setParameters(ArrayList params)
+	public void setParameters(List<String> params)
 	{
-		this.parameters = params;
+		parameters = params;
 	}
 
-	public List getParameters()
+	public List<String> getParameters()
 	{
-		return this.parameters;
+		return parameters;
 	}
 
-	public Class[] getParameterTypes()
+	public Class<?>[] getParameterTypes()
 	{
 
 		try
 		{
-			if (!this.parameters.isEmpty())
+			if (!parameters.isEmpty())
 			{
-				Class[] classes = new Class[this.parameters.size()];
-				for (int i = 0; i < this.parameters.size(); i++)
+				Class<?>[] classes = new Class[parameters.size()];
+				for (int i = 0; i < parameters.size(); i++)
 				{
 					Object obj = parameters.get(i);
 					classes[i] = obj.getClass();
@@ -103,17 +103,17 @@ public class MethodNode extends Node
 	/**
 	 * @return an unique id for a referenced method
 	 */
+	@Override
 	public String getUniqueID(Object obj)
 	{
 		StringBuffer uniqueID = new StringBuffer(obj.hashCode());
 		uniqueID.append(".");
-		uniqueID.append(this.reference);
+		uniqueID.append(reference);
 		if (!parameters.isEmpty())
 		{
-			Iterator params = parameters.iterator();
-			for (Object parameter : parameters)
+			for (String parameter : parameters)
 			{
-				uniqueID.append((String) parameter);
+				uniqueID.append(parameter);
 			}
 		}
 		return uniqueID.toString();

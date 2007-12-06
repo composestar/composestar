@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import Composestar.Core.RepositoryImplementation.DataStore;
 
@@ -69,10 +70,8 @@ public class INCRETester
 		createCell("[" + record2.instances.size() + "] Instances");
 
 		/* Compare number of type */
-		Iterator types1 = record1.instancesByType.keySet().iterator();
-		for (Object o : record1.instancesByType.keySet())
+		for (String type : record1.instancesByType.keySet())
 		{
-			String type = (String) o;
 			int count1 = (Integer) record1.instancesByType.get(type);
 			int count2 = 0;
 			Object obj = record2.instancesByType.get(type);
@@ -100,10 +99,10 @@ public class INCRETester
 		closeTag("tr");
 
 		/* Compare objects by ID */
-		Iterator keysIt = record1.ds.keys();
+		Iterator<String> keysIt = record1.ds.keys();
 		while (keysIt.hasNext())
 		{
-			String key = (String) keysIt.next();
+			String key = keysIt.next();
 			if (key.indexOf('_') == -1)
 			{
 				if (null == record2.ds.getObjectByID(key))
@@ -193,9 +192,9 @@ public class INCRETester
 		public Date compilationDate;
 
 		/* Maps containing type information */
-		public HashMap instancesByType = new HashMap();
+		public Map<String, Object> instancesByType = new HashMap<String, Object>();
 
-		public HashMap instances = new HashMap();
+		public Map<String, Object> instances = new HashMap<String, Object>();
 
 		public FileRecord(String inFilename)
 		{

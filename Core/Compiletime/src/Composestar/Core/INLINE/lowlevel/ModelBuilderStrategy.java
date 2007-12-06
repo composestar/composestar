@@ -202,11 +202,11 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		// default dispatch filter module, are conditional. Then we can check
 		// all these conditions in advance and when they are all false, no
 		// filtercode needs to be executed.
-		List list = filterSet.filterModuleSIList();
+		List<FilterModuleSuperImposition> list = filterSet.filterModuleSIList();
 		boolean hasCheckConditions = true;
 		for (int i = 0; i < list.size() - 1; i++)
 		{
-			FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) list.get(i);
+			FilterModuleSuperImposition fmsi = list.get(i);
 			hasCheckConditions = hasCheckConditions && (fmsi.getCondition() != null);
 		}
 
@@ -214,7 +214,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		{
 			for (int i = 0; i < list.size() - 1; i++)
 			{
-				FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) list.get(i);
+				FilterModuleSuperImposition fmsi = list.get(i);
 				filterCode.addCheckCondition(fmsi.getCondition());
 			}
 		}

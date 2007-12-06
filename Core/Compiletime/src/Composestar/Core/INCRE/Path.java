@@ -11,7 +11,7 @@ public class Path implements Serializable
 {
 	private static final long serialVersionUID = 3702399602907107235L;
 
-	private List nodes = new ArrayList();
+	private List<Node> nodes = new ArrayList<Node>();
 
 	public Path()
 	{}
@@ -23,12 +23,12 @@ public class Path implements Serializable
 	 */
 	public void addNode(Node n)
 	{
-		this.nodes.add(n);
+		nodes.add(n);
 	}
 
 	public Node getFirstNode()
 	{
-		return (Node) this.nodes.get(0);
+		return nodes.get(0);
 	}
 
 	public Object follow(Object obj) throws ModuleException
@@ -36,14 +36,14 @@ public class Path implements Serializable
 		// follow path and return final object
 		if (!nodes.isEmpty())
 		{
-			Iterator pathnodes = nodes.iterator();
+			Iterator<Node> pathnodes = nodes.iterator();
 			Object nextobject = obj;
 
 			while (pathnodes.hasNext())
 			{
 				try
 				{
-					Node currentnode = (Node) pathnodes.next();
+					Node currentnode = pathnodes.next();
 					nextobject = currentnode.visit(nextobject);
 				}
 				catch (NullPointerException npe)
