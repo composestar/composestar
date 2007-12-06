@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import tarau.jinni.Builtins;
 import tarau.jinni.DataBase;
@@ -47,7 +47,7 @@ public abstract class LOLA implements CTCommonModule
 
 	public UnitDictionary unitDict;
 
-	public static ArrayList selectors;
+	public static List<PredicateSelector> selectors;
 
 	public LanguageModel langModel;
 
@@ -178,7 +178,7 @@ public abstract class LOLA implements CTCommonModule
 		 * include all this info. Therefore we use this kind of ugly
 		 * UnitRegister thing where units register themselves.
 		 */
-		HashSet registeredUnits = UnitRegister.instance().getRegisteredUnits();
+		Set registeredUnits = UnitRegister.instance().getRegisteredUnits();
 		logger.debug("Useless information: " + registeredUnits.size() + " language units have been registered.");
 
 		/*
@@ -218,10 +218,10 @@ public abstract class LOLA implements CTCommonModule
 		boolean incremental = incre.isModuleInc(MODULE_NAME);
 
 		// step 0: gather all predicate selectors
-		Iterator predicateIter = dataStore.getAllInstancesOf(PredicateSelector.class);
+		Iterator<PredicateSelector> predicateIter = dataStore.getAllInstancesOf(PredicateSelector.class);
 		while (predicateIter.hasNext())
 		{
-			PredicateSelector predSel = (PredicateSelector) predicateIter.next();
+			PredicateSelector predSel = predicateIter.next();
 			selectors.add(predSel);
 		}
 
@@ -493,14 +493,12 @@ public abstract class LOLA implements CTCommonModule
 	 * @param list
 	 * @param to
 	 */
-	public void moveSelectors(ArrayList list, ArrayList from, ArrayList to)
+	public void moveSelectors(List<PredicateSelector> list, List<PredicateSelector> from, List<PredicateSelector> to)
 	{
 		if (!list.isEmpty())
 		{
-			Iterator predItr = list.iterator();
-			for (Object aList : list)
+			for (PredicateSelector predSel : list)
 			{
-				PredicateSelector predSel = (PredicateSelector) aList;
 				moveSelector(predSel, from, to);
 			}
 			list.clear();
@@ -514,7 +512,7 @@ public abstract class LOLA implements CTCommonModule
 	 * @param to
 	 * @param predSel
 	 */
-	public void moveSelector(PredicateSelector predSel, ArrayList from, ArrayList to)
+	public void moveSelector(PredicateSelector predSel, List<PredicateSelector> from, List<PredicateSelector> to)
 	{
 
 		if (!to.contains(predSel))

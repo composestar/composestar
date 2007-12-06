@@ -21,10 +21,11 @@
  */
 package Composestar.Core.LOLA;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
@@ -39,35 +40,38 @@ import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 public class AnnotationSuperImposition
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME);
+
 	private DataStore dataStore;
 
-	private Vector selectors;
+	private List<Selector> selectors;
 
-	private Vector annotationActions;
+	private List<AnnotationAction> annotationActions;
 
 	public AnnotationSuperImposition(DataStore ds)
 	{
 		dataStore = ds;
-		selectors = new Vector();
-		annotationActions = new Vector();
+		selectors = new ArrayList<Selector>();
+		annotationActions = new ArrayList<AnnotationAction>();
 	}
 
 	public void run() throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
-		Debug.out(Debug.MODE_DEBUG, "LOLA", "Annotation superimposition dependency algorithm starts");
-		INCRETimer gather = incre.getReporter().openProcess("LOLA", "gatherDependencyAlgorithmInputs",
+		logger.debug("Annotation superimposition dependency algorithm starts");
+		INCRETimer gather = incre.getReporter().openProcess(LOLA.MODULE_NAME, "gatherDependencyAlgorithmInputs",
 				INCRETimer.TYPE_NORMAL);
 		gatherDependencyAlgorithmInputs();
 		gather.stop();
-		INCRETimer dep = incre.getReporter().openProcess("LOLA", "doDependencyAlgorithm", INCRETimer.TYPE_NORMAL);
+		INCRETimer dep = incre.getReporter().openProcess(LOLA.MODULE_NAME, "doDependencyAlgorithm",
+				INCRETimer.TYPE_NORMAL);
 		doDependencyAlgorithm();
 		dep.stop();
-		Debug.out(Debug.MODE_DEBUG, "LOLA", "Annotation superimposition dependency algorithm finished");
+		logger.debug("Annotation superimposition dependency algorithm finished");
 	}
 
 	/**
@@ -81,10 +85,9 @@ public class AnnotationSuperImposition
 	 */
 	public void gatherDependencyAlgorithmInputs() throws ModuleException
 	{
-		Debug.out(Debug.MODE_DEBUG, "LOLA", "Gathering dependency algorithm inputs");
+		logger.debug("Gathering dependency algorithm inputs");
 
 		// Gather all predicate selectors
-		Iterator predicateIter = LOLA.selectors.iterator();
 		for (Object selector : LOLA.selectors)
 		{
 			PredicateSelector predSel = (PredicateSelector) selector;
@@ -97,21 +100,20 @@ public class AnnotationSuperImposition
 			s.posInResultVector = selectors.size();
 			selectors.add(s);
 
-			Debug.out(Debug.MODE_DEBUG, "LOLA", "Predicate selector added (" + s.qname + ", " + s.predicate.getQuery()
-					+ ')');
+			logger.debug("Predicate selector added (" + s.qname + ", " + s.predicate.getQuery() + ')');
 		}
 
-		Iterator annotBindingIter = dataStore.getAllInstancesOf(AnnotationBinding.class);
+		Iterator<AnnotationBinding> annotBindingIter = dataStore.getAllInstancesOf(AnnotationBinding.class);
 		while (annotBindingIter.hasNext())
 		{
-			AnnotationBinding annotBind = (AnnotationBinding) annotBindingIter.next();
+			AnnotationBinding annotBind = annotBindingIter.next();
 			/* Find out which predicate selector this binding belongs to */
 			SelectorDefinition selDef = annotBind.getSelector().getRef();
 			if (null == selDef) // The reference has not been resolved, i.e. the
 			// binding points to a non-existent selector
 			{
 				throw new ModuleException("Annotation binding points to non-existent selector: "
-						+ annotBind.getSelector().getQualifiedName(), "LOLA", annotBind.getSelector());
+						+ annotBind.getSelector().getQualifiedName(), LOLA.MODULE_NAME, annotBind.getSelector());
 			}
 
 			boolean foundSelector = false;
@@ -121,14 +123,13 @@ public class AnnotationSuperImposition
 				if (sel.qname.equals(selDef.getQualifiedName()))
 				{
 					foundSelector = true;
-					Iterator annotsToAttach = annotBind.getAnnotations().iterator();
 					for (Object o : annotBind.getAnnotations())
 					{
 						ConcernReference annotRef = (ConcernReference) o;
 						Concern concernRef = annotRef.getRef();
 						if (null == concernRef)
 						{
-							Debug.out(Debug.MODE_WARNING, "LOLA", "Annotation class " + annotRef.getQualifiedName()
+							logger.warn("Annotation class " + annotRef.getQualifiedName()
 									+ " referenced in annotation binding does not exist; skipping", annotRef);
 							continue; // Just skip, or should this be a fatal
 							// error?
@@ -136,7 +137,7 @@ public class AnnotationSuperImposition
 						PlatformRepresentation annotConcern = annotRef.getRef().getPlatformRepresentation();
 						if (null == annotConcern || !(annotConcern instanceof Type))
 						{
-							Debug.out(Debug.MODE_WARNING, "LOLA", "Annotation class " + annotRef.getQualifiedName()
+							logger.warn("Annotation class " + annotRef.getQualifiedName()
 									+ " referenced in annotation binding or is not a .NET class!", annotRef);
 							continue; // Just skip, or should this be a fatal
 							// error?
@@ -144,7 +145,7 @@ public class AnnotationSuperImposition
 						Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
 						if (!(annotation.getUnitType().equals("Annotation")))
 						{
-							Debug.out(Debug.MODE_WARNING, "LOLA", annotRef.getQualifiedName()
+							logger.warn(annotRef.getQualifiedName()
 									+ " is not an annotation type! (make sure it extends System.Attribute)", annotRef);
 							continue; // Just skip, or should this be a fatal
 							// error?
@@ -154,22 +155,22 @@ public class AnnotationSuperImposition
 						act.selector = sel;
 						act.annotation = annotation;
 						annotationActions.add(act);
-						Debug.out(Debug.MODE_DEBUG, "LOLA", "Annotation binding: '" + act.annotation.getUnitName()
-								+ "' to selector '" + act.selector.qname + '\'');
+						logger.debug("Annotation binding: '" + act.annotation.getUnitName() + "' to selector '"
+								+ act.selector.qname + '\'');
 					}
 				}
 			}
 			if (!foundSelector)
 			{
 				throw new ModuleException("Can bind annotations only to predicate selector statements: "
-						+ selDef.getQualifiedName(), "LOLA", selDef);
+						+ selDef.getQualifiedName(), LOLA.MODULE_NAME, selDef);
 			}
 		}
 	}
 
 	public void doDependencyAlgorithm() throws ModuleException
 	{
-		Vector states = new Vector();
+		List<State> states = new ArrayList<State>();
 		State endState = null; // no endstate found so far
 
 		/* Initialize starting state */
@@ -182,7 +183,7 @@ public class AnnotationSuperImposition
 
 		while (currentState < states.size()) // 
 		{
-			State myState = (State) states.elementAt(currentState);
+			State myState = states.get(currentState);
 
 			boolean currentIsEndState = true;
 			for (int action = 0; action < annotationActions.size(); action++)
@@ -195,7 +196,7 @@ public class AnnotationSuperImposition
 
 				// Attach annotations based on the current state (e.g. this
 				// action and actions done by previous states in this run)
-				Set addedAnnots = setAnnotationState(myState, action);
+				Set<Annotation> addedAnnots = setAnnotationState(myState, action);
 
 				if (addedAnnots.isEmpty())
 				{
@@ -226,14 +227,14 @@ public class AnnotationSuperImposition
 					msg
 							.append("as the order of superimposing annotations is arbitrary, this would make the compilation process ambiguous.\n");
 					msg.append("The problem was detected while applying the following annotation superimposition:\n");
-					AnnotationAction act = (AnnotationAction) annotationActions.elementAt(action);
+					AnnotationAction act = annotationActions.get(action);
 					msg.append("Attaching annotation ").append(act.annotation.getUnitName()).append(
 							" to the program elements selected by ").append(act.selector.qname).append('\n');
 					msg.append("This action shrunk the resultset of selector ").append(
-							((Selector) selectors.elementAt(errorLocation)).qname);
+							(selectors.get(errorLocation)).qname);
 					// At least one of the result sets shrunk, this is not
 					// allowed
-					throw new ModuleException(msg.toString(), "LOLA");
+					throw new ModuleException(msg.toString(), LOLA.MODULE_NAME);
 				}
 
 				if (!equalContents(tempState.selectorResults, myState.selectorResults))
@@ -274,7 +275,7 @@ public class AnnotationSuperImposition
 					throw new ModuleException(
 							"The annotation superimposition algorithm detected that there are different possible\n "
 									+ "orders of annotation superimposition. If you get this message, contact the Compose* developers",
-							"LOLA");
+							LOLA.MODULE_NAME);
 				}
 				else
 				{
@@ -298,18 +299,17 @@ public class AnnotationSuperImposition
 		// Give warnings when selectors (still) do not select anything
 		for (int i = 0; i < endState.selectorResults.size(); i++)
 		{
-			Selector selector = (Selector) selectors.elementAt(i);
-			HashSet resultSet = (HashSet) endState.selectorResults.elementAt(i);
+			Selector selector = selectors.get(i);
+			Set<ProgramElement> resultSet = endState.selectorResults.get(i);
 			if (resultSet.isEmpty())
 			{
-				Debug.out(Debug.MODE_WARNING, "LOLA", "Selector " + selector.qname
-						+ " does not match any program elements", selector.predicate);
+				logger.warn("Selector " + selector.qname + " does not match any program elements", selector.predicate);
 			}
 			else
 			{
 				StringBuffer names = new StringBuffer();
 
-				Iterator resultIt = resultSet.iterator();
+				Iterator<ProgramElement> resultIt = resultSet.iterator();
 				while (resultIt.hasNext())
 				{
 					Object result = resultIt.next();
@@ -323,8 +323,7 @@ public class AnnotationSuperImposition
 						names.append("(unknown) ");
 					}
 				}
-				Debug.out(Debug.MODE_INFORMATION, "LOLA", "Selector " + selector.qname
-						+ " matches the following program elements: " + names);
+				logger.info("Selector " + selector.qname + " matches the following program elements: " + names);
 			}
 		}
 		// Do not reset annotation state here, because other modules might be
@@ -338,11 +337,11 @@ public class AnnotationSuperImposition
 	 * @param allStates
 	 * @param selectorResults
 	 */
-	public boolean isNewState(Vector allStates, Vector selectorResults) throws ModuleException
+	public boolean isNewState(List<State> allStates, List<Set<ProgramElement>> selectorResults) throws ModuleException
 	{
 		for (int i = 0; i < allStates.size(); i++)
 		{
-			if (equalContents(selectorResults, ((State) allStates.elementAt(i)).selectorResults))
+			if (equalContents(selectorResults, (allStates.get(i)).selectorResults))
 			{
 				return false;
 			}
@@ -350,9 +349,9 @@ public class AnnotationSuperImposition
 		return true;
 	}
 
-	public Vector evaluateSelectors() throws ModuleException
+	public List<Set<ProgramElement>> evaluateSelectors() throws ModuleException
 	{
-		Vector results = new Vector();
+		List<Set<ProgramElement>> results = new ArrayList<Set<ProgramElement>>();
 		for (Object selector1 : selectors)
 		{
 			Selector selector = (Selector) selector1;
@@ -373,16 +372,16 @@ public class AnnotationSuperImposition
 	 * @return
 	 * @throws ModuleException
 	 */
-	public boolean equalContents(Vector res1, Vector res2) throws ModuleException
+	public boolean equalContents(List<?> res1, List<?> res2) throws ModuleException
 	{
 		if (res1.size() != res2.size())
 		{
-			throw new ModuleException("Internal error; selector resultsets differ in size", "LOLA");
+			throw new ModuleException("Internal error; selector resultsets differ in size", LOLA.MODULE_NAME);
 		}
 
 		for (int i = 0; i < res1.size(); i++)
 		{
-			if (!res1.elementAt(i).equals(res2.elementAt(i)))
+			if (!res1.get(i).equals(res2.get(i)))
 			{
 				return false;
 			}
@@ -401,16 +400,16 @@ public class AnnotationSuperImposition
 	 *         on succes
 	 * @throws ModuleException
 	 */
-	public int subsetContents(Vector res1, Vector res2) throws ModuleException
+	public int subsetContents(List<Set<ProgramElement>> res1, List<Set<ProgramElement>> res2) throws ModuleException
 	{
 		if (res1.size() != res2.size())
 		{
-			throw new ModuleException("Internal error; selector resultsets differ in size", "LOLA");
+			throw new ModuleException("Internal error; selector resultsets differ in size", LOLA.MODULE_NAME);
 		}
 
 		for (int i = 0; i < res1.size(); i++)
 		{
-			if (!((Set) res2.elementAt(i)).containsAll((Set) res1.elementAt(i)))
+			if (!(res2.get(i)).containsAll(res1.get(i)))
 			{
 				return i;
 			}
@@ -433,9 +432,9 @@ public class AnnotationSuperImposition
 	 * @return A set of all the DotNETAttributes that have been added, so they
 	 *         can easily be removed later
 	 */
-	public Set setAnnotationState(State thisState, int thisAction)
+	public Set<Annotation> setAnnotationState(State thisState, int thisAction)
 	{
-		HashSet removeMeLater = new HashSet();
+		Set<Annotation> removeMeLater = new HashSet<Annotation>();
 		int currAction = thisAction;
 		State currState = thisState;
 		while (null != currState)
@@ -443,12 +442,11 @@ public class AnnotationSuperImposition
 			if (currAction != -1) // Skip first iteration in case of action ==
 			// -1
 			{
-				AnnotationAction action = (AnnotationAction) annotationActions.elementAt(currAction);
-				Set attachTo = (Set) currState.selectorResults.elementAt(action.selector.posInResultVector);
+				AnnotationAction action = annotationActions.get(currAction);
+				Set<ProgramElement> attachTo = currState.selectorResults.get(action.selector.posInResultVector);
 
-				for (Object anAttachTo : attachTo)
+				for (ProgramElement elem : attachTo)
 				{
-					ProgramElement elem = (ProgramElement) anAttachTo;
 					// Currently, we don't attach the same annotation more than
 					// once.
 
@@ -464,8 +462,8 @@ public class AnnotationSuperImposition
 					}
 					if (!doubleAnnot)
 					{
-						Debug.out(Debug.MODE_DEBUG, "LOLA", "Attaching annotation '" + action.annotation.getName()
-								+ "' to program element '" + elem.toString());
+						logger.debug("Attaching annotation '" + action.annotation.getName() + "' to program element '"
+								+ elem.toString());
 
 						Annotation annotInst = new Annotation(true); // true
 						// =
@@ -477,8 +475,8 @@ public class AnnotationSuperImposition
 					else
 					// We don't attach the same annotation twice right now (!)
 					{
-						Debug.out(Debug.MODE_INFORMATION, "LOLA", "Not attaching '" + action.annotation.getUnitName()
-								+ "' to '" + elem.getUnitName() + "' a second time!");
+						logger.info("Not attaching '" + action.annotation.getUnitName() + "' to '" + elem.getUnitName()
+								+ "' a second time!");
 					}
 				}
 			}
@@ -490,11 +488,10 @@ public class AnnotationSuperImposition
 		return removeMeLater;
 	}
 
-	public void resetAnnotationState(Set annotToRemove)
+	public void resetAnnotationState(Set<Annotation> annotToRemove)
 	{
-		for (Object anAnnotToRemove : annotToRemove)
+		for (Annotation attr : annotToRemove)
 		{
-			Annotation attr = (Annotation) anAnnotToRemove;
 			attr.deregister();
 		}
 	}
@@ -517,7 +514,7 @@ public class AnnotationSuperImposition
 
 	private class State
 	{
-		public Vector selectorResults; // Vector of sets -
+		public List<Set<ProgramElement>> selectorResults; // Vector of sets -
 
 		// selectorResults[selectorIndex]
 		// returns set of selected program

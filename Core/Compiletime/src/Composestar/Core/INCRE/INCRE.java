@@ -120,7 +120,7 @@ public final class INCRE implements CTCommonModule
 		// check whether incremental compilation is enabled
 
 		// TODO Incre is disabled by default, it does not work properly
-		enabled = moduleInfo.getBooleanSetting("enabled") && false;
+		enabled = false; // moduleInfo.getBooleanSetting("enabled");
 
 		historyFile = new File(config.getProject().getIntermediate(), CompileHistory.DEFAULT_FILENAME);
 
