@@ -54,6 +54,12 @@
 			<merge file="${composestar.path}\StarLight\QualityAssurance\checkstyle-result.xml" />
 			<merge file="${composestar.path}\Java\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\C\qa\checkstyle-result.xml" />
+
+			<merge file="${composestar.path}\Core\qa\findbugs-result.xml" />
+			<merge file="${composestar.path}\DotNET\qa\findbugs-result.xml" />
+			<merge file="${composestar.path}\StarLight\QualityAssurance\findbugs-result.xml" />
+			<merge file="${composestar.path}\Java\qa\findbugs-result.xml" />
+			<merge file="${composestar.path}\C\qa\findbugs-result.xml" />
 			
 			<!--<delete every="1" unit="MONTH" ignoreSuffix="false" />-->
 		</log>
@@ -156,7 +162,7 @@
 
 
 	<modificationset>
-		<cvs localworkingcopy="C:\Groove\release\run\groove" property="groove.modified"/>
+		<cvs localworkingcopy="C:\Groove\groove" property="groove.modified"/>
 	</modificationset>
     
 	<!-- performs a build every night at 03:17 -->

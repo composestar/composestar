@@ -15,17 +15,17 @@
 			</dirset>
 		</cs:pruneDir>
 
-		<cs:pruneDir keep="50"><!-- delete all but the last X log files -->
-			<dirset dir="${env.CCDIR}${file.separator}logs${file.separator}${projectname}">
+		<cs:pruneFiles keep="100"><!-- delete all but the last X log files -->
+			<fileset dir="${env.CCDIR}${file.separator}logs${file.separator}${projectname}">
 				<include name="*.xml" />
-			</dirset>			
-		</cs:pruneDir>
+			</fileset>			
+		</cs:pruneFiles>
 
-		<cs:pruneDir keep="50"><!-- delete all but the last X log files -->
-			<dirset dir="${env.CCDIR}${file.separator}logs${file.separator}${projectname}${file.separator}_cache">
+		<cs:pruneFiles keep="25"><!-- delete all but the last X log files -->
+			<fileset dir="${env.CCDIR}${file.separator}logs${file.separator}${projectname}${file.separator}_cache">
 				<include name="*.html" />
-			</dirset>			
-		</cs:pruneDir>
+			</fileset>			
+		</cs:pruneFiles>
 	
 		<!--
 		<tstamp>
