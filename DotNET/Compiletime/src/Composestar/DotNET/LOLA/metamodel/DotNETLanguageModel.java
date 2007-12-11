@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.MethodNode;
@@ -498,7 +499,7 @@ public class DotNETLanguageModel extends LanguageModel
 	 *            methods to be visible, while in the selector expressions we
 	 *            don't want that.
 	 */
-	public void createIndex(Collection units, UnitDictionary dict) throws ModuleException
+	public void createIndex(Collection<ProgramElement> units, UnitDictionary dict) throws ModuleException
 	{
 		// Loop 1: find methods, add only those that are ImplementedHere
 		Iterator unitIter = units.iterator();
@@ -587,9 +588,9 @@ public class DotNETLanguageModel extends LanguageModel
 	 *            DotNETMethodInfo.getUnitRelation(ChildFields) Returns null if
 	 *            path cannot be found
 	 */
-	public HashMap getPathOfUnitRelations(String from, String to)
+	public Map<String, MethodNode> getPathOfUnitRelations(String from, String to)
 	{
-		HashMap relations = new HashMap();
+		Map<String, MethodNode> relations = new HashMap();
 		List params = new ArrayList();
 		MethodNode m = new MethodNode("getUnitRelation");
 

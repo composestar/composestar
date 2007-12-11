@@ -26,6 +26,7 @@ import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.LOLA.connector.ComposestarBuiltins;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
@@ -78,7 +79,7 @@ public class ConcernGenerator extends DefaultHandler
 	 * 
 	 * @throws ModuleException
 	 */
-	public void evaluateConcerns() throws ModuleException
+	public void evaluateConcerns(ComposestarBuiltins composestarBuiltins) throws ModuleException
 	{
 		Vector results = new Vector();
 		HashMap resultsMap = new HashMap();
@@ -87,7 +88,7 @@ public class ConcernGenerator extends DefaultHandler
 		{
 			String key = (String) o;
 			PredicateSelector selector = (PredicateSelector) concerns.get(key); // selectorIter.next();
-			selector.run();
+			selector.run(composestarBuiltins);
 			resultsMap.put(key, selector.getSelectedUnits());
 		}
 		concerns.clear();

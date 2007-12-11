@@ -7,16 +7,17 @@
 
 package Composestar.Core.LOLA.metamodel;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.LOLA;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Keeps a list of all registered Language Units that can be queried by the
@@ -27,6 +28,8 @@ import Composestar.Utils.Debug;
  */
 public class UnitDictionary
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME);
+
 	private LanguageModel langModel;
 
 	// Indexes on Units. Be very careful to keep these consistent with each
@@ -40,7 +43,7 @@ public class UnitDictionary
 	 * Contains all language units. The key is the classname of the unit type,
 	 * the value is a set of all LanguageUnits of that type.
 	 */
-	private Hashtable unitsByType;
+	private Map<String, Set<ProgramElement>> unitsByType;
 
 	/**
 	 * Used to select units by name - like unitsByType, the first level is an
@@ -50,9 +53,9 @@ public class UnitDictionary
 	 * hashset of objects if they don't have to be unique (fields, operations,
 	 * methods, constructors).
 	 */
-	private Hashtable unitsByName;
+	private Map<String, Map<String, Object>> unitsByName;
 
-	private Hashtable duplicateUniqueUnits;
+	private Map<String, ProgramElement> duplicateUniqueUnits;
 
 	public UnitDictionary()
 	{
@@ -61,9 +64,9 @@ public class UnitDictionary
 
 	public UnitDictionary(LanguageModel langModel)
 	{
-		this.unitsByType = new Hashtable();
-		this.unitsByName = new Hashtable();
-		this.duplicateUniqueUnits = new Hashtable();
+		unitsByType = new HashMap<String, Set<ProgramElement>>();
+		unitsByName = new HashMap<String, Map<String, Object>>();
+		duplicateUniqueUnits = new HashMap<String, ProgramElement>();
 		this.langModel = langModel;
 	}
 
@@ -79,7 +82,7 @@ public class UnitDictionary
 	{
 		if (langModel == null)
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", "UnitDictionary: internal error; no language model has been set!");
+			logger.warn("UnitDictionary: internal error; no language model has been set!");
 			throw new ModuleException("UnitDictionary needs a language model to function correctly!", "LOLA");
 		}
 		try
@@ -93,19 +96,22 @@ public class UnitDictionary
 
 			// Step 1: Add the unit to the namebased index
 			if (!unitsByName.containsKey(type)) // Might be the first unit of
-												// this type
+			// this type
 			{
-				unitsByName.put(type, new Hashtable()); // If yes, create the
-														// table for this type
+				unitsByName.put(type, new HashMap<String, Object>()); // If
+				// yes,
+				// create
+				// the
+				// table for this type
 			}
 
-			Hashtable nameTypeTable = (Hashtable) unitsByName.get(type);
+			Map<String, Object> nameTypeTable = unitsByName.get(type);
 			if (unitInfo.isNameUnique()) // Unit has unique name; add it
-											// directly.
+			// directly.
 			{
 				if (nameTypeTable.containsKey(name)) // In this case the unit
-														// will *NOT* have been
-														// added anywhere!
+				// will *NOT* have been
+				// added anywhere!
 				{
 					// Add warning suppression for duplicate class names within
 					// different assemblies
@@ -115,8 +121,8 @@ public class UnitDictionary
 						nameTypeTable.remove(name);
 					}
 
-					Debug.out(Debug.MODE_WARNING, "LOLA", "Duplicate key for unit with unique name: " + name
-							+ " (type '" + unit.getUnitType() + "')");
+					logger.warn("Duplicate key for unit with unique name: " + name + " (type '" + unit.getUnitType()
+							+ "')");
 					return;
 					// throw new ModelClashException("Duplicate key for unit
 					// with unique name");
@@ -135,12 +141,12 @@ public class UnitDictionary
 				// of names
 				if (!nameTypeTable.containsKey(name))
 				{
-					nameTypeTable.put(name, new HashSet());
+					nameTypeTable.put(name, new HashSet<ProgramElement>());
 				}
 
 				// Add the unit with this name to the hashset, and the hashset
 				// to the nametable.
-				HashSet nameSet = (HashSet) nameTypeTable.get(name);
+				Set<ProgramElement> nameSet = (Set<ProgramElement>) nameTypeTable.get(name);
 				nameSet.add(unit);
 				nameTypeTable.put(name, nameSet);
 			}
@@ -150,11 +156,11 @@ public class UnitDictionary
 			// this type.
 			if (!unitsByType.containsKey(type))
 			{
-				unitsByType.put(type, new HashSet());
+				unitsByType.put(type, new HashSet<ProgramElement>());
 			}
 
 			// Add the unit to the 'unitsByType' dictionary
-			HashSet typeSet = (HashSet) unitsByType.get(type);
+			Set<ProgramElement> typeSet = unitsByType.get(type);
 			typeSet.add(unit);
 		}
 		catch (ModelException e)
@@ -209,13 +215,12 @@ public class UnitDictionary
 	{
 		if (!unitsByName.containsKey(type))
 		{
-			Debug.out(Debug.MODE_WARNING, LOLA.MODULE_NAME, "UnitDictionary::getByName - type '" + type
-					+ "' not found!");
+			logger.warn("UnitDictionary::getByName - type '" + type + "' not found!");
 
 			return null; // The unit type does not even exist!
 		}
 
-		Map names = (Map) unitsByName.get(type);
+		Map<String, Object> names = unitsByName.get(type);
 		if (names.containsKey(name))
 		{
 			Object result = names.get(name);
@@ -223,9 +228,9 @@ public class UnitDictionary
 			{
 				return new UnitResult((ProgramElement) result);
 			}
-			else if (result instanceof HashSet)
+			else if (result instanceof Set)
 			{
-				return new UnitResult((HashSet) result);
+				return new UnitResult((Set<ProgramElement>) result);
 			}
 			else
 			{
@@ -247,11 +252,11 @@ public class UnitDictionary
 	 */
 	public UnitResult getByName(String name)
 	{
-		Iterator types = unitsByName.keySet().iterator();
-		HashSet result = new HashSet();
+		Iterator<String> types = unitsByName.keySet().iterator();
+		Set<ProgramElement> result = new HashSet<ProgramElement>();
 		while (types.hasNext())
 		{
-			UnitResult typeRes = getByName(name, (String) types.next());
+			UnitResult typeRes = getByName(name, types.next());
 			if (null != typeRes)
 			{
 				if (typeRes.isSingleValue())
@@ -276,12 +281,11 @@ public class UnitDictionary
 	{
 		if (unitsByType.containsKey(type))
 		{
-			return new UnitResult((HashSet) unitsByType.get(type));
+			return new UnitResult(unitsByType.get(type));
 		}
 		else
 		{
-			Debug.out(Debug.MODE_DEBUG, "LOLA", "UnitDictionary warning: request for non-existing unit type '" + type
-					+ "'");
+			logger.debug("UnitDictionary warning: request for non-existing unit type '" + type + "'");
 			return null;
 		}
 	}
@@ -291,12 +295,11 @@ public class UnitDictionary
 	 */
 	public UnitResult getAll()
 	{
-		HashSet result = new HashSet();
+		Set<ProgramElement> result = new HashSet<ProgramElement>();
 
-		Iterator types = unitsByType.values().iterator();
-		for (Object o : unitsByType.values())
+		for (Set<ProgramElement> o : unitsByType.values())
 		{
-			result.addAll((HashSet) o);
+			result.addAll(o);
 		}
 
 		return new UnitResult(result);

@@ -13,10 +13,11 @@ package Composestar.Core.LOLA.connector;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import Composestar.Core.LOLA.metamodel.CompositeLanguageUnitType;
 import Composestar.Core.LOLA.metamodel.CompositeRelationPredicate;
@@ -44,7 +45,6 @@ public class ModelGenerator
 	public static void prologGenerator(LanguageModel model, PrintStream output) throws IOException, ModelException
 	{
 		output.println("%% Definition of language unit types\n");
-		Iterator types = model.getLanguageUnitTypes().iterator();
 		for (Object o1 : model.getLanguageUnitTypes())
 		{
 			LanguageUnitType type = (LanguageUnitType) o1;
@@ -60,7 +60,6 @@ public class ModelGenerator
 
 		output.println("\n\n%% Definition of relations between language units\n");
 
-		Iterator rels = model.getRelationPredicates().values().iterator();
 		for (Object o : model.getRelationPredicates().values())
 		{
 			RelationPredicate rel = (RelationPredicate) o;
@@ -118,22 +117,21 @@ public class ModelGenerator
 	private static String genCompositeUnitTypePredicates(CompositeLanguageUnitType type)
 	{
 		StringBuffer res = new StringBuffer();
-		Collection containedTypes = type.getContainedTypes();
+		Collection<LanguageUnitType> containedTypes = type.getContainedTypes();
 
 		// Definition of isSomething(Unit) predicate
-		for (Object containedType1 : containedTypes)
+		for (LanguageUnitType containedType : containedTypes)
 		{
-			LanguageUnitType containedType = (LanguageUnitType) containedType1;
 			res.append("is").append(type.getType()).append("(Unit) :-\n");
 			res.append("  is").append(containedType.getType()).append("(Unit).\n");
 		}
 		res.append('\n');
 
 		// Definition of isSomethingWithName(Unit, Name) predicate
-		Iterator iter = containedTypes.iterator();
+		Iterator<LanguageUnitType> iter = containedTypes.iterator();
 		while (iter.hasNext())
 		{
-			LanguageUnitType containedType = (LanguageUnitType) iter.next();
+			LanguageUnitType containedType = iter.next();
 			res.append("is").append(type.getType()).append("WithName(Unit, Name) :-\n");
 			res.append("  is").append(containedType.getType()).append("WithName(Unit, Name).\n");
 		}
@@ -142,24 +140,24 @@ public class ModelGenerator
 		return res.toString();
 	}
 
-	private static String commaSeparated(Collection argList)
+	private static String commaSeparated(Collection<String> argList)
 	{
-		String res = "";
-		Iterator i = argList.iterator();
+		StringBuffer res = new StringBuffer();;
+		Iterator<String> i = argList.iterator();
 		while (i.hasNext())
 		{
-			res += i.next();
+			res.append(i.next());
 			if (i.hasNext()) // Only when there are more elements
 			{
-				res += ", ";
+				res.append(", ");
 			}
 		}
-		return res;
+		return res.toString();
 	}
 
-	private static Vector getVarList(RelationPredicate rel)
+	private static List<String> getVarList(RelationPredicate rel)
 	{ // Only binary relations are supported
-		Vector res = new Vector();
+		List<String> res = new ArrayList<String>();
 		res.add(rel.getVarName(1));
 		res.add(rel.getVarName(2));
 		return res;
@@ -178,7 +176,7 @@ public class ModelGenerator
 	private static String genRelationPredicate(RelationPredicate rel)
 	{
 		boolean var1unique, var2unique;
-		Vector varList = getVarList(rel);
+		List<String> varList = getVarList(rel);
 		// Yes, the 1's and 2's are exchanged on purpose, this is not a bug.
 		// Explanation: if side1 says that the link to the other side is unique,
 		// it means there is only one possible value for var2, and v.v.
@@ -190,18 +188,18 @@ public class ModelGenerator
 
 		if (!var1unique && !var2unique) // It is a (*,*)-relation
 		{ /*
-			 * Because both sides can have multiple answers, we have to put an
-			 * answer generator on both argument 1 and 2
-			 */
+		 * Because both sides can have multiple answers, we have to put an
+		 * answer generator on both argument 1 and 2
+		 */
 			res.append("check_or_gen12(");
 		}
 		else if (!var1unique && var2unique) // It is a (*,1)-relation
 		{ /*
-			 * Most relations are one-to-many or many-to-one (e.g. because one
-			 * side is the 'Parent' and these are usually unique). Because
-			 * unique items can be handled way faster, a distinction is made for
-			 * these cases.
-			 */
+		 * Most relations are one-to-many or many-to-one (e.g. because one
+		 * side is the 'Parent' and these are usually unique). Because
+		 * unique items can be handled way faster, a distinction is made for
+		 * these cases.
+		 */
 			res.append("check_or_gen1(");
 		}
 		else if (var1unique && !var2unique)
@@ -232,14 +230,12 @@ public class ModelGenerator
 
 	private static String genCompositeRelationPredicate(CompositeRelationPredicate rel)
 	{
-		Collection containedRels = rel.getContainedRelationPredicates();
+		Collection<RelationPredicate> containedRels = rel.getContainedRelationPredicates();
 		StringBuffer res = new StringBuffer();
 
-		Iterator iter = containedRels.iterator();
-		for (Object containedRel1 : containedRels)
+		for (RelationPredicate containedRel : containedRels)
 		{
-			RelationPredicate containedRel = (RelationPredicate) containedRel1;
-			Vector varList = getVarList(containedRel);
+			List<String> varList = getVarList(containedRel);
 			res.append(rel.getPredicateName()).append('(').append(commaSeparated(varList)).append(") :-\n  ");
 			res.append(containedRel.getPredicateName()).append('(').append(commaSeparated(varList)).append(").\n");
 		}

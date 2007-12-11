@@ -7,11 +7,12 @@
  */
 package Composestar.Core.LOLA.metamodel;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LanguageUnitType
 {
-	private Class impl; // Class that implements this type of LanguageUnit
+	private Class<?> impl; // Class that implements this type of LanguageUnit
 
 	// private String predicateName; // Base name of this kind of language unit
 	private String type; // Unit type
@@ -20,25 +21,28 @@ public class LanguageUnitType
 
 	// be unique
 
-	private Hashtable relationTypes;// Specs of relations that this type of unit
+	private Map<String, RelationType> relationTypes;// Specs of
+
+	// relations that
+	// this type of unit
 
 	// can have to other units
 
-	public LanguageUnitType(/* String predicateName, */Class impl, String type, boolean nameUnique)
+	public LanguageUnitType(/* String predicateName, */Class<?> impl, String type, boolean nameUnique)
 	{
 		// this.predicateName = predicateName;
 		this.impl = impl;
 		this.type = type;
 		this.nameUnique = nameUnique;
-		this.relationTypes = new Hashtable();
+		relationTypes = new HashMap<String, RelationType>();
 	}
 
 	/**
 	 * @return Returns the class that implements this type of language unit
 	 */
-	public Class getImplementingClass()
+	public Class<?> getImplementingClass()
 	{
-		return this.impl;
+		return impl;
 	}
 
 	/*
@@ -102,7 +106,7 @@ public class LanguageUnitType
 		{
 			throw new ModelClashException("Unit does not have the relation " + relName);
 		}
-		return (RelationType) relationTypes.get(relName);
+		return relationTypes.get(relName);
 	}
 
 	/**

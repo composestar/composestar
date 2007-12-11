@@ -20,7 +20,7 @@ public class RelationType
 	public RelationType(String name, boolean unique)
 	{
 		this.name = name;
-		this.otherType = null;
+		otherType = null;
 		this.unique = unique;
 	}
 

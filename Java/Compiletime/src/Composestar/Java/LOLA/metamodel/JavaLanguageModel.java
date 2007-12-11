@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.MethodNode;
@@ -504,7 +505,7 @@ public class JavaLanguageModel extends LanguageModel
 	 *            methods to be visible, while in the selector expressions we
 	 *            don't want that.
 	 */
-	public void createIndex(Collection units, UnitDictionary dict) throws ModuleException
+	public void createIndex(Collection<ProgramElement> units, UnitDictionary dict) throws ModuleException
 	{
 		Debug.out(Debug.MODE_DEBUG, "LOLA", "Creating index on the language units");
 		// Loop 1: find methods, add only those that are ImplementedHere
@@ -593,9 +594,9 @@ public class JavaLanguageModel extends LanguageModel
 	 * @param from type of languageunit
 	 * @param to type of languageunit
 	 */
-	public HashMap getPathOfUnitRelations(String from, String to)
+	public Map<String, MethodNode> getPathOfUnitRelations(String from, String to)
 	{
-		HashMap relations = new HashMap();
+		Map<String, MethodNode> relations = new HashMap();
 		List params = new ArrayList();
 		MethodNode m = new MethodNode("getUnitRelation");
 

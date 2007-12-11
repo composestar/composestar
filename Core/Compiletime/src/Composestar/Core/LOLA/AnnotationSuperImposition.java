@@ -39,6 +39,7 @@ import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
+import Composestar.Core.LOLA.connector.ComposestarBuiltins;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -50,18 +51,24 @@ public class AnnotationSuperImposition
 
 	private List<Selector> selectors;
 
+	private List<PredicateSelector> predSel;
+
 	private List<AnnotationAction> annotationActions;
 
-	public AnnotationSuperImposition(DataStore ds)
+	private ComposestarBuiltins composestarBuiltins;
+
+	public AnnotationSuperImposition(DataStore ds, List<PredicateSelector> predSelectors)
 	{
 		dataStore = ds;
 		selectors = new ArrayList<Selector>();
+		predSel = predSelectors;
 		annotationActions = new ArrayList<AnnotationAction>();
 	}
 
-	public void run() throws ModuleException
+	public void run(ComposestarBuiltins builtins) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
+		composestarBuiltins = builtins;
 		logger.debug("Annotation superimposition dependency algorithm starts");
 		INCRETimer gather = incre.getReporter().openProcess(LOLA.MODULE_NAME, "gatherDependencyAlgorithmInputs",
 				INCRETimer.TYPE_NORMAL);
@@ -88,15 +95,14 @@ public class AnnotationSuperImposition
 		logger.debug("Gathering dependency algorithm inputs");
 
 		// Gather all predicate selectors
-		for (Object selector : LOLA.selectors)
+		for (PredicateSelector psel : predSel)
 		{
-			PredicateSelector predSel = (PredicateSelector) selector;
-			SelectorDefinition sd = (SelectorDefinition) predSel.getParent();
+			SelectorDefinition sd = (SelectorDefinition) psel.getParent();
 
 			Selector s = new Selector();
 			s.name = sd.getName();
 			s.qname = sd.getQualifiedName();
-			s.predicate = predSel;
+			s.predicate = psel;
 			s.posInResultVector = selectors.size();
 			selectors.add(s);
 
@@ -355,7 +361,7 @@ public class AnnotationSuperImposition
 		for (Object selector1 : selectors)
 		{
 			Selector selector = (Selector) selector1;
-			selector.predicate.run();
+			selector.predicate.run(composestarBuiltins);
 			results.add(selector.predicate.getSelectedUnits());
 			// System.out.println("Selector: " + selector.name + " selected [" +
 			// selector.predicate.getSelectedUnits() + "]");
@@ -500,7 +506,7 @@ public class AnnotationSuperImposition
 	 * Internal helper structures, just for storing algorithm data in a easily
 	 * accessible way
 	 */
-	private class Selector
+	private static class Selector
 	{
 		public String name;
 
@@ -512,7 +518,7 @@ public class AnnotationSuperImposition
 		// State.selectorResult
 	}
 
-	private class State
+	private static class State
 	{
 		public List<Set<ProgramElement>> selectorResults; // Vector of sets -
 
@@ -526,7 +532,7 @@ public class AnnotationSuperImposition
 		// last_action brought us into this state
 	}
 
-	private class AnnotationAction
+	private static class AnnotationAction
 	{
 		public Type annotation; // Attach this annotation (class) to..
 

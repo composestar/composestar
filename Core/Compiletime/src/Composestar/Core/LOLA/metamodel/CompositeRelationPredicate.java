@@ -5,41 +5,42 @@
  */
 package Composestar.Core.LOLA.metamodel;
 
-import java.util.Collection;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CompositeRelationPredicate extends RelationPredicate
 {
-	Vector containedRelationPredicates;
+	protected List<RelationPredicate> containedRelationPredicates;
 
 	public CompositeRelationPredicate(String predName, RelationPredicate rel1, RelationPredicate rel2)
 	{
 		this(predName, null);
-		Vector rels = new Vector();
+		List<RelationPredicate> rels = new ArrayList<RelationPredicate>();
 		rels.add(rel1);
 		rels.add(rel2);
-		this.containedRelationPredicates = rels;
+		containedRelationPredicates = rels;
 	}
 
-	public CompositeRelationPredicate(String predName, Vector containedRels)
+	public CompositeRelationPredicate(String predName, List<RelationPredicate> containedRels)
 	{
 		super(predName);
-		this.containedRelationPredicates = containedRels;
+		containedRelationPredicates = containedRels;
 	}
 
 	/**
 	 * @return Returns the containedRelationPredicates.
 	 */
-	public Collection getContainedRelationPredicates()
+	public List<RelationPredicate> getContainedRelationPredicates()
 	{
-		return containedRelationPredicates;
+		return Collections.unmodifiableList(containedRelationPredicates);
 	}
 
 	/**
 	 * @param containedRelationPredicates The containedRelationPredicates to
 	 *            set.
 	 */
-	public void setContainedRelationPredicates(Vector containedRelationPredicates)
+	public void setContainedRelationPredicates(List<RelationPredicate> containedRelationPredicates)
 	{
 		this.containedRelationPredicates = containedRelationPredicates;
 	}

@@ -33,6 +33,6 @@ public class ModelClashException extends ModelException
 
 	public String getModel()
 	{
-		return this.model;
+		return model;
 	}
 }

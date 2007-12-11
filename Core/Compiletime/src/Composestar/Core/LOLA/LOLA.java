@@ -17,6 +17,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSe
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
 import Composestar.Core.LOLA.connector.ModelGenerator;
@@ -47,9 +48,11 @@ public abstract class LOLA implements CTCommonModule
 
 	public UnitDictionary unitDict;
 
-	public static List<PredicateSelector> selectors;
+	public List<PredicateSelector> selectors;
 
 	public LanguageModel langModel;
+
+	protected ComposestarBuiltins composestarBuiltins;
 
 	/**
 	 * Initializes the specified language model. This means the createMetaModel
@@ -106,8 +109,8 @@ public abstract class LOLA implements CTCommonModule
 			return;
 		}
 		Init.builtinDict = new Builtins();
-		ComposestarBuiltins.setUnitDictionary(unitDict);
-		Init.builtinDict.putAll(new ComposestarBuiltins(langModel));
+		composestarBuiltins = new ComposestarBuiltins(langModel, unitDict);
+		Init.builtinDict.putAll(composestarBuiltins);
 
 		logger.debug("Consulting base predicate libraries");
 
@@ -178,7 +181,7 @@ public abstract class LOLA implements CTCommonModule
 		 * include all this info. Therefore we use this kind of ugly
 		 * UnitRegister thing where units register themselves.
 		 */
-		Set registeredUnits = UnitRegister.instance().getRegisteredUnits();
+		Set<ProgramElement> registeredUnits = UnitRegister.instance().getRegisteredUnits();
 		logger.debug("Useless information: " + registeredUnits.size() + " language units have been registered.");
 
 		/*
@@ -266,8 +269,8 @@ public abstract class LOLA implements CTCommonModule
 			// values of all selectors
 			INCRETimer selcalc = incre.getReporter().openProcess(MODULE_NAME, "Calculating values of selectors",
 					INCRETimer.TYPE_NORMAL);
-			AnnotationSuperImposition asi = new AnnotationSuperImposition(dataStore);
-			asi.run();
+			AnnotationSuperImposition asi = new AnnotationSuperImposition(dataStore, selectors);
+			asi.run(composestarBuiltins);
 			selcalc.stop();
 		}
 

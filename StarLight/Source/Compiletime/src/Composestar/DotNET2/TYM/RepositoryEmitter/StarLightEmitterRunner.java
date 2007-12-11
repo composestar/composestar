@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
+import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -32,7 +33,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjec
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ExternalConcernReference;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
-import Composestar.Core.INLINE.lowlevel.ModelBuilder;
+import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
@@ -77,6 +78,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 	private CommonResources resources;
 
 	private boolean includeConflictRules;
+
+	@ResourceManager
+	private InlinerResources inlinerRes;
 
 	public StarLightEmitterRunner()
 	{
@@ -406,7 +410,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			MethodInfo methodInfo = type.getMethod(selector, new String[0]);
 			if (methodInfo != null)
 			{
-				storedRef.setInnerCallContext(ModelBuilder.getMethodId(methodInfo));
+				storedRef.setInnerCallContext(inlinerRes.getMethodId(methodInfo));
 			}
 			else
 			{
@@ -444,7 +448,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			weaveMethod.setSignature(method.getSignature());
 
 			// get the block containing the filterinstructions:
-			FilterCode filterCode = ModelBuilder.getInputFilterCode(method);
+			FilterCode filterCode = inlinerRes.getInputFilterCode(method);
 
 			if (filterCode != null)
 			{
@@ -482,7 +486,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			DotNETCallToOtherMethod call = (DotNETCallToOtherMethod) calls.next();
 
 			// add outputfilter code:
-			FilterCode filterCode = ModelBuilder.getOutputFilterCode(call);
+			FilterCode filterCode = inlinerRes.getOutputFilterCode(call);
 			if (filterCode != null)
 			{
 				WeaveCall weaveCall = weaveMethod.getWeaveCalls().addNewWeaveCall();

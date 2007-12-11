@@ -15,7 +15,7 @@ public class RelationPredicate
 
 	public RelationPredicate(String predName)
 	{
-		this.predicateName = predName;
+		predicateName = predName;
 	}
 
 	public RelationPredicate(String predName, RelationType type1, String var1, RelationType type2, String var2)

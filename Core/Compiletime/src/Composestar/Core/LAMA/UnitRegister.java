@@ -10,6 +10,7 @@
 package Composestar.Core.LAMA;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
@@ -31,7 +32,7 @@ public class UnitRegister implements SerializableRepositoryEntity
 
 	// Contains the set of program elements, before they are processed by
 	// UnitDictionary.processLanguageUnits
-	private HashSet registeredUnits;
+	private Set registeredUnits;
 
 	private static UnitRegister instance;
 
@@ -75,7 +76,7 @@ public class UnitRegister implements SerializableRepositoryEntity
 	/**
 	 * @return Returns the registeredUnits.
 	 */
-	public HashSet getRegisteredUnits()
+	public Set getRegisteredUnits()
 	{
 		return registeredUnits;
 	}

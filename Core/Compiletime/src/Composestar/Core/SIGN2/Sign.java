@@ -1038,7 +1038,7 @@ public class Sign implements CTCommonModule
 					MethodInfo mi = wrapper.getMethodInfo();
 					String returntype = mi.getReturnTypeString();
 
-					List paramNames = new ArrayList();
+					List<String> paramNames = new ArrayList<String>();
 					for (Object o : mi.getParameters())
 					{
 						ParameterInfo pi = (ParameterInfo) o;

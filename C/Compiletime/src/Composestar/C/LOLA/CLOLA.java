@@ -121,7 +121,7 @@ public class CLOLA extends LOLA
 				Debug.out(Debug.MODE_INFORMATION, "CCone", "Create concerns from CConcern.xml ");
 				ConcernGenerator cg = new ConcernGenerator();
 				cg.run(concernXml);
-				cg.evaluateConcerns();
+				cg.evaluateConcerns(composestarBuiltins);
 				cg.createConcerns();
 			}
 			// Init.standardTop(); // Enable this line if you want to debug the
@@ -131,8 +131,8 @@ public class CLOLA extends LOLA
 			// values of all selectors
 			INCRETimer selcalc = incre.getReporter().openProcess("LOLA", "Calculating values of selectors",
 					INCRETimer.TYPE_NORMAL);
-			AnnotationSuperImposition asi = new AnnotationSuperImposition(dataStore);
-			asi.run();
+			AnnotationSuperImposition asi = new AnnotationSuperImposition(dataStore, selectors);
+			asi.run(composestarBuiltins);
 			selcalc.stop();
 		}
 
@@ -149,8 +149,8 @@ public class CLOLA extends LOLA
 			return;
 		}
 		Init.builtinDict = new Builtins();
-		ComposestarBuiltins.setUnitDictionary(unitDict);
-		Init.builtinDict.putAll(new ComposestarBuiltins(langModel));
+		composestarBuiltins = new ComposestarBuiltins(langModel, unitDict);
+		Init.builtinDict.putAll(composestarBuiltins);
 
 		logger.debug("Consulting base predicate libraries");
 

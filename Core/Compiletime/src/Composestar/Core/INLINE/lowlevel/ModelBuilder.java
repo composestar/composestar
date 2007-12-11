@@ -4,11 +4,9 @@
  */
 package Composestar.Core.INLINE.lowlevel;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.Annotations.ResourceManager;
@@ -92,18 +90,6 @@ public class ModelBuilder implements CTCommonModule
 	private DataStore dataStore;
 
 	/**
-	 * Contains a mapping from MethodInfo to the code objectmodel of the
-	 * inputfilters that need to be inlined in the method.
-	 */
-	private static Map<MethodInfo, FilterCode> inputFilterCode;
-
-	/**
-	 * Contains a mapping from CallToOtherMethod to the code objectmodel of the
-	 * outputfilters that need to be inlined on the call.
-	 */
-	private static Map<CallToOtherMethod, FilterCode> outputFilterCode;
-
-	/**
 	 * The current selector being processed.
 	 */
 	private String currentSelector;
@@ -115,6 +101,9 @@ public class ModelBuilder implements CTCommonModule
 
 	@ResourceManager
 	private SECRETResources secretRes;
+
+	@ResourceManager
+	private InlinerResources inlinerRes;
 
 	/**
 	 * Creates the ModelBuilder.
@@ -144,43 +133,6 @@ public class ModelBuilder implements CTCommonModule
 	}
 
 	/**
-	 * Returns the inputfiltercode that needs to be inlined on the given method,
-	 * or <code>null</code> if no inputfilters need to be inlined in the
-	 * method.
-	 * 
-	 * @param method
-	 * @return
-	 */
-	public static FilterCode getInputFilterCode(MethodInfo method)
-	{
-		return inputFilterCode.get(method);
-	}
-
-	/**
-	 * Returns the outputfiltercode that needs to be inlined on the given call,
-	 * or <code>null</code> if no outputfilters need to be inlined in the
-	 * call.
-	 * 
-	 * @param call
-	 * @return
-	 */
-	public static FilterCode getOutputFilterCode(CallToOtherMethod call)
-	{
-		return outputFilterCode.get(call);
-	}
-
-	/**
-	 * Returns the methodid of the given method.
-	 * 
-	 * @param method
-	 * @return
-	 */
-	public static int getMethodId(MethodInfo method)
-	{
-		return ModelBuilderStrategy.getMethodId(method);
-	}
-
-	/**
 	 * Starts the inlining.
 	 */
 	private void startInliner()
@@ -194,8 +146,7 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	private void initialize()
 	{
-		inputFilterCode = new HashMap<MethodInfo, FilterCode>();
-		outputFilterCode = new HashMap<CallToOtherMethod, FilterCode>();
+
 	}
 
 	/**
@@ -276,8 +227,8 @@ public class ModelBuilder implements CTCommonModule
 		FilterCode filterCode = inputFilterBuilderStrategy.getFilterCode();
 		if (filterCode != null)
 		{
-			inputFilterCode.put(methodInfo, filterCode);
-			inlinedMethodSet.add(Integer.valueOf(ModelBuilderStrategy.getMethodId(methodInfo)));
+			inlinerRes.setInputFilterCode(methodInfo, filterCode);
+			inlinedMethodSet.add(Integer.valueOf(inlinerRes.getMethodId(methodInfo)));
 		}
 
 		// process calls:
@@ -322,7 +273,7 @@ public class ModelBuilder implements CTCommonModule
 		// add callBlock to call
 		if (filterCode != null)
 		{
-			outputFilterCode.put(call, filterCode);
+			inlinerRes.setOutputFilterCode(call, filterCode);
 		}
 	}
 

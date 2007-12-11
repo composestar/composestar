@@ -579,7 +579,7 @@ public class LowLevelInliner
 	 * 
 	 * @author Arjan
 	 */
-	private class FilterElementBlock
+	private static class FilterElementBlock
 	{
 		/**
 		 * The executionstate corresponding with the conditionexpression of this
@@ -629,7 +629,7 @@ public class LowLevelInliner
 
 	}
 
-	private class FilterModuleCondition extends TopLevelBlock
+	private static class FilterModuleCondition extends TopLevelBlock
 	{
 		/**
 		 * The execution state corresponding with the filter module condition.
@@ -647,7 +647,7 @@ public class LowLevelInliner
 		private ExecutionState falseExit;
 	}
 
-	private class TopLevelBlock
+	private static class TopLevelBlock
 	{
 		/**
 		 * The label of the top level block, to generate jumps.

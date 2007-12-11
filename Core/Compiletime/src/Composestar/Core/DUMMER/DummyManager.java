@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.COMP.LangCompiler;
@@ -91,27 +92,26 @@ public class DummyManager implements CTCommonModule
 			}
 			ldummies.add(source);
 		}
-		for (String language : dummies.keySet())
+		for (Entry<String, Set<Source>> entry : dummies.entrySet())
 		{
-			Language lang = project.getPlatform().getLanguage(language);
+			Language lang = project.getPlatform().getLanguage(entry.getKey());
 			if (lang == null)
 			{
-				throw new ModuleException(String.format("No language called %s in platform %s", language, project
+				throw new ModuleException(String.format("No language called %s in platform %s", entry.getKey(), project
 						.getPlatform().getId()), MODULE_NAME);
 			}
-			Set<Source> sources = dummies.get(language);
 
 			logger.info("Constructing dummies");
 			DummyEmitter emitter = lang.getDummyEmitter();
 			emitter.setCommonResources(resc);
-			emitter.createDummies(project, sources);
+			emitter.createDummies(project, entry.getValue());
 
 			logger.info("Compiling dummies");
 			LangCompiler comp = lang.getCompiler().getCompiler();
 			comp.setCommonResources(resc);
 			try
 			{
-				comp.compileDummies(project, sources);
+				comp.compileDummies(project, entry.getValue());
 			}
 			catch (CompilerException e)
 			{

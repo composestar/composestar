@@ -76,16 +76,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private Map<Integer, Label> labelTable;
 
 	/**
-	 * Hashtable containing a mapping from MethodInfo to integer id's
-	 */
-	private static Map<MethodInfo, Integer> methodTable;
-
-	/**
-	 * The last generated methodid.
-	 */
-	private static int lastMethodId;
-
-	/**
 	 * Indicates whether the instructionset of the current inline is empty or
 	 * not. When it is empty, this indicates that the filters don't change the
 	 * behaviour of the method(call) and so no inline needs to be done on the
@@ -130,8 +120,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	{
 		this.builder = builder;
 		this.filterSetType = filterSetType;
-		methodTable = new HashMap<MethodInfo, Integer>();
-		lastMethodId = 0;
 		bookKeepingMode = inBookKeepingMode;
 	}
 
@@ -558,28 +546,5 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 			forAction.setBookKeeping(true);
 			filterCode.setBookKeeping(true);
 		}
-	}
-
-	/**
-	 * Returns the methodid corresponding with the given MethodInfo.
-	 * 
-	 * @param method
-	 * @return
-	 */
-	public static int getMethodId(MethodInfo method)
-	{
-		if (method == null)
-		{
-			return -1;
-		}
-
-		Integer id = methodTable.get(method);
-		if (id == null)
-		{
-			id = lastMethodId++;
-			methodTable.put(method, id);
-		}
-
-		return id;
 	}
 }

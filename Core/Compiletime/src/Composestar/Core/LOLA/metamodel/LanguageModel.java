@@ -12,27 +12,31 @@ package Composestar.Core.LOLA.metamodel;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.MethodNode;
+import Composestar.Core.LAMA.ProgramElement;
 
 public abstract class LanguageModel
 {
-	protected Hashtable languageUnitTypes; // Hashtable of
+	protected Map<String, LanguageUnitType> languageUnitTypes; // Hashtable of
 
 	// unitTypeName=>LanguageUnitType
 
 	// protected Hashtable languageUnitTypesByName; // Hashtable of
 	// typeName=>LanguageUnitType
-	protected Hashtable relationPredicates; // Hashtable of
+	protected Map<String, RelationPredicate> relationPredicates; // Hashtable
+
+	// of
 
 	// relPredName=>RelationPredicate
 
 	public LanguageModel()
 	{
-		languageUnitTypes = new Hashtable();
+		languageUnitTypes = new HashMap<String, LanguageUnitType>();
 		// languageUnitTypesByName = new Hashtable();
-		relationPredicates = new Hashtable();
+		relationPredicates = new HashMap<String, RelationPredicate>();
 	}
 
 	/**
@@ -48,7 +52,7 @@ public abstract class LanguageModel
 		{
 			throw new ModelClashException("The type " + type + " is not a registered LanguageUnitType");
 		}
-		return (LanguageUnitType) languageUnitTypes.get(type);
+		return languageUnitTypes.get(type);
 	}
 
 	/*
@@ -76,7 +80,7 @@ public abstract class LanguageModel
 		{
 			throw new ModelClashException("The relation " + relName + " is not a registered relation predicate");
 		}
-		return (RelationPredicate) relationPredicates.get(relName);
+		return relationPredicates.get(relName);
 	}
 
 	/**
@@ -101,14 +105,14 @@ public abstract class LanguageModel
 	 * @param dict Unitdictionary object that will be used for faster lookups by
 	 *            the prolog engine
 	 */
-	public abstract void createIndex(Collection units, UnitDictionary dict) throws ModuleException;
+	public abstract void createIndex(Collection<ProgramElement> units, UnitDictionary dict) throws ModuleException;
 
 	public abstract void createMetaModel() throws InvalidModelException;
 
 	/**
 	 * @return Returns the languageUnitTypes.
 	 */
-	public Collection getLanguageUnitTypes()
+	public Collection<LanguageUnitType> getLanguageUnitTypes()
 	{
 		return languageUnitTypes.values();
 	}
@@ -116,7 +120,7 @@ public abstract class LanguageModel
 	/**
 	 * @param languageUnitTypes The languageUnitTypes to set.
 	 */
-	public void setLanguageUnitTypes(Hashtable languageUnitTypes)
+	public void setLanguageUnitTypes(Map<String, LanguageUnitType> languageUnitTypes)
 	{
 		this.languageUnitTypes = languageUnitTypes;
 	}
@@ -124,7 +128,7 @@ public abstract class LanguageModel
 	/**
 	 * @return Returns the relationPredicates.
 	 */
-	public Hashtable getRelationPredicates()
+	public Map<String, RelationPredicate> getRelationPredicates()
 	{
 		return relationPredicates;
 	}
@@ -132,7 +136,7 @@ public abstract class LanguageModel
 	/**
 	 * @param relationPredicates The relationPredicates to set.
 	 */
-	public void setRelationPredicates(Hashtable relationPredicates)
+	public void setRelationPredicates(Map<String, RelationPredicate> relationPredicates)
 	{
 		this.relationPredicates = relationPredicates;
 	}
@@ -143,7 +147,7 @@ public abstract class LanguageModel
 	 * @param from Type of languageunit
 	 * @param to Type of languageunit
 	 */
-	public abstract HashMap getPathOfUnitRelations(String from, String to);
+	public abstract Map<String, MethodNode> getPathOfUnitRelations(String from, String to);
 
 	// public abstract static LanguageModel instance();
 

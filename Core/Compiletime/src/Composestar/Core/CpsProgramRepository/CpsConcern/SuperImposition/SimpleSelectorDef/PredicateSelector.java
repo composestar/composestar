@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
@@ -44,9 +45,6 @@ import Composestar.Utils.Debug;
 
 public class PredicateSelector extends SimpleSelExpression
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5921852132415178944L;
 
 	String outputVar;
@@ -64,6 +62,8 @@ public class PredicateSelector extends SimpleSelExpression
 	// query
 
 	HashSet annotations; // contains the names of annotations extracted while
+
+	transient ComposestarBuiltins composestarBuiltins;
 
 	// executing query
 
@@ -99,13 +99,15 @@ public class PredicateSelector extends SimpleSelExpression
 	 * Interprets the predicate and stores the answers to be returned by
 	 * interpret()
 	 */
-	public void run() throws ModuleException
+	public void run(ComposestarBuiltins builtins) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
 		INCRETimer executequery = incre.getReporter().openProcess("LOLA", query, INCRETimer.TYPE_NORMAL);
 
+		composestarBuiltins = builtins;
+
 		// tell ComposestarBuiltins that we are executing this selector
-		ComposestarBuiltins.setCurrentSelector(this);
+		composestarBuiltins.setCurrentSelector(this);
 
 		// Debug.out(Debug.MODE_DEBUG, "LOLA", "Interpret a predicate selector("
 		// + outputVar + ", " + query + ")");
@@ -326,12 +328,12 @@ public class PredicateSelector extends SimpleSelExpression
 		Iterator typesItr = tymInfo.keySet().iterator();
 		try
 		{
-			String classType = ComposestarBuiltins.currentLangModel.getLanguageUnitType("Class").getImplementingClass()
-					.getName();
+			String classType = composestarBuiltins.getCurrentLangModel().getLanguageUnitType("Class")
+					.getImplementingClass().getName();
 			while (typesItr.hasNext())
 			{
 				String keyType = (String) typesItr.next();
-				HashMap relations = ComposestarBuiltins.currentLangModel.getPathOfUnitRelations(classType, keyType);
+				Map relations = composestarBuiltins.getCurrentLangModel().getPathOfUnitRelations(classType, keyType);
 				if (relations != null)
 				{
 					Iterator entries = relations.entrySet().iterator();
@@ -404,8 +406,8 @@ public class PredicateSelector extends SimpleSelExpression
 
 		try
 		{
-			String fullname = ComposestarBuiltins.currentLangModel.getLanguageUnitType(type).getImplementingClass()
-					.getName();
+			String fullname = composestarBuiltins.getCurrentLangModel().getLanguageUnitType(type)
+					.getImplementingClass().getName();
 			MethodNode method = new MethodNode(methodname);
 			this.addTYMInfo(fullname, method);
 		}
@@ -424,8 +426,8 @@ public class PredicateSelector extends SimpleSelExpression
 	{
 		try
 		{
-			String fullname = ComposestarBuiltins.currentLangModel.getLanguageUnitType(type).getImplementingClass()
-					.getName();
+			String fullname = composestarBuiltins.getCurrentLangModel().getLanguageUnitType(type)
+					.getImplementingClass().getName();
 			MethodNode method = new MethodNode(methodname);
 			method.setParameters(params);
 			this.addTYMInfo(fullname, method);

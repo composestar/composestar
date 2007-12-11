@@ -397,7 +397,7 @@ public class HighLevelInliner
 		return isCondExpr.isTrue(state) || state.getFlowNode().containsName(FlowNode.ACTION_NODE);
 	}
 
-	private class FilterModuleBlock
+	private static class FilterModuleBlock
 	{
 		public ExecutionState fmState;
 
@@ -407,7 +407,7 @@ public class HighLevelInliner
 		{}
 	}
 
-	private class FilterBlock
+	private static class FilterBlock
 	{
 		public List<FilterElementBlock> filterElements;
 
@@ -415,7 +415,7 @@ public class HighLevelInliner
 		{}
 	}
 
-	private class FilterElementBlock
+	private static class FilterElementBlock
 	{
 		public ExecutionState conditionExprState;
 
@@ -427,7 +427,7 @@ public class HighLevelInliner
 		{}
 	}
 
-	private class ConditionalInliner
+	private static class ConditionalInliner
 	{
 		private HighLevelInlineStrategy strategy;
 
@@ -621,7 +621,7 @@ public class HighLevelInliner
 		}
 	}
 
-	private class InlineException extends RuntimeException
+	private static class InlineException extends RuntimeException
 	{
 		private static final long serialVersionUID = -761683949137294910L;
 

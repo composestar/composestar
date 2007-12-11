@@ -43,7 +43,11 @@ public class EMBEX implements CTCommonModule
 		DataStore ds = DataStore.instance();
 		// create directory for embedded code
 		File embeddedDir = new File(config.getProject().getIntermediate(), EMBEDDED_PATH);
-		embeddedDir.mkdirs();
+		if (!embeddedDir.exists() && !embeddedDir.mkdirs())
+		{
+			throw new ModuleException(String.format("Unable to create directory for embedded sources: %s", embeddedDir
+					.toString()), MODULE_NAME);
+		}
 
 		// iterate over all cps concerns
 		Iterator<CpsConcern> concernIt = ds.getAllInstancesOf(CpsConcern.class);
