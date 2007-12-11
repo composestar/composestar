@@ -16,12 +16,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleE
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.MethodReference;
 import Composestar.Utils.CPSIterator;
 
+/**
+ * @deprecated
+ */
 public class StarMethod extends FilterModuleElementReference
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8845115159529931618L;
 
 	/**

@@ -13,6 +13,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElem
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElementAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPartAST;
@@ -36,18 +37,20 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.FilterMo
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Tries to resolves all references in the repository
+ * 
+ * @deprecated now "all" done in Main
  */
 public class DoResolve
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Main.MODULE_NAME);
+
 	private DataStore ds; // the datastore containing the objects
 
 	private boolean ignoreCase = true; // for stupid typing errors in
-
-	// concernspecifications
 
 	/**
 	 * Constructor
@@ -98,7 +101,8 @@ public class DoResolve
 	private void resolveConcernReferences() throws ModuleException
 	{
 		// iterate over all instances of ConcernReference
-		for (Iterator it = ds.getAllInstancesOf(ConcernReference.class); it.hasNext();)
+		Iterator<ConcernReference> it = ds.getAllInstancesOf(ConcernReference.class);
+		while (it.hasNext())
 		{
 			ConcernReference ref = (ConcernReference) it.next();
 
@@ -125,7 +129,8 @@ public class DoResolve
 	 */
 	private void resolveLabeledConcernReferences() throws ModuleException
 	{
-		for (Iterator it = ds.getAllInstancesOf(LabeledConcernReference.class); it.hasNext();)
+		Iterator<LabeledConcernReference> it = ds.getAllInstancesOf(LabeledConcernReference.class);
+		while (it.hasNext())
 		{
 			Object obj = it.next();
 			LabeledConcernReference ref = (LabeledConcernReference) obj;
@@ -163,7 +168,7 @@ public class DoResolve
 		int fmCounter = 0;
 		// for (Iterator it = ds.getAllInstancesOf(FilterModuleReference.class);
 		// it.hasNext();) {
-		Iterator it = ds.getAllInstancesOf(FilterModuleReference.class);
+		Iterator<FilterModuleReference> it = ds.getAllInstancesOf(FilterModuleReference.class);
 		while (it.hasNext())
 		{
 			FilterModuleReference ref = (FilterModuleReference) it.next();
@@ -177,13 +182,14 @@ public class DoResolve
 				CpsConcern concern = (CpsConcern) fm_ast.getParent();
 				if (concern.getSuperImposition() != null)
 				{
-					Iterator fmBindingIter = concern.getSuperImposition().getFilterModuleBindingIterator();
+					Iterator<FilterModuleBinding> fmBindingIter = concern.getSuperImposition()
+							.getFilterModuleBindingIterator();
 					while (fmBindingIter.hasNext())
 					{
 						FilterModuleBinding fmBinding = (FilterModuleBinding) fmBindingIter.next();
 						SelectorReference selRef = fmBinding.getSelector();
 
-						Iterator fmIter = fmBinding.getFilterModuleIterator();
+						Iterator<FilterModuleReference> fmIter = fmBinding.getFilterModuleIterator();
 						while (fmIter.hasNext())
 						{
 							FilterModuleReference fm_bound = (FilterModuleReference) fmIter.next();
@@ -204,7 +210,7 @@ public class DoResolve
 
 				// add all the newly created internal instances to the
 				// repository
-				Iterator iter = fm.getInternalIterator();
+				Iterator<Internal> iter = fm.getInternalIterator();
 				while (iter.hasNext())
 				{
 					Internal o = (Internal) iter.next();
@@ -212,7 +218,7 @@ public class DoResolve
 					if (o instanceof ParameterizedInternal)
 					{
 						ParameterizedInternal pi = (ParameterizedInternal) o;
-						Vector pack = (Vector) fm.getParameter(pi.getParameter()).getValue();
+						Vector<String> pack = (Vector<String>) fm.getParameter(pi.getParameter()).getValue();
 						ConcernReference cref = new ConcernReference();
 						// ds.removeObject(cref); // FIXME: removeObject isn't
 						// implemented
@@ -226,10 +232,10 @@ public class DoResolve
 					}
 				}
 				// adding the new parameters instances to the repository
-				Iterator iterParams = fm.getParameterIterator();
+				Iterator<FilterModuleParameter> iterParams = fm.getParameterIterator();
 				while (iterParams.hasNext())
 				{
-					Object o = iterParams.next();
+					FilterModuleParameter o = iterParams.next();
 					ds.addObject(o);
 				}
 				ref.setRef(fm);
@@ -289,35 +295,32 @@ public class DoResolve
 	 */
 	private void resolveSelectorReferences() throws ModuleException
 	{
-		SelectorReference ref;
-		CpsConcern temp;
-		SelectorDefinition temp2;
-		Iterator it, it2, it3;
-		Object obj, obj2;
-		boolean found;
-
-		for (it = ds.getIterator(); it.hasNext();)
+		Iterator<Object> it = ds.getIterator();
+		while (it.hasNext())
 		{
-			obj = it.next();
+			Object obj = it.next();
 			if (obj instanceof SelectorReference)
-			{ // ok, try to resolve
-				ref = (SelectorReference) obj;
-				found = false;
+			{
+				// ok, try to resolve
+				SelectorReference ref = (SelectorReference) obj;
+				boolean found = false;
 
 				// first try to find the concern
-				for (it2 = ds.getIterator(); it2.hasNext() && !found;)
+				Iterator<Object> it2 = ds.getIterator();
+				while (it2.hasNext() && !found)
 				{
-					obj2 = it2.next();
+					Object obj2 = it2.next();
 					if (obj2 instanceof CpsConcern)
 					{
-						temp = (CpsConcern) obj2;
+						CpsConcern temp = (CpsConcern) obj2;
 						if (temp.getName().compareTo(ref.getConcern()) == 0)
 						{
 
+							Iterator<SelectorDefinition> it3 = temp.getSuperImposition().getSelectorIterator();
 							// ok, found, now try to find the selector
-							for (it3 = temp.getSuperImposition().getSelectorIterator(); it3.hasNext() && !found;)
+							while (it3.hasNext() && !found)
 							{
-								temp2 = (SelectorDefinition) it3.next();
+								SelectorDefinition temp2 = (SelectorDefinition) it3.next();
 								if ((ignoreCase) && (temp2.getName().compareToIgnoreCase(ref.getName()) == 0))
 								{
 									found = true;
@@ -349,43 +352,40 @@ public class DoResolve
 	 */
 	private void resolveMethodReferences()
 	{
-		MethodReference ref;
-		CpsConcern temp;
-		FilterModule temp2;
-		Method temp3;
-		Iterator it, it2, it3, it4;
-		Object obj, obj2;
-		boolean found;
-
-		for (it = ds.getIterator(); it.hasNext();)
+		Iterator<Object> it = ds.getIterator();
+		while (it.hasNext())
 		{
-			obj = it.next();
+			Object obj = it.next();
 			if (obj instanceof MethodReference)
-			{ // ok, try to resolve
-				ref = (MethodReference) obj;
-				found = false;
+			{
+				// ok, try to resolve
+				MethodReference ref = (MethodReference) obj;
+				boolean found = false;
 
 				// first try to find the concern
-				for (it2 = ds.getIterator(); it2.hasNext() && !found;)
+				Iterator<Object> it2 = ds.getIterator();
+				while (it2.hasNext() && !found)
 				{
-					obj2 = it2.next();
+					Object obj2 = it2.next();
 					if (obj2 instanceof CpsConcern)
 					{
-						temp = (CpsConcern) obj2;
+						CpsConcern temp = (CpsConcern) obj2;
 						if (temp.getName().compareTo(ref.getConcern()) == 0)
 						{
 
 							// ok, found, now try to find the filtermodule
-							for (it3 = temp.getFilterModuleIterator(); it3.hasNext() && !found;)
+							Iterator<FilterModule> it3 = temp.getFilterModuleIterator();
+							while (it3.hasNext() && !found)
 							{
-								temp2 = (FilterModule) it3.next();
+								FilterModule temp2 = (FilterModule) it3.next();
 								if (temp2.getName().compareTo(ref.getFilterModule()) == 0)
 								{
 
 									// ok, found, now try to find the method
-									for (it4 = temp2.getMethodIterator(); it4.hasNext() && !found;)
+									Iterator<Method> it4 = temp2.getMethodIterator();
+									while (it4.hasNext() && !found)
 									{
-										temp3 = (Method) it4.next();
+										Method temp3 = (Method) it4.next();
 										if ((ignoreCase) && (temp3.getName().compareToIgnoreCase(ref.getName()) == 0))
 										{
 											// ok, name matches, now check
@@ -441,10 +441,10 @@ public class DoResolve
 	 * @param it Iterator to the first collection of parameters
 	 * @param it2 Iterator to the second collection of parameters
 	 */
-	private boolean compareParameters(Iterator it, Iterator it2)
+	private boolean compareParameters(Iterator<Object> it, Iterator<Object> it2)
 	{
 		int i = 0, j = 0;
-		Iterator it3, it4; // backups, used for counting
+		Iterator<Object> it3, it4; // backups, used for counting
 		LabeledConcernReference l;
 		ConcernReference c;
 
@@ -743,9 +743,8 @@ public class DoResolve
 				}
 				catch (Exception e)
 				{
-					Debug
-							.out(Debug.MODE_ERROR, "REXREF",
-									"Getting the value for a message selector parameter failed, probably the parent chain is broken.");
+					logger
+							.error("Getting the value for a message selector parameter failed, probably the parent chain is broken.");
 				}
 			}
 		}
@@ -903,17 +902,11 @@ public class DoResolve
 		return copy;
 	}
 
-	public class Splitter
+	public static class Splitter
 	{
-		private Vector pack;
+		private Vector<String> pack;
 
 		private String concern;
-
-		private String concernelem;
-
-		private String fm;
-
-		private String fmelem;
 
 		private int i, j;
 
@@ -927,15 +920,12 @@ public class DoResolve
 		{
 			pack = null;
 			concern = null;
-			concernelem = null;
-			fm = null;
-			fmelem = null;
 			i = 0;
 			j = 0;
 		}
 
 		// split a concernReference (i.e. a.b.c.concern)
-		public void splitConcernReference(Vector in)
+		public void splitConcernReference(Vector<String> in)
 		{
 			reset();
 			i = in.size();
@@ -953,7 +943,7 @@ public class DoResolve
 						if (pack == null)
 						{
 							pack = new Vector(); // only create pack if
-													// actually
+							// actually
 							// used
 						}
 						pack.add(in.elementAt(j));
@@ -962,7 +952,7 @@ public class DoResolve
 			}
 		}
 
-		public Vector getPack()
+		public Vector<String> getPack()
 		{
 			return pack;
 		}
@@ -970,21 +960,6 @@ public class DoResolve
 		public String getConcern()
 		{
 			return concern;
-		}
-
-		public String getFm()
-		{
-			return fm;
-		}
-
-		public String getFmelem()
-		{
-			return fmelem;
-		}
-
-		public String getConcernelem()
-		{
-			return concernelem;
 		}
 	}
 

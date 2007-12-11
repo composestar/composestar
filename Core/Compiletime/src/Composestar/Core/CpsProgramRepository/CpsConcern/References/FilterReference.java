@@ -17,6 +17,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 
 /**
  * reference to a in- or outputfilter
+ * 
+ * @deprecated ??
  */
 public class FilterReference extends FilterModuleElementReference
 {

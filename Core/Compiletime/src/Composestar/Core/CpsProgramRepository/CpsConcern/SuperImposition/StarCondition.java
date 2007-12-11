@@ -16,6 +16,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionRefe
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleElementReference;
 import Composestar.Utils.CPSIterator;
 
+/**
+ * @deprecated
+ */
 public class StarCondition extends FilterModuleElementReference
 {
 

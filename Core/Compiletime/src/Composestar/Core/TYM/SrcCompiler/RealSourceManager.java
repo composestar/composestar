@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.COMP.LangCompiler;
@@ -67,21 +68,20 @@ public class RealSourceManager implements CTCommonModule
 			lsources.add(source);
 		}
 
-		for (String language : sources.keySet())
+		for (Entry<String, Set<Source>> entry : sources.entrySet())
 		{
-			Language lang = project.getPlatform().getLanguage(language);
+			Language lang = project.getPlatform().getLanguage(entry.getKey());
 			if (lang == null)
 			{
-				throw new ModuleException(String.format("No language called %s in platform %s", language, project
+				throw new ModuleException(String.format("No language called %s in platform %s", entry.getKey(), project
 						.getPlatform().getId()), MODULE_NAME);
 			}
-			Set<Source> lsources = sources.get(language);
 
 			LangCompiler comp = lang.getCompiler().getCompiler();
 			comp.setCommonResources(resources);
 			try
 			{
-				comp.compileSources(project, lsources);
+				comp.compileSources(project, entry.getValue());
 			}
 			catch (CompilerException e)
 			{

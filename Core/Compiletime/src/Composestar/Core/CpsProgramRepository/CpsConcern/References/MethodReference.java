@@ -20,6 +20,8 @@ import Composestar.Utils.CPSIterator;
 
 /**
  * reference to a method
+ * 
+ * @deprecated
  */
 public class MethodReference extends FilterModuleElementReference
 {
