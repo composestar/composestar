@@ -10,19 +10,19 @@ public class StringUtilsTest extends TestCase
 {
 	public void testJoin1()
 	{
-		List p1 = Arrays.asList(new String[] {});
+		List<String> p1 = Arrays.asList(new String[] {});
 		assertEquals("", StringUtils.join(p1));
 
-		List p2 = Arrays.asList(new String[] { "1", "2", "3", "4" });
+		List<String> p2 = Arrays.asList(new String[] { "1", "2", "3", "4" });
 		assertEquals("1 2 3 4", StringUtils.join(p2));
 	}
 
 	public void testJoin2()
 	{
-		List p1 = Arrays.asList(new String[] {});
+		List<String> p1 = Arrays.asList(new String[] {});
 		assertEquals("", StringUtils.join(p1, ","));
 
-		List p2 = Arrays.asList(new String[] { "1", "2", "3", "4" });
+		List<String> p2 = Arrays.asList(new String[] { "1", "2", "3", "4" });
 		assertEquals("1,2,3,4", StringUtils.join(p2, ","));
 	}
 
@@ -36,17 +36,6 @@ public class StringUtilsTest extends TestCase
 
 		String[] p3 = StringUtils.split("1,2,3,4", ',');
 		assertEquals(new String[] { "1", "2", "3", "4" }, p3);
-	}
-
-	public void testCapitalize()
-	{
-		assertEquals(null, StringUtils.capitalize(null));
-		assertEquals("", StringUtils.capitalize(""));
-		assertEquals("Q", StringUtils.capitalize("q"));
-		assertEquals("Foo", StringUtils.capitalize("foo"));
-		assertEquals("Foo", StringUtils.capitalize("Foo"));
-		assertEquals("BAR", StringUtils.capitalize("BAR"));
-		assertEquals("Foo bar", StringUtils.capitalize("foo bar"));
 	}
 
 	private static void assertEquals(String message, Object[] expected, Object[] actual)

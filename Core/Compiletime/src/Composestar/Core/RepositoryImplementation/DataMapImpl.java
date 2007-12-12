@@ -3,7 +3,6 @@ package Composestar.Core.RepositoryImplementation;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,32 +23,27 @@ public class DataMapImpl extends DataMap
 {
 	private static final long serialVersionUID = -6486304623601718657L;
 
-	// public Vector m_keys;
-	// public Vector m_values;
-	public HashMap map;
+	public HashMap<Object, Object> map;
 
 	public DataMapImpl()
 	{
-		// m_keys = new Vector();
-		// m_values = new Vector();
-		map = new HashMap();
+		map = new HashMap<Object, Object>();
 	}
 
 	public DataMapImpl(DataMap dataMap)
 	{
-		map = new HashMap(dataMap.size());
-
-		Iterator keyIterator = dataMap.keySet().iterator();
+		map = new HashMap<Object, Object>(dataMap.size());
+		Iterator<Object> keyIterator = dataMap.keySet().iterator();
 		while (keyIterator.hasNext())
 		{
-			String key = (String) keyIterator.next();
+			Object key = keyIterator.next();
 			map.put(key, dataMap.get(key));
 		}
 	}
 
 	public void clear()
 	{
-		map = new HashMap();
+		map = new HashMap<Object, Object>();
 	}
 
 	public boolean containsKey(Object key)
@@ -112,7 +106,7 @@ public class DataMapImpl extends DataMap
 		return map.size();
 	}
 
-	public Collection values()
+	public Collection<Object> values()
 	{
 		return map.values();
 	}
@@ -120,10 +114,10 @@ public class DataMapImpl extends DataMap
 	public void excludeUnreferenced(Class c)
 	{
 		// CPSLogger logger = CPSLogger.getCPSLogger("datamap");
-		Iterator it = map.entrySet().iterator();
+		Iterator<Entry<Object, Object>> it = map.entrySet().iterator();
 		while (it.hasNext())
 		{
-			Entry entry = (Entry) it.next();
+			Entry<Object, Object> entry = it.next();
 			if (entry.getValue().getClass().equals(c) && entry.getValue() instanceof RepositoryEntity)
 			{
 				RepositoryEntity re = (RepositoryEntity) entry.getValue();
@@ -156,12 +150,12 @@ public class DataMapImpl extends DataMap
 		 */
 		DataMapImpl dmap = (DataMapImpl) super.clone();
 
-		dmap.map = new HashMap(map.size());
+		dmap.map = new HashMap<Object, Object>(map.size());
 
-		Iterator keyIterator = keySet().iterator();
+		Iterator<Object> keyIterator = keySet().iterator();
 		while (keyIterator.hasNext())
 		{
-			String key = (String) keyIterator.next();
+			Object key = keyIterator.next();
 			dmap.put(key, map.get(key));
 		}
 
@@ -185,7 +179,7 @@ public class DataMapImpl extends DataMap
 		}
 		else
 		{
-			map = (HashMap) in.readObject();
+			map = (HashMap<Object, Object>) in.readObject();
 		}
 	}
 
@@ -198,11 +192,11 @@ public class DataMapImpl extends DataMap
 		}
 		else
 		{
-			HashMap rtmap = new HashMap(map);
-			Iterator it = rtmap.entrySet().iterator();
+			HashMap<Object, Object> rtmap = new HashMap<Object, Object>(map);
+			Iterator<Entry<Object, Object>> it = rtmap.entrySet().iterator();
 			while (it.hasNext())
 			{
-				Entry entry = (Entry) it.next();
+				Entry<Object, Object> entry = it.next();
 				Object obj = entry.getValue();
 				if (obj instanceof String)
 				{
@@ -220,8 +214,10 @@ public class DataMapImpl extends DataMap
 				{
 					continue;
 				}
-				System.err.println("Not serializing object of type: " + obj.getClass().getName());
-				System.err.println(" " + entry.getKey() + " = " + obj.toString());
+				// System.err.println("Not serializing object of type: " +
+				// obj.getClass().getName());
+				// System.err.println(" " + entry.getKey() + " = " +
+				// obj.toString());
 				it.remove();
 			}
 			out.writeObject(rtmap);

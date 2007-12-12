@@ -145,9 +145,9 @@ public class CmdLineArgumentList extends CmdLineArgument
 		return useQuote;
 	}
 
-	public void setUseQuote(boolean useQuote)
+	public void setUseQuote(boolean value)
 	{
-		this.useQuote = useQuote;
+		useQuote = value;
 	}
 
 }

@@ -42,15 +42,15 @@ public class ExecutionModelExtractor
 {
 	private Map<DefaultGraphState, BasicExecutionState> stateTable;
 
-	private final static Label PC_LABEL = new DefaultLabel("pc");
+	private static final Label PC_LABEL = new DefaultLabel("pc");
 
-	private final static Label SELECTOR_LABEL = new DefaultLabel("selector");
+	private static final Label SELECTOR_LABEL = new DefaultLabel("selector");
 
-	private final static Label TARGET_LABEL = new DefaultLabel("target");
+	private static final Label TARGET_LABEL = new DefaultLabel("target");
 
-	private final static Label SUBSTITUTIONSELECTOR_LABEL = new DefaultLabel("substitutionSelector");
+	private static final Label SUBSTITUTIONSELECTOR_LABEL = new DefaultLabel("substitutionSelector");
 
-	private final static Label SUBSTITUTIONTARGET_LABEL = new DefaultLabel("substitutionTarget");
+	private static final Label SUBSTITUTIONTARGET_LABEL = new DefaultLabel("substitutionTarget");
 
 	public ExecutionModelExtractor()
 	{}

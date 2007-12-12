@@ -22,7 +22,7 @@ public class Target extends ContextRepositoryEntity
 	private static final long serialVersionUID = 4238743031003419298L;
 
 	public static final String INNER = "inner";
-	
+
 	public static final String SELF = "self";
 
 	/**
@@ -81,10 +81,10 @@ public class Target extends ContextRepositoryEntity
 
 	public int hashCode()
 	{
-		final int PRIME = 31;
+		final int prime = 31;
 		int result = 1;
-		result = PRIME * result + ((name == null) ? 0 : name.hashCode());
-		result = PRIME * result + ((ref == null) ? 0 : ref.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((ref == null) ? 0 : ref.hashCode());
 		return result;
 	}
 

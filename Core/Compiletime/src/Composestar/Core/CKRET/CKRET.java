@@ -30,8 +30,6 @@ import Composestar.Core.CKRET.Report.XMLReport;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
@@ -41,9 +39,6 @@ import Composestar.Core.FIRE2.util.regex.RegularState;
 import Composestar.Core.FIRE2.util.regex.RegularTransition;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.LAMA.Annotation;
-import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -78,10 +73,10 @@ public class CKRET implements CTCommonModule
 
 		secretResources.setLabeler(new ResourceOperationLabelerEx(secretResources));
 
-		Iterator conIt = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIt = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (conIt.hasNext())
 		{
-			Concern concern = (Concern) conIt.next();
+			Concern concern = conIt.next();
 
 			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
 			{
@@ -169,10 +164,10 @@ public class CKRET implements CTCommonModule
 		}
 
 		// load operation sequences from filter action
-		Iterator facts = DataStore.instance().getAllInstancesOf(FilterAction.class);
+		Iterator<FilterAction> facts = DataStore.instance().getAllInstancesOf(FilterAction.class);
 		while (facts.hasNext())
 		{
-			FilterAction fact = (FilterAction) facts.next();
+			FilterAction fact = facts.next();
 			OperationSequence opseq = new OperationSequence();
 			opseq.addLabel(fact.getName(), "node");
 			secretResources.addOperationSequence(opseq);
@@ -390,53 +385,5 @@ public class CKRET implements CTCommonModule
 					break;
 			}
 		}
-	}
-
-	@Deprecated
-	public List<Annotation> getSemanticAnnotations(PrimitiveConcern pc)
-	{
-		return getSemanticAnnotations((Concern) pc);
-	}
-
-	@Deprecated
-	public List<Annotation> getSemanticAnnotations(CpsConcern cps)
-	{
-		return getSemanticAnnotations((Concern) cps);
-	}
-
-	@Deprecated
-	public List<Annotation> getSemanticAnnotations(Concern c)
-	{
-		List<Annotation> annos = new ArrayList<Annotation>();
-		INCRE incre = INCRE.instance();
-		DataStore ds = incre.getCurrentRepository();
-
-		// iterate over concerns
-		Iterator iterConcerns = ds.getAllInstancesOf(Concern.class);
-		while (iterConcerns.hasNext())
-		{
-			Concern concern = (Concern) iterConcerns.next();
-			Type type = (Type) concern.getPlatformRepresentation();
-			if (type == null)
-			{
-				continue;
-			}
-			// iterate over methods
-			for (Object o : type.getMethods())
-			{
-				MethodInfo method = (MethodInfo) o;
-				// iterate over annotations
-				for (Object o1 : method.getAnnotations())
-				{
-					Annotation anno = (Annotation) o1;
-					if (anno.getType().getUnitName().endsWith("Semantics"))
-					{
-						annos.add(anno);
-					}
-				}
-			}
-		}
-
-		return annos;
 	}
 }

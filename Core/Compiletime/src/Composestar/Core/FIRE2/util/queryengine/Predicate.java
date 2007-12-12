@@ -17,6 +17,7 @@ public abstract class Predicate implements CtlFormula
 		return visitor.visitPredicate(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "Predicate";

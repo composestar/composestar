@@ -37,6 +37,6 @@ public class SyntacticOrderingConstraint implements Serializable
 	@Override
 	public String toString()
 	{
-		return ("Constraint: " + left + " before " + postconstraints);
+		return "Constraint: " + left + " before " + postconstraints;
 	}
 }

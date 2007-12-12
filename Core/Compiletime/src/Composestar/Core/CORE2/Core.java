@@ -39,10 +39,10 @@ public class Core implements CTCommonModule
 	{
 		// f2res = resources.getResourceManager(FIRE2Resources.class);
 		// Iterate over all concerns
-		Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIter = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
 		{
-			Concern concern = (Concern) conIter.next();
+			Concern concern = conIter.next();
 
 			// Check whether the concern has filters superimposed
 			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)

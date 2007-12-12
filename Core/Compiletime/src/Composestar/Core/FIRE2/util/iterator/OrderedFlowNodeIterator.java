@@ -9,11 +9,11 @@ import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
 
-public class OrderedFlowNodeIterator implements Iterator
+public class OrderedFlowNodeIterator implements Iterator<FlowNode>
 {
-	private HashMap unvisitedTransitionCount;
+	private HashMap<FlowNode, MutableInteger> unvisitedTransitionCount;
 
-	private LinkedList nextNodes;
+	private LinkedList<FlowNode> nextNodes;
 
 	public OrderedFlowNodeIterator(FlowModel model)
 	{
@@ -22,15 +22,13 @@ public class OrderedFlowNodeIterator implements Iterator
 
 	private void initialize(FlowModel model)
 	{
-		unvisitedTransitionCount = new HashMap();
-		Iterator transitionIter = model.getTransitions();
-		while (transitionIter.hasNext())
+		unvisitedTransitionCount = new HashMap<FlowNode, MutableInteger>();
+		for (FlowTransition transition : model.getTransitionsEx())
 		{
-			FlowTransition transition = (FlowTransition) transitionIter.next();
 			FlowNode endNode = transition.getEndNode();
 			if (unvisitedTransitionCount.containsKey(endNode))
 			{
-				MutableInteger count = (MutableInteger) unvisitedTransitionCount.get(endNode);
+				MutableInteger count = unvisitedTransitionCount.get(endNode);
 				count.value++;
 			}
 			else
@@ -41,7 +39,7 @@ public class OrderedFlowNodeIterator implements Iterator
 			}
 		}
 
-		nextNodes = new LinkedList();
+		nextNodes = new LinkedList<FlowNode>();
 		nextNodes.add(model.getStartNode());
 	}
 
@@ -50,22 +48,20 @@ public class OrderedFlowNodeIterator implements Iterator
 		return !nextNodes.isEmpty();
 	}
 
-	public Object next()
+	public FlowNode next()
 	{
 		if (nextNodes.isEmpty())
 		{
 			throw new NoSuchElementException();
 		}
 
-		FlowNode node = (FlowNode) nextNodes.removeFirst();
+		FlowNode node = nextNodes.removeFirst();
 
 		// Decrement counter of next nodes
-		Iterator transitionIter = node.getTransitions();
-		while (transitionIter.hasNext())
+		for (FlowTransition transition : node.getTransitionsEx())
 		{
-			FlowTransition transition = (FlowTransition) transitionIter.next();
 			FlowNode endNode = transition.getEndNode();
-			MutableInteger count = (MutableInteger) unvisitedTransitionCount.get(endNode);
+			MutableInteger count = unvisitedTransitionCount.get(endNode);
 			count.value--;
 			if (count.value == 0)
 			{
@@ -81,7 +77,7 @@ public class OrderedFlowNodeIterator implements Iterator
 		throw new UnsupportedOperationException();
 	}
 
-	private class MutableInteger
+	private static class MutableInteger
 	{
 		private int value = 0;
 	}

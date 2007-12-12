@@ -34,17 +34,17 @@ public class FilterType extends RepositoryEntity
 
 	private FilterAction rejectReturnAction;
 
-	// public final static String WAIT = "Wait";
-	// public final static String DISPATCH = "Dispatch";
-	// public final static String ERROR = "Error";
-	// public final static String META = "Meta";
-	// public final static String SUBSTITUTION = "Substitution";
-	// public final static String CUSTOM = "Custom";
-	// public final static String SEND = "Send";
-	// public final static String PREPEND = "Prepend";
-	// public final static String APPEND = "Append";
-	// public final static String BEFORE = "Before";
-	// public final static String AFTER = "After";
+	// public static final String WAIT = "Wait";
+	// public static final String DISPATCH = "Dispatch";
+	// public static final String ERROR = "Error";
+	// public static final String META = "Meta";
+	// public static final String SUBSTITUTION = "Substitution";
+	// public static final String CUSTOM = "Custom";
+	// public static final String SEND = "Send";
+	// public static final String PREPEND = "Prepend";
+	// public static final String APPEND = "Append";
+	// public static final String BEFORE = "Before";
+	// public static final String AFTER = "After";
 
 	/**
 	 * Contains a mapping from strings representing filtertypes to FilterType
@@ -79,11 +79,11 @@ public class FilterType extends RepositoryEntity
 	}
 
 	/**
-	 * @param acceptCallAction the acceptCallAction to set
+	 * @param value the acceptCallAction to set
 	 */
-	public void setAcceptCallAction(FilterAction acceptCallAction)
+	public void setAcceptCallAction(FilterAction value)
 	{
-		this.acceptCallAction = acceptCallAction;
+		acceptCallAction = value;
 	}
 
 	/**
@@ -95,11 +95,11 @@ public class FilterType extends RepositoryEntity
 	}
 
 	/**
-	 * @param acceptReturnAction the acceptReturnAction to set
+	 * @param value the acceptReturnAction to set
 	 */
-	public void setAcceptReturnAction(FilterAction acceptReturnAction)
+	public void setAcceptReturnAction(FilterAction value)
 	{
-		this.acceptReturnAction = acceptReturnAction;
+		acceptReturnAction = value;
 	}
 
 	/**
@@ -111,11 +111,11 @@ public class FilterType extends RepositoryEntity
 	}
 
 	/**
-	 * @param rejectCallAction the rejectCallAction to set
+	 * @param value the rejectCallAction to set
 	 */
-	public void setRejectCallAction(FilterAction rejectCallAction)
+	public void setRejectCallAction(FilterAction value)
 	{
-		this.rejectCallAction = rejectCallAction;
+		rejectCallAction = value;
 	}
 
 	/**
@@ -127,11 +127,11 @@ public class FilterType extends RepositoryEntity
 	}
 
 	/**
-	 * @param rejectReturnAction the rejectReturnAction to set
+	 * @param value the rejectReturnAction to set
 	 */
-	public void setRejectReturnAction(FilterAction rejectReturnAction)
+	public void setRejectReturnAction(FilterAction value)
 	{
-		this.rejectReturnAction = rejectReturnAction;
+		rejectReturnAction = value;
 	}
 
 	public static FilterType getFilterType(String name)

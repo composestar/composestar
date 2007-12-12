@@ -43,15 +43,15 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  */
 public class GrooveASTBuilder
 {
-	public final static String SELECTOR_ANNOTATION = "selector";
+	public static final String SELECTOR_ANNOTATION = "selector";
 
-	public final static String TARGET_ANNOTATION = "target";
+	public static final String TARGET_ANNOTATION = "target";
 
-	public final static String REPOSITORY_LINK_ANNOTATION = "repositoryLink";
+	public static final String REPOSITORY_LINK_ANNOTATION = "repositoryLink";
 
-	public final static String ACTION_ANNOTATION = "action";
+	public static final String ACTION_ANNOTATION = "action";
 
-	public final static String STAR_REPRESENTATION = "'*'";
+	public static final String STAR_REPRESENTATION = "'*'";
 
 	/**
 	 * Map containing a mapping from the String representation of the
@@ -70,39 +70,39 @@ public class GrooveASTBuilder
 	/*
 	 * Edge labels in the AST
 	 */
-	public final static String FILTER_EDGE = "filter";
+	public static final String FILTER_EDGE = "filter";
 
-	public final static String ORDER_FIRST_EDGE = "orderFirst";
+	public static final String ORDER_FIRST_EDGE = "orderFirst";
 
-	public final static String ORDER_NEXT_EDGE = "orderNext";
+	public static final String ORDER_NEXT_EDGE = "orderNext";
 
-	public final static String RIGHT_OPERATOR_EDGE = "rightOper";
+	public static final String RIGHT_OPERATOR_EDGE = "rightOper";
 
-	public final static String RIGHT_ARGUMENT_EDGE = "rightArg";
+	public static final String RIGHT_ARGUMENT_EDGE = "rightArg";
 
-	public final static String REJECT_CALL_EDGE = "rejectCall";
+	public static final String REJECT_CALL_EDGE = "rejectCall";
 
-	public final static String ACCEPT_CALL_EDGE = "acceptCall";
+	public static final String ACCEPT_CALL_EDGE = "acceptCall";
 
-	public final static String REJECT_RETURN_EDGE = "rejectReturn";
+	public static final String REJECT_RETURN_EDGE = "rejectReturn";
 
-	public final static String ACCEPT_RETURN_EDGE = "acceptReturn";
+	public static final String ACCEPT_RETURN_EDGE = "acceptReturn";
 
-	public final static String FILTER_ELEMENT_EDGE = "filterElement";
+	public static final String FILTER_ELEMENT_EDGE = "filterElement";
 
-	public final static String CONDITION_PART_EDGE = "conditionPart";
+	public static final String CONDITION_PART_EDGE = "conditionPart";
 
-	public final static String CONDITION_OPERATOR_EDGE = "conditionOperator";
+	public static final String CONDITION_OPERATOR_EDGE = "conditionOperator";
 
-	public final static String MATCHING_PATTERN_EDGE = "matchingPattern";
+	public static final String MATCHING_PATTERN_EDGE = "matchingPattern";
 
-	public final static String MATCHING_PART_EDGE = "matchingPart";
+	public static final String MATCHING_PART_EDGE = "matchingPart";
 
-	public final static String SUBSTITUTION_PART_EDGE = "substitutionPart";
+	public static final String SUBSTITUTION_PART_EDGE = "substitutionPart";
 
-	public final static String SELECTOR_EDGE = "selector";
+	public static final String SELECTOR_EDGE = "selector";
 
-	public final static String TARGET_EDGE = "target";
+	public static final String TARGET_EDGE = "target";
 
 	public GrooveASTBuilder()
 	{}

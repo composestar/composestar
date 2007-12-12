@@ -7,12 +7,12 @@ package Composestar.Core.FIRE2.util.queryengine.ctl;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Dictionary;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JPanel;
 import javax.swing.JTree;
@@ -26,7 +26,6 @@ import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.util.queryengine.Predicate;
-import Composestar.Core.FIRE2.util.queryengine.QueryEngine;
 import Composestar.Core.FIRE2.util.viewer.Viewer;
 
 public class CtlChecker
@@ -37,17 +36,17 @@ public class CtlChecker
 
 	private CtlFormula formula;
 
-	private Hashtable satTable;
+	private Map<ExecutionState, Set<CtlFormula>> satTable;
 
-	private Hashtable reverseSatTable;
+	private Map<ExecutionState, Set<CtlFormula>> reverseSatTable;
 
-	private Hashtable reverseTable;
+	private Map<ExecutionState, List<ExecutionState>> reverseTable;
 
-	private Vector backwardStateVector;
+	private List<ExecutionState> backwardStateVector;
 
-	private Vector forwardStateVector;
+	private List<ExecutionState> forwardStateVector;
 
-	private Hashtable simplifierMap;
+	private Map<Object, CtlFormula> simplifierMap;
 
 	public CtlChecker(ExecutionModel model, String formula, Dictionary<String, Predicate> predicates)
 	{
@@ -57,7 +56,7 @@ public class CtlChecker
 	public CtlChecker(ExecutionModel model, CtlFormula formula)
 	{
 		this.model = model;
-		this.origFormula = formula;
+		origFormula = formula;
 		this.formula = formula;
 
 		initialize();
@@ -69,22 +68,22 @@ public class CtlChecker
 
 	public boolean matchesState(ExecutionState state)
 	{
-		HashSet satSet = (HashSet) satTable.get(state);
+		Set<CtlFormula> satSet = satTable.get(state);
 
-		Vector v = (Vector) reverseTable.get(state);
-
-		ExecutionState state2;
-		HashSet satSet2 = null;
-		HashSet reverseSatSet2 = null;
-		Vector v2 = null;
-		if (!v.isEmpty())
-		{
-			state2 = (ExecutionState) v.elementAt(0);
-			satSet2 = (HashSet) satTable.get(state2);
-
-			reverseSatSet2 = (HashSet) reverseSatTable.get(state2);
-			v2 = (Vector) reverseTable.get(state2);
-		}
+		// List v = reverseTable.get(state);
+		//
+		// ExecutionState state2;
+		// Set satSet2 = null;
+		// Set reverseSatSet2 = null;
+		// List v2 = null;
+		// if (!v.isEmpty())
+		// {
+		// state2 = (ExecutionState) v.get(0);
+		// satSet2 = satTable.get(state2);
+		//
+		// reverseSatSet2 = reverseSatTable.get(state2);
+		// v2 = reverseTable.get(state2);
+		// }
 
 		return satSet.contains(formula);
 	}
@@ -93,10 +92,8 @@ public class CtlChecker
 	{
 		ArrayList<ExecutionState> list = new ArrayList<ExecutionState>();
 
-		Enumeration e = backwardStateVector.elements();
-		while (e.hasMoreElements())
+		for (ExecutionState state : backwardStateVector)
 		{
-			ExecutionState state = (ExecutionState) e.nextElement();
 			if (matchesState(state))
 			{
 				list.add(state);
@@ -108,23 +105,23 @@ public class CtlChecker
 
 	private void initialize()
 	{
-		satTable = new Hashtable();
-		reverseSatTable = new Hashtable();
-		backwardStateVector = new Vector();
-		forwardStateVector = new Vector();
-		reverseTable = new Hashtable();
+		satTable = new HashMap<ExecutionState, Set<CtlFormula>>();
+		reverseSatTable = new HashMap<ExecutionState, Set<CtlFormula>>();
+		backwardStateVector = new ArrayList<ExecutionState>();
+		forwardStateVector = new ArrayList<ExecutionState>();
+		reverseTable = new HashMap<ExecutionState, List<ExecutionState>>();
 
-		simplifierMap = new Hashtable();
+		simplifierMap = new HashMap<Object, CtlFormula>();
 
-		Iterator startStates = model.getEntranceStates();
+		Iterator<ExecutionState> startStates = model.getEntranceStates();
 		while (startStates.hasNext())
 		{
-			addState((ExecutionState) startStates.next());
+			addState(startStates.next());
 		}
 
 		for (int i = backwardStateVector.size() - 1; i >= 0; i--)
 		{
-			forwardStateVector.addElement(backwardStateVector.elementAt(i));
+			forwardStateVector.add(backwardStateVector.get(i));
 		}
 	}
 
@@ -135,30 +132,28 @@ public class CtlChecker
 			return;
 		}
 
-		satTable.put(state, new HashSet());
-		reverseSatTable.put(state, new HashSet());
+		satTable.put(state, new HashSet<CtlFormula>());
+		reverseSatTable.put(state, new HashSet<CtlFormula>());
 
-		reverseTable.put(state, new Vector());
+		reverseTable.put(state, new ArrayList<ExecutionState>());
 
-		Iterator it = state.getOutTransitions();
-		while (it.hasNext())
+		for (ExecutionTransition transition : state.getOutTransitionsEx())
 		{
-			ExecutionTransition transition = (ExecutionTransition) it.next();
 			ExecutionState nextState = transition.getEndState();
 			addState(nextState);
 
-			Vector v = (Vector) reverseTable.get(nextState);
-			v.addElement(state);
+			List<ExecutionState> v = reverseTable.get(nextState);
+			v.add(state);
 		}
 
-		backwardStateVector.addElement(state);
+		backwardStateVector.add(state);
 	}
 
 	private void simplify()
 	{
 		Simplifier simplifier = new Simplifier();
 		CtlFormula simplified = (CtlFormula) formula.visit(simplifier, null);
-		this.formula = simplified;
+		formula = simplified;
 	}
 
 	private void check()
@@ -169,15 +164,15 @@ public class CtlChecker
 
 	private boolean isSatisfied(ExecutionState state, CtlFormula formula, Boolean reversed)
 	{
-		HashSet satSet;
+		Set<CtlFormula> satSet;
 
 		if (reversed)
 		{
-			satSet = (HashSet) reverseSatTable.get(state);
+			satSet = reverseSatTable.get(state);
 		}
 		else
 		{
-			satSet = (HashSet) satTable.get(state);
+			satSet = satTable.get(state);
 		}
 
 		return satSet.contains(formula);
@@ -205,10 +200,10 @@ public class CtlChecker
 			formula.subFormula1.visit(this, arg);
 			formula.subFormula2.visit(this, arg);
 
-			Enumeration states = satTable.keys();
-			while (states.hasMoreElements())
+			Iterator<ExecutionState> states = satTable.keySet().iterator();
+			while (states.hasNext())
 			{
-				ExecutionState state = (ExecutionState) states.nextElement();
+				ExecutionState state = states.next();
 				if (isSatisfied(state, formula.subFormula1, (Boolean) arg)
 						&& isSatisfied(state, formula.subFormula2, (Boolean) arg))
 				{
@@ -239,10 +234,10 @@ public class CtlChecker
 			formula.subFormula.visit(this, arg);
 
 			// iterate backward over all states:
-			Enumeration enumer = backwardStateIterator((Boolean) arg);
-			while (enumer.hasMoreElements())
+			Iterator<ExecutionState> enumer = backwardStateIterator((Boolean) arg);
+			while (enumer.hasNext())
 			{
-				ExecutionState state = (ExecutionState) enumer.nextElement();
+				ExecutionState state = enumer.next();
 
 				// check whether current state doesn't satisfy the subformula
 				if (isSatisfied(state, formula.subFormula, (Boolean) arg))
@@ -251,21 +246,21 @@ public class CtlChecker
 					// formula
 					// (due to backward traversal this state is already
 					// checked):
-					Enumeration nextStates = getNextStates(state, (Boolean) arg);
+					Iterator<ExecutionState> nextStates = getNextStates(state, (Boolean) arg);
 
 					// if it hasn't any next states, this is an end state, so
 					// this
 					// state satisfies the formula (it is already checked
 					// whether
 					// it satisfies the subformula)
-					if (!nextStates.hasMoreElements())
+					if (!nextStates.hasNext())
 					{
 						addSatisfy(state, formula, (Boolean) arg);
 					}
 
-					while (nextStates.hasMoreElements())
+					while (nextStates.hasNext())
 					{
-						ExecutionState nextState = (ExecutionState) nextStates.nextElement();
+						ExecutionState nextState = nextStates.next();
 						if (isSatisfied(nextState, formula, (Boolean) arg))
 						{
 							addSatisfy(state, formula, (Boolean) arg);
@@ -285,10 +280,10 @@ public class CtlChecker
 			formula.subFormula1.visit(this, arg);
 			formula.subFormula2.visit(this, arg);
 
-			Enumeration enumer = backwardStateIterator(reversed);
-			while (enumer.hasMoreElements())
+			Iterator<ExecutionState> enumer = backwardStateIterator(reversed);
+			while (enumer.hasNext())
 			{
-				ExecutionState state = (ExecutionState) enumer.nextElement();
+				ExecutionState state = enumer.next();
 
 				if (isSatisfied(state, formula, reversed))
 				{
@@ -304,10 +299,10 @@ public class CtlChecker
 				// next state satisfies the formula:
 				else if (isSatisfied(state, formula.subFormula1, reversed))
 				{
-					Enumeration nextStates = getNextStates(state, reversed);
-					while (nextStates.hasMoreElements())
+					Iterator<ExecutionState> nextStates = getNextStates(state, reversed);
+					while (nextStates.hasNext())
 					{
-						ExecutionState nextState = (ExecutionState) nextStates.nextElement();
+						ExecutionState nextState = nextStates.next();
 						if (isSatisfied(nextState, formula, reversed))
 						{
 							addSatisfy(state, formula, reversed);
@@ -326,19 +321,19 @@ public class CtlChecker
 
 			formula.subFormula.visit(this, arg);
 
-			Enumeration states = satTable.keys();
-			while (states.hasMoreElements())
+			Iterator<ExecutionState> states = satTable.keySet().iterator();
+			while (states.hasNext())
 			{
-				ExecutionState state = (ExecutionState) states.nextElement();
+				ExecutionState state = states.next();
 				if (isSatisfied(state, formula, reversed))
 				{
 					continue;
 				}
 
-				Enumeration nextStates = getNextStates(state, (Boolean) arg);
-				while (nextStates.hasMoreElements())
+				Iterator<ExecutionState> nextStates = getNextStates(state, (Boolean) arg);
+				while (nextStates.hasNext())
 				{
-					ExecutionState nextState = (ExecutionState) nextStates.nextElement();
+					ExecutionState nextState = nextStates.next();
 					if (isSatisfied(nextState, formula.subFormula, reversed))
 					{
 						addSatisfy(state, formula, reversed);
@@ -361,10 +356,10 @@ public class CtlChecker
 
 			formula.subFormula.visit(this, arg);
 
-			Enumeration states = satTable.keys();
-			while (states.hasMoreElements())
+			Iterator<ExecutionState> states = satTable.keySet().iterator();
+			while (states.hasNext())
 			{
-				ExecutionState state = (ExecutionState) states.nextElement();
+				ExecutionState state = states.next();
 				if (!isSatisfied(state, formula.subFormula, reversed))
 				{
 					addSatisfy(state, formula, reversed);
@@ -386,10 +381,10 @@ public class CtlChecker
 
 			formula.subFormula.visit(this, b2);
 
-			Enumeration states = satTable.keys();
-			while (states.hasMoreElements())
+			Iterator<ExecutionState> states = satTable.keySet().iterator();
+			while (states.hasNext())
 			{
-				ExecutionState state = (ExecutionState) states.nextElement();
+				ExecutionState state = states.next();
 				if (isSatisfied(state, formula.subFormula, b2))
 				{
 					addSatisfy(state, formula, b1);
@@ -401,10 +396,10 @@ public class CtlChecker
 
 		public Object visitPredicate(Predicate predicate, Object arg)
 		{
-			Enumeration states = satTable.keys();
-			while (states.hasMoreElements())
+			Iterator<ExecutionState> states = satTable.keySet().iterator();
+			while (states.hasNext())
 			{
-				ExecutionState state = (ExecutionState) states.nextElement();
+				ExecutionState state = states.next();
 				if (predicate.isTrue(state))
 				{
 					addSatisfy(state, predicate, (Boolean) arg);
@@ -416,49 +411,47 @@ public class CtlChecker
 
 		private void addSatisfy(ExecutionState state, CtlFormula formula, Boolean reversed)
 		{
-			HashSet satSet;
+			Set<CtlFormula> satSet;
 
 			if (reversed)
 			{
-				satSet = (HashSet) reverseSatTable.get(state);
+				satSet = reverseSatTable.get(state);
 			}
 			else
 			{
-				satSet = (HashSet) satTable.get(state);
+				satSet = satTable.get(state);
 			}
 
 			satSet.add(formula);
 		}
 
-		private Enumeration getNextStates(ExecutionState state, Boolean reversed)
+		private Iterator<ExecutionState> getNextStates(ExecutionState state, Boolean reversed)
 		{
 			if (reversed)
 			{
-				Vector v = (Vector) reverseTable.get(state);
-				return v.elements();
+				List<ExecutionState> v = reverseTable.get(state);
+				return v.iterator();
 			}
 			else
 			{
-				Iterator outTransitions = state.getOutTransitions();
-				Vector v = new Vector();
-				while (outTransitions.hasNext())
+				List<ExecutionState> v = new ArrayList<ExecutionState>();
+				for (ExecutionTransition transition : state.getOutTransitionsEx())
 				{
-					ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
-					v.addElement(transition.getEndState());
+					v.add(transition.getEndState());
 				}
-				return v.elements();
+				return v.iterator();
 			}
 		}
 
-		private Enumeration backwardStateIterator(Boolean reverse)
+		private Iterator<ExecutionState> backwardStateIterator(Boolean reverse)
 		{
 			if (reverse)
 			{
-				return forwardStateVector.elements();
+				return forwardStateVector.iterator();
 			}
 			else
 			{
-				return backwardStateVector.elements();
+				return backwardStateVector.iterator();
 			}
 		}
 	}
@@ -670,7 +663,7 @@ public class CtlChecker
 
 			tree = new JTree(rootNode);
 
-			this.setLayout(new BorderLayout());
+			setLayout(new BorderLayout());
 			this.add(tree, BorderLayout.CENTER);
 		}
 	}
@@ -694,14 +687,14 @@ public class CtlChecker
 
 			if (formulas.length == 0)
 			{
-				viewer.highlightNodes(new Vector());
+				viewer.highlightNodes(new ArrayList<ExecutionState>());
 			}
 
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) formulas[formulas.length - 1];
 			CtlFormula formula = (CtlFormula) node.getUserObject();
 			if (!simplified)
 			{
-				formula = (CtlFormula) simplifierMap.get(formula);
+				formula = simplifierMap.get(formula);
 			}
 
 			boolean reverse = false;
@@ -717,13 +710,13 @@ public class CtlChecker
 				}
 			}
 
-			Vector v = new Vector();
-			Enumeration states = backwardStateVector.elements();
+			List<ExecutionState> v = new ArrayList<ExecutionState>();
+			Iterator<ExecutionState> states = backwardStateVector.iterator();
 			Boolean reversed = (reverse) ? Boolean.TRUE : Boolean.FALSE;
 
-			while (states.hasMoreElements())
+			while (states.hasNext())
 			{
-				ExecutionState state = (ExecutionState) states.nextElement();
+				ExecutionState state = states.next();
 				if (isSatisfied(state, formula, reversed))
 				{
 					v.add(state);
@@ -735,7 +728,7 @@ public class CtlChecker
 
 	}
 
-	private class TreeCreator implements CtlFormulaVisitor
+	private static class TreeCreator implements CtlFormulaVisitor
 	{
 
 		public Object visitAF(AF formula, Object arg)

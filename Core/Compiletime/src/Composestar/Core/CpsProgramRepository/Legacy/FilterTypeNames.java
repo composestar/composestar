@@ -17,27 +17,27 @@ package Composestar.Core.CpsProgramRepository.Legacy;
  */
 public final class FilterTypeNames
 {
-	public final static String WAIT = "Wait";
+	public static final String WAIT = "Wait";
 
-	public final static String DISPATCH = "Dispatch";
+	public static final String DISPATCH = "Dispatch";
 
-	public final static String ERROR = "Error";
+	public static final String ERROR = "Error";
 
-	public final static String META = "Meta";
+	public static final String META = "Meta";
 
-	public final static String SUBSTITUTION = "Substitution";
+	public static final String SUBSTITUTION = "Substitution";
 
-	public final static String CUSTOM = "Custom";
+	public static final String CUSTOM = "Custom";
 
-	public final static String SEND = "Send";
+	public static final String SEND = "Send";
 
-	public final static String PREPEND = "Prepend";
+	public static final String PREPEND = "Prepend";
 
-	public final static String APPEND = "Append";
+	public static final String APPEND = "Append";
 
-	public final static String BEFORE = "Before";
+	public static final String BEFORE = "Before";
 
-	public final static String AFTER = "After";
+	public static final String AFTER = "After";
 
 	public FilterTypeNames()
 	{}

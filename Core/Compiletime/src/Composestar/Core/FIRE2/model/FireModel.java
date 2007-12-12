@@ -62,19 +62,19 @@ public class FireModel
 	/**
 	 * Indicates the 'input filter' filter location.
 	 */
-	private final static int INPUT_FILTERS = 0;
+	private static final int INPUT_FILTERS = 0;
 
 	/**
 	 * Indicates the 'output filter' filter location
 	 */
-	private final static int OUTPUT_FILTERS = 1;
+	private static final int OUTPUT_FILTERS = 1;
 
 	/**
 	 * Indicates that an execution model should be created without signature
 	 * checks
 	 */
 
-	public final static int NO_SIGNATURE_CHECK = 0;
+	public static final int NO_SIGNATURE_CHECK = 0;
 
 	/**
 	 * Indicates that an execution model should be created with loose signature
@@ -86,7 +86,7 @@ public class FireModel
 	 * used. After Sign there are no more 'UNKNOWN' methods, so
 	 * STRICT_SIGNATURE_CHECK is used.
 	 */
-	public final static int LOOSE_SIGNATURE_CHECK = 1;
+	public static final int LOOSE_SIGNATURE_CHECK = 1;
 
 	/**
 	 * Indicates that an execution model should be created with strict signature
@@ -96,9 +96,9 @@ public class FireModel
 	 * for which it is certain that they are will match. Selectors having the
 	 * status 'UNKNOWN' are assumed not to be in the signature.
 	 */
-	public final static int STRICT_SIGNATURE_CHECK = 2;
+	public static final int STRICT_SIGNATURE_CHECK = 2;
 
-	private final static String[] FM_COND_NODE_NAMES = { FlowNode.FM_CONDITION_NODE, FlowNode.PREDICATE_NODE,
+	private static final String[] FM_COND_NODE_NAMES = { FlowNode.FM_CONDITION_NODE, FlowNode.PREDICATE_NODE,
 			FlowNode.FLOW_ELEMENT_NODE };
 
 	/**
@@ -918,14 +918,15 @@ public class FireModel
 			filterPosition = filterDirection.getIndex();
 
 			Message message;
-			ExecutionState state;
+			// ExecutionState state;
 			ExtendedExecutionState extendedState;
 
 			for (String selector : getDistinguishableSelectors(filterPosition))
 			{
 				message = getEntranceMessage(selector);
 
-				state = executionModels[filterPosition][0].getEntranceState(message);
+				// state =
+				// executionModels[filterPosition][0].getEntranceState(message);
 
 				extendedState = getStartStateNextLayer(this, message, NO_SIGNATURE_CHECK, null, filterPosition, 0);
 
@@ -939,7 +940,8 @@ public class FireModel
 			// undistinguishable selector:
 			message = getEntranceMessage(Message.UNDISTINGUISHABLE_SELECTOR);
 
-			state = executionModels[filterPosition][0].getEntranceState(message);
+			// state =
+			// executionModels[filterPosition][0].getEntranceState(message);
 
 			extendedState = getStartStateNextLayer(this, message, NO_SIGNATURE_CHECK, null, filterPosition, 0);
 
@@ -958,7 +960,8 @@ public class FireModel
 
 			Message message = getEntranceMessage(selector);
 
-			ExecutionState state = executionModels[filterPosition][0].getEntranceState(message);
+			// ExecutionState state =
+			// executionModels[filterPosition][0].getEntranceState(message);
 
 			ExtendedExecutionState extendedState = getStartStateNextLayer(this, message, NO_SIGNATURE_CHECK, null,
 					filterPosition, 0);
@@ -978,7 +981,8 @@ public class FireModel
 
 			Message message = getEntranceMessage(methodInfo.getName());
 
-			ExecutionState state = executionModels[filterPosition][0].getEntranceState(message);
+			// ExecutionState state =
+			// executionModels[filterPosition][0].getEntranceState(message);
 
 			ExtendedExecutionState extendedState = getStartStateNextLayer(this, message, signatureCheck, methodInfo,
 					filterPosition, 0);
@@ -995,7 +999,8 @@ public class FireModel
 
 			Message message = new Message(target, methodInfo);
 
-			ExecutionState state = executionModels[filterPosition][0].getEntranceState(message);
+			// ExecutionState state =
+			// executionModels[filterPosition][0].getEntranceState(message);
 
 			ExtendedExecutionState extendedState = getStartStateNextLayer(this, message, signatureCheck, methodInfo,
 					filterPosition, 0);
@@ -1177,7 +1182,7 @@ public class FireModel
 		}
 	}
 
-	private class ExtendedFlowModel implements FlowModel
+	private static class ExtendedFlowModel implements FlowModel
 	{
 		/**
 		 * 
@@ -1257,7 +1262,7 @@ public class FireModel
 		}
 	}
 
-	private class ExtendedFlowNode implements FlowNode
+	private static class ExtendedFlowNode implements FlowNode
 	{
 		/**
 		 * 
@@ -1402,7 +1407,7 @@ public class FireModel
 
 	}
 
-	private class ExtendedFlowTransition implements FlowTransition
+	private static class ExtendedFlowTransition implements FlowTransition
 	{
 		/**
 		 * 

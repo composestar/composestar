@@ -38,7 +38,7 @@ public final class LegacyFilterTypes
 	/**
 	 * If true legacy filter types will be used
 	 */
-	public static boolean useLegacyFilterTypes = false;
+	public static boolean useLegacyFilterTypes;
 
 	public static void addLegacyFilterTypes()
 	{

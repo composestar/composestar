@@ -6,17 +6,17 @@ public class FilterAction extends RepositoryEntity
 {
 	private static final long serialVersionUID = 1318091104465614214L;
 
-	public final static int FLOW_CONTINUE = 1;
+	public static final int FLOW_CONTINUE = 1;
 
-	public final static int FLOW_EXIT = 2;
+	public static final int FLOW_EXIT = 2;
 
-	public final static int FLOW_RETURN = 3;
+	public static final int FLOW_RETURN = 3;
 
-	public final static int MESSAGE_ORIGINAL = 1;
+	public static final int MESSAGE_ORIGINAL = 1;
 
-	public final static int MESSAGE_SUBSTITUTED = 2;
+	public static final int MESSAGE_SUBSTITUTED = 2;
 
-	public final static int MESSAGE_ANY = 3;
+	public static final int MESSAGE_ANY = 3;
 
 	private int flowBehaviour;
 
@@ -37,11 +37,11 @@ public class FilterAction extends RepositoryEntity
 	}
 
 	/**
-	 * @param flowBehaviour the flowBehaviour to set
+	 * @param value the flowBehaviour to set
 	 */
-	public void setFlowBehaviour(int flowBehaviour)
+	public void setFlowBehaviour(int value)
 	{
-		this.flowBehaviour = flowBehaviour;
+		flowBehaviour = value;
 	}
 
 	/**
@@ -53,11 +53,11 @@ public class FilterAction extends RepositoryEntity
 	}
 
 	/**
-	 * @param messageChangeBehaviour the messageChangeBehaviour to set
+	 * @param value the messageChangeBehaviour to set
 	 */
-	public void setMessageChangeBehaviour(int messageChangeBehaviour)
+	public void setMessageChangeBehaviour(int value)
 	{
-		this.messageChangeBehaviour = messageChangeBehaviour;
+		messageChangeBehaviour = value;
 	}
 
 	/**
@@ -69,11 +69,11 @@ public class FilterAction extends RepositoryEntity
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param value the name to set
 	 */
-	public void setName(String name)
+	public void setName(String value)
 	{
-		this.name = name;
+		name = value;
 	}
 
 	/**
@@ -85,11 +85,11 @@ public class FilterAction extends RepositoryEntity
 	}
 
 	/**
-	 * @param fullName the fullName to set
+	 * @param value the fullName to set
 	 */
-	public void setFullName(String fullName)
+	public void setFullName(String value)
 	{
-		this.fullName = fullName;
+		fullName = value;
 	}
 
 	/**

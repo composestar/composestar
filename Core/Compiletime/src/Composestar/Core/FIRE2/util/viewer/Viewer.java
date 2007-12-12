@@ -14,6 +14,7 @@ import javax.swing.JSplitPane;
 import javax.swing.WindowConstants;
 
 import Composestar.Core.FIRE2.model.ExecutionModel;
+import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FlowModel;
 
 public class Viewer extends JFrame
@@ -49,7 +50,7 @@ public class Viewer extends JFrame
 		init(model);
 	}
 
-	public void highlightNodes(Collection executionStates)
+	public void highlightNodes(Collection<ExecutionState> executionStates)
 	{
 		viewPanel.highlightNodes(executionStates);
 	}
@@ -82,15 +83,15 @@ public class Viewer extends JFrame
 			JScrollPane scroller2 = new JScrollPane(controlPanel);
 			pane.setBottomComponent(scroller2);
 
-			this.getContentPane().add(pane);
+			getContentPane().add(pane);
 		}
 		else
 		{
-			this.getContentPane().add(scroller, BorderLayout.CENTER);
+			getContentPane().add(scroller, BorderLayout.CENTER);
 		}
 
 		this.setSize(600, 600);
-		this.setVisible(true);
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setVisible(true);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 }

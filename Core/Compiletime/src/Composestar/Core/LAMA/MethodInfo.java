@@ -14,9 +14,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-
-import Composestar.Utils.StringUtils;
 
 //
 // !! Compose* Runtime Warning !!
@@ -251,9 +250,31 @@ public abstract class MethodInfo extends ProgramElement
 
 	public String toString()
 	{
-		String atts = StringUtils.join(getUnitAttributes(), " ");
-		String params = StringUtils.join(parameters, ", ");
-		return atts + " " + returnTypeString + " " + Name + "(" + params + ")";
+		StringBuffer sb = new StringBuffer();
+		Iterator au = getUnitAttributes().iterator();
+		while (au.hasNext())
+		{
+			if (sb.length() > 0)
+			{
+				sb.append(" ");
+			}
+			sb.append(au);
+		}
+		sb.append(" ");
+		sb.append(returnTypeString);
+		sb.append(" ");
+		sb.append(Name);
+		sb.append("(");
+		for (int i = 0; i < parameters.size(); i++)
+		{
+			if (i > 0)
+			{
+				sb.append(", ");
+			}
+			sb.append(parameters.get(i));
+		}
+		sb.append(")");
+		return sb.toString();
 	}
 
 	// Stuff for LOLA

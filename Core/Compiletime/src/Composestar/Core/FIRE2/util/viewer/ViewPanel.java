@@ -8,11 +8,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -26,30 +27,27 @@ import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 
 public class ViewPanel extends JPanel
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5738123083267682871L;
 
-	private LinkedList unProcessed;
+	private LinkedList<Object> unProcessed;
 
-	private HashMap nodeMap;
+	private HashMap<Object, Node> nodeMap;
 
-	private HashMap labelCounter;
+	private HashMap<String, Integer> labelCounter;
 
 	private Node rootNode;
 
-	private final static int RADIUS = 40;
+	private static final int RADIUS = 40;
 
-	private final static int MARGIN = 10;
+	private static final int MARGIN = 10;
 
-	private final static int ARROW_HEAD_XOFFSET = -10;
+	private static final int ARROW_HEAD_XOFFSET = -10;
 
-	private final static int ARROW_HEAD_YOFFSET = -5;
+	private static final int ARROW_HEAD_YOFFSET = -5;
 
 	private int height = 0;
 
-	private final static Edge[] EmptyEdgeArray = {};
+	private static final Edge[] EmptyEdgeArray = {};
 
 	public ViewPanel(ExecutionModel model)
 	{
@@ -74,11 +72,9 @@ public class ViewPanel extends JPanel
 	{
 		initialize();
 
-		unProcessed = new LinkedList();
-		nodeMap = new HashMap();
-		labelCounter = new HashMap();
-
-		Vector edges = new Vector();
+		unProcessed = new LinkedList<Object>();
+		nodeMap = new HashMap<Object, Node>();
+		labelCounter = new HashMap<String, Integer>();
 
 		FlowNode startNode = model.getStartNode();
 
@@ -98,16 +94,13 @@ public class ViewPanel extends JPanel
 
 	private void process(FlowNode flowNode)
 	{
-		Vector primaryEdges = new Vector();
-		Vector secondaryEdges = new Vector();
+		List<Edge> primaryEdges = new ArrayList<Edge>();
+		List<Edge> secondaryEdges = new ArrayList<Edge>();
 
-		Node node = (Node) nodeMap.get(flowNode);
+		Node node = nodeMap.get(flowNode);
 
-		Iterator outTransitions = flowNode.getTransitions();
-		while (outTransitions.hasNext())
+		for (FlowTransition transition : flowNode.getTransitionsEx())
 		{
-			FlowTransition transition = (FlowTransition) outTransitions.next();
-
 			FlowNode nextFlowNode = transition.getEndNode();
 			if (!nodeMap.containsKey(nextFlowNode))
 			{
@@ -121,15 +114,15 @@ public class ViewPanel extends JPanel
 			}
 			else
 			{
-				Node nextNode = (Node) nodeMap.get(nextFlowNode);
+				Node nextNode = nodeMap.get(nextFlowNode);
 
 				Edge edge = new Edge(node, nextNode);
 				secondaryEdges.add(edge);
 			}
 		}
 
-		node.primaryEdges = (Edge[]) primaryEdges.toArray(EmptyEdgeArray);
-		node.secondaryEdges = (Edge[]) secondaryEdges.toArray(EmptyEdgeArray);
+		node.primaryEdges = primaryEdges.toArray(EmptyEdgeArray);
+		node.secondaryEdges = secondaryEdges.toArray(EmptyEdgeArray);
 	}
 
 	private void initialize(ExecutionModel model)
@@ -138,17 +131,17 @@ public class ViewPanel extends JPanel
 
 		rootNode = new Node((ExecutionState) null);
 
-		unProcessed = new LinkedList();
-		nodeMap = new HashMap();
-		labelCounter = new HashMap();
+		unProcessed = new LinkedList<Object>();
+		nodeMap = new HashMap<Object, Node>();
+		labelCounter = new HashMap<String, Integer>();
 
-		Vector edges = new Vector();
+		List<Edge> edges = new ArrayList<Edge>();
 
-		Iterator it = model.getEntranceStates();
+		Iterator<ExecutionState> it = model.getEntranceStates();
 		while (it.hasNext())
 		{
-			Object obj = it.next();
-			Node node = new Node((ExecutionState) obj);
+			ExecutionState obj = it.next();
+			Node node = new Node(obj);
 			nodeMap.put(obj, node);
 
 			unProcessed.add(obj);
@@ -157,7 +150,7 @@ public class ViewPanel extends JPanel
 			edges.add(edge);
 		}
 
-		rootNode.primaryEdges = (Edge[]) edges.toArray(new Edge[0]);
+		rootNode.primaryEdges = edges.toArray(new Edge[0]);
 		rootNode.secondaryEdges = new Edge[0];
 
 		processExec();
@@ -177,31 +170,30 @@ public class ViewPanel extends JPanel
 
 	private void addLabels(FlowNode node)
 	{
-		Iterator iter = node.getNames();
-		while (iter.hasNext())
+		for (String s : node.getNamesEx())
 		{
-			addCount(iter.next());
+			addCount(s);
 		}
 	}
 
-	private void addCount(Object obj)
+	private void addCount(String str)
 	{
-		Integer i = (Integer) labelCounter.get(obj);
+		Integer i = labelCounter.get(str);
 
 		int add = 1;
-		if (obj.toString().equals("AcceptCallAction") || obj.toString().equals("AcceptReturnAction")
-				|| obj.toString().equals("RejectCallAction") || obj.toString().equals("RejectReturnAction"))
+		if (str.equals("AcceptCallAction") || str.equals("AcceptReturnAction") || str.equals("RejectCallAction")
+				|| str.equals("RejectReturnAction"))
 		{
 			add = 100000;
 		}
 
 		if (i == null)
 		{
-			labelCounter.put(obj, new Integer(add));
+			labelCounter.put(str, Integer.valueOf(add));
 		}
 		else
 		{
-			labelCounter.put(obj, new Integer(i.intValue() + add));
+			labelCounter.put(str, Integer.valueOf(i.intValue() + add));
 		}
 	}
 
@@ -215,15 +207,13 @@ public class ViewPanel extends JPanel
 		String currentLabel = "";
 		int currentCount = Integer.MAX_VALUE;
 
-		Iterator iterator = flowNode.getNames();
-		while (iterator.hasNext())
+		for (String str : flowNode.getNamesEx())
 		{
-			Object obj = iterator.next();
-			Integer i = (Integer) labelCounter.get(obj);
+			Integer i = labelCounter.get(str);
 
 			if (i < currentCount)
 			{
-				currentLabel = (String) obj;
+				currentLabel = str;
 				currentCount = i;
 			}
 		}
@@ -231,10 +221,10 @@ public class ViewPanel extends JPanel
 		return currentLabel;
 	}
 
-	public void highlightNodes(Collection executionStates)
+	public void highlightNodes(Collection<ExecutionState> executionStates)
 	{
 		// first remove highlight:
-		Collection nodes = nodeMap.values();
+		Collection<Node> nodes = nodeMap.values();
 		for (Object node1 : nodes)
 		{
 			Node node = (Node) node1;
@@ -242,11 +232,11 @@ public class ViewPanel extends JPanel
 		}
 
 		// then add highlight:
-		Iterator iter = executionStates.iterator();
+		Iterator<ExecutionState> iter = executionStates.iterator();
 		while (iter.hasNext())
 		{
-			ExecutionState state = (ExecutionState) iter.next();
-			Node node = (Node) nodeMap.get(state);
+			ExecutionState state = iter.next();
+			Node node = nodeMap.get(state);
 			node.highlighted = true;
 		}
 
@@ -255,16 +245,13 @@ public class ViewPanel extends JPanel
 
 	private void processExecState(ExecutionState state)
 	{
-		Vector primaryEdges = new Vector();
-		Vector secondaryEdges = new Vector();
+		List<Edge> primaryEdges = new ArrayList<Edge>();
+		List<Edge> secondaryEdges = new ArrayList<Edge>();
 
-		Node node = (Node) nodeMap.get(state);
+		Node node = nodeMap.get(state);
 
-		Iterator outTransitions = state.getOutTransitions();
-		while (outTransitions.hasNext())
+		for (ExecutionTransition transition : state.getOutTransitionsEx())
 		{
-			ExecutionTransition transition = (ExecutionTransition) outTransitions.next();
-
 			ExecutionState nextState = transition.getEndState();
 			if (!nodeMap.containsKey(nextState))
 			{
@@ -278,23 +265,23 @@ public class ViewPanel extends JPanel
 			}
 			else
 			{
-				Node nextNode = (Node) nodeMap.get(nextState);
+				Node nextNode = nodeMap.get(nextState);
 
 				Edge edge = new Edge(node, nextNode);
 				secondaryEdges.add(edge);
 			}
 		}
 
-		node.primaryEdges = (Edge[]) primaryEdges.toArray(EmptyEdgeArray);
-		node.secondaryEdges = (Edge[]) secondaryEdges.toArray(EmptyEdgeArray);
+		node.primaryEdges = primaryEdges.toArray(EmptyEdgeArray);
+		node.secondaryEdges = secondaryEdges.toArray(EmptyEdgeArray);
 	}
 
 	private void calculatePositions()
 	{
 		int width = calculatePosition(rootNode, 0, 0);
-		this.height += 4 * (MARGIN + RADIUS);
+		height += 4 * (MARGIN + RADIUS);
 
-		this.setPreferredSize(new Dimension(width, height));
+		setPreferredSize(new Dimension(width, height));
 	}
 
 	private int calculatePosition(Node node, int xOffset, int yOffset)
@@ -315,11 +302,12 @@ public class ViewPanel extends JPanel
 			width += calculatePosition(primaryEdge.endNode, xOffset + width, newYOffset);
 		}
 
-		this.height = Math.max(yOffset, this.height);
+		height = Math.max(yOffset, height);
 
 		return width;
 	}
 
+	@Override
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
@@ -428,7 +416,7 @@ public class ViewPanel extends JPanel
 		g.fillPolygon(xPoints, yPoints, 3);
 	}
 
-	private class Node
+	private static class Node
 	{
 		/**
 		 * the edges that make up the main tree structure
@@ -455,13 +443,13 @@ public class ViewPanel extends JPanel
 			this.state = state;
 			if (state != null)
 			{
-				this.flowNode = state.getFlowNode();
+				flowNode = state.getFlowNode();
 			}
 		}
 
 		public Node(FlowNode node)
 		{
-			this.flowNode = node;
+			flowNode = node;
 		}
 
 		public int treeWidth()
@@ -477,7 +465,7 @@ public class ViewPanel extends JPanel
 		}
 	}
 
-	private class Edge
+	private static class Edge
 	{
 		private Node startNode;
 

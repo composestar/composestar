@@ -23,20 +23,20 @@ public abstract class ExecutionState implements Serializable
 
 	private int stateType;
 
-	public final static int ENTRANCE_STATE = 1;
+	public static final int ENTRANCE_STATE = 1;
 
-	public final static int EXIT_STATE = 2;
+	public static final int EXIT_STATE = 2;
 
-	public final static int NORMAL_STATE = 3;
+	public static final int NORMAL_STATE = 3;
 
-	public ExecutionState(FlowNode flowNode, Message message, Message substitutionMessage, int stateType)
+	public ExecutionState(FlowNode inFlowNode, Message inMessage, Message inSubstitutionMessage, int inStateType)
 	{
 		super();
 
-		this.flowNode = flowNode;
-		this.message = message;
-		this.substitutionMessage = substitutionMessage;
-		this.stateType = stateType;
+		flowNode = inFlowNode;
+		message = inMessage;
+		substitutionMessage = inSubstitutionMessage;
+		stateType = inStateType;
 	}
 
 	/**

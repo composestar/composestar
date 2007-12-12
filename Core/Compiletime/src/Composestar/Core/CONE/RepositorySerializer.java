@@ -16,5 +16,5 @@ public interface RepositorySerializer extends CTCommonModule
 	/**
 	 * Key used to store the serialized repository in the CommonResources
 	 */
-	public static final String REPOSITORY_FILE_KEY = "RepositoryFile";
+	static final String REPOSITORY_FILE_KEY = "RepositoryFile";
 }

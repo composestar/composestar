@@ -16,7 +16,7 @@ import java.util.Set;
 public interface ExecutionModel extends Serializable
 {
 
-	public Iterator<ExecutionState> getEntranceStates();
+	Iterator<ExecutionState> getEntranceStates();
 
 	/**
 	 * Returns the entrance state for the given selector. If a selector doesn't
@@ -26,15 +26,15 @@ public interface ExecutionModel extends Serializable
 	 * @param message
 	 * @return
 	 */
-	public ExecutionState getEntranceState(Message message);
+	ExecutionState getEntranceState(Message message);
 
 	/**
 	 * Returns all the messages for which there are different entrance states.
 	 * 
 	 * @return
 	 */
-	public Set<Message> getEntranceMessages();
+	Set<Message> getEntranceMessages();
 
-	public boolean isEntranceMessage(Message message);
+	boolean isEntranceMessage(Message message);
 
 }

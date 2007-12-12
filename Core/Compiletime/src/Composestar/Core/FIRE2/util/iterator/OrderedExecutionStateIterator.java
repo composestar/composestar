@@ -11,7 +11,7 @@ import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 
-public class OrderedExecutionStateIterator implements Iterator
+public class OrderedExecutionStateIterator implements Iterator<ExecutionState>
 {
 	private HashMap<ExecutionState, MutableInteger> unvisitedTransitionCount;
 
@@ -32,7 +32,7 @@ public class OrderedExecutionStateIterator implements Iterator
 			ExecutionState endState = transition.getEndState();
 			if (unvisitedTransitionCount.containsKey(endState))
 			{
-				MutableInteger count = (MutableInteger) unvisitedTransitionCount.get(endState);
+				MutableInteger count = unvisitedTransitionCount.get(endState);
 				count.value++;
 			}
 			else
@@ -45,10 +45,10 @@ public class OrderedExecutionStateIterator implements Iterator
 
 		nextStates = new LinkedList<ExecutionState>();
 
-		Iterator entranceStates = model.getEntranceStates();
+		Iterator<ExecutionState> entranceStates = model.getEntranceStates();
 		while (entranceStates.hasNext())
 		{
-			ExecutionState entranceState = (ExecutionState) entranceStates.next();
+			ExecutionState entranceState = entranceStates.next();
 			nextStates.add(entranceState);
 		}
 	}
@@ -58,7 +58,7 @@ public class OrderedExecutionStateIterator implements Iterator
 		return !nextStates.isEmpty();
 	}
 
-	public Object next()
+	public ExecutionState next()
 	{
 		if (nextStates.isEmpty())
 		{
@@ -68,12 +68,10 @@ public class OrderedExecutionStateIterator implements Iterator
 		ExecutionState state = nextStates.removeFirst();
 
 		// Decrement counter of next nodes
-		Iterator transitionIter = state.getOutTransitions();
-		while (transitionIter.hasNext())
+		for (ExecutionTransition transition : state.getOutTransitionsEx())
 		{
-			ExecutionTransition transition = (ExecutionTransition) transitionIter.next();
 			ExecutionState endState = transition.getEndState();
-			MutableInteger count = (MutableInteger) unvisitedTransitionCount.get(endState);
+			MutableInteger count = unvisitedTransitionCount.get(endState);
 			count.value--;
 			if (count.value == 0)
 			{
@@ -93,21 +91,20 @@ public class OrderedExecutionStateIterator implements Iterator
 	{
 		ArrayList<ExecutionTransition> list = new ArrayList<ExecutionTransition>();
 
-		Iterator stateIter = new ExecutionStateIterator(model);
+		Iterator<ExecutionState> stateIter = new ExecutionStateIterator(model);
 		while (stateIter.hasNext())
 		{
-			ExecutionState state = (ExecutionState) stateIter.next();
-			Iterator transitionIter = state.getOutTransitions();
-			while (transitionIter.hasNext())
+			ExecutionState state = stateIter.next();
+			for (ExecutionTransition trans : state.getOutTransitionsEx())
 			{
-				list.add((ExecutionTransition) transitionIter.next());
+				list.add(trans);
 			}
 		}
 
 		return list;
 	}
 
-	private class MutableInteger
+	private static class MutableInteger
 	{
 		private int value = 0;
 	}

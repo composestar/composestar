@@ -32,30 +32,30 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  */
 public class FlowModelExtractor
 {
-	public final static String FLOW_NODE_ANNOTATION = "FlowNode";
+	public static final String FLOW_NODE_ANNOTATION = "FlowNode";
 
-	private final static Label FILTERMODULE_LABEL = new DefaultLabel(FlowNode.FILTER_MODULE_NODE);
+	private static final Label FILTERMODULE_LABEL = new DefaultLabel(FlowNode.FILTER_MODULE_NODE);
 
-	private final static Label END_LABEL = new DefaultLabel(FlowNode.END_NODE);
+	private static final Label END_LABEL = new DefaultLabel(FlowNode.END_NODE);
 
-	private final static String FLOW_TRUE_LABEL = "flowTrue";
+	private static final String FLOW_TRUE_LABEL = "flowTrue";
 
-	private final static String FLOW_FALSE_LABEL = "flowFalse";
+	private static final String FLOW_FALSE_LABEL = "flowFalse";
 
-	private final static String FLOW_NEXT_LABEL = "flowNext";
+	private static final String FLOW_NEXT_LABEL = "flowNext";
 
 	public static FlowModel extract(Graph graph)
 	{
 		BasicFlowModel model = new BasicFlowModel();
 
-		Iterator iter = graph.edgeIterator();
+		Iterator<Edge> iter = graph.edgeIterator();
 		Edge edge;
 		AnnotatedNode startNode, endNode, filterModuleNode;
 		BasicFlowNode startFlowNode, endFlowNode;
 		FlowTransition transition;
 		while (iter.hasNext())
 		{
-			edge = (Edge) iter.next();
+			edge = iter.next();
 
 			String label = edge.label().text();
 			int type;
@@ -87,7 +87,7 @@ public class FlowModelExtractor
 		}
 
 		// startnode:
-		Collection col = graph.labelEdgeSet(2, FILTERMODULE_LABEL);
+		Collection<Edge> col = graph.labelEdgeSet(2, FILTERMODULE_LABEL);
 		iter = col.iterator();
 		if (!iter.hasNext())
 		{
@@ -95,7 +95,7 @@ public class FlowModelExtractor
 			throw new RuntimeException("FilterModule-edge not found!");
 		}
 
-		edge = (Edge) iter.next();
+		edge = iter.next();
 		filterModuleNode = (AnnotatedNode) edge.source();
 		model.setStartNode((FlowNode) filterModuleNode.getAnnotation(FLOW_NODE_ANNOTATION));
 
@@ -108,7 +108,7 @@ public class FlowModelExtractor
 			throw new RuntimeException("Exit-edge not found!");
 		}
 
-		edge = (Edge) iter.next();
+		edge = iter.next();
 		endNode = (AnnotatedNode) edge.source();
 		model.setEndNode((FlowNode) endNode.getAnnotation(FLOW_NODE_ANNOTATION));
 
@@ -126,13 +126,13 @@ public class FlowModelExtractor
 
 		RepositoryEntity entity = (RepositoryEntity) graphNode.getAnnotation("repositoryLink");
 
-		Collection col = graph.edgeSet(graphNode);
-		Iterator iter = col.iterator();
+		Collection<Edge> col = graph.edgeSet(graphNode);
+		Iterator<Edge> iter = col.iterator();
 		Set<String> names = new HashSet<String>();
 		String label;
 		while (iter.hasNext())
 		{
-			Edge edge = (Edge) iter.next();
+			Edge edge = iter.next();
 			if (edge.source().equals(graphNode) && edge.opposite().equals(graphNode))
 			{
 				label = edge.label().text();

@@ -27,7 +27,7 @@ public class CoreConflictDetector
 
 	private int filterElementCounter;
 
-	private boolean unreachableFilter = false;
+	private boolean unreachableFilter;
 
 	private CoreConflict accRejFilterConflict;
 

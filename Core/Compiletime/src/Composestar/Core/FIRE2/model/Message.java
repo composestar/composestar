@@ -5,6 +5,7 @@
 package Composestar.Core.FIRE2.model;
 
 import java.io.Serializable;
+
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.LAMA.MethodInfo;
 
@@ -33,7 +34,7 @@ public class Message implements Serializable
 	 * @deprecated Use SELF_TARGET or INNER_TARGET
 	 */
 	@Deprecated
-	public final static Target STAR_TARGET = getStarTarget();
+	public static final Target STAR_TARGET = getStarTarget();
 
 	/**
 	 * The star selector. Only used in matching parts and substitution parts.
@@ -41,32 +42,32 @@ public class Message implements Serializable
 	 * @deprecated
 	 */
 	@Deprecated
-	public final static String STAR_SELECTOR = "*";
+	public static final String STAR_SELECTOR = "*";
 
 	/**
 	 * The inner target
 	 */
-	public final static Target INNER_TARGET = getInnerTarget();
+	public static final Target INNER_TARGET = getInnerTarget();
 
 	/**
 	 * The self target
 	 */
-	public final static Target SELF_TARGET = getSelfTarget();
+	public static final Target SELF_TARGET = getSelfTarget();
 
 	/**
 	 * Placeholder for an undistinguishable target
 	 */
-	public final static Target UNDISTINGUISHABLE_TARGET = getUndistinguishableTarget();
+	public static final Target UNDISTINGUISHABLE_TARGET = getUndistinguishableTarget();
 
 	/**
 	 * Placeholder for an undistinguishable selector
 	 */
-	public final static String UNDISTINGUISHABLE_SELECTOR = "+";
+	public static final String UNDISTINGUISHABLE_SELECTOR = "+";
 
 	/**
 	 * Placeholder for an undistinguishable message
 	 */
-	public final static Message UNDISTINGUISHABLE_MESSAGE = new Message(UNDISTINGUISHABLE_TARGET,
+	public static final Message UNDISTINGUISHABLE_MESSAGE = new Message(UNDISTINGUISHABLE_TARGET,
 			UNDISTINGUISHABLE_SELECTOR);
 
 	/**

@@ -25,8 +25,8 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -41,13 +41,13 @@ import org.exolab.castor.xml.ValidationException;
  */
 public class JarGpsGrammar extends GpsGrammar
 {
-	private final static String LOAD_ERROR = "Can't load graph grammar";
+	private static final String LOAD_ERROR = "Can't load graph grammar";
 
 	private InnerLoader innerLoader = new InnerLoader();
 
 	public GraphGrammar unmarshal(String grammarLocation) throws IOException
 	{
-		URL grammarUrl = this.getClass().getResource(grammarLocation);
+		URL grammarUrl = JarGpsGrammar.class.getResource(grammarLocation);
 
 		if (grammarUrl == null)
 		{
@@ -57,16 +57,14 @@ public class JarGpsGrammar extends GpsGrammar
 
 		RuleViewGrammar result = createGrammar(getExtensionFilter().stripExtension(grammarLocation));
 		// load the rules from location
-		Map ruleGraphMap = new HashMap();
-		Map priorityMap = new HashMap();
+		Map<StructuredRuleName, RuleGraph> ruleGraphMap = new HashMap<StructuredRuleName, RuleGraph>();
+		Map<StructuredRuleName, Integer> priorityMap = new HashMap<StructuredRuleName, Integer>();
 		loadRules(grammarUrl, grammarLocation, null, ruleGraphMap, priorityMap);
-		Iterator ruleGraphIter = ruleGraphMap.entrySet().iterator();
-		for (Object o : ruleGraphMap.entrySet())
+		for (Entry<StructuredRuleName, RuleGraph> ruleGraphEntry : ruleGraphMap.entrySet())
 		{
-			Map.Entry ruleGraphEntry = (Map.Entry) o;
-			StructuredRuleName ruleName = (StructuredRuleName) ruleGraphEntry.getKey();
-			RuleGraph ruleGraph = (RuleGraph) ruleGraphEntry.getValue();
-			result.add(ruleGraph, (Integer) priorityMap.get(ruleName));
+			StructuredRuleName ruleName = ruleGraphEntry.getKey();
+			RuleGraph ruleGraph = ruleGraphEntry.getValue();
+			result.add(ruleGraph, priorityMap.get(ruleName));
 		}
 		// get the start graph
 		Graph startGraph = null;
@@ -76,8 +74,9 @@ public class JarGpsGrammar extends GpsGrammar
 		return result;
 	}
 
-	private void loadRules(URL grammarURL, String relativeLocation, StructuredRuleName rulePath, Map ruleGraphMap,
-			Map priorityMap) throws IOException
+	private void loadRules(URL grammarURL, String relativeLocation, StructuredRuleName rulePath,
+			Map<StructuredRuleName, RuleGraph> ruleGraphMap, Map<StructuredRuleName, Integer> priorityMap)
+			throws IOException
 	{
 		String grammarName = grammarURL.getFile();
 		int pos = grammarName.indexOf('!');
@@ -166,7 +165,7 @@ public class JarGpsGrammar extends GpsGrammar
 
 	}
 
-	private class InnerLoader extends UntypedGxl
+	private static class InnerLoader extends UntypedGxl
 	{
 		/**
 		 * This implementation returns a
@@ -191,7 +190,7 @@ public class JarGpsGrammar extends GpsGrammar
 				gxl = new groove.gxl.Gxl();
 				Unmarshaller unmarshaller = new Unmarshaller(gxl);
 				unmarshaller.setLogWriter(new PrintWriter(System.err));
-				InputStream stream = this.getClass().getResourceAsStream(filename);
+				InputStream stream = InnerLoader.class.getResourceAsStream(filename);
 				Reader reader = new InputStreamReader(stream);
 				unmarshaller.unmarshal(reader);
 			}

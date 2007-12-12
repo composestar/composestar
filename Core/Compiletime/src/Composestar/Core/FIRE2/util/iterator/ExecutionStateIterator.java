@@ -57,7 +57,7 @@ public class ExecutionStateIterator implements Iterator<ExecutionState>
 		}
 
 		// get next state:
-		state = (ExecutionState) unvisitedStates.pop();
+		state = unvisitedStates.pop();
 
 		// add next unvisitedStates to the unvisitedStates stack:
 		addNextStates(state);

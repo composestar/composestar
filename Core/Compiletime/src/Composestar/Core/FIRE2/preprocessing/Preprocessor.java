@@ -38,7 +38,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Preprocessor implements CTCommonModule
 {
-	public final static String MODULE_NAME = "FIRE";
+	public static final String MODULE_NAME = "FIRE";
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
@@ -52,25 +52,25 @@ public class Preprocessor implements CTCommonModule
 
 	private ExecutionModelExtractor executionModelExtractor;
 
-	private final static ExploreStrategy LINEAR_STRATEGY = new LinearStrategy();
+	private static final ExploreStrategy LINEAR_STRATEGY = new LinearStrategy();
 
-	private final static ExploreStrategy BARBED_STRATEGY = new BarbedStrategy();
+	private static final ExploreStrategy BARBED_STRATEGY = new BarbedStrategy();
 
-	private final static ExploreStrategy FULL_STRATEGY = new FullStrategy();
+	private static final ExploreStrategy FULL_STRATEGY = new FullStrategy();
 
-	private final static String GENERATE_FLOW_GRAMMAR_PATH = "groovegrammars/generateflow.gps";
+	private static final String GENERATE_FLOW_GRAMMAR_PATH = "groovegrammars/generateflow.gps";
 
-	private final static String RUNTIME_GRAMMAR_PATH = "groovegrammars/runtime.gps";
+	private static final String RUNTIME_GRAMMAR_PATH = "groovegrammars/runtime.gps";
 
-	private final static boolean GROOVE_DEBUG = false;
+	private static final boolean GROOVE_DEBUG = false;
 
-	private final static File AST_OUT = new File("./ast.gst");
+	private static final File AST_OUT = new File("./ast.gst");
 
-	private final static File FLOW_OUT = new File("./flow.gst");
+	private static final File FLOW_OUT = new File("./flow.gst");
 
-	private final static File EXECUTION_OUT = new File("./execution.gst");
+	private static final File EXECUTION_OUT = new File("./execution.gst");
 
-	// public final static String RESULT_ID = "FirePreprocessingResult";
+	// public static final String RESULT_ID = "FirePreprocessingResult";
 
 	protected FIRE2Resources fire2Resources;
 
@@ -219,7 +219,7 @@ public class Preprocessor implements CTCommonModule
 			// TODO nice exception handling
 			exc.printStackTrace();
 		}
-		Iterator finalStates = gts.getFinalStates().iterator();
+		Iterator<DefaultGraphState> finalStates = gts.getFinalStates().iterator();
 
 		if (!finalStates.hasNext())
 		{
@@ -228,7 +228,7 @@ public class Preprocessor implements CTCommonModule
 		}
 		else
 		{
-			DefaultGraphState state = (DefaultGraphState) finalStates.next();
+			DefaultGraphState state = finalStates.next();
 
 			Graph graph = state.getGraph();
 

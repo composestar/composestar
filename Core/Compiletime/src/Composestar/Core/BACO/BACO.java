@@ -88,10 +88,10 @@ public abstract class BACO implements CTCommonModule
 	protected void addBuiltLibraries(Set<File> filesToCopy)
 	{
 		// TODO: where is this stored, and why like this? use resources?
-		List builtLibs = (List) DataStore.instance().getObjectByID("BuiltLibs");
-		for (Object builtLib : builtLibs)
+		List<File> builtLibs = (List<File>) DataStore.instance().getObjectByID("BuiltLibs");
+		for (File builtLib : builtLibs)
 		{
-			String lib = ((File) builtLib).toString();
+			String lib = builtLib.toString();
 			File file = new File(FileUtils.unquote(lib));
 			logger.debug("Adding built library: " + file.toString());
 			filesToCopy.add(file);

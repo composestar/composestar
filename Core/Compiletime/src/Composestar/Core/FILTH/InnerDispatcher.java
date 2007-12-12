@@ -36,7 +36,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  * 
  * @author Staijen
  */
-public class InnerDispatcher
+public final class InnerDispatcher
 {
 	private static FilterModuleReference innerDispatchReference;
 

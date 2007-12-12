@@ -629,11 +629,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Composestar\utils\StringUtils.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Composestar\utils\Logging\ILogger.java"
                     SubType = "Code"
                     BuildAction = "Compile"

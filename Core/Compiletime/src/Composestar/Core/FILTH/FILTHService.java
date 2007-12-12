@@ -24,7 +24,7 @@ import Composestar.Utils.Logging.CPSLogger;
 
 public abstract class FILTHService
 {
-	protected final static CPSLogger logger = CPSLogger.getCPSLogger(FILTH.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(FILTH.MODULE_NAME);
 
 	public static final int HTML = 1;
 

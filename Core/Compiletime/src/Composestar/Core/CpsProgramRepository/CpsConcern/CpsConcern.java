@@ -20,7 +20,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Implement
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.LabeledConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImposition;
 import Composestar.Utils.CPSIterator;
-import Composestar.Utils.StringUtils;
 
 /**
  * we can reason about the implementation here.
@@ -218,13 +217,26 @@ public class CpsConcern extends Concern
 
 	public void setNamespace(String inName)
 	{
-		Vector vect = new Vector();
-		String[] str = StringUtils.split(inName, '.');
-		for (int i = 0; i < str.length; i++)
+		Vector parts = new Vector();
+		int length = inName.length();
+		int cur = 0;
+		do
 		{
-			vect.add(str[i]);
+			int pos = inName.indexOf('.', cur);
+			if (pos == -1)
+			{
+				break;
+			}
+
+			parts.add(inName.substring(cur, pos));
+			cur = pos + 1;
+		} while (cur < length);
+
+		if (cur < length)
+		{
+			parts.add(inName.substring(cur));
 		}
-		setNamespace(vect);
+		setNamespace(parts);
 	}
 
 	public void setNamespace(List inName)

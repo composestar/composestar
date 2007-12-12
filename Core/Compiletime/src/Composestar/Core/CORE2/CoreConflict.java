@@ -48,7 +48,7 @@ public class CoreConflict
 			"Matching pattern always accepts", "Redundant matching pattern", "Unreachable matching pattern",
 			"Filter element always rejects", "Filter element always accepts", "Redundant filter element",
 			"Unreachable filter element", "Filter always rejects", "Filter always accepts", "Redundant filter",
-			"Unreachable filter" };
+			"Unreachable filter", };
 
 	/*
 	 * Fields

@@ -162,7 +162,7 @@ public class Signature implements SerializableRepositoryEntity
 	public boolean hasMethod(MethodInfo dnmi)
 	{
 		String key = dnmi.getHashKey();
-		return (methodByKey.containsKey(key));
+		return methodByKey.containsKey(key);
 	}
 
 	public boolean hasMethod(String methodName)

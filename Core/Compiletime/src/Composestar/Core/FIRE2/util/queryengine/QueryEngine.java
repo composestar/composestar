@@ -7,7 +7,7 @@ import Composestar.Core.FIRE2.model.ExecutionState;
 
 /**
  * All query engines should implement this interface
- *
+ * 
  * @author Arjan
  */
 public interface QueryEngine

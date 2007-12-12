@@ -93,11 +93,11 @@ public class FilterModuleBinding extends Binding
 	/**
 	 * Sets the filtermodule condition for this binding.
 	 * 
-	 * @param condition
+	 * @param value
 	 */
-	public void setFilterModuleCondition(Condition condition)
+	public void setFilterModuleCondition(Condition value)
 	{
-		this.condition = condition;
+		condition = value;
 	}
 
 	/**

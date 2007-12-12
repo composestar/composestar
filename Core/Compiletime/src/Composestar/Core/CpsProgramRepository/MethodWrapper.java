@@ -44,11 +44,11 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	 * @param inRelationType
 	 * @param inMethodInfo
 	 */
-	public MethodWrapper(MethodInfo inMethodInfo, int status)
+	public MethodWrapper(MethodInfo inMethodInfo, int inStatus)
 	{
-		this.relationType = NORMAL;
-		this.methodInfo = inMethodInfo;
-		this.status = status;
+		relationType = NORMAL;
+		methodInfo = inMethodInfo;
+		status = inStatus;
 	}
 
 	public MethodWrapper()
@@ -83,9 +83,9 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(int status)
+	public void setStatus(int inStatus)
 	{
-		this.status = status;
+		status = inStatus;
 	}
 
 	public String toString()

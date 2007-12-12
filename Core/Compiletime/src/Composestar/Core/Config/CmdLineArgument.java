@@ -148,8 +148,8 @@ public class CmdLineArgument implements Serializable
 		return useUnixSlashes;
 	}
 
-	public void setUseUnixSlashes(boolean useUnixSlashes)
+	public void setUseUnixSlashes(boolean value)
 	{
-		this.useUnixSlashes = useUnixSlashes;
+		useUnixSlashes = value;
 	}
 }

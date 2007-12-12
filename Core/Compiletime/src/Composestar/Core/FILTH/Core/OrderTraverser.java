@@ -360,7 +360,7 @@ public class OrderTraverser
 		{
 			for (Pair aPath : path)
 			{
-				if ((aPath).getNode().getElement().equals(node.getElement()))
+				if (aPath.getNode().getElement().equals(node.getElement()))
 				{
 					return true;
 				}
@@ -397,7 +397,7 @@ public class OrderTraverser
 		// System.out.println("<<<cycle-begin>>>");
 		for (Pair aPath : path)
 		{
-			Node n = (aPath).getNode();
+			Node n = aPath.getNode();
 			// System.out.print(n.getElement()+" ");
 			if (stopPair.getNode().getElement().equals(n.getElement()))
 			{

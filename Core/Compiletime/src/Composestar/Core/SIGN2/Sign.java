@@ -56,20 +56,20 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Sign implements CTCommonModule
 {
-	private final static String MODULE_NAME = "SIGN";
+	private static final String MODULE_NAME = "SIGN";
 
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
-	private final static String DISPATCH_FORMULA = "isDispatch";
+	private static final String DISPATCH_FORMULA = "isDispatch";
 
-	private final static int SIGNATURE_MATCHING_SET = 1;
+	private static final int SIGNATURE_MATCHING_SET = 1;
 
-	private final static int TYPE_MATCHING_SET = 2;
+	private static final int TYPE_MATCHING_SET = 2;
 
 	/**
 	 * The star target. Only used in matching parts and substitution parts.
 	 */
-	public final static String STAR_TARGET = "*";
+	public static final String STAR_TARGET = "*";
 
 	private HashSet<Concern> superimposedConcerns;
 

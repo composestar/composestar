@@ -19,7 +19,7 @@ public class CtlParser
 
 	private static class Parser
 	{
-		private Dictionary predicates;
+		private Dictionary<String, Predicate> predicates;
 
 		public Parser(Dictionary<String, Predicate> predicates)
 		{
@@ -208,7 +208,7 @@ public class CtlParser
 					return formula1;
 				case Token.IDENTIFIER:
 					lexer.nextToken();
-					return (CtlFormula) predicates.get(token.getValue());
+					return predicates.get(token.getValue());
 				default:
 					throw new CtlParseException();
 			}
@@ -226,7 +226,7 @@ public class CtlParser
 		public Lexer(String pattern)
 		{
 			this.pattern = pattern.trim();
-			this.pos = 0;
+			pos = 0;
 		}
 
 		public boolean hasMoreTokens()
@@ -396,39 +396,39 @@ public class CtlParser
 
 		private int length;
 
-		public final static int LEFT_BRACKET = 1;
+		public static final int LEFT_BRACKET = 1;
 
-		public final static int RIGHT_BRACKET = 2;
+		public static final int RIGHT_BRACKET = 2;
 
-		public final static int LEFT_BOXBRACKET = 3;
+		public static final int LEFT_BOXBRACKET = 3;
 
-		public final static int RIGHT_BOXBRACKET = 4;
+		public static final int RIGHT_BOXBRACKET = 4;
 
-		public final static int AND_OPERATOR = 101;
+		public static final int AND_OPERATOR = 101;
 
-		public final static int OR_OPERATOR = 102;
+		public static final int OR_OPERATOR = 102;
 
-		public final static int NOT_OPERATOR = 103;
+		public static final int NOT_OPERATOR = 103;
 
-		public final static int IMPLIES_OPERATOR = 104;
+		public static final int IMPLIES_OPERATOR = 104;
 
-		public final static int X_OPERATOR = 201;
+		public static final int X_OPERATOR = 201;
 
-		public final static int F_OPERATOR = 202;
+		public static final int F_OPERATOR = 202;
 
-		public final static int G_OPERATOR = 203;
+		public static final int G_OPERATOR = 203;
 
-		public final static int U_OPERATOR = 204;
+		public static final int U_OPERATOR = 204;
 
-		public final static int A_OPERATOR = 301;
+		public static final int A_OPERATOR = 301;
 
-		public final static int E_OPERATOR = 302;
+		public static final int E_OPERATOR = 302;
 
-		public final static int REVERSE_OPERATOR = 401;
+		public static final int REVERSE_OPERATOR = 401;
 
-		public final static int IDENTIFIER = 501;
+		public static final int IDENTIFIER = 501;
 
-		public final static int END_OF_PATTERN = 1000;
+		public static final int END_OF_PATTERN = 1000;
 
 		private Token(int type, String value, int position, int length)
 		{
