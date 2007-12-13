@@ -34,6 +34,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import Composestar.Core.Exception.ConfigurationException;
@@ -85,8 +86,8 @@ public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 	{
 		if (configGenerator == null)
 		{
-			throw new CoreException(new Status(IResourceStatus.BUILD_FAILED, pluginid,
-					"No build configuration generator"));
+			throw new CoreException(new Status(IStatus.ERROR, pluginid, IResourceStatus.BUILD_FAILED,
+					"No configuration generator", new NullPointerException()));
 		}
 		monitor.beginTask("Compiling", 100);
 		try
@@ -95,7 +96,8 @@ public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 		}
 		catch (ConfigurationException e)
 		{
-			throw new CoreException(new Status(IResourceStatus.BUILD_FAILED, pluginid, e.getMessage()));
+			throw new CoreException(
+					new Status(IStatus.ERROR, pluginid, IResourceStatus.BUILD_FAILED, e.getMessage(), e));
 		}
 		monitor.worked(1);
 		File buildConfigFile = new File(currentProject.getLocation().toFile(), "BuildConfiguration.xml");
