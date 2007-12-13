@@ -146,7 +146,7 @@ public class Preprocessor implements CTCommonModule
 
 		try
 		{
-			URL genUrl = this.getClass().getResource(GENERATE_FLOW_GRAMMAR_PATH);
+			URL genUrl = Preprocessor.class.getResource(GENERATE_FLOW_GRAMMAR_PATH);
 			String fileName = genUrl.getFile().replaceAll("%20", " ");
 			logger.debug("Loading grammar: " + fileName);
 			if (fileName.indexOf('!') >= 0)

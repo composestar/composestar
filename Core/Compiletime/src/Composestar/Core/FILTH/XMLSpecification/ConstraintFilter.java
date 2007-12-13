@@ -16,7 +16,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.Core.Action;
 import Composestar.Core.FILTH.Core.Graph;
 import Composestar.Core.FILTH.Core.Node;
@@ -115,10 +114,6 @@ public class ConstraintFilter extends ArgumentFilter
 				{
 					Rule rule = new SoftPreRule(l, r);
 					rule.insert(graph);
-
-					// FILTHService.print("FILTH::adding rule> "+value+"( "+l+"
-					// , "+r+" )\n");
-					FILTHService.getLog().print("<li><i>" + value + "( " + l + " , " + r + ")</i></li>\n");
 				}
 			}
 

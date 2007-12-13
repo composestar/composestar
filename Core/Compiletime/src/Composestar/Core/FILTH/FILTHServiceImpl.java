@@ -10,12 +10,8 @@
 package Composestar.Core.FILTH;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.PrintStream;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,8 +44,6 @@ import Composestar.Core.SANE.SIinfo;
 
 public class FILTHServiceImpl extends FILTHService
 {
-	private boolean outputEnabled;
-
 	private String specFilename;
 
 	protected CommonResources resources;
@@ -58,7 +52,6 @@ public class FILTHServiceImpl extends FILTHService
 	{
 		resources = cr;
 		ModuleInfo mi = ModuleInfoManager.get(FILTH.MODULE_NAME);
-		outputEnabled = mi.getBooleanSetting("outputEnabled");
 		specFilename = mi.getSetting("input");
 	}
 
@@ -81,87 +74,6 @@ public class FILTHServiceImpl extends FILTHService
 	@Override
 	public List<List<FilterModuleSuperImposition>> getMultipleOrder(Concern c)
 	{
-		String filename = "";
-		String cssFile = "";
-		try
-		{
-			File file = new File(resources.configuration().getProject().getIntermediate(), "Analyses");
-			if (!file.exists())
-			{
-				file.mkdir();
-			}
-			if (file.isDirectory())
-			{
-				if (c.getName().indexOf("<") >= 0)
-				{
-					filename = c.getName().substring(0, c.getName().indexOf("<"));
-
-					int count = 1, fromIndex = 0, foundIndex = 0;
-					do
-					{
-						foundIndex = c.getName().indexOf(",", fromIndex);
-						if (foundIndex >= 0)
-						{
-							count++;
-							fromIndex = foundIndex + 1;
-						}
-					} while (foundIndex >= 0);
-
-					filename = filename + "`" + count;
-				}
-				else
-				{
-					filename = c.getName();
-				}
-				filename = file.getAbsolutePath() + "\\FILTH_" + filename + ".html";
-
-				if (outputEnabled)
-				{
-					FILTHService.setLog(new PrintStream(new FileOutputStream(filename)));
-				}
-				else
-				{
-					FILTHService.setLog(new PrintStream(new DevNullOutputStream()));
-				}
-			}
-		}
-		catch (FileNotFoundException e)
-		{
-			// e.getMessage();
-			// e.printStackTrace();
-			// throw new ModuleException("SECRET","FILTH report file creation
-			// failed (" + filename + "), with reason: " + e.getMessage());
-			logger.info("FILTH report file creation failed (" + filename + "), with reason: " + e.getMessage(), e);
-		}
-
-		// String composestarpath = props.getProperty("ComposestarPath");
-		// FILTHService.log.println("<html><head><title>SECRET
-		// Report</title><link rel=\"stylesheet\" href=\"" + cssFile + "\"
-		// type=\"text/css\"></head><body><H1>FILTH Report</h1><h3>");
-		StringBuffer buffer = new StringBuffer("");
-
-		buffer.append("<html>\n");
-		buffer.append("\t<head>\n");
-		buffer.append("\t\t<title>Filter Composition and Checking report</title>\n");
-		buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\"").append(cssFile).append(
-				"\"/>\n");
-		buffer.append("</head>\n");
-		buffer.append("<body>\n");
-		// TODO bad path usage
-		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"");
-		File logoFile = resources.getPathResolver().getResource("logo.gif");
-		if (logoFile != null)
-		{
-			buffer.append(logoFile.toURI().toString());
-		}
-		buffer.append("\"/>  /TRESE/Compose*/FILTH</i></b></font></div>\n");
-		buffer.append("<h3>Report generated on:  ").append(new Date().toString()).append("</h3>\n");
-
-		FILTHService.log.print(buffer.toString());
-
-		FILTHService.log.print("<h4>Analyzing Filter Module Orders for shared join point: <u>" + c.getName()
-				+ "</u></h4>\n");
-
 		LinkedList<List<FilterModuleSuperImposition>> forders = new LinkedList<List<FilterModuleSuperImposition>>();
 
 		LinkedList<FilterModuleSuperImposition> modulrefs;
@@ -169,31 +81,14 @@ public class FILTHServiceImpl extends FILTHService
 		Graph g = new Graph();
 		g.setRoot(new Node("root"));
 
-		FILTHService.log.print("<h4>Superimposed Filter Modules: </h4>\n");
-		FILTHService.log.print("<ul>\n");
 		modulrefs = processModules(c, g);
-		FILTHService.log.print("</ul>\n");
 
 		processOrderingSpecifications(g);
 
-		FILTHService.log.print("<h4>Ordering constraints: </h4>\n");
-		FILTHService.log.print("<ul>\n");
-
-		printOrderingSpecifications();
 		processXML(c, g);
 
-		FILTHService.log.print("</ul>\n");
-
-		// FILTHService.print("FILTH::generating alternatives\n");
 		OrderTraverser ot = new OrderTraverser();
 		LinkedList<List<Node>> orders = ot.multiTraverse(g);
-		/*
-		 * System.out.println("<<INNER multiple-orders>>"); for (Iterator
-		 * j=orders.iterator();j.hasNext();){ for (Iterator
-		 * i=((LinkedList)j.next()).iterator();i.hasNext();)
-		 * System.out.println(((Node)i.next()).getElement());
-		 * System.out.println("/n-----------"); }
-		 */
 		for (List<Node> ord : orders)
 		{
 			Iterator<Node> i = ord.iterator();
@@ -221,40 +116,6 @@ public class FILTHServiceImpl extends FILTHService
 			forders.addLast(anOrder);
 		}
 
-		/* DEBUG info about the orders */
-		int alt = 1;
-
-		FILTHService.log.print("<h4>Selected Order: </h4>\n");
-		FILTHService.log.print("<ol>\n");
-		// FILTHService.printTab(3,"<-- Alternative ("+ alt++ +") -->\n");
-		for (FilterModuleSuperImposition fmsi : forders.getFirst())
-		{
-			FilterModuleReference fmr = fmsi.getFilterModule();
-			if (!InnerDispatcher.isDefaultDispatch(fmr))
-			{
-				FILTHService.log.print("<li><i>" + fmr.getRef().getQualifiedName() + "</i></li>\n");
-			}
-		}
-		FILTHService.log.print("</ol>\n");
-
-		FILTHService.log.print("<h4>Alternatives: </h4>\n");
-		// FILTHService.log.print("<ul>\n");
-
-		for (List<FilterModuleSuperImposition> fmsiList : forders)
-		{
-			FILTHService.log.print("<h4>Alternative[" + alt + "]: </h4>\n");
-			FILTHService.log.print("<ol>\n");
-			for (FilterModuleSuperImposition fmsi : fmsiList)
-			{
-				FilterModuleReference fmr = fmsi.getFilterModule();
-				if (!InnerDispatcher.isDefaultDispatch(fmr))
-				{
-					FILTHService.log.print("<li><i>" + fmr.getRef().getQualifiedName() + "</i></li>\n");
-				}
-			}
-			FILTHService.log.print("</ol>\n");
-			alt++;
-		}
 		/* DEBUG info end */
 
 		/** * attaching all orders to the concern in DataStore */
@@ -268,14 +129,7 @@ public class FILTHServiceImpl extends FILTHService
 		FilterModuleOrder fmorder = new FilterModuleOrder(forders.getFirst());
 		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmorder);
 
-		// FILTHService.print("FILTH::order (1) added to the repository
-		// {"+c.getName()+"}\n");
-		// FILTHService.print("<---FILTH::END--->\n");
-
-		FILTHService.log.print("</body></html>\n");
-		FILTHService.log.close();
-
-		if (alt > 2)
+		if (forders.size() > 2)
 		{
 			logger.warn("Multiple Filter Module orderings possible for concern " + c.getQualifiedName());
 		}
@@ -292,11 +146,6 @@ public class FILTHServiceImpl extends FILTHService
 		/* get the firt altnernative */
 		Vector<FilterModSIinfo> msalts = sinfo.getFilterModSIAlts();
 
-		/*
-		 * System.out.print(">>>"+c.getName()); for (Iterator
-		 * i=msalts.iterator();i.hasNext();)
-		 * System.out.println("@@@@"+i.next());
-		 */
 		/* get the vector of the superimposed filtermodules */
 		FilterModSIinfo fmsi = msalts.get(0);
 
@@ -306,10 +155,6 @@ public class FILTHServiceImpl extends FILTHService
 			FilterModuleReference fr = fms.getFilterModule();
 			Action a = new Action(fr.getQualifiedName(), Boolean.TRUE, true);
 			Action.insert(a, g);
-
-			// FILTHService.print("FILTH::adding module> "+fr.getName()+"|");
-			FILTHService.log.print("<li><i>" + fr.getQualifiedName() + "</i></li>\n");
-
 			modulerefs.add(fms);
 		}
 		return modulerefs;
@@ -335,20 +180,6 @@ public class FILTHServiceImpl extends FILTHService
 				String right = socit.next();
 				processRule(left, right, g);
 			}
-		}
-	}
-
-	private void printOrderingSpecifications()
-	{
-		Map<String, SyntacticOrderingConstraint> map = (Map<String, SyntacticOrderingConstraint>) DataStore.instance()
-				.getObjectByID(FILTH.FILTER_ORDERING_SPEC);
-		if (map == null)
-		{
-			return;
-		}
-		for (SyntacticOrderingConstraint soc : map.values())
-		{
-			FILTHService.log.print("<li><i>" + soc.toString() + "</i></li>\n");
 		}
 	}
 

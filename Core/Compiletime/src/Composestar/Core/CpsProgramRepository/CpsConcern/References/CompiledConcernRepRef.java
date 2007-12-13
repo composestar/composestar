@@ -11,6 +11,9 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 
+/**
+ * @deprecated ?? it's not used anywhere
+ */
 public class CompiledConcernRepRef extends ConcernElementReference
 {
 	// private PlatformRepresentation ref;

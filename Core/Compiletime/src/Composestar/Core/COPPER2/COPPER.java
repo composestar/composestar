@@ -37,13 +37,13 @@ import org.apache.log4j.Level;
 
 import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.DevNullOutputStream;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Utils.DevNullOutputStream;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
