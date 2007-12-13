@@ -1,9 +1,9 @@
 package Composestar.Core.SANE;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Utils.CPSIterator;
 
 public interface AbstractSIinfo
 {
@@ -23,5 +23,5 @@ public interface AbstractSIinfo
 	/**
 	 * @return Composestar.Utils.*;
 	 */
-	CPSIterator getIter();
+	Iterator getIter();
 }

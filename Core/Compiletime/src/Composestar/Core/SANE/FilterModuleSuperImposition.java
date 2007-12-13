@@ -38,24 +38,23 @@ public class FilterModuleSuperImposition extends RepositoryEntity
 	/**
 	 * Creates an unconditional filter module superimposition.
 	 * 
-	 * @param filterModule The filter module that is superimposed.
+	 * @param fm The filter module that is superimposed.
 	 */
-	public FilterModuleSuperImposition(FilterModuleReference filterModule)
+	public FilterModuleSuperImposition(FilterModuleReference fm)
 	{
-		this.filterModule = filterModule;
+		filterModule = fm;
 	}
 
 	/**
 	 * Creates a filter module superimposition.
 	 * 
-	 * @param filterModule The filter module that is superimposed.
-	 * @param condition The condition under which the filter module is
-	 *            superimposed.
+	 * @param fm The filter module that is superimposed.
+	 * @param cond The condition under which the filter module is superimposed.
 	 */
-	public FilterModuleSuperImposition(FilterModuleReference filterModule, Condition condition)
+	public FilterModuleSuperImposition(FilterModuleReference fm, Condition cond)
 	{
-		this.filterModule = filterModule;
-		this.condition = condition;
+		filterModule = fm;
+		condition = cond;
 	}
 
 	/**

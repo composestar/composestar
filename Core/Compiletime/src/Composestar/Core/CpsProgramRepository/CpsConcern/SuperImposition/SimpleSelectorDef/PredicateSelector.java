@@ -41,10 +41,13 @@ import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
 import Composestar.Core.LOLA.metamodel.ModelClashException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.ILogger;
+import Composestar.Utils.Logging.SafeLogger;
 
 public class PredicateSelector extends SimpleSelExpression
 {
+	protected static final ILogger logger = SafeLogger.getILogger("LOLA");
+
 	private static final long serialVersionUID = 5921852132415178944L;
 
 	String outputVar;
@@ -77,7 +80,7 @@ public class PredicateSelector extends SimpleSelExpression
 		toBeCheckedByINCRE = false;
 		tymInfo = new HashMap();
 		annotations = new HashSet();
-		Debug.out(Debug.MODE_DEBUG, "LOLA", "Creating a predicate selector(" + inOutputVar + ", " + inQuery + ')');
+		logger.debug("Creating a predicate selector(" + inOutputVar + ", " + inQuery + ')');
 	}
 
 	public PredicateSelector()
@@ -137,7 +140,7 @@ public class PredicateSelector extends SimpleSelExpression
 			Object element = iter.next();
 			if (!(element instanceof ProgramElement))
 			{
-				Debug.out(Debug.MODE_WARNING, "LOLA", "Error: the output variable '" + outputVar
+				logger.warn("Error: the output variable '" + outputVar
 						+ "' does not return (only) Language Units for this query:\n" + query, this);
 			}
 			else
@@ -300,8 +303,7 @@ public class PredicateSelector extends SimpleSelExpression
 			}
 			else
 			{
-				Debug.out(Debug.MODE_ERROR, "LOLA", "Internal error: Query should, but did not return a java object!",
-						this);
+				logger.error("Internal error: Query should, but did not return a java object!", this);
 			}
 			r = Prog.ask_engine(e);
 		}
@@ -314,8 +316,7 @@ public class PredicateSelector extends SimpleSelExpression
 		// TODO:Arbitrary number...what would be reasonable to expect?
 		if (answers.size() >= 50000)
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA",
-					"Over 50k results; maybe this prolog expression generates infinite results:\n" + query, this);
+			logger.warn("Over 50k results; maybe this prolog expression generates infinite results:\n" + query, this);
 		}
 		return answers;
 	}
@@ -352,7 +353,7 @@ public class PredicateSelector extends SimpleSelExpression
 		}
 		catch (ModelClashException mce)
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", "Error while finishing type information:  " + mce.getMessage());
+			logger.warn("Error while finishing type information:  " + mce.getMessage());
 		}
 
 		// add tym information according to type of answer
@@ -413,7 +414,7 @@ public class PredicateSelector extends SimpleSelExpression
 		}
 		catch (ModelClashException mce)
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", "Cannot add TYM information of type " + type);
+			logger.warn("Cannot add TYM information of type " + type);
 		}
 	}
 
@@ -434,7 +435,7 @@ public class PredicateSelector extends SimpleSelExpression
 		}
 		catch (ModelClashException mce)
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", "Cannot add TYM information of type " + type);
+			logger.warn("Cannot add TYM information of type " + type);
 		}
 	}
 
@@ -556,7 +557,7 @@ public class PredicateSelector extends SimpleSelExpression
 
 			if (!unitfound)
 			{
-				Debug.out(Debug.MODE_WARNING, "LOLA", "Cannot resolve Unit " + unit.getUnitName());
+				logger.warn("Cannot resolve Unit " + unit.getUnitName());
 				answersResolved = false;
 			}
 

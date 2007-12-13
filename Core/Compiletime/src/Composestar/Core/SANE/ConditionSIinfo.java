@@ -11,6 +11,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Utils.CPSIterator;
 
+/**
+ * @deprecated condition super imposition is not implements
+ */
 public class ConditionSIinfo extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity implements
 		AbstractSIinfo
 {
@@ -63,7 +66,7 @@ public class ConditionSIinfo extends Composestar.Core.RepositoryImplementation.C
 	 * @return Composestar.Utils.*;
 	 * @roseuid 405987540200
 	 */
-	public CPSIterator getIter()
+	public Iterator getIter()
 	{
 		return new CPSIterator(superimposed);
 	}

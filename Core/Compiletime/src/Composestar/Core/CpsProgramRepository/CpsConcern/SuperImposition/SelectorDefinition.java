@@ -18,14 +18,12 @@ import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 import Composestar.Utils.CPSIterator;
 
 /**
- * @modelguid {AE646A8D-63B9-4526-B3B7-9402D9AF580F} Definition of the Selector
- *            that defines the crosscut
+ * Definition of the Selector that defines the crosscut
  */
 public class SelectorDefinition extends DeclaredRepositoryEntity
 {
-	/**
-	 * 
-	 */
+	public static final String INTREP_KEY = "SelDefIntrep";
+
 	private static final long serialVersionUID = -8636845317655529305L;
 
 	public Vector selExpressionList;
@@ -120,7 +118,7 @@ public class SelectorDefinition extends DeclaredRepositoryEntity
 			// result.addAll(((SimpleSelExpression)
 			// selExpIter.next()).interpret().elements()); GG
 		}
-		this.addDynObject("interpretation", result);
+		this.addDynObject(INTREP_KEY, result);
 		return result;
 	}
 }

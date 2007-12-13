@@ -6,10 +6,8 @@ package Composestar.Core.SIGN2;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,13 +69,13 @@ public class Sign implements CTCommonModule
 	 */
 	public static final String STAR_TARGET = "*";
 
-	private HashSet<Concern> superimposedConcerns;
+	private Set<Concern> superimposedConcerns;
 
-	private Hashtable<Concern, FireModel> fireModels;
+	private Map<Concern, FireModel> fireModels;
 
-	private Hashtable<Concern, Set<String>> distinguishableSets;
+	private Map<Concern, Set<String>> distinguishableSets;
 
-	private HashSet<MethodWrapper> cyclicDispatchSet;
+	private Set<MethodWrapper> cyclicDispatchSet;
 
 	private boolean change;
 
@@ -87,7 +85,7 @@ public class Sign implements CTCommonModule
 	private boolean error;
 
 	// ctl-reusable fields:
-	private Dictionary<String, Predicate> dictionary;
+	private Map<String, Predicate> dictionary;
 
 	@ResourceManager
 	private FIRE2Resources fire2Resources;
@@ -100,7 +98,7 @@ public class Sign implements CTCommonModule
 	private void init()
 	{
 		// creating dictionary
-		dictionary = new Hashtable<String, Predicate>();
+		dictionary = new HashMap<String, Predicate>();
 
 		dictionary.put("isDispatch", new StateType("DispatchAction"));
 	}
@@ -169,28 +167,28 @@ public class Sign implements CTCommonModule
 	private void initialize()
 	{
 		superimposedConcerns = new HashSet<Concern>();
-		fireModels = new Hashtable<Concern, FireModel>();
-		distinguishableSets = new Hashtable<Concern, Set<String>>();
+		fireModels = new HashMap<Concern, FireModel>();
+		distinguishableSets = new HashMap<Concern, Set<String>>();
 
 		initializeSignatures();
 	}
 
 	private void initializeSignatures()
 	{
-		Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIter = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
 		{
-			Concern concern = (Concern) conIter.next();
+			Concern concern = conIter.next();
 			if (concern.getDynObject(SIinfo.DATAMAP_KEY) == null)
 			{
 				Signature signature = getSignature(concern);
-				List methods = getMethodList(concern);
+				List<MethodInfo> methods = getMethodList(concern);
 
 				// Add all (usr src) methods to the signature with status
 				// existing.
-				for (Object method : methods)
+				for (MethodInfo method : methods)
 				{
-					signature.addMethodWrapper(new MethodWrapper((MethodInfo) method, MethodWrapper.EXISTING));
+					signature.addMethodWrapper(new MethodWrapper(method, MethodWrapper.EXISTING));
 				}
 			}
 			else
@@ -239,7 +237,7 @@ public class Sign implements CTCommonModule
 
 		FireModel fireModel = fireModels.get(concern);
 
-		String[] selectors = (String[]) distinguishableSets.get(concern).toArray(new String[0]);
+		String[] selectors = distinguishableSets.get(concern).toArray(new String[0]);
 		for (String sel : selectors)
 		{
 			ExecutionModel execModel = fireModel.getExecutionModel(FilterDirection.Input, sel);
@@ -497,14 +495,12 @@ public class Sign implements CTCommonModule
 
 		// Create in-transition map
 		HashMap<ExecutionState, List<ExecutionTransition>> inTransitionMap = new HashMap<ExecutionState, List<ExecutionTransition>>();
-		Iterator stateIter = new ExecutionStateIterator(execModel);
+		Iterator<ExecutionState> stateIter = new ExecutionStateIterator(execModel);
 		while (stateIter.hasNext())
 		{
-			ExecutionState state = (ExecutionState) stateIter.next();
-			Iterator transitionIter = state.getOutTransitions();
-			while (transitionIter.hasNext())
+			ExecutionState state = stateIter.next();
+			for (ExecutionTransition transition : state.getOutTransitionsEx())
 			{
-				ExecutionTransition transition = (ExecutionTransition) transitionIter.next();
 				ExecutionState endState = transition.getEndState();
 				if (inTransitionMap.containsKey(endState))
 				{
@@ -523,7 +519,7 @@ public class Sign implements CTCommonModule
 		stateIter = new OrderedExecutionStateIterator(execModel);
 		while (stateIter.hasNext())
 		{
-			ExecutionState state = (ExecutionState) stateIter.next();
+			ExecutionState state = stateIter.next();
 
 			// Check whether the state has in-transitions:
 			if (!inTransitionMap.containsKey(state))
@@ -792,7 +788,7 @@ public class Sign implements CTCommonModule
 	private boolean existsDispatchTarget(Concern concern, MethodInfo method, ExecutionState state)
 	{
 		int status = getDispatchTargetStatus(concern, method, state);
-		return (status != MethodWrapper.NOT_EXISTING);
+		return status != MethodWrapper.NOT_EXISTING;
 	}
 
 	private void cyclicDispatchConflictCheck()
@@ -872,15 +868,15 @@ public class Sign implements CTCommonModule
 		}
 	}
 
-	private List getMethodList(Concern c)
+	private List<MethodInfo> getMethodList(Concern c)
 	{
 		Type dt = (Type) c.getPlatformRepresentation();
 		if (dt == null)
 		{
-			return new LinkedList();
+			return new LinkedList<MethodInfo>();
 		}
 
-		return new LinkedList(dt.getMethods());
+		return new LinkedList<MethodInfo>(dt.getMethods());
 	}
 
 	private static Signature getSignature(Concern c)
@@ -901,7 +897,7 @@ public class Sign implements CTCommonModule
 		buffer.append(info.getName());
 
 		buffer.append('(');
-		List parameters = info.getParameters();
+		List<ParameterInfo> parameters = info.getParameters();
 		for (int i = 0; i < parameters.size(); i++)
 		{
 			if (i > 0)
@@ -909,7 +905,7 @@ public class Sign implements CTCommonModule
 				buffer.append(", ");
 			}
 
-			ParameterInfo parameter = (ParameterInfo) parameters.get(i);
+			ParameterInfo parameter = parameters.get(i);
 			buffer.append(parameter.parameterTypeString);
 		}
 		buffer.append(')');
@@ -944,18 +940,17 @@ public class Sign implements CTCommonModule
 	public void finishing()
 	{
 		DataStore datastore = DataStore.instance();
-		Iterator conIter = datastore.getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
 
 		while (conIter.hasNext())
 		{
-			Concern concern = (Concern) conIter.next();
+			Concern concern = conIter.next();
 
-			List dnmi = getMethodList(concern);
+			List<MethodInfo> dnmi = getMethodList(concern);
 			Signature signature = concern.getSignature();
 
-			for (Object aDnmi : dnmi)
+			for (MethodInfo methodInfo : dnmi)
 			{
-				MethodInfo methodInfo = (MethodInfo) aDnmi;
 				MethodWrapper wrapper = signature.getMethodWrapper(methodInfo);
 
 				if (wrapper == null)
@@ -1000,10 +995,10 @@ public class Sign implements CTCommonModule
 		DataStore datastore = DataStore.instance();
 
 		// Get all the concerns
-		Iterator conIter = datastore.getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
 		{
-			Concern concern = (Concern) conIter.next();
+			Concern concern = conIter.next();
 
 			Signature st = concern.getSignature();
 			if (st != null && concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
@@ -1011,10 +1006,10 @@ public class Sign implements CTCommonModule
 				logger.info("\tSignature for concern: " + concern.getQualifiedName());
 
 				// Show them your goodies.
-				Iterator wrapperIter = st.getMethodWrapperIterator();
+				Iterator<MethodWrapper> wrapperIter = st.getMethodWrapperIterator();
 				while (wrapperIter.hasNext())
 				{
-					MethodWrapper wrapper = (MethodWrapper) wrapperIter.next();
+					MethodWrapper wrapper = wrapperIter.next();
 					if (wrapper.getRelationType() == MethodWrapper.REMOVED
 							|| wrapper.getRelationType() == MethodWrapper.ADDED)
 					{
@@ -1060,11 +1055,11 @@ public class Sign implements CTCommonModule
 	public void cleanProbes()
 	{
 		DataStore datastore = DataStore.instance();
-		Iterator conIter = datastore.getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
 
 		while (conIter.hasNext())
 		{
-			Concern concern = (Concern) conIter.next();
+			Concern concern = conIter.next();
 
 			Signature signature = concern.getSignature();
 
@@ -1159,7 +1154,7 @@ public class Sign implements CTCommonModule
 	private List<MethodInfo> targetMethods(Concern concern, Target target, String selector)
 	{
 		// get dispatchtarget concern and methods:
-		List methods;
+		List<MethodInfo> methods;
 		if (target.getName().equals(Target.INNER))
 		{
 			methods = getMethodList(concern);
@@ -1186,9 +1181,8 @@ public class Sign implements CTCommonModule
 				FilterDirection.Input);
 
 		ArrayList<MethodInfo> targetMethods = new ArrayList<MethodInfo>();
-		for (Object method1 : methods)
+		for (MethodInfo method : methods)
 		{
-			MethodInfo method = (MethodInfo) method1;
 			if (selector.equals(Message.UNDISTINGUISHABLE_SELECTOR))
 			{
 				if (!distinguishableSelectors.contains(method.getName()))
@@ -1251,11 +1245,10 @@ public class Sign implements CTCommonModule
 		}
 	}
 
-	private static boolean containsMethod(List methods, MethodInfo method)
+	private static boolean containsMethod(List<MethodInfo> methods, MethodInfo method)
 	{
-		for (Object method1 : methods)
+		for (MethodInfo containedMethod : methods)
 		{
-			MethodInfo containedMethod = (MethodInfo) method1;
 			if (containedMethod.checkEquals(method))
 			{
 				return true;
@@ -1269,10 +1262,10 @@ public class Sign implements CTCommonModule
 	{
 		Signature signature = getSignature(concern);
 		ArrayList<MethodWrapper> list = new ArrayList<MethodWrapper>();
-		Iterator wrapperIter = signature.getMethodWrapperIterator();
+		Iterator<MethodWrapper> wrapperIter = signature.getMethodWrapperIterator();
 		while (wrapperIter.hasNext())
 		{
-			list.add((MethodWrapper) wrapperIter.next());
+			list.add(wrapperIter.next());
 		}
 		return list;
 	}
@@ -1308,7 +1301,7 @@ public class Sign implements CTCommonModule
 	public static int getMethodStatus(Concern concern, MethodInfo method, Target target, String selector)
 	{
 		// get the methods from the dispatch target
-		List methods;
+		List<MethodInfo> methods;
 		Type type;
 		if (target.getName().equals(Target.INNER))
 		{
@@ -1361,7 +1354,6 @@ public class Sign implements CTCommonModule
 	private MethodWrapper getTargetMethod(Concern concern, MethodInfo methodInfo, Target target, String selector)
 	{
 		// get the methods from the dispatch target
-		List methods;
 		Type type;
 		if (target.getName().equals(Target.INNER))
 		{
@@ -1393,6 +1385,7 @@ public class Sign implements CTCommonModule
 
 	private class ProbeMethodInfo extends MethodInfo
 	{
+		private static final long serialVersionUID = 805085265558745828L;
 
 		public ProbeMethodInfo(String name, String type)
 		{
@@ -1409,7 +1402,7 @@ public class Sign implements CTCommonModule
 		@Override
 		public MethodInfo getClone(String name, Type actualParent)
 		{
-			return new ProbeMethodInfo(name, this.getReturnTypeString());
+			return new ProbeMethodInfo(name, getReturnTypeString());
 		}
 
 		/*
@@ -1420,7 +1413,6 @@ public class Sign implements CTCommonModule
 		@Override
 		public Collection getUnitAttributes()
 		{
-			// TODO Auto-generated method stub
 			return null;
 		}
 
@@ -1432,7 +1424,6 @@ public class Sign implements CTCommonModule
 		@Override
 		public UnitResult getUnitRelation(String argumentName)
 		{
-			// TODO Auto-generated method stub
 			return null;
 		}
 
@@ -1444,7 +1435,6 @@ public class Sign implements CTCommonModule
 		@Override
 		public boolean isPrivate()
 		{
-			// TODO Auto-generated method stub
 			return false;
 		}
 
@@ -1456,7 +1446,6 @@ public class Sign implements CTCommonModule
 		@Override
 		public boolean isProtected()
 		{
-			// TODO Auto-generated method stub
 			return false;
 		}
 
@@ -1468,7 +1457,6 @@ public class Sign implements CTCommonModule
 		@Override
 		public boolean isPublic()
 		{
-			// TODO Auto-generated method stub
 			return false;
 		}
 

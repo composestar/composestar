@@ -9,8 +9,10 @@ import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method;
-import Composestar.Utils.CPSIterator;
 
+/**
+ * @deprecated condition super imposition is not implements
+ */
 public class MethodSIinfo extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity implements
 		AbstractSIinfo
 {
@@ -63,7 +65,7 @@ public class MethodSIinfo extends Composestar.Core.RepositoryImplementation.Cont
 	 * @return Composestar.Utils.*;
 	 * @roseuid 4059875501D9
 	 */
-	public CPSIterator getIter()
+	public Iterator getIter()
 	{
 		return null;
 	}

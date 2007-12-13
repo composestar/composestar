@@ -6,7 +6,6 @@ package Composestar.Core.FIRE2.util.queryengine.ctl;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -48,7 +47,7 @@ public class CtlChecker
 
 	private Map<Object, CtlFormula> simplifierMap;
 
-	public CtlChecker(ExecutionModel model, String formula, Dictionary<String, Predicate> predicates)
+	public CtlChecker(ExecutionModel model, String formula, Map<String, Predicate> predicates)
 	{
 		this(model, CtlParser.parse(formula, predicates));
 	}

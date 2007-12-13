@@ -7,12 +7,12 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
-import Composestar.Utils.CPSIterator;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 /**
  * [this aggregate is necessary to enable the inclusion of alternatives]
  */
-public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity
+public class SIinfo extends ContextRepositoryEntity
 {
 	public static final String DATAMAP_KEY = "superImpInfo";
 
@@ -20,21 +20,14 @@ public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRep
 
 	public Vector theFmSIinfo = new Vector();
 
-	public Vector theMethodSIinfo = new Vector();
-
-	public Vector theConditionSIinfo = new Vector();
-
 	/**
-	 * @roseuid 4053A9110195
+	 *
 	 */
 	public SIinfo()
-	{
-
-	}
+	{}
 
 	/**
 	 * @param parent
-	 * @roseuid 404C4B660033
 	 */
 	public SIinfo(Concern parent)
 	{
@@ -47,7 +40,6 @@ public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRep
 	 * selector
 	 * 
 	 * @param sel
-	 * @roseuid 40539E4D0228
 	 */
 	public void resolveSelectors(SelectorDefinition sel)
 	{
@@ -58,17 +50,14 @@ public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRep
 	/**
 	 * @param concern resolve SuperImposition for this single concern.
 	 * @param concern
-	 * @roseuid 4053996D03A0
 	 */
 	public void resolveSI(CpsConcern concern)
 	{
-
 	// TODO finish up
 	}
 
 	/**
 	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern
-	 * @roseuid 4053AD6703E0
 	 */
 	public CpsConcern myConcern()
 	{
@@ -80,56 +69,15 @@ public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRep
 	 * (perhaps just one)
 	 * 
 	 * @return java.util.Vector
-	 * @roseuid 405984CB0062
 	 */
 	public Vector getFilterModSIAlts()
 	{
 		return theFmSIinfo;
 	}
 
-	public CPSIterator filterModSIAltsIter()
-	{
-		return new CPSIterator(theFmSIinfo);
-	}
-
-	/**
-	 * get a vector with all the alternative superimpositions of methods
-	 * (perhaps just one)
-	 * 
-	 * @return java.util.Vector
-	 * @roseuid 405984E50236
-	 */
-	public Vector getMethodSIAlts()
-	{
-		return theMethodSIinfo;
-	}
-
-	public CPSIterator getMethodSIAltsIter()
-	{
-		return new CPSIterator(theMethodSIinfo);
-	}
-
-	/**
-	 * get a vector with all the alternative superimpositions of conditions
-	 * (perhaps just one)
-	 * 
-	 * @return java.util.Vector
-	 * @roseuid 405984F40332
-	 */
-	public Vector getConditionSIAlts()
-	{
-		return theConditionSIinfo;
-	}
-
-	public CPSIterator getConditionSIAltsIter()
-	{
-		return new CPSIterator(theConditionSIinfo);
-	}
-
 	/**
 	 * @param fms
 	 * @param index
-	 * @roseuid 405A5EE500FC
 	 */
 	public void addFMsAt(Iterator fms, Condition fmCondition, int index)
 	{
@@ -146,25 +94,5 @@ public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRep
 			fmSIinfo = (FilterModSIinfo) theFmSIinfo.get(index);
 		}
 		fmSIinfo.addFMs(fms, fmCondition);
-	}
-
-	/**
-	 * @param fms
-	 * @param index
-	 * @roseuid 405A5F1101AA
-	 */
-	public void addMethodsAt(Iterator fms, int index)
-	{
-
-	}
-
-	/**
-	 * @param fms
-	 * @param index
-	 * @roseuid 405A5F200129
-	 */
-	public void addCondsAt(Iterator fms, int index)
-	{
-
 	}
 }

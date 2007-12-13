@@ -7,25 +7,20 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
-import Composestar.Utils.CPSIterator;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 /**
  * This represents one single possible set of filtermodules as they may be
  * superimposed.
  */
-public class FilterModSIinfo extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity implements
-		AbstractSIinfo
+public class FilterModSIinfo extends ContextRepositoryEntity implements AbstractSIinfo
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4721833069236805491L;
 
 	public Vector superimposed;
 
 	/**
-	 * @roseuid 404C4B660070
+	 * 
 	 */
 	public FilterModSIinfo()
 	{
@@ -34,12 +29,9 @@ public class FilterModSIinfo extends Composestar.Core.RepositoryImplementation.C
 
 	/**
 	 * @param concern
-	 * @roseuid 4059833E031E
 	 */
 	public void bind(CpsConcern concern)
-	{
-
-	}
+	{}
 
 	/**
 	 * get a superimposed filter module through its name
@@ -51,7 +43,7 @@ public class FilterModSIinfo extends Composestar.Core.RepositoryImplementation.C
 	public FilterModuleSuperImposition getByName(String name)
 	{
 		FilterModule fm = null;
-		CPSIterator iter = this.getIter();
+		Iterator iter = this.getIter();
 		while (iter.hasNext())
 		{
 			FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) iter.next();
@@ -68,7 +60,6 @@ public class FilterModSIinfo extends Composestar.Core.RepositoryImplementation.C
 
 	/**
 	 * @return java.util.Vector
-	 * @roseuid 405987550003
 	 */
 	public Vector getAll()
 	{
@@ -77,11 +68,10 @@ public class FilterModSIinfo extends Composestar.Core.RepositoryImplementation.C
 
 	/**
 	 * @return Composestar.Utils.*;
-	 * @roseuid 405987550035
 	 */
-	public CPSIterator getIter()
+	public Iterator getIter()
 	{
-		return new CPSIterator(superimposed);
+		return superimposed.iterator();
 	}
 
 	/**

@@ -4,14 +4,14 @@
  */
 package Composestar.Core.FIRE2.util.queryengine.ctl;
 
-import java.util.Dictionary;
+import java.util.Map;
 
 import Composestar.Core.FIRE2.util.queryengine.Predicate;
 
 public class CtlParser
 {
 
-	public static CtlFormula parse(String pattern, Dictionary<String, Predicate> predicates) throws CtlParseException
+	public static CtlFormula parse(String pattern, Map<String, Predicate> predicates) throws CtlParseException
 	{
 		Parser parser = new Parser(predicates);
 		return parser.parse(pattern);
@@ -19,9 +19,9 @@ public class CtlParser
 
 	private static class Parser
 	{
-		private Dictionary<String, Predicate> predicates;
+		private Map<String, Predicate> predicates;
 
-		public Parser(Dictionary<String, Predicate> predicates)
+		public Parser(Map<String, Predicate> predicates)
 		{
 			this.predicates = predicates;
 			predicates.put("true", new True());

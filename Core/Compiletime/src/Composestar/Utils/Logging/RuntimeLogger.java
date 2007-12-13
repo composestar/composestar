@@ -10,6 +10,8 @@
 
 package Composestar.Utils.Logging;
 
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+
 //
 // !! Compose* Runtime Warning !!
 //
@@ -108,5 +110,30 @@ public class RuntimeLogger implements ILogger
 	public void warn(Object arg0)
 	{
 		System.out.println("[" + name + "] WARN: " + arg0);
+	}
+
+	public void debug(Object arg0, RepositoryEntity arg1)
+	{
+		debug(arg0);
+	}
+
+	public void error(Object arg0, RepositoryEntity arg1)
+	{
+		error(arg0);
+	}
+
+	public void fatal(Object arg0, RepositoryEntity arg1)
+	{
+		fatal(arg0);
+	}
+
+	public void info(Object arg0, RepositoryEntity arg1)
+	{
+		info(arg0);
+	}
+
+	public void warn(Object arg0, RepositoryEntity arg1)
+	{
+		warn(arg0);
 	}
 }
