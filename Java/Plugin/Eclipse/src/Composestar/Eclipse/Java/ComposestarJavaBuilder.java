@@ -24,11 +24,14 @@
 
 package Composestar.Eclipse.Java;
 
+import java.io.File;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
 
 import Composestar.Eclipse.Core.ComposestarBuilder;
 
@@ -38,29 +41,24 @@ import Composestar.Eclipse.Core.ComposestarBuilder;
 public class ComposestarJavaBuilder extends ComposestarBuilder
 {
 	public ComposestarJavaBuilder()
-	{}
+	{
+		pluginid = "composestar.java.plugin";
+	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int,
-	 *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException
 	{
-		currentProject = getProject();
-		if (currentProject == null || !currentProject.isAccessible())
-		{
-			return new IProject[0];
-		}
-
-		switch (kind)
-		{
-			case FULL_BUILD:
-				fullBuild(monitor);
-		}
-		return null;
+		configGenerator = new JavaBuildConfigGenerator();
+		return super.build(kind, args, monitor);
 	}
 
+	protected void callMaster(IProgressMonitor monitor, File buildConfigFile) throws CoreException
+	{
+		MasterManager m = MasterManager.getInstance();
+		m.run(buildConfigFile);
+		if (!m.completed)
+		{
+			throw new CoreException(new Status(IResourceStatus.BUILD_FAILED, pluginid, "Build failed"));
+		}
+	}
 }

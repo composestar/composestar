@@ -24,13 +24,19 @@
 
 package Composestar.Eclipse.Core;
 
+import java.io.File;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
+
+import Composestar.Core.Exception.ConfigurationException;
 
 /**
  * @author Michiel Hendriks
@@ -38,16 +44,71 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 {
 	protected IProject currentProject;
-	
+
 	protected Set<IPath> sources;
-	
+
 	protected Set<IPath> concerns;
-	
+
+	protected BuildConfigGenerator configGenerator;
+
+	protected String pluginid;
+
 	public ComposestarBuilder()
 	{}
-	
-	protected IProject[] fullBuild(IProgressMonitor monitor) throws CoreException
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int,
+	 *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException
 	{
+		currentProject = getProject();
+		if (currentProject == null || !currentProject.isAccessible())
+		{
+			return new IProject[0];
+		}
+
+		switch (kind)
+		{
+			case INCREMENTAL_BUILD:
+			case FULL_BUILD:
+				fullBuild(monitor);
+				break;
+		}
 		return null;
 	}
+
+	protected IProject[] fullBuild(IProgressMonitor monitor) throws CoreException
+	{
+		if (configGenerator == null)
+		{
+			throw new CoreException(new Status(IResourceStatus.BUILD_FAILED, pluginid,
+					"No build configuration generator"));
+		}
+		monitor.beginTask("Compiling", 100);
+		try
+		{
+			configGenerator.addProject(currentProject);
+		}
+		catch (ConfigurationException e)
+		{
+			throw new CoreException(new Status(IResourceStatus.BUILD_FAILED, pluginid, e.getMessage()));
+		}
+		monitor.worked(1);
+		File buildConfigFile = new File(currentProject.getLocation().toFile(), "BuildConfiguration.xml");
+		if (!configGenerator.generate(buildConfigFile))
+		{
+			// throw CoreException
+			return null;
+		}
+		monitor.worked(1);
+		callMaster(monitor, buildConfigFile);
+		monitor.worked(98);
+		return null;
+	}
+
+	protected abstract void callMaster(IProgressMonitor monitor, File buildConfigFile) throws CoreException;
 }
