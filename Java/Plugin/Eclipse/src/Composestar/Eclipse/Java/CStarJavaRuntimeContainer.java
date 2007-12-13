@@ -61,7 +61,7 @@ public class CStarJavaRuntimeContainer implements IClasspathContainer
 	 */
 	public String[] getClasspath()
 	{
-		String[] cp = new String[4];
+		String[] cp = new String[3];
 		// Compiletime Core
 		// TODO: shouldn't be needed
 		cp[0] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
@@ -76,10 +76,10 @@ public class CStarJavaRuntimeContainer implements IClasspathContainer
 		cp[2] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
 				+ "ComposestarRuntimeInterpreter.jar", IComposestarJavaConstants.BUNDLE_ID));
 
-		// Compiletime Core
-		// TODO: shouldn't be needed
-		cp[3] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
-				+ "prolog.jar"));
+		// // TODO: shouldn't be needed
+		// cp[3] =
+		// FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
+		// + "prolog.jar"));
 
 		return cp;
 	}

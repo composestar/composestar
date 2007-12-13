@@ -358,10 +358,9 @@ public class AnnotationSuperImposition
 	public List<Set<ProgramElement>> evaluateSelectors() throws ModuleException
 	{
 		List<Set<ProgramElement>> results = new ArrayList<Set<ProgramElement>>();
-		for (Object selector1 : selectors)
+		for (Selector selector : selectors)
 		{
-			Selector selector = (Selector) selector1;
-			selector.predicate.run(composestarBuiltins);
+			composestarBuiltins.getPredicateSelectorInterpreter().interpret(selector.predicate);
 			results.add(selector.predicate.getSelectedUnits());
 			// System.out.println("Selector: " + selector.name + " selected [" +
 			// selector.predicate.getSelectedUnits() + "]");

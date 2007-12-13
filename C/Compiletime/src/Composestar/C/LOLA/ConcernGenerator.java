@@ -88,7 +88,7 @@ public class ConcernGenerator extends DefaultHandler
 		{
 			String key = (String) o;
 			PredicateSelector selector = (PredicateSelector) concerns.get(key); // selectorIter.next();
-			selector.run(composestarBuiltins);
+			composestarBuiltins.getPredicateSelectorInterpreter().interpret(selector);
 			resultsMap.put(key, selector.getSelectedUnits());
 		}
 		concerns.clear();

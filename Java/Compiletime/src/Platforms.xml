@@ -44,7 +44,6 @@
 			<file>lib/ComposestarCore.jar</file>
 			<file>lib/ComposestarJava.jar</file>
 			<file>lib/ComposestarRuntimeInterpreter.jar</file>
-			<file>lib/prolog.jar</file>
 		</resources>
 	</platform>
 	
@@ -90,7 +89,6 @@
 			<file>lib/ComposestarCore.jar</file>
 			<file>lib/ComposestarJava.jar</file>
 			<file>lib/ComposestarRuntimeInterpreter.jar</file>
-			<file>lib/prolog.jar</file>
 		</resources>
 	</platform>
 </platforms>
