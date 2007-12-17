@@ -12,7 +12,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Java.LAMA.JavaMethodInfo;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Class that modifies a class. It uses javassist to perform the changes.
@@ -21,12 +21,13 @@ import Composestar.Utils.Debug;
  */
 public class ClassModifier
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger("SITRA");
 
 	private static ClassModifier Instance;
 
 	private ClassPool classpool;
 
-	private ArrayList pathList;
+	private List<File> pathList;
 
 	/**
 	 * Constructor.
@@ -34,7 +35,7 @@ public class ClassModifier
 	public ClassModifier()
 	{
 		classpool = ClassPool.getDefault();
-		pathList = new ArrayList();
+		pathList = new ArrayList<File>();
 	}
 
 	/**
@@ -57,11 +58,10 @@ public class ClassModifier
 	 * @throws Exception - when an error occurs while trying to add the methods
 	 *             to the class.
 	 */
-	public void addMethods(List methods, CtClass ct) throws Exception
+	public void addMethods(List<JavaMethodInfo> methods, CtClass ct) throws Exception
 	{
-		for (Object method : methods)
+		for (JavaMethodInfo m : methods)
 		{
-			JavaMethodInfo m = (JavaMethodInfo) method;
 			int modifiers = m.theMethod.getModifiers();
 			CtClass returnClass = null;
 			if (!m.returnTypeString.equals(""))
@@ -72,7 +72,7 @@ public class ClassModifier
 			CtClass[] parameters = new CtClass[m.parameters.size()];
 			if (m.parameters.size() > 0)
 			{
-				Class[] params = m.theMethod.getParameterTypes();
+				Class<?>[] params = m.theMethod.getParameterTypes();
 				for (int i = 0; i < params.length; i++)
 				{
 					String name = params[i].getName();
@@ -82,8 +82,7 @@ public class ClassModifier
 			}
 			CtClass[] exceptions = new CtClass[0];
 			CtMethod newMethod = CtNewMethod.make(modifiers, returnClass, methodName, parameters, exceptions, null, ct);
-			Debug.out(Debug.MODE_INFORMATION, "SITRA", "method " + newMethod.getName() + " added to dummy class "
-					+ ct.getName());
+			logger.info("method " + newMethod.getName() + " added to dummy class " + ct.getName());
 			ct.addMethod(newMethod);
 		}
 
@@ -96,15 +95,14 @@ public class ClassModifier
 	 * @param ct - the class.
 	 * @throws Exception - e.g. when method doesn't exist.
 	 */
-	public void deleteMethods(List methods, CtClass ct) throws Exception
+	public void deleteMethods(List<JavaMethodInfo> methods, CtClass ct) throws Exception
 	{
-		for (Object method1 : methods)
+		for (JavaMethodInfo m : methods)
 		{
-			JavaMethodInfo m = (JavaMethodInfo) method1;
 			CtClass[] parameters = new CtClass[m.parameters.size()];
 			if (m.parameters.size() > 0)
 			{
-				Class[] params = m.theMethod.getParameterTypes();
+				Class<?>[] params = m.theMethod.getParameterTypes();
 				for (int i = 0; i < params.length; i++)
 				{
 					String name = params[i].getName();
@@ -165,7 +163,7 @@ public class ClassModifier
 
 		if (signature != null)
 		{
-			List methods = signature.getMethods(MethodWrapper.ADDED);
+			List<JavaMethodInfo> methods = signature.getMethods(MethodWrapper.ADDED);
 			if (methods.size() > 0)
 			{
 				addMethods(methods, ct);

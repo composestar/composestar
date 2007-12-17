@@ -84,7 +84,7 @@ public class ClassWeaver
 	public void weave(Project p) throws ModuleException
 	{
 		List<File> weavedClasses = new ArrayList<File>();
-		resources.add(JavaWeaver.WOVEN_CLASSES, weavedClasses);
+		resources.put(JavaWeaver.WOVEN_CLASSES, weavedClasses);
 
 		// write applicationStart
 		writeApplicationStart();

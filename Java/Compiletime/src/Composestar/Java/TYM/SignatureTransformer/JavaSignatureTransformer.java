@@ -30,7 +30,7 @@ public class JavaSignatureTransformer implements SignatureTransformer
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		boolean signaturesmodified = (Boolean) (resources.get("signaturesmodified"));
+		boolean signaturesmodified = (Boolean) resources.get("signaturesmodified");
 		if (signaturesmodified) // process only if signatures are modified
 		{
 			File dummies = (File) resources.get(CStarJavaCompiler.DUMMY_JAR);

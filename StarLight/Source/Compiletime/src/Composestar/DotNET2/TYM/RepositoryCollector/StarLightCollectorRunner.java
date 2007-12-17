@@ -449,14 +449,14 @@ public class StarLightCollectorRunner implements CTCommonModule
 		}
 
 		// see rev. 2806
-		return (ns.endsWith("+") ? (ns + name) : (ns + "." + name));
+		return ns.endsWith("+") ? ns + name : ns + "." + name;
 	}
 
 	private List<DotNETAttribute> collectAttributes(ArrayOfAttributeElement attributes)
 	{
 		if (attributes == null)
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		List<DotNETAttribute> result = new ArrayList<DotNETAttribute>();

@@ -20,6 +20,7 @@ import java.util.Set;
 
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 
@@ -233,17 +234,6 @@ public class DotNETMethodInfo extends MethodInfo
 	 * Parameters.add(param); // param.setParent(this); } public void
 	 * setParent(DotNETType parent) { Parent = parent; }
 	 */
-	// Stuff for LOLA
-	private HashSet toHashSet(Collection c)
-	{
-		HashSet result = new HashSet();
-		Iterator iter = c.iterator();
-		while (iter.hasNext())
-		{
-			result.add(iter.next());
-		}
-		return result;
-	}
 
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
@@ -258,7 +248,7 @@ public class DotNETMethodInfo extends MethodInfo
 		}
 		else if (argumentName.equals("ChildParameters"))
 		{
-			return new UnitResult(toHashSet(parameters));
+			return new UnitResult(new HashSet<ParameterInfo>(parameters));
 		}
 		else if (argumentName.equals("ReturnClass") && getReturnType().getUnitType().equals("Class"))
 		{
@@ -274,11 +264,11 @@ public class DotNETMethodInfo extends MethodInfo
 		}
 		else if (argumentName.equals("Annotations"))
 		{
-			Iterator i = getAnnotations().iterator();
-			HashSet res = new HashSet();
+			Iterator<Annotation> i = getAnnotations().iterator();
+			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add(((Annotation) i.next()).getType());
+				res.add((i.next()).getType());
 			}
 			return new UnitResult(res);
 		}
@@ -287,9 +277,9 @@ public class DotNETMethodInfo extends MethodInfo
 	}
 
 	@Override
-	public Collection getUnitAttributes()
+	public Collection<String> getUnitAttributes()
 	{
-		Set result = new HashSet();
+		Set<String> result = new HashSet<String>();
 		if (isPrivate())
 		{
 			result.add("private");

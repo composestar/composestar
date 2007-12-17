@@ -176,7 +176,7 @@ public class JavaWeaver implements WEAVER
 			{
 				continue;
 			}
-			List<FilterModuleSuperImposition> list = (List<FilterModuleSuperImposition>) fmo.filterModuleSIList();
+			List<FilterModuleSuperImposition> list = fmo.filterModuleSIList();
 			if (!list.isEmpty())
 			{
 				if (hasInputFilters(list))

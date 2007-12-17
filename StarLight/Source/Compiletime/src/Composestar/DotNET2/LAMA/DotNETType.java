@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
@@ -59,9 +60,9 @@ public class DotNETType extends Type
 
 	private String BaseTypeString;
 
-	private List ImplementedInterfaces; // List of DotNETTypes
+	private List<DotNETType> ImplementedInterfaces; // List of DotNETTypes
 
-	private List ImplementedInterfaceNames; // List of Strings
+	private List<String> ImplementedInterfaceNames; // List of Strings
 
 	private String Namespace;
 
@@ -72,38 +73,52 @@ public class DotNETType extends Type
 	private int endPos;
 
 	// for LOLA
-	private ProgramElement parentNS; // Added by the Language Model; this
-										// relation can be used in logic queries
 
-	private HashSet childTypes; // Added by the Language Model; this relation
-								// contains links to sub-types of this type.
+	/*
+	 * Added by the Language Model; this relation can be used in logic queries
+	 */
+	private ProgramElement parentNS;
 
-	private HashSet parameterTypes; // Added by the Language Model; this
-									// relation contains links to parameters of
-									// this type.
+	/*
+	 * Added by the Language Model; this relation contains links to sub-types of
+	 * this type.
+	 */
+	private Set<ProgramElement> childTypes;
 
-	private HashSet methodReturnTypes; // Added by the Language Model; this
-										// relation contains links to methods
-										// that return this type.
+	/*
+	 * Added by the Language Model; this relation contains links to parameters
+	 * of this type.
+	 */
+	private Set<ProgramElement> parameterTypes;
 
-	private HashSet fieldTypes; // Added by the Language Model; this relation
-								// contains links to fields of this type.
+	/*
+	 * Added by the Language Model; this relation contains links to methods that
+	 * return this type.
+	 */
+	private Set<ProgramElement> methodReturnTypes;
 
-	private HashSet implementedBy; // Added by the Language Model; this
-									// relation exists for interfaces and points
-									// to the Types that implement this
-									// interface
+	/*
+	 * Added by the Language Model; this relation contains links to fields of
+	 * this type.
+	 */
+	private Set<ProgramElement> fieldTypes;
+
+	/*
+	 * Added by the Language Model; this relation exists for interfaces and
+	 * points to the Types that implement this interface
+	 */
+	private Set<ProgramElement> implementedBy;
 
 	public DotNETType()
 	{
 		super();
-		ImplementedInterfaceNames = new ArrayList();
+		ImplementedInterfaceNames = new ArrayList<String>();
 		ImplementedInterfaces = null;
-		childTypes = new HashSet();
-		parameterTypes = new HashSet();
-		methodReturnTypes = new HashSet();
-		fieldTypes = new HashSet();
-		implementedBy = new HashSet();
+		childTypes = new HashSet<ProgramElement>();
+		parameterTypes = new HashSet<ProgramElement>();
+		methodReturnTypes = new HashSet<ProgramElement>();
+		fieldTypes = new HashSet<ProgramElement>();
+		implementedBy = new HashSet<ProgramElement>();
 	}
 
 	public boolean isClass()
@@ -206,16 +221,16 @@ public class DotNETType extends Type
 		ImplementedInterfaceNames.add(iface);
 	}
 
-	public List getImplementedInterfaces()
+	public List<DotNETType> getImplementedInterfaces()
 	{
 		if (null == ImplementedInterfaces)
 		{
-			ImplementedInterfaces = new ArrayList();
-			Iterator iter = ImplementedInterfaceNames.iterator();
+			ImplementedInterfaces = new ArrayList<DotNETType>();
+			Iterator<String> iter = ImplementedInterfaceNames.iterator();
 			TypeMap map = TypeMap.instance();
 			while (iter.hasNext())
 			{
-				DotNETType iface = (DotNETType) map.getType((String) iter.next());
+				DotNETType iface = (DotNETType) map.getType(iter.next());
 				if (null != iface)
 				{
 					ImplementedInterfaces.add(iface);
@@ -270,12 +285,13 @@ public class DotNETType extends Type
 		this.endPos = endPos;
 	}
 
-	public List getConstructors()
+	public List<DotNETMethodInfo> getConstructors()
 	{
-		List constructors = new ArrayList();
-		for (Iterator it = methods.iterator(); it.hasNext(); /* nop */)
+		List<DotNETMethodInfo> constructors = new ArrayList<DotNETMethodInfo>();
+		Iterator<DotNETMethodInfo> it = methods.iterator();
+		while (it.hasNext())
 		{
-			DotNETMethodInfo method = (DotNETMethodInfo) it.next();
+			DotNETMethodInfo method = it.next();
 			if (method.isConstructor())
 			{
 				constructors.add(method);
@@ -286,9 +302,10 @@ public class DotNETType extends Type
 
 	public DotNETMethodInfo getConstructor(String[] types)
 	{
-		for (Iterator it = methods.iterator(); it.hasNext(); /* nop */)
+		Iterator<DotNETMethodInfo> it = methods.iterator();
+		while (it.hasNext())
 		{
-			DotNETMethodInfo method = (DotNETMethodInfo) it.next();
+			DotNETMethodInfo method = it.next();
 			if (method.isConstructor() && method.hasParameters(types))
 			{
 				return method;
@@ -299,9 +316,10 @@ public class DotNETType extends Type
 
 	public DotNETFieldInfo getField(String name)
 	{
-		for (Iterator it = fields.iterator(); it.hasNext(); /* nop */)
+		Iterator<DotNETFieldInfo> it = fields.iterator();
+		while (it.hasNext())
 		{
-			DotNETFieldInfo field = (DotNETFieldInfo) it.next();
+			DotNETFieldInfo field = it.next();
 			if (field.getName().equals(name))
 			{
 				return field;
@@ -312,24 +330,13 @@ public class DotNETType extends Type
 
 	// Stuff for LOLA
 
-	private HashSet toHashSet(Collection c)
+	private HashSet<ProgramElement> filterDeclaredHere(Collection<ProgramElement> in)
 	{
-		HashSet result = new HashSet();
-		Iterator iter = c.iterator();
+		HashSet<ProgramElement> out = new HashSet<ProgramElement>();
+		Iterator<ProgramElement> iter = in.iterator();
 		while (iter.hasNext())
 		{
-			result.add(iter.next());
-		}
-		return result;
-	}
-
-	private HashSet filterDeclaredHere(Collection in)
-	{
-		HashSet out = new HashSet();
-		Iterator iter = in.iterator();
-		while (iter.hasNext())
-		{
-			Object obj = iter.next();
+			ProgramElement obj = iter.next();
 			if (obj instanceof DotNETMethodInfo)
 			{
 				if (((DotNETMethodInfo) obj).isDeclaredHere())
@@ -388,15 +395,15 @@ public class DotNETType extends Type
 		}
 		else if (argumentName.equals("Implements"))
 		{
-			return new UnitResult(toHashSet(getImplementedInterfaces()));
+			return new UnitResult(new HashSet<DotNETType>(getImplementedInterfaces()));
 		}
 		else if (argumentName.equals("Annotations"))
 		{
-			Iterator i = getAnnotations().iterator();
-			HashSet res = new HashSet();
+			Iterator<Annotation> i = getAnnotations().iterator();
+			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add(((Annotation) i.next()).getType());
+				res.add((i.next()).getType());
 			}
 			return new UnitResult(res);
 		}
@@ -440,11 +447,11 @@ public class DotNETType extends Type
 		}
 		else if (argumentName.equals("Annotations"))
 		{
-			Iterator i = getAnnotations().iterator();
-			HashSet res = new HashSet();
+			Iterator<Annotation> i = getAnnotations().iterator();
+			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add(((Annotation) i.next()).getType());
+				res.add((i.next()).getType());
 			}
 			return new UnitResult(res);
 		}
@@ -454,16 +461,16 @@ public class DotNETType extends Type
 
 	public UnitResult getUnitRelationForAnnotation(String argumentName)
 	{
-		HashSet resClasses = new HashSet();
-		HashSet resInterfaces = new HashSet();
-		HashSet resMethods = new HashSet();
-		HashSet resFields = new HashSet();
-		HashSet resParameters = new HashSet();
+		Set<DotNETType> resClasses = new HashSet<DotNETType>();
+		Set<DotNETType> resInterfaces = new HashSet<DotNETType>();
+		Set<DotNETMethodInfo> resMethods = new HashSet<DotNETMethodInfo>();
+		Set<FieldInfo> resFields = new HashSet<FieldInfo>();
+		Set<ParameterInfo> resParameters = new HashSet<ParameterInfo>();
 
-		Iterator i = getAnnotationInstances().iterator();
+		Iterator<Annotation> i = getAnnotationInstances().iterator();
 		while (i.hasNext())
 		{
-			ProgramElement unit = ((Annotation) i.next()).getTarget();
+			ProgramElement unit = (i.next()).getTarget();
 			if (unit instanceof DotNETType)
 			{
 				DotNETType type = (DotNETType) unit;
@@ -478,15 +485,15 @@ public class DotNETType extends Type
 			}
 			else if (unit instanceof DotNETMethodInfo)
 			{
-				resMethods.add(unit);
+				resMethods.add((DotNETMethodInfo) unit);
 			}
 			else if (unit instanceof FieldInfo)
 			{
-				resFields.add(unit);
+				resFields.add((FieldInfo) unit);
 			}
 			else if (unit instanceof ParameterInfo)
 			{
-				resParameters.add(unit);
+				resParameters.add((ParameterInfo) unit);
 			}
 		}
 
@@ -548,7 +555,7 @@ public class DotNETType extends Type
 	{
 		if (childTypes == null)
 		{
-			childTypes = new HashSet();
+			childTypes = new HashSet<ProgramElement>();
 		}
 		childTypes.add(childType);
 	}
@@ -626,9 +633,9 @@ public class DotNETType extends Type
 	}
 
 	@Override
-	public Collection getUnitAttributes()
+	public Collection<String> getUnitAttributes()
 	{
-		HashSet result = new HashSet();
+		Set<String> result = new HashSet<String>();
 		if (isPublic())
 		{
 			result.add("public");
@@ -638,18 +645,18 @@ public class DotNETType extends Type
 
 	public void reset()
 	{
-		childTypes = new HashSet();
-		parameterTypes = new HashSet();
-		methodReturnTypes = new HashSet();
-		fieldTypes = new HashSet();
-		implementedBy = new HashSet();
+		childTypes = new HashSet<ProgramElement>();
+		parameterTypes = new HashSet<ProgramElement>();
+		methodReturnTypes = new HashSet<ProgramElement>();
+		fieldTypes = new HashSet<ProgramElement>();
+		implementedBy = new HashSet<ProgramElement>();
 		UnitRegister.instance().registerLanguageUnit(this);
 
 		// register fields
-		Iterator fiter = fields.iterator();
+		Iterator<DotNETFieldInfo> fiter = fields.iterator();
 		while (fiter.hasNext())
 		{
-			DotNETFieldInfo field = (DotNETFieldInfo) fiter.next();
+			DotNETFieldInfo field = fiter.next();
 			if (null != field)
 			{
 				UnitRegister.instance().registerLanguageUnit(field);
@@ -657,19 +664,19 @@ public class DotNETType extends Type
 		}
 
 		// register methods and its parameters
-		Iterator miter = methods.iterator();
+		Iterator<DotNETMethodInfo> miter = methods.iterator();
 		while (miter.hasNext())
 		{
-			DotNETMethodInfo method = (DotNETMethodInfo) miter.next();
+			DotNETMethodInfo method = miter.next();
 			if (null != method)
 			{
 				UnitRegister.instance().registerLanguageUnit(method);
 			}
 
-			Iterator piter = method.getParameters().iterator();
+			Iterator<DotNETParameterInfo> piter = method.getParameters().iterator();
 			while (piter.hasNext())
 			{
-				DotNETParameterInfo param = (DotNETParameterInfo) piter.next();
+				DotNETParameterInfo param = piter.next();
 				if (null != param)
 				{
 					UnitRegister.instance().registerLanguageUnit(param);
@@ -702,10 +709,10 @@ public class DotNETType extends Type
 		IsPublic = in.readBoolean();
 
 		BaseTypeString = in.readUTF();
-		ImplementedInterfaceNames = (List) in.readObject();
+		ImplementedInterfaceNames = (List<String>) in.readObject();
 		Namespace = in.readUTF();
 		// fromFile = in.readUTF();
-		annotationInstances = (ArrayList) in.readObject();
+		annotationInstances = (ArrayList<Annotation>) in.readObject();
 
 		if ("".equals(BaseTypeString))
 		{

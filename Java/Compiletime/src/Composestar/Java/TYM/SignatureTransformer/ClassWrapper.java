@@ -10,7 +10,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 class ClassWrapper
 {
 
-	private Class theClass;
+	private Class<?> theClass;
 
 	private Concern concern;
 
@@ -23,7 +23,7 @@ class ClassWrapper
 	 * @param concern - the concern representing the class.
 	 * @param bytecode - the bytecode of the class.
 	 */
-	public ClassWrapper(Class aClass, Concern concern, byte[] bytecode)
+	public ClassWrapper(Class<?> aClass, Concern concern, byte[] bytecode)
 	{
 		theClass = aClass;
 		this.concern = concern;
@@ -43,7 +43,7 @@ class ClassWrapper
 	/**
 	 * Returns the class object.
 	 */
-	public Class getClazz()
+	public Class<?> getClazz()
 	{
 		return theClass;
 	}

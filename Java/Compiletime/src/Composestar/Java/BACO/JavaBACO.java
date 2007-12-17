@@ -17,6 +17,7 @@ public class JavaBACO extends BACO
 {
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
+	@Override
 	protected void addRepository(Set<File> filesToCopy)
 	{
 		// add repository.dat
@@ -25,6 +26,7 @@ public class JavaBACO extends BACO
 		filesToCopy.add(repository);
 	}
 
+	@Override
 	protected void addBuiltLibraries(Set<File> filesToCopy)
 	{
 		List<File> weavedClasses = (List<File>) resources.get(JavaWeaver.WOVEN_CLASSES);// DataStore.instance().getObjectByID("WeavedClasses");
@@ -35,6 +37,7 @@ public class JavaBACO extends BACO
 		}
 	}
 
+	@Override
 	protected void addRequiredFiles(Set<File> filesToCopy)
 	{
 	// Required files don't need to be copied, since it only contains jar-files.
@@ -42,6 +45,7 @@ public class JavaBACO extends BACO
 	// So this is a redundant operation.
 	}
 
+	@Override
 	protected void copyFile(File outputDir, File source, boolean fatal) throws ModuleException
 	{
 		File dest;

@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
@@ -18,6 +17,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -36,17 +36,17 @@ public class JavaCollectorRunner implements CollectorRunner
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
-	protected Map<String,Class> pendingTypes;
+	protected Map<String, Class<?>> pendingTypes;
 
-	protected Map<String,Class> processedTypes;
+	protected Map<String, Class<?>> processedTypes;
 
 	/**
 	 * Default Constructor.
 	 */
 	public JavaCollectorRunner()
 	{
-		pendingTypes = new HashMap<String,Class>();
-		processedTypes = new HashMap<String,Class>();
+		pendingTypes = new HashMap<String, Class<?>>();
+		processedTypes = new HashMap<String, Class<?>>();
 	}
 
 	/**
@@ -57,8 +57,8 @@ public class JavaCollectorRunner implements CollectorRunner
 		try
 		{
 			// iterate over classes
-			Collection<Class> classes = (Collection<Class>)resources.get(JavaHarvestRunner.CLASS_MAP);
-			for (Class c : classes)
+			Collection<Class<?>> classes = (Collection<Class<?>>) resources.get(JavaHarvestRunner.CLASS_MAP);
+			for (Class<?> c : classes)
 			{
 				try
 				{
@@ -85,10 +85,10 @@ public class JavaCollectorRunner implements CollectorRunner
 
 		int count = 0;
 		DataStore dataStore = DataStore.instance();
-		HashMap typeMap = TypeMap.instance().map();
+		Map<String, Type> typeMap = TypeMap.instance().map();
 		// loop through all current concerns, fetch implementation and remove
 		// from types map.
-		Iterator repIt = dataStore.getIterator();
+		Iterator<Object> repIt = dataStore.getIterator();
 		while (repIt.hasNext())
 		{
 			Object next = repIt.next();
@@ -131,8 +131,7 @@ public class JavaCollectorRunner implements CollectorRunner
 					Object otherConcern = dataStore.getObjectByID(className);
 					if (otherConcern instanceof CpsConcern)
 					{
-						logger.info("Implementation of " + concern + " contains type info for "
-								+ ((CpsConcern) otherConcern));
+						logger.info("Implementation of " + concern + " contains type info for " + otherConcern);
 						JavaType type = (JavaType) typeMap.get(className);
 						concern.setPlatformRepresentation(type);
 						type.setParentConcern((CpsConcern) otherConcern);
@@ -156,9 +155,8 @@ public class JavaCollectorRunner implements CollectorRunner
 
 		// loop through rest of the concerns and add to the repository in the
 		// form of primitive concerns
-		for (Object o1 : typeMap.values())
+		for (Type type : typeMap.values())
 		{
-			JavaType type = (JavaType) o1;
 			PrimitiveConcern pc = new PrimitiveConcern();
 			pc.setName(type.getFullName());
 			pc.setPlatformRepresentation(type);
@@ -173,7 +171,7 @@ public class JavaCollectorRunner implements CollectorRunner
 	 * @param c - <code>Class</code> instance.
 	 * @throws Throwable
 	 */
-	private void processType(Class c) throws Throwable
+	private void processType(Class<?> c) throws Throwable
 	{
 		if (processedTypes.containsKey(c.getName()))
 		{
@@ -192,7 +190,8 @@ public class JavaCollectorRunner implements CollectorRunner
 		// set name
 		if (jtype.getFullName().lastIndexOf(".") > 0)
 		{
-			jtype.setName(jtype.getFullName().substring(jtype.getFullName().lastIndexOf(".") + 1, jtype.getFullName().length()));
+			jtype.setName(jtype.getFullName().substring(jtype.getFullName().lastIndexOf(".") + 1,
+					jtype.getFullName().length()));
 		}
 		else
 		{
@@ -200,15 +199,15 @@ public class JavaCollectorRunner implements CollectorRunner
 		}
 
 		// add superclass
-		Class superclass = c.getSuperclass();
+		Class<?> superclass = c.getSuperclass();
 		if (superclass != null)
 		{
 			addPendingType(superclass.getName(), superclass);
 		}
 
 		// add interfaces
-		Class[] interfaces = c.getInterfaces();
-		for (Class anInterface : interfaces)
+		Class<?>[] interfaces = c.getInterfaces();
+		for (Class<?> anInterface : interfaces)
 		{
 			jtype.addImplementedInterface(anInterface.getName());
 			addPendingType(anInterface.getName(), anInterface);
@@ -252,8 +251,8 @@ public class JavaCollectorRunner implements CollectorRunner
 		addPendingType(m.getReturnType().getName(), m.getReturnType());
 
 		// add parameters
-		Class[] parameters = m.getParameterTypes();
-		for (Class parameter : parameters)
+		Class<?>[] parameters = m.getParameterTypes();
+		for (Class<?> parameter : parameters)
 		{
 			jmethod.addParameter(processParameterInfo(parameter));
 		}
@@ -282,7 +281,7 @@ public class JavaCollectorRunner implements CollectorRunner
 	 * @param p - <code>Class</code> instance.
 	 * @throws Throwable
 	 */
-	private ParameterInfo processParameterInfo(Class p) throws Throwable
+	private ParameterInfo processParameterInfo(Class<?> p) throws Throwable
 	{
 
 		JavaParameterInfo jparameter = new JavaParameterInfo(p);
@@ -295,7 +294,7 @@ public class JavaCollectorRunner implements CollectorRunner
 	/**
 	 * Helper method.
 	 */
-	private void addPendingType(String key, Class ptype)
+	private void addPendingType(String key, Class<?> ptype)
 	{
 
 		if (pendingTypes.containsKey(key))
@@ -319,17 +318,17 @@ public class JavaCollectorRunner implements CollectorRunner
 	private void processPendingTypes() throws Throwable
 	{
 
-		Iterator pendingIt = pendingTypes.values().iterator();
+		Iterator<Class<?>> pendingIt = pendingTypes.values().iterator();
 		while (pendingIt.hasNext())
 		{
-			Class pendingClass = (Class) pendingIt.next();
+			Class<?> pendingClass = pendingIt.next();
 			processType(pendingClass);
 			typeProcessed(pendingClass.getName(), pendingClass);
 			pendingIt = pendingTypes.values().iterator();
 		}
 	}
 
-	private void typeProcessed(String key, Class type)
+	private void typeProcessed(String key, Class<?> type)
 	{
 		if (pendingTypes.containsKey(key))
 		{
@@ -339,11 +338,5 @@ public class JavaCollectorRunner implements CollectorRunner
 		{
 			processedTypes.put(key, type);
 		}
-	}
-
-	// Added by INCRE.
-	public void copyOperation(Vector dlls)
-	{
-
 	}
 }

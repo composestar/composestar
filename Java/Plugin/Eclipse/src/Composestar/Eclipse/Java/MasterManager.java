@@ -48,9 +48,7 @@ public class MasterManager
 	public File logFile;
 
 	public MasterManager()
-	{
-
-	}
+	{}
 
 	public static MasterManager getInstance()
 	{

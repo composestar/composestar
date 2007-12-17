@@ -69,7 +69,7 @@ public class CStarJavaCompiler implements LangCompiler
 				throw new ModuleException(String.format("Unable to create source output directory: %s", sourceOut
 						.toString()), MODULE_NAME);
 			}
-			resources.add(SOURCE_OUT, sourceOut);
+			resources.put(SOURCE_OUT, sourceOut);
 
 			if (false)
 			{

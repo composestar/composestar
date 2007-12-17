@@ -133,11 +133,11 @@ public class MethodBodyTransformer extends ExprEditor
 				CtClass returnType = Descriptor.getReturnType(signature, classpool);
 				if (returnType == CtClass.voidType)
 				{
-					this.replaceVoidMethodCall(m);
+					replaceVoidMethodCall(m);
 				}
 				else
 				{
-					this.replaceReturnMethodCall(m);
+					replaceReturnMethodCall(m);
 				}
 			}
 		}
@@ -290,10 +290,10 @@ public class MethodBodyTransformer extends ExprEditor
 		if (c != null)
 		{
 			Signature s = c.getSignature();
-			Iterator methods = s.getMethods().iterator();
+			Iterator<JavaMethodInfo> methods = s.getMethods().iterator();
 			if (methods.hasNext())
 			{
-				JavaMethodInfo method = (JavaMethodInfo) methods.next();
+				JavaMethodInfo method = methods.next();
 				if (method.getName().equals(m.getMethodName()))
 				{
 					// equal parameters?

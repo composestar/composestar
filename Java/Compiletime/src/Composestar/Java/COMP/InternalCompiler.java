@@ -24,7 +24,6 @@
 
 package Composestar.Java.COMP;
 
-
 /**
  * Uses the internal compiler access exposed in Java 1.6. However, the
  * performance gain over executing javac is minimal (~4%). To use this feature

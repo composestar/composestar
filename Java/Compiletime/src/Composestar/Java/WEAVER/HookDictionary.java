@@ -1,8 +1,10 @@
 package Composestar.Java.WEAVER;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Storage place for hooks. A hook is a location in the program where a call to
@@ -19,13 +21,13 @@ import java.util.List;
 public class HookDictionary
 {
 
-	private List afterInstantationInterceptions = new ArrayList();
+	private List<String> afterInstantationInterceptions = new ArrayList<String>();
 
-	private List castInterceptions = new ArrayList();
+	private List<String> castInterceptions = new ArrayList<String>();
 
-	private Hashtable incomingMethodInterceptions = new Hashtable();
+	private Map<String, Map<?, ?>> incomingMethodInterceptions = new HashMap<String, Map<?, ?>>();
 
-	private Hashtable outgoingMethodInterceptions = new Hashtable();
+	private Map<String, Map<?, ?>> outgoingMethodInterceptions = new HashMap<String, Map<?, ?>>();
 
 	private static HookDictionary Instance;
 

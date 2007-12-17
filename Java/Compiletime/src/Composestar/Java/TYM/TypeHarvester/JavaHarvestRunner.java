@@ -1,17 +1,11 @@
 package Composestar.Java.TYM.TypeHarvester;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.Set;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Resources.CommonResources;
@@ -31,23 +25,32 @@ public class JavaHarvestRunner implements HarvestRunner
 	public void run(CommonResources resources) throws ModuleException
 	{
 		List<URL> toBeHarvested = new ArrayList<URL>();
-		HashSet<Class> classes = new HashSet<Class>();
-		resources.put(JavaHarvestRunner.CLASS_MAP, classes); // make the set of classes accesible to other modules
+		Set<Class<?>> classes = new HashSet<Class<?>>();
+		resources.put(JavaHarvestRunner.CLASS_MAP, classes); // make the set
+		// of classes
+		// accesible to
+		// other modules
 
-		try {
+		try
+		{
 			// Harvest dummy classes
 			toBeHarvested.add(((File) resources.get(CStarJavaCompiler.DUMMY_JAR)).toURI().toURL());
-	
+
 			// As well as all project dependencies
 			for (File deps : resources.configuration().getProject().getFilesDependencies())
+			{
 				toBeHarvested.add(deps.toURI().toURL());
+			}
 
 			// Now harvest these jarFiles for type information
 			for (URL jarFile : toBeHarvested)
+			{
 				classes.addAll(new JarHelper(jarFile).getClasses());
-			
+			}
+
 		}
-		catch(Exception e) {
+		catch (Exception e)
+		{
 			throw new ModuleException("Error while harvesting types: " + e.getMessage(), "HARVESTER");
 		}
 	}

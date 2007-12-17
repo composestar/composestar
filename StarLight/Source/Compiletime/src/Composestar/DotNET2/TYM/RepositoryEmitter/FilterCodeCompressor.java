@@ -601,7 +601,7 @@ public class FilterCodeCompressor
 
 		private Message generalize(Message message)
 		{
-			return new Message(message.getTarget(), (message.getSelector().equals(selector)) ? GENERALIZATION_SELECTOR
+			return new Message(message.getTarget(), message.getSelector().equals(selector) ? GENERALIZATION_SELECTOR
 					: message.getSelector());
 
 		}

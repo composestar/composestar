@@ -45,7 +45,7 @@ class ExpandedSource
 					throw new IllegalArgumentException();
 				}
 
-				return (endPosA < endPosB ? -1 : 1);
+				return endPosA < endPosB ? -1 : 1;
 			}
 		};
 		Collections.sort(types, c);

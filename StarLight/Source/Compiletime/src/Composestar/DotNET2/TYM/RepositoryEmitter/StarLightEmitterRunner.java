@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.Annotations.ResourceManager;
@@ -231,10 +230,10 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private void processConcerns() throws ModuleException
 	{
-		Iterator concernIterator = dataStore.getAllInstancesOf(Concern.class);
+		Iterator<Concern> concernIterator = dataStore.getAllInstancesOf(Concern.class);
 		while (concernIterator.hasNext())
 		{
-			Concern concern = (Concern) concernIterator.next();
+			Concern concern = concernIterator.next();
 			processConcern(concern);
 		}
 	}
@@ -265,18 +264,18 @@ public class StarLightEmitterRunner implements CTCommonModule
 			weaveType.addNewMethods();
 			weaveType.setName(type.getFullName());
 
-			Iterator filterModules = order.filterModuleSIList().iterator();
+			Iterator<FilterModuleSuperImposition> filterModules = order.filterModuleSIList().iterator();
 			while (filterModules.hasNext())
 			{
-				FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) filterModules.next();
+				FilterModuleSuperImposition fmsi = filterModules.next();
 				FilterModule filterModule = fmsi.getFilterModule().getRef();
 
 				// internals:
-				Iterator internals = filterModule.getInternalIterator();
+				Iterator<Internal> internals = filterModule.getInternalIterator();
 				while (internals.hasNext())
 				{
 					// store internal:
-					Internal internal = (Internal) internals.next();
+					Internal internal = internals.next();
 					composestar.dotNET2.tym.entities.Internal storedInternal = weaveType.getInternals()
 							.addNewInternal();
 
@@ -296,11 +295,11 @@ public class StarLightEmitterRunner implements CTCommonModule
 				}
 
 				// externals:
-				Iterator externals = filterModule.getExternalIterator();
+				Iterator<External> externals = filterModule.getExternalIterator();
 				while (externals.hasNext())
 				{
 					// store external
-					External external = (External) externals.next();
+					External external = externals.next();
 					composestar.dotNET2.tym.entities.External storedExternal = weaveType.getExternals()
 							.addNewExternal();
 
@@ -330,11 +329,11 @@ public class StarLightEmitterRunner implements CTCommonModule
 					storeCondition(weaveType, type, condition);
 					storedConditions.add(condition);
 				}
-				Iterator conditions = filterModule.getConditionIterator();
+				Iterator<Condition> conditions = filterModule.getConditionIterator();
 				while (conditions.hasNext())
 				{
 					// store condition:
-					condition = (Condition) conditions.next();
+					condition = conditions.next();
 					if (!storedConditions.contains(condition))
 					{
 						storeCondition(weaveType, type, condition);
@@ -391,7 +390,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 	 * Creates the reference used by the external and condition to retrieve its
 	 * instance/value
 	 */
-	private Reference createReference(Type type, String assembly, Vector pack, String target, String selector)
+	private Reference createReference(Type type, String assembly, List<String> pack, String target, String selector)
 	{
 		Reference storedRef = Reference.Factory.newInstance();
 
@@ -431,18 +430,18 @@ public class StarLightEmitterRunner implements CTCommonModule
 	private void processMethods(Concern concern, WeaveType weaveType) throws ModuleException
 	{
 		Signature sig = concern.getSignature();
-		List methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
+		List<DotNETMethodInfo> methods = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
 
 		boolean hasFilters;
 		List<WeaveMethod> weaveMethods = new ArrayList<WeaveMethod>();
 
 		logger.debug("Processing concern: " + concern);
 
-		Iterator methodIter = methods.iterator();
+		Iterator<DotNETMethodInfo> methodIter = methods.iterator();
 		while (methodIter.hasNext())
 		{
 			hasFilters = false;
-			DotNETMethodInfo method = (DotNETMethodInfo) methodIter.next();
+			DotNETMethodInfo method = methodIter.next();
 			WeaveMethod weaveMethod = WeaveMethod.Factory.newInstance();
 			weaveMethod.addNewWeaveCalls();
 			weaveMethod.setSignature(method.getSignature());
@@ -479,11 +478,11 @@ public class StarLightEmitterRunner implements CTCommonModule
 	private boolean processCalls(MethodInfo method, WeaveMethod weaveMethod)
 	{
 		boolean hasFilters = false;
-		Iterator calls = method.getCallsToOtherMethods().iterator();
+		Iterator<DotNETCallToOtherMethod> calls = method.getCallsToOtherMethods().iterator();
 
 		while (calls.hasNext())
 		{
-			DotNETCallToOtherMethod call = (DotNETCallToOtherMethod) calls.next();
+			DotNETCallToOtherMethod call = calls.next();
 
 			// add outputfilter code:
 			FilterCode filterCode = inlinerRes.getOutputFilterCode(call);

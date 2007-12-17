@@ -19,6 +19,7 @@ import Composestar.Core.INCRE.MethodNode;
 import Composestar.Core.LAMA.LangNamespace;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.metamodel.CompositeLanguageUnitType;
 import Composestar.Core.LOLA.metamodel.CompositeRelationPredicate;
 import Composestar.Core.LOLA.metamodel.InvalidModelException;
@@ -32,13 +33,15 @@ import Composestar.Java.LAMA.JavaFieldInfo;
 import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Java.LAMA.JavaParameterInfo;
 import Composestar.Java.LAMA.JavaType;
-import Composestar.Utils.Debug;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Java implementation of the prolog language model.
  */
 public class JavaLanguageModel extends LanguageModel
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME);
+
 	static JavaLanguageModel instance;
 
 	/**
@@ -67,298 +70,279 @@ public class JavaLanguageModel extends LanguageModel
 	 */
 	public void createMetaModel() throws InvalidModelException
 	{
-		try
-		{
-			Class namespaceImpl = Class.forName("Composestar.Core.LAMA.LangNamespace");
-			Class classImpl = Class.forName("Composestar.Java.LAMA.JavaType");
-			Class interfaceImpl = Class.forName("Composestar.Java.LAMA.JavaType");
-			Class typeImpl = Class.forName("Composestar.Java.LAMA.JavaType");
-			Class methodImpl = Class.forName("Composestar.Java.LAMA.JavaMethodInfo");
-			Class fieldImpl = Class.forName("Composestar.Java.LAMA.JavaFieldInfo");
-			Class parameterImpl = Class.forName("Composestar.Java.LAMA.JavaParameterInfo");
-			Class annotationImpl = Class.forName("Composestar.Java.LAMA.JavaType");
-
-			/** ******* Definition of unit types ********** */
-			// Define the 'Namespace' language unit type
-			LanguageUnitType utNamespace = new LanguageUnitType(namespaceImpl, "Namespace", true);
-			addLanguageUnitType(utNamespace);
 
-			// Define the 'Class' language unit type
-			LanguageUnitType utClass = new LanguageUnitType(classImpl, "Class", true);
-			addLanguageUnitType(utClass);
+		/** ******* Definition of unit types ********** */
+		// Define the 'Namespace' language unit type
+		LanguageUnitType utNamespace = new LanguageUnitType(Composestar.Core.LAMA.LangNamespace.class, "Namespace",
+				true);
+		addLanguageUnitType(utNamespace);
 
-			// Define the 'Interface' language unit type
-			LanguageUnitType utInterface = new LanguageUnitType(interfaceImpl, "Interface", true);
-			addLanguageUnitType(utInterface);
-
-			// Define the 'Type' composite language unit type (Type = Class |
-			// Interface)
-			CompositeLanguageUnitType utType = new CompositeLanguageUnitType(typeImpl, "Type", true, utClass,
-					utInterface);
-			addLanguageUnitType(utType);
-
-			// Define the 'Method' language unit type
-			LanguageUnitType utMethod = new LanguageUnitType(methodImpl, "Method", false);
-			addLanguageUnitType(utMethod);
-
-			// Define the 'Field' language unit type
-			LanguageUnitType utField = new LanguageUnitType(fieldImpl, "Field", false);
-			addLanguageUnitType(utField);
-
-			// Define the 'Parameter' language unit type
-			LanguageUnitType utParameter = new LanguageUnitType(parameterImpl, "Parameter", false);
-			addLanguageUnitType(utParameter);
-
-			// Define the 'Annotation' language unit type
-			LanguageUnitType utAnnotation = new LanguageUnitType(annotationImpl, "Annotation", true);
-			addLanguageUnitType(utAnnotation);
-
-			/** ******* Definition of unit relations ******** */
+		// Define the 'Class' language unit type
+		LanguageUnitType utClass = new LanguageUnitType(Composestar.Java.LAMA.JavaType.class, "Class", true);
+		addLanguageUnitType(utClass);
 
-			/** Annotation * */
-			RelationType annotationAttachedClasses = new RelationType("AttachedClasses", utClass, RelationType.MULTIPLE);
-			utAnnotation.addRelationType(annotationAttachedClasses);
+		// Define the 'Interface' language unit type
+		LanguageUnitType utInterface = new LanguageUnitType(Composestar.Java.LAMA.JavaType.class, "Interface", true);
+		addLanguageUnitType(utInterface);
 
-			RelationType annotationAttachedInterfaces = new RelationType("AttachedInterfaces", utInterface,
-					RelationType.MULTIPLE);
-			utAnnotation.addRelationType(annotationAttachedInterfaces);
+		// Define the 'Type' composite language unit type (Type = Class |
+		// Interface)
+		CompositeLanguageUnitType utType = new CompositeLanguageUnitType(Composestar.Java.LAMA.JavaType.class, "Type",
+				true, utClass, utInterface);
+		addLanguageUnitType(utType);
 
-			RelationType annotationAttachedMethods = new RelationType("AttachedMethods", utMethod,
-					RelationType.MULTIPLE);
-			utAnnotation.addRelationType(annotationAttachedMethods);
+		// Define the 'Method' language unit type
+		LanguageUnitType utMethod = new LanguageUnitType(Composestar.Java.LAMA.JavaMethodInfo.class, "Method", false);
+		addLanguageUnitType(utMethod);
 
-			RelationType annotationAttachedFields = new RelationType("AttachedFields", utField, RelationType.MULTIPLE);
-			utAnnotation.addRelationType(annotationAttachedFields);
+		// Define the 'Field' language unit type
+		LanguageUnitType utField = new LanguageUnitType(Composestar.Java.LAMA.JavaFieldInfo.class, "Field", false);
+		addLanguageUnitType(utField);
 
-			RelationType annotationAttachedParameters = new RelationType("AttachedParameters", utField,
-					RelationType.MULTIPLE);
-			utAnnotation.addRelationType(annotationAttachedParameters);
+		// Define the 'Parameter' language unit type
+		LanguageUnitType utParameter = new LanguageUnitType(Composestar.Java.LAMA.JavaParameterInfo.class, "Parameter",
+				false);
+		addLanguageUnitType(utParameter);
 
-			/** Class * */
-			RelationType classParentNamespace = new RelationType("ParentNamespace", utNamespace, RelationType.UNIQUE);
-			utClass.addRelationType(classParentNamespace);
+		// Define the 'Annotation' language unit type
+		LanguageUnitType utAnnotation = new LanguageUnitType(Composestar.Java.LAMA.JavaType.class, "Annotation", true);
+		addLanguageUnitType(utAnnotation);
 
-			RelationType classSubClasses = new RelationType("ChildClasses", utClass, RelationType.MULTIPLE);
-			utClass.addRelationType(classSubClasses);
+		/** ******* Definition of unit relations ******** */
 
-			RelationType classParentClass = new RelationType("ParentClass", utClass, RelationType.UNIQUE);
-			utClass.addRelationType(classParentClass);
+		/** Annotation * */
+		RelationType annotationAttachedClasses = new RelationType("AttachedClasses", utClass, RelationType.MULTIPLE);
+		utAnnotation.addRelationType(annotationAttachedClasses);
 
-			RelationType classChildMethods = new RelationType("ChildMethods", utMethod, RelationType.MULTIPLE);
-			utClass.addRelationType(classChildMethods);
+		RelationType annotationAttachedInterfaces = new RelationType("AttachedInterfaces", utInterface,
+				RelationType.MULTIPLE);
+		utAnnotation.addRelationType(annotationAttachedInterfaces);
 
-			RelationType classChildFields = new RelationType("ChildFields", utField, RelationType.MULTIPLE);
-			utClass.addRelationType(classChildFields);
+		RelationType annotationAttachedMethods = new RelationType("AttachedMethods", utMethod, RelationType.MULTIPLE);
+		utAnnotation.addRelationType(annotationAttachedMethods);
 
-			RelationType classParameterClass = new RelationType("ParameterClass", utParameter, RelationType.MULTIPLE);
-			utClass.addRelationType(classParameterClass);
+		RelationType annotationAttachedFields = new RelationType("AttachedFields", utField, RelationType.MULTIPLE);
+		utAnnotation.addRelationType(annotationAttachedFields);
 
-			RelationType classMethodReturnClass = new RelationType("MethodReturnClass", utMethod, RelationType.MULTIPLE);
-			utClass.addRelationType(classMethodReturnClass);
+		RelationType annotationAttachedParameters = new RelationType("AttachedParameters", utField,
+				RelationType.MULTIPLE);
+		utAnnotation.addRelationType(annotationAttachedParameters);
 
-			RelationType classFieldClass = new RelationType("FieldClass", utField, RelationType.MULTIPLE);
-			utClass.addRelationType(classFieldClass);
+		/** Class * */
+		RelationType classParentNamespace = new RelationType("ParentNamespace", utNamespace, RelationType.UNIQUE);
+		utClass.addRelationType(classParentNamespace);
 
-			RelationType classImplements = new RelationType("Implements", utInterface, RelationType.MULTIPLE);
-			utClass.addRelationType(classImplements);
+		RelationType classSubClasses = new RelationType("ChildClasses", utClass, RelationType.MULTIPLE);
+		utClass.addRelationType(classSubClasses);
 
-			RelationType classAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
-			utClass.addRelationType(classAnnotations);
+		RelationType classParentClass = new RelationType("ParentClass", utClass, RelationType.UNIQUE);
+		utClass.addRelationType(classParentClass);
 
-			/** Interface * */
-			RelationType interfaceParentNamespace = new RelationType("ParentNamespace", utNamespace,
-					RelationType.UNIQUE);
-			utInterface.addRelationType(interfaceParentNamespace);
+		RelationType classChildMethods = new RelationType("ChildMethods", utMethod, RelationType.MULTIPLE);
+		utClass.addRelationType(classChildMethods);
 
-			RelationType interfaceSubInterfaces = new RelationType("ChildInterfaces", utInterface,
-					RelationType.MULTIPLE);
-			utInterface.addRelationType(interfaceSubInterfaces);
+		RelationType classChildFields = new RelationType("ChildFields", utField, RelationType.MULTIPLE);
+		utClass.addRelationType(classChildFields);
 
-			RelationType interfaceParentInterface = new RelationType("ParentInterface", utInterface,
-					RelationType.UNIQUE);
-			utInterface.addRelationType(interfaceParentInterface);
+		RelationType classParameterClass = new RelationType("ParameterClass", utParameter, RelationType.MULTIPLE);
+		utClass.addRelationType(classParameterClass);
 
-			RelationType interfaceChildMethods = new RelationType("ChildMethods", utMethod, RelationType.MULTIPLE);
-			utInterface.addRelationType(interfaceChildMethods);
+		RelationType classMethodReturnClass = new RelationType("MethodReturnClass", utMethod, RelationType.MULTIPLE);
+		utClass.addRelationType(classMethodReturnClass);
 
-			RelationType interfaceImplementedBy = new RelationType("ImplementedBy", utClass, RelationType.MULTIPLE);
-			utInterface.addRelationType(interfaceImplementedBy);
+		RelationType classFieldClass = new RelationType("FieldClass", utField, RelationType.MULTIPLE);
+		utClass.addRelationType(classFieldClass);
 
-			/*
-			 * RelationType InterfaceChildFields = new
-			 * RelationType("ChildFields", utField, RelationType.MULTIPLE);
-			 * utInterface.addRelationType(InterfaceChildFields); Interface does
-			 * not have fields
-			 */
+		RelationType classImplements = new RelationType("Implements", utInterface, RelationType.MULTIPLE);
+		utClass.addRelationType(classImplements);
 
-			RelationType interfaceParameterInterface = new RelationType("ParameterInterface", utParameter,
-					RelationType.MULTIPLE);
-			utInterface.addRelationType(interfaceParameterInterface);
+		RelationType classAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
+		utClass.addRelationType(classAnnotations);
 
-			RelationType interfaceMethodReturnInterface = new RelationType("MethodReturnInterface", utMethod,
-					RelationType.MULTIPLE);
-			utInterface.addRelationType(interfaceMethodReturnInterface);
+		/** Interface * */
+		RelationType interfaceParentNamespace = new RelationType("ParentNamespace", utNamespace, RelationType.UNIQUE);
+		utInterface.addRelationType(interfaceParentNamespace);
 
-			RelationType interfaceFieldInterface = new RelationType("FieldInterface", utField, RelationType.MULTIPLE);
-			utInterface.addRelationType(interfaceFieldInterface);
+		RelationType interfaceSubInterfaces = new RelationType("ChildInterfaces", utInterface, RelationType.MULTIPLE);
+		utInterface.addRelationType(interfaceSubInterfaces);
 
-			RelationType interfaceAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
-			utClass.addRelationType(interfaceAnnotations);
+		RelationType interfaceParentInterface = new RelationType("ParentInterface", utInterface, RelationType.UNIQUE);
+		utInterface.addRelationType(interfaceParentInterface);
 
-			/** Namespace * */
-			RelationType namespaceChildClasses = new RelationType("ChildClasses", utClass, RelationType.MULTIPLE);
-			utNamespace.addRelationType(namespaceChildClasses);
+		RelationType interfaceChildMethods = new RelationType("ChildMethods", utMethod, RelationType.MULTIPLE);
+		utInterface.addRelationType(interfaceChildMethods);
 
-			RelationType namespaceChildInterfaces = new RelationType("ChildInterfaces", utInterface,
-					RelationType.MULTIPLE);
-			utNamespace.addRelationType(namespaceChildInterfaces);
+		RelationType interfaceImplementedBy = new RelationType("ImplementedBy", utClass, RelationType.MULTIPLE);
+		utInterface.addRelationType(interfaceImplementedBy);
 
-			/** Method * */
-			RelationType methodParentClass = new RelationType("ParentClass", utClass, RelationType.UNIQUE);
-			utMethod.addRelationType(methodParentClass);
+		/*
+		 * RelationType InterfaceChildFields = new RelationType("ChildFields",
+		 * utField, RelationType.MULTIPLE);
+		 * utInterface.addRelationType(InterfaceChildFields); Interface does not
+		 * have fields
+		 */
 
-			RelationType methodParentInterface = new RelationType("ParentInterface", utInterface, RelationType.UNIQUE);
-			utMethod.addRelationType(methodParentInterface);
+		RelationType interfaceParameterInterface = new RelationType("ParameterInterface", utParameter,
+				RelationType.MULTIPLE);
+		utInterface.addRelationType(interfaceParameterInterface);
 
-			RelationType methodChildParameters = new RelationType("ChildParameters", utParameter, RelationType.MULTIPLE);
-			utMethod.addRelationType(methodChildParameters);
+		RelationType interfaceMethodReturnInterface = new RelationType("MethodReturnInterface", utMethod,
+				RelationType.MULTIPLE);
+		utInterface.addRelationType(interfaceMethodReturnInterface);
 
-			RelationType methodReturnClass = new RelationType("ReturnClass", utClass, RelationType.UNIQUE);
-			utMethod.addRelationType(methodReturnClass);
+		RelationType interfaceFieldInterface = new RelationType("FieldInterface", utField, RelationType.MULTIPLE);
+		utInterface.addRelationType(interfaceFieldInterface);
 
-			RelationType methodReturnInterface = new RelationType("ReturnInterface", utClass, RelationType.UNIQUE);
-			utMethod.addRelationType(methodReturnInterface);
+		RelationType interfaceAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
+		utClass.addRelationType(interfaceAnnotations);
 
-			RelationType methodAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
-			utMethod.addRelationType(methodAnnotations);
+		/** Namespace * */
+		RelationType namespaceChildClasses = new RelationType("ChildClasses", utClass, RelationType.MULTIPLE);
+		utNamespace.addRelationType(namespaceChildClasses);
 
-			/** Field * */
-			RelationType fieldParentClass = new RelationType("ParentClass", utClass, RelationType.UNIQUE);
-			utField.addRelationType(fieldParentClass);
+		RelationType namespaceChildInterfaces = new RelationType("ChildInterfaces", utInterface, RelationType.MULTIPLE);
+		utNamespace.addRelationType(namespaceChildInterfaces);
 
-			RelationType fieldClass = new RelationType("Class", utClass, RelationType.UNIQUE);
-			utField.addRelationType(fieldClass);
+		/** Method * */
+		RelationType methodParentClass = new RelationType("ParentClass", utClass, RelationType.UNIQUE);
+		utMethod.addRelationType(methodParentClass);
 
-			RelationType fieldInterface = new RelationType("Interface", utInterface, RelationType.UNIQUE);
-			utField.addRelationType(fieldInterface);
+		RelationType methodParentInterface = new RelationType("ParentInterface", utInterface, RelationType.UNIQUE);
+		utMethod.addRelationType(methodParentInterface);
 
-			RelationType fieldAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
-			utField.addRelationType(fieldAnnotations);
+		RelationType methodChildParameters = new RelationType("ChildParameters", utParameter, RelationType.MULTIPLE);
+		utMethod.addRelationType(methodChildParameters);
 
-			/** Parameter * */
-			RelationType parameterParentMethod = new RelationType("ParentMethod", utMethod, RelationType.UNIQUE);
-			utParameter.addRelationType(parameterParentMethod);
+		RelationType methodReturnClass = new RelationType("ReturnClass", utClass, RelationType.UNIQUE);
+		utMethod.addRelationType(methodReturnClass);
 
-			RelationType parameterClass = new RelationType("Class", utClass, RelationType.UNIQUE);
-			utParameter.addRelationType(parameterClass);
+		RelationType methodReturnInterface = new RelationType("ReturnInterface", utClass, RelationType.UNIQUE);
+		utMethod.addRelationType(methodReturnInterface);
 
-			RelationType parameterInterface = new RelationType("Interface", utClass, RelationType.UNIQUE);
-			utParameter.addRelationType(parameterInterface);
+		RelationType methodAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
+		utMethod.addRelationType(methodAnnotations);
 
-			RelationType parameterAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
-			utParameter.addRelationType(parameterAnnotations);
+		/** Field * */
+		RelationType fieldParentClass = new RelationType("ParentClass", utClass, RelationType.UNIQUE);
+		utField.addRelationType(fieldParentClass);
 
-			/** ******* Definition of relation predicates **** */
-			/** Namespace * */
-			RelationPredicate namespaceHasClass = new RelationPredicate("namespaceHasClass", namespaceChildClasses,
-					"Namespace", classParentNamespace, "Class");
-			addRelationPredicate(namespaceHasClass);
+		RelationType fieldClass = new RelationType("Class", utClass, RelationType.UNIQUE);
+		utField.addRelationType(fieldClass);
 
-			RelationPredicate namespaceHasInterface = new RelationPredicate("namespaceHasInterface",
-					namespaceChildInterfaces, "Namespace", classParentNamespace, "Interface");
-			addRelationPredicate(namespaceHasInterface);
+		RelationType fieldInterface = new RelationType("Interface", utInterface, RelationType.UNIQUE);
+		utField.addRelationType(fieldInterface);
 
-			/** Class/Interface * */
+		RelationType fieldAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
+		utField.addRelationType(fieldAnnotations);
 
-			RelationPredicate isSuperClass = new RelationPredicate("isSuperClass", classSubClasses, "SuperClass",
-					classParentClass, "SubClass");
-			addRelationPredicate(isSuperClass);
+		/** Parameter * */
+		RelationType parameterParentMethod = new RelationType("ParentMethod", utMethod, RelationType.UNIQUE);
+		utParameter.addRelationType(parameterParentMethod);
 
-			RelationPredicate isSuperInterface = new RelationPredicate("isSuperInterface", interfaceSubInterfaces,
-					"SuperInterface", interfaceParentInterface, "SubInterface");
-			addRelationPredicate(isSuperInterface);
+		RelationType parameterClass = new RelationType("Class", utClass, RelationType.UNIQUE);
+		utParameter.addRelationType(parameterClass);
 
-			CompositeRelationPredicate isSuperType = new CompositeRelationPredicate("isSuperType", isSuperClass,
-					isSuperInterface);
-			addRelationPredicate(isSuperType);
+		RelationType parameterInterface = new RelationType("Interface", utClass, RelationType.UNIQUE);
+		utParameter.addRelationType(parameterInterface);
 
-			RelationPredicate classImplementsInterface = new RelationPredicate("implements", classImplements, "Class",
-					interfaceImplementedBy, "Interface");
-			addRelationPredicate(classImplementsInterface);
+		RelationType parameterAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
+		utParameter.addRelationType(parameterAnnotations);
 
-			RelationPredicate classHasMethod = new RelationPredicate("classHasMethod", classChildMethods, "Class",
-					methodParentClass, "Method");
-			addRelationPredicate(classHasMethod);
+		/** ******* Definition of relation predicates **** */
+		/** Namespace * */
+		RelationPredicate namespaceHasClass = new RelationPredicate("namespaceHasClass", namespaceChildClasses,
+				"Namespace", classParentNamespace, "Class");
+		addRelationPredicate(namespaceHasClass);
 
-			RelationPredicate interfaceHasMethod = new RelationPredicate("interfaceHasMethod", interfaceChildMethods,
-					"Interface", methodParentInterface, "Method");
-			addRelationPredicate(interfaceHasMethod);
+		RelationPredicate namespaceHasInterface = new RelationPredicate("namespaceHasInterface",
+				namespaceChildInterfaces, "Namespace", classParentNamespace, "Interface");
+		addRelationPredicate(namespaceHasInterface);
 
-			RelationPredicate classHasField = new RelationPredicate("classHasField", classChildFields, "Class",
-					fieldParentClass, "Field");
-			addRelationPredicate(classHasField);
+		/** Class/Interface * */
 
-			RelationPredicate classHasAnnotation = new RelationPredicate("classHasAnnotation", classAnnotations,
-					"Class", annotationAttachedClasses, "Annotation");
-			addRelationPredicate(classHasAnnotation);
+		RelationPredicate isSuperClass = new RelationPredicate("isSuperClass", classSubClasses, "SuperClass",
+				classParentClass, "SubClass");
+		addRelationPredicate(isSuperClass);
 
-			RelationPredicate interfaceHasAnnotation = new RelationPredicate("interfaceHasAnnotation",
-					interfaceAnnotations, "Interface", annotationAttachedInterfaces, "Annotation");
-			addRelationPredicate(interfaceHasAnnotation);
+		RelationPredicate isSuperInterface = new RelationPredicate("isSuperInterface", interfaceSubInterfaces,
+				"SuperInterface", interfaceParentInterface, "SubInterface");
+		addRelationPredicate(isSuperInterface);
 
-			CompositeRelationPredicate typeHasAnnotation = new CompositeRelationPredicate("typeHasAnnotation",
-					classHasAnnotation, interfaceHasAnnotation);
-			addRelationPredicate(typeHasAnnotation);
+		CompositeRelationPredicate isSuperType = new CompositeRelationPredicate("isSuperType", isSuperClass,
+				isSuperInterface);
+		addRelationPredicate(isSuperType);
 
-			/** Method * */
-			RelationPredicate methodHasParameter = new RelationPredicate("methodHasParameter", methodChildParameters,
-					"Method", parameterParentMethod, "Parameter");
-			addRelationPredicate(methodHasParameter);
+		RelationPredicate classImplementsInterface = new RelationPredicate("implements", classImplements, "Class",
+				interfaceImplementedBy, "Interface");
+		addRelationPredicate(classImplementsInterface);
 
-			RelationPredicate methodHasAnnotation = new RelationPredicate("methodHasAnnotation", methodAnnotations,
-					"Method", annotationAttachedMethods, "Annotation");
-			addRelationPredicate(methodHasAnnotation);
+		RelationPredicate classHasMethod = new RelationPredicate("classHasMethod", classChildMethods, "Class",
+				methodParentClass, "Method");
+		addRelationPredicate(classHasMethod);
 
-			RelationPredicate methodReturnClassRel = new RelationPredicate("methodReturnClass", methodReturnClass,
-					"Method", classMethodReturnClass, "Class");
-			addRelationPredicate(methodReturnClassRel);
+		RelationPredicate interfaceHasMethod = new RelationPredicate("interfaceHasMethod", interfaceChildMethods,
+				"Interface", methodParentInterface, "Method");
+		addRelationPredicate(interfaceHasMethod);
 
-			addRelationPredicate(methodReturnClassRel);
+		RelationPredicate classHasField = new RelationPredicate("classHasField", classChildFields, "Class",
+				fieldParentClass, "Field");
+		addRelationPredicate(classHasField);
 
-			/** Parameter * */
-			RelationPredicate parameterClassRel = new RelationPredicate("parameterClass", parameterClass, "Parameter",
-					classParameterClass, "Class");
-			addRelationPredicate(parameterClassRel);
+		RelationPredicate classHasAnnotation = new RelationPredicate("classHasAnnotation", classAnnotations, "Class",
+				annotationAttachedClasses, "Annotation");
+		addRelationPredicate(classHasAnnotation);
 
-			addRelationPredicate(parameterClassRel);
+		RelationPredicate interfaceHasAnnotation = new RelationPredicate("interfaceHasAnnotation",
+				interfaceAnnotations, "Interface", annotationAttachedInterfaces, "Annotation");
+		addRelationPredicate(interfaceHasAnnotation);
 
-			RelationPredicate parameterHasAnnotation = new RelationPredicate("parameterHasAnnotation",
-					parameterAnnotations, "Parameter", annotationAttachedParameters, "Annotation");
-			addRelationPredicate(parameterHasAnnotation);
+		CompositeRelationPredicate typeHasAnnotation = new CompositeRelationPredicate("typeHasAnnotation",
+				classHasAnnotation, interfaceHasAnnotation);
+		addRelationPredicate(typeHasAnnotation);
 
-			/** Field * */
-			RelationPredicate fieldClassRel = new RelationPredicate("fieldClass", fieldClass, "Field", classFieldClass,
-					"Class");
-			addRelationPredicate(fieldClassRel);
+		/** Method * */
+		RelationPredicate methodHasParameter = new RelationPredicate("methodHasParameter", methodChildParameters,
+				"Method", parameterParentMethod, "Parameter");
+		addRelationPredicate(methodHasParameter);
 
-			RelationPredicate fieldInterfaceRel = new RelationPredicate("fieldInterface", fieldInterface, "Field",
-					interfaceFieldInterface, "Interface");
-			addRelationPredicate(fieldInterfaceRel);
+		RelationPredicate methodHasAnnotation = new RelationPredicate("methodHasAnnotation", methodAnnotations,
+				"Method", annotationAttachedMethods, "Annotation");
+		addRelationPredicate(methodHasAnnotation);
 
-			RelationPredicate fieldHasAnnotation = new RelationPredicate("fieldHasAnnotation", fieldAnnotations,
-					"Field", annotationAttachedFields, "Annotation");
-			addRelationPredicate(fieldHasAnnotation);
+		RelationPredicate methodReturnClassRel = new RelationPredicate("methodReturnClass", methodReturnClass,
+				"Method", classMethodReturnClass, "Class");
+		addRelationPredicate(methodReturnClassRel);
 
-		}
-		catch (ClassNotFoundException cnfe)
-		{
-			throw new InvalidModelException("Exception occured during creation of meta model: " + cnfe.getMessage());
-		}
+		addRelationPredicate(methodReturnClassRel);
+
+		/** Parameter * */
+		RelationPredicate parameterClassRel = new RelationPredicate("parameterClass", parameterClass, "Parameter",
+				classParameterClass, "Class");
+		addRelationPredicate(parameterClassRel);
+
+		addRelationPredicate(parameterClassRel);
+
+		RelationPredicate parameterHasAnnotation = new RelationPredicate("parameterHasAnnotation",
+				parameterAnnotations, "Parameter", annotationAttachedParameters, "Annotation");
+		addRelationPredicate(parameterHasAnnotation);
+
+		/** Field * */
+		RelationPredicate fieldClassRel = new RelationPredicate("fieldClass", fieldClass, "Field", classFieldClass,
+				"Class");
+		addRelationPredicate(fieldClassRel);
+
+		RelationPredicate fieldInterfaceRel = new RelationPredicate("fieldInterface", fieldInterface, "Field",
+				interfaceFieldInterface, "Interface");
+		addRelationPredicate(fieldInterfaceRel);
+
+		RelationPredicate fieldHasAnnotation = new RelationPredicate("fieldHasAnnotation", fieldAnnotations, "Field",
+				annotationAttachedFields, "Annotation");
+		addRelationPredicate(fieldHasAnnotation);
 	}
 
 	public void completeModel(UnitDictionary unitDict) throws ModelClashException
 	{
-		Debug.out(Debug.MODE_DEBUG, "LOLA", "complete java language model..");
+		logger.debug("complete java language model..");
 
 		LangNamespace rootNS = new LangNamespace("");
 		try
@@ -367,7 +351,7 @@ public class JavaLanguageModel extends LanguageModel
 		}
 		catch (ModuleException e)
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", e.getMessage());
+			logger.warn(e);
 			return;
 		}
 
@@ -379,7 +363,7 @@ public class JavaLanguageModel extends LanguageModel
 			{
 				JavaType concern = (JavaType) o;
 				LangNamespace ns = rootNS;
-				if ((null != concern.namespace()) && (!concern.namespace().equals("")))
+				if (null != concern.namespace() && !concern.namespace().equals(""))
 				{
 					ns = findOrAddNamespace(unitDict, rootNS, concern.namespace());
 				}
@@ -392,8 +376,8 @@ public class JavaLanguageModel extends LanguageModel
 					// So also add the link the other way round.
 					((JavaType) superType).addChildType(concern);
 				}
-				Collection implementedInterfaces = concern.getUnitRelation("Implements").multiValue();
-				for (Object implementedInterface : implementedInterfaces)
+				Collection<JavaType> implementedInterfaces = concern.getUnitRelation("Implements").multiValue();
+				for (JavaType implementedInterface : implementedInterfaces)
 				{
 					// This class implements interfaces, also add the reverse
 					// mapping from interface -> classes that implement it
@@ -438,7 +422,7 @@ public class JavaLanguageModel extends LanguageModel
 				if (param.parameterType() != null)
 				{
 					ProgramElement paramType = param.getUnitRelation(param.parameterType().getUnitType()).singleValue();
-					if ((null != paramType) && (paramType instanceof JavaType))
+					if (null != paramType && paramType instanceof JavaType)
 					{
 						// The parameter has a registered Type
 						// So also add the link the other way round.
@@ -459,7 +443,7 @@ public class JavaLanguageModel extends LanguageModel
 				{
 					ProgramElement methodReturnType = method.getUnitRelation(
 							"Return" + method.getReturnType().getUnitType()).singleValue();
-					if ((null != methodReturnType) && (methodReturnType instanceof JavaType))
+					if (null != methodReturnType && methodReturnType instanceof JavaType)
 					{
 						// The method has a registered return Type
 						// So also add the link the other way round.
@@ -479,7 +463,7 @@ public class JavaLanguageModel extends LanguageModel
 				if (null != field.getFieldType())
 				{
 					ProgramElement fieldType = field.getUnitRelation(field.getFieldType().getUnitType()).singleValue();
-					if ((null != fieldType) && (fieldType instanceof JavaType))
+					if (null != fieldType && fieldType instanceof JavaType)
 					{
 						// The method has a registered return Type
 						// So also add the link the other way round.
@@ -507,7 +491,7 @@ public class JavaLanguageModel extends LanguageModel
 	 */
 	public void createIndex(Collection<ProgramElement> units, UnitDictionary dict) throws ModuleException
 	{
-		Debug.out(Debug.MODE_DEBUG, "LOLA", "Creating index on the language units");
+		logger.debug("Creating index on the language units");
 		// Loop 1: find methods, add only those that are ImplementedHere
 		for (Object unit1 : units)
 		{
@@ -524,7 +508,7 @@ public class JavaLanguageModel extends LanguageModel
 					// Exclude this method because it is inherited; set the
 					// parent of its child parameters
 					// so they will be noticed for removal by the 2nd loop.
-					Collection params = method.getUnitRelation("ChildParameters").multiValue();
+					Collection<JavaParameterInfo> params = method.getUnitRelation("ChildParameters").multiValue();
 					for (Object param : params)
 					{
 						JavaParameterInfo paramInfo = (JavaParameterInfo) param;
@@ -540,7 +524,7 @@ public class JavaLanguageModel extends LanguageModel
 		// A parameter is skipped when its parent method is not ImplementedHere.
 		// Methods are skipped altogether, because they have been added in loop
 		// 1 already.
-		Iterator unitIter = units.iterator();
+		Iterator<ProgramElement> unitIter = units.iterator();
 		while (unitIter.hasNext())
 		{
 			ProgramElement unit = (ProgramElement) unitIter.next();
@@ -555,7 +539,7 @@ public class JavaLanguageModel extends LanguageModel
 			else if (unit instanceof JavaParameterInfo)
 			{
 				JavaParameterInfo param = (JavaParameterInfo) unit;
-				if ((null == param.getParent()) || ((JavaMethodInfo) param.getParent()).isDeclaredHere())
+				if (null == param.getParent() || ((JavaMethodInfo) param.getParent()).isDeclaredHere())
 				{
 					// The parameter does not belong to an inherited method, so
 					// add it.
@@ -596,8 +580,8 @@ public class JavaLanguageModel extends LanguageModel
 	 */
 	public Map<String, MethodNode> getPathOfUnitRelations(String from, String to)
 	{
-		Map<String, MethodNode> relations = new HashMap();
-		List params = new ArrayList();
+		Map<String, MethodNode> relations = new HashMap<String, MethodNode>();
+		List<String> params = new ArrayList<String>();
 		MethodNode m = new MethodNode("getUnitRelation");
 
 		try
@@ -640,8 +624,9 @@ public class JavaLanguageModel extends LanguageModel
 		}
 		catch (ModelClashException mce)
 		{
-			Debug.out(Debug.MODE_WARNING, "LOLA", "Unable to generate map of relations from " + from + " to " + to
-					+ ": " + mce.getMessage());
+			logger
+					.warn("Unable to generate map of relations from " + from + " to " + to + ": " + mce.getMessage(),
+							mce);
 		}
 
 		return null;
@@ -731,13 +716,11 @@ public class JavaLanguageModel extends LanguageModel
 				catch (IndexOutOfBoundsException e)
 				{
 					// if you get this error, you're in real trouble.
-					Debug.out(Debug.MODE_WARNING, "LOLA", "Internal error: " + e.getMessage());
-					e.printStackTrace();
+					logger.warn("Internal error: " + e.getMessage(), e);
 				}
 				catch (ModuleException e)
 				{
-					System.err.println("Internal error: " + e.getMessage());
-					e.printStackTrace();
+					logger.error("Internal error: " + e.getMessage(), e);
 				}
 			}
 		}

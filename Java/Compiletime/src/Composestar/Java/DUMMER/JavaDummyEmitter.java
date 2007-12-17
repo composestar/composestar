@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
@@ -30,7 +32,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 {
 	private StringBuilder dummy;
 
-	private java.util.Stack stack = new java.util.Stack();
+	private Stack<AST> stack = new Stack<AST>();
 
 	private static final int ROOT_ID = 0;
 
@@ -48,9 +50,9 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 	private String packageName = "";
 
-	private ArrayList packages = new ArrayList();
+	private List<String> packages = new ArrayList<String>();
 
-	private boolean packageDefinition = false;
+	private boolean packageDefinition;
 
 	private ASTFactory factory = new ASTFactory();
 
@@ -83,7 +85,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	{
 		currentSource = source;
 		packageName = "";
-		packages = new ArrayList();
+		packages = new ArrayList<String>();
 		dummy = new StringBuilder();
 		// Create a root AST node with id 0
 		factory = new ASTFactory();
@@ -137,10 +139,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	 */
 	public void addTypeSource(String classname)
 	{
-		if (this.currentSource != null)
+		if (currentSource != null)
 		{
 			String sourcename = FileUtils.removeExtension(currentSource.getFile().getName());
-			String fqn = this.getPackageName();
+			String fqn = getPackageName();
 			if (!fqn.equals(""))
 			{
 				fqn += ".";
@@ -264,7 +266,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		if (packages.size() > 0)
 		{
 			// iterate over packages
-			Iterator packageIt = packages.iterator();
+			Iterator<String> packageIt = packages.iterator();
 			while (packageIt.hasNext())
 			{
 				name.append(packageIt.next());
@@ -426,7 +428,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	public void newline()
 	{
 		lastOutputWasNewline = true;
-		this.dummy.append('\n');
+		dummy.append('\n');
 	}
 
 	/**
@@ -441,7 +443,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			tab();
 		}
 		lastOutputWasNewline = false;
-		this.dummy.append(text);
+		dummy.append(text);
 	}
 
 	/**
@@ -596,7 +598,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	{
 		for (int i = 1; i <= tabs; i++)
 		{
-			this.dummy.append('\t');
+			dummy.append('\t');
 		}
 	}
 
@@ -644,10 +646,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 				visit(getChild(ast, ANNOTATIONS)); // added 1.5
 				out("package ");
-				this.packageDefinition = true;
+				packageDefinition = true;
 				visit(getChild(ast, IDENT));
 				visitChildren(ast, "", DOT);
-				this.packageDefinition = false;
+				packageDefinition = false;
 				out(";");
 				newline();
 				break;
@@ -670,7 +672,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 					out("interface ");
 				}
 				AST c = getChild(ast, IDENT);
-				this.addTypeSource(c.getText());
+				addTypeSource(c.getText());
 				visit(c);
 
 				out(" ");
@@ -700,18 +702,18 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case ANNOTATION_DEF: // added WH-20071029
-				visit(getChild(ast, MODIFIERS));				
+				visit(getChild(ast, MODIFIERS));
 				out("@interface ");
 				AST c2 = getChild(ast, IDENT);
-				this.addTypeSource(c2.getText());
+				addTypeSource(c2.getText());
 				visit(c2);
-				
+
 				startBlock();
 				visit(getChild(ast, OBJBLOCK));
 				endBlock();
 				newline();
 				break;
-				
+
 			case TYPE_ARGS: // added 1.5
 				break;
 
@@ -1036,9 +1038,9 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			case STRING_LITERAL:
 			case NUM_FLOAT:
 			case NUM_DOUBLE:
-				if (this.packageDefinition)
+				if (packageDefinition)
 				{
-					this.packages.add(ast.getText());
+					packages.add(ast.getText());
 				}
 				out(ast.getText());
 				break;
@@ -1236,5 +1238,3 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		return ret;
 	}
 }
-
-

@@ -5,14 +5,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
-import Composestar.Utils.StringConverter;
 
 /**
  * An instance of <code>JavaMethodInfo</code> represents a method in Java. It
@@ -34,7 +35,7 @@ public class JavaMethodInfo extends MethodInfo
 	{
 		super();
 	}
-	
+
 	public JavaMethodInfo(boolean dummy)
 	{
 		super(dummy);
@@ -48,7 +49,7 @@ public class JavaMethodInfo extends MethodInfo
 	public JavaMethodInfo(Method m)
 	{
 		super();
-		this.theMethod = m;
+		theMethod = m;
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class JavaMethodInfo extends MethodInfo
 	 */
 	public boolean isDeclaredHere()
 	{
-		if ((parent.getFullName()).equals(theMethod.getDeclaringClass().getName())) 
+		if (parent.getFullName().equals(theMethod.getDeclaringClass().getName()))
 		{
 			return true;
 		}
@@ -69,6 +70,7 @@ public class JavaMethodInfo extends MethodInfo
 	 * parentType changed to the given name and actualParent. The parameters and
 	 * return type should stay the same.
 	 */
+	@Override
 	public MethodInfo getClone(String name, Type actualParent)
 	{
 		JavaMethodInfo mi = new JavaMethodInfo(true);
@@ -76,12 +78,12 @@ public class JavaMethodInfo extends MethodInfo
 
 		// set MethodInfo variables
 		mi.parent = actualParent;
-		mi.parameters = this.parameters;
-		mi.returnType = this.returnType;
-		mi.returnTypeString = this.returnTypeString;
+		mi.parameters = parameters;
+		mi.returnType = returnType;
+		mi.returnTypeString = returnTypeString;
 
 		// set JavaMethodInfo variables
-		mi.theMethod = this.theMethod;
+		mi.theMethod = theMethod;
 
 		return mi;
 	}
@@ -89,76 +91,60 @@ public class JavaMethodInfo extends MethodInfo
 	/** Stuff for LOLA * */
 
 	/**
-	 * Helper method. Converts a <code>Collection</code> to a
-	 * <code>HashSet</code>.
-	 */
-	private HashSet toHashSet(Collection c)
-	{
-		HashSet result = new HashSet();
-		for (Object aC : c)
-		{
-			result.add(aC);
-		}
-		return result;
-	}
-
-	/**
 	 * @see Composestar.core.LAMA.ProgramElement#getUnitAttributes()
 	 */
-	public Collection getUnitAttributes()
+	@Override
+	public Collection<String> getUnitAttributes()
 	{
-		HashSet result = new HashSet();
-		Iterator modifierIt = StringConverter.stringToStringList(Modifier.toString(theMethod.getModifiers()), " ");
-		while (modifierIt.hasNext())
-		{
-			result.add(modifierIt.next());
-		}
+		HashSet<String> result = new HashSet<String>(Arrays.asList(Modifier.toString(theMethod.getModifiers()).split(
+				" ")));
 		return result;
 	}
 
 	/**
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
 	 */
+	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentClass") && parent.getUnitType().equals("Class")) 
+		if (argumentName.equals("ParentClass") && parent.getUnitType().equals("Class"))
 		{
 			return new UnitResult(parent);
 		}
-		else if (argumentName.equals("ParentInterface") && parent.getUnitType().equals("Interface")) 
+		else if (argumentName.equals("ParentInterface") && parent.getUnitType().equals("Interface"))
 		{
 			return new UnitResult(parent);
 		}
-		else if (argumentName.equals("ChildParameters")) 
+		else if (argumentName.equals("ChildParameters"))
 		{
-			return new UnitResult(toHashSet(parameters));
+			return new UnitResult(new HashSet<ProgramElement>(parameters));
 		}
-		else if (argumentName.equals("ReturnClass") && getReturnType().getUnitType().equals("Class")) 
-		{	
-			return new UnitResult(getReturnType());
-		}
-		else if (argumentName.equals("ReturnInterface") && getReturnType().getUnitType().equals("Interface")) 
+		else if (argumentName.equals("ReturnClass") && getReturnType().getUnitType().equals("Class"))
 		{
 			return new UnitResult(getReturnType());
 		}
-		else if (argumentName.equals("ReturnAnnotation") && getReturnType().getUnitType().equals("Annotation")) 
+		else if (argumentName.equals("ReturnInterface") && getReturnType().getUnitType().equals("Interface"))
 		{
 			return new UnitResult(getReturnType());
-		}	
+		}
+		else if (argumentName.equals("ReturnAnnotation") && getReturnType().getUnitType().equals("Annotation"))
+		{
+			return new UnitResult(getReturnType());
+		}
 		else if (argumentName.equals("Annotations"))
 		{
-			Iterator i = getAnnotations().iterator();
-			HashSet res = new HashSet();
+			Iterator<JavaAnnotation> i = getAnnotations().iterator();
+			HashSet<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add(((JavaAnnotation) i.next()).getType());
+				res.add((i.next()).getType());
 			}
 			return new UnitResult(res);
 		}
 
 		return null;
 	}
-	
+
 	@Override
 	public boolean isPrivate()
 	{
@@ -181,15 +167,11 @@ public class JavaMethodInfo extends MethodInfo
 	 * Custom deserialization of this object
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-	{
-
-	}
+	{}
 
 	/**
 	 * Custom serialization of this object
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
-	{
-
-	}
+	{}
 }

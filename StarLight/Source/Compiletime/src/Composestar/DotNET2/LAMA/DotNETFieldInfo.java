@@ -16,9 +16,11 @@ import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 
 /**
@@ -145,11 +147,11 @@ public class DotNETFieldInfo extends FieldInfo
 		}
 		else if ("Annotations".equals(argumentName))
 		{
-			Iterator i = getAnnotations().iterator();
-			HashSet res = new HashSet();
+			Iterator<Annotation> i = getAnnotations().iterator();
+			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add(((Annotation) i.next()).getType());
+				res.add((i.next()).getType());
 			}
 			return new UnitResult(res);
 		}
@@ -163,9 +165,9 @@ public class DotNETFieldInfo extends FieldInfo
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 	 */
 	@Override
-	public Collection getUnitAttributes()
+	public Collection<String> getUnitAttributes()
 	{
-		HashSet result = new HashSet();
+		Set<String> result = new HashSet<String>();
 		if (isPublic())
 		{
 			result.add("public");

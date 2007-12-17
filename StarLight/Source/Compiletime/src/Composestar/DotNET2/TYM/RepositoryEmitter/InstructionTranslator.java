@@ -42,12 +42,12 @@ class InstructionTranslator implements Visitor
 		Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction filterAction;
 
 		DataStore dataStore = DataStore.instance();
-		Iterator it = dataStore
+		Iterator<Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction> it = dataStore
 				.getAllInstancesOf(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.class);
 
 		while (it.hasNext())
 		{
-			filterAction = (Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction) it.next();
+			filterAction = it.next();
 			fullNameMap.put(filterAction.getName(), filterAction.getFullName());
 		}
 	}
@@ -67,12 +67,12 @@ class InstructionTranslator implements Visitor
 		weaveFilterCode.setInstructions(instruction);
 
 		// Check conditions
-		Iterator condIter = filterCode.getCheckConditions();
+		Iterator<Condition> condIter = filterCode.getCheckConditions();
 		composestar.dotNET2.tym.entities.ConditionExpression condExpr = null;
 		composestar.dotNET2.tym.entities.ConditionExpression condExpr2;
 		while (condIter.hasNext())
 		{
-			Condition condition = (Condition) condIter.next();
+			Condition condition = condIter.next();
 
 			condExpr2 = translateCondition(condition);
 

@@ -14,11 +14,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 
 /**
@@ -177,11 +180,11 @@ public class DotNETParameterInfo extends ParameterInfo
 		}
 		else if (argumentName.equals("Annotations"))
 		{
-			Iterator i = getAnnotations().iterator();
-			HashSet res = new HashSet();
+			Iterator<Annotation> i = getAnnotations().iterator();
+			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add(((Annotation) i.next()).getType());
+				res.add((i.next()).getType());
 			}
 			return new UnitResult(res);
 		}
@@ -195,9 +198,9 @@ public class DotNETParameterInfo extends ParameterInfo
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 	 */
 	@Override
-	public Collection getUnitAttributes()
+	public Collection<String> getUnitAttributes()
 	{
-		return new HashSet();
+		return Collections.emptySet();
 	}
 
 	/**

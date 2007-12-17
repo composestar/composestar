@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.Master;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.DotNET2.MASTER.StarLightMaster;
 import Composestar.Utils.CommandLineExecutor;
-import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringUtils;
+import Composestar.Utils.Logging.CPSLogger;
 
 import composestar.dotNET2.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET2.tym.entities.AssemblyConfig;
@@ -26,6 +27,8 @@ import composestar.dotNET2.tym.entities.ExpandedAssemblyDocument;
 
 class AssemblyExpander
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(TYPEX.MODULE_NAME);
+
 	private File baseDir;
 
 	private Map<String, AssemblyConfig> assemblyConfigs;
@@ -103,16 +106,16 @@ class AssemblyExpander
 	{
 		List<String> cmd = new ArrayList<String>();
 		cmd.add(getExecutable());
-		cmd.add((String) resources.get(StarLightMaster.RESOURCE_CONFIGFILE));
+		cmd.add((String) resources.get(Master.RESOURCE_CONFIGFILE));
 
-		Debug.out(Debug.MODE_DEBUG, TYPEX.MODULE_NAME, "Command line: " + StringUtils.join(cmd));
+		logger.debug("Command line: " + StringUtils.join(cmd));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
 		int result = cle.exec(cmd);
 
 		if (result != 0)
 		{
-			Debug.out(Debug.MODE_ERROR, TYPEX.MODULE_NAME, "Output from SigExpander: " + cle.outputNormal());
+			logger.error("Output from SigExpander: " + cle.outputNormal());
 			throw new ModuleException("SigExpander failed with error " + result, TYPEX.MODULE_NAME);
 		}
 	}

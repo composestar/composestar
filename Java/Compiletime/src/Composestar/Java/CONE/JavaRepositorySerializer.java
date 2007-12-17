@@ -35,7 +35,7 @@ public class JavaRepositorySerializer implements RepositorySerializer
 	{
 		File repositoryFilename = new File(resources.configuration().getProject().getIntermediate(), "repository.dat");
 
-		resources.add(REPOSITORY_FILE_KEY, repositoryFilename);
+		resources.put(REPOSITORY_FILE_KEY, repositoryFilename);
 
 		logger.info("writing repository to file " + repositoryFilename + " ...");
 
@@ -53,7 +53,7 @@ public class JavaRepositorySerializer implements RepositorySerializer
 			oos = new ObjectOutputStream(bos);
 
 			// collect the objects
-			Iterator it = ds.getIterator();
+			Iterator<Object> it = ds.getIterator();
 
 			// write the objects
 			while (it.hasNext())
