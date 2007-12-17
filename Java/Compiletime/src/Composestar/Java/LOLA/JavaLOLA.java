@@ -15,7 +15,7 @@ public class JavaLOLA extends LOLA
 	 */
 	public JavaLOLA()
 	{
-		this(JavaLanguageModel.instance());
+		this(new JavaLanguageModel());
 	}
 
 	/**

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
@@ -44,7 +43,7 @@ public class CMethodInfo extends MethodInfo
 	{
 		super();
 	}
-	
+
 	public CMethodInfo(boolean dummy)
 	{
 		super(dummy);
@@ -162,6 +161,13 @@ public class CMethodInfo extends MethodInfo
 
 	@Override
 	public boolean isPublic()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isDeclaredHere()
 	{
 		// TODO Auto-generated method stub
 		return false;

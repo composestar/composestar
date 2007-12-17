@@ -15,7 +15,7 @@ public class DotNETLOLA extends LOLA
 	 */
 	public DotNETLOLA()
 	{
-		this(DotNETLanguageModel.instance());
+		this(new DotNETLanguageModel());
 	}
 
 	/**

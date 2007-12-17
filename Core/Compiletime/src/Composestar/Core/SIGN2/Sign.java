@@ -1411,7 +1411,7 @@ public class Sign implements CTCommonModule
 		 * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
 		 */
 		@Override
-		public Collection getUnitAttributes()
+		public Collection<String> getUnitAttributes()
 		{
 			return null;
 		}
@@ -1456,6 +1456,12 @@ public class Sign implements CTCommonModule
 		 */
 		@Override
 		public boolean isPublic()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean isDeclaredHere()
 		{
 			return false;
 		}

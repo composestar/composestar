@@ -180,4 +180,18 @@ public abstract class Type extends ProgramElement
 	{
 		return getUnitAttributes().contains(attribute);
 	}
+
+	public abstract String namespace();
+
+	public abstract void setParentNamespace(ProgramElement parentNS);
+
+	public abstract void addChildType(ProgramElement childType);
+
+	public abstract void addImplementedBy(ProgramElement aClass);
+
+	public abstract void addParameterType(ProgramElement paramType);
+
+	public abstract void addMethodReturnType(ProgramElement returnType);
+
+	public abstract void addFieldType(ProgramElement fieldType);
 }

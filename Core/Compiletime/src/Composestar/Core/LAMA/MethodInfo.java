@@ -248,6 +248,8 @@ public abstract class MethodInfo extends ProgramElement
 		return returnTypeString;
 	}
 
+	public abstract boolean isDeclaredHere();
+
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer();

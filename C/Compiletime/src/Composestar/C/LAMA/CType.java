@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
@@ -171,6 +172,55 @@ public class CType extends Type
 		out.writeBoolean(isTypeDef);
 		out.writeInt(pointerLevel);
 		out.writeInt(arrayLevel);
+	}
+
+	@Override
+	public void addChildType(ProgramElement childType)
+	{
+	// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addFieldType(ProgramElement fieldType)
+	{
+	// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addImplementedBy(ProgramElement class1)
+	{
+	// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addMethodReturnType(ProgramElement returnType)
+	{
+	// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addParameterType(ProgramElement paramType)
+	{
+	// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String namespace()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setParentNamespace(ProgramElement parentNS)
+	{
+	// TODO Auto-generated method stub
+
 	}
 
 }

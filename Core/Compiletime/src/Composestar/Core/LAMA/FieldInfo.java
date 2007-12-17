@@ -114,6 +114,8 @@ public abstract class FieldInfo extends ProgramElement
 
 	public abstract boolean isProtected();
 
+	public abstract boolean isDeclaredHere();
+
 	/**
 	 * Custom deserialization of this object
 	 * 

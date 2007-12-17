@@ -136,7 +136,7 @@ public class CVariable extends FieldInfo
 	{
 		parent = inParent;
 	}
-	
+
 	public CFile getParent()
 	{
 		return parent;
@@ -249,6 +249,13 @@ public class CVariable extends FieldInfo
 
 	@Override
 	public boolean isPublic()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isDeclaredHere()
 	{
 		// TODO Auto-generated method stub
 		return false;

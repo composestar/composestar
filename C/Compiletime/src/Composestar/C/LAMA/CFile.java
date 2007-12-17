@@ -215,4 +215,53 @@ public class CFile extends Type
 		out.writeObject(parent);
 		// out.writeBoolean(isAnnotation);
 	}
+
+	@Override
+	public void addChildType(ProgramElement childType)
+	{
+	// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addFieldType(ProgramElement fieldType)
+	{
+	// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addImplementedBy(ProgramElement class1)
+	{
+	// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addMethodReturnType(ProgramElement returnType)
+	{
+	// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addParameterType(ProgramElement paramType)
+	{
+	// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String namespace()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setParentNamespace(ProgramElement parentNS)
+	{
+	// TODO Auto-generated method stub
+
+	}
 }
