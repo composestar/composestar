@@ -9,8 +9,6 @@
  */
 package Composestar.Core.FILTH;
 
-import java.io.File;
-import java.io.FileReader;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -18,14 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
-import Composestar.Core.Config.ModuleInfo;
-import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.Exception.ConfigurationException;
@@ -35,7 +25,6 @@ import Composestar.Core.FILTH.Core.Node;
 import Composestar.Core.FILTH.Core.OrderTraverser;
 import Composestar.Core.FILTH.Core.Rule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
-import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModSIinfo;
@@ -44,16 +33,8 @@ import Composestar.Core.SANE.SIinfo;
 
 public class FILTHServiceImpl extends FILTHService
 {
-	private String specFilename;
-
-	protected CommonResources resources;
-
 	protected FILTHServiceImpl(CommonResources cr) throws ConfigurationException
-	{
-		resources = cr;
-		ModuleInfo mi = ModuleInfoManager.get(FILTH.MODULE_NAME);
-		specFilename = mi.getSetting("input");
-	}
+	{}
 
 	@Override
 	public List<FilterModuleSuperImposition> getOrder(Concern c)
@@ -84,8 +65,6 @@ public class FILTHServiceImpl extends FILTHService
 		modulrefs = processModules(c, g);
 
 		processOrderingSpecifications(g);
-
-		processXML(c, g);
 
 		OrderTraverser ot = new OrderTraverser();
 		LinkedList<List<Node>> orders = ot.multiTraverse(g);
@@ -224,41 +203,6 @@ public class FILTHServiceImpl extends FILTHService
 		{
 			Rule rule = new SoftPreRule(l, r);
 			rule.insert(graph);
-		}
-	}
-
-	private void processXML(Concern c, Graph g)
-	{
-		/* process XML specification, build the rules into the graph */
-		try
-		{
-			SAXParserFactory saxfactory = SAXParserFactory.newInstance();
-			saxfactory.setNamespaceAware(true);
-			XMLReader xr = saxfactory.newSAXParser().getXMLReader();
-			ConstraintFilter of = new ConstraintFilter(g);
-			of.setParent(xr);
-
-			if (specFilename != null)
-			{
-				File file = new File(specFilename);
-				if (file != null && file.exists() && file.canRead())
-				{
-					FileReader fr = new FileReader(specFilename);
-					of.parse(new InputSource(fr));
-				}
-				else
-				{
-					logger.warn("Could not read/find Filter Module Order specification (" + specFilename + ").", c);
-				}
-			}
-		}
-		catch (SAXException se)
-		{
-			logger.warn("Problems parsing file: " + specFilename + ", message: " + se.getMessage(), se);
-		}
-		catch (Exception ioe)
-		{
-			logger.warn("Could not read/find Filter Module Order specification (" + specFilename + ").", c);
 		}
 	}
 }

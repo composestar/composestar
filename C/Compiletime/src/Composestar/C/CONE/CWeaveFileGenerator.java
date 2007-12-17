@@ -24,7 +24,6 @@ import Composestar.C.specification.Functions;
 import Composestar.C.specification.Pointcut;
 import Composestar.C.wrapper.WeaveblePoint;
 import Composestar.C.wrapper.utils.GeneralUtils;
-import Composestar.Core.CONE.WeaveFileGenerator;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
@@ -49,7 +48,7 @@ import Composestar.Utils.Debug;
  * 
  * @author Johan te Winkel
  */
-public class CWeaveFileGenerator implements WeaveFileGenerator
+public class CWeaveFileGenerator
 {
 	public static Map<String, FilterModule> filterModuleReferenceMap = new HashMap<String, FilterModule>();
 

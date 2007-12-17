@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import Composestar.Core.CONE.RepositorySerializer;
+import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.Exception.ModuleException;
@@ -125,7 +125,7 @@ public abstract class BACO implements CTCommonModule
 
 	protected void addRepository(Set<File> filesToCopy)
 	{
-		File repository = (File) resources.get(RepositorySerializer.REPOSITORY_FILE_KEY);
+		File repository = (File) resources.get(CONE.REPOSITORY_FILE_KEY);
 		if (repository != null)
 		{
 			logger.debug("Adding repository: '" + repository + "'");

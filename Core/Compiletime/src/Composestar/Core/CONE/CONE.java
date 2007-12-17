@@ -13,4 +13,8 @@ import Composestar.Core.Master.CTCommonModule;
 
 public abstract class CONE implements CTCommonModule
 {
+	/**
+	 * Key used to store the serialized repository in the CommonResources
+	 */
+	public static final String REPOSITORY_FILE_KEY = "RepositoryFile";
 }

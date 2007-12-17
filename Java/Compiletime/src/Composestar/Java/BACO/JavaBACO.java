@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import Composestar.Core.BACO.BACO;
-import Composestar.Core.CONE.RepositorySerializer;
+import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Java.WEAVER.JavaWeaver;
@@ -21,7 +21,7 @@ public class JavaBACO extends BACO
 	protected void addRepository(Set<File> filesToCopy)
 	{
 		// add repository.dat
-		File repository = (File) resources.get(RepositorySerializer.REPOSITORY_FILE_KEY);
+		File repository = (File) resources.get(CONE.REPOSITORY_FILE_KEY);
 		logger.debug("Adding repository: '" + repository + "'");
 		filesToCopy.add(repository);
 	}

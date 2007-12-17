@@ -7,17 +7,7 @@
 			however say anything about the order in which the filtermodules should be applied. The possible orderings
 			are constrained by the filter ordering specification.
 		</description>
-		<settings>
-			<setting id="input">
-				<name>Filter Module Order specification</name>
-			</setting>
-			<!-- 
-			<setting id="outputEnabled" type="boolean">
-				<name>Output enabled</name>
-				<default>false</default>
-			</setting>
-			 -->
-		</settings>
+		<settings />
 		<incre>
 			<module input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true"
 				summary="Determining order of filter modules at shared join points...">

@@ -29,7 +29,6 @@ import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.CONE.CONE;
-import Composestar.Core.CONE.RepositorySerializer;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
@@ -50,7 +49,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * @author Tom Staijen
  * @version 0.9.0
  */
-public class DotNETRepositorySerializer extends CONE implements RepositorySerializer
+public class DotNETRepositorySerializer extends CONE
 {
 	public static final String MODULE_NAME = "CONE-XML";
 

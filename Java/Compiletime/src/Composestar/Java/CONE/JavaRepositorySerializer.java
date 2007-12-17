@@ -7,7 +7,7 @@ import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 import java.util.Iterator;
 
-import Composestar.Core.CONE.RepositorySerializer;
+import Composestar.Core.CONE.CONE;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataMap;
@@ -21,7 +21,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @see Composestar.Core.CONE.RepositorySerializer.
  */
-public class JavaRepositorySerializer implements RepositorySerializer
+public class JavaRepositorySerializer extends CONE
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("CONE");
 

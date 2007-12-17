@@ -45,8 +45,7 @@ public class FILTH implements CTCommonModule
 		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Init FILTH service",
 				INCRETimer.TYPE_NORMAL);
 
-		/* get a FILTHService instance */
-		FILTHService filthservice = FILTHService.getInstance(resources);
+		FILTHService filthservice = new FILTHServiceImpl(resources);
 		InnerDispatcher.getInnerDispatchReference();
 		filthinit.stop();
 

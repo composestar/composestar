@@ -12,13 +12,7 @@ package Composestar.Core.FILTH;
 /**
  * @author nagyist
  */
-import java.io.FileReader;
 import java.util.LinkedList;
-
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 import Composestar.Core.FILTH.Core.Action;
 import Composestar.Core.FILTH.Core.ExecutionManager;
@@ -35,7 +29,6 @@ import Composestar.Core.FILTH.Core.SoftCondRule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
 import Composestar.Core.FILTH.Core.SoftSkipRule;
 import Composestar.Core.FILTH.Core.True;
-import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
 
 public class Run
 {
@@ -386,20 +379,20 @@ public class Run
 		/* TODO: augment the active filtermodules in memory and in the graph */
 
 		/* process XML specification */
-		try
-		{
-			SAXParserFactory saxFactory = SAXParserFactory.newInstance();
-			saxFactory.setNamespaceAware(true);
-			XMLReader xr = saxFactory.newSAXParser().getXMLReader();
-			ConstraintFilter of = new ConstraintFilter(g);
-			of.setParent(xr);
-			FileReader r = new FileReader("XMLTest.xml");
-			of.parse(new InputSource(r));
-		}
-		catch (Exception e)
-		{
-			e.getStackTrace();
-		}
+		// try
+		// {
+		// SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+		// saxFactory.setNamespaceAware(true);
+		// XMLReader xr = saxFactory.newSAXParser().getXMLReader();
+		// ConstraintFilter of = new ConstraintFilter(g);
+		// of.setParent(xr);
+		// FileReader r = new FileReader("XMLTest.xml");
+		// of.parse(new InputSource(r));
+		// }
+		// catch (Exception e)
+		// {
+		// e.getStackTrace();
+		// }
 		/* process XML specification */
 
 		// OrderTraverser ot = new OrderTraverser();

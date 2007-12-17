@@ -14,28 +14,16 @@ package Composestar.Core.COMP;
  */
 public class CompilerException extends Exception
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4728512274694103401L;
 
-	/**
-	 * Default ctor
-	 * 
-	 * @roseuid 401B9896021B
-	 */
 	public CompilerException()
-	{
-
-	}
+	{}
 
 	/**
 	 * Ctor taking an error message.
 	 * 
 	 * @param The error message
 	 * @param message
-	 * @roseuid 401B97460055
 	 */
 	public CompilerException(String message)
 	{

@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import Composestar.Core.CONE.RepositorySerializer;
-import Composestar.Core.CONE.WeaveFileGenerator;
+import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
@@ -35,9 +34,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
@@ -52,7 +51,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Sverre Boschman
  */
-public class DotNETWeaveFileGenerator implements WeaveFileGenerator
+public class DotNETWeaveFileGenerator implements CTCommonModule
 {
 	public final static String MODULE_NAME = "CONE-IS";
 
@@ -87,7 +86,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		{
 			repositoryFile = new File(config.getProject().getIntermediate(), "repository.xml");
 		}
-		resources.add(RepositorySerializer.REPOSITORY_FILE_KEY, repositoryFile);
+		resources.put(CONE.REPOSITORY_FILE_KEY, repositoryFile);
 
 		try
 		{
@@ -309,8 +308,6 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 	private void writeMethodInvocations(CommonResources resources) throws ModuleException
 	{
-		FILTHService filthservice = FILTHService.getInstance(resources);
-
 		out.println("<methodInvocations>");
 
 		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
@@ -320,9 +317,10 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 			try
 			{
-				List list = filthservice.getOrder(c);
-				if (!list.isEmpty())
+				FilterModuleOrder fo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+				if (fo != null)
 				{
+					List list = fo.filterModuleSIList();
 					writeMethodInvocationRecord(c.getQualifiedName());
 				}
 			}
