@@ -7,9 +7,6 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
  */
 public class DotNETCallingConventions implements SerializableRepositoryEntity
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2916103173240390588L;
 
 	public static final int Standard = 1;

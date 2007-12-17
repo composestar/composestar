@@ -35,47 +35,44 @@ public class JavaType extends Type
 
 	private JavaType superClass;
 
-	public List<String> ImplementedInterfaceNames; // List of Strings
+	public List<String> implementedInterfaceNames; // List of Strings
 
-	private List<JavaType> ImplementedInterfaces; // List of JavaTypes
+	private List<JavaType> implementedInterfaces; // List of JavaTypes
 
-	private ProgramElement parentNS; // Added by the Language Model; this
+	/**
+	 * Added by the Language Model; this relation can be used in logic queries
+	 */
+	private ProgramElement parentNS;
 
-	// relation can be used in logic queries
+	/**
+	 * Added by the Language Model; this relation contains links to sub-types of
+	 * this type.
+	 */
+	private Set<ProgramElement> childTypes;
 
-	private Set<ProgramElement> childTypes; // Added by the Language Model; this
+	/**
+	 * Added by the Language Model; this relation contains links to parameters
+	 * of this type.
+	 */
+	private Set<ProgramElement> parameterTypes;
 
-	// relation
+	/**
+	 * Added by the Language Model; this relation contains links to methods that
+	 * return this type.
+	 */
+	private Set<ProgramElement> methodReturnTypes;
 
-	// contains links to sub-types of this type.
+	/**
+	 * Added by the Language Model; this relation contains links to fields of
+	 * this type.
+	 */
+	private Set<ProgramElement> fieldTypes;
 
-	private Set<ProgramElement> parameterTypes; // Added by the Language Model;
-
-	// this
-
-	// relation contains links to parameters of
-	// this type.
-
-	private Set<ProgramElement> methodReturnTypes; // Added by the Language
-
-	// Model; this
-
-	// relation contains links to methods
-	// that return this type.
-
-	private Set<ProgramElement> fieldTypes; // Added by the Language Model; this
-
-	// relation
-
-	// contains links to fields of this type.
-
-	private Set<ProgramElement> implementedBy; // Added by the Language Model;
-
-	// this
-
-	// relation exists for interfaces and points
-	// to the Types that implement this
-	// interface
+	/**
+	 * Added by the Language Model; this relation exists for interfaces and
+	 * points to the Types that implement this interface
+	 */
+	private Set<ProgramElement> implementedBy;
 
 	/**
 	 * Constructor
@@ -86,8 +83,8 @@ public class JavaType extends Type
 	{
 		super();
 		theClass = c;
-		ImplementedInterfaceNames = new ArrayList<String>();
-		ImplementedInterfaces = null;
+		implementedInterfaceNames = new ArrayList<String>();
+		implementedInterfaces = null;
 		childTypes = new HashSet<ProgramElement>();
 		parameterTypes = new HashSet<ProgramElement>();
 		methodReturnTypes = new HashSet<ProgramElement>();
@@ -102,7 +99,7 @@ public class JavaType extends Type
 	 * 
 	 * @return java.lang.Class
 	 */
-	public Class<?> getclass()
+	public Class<?> getTypeClass()
 	{
 		return theClass;
 	}
@@ -114,7 +111,7 @@ public class JavaType extends Type
 	 */
 	public void addImplementedInterface(String iface)
 	{
-		ImplementedInterfaceNames.add(iface);
+		implementedInterfaceNames.add(iface);
 	}
 
 	/**
@@ -124,21 +121,21 @@ public class JavaType extends Type
 	public List<JavaType> getImplementedInterfaces()
 	{
 
-		if (null == ImplementedInterfaces)
+		if (null == implementedInterfaces)
 		{
-			ImplementedInterfaces = new ArrayList<JavaType>();
-			Iterator<String> iter = ImplementedInterfaceNames.iterator();
+			implementedInterfaces = new ArrayList<JavaType>();
+			Iterator<String> iter = implementedInterfaceNames.iterator();
 			TypeMap map = TypeMap.instance();
 			while (iter.hasNext())
 			{
 				JavaType iface = (JavaType) map.getType(iter.next());
 				if (null != iface)
 				{
-					ImplementedInterfaces.add(iface);
+					implementedInterfaces.add(iface);
 				}
 			}
 		}
-		return ImplementedInterfaces;
+		return implementedInterfaces;
 	}
 
 	/**
@@ -493,7 +490,7 @@ public class JavaType extends Type
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		ImplementedInterfaceNames = (List<String>) in.readObject();
+		implementedInterfaceNames = (List<String>) in.readObject();
 	}
 
 	/**
@@ -501,6 +498,6 @@ public class JavaType extends Type
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeObject(ImplementedInterfaceNames);
+		out.writeObject(implementedInterfaceNames);
 	}
 }

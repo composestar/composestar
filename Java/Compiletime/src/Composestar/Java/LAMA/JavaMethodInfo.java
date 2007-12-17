@@ -25,7 +25,7 @@ public class JavaMethodInfo extends MethodInfo
 {
 	private static final long serialVersionUID = 308590098089260675L;
 
-	public Method theMethod;
+	public transient Method theMethod;
 
 	/**
 	 * Default constructor.

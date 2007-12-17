@@ -32,7 +32,7 @@ public class JarHelper
 		resources = new HashSet<JarEntry>();
 		modifiedClasses = new HashMap<Class<?>, byte[]>();
 
-		ClassLoader classLoader = new URLClassLoader(new URL[] { jarURL });
+		ClassLoader classLoader = URLClassLoader.newInstance(new URL[] { jarURL });
 		File jar = new File(jarURL.toURI());
 		jarFile = new JarFile(jar);
 

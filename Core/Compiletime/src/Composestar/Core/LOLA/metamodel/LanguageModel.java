@@ -43,7 +43,7 @@ public abstract class LanguageModel
 	/**
 	 * Wrapper classes for program elements used during creation of the model;
 	 */
-	protected static Class<?> mcNamespace, mcClass, mcInterface, mcType, mcMethod, mcField, mcParameter, mcAnnotation;
+	protected Class<?> mcNamespace, mcClass, mcInterface, mcType, mcMethod, mcField, mcParameter, mcAnnotation;
 
 	public LanguageModel()
 	{

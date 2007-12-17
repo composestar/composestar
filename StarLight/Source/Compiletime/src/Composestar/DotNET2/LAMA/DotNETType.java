@@ -40,33 +40,33 @@ public class DotNETType extends Type
 {
 	private static final long serialVersionUID = 5652622506200113401L;
 
-	private boolean IsClass;
+	private boolean flagIsClass;
 
-	private boolean IsInterface;
+	private boolean flagIsInterface;
 
-	private boolean IsEnum;
+	private boolean flagIsEnum;
 
-	private boolean IsValueType;
+	private boolean flagIsValueType;
 
-	private boolean IsPrimitive;
+	private boolean flagIsPrimitive;
 
-	private boolean IsAbstract;
+	private boolean flagIsAbstract;
 
-	private boolean IsSealed;
+	private boolean flagIsSealed;
 
-	private boolean IsPublic;
+	private boolean flagIsPublic;
 
-	private DotNETType BaseType;
+	private DotNETType baseType;
 
-	private String BaseTypeString;
+	private String baseTypeString;
 
-	private List<DotNETType> ImplementedInterfaces; // List of DotNETTypes
+	private List<DotNETType> implementedInterfaces; // List of DotNETTypes
 
-	private List<String> ImplementedInterfaceNames; // List of Strings
+	private List<String> implementedInterfaceNames; // List of Strings
 
-	private String Namespace;
+	private String namespace;
 
-	private String AssemblyName;
+	private String assemblyName;
 
 	private String fromSource;
 
@@ -112,8 +112,8 @@ public class DotNETType extends Type
 	public DotNETType()
 	{
 		super();
-		ImplementedInterfaceNames = new ArrayList<String>();
-		ImplementedInterfaces = null;
+		implementedInterfaceNames = new ArrayList<String>();
+		implementedInterfaces = null;
 		childTypes = new HashSet<ProgramElement>();
 		parameterTypes = new HashSet<ProgramElement>();
 		methodReturnTypes = new HashSet<ProgramElement>();
@@ -123,141 +123,141 @@ public class DotNETType extends Type
 
 	public boolean isClass()
 	{
-		return IsClass;
+		return flagIsClass;
 	}
 
 	public void setIsClass(boolean isClass)
 	{
-		IsClass = isClass;
+		flagIsClass = isClass;
 	}
 
 	public boolean isInterface()
 	{
-		return IsInterface;
+		return flagIsInterface;
 	}
 
 	public void setIsInterface(boolean isInterface)
 	{
-		IsInterface = isInterface;
+		flagIsInterface = isInterface;
 	}
 
 	public boolean isEnum()
 	{
-		return IsEnum;
+		return flagIsEnum;
 	}
 
 	public void setIsEnum(boolean isEnum)
 	{
-		IsEnum = isEnum;
+		flagIsEnum = isEnum;
 	}
 
 	public boolean isValueType()
 	{
-		return IsValueType;
+		return flagIsValueType;
 	}
 
 	public void setIsValueType(boolean isValueType)
 	{
-		IsValueType = isValueType;
+		flagIsValueType = isValueType;
 	}
 
 	public boolean isPrimitive()
 	{
-		return IsPrimitive;
+		return flagIsPrimitive;
 	}
 
 	public void setIsPrimitive(boolean isPrim)
 	{
-		IsPrimitive = isPrim;
+		flagIsPrimitive = isPrim;
 	}
 
 	public boolean isAbstract()
 	{
-		return IsAbstract;
+		return flagIsAbstract;
 	}
 
 	public void setIsAbstract(boolean isAbstract)
 	{
-		IsAbstract = isAbstract;
+		flagIsAbstract = isAbstract;
 	}
 
 	public boolean isSealed()
 	{
-		return IsSealed;
+		return flagIsSealed;
 	}
 
 	public void setIsSealed(boolean isSealed)
 	{
-		IsSealed = isSealed;
+		flagIsSealed = isSealed;
 	}
 
 	public boolean isPublic()
 	{
-		return IsPublic;
+		return flagIsPublic;
 	}
 
 	public void setIsPublic(boolean isPublic)
 	{
-		IsPublic = isPublic;
+		flagIsPublic = isPublic;
 	}
 
 	public DotNETType baseType()
 	{
-		if (BaseType == null)
+		if (baseType == null)
 		{
 			TypeMap map = TypeMap.instance();
-			BaseType = (DotNETType) map.getType(BaseTypeString);
+			baseType = (DotNETType) map.getType(baseTypeString);
 		}
-		return BaseType;
+		return baseType;
 	}
 
 	public void setBaseType(String type)
 	{
-		BaseTypeString = type;
+		baseTypeString = type;
 	}
 
 	public void addImplementedInterface(String iface)
 	{
-		ImplementedInterfaceNames.add(iface);
+		implementedInterfaceNames.add(iface);
 	}
 
 	public List<DotNETType> getImplementedInterfaces()
 	{
-		if (null == ImplementedInterfaces)
+		if (null == implementedInterfaces)
 		{
-			ImplementedInterfaces = new ArrayList<DotNETType>();
-			Iterator<String> iter = ImplementedInterfaceNames.iterator();
+			implementedInterfaces = new ArrayList<DotNETType>();
+			Iterator<String> iter = implementedInterfaceNames.iterator();
 			TypeMap map = TypeMap.instance();
 			while (iter.hasNext())
 			{
 				DotNETType iface = (DotNETType) map.getType(iter.next());
 				if (null != iface)
 				{
-					ImplementedInterfaces.add(iface);
+					implementedInterfaces.add(iface);
 				}
 			}
 		}
-		return ImplementedInterfaces;
+		return implementedInterfaces;
 	}
 
 	public String namespace()
 	{
-		return Namespace;
+		return namespace;
 	}
 
 	public void setNamespace(String space)
 	{
-		Namespace = space;
+		namespace = space;
 	}
 
 	public String assemblyName()
 	{
-		return AssemblyName;
+		return assemblyName;
 	}
 
 	public void setAssemblyName(String name)
 	{
-		AssemblyName = name;
+		assemblyName = name;
 	}
 
 	public boolean isFromSource()
@@ -671,15 +671,14 @@ public class DotNETType extends Type
 			if (null != method)
 			{
 				UnitRegister.instance().registerLanguageUnit(method);
-			}
-
-			Iterator<DotNETParameterInfo> piter = method.getParameters().iterator();
-			while (piter.hasNext())
-			{
-				DotNETParameterInfo param = piter.next();
-				if (null != param)
+				Iterator<DotNETParameterInfo> piter = method.getParameters().iterator();
+				while (piter.hasNext())
 				{
-					UnitRegister.instance().registerLanguageUnit(param);
+					DotNETParameterInfo param = piter.next();
+					if (null != param)
+					{
+						UnitRegister.instance().registerLanguageUnit(param);
+					}
 				}
 			}
 		}
@@ -699,28 +698,28 @@ public class DotNETType extends Type
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		IsClass = in.readBoolean();
-		IsInterface = in.readBoolean();
-		IsEnum = in.readBoolean();
-		IsValueType = in.readBoolean();
-		IsPrimitive = in.readBoolean();
-		IsAbstract = in.readBoolean();
-		IsSealed = in.readBoolean();
-		IsPublic = in.readBoolean();
+		flagIsClass = in.readBoolean();
+		flagIsInterface = in.readBoolean();
+		flagIsEnum = in.readBoolean();
+		flagIsValueType = in.readBoolean();
+		flagIsPrimitive = in.readBoolean();
+		flagIsAbstract = in.readBoolean();
+		flagIsSealed = in.readBoolean();
+		flagIsPublic = in.readBoolean();
 
-		BaseTypeString = in.readUTF();
-		ImplementedInterfaceNames = (List<String>) in.readObject();
-		Namespace = in.readUTF();
+		baseTypeString = in.readUTF();
+		implementedInterfaceNames = (List<String>) in.readObject();
+		namespace = in.readUTF();
 		// fromFile = in.readUTF();
 		annotationInstances = (ArrayList<Annotation>) in.readObject();
 
-		if ("".equals(BaseTypeString))
+		if ("".equals(baseTypeString))
 		{
-			BaseTypeString = null;
+			baseTypeString = null;
 		}
-		if ("".equals(Namespace))
+		if ("".equals(namespace))
 		{
-			Namespace = null;
+			namespace = null;
 		}
 	}
 
@@ -729,18 +728,18 @@ public class DotNETType extends Type
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeBoolean(IsClass);
-		out.writeBoolean(IsInterface);
-		out.writeBoolean(IsEnum);
-		out.writeBoolean(IsValueType);
-		out.writeBoolean(IsPrimitive);
-		out.writeBoolean(IsAbstract);
-		out.writeBoolean(IsSealed);
-		out.writeBoolean(IsPublic);
+		out.writeBoolean(flagIsClass);
+		out.writeBoolean(flagIsInterface);
+		out.writeBoolean(flagIsEnum);
+		out.writeBoolean(flagIsValueType);
+		out.writeBoolean(flagIsPrimitive);
+		out.writeBoolean(flagIsAbstract);
+		out.writeBoolean(flagIsSealed);
+		out.writeBoolean(flagIsPublic);
 
-		out.writeUTF(BaseTypeString != null ? BaseTypeString : "");
-		out.writeObject(ImplementedInterfaceNames);
-		out.writeUTF(Namespace != null ? Namespace : "");
+		out.writeUTF(baseTypeString != null ? baseTypeString : "");
+		out.writeObject(implementedInterfaceNames);
+		out.writeUTF(namespace != null ? namespace : "");
 		// out.writeUTF(fromFile != null ? fromFile : "");
 		out.writeObject(annotationInstances);
 	}

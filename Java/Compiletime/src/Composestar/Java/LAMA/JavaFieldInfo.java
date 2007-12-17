@@ -25,7 +25,7 @@ public class JavaFieldInfo extends FieldInfo
 {
 	private static final long serialVersionUID = -3329314904670932060L;
 
-	public Field theField;
+	public transient Field theField;
 
 	/**
 	 * Constructor.

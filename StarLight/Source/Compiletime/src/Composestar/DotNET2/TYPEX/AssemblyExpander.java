@@ -124,7 +124,8 @@ class AssemblyExpander
 	{
 		// File baseDir = new File(pathSettings.getPath("Composestar"),
 		// "CoreElements");
-		File baseDir = new File("C:\\CPS\\StarLight\\Source\\SigExpander\\bin\\Debug");
+		// File baseDir = new
+		// File("C:\\CPS\\StarLight\\Source\\SigExpander\\bin\\Debug");
 		File exe = new File(baseDir, "Composestar.StarLight.SigExpander.exe");
 
 		if (!exe.exists())

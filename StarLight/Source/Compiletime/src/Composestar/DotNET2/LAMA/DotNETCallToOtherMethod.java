@@ -10,15 +10,12 @@ import composestar.dotNET2.tym.entities.CallElement;
 
 public class DotNETCallToOtherMethod extends CallToOtherMethod
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3694886424068852601L;
 
 	/**
 	 * The corresponding callelement in the database
 	 */
-	private CallElement callElement;
+	private transient CallElement callElement;
 
 	/**
 	 * @return the callElement

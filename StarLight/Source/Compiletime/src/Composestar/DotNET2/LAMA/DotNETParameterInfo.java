@@ -33,20 +33,19 @@ import Composestar.Core.LAMA.UnitResult;
  */
 public class DotNETParameterInfo extends ParameterInfo
 {
-
 	private static final long serialVersionUID = -527486572514730318L;
 
-	private int HashCode;
+	private int dotNetHashCode;
 
-	public int Position;
+	public int position;
 
-	private boolean IsIn;
+	private boolean flagIsIn;
 
-	private boolean IsOptional;
+	private boolean flagIsOptional;
 
-	private boolean IsOut;
+	private boolean flagIsOut;
 
-	private boolean IsRetval;
+	private boolean flagIsRetval;
 
 	/**
 
@@ -61,7 +60,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public boolean isIn()
 	{
-		return IsIn;
+		return flagIsIn;
 	}
 
 	/**
@@ -69,7 +68,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public void setIsln(boolean isln)
 	{
-		IsIn = isln;
+		flagIsIn = isln;
 	}
 
 	/**
@@ -77,7 +76,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public boolean isOptional()
 	{
-		return IsOptional;
+		return flagIsOptional;
 	}
 
 	/**
@@ -85,7 +84,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public void setIsOptional(boolean isOptional)
 	{
-		IsOptional = isOptional;
+		flagIsOptional = isOptional;
 	}
 
 	/**
@@ -93,7 +92,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public boolean isOut()
 	{
-		return IsOut;
+		return flagIsOut;
 	}
 
 	/**
@@ -101,7 +100,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public void setIsOut(boolean isOut)
 	{
-		IsOut = isOut;
+		flagIsOut = isOut;
 	}
 
 	/**
@@ -109,7 +108,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public boolean isRetval()
 	{
-		return IsRetval;
+		return flagIsRetval;
 	}
 
 	/**
@@ -117,7 +116,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public void setIsRetVal(boolean isRetval)
 	{
-		IsRetval = isRetval;
+		flagIsRetval = isRetval;
 	}
 
 	/**
@@ -125,7 +124,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public int position()
 	{
-		return Position;
+		return position;
 	}
 
 	/**
@@ -133,7 +132,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public void setPosition(int pos)
 	{
-		Position = pos;
+		position = pos;
 	}
 
 	/**
@@ -141,7 +140,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public int getHashCode()
 	{
-		return HashCode;
+		return dotNetHashCode;
 	}
 
 	/**
@@ -149,7 +148,7 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	public void setHashCode(int code)
 	{
-		HashCode = code;
+		dotNetHashCode = code;
 	}
 
 	/** Stuff for LOLA * */
@@ -208,12 +207,12 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		HashCode = in.readInt();
-		Position = in.readInt();
-		IsIn = in.readBoolean();
-		IsOptional = in.readBoolean();
-		IsOut = in.readBoolean();
-		IsRetval = in.readBoolean();
+		dotNetHashCode = in.readInt();
+		position = in.readInt();
+		flagIsIn = in.readBoolean();
+		flagIsOptional = in.readBoolean();
+		flagIsOut = in.readBoolean();
+		flagIsRetval = in.readBoolean();
 	}
 
 	/**
@@ -221,11 +220,11 @@ public class DotNETParameterInfo extends ParameterInfo
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeInt(HashCode);
-		out.writeInt(Position);
-		out.writeBoolean(IsIn);
-		out.writeBoolean(IsOptional);
-		out.writeBoolean(IsOut);
-		out.writeBoolean(IsRetval);
+		out.writeInt(dotNetHashCode);
+		out.writeInt(position);
+		out.writeBoolean(flagIsIn);
+		out.writeBoolean(flagIsOptional);
+		out.writeBoolean(flagIsOut);
+		out.writeBoolean(flagIsRetval);
 	}
 }

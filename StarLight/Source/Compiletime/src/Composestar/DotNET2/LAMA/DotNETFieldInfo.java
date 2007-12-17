@@ -32,19 +32,18 @@ public class DotNETFieldInfo extends FieldInfo
 {
 	private static final long serialVersionUID = 235924601234730641L;
 
-	public int HashCode; // .NET hashcode
+	public int dotNetHashCode; // .NET hashcode
 
-	private boolean IsAssembly; // Visible on Assembly level?
+	private boolean flagIsAssembly; // Visible on Assembly level?
 
-	private boolean IsPrivate; // Private field?
+	private boolean flagIsPrivate; // Private field?
 
-	private boolean IsPublic; // Public field?
+	private boolean flagIsPublic; // Public field?
 
-	private boolean IsStatic; // Static field ('global')?
+	private boolean flagIsStatic; // Static field ('global')?
 
-	private boolean IsDeclaredHere; // Declared in this Type, or inherited from
-
-	// parent type?
+	// Declared in this Type, or inherited from parent type?
+	private boolean flagIsDeclaredHere;
 
 	public DotNETFieldInfo()
 	{
@@ -53,44 +52,44 @@ public class DotNETFieldInfo extends FieldInfo
 
 	public int getHashCode()
 	{
-		return HashCode;
+		return dotNetHashCode;
 	}
 
 	public void setHashCode(int hashcode)
 	{
-		HashCode = hashcode;
+		dotNetHashCode = hashcode;
 	}
 
 	public boolean isAssembly()
 	{
-		return IsAssembly;
+		return flagIsAssembly;
 	}
 
 	public void setIsAssembly(boolean isAssembly)
 	{
-		IsAssembly = isAssembly;
+		flagIsAssembly = isAssembly;
 	}
 
 	@Override
 	public boolean isPrivate()
 	{
-		return IsPrivate;
+		return flagIsPrivate;
 	}
 
 	public void setIsPrivate(boolean isPrivate)
 	{
-		IsPrivate = isPrivate;
+		flagIsPrivate = isPrivate;
 	}
 
 	@Override
 	public boolean isPublic()
 	{
-		return IsPublic;
+		return flagIsPublic;
 	}
 
 	public void setIsPublic(boolean isPublic)
 	{
-		IsPublic = isPublic;
+		flagIsPublic = isPublic;
 	}
 
 	@Override
@@ -101,22 +100,22 @@ public class DotNETFieldInfo extends FieldInfo
 
 	public boolean isStatic()
 	{
-		return IsStatic;
+		return flagIsStatic;
 	}
 
 	public void setIsStatic(boolean isStatic)
 	{
-		IsStatic = isStatic;
+		flagIsStatic = isStatic;
 	}
 
 	public boolean isDeclaredHere()
 	{
-		return IsDeclaredHere;
+		return flagIsDeclaredHere;
 	}
 
 	public void setIsDeclaredHere(boolean isDeclaredHere)
 	{
-		IsDeclaredHere = isDeclaredHere;
+		flagIsDeclaredHere = isDeclaredHere;
 	}
 
 	/** Stuff for LOLA* */
@@ -189,13 +188,13 @@ public class DotNETFieldInfo extends FieldInfo
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		HashCode = in.readInt();
-		IsAssembly = in.readBoolean();
+		dotNetHashCode = in.readInt();
+		flagIsAssembly = in.readBoolean();
 
-		IsPrivate = in.readBoolean();
-		IsPublic = in.readBoolean();
-		IsStatic = in.readBoolean();
-		IsDeclaredHere = in.readBoolean();
+		flagIsPrivate = in.readBoolean();
+		flagIsPublic = in.readBoolean();
+		flagIsStatic = in.readBoolean();
+		flagIsDeclaredHere = in.readBoolean();
 	}
 
 	/**
@@ -203,13 +202,13 @@ public class DotNETFieldInfo extends FieldInfo
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeInt(HashCode);
-		out.writeBoolean(IsAssembly);
+		out.writeInt(dotNetHashCode);
+		out.writeBoolean(flagIsAssembly);
 
-		out.writeBoolean(IsPrivate);
-		out.writeBoolean(IsPublic);
-		out.writeBoolean(IsStatic);
-		out.writeBoolean(IsDeclaredHere);
+		out.writeBoolean(flagIsPrivate);
+		out.writeBoolean(flagIsPublic);
+		out.writeBoolean(flagIsStatic);
+		out.writeBoolean(flagIsDeclaredHere);
 		out.writeObject(parent);
 	}
 }

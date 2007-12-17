@@ -78,8 +78,7 @@ public class StarLightMaster extends Master
 		File configFile = new File(configFilename);
 		if (!configFile.exists())
 		{
-			logger.error("Configuration file '" + configFilename + " not found!");
-			System.exit(ECONFIG);
+			throw new Exception("Configuration file '" + configFilename + " not found!");
 		}
 
 		logger.info("Using configuration file '" + configFilename + "'");
@@ -216,7 +215,7 @@ public class StarLightMaster extends Master
 	{
 		if (args.length == 0)
 		{
-			System.out.println("Usage: java -jar ComposestarDotNET.jar [options] <config file>");
+			System.out.println("Usage: java -jar StarLight.jar [options] <config file>");
 			return;
 		}
 		main(StarLightMaster.class, args);

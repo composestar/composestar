@@ -55,7 +55,7 @@ public class FilterCodeCompressor
 		else
 		{
 			// If it does not exist, generate id and add it to the map:
-			Integer newId = new Integer(generalizedIdMap.size());
+			Integer newId = Integer.valueOf(generalizedIdMap.size());
 			generalizedIdMap.put(eqFilterCode, newId);
 			return newId.intValue();
 		}
@@ -86,7 +86,7 @@ public class FilterCodeCompressor
 		return result;
 	}
 
-	private class EqualizedFilterCode
+	private static class EqualizedFilterCode
 	{
 		private FilterCode filterCode;
 
@@ -125,7 +125,7 @@ public class FilterCodeCompressor
 
 	}
 
-	private class EqualsVisitor implements Visitor
+	private static class EqualsVisitor implements Visitor
 	{
 		private Visitable currentCheckInstruction;
 
@@ -374,7 +374,7 @@ public class FilterCodeCompressor
 
 	}
 
-	private class HashCodeVisitor implements Visitor
+	private static class HashCodeVisitor implements Visitor
 	{
 		public HashCodeVisitor()
 		{}
@@ -468,7 +468,7 @@ public class FilterCodeCompressor
 		}
 	}
 
-	private class GeneralizeVisitor implements Visitor
+	private static class GeneralizeVisitor implements Visitor
 	{
 		private String selector;
 
