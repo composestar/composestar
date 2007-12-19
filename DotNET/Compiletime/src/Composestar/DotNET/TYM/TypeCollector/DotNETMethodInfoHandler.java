@@ -66,6 +66,7 @@ public class DotNETMethodInfoHandler extends DefaultHandler implements ContentHa
 		if ("ParameterInfo".equals(rawName))
 		{
 			DotNETParameterInfo paramInfo = new DotNETParameterInfo();
+			returnHandler.getRegister().registerLanguageUnit(paramInfo);
 			String fullName = atts.getValue("name");
 			if (fullName != null)
 			{

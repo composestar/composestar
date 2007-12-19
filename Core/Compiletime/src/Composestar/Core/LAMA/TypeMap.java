@@ -10,6 +10,7 @@
 package Composestar.Core.LAMA;
 
 import java.util.Collection;
+import java.util.Map;
 
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
@@ -29,12 +30,12 @@ public class TypeMap implements SerializableRepositoryEntity
 {
 	private static final long serialVersionUID = 3742264878434693439L;
 
-	private DataMap types;
+	private Map types;
 
 	private static TypeMap Instance;
 
 	/**
-	 * @roseuid 402CA342033C
+	 * 
 	 */
 	public TypeMap()
 	{
@@ -46,7 +47,6 @@ public class TypeMap implements SerializableRepositoryEntity
 	 * 
 	 * @param name Unique identifier of the type to add.
 	 * @param type
-	 * @roseuid 402CA2FF0154
 	 */
 	public void addType(String name, Type type)
 	{
@@ -58,7 +58,6 @@ public class TypeMap implements SerializableRepositoryEntity
 	 * 
 	 * @param name
 	 * @return The requested Type or null if it wasn't found.
-	 * @roseuid 402CA30E002A
 	 */
 	public Type getType(String name)
 	{
@@ -69,7 +68,6 @@ public class TypeMap implements SerializableRepositoryEntity
 	 * Retrieve the TypeMap instance
 	 * 
 	 * @return Composestar.Core.LAMA.TypeMap
-	 * @roseuid 402CA35A010F
 	 */
 	public static TypeMap instance()
 	{
@@ -82,7 +80,6 @@ public class TypeMap implements SerializableRepositoryEntity
 
 	/**
 	 * @return java.util.Collection
-	 * @roseuid 405AD19F032D
 	 */
 	public Collection values()
 	{
@@ -91,10 +88,9 @@ public class TypeMap implements SerializableRepositoryEntity
 
 	/**
 	 * @return java.util.HashMap
-	 * @roseuid 405AD1CB0396
 	 */
-	public java.util.HashMap map()
+	public Map map()
 	{
-		return types.toHashMap();
+		return types;
 	}
 }

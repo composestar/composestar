@@ -14,6 +14,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSe
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LOLA.AnnotationSuperImposition;
 import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
@@ -108,7 +109,13 @@ public class CLOLA extends LOLA
 			 */
 			INCRETimer unitindex = incre.getReporter().openProcess("LOLA", "Creation of unit index",
 					INCRETimer.TYPE_NORMAL);
-			createUnitIndex();
+			UnitRegister register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+			if (register == null)
+			{
+				register = new UnitRegister();
+				resources.put(UnitRegister.RESOURCE_KEY, register);
+			}
+			createUnitIndex(register);
 			unitindex.stop();
 			/*******************************************************************
 			 * Create a predSel here that will be evaluated from xml file Then

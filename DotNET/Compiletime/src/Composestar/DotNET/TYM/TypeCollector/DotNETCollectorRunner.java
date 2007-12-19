@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,8 +21,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
@@ -38,6 +37,8 @@ public class DotNETCollectorRunner implements CollectorRunner
 
 	private DataStore dataStore;
 
+	private UnitRegister register;
+
 	public DotNETCollectorRunner()
 	{
 		incre = INCRE.instance();
@@ -48,11 +49,17 @@ public class DotNETCollectorRunner implements CollectorRunner
 	{
 		try
 		{
+			register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+			if (register == null)
+			{
+				register = new UnitRegister();
+				resources.put(UnitRegister.RESOURCE_KEY, register);
+			}
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
 			XMLReader parser = saxParser.getXMLReader();
 
-			DocumentHandler handler = new DocumentHandler(parser);
+			DocumentHandler handler = new DocumentHandler(parser, register);
 			parser.setContentHandler(handler);
 			File typesXml = new File(resources.configuration().getProject().getIntermediate(), "types.xml");
 			parser.parse(new InputSource(new FileInputStream(typesXml)));
@@ -164,59 +171,6 @@ public class DotNETCollectorRunner implements CollectorRunner
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
 			dataStore.addObject(type.getFullName(), pc);
-		}
-
-		// add skipped types in case harvester was incremental
-		if (incre.isModuleInc("HARVESTER"))
-		{
-			// copy types from assemblies skipped by harvester
-			INCRETimer copytypes = incre.getReporter().openProcess("COLLECTOR", "Copying skipped types..",
-					INCRETimer.TYPE_INCREMENTAL);
-			this.copyOperation(resources);
-			copytypes.stop();
-		}
-	}
-
-	/**
-	 * Find all concerns harvested from unmodified assemblies Add those concerns
-	 * to the DataStore and TypeMap, and register all program elements
-	 */
-	public void copyOperation(CommonResources resources)
-	{
-		TypeMap map = TypeMap.instance();
-
-		List skippedAssemblies = (List) resources.get("skippedAssemblies");
-		Iterator asmItr = skippedAssemblies.iterator();
-		while (asmItr.hasNext())
-		{
-			String asm = (String) asmItr.next();
-			Iterator objects = incre.history.getDataStore().getAllInstancesOf(PrimitiveConcern.class);
-			while (objects.hasNext())
-			{
-				PrimitiveConcern pc = (PrimitiveConcern) objects.next();
-				DotNETType type = (DotNETType) pc.getPlatformRepresentation();
-
-				if (type.fromDLL.equals(asm))
-				{
-					// make a clone and add to datastore
-					PrimitiveConcern pcclone;
-					try
-					{
-						pcclone = (PrimitiveConcern) pc.clone();
-					}
-					catch (CloneNotSupportedException e)
-					{
-						pcclone = pc;
-					}
-
-					type.setParentConcern(pcclone);
-					dataStore.addObject(type.getFullName(), pcclone);
-
-					// also add the type to the type map
-					type.reset(); // reset hashsets of type and register
-					map.addType(type.getFullName(), type);
-				}
-			}
 		}
 	}
 }

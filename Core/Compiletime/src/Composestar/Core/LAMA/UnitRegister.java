@@ -9,10 +9,9 @@
  */
 package Composestar.Core.LAMA;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 //
 // !! Compose* Runtime Warning !!
@@ -26,16 +25,20 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
  * because the Runtime only needs this part; not the entire dictionary. Created
  * on Nov 3, 2004 by wilke
  */
-public class UnitRegister implements SerializableRepositoryEntity
+public class UnitRegister implements Serializable
 {
-	private static final long serialVersionUID = 6093032955062774862L;
+	private static final long serialVersionUID = 9098646852116014L;
+
+	public static final String RESOURCE_KEY = "UnitRegister";
 
 	// Contains the set of program elements, before they are processed by
 	// UnitDictionary.processLanguageUnits
-	private Set registeredUnits;
+	private Set<ProgramElement> registeredUnits;
 
+	@Deprecated
 	private static UnitRegister instance;
 
+	@Deprecated
 	public static UnitRegister instance()
 	{
 		if (instance == null)
@@ -50,7 +53,7 @@ public class UnitRegister implements SerializableRepositoryEntity
 	 */
 	public UnitRegister()
 	{
-		registeredUnits = new HashSet();
+		registeredUnits = new HashSet<ProgramElement>();
 	}
 
 	/**
@@ -76,7 +79,7 @@ public class UnitRegister implements SerializableRepositoryEntity
 	/**
 	 * @return Returns the registeredUnits.
 	 */
-	public Set getRegisteredUnits()
+	public Set<ProgramElement> getRegisteredUnits()
 	{
 		return registeredUnits;
 	}

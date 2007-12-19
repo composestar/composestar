@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import Composestar.Core.LAMA.FieldInfo;
-import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
 
 public class CVariable extends FieldInfo
@@ -42,9 +41,7 @@ public class CVariable extends FieldInfo
 	private int arrayLevel;
 
 	public CVariable()
-	{
-		UnitRegister.instance().registerLanguageUnit(this);
-	}
+	{}
 
 	public int getHashCode()
 	{

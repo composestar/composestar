@@ -26,6 +26,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.REXREF.DoResolve;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -41,6 +42,8 @@ public class Main extends DefaultHandler implements CTCommonModule
 
 	private List<String> modules = new ArrayList<String>();
 
+	private UnitRegister register;
+
 	/**
 	 * Constructor
 	 */
@@ -54,6 +57,13 @@ public class Main extends DefaultHandler implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
+		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+		if (register == null)
+		{
+			register = new UnitRegister();
+			resources.put(UnitRegister.RESOURCE_KEY, register);
+		}
+
 		File concernXml = new File(resources.configuration().getProject().getBase(), "CConcern.xml");
 		if (concernXml.exists())
 		{
@@ -89,6 +99,7 @@ public class Main extends DefaultHandler implements CTCommonModule
 						/** create concern and add to repository * */
 						PrimitiveConcern pconcern = new PrimitiveConcern();
 						CFile type = new CFile();
+						register.registerLanguageUnit(type);
 						pconcern.setName(module);
 						type.setName(module);
 						type.setFullName(module);

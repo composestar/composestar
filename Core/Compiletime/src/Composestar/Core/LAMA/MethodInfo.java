@@ -43,21 +43,12 @@ public abstract class MethodInfo extends ProgramElement
 
 	private HashSet resourceUsage;
 
-	public MethodInfo()
-	{
-		this(false);
-	}
-
 	/**
 	 * @param dummy if true don't register this language unit, should be used
 	 *            when temporary clones are needed
 	 */
-	public MethodInfo(boolean dummy)
+	public MethodInfo()
 	{
-		if (!dummy)
-		{
-			UnitRegister.instance().registerLanguageUnit(this);
-		}
 		parameters = new ArrayList();
 		callsToOtherMethods = new HashSet();
 		reifiedMessageBehavior = new HashSet();

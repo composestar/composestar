@@ -38,7 +38,6 @@ public abstract class Type extends ProgramElement
 
 	public Type()
 	{
-		UnitRegister.instance().registerLanguageUnit(this);
 		methods = new ArrayList();
 		fields = new ArrayList();
 	}

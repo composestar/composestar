@@ -30,7 +30,6 @@ import java.util.Vector;
  * the CommonResources.
  * 
  * @author Tom Staijen
- * @version 0.9.0
  */
 public class LegacyDataMap extends DataMap
 {

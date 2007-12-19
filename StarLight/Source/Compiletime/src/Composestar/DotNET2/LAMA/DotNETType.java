@@ -26,7 +26,6 @@ import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
-import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
 
 /**
@@ -641,47 +640,6 @@ public class DotNETType extends Type
 			result.add("public");
 		}
 		return result;
-	}
-
-	public void reset()
-	{
-		childTypes = new HashSet<ProgramElement>();
-		parameterTypes = new HashSet<ProgramElement>();
-		methodReturnTypes = new HashSet<ProgramElement>();
-		fieldTypes = new HashSet<ProgramElement>();
-		implementedBy = new HashSet<ProgramElement>();
-		UnitRegister.instance().registerLanguageUnit(this);
-
-		// register fields
-		Iterator<DotNETFieldInfo> fiter = fields.iterator();
-		while (fiter.hasNext())
-		{
-			DotNETFieldInfo field = fiter.next();
-			if (null != field)
-			{
-				UnitRegister.instance().registerLanguageUnit(field);
-			}
-		}
-
-		// register methods and its parameters
-		Iterator<DotNETMethodInfo> miter = methods.iterator();
-		while (miter.hasNext())
-		{
-			DotNETMethodInfo method = miter.next();
-			if (null != method)
-			{
-				UnitRegister.instance().registerLanguageUnit(method);
-				Iterator<DotNETParameterInfo> piter = method.getParameters().iterator();
-				while (piter.hasNext())
-				{
-					DotNETParameterInfo param = piter.next();
-					if (null != param)
-					{
-						UnitRegister.instance().registerLanguageUnit(param);
-					}
-				}
-			}
-		}
 	}
 
 	/**

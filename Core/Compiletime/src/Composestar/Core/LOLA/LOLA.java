@@ -164,7 +164,7 @@ public abstract class LOLA implements CTCommonModule
 	 * 
 	 * @throws ModuleException
 	 */
-	public void createUnitIndex() throws ModuleException
+	public void createUnitIndex(UnitRegister register) throws ModuleException
 	{
 		/* Create a fast index to the language units */
 		/*
@@ -181,7 +181,7 @@ public abstract class LOLA implements CTCommonModule
 		 * include all this info. Therefore we use this kind of ugly
 		 * UnitRegister thing where units register themselves.
 		 */
-		Set<ProgramElement> registeredUnits = UnitRegister.instance().getRegisteredUnits();
+		Set<ProgramElement> registeredUnits = register.getRegisteredUnits();
 		logger.debug("Useless information: " + registeredUnits.size() + " language units have been registered.");
 
 		/*
@@ -259,7 +259,13 @@ public abstract class LOLA implements CTCommonModule
 			 */
 			INCRETimer unitindex = incre.getReporter().openProcess(MODULE_NAME, "Creation of unit index",
 					INCRETimer.TYPE_NORMAL);
-			createUnitIndex();
+			UnitRegister register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+			if (register == null)
+			{
+				register = new UnitRegister();
+				resources.put(UnitRegister.RESOURCE_KEY, register);
+			}
+			createUnitIndex(register);
 			unitindex.stop();
 
 			// Init.standardTop(); // Enable this line if you want to debug the

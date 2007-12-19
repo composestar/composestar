@@ -17,7 +17,6 @@ import java.util.Vector;
  * serialized by CONE-XML.
  * 
  * @author Tom Staijen
- * @version 0.9.0
  */
 public class DataMapImpl extends DataMap
 {
@@ -41,76 +40,91 @@ public class DataMapImpl extends DataMap
 		}
 	}
 
+	@Override
 	public void clear()
 	{
 		map = new HashMap<Object, Object>();
 	}
 
+	@Override
 	public boolean containsKey(Object key)
 	{
 		return map.containsKey(key);
 	}
 
+	@Override
 	public boolean containsValue(Object value)
 	{
 		return map.containsValue(value);
 	}
 
+	@Override
 	public Set entrySet()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean equals(Object arg0)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Object get(Object key)
 	{
 		return map.get(key);
 	}
 
+	@Override
 	public int hashCode()
 	{
 		return map.hashCode();
 	}
 
+	@Override
 	public boolean isEmpty()
 	{
 		return map.isEmpty();
 	}
 
+	@Override
 	public Set keySet()
 	{
 		return map.keySet();
 	}
 
+	@Override
 	public Object put(Object key, Object value)
 	{
 		return map.put(key, value);
 	}
 
+	@Override
 	public void putAll(Map map)
 	{
 		this.map.putAll(map);
 	}
 
+	@Override
 	public Object remove(Object key)
 	{
 		return map.remove(key);
 	}
 
+	@Override
 	public int size()
 	{
 		return map.size();
 	}
 
+	@Override
 	public Collection<Object> values()
 	{
 		return map.values();
 	}
 
+	@Override
 	public void excludeUnreferenced(Class c)
 	{
 		// CPSLogger logger = CPSLogger.getCPSLogger("datamap");
@@ -139,6 +153,7 @@ public class DataMapImpl extends DataMap
 	// return (m_keys + " == " + m_values);
 	// }
 
+	@Override
 	public Object clone() throws CloneNotSupportedException
 	{
 		/*
@@ -165,6 +180,7 @@ public class DataMapImpl extends DataMap
 	/**
 	 * For converting
 	 */
+	@Override
 	public HashMap toHashMap()
 	{
 		return map;

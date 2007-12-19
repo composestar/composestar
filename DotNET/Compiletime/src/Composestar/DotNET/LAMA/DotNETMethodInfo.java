@@ -73,18 +73,13 @@ public class DotNETMethodInfo extends MethodInfo
 	{
 		super();
 	}
-	
-	public DotNETMethodInfo(boolean dummy)
-	{
-		super(dummy);
-	}
 
 	// add clone: currently used to support selector name conversion
 	// copy only stuff that applies to a method signature, this excludes e.g.
 	// the parent
 	public MethodInfo getClone(String n, Type actualParent)
 	{
-		DotNETMethodInfo mi = new DotNETMethodInfo(true);
+		DotNETMethodInfo mi = new DotNETMethodInfo();
 		mi.setName(n);
 		// set MethodInfo variables
 		// mi.Parent = this.Parent;
@@ -308,7 +303,7 @@ public class DotNETMethodInfo extends MethodInfo
 	{
 		IsPublic = isPublic;
 	}
-	
+
 	public boolean isProtected()
 	{
 		// "family" means protected in .NET

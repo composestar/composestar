@@ -17,6 +17,7 @@ import Composestar.C.wrapper.parsing.GnuCTreeParser;
 import Composestar.C.wrapper.parsing.PreprocessorInfoChannel;
 import Composestar.C.wrapper.parsing.TNode;
 import Composestar.C.wrapper.parsing.WrappedAST;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Debug;
 import antlr.CommonAST;
@@ -64,7 +65,7 @@ public class retrieveAST
 	private static HashMap usedTypes = null;
 
 	public WrappedAST createWrappedAST(String filename, String objectname, String namespace, HashMap usedType,
-			CFile cf, CWrapper t) throws FileNotFoundException
+			CFile cf, CWrapper t, UnitRegister register) throws FileNotFoundException
 	{
 		allNodes = new Vector();
 		setFunctions(new Vector());
@@ -80,7 +81,7 @@ public class retrieveAST
 		{
 			Debug.out(Debug.MODE_INFORMATION, "Wrapper", filename);
 			DataInputStream input = new DataInputStream(new FileInputStream(filename));
-			initialization(input);
+			initialization(input, register);
 			fillAllNodes();
 
 			setWrappedAST(new WrappedAST(node, infoChannel, allNodes, getFunctions(), commentKeepers,
@@ -100,7 +101,7 @@ public class retrieveAST
 		return null;
 	}
 
-	private void initialization(DataInputStream input)
+	private void initialization(DataInputStream input, UnitRegister register)
 	{
 		lexer = new GnuCLexer(input);
 		lexer.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
@@ -117,6 +118,7 @@ public class retrieveAST
 			parser.translationUnit();
 
 			GnuCTreeParser treeparser = new GnuCTreeParser();
+			treeparser.setRegister(register);
 			treeparser.setUsedTypes(usedTypes);
 			treeparser.setCFile(cf);
 			treeparser.setFilename(objectname);

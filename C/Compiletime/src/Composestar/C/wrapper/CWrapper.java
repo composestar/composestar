@@ -49,6 +49,7 @@ import Composestar.C.wrapper.parsing.AttributeWriter;
 import Composestar.C.wrapper.parsing.WrappedAST;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.LangNamespace;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -85,8 +86,17 @@ public class CWrapper implements CTCommonModule
 
 	private static HashMap usedTypes = null;
 
+	private UnitRegister register;
+
 	public void run(CommonResources resources) throws ModuleException
 	{
+		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+		if (register == null)
+		{
+			register = new UnitRegister();
+			resources.put(UnitRegister.RESOURCE_KEY, register);
+		}
+
 		filename = resources.configuration().getProject().getBase();
 		tempFolder = filename;
 		/***********************************************************************
@@ -151,7 +161,8 @@ public class CWrapper implements CTCommonModule
 
 				setObjectName(fn, resources);
 				setNameSpace(fn, resources);
-				wrapper.createWrappedAST(fn, objectname, namespace, usedTypes, cf, this);
+
+				wrapper.createWrappedAST(fn, objectname, namespace, usedTypes, cf, this, register);
 				fileASTMap.put(fn, wrapper);
 				FileMap.instance().addFileAST(fn, wrapper);// createWrappedAST(filename,
 				// objectname,
@@ -193,6 +204,7 @@ public class CWrapper implements CTCommonModule
 			if (children.length > 0)
 			{
 				cdir = new CDirectory();
+				register.registerLanguageUnit(cdir);
 				cdir.setDirName(dir.getName());
 				// System.out.println("Added directory"+dir.getName());
 				if (cdirectory != null)
@@ -216,6 +228,7 @@ public class CWrapper implements CTCommonModule
 		else
 		{
 			CFile cf = new CFile();
+			register.registerLanguageUnit(cf);
 			cf.setName(dir.getName().substring(0, dir.getName().indexOf(".ccc")));
 			if (cdirectory != null)
 			{
@@ -310,7 +323,7 @@ public class CWrapper implements CTCommonModule
 		objectname = resources.configuration().getProject().getBase().toString();
 		objectname = objectname.replace('/', '\\');
 		objectname = filename.substring(objectname.length() + 1); // because
-																	// there
+		// there
 		// is no
 		// trailing
 		// slash

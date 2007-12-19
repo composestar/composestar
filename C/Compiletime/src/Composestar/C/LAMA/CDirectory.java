@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import Composestar.Core.LAMA.LangNamespace;
-import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
 
 public class CDirectory extends LangNamespace
@@ -25,9 +24,7 @@ public class CDirectory extends LangNamespace
 	private ArrayList files = new ArrayList();
 
 	public CDirectory()
-	{
-		UnitRegister.instance().registerLanguageUnit(this);
-	}
+	{}
 
 	public void setDirName(String dirName)
 	{

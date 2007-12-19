@@ -106,6 +106,7 @@ options
             	protected int array = 0;
             	protected int returnTypePointerLevel=0;
         	protected int returnTypeArrayLevel=0;
+        	private UnitRegister register;
 		
 		public String getFilename()
 		{
@@ -116,6 +117,11 @@ options
 		{
 			this.filename = filename;
 			
+		}
+		
+		public void setRegister(UnitRegister value)
+		{
+			register = value;
 		}
 		
 		public void setCFile(CFile cf){
@@ -308,6 +314,7 @@ options
         	if(!usedTypes.containsValue(typeName)){
                 		usedTypes.put(typeName,typeName);
                 		CType usedType = new CType(typeName);
+                		register.registerLanguageUnit(usedType);
                 		//usedType.setName(typeName);
                 		//usedType.setFullName(typeName);
                 		PrimitiveConcern pcType = new PrimitiveConcern();
@@ -456,6 +463,7 @@ options
         	while(it.hasNext()){
         		Variable var= (Variable)it.next();
         		CVariable cvar=new CVariable();
+        		register.registerLanguageUnit(cvar);
         		cvar.setName(var.name());
         		cvar.setParent(file);
         		cvar.setIsStatic(var.isStatic());
@@ -886,6 +894,7 @@ parameterDeclaration
                		addBasicType(type);
                		                			
                		CParameterInfo parameter = new CParameterInfo();
+               		register.registerLanguageUnit(parameter);
                		parameter.setName(declName);
                		parameter.setParameterType(type);
                		parameterList.add(parameter);   
@@ -949,6 +958,7 @@ functionDef
             	//function.setParent(file);
             		
                 CMethodInfo method= new CMethodInfo();
+                register.registerLanguageUnit(method);
 		method.setReturnType(returnType);
 		method.setName(f.getName());
 		method.setParent((Type)file);

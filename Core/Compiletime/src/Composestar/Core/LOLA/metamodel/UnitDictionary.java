@@ -98,11 +98,10 @@ public class UnitDictionary
 			if (!unitsByName.containsKey(type)) // Might be the first unit of
 			// this type
 			{
-				unitsByName.put(type, new HashMap<String, Object>()); // If
-				// yes,
-				// create
-				// the
-				// table for this type
+				/*
+				 * If yes, create the table for this type
+				 */
+				unitsByName.put(type, new HashMap<String, Object>());
 			}
 
 			Map<String, Object> nameTypeTable = unitsByName.get(type);

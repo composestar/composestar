@@ -16,9 +16,7 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.xmlbeans.XmlException;
 
-import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.Exception.ModuleException;
@@ -29,6 +27,7 @@ import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -76,9 +75,17 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 	private CommonResources resources;
 
+	private UnitRegister register;
+
 	public void run(CommonResources resc) throws ModuleException
 	{
 		resources = resc;
+		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+		if (register == null)
+		{
+			register = new UnitRegister();
+			resources.put(UnitRegister.RESOURCE_KEY, register);
+		}
 		configContainer = (ConfigurationContainer) resources.get(StarLightMaster.RESOURCE_CONFIGCONTAINER);
 
 		// Collect filtertypes and filteractions
@@ -175,58 +182,11 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 			logger.debug("Processing assembly '" + assemblyName + "'...");
 
-			if (incre.isProcessedByModule(ac, MODULE_NAME))
-			{
-				INCRETimer copyTimer = incre.getReporter().openProcess(MODULE_NAME, assemblyName,
-						INCRETimer.TYPE_INCREMENTAL);
+			INCRETimer runTimer = incre.getReporter().openProcess(MODULE_NAME, assemblyName, INCRETimer.TYPE_NORMAL);
 
-				copyAssemblies(assemblyName);
-				copyTimer.stop();
-			}
-			else
-			{
-				INCRETimer runTimer = incre.getReporter()
-						.openProcess(MODULE_NAME, assemblyName, INCRETimer.TYPE_NORMAL);
-
-				collectAssembly(ac);
-				runTimer.stop();
-			}
+			collectAssembly(ac);
+			runTimer.stop();
 		}
-	}
-
-	private void copyAssemblies(String assemblyName) throws ModuleException
-	{
-		logger.debug("Restoring type information for assembly '" + assemblyName + "'");
-
-		// collect and iterate over all objects from previous compilation runs
-
-		int typecount = 0;
-		for (Object obj : incre.history.getDataStore().getObjects())
-		{
-			// Only restore PrimitiveConcerns and CpsConcerns
-			if (obj instanceof PrimitiveConcern || obj instanceof CpsConcern)
-			{
-				Concern c = (Concern) obj;
-
-				// Get the .NET platform representation for this concern
-				DotNETType t = (DotNETType) c.getPlatformRepresentation();
-
-				// Add to datastore if type belongs to the assembly we are
-				// restoring
-				if (t != null && assemblyName.equals(t.assemblyName()))
-				{
-					// Register the type with LAMA
-					t.setParentConcern(null);
-					Composestar.Core.LAMA.UnitRegister.instance().registerLanguageUnit(t);
-
-					// Add the type to the TypeMap
-					TypeMap.instance().addType(t.getFullName(), t);
-					typecount++;
-				}
-			}
-		}
-
-		logger.debug(typecount + " types restored");
 	}
 
 	private void collectAssembly(AssemblyConfig assembly) throws ModuleException
@@ -360,6 +320,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			{
 				// Create a new DotNETType element
 				DotNETType attributeType = new DotNETType();
+				register.registerLanguageUnit(attributeType);
 				attributeType.setFullName(annotation.getTypeName());
 
 				// Add this attribute type to the repository as a primitive
@@ -396,6 +357,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			// logger.debug("Processing type '" + fullName + "'...");
 
 			DotNETType dnt = new DotNETType();
+			register.registerLanguageUnit(dnt);
 			dnt.setName(te.getName());
 			dnt.setNamespace(te.getNamespace());
 			dnt.setFullName(fullName);
@@ -486,6 +448,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			// "'...");
 
 			DotNETFieldInfo field = new DotNETFieldInfo();
+			register.registerLanguageUnit(field);
 			field.setIsDeclaredHere(true);
 			field.setName(storedField.getName());
 			field.setFieldType(storedField.getType());
@@ -519,6 +482,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			}
 
 			DotNETMethodInfo method = new DotNETMethodInfo();
+			register.registerLanguageUnit(method);
 			method.setIsDeclaredHere(true);
 			method.setName(storedMethod.getName());
 			method.setReturnType(storedMethod.getReturnType());
@@ -569,6 +533,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			}
 
 			DotNETParameterInfo parameter = new DotNETParameterInfo();
+			register.registerLanguageUnit(parameter);
 			parameter.setName(name);
 			parameter.setPosition(storedParameter.getOrdinal());
 			parameter.setParameterType(storedParameter.getType());

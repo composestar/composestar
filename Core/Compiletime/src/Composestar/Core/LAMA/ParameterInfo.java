@@ -31,9 +31,7 @@ public abstract class ParameterInfo extends ProgramElement
 	public MethodInfo parent;
 
 	public ParameterInfo()
-	{
-		UnitRegister.instance().registerLanguageUnit(this);
-	}
+	{}
 
 	/**
 	 * @return java.lang.String

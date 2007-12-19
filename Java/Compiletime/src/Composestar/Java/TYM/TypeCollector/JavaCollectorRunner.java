@@ -19,6 +19,7 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
@@ -40,6 +41,8 @@ public class JavaCollectorRunner implements CollectorRunner
 
 	protected Map<String, Class<?>> processedTypes;
 
+	private UnitRegister register;
+
 	/**
 	 * Default Constructor.
 	 */
@@ -56,6 +59,12 @@ public class JavaCollectorRunner implements CollectorRunner
 	{
 		try
 		{
+			register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+			if (register == null)
+			{
+				register = new UnitRegister();
+				resources.put(UnitRegister.RESOURCE_KEY, register);
+			}
 			// iterate over classes
 			Collection<Class<?>> classes = (Collection<Class<?>>) resources.get(JavaHarvestRunner.CLASS_MAP);
 			for (Class<?> c : classes)
@@ -183,6 +192,7 @@ public class JavaCollectorRunner implements CollectorRunner
 
 		TypeMap map = TypeMap.instance();
 		JavaType jtype = new JavaType(c);
+		register.registerLanguageUnit(jtype);
 		jtype.setFullName(c.getName());
 
 		map.addType(jtype.getFullName(), jtype);
@@ -246,6 +256,7 @@ public class JavaCollectorRunner implements CollectorRunner
 	private MethodInfo processMethodInfo(Method m) throws Throwable
 	{
 		JavaMethodInfo jmethod = new JavaMethodInfo(m);
+		register.registerLanguageUnit(jmethod);
 		jmethod.setName(m.getName());
 		jmethod.setReturnType(m.getReturnType().getName());
 		addPendingType(m.getReturnType().getName(), m.getReturnType());
@@ -269,6 +280,7 @@ public class JavaCollectorRunner implements CollectorRunner
 	{
 
 		JavaFieldInfo jfield = new JavaFieldInfo(f);
+		register.registerLanguageUnit(jfield);
 		jfield.setName(f.getName());
 		jfield.setFieldType(f.getType().getName());
 		addPendingType(f.getType().getName(), f.getType());
@@ -285,6 +297,7 @@ public class JavaCollectorRunner implements CollectorRunner
 	{
 
 		JavaParameterInfo jparameter = new JavaParameterInfo(p);
+		register.registerLanguageUnit(jparameter);
 		jparameter.setName("");
 		jparameter.setParameterType(p.getName());
 		addPendingType(p.getName(), p);

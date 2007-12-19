@@ -18,7 +18,6 @@ import java.util.HashSet;
 
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
-import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
 
 public class CParameterInfo extends ParameterInfo
@@ -39,9 +38,7 @@ public class CParameterInfo extends ParameterInfo
 
 	 */
 	public CParameterInfo()
-	{
-		UnitRegister.instance().registerLanguageUnit(this);
-	}
+	{}
 
 	// public CType parameterType()
 	// {

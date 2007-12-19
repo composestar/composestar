@@ -23,16 +23,11 @@ public class DotNETHarvestRunner implements HarvestRunner
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
-	private List<String> skippedAssemblies;
-
 	public DotNETHarvestRunner()
-	{
-		skippedAssemblies = new ArrayList<String>();
-	}
+	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		resources.add("skippedAssemblies", skippedAssemblies);
 		File dummies = (File) resources.get(DotNETCompiler.DUMMY_ASSEMBLY);
 
 		if (dummies == null)

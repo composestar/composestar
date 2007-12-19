@@ -32,9 +32,7 @@ public abstract class FieldInfo extends ProgramElement
 	private Type fieldType;
 
 	public FieldInfo()
-	{
-		UnitRegister.instance().registerLanguageUnit(this);
-	}
+	{}
 
 	public String getName()
 	{

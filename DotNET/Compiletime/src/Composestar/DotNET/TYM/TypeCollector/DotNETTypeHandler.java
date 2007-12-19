@@ -18,6 +18,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.DotNET.LAMA.DotNETFieldInfo;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETModule;
@@ -49,6 +50,11 @@ public class DotNETTypeHandler extends DefaultHandler implements ContentHandler
 		type = theType;
 	}
 
+	public UnitRegister getRegister()
+	{
+		return returnHandler.getRegister();
+	}
+
 	/**
 	 * @param namespaceURI
 	 * @param localName
@@ -64,6 +70,7 @@ public class DotNETTypeHandler extends DefaultHandler implements ContentHandler
 		if ("MethodInfo".equals(rawName))
 		{
 			DotNETMethodInfo methodInfo = new DotNETMethodInfo();
+			returnHandler.getRegister().registerLanguageUnit(methodInfo);
 			String fullName = atts.getValue("name");
 			if (fullName != null)
 			{
@@ -82,6 +89,7 @@ public class DotNETTypeHandler extends DefaultHandler implements ContentHandler
 		else if ("FieldInfo".equals(rawName))
 		{
 			DotNETFieldInfo fieldInfo = new DotNETFieldInfo();
+			returnHandler.getRegister().registerLanguageUnit(fieldInfo);
 			String fullName = atts.getValue("name");
 			if (fullName != null)
 			{

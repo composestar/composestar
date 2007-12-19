@@ -24,7 +24,6 @@
 
 package Composestar.Core.LOLA.connector;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -337,7 +336,7 @@ public class PredicateSelectorInterpreter
 			}
 			else if (obj instanceof CpsConcern)
 			{
-				HashMap<String, Type> typeMap = TypeMap.instance().map();
+				Map<String, Type> typeMap = TypeMap.instance().map();
 				CpsConcern concern = (CpsConcern) obj;
 				Object impl = concern.getImplementation();
 				String className = "";

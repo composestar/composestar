@@ -21,6 +21,7 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.DotNET.LAMA.DotNETType;
 
 /**
@@ -32,9 +33,17 @@ public class DocumentHandler extends DefaultHandler implements ContentHandler
 
 	private XMLReader xr;
 
-	public DocumentHandler(XMLReader parser)
+	private UnitRegister register;
+
+	public DocumentHandler(XMLReader parser, UnitRegister reg)
 	{
 		xr = parser;
+		register = reg;
+	}
+
+	public UnitRegister getRegister()
+	{
+		return register;
 	}
 
 	public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
@@ -49,6 +58,7 @@ public class DocumentHandler extends DefaultHandler implements ContentHandler
 		{
 			// create new TypeHandler and install it
 			DotNETType type = new DotNETType();
+			register.registerLanguageUnit(type);
 			String fullName = atts.getValue("name");
 			if (fullName != null)
 			{
@@ -88,7 +98,7 @@ public class DocumentHandler extends DefaultHandler implements ContentHandler
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
 			XMLReader parser = saxParser.getXMLReader();
-			DocumentHandler handler = new DocumentHandler(parser);
+			DocumentHandler handler = new DocumentHandler(parser, new UnitRegister());
 			parser.setContentHandler(handler);
 			parser.parse(new InputSource("types.xml"));
 		}

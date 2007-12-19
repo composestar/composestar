@@ -9,7 +9,6 @@ import java.util.Iterator;
 
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
-import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
 
 public class CType extends Type
@@ -33,7 +32,6 @@ public class CType extends Type
 
 	public CType(String name)
 	{
-		UnitRegister.instance().registerLanguageUnit(this);
 		this.name = name;
 		fullName = name;
 	}
