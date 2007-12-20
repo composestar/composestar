@@ -89,11 +89,11 @@ public abstract class Master
 	 */
 	protected File platformConfiguration;
 
-	protected int debugOverride = -1;
-
 	protected Map<String, String> settingsOverride;
 
 	protected CommonResources resources;
+
+	protected boolean debugOverride;
 
 	public Master()
 	{
@@ -152,6 +152,7 @@ public abstract class Master
 		{
 			setLogLevel(logLevel);
 			logger.info("Log4j level override from environment");
+			debugOverride = true;
 		}
 	}
 
@@ -229,6 +230,7 @@ public abstract class Master
 			if (arg.startsWith("-d"))
 			{
 				setLogLevel(arg.substring(2));
+				debugOverride = true;
 			}
 			else if (arg.startsWith("-t"))
 			{
@@ -403,7 +405,10 @@ public abstract class Master
 		BuildConfig config = BuildConfigHandler.loadBuildConfig(configFile);
 		resources.setConfiguration(config);
 		resources.setPathResolver(getPathResolver());
-		setLogLevel(config.getSetting("buildDebugLevel"));
+		if (!debugOverride)
+		{
+			setLogLevel(config.getSetting("buildDebugLevel"));
+		}
 		ModuleInfoManager.getInstance().setBuildConfig(config);
 
 		for (Entry<String, String> override : settingsOverride.entrySet())

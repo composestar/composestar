@@ -16,16 +16,17 @@ public class GlobalObjectManager
 	 */
 	public static Object getObjectManagerFor(Object key)
 	{
+		String hc = key.getClass().getName() + "@" + System.identityHashCode(key);
 		if (Debug.SHOULD_DEBUG)
 		{
-			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Getting object with key '" + key.hashCode() + "'.");
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Getting object with key '" + hc + "'.");
 		}
 		// if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Currently
 		// " + objectmanagers.size() + " objectmanager(s) allocated.");
 		// if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Getting
 		// objectmanager with key " + key.GetHashCode() + " (" + key.getClass()
 		// + " | " + key.getClass().get_Namespace().startsWith("java.") + ").");
-		return objectmanagers.get(new Integer(key.hashCode()));
+		return objectmanagers.get(hc);
 	}
 
 	public static Enumeration getEnumerator()
@@ -40,20 +41,25 @@ public class GlobalObjectManager
 	 */
 	public static void setObjectManagerFor(Object key, Object obj)
 	{
+		if (key == null)
+		{
+			return;
+		}
 		// Do not store the object managers for framework classes
 		if ((key.getClass() == null) || // Fixed crash: namespace can be null
 				// (when class is in default namespace)!
 				(!(key.getClass().getName().startsWith("java.") || key.getClass().getName().startsWith("System."))))
 		{
+			String hc = key.getClass().getName() + "@" + System.identityHashCode(key);
 			if (Debug.SHOULD_DEBUG)
 			{
-				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Storing '" + obj + "' with key '" + key.hashCode() + "'.");
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Storing '" + obj + "' with key '" + hc + "'.");
 			}
 			// if(Debug.SHOULD_DEBUG)
 			// Debug.out(Debug.MODE_DEBUG,"FLIRT","Storing objectmanager for
 			// object '" + ((ObjectManager)obj).theObject + "' with key '" +
 			// key.GetHashCode() + " (" + key + ")'.");
-			objectmanagers.put(new Integer(key.hashCode()), obj);
+			objectmanagers.put(hc, obj);
 			// if(Debug.SHOULD_DEBUG)
 			// Debug.out(Debug.MODE_DEBUG,"FLIRT","Currently " +
 			// objectmanagers.size() + " objectmanager(s) have been

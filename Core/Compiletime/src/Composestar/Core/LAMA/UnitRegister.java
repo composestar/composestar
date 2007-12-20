@@ -9,7 +9,6 @@
  */
 package Composestar.Core.LAMA;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,21 +21,19 @@ import java.util.Set;
  * datastore repository, therefor all fields are set to be transient (it can
  * cause problems when serializing the compile history).
  */
-public class UnitRegister implements Serializable
+public class UnitRegister
 {
-	private static final long serialVersionUID = 9098646852116014L;
-
 	public static final String RESOURCE_KEY = "LAMA.UnitRegister";
 
 	/**
 	 * Contains the set of program elements, before they are processed by
 	 * UnitDictionary.processLanguageUnits
 	 */
-	private transient Set<ProgramElement> registeredUnits = new HashSet<ProgramElement>();
+	private Set<ProgramElement> registeredUnits = new HashSet<ProgramElement>();
 
-	private transient Set<Type> pendingReg = new HashSet<Type>();
+	private Set<Type> pendingReg = new HashSet<Type>();
 
-	private transient Map<String, Type> typeMap = new HashMap<String, Type>();
+	private Map<String, Type> typeMap = new HashMap<String, Type>();
 
 	/**
 	 * Creates a new UnitRegister.

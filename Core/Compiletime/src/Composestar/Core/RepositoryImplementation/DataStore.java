@@ -189,10 +189,7 @@ public class DataStore implements Serializable, Cloneable
 		}
 		else
 		{
-			// FIXME: obj.hashCode() is not guaranteed to produce unique values
-			// for distinct instances of some class, so this can lead to subtle
-			// bugs.
-			id = obj.getClass() + "_" + obj.hashCode();
+			id = obj.getClass() + "@" + System.identityHashCode(obj);
 		}
 		return addObject(id, obj);
 	}

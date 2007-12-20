@@ -10,6 +10,8 @@
 
 package Composestar.Core.Resources;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -42,6 +44,11 @@ public class CommonResources implements Serializable
 	protected Map<String, Object> resources;
 
 	/**
+	 * Unserializable resources
+	 */
+	protected transient Map<String, Object> resourcesEx;
+
+	/**
 	 * The build configuration for the current project
 	 */
 	protected BuildConfig config;
@@ -60,6 +67,7 @@ public class CommonResources implements Serializable
 	public CommonResources()
 	{
 		resources = new HashMap<String, Object>();
+		resourcesEx = new HashMap<String, Object>();
 		resourceManagers = new HashMap<Class<? extends ModuleResourceManager>, ModuleResourceManager>();
 	}
 
@@ -113,7 +121,14 @@ public class CommonResources implements Serializable
 	 */
 	public void put(String key, Object object)
 	{
-		resources.put(key, object);
+		if (object instanceof Serializable)
+		{
+			resources.put(key, object);
+		}
+		else
+		{
+			resourcesEx.put(key, object);
+		}
 	}
 
 	public void addBoolean(String key, boolean value)
@@ -130,7 +145,12 @@ public class CommonResources implements Serializable
 	 */
 	public Object get(String key)
 	{
-		return resources.get(key);
+		Object res = resources.get(key);
+		if (res == null)
+		{
+			res = resourcesEx.get(key);
+		}
+		return res;
 	}
 
 	/**
@@ -368,27 +388,9 @@ public class CommonResources implements Serializable
 		}
 	}
 
-	// private void writeObject(java.io.ObjectOutputStream stream) throws
-	// IOException
-	// {
-	// Map<String, Object> temp = new HashMap<String, Object>(resources);
-	// Iterator<Entry<String, Object>> it = temp.entrySet().iterator();
-	// while (it.hasNext())
-	// {
-	// Entry<String, Object> entry = it.next();
-	// if (!(entry.getValue() instanceof Serializable))
-	// {
-	// it.remove();
-	// }
-	// }
-	// stream.writeObject(temp);
-	// }
-	//
-	// @SuppressWarnings("unchecked")
-	// private void readObject(java.io.ObjectInputStream stream) throws
-	// IOException, ClassNotFoundException
-	// {
-	// resources = (Map<String, Object>) stream.readObject();
-	// }
-
+	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException
+	{
+		stream.defaultReadObject();
+		resourcesEx = new HashMap<String, Object>();
+	}
 }

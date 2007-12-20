@@ -91,6 +91,7 @@ public class CastingFacility
 
 		// Search for a possible cast in the other direction, from internal
 		// object to concern object...
+		String idhash = from.getClass() + "@" + System.identityHashCode(from);
 		Enumeration enumManagers = GlobalObjectManager.getEnumerator();
 		while (enumManagers.hasMoreElements())
 		{
@@ -117,28 +118,29 @@ public class CastingFacility
 								+ "'.");
 					}
 
-					// FIXME: identical hashCode does not guarantee equality
-					if (internal.hashCode() == from.hashCode())
+					if (idhash.equals(internal.getClass() + "@" + System.identityHashCode(internal)))
 					{
 						// This should be the match and return the correct
 						// parent concern object
 						Object obj = fmr.getObjectManager().theObject;
 
-						//mh: also check if the types match, otherwise it's not the designed cast 
-						//	(e.g. for the multiple inheritance hack)
-						//  this change (prefixed with //!) isnt safe because it doesn't check subclasses
-						//  and break a couple of classes
+						// mh: also check if the types match, otherwise it's not
+						// the designed cast
+						// (e.g. for the multiple inheritance hack)
+						// this change (prefixed with //!) isnt safe because it
+						// doesn't check subclasses
+						// and break a couple of classes
 
-						//!if (obj.getClass().getName().equals(to))
-						//!{
-							if (Debug.SHOULD_DEBUG)
-							{
-								Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+						// !if (obj.getClass().getName().equals(to))
+						// !{
+						if (Debug.SHOULD_DEBUG)
+						{
+							Debug.out(Debug.MODE_INFORMATION, "FLIRT",
 									"Found managed object for given internal to return for casting: "
-									+ obj.getClass().getName() + ", key " + obj.hashCode());
-							}
-							return obj;
-						//!}
+											+ obj.getClass().getName() + ", key " + obj.hashCode());
+						}
+						return obj;
+						// !}
 					}
 				}
 			}
