@@ -17,7 +17,6 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.DotNET.LAMA.DotNETFieldInfo;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
@@ -133,8 +132,7 @@ public class DotNETTypeHandler extends DefaultHandler implements ContentHandler
 		else if ("FullName".equals(rawName))
 		{
 			type.setFullName(lastCharData);
-			TypeMap map = TypeMap.instance();
-			map.addType(type.getFullName(), type);
+			returnHandler.getRegister().registerLanguageUnit(type);
 		}
 		// <!ELEMENT IsAbstract (#PCDATA)>
 		else if ("IsAbstract".equals(rawName))

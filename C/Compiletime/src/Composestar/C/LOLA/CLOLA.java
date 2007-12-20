@@ -156,7 +156,13 @@ public class CLOLA extends LOLA
 			return;
 		}
 		Init.builtinDict = new Builtins();
-		composestarBuiltins = new ComposestarBuiltins(langModel, unitDict);
+		UnitRegister register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+		if (register == null)
+		{
+			register = new UnitRegister();
+			resources.put(UnitRegister.RESOURCE_KEY, register);
+		}
+		composestarBuiltins = new ComposestarBuiltins(langModel, unitDict, register);
 		Init.builtinDict.putAll(composestarBuiltins);
 
 		logger.debug("Consulting base predicate libraries");

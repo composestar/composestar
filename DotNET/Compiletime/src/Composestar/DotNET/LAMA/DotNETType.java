@@ -26,7 +26,6 @@ import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
-import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitResult;
 
 /**
@@ -147,7 +146,7 @@ public class DotNETType extends Type
 	{
 		super();
 		ImplementedInterfaceNames = new ArrayList();
-		ImplementedInterfaces = null;
+		ImplementedInterfaces = new ArrayList();
 		childTypes = new HashSet();
 		parameterTypes = new HashSet();
 		methodReturnTypes = new HashSet();
@@ -179,12 +178,12 @@ public class DotNETType extends Type
 	 */
 	public DotNETType baseType()
 	{
-		if (BaseType == null)
-		{
-			TypeMap map = TypeMap.instance();
-			BaseType = (DotNETType) map.getType(BaseTypeString);
-		}
 		return BaseType;
+	}
+
+	public void setBaseType(DotNETType type)
+	{
+		BaseType = type;
 	}
 
 	/**
@@ -194,6 +193,11 @@ public class DotNETType extends Type
 	public void setBaseType(String type)
 	{
 		BaseTypeString = type;
+	}
+
+	public String getBaseTypeString()
+	{
+		return BaseTypeString;
 	}
 
 	/**
@@ -630,11 +634,6 @@ public class DotNETType extends Type
 	 */
 	public DotNETType underlyingSystemType()
 	{
-		if (UnderlyingType == null)
-		{
-			TypeMap map = TypeMap.instance();
-			UnderlyingType = (DotNETType) map.getType(UnderlyingTypeString);
-		}
 		return UnderlyingType;
 	}
 
@@ -645,6 +644,16 @@ public class DotNETType extends Type
 	public void setunderlyingSystemType(String type)
 	{
 		UnderlyingTypeString = type;
+	}
+
+	public String getUnderlyingSystemType()
+	{
+		return UnderlyingTypeString;
+	}
+
+	public void setUnderlyingSystemType(DotNETType type)
+	{
+		UnderlyingType = type;
 	}
 
 	/**
@@ -722,22 +731,18 @@ public class DotNETType extends Type
 		ImplementedInterfaceNames.add(iface);
 	}
 
+	public void addImplementedInterface(DotNETType iface)
+	{
+		ImplementedInterfaces.add(iface);
+	}
+
+	public List getImplementedInterfaceNames()
+	{
+		return ImplementedInterfaceNames;
+	}
+
 	public List getImplementedInterfaces()
 	{
-		if (null == ImplementedInterfaces)
-		{
-			ImplementedInterfaces = new ArrayList();
-			Iterator iter = ImplementedInterfaceNames.iterator();
-			TypeMap map = TypeMap.instance();
-			while (iter.hasNext())
-			{
-				DotNETType iface = (DotNETType) map.getType((String) iter.next());
-				if (null != iface)
-				{
-					ImplementedInterfaces.add(iface);
-				}
-			}
-		}
 		return ImplementedInterfaces;
 	}
 

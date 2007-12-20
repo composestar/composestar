@@ -58,7 +58,6 @@ public class DocumentHandler extends DefaultHandler implements ContentHandler
 		{
 			// create new TypeHandler and install it
 			DotNETType type = new DotNETType();
-			register.registerLanguageUnit(type);
 			String fullName = atts.getValue("name");
 			if (fullName != null)
 			{

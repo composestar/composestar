@@ -26,6 +26,7 @@ import tarau.jinni.Source;
 import tarau.jinni.Term;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.LAMA.ProgramElement;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.metamodel.CompositeRelationPredicate;
 import Composestar.Core.LOLA.metamodel.LanguageModel;
@@ -51,11 +52,11 @@ public class ComposestarBuiltins extends HashDict
 
 	protected LanguageModel currentLangModel;
 
-	public ComposestarBuiltins(LanguageModel langModel, UnitDictionary dict)
+	public ComposestarBuiltins(LanguageModel langModel, UnitDictionary dict, UnitRegister reg)
 	{
 		super();
 
-		psi = new PredicateSelectorInterpreter(this);
+		psi = new PredicateSelectorInterpreter(this, reg);
 
 		langUnits = dict;
 
@@ -581,9 +582,9 @@ public class ComposestarBuiltins extends HashDict
 			}
 			String type = ((Const) tType).name();
 			if (tUnit instanceof JavaObject) /*
-			 * Easy case: the unit is
-			 * specified
-			 */
+												 * Easy case: the unit is
+												 * specified
+												 */
 			{
 				if (!(tUnit.toObject() instanceof ProgramElement))
 				{

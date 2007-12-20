@@ -564,11 +564,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Composestar\core\LAMA\TypeMap.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Composestar\core\LAMA\UnitResult.java"
                     SubType = "Code"
                     BuildAction = "Compile"

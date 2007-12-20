@@ -10,51 +10,39 @@
 package Composestar.Core.LAMA;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-//
-// !! Compose* Runtime Warning !!
-//
-// This class is referenced in the Compose* Runtime for .NET 1.1
-// Do not use Java features added after Java 2.0
-//
-
 /**
- * Contains a set of registered program elements. Separated from UnitDictionary
- * because the Runtime only needs this part; not the entire dictionary. Created
- * on Nov 3, 2004 by wilke
+ * Registry where all harvested units will be stored. It will/should be placed
+ * in the common resources. The content of this register is copied to the
+ * datastore repository, therefor all fields are set to be transient (it can
+ * cause problems when serializing the compile history).
  */
 public class UnitRegister implements Serializable
 {
 	private static final long serialVersionUID = 9098646852116014L;
 
-	public static final String RESOURCE_KEY = "UnitRegister";
+	public static final String RESOURCE_KEY = "LAMA.UnitRegister";
 
-	// Contains the set of program elements, before they are processed by
-	// UnitDictionary.processLanguageUnits
-	private Set<ProgramElement> registeredUnits;
+	/**
+	 * Contains the set of program elements, before they are processed by
+	 * UnitDictionary.processLanguageUnits
+	 */
+	private transient Set<ProgramElement> registeredUnits = new HashSet<ProgramElement>();
 
-	@Deprecated
-	private static UnitRegister instance;
+	private transient Set<Type> pendingReg = new HashSet<Type>();
 
-	@Deprecated
-	public static UnitRegister instance()
-	{
-		if (instance == null)
-		{
-			instance = new UnitRegister();
-		}
-		return instance;
-	}
+	private transient Map<String, Type> typeMap = new HashMap<String, Type>();
 
 	/**
 	 * Creates a new UnitRegister.
 	 */
 	public UnitRegister()
-	{
-		registeredUnits = new HashSet<ProgramElement>();
-	}
+	{}
 
 	/**
 	 * Registers a program element. The unit will *not* actually be added to the
@@ -74,6 +62,18 @@ public class UnitRegister implements Serializable
 		// Therefore, call 'processLanguageUnits()' to really create the table
 		// of units.
 		registeredUnits.add(unit);
+		if (unit instanceof Type)
+		{
+			Type type = (Type) unit;
+			if (type.getFullName() != null)
+			{
+				typeMap.put(type.getFullName(), type);
+			}
+			else
+			{
+				pendingReg.add(type);
+			}
+		}
 	}
 
 	/**
@@ -82,5 +82,44 @@ public class UnitRegister implements Serializable
 	public Set<ProgramElement> getRegisteredUnits()
 	{
 		return registeredUnits;
+	}
+
+	/**
+	 * Construct the typemap and resolve the types
+	 * 
+	 * @param resolver
+	 */
+	public void resolveTypes(TypeResolver resolver)
+	{
+		// first add full names
+		for (Type unit : pendingReg)
+		{
+			typeMap.put(((Type) unit).getFullName(), (Type) unit);
+		}
+		pendingReg.clear();
+		for (ProgramElement unit : registeredUnits)
+		{
+			resolver.resolve(unit, this);
+		}
+	}
+
+	public Type getType(String typename)
+	{
+		return typeMap.get(typename);
+	}
+
+	public void removeType(String typename)
+	{
+		typeMap.remove(typename);
+	}
+
+	public boolean hasType(String typename)
+	{
+		return typeMap.containsKey(typename);
+	}
+
+	public Map<String, Type> getTypeMap()
+	{
+		return Collections.unmodifiableMap(typeMap);
 	}
 }

@@ -18,7 +18,6 @@ import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
-import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -94,7 +93,6 @@ public class JavaCollectorRunner implements CollectorRunner
 
 		int count = 0;
 		DataStore dataStore = DataStore.instance();
-		Map<String, Type> typeMap = TypeMap.instance().map();
 		// loop through all current concerns, fetch implementation and remove
 		// from types map.
 		Iterator<Object> repIt = dataStore.getIterator();
@@ -141,30 +139,30 @@ public class JavaCollectorRunner implements CollectorRunner
 					if (otherConcern instanceof CpsConcern)
 					{
 						logger.info("Implementation of " + concern + " contains type info for " + otherConcern);
-						JavaType type = (JavaType) typeMap.get(className);
+						JavaType type = (JavaType) register.getType(className);
 						concern.setPlatformRepresentation(type);
 						type.setParentConcern((CpsConcern) otherConcern);
-						typeMap.remove(className);
+						register.removeType(className);
 					}
 					continue;
 				}
 
-				if (!typeMap.containsKey(className))
+				if (!register.hasType(className))
 				{
 					throw new ModuleException("Implementation: " + className + " for concern: " + concern.getName()
 							+ " not found!", MODULE_NAME);
 				}
-				JavaType type = (JavaType) typeMap.get(className);
+				JavaType type = (JavaType) register.getType(className);
 				concern.setPlatformRepresentation(type);
 				type.setParentConcern(concern);
-				typeMap.remove(className);
+				register.removeType(className);
 				count++;
 			}
 		}
 
 		// loop through rest of the concerns and add to the repository in the
 		// form of primitive concerns
-		for (Type type : typeMap.values())
+		for (Type type : register.getTypeMap().values())
 		{
 			PrimitiveConcern pc = new PrimitiveConcern();
 			pc.setName(type.getFullName());
@@ -190,12 +188,9 @@ public class JavaCollectorRunner implements CollectorRunner
 
 		typeProcessed(c.getName(), c);
 
-		TypeMap map = TypeMap.instance();
 		JavaType jtype = new JavaType(c);
-		register.registerLanguageUnit(jtype);
 		jtype.setFullName(c.getName());
-
-		map.addType(jtype.getFullName(), jtype);
+		register.registerLanguageUnit(jtype);
 
 		// set name
 		if (jtype.getFullName().lastIndexOf(".") > 0)

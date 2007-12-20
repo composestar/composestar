@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -16,7 +17,6 @@ import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
-import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitResult;
 
 /**
@@ -84,7 +84,7 @@ public class JavaType extends Type
 		super();
 		theClass = c;
 		implementedInterfaceNames = new ArrayList<String>();
-		implementedInterfaces = null;
+		implementedInterfaces = new ArrayList<JavaType>();
 		childTypes = new HashSet<ProgramElement>();
 		parameterTypes = new HashSet<ProgramElement>();
 		methodReturnTypes = new HashSet<ProgramElement>();
@@ -114,28 +114,23 @@ public class JavaType extends Type
 		implementedInterfaceNames.add(iface);
 	}
 
+	public void addImplementedInterface(JavaType iface)
+	{
+		implementedInterfaces.add(iface);
+	}
+
+	public List<String> getImplementedInterfaceNames()
+	{
+		return Collections.unmodifiableList(implementedInterfaceNames);
+	}
+
 	/**
 	 * Returns a list of interfaces that this <code>JavaType</code>
 	 * implements.
 	 */
 	public List<JavaType> getImplementedInterfaces()
 	{
-
-		if (null == implementedInterfaces)
-		{
-			implementedInterfaces = new ArrayList<JavaType>();
-			Iterator<String> iter = implementedInterfaceNames.iterator();
-			TypeMap map = TypeMap.instance();
-			while (iter.hasNext())
-			{
-				JavaType iface = (JavaType) map.getType(iter.next());
-				if (null != iface)
-				{
-					implementedInterfaces.add(iface);
-				}
-			}
-		}
-		return implementedInterfaces;
+		return Collections.unmodifiableList(implementedInterfaces);
 	}
 
 	/**
@@ -184,16 +179,25 @@ public class JavaType extends Type
 	 */
 	public JavaType superClass()
 	{
-		if (superClass == null)
-		{
-			Class<?> superclass = theClass.getSuperclass();
-			if (null != superclass)
-			{
-				TypeMap map = TypeMap.instance();
-				superClass = (JavaType) map.getType(theClass.getSuperclass().getName());
-			}
-		}
 		return superClass;
+	}
+
+	public void setSuperClass(JavaType type)
+	{
+		superClass = type;
+	}
+
+	public String getSuperClassString()
+	{
+		Class<?> superclass = theClass.getSuperclass();
+		if (superclass != null)
+		{
+			return theClass.getSuperclass().getName();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/** Stuff for LOLA * */

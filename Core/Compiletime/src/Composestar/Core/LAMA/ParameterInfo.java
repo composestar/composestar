@@ -54,12 +54,12 @@ public abstract class ParameterInfo extends ProgramElement
 	 */
 	public Type parameterType()
 	{
-		if (parameterType == null)
-		{
-			TypeMap map = TypeMap.instance();
-			parameterType = map.getType(parameterTypeString);
-		}
 		return parameterType;
+	}
+
+	public void setParameterType(Type paramType)
+	{
+		parameterType = paramType;
 	}
 
 	/**

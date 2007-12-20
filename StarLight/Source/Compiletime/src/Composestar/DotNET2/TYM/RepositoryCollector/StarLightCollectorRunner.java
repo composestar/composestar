@@ -26,7 +26,6 @@ import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
-import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -93,6 +92,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 		// Collect the type information from assemblies
 		collectAssemblies();
+
+		register.resolveTypes(new Composestar.DotNET2.LAMA.DotNETTypeResolver());
 
 		// Collection cps concern sources
 		collectConcernSources();
@@ -246,8 +247,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 		Set<Annotation> unresolvedAttributeTypes = new HashSet<Annotation>();
 
-		Map<String, DotNETType> typeMap = TypeMap.instance().map();
-		for (DotNETType type : typeMap.values())
+		Map<String, Type> typeMap = register.getTypeMap();
+		for (Type type : typeMap.values())
 		{
 			// Collect type attributes
 			List<Annotation> typeAnnos = type.getAnnotations();
@@ -300,7 +301,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 		logger.debug("Resolving " + unresolvedAttributeTypes.size() + " attribute types...");
 		long starttime = System.currentTimeMillis();
 
-		Map<String, DotNETType> typeMap = TypeMap.instance().map();
+		Map<String, Type> typeMap = register.getTypeMap();
 		Map<String, DotNETType> newAttributeTypes = new HashMap<String, DotNETType>();
 
 		for (Annotation annotation : unresolvedAttributeTypes)
@@ -320,8 +321,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 			{
 				// Create a new DotNETType element
 				DotNETType attributeType = new DotNETType();
-				register.registerLanguageUnit(attributeType);
 				attributeType.setFullName(annotation.getTypeName());
+				register.registerLanguageUnit(attributeType);
 
 				// Add this attribute type to the repository as a primitive
 				// concern
@@ -357,10 +358,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 			// logger.debug("Processing type '" + fullName + "'...");
 
 			DotNETType dnt = new DotNETType();
-			register.registerLanguageUnit(dnt);
 			dnt.setName(te.getName());
 			dnt.setNamespace(te.getNamespace());
 			dnt.setFullName(fullName);
+			register.registerLanguageUnit(dnt);
 			dnt.setBaseType(te.getBaseType());
 			dnt.setAssemblyName(assembly.getName());
 			dnt.setFromSource(te.getFromSource());
@@ -391,9 +392,6 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 			collectFields(te, dnt);
 			collectMethods(te, dnt);
-
-			// Add the DotNETType to the TypeMap
-			TypeMap.instance().addType(dnt.getFullName(), dnt);
 		}
 
 		long elapsed = System.currentTimeMillis() - starttime;
@@ -618,7 +616,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 		}
 
 		// get method info:
-		Type type = TypeMap.instance().getType(typeName);
+		Type type = register.getType(typeName);
 		MethodInfo methodInfo = null;
 		if (type != null)
 		{

@@ -52,7 +52,7 @@ import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.INCRE.MethodNode;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
-import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.metamodel.ModelClashException;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -69,9 +69,12 @@ public class PredicateSelectorInterpreter
 
 	protected PredicateSelector currentSel;
 
-	public PredicateSelectorInterpreter(ComposestarBuiltins builtins)
+	protected UnitRegister register;
+
+	public PredicateSelectorInterpreter(ComposestarBuiltins builtins, UnitRegister reg)
 	{
 		composestarBuiltins = builtins;
+		register = reg;
 	}
 
 	public void interpret(PredicateSelector sel) throws ModuleException
@@ -336,7 +339,6 @@ public class PredicateSelectorInterpreter
 			}
 			else if (obj instanceof CpsConcern)
 			{
-				Map<String, Type> typeMap = TypeMap.instance().map();
 				CpsConcern concern = (CpsConcern) obj;
 				Object impl = concern.getImplementation();
 				String className = "";
@@ -351,7 +353,7 @@ public class PredicateSelectorInterpreter
 					className = ((CompiledImplementation) impl).getClassName();
 				}
 
-				unit2 = typeMap.get(className);
+				unit2 = register.getType(className);
 			}
 
 			if (unit2 != null)

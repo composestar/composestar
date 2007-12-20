@@ -46,11 +46,6 @@ public abstract class FieldInfo extends ProgramElement
 
 	public Type getFieldType()
 	{
-		if (this.fieldType == null)
-		{
-			TypeMap map = TypeMap.instance();
-			fieldType = map.getType(fieldTypeString);
-		}
 		return fieldType;
 	}
 
@@ -62,6 +57,11 @@ public abstract class FieldInfo extends ProgramElement
 	public void setFieldType(String fieldtype)
 	{
 		this.fieldTypeString = fieldtype;
+	}
+
+	public void setFieldType(Type value)
+	{
+		this.fieldType = value;
 	}
 
 	public Type getParent()

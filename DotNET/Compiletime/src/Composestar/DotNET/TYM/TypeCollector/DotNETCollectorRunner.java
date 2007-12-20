@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -21,12 +20,12 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.DotNET.LAMA.DotNETType;
+import Composestar.DotNET.LAMA.DotNETTypeResolver;
 import Composestar.Utils.Logging.CPSLogger;
 
 public class DotNETCollectorRunner implements CollectorRunner
@@ -82,7 +81,7 @@ public class DotNETCollectorRunner implements CollectorRunner
 			throw new ModuleException("I/O exception while parsing types.xml: " + e.getMessage(), MODULE_NAME);
 		}
 
-		Map typeMap = TypeMap.instance().map();
+		register.resolveTypes(new DotNETTypeResolver());
 
 		/*
 		 * TODO : The only types of embedded code are the imported dll's like in
@@ -137,16 +136,16 @@ public class DotNETCollectorRunner implements CollectorRunner
 				{
 					logger.info("Implementation of " + concern + " contains type info for "
 							+ ((CpsConcern) otherConcern));
-					DotNETType type = (DotNETType) typeMap.get(className);
+					DotNETType type = (DotNETType) register.getType(className);
 					concern.setPlatformRepresentation(type);
 					type.setParentConcern((CpsConcern) otherConcern);
-					typeMap.remove(className);
+					register.removeType(className);
 				}
 				continue;
 			}
 
 			// transform source name into assembly name blaat.java --> blaat.dll
-			if (!typeMap.containsKey(className))
+			if (!register.hasType(className))
 			{
 				throw new ModuleException("Implementation: " + className + " for concern: " + concern.getName()
 						+ " not found!", MODULE_NAME);
@@ -154,15 +153,15 @@ public class DotNETCollectorRunner implements CollectorRunner
 			}
 			logger.info("" + concern + " implements own type info");
 
-			DotNETType type = (DotNETType) typeMap.get(className);
+			DotNETType type = (DotNETType) register.getType(className);
 			concern.setPlatformRepresentation(type);
 			type.setParentConcern(concern);
-			typeMap.remove(className);
+			register.removeType(className);
 		}
 
 		// loop through rest of the concerns and add to the repository in the
 		// form of primitive concerns
-		Iterator it = typeMap.values().iterator();
+		Iterator it = register.getTypeMap().values().iterator();
 		while (it.hasNext())
 		{
 			DotNETType type = (DotNETType) it.next();

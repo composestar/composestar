@@ -212,21 +212,12 @@ public abstract class MethodInfo extends ProgramElement
 
 	public Type getReturnType()
 	{
-		if (returnType == null)
-		{
-			TypeMap map = TypeMap.instance();
-			returnType = map.getType(returnTypeString);
-
-			if (returnType == null)
-			{
-				return null;
-				// throw new RuntimeException("Unable to find type specification
-				// for
-				// '" + ReturnTypeString + "'");
-			}
-		}
-
 		return returnType;
+	}
+
+	public void setReturnType(Type type)
+	{
+		returnType = type;
 	}
 
 	public void setReturnType(String type)

@@ -25,7 +25,6 @@ import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
-import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitResult;
 
 /**
@@ -112,7 +111,7 @@ public class DotNETType extends Type
 	{
 		super();
 		implementedInterfaceNames = new ArrayList<String>();
-		implementedInterfaces = null;
+		implementedInterfaces = new ArrayList<DotNETType>();
 		childTypes = new HashSet<ProgramElement>();
 		parameterTypes = new HashSet<ProgramElement>();
 		methodReturnTypes = new HashSet<ProgramElement>();
@@ -202,17 +201,22 @@ public class DotNETType extends Type
 
 	public DotNETType baseType()
 	{
-		if (baseType == null)
-		{
-			TypeMap map = TypeMap.instance();
-			baseType = (DotNETType) map.getType(baseTypeString);
-		}
 		return baseType;
 	}
 
 	public void setBaseType(String type)
 	{
 		baseTypeString = type;
+	}
+
+	public void setBaseType(DotNETType type)
+	{
+		baseType = type;
+	}
+
+	public String getBaseTypeString()
+	{
+		return baseTypeString;
 	}
 
 	public void addImplementedInterface(String iface)
@@ -222,23 +226,20 @@ public class DotNETType extends Type
 
 	public List<DotNETType> getImplementedInterfaces()
 	{
-		if (null == implementedInterfaces)
-		{
-			implementedInterfaces = new ArrayList<DotNETType>();
-			Iterator<String> iter = implementedInterfaceNames.iterator();
-			TypeMap map = TypeMap.instance();
-			while (iter.hasNext())
-			{
-				DotNETType iface = (DotNETType) map.getType(iter.next());
-				if (null != iface)
-				{
-					implementedInterfaces.add(iface);
-				}
-			}
-		}
 		return implementedInterfaces;
 	}
 
+	public void addImplementedInterface(DotNETType iface)
+	{
+		implementedInterfaces.add(iface);
+	}
+
+	public List<String> getImplementedInterfaceNames()
+	{
+		return implementedInterfaceNames;
+	}
+
+	@Override
 	public String namespace()
 	{
 		return namespace;
@@ -542,6 +543,7 @@ public class DotNETType extends Type
 	 * Extra method for storing the parent namespace; called by
 	 * DotNETLanguageModel::completeModel()
 	 */
+	@Override
 	public void setParentNamespace(ProgramElement parentNS)
 	{
 		this.parentNS = parentNS;
@@ -550,6 +552,7 @@ public class DotNETType extends Type
 	/**
 	 * Extra method for adding links to child types of this type.
 	 */
+	@Override
 	public void addChildType(ProgramElement childType)
 	{
 		if (childTypes == null)
@@ -562,6 +565,7 @@ public class DotNETType extends Type
 	/**
 	 * Extra method for adding links to parameters of this type.
 	 */
+	@Override
 	public void addParameterType(ProgramElement paramType)
 	{
 		parameterTypes.add(paramType);
@@ -570,6 +574,7 @@ public class DotNETType extends Type
 	/**
 	 * Extra method for adding links to methods that return this type
 	 */
+	@Override
 	public void addMethodReturnType(ProgramElement returnType)
 	{
 		methodReturnTypes.add(returnType);
@@ -578,6 +583,7 @@ public class DotNETType extends Type
 	/**
 	 * Extra method for adding links to methods that return this type
 	 */
+	@Override
 	public void addFieldType(ProgramElement fieldType)
 	{
 		fieldTypes.add(fieldType);
@@ -586,6 +592,7 @@ public class DotNETType extends Type
 	/**
 	 * Extra method for adding links to classes that implement this interface
 	 */
+	@Override
 	public void addImplementedBy(ProgramElement aClass)
 	{
 		implementedBy.add(aClass);
