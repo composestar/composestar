@@ -134,6 +134,10 @@ public class CKRET implements CTCommonModule
 		if (cfgfile != null && cfgfile.trim().length() > 0)
 		{
 			configFile = new File(cfgfile.trim());
+			if (!configFile.isAbsolute())
+			{
+				configFile = new File(resources.configuration().getProject().getBase(), cfgfile.trim());
+			}
 			if (!configFile.exists())
 			{
 				configFile = null;
