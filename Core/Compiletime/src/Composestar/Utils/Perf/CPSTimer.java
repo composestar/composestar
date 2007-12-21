@@ -40,7 +40,7 @@ public class CPSTimer
 {
 	private static final int MAX_NESTING = 5;
 
-	protected static CPSTimerRepository repository = new CPSTimerRepository();
+	protected static final CPSTimerRepository repository = new CPSTimerRepository();
 
 	protected long creationTime;
 

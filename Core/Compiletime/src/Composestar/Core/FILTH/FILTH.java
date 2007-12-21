@@ -38,8 +38,7 @@ public class FILTH implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		FILTHService filthservice = new FILTHServiceImpl(resources);
-		InnerDispatcher.getInnerDispatchReference();
+		FILTHService filthservice = new FILTHServiceImpl(resources, InnerDispatcher.createInnerDispatchReference());
 
 		Iterator<Concern> conIter = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())

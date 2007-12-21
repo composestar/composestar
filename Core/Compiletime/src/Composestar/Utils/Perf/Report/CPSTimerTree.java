@@ -24,6 +24,7 @@
 
 package Composestar.Utils.Perf.Report;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -165,8 +166,10 @@ public class CPSTimerTree
 		parent = value;
 	}
 
-	private static class CPSTimerTreeComparator implements Comparator<CPSTimerTree>
+	private static class CPSTimerTreeComparator implements Comparator<CPSTimerTree>, Serializable
 	{
+		private static final long serialVersionUID = 4317682002605698740L;
+
 		public int compare(CPSTimerTree o1, CPSTimerTree o2)
 		{
 			return (int) (o1.getCreationTime() - o2.getCreationTime());

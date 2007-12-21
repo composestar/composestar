@@ -26,6 +26,17 @@ public class ContextRepositoryEntity extends RepositoryEntity
 	private static final long serialVersionUID = 9219062801100391060L;
 
 	/**
+	 * If this flag is set the entity is part of the default inner dispatch
+	 * filter.
+	 */
+	public static final long FLAG_DEFAULT_FILTER = 0x1L;
+
+	/**
+	 * Special flags used by the Compose* compiler
+	 */
+	private long cpsFlags;
+
+	/**
 	 * owner of this entity
 	 */
 	private Object parent;
@@ -104,5 +115,20 @@ public class ContextRepositoryEntity extends RepositoryEntity
 	public String asSourceCode()
 	{
 		return null;
+	}
+
+	public void setFlag(long flag)
+	{
+		cpsFlags |= flag;
+	}
+
+	public void unsetFlag(long flag)
+	{
+		cpsFlags &= ~flag;
+	}
+
+	public long getFlags()
+	{
+		return cpsFlags;
 	}
 }

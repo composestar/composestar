@@ -33,8 +33,12 @@ import Composestar.Core.SANE.SIinfo;
 
 public class FILTHServiceImpl extends FILTHService
 {
-	protected FILTHServiceImpl(CommonResources cr) throws ConfigurationException
-	{}
+	protected FilterModuleReference defaultDispatch;
+
+	protected FILTHServiceImpl(CommonResources cr, FilterModuleReference deffmr) throws ConfigurationException
+	{
+		defaultDispatch = deffmr;
+	}
 
 	@Override
 	public List<FilterModuleSuperImposition> getOrder(Concern c)
@@ -91,7 +95,7 @@ public class FILTHServiceImpl extends FILTHService
 				}
 				// System.out.println(count++);
 			}
-			anOrder.addLast(new FilterModuleSuperImposition(InnerDispatcher.getInnerDispatchReference()));
+			anOrder.addLast(new FilterModuleSuperImposition(defaultDispatch));
 			forders.addLast(anOrder);
 		}
 

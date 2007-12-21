@@ -29,6 +29,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilter
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
@@ -38,19 +39,8 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  */
 public final class InnerDispatcher
 {
-	private static FilterModuleReference innerDispatchReference;
-
 	private InnerDispatcher()
 	{}
-
-	public static FilterModuleReference getInnerDispatchReference()
-	{
-		if (innerDispatchReference == null)
-		{
-			innerDispatchReference = InnerDispatcher.createInnerDispatchReference();
-		}
-		return innerDispatchReference;
-	}
 
 	/**
 	 * @param fmName Fully Qualified FilterModule name
@@ -63,11 +53,7 @@ public final class InnerDispatcher
 		{
 			return false;
 		}
-		else if (innerDispatchReference == null)
-		{
-			return fmName.equals(DefaultInnerDispatchNames.FQN_FILTER_MODULE);
-		}
-		return innerDispatchReference.getQualifiedName().equals(fmName);
+		return fmName.equals(DefaultInnerDispatchNames.FQN_FILTER_MODULE);
 	}
 
 	public static boolean isDefaultDispatch(FilterModule fm)
@@ -76,11 +62,7 @@ public final class InnerDispatcher
 		{
 			return false;
 		}
-		else if (innerDispatchReference == null)
-		{
-			return isDefaultDispatch(fm.getQualifiedName());
-		}
-		return innerDispatchReference.getRef().equals(fm);
+		return (fm.getFlags() & ContextRepositoryEntity.FLAG_DEFAULT_FILTER) != 0;
 	}
 
 	public static boolean isDefaultDispatch(FilterModuleReference fmr)
@@ -89,11 +71,7 @@ public final class InnerDispatcher
 		{
 			return false;
 		}
-		else if (innerDispatchReference == null)
-		{
-			return isDefaultDispatch(fmr.getRef());
-		}
-		return innerDispatchReference.equals(fmr);
+		return isDefaultDispatch(fmr.getRef());
 	}
 
 	private static FilterModule createInnerDispatchFilterModule()
@@ -101,12 +79,14 @@ public final class InnerDispatcher
 		// create a conern
 		CpsConcern cc = new CpsConcern();
 		cc.setName(DefaultInnerDispatchNames.CONCERN);
+		cc.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
 
 		// create filtermodule
 		FilterModuleAST fm = new FilterModuleAST();
 		cc.addFilterModuleAST(fm);
 		fm.setParent(cc);
 		fm.setName(DefaultInnerDispatchNames.FILTER_MODULE);
+		fm.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
 
 		// add the filter to the filtermodule
 		fm.addInputFilter(createInnerDispatchFilter(cc, fm, DefaultInnerDispatchNames.INPUT_FILTER));
@@ -118,6 +98,7 @@ public final class InnerDispatcher
 
 		// create the instances
 		FilterModule fmInstance = new FilterModule(fm, new Vector(), DefaultInnerDispatchNames.FILTER_MODULE_TOKEN);
+		fmInstance.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
 		DataStore.instance().addObject(fmInstance);
 
 		// return the filtermodule
@@ -130,6 +111,7 @@ public final class InnerDispatcher
 		FilterAST f = new FilterAST();
 		f.setParent(fm);
 		f.setName(name);
+		f.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
 
 		// create the filtertype and set it in the filter (typeImplementation as
 		// well)
@@ -143,26 +125,38 @@ public final class InnerDispatcher
 		fe.setConditionPart(new True());
 		fe.setEnableOperatorType(new EnableOperator());
 		fe.setRightOperator(new VoidFilterElementCompOper());
+		fe.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
 
 		// create the matchingpattern
 		Target mtarget = new Target();
+		mtarget.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
 		mtarget.setName(Target.INNER);
 		DeclaredObjectReference dor = new DeclaredObjectReference();
 		dor.setName(Target.INNER);
 		dor.setConcern(cc.getName());
 		mtarget.setRef(dor);
 		dor.setFilterModule(fm.getName());
+
 		MessageSelectorAST selector = new MessageSelectorAST();
 		selector.setName("*");
+		selector.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
+
 		MatchingPatternAST mpattern = new MatchingPatternAST();
+		mpattern.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
+
 		MatchingPartAST mpart = new MatchingPartAST();
+		mpart.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
 		mpart.setTarget(mtarget);
 		mpart.setSelector(selector);
 		mpart.setMatchType(new SignatureMatchingType());
+
 		mpattern.addMatchingPart(mpart);
 
 		SubstitutionPartAST spart = new SubstitutionPartAST();
+		spart.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
+
 		Target starget = new Target();
+		starget.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
 		starget.setName(Target.INNER);
 
 		DeclaredObjectReference subdor = new DeclaredObjectReference();
@@ -180,7 +174,7 @@ public final class InnerDispatcher
 		return f;
 	}
 
-	private static FilterModuleReference createInnerDispatchReference()
+	public static FilterModuleReference createInnerDispatchReference()
 	{
 		FilterModule fm = InnerDispatcher.createInnerDispatchFilterModule();
 		FilterModuleReference fmr = new FilterModuleReference();
