@@ -22,8 +22,9 @@ public class ConfigNode extends Node
 	{
 		try
 		{
-			INCRE incre = INCRE.instance();
-			String config = incre.getConfiguration(reference);
+			// because INCRE is broken anyway
+			// INCRE incre = INCRE.instance();
+			String config = ""; // incre.getConfiguration(reference);
 			if (config.length() == 0)
 			{
 				logger.debug("INCRE::ConfigNode EMPTY value for configuration " + reference);

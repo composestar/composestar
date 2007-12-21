@@ -20,8 +20,6 @@ import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
@@ -39,6 +37,7 @@ import Composestar.DotNET2.LAMA.DotNETType;
 import Composestar.DotNET2.MASTER.StarLightMaster;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Perf.CPSTimer;
 
 import composestar.dotNET2.tym.entities.ArrayOfAttributeElement;
 import composestar.dotNET2.tym.entities.ArrayOfCallElement;
@@ -69,8 +68,6 @@ public class StarLightCollectorRunner implements CTCommonModule
 	private List<DotNETCallToOtherMethod> callsToOtherMethods = new ArrayList<DotNETCallToOtherMethod>();
 
 	private ConfigurationContainer configContainer;
-
-	private INCRE incre = INCRE.instance();
 
 	private CommonResources resources;
 
@@ -177,16 +174,16 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 	private void collectAssemblies() throws ModuleException
 	{
+		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 		for (AssemblyConfig ac : configContainer.getAssemblies().getAssemblyConfigList())
 		{
 			String assemblyName = ac.getName();
 
 			logger.debug("Processing assembly '" + assemblyName + "'...");
 
-			INCRETimer runTimer = incre.getReporter().openProcess(MODULE_NAME, assemblyName, INCRETimer.TYPE_NORMAL);
-
+			timer.start(assemblyName);
 			collectAssembly(ac);
-			runTimer.stop();
+			timer.stop();
 		}
 	}
 
@@ -199,8 +196,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 		InputStream is = null;
 		try
 		{
-			INCRETimer deserializeTimer = incre.getReporter().openProcess(MODULE_NAME, "XML deserialize",
-					INCRETimer.TYPE_NORMAL);
+			CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, "XML deserialize");
 
 			is = new FileInputStream(filename);
 			if (filename.endsWith(".gz"))
@@ -210,7 +206,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 			AssemblyDocument doc = AssemblyDocument.Factory.parse(is);
 
-			deserializeTimer.stop();
+			timer.stop();
 
 			collectTypes(doc.getAssembly());
 		}

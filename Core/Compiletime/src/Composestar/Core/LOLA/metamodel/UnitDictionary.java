@@ -30,6 +30,8 @@ public class UnitDictionary
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME);
 
+	public static final String REPOSITORY_KEY = "LOLA.UnitDictionary";
+
 	private LanguageModel langModel;
 
 	// Indexes on Units. Be very careful to keep these consistent with each

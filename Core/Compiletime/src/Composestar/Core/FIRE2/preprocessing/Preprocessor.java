@@ -32,6 +32,7 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Perf.CPSTimer;
 
 /**
  * @author Arjan de Roo
@@ -99,10 +100,14 @@ public class Preprocessor implements CTCommonModule
 
 		logger.debug("Starting FIRE Preprocessing");
 
+		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+
 		while (moduleIter.hasNext())
 		{
 			FilterModule module = moduleIter.next();
+			timer.start(module.getOriginalQualifiedName());
 			preprocessModule(module);
+			timer.stop();
 		}
 
 		logger.debug("FIRE Preprocessing done");

@@ -47,8 +47,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ProgramElemen
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.INCRE.MethodNode;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -57,6 +55,7 @@ import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.metamodel.ModelClashException;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Perf.CPSTimer;
 
 /**
  * @author Michiel Hendriks
@@ -89,9 +88,7 @@ public class PredicateSelectorInterpreter
 	 */
 	protected void run() throws ModuleException
 	{
-		INCRE incre = INCRE.instance();
-		INCRETimer executequery = incre.getReporter()
-				.openProcess("LOLA", currentSel.getQuery(), INCRETimer.TYPE_NORMAL);
+		CPSTimer timer = CPSTimer.getTimer(LOLA.MODULE_NAME, currentSel.getQuery());
 
 		// tell ComposestarBuiltins that we are executing this selector
 		composestarBuiltins.setCurrentSelector(currentSel);
@@ -143,7 +140,7 @@ public class PredicateSelectorInterpreter
 
 		// finish type information
 		finishTypeInfo();
-		executequery.stop();
+		timer.stop();
 	}
 
 	/**

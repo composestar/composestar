@@ -42,6 +42,8 @@ public class INCREModule implements Serializable
 	 */
 	private Map<String, List<Object>> comparableObjects = new HashMap<String, List<Object>>();
 
+	private INCRE incre;
+
 	public INCREModule(String inName)
 	{
 		moduleName = inName;
@@ -50,6 +52,11 @@ public class INCREModule implements Serializable
 	public void setName(String inName)
 	{
 		moduleName = inName;
+	}
+
+	public void setParent(INCRE parent)
+	{
+		incre = parent;
 	}
 
 	public void setFullType(String ftype) throws ClassNotFoundException
@@ -234,14 +241,11 @@ public class INCREModule implements Serializable
 		try
 		{
 			CTCommonModule module = moduleClass.newInstance();
-			INCRE.instance().addModuleByName(moduleName, module);
+			incre.addModuleByName(moduleName, module);
 
 			resources.inject(module);
 
-			INCRETimer timer = INCRE.instance().getReporter().openProcess(moduleName, moduleName, INCRETimer.TYPE_ALL);
-
 			module.run(resources);
-			timer.stop();
 
 			resources.extract(module);
 		}

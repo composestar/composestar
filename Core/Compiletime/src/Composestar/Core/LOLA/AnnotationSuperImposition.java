@@ -34,14 +34,13 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.Annotati
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Perf.CPSTimer;
 
 public class AnnotationSuperImposition
 {
@@ -67,17 +66,14 @@ public class AnnotationSuperImposition
 
 	public void run(ComposestarBuiltins builtins) throws ModuleException
 	{
-		INCRE incre = INCRE.instance();
 		composestarBuiltins = builtins;
 		logger.debug("Annotation superimposition dependency algorithm starts");
-		INCRETimer gather = incre.getReporter().openProcess(LOLA.MODULE_NAME, "gatherDependencyAlgorithmInputs",
-				INCRETimer.TYPE_NORMAL);
+		CPSTimer timer = CPSTimer.getTimer(LOLA.MODULE_NAME, "gatherDependencyAlgorithmInputs");
 		gatherDependencyAlgorithmInputs();
-		gather.stop();
-		INCRETimer dep = incre.getReporter().openProcess(LOLA.MODULE_NAME, "doDependencyAlgorithm",
-				INCRETimer.TYPE_NORMAL);
+		timer.stop();
+		timer.start("doDependencyAlgorithm");
 		doDependencyAlgorithm();
-		dep.stop();
+		timer.stop();
 		logger.debug("Annotation superimposition dependency algorithm finished");
 	}
 

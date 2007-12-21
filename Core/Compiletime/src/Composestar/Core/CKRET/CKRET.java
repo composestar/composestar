@@ -37,8 +37,6 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.util.regex.RegularState;
 import Composestar.Core.FIRE2.util.regex.RegularTransition;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -46,6 +44,7 @@ import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
+import Composestar.Utils.Perf.CPSTimer;
 
 // FIXME: rename package to SECRET
 /**
@@ -66,8 +65,6 @@ public class CKRET implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		INCRE incre = INCRE.instance();
-
 		secretResources.setFIRE2Resources(resources.getResourceManager(FIRE2Resources.class));
 		loadConfiguration(resources);
 
@@ -80,10 +77,9 @@ public class CKRET implements CTCommonModule
 
 			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
 			{
-				INCRETimer ckretrun = incre.getReporter().openProcess(MODULE_NAME, concern.getUniqueID(),
-						INCRETimer.TYPE_NORMAL);
-				this.run(concern);
-				ckretrun.stop();
+				CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, concern.getUniqueID());
+				run(concern);
+				timer.stop();
 			}
 		}
 

@@ -37,14 +37,13 @@ import org.apache.log4j.Level;
 
 import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.DevNullOutputStream;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Perf.CPSTimer;
 
 /**
  * CPS parser and repository constructor.
@@ -69,8 +68,6 @@ public class COPPER implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		INCRE incre = INCRE.instance();
-
 		if (LegacyFilterTypes.useLegacyFilterTypes)
 		{
 			LegacyFilterTypes.addLegacyFilterTypes();
@@ -78,11 +75,12 @@ public class COPPER implements CTCommonModule
 
 		errorCnt = 0;
 
+		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 		for (File file : resources.configuration().getProject().getConcernFiles())
 		{
-			INCRETimer runTimer = incre.getReporter().openProcess(MODULE_NAME, file.toString(), INCRETimer.TYPE_NORMAL);
+			timer.start(file.toString());
 			parseConcernFile(file);
-			runTimer.stop();
+			timer.stop();
 		}
 
 		if (errorCnt > 0)

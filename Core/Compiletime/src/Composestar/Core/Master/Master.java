@@ -11,6 +11,8 @@
 package Composestar.Core.Master;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -45,6 +47,10 @@ import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.Log4j.CPSPatternLayout;
 import Composestar.Utils.Logging.Log4j.CrucialLevel;
 import Composestar.Utils.Logging.Log4j.MetricAppender;
+import Composestar.Utils.Perf.CPSTimer;
+import Composestar.Utils.Perf.Report.CPSTimerReport;
+import Composestar.Utils.Perf.Report.CPSTimerTree;
+import Composestar.Utils.Perf.Report.XMLTimerReport;
 
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules and
@@ -436,25 +442,24 @@ public abstract class Master
 	{
 		try
 		{
-			long beginTime = System.currentTimeMillis();
+			CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, "Main process");
 
 			preBuild();
 
 			// initialize INCRE
-			INCRE incre = INCRE.instance();
+			INCRE incre = new INCRE();
 			incre.init(resources);
 
 			// execute enabled modules one by one
 			incre.runModules(resources);
 
-			// close the incre reporter
-			incre.getReporter().close();
-
 			postBuild();
 
 			// display total time elapsed
-			long total = System.currentTimeMillis() - beginTime;
-			logger.debug("Total time: " + total + "ms");
+			timer.stop();
+			logger.debug("Total time: " + (timer.getLastEvent().getDuration() / 1000000) + " ms");
+
+			createTimerReport();
 
 			// display number of warnings
 			if ((logMetrics.numWarnings() > 0) || (logMetrics.numErrors() > 0) || (logMetrics.numFatals() > 0))
@@ -488,6 +493,54 @@ public abstract class Master
 			return EFAIL;
 		}
 		return 0;
+	}
+
+	/**
+	 * 
+	 */
+	protected void createTimerReport()
+	{
+		File timerResult = new File(resources.configuration().getProject().getIntermediate(), "Analyses");
+		if (!timerResult.exists())
+		{
+			if (!timerResult.mkdirs())
+			{
+				logger.warn(String.format("Unable to create report directory: %s", timerResult));
+				return;
+			}
+		}
+		if (!timerResult.isDirectory())
+		{
+			logger.warn(String.format("Report output location is not a directory: %s", timerResult));
+			return;
+		}
+		if (timerResult.canWrite())
+		{
+			timerResult = new File(timerResult, "TimerResults.xml");
+			FileOutputStream trOs;
+			try
+			{
+				trOs = new FileOutputStream(timerResult);
+			}
+			catch (FileNotFoundException e)
+			{
+				logger.warn(String.format("Error writing timer report: %s", e));
+				return;
+			}
+			String styleSheet = "TimerResults.xslt";
+			FileOutputStream stOs;
+			try
+			{
+				stOs = new FileOutputStream(new File(timerResult.getParent(), styleSheet));
+			}
+			catch (FileNotFoundException e)
+			{
+				logger.warn(String.format("Error writing timer report: %s", e));
+				return;
+			}
+			CPSTimerReport report = new XMLTimerReport(trOs, stOs, styleSheet);
+			report.generateReport(CPSTimerTree.constructTree(CPSTimer.getTimers()));
+		}
 	}
 
 	protected static void main(Class<? extends Master> masterClass, String[] args)

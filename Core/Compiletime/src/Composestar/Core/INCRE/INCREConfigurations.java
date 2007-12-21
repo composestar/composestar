@@ -14,12 +14,15 @@ public class INCREConfigurations
 
 	private Properties history;
 
+	private INCRE incre;
+
 	// public Configuration historyconfig;
 
-	public INCREConfigurations()
+	public INCREConfigurations(INCRE increInstance)
 	{
 		current = new Properties();
 		history = new Properties();
+		incre = increInstance;
 	}
 
 	public void init()
@@ -87,7 +90,6 @@ public class INCREConfigurations
 
 	public String getConfiguration(String key)
 	{
-		INCRE incre = INCRE.instance();
 		if (incre.searchingHistory)
 		{
 			return history.getProperty(key);

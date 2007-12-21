@@ -11,6 +11,7 @@ import Composestar.Core.Master.CompileHistory;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Perf.CPSTimer;
 
 public class INCRESerializer implements CTCommonModule
 {
@@ -27,9 +28,7 @@ public class INCRESerializer implements CTCommonModule
 		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
 		if (increMi.getBooleanSetting("enabled") || mi.getBooleanSetting("force"))
 		{
-			INCRE incre = INCRE.instance();
-			INCRETimer increhistory = incre.getReporter().openProcess("INCRESerializer", "Creation of INCRE history",
-					INCRETimer.TYPE_OVERHEAD);
+			CPSTimer timer = CPSTimer.getTimer("INCRESerializer", "Creation of INCRE history");
 
 			CompileHistory history = new CompileHistory(DataStore.instance(), resources);
 			File dest = new File(resources.configuration().getProject().getIntermediate(),
@@ -43,7 +42,7 @@ public class INCRESerializer implements CTCommonModule
 			{
 				logger.error("Unable to save compile history. Received exception: " + e, e);
 			}
-			increhistory.stop();
+			timer.stop();
 		}
 	}
 }

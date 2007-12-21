@@ -30,16 +30,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
 import Composestar.Eclipse.Core.UI.ComposestarPropertyPage;
-import Composestar.Eclipse.Core.Utils.FileUtils;
 
 /**
  * Project preferences page
@@ -189,29 +186,6 @@ public class JavaComposestarPropertyPage extends ComposestarPropertyPage impleme
 		incremental.add("True");
 		new Label(group, SWT.NULL);
 		incremental.setLayoutData(gd);
-
-		label = new Label(group, SWT.NULL);
-		label.setText(FILTERMODULE_TITLE);
-		filterModuleOrder = new Text(group, SWT.BORDER | SWT.SINGLE);
-		Button browseFMOButton = new Button(group, SWT.PUSH | SWT.RIGHT);
-		browseFMOButton.setText("Browse...");
-		browseFMOButton.addSelectionListener(new SelectionListener()
-		{
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
-
-			}
-
-			public void widgetSelected(SelectionEvent e)
-			{
-				Shell shell = new Shell();
-				shell.setText("Select order specification module");
-				FileDialog fd = new FileDialog(shell, SWT.OPEN);
-				String filterOrderString = fd.open();
-				filterModuleOrder.setText(FileUtils.fixFilename(filterOrderString));
-			}
-		});
-		filterModuleOrder.setLayoutData(gd);
 
 		return controls;
 	}

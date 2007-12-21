@@ -17,10 +17,9 @@ import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.Legacy.LegacyCustomFilterType;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitResult;
-import Composestar.Core.LOLA.LOLA;
+import Composestar.Core.LOLA.metamodel.UnitDictionary;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -38,12 +37,15 @@ public class FITER implements CTCommonModule
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
+	protected UnitDictionary unitDict;
+
 	public FITER()
 	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
 		logger.info("Verifying Filter Types...");
+		unitDict = (UnitDictionary) resources.get(UnitDictionary.REPOSITORY_KEY);
 		List<LegacyCustomFilterType> customfilters = getCustomFilterTypes();
 		resolveCustomFilterTypes(customfilters);
 	}
@@ -65,11 +67,10 @@ public class FITER implements CTCommonModule
 	{
 		List<LegacyCustomFilterType> working = new ArrayList<LegacyCustomFilterType>(customfilters);
 		List<LegacyCustomFilterType> result = new ArrayList<LegacyCustomFilterType>(customfilters);
-		LOLA lola = (LOLA) INCRE.instance().getModuleByName(LOLA.MODULE_NAME);
 		String filterSuperClass = "Composestar.RuntimeCore.FLIRT.Filtertypes.CustomFilter";
-		if (lola.unitDict != null)
+		if (unitDict != null)
 		{
-			UnitResult ur = lola.unitDict.getByName(filterSuperClass, "Class");
+			UnitResult ur = unitDict.getByName(filterSuperClass, "Class");
 			if (ur != null && ur.singleValue() != null)
 			{
 				ProgramElement filterType = ur.singleValue();

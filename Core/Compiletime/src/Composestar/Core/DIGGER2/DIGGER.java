@@ -25,8 +25,6 @@ import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
@@ -34,6 +32,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Perf.CPSTimer;
 
 /**
  * DIspatch Grapg GEneratoR. Creates an initial dispatch graph using the
@@ -64,11 +63,6 @@ public class DIGGER implements CTCommonModule
 	protected DispatchGraph graph;
 
 	/**
-	 * Reference to the INCRE module, used for timer creation
-	 */
-	protected INCRE incre;
-
-	/**
 	 * Reference to out ModuleInfo instance, used to retrieve configuration
 	 * settings.
 	 */
@@ -90,6 +84,8 @@ public class DIGGER implements CTCommonModule
 	@ResourceManager
 	protected FIRE2Resources f2res;
 
+	protected CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+
 	public DIGGER()
 	{}
 
@@ -101,14 +97,11 @@ public class DIGGER implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		// initialize
-		incre = INCRE.instance();
-		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Main", INCRETimer.TYPE_OVERHEAD);
 		moduleInfo = ModuleInfoManager.get(DIGGER.class);
 		graph = new DispatchGraph(moduleInfo.getIntSetting("mode"));
 		graph.setAutoResolve(false);
 		resources.put(DispatchGraph.REPOSITORY_KEY, graph);
 		allCrumbs = new ArrayList<Breadcrumb>();
-		filthinit.stop();
 
 		// f2res = resources.getResourceManager(FIRE2Resources.class);
 
@@ -151,8 +144,7 @@ public class DIGGER implements CTCommonModule
 	 */
 	protected void createBreadcrumbs() throws ModuleException
 	{
-		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME,
-				"Creating breadcrumbs in mode " + graph.getMode(), INCRETimer.TYPE_NORMAL);
+		timer.start("Creating breadcrumbs in mode " + graph.getMode());
 		Iterator<Concern> concerns = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (concerns.hasNext())
 		{
@@ -197,8 +189,7 @@ public class DIGGER implements CTCommonModule
 	 */
 	protected void resolveBreadcrumbs() throws ModuleException
 	{
-		INCRETimer timer = incre.getReporter()
-				.openProcess(MODULE_NAME, "Resolving breadcrumbs", INCRETimer.TYPE_NORMAL);
+		timer.start("Resolving breadcrumbs");
 		for (Breadcrumb crumb : allCrumbs)
 		{
 			graph.getResolver().resolve(crumb);
@@ -215,8 +206,7 @@ public class DIGGER implements CTCommonModule
 	 */
 	protected void checkRecursion() throws ModuleException
 	{
-		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME, "Checking for recursive filter definitions",
-				INCRETimer.TYPE_NORMAL);
+		timer.start("Checking for recursive filter definitions");
 		for (Breadcrumb crumb : allCrumbs)
 		{
 			List<AbstractMessageResult> results = graph.getResultingMessages(crumb);

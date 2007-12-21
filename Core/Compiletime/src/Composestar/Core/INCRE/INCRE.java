@@ -33,6 +33,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Perf.CPSTimer;
 
 /**
  * The INCRE class is responsible for deciding which modules are incremental and
@@ -45,8 +46,6 @@ public final class INCRE implements CTCommonModule
 	public static final String MODULE_NAME = "INCRE";
 
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
-
-	private static INCRE instance;
 
 	/**
 	 * If true incremental compilation is enabled for this build
@@ -64,8 +63,6 @@ public final class INCRE implements CTCommonModule
 	public boolean searchingHistory;
 
 	private ConfigManager configmanager;
-
-	private INCREReporter reporter;
 
 	// for optimalization purposes
 	public INCREConfigurations configurations;
@@ -92,30 +89,18 @@ public final class INCRE implements CTCommonModule
 
 	private File historyFile;
 
-	private INCRE()
+	public INCRE()
 	{
 		moduleInfo = ModuleInfoManager.get(INCRE.class);
 		filesCheckedOnTimeStamp = new HashMap<String, Boolean>();
 		dsObjectsOrdered = new HashMap<String, List<RepositoryEntity>>();
-		configurations = new INCREConfigurations();
+		configurations = new INCREConfigurations(this);
 		modulesByName = new HashMap<String, CTCommonModule>();
-	}
-
-	public static INCRE instance()
-	{
-		if (instance == null)
-		{
-			instance = new INCRE();
-		}
-
-		return instance;
 	}
 
 	public void init(CommonResources inRsources) throws ModuleException
 	{
 		resources = inRsources;
-		reporter = new INCREReporter(resources);
-		reporter.open();
 		config = resources.configuration();
 		// check whether incremental compilation is enabled
 
@@ -129,9 +114,6 @@ public final class INCRE implements CTCommonModule
 		{
 			deleteHistory();
 		}
-
-		// time this initialization process
-		INCRETimer increinit = getReporter().openProcess(MODULE_NAME, "", INCRETimer.TYPE_ALL);
 
 		// parse the XML configuration file containing the modules
 		loadConfiguration(getConfigFile());
@@ -175,8 +157,6 @@ public final class INCRE implements CTCommonModule
 			configurations.init();
 		}
 
-		increinit.stop(); // stop timing INCRE's initialization
-
 		// INCRE enabled or not?
 		logger.debug("INCRE is " + (enabled ? "enabled" : "disabled"));
 	}
@@ -185,12 +165,14 @@ public final class INCRE implements CTCommonModule
 	{
 		Collection<INCREModule> modules = configmanager.getModules().values();
 
+		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 		for (INCREModule m : modules)
 		{
+			m.setParent(this);
+			timer.start(m.getName());
 			m.execute(resources);
-
-			long total = getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL);
-			logger.debug(m.getName() + " executed in " + total + " ms");
+			timer.stop();
+			logger.debug(m.getName() + " executed in " + (timer.getLastEvent().getDuration() / 1000000) + " ms");
 		}
 	}
 
@@ -233,8 +215,6 @@ public final class INCRE implements CTCommonModule
 
 	private void loadConfiguration(InputStream configfile) throws ModuleException
 	{
-		INCRETimer increparse = getReporter().openProcess(MODULE_NAME, "Parsing configuration file",
-				INCRETimer.TYPE_OVERHEAD);
 		try
 		{
 			configmanager = new ConfigManager();
@@ -243,10 +223,6 @@ public final class INCRE implements CTCommonModule
 		catch (Exception e)
 		{
 			throw new ModuleException("Error parsing configuration file: " + e.getMessage(), MODULE_NAME);
-		}
-		finally
-		{
-			increparse.stop();
 		}
 	}
 
@@ -260,14 +236,6 @@ public final class INCRE implements CTCommonModule
 		}
 
 		return result;
-	}
-
-	/**
-	 * Returns an instance of INCREReporter
-	 */
-	public INCREReporter getReporter()
-	{
-		return reporter;
 	}
 
 	/**
@@ -877,14 +845,12 @@ public final class INCRE implements CTCommonModule
 			return false;
 		}
 
-		INCREComparator comparator = new INCREComparator(moduleName);
+		INCREComparator comparator = new INCREComparator(this, moduleName);
 		currentRepository = DataStore.instance();
 		searchingHistory = false;
 		Object historyobject = null;
 		Object depofinputobject;
 		Object depofhistoryobject;
-		INCRETimer overhead = getReporter().openProcess(moduleName, "INCRE::isProcessedBy(" + input + ')',
-				INCRETimer.TYPE_OVERHEAD);
 
 		INCREModule mod = configmanager.getModuleByID(moduleName);
 		if (mod == null)
@@ -963,7 +929,6 @@ public final class INCRE implements CTCommonModule
 						}
 						if (isFileModified(currentFile))
 						{
-							overhead.stop();
 							logger.debug("Found modified dependency [module=" + moduleName + ",dep=" + dep.getName()
 									+ ",input=" + input + ']');
 							return false;
@@ -980,7 +945,6 @@ public final class INCRE implements CTCommonModule
 					boolean modified = !comparator.getComparison(dep.getName() + depofinputobject.hashCode());
 					if (modified)
 					{
-						overhead.stop();
 						logger.debug("Found modified dependency [module=" + moduleName + ",dep=" + dep.getName()
 								+ ",input=" + input + ']');
 						return false;
@@ -1013,7 +977,6 @@ public final class INCRE implements CTCommonModule
 						// stop calculation when object has been modified
 						if (modified)
 						{
-							overhead.stop();
 							logger.debug("Found modified dependency [module=" + moduleName + ",dep=" + dep.getName()
 									+ ",input=" + input + ']');
 							return false;
@@ -1023,7 +986,6 @@ public final class INCRE implements CTCommonModule
 					{
 						// history of input object cannot be found
 						// so input has not been processed
-						overhead.stop();
 						logger.debug("Found modified dependency [module=" + moduleName + ",dep=" + dep.getName()
 								+ ",input=" + input + ']');
 						return false;
@@ -1034,7 +996,6 @@ public final class INCRE implements CTCommonModule
 
 		// no dependencies have been modified
 		// so input has already been processed
-		overhead.stop();
 
 		return true;
 	}

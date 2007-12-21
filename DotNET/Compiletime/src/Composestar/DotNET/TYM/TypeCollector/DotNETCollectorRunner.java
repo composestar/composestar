@@ -19,7 +19,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledI
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -32,20 +31,16 @@ public class DotNETCollectorRunner implements CollectorRunner
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
-	private INCRE incre;
-
 	private DataStore dataStore;
 
 	private UnitRegister register;
 
 	public DotNETCollectorRunner()
-	{
-		incre = INCRE.instance();
-		dataStore = DataStore.instance();
-	}
+	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
+		dataStore = DataStore.instance();
 		try
 		{
 			register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
@@ -62,11 +57,9 @@ public class DotNETCollectorRunner implements CollectorRunner
 			parser.setContentHandler(handler);
 			File typesXml = new File(resources.configuration().getProject().getIntermediate(), "types.xml");
 			parser.parse(new InputSource(new FileInputStream(typesXml)));
-			if (!INCRE.instance().isIncremental())
-			{
-				typesXml.delete(); // free up some diskspace because types.xml
-				// is no longer needed
-			}
+
+			typesXml.delete(); // free up some diskspace because types.xml
+			// is no longer needed
 		}
 		catch (SAXException e)
 		{

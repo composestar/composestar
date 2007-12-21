@@ -25,8 +25,11 @@ public class INCREComparator
 
 	protected int compare;
 
-	public INCREComparator(String inModule)
+	protected INCRE incre;
+
+	public INCREComparator(INCRE parent, String inModule)
 	{
+		incre = parent;
 		module = inModule;
 	}
 
@@ -278,7 +281,6 @@ public class INCREComparator
 	public boolean hasComparableObjects(Object obj)
 	{
 		String fullname = obj.getClass().getName();
-		INCRE incre = INCRE.instance();
 		INCREModule m = incre.getConfigManager().getModuleByID(module);
 
 		return m.hasComparableObjects(fullname);
@@ -295,7 +297,6 @@ public class INCREComparator
 	{
 		try
 		{
-			INCRE incre = INCRE.instance();
 			String fullname = a.getClass().getName();
 			INCREModule m = incre.getConfigManager().getModuleByID(module);
 			List<Object> compObjects = m.getComparableObjects(fullname);

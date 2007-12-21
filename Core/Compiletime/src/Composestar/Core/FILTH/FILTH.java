@@ -14,14 +14,13 @@ import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Perf.CPSTimer;
 
 /**
  * Calculates orders of the superimposed filtermodules
@@ -39,15 +38,8 @@ public class FILTH implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		/* get a INCRE instance */
-		INCRE incre = INCRE.instance();
-
-		INCRETimer filthinit = incre.getReporter().openProcess(MODULE_NAME, "Init FILTH service",
-				INCRETimer.TYPE_NORMAL);
-
 		FILTHService filthservice = new FILTHServiceImpl(resources);
 		InnerDispatcher.getInnerDispatchReference();
-		filthinit.stop();
 
 		Iterator<Concern> conIter = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
@@ -60,10 +52,9 @@ public class FILTH implements CTCommonModule
 				List<List<FilterModuleSuperImposition>> list;
 
 				/* Calculate FilterModuleOrders */
-				INCRETimer filthrun = incre.getReporter().openProcess(MODULE_NAME, c.getUniqueID(),
-						INCRETimer.TYPE_NORMAL);
+				CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, c.getUniqueID());
 				list = filthservice.getMultipleOrder(c);
-				filthrun.stop();
+				timer.stop();
 
 				if (list.size() > 1)
 				{

@@ -12,8 +12,6 @@ import tarau.jinni.Init;
 import Composestar.C.LOLA.metamodel.CLanguageModel;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LOLA.AnnotationSuperImposition;
 import Composestar.Core.LOLA.LOLA;
@@ -65,23 +63,12 @@ public class CLOLA extends LOLA
 		 * PrintStream stderr = System.err; System.setErr(System.out);
 		 */
 
-		INCRE incre = INCRE.instance();
-		boolean incremental = incre.isModuleInc("LOLA");
-
 		// step 0: gather all predicate selectors
 		Iterator predicateIter = dataStore.getAllInstancesOf(PredicateSelector.class);
 		while (predicateIter.hasNext())
 		{
 			PredicateSelector predSel = (PredicateSelector) predicateIter.next();
 			selectors.add(predSel);
-		}
-
-		if (incremental && !selectors.isEmpty())
-		{
-			// selectors = splitSelectors(selectors); // which
-			// selectors
-			// to
-			// skip/process?
 		}
 
 		// initialize when we have one or more predicate selectors
@@ -93,11 +80,8 @@ public class CLOLA extends LOLA
 		/* Initialize this module (only on the first call) */
 		if (!initialized)
 		{
-			INCRETimer initprolog = incre.getReporter().openProcess("LOLA", "Initialize prolog engine",
-					INCRETimer.TYPE_NORMAL);
 			File predicateFile = initLanguageModel(resources);
 			initPrologEngine(resources, predicateFile);
-			initprolog.stop();
 			initialized = true;
 		}
 
@@ -107,8 +91,6 @@ public class CLOLA extends LOLA
 			 * Create an index of language units by type and name so that Prolog
 			 * can look them up faster
 			 */
-			INCRETimer unitindex = incre.getReporter().openProcess("LOLA", "Creation of unit index",
-					INCRETimer.TYPE_NORMAL);
 			UnitRegister register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
 			if (register == null)
 			{
@@ -116,7 +98,6 @@ public class CLOLA extends LOLA
 				resources.put(UnitRegister.RESOURCE_KEY, register);
 			}
 			createUnitIndex(register);
-			unitindex.stop();
 			/*******************************************************************
 			 * Create a predSel here that will be evaluated from xml file Then
 			 * we can define it as Primitive concern/&set of Functions At last
@@ -136,11 +117,8 @@ public class CLOLA extends LOLA
 
 			// Run the superimposition algorithm; this will also calculate the
 			// values of all selectors
-			INCRETimer selcalc = incre.getReporter().openProcess("LOLA", "Calculating values of selectors",
-					INCRETimer.TYPE_NORMAL);
 			AnnotationSuperImposition asi = new AnnotationSuperImposition(dataStore, selectors);
 			asi.run(composestarBuiltins);
-			selcalc.stop();
 		}
 
 	}

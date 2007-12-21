@@ -37,8 +37,6 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 
 	protected Combo secretMode;
 
-	protected Text filterModuleOrder;
-
 	protected GridData gd;
 
 	protected IProject project;
@@ -61,7 +59,6 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 		runDebugLevel.select(settings.getInt("runDebugLevel", 0)); // 0=error
 		incremental.select(settings.getBoolean("incremental", false) ? 1 : 0);
 		secretMode.select(secretMode.indexOf(settings.get("SECRET.mode", "Normal")));
-		filterModuleOrder.setText(settings.get("FILTH.input", ""));
 	}
 
 	public void save()
@@ -73,7 +70,6 @@ public class ComposestarPropertyPage extends PropertyPage implements IComposesta
 			settings.putInt("runDebugLevel", runDebugLevel.getSelectionIndex());
 			settings.putBoolean("incremental", incremental.getSelectionIndex() == 1);
 			settings.put("SECRET.mode", secretMode.getText());
-			settings.put("FILTH.input", filterModuleOrder.getText());
 			try
 			{
 				settings.flush();
