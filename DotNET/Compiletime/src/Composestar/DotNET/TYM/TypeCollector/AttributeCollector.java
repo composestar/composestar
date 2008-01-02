@@ -32,11 +32,14 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
+	protected DataStore ds;
+
 	public AttributeCollector()
 	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
+		ds = resources.repository();
 		File xmlFile = new File(resources.configuration().getProject().getIntermediate(), "attributes.xml");
 
 		if (xmlFile.exists())
@@ -66,7 +69,7 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 		if ("Attribute".equalsIgnoreCase(qName) && attr != null)
 		{
 			Annotation anno = new Annotation();
-			Concern c = (Concern) DataStore.instance().getObjectByID(attr.getValue("type"));
+			Concern c = (Concern) ds.getObjectByID(attr.getValue("type"));
 			if (c != null && c.getPlatformRepresentation() != null)
 			{
 				Type annoType = (Type) c.getPlatformRepresentation();
@@ -97,7 +100,7 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 
 	public Type getTypeLocation(String location)
 	{
-		Concern c = (Concern) DataStore.instance().getObjectByID(location);
+		Concern c = (Concern) ds.getObjectByID(location);
 		if (c != null && c.getPlatformRepresentation() instanceof Type)
 		{
 			return (Type) c.getPlatformRepresentation();

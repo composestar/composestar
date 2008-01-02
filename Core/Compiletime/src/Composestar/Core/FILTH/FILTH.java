@@ -15,7 +15,6 @@ import java.util.List;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
@@ -38,9 +37,10 @@ public class FILTH implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		FILTHService filthservice = new FILTHServiceImpl(resources, InnerDispatcher.createInnerDispatchReference());
+		FILTHService filthservice = new FILTHServiceImpl(resources, InnerDispatcher
+				.createInnerDispatchReference(resources.repository()));
 
-		Iterator<Concern> conIter = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIter = resources.repository().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
 		{
 			Concern c = conIter.next();

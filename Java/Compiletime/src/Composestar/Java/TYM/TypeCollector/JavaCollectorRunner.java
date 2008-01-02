@@ -92,7 +92,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		}
 
 		int count = 0;
-		DataStore dataStore = DataStore.instance();
+		DataStore dataStore = resources.repository();
 		// loop through all current concerns, fetch implementation and remove
 		// from types map.
 		Iterator<Object> repIt = dataStore.getIterator();

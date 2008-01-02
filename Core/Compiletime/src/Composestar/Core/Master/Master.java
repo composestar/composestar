@@ -405,8 +405,8 @@ public abstract class Master
 		}
 
 		// create the repository and common resources
-		DataStore.instance();
 		resources = new CommonResources();
+		resources.setRepository(DataStore.instance());
 		resources.put(RESOURCE_CONFIGFILE, configFilename);
 		BuildConfig config = BuildConfigHandler.loadBuildConfig(configFile);
 		resources.setConfiguration(config);

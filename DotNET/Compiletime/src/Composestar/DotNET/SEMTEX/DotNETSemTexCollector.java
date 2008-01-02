@@ -45,7 +45,7 @@ public class DotNETSemTexCollector implements CTCommonModule
 			{
 				SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 				SAXParser saxParser = saxParserFactory.newSAXParser();
-				SemanticContainerHandler sch = new SemanticContainerHandler();
+				SemanticContainerHandler sch = new SemanticContainerHandler(resources.repository());
 
 				// We use the getCleanInputStream because the SAX parser has
 				// some problems with UTF-8

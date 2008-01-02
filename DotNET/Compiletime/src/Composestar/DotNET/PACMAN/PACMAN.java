@@ -30,9 +30,7 @@ public class PACMAN implements CTCommonModule
 	private DataStore dataStore;
 
 	public PACMAN()
-	{
-		dataStore = DataStore.instance();
-	}
+	{}
 
 	/**
 	 * Determines which types have been expanded with additional methods, then
@@ -43,6 +41,7 @@ public class PACMAN implements CTCommonModule
 	{
 		try
 		{
+			dataStore = resources.repository();
 			File target = new File(resources.configuration().getProject().getIntermediate(), "PartialClasses.cs");
 
 			PartialClassEmitter pce = new PartialClassEmitter(target);

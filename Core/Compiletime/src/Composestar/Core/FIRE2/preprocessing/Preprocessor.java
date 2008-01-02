@@ -91,12 +91,12 @@ public class Preprocessor implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		fire2Resources = resources.getResourceManager(FIRE2Resources.class, true);
-		preprocess();
+		preprocess(resources.repository());
 	}
 
-	public void preprocess()
+	public void preprocess(DataStore ds)
 	{
-		Iterator<FilterModule> moduleIter = DataStore.instance().getAllInstancesOf(FilterModule.class);
+		Iterator<FilterModule> moduleIter = ds.getAllInstancesOf(FilterModule.class);
 
 		logger.debug("Starting FIRE Preprocessing");
 

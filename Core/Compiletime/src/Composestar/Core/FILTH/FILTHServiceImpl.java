@@ -25,7 +25,6 @@ import Composestar.Core.FILTH.Core.Node;
 import Composestar.Core.FILTH.Core.OrderTraverser;
 import Composestar.Core.FILTH.Core.Rule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
@@ -35,9 +34,12 @@ public class FILTHServiceImpl extends FILTHService
 {
 	protected FilterModuleReference defaultDispatch;
 
+	protected Map<String, SyntacticOrderingConstraint> orderSpec;
+
 	protected FILTHServiceImpl(CommonResources cr, FilterModuleReference deffmr) throws ConfigurationException
 	{
 		defaultDispatch = deffmr;
+		orderSpec = (Map<String, SyntacticOrderingConstraint>) cr.get(FILTH.FILTER_ORDERING_SPEC);
 	}
 
 	@Override
@@ -145,16 +147,14 @@ public class FILTHServiceImpl extends FILTHService
 
 	private void processOrderingSpecifications(Graph g)
 	{
-		Map<String, SyntacticOrderingConstraint> map = (Map<String, SyntacticOrderingConstraint>) DataStore.instance()
-				.getObjectByID(FILTH.FILTER_ORDERING_SPEC);
-		if (map == null)
+		if (orderSpec == null)
 		{
 			return;
 		}
-		logger.info("FilterModule ordering constraints: " + map);
+		logger.info("FilterModule ordering constraints: " + orderSpec);
 
 		String left;
-		for (SyntacticOrderingConstraint soc : map.values())
+		for (SyntacticOrderingConstraint soc : orderSpec.values())
 		{
 			left = soc.getLeft();
 			Iterator<String> socit = soc.getRightFilterModules();

@@ -6,7 +6,6 @@ import java.util.List;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -36,7 +35,7 @@ public class TYPEX implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		concerns = DataStore.instance().getListOfAllInstances(Concern.class);
+		concerns = resources.repository().getListOfAllInstances(Concern.class);
 		signaturesModified = resources.getBoolean("signaturesmodified");
 
 		if (!signaturesModified)

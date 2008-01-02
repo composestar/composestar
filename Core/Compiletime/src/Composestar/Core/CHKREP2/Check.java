@@ -29,7 +29,6 @@ import java.util.Set;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -98,10 +97,9 @@ public class Check implements CTCommonModule
 
 	protected void runCheckers(CommonResources resources)
 	{
-		DataStore ds = DataStore.instance();
 		for (AbstractChecker checker : checkers)
 		{
-			checker.performCheck(ds);
+			checker.performCheck(resources.repository());
 		}
 	}
 }

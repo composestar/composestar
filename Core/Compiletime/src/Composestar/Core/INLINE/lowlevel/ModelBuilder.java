@@ -127,7 +127,7 @@ public class ModelBuilder implements CTCommonModule
 		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, FilterDirection.Output, bkmode);
 		outputFilterInliner = new LowLevelInliner(outputFilterBuilderStrategy, resources);
 
-		dataStore = DataStore.instance();
+		dataStore = resources.repository();
 		// f2res = resources.getResourceManager(FIRE2Resources.class);
 		startInliner();
 	}

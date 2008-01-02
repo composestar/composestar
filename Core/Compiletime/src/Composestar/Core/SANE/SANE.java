@@ -33,7 +33,7 @@ public class SANE implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		DataStore repository = DataStore.instance();
+		DataStore repository = resources.repository();
 		Iterator<CpsConcern> cpsConcernIter = repository.getAllInstancesOf(CpsConcern.class);
 
 		// now iterate over the CpsConcerns again and resolve the bindings

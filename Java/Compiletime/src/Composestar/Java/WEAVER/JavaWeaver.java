@@ -45,6 +45,10 @@ public class JavaWeaver implements WEAVER
 	 */
 	public static final String WOVEN_CLASSES = "JavaWovenClasses";
 
+	protected HookDictionary hd;
+
+	protected DataStore ds;
+
 	/**
 	 * Constructor
 	 */
@@ -66,11 +70,14 @@ public class JavaWeaver implements WEAVER
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
+		hd = new HookDictionary();
+		ds = resources.repository();
+
 		// create the hook dictionary...
 		createHookDictionary(resources);
 
 		Project project = resources.configuration().getProject();
-		ClassWeaver c = new ClassWeaver(resources);
+		ClassWeaver c = new ClassWeaver(resources, hd);
 		for (File file : project.getFilesDependencies())
 		{
 			c.addClasspath(file);
@@ -90,9 +97,6 @@ public class JavaWeaver implements WEAVER
 
 	public void getAfterInstantationInterceptions()
 	{
-
-		DataStore ds = DataStore.instance();
-		HookDictionary hd = HookDictionary.instance();
 		Iterator<CompiledImplementation> it = ds.getAllInstancesOf(CompiledImplementation.class);
 		while (it.hasNext())
 		{
@@ -127,9 +131,6 @@ public class JavaWeaver implements WEAVER
 
 	public void getCastInterceptions()
 	{
-
-		DataStore ds = DataStore.instance();
-		HookDictionary hd = HookDictionary.instance();
 		Set<String> qns = new HashSet<String>();
 		Iterator<Concern> iterConcerns = ds.getAllInstancesOf(Concern.class);
 		while (iterConcerns.hasNext())
@@ -167,7 +168,7 @@ public class JavaWeaver implements WEAVER
 
 	public void getMethodInterceptions(CommonResources resources) throws ModuleException
 	{
-		Iterator<Concern> iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> iterConcerns = ds.getAllInstancesOf(Concern.class);
 		while (iterConcerns.hasNext())
 		{
 			Concern c = iterConcerns.next();
@@ -182,12 +183,12 @@ public class JavaWeaver implements WEAVER
 				if (hasInputFilters(list))
 				{
 					logger.debug(" method calls to " + c.getQualifiedName() + " added to hook dictionary...");
-					HookDictionary.instance().addIncomingMethodInterception(c.getQualifiedName());
+					hd.addIncomingMethodInterception(c.getQualifiedName());
 				}
 				if (hasOutputFilters(list))
 				{
 					logger.debug(" method calls from " + c.getQualifiedName() + " added to hook dictionary...");
-					HookDictionary.instance().addOutgoingMethodInterception(c.getQualifiedName());
+					hd.addOutgoingMethodInterception(c.getQualifiedName());
 				}
 			}
 		}

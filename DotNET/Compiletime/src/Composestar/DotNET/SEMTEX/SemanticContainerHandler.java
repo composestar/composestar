@@ -38,10 +38,10 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 
 	private DataStore datastore;
 
-	public SemanticContainerHandler()
+	public SemanticContainerHandler(DataStore ds)
 	{
 		// Get a local instance of the datastore
-		datastore = DataStore.instance();
+		datastore = ds;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

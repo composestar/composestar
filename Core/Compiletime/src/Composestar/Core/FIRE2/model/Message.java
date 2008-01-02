@@ -92,7 +92,7 @@ public class Message implements Serializable
 	private static Target getSelfTarget()
 	{
 		Target target = new Target();
-		target.setName("self");
+		target.setName(Target.SELF);
 		return target;
 	}
 

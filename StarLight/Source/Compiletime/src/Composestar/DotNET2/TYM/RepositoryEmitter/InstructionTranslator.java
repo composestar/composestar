@@ -37,11 +37,10 @@ class InstructionTranslator implements Visitor
 {
 	private Map<String, String> fullNameMap = new HashMap<String, String>();
 
-	public InstructionTranslator()
+	public InstructionTranslator(DataStore dataStore)
 	{
 		Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction filterAction;
 
-		DataStore dataStore = DataStore.instance();
 		Iterator<Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction> it = dataStore
 				.getAllInstancesOf(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.class);
 

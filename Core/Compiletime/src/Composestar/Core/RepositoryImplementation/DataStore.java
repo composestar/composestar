@@ -65,6 +65,9 @@ public class DataStore implements Serializable, Cloneable
 
 	/**
 	 * Returns what should be the sole instance of this class.
+	 * 
+	 * @deprecated Use Composestar.Core.Resources.CommonResources.repository()
+	 * @see Composestar.Core.Resources.CommonResources#repository()
 	 */
 	public static DataStore instance()
 	{

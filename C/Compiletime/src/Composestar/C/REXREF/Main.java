@@ -67,23 +67,23 @@ public class Main extends DefaultHandler implements CTCommonModule
 		File concernXml = new File(resources.configuration().getProject().getBase(), "CConcern.xml");
 		if (concernXml.exists())
 		{
-			resolveConcernReferences(concernXml);
+			resolveConcernReferences(concernXml, resources.repository());
 		}
 		DoResolve dr = new DoResolve();
-		dr.go(DataStore.instance());
+		dr.go(resources.repository());
 	}
 
-	private void resolveConcernReferences(File concernXml) throws ModuleException
+	private void resolveConcernReferences(File concernXml, DataStore ds) throws ModuleException
 	{
 		// iterate over all instances of ConcernReference
 		checkCConcern(concernXml);
-		for (Iterator it = DataStore.instance().getAllInstancesOf(ConcernReference.class); it.hasNext();)
+		for (Iterator it = ds.getAllInstancesOf(ConcernReference.class); it.hasNext();)
 		{
 			ConcernReference ref = (ConcernReference) it.next();
 
 			// fetch the Concern with the same name as the reference references
 			// to
-			Concern concern = (Concern) DataStore.instance().getObjectByID(ref.getQualifiedName());
+			Concern concern = (Concern) ds.getObjectByID(ref.getQualifiedName());
 			if (concern != null)
 			{
 				ref.setRef(concern);
@@ -105,7 +105,7 @@ public class Main extends DefaultHandler implements CTCommonModule
 						type.setFullName(module);
 						pconcern.setPlatformRepresentation(type);
 						type.setParentConcern(pconcern);
-						DataStore.instance().addObject(pconcern.getName(), pconcern);
+						ds.addObject(pconcern.getName(), pconcern);
 						ref.setRef(pconcern);
 						ref.setResolved(true);
 						inCConcern = true;

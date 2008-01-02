@@ -65,12 +65,15 @@ public class DotNETWeaveFileGenerator implements CTCommonModule
 
 	protected String dummyAssembly;
 
+	protected DataStore ds;
+
 	public DotNETWeaveFileGenerator()
 	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
 		config = resources.configuration();
+		ds = resources.repository();
 		File dummies = (File) resources.get(DotNETCompiler.DUMMY_ASSEMBLY);
 		dummyAssembly = FileUtils.removeExtension(dummies.getName().toString());
 		File destination = new File(config.getProject().getIntermediate(), "weavespec.xml");
@@ -256,7 +259,6 @@ public class DotNETWeaveFileGenerator implements CTCommonModule
 		List<String> result = new ArrayList<String>();
 		logger.debug("Searching for instantiation interceptions...");
 
-		DataStore ds = DataStore.instance();
 		Iterator it = ds.getAllInstancesOf(CompiledImplementation.class);
 		while (it.hasNext())
 		{
@@ -310,7 +312,7 @@ public class DotNETWeaveFileGenerator implements CTCommonModule
 	{
 		out.println("<methodInvocations>");
 
-		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator iterConcerns = ds.getAllInstancesOf(Concern.class);
 		while (iterConcerns.hasNext())
 		{
 			Concern c = (Concern) iterConcerns.next();
@@ -339,7 +341,7 @@ public class DotNETWeaveFileGenerator implements CTCommonModule
 
 		out.println("<casts>");
 
-		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator iterConcerns = ds.getAllInstancesOf(Concern.class);
 		while (iterConcerns.hasNext())
 		{
 			Concern c = (Concern) iterConcerns.next();
@@ -411,7 +413,7 @@ public class DotNETWeaveFileGenerator implements CTCommonModule
 		// Write definitions for outputfilters and instantiations
 		List<String> instantiationClasses = getAfterInstantiationClasses();
 
-		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator iterConcerns = ds.getAllInstancesOf(Concern.class);
 		while (iterConcerns.hasNext())
 		{
 			Concern c = (Concern) iterConcerns.next();

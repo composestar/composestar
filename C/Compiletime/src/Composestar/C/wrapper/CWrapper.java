@@ -105,7 +105,7 @@ public class CWrapper implements CTCommonModule
 		 **********************************************************************/
 		usedTypes = new HashMap();
 		// CFile semantics = new CFile();
-		DataStore dataStore = DataStore.instance();
+		DataStore dataStore = resources.repository();
 		// PrimitiveConcern pcFile = new PrimitiveConcern();
 		// semantics.setName("Semantics");
 		// semantics.setFullName("Composestar.Semantics");

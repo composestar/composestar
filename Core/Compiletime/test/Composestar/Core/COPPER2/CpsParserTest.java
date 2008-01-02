@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -39,6 +40,7 @@ import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.BasicConfigurator;
 
 import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
+import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -76,7 +78,6 @@ public class CpsParserTest extends TestCase
 		}
 		files = exampleDir.listFiles(new FileFilter()
 		{
-
 			public boolean accept(File pathname)
 			{
 				return pathname.getName().endsWith(".cps");
@@ -128,6 +129,7 @@ public class CpsParserTest extends TestCase
 		nodes.setTokenStream(tokens);
 		CpsTreeWalker w = new CpsTreeWalker(nodes);
 		w.setSourceFile(file.toString());
+		w.setOrderingConstraints(new HashMap<String, SyntacticOrderingConstraint>());
 		try
 		{
 			w.concern();

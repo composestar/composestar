@@ -224,6 +224,8 @@ public abstract class LOLA implements CTCommonModule
 
 		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 
+		dataStore = resources.repository();
+
 		resources.put(UnitDictionary.REPOSITORY_KEY, unitDict);
 
 		// step 0: gather all predicate selectors

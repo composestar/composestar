@@ -8,7 +8,6 @@ import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CompileHistory;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
@@ -30,7 +29,7 @@ public class INCRESerializer implements CTCommonModule
 		{
 			CPSTimer timer = CPSTimer.getTimer("INCRESerializer", "Creation of INCRE history");
 
-			CompileHistory history = new CompileHistory(DataStore.instance(), resources);
+			CompileHistory history = new CompileHistory(resources);
 			File dest = new File(resources.configuration().getProject().getIntermediate(),
 					CompileHistory.DEFAULT_FILENAME);
 			try

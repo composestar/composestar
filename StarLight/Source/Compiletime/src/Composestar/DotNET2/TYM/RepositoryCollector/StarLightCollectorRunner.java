@@ -26,7 +26,6 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.DotNET2.LAMA.DotNETAttribute;
 import Composestar.DotNET2.LAMA.DotNETCallToOtherMethod;
@@ -280,7 +279,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			pc.setName(type.getFullName());
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
-			DataStore.instance().addObject(type.getFullName(), pc);
+			resources.repository().addObject(type.getFullName(), pc);
 
 			// logger.debug("Adding primitive concern '" + pc.getName() + "'");
 		}
@@ -326,7 +325,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 				pc_attribute.setName(attributeType.getFullName());
 				pc_attribute.setPlatformRepresentation(attributeType);
 				attributeType.setParentConcern(pc_attribute);
-				DataStore.instance().addObject(attributeType.getFullName(), pc_attribute);
+				resources.repository().addObject(attributeType.getFullName(), pc_attribute);
 
 				// Add this attribute type to the list of added types
 				newAttributeTypes.put(attributeType.getFullName(), attributeType);

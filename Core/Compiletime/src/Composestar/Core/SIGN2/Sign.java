@@ -90,6 +90,8 @@ public class Sign implements CTCommonModule
 	@ResourceManager
 	private FIRE2Resources fire2Resources;
 
+	private DataStore datastore;
+
 	public Sign()
 	{
 		init();
@@ -110,6 +112,7 @@ public class Sign implements CTCommonModule
 	{
 		try
 		{
+			datastore = inresc.repository();
 			// fire2Resources = inresc.getResourceManager(FIRE2Resources.class);
 			error = false;
 			logger.debug("Start signature generation and checking");
@@ -175,7 +178,7 @@ public class Sign implements CTCommonModule
 
 	private void initializeSignatures()
 	{
-		Iterator<Concern> conIter = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
 		{
 			Concern concern = conIter.next();
@@ -939,7 +942,6 @@ public class Sign implements CTCommonModule
 
 	public void finishing()
 	{
-		DataStore datastore = DataStore.instance();
 		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
 
 		while (conIter.hasNext())
@@ -992,7 +994,6 @@ public class Sign implements CTCommonModule
 	public void printConcernMethods(CommonResources resources)
 	{
 		boolean signaturesmodified = false;
-		DataStore datastore = DataStore.instance();
 
 		// Get all the concerns
 		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
@@ -1054,7 +1055,6 @@ public class Sign implements CTCommonModule
 	 */
 	public void cleanProbes()
 	{
-		DataStore datastore = DataStore.instance();
 		Iterator<Concern> conIter = datastore.getAllInstancesOf(Concern.class);
 
 		while (conIter.hasNext())

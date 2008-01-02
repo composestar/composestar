@@ -69,7 +69,7 @@ public class DotNETRepositorySerializer extends CONE
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		DataStore ds = DataStore.instance();
+		DataStore ds = resources.repository();
 
 		ModuleInfo mi = ModuleInfoManager.get(DotNETRepositorySerializer.MODULE_NAME);
 		File destination = (File) resources.get(REPOSITORY_FILE_KEY);
@@ -365,9 +365,9 @@ public class DotNETRepositorySerializer extends CONE
 				int modifier = declaredField.getModifiers();
 
 				if (Modifier.isPublic(modifier) /*
-				 * &&
-				 * !Modifier.isTransient(modifier)
-				 */)
+												 * &&
+												 * !Modifier.isTransient(modifier)
+												 */)
 				{
 					fields.add(declaredField);
 				}

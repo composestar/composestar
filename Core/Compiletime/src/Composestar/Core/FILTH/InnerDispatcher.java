@@ -74,7 +74,7 @@ public final class InnerDispatcher
 		return isDefaultDispatch(fmr.getRef());
 	}
 
-	private static FilterModule createInnerDispatchFilterModule()
+	private static FilterModule createInnerDispatchFilterModule(DataStore ds)
 	{
 		// create a conern
 		CpsConcern cc = new CpsConcern();
@@ -89,23 +89,23 @@ public final class InnerDispatcher
 		fm.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
 
 		// add the filter to the filtermodule
-		fm.addInputFilter(createInnerDispatchFilter(cc, fm, DefaultInnerDispatchNames.INPUT_FILTER));
-		fm.addOutputFilter(createInnerDispatchFilter(cc, fm, DefaultInnerDispatchNames.OUTER_FILTER));
+		fm.addInputFilter(createInnerDispatchFilter(ds, cc, fm, DefaultInnerDispatchNames.INPUT_FILTER));
+		fm.addOutputFilter(createInnerDispatchFilter(ds, cc, fm, DefaultInnerDispatchNames.OUTER_FILTER));
 
 		// add concern and filtermodule to the datastore
-		DataStore.instance().addObject(cc);
-		DataStore.instance().addObject(fm);
+		ds.addObject(cc);
+		ds.addObject(fm);
 
 		// create the instances
 		FilterModule fmInstance = new FilterModule(fm, new Vector(), DefaultInnerDispatchNames.FILTER_MODULE_TOKEN);
 		fmInstance.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
-		DataStore.instance().addObject(fmInstance);
+		ds.addObject(fmInstance);
 
 		// return the filtermodule
 		return fmInstance;
 	}
 
-	private static FilterAST createInnerDispatchFilter(CpsConcern cc, FilterModuleAST fm, String name)
+	private static FilterAST createInnerDispatchFilter(DataStore ds, CpsConcern cc, FilterModuleAST fm, String name)
 	{
 		// create a filter
 		FilterAST f = new FilterAST();
@@ -174,9 +174,9 @@ public final class InnerDispatcher
 		return f;
 	}
 
-	public static FilterModuleReference createInnerDispatchReference()
+	public static FilterModuleReference createInnerDispatchReference(DataStore ds)
 	{
-		FilterModule fm = InnerDispatcher.createInnerDispatchFilterModule();
+		FilterModule fm = InnerDispatcher.createInnerDispatchFilterModule(ds);
 		FilterModuleReference fmr = new FilterModuleReference();
 		fmr.setName(fm.getName());
 		fmr.setConcern(((CpsConcern) fm.getParent()).getName());

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.BACO.BACO;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.FileUtils;
@@ -40,12 +40,12 @@ public class DotNETSemTexRunner implements CTCommonModule
 			List<String> cmdList = new ArrayList<String>();
 			cmdList.add(exe);
 
-			List builtLibs = (List) DataStore.instance().getObjectByID("BuiltLibs");
-			Iterator it = builtLibs.iterator();
+			List<File> builtLibs = (List<File>) resources.get(BACO.BUILDLIBS_KEY);
+			Iterator<File> it = builtLibs.iterator();
 			while (it.hasNext())
 			{
-				String lib = (String) it.next();
-				cmdList.add(FileUtils.quote(lib));
+				File lib = it.next();
+				cmdList.add(FileUtils.quote(lib.toString()));
 			}
 
 			cmdList.add("/plugin:" + resources.getPathResolver().getResource("bin/SemanticComposestarPlugins.dll"));

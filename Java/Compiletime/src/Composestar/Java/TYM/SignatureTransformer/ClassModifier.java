@@ -23,8 +23,6 @@ public class ClassModifier
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("SITRA");
 
-	private static ClassModifier Instance;
-
 	private ClassPool classpool;
 
 	private List<File> pathList;
@@ -36,18 +34,6 @@ public class ClassModifier
 	{
 		classpool = ClassPool.getDefault();
 		pathList = new ArrayList<File>();
-	}
-
-	/**
-	 * Returns an <code>ClassModifier</code> instance.
-	 */
-	public static ClassModifier instance()
-	{
-		if (Instance == null)
-		{
-			Instance = new ClassModifier();
-		}
-		return Instance;
 	}
 
 	/**

@@ -39,9 +39,15 @@ public class MethodBodyTransformer extends ExprEditor
 
 	private ClassPool classpool;
 
-	public MethodBodyTransformer(ClassPool classpool)
+	private HookDictionary hd;
+
+	private DataStore ds;
+
+	public MethodBodyTransformer(ClassPool classpool, HookDictionary hookdict, DataStore repository)
 	{
 		this.classpool = classpool;
+		hd = hookdict;
+		ds = repository;
 	}
 
 	/**
@@ -52,7 +58,6 @@ public class MethodBodyTransformer extends ExprEditor
 	@Override
 	public void edit(Cast c) throws CannotCompileException
 	{
-		HookDictionary hd = HookDictionary.instance();
 		try
 		{
 			if (hd.isCastInterception(c.getType().getName()))
@@ -120,8 +125,6 @@ public class MethodBodyTransformer extends ExprEditor
 	@Override
 	public void edit(MethodCall m) throws CannotCompileException
 	{
-		HookDictionary hd = HookDictionary.instance();
-
 		String target = m.getClassName();
 		String caller = m.where().getDeclaringClass().getName();
 
@@ -166,8 +169,6 @@ public class MethodBodyTransformer extends ExprEditor
 	@Override
 	public void edit(NewExpr e) throws CannotCompileException
 	{
-
-		HookDictionary hd = HookDictionary.instance();
 		if (hd.isAfterInstantationInterception(e.getClassName()))
 		{
 			int mod = e.where().getModifiers();
@@ -285,8 +286,7 @@ public class MethodBodyTransformer extends ExprEditor
 		}
 
 		// second try: lookup in concern's Signature (it could be added by SIGN)
-		DataStore d = DataStore.instance();
-		Concern c = (Concern) d.getObjectByID(m.getClassName());
+		Concern c = (Concern) ds.getObjectByID(m.getClassName());
 		if (c != null)
 		{
 			Signature s = c.getSignature();

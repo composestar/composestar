@@ -107,7 +107,7 @@ public class DIGGER implements CTCommonModule
 
 		// step 1: breadcrumb creation, the crumbs will not be resolved
 		logger.info("Step 1: breadcrumb creation");
-		createBreadcrumbs();
+		createBreadcrumbs(resources.repository());
 
 		// step 2: resolve and check the created crumbs
 		if (moduleInfo.getBooleanSetting("resolve"))
@@ -142,10 +142,10 @@ public class DIGGER implements CTCommonModule
 	 * 
 	 * @throws ModuleException
 	 */
-	protected void createBreadcrumbs() throws ModuleException
+	protected void createBreadcrumbs(DataStore ds) throws ModuleException
 	{
 		timer.start("Creating breadcrumbs in mode " + graph.getMode());
-		Iterator<Concern> concerns = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> concerns = ds.getAllInstancesOf(Concern.class);
 		while (concerns.hasNext())
 		{
 			Concern concern = concerns.next();

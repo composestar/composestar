@@ -23,16 +23,19 @@ public class ClassWeaver
 
 	protected CommonResources resources;
 
+	protected HookDictionary hd;
+
 	/**
 	 * Constructor. Creates a ClassPool.
 	 * 
 	 * @see javassist.ClassPool
 	 */
-	public ClassWeaver(CommonResources resc)
+	public ClassWeaver(CommonResources resc, HookDictionary hookdict)
 	{
 		resources = resc;
 		classpool = new ClassPool();
 		classpool.appendSystemPath();
+		hd = hookdict;
 	}
 
 	/**
@@ -102,7 +105,7 @@ public class ClassWeaver
 				// weaving on embedded types.
 				// if (!p.getTypeMapping().getSource(typeName).isEmbedded())
 				// {
-				clazz.instrument(new MethodBodyTransformer(classpool));
+				clazz.instrument(new MethodBodyTransformer(classpool, hd, resources.repository()));
 				clazz.writeFile(outputDir.toString());
 				weavedClasses.add(getOutputFile(outputDir, clazz));
 				// }

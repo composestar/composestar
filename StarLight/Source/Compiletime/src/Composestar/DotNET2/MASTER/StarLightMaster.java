@@ -88,10 +88,8 @@ public class StarLightMaster extends Master
 		// Set the debugmode
 		setLogLevel(getSettingValue("buildDebugLevel"));
 
-		// Create the repository
-		DataStore.instance();
-
 		resources = new CommonResources();
+		resources.setRepository(DataStore.instance());
 		resources.put(RESOURCE_CONFIGFILE, configFilename);
 		resources.put(RESOURCE_CONFIGCONTAINER, configContainer);
 		resources.setPathResolver(getPathResolver());

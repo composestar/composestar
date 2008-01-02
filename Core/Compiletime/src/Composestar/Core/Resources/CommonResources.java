@@ -21,6 +21,7 @@ import Composestar.Core.Annotations.In;
 import Composestar.Core.Annotations.Out;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -54,6 +55,11 @@ public class CommonResources implements Serializable
 	protected BuildConfig config;
 
 	/**
+	 * The compose* datastore
+	 */
+	protected DataStore dataStore;
+
+	/**
 	 * Reference to the path resolver. The path resolver provides means to
 	 * resolve the paths for external compiler resources.
 	 */
@@ -84,6 +90,22 @@ public class CommonResources implements Serializable
 	public BuildConfig configuration()
 	{
 		return config;
+	}
+
+	public void setRepository(DataStore ds)
+	{
+		dataStore = ds;
+	}
+
+	/**
+	 * Retrieve the repository instance that contains all Compose* language
+	 * elements.
+	 * 
+	 * @return
+	 */
+	public DataStore repository()
+	{
+		return dataStore;
 	}
 
 	/**

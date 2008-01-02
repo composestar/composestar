@@ -70,7 +70,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	private Map<WeaveSpecification, FilterCodeCompressor> compressors;
 
-	private InstructionTranslator instructionTranslater = new InstructionTranslator();
+	private InstructionTranslator instructionTranslater;
 
 	private FilterCodeCompressor currentCompressor;
 
@@ -83,7 +83,6 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 	public StarLightEmitterRunner()
 	{
-		dataStore = DataStore.instance();
 		weaveSpecs = new HashMap<String, WeaveSpecification>();
 		compressors = new HashMap<WeaveSpecification, FilterCodeCompressor>();
 	}
@@ -91,6 +90,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 	public void run(CommonResources resc) throws ModuleException
 	{
 		resources = resc;
+		dataStore = resc.repository();
+		instructionTranslater = new InstructionTranslator(dataStore);
 		// Emit all types to persistent repository
 		try
 		{

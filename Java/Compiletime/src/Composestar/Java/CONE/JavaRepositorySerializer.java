@@ -39,7 +39,7 @@ public class JavaRepositorySerializer extends CONE
 
 		logger.info("writing repository to file " + repositoryFilename + " ...");
 
-		DataStore ds = DataStore.instance();
+		DataStore ds = resources.repository();
 
 		ds.excludeUnreferenced(PrimitiveConcern.class);
 

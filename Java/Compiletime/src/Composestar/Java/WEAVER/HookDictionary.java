@@ -2,7 +2,6 @@ package Composestar.Java.WEAVER;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -20,35 +19,16 @@ import java.util.Map;
  */
 public class HookDictionary
 {
-
 	private List<String> afterInstantationInterceptions = new ArrayList<String>();
 
 	private List<String> castInterceptions = new ArrayList<String>();
 
-	private Map<String, Map<?, ?>> incomingMethodInterceptions = new HashMap<String, Map<?, ?>>();
+	private Map<String, Map> incomingMethodInterceptions = new HashMap<String, Map>();
 
-	private Map<String, Map<?, ?>> outgoingMethodInterceptions = new HashMap<String, Map<?, ?>>();
-
-	private static HookDictionary Instance;
+	private Map<String, Map> outgoingMethodInterceptions = new HashMap<String, Map>();
 
 	public HookDictionary()
-	{
-
-	}
-
-	/**
-	 * Singleton
-	 * 
-	 * @return A HookDictionary instance.
-	 */
-	public static HookDictionary instance()
-	{
-		if (Instance == null)
-		{
-			Instance = new HookDictionary();
-		}
-		return Instance;
-	}
+	{}
 
 	/**
 	 * Adds an instantation interception to Dictionary.
@@ -87,7 +67,7 @@ public class HookDictionary
 	{
 		if (incomingMethodInterceptions.get(className) == null)
 		{
-			incomingMethodInterceptions.put(className, new Hashtable());
+			incomingMethodInterceptions.put(className, new HashMap());
 		}
 	}
 
@@ -100,7 +80,7 @@ public class HookDictionary
 	{
 		if (outgoingMethodInterceptions.get(className) == null)
 		{
-			outgoingMethodInterceptions.put(className, new Hashtable());
+			outgoingMethodInterceptions.put(className, new HashMap());
 		}
 	}
 

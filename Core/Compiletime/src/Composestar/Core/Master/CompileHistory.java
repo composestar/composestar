@@ -61,18 +61,12 @@ public class CompileHistory implements Serializable
 	protected Date savedOn;
 
 	/**
-	 * DataStore containing the compilation results
-	 */
-	protected DataStore datastore;
-
-	/**
 	 * The common resources. Contains data not required for runtime.
 	 */
 	protected CommonResources resources;
 
-	public CompileHistory(DataStore inDatastore, CommonResources inResources)
+	public CompileHistory(CommonResources inResources)
 	{
-		datastore = inDatastore;
 		resources = inResources;
 	}
 
@@ -154,7 +148,7 @@ public class CompileHistory implements Serializable
 
 	public DataStore getDataStore()
 	{
-		return datastore;
+		return resources.repository();
 	}
 
 	public CommonResources getResources()

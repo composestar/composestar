@@ -35,7 +35,7 @@ public class JavaSignatureTransformer implements SignatureTransformer
 		{
 			File dummies = (File) resources.get(CStarJavaCompiler.DUMMY_JAR);
 			JarTransformer transformer = new JarTransformer(dummies);
-			transformer.run();
+			transformer.run(resources.repository());
 		}
 	}
 }

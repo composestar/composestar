@@ -38,10 +38,6 @@ import tarau.jinni.JavaObject;
 import tarau.jinni.Prog;
 import tarau.jinni.PrologErrorState;
 import tarau.jinni.Term;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ProgramElementReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
@@ -53,7 +49,6 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.metamodel.ModelClashException;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
@@ -310,70 +305,73 @@ public class PredicateSelectorInterpreter
 		return ref;
 	}
 
-	public boolean resolveAnswers()
-	{
-
-		Vector<Reference> resolvedSelectedUnitRefs = new Vector<Reference>();
-		HashSet<ProgramElement> resolvedSelectedUnits = new HashSet<ProgramElement>();
-		boolean answersResolved = true;
-
-		// iterate over answers
-		Iterator<ProgramElement> units = currentSel.getSelectedUnits().iterator();
-		while (units.hasNext())
-		{
-
-			// find unit in current repository
-			ProgramElement unit = units.next();
-			ProgramElement unit2 = null;
-			boolean unitfound = false;
-
-			Object obj = DataStore.instance().getObjectByID(unit.getUnitName());
-
-			if (obj instanceof PrimitiveConcern)
-			{
-				PrimitiveConcern pc = (PrimitiveConcern) obj;
-				unit2 = (ProgramElement) pc.platformRepr;
-			}
-			else if (obj instanceof CpsConcern)
-			{
-				CpsConcern concern = (CpsConcern) obj;
-				Object impl = concern.getImplementation();
-				String className = "";
-
-				if (impl instanceof Source)
-				{
-					Source source = (Source) impl;
-					className = source.getClassName();
-				}
-				else if (impl instanceof CompiledImplementation)
-				{
-					className = ((CompiledImplementation) impl).getClassName();
-				}
-
-				unit2 = register.getType(className);
-			}
-
-			if (unit2 != null)
-			{
-				Reference ref = resolveUnit(unit2);
-				resolvedSelectedUnitRefs.add(ref);
-				resolvedSelectedUnits.add(unit2);
-				unitfound = true;
-			}
-
-			if (!unitfound)
-			{
-				logger.warn("Cannot resolve Unit " + unit.getUnitName());
-				answersResolved = false;
-			}
-
-		}
-
-		currentSel.setSelectedUnitRefs(resolvedSelectedUnitRefs);
-		currentSel.setSelectedUnits(resolvedSelectedUnits);
-		return answersResolved;
-
-	}
+	// TODO: not used?
+	// private boolean resolveAnswers()
+	// {
+	//
+	// Vector<Reference> resolvedSelectedUnitRefs = new Vector<Reference>();
+	// HashSet<ProgramElement> resolvedSelectedUnits = new
+	// HashSet<ProgramElement>();
+	// boolean answersResolved = true;
+	//
+	// // iterate over answers
+	// Iterator<ProgramElement> units =
+	// currentSel.getSelectedUnits().iterator();
+	// while (units.hasNext())
+	// {
+	//
+	// // find unit in current repository
+	// ProgramElement unit = units.next();
+	// ProgramElement unit2 = null;
+	// boolean unitfound = false;
+	//
+	// Object obj = DataStore.instance().getObjectByID(unit.getUnitName());
+	//
+	// if (obj instanceof PrimitiveConcern)
+	// {
+	// PrimitiveConcern pc = (PrimitiveConcern) obj;
+	// unit2 = (ProgramElement) pc.platformRepr;
+	// }
+	// else if (obj instanceof CpsConcern)
+	// {
+	// CpsConcern concern = (CpsConcern) obj;
+	// Object impl = concern.getImplementation();
+	// String className = "";
+	//
+	// if (impl instanceof Source)
+	// {
+	// Source source = (Source) impl;
+	// className = source.getClassName();
+	// }
+	// else if (impl instanceof CompiledImplementation)
+	// {
+	// className = ((CompiledImplementation) impl).getClassName();
+	// }
+	//
+	// unit2 = register.getType(className);
+	// }
+	//
+	// if (unit2 != null)
+	// {
+	// Reference ref = resolveUnit(unit2);
+	// resolvedSelectedUnitRefs.add(ref);
+	// resolvedSelectedUnits.add(unit2);
+	// unitfound = true;
+	// }
+	//
+	// if (!unitfound)
+	// {
+	// logger.warn("Cannot resolve Unit " + unit.getUnitName());
+	// answersResolved = false;
+	// }
+	//
+	// }
+	//
+	// currentSel.setSelectedUnitRefs(resolvedSelectedUnitRefs);
+	// currentSel.setSelectedUnits(resolvedSelectedUnits);
+	// return answersResolved;
+	//
+	// }
 
 	/**
 	 * @param type - Type of TYM information: 'Class','Method'...

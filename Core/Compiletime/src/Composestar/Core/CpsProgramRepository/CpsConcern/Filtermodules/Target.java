@@ -26,11 +26,13 @@ public class Target extends ContextRepositoryEntity
 	public static final String SELF = "self";
 
 	/**
-	 * fixme: same information twice, name kept for compatibility, should only
-	 * be ref
+	 * The name of the target, should be equal to ref.getName
 	 */
 	public String name;
 
+	/**
+	 * Reference to a filter module element. Can be null.
+	 */
 	public FilterModuleElementReference ref;
 
 	/**
@@ -46,6 +48,10 @@ public class Target extends ContextRepositoryEntity
 	 */
 	public String getName()
 	{
+		if (ref != null)
+		{
+			return ref.getName();
+		}
 		return name;
 	}
 
@@ -54,6 +60,7 @@ public class Target extends ContextRepositoryEntity
 	 */
 	public void setName(String targetValue)
 	{
+		// NOTE: not allowed when ref!=null
 		this.name = targetValue;
 	}
 
@@ -72,11 +79,16 @@ public class Target extends ContextRepositoryEntity
 	public void setRef(FilterModuleElementReference refValue)
 	{
 		this.ref = refValue;
+		name = refValue.getName();
 	}
 
 	public String asSourceCode()
 	{
-		return ref.getName();
+		if (ref != null)
+		{
+			return ref.getName();
+		}
+		return name;
 	}
 
 	public int hashCode()
@@ -99,14 +111,14 @@ public class Target extends ContextRepositoryEntity
 			return false;
 		}
 		final Target other = (Target) obj;
-		if (name == null)
+		if (getName() == null)
 		{
-			if (other.name != null)
+			if (other.getName() != null)
 			{
 				return false;
 			}
 		}
-		else if (!name.equals(other.name))
+		else if (!getName().equals(other.getName()))
 		{
 			return false;
 		}

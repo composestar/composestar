@@ -24,7 +24,6 @@
 
 package Composestar.Core.COPPER2;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.antlr.runtime.RecognitionException;
@@ -34,9 +33,7 @@ import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
 
 import Composestar.Core.Exception.CpsSemanticException;
-import Composestar.Core.FILTH.FILTH;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
@@ -66,18 +63,16 @@ public class CpsTreeWalkerBase extends TreeParser
 	public CpsTreeWalkerBase(TreeNodeStream input)
 	{
 		super(input);
-		orderingconstraints = (Map<String, SyntacticOrderingConstraint>) DataStore.instance().getObjectByID(
-				FILTH.FILTER_ORDERING_SPEC);
-		if (orderingconstraints == null)
-		{
-			orderingconstraints = new HashMap<String, SyntacticOrderingConstraint>();
-			DataStore.instance().addObject(FILTH.FILTER_ORDERING_SPEC, orderingconstraints);
-		}
 	}
 
 	public void setSourceFile(String srcfl)
 	{
 		sourceFile = srcfl;
+	}
+
+	public void setOrderingConstraints(Map<String, SyntacticOrderingConstraint> oc)
+	{
+		orderingconstraints = oc;
 	}
 
 	public int getErrorCnt()

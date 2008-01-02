@@ -40,7 +40,7 @@ public class EMBEX implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		config = resources.configuration();
-		DataStore ds = DataStore.instance();
+		DataStore ds = resources.repository();
 		// create directory for embedded code
 		File embeddedDir = new File(config.getProject().getIntermediate(), EMBEDDED_PATH);
 		if (!embeddedDir.exists() && !embeddedDir.mkdirs())

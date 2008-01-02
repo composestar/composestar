@@ -20,7 +20,6 @@ import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.Resources.PathResolver;
 import Composestar.Utils.FileUtils;
@@ -34,6 +33,11 @@ public abstract class BACO implements CTCommonModule
 	public static final String MODULE_NAME = "BACO";
 
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
+	/**
+	 * Resource key for the List&lt;File&gt; of build libraries
+	 */
+	public static final String BUILDLIBS_KEY = "BuiltLibs";
 
 	protected CommonResources resources;
 
@@ -88,7 +92,7 @@ public abstract class BACO implements CTCommonModule
 	protected void addBuiltLibraries(Set<File> filesToCopy)
 	{
 		// TODO: where is this stored, and why like this? use resources?
-		List<File> builtLibs = (List<File>) DataStore.instance().getObjectByID("BuiltLibs");
+		List<File> builtLibs = (List<File>) resources.get(BUILDLIBS_KEY);
 		for (File builtLib : builtLibs)
 		{
 			String lib = builtLib.toString();

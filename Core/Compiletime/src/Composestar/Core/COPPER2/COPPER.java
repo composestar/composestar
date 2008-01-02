@@ -27,6 +27,8 @@ package Composestar.Core.COPPER2;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -37,6 +39,8 @@ import org.apache.log4j.Level;
 
 import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.FILTH.FILTH;
+import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
@@ -58,6 +62,8 @@ public class COPPER implements CTCommonModule
 
 	protected int errorCnt;
 
+	protected Map<String, SyntacticOrderingConstraint> orderingconstraints;
+
 	public COPPER()
 	{}
 
@@ -74,6 +80,9 @@ public class COPPER implements CTCommonModule
 		}
 
 		errorCnt = 0;
+
+		orderingconstraints = new HashMap<String, SyntacticOrderingConstraint>();
+		resources.put(FILTH.FILTER_ORDERING_SPEC, orderingconstraints);
 
 		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 		for (File file : resources.configuration().getProject().getConcernFiles())
@@ -128,6 +137,7 @@ public class COPPER implements CTCommonModule
 		nodes.setTokenStream(tokens);
 		CpsTreeWalker w = new CpsTreeWalker(nodes);
 		w.setSourceFile(file.toString());
+		w.setOrderingConstraints(orderingconstraints);
 		try
 		{
 			w.concern();

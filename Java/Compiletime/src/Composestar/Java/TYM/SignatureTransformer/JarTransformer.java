@@ -42,18 +42,18 @@ public class JarTransformer
 	 * @throws ModuleException - when an error occurs while transforming the
 	 *             classes.
 	 */
-	public void run() throws ModuleException
+	public void run(DataStore ds) throws ModuleException
 	{
 		File tempJar = null;
 		try
 		{
+			ClassModifier cm = new ClassModifier();
 			JarHelper yarr = new JarHelper(jarFile.toURI().toURL());
 			Collection<Class<?>> classes = yarr.getClasses();
 			for (Class<?> c : classes)
 			{
 				String className = c.getName();
 
-				DataStore ds = DataStore.instance();
 				Concern concern = (Concern) ds.getObjectByID(className);
 				Signature signature = concern.getSignature();
 				if (signature != null)
@@ -65,7 +65,7 @@ public class JarTransformer
 						ClassWrapper cw = new ClassWrapper(c, concern, null);
 
 						// Execute the transformation
-						ClassModifier.instance().modifyClass(cw, jarFile);
+						cm.modifyClass(cw, jarFile);
 						yarr.modifyClass(cw.getClazz(), cw.getByteCode());
 					}
 				}

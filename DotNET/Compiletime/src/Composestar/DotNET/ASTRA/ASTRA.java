@@ -44,7 +44,7 @@ public class ASTRA implements CTCommonModule
 
 		ILCodeParser codeParser = new ILCodeParser();
 
-		DataStore ds = DataStore.instance();
+		DataStore ds = resources.repository();
 		Iterator iterator = ds.getAllInstancesOf(Concern.class);
 		while (iterator.hasNext())
 		{

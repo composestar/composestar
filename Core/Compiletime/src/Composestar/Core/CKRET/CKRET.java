@@ -38,7 +38,6 @@ import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.util.regex.RegularState;
 import Composestar.Core.FIRE2.util.regex.RegularTransition;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
@@ -70,7 +69,7 @@ public class CKRET implements CTCommonModule
 
 		secretResources.setLabeler(new ResourceOperationLabelerEx(secretResources));
 
-		Iterator<Concern> conIt = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIt = resources.repository().getAllInstancesOf(Concern.class);
 		while (conIt.hasNext())
 		{
 			Concern concern = conIt.next();
@@ -164,7 +163,7 @@ public class CKRET implements CTCommonModule
 		}
 
 		// load operation sequences from filter action
-		Iterator<FilterAction> facts = DataStore.instance().getAllInstancesOf(FilterAction.class);
+		Iterator<FilterAction> facts = resources.repository().getAllInstancesOf(FilterAction.class);
 		while (facts.hasNext())
 		{
 			FilterAction fact = facts.next();

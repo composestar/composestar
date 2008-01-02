@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.DotNET2.LOLA.metamodel.DotNETLanguageModel;
 
 public class DotNETLOLA extends LOLA
@@ -28,7 +27,6 @@ public class DotNETLOLA extends LOLA
 	{
 		initialized = false;
 		langModel = model;
-		dataStore = DataStore.instance();
 		unitDict = new UnitDictionary(model);
 		selectors = new ArrayList<PredicateSelector>();
 	}

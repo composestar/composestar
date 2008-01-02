@@ -13,7 +13,6 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
@@ -39,7 +38,7 @@ public class Core implements CTCommonModule
 	{
 		// f2res = resources.getResourceManager(FIRE2Resources.class);
 		// Iterate over all concerns
-		Iterator<Concern> conIter = DataStore.instance().getAllInstancesOf(Concern.class);
+		Iterator<Concern> conIter = resources.repository().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
 		{
 			Concern concern = conIter.next();

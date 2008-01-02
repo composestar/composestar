@@ -46,14 +46,13 @@ public class FITER implements CTCommonModule
 	{
 		logger.info("Verifying Filter Types...");
 		unitDict = (UnitDictionary) resources.get(UnitDictionary.REPOSITORY_KEY);
-		List<LegacyCustomFilterType> customfilters = getCustomFilterTypes();
+		List<LegacyCustomFilterType> customfilters = getCustomFilterTypes(resources.repository());
 		resolveCustomFilterTypes(customfilters);
 	}
 
-	private List<LegacyCustomFilterType> getCustomFilterTypes()
+	private List<LegacyCustomFilterType> getCustomFilterTypes(DataStore ds)
 	{
 		List<LegacyCustomFilterType> customfilters = new ArrayList<LegacyCustomFilterType>();
-		DataStore ds = DataStore.instance();
 		Iterator<LegacyCustomFilterType> it = ds.getAllInstancesOf(LegacyCustomFilterType.class);
 		while (it.hasNext())
 		{

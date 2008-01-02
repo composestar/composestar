@@ -20,11 +20,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.BACO.BACO;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.WEAVER.WEAVER;
 import Composestar.DotNET.COMP.DotNETCompiler;
@@ -91,7 +91,7 @@ public class ILICIT implements WEAVER
 	{
 		Set<File> result = new HashSet<File>();
 		List<File> builtAssemblies = new ArrayList<File>();
-		DataStore.instance().addObject("BuiltLibs", builtAssemblies);
+		resources.put(BACO.BUILDLIBS_KEY, builtAssemblies);
 
 		for (Source src : config.getProject().getSources())
 		{

@@ -40,7 +40,7 @@ public class DotNETCollectorRunner implements CollectorRunner
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		dataStore = DataStore.instance();
+		dataStore = resources.repository();
 		try
 		{
 			register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);

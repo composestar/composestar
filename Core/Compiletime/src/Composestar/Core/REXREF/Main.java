@@ -71,7 +71,7 @@ public class Main implements CTCommonModule
 		// DoResolve dr = new DoResolve();
 		// dr.go(DataStore.instance());
 
-		ds = DataStore.instance();
+		ds = resources.repository();
 		resolveReferences();
 		if (hasErrors)
 		{

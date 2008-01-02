@@ -23,11 +23,14 @@ public class AnnotationCollector implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("AnnotationCollector");
 
+	protected DataStore ds;
+
 	/**
 	 * Module run method.
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
+		ds = resources.repository();
 		try
 		{
 			Collection<Class<?>> classes = (Collection<Class<?>>) resources.get(JavaHarvestRunner.CLASS_MAP);
@@ -131,7 +134,7 @@ public class AnnotationCollector implements CTCommonModule
 	 */
 	public Type getTypeLocation(String typeName)
 	{
-		Concern c = (Concern) DataStore.instance().getObjectByID(typeName);
+		Concern c = (Concern) ds.getObjectByID(typeName);
 		if (c != null && c.getPlatformRepresentation() instanceof Type)
 		{
 			return (Type) c.getPlatformRepresentation();

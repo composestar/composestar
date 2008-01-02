@@ -7,7 +7,6 @@ import java.util.Set;
 
 import Composestar.Core.BACO.BACO;
 import Composestar.Core.Config.CustomFilter;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -30,11 +29,11 @@ public class DotNETBACO extends BACO
 
 	protected void addBuiltLibraries(Set<File> filesToCopy)
 	{
-		List builtLibs = (List) DataStore.instance().getObjectByID("BuiltLibs");
-		Iterator it = builtLibs.iterator();
+		List<File> builtLibs = (List<File>) resources.get(BUILDLIBS_KEY);
+		Iterator<File> it = builtLibs.iterator();
 		while (it.hasNext())
 		{
-			String dll = ((File) it.next()).toString();
+			String dll = (it.next()).toString();
 			String pdb = FileUtils.replaceExtension(dll, "pdb");
 
 			logger.debug("Adding built library PDB: " + pdb);
