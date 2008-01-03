@@ -378,7 +378,7 @@ public class OrderTraverser
 		{
 			// we don't extend the database with the edges to the root node and
 			// the node from which we come
-			if ((!e.equals(exc)) && (!e.getLeft().getElement().equals("root")))
+			if (!e.equals(exc) && !e.getLeft().getElement().equals("root"))
 			/*
 			 * not the exception edge and the edges referring back to the root
 			 * node

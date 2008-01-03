@@ -39,7 +39,7 @@ public class FILTHServiceImpl extends FILTHService
 	protected FILTHServiceImpl(CommonResources cr, FilterModuleReference deffmr) throws ConfigurationException
 	{
 		defaultDispatch = deffmr;
-		orderSpec = (Map<String, SyntacticOrderingConstraint>) cr.get(FILTH.FILTER_ORDERING_SPEC);
+		orderSpec = cr.get(FILTH.FILTER_ORDERING_SPEC);
 	}
 
 	@Override
@@ -203,7 +203,7 @@ public class FILTHServiceImpl extends FILTHService
 		}
 
 		/* we add a rule only if both arguments are active */
-		if ((l != null) && (r != null))
+		if (l != null && r != null)
 		{
 			Rule rule = new SoftPreRule(l, r);
 			rule.insert(graph);

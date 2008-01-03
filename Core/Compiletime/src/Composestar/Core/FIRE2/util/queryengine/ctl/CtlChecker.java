@@ -376,7 +376,7 @@ public class CtlChecker
 		public Object visitReverse(Reverse formula, Object arg)
 		{
 			Boolean b1 = (Boolean) arg;
-			Boolean b2 = (!b1) ? Boolean.TRUE : Boolean.FALSE;
+			Boolean b2 = !b1 ? Boolean.TRUE : Boolean.FALSE;
 
 			formula.subFormula.visit(this, b2);
 
@@ -711,7 +711,7 @@ public class CtlChecker
 
 			List<ExecutionState> v = new ArrayList<ExecutionState>();
 			Iterator<ExecutionState> states = backwardStateVector.iterator();
-			Boolean reversed = (reverse) ? Boolean.TRUE : Boolean.FALSE;
+			Boolean reversed = reverse ? Boolean.TRUE : Boolean.FALSE;
 
 			while (states.hasNext())
 			{

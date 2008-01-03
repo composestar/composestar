@@ -195,7 +195,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		for (int i = 0; i < list.size() - 1; i++)
 		{
 			FilterModuleSuperImposition fmsi = list.get(i);
-			hasCheckConditions = hasCheckConditions && (fmsi.getCondition() != null);
+			hasCheckConditions = hasCheckConditions && fmsi.getCondition() != null;
 		}
 
 		if (hasCheckConditions)
@@ -532,7 +532,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 				// detection could be improved by just monitoring the
 				// conflicting subpath, in that case this check will need to see
 				// if the filteraction is in a trace of the conflict list.
-				val = (concernAnalysis != null) && (conflicts != null);
+				val = concernAnalysis != null && conflicts != null;
 				break;
 			default:
 				val = false;

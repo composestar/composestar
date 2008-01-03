@@ -95,6 +95,7 @@ public final class FileUtils
 	/**
 	 * @deprecated use normalizeFilename
 	 */
+	@Deprecated
 	public static String fixFilename(String name)
 	{
 		return normalizeFilename(name);

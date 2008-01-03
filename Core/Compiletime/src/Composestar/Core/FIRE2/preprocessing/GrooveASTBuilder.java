@@ -521,7 +521,7 @@ public class GrooveASTBuilder
 
 		// substitutionpart:
 		Node substitutionPartNode;
-		SubstitutionPart substitutionPart = (pattern.getSubstitutionParts().isEmpty()) ? null
+		SubstitutionPart substitutionPart = pattern.getSubstitutionParts().isEmpty() ? null
 				: (SubstitutionPart) pattern.getSubstitutionParts().elementAt(0);
 
 		if (pattern.getSubstitutionParts().isEmpty())

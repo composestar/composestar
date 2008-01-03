@@ -17,11 +17,11 @@ import java.util.Map;
  */
 public class TokenReplacer
 {
-	private Map<String,String> replacements;
+	private Map<String, String> replacements;
 
 	public TokenReplacer()
 	{
-		replacements = new HashMap<String,String>();
+		replacements = new HashMap<String, String>();
 	}
 
 	public void addReplacement(String token, String replacement)
@@ -75,6 +75,6 @@ public class TokenReplacer
 
 	private String getReplacement(String token)
 	{
-		return (String) replacements.get(token);
+		return replacements.get(token);
 	}
 }

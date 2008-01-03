@@ -91,8 +91,7 @@ public abstract class BACO implements CTCommonModule
 
 	protected void addBuiltLibraries(Set<File> filesToCopy)
 	{
-		// TODO: where is this stored, and why like this? use resources?
-		List<File> builtLibs = (List<File>) resources.get(BUILDLIBS_KEY);
+		List<File> builtLibs = resources.get(BUILDLIBS_KEY);
 		for (File builtLib : builtLibs)
 		{
 			String lib = builtLib.toString();
@@ -129,7 +128,7 @@ public abstract class BACO implements CTCommonModule
 
 	protected void addRepository(Set<File> filesToCopy)
 	{
-		File repository = (File) resources.get(CONE.REPOSITORY_FILE_KEY);
+		File repository = resources.get(CONE.REPOSITORY_FILE_KEY);
 		if (repository != null)
 		{
 			logger.debug("Adding repository: '" + repository + "'");

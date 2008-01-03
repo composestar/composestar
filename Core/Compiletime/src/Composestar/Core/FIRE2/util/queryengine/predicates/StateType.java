@@ -19,11 +19,13 @@ public class StateType extends Predicate
 		this.type = type;
 	}
 
+	@Override
 	public boolean isTrue(ExecutionState state)
 	{
 		return state != null && state.getFlowNode().containsName(type);
 	}
 
+	@Override
 	public String toString()
 	{
 		return super.toString() + "(StateType)";

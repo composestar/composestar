@@ -344,7 +344,7 @@ public class ViewPanel extends JPanel
 		g.drawString(label, node.xPos - width / 2, node.yPos);
 
 		// paint name of rep entity
-		if ((node.flowNode != null) && (node.flowNode.getRepositoryLink() instanceof DeclaredRepositoryEntity))
+		if (node.flowNode != null && node.flowNode.getRepositoryLink() instanceof DeclaredRepositoryEntity)
 		{
 			label = ((DeclaredRepositoryEntity) node.flowNode.getRepositoryLink()).getName();
 			width = metrics.stringWidth(label);

@@ -152,7 +152,7 @@ public class ProjectHandler extends DefaultBuildConfigHandler
 			else
 			{
 				en = en.trim();
-				concernEnabled = "true".equalsIgnoreCase(en) || "1".equals(en) || (en.length() == 0);
+				concernEnabled = "true".equalsIgnoreCase(en) || "1".equals(en) || en.length() == 0;
 			}
 		}
 		else if ("dependencies".equals(currentName) && state == STATE_PROJECT)

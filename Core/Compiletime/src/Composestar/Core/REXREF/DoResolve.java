@@ -44,6 +44,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @deprecated now "all" done in Main
  */
+@Deprecated
 public class DoResolve
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Main.MODULE_NAME);
@@ -104,7 +105,7 @@ public class DoResolve
 		Iterator<ConcernReference> it = ds.getAllInstancesOf(ConcernReference.class);
 		while (it.hasNext())
 		{
-			ConcernReference ref = (ConcernReference) it.next();
+			ConcernReference ref = it.next();
 
 			// fetch the Concern with the same name as the reference references
 			// to
@@ -171,11 +172,11 @@ public class DoResolve
 		Iterator<FilterModuleReference> it = ds.getAllInstancesOf(FilterModuleReference.class);
 		while (it.hasNext())
 		{
-			FilterModuleReference ref = (FilterModuleReference) it.next();
+			FilterModuleReference ref = it.next();
 			FilterModuleAST fm_ast = (FilterModuleAST) ds.getObjectByID(ref.getQualifiedName());
 			if (fm_ast != null)
 			{
-				String uniqueID = "" + (fmCounter++);
+				String uniqueID = "" + fmCounter++;
 
 				// Create an unique ID for this FM instance, based on the
 				// SelectorReference for the FilterModuleReference
@@ -186,13 +187,13 @@ public class DoResolve
 							.getFilterModuleBindingIterator();
 					while (fmBindingIter.hasNext())
 					{
-						FilterModuleBinding fmBinding = (FilterModuleBinding) fmBindingIter.next();
+						FilterModuleBinding fmBinding = fmBindingIter.next();
 						SelectorReference selRef = fmBinding.getSelector();
 
 						Iterator<FilterModuleReference> fmIter = fmBinding.getFilterModuleIterator();
 						while (fmIter.hasNext())
 						{
-							FilterModuleReference fm_bound = (FilterModuleReference) fmIter.next();
+							FilterModuleReference fm_bound = fmIter.next();
 							if (ref == fm_bound)
 							{
 								uniqueID = selRef.getName();
@@ -213,7 +214,7 @@ public class DoResolve
 				Iterator<Internal> iter = fm.getInternalIterator();
 				while (iter.hasNext())
 				{
-					Internal o = (Internal) iter.next();
+					Internal o = iter.next();
 
 					if (o instanceof ParameterizedInternal)
 					{
@@ -320,12 +321,12 @@ public class DoResolve
 							// ok, found, now try to find the selector
 							while (it3.hasNext() && !found)
 							{
-								SelectorDefinition temp2 = (SelectorDefinition) it3.next();
-								if ((ignoreCase) && (temp2.getName().compareToIgnoreCase(ref.getName()) == 0))
+								SelectorDefinition temp2 = it3.next();
+								if (ignoreCase && temp2.getName().compareToIgnoreCase(ref.getName()) == 0)
 								{
 									found = true;
 								}
-								else if ((!ignoreCase) && (temp2.getName().compareTo(ref.getName()) == 0))
+								else if (!ignoreCase && temp2.getName().compareTo(ref.getName()) == 0)
 								{
 									found = true;
 								}
@@ -377,7 +378,7 @@ public class DoResolve
 							Iterator<FilterModule> it3 = temp.getFilterModuleIterator();
 							while (it3.hasNext() && !found)
 							{
-								FilterModule temp2 = (FilterModule) it3.next();
+								FilterModule temp2 = it3.next();
 								if (temp2.getName().compareTo(ref.getFilterModule()) == 0)
 								{
 
@@ -385,8 +386,8 @@ public class DoResolve
 									Iterator<Method> it4 = temp2.getMethodIterator();
 									while (it4.hasNext() && !found)
 									{
-										Method temp3 = (Method) it4.next();
-										if ((ignoreCase) && (temp3.getName().compareToIgnoreCase(ref.getName()) == 0))
+										Method temp3 = it4.next();
+										if (ignoreCase && temp3.getName().compareToIgnoreCase(ref.getName()) == 0)
 										{
 											// ok, name matches, now check
 											// parameters (types only)
@@ -404,7 +405,7 @@ public class DoResolve
 												// resolved " + ref.getName());
 											}
 										}
-										else if ((!ignoreCase) && (temp3.getName().compareTo(ref.getName()) == 0))
+										else if (!ignoreCase && temp3.getName().compareTo(ref.getName()) == 0)
 										{
 											found = true;
 										}
@@ -526,11 +527,11 @@ public class DoResolve
 									for (it4 = temp2.getInputFilterIterator(); it4.hasNext() && !found;)
 									{
 										temp3 = (Filter) it4.next();
-										if ((ignoreCase) && (temp3.getName().compareToIgnoreCase(ref.getName()) == 0))
+										if (ignoreCase && temp3.getName().compareToIgnoreCase(ref.getName()) == 0)
 										{
 											found = true;
 										}
-										else if ((!ignoreCase) && (temp3.getName().compareTo(ref.getName()) == 0))
+										else if (!ignoreCase && temp3.getName().compareTo(ref.getName()) == 0)
 										{
 											found = true;
 										}
@@ -547,11 +548,11 @@ public class DoResolve
 									for (it5 = temp2.getOutputFilterIterator(); it5.hasNext() && !found;)
 									{
 										temp3 = (Filter) it5.next();
-										if ((ignoreCase) && (temp3.getName().compareToIgnoreCase(ref.getName()) == 0))
+										if (ignoreCase && temp3.getName().compareToIgnoreCase(ref.getName()) == 0)
 										{
 											found = true;
 										}
-										else if ((!ignoreCase) && (temp3.getName().compareTo(ref.getName()) == 0))
+										else if (!ignoreCase && temp3.getName().compareTo(ref.getName()) == 0)
 										{
 											found = true;
 										}
@@ -607,11 +608,11 @@ public class DoResolve
 							for (conditerator = filtermod.getConditionIterator(); conditerator.hasNext() && !found;)
 							{
 								condition = (Condition) conditerator.next();
-								if ((ignoreCase) && (condition.getName().compareToIgnoreCase(ref.getName()) == 0))
+								if (ignoreCase && condition.getName().compareToIgnoreCase(ref.getName()) == 0)
 								{
 									found = true;
 								}
-								else if ((!ignoreCase) && (condition.getName().compareTo(ref.getName()) == 0))
+								else if (!ignoreCase && condition.getName().compareTo(ref.getName()) == 0)
 								{
 									found = true;
 								}
@@ -659,11 +660,11 @@ public class DoResolve
 								for (Iterator interalit = fm.getInternalIterator(); interalit.hasNext() && !found;)
 								{
 									Internal internal = (Internal) interalit.next();
-									if ((ignoreCase) && (internal.getName().compareToIgnoreCase(ref.getName()) == 0))
+									if (ignoreCase && internal.getName().compareToIgnoreCase(ref.getName()) == 0)
 									{
 										found = true;
 									}
-									else if ((!ignoreCase) && (internal.getName().compareTo(ref.getName()) == 0))
+									else if (!ignoreCase && internal.getName().compareTo(ref.getName()) == 0)
 									{
 										found = true;
 									}
@@ -677,11 +678,11 @@ public class DoResolve
 								for (Iterator externalit = fm.getExternalIterator(); externalit.hasNext() && !found;)
 								{
 									External external = (External) externalit.next();
-									if ((ignoreCase) && (external.getName().compareToIgnoreCase(ref.getName()) == 0))
+									if (ignoreCase && external.getName().compareToIgnoreCase(ref.getName()) == 0)
 									{
 										found = true;
 									}
-									else if ((!ignoreCase) && (external.getName().compareTo(ref.getName()) == 0))
+									else if (!ignoreCase && external.getName().compareTo(ref.getName()) == 0)
 									{
 										found = true;
 									}
@@ -798,7 +799,7 @@ public class DoResolve
 				// the second one out of the vector and the rest
 				while (sel.hasNext())
 				{
-					FilterElement copy = this.copyFilterElement(fe);
+					FilterElement copy = copyFilterElement(fe);
 
 					// placing and and afetr the first one
 					CORfilterElementCompOper cfeco = new CORfilterElementCompOper();
@@ -934,10 +935,10 @@ public class DoResolve
 				case 0: // nothing, just null
 					break;
 				case 1: // we just have n
-					concern = (String) in.elementAt(0);
+					concern = in.elementAt(0);
 					break;
 				default: // we have a.b.c.n
-					concern = (String) in.elementAt(i - 1);
+					concern = in.elementAt(i - 1);
 					for (j = 0; j <= i - 2; j++)
 					{ // now add the package
 						if (pack == null)

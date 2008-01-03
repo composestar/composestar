@@ -15,44 +15,47 @@ import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
- *
  * @author Composer
  */
 public class MetricAppender extends AppenderSkeleton
 {
 	protected int fatals;
+
 	protected int errors;
+
 	protected int warnings;
-	
+
 	public MetricAppender()
-	{
-	}
-	
+	{}
+
 	public void reset()
 	{
 		fatals = 0;
 		errors = 0;
 		warnings = 0;
 	}
-	
+
 	public int numFatals()
 	{
 		return fatals;
 	}
-	
+
 	public int numErrors()
 	{
 		return errors;
 	}
-	
+
 	public int numWarnings()
 	{
 		return warnings;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.apache.log4j.AppenderSkeleton#append(org.apache.log4j.spi.LoggingEvent)
 	 */
+	@Override
 	protected void append(LoggingEvent event)
 	{
 		Level l = event.getLevel();
@@ -70,17 +73,23 @@ public class MetricAppender extends AppenderSkeleton
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.apache.log4j.AppenderSkeleton#close()
 	 */
+	@Override
 	public void close()
 	{
 		reset();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.apache.log4j.AppenderSkeleton#requiresLayout()
 	 */
+	@Override
 	public boolean requiresLayout()
 	{
 		return false;

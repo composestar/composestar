@@ -130,6 +130,7 @@ public class CommonResources implements Serializable
 	 * @param object The object to store for this key.
 	 * @deprecated Use {@link #put(String,Object)} instead
 	 */
+	@Deprecated
 	public void add(String key, Object object)
 	{
 		put(key, object);
@@ -165,14 +166,18 @@ public class CommonResources implements Serializable
 	 * @return An object pointer if an object with the specified key was found
 	 *         or null if the key is invalid.
 	 */
-	public Object get(String key)
+	public <T extends Object> T get(String key)
 	{
 		Object res = resources.get(key);
 		if (res == null)
 		{
 			res = resourcesEx.get(key);
 		}
-		return res;
+		if (res == null)
+		{
+			return null;
+		}
+		return (T) res;
 	}
 
 	/**

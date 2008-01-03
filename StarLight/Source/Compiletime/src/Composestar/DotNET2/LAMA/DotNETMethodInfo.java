@@ -209,6 +209,7 @@ public class DotNETMethodInfo extends MethodInfo
 		this.isVirtual = isVirtual;
 	}
 
+	@Override
 	public boolean isDeclaredHere()
 	{
 		return isDeclaredHere;
@@ -268,7 +269,7 @@ public class DotNETMethodInfo extends MethodInfo
 			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add((i.next()).getType());
+				res.add(i.next().getType());
 			}
 			return new UnitResult(res);
 		}

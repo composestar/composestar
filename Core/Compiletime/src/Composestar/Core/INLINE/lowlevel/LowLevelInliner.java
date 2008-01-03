@@ -506,7 +506,7 @@ public class LowLevelInliner
 		if (transitions.size() > 0)
 		{
 			ExecutionTransition transition = transitions.get(0);
-			if ((labeler != null) && (resourceOperations != null))
+			if (labeler != null && resourceOperations != null)
 			{
 				resourceOperations.addAll(labeler.getResourceOperations(transition, excludeResources));
 			}

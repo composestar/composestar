@@ -99,7 +99,7 @@ public class CoreConflictDetector
 		OrderedFlowNodeIterator nodeIter = new OrderedFlowNodeIterator(flowModel);
 		while (nodeIter.hasNext())
 		{
-			FlowNode node = (FlowNode) nodeIter.next();
+			FlowNode node = nodeIter.next();
 
 			// Maintain certain nodes
 			if (node.containsName(FlowNode.FILTER_NODE))

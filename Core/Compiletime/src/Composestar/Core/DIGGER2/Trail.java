@@ -170,7 +170,7 @@ public class Trail implements Serializable
 	 */
 	public boolean isEOL()
 	{
-		return (destinationCrumb == null) && resolved;
+		return destinationCrumb == null && resolved;
 	}
 
 	public boolean isRecursive()

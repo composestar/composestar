@@ -50,6 +50,7 @@ public class JavaMethodInfo extends MethodInfo
 	 * Returns true if this <code>JavaMethodInfo</code> is declared inside its
 	 * parent <code>Type</code>.
 	 */
+	@Override
 	public boolean isDeclaredHere()
 	{
 		if (parent.getFullName().equals(theMethod.getDeclaringClass().getName()))
@@ -131,7 +132,7 @@ public class JavaMethodInfo extends MethodInfo
 			HashSet<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add((i.next()).getType());
+				res.add(i.next().getType());
 			}
 			return new UnitResult(res);
 		}

@@ -111,6 +111,7 @@ public class LogMessage implements LocationProvider, Serializable
 		return repoEntity;
 	}
 
+	@Override
 	public String toString()
 	{
 		return message.toString();

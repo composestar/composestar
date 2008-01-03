@@ -144,7 +144,7 @@ public abstract class LOLA implements CTCommonModule
 	protected boolean reconsult(String proFile)
 	{
 		InputStream s = LOLA.class.getResourceAsStream(proFile);
-		if ((s != null) && DataBase.streamToProg(new InputStreamReader(s), true))
+		if (s != null && DataBase.streamToProg(new InputStreamReader(s), true))
 		{
 			return true;
 		}

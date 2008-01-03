@@ -38,6 +38,7 @@ public class LabelSequence
 	 * @deprecated use getLabelsEx()
 	 * @return
 	 */
+	@Deprecated
 	public Iterator<String> getLabels()
 	{
 		return getLabelsEx().iterator();
@@ -53,6 +54,7 @@ public class LabelSequence
 		return labels.isEmpty();
 	}
 
+	@Override
 	public String toString()
 	{
 		return labels.toString();

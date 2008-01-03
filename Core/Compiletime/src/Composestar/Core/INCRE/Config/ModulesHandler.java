@@ -59,7 +59,7 @@ public class ModulesHandler extends DefaultHandler
 
 			// if loaded from INCRE try to import existing settings through
 			// ModuleInfo
-			if ((configmanager != null) && (fullTypeClass != null))
+			if (configmanager != null && fullTypeClass != null)
 			{
 				ModuleInfo mi = ModuleInfoManager.get(fullTypeClass);
 				if (mi != null)
@@ -103,18 +103,18 @@ public class ModulesHandler extends DefaultHandler
 				m.setEnabled(amap.getValue("enabled").equals("true"));
 			}
 
-			if ((configmanager != null) && (m.getName() != null))
+			if (configmanager != null && m.getName() != null)
 			{
 				configmanager.addModule(m.getName(), m);
 			}
 		}
-		else if (qName.equalsIgnoreCase("dependencies") && (m != null))
+		else if (qName.equalsIgnoreCase("dependencies") && m != null)
 		{
 			m.clearDeps(); // clear previously set dependencies
 			DependencyHandler dependencyhandler = new DependencyHandler(reader, m, this);
 			reader.setContentHandler(dependencyhandler);
 		}
-		else if (qName.equalsIgnoreCase("comparisons") && (m != null))
+		else if (qName.equalsIgnoreCase("comparisons") && m != null)
 		{
 			m.clearComparableObjects(); // clear previously set comparisons
 			ComparisonsHandler comparisonsHandler = new ComparisonsHandler(reader, m, this);

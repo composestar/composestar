@@ -21,6 +21,7 @@ import Composestar.Utils.Logging.Log4j.CrucialLevel;
  * @deprecated use Composestar.Utils.Logging.CPSLogger or
  *             Composestar.Utils.Logging.SafeLogger
  */
+@Deprecated
 public final class Debug
 {
 	public static final int MODE_ERROR = 0;

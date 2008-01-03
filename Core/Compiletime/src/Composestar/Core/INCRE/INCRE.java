@@ -846,7 +846,7 @@ public final class INCRE implements CTCommonModule
 		}
 
 		INCREComparator comparator = new INCREComparator(this, moduleName);
-		currentRepository = DataStore.instance();
+		currentRepository = resources.repository();
 		searchingHistory = false;
 		Object historyobject = null;
 		Object depofinputobject;
@@ -875,7 +875,7 @@ public final class INCRE implements CTCommonModule
 		Iterator<Composestar.Core.INCRE.Dependency> dependencies = mod.getDeps();
 		while (dependencies.hasNext())
 		{
-			currentRepository = DataStore.instance();
+			currentRepository = resources.repository();
 			searchingHistory = false;
 			Composestar.Core.INCRE.Dependency dep = dependencies.next();
 			try

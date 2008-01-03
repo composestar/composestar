@@ -26,6 +26,7 @@ public final class StringConverter
 	 * @return Iterator The list of values of the value
 	 * @deprecated Use String.split(...)
 	 */
+	@Deprecated
 	public static Iterator<String> stringToStringList(String value, String separator)
 	{
 		ArrayList<String> list = new ArrayList<String>();

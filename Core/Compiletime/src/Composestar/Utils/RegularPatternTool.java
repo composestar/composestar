@@ -158,11 +158,11 @@ public class RegularPatternTool extends Frame
 		gridBagConstraints.gridy = 0;
 		lblPattern = new Label();
 		lblPattern.setText("Pattern");
-		this.setLayout(new GridBagLayout());
+		setLayout(new GridBagLayout());
 		this.setSize(639, 311);
-		this.setForeground(SystemColor.windowText);
-		this.setBackground(SystemColor.control);
-		this.setTitle("Compose* Regular Pattern Tool");
+		setForeground(SystemColor.windowText);
+		setBackground(SystemColor.control);
+		setTitle("Compose* Regular Pattern Tool");
 
 		this.add(lblPattern, gridBagConstraints);
 		this.add(getEdPattern(), gridBagConstraints1);
@@ -173,8 +173,9 @@ public class RegularPatternTool extends Frame
 		this.add(getBtnTest(), gridBagConstraints6);
 		this.add(getBtnQuit(), gridBagConstraints7);
 		this.add(getBtnNFA(), gridBagConstraints8);
-		this.addWindowListener(new java.awt.event.WindowAdapter()
+		addWindowListener(new java.awt.event.WindowAdapter()
 		{
+			@Override
 			public void windowClosing(java.awt.event.WindowEvent e)
 			{
 				e.getWindow().dispose();

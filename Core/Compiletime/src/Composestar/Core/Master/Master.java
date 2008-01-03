@@ -457,12 +457,12 @@ public abstract class Master
 
 			// display total time elapsed
 			timer.stop();
-			logger.debug("Total time: " + (timer.getLastEvent().getDuration() / 1000000) + " ms");
+			logger.debug("Total time: " + timer.getLastEvent().getDuration() / 1000000 + " ms");
 
 			createTimerReport();
 
 			// display number of warnings
-			if ((logMetrics.numWarnings() > 0) || (logMetrics.numErrors() > 0) || (logMetrics.numFatals() > 0))
+			if (logMetrics.numWarnings() > 0 || logMetrics.numErrors() > 0 || logMetrics.numFatals() > 0)
 			{
 				// TODO: shouldn't print to stdout or anywhere else for that
 				// matter

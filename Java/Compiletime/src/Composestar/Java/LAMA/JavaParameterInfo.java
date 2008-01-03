@@ -75,7 +75,7 @@ public class JavaParameterInfo extends ParameterInfo
 			HashSet<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add((i.next()).getType());
+				res.add(i.next().getType());
 			}
 			return new UnitResult(res);
 		}

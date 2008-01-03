@@ -24,8 +24,6 @@
 
 package Composestar.Java.LAMA;
 
-import java.util.List;
-
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.TypeResolver;
 import Composestar.Core.LAMA.UnitRegister;
@@ -69,7 +67,7 @@ public class JavaTypeResolver extends TypeResolver
 		{
 			unit.setSuperClass(type);
 		}
-		for (String iface : (List<String>) unit.getImplementedInterfaceNames())
+		for (String iface : unit.getImplementedInterfaceNames())
 		{
 			type = (JavaType) register.getType(iface);
 			if (type == null)

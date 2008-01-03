@@ -222,20 +222,20 @@ public class ComposestarBuiltins extends HashDict
 					psi.addTYMInfo(unit2, "getUnitRelation", params2);
 
 					// If one of the relations is unique, use that side (faster)
-					if (relation1unique && (unit1.getUnitRelation(relation1).singleValue() != null))
+					if (relation1unique && unit1.getUnitRelation(relation1).singleValue() != null)
 					{
-						return (unit1.getUnitRelation(relation1).singleValue().equals(unit2) ? 1 : 0);
+						return unit1.getUnitRelation(relation1).singleValue().equals(unit2) ? 1 : 0;
 					}
-					else if (relation2unique && (unit2.getUnitRelation(relation2).singleValue() != null))
+					else if (relation2unique && unit2.getUnitRelation(relation2).singleValue() != null)
 					{
-						return (unit2.getUnitRelation(relation2).singleValue().equals(unit1) ? 1 : 0);
+						return unit2.getUnitRelation(relation2).singleValue().equals(unit1) ? 1 : 0;
 					}
 					else
 					// many-to-many relation, check whether unit1 contains unit2
 					// in
 					// the relation set
 					{
-						return (unit1.getUnitRelation(relation1).multiValue().contains(unit2) ? 1 : 0);
+						return unit1.getUnitRelation(relation1).multiValue().contains(unit2) ? 1 : 0;
 					}
 
 				}
@@ -379,7 +379,7 @@ public class ComposestarBuiltins extends HashDict
 
 				if (tUnit instanceof JavaObject)
 				{ // Unit is bound - check whether we have found the same unit
-					if ((tUnit.toObject() instanceof ProgramElement))
+					if (tUnit.toObject() instanceof ProgramElement)
 					{
 						if (knownType)
 						{
@@ -413,7 +413,7 @@ public class ComposestarBuiltins extends HashDict
 					return 0; // Invalid object; not a Language Unit.
 				}
 				ProgramElement unit = (ProgramElement) tUnit.toObject();
-				if (knownType && !(unit.getUnitType().equals(type)))
+				if (knownType && !unit.getUnitType().equals(type))
 				{
 					return 0; // It is a unit, but not of the specified type!
 					// So
@@ -497,12 +497,12 @@ public class ComposestarBuiltins extends HashDict
 
 					if (result.isSingleValue())
 					{
-						return (result.singleValue().equals(tUnit.toObject())) ? 1 : 0;
+						return result.singleValue().equals(tUnit.toObject()) ? 1 : 0;
 					}
 					else
 					// Multiple values found
 					{
-						return (result.multiValue().contains(tUnit.toObject())) ? 1 : 0;
+						return result.multiValue().contains(tUnit.toObject()) ? 1 : 0;
 					}
 				}
 				else
@@ -536,7 +536,7 @@ public class ComposestarBuiltins extends HashDict
 					return 0; // Invalid object; not a Language Unit.
 				}
 				ProgramElement unit = (ProgramElement) tUnit.toObject();
-				if (knownType && !(unit.getUnitType().equals(type)))
+				if (knownType && !unit.getUnitType().equals(type))
 				{
 					return 0; // It is a unit, but not of the specified type!
 					// So
@@ -582,9 +582,9 @@ public class ComposestarBuiltins extends HashDict
 			}
 			String type = ((Const) tType).name();
 			if (tUnit instanceof JavaObject) /*
-												 * Easy case: the unit is
-												 * specified
-												 */
+			 * Easy case: the unit is
+			 * specified
+			 */
 			{
 				if (!(tUnit.toObject() instanceof ProgramElement))
 				{
@@ -644,7 +644,7 @@ public class ComposestarBuiltins extends HashDict
 				 */
 				Pattern pat = Pattern.compile(pattern);
 				Matcher match = pat.matcher(str);
-				return (match.matches() ? 1 : 0);
+				return match.matches() ? 1 : 0;
 			}
 			else
 			{

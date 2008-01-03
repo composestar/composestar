@@ -219,7 +219,7 @@ public class DirectoryResource extends FileCollection implements FileFilter
 	@Override
 	public Set<File> getFiles(File base)
 	{
-		if ((cache == null) || (!cacheBase.equals(base)))
+		if (cache == null || !cacheBase.equals(base))
 		{
 			if (path.isAbsolute())
 			{

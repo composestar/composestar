@@ -56,7 +56,7 @@ public class FITER implements CTCommonModule
 		Iterator<LegacyCustomFilterType> it = ds.getAllInstancesOf(LegacyCustomFilterType.class);
 		while (it.hasNext())
 		{
-			LegacyCustomFilterType type = (LegacyCustomFilterType) it.next();
+			LegacyCustomFilterType type = it.next();
 			customfilters.add(type);
 		}
 		return customfilters;

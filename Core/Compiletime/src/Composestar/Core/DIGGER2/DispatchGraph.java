@@ -173,7 +173,7 @@ public class DispatchGraph implements Serializable
 		{
 			result = concernCrumbs.getInputCrumb(selector);
 		}
-		if (autoResolve && ((result == null) || !result.isResolved()))
+		if (autoResolve && (result == null || !result.isResolved()))
 		{
 			result = performAutoResolve(concern, selector);
 		}
@@ -223,7 +223,7 @@ public class DispatchGraph implements Serializable
 	{
 		List<AbstractMessageResult> results = new ArrayList<AbstractMessageResult>();
 		boolean freshCrumb = true;
-		while ((crumb != null) && freshCrumb)
+		while (crumb != null && freshCrumb)
 		{
 			freshCrumb = false;
 			Iterator<Trail> it = crumb.getTrails();

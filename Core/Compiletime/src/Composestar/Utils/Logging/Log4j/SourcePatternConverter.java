@@ -42,6 +42,7 @@ public class SourcePatternConverter extends PatternConverter
 	 * 
 	 * @see org.apache.log4j.helpers.PatternConverter#convert(org.apache.log4j.spi.LoggingEvent)
 	 */
+	@Override
 	protected String convert(LoggingEvent event)
 	{
 		LocationProvider lp = null;

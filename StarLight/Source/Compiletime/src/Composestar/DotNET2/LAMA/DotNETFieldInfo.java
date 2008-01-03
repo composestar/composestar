@@ -108,6 +108,7 @@ public class DotNETFieldInfo extends FieldInfo
 		flagIsStatic = isStatic;
 	}
 
+	@Override
 	public boolean isDeclaredHere()
 	{
 		return flagIsDeclaredHere;
@@ -150,7 +151,7 @@ public class DotNETFieldInfo extends FieldInfo
 			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add((i.next()).getType());
+				res.add(i.next().getType());
 			}
 			return new UnitResult(res);
 		}

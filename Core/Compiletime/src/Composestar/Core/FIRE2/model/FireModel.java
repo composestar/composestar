@@ -564,7 +564,7 @@ public class FireModel
 			ExecutionState nextState = executionModels[filterPosition][nextLayer].getEntranceState(message);
 
 			return deriveState(nextState, model, message, signatureCheck, signatureCheckInfo, filterPosition,
-					nextLayer, (nextLayer == 0) ? ExecutionState.ENTRANCE_STATE : ExecutionState.NORMAL_STATE);
+					nextLayer, nextLayer == 0 ? ExecutionState.ENTRANCE_STATE : ExecutionState.NORMAL_STATE);
 		}
 		else
 		{
@@ -705,12 +705,12 @@ public class FireModel
 			return null;
 		}
 
-		Target derivedTarget = (Message.checkEquals(generalizedMessage.getTarget(), Message.UNDISTINGUISHABLE_TARGET) ? exampleMessage
+		Target derivedTarget = Message.checkEquals(generalizedMessage.getTarget(), Message.UNDISTINGUISHABLE_TARGET) ? exampleMessage
 				.getTarget()
-				: generalizedMessage.getTarget());
+				: generalizedMessage.getTarget();
 
-		String derivedSelector = (Message.checkEquals(generalizedMessage.getSelector(),
-				Message.UNDISTINGUISHABLE_SELECTOR) ? exampleMessage.getSelector() : generalizedMessage.getSelector());
+		String derivedSelector = Message.checkEquals(generalizedMessage.getSelector(),
+				Message.UNDISTINGUISHABLE_SELECTOR) ? exampleMessage.getSelector() : generalizedMessage.getSelector();
 
 		return new Message(derivedTarget, derivedSelector);
 	}

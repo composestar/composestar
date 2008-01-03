@@ -145,22 +145,23 @@ public class ExecutionManager
 				for (Iterator<SkipRule> i = crules.iterator(); i.hasNext();)
 				{
 					r1 = i.next();
-					for (Iterator<SkipRule> j = crules.iterator(); j.hasNext();)
+					for (SkipRule skipRule : crules)
 					{
 						r2 = i.next();
 						/* i f the skip rules have the same skip value */
-						if (((r1.getNewValue() == null) && (r2.getNewValue() == null))
-								|| (r1.getNewValue().evaluate().booleanValue() != r2.getNewValue().evaluate()
-										.booleanValue()))
+						if (r1.getNewValue() == null
+								&& r2.getNewValue() == null
+								|| r1.getNewValue().evaluate().booleanValue() != r2.getNewValue().evaluate()
+										.booleanValue())
 						{
 
 							// and both should be skipped
-							if ((((r1.getLeft().evaluate() != null) && (r2.getLeft().evaluate() != null)) && ((r1
-									.getLeft().evaluate()) && (r2.getLeft().evaluate())))
-									|| (((r1.getLeft().evaluate() != null) && (r1.getLeft().evaluate())) && ((r2
-											.getLeft().evaluate() == null) && (r2 instanceof SoftSkipRule)))
-									|| (((r2.getLeft().evaluate() != null) && (r2.getLeft().evaluate())) && ((r1
-											.getLeft().evaluate() == null) && (r1 instanceof SoftSkipRule))))
+							if (r1.getLeft().evaluate() != null && r2.getLeft().evaluate() != null
+									&& r1.getLeft().evaluate() && r2.getLeft().evaluate()
+									|| r1.getLeft().evaluate() != null && r1.getLeft().evaluate()
+									&& r2.getLeft().evaluate() == null && r2 instanceof SoftSkipRule
+									|| r2.getLeft().evaluate() != null && r2.getLeft().evaluate()
+									&& r1.getLeft().evaluate() == null && r1 instanceof SoftSkipRule)
 							{
 								throw new RuntimeException("Conflict between two skips");
 							}

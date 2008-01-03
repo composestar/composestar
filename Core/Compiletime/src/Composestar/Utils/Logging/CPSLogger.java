@@ -118,6 +118,7 @@ public class CPSLogger extends Logger implements ILogger
 		super(name);
 	}
 
+	@Override
 	protected void forcedLog(String fqcn, Priority level, Object message, Throwable t)
 	{
 		callAppenders(new CPSLoggingEvent(fqcn, this, level, message, t));

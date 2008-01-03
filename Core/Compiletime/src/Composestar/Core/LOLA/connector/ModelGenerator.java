@@ -188,18 +188,18 @@ public class ModelGenerator
 
 		if (!var1unique && !var2unique) // It is a (*,*)-relation
 		{ /*
-		 * Because both sides can have multiple answers, we have to put an
-		 * answer generator on both argument 1 and 2
-		 */
+			 * Because both sides can have multiple answers, we have to put an
+			 * answer generator on both argument 1 and 2
+			 */
 			res.append("check_or_gen12(");
 		}
 		else if (!var1unique && var2unique) // It is a (*,1)-relation
 		{ /*
-		 * Most relations are one-to-many or many-to-one (e.g. because one
-		 * side is the 'Parent' and these are usually unique). Because
-		 * unique items can be handled way faster, a distinction is made for
-		 * these cases.
-		 */
+			 * Most relations are one-to-many or many-to-one (e.g. because one
+			 * side is the 'Parent' and these are usually unique). Because
+			 * unique items can be handled way faster, a distinction is made for
+			 * these cases.
+			 */
 			res.append("check_or_gen1(");
 		}
 		else if (var1unique && !var2unique)

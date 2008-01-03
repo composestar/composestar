@@ -571,7 +571,7 @@ public final class RegularPattern extends Pattern
 			else if (Character.isLetterOrDigit(c))
 			{
 				int start = chrPos - 1;
-				while ((chrPos < buffer.length()) && Character.isLetterOrDigit(buffer.charAt(chrPos)))
+				while (chrPos < buffer.length() && Character.isLetterOrDigit(buffer.charAt(chrPos)))
 				{
 					chrPos++;
 				}

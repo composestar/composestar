@@ -268,7 +268,7 @@ public class Resolver
 		{
 			// uses an internal/external, look it up in the filter module
 			DeclaredObjectReference ref = (DeclaredObjectReference) target.getRef();
-			if ((ref != null) && ref.getResolved())
+			if (ref != null && ref.getResolved())
 			{
 				TypedDeclaration typeDecl = ref.getRef();
 				ConcernReference concernRef = typeDecl.getType();

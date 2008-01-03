@@ -27,6 +27,7 @@ final class Not implements CtlFormula
 		return visitor.visitNot(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "Not";
@@ -50,6 +51,7 @@ final class And implements CtlFormula
 		return visitor.visitAnd(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "And";
@@ -73,6 +75,7 @@ final class Or implements CtlFormula
 		return visitor.visitOr(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "Or";
@@ -96,6 +99,7 @@ final class Implies implements CtlFormula
 		return visitor.visitImplies(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "Implies";
@@ -116,6 +120,7 @@ final class AX implements CtlFormula
 		return visitor.visitAX(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "AX";
@@ -136,6 +141,7 @@ final class EX implements CtlFormula
 		return visitor.visitEX(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "EX";
@@ -156,6 +162,7 @@ final class AF implements CtlFormula
 		return visitor.visitAF(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "AF";
@@ -176,6 +183,7 @@ final class EF implements CtlFormula
 		return visitor.visitEF(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "EF";
@@ -196,6 +204,7 @@ final class AG implements CtlFormula
 		return visitor.visitAG(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "AG";
@@ -216,6 +225,7 @@ final class EG implements CtlFormula
 		return visitor.visitEG(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "EG";
@@ -239,6 +249,7 @@ final class AU implements CtlFormula
 		return visitor.visitAU(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "AU";
@@ -262,6 +273,7 @@ final class EU implements CtlFormula
 		return visitor.visitEU(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "EU";
@@ -282,6 +294,7 @@ final class Reverse implements CtlFormula
 		return visitor.visitReverse(this, arg);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "Reverse";
@@ -290,11 +303,13 @@ final class Reverse implements CtlFormula
 
 final class True extends Predicate
 {
+	@Override
 	public boolean isTrue(ExecutionState state)
 	{
 		return true;
 	}
 
+	@Override
 	public String toString()
 	{
 		return "True";
@@ -303,11 +318,13 @@ final class True extends Predicate
 
 final class False extends Predicate
 {
+	@Override
 	public boolean isTrue(ExecutionState state)
 	{
 		return false;
 	}
 
+	@Override
 	public String toString()
 	{
 		return "False";

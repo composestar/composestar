@@ -34,6 +34,7 @@ public class CommandLineExecutor
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public int exec(String command)
 	{
 		return exec(command, null);
@@ -42,6 +43,7 @@ public class CommandLineExecutor
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public int exec(String command, File dir)
 	{
 		try

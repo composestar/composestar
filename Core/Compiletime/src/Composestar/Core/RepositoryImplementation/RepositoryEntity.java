@@ -136,6 +136,9 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 				String oldKey = repositoryKey;
 				ds.removeObject(oldKey);
 				repositoryKey = ds.addObject(this);
+				// System.err.println(String.format("Changing repo key for
+				// \"%s\" from \"%s\" to \"%s\"", getClass(),
+				// oldKey, repositoryKey));
 			}
 		}
 	}

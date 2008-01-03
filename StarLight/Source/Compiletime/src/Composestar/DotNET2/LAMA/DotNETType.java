@@ -403,7 +403,7 @@ public class DotNETType extends Type
 			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add((i.next()).getType());
+				res.add(i.next().getType());
 			}
 			return new UnitResult(res);
 		}
@@ -451,7 +451,7 @@ public class DotNETType extends Type
 			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add((i.next()).getType());
+				res.add(i.next().getType());
 			}
 			return new UnitResult(res);
 		}
@@ -470,7 +470,7 @@ public class DotNETType extends Type
 		Iterator<Annotation> i = getAnnotationInstances().iterator();
 		while (i.hasNext())
 		{
-			ProgramElement unit = (i.next()).getTarget();
+			ProgramElement unit = i.next().getTarget();
 			if (unit instanceof DotNETType)
 			{
 				DotNETType type = (DotNETType) unit;

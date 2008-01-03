@@ -160,7 +160,7 @@ public class Main implements CTCommonModule
 		FilterModuleAST fmAst = (FilterModuleAST) ds.getObjectByID(ref.getQualifiedName());
 		if (fmAst != null)
 		{
-			String uniqueID = "" + (fmCounter++);
+			String uniqueID = "" + fmCounter++;
 
 			// Create an unique ID for this FM instance, based on the
 			// SelectorReference for the FilterModuleReference
@@ -171,13 +171,13 @@ public class Main implements CTCommonModule
 						.getFilterModuleBindingIterator();
 				while (fmBindingIter.hasNext())
 				{
-					FilterModuleBinding fmBinding = (FilterModuleBinding) fmBindingIter.next();
+					FilterModuleBinding fmBinding = fmBindingIter.next();
 					SelectorReference selRef = fmBinding.getSelector();
 
 					Iterator<FilterModuleReference> fmIter = fmBinding.getFilterModuleIterator();
 					while (fmIter.hasNext())
 					{
-						FilterModuleReference fm_bound = (FilterModuleReference) fmIter.next();
+						FilterModuleReference fm_bound = fmIter.next();
 						if (ref == fm_bound)
 						{
 							uniqueID = selRef.getName();
@@ -404,7 +404,7 @@ public class Main implements CTCommonModule
 							{
 								Vector<String> selectors = (Vector<String>) fm.getParameter(pms.getName()).getValue();
 								Iterator<String> sel = selectors.iterator();
-								String s = (String) sel.next();
+								String s = sel.next();
 								pms.setName(s);
 
 								// the second one out of the vector and the rest
@@ -428,8 +428,8 @@ public class Main implements CTCommonModule
 									Iterator<MatchingPart> match = mp2.getMatchingPartsIterator();
 									while (match.hasNext())
 									{
-										MatchingPart matchpart = (MatchingPart) match.next();
-										matchpart.getSelector().setName((String) sel.next());
+										MatchingPart matchpart = match.next();
+										matchpart.getSelector().setName(sel.next());
 									}
 
 									// this for getting , , between them
@@ -484,7 +484,7 @@ public class Main implements CTCommonModule
 		while (mi.hasNext())
 		{
 			MatchingPartAST newm = new MatchingPartAST();
-			MatchingPartAST oldm = (MatchingPartAST) mi.next();
+			MatchingPartAST oldm = mi.next();
 
 			newm.setDescriptionFileName(oldm.getDescriptionFileName());
 			newm.setDescriptionLineNumber(oldm.getDescriptionLineNumber());

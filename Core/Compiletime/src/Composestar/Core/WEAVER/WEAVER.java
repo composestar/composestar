@@ -13,4 +13,5 @@ package Composestar.Core.WEAVER;
 import Composestar.Core.Master.CTCommonModule;
 
 public interface WEAVER extends CTCommonModule
-{}
+{
+}

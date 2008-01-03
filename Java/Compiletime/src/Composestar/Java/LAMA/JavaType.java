@@ -138,6 +138,7 @@ public class JavaType extends Type
 	 * 
 	 * @return java.lang.String
 	 */
+	@Override
 	public String namespace()
 	{
 		if (theClass.getPackage() == null)
@@ -374,7 +375,7 @@ public class JavaType extends Type
 			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add((i.next()).getType());
+				res.add(i.next().getType());
 			}
 			return new UnitResult(res);
 		}
@@ -422,7 +423,7 @@ public class JavaType extends Type
 			HashSet<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add((i.next()).getType());
+				res.add(i.next().getType());
 			}
 			return new UnitResult(res);
 		}
@@ -451,30 +452,35 @@ public class JavaType extends Type
 	}
 
 	/** * Extra method for adding links to child types of this type */
+	@Override
 	public void addChildType(ProgramElement childType)
 	{
 		childTypes.add(childType);
 	}
 
 	/** * Extra method for adding links to methods that return this type */
+	@Override
 	public void addFieldType(ProgramElement fieldType)
 	{
 		fieldTypes.add(fieldType);
 	}
 
 	/** * Extra method for adding links to classes that implement this interface */
+	@Override
 	public void addImplementedBy(ProgramElement aClass)
 	{
 		implementedBy.add(aClass);
 	}
 
 	/** * Extra method for adding links to methods that return this type */
+	@Override
 	public void addMethodReturnType(ProgramElement returnType)
 	{
 		methodReturnTypes.add(returnType);
 	}
 
 	/** * Extra method for adding links to parameters of this type */
+	@Override
 	public void addParameterType(ProgramElement paramType)
 	{
 		parameterTypes.add(paramType);
@@ -484,6 +490,7 @@ public class JavaType extends Type
 	 * Extra method for storing the parent namespace; called by
 	 * JavaLanguageModel::completeModel()
 	 */
+	@Override
 	public void setParentNamespace(ProgramElement parentNS)
 	{
 		this.parentNS = parentNS;

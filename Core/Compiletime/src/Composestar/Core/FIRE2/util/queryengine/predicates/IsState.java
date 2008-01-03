@@ -21,6 +21,7 @@ public class IsState extends Predicate
 		this.state = state;
 	}
 
+	@Override
 	public boolean isTrue(ExecutionState state)
 	{
 		if (state == null)
@@ -33,6 +34,7 @@ public class IsState extends Predicate
 		}
 	}
 
+	@Override
 	public String toString()
 	{
 		return super.toString() + "(isState)";

@@ -111,7 +111,7 @@ public class SimpleMatcher
 				break;
 			}
 		}
-		return hasGreedyEnd || ((words.size() == 0) && (states.contains(pattern.getEndState())));
+		return hasGreedyEnd || words.size() == 0 && states.contains(pattern.getEndState());
 	}
 
 	protected int traverseStates(String word)

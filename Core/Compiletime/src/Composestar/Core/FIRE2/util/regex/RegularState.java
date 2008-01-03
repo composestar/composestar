@@ -54,7 +54,7 @@ public class RegularState implements Serializable
 
 	private static String getNewStateId()
 	{
-		return "s" + (currentId++);
+		return "s" + currentId++;
 	}
 
 	public String getStateId()

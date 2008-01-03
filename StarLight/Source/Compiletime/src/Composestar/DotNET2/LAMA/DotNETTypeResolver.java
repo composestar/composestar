@@ -24,8 +24,6 @@
 
 package Composestar.DotNET2.LAMA;
 
-import java.util.List;
-
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.TypeResolver;
 import Composestar.Core.LAMA.UnitRegister;
@@ -72,7 +70,7 @@ public class DotNETTypeResolver extends TypeResolver
 				unit.setBaseType(type);
 			}
 		}
-		for (String iface : (List<String>) unit.getImplementedInterfaceNames())
+		for (String iface : unit.getImplementedInterfaceNames())
 		{
 			DotNETType type = (DotNETType) register.getType(iface);
 			if (type == null)

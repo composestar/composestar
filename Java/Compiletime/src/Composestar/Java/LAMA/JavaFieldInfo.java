@@ -42,6 +42,7 @@ public class JavaFieldInfo extends FieldInfo
 	 * Returns true if this <code>JavaFieldInfo</code> is declared inside its
 	 * parent <code>Type</code>.
 	 */
+	@Override
 	public boolean isDeclaredHere()
 	{
 		if (parent.getFullName().equals(theField.getDeclaringClass().getName()))
@@ -91,7 +92,7 @@ public class JavaFieldInfo extends FieldInfo
 			Set<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
-				res.add((i.next()).getType());
+				res.add(i.next().getType());
 			}
 			return new UnitResult(res);
 		}

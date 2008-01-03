@@ -24,6 +24,7 @@ public class JavaLanguageModel extends LanguageModel
 	 * Creates specifications for all language units that can occur in java, and
 	 * the relations between them.
 	 */
+	@Override
 	public void createMetaModel() throws InvalidModelException
 	{
 		mcNamespace = Composestar.Core.LAMA.LangNamespace.class;

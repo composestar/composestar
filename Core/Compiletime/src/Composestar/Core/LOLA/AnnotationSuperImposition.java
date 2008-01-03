@@ -145,7 +145,7 @@ public class AnnotationSuperImposition
 							// error?
 						}
 						Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
-						if (!(annotation.getUnitType().equals("Annotation")))
+						if (!annotation.getUnitType().equals("Annotation"))
 						{
 							logger.warn(annotRef.getQualifiedName()
 									+ " is not an annotation type! (make sure it extends System.Attribute)", annotRef);
@@ -410,7 +410,7 @@ public class AnnotationSuperImposition
 
 		for (int i = 0; i < res1.size(); i++)
 		{
-			if (!(res2.get(i)).containsAll(res1.get(i)))
+			if (!res2.get(i).containsAll(res1.get(i)))
 			{
 				return i;
 			}
