@@ -10,8 +10,10 @@
 
 package Composestar.Core.CpsProgramRepository.Legacy;
 
+import Composestar.Core.COPPER2.FilterTypeMapping;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
+import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
  * Inserts the legacy filter types to the repository to serve as legacy glue for
@@ -23,24 +25,37 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType
  */
 public final class LegacyFilterTypes
 {
-	private static FilterAction dispatchAction;
-
-	private static FilterAction continueAction;
-
-	private static FilterAction errorAction;
-
-	// private static FilterAction substitutionAction;
-
-	private static FilterAction adviceAction;
-
-	private static FilterAction metaAction;
+	public static final String RESOURCE_KEY = "Repository.LegacyFilterTypes";
 
 	/**
 	 * If true legacy filter types will be used
 	 */
 	public static boolean useLegacyFilterTypes;
 
-	public static void addLegacyFilterTypes()
+	private FilterAction dispatchAction;
+
+	private FilterAction continueAction;
+
+	private FilterAction errorAction;
+
+	// private FilterAction substitutionAction;
+
+	private FilterAction adviceAction;
+
+	private FilterAction metaAction;
+
+	private FilterTypeMapping mapping;
+
+	private DataStore repository;
+
+	public LegacyFilterTypes(FilterTypeMapping ftm, DataStore repo)
+	{
+		mapping = ftm;
+		repository = repo;
+		addLegacyFilterTypes();
+	}
+
+	private void addLegacyFilterTypes()
 	{
 		dispatchAction = createDispatchAction();
 		continueAction = createContinueAction();
@@ -60,7 +75,7 @@ public final class LegacyFilterTypes
 		addMetaFilterType();
 	}
 
-	public static FilterType createCustomFilterType(String name)
+	public FilterType createCustomFilterType(String name)
 	{
 		LegacyCustomFilterType custom = new LegacyCustomFilterType(name);
 		// use 'continueActions' because these kind of CustomFilters have
@@ -69,12 +84,14 @@ public final class LegacyFilterTypes
 		custom.setRejectCallAction(continueAction);
 		custom.setAcceptReturnAction(continueAction);
 		custom.setRejectReturnAction(continueAction);
+		repository.addObject(custom);
+		mapping.registerFilterType(custom);
 		return custom;
 	}
 
 	// Filter Actions
 
-	private static FilterAction createDispatchAction()
+	private FilterAction createDispatchAction()
 	{
 		FilterAction action = new FilterAction();
 		action.setName("DispatchAction");
@@ -82,20 +99,22 @@ public final class LegacyFilterTypes
 		action.setFlowBehaviour(FilterAction.FLOW_RETURN);
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
 		action.setResourceOperations("arg.read;message.dispatch;return.read;");
+		repository.addObject(action);
 		return action;
 	}
 
-	private static FilterAction createContinueAction()
+	private FilterAction createContinueAction()
 	{
 		FilterAction action = new FilterAction();
 		action.setName("ContinueAction");
 		action.setFullName("ContinueAction");
 		action.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		repository.addObject(action);
 		return action;
 	}
 
-	private static FilterAction createErrorAction()
+	private FilterAction createErrorAction()
 	{
 		FilterAction action = new FilterAction();
 		action.setName("ErrorAction");
@@ -103,6 +122,7 @@ public final class LegacyFilterTypes
 		action.setFlowBehaviour(FilterAction.FLOW_EXIT);
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
 		action.setResourceOperations("message.discard;return.discard;arg.discard");
+		repository.addObject(action);
 		return action;
 	}
 
@@ -113,20 +133,22 @@ public final class LegacyFilterTypes
 	// action.setFullName("SubstitutionAction");
 	// action.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
 	// action.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
+	// repository.addObject(action);
 	// return action;
 	// }
 
-	private static FilterAction createAdviceAction()
+	private FilterAction createAdviceAction()
 	{
 		FilterAction action = new FilterAction();
 		action.setName("AdviceAction");
 		action.setFullName("AdviceAction");
 		action.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		repository.addObject(action);
 		return action;
 	}
 
-	private static FilterAction createMetaAction()
+	private FilterAction createMetaAction()
 	{
 		FilterAction action = new FilterAction();
 		action.setName("MetaAction");
@@ -135,12 +157,13 @@ public final class LegacyFilterTypes
 		// TODO: this should actually be MESSAGE_ANY, but it breaks various
 		// things during the compose* compile process
 		action.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		repository.addObject(action);
 		return action;
 	}
 
 	// Filter Types
 
-	private static void addDispatchFilterType()
+	private void addDispatchFilterType()
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.DISPATCH);
@@ -148,9 +171,11 @@ public final class LegacyFilterTypes
 		type.setRejectCallAction(continueAction);
 		type.setAcceptReturnAction(continueAction);
 		type.setRejectReturnAction(continueAction);
+		repository.addObject(type);
+		mapping.registerFilterType(type);
 	}
 
-	private static void addSendFilterType()
+	private void addSendFilterType()
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.SEND);
@@ -158,9 +183,11 @@ public final class LegacyFilterTypes
 		type.setRejectCallAction(continueAction);
 		type.setAcceptReturnAction(continueAction);
 		type.setRejectReturnAction(continueAction);
+		repository.addObject(type);
+		mapping.registerFilterType(type);
 	}
 
-	private static void addMetaFilterType()
+	private void addMetaFilterType()
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.META);
@@ -168,9 +195,11 @@ public final class LegacyFilterTypes
 		type.setRejectCallAction(continueAction);
 		type.setAcceptReturnAction(metaAction);
 		type.setRejectReturnAction(continueAction);
+		repository.addObject(type);
+		mapping.registerFilterType(type);
 	}
 
-	private static void addErrorFilterType()
+	private void addErrorFilterType()
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.ERROR);
@@ -178,19 +207,24 @@ public final class LegacyFilterTypes
 		type.setRejectCallAction(errorAction);
 		type.setAcceptReturnAction(continueAction);
 		type.setRejectReturnAction(continueAction);
+		repository.addObject(type);
+		mapping.registerFilterType(type);
 	}
 
-	private static void addBeforeFilterType()
+	private void addBeforeFilterType()
 	{
 	// does not exist in the legacy system
-	// FilterType type = new FilterType(); type.setType(FilterTypeNames.BEFORE);
+	// FilterType type = new FilterType();
+	// type.setType(FilterTypeNames.BEFORE);
 	// type.setAcceptCallAction(adviceAction);
 	// type.setRejectCallAction(continueAction);
 	// type.setAcceptReturnAction(continueAction);
 	// type.setRejectReturnAction(continueAction);
+	// repository.addObject(type);
+	// mapping.registerFilterType(type);
 	}
 
-	private static void addAfterFilterType()
+	private void addAfterFilterType()
 	{
 	// does not exist in the legacy system
 	// FilterType type = new FilterType();
@@ -199,9 +233,11 @@ public final class LegacyFilterTypes
 	// type.setRejectCallAction(continueAction);
 	// type.setAcceptReturnAction(adviceAction);
 	// type.setRejectReturnAction(continueAction);
+	// repository.addObject(type);
+	// mapping.registerFilterType(type);
 	}
 
-	private static void addSubstitutionFilterType()
+	private void addSubstitutionFilterType()
 	{
 	// does not exist in the legacy system
 	// FilterType type = new FilterType();
@@ -210,9 +246,11 @@ public final class LegacyFilterTypes
 	// type.setRejectCallAction(continueAction);
 	// type.setAcceptReturnAction(continueAction);
 	// type.setRejectReturnAction(continueAction);
+	// repository.addObject(type);
+	// mapping.registerFilterType(type);
 	}
 
-	private static void addPrependFilterType()
+	private void addPrependFilterType()
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.PREPEND);
@@ -220,9 +258,11 @@ public final class LegacyFilterTypes
 		type.setRejectCallAction(continueAction);
 		type.setAcceptReturnAction(continueAction);
 		type.setRejectReturnAction(continueAction);
+		repository.addObject(type);
+		mapping.registerFilterType(type);
 	}
 
-	private static void addAppendFilterType()
+	private void addAppendFilterType()
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.APPEND);
@@ -230,5 +270,7 @@ public final class LegacyFilterTypes
 		type.setRejectCallAction(continueAction);
 		type.setAcceptReturnAction(adviceAction);
 		type.setRejectReturnAction(continueAction);
+		repository.addObject(type);
+		mapping.registerFilterType(type);
 	}
 }

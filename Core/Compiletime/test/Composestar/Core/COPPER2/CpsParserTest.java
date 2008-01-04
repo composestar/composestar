@@ -100,7 +100,8 @@ public class CpsParserTest extends TestCase
 	{
 		System.out.println("Parsing file " + file.toString());
 
-		DataStore.setInstance(new DataStore());
+		DataStore ds = new DataStore();
+		DataStore.setInstance(ds);
 
 		CpsLexer lex;
 		try
@@ -130,6 +131,8 @@ public class CpsParserTest extends TestCase
 		CpsTreeWalker w = new CpsTreeWalker(nodes);
 		w.setSourceFile(file.toString());
 		w.setOrderingConstraints(new HashMap<String, SyntacticOrderingConstraint>());
+		w.setFilterTypeMapping(new FilterTypeMapping());
+		w.setLegacyFilterTypes(new LegacyFilterTypes(w.filterTypes, ds));
 		try
 		{
 			w.concern();

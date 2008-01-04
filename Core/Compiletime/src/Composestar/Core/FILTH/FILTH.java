@@ -12,6 +12,7 @@ package Composestar.Core.FILTH;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.COPPER2.FilterTypeMapping;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
@@ -37,8 +38,9 @@ public class FILTH implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		FILTHService filthservice = new FILTHServiceImpl(resources, InnerDispatcher
-				.createInnerDispatchReference(resources.repository()));
+		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
+		FILTHService filthservice = new FILTHServiceImpl(resources, InnerDispatcher.createInnerDispatchReference(
+				resources.repository(), filterTypes));
 
 		Iterator<Concern> conIter = resources.repository().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())

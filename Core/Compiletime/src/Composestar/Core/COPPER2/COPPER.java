@@ -44,6 +44,7 @@ import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
+import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.DevNullOutputStream;
 import Composestar.Utils.Logging.CPSLogger;
@@ -64,6 +65,10 @@ public class COPPER implements CTCommonModule
 
 	protected Map<String, SyntacticOrderingConstraint> orderingconstraints;
 
+	protected FilterTypeMapping filterTypes;
+
+	protected LegacyFilterTypes legacyFilterTypes;
+
 	public COPPER()
 	{}
 
@@ -74,9 +79,17 @@ public class COPPER implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
+		filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
+		if (filterTypes == null)
+		{
+			filterTypes = new FilterTypeMapping(resources.repository());
+			resources.put(FilterTypeMapping.RESOURCE_KEY, filterTypes);
+		}
+
 		if (LegacyFilterTypes.useLegacyFilterTypes)
 		{
-			LegacyFilterTypes.addLegacyFilterTypes();
+			legacyFilterTypes = new LegacyFilterTypes(filterTypes, resources.repository());
+			resources.put(LegacyFilterTypes.RESOURCE_KEY, legacyFilterTypes);
 		}
 
 		errorCnt = 0;
@@ -138,6 +151,8 @@ public class COPPER implements CTCommonModule
 		CpsTreeWalker w = new CpsTreeWalker(nodes);
 		w.setSourceFile(file.toString());
 		w.setOrderingConstraints(orderingconstraints);
+		w.setFilterTypeMapping(filterTypes);
+		w.setLegacyFilterTypes(legacyFilterTypes);
 		try
 		{
 			w.concern();
@@ -164,8 +179,10 @@ public class COPPER implements CTCommonModule
 		CPSLogger.getRootLogger().setLevel(Level.DEBUG);
 		DataMap.setDataMapClass(DataMapImpl.class);
 		LegacyFilterTypes.useLegacyFilterTypes = true;
-		LegacyFilterTypes.addLegacyFilterTypes();
 		COPPER c = new COPPER();
+		DataStore ds = DataStore.instance();
+		c.filterTypes = new FilterTypeMapping(ds);
+		new LegacyFilterTypes(c.filterTypes, ds);
 		try
 		{
 			c.parseConcernFile(new File(args[0]));

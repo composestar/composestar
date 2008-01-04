@@ -547,11 +547,11 @@ filterType returns [FilterType ft]
 	  {
 	  try {
 	  	String ftName = $name.text;
-	  	ft = FilterType.getFilterType(ftName);
-	  	if ((ft == null) && LegacyFilterTypes.useLegacyFilterTypes)
+	  	ft = filterTypes.getFilterType(ftName);
+	  	if ((ft == null) && (legacyFilterTypes != null))
 		{
 			logger.info(String.format("Creating legacy custom filter with name: \%s", ftName));
-			ft = LegacyFilterTypes.createCustomFilterType(ftName);
+			ft = legacyFilterTypes.createCustomFilterType(ftName);
 		}
 		if (ft == null)
 		{

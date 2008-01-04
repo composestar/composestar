@@ -9,10 +9,6 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import java.util.Hashtable;
-import java.util.Iterator;
-
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
@@ -33,24 +29,6 @@ public class FilterType extends RepositoryEntity
 	private FilterAction acceptReturnAction;
 
 	private FilterAction rejectReturnAction;
-
-	// public static final String WAIT = "Wait";
-	// public static final String DISPATCH = "Dispatch";
-	// public static final String ERROR = "Error";
-	// public static final String META = "Meta";
-	// public static final String SUBSTITUTION = "Substitution";
-	// public static final String CUSTOM = "Custom";
-	// public static final String SEND = "Send";
-	// public static final String PREPEND = "Prepend";
-	// public static final String APPEND = "Append";
-	// public static final String BEFORE = "Before";
-	// public static final String AFTER = "After";
-
-	/**
-	 * Contains a mapping from strings representing filtertypes to FilterType
-	 * objects
-	 */
-	private static Hashtable filterTypeMapping;
 
 	/**
 	 * @return java.lang.String
@@ -132,27 +110,5 @@ public class FilterType extends RepositoryEntity
 	public void setRejectReturnAction(FilterAction value)
 	{
 		rejectReturnAction = value;
-	}
-
-	public static FilterType getFilterType(String name)
-	{
-		if (filterTypeMapping == null)
-		{
-			createFilterTypeMapping();
-		}
-
-		return (FilterType) filterTypeMapping.get(name.toLowerCase());
-	}
-
-	private static void createFilterTypeMapping()
-	{
-		DataStore ds = DataStore.instance();
-		filterTypeMapping = new Hashtable();
-		Iterator filterTypeIter = ds.getAllInstancesOf(FilterType.class);
-		while (filterTypeIter.hasNext())
-		{
-			FilterType filterType = (FilterType) filterTypeIter.next();
-			filterTypeMapping.put(filterType.getType().toLowerCase(), filterType);
-		}
 	}
 }

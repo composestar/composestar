@@ -26,8 +26,9 @@ import Composestar.Utils.Logging.SafeLogger;
 //
 
 /**
- * The Repository part of the Compose* project. It supports reading and writing
- * objects. It allows for basic store and restore operations
+ * The language repository. This map should only contain program/language
+ * elements. Intermediate module information should be stored in the
+ * CommonResources.
  * 
  * @author Pascal Dürr
  * @version $Id$

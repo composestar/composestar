@@ -32,6 +32,7 @@ import org.antlr.runtime.tree.Tree;
 import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
 
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
 import Composestar.Core.Exception.CpsSemanticException;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
@@ -60,6 +61,17 @@ public class CpsTreeWalkerBase extends TreeParser
 
 	protected Map<String, SyntacticOrderingConstraint> orderingconstraints;
 
+	/**
+	 * Contains the filter type mapping which is used to retrieve the filtertype
+	 */
+	protected FilterTypeMapping filterTypes;
+
+	/**
+	 * Will be set when legacyFilterTypes are used. Will be used to construct
+	 * legacy custom filter types on the fly.
+	 */
+	protected LegacyFilterTypes legacyFilterTypes;
+
 	public CpsTreeWalkerBase(TreeNodeStream input)
 	{
 		super(input);
@@ -73,6 +85,16 @@ public class CpsTreeWalkerBase extends TreeParser
 	public void setOrderingConstraints(Map<String, SyntacticOrderingConstraint> oc)
 	{
 		orderingconstraints = oc;
+	}
+
+	public void setFilterTypeMapping(FilterTypeMapping ftm)
+	{
+		filterTypes = ftm;
+	}
+
+	public void setLegacyFilterTypes(LegacyFilterTypes lft)
+	{
+		legacyFilterTypes = lft;
 	}
 
 	public int getErrorCnt()

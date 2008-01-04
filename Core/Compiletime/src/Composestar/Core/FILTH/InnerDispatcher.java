@@ -11,6 +11,7 @@ package Composestar.Core.FILTH;
 
 import java.util.Vector;
 
+import Composestar.Core.COPPER2.FilterTypeMapping;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAST;
@@ -74,7 +75,7 @@ public final class InnerDispatcher
 		return isDefaultDispatch(fmr.getRef());
 	}
 
-	private static FilterModule createInnerDispatchFilterModule(DataStore ds)
+	private static FilterModule createInnerDispatchFilterModule(DataStore ds, FilterTypeMapping filterTypes)
 	{
 		// create a conern
 		CpsConcern cc = new CpsConcern();
@@ -89,8 +90,8 @@ public final class InnerDispatcher
 		fm.setFlag(ContextRepositoryEntity.FLAG_DEFAULT_FILTER);
 
 		// add the filter to the filtermodule
-		fm.addInputFilter(createInnerDispatchFilter(ds, cc, fm, DefaultInnerDispatchNames.INPUT_FILTER));
-		fm.addOutputFilter(createInnerDispatchFilter(ds, cc, fm, DefaultInnerDispatchNames.OUTER_FILTER));
+		fm.addInputFilter(createInnerDispatchFilter(ds, filterTypes, cc, fm, DefaultInnerDispatchNames.INPUT_FILTER));
+		fm.addOutputFilter(createInnerDispatchFilter(ds, filterTypes, cc, fm, DefaultInnerDispatchNames.OUTER_FILTER));
 
 		// add concern and filtermodule to the datastore
 		ds.addObject(cc);
@@ -105,7 +106,8 @@ public final class InnerDispatcher
 		return fmInstance;
 	}
 
-	private static FilterAST createInnerDispatchFilter(DataStore ds, CpsConcern cc, FilterModuleAST fm, String name)
+	private static FilterAST createInnerDispatchFilter(DataStore ds, FilterTypeMapping filterTypes, CpsConcern cc,
+			FilterModuleAST fm, String name)
 	{
 		// create a filter
 		FilterAST f = new FilterAST();
@@ -115,7 +117,7 @@ public final class InnerDispatcher
 
 		// create the filtertype and set it in the filter (typeImplementation as
 		// well)
-		FilterType filterType = FilterType.getFilterType("Dispatch");
+		FilterType filterType = filterTypes.getFilterType("Dispatch");
 		f.setFilterType(filterType);
 		f.setRightOperator(new VoidFilterCompOper());
 
@@ -174,9 +176,9 @@ public final class InnerDispatcher
 		return f;
 	}
 
-	public static FilterModuleReference createInnerDispatchReference(DataStore ds)
+	public static FilterModuleReference createInnerDispatchReference(DataStore ds, FilterTypeMapping filterTypes)
 	{
-		FilterModule fm = InnerDispatcher.createInnerDispatchFilterModule(ds);
+		FilterModule fm = InnerDispatcher.createInnerDispatchFilterModule(ds, filterTypes);
 		FilterModuleReference fmr = new FilterModuleReference();
 		fmr.setName(fm.getName());
 		fmr.setConcern(((CpsConcern) fm.getParent()).getName());

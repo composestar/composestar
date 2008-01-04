@@ -514,11 +514,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Composestar\core\CpsProgramRepository\Legacy\LegacyFilterTypes.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Composestar\core\FILTH\DefaultInnerDispatchNames.java"
                     SubType = "Code"
                     BuildAction = "Compile"
