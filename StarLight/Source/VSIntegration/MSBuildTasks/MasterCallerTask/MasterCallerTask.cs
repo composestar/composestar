@@ -209,14 +209,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 			configContainer.AddSetting("IntermediateOutputPath", _intermediateOutputPath);
 			configContainer.AddSetting("InstallFolder", StarLightSettings.Instance.StarLightInstallFolder);
 
-			// Set FILTH Specification
-			string filthFile = "FILTH.xml";
-			if (!File.Exists(filthFile))
-			{
-				filthFile = Path.Combine(StarLightSettings.Instance.StarLightInstallFolder, filthFile);
-			}
-            configContainer.AddSetting("FILTH.input", filthFile);
-            configContainer.AddSetting("FILTH.outputEnabled", _filthOutput.ToString(CultureInfo.InvariantCulture));
+            //michielh: disabled for now, not used in FILTH
+            //configContainer.AddSetting("FILTH.outputEnabled", _filthOutput.ToString(CultureInfo.InvariantCulture));
 
             if (!String.IsNullOrEmpty(_bookKeepingMode))
             {
