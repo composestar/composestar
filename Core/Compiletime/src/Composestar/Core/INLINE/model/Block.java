@@ -5,6 +5,7 @@
 package Composestar.Core.INLINE.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,10 +41,20 @@ public class Block extends Instruction
 
 	/**
 	 * @return An enumeration of the instructions in this block.
+	 * @deprecated use getInstructionsEx()
 	 */
+	@Deprecated
 	public Iterator<Instruction> getInstructions()
 	{
-		return instructions.iterator();
+		return getInstructionsEx().iterator();
+	}
+
+	/**
+	 * @return a readonly list of instructions in this block
+	 */
+	public List<Instruction> getInstructionsEx()
+	{
+		return Collections.unmodifiableList(instructions);
 	}
 
 	/**

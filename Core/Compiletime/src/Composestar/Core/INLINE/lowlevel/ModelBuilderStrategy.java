@@ -338,6 +338,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		else if (labelId != currentLabelId + 1)
 		{
 			label = getLabel(labelId);
+			label.setUsed(true);
 		}
 		else
 		{

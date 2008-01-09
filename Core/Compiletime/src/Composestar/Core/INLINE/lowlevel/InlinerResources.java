@@ -25,6 +25,7 @@
 package Composestar.Core.INLINE.lowlevel;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,6 +101,11 @@ public class InlinerResources implements ModuleResourceManager
 		return inputFilterCode.get(method);
 	}
 
+	public Map<MethodInfo, FilterCode> getInputFilterCode()
+	{
+		return Collections.unmodifiableMap(inputFilterCode);
+	}
+
 	/**
 	 * @param method
 	 * @param code
@@ -120,6 +126,11 @@ public class InlinerResources implements ModuleResourceManager
 	public FilterCode getOutputFilterCode(CallToOtherMethod call)
 	{
 		return outputFilterCode.get(call);
+	}
+
+	public Map<CallToOtherMethod, FilterCode> getOutputFilterCode()
+	{
+		return Collections.unmodifiableMap(outputFilterCode);
 	}
 
 	/**

@@ -36,5 +36,6 @@
 	<module name="EMITTER" fulltype="Composestar.DotNET2.TYM.RepositoryEmitter.StarLightEmitterRunner" enabled="true" incremental="false" summary="Emitting weaving information...">
 		<dependencies></dependencies>
 	</module>
+	<module fulltype="Composestar.Core.INLINE.CodeGen.COGModule" />
 	<module fulltype="Composestar.Core.INCRE.INCRESerializer" />
 </modules>

@@ -210,6 +210,13 @@ public class ModuleInfoHandler extends CpsBaseHandler
 			super.endElement(uri, localName, name);
 			if (state == STATE_MODULEINFO && "moduleinfo".equals(name))
 			{
+				if (currentMi.getIncreModule() == null)
+				{
+					INCREModule increModule = new INCREModule(currentMi.getId());
+					increModule.setModuleClass(currentMi.getModuleClass());
+					increModule.setEnabled(true);
+					currentMi.setIncreModule(increModule);
+				}
 				returnHandler(uri, localName, name);
 			}
 			else if (state == STATE_NAME && "name".equals(name))

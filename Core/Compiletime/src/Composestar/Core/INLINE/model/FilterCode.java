@@ -1,6 +1,7 @@
 package Composestar.Core.INLINE.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,10 +52,17 @@ public class FilterCode implements Visitable
 	 * Returns the conditions to check before filter code can be executed.
 	 * 
 	 * @return
+	 * @deprecated use getCheckConditionsEx
 	 */
+	@Deprecated
 	public Iterator<Condition> getCheckConditions()
 	{
-		return checkConditions.iterator();
+		return getCheckConditionsEx().iterator();
+	}
+
+	public List<Condition> getCheckConditionsEx()
+	{
+		return Collections.unmodifiableList(checkConditions);
 	}
 
 	/**
