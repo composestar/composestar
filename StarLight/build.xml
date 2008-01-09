@@ -56,7 +56,7 @@
 					<arg value="/q" />
 					<arg value="/summary" />
 					<arg value="/axsl" />
-					<arg value="/outxsl:${build.core}${file.separator}Development${file.separator}fxcop${file.separator}xml${file.separator}FxCopReport.xsl" />
+					<arg value="/outxsl:${build.starlight}${file.separator}Development${file.separator}fxcop${file.separator}xml${file.separator}FxCopReport.xsl" />
 				</exec>
 			</sequential>
 
