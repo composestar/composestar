@@ -231,60 +231,6 @@
 			</not>
 		</condition>
 
-		<!-- FxCop -->
-		<available file="FxCopCmd.exe"
-			filepath="${build.core}${file.separator}Development${file.separator}fxcop${file.separator}"
-			property="available.fxcop" />
-		<available file="FxCopCmd.exe" filepath="${env.PATH}" property="available.fxcop.path" />
-		<condition property="bin.fxcop"
-			value="${build.core}${file.separator}Development${file.separator}fxcop${file.separator}FxCopCmd.exe"
-			else="FxCopCmd.exe">
-			<not>
-				<isset property="available.fxcop.path" />
-			</not>
-		</condition>
-
-		<!-- HTML Help Compiler -->
-		<available file="hhc.exe"
-			filepath="C:${file.separator}Program Files${file.separator}HTML Help Workshop${file.separator}"
-			property="available.hhc" />
-
-		<!-- Sandcastle -->
-		<property name="bin.sandcastle"
-			value="${build.core}${file.separator}Development${file.separator}Sandcastle${file.separator}Help File Builder${file.separator}SandcastleBuilderConsole.exe" />
-
-		<!-- WIX -->
-		<property name="path.wix"
-			value="${build.core}${file.separator}Development${file.separator}Wix${file.separator}" />
-
-		<!-- NUnit -->
-		<property name="path.nunit"
-			value="${build.core}${file.separator}Development${file.separator}NUnit${file.separator}" />
-
-		<!-- NTime -->
-		<property name="path.ntime"
-			value="${build.core}${file.separator}Development${file.separator}NTime${file.separator}" />
-
-		<!-- FxCop macro -->
-		<macrodef name="fxcop">
-
-			<attribute name="files" />
-			<attribute name="reportfile" />
-
-			<sequential>
-				<exec executable="${bin.fxcop}" failonerror="false">
-					<arg value="/f:@{files}" />
-					<arg value="/o:@{reportfile}" />
-					<arg value="/q" />
-					<arg value="/summary" />
-					<arg value="/axsl" />
-					<arg
-						value="/outxsl:${build.core}${file.separator}Development${file.separator}fxcop${file.separator}xml${file.separator}FxCopReport.xsl" />
-				</exec>
-			</sequential>
-
-		</macrodef>
-
 		<macrodef name="devenv">
 			<attribute name="solution" />
 			<attribute name="target" default="Release" />
@@ -327,7 +273,7 @@
 		<path id="lib.core">
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}lib">
 				<include name="**/*.jar" />
-				
+
 				<!-- these are only needed for the antlr tool -->
 				<exclude name="antrl/antlr-3.jar" />
 				<exclude name="antrl/stringtemplate-3.1b1.jar" />
@@ -466,7 +412,7 @@
 		<path id="lib.eclipse">
 			<path refid="lib.core" />
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
-			
+
 			<fileset dir="${eclipse.home}${file.separator}plugins" includes="*.jar" />
 			<fileset dir="${eclipse.pluginsdir}" includes="*.jar" />
 		</path>
@@ -481,8 +427,7 @@
 		<property name="eclipse.pluginsdir.java.plugin"
 			value="${eclipse.pluginsdir}${file.separator}composestar.java.plugin_${version.java}" />
 
-		<property name="eclipse.pluginsdir.c"
-			value="${eclipse.pluginsdir}${file.separator}composestar.c_${version.c}" />
+		<property name="eclipse.pluginsdir.c" value="${eclipse.pluginsdir}${file.separator}composestar.c_${version.c}" />
 	</target>
 
 	<!-- generic target to rebuild all -->

@@ -13,17 +13,59 @@
 
 	<description>The StarLight (.NET 2+) implementation of Compose*</description>
 
-	<property name="out.qa.starlight" value="QualityAssurance" />
-	<property name="out.fxcop.starlight" value="QualityAssurance" />
-	<property name="out.nunit" value="Source${file.separator}Tests${file.separator}TestResults" />
+	<target name="init_local" depends="init">
+		<property name="out.qa.starlight" value="QualityAssurance" />
+		<property name="out.fxcop.starlight" value="QualityAssurance" />
+		<property name="out.nunit" value="Source${file.separator}Tests${file.separator}TestResults" />
 
-	<property name="MSBuildTasks.dir" location="Source/VSIntegration/MSBuildTasks" />
-	<property name="path.nunitprojects" value="Source${file.separator}Tests${file.separator}UnitTests${file.separator}" />
-	<property name="path.ntimeprojects" value="Source${file.separator}Tests${file.separator}PerformanceTests${file.separator}" />
+		<property name="MSBuildTasks.dir" location="Source/VSIntegration/MSBuildTasks" />
+		<property name="path.nunitprojects" value="Source${file.separator}Tests${file.separator}UnitTests${file.separator}" />
+		<property name="path.ntimeprojects" value="Source${file.separator}Tests${file.separator}PerformanceTests${file.separator}" />
+
+		<!-- FxCop -->
+		<available file="FxCopCmd.exe" filepath="${build.starlight}${file.separator}Development${file.separator}fxcop${file.separator}" property="available.fxcop" />
+		<available file="FxCopCmd.exe" filepath="${env.PATH}" property="available.fxcop.path" />
+		<condition property="bin.fxcop" value="${build.starlight}${file.separator}Development${file.separator}fxcop${file.separator}FxCopCmd.exe" else="FxCopCmd.exe">
+			<not>
+				<isset property="available.fxcop.path" />
+			</not>
+		</condition>
+
+		<!-- HTML Help Compiler -->
+		<available file="hhc.exe" filepath="C:${file.separator}Program Files${file.separator}HTML Help Workshop${file.separator}" property="available.hhc" />
+
+		<!-- Sandcastle -->
+		<property name="bin.sandcastle" value="${build.starlight}${file.separator}Development${file.separator}Sandcastle${file.separator}Help File Builder${file.separator}SandcastleBuilderConsole.exe" />
+
+		<!-- NUnit -->
+		<property name="path.nunit" value="${build.starlight}${file.separator}Development${file.separator}NUnit${file.separator}" />
+
+		<!-- NTime -->
+		<property name="path.ntime" value="${build.starlight}${file.separator}Development${file.separator}NTime${file.separator}" />
+
+		<!-- FxCop macro -->
+		<macrodef name="fxcop">
+
+			<attribute name="files" />
+			<attribute name="reportfile" />
+
+			<sequential>
+				<exec executable="${bin.fxcop}" failonerror="false">
+					<arg value="/f:@{files}" />
+					<arg value="/o:@{reportfile}" />
+					<arg value="/q" />
+					<arg value="/summary" />
+					<arg value="/axsl" />
+					<arg value="/outxsl:${build.core}${file.separator}Development${file.separator}fxcop${file.separator}xml${file.separator}FxCopReport.xsl" />
+				</exec>
+			</sequential>
+
+		</macrodef>
+	</target>
 
 	<!-- clean -->
 
-	<target name="clean" depends="init" description="Cleanup the result of compilations">
+	<target name="clean" depends="init_local" description="Cleanup the result of compilations">
 
 		<ant target="clean" dir="Source/VSIntegration/" inheritRefs="true" />
 
@@ -53,86 +95,61 @@
 	</target>
 
 	<!-- build -->
-	
-	<target name="msbuild_init" depends="init" description="Perform soms system initializing through msbuild">
-    <dn:msbuild>
-      <target name="init" />
-      <property name="StarlightVersion" value="${version.starlight}"/>
-      <property name="basedir" value="${basedir}"/>
-      <build>
-        <Project DefaultTargets="empty" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-          <PropertyGroup>
-              <MSBuildCommunityTasksPath Condition="'$(MSBuildCommunityTasksPath)' == ''">$(basedir)\Development\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
-          </PropertyGroup>
-          <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
-          <Target Name="init">     
-            <Error Text="The StarlightVersion property is not set." Condition="$(StarlightVersion) == ''" />
-            <RegistryRead 
-                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" 
-                ValueName="CurrentVersion">
-              <Output TaskParameter="Value" PropertyName="CurrentStarlightVersion" />
-            </RegistryRead>
-          
-            <!-- get old values -->
-            <RegistryRead 
-                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(CurrentStarlightVersion)" 
-                ValueName="StarLightInstallFolder" 
-                DefaultValue="$(ProgramFiles)\StarLight"
-                Condition="$(StarlightVersion) != $(CurrentStarlightVersion)">
-              <Output TaskParameter="Value" PropertyName="StarLightInstallFolder" />
-            </RegistryRead>
-            <RegistryRead 
-                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(CurrentStarlightVersion)" 
-                ValueName="WeaveStrategiesFolder" 
-                DefaultValue="$(ProgramFiles)\StarLight\WeaveStrategies\"
-                Condition="$(StarlightVersion) != $(CurrentStarlightVersion)">
-              <Output TaskParameter="Value" PropertyName="WeaveStrategiesFolder"/>
-            </RegistryRead>
-            
-            <!-- update registry -->
-            <RegistryWrite
-                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" 
-                ValueName="CurrentVersion"
-                Value="$(StarlightVersion)" 
-                Condition="$(StarlightVersion) != $(CurrentStarlightVersion)"
-            />
-            <RegistryWrite
-                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" 
-                ValueName="StarLightInstallFolder"
-                Value="$(StarLightInstallFolder)" 
-                Condition="$(StarlightVersion) != $(CurrentStarlightVersion)"
-            />
-            <RegistryWrite
-                KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" 
-                ValueName="WeaveStrategiesFolder"
-                Value="$(WeaveStrategiesFolder)" 
-                Condition="$(StarlightVersion) != $(CurrentStarlightVersion)"
-            />
-          </Target>
-        </Project>
-      </build>
-    </dn:msbuild>
-    
-    <fileset dir="Source" id="AssemblyInfoFiles">
-      <exclude name="Compiletime/**"/>
-      <exclude name="Tests/**"/>
-      <include name="**/AssemblyInfo.cs"/>
-    </fileset>
-    
-    <replaceregexp>
-      <regexp pattern="(\[assembly: AssemblyVersion\(&quot;)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(&quot;\)\])" />
-      <substitution expression="\1${version.starlight}.0\2" />
-      <fileset refid="AssemblyInfoFiles" />
-    </replaceregexp>
-    <replaceregexp>
-      <regexp pattern="(\[assembly: AssemblyFileVersion\(&quot;)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(&quot;\)\])" />
-      <substitution expression="\1${version.starlight}.0\2" />
-      <fileset refid="AssemblyInfoFiles" />
-    </replaceregexp>
-    
+
+	<target name="msbuild_init" depends="init_local" description="Perform soms system initializing through msbuild">
+		<dn:msbuild>
+			<target name="init" />
+			<property name="StarlightVersion" value="${version.starlight}" />
+			<property name="basedir" value="${basedir}" />
+			<build>
+				<Project DefaultTargets="empty" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+					<PropertyGroup>
+						<MSBuildCommunityTasksPath Condition="'$(MSBuildCommunityTasksPath)' == ''">$(basedir)\Development\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
+					</PropertyGroup>
+					<Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
+					<Target Name="init">
+						<Error Text="The StarlightVersion property is not set." Condition="$(StarlightVersion) == ''" />
+						<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion">
+							<Output TaskParameter="Value" PropertyName="CurrentStarlightVersion" />
+						</RegistryRead>
+
+						<!-- get old values -->
+						<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\Starlight\$(CurrentStarlightVersion)" ValueName="StarLightInstallFolder" DefaultValue="$(ProgramFiles)\StarLight" Condition="$(StarlightVersion) != $(CurrentStarlightVersion)">
+							<Output TaskParameter="Value" PropertyName="StarLightInstallFolder" />
+						</RegistryRead>
+						<RegistryRead KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(CurrentStarlightVersion)" ValueName="WeaveStrategiesFolder" DefaultValue="$(ProgramFiles)\StarLight\WeaveStrategies\" Condition="$(StarlightVersion) != $(CurrentStarlightVersion)">
+							<Output TaskParameter="Value" PropertyName="WeaveStrategiesFolder" />
+						</RegistryRead>
+
+						<!-- update registry -->
+						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight" ValueName="CurrentVersion" Value="$(StarlightVersion)" Condition="$(StarlightVersion) != $(CurrentStarlightVersion)" />
+						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" ValueName="StarLightInstallFolder" Value="$(StarLightInstallFolder)" Condition="$(StarlightVersion) != $(CurrentStarlightVersion)" />
+						<RegistryWrite KeyName="HKEY_LOCAL_MACHINE\Software\Composestar\StarLight\$(StarlightVersion)" ValueName="WeaveStrategiesFolder" Value="$(WeaveStrategiesFolder)" Condition="$(StarlightVersion) != $(CurrentStarlightVersion)" />
+					</Target>
+				</Project>
+			</build>
+		</dn:msbuild>
+
+		<fileset dir="Source" id="AssemblyInfoFiles">
+			<exclude name="Compiletime/**" />
+			<exclude name="Tests/**" />
+			<include name="**/AssemblyInfo.cs" />
+		</fileset>
+
+		<replaceregexp>
+			<regexp pattern="(\[assembly: AssemblyVersion\(&quot;)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(&quot;\)\])" />
+			<substitution expression="\1${version.starlight}.0\2" />
+			<fileset refid="AssemblyInfoFiles" />
+		</replaceregexp>
+		<replaceregexp>
+			<regexp pattern="(\[assembly: AssemblyFileVersion\(&quot;)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(&quot;\)\])" />
+			<substitution expression="\1${version.starlight}.0\2" />
+			<fileset refid="AssemblyInfoFiles" />
+		</replaceregexp>
+
 	</target>
 
-	<target name="build" depends="init,msbuild_init" description="Build the StarLight implementation of Compose*">
+	<target name="build" depends="init_local,msbuild_init" description="Build the StarLight implementation of Compose*">
 		<antcall target="build_compiletime" inheritRefs="true" />
 		<antcall target="build_core_elements" inheritRefs="true" />
 		<antcall target="build_weaving" inheritRefs="true" />
@@ -140,7 +157,7 @@
 		<antcall target="build_vsi" inheritRefs="true" />
 	</target>
 
-	<target name="build_compiletime" depends="init" description="Build Compose* StarLight Compiletime">
+	<target name="build_compiletime" depends="init_local" description="Build Compose* StarLight Compiletime">
 		<ant target="build" dir="Source/Compiletime" inheritRefs="true" />
 	</target>
 
@@ -161,12 +178,12 @@
 	</target>
 
 	<!-- deploy -->
-	
+
 	<target name="install">
 		<antcall target="deploy" inheritRefs="true" />
 	</target>
 
-	<target name="deploy" depends="init,msbuild_init" description="Deploy the StarLight implementation of Compose*">
+	<target name="deploy" depends="init_local,msbuild_init" description="Deploy the StarLight implementation of Compose*">
 		<antcall target="deploy_compiletime" inheritRefs="true" />
 		<antcall target="deploy_core_elements" inheritRefs="true" />
 		<antcall target="deploy_weaving" inheritRefs="true" />
@@ -206,7 +223,7 @@
 
 	<!-- QA -->
 
-	<target name="init_qa" depends="init">
+	<target name="init_qa" depends="init_local">
 		<mkdir dir="${out.qa.starlight}" />
 	</target>
 
@@ -238,7 +255,7 @@
 		<xslt in="${out.qa.starlight}/checkstyle-result.xml" out="${out.qa.starlight}/checkstyle-result.html" style="${checkstyle.style}" />
 	</target>
 
-	<target name="build_codeanalysis" depends="init" description="Build .net projects for code analysis">
+	<target name="build_codeanalysis" depends="init_local" description="Build .net projects for code analysis">
 		<msbuild solution="${MSBuildTasks.dir}/StarLight.MSBuild.Tasks.csproj" target="build" config="Debug" />
 	</target>
 
@@ -252,7 +269,7 @@
 
 	<!-- documentation -->
 
-	<target name="documentation.init" depends="init" unless="available.hhc">
+	<target name="documentation.init" depends="init_local" unless="available.hhc">
 		<!-- 
 			Output a warning if the hhc executable is not found in the 'C:\Program Files\HTML Help Workshop' folder,
 			it might be found by Sandcastle in another folder however, so don't fail...
@@ -276,12 +293,12 @@
 		<msbuild solution="Source\Utilities\Cecil\CecilUtilities.csproj" target="build" config="release" />
 	</target>
 
-	<target name="documentation" description="Create StarLight documentation" depends="documentation.init,documentation.build">	
+	<target name="documentation" description="Create StarLight documentation" depends="init_local,documentation.init,documentation.build">
 		<!-- Run Sandcastle -->
 		<exec dir="${build.starlight}${file.separator}documentation" executable="${bin.sandcastle}">
 			<arg value="${build.starlight}${file.separator}documentation${file.separator}SandcastleHelpStarLight.shfb" />
 		</exec>
-		
+
 		<!-- ARM -->
 		<delete file="Documentation/ARM.pdf" />
 		<svn>
@@ -297,21 +314,21 @@
 		<antcall target="checkstyle_starlight" inheritRefs="true" />
 	</target>
 
-	<target name="fxcop_starlight" depends="init" if="enabled.starlight">
+	<target name="fxcop_starlight" depends="init_local" if="enabled.starlight">
 		<ant target="fxcop" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 
-	<target name="findbugs_starlight" depends="init" if="enabled.starlight">
+	<target name="findbugs_starlight" depends="init_local" if="enabled.starlight">
 		<ant target="findbugs" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 
-	<target name="checkstyle_starlight" depends="init" if="enabled.starlight">
+	<target name="checkstyle_starlight" depends="init_local" if="enabled.starlight">
 		<ant target="checkstyle" dir="${build.starlight}" inheritRefs="true" />
 	</target>
 
 	<!-- Installer -->
 
-	<target name="build_installer" depends="init,build_compiletime,documentation" description="Create the WIX installer for StarLight">
+	<target name="build_installer" depends="init_local,build_compiletime,documentation" description="Create the WIX installer for StarLight">
 		<ant target="build" dir="${build.starlight}${file.separator}Setup" inheritRefs="true" />
 	</target>
 
@@ -325,7 +342,7 @@
 
 	<!-- Testing -->
 
-	<target name="test" depends="init,init_test" description="Execute Tests on the StarLight code other then QA tests">
+	<target name="test" depends="init_local,init_test" description="Execute Tests on the StarLight code other then QA tests">
 		<antcall target="test_junit" inheritRefs="true" />
 		<antcall target="test_nunit" inheritRefs="true" />
 		<!--
@@ -345,7 +362,7 @@
 		<ant target="unittest" dir="${build.core}/Compiletime" inheritRefs="true" />
 	</target>
 
-	<target name="init_nunit" depends="init" description="Build the NUnit projects">
+	<target name="init_nunit" depends="init_local" description="Build the NUnit projects">
 		<echo level="info">Compiling .NET NUnit projects</echo>
 		<msbuild solution="${path.nunitprojects}TestContextInfo${file.separator}ContextInfo.Tests.NUnit.csproj" target="build" config="debug" />
 		<msbuild solution="${path.nunitprojects}TestCpsFileParser${file.separator}CpsFileParser.Tests.NUnit.csproj" target="build" config="debug" />
@@ -371,7 +388,7 @@
 		</exec>
 	</target>
 
-	<target name="init_ntime" depends="init" description="Build the NTime projects">
+	<target name="init_ntime" depends="init_local" description="Build the NTime projects">
 		<echo level="info">Compiling .NET NTime projects</echo>
 		<msbuild solution="${path.ntimeprojects}AllPerformanceTests${file.separator}AllPerformanceTests.csproj" target="build" config="debug" />
 	</target>
@@ -390,7 +407,7 @@
 		<antcall target="systemtest_exec" inheritRefs="true" />
 	</target>
 
-	<target name="systemtest_build" depends="init">
+	<target name="systemtest_build" depends="init_local">
 
 		<fileset id="systemtest.solutions" dir="${build.starlight}/Examples">
 			<include name="Testing/Concerns.sln" />
@@ -412,7 +429,7 @@
 
 	</target>
 
-	<target name="systemtest_exec" depends="init">
+	<target name="systemtest_exec" depends="init_local">
 
 		<echo level="info">Running tests</echo>
 		<cs:test>

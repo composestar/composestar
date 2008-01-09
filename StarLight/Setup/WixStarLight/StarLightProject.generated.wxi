@@ -49,5 +49,5 @@
     <Registry Name="TemplatesDir" Value="[$ComponentPath]\.\NullPath" Type="string" />
   </Registry>
 
-  <Registry Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\Generators\{d0a7707a-04e2-4aa9-a44e-89783e5bd8a8}" Value="" Type="string" />
+  <Registry Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\Generators\{d0a7707a-04e2-4aa9-a44e-89783e5bd8a8}" />
 </Include>

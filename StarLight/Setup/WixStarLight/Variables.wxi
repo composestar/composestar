@@ -26,6 +26,7 @@
   <?define IntegrationBinPath=..\..\Source\VSIntegration\VisualStudio.Project\bin\Release?>
   <?define weaveStrategyBinPath=..\..\Source\StarLight.Weaving.BuiltIn\bin\Release?>
   <?define IntegrationTasksPath=..\..\Source\VSIntegration\MSBuildTasks\bin\Release?>
+  <?define IntegrationTargetsPath=..\..\Source\VSIntegration\MSBuildTasks\Target?>
   <?define SnippetsSources=..\..\Source\VSIntegration\VisualStudio.Project\bin\Release\CodeSnippets?>
   <?define ProjectTemplatesZipPath=..\..\Source\VSIntegration\VisualStudio.Project\obj\Release?>
   <?define ItemTemplatesZipPath=..\..\Source\VSIntegration\VisualStudio.Project\obj\Release?>

@@ -5,18 +5,19 @@
 
     <ComponentGroup Id="CompGroup_MSBuild">
       <ComponentRef Id="Comp_MSBuild" />
+      <ComponentRef Id="Comp_MSBuildVer" />
     </ComponentGroup>
 
     <DirectoryRef Id="ProgramFilesFolder">
       <Directory Id="Dir_MSBuild" Name="MSBuild">
         <Directory Id="Dir_MSBuildMSStarLight" Name="STARLGHT" LongName="StarLight">
           <Component Id="Comp_MSBuild" DiskId="1" Guid="$(var.Comp_MSBuild_Guid)">
-            <File Id="File_TargetsStuv" Name="TARGETS" LongName="StarLight.targets" src="..\..\Source\VSIntegration\MSBuildTasks\Target" />
-            <File Id="File_VersionTargets" Name="TARGETS" LongName="StarLightVersion.targets" src="..\..\Source\VSIntegration\MSBuildTasks\Target" />
+            <File Id="File_TargetsStuv" Name="TARGETS" LongName="StarLight.targets" src="$(var.IntegrationTargetsPath)\" />
+            <File Id="File_VersionTargets" Name="TARGETS" LongName="StarLightVersion.targets" src="$(var.IntegrationTargetsPath)\" />
           </Component>
           <Directory Id="Dir_MSBuildStarLight10" Name="$(var.ProductVersionText)">
             <Component Id="Comp_MSBuildVer" DiskId="1" Guid="$(var.Comp_MSBuildVer_Guid)">
-              <File Id="File_Targets" Name="TARGETS" LongName="StarLightImpl.targets" src="..\..\Source\VSIntegration\MSBuildTasks\Target" />
+              <File Id="File_Targets" Name="TARGETS" LongName="StarLightImpl.targets" src="$(var.IntegrationTargetsPath)\" />
               <File Id="File_Tasks" Name="TASKS" LongName="Composestar.StarLight.MSBuild.Tasks.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks2" Name="TASKS2" LongName="Composestar.StarLight.Entities.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks3" Name="TASKS3" LongName="Composestar.StarLight.ContextInfo.dll" src="$(var.IntegrationTasksPath)\" />

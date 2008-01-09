@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight/Setup" default="build" xmlns:dn="antlib:org.apache.ant.dotnet">
-	
+
 	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
 		<and>
 			<not>
@@ -10,79 +10,83 @@
 		</and>
 	</condition>
 	<import file="${build.core}/common.xml" />
-   
+
 	<description>Compose*/StarLight Setup. Generates the MSI installer.</description>
- 
+
 	<target name="clean" depends="init" description="Clean compile results">
 		<echo>Cleaning WIX object files</echo>
 		<delete>
-			<fileset dir="." includes="**/*.wixobj"/>
-			<fileset dir="Releases" includes="**/*.msi"/>
-			<fileset dir="Releases" includes="**/*.sha1"/>
-		</delete>     
+			<fileset dir="." includes="**/*.wixobj" />
+			<fileset dir="Releases" includes="**/*.msi" />
+			<fileset dir="Releases" includes="**/*.sha1" />
+		</delete>
 	</target>
-	
+
 	<target name="local_init" depends="init">
-		<property name="MSBuildTasks.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}MSBuildTasks"/>
-		<property name="VSProject.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}VisualStudio.Project"/>
-		<property name="VSLang.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}VisualStudio.LanguageServices"/>
-		<property name="WeaveStrategy.dir" location="..${file.separator}Source${file.separator}StarLight.Weaving.BuiltIn"/>
-		<property name="wixsource.path" value="${basedir}${file.separator}WixStarLight${file.separator}"/>
-		<property name="msi.file" value="${build.starlight}${file.separator}Setup${file.separator}Releases${file.separator}StarLight_${version.starlight}.msi"/>
-		<property name="wixtemp.path" value="${build.starlight}${file.separator}Setup${file.separator}"/>
+
+		<!-- WIX -->
+		<property name="path.wix" value="${build.starlight}${file.separator}Development${file.separator}Wix${file.separator}" />
+
+		<property name="MSBuildTasks.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}MSBuildTasks" />
+		<property name="VSProject.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}VisualStudio.Project" />
+		<property name="VSLang.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}VisualStudio.LanguageServices" />
+		<property name="WeaveStrategy.dir" location="..${file.separator}Source${file.separator}StarLight.Weaving.BuiltIn" />
+		<property name="wixsource.path" value="${basedir}${file.separator}WixStarLight${file.separator}" />
+		<property name="msi.file" value="${build.starlight}${file.separator}Setup${file.separator}Releases${file.separator}StarLight_${version.starlight}.msi" />
+		<property name="wixtemp.path" value="${build.starlight}${file.separator}Setup${file.separator}" />
 	</target>
-   
-	<target name="build" depends="local_init,clean,compile_sources" description="Compile the installer files" >
-    <copy todir="installed">
-      <fileset file="${basedir}/../Source/Compiletime/src/INCREconfig.xml" />
-    </copy>
-	    <echo>Building MSI file using WIX</echo>
-			<echo>Running Candle for preprocessing</echo>
-	    <exec executable="${path.wix}candle.exe" failonerror="true">
-	        <arg value="-I${wixsource.path}"/>	        
-					<arg value="-dVariablesFile=${wixsource.path}Variables.wxi"/>
-					<arg value="${wixsource.path}WixStarLight.wxs"/>
-					<arg value="${wixsource.path}WixProlog.wxs"/> 
-					<arg value="${wixsource.path}WixDocuments.wxs"/> 
-					<arg value="${wixsource.path}WixXmlBeans.wxs"/> 
-					<arg value="${wixsource.path}WixLibs.wxs"/> 
-					<arg value="${wixsource.path}WixGroove.wxs"/> 
-					<arg value="${wixsource.path}WixAntlr.wxs"/> 
-					<arg value="${wixsource.path}MSBuild.wxs"/> 
-					<arg value="${wixsource.path}VSIntegration.wxs"/>
-					<arg value="${wixsource.path}CoreElements.wxs"/>										
-					<arg value="-nologo" />
-			</exec>
-			<echo>Running Light for MSI generation to ${msi.file}</echo>
-	    		<exec executable="${path.wix}light.exe" failonerror="true">					
-					<arg value="-out"/>
-					<arg value="${msi.file}"/>
-					<arg value="-b ${wixtemp.path}"/>
-					<arg value="WixStarLight.wixobj"/>
-					<arg value="WixProlog.wixobj"/> 
-					<arg value="WixLibs.wixobj"/> 
-					<arg value="WixDocuments.wixobj"/> 
-					<arg value="WixXmlBeans.wixobj"/> 
-					<arg value="WixGroove.wixobj"/> 
-					<arg value="WixAntlr.wixobj"/> 
-					<arg value="MSBuild.wixobj"/> 
-					<arg value="VSIntegration.wixobj"/>
-					<arg value="CoreElements.wixobj"/>	
-					<arg value="${wixsource.path}wixui.wixlib"/>
-					<arg value="-loc ${wixsource.path}WixUI_en-us.wxl"/>		
-					<arg value="-nologo" />	
-			</exec>
-			<checksum file="${msi.file}" forceOverwrite="yes" algorithm="sha1" format="MD5SUM"/>
+
+	<target name="build" depends="local_init,clean,compile_sources" description="Compile the installer files">
+		<copy todir="installed">
+			<fileset file="${basedir}/../Source/Compiletime/src/INCREconfig.xml" />
+		</copy>
+		<echo>Building MSI file using WIX</echo>
+		<echo>Running Candle for preprocessing</echo>
+		<exec executable="${path.wix}candle.exe" failonerror="true">
+			<arg value="-I${wixsource.path}" />
+			<arg value="-dVariablesFile=${wixsource.path}Variables.wxi" />
+			<arg value="${wixsource.path}WixStarLight.wxs" />
+			<arg value="${wixsource.path}WixProlog.wxs" />
+			<arg value="${wixsource.path}WixDocuments.wxs" />
+			<arg value="${wixsource.path}WixXmlBeans.wxs" />
+			<arg value="${wixsource.path}WixLibs.wxs" />
+			<arg value="${wixsource.path}WixGroove.wxs" />
+			<arg value="${wixsource.path}WixAntlr.wxs" />
+			<arg value="${wixsource.path}MSBuild.wxs" />
+			<arg value="${wixsource.path}VSIntegration.wxs" />
+			<arg value="${wixsource.path}CoreElements.wxs" />
+			<arg value="-nologo" />
+		</exec>
+		<echo>Running Light for MSI generation to ${msi.file}</echo>
+		<exec executable="${path.wix}light.exe" failonerror="true">
+			<arg value="-out" />
+			<arg value="${msi.file}" />
+			<arg value="-b ${wixtemp.path}" />
+			<arg value="WixStarLight.wixobj" />
+			<arg value="WixProlog.wixobj" />
+			<arg value="WixLibs.wixobj" />
+			<arg value="WixDocuments.wixobj" />
+			<arg value="WixXmlBeans.wixobj" />
+			<arg value="WixGroove.wixobj" />
+			<arg value="WixAntlr.wixobj" />
+			<arg value="MSBuild.wixobj" />
+			<arg value="VSIntegration.wixobj" />
+			<arg value="CoreElements.wixobj" />
+			<arg value="${wixsource.path}wixui.wixlib" />
+			<arg value="-loc ${wixsource.path}WixUI_en-us.wxl" />
+			<arg value="-nologo" />
+		</exec>
+		<checksum file="${msi.file}" forceOverwrite="yes" algorithm="sha1" format="MD5SUM" />
 	</target>
-		
+
 	<target name="compile_sources" depends="local_init">
-	  	<echo>Compiling .NET sources in release mode</echo>
-  		<msbuild solution="${MSBuildTasks.dir}${file.separator}StarLight.MSBuild.Tasks.csproj" target="build" config="release" />
-    		<msbuild solution="${VSProject.dir}${file.separator}StarLight.VisualStudio.Project.csproj" target="build" config="release" />
-    		<msbuild solution="${VSLang.dir}${file.separator}StarLight.VisualStudio.LanguageServices.csproj" target="build" config="release" />
-    		<msbuild solution="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuiltIn.csproj" target="build" config="release" /> 
+		<echo>Compiling .NET sources in release mode</echo>
+		<msbuild solution="${MSBuildTasks.dir}${file.separator}StarLight.MSBuild.Tasks.csproj" target="build" config="release" />
+		<msbuild solution="${VSProject.dir}${file.separator}StarLight.VisualStudio.Project.csproj" target="build" config="release" />
+		<msbuild solution="${VSLang.dir}${file.separator}StarLight.VisualStudio.LanguageServices.csproj" target="build" config="release" />
+		<msbuild solution="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuiltIn.csproj" target="build" config="release" />
 	</target>
-	
-	
+
+
 </project>
 
