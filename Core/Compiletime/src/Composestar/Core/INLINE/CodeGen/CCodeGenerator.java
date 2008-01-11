@@ -36,6 +36,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
 
 /**
  * Produces ANSI-C code
@@ -138,6 +139,7 @@ public class CCodeGenerator extends StringCodeGenerator
 		}
 
 		sb.append("\tJoinPointContext __JPC;\n");
+		sb.append(String.format("\t%s returnValue;\n", method.getReturnTypeString()));
 
 		// return action identifier
 		if (returnActions.size() > 0)
@@ -147,6 +149,25 @@ public class CCodeGenerator extends StringCodeGenerator
 		}
 
 		sb.append("\t/* init JPC */;\n");
+		sb.append(String.format("\t__JPC.startSelector = \"%s\";\n", method.getName()));
+		sb.append("\t__JPC.returnValue = &returnValue;\n");
+		List<ParameterInfo> pis = method.getParameters();
+		sb.append(String.format("\t__JPC.argc = %d;\n", pis.size()));
+		if (pis.size() > 0)
+		{
+			sb.append(String.format("\t__JPC.argv = (void **) malloc(%d * sizeof(void *));\n", pis.size()));
+			for (int i = 0; i < pis.size(); i++)
+			{
+				ParameterInfo pi = pis.get(i);
+				sb.append(String.format("\t__JPC.argv[%d] = &%s; /* %s */\n", i, pi.getName(), pi
+						.getParameterTypeString()));
+			}
+		}
+		else
+		{
+			// requires #include <stdio.h>
+			sb.append("\t__JPC.argv = NULL;\n");
+		}
 
 		sb.append(indent(onCall));
 		sb.append(emitLabel(-1));
@@ -156,7 +177,7 @@ public class CCodeGenerator extends StringCodeGenerator
 			sb.append(indent(indent(onReturn)));
 			sb.append("\t}\n");
 		}
-		sb.append("\treturn /* return value */;\n");
+		sb.append("\treturn returnValue;\n");
 		if (hasFmCond)
 		{
 			sb.append("} /* end filter module condition check */\n");
