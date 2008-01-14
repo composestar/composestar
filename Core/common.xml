@@ -29,6 +29,7 @@
 		<property name="version.java" value="${version.core}" />
 		<property name="version.c" value="${version.core}" />
 		<property name="version.starlight" value="${version.core}" />
+		<property name="version.cwc" value="${version.core}" />
 
 		<!-- various config items -->
 		<property name="out.build" value="build" />
@@ -39,6 +40,7 @@
 		<property name="out.jar.dotnet" value="${out.dist}${file.separator}lib${file.separator}ComposestarDotNET.jar" />
 		<property name="out.jar.java" value="${out.dist}${file.separator}lib${file.separator}ComposestarJava.jar" />
 		<property name="out.jar.starlight" value="${out.dist}${file.separator}StarLight.jar" />
+		<property name="out.jar.cwc" value="${out.dist}${file.separator}lib${file.separator}ComposestarCwC.jar" />
 		<property name="out.jar.visualization"
 			value="${out.dist}${file.separator}lib${file.separator}ComposestarVisualization.jar" />
 
@@ -68,18 +70,21 @@
 		<property name="build.starlight" value="${build.root}${file.separator}StarLight" />
 		<property name="build.java" value="${build.root}${file.separator}Java" />
 		<property name="build.c" value="${build.root}${file.separator}C" />
+		<property name="build.cwc" value="${build.root}${file.separator}CwC" />
 
 		<!-- check which platforms are available -->
 		<available file="${build.dotnet}${file.separator}build.xml" property="available.dotnet" />
 		<available file="${build.starlight}${file.separator}build.xml" property="available.starlight" />
 		<available file="${build.java}${file.separator}build.xml" property="available.java" />
 		<available file="${build.c}${file.separator}build.xml" property="available.c" />
+		<available file="${build.cwc}${file.separator}build.xml" property="available.cwc" />
 
 		<!-- set default values of ignore properties for all platforms -->
 		<property name="ignore.dotnet" value="false" />
 		<property name="ignore.starlight" value="false" />
 		<property name="ignore.java" value="false" />
 		<property name="ignore.c" value="false" />
+		<property name="ignore.cwc" value="true" />
 
 		<!-- set the enabled properties for all platforms based on available and ignore -->
 		<condition property="enabled.dotnet" value="true">
@@ -107,6 +112,13 @@
 			<and>
 				<istrue value="${available.c}" />
 				<isfalse value="${ignore.c}" />
+			</and>
+		</condition>
+		
+		<condition property="enabled.cwc" value="true">
+			<and>
+				<istrue value="${available.cwc}" />
+				<isfalse value="${ignore.cwc}" />
 			</and>
 		</condition>
 
@@ -302,6 +314,12 @@
 			<path refid="lib.core" />
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
 		</path>
+		
+		<path id="lib.cwc">
+			<path refid="lib.core" />
+			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
+			<fileset dir="${build.cwc}${file.separator}Compiletime${file.separator}lib" includes="*/*.jar" />
+		</path>
 
 		<!-- findbugs jars -->
 		<path id="lib.findbugs">
@@ -493,6 +511,10 @@
 		<condition property="status.c" value="enabled" else="disabled">
 			<isset property="enabled.c" />
 		</condition>
+		
+		<condition property="status.cwc" value="enabled" else="disabled">
+			<isset property="enabled.cwc" />
+		</condition>
 
 		<echo message="Settings:" />
 		<echo message="  ant.build.javac.target: ${ant.build.javac.target}" />
@@ -505,6 +527,7 @@
 		<echo message="  build.starlight:        ${build.starlight}" />
 		<echo message="  build.java:             ${build.java}" />
 		<echo message="  build.c:                ${build.c}" />
+		<echo message="  build.cwc:              ${build.cwc}" />
 		<echo></echo>
 		<echo message="	 composestar.installdir: ${composestar.installdir}" />
 		<echo message="	 starlight.installdir:   ${starlight.installdir}" />
@@ -516,6 +539,7 @@
 		<echo message="  StarLight: ${status.starlight}	(version ${version.starlight})" />
 		<echo message="  Java:      ${status.java}	(version ${version.java})" />
 		<echo message="  C:         ${status.c}	(version ${version.c})" />
+		<echo message="  CwC:       ${status.cwc}	(version ${version.cwc})" />
 		<echo></echo>
 		<input message="Press enter to continue..." />
 	</target>
