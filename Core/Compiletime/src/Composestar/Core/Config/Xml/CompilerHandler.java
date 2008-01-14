@@ -37,6 +37,7 @@ import Composestar.Core.Config.CmdLineArgument;
 import Composestar.Core.Config.CmdLineArgumentList;
 import Composestar.Core.Config.CompilerAction;
 import Composestar.Core.Config.DepsCmdLineArgumentList;
+import Composestar.Core.Config.ListCmdLineArgumentList;
 import Composestar.Core.Config.SourceCompiler;
 import Composestar.Core.Config.SourcesCmdLineArgumentList;
 
@@ -155,6 +156,7 @@ public class CompilerHandler extends CpsBaseHandler
 			pushState(STATE_ARG_LIST);
 			SourcesCmdLineArgumentList currentArgList = new SourcesCmdLineArgumentList();
 			currentArgList.setMerge(Boolean.parseBoolean(attributes.getValue("merge")));
+			currentArgList.setUseQuote(Boolean.parseBoolean(attributes.getValue("useQuotes")));
 			currentArgList.setDelimiter(attributes.getValue("delimiter"));
 			addArgument(currentArgList);
 			argList.push(currentArgList);
@@ -166,6 +168,18 @@ public class CompilerHandler extends CpsBaseHandler
 			currentArgList.setMerge(Boolean.parseBoolean(attributes.getValue("merge")));
 			currentArgList.setUseQuote(Boolean.parseBoolean(attributes.getValue("useQuotes")));
 			currentArgList.setDelimiter(attributes.getValue("delimiter"));
+			addArgument(currentArgList);
+			argList.push(currentArgList);
+		}
+		else if ((state == STATE_ACTION || state == STATE_RCFILE) && "list".equals(name))
+		{
+			pushState(STATE_ARG_LIST);
+			ListCmdLineArgumentList currentArgList = new ListCmdLineArgumentList();
+			currentArgList.setMerge(Boolean.parseBoolean(attributes.getValue("merge")));
+			currentArgList.setUseQuote(Boolean.parseBoolean(attributes.getValue("useQuotes")));
+			currentArgList.setDelimiter(attributes.getValue("delimiter"));
+			currentArgList.setVarName(attributes.getValue("var"));
+			currentArgList.setSplit(attributes.getValue("split"));
 			addArgument(currentArgList);
 			argList.push(currentArgList);
 		}
@@ -218,12 +232,17 @@ public class CompilerHandler extends CpsBaseHandler
 			popState(/* STATE_ACTION | STATE_RCFILE */);
 			argList.pop();
 		}
+		else if (state == STATE_ARG_LIST && "list".equals(name))
+		{
+			popState(/* STATE_ACTION | STATE_RCFILE */);
+			argList.pop();
+		}
 		else if (state == STATE_RCFILE && "rcfile".equals(name))
 		{
 			popState( /*
-			 * STATE_ACTION | STATE_ARG_LIST | STATE_ARG_LIST |
-			 * STATE_RCFILE
-			 */);
+						 * STATE_ACTION | STATE_ARG_LIST | STATE_ARG_LIST |
+						 * STATE_RCFILE
+						 */);
 			argList.pop();
 		}
 		else

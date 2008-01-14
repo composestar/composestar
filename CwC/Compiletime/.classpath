@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="**/.svn/" including="**/*.java|**/moduleinfo.xml|INCREconfig.xml|MANIFEST.MF|Platforms.xml" kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/weavec.jar" sourcepath="/WeaveC/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/lib/log4j/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/lib/antlr/antlr.jar" sourcepath="C:/antlr"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

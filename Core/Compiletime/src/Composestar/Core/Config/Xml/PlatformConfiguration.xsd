@@ -247,6 +247,7 @@
 
 			</xsd:element>
 
+			<xsd:element name="list" type="ListCmdLineArgList"></xsd:element>
 		</xsd:choice>
 	</xsd:group>
 
@@ -309,5 +310,27 @@
 			</xsd:annotation>
 		</xsd:attribute>
 		<xsd:attribute name="delimiter" type="xsd:string"></xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="ListCmdLineArgList">
+        <xsd:annotation>
+        	<xsd:documentation>
+        		A generic list of arguments. Uses a variable in the properties as source of the entries
+        	</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+			<xsd:extension base="CmdLineArgList">
+				<xsd:attribute name="var" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>The variable name to use as source.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="split" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The pattern to use to split the variable into a list.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
 	</xsd:complexType>
 </xsd:schema>

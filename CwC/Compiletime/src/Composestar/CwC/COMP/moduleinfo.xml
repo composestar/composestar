@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../../../../ComposestarCORE/src/Composestar/Core/Config/Xml/ModuleInfo.xsd">
+	<moduleinfo class="Composestar.CwC.COMP.PreProcess" id="COMP.PreProcess">
+		<name>C PreProcessor</name>
+		<description>Calls the C preprocessor</description>
+	</moduleinfo>
+	<moduleinfo class="Composestar.CwC.COMP.Compile" id="COMP">
+		<name>C Compiler</name>
+		<description>Calls the C Compiler</description>
+		<settings>
+			<setting id="defines" type="string">
+				<name>Definitions</name>
+			</setting>
+		</settings>
+	</moduleinfo>
+</modules>
