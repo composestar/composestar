@@ -116,15 +116,16 @@ public class CCompiler implements LangCompiler
 			Properties prop = new Properties();
 			prop.put("OUT", target.toString());
 			prop.put("includedir", p.getBase().toString());
-			String defines = moduleInfo.getSetting("defines", "");
-			if (defines != null && defines.trim().length() > 0)
+			String args = moduleInfo.getSetting("args", "");
+			if (args != null && args.trim().length() > 0)
 			{
-				prop.put("defines", defines);
+				prop.put("args", args);
 			}
 
 			String[] cmdline = action.getCmdLine(p, files, prop);
 			logger.debug(Arrays.toString(cmdline));
 			CommandLineExecutor cmdExec = new CommandLineExecutor();
+			cmdExec.setWorkingDir(p.getBase());
 			int result = cmdExec.exec(cmdline);
 			String compilerOutput = cmdExec.outputError();
 

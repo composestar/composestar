@@ -27,6 +27,13 @@ public class CommandLineExecutor
 
 	private StreamGobbler outputGobbler;
 
+	private File workingDir;
+
+	public void setWorkingDir(File wd)
+	{
+		workingDir = wd;
+	}
+
 	/**
 	 * Executess the command and waits for it to return. WARNING: If the program
 	 * hangs this function will never return. Please note that return values
@@ -107,7 +114,7 @@ public class CommandLineExecutor
 		try
 		{
 			Runtime rt = Runtime.getRuntime();
-			Process proc = rt.exec(command);
+			Process proc = rt.exec(command, null, workingDir);
 
 			// connect error and output filters
 			errorGobbler = new StreamGobbler(proc.getErrorStream());

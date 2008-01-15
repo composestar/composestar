@@ -9,8 +9,8 @@
 		<name>C Compiler</name>
 		<description>Calls the C Compiler</description>
 		<settings>
-			<setting id="defines" type="string">
-				<name>Definitions</name>
+			<setting id="args" type="string">
+				<name>Additional compiler arguments</name>
 			</setting>
 		</settings>
 	</moduleinfo>

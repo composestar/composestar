@@ -13,25 +13,33 @@
 						<arg>-E</arg><!-- only preprocess -->
 						<arg>-dD</arg><!-- keep macros -->
 						<arg>-C</arg><!-- preserve comments, they contain the annotations -->
+						<arg>-D</arg><!-- unset __attribute__ construction, not fully supported?  -->
+						<arg>__attribute__(x)= /*__attribute__(x)*/</arg>
 						<arg>-I</arg>
 						<arg>${includedir}</arg>
-						<list var="defines" split=";">
-							<arg>-D${ENTRY}</arg>
-						</list>
 						<arg>-o</arg>
 						<arg>${OUT}</arg>
+						<list var="args" split="\n">
+							<arg>${ENTRY}</arg>
+						</list>
 						<sources>
 							<arg>${SOURCE}</arg>
 						</sources>
 					</action>
 					<action name="compile" executable="gcc">
+						<arg>-Wall</arg>
 						<arg>-I</arg>
 						<arg>${includedir}</arg>
 						<arg>-include</arg>
 						<arg>JoinPointContext.h</arg>
 						<arg>-o</arg>
 						<arg>${OUT}</arg>
-						<arg>${SOURCE}</arg>
+						<list var="args" split="\n">
+							<arg>${ENTRY}</arg>
+						</list>
+						<sources>
+							<arg>${SOURCE}</arg>
+						</sources>
 					</action>
 				</compiler>
 				<!-- <dummygenerator>...</dummygenerator>  -->

@@ -50,14 +50,14 @@ public class OutputStreamRedirector extends OutputStream
 	@Override
 	public void write(int b) throws IOException
 	{
-		if (b == 0x10)
+		if (b == '\n')
 		{
 			log.log(lev, sb.toString());
 			sb = new StringBuffer();
 		}
 		else if (b > 32)
 		{
-			sb.append(b);
+			sb.append((char) b);
 		};
 	}
 }

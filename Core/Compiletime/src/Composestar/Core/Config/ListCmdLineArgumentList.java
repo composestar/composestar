@@ -103,7 +103,11 @@ public class ListCmdLineArgumentList extends CmdLineArgumentList
 		{
 			for (String entry : split.split(val))
 			{
-				prop.setProperty("ENTRY", entry);
+				if (entry.trim().length() == 0)
+				{
+					continue;
+				}
+				prop.setProperty("ENTRY", entry.trim());
 				super.addArgs(argList, proj, sources, prop);
 			}
 		}
