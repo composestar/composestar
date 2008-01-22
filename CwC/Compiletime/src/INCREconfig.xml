@@ -3,6 +3,7 @@
 	<module fulltype="Composestar.CwC.COMP.PreProcess" />
 	<module fulltype="Composestar.CwC.TYM.Harvester.TypeHarvester" />
 	<module fulltype="Composestar.CwC.TYM.Collector.LangModelConverter" />
+	<module fulltype="Composestar.CwC.LOLA.CwCLOLA" />
 	<!-- 
 	<module fulltype="Composestar.Core.COPPER2.COPPER" />
 	<module fulltype="Composestar.Core.EMBEX.EMBEX" />

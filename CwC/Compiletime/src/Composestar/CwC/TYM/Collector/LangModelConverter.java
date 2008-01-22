@@ -39,7 +39,9 @@ import weavec.cmodel.type.CType;
 import weavec.cmodel.type.FunctionType;
 import weavec.grammar.TranslationUnitResult;
 import Composestar.Core.Annotations.ResourceManager;
+import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
@@ -110,8 +112,24 @@ public class LangModelConverter implements CTCommonModule
 		{
 			createCwCFile(tunit.getModuleDeclaration());
 		}
+
+		logger.info("Phase 3: Creating primitive types");
+		for (Type type : register.getTypeMap().values())
+		{
+			PrimitiveConcern pc = new PrimitiveConcern();
+			pc.setName(type.getFullName());
+			pc.setPlatformRepresentation(type);
+			type.setParentConcern(pc);
+			resources.repository().addObject(type.getFullName(), pc);
+		}
 	}
 
+	/**
+	 * Find a CwCType for a given CType (create it if missing).
+	 * 
+	 * @param ctype
+	 * @return
+	 */
 	protected CwCType resolveCwCType(CType ctype)
 	{
 		CwCType result;
