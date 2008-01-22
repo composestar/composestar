@@ -22,8 +22,9 @@
  * $Id$
  */
 
-package Composestar.CwC.TYM.Harvester;
+package Composestar.CwC.TYM;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,6 +62,11 @@ public class WeaveCResources implements ModuleResourceManager
 			return;
 		}
 		tunits.add(tunit);
+	}
+
+	public Set<TranslationUnitResult> translationUnitResults()
+	{
+		return Collections.unmodifiableSet(tunits);
 	}
 
 }

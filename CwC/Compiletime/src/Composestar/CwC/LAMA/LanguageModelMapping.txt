@@ -1,0 +1,11 @@
+WeaveC element	=	LAMA
+
+ModuleDeclaration	=	CFile -> Type
+FunctionDeclaration	=	MethodInfo
+ObjectDeclaration	=	FieldInfo
+AnnotationInstance	=	Annotation
+TypeDeclaration		=	Type
+
+ParameterInfo does not have a mapping, it's contained within FunctionDeclaration
+Namespace is extracted from the ModuleDeclaration name (directory name)
+	 

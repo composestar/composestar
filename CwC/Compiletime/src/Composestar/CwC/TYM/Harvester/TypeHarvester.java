@@ -34,25 +34,18 @@ import java.io.PrintStream;
 import org.apache.log4j.Level;
 
 import weavec.aspectc.acmodel.AnnotationDescriptor;
-import weavec.aspectc.acmodel.BindingEntity;
 import weavec.aspectc.acmodel.CTypeDescriptor;
-import weavec.aspectc.acmodel.advicetemplates.AdviceTemplateFunction;
-import weavec.aspectc.gen.Query;
-import weavec.aspectc.jpmodel.FunctionJP;
-import weavec.aspectc.jpmodel.ModuleJP;
-import weavec.aspectc.weaver.WeaveEngine;
 import weavec.ast.CToken;
 import weavec.ast.TNode;
-import weavec.ast.TNodeFactory;
 import weavec.grammar.AnonymousIdentifier;
 import weavec.parser.ACGrammarLexer;
 import weavec.parser.AspectCParser;
-import weavec.util.Options;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
+import Composestar.CwC.TYM.WeaveCResources;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
@@ -61,7 +54,10 @@ import Composestar.Utils.Perf.CPSTimer;
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 
+// TODO: check for duplication of type information
 /**
+ * Uses WeaveC to harvest type information from the preprocessed C files.
+ * 
  * @author Michiel Hendriks
  */
 public class TypeHarvester implements HarvestRunner
@@ -91,17 +87,10 @@ public class TypeHarvester implements HarvestRunner
 
 	protected void initWeaveC()
 	{
-		Options.newInstance();
 		AnonymousIdentifier.reset();
-		TNodeFactory.newInstance();
-		TNode.setTokenVocabulary(new String());
-		WeaveEngine.systemProperties().clear();
-		WeaveEngine.newInstance();
-		ModuleJP.allModuleJPs().clear();
-		FunctionJP.allFunctionJPs().clear();
-		Query.listCache().clear();
-		AdviceTemplateFunction.setcounter(new Integer(0));
-		BindingEntity.setcounter(new Integer(0));
+		TNode.setTokenVocabulary("ACGrammarTokenTypes");
+		// AdviceTemplateFunction.setcounter(new Integer(0));
+		// BindingEntity.setcounter(new Integer(0));
 		CTypeDescriptor.setcounter(new Integer(0));
 		CTypeDescriptor.ctdescriptors().clear();
 		AnnotationDescriptor.setcounter(new Integer(0));
