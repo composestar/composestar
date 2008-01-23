@@ -35,6 +35,7 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
  * A CwCFile is a primitive concern. It does not actually define a type in C. It
@@ -193,7 +194,7 @@ public class CwCFile extends Type
 	@Override
 	public String getUnitType()
 	{
-		return "Class";
+		return EUnitType.CLASS.toString();
 	}
 
 }

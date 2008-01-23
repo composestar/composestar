@@ -126,7 +126,7 @@
 					<xsd:documentation>The source code compiler for this language</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="dummygenerator" type="xsd:NCName" maxOccurs="1" minOccurs="1">
+			<xsd:element name="dummygenerator" type="xsd:NCName" maxOccurs="1" minOccurs="0">
 				<xsd:annotation>
 					<xsd:documentation>The class for the dummy generator.</xsd:documentation>
 				</xsd:annotation>

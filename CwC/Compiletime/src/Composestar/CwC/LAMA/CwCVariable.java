@@ -31,6 +31,7 @@ import java.util.Set;
 import weavec.cmodel.declaration.ObjectDeclaration;
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.ERelationType;
 
 /**
  * Encapsulates a variable defined in a C file. Since the C file is considered a
@@ -124,15 +125,15 @@ public class CwCVariable extends FieldInfo
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if ("ParentMethod".equals(argumentName))
+		if (ERelationType.PARENT_METHOD.equals(argumentName))
 		{
 			return new UnitResult(parent);
 		}
-		else if ("Class".equals(argumentName) && "Class".equals(getFieldType().getUnitType()))
+		else if (ERelationType.CLASS.equals(argumentName) && "Class".equals(getFieldType().getUnitType()))
 		{
 			return new UnitResult(getFieldType());
 		}
-		else if ("Type".equals(argumentName) && "Type".equals(getFieldType().getUnitType()))
+		else if (ERelationType.TYPE.equals(argumentName) && "Type".equals(getFieldType().getUnitType()))
 		{
 			return new UnitResult(getFieldType());
 		}

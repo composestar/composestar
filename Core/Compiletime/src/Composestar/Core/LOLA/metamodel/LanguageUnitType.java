@@ -37,6 +37,11 @@ public class LanguageUnitType
 		relationTypes = new HashMap<String, RelationType>();
 	}
 
+	public LanguageUnitType(/* String predicateName, */Class<?> impl, EUnitType type, boolean nameUnique)
+	{
+		this(impl, type.toString(), nameUnique);
+	}
+
 	/**
 	 * @return Returns the class that implements this type of language unit
 	 */

@@ -30,6 +30,11 @@ public class RelationType
 		this.otherType = otherType;
 	}
 
+	public RelationType(ERelationType type, LanguageUnitType otherType, boolean unique)
+	{
+		this(type.toString(), otherType, unique);
+	}
+
 	/**
 	 * @return Returns the name.
 	 */

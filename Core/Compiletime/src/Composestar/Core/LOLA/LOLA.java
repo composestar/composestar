@@ -117,10 +117,7 @@ public abstract class LOLA implements CTCommonModule
 		composestarBuiltins = new ComposestarBuiltins(langModel, unitDict, register);
 		Init.builtinDict.putAll(composestarBuiltins);
 
-		logger.debug("Consulting base predicate libraries");
-
-		reconsult("lib.pro");
-		reconsult("connector.pro");
+		loadLibraries();
 
 		if (Init.askJinni("reconsult('" + generatedPredicatesFilename.getAbsolutePath().replace("\\", "/") + "')")
 				.equals("no"))
@@ -133,6 +130,16 @@ public abstract class LOLA implements CTCommonModule
 		{
 			throw new ModuleException("FATAL: Prolog interpreter could not be initialized!", MODULE_NAME);
 		}
+	}
+
+	/**
+	 * Load the base libraries
+	 */
+	protected void loadLibraries()
+	{
+		logger.debug("Consulting base predicate libraries");
+		reconsult("lib.pro");
+		reconsult("connector.pro");
 	}
 
 	/**

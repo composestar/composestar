@@ -195,7 +195,7 @@ public class INCREComparator
 	}
 
 	/**
-	 * @param Class
+	 * @param CLASS
 	 * @return
 	 * @param c
 	 */

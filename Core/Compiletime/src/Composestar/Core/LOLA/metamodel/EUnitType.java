@@ -22,35 +22,31 @@
  * $Id$
  */
 
-package Composestar.CwC.LOLA.Metamodel;
-
-import Composestar.Core.LOLA.metamodel.InvalidModelException;
-import Composestar.Core.LOLA.metamodel.LanguageModel;
+package Composestar.Core.LOLA.metamodel;
 
 /**
  * @author Michiel Hendriks
  */
-public class CwCLanguageModel extends LanguageModel
+public enum EUnitType
 {
-	public CwCLanguageModel()
-	{}
+	NAMESPACE("Namespace"), CLASS("Class"), INTERFACE("Interface"), TYPE("Type"), METHOD("Method"), FIELD("Field"),
+	PARAMETER("Parameter"), ANNOTATION("Annotation");
 
-	/**
-	 * Creates specifications for all language units that can occur in java, and
-	 * the relations between them.
-	 */
-	@Override
-	public void createMetaModel() throws InvalidModelException
+	private String name;
+
+	EUnitType(String name)
 	{
-		mcNamespace = Composestar.Core.LAMA.LangNamespace.class;
-		mcClass = Composestar.CwC.LAMA.CwCFile.class;
-		mcInterface = null;
-		mcType = Composestar.CwC.LAMA.CwCType.class;
-		mcMethod = Composestar.CwC.LAMA.CwCFunctionInfo.class;
-		mcField = Composestar.CwC.LAMA.CwCVariable.class;
-		mcParameter = Composestar.CwC.LAMA.CwCParameterInfo.class;
-		// TODO mcAnnotation = Composestar.CwC.LAMA.JavaType.class;
-		super.createMetaModel();
+		this.name = name;
 	}
 
+	@Override
+	public String toString()
+	{
+		return name;
+	}
+
+	public boolean equals(String other)
+	{
+		return name.equals(other);
+	}
 }

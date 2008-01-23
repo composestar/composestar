@@ -42,7 +42,7 @@
 	</target>
 
 	<target name="compile" depends="init_local">
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.c" debug="${build.debug}" deprecation="${build.deprecation}" />
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.cwc" debug="${build.debug}" deprecation="${build.deprecation}" />
 	</target>
 
 	<target name="jar" depends="compile">

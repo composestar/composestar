@@ -318,7 +318,7 @@
 		<path id="lib.cwc">
 			<path refid="lib.core" />
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
-			<fileset dir="${build.cwc}${file.separator}Compiletime${file.separator}lib" includes="*/*.jar" />
+			<fileset dir="${build.cwc}${file.separator}Compiletime${file.separator}lib" includes="*.jar" />
 		</path>
 
 		<!-- findbugs jars -->

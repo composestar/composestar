@@ -42,7 +42,6 @@
 						</sources>
 					</action>
 				</compiler>
-				<!-- <dummygenerator>...</dummygenerator>  -->
 			</language>
 		</languages>
 		<resources>

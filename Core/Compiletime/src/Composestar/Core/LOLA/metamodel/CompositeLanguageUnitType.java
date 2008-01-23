@@ -36,6 +36,12 @@ public class CompositeLanguageUnitType extends LanguageUnitType
 		containedTypes.add(type2);
 	}
 
+	public CompositeLanguageUnitType(Class<?> impl, EUnitType type, boolean nameUnique, LanguageUnitType type1,
+			LanguageUnitType type2)
+	{
+		this(impl, type.toString(), nameUnique, type1, type2);
+	}
+
 	public CompositeLanguageUnitType(Class<?> impl, String type, boolean nameUnique,
 			List<LanguageUnitType> containedTypes)
 	{
