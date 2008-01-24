@@ -504,12 +504,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Composestar\core\CpsProgramRepository\Legacy\FilterTypeNames.java"
+                    RelPath = "Composestar\core\CpsProgramRepository\Filters\FilterTypeNames.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Composestar\core\CpsProgramRepository\Legacy\LegacyCustomFilterType.java"
+                    RelPath = "Composestar\core\CpsProgramRepository\Filters\LegacyCustomFilterType.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

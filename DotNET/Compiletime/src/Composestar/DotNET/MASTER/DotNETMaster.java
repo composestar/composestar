@@ -10,7 +10,7 @@
 
 package Composestar.DotNET.MASTER;
 
-import Composestar.Core.CpsProgramRepository.Legacy.DefaultFilterFactory;
+import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.LegacyDataMap;

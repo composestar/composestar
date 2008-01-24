@@ -8,7 +8,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsProgramRepository.Legacy;
+package Composestar.Core.CpsProgramRepository.Filters;
 
 import Composestar.Core.COPPER2.FilterTypeMapping;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;

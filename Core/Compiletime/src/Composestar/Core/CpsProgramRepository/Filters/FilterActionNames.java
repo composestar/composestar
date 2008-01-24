@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsProgramRepository.Legacy;
+package Composestar.Core.CpsProgramRepository.Filters;
 
 /**
  * @author Michiel Hendriks

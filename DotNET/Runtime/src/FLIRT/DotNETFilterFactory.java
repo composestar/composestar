@@ -1,7 +1,7 @@
 package Composestar.RuntimeDotNET.FLIRT.Filtertypes;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.Legacy.LegacyCustomFilterType;
+import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
 import Composestar.RuntimeCore.Utils.Debug;

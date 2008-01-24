@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.Legacy.LegacyCustomFilterType;
+import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 

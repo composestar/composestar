@@ -8,7 +8,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsProgramRepository.Legacy;
+package Composestar.Core.CpsProgramRepository.Filters;
 
 /**
  * Contains the filter names. Part of the legacy compose* support

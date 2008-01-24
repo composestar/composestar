@@ -38,7 +38,7 @@ import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import Composestar.Core.CpsProgramRepository.Legacy.DefaultFilterFactory;
+import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FILTH;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;

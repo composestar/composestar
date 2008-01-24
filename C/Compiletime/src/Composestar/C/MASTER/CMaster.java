@@ -10,7 +10,7 @@
 
 package Composestar.C.MASTER;
 
-import Composestar.Core.CpsProgramRepository.Legacy.DefaultFilterFactory;
+import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.Master.Master;
 
 /**

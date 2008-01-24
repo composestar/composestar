@@ -54,7 +54,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.*;
-import Composestar.Core.CpsProgramRepository.Legacy.DefaultFilterFactory;
+import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.Exception.*;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 

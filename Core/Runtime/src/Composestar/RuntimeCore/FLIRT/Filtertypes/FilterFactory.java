@@ -1,7 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.Legacy.FilterTypeNames;
+import Composestar.Core.CpsProgramRepository.Filters.FilterTypeNames;
 
 /**
  * FilterFactory is implemented as an abstract factory. It used to be a static
