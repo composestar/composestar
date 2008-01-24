@@ -22,12 +22,14 @@
  * $Id$
  */
 
-package Composestar.Core.INLINE.CodeGen;
+package Composestar.CwC.INLINE.CodeGen;
 
 import java.util.Map.Entry;
 
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INLINE.CodeGen.CodeGenerator;
+import Composestar.Core.INLINE.CodeGen.DispatchActionCodeGen;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.MethodInfo;

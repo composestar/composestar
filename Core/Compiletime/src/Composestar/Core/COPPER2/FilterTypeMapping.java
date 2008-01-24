@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
+import Composestar.Core.CpsProgramRepository.Legacy.LegacyCustomFilterType;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -85,7 +86,15 @@ public class FilterTypeMapping
 	 */
 	public void registerFilterType(FilterType ft)
 	{
-		String typeName = ft.getType().toLowerCase();
+		String typeName;
+		if (ft instanceof LegacyCustomFilterType)
+		{
+			typeName = ((LegacyCustomFilterType) ft).getName();
+		}
+		else
+		{
+			typeName = ft.getType().toLowerCase();
+		}
 		if (mapping.containsKey(typeName))
 		{
 			logger.warn(String.format("Two filters with the same name: %s", typeName));

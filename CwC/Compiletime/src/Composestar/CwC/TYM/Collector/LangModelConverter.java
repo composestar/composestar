@@ -29,22 +29,28 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import weavec.cmodel.declaration.AnnotationDeclaration;
+import weavec.cmodel.declaration.AnnotationInstance;
 import weavec.cmodel.declaration.Declaration;
 import weavec.cmodel.declaration.FunctionDeclaration;
 import weavec.cmodel.declaration.ModuleDeclaration;
 import weavec.cmodel.declaration.ObjectDeclaration;
 import weavec.cmodel.declaration.TypeDeclaration;
 import weavec.cmodel.scope.CNamespaceKind;
+import weavec.cmodel.type.AnnotationType;
 import weavec.cmodel.type.CType;
 import weavec.cmodel.type.FunctionType;
 import weavec.grammar.TranslationUnitResult;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.CwC.LAMA.CwCAnnotation;
+import Composestar.CwC.LAMA.CwCAnnotationType;
 import Composestar.CwC.LAMA.CwCFile;
 import Composestar.CwC.LAMA.CwCFunctionInfo;
 import Composestar.CwC.LAMA.CwCParameterInfo;
@@ -71,6 +77,10 @@ public class LangModelConverter implements CTCommonModule
 
 	protected Map<String, CwCType> stringTypeMapping;
 
+	protected Map<AnnotationType, CwCAnnotationType> annotTypeMapping;
+
+	protected Map<String, CwCAnnotationType> stringAnnotTypeMapping;
+
 	public UnitRegister register;
 
 	public LangModelConverter()
@@ -85,6 +95,8 @@ public class LangModelConverter implements CTCommonModule
 	{
 		typeMapping = new HashMap<CType, CwCType>();
 		stringTypeMapping = new HashMap<String, CwCType>();
+		annotTypeMapping = new HashMap<AnnotationType, CwCAnnotationType>();
+		stringAnnotTypeMapping = new HashMap<String, CwCAnnotationType>();
 
 		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
 		if (register == null)
@@ -100,11 +112,14 @@ public class LangModelConverter implements CTCommonModule
 			while (it.hasNext())
 			{
 				Declaration d = it.next();
-				if (!(d instanceof TypeDeclaration))
+				if (d instanceof TypeDeclaration)
 				{
-					continue;
+					createCwCType((TypeDeclaration) d);
 				}
-				createCwCType((TypeDeclaration) d);
+				else if (d instanceof AnnotationDeclaration)
+				{
+					createCwCAnnotationType((AnnotationDeclaration) d);
+				}
 			}
 		}
 		logger.info("Phase 2: Collecting language model");
@@ -158,6 +173,34 @@ public class LangModelConverter implements CTCommonModule
 		typeMapping.put(typeDecl.getType(), cwcType);
 	}
 
+	protected CwCAnnotationType resolveCwCAnnotationType(AnnotationType annotType)
+	{
+		CwCAnnotationType result;
+		result = annotTypeMapping.get(annotType);
+		if (result == null)
+		{
+			result = new CwCAnnotationType(annotType.getDeclaration());
+			annotTypeMapping.put(annotType, result);
+		}
+		return result;
+	}
+
+	protected void createCwCAnnotationType(AnnotationDeclaration annotDecl)
+	{
+		if (stringTypeMapping.containsKey(annotDecl.getName()))
+		{
+			annotTypeMapping.put(annotDecl.getType(), stringAnnotTypeMapping.get(annotDecl.getName()));
+			logger.debug(String.format("Type %s already contains a registered declaration", annotDecl.getName()));
+			return;
+		}
+		logger.debug(String.format("Creating LAMA Type for %s", annotDecl.getName()));
+		CwCAnnotationType cwcType = new CwCAnnotationType(annotDecl);
+
+		register.registerLanguageUnit(cwcType);
+		stringAnnotTypeMapping.put(annotDecl.getName(), cwcType);
+		annotTypeMapping.put(annotDecl.getType(), cwcType);
+	}
+
 	protected void createCwCFile(ModuleDeclaration modDecl)
 	{
 		logger.debug(String.format("Collecting file (module) %s", modDecl.getName()));
@@ -173,6 +216,7 @@ public class LangModelConverter implements CTCommonModule
 		cwcfile.setFullName(fileName.toString().replace(File.separatorChar, '.'));
 		cwcfile.setNamespace(namespace);
 		register.registerLanguageUnit(cwcfile);
+		procAnnotations(cwcfile, modDecl);
 
 		for (FunctionDeclaration funcDecl : modDecl.getFunctions())
 		{
@@ -186,6 +230,7 @@ public class LangModelConverter implements CTCommonModule
 			cwcfunc.setParent(cwcfile);
 			cwcfile.addMethod(cwcfunc);
 			register.registerLanguageUnit(cwcfunc);
+			procAnnotations(cwcfunc, funcDecl);
 
 			for (Declaration d : funcDecl.getParameterScope().getNamespace(CNamespaceKind.OBJECT))
 			{
@@ -197,6 +242,7 @@ public class LangModelConverter implements CTCommonModule
 				cwcparm.setParent(cwcfunc);
 				cwcfunc.addParameter(cwcparm);
 				register.registerLanguageUnit(cwcparm);
+				procAnnotations(cwcparm, od);
 			}
 		}
 
@@ -211,6 +257,17 @@ public class LangModelConverter implements CTCommonModule
 			cwcvar.setParent(cwcfile);
 			cwcfile.addField(cwcvar);
 			register.registerLanguageUnit(cwcvar);
+			procAnnotations(cwcvar, objDecl);
+		}
+	}
+
+	protected void procAnnotations(ProgramElement target, Declaration source)
+	{
+		for (AnnotationInstance annot : source.getAnnotations())
+		{
+			CwCAnnotation cwcannot = new CwCAnnotation(annot);
+			cwcannot.setValue(annot.getAttributeValues().toString());
+			cwcannot.register(resolveCwCAnnotationType(annot.getDeclaration().getType()), target);
 		}
 	}
 }

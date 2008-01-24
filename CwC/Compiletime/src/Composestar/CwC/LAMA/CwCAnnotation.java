@@ -22,35 +22,23 @@
  * $Id$
  */
 
-package Composestar.CwC.LOLA.Metamodel;
+package Composestar.CwC.LAMA;
 
-import Composestar.Core.LOLA.metamodel.InvalidModelException;
-import Composestar.Core.LOLA.metamodel.LanguageModel;
+import weavec.cmodel.declaration.AnnotationInstance;
+import Composestar.Core.LAMA.Annotation;
 
 /**
  * @author Michiel Hendriks
  */
-public class CwCLanguageModel extends LanguageModel
+public class CwCAnnotation extends Annotation
 {
-	public CwCLanguageModel()
-	{}
+	private static final long serialVersionUID = 8526996013752977783L;
 
-	/**
-	 * Creates specifications for all language units that can occur in java, and
-	 * the relations between them.
-	 */
-	@Override
-	public void createMetaModel() throws InvalidModelException
+	protected AnnotationInstance annInst;
+
+	public CwCAnnotation(AnnotationInstance inst)
 	{
-		mcNamespace = Composestar.Core.LAMA.LangNamespace.class;
-		mcClass = Composestar.CwC.LAMA.CwCFile.class;
-		mcInterface = null;
-		mcType = Composestar.CwC.LAMA.CwCType.class;
-		mcMethod = Composestar.CwC.LAMA.CwCFunctionInfo.class;
-		mcField = Composestar.CwC.LAMA.CwCVariable.class;
-		mcParameter = Composestar.CwC.LAMA.CwCParameterInfo.class;
-		mcAnnotation = Composestar.CwC.LAMA.CwCAnnotation.class;
-		super.createMetaModel();
+		super();
+		annInst = inst;
 	}
-
 }

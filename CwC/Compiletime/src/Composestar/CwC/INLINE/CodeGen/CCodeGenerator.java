@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.INLINE.CodeGen;
+package Composestar.CwC.INLINE.CodeGen;
 
 import java.util.List;
 
@@ -34,6 +34,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
+import Composestar.Core.INLINE.CodeGen.StringCodeGenerator;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;

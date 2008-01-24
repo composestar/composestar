@@ -36,8 +36,9 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
-import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
+import Composestar.Core.CpsProgramRepository.Legacy.DefaultFilterFactory;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FILTH;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
@@ -67,7 +68,7 @@ public class COPPER implements CTCommonModule
 
 	protected FilterTypeMapping filterTypes;
 
-	protected LegacyFilterTypes legacyFilterTypes;
+	protected DefaultFilterFactory filterFactory;
 
 	public COPPER()
 	{}
@@ -85,11 +86,15 @@ public class COPPER implements CTCommonModule
 			filterTypes = new FilterTypeMapping(resources.repository());
 			resources.put(FilterTypeMapping.RESOURCE_KEY, filterTypes);
 		}
-
-		if (LegacyFilterTypes.useLegacyFilterTypes)
+		filterFactory = resources.get(DefaultFilterFactory.RESOURCE_KEY);
+		if (filterFactory == null)
 		{
-			legacyFilterTypes = new LegacyFilterTypes(filterTypes, resources.repository());
-			resources.put(LegacyFilterTypes.RESOURCE_KEY, legacyFilterTypes);
+			filterFactory = new DefaultFilterFactory(filterTypes, resources.repository());
+			resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
+		}
+		else
+		{
+			filterFactory.setTypeMapping(filterTypes);
 		}
 
 		errorCnt = 0;
@@ -152,7 +157,7 @@ public class COPPER implements CTCommonModule
 		w.setSourceFile(file.toString());
 		w.setOrderingConstraints(orderingconstraints);
 		w.setFilterTypeMapping(filterTypes);
-		w.setLegacyFilterTypes(legacyFilterTypes);
+		w.setFilterFactory(filterFactory);
 		try
 		{
 			w.concern();
@@ -176,13 +181,13 @@ public class COPPER implements CTCommonModule
 	public static void main(String[] args)
 	{
 		// BasicConfigurator.configure();
-		CPSLogger.getRootLogger().setLevel(Level.DEBUG);
+		Logger.getRootLogger().setLevel(Level.DEBUG);
 		DataMap.setDataMapClass(DataMapImpl.class);
-		LegacyFilterTypes.useLegacyFilterTypes = true;
 		COPPER c = new COPPER();
 		DataStore ds = DataStore.instance();
 		c.filterTypes = new FilterTypeMapping(ds);
-		new LegacyFilterTypes(c.filterTypes, ds);
+		DefaultFilterFactory fact = new DefaultFilterFactory(c.filterTypes, ds);
+		fact.setAllowLegacyCustomFilters(true);
 		try
 		{
 			c.parseConcernFile(new File(args[0]));

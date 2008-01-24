@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="../../Config/Xml/ModuleInfo.xsd">
-	<moduleinfo class="Composestar.Core.INLINE.CodeGen.COGModule" id="INLINE.CodeGen">
+	<moduleinfo class="Composestar.CwC.INLINE.CodeGen.COGModule" id="INLINE.CodeGen">
 		<name>Code Generator</name>
 		<description>
 			Produces the code to be woven by the weaver using the inliner output. This is a fake module, it is only

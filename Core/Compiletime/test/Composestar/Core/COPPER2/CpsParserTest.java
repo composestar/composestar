@@ -39,7 +39,7 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.BasicConfigurator;
 
-import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
+import Composestar.Core.CpsProgramRepository.Legacy.DefaultFilterFactory;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
@@ -66,7 +66,6 @@ public class CpsParserTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		DataMap.setDataMapClass(DataMapImpl.class);
-		LegacyFilterTypes.useLegacyFilterTypes = true;
 
 		URL url = CpsParserTest.class.getResource("examples");
 		File exampleDir = new File(url.toURI());
@@ -132,7 +131,9 @@ public class CpsParserTest extends TestCase
 		w.setSourceFile(file.toString());
 		w.setOrderingConstraints(new HashMap<String, SyntacticOrderingConstraint>());
 		w.setFilterTypeMapping(new FilterTypeMapping());
-		w.setLegacyFilterTypes(new LegacyFilterTypes(w.filterTypes, ds));
+		DefaultFilterFactory fact = new DefaultFilterFactory(w.filterTypes, ds);
+		fact.setAllowLegacyCustomFilters(true);
+		w.setFilterFactory(fact);
 		try
 		{
 			w.concern();

@@ -1,6 +1,6 @@
 package Composestar.Java.MASTER;
 
-import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
+import Composestar.Core.CpsProgramRepository.Legacy.DefaultFilterFactory;
 import Composestar.Core.Master.Master;
 
 /**
@@ -9,16 +9,13 @@ import Composestar.Core.Master.Master;
  */
 public class JavaMaster extends Master
 {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.Master.Master#initEvironment()
-	 */
 	@Override
-	protected void initEvironment()
+	protected void loadConfiguration() throws Exception
 	{
-		super.initEvironment();
-		LegacyFilterTypes.useLegacyFilterTypes = true;
+		super.loadConfiguration();
+		DefaultFilterFactory filterFactory = new DefaultFilterFactory(resources.repository());
+		filterFactory.addLegacyFilterTypes();
+		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
 	}
 
 	/**

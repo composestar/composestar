@@ -348,10 +348,15 @@ public abstract class LanguageModel
 
 		// Define the 'Type' composite language unit type (Type = Class |
 		// Interface)
-		CompositeLanguageUnitType utType = null;
+		LanguageUnitType utType = null;
 		if (utClass != null && utInterface != null)
 		{
 			utType = new CompositeLanguageUnitType(mcType, EUnitType.TYPE, true, utClass, utInterface);
+			addLanguageUnitType(utType);
+		}
+		else
+		{
+			utType = new LanguageUnitType(mcType, EUnitType.TYPE, true);
 			addLanguageUnitType(utType);
 		}
 
@@ -448,7 +453,8 @@ public abstract class LanguageModel
 		{
 			if (utNamespace != null)
 			{
-				classParentNamespace = new RelationType(ERelationType.PARENT_NAMESPACE, utNamespace, RelationType.UNIQUE);
+				classParentNamespace = new RelationType(ERelationType.PARENT_NAMESPACE, utNamespace,
+						RelationType.UNIQUE);
 				utClass.addRelationType(classParentNamespace);
 			}
 
@@ -472,7 +478,8 @@ public abstract class LanguageModel
 
 			if (utParameter != null)
 			{
-				classParameterClass = new RelationType(ERelationType.PARAMETER_CLASS, utParameter, RelationType.MULTIPLE);
+				classParameterClass = new RelationType(ERelationType.PARAMETER_CLASS, utParameter,
+						RelationType.MULTIPLE);
 				utClass.addRelationType(classParameterClass);
 			}
 
@@ -521,10 +528,12 @@ public abstract class LanguageModel
 				utInterface.addRelationType(interfaceParentNamespace);
 			}
 
-			interfaceSubInterfaces = new RelationType(ERelationType.CHILD_INTERFACES, utInterface, RelationType.MULTIPLE);
+			interfaceSubInterfaces = new RelationType(ERelationType.CHILD_INTERFACES, utInterface,
+					RelationType.MULTIPLE);
 			utInterface.addRelationType(interfaceSubInterfaces);
 
-			interfaceParentInterface = new RelationType(ERelationType.PARENT_INTERFACE, utInterface, RelationType.UNIQUE);
+			interfaceParentInterface = new RelationType(ERelationType.PARENT_INTERFACE, utInterface,
+					RelationType.UNIQUE);
 			utInterface.addRelationType(interfaceParentInterface);
 
 			if (utMethod != null)
@@ -562,7 +571,8 @@ public abstract class LanguageModel
 
 			if (utField != null)
 			{
-				interfaceFieldInterface = new RelationType(ERelationType.FIELD_INTERFACE, utField, RelationType.MULTIPLE);
+				interfaceFieldInterface = new RelationType(ERelationType.FIELD_INTERFACE, utField,
+						RelationType.MULTIPLE);
 				utInterface.addRelationType(interfaceFieldInterface);
 			}
 

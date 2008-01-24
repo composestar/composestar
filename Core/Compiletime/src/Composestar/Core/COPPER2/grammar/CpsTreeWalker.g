@@ -54,7 +54,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.*;
-import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
+import Composestar.Core.CpsProgramRepository.Legacy.DefaultFilterFactory;
 import Composestar.Core.Exception.*;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 
@@ -548,10 +548,10 @@ filterType returns [FilterType ft]
 	  try {
 	  	String ftName = $name.text;
 	  	ft = filterTypes.getFilterType(ftName);
-	  	if ((ft == null) && (legacyFilterTypes != null))
+	  	if ((ft == null) && (filterFactory.allowLegacyCustomFilters()))
 		{
 			logger.info(String.format("Creating legacy custom filter with name: \%s", ftName));
-			ft = legacyFilterTypes.createCustomFilterType(ftName);
+			ft = filterFactory.createLegacyCustomFilterType(ftName);
 		}
 		if (ft == null)
 		{

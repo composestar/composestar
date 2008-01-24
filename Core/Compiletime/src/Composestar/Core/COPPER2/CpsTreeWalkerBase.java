@@ -32,7 +32,7 @@ import org.antlr.runtime.tree.Tree;
 import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
 
-import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
+import Composestar.Core.CpsProgramRepository.Legacy.DefaultFilterFactory;
 import Composestar.Core.Exception.CpsSemanticException;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
@@ -70,7 +70,7 @@ public class CpsTreeWalkerBase extends TreeParser
 	 * Will be set when legacyFilterTypes are used. Will be used to construct
 	 * legacy custom filter types on the fly.
 	 */
-	protected LegacyFilterTypes legacyFilterTypes;
+	protected DefaultFilterFactory filterFactory;
 
 	public CpsTreeWalkerBase(TreeNodeStream input)
 	{
@@ -92,9 +92,9 @@ public class CpsTreeWalkerBase extends TreeParser
 		filterTypes = ftm;
 	}
 
-	public void setLegacyFilterTypes(LegacyFilterTypes lft)
+	public void setFilterFactory(DefaultFilterFactory lft)
 	{
-		legacyFilterTypes = lft;
+		filterFactory = lft;
 	}
 
 	public int getErrorCnt()
@@ -102,6 +102,7 @@ public class CpsTreeWalkerBase extends TreeParser
 		return errorCnt;
 	}
 
+	@Override
 	public void displayRecognitionError(String[] tokenNames, RecognitionException e)
 	{
 		++errorCnt;
@@ -110,12 +111,14 @@ public class CpsTreeWalkerBase extends TreeParser
 		logger.error(new LogMessage(msg, sourceFile, e.line, e.charPositionInLine));
 	}
 
+	@Override
 	public void emitErrorMessage(String msg)
 	{
 		++errorCnt;
 		logger.error(msg);
 	}
 
+	@Override
 	public String getErrorMessage(RecognitionException e, String[] tokenNames)
 	{
 		String res = super.getErrorMessage(e, tokenNames);

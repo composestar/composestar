@@ -10,7 +10,7 @@
 
 package Composestar.DotNET.MASTER;
 
-import Composestar.Core.CpsProgramRepository.Legacy.LegacyFilterTypes;
+import Composestar.Core.CpsProgramRepository.Legacy.DefaultFilterFactory;
 import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.LegacyDataMap;
@@ -21,10 +21,19 @@ import Composestar.Core.RepositoryImplementation.LegacyDataMap;
  */
 public class DotNETMaster extends Master
 {
+	@Override
 	protected void initEvironment()
 	{
 		DataMap.setDataMapClass(LegacyDataMap.class);
-		LegacyFilterTypes.useLegacyFilterTypes = true;
+	}
+
+	@Override
+	protected void loadConfiguration() throws Exception
+	{
+		super.loadConfiguration();
+		DefaultFilterFactory filterFactory = new DefaultFilterFactory(resources.repository());
+		filterFactory.addLegacyFilterTypes();
+		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
 	}
 
 	/**
