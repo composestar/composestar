@@ -130,7 +130,7 @@ public class CCodeGenerator extends StringCodeGenerator
 	public String emitFilterCode(String fmConditions, String onCall, String onReturn)
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append(String.format("\nif ( !CSTAR_is_inner_call(%d) ) { /* inner call check */\n", methodId));
+		sb.append(String.format("\n{\nif ( !CSTAR_is_inner_call(%d) ) { /* inner call check */\n", methodId));
 		boolean hasFmCond = fmConditions != null && fmConditions.trim().length() > 0;
 		if (hasFmCond)
 		{
@@ -184,7 +184,7 @@ public class CCodeGenerator extends StringCodeGenerator
 			sb.append("} /* end filter module condition check */\n");
 		}
 		sb.append("} /* end filter code */\n");
-		sb.append(String.format("CSTAR_reset_inner_call(%d);\n", methodId));
+		sb.append(String.format("CSTAR_reset_inner_call(%d);\n}\n", methodId));
 		return sb.toString();
 	}
 

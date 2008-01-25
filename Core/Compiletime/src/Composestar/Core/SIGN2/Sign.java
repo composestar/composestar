@@ -152,7 +152,7 @@ public class Sign implements CTCommonModule
 		}
 		catch (Exception exc)
 		{
-			logger.error(exc);
+			logger.error(exc, exc);
 		}
 	}
 

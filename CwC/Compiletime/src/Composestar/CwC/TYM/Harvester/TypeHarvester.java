@@ -38,6 +38,7 @@ import weavec.aspectc.acmodel.CTypeDescriptor;
 import weavec.ast.CToken;
 import weavec.ast.TNode;
 import weavec.grammar.AnonymousIdentifier;
+import weavec.grammar.TranslationUnitResult;
 import weavec.parser.ACGrammarLexer;
 import weavec.parser.AspectCParser;
 import Composestar.Core.Annotations.ResourceManager;
@@ -131,7 +132,9 @@ public class TypeHarvester implements HarvestRunner
 				cparser.setSource(sourceFile.toString());
 				try
 				{
-					weavecRes.addTranslationUnitResult(cparser.cfile(moduleName));
+					TranslationUnitResult tunit = cparser.cfile(moduleName);
+					weavecRes.addTranslationUnitResult(tunit);
+					weavecRes.addPreprocessorInfoChannel(tunit, lexer.getPreprocessorInfoChannel());
 				}
 				catch (RecognitionException e)
 				{

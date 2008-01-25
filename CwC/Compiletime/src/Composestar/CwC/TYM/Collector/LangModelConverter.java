@@ -81,6 +81,8 @@ public class LangModelConverter implements CTCommonModule
 
 	protected Map<String, CwCAnnotationType> stringAnnotTypeMapping;
 
+	protected CTypeToStringConverter converter;
+
 	public UnitRegister register;
 
 	public LangModelConverter()
@@ -123,6 +125,7 @@ public class LangModelConverter implements CTCommonModule
 			}
 		}
 		logger.info("Phase 2: Collecting language model");
+		converter = new CTypeToStringConverter();
 		for (TranslationUnitResult tunit : weavecRes.translationUnitResults())
 		{
 			createCwCFile(tunit.getModuleDeclaration());
@@ -225,6 +228,7 @@ public class LangModelConverter implements CTCommonModule
 
 			CwCFunctionInfo cwcfunc = new CwCFunctionInfo(funcDecl);
 			cwcfunc.setReturnType(resolveCwCType(funcDecl.getReturnType()));
+			cwcfunc.setReturnType(converter.convert(funcDecl.getReturnType()));
 			cwcfunc.setVarArgs(ftype.hasVarArgs());
 
 			cwcfunc.setParent(cwcfile);
@@ -238,6 +242,7 @@ public class LangModelConverter implements CTCommonModule
 				CwCParameterInfo cwcparm = new CwCParameterInfo(od);
 				cwcparm.setName(d.getName());
 				cwcparm.setParameterType(resolveCwCType(od.getType()));
+				cwcparm.setParameterType(converter.convert(od.getType()));
 
 				cwcparm.setParent(cwcfunc);
 				cwcfunc.addParameter(cwcparm);
@@ -253,6 +258,7 @@ public class LangModelConverter implements CTCommonModule
 			CwCVariable cwcvar = new CwCVariable(objDecl);
 			cwcvar.setName(objDecl.getName());
 			cwcvar.setFieldType(resolveCwCType(objDecl.getType()));
+			cwcvar.setFieldType(converter.convert(objDecl.getType()));
 
 			cwcvar.setParent(cwcfile);
 			cwcfile.addField(cwcvar);

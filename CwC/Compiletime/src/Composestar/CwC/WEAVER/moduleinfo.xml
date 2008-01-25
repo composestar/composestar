@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../../../../../ComposestarCORE/src/Composestar/Core/Config/Xml/ModuleInfo.xsd">
+	<moduleinfo class="Composestar.CwC.WEAVER.CwCWeaver" id="WEAVER">
+		<name>Weaver</name>
+		<description>Weaves the composition filter code into the preprocessed sources using WeaveC.</description>
+	</moduleinfo>
+</modules>

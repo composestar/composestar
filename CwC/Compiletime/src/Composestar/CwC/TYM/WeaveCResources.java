@@ -25,9 +25,12 @@
 package Composestar.CwC.TYM;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import weavec.ast.PreprocessorInfoChannel;
 import weavec.grammar.TranslationUnitResult;
 import Composestar.Core.Resources.ModuleResourceManager;
 
@@ -40,9 +43,12 @@ public class WeaveCResources implements ModuleResourceManager
 
 	protected transient Set<TranslationUnitResult> tunits;
 
+	protected transient Map<TranslationUnitResult, PreprocessorInfoChannel> ppics;
+
 	public WeaveCResources()
 	{
 		tunits = new HashSet<TranslationUnitResult>();
+		ppics = new HashMap<TranslationUnitResult, PreprocessorInfoChannel>();
 	}
 
 	/*
@@ -67,6 +73,16 @@ public class WeaveCResources implements ModuleResourceManager
 	public Set<TranslationUnitResult> translationUnitResults()
 	{
 		return Collections.unmodifiableSet(tunits);
+	}
+
+	public void addPreprocessorInfoChannel(TranslationUnitResult tunit, PreprocessorInfoChannel ppic)
+	{
+		ppics.put(tunit, ppic);
+	}
+
+	public PreprocessorInfoChannel getPreprocessorInfoChannel(TranslationUnitResult tunit)
+	{
+		return ppics.get(tunit);
 	}
 
 }

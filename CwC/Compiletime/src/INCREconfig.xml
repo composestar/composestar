@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
-	<!-- filter types -->
+	<!-- load filter types -->
 	<module fulltype="Composestar.Core.COPPER2.COPPER" />
 	<module fulltype="Composestar.Core.EMBEX.EMBEX" />
 	<module fulltype="Composestar.CwC.COMP.PreProcess" />
@@ -15,7 +15,7 @@
 	<module fulltype="Composestar.Core.CORE2.Core" />
 	<module fulltype="Composestar.Core.SIGN2.Sign" />
 	<module fulltype="Composestar.Core.DIGGER2.DIGGER" />
-	<!-- weaving -->
+	<module fulltype="Composestar.CwC.WEAVER.CwCWeaver" />
 	<module fulltype="Composestar.Core.CKRET.CKRET" />
-	<module fulltype="Composestar.Core.INCRE.INCRESerializer" />
+	<!-- CwC.LAMA is not very serializable <module fulltype="Composestar.Core.INCRE.INCRESerializer" />-->
 </modules>
