@@ -26,6 +26,7 @@ package Composestar.CwC.INLINE.CodeGen;
 
 import java.util.List;
 
+import weavec.cmodel.type.VoidType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral;
@@ -38,6 +39,8 @@ import Composestar.Core.INLINE.CodeGen.StringCodeGenerator;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.CwC.LAMA.CwCFunctionInfo;
+import Composestar.CwC.LAMA.CwCType;
 
 /**
  * Produces ANSI-C code
@@ -130,7 +133,7 @@ public class CCodeGenerator extends StringCodeGenerator
 	public String emitFilterCode(String fmConditions, String onCall, String onReturn)
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append(String.format("\n{\nif ( !CSTAR_is_inner_call(%d) ) { /* inner call check */\n", methodId));
+		sb.append(String.format("\n{ /* start filter code */\nif ( !CSTAR_is_inner_call(%d) ) { \n", methodId));
 		boolean hasFmCond = fmConditions != null && fmConditions.trim().length() > 0;
 		if (hasFmCond)
 		{
@@ -140,7 +143,10 @@ public class CCodeGenerator extends StringCodeGenerator
 		}
 
 		sb.append("\tJoinPointContext __JPC;\n");
-		sb.append(String.format("\t%s returnValue;\n", method.getReturnTypeString()));
+		if (hasReturnValue(method))
+		{
+			sb.append(String.format("\t%s returnValue;\n", method.getReturnTypeString()));
+		}
 
 		// return action identifier
 		if (returnActions.size() > 0)
@@ -151,7 +157,10 @@ public class CCodeGenerator extends StringCodeGenerator
 
 		sb.append("\t/* init JPC */;\n");
 		sb.append(String.format("\t__JPC.startSelector = \"%s\";\n", method.getName()));
-		sb.append("\t__JPC.returnValue = &returnValue;\n");
+		if (hasReturnValue(method))
+		{
+			sb.append("\t__JPC.returnValue = &returnValue;\n");
+		}
 		List<ParameterInfo> pis = method.getParameters();
 		sb.append(String.format("\t__JPC.argc = %d;\n", pis.size()));
 		if (pis.size() > 0)
@@ -186,6 +195,13 @@ public class CCodeGenerator extends StringCodeGenerator
 		sb.append("} /* end filter code */\n");
 		sb.append(String.format("CSTAR_reset_inner_call(%d);\n}\n", methodId));
 		return sb.toString();
+	}
+
+	public boolean hasReturnValue(MethodInfo method)
+	{
+		CwCFunctionInfo cwcfunc = (CwCFunctionInfo) method;
+		CwCType cwctype = (CwCType) cwcfunc.getReturnType();
+		return !(cwctype.getCType() instanceof VoidType);
 	}
 
 	/*
@@ -282,11 +298,11 @@ public class CCodeGenerator extends StringCodeGenerator
 	{
 		if (labelId == -1)
 		{
-			return String.format("goto %s;\n", RETURN_FLOW_LABEL);
+			return String.format(";goto %s;\n", RETURN_FLOW_LABEL);
 		}
 		else
 		{
-			return String.format("goto %s;\n", String.format(LABEL_FORMAT, labelId));
+			return String.format(";goto %s;\n", String.format(LABEL_FORMAT, labelId));
 		}
 	}
 

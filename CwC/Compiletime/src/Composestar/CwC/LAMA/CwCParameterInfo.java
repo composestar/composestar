@@ -82,6 +82,6 @@ public class CwCParameterInfo extends ParameterInfo
 		{
 			return new UnitResult(parameterType());
 		}
-		return null;
+		return new UnitResult(Collections.emptySet());
 	}
 }

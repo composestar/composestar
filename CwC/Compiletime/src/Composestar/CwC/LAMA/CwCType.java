@@ -205,7 +205,11 @@ public class CwCType extends Type
 		{
 			return new UnitResult(fieldTypes);
 		}
-		return null;
+		else if (ERelationType.IMPLEMENTS.equals(argumentName))
+		{
+			return new UnitResult(new HashSet<Type>());
+		}
+		return new UnitResult(Collections.emptySet());
 	}
 
 	/*

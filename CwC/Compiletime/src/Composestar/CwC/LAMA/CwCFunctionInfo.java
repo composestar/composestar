@@ -25,6 +25,7 @@
 package Composestar.CwC.LAMA;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -186,7 +187,7 @@ public class CwCFunctionInfo extends MethodInfo
 			// this is never true, return type is of unittype "Type"
 			return new UnitResult(getReturnType());
 		}
-		return null;
+		return new UnitResult(Collections.emptySet());
 	}
 
 }

@@ -106,6 +106,7 @@ public class LangModelConverter implements CTCommonModule
 			register = new UnitRegister();
 			resources.put(UnitRegister.RESOURCE_KEY, register);
 		}
+		converter = new CTypeToStringConverter();
 
 		logger.info("Phase 1: Collecting types for caching");
 		for (TranslationUnitResult tunit : weavecRes.translationUnitResults())
@@ -125,7 +126,6 @@ public class LangModelConverter implements CTCommonModule
 			}
 		}
 		logger.info("Phase 2: Collecting language model");
-		converter = new CTypeToStringConverter();
 		for (TranslationUnitResult tunit : weavecRes.translationUnitResults())
 		{
 			createCwCFile(tunit.getModuleDeclaration());
@@ -155,6 +155,8 @@ public class LangModelConverter implements CTCommonModule
 		if (result == null)
 		{
 			result = new CwCType(ctype);
+			result.setName(converter.convert(ctype));
+			result.setFullName(result.getName());
 			typeMapping.put(ctype, result);
 		}
 		return result;
@@ -170,6 +172,8 @@ public class LangModelConverter implements CTCommonModule
 		}
 		logger.debug(String.format("Creating LAMA Type for %s", typeDecl.getName()));
 		CwCType cwcType = new CwCType(typeDecl);
+		cwcType.setName(converter.convert(typeDecl.getType()));
+		cwcType.setFullName(cwcType.getName());
 
 		register.registerLanguageUnit(cwcType);
 		stringTypeMapping.put(typeDecl.getName(), cwcType);

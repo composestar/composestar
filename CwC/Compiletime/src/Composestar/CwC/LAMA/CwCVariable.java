@@ -25,6 +25,7 @@
 package Composestar.CwC.LAMA;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -137,7 +138,7 @@ public class CwCVariable extends FieldInfo
 		{
 			return new UnitResult(getFieldType());
 		}
-		return null;
+		return new UnitResult(Collections.emptySet());
 	}
 
 }

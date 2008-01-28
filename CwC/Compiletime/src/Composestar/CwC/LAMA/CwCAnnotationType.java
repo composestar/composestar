@@ -162,7 +162,7 @@ public class CwCAnnotationType extends Type
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		return null;
+		return new UnitResult(Collections.emptySet());
 	}
 
 	/*

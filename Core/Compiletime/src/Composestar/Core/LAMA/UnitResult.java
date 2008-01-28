@@ -33,14 +33,14 @@ public class UnitResult
 
 	public UnitResult(ProgramElement single)
 	{
-		this.singleRes = single;
-		this.multiRes = null;
+		singleRes = single;
+		multiRes = null;
 	}
 
 	public UnitResult(Set multi)
 	{
-		this.multiRes = multi;
-		this.singleRes = null;
+		multiRes = multi;
+		singleRes = null;
 	}
 
 	/*

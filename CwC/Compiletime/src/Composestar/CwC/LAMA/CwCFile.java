@@ -35,6 +35,7 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.ERelationType;
 import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
@@ -171,19 +172,19 @@ public class CwCFile extends Type
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if ("ParentNamespace".equals(argumentName))
+		if (ERelationType.PARENT_NAMESPACE.equals(argumentName))
 		{
 			return new UnitResult(langNamespace);
 		}
-		else if ("ChildMethods".equals(argumentName))
+		else if (ERelationType.CHILD_METHODS.equals(argumentName))
 		{
 			return new UnitResult(new HashSet<MethodInfo>(methods));
 		}
-		else if ("ChildFields".equals(argumentName))
+		else if (ERelationType.CHILD_FIELDS.equals(argumentName))
 		{
 			return new UnitResult(new HashSet<FieldInfo>(fields));
 		}
-		return null;
+		return new UnitResult(Collections.emptySet());
 	}
 
 	/*

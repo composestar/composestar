@@ -87,6 +87,8 @@ public class CwCWeaver implements WEAVER
 
 	protected CodeGenerator<String> codeGen;
 
+	protected BlockScope rootScope;
+
 	public CwCWeaver()
 	{}
 
@@ -101,6 +103,8 @@ public class CwCWeaver implements WEAVER
 		codeGen.register(new DispatchActionCodeGen(inlinerRes));
 		// TODO: add all code gens
 
+		rootScope = loadComposeStarH();
+
 		Iterator<Concern> concernIterator = resources.repository().getAllInstancesOf(Concern.class);
 		while (concernIterator.hasNext())
 		{
@@ -114,6 +118,7 @@ public class CwCWeaver implements WEAVER
 			throw new ModuleException(String.format("Unable to create target directory for preprocessing: %s",
 					outputDir.toString()), MODULE_NAME);
 		}
+
 		for (TranslationUnitResult tunit : weavecResc.translationUnitResults())
 		{
 			File target = FileUtils.relocateFile(p.getBase(), weavecResc.getSource(tunit).getFile(), outputDir);
@@ -146,11 +151,11 @@ public class CwCWeaver implements WEAVER
 
 	protected void processConcern(Concern concern)
 	{
-		CwCFile type = (CwCFile) concern.getPlatformRepresentation();
-		if (type == null)
+		if (!(concern.getPlatformRepresentation() instanceof CwCFile))
 		{
 			return;
 		}
+		CwCFile type = (CwCFile) concern.getPlatformRepresentation();
 
 		if (concern.getDynObject(SIinfo.DATAMAP_KEY) == null)
 		{
@@ -166,16 +171,43 @@ public class CwCWeaver implements WEAVER
 			FilterCode filterCode = inlinerRes.getInputFilterCode(func);
 			if (filterCode != null)
 			{
-				processFilterCode(func, filterCode);
+				processFilterCode(rootScope, func, filterCode);
 			}
 			// TODO: call to other methods
 		}
 	}
 
-	protected void processFilterCode(CwCFunctionInfo func, FilterCode fc)
+	protected BlockScope loadComposeStarH()
 	{
+		AspectCLexer lexer = new AspectCLexer(CwCWeaver.class.getResourceAsStream("ComposeStar.h"));
+		lexer.setSource("ComposeStar.h");
+		lexer.newPreprocessorInfoChannel();
+		lexer.yybegin(AspectCLexer.C);
+		AspectCParser cparser = new AspectCParser(lexer);
+		cparser.setASTNodeClass(TNode.class.getName());
+		cparser.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
+		try
+		{
+			TranslationUnitResult csh = cparser.cfile("__COMPOSESTAR_H");
+			return csh.getRootScope();
+		}
+		catch (RecognitionException e)
+		{
+			logger.error(e, e);
+		}
+		catch (TokenStreamException e)
+		{
+			logger.error(e, e);
+		}
+		return null;
+	}
+
+	protected void processFilterCode(BlockScope rootScope, CwCFunctionInfo func, FilterCode fc)
+	{
+		String strcode = codeGen.generate(fc, func, inlinerRes.getMethodId(func));
 		// generate ANSI-C code
-		Reader ccode = new StringReader(codeGen.generate(fc, func, inlinerRes.getMethodId(func)));
+		Reader ccode = new StringReader(strcode);
+		logger.debug(strcode);
 
 		// parse ANSI-C code to AST
 		// parser.compoundStatement(...)
@@ -191,10 +223,9 @@ public class CwCWeaver implements WEAVER
 		TNode fcAst = null;
 		try
 		{
-			BlockScope blockScope = ScopeConstructor.getRootScope();
 			LabelScope labelScope = ScopeConstructor.getLabelScope();
 			AnnotationScope annotationScope = new AnnotationScopeImpl();
-			cparser.compoundStatement(blockScope, labelScope, annotationScope);
+			cparser.compoundStatement(ScopeConstructor.getScope(rootScope), labelScope, annotationScope);
 			// getAST should return the returnAst, which contains the result of
 			// the previous method execution
 			fcAst = (TNode) cparser.getAST();
