@@ -24,6 +24,8 @@
 
 package Composestar.CwC.COMP;
 
+import Composestar.Core.Config.ModuleInfo;
+import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
@@ -40,6 +42,13 @@ public class Compile implements CTCommonModule
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
 	public void run(CommonResources resources) throws ModuleException
-	{}
+	{
+		ModuleInfo mi = ModuleInfoManager.get(Compile.class);
+		if (mi.getSetting("nocompile", false))
+		{
+			// logger.info("nocompile = true, skipping compiling");
+			return;
+		}
+	}
 
 }

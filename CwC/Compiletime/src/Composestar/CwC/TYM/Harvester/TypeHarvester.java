@@ -35,11 +35,10 @@ import org.apache.log4j.Level;
 
 import weavec.aspectc.acmodel.AnnotationDescriptor;
 import weavec.aspectc.acmodel.CTypeDescriptor;
-import weavec.ast.CToken;
 import weavec.ast.TNode;
 import weavec.grammar.AnonymousIdentifier;
 import weavec.grammar.TranslationUnitResult;
-import weavec.parser.ACGrammarLexer;
+import weavec.parser.AspectCLexer;
 import weavec.parser.AspectCParser;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.Source;
@@ -110,16 +109,16 @@ public class TypeHarvester implements HarvestRunner
 			try
 			{
 				InputStream is = new BufferedInputStream(new FileInputStream(sourceFile));
-				// // contains bugs: incorrect linenumbers
-				// AspectCLexer lexer = new AspectCLexer(is);
-				// lexer.setSource(sourceFile.toString());
-				// lexer.newPreprocessorInfoChannel();
-				// lexer.yybegin(AspectCLexer.C);
 
-				ACGrammarLexer lexer = new ACGrammarLexer(is);
-				lexer.setTokenObjectClass(CToken.class.getName());
-				lexer.initialize(sourceFile.toString());
-				lexer.setAnnotationsLexer();
+				AspectCLexer lexer = new AspectCLexer(is);
+				lexer.setSource(sourceFile.toString());
+				lexer.newPreprocessorInfoChannel();
+				lexer.yybegin(AspectCLexer.C);
+
+				// ACGrammarLexer lexer = new ACGrammarLexer(is);
+				// lexer.setTokenObjectClass(CToken.class.getName());
+				// lexer.initialize(sourceFile.toString());
+				// lexer.setAnnotationsLexer();
 
 				AspectCParser cparser = new AspectCParser(lexer);
 				cparser.setASTNodeClass(TNode.class.getName());
@@ -135,6 +134,7 @@ public class TypeHarvester implements HarvestRunner
 					TranslationUnitResult tunit = cparser.cfile(moduleName);
 					weavecRes.addTranslationUnitResult(tunit);
 					weavecRes.addPreprocessorInfoChannel(tunit, lexer.getPreprocessorInfoChannel());
+					weavecRes.addSourceMapping(tunit, source);
 				}
 				catch (RecognitionException e)
 				{

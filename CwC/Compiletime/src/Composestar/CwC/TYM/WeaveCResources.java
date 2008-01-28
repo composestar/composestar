@@ -32,6 +32,7 @@ import java.util.Set;
 
 import weavec.ast.PreprocessorInfoChannel;
 import weavec.grammar.TranslationUnitResult;
+import Composestar.Core.Config.Source;
 import Composestar.Core.Resources.ModuleResourceManager;
 
 /**
@@ -45,10 +46,13 @@ public class WeaveCResources implements ModuleResourceManager
 
 	protected transient Map<TranslationUnitResult, PreprocessorInfoChannel> ppics;
 
+	protected transient Map<TranslationUnitResult, Source> sourceMapping;
+
 	public WeaveCResources()
 	{
 		tunits = new HashSet<TranslationUnitResult>();
 		ppics = new HashMap<TranslationUnitResult, PreprocessorInfoChannel>();
+		sourceMapping = new HashMap<TranslationUnitResult, Source>();
 	}
 
 	/*
@@ -83,6 +87,16 @@ public class WeaveCResources implements ModuleResourceManager
 	public PreprocessorInfoChannel getPreprocessorInfoChannel(TranslationUnitResult tunit)
 	{
 		return ppics.get(tunit);
+	}
+
+	public void addSourceMapping(TranslationUnitResult tunit, Source src)
+	{
+		sourceMapping.put(tunit, src);
+	}
+
+	public Source getSource(TranslationUnitResult tunit)
+	{
+		return sourceMapping.get(tunit);
 	}
 
 }

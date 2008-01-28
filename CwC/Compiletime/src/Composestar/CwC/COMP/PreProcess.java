@@ -26,6 +26,8 @@ package Composestar.CwC.COMP;
 
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.Config.Language;
+import Composestar.Core.Config.ModuleInfo;
+import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.SourceCompiler;
 import Composestar.Core.Exception.ModuleException;
@@ -54,6 +56,12 @@ public class PreProcess implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
+		ModuleInfo mi = ModuleInfoManager.get(PreProcess.class);
+		if (mi.getSetting("preprocessed", false))
+		{
+			logger.info("Already preprocessed, skipping " + MODULE_NAME);
+			return;
+		}
 		Project proj = resources.configuration().getProject();
 		Language lang = proj.getPlatform().getLanguage(proj.getLanguage());
 		if (lang == null)

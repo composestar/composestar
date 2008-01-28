@@ -15,6 +15,7 @@
 	<module fulltype="Composestar.Core.CORE2.Core" />
 	<module fulltype="Composestar.Core.SIGN2.Sign" />
 	<module fulltype="Composestar.Core.DIGGER2.DIGGER" />
+	<module fulltype="Composestar.Core.INLINE.lowlevel.ModelBuilder" />
 	<module fulltype="Composestar.CwC.WEAVER.CwCWeaver" />
 	<module fulltype="Composestar.Core.CKRET.CKRET" />
 	<!-- CwC.LAMA is not very serializable <module fulltype="Composestar.Core.INCRE.INCRESerializer" />-->

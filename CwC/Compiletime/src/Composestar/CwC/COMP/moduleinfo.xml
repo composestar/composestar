@@ -4,6 +4,12 @@
 	<moduleinfo class="Composestar.CwC.COMP.PreProcess" id="COMP.PreProcess">
 		<name>C PreProcessor</name>
 		<description>Calls the C preprocessor</description>
+		<settings>
+			<setting id="preprocessed" type="boolean">
+				<name>PreProcessed input</name>
+				<default>true</default>
+			</setting>
+		</settings>
 	</moduleinfo>
 	<moduleinfo class="Composestar.CwC.COMP.Compile" id="COMP">
 		<name>C Compiler</name>
@@ -11,6 +17,10 @@
 		<settings>
 			<setting id="args" type="string">
 				<name>Additional compiler arguments</name>
+			</setting>
+			<setting id="nocompile" type="boolean">
+				<name>Do not compile</name>
+				<default>true</default>
 			</setting>
 		</settings>
 	</moduleinfo>
