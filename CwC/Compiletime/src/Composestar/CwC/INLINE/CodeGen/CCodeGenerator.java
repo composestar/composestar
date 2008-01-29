@@ -214,18 +214,6 @@ public class CCodeGenerator extends StringCodeGenerator
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitMethodCall(Composestar.Core.LAMA.MethodInfo,
-	 *      java.util.List, java.lang.Object)
-	 */
-	public String emitMethodCall(MethodInfo method, List<String> args, Object context)
-	{
-		// TODO Auto-generated method stub
-		return method.getName() + "()";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitSetInnerCall(int)
 	 */
 	public String emitSetInnerCall(int methodId)
@@ -305,11 +293,11 @@ public class CCodeGenerator extends StringCodeGenerator
 	{
 		if (labelId == -1)
 		{
-			return String.format(";goto %s;\n", RETURN_FLOW_LABEL);
+			return String.format("goto %s;\n", RETURN_FLOW_LABEL);
 		}
 		else
 		{
-			return String.format(";goto %s;\n", String.format(LABEL_FORMAT, labelId));
+			return String.format("goto %s;\n", String.format(LABEL_FORMAT, labelId));
 		}
 	}
 

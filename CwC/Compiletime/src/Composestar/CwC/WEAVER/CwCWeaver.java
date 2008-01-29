@@ -91,10 +91,7 @@ public class CwCWeaver implements WEAVER
 
 	protected BlockScope rootScope;
 
-	enum RecursionMode
-	{
-		NODE, TREE, FOREST;
-	}
+	protected TNode composestarHAst;
 
 	public CwCWeaver()
 	{}
@@ -110,8 +107,9 @@ public class CwCWeaver implements WEAVER
 		codeGen.register(new DispatchActionCodeGen(inlinerRes));
 		// TODO: add all code gens
 
-		rootScope = loadComposeStarH();
+		loadComposeStarH();
 
+		// inject filter code
 		Iterator<Concern> concernIterator = resources.repository().getAllInstancesOf(Concern.class);
 		while (concernIterator.hasNext())
 		{
@@ -126,6 +124,7 @@ public class CwCWeaver implements WEAVER
 					outputDir.toString()), MODULE_NAME);
 		}
 
+		// emit updated C files
 		for (TranslationUnitResult tunit : weavecResc.translationUnitResults())
 		{
 			File target = FileUtils.relocateFile(p.getBase(), weavecResc.getSource(tunit).getFile(), outputDir);
@@ -155,6 +154,31 @@ public class CwCWeaver implements WEAVER
 				logger.error(e.getMessage(), e);
 				continue;
 			}
+		}
+	}
+
+	protected void loadComposeStarH()
+	{
+		AspectCLexer lexer = new AspectCLexer(CwCWeaver.class.getResourceAsStream("ComposeStar.h"));
+		lexer.setSource("ComposeStar.h");
+		lexer.newPreprocessorInfoChannel();
+		lexer.yybegin(AspectCLexer.C);
+		AspectCParser cparser = new AspectCParser(lexer);
+		cparser.setASTNodeClass(TNode.class.getName());
+		cparser.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
+		try
+		{
+			TranslationUnitResult csh = cparser.cfile("__COMPOSESTAR_H");
+			rootScope = csh.getRootScope();
+			composestarHAst = csh.getAST();
+		}
+		catch (RecognitionException e)
+		{
+			logger.error(e, e);
+		}
+		catch (TokenStreamException e)
+		{
+			logger.error(e, e);
 		}
 	}
 
@@ -200,31 +224,8 @@ public class CwCWeaver implements WEAVER
 			// TODO: call to other methods
 		}
 		// TODO: process added signatures
-	}
 
-	protected BlockScope loadComposeStarH()
-	{
-		AspectCLexer lexer = new AspectCLexer(CwCWeaver.class.getResourceAsStream("ComposeStar.h"));
-		lexer.setSource("ComposeStar.h");
-		lexer.newPreprocessorInfoChannel();
-		lexer.yybegin(AspectCLexer.C);
-		AspectCParser cparser = new AspectCParser(lexer);
-		cparser.setASTNodeClass(TNode.class.getName());
-		cparser.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
-		try
-		{
-			TranslationUnitResult csh = cparser.cfile("__COMPOSESTAR_H");
-			return csh.getRootScope();
-		}
-		catch (RecognitionException e)
-		{
-			logger.error(e, e);
-		}
-		catch (TokenStreamException e)
-		{
-			logger.error(e, e);
-		}
-		return null;
+		// TODO inject composestar.h somewhere
 	}
 
 	protected void processFilterCode(BlockScope rootScope, CwCFunctionInfo func, FilterCode fc)
@@ -284,6 +285,11 @@ public class CwCWeaver implements WEAVER
 		TNode node = TNodeFactory.getInstance().create(type, text);
 		setMetaInfo(node, RecursionMode.NODE, ref);
 		return node;
+	}
+
+	enum RecursionMode
+	{
+		NODE, TREE, FOREST;
 	}
 
 	protected void setMetaInfo(TNode node, RecursionMode mode, int lineNum, String source, int tokenNumber)

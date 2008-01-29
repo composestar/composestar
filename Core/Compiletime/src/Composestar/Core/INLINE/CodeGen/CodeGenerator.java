@@ -217,4 +217,12 @@ public interface CodeGenerator<T> extends Visitor
 	 * @return
 	 */
 	T emitFilterCode(T fmConditions, T onCall, T onReturn);
+
+	/**
+	 * Return true when the method has a return value.
+	 * 
+	 * @param method
+	 * @return
+	 */
+	boolean hasReturnValue(MethodInfo method);
 }

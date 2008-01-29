@@ -327,4 +327,18 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 			return res;
 		}
 	}
+
+	public String emitMethodCall(MethodInfo method, List<String> args, Object context)
+	{
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < args.size(); i++)
+		{
+			if (sb.length() > 0)
+			{
+				sb.append(", ");
+			}
+			sb.append(args.get(i));
+		}
+		return method.getName() + "(" + sb.toString() + ")";
+	}
 }

@@ -24,6 +24,7 @@
 
 package Composestar.Core.INLINE.CodeGen;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
@@ -86,7 +87,7 @@ public class DispatchActionCodeGen implements FilterActionCodeGenerator<String>
 		{
 			prefix = codeGen.emitSetInnerCall(inlinerResources.getMethodId(method));
 		}
-		return prefix + codeGen.emitMethodCall(method, args, context);
+		return emitAction(prefix, codeGen.emitMethodCall(method, args, context), codeGen.hasReturnValue(method));
 	}
 
 	/*
@@ -109,8 +110,14 @@ public class DispatchActionCodeGen implements FilterActionCodeGenerator<String>
 	 */
 	protected List<String> getJpcArguments(List<ParameterInfo> parameters)
 	{
-		// TODO: implement
-		return null;
+		List<String> result = new ArrayList<String>();
+		for (int i = 0; i < parameters.size(); i++)
+		{
+			// TODO this is valid for only C, shouldn't be here (because
+			// pointers are used in JPC)
+			result.add(parameters.get(i).getName());
+		}
+		return result;
 	}
 
 	/**
@@ -123,6 +130,14 @@ public class DispatchActionCodeGen implements FilterActionCodeGenerator<String>
 	 */
 	protected String emitAction(String methodCall, String prefix, boolean hasReturn)
 	{
-		return prefix + ".." + " = " + methodCall + ";\n";
+		// TODO this is C, shouldn't be here
+		if (hasReturn)
+		{
+			return prefix + "returnValue" + " = " + methodCall + ";\n";
+		}
+		else
+		{
+			return prefix + methodCall + ";\n";
+		}
 	}
 }
