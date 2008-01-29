@@ -79,13 +79,14 @@ public class CwCFunctionInfo extends MethodInfo
 	{
 		CwCFunctionInfo mi = new CwCFunctionInfo(funcDecl);
 
-		mi.setName(name);
-
 		// set MethodInfo variables
 		mi.parent = actualParent;
 		mi.parameters = parameters;
 		mi.returnType = returnType;
 		mi.returnTypeString = returnTypeString;
+		mi.funcDecl = funcDecl;
+		mi.varargs = varargs;
+		mi.setName(name);
 
 		return mi;
 	}

@@ -227,10 +227,15 @@ public class LangModelConverter implements CTCommonModule
 
 		for (FunctionDeclaration funcDecl : modDecl.getFunctions())
 		{
+			if (funcDecl.isIncluded())
+			{
+				continue;
+			}
 			logger.debug(String.format("Collecting function %s.%s", cwcfile.getFullName(), funcDecl.getName()));
 			FunctionType ftype = (FunctionType) funcDecl.getType();
 
 			CwCFunctionInfo cwcfunc = new CwCFunctionInfo(funcDecl);
+			cwcfunc.setName(funcDecl.getName());
 			cwcfunc.setReturnType(resolveCwCType(funcDecl.getReturnType()));
 			cwcfunc.setReturnType(converter.convert(funcDecl.getReturnType()));
 			cwcfunc.setVarArgs(ftype.hasVarArgs());

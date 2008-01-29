@@ -155,7 +155,7 @@ public class CCodeGenerator extends StringCodeGenerator
 					returnActions.size()));
 		}
 
-		sb.append("\t/* init JPC */;\n");
+		sb.append("\t/* init JPC */\n");
 		sb.append(String.format("\t__JPC.startSelector = \"%s\";\n", method.getName()));
 		if (hasReturnValue(method))
 		{
@@ -187,7 +187,14 @@ public class CCodeGenerator extends StringCodeGenerator
 			sb.append(indent(indent(onReturn)));
 			sb.append("\t}\n");
 		}
-		sb.append("\treturn returnValue;\n");
+		if (hasReturnValue(method))
+		{
+			sb.append("\treturn returnValue;\n");
+		}
+		else
+		{
+			sb.append("\treturn;\n");
+		}
 		if (hasFmCond)
 		{
 			sb.append("} /* end filter module condition check */\n");

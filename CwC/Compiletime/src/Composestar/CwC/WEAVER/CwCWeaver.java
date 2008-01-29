@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,6 +57,7 @@ import Composestar.Core.INLINE.CodeGen.CodeGenerator;
 import Composestar.Core.INLINE.CodeGen.DispatchActionCodeGen;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
+import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Core.WEAVER.WEAVER;
@@ -88,6 +90,11 @@ public class CwCWeaver implements WEAVER
 	protected CodeGenerator<String> codeGen;
 
 	protected BlockScope rootScope;
+
+	enum RecursionMode
+	{
+		NODE, TREE, FOREST;
+	}
 
 	public CwCWeaver()
 	{}
@@ -133,6 +140,8 @@ public class CwCWeaver implements WEAVER
 				output = new FileWriter(target);
 				CEmitter emitter = new CEmitter(weavecResc.getPreprocessorInfoChannel(tunit), output);
 				emitter.setASTNodeClass(TNode.class.getName());
+				emitter.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
+				// emitter.tracings = System.err;
 				emitter.translationUnit(tunit.getModuleDeclaration().getAST());
 				output.close();
 			}
@@ -155,7 +164,6 @@ public class CwCWeaver implements WEAVER
 		{
 			return;
 		}
-		CwCFile type = (CwCFile) concern.getPlatformRepresentation();
 
 		if (concern.getDynObject(SIinfo.DATAMAP_KEY) == null)
 		{
@@ -164,17 +172,34 @@ public class CwCWeaver implements WEAVER
 
 		logger.info(String.format("Weaving concern %s", concern.getQualifiedName()));
 
+		CwCFile type = (CwCFile) concern.getPlatformRepresentation();
+
 		Signature sig = concern.getSignature();
-		List<CwCFunctionInfo> functions = sig.getMethods(MethodWrapper.NORMAL + MethodWrapper.ADDED);
+		List<CwCFunctionInfo> functions = sig.getMethods(MethodWrapper.NORMAL);
 		for (CwCFunctionInfo func : functions)
 		{
+			// look up the "real" function
+			List<ParameterInfo> pis = func.getParameters();
+			String[] params = new String[pis.size()];
+			for (int i = 0; i < pis.size(); i++)
+			{
+				params[i] = pis.get(i).getParameterTypeString();
+			}
+			CwCFunctionInfo realFunc = (CwCFunctionInfo) type.getMethod(func.getName(), params);
+			if (realFunc == null)
+			{
+				logger.error(String.format("Unable to find the method %s.%s(%s)", concern.getQualifiedName(), func
+						.getName(), Arrays.toString(params)));
+				continue;
+			}
 			FilterCode filterCode = inlinerRes.getInputFilterCode(func);
 			if (filterCode != null)
 			{
-				processFilterCode(rootScope, func, filterCode);
+				processFilterCode(rootScope, realFunc, filterCode);
 			}
 			// TODO: call to other methods
 		}
+		// TODO: process added signatures
 	}
 
 	protected BlockScope loadComposeStarH()
@@ -204,10 +229,8 @@ public class CwCWeaver implements WEAVER
 
 	protected void processFilterCode(BlockScope rootScope, CwCFunctionInfo func, FilterCode fc)
 	{
-		String strcode = codeGen.generate(fc, func, inlinerRes.getMethodId(func));
 		// generate ANSI-C code
-		Reader ccode = new StringReader(strcode);
-		logger.debug(strcode);
+		Reader ccode = new StringReader(codeGen.generate(fc, func, inlinerRes.getMethodId(func)));
 
 		// parse ANSI-C code to AST
 		// parser.compoundStatement(...)
@@ -243,10 +266,13 @@ public class CwCWeaver implements WEAVER
 
 		// inject AST into function node
 		TNode functionAST = func.getFunctionDeclaration().getAST();
+		functionAST.doubleLink();
 		TNode bodyAST = functionAST.getLastSibling();
 		TNode newBodyAST = createTNode(ACGrammarTokenTypes.NCompoundStatement, "{", bodyAST);
 		bodyAST.doubleLink();
 		bodyAST.removeSelf();
+		setMetaInfo(fcAst, RecursionMode.FOREST, -1, null, bodyAST.getTokenNumber());
+		fcAst.doubleLink();
 		newBodyAST.addChild(fcAst);
 		newBodyAST.addChild(bodyAST);
 		newBodyAST.addChild(createTNode(ACGrammarTokenTypes.RCURLY, "}", bodyAST.getLastChild()));
@@ -255,6 +281,45 @@ public class CwCWeaver implements WEAVER
 
 	protected TNode createTNode(int type, String text, TNode ref)
 	{
-		return TNodeFactory.getInstance().create(type, text);
+		TNode node = TNodeFactory.getInstance().create(type, text);
+		setMetaInfo(node, RecursionMode.NODE, ref);
+		return node;
+	}
+
+	protected void setMetaInfo(TNode node, RecursionMode mode, int lineNum, String source, int tokenNumber)
+	{
+		switch (mode)
+		{
+			case NODE:
+				if (lineNum != -1)
+				{
+					node.setLineNum(lineNum);
+				}
+				if (source != null)
+				{
+					node.setSource(source);
+				}
+				if (tokenNumber != -1)
+				{
+					node.setTokenNumber(tokenNumber);
+				}
+				break;
+			case TREE:
+				setMetaInfo(node, RecursionMode.NODE, lineNum, source, tokenNumber);
+				setMetaInfo(node.getFirstChild(), RecursionMode.FOREST, lineNum, source, tokenNumber);
+				break;
+			case FOREST:
+				while (node != null)
+				{
+					setMetaInfo(node, RecursionMode.TREE, lineNum, source, tokenNumber);
+					node = node.getNextSibling();
+				}
+				break;
+		}
+	}
+
+	protected void setMetaInfo(TNode node, RecursionMode mode, TNode ref)
+	{
+		setMetaInfo(node, mode, ref.getLineNum(), ref.getSource(), ref.getTokenNumber());
 	}
 }
