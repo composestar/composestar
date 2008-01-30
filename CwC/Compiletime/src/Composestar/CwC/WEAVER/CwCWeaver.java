@@ -166,6 +166,7 @@ public class CwCWeaver implements WEAVER
 		AspectCParser cparser = new AspectCParser(lexer);
 		cparser.setASTNodeClass(TNode.class.getName());
 		cparser.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
+		cparser.setSource("ComposeStar.h");
 		try
 		{
 			TranslationUnitResult csh = cparser.cfile("__COMPOSESTAR_H");
