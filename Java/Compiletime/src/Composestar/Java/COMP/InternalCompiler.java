@@ -24,6 +24,22 @@
 
 package Composestar.Java.COMP;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.tools.JavaCompiler;
+import javax.tools.JavaCompiler.CompilationTask;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
+
+import Composestar.Core.COMP.CompilerException;
+import Composestar.Utils.Logging.CPSLogger;
+
 /**
  * Uses the internal compiler access exposed in Java 1.6. However, the
  * performance gain over executing javac is minimal (~4%). To use this feature
@@ -33,92 +49,87 @@ package Composestar.Java.COMP;
  */
 public class InternalCompiler
 {
-	// protected static final CPSLogger logger =
-	// CPSLogger.getCPSLogger(CStarJavaCompiler.MODULE_NAME);
-	//
-	// public boolean compileSources(Set<File> sources, File dest, Set<File>
-	// classpath, boolean separate)
-	// throws CompilerException
-	// {
-	// JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
-	// StandardJavaFileManager fm = javac.getStandardFileManager(null, null,
-	// null);
-	// List<String> options = new ArrayList<String>();
-	// options.add("-implicit:none");
-	// // output dir
-	// options.add("-d");
-	// options.add(dest.toString());
-	// // classpath
-	// fm.getJavaFileObjectsFromFiles(classpath);
-	//
-	// options.add("-cp");
-	// StringBuffer cp = new StringBuffer();
-	// for (File file : classpath)
-	// {
-	// if (cp.length() > 0)
-	// {
-	// cp.append(";");
-	// }
-	// cp.append(file.toString());
-	// }
-	// options.add(cp.toString());
-	//
-	// if (!separate)
-	// {
-	// Iterable<? extends JavaFileObject> fo =
-	// fm.getJavaFileObjectsFromFiles(sources);
-	// CompilationTask task = javac.getTask(new IntErrOut(), fm, null, options,
-	// null, fo);
-	// return task.call();
-	// }
-	// else
-	// {
-	// Writer err = new IntErrOut();
-	// for (File file : sources)
-	// {
-	// Iterable<? extends JavaFileObject> fo = fm.getJavaFileObjects(file);
-	// CompilationTask task = javac.getTask(err, fm, null, options, null, fo);
-	// if (!task.call())
-	// {
-	// return false;
-	// }
-	// }
-	// return true;
-	// }
-	// }
-	//
-	// /**
-	// * Simple write used to report compiler errors to the logger
-	// *
-	// * @author Michiel Hendriks
-	// */
-	// class IntErrOut extends Writer
-	// {
-	// protected StringBuffer sb;
-	//
-	// public IntErrOut()
-	// {
-	// sb = new StringBuffer();
-	// }
-	//
-	// @Override
-	// public void close() throws IOException
-	// {}
-	//
-	// @Override
-	// public void flush() throws IOException
-	// {}
-	//
-	// @Override
-	// public void write(char[] str, int offset, int len) throws IOException
-	// {
-	// sb.append(str, offset, len);
-	// int nl = sb.indexOf("\n");
-	// if (nl > -1)
-	// {
-	// logger.error(sb.substring(0, nl).trim());
-	// sb = new StringBuffer(sb.substring(nl + 1));
-	// }
-	// }
-	// }
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CStarJavaCompiler.MODULE_NAME);
+
+	public boolean compileSources(Set<File> sources, File dest, Set<File> classpath, boolean separate)
+			throws CompilerException
+	{
+		JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
+		StandardJavaFileManager fm = javac.getStandardFileManager(null, null, null);
+		List<String> options = new ArrayList<String>();
+		options.add("-implicit:none");
+		// output dir
+		options.add("-d");
+		options.add(dest.toString());
+		// classpath
+		fm.getJavaFileObjectsFromFiles(classpath);
+
+		options.add("-cp");
+		StringBuffer cp = new StringBuffer();
+		for (File file : classpath)
+		{
+			if (cp.length() > 0)
+			{
+				cp.append(";");
+			}
+			cp.append(file.toString());
+		}
+		options.add(cp.toString());
+
+		if (!separate)
+		{
+			Iterable<? extends JavaFileObject> fo = fm.getJavaFileObjectsFromFiles(sources);
+			CompilationTask task = javac.getTask(new IntErrOut(), fm, null, options, null, fo);
+			return task.call();
+		}
+		else
+		{
+			Writer err = new IntErrOut();
+			for (File file : sources)
+			{
+				Iterable<? extends JavaFileObject> fo = fm.getJavaFileObjects(file);
+				CompilationTask task = javac.getTask(err, fm, null, options, null, fo);
+				if (!task.call())
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
+	/**
+	 * Simple write used to report compiler errors to the logger
+	 * 
+	 * @author Michiel Hendriks
+	 */
+	class IntErrOut extends Writer
+	{
+		protected StringBuffer sb;
+
+		public IntErrOut()
+		{
+			sb = new StringBuffer();
+		}
+
+		@Override
+		public void close() throws IOException
+		{}
+
+		@Override
+		public void flush() throws IOException
+		{}
+
+		@Override
+		public void write(char[] str, int offset, int len) throws IOException
+		{
+			sb.append(str, offset, len);
+			int nl = sb.indexOf("\n");
+			if (nl > -1)
+			{
+				logger.error(sb.substring(0, nl).trim());
+				sb = new StringBuffer(sb.substring(nl + 1));
+			}
+		}
+	}
 }

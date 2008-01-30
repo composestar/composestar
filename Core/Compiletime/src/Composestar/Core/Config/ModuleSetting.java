@@ -178,6 +178,11 @@ public class ModuleSetting<T extends Serializable> implements Serializable
 		}
 		else if (Enum.class.isAssignableFrom(type))
 		{
+			if (newValue.trim().length() == 0)
+			{
+				value = defaultValue;
+				return;
+			}
 			try
 			{
 				value = (T) Enum.valueOf((Class<Enum>) type, newValue.trim());

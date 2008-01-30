@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.tools.ToolProvider;
+
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.COMP.LangCompiler;
 import Composestar.Core.Config.CompilerAction;
@@ -45,6 +47,11 @@ public class CStarJavaCompiler implements LangCompiler
 
 	private String compilerOutput;
 
+	/**
+	 * If true try to use the internal Java compiler interface
+	 */
+	protected boolean tryInternal = true;
+
 	public void setCompilerConfig(SourceCompiler compilerConfig)
 	{
 		compConfig = compilerConfig;
@@ -53,6 +60,12 @@ public class CStarJavaCompiler implements LangCompiler
 	public void setCommonResources(CommonResources resc)
 	{
 		resources = resc;
+		// TODO: make configurable
+		String s = resc.configuration().getSetting("internalCompiler");
+		if (s != null && s.length() > 0)
+		{
+			tryInternal = Boolean.parseBoolean(s);
+		}
 	}
 
 	public void compileSources(Project p, Set<Source> sources) throws CompilerException, ModuleException
@@ -71,20 +84,19 @@ public class CStarJavaCompiler implements LangCompiler
 			}
 			resources.put(SOURCE_OUT, sourceOut);
 
-			if (false)
+			if (tryInternal && ToolProvider.getSystemJavaCompiler() != null)
 			{
-				// Set<File> files = new HashSet<File>();
-				// for (Source source : sources)
-				// {
-				// files.add(source.getFile());
-				// }
-				// InternalCompiler icomp = new InternalCompiler();
-				// if (!icomp.compileSources(files, sourceOut,
-				// p.getFilesDependencies(), true))
-				// {
-				// throw new CompilerException("COMP reported errors during
-				// compilation.");
-				// }
+				logger.info("Using the internal Java compiler service");
+				Set<File> files = new HashSet<File>();
+				for (Source source : sources)
+				{
+					files.add(source.getFile());
+				}
+				InternalCompiler icomp = new InternalCompiler();
+				if (!icomp.compileSources(files, sourceOut, p.getFilesDependencies(), true))
+				{
+					throw new CompilerException("COMP reported errors during compilation.");
+				}
 			}
 			else
 			{
@@ -147,15 +159,14 @@ public class CStarJavaCompiler implements LangCompiler
 		}
 
 		long time = System.currentTimeMillis();
-		if (false)
+		if (tryInternal && ToolProvider.getSystemJavaCompiler() != null)
 		{
-			// InternalCompiler icomp = new InternalCompiler();
-			// if (!icomp.compileSources(files, dummiesDir,
-			// p.getFilesDependencies(), false))
-			// {
-			// throw new CompilerException("COMP reported errors during
-			// compilation.");
-			// }
+			logger.info("Using the internal Java compiler service");
+			InternalCompiler icomp = new InternalCompiler();
+			if (!icomp.compileSources(files, dummiesDir, p.getFilesDependencies(), false))
+			{
+				throw new CompilerException("COMP reported errors during compilation.");
+			}
 		}
 		else
 		{
@@ -228,6 +239,6 @@ public class CStarJavaCompiler implements LangCompiler
 			}
 		}
 
-		resources.add(DUMMY_JAR, dummiesJar);
+		resources.put(DUMMY_JAR, dummiesJar);
 	}
 }
