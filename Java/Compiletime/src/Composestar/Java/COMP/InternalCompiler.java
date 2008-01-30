@@ -32,10 +32,10 @@ import java.util.List;
 import java.util.Set;
 
 import javax.tools.JavaCompiler;
-import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+import javax.tools.JavaCompiler.CompilationTask;
 
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Utils.Logging.CPSLogger;
@@ -127,7 +127,7 @@ public class InternalCompiler
 			int nl = sb.indexOf("\n");
 			if (nl > -1)
 			{
-				logger.error(sb.substring(0, nl).trim());
+				logger.warn(sb.substring(0, nl).trim());
 				sb = new StringBuffer(sb.substring(nl + 1));
 			}
 		}
