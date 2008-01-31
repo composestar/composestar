@@ -48,6 +48,8 @@ public class WeaveCResources implements ModuleResourceManager
 
 	protected transient Map<TranslationUnitResult, Source> sourceMapping;
 
+	protected int tokenNumber;
+
 	public WeaveCResources()
 	{
 		tunits = new HashSet<TranslationUnitResult>();
@@ -77,6 +79,16 @@ public class WeaveCResources implements ModuleResourceManager
 	public Set<TranslationUnitResult> translationUnitResults()
 	{
 		return Collections.unmodifiableSet(tunits);
+	}
+
+	public int getTokenNumber()
+	{
+		return tokenNumber;
+	}
+
+	public void setTokenNumber(int value)
+	{
+		tokenNumber = value;
 	}
 
 	public void addPreprocessorInfoChannel(TranslationUnitResult tunit, PreprocessorInfoChannel ppic)

@@ -113,6 +113,7 @@ public class TypeHarvester implements HarvestRunner
 				AspectCLexer lexer = new AspectCLexer(is);
 				lexer.setSource(sourceFile.toString());
 				lexer.newPreprocessorInfoChannel();
+				lexer.setTokenNumber(weavecRes.getTokenNumber());
 				lexer.yybegin(AspectCLexer.C);
 
 				// ACGrammarLexer lexer = new ACGrammarLexer(is);
@@ -135,6 +136,7 @@ public class TypeHarvester implements HarvestRunner
 					weavecRes.addTranslationUnitResult(tunit);
 					weavecRes.addPreprocessorInfoChannel(tunit, lexer.getPreprocessorInfoChannel());
 					weavecRes.addSourceMapping(tunit, source);
+					weavecRes.setTokenNumber(lexer.getTokenNumber());
 				}
 				catch (RecognitionException e)
 				{

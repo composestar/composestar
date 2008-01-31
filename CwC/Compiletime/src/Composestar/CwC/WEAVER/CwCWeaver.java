@@ -29,14 +29,19 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Level;
 
+import weavec.ast.PreprocessorInfoChannel;
 import weavec.ast.TNode;
 import weavec.ast.TNodeFactory;
+import weavec.cmodel.declaration.FunctionDeclaration;
+import weavec.cmodel.declaration.ModuleDeclaration;
 import weavec.cmodel.scope.AnnotationScope;
 import weavec.cmodel.scope.BlockScope;
 import weavec.cmodel.scope.LabelScope;
@@ -93,6 +98,8 @@ public class CwCWeaver implements WEAVER
 
 	protected TNode composestarHAst;
 
+	protected PreprocessorInfoChannel cshPIC;
+
 	public CwCWeaver()
 	{}
 
@@ -137,7 +144,18 @@ public class CwCWeaver implements WEAVER
 			try
 			{
 				output = new FileWriter(target);
-				CEmitter emitter = new CEmitter(weavecResc.getPreprocessorInfoChannel(tunit), output);
+				PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
+
+				// insert the preprocessor data from the header file
+				for (Entry<Integer, ArrayList<Object>> entry : cshPIC.objects.entrySet())
+				{
+					for (Object o : entry.getValue())
+					{
+						ppic.addLineForTokenNumber(o, entry.getKey());
+					}
+				}
+
+				CEmitter emitter = new CEmitter(ppic, output);
 				emitter.setASTNodeClass(TNode.class.getName());
 				emitter.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
 				// emitter.tracings = System.err;
@@ -162,6 +180,7 @@ public class CwCWeaver implements WEAVER
 		AspectCLexer lexer = new AspectCLexer(CwCWeaver.class.getResourceAsStream("ComposeStar.h"));
 		lexer.setSource("ComposeStar.h");
 		lexer.newPreprocessorInfoChannel();
+		lexer.setTokenNumber(weavecResc.getTokenNumber());
 		lexer.yybegin(AspectCLexer.C);
 		AspectCParser cparser = new AspectCParser(lexer);
 		cparser.setASTNodeClass(TNode.class.getName());
@@ -169,9 +188,10 @@ public class CwCWeaver implements WEAVER
 		cparser.setSource("ComposeStar.h");
 		try
 		{
-			TranslationUnitResult csh = cparser.cfile("__COMPOSESTAR_H");
+			TranslationUnitResult csh = cparser.cfile("_COMPOSESTAR_H_");
 			rootScope = csh.getRootScope();
 			composestarHAst = csh.getAST();
+			cshPIC = lexer.getPreprocessorInfoChannel();
 		}
 		catch (RecognitionException e)
 		{
@@ -199,6 +219,8 @@ public class CwCWeaver implements WEAVER
 
 		CwCFile type = (CwCFile) concern.getPlatformRepresentation();
 
+		boolean containsFilterCode = false;
+
 		Signature sig = concern.getSignature();
 		List<CwCFunctionInfo> functions = sig.getMethods(MethodWrapper.NORMAL);
 		for (CwCFunctionInfo func : functions)
@@ -220,6 +242,7 @@ public class CwCWeaver implements WEAVER
 			FilterCode filterCode = inlinerRes.getInputFilterCode(func);
 			if (filterCode != null)
 			{
+				containsFilterCode = true;
 				processFilterCode(rootScope, realFunc, filterCode);
 			}
 			// TODO: call to other methods
@@ -227,6 +250,10 @@ public class CwCWeaver implements WEAVER
 		// TODO: process added signatures
 
 		// TODO inject composestar.h somewhere
+		if (containsFilterCode)
+		{
+			injectComposestarH(type.getModuleDeclaration());
+		}
 	}
 
 	protected void processFilterCode(BlockScope rootScope, CwCFunctionInfo func, FilterCode fc)
@@ -279,6 +306,42 @@ public class CwCWeaver implements WEAVER
 		newBodyAST.addChild(bodyAST);
 		newBodyAST.addChild(createTNode(ACGrammarTokenTypes.RCURLY, "}", bodyAST.getLastChild()));
 		functionAST.getLastSibling().addSibling(newBodyAST);
+	}
+
+	protected void injectComposestarH(ModuleDeclaration modDecl)
+	{
+		TNode cshStart = TNodeFactory.getInstance().dupTree(composestarHAst);
+		TNode cshEnd = cshStart;
+
+		TNode nxtSib = composestarHAst.getNextSibling();
+		while (nxtSib != null)
+		{
+			TNode currentAST = TNodeFactory.getInstance().dupTree(nxtSib);
+			cshEnd.addSibling(currentAST);
+			cshEnd = currentAST;
+			nxtSib = nxtSib.getNextSibling();
+		}
+
+		modDecl.getAST().doubleLink();
+
+		// find injection AST
+		TNode weaveNode = null;
+
+		for (FunctionDeclaration func : modDecl.getFunctions())
+		{
+			if (!func.isIncluded())
+			{
+				weaveNode = func.getAST();
+				break;
+			}
+		}
+
+		// FIXME: weave node points to the first function, this should be the
+		// just before the first function
+
+		TNode afterNodes = weaveNode.getNextSibling();
+		weaveNode.setNextSibling(cshStart);
+		cshEnd.addSibling(afterNodes);
 	}
 
 	protected TNode createTNode(int type, String text, TNode ref)

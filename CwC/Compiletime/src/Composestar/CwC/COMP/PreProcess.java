@@ -42,7 +42,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class PreProcess implements CTCommonModule
 {
-	public static final String MODULE_NAME = CCompiler.MODULE_NAME + ".PreProcess";
+	public static final String MODULE_NAME = "PreCOMP";
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
