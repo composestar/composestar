@@ -145,6 +145,7 @@ public class CwCWeaver implements WEAVER
 
 		cshFile = FileUtils.relocateFile(p.getBase(), new File("ComposeStar.h"), outputDir);
 		loadComposeStarH();
+		copyComposeStarC(FileUtils.relocateFile(p.getBase(), new File("ComposeStar.c"), outputDir));
 
 		// inject filter code
 		Iterator<Concern> concernIterator = resources.repository().getAllInstancesOf(Concern.class);
@@ -199,9 +200,14 @@ public class CwCWeaver implements WEAVER
 		}
 	}
 
-	protected InputStream getComposeStarh()
+	protected InputStream getComposeStarFile(boolean header)
 	{
-		return CwCWeaver.class.getResourceAsStream("ComposeStar.h");
+		String filename = "ComposeStar.h";
+		if (!header)
+		{
+			filename = "ComposeStar.c";
+		}
+		return CwCWeaver.class.getResourceAsStream(filename);
 	}
 
 	/**
@@ -212,7 +218,8 @@ public class CwCWeaver implements WEAVER
 	 */
 	protected void loadComposeStarH() throws ModuleException
 	{
-		InputStream cshstream = getComposeStarh();
+		logger.info("Copying ComposeStar.h to output directory");
+		InputStream cshstream = getComposeStarFile(true);
 
 		// save a copy in the "woven" directory, which will be used in the
 		// #include directive
@@ -245,7 +252,7 @@ public class CwCWeaver implements WEAVER
 		}
 
 		// re-get the stream
-		cshstream = getComposeStarh();
+		cshstream = getComposeStarFile(true);
 
 		AspectCLexer lexer = new AspectCLexer(cshstream);
 		lexer.setSource("ComposeStar.h");
@@ -270,6 +277,42 @@ public class CwCWeaver implements WEAVER
 		catch (TokenStreamException e)
 		{
 			logger.error(e, e);
+		}
+	}
+
+	protected void copyComposeStarC(File dest) throws ModuleException
+	{
+		logger.info("Copying ComposeStar.c to output directory");
+		InputStream cshstream = getComposeStarFile(false);
+
+		// save a copy in the "woven" directory, which will be used in the
+		// #include directive
+		if (!dest.getParentFile().exists() && !dest.getParentFile().mkdirs())
+		{
+			throw new ModuleException(String.format("Unable to create parent directories for: %s", dest.toString()),
+					MODULE_NAME);
+		}
+
+		if (dest.exists())
+		{
+			dest.delete();
+		}
+		FileOutputStream fos;
+		try
+		{
+			fos = new FileOutputStream(dest);
+		}
+		catch (FileNotFoundException e1)
+		{
+			throw new ModuleException(e1.toString(), MODULE_NAME, e1);
+		}
+		try
+		{
+			FileUtils.copy(cshstream, fos);
+		}
+		catch (IOException e1)
+		{
+			throw new ModuleException(e1.toString(), MODULE_NAME, e1);
 		}
 	}
 

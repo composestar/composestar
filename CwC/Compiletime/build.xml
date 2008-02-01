@@ -50,7 +50,7 @@
 			<fileset dir="src">
 				<include name="**/moduleinfo.xml" />
 				<include name="**/*.pro" />
-				<include name="Composestar/CwC/WEAVER/ComposeStar.h" />
+				<include name="Composestar/CwC/WEAVER/ComposeStar.*" />
 				<include name="INCREconfig.xml" />
 				<include name="Platforms.xml" />
 			</fileset>
