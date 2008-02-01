@@ -205,6 +205,7 @@ public final class DefaultFilterFactory
 		dispatchAction.setFlowBehaviour(FilterAction.FLOW_RETURN);
 		dispatchAction.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
 		dispatchAction.setResourceOperations("arg.read;message.dispatch;return.read;");
+		dispatchAction.setCreateJPC(false);
 		repository.addObject(dispatchAction);
 		return dispatchAction;
 	}
@@ -220,6 +221,7 @@ public final class DefaultFilterFactory
 		continueAction.setFullName(FilterActionNames.CONTINUE_ACTION);
 		continueAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
 		continueAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		continueAction.setCreateJPC(false);
 		repository.addObject(continueAction);
 		return continueAction;
 	}
@@ -236,6 +238,7 @@ public final class DefaultFilterFactory
 		errorAction.setFlowBehaviour(FilterAction.FLOW_EXIT);
 		errorAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
 		errorAction.setResourceOperations("message.discard;return.discard;arg.discard");
+		errorAction.setCreateJPC(false);
 		repository.addObject(errorAction);
 		return errorAction;
 	}
@@ -251,6 +254,7 @@ public final class DefaultFilterFactory
 		substitutionAction.setFullName(FilterActionNames.SUBSTITUTION_ACTION);
 		substitutionAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
 		substitutionAction.setMessageChangeBehaviour(FilterAction.MESSAGE_SUBSTITUTED);
+		substitutionAction.setCreateJPC(false);
 		repository.addObject(substitutionAction);
 		return substitutionAction;
 	}

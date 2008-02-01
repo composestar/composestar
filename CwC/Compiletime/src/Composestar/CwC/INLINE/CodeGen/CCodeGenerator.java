@@ -142,7 +142,10 @@ public class CCodeGenerator extends StringCodeGenerator
 			sb.append(" ) {\n");
 		}
 
-		sb.append("\tJoinPointContext __JPC;\n");
+		if (createJPC)
+		{
+			sb.append("\tJoinPointContext __JPC;\n");
+		}
 		if (hasReturnValue(method))
 		{
 			sb.append(String.format("\t%s returnValue;\n", method.getReturnTypeString()));
@@ -155,28 +158,31 @@ public class CCodeGenerator extends StringCodeGenerator
 					returnActions.size()));
 		}
 
-		sb.append("\t/* init JPC */\n");
-		sb.append(String.format("\t__JPC.startSelector = \"%s\";\n", method.getName()));
-		if (hasReturnValue(method))
+		if (createJPC)
 		{
-			sb.append("\t__JPC.returnValue = &returnValue;\n");
-		}
-		List<ParameterInfo> pis = method.getParameters();
-		sb.append(String.format("\t__JPC.argc = %d;\n", pis.size()));
-		if (pis.size() > 0)
-		{
-			sb.append(String.format("\t__JPC.argv = (void **) malloc(%d * sizeof(void *));\n", pis.size()));
-			for (int i = 0; i < pis.size(); i++)
+			sb.append("\t/* init JPC */\n");
+			sb.append(String.format("\t__JPC.startSelector = \"%s\";\n", method.getName()));
+			if (hasReturnValue(method))
 			{
-				ParameterInfo pi = pis.get(i);
-				sb.append(String.format("\t__JPC.argv[%d] = &%s; /* %s */\n", i, pi.getName(), pi
-						.getParameterTypeString()));
+				sb.append("\t__JPC.returnValue = &returnValue;\n");
 			}
-		}
-		else
-		{
-			// requires #include <stdio.h>
-			sb.append("\t__JPC.argv = NULL;\n");
+			List<ParameterInfo> pis = method.getParameters();
+			sb.append(String.format("\t__JPC.argc = %d;\n", pis.size()));
+			if (pis.size() > 0)
+			{
+				sb.append(String.format("\t__JPC.argv = (void **) malloc(%d * sizeof(void *));\n", pis.size()));
+				for (int i = 0; i < pis.size(); i++)
+				{
+					ParameterInfo pi = pis.get(i);
+					sb.append(String.format("\t__JPC.argv[%d] = &%s; /* %s */\n", i, pi.getName(), pi
+							.getParameterTypeString()));
+				}
+			}
+			else
+			{
+				// requires #include <stdio.h>
+				sb.append("\t__JPC.argv = NULL;\n");
+			}
 		}
 
 		sb.append(indent(onCall));

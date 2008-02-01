@@ -80,6 +80,10 @@ import antlr.RecognitionException;
 import antlr.TokenStreamException;
 
 /**
+ * CwC Weaver. Weaves the filtercode (from INLINE) into the correct methods. It
+ * does not actually use the WeaveC weaver engine, but in employs the same
+ * methods (i.e. modifying the Antlr AST)
+ * 
  * @author Michiel Hendriks
  */
 public class CwCWeaver implements WEAVER
@@ -195,6 +199,11 @@ public class CwCWeaver implements WEAVER
 		}
 	}
 
+	protected InputStream getComposeStarh()
+	{
+		return CwCWeaver.class.getResourceAsStream("ComposeStar.h");
+	}
+
 	/**
 	 * Load ComposeStar.h; this is used to get the global scope so that the
 	 * JoinPointContext is known when generating the filter code
@@ -203,8 +212,10 @@ public class CwCWeaver implements WEAVER
 	 */
 	protected void loadComposeStarH() throws ModuleException
 	{
-		InputStream cshstream = CwCWeaver.class.getResourceAsStream("ComposeStar.h");
+		InputStream cshstream = getComposeStarh();
 
+		// save a copy in the "woven" directory, which will be used in the
+		// #include directive
 		if (!cshFile.getParentFile().exists() && !cshFile.getParentFile().mkdirs())
 		{
 			throw new ModuleException(String.format("Unable to create parent directories for: %s", cshFile.toString()),
@@ -233,8 +244,8 @@ public class CwCWeaver implements WEAVER
 			throw new ModuleException(e1.toString(), MODULE_NAME, e1);
 		}
 
-		// reget stream
-		cshstream = CwCWeaver.class.getResourceAsStream("ComposeStar.h");
+		// re-get the stream
+		cshstream = getComposeStarh();
 
 		AspectCLexer lexer = new AspectCLexer(cshstream);
 		lexer.setSource("ComposeStar.h");
@@ -304,9 +315,13 @@ public class CwCWeaver implements WEAVER
 				containsFilterCode = true;
 				processFilterCode(rootScope, realFunc, filterCode);
 			}
-			// TODO: call to other methods
+			// TODO: call to other methods, how? This information isn't
+			// harvested from the C file in the first place.
 		}
-		// TODO: process added signatures
+
+		// TODO: process added signatures, added signatures can't be processed
+		// using the same method as NORMAL because they don't have actual
+		// function declarations in the code. They need to be added.
 
 		if (containsFilterCode)
 		{
@@ -314,6 +329,13 @@ public class CwCWeaver implements WEAVER
 		}
 	}
 
+	/**
+	 * Inject the filter code at the beginning of the method implementation.
+	 * 
+	 * @param rootScope
+	 * @param func
+	 * @param fc
+	 */
 	protected void processFilterCode(BlockScope rootScope, CwCFunctionInfo func, FilterCode fc)
 	{
 		// generate ANSI-C code
@@ -463,10 +485,18 @@ public class CwCWeaver implements WEAVER
 		cshEnd.addSibling(afterNodes);
 	}
 
-	protected TNode createTNode(int type, String text, TNode ref)
+	//
+	// The following comes from WeaveC's WeaveUnit
+	//
+
+	/**
+	 * Create a new TNode of the given type with the provided text.
+	 */
+	protected TNode createTNode(int type, String text, TNode metaInfoFrom)
 	{
 		TNode node = TNodeFactory.getInstance().create(type, text);
-		setMetaInfo(node, RecursionMode.NODE, ref);
+		setMetaInfo(node, RecursionMode.NODE, metaInfoFrom.getLineNum(), metaInfoFrom.getSource(), metaInfoFrom
+				.getTokenNumber());
 		return node;
 	}
 
@@ -475,6 +505,16 @@ public class CwCWeaver implements WEAVER
 		NODE, TREE, FOREST;
 	}
 
+	/**
+	 * Sets meta info on the provide node(s). The meta info is important during
+	 * the emitting phase.
+	 * 
+	 * @param node
+	 * @param mode
+	 * @param lineNum
+	 * @param source
+	 * @param tokenNumber
+	 */
 	protected void setMetaInfo(TNode node, RecursionMode mode, int lineNum, String source, int tokenNumber)
 	{
 		switch (mode)
@@ -505,10 +545,5 @@ public class CwCWeaver implements WEAVER
 				}
 				break;
 		}
-	}
-
-	protected void setMetaInfo(TNode node, RecursionMode mode, TNode ref)
-	{
-		setMetaInfo(node, mode, ref.getLineNum(), ref.getSource(), ref.getTokenNumber());
 	}
 }

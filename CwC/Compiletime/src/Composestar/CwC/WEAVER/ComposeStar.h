@@ -15,8 +15,8 @@
 #include <assert.h>
 #endif
 
-static int *cstar_inner_register;
-static int cstar_inner_register_size = 0;
+int *cstar_inner_register;
+int cstar_inner_register_size = 0;
 
 #ifndef CSTAR_INNER_REGISTER_ALLOC_BY
 #define CSTAR_INNER_REGISTER_ALLOC_BY 32
@@ -25,7 +25,7 @@ static int cstar_inner_register_size = 0;
 /**
  * Check if the inner call is set for the given method id
  */
-static int CSTAR_is_inner_call(int methodId) {
+int CSTAR_is_inner_call(int methodId) {
 	int i;
 	for (i = 0; i < cstar_inner_register_size; i++) {
 		if (cstar_inner_register[i] == methodId)
@@ -37,7 +37,7 @@ static int CSTAR_is_inner_call(int methodId) {
 /**
  * Sets the inner call flag for the given method id
  */
-static void CSTAR_set_inner_call(int methodId) {
+void CSTAR_set_inner_call(int methodId) {
 	int i;
 	for (i = 0; i < cstar_inner_register_size; i++) {
 		if (cstar_inner_register[i] == 0) {
@@ -60,7 +60,7 @@ static void CSTAR_set_inner_call(int methodId) {
 /**
  * Unsets the inner call flag for the given method id
  */
-static void CSTAR_reset_inner_call(int methodId) {
+void CSTAR_reset_inner_call(int methodId) {
 	int i;
 	for (i = 0; i < cstar_inner_register_size; i++) {
 		if (cstar_inner_register[i] == methodId) {

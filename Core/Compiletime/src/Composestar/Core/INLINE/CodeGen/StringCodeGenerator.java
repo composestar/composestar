@@ -68,6 +68,8 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	protected Map<String, FilterActionCodeGenerator<String>> faCodeGens;
 
+	protected boolean createJPC;
+
 	public StringCodeGenerator()
 	{
 		faCodeGens = new HashMap<String, FilterActionCodeGenerator<String>>();
@@ -156,6 +158,10 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	 */
 	public Object visitFilterAction(FilterAction filterAction)
 	{
+		if (filterAction.getCreateJPC())
+		{
+			createJPC = true;
+		}
 		if (!filterAction.isOnCall())
 		{
 			int idx = returnActions.size();
@@ -172,6 +178,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	 */
 	public Object visitFilterCode(FilterCode filterCode)
 	{
+		createJPC = false;
 		String fmConditions = null;
 		List<Condition> fmConds = filterCode.getCheckConditionsEx();
 		if (fmConds != null && fmConds.size() > 0)
@@ -296,11 +303,10 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 			return emitMethodCall(mi, null, null);
 		}
 
+		logger.error(String.format("Method condition for \"%s\" not found: %s.%s", cond.getName(), type.getFullName(),
+				cond.getDynObject("selector")));
 		return " /* unable to resolve method */ ";
 
-		// logger.error(String.format("Method condition for \"%s\" not
-		// found:%s.%s", cond.getName(), type.getFullName(),
-		// cond.getDynObject("selector")));
 		// throw new RuntimeException("Method condition not found");
 	}
 
@@ -328,6 +334,12 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitMethodCall(Composestar.Core.LAMA.MethodInfo,
+	 *      java.util.List, java.lang.Object)
+	 */
 	public String emitMethodCall(MethodInfo method, List<String> args, Object context)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -340,5 +352,15 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 			sb.append(args.get(i));
 		}
 		return method.getName() + "(" + sb.toString() + ")";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#needJPC()
+	 */
+	public void needJPC()
+	{
+		createJPC = true;
 	}
 }

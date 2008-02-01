@@ -420,6 +420,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 				state.getSubstitutionMessage(),
 				true,
 				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
+		instruction.setCreateJPC(action.getCreateJPC());
 		setBookKeeping(instruction, state, resourceOps);
 
 		empty = false;
@@ -441,6 +442,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 				state.getSubstitutionMessage(),
 				false,
 				action.getFlowBehaviour() == Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.FLOW_RETURN);
+		instruction.setCreateJPC(action.getCreateJPC());
 		setBookKeeping(instruction, state, resourceOps);
 
 		empty = false;
@@ -458,9 +460,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	{
 		Message callMessage = state.getSubstitutionMessage();
 
-		FilterAction action = new FilterAction("DispatchAction", state.getMessage(), callMessage, true, true);
-		setBookKeeping(action, state, resourceOps);
-		currentBlock.addInstruction(action);
+		FilterAction instruction = new FilterAction("DispatchAction", state.getMessage(), callMessage, true, true);
+		instruction.setCreateJPC(false); // dispatch doesn't need a JPC
+		setBookKeeping(instruction, state, resourceOps);
+		currentBlock.addInstruction(instruction);
 
 		Target target = callMessage.getTarget();
 		String selector = callMessage.getSelector();

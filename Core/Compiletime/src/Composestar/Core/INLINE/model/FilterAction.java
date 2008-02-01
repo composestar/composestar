@@ -54,6 +54,11 @@ public class FilterAction extends Instruction
 	private String resourceOperations = "";
 
 	/**
+	 * Should a JointPointContext be created for this filter action?
+	 */
+	private boolean createJPC = true;
+
+	/**
 	 * The constructor
 	 * 
 	 * @param type The type of the filteraction.
@@ -160,6 +165,22 @@ public class FilterAction extends Instruction
 	public Object accept(Visitor visitor)
 	{
 		return visitor.visitFilterAction(this);
+	}
+
+	/**
+	 * @return the createJPC
+	 */
+	public boolean getCreateJPC()
+	{
+		return createJPC;
+	}
+
+	/**
+	 * @param createJPC the createJPC to set
+	 */
+	public void setCreateJPC(boolean createJPC)
+	{
+		this.createJPC = createJPC;
 	}
 
 }

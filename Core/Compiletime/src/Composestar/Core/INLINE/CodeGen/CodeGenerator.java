@@ -225,4 +225,13 @@ public interface CodeGenerator<T> extends Visitor
 	 * @return
 	 */
 	boolean hasReturnValue(MethodInfo method);
+
+	/**
+	 * Calling this method forces the creation of a join point context. The
+	 * creation of the JPC is usually controlled by the filter actions, but a
+	 * filter action code generator can call this method to force the creation
+	 * of the JPC even though the original filter action defined that it did not
+	 * need a JPC.
+	 */
+	void needJPC();
 }

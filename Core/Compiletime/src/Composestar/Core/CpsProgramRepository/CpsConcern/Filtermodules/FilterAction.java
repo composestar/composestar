@@ -29,6 +29,13 @@ public class FilterAction extends RepositoryEntity
 	private String resourceOperations;
 
 	/**
+	 * If true this filter action depends on the existance of a
+	 * JoinPointContext. Its only used for hinting in the inliner. It does not
+	 * affect the reasoning at all.
+	 */
+	private boolean createJPC = true;
+
+	/**
 	 * @return the flowBehaviour
 	 */
 	public int getFlowBehaviour()
@@ -106,5 +113,21 @@ public class FilterAction extends RepositoryEntity
 	public void setResourceOperations(String resop)
 	{
 		resourceOperations = resop;
+	}
+
+	/**
+	 * @return the createJPC
+	 */
+	public boolean getCreateJPC()
+	{
+		return createJPC;
+	}
+
+	/**
+	 * @param createJPC the createJPC to set
+	 */
+	public void setCreateJPC(boolean value)
+	{
+		createJPC = value;
 	}
 }

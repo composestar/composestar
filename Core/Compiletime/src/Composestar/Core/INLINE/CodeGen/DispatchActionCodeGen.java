@@ -87,7 +87,7 @@ public class DispatchActionCodeGen implements FilterActionCodeGenerator<String>
 		{
 			prefix = codeGen.emitSetInnerCall(inlinerResources.getMethodId(method));
 		}
-		return emitAction(prefix, codeGen.emitMethodCall(method, args, context), codeGen.hasReturnValue(method));
+		return emitAction(codeGen.emitMethodCall(method, args, context), prefix, codeGen.hasReturnValue(method));
 	}
 
 	/*
