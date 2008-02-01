@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INLINE.CodeGen.CodeGenerator;
-import Composestar.Core.INLINE.CodeGen.DispatchActionCodeGen;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.MethodInfo;
@@ -58,7 +57,7 @@ public class COGModule implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		CodeGenerator<String> cg = new CCodeGenerator();
-		cg.register(new DispatchActionCodeGen(inlinerResc));
+		cg.register(new CDispatchActionCodeGen(inlinerResc));
 		for (Entry<MethodInfo, FilterCode> entry : inlinerResc.getInputFilterCode().entrySet())
 		{
 			Object result = cg.generate(entry.getValue(), entry.getKey(), inlinerResc.getMethodId(entry.getKey()));

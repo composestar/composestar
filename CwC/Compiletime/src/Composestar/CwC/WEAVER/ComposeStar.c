@@ -1,12 +1,12 @@
 /*
  * Compose* / CwC Implementation of support methods
  * 
- * $Id: ComposeStar.h 4044 2008-02-01 13:16:50Z elmuerte $
+ * $Id$
  */
 
 #include <stdlib.h>
 #include <assert.h>
-#include "./Composestar.h"
+#include "Composestar.h"
 
 static int *cstar_inner_register;
 static int cstar_inner_register_size = 0;

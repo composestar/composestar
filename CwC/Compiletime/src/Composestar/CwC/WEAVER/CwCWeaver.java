@@ -61,7 +61,6 @@ import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INLINE.CodeGen.CodeGenerator;
-import Composestar.Core.INLINE.CodeGen.DispatchActionCodeGen;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.ParameterInfo;
@@ -69,6 +68,7 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Core.WEAVER.WEAVER;
 import Composestar.CwC.INLINE.CodeGen.CCodeGenerator;
+import Composestar.CwC.INLINE.CodeGen.CDispatchActionCodeGen;
 import Composestar.CwC.LAMA.CwCFile;
 import Composestar.CwC.LAMA.CwCFunctionInfo;
 import Composestar.CwC.TYM.WeaveCResources;
@@ -132,7 +132,7 @@ public class CwCWeaver implements WEAVER
 	public void run(CommonResources resources) throws ModuleException
 	{
 		codeGen = new CCodeGenerator();
-		codeGen.register(new DispatchActionCodeGen(inlinerRes));
+		codeGen.register(new CDispatchActionCodeGen(inlinerRes));
 		// TODO: add all code gens
 
 		Project p = resources.configuration().getProject();
@@ -458,8 +458,7 @@ public class CwCWeaver implements WEAVER
 			weaveNode = weaveNode.getFirstChild();
 		}
 
-		PreprocDirective incdirective = new PreprocDirective(String.format("#include \"%s\"", cshFile.toString()
-				.replace("\\", "\\\\")), 1);
+		PreprocDirective incdirective = new PreprocDirective(String.format("#include \"%s\"", cshFile.toString()), 1);
 
 		for (TranslationUnitResult tunit : weavecResc.translationUnitResults())
 		{
