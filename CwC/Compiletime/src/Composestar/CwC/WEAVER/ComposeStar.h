@@ -1,18 +1,18 @@
-#ifndef _COMPOSESTAR_H_
-#define _COMPOSESTAR_H_
-
 /*
  * Compose* / CwC Header file
  * 
  * $Id$
  */
 
+#ifndef _COMPOSESTAR_H_
+#define _COMPOSESTAR_H_
+
 #ifndef _STDLIB_H_
-#include <stdlib>
+#include <stdlib.h>
 #endif
 
 #ifndef _ASSERT_H_
-#include <assert>
+#include <assert.h>
 #endif
 
 static int *cstar_inner_register;
@@ -110,3 +110,4 @@ typedef struct __join_point_context {
 } JoinPointContext;
 
 #endif
+// end of ComposeStar.h

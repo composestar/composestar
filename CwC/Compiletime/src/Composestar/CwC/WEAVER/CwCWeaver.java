@@ -24,19 +24,21 @@
 package Composestar.CwC.WEAVER;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.apache.log4j.Level;
 
+import weavec.ast.PreprocDirective;
 import weavec.ast.PreprocessorInfoChannel;
 import weavec.ast.TNode;
 import weavec.ast.TNodeFactory;
@@ -94,10 +96,25 @@ public class CwCWeaver implements WEAVER
 
 	protected CodeGenerator<String> codeGen;
 
+	/**
+	 * The scope where composestar.h is loaded. This is needed for the generated
+	 * code
+	 */
 	protected BlockScope rootScope;
 
+	/**
+	 * Location to the ComposeStar.h file in the "woven" directory
+	 */
+	protected File cshFile;
+
+	/**
+	 * The AST of the ComposeStar.H file
+	 */
 	protected TNode composestarHAst;
 
+	/**
+	 * The preprocessor channel of the parsed composestar.h
+	 */
 	protected PreprocessorInfoChannel cshPIC;
 
 	public CwCWeaver()
@@ -114,6 +131,15 @@ public class CwCWeaver implements WEAVER
 		codeGen.register(new DispatchActionCodeGen(inlinerRes));
 		// TODO: add all code gens
 
+		Project p = resources.configuration().getProject();
+		File outputDir = new File(p.getIntermediate(), "woven");
+		if (!outputDir.isDirectory() && !outputDir.mkdirs())
+		{
+			throw new ModuleException(String.format("Unable to create target directory for preprocessing: %s",
+					outputDir.toString()), MODULE_NAME);
+		}
+
+		cshFile = FileUtils.relocateFile(p.getBase(), new File("ComposeStar.h"), outputDir);
 		loadComposeStarH();
 
 		// inject filter code
@@ -122,13 +148,6 @@ public class CwCWeaver implements WEAVER
 		{
 			Concern concern = concernIterator.next();
 			processConcern(concern);
-		}
-		Project p = resources.configuration().getProject();
-		File outputDir = new File(p.getIntermediate(), "woven");
-		if (!outputDir.isDirectory() && !outputDir.mkdirs())
-		{
-			throw new ModuleException(String.format("Unable to create target directory for preprocessing: %s",
-					outputDir.toString()), MODULE_NAME);
 		}
 
 		// emit updated C files
@@ -147,13 +166,14 @@ public class CwCWeaver implements WEAVER
 				PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
 
 				// insert the preprocessor data from the header file
-				for (Entry<Integer, ArrayList<Object>> entry : cshPIC.objects.entrySet())
-				{
-					for (Object o : entry.getValue())
-					{
-						ppic.addLineForTokenNumber(o, entry.getKey());
-					}
-				}
+				// for (Entry<Integer, ArrayList<Object>> entry :
+				// cshPIC.objects.entrySet())
+				// {
+				// for (Object o : entry.getValue())
+				// {
+				// ppic.addLineForTokenNumber(o, entry.getKey());
+				// }
+				// }
 
 				CEmitter emitter = new CEmitter(ppic, output);
 				emitter.setASTNodeClass(TNode.class.getName());
@@ -175,9 +195,48 @@ public class CwCWeaver implements WEAVER
 		}
 	}
 
-	protected void loadComposeStarH()
+	/**
+	 * Load ComposeStar.h; this is used to get the global scope so that the
+	 * JoinPointContext is known when generating the filter code
+	 * 
+	 * @throws ModuleException
+	 */
+	protected void loadComposeStarH() throws ModuleException
 	{
-		AspectCLexer lexer = new AspectCLexer(CwCWeaver.class.getResourceAsStream("ComposeStar.h"));
+		InputStream cshstream = CwCWeaver.class.getResourceAsStream("ComposeStar.h");
+
+		if (!cshFile.getParentFile().exists() && !cshFile.getParentFile().mkdirs())
+		{
+			throw new ModuleException(String.format("Unable to create parent directories for: %s", cshFile.toString()),
+					MODULE_NAME);
+		}
+
+		if (cshFile.exists())
+		{
+			cshFile.delete();
+		}
+		FileOutputStream fos;
+		try
+		{
+			fos = new FileOutputStream(cshFile);
+		}
+		catch (FileNotFoundException e1)
+		{
+			throw new ModuleException(e1.toString(), MODULE_NAME, e1);
+		}
+		try
+		{
+			FileUtils.copy(cshstream, fos);
+		}
+		catch (IOException e1)
+		{
+			throw new ModuleException(e1.toString(), MODULE_NAME, e1);
+		}
+
+		// reget stream
+		cshstream = CwCWeaver.class.getResourceAsStream("ComposeStar.h");
+
+		AspectCLexer lexer = new AspectCLexer(cshstream);
 		lexer.setSource("ComposeStar.h");
 		lexer.newPreprocessorInfoChannel();
 		lexer.setTokenNumber(weavecResc.getTokenNumber());
@@ -249,10 +308,9 @@ public class CwCWeaver implements WEAVER
 		}
 		// TODO: process added signatures
 
-		// TODO inject composestar.h somewhere
 		if (containsFilterCode)
 		{
-			injectComposestarH(type.getModuleDeclaration());
+			injectComposestarHInclude(type.getModuleDeclaration());
 		}
 	}
 
@@ -308,6 +366,54 @@ public class CwCWeaver implements WEAVER
 		functionAST.getLastSibling().addSibling(newBodyAST);
 	}
 
+	/**
+	 * Inserts an #include directive just before the first function declaration
+	 * 
+	 * @param modDecl
+	 */
+	protected void injectComposestarHInclude(ModuleDeclaration modDecl)
+	{
+		// find injection AST
+		TNode weaveNode = null;
+		modDecl.getAST().doubleLink();
+
+		for (FunctionDeclaration func : modDecl.getFunctions())
+		{
+			if (!func.isIncluded())
+			{
+				// the function's AST points to the "name" part, it should go up
+				// 2 levels to get to the declaration part
+				weaveNode = func.getAST().getParent().getParent();
+				break;
+			}
+		}
+
+		while (weaveNode.getTokenNumber() == -1)
+		{
+			weaveNode = weaveNode.getFirstChild();
+		}
+
+		PreprocDirective incdirective = new PreprocDirective(String.format("#include \"%s\"", cshFile.toString()
+				.replace("\\", "\\\\")), 1);
+
+		for (TranslationUnitResult tunit : weavecResc.translationUnitResults())
+		{
+			if (tunit.getModuleDeclaration() == modDecl)
+			{
+				PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
+				ppic.addLineForTokenNumber(incdirective, weaveNode.getTokenNumber() - 1);
+				return;
+			}
+		}
+		logger.error("Unable to find location to inject the ComposeStar.h include directive");
+	}
+
+	/**
+	 * Injects the contents of the composestar.h file before the first function
+	 * declaration. NOTE: BROKEN
+	 * 
+	 * @param modDecl
+	 */
 	protected void injectComposestarH(ModuleDeclaration modDecl)
 	{
 		TNode cshStart = TNodeFactory.getInstance().dupTree(composestarHAst);
@@ -331,13 +437,26 @@ public class CwCWeaver implements WEAVER
 		{
 			if (!func.isIncluded())
 			{
-				weaveNode = func.getAST();
+				// the function's AST points to the "name" part, it should go up
+				// 2 levels to get to the declaration part
+				weaveNode = func.getAST().getParent().getParent();
 				break;
 			}
 		}
 
-		// FIXME: weave node points to the first function, this should be the
+		// weave node points to the first function, this should be the
 		// just before the first function
+
+		TNode search = modDecl.getAST();
+		while (search != null)
+		{
+			if (search.getNextSibling() == weaveNode)
+			{
+				weaveNode = search;
+				break;
+			}
+			search = search.getNextSibling();
+		}
 
 		TNode afterNodes = weaveNode.getNextSibling();
 		weaveNode.setNextSibling(cshStart);
