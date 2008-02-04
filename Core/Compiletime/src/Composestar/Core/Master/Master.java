@@ -42,6 +42,7 @@ import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.Resources.PathResolver;
+import Composestar.Utils.CmdLineParser;
 import Composestar.Utils.Version;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.Log4j.CPSPatternLayout;
@@ -222,6 +223,110 @@ public abstract class Master
 			return;
 		}
 		Logger.getRootLogger().setLevel(lvl);
+	}
+
+	/**
+	 * Add the default commandline options
+	 * 
+	 * @param parser
+	 */
+	protected void addCmdLineOptions(CmdLineParser parser)
+	{
+		parser.addOption(new CmdLineParser.StringOption('d', "log-level"));
+		parser.addOption(new CmdLineParser.StringOption('t', "threshold"));
+		parser.addOption(new CmdLineParser.StringListOption('D'));
+		parser.addOption(new CmdLineParser.StringOption('L', "log4j-config"));
+		parser.addOption(new CmdLineParser.StringOption('P', "platform"));
+		parser.addOption(new CmdLineParser.StringOption("log4j-network"));
+		parser.setDefaultOption(new CmdLineParser.StringOption());
+	}
+
+	/**
+	 * Process the default commandline options
+	 * 
+	 * @param parser
+	 */
+	protected void procCmdLineOptions(CmdLineParser parser)
+	{
+		CmdLineParser.StringOption so;
+		so = parser.getOption("log4j-config");
+		if (so != null && so.isSet())
+		{
+			// override Log4J configuration, must be before a -d setting
+			// -L=<filename>
+			LogManager.resetConfiguration();
+			PropertyConfigurator.configure(so.getValue());
+			if (!Logger.getRootLogger().isAttached(logMetrics))
+			{
+				Logger.getRootLogger().addAppender(logMetrics);
+			}
+		}
+		so = parser.getOption("log-level");
+		if (so != null && so.isSet())
+		{
+			setLogLevel(so.getValue());
+			debugOverride = true;
+		}
+		so = parser.getOption("threshold");
+		if (so != null && so.isSet())
+		{
+			int et = Integer.parseInt(so.getValue());
+
+			Logger root = Logger.getRootLogger();
+			ConsoleAppender errAppender = new ConsoleAppender(new CPSPatternLayout("[%c] %p: %m%n"),
+					ConsoleAppender.SYSTEM_ERR);
+			LevelRangeFilter rangeFilter = new LevelRangeFilter();
+			rangeFilter.setLevelMax(Level.FATAL);
+			rangeFilter.setLevelMin(debugModeToLevel(et));
+			errAppender.addFilter(rangeFilter);
+			root.addAppender(errAppender);
+		}
+		so = parser.getOption("platform");
+		if (so != null && so.isSet())
+		{
+			platformConfiguration = new File(so.getValue());
+		}
+		so = parser.getOption("log4j-network");
+		if (so != null && so.isSet())
+		{
+			// log to net
+			String host = "127.0.0.1";
+			int port = 4445;
+			String[] hp = so.getValue().substring(4).split(":");
+			if (hp.length > 1)
+			{
+				host = hp[0];
+			}
+			if (hp.length > 2)
+			{
+				try
+				{
+					port = Integer.parseInt(hp[1]);
+				}
+				catch (NumberFormatException nfe)
+				{
+					System.err.println(String.format("%s is not a valid host:port", so.getValue().substring(4)));
+					port = 4445;
+				}
+			}
+			Logger.getRootLogger().addAppender(new SocketAppender(host, port));
+		}
+
+		CmdLineParser.StringListOption slo;
+		slo = parser.getOption('D');
+		if (slo != null && so.isSet())
+		{
+			for (String arg : slo.getValue())
+			{
+				String[] setting = arg.substring(2).split("\\.|=", 3);
+				if (setting.length != 3)
+				{
+					System.err.println("Correct format is: -D<module>.<setting>=<value>");
+					continue;
+				}
+				settingsOverride.put(setting[0] + "." + setting[1], setting[3]);
+			}
+		}
 	}
 
 	/**

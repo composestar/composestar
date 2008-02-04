@@ -24,19 +24,58 @@
 
 package Composestar.CwC.MASTER;
 
+import java.util.Map.Entry;
+
+import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Config.ModuleInfoManager;
+import Composestar.Core.Config.Project;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.CpsProgramRepository.Filters.FilterTypeNames;
 import Composestar.Core.Master.Master;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Resources.CommonResources;
+import Composestar.Utils.CmdLineParser;
 
 /**
  * @author Michiel Hendriks
  */
 public class CwCMaster extends Master
 {
+	protected String intermediateDir;
+
 	@Override
 	protected void loadConfiguration() throws Exception
 	{
-		super.loadConfiguration();
+		if (configFilename != null)
+		{
+			super.loadConfiguration();
+		}
+		else
+		{
+			// create the repository and common resources
+			resources = new CommonResources();
+			resources.setRepository(DataStore.instance());
+			resources.put(RESOURCE_CONFIGFILE, configFilename);
+			BuildConfig config = new BuildConfig();
+			Project proj = config.getNewProject();
+
+			proj.setBase(System.getProperty("user.dir"));
+			proj.setIntermediate(intermediateDir);
+			// todo: add files
+
+			resources.setConfiguration(config);
+			resources.setPathResolver(getPathResolver());
+			if (!debugOverride)
+			{
+				setLogLevel(config.getSetting("buildDebugLevel"));
+			}
+			ModuleInfoManager.getInstance().setBuildConfig(config);
+
+			for (Entry<String, String> override : settingsOverride.entrySet())
+			{
+				config.addSetting(override.getKey(), override.getValue());
+			}
+		}
 		// FIXME this probably needs to be improved, how to load it properly?
 		// where to get the custom filters from?
 		DefaultFilterFactory filterFactory = new DefaultFilterFactory(resources.repository());
@@ -44,6 +83,30 @@ public class CwCMaster extends Master
 				FilterTypeNames.BEFORE, FilterTypeNames.AFTER, FilterTypeNames.SUBSTITUTION };
 		filterFactory.createFilterTypes(filters);
 		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
+	}
+
+	@Override
+	public void processCmdArgs(String[] args)
+	{
+		CmdLineParser parser = new CmdLineParser();
+		super.addCmdLineOptions(parser);
+		CmdLineParser.SwitchOption ispped = new CmdLineParser.SwitchOption("preprocessed");
+		parser.addOption(ispped);
+		CmdLineParser.StringOption intermed = new CmdLineParser.StringOption('i', "intermediate");
+		parser.addOption(intermed);
+		parser.setDefaultOption(new CmdLineParser.StringListOption());
+
+		parser.parse(args);
+		procCmdLineOptions(parser);
+
+		if (ispped.isSet() && ispped.getValue())
+		{
+			settingsOverride.put("PreCOMP.preprocessed", "true");
+		}
+		if (intermed.isSet())
+		{
+			intermediateDir = intermed.getValue();
+		}
 	}
 
 	/**
