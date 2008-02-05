@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**/.svn/" including="**/*.java|**/moduleinfo.xml|Composestar/CwC/WEAVER/ComposeStar.*|INCREconfig.xml|MANIFEST.MF|Platforms.xml" kind="src" path="src"/>
+	<classpathentry excluding="**/.svn/" including="**/*.java|**/moduleinfo.xml|Composestar/CwC/WEAVER/ComposeStar.*|INCREconfig.xml|Platforms.xml|log4j.properties" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
 	<classpathentry kind="lib" path="/ComposestarCORE/lib/log4j/log4j-1.2.14.jar"/>

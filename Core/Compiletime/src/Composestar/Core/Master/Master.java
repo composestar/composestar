@@ -135,7 +135,11 @@ public abstract class Master
 		Logger root = Logger.getRootLogger();
 		if (root.getAllAppenders() instanceof NullEnumeration)
 		{
-			URL propfile = Master.class.getResource("/log4j.properties");
+			URL propfile = this.getClass().getResource("/log4j.properties");
+			if (propfile == null)
+			{
+				propfile = Master.class.getResource("/log4j.properties");
+			}
 			if (propfile != null)
 			{
 				PropertyConfigurator.configure(propfile);
