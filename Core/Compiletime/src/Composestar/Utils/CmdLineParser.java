@@ -25,6 +25,7 @@
 package Composestar.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,8 @@ public class CmdLineParser
 	public CmdLineParser()
 	{
 		options = new ArrayList<Option<?>>();
+		shortOptions = new HashMap<Character, Option<?>>();
+		longOptions = new HashMap<String, Option<?>>();
 	}
 
 	/**
@@ -86,7 +89,7 @@ public class CmdLineParser
 				Option<?> opt = longOptions.get(lname);
 				if (opt == null)
 				{
-					logger.error(String.format("Unknown option %s%s", LONG_VALUE_DELIM, lname));
+					logger.error(String.format("Unknown option %s%s", LONG_PREFIX, lname));
 					i++;
 					continue;
 				}
@@ -97,13 +100,13 @@ public class CmdLineParser
 						i++;
 						if (i >= args.length)
 						{
-							logger.error(String.format("Missing value for %s%s", LONG_VALUE_DELIM, lname));
+							logger.error(String.format("Missing value for %s%s", LONG_PREFIX, lname));
 							continue;
 						}
 						value = args[i];
 					}
 					logger.debug(String.format("Long option %s: %s", lname, value));
-					opt.parseValue(lname);
+					opt.parseValue(value);
 				}
 			}
 			else if (args[i].startsWith(SHORT_PREFIX))
@@ -159,17 +162,23 @@ public class CmdLineParser
 	{
 		char sname = option.getShortName();
 		String lname = option.getLongName();
-		if (shortOptions.containsKey(sname))
+		if (sname != '\0' && shortOptions.containsKey(sname))
 		{
 			return false;
 		}
-		if (longOptions.containsKey(lname))
+		if (lname != null && longOptions.containsKey(lname))
 		{
 			return false;
 		}
 		options.add(option);
-		shortOptions.put(sname, option);
-		longOptions.put(lname, option);
+		if (sname != '\0')
+		{
+			shortOptions.put(sname, option);
+		}
+		if (lname != null)
+		{
+			longOptions.put(lname, option);
+		}
 		return true;
 	}
 

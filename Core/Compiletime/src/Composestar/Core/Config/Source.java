@@ -233,4 +233,10 @@ public class Source implements Serializable
 	{
 		return assembly;
 	}
+
+	@Override
+	public String toString()
+	{
+		return file.toString();
+	}
 }

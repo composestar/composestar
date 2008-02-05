@@ -25,6 +25,7 @@
 package Composestar.Core.INLINE.CodeGen;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -300,7 +301,8 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 		// TODO: resolve context (interal/external)
 		if (mi != null)
 		{
-			return emitMethodCall(mi, null, null);
+			List<String> condArgs = Collections.emptyList();
+			return emitMethodCall(mi, condArgs, null);
 		}
 
 		logger.error(String.format("Method condition for \"%s\" not found: %s.%s", cond.getName(), type.getFullName(),

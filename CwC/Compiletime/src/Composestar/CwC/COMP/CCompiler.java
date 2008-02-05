@@ -81,7 +81,7 @@ public class CCompiler implements LangCompiler
 	 */
 	public void compileDummies(Project p, Set<Source> sources) throws CompilerException
 	{
-		File ppOutput = new File(p.getIntermediate(), "preprocess");
+		File ppOutput = new File(p.getIntermediate(), PreProcess.PREPROCESSED_DIR);
 		if (!ppOutput.isDirectory() && !ppOutput.mkdirs())
 		{
 			throw new CompilerException(String.format("Unable to create target directory for preprocessing: %s",

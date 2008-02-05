@@ -24,11 +24,14 @@
 
 package Composestar.CwC.COMP;
 
+import java.io.File;
+
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.Config.Language;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
+import Composestar.Core.Config.Source;
 import Composestar.Core.Config.SourceCompiler;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
@@ -44,6 +47,8 @@ public class PreProcess implements CTCommonModule
 {
 	public static final String MODULE_NAME = "PreCOMP";
 
+	public static final String PREPROCESSED_DIR = "preprocessed";
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	public PreProcess()
@@ -57,12 +62,23 @@ public class PreProcess implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		ModuleInfo mi = ModuleInfoManager.get(PreProcess.class);
+		Project proj = resources.configuration().getProject();
 		if (mi.getSetting("preprocessed", false))
 		{
 			logger.info("Already preprocessed, skipping " + MODULE_NAME);
+			File ppdir = new File(proj.getIntermediate(), PREPROCESSED_DIR);
+			for (Source src : proj.getSources())
+			{
+				src.setStub(src.getFile());
+				if (src.getFile().toString().startsWith(ppdir.toString()))
+				{
+					// source file was in the preprocessed dir
+					src.setFile(new File(src.getFile().toString().substring(
+							ppdir.toString().length() + File.pathSeparator.length())));
+				}
+			}
 			return;
 		}
-		Project proj = resources.configuration().getProject();
 		Language lang = proj.getPlatform().getLanguage(proj.getLanguage());
 		if (lang == null)
 		{

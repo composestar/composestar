@@ -24,11 +24,15 @@
 
 package Composestar.CwC.MASTER;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
+import Composestar.Core.Config.Source;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.CpsProgramRepository.Filters.FilterTypeNames;
 import Composestar.Core.Master.Master;
@@ -42,6 +46,8 @@ import Composestar.Utils.CmdLineParser;
 public class CwCMaster extends Master
 {
 	protected String intermediateDir;
+
+	protected List<String> cfiles, cpsfiles;
 
 	@Override
 	protected void loadConfiguration() throws Exception
@@ -61,7 +67,19 @@ public class CwCMaster extends Master
 
 			proj.setBase(System.getProperty("user.dir"));
 			proj.setIntermediate(intermediateDir);
-			// todo: add files
+			proj.setPlatform("CwC");
+			proj.setLanguage("C");
+			proj.setName(proj.getBase().getName());
+			for (String file : cfiles)
+			{
+				Source s = new Source();
+				s.setFile(new File(file));
+				proj.addSource(s);
+			}
+			for (String file : cpsfiles)
+			{
+				proj.addConcern(file);
+			}
 
 			resources.setConfiguration(config);
 			resources.setPathResolver(getPathResolver());
@@ -94,7 +112,8 @@ public class CwCMaster extends Master
 		parser.addOption(ispped);
 		CmdLineParser.StringOption intermed = new CmdLineParser.StringOption('i', "intermediate");
 		parser.addOption(intermed);
-		parser.setDefaultOption(new CmdLineParser.StringListOption());
+		CmdLineParser.StringListOption fileList = new CmdLineParser.StringListOption();
+		parser.setDefaultOption(fileList);
 
 		parser.parse(args);
 		procCmdLineOptions(parser);
@@ -106,6 +125,25 @@ public class CwCMaster extends Master
 		if (intermed.isSet())
 		{
 			intermediateDir = intermed.getValue();
+		}
+		cfiles = new ArrayList<String>();
+		cpsfiles = new ArrayList<String>();
+		for (String file : fileList.getValue())
+		{
+			String locfile = file.toLowerCase();
+			if (locfile.endsWith(".xml"))
+			{
+				// we assume it's the buildconfig
+				configFilename = file;
+			}
+			else if (locfile.endsWith(".c"))
+			{
+				cfiles.add(file);
+			}
+			else if (locfile.endsWith(".cps"))
+			{
+				cpsfiles.add(file);
+			}
 		}
 	}
 

@@ -7,7 +7,7 @@ concerns = mainprint.cps calcfix.cps
 # Intermediate directory
 INTERMED = obj
 # Directory for the preprocessed files
-PREPROCESSED = $(INTERMED)/preprocess
+PREPROCESSED = $(INTERMED)/preprocessed
 # Directory for the woven files
 WOVEN = $(INTERMED)/woven
 
@@ -19,7 +19,9 @@ wovenSources := $(patsubst %.c,$(WOVEN)/%.c,$(sources))
 CC = gcc
 CFLAGS = 
 RM = del /F /Q
-RMDIR = rmdir /S /Q
+RMDIR = cmd /c rmdir /S /Q
+
+COMPOSESTAR = ../../Testing/bin/lib/ComposestarCwC.jar 
 
 .PHONY : all
 all : basictest.exe
@@ -48,14 +50,14 @@ $(objects) : %.o : $(WOVEN)/%.c
 # Performs the actual weaving	
 .PHONY : weave
 weave : $(ppSources)
-	@echo $(wovenSources)
+	java -jar $(COMPOSESTAR) --preprocessed --intermediate $(INTERMED) $(ppSources) $(concerns)
 
 # dummy, to fake weaving
-$(WOVEN)/%.c : $(PREPROCESSED)/%.c
-	type $(subst /,\,$<) > $(subst /,\,$@)
+#$(WOVEN)/%.c : $(PREPROCESSED)/%.c
+#	type $(subst /,\,$<) > $(subst /,\,$@)
 
 
-basictest.exe : init weave $(objects)
-	$(CC) -o $@ $(objects)
+basictest.exe : init weave $(objects) $(WOVEN)/ComposeStar.o
+	$(CC) -o $@ $(objects) $(WOVEN)/ComposeStar.o
 
   

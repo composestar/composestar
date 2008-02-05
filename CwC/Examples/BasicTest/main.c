@@ -20,13 +20,14 @@ void printHeaderWithVersion()
 	printf("Compose*/CwC Basic Test Example\n$Id$\n\n");
 }
 
+
+void printNoName(char* name)
+{}
+
 void printProgramName(char* name)
 {
 	printf("argv[0] = %s\n", name);
 }
-
-void printVoid(char* name)
-{}
 
 int doPrintProgramName()
 {

@@ -10,28 +10,30 @@
 		</and>
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
-	
+
 	<description>C (WeaveC) implementation of Compose*</description>
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<delete dir="${out.qa}" />
 		<ant target="clean" dir="Compiletime" inheritRefs="true" />
-	</target>	
-	
+		<ant target="clean" dir="Testing" inheritRefs="true" />
+	</target>
+
 	<target name="build" description="Build the C implementation of Compose*">
 		<ant target="build" dir="Compiletime" inheritRefs="true" />
 	</target>
 
 	<target name="test" description="Execute system tests">
+		<ant target="test" dir="Testing" inheritRefs="true" />
 	</target>
-	
+
 	<target name="install" depends="init,build" description="Install the result">
 	</target>
-	
+
 	<target name="init_qa" depends="init">
 		<mkdir dir="${out.qa}" />
 	</target>
-	
+
 	<target name="findbugs" depends="init_qa" description="Execute FindBugs">
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.cwc}${file.separator}Compiletime${file.separator}${out.build}" />
@@ -43,7 +45,7 @@
 		</findbugs>
 		<xslt in="${out.qa}${file.separator}findbugs-result.xml" out="${out.qa}${file.separator}findbugs-result.html" style="${findbugs.style}" />
 	</target>
-	
+
 	<target name="checkstyle" depends="init_qa" description="Run CheckStyle code proof reading">
 		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false" classpathref="lib.java">
 			<formatter type="xml" toFile="${out.qa}${file.separator}checkstyle-result.xml" />

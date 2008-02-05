@@ -3,15 +3,15 @@ concern mainprint
 	filtermodule noVersionHeader
 	{
 		inputfilters
-			divismult : Dispatch = { [*.printHeaderWithVersion] *.printPlainHeader }
+			noversion : Dispatch = { [*.printHeaderWithVersion] *.printPlainHeader }
 	}
 	
 	filtermodule optionalProgramName
 	{
 		conditions
-			printit = inner.doPrintProgramName();
+			printit : inner.doPrintProgramName();
 		inputfilters
-			maybeprint : Dispatch = { !printit => [*.printProgramName] *.printVoid }
+			maybeprint : Dispatch = { !printit => [*.printProgramName] *.printNoName }
 	}
 	
 	superimposition

@@ -9,5 +9,5 @@ Class-Path: ComposestarCORE.jar
  groove-1_2_0.jar 
  jgraph.jar 
  xerces-2_6_0-xml-apis.jar 
- xerces-2_6_0-xercesImpl.jar
+ xerces-2_6_0-xercesImpl.jar 
  weavec.jar

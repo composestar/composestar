@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/CwC/Testing" default="test">
+
+	<condition property="build.core" value="../../Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="../../Core/common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}/common.xml" />
+
+	<description>Compose*/C (WeaveC) Testing</description>
+
+	<target name="clean" depends="init" description="clean the test environment">
+		<delete dir="bin" />
+	</target>
+
+	<target name="init_local" depends="init">
+		<mkdir dir="bin" />
+		<copy todir="bin">
+			<fileset dir="${build.core}/Compiletime/dist">
+				<exclude name="META-INF/**" />
+			</fileset>
+			<fileset dir="${build.cwc}/Compiletime/dist" />
+		</copy>
+	</target>
+
+	<target name="build" />
+	
+	<target name="test" depends="init_local">
+	</target>
+
+</project>
