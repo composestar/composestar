@@ -573,9 +573,8 @@ public abstract class Master
 			// display number of warnings
 			if (logMetrics.numWarnings() > 0 || logMetrics.numErrors() > 0 || logMetrics.numFatals() > 0)
 			{
-				// TODO: shouldn't print to stdout or anywhere else for that
-				// matter
-				System.out.println("Warnings: " + logMetrics.numWarnings() + "; Errors: " + logMetrics.numErrors());
+				logger.log(CrucialLevel.CRUCIAL, "Warnings: " + logMetrics.numWarnings() + "; Errors: "
+						+ logMetrics.numErrors());
 			}
 
 			if (logMetrics.numErrors() > 0)
@@ -698,6 +697,9 @@ public abstract class Master
 		logger.debug("Compiled on " + Version.getCompileDate().toString());
 
 		int ret = master.run();
+
+		long memUsage = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		logger.debug(String.format("Final memory usage: %d (%d MiB)", memUsage, (memUsage / 1024 / 1024)));
 		if (ret != 0)
 		{
 			System.exit(ret);

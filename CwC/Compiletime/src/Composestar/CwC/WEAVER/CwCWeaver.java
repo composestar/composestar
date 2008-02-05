@@ -33,8 +33,11 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Level;
 
@@ -42,18 +45,23 @@ import weavec.ast.PreprocDirective;
 import weavec.ast.PreprocessorInfoChannel;
 import weavec.ast.TNode;
 import weavec.ast.TNodeFactory;
+import weavec.cmodel.declaration.Declaration;
 import weavec.cmodel.declaration.FunctionDeclaration;
 import weavec.cmodel.declaration.ModuleDeclaration;
 import weavec.cmodel.scope.AnnotationScope;
 import weavec.cmodel.scope.BlockScope;
+import weavec.cmodel.scope.CNamespaceKind;
 import weavec.cmodel.scope.LabelScope;
+import weavec.cmodel.scope.Namespace;
 import weavec.cmodel.util.AnnotationScopeImpl;
+import weavec.cmodel.util.BlockScopeImpl;
 import weavec.cmodel.util.ScopeConstructor;
 import weavec.emitter.CEmitter;
 import weavec.grammar.TranslationUnitResult;
 import weavec.parser.ACGrammarTokenTypes;
 import weavec.parser.AspectCLexer;
 import weavec.parser.AspectCParser;
+import weavec.util.RecursivePrinter;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -355,6 +363,7 @@ public class CwCWeaver implements WEAVER
 			FilterCode filterCode = inlinerRes.getInputFilterCode(func);
 			if (filterCode != null)
 			{
+				logger.info(String.format("Weaving function %s.%s", concern.getQualifiedName(), func.getName()));
 				containsFilterCode = true;
 				processFilterCode(rootScope, realFunc, filterCode);
 			}
@@ -382,7 +391,8 @@ public class CwCWeaver implements WEAVER
 	protected void processFilterCode(BlockScope rootScope, CwCFunctionInfo func, FilterCode fc)
 	{
 		// generate ANSI-C code
-		Reader ccode = new StringReader(codeGen.generate(fc, func, inlinerRes.getMethodId(func)));
+		String stringcode = codeGen.generate(fc, func, inlinerRes.getMethodId(func));
+		Reader ccode = new StringReader(stringcode);
 
 		// parse ANSI-C code to AST
 		// parser.compoundStatement(...)
@@ -400,13 +410,15 @@ public class CwCWeaver implements WEAVER
 		{
 			LabelScope labelScope = ScopeConstructor.getLabelScope();
 			AnnotationScope annotationScope = new AnnotationScopeImpl();
-			cparser.compoundStatement(ScopeConstructor.getScope(rootScope), labelScope, annotationScope);
+			cparser.compoundStatement(ScopeConstructor.getScope(new CompositeScope((BlockScope) func
+					.getFunctionDeclaration().getScope(), rootScope)), labelScope, annotationScope);
 			// getAST should return the returnAst, which contains the result of
 			// the previous method execution
 			fcAst = (TNode) cparser.getAST();
 		}
 		catch (RecognitionException e)
 		{
+			logger.debug(stringcode);
 			logger.error(new LogMessage(e.getMessage(), "", e.getLine(), e.getColumn()), e);
 			return;
 		}
@@ -440,7 +452,7 @@ public class CwCWeaver implements WEAVER
 	{
 		// find injection AST
 		TNode weaveNode = null;
-		modDecl.getAST().doubleLink();
+		// modDecl.getAST().doubleLink();
 
 		for (FunctionDeclaration func : modDecl.getFunctions())
 		{
@@ -448,7 +460,11 @@ public class CwCWeaver implements WEAVER
 			{
 				// the function's AST points to the "name" part, it should go up
 				// 2 levels to get to the declaration part
-				weaveNode = func.getAST().getParent().getParent();
+				weaveNode = func.getBaseTypeAST();// .getParent().getParent();
+				if (weaveNode == null)
+				{
+					weaveNode = func.getAST();
+				}
 				break;
 			}
 		}
@@ -587,5 +603,180 @@ public class CwCWeaver implements WEAVER
 				}
 				break;
 		}
+	}
+
+	static class CompositeScope extends BlockScopeImpl
+	{
+		protected BlockScope parent1;
+
+		protected BlockScope parent2;
+
+		public CompositeScope(BlockScope scope1, BlockScope scope2)
+		{
+			super(null, false);
+			parent1 = scope1;
+			parent2 = scope2;
+		}
+
+		@Override
+		public BlockScope getNewChild(boolean functionBlockScope)
+		{
+			return new BlockScopeImpl(this, functionBlockScope);
+		}
+
+		@Override
+		public void addDeclaration(CNamespaceKind kind, Declaration declaration)
+		{
+			throw new UnsupportedOperationException("addDeclaration");
+		}
+
+		@Override
+		public void addDefinition(CNamespaceKind kind, Declaration declaration)
+		{
+			throw new UnsupportedOperationException("addDeclaration");
+		}
+
+		@Override
+		public Declaration get(CNamespaceKind kind, String id)
+		{
+			Declaration result = parent1.get(kind, id);
+			if (result == null)
+			{
+				result = parent1.get(kind, id);
+			}
+			return result;
+		}
+
+		@Override
+		public Collection<Declaration> getAll(CNamespaceKind kind, String id)
+		{
+			Collection<Declaration> result = new HashSet<Declaration>();
+			Collection<Declaration> x;
+			x = parent1.getAll(kind, id);
+			if (x != null)
+			{
+				result.addAll(x);
+			}
+			x = parent2.getAll(kind, id);
+			if (x != null)
+			{
+				result.addAll(x);
+			}
+			return result;
+		}
+
+		@Override
+		public Collection<BlockScope> getChildren()
+		{
+			Collection<BlockScope> result = new HashSet<BlockScope>();
+			Collection<BlockScope> x;
+			x = parent1.getChildren();
+			if (x != null)
+			{
+				result.addAll(x);
+			}
+			x = parent2.getChildren();
+			if (x != null)
+			{
+				result.addAll(x);
+			}
+			return null;
+		}
+
+		@Override
+		public Namespace getNamespace(CNamespaceKind kind)
+		{
+			Namespace result = parent1.getNamespace(kind);
+			if (result == null)
+			{
+				parent2.getNamespace(kind);
+			}
+			return result;
+		}
+
+		@Override
+		public BlockScope getParent()
+		{
+			return null;
+		}
+
+		@Override
+		public Set<String> keySet(CNamespaceKind kind)
+		{
+			Set<String> result = new HashSet<String>();
+			Set<String> x;
+			x = parent1.keySet(kind);
+			if (x != null)
+			{
+				result.addAll(x);
+			}
+			x = parent2.keySet(kind);
+			if (x != null)
+			{
+				result.addAll(x);
+			}
+			return result;
+		}
+
+		@Override
+		public Set<String> localKeySet(CNamespaceKind kind)
+		{
+			Set<String> result = new HashSet<String>();
+			Set<String> x;
+			x = parent1.localKeySet(kind);
+			if (x != null)
+			{
+				result.addAll(x);
+			}
+			x = parent2.localKeySet(kind);
+			if (x != null)
+			{
+				result.addAll(x);
+			}
+			return result;
+		}
+
+		@Override
+		public Set<String> objectKeySet(CNamespaceKind kind)
+		{
+			Set<String> result = new HashSet<String>();
+			Set<String> x;
+			x = parent1.objectKeySet(kind);
+			if (x != null)
+			{
+				result.addAll(x);
+			}
+			x = parent2.objectKeySet(kind);
+			if (x != null)
+			{
+				result.addAll(x);
+			}
+			return result;
+		}
+
+		@Override
+		public boolean isParameterScope()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean isRootScope()
+		{
+			return false;
+		}
+
+		@Override
+		public void printNonrecursive(RecursivePrinter rp)
+		{
+		// nop
+		}
+
+		@Override
+		public void printRecursive(RecursivePrinter rp)
+		{
+		// n op
+		}
+
 	}
 }
