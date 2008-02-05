@@ -276,7 +276,7 @@
 		<ant target="test" dir="${build.c}" inheritRefs="true" />
 	</target>
 	
-	<target name="test_cwc" depends="init" if="enabled.c">
+	<target name="test_cwc" depends="init" if="enabled.cwc">
 		<ant target="test" dir="${build.cwc}" inheritRefs="true" />
 	</target>
 
