@@ -84,6 +84,7 @@ import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
 import Composestar.Utils.Logging.OutputStreamRedirector;
+import Composestar.Utils.Perf.CPSTimer;
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 
@@ -129,6 +130,8 @@ public class CwCWeaver implements WEAVER
 	 */
 	protected PreprocessorInfoChannel cshPIC;
 
+	protected CPSTimer timer;
+
 	public CwCWeaver()
 	{}
 
@@ -139,6 +142,8 @@ public class CwCWeaver implements WEAVER
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
+		timer = CPSTimer.getTimer(MODULE_NAME);
+
 		codeGen = new CCodeGenerator();
 		codeGen.register(new CDispatchActionCodeGen(inlinerRes));
 		// TODO: add all code gens
@@ -175,6 +180,7 @@ public class CwCWeaver implements WEAVER
 			FileWriter output;
 			try
 			{
+				timer.start("Emitting file " + target.toString());
 				output = new FileWriter(target);
 				PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
 
@@ -194,6 +200,7 @@ public class CwCWeaver implements WEAVER
 				// emitter.tracings = System.err;
 				emitter.translationUnit(tunit.getModuleDeclaration().getAST());
 				output.close();
+				timer.stop();
 			}
 			catch (IOException e)
 			{
@@ -261,6 +268,7 @@ public class CwCWeaver implements WEAVER
 
 		// re-get the stream
 		cshstream = getComposeStarFile(true);
+		timer.start("Parsing ComposeStar.h");
 
 		AspectCLexer lexer = new AspectCLexer(cshstream);
 		lexer.setSource("ComposeStar.h");
@@ -286,6 +294,7 @@ public class CwCWeaver implements WEAVER
 		{
 			logger.error(e, e);
 		}
+		timer.stop();
 	}
 
 	protected void copyComposeStarC(File dest) throws ModuleException
@@ -337,6 +346,7 @@ public class CwCWeaver implements WEAVER
 		}
 
 		logger.info(String.format("Weaving concern %s", concern.getQualifiedName()));
+		timer.start("Weaving concern " + concern.getName());
 
 		CwCFile type = (CwCFile) concern.getPlatformRepresentation();
 
@@ -379,6 +389,8 @@ public class CwCWeaver implements WEAVER
 		{
 			injectComposestarHInclude(type.getModuleDeclaration());
 		}
+
+		timer.stop();
 	}
 
 	/**

@@ -75,13 +75,9 @@ public class TypeHarvester implements HarvestRunner
 	public void run(CommonResources resources) throws ModuleException
 	{
 		initWeaveC();
-		long memUsage = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-		logger.debug(String.format("Memory usage: %d (%d MiB)", memUsage, (memUsage / 1024 / 1024)));
 		for (Source src : resources.configuration().getProject().getSources())
 		{
 			harvest(src);
-			memUsage = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-			logger.debug(String.format("Memory usage: %d (%d MiB)", memUsage, (memUsage / 1024 / 1024)));
 		}
 	}
 

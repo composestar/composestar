@@ -59,6 +59,9 @@ TR.event TD.eventtext {
 					<tr>
 						<th>Name / Message</th>
 						<th>Duration (ms)</th>
+						<th title="Note: estimated, garbage collection during the events influences the results.">
+							Memory &#948;
+						</th>
 					</tr>
 					<xsl:apply-templates select="timer/timer">
 						<xsl:sort data-type="number" select="@creation" />
@@ -70,7 +73,7 @@ TR.event TD.eventtext {
 
 	<xsl:template match="timer">
 		<tr class="timername">
-			<td colspan="2">
+			<td colspan="3">
 				<xsl:value-of select="@name" />
 			</td>
 		</tr>
@@ -89,6 +92,30 @@ TR.event TD.eventtext {
 			</td>
 			<td class="number">
 				<xsl:value-of select="format-number(@duration div 1000000, '0.00')" />
+			</td>
+			<td class="number">
+				<xsl:choose>
+					<xsl:when test="@memory &gt; 1048576">
+						<xsl:value-of select="format-number(@memory div 1048576, '0.00')" />
+						<xsl:text> MiB</xsl:text>
+					</xsl:when>
+					<xsl:when test="@memory &gt; 1024">
+						<xsl:value-of select="format-number(@memory div 1024, '0.00')" />
+						<xsl:text> KiB</xsl:text>
+					</xsl:when>
+					<xsl:when test="@memory &lt; -1048576">
+						<xsl:value-of select="format-number(@memory div 1048576, '0.00')" />
+						<xsl:text> MiB</xsl:text>
+					</xsl:when>
+					<xsl:when test="@memory &lt; -1024">
+						<xsl:value-of select="format-number(@memory div 1024, '0.00')" />
+						<xsl:text> KiB</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@memory" />
+						<xsl:text> B</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
 			</td>
 		</tr>
 	</xsl:template>

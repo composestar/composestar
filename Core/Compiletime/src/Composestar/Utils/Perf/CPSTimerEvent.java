@@ -35,11 +35,14 @@ public class CPSTimerEvent
 
 	protected long stopTime;
 
-	public CPSTimerEvent(String eventMessage, long eventStart, long eventStop)
+	protected long memoryDelta;
+
+	public CPSTimerEvent(String eventMessage, long eventStart, long eventStop, long eventMemoryDelta)
 	{
 		message = eventMessage;
 		startTime = eventStart;
 		stopTime = eventStop;
+		memoryDelta = eventMemoryDelta;
 		// System.out.println(toString());
 	}
 
@@ -80,6 +83,16 @@ public class CPSTimerEvent
 			return stopTime - startTime;
 		}
 		return -1L;
+	}
+
+	/**
+	 * Get the memory usage delta (estimated) between start and stop in bytes;
+	 * 
+	 * @return
+	 */
+	public long getMemoryDelta()
+	{
+		return memoryDelta;
 	}
 
 	@Override

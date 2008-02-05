@@ -188,7 +188,8 @@ public class CTypeToStringConverter
 
 	protected void convertEnumType(StringBuffer sb, EnumType type)
 	{
-		System.err.println("convertEnumType not implemented");
+		sb.append("enum ");
+		sb.append(type.getDeclaration().getName());
 	}
 
 	protected void convertStructUnionType(StringBuffer sb, StructUnionType type)

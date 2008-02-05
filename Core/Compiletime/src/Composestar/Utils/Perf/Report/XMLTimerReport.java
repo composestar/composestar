@@ -152,6 +152,7 @@ public class XMLTimerReport implements CPSTimerReport
 				eventNode.setAttribute("start", "" + event.getStart());
 				eventNode.setAttribute("stop", "" + event.getStop());
 				eventNode.setAttribute("duration", "" + event.getDuration());
+				eventNode.setAttribute("memory", "" + event.getMemoryDelta());
 				eventNode.setTextContent(event.getMessage());
 				node.appendChild(eventNode);
 			}

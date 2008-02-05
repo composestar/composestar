@@ -40,6 +40,13 @@ public class CPSTimer
 {
 	private static final int MAX_NESTING = 5;
 
+	/**
+	 * If true garbage collection will be issues before and after the timing
+	 * event. This provides better memory delta's, but is a large performance
+	 * hit
+	 */
+	private static final boolean agressiveMemoryProfiling = false || Boolean.getBoolean("agressiveMemoryProfiling");
+
 	protected static final CPSTimerRepository repository = new CPSTimerRepository();
 
 	protected long creationTime;
@@ -49,6 +56,8 @@ public class CPSTimer
 	protected String[] currentMessage = new String[MAX_NESTING];
 
 	protected long[] currentStart = new long[MAX_NESTING];
+
+	protected long[] currentMemory = new long[MAX_NESTING];
 
 	protected int idx;
 
@@ -163,6 +172,11 @@ public class CPSTimer
 			return;
 		}
 		currentMessage[idx] = msg;
+		if (agressiveMemoryProfiling)
+		{
+			Runtime.getRuntime().gc();
+		}
+		currentMemory[idx] = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 		currentStart[idx] = System.nanoTime();
 		++idx;
 	}
@@ -186,6 +200,11 @@ public class CPSTimer
 	public synchronized void stop()
 	{
 		long stopTime = System.nanoTime();
+		if (agressiveMemoryProfiling)
+		{
+			Runtime.getRuntime().gc();
+		}
+		long stopMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 		--idx;
 		if (idx < 0)
 		{
@@ -215,12 +234,13 @@ public class CPSTimer
 
 			// shouldn't happen
 			addEvent(new CPSTimerEvent("Timer results are corrupt, stop() calls outnumber the start() calls. Trace: "
-					+ stackTrace.toString(), 0, 0));
+					+ stackTrace.toString(), 0, 0, 0));
 			idx = 0;
 			return;
 		}
-		addEvent(new CPSTimerEvent(currentMessage[idx], currentStart[idx], stopTime));
+		addEvent(new CPSTimerEvent(currentMessage[idx], currentStart[idx], stopTime, stopMemory - currentMemory[idx]));
 		currentMessage[idx] = "";
+		currentMemory[idx] = 0;
 		currentStart[idx] = 0;
 	}
 
