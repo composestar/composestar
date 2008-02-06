@@ -14,12 +14,16 @@ public class JavaMaster extends Master
 	protected static final int[] MIN_JAVA_VERSION = { 1, 6 };
 
 	@Override
-	protected void loadConfiguration() throws Exception
+	protected boolean loadConfiguration() throws Exception
 	{
-		super.loadConfiguration();
+		if (!super.loadConfiguration())
+		{
+			return false;
+		}
 		DefaultFilterFactory filterFactory = new DefaultFilterFactory(resources.repository());
 		filterFactory.addLegacyFilterTypes();
 		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
+		return true;
 	}
 
 	protected static boolean hasMinJavaVersion()
@@ -54,11 +58,8 @@ public class JavaMaster extends Master
 		super.initEvironment();
 		if (!hasMinJavaVersion())
 		{
-			logger
-					.error(String
-							.format(
-									"The JavaVM does not meet the minimum version requirement. Please update the JavaVM to at least version %s",
-									Arrays.toString(MIN_JAVA_VERSION)));
+			logger.error(String.format("The JavaVM does not meet the minimum version requirement. "
+					+ "Please update the JavaVM to at least version %s", Arrays.toString(MIN_JAVA_VERSION)));
 			throw new UnsupportedOperationException("Outdated JavaVM");
 		}
 	}
@@ -71,12 +72,7 @@ public class JavaMaster extends Master
 	 */
 	public static void main(String[] args)
 	{
-		if (args.length == 0)
-		{
-			System.out.println("Usage: java -jar ComposestarJava.jar [options] <config file>");
-			return;
-		}
-		main(JavaMaster.class, args);
+		main(JavaMaster.class, "ComposestarJava.jar", args);
 	}
 
 }

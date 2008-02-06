@@ -28,12 +28,16 @@ public class DotNETMaster extends Master
 	}
 
 	@Override
-	protected void loadConfiguration() throws Exception
+	protected boolean loadConfiguration() throws Exception
 	{
-		super.loadConfiguration();
+		if (!super.loadConfiguration())
+		{
+			return false;
+		}
 		DefaultFilterFactory filterFactory = new DefaultFilterFactory(resources.repository());
 		filterFactory.addLegacyFilterTypes();
 		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
+		return true;
 	}
 
 	/**
@@ -44,11 +48,6 @@ public class DotNETMaster extends Master
 	 */
 	public static void main(String[] args)
 	{
-		if (args.length == 0)
-		{
-			System.out.println("Usage: java -jar ComposestarDotNET.jar [options] <config file>");
-			return;
-		}
-		main(DotNETMaster.class, args);
+		main(DotNETMaster.class, "ComposestarDotNET.jar", args);
 	}
 }

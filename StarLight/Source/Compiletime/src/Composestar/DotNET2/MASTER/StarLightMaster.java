@@ -73,12 +73,25 @@ public class StarLightMaster extends Master
 	 * @see Composestar.Core.Master.Master#loadConfiguration()
 	 */
 	@Override
-	protected void loadConfiguration() throws Exception
+	protected boolean loadConfiguration() throws Exception
 	{
-		File configFile = new File(configFilename);
-		if (!configFile.exists())
+		File configFile;
+		if (configFilename == null)
 		{
-			throw new Exception("Configuration file '" + configFilename + " not found!");
+			configFile = new File("starlight.xml");
+		}
+		else
+		{
+			configFile = new File(configFilename);
+		}
+		if (!configFile.canRead())
+		{
+			if (parser != null && configFilename == null)
+			{
+				parser.printUsage(System.out);
+				return false;
+			}
+			throw new Exception("Unable to open configuration file: '" + configFile.toString() + "'");
 		}
 
 		logger.info("Using configuration file '" + configFilename + "'");
@@ -190,6 +203,7 @@ public class StarLightMaster extends Master
 				}
 			}
 		}
+		return true;
 	}
 
 	/*
@@ -211,11 +225,6 @@ public class StarLightMaster extends Master
 	 */
 	public static void main(String[] args)
 	{
-		if (args.length == 0)
-		{
-			System.out.println("Usage: java -jar StarLight.jar [options] <config file>");
-			return;
-		}
-		main(StarLightMaster.class, args);
+		main(StarLightMaster.class, "StarLight.jar", args);
 	}
 }

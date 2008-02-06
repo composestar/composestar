@@ -102,10 +102,16 @@ public abstract class Master
 
 	protected boolean debugOverride;
 
+	/**
+	 * The commandline parser
+	 */
+	protected CmdLineParser parser;
+
 	public Master()
 	{
 		settingsOverride = new HashMap<String, String>();
 		loggerSetup();
+		parser = new CmdLineParser();
 		initEvironment();
 	}
 
@@ -234,15 +240,44 @@ public abstract class Master
 	 * 
 	 * @param parser
 	 */
-	protected void addCmdLineOptions(CmdLineParser parser)
+	protected void addCmdLineOptions()
 	{
-		parser.addOption(new CmdLineParser.StringOption('d', "log-level"));
-		parser.addOption(new CmdLineParser.StringOption('t', "threshold"));
-		parser.addOption(new CmdLineParser.StringListOption('D'));
-		parser.addOption(new CmdLineParser.StringOption('L', "log4j-config"));
-		parser.addOption(new CmdLineParser.StringOption('P', "platform"));
-		parser.addOption(new CmdLineParser.StringOption("log4j-network"));
-		parser.setDefaultOption(new CmdLineParser.StringOption());
+		parser.addOption(new CmdLineParser.SwitchOption('?', "help",
+				"Show information on various accepted commandline options."));
+		parser.addOption(new CmdLineParser.SwitchOption('V', "version", "Show the version."));
+		parser.addOption(new CmdLineParser.StringOption('d', "log-level", "Define the detail level of the log events."
+				+ "Accepted values are: ERROR, WARN, INFO, DEBUG, TRACE"));
+		parser.addOption(new CmdLineParser.StringOption('t', "threshold",
+				"The log level threshold for message to be send to the standard error rather than the standard out. "
+						+ "The values are the same as for the log level option."));
+
+		CmdLineParser.StringListOption slo = new CmdLineParser.StringListOption('D');
+		slo.setDescription("Set a configuration option. These are identical to the settings entries in the build "
+				+ "configuration. This option has be used more than once.");
+		slo.setHelpValue("key=value");
+		parser.addOption(slo);
+
+		CmdLineParser.StringOption so = new CmdLineParser.StringOption('L', "log4j-config");
+		so.setDescription("Set the log4j configuration file. When this is not specified the default "
+				+ "configuration will be used.");
+		so.setHelpValue("file");
+		parser.addOption(so);
+
+		so = new CmdLineParser.StringOption('P', "platform");
+		so.setDescription("A custom platform configuration to use.");
+		so.setHelpValue("file");
+		parser.addOption(so);
+
+		so = new CmdLineParser.StringOption("log4j-network");
+		so.setDescription("Log to a network socket (can be used with ChainSaw).");
+		so.setHelpValue("host:port");
+		parser.addOption(so);
+
+		so = new CmdLineParser.StringOption();
+		so.setDescription("The build configuration file to use. When it is omitted Compose*"
+				+ "will search for a file called BuildConfiguration.xml in the current directory.");
+		so.setHelpValue("BuildConfiguration.xml");
+		parser.setDefaultOption(so);
 	}
 
 	/**
@@ -250,7 +285,7 @@ public abstract class Master
 	 * 
 	 * @param parser
 	 */
-	protected void procCmdLineOptions(CmdLineParser parser)
+	protected boolean procCmdLineOptions()
 	{
 		CmdLineParser.StringOption so;
 		so = parser.getOption("log4j-config");
@@ -331,6 +366,29 @@ public abstract class Master
 				settingsOverride.put(setting[0] + "." + setting[1], setting[3]);
 			}
 		}
+		if (parser.getDefaultOption() instanceof CmdLineParser.StringOption)
+		{
+			so = (CmdLineParser.StringOption) parser.getDefaultOption();
+			if (so.isSet())
+			{
+				configFilename = so.getValue();
+			}
+		}
+
+		CmdLineParser.SwitchOption sw;
+		sw = parser.getOption("help");
+		if (sw != null && sw.isSet())
+		{
+			parser.printUsage(System.out);
+			return false;
+		}
+		sw = parser.getOption("version");
+		if (sw != null && sw.isSet())
+		{
+			Version.reportVersion(System.out);
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -338,94 +396,11 @@ public abstract class Master
 	 * 
 	 * @param args
 	 */
-	public void processCmdArgs(String[] args)
+	public boolean processCmdArgs(String[] args)
 	{
-		for (String arg : args)
-		{
-			if (arg.startsWith("-d"))
-			{
-				setLogLevel(arg.substring(2));
-				debugOverride = true;
-			}
-			else if (arg.startsWith("-t"))
-			{
-				int et = Integer.parseInt(arg.substring(2));
-
-				Logger root = Logger.getRootLogger();
-				ConsoleAppender errAppender = new ConsoleAppender(new CPSPatternLayout("[%c] %p: %m%n"),
-						ConsoleAppender.SYSTEM_ERR);
-				LevelRangeFilter rangeFilter = new LevelRangeFilter();
-				rangeFilter.setLevelMax(Level.FATAL);
-				rangeFilter.setLevelMin(debugModeToLevel(et));
-				errAppender.addFilter(rangeFilter);
-				root.addAppender(errAppender);
-			}
-			else if (arg.startsWith("-D"))
-			{
-				// -D<module>.<setting>=<value>
-				String[] setting = arg.substring(2).split("\\.|=", 3);
-				if (setting.length != 3)
-				{
-					System.err.println("Correct format is: -D<module>.<setting>=<value>");
-					continue;
-				}
-				settingsOverride.put(setting[0] + "." + setting[1], setting[3]);
-			}
-			else if (arg.startsWith("-L="))
-			{
-				// override Log4J configuration, must be before a -d setting
-				// -L=<filename>
-				arg = arg.substring(3);
-				LogManager.resetConfiguration();
-				PropertyConfigurator.configure(arg);
-				if (!Logger.getRootLogger().isAttached(logMetrics))
-				{
-					Logger.getRootLogger().addAppender(logMetrics);
-				}
-			}
-			else if (arg.startsWith("-P="))
-			{
-				// override the platform configuration
-				arg = arg.substring(3);
-				platformConfiguration = new File(arg);
-			}
-			else if (arg.startsWith("-LN"))
-			{
-				// log to net
-				String host = "127.0.0.1";
-				int port = 4445;
-				if (arg.startsWith("-LN="))
-				{
-					String[] hp = arg.substring(4).split(":");
-					if (hp.length > 1)
-					{
-						host = hp[0];
-					}
-					if (hp.length > 2)
-					{
-						try
-						{
-							port = Integer.parseInt(hp[1]);
-						}
-						catch (NumberFormatException nfe)
-						{
-							System.err.println(String.format("%s is not a valid host:port", arg.substring(4)));
-							port = 4445;
-						}
-					}
-				}
-				Logger.getRootLogger().addAppender(new SocketAppender(host, port));
-			}
-			else if (arg.startsWith("-"))
-			{
-				System.err.println("Unknown option " + arg);
-			}
-			else
-			{
-				// assume it's the config file
-				configFilename = arg;
-			}
-		}
+		addCmdLineOptions();
+		parser.parse(args);
+		return procCmdLineOptions();
 	}
 
 	/**
@@ -505,11 +480,24 @@ public abstract class Master
 	 * 
 	 * @throws Exception
 	 */
-	protected void loadConfiguration() throws Exception
+	protected boolean loadConfiguration() throws Exception
 	{
-		File configFile = new File(configFilename);
+		File configFile;
+		if (configFilename == null)
+		{
+			configFile = new File("BuildConfiguration.xml");
+		}
+		else
+		{
+			configFile = new File(configFilename);
+		}
 		if (!configFile.canRead())
 		{
+			if (parser != null && configFilename == null)
+			{
+				parser.printUsage(System.out);
+				return false;
+			}
 			throw new Exception("Unable to open configuration file: '" + configFile.toString() + "'");
 		}
 
@@ -530,6 +518,8 @@ public abstract class Master
 		{
 			config.addSetting(override.getKey(), override.getValue());
 		}
+
+		return true;
 	}
 
 	/**
@@ -651,22 +641,8 @@ public abstract class Master
 		}
 	}
 
-	protected static void main(Class<? extends Master> masterClass, String[] args)
+	protected static void main(Class<? extends Master> masterClass, String jarName, String[] args)
 	{
-		if (args.length == 0)
-		{
-			System.err.println("No build configuration provided");
-			System.exit(EFAIL);
-			return;
-		}
-
-		String arg = args[0].toLowerCase();
-		if (arg.equals("-v") || arg.equals("--version"))
-		{
-			Version.reportVersion(System.out);
-			return;
-		}
-
 		Master master;
 		try
 		{
@@ -679,11 +655,23 @@ public abstract class Master
 			System.exit(EFAIL);
 			return;
 		}
-		master.processCmdArgs(args);
+		if (master.parser != null)
+		{
+			master.parser.setStartCommand(String.format("java -jar %s", jarName));
+		}
+		if (!master.processCmdArgs(args))
+		{
+			System.exit(ECONFIG);
+			return;
+		}
 		try
 		{
 			master.loadPlatform();
-			master.loadConfiguration();
+			if (!master.loadConfiguration())
+			{
+				System.exit(ECONFIG);
+				return;
+			}
 		}
 		catch (Exception e)
 		{

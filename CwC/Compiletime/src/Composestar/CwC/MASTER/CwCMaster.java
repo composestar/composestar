@@ -50,11 +50,14 @@ public class CwCMaster extends Master
 	protected List<String> cfiles, cpsfiles;
 
 	@Override
-	protected void loadConfiguration() throws Exception
+	protected boolean loadConfiguration() throws Exception
 	{
-		if (configFilename != null)
+		if (cfiles.size() == 0)
 		{
-			super.loadConfiguration();
+			if (!super.loadConfiguration())
+			{
+				return false;
+			}
 		}
 		else
 		{
@@ -101,26 +104,40 @@ public class CwCMaster extends Master
 				FilterTypeNames.BEFORE, FilterTypeNames.AFTER, FilterTypeNames.SUBSTITUTION };
 		filterFactory.createFilterTypes(filters);
 		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
+
+		return true;
 	}
 
 	@Override
-	public void processCmdArgs(String[] args)
+	public boolean processCmdArgs(String[] args)
 	{
-		CmdLineParser parser = new CmdLineParser();
-		super.addCmdLineOptions(parser);
-		CmdLineParser.SwitchOption ispped = new CmdLineParser.SwitchOption("preprocessed");
-		parser.addOption(ispped);
+		super.addCmdLineOptions();
+		CmdLineParser.SwitchOption notPPed = new CmdLineParser.SwitchOption('N', "notpreprocessed");
+		notPPed.setDescription("The input files have not been preprocessed yet. "
+				+ "This is identical to providing the switch: -D PreCOMP.preprocessed=false");
+		parser.addOption(notPPed);
 		CmdLineParser.StringOption intermed = new CmdLineParser.StringOption('i', "intermediate");
+		intermed.setHelpValue("directory");
+		intermed.setDescription("The directory where the intermediate files should be stored.");
 		parser.addOption(intermed);
 		CmdLineParser.StringListOption fileList = new CmdLineParser.StringListOption();
+		fileList
+				.setDescription("You can either provide a single BuildConfiguration.xml or a list of files. "
+						+ "When a list of files is given all files ending with .cps are considered concern files, "
+						+ "and all other files will be considered C source files. "
+						+ "If no files are given Compose* will try to load the file BuildConfiguration.xml in the current directory.");
+		fileList.setHelpValue("file");
 		parser.setDefaultOption(fileList);
 
 		parser.parse(args);
-		procCmdLineOptions(parser);
-
-		if (ispped.isSet() && ispped.getValue())
+		if (!procCmdLineOptions())
 		{
-			settingsOverride.put("PreCOMP.preprocessed", "true");
+			return false;
+		}
+
+		if (notPPed.isSet() && notPPed.getValue())
+		{
+			settingsOverride.put("PreCOMP.preprocessed", "false");
 		}
 		if (intermed.isSet())
 		{
@@ -128,6 +145,10 @@ public class CwCMaster extends Master
 		}
 		cfiles = new ArrayList<String>();
 		cpsfiles = new ArrayList<String>();
+		if (fileList.isSet())
+		{
+			configFilename = null;
+		}
 		for (String file : fileList.getValue())
 		{
 			String locfile = file.toLowerCase();
@@ -136,15 +157,17 @@ public class CwCMaster extends Master
 				// we assume it's the buildconfig
 				configFilename = file;
 			}
-			else if (locfile.endsWith(".c"))
-			{
-				cfiles.add(file);
-			}
 			else if (locfile.endsWith(".cps"))
 			{
 				cpsfiles.add(file);
 			}
+			else
+			{
+				// assume it's a source file
+				cfiles.add(file);
+			}
 		}
+		return true;
 	}
 
 	/**
@@ -152,12 +175,6 @@ public class CwCMaster extends Master
 	 */
 	public static void main(String[] args)
 	{
-		if (args.length == 0)
-		{
-			System.out.println("Usage: java -jar ComposestarCwC.jar [options] <config file>");
-			return;
-		}
-		main(CwCMaster.class, args);
+		main(CwCMaster.class, "ComposestarCwC.jar", args);
 	}
-
 }

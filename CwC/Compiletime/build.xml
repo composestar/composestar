@@ -53,6 +53,7 @@
 				<include name="Composestar/CwC/WEAVER/ComposeStar.*" />
 				<include name="INCREconfig.xml" />
 				<include name="Platforms.xml" />
+				<include name="log4j.properties" />
 			</fileset>
 		</copy>
 		<jar destfile="${out.dist}/lib/ComposestarCwC.jar" basedir="${out.build}" manifest="src/MANIFEST.MF" />

@@ -50,7 +50,7 @@ $(objects) : %.o : $(WOVEN)/%.c
 # Performs the actual weaving	
 .PHONY : weave
 weave : $(ppSources)
-	java -jar $(COMPOSESTAR) --preprocessed --intermediate $(INTERMED) $(ppSources) $(concerns)
+	java -jar $(COMPOSESTAR) --intermediate $(INTERMED) $(ppSources) $(concerns)
 
 # dummy, to fake weaving
 #$(WOVEN)/%.c : $(PREPROCESSED)/%.c

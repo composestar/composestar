@@ -24,10 +24,12 @@
 
 package Composestar.Utils;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -52,6 +54,8 @@ public class CmdLineParser
 	protected Map<Character, Option<?>> shortOptions;
 
 	protected Map<String, Option<?>> longOptions;
+
+	protected String startCommand = "";
 
 	/**
 	 * The default option, it will accept the commandline arguments without a -
@@ -125,7 +129,7 @@ public class CmdLineParser
 					Option<?> opt = shortOptions.get(sname);
 					if (opt == null)
 					{
-						logger.error(String.format("Unknown option %s%s", SHORT_PREFIX, lname));
+						logger.error(String.format("Unknown option %s%s", SHORT_PREFIX, sname));
 						i++;
 						continue;
 					}
@@ -136,7 +140,7 @@ public class CmdLineParser
 							i++;
 							if (i >= args.length)
 							{
-								logger.error(String.format("Missing value for %s%s", SHORT_PREFIX, lname));
+								logger.error(String.format("Missing value for %s%s", SHORT_PREFIX, sname));
 								continue;
 							}
 							lname = args[i];
@@ -158,16 +162,103 @@ public class CmdLineParser
 		}
 	}
 
+	public void setStartCommand(String val)
+	{
+		startCommand = val;
+	}
+
+	public void printUsage(PrintStream os)
+	{
+		Version.reportVersion(os);
+		os.println("");
+		os.println("Usage:");
+		os.print("\t");
+		os.print(startCommand);
+		os.print(" [options]");
+		if (defaultOption != null)
+		{
+			if (defaultOption instanceof ListOption)
+			{
+				os.print(" " + defaultOption.getHelpValue() + " [...]");
+			}
+			else
+			{
+				os.print(" " + defaultOption.getHelpValue());
+			}
+		}
+		os.println("");
+		os.println("");
+		if (defaultOption != null && defaultOption.getDescription().length() > 0)
+		{
+			os.println(wordWrap(defaultOption.getDescription(), 72, System.getProperty("line.separator")));
+			os.println("");
+		}
+		os.println("Options:");
+		for (Option<?> opt : options)
+		{
+			if (opt.getShortName() != '\0')
+			{
+				if (opt.needsValue())
+				{
+					os.println(String.format("\t%s%s %s", SHORT_PREFIX, opt.getShortName(), opt.getHelpValue()));
+				}
+				else
+				{
+					os.println(String.format("\t%s%s", SHORT_PREFIX, opt.getShortName()));
+				}
+			}
+			if (opt.getLongName() != null)
+			{
+				if (opt.needsValue())
+				{
+					os.println(String.format("\t%s%s%s%s", LONG_PREFIX, opt.getLongName(), LONG_VALUE_DELIM, opt
+							.getHelpValue()));
+				}
+				else
+				{
+					os.println(String.format("\t%s%s", LONG_PREFIX, opt.getLongName()));
+				}
+			}
+			os.println("\t\t" + wordWrap(opt.getDescription(), 56, System.getProperty("line.separator") + "\t\t"));
+		}
+	}
+
+	public static String wordWrap(String text, int columns, String wraptoken)
+	{
+		StringBuffer result = new StringBuffer(text.length());
+		StringTokenizer tokens = new StringTokenizer(text, " \t\n\r", true);
+		int cnt = 0;
+		while (tokens.hasMoreTokens())
+		{
+			String token = tokens.nextToken();
+			int toklen = token.length();
+			if (cnt + toklen > columns)
+			{
+				result.append(wraptoken);
+				cnt = 0;
+			}
+			if (cnt == 0 && (token.equals(" ") || token.equals("\t")))
+			{
+				continue;
+			}
+			result.append(token);
+			cnt += toklen;
+		}
+		return result.toString();
+	}
+
 	public boolean addOption(Option<?> option)
 	{
 		char sname = option.getShortName();
 		String lname = option.getLongName();
 		if (sname != '\0' && shortOptions.containsKey(sname))
 		{
+			logger.error(String.format("There is alrady a command line option with the short name '%s'", sname));
 			return false;
 		}
 		if (lname != null && longOptions.containsKey(lname))
 		{
+			logger.error(String.format("There is alrady a command line option with the long name '%s'", lname));
 			return false;
 		}
 		options.add(option);
@@ -226,6 +317,11 @@ public class CmdLineParser
 		defaultOption = option;
 	}
 
+	public Option<?> getDefaultOption()
+	{
+		return defaultOption;
+	}
+
 	/**
 	 * A commandline option
 	 * 
@@ -238,6 +334,10 @@ public class CmdLineParser
 		protected char shortName;
 
 		T value;
+
+		protected String description = "";
+
+		protected String helpValue = "value";
 
 		protected boolean valueSet;
 
@@ -261,6 +361,14 @@ public class CmdLineParser
 			this();
 			shortName = sname;
 			longName = lname;
+		}
+
+		protected Option(char sname, String lname, String desc)
+		{
+			this();
+			shortName = sname;
+			longName = lname;
+			description = desc;
 		}
 
 		/**
@@ -307,6 +415,36 @@ public class CmdLineParser
 		{
 			return true;
 		}
+
+		/**
+		 * Set a help description to use when printing the usage
+		 * 
+		 * @param value
+		 */
+		public void setDescription(String value)
+		{
+			description = value;
+		}
+
+		public String getDescription()
+		{
+			return description;
+		}
+
+		public void setHelpValue(String val)
+		{
+			helpValue = val;
+		}
+
+		/**
+		 * Return the help string to use as "value" when printing the usage
+		 * 
+		 * @return
+		 */
+		public String getHelpValue()
+		{
+			return helpValue;
+		}
 	}
 
 	public static class SwitchOption extends Option<Boolean>
@@ -331,6 +469,11 @@ public class CmdLineParser
 			super(name);
 		}
 
+		public SwitchOption(char sname, String lname, String desc)
+		{
+			super(sname, lname, desc);
+		}
+
 		@Override
 		public boolean needsValue()
 		{
@@ -351,11 +494,9 @@ public class CmdLineParser
 
 	public static class StringOption extends Option<String>
 	{
-
 		public StringOption()
 		{
 			super();
-
 		}
 
 		public StringOption(char sname, String lname)
@@ -371,6 +512,11 @@ public class CmdLineParser
 		public StringOption(String name)
 		{
 			super(name);
+		}
+
+		public StringOption(char sname, String lname, String desc)
+		{
+			super(sname, lname, desc);
 		}
 
 		@Override
@@ -391,6 +537,7 @@ public class CmdLineParser
 		public IntOption()
 		{
 			super();
+			helpValue = "integer";
 		}
 
 		public IntOption(char sname, String lname)
@@ -408,6 +555,11 @@ public class CmdLineParser
 			super(name);
 		}
 
+		public IntOption(char sname, String lname, String desc)
+		{
+			super(sname, lname, desc);
+		}
+
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -418,6 +570,7 @@ public class CmdLineParser
 			value = Integer.parseInt(rawValue.trim());
 			valueSet = true;
 		}
+
 	}
 
 	public static class FloatOption extends Option<Float>
@@ -426,6 +579,7 @@ public class CmdLineParser
 		public FloatOption()
 		{
 			super();
+			helpValue = "float";
 		}
 
 		public FloatOption(char sname, String lname)
@@ -443,6 +597,11 @@ public class CmdLineParser
 			super(name);
 		}
 
+		public FloatOption(char sname, String lname, String desc)
+		{
+			super(sname, lname, desc);
+		}
+
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -455,7 +614,35 @@ public class CmdLineParser
 		}
 	}
 
-	public static class SwitchListOption extends Option<Integer>
+	public static abstract class ListOption<T> extends Option<T>
+	{
+		public ListOption()
+		{
+			super();
+		}
+
+		public ListOption(char sname, String lname)
+		{
+			super(sname, lname);
+		}
+
+		public ListOption(char name)
+		{
+			super(name);
+		}
+
+		public ListOption(String name)
+		{
+			super(name);
+		}
+
+		public ListOption(char sname, String lname, String desc)
+		{
+			super(sname, lname, desc);
+		}
+	}
+
+	public static class SwitchListOption extends ListOption<Integer>
 	{
 
 		public SwitchListOption()
@@ -478,6 +665,11 @@ public class CmdLineParser
 			super(name);
 		}
 
+		public SwitchListOption(char sname, String lname, String desc)
+		{
+			super(sname, lname, desc);
+		}
+
 		@Override
 		public boolean needsValue()
 		{
@@ -496,9 +688,8 @@ public class CmdLineParser
 		}
 	}
 
-	public static class StringListOption extends Option<List<String>>
+	public static class StringListOption extends ListOption<List<String>>
 	{
-
 		public StringListOption()
 		{
 			super();
@@ -520,6 +711,11 @@ public class CmdLineParser
 			super(name);
 		}
 
+		public StringListOption(char sname, String lname, String desc)
+		{
+			super(sname, lname, desc);
+		}
+
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -532,13 +728,13 @@ public class CmdLineParser
 		}
 	}
 
-	public static class IntListOption extends Option<List<Integer>>
+	public static class IntListOption extends ListOption<List<Integer>>
 	{
-
 		public IntListOption()
 		{
 			super();
 			value = new ArrayList<Integer>();
+			helpValue = "integer";
 		}
 
 		public IntListOption(char sname, String lname)
@@ -556,6 +752,11 @@ public class CmdLineParser
 			super(name);
 		}
 
+		public IntListOption(char sname, String lname, String desc)
+		{
+			super(sname, lname, desc);
+		}
+
 		@Override
 		public void parseValue(String rawValue)
 		{
@@ -568,13 +769,14 @@ public class CmdLineParser
 		}
 	}
 
-	public static class FloatListOption extends Option<List<Float>>
+	public static class FloatListOption extends ListOption<List<Float>>
 	{
 
 		public FloatListOption()
 		{
 			super();
 			value = new ArrayList<Float>();
+			helpValue = "float";
 		}
 
 		public FloatListOption(char sname, String lname)
@@ -590,6 +792,11 @@ public class CmdLineParser
 		public FloatListOption(String name)
 		{
 			super(name);
+		}
+
+		public FloatListOption(char sname, String lname, String desc)
+		{
+			super(sname, lname, desc);
 		}
 
 		@Override

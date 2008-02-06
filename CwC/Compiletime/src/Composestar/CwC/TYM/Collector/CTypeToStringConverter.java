@@ -262,6 +262,6 @@ public class CTypeToStringConverter
 
 	protected void convertUnspecifiedType(StringBuffer sb, UnspecifiedType type)
 	{
-		System.err.println("convertUnspecifiedType not implemented");
+	// can't say anything about this because it's not specified
 	}
 }

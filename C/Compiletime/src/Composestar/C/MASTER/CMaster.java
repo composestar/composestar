@@ -20,12 +20,16 @@ import Composestar.Core.Master.Master;
 public class CMaster extends Master
 {
 	@Override
-	protected void loadConfiguration() throws Exception
+	protected boolean loadConfiguration() throws Exception
 	{
-		super.loadConfiguration();
+		if (!super.loadConfiguration())
+		{
+			return false;
+		}
 		DefaultFilterFactory filterFactory = new DefaultFilterFactory(resources.repository());
 		filterFactory.addLegacyFilterTypes();
 		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
+		return true;
 	}
 
 	/**
@@ -37,11 +41,6 @@ public class CMaster extends Master
 	 */
 	public static void main(String[] args)
 	{
-		if (args.length == 0)
-		{
-			System.out.println("Usage: java -jar ComposestarC.jar [options] <config file>");
-			return;
-		}
-		main(CMaster.class, args);
+		main(CMaster.class, "ComposestarC.jar", args);
 	}
 }
