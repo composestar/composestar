@@ -49,8 +49,6 @@
 	</target>
 
 	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file">
-		<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${out.dist}" />
-
 		<copy file="lib/antlr/antlr.jar" todir="${out.dist}/lib" />
 		<copy file="lib/antlr/antlr-runtime-3.jar" todir="${out.dist}/lib" />
 		<copy file="lib/log4j/log4j-1.2.14.jar" todir="${out.dist}/lib" />
