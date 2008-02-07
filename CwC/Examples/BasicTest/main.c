@@ -6,7 +6,7 @@
   
 #include <stdio.h>
 #include "calc.h"
-#include "obj/woven/ComposeStar.h"
+#include "ComposeStar.h"
 
 
 void beforeSomeThing(JoinPointContext* jpc)

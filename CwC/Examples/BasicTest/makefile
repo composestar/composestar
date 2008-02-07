@@ -55,6 +55,11 @@ clean :
 $(PREPROCESSED)/%.c : %.c
 	$(CPP) -c $(CFLAGS) -dD -C -o $@ $<
 
+ComposeStar.h :
+	copy ..\..\Compiletime\src\Composestar\CwC\WEAVER\ComposeStar.h .
+
+main.c : ComposeStar.h
+
 ifeq ($(DOWEAVE), yes)
 
 # compile the woven sources
