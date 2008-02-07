@@ -144,7 +144,7 @@ public class CCodeGenerator extends StringCodeGenerator
 
 		if (createJPC)
 		{
-			sb.append("\tJoinPointContext __JPC;\n");
+			sb.append(String.format("\t%s %s;\n", getJPCType(false), getJPCVariable(false)));
 		}
 		if (hasReturnValue(method))
 		{
@@ -161,27 +161,28 @@ public class CCodeGenerator extends StringCodeGenerator
 		if (createJPC)
 		{
 			sb.append("\t/* init JPC */\n");
-			sb.append(String.format("\t__JPC.startSelector = \"%s\";\n", method.getName()));
+			sb.append(String.format("\t%s.startSelector = \"%s\";\n", getJPCVariable(false), method.getName()));
 			if (hasReturnValue(method))
 			{
-				sb.append("\t__JPC.returnValue = &returnValue;\n");
+				sb.append(String.format("\t%s.returnValue = &returnValue;\n", getJPCVariable(false)));
 			}
 			List<ParameterInfo> pis = method.getParameters();
-			sb.append(String.format("\t__JPC.argc = %d;\n", pis.size()));
+			sb.append(String.format("\t%s.argc = %d;\n", getJPCVariable(false), pis.size()));
 			if (pis.size() > 0)
 			{
-				sb.append(String.format("\t__JPC.argv = (void **) malloc(%d * sizeof(void *));\n", pis.size()));
+				sb.append(String.format("\t%s.argv = (void **) malloc(%d * sizeof(void *));\n", getJPCVariable(false),
+						pis.size()));
 				for (int i = 0; i < pis.size(); i++)
 				{
 					ParameterInfo pi = pis.get(i);
-					sb.append(String.format("\t__JPC.argv[%d] = &%s; /* %s */\n", i, pi.getName(), pi
-							.getParameterTypeString()));
+					sb.append(String.format("\t%s.argv[%d] = &%s; /* %s */\n", getJPCVariable(false), i, pi.getName(),
+							pi.getParameterTypeString()));
 				}
 			}
 			else
 			{
 				// requires #include <stdio.h>
-				sb.append("\t__JPC.argv = NULL;\n");
+				sb.append(String.format("\t%s.argv = ((void *)0);\n", getJPCVariable(false)));
 			}
 		}
 
@@ -337,5 +338,33 @@ public class CCodeGenerator extends StringCodeGenerator
 	public String emitDefaultFilterAction(FilterAction filterAction)
 	{
 		return "/* " + filterAction.getType() + " */ ;\n";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getJPCType()
+	 */
+	public String getJPCType(boolean asReference)
+	{
+		if (asReference)
+		{
+			return "JoinPointContext*";
+		}
+		return "JoinPointContext";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getJPCVariable()
+	 */
+	public String getJPCVariable(boolean asReference)
+	{
+		if (asReference)
+		{
+			return "&__JPC";
+		}
+		return "__JPC";
 	}
 }

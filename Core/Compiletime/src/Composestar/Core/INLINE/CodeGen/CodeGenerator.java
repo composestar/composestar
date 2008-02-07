@@ -234,4 +234,19 @@ public interface CodeGenerator<T> extends Visitor
 	 * need a JPC.
 	 */
 	void needJPC();
+
+	/**
+	 * Return the string representation of the JoinPointContext type.
+	 * 
+	 * @return
+	 */
+	String getJPCType(boolean asReference);
+
+	/**
+	 * Return the code to reference the JoinPointContext, for example to pass it
+	 * as an argument for a method call.
+	 * 
+	 * @return
+	 */
+	T getJPCVariable(boolean asReference);
 }

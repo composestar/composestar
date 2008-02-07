@@ -20,6 +20,7 @@ static int cstar_inner_register_size = 0;
  */
 int CSTAR_is_inner_call(int methodId) {
 	int i;
+	++methodId;
 	for (i = 0; i < cstar_inner_register_size; i++) {
 		if (cstar_inner_register[i] == methodId)
 			return 1;
@@ -32,6 +33,7 @@ int CSTAR_is_inner_call(int methodId) {
  */
 void CSTAR_set_inner_call(int methodId) {
 	int i;
+	++methodId;
 	for (i = 0; i < cstar_inner_register_size; i++) {
 		if (cstar_inner_register[i] == 0) {
 			cstar_inner_register[i] = methodId;
@@ -48,6 +50,12 @@ void CSTAR_set_inner_call(int methodId) {
 	}
 	assert(cstar_inner_register != NULL);
 	cstar_inner_register[i] = methodId;
+	// zero the other fields
+	i++;
+	while (i < cstar_inner_register_size) {
+		cstar_inner_register[i] = 0;
+		i++;
+	}
 }
 
 /**
@@ -55,6 +63,7 @@ void CSTAR_set_inner_call(int methodId) {
  */
 void CSTAR_reset_inner_call(int methodId) {
 	int i;
+	++methodId;
 	for (i = 0; i < cstar_inner_register_size; i++) {
 		if (cstar_inner_register[i] == methodId) {
 			cstar_inner_register[i] = 0;

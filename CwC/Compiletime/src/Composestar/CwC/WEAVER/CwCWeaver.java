@@ -68,6 +68,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INLINE.CodeGen.AdviceActionCodeGen;
 import Composestar.Core.INLINE.CodeGen.CodeGenerator;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
@@ -149,7 +150,7 @@ public class CwCWeaver implements WEAVER
 		codeGen = new CCodeGenerator();
 		codeGen.register(new CDispatchActionCodeGen(inlinerRes));
 		// codeGen.register(new CErrorActionCodeGen(inlinerRes));
-		// codeGen.register(new CAdviceActionCodeGen(inlinerRes));
+		codeGen.register(new AdviceActionCodeGen(inlinerRes));
 
 		FilterLoader filterLoader = resources.get(FilterLoader.RESOURCE_KEY);
 		if (filterLoader != null)
@@ -525,6 +526,11 @@ public class CwCWeaver implements WEAVER
 		{
 			if (tunit.getModuleDeclaration() == modDecl)
 			{
+				if (tunit.getRootScope().get(CNamespaceKind.OBJECT, "JoinPointContext") != null)
+				{
+					logger.info("ComposeStar.h already included, skipping weaving");
+					return;
+				}
 				PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
 				ppic.addLineForTokenNumber(incdirective, weaveNode.getTokenNumber() - 1);
 				return;
