@@ -41,6 +41,7 @@
 			<auxClasspath refid="lib.core" />
 			<auxClasspath>
 				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
+				<pathelement path="${build.cwc}${file.separator}Compiletime${file.separator}lib${file.separator}weavec.jar" />
 			</auxClasspath>
 		</findbugs>
 		<xslt in="${out.qa}${file.separator}findbugs-result.xml" out="${out.qa}${file.separator}findbugs-result.html" style="${findbugs.style}" />

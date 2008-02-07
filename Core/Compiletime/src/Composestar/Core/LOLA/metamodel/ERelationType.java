@@ -44,7 +44,8 @@ public enum ERelationType
 
 	// Class
 	CLASS("Class"), CHILD_CLASSES("ChildClasses"), PARENT_CLASS("ParentClass"), CHILD_METHODS("ChildMethods"),
-	CHILD_FIELDS("ChildFields"), PARAMETER_CLASS("ParameterClass"), METHOD_RETURN_CLASS("MethodReturnClass"),
+	CHILD_FIELDS("ChildFields"), PARAMETER_CLASS("ParameterClass"),
+	METHOD_RETURN_CLASS("MethodReturnClass"),
 	FIELD_CLASS("FieldClass"),
 	IMPLEMENTS("Implements"),
 
@@ -55,6 +56,7 @@ public enum ERelationType
 
 	// Method
 	CHILD_PARAMETERS("ChildParameters"), RETURN_CLASS("ReturnClass"), RETURN_INTERFACE("ReturnInterface"),
+	RETURN_TYPE("ReturnType"),
 
 	// Parameter
 	PARENT_METHOD("ParentMethod");
@@ -70,5 +72,10 @@ public enum ERelationType
 	public String toString()
 	{
 		return name;
+	}
+
+	public boolean equals(String other)
+	{
+		return name.equals(other);
 	}
 }

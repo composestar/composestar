@@ -49,7 +49,7 @@ public class CwCFile extends Type
 {
 	private static final long serialVersionUID = -6978972108837895349L;
 
-	protected ModuleDeclaration modDecl;
+	protected transient ModuleDeclaration modDecl;
 
 	protected String dirPath;
 

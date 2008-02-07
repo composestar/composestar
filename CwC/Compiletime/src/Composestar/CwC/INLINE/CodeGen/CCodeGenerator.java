@@ -334,11 +334,6 @@ public class CCodeGenerator extends StringCodeGenerator
 	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitDefaultFilterAction(Composestar.Core.INLINE.model.FilterAction)
 	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitDefaultFilterAction(Composestar.Core.INLINE.model.FilterAction)
-	 */
 	public String emitDefaultFilterAction(FilterAction filterAction)
 	{
 		return "/* " + filterAction.getType() + " */ ;\n";

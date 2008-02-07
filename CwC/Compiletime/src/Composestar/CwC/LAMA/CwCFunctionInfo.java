@@ -34,6 +34,8 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.ERelationType;
+import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
  * Defines the method info for the defined C functions.
@@ -44,7 +46,7 @@ public class CwCFunctionInfo extends MethodInfo
 {
 	private static final long serialVersionUID = -2567532950309340694L;
 
-	protected FunctionDeclaration funcDecl;
+	protected transient FunctionDeclaration funcDecl;
 
 	/**
 	 * If true this method has a varargs construction
@@ -170,20 +172,21 @@ public class CwCFunctionInfo extends MethodInfo
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if ("ParentClass".equals(argumentName) && "Class".equals(parent.getUnitType()))
+		if (ERelationType.PARENT_CLASS.equals(argumentName) && EUnitType.CLASS.equals(parent.getUnitType()))
 		{
 			return new UnitResult(parent);
 		}
-		else if ("ChildParameters".equals(argumentName))
+		else if (ERelationType.CHILD_PARAMETERS.equals(argumentName))
 		{
 			return new UnitResult(new HashSet<ProgramElement>(parameters));
 		}
-		else if ("ReturnClass".equals(argumentName) && "Class".equals(getReturnType().getUnitType()))
+		else if (ERelationType.RETURN_CLASS.equals(argumentName)
+				&& EUnitType.CLASS.equals(getReturnType().getUnitType()))
 		{
 			// this is never true, return type is of unittype "Type"
 			return new UnitResult(getReturnType());
 		}
-		else if ("ReturnType".equals(argumentName) && "Type".equals(getReturnType().getUnitType()))
+		else if (ERelationType.RETURN_TYPE.equals(argumentName) && EUnitType.TYPE.equals(getReturnType().getUnitType()))
 		{
 			// this is never true, return type is of unittype "Type"
 			return new UnitResult(getReturnType());

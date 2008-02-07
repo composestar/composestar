@@ -83,7 +83,9 @@ public class LangModelConverter implements CTCommonModule
 
 	protected CTypeToStringConverter converter;
 
-	public UnitRegister register;
+	protected UnitRegister register;
+
+	protected int duplicateTypeCtr;
 
 	public LangModelConverter()
 	{}
@@ -99,6 +101,7 @@ public class LangModelConverter implements CTCommonModule
 		stringTypeMapping = new HashMap<String, CwCType>();
 		annotTypeMapping = new HashMap<AnnotationType, CwCAnnotationType>();
 		stringAnnotTypeMapping = new HashMap<String, CwCAnnotationType>();
+		duplicateTypeCtr = 0;
 
 		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
 		if (register == null)
@@ -140,6 +143,10 @@ public class LangModelConverter implements CTCommonModule
 			type.setParentConcern(pc);
 			resources.repository().addObject(type.getFullName(), pc);
 		}
+		if (duplicateTypeCtr > 0)
+		{
+			logger.debug(String.format("Detected %d duplicate type declarations", duplicateTypeCtr));
+		}
 	}
 
 	/**
@@ -167,7 +174,8 @@ public class LangModelConverter implements CTCommonModule
 		if (stringTypeMapping.containsKey(typeDecl.getName()))
 		{
 			typeMapping.put(typeDecl.getType(), stringTypeMapping.get(typeDecl.getName()));
-			logger.debug(String.format("Type %s already contains a registered declaration", typeDecl.getName()));
+			logger.trace(String.format("Type %s already contains a registered declaration", typeDecl.getName()));
+			duplicateTypeCtr++;
 			return;
 		}
 		logger.debug(String.format("Creating LAMA Type for %s", typeDecl.getName()));
@@ -197,7 +205,8 @@ public class LangModelConverter implements CTCommonModule
 		if (stringTypeMapping.containsKey(annotDecl.getName()))
 		{
 			annotTypeMapping.put(annotDecl.getType(), stringAnnotTypeMapping.get(annotDecl.getName()));
-			logger.debug(String.format("Type %s already contains a registered declaration", annotDecl.getName()));
+			logger.trace(String.format("Annotation Type %s already contains a registered declaration", annotDecl
+					.getName()));
 			return;
 		}
 		logger.debug(String.format("Creating LAMA Type for %s", annotDecl.getName()));

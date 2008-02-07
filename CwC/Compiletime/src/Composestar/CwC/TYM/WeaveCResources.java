@@ -24,6 +24,9 @@
 
 package Composestar.CwC.TYM;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,6 +55,11 @@ public class WeaveCResources implements ModuleResourceManager
 
 	public WeaveCResources()
 	{
+		init();
+	}
+
+	protected void init()
+	{
 		tunits = new HashSet<TranslationUnitResult>();
 		ppics = new HashMap<TranslationUnitResult, PreprocessorInfoChannel>();
 		sourceMapping = new HashMap<TranslationUnitResult, Source>();
@@ -71,6 +79,7 @@ public class WeaveCResources implements ModuleResourceManager
 	{
 		if (tunit == null)
 		{
+
 			return;
 		}
 		tunits.add(tunit);
@@ -111,4 +120,13 @@ public class WeaveCResources implements ModuleResourceManager
 		return sourceMapping.get(tunit);
 	}
 
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+
+	}
+
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		init();
+	}
 }

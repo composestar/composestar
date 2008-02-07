@@ -50,9 +50,9 @@ public class CwCType extends Type
 {
 	private static final long serialVersionUID = -447789582637518491L;
 
-	protected TypeDeclaration typeDecl;
+	protected transient TypeDeclaration typeDecl;
 
-	protected CType cType;
+	protected transient CType cType;
 
 	protected Set<MethodInfo> methodReturnTypes;
 

@@ -34,7 +34,7 @@ public class CwCAnnotation extends Annotation
 {
 	private static final long serialVersionUID = 8526996013752977783L;
 
-	protected AnnotationInstance annInst;
+	protected transient AnnotationInstance annInst;
 
 	public CwCAnnotation(AnnotationInstance inst)
 	{

@@ -44,9 +44,9 @@ public class CwCAnnotationType extends Type
 {
 	private static final long serialVersionUID = -439148456392869374L;
 
-	protected AnnotationDeclaration annotDecl;
+	protected transient AnnotationDeclaration annotDecl;
 
-	protected AnnotationType annotType;
+	protected transient AnnotationType annotType;
 
 	public CwCAnnotationType()
 	{

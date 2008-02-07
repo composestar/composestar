@@ -30,6 +30,8 @@ import java.util.Collections;
 import weavec.cmodel.declaration.ObjectDeclaration;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.ERelationType;
+import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
  * @author Michiel Hendriks
@@ -38,7 +40,7 @@ public class CwCParameterInfo extends ParameterInfo
 {
 	private static final long serialVersionUID = 8367235262502160776L;
 
-	protected ObjectDeclaration objDecl;
+	protected transient ObjectDeclaration objDecl;
 
 	public CwCParameterInfo(ObjectDeclaration decl)
 	{
@@ -70,15 +72,15 @@ public class CwCParameterInfo extends ParameterInfo
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if ("ParentMethod".equals(argumentName))
+		if (ERelationType.PARENT_METHOD.equals(argumentName))
 		{
 			return new UnitResult(parent);
 		}
-		else if ("Class".equals(argumentName) && "Class".equals(parameterType().getUnitType()))
+		else if (ERelationType.CLASS.equals(argumentName) && EUnitType.CLASS.equals(parameterType().getUnitType()))
 		{
 			return new UnitResult(parameterType());
 		}
-		else if ("Type".equals(argumentName) && "Type".equals(parameterType().getUnitType()))
+		else if (ERelationType.TYPE.equals(argumentName) && EUnitType.TYPE.equals(parameterType().getUnitType()))
 		{
 			return new UnitResult(parameterType());
 		}

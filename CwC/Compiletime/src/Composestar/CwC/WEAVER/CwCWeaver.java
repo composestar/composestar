@@ -233,8 +233,39 @@ public class CwCWeaver implements WEAVER
 	 */
 	protected void loadComposeStarH() throws ModuleException
 	{
-		logger.info("Copying ComposeStar.h to output directory");
+		// re-get the stream
 		InputStream cshstream = getComposeStarFile(true);
+		timer.start("Parsing ComposeStar.h");
+
+		AspectCLexer lexer = new AspectCLexer(cshstream);
+		lexer.setSource(cshFile.getName());
+		lexer.newPreprocessorInfoChannel();
+		lexer.setTokenNumber(weavecResc.getTokenNumber());
+		lexer.yybegin(AspectCLexer.C);
+		AspectCParser cparser = new AspectCParser(lexer);
+		cparser.setASTNodeClass(TNode.class.getName());
+		cparser.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
+		cparser.setSource(cshFile.getName());
+		try
+		{
+			TranslationUnitResult csh = cparser.cfile("_COMPOSESTAR_H_");
+			rootScope = csh.getRootScope();
+			composestarHAst = csh.getAST();
+			cshPIC = lexer.getPreprocessorInfoChannel();
+		}
+		catch (RecognitionException e)
+		{
+			logger.error(e, e);
+		}
+		catch (TokenStreamException e)
+		{
+			logger.error(e, e);
+		}
+		timer.stop();
+
+		logger.info("Copying ComposeStar.h to output directory");
+		// re-get the stream
+		cshstream = getComposeStarFile(true);
 
 		// save a copy in the "woven" directory, which will be used in the
 		// #include directive
@@ -246,7 +277,12 @@ public class CwCWeaver implements WEAVER
 
 		if (cshFile.exists())
 		{
-			cshFile.delete();
+			if (!cshFile.delete())
+			{
+				logger.error(String.format("Unable to delete the file \"%s\". Existing file might be outdated.",
+						cshFile.toString()));
+				return;
+			}
 		}
 		FileOutputStream fos;
 		try
@@ -266,35 +302,6 @@ public class CwCWeaver implements WEAVER
 			throw new ModuleException(e1.toString(), MODULE_NAME, e1);
 		}
 
-		// re-get the stream
-		cshstream = getComposeStarFile(true);
-		timer.start("Parsing ComposeStar.h");
-
-		AspectCLexer lexer = new AspectCLexer(cshstream);
-		lexer.setSource("ComposeStar.h");
-		lexer.newPreprocessorInfoChannel();
-		lexer.setTokenNumber(weavecResc.getTokenNumber());
-		lexer.yybegin(AspectCLexer.C);
-		AspectCParser cparser = new AspectCParser(lexer);
-		cparser.setASTNodeClass(TNode.class.getName());
-		cparser.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
-		cparser.setSource("ComposeStar.h");
-		try
-		{
-			TranslationUnitResult csh = cparser.cfile("_COMPOSESTAR_H_");
-			rootScope = csh.getRootScope();
-			composestarHAst = csh.getAST();
-			cshPIC = lexer.getPreprocessorInfoChannel();
-		}
-		catch (RecognitionException e)
-		{
-			logger.error(e, e);
-		}
-		catch (TokenStreamException e)
-		{
-			logger.error(e, e);
-		}
-		timer.stop();
 	}
 
 	protected void copyComposeStarC(File dest) throws ModuleException
@@ -312,7 +319,12 @@ public class CwCWeaver implements WEAVER
 
 		if (dest.exists())
 		{
-			dest.delete();
+			if (!dest.delete())
+			{
+				logger.error(String.format("Unable to delete the file \"%s\". Existing file might be outdated.", dest
+						.toString()));
+				return;
+			}
 		}
 		FileOutputStream fos;
 		try
@@ -375,7 +387,7 @@ public class CwCWeaver implements WEAVER
 			{
 				logger.info(String.format("Weaving function %s.%s", concern.getQualifiedName(), func.getName()));
 				containsFilterCode = true;
-				processFilterCode(rootScope, realFunc, filterCode);
+				processFilterCode(realFunc, filterCode);
 			}
 			// TODO: call to other methods, how? This information isn't
 			// harvested from the C file in the first place.
@@ -400,7 +412,7 @@ public class CwCWeaver implements WEAVER
 	 * @param func
 	 * @param fc
 	 */
-	protected void processFilterCode(BlockScope rootScope, CwCFunctionInfo func, FilterCode fc)
+	protected void processFilterCode(CwCFunctionInfo func, FilterCode fc)
 	{
 		// generate ANSI-C code
 		String stringcode = codeGen.generate(fc, func, inlinerRes.getMethodId(func));
@@ -479,6 +491,14 @@ public class CwCWeaver implements WEAVER
 				}
 				break;
 			}
+		}
+
+		if (weaveNode == null)
+		{
+			// no functions -> no inlining possible
+			logger.error(String.format("Tried to inject ComposeStar.H include in a file without functions, "
+					+ "which should not be needed anyway."));
+			return;
 		}
 
 		while (weaveNode.getTokenNumber() == -1)
@@ -614,6 +634,7 @@ public class CwCWeaver implements WEAVER
 					node = node.getNextSibling();
 				}
 				break;
+			default:
 		}
 	}
 

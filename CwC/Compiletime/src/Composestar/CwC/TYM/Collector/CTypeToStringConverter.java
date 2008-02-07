@@ -76,7 +76,7 @@ public class CTypeToStringConverter
 		}
 		else if (ctype instanceof Builtin_va_listType)
 		{
-			convertBuiltin_va_listType(sb, (Builtin_va_listType) ctype);
+			convertBuiltinVaListType(sb, (Builtin_va_listType) ctype);
 		}
 		else if (ctype instanceof EnumType)
 		{
@@ -137,15 +137,15 @@ public class CTypeToStringConverter
 	{
 		switch (type.getKind())
 		{
-			case FLOAT:
-				sb.append("float");
-				break;
 			case DOUBLE:
 				sb.append("double");
 				break;
 			case LONGDOUBLE:
 				sb.append("long double");
 				break;
+			case FLOAT:
+			default:
+				sb.append("float");
 		}
 	}
 
@@ -153,21 +153,17 @@ public class CTypeToStringConverter
 	{
 		switch (type.getSign())
 		{
-			case SIGNED:
-				// sb.append("signed ");
-				break;
 			case UNSIGNED:
 				sb.append("unsigned ");
 				break;
+			case SIGNED:
+			default:
+				// sb.append("signed ");
 		}
 		switch (type.getKind())
 		{
 			case CHAR:
 				sb.append("char");
-				break;
-			case BOOLEAN:
-			case INT:
-				sb.append("int");
 				break;
 			case LONG:
 				sb.append("long");
@@ -178,10 +174,15 @@ public class CTypeToStringConverter
 			case SHORT:
 				sb.append("short");
 				break;
+			case BOOLEAN:
+			case INT:
+			default:
+				sb.append("int");
+				break;
 		}
 	}
 
-	protected void convertBuiltin_va_listType(StringBuffer sb, Builtin_va_listType type)
+	protected void convertBuiltinVaListType(StringBuffer sb, Builtin_va_listType type)
 	{
 		sb.append("__builtin_va_list");
 	}

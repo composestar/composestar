@@ -33,6 +33,7 @@ import weavec.cmodel.declaration.ObjectDeclaration;
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.metamodel.ERelationType;
+import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
  * Encapsulates a variable defined in a C file. Since the C file is considered a
@@ -44,7 +45,7 @@ public class CwCVariable extends FieldInfo
 {
 	private static final long serialVersionUID = 7148389289475337004L;
 
-	protected ObjectDeclaration objDecl;
+	protected transient ObjectDeclaration objDecl;
 
 	public CwCVariable()
 	{
@@ -130,11 +131,11 @@ public class CwCVariable extends FieldInfo
 		{
 			return new UnitResult(parent);
 		}
-		else if (ERelationType.CLASS.equals(argumentName) && "Class".equals(getFieldType().getUnitType()))
+		else if (ERelationType.CLASS.equals(argumentName) && EUnitType.CLASS.equals(getFieldType().getUnitType()))
 		{
 			return new UnitResult(getFieldType());
 		}
-		else if (ERelationType.TYPE.equals(argumentName) && "Type".equals(getFieldType().getUnitType()))
+		else if (ERelationType.TYPE.equals(argumentName) && EUnitType.TYPE.equals(getFieldType().getUnitType()))
 		{
 			return new UnitResult(getFieldType());
 		}

@@ -87,9 +87,9 @@ public class TypeHarvester implements HarvestRunner
 		TNode.setTokenVocabulary("ACGrammarTokenTypes");
 		// AdviceTemplateFunction.setcounter(new Integer(0));
 		// BindingEntity.setcounter(new Integer(0));
-		CTypeDescriptor.setcounter(new Integer(0));
+		CTypeDescriptor.setcounter(Integer.valueOf(0));
 		CTypeDescriptor.ctdescriptors().clear();
-		AnnotationDescriptor.setcounter(new Integer(0));
+		AnnotationDescriptor.setcounter(Integer.valueOf(0));
 		AnnotationDescriptor.ctdescriptors().clear();
 	}
 
