@@ -472,6 +472,9 @@
 					<include name="**/*.cs" />
 					<include name="**/*.jsl" />
 					<include name="**/*.cps" />
+					
+					<include name="**/*.c" />
+					<include name="**/*.h" />
 
 					<include name="**/*.xml" />
 					<include name="**/*.txt" />
