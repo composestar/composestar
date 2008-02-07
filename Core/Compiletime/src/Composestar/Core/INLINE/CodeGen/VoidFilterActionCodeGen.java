@@ -24,6 +24,7 @@
 
 package Composestar.Core.INLINE.CodeGen;
 
+import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterAction;
 
 /**
@@ -49,5 +50,8 @@ public class VoidFilterActionCodeGen implements FilterActionCodeGenerator<String
 	{
 		return filterTypes;
 	}
+
+	public void setInlinerResources(InlinerResources resources)
+	{}
 
 }

@@ -1,7 +1,9 @@
 
+# List of source files
 sources = main.c calc.c
 objects := $(patsubst %.c,%.o,$(sources))
 
+# List of concerns
 concerns = mainprint.cps calcfix.cps
 
 # Intermediate directory
@@ -14,24 +16,34 @@ WOVEN = $(INTERMED)/woven
 # produce preprocessed and woven source lists
 ppSources := $(patsubst %.c,$(PREPROCESSED)/%.c,$(sources))
 wovenSources := $(patsubst %.c,$(WOVEN)/%.c,$(sources))
+# create list of directories where the preprocessed files will be stored
+# the patsubst will remove all trailing slashes
+ppDirs := $(patsubst  %/,%,$(sort $(dir $(ppSources))))
 
 # Misc env settings
 CC = gcc
 CFLAGS = 
 RM = del /F /Q
 RMDIR = cmd /c rmdir /S /Q
+MKDIR = mkdir 
 
-COMPOSESTAR = ../../Testing/bin/lib/ComposestarCwC.jar 
+COMPOSESTAR = java -jar ../../Testing/bin/lib/ComposestarCwC.jar 
+
+# if DOWEAVE != yes then weaving will not be performed
+ifndef DOWEAVE
+DOWEAVE = yes
+endif
 
 .PHONY : all
 all : basictest.exe
 
-# Make the directories
+# Make the intermediate directories
 .PHONY : init
-init : $(INTERMED) $(PREPROCESSED) $(WOVEN)
+init : $(ppDirs) $(WOVEN)
 
-$(INTERMED) $(PREPROCESSED) $(WOVEN):
-	mkdir $(subst /,\,$@)
+# Creates the directories when the preprocessed files will be stored
+$(ppDirs) $(WOVEN) :
+	-$(MKDIR) $(subst /,\,$@)
 
 # Clean 
 .PHONY : clean
@@ -43,21 +55,31 @@ clean :
 $(PREPROCESSED)/%.c : %.c
 	$(CPP) -c $(CFLAGS) -o $@ $<
 
-# compile 
+ifeq ($(DOWEAVE), yes)
+
+# compile the woven sources
 $(objects) : %.o : $(WOVEN)/%.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
+# Add the ComposeStar.c file to the list
+objects += $(WOVEN)/ComposeStar.o
+
 # Performs the actual weaving	
 .PHONY : weave
-weave : $(ppSources)
-	java -jar $(COMPOSESTAR) --intermediate $(INTERMED) $(ppSources) $(concerns)
+weave : init $(ppSources)
+	$(COMPOSESTAR) --intermediate $(INTERMED) $(ppSources) $(concerns)	
 
-# dummy, to fake weaving
-#$(WOVEN)/%.c : $(PREPROCESSED)/%.c
-#	type $(subst /,\,$<) > $(subst /,\,$@)
+basictest.exe : weave $(objects)
+	$(CC) -o $@ $(LDFLAGS) $(objects)
 
+else
 
-basictest.exe : init weave $(objects) $(WOVEN)/ComposeStar.o
-	$(CC) -o $@ $(objects) $(WOVEN)/ComposeStar.o
+# Compile without weaving
 
-  
+$(objects) : %.o : %.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+basictest.exe : $(objects)
+	$(CC) -o $@ $(LDFLAGS) $(objects)
+
+endif

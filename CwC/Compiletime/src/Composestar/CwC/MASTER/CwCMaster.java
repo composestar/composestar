@@ -33,11 +33,10 @@ import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
-import Composestar.Core.CpsProgramRepository.Filters.FilterTypeNames;
 import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.CwC.Filters.FilterLoader;
 import Composestar.Utils.CmdLineParser;
 
 /**
@@ -97,14 +96,8 @@ public class CwCMaster extends Master
 				config.addSetting(override.getKey(), override.getValue());
 			}
 		}
-		// FIXME this probably needs to be improved, how to load it properly?
-		// where to get the custom filters from?
-		DefaultFilterFactory filterFactory = new DefaultFilterFactory(resources.repository());
-		String[] filters = { FilterTypeNames.DISPATCH, FilterTypeNames.SEND, FilterTypeNames.ERROR,
-				FilterTypeNames.BEFORE, FilterTypeNames.AFTER, FilterTypeNames.SUBSTITUTION };
-		filterFactory.createFilterTypes(filters);
-		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
-
+		FilterLoader loader = new FilterLoader();
+		loader.load(resources);
 		return true;
 	}
 

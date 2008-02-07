@@ -8,7 +8,7 @@
  *
  * $Id$
  *
- * Changes:
+ * Grammar Changes:
  * (2007-10-12) michielh	Added source code extraction from the
  *				implementation block. Added graceful
  *				error recovery.
@@ -55,6 +55,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.*;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
+import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory.*;
 import Composestar.Core.Exception.*;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 
@@ -551,7 +552,13 @@ filterType returns [FilterType ft]
 	  	if ((ft == null) && (filterFactory.allowLegacyCustomFilters()))
 		{
 			logger.info(String.format("Creating legacy custom filter with name: \%s", ftName));
-			ft = filterFactory.createLegacyCustomFilterType(ftName);
+			try {
+				ft = filterFactory.createLegacyCustomFilterType(ftName);
+			}
+			catch (UnsupportedFilterTypeException e)
+			{
+				logger.info(String.format("Error creating custom filter type: \%s", ftName));
+			}
 		}
 		if (ft == null)
 		{

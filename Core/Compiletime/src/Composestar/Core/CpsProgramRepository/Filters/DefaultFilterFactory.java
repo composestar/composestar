@@ -20,7 +20,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  * 
  * @author Michiel Hendriks
  */
-public final class DefaultFilterFactory
+public class DefaultFilterFactory
 {
 	public static final String RESOURCE_KEY = "Repository.DefaultFilterFactory";
 
@@ -30,23 +30,23 @@ public final class DefaultFilterFactory
 	public static final String[] LEGACY = { FilterTypeNames.DISPATCH, FilterTypeNames.SEND, FilterTypeNames.ERROR,
 			FilterTypeNames.META, FilterTypeNames.APPEND, FilterTypeNames.PREPEND };
 
-	private FilterAction dispatchAction;
+	protected FilterAction dispatchAction;
 
-	private FilterAction continueAction;
+	protected FilterAction continueAction;
 
-	private FilterAction errorAction;
+	protected FilterAction errorAction;
 
-	private FilterAction substitutionAction;
+	protected FilterAction substitutionAction;
 
-	private FilterAction adviceAction;
+	protected FilterAction adviceAction;
 
-	private FilterAction metaAction;
+	protected FilterAction metaAction;
 
-	private FilterTypeMapping mapping;
+	protected FilterTypeMapping mapping;
 
-	private DataStore repository;
+	protected DataStore repository;
 
-	private boolean allowLegacyCustom;
+	protected boolean allowLegacyCustom;
 
 	public DefaultFilterFactory(DataStore repo)
 	{
@@ -62,8 +62,10 @@ public final class DefaultFilterFactory
 	/**
 	 * Add all legacy filter types and permit creation of the legacy custom
 	 * filter types
+	 * 
+	 * @throws UnsupportedFilterTypeException
 	 */
-	public void addLegacyFilterTypes()
+	public void addLegacyFilterTypes() throws UnsupportedFilterTypeException
 	{
 		allowLegacyCustom = true;
 		createFilterTypes(LEGACY);
@@ -89,46 +91,56 @@ public final class DefaultFilterFactory
 	 * 
 	 * @param types
 	 */
-	public void createFilterTypes(String[] types)
+	public void createFilterTypes(String[] types) throws UnsupportedFilterTypeException
 	{
 		for (String type : types)
 		{
-			if (FilterTypeNames.DISPATCH.equals(type))
-			{
-				addDispatchFilterType();
-			}
-			else if (FilterTypeNames.SEND.equals(type))
-			{
-				addSendFilterType();
-			}
-			else if (FilterTypeNames.AFTER.equals(type))
-			{
-				addAfterFilterType();
-			}
-			else if (FilterTypeNames.APPEND.equals(type))
-			{
-				addAppendFilterType();
-			}
-			else if (FilterTypeNames.BEFORE.equals(type))
-			{
-				addBeforeFilterType();
-			}
-			else if (FilterTypeNames.ERROR.equals(type))
-			{
-				addErrorFilterType();
-			}
-			else if (FilterTypeNames.META.equals(type))
-			{
-				addMetaFilterType();
-			}
-			else if (FilterTypeNames.PREPEND.equals(type))
-			{
-				addPrependFilterType();
-			}
-			else if (FilterTypeNames.SUBSTITUTION.equals(type))
-			{
-				addSubstitutionFilterType();
-			}
+			createFilterType(type);
+		}
+	}
+
+	/**
+	 * Creates a known/default filter type
+	 * 
+	 * @param type
+	 */
+	public void createFilterType(String type) throws UnsupportedFilterTypeException
+	{
+		if (FilterTypeNames.DISPATCH.equals(type))
+		{
+			addDispatchFilterType();
+		}
+		else if (FilterTypeNames.SEND.equals(type))
+		{
+			addSendFilterType();
+		}
+		else if (FilterTypeNames.AFTER.equals(type))
+		{
+			addAfterFilterType();
+		}
+		else if (FilterTypeNames.APPEND.equals(type))
+		{
+			addAppendFilterType();
+		}
+		else if (FilterTypeNames.BEFORE.equals(type))
+		{
+			addBeforeFilterType();
+		}
+		else if (FilterTypeNames.ERROR.equals(type))
+		{
+			addErrorFilterType();
+		}
+		else if (FilterTypeNames.META.equals(type))
+		{
+			addMetaFilterType();
+		}
+		else if (FilterTypeNames.PREPEND.equals(type))
+		{
+			addPrependFilterType();
+		}
+		else if (FilterTypeNames.SUBSTITUTION.equals(type))
+		{
+			addSubstitutionFilterType();
 		}
 	}
 
@@ -138,7 +150,7 @@ public final class DefaultFilterFactory
 	 * @param name
 	 * @return
 	 */
-	public FilterType createLegacyCustomFilterType(String name)
+	public FilterType createLegacyCustomFilterType(String name) throws UnsupportedFilterTypeException
 	{
 		if (!allowLegacyCustom)
 		{
@@ -147,10 +159,17 @@ public final class DefaultFilterFactory
 		LegacyCustomFilterType custom = new LegacyCustomFilterType(name);
 		// use 'continueActions' because these kind of CustomFilters have
 		// unknown behaviors, unable to reason about them.
-		custom.setAcceptCallAction(getContinueAction());
-		custom.setRejectCallAction(getContinueAction());
-		custom.setAcceptReturnAction(getContinueAction());
-		custom.setRejectReturnAction(getContinueAction());
+		try
+		{
+			custom.setAcceptCallAction(getContinueAction());
+			custom.setRejectCallAction(getContinueAction());
+			custom.setAcceptReturnAction(getContinueAction());
+			custom.setRejectReturnAction(getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(FilterTypeNames.CUSTOM, e);
+		}
 		repository.addObject(custom);
 		if (mapping != null)
 		{
@@ -164,7 +183,7 @@ public final class DefaultFilterFactory
 	/**
 	 * Get a standard filter action with the given name.
 	 */
-	public FilterAction getFilterAction(String name)
+	public FilterAction getFilterAction(String name) throws UnsupportedFilterActionException
 	{
 		if (FilterActionNames.DISPATCH_ACTION.equals(name))
 		{
@@ -193,7 +212,7 @@ public final class DefaultFilterFactory
 		return null;
 	}
 
-	public FilterAction getDispatchAction()
+	public FilterAction getDispatchAction() throws UnsupportedFilterActionException
 	{
 		if (dispatchAction != null)
 		{
@@ -210,7 +229,7 @@ public final class DefaultFilterFactory
 		return dispatchAction;
 	}
 
-	public FilterAction getContinueAction()
+	public FilterAction getContinueAction() throws UnsupportedFilterActionException
 	{
 		if (continueAction != null)
 		{
@@ -226,7 +245,7 @@ public final class DefaultFilterFactory
 		return continueAction;
 	}
 
-	public FilterAction getErrorAction()
+	public FilterAction getErrorAction() throws UnsupportedFilterActionException
 	{
 		if (errorAction != null)
 		{
@@ -243,7 +262,7 @@ public final class DefaultFilterFactory
 		return errorAction;
 	}
 
-	public FilterAction getSubstitutionAction()
+	public FilterAction getSubstitutionAction() throws UnsupportedFilterActionException
 	{
 		if (substitutionAction != null)
 		{
@@ -259,7 +278,7 @@ public final class DefaultFilterFactory
 		return substitutionAction;
 	}
 
-	public FilterAction getAdviceAction()
+	public FilterAction getAdviceAction() throws UnsupportedFilterActionException
 	{
 		if (adviceAction != null)
 		{
@@ -274,7 +293,7 @@ public final class DefaultFilterFactory
 		return adviceAction;
 	}
 
-	public FilterAction getMetaAction()
+	public FilterAction getMetaAction() throws UnsupportedFilterActionException
 	{
 		if (metaAction != null)
 		{
@@ -293,14 +312,21 @@ public final class DefaultFilterFactory
 
 	// Filter Types
 
-	public void addDispatchFilterType()
+	public void addDispatchFilterType() throws UnsupportedFilterTypeException
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.DISPATCH);
-		type.setAcceptCallAction(getDispatchAction());
-		type.setRejectCallAction(getContinueAction());
-		type.setAcceptReturnAction(getContinueAction());
-		type.setRejectReturnAction(getContinueAction());
+		try
+		{
+			type.setAcceptCallAction(getDispatchAction());
+			type.setRejectCallAction(getContinueAction());
+			type.setAcceptReturnAction(getContinueAction());
+			type.setRejectReturnAction(getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(FilterTypeNames.DISPATCH, e);
+		}
 		repository.addObject(type);
 		if (mapping != null)
 		{
@@ -308,14 +334,21 @@ public final class DefaultFilterFactory
 		}
 	}
 
-	public void addSendFilterType()
+	public void addSendFilterType() throws UnsupportedFilterTypeException
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.SEND);
-		type.setAcceptCallAction(getDispatchAction());
-		type.setRejectCallAction(getContinueAction());
-		type.setAcceptReturnAction(getContinueAction());
-		type.setRejectReturnAction(getContinueAction());
+		try
+		{
+			type.setAcceptCallAction(getDispatchAction());
+			type.setRejectCallAction(getContinueAction());
+			type.setAcceptReturnAction(getContinueAction());
+			type.setRejectReturnAction(getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(FilterTypeNames.SEND, e);
+		}
 		repository.addObject(type);
 		if (mapping != null)
 		{
@@ -323,14 +356,21 @@ public final class DefaultFilterFactory
 		}
 	}
 
-	public void addMetaFilterType()
+	public void addMetaFilterType() throws UnsupportedFilterTypeException
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.META);
-		type.setAcceptCallAction(getMetaAction());
-		type.setRejectCallAction(getContinueAction());
-		type.setAcceptReturnAction(getMetaAction());
-		type.setRejectReturnAction(getContinueAction());
+		try
+		{
+			type.setAcceptCallAction(getMetaAction());
+			type.setRejectCallAction(getContinueAction());
+			type.setAcceptReturnAction(getMetaAction());
+			type.setRejectReturnAction(getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(FilterTypeNames.META, e);
+		}
 		repository.addObject(type);
 		if (mapping != null)
 		{
@@ -338,14 +378,21 @@ public final class DefaultFilterFactory
 		}
 	}
 
-	public void addErrorFilterType()
+	public void addErrorFilterType() throws UnsupportedFilterTypeException
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.ERROR);
-		type.setAcceptCallAction(getContinueAction());
-		type.setRejectCallAction(getErrorAction());
-		type.setAcceptReturnAction(getContinueAction());
-		type.setRejectReturnAction(getContinueAction());
+		try
+		{
+			type.setAcceptCallAction(getContinueAction());
+			type.setRejectCallAction(getErrorAction());
+			type.setAcceptReturnAction(getContinueAction());
+			type.setRejectReturnAction(getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(FilterTypeNames.ERROR, e);
+		}
 		repository.addObject(type);
 		if (mapping != null)
 		{
@@ -353,14 +400,21 @@ public final class DefaultFilterFactory
 		}
 	}
 
-	public void addBeforeFilterType()
+	public void addBeforeFilterType() throws UnsupportedFilterTypeException
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.BEFORE);
-		type.setAcceptCallAction(getAdviceAction());
-		type.setRejectCallAction(getContinueAction());
-		type.setAcceptReturnAction(getContinueAction());
-		type.setRejectReturnAction(getContinueAction());
+		try
+		{
+			type.setAcceptCallAction(getAdviceAction());
+			type.setRejectCallAction(getContinueAction());
+			type.setAcceptReturnAction(getContinueAction());
+			type.setRejectReturnAction(getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(FilterTypeNames.BEFORE, e);
+		}
 		repository.addObject(type);
 		if (mapping != null)
 		{
@@ -368,14 +422,21 @@ public final class DefaultFilterFactory
 		}
 	}
 
-	public void addAfterFilterType()
+	public void addAfterFilterType() throws UnsupportedFilterTypeException
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.AFTER);
-		type.setAcceptCallAction(getContinueAction());
-		type.setRejectCallAction(getContinueAction());
-		type.setAcceptReturnAction(getAdviceAction());
-		type.setRejectReturnAction(getContinueAction());
+		try
+		{
+			type.setAcceptCallAction(getContinueAction());
+			type.setRejectCallAction(getContinueAction());
+			type.setAcceptReturnAction(getAdviceAction());
+			type.setRejectReturnAction(getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(FilterTypeNames.AFTER, e);
+		}
 		repository.addObject(type);
 		if (mapping != null)
 		{
@@ -383,14 +444,21 @@ public final class DefaultFilterFactory
 		}
 	}
 
-	public void addSubstitutionFilterType()
+	public void addSubstitutionFilterType() throws UnsupportedFilterTypeException
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.SUBSTITUTION);
-		type.setAcceptCallAction(getSubstitutionAction());
-		type.setRejectCallAction(getContinueAction());
-		type.setAcceptReturnAction(getContinueAction());
-		type.setRejectReturnAction(getContinueAction());
+		try
+		{
+			type.setAcceptCallAction(getSubstitutionAction());
+			type.setRejectCallAction(getContinueAction());
+			type.setAcceptReturnAction(getContinueAction());
+			type.setRejectReturnAction(getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(FilterTypeNames.SUBSTITUTION, e);
+		}
 		repository.addObject(type);
 		if (mapping != null)
 		{
@@ -398,14 +466,21 @@ public final class DefaultFilterFactory
 		}
 	}
 
-	public void addPrependFilterType()
+	public void addPrependFilterType() throws UnsupportedFilterTypeException
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.PREPEND);
-		type.setAcceptCallAction(getAdviceAction());
-		type.setRejectCallAction(getContinueAction());
-		type.setAcceptReturnAction(getContinueAction());
-		type.setRejectReturnAction(getContinueAction());
+		try
+		{
+			type.setAcceptCallAction(getAdviceAction());
+			type.setRejectCallAction(getContinueAction());
+			type.setAcceptReturnAction(getContinueAction());
+			type.setRejectReturnAction(getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(FilterTypeNames.PREPEND, e);
+		}
 		repository.addObject(type);
 		if (mapping != null)
 		{
@@ -413,18 +488,97 @@ public final class DefaultFilterFactory
 		}
 	}
 
-	public void addAppendFilterType()
+	public void addAppendFilterType() throws UnsupportedFilterTypeException
 	{
 		FilterType type = new FilterType();
 		type.setType(FilterTypeNames.APPEND);
-		type.setAcceptCallAction(getContinueAction());
-		type.setRejectCallAction(getContinueAction());
-		type.setAcceptReturnAction(adviceAction);
-		type.setRejectReturnAction(getContinueAction());
+		try
+		{
+			type.setAcceptCallAction(getContinueAction());
+			type.setRejectCallAction(getContinueAction());
+			type.setAcceptReturnAction(getAdviceAction());
+			type.setRejectReturnAction(getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(FilterTypeNames.APPEND, e);
+		}
 		repository.addObject(type);
 		if (mapping != null)
 		{
 			mapping.registerFilterType(type);
+		}
+	}
+
+	/**
+	 * Exception thrown when a given filter type is not supported by the current
+	 * factory/platform
+	 * 
+	 * @author Michiel Hendriks
+	 */
+	public static class UnsupportedFilterTypeException extends Exception
+	{
+		private static final long serialVersionUID = 3847929384310561849L;
+
+		protected String filterType;
+
+		public UnsupportedFilterTypeException(String type)
+		{
+			super();
+			filterType = type;
+		}
+
+		public UnsupportedFilterTypeException(String type, Throwable cause)
+		{
+			super(cause);
+			filterType = type;
+		}
+
+		public String getType()
+		{
+			return filterType;
+		}
+
+		@Override
+		public String toString()
+		{
+			return String.format("The filter type \"%s\" is not supported.", filterType);
+		}
+	}
+
+	/**
+	 * Exception thrown when a given filter action is not supported by the
+	 * current factory/platform
+	 * 
+	 * @author Michiel Hendriks
+	 */
+	public static class UnsupportedFilterActionException extends Exception
+	{
+		private static final long serialVersionUID = 120051574939262658L;
+
+		protected String filterAction;
+
+		public UnsupportedFilterActionException(String type)
+		{
+			super();
+			filterAction = type;
+		}
+
+		public UnsupportedFilterActionException(String type, Throwable cause)
+		{
+			super(cause);
+			filterAction = type;
+		}
+
+		public String getType()
+		{
+			return filterAction;
+		}
+
+		@Override
+		public String toString()
+		{
+			return String.format("The filter action \"%s\" is not supported.", filterAction);
 		}
 	}
 }

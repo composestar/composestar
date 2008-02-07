@@ -24,6 +24,7 @@
 
 package Composestar.Core.INLINE.CodeGen;
 
+import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterAction;
 
 /**
@@ -33,6 +34,15 @@ import Composestar.Core.INLINE.model.FilterAction;
  */
 public interface FilterActionCodeGenerator<T>
 {
+	/**
+	 * Will be called after construction to provide access to the
+	 * InlinerResources instance. This resource can be used to look up method
+	 * IDs
+	 * 
+	 * @param resources
+	 */
+	void setInlinerResources(InlinerResources resources);
+
 	/**
 	 * The list of filter action types supported by this code generator
 	 * 

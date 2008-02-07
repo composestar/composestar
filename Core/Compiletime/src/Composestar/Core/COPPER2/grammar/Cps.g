@@ -6,7 +6,7 @@
  * Parser (Tree generator) and Lexer specification for the Compose* language
  * $Id$
  *
- * Changes:
+ * Grammar Changes:
  * (2007-10-05) michielh	Dropped single target.selector which implies
  *				signature matching (too confusing).
  * (2007-10-08) michielh	Added the filter module parameter

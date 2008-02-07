@@ -38,6 +38,8 @@ import Composestar.Core.LAMA.ParameterInfo;
  */
 public class CDispatchActionCodeGen extends DispatchActionCodeGen
 {
+	public CDispatchActionCodeGen()
+	{}
 
 	public CDispatchActionCodeGen(InlinerResources inresc)
 	{

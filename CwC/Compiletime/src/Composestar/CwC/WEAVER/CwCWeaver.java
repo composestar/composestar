@@ -69,12 +69,14 @@ import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INLINE.CodeGen.CodeGenerator;
+import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Core.WEAVER.WEAVER;
+import Composestar.CwC.Filters.FilterLoader;
 import Composestar.CwC.INLINE.CodeGen.CCodeGenerator;
 import Composestar.CwC.INLINE.CodeGen.CDispatchActionCodeGen;
 import Composestar.CwC.LAMA.CwCFile;
@@ -146,7 +148,18 @@ public class CwCWeaver implements WEAVER
 
 		codeGen = new CCodeGenerator();
 		codeGen.register(new CDispatchActionCodeGen(inlinerRes));
-		// TODO: add all code gens
+		// codeGen.register(new CErrorActionCodeGen(inlinerRes));
+		// codeGen.register(new CAdviceActionCodeGen(inlinerRes));
+
+		FilterLoader filterLoader = resources.get(FilterLoader.RESOURCE_KEY);
+		if (filterLoader != null)
+		{
+			for (FilterActionCodeGenerator<String> facg : filterLoader.getCodeGenerators())
+			{
+				facg.setInlinerResources(inlinerRes);
+				codeGen.register(facg);
+			}
+		}
 
 		Project p = resources.configuration().getProject();
 		File outputDir = new File(p.getIntermediate(), "woven");

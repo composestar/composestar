@@ -42,9 +42,17 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 {
 	protected InlinerResources inlinerResources;
 
+	public DispatchActionCodeGen()
+	{}
+
 	public DispatchActionCodeGen(InlinerResources inresc)
 	{
-		inlinerResources = inresc;
+		setInlinerResources(inresc);
+	}
+
+	public void setInlinerResources(InlinerResources resources)
+	{
+		inlinerResources = resources;
 	}
 
 	/*
