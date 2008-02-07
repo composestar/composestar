@@ -53,7 +53,7 @@ clean :
 
 # Produce preprocessed files
 $(PREPROCESSED)/%.c : %.c
-	$(CPP) -c $(CFLAGS) -o $@ $<
+	$(CPP) -c $(CFLAGS) -dD -C -o $@ $<
 
 ifeq ($(DOWEAVE), yes)
 
