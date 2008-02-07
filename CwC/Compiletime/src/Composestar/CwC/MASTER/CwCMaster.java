@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
@@ -47,6 +48,8 @@ public class CwCMaster extends Master
 	protected String intermediateDir;
 
 	protected List<String> cfiles, cpsfiles;
+
+	protected CmdLineParser.StringListOption customFilters;
 
 	@Override
 	protected boolean loadConfiguration() throws Exception
@@ -95,6 +98,16 @@ public class CwCMaster extends Master
 			{
 				config.addSetting(override.getKey(), override.getValue());
 			}
+
+			if (customFilters != null && customFilters.isSet())
+			{
+				for (String cfspec : customFilters.getValue())
+				{
+					CustomFilter cf = new CustomFilter();
+					cf.setLibrary(cfspec);
+					config.getFilters().add(cf);
+				}
+			}
 		}
 		FilterLoader loader = new FilterLoader();
 		loader.load(resources);
@@ -121,6 +134,12 @@ public class CwCMaster extends Master
 						+ "If no files are given Compose* will try to load the file BuildConfiguration.xml in the current directory.");
 		fileList.setHelpValue("file");
 		parser.setDefaultOption(fileList);
+		customFilters = new CmdLineParser.StringListOption('F', "custom-filter");
+		customFilters.setDescription("Include custom filters. The spec is a combination of an url "
+				+ "of the package to load followed by a pound (#) and the fully qualified "
+				+ "name of a class that implements the CustomCwCFilters class.");
+		fileList.setHelpValue("spec");
+		parser.addOption(customFilters);
 
 		parser.parse(args);
 		if (!procCmdLineOptions())

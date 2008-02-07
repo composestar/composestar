@@ -72,7 +72,7 @@ objects += $(WOVEN)/ComposeStar.o
 # Performs the actual weaving	
 .PHONY : weave
 weave : init $(ppSources)
-	$(COMPOSESTAR) --intermediate $(INTERMED) $(ppSources) $(concerns)	
+	$(COMPOSESTAR) --intermediate $(INTERMED) --custom-filter #Composestar.CwC.Filters.ExtraFilters $(ppSources) $(concerns)	
 
 basictest.exe : weave $(objects)
 	$(CC) -o $@ $(LDFLAGS) $(objects)

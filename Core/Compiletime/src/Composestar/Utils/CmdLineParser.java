@@ -692,28 +692,28 @@ public class CmdLineParser
 	{
 		public StringListOption()
 		{
-			super();
-			value = new ArrayList<String>();
+			this('\0', null, "");
 		}
 
 		public StringListOption(char sname, String lname)
 		{
-			super(sname, lname);
+			this(sname, lname, "");
 		}
 
 		public StringListOption(char name)
 		{
-			super(name);
+			this(name, null, "");
 		}
 
 		public StringListOption(String name)
 		{
-			super(name);
+			this('\0', name, "");
 		}
 
 		public StringListOption(char sname, String lname, String desc)
 		{
 			super(sname, lname, desc);
+			value = new ArrayList<String>();
 		}
 
 		@Override
@@ -732,29 +732,29 @@ public class CmdLineParser
 	{
 		public IntListOption()
 		{
-			super();
-			value = new ArrayList<Integer>();
-			helpValue = "integer";
+			this('\0', null, "");
 		}
 
 		public IntListOption(char sname, String lname)
 		{
-			super(sname, lname);
+			this(sname, lname, "");
 		}
 
 		public IntListOption(char name)
 		{
-			super(name);
+			this(name, null, "");
 		}
 
 		public IntListOption(String name)
 		{
-			super(name);
+			this('\0', name, "");
 		}
 
 		public IntListOption(char sname, String lname, String desc)
 		{
 			super(sname, lname, desc);
+			value = new ArrayList<Integer>();
+			helpValue = "integer";
 		}
 
 		@Override
@@ -774,29 +774,29 @@ public class CmdLineParser
 
 		public FloatListOption()
 		{
-			super();
-			value = new ArrayList<Float>();
-			helpValue = "float";
+			this('\0', null, "");
 		}
 
 		public FloatListOption(char sname, String lname)
 		{
-			super(sname, lname);
+			this(sname, lname, "");
 		}
 
 		public FloatListOption(char name)
 		{
-			super(name);
+			this(name, null, "");
 		}
 
 		public FloatListOption(String name)
 		{
-			super(name);
+			this('\0', name, "");
 		}
 
 		public FloatListOption(char sname, String lname, String desc)
 		{
 			super(sname, lname, desc);
+			value = new ArrayList<Float>();
+			helpValue = "float";
 		}
 
 		@Override

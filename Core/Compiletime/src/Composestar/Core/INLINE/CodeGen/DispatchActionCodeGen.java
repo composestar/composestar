@@ -27,6 +27,7 @@ package Composestar.Core.INLINE.CodeGen;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
+import Composestar.Core.CpsProgramRepository.Filters.FilterActionNames;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.LAMA.MethodInfo;
@@ -104,7 +105,7 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 	 */
 	public String[] supportedTypes()
 	{
-		String[] types = { "DispatchAction" };
+		String[] types = { FilterActionNames.DISPATCH_ACTION };
 		return types;
 	}
 

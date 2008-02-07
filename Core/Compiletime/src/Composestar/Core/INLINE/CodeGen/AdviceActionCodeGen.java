@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
+import Composestar.Core.CpsProgramRepository.Filters.FilterActionNames;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.LAMA.MethodInfo;
@@ -36,7 +37,7 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 
 	public String[] supportedTypes()
 	{
-		String[] types = { "AdviceAction" };
+		String[] types = { FilterActionNames.ADVICE_ACTION };
 		return types;
 	}
 

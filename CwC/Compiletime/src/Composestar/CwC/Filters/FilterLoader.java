@@ -88,6 +88,12 @@ public class FilterLoader
 			}
 			String className = pkg.substring(idx + 1);
 			pkg = pkg.substring(0, idx);
+			if (pkg.length() == 0)
+			{
+				// no package, use current classpath?
+				classNames.add(className);
+				continue;
+			}
 			URL url;
 			try
 			{
@@ -117,7 +123,7 @@ public class FilterLoader
 		}
 
 		URL[] urlz = urls.toArray(new URL[0]);
-		URLClassLoader clsLoader = URLClassLoader.newInstance(urlz);
+		URLClassLoader clsLoader = URLClassLoader.newInstance(urlz, FilterLoader.class.getClassLoader());
 		for (String className : classNames)
 		{
 			Class<?> cls;
@@ -162,7 +168,11 @@ public class FilterLoader
 		Set<FilterActionCodeGenerator<String>> generators = new HashSet<FilterActionCodeGenerator<String>>();
 		for (CustomCwCFilters cflt : customFilters)
 		{
-			generators.addAll(cflt.getCodeGenerators());
+			Collection<FilterActionCodeGenerator<String>> col = cflt.getCodeGenerators();
+			if (col != null)
+			{
+				generators.addAll(col);
+			}
 		}
 		return generators;
 	}

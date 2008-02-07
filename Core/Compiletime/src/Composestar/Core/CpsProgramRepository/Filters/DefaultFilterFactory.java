@@ -76,6 +76,11 @@ public class DefaultFilterFactory
 		mapping = tm;
 	}
 
+	public FilterTypeMapping getTypeMapping()
+	{
+		return mapping;
+	}
+
 	public void setAllowLegacyCustomFilters(boolean value)
 	{
 		allowLegacyCustom = value;
