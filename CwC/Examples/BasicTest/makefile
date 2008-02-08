@@ -4,7 +4,7 @@ sources = main.c calc.c
 objects := $(patsubst %.c,%.o,$(sources))
 
 # List of concerns
-concerns = mainprint.cps calcfix.cps
+concerns = mainprint.cps calcfix.cps trace.cps
 
 # Intermediate directory
 INTERMED = obj

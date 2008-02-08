@@ -319,6 +319,7 @@ public class AnnotationSuperImposition
 					{
 						ProgramElement pe = (ProgramElement) result;
 						names.append(pe.getUnitName());
+						names.append(" ");
 					}
 					else
 					{

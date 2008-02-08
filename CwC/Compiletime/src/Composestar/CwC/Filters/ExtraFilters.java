@@ -25,6 +25,8 @@
 package Composestar.CwC.Filters;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
@@ -34,6 +36,7 @@ import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory.Unsupp
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.CwC.INLINE.CodeGen.CTraceActionCodeGenerator;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -53,7 +56,7 @@ public class ExtraFilters implements CustomCwCFilters
 
 	public static final String TRACE_IN_ACTION = "TraceInAction";
 
-	public static final String TRACE_OUT_ACTION = "TraceInAction";
+	public static final String TRACE_OUT_ACTION = "TraceOutAction";
 
 	protected FilterAction traceInAction;
 
@@ -69,7 +72,9 @@ public class ExtraFilters implements CustomCwCFilters
 	 */
 	public Collection<FilterActionCodeGenerator<String>> getCodeGenerators()
 	{
-		return null;
+		Set<FilterActionCodeGenerator<String>> result = new HashSet<FilterActionCodeGenerator<String>>();
+		result.add(new CTraceActionCodeGenerator());
+		return result;
 	}
 
 	/*
