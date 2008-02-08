@@ -29,18 +29,33 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 		setInlinerResources(resources);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#setInlinerResources(Composestar.Core.INLINE.lowlevel.InlinerResources)
+	 */
 	public void setInlinerResources(InlinerResources resources)
 	{
 		inlinerResources = resources;
-
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes()
+	 */
 	public String[] supportedTypes()
 	{
 		String[] types = { FilterActionNames.ADVICE_ACTION };
 		return types;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 *      Composestar.Core.INLINE.model.FilterAction)
+	 */
 	public String generate(CodeGenerator<String> codeGen, FilterAction action)
 	{
 		MethodInfo currentMethod = codeGen.getCurrentMethod();
@@ -72,5 +87,16 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 			prefix = codeGen.emitSetInnerCall(inlinerResources.getMethodId(method));
 		}
 		return prefix + codeGen.emitMethodCall(method, args, context) + ";\n";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 *      Composestar.Core.INLINE.model.FilterAction)
+	 */
+	public String methodInit(CodeGenerator<String> codeGen, FilterAction action)
+	{
+		return null;
 	}
 }

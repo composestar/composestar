@@ -8,7 +8,6 @@
 #include "calc.h"
 #include "ComposeStar.h"
 
-
 void beforeSomeThing(JoinPointContext* jpc)
 {
 	printf("Executing something before: %s\n", jpc->startSelector);
@@ -60,6 +59,6 @@ int main(int argc, char *argv[])
 	printf("%d*%d=%d\n", 5, 5, div(5,5));
 	// this is ofcourse a divide by zero
 	printf("%d*%d=%d\n", 5, 0, div(5,0));
-    
+	
 	return 0;
 }

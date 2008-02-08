@@ -33,9 +33,13 @@ TH {
   text-align: left;
 }
 
+TH SUP {
+  font-size: 50%;
+}
+
 TR.timername {
   background-color: menu;
-	color: menutext;
+  color: menutext;
 }
 
 TR.event TD.eventtext {
@@ -59,14 +63,20 @@ TR.event TD.eventtext {
 					<tr>
 						<th>Name / Message</th>
 						<th>Duration (ms)</th>
-						<th title="Note: estimated, garbage collection during the events influences the results.">
+						<th>
 							Memory &#948;
+							<sup>(1)</sup>
 						</th>
 					</tr>
 					<xsl:apply-templates select="timer/timer">
 						<xsl:sort data-type="number" select="@creation" />
 					</xsl:apply-templates>
 				</table>
+
+				<p>
+					<sup>1)</sup>
+					Memory deltas are estimated values. Garbage collection during the events influences the results.
+				</p>
 			</body>
 		</html>
 	</xsl:template>

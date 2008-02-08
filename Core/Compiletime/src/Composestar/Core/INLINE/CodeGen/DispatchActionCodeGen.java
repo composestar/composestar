@@ -109,6 +109,17 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 		return types;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 *      Composestar.Core.INLINE.model.FilterAction)
+	 */
+	public String methodInit(CodeGenerator<String> codeGen, FilterAction action)
+	{
+		return null;
+	}
+
 	/**
 	 * Produces a list of method arguments based on the provided parameter
 	 * signature

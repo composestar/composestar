@@ -22,27 +22,21 @@
  * $Id$
  */
 
-package Composestar.Core.INLINE.CodeGen;
+package Composestar.CwC.INLINE.CodeGen;
 
+import Composestar.Core.INLINE.CodeGen.CodeGenerator;
+import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.CwC.Filters.ExtraFilters;
 
 /**
- * A code generator that does not produce any code.
- * 
  * @author Michiel Hendriks
  */
-public class VoidFilterActionCodeGen implements FilterActionCodeGenerator<String>
+public class CTimerActionCodeGenerator implements FilterActionCodeGenerator<String>
 {
-	protected String[] filterTypes;
-
-	/**
-	 * @param types
-	 */
-	public VoidFilterActionCodeGen(String[] types)
-	{
-		filterTypes = types;
-	}
+	public CTimerActionCodeGenerator()
+	{}
 
 	/*
 	 * (non-Javadoc)
@@ -52,17 +46,36 @@ public class VoidFilterActionCodeGen implements FilterActionCodeGenerator<String
 	 */
 	public String generate(CodeGenerator<String> codeGen, FilterAction action)
 	{
+		if (action.getType().equals(ExtraFilters.TIMER_START_ACTION))
+		{
+			return String.format("timer_%s = clock();\n", System.identityHashCode(codeGen.getCurrentMethod()));
+		}
+		else if (action.getType().equals(ExtraFilters.TIMER_STOP_ACTION))
+		{
+			StringBuffer sb = new StringBuffer();
+			sb.append("printf(\"!!! Function \\\"");
+			sb.append(codeGen.getCurrentMethod().getName());
+			sb.append("\\\" took %ld clock ticks to execute\\n\", (clock() - timer_");
+			sb.append(System.identityHashCode(codeGen.getCurrentMethod()));
+			sb.append("), clock());\n");
+			return sb.toString();
+		}
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes()
+	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String[] supportedTypes()
+	public String methodInit(CodeGenerator<String> codeGen, FilterAction action)
 	{
-		return filterTypes;
+		if (action.getType().equals(ExtraFilters.TIMER_START_ACTION))
+		{
+			return String.format("long timer_%s = 0;\n", System.identityHashCode(codeGen.getCurrentMethod()));
+		}
+		return null;
 	}
 
 	/*
@@ -76,12 +89,12 @@ public class VoidFilterActionCodeGen implements FilterActionCodeGenerator<String
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
-	 *      Composestar.Core.INLINE.model.FilterAction)
+	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#supportedTypes()
 	 */
-	public String methodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String[] supportedTypes()
 	{
-		return null;
+		String[] result = { ExtraFilters.TIMER_START_ACTION, ExtraFilters.TIMER_STOP_ACTION };
+		return result;
 	}
 
 }

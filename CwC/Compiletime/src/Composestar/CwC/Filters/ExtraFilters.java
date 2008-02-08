@@ -36,6 +36,7 @@ import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory.Unsupp
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.CwC.INLINE.CodeGen.CTimerActionCodeGenerator;
 import Composestar.CwC.INLINE.CodeGen.CTraceActionCodeGenerator;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -58,9 +59,19 @@ public class ExtraFilters implements CustomCwCFilters
 
 	public static final String TRACE_OUT_ACTION = "TraceOutAction";
 
+	public static final String PROFILING_FILTER = "profile";
+
+	public static final String TIMER_START_ACTION = "TimerStartAction";
+
+	public static final String TIMER_STOP_ACTION = "TimerStopAction";
+
 	protected FilterAction traceInAction;
 
 	protected FilterAction traceOutAction;
+
+	protected FilterAction timerStartAction;
+
+	protected FilterAction timerStopAction;
 
 	public ExtraFilters()
 	{}
@@ -74,6 +85,7 @@ public class ExtraFilters implements CustomCwCFilters
 	{
 		Set<FilterActionCodeGenerator<String>> result = new HashSet<FilterActionCodeGenerator<String>>();
 		result.add(new CTraceActionCodeGenerator());
+		result.add(new CTimerActionCodeGenerator());
 		return result;
 	}
 
@@ -90,6 +102,7 @@ public class ExtraFilters implements CustomCwCFilters
 			addTraceFilterType(repository, factory);
 			addTraceInFilterType(repository, factory);
 			addTraceOutFilterType(repository, factory);
+			addProfilingFilterType(repository, factory);
 		}
 		catch (UnsupportedFilterTypeException e)
 		{
@@ -192,6 +205,63 @@ public class ExtraFilters implements CustomCwCFilters
 		catch (UnsupportedFilterActionException e)
 		{
 			throw new UnsupportedFilterTypeException(TRACE_OUT_FILTER, e);
+		}
+		repository.addObject(type);
+		if (factory.getTypeMapping() != null)
+		{
+			factory.getTypeMapping().registerFilterType(type);
+		}
+	}
+
+	public FilterAction getTimerStartAction(DataStore repository)
+	{
+		if (timerStartAction != null)
+		{
+			return timerStartAction;
+		}
+		timerStartAction = new FilterAction();
+		timerStartAction.setName(TIMER_START_ACTION);
+		timerStartAction.setFullName(TIMER_START_ACTION);
+		timerStartAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
+		timerStartAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		timerStartAction.setResourceOperations("timer.write");
+		timerStartAction.setCreateJPC(false);
+		repository.addObject(timerStartAction);
+		return timerStartAction;
+	}
+
+	public FilterAction getTimerStopAction(DataStore repository)
+	{
+		if (timerStopAction != null)
+		{
+			return timerStopAction;
+		}
+		timerStopAction = new FilterAction();
+		timerStopAction.setName(TIMER_STOP_ACTION);
+		timerStopAction.setFullName(TIMER_STOP_ACTION);
+		timerStopAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
+		timerStopAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
+		timerStopAction.setResourceOperations("timer.read");
+		timerStopAction.setCreateJPC(false);
+		repository.addObject(timerStopAction);
+		return timerStopAction;
+	}
+
+	public void addProfilingFilterType(DataStore repository, DefaultFilterFactory factory)
+			throws UnsupportedFilterTypeException
+	{
+		FilterType type = new FilterType();
+		type.setType(PROFILING_FILTER);
+		try
+		{
+			type.setAcceptCallAction(getTimerStartAction(repository));
+			type.setRejectCallAction(factory.getContinueAction());
+			type.setAcceptReturnAction(getTimerStopAction(repository));
+			type.setRejectReturnAction(factory.getContinueAction());
+		}
+		catch (UnsupportedFilterActionException e)
+		{
+			throw new UnsupportedFilterTypeException(PROFILING_FILTER, e);
 		}
 		repository.addObject(type);
 		if (factory.getTypeMapping() != null)

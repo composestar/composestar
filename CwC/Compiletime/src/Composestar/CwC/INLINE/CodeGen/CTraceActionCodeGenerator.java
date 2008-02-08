@@ -267,4 +267,15 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 		}
 		return null;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
+	 *      Composestar.Core.INLINE.model.FilterAction)
+	 */
+	public String methodInit(CodeGenerator<String> codeGen, FilterAction action)
+	{
+		return null;
+	}
 }

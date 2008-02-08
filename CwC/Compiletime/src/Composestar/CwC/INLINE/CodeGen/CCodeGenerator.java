@@ -35,6 +35,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
+import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.CodeGen.StringCodeGenerator;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.LAMA.MethodInfo;
@@ -156,6 +157,19 @@ public class CCodeGenerator extends StringCodeGenerator
 		{
 			sb.append(String.format("\tint __cstar_return_actions[%d], __cstar_return_actions_cnt = 0;\n",
 					returnActions.size()));
+		}
+
+		for (FilterAction action : allActions)
+		{
+			FilterActionCodeGenerator<String> facg = faCodeGens.get(action.getType());
+			if (facg != null)
+			{
+				String initString = facg.methodInit(this, action);
+				if (initString != null)
+				{
+					sb.append(indent(initString));
+				}
+			}
 		}
 
 		if (createJPC)

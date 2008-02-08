@@ -44,11 +44,12 @@ public class Compile implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		ModuleInfo mi = ModuleInfoManager.get(Compile.class);
-		if (mi.getSetting("nocompile", false))
+		if (mi.getSetting("nocompile", true))
 		{
 			// logger.info("nocompile = true, skipping compiling");
 			return;
 		}
+		throw new ModuleException("Internal compiler for Compose*/CWC is not implemented", "COMP");
 	}
 
 }

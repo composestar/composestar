@@ -58,4 +58,16 @@ public interface FilterActionCodeGenerator<T>
 	 *         Return null when this filter action does not result in code.
 	 */
 	T generate(CodeGenerator<T> codeGen, FilterAction action);
+
+	/**
+	 * Will be called for every filter action to produce code that is inserted
+	 * at the beginning of the method's filter code. This method should <b>only</b>
+	 * be used for declaration of variables used by various filter actions.
+	 * Statements and expressions are not allowed.
+	 * 
+	 * @param codeGen
+	 * @param action
+	 * @return
+	 */
+	T methodInit(CodeGenerator<T> codeGen, FilterAction action);
 }

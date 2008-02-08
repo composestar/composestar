@@ -65,6 +65,8 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	protected int methodId;
 
+	protected List<FilterAction> allActions;
+
 	protected List<FilterAction> returnActions;
 
 	protected Map<String, FilterActionCodeGenerator<String>> faCodeGens;
@@ -86,6 +88,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	{
 		method = currentMethod;
 		methodId = currentMethodId;
+		allActions = new ArrayList<FilterAction>();
 		returnActions = new ArrayList<FilterAction>();
 		return code.accept(this).toString();
 	}
@@ -159,6 +162,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	 */
 	public Object visitFilterAction(FilterAction filterAction)
 	{
+		allActions.add(filterAction);
 		if (filterAction.getCreateJPC())
 		{
 			createJPC = true;
