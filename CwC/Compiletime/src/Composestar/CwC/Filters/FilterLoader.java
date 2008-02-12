@@ -34,10 +34,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.CpsProgramRepository.Filters.FilterTypeNames;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory.UnsupportedFilterTypeException;
+import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterTypeException;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Resources.CommonResources;
@@ -63,7 +64,7 @@ public class FilterLoader
 
 		DefaultFilterFactory filterFactory = new CwCFilterFactory(resources.repository());
 		String[] filters = { FilterTypeNames.DISPATCH, FilterTypeNames.SEND, FilterTypeNames.ERROR,
-				FilterTypeNames.BEFORE, FilterTypeNames.AFTER, FilterTypeNames.SUBSTITUTION };
+				FilterTypeNames.BEFORE, FilterTypeNames.AFTER, FilterTypeNames.SUBSTITUTION, };
 		try
 		{
 			filterFactory.createFilterTypes(filters);
@@ -73,6 +74,8 @@ public class FilterLoader
 			logger.error(e.getMessage(), e);
 		}
 		resources.put(DefaultFilterFactory.RESOURCE_KEY, filterFactory);
+
+		SECRETResources secretResc = resources.getResourceManager(SECRETResources.class, true);
 
 		List<URL> urls = new ArrayList<URL>();
 		List<String> classNames = new ArrayList<String>();
@@ -160,6 +163,7 @@ public class FilterLoader
 			logger.info(String.format("Loaded CustomCwCFilters instance %s", className));
 			customFilters.add(ccwcf);
 			ccwcf.registerFilters(resources.repository(), filterFactory);
+			ccwcf.registerSecretResources(secretResc);
 		}
 	}
 

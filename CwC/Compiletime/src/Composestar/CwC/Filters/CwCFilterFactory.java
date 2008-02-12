@@ -30,6 +30,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.CpsProgramRepository.Filters.FilterActionNames;
 import Composestar.Core.CpsProgramRepository.Filters.FilterTypeNames;
+import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterActionException;
+import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterTypeException;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**

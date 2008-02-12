@@ -26,6 +26,7 @@ package Composestar.CwC.Filters;
 
 import java.util.Collection;
 
+import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -50,6 +51,15 @@ public interface CustomCwCFilters
 	 * @param factory
 	 */
 	void registerFilters(DataStore repository, DefaultFilterFactory factory);
+
+	/**
+	 * Will be called after registerFilters, this can be used to register custom
+	 * resources and resource operations, but more importantly it can be used to
+	 * register conflict rules.
+	 * 
+	 * @param resources
+	 */
+	void registerSecretResources(SECRETResources resources);
 
 	/**
 	 * Return the code generators for all custom filter actions defined by this

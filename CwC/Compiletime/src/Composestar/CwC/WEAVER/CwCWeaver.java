@@ -616,8 +616,7 @@ public class CwCWeaver implements WEAVER
 						logger.error(String.format("Invalid include file, must start with \" or <: %s", incfile));
 						continue;
 					}
-					PreprocDirective incdirective = new PreprocDirective(String.format("#include %s", incfile
-							.toString()), 0);
+					PreprocDirective incdirective = new PreprocDirective(String.format("#include %s", incfile), 0);
 					ppic.addLineForTokenNumber(incdirective, weaveNode.getTokenNumber() - 1);
 				}
 				return;

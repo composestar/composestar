@@ -664,6 +664,8 @@ public abstract class Master
 			System.exit(ECONFIG);
 			return;
 		}
+		logger.info(Version.getTitle() + " " + Version.getVersionString());
+		logger.debug("Compiled on " + Version.getCompileDate().toString());
 		try
 		{
 			master.loadPlatform();
@@ -680,9 +682,6 @@ public abstract class Master
 			System.exit(ECONFIG);
 			return;
 		}
-
-		logger.info(Version.getTitle() + " " + Version.getVersionString());
-		logger.debug("Compiled on " + Version.getCompileDate().toString());
 
 		int ret = master.run();
 

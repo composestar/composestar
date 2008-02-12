@@ -154,7 +154,7 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 		return sb.toString();
 	}
 
-	class FormatSpec
+	static class FormatSpec
 	{
 		int pointerCnt;
 

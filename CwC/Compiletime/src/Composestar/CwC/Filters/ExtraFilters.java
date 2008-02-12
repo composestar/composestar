@@ -28,11 +28,17 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import Composestar.Core.CKRET.SECRETResources;
+import Composestar.Core.CKRET.Config.ConflictRule;
+import Composestar.Core.CKRET.Config.Resource;
+import Composestar.Core.CKRET.Config.ResourceType;
+import Composestar.Core.CKRET.Config.ConflictRule.RuleType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory.UnsupportedFilterActionException;
-import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory.UnsupportedFilterTypeException;
+import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterActionException;
+import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterTypeException;
+import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -105,6 +111,29 @@ public class ExtraFilters implements CustomCwCFilters
 			addProfilingFilterType(repository, factory);
 		}
 		catch (UnsupportedFilterTypeException e)
+		{
+			logger.error(e, e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.CwC.Filters.CustomCwCFilters#registerSecretResources(Composestar.Core.CKRET.SECRETResources)
+	 */
+	public void registerSecretResources(SECRETResources resources)
+	{
+		Resource rsc = ResourceType.createResource("timer", false);
+		rsc.addVocabulary("read");
+		rsc.addVocabulary("write");
+		resources.addResource(rsc);
+		try
+		{
+			ConflictRule cr = new ConflictRule(rsc, RuleType.Constraint, ConflictRule.PATTERN_NO_WRITE_WRITE_READ,
+					"Timer value is unreliable");
+			resources.addRule(cr);
+		}
+		catch (PatternParseException e)
 		{
 			logger.error(e, e);
 		}

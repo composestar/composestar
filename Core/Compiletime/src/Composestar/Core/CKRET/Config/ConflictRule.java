@@ -21,6 +21,12 @@ import Composestar.Core.FIRE2.util.regex.RegularPattern;
  */
 public class ConflictRule implements Serializable
 {
+	/**
+	 * A predefine conflict pattern that defines that a value may never be
+	 * written twice before being read
+	 */
+	public static final String PATTERN_NO_WRITE_WRITE_READ = "(write)(![write,read]*(write)![write,read]*)+(read)";
+
 	public enum RuleType
 	{
 		/**

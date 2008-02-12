@@ -58,6 +58,8 @@ public class CTimerActionCodeGenerator implements FilterActionCodeGenerator<Stri
 			StringBuffer sb = new StringBuffer();
 			sb.append("printf(\"!!! Function \\\"");
 			sb.append(codeGen.getCurrentMethod().getName());
+			sb.append("\\\" in module \\\"");
+			sb.append(codeGen.getCurrentMethod().parent().getName());
 			sb.append("\\\" took %ld clock ticks to execute\\n\", (clock() - timer_");
 			sb.append(System.identityHashCode(codeGen.getCurrentMethod()));
 			sb.append("), clock());\n");
