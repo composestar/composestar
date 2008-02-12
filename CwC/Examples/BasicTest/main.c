@@ -6,7 +6,7 @@
   
 #include <stdio.h>
 #include "calc.h"
-#include "ComposeStar.h"
+#include "ComposeStar.h" // for JPC
 
 void beforeSomeThing(JoinPointContext* jpc)
 {
@@ -50,7 +50,6 @@ int doPrintProgramName()
 
 int main(int argc, char *argv[])
 {
-	__argc = argc;
 	printHeaderWithVersion();
 	
   printProgramName(argv[0]);
@@ -59,6 +58,9 @@ int main(int argc, char *argv[])
 	printf("%d*%d=%d\n", 5, 5, div(5,5));
 	// this is ofcourse a divide by zero
 	printf("%d*%d=%d\n", 5, 0, div(5,0));
+	
+	printf("Primes up to %u : %u\n", 10000000, nsieve(10000000));
+	printf("Primes up to %u : %u\n", 20000000, nsieve(20000000));
 	
 	return 0;
 }

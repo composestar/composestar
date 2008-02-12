@@ -24,6 +24,8 @@
 
 package Composestar.Core.INLINE.CodeGen;
 
+import java.util.Set;
+
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterAction;
 
@@ -79,7 +81,17 @@ public class VoidFilterActionCodeGen implements FilterActionCodeGenerator<String
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String methodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
+	{
+		return null;
+	}
+
+	public Set<String> getDependencies(CodeGenerator<String> codeGen, String action)
+	{
+		return null;
+	}
+
+	public Set<String> getImports(CodeGenerator<String> codeGen, String action)
 	{
 		return null;
 	}

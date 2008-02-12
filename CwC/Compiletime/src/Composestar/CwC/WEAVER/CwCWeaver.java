@@ -133,6 +133,8 @@ public class CwCWeaver implements WEAVER
 	 */
 	protected PreprocessorInfoChannel cshPIC;
 
+	protected Set<String> extraDeps;
+
 	protected CPSTimer timer;
 
 	public CwCWeaver()
@@ -161,6 +163,9 @@ public class CwCWeaver implements WEAVER
 				codeGen.register(facg);
 			}
 		}
+
+		// TODO: do something with the additional dependencies
+		extraDeps = new HashSet<String>();
 
 		Project p = resources.configuration().getProject();
 		File outputDir = new File(p.getIntermediate(), "woven");
@@ -378,6 +383,8 @@ public class CwCWeaver implements WEAVER
 
 		boolean containsFilterCode = false;
 
+		Set<String> imports = new HashSet<String>();
+
 		Signature sig = concern.getSignature();
 		List<CwCFunctionInfo> functions = sig.getMethods(MethodWrapper.NORMAL);
 		for (CwCFunctionInfo func : functions)
@@ -399,9 +406,10 @@ public class CwCWeaver implements WEAVER
 			FilterCode filterCode = inlinerRes.getInputFilterCode(func);
 			if (filterCode != null)
 			{
-				logger.info(String.format("Weaving function %s.%s", concern.getQualifiedName(), func.getName()));
+				logger.info(String.format("Weaving function %s.%s", concern.getQualifiedName(), func.getName()),
+						realFunc);
 				containsFilterCode = true;
-				processFilterCode(realFunc, filterCode);
+				processFilterCode(realFunc, filterCode, imports);
 			}
 			// TODO: call to other methods, how? This information isn't
 			// harvested from the C file in the first place.
@@ -413,7 +421,12 @@ public class CwCWeaver implements WEAVER
 
 		if (containsFilterCode)
 		{
-			injectComposestarHInclude(type.getModuleDeclaration());
+			imports.add("\"" + cshFile.toString() + "\"");
+			// injectComposestarHInclude(type.getModuleDeclaration());
+		}
+		if (imports.size() > 0)
+		{
+			injectIncludeDirectives(type.getModuleDeclaration(), imports);
 		}
 
 		timer.stop();
@@ -426,11 +439,26 @@ public class CwCWeaver implements WEAVER
 	 * @param func
 	 * @param fc
 	 */
-	protected void processFilterCode(CwCFunctionInfo func, FilterCode fc)
+	protected void processFilterCode(CwCFunctionInfo func, FilterCode fc, Set<String> imports)
 	{
 		// generate ANSI-C code
 		String stringcode = codeGen.generate(fc, func, inlinerRes.getMethodId(func));
 		Reader ccode = new StringReader(stringcode);
+		stringcode = null;
+
+		Set<String> limp = codeGen.getDependencies();
+		if (limp != null)
+		{
+			extraDeps.addAll(limp);
+			limp = null;
+		}
+
+		limp = codeGen.getImports();
+		if (limp != null)
+		{
+			imports.addAll(limp);
+			// limp = null;
+		}
 
 		// parse ANSI-C code to AST
 		// parser.compoundStatement(...)
@@ -537,6 +565,65 @@ public class CwCWeaver implements WEAVER
 			}
 		}
 		logger.error("Unable to find location to inject the ComposeStar.h include directive");
+	}
+
+	/**
+	 * Inserts an #include directive just before the first function declaration
+	 * 
+	 * @param modDecl
+	 */
+	protected void injectIncludeDirectives(ModuleDeclaration modDecl, Set<String> incfiles)
+	{
+		// find injection AST
+		TNode weaveNode = null;
+
+		for (FunctionDeclaration func : modDecl.getFunctions())
+		{
+			if (!func.isIncluded())
+			{
+				// the function's AST points to the "name" part, it should go up
+				// 2 levels to get to the declaration part
+				weaveNode = func.getBaseTypeAST();// .getParent().getParent();
+				if (weaveNode == null)
+				{
+					weaveNode = func.getAST();
+				}
+				break;
+			}
+		}
+
+		if (weaveNode == null)
+		{
+			// no functions -> no inlining possible
+			logger.error(String.format("No location to inject include directives found, not functions in this file"));
+			return;
+		}
+
+		while (weaveNode.getTokenNumber() == -1)
+		{
+			weaveNode = weaveNode.getFirstChild();
+		}
+
+		for (TranslationUnitResult tunit : weavecResc.translationUnitResults())
+		{
+			if (tunit.getModuleDeclaration() == modDecl)
+			{
+				PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
+				for (String incfile : incfiles)
+				{
+					if (!incfile.startsWith("\"") && !incfile.startsWith("<"))
+					{
+						logger.error(String.format("Invalid include file, must start with \" or <: %s", incfile));
+						continue;
+					}
+					PreprocDirective incdirective = new PreprocDirective(String.format("#include %s", incfile
+							.toString()), 0);
+					ppic.addLineForTokenNumber(incdirective, weaveNode.getTokenNumber() - 1);
+				}
+				return;
+			}
+		}
+		logger.error("No location to inject include directives found.");
 	}
 
 	/**

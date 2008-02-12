@@ -24,6 +24,9 @@
 
 package Composestar.CwC.INLINE.CodeGen;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import Composestar.Core.INLINE.CodeGen.CodeGenerator;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
@@ -69,7 +72,7 @@ public class CTimerActionCodeGenerator implements FilterActionCodeGenerator<Stri
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String methodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
 	{
 		if (action.getType().equals(ExtraFilters.TIMER_START_ACTION))
 		{
@@ -94,6 +97,18 @@ public class CTimerActionCodeGenerator implements FilterActionCodeGenerator<Stri
 	public String[] supportedTypes()
 	{
 		String[] result = { ExtraFilters.TIMER_START_ACTION, ExtraFilters.TIMER_STOP_ACTION };
+		return result;
+	}
+
+	public Set<String> getDependencies(CodeGenerator<String> codeGen, String action)
+	{
+		return null;
+	}
+
+	public Set<String> getImports(CodeGenerator<String> codeGen, String action)
+	{
+		Set<String> result = new HashSet<String>();
+		result.add("<time.h>");
 		return result;
 	}
 

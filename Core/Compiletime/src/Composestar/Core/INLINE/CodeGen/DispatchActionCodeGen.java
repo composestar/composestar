@@ -115,7 +115,7 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String methodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
 	{
 		return null;
 	}

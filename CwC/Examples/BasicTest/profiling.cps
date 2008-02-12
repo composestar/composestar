@@ -3,7 +3,7 @@ concern profiling
 	filtermodule profileall
 	{
 		inputfilters
-			prof : Profile = { True ~> [*.main] }
+			prof : Profile = { [*.nsieve] }
 	}
 	
 	superimposition

@@ -36,13 +36,14 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.metamodel.ERelationType;
 import Composestar.Core.LOLA.metamodel.EUnitType;
+import Composestar.Utils.Logging.LocationProvider;
 
 /**
  * Defines the method info for the defined C functions.
  * 
  * @author Michiel Hendriks
  */
-public class CwCFunctionInfo extends MethodInfo
+public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 {
 	private static final long serialVersionUID = -2567532950309340694L;
 
@@ -52,6 +53,12 @@ public class CwCFunctionInfo extends MethodInfo
 	 * If true this method has a varargs construction
 	 */
 	protected boolean varargs;
+
+	protected String sourceFilename;
+
+	protected int sourceLine;
+
+	protected int sourceLinepos;
 
 	public CwCFunctionInfo()
 	{
@@ -63,6 +70,8 @@ public class CwCFunctionInfo extends MethodInfo
 		this();
 		funcDecl = decl;
 		setName(funcDecl.getName());
+		sourceFilename = decl.getAST().getFirstChild().getSource();
+		sourceLine = decl.getAST().getFirstChild().getLineNum();
 	}
 
 	public FunctionDeclaration getFunctionDeclaration()
@@ -192,6 +201,21 @@ public class CwCFunctionInfo extends MethodInfo
 			return new UnitResult(getReturnType());
 		}
 		return new UnitResult(Collections.emptySet());
+	}
+
+	public String getFilename()
+	{
+		return sourceFilename;
+	}
+
+	public int getLineNumber()
+	{
+		return sourceLine;
+	}
+
+	public int getLinePosition()
+	{
+		return sourceLinepos;
 	}
 
 }

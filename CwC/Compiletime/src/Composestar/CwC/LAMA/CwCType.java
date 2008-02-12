@@ -39,6 +39,7 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.metamodel.ERelationType;
 import Composestar.Core.LOLA.metamodel.EUnitType;
+import Composestar.Utils.Logging.LocationProvider;
 
 /**
  * Encapsulates an actual C type (unlike CwCFile). However, these instances are
@@ -46,7 +47,7 @@ import Composestar.Core.LOLA.metamodel.EUnitType;
  * 
  * @author Michiel Hendriks
  */
-public class CwCType extends Type
+public class CwCType extends Type implements LocationProvider
 {
 	private static final long serialVersionUID = -447789582637518491L;
 
@@ -221,6 +222,21 @@ public class CwCType extends Type
 	public String getUnitType()
 	{
 		return EUnitType.TYPE.toString();
+	}
+
+	public String getFilename()
+	{
+		return null;
+	}
+
+	public int getLineNumber()
+	{
+		return 0;
+	}
+
+	public int getLinePosition()
+	{
+		return 0;
 	}
 
 }

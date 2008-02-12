@@ -26,6 +26,7 @@ package Composestar.CwC.INLINE.CodeGen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import weavec.cmodel.type.CType;
 import weavec.cmodel.type.FloatingType;
@@ -84,11 +85,11 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 		sb.append("printf(\"");
 		if (action.getType().equals(ExtraFilters.TRACE_IN_ACTION))
 		{
-			sb.append(">>> ");
+			sb.append(">>> Trace IN:   ");
 		}
 		else if (action.getType().equals(ExtraFilters.TRACE_OUT_ACTION))
 		{
-			sb.append("<<< ");
+			sb.append("<<< Trace OUT:  ");
 		}
 		else
 		{
@@ -274,7 +275,17 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String methodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
+	{
+		return null;
+	}
+
+	public Set<String> getDependencies(CodeGenerator<String> codeGen, String action)
+	{
+		return null;
+	}
+
+	public Set<String> getImports(CodeGenerator<String> codeGen, String action)
 	{
 		return null;
 	}

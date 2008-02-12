@@ -113,6 +113,62 @@ public class CPSLogger extends Logger implements ILogger
 		super.log(prio, new LogMessage(message, re));
 	}
 
+	/**
+	 * Trace log entry with a LocationProvider
+	 */
+	public void trace(Object message, LocationProvider re)
+	{
+		super.trace(new LogMessage(message, re));
+	}
+
+	/**
+	 * Debug log entry with a LocationProvider
+	 */
+	public void debug(Object message, LocationProvider re)
+	{
+		super.debug(new LogMessage(message, re));
+	}
+
+	/**
+	 * Error log entry with a LocationProvider
+	 */
+	public void error(Object message, LocationProvider re)
+	{
+		super.error(new LogMessage(message, re));
+	}
+
+	/**
+	 * Fatal log entry with a LocationProvider
+	 */
+	public void fatal(Object message, LocationProvider re)
+	{
+		super.fatal(new LogMessage(message, re));
+	}
+
+	/**
+	 * Information log entry with a LocationProvider
+	 */
+	public void info(Object message, LocationProvider re)
+	{
+		super.info(new LogMessage(message, re));
+	}
+
+	/**
+	 * Warning log entry with a LocationProvider
+	 */
+	public void warn(Object message, LocationProvider re)
+	{
+		super.warn(new LogMessage(message, re));
+	}
+
+	/**
+	 * A log entry with a LocationProvider
+	 */
+	public void log(Priority prio, Object message, LocationProvider re)
+	{
+		super.log(prio, new LogMessage(message, re));
+	}
+
 	protected CPSLogger(String name)
 	{
 		super(name);

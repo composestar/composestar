@@ -27,8 +27,10 @@ package Composestar.Core.INLINE.CodeGen;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral;
@@ -69,6 +71,10 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 
 	protected List<FilterAction> returnActions;
 
+	protected Set<String> imports;
+
+	protected Set<String> deps;
+
 	protected Map<String, FilterActionCodeGenerator<String>> faCodeGens;
 
 	protected boolean createJPC;
@@ -90,7 +96,54 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 		methodId = currentMethodId;
 		allActions = new ArrayList<FilterAction>();
 		returnActions = new ArrayList<FilterAction>();
-		return code.accept(this).toString();
+		imports = new HashSet<String>();
+		deps = new HashSet<String>();
+		String result = code.accept(this).toString();
+		Set<String> visited = new HashSet<String>();
+		for (FilterAction fc : allActions)
+		{
+			String fcn = fc.getType();
+			if (visited.contains(fcn))
+			{
+				continue;
+			}
+			visited.add(fcn);
+			FilterActionCodeGenerator<String> facg = faCodeGens.get(fcn);
+			if (facg != null)
+			{
+				Set<String> val = facg.getDependencies(this, fcn);
+				if (val != null)
+				{
+					deps.addAll(val);
+				}
+				val = facg.getImports(this, fcn);
+				if (val != null)
+				{
+					imports.addAll(val);
+				}
+			}
+		}
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getDependencies()
+	 */
+	public Set<String> getDependencies()
+	{
+		return Collections.unmodifiableSet(deps);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getImports()
+	 */
+	public Set<String> getImports()
+	{
+		return Collections.unmodifiableSet(imports);
 	}
 
 	/*

@@ -576,7 +576,7 @@ public abstract class Master
 		catch (ModuleException e)
 		{
 			CPSLogger mLogger = CPSLogger.getCPSLogger(e.getModule());
-			mLogger.error(e, e);
+			mLogger.error(e, (Exception) e);
 			StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			mLogger.debug(sw.toString());

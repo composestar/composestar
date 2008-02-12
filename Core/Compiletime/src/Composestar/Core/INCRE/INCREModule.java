@@ -13,8 +13,6 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.Resources.ResourceException;
-import Composestar.Utils.Logging.CPSLogger;
-import Composestar.Utils.Logging.Log4j.CrucialLevel;
 
 public class INCREModule implements Serializable
 {
@@ -221,12 +219,6 @@ public class INCREModule implements Serializable
 		{
 			return;
 		}
-		if (summary.length() != 0)
-		{
-			CPSLogger logger = CPSLogger.getCPSLogger(moduleName);
-			logger.log(CrucialLevel.CRUCIAL, summary);
-		}
-
 		if (moduleClass == null)
 		{
 			throw new ModuleException("Module class has not been assigned", moduleName);

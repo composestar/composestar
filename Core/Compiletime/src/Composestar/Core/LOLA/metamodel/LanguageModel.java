@@ -1046,7 +1046,7 @@ public abstract class LanguageModel
 				}
 				catch (ModuleException e)
 				{
-					logger.error("Internal error: " + e.getMessage(), e);
+					logger.error("Internal error: " + e.getMessage(), (Exception) e);
 				}
 			}
 		}

@@ -37,6 +37,7 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.metamodel.ERelationType;
 import Composestar.Core.LOLA.metamodel.EUnitType;
+import Composestar.Utils.Logging.LocationProvider;
 
 /**
  * A CwCFile is a primitive concern. It does not actually define a type in C. It
@@ -45,7 +46,7 @@ import Composestar.Core.LOLA.metamodel.EUnitType;
  * 
  * @author Michiel Hendriks
  */
-public class CwCFile extends Type
+public class CwCFile extends Type implements LocationProvider
 {
 	private static final long serialVersionUID = -6978972108837895349L;
 
@@ -54,6 +55,8 @@ public class CwCFile extends Type
 	protected String dirPath;
 
 	protected LangNamespace langNamespace;
+
+	protected String sourceFile;
 
 	public CwCFile()
 	{
@@ -64,6 +67,8 @@ public class CwCFile extends Type
 	{
 		this();
 		modDecl = decl;
+		// FIXME: this is incorrect
+		sourceFile = decl.getAST().getSource();
 	}
 
 	public ModuleDeclaration getModuleDeclaration()
@@ -196,6 +201,21 @@ public class CwCFile extends Type
 	public String getUnitType()
 	{
 		return EUnitType.CLASS.toString();
+	}
+
+	public String getFilename()
+	{
+		return sourceFile;
+	}
+
+	public int getLineNumber()
+	{
+		return 0;
+	}
+
+	public int getLinePosition()
+	{
+		return 0;
 	}
 
 }

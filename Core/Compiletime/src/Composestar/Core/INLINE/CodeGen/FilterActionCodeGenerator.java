@@ -24,6 +24,8 @@
 
 package Composestar.Core.INLINE.CodeGen;
 
+import java.util.Set;
+
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterAction;
 
@@ -69,5 +71,25 @@ public interface FilterActionCodeGenerator<T>
 	 * @param action
 	 * @return
 	 */
-	T methodInit(CodeGenerator<T> codeGen, FilterAction action);
+	T generateMethodInit(CodeGenerator<T> codeGen, FilterAction action);
+
+	/**
+	 * Should return a list of types/packages/... that should be included in the
+	 * import second of the type that is currently being woven.
+	 * 
+	 * @param codeGen
+	 * @param action
+	 * @return
+	 */
+	Set<String> getImports(CodeGenerator<T> codeGen, String action);
+
+	/**
+	 * This method should return a list of (file-) dependencies for the given
+	 * filter action.
+	 * 
+	 * @param codeGen
+	 * @param action
+	 * @return
+	 */
+	Set<String> getDependencies(CodeGenerator<T> codeGen, String action);
 }

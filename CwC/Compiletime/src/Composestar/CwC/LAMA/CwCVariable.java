@@ -34,6 +34,7 @@ import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.metamodel.ERelationType;
 import Composestar.Core.LOLA.metamodel.EUnitType;
+import Composestar.Utils.Logging.LocationProvider;
 
 /**
  * Encapsulates a variable defined in a C file. Since the C file is considered a
@@ -41,11 +42,17 @@ import Composestar.Core.LOLA.metamodel.EUnitType;
  * 
  * @author Michiel Hendriks
  */
-public class CwCVariable extends FieldInfo
+public class CwCVariable extends FieldInfo implements LocationProvider
 {
 	private static final long serialVersionUID = 7148389289475337004L;
 
 	protected transient ObjectDeclaration objDecl;
+
+	protected String sourceFilename;
+
+	protected int sourceLine;
+
+	protected int sourceLinepos;
 
 	public CwCVariable()
 	{
@@ -54,7 +61,10 @@ public class CwCVariable extends FieldInfo
 
 	public CwCVariable(ObjectDeclaration decl)
 	{
+		this();
 		objDecl = decl;
+		// sourceFilename = decl.getAST().getFirstChild().getSource();
+		// sourceLine = decl.getAST().getFirstChild().getLineNum();
 	}
 
 	public ObjectDeclaration getObjectDeclaration()
@@ -140,6 +150,21 @@ public class CwCVariable extends FieldInfo
 			return new UnitResult(getFieldType());
 		}
 		return new UnitResult(Collections.emptySet());
+	}
+
+	public String getFilename()
+	{
+		return sourceFilename;
+	}
+
+	public int getLineNumber()
+	{
+		return sourceLine;
+	}
+
+	public int getLinePosition()
+	{
+		return sourceLinepos;
 	}
 
 }

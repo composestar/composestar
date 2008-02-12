@@ -33,6 +33,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Logging.Log4j.CrucialLevel;
 import Composestar.Utils.Perf.CPSTimer;
 
 /**
@@ -166,8 +167,20 @@ public final class INCRE implements CTCommonModule
 		Collection<INCREModule> modules = configmanager.getModules().values();
 
 		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+		int cnt = 0;
 		for (INCREModule m : modules)
 		{
+			String summary = m.getSummary();
+			if (summary == null || summary.length() == 0)
+			{
+				summary = "...";
+			}
+			else
+			{
+				summary = ": " + summary;
+			}
+			logger.log(CrucialLevel.CRUCIAL, String.format("(%2d%%) Executing module %s%s", (cnt++ * 100 / modules
+					.size()), m.getName(), summary));
 			m.setParent(this);
 			timer.start(m.getName());
 			m.execute(resources);

@@ -26,7 +26,9 @@ package Composestar.CwC.INLINE.CodeGen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import Composestar.Core.INLINE.CodeGen.CodeGenerator;
 import Composestar.Core.INLINE.CodeGen.DispatchActionCodeGen;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.LAMA.ParameterInfo;
@@ -68,6 +70,16 @@ public class CDispatchActionCodeGen extends DispatchActionCodeGen
 		{
 			return prefix + methodCall + ";\n";
 		}
+	}
+
+	public Set<String> getDependencies(CodeGenerator<String> codeGen, String action)
+	{
+		return null;
+	}
+
+	public Set<String> getImports(CodeGenerator<String> codeGen, String action)
+	{
+		return null;
 	}
 
 }

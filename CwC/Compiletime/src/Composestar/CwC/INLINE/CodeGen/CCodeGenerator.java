@@ -164,7 +164,7 @@ public class CCodeGenerator extends StringCodeGenerator
 			FilterActionCodeGenerator<String> facg = faCodeGens.get(action.getType());
 			if (facg != null)
 			{
-				String initString = facg.methodInit(this, action);
+				String initString = facg.generateMethodInit(this, action);
 				if (initString != null)
 				{
 					sb.append(indent(initString));

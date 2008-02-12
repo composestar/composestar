@@ -1,6 +1,6 @@
 
 # List of source files
-sources = main.c calc.c
+sources = main.c calc.c 
 objects := $(patsubst %.c,%.o,$(sources))
 
 # List of concerns

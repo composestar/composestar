@@ -2,6 +2,7 @@ package Composestar.Core.INLINE.CodeGen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.Filters.FilterActionNames;
@@ -95,7 +96,17 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String methodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
+	{
+		return null;
+	}
+
+	public Set<String> getDependencies(CodeGenerator<String> codeGen, String action)
+	{
+		return null;
+	}
+
+	public Set<String> getImports(CodeGenerator<String> codeGen, String action)
 	{
 		return null;
 	}
