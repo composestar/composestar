@@ -1,11 +1,14 @@
 package Composestar.Core.LOLA;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -62,7 +65,9 @@ public abstract class LOLA implements CTCommonModule
 	 * @return The filename of the generated language predicate library
 	 * @throws ModuleException when it is detected that the model is invalid, or
 	 *             when the predicate library can not be written to the temp dir
+	 * @deprecated use {@link #initLanguageModelEx(CommonResources)}
 	 */
+	@Deprecated
 	public File initLanguageModel(CommonResources resources) throws ModuleException
 	{
 		File langmap = new File(resources.configuration().getProject().getIntermediate(), "langmap.pro");
@@ -88,6 +93,40 @@ public abstract class LOLA implements CTCommonModule
 	}
 
 	/**
+	 * Initializes the specified language model. This means the createMetaModel
+	 * method is invoked on the model, and the predicate generator will be run
+	 * on this meta model.
+	 * 
+	 * @param model The language meta-model to use (e.g. the DotNETModel)
+	 * @return The reader containing the prolog statements.
+	 * @throws ModuleException when it is detected that the model is invalid
+	 */
+	public Reader initLanguageModelEx(CommonResources resources) throws ModuleException
+	{
+		Reader reader = null;
+		try
+		{
+			langModel.createMetaModel();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			PrintStream languagePredicateFile = new PrintStream(baos);
+			ModelGenerator.prologGenerator(langModel, languagePredicateFile);
+			languagePredicateFile.close();
+			reader = new StringReader(baos.toString());
+		}
+		catch (ModelException e)
+		{
+			logger.error(e, e);
+			throw new ModuleException(e.getMessage(), MODULE_NAME);
+		}
+		catch (IOException e)
+		{
+			logger.error(e, e);
+			throw new ModuleException(e.getMessage(), MODULE_NAME);
+		}
+		return reader;
+	}
+
+	/**
 	 * Initializes the prolog engine.
 	 * 
 	 * @param resources Common resources (used to get the ComposeStarPath)
@@ -96,12 +135,14 @@ public abstract class LOLA implements CTCommonModule
 	 * @throws ModuleException when the prolog engine can not be initialized at
 	 *             all
 	 */
-	public void initPrologEngine(CommonResources resources, File generatedPredicatesFilename) throws ModuleException
+	public void initPrologEngine(CommonResources resources) throws ModuleException
 	{
 		/* Get the names of special files (containing base predicate libraries) */
 
 		/* Initialize the prolog engine */
 		logger.debug("Initializing the prolog interpreter");
+
+		Reader langmod = initLanguageModelEx(resources);
 
 		if (!Init.startJinni())
 		{
@@ -119,12 +160,21 @@ public abstract class LOLA implements CTCommonModule
 
 		loadLibraries();
 
-		if (Init.askJinni("reconsult('" + generatedPredicatesFilename.getAbsolutePath().replace("\\", "/") + "')")
-				.equals("no"))
+		if (langmod == null || !DataBase.streamToProg(langmod, true))
 		{
-			logger.warn("Could not load prolog language-mapping library! Expected location: "
-					+ generatedPredicatesFilename);
+			logger.warn("Error loading language mapping library");
 		}
+
+		// File generatedPredicatesFilename = initLanguageModel(resources);
+		// if (Init.askJinni("reconsult('" +
+		// generatedPredicatesFilename.getAbsolutePath().replace("\\", "/") +
+		// "')")
+		// .equals("no"))
+		// {
+		// logger.warn("Could not load prolog language-mapping library! Expected
+		// location: "
+		// + generatedPredicatesFilename);
+		// }
 
 		if (!Init.run(new String[] {}))
 		{
@@ -253,8 +303,7 @@ public abstract class LOLA implements CTCommonModule
 		if (!initialized)
 		{
 			timer.start("Initialize prolog engine");
-			File predicateFile = initLanguageModel(resources);
-			initPrologEngine(resources, predicateFile);
+			initPrologEngine(resources);
 			timer.stop();
 			initialized = true;
 		}

@@ -53,6 +53,7 @@ public class CLOLA extends LOLA
 	/**
 	 * Run this module.
 	 */
+	@Override
 	public void run(CommonResources resources) throws ModuleException
 	{
 		/*
@@ -80,8 +81,7 @@ public class CLOLA extends LOLA
 		/* Initialize this module (only on the first call) */
 		if (!initialized)
 		{
-			File predicateFile = initLanguageModel(resources);
-			initPrologEngine(resources, predicateFile);
+			initPrologEngine(resources);
 			initialized = true;
 		}
 
@@ -124,10 +124,12 @@ public class CLOLA extends LOLA
 	}
 
 	@Override
-	public void initPrologEngine(CommonResources resources, File generatedPredicatesFilename) throws ModuleException
+	public void initPrologEngine(CommonResources resources) throws ModuleException
 	{
 		/* Initialize the prolog engine */
 		logger.debug("Initializing the prolog interpreter");
+
+		File generatedPredicatesFilename = initLanguageModel(resources);
 
 		if (!Init.startJinni())
 		{
