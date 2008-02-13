@@ -130,6 +130,17 @@ public interface CodeGenerator<T> extends Visitor
 	T emitFilterAction(FilterAction filterAction);
 
 	/**
+	 * Emit the JPC initialization code for a filter action. This will be called
+	 * for filter actions who have CreateJPC=true. It should initialize the JPC
+	 * to contain correct values for the current target/selector and
+	 * substitution target/selector.
+	 * 
+	 * @param filterActio
+	 * @return
+	 */
+	T emitJpcInitialization(FilterAction filterAction);
+
+	/**
 	 * Emit the code to enqueue a 'return filter action' to the list of filter
 	 * actions to be executed in the return flow
 	 * 

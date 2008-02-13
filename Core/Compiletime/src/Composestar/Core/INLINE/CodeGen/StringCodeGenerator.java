@@ -376,21 +376,27 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	 */
 	public String emitFilterAction(FilterAction filterAction)
 	{
+		String jpcInit = "";
+		if (filterAction.getCreateJPC())
+		{
+			jpcInit = emitJpcInitialization(filterAction);
+		}
 		FilterActionCodeGenerator<String> facg = faCodeGens.get(filterAction.getType());
+		String res = null;
 		if (facg == null)
 		{
-			return emitDefaultFilterAction(filterAction);
+			res = emitDefaultFilterAction(filterAction);
 		}
 		else
 		{
-			String res = facg.generate(this, filterAction);
-			if (res == null)
-			{
-				// dummy filter actions don't produce a result
-				return null;
-			}
-			return res;
+			res = facg.generate(this, filterAction);
 		}
+		if (res == null || res.length() == 0)
+		{
+			// dummy filter actions don't produce a result
+			return null;
+		}
+		return jpcInit + res;
 	}
 
 	/*

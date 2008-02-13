@@ -29,17 +29,31 @@ typedef struct __join_point_context {
 	// sender? 
 
 	/**
+	 * The fully qualified name of the module the current join point is located at.
+	 */
+	char *startTarget;
+
+	/**
 	 * The name of the starting selector (name of the function that was called).
 	 */
 	char *startSelector;
 
-	// current target
+	/**
+	 * The name of the current target. This would be the fully qualified name, which 
+	 * relates to the directory + filename (without extention)
+	 */
+
+	char *currentTarget;
 	/**
 	 * The current selector value, which could have been substituted
 	 */
 	char *currentSelector;
 
-	// subst target
+	/**
+	 * The fully qualified name of the substitution target.
+	 */
+	char *substTarget;
+
 	/**
 	 * The name of the selectors from the substitution
 	 */
@@ -49,7 +63,7 @@ typedef struct __join_point_context {
 	 * List with pointers to the argument values
 	 */
 	void **argv;
-	
+
 	/**
 	 * Number of arguments passed to the method
 	 */
@@ -59,6 +73,11 @@ typedef struct __join_point_context {
 	 * Pointer to the return value
 	 */
 	void *returnValue;
+
+	/**
+	 * Will be 1 if the function returns a value (i.e. !void).
+	 */
+	unsigned short hasReturn;
 } JoinPointContext;
 
 #endif

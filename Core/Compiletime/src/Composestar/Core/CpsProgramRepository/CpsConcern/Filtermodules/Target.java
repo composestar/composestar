@@ -9,8 +9,12 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleElementReference;
 import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
+import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 
 /**
  * should be either a declared (in the scope) object or a pseudo variable
@@ -61,7 +65,7 @@ public class Target extends ContextRepositoryEntity
 	public void setName(String targetValue)
 	{
 		// NOTE: not allowed when ref!=null
-		this.name = targetValue;
+		name = targetValue;
 	}
 
 	/**
@@ -74,11 +78,37 @@ public class Target extends ContextRepositoryEntity
 	}
 
 	/**
+	 * If the target is an internal or external this method will return the
+	 * Concern for the Type of the internal/external.
+	 * 
+	 * @return
+	 */
+	public Concern getRefToConcern()
+	{
+		if (!(ref instanceof DeclaredObjectReference))
+		{
+			return null;
+		}
+		DeclaredObjectReference doref = (DeclaredObjectReference) ref;
+		if (doref != null && doref.getResolved())
+		{
+			TypedDeclaration typeDecl = doref.getRef();
+			if (typeDecl == null)
+			{
+				return null;
+			}
+			ConcernReference concernRef = typeDecl.getType();
+			return concernRef.getRef();
+		}
+		return null;
+	}
+
+	/**
 	 * @param refValue
 	 */
 	public void setRef(FilterModuleElementReference refValue)
 	{
-		this.ref = refValue;
+		ref = refValue;
 		name = refValue.getName();
 	}
 

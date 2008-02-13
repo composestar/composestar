@@ -26,6 +26,7 @@ package Composestar.Core.INLINE.CodeGen;
 
 import java.util.List;
 
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.Filters.FilterActionNames;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
@@ -74,7 +75,16 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 		}
 		else
 		{
-			// TODO: resolve type
+			Concern crn = target.getRefToConcern();
+			if (crn != null)
+			{
+				targetType = (Type) crn.getPlatformRepresentation();
+			}
+		}
+
+		if (targetType == null)
+		{
+			throw new RuntimeException("Could not resolve the type of the target of the dispatch action");
 		}
 
 		List<ParameterInfo> paramInfo = currentMethod.getParameters();
@@ -89,7 +99,8 @@ public abstract class DispatchActionCodeGen implements FilterActionCodeGenerator
 		Object context = null;
 		String prefix = "";
 
-		// TODO: resolve target and context
+		// TODO: resolve target and context (i.e. the variable that was created,
+		// which would be the name of the DeclaredPbjectReference)
 
 		if (Target.INNER.equals(target.getName()))
 		{

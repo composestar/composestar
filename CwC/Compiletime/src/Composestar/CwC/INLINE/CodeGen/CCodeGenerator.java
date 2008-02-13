@@ -27,12 +27,14 @@ package Composestar.CwC.INLINE.CodeGen;
 import java.util.List;
 
 import weavec.cmodel.type.VoidType;
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
@@ -40,6 +42,7 @@ import Composestar.Core.INLINE.CodeGen.StringCodeGenerator;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.Type;
 import Composestar.CwC.LAMA.CwCFunctionInfo;
 import Composestar.CwC.LAMA.CwCType;
 
@@ -174,23 +177,31 @@ public class CCodeGenerator extends StringCodeGenerator
 
 		if (createJPC)
 		{
+			String jpcVarName = getJPCVariable(false);
 			sb.append("\t/* init JPC */\n");
-			sb.append(String.format("\t%s.startSelector = \"%s\";\n", getJPCVariable(false), method.getName()));
+			sb.append(String.format("\t%s.startTarget = \"%s\";\n", jpcVarName, method.parent().getFullName()));
+			sb.append(String.format("\t%s.startSelector = \"%s\";\n", jpcVarName, method.getName()));
 			if (hasReturnValue(method))
 			{
-				sb.append(String.format("\t%s.returnValue = &returnValue;\n", getJPCVariable(false)));
+				sb.append(String.format("\t%s.returnValue = &returnValue;\n", jpcVarName));
+				sb.append(String.format("\t%s.hasReturn = 1;\n", jpcVarName));
+			}
+			else
+			{
+				sb.append(String.format("\t%s.hasReturn = 0;\n", jpcVarName));
 			}
 			List<ParameterInfo> pis = method.getParameters();
-			sb.append(String.format("\t%s.argc = %d;\n", getJPCVariable(false), pis.size()));
+			sb.append(String.format("\t%s.argc = %d;\n", jpcVarName, pis.size()));
 			if (pis.size() > 0)
 			{
-				sb.append(String.format("\t%s.argv = (void **) malloc(%d * sizeof(void *));\n", getJPCVariable(false),
-						pis.size()));
+				sb
+						.append(String.format("\t%s.argv = (void **) malloc(%d * sizeof(void *));\n", jpcVarName, pis
+								.size()));
 				for (int i = 0; i < pis.size(); i++)
 				{
 					ParameterInfo pi = pis.get(i);
-					sb.append(String.format("\t%s.argv[%d] = &%s; /* %s */\n", getJPCVariable(false), i, pi.getName(),
-							pi.getParameterTypeString()));
+					sb.append(String.format("\t%s.argv[%d] = &%s; /* %s */\n", jpcVarName, i, pi.getName(), pi
+							.getParameterTypeString()));
 				}
 			}
 			else
@@ -380,5 +391,56 @@ public class CCodeGenerator extends StringCodeGenerator
 			return "&__JPC";
 		}
 		return "__JPC";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#emitJpcInitialization(Composestar.Core.INLINE.model.FilterAction)
+	 */
+	public String emitJpcInitialization(FilterAction filterAction)
+	{
+		StringBuffer sb = new StringBuffer();
+		String jpcVarName = getJPCVariable(false);
+
+		Target target = filterAction.getMessage().getTarget();
+		Type targetType = null;
+		if (Target.INNER.equals(target.getName()) || Target.SELF.equals(target.getName()))
+		{
+			targetType = method.parent();
+		}
+		else
+		{
+			Concern crn = target.getRefToConcern();
+			if (crn != null)
+			{
+				targetType = (Type) crn.getPlatformRepresentation();
+			}
+		}
+
+		if (targetType != null)
+		{
+			sb.append(String.format("%s.currentTarget = \"%s\";\n", jpcVarName, targetType.getFullName()));
+		}
+		sb.append(String.format("%s.currentSelector = \"%s\";\n", jpcVarName, filterAction.getMessage().getSelector()));
+
+		target = filterAction.getSubstitutedMessage().getTarget();
+		targetType = null;
+		if (Target.INNER.equals(target.getName()) || Target.SELF.equals(target.getName()))
+		{
+			targetType = method.parent();
+		}
+		else
+		{
+			Concern crn = target.getRefToConcern();
+			if (crn != null)
+			{
+				targetType = (Type) crn.getPlatformRepresentation();
+			}
+		}
+		sb.append(String.format("%s.substTarget = \"%s\";\n", jpcVarName, targetType.getFullName()));
+		sb.append(String.format("%s.substSelector = \"%s\";\n", jpcVarName, filterAction.getSubstitutedMessage()
+				.getSelector()));
+		return sb.toString();
 	}
 }
