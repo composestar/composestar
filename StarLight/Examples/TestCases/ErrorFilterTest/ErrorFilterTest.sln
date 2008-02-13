@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{D0A7707A-04E2-4AA9-A44E-89783E5BD8A8}") = "ErrorFilterTest", "ErrorFilterTest.cpsproj", "{C7FC7DB6-2DC8-4DEC-B15F-ED37843E7BE6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7FC7DB6-2DC8-4DEC-B15F-ED37843E7BE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7FC7DB6-2DC8-4DEC-B15F-ED37843E7BE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7FC7DB6-2DC8-4DEC-B15F-ED37843E7BE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7FC7DB6-2DC8-4DEC-B15F-ED37843E7BE6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
