@@ -414,12 +414,24 @@
 			<include name="iTextSharp/iTextSharp.sln" />
 			<include name="Pacman/Pacman.sln" />
 			<include name="PacmanTwo/PacmanTwo.sln" />
-			<include name="RuBCoDeTest/TestCase/TestCase.sln" />
+			<include name="RuBCoDeTest/*.sln" />
+			<include name="TestCases/*/*.sln" />
+		</fileset>
+		
+		<fileset id="systemtest.customfilters" dir="${build.starlight}/Examples">
+			<include name="CustomFilters/*.sln" />
+			<include name="RuBCoDeTest/RuBCoDeTestFilters/*.sln" />
 		</fileset>
 
 		<echo level="info">Cleaning tests</echo>
 		<cs:dn_msbatch target="Clean">
 			<fileset refid="systemtest.solutions" />
+			<fileset refid="systemtest.customfilters" />
+		</cs:dn_msbatch>
+
+		<echo level="info">Tests setup (custom filters)</echo>
+		<cs:dn_msbatch failOnError="true">
+			<fileset refid="systemtest.customfilters" />
 		</cs:dn_msbatch>
 
 		<echo level="info">Building tests</echo>

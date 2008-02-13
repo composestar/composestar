@@ -21,7 +21,7 @@ namespace RuBCoDeTest.TestCase
             {
                 Console.WriteLine("\n[ ResourceOperationException ]");
                 Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                //Console.WriteLine(e.StackTrace);
             }
 
             Console.WriteLine("\n[ Increasing security ]");
@@ -35,7 +35,7 @@ namespace RuBCoDeTest.TestCase
             {
                 Console.WriteLine("\n[ ResourceOperationException ]");
                 Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                //Console.WriteLine(e.StackTrace);
             }
         }
 

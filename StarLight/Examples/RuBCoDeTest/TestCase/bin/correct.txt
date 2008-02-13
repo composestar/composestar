@@ -1,0 +1,22 @@
+
+Sending message
+Sender:   alice@example.org
+Receiver: bob@example.org
+Message:  Hello World!
+
+Archiving message
+Sender:   alice@example.org
+Receiver: bob@example.org
+Message:  Hello World!
+
+[ Increasing security ]
+
+Sending message
+Sender:   YWxpY2VAZXhhbXBsZS5vcmc=
+Receiver: Ym9iQGV4YW1wbGUub3Jn
+Message:  SGVsbG8gV29ybGQh
+
+Archiving message
+Sender:   alice@example.org
+Receiver: bob@example.org
+Message:  Hello World!
