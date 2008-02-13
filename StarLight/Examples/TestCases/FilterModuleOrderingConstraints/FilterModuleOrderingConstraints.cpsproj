@@ -1,0 +1,64 @@
+﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"FilterModuleOrderingConstraints"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2029815d-fc65-40e2-bbab-4e636908f00a}</ProjectGuid>
+    <ProjectType>StarLight</ProjectType>
+    <RepositoryFilename>obj\starlight.xml</RepositoryFilename>
+    <RootNamespace>FilterModuleOrderingConstraints</RootNamespace>
+    <AssemblyName>FilterModuleOrderingConstraints</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <CodeLanguage>CSharp</CodeLanguage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugLevel>Debug</DebugLevel>
+    <VerifyIL>False</VerifyIL>
+    <WeaveDebugLevel>None</WeaveDebugLevel>
+    <FILTHOutput>False</FILTHOutput>
+    <SecretEnabled>False</SecretEnabled>
+    <BookKeepingMode>ConflictPaths</BookKeepingMode>
+    <ActiveStarlightVersion>
+    </ActiveStarlightVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugLevel>1</DebugLevel>
+    <VerifyIL>True</VerifyIL>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.8.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+      <Name>Composestar.StarLight.ContextInfo</Name>
+      <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
+      <HintPath>..\..\..\..\..\Program Files\StarLight\CoreElements\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Composestar.StarLight.Filters, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+      <Name>Composestar.StarLight.Filters</Name>
+      <AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.Filters.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FilterPrinter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Foo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainRunner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Concern Include="FilterModuleOrderingConstraints.cps" />
+  </ItemGroup>
+  <!-- Import the CSharp targets -->
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!--Import the StarLight targets-->
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\StarLight.targets" />
+</Project>
