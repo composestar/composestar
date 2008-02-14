@@ -1,0 +1,58 @@
+[1] target functions must be declared in the current file, otherwise the 
+	resulting file will not compile. This means that a header file must be used
+	in the current file that contains the target method declarations. This
+	problem affects all filters that use the substitution part as input
+	for the destination function.
+	A possible solution would be to inline the signature of the target function
+	in the current file (if it's not already declared). Or, create a temporary
+	header file that contains these signatures and inline an include directive.
+	
+[2] added signatures are not supported. This required the addition of a dummy
+	method to the current file.
+	
+[3] signature removing is not really supported. Unclear on the actual inliner 
+	behavior. Should the actual method be removed? Then it won't compile. A 
+	single filter with an unconditional exit flow results in the removing of a
+	method, is this intended?.
+	
+[4] no public access to ComposeStar.h, which makes creating of advice action
+	target difficult.
+	
+[5] no outputfilter support, this requires information about "call to method",
+	which is not available (?).
+	
+[6] no support for custom objects/sources which can be required by filter
+	actions. The include directives can be inlines. But the final compile action
+	should also compile these sources and link them with the program. For this
+	the makefile needs to be modified, which imposes a static change to the
+	base program (already required for ComposeStar.c).
+	
+[7] compiler is not implemented. The current implementation expects to be
+	called from a makefile which will do the eventual compiling of the woven 
+	files. (preprocessing is implemented)
+	
+[8] modified weavec is required, it contains a small bug in the parser and the
+	define/undef directives are stripped from the final source. These are required
+	for the inlined include files to respect the header file guards.	 			
+	
+[9] filter code can not contain types not declared in the target file or 
+	ComposeStar.h. This is because weavec needs to know everything about the 
+	types it encounters during parsing of the inline code (to generate the AST),
+	even though the type information is never used during weaving.
+
+[10] a complex build setup is needed to compile a C program with composition 
+	filters. Compose* needs all information about the program to do its work.
+	Which means it can not be placed in the standard compile chain as used in
+	makefiles. Often compiling of a C program relies a lot on various compiler
+	instructions. This makes a generic preprocess+compile step within Compose*
+	very difficult. Therefor Compose* will need to be called after preprocessing
+	of the source files and before the actual compiling. The standard compiling 
+	of C files to objects needs to be split up in a seperate preprocess and 
+	compile step, where the compile step uses the woven source files.
+	
+[11] error action not implemented. How should the error be handled? No 
+	exception handling. Only fatal errors are possible. JohanW suggest assertions,
+	those are fatal.
+
+[12] JoinPointContext does not contain a lot of useful information. An runtime
+	there is no type information.

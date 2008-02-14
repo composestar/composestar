@@ -80,6 +80,7 @@ import Composestar.Core.WEAVER.WEAVER;
 import Composestar.CwC.Filters.FilterLoader;
 import Composestar.CwC.INLINE.CodeGen.CCodeGenerator;
 import Composestar.CwC.INLINE.CodeGen.CDispatchActionCodeGen;
+import Composestar.CwC.LAMA.CwCCallToOtherMethod;
 import Composestar.CwC.LAMA.CwCFile;
 import Composestar.CwC.LAMA.CwCFunctionInfo;
 import Composestar.CwC.TYM.WeaveCResources;
@@ -411,8 +412,20 @@ public class CwCWeaver implements WEAVER
 				containsFilterCode = true;
 				processFilterCode(realFunc, filterCode, imports);
 			}
+
 			// TODO: call to other methods, how? This information isn't
 			// harvested from the C file in the first place.
+			for (CwCCallToOtherMethod ctom : (Collection<CwCCallToOtherMethod>) func.getCallsToOtherMethods())
+			{
+				filterCode = inlinerRes.getOutputFilterCode(ctom);
+				if (filterCode != null)
+				{
+					logger.info(String.format("Weaving call to function %s from %s.%s", ctom.getMethodName(), concern
+							.getQualifiedName(), func.getName()), realFunc);
+					containsFilterCode = true;
+					//
+				}
+			}
 		}
 
 		// TODO: process added signatures, added signatures can't be processed

@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import weavec.ast.TNode;
 import weavec.cmodel.declaration.AnnotationDeclaration;
 import weavec.cmodel.declaration.AnnotationInstance;
 import weavec.cmodel.declaration.Declaration;
@@ -51,13 +52,16 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.CwC.LAMA.CwCAnnotation;
 import Composestar.CwC.LAMA.CwCAnnotationType;
+import Composestar.CwC.LAMA.CwCCallToOtherMethod;
 import Composestar.CwC.LAMA.CwCFile;
 import Composestar.CwC.LAMA.CwCFunctionInfo;
+import Composestar.CwC.LAMA.CwCFunctionInfoCTOMStub;
 import Composestar.CwC.LAMA.CwCParameterInfo;
 import Composestar.CwC.LAMA.CwCType;
 import Composestar.CwC.LAMA.CwCVariable;
 import Composestar.CwC.TYM.WeaveCResources;
 import Composestar.Utils.Logging.CPSLogger;
+import antlr.collections.AST;
 
 /**
  * Creates the LAMA wrapper classes for the WeaveC Language Model
@@ -81,6 +85,8 @@ public class LangModelConverter implements CTCommonModule
 
 	protected Map<String, CwCAnnotationType> stringAnnotTypeMapping;
 
+	protected Map<FunctionDeclaration, CwCFunctionInfoCTOMStub> ctomStubs;
+
 	protected CTypeToStringConverter converter;
 
 	protected UnitRegister register;
@@ -101,6 +107,7 @@ public class LangModelConverter implements CTCommonModule
 		stringTypeMapping = new HashMap<String, CwCType>();
 		annotTypeMapping = new HashMap<AnnotationType, CwCAnnotationType>();
 		stringAnnotTypeMapping = new HashMap<String, CwCAnnotationType>();
+		ctomStubs = new HashMap<FunctionDeclaration, CwCFunctionInfoCTOMStub>();
 		duplicateTypeCtr = 0;
 
 		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
@@ -131,7 +138,7 @@ public class LangModelConverter implements CTCommonModule
 		logger.info("Phase 2: Collecting language model");
 		for (TranslationUnitResult tunit : weavecRes.translationUnitResults())
 		{
-			createCwCFile(tunit.getModuleDeclaration());
+			createCwCFile(tunit);
 		}
 
 		logger.info("Phase 3: Creating primitive types");
@@ -217,8 +224,9 @@ public class LangModelConverter implements CTCommonModule
 		annotTypeMapping.put(annotDecl.getType(), cwcType);
 	}
 
-	protected void createCwCFile(ModuleDeclaration modDecl)
+	protected void createCwCFile(TranslationUnitResult tunit)
 	{
+		ModuleDeclaration modDecl = tunit.getModuleDeclaration();
 		logger.debug(String.format("Collecting file (module) %s", modDecl.getName()));
 		File fileName = new File(modDecl.getName());
 		String namespace = "";
@@ -267,6 +275,8 @@ public class LangModelConverter implements CTCommonModule
 				register.registerLanguageUnit(cwcparm);
 				procAnnotations(cwcparm, od);
 			}
+
+			procCallToOtherMethods(tunit, cwcfunc, funcDecl);
 		}
 
 		for (ObjectDeclaration objDecl : modDecl.getVariables())
@@ -293,5 +303,73 @@ public class LangModelConverter implements CTCommonModule
 			cwcannot.setValue(annot.getAttributeValues().toString());
 			cwcannot.register(resolveCwCAnnotationType(annot.getDeclaration().getType()), target);
 		}
+	}
+
+	protected void procCallToOtherMethods(TranslationUnitResult tunit, CwCFunctionInfo cwcfunc,
+			FunctionDeclaration funcDecl)
+	{
+		TNode ast = funcDecl.getAST();
+		procCTOMAstWalker(tunit, cwcfunc, ast.getNextSibling());
+	}
+
+	protected void procCTOMAstWalker(TranslationUnitResult tunit, CwCFunctionInfo cwcfunc, AST ast)
+	{
+		for (AST sibling = ast; sibling != null; sibling = sibling.getNextSibling())
+		{
+			if (sibling.getNextSibling() != null
+					&& sibling.getNextSibling().getType() == weavec.parser.ACGrammarLexerTokenTypes.NFunctionCallArgs)
+			{
+				procCTOMAddCall(tunit, cwcfunc, sibling);
+			}
+			if (sibling.getFirstChild() != null)
+			{
+				procCTOMAstWalker(tunit, cwcfunc, sibling.getFirstChild());
+			}
+		}
+	}
+
+	protected CwCFunctionInfoCTOMStub getCTOMStub(FunctionDeclaration funcDecl)
+	{
+		if (ctomStubs.containsKey(funcDecl))
+		{
+			return ctomStubs.get(funcDecl);
+		}
+		FunctionType ftype = (FunctionType) funcDecl.getType();
+		CwCFunctionInfoCTOMStub calledMethod = new CwCFunctionInfoCTOMStub(funcDecl);
+		calledMethod.setName(funcDecl.getName());
+		calledMethod.setReturnType(resolveCwCType(funcDecl.getReturnType()));
+		calledMethod.setReturnType(converter.convert(funcDecl.getReturnType()));
+		calledMethod.setVarArgs(ftype.hasVarArgs());
+
+		if (funcDecl.getParameterScope() != null)
+		{
+			for (Declaration d : funcDecl.getParameterScope().getNamespace(CNamespaceKind.OBJECT))
+			{
+				ObjectDeclaration od = (ObjectDeclaration) d;
+				CwCParameterInfo cwcparm = new CwCParameterInfo(od);
+				cwcparm.setName(d.getName());
+				cwcparm.setParameterType(resolveCwCType(od.getType()));
+				cwcparm.setParameterType(converter.convert(od.getType()));
+
+				cwcparm.setParent(calledMethod);
+				calledMethod.addParameter(cwcparm);
+			}
+		}
+		ctomStubs.put(funcDecl, calledMethod);
+		return calledMethod;
+	}
+
+	protected void procCTOMAddCall(TranslationUnitResult tunit, CwCFunctionInfo cwcfunc, AST ast)
+	{
+		logger.debug(String.format("Found call to %s from %s", ast.getText(), cwcfunc.getName()));
+		CwCCallToOtherMethod ctom = new CwCCallToOtherMethod();
+		ctom.setMethodName(ast.getText());
+		ctom.setASTNode(ast);
+		Declaration decl = tunit.getRootScope().get(CNamespaceKind.OBJECT, ast.getText());
+		if (decl instanceof FunctionDeclaration)
+		{
+			ctom.setCalledMethod(getCTOMStub((FunctionDeclaration) decl));
+		}
+		cwcfunc.getCallsToOtherMethods().add(ctom);
 	}
 }

@@ -70,8 +70,11 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 		this();
 		funcDecl = decl;
 		setName(funcDecl.getName());
-		sourceFilename = decl.getAST().getFirstChild().getSource();
-		sourceLine = decl.getAST().getFirstChild().getLineNum();
+		if (decl.getAST() != null)
+		{
+			sourceFilename = decl.getAST().getFirstChild().getSource();
+			sourceLine = decl.getAST().getFirstChild().getLineNum();
+		}
 	}
 
 	public FunctionDeclaration getFunctionDeclaration()
