@@ -62,6 +62,16 @@ public class CCodeGenerator extends StringCodeGenerator
 		return "\t" + input.replaceAll("\n(.)", "\n\t$1");
 	}
 
+	protected static String indent(String input, int depth)
+	{
+		String it = "";
+		while (depth-- > 0)
+		{
+			it += "\t";
+		}
+		return it + input.replaceAll("\n(.)", "\n" + it + "$1");
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -207,7 +217,7 @@ public class CCodeGenerator extends StringCodeGenerator
 			else
 			{
 				// requires #include <stdio.h>
-				sb.append(String.format("\t%s.argv = ((void *)0);\n", getJPCVariable(false)));
+				sb.append(String.format("\t%s.argv = NULL /*((void *)0)*/;\n", getJPCVariable(false)));
 			}
 		}
 
@@ -216,7 +226,7 @@ public class CCodeGenerator extends StringCodeGenerator
 		if (onReturn != null)
 		{
 			sb.append("\t{\n");
-			sb.append(indent(indent(onReturn)));
+			sb.append(indent(onReturn, 2));
 			sb.append("\t}\n");
 		}
 		if (hasReturnValue(method))
@@ -263,17 +273,16 @@ public class CCodeGenerator extends StringCodeGenerator
 		StringBuffer sb = new StringBuffer();
 		sb.append("int __cstar_return_actions_proc = 0;\n");
 		sb.append("while ( __cstar_return_actions_proc < __cstar_return_actions_cnt ) {\n");
-		sb.append("\tswitch( __cstar_return_actions[__cstar_return_actions_proc] ) {\n");
+		sb.append("\tswitch( __cstar_return_actions[__cstar_return_actions_proc++] ) {\n");
 		for (int i = 0; i < returnActions.size(); i++)
 		{
 			sb.append("\tcase ");
 			sb.append(i);
-			sb.append(":\n");
-			sb.append(indent(indent(emitFilterAction(returnActions.get(i)))));
-			sb.append("\t\tbreak;\n");
+			sb.append(": {\n");
+			sb.append(indent(emitFilterAction(returnActions.get(i)), 3));
+			sb.append("\t\t}\n\t\tbreak;\n");
 		}
 		sb.append("\t}\n");
-		sb.append("\t__cstar_return_actions_proc++;\n");
 		sb.append("}\n");
 		return sb.toString();
 	}

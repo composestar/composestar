@@ -442,9 +442,15 @@ public class CwCWeaver implements WEAVER
 	protected void processFilterCode(CwCFunctionInfo func, FilterCode fc, Set<String> imports)
 	{
 		// generate ANSI-C code
+
+		// Note: stringcode is used for error reporting when there's an
+		// exception
 		String stringcode = codeGen.generate(fc, func, inlinerRes.getMethodId(func));
+		if (logger.isTraceEnabled())
+		{
+			logger.trace(stringcode);
+		}
 		Reader ccode = new StringReader(stringcode);
-		stringcode = null;
 
 		Set<String> limp = codeGen.getDependencies();
 		if (limp != null)
@@ -501,7 +507,8 @@ public class CwCWeaver implements WEAVER
 		TNode newBodyAST = createTNode(ACGrammarTokenTypes.NCompoundStatement, "{", bodyAST);
 		bodyAST.doubleLink();
 		bodyAST.removeSelf();
-		setMetaInfo(fcAst, RecursionMode.FOREST, -1, null, bodyAST.getTokenNumber());
+		setMetaInfo(fcAst, RecursionMode.FOREST, -1, "<Composestar/CwC/INLINE#" + func.parent().getFullName() + "."
+				+ func.getName() + ">", bodyAST.getTokenNumber());
 		fcAst.doubleLink();
 		newBodyAST.addChild(fcAst);
 		newBodyAST.addChild(bodyAST);
