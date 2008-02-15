@@ -460,7 +460,10 @@ public class CCodeGenerator extends StringCodeGenerator
 				targetType = (Type) crn.getPlatformRepresentation();
 			}
 		}
-		sb.append(String.format("%s.substTarget = \"%s\";\n", jpcVarName, targetType.getFullName()));
+		if (targetType != null)
+		{
+			sb.append(String.format("%s.substTarget = \"%s\";\n", jpcVarName, targetType.getFullName()));
+		}
 		sb.append(String.format("%s.substSelector = \"%s\";\n", jpcVarName, filterAction.getSubstitutedMessage()
 				.getSelector()));
 		return sb.toString();

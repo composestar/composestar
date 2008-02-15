@@ -56,6 +56,8 @@ import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
 import Composestar.Core.Config.BuildConfig;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.Resources.CommonResources;
@@ -269,6 +271,10 @@ public class XMLReport implements SECRETReport
 				for (FilterModuleSuperImposition fmsi : (List<FilterModuleSuperImposition>) fsa.getOrder()
 						.filterModuleSIList())
 				{
+					if (InnerDispatcher.isDefaultDispatch(fmsi.getFilterModule().getRef()))
+					{
+						continue;
+					}
 					Element fmsiElm = xmlDoc.createElement("filtermodule");
 					if (fmsi.getCondition() != null)
 					{
@@ -295,12 +301,18 @@ public class XMLReport implements SECRETReport
 						FlowNode fn = et.getStartState().getFlowNode();
 						if (fn.containsName(FlowNode.FILTER_NODE))
 						{
-							if (fn.getRepositoryLink() == null)
+							if (!(fn.getRepositoryLink() instanceof Filter))
+							{
+								continue;
+							}
+							Filter re = (Filter) fn.getRepositoryLink();
+							if (re.getDescriptionFileName() == null)
 							{
 								continue;
 							}
 							Element traceElm = xmlDoc.createElement("trace");
-							traceElm.setTextContent(fn.getRepositoryLink().getRepositoryKey());
+							traceElm.setTextContent(re.getFilterAST().getQualifiedName() + " : "
+									+ re.getFilterType().getType());
 							confElm.appendChild(traceElm);
 						}
 					}
