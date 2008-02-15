@@ -34,7 +34,7 @@ import Composestar.Core.INLINE.model.FilterAction;
  * 
  * @author Michiel Hendriks
  */
-public class VoidFilterActionCodeGen implements FilterActionCodeGenerator<String>
+public class VoidFilterActionCodeGen<T> implements FilterActionCodeGenerator<T>
 {
 	protected String[] filterTypes;
 
@@ -52,7 +52,7 @@ public class VoidFilterActionCodeGen implements FilterActionCodeGenerator<String
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#generate(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generate(CodeGenerator<String> codeGen, FilterAction action)
+	public T generate(CodeGenerator<T> codeGen, FilterAction action)
 	{
 		return null;
 	}
@@ -81,17 +81,17 @@ public class VoidFilterActionCodeGen implements FilterActionCodeGenerator<String
 	 * @see Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator#methodInit(Composestar.Core.INLINE.CodeGen.CodeGenerator,
 	 *      Composestar.Core.INLINE.model.FilterAction)
 	 */
-	public String generateMethodInit(CodeGenerator<String> codeGen, FilterAction action)
+	public T generateMethodInit(CodeGenerator<T> codeGen, FilterAction action)
 	{
 		return null;
 	}
 
-	public Set<String> getDependencies(CodeGenerator<String> codeGen, String action)
+	public Set<String> getDependencies(CodeGenerator<T> codeGen, String action)
 	{
 		return null;
 	}
 
-	public Set<String> getImports(CodeGenerator<String> codeGen, String action)
+	public Set<String> getImports(CodeGenerator<T> codeGen, String action)
 	{
 		return null;
 	}

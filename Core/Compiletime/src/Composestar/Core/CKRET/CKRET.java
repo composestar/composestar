@@ -357,7 +357,7 @@ public class CKRET implements CTCommonModule
 						FilterModuleOrder fmo = new FilterModuleOrder(aFmolist);
 						if (!fmo.equals(singleOrder))
 						{
-							if (ca.analyseOrder(fmo, !foundGoodOrder))
+							if (ca.analyseOrder(fmo, fmo.equals(singleOrder)))
 							{
 								if (!foundGoodOrder)
 								{

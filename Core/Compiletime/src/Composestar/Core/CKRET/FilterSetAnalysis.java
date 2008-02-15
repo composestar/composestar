@@ -231,6 +231,10 @@ public class FilterSetAnalysis implements Serializable
 			if (fn.containsName(FlowNode.FILTER_NODE))
 			{
 				RepositoryEntity re = fn.getRepositoryLink();
+				if (re.getDescriptionFileName() == null)
+				{
+					continue;
+				}
 				logger.warn(re.getRepositoryKey(), re);
 			}
 		}

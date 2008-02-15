@@ -353,17 +353,17 @@ public abstract class Master
 
 		CmdLineParser.StringListOption slo;
 		slo = parser.getOption('D');
-		if (slo != null && so.isSet())
+		if (slo != null)
 		{
 			for (String arg : slo.getValue())
 			{
-				String[] setting = arg.substring(2).split("\\.|=", 3);
+				String[] setting = arg.split("\\.|=", 3);
 				if (setting.length != 3)
 				{
 					System.err.println("Correct format is: -D<module>.<setting>=<value>");
 					continue;
 				}
-				settingsOverride.put(setting[0] + "." + setting[1], setting[3]);
+				settingsOverride.put(setting[0] + "." + setting[1], setting[2]);
 			}
 		}
 		if (parser.getDefaultOption() instanceof CmdLineParser.StringOption)

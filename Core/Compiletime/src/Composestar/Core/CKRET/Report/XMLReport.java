@@ -295,6 +295,10 @@ public class XMLReport implements SECRETReport
 						FlowNode fn = et.getStartState().getFlowNode();
 						if (fn.containsName(FlowNode.FILTER_NODE))
 						{
+							if (fn.getRepositoryLink() == null)
+							{
+								continue;
+							}
 							Element traceElm = xmlDoc.createElement("trace");
 							traceElm.setTextContent(fn.getRepositoryLink().getRepositoryKey());
 							confElm.appendChild(traceElm);

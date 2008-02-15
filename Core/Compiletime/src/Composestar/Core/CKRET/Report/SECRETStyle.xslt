@@ -55,6 +55,10 @@ H4 {
 	margin-bottom: 5px;
 }
 
+FIELDSET {
+	margin-top: 5px;
+}
+
 A {
 	padding: 1px 3px 1px 3px;
 	text-decoration: none;
@@ -393,15 +397,18 @@ way to fit your requirements.
 			</h2>
 			<xsl:for-each select="filterset">
 				<xsl:sort select="@selected" data-type="text" order="descending" />
-				<xsl:apply-templates select="." />
+				<xsl:apply-templates select=".">
+					<xsl:with-param name="position" select="position()" />
+				</xsl:apply-templates>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 
 	<xsl:template match="filterset">
+		<xsl:param name="position">??</xsl:param>
 		<xsl:variable name="styleclass">
 			filterset
-			<xsl:if test="@selected">
+			<xsl:if test="@selected = 'true'">
 				<xsl:text> </xsl:text>
 				selectedFilterset
 			</xsl:if>
@@ -413,7 +420,7 @@ way to fit your requirements.
 		<fieldset class="{$styleclass}" id="{generate-id(.)}">
 			<legend class="{$styleclass}">
 				Filter set analysis #
-				<xsl:value-of select="position()" />
+				<xsl:value-of select="$position" />
 			</legend>
 			<dl>
 				<dt>Selected filter set</dt>
@@ -453,15 +460,15 @@ way to fit your requirements.
 						<dt>Resource</dt>
 						<dd>
 							<xsl:choose>
-    						<xsl:when test="key('resourcekey', @resource)">
-    							<a href="#{generate-id(key('resourcekey', @resource))}">
-    								<xsl:value-of select="@resource" />
-    							</a>
-    						</xsl:when>
-    						<xsl:otherwise>
-    							<xsl:value-of select="@resource" />
-    						</xsl:otherwise>
-    					</xsl:choose>
+								<xsl:when test="key('resourcekey', @resource)">
+									<a href="#{generate-id(key('resourcekey', @resource))}">
+										<xsl:value-of select="@resource" />
+									</a>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="@resource" />
+								</xsl:otherwise>
+							</xsl:choose>
 						</dd>
 						<dt>Selector</dt>
 						<dd>

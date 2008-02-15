@@ -59,11 +59,19 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	protected static String indent(String input)
 	{
+		if (input == null)
+		{
+			return "";
+		}
 		return "\t" + input.replaceAll("\n(.)", "\n\t$1");
 	}
 
 	protected static String indent(String input, int depth)
 	{
+		if (input == null)
+		{
+			return "";
+		}
 		String it = "";
 		while (depth-- > 0)
 		{
@@ -109,6 +117,11 @@ public class CCodeGenerator extends StringCodeGenerator
 	 */
 	public String emitBranch(String condition, String trueBranch, String falseBranch)
 	{
+		if ((trueBranch == null || trueBranch.trim().length() == 0)
+				&& (falseBranch == null || falseBranch.trim().length() == 0))
+		{
+			return String.format("if ( %s ) /* nop */;", condition);
+		}
 		if (trueBranch == null || trueBranch.trim().length() == 0)
 		{
 			return String.format("if ( !( %s ) ) %s", condition, falseBranch);
