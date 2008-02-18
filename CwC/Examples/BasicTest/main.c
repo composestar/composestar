@@ -18,11 +18,6 @@ void afterSomeThing(JoinPointContext* jpc)
 	printf("Executing something after: %s\n", jpc->startSelector);
 }
 
-void printPlainHeader()
-{
-	printf("Compose*/CwC Basic Test Example\n\n");
-}
-
 /**
  * Print the header with a version string. This is not safe for system tests.
  */
@@ -31,14 +26,19 @@ void printHeaderWithVersion()
 	printf("Compose*/CwC Basic Test Example\n$Id$\n\n");
 }
 
-
-void printNoName(char* name)
-{}
+void printPlainHeader()
+{
+	printf("Compose*/CwC Basic Test Example\n\n");
+}
 
 void printProgramName(char* name)
 {
 	printf("argv[0] = %s\n", name);
 }
+
+void printNoName(char* name)
+{}
+
 
 static int __argc;
 

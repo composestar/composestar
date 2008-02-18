@@ -407,6 +407,7 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	 */
 	public String emitMethodCall(MethodInfo method, List<String> args, Object context)
 	{
+		// FIXME: it doesn't use the context
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < args.size(); i++)
 		{

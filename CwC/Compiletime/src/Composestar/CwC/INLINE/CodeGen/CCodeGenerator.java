@@ -57,6 +57,13 @@ public class CCodeGenerator extends StringCodeGenerator
 
 	protected static final String LABEL_FORMAT = "__cstar_%s";
 
+	protected AbstractHeaderFileGenerator headerGenerator;
+
+	public void setHeaderGenerator(AbstractHeaderFileGenerator hgen)
+	{
+		headerGenerator = hgen;
+	}
+
 	protected static String indent(String input)
 	{
 		if (input == null)
@@ -467,5 +474,31 @@ public class CCodeGenerator extends StringCodeGenerator
 		sb.append(String.format("%s.substSelector = \"%s\";\n", jpcVarName, filterAction.getSubstitutedMessage()
 				.getSelector()));
 		return sb.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.StringCodeGenerator#emitMethodCall(Composestar.Core.LAMA.MethodInfo,
+	 *      java.util.List, java.lang.Object)
+	 */
+	@Override
+	public String emitMethodCall(MethodInfo method, List<String> args, Object context)
+	{
+		if (headerGenerator != null)
+		{
+			headerGenerator.addMethod(method);
+		}
+		// because context is not relevant in C
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < args.size(); i++)
+		{
+			if (sb.length() > 0)
+			{
+				sb.append(", ");
+			}
+			sb.append(args.get(i));
+		}
+		return method.getName() + "(" + sb.toString() + ")";
 	}
 }

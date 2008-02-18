@@ -6,6 +6,11 @@
 	A possible solution would be to inline the signature of the target function
 	in the current file (if it's not already declared). Or, create a temporary
 	header file that contains these signatures and inline an include directive.
+
+-> this issue has been fixed, as long as no new types are used by the target
+  methods, but this is usually not the case. A special header file is created
+	with definitions of methods used in the filter code which did not have a
+	definition yet.	
 	
 [2] added signatures are not supported. This required the addition of a dummy
 	method to the current file.

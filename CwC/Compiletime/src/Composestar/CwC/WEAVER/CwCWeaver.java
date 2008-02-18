@@ -69,7 +69,6 @@ import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INLINE.CodeGen.AdviceActionCodeGen;
-import Composestar.Core.INLINE.CodeGen.CodeGenerator;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
@@ -111,7 +110,11 @@ public class CwCWeaver implements WEAVER
 	@ResourceManager
 	protected InlinerResources inlinerRes;
 
-	protected CodeGenerator<String> codeGen;
+	protected CCodeGenerator codeGen;
+
+	protected Project currentProject;
+
+	protected File outputDir;
 
 	/**
 	 * The scope where composestar.h is loaded. This is needed for the generated
@@ -168,17 +171,17 @@ public class CwCWeaver implements WEAVER
 		// TODO: do something with the additional dependencies
 		extraDeps = new HashSet<String>();
 
-		Project p = resources.configuration().getProject();
-		File outputDir = new File(p.getIntermediate(), "woven");
+		currentProject = resources.configuration().getProject();
+		outputDir = new File(currentProject.getIntermediate(), "woven");
 		if (!outputDir.isDirectory() && !outputDir.mkdirs())
 		{
 			throw new ModuleException(String.format("Unable to create target directory for preprocessing: %s",
 					outputDir.toString()), MODULE_NAME);
 		}
 
-		cshFile = FileUtils.relocateFile(p.getBase(), new File("ComposeStar.h"), outputDir);
+		cshFile = FileUtils.relocateFile(currentProject.getBase(), new File("ComposeStar.h"), outputDir);
 		loadComposeStarH();
-		copyComposeStarC(FileUtils.relocateFile(p.getBase(), new File("ComposeStar.c"), outputDir));
+		copyComposeStarC(FileUtils.relocateFile(currentProject.getBase(), new File("ComposeStar.c"), outputDir));
 
 		// inject filter code
 		Iterator<Concern> concernIterator = resources.repository().getAllInstancesOf(Concern.class);
@@ -191,7 +194,8 @@ public class CwCWeaver implements WEAVER
 		// emit updated C files
 		for (TranslationUnitResult tunit : weavecResc.translationUnitResults())
 		{
-			File target = FileUtils.relocateFile(p.getBase(), weavecResc.getSource(tunit).getFile(), outputDir);
+			File target = FileUtils.relocateFile(currentProject.getBase(), weavecResc.getSource(tunit).getFile(),
+					outputDir);
 			if (!target.getParentFile().exists() && !target.getParentFile().mkdirs())
 			{
 				throw new ModuleException(String.format("Unable to create parent directories for: %s", target
@@ -382,9 +386,27 @@ public class CwCWeaver implements WEAVER
 
 		CwCFile type = (CwCFile) concern.getPlatformRepresentation();
 
+		TranslationUnitResult tunit = null;
+		for (TranslationUnitResult ttu : weavecResc.translationUnitResults())
+		{
+			if (ttu.getModuleDeclaration() == type.getModuleDeclaration())
+			{
+				tunit = ttu;
+				break;
+			}
+		}
+		if (tunit == null)
+		{
+			logger.error(String.format("Concern '%s' does not have a translation unit associated with it.", concern
+					.getQualifiedName()));
+			return;
+		}
+
 		boolean containsFilterCode = false;
 
 		Set<String> imports = new HashSet<String>();
+		HeaderFileGenerator extraFuncDecls = new HeaderFileGenerator(tunit);
+		codeGen.setHeaderGenerator(extraFuncDecls);
 
 		Signature sig = concern.getSignature();
 		List<CwCFunctionInfo> functions = sig.getMethods(MethodWrapper.NORMAL);
@@ -437,9 +459,22 @@ public class CwCWeaver implements WEAVER
 			imports.add("\"" + cshFile.toString() + "\"");
 			// injectComposestarHInclude(type.getModuleDeclaration());
 		}
+		if (extraFuncDecls.hasMethods())
+		{
+			File extraH = new File(outputDir, String.format("cstarxt__%s.h", type.getFullName()));
+			try
+			{
+				extraFuncDecls.generateHeader(new FileWriter(extraH, false));
+				imports.add("\"" + extraH.toString() + "\"");
+			}
+			catch (IOException e)
+			{
+				logger.error(e, e);
+			}
+		}
 		if (imports.size() > 0)
 		{
-			injectIncludeDirectives(type.getModuleDeclaration(), imports);
+			injectIncludeDirectives(tunit, imports);
 		}
 
 		timer.stop();
@@ -592,8 +627,10 @@ public class CwCWeaver implements WEAVER
 	 * 
 	 * @param modDecl
 	 */
-	protected void injectIncludeDirectives(ModuleDeclaration modDecl, Set<String> incfiles)
+	protected void injectIncludeDirectives(TranslationUnitResult tunit, Set<String> incfiles)
 	{
+
+		ModuleDeclaration modDecl = tunit.getModuleDeclaration();
 		// find injection AST
 		TNode weaveNode = null;
 
@@ -624,25 +661,18 @@ public class CwCWeaver implements WEAVER
 			weaveNode = weaveNode.getFirstChild();
 		}
 
-		for (TranslationUnitResult tunit : weavecResc.translationUnitResults())
+		PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
+		for (String incfile : incfiles)
 		{
-			if (tunit.getModuleDeclaration() == modDecl)
+			if (!incfile.startsWith("\"") && !incfile.startsWith("<"))
 			{
-				PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
-				for (String incfile : incfiles)
-				{
-					if (!incfile.startsWith("\"") && !incfile.startsWith("<"))
-					{
-						logger.error(String.format("Invalid include file, must start with \" or <: %s", incfile));
-						continue;
-					}
-					PreprocDirective incdirective = new PreprocDirective(String.format("#include %s", incfile), 0);
-					ppic.addLineForTokenNumber(incdirective, weaveNode.getTokenNumber() - 1);
-				}
-				return;
+				logger.error(String.format("Invalid include file, must start with \" or <: %s", incfile));
+				continue;
 			}
+			PreprocDirective incdirective = new PreprocDirective(String.format("#include %s", incfile), 0);
+			ppic.addLineForTokenNumber(incdirective, weaveNode.getTokenNumber() - 1);
 		}
-		logger.error("No location to inject include directives found.");
+		return;
 	}
 
 	/**
