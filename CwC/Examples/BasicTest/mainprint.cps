@@ -15,7 +15,8 @@ concern mainprint
 		inputfilters			
 			befr : Before = { [*.printProgramName] *.beforeSomeThing };
 			aftr : After = { [*.printProgramName] *.afterSomeThing };
-			maybeprint : Dispatch = { !printit => [*.printProgramName] *.printNoName }
+			maybeprint : Dispatch = { !printit => [*.printProgramName] *.printNoName };
+			addedmeth : Dispatch = { [*.newPrint] *.printNoName }
 	}	
 	
 	superimposition

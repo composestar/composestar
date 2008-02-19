@@ -25,6 +25,7 @@
 package Composestar.CwC.INLINE.CodeGen;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -287,6 +288,8 @@ public class CTraceActionCodeGenerator implements FilterActionCodeGenerator<Stri
 
 	public Set<String> getImports(CodeGenerator<String> codeGen, String action)
 	{
-		return null;
+		Set<String> result = new HashSet<String>();
+		result.add("<stdio.h>");
+		return result;
 	}
 }

@@ -15,6 +15,12 @@
 [2] added signatures are not supported. This required the addition of a dummy
 	method to the current file.
 	
+-> added signatures are now supported, a stub method is inserted into the file
+	that should logically contain the	method. There is a dirty hack for the 
+	return value of this added method. A proper AST should be created, but 
+	instead the text buffer of the return token is abused. Also, the added
+	methods return uninitialized values which is dangerous
+	
 [3] signature removing is not really supported. Unclear on the actual inliner 
 	behavior. Should the actual method be removed? Then it won't compile. A 
 	single filter with an unconditional exit flow results in the removing of a

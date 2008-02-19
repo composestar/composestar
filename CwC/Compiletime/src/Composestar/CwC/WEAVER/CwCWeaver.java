@@ -34,9 +34,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Level;
@@ -45,23 +48,21 @@ import weavec.ast.PreprocDirective;
 import weavec.ast.PreprocessorInfoChannel;
 import weavec.ast.TNode;
 import weavec.ast.TNodeFactory;
-import weavec.cmodel.declaration.Declaration;
 import weavec.cmodel.declaration.FunctionDeclaration;
 import weavec.cmodel.declaration.ModuleDeclaration;
+import weavec.cmodel.declaration.StorageClass;
 import weavec.cmodel.scope.AnnotationScope;
 import weavec.cmodel.scope.BlockScope;
 import weavec.cmodel.scope.CNamespaceKind;
 import weavec.cmodel.scope.LabelScope;
-import weavec.cmodel.scope.Namespace;
 import weavec.cmodel.util.AnnotationScopeImpl;
-import weavec.cmodel.util.BlockScopeImpl;
+import weavec.cmodel.util.CDeclarations;
 import weavec.cmodel.util.ScopeConstructor;
 import weavec.emitter.CEmitter;
 import weavec.grammar.TranslationUnitResult;
 import weavec.parser.ACGrammarTokenTypes;
 import weavec.parser.AspectCLexer;
 import weavec.parser.AspectCParser;
-import weavec.util.RecursivePrinter;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -72,6 +73,7 @@ import Composestar.Core.INLINE.CodeGen.AdviceActionCodeGen;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
@@ -110,6 +112,8 @@ public class CwCWeaver implements WEAVER
 	@ResourceManager
 	protected InlinerResources inlinerRes;
 
+	protected CommonResources resources;
+
 	protected CCodeGenerator codeGen;
 
 	protected Project currentProject;
@@ -141,6 +145,13 @@ public class CwCWeaver implements WEAVER
 
 	protected CPSTimer timer;
 
+	/**
+	 * Used to look up unknown methods
+	 * 
+	 * @see {@link CwCWeaver#findMethodByName(String)}
+	 */
+	protected Map<String, MethodInfo> methodLookup;
+
 	public CwCWeaver()
 	{}
 
@@ -149,9 +160,10 @@ public class CwCWeaver implements WEAVER
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public void run(CommonResources resc) throws ModuleException
 	{
 		timer = CPSTimer.getTimer(MODULE_NAME);
+		resources = resc;
 
 		codeGen = new CCodeGenerator();
 		codeGen.register(new CDispatchActionCodeGen(inlinerRes));
@@ -435,17 +447,32 @@ public class CwCWeaver implements WEAVER
 				processFilterCode(realFunc, filterCode, imports);
 			}
 
-			// TODO: call to other methods, how? This information isn't
-			// harvested from the C file in the first place.
 			for (CwCCallToOtherMethod ctom : (Collection<CwCCallToOtherMethod>) func.getCallsToOtherMethods())
 			{
+				// check if this method was added, in which case the call to
+				// other method is not set
+				MethodInfo mi = ctom.getCalledMethod();
+				if (mi == null)
+				{
+					mi = findMethodByName(ctom.getMethodName());
+					if (mi == null)
+					{
+						logger.warn(String.format("Call to unknown method %s", ctom.getMethodName()), realFunc);
+					}
+					else
+					{
+						ctom.setCalledMethod(mi);
+						extraFuncDecls.addMethod(mi);
+					}
+				}
+
 				filterCode = inlinerRes.getOutputFilterCode(ctom);
 				if (filterCode != null)
 				{
 					logger.info(String.format("Weaving call to function %s from %s.%s", ctom.getMethodName(), concern
 							.getQualifiedName(), func.getName()), realFunc);
 					containsFilterCode = true;
-					//
+					// TODO: how?
 				}
 			}
 		}
@@ -453,6 +480,19 @@ public class CwCWeaver implements WEAVER
 		// TODO: process added signatures, added signatures can't be processed
 		// using the same method as NORMAL because they don't have actual
 		// function declarations in the code. They need to be added.
+
+		functions = sig.getMethods(MethodWrapper.ADDED);
+		for (CwCFunctionInfo func : functions)
+		{
+			createAddedFunctionAST(func, type);
+			FilterCode filterCode = inlinerRes.getInputFilterCode(func);
+			if (filterCode != null)
+			{
+				logger.info(String.format("Weaving function %s.%s", concern.getQualifiedName(), func.getName()));
+				containsFilterCode = true;
+				processFilterCode(func, filterCode, imports);
+			}
+		}
 
 		if (containsFilterCode)
 		{
@@ -478,6 +518,36 @@ public class CwCWeaver implements WEAVER
 		}
 
 		timer.stop();
+	}
+
+	/**
+	 * Find a method by name. It will only try to find added methods. Existing
+	 * methods should already be properly linked in the CallToOtherMethod
+	 * 
+	 * @param name
+	 * @return
+	 */
+	protected MethodInfo findMethodByName(String name)
+	{
+		logger.debug(String.format("Looking up function by name %s", name));
+		if (methodLookup == null)
+		{
+			methodLookup = new HashMap<String, MethodInfo>();
+			Iterator<Concern> concernIterator = resources.repository().getAllInstancesOf(Concern.class);
+			while (concernIterator.hasNext())
+			{
+				Concern concern = concernIterator.next();
+				Signature sign = concern.getSignature();
+				if (sign != null)
+				{
+					for (MethodInfo mi : (Collection<MethodInfo>) sign.getMethods(MethodWrapper.ADDED))
+					{
+						methodLookup.put(mi.getName(), mi);
+					}
+				}
+			}
+		}
+		return methodLookup.get(name);
 	}
 
 	/**
@@ -569,67 +639,8 @@ public class CwCWeaver implements WEAVER
 	 * 
 	 * @param modDecl
 	 */
-	protected void injectComposestarHInclude(ModuleDeclaration modDecl)
-	{
-		// find injection AST
-		TNode weaveNode = null;
-		// modDecl.getAST().doubleLink();
-
-		for (FunctionDeclaration func : modDecl.getFunctions())
-		{
-			if (!func.isIncluded())
-			{
-				// the function's AST points to the "name" part, it should go up
-				// 2 levels to get to the declaration part
-				weaveNode = func.getBaseTypeAST();// .getParent().getParent();
-				if (weaveNode == null)
-				{
-					weaveNode = func.getAST();
-				}
-				break;
-			}
-		}
-
-		if (weaveNode == null)
-		{
-			// no functions -> no inlining possible
-			logger.error(String.format("Tried to inject ComposeStar.H include in a file without functions, "
-					+ "which should not be needed anyway."));
-			return;
-		}
-
-		while (weaveNode.getTokenNumber() == -1)
-		{
-			weaveNode = weaveNode.getFirstChild();
-		}
-
-		PreprocDirective incdirective = new PreprocDirective(String.format("#include \"%s\"", cshFile.toString()), 1);
-
-		for (TranslationUnitResult tunit : weavecResc.translationUnitResults())
-		{
-			if (tunit.getModuleDeclaration() == modDecl)
-			{
-				if (tunit.getRootScope().get(CNamespaceKind.OBJECT, "JoinPointContext") != null)
-				{
-					logger.info("ComposeStar.h already included, skipping weaving");
-					return;
-				}
-				PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
-				ppic.addLineForTokenNumber(incdirective, weaveNode.getTokenNumber() - 1);
-				return;
-			}
-		}
-		logger.error("Unable to find location to inject the ComposeStar.h include directive");
-	}
-
-	/**
-	 * Inserts an #include directive just before the first function declaration
-	 * 
-	 * @param modDecl
-	 */
 	protected void injectIncludeDirectives(TranslationUnitResult tunit, Set<String> incfiles)
 	{
-
 		ModuleDeclaration modDecl = tunit.getModuleDeclaration();
 		// find injection AST
 		TNode weaveNode = null;
@@ -674,65 +685,6 @@ public class CwCWeaver implements WEAVER
 		}
 		return;
 	}
-
-	/**
-	 * Injects the contents of the composestar.h file before the first function
-	 * declaration. NOTE: BROKEN
-	 * 
-	 * @param modDecl
-	 */
-	protected void injectComposestarH(ModuleDeclaration modDecl)
-	{
-		TNode cshStart = TNodeFactory.getInstance().dupTree(composestarHAst);
-		TNode cshEnd = cshStart;
-
-		TNode nxtSib = composestarHAst.getNextSibling();
-		while (nxtSib != null)
-		{
-			TNode currentAST = TNodeFactory.getInstance().dupTree(nxtSib);
-			cshEnd.addSibling(currentAST);
-			cshEnd = currentAST;
-			nxtSib = nxtSib.getNextSibling();
-		}
-
-		modDecl.getAST().doubleLink();
-
-		// find injection AST
-		TNode weaveNode = null;
-
-		for (FunctionDeclaration func : modDecl.getFunctions())
-		{
-			if (!func.isIncluded())
-			{
-				// the function's AST points to the "name" part, it should go up
-				// 2 levels to get to the declaration part
-				weaveNode = func.getAST().getParent().getParent();
-				break;
-			}
-		}
-
-		// weave node points to the first function, this should be the
-		// just before the first function
-
-		TNode search = modDecl.getAST();
-		while (search != null)
-		{
-			if (search.getNextSibling() == weaveNode)
-			{
-				weaveNode = search;
-				break;
-			}
-			search = search.getNextSibling();
-		}
-
-		TNode afterNodes = weaveNode.getNextSibling();
-		weaveNode.setNextSibling(cshStart);
-		cshEnd.addSibling(afterNodes);
-	}
-
-	//
-	// The following comes from WeaveC's WeaveUnit
-	//
 
 	/**
 	 * Create a new TNode of the given type with the provided text.
@@ -793,178 +745,47 @@ public class CwCWeaver implements WEAVER
 		}
 	}
 
-	static class CompositeScope extends BlockScopeImpl
+	/**
+	 * Creates the WeaveC data structure for this added function.
+	 * 
+	 * @param func
+	 */
+	protected void createAddedFunctionAST(CwCFunctionInfo func, CwCFile type)
 	{
-		protected BlockScope parent1;
+		TNode fast = TNodeFactory.getInstance().dupTree(func.getFunctionDeclaration().getAST());
+		TNode bast = TNodeFactory.getInstance().dupTree(func.getFunctionDeclaration().getBaseTypeAST());
 
-		protected BlockScope parent2;
-
-		public CompositeScope(BlockScope scope1, BlockScope scope2)
+		fast.getFirstChild().setText(func.getName());
+		TNode bodyAST = TNodeFactory.getInstance().create(ACGrammarTokenTypes.NCompoundStatement, "{");
+		if (codeGen.hasReturnValue(func))
 		{
-			super(null, false);
-			parent1 = scope1;
-			parent2 = scope2;
+			// yes I know this is extremely dirty, but it works
+			TNode returnVal = TNodeFactory.getInstance().create(ACGrammarTokenTypes.LITERAL_return,
+					String.format("%s retval; return retval", func.getReturnTypeString()));
+			returnVal.addChild(TNodeFactory.getInstance().create(ACGrammarTokenTypes.SEMI, ";"));
+			bodyAST.addChild(returnVal);
 		}
+		bodyAST.addChild(TNodeFactory.getInstance().create(ACGrammarTokenTypes.RCURLY, "}"));
 
-		@Override
-		public BlockScope getNewChild(boolean functionBlockScope)
-		{
-			return new BlockScopeImpl(this, functionBlockScope);
-		}
+		TNode fdecl = TNodeFactory.getInstance().create(ACGrammarTokenTypes.NDeclaration);
+		fdecl.addChild(fast);
+		fdecl.addChild(bodyAST);
 
-		@Override
-		public void addDeclaration(CNamespaceKind kind, Declaration declaration)
-		{
-			throw new UnsupportedOperationException("addDeclaration");
-		}
+		TNode nfast = TNodeFactory.getInstance().create(ACGrammarTokenTypes.NTypedDeclaration);
+		nfast.addChild(bast);
+		nfast.addChild(fdecl);
+		nfast.doubleLink();
 
-		@Override
-		public void addDefinition(CNamespaceKind kind, Declaration declaration)
-		{
-			throw new UnsupportedOperationException("addDeclaration");
-		}
+		setMetaInfo(nfast, RecursionMode.FOREST, 1, String.format("<Composestar/CwC/SIGN/Added#%s.%s>", func.parent()
+				.getFullName(), func.getName()), -1);
 
-		@Override
-		public Declaration get(CNamespaceKind kind, String id)
-		{
-			Declaration result = parent1.get(kind, id);
-			if (result == null)
-			{
-				result = parent1.get(kind, id);
-			}
-			return result;
-		}
-
-		@Override
-		public Collection<Declaration> getAll(CNamespaceKind kind, String id)
-		{
-			Collection<Declaration> result = new HashSet<Declaration>();
-			Collection<Declaration> x;
-			x = parent1.getAll(kind, id);
-			if (x != null)
-			{
-				result.addAll(x);
-			}
-			x = parent2.getAll(kind, id);
-			if (x != null)
-			{
-				result.addAll(x);
-			}
-			return result;
-		}
-
-		@Override
-		public Collection<BlockScope> getChildren()
-		{
-			Collection<BlockScope> result = new HashSet<BlockScope>();
-			Collection<BlockScope> x;
-			x = parent1.getChildren();
-			if (x != null)
-			{
-				result.addAll(x);
-			}
-			x = parent2.getChildren();
-			if (x != null)
-			{
-				result.addAll(x);
-			}
-			return null;
-		}
-
-		@Override
-		public Namespace getNamespace(CNamespaceKind kind)
-		{
-			Namespace result = parent1.getNamespace(kind);
-			if (result == null)
-			{
-				parent2.getNamespace(kind);
-			}
-			return result;
-		}
-
-		@Override
-		public BlockScope getParent()
-		{
-			return null;
-		}
-
-		@Override
-		public Set<String> keySet(CNamespaceKind kind)
-		{
-			Set<String> result = new HashSet<String>();
-			Set<String> x;
-			x = parent1.keySet(kind);
-			if (x != null)
-			{
-				result.addAll(x);
-			}
-			x = parent2.keySet(kind);
-			if (x != null)
-			{
-				result.addAll(x);
-			}
-			return result;
-		}
-
-		@Override
-		public Set<String> localKeySet(CNamespaceKind kind)
-		{
-			Set<String> result = new HashSet<String>();
-			Set<String> x;
-			x = parent1.localKeySet(kind);
-			if (x != null)
-			{
-				result.addAll(x);
-			}
-			x = parent2.localKeySet(kind);
-			if (x != null)
-			{
-				result.addAll(x);
-			}
-			return result;
-		}
-
-		@Override
-		public Set<String> objectKeySet(CNamespaceKind kind)
-		{
-			Set<String> result = new HashSet<String>();
-			Set<String> x;
-			x = parent1.objectKeySet(kind);
-			if (x != null)
-			{
-				result.addAll(x);
-			}
-			x = parent2.objectKeySet(kind);
-			if (x != null)
-			{
-				result.addAll(x);
-			}
-			return result;
-		}
-
-		@Override
-		public boolean isParameterScope()
-		{
-			return false;
-		}
-
-		@Override
-		public boolean isRootScope()
-		{
-			return false;
-		}
-
-		@Override
-		public void printNonrecursive(RecursivePrinter rp)
-		{
-		// nop
-		}
-
-		@Override
-		public void printRecursive(RecursivePrinter rp)
-		{
-		// n op
-		}
-
+		FunctionDeclaration olddecl = func.getFunctionDeclaration();
+		FunctionDeclaration newdecl = (FunctionDeclaration) CDeclarations.getFunctionOrTypedef(func.getName(), olddecl
+				.getType(), (EnumSet<StorageClass>) olddecl.getStorageClasses(), false);
+		newdecl.setAST(fast);
+		newdecl.setBaseTypeAST(bast);
+		func.setFunctionDeclaration(newdecl);
+		((BlockScope) olddecl.getScope()).addDeclaration(CNamespaceKind.OBJECT, newdecl);
+		type.getModuleDeclaration().getAST().getLastSibling().addSibling(nfast);
 	}
 }

@@ -224,6 +224,7 @@ public class CCodeGenerator extends StringCodeGenerator
 			sb.append(String.format("\t%s.argc = %d;\n", jpcVarName, pis.size()));
 			if (pis.size() > 0)
 			{
+				imports.add("<stdlib.h>");
 				sb
 						.append(String.format("\t%s.argv = (void **) malloc(%d * sizeof(void *));\n", jpcVarName, pis
 								.size()));
@@ -237,6 +238,7 @@ public class CCodeGenerator extends StringCodeGenerator
 			else
 			{
 				// requires #include <stdio.h>
+				imports.add("<stddef.h>");
 				sb.append(String.format("\t%s.argv = NULL /*((void *)0)*/;\n", getJPCVariable(false)));
 			}
 		}

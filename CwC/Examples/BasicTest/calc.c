@@ -4,6 +4,8 @@
  * $Id$ 
  */
 
+#include <stdlib.h>
+#include <string.h>
 #include "calc.h"
  
 int add(int x, int y)
@@ -21,7 +23,7 @@ int mult(int x, int y)
 	return x*y;
 }
 
-int div(int x, int y)
+int divide(int x, int y)
 {
 	return x/y;
 }

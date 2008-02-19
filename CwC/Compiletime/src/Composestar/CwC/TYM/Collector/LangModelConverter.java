@@ -276,6 +276,8 @@ public class LangModelConverter implements CTCommonModule
 				procAnnotations(cwcparm, od);
 			}
 
+			// this is required for output filters but also for signature
+			// extention
 			procCallToOtherMethods(tunit, cwcfunc, funcDecl);
 		}
 
@@ -323,6 +325,7 @@ public class LangModelConverter implements CTCommonModule
 			}
 			if (sibling.getFirstChild() != null)
 			{
+				// TODO could be changed to use a queue instead of recursion
 				procCTOMAstWalker(tunit, cwcfunc, sibling.getFirstChild());
 			}
 		}

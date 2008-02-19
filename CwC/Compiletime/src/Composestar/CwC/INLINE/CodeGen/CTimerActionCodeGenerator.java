@@ -62,7 +62,7 @@ public class CTimerActionCodeGenerator implements FilterActionCodeGenerator<Stri
 			sb.append(codeGen.getCurrentMethod().parent().getName());
 			sb.append("\\\" took %ld clock ticks to execute\\n\", (clock() - timer_");
 			sb.append(System.identityHashCode(codeGen.getCurrentMethod()));
-			sb.append("), clock());\n");
+			sb.append("));\n");
 			return sb.toString();
 		}
 		return null;
@@ -111,6 +111,7 @@ public class CTimerActionCodeGenerator implements FilterActionCodeGenerator<Stri
 	{
 		Set<String> result = new HashSet<String>();
 		result.add("<time.h>");
+		result.add("<stdio.h>");
 		return result;
 	}
 

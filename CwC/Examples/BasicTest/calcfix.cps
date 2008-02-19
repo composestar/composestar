@@ -3,7 +3,8 @@ concern calcfix
 	filtermodule correctDiv
 	{
 		inputfilters
-			divismult : Dispatch = { [*.div] *.mult }
+			divismult : Dispatch = { [*.divide] *.mult };
+			sffds : Dispatch = { [*.multiply] *.mult }
 	}
 	
 	superimposition

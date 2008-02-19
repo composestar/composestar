@@ -21,7 +21,7 @@ wovenSources := $(patsubst %.c,$(WOVEN)/%.c,$(sources))
 ppDirs := $(patsubst  %/,%,$(sort $(dir $(ppSources))))
 
 # Misc env settings
-CC = gcc
+CC = gcc -Wall
 CFLAGS = 
 RM = del /F /Q
 RMDIR = cmd /c rmdir /S /Q

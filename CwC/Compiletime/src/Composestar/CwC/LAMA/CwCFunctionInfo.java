@@ -82,6 +82,16 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 		return funcDecl;
 	}
 
+	/**
+	 * Sets the FunctionDeclaration, should probably not be used
+	 * 
+	 * @param value
+	 */
+	public void setFunctionDeclaration(FunctionDeclaration value)
+	{
+		funcDecl = value;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

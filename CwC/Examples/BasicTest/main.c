@@ -8,6 +8,8 @@
 #include "calc.h"
 #include "ComposeStar.h" // for JPC
 
+static int __argc;
+
 void beforeSomeThing(JoinPointContext* jpc)
 {
 	printf("Executing something before: %s\n", jpc->startSelector);
@@ -39,9 +41,6 @@ void printProgramName(char* name)
 void printNoName(char* name)
 {}
 
-
-static int __argc;
-
 int doPrintProgramName()
 {
 	printf("doPrintProgramName = %d\n", __argc > 1);
@@ -55,9 +54,12 @@ int main(int argc, char *argv[])
   printProgramName(argv[0]);
 	
 	printf("%d+%d=%d\n", 5, 5, add(5,5));
-	printf("%d*%d=%d\n", 5, 5, div(5,5));
+	printf("%d*%d=%d\n", 5, 5, divide(5,5));
 	// this is ofcourse a divide by zero
-	printf("%d*%d=%d\n", 5, 0, div(5,0));
+	printf("%d*%d=%d\n", 5, 0, divide(5,0));
+	
+	printf("multiply(%d,%d)=%d\n", 5, 5, multiply(5,5));
+	newPrint(argv[0]);
 	
 	printf("Primes up to %u : %u\n", 10000000, nsieve(10000000));
 	printf("Primes up to %u : %u\n", 20000000, nsieve(20000000));

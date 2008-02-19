@@ -135,8 +135,11 @@ public class HeaderFileGenerator extends AbstractHeaderFileGenerator
 		nd = TNodeFactory.getInstance().dupTree(cwcfunc.getFunctionDeclaration().getBaseTypeAST().getNextSibling());
 		try
 		{
-			// remove implementation
 			nd.doubleLink();
+			// method name
+			nd.getFirstChild().getFirstChild().setText(mi.getName());
+
+			// remove implementation
 			TNode body = nd.getFirstChild().getNextSibling();
 			body.removeSelf();
 
