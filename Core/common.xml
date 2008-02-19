@@ -77,14 +77,15 @@
 		<available file="${build.starlight}${file.separator}build.xml" property="available.starlight" />
 		<available file="${build.java}${file.separator}build.xml" property="available.java" />
 		<available file="${build.c}${file.separator}build.xml" property="available.c" />
-		<available file="${build.cwc}${file.separator}build.xml" property="available.cwc" />
+		<available file="${build.cwc}${file.separator}Compiletime${file.separator}lib${file.separator}weavec.jar" property="available.cwc" />
 
 		<!-- set default values of ignore properties for all platforms -->
-		<property name="ignore.dotnet" value="false" />
 		<property name="ignore.starlight" value="false" />
 		<property name="ignore.java" value="false" />
-		<property name="ignore.c" value="false" />
-		<property name="ignore.cwc" value="true" />
+		<property name="ignore.cwc" value="false" />
+		<!-- deprecated ports -->
+		<property name="ignore.dotnet" value="true" />
+		<property name="ignore.c" value="true" />
 
 		<!-- set the enabled properties for all platforms based on available and ignore -->
 		<condition property="enabled.dotnet" value="true">
