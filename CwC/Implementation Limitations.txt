@@ -22,7 +22,7 @@
 	methods return uninitialized values which is dangerous
 	
 [3] signature removing is not really supported. Unclear on the actual inliner 
-	behavior. Should the actual method be removed? Then it won't compile. A 
+	behavior. Should the actual method be removed? Then it might not compile. A 
 	single filter with an unconditional exit flow results in the removing of a
 	method, is this intended?.
 	

@@ -49,6 +49,8 @@ int doPrintProgramName()
 
 int main(int argc, char *argv[])
 {
+	__argc = argc;
+	
 	printHeaderWithVersion();
 	
   printProgramName(argv[0]);
@@ -58,7 +60,9 @@ int main(int argc, char *argv[])
 	// this is ofcourse a divide by zero
 	printf("%d*%d=%d\n", 5, 0, divide(5,0));
 	
+	// multiply directs to mult using dispatch filter
 	printf("multiply(%d,%d)=%d\n", 5, 5, multiply(5,5));
+	// this directys to printNoName, used for testing of different function signs
 	newPrint(argv[0]);
 	
 	printf("Primes up to %u : %u\n", 10000000, nsieve(10000000));

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/CwC/Testing" default="test">
+<project name="ComposeStar/CwC/Testing" default="test" xmlns:cs="antlib:Composestar">
 
 	<condition property="build.core" value="../../Core">
 		<and>
@@ -18,6 +18,21 @@
 	</target>
 
 	<target name="init_local" depends="init">
+		<!-- test for some of the available tools -->
+		<condition property="executable.extention" value=".exe" else="">
+			<os family="windows" />
+		</condition>
+		<fail message="gcc and make were not available on the system path">
+			<condition>
+				<not>
+					<and>
+						<available file="gcc${executable.extention}" filepath="${env.PATH}" />
+						<available file="make${executable.extention}" filepath="${env.PATH}" />
+					</and>
+				</not>
+			</condition>
+		</fail>
+	
 		<mkdir dir="bin" />
 		<copy todir="bin">
 			<fileset dir="${build.core}/Compiletime/dist">
@@ -28,8 +43,36 @@
 	</target>
 
 	<target name="build" />
-	
-	<target name="test" depends="init_local">
+
+	<target name="test" depends="build_tests,exec_tests" description="run the system test">
+	</target>
+
+	<target name="build_tests" depends="init_local">
+		<macrodef name="maketest">
+			<attribute name="dir" />
+			<sequential>
+				<echo level="info">Building example in @{dir}</echo>
+				<exec executable="make" dir="@{dir}" failonerror="true">
+					<redirector output="@{dir}/build.log" logError="true" alwayslog="true" />
+					<arg value="clean" />
+					<arg value="all" />
+					<env key="LOG4J_LEVEL" value="WARN" />
+				</exec>
+			</sequential>
+		</macrodef>
+
+		<maketest dir="${build.cwc}/Examples/BasicTest" />
+		<maketest dir="${build.cwc}/Examples/IDEALSCase" />
+	</target>
+
+	<target name="exec_tests" depends="init">
+		<!--
+		<cs:test>
+			<fileset dir="${build.cwc}/Examples">
+				<include name="**/basictest.exe" />
+			</fileset>
+		</cs:test>
+		-->
 	</target>
 
 </project>
