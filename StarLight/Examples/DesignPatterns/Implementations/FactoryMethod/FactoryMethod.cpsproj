@@ -1,0 +1,79 @@
+<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<PropertyGroup>
+<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+<Name>"FactoryMethod"</Name>
+<SchemaVersion>2.0</SchemaVersion>
+<ProjectGuid>{7A2C6DD3-387F-4B15-AEDF-DB34BF927D75}</ProjectGuid>
+<ProjectType>StarLight</ProjectType>
+<RepositoryFilename>obj\starlight.xml</RepositoryFilename>
+<RootNamespace>FactoryMethod</RootNamespace>
+<AssemblyName>FactoryMethod</AssemblyName>
+<OutputType>Exe</OutputType>
+<CodeLanguage>JSharp</CodeLanguage>
+</PropertyGroup>
+<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+<IncludeDebugInformation>true</IncludeDebugInformation>
+<OutputPath>bin\Debug\</OutputPath>
+<DebugLevel>4</DebugLevel>
+<VerifyIL>True</VerifyIL>
+</PropertyGroup>
+<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+<IncludeDebugInformation>true</IncludeDebugInformation>
+<OutputPath>bin\Release\</OutputPath>
+<DebugLevel>1</DebugLevel>
+<VerifyIL>True</VerifyIL>
+</PropertyGroup>
+<ItemGroup>
+<Reference Include="vjslib">
+<Name>vjslib</Name>
+</Reference>
+<Reference Include="System">
+<Name>System</Name>
+</Reference>
+<Reference Include="System.Data">
+<Name>System.Data</Name>
+</Reference>
+<Reference Include="System.XML">
+<Name>System.XML</Name>
+</Reference>
+<Reference Include="VJSSupUILib">
+<Name>VJSSupUILib</Name>
+</Reference>
+<Reference Include="DesignPatternAnnotations">
+<Name>DesignPatternAnnotations</Name>
+<AssemblyName>DesignPatternAnnotations.dll</AssemblyName>
+<HintPath>..\..\Annotations\bin\Debug\DesignPatternAnnotations.dll</HintPath>
+</Reference>
+<Reference Include="Composestar.StarLight.Filters, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+<Name>Composestar.StarLight.Filters</Name>
+<AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>
+<HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.Filters.dll</HintPath>
+<Private>True</Private>
+</Reference>
+</ItemGroup>
+<ItemGroup>
+<Compile Include="ButtonCreator.jsl">
+<SubType>Code</SubType>
+</Compile>
+<Compile Include="Creator.jsl">
+<SubType>Code</SubType>
+</Compile>
+<Compile Include="GUIComponentCreator.jsl">
+<SubType>Code</SubType>
+</Compile>
+<Compile Include="LabelCreator.jsl">
+<SubType>Code</SubType>
+</Compile>
+<Compile Include="Main.jsl">
+<SubType>Code</SubType>
+</Compile>
+<Content Include="ReadMe.txt">
+<SubType/>
+</Content>
+</ItemGroup>
+<ItemGroup>
+<Concern Include="Creator.cps"/>
+</ItemGroup>
+<Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets"/>
+<Import Project="$(MSBuildExtensionsPath)\StarLight\StarLight.targets"/>
+</Project>

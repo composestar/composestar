@@ -1,0 +1,46 @@
+package Composestar.Patterns.Interpreter;	
+
+public class Replace
+{
+	public Replace(){}
+
+	public BooleanExpression replaceAndExpression(String name, BooleanExpression exp) 
+	{
+		AndExpression andExpression = (AndExpression)((Object)this);
+		return new AndExpression(andExpression.expression1.replace(name, exp), andExpression.expression2.replace(name,exp));
+	}
+
+	public BooleanExpression replaceBooleanConstant(String name, BooleanExpression exp) 
+	{
+		BooleanConstant booleanConstant = (BooleanConstant)((Object)this);
+		return booleanConstant;   
+	}
+
+	public BooleanExpression replaceNotExpression(String name, BooleanExpression exp) 
+	{
+		NotExpression notExpression = (NotExpression)((Object)this);
+		return new NotExpression(notExpression.exp.replace(name, exp));
+	}
+
+	public BooleanExpression replaceOrExpression(String name, BooleanExpression exp) 
+	{
+		OrExpression orExpression = (OrExpression)((Object)this);
+		return new OrExpression(orExpression.expression1.replace(name, exp), orExpression.expression2.replace(name,exp));
+	}
+
+	//only class where an actual replace is done
+	public BooleanExpression replaceVariableExpression(String name, BooleanExpression exp) 
+	{
+		VariableExpression variableExpression = (VariableExpression)((Object)this);
+		if (name.equals(variableExpression.name)) 
+		{
+			return exp.copy();
+		} 
+		else 
+		{
+			return new VariableExpression(variableExpression.name);
+		}
+	}
+	
+
+}

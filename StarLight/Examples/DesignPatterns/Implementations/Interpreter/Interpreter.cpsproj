@@ -1,0 +1,97 @@
+﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"Interpreter"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B2E68ACC-0129-42C0-8A40-71C6E98C14D6}</ProjectGuid>
+    <ProjectType>StarLight</ProjectType>
+    <RepositoryFilename>obj\starlight.xml</RepositoryFilename>
+    <RootNamespace>Composestar.Patterns.Interpreter</RootNamespace>
+    <AssemblyName>Interpreter</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <CodeLanguage>JSharp</CodeLanguage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugLevel>4</DebugLevel>
+    <VerifyIL>True</VerifyIL>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugLevel>1</DebugLevel>
+    <VerifyIL>True</VerifyIL>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="vjslib">
+      <Name>vjslib</Name>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.XML">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="Composestar.StarLight.Filters, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+      <Name>Composestar.StarLight.Filters</Name>
+      <AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.Filters.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AndExpression.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BooleanConstant.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BooleanExpression.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExpressionException.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Main.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NotExpression.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OrExpression.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="ReadMe.txt">
+      <SubType />
+    </Content>
+    <Compile Include="VariableContext.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VariableExpression.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Concerns\Copy.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Concerns\Evaluate.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Concerns\Replace.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Concern Include="Concerns\Copy.cps" />
+    <Concern Include="Concerns\Evaluate.cps" />
+    <Concern Include="Concerns\Replace.cps" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Concerns\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\StarLight.targets" />
+</Project>

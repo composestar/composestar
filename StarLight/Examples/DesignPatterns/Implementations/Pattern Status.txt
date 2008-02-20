@@ -1,0 +1,19 @@
+Working examples:
+- Bridge
+- Command
+- Decorator
+
+Examples that depend on signature expansion:
+- AbstractFactory
+- Adapter
+- Builder
+- ChainOfResponsibility
+- Composite
+- FactoryMethod
+- Iterator
+
+Others:
+- Facade
+	This example needs functionality of the meta filter
+- Interpreter
+	Signature calculations are not correct?	
