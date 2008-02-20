@@ -417,6 +417,7 @@
 			<include name="RuBCoDeTest/*.sln" />
 			<include name="TestCases/*/*.sln" />
 			<include name="Wedding/Wedding.sln" />
+			<include name="DesignPatterns/Implementations/Bridge/Bridge.sln" />
 		</fileset>
 		
 		<fileset id="systemtest.customfilters" dir="${build.starlight}/Examples">
