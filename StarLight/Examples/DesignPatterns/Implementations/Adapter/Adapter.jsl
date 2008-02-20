@@ -1,0 +1,13 @@
+package Composestar.Patterns.Adapter;
+
+import Composestar.StarLight.ContextInfo.JoinPointContext;
+
+public class Adapter
+{
+	public Adapter(){}
+
+	public void printDefaultText(JoinPointContext jpc)
+	{
+		jpc.SetArgumentValue((short) 0, (Object) "Changed to Default Text");
+	}
+}
