@@ -1,0 +1,333 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EF905AC8-0A85-4176-B87A-9D37C7E509A7}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>DesignPatternAnnotations</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DesignPatternAnnotations</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractFactory\AbstractFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AbstractFactory\AbstractProduct.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AbstractFactory\Client.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AbstractFactory\ConcreteFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AbstractFactory\ConcreteProduct.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapter\Adaptee.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapter\Adapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapter\Client.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Adapter\Target.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Bridge\Abstraction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Bridge\ConcreteImplementor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Bridge\Implementor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Bridge\RefinedAbstraction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Builder\Builder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Builder\ConcreteBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Builder\Director.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ChainOfResponsibility\Client.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ChainOfResponsibility\ConcreteHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ChainOfResponsibility\Handler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Command\Client.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Command\Command.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Command\ConcreteCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Command\Invoker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Command\Receiver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composite\Client.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composite\Component.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composite\Composite.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composite\Leaf.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Decorator\Component.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Decorator\ConcreteComponent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Decorator\ConcreteDecorator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Decorator\Decorator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Facade\Facade.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Facade\SubsystemClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FactoryMethod\ConcreteCreator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FactoryMethod\ConcreteProduct.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FactoryMethod\Creator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FactoryMethod\Product.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Flyweight\Client.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Flyweight\ConcreteFlyweight.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Flyweight\Flyweight.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Flyweight\FlyweightFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Flyweight\UnsharedConcreteFlyweight.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interpreter\AbstractExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interpreter\Client.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interpreter\Context.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interpreter\NonterminalExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interpreter\TerminalExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Iterator\Aggregate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Iterator\ConcreteAggregate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Iterator\ConcreteIterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Iterator\Iterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mediator\Colleague.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mediator\Mediator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memento\Caretaker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memento\Memento.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memento\Originator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Observer\ConcreteObserver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Observer\ConcreteSubject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Observer\Observer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Observer\Subject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Prototype\Client.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Prototype\ConcretePrototype.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Prototype\Prototype.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Proxy\Proxy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Proxy\RealSubject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Proxy\Subject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Singleton\Singleton.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="State\ConcreteState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="State\Context.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="State\State.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Strategy\Context.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TemplateMethod\AbstractClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TemplateMethod\ConcreteClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Visitor\ConcreteElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Visitor\ConcreteVisitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Visitor\Element.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Visitor\Visitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
