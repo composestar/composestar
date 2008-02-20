@@ -1,0 +1,16 @@
+package Composestar.Patterns.Command;
+
+public class PrintTarget
+{
+	public PrintTarget(){}
+
+	public void printIt(String text)
+	{
+		System.out.println("Writing: "+text);
+	}
+
+	public void printStandard()
+	{
+		System.out.println("Standard Text");
+	}
+}
