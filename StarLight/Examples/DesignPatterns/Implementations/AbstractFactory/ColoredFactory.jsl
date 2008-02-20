@@ -1,0 +1,39 @@
+package Composestar.Patterns.AbstractFactory;
+ 
+import javax.swing.JLabel; 
+import javax.swing.border.Border;
+import javax.swing.BorderFactory;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+
+public class ColoredFactory{
+
+	public JLabel createLabel() {
+		System.out.println("ColoredFactory.createLabel()");
+		JLabel label = new JLabel("This Label was created by " +getName());
+		label.setForeground(java.awt.Color.blue);
+		return label;
+	} 
+	
+     public JButton createButton(String label) {
+		System.out.println("ColoredFactory.createButton()");
+		JButton button = new JButton(label);
+		button.setForeground(java.awt.Color.blue);
+		return button;
+	}	
+
+	//This new factory can immediately contain the input field
+	public JTextField createInputField()
+	{
+		System.out.println("ColoredFactory.createInputField()");
+		JTextField inputField = new JTextField("This is an input field");
+		inputField.setForeground(java.awt.Color.blue);
+		return inputField;
+	}
+
+ 	public String getName() 
+	{
+		System.out.println("ColoredFactory.getName()");
+		return "ColoredFactory";
+	} 
+}
