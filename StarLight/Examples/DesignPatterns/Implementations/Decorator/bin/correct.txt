@@ -1,0 +1,8 @@
+Printing String with Decorators applied
+$[ *** <String> *** ]$
+
+
+Printing String with a subset of Decorators applied
+$<String>$
+
+

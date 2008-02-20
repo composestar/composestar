@@ -1,0 +1,41 @@
+package Composestar.Patterns.Decorator;
+
+public class ActiveDecorators
+{
+	private static boolean bracket = true;
+
+	public static boolean bracketOn()
+	{
+		return bracket;
+	}
+
+	public static void setBracket(boolean state)
+	{
+		bracket = state;
+	}
+
+	private static boolean star = true;
+
+	public static boolean starOn()
+	{
+		return star;
+	}
+
+	public static void setStar(boolean state)
+	{
+		star = state;
+	}
+
+	private static boolean dollar = true;
+
+	public static boolean dollarOn()
+	{
+		return dollar;
+	}
+
+	public static void setDollar(boolean state)
+	{
+		dollar = state;
+	}
+
+}
