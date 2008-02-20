@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{D0A7707A-04E2-4AA9-A44E-89783E5BD8A8}") = "Bridge", "Bridge.cpsproj", "{AE83431F-9D91-40B0-9DB3-3571D5F8FCAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE83431F-9D91-40B0-9DB3-3571D5F8FCAD}.Debug|x86.ActiveCfg = Debug|x86
+		{AE83431F-9D91-40B0-9DB3-3571D5F8FCAD}.Debug|x86.Build.0 = Debug|x86
+		{AE83431F-9D91-40B0-9DB3-3571D5F8FCAD}.Release|x86.ActiveCfg = Release|x86
+		{AE83431F-9D91-40B0-9DB3-3571D5F8FCAD}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
