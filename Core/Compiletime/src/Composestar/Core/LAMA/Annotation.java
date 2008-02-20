@@ -87,7 +87,7 @@ public class Annotation implements Serializable
 
 	public boolean isSuperImposed()
 	{
-		return this.superImposed;
+		return superImposed;
 	}
 
 	public void setIsSuperImposed(boolean isSI)
@@ -98,6 +98,11 @@ public class Annotation implements Serializable
 	public ProgramElement getTarget()
 	{
 		return target;
+	}
+
+	public void setTarget(ProgramElement value)
+	{
+		target = value;
 	}
 
 	/**

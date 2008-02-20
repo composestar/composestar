@@ -7,10 +7,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
 
@@ -23,6 +21,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
@@ -71,6 +70,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 	private CommonResources resources;
 
 	private UnitRegister register;
+
+	protected Map<String, DotNETType> newAttributeTypes;
+
+	protected Map<String, Type> typeMap;
 
 	public void run(CommonResources resc) throws ModuleException
 	{
@@ -240,16 +243,19 @@ public class StarLightCollectorRunner implements CTCommonModule
 		logger.debug("Processing primitive concerns...");
 		long starttime = System.currentTimeMillis();
 
-		Set<Annotation> unresolvedAttributeTypes = new HashSet<Annotation>();
+		newAttributeTypes = new HashMap<String, DotNETType>();
+		typeMap = register.getTypeMap();
 
-		Map<String, Type> typeMap = register.getTypeMap();
 		for (Type type : typeMap.values())
 		{
 			// Collect type attributes
 			List<Annotation> typeAnnos = type.getAnnotations();
 			if (typeAnnos != null)
 			{
-				unresolvedAttributeTypes.addAll(typeAnnos);
+				for (Annotation annot : typeAnnos)
+				{
+					resolveAttributeType(annot, type);
+				}
 			}
 
 			// Collect field attributes
@@ -259,7 +265,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 				List<Annotation> fieldAnnos = field.getAnnotations();
 				if (fieldAnnos != null)
 				{
-					unresolvedAttributeTypes.addAll(fieldAnnos);
+					for (Annotation annot : fieldAnnos)
+					{
+						resolveAttributeType(annot, field);
+					}
 				}
 			}
 
@@ -270,7 +279,10 @@ public class StarLightCollectorRunner implements CTCommonModule
 				List<Annotation> methodAnnos = method.getAnnotations();
 				if (methodAnnos != null)
 				{
-					unresolvedAttributeTypes.addAll(methodAnnos);
+					for (Annotation annot : methodAnnos)
+					{
+						resolveAttributeType(annot, method);
+					}
 				}
 			}
 
@@ -287,53 +299,48 @@ public class StarLightCollectorRunner implements CTCommonModule
 		long elapsed = System.currentTimeMillis() - starttime;
 		logger.debug(typeMap.size() + " primitive concerns added in " + elapsed + " ms.");
 
-		// Resolve attribute types
-		resolveAttributeTypes(unresolvedAttributeTypes);
+		for (DotNETType nat : newAttributeTypes.values())
+		{
+			register.registerLanguageUnit(nat);
+		}
 	}
 
-	private void resolveAttributeTypes(Set<Annotation> unresolvedAttributeTypes)
+	private void resolveAttributeType(Annotation annotation, ProgramElement inTarget)
 	{
-		logger.debug("Resolving " + unresolvedAttributeTypes.size() + " attribute types...");
-		long starttime = System.currentTimeMillis();
-
-		Map<String, Type> typeMap = register.getTypeMap();
-		Map<String, DotNETType> newAttributeTypes = new HashMap<String, DotNETType>();
-
-		for (Annotation annotation : unresolvedAttributeTypes)
+		DotNETType attributeType;
+		if (typeMap.containsKey(annotation.getTypeName()))
 		{
-			if (typeMap.containsKey(annotation.getTypeName()))
-			{
-				// Attribute type has been resolved by the analyzer
-				annotation.setType(typeMap.get(annotation.getTypeName()));
-			}
-			else if (newAttributeTypes.containsKey(annotation.getTypeName()))
-			{
-				// Attribute type has been encountered before, use previously
-				// created type
-				annotation.setType(newAttributeTypes.get(annotation.getTypeName()));
-			}
-			else
-			{
-				// Create a new DotNETType element
-				DotNETType attributeType = new DotNETType();
-				attributeType.setFullName(annotation.getTypeName());
-				register.registerLanguageUnit(attributeType);
-
-				// Add this attribute type to the repository as a primitive
-				// concern
-				PrimitiveConcern pc_attribute = new PrimitiveConcern();
-				pc_attribute.setName(attributeType.getFullName());
-				pc_attribute.setPlatformRepresentation(attributeType);
-				attributeType.setParentConcern(pc_attribute);
-				resources.repository().addObject(attributeType.getFullName(), pc_attribute);
-
-				// Add this attribute type to the list of added types
-				newAttributeTypes.put(attributeType.getFullName(), attributeType);
-			}
+			// Attribute type has been resolved by the analyzer
+			attributeType = (DotNETType) typeMap.get(annotation.getTypeName());
 		}
+		else if (newAttributeTypes.containsKey(annotation.getTypeName()))
+		{
+			// Attribute type has been encountered before, use previously
+			// created type
+			attributeType = newAttributeTypes.get(annotation.getTypeName());
+		}
+		else
+		{
+			// Create a new DotNETType element
+			attributeType = new DotNETType();
+			attributeType.setFullName(annotation.getTypeName());
+			// register.registerLanguageUnit(attributeType);
 
-		long elapsed = System.currentTimeMillis() - starttime;
-		logger.debug("Attribute types resolved in " + elapsed + " ms.");
+			// Add this attribute type to the repository as a primitive
+			// concern
+			PrimitiveConcern pc_attribute = new PrimitiveConcern();
+			pc_attribute.setName(attributeType.getFullName());
+			pc_attribute.setPlatformRepresentation(attributeType);
+			attributeType.setParentConcern(pc_attribute);
+			resources.repository().addObject(attributeType.getFullName(), pc_attribute);
+
+			// Add this attribute type to the list of added types
+			newAttributeTypes.put(attributeType.getFullName(), attributeType);
+		}
+		// annotation.register(attributeType, inTarget);
+		annotation.setType(attributeType);
+		annotation.setTarget(inTarget);
+		attributeType.addAnnotationInstance(annotation);
 	}
 
 	/**
