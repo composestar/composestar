@@ -17,3 +17,5 @@ Others:
 	This example needs functionality of the meta filter
 - Interpreter
 	Signature calculations are not correct?	
+- Mediator
+	Compile error, can not find an existing method!?
