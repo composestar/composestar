@@ -423,7 +423,7 @@
 		<fileset id="systemtest.customfilters" dir="${build.starlight}/Examples">
 			<include name="CustomFilters/*.sln" />
 			<include name="RuBCoDeTest/RuBCoDeTestFilters/*.sln" />
-			<include name="DesignPatterns/Annotations" />
+			<include name="DesignPatterns/Annotations/DesignPatternAnnotations.sln" />
 		</fileset>
 
 		<echo level="info">Cleaning tests</echo>
