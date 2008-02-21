@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{D0A7707A-04E2-4AA9-A44E-89783E5BD8A8}") = "Visitor", "Visitor.cpsproj", "{9396CC61-B13A-419F-8F46-7A3593C4FD1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9396CC61-B13A-419F-8F46-7A3593C4FD1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9396CC61-B13A-419F-8F46-7A3593C4FD1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9396CC61-B13A-419F-8F46-7A3593C4FD1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9396CC61-B13A-419F-8F46-7A3593C4FD1C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,14 @@
+Testing the Prototype design pattern implementation...
+These are the two prototypes:
+StringPrototypeA:   This is Prototype 1
+StringPrototypeB:   This is Prototype 2
+These are copies of the prototypes:
+StringPrototypeA:   This is Prototype 1
+StringPrototypeB:   This is Prototype 2
+Now prototype 1 is changed. Here are prototype 1 and its former copy:
+StringPrototypeA:   This is Prototype 1 (changed)
+StringPrototypeA:   This is Prototype 1
+This is a clone of the changed prototype 1 and a changed copy of prototype 2:
+StringPrototypeA:   This is Prototype 1 (changed)
+StringPrototypeB:   This is a changed copy of prototype 2
+... done.

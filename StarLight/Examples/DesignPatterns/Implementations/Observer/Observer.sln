@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{D0A7707A-04E2-4AA9-A44E-89783E5BD8A8}") = "Observer", "Observer.cpsproj", "{EB1457AD-5E29-4116-9F3D-A2E5514038B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB1457AD-5E29-4116-9F3D-A2E5514038B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB1457AD-5E29-4116-9F3D-A2E5514038B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB1457AD-5E29-4116-9F3D-A2E5514038B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB1457AD-5E29-4116-9F3D-A2E5514038B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

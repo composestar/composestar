@@ -1,0 +1,12 @@
+Building the tree (1): leaves
+Building the tree (1): regular nodes
+The tree now looks like this: 
+         regN                 
+        /    \               
+    regN      3               
+   /    \                    
+  1      2                    
+collect the sum of leaf
+>>> SummationVisitor collected a sum of: 6
+Getting representation. Result should be {{1,2},3}.
+>>> TraversalVisitor traversed the tree to: {{1,2},3}

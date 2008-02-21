@@ -1,0 +1,85 @@
+﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"Proxy"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AE16B79C-C21C-4D21-9D5A-031C14FA82C7}</ProjectGuid>
+    <ProjectType>StarLight</ProjectType>
+    <RepositoryFilename>obj\starlight.xml</RepositoryFilename>
+    <RootNamespace>Composestar.Patterns.Proxy</RootNamespace>
+    <AssemblyName>Proxy</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <CodeLanguage>JSharp</CodeLanguage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugLevel>4</DebugLevel>
+    <VerifyIL>True</VerifyIL>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugLevel>1</DebugLevel>
+    <VerifyIL>True</VerifyIL>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="vjslib">
+      <Name>vjslib</Name>
+      <AssemblyName>vjslib.dll</AssemblyName>
+      <HintPath>vjslib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+      <AssemblyName>System.dll</AssemblyName>
+      <HintPath>System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+      <AssemblyName>System.Data.dll</AssemblyName>
+      <HintPath>System.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.XML">
+      <Name>System.XML</Name>
+      <AssemblyName>System.Xml.dll</AssemblyName>
+      <HintPath>System.XML.dll</HintPath>
+    </Reference>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+      <Name>Composestar.StarLight.ContextInfo</Name>
+      <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DesignPatternAnnotations">
+      <Name>DesignPatternAnnotations</Name>
+      <AssemblyName>DesignPatternAnnotations.dll</AssemblyName>
+      <HintPath>..\..\Annotations\bin\Debug\DesignPatternAnnotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Composestar.StarLight.Filters, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+      <Name>Composestar.StarLight.Filters</Name>
+      <AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.Filters.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OutputImplementation.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="ReadMe.txt">
+      <SubType />
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Concern Include="Concerns\BlockerProxy.cps" />
+    <Concern Include="Concerns\CounterProxy.cps" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Concerns\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\StarLight.targets" />
+</Project>

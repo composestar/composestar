@@ -1,0 +1,89 @@
+package Composestar.Patterns.State;
+
+import Composestar.StarLight.ContextInfo.JoinPointContext;
+
+public class StateTransition
+{
+	private static StateTransition instance;
+	
+	public static StateTransition instance()
+	{
+		if( instance == null )
+			instance = new StateTransition();
+		return instance;
+	}
+
+	private StateTransition(){}
+
+	public void empty_Insert_Normal(JoinPointContext jpc)
+	{
+		System.out.println("statechange: empty_Insert_Normal");
+
+		//do statechange
+		QueueState normalState = QueueNormal.instance();
+		Queue context = (Queue)jpc.get_CurrentTarget();
+		context.setState(normalState);
+
+		//do action and send return value
+		Object arg = message.getArg(0);
+		Boolean returnValue = normalState.insert(arg);
+		jpc.set_ReturnValue(returnValue);
+		// message.reply ...
+	}
+
+	public void normal_Insert_Full(JoinPointContext jpc) 
+	{
+		//get needed information	
+		Queue context = (Queue)jpc.get_CurrentTarget();
+		QueueNormal currentState = (QueueNormal) context.getState();
+
+		//do possible statechange
+		if (currentState.last == currentState.size-1) 
+		{
+			System.out.println("statechange: normal_Insert_Full");
+			QueueFull nextState = QueueFull.instance();
+			nextState.setData(currentState.items, currentState.first, currentState.last); 
+			context.setState(nextState);
+		}
+	}
+
+	public void full_Remove_Normal(JoinPointContext jpc)
+	{
+		//do statechange
+		System.out.println("statechange: full_Remove_Normal");
+		Queue context = (Queue)jpc.get_CurrentTarget();
+		QueueFull currentState = (QueueFull) context.getState();
+		QueueNormal nextState = QueueNormal.instance();
+		nextState.setData(currentState.items, currentState.first, currentState.last); 
+		context.setState(nextState);
+
+		//do action
+		Boolean returnValue = nextState.removeFirst();
+		jpc.set_ReturnValue(returnValue);
+		// message.reply ...
+	}
+
+	public void normal_Remove_Empty(JoinPointContext jpc)
+	{	
+		//get needed information
+		Queue context = (Queue)jpc.get_CurrentTarget();
+		QueueNormal currentState = (QueueNormal) context.getState();
+
+		//do possible state change
+		if (currentState.first == currentState.last+1) 
+		{
+			System.out.println("statechange: normal_Remove_Empty");		
+			QueueEmpty nextState = QueueEmpty.instance();
+			context.setState(nextState);
+
+			//reset counters
+			currentState.first=0;
+			currentState.last=0;
+
+			//do action
+			Boolean returnValue = nextState.removeFirst();
+			jpc.set_ReturnValue(returnValue);
+			// message.reply ...
+		}
+	}
+}

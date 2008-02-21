@@ -1,0 +1,91 @@
+﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"Observer"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EB1457AD-5E29-4116-9F3D-A2E5514038B6}</ProjectGuid>
+    <ProjectType>StarLight</ProjectType>
+    <RepositoryFilename>obj\starlight.xml</RepositoryFilename>
+    <RootNamespace>Composestar.Patterns.Observer</RootNamespace>
+    <AssemblyName>Observer</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <CodeLanguage>JSharp</CodeLanguage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugLevel>4</DebugLevel>
+    <VerifyIL>True</VerifyIL>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugLevel>1</DebugLevel>
+    <VerifyIL>True</VerifyIL>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="vjslib">
+      <Name>vjslib</Name>
+      <AssemblyName>vjslib.dll</AssemblyName>
+      <HintPath>vjslib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+      <AssemblyName>System.dll</AssemblyName>
+      <HintPath>System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+      <AssemblyName>System.Data.dll</AssemblyName>
+      <HintPath>System.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.XML">
+      <Name>System.XML</Name>
+      <AssemblyName>System.Xml.dll</AssemblyName>
+      <HintPath>System.XML.dll</HintPath>
+    </Reference>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+      <Name>Composestar.StarLight.ContextInfo</Name>
+      <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Composestar.StarLight.Filters, Version=$(StarlightVersion).0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
+      <Name>Composestar.StarLight.Filters</Name>
+      <AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\$(StarlightVersion)\Composestar.StarLight.Filters.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Observer.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Point.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="ReadMe.txt">
+      <SubType />
+    </Content>
+    <Compile Include="Screen.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Subject.jsl">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Concern Include="Concerns\AddRemoveObservers.cps" />
+    <Concern Include="Concerns\NotifyObservers.cps" />
+    <Concern Include="Concerns\ObserverUpdate.cps" />
+    <Concern Include="Concerns\Superimpose.cps" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Concerns\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\StarLight.targets" />
+</Project>

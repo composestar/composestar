@@ -2,6 +2,8 @@ Working examples:
 - Bridge
 - Command
 - Decorator
+- Mediator
+- Proxy
 
 Examples that depend on signature expansion:
 - AbstractFactory
@@ -11,11 +13,24 @@ Examples that depend on signature expansion:
 - Composite
 - FactoryMethod
 - Iterator
+- Observer
+- Prototype
+- TemplateMethod
+- Visitor
+
+Not implemented
+- Flyweight
+- Singleton
+
+Requires Meta filter functionality (need to rethink it in order of Before/After/
+Custom filters)
+- Facade
+- Memento (also needs signature expansion)
+- State
 
 Others:
-- Facade
-	This example needs functionality of the meta filter
 - Interpreter
 	Signature calculations are not correct?	
-- Mediator
-	Compile error, can not find an existing method!?
+- Strategy
+	Uses Composestar.RuntimeCore.FLIRT.Reflection.MessageInfo	
+	

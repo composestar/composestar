@@ -41,7 +41,7 @@ public class ConcreteMediator{
 		cc();*/
 	}
 
-	public void cc()
+	public void cc(JoinPointContext jpc)
 	{
 		System.out.println("Wrong!");
 	}
@@ -56,13 +56,13 @@ public class ConcreteMediator{
 		return (button2 != null && button2 == callingColleague);
 	}
 
-	public void setButton1()
+	public void setButton1(JoinPointContext jpc)
 	{
 		label.setText("Button1 clicked");
 		button1.setText("(Done)");
 	}
 
-	public void setButton2()
+	public void setButton2(JoinPointContext jpc)
 	{
 		label.setText("Button2 clicked");
 		button2.setText("(Done)");

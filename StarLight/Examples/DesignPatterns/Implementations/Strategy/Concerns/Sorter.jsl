@@ -1,0 +1,27 @@
+package Composestar.Patterns.Strategy;
+
+import Composestar.StarLight.ContextInfo.JoinPointContext;
+import java.util.List;
+
+/** @attribute Composestar.Patterns.Strategy.Annotations.Context() */
+public class Sorter
+{ 
+	private int numbersLength=0;
+
+	public boolean lessThanTen()
+	{
+		return numbersLength<10;
+	}
+
+	public boolean lessThanTwenty()
+	{
+		return numbersLength<20;
+	}
+
+	public void determineStrategy(JoinPointContext jpc)
+	{
+		Integer[] numbers = (Integer[]) jpc.get_ArgumentValue((short) 0);
+		numbersLength = numbers.length;
+	}
+}
+

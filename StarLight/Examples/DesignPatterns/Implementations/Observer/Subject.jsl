@@ -1,0 +1,61 @@
+package Composestar.Patterns.Observer;
+
+import java.util.*;
+import Composestar.StarLight.ContextInfo.JoinPointContext;
+
+//generic implementation if refresh is the method on the observer side
+public class Subject
+{
+	private HashMap observersPerSubject;
+
+	private Subject()
+	{
+		this.observersPerSubject = new HashMap();
+	}
+
+	private static Subject _instance;
+
+	public static Subject instance()
+	{
+		if(_instance==null)
+		{
+			_instance = new Subject();
+		}
+		return _instance;
+	}
+
+	public void addObserver(Object subject, Object observer){
+		System.out.println("adding: "+observer.toString());
+		HashSet observers = (HashSet) this.observersPerSubject.get(subject);
+		if(observers == null)
+		{
+			observers = new HashSet();
+		}
+		observers.add(observer);
+		this.observersPerSubject.put(subject,observers);
+	}
+    
+	public void removeObserver(Object subject, Object observer) 
+	{
+		HashSet observers = (HashSet) this.observersPerSubject.get(subject);
+		if(observers != null)
+		{
+			observers.remove(observer);
+			this.observersPerSubject.put(subject,observers);
+		}
+	}
+
+	public void notifyObservers(JoinPointContext jpc) 
+	{
+		Object subject = jpc.get_CurrentTarget();
+		System.out.println("Notifying Observers for subject: "+subject.toString());
+		HashSet observers = (HashSet) this.observersPerSubject.get(subject);
+		for (Iterator e = observers.iterator(); e.hasNext();) 
+		{
+			Object object = e.next();
+			System.out.println("Notifying Observer: "+object.toString());
+			Observer observer = (Observer)object;
+			observer.refresh(subject);
+		}
+	}
+}

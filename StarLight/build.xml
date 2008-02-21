@@ -419,6 +419,8 @@
 			<include name="Wedding/Wedding.sln" />
 			<include name="DesignPatterns/Implementations/Bridge/*.sln" />
 			<include name="DesignPatterns/Implementations/Decorator/*.sln" />
+			<include name="DesignPatterns/Implementations/Proxy/*.sln" />
+			<include name="DesignPatterns/Implementations/Mediator/*.sln" />
 		</fileset>
 		
 		<fileset id="systemtest.customfilters" dir="${build.starlight}/Examples">
