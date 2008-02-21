@@ -281,7 +281,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 							.addNewInternal();
 
 					// name:
-					storedInternal.setName(internal.getName());
+					storedInternal.setName(String.format("%s_%s", filterModule.getOriginalQualifiedName().replace(".",
+							"_"), internal.getName()));
 
 					// namespace:
 					String namespace = StringUtils.join(internal.getType().getPackage(), ".");
@@ -305,7 +306,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 							.addNewExternal();
 
 					// name:
-					storedExternal.setName(external.getName());
+					storedExternal.setName(String.format("%s_%s", filterModule.getOriginalQualifiedName().replace(".",
+							"_"), external.getName()));
 
 					// reference:
 					ExternalConcernReference reference = external.getShortinit();

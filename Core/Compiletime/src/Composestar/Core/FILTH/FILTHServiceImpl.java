@@ -116,7 +116,8 @@ public class FILTHServiceImpl extends FILTHService
 
 		if (forders.size() > 1)
 		{
-			logger.warn("Multiple Filter Module orderings possible for concern " + c.getQualifiedName());
+			logger.warn(String.format("Multiple (%d) Filter Module orderings possible for concern %s", forders.size(),
+					c.getQualifiedName()));
 		}
 
 		return forders; // arrange this according to the output required!!

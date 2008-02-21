@@ -30,7 +30,7 @@ Custom filters)
 
 Others:
 - Interpreter
-	Signature calculations are not correct?	
+	Requires type casting to outer type from an internal	
 - Strategy
 	Uses Composestar.RuntimeCore.FLIRT.Reflection.MessageInfo	
 	

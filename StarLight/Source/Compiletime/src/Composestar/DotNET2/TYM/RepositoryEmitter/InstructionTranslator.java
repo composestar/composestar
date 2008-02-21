@@ -11,9 +11,12 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
 import Composestar.Core.INLINE.model.FilterAction;
@@ -23,6 +26,7 @@ import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.INLINE.model.Visitor;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 
 import composestar.dotNET2.tym.entities.AndCondition;
 import composestar.dotNET2.tym.entities.ConditionLiteral;
@@ -51,6 +55,45 @@ class InstructionTranslator implements Visitor
 		}
 	}
 
+	protected String getSafeTargetName(Target target)
+	{
+		if (Target.INNER.equals(target.getName()) || Target.SELF.equals(target.getName()))
+		{
+			return target.getName();
+		}
+		StringBuffer sb = new StringBuffer();
+		if (target.getRef() != null)
+		{
+			DeclaredObjectReference doref = (DeclaredObjectReference) target.getRef();
+			if (doref != null && doref.getResolved())
+			{
+				TypedDeclaration typeDecl = doref.getRef();
+				if (typeDecl == null)
+				{
+					// should never happen
+					sb.append(target.getName());
+				}
+				else
+				{
+					sb.append(((FilterModule) typeDecl.getParent()).getOriginalQualifiedName().replace(".", "_"));
+					sb.append("_");
+					sb.append(typeDecl.getName());
+				}
+			}
+			else
+			{
+				// should never happen
+				sb.append(target.getName());
+			}
+		}
+		else
+		{
+			// should never happen
+			sb.append(target.getName());
+		}
+		return sb.toString();
+	}
+
 	/**
 	 * @see Composestar.Core.INLINE.model.Visitor#visitFilterCode(Composestar.Core.INLINE.model.FilterCode)
 	 */
@@ -66,13 +109,11 @@ class InstructionTranslator implements Visitor
 		weaveFilterCode.setInstructions(instruction);
 
 		// Check conditions
-		Iterator<Condition> condIter = filterCode.getCheckConditions();
+		List<Condition> condIter = filterCode.getCheckConditionsEx();
 		composestar.dotNET2.tym.entities.ConditionExpression condExpr = null;
 		composestar.dotNET2.tym.entities.ConditionExpression condExpr2;
-		while (condIter.hasNext())
+		for (Condition condition : condIter)
 		{
-			Condition condition = condIter.next();
-
 			condExpr2 = translateCondition(condition);
 
 			if (condExpr == null)
@@ -106,11 +147,9 @@ class InstructionTranslator implements Visitor
 
 		// create contained instructions:
 		List<InlineInstruction> inlineInstructions = new ArrayList<InlineInstruction>();
-		Iterator<Instruction> instructions = block.getInstructions();
-		while (instructions.hasNext())
+		List<Instruction> instructions = block.getInstructionsEx();
+		for (Instruction instruction : instructions)
 		{
-			Instruction instruction = instructions.next();
-
 			InlineInstruction inlineInstruction = (InlineInstruction) instruction.accept(this);
 			inlineInstructions.add(inlineInstruction);
 		}
@@ -155,10 +194,10 @@ class InstructionTranslator implements Visitor
 		weaveAction.setFullName(fullNameMap.get(filterAction.getType()));
 
 		weaveAction.setSelector(filterAction.getMessage().getSelector());
-		weaveAction.setTarget(filterAction.getMessage().getTarget().getName());
+		weaveAction.setTarget(getSafeTargetName(filterAction.getMessage().getTarget()));
 
 		weaveAction.setSubstitutionSelector(filterAction.getSubstitutedMessage().getSelector());
-		weaveAction.setSubstitutionTarget(filterAction.getSubstitutedMessage().getTarget().getName());
+		weaveAction.setSubstitutionTarget(getSafeTargetName(filterAction.getSubstitutedMessage().getTarget()));
 
 		weaveAction.setOnCall(filterAction.isOnCall());
 		weaveAction.setReturning(filterAction.isReturning());

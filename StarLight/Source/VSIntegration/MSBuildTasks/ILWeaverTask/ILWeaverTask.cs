@@ -265,13 +265,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
 					while (innerException != null)
 					{
 						errorMessage = string.Concat(errorMessage, "; ", innerException.Message);
+                        stackTrace = string.Concat(innerException.StackTrace, stackTrace);
 						innerException = innerException.InnerException;
 					}
 					Log.LogErrorFromResources("WeaverException", errorMessage);
 
 					// Only show stacktrace when debugging is enabled
-					if (weaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
-						Log.LogErrorFromResources("WeaverExceptionStackTrace", stackTrace);
+                    if (weaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
+                    {
+                        Log.LogErrorFromResources("WeaverExceptionStackTrace", stackTrace);
+                    }
 				}
 				catch (ArgumentException ex)
 				{

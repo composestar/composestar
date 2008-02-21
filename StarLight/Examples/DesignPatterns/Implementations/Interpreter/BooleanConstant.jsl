@@ -31,4 +31,17 @@ public class BooleanConstant extends BooleanExpression{
 	public BooleanConstant(boolean value) {
 		this.value = value;
 	}
+	
+	// needed because StarLight can not at filter code to non existing overrides
+	public boolean evaluate(VariableContext c){
+		return false;
+	}
+
+	public BooleanExpression replace(String name, BooleanExpression exp){
+		return null;
+	}
+
+	public BooleanExpression copy(){
+		return null;
+	}	
 }

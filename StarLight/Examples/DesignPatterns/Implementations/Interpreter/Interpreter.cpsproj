@@ -14,8 +14,14 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>bin\Debug\</OutputPath>
-    <DebugLevel>4</DebugLevel>
+    <DebugLevel>Debug</DebugLevel>
     <VerifyIL>True</VerifyIL>
+    <WeaveDebugLevel>Detailed</WeaveDebugLevel>
+    <FILTHOutput>False</FILTHOutput>
+    <SecretEnabled>False</SecretEnabled>
+    <BookKeepingMode>ConflictPaths</BookKeepingMode>
+    <ActiveStarlightVersion>
+    </ActiveStarlightVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>

@@ -154,6 +154,12 @@ namespace Composestar.StarLight.Weaving.Strategies
 				MethodDefinition md = CecilUtilities.ResolveMethod(fieldType,
 					filterAction.SubstitutionSelector, originalCall);
 
+                if (md == null)
+                {
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                        "Method {0} not found in {1}", filterAction.SubstitutionSelector, fieldType.FullName));
+                }
+
 				methodReference = visitor.TargetAssemblyDefinition.MainModule.Import(md);
 			}
 
