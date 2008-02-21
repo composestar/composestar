@@ -150,6 +150,12 @@ public class COPPER implements CTCommonModule
 		}
 		localErrCnt += p.getErrorCnt();
 
+		if (localErrCnt > 0)
+		{
+			logger.error(String.format("%s contains %d error(s)", file.toString(), localErrCnt));
+			return;
+		}
+
 		logger.debug("Walking AST");
 		CommonTreeNodeStream nodes = new CommonTreeNodeStream(rootNode);
 		nodes.setTokenStream(tokens);
