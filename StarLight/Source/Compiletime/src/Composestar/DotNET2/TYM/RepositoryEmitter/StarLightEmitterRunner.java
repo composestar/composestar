@@ -360,6 +360,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 		// reference:
 		DotNETType refType;
+		String refname;
+
 		Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference condRef = condition.getShortref();
 		if (condRef instanceof DeclaredObjectReference)
 		{
@@ -367,16 +369,19 @@ public class StarLightEmitterRunner implements CTCommonModule
 			if (dor.getName().equals("inner") || dor.getName().equals("self"))
 			{
 				refType = type;
+				refname = condition.getShortref().getName();
 			}
 			else
 			{
 				refType = (DotNETType) dor.getRef().getType().getRef().getPlatformRepresentation();
+				refname = InstructionTranslator.getSafeTargetName(dor);
 			}
 		}
 		else if (condRef instanceof ConcernReference)
 		{
 			ConcernReference cor = (ConcernReference) condRef;
 			refType = (DotNETType) cor.getRef().getPlatformRepresentation();
+			refname = condition.getShortref().getName();
 		}
 		else
 		{
@@ -384,7 +389,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		}
 
 		Reference reference = createReference(type, refType.assemblyName(), condition.getShortref().getPackage(),
-				condition.getShortref().getName(), (String) condition.getDynObject("selector"));
+				refname, (String) condition.getDynObject("selector"));
 
 		storedCondition.setReference(reference);
 	}

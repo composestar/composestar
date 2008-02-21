@@ -12,6 +12,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionE
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
@@ -55,43 +56,49 @@ class InstructionTranslator implements Visitor
 		}
 	}
 
-	protected String getSafeTargetName(Target target)
+	public static String getSafeTargetName(DeclaredObjectReference doref)
+	{
+		StringBuffer sb = new StringBuffer();
+		TypedDeclaration typeDecl = doref.getRef();
+		if (typeDecl == null)
+		{
+			return null;
+		}
+		else
+		{
+			if (typeDecl.getParent() instanceof FilterModule)
+			{
+				sb.append(((FilterModule) typeDecl.getParent()).getOriginalQualifiedName().replace(".", "_"));
+			}
+			else if (typeDecl.getParent() instanceof FilterModuleAST)
+			{
+				sb.append(((FilterModuleAST) typeDecl.getParent()).getQualifiedName().replace(".", "_"));
+			}
+			sb.append("_");
+			sb.append(typeDecl.getName());
+		}
+		return sb.toString();
+	}
+
+	public static String getSafeTargetName(Target target)
 	{
 		if (Target.INNER.equals(target.getName()) || Target.SELF.equals(target.getName()))
 		{
 			return target.getName();
 		}
-		StringBuffer sb = new StringBuffer();
 		if (target.getRef() != null)
 		{
 			DeclaredObjectReference doref = (DeclaredObjectReference) target.getRef();
 			if (doref != null && doref.getResolved())
 			{
-				TypedDeclaration typeDecl = doref.getRef();
-				if (typeDecl == null)
+				String result = getSafeTargetName(doref);
+				if (result != null)
 				{
-					// should never happen
-					sb.append(target.getName());
-				}
-				else
-				{
-					sb.append(((FilterModule) typeDecl.getParent()).getOriginalQualifiedName().replace(".", "_"));
-					sb.append("_");
-					sb.append(typeDecl.getName());
+					return result;
 				}
 			}
-			else
-			{
-				// should never happen
-				sb.append(target.getName());
-			}
 		}
-		else
-		{
-			// should never happen
-			sb.append(target.getName());
-		}
-		return sb.toString();
+		return target.getName();
 	}
 
 	/**
