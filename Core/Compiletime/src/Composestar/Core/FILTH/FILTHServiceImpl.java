@@ -114,7 +114,7 @@ public class FILTHServiceImpl extends FILTHService
 		FilterModuleOrder fmorder = new FilterModuleOrder(forders.getFirst());
 		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY, fmorder);
 
-		if (forders.size() > 2)
+		if (forders.size() > 1)
 		{
 			logger.warn("Multiple Filter Module orderings possible for concern " + c.getQualifiedName());
 		}
