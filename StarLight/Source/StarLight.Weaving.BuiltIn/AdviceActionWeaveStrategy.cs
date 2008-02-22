@@ -72,6 +72,8 @@ namespace Composestar.StarLight.Weaving.Strategies
 		/// M jpc types
 		/// </summary>
 		private Type[] m_JpcTypes = new Type[1] { typeof(JoinPointContext) };
+        private Type[] m_ObjectTypes = new Type[1] { typeof(Object) };
+        private Type[] m_NoneTypes = new Type[0] {};
 
 		/// <summary>
 		/// Generate the code which has to be inserted at the place of the filter specified by the visitor.
@@ -93,6 +95,7 @@ namespace Composestar.StarLight.Weaving.Strategies
 
 			// Get method to call
 			methodToCall = GetMethodToCall(visitor, filterAction, parentType);
+
 			if (methodToCall == null)
 			{
 				throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
@@ -169,10 +172,19 @@ namespace Composestar.StarLight.Weaving.Strategies
 		private MethodReference GetMethodToCall(ICecilInliningInstructionVisitor visitor,
 			FilterAction filterAction, TypeDefinition parentType)
 		{
+            MethodReference result = null;
 			if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
 				filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
 			{
-				return CecilUtilities.ResolveMethod(parentType, filterAction.SubstitutionSelector, m_JpcTypes);
+				result = CecilUtilities.ResolveMethod(parentType, filterAction.SubstitutionSelector, m_JpcTypes);
+                if (result == null)
+                {
+                    result = CecilUtilities.ResolveMethod(parentType, filterAction.SubstitutionSelector, m_ObjectTypes);
+                }
+                if (result == null)
+                {
+                    result = CecilUtilities.ResolveMethod(parentType, filterAction.SubstitutionSelector, m_NoneTypes);
+                }
 			}
 			else
 			{
@@ -186,6 +198,17 @@ namespace Composestar.StarLight.Weaving.Strategies
 				MethodDefinition method = CecilUtilities.ResolveMethod(target.FieldType,
 					filterAction.SubstitutionSelector, m_JpcTypes);
 
+                if (result == null)
+                {
+                    // try func(Object)
+                    result = CecilUtilities.ResolveMethod(target.FieldType, filterAction.SubstitutionSelector, m_ObjectTypes);
+                }
+                if (result == null)
+                {
+                    // try func()
+                    result = CecilUtilities.ResolveMethod(target.FieldType, filterAction.SubstitutionSelector, m_NoneTypes);
+                }
+
 				if (method == null)
 				{
 					throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
@@ -194,6 +217,7 @@ namespace Composestar.StarLight.Weaving.Strategies
 
 				return visitor.TargetAssemblyDefinition.MainModule.Import(method);
 			}
+            return result;
 		}
 	}
 }

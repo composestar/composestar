@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.Filters.FilterActionNames;
 import Composestar.Core.INLINE.lowlevel.InlinerResources;
@@ -69,13 +70,34 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 		}
 		else
 		{
-			// TODO: resolve type
+			Concern crn = target.getRefToConcern();
+			if (crn != null)
+			{
+				targetType = (Type) crn.getPlatformRepresentation();
+			}
 		}
 
 		String[] params = new String[1];
 		params[0] = codeGen.getJPCType(true);
 		MethodInfo method = targetType.getMethod(action.getSubstitutedMessage().getSelector(), params);
-		// TODO: method could be null
+
+		if (method == null)
+		{
+			// try to find a generic method with that name
+			params[0] = codeGen.getBaseType();
+			if (params[0] != null)
+			{
+				method = targetType.getMethod(action.getSubstitutedMessage().getSelector(), params);
+			}
+		}
+
+		if (method == null)
+		{
+			// try to find a method that doesn't use a JPC
+			params = new String[0];
+			method = targetType.getMethod(action.getSubstitutedMessage().getSelector(), params);
+		}
+
 		List<String> args = new ArrayList<String>();
 		args.add(codeGen.getJPCVariable(true));
 		Object context = null;

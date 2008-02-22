@@ -503,4 +503,9 @@ public class CCodeGenerator extends StringCodeGenerator
 		}
 		return method.getName() + "(" + sb.toString() + ")";
 	}
+
+	public String getBaseType()
+	{
+		return null;
+	}
 }

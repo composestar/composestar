@@ -273,6 +273,15 @@ public interface CodeGenerator<T> extends Visitor
 	String getJPCType(boolean asReference);
 
 	/**
+	 * Return the base type which all classes extent. This is used to look up
+	 * basic methods that always accept, for example in advice actions where
+	 * Object is used in the argument because the JoinPointContext is not used.
+	 * 
+	 * @return
+	 */
+	String getBaseType();
+
+	/**
 	 * Return the code to reference the JoinPointContext, for example to pass it
 	 * as an argument for a method call.
 	 * 
