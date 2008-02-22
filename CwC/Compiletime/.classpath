@@ -5,7 +5,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
 	<classpathentry kind="lib" path="/ComposestarCORE/lib/log4j/log4j-1.2.14.jar"/>
 	<classpathentry kind="lib" path="/ComposestarCORE/lib/antlr/antlr.jar" sourcepath="C:/antlr"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/WeaveC"/>
 	<classpathentry kind="con" path="org.eclipse.tptp.platform.instrumentation.ui.ContainerInitializer/Build to Manage Libraries"/>
+	<classpathentry kind="lib" path="lib/weavec.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
