@@ -620,7 +620,7 @@ constraint
  */
 implementation
 	: 'implementation' 
-	( 'by' asm=fqn
+	( 'by' asm=fqn SEMICOLON
 	-> ^(IMPLEMENTATION[$start] $asm)
 	| 'in' lang=IDENTIFIER 'by' cls=fqn 'as' DOUBLEQUOTE fn=filename DOUBLEQUOTE code=codeBlock
 	-> ^(IMPLEMENTATION[$start] $lang $cls $fn $code)
