@@ -10,7 +10,7 @@
 		</dependencies>	
 	</module>
 	<module fulltype="Composestar.Core.COPPER2.COPPER" />
-	<module fulltype="Composestar.Core.REXREF.Main" />
+	<module fulltype="Composestar.Core.REXREF.ParumREXREF" />
 	<module name="LOLA" fulltype="Composestar.DotNET2.LOLA.DotNETLOLA" enabled="true" incremental="true" summary="Evaluating predicate selectors...">
 		<dependencies></dependencies>
 		<comparisons>
@@ -23,6 +23,7 @@
 			</type>
 		</comparisons>
 	</module>
+	<module fulltype="Composestar.Core.REXREF.Main" />
 	<module fulltype="Composestar.Core.CHKREP2.Check" />
 	<module fulltype="Composestar.Core.SANE.SANE" />
 	<module fulltype="Composestar.Core.FILTH.FILTH" />

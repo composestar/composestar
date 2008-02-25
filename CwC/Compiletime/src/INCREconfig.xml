@@ -6,8 +6,9 @@
 	<module fulltype="Composestar.CwC.COMP.PreProcess" />
 	<module fulltype="Composestar.CwC.TYM.Harvester.TypeHarvester" />
 	<module fulltype="Composestar.CwC.TYM.Collector.LangModelConverter" />
-	<module fulltype="Composestar.Core.REXREF.Main" />
+	<module fulltype="Composestar.Core.REXREF.ParumREXREF" />
 	<module fulltype="Composestar.CwC.LOLA.CwCLOLA" />
+	<module fulltype="Composestar.Core.REXREF.Main" />
 	<module fulltype="Composestar.Core.CHKREP2.Check" />
 	<module fulltype="Composestar.Core.SANE.SANE" />
 	<module fulltype="Composestar.Core.FILTH.FILTH" />

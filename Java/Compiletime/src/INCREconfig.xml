@@ -19,6 +19,7 @@
 		incremental="false" summary="Collecting annotations...">
 		<dependencies></dependencies>
 	</module>
+	<module fulltype="Composestar.Core.REXREF.ParumREXREF" />
 	<module name="LOLA" fulltype="Composestar.Java.LOLA.JavaLOLA" enabled="true" incremental="false"
 		summary="Evaluating predicate selectors...">
 		<dependencies></dependencies>

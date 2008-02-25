@@ -13,4 +13,12 @@
 			</module>
 		</incre>
 	</moduleinfo>
+	<moduleinfo id="ParumREXREF" class="Composestar.Core.REXREF.ParumREXREF">
+		<name>Resolve selector references</name>
+		<incre>
+			<module enabled="true" incremental="false" summary="Resolving selector references...">
+				<dependencies></dependencies>
+			</module>
+		</incre>
+	</moduleinfo>
 </modules>
