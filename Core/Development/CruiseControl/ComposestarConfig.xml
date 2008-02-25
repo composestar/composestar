@@ -54,12 +54,14 @@
 			<merge file="${composestar.path}\StarLight\QualityAssurance\checkstyle-result.xml" />
 			<merge file="${composestar.path}\Java\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\C\qa\checkstyle-result.xml" />
+			<merge file="${composestar.path}\CwC\qa\checkstyle-result.xml" />
 
 			<merge file="${composestar.path}\Core\qa\findbugs-result.xml" />
 			<merge file="${composestar.path}\DotNET\qa\findbugs-result.xml" />
 			<merge file="${composestar.path}\StarLight\QualityAssurance\findbugs-result.xml" />
 			<merge file="${composestar.path}\Java\qa\findbugs-result.xml" />
 			<merge file="${composestar.path}\C\qa\findbugs-result.xml" />
+			<merge file="${composestar.path}\CwC\qa\findbugs-result.xml" />
 			
 			<!--<delete every="1" unit="MONTH" ignoreSuffix="false" />-->
 		</log>
@@ -129,6 +131,11 @@
 					dest="artifacts/${project.name}/"
 					subdirectory="qa_starlight"
 				/>
+				<artifactspublisher
+					dir="${composestar.path}/CwC/qa"
+					dest="artifacts/${project.name}/"
+					subdirectory="qa_cwc"
+				/>
 					
 				<!-- clean up old artifacts, e.a. -->			
 				<antpublisher 
@@ -163,18 +170,28 @@
 
 	<modificationset>
 		<cvs localworkingcopy="C:\Groove\groove" property="groove.modified"/>
+		<cvs localworkingcopy="C:\Groove\release" property="groove.modified"/>
 	</modificationset>
     
 	<!-- performs a build every night at 03:17 -->
 	<schedule>
-		<ant time="0317" 
-			 target="default" 
-			 buildfile="${groove.path}\build-nightly.xml"
-			 uselogger="true" 
-			 usequiet="true" 
-			 anthome="${groove.ant}" 
-			 antWorkingDir="${groove.path}"
-			 usedebug="false" />
+			<ant time="0317"
+				 target="UpdateBuildFile"
+				 buildfile="${groove.path}\release\build-nightly.xml"
+				 uselogger="false" 
+				 usequiet="true" 
+				 anthome="${groove.ant}" 
+				 antWorkingDir="${groove.path}"
+				 usedebug="false" />
+				 
+			<ant time="0322" 
+				 target="default" 
+				 buildfile="${groove.path}\release\build-nightly.xml"
+				 uselogger="true" 
+				 usequiet="true" 
+				 anthome="${groove.ant}" 
+				 antWorkingDir="${groove.path}"
+				 usedebug="false" />
 	</schedule>
 	
 	
