@@ -68,6 +68,7 @@ public abstract class CpsParserBase extends Parser
 		sourceFile = srcfl;
 	}
 
+	@Override
 	public void displayRecognitionError(String[] tokenNames, RecognitionException e)
 	{
 		++errorCnt;
@@ -76,6 +77,7 @@ public abstract class CpsParserBase extends Parser
 		logger.error(new LogMessage(msg, sourceFile, e.line, e.charPositionInLine));
 	}
 
+	@Override
 	public void emitErrorMessage(String msg)
 	{
 		++errorCnt;
@@ -88,16 +90,15 @@ public abstract class CpsParserBase extends Parser
 	 */
 	protected String extractEmbeddedCode(TreeAdaptor adaptor)
 	{
-		Token start = (Token) input.LT(-1);
+		Token start = input.LT(-1);
 		matchAny(input);
 		Token stop = null;
 
 		while (input.LA(3) != Token.EOF)
 		{
-			stop = (Token) input.LT(1);
 			matchAny(input);
 		}
-		stop = (Token) input.LT(1); // this should be a '}' will be matched by
+		stop = input.LT(1); // this should be a '}' will be matched by
 		// the parser
 
 		String result = input.toString(start.getTokenIndex() + 1, stop.getTokenIndex() - 1);

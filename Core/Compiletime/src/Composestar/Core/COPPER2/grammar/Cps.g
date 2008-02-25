@@ -24,6 +24,7 @@
  *				target.selector sign matching, but generate a 
  *				warning.
  * (2007-10-15) michielh	Constraints are no longer hardcoded
+ * (2008-02-25) michielh	Added required check for ending } and EOF
  */
 grammar Cps;
 
@@ -144,7 +145,7 @@ tokens {
  * or an implementation rule.
  */
 concern
-	: 'concern' IDENTIFIER concernParameters? (inToken='in' fqn)? LCURLY filtermodule* superimposition? implementation?
+	: 'concern' IDENTIFIER concernParameters? (inToken='in' fqn)? LCURLY filtermodule* superimposition? implementation? RCURLY EOF
 	-> ^(CONCERN[$start] IDENTIFIER concernParameters? ^(IN[$inToken] fqn)? filtermodule* superimposition? implementation?)
 	;
 

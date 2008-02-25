@@ -122,65 +122,72 @@ public class COPPER implements CTCommonModule
 		// workaround for some ANTLRv3 debug output
 		PrintStream oldErr = System.err;
 		System.setErr(new PrintStream(new DevNullOutputStream()));
-
-		int localErrCnt = 0;
-
-		logger.info(String.format("Parsing file %s", file.toString()));
-		CpsLexer lex;
 		try
 		{
-			lex = new CpsLexer(new ANTLRFileStream(file.toString()));
+
+			int localErrCnt = 0;
+
+			logger.info(String.format("Parsing file %s", file.toString()));
+			CpsLexer lex;
+			try
+			{
+				lex = new CpsLexer(new ANTLRFileStream(file.toString()));
+			}
+			catch (IOException e1)
+			{
+				throw new ModuleException(e1.getMessage(), MODULE_NAME, e1);
+			}
+			CommonTokenStream tokens = new CommonTokenStream(lex);
+			CpsParser p = new CpsParser(tokens);
+			p.setSourceFile(file.toString());
+			Tree rootNode;
+			try
+			{
+				rootNode = (Tree) p.concern().getTree();
+			}
+			catch (RecognitionException e)
+			{
+				System.setErr(oldErr);
+				throw new ModuleException(e.getMessage(), MODULE_NAME, file.toString(), e.line, e);
+			}
+			localErrCnt += p.getErrorCnt();
+
+			if (localErrCnt > 0)
+			{
+				logger.error(String.format("%s contains %d error(s)", file.toString(), localErrCnt));
+				return;
+			}
+
+			logger.debug("Walking AST");
+			CommonTreeNodeStream nodes = new CommonTreeNodeStream(rootNode);
+			nodes.setTokenStream(tokens);
+			CpsTreeWalker w = new CpsTreeWalker(nodes);
+			w.setSourceFile(file.toString());
+			w.setOrderingConstraints(orderingconstraints);
+			w.setFilterTypeMapping(filterTypes);
+			w.setFilterFactory(filterFactory);
+			try
+			{
+				w.concern();
+			}
+			catch (RecognitionException e)
+			{
+				System.setErr(oldErr);
+				throw new ModuleException(e.getMessage(), MODULE_NAME, file.toString(), e.line, e.charPositionInLine, e);
+			}
+			System.setErr(oldErr);
+
+			localErrCnt += w.getErrorCnt();
+			errorCnt += localErrCnt;
+
+			if (localErrCnt > 0)
+			{
+				logger.error(String.format("%s contains %d error(s)", file.toString(), localErrCnt));
+			}
 		}
-		catch (IOException e1)
-		{
-			throw new ModuleException(e1.getMessage(), MODULE_NAME, e1);
-		}
-		CommonTokenStream tokens = new CommonTokenStream(lex);
-		CpsParser p = new CpsParser(tokens);
-		p.setSourceFile(file.toString());
-		Tree rootNode;
-		try
-		{
-			rootNode = (Tree) p.concern().getTree();
-		}
-		catch (RecognitionException e)
+		finally
 		{
 			System.setErr(oldErr);
-			throw new ModuleException(e.getMessage(), MODULE_NAME, file.toString(), e.line, e);
-		}
-		localErrCnt += p.getErrorCnt();
-
-		if (localErrCnt > 0)
-		{
-			logger.error(String.format("%s contains %d error(s)", file.toString(), localErrCnt));
-			return;
-		}
-
-		logger.debug("Walking AST");
-		CommonTreeNodeStream nodes = new CommonTreeNodeStream(rootNode);
-		nodes.setTokenStream(tokens);
-		CpsTreeWalker w = new CpsTreeWalker(nodes);
-		w.setSourceFile(file.toString());
-		w.setOrderingConstraints(orderingconstraints);
-		w.setFilterTypeMapping(filterTypes);
-		w.setFilterFactory(filterFactory);
-		try
-		{
-			w.concern();
-		}
-		catch (RecognitionException e)
-		{
-			System.setErr(oldErr);
-			throw new ModuleException(e.getMessage(), MODULE_NAME, file.toString(), e.line, e.charPositionInLine, e);
-		}
-		System.setErr(oldErr);
-
-		localErrCnt += w.getErrorCnt();
-		errorCnt += localErrCnt;
-
-		if (localErrCnt > 0)
-		{
-			logger.error(String.format("%s contains %d error(s)", file.toString(), localErrCnt));
 		}
 	}
 
@@ -192,13 +199,13 @@ public class COPPER implements CTCommonModule
 		COPPER c = new COPPER();
 		DataStore ds = DataStore.instance();
 		c.filterTypes = new FilterTypeMapping(ds);
-		DefaultFilterFactory fact = new DefaultFilterFactory(c.filterTypes, ds);
-		fact.setAllowLegacyCustomFilters(true);
+		c.filterFactory = new DefaultFilterFactory(c.filterTypes, ds);
+		c.filterFactory.setAllowLegacyCustomFilters(true);
 		try
 		{
 			c.parseConcernFile(new File(args[0]));
 		}
-		catch (ModuleException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}

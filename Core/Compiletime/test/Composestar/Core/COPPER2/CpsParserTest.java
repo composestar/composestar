@@ -124,6 +124,10 @@ public class CpsParserTest extends TestCase
 			fail(String.format("Parsing of \"%s\" failed: %s", file.toString(), e.getMessage()));
 			return -1;
 		}
+		if (parser.getErrorCnt() > 0)
+		{
+			return parser.getErrorCnt();
+		}
 
 		CommonTreeNodeStream nodes = new CommonTreeNodeStream(rootNode);
 		nodes.setTokenStream(tokens);
@@ -143,7 +147,7 @@ public class CpsParserTest extends TestCase
 			fail(String.format("Parsing of \"%s\" failed: %s", file.toString(), e.getMessage()));
 		}
 
-		return parser.getErrorCnt() + w.getErrorCnt();
+		return w.getErrorCnt();
 	}
 
 	public void testCorrect()
