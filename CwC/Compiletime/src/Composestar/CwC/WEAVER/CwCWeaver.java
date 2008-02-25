@@ -220,16 +220,6 @@ public class CwCWeaver implements WEAVER
 				output = new FileWriter(target);
 				PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
 
-				// insert the preprocessor data from the header file
-				// for (Entry<Integer, ArrayList<Object>> entry :
-				// cshPIC.objects.entrySet())
-				// {
-				// for (Object o : entry.getValue())
-				// {
-				// ppic.addLineForTokenNumber(o, entry.getKey());
-				// }
-				// }
-
 				CEmitter emitter = new CEmitter(ppic, output);
 				emitter.setASTNodeClass(TNode.class.getName());
 				emitter.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
@@ -476,10 +466,6 @@ public class CwCWeaver implements WEAVER
 				}
 			}
 		}
-
-		// TODO: process added signatures, added signatures can't be processed
-		// using the same method as NORMAL because they don't have actual
-		// function declarations in the code. They need to be added.
 
 		functions = sig.getMethods(MethodWrapper.ADDED);
 		for (CwCFunctionInfo func : functions)

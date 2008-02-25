@@ -1,15 +1,14 @@
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+import java.util.Vector;
+
 import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 
 public class FilterModuleParameter extends DeclaredRepositoryEntity
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3840471205660574871L;
 
-	public Object value;
+	public Vector value;
 
 	public FilterModuleParameterAST fmpAst;
 
@@ -18,26 +17,25 @@ public class FilterModuleParameter extends DeclaredRepositoryEntity
 	public FilterModuleParameter()
 	{
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public FilterModuleParameter(FilterModuleParameterAST fmp, Object aValue, int number)
+	public FilterModuleParameter(FilterModuleParameterAST fmp, FilterModuleParameter aValue, int number)
 	{
 		super();
 		fmpAst = fmp;
 		descriptionFileName = fmpAst.getDescriptionFileName();
 		descriptionLineNumber = fmpAst.getDescriptionLineNumber();
 		name = fmpAst.getName();
-		value = ((FilterModuleParameter) aValue).getValue();
+		value = aValue.getValue();
 		uniqueNumber = number;
 	}
 
-	public void setValue(Object o)
+	public void setValue(Vector o)
 	{
 		value = o;
 	}
 
-	public Object getValue()
+	public Vector getValue()
 	{
 		return value;
 	}

@@ -19,7 +19,6 @@
 		incremental="false" summary="Collecting annotations...">
 		<dependencies></dependencies>
 	</module>
-	<module fulltype="Composestar.Core.REXREF.Main" />
 	<module name="LOLA" fulltype="Composestar.Java.LOLA.JavaLOLA" enabled="true" incremental="false"
 		summary="Evaluating predicate selectors...">
 		<dependencies></dependencies>
@@ -33,6 +32,7 @@
 			</type>
 		</comparisons>
 	</module>
+	<module fulltype="Composestar.Core.REXREF.Main" />
 	<module fulltype="Composestar.Core.CHKREP2.Check" />
 	<module fulltype="Composestar.Core.SANE.SANE" />
 	<module fulltype="Composestar.Core.FILTH.FILTH" />

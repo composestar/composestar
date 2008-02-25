@@ -65,5 +65,5 @@
 	exception handling. Only fatal errors are possible. JohanW suggest assertions,
 	those are fatal.
 
-[12] JoinPointContext does not contain a lot of useful information. An runtime
+[12] JoinPointContext does not contain a lot of useful information. At runtime
 	there is no type information.

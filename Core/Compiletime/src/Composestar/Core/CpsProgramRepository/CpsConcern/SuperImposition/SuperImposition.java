@@ -18,14 +18,10 @@ import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 import Composestar.Utils.CPSIterator;
 
 /**
- * @modelguid {45C1BA7F-52B3-49C6-9330-77B3065146D5}
+ * 
  */
 public class SuperImposition extends DeclaredRepositoryEntity
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2244055769354841823L;
 
 	/**
@@ -262,6 +258,18 @@ public class SuperImposition extends DeclaredRepositoryEntity
 	public SelectorDefinition getSelectorDefinition(int index)
 	{
 		return (SelectorDefinition) selectors.elementAt(index);
+	}
+
+	public SelectorDefinition getSelectorDefinitionByName(String name)
+	{
+		for (int i = 0; i < selectors.size(); i++)
+		{
+			if (((SelectorDefinition) selectors.get(i)).getName().equals(name))
+			{
+				return (SelectorDefinition) selectors.get(i);
+			}
+		}
+		return null;
 	}
 
 	/**

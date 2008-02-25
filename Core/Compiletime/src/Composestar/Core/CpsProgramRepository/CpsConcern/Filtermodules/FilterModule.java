@@ -84,9 +84,10 @@ public class FilterModule extends DeclaredRepositoryEntity
 		{
 			FilterModuleParameterAST fmpAst = (FilterModuleParameterAST) parameterIterator.next();
 			// we take the assumption that #parameters == # arguments
-			FilterModuleParameter fmp = new FilterModuleParameter(fmpAst, args.elementAt(index), counter);
+			FilterModuleParameter fmp = new FilterModuleParameter(fmpAst, (FilterModuleParameter) args.get(index),
+					counter);
 			fmp.setParent(this);
-			this.addParameter(fmp);
+			addParameter(fmp);
 			index++;
 			counter++;
 		}
@@ -102,7 +103,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 				ParameterizedInternal internal = new ParameterizedInternal((ParameterizedInternalAST) internalAST);
 				// counter++;
 				internal.setParent(this);
-				this.addInternal(internal);
+				addInternal(internal);
 			}
 			else
 			{
@@ -110,7 +111,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 				// counter++;
 				internal.setParent(this);
 				internal.setType(internalAST.getType());
-				this.addInternal(internal);
+				addInternal(internal);
 			}
 		}
 
@@ -118,7 +119,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 		while (filterIt.hasNext())
 		{
 			Filter filter = new Filter((FilterAST) filterIt.next());
-			this.addInputFilter(filter);
+			addInputFilter(filter);
 			filter.setParent(this);
 			ds.addObject(filter);
 		}
@@ -127,7 +128,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 		while (filterIt.hasNext())
 		{
 			Filter filter = new Filter((FilterAST) filterIt.next());
-			this.addOutputFilter(filter);
+			addOutputFilter(filter);
 			filter.setParent(this);
 			ds.addObject(filter);
 		}
@@ -542,7 +543,7 @@ public class FilterModule extends DeclaredRepositoryEntity
 
 	public String getUniqueToken()
 	{
-		return this.uniqueToken;
+		return uniqueToken;
 	}
 
 	public void setUniqueToken(String inUniqueToken)

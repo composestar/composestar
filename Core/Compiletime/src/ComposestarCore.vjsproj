@@ -219,6 +219,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterModuleParameterValue.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterType.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -230,6 +235,11 @@
                 />
                 <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\InternalAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\LiteralFilterModuleParameterValue.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -305,6 +315,11 @@
                 />
                 <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ParameterizedMessageSelectorAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\SelectorFilterModuleParameterValue.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -1078,7 +1078,7 @@ filtermoduleSi [SuperImposition si]
 	  (bnd=fmBinding[si]
 	    {
 	    	fmb.addFilterModule(bnd);
-	    		    }
+        }
 	  )+)
 	;
 	
@@ -1125,20 +1125,27 @@ fmBinding [SuperImposition si] returns [FilterModuleReference fmr = new FilterMo
 		recover(input,re);
 	  }
 	  }
-	  (^(PARAMS (prm=param
+	  (^(PARAMS (prm=param[si]
 	    {
 	    	fmr.addArg(prm);
 	    }
 	  )+))?)
 	;	
 	
-param returns [FilterModuleParameter fmp = new FilterModuleParameter();]
+param [SuperImposition si] returns [FilterModuleParameter fmp = new FilterModuleParameter();]
 @init {
 	Vector v = new Vector();
 }
 	: ^(strt=LIST (lp=fqn
 	    {
-	    	v.add(lp);
+	    	SelectorDefinition seldef = si.getSelectorDefinitionByName(lp);
+	    	if (seldef != null)
+	    	{
+	    		v.add(new SelectorFilterModuleParameterValue(seldef));
+	    	}
+	    	else {
+	    		v.add(new LiteralFilterModuleParameterValue(lp));
+	    	}
 	    }
 	  )+
 	  {
@@ -1149,7 +1156,14 @@ param returns [FilterModuleParameter fmp = new FilterModuleParameter();]
 	| ^(strt=PARAM sp=fqn
 	  {
 	  	setLocInfo(fmp, $strt);
-	  	v.add(sp);
+	  	SelectorDefinition seldef = si.getSelectorDefinitionByName(sp);
+	    if (seldef != null)
+	    {
+	    	v.add(new SelectorFilterModuleParameterValue(seldef));
+	    }
+	    else {
+	    	v.add(new LiteralFilterModuleParameterValue(sp));
+	    }
 	  	fmp.setValue(v);
 	  }
 	  )

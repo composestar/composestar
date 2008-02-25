@@ -1,6 +1,8 @@
 package Composestar.Core.REXREF;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -16,7 +18,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElem
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameterValue;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.LiteralFilterModuleParameterValue;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
@@ -30,11 +34,14 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernRefere
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ProgramElementReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.SelectorReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.FilterModuleBinding;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -203,7 +210,29 @@ public class Main implements CTCommonModule
 				if (o instanceof ParameterizedInternal)
 				{
 					ParameterizedInternal pi = (ParameterizedInternal) o;
-					Vector<String> pack = (Vector<String>) fm.getParameter(pi.getParameter()).getValue();
+
+					Vector<FilterModuleParameterValue> values = fm.getParameter(pi.getParameter()).getValue();
+					List<String> selectors = new ArrayList<String>();
+					for (FilterModuleParameterValue val : values)
+					{
+						if (val instanceof LiteralFilterModuleParameterValue)
+						{
+							selectors.addAll(val.getValues());
+						}
+						else
+						{
+							for (ProgramElementReference per : (Collection<ProgramElementReference>) val.getValues())
+							{
+								if (per.getRef() instanceof Type)
+								{
+									selectors.add(((Type) per.getRef()).getFullName());
+								}
+							}
+						}
+					}
+
+					String[] prepack = selectors.get(0).split("\\.");
+					List<String> pack = Arrays.asList(prepack);
 
 					ConcernReference cref = new ConcernReference();
 					cref.setName(pack.get(pack.size() - 1));
@@ -398,11 +427,31 @@ public class Main implements CTCommonModule
 					if (mp.getSelector() instanceof ParameterizedMessageSelector)
 					{
 						ParameterizedMessageSelector pms = (ParameterizedMessageSelector) mp.getSelector();
+
+						Vector<FilterModuleParameterValue> values = fm.getParameter(pms.getName()).getValue();
+						List<String> selectors = new ArrayList<String>();
+						for (FilterModuleParameterValue val : values)
+						{
+							if (val instanceof LiteralFilterModuleParameterValue)
+							{
+								selectors.addAll(val.getValues());
+							}
+							else
+							{
+								for (ProgramElementReference per : (Collection<ProgramElementReference>) val
+										.getValues())
+								{
+									if (per.getRef() instanceof MethodInfo)
+									{
+										selectors.add(((MethodInfo) per.getRef()).getName());
+									}
+								}
+							}
+						}
 						if (pms.isList())
 						{
 							if (mp.getMatchType() instanceof NameMatchingType)
 							{
-								Vector<String> selectors = (Vector<String>) fm.getParameter(pms.getName()).getValue();
 								Iterator<String> sel = selectors.iterator();
 								String s = sel.next();
 								pms.setName(s);
@@ -443,7 +492,7 @@ public class Main implements CTCommonModule
 						}
 						else
 						{
-							String paraValue = (String) ((Vector) fm.getParameter(pms.getName()).getValue()).get(0);
+							String paraValue = selectors.get(0);
 							pms.setName(paraValue);
 						}
 					}
