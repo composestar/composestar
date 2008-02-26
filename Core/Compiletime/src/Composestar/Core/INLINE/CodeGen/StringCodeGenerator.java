@@ -159,6 +159,16 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getCurrentMethodId()
+	 */
+	public int getCurrentMethodId()
+	{
+		return methodId;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see Composestar.Core.INLINE.model.Visitor#visitBlock(Composestar.Core.INLINE.model.Block)
 	 */
 	public Object visitBlock(Block block)

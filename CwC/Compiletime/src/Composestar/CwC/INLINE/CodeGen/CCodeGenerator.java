@@ -293,20 +293,33 @@ public class CCodeGenerator extends StringCodeGenerator
 	public String emitReturnActions()
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append("int __cstar_return_actions_proc = 0;\n");
-		sb.append("while ( __cstar_return_actions_proc < __cstar_return_actions_cnt ) {\n");
-		sb.append("\tswitch( __cstar_return_actions[__cstar_return_actions_proc++] ) {\n");
 		for (int i = 0; i < returnActions.size(); i++)
 		{
+			String action = emitFilterAction(returnActions.get(i));
+			if (action == null || action.trim().length() == 0)
+			{
+				continue;
+			}
 			sb.append("\tcase ");
 			sb.append(i);
 			sb.append(": {\n");
-			sb.append(indent(emitFilterAction(returnActions.get(i)), 3));
+			sb.append(indent(action, 3));
 			sb.append("\t\t}\n\t\tbreak;\n");
 		}
-		sb.append("\t}\n");
-		sb.append("}\n");
-		return sb.toString();
+		if (sb.length() == 0)
+		{
+			// no code for return actions
+			return "";
+		}
+
+		StringBuffer sb2 = new StringBuffer();
+		sb2.append("int __cstar_return_actions_proc = 0;\n");
+		sb2.append("while ( __cstar_return_actions_proc < __cstar_return_actions_cnt ) {\n");
+		sb2.append("\tswitch( __cstar_return_actions[__cstar_return_actions_proc++] ) {\n");
+		sb2.append(sb.toString());
+		sb2.append("\t}\n");
+		sb2.append("}\n");
+		return sb2.toString();
 	}
 
 	/*

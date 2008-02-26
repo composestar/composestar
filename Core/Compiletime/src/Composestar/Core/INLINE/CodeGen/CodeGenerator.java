@@ -82,6 +82,13 @@ public interface CodeGenerator<T> extends Visitor
 	MethodInfo getCurrentMethod();
 
 	/**
+	 * Get the current method ID
+	 * 
+	 * @return
+	 */
+	int getCurrentMethodId();
+
+	/**
 	 * Register a filter action code generator with this code generator.
 	 * 
 	 * @param facg

@@ -63,16 +63,15 @@
 
 		<maketest dir="${build.cwc}/Examples/BasicTest" />
 		<maketest dir="${build.cwc}/Examples/IDEALSCase" />
+		<maketest dir="${build.cwc}/Examples/Memoize" />
 	</target>
 
 	<target name="exec_tests" depends="init">
-		<!--
 		<cs:test>
 			<fileset dir="${build.cwc}/Examples">
-				<include name="**/basictest.exe" />
+				<include name="**/fibonacci.exe" />
 			</fileset>
 		</cs:test>
-		-->
 	</target>
 
 </project>

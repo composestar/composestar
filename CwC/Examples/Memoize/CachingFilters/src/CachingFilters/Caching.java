@@ -40,7 +40,6 @@ import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterActionExce
 import Composestar.Core.CpsProgramRepository.Filters.UnsupportedFilterTypeException;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
-import Composestar.Core.INLINE.CodeGen.VoidFilterActionCodeGen;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.CwC.Filters.CustomCwCFilters;
 
@@ -72,9 +71,8 @@ public class Caching implements CustomCwCFilters
 	 */
 	public Collection<FilterActionCodeGenerator<String>> getCodeGenerators()
 	{
-		String[] stubs = { CACHE_ACTION, CACHE_RETURN_ACTION, INVALIDATE_ACTION };
 		Set<FilterActionCodeGenerator<String>> facgs = new HashSet<FilterActionCodeGenerator<String>>();
-		facgs.add(new VoidFilterActionCodeGen<String>(stubs));
+		facgs.add(new CachingFilterActionCodeGen());
 		return facgs;
 	}
 
