@@ -27,9 +27,11 @@ package Composestar.CwC.LAMA;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import weavec.cmodel.declaration.FunctionDeclaration;
+import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -212,6 +214,16 @@ public class CwCFunctionInfo extends MethodInfo implements LocationProvider
 		{
 			// this is never true, return type is of unittype "Type"
 			return new UnitResult(getReturnType());
+		}
+		else if (ERelationType.ANNOTATIONS.equals(argumentName))
+		{
+			Iterator<Annotation> i = getAnnotations().iterator();
+			Set<Type> res = new HashSet<Type>();
+			while (i.hasNext())
+			{
+				res.add(i.next().getType());
+			}
+			return new UnitResult(res);
 		}
 		return new UnitResult(Collections.emptySet());
 	}

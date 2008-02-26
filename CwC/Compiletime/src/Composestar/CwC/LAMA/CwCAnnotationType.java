@@ -26,12 +26,19 @@ package Composestar.CwC.LAMA;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import weavec.cmodel.declaration.AnnotationDeclaration;
+import weavec.cmodel.declaration.Annotation;
 import weavec.cmodel.type.AnnotationType;
+import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.ERelationType;
 import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
@@ -44,7 +51,7 @@ public class CwCAnnotationType extends Type
 {
 	private static final long serialVersionUID = -439148456392869374L;
 
-	protected transient AnnotationDeclaration annotDecl;
+	protected transient Annotation annot;
 
 	protected transient AnnotationType annotType;
 
@@ -53,11 +60,13 @@ public class CwCAnnotationType extends Type
 		super();
 	}
 
-	public CwCAnnotationType(AnnotationDeclaration decl)
+	public CwCAnnotationType(Annotation annotatation)
 	{
-		this(decl.getType());
-		annotDecl = decl;
-		setName(decl.getName());
+		this(annotatation.getType());
+		annot = annotatation;
+		setName(annot.getName());
+		// TODO maybe use module.name ??
+		setFullName(annot.getName());
 	}
 
 	protected CwCAnnotationType(AnnotationType at)
@@ -66,9 +75,9 @@ public class CwCAnnotationType extends Type
 		annotType = at;
 	}
 
-	public AnnotationDeclaration getAnnotationDeclaration()
+	public Annotation getAnnotationDeclaration()
 	{
-		return annotDecl;
+		return annot;
 	}
 
 	public AnnotationType getAnnotationType()
@@ -162,6 +171,49 @@ public class CwCAnnotationType extends Type
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
+		Set<Type> resClasses = new HashSet<Type>();
+		Set<MethodInfo> resMethods = new HashSet<MethodInfo>();
+		Set<FieldInfo> resFields = new HashSet<FieldInfo>();
+		Set<ParameterInfo> resParameters = new HashSet<ParameterInfo>();
+
+		Iterator<Composestar.Core.LAMA.Annotation> i = getAnnotationInstances().iterator();
+		while (i.hasNext())
+		{
+			ProgramElement unit = i.next().getTarget();
+			if (unit instanceof CwCFile)
+			{
+				resClasses.add((Type) unit);
+			}
+			else if (unit instanceof MethodInfo)
+			{
+				resMethods.add((MethodInfo) unit);
+			}
+			else if (unit instanceof FieldInfo)
+			{
+				resFields.add((FieldInfo) unit);
+			}
+			else if (unit instanceof ParameterInfo)
+			{
+				resParameters.add((ParameterInfo) unit);
+			}
+		}
+
+		if (ERelationType.ATTACHED_CLASSES.equals(argumentName))
+		{
+			return new UnitResult(resClasses);
+		}
+		else if (ERelationType.ATTACHED_METHODS.equals(argumentName))
+		{
+			return new UnitResult(resMethods);
+		}
+		else if (ERelationType.ATTACHED_FIELDS.equals(argumentName))
+		{
+			return new UnitResult(resFields);
+		}
+		else if (ERelationType.ATTACHED_PARAMETERS.equals(argumentName))
+		{
+			return new UnitResult(resParameters);
+		}
 		return new UnitResult(Collections.emptySet());
 	}
 
@@ -173,7 +225,7 @@ public class CwCAnnotationType extends Type
 	@Override
 	public String getUnitType()
 	{
-		return EUnitType.TYPE.toString();
+		return EUnitType.ANNOTATION.toString();
 	}
 
 }

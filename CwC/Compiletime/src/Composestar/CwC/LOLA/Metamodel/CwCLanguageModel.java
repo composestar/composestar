@@ -45,11 +45,11 @@ public class CwCLanguageModel extends LanguageModel
 		mcNamespace = Composestar.Core.LAMA.LangNamespace.class;
 		mcClass = Composestar.CwC.LAMA.CwCFile.class;
 		mcInterface = null;
-		mcType = Composestar.CwC.LAMA.CwCType.class;
+		mcType = Composestar.CwC.LAMA.CwCFile.class;
 		mcMethod = Composestar.CwC.LAMA.CwCFunctionInfo.class;
 		mcField = Composestar.CwC.LAMA.CwCVariable.class;
 		mcParameter = Composestar.CwC.LAMA.CwCParameterInfo.class;
-		mcAnnotation = Composestar.CwC.LAMA.CwCAnnotation.class;
+		mcAnnotation = Composestar.CwC.LAMA.CwCAnnotationType.class;
 		super.createMetaModel();
 	}
 

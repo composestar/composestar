@@ -807,6 +807,18 @@ public abstract class LanguageModel
 					classHasAnnotation, interfaceHasAnnotation);
 			addRelationPredicate(typeHasAnnotation);
 		}
+		else if (classHasAnnotation != null)
+		{
+			RelationPredicate typeHasAnnotation = new RelationPredicate("typeHasAnnotation", classAnnotations, "Class",
+					annotationAttachedClasses, "Annotation");
+			addRelationPredicate(typeHasAnnotation);
+		}
+		else if (interfaceHasAnnotation != null)
+		{
+			RelationPredicate typeHasAnnotation = new RelationPredicate("typeHasAnnotation", classAnnotations, "Class",
+					annotationAttachedClasses, "Annotation");
+			addRelationPredicate(typeHasAnnotation);
+		}
 
 		/** Method * */
 		if (methodChildParameters != null && parameterParentMethod != null)

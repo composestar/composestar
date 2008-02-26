@@ -448,52 +448,60 @@ public class Main implements CTCommonModule
 								}
 							}
 						}
-						if (pms.isList())
+						if (selectors.size() == 0)
 						{
-							if (mp.getMatchType() instanceof NameMatchingType)
+							logger.warn(String.format("Paramater %s contains no values", pms.getName()), pms);
+						}
+						else
+						{
+							if (pms.isList())
 							{
-								Iterator<String> sel = selectors.iterator();
-								String s = sel.next();
-								pms.setName(s);
-
-								// the second one out of the vector and the rest
-								while (sel.hasNext())
+								if (mp.getMatchType() instanceof NameMatchingType)
 								{
-									FilterElement copy = copyFilterElement(fe);
+									Iterator<String> sel = selectors.iterator();
+									String s = sel.next();
+									pms.setName(s);
 
-									// placing and and afetr the first one
-									CORfilterElementCompOper cfeco = new CORfilterElementCompOper();
-									cfeco.setDescriptionFileName(fe.getDescriptionFileName());
-									cfeco.setDescriptionLineNumber(fe.getDescriptionLineNumber());
-									cfeco.setParent(fe.getFilterElementAST());
-									fe.setRightOperator(cfeco);
-									ds.addObject(cfeco);
-
-									filter.addFilterElement(copy);
-									ds.addObject(copy);
-
-									// setting the selector
-									MatchingPattern mp2 = copy.getMatchingPattern();
-									Iterator<MatchingPart> match = mp2.getMatchingPartsIterator();
-									while (match.hasNext())
+									// the second one out of the vector and the
+									// rest
+									while (sel.hasNext())
 									{
-										MatchingPart matchpart = match.next();
-										matchpart.getSelector().setName(sel.next());
-									}
+										FilterElement copy = copyFilterElement(fe);
 
-									// this for getting , , between them
-									fe = copy;
+										// placing and and afetr the first one
+										CORfilterElementCompOper cfeco = new CORfilterElementCompOper();
+										cfeco.setDescriptionFileName(fe.getDescriptionFileName());
+										cfeco.setDescriptionLineNumber(fe.getDescriptionLineNumber());
+										cfeco.setParent(fe.getFilterElementAST());
+										fe.setRightOperator(cfeco);
+										ds.addObject(cfeco);
+
+										filter.addFilterElement(copy);
+										ds.addObject(copy);
+
+										// setting the selector
+										MatchingPattern mp2 = copy.getMatchingPattern();
+										Iterator<MatchingPart> match = mp2.getMatchingPartsIterator();
+										while (match.hasNext())
+										{
+											MatchingPart matchpart = match.next();
+											matchpart.getSelector().setName(sel.next());
+										}
+
+										// this for getting , , between them
+										fe = copy;
+									}
+								}
+								else
+								{
+									logger.error("Parameter list is only allowed in name matching", pms);
 								}
 							}
 							else
 							{
-								logger.error("Parameter list is only allowed in name matching", pms);
+								String paraValue = selectors.get(0);
+								pms.setName(paraValue);
 							}
-						}
-						else
-						{
-							String paraValue = selectors.get(0);
-							pms.setName(paraValue);
 						}
 					}
 				}

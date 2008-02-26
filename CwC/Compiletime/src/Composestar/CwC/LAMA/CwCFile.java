@@ -27,8 +27,11 @@ package Composestar.CwC.LAMA;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import weavec.cmodel.declaration.ModuleDeclaration;
+import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.LangNamespace;
 import Composestar.Core.LAMA.MethodInfo;
@@ -188,6 +191,16 @@ public class CwCFile extends Type implements LocationProvider
 		else if (ERelationType.CHILD_FIELDS.equals(argumentName))
 		{
 			return new UnitResult(new HashSet<FieldInfo>(fields));
+		}
+		else if (ERelationType.ANNOTATIONS.equals(argumentName))
+		{
+			Iterator<Annotation> i = getAnnotations().iterator();
+			Set<Type> res = new HashSet<Type>();
+			while (i.hasNext())
+			{
+				res.add(i.next().getType());
+			}
+			return new UnitResult(res);
 		}
 		return new UnitResult(Collections.emptySet());
 	}

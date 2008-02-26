@@ -25,18 +25,20 @@
 package Composestar.CwC.TYM.Collector;
 
 import java.io.File;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import weavec.ast.TNode;
-import weavec.cmodel.declaration.AnnotationDeclaration;
+import weavec.cmodel.declaration.Annotation;
 import weavec.cmodel.declaration.AnnotationInstance;
 import weavec.cmodel.declaration.Declaration;
 import weavec.cmodel.declaration.FunctionDeclaration;
 import weavec.cmodel.declaration.ModuleDeclaration;
 import weavec.cmodel.declaration.ObjectDeclaration;
 import weavec.cmodel.declaration.TypeDeclaration;
+import weavec.cmodel.scope.AnnotationNamespaceKind;
 import weavec.cmodel.scope.CNamespaceKind;
 import weavec.cmodel.type.AnnotationType;
 import weavec.cmodel.type.CType;
@@ -129,9 +131,20 @@ public class LangModelConverter implements CTCommonModule
 				{
 					createCwCType((TypeDeclaration) d);
 				}
-				else if (d instanceof AnnotationDeclaration)
+			}
+
+			EnumSet<AnnotationNamespaceKind> anks = EnumSet.allOf(AnnotationNamespaceKind.class);
+			anks.remove(AnnotationNamespaceKind.ANNOTATION_TAG);
+			for (AnnotationNamespaceKind ank : anks)
+			{
+				Iterator<Declaration> atit = tunit.getAnnotationScope().getNamespace(ank).iterator();
+				while (atit.hasNext())
 				{
-					createCwCAnnotationType((AnnotationDeclaration) d);
+					Declaration d = atit.next();
+					if (d instanceof Annotation)
+					{
+						createCwCAnnotationType((Annotation) d);
+					}
 				}
 			}
 		}
@@ -201,27 +214,31 @@ public class LangModelConverter implements CTCommonModule
 		result = annotTypeMapping.get(annotType);
 		if (result == null)
 		{
-			result = new CwCAnnotationType(annotType.getDeclaration());
-			annotTypeMapping.put(annotType, result);
+			/*
+			 * result = createCwCAnnotationType(annotType.getDeclaration()); if
+			 * (result != null) { annotTypeMapping.put(annotType, result); }
+			 */
 		}
 		return result;
 	}
 
-	protected void createCwCAnnotationType(AnnotationDeclaration annotDecl)
+	protected CwCAnnotationType createCwCAnnotationType(Annotation annot)
 	{
-		if (stringTypeMapping.containsKey(annotDecl.getName()))
+		if (stringTypeMapping.containsKey(annot.getName()))
 		{
-			annotTypeMapping.put(annotDecl.getType(), stringAnnotTypeMapping.get(annotDecl.getName()));
-			logger.trace(String.format("Annotation Type %s already contains a registered declaration", annotDecl
-					.getName()));
-			return;
+			annotTypeMapping.put(annot.getType(), stringAnnotTypeMapping.get(annot.getName()));
+			logger
+					.trace(String.format("Annotation Type %s already contains a registered declaration", annot
+							.getName()));
+			return null;
 		}
-		logger.debug(String.format("Creating LAMA Type for %s", annotDecl.getName()));
-		CwCAnnotationType cwcType = new CwCAnnotationType(annotDecl);
+		logger.debug(String.format("Creating LAMA Annotation Type for %s", annot.getName()));
+		CwCAnnotationType cwcType = new CwCAnnotationType(annot);
 
 		register.registerLanguageUnit(cwcType);
-		stringAnnotTypeMapping.put(annotDecl.getName(), cwcType);
-		annotTypeMapping.put(annotDecl.getType(), cwcType);
+		stringAnnotTypeMapping.put(annot.getName(), cwcType);
+		annotTypeMapping.put(annot.getType(), cwcType);
+		return cwcType;
 	}
 
 	protected void createCwCFile(TranslationUnitResult tunit)

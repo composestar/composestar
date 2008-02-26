@@ -140,7 +140,7 @@ public class HeaderFileGenerator extends AbstractHeaderFileGenerator
 			nd.getFirstChild().getFirstChild().setText(mi.getName());
 
 			// remove implementation
-			TNode body = nd.getFirstChild().getNextSibling();
+			TNode body = nd.getFirstChild().getLastSibling();
 			body.removeSelf();
 
 			body = TNodeFactory.getInstance().create(ACGrammarTokenTypes.NInitDecl, "");

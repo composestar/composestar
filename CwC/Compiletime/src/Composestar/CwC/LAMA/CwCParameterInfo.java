@@ -26,9 +26,14 @@ package Composestar.CwC.LAMA;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import weavec.cmodel.declaration.ObjectDeclaration;
+import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.metamodel.ERelationType;
 import Composestar.Core.LOLA.metamodel.EUnitType;
@@ -83,6 +88,16 @@ public class CwCParameterInfo extends ParameterInfo
 		else if (ERelationType.TYPE.equals(argumentName) && EUnitType.TYPE.equals(parameterType().getUnitType()))
 		{
 			return new UnitResult(parameterType());
+		}
+		else if (ERelationType.ANNOTATIONS.equals(argumentName))
+		{
+			Iterator<Annotation> i = getAnnotations().iterator();
+			Set<Type> res = new HashSet<Type>();
+			while (i.hasNext())
+			{
+				res.add(i.next().getType());
+			}
+			return new UnitResult(res);
 		}
 		return new UnitResult(Collections.emptySet());
 	}
