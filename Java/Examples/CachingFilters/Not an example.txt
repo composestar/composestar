@@ -1,0 +1,2 @@
+This is not an example for Compose*/Java
+It's a project that contains custom filters used by the Fibonacci example

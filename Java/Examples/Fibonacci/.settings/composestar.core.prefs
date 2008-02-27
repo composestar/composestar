@@ -1,0 +1,7 @@
+#Wed Feb 27 14:28:34 CET 2008
+SECRET.mode=Normal
+buildDebugLevel=INFO
+eclipse.preferences.version=1
+incremental=false
+mainclass=Fibonacci
+runDebugLevel=0
