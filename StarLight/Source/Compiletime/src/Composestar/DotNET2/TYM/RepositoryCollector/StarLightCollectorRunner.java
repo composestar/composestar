@@ -411,7 +411,18 @@ public class StarLightCollectorRunner implements CTCommonModule
 		}
 
 		// see rev. 2806
-		return ns.endsWith("+") ? ns + name : ns + "." + name;
+		if (ns.endsWith("+"))
+		{
+			return ns + name;
+		}
+		else
+		{
+			if (ns.equals(""))
+			{
+				return name;
+			}
+			return ns + "." + name;
+		}
 	}
 
 	private List<DotNETAttribute> collectAttributes(ArrayOfAttributeElement attributes)
