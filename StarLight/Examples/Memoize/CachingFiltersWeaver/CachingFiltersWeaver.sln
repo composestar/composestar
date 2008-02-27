@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CachingFiltersWeaver", "CachingFiltersWeaver.csproj", "{51293AAA-1B6D-4ADD-BD5F-4E5B27F82663}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CachingFilters", "..\CachingFilters\CachingFilters.csproj", "{C2DAF3BF-DF42-4C4A-AC28-F2ED6EF4224B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51293AAA-1B6D-4ADD-BD5F-4E5B27F82663}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51293AAA-1B6D-4ADD-BD5F-4E5B27F82663}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51293AAA-1B6D-4ADD-BD5F-4E5B27F82663}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51293AAA-1B6D-4ADD-BD5F-4E5B27F82663}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2DAF3BF-DF42-4C4A-AC28-F2ED6EF4224B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2DAF3BF-DF42-4C4A-AC28-F2ED6EF4224B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2DAF3BF-DF42-4C4A-AC28-F2ED6EF4224B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2DAF3BF-DF42-4C4A-AC28-F2ED6EF4224B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{D0A7707A-04E2-4AA9-A44E-89783E5BD8A8}") = "Fibonacci", "Fibonacci\Fibonacci.cpsproj", "{AAE64F51-2859-4BFA-A82D-D012C2F0C95B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CachingFilters", "CachingFilters\CachingFilters.csproj", "{C2DAF3BF-DF42-4C4A-AC28-F2ED6EF4224B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AAE64F51-2859-4BFA-A82D-D012C2F0C95B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAE64F51-2859-4BFA-A82D-D012C2F0C95B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAE64F51-2859-4BFA-A82D-D012C2F0C95B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAE64F51-2859-4BFA-A82D-D012C2F0C95B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2DAF3BF-DF42-4C4A-AC28-F2ED6EF4224B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2DAF3BF-DF42-4C4A-AC28-F2ED6EF4224B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2DAF3BF-DF42-4C4A-AC28-F2ED6EF4224B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2DAF3BF-DF42-4C4A-AC28-F2ED6EF4224B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
