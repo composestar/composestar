@@ -2,6 +2,7 @@ package Composestar.Java.TYM.TypeHarvester;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,10 +43,14 @@ public class JavaHarvestRunner implements HarvestRunner
 				toBeHarvested.add(deps.toURI().toURL());
 			}
 
+			URL[] urls = new URL[toBeHarvested.size()];
+			urls = toBeHarvested.toArray(urls);
+			ClassLoader classLoader = URLClassLoader.newInstance(urls);
+
 			// Now harvest these jarFiles for type information
 			for (URL jarFile : toBeHarvested)
 			{
-				classes.addAll(new JarHelper(jarFile).getClasses());
+				classes.addAll(new JarHelper(jarFile, classLoader).getClasses());
 			}
 
 		}

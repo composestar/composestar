@@ -1,6 +1,8 @@
 package Composestar.Java.TYM.SignatureTransformer;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.List;
 
@@ -48,7 +50,9 @@ public class JarTransformer
 		try
 		{
 			ClassModifier cm = new ClassModifier();
-			JarHelper yarr = new JarHelper(jarFile.toURI().toURL());
+			URL[] urls = { jarFile.toURI().toURL() };
+			ClassLoader classLoader = URLClassLoader.newInstance(urls);
+			JarHelper yarr = new JarHelper(jarFile.toURI().toURL(), classLoader);
 			Collection<Class<?>> classes = yarr.getClasses();
 			for (Class<?> c : classes)
 			{

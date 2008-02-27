@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -26,13 +25,13 @@ public class JarHelper
 
 	JarFile jarFile;
 
-	public JarHelper(URL jarURL) throws URISyntaxException, IOException, ClassNotFoundException
+	public JarHelper(URL jarURL, ClassLoader classLoader) throws URISyntaxException, IOException,
+			ClassNotFoundException
 	{
 		classes = new HashMap<Class<?>, JarEntry>();
 		resources = new HashSet<JarEntry>();
 		modifiedClasses = new HashMap<Class<?>, byte[]>();
 
-		ClassLoader classLoader = URLClassLoader.newInstance(new URL[] { jarURL });
 		File jar = new File(jarURL.toURI());
 		jarFile = new JarFile(jar);
 
