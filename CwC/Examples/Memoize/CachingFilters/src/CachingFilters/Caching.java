@@ -19,7 +19,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: IDEALSFilters.java 4086 2008-02-19 11:27:00Z elmuerte $
+ * $Id$
  */
 
 package CachingFilters;
@@ -128,7 +128,7 @@ public class Caching implements CustomCwCFilters
 		// does exit when cached
 		cacheAction.setFlowBehaviour(FilterAction.FLOW_CONTINUE);
 		cacheAction.setMessageChangeBehaviour(FilterAction.MESSAGE_ORIGINAL);
-		cacheAction.setResourceOperations("target.read;selector.read;arg.read;cache.read;");
+		cacheAction.setResourceOperations("target.read;selector.read;arg.read;cache.read;return.write");
 		cacheAction.setCreateJPC(false);
 		repository.addObject(cacheAction);
 		return cacheAction;
@@ -197,9 +197,9 @@ public class Caching implements CustomCwCFilters
 		type.setType(INVALIDATE_FILTER);
 		try
 		{
-			type.setAcceptCallAction(getInvalidateAction(repository));
+			type.setAcceptCallAction(factory.getContinueAction());
 			type.setRejectCallAction(factory.getContinueAction());
-			type.setAcceptReturnAction(factory.getContinueAction());
+			type.setAcceptReturnAction(getInvalidateAction(repository));
 			type.setRejectReturnAction(factory.getContinueAction());
 		}
 		catch (UnsupportedFilterActionException e)

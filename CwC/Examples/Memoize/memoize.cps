@@ -9,12 +9,12 @@ concern Memoization
   
   superimposition
   {
-		selectors
-			memoize = { C | classHasAnnotationWithName(C, 'ApplyCaching') };
-			cacheresults = { M | classHasAnnotationWithName(C, 'ApplyCaching'), 
-				classHasMethod(C, M),	methodHasAnnotationWithName(M, 'CacheResult') };
-			invalidators = { M | classHasAnnotationWithName(C, 'ApplyCaching'), 
-				classHasMethod(C, M),	methodHasAnnotationWithName(M, 'InvalidateCache') };
+    selectors
+      memoize = { C | classHasAnnotationWithName(C, 'ApplyCaching') };
+      cacheresults = { M | classHasAnnotationWithName(C, 'ApplyCaching'), 
+        classHasMethod(C, M), methodHasAnnotationWithName(M, 'CacheResult') };
+      invalidators = { M | classHasAnnotationWithName(C, 'ApplyCaching'), 
+        classHasMethod(C, M), methodHasAnnotationWithName(M, 'InvalidateCache') };
     filtermodules
       memoize <- caching_advice(cacheresults, invalidators);
   }

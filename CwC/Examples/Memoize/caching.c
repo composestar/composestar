@@ -83,15 +83,9 @@ void CSTAR_set_cache(int methodid, int arg0, int value)
 	cacheSize++;
 }
 
-void CSTAR_clear_cache(int methodid, int arg0)
+void CSTAR_clear_cache()
 {
-	unsigned int i;
-	for (i = 0; i < cacheSize; i++)
-	{
-		if (cache[i].methodid == methodid && cache[i].arg0 == arg0)
-		{
-			cache[i].methodid = -1;
-			return;
-		}
-	}
+	free(cache);
+	cache = NULL;
+	cacheSize = 0;
 }
