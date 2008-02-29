@@ -67,3 +67,7 @@
 
 [12] JoinPointContext does not contain a lot of useful information. At runtime
 	there is no type information.
+
+[13] Signature calculations might be incorrect. C does not allow overloading
+	this could lead to problem. "int" and "typedef int myint" are identical, but
+	not recognized as identical. 
