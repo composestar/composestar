@@ -83,11 +83,11 @@ public class JarGpsGrammar extends GpsGrammar
 		String grammarLocation = grammarName.substring(pos + 2);
 		if (pos > 0)
 		{
-			grammarName = grammarName.substring(6, pos);
+			grammarName = grammarName.substring(5, pos);
 		}
 		else
 		{
-			grammarName = grammarName.substring(6);
+			grammarName = grammarName.substring(5);
 		}
 		grammarName = grammarName.replaceAll("%20", " ");
 
