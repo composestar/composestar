@@ -15,7 +15,7 @@
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
 		<delete>
-			<fileset dir="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl">
+			<fileset dir="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/LTL">
 				<include name="LtlLexer.java"/>
 				<include name="LtlParser.java"/>
 				<include name="LtlTokenTypes.*"/>
@@ -34,7 +34,7 @@
 	<target name="build" depends="init,antlr,jar" description="Create CODER parsers"/>
 	
 	<target name="antlr">
-		<antlr target="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl/grammar/ltl.g" outputdirectory="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl">
+		<antlr target="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/LTL/grammar/ltl.g" outputdirectory="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/LTL">
 			<classpath refid="lib.core"/>
 		</antlr>
 	</target>
