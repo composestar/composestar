@@ -79,12 +79,12 @@ public class CCodeGenerator extends StringCodeGenerator
 		{
 			return "";
 		}
-		String it = "";
+		StringBuffer it = new StringBuffer();
 		while (depth-- > 0)
 		{
-			it += "\t";
+			it.append("\t");
 		}
-		return it + input.replaceAll("\n(.)", "\n" + it + "$1");
+		return it.toString() + input.replaceAll("\n(.)", "\n" + it.toString() + "$1");
 	}
 
 	/*

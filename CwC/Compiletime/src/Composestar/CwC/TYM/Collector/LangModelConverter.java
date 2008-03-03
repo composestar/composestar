@@ -212,13 +212,16 @@ public class LangModelConverter implements CTCommonModule
 	{
 		CwCAnnotationType result;
 		result = annotTypeMapping.get(annotType);
-		if (result == null)
-		{
-			/*
-			 * result = createCwCAnnotationType(annotType.getDeclaration()); if
-			 * (result != null) { annotTypeMapping.put(annotType, result); }
-			 */
-		}
+		// if (result == null)
+		// {
+		//
+		// result = createCwCAnnotationType(annotType.getDeclaration());
+		// if (result != null)
+		// {
+		// annotTypeMapping.put(annotType, result);
+		// }
+		//
+		// }
 		return result;
 	}
 

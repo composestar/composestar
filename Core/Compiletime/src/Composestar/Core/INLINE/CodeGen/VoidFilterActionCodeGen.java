@@ -43,7 +43,7 @@ public class VoidFilterActionCodeGen<T> implements FilterActionCodeGenerator<T>
 	 */
 	public VoidFilterActionCodeGen(String[] types)
 	{
-		filterTypes = types;
+		filterTypes = types.clone();
 	}
 
 	/*
@@ -64,7 +64,7 @@ public class VoidFilterActionCodeGen<T> implements FilterActionCodeGenerator<T>
 	 */
 	public String[] supportedTypes()
 	{
-		return filterTypes;
+		return filterTypes.clone();
 	}
 
 	/*

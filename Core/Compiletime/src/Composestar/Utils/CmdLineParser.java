@@ -683,7 +683,8 @@ public class CmdLineParser
 			{
 				throw new IllegalArgumentException("Switch does not take a value");
 			}
-			value++;
+			value = value + 1; // to prevent a dead local datastore (auto
+								// (un)boxing)
 			valueSet = true;
 		}
 	}

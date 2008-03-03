@@ -77,6 +77,12 @@ public class AdviceActionCodeGen implements FilterActionCodeGenerator<String>
 			}
 		}
 
+		if (targetType == null)
+		{
+			// TODO: produce error
+			return null;
+		}
+
 		String[] params = new String[1];
 		params[0] = codeGen.getJPCType(true);
 		MethodInfo method = targetType.getMethod(action.getSubstitutedMessage().getSelector(), params);
