@@ -2,6 +2,7 @@ import java.util.Dictionary;
 
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
+import Composestar.RuntimeCore.FLIRT.Actions.MetaAction;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.CustomFilter;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
@@ -10,8 +11,10 @@ public class Invalidate extends CustomFilter {
 	@Override
 	public ComposeStarAction acceptAction(MessageList arg0, MessageList arg1,
 			Dictionary arg2) {
-		// TODO Auto-generated method stub
-		return new ContinueToNextFilterAction(arg0, false);
+		replaceInner(arg0, arg1);
+		replaceWildcards(arg0, arg1);
+		return new MetaAction(arg0, arg0.reify(), CachingObject.getInstance(),
+				"invalidate", true);
 	}
 
 	@Override

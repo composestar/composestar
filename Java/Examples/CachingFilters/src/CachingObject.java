@@ -1,4 +1,5 @@
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage;
 
@@ -6,13 +7,13 @@ public class CachingObject {
 	boolean debug = false; // set to "true" to see what is going on inside
 
 	// Maps (method argument => return value)
-	Hashtable cache;
+	Map<Object, Map<Object, Object>> objectCache;
 
 	// Singleton cache instance
 	private static CachingObject cacheInstance;
 
 	public CachingObject() {
-		cache = new Hashtable();
+		objectCache = new HashMap<Object, Map<Object, Object>>();
 	}
 
 	// This is where the actual caching takes place. A "Meta-filter" can
@@ -32,6 +33,13 @@ public class CachingObject {
 
 		debugPrint("Method " + message.getSelector()
 				+ " called with argument value: " + arg);
+		
+		Map<Object, Object> cache = objectCache.get(message.getTarget());
+		if (cache == null)
+		{
+			cache = new HashMap<Object, Object>();
+			objectCache.put(message.getTarget(), cache);
+		}
 
 		// Did we already calculate the return value, given this argument value?
 		if (cache.containsKey(arg)) { // Yes....
@@ -51,6 +59,14 @@ public class CachingObject {
 		{
 			cache.put(arg, res);
 			debugPrint("Calculated result for " + arg + ": " + res);
+		}
+	}
+	
+	public void invalidate(ReifiedMessage message) {
+		Map<Object, Object> cache = objectCache.get(message.getTarget());
+		if (cache != null)
+		{
+			cache.clear();
 		}
 	}
 
