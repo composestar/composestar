@@ -4,5 +4,15 @@
 	<moduleinfo class="Composestar.CwC.WEAVER.CwCWeaver" id="WEAVER">
 		<name>Weaver</name>
 		<description>Weaves the composition filter code into the preprocessed sources using WeaveC.</description>
+		<settings>
+			<setting id="undef" type="boolean">
+				<name>Undefine built-ins</name>
+				<default>true</default>
+			</setting>
+			<setting id="undef-cmdline" type="boolean">
+				<name>Undefine commandline</name>
+				<default>false</default>
+			</setting>
+		</settings>		
 	</moduleinfo>
 </modules>

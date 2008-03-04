@@ -105,6 +105,8 @@ public class HeaderFileGenerator extends AbstractHeaderFileGenerator
 		try
 		{
 			target.write(sw.getBuffer().toString());
+			// force a trailing newline
+			target.write(System.getProperty("line.separator"));
 			target.flush();
 			target.close();
 		}

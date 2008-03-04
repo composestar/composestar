@@ -44,6 +44,7 @@ import java.util.Set;
 
 import org.apache.log4j.Level;
 
+import weavec.ast.LineObject;
 import weavec.ast.PreprocDirective;
 import weavec.ast.PreprocessorInfoChannel;
 import weavec.ast.TNode;
@@ -64,6 +65,8 @@ import weavec.parser.ACGrammarTokenTypes;
 import weavec.parser.AspectCLexer;
 import weavec.parser.AspectCParser;
 import Composestar.Core.Annotations.ResourceManager;
+import Composestar.Core.Config.ModuleInfo;
+import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
@@ -152,6 +155,16 @@ public class CwCWeaver implements WEAVER
 	 */
 	protected Map<String, MethodInfo> methodLookup;
 
+	/**
+	 * If true, remove preprocessor directives from <built-in>
+	 */
+	protected boolean ppRemoveBuiltins = true;
+
+	/**
+	 * If true, remove preprocessor directives from <command line>
+	 */
+	protected boolean ppRemoveCommandline;
+
 	public CwCWeaver()
 	{}
 
@@ -164,6 +177,10 @@ public class CwCWeaver implements WEAVER
 	{
 		timer = CPSTimer.getTimer(MODULE_NAME);
 		resources = resc;
+
+		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
+		ppRemoveBuiltins = mi.getSetting("undef");
+		ppRemoveCommandline = mi.getSetting("undef-cmdline");
 
 		codeGen = new CCodeGenerator();
 		codeGen.register(new CDispatchActionCodeGen(inlinerRes));
@@ -220,6 +237,11 @@ public class CwCWeaver implements WEAVER
 				output = new FileWriter(target);
 				PreprocessorInfoChannel ppic = weavecResc.getPreprocessorInfoChannel(tunit);
 
+				if (ppRemoveBuiltins || ppRemoveCommandline)
+				{
+					cleanPreprocessorInfoChannel(ppic);
+				}
+
 				CEmitter emitter = new CEmitter(ppic, output);
 				emitter.setASTNodeClass(TNode.class.getName());
 				emitter.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
@@ -237,6 +259,40 @@ public class CwCWeaver implements WEAVER
 			{
 				logger.error(e.getMessage(), e);
 				continue;
+			}
+		}
+	}
+
+	protected void cleanPreprocessorInfoChannel(PreprocessorInfoChannel ppic)
+	{
+		boolean removeItems = false;
+		for (List<Object> objs : ppic.objects.values())
+		{
+			Iterator<Object> oit = objs.iterator();
+			while (oit.hasNext())
+			{
+				Object o = oit.next();
+				if (o instanceof LineObject)
+				{
+					LineObject lo = (LineObject) o;
+					if (ppRemoveBuiltins && lo.getSource().equals("<built-in>"))
+					{
+						removeItems = true;
+						oit.remove();
+						continue;
+					}
+					if (ppRemoveCommandline && lo.getSource().equals("<command line>"))
+					{
+						oit.remove();
+						removeItems = true;
+						continue;
+					}
+					removeItems = false;
+				}
+				if (removeItems)
+				{
+					oit.remove();
+				}
 			}
 		}
 	}

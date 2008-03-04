@@ -8,7 +8,7 @@
 #include "calc.h"
 #include "ComposeStar.h" // for JPC
 
-static int __argc;
+int __argc;
 
 void beforeSomeThing(JoinPointContext* jpc)
 {

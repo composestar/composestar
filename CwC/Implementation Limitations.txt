@@ -29,8 +29,7 @@
 [4] no public access to ComposeStar.h, which makes creating of advice action
 	target difficult.
 	
-[5] no outputfilter support, this requires information about "call to method",
-	which is not available (?).
+[5] no outputfilter support.
 	
 [6] no support for custom objects/sources which can be required by filter
 	actions. The include directives can be inlines. But the final compile action
