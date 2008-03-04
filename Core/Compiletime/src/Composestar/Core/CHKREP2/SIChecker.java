@@ -24,6 +24,7 @@
 
 package Composestar.Core.CHKREP2;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,6 +35,9 @@ import java.util.Map.Entry;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameterValue;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SelectorFilterModuleParameterValue;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.AnnotationBinding;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.FilterModuleBinding;
@@ -135,6 +139,16 @@ public class SIChecker extends AbstractChecker
 			if (o == null || !(o instanceof FilterModuleAST))
 			{
 				results.addError(String.format("Filter module \"%s\" does not exist", fmFqn), fmb);
+			}
+			for (FilterModuleParameter fmp : (Collection<FilterModuleParameter>) fm.getArgs())
+			{
+				for (FilterModuleParameterValue fmpv : (Collection<FilterModuleParameterValue>) fmp.getValue())
+				{
+					if (fmpv instanceof SelectorFilterModuleParameterValue)
+					{
+						usedSelectors.add(((SelectorFilterModuleParameterValue) fmpv).getSelector().getName());
+					}
+				}
 			}
 		}
 		String sel = fmb.getSelector().getName();
