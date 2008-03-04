@@ -39,6 +39,9 @@
 				<exclude name="META-INF/**" />
 			</fileset>
 			<fileset dir="${build.cwc}/Compiletime/dist" />
+			<fileset dir="${build.cwc}/Compiletime/src/Composestar/CwC/WEAVER">
+				<include name="ComposeStar.*" />
+			</fileset>
 		</copy>
 	</target>
 

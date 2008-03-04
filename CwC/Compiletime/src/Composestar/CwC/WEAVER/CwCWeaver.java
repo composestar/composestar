@@ -179,8 +179,8 @@ public class CwCWeaver implements WEAVER
 		resources = resc;
 
 		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
-		ppRemoveBuiltins = mi.getSetting("undef");
-		ppRemoveCommandline = mi.getSetting("undef-cmdline");
+		ppRemoveBuiltins = mi.getSetting("undef", ppRemoveBuiltins);
+		ppRemoveCommandline = mi.getSetting("undef-cmdline", ppRemoveCommandline);
 
 		codeGen = new CCodeGenerator();
 		codeGen.register(new CDispatchActionCodeGen(inlinerRes));
