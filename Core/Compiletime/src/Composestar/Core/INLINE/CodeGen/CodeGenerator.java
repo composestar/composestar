@@ -31,10 +31,12 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOper
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLiteral;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.lowlevel.ModelBuilder;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Visitor;
+import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
@@ -55,6 +57,22 @@ public interface CodeGenerator<T> extends Visitor
 	 * @return the generated code
 	 */
 	T generate(FilterCode code, MethodInfo currentMethod, int currentMethodId);
+
+	/**
+	 * Generate code for the given filter code and methods. Used for output
+	 * filters.
+	 * 
+	 * @param code
+	 * @param currentMethod
+	 * @param currentMethodId
+	 * @param fromMethod
+	 * @param fromMethodId
+	 * @return
+	 */
+	T generate(FilterCode code, CallToOtherMethod currentMethod, int currentMethodId, MethodInfo fromMethod,
+			int fromMethodId);
+
+	FilterDirection getFilterDirection();
 
 	/**
 	 * Return the list of import/include/etc. clauses required for the code
@@ -87,6 +105,27 @@ public interface CodeGenerator<T> extends Visitor
 	 * @return
 	 */
 	int getCurrentMethodId();
+
+	/**
+	 * The called method, used with output filters
+	 * 
+	 * @return
+	 */
+	MethodInfo getCalledFromMethod();
+
+	/**
+	 * Return the call to other method object, only used with output filters
+	 * 
+	 * @return
+	 */
+	CallToOtherMethod getCallToOtherMethod();
+
+	/**
+	 * The called method id.
+	 * 
+	 * @return
+	 */
+	int getCalledFromMethodId();
 
 	/**
 	 * Register a filter action code generator with this code generator.

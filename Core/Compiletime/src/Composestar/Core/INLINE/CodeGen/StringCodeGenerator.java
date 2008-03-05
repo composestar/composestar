@@ -42,12 +42,14 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOpera
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
+import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Utils.Logging.CPSLogger;
@@ -66,6 +68,14 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	protected MethodInfo method;
 
 	protected int methodId;
+
+	protected CallToOtherMethod ctom;
+
+	protected MethodInfo calledFromMethod;
+
+	protected int calledFromMethodId;
+
+	protected FilterDirection filterDirection;
 
 	protected List<FilterAction> allActions;
 
@@ -94,6 +104,39 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	{
 		method = currentMethod;
 		methodId = currentMethodId;
+		ctom = null;
+		calledFromMethod = null;
+		calledFromMethodId = -1;
+		filterDirection = FilterDirection.Input;
+		return generate(code);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#generate(Composestar.Core.INLINE.model.FilterCode,
+	 *      Composestar.Core.LAMA.MethodInfo, int,
+	 *      Composestar.Core.LAMA.MethodInfo, int)
+	 */
+	public String generate(FilterCode code, CallToOtherMethod currentMethod, int currentMethodId,
+			MethodInfo fromMethod, int fromMethodId)
+	{
+		ctom = currentMethod;
+		method = currentMethod.getCalledMethod();
+		methodId = currentMethodId;
+		calledFromMethod = fromMethod;
+		calledFromMethodId = fromMethodId;
+		filterDirection = FilterDirection.Output;
+		return generate(code);
+	}
+
+	public FilterDirection getFilterDirection()
+	{
+		return filterDirection;
+	}
+
+	protected String generate(FilterCode code)
+	{
 		allActions = new ArrayList<FilterAction>();
 		returnActions = new ArrayList<FilterAction>();
 		imports = new HashSet<String>();
@@ -159,11 +202,41 @@ public abstract class StringCodeGenerator implements CodeGenerator<String>
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getCalledMethod()
+	 */
+	public MethodInfo getCalledFromMethod()
+	{
+		return calledFromMethod;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getCurrentMethodId()
 	 */
 	public int getCurrentMethodId()
 	{
 		return methodId;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getCalledMethodId()
+	 */
+	public int getCalledFromMethodId()
+	{
+		return calledFromMethodId;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.INLINE.CodeGen.CodeGenerator#getCallToOtherMethod()
+	 */
+	public CallToOtherMethod getCallToOtherMethod()
+	{
+		return ctom;
 	}
 
 	/*

@@ -27,8 +27,10 @@ package Composestar.CwC.TYM.Collector;
 import java.io.File;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import weavec.ast.TNode;
 import weavec.cmodel.declaration.Annotation;
@@ -95,6 +97,12 @@ public class LangModelConverter implements CTCommonModule
 
 	protected int duplicateTypeCtr;
 
+	// used for resolving CTOM stubs
+	protected Set<CwCCallToOtherMethod> ctoms;
+
+	// used for resolving CTOM stubs
+	protected Set<CwCFunctionInfo> cfucns;
+
 	public LangModelConverter()
 	{}
 
@@ -110,6 +118,8 @@ public class LangModelConverter implements CTCommonModule
 		annotTypeMapping = new HashMap<AnnotationType, CwCAnnotationType>();
 		stringAnnotTypeMapping = new HashMap<String, CwCAnnotationType>();
 		ctomStubs = new HashMap<FunctionDeclaration, CwCFunctionInfoCTOMStub>();
+		ctoms = new HashSet<CwCCallToOtherMethod>();
+		cfucns = new HashSet<CwCFunctionInfo>();
 		duplicateTypeCtr = 0;
 
 		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
@@ -163,6 +173,9 @@ public class LangModelConverter implements CTCommonModule
 			type.setParentConcern(pc);
 			resources.repository().addObject(type.getFullName(), pc);
 		}
+		logger.info("Phase 4: Resolve call to other methods");
+		resolveCTOMs();
+
 		if (duplicateTypeCtr > 0)
 		{
 			logger.debug(String.format("Detected %d duplicate type declarations", duplicateTypeCtr));
@@ -280,6 +293,7 @@ public class LangModelConverter implements CTCommonModule
 			cwcfunc.setParent(cwcfile);
 			cwcfile.addMethod(cwcfunc);
 			register.registerLanguageUnit(cwcfunc);
+			cfucns.add(cwcfunc);
 			procAnnotations(cwcfunc, funcDecl);
 
 			for (Declaration d : funcDecl.getParameterScope().getNamespace(CNamespaceKind.OBJECT))
@@ -394,5 +408,42 @@ public class LangModelConverter implements CTCommonModule
 			ctom.setCalledMethod(getCTOMStub((FunctionDeclaration) decl));
 		}
 		cwcfunc.getCallsToOtherMethods().add(ctom);
+		ctoms.add(ctom);
+	}
+
+	protected void resolveCTOMs()
+	{
+		Map<CwCFunctionInfoCTOMStub, CwCFunctionInfo> lookup = new HashMap<CwCFunctionInfoCTOMStub, CwCFunctionInfo>();
+		for (CwCCallToOtherMethod ctom : ctoms)
+		{
+			if (!(ctom.getCalledMethod() instanceof CwCFunctionInfoCTOMStub))
+			{
+				continue;
+			}
+			if (lookup.containsKey(ctom.getCalledMethod()))
+			{
+				ctom.setCalledMethod(lookup.get(ctom.getCalledMethod()));
+				continue;
+			}
+			CwCFunctionInfo func = null;
+			CwCFunctionInfoCTOMStub stub = (CwCFunctionInfoCTOMStub) ctom.getCalledMethod();
+			for (CwCFunctionInfo tf : cfucns)
+			{
+				if (stub.checkEquals(tf))
+				{
+					func = tf;
+					break;
+				}
+			}
+			if (func != null)
+			{
+				lookup.put(stub, func);
+				ctom.setCalledMethod(func);
+			}
+			else
+			{
+				logger.debug("Unable to find actual declaration of method " + stub.getName());
+			}
+		}
 	}
 }

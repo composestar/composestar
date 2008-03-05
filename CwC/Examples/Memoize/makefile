@@ -59,7 +59,7 @@ ifeq ($(DOWEAVE), yes)
 
 # compile the woven sources
 $(objects) : %.o : $(WOVEN)/%.c
-	$(CC) -c $(CFLAGS) -o $@ $<
+	$(CC) -I. -c $(CFLAGS) -o $@ $<
 
 # Add the ComposeStar.c file to the list
 objects += $(WOVEN)/ComposeStar.o

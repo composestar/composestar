@@ -518,7 +518,7 @@ public class CwCWeaver implements WEAVER
 					logger.info(String.format("Weaving call to function %s from %s.%s", ctom.getMethodName(), concern
 							.getQualifiedName(), func.getName()), realFunc);
 					containsFilterCode = true;
-					// TODO: how?
+					processOutputFilterCode(ctom, func, filterCode, imports);
 				}
 			}
 		}
@@ -593,19 +593,14 @@ public class CwCWeaver implements WEAVER
 	}
 
 	/**
-	 * Inject the filter code at the beginning of the method implementation.
 	 * 
-	 * @param rootScope
-	 * @param func
-	 * @param fc
 	 */
-	protected void processFilterCode(CwCFunctionInfo func, FilterCode fc, Set<String> imports)
+	protected TNode generateCodeAST(String stringcode, CwCFunctionInfo func, Set<String> imports)
 	{
 		// generate ANSI-C code
 
 		// Note: stringcode is used for error reporting when there's an
 		// exception
-		String stringcode = codeGen.generate(fc, func, inlinerRes.getMethodId(func));
 		if (logger.isTraceEnabled())
 		{
 			logger.trace(stringcode);
@@ -637,7 +632,6 @@ public class CwCWeaver implements WEAVER
 		cparser.setASTNodeClass(TNode.class.getName());
 		cparser.errors = new PrintStream(new OutputStreamRedirector(logger, Level.ERROR));
 
-		TNode fcAst = null;
 		try
 		{
 			LabelScope labelScope = ScopeConstructor.getLabelScope();
@@ -646,17 +640,33 @@ public class CwCWeaver implements WEAVER
 					.getFunctionDeclaration().getScope(), rootScope)), labelScope, annotationScope);
 			// getAST should return the returnAst, which contains the result of
 			// the previous method execution
-			fcAst = (TNode) cparser.getAST();
+			return (TNode) cparser.getAST();
 		}
 		catch (RecognitionException e)
 		{
 			logger.debug(stringcode);
 			logger.error(new LogMessage(e.getMessage(), "", e.getLine(), e.getColumn()), e);
-			return;
+			return null;
 		}
 		catch (TokenStreamException e)
 		{
 			logger.error(e, e);
+			return null;
+		}
+	}
+
+	/**
+	 * Inject the filter code at the beginning of the method implementation.
+	 * 
+	 * @param rootScope
+	 * @param func
+	 * @param fc
+	 */
+	protected void processFilterCode(CwCFunctionInfo func, FilterCode fc, Set<String> imports)
+	{
+		TNode fcAst = generateCodeAST(codeGen.generate(fc, func, inlinerRes.getMethodId(func)), func, imports);
+		if (fcAst == null)
+		{
 			return;
 		}
 
@@ -726,6 +736,23 @@ public class CwCWeaver implements WEAVER
 			ppic.addLineForTokenNumber(incdirective, weaveNode.getTokenNumber() - 1);
 		}
 		return;
+	}
+
+	/**
+	 * @param ctom call to a given method
+	 * @param func called from within this method
+	 * @param fc the generated filter code
+	 * @param imports
+	 */
+	protected void processOutputFilterCode(CwCCallToOtherMethod ctom, CwCFunctionInfo func, FilterCode fc,
+			Set<String> imports)
+	{
+		TNode fcAst = generateCodeAST(codeGen.generate(fc, ctom, inlinerRes.getMethodId(ctom.getCalledMethod()), func,
+				inlinerRes.getMethodId(func)), func, imports);
+		if (fcAst == null)
+		{
+			return;
+		}
 	}
 
 	/**
