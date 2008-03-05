@@ -747,8 +747,10 @@ public class CwCWeaver implements WEAVER
 	protected void processOutputFilterCode(CwCCallToOtherMethod ctom, CwCFunctionInfo func, FilterCode fc,
 			Set<String> imports)
 	{
-		TNode fcAst = generateCodeAST(codeGen.generate(fc, ctom, inlinerRes.getMethodId(ctom.getCalledMethod()), func,
-				inlinerRes.getMethodId(func)), func, imports);
+		String code = codeGen.generate(fc, ctom, inlinerRes.getMethodId(ctom.getCalledMethod()), func, inlinerRes
+				.getMethodId(func));
+		logger.debug(code);
+		TNode fcAst = generateCodeAST(code, func, imports);
 		if (fcAst == null)
 		{
 			return;

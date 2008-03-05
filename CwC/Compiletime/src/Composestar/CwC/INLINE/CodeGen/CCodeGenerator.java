@@ -37,6 +37,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
+import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.INLINE.CodeGen.FilterActionCodeGenerator;
 import Composestar.Core.INLINE.CodeGen.StringCodeGenerator;
 import Composestar.Core.INLINE.model.FilterAction;
@@ -167,7 +168,11 @@ public class CCodeGenerator extends StringCodeGenerator
 	public String emitFilterCode(String fmConditions, String onCall, String onReturn)
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append(String.format("\n{ /* start filter code */\nif ( !CSTAR_is_inner_call(%d) ) { \n", methodId));
+		sb.append("\n{ /* start filter code */\n");
+		if (filterDirection == FilterDirection.Input)
+		{
+			sb.append(String.format("if ( !CSTAR_is_inner_call(%d) ) { \n", methodId));
+		}
 		boolean hasFmCond = fmConditions != null && fmConditions.trim().length() > 0;
 		if (hasFmCond)
 		{
@@ -182,6 +187,8 @@ public class CCodeGenerator extends StringCodeGenerator
 		}
 		if (hasReturnValue(method))
 		{
+			// FIXME: need unique name here (specially for output filters)
+			// also it needs to be outside this scope
 			sb.append(String.format("\t%s returnValue;\n", method.getReturnTypeString()));
 		}
 
@@ -251,20 +258,26 @@ public class CCodeGenerator extends StringCodeGenerator
 			sb.append(indent(onReturn, 2));
 			sb.append("\t}\n");
 		}
-		if (hasReturnValue(method))
+		if (filterDirection == FilterDirection.Input)
 		{
-			sb.append("\treturn returnValue;\n");
-		}
-		else
-		{
-			sb.append("\treturn;\n");
+			if (hasReturnValue(method))
+			{
+				sb.append("\treturn returnValue;\n");
+			}
+			else
+			{
+				sb.append("\treturn;\n");
+			}
 		}
 		if (hasFmCond)
 		{
 			sb.append("} /* end filter module condition check */\n");
 		}
 		sb.append("} /* end filter code */\n");
-		sb.append(String.format("CSTAR_reset_inner_call(%d);\n}\n", methodId));
+		if (filterDirection == FilterDirection.Input)
+		{
+			sb.append(String.format("CSTAR_reset_inner_call(%d);\n}\n", methodId));
+		}
 		return sb.toString();
 	}
 
@@ -391,6 +404,7 @@ public class CCodeGenerator extends StringCodeGenerator
 	{
 		if (labelId == -1)
 		{
+			// FIXME: needs to be a unique label
 			return String.format("\n%s:\n", RETURN_FLOW_LABEL);
 		}
 		else
