@@ -32,9 +32,14 @@ public class EclipseRunner
 	protected static final int MODE_STARTUPJAR = 1;
 
 	/**
-	 * Call eclipsc; used in eclipse 3.3
+	 * Call eclipsec; used in eclipse 3.3
 	 */
 	protected static final int MODE_EXCLIPSEC = 2;
+
+	/**
+	 * Call eclipse; used on non-windows systems
+	 */
+	protected static final int MODE_EXCLIPSE = 3;
 
 	/**
 	 * Eclipse launcher
@@ -55,7 +60,7 @@ public class EclipseRunner
 
 	protected String workspace;
 
-	protected String[] additionalArgs = {"-clean"};
+	protected String[] additionalArgs = { "-clean" };
 
 	protected long timeout;
 
@@ -68,7 +73,10 @@ public class EclipseRunner
 
 	protected void detectMode()
 	{
-		if (!home.isDirectory()) return;
+		if (!home.isDirectory())
+		{
+			return;
+		}
 		File sjar = new File(home, startupjar);
 		if (sjar.exists())
 		{
@@ -85,6 +93,18 @@ public class EclipseRunner
 		if (ecfiles.length > 0)
 		{
 			mode = MODE_EXCLIPSEC;
+			return;
+		}
+		ecfiles = home.list(new FilenameFilter()
+		{
+			public boolean accept(File dir, String name)
+			{
+				return name.toLowerCase().startsWith("eclipse");
+			}
+		});
+		if (ecfiles.length > 0)
+		{
+			mode = MODE_EXCLIPSE;
 			return;
 		}
 	}
@@ -116,6 +136,7 @@ public class EclipseRunner
 			case MODE_STARTUPJAR:
 				return executeStartupjar();
 			case MODE_EXCLIPSEC:
+			case MODE_EXCLIPSE:
 				return executeEclipsec();
 			default:
 				project.log("No valid eclipse execution method", Project.MSG_ERR);
@@ -141,6 +162,10 @@ public class EclipseRunner
 				break;
 			case MODE_EXCLIPSEC:
 				cmd.add((new File(home, "eclipsec")).getAbsolutePath());
+				cmd.add("-nosplash");
+				break;
+			case MODE_EXCLIPSE:
+				cmd.add((new File(home, "eclipse")).getAbsolutePath());
 				cmd.add("-nosplash");
 				break;
 			default:
@@ -194,7 +219,10 @@ public class EclipseRunner
 		java.init();
 		java.setDir(home);
 		java.setClassname(launcher);
-		if (timeout > 0) java.setTimeout(timeout);
+		if (timeout > 0)
+		{
+			java.setTimeout(timeout);
+		}
 
 		String[] args = getArguments();
 		for (int i = 0; i < args.length; i++)
