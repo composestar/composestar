@@ -3,7 +3,7 @@
   
   <!-- General settings -->
   <?define ProductShortName = "StarLight" ?>
-  <?define ProductVersion = "0.8.0" ?>
+  <?define ProductVersion = "0.8.1" ?>
   <?define ProductVersionText = "$(var.ProductVersion)" ?>
   <?define Manufacturer = "University of Twente" ?>
   <?define UpgradeCode = "D7A4BED9-24C4-42f8-9C20-4CB905F54488" ?>

@@ -6,10 +6,10 @@
 -->
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
   <?include $(var.VariablesFile)?>
-  <Product Id='44DDBC54-D566-46af-A6DD-D0CEE3FC966B' UpgradeCode="$(var.UpgradeCode)" 
+  <Product Id='C383EA57-3925-4673-BD60-BE777E200019' UpgradeCode="$(var.UpgradeCode)" 
   Name="$(var.ProductShortName) $(var.ProductVersionText)" Version="$(var.ProductVersion)" Language="1033" Manufacturer="$(var.Manufacturer)">
 
-    <Package Id='D9E2BF94-CB7A-4a31-9AD0-B3C3940E0B24' Keywords='Installer'
+    <Package Id='83092992-AA10-4df9-990E-D9ADDD6321AB' Keywords='Installer'
              Compressed="yes" Description="$(var.ProductShortName) $(var.ProductVersionText) ($(var.ProductVersion))" 
              InstallerVersion="200" ShortNames="no" Manufacturer="$(var.Manufacturer)" Platforms="Intel"
       Comments='ComposeStar StarLight is a project of the University of Twente.' Languages='1033' />

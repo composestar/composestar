@@ -5,7 +5,7 @@
     <Registry Name="UseInterface" Value="1" Type="integer" />
   </Registry>
 
-  <Registry Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\Packages\{9d31cb73-40a7-4dcc-8c01-bbfbbb66001c}" Value="Composestar.StarLight.VisualStudio.Project.ComposeStarProjectPackage, Composestar.StarLight.VisualStudio.Project, Version=0.8.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3" Type="string">
+  <Registry Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\Packages\{9d31cb73-40a7-4dcc-8c01-bbfbbb66001c}" Value="Composestar.StarLight.VisualStudio.Project.ComposeStarProjectPackage, Composestar.StarLight.VisualStudio.Project, Version=0.8.1.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3" Type="string">
     <Registry Name="InprocServer32" Value="[SystemFolder]mscoree.dll" Type="string" />
     <Registry Name="Class" Value="Composestar.StarLight.VisualStudio.Project.ComposeStarProjectPackage" Type="string" />
     <Registry Name="CodeBase" Value="[#File_Composestar.StarLight.VisualStudio.Project.dll]" Type="string" />
