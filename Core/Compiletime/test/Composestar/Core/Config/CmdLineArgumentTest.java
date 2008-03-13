@@ -65,7 +65,10 @@ public class CmdLineArgumentTest extends TestCase
 		assertEquals("fooquuxbar", arg.resolve("foo${foo}bar", prop));
 		assertEquals(System.getProperty("os.name"), arg.resolve("@{os.name}", prop));
 		assertEquals("default", arg.resolve("@{os.InVaLiD:default}", prop));
-		assertEquals(System.getenv("TEMP"), arg.resolve("%{TEMP}", prop));
+		if (System.getenv("PATH") != null)
+		{
+			assertEquals(System.getenv("PATH"), arg.resolve("%{PATH}", prop));
+		}
 		assertEquals("default", arg.resolve("%{InVaLiD:default}", prop));
 	}
 }
