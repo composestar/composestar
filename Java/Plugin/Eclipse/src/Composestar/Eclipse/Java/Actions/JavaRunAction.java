@@ -1,5 +1,6 @@
 package Composestar.Eclipse.Java.Actions;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -110,7 +111,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 		mainClass = settings.get("mainclass", null);
 		if (mainClass == null || mainClass.trim().length() == 0)
 		{
-			Debug.instance().Log("No mainclass configured for this project", Debug.MSG_ERROR);
+			Debug.instance().Log("No mainclass configured for this project", IComposestarConstants.MSG_ERROR);
 			return;
 		}
 
@@ -148,7 +149,7 @@ public class JavaRunAction extends Action implements IWorkbenchWindowActionDeleg
 		{
 			if (sb.length() > 0)
 			{
-				sb.append(";");
+				sb.append(File.pathSeparatorChar);
 			}
 			sb.append(cp);
 		}

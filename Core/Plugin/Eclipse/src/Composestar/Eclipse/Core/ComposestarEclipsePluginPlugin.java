@@ -45,6 +45,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 	/**
 	 * This method is called upon plug-in activation
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception
 	{
 		super.start(context);
@@ -53,6 +54,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception
 	{
 		super.stop(context);
@@ -120,6 +122,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 		return result.replace('\\', '/');
 	}
 
+	@Override
 	@Deprecated
 	public IDialogSettings getDialogSettings()
 	{
@@ -218,7 +221,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 				lst.add(jarf.getAbsolutePath());
 				if (cp != null)
 				{
-					Debug.instance().Log("Class-Path: " + cp);
+					// Debug.instance().Log("Class-Path: " + cp);
 					for (String entry : cp.split(" "))
 					{
 						File cpentry = new File(jarf.getParentFile(), entry);
@@ -232,7 +235,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 			catch (IOException e)
 			{
 			}
-			Debug.instance().Log("result: " + lst);
+			// Debug.instance().Log("result: " + lst);
 			jarClassPaths.put(jar, lst);
 		}
 		return jarClassPaths.get(jar);
