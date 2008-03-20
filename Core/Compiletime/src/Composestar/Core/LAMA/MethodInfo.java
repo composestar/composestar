@@ -232,6 +232,7 @@ public abstract class MethodInfo extends ProgramElement
 
 	public abstract boolean isDeclaredHere();
 
+	
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer();
@@ -242,11 +243,16 @@ public abstract class MethodInfo extends ProgramElement
 			{
 				sb.append(" ");
 			}
-			sb.append(au);
+			sb.append(au.next());
 		}
 		sb.append(" ");
 		sb.append(returnTypeString);
 		sb.append(" ");
+		if (parent != null)
+		{
+			sb.append(parent.fullName);
+			sb.append(".");
+		}
 		sb.append(Name);
 		sb.append("(");
 		for (int i = 0; i < parameters.size(); i++)
@@ -263,16 +269,19 @@ public abstract class MethodInfo extends ProgramElement
 
 	// Stuff for LOLA
 
+	
 	public String getUnitName()
 	{
 		return getName();
 	}
 
+	
 	public String getUnitType()
 	{
 		return "Method";
 	}
 
+	
 	public boolean hasUnitAttribute(String attribute)
 	{
 		return getUnitAttributes().contains(attribute);
@@ -314,24 +323,24 @@ public abstract class MethodInfo extends ProgramElement
 
 	public boolean checkEquals(MethodInfo method)
 	{
-		if (!method.Name.equals(this.Name))
+		if (!method.Name.equals(Name))
 		{
 			return false;
 		}
 
-		if (!method.returnTypeString.equals(this.returnTypeString))
+		if (!method.returnTypeString.equals(returnTypeString))
 		{
 			return false;
 		}
 
-		if (this.parameters.size() != method.parameters.size())
+		if (parameters.size() != method.parameters.size())
 		{
 			return false;
 		}
 
-		for (int i = 0; i < this.parameters.size(); i++)
+		for (int i = 0; i < parameters.size(); i++)
 		{
-			ParameterInfo thisPar = (ParameterInfo) this.parameters.get(i);
+			ParameterInfo thisPar = (ParameterInfo) parameters.get(i);
 			ParameterInfo objPar = (ParameterInfo) method.parameters.get(i);
 			if (!thisPar.parameterTypeString.equals(objPar.parameterTypeString))
 			{
@@ -352,10 +361,10 @@ public abstract class MethodInfo extends ProgramElement
 	{
 		StringBuffer sb = new StringBuffer();
 
-		sb.append(this.getName()).append('%');
-		sb.append(this.getReturnTypeString()).append('%');
+		sb.append(getName()).append('%');
+		sb.append(getReturnTypeString()).append('%');
 
-		List pars = this.getParameters();
+		List pars = getParameters();
 		for (int i = 0; i < pars.size(); i++)
 		{
 			ParameterInfo pi = (ParameterInfo) pars.get(i);

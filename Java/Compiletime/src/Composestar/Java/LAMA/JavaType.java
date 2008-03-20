@@ -13,11 +13,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.FieldInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.metamodel.EUnitType;
 
 /**
  * An instance of <code>JavaType</code> represents a class object in Java. It
@@ -255,15 +257,15 @@ public class JavaType extends Type
 	@Override
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (getUnitType().equals("Class"))
+		if (getUnitType().equals(EUnitType.CLASS.toString()))
 		{
 			return getUnitRelationForClass(argumentName);
 		}
-		else if (getUnitType().equals("Interface"))
+		else if (getUnitType().equals(EUnitType.INTERFACE.toString()))
 		{
 			return getUnitRelationForInterface(argumentName);
 		}
-		else if (getUnitType().equals("Annotation"))
+		else if (getUnitType().equals(EUnitType.ANNOTATION.toString()))
 		{
 			return getUnitRelationForAnnotation(argumentName);
 		}
@@ -280,7 +282,7 @@ public class JavaType extends Type
 
 		for (Object o : getAnnotationInstances())
 		{
-			ProgramElement unit = ((JavaAnnotation) o).getTarget();
+			ProgramElement unit = ((Annotation) o).getTarget();
 			if (unit instanceof JavaType)
 			{
 				JavaType type = (JavaType) unit;
@@ -439,15 +441,15 @@ public class JavaType extends Type
 	{
 		if (isAnnotation())
 		{
-			return "Annotation";
+			return EUnitType.ANNOTATION.toString();
 		}
 		else if (isInterface())
 		{
-			return "Interface";
+			return EUnitType.INTERFACE.toString();
 		}
 		else
 		{
-			return "Class";
+			return EUnitType.CLASS.toString();
 		}
 	}
 
@@ -510,5 +512,11 @@ public class JavaType extends Type
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(implementedInterfaceNames);
+	}
+
+	@Override
+	public String toString()
+	{
+		return fullName;
 	}
 }

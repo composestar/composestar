@@ -24,6 +24,7 @@
 
 package Composestar.Core.REXREF;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.SelectorReference;
 import Composestar.Core.Exception.ModuleException;
@@ -31,7 +32,7 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Small version of REXREF that only resolves selectors
+ * Small version of REXREF that only resolves selectors and concerns
  * 
  * @author Michiel Hendriks
  */
@@ -74,6 +75,10 @@ public class ParumREXREF extends Main
 			if (o instanceof SelectorReference)
 			{
 				resolveReference((SelectorReference) o);
+			}
+			else if (o instanceof ConcernReference)
+			{
+				resolveReference((ConcernReference) o);
 			}
 		}
 	}

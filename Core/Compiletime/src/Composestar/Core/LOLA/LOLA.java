@@ -6,15 +6,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Level;
+
 import tarau.jinni.Builtins;
 import tarau.jinni.DataBase;
+import tarau.jinni.IO;
 import tarau.jinni.Init;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
@@ -29,6 +34,7 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Logging.OutputStreamRedirector;
 import Composestar.Utils.Perf.CPSTimer;
 
 /*
@@ -281,58 +287,71 @@ public abstract class LOLA implements CTCommonModule
 
 		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 
-		dataStore = resources.repository();
-
-		resources.put(UnitDictionary.REPOSITORY_KEY, unitDict);
-
-		// step 0: gather all predicate selectors
-		Iterator<PredicateSelector> predicateIter = dataStore.getAllInstancesOf(PredicateSelector.class);
-		while (predicateIter.hasNext())
+		Writer oldIOOutput = IO.output;
+		try
 		{
-			PredicateSelector predSel = predicateIter.next();
-			selectors.add(predSel);
-		}
+			IO.output = new OutputStreamWriter(new OutputStreamRedirector(CPSLogger
+					.getCPSLogger(MODULE_NAME + ".Jinni"), Level.WARN));
 
-		// initialize when we have one or more predicate selectors
-		if (selectors.isEmpty())
-		{
-			initialized = true;
-		}
+			dataStore = resources.repository();
 
-		/* Initialize this module (only on the first call) */
-		if (!initialized)
-		{
-			timer.start("Initialize prolog engine");
-			initPrologEngine(resources);
-			timer.stop();
-			initialized = true;
-		}
+			resources.put(UnitDictionary.REPOSITORY_KEY, unitDict);
 
-		if (!selectors.isEmpty())
-		{
-			/*
-			 * Create an index of language units by type and name so that Prolog
-			 * can look them up faster
-			 */
-			timer.start("Creation of unit index");
-			UnitRegister register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
-			if (register == null)
+			// step 0: gather all predicate selectors
+			Iterator<PredicateSelector> predicateIter = dataStore.getAllInstancesOf(PredicateSelector.class);
+			while (predicateIter.hasNext())
 			{
-				register = new UnitRegister();
-				resources.put(UnitRegister.RESOURCE_KEY, register);
+				PredicateSelector predSel = predicateIter.next();
+				selectors.add(predSel);
 			}
-			createUnitIndex(register);
-			timer.stop();
 
-			// Init.standardTop(); // Enable this line if you want to debug the
-			// prolog engine in interactive mode
+			// initialize when we have one or more predicate selectors
+			if (selectors.isEmpty())
+			{
+				initialized = true;
+			}
 
-			// Run the superimposition algorithm; this will also calculate the
-			// values of all selectors
-			timer.start("Calculating values of selectors");
-			AnnotationSuperImposition asi = new AnnotationSuperImposition(dataStore, selectors);
-			asi.run(composestarBuiltins);
-			timer.stop();
+			/* Initialize this module (only on the first call) */
+			if (!initialized)
+			{
+				timer.start("Initialize prolog engine");
+				initPrologEngine(resources);
+				timer.stop();
+				initialized = true;
+			}
+
+			if (!selectors.isEmpty())
+			{
+				/*
+				 * Create an index of language units by type and name so that
+				 * Prolog can look them up faster
+				 */
+				timer.start("Creation of unit index");
+				UnitRegister register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
+				if (register == null)
+				{
+					register = new UnitRegister();
+					resources.put(UnitRegister.RESOURCE_KEY, register);
+				}
+				createUnitIndex(register);
+				timer.stop();
+
+				// Init.standardTop(); // Enable this line if you want to debug
+				// the
+				// prolog engine in interactive mode
+
+				// Run the superimposition algorithm; this will also calculate
+				// the
+				// values of all selectors
+				timer.start("Calculating values of selectors");
+				AnnotationSuperImposition asi = new AnnotationSuperImposition(dataStore, selectors);
+				asi.run(composestarBuiltins);
+				timer.stop();
+			}
+		}
+		finally
+		{
+			IO.output = oldIOOutput;
 		}
 
 		/* Connect stderr to the original stream again */

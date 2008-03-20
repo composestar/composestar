@@ -102,7 +102,8 @@ public class AnnotationSuperImposition
 			s.posInResultVector = selectors.size();
 			selectors.add(s);
 
-			logger.debug("Predicate selector added (" + s.qname + ", " + s.predicate.getQuery() + ')');
+			logger.debug("Predicate selector added (" + s.qname + ", " + s.predicate.getQuery().replaceAll("\\s+", " ")
+					+ ')');
 		}
 
 		Iterator<AnnotationBinding> annotBindingIter = dataStore.getAllInstancesOf(AnnotationBinding.class);
@@ -140,7 +141,7 @@ public class AnnotationSuperImposition
 						if (null == annotConcern || !(annotConcern instanceof Type))
 						{
 							logger.warn("Annotation class " + annotRef.getQualifiedName()
-									+ " referenced in annotation binding or is not a .NET class!", annotRef);
+									+ " referenced in annotation binding or is not a type!", annotRef);
 							continue; // Just skip, or should this be a fatal
 							// error?
 						}
@@ -466,8 +467,8 @@ public class AnnotationSuperImposition
 					}
 					if (!doubleAnnot)
 					{
-						logger.debug("Attaching annotation '" + action.annotation.getName() + "' to program element '"
-								+ elem.toString());
+						logger.debug(String.format("Attaching annotation '%s' to program element '%s'",
+								action.annotation.getName(), elem.toString()));
 
 						Annotation annotInst = new Annotation(true); // true
 						// =

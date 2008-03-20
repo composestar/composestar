@@ -212,12 +212,12 @@ public class DIGGER implements CTCommonModule
 			List<AbstractMessageResult> results = graph.getResultingMessages(crumb);
 			if (results.size() > 0)
 			{
-				logger.debug("" + crumb + " results in:");
+				logger.trace("" + crumb + " results in:");
 				for (AbstractMessageResult msgResult : results)
 				{
 					if (msgResult.isValidResult())
 					{
-						logger.debug(" " + msgResult.getConcern().getName() + "."
+						logger.trace(" " + msgResult.getConcern().getName() + "."
 								+ ((MessageResult) msgResult).getSelector());
 					}
 					else

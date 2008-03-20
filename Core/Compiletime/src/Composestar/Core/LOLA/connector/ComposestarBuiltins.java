@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 import tarau.jinni.Const;
 import tarau.jinni.FunBuiltin;
 import tarau.jinni.HashDict;
-import tarau.jinni.IO;
 import tarau.jinni.JavaObject;
 import tarau.jinni.Prog;
 import tarau.jinni.Source;
@@ -28,10 +27,12 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSe
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.metamodel.CompositeRelationPredicate;
 import Composestar.Core.LOLA.metamodel.LanguageModel;
 import Composestar.Core.LOLA.metamodel.RelationPredicate;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * This class implements builtin predicates used by the Composestar Prolog
@@ -41,6 +42,8 @@ import Composestar.Core.LOLA.metamodel.UnitDictionary;
  */
 public class ComposestarBuiltins extends HashDict
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME + ".ComposestarBuiltins");
+
 	private static final long serialVersionUID = 8404927622993344626L;
 
 	// Public for convenience - should be readable by builtin-classes
@@ -198,7 +201,7 @@ public class ComposestarBuiltins extends HashDict
 			{
 				if (null == termToUnit(term1))
 				{
-					IO.errmes(name + ": Error: Argument 1 is not a language unit");
+					logger.warn(name + ": Argument 1 is not a language unit");
 					return 0;
 				}
 				ProgramElement unit1 = termToUnit(term1);
@@ -207,7 +210,7 @@ public class ComposestarBuiltins extends HashDict
 				{ // Both terms are bound!
 					if (null == termToUnit(term2))
 					{
-						IO.errmes(name + ": Error: Argument 1 is not a language unit");
+						logger.warn(name + ": Argument 1 is not a language unit");
 						return 0;
 					}
 					ProgramElement unit2 = termToUnit(term2);
@@ -220,6 +223,8 @@ public class ComposestarBuiltins extends HashDict
 					params2.add(relation2);
 					psi.addTYMInfo(unit1, "getUnitRelation", params1);
 					psi.addTYMInfo(unit2, "getUnitRelation", params2);
+
+					// FIXME: getUnitRelation() could be null
 
 					// If one of the relations is unique, use that side (faster)
 					if (relation1unique && unit1.getUnitRelation(relation1).singleValue() != null)
@@ -250,7 +255,7 @@ public class ComposestarBuiltins extends HashDict
 					UnitResult otherside = unit1.getUnitRelation(relation1);
 					if (null == otherside)
 					{
-						IO.errmes(name + ": Error: Relation type does not exist: " + relation1);
+						logger.warn(name + ": Relation type does not exist: " + relation1 + " for " + unit1.toString());
 					}
 					else if (relation1unique && otherside.isSingleValue())
 					{
@@ -265,7 +270,7 @@ public class ComposestarBuiltins extends HashDict
 					}
 					else
 					{
-						IO.errmes(name + ": Error: Relation multiplicity violation.");
+						logger.warn(name + "Relation multiplicity violation.");
 					}
 				}
 			}
@@ -275,7 +280,7 @@ public class ComposestarBuiltins extends HashDict
 			{
 				if (null == termToUnit(term2))
 				{
-					IO.errmes(name + ": Error: Argument 2 is not a language unit");
+					logger.warn(name + ": Argument 2 is not a language unit");
 					return 0;
 				}
 				ProgramElement unit2 = termToUnit(term2);
@@ -288,7 +293,7 @@ public class ComposestarBuiltins extends HashDict
 				UnitResult otherside = unit2.getUnitRelation(relation2);
 				if (null == otherside)
 				{
-					IO.errmes(name + ": Error: Relation type does not exist: " + relation1);
+					logger.warn(name + ": Relation type does not exist: " + relation2 + " for " + unit2.toString());
 				}
 				else if (relation2unique && otherside.isSingleValue())
 				{
@@ -303,12 +308,12 @@ public class ComposestarBuiltins extends HashDict
 				}
 				else
 				{
-					IO.errmes(name + ": Error: Relation multiplicity violation.");
+					logger.warn(name + ": Relation multiplicity violation.");
 				}
 			}
 			else
 			{
-				IO.errmes(name + ": At least one of the arguments must be bound!");
+				logger.warn(name + ": At least one of the arguments must be bound!");
 			}
 			// Both terms are unbound, no relations where found or an error was
 			// detected.
@@ -405,7 +410,7 @@ public class ComposestarBuiltins extends HashDict
 			{ // Attribute is unbound - generate list of attrs for this thing.
 				if (!(tUnit instanceof JavaObject))
 				{
-					IO.errmes("hasAttributeBuiltin: at least one of Unit and Name must be bound!");
+					logger.warn("hasAttributeBuiltin: at least one of Unit and Name must be bound!");
 					return 0;
 				}
 				if (!(tUnit.toObject() instanceof ProgramElement))
@@ -528,7 +533,7 @@ public class ComposestarBuiltins extends HashDict
 			{ // Name is unbound - look it up by UID
 				if (!(tUnit instanceof JavaObject))
 				{
-					IO.errmes("isUnitNameBuiltin: at least one of Unit and Name must be bound!");
+					logger.warn("isUnitNameBuiltin: at least one of Unit and Name must be bound!");
 					return 0;
 				}
 				if (!(tUnit.toObject() instanceof ProgramElement))
@@ -577,14 +582,14 @@ public class ComposestarBuiltins extends HashDict
 			Term tType = getArg(1);
 			if (!(tType instanceof Const)) /* We don't support this for now */
 			{
-				IO.errmes("isUnitTypeBuiltin: 2nd argument 'Type' should be bound!");
+				logger.warn("isUnitTypeBuiltin: 2nd argument 'Type' should be bound!");
 				return 0; /* Failed */
 			}
 			String type = ((Const) tType).name();
 			if (tUnit instanceof JavaObject) /*
-			 * Easy case: the unit is
-			 * specified
-			 */
+												 * Easy case: the unit is
+												 * specified
+												 */
 			{
 				if (!(tUnit.toObject() instanceof ProgramElement))
 				{
@@ -606,7 +611,7 @@ public class ComposestarBuiltins extends HashDict
 				UnitResult unitsOfThisType = langUnits.getByType(type);
 				if (null == unitsOfThisType) // Type does not exist!
 				{
-					IO.errmes("internal error: unit type does not exist: " + type);
+					logger.warn("internal error: unit type does not exist: " + type);
 					return 0;
 				}
 				// add type information for incremental process
@@ -648,7 +653,7 @@ public class ComposestarBuiltins extends HashDict
 			}
 			else
 			{
-				IO.errmes("matchPattern: both arguments should be bound!");
+				logger.warn("matchPattern: both arguments should be bound!");
 			}
 			return 0; /* Failed */
 		}

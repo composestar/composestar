@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -128,7 +129,7 @@ public class JavaMethodInfo extends MethodInfo
 		}
 		else if (argumentName.equals("Annotations"))
 		{
-			Iterator<JavaAnnotation> i = getAnnotations().iterator();
+			Iterator<Annotation> i = getAnnotations().iterator();
 			HashSet<Type> res = new HashSet<Type>();
 			while (i.hasNext())
 			{
@@ -137,7 +138,7 @@ public class JavaMethodInfo extends MethodInfo
 			return new UnitResult(res);
 		}
 
-		return null;
+		return new UnitResult();
 	}
 
 	@Override

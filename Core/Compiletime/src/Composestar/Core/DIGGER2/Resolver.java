@@ -34,7 +34,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Resolver
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DIGGER.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DIGGER.MODULE_NAME + ".Resolver");
 
 	protected DispatchGraph graph;
 
@@ -57,7 +57,7 @@ public class Resolver
 			throws ModuleException
 	{
 		Message msg = state.getMessage();
-		logger.debug("[resolver] entrance message: " + msg.toString());
+		logger.trace("entrance message: " + msg.toString());
 		Breadcrumb crumb = new Breadcrumb(concern, msg, filterChain);
 		traverseState(state, crumb, crumb.addTrail(), new LinkedList<ExecutionState>());
 		Iterator<Trail> results = crumb.getTrails();
@@ -65,7 +65,7 @@ public class Resolver
 		{
 			Trail trail = results.next();
 			msg = trail.getResultMessage();
-			logger.debug("[resolver] message result: " + msg.toString());
+			logger.trace("message result: " + msg.toString());
 		}
 		return crumb;
 	}
@@ -82,7 +82,7 @@ public class Resolver
 		while (trails.hasNext())
 		{
 			Trail trail = trails.next();
-			logger.debug("[resolver] " + trail.getResultMessage().toString() + " for " + crumb.toString());
+			logger.trace(trail.getResultMessage().toString() + " for " + crumb.toString());
 			if (trail.getTargetConcern() != null)
 			{
 				// crumbs always refer to input crumbs
@@ -93,12 +93,12 @@ public class Resolver
 				// }
 				Breadcrumb toCrumb = graph.getInputCrumb(trail.getTargetConcern(), selector);
 				// is `null' when destination has no input crumbs
-				logger.debug("[resolver]  leads to crumb: " + toCrumb);
+				logger.trace("  leads to crumb: " + toCrumb);
 				trail.setDestinationCrumb(toCrumb);
 			}
 			else
 			{
-				logger.debug("[resolver]  end of trail");
+				logger.trace("  end of trail");
 				trail.setDestinationCrumb(null);
 			}
 		}
@@ -119,7 +119,7 @@ public class Resolver
 		{
 			if (pastStates.contains(state))
 			{
-				logger.trace("[resolver] Loop detected, ignoring path");
+				logger.trace("Loop detected, ignoring path");
 				crumb.removeTrail(trail);
 				return;
 			}
@@ -194,20 +194,18 @@ public class Resolver
 						}
 						sb.append(name);
 					}
-					logger
-							.info("[resolver] reached the end of a trail without a STOP or RETURN node. Contains labels: "
-									+ sb);
+					logger.info("reached the end of a trail without a STOP or RETURN node. Contains labels: " + sb);
 				}
 				if (trail.getResultMessage() == null)
 				{
-					logger.debug("[resolver] remove resultless trail");
+					logger.debug("remove resultless trail");
 					crumb.removeTrail(trail);
 				}
 				return;
 			}
 			else if (idx > 1)
 			{
-				logger.trace("[resolver] Branched into " + idx + " trails");
+				logger.trace("Branched into " + idx + " trails");
 			}
 		}
 	}
