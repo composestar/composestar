@@ -58,6 +58,8 @@ public class ObjectManager implements Runnable
 
 	private boolean working = false;
 
+	private Object workingMutex = new Object();
+
 	private static final Object[] EmptyObjectArray = {};
 
 	/**
@@ -66,7 +68,6 @@ public class ObjectManager implements Runnable
 	public synchronized void run()
 	{
 		this.working = true;
-
 		do
 		{
 			Message msg = (Message) this.messageQueue.consume();
@@ -89,17 +90,30 @@ public class ObjectManager implements Runnable
 			{
 				msg.setResponse(reply);
 			}
-		} while (!this.messageQueue.isEmpty()); // dowhile because of concurency
-		this.working = false;
+
+			if (this.messageQueue.isEmpty())
+			{
+				synchronized (workingMutex)
+				{
+					if (this.messageQueue.isEmpty())
+					{
+						this.working = false;
+						return;
+					}
+				}
+			}
+		} while (true); // dowhile because of concurency
 	}
 
 	public void notifyMessageConsumer()
 	{
-		if (!this.working)
+		synchronized (workingMutex)
 		{
-			Thread child = new Thread(this);
-			child.start();
+			if (this.working) return;
+			this.working = true;
 		}
+		Thread child = new Thread(this);
+		child.start();
 	}
 
 	/**
