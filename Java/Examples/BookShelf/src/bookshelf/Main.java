@@ -2,7 +2,9 @@ package bookshelf;
 
 import java.util.List;
 
+import observer.ObserveBookSize;
 import bookshelf.books.Book;
+import bookshelf.books.Chapter;
 import bookshelf.generators.ArmyOfMonkeys;
 
 public class Main {
@@ -35,11 +37,10 @@ public class Main {
 	int leastWords = Integer.MAX_VALUE;
 	Book largest = null;
 	Book smallest = null;
-	
-	System.out.print(String.format("Searching the largest book ",
-		cnt));
+
+	System.out.print(String.format("Searching the largest book ", cnt));
 	System.out.flush();
-	
+
 	for (Book b : (List<Book>) shelf.getBooks()) {
 	    System.out.print(".");
 	    System.out.flush();
@@ -71,10 +72,9 @@ public class Main {
 			.getChapter(0).getParagraph(0).countSentences()));
 
 	// Count books which are 33% smaller
-	System.out.print(String.format("Counting books 33%% smaller ",
-		cnt));
+	System.out.print(String.format("Counting books 33%% smaller ", cnt));
 	System.out.flush();
-	
+
 	cnt = 0;
 	for (Book b : (List<Book>) shelf.getBooks()) {
 	    System.out.print(".");
@@ -91,11 +91,24 @@ public class Main {
 		"%d books are 33%% smaller than the largest book", cnt));
     }
 
+    /*public void doModification() {
+	Book b = shelf.getBook(0);
+	//b.attach(new ObserveBookSize());
+	Chapter newChap = ArmyOfMonkeys.writeChapter();
+	System.out.println(String.format("Size of the book: %d words", b.countWords()));
+	b.addChapter(newChap);
+	System.out.println(String.format("After adding a chapter: %d words", b.countWords()));
+	b.removeChapter(newChap);
+	System.out.println(String.format("Removing the chapter: %d words", b.countWords()));
+    }*/
+
     public static void main(String[] args) {
 	long time = System.currentTimeMillis();
 	Main m = new Main();
 	m.createBooks(10);
 	m.shelfMetrics();
-	System.out.println(String.format("Time taken %dms", System.currentTimeMillis()-time));
+	System.out.println(String.format("Time taken %dms", System
+		.currentTimeMillis()
+		- time));
     }
 }

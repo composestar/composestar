@@ -18,9 +18,9 @@ public class ArmyOfMonkeys {
     public static int CHAPTER_PARAGRAPH_MIN = 5; // paragraphs
     public static int CHAPTER_PARAGRAPH_MAX = 15;
     public static int PARAGRAPH_MIN = 50; // words
-    public static int PARAGRAPH_MAX = 500;
+    public static int PARAGRAPH_MAX = 750;
     public static int LINE_MIN = 5; // words
-    public static int LINE_MAX = 15;
+    public static int LINE_MAX = 20;
 
     protected static final Random random = new Random();
 
@@ -39,7 +39,7 @@ public class ArmyOfMonkeys {
 	int cnt = BOOK_CHAPTER_MIN
 		+ random.nextInt(BOOK_CHAPTER_MAX - BOOK_CHAPTER_MIN);
 	for (int i = 0; i < cnt; i++) {
-	    book.addChapters(writeChapter());
+	    book.addChapter(writeChapter());
 	}
 	return book;
     }

@@ -11,9 +11,9 @@ concern TextMetrics
 	superimposition
 	{
 		selectors
-			getText = { C | isClassWithNameInList(C, ['bookshelf.books.Book',
+			countables = { C | isClassWithNameInList(C, ['bookshelf.books.Book',
 				'bookshelf.books.Chapter', 'bookshelf.books.Paragraph']) };
 		filtermodules
-			getText <- Counter;
+			countables <- Counter;
 	}
 }

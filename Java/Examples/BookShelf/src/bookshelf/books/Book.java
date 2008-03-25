@@ -47,7 +47,7 @@ public class Book {
 	return chapters.get(index);
     }
 
-    public void addChapters(Chapter newChapter) {
+    public void addChapter(Chapter newChapter) {
 	Book pb = newChapter.withinBook();
 	if (pb != null && pb != this) {
 	    pb.removeChapter(newChapter);
