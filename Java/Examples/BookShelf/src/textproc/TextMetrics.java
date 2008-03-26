@@ -10,11 +10,52 @@ import bookshelf.books.Chapter;
 import bookshelf.books.Paragraph;
 
 public class TextMetrics implements IObserver {
-    protected TextAlgorithms ta;
-    protected boolean init = true;
     protected Book book;
     protected Chapter chapter;
     protected Paragraph paragraph;
+
+    public int countWords() {
+	internalInitialize();
+	if (book != null) {
+	    int res = 0;
+	    for (Chapter c : (List<Chapter>) book.getChapters()) {
+		res += c.countWords();
+	    }
+	    return res;
+	} else if (chapter != null) {
+	    int res = 0;
+	    for (Paragraph p : (List<Paragraph>) chapter.getParagraphs()) {
+		res += p.countWords();
+	    }
+	    return res;
+	} else if (paragraph != null) {
+	    return ta.numberOfWords(paragraph.getText());
+	}
+	return -1;
+    }
+
+    public int countSentences() {
+	internalInitialize();
+	if (book != null) {
+	    int res = 0;
+	    for (Chapter c : (List<Chapter>) book.getChapters()) {
+		res += c.countSentences();
+	    }
+	    return res;
+	} else if (chapter != null) {
+	    int res = 0;
+	    for (Paragraph p : (List<Paragraph>) chapter.getParagraphs()) {
+		res += p.countSentences();
+	    }
+	    return res;
+	} else if (paragraph != null) {
+	    return ta.numberOfSentences(paragraph.getText());
+	}
+	return -1;
+    }
+
+    protected TextAlgorithms ta;
+    protected boolean init = true;
 
     public TextMetrics() {
 	ta = new TextAlgorithms();
@@ -22,11 +63,13 @@ public class TextMetrics implements IObserver {
 
     public void internalInitialize() {
 	book = internalGetBook();
-	if (book != null) {
-	    book.attach(this);
+	// if (book != null) {book.attach(this);}
+	if (book == null) {
+	    chapter = internalGetChapter();
 	}
-	chapter = internalGetChapter();
-	paragraph = internalGetParagraph();
+	if (book == null && chapter == null) {
+	    paragraph = internalGetParagraph();
+	}
 	init = false;
     }
 
@@ -59,49 +102,6 @@ public class TextMetrics implements IObserver {
 
     @Override
     public void subjectChanged(Object subject) {
-	System.out.println("@@@@");
-    }
-
-    public int countWords() {
-	if (init)
-	    internalInitialize();
-	if (book != null) {
-	    int res = 0;
-	    for (Chapter c : (List<Chapter>) book.getChapters()) {
-		res += c.countWords();
-	    }
-	    return res;
-	} else if (chapter != null) {
-	    int res = 0;
-	    for (Paragraph p : (List<Paragraph>) chapter.getParagraphs()) {
-		res += p.countWords();
-	    }
-	    return res;
-	} else if (paragraph != null) {
-	    return ta.numberOfWords(paragraph.getText());
-	}
-	return -1;
-    }
-
-    public int countSentences() {
-	if (init)
-	    internalInitialize();
-	if (book != null) {
-	    int res = 0;
-	    for (Chapter c : (List<Chapter>) book.getChapters()) {
-		res += c.countSentences();
-	    }
-	    return res;
-	} else if (chapter != null) {
-	    int res = 0;
-	    for (Paragraph p : (List<Paragraph>) chapter.getParagraphs()) {
-		res += p.countSentences();
-	    }
-	    return res;
-	} else if (paragraph != null) {
-	    return ta.numberOfSentences(paragraph.getText());
-	}
-	return -1;
     }
 
     public static class TextAlgorithms {

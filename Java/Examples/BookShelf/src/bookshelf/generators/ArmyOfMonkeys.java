@@ -17,8 +17,8 @@ public class ArmyOfMonkeys {
     public static int CHAPTER_TITLE_MAX = 8;
     public static int CHAPTER_PARAGRAPH_MIN = 5; // paragraphs
     public static int CHAPTER_PARAGRAPH_MAX = 15;
-    public static int PARAGRAPH_MIN = 50; // words
-    public static int PARAGRAPH_MAX = 750;
+    public static int PARAGRAPH_MIN = 100; // words
+    public static int PARAGRAPH_MAX = 1000;
     public static int LINE_MIN = 5; // words
     public static int LINE_MAX = 20;
 

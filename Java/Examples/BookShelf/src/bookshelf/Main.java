@@ -41,17 +41,17 @@ public class Main {
 	System.out.print(String.format("Searching the largest book ", cnt));
 	System.out.flush();
 
-	for (Book b : (List<Book>) shelf.getBooks()) {
+	for (Book book : (List<Book>) shelf.getBooks()) {
 	    System.out.print(".");
 	    System.out.flush();
-	    int cur = b.countWords();
+	    int cur = book.countWords();
 	    cnt += cur;
 	    if (cur > mostWords) {
-		largest = b;
+		largest = book;
 		mostWords = cur;
 	    }
 	    if (cur < leastWords) {
-		smallest = b;
+		smallest = book;
 		leastWords = cur;
 	    }
 	}
@@ -76,13 +76,13 @@ public class Main {
 	System.out.flush();
 
 	cnt = 0;
-	for (Book b : (List<Book>) shelf.getBooks()) {
+	for (Book book : (List<Book>) shelf.getBooks()) {
 	    System.out.print(".");
 	    System.out.flush();
-	    if (b == largest) {
+	    if (book == largest) {
 		continue;
 	    }
-	    if (b.countWords() < mostWords * 0.66) {
+	    if (book.countWords() < mostWords * 0.66) {
 		cnt++;
 	    }
 	}
@@ -91,16 +91,19 @@ public class Main {
 		"%d books are 33%% smaller than the largest book", cnt));
     }
 
-    /*public void doModification() {
+    public void doModification() {
 	Book b = shelf.getBook(0);
-	//b.attach(new ObserveBookSize());
+	// b.attach(new ObserveBookSize());
 	Chapter newChap = ArmyOfMonkeys.writeChapter();
-	System.out.println(String.format("Size of the book: %d words", b.countWords()));
+	System.out.println(String.format("Size of the book: %d words", b
+		.countWords()));
 	b.addChapter(newChap);
-	System.out.println(String.format("After adding a chapter: %d words", b.countWords()));
+	System.out.println(String.format("After adding a chapter: %d words", b
+		.countWords()));
 	b.removeChapter(newChap);
-	System.out.println(String.format("Removing the chapter: %d words", b.countWords()));
-    }*/
+	System.out.println(String.format("Removing the chapter: %d words", b
+		.countWords()));
+    }
 
     public static void main(String[] args) {
 	long time = System.currentTimeMillis();
