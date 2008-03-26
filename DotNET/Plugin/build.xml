@@ -48,7 +48,7 @@
 	<target name="install" depends="init_local,install_vs2003,install_vs2005" unless="ignore.plugin" description="install the plugins" />
 	
 	<target name="install_vs2003" depends="init_local,build_vs2003" if="plugin.vs2003">
-		<copy todir="${composestar.installdir}${file.separator}ComposestarVSAddin">
+		<copy todir="${composestar.installdir}${file.separator}ComposestarVSAddin" failonerror="false"> <!-- not that crucial, no longer developed -->
 			<fileset dir="VSAddin${file.separator}bin">
 				<include name="ComposestarVSAddin.*" />
 			</fileset>
