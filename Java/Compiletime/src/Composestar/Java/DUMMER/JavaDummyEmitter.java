@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,8 +14,10 @@ import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.DUMMER.DefaultEmitter;
 import Composestar.Core.DUMMER.DummyEmitter;
+import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.Logging.CPSLogger;
 import antlr.ASTFactory;
 import antlr.CommonAST;
 import antlr.collections.AST;
@@ -30,6 +31,8 @@ import antlr.collections.AST;
  */
 public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, JavaTokenTypes
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DummyManager.MODULE_NAME);
+
 	private StringBuilder dummy;
 
 	private Stack<AST> stack = new Stack<AST>();
@@ -39,8 +42,6 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	private static int ALL = -1;
 
 	private static String[] tokenNames;
-
-	private PrintStream debug = System.err;
 
 	private int tabs;
 
@@ -249,7 +250,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		}
 		else if (tokentype == LITERAL_char)
 		{
-			return "' '";
+			return "'\\0'";
 		}
 		else
 		{
@@ -714,10 +715,14 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				newline();
 				break;
 
-			case TYPE_ARGS: // added 1.5
-				break;
-
 			case TYPE_PARAMS: // added 1.5
+			case TYPE_ARGS: // added 1.5
+				if (hasChildren(ast))
+				{
+					out("<");
+					visitChildren(ast, ", ");
+					out(">");
+				}
 				break;
 
 			case MODIFIERS:
@@ -833,6 +838,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 			case TYPE:
 				visit(ast.getFirstChild());
+				visit(getChild(ast, TYPE_ARGS));
 				break;
 
 			case ARRAY_DECLARATOR:
@@ -1178,13 +1184,23 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				out("class");
 				break;
 
+			case LITERAL_extends:
+				out(ast.getText());
+				break;
+
+			case WILDCARD:
+				out(ast.getText());
+				out(" ");
+				visitChildren(ast, " ");
+				break;
+
 			/*
 			 * case LITERAL_assert: out("assert "); visit(child1); if (child2 !=
 			 * null) { out(" : "); visit(child2); } break;
 			 */
 
 			default:
-				debug.println("Invalid type:" + ast.getType());
+				logger.error(String.format("Invalid type: %d text = \"%s\"", ast.getType(), ast.getText()));
 				break;
 
 			/*
