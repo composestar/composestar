@@ -44,8 +44,8 @@ public class RotAction extends ComposeStarAction
 	public Object execute()
 	{
 		// Start execution in a new thread
-		Thread t = new Thread(this.message);
-		t.start();
+		Thread t = new Thread(this.message, "Rot13 filter");
+		//t.start();
 
 		// Store jp and m in ACT thread.
 		JoinPoint __jp = JoinPointInfo.getJoinPointInfo();

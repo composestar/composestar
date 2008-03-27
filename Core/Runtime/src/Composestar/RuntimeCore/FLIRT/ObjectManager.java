@@ -138,7 +138,7 @@ public class ObjectManager implements Runnable
 			if (this.working) return;
 			this.working = true;
 		}
-		Thread child = new Thread(this);
+		Thread child = new Thread(this, "MessageConsumer");
 		child.start();
 	}
 

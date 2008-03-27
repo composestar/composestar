@@ -129,23 +129,21 @@
 				<argument value="-systemtest" />
 			</commandline>
 			<FileSet dir="${build.dotnet}/Examples">
-				<!-- output not always correct but should be -->
+				<!-- results in an occasional deadlocks -->
+				<!--								
+				<include name="Wedding/bin/wedding.Wedding.exe"/>
+				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>
+				-->
+				
+				<!-- just disabled -->
 				<!--
 				<include name="InventoryTwo/bin/InventoryTwo.Example.exe"/>
-				-->
-
-				<!-- plaged with deadlocks -->
-				<!--				
 				<include name="Inventory/bin/ExampleAOP.Example.exe"/>
 				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe"/>
 				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe"/>
-				<include name="Wedding/bin/wedding.Wedding.exe"/>
 				-->
 
-				<!-- correct.txt less tests -->
-
 				<!-- working as it should -->
-				<!--<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>-->
 				<include name="Platypus/bin/PlatypusExample.Main.exe" />
 				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe" />
 
