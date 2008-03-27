@@ -22,8 +22,8 @@ public class Subject {
 
     public void notify(ReifiedMessage msg) {
 	Object subject = msg.getTarget();
-	//msg.proceed();
-	for (IObserver obs : (List<IObserver>) observers) {
+	msg.proceed();
+	for (IObserver obs : observers) {
 	    obs.subjectChanged(subject);
 	}
     }

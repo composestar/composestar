@@ -120,7 +120,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Thread.java"
+                    RelPath = "WeakReference.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -66,7 +66,8 @@
 				<include name="ErrorFilterTest"/>
 				<include name="Pacman"/>
 				<include name="Platypus"/>
-				<include name="VenusFlyTrap"/> 
+				<include name="VenusFlyTrap"/>
+				<include name="BookShelf"/>  
 				<exclude name="**/.svn/"/>
 				<exclude name="**/.metadata/"/>
 			</DirSet>

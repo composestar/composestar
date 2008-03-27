@@ -1,10 +1,9 @@
 package Composestar.RuntimeCore.FLIRT;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.lang.Thread;
-import java.lang.Runnable;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
@@ -42,11 +41,13 @@ import Composestar.RuntimeCore.Utils.SyncBuffer;
  */
 public class ObjectManager implements Runnable
 {
-
 	/**
-	 * The Object that is being managed
+	 * Weak reference to the object
 	 */
-	public Object theObject;
+	private WeakReference objectRef;
+
+	// WeakReference doesn't exist in .NET1.1 but WeakHashMap does
+	// private WeakHashMap objectRefHack;
 
 	private ArrayList filterModules;
 
@@ -61,6 +62,31 @@ public class ObjectManager implements Runnable
 	private Object workingMutex = new Object();
 
 	private static final Object[] EmptyObjectArray = {};
+
+	/**
+	 * Get the object that belong to this manager
+	 * 
+	 * @return
+	 */
+	public Object getObject()
+	{
+		// if (objectRefHack != null)
+		// {
+		// Iterator it = objectRefHack.keySet().iterator();
+		// if (it.hasNext())
+		// {
+		// return it.next();
+		// }
+		// }
+		// return null;
+
+		Object res = objectRef.get();
+		if (res == null)
+		{
+			GlobalObjectManager.removeObjectManager(this);
+		}
+		return res;
+	}
 
 	/**
 	 * @roseuid 41161A8D008E
@@ -119,11 +145,11 @@ public class ObjectManager implements Runnable
 	/**
 	 * Constructs a new Object Manager - made public for testing purposes.
 	 * 
-	 * @param o
+	 * @param subject
 	 * @roseuid 3F36584D0116
 	 * @param store
 	 */
-	public ObjectManager(Object o, DataStore store)
+	public ObjectManager(Object subject, DataStore store)
 	{
 		this.messageQueue = new SyncBuffer();
 		// DataStore store1 = store;
@@ -132,13 +158,15 @@ public class ObjectManager implements Runnable
 		conditions = new ArrayList(); // list with conditionBinding objects
 
 		// find the concern
-		theObject = o;
+		objectRef = new WeakReference(subject);
+		// objectRefHack = new WeakHashMap(1);
+		// objectRefHack.put(subject, null);
 		if (Debug.SHOULD_DEBUG)
 		{
 			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "ObjectManager created for object of type '"
-					+ o.getClass().getName() + "'.");
+					+ subject.getClass().getName() + "'.");
 		}
-		Concern concern = (Concern) store.getObjectByID(o.getClass().getName());
+		Concern concern = (Concern) store.getObjectByID(subject.getClass().getName());
 		if (Debug.SHOULD_DEBUG)
 		{
 			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Checking concern '" + concern + "'...");
@@ -442,14 +470,14 @@ public class ObjectManager implements Runnable
 					+ o.getClass().getName() + "'.");
 		}
 
-		ObjectManager obj = (ObjectManager) GlobalObjectManager.getObjectManagerFor(o);
-		if (obj == null)
+		ObjectManager manager = GlobalObjectManager.getObjectManagerFor(o);
+		if (manager == null)
 		{
 			// No object manager present, so create one
-			obj = new ObjectManager(o, store);
-			GlobalObjectManager.setObjectManagerFor(o, obj);
+			manager = new ObjectManager(o, store);
+			GlobalObjectManager.setObjectManagerFor(o, manager);
 		}
-		return obj;
+		return manager;
 	}
 
 	public static boolean hasFilterModules(Object o, DataStore store)

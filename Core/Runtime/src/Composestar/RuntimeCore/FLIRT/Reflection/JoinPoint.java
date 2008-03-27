@@ -1,5 +1,6 @@
 package Composestar.RuntimeCore.FLIRT.Reflection;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -8,7 +9,7 @@ import java.util.Hashtable;
 
 public class JoinPoint
 {
-	private Object joinPointInstance; // the 'current' object
+	private WeakReference joinPointInstance; // the 'current' object
 
 	private HashMap attributemap = new HashMap();
 
@@ -23,7 +24,7 @@ public class JoinPoint
 
 	public JoinPoint(Object instance)
 	{
-		this.joinPointInstance = instance;
+		this.joinPointInstance = new WeakReference(instance);
 	}
 
 	public JoinPoint(Object instance, Dictionary internals, Dictionary externals, ArrayList atributesList)
@@ -36,7 +37,7 @@ public class JoinPoint
 
 	public Object getInstance()
 	{
-		return joinPointInstance;
+		return joinPointInstance.get();
 	}
 
 	public void setAttributeList(ArrayList atts)
@@ -85,7 +86,11 @@ public class JoinPoint
 	 */
 	public String getClassName()
 	{
-		return this.joinPointInstance.toString();
+		if (joinPointInstance.get() != null)
+		{
+			return this.joinPointInstance.get().getClass().getName();
+		}
+		return null;
 	}
 
 	public Enumeration getInternals()

@@ -1,55 +1,58 @@
 package textproc;
 
+import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
-import java.util.List;
 
 import observer.IObserver;
-
 import bookshelf.books.Book;
 import bookshelf.books.Chapter;
 import bookshelf.books.Paragraph;
 
 public class TextMetrics implements IObserver {
-    protected Book book;
-    protected Chapter chapter;
-    protected Paragraph paragraph;
+    protected WeakReference<Book> book;
+    protected WeakReference<Chapter> chapter;
+    protected WeakReference<Paragraph> paragraph;
 
     public int countWords() {
-	internalInitialize();
-	if (book != null) {
+	if (init) {
+	    internalInitialize();
+	}
+	if (book != null && book.get() != null) {
 	    int res = 0;
-	    for (Chapter c : (List<Chapter>) book.getChapters()) {
+	    for (Chapter c : book.get().getChapters()) {
 		res += c.countWords();
 	    }
 	    return res;
-	} else if (chapter != null) {
+	} else if (chapter != null && chapter.get() != null) {
 	    int res = 0;
-	    for (Paragraph p : (List<Paragraph>) chapter.getParagraphs()) {
+	    for (Paragraph p : chapter.get().getParagraphs()) {
 		res += p.countWords();
 	    }
 	    return res;
-	} else if (paragraph != null) {
-	    return ta.numberOfWords(paragraph.getText());
+	} else if (paragraph != null && paragraph.get() != null) {
+	    return ta.numberOfWords(paragraph.get().getText());
 	}
 	return -1;
     }
 
     public int countSentences() {
-	internalInitialize();
-	if (book != null) {
+	if (init) {
+	    internalInitialize();
+	}
+	if (book != null && book.get() != null) {
 	    int res = 0;
-	    for (Chapter c : (List<Chapter>) book.getChapters()) {
+	    for (Chapter c : book.get().getChapters()) {
 		res += c.countSentences();
 	    }
 	    return res;
-	} else if (chapter != null) {
+	} else if (chapter != null && chapter.get() != null) {
 	    int res = 0;
-	    for (Paragraph p : (List<Paragraph>) chapter.getParagraphs()) {
+	    for (Paragraph p : chapter.get().getParagraphs()) {
 		res += p.countSentences();
 	    }
 	    return res;
-	} else if (paragraph != null) {
-	    return ta.numberOfSentences(paragraph.getText());
+	} else if (paragraph != null && paragraph.get() != null) {
+	    return ta.numberOfSentences(paragraph.get().getText());
 	}
 	return -1;
     }
@@ -63,45 +66,76 @@ public class TextMetrics implements IObserver {
 
     public void internalInitialize() {
 	book = internalGetBook();
-	// if (book != null) {book.attach(this);}
+	if (book != null) {
+	    book.get().attach(this);
+	}
 	if (book == null) {
 	    chapter = internalGetChapter();
+	    if (chapter != null) {
+		chapter.get().attach(this);
+	    }
 	}
 	if (book == null && chapter == null) {
 	    paragraph = internalGetParagraph();
+	    if (paragraph != null) {
+		paragraph.get().attach(this);
+	    }
 	}
 	init = false;
     }
 
-    public Book internalGetBook() {
+    public WeakReference<Book> internalGetBook() {
 	try {
 	    Book b = (Book) (Object) this;
-	    return b;
+	    return new WeakReference<Book>(b);
 	} catch (ClassCastException e) {
 	}
 	return null;
     }
 
-    public Chapter internalGetChapter() {
+    public WeakReference<Chapter> internalGetChapter() {
 	try {
 	    Chapter c = (Chapter) (Object) this;
-	    return c;
+	    return new WeakReference<Chapter>(c);
 	} catch (ClassCastException e) {
 	}
 	return null;
     }
 
-    public Paragraph internalGetParagraph() {
+    public WeakReference<Paragraph> internalGetParagraph() {
 	try {
 	    Paragraph p = (Paragraph) (Object) this;
-	    return p;
+	    return new WeakReference<Paragraph>(p);
 	} catch (ClassCastException e) {
 	}
 	return null;
+    }
+
+    public void bookUpdated() {
+    }
+
+    public void chapterUpdated() {
+	chapter.get().withinBook().bookUpdated();
+    }
+
+    public void paragraphUpdated() {
+	paragraph.get().withinChapter().chapterUpdated();
     }
 
     @Override
     public void subjectChanged(Object subject) {
+	if (init) {
+	    internalInitialize();
+	}
+	// this construction is used because "subjectChanged" isn't
+	// captured by the runtime (TODO: why not?)
+	if (book != null && subject == book.get()) {
+	    bookUpdated();
+	} else if (chapter != null && subject == chapter.get()) {
+	    chapterUpdated();
+	} else if (paragraph != null && subject == paragraph.get()) {
+	    paragraphUpdated();
+	}
     }
 
     public static class TextAlgorithms {

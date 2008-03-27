@@ -36,7 +36,7 @@ public class Book {
     }
 
     public void setAuthor(String newAuthor) {
-	this.author = newAuthor;
+	author = newAuthor;
     }
 
     public List<Chapter> getChapters() {

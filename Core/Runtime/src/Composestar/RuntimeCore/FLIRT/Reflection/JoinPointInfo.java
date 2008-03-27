@@ -2,12 +2,11 @@ package Composestar.RuntimeCore.FLIRT.Reflection;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.lang.Thread;
+import java.util.WeakHashMap;
 
 public class JoinPointInfo
 {
-	private static HashMap joinpointByThread = new HashMap();
+	private static WeakHashMap joinpointByThread = new WeakHashMap();
 
 	public static JoinPoint getJoinPointInfo()
 	{

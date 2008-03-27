@@ -1,37 +1,48 @@
 package Composestar.RuntimeCore.FLIRT;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-
-import Composestar.RuntimeCore.Utils.Debug;
+import java.util.Iterator;
+import java.util.WeakHashMap;
 
 public class GlobalObjectManager
 {
-	protected static Hashtable objectmanagers = new Hashtable(100);
+	// <String,ObjectManager>
+	protected static WeakHashMap objectmanagers = new WeakHashMap(100);
+
+	// public static String getObjectKey(Object subject)
+	// {
+	// return subject.getClass().getName() + "@" +
+	// System.identityHashCode(subject);
+	// }
 
 	/**
 	 * @param key
 	 * @return java.lang.Object
 	 * @roseuid 41162D0102DC
 	 */
-	public static Object getObjectManagerFor(Object key)
+	public static ObjectManager getObjectManagerFor(Object key)
 	{
-		String hc = key.getClass().getName() + "@" + System.identityHashCode(key);
-		if (Debug.SHOULD_DEBUG)
-		{
-			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Getting object with key '" + hc + "'.");
-		}
+		// String hc = getObjectKey(key);
+		// if (Debug.SHOULD_DEBUG)
+		// {
+		// Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Getting object with key
+		// '" + hc + "'.");
+		// }
 		// if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Currently
 		// " + objectmanagers.size() + " objectmanager(s) allocated.");
 		// if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Getting
 		// objectmanager with key " + key.GetHashCode() + " (" + key.getClass()
 		// + " | " + key.getClass().get_Namespace().startsWith("java.") + ").");
-		return objectmanagers.get(hc);
+		return (ObjectManager) objectmanagers.get(key);
 	}
 
-	public static Enumeration getEnumerator()
+	public static void removeObjectManager(ObjectManager key)
 	{
-		return objectmanagers.elements();
+		objectmanagers.values().remove(key);
+	}
+
+	public static Iterator iterator()
+	{
+		return objectmanagers.values().iterator();
 	}
 
 	/**
@@ -39,7 +50,7 @@ public class GlobalObjectManager
 	 * @param obj
 	 * @roseuid 41162D0102E1
 	 */
-	public static void setObjectManagerFor(Object key, Object obj)
+	public static void setObjectManagerFor(Object key, ObjectManager obj)
 	{
 		if (key == null)
 		{
@@ -50,16 +61,17 @@ public class GlobalObjectManager
 				// (when class is in default namespace)!
 				(!(key.getClass().getName().startsWith("java.") || key.getClass().getName().startsWith("System."))))
 		{
-			String hc = key.getClass().getName() + "@" + System.identityHashCode(key);
-			if (Debug.SHOULD_DEBUG)
-			{
-				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Storing '" + obj + "' with key '" + hc + "'.");
-			}
+			// String hc = getObjectKey(key);
+			// if (Debug.SHOULD_DEBUG)
+			// {
+			// Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Storing '" + obj + "'
+			// with key '" + hc + "'.");
+			// }
 			// if(Debug.SHOULD_DEBUG)
 			// Debug.out(Debug.MODE_DEBUG,"FLIRT","Storing objectmanager for
 			// object '" + ((ObjectManager)obj).theObject + "' with key '" +
 			// key.GetHashCode() + " (" + key + ")'.");
-			objectmanagers.put(hc, obj);
+			objectmanagers.put(key, obj);
 			// if(Debug.SHOULD_DEBUG)
 			// Debug.out(Debug.MODE_DEBUG,"FLIRT","Currently " +
 			// objectmanagers.size() + " objectmanager(s) have been
@@ -72,6 +84,6 @@ public class GlobalObjectManager
 	 */
 	public static void reset()
 	{
-		objectmanagers = new Hashtable();
+		objectmanagers = new WeakHashMap(100);
 	}
 }

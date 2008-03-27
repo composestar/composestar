@@ -1,6 +1,5 @@
 package Composestar.RuntimeCore.FLIRT;
 
-import java.util.Enumeration;
 import java.util.Iterator;
 
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
@@ -92,10 +91,10 @@ public class CastingFacility
 		// Search for a possible cast in the other direction, from internal
 		// object to concern object...
 		String idhash = from.getClass() + "@" + System.identityHashCode(from);
-		Enumeration enumManagers = GlobalObjectManager.getEnumerator();
-		while (enumManagers.hasMoreElements())
+		Iterator enumManagers = GlobalObjectManager.iterator();
+		while (enumManagers.hasNext())
 		{
-			om = (ObjectManager) enumManagers.nextElement();
+			om = (ObjectManager) enumManagers.next();
 			Iterator i = om.getFilterModules().iterator();
 			while (i.hasNext())
 			{
@@ -122,7 +121,7 @@ public class CastingFacility
 					{
 						// This should be the match and return the correct
 						// parent concern object
-						Object obj = fmr.getObjectManager().theObject;
+						Object obj = fmr.getObjectManager().getObject();
 
 						// mh: also check if the types match, otherwise it's not
 						// the designed cast

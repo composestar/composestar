@@ -8,7 +8,7 @@ public class ObserveBookSize implements IObserver {
     public void subjectChanged(Object subject) {
 	Book b = (Book) subject;
 	System.out.println(String.format(
-		"Book \"%s\" changed. New size is: %d", b.getTitle(), b
+		"Book \"%s\" changed. New size is: %d words", b.getTitle(), b
 			.countWords()));
     }
 

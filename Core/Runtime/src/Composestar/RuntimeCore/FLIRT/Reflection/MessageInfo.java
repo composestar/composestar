@@ -1,7 +1,6 @@
 package Composestar.RuntimeCore.FLIRT.Reflection;
 
-import java.util.HashMap;
-import java.lang.Thread;
+import java.util.WeakHashMap;
 
 import Composestar.RuntimeCore.FLIRT.Message.Message;
 
@@ -46,7 +45,9 @@ import Composestar.RuntimeCore.FLIRT.Message.Message;
 
 public class MessageInfo
 {
-	private static HashMap messagesByThread = new HashMap();
+	// Message for real application threads will stay around until the next
+	// message is processed. This produces a minor memory leak.
+	private static WeakHashMap messagesByThread = new WeakHashMap();
 
 	/**
 	 * Returns the actual MessageInfo instance for the current thread.

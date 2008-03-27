@@ -1,6 +1,6 @@
 package bookshelf;
 
-import java.util.List;
+import java.lang.ref.WeakReference;
 
 import observer.ObserveBookSize;
 import bookshelf.books.Book;
@@ -41,7 +41,7 @@ public class Main {
 	System.out.print(String.format("Searching the largest book ", cnt));
 	System.out.flush();
 
-	for (Book book : (List<Book>) shelf.getBooks()) {
+	for (Book book : shelf.getBooks()) {
 	    System.out.print(".");
 	    System.out.flush();
 	    int cur = book.countWords();
@@ -76,7 +76,7 @@ public class Main {
 	System.out.flush();
 
 	cnt = 0;
-	for (Book book : (List<Book>) shelf.getBooks()) {
+	for (Book book : shelf.getBooks()) {
 	    System.out.print(".");
 	    System.out.flush();
 	    if (book == largest) {
@@ -93,16 +93,10 @@ public class Main {
 
     public void doModification() {
 	Book b = shelf.getBook(0);
-	// b.attach(new ObserveBookSize());
+	b.attach(new ObserveBookSize());
 	Chapter newChap = ArmyOfMonkeys.writeChapter();
-	System.out.println(String.format("Size of the book: %d words", b
-		.countWords()));
 	b.addChapter(newChap);
-	System.out.println(String.format("After adding a chapter: %d words", b
-		.countWords()));
 	b.removeChapter(newChap);
-	System.out.println(String.format("Removing the chapter: %d words", b
-		.countWords()));
     }
 
     public static void main(String[] args) {
@@ -110,6 +104,7 @@ public class Main {
 	Main m = new Main();
 	m.createBooks(10);
 	m.shelfMetrics();
+	m.doModification();
 	System.out.println(String.format("Time taken %dms", System
 		.currentTimeMillis()
 		- time));

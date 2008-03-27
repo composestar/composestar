@@ -8,7 +8,6 @@ import Composestar.RuntimeCore.FLIRT.Reflection.JoinPointInfo;
 import Composestar.RuntimeCore.FLIRT.Reflection.JoinPointInfoProxy;
 import Composestar.RuntimeCore.FLIRT.Reflection.MessageInfo;
 import Composestar.RuntimeCore.FLIRT.Reflection.MessageInfoProxy;
-import java.lang.Thread;
 
 /**
  * Models the action that comes from the acceptance of a message by a Meta
@@ -90,7 +89,7 @@ public class MetaAction extends ComposeStarAction
 		// Invoker.getInstance().invoke(actObject, actMethod, args);
 
 		// start execution in a new thread
-		Thread t = new Thread(this.message);
+		Thread t = new Thread(this.message, "MetaAction");
 		t.start();
 
 		// Store jp and m in ACT thread
