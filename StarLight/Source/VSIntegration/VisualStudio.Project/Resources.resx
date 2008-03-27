@@ -178,7 +178,7 @@
     <value>Enable or disable the semantic reasoning module.</value>
   </data>
   <data name="ProjectFileExtensionFilter" xml:space="preserve">
-    <value>ComposeStar Project File (*.cpsproj){0}*.cpsproj{1}</value>
+    <value>Compose*/StarLight Project File (*.cpsproj){0}*.cpsproj{1}</value>
   </data>
   <data name="AssemblyName" xml:space="preserve">
     <value>Assembly Name</value>
@@ -199,10 +199,10 @@
     <value>Specifies the default namespace for added items, such as classes, that are added via the Add New Item Dialog Box.</value>
   </data>
   <data name="100" xml:space="preserve">
-    <value>ComposeStar StarLight</value>
+    <value>Compose*/StarLight</value>
   </data>
   <data name="102" xml:space="preserve">
-    <value>ComposeStar StarLight VS IDE integration</value>
+    <value>Compose*/StarLight VS2005 IDE integration</value>
   </data>
   <data name="103" xml:space="preserve">
     <value>University of Twente</value>
@@ -226,13 +226,13 @@
       Version=2.0.0.0, Culture=neutral,         PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ProductDetails" xml:space="preserve">
-    <value>Visual Studio Integration of Composestar StarLight Project System</value>
+    <value>Visual Studio Integration of Compose*/StarLight</value>
   </data>
   <data name="ProductID" xml:space="preserve">
     <value>1.0</value>
   </data>
   <data name="ProductName" xml:space="preserve">
-    <value>ComposeStar StarLight</value>
+    <value>Compose*/StarLight</value>
   </data>
   <data name="CompanyName" xml:space="preserve">
     <value>University of Twente</value>
