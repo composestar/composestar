@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include "Composestar.h"
+#include "ComposeStar.h"
 
 static int *cstar_inner_register;
 static int cstar_inner_register_size = 0;

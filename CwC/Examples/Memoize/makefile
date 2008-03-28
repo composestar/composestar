@@ -1,3 +1,9 @@
+# Program to produce
+ifeq "$OS" "Windows_NT"
+executable = fibonacci.exe
+else
+executable = fibonacci
+endif
 
 # List of source files
 sources = fibonacci.c 
@@ -21,13 +27,20 @@ wovenSources := $(patsubst %.c,$(WOVEN)/%.c,$(sources))
 ppDirs := $(patsubst  %/,%,$(sort $(dir $(ppSources))))
 
 # Misc env settings
+JAVA = java
 CC = gcc -Wall
 CFLAGS = 
+COMPOSESTAR = $(JAVA) -jar ../../Testing/bin/lib/ComposestarCwC.jar 
+
+ifeq "$OS" "Windows_NT"
 RM = del /F /Q
 RMDIR = cmd /c rmdir /S /Q
-MKDIR = mkdir 
-
-COMPOSESTAR = java -jar ../../Testing/bin/lib/ComposestarCwC.jar 
+MKDIR = mkdir
+else
+RM = rm -f
+RMDIR = rm -R -f
+MKDIR = mkdir -p 
+endif
 
 # if DOWEAVE != yes then weaving will not be performed
 ifndef DOWEAVE
@@ -35,7 +48,7 @@ DOWEAVE = yes
 endif
 
 .PHONY : all
-all : fibonacci.exe
+all : $(executable)
 
 # Make the intermediate directories
 .PHONY : init
@@ -43,11 +56,16 @@ init : $(ppDirs) $(WOVEN)
 
 # Creates the directories when the preprocessed files will be stored
 $(ppDirs) $(WOVEN) :
+ifeq "$OS" "Windows_NT"
 	-$(MKDIR) $(subst /,\,$@)
+else
+	-$(MKDIR) $@
+endif
 
 # Clean 
 .PHONY : clean
 clean :
+	-$(RM) $(executable)
 	-$(RM) *.o
 	-$(RMDIR) $(INTERMED)
 
@@ -70,7 +88,7 @@ objects += caching.o
 weave : init $(ppSources)
 	$(COMPOSESTAR) --intermediate $(INTERMED) --custom-filter CachingFilters.jar#CachingFilters.Caching $(ppSources) $(concerns)	
 
-fibonacci.exe : weave $(objects)
+$(executable) : weave $(objects)
 	$(CC) -o $@ $(LDFLAGS) $(objects)
 
 else
@@ -80,7 +98,7 @@ else
 $(objects) : %.o : %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-fibonacci.exe : $(objects)
+$(executable) : $(objects)
 	$(CC) -o $@ $(LDFLAGS) $(objects)
 
 endif

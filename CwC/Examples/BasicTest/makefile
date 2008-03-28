@@ -1,3 +1,9 @@
+# Program to produce
+ifeq "$OS" "Windows_NT"
+executable = basictest.exe
+else
+executable = basictest
+endif
 
 # List of source files
 sources = main.c calc.c 
@@ -21,13 +27,22 @@ wovenSources := $(patsubst %.c,$(WOVEN)/%.c,$(sources))
 ppDirs := $(patsubst  %/,%,$(sort $(dir $(ppSources))))
 
 # Misc env settings
+JAVA = java
 CC = gcc -Wall
 CFLAGS = 
+COMPOSESTAR = $(JAVA) -jar ../../Testing/bin/lib/ComposestarCwC.jar 
+
+ifeq "$OS" "Windows_NT"
+CP = copy
 RM = del /F /Q
 RMDIR = cmd /c rmdir /S /Q
-MKDIR = mkdir 
-
-COMPOSESTAR = java -jar ../../Testing/bin/lib/ComposestarCwC.jar 
+MKDIR = mkdir
+else
+CP = cp
+RM = rm -f
+RMDIR = rm -R -f
+MKDIR = mkdir -p 
+endif
 
 # if DOWEAVE != yes then weaving will not be performed
 ifndef DOWEAVE
@@ -35,7 +50,7 @@ DOWEAVE = yes
 endif
 
 .PHONY : all
-all : basictest.exe
+all : $(executable)
 
 # Make the intermediate directories
 .PHONY : init
@@ -43,11 +58,16 @@ init : $(ppDirs) $(WOVEN)
 
 # Creates the directories when the preprocessed files will be stored
 $(ppDirs) $(WOVEN) :
+ifeq "$OS" "Windows_NT"
 	-$(MKDIR) $(subst /,\,$@)
+else
+	-$(MKDIR) $@
+endif
 
 # Clean 
 .PHONY : clean
 clean :
+	-$(RM) $(executable)
 	-$(RM) *.o
 	-$(RMDIR) $(INTERMED)
 
@@ -56,7 +76,11 @@ $(PREPROCESSED)/%.c : %.c
 	$(CPP) -c $(CFLAGS) -dD -C -o $@ $<
 
 ComposeStar.h :
-	copy ..\..\Compiletime\src\Composestar\CwC\WEAVER\ComposeStar.h .
+ifeq "$OS" "Windows_NT"
+	$(CP) ..\..\Compiletime\src\Composestar\CwC\WEAVER\ComposeStar.h .
+else
+	$(CP) ../../Compiletime/src/Composestar/CwC/WEAVER/ComposeStar.h .
+endif
 
 main.c : ComposeStar.h
 
@@ -72,9 +96,9 @@ objects += $(WOVEN)/ComposeStar.o
 # Performs the actual weaving	
 .PHONY : weave
 weave : init $(ppSources)
-	$(COMPOSESTAR) --intermediate $(INTERMED) --custom-filter #Composestar.CwC.Filters.ExtraFilters $(ppSources) $(concerns)	
+	$(COMPOSESTAR) --intermediate $(INTERMED) --custom-filter "#Composestar.CwC.Filters.ExtraFilters" $(ppSources) $(concerns)	
 
-basictest.exe : weave $(objects)
+$(executable) : weave $(objects)
 	$(CC) -o $@ $(LDFLAGS) $(objects)
 
 else
@@ -84,7 +108,7 @@ else
 $(objects) : %.o : %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-basictest.exe : $(objects)
+$(executable) : $(objects)
 	$(CC) -o $@ $(LDFLAGS) $(objects)
 
 endif

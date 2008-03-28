@@ -1,7 +1,7 @@
-#Fri Sep 28 15:05:53 CEST 2007
+#Fri Feb 29 16:16:24 CET 2008
 FILTH.input=
 SECRET.mode=
-buildDebugLevel=1
+buildDebugLevel=DEBUG
 eclipse.preferences.version=1
 incremental=false
 mainclass=BasicTests.MainClass

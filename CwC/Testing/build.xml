@@ -73,6 +73,7 @@
 		<cs:test>
 			<fileset dir="${build.cwc}/Examples">
 				<include name="**/fibonacci.exe" />
+				<include name="**/fibonacci" />
 			</fileset>
 		</cs:test>
 	</target>
