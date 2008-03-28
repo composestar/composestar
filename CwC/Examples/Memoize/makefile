@@ -1,5 +1,5 @@
 # Program to produce
-ifeq "$OS" "Windows_NT"
+ifeq "$(OS)" "Windows_NT"
 executable = fibonacci.exe
 else
 executable = fibonacci
@@ -32,7 +32,7 @@ CC = gcc -Wall
 CFLAGS = 
 COMPOSESTAR = $(JAVA) -jar ../../Testing/bin/lib/ComposestarCwC.jar 
 
-ifeq "$OS" "Windows_NT"
+ifeq "$(OS)" "Windows_NT"
 RM = del /F /Q
 RMDIR = cmd /c rmdir /S /Q
 MKDIR = mkdir
@@ -56,7 +56,7 @@ init : $(ppDirs) $(WOVEN)
 
 # Creates the directories when the preprocessed files will be stored
 $(ppDirs) $(WOVEN) :
-ifeq "$OS" "Windows_NT"
+ifeq "$(OS)" "Windows_NT"
 	-$(MKDIR) $(subst /,\,$@)
 else
 	-$(MKDIR) $@
