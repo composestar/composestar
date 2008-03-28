@@ -1,6 +1,6 @@
 concern CacheMetrics
 {
-	/*superimposition
+	superimposition
 	{
 		selectors
 			countingClasses = { C | isClassWithName(C, 'textproc.TextMetrics') };
@@ -13,5 +13,5 @@ concern CacheMetrics
 			countingClasses <- ApplyCaching;
 			countingMethods <- CacheResult;
 			invalidateMethods <- InvalidateCache;
-	}*/
+	}
 }

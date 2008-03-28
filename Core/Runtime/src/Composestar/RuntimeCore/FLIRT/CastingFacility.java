@@ -1,17 +1,41 @@
 package Composestar.RuntimeCore.FLIRT;
 
-import java.util.Iterator;
+import java.lang.ref.WeakReference;
+import java.util.WeakHashMap;
 
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
 import Composestar.RuntimeCore.Utils.Debug;
 
 /**
- * This code is .NET specific (then why is it in RuntimeCore?)
+ * 
  */
 public class CastingFacility
 {
+	// for a quick lookup for a cast to outer
+	private static WeakHashMap internalMapping = new WeakHashMap();
+
 	private CastingFacility()
 	{}
+
+	public static void registerInternal(Object internal, WeakReference outer)
+	{
+		internalMapping.put(internal, outer);
+	}
+
+	public static Object getOuterForInternal(Object internal)
+	{
+		WeakReference ref = (WeakReference) internalMapping.get(internal);
+		if (ref != null)
+		{
+			Object res = ref.get();
+			if (res == null)
+			{
+				internalMapping.remove(internal);
+			}
+			return res;
+		}
+		return null;
+	}
 
 	public synchronized static Object handleCast(Object from, String to)
 	{
@@ -90,60 +114,73 @@ public class CastingFacility
 
 		// Search for a possible cast in the other direction, from internal
 		// object to concern object...
-		String idhash = from.getClass() + "@" + System.identityHashCode(from);
-		Iterator enumManagers = GlobalObjectManager.iterator();
-		while (enumManagers.hasNext())
+		Object res = getOuterForInternal(from);
+		if (res != null)
 		{
-			om = (ObjectManager) enumManagers.next();
-			Iterator i = om.getFilterModules().iterator();
-			while (i.hasNext())
+			// if (res.getClass().getName().equals(to))
 			{
-				FilterModuleRuntime fmr = (FilterModuleRuntime) i.next();
-				if (Debug.SHOULD_DEBUG)
-				{
-					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Inspecting FilterModuleRuntime: " + fmr);
-				}
-
-				java.util.Hashtable internals = (java.util.Hashtable) fmr.getInternals();
-				java.util.Enumeration internalObjects = internals.elements();
-
-				while (internalObjects.hasMoreElements())
-				{
-					Object internal = internalObjects.nextElement();
-
-					if (Debug.SHOULD_DEBUG)
-					{
-						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Inspecting internal '" + internal + "' of '" + fmr
-								+ "'.");
-					}
-
-					if (idhash.equals(internal.getClass() + "@" + System.identityHashCode(internal)))
-					{
-						// This should be the match and return the correct
-						// parent concern object
-						Object obj = fmr.getObjectManager().getObject();
-
-						// mh: also check if the types match, otherwise it's not
-						// the designed cast
-						// (e.g. for the multiple inheritance hack)
-						// this change (prefixed with //!) isnt safe because it
-						// doesn't check subclasses
-						// and break a couple of classes
-
-						// !if (obj.getClass().getName().equals(to))
-						// !{
-						if (Debug.SHOULD_DEBUG)
-						{
-							Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-									"Found managed object for given internal to return for casting: "
-											+ obj.getClass().getName() + ", key " + obj.hashCode());
-						}
-						return obj;
-						// !}
-					}
-				}
+				return res;
 			}
 		}
+		// String idhash = from.getClass() + "@" +
+		// System.identityHashCode(from);
+		// Iterator enumManagers = GlobalObjectManager.iterator();
+		// while (enumManagers.hasNext())
+		// {
+		// om = (ObjectManager) enumManagers.next();
+		// Iterator i = om.getFilterModules().iterator();
+		// while (i.hasNext())
+		// {
+		// FilterModuleRuntime fmr = (FilterModuleRuntime) i.next();
+		// if (Debug.SHOULD_DEBUG)
+		// {
+		// Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Inspecting
+		// FilterModuleRuntime: " + fmr);
+		// }
+		//
+		// java.util.Hashtable internals = (java.util.Hashtable)
+		// fmr.getInternals();
+		// java.util.Enumeration internalObjects = internals.elements();
+		//
+		// while (internalObjects.hasMoreElements())
+		// {
+		// Object internal = internalObjects.nextElement();
+		//
+		// if (Debug.SHOULD_DEBUG)
+		// {
+		// Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Inspecting internal '" +
+		// internal + "' of '" + fmr
+		// + "'.");
+		// }
+		//
+		// if (idhash.equals(internal.getClass() + "@" +
+		// System.identityHashCode(internal)))
+		// {
+		// // This should be the match and return the correct
+		// // parent concern object
+		// Object obj = fmr.getObjectManager().getObject();
+		//
+		// // mh: also check if the types match, otherwise it's not
+		// // the designed cast
+		// // (e.g. for the multiple inheritance hack)
+		// // this change (prefixed with //!) isnt safe because it
+		// // doesn't check subclasses
+		// // and break a couple of classes
+		//
+		// // !if (obj.getClass().getName().equals(to))
+		// // !{
+		// if (Debug.SHOULD_DEBUG)
+		// {
+		// Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+		// "Found managed object for given internal to return for casting: "
+		// + obj.getClass().getName() + ", key " + obj.hashCode());
+		// }
+		// return obj;
+		// // !}
+		// }
+		// }
+		// }
+		// }
 
 		if (Debug.SHOULD_DEBUG)
 		{

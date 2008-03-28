@@ -308,6 +308,7 @@ public class ObjectManager implements Runnable
 						+ internaltype + "' inside object '" + internalobject + "'.");
 			}
 			fmruntime.addInternal(internalname, internalobject);
+			CastingFacility.registerInternal(internalobject, objectRef);
 		}
 	}
 

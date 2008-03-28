@@ -11,14 +11,14 @@ public class ArmyOfMonkeys {
     public static int BOOK_TITLE_MAX = 10;
     public static int BOOK_AUTHOR_MIN = 2; // words
     public static int BOOK_AUTHOR_MAX = 3;
-    public static int BOOK_CHAPTER_MIN = 2; // chapters
-    public static int BOOK_CHAPTER_MAX = 10;
+    public static int BOOK_CHAPTER_MIN = 5; // chapters
+    public static int BOOK_CHAPTER_MAX = 20;
     public static int CHAPTER_TITLE_MIN = 3; // words
     public static int CHAPTER_TITLE_MAX = 8;
     public static int CHAPTER_PARAGRAPH_MIN = 5; // paragraphs
-    public static int CHAPTER_PARAGRAPH_MAX = 15;
+    public static int CHAPTER_PARAGRAPH_MAX = 20;
     public static int PARAGRAPH_MIN = 100; // words
-    public static int PARAGRAPH_MAX = 1000;
+    public static int PARAGRAPH_MAX = 500;
     public static int LINE_MIN = 5; // words
     public static int LINE_MAX = 20;
 

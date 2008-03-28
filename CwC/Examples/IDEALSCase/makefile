@@ -25,7 +25,7 @@ CC = gcc -Wall
 CFLAGS = 
 COMPOSESTAR = $(JAVA) -jar ../../Testing/bin/lib/ComposestarCwC.jar 
 
-ifeq "$OS" "Windows_NT"
+ifeq "$(OS)" "Windows_NT"
 CP = copy
 RM = del /F /Q
 RMDIR = cmd /c rmdir /S /Q
@@ -46,7 +46,7 @@ init : $(ppDirs) $(WOVEN)
 
 # Creates the directories when the preprocessed files will be stored
 $(ppDirs) $(WOVEN) :
-ifeq "$OS" "Windows_NT"
+ifeq "$(OS)" "Windows_NT"
 	-$(MKDIR) $(subst /,\,$@)
 else
 	-$(MKDIR) $@
@@ -63,7 +63,7 @@ $(PREPROCESSED)/%.c : %.c
 	$(CPP) -c $(CFLAGS) -dD -C -o $@ $<
 
 ComposeStar.h :
-ifeq "$OS" "Windows_NT"
+ifeq "$(OS)" "Windows_NT"
 	$(CP) ..\..\Compiletime\src\Composestar\CwC\WEAVER\ComposeStar.h .
 else
 	$(CP) ../../Compiletime/src/Composestar/CwC/WEAVER/ComposeStar.h .

@@ -102,7 +102,7 @@ public class Main {
     public static void main(String[] args) {
 	long time = System.currentTimeMillis();
 	Main m = new Main();
-	m.createBooks(10);
+	m.createBooks(15);
 	m.shelfMetrics();
 	m.doModification();
 	System.out.println(String.format("Time taken %dms", System
