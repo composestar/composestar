@@ -142,13 +142,16 @@ public class ReifiedMessage implements Runnable
 		{
 			// wrap the responsebuffer so a response
 			// will be set in a new buffer and not in the
-			// original one
-			this.message.getResponseBuffer().wrap();
+			// original one, we keep a reference to the new
+			// Syncbuffer because it might get wrapped again
+			// by a different meta filter. Otherwise we'd
+			// wait for the incorrect buffer to be filled.
+			SyncBuffer buff = this.message.getResponseBuffer().wrap();
 			// make the filterset continue...
 			this.continueBuffer.produce(null);
 			// the call below waits for a response being set in the wrapped
 			// message
-			this.returnValue = this.message.getResponse();
+			this.returnValue = this.message.getResponse(buff);
 			// unwrap the responsebuffer
 			// another response will be set in the original buffer
 			this.message.getResponseBuffer().unwrap();

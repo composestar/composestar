@@ -8,6 +8,7 @@ import Composestar.RuntimeCore.FLIRT.Actions.DispatchToInnerAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ErrorAction;
 import Composestar.RuntimeCore.FLIRT.Actions.SendAction;
 import Composestar.RuntimeCore.Utils.ResponseBuffer;
+import Composestar.RuntimeCore.Utils.SyncBuffer;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -590,7 +591,20 @@ public class Message
 
 	public Object getResponse()
 	{
-		Object response = this.getResponseBuffer().consume();
+		return getResponse(null);
+	}
+
+	public Object getResponse(SyncBuffer buff)
+	{
+		Object response;
+		if (buff == null)
+		{
+			response = getResponseBuffer().consume();
+		}
+		else
+		{
+			response = getResponseBuffer().consume(buff);
+		}
 
 		if (response instanceof DispatchAction)
 		{

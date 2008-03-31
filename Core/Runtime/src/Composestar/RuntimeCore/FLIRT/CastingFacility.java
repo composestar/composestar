@@ -117,6 +117,7 @@ public class CastingFacility
 		Object res = getOuterForInternal(from);
 		if (res != null)
 		{
+			// TODO has to check if the "to" is of a compatible class
 			// if (res.getClass().getName().equals(to))
 			{
 				return res;

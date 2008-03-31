@@ -32,10 +32,20 @@ public class ResponseBuffer
 		return this.currentBuffer.consume();
 	}
 
-	public void wrap()
+	public Object consume(SyncBuffer buff)
+	{
+		if (buff == null)
+		{
+			buff = currentBuffer;
+		}
+		return buff.consume();
+	}
+
+	public SyncBuffer wrap()
 	{
 		this.buffers.push(currentBuffer);
 		currentBuffer = new SyncBuffer();
+		return currentBuffer;
 	}
 
 	public void unwrap()
