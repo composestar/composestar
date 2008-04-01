@@ -20,7 +20,7 @@ public class DotNETFilterFactory extends FilterFactory
 {
 	public DotNETFilterFactory() 
 	{
-		instance = this;
+		setInstance(this);
 	}
 
 	/**

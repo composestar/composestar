@@ -26,6 +26,7 @@ import Composestar.Java.LAMA.JavaFieldInfo;
 import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Java.LAMA.JavaParameterInfo;
 import Composestar.Java.LAMA.JavaType;
+import Composestar.Java.LAMA.JavaTypeResolver;
 import Composestar.Java.TYM.TypeHarvester.JavaHarvestRunner;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -170,6 +171,8 @@ public class JavaCollectorRunner implements CollectorRunner
 			type.setParentConcern(pc);
 			dataStore.addObject(type.getFullName(), pc);
 		}
+
+		register.resolveTypes(new JavaTypeResolver());
 	}
 
 	/**

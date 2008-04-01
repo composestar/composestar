@@ -57,6 +57,8 @@ public class XmlConfiguration extends CpsBaseHandler
 
 	protected static final int STATE_SECRET = 1;
 
+	protected static final int STATE_ANALYSIS = 2;
+
 	protected SECRETResources resources;
 
 	protected ResourceHandler resh;
@@ -189,6 +191,11 @@ public class XmlConfiguration extends CpsBaseHandler
 			reader.setContentHandler(ruleh);
 			ruleh.startElement(uri, localName, name, attributes);
 		}
+		else if (state == STATE_SECRET && "analysis".equals(currentName))
+		{
+			state = STATE_ANALYSIS;
+			// ignore this stuff
+		}
 		else
 		{
 			startUnknownElement(uri, localName, name, attributes);
@@ -205,9 +212,13 @@ public class XmlConfiguration extends CpsBaseHandler
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
 		super.endElement(uri, localName, name);
-		if (state == STATE_SECRET && ("secret".equals(name) || "secret".equals(localName)))
+		if (state == STATE_SECRET && "secret".equals(currentName))
 		{
 			returnHandler(uri, localName, name);
+		}
+		else if (state == STATE_ANALYSIS && "analysis".equals(currentName))
+		{
+			state = STATE_SECRET;
 		}
 		else
 		{

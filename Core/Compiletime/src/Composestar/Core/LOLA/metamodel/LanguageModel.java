@@ -122,7 +122,7 @@ public abstract class LanguageModel
 		}
 
 		/* Create missing Language Unit links for Classes */
-		UnitResult classes = unitDict.getByType("Class");
+		UnitResult classes = unitDict.getByType(EUnitType.CLASS.toString());
 		if (null != classes)
 		{
 			for (Object o : classes.multiValue())
@@ -136,7 +136,7 @@ public abstract class LanguageModel
 				ns.addChildClass(concern);
 				concern.setParentNamespace(ns);
 
-				ProgramElement superType = concern.getUnitRelation("ParentClass").singleValue();
+				ProgramElement superType = concern.getUnitRelation(ERelationType.PARENT_CLASS.toString()).singleValue();
 				if (null != superType)
 				{
 					// The concern has a registered superType

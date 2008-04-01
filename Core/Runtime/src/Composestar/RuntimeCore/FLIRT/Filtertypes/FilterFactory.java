@@ -12,11 +12,16 @@ import Composestar.Core.CpsProgramRepository.Filters.FilterTypeNames;
  */
 public abstract class FilterFactory
 {
-	protected static FilterFactory instance;
+	private static FilterFactory instance;
 
 	public static FilterFactory getInstance()
 	{
 		return instance;
+	}
+
+	protected static void setInstance(FilterFactory ffin)
+	{
+		instance = ffin;
 	}
 
 	protected FilterFactory()

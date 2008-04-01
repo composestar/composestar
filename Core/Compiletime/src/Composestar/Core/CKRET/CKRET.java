@@ -129,7 +129,7 @@ public class CKRET implements CTCommonModule
 		reportClass = mi.getSetting("reportGenerator", "");
 
 		File configFile = null;
-		String cfgfile = mi.getSetting("config", "");
+		String cfgfile = mi.getSetting("baseconfig", "");
 		if (cfgfile != null && cfgfile.trim().length() > 0)
 		{
 			configFile = new File(cfgfile.trim());
@@ -225,6 +225,27 @@ public class CKRET implements CTCommonModule
 			{
 				logger.warn(String.format("Filter action \"%s\" has no valid resource operations.", fact.getName()));
 			}
+		}
+
+		// load additional configuration directives
+		configFile = null;
+		cfgfile = mi.getSetting("config", "");
+		if (cfgfile != null && cfgfile.trim().length() > 0)
+		{
+			configFile = new File(cfgfile.trim());
+			if (!configFile.isAbsolute())
+			{
+				configFile = new File(resources.configuration().getProject().getBase(), cfgfile.trim());
+			}
+			if (!configFile.exists())
+			{
+				configFile = null;
+			}
+		}
+		if (configFile != null)
+		{
+			logger.info(String.format("Loading additional SECRET config from: %s", configFile.toString()));
+			XmlConfiguration.loadBuildConfig(configFile, secretResources);
 		}
 
 		if (mi.getSetting("validate", true))

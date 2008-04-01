@@ -103,7 +103,7 @@ public class InternalCompiler
 	 * 
 	 * @author Michiel Hendriks
 	 */
-	class IntErrOut extends Writer
+	static class IntErrOut extends Writer
 	{
 		protected StringBuffer sb;
 

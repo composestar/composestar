@@ -4,6 +4,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
@@ -74,13 +76,7 @@ public class AnnotationCollector implements CTCommonModule
 				{
 					annot.register(annotType, getMethodLocation(getTypeLocation(c.getName()), method.getName()));
 				}
-
-				// retrieving value
-				String value = "";
-				String annotStr = annotation.toString();
-				// "@Composestar.Semantics(value=args.read)"
-				value = annotStr.substring(annotStr.indexOf("=") + 1, annotStr.indexOf(")"));
-				annot.setValue(value);
+				collectValues(annot, annotation);
 			}
 		}
 	}
@@ -99,6 +95,44 @@ public class AnnotationCollector implements CTCommonModule
 			{
 				logger.info("Registering: " + annotType.getName() + " to " + getTypeLocation(c.getName()).getName());
 				annot.register(annotType, getTypeLocation(c.getName()));
+			}
+			collectValues(annot, annotation);
+		}
+	}
+
+	public void collectValues(JavaAnnotation annot, Annotation annotation)
+	{
+		final Pattern namepat = Pattern.compile("\\s*([a-zA-Z0-9_]+)\\s*=");
+
+		// annotation.toString():
+		// @com.acme.util.Name(first=Alfred, middle=E., last=Neuman)
+		String str = annotation.toString();
+		int idxs = str.indexOf('(');
+		int idxe = str.lastIndexOf(')');
+		if (idxs > -1 && idxe > -1 && idxs < idxe - 1)
+		{
+			str = str.substring(idxs + 1, idxe);
+			Matcher m = namepat.matcher(str);
+			while (m.find())
+			{
+				String name = m.group(1);
+				if (name != null && name.length() > 0)
+				{
+					try
+					{
+						Method method = annotation.annotationType().getDeclaredMethod(name, new Class[0]);
+						Object val = method.invoke(annotation);
+						if (val != null)
+						{
+							annot.setValue(name, val.toString());
+						}
+					}
+					catch (Exception e)
+					{
+						logger.info(String.format("Exception harvesting annotation value for %s.%s", annotation
+								.annotationType().getClass().getName(), name));
+					}
+				}
 			}
 		}
 	}

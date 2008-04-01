@@ -8,16 +8,15 @@ import Composestar.RuntimeCore.Utils.Debug;
 
 public class JavaFilterFactory extends FilterFactory
 {
-
 	public JavaFilterFactory()
 	{
-		instance = this;
+		setInstance(this);
 	}
 
 	@Override
 	protected FilterTypeRuntime getCustomFilterTypeFor(FilterType filterType)
 	{
-		String filtername = ((LegacyCustomFilterType) filterType).getName();
+		String filtername = ((LegacyCustomFilterType) filterType).getClassName();
 		try
 		{
 			Class<?> cls = ClassLoader.getSystemClassLoader().loadClass(filtername);
@@ -42,7 +41,8 @@ public class JavaFilterFactory extends FilterFactory
 			Debug.out(Debug.MODE_ERROR, "FLIRT", e.getMessage());
 			return null;
 		}
-		Debug.out(Debug.MODE_ERROR, "FLIRT", "Filter type " + filtername + " not found");
+		Debug.out(Debug.MODE_ERROR, "FLIRT", "Filter type " + ((LegacyCustomFilterType) filterType).getName()
+				+ " not found");
 		return null;
 	}
 }

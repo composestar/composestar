@@ -95,7 +95,8 @@
 					<xs:documentation>Human readable name of the setting.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="default" type="xs:string" maxOccurs="1" minOccurs="0">
+            <xs:element name="description" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+            <xs:element name="default" type="xs:string" maxOccurs="1" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Default value.</xs:documentation>
 				</xs:annotation>
@@ -105,7 +106,8 @@
 					<xs:documentation>
 						Comma delimited list of allowed values in case the type is an enumerated type.
 					</xs:documentation>
-				</xs:annotation></xs:element>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required">
 			<xs:annotation>

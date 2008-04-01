@@ -80,7 +80,10 @@ public class JarTransformer
 			// cannot delete files that may still be in use)
 			// so instead use the following workaround.
 			FileUtils.copyFile(jarFile, tempJar);
-			tempJar.delete();
+			if (!tempJar.delete())
+			{
+				tempJar.deleteOnExit();
+			}
 		}
 		catch (Exception e)
 		{

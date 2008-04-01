@@ -22,8 +22,18 @@
 				<default>Normal</default>
 				<choices>Normal,Redundant,Progressive</choices>
 			</setting>
-			<setting id="config" type="string">
+			<setting id="baseconfig" type="string">
 				<name>Base configuration</name>
+				<description>
+					The base configuration file which contain all default configuration directives. This is usually
+					loaded from an global file and not a project dependent file.
+				</description>
+			</setting>
+			<setting id="config" type="string">
+				<name>Configuration</name>
+				<description>
+					Additional configuration directives which are loaded besides the base configuration file.
+				</description>
 			</setting>
 			<setting id="validate" type="boolean">
 				<name>Validate resources</name>
@@ -31,6 +41,10 @@
 			</setting>
 			<setting id="reportGenerator" type="string">
 				<name>Report generator</name>
+				<description>
+					The classname of the report generator. If "true" then the default report generator is used. If the
+					value is empty no report will be generated.
+				</description>
 				<default>true</default>
 			</setting>
 		</settings>

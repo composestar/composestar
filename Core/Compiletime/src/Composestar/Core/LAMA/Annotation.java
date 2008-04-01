@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Map.Entry;
 
 //
 // !! Compose* Runtime Warning !!
@@ -14,13 +18,13 @@ import java.io.Serializable;
 
 public class Annotation implements Serializable
 {
-	private static final long serialVersionUID = 2225517155784402517L;
+	private static final long serialVersionUID = -3037031466310155062L;
 
 	private String typeName;
 
 	private Type type;
 
-	private String value;
+	private Properties values;
 
 	public ProgramElement target;
 
@@ -33,17 +37,22 @@ public class Annotation implements Serializable
 
 	public Annotation()
 	{
-		superImposed = false;
+		this(false);
 	}
 
 	public Annotation(boolean inIsSuperImposed)
 	{
 		superImposed = inIsSuperImposed;
+		values = new Properties();
 	}
 
 	public void register(Type annotationType, ProgramElement inTarget)
 	{
 		type = annotationType;
+		if (type != null)
+		{
+			setTypeName(type.getFullName());
+		}
 		target = inTarget;
 		type.addAnnotationInstance(this);
 		inTarget.addAnnotation(this);
@@ -75,14 +84,28 @@ public class Annotation implements Serializable
 		return type;
 	}
 
-	public void setValue(String theValue)
+	public void setValue(String key, String value)
 	{
-		value = theValue;
+		if (key == null || value == null)
+		{
+			return;
+		}
+		values.setProperty(key, value);
 	}
 
-	public String getValue()
+	public String getValue(String key)
 	{
-		return value;
+		return values.getProperty(key);
+	}
+
+	public void setValues(Map data)
+	{
+		Iterator it = data.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Entry entry = (Entry) it.next();
+			setValue(entry.getKey().toString(), entry.getValue().toString());
+		}
 	}
 
 	public boolean isSuperImposed()
@@ -119,11 +142,7 @@ public class Annotation implements Serializable
 			typeName = null;
 		}
 		target = (ProgramElement) in.readObject();
-		value = in.readUTF();
-		if (value.length() == 0)
-		{
-			value = null;
-		}
+		values = (Properties) in.readObject();
 		superImposed = in.readBoolean();
 	}
 
@@ -137,7 +156,7 @@ public class Annotation implements Serializable
 		// out.writeObject(m_type);
 		out.writeUTF(typeName == null ? "" : typeName);
 		out.writeObject(target);
-		out.writeUTF(value == null ? "" : value);
+		out.writeObject(values);
 		out.writeBoolean(superImposed);
 	}
 }

@@ -44,6 +44,7 @@ import composestar.dotNET2.tym.entities.AssemblyConfig;
 import composestar.dotNET2.tym.entities.AssemblyDocument;
 import composestar.dotNET2.tym.entities.AssemblyElement;
 import composestar.dotNET2.tym.entities.AttributeElement;
+import composestar.dotNET2.tym.entities.AttributeValueElement;
 import composestar.dotNET2.tym.entities.CallElement;
 import composestar.dotNET2.tym.entities.ConcernElement;
 import composestar.dotNET2.tym.entities.ConfigurationContainer;
@@ -439,9 +440,14 @@ public class StarLightCollectorRunner implements CTCommonModule
 			attribute.setTypeName(ae.getAttributeType());
 
 			// Set value for this attribute
-			if (ae.getValues().sizeOfValueArray() >= 1)
+			// if (ae.getValues().sizeOfValueArray() >= 1)
+			// {
+			// attribute.setStringValue(ae.getValues().getValueArray(0).getValue());
+			// }
+
+			for (AttributeValueElement val : ae.getValues().getValueList())
 			{
-				attribute.setValue(ae.getValues().getValueArray(0).getValue());
+				attribute.setValue(val.getName(), val.getValue());
 			}
 
 			result.add(attribute);

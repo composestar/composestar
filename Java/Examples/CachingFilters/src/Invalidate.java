@@ -3,9 +3,11 @@ import java.util.Dictionary;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
 import Composestar.RuntimeCore.FLIRT.Actions.MetaAction;
+import Composestar.RuntimeCore.FLIRT.Annotations.FilterActionAcceptReturn;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.CustomFilter;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
+@FilterActionAcceptReturn(operations = "target.read;selector.read;arg.read;cache.write")
 public class Invalidate extends CustomFilter {
 
 	@Override

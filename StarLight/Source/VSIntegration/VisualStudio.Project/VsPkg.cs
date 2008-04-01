@@ -374,16 +374,16 @@ namespace Composestar.StarLight.VisualStudio.Project
 			string itemPath = PackageUtilities.MakeRelativeIfRooted(file, this.BaseURI);
 			Debug.Assert(!Path.IsPathRooted(itemPath), "Cannot add item with full path.");
 
-			if (this.IsCodeFile(itemPath))
-			{
-				newItem = this.CreateMsBuildFileItem(itemPath, "Concern");
-			}
-			else if (this.IsVSCodeFile(itemPath))
+			if (this.IsVSCodeFile(itemPath))
 			{
 				newItem = this.CreateMsBuildFileItem(itemPath, ProjectFileConstants.Compile);
 				newItem.SetMetadata(ProjectFileConstants.SubType, ProjectFileAttributeValue.Code);
 
-			} // if
+			}
+            else if (this.IsCodeFile(itemPath))
+            {
+                newItem = this.CreateMsBuildFileItem(itemPath, "Concern");
+            }
 			else if (this.IsEmbeddedResource(itemPath))
 			{
 				newItem = this.CreateMsBuildFileItem(itemPath, ProjectFileConstants.EmbeddedResource);
@@ -498,7 +498,7 @@ namespace Composestar.StarLight.VisualStudio.Project
 			{
 				return false;
 			}
-			return (String.Compare(Path.GetExtension(strFileName), ".cps", StringComparison.OrdinalIgnoreCase) == 0);
+            return (String.Compare(Path.GetExtension(strFileName), ".cps", StringComparison.OrdinalIgnoreCase) == 0) || IsVSCodeFile(strFileName);
 
 		}
 
@@ -732,7 +732,7 @@ namespace Composestar.StarLight.VisualStudio.Project
 			// that guid
 
 			guidEditorType = Guid.Empty; // EditorFactory.guidEditorFactory;
-			return VSConstants.S_OK;
+            return VSConstants.E_NOTIMPL;
 		}
 
 		/// <summary>

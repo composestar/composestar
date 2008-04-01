@@ -128,6 +128,10 @@ public class ModuleSettingHandler extends CpsBaseHandler
 			{
 				// nop - irrelevant
 			}
+			else if (state == STATE_SETTING && "description".equals(name))
+			{
+				// nop - irrelevant
+			}
 			else
 			{
 				startUnknownElement(uri, localName, name, attributes);
@@ -160,6 +164,10 @@ public class ModuleSettingHandler extends CpsBaseHandler
 				ms.setDefaultFromString(charData.toString());
 			}
 			else if (state == STATE_SETTING && "choices".equals(name))
+			{
+				// nop - irrelevant
+			}
+			else if (state == STATE_SETTING && "description".equals(name))
 			{
 				// nop - irrelevant
 			}

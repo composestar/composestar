@@ -90,7 +90,7 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 					anno.register(annoType, getFieldLocation(location));
 				}
 
-				anno.setValue(attr.getValue("value"));
+				// attr.getValue("value");
 			}
 		}
 	}

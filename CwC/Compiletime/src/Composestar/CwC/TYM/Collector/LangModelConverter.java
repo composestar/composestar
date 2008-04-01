@@ -31,10 +31,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import weavec.ast.TNode;
 import weavec.cmodel.declaration.Annotation;
 import weavec.cmodel.declaration.AnnotationInstance;
+import weavec.cmodel.declaration.AnnotationValue;
 import weavec.cmodel.declaration.Declaration;
 import weavec.cmodel.declaration.FunctionDeclaration;
 import weavec.cmodel.declaration.ModuleDeclaration;
@@ -336,7 +338,11 @@ public class LangModelConverter implements CTCommonModule
 		for (AnnotationInstance annot : source.getAnnotations())
 		{
 			CwCAnnotation cwcannot = new CwCAnnotation(annot);
-			cwcannot.setValue(annot.getAttributeValues().toString());
+			// cwcannot.setStringValue(annot.getAttributeValues().toString());
+			for (Entry<String, AnnotationValue> entry : annot.getAttributeValues().entrySet())
+			{
+				cwcannot.setValue(entry.getKey(), entry.getValue().toString());
+			}
 			cwcannot.register(resolveCwCAnnotationType(annot.getDeclaration().getType()), target);
 		}
 	}

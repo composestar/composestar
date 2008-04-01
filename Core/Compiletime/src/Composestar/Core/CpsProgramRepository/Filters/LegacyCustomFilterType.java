@@ -23,6 +23,8 @@ public class LegacyCustomFilterType extends FilterType
 
 	public String name;
 
+	public String className;
+
 	public LegacyCustomFilterType()
 	{
 		super();
@@ -38,5 +40,19 @@ public class LegacyCustomFilterType extends FilterType
 	public String getName()
 	{
 		return name;
+	}
+
+	public String getClassName()
+	{
+		if (className != null && className.length() > 0)
+		{
+			return className;
+		}
+		return name;
+	}
+
+	public void setClassName(String clsName)
+	{
+		className = clsName;
 	}
 }

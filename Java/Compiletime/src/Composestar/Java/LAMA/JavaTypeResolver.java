@@ -57,19 +57,23 @@ public class JavaTypeResolver extends TypeResolver
 
 	protected void resolveJavaType(JavaType unit, UnitRegister register)
 	{
-		JavaType type = (JavaType) register.getType(unit.getSuperClassString());
-		if (type == null)
+		String superClass = unit.getSuperClassString();
+		if (superClass != null)
 		{
-			logger.info(String.format("Unable to find super class \"%s\" for type \"%s\"", unit.getSuperClassString(),
-					unit.getFullName()));
-		}
-		else
-		{
-			unit.setSuperClass(type);
+			JavaType type = (JavaType) register.getType(superClass);
+			if (type == null)
+			{
+				logger.info(String.format("Unable to find super class \"%s\" for type \"%s\"", unit
+						.getSuperClassString(), unit.getFullName()));
+			}
+			else
+			{
+				unit.setSuperClass(type);
+			}
 		}
 		for (String iface : unit.getImplementedInterfaceNames())
 		{
-			type = (JavaType) register.getType(iface);
+			JavaType type = (JavaType) register.getType(iface);
 			if (type == null)
 			{
 				logger
