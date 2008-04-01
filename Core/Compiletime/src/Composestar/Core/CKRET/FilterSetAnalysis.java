@@ -225,17 +225,29 @@ public class FilterSetAnalysis implements Serializable
 		logger.warn(String.format("Resource operation conflict for \"%s.%s\" on the resource \"%s\". ", concern
 				.getQualifiedName(), entranceMessage.getSelector(), resource.getName()));
 		logger.warn(String.format("Violating operation sequence: %s", conflict.getOperations()));
+		RepositoryEntity re = null;
 		for (ExecutionTransition et : trans)
 		{
 			FlowNode fn = et.getStartState().getFlowNode();
 			if (fn.containsName(FlowNode.FILTER_NODE))
 			{
-				RepositoryEntity re = fn.getRepositoryLink();
+				re = fn.getRepositoryLink();
 				if (re.getDescriptionFileName() == null)
 				{
+					re = null;
 					continue;
 				}
-				logger.warn(re.getRepositoryKey(), re);
+			}
+			else if (fn.containsName(FlowNode.FILTER_ACTION_NODE))
+			{
+				if (re != null)
+				{
+					if (!fn.containsName("ContinueAction") && !fn.containsName("SkipAction"))
+					{
+						logger.warn(re.getRepositoryKey(), re);
+					}
+					re = null;
+				}
 			}
 		}
 		logger.warn(String.format("Violation of the conflict rule: %s", rule.toString()));

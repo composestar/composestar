@@ -57,6 +57,7 @@ import Composestar.Core.CKRET.Config.Resource;
 import Composestar.Core.CKRET.Config.OperationSequence.GraphLabel;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
 import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
@@ -296,6 +297,7 @@ public class XMLReport implements SECRETReport
 					opsElm.setTextContent(StringUtils.join(conf.getOperations(), " "));
 					confElm.appendChild(opsElm);
 
+					Element traceElm = null;
 					for (ExecutionTransition et : conf.getTrace())
 					{
 						FlowNode fn = et.getStartState().getFlowNode();
@@ -310,10 +312,24 @@ public class XMLReport implements SECRETReport
 							{
 								continue;
 							}
-							Element traceElm = xmlDoc.createElement("trace");
-							traceElm.setTextContent(re.getFilterAST().getQualifiedName() + " : "
-									+ re.getFilterType().getType());
-							confElm.appendChild(traceElm);
+							String fname = re.getFilterType().getType();
+							if (re.getFilterType() instanceof LegacyCustomFilterType)
+							{
+								fname = ((LegacyCustomFilterType) re.getFilterType()).getName();
+							}
+							traceElm = xmlDoc.createElement("trace");
+							traceElm.setTextContent(re.getFilterAST().getQualifiedName() + " : " + fname);
+						}
+						else if (fn.containsName(FlowNode.FILTER_ACTION_NODE))
+						{
+							if (traceElm != null)
+							{
+								if (!fn.containsName("ContinueAction") && !fn.containsName("SkipAction"))
+								{
+									confElm.appendChild(traceElm);
+								}
+								traceElm = null;
+							}
 						}
 					}
 

@@ -1,5 +1,11 @@
 concern CacheMetrics
 {
+	filtermodule ResourceConflict(??m)
+	{
+		inputfilters
+			alwaysinval : Invalidate = { [*.??m] }
+	}
+
 	superimposition
 	{
 		selectors
@@ -9,9 +15,17 @@ concern CacheMetrics
 			invalidateMethods = { M | isMethodWithNameInList( M, ['bookUpdated', 'chapterUpdated',
 				'paragraphUpdated']), isClassWithName(C, 'textproc.TextMetrics'), 
 				classHasMethod( C, M )};
+		// Uncomment this to cause a resource conflict
+		/*
+		filtermodules
+			countingClasses <- ResourceConflict(countingMethods);
+		*/
 		annotations
 			countingClasses <- ApplyCaching;
 			countingMethods <- CacheResult;
 			invalidateMethods <- InvalidateCache;
+		constraints
+			// make sure the conflict is caused
+			pre(Memoization::caching_advice,ResourceConflict);
 	}
 }

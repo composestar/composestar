@@ -7,7 +7,7 @@ import Composestar.RuntimeCore.FLIRT.Annotations.FilterActionAcceptReturn;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.CustomFilter;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
-@FilterActionAcceptReturn(operations = "target.read;selector.read;arg.read;cache.write")
+@FilterActionAcceptReturn(operations = "target.read;selector.read;arg.read;cache.clear")
 public class Invalidate extends CustomFilter {
 
 	@Override
