@@ -43,4 +43,9 @@ public abstract class Pattern implements Serializable
 	{
 		return patternString;
 	}
+
+	public String getPatternString()
+	{
+		return patternString;
+	}
 }

@@ -228,7 +228,7 @@ public class CKRET implements CTCommonModule
 		}
 
 		// load additional configuration directives
-		configFile = null;
+		configFile = new File(resources.configuration().getProject().getBase(), "SECRETConfig.xml");
 		cfgfile = mi.getSetting("config", "");
 		if (cfgfile != null && cfgfile.trim().length() > 0)
 		{
@@ -237,12 +237,8 @@ public class CKRET implements CTCommonModule
 			{
 				configFile = new File(resources.configuration().getProject().getBase(), cfgfile.trim());
 			}
-			if (!configFile.exists())
-			{
-				configFile = null;
-			}
 		}
-		if (configFile != null)
+		if (configFile != null && configFile.exists())
 		{
 			logger.info(String.format("Loading additional SECRET config from: %s", configFile.toString()));
 			XmlConfiguration.loadBuildConfig(configFile, secretResources);

@@ -142,4 +142,78 @@ public class ConflictRule implements Serializable
 		return String.format("%s on resource %s with pattern \"%s\". Reason: %s", type.toString(), resource.getName(),
 				pattern.toString(), message);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (pattern == null ? 0 : pattern.getPatternString().hashCode());
+		result = prime * result + (resource == null ? 0 : resource.hashCode());
+		result = prime * result + (type == null ? 0 : type.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		final ConflictRule other = (ConflictRule) obj;
+		if (pattern == null)
+		{
+			if (other.pattern != null)
+			{
+				return false;
+			}
+		}
+		else if (!pattern.getPatternString().equals(other.pattern.getPatternString()))
+		{
+			return false;
+		}
+		if (resource == null)
+		{
+			if (other.resource != null)
+			{
+				return false;
+			}
+		}
+		else if (!resource.equals(other.resource))
+		{
+			return false;
+		}
+		if (type == null)
+		{
+			if (other.type != null)
+			{
+				return false;
+			}
+		}
+		else if (!type.equals(other.type))
+		{
+			return false;
+		}
+		return true;
+	}
+
 }
