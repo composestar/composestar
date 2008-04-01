@@ -62,6 +62,11 @@ public class JarHelper
 		return resources;
 	}
 
+	public InputStream getStream(JarEntry je) throws IOException
+	{
+		return jarFile.getInputStream(je);
+	}
+
 	public void modifyClass(Class<?> whichClass, byte[] newByteCode)
 	{
 		modifiedClasses.put(whichClass, newByteCode);

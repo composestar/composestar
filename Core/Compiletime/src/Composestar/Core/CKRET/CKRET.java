@@ -53,6 +53,8 @@ public class CKRET implements CTCommonModule
 {
 	public static final String MODULE_NAME = "SECRET";
 
+	public static final String CONFIG_NAME = "SECRETConfig.xml";
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	protected SECRETMode mode;
@@ -144,7 +146,7 @@ public class CKRET implements CTCommonModule
 		}
 		if (configFile == null)
 		{
-			configFile = resources.getPathResolver().getResource("SECRETConfig.xml");
+			configFile = resources.getPathResolver().getResource(CONFIG_NAME);
 		}
 		if (configFile != null)
 		{
@@ -154,7 +156,7 @@ public class CKRET implements CTCommonModule
 		else
 		{
 			logger.debug("Loading internal SECRET configuration");
-			XmlConfiguration.loadBuildConfig(CKRET.class.getResourceAsStream("SECRETConfig.xml"), secretResources);
+			XmlConfiguration.loadBuildConfig(CKRET.class.getResourceAsStream(CONFIG_NAME), secretResources);
 		}
 
 		if (resources.configuration().getSecretResources() != null)
@@ -228,7 +230,7 @@ public class CKRET implements CTCommonModule
 		}
 
 		// load additional configuration directives
-		configFile = new File(resources.configuration().getProject().getBase(), "SECRETConfig.xml");
+		configFile = new File(resources.configuration().getProject().getBase(), CONFIG_NAME);
 		cfgfile = mi.getSetting("config", "");
 		if (cfgfile != null && cfgfile.trim().length() > 0)
 		{

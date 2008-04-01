@@ -29,5 +29,16 @@ package Composestar.RuntimeCore.FLIRT.Annotations;
  */
 public enum EFlowBehavior
 {
-	Continue, Return, Exit
+	/**
+	 * The flow continues to the next filter(element)
+	 */
+	Continue,
+	/**
+	 * Jumps to the return flow
+	 */
+	Return,
+	/**
+	 * Exit filter processing completely
+	 */
+	Exit
 }

@@ -29,5 +29,16 @@ package Composestar.RuntimeCore.FLIRT.Annotations;
  */
 public enum EMessageChangeBehavior
 {
-	Original, Substituted, Any
+	/**
+	 * Message is untouched
+	 */
+	Original,
+	/**
+	 * Message is substituted using the substituted part of a filter element
+	 */
+	Substituted,
+	/**
+	 * Undefined actions are performed on the message
+	 */
+	Any
 }

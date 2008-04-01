@@ -30,6 +30,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * A custom filter type with this annotation will get a special (i.e.
+ * non-continue) filter action for the Accept-Call action.
+ * 
  * @author Michiel Hendriks
  */
 @Target(ElementType.TYPE)
