@@ -14,7 +14,7 @@
 	<description>Compose*/StarLight Setup. Generates the MSI installer.</description>
 
 	<target name="clean" depends="init" description="Clean compile results">
-		<echo>Cleaning WIX object files</echo>
+		<echo level="info">Cleaning WIX object files</echo>
 		<delete>
 			<fileset dir="." includes="**/*.wixobj" />
 			<fileset dir="Releases" includes="**/*.msi" />
@@ -36,15 +36,21 @@
 		<property name="wixtemp.path" value="${build.starlight}${file.separator}Setup${file.separator}" />
 		
 		<property name="VSTools.path" value="C:\Program Files\Microsoft Visual Studio 8\Common7\Tools" />
-		<property name="VSSDK.path" value="C:\Program Files\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Tools\Bin" />
+				
+		<path id="VSSDK.path.set">
+			<dirset dir="C:\Program Files\Visual Studio 2005 SDK">
+  			<include name="*\VisualStudioIntegration\Tools\Bin" />
+			</dirset>
+		</path>
+		<property name="VSSDK.path" refid="VSSDK.path.set" />
 	</target>
 
 	<target name="build" depends="local_init,clean,compile_sources" description="Compile the installer files">
 		<copy todir="installed">
 			<fileset file="${basedir}/../Source/Compiletime/src/INCREconfig.xml" />
 		</copy>
-		<echo>Building MSI file using WIX</echo>
-		<echo>Running Candle for preprocessing</echo>
+		<echo level="info">Building MSI file using WIX</echo>
+		<echo level="info">Running Candle for preprocessing</echo>
 		<exec executable="${VSTools.path}\uuidgen.exe" outputproperty="starlight.uuid.product" />
 		<exec executable="${VSTools.path}\uuidgen.exe" outputproperty="starlight.uuid.package" />
 		<echo level="info">ProductId = ${starlight.uuid.product}; PackageId = ${starlight.uuid.package}</echo>
@@ -66,7 +72,7 @@
 			<arg value="${wixsource.path}CoreElements.wxs" />
 			<arg value="-nologo" />
 		</exec>
-		<echo>Running Light for MSI generation to ${msi.file}</echo>
+		<echo level="info">Running Light for MSI generation to ${msi.file}</echo>
 		<exec executable="${path.wix}light.exe" failonerror="true">
 			<arg value="-out" />
 			<arg value="${msi.file}" />
@@ -89,26 +95,27 @@
 	</target>
 
 	<target name="compile_sources" depends="local_init">
-		<echo>Compiling .NET sources in release mode</echo>
+		<echo level="info">Compiling .NET sources in release mode</echo>
 		<msbuild solution="${MSBuildTasks.dir}${file.separator}StarLight.MSBuild.Tasks.csproj" target="build" config="release" />
 		<msbuild solution="${VSProject.dir}${file.separator}StarLight.VisualStudio.Project.csproj" target="build" config="release" />
 		<msbuild solution="${VSLang.dir}${file.separator}StarLight.VisualStudio.LanguageServices.csproj" target="build" config="release" />
 		<msbuild solution="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuiltIn.csproj" target="build" config="release" />
 		
-		<exec executable="${VSSDK.path}\regpkg.exe" failonerror="true">
+		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true">
+			<env key="PATH" path="${env.PATH}:${VSSDK.path}"/>
 			<arg value="/codebase" />
 			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
 			<arg value="/wixfile:WixStarLight\StarLight.LanguageService.generated.wxi" />
 			<arg value="..\Source\VSIntegration\VisualStudio.Project\bin\Release\Composestar.StarLight.VisualStudio.LanguageServices.dll" />
 		</exec>
-		<exec executable="${VSSDK.path}\regpkg.exe" failonerror="true">
+		<exec executable="regpkg.exe" failonerror="true" resolveexecutable="true" searchpath="true">
+			<env key="PATH" path="${env.PATH}:${VSSDK.path}"/>
 			<arg value="/codebase" />
 			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
 			<arg value="/wixfile:WixStarLight\StarLightProject.generated.wxi" />
 			<arg value="..\Source\VSIntegration\VisualStudio.Project\bin\Release\Composestar.StarLight.VisualStudio.Project.dll" />
 		</exec>
 	</target>
-
 
 </project>
 
