@@ -45,11 +45,13 @@
 		</copy>
 		<echo>Building MSI file using WIX</echo>
 		<echo>Running Candle for preprocessing</echo>
+		<exec executable="${VSTools.path}\uuidgen.exe" outputproperty="starlight.uuid.product" />
 		<exec executable="${VSTools.path}\uuidgen.exe" outputproperty="starlight.uuid.package" />
-		<echo level="info">PackageId = ${starlight.uuid.package}</echo>
+		<echo level="info">ProductId = ${starlight.uuid.product}; PackageId = ${starlight.uuid.package}</echo>
 		<exec executable="${path.wix}candle.exe" failonerror="true">
 			<arg value="-I${wixsource.path}" />
 			<arg value="-dProductVersion=${version.starlight}" />
+			<arg value="-dProductId=${starlight.uuid.product}" />
 			<arg value="-dPackageId=${starlight.uuid.package}" />
 			<arg value="-dVariablesFile=${wixsource.path}Variables.wxi" />			
 			<arg value="${wixsource.path}WixStarLight.wxs" />

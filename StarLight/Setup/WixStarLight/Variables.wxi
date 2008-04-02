@@ -9,8 +9,10 @@
   <?define ProductVersionText = "$(var.ProductVersion)" ?>
   <?define Manufacturer = "University of Twente" ?>
   
-  <!-- change this on major updates -->
-  <?define ProductId = "C383EA57-3925-4673-BD60-BE777E200019" ?>
+	<?ifndef ProductId?>
+		<!-- change this on major updates -->
+  	<?define ProductId = "f9a76e6c-d61c-4616-9a66-bd5b8b576871" ?>
+  <?endif?>
   <?ifndef PackageId?>
   	<!-- change this for every update, a new value is provided by the ant build script -->
   	<?define PackageId = "f9a76e6c-d61c-4616-9a66-bd5b8b576872" ?>
