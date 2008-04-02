@@ -34,6 +34,9 @@
 		<property name="wixsource.path" value="${basedir}${file.separator}WixStarLight${file.separator}" />
 		<property name="msi.file" value="${build.starlight}${file.separator}Setup${file.separator}Releases${file.separator}StarLight_${version.starlight}.msi" />
 		<property name="wixtemp.path" value="${build.starlight}${file.separator}Setup${file.separator}" />
+		
+		<property name="VSTools.path" value="C:\Program Files\Microsoft Visual Studio 8\Common7\Tools" />
+		<property name="VSSDK.path" value="C:\Program Files\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Tools\Bin" />
 	</target>
 
 	<target name="build" depends="local_init,clean,compile_sources" description="Compile the installer files">
@@ -42,9 +45,13 @@
 		</copy>
 		<echo>Building MSI file using WIX</echo>
 		<echo>Running Candle for preprocessing</echo>
+		<exec executable="${VSTools.path}\uuidgen.exe" outputproperty="starlight.uuid.package" />
+		<echo level="info">PackageId = ${starlight.uuid.package}</echo>
 		<exec executable="${path.wix}candle.exe" failonerror="true">
 			<arg value="-I${wixsource.path}" />
-			<arg value="-dVariablesFile=${wixsource.path}Variables.wxi" />
+			<arg value="-dProductVersion=${version.starlight}" />
+			<arg value="-dPackageId=${starlight.uuid.package}" />
+			<arg value="-dVariablesFile=${wixsource.path}Variables.wxi" />			
 			<arg value="${wixsource.path}WixStarLight.wxs" />
 			<arg value="${wixsource.path}WixProlog.wxs" />
 			<arg value="${wixsource.path}WixDocuments.wxs" />
@@ -85,6 +92,19 @@
 		<msbuild solution="${VSProject.dir}${file.separator}StarLight.VisualStudio.Project.csproj" target="build" config="release" />
 		<msbuild solution="${VSLang.dir}${file.separator}StarLight.VisualStudio.LanguageServices.csproj" target="build" config="release" />
 		<msbuild solution="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuiltIn.csproj" target="build" config="release" />
+		
+		<exec executable="${VSSDK.path}\regpkg.exe" failonerror="true">
+			<arg value="/codebase" />
+			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
+			<arg value="/wixfile:WixStarLight\StarLight.LanguageService.generated.wxi" />
+			<arg value="..\Source\VSIntegration\VisualStudio.Project\bin\Release\Composestar.StarLight.VisualStudio.LanguageServices.dll" />
+		</exec>
+		<exec executable="${VSSDK.path}\regpkg.exe" failonerror="true">
+			<arg value="/codebase" />
+			<arg value="/root:Software\Microsoft\VisualStudio\8.0" />
+			<arg value="/wixfile:WixStarLight\StarLightProject.generated.wxi" />
+			<arg value="..\Source\VSIntegration\VisualStudio.Project\bin\Release\Composestar.StarLight.VisualStudio.Project.dll" />
+		</exec>
 	</target>
 
 

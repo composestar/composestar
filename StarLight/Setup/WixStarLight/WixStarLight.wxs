@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='Windows-1252'?>
 <!-- 
 
-  Setup script for ComposeStar StarLight version 0.2.0
+  Setup script for ComposeStar StarLight
 
 -->
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
   <?include $(var.VariablesFile)?>
-  <Product Id='C383EA57-3925-4673-BD60-BE777E200019' UpgradeCode="$(var.UpgradeCode)" 
+  <Product Id='$(var.ProductId)' UpgradeCode="$(var.UpgradeCode)" 
   Name="$(var.ProductShortName) $(var.ProductVersionText)" Version="$(var.ProductVersion)" Language="1033" Manufacturer="$(var.Manufacturer)">
 
-    <Package Id='83092992-AA10-4df9-990E-D9ADDD6321AB' Keywords='Installer'
+    <Package Id='$(var.PackageId)' Keywords='Installer'
              Compressed="yes" Description="$(var.ProductShortName) $(var.ProductVersionText) ($(var.ProductVersion))" 
              InstallerVersion="200" ShortNames="no" Manufacturer="$(var.Manufacturer)" Platforms="Intel"
       Comments='ComposeStar StarLight is a project of the University of Twente.' Languages='1033' />

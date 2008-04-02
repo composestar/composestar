@@ -66,7 +66,7 @@ namespace Microsoft.VisualStudio.Shell
 		{
             using (Key childKey = context.CreateKey(GeneratorRegKey))
             {
-                childKey.SetValue(string.Empty, string.Empty);
+                //childKey.SetValue(string.Empty, string.Empty);
             }
 
         }

@@ -3,10 +3,20 @@
   
   <!-- General settings -->
   <?define ProductShortName = "StarLight" ?>
-  <?define ProductVersion = "0.8.1" ?>
+  <?ifndef ProductVersion?>
+  	<?define ProductVersion = "0.0.0" ?>
+  <?endif?>
   <?define ProductVersionText = "$(var.ProductVersion)" ?>
   <?define Manufacturer = "University of Twente" ?>
-  <?define UpgradeCode = "D7A4BED9-24C4-42f8-9C20-4CB905F54488" ?>
+  
+  <!-- change this on major updates -->
+  <?define ProductId = "C383EA57-3925-4673-BD60-BE777E200019" ?>
+  <?ifndef PackageId?>
+  	<!-- change this for every update, a new value is provided by the ant build script -->
+  	<?define PackageId = "f9a76e6c-d61c-4616-9a66-bd5b8b576872" ?>
+  <?endif?>
+  
+	<?define UpgradeCode = "D7A4BED9-24C4-42f8-9C20-4CB905F54488" ?>
   <?define LICENSE_TYPE = "commercial" ?>
   
   <!-- GUIDs for the components -->
