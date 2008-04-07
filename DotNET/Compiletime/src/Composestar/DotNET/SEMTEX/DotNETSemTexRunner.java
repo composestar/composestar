@@ -1,6 +1,7 @@
 package Composestar.DotNET.SEMTEX;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -55,7 +56,19 @@ public class DotNETSemTexRunner implements CTCommonModule
 			logger.debug("Command for .NET SemTex: " + StringUtils.join(cmdList));
 
 			CommandLineExecutor cle = new CommandLineExecutor();
-			int result = cle.exec(cmdList);
+			int result;
+			try
+			{
+				result = cle.exec(cmdList);
+			}
+			catch (IOException e)
+			{
+				throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+			}
+			catch (InterruptedException e)
+			{
+				throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+			}
 			if (result != 0)
 			{
 				throw new ModuleException("SemTex Analyzer failed with error: " + cle.outputError(), MODULE_NAME);

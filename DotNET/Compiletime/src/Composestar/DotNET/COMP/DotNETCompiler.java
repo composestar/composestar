@@ -1,6 +1,7 @@
 package Composestar.DotNET.COMP;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -109,7 +110,19 @@ public class DotNETCompiler implements LangCompiler
 				logger.debug(Arrays.toString(cmdline));
 
 				CommandLineExecutor cmdExec = new CommandLineExecutor();
-				int exitCode = cmdExec.exec(cmdline);
+				int exitCode;
+				try
+				{
+					exitCode = cmdExec.exec(cmdline);
+				}
+				catch (IOException e)
+				{
+					throw new CompilerException(e.getMessage());
+				}
+				catch (InterruptedException e)
+				{
+					throw new CompilerException(e.getMessage());
+				}
 				processOutput(exitCode, cmdExec.outputNormal());
 				source.setAssembly(result);
 			}
@@ -143,7 +156,19 @@ public class DotNETCompiler implements LangCompiler
 		logger.debug(Arrays.toString(cmdline));
 
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
-		int exitCode = cmdExec.exec(cmdline);
+		int exitCode;
+		try
+		{
+			exitCode = cmdExec.exec(cmdline);
+		}
+		catch (IOException e)
+		{
+			throw new CompilerException(e.getMessage());
+		}
+		catch (InterruptedException e)
+		{
+			throw new CompilerException(e.getMessage());
+		}
 		processOutput(exitCode, cmdExec.outputNormal());
 	}
 

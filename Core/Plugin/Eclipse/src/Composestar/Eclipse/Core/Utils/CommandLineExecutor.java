@@ -107,6 +107,7 @@ public class CommandLineExecutor
 		}
 		catch (Throwable t)
 		{
+			Debug.instance().Log(t.getMessage(), Debug.MSG_ERROR);
 			t.printStackTrace();
 		}
 		return -1;

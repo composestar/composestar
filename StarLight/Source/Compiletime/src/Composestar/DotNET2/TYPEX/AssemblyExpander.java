@@ -111,7 +111,19 @@ class AssemblyExpander
 		logger.debug("Command line: " + StringUtils.join(cmd));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
-		int result = cle.exec(cmd);
+		int result;
+		try
+		{
+			result = cle.exec(cmd);
+		}
+		catch (IOException e)
+		{
+			throw new ModuleException(e.getMessage(), TYPEX.MODULE_NAME, e);
+		}
+		catch (InterruptedException e)
+		{
+			throw new ModuleException(e.getMessage(), TYPEX.MODULE_NAME, e);
+		}
 
 		if (result != 0)
 		{

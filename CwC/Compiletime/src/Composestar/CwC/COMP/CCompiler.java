@@ -25,6 +25,7 @@
 package Composestar.CwC.COMP;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
@@ -126,7 +127,19 @@ public class CCompiler implements LangCompiler
 			logger.debug(Arrays.toString(cmdline));
 			CommandLineExecutor cmdExec = new CommandLineExecutor();
 			cmdExec.setWorkingDir(p.getBase());
-			int result = cmdExec.exec(cmdline);
+			int result;
+			try
+			{
+				result = cmdExec.exec(cmdline);
+			}
+			catch (IOException e)
+			{
+				throw new CompilerException(e.getMessage());
+			}
+			catch (InterruptedException e)
+			{
+				throw new CompilerException(e.getMessage());
+			}
 			String compilerOutput = cmdExec.outputError();
 
 			if (result != 0)

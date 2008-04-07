@@ -1,6 +1,7 @@
 package Composestar.Java.COMP;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -116,7 +117,19 @@ public class CStarJavaCompiler implements LangCompiler
 					String[] cmdline = action.getCmdLine(p, files, prop);
 					logger.debug(Arrays.toString(cmdline));
 					CommandLineExecutor cmdExec = new CommandLineExecutor();
-					int result = cmdExec.exec(cmdline);
+					int result;
+					try
+					{
+						result = cmdExec.exec(cmdline);
+					}
+					catch (IOException e)
+					{
+						throw new CompilerException(e.getMessage());
+					}
+					catch (InterruptedException e)
+					{
+						throw new CompilerException(e.getMessage());
+					}
 					compilerOutput = cmdExec.outputError();
 
 					if (result != 0)
@@ -178,7 +191,19 @@ public class CStarJavaCompiler implements LangCompiler
 			String[] cmdline = action.getCmdLine(p, files, prop);
 			logger.debug(Arrays.toString(cmdline));
 			CommandLineExecutor cmdExec = new CommandLineExecutor();
-			int result = cmdExec.exec(cmdline);
+			int result;
+			try
+			{
+				result = cmdExec.exec(cmdline);
+			}
+			catch (IOException e)
+			{
+				throw new CompilerException(e.getMessage());
+			}
+			catch (InterruptedException e)
+			{
+				throw new CompilerException(e.getMessage());
+			}
 			compilerOutput = cmdExec.outputError();
 
 			if (result != 0)
@@ -217,7 +242,19 @@ public class CStarJavaCompiler implements LangCompiler
 		String[] cmdline = action.getCmdLine(p, files, prop);
 		logger.debug(Arrays.toString(cmdline));
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
-		int result = cmdExec.exec(cmdline);
+		int result;
+		try
+		{
+			result = cmdExec.exec(cmdline);
+		}
+		catch (IOException e)
+		{
+			throw new CompilerException(e.getMessage());
+		}
+		catch (InterruptedException e)
+		{
+			throw new CompilerException(e.getMessage());
+		}
 		compilerOutput = cmdExec.outputError();
 
 		if (result != 0)

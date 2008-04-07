@@ -11,6 +11,7 @@
 package Composestar.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -101,7 +102,7 @@ public class CommandLineExecutor
 		}
 	}
 
-	public int exec(List<String> cmdList)
+	public int exec(List<String> cmdList) throws IOException, InterruptedException
 	{
 		String[] cmdArray = new String[cmdList.size()];
 		cmdList.toArray(cmdArray);
@@ -109,33 +110,25 @@ public class CommandLineExecutor
 		return exec(cmdArray);
 	}
 
-	public int exec(String[] command)
+	public int exec(String[] command) throws IOException, InterruptedException
 	{
-		try
-		{
-			Runtime rt = Runtime.getRuntime();
-			Process proc = rt.exec(command, null, workingDir);
+		Runtime rt = Runtime.getRuntime();
+		Process proc = rt.exec(command, null, workingDir);
 
-			// connect error and output filters
-			errorGobbler = new StreamGobbler(proc.getErrorStream());
-			outputGobbler = new StreamGobbler(proc.getInputStream());
-			errorGobbler.start();
-			outputGobbler.start();
+		// connect error and output filters
+		errorGobbler = new StreamGobbler(proc.getErrorStream());
+		outputGobbler = new StreamGobbler(proc.getInputStream());
+		errorGobbler.start();
+		outputGobbler.start();
 
-			// wait for program return.
-			int result = proc.waitFor();
+		// wait for program return.
+		int result = proc.waitFor();
 
-			// wait for the output threads
-			outputGobbler.waitForResult();
-			errorGobbler.waitForResult();
+		// wait for the output threads
+		outputGobbler.waitForResult();
+		errorGobbler.waitForResult();
 
-			return result;
-		}
-		catch (Exception e)
-		{
-			// TODO: New throw specific to project
-			return -1;
-		}
+		return result;
 	}
 
 	/**
@@ -166,15 +159,5 @@ public class CommandLineExecutor
 		{
 			return errorGobbler.result();
 		}
-	}
-
-	/**
-	 * For testing purposes
-	 */
-	public static void main(String[] args)
-	{
-		CommandLineExecutor e = new CommandLineExecutor();
-		e.exec(args);
-		System.out.println(e.outputNormal());
 	}
 }

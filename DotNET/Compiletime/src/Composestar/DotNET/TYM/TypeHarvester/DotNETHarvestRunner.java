@@ -1,6 +1,7 @@
 package Composestar.DotNET.TYM.TypeHarvester;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,19 @@ public class DotNETHarvestRunner implements HarvestRunner
 		logger.debug("Command for TYM Harvester: " + StringUtils.join(cmdItems));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
-		int result = cle.exec(cmdItems);
+		int result;
+		try
+		{
+			result = cle.exec(cmdItems);
+		}
+		catch (IOException e)
+		{
+			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+		}
+		catch (InterruptedException e)
+		{
+			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+		}
 
 		Debug.parseLog(cle.outputNormal());
 

@@ -127,6 +127,50 @@ public class Debug implements IComposestarConstants
 		}
 	}
 
+	public void print(final String msg, final int msgKind)
+	{
+		if (!logToStd)
+		{
+			// Print the message in the UI Thread in async mode
+			Display.getDefault().asyncExec(new Runnable()
+			{
+				public void run()
+				{
+					int swtColorId = SWT.COLOR_BLACK;
+
+					switch (msgKind)
+					{
+						case MSG_INFORMATION:
+							swtColorId = SWT.COLOR_BLACK;
+							break;
+						case MSG_ERROR:
+							swtColorId = SWT.COLOR_RED;
+							break;
+						case MSG_WARNING:
+							swtColorId = SWT.COLOR_YELLOW;
+							break;
+						default:
+					}
+					stream = myConsole.newMessageStream();
+					stream.setColor(Display.getCurrent().getSystemColor(swtColorId));
+					stream.print(msg);
+				}
+			});
+		}
+		else
+		{
+			switch (msgKind)
+			{
+				case MSG_ERROR:
+					System.err.print(msg);
+					break;
+				default:
+					System.out.print(msg);
+					break;
+			}
+		}
+	}
+
 	public void setEnabled(boolean b)
 	{
 		enabled = b;

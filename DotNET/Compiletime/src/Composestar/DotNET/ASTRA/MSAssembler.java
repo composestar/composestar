@@ -1,6 +1,7 @@
 package Composestar.DotNET.ASTRA;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +32,21 @@ public class MSAssembler implements Assembler
 		logger.debug("Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
-		if (cle.exec(cmdList) != 0)
+		try
 		{
-			logger.debug("Output from ilasm:\n" + cle.outputNormal());
-			throw new AssemblerException("There was a fatal assembler error");
+			if (cle.exec(cmdList) != 0)
+			{
+				logger.debug("Output from ilasm:\n" + cle.outputNormal());
+				throw new AssemblerException("There was a fatal assembler error");
+			}
+		}
+		catch (IOException e)
+		{
+			throw new AssemblerException(e.getMessage());
+		}
+		catch (InterruptedException e)
+		{
+			throw new AssemblerException(e.getMessage());
 		}
 	}
 
@@ -51,10 +63,21 @@ public class MSAssembler implements Assembler
 		logger.debug("Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
-		if (cle.exec(cmdList) != 0)
+		try
 		{
-			logger.debug("Output from ildasm:\n" + cle.outputNormal());
-			throw new AssemblerException("There was a fatal disassembler error");
+			if (cle.exec(cmdList) != 0)
+			{
+				logger.debug("Output from ildasm:\n" + cle.outputNormal());
+				throw new AssemblerException("There was a fatal disassembler error");
+			}
+		}
+		catch (IOException e)
+		{
+			throw new AssemblerException(e.getMessage());
+		}
+		catch (InterruptedException e)
+		{
+			throw new AssemblerException(e.getMessage());
 		}
 	}
 }

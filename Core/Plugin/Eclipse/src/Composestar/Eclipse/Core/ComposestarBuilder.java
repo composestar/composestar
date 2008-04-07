@@ -89,7 +89,7 @@ public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 			throw new CoreException(new Status(IStatus.ERROR, pluginid, IResourceStatus.BUILD_FAILED,
 					"No configuration generator", new NullPointerException()));
 		}
-		monitor.beginTask("Compiling", 100);
+		monitor.beginTask("Compiling", 3);
 		try
 		{
 			configGenerator.addProject(currentProject);
@@ -108,7 +108,7 @@ public abstract class ComposestarBuilder extends IncrementalProjectBuilder
 		}
 		monitor.worked(1);
 		callMaster(monitor, buildConfigFile);
-		monitor.worked(98);
+		monitor.worked(1);
 		return null;
 	}
 

@@ -176,7 +176,19 @@ public class ILICIT implements WEAVER
 		logger.debug("Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
-		int exitcode = cle.exec(cmdList);
+		int exitcode;
+		try
+		{
+			exitcode = cle.exec(cmdList);
+		}
+		catch (IOException e)
+		{
+			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+		}
+		catch (InterruptedException e)
+		{
+			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+		}
 
 		File logFile = new File(basePath, "weavelog.txt");
 		createLog(logFile, cle.outputNormal());

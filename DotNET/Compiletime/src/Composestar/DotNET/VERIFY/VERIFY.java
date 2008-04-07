@@ -1,5 +1,6 @@
 package Composestar.DotNET.VERIFY;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -49,12 +50,23 @@ public class VERIFY implements CTCommonModule
 
 			logger.debug("Command: " + StringUtils.join(cmdList));
 
-			if (cle.exec(cmdList) != 0)
+			try
 			{
-				String stdout = cle.outputNormal();
-				logger.debug(stdout);
+				if (cle.exec(cmdList) != 0)
+				{
+					String stdout = cle.outputNormal();
+					logger.debug(stdout);
 
-				throw new ModuleException("Error verifying assembly '" + asmPath + "'", MODULE_NAME);
+					throw new ModuleException("Error verifying assembly '" + asmPath + "'", MODULE_NAME);
+				}
+			}
+			catch (IOException e)
+			{
+				throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+			}
+			catch (InterruptedException e)
+			{
+				throw new ModuleException(e.getMessage(), MODULE_NAME, e);
 			}
 		}
 	}
