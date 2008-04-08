@@ -61,8 +61,10 @@ public class CStarJavaCompiler implements LangCompiler
 	public void setCommonResources(CommonResources resc)
 	{
 		resources = resc;
-		// TODO: make configurable
-		tryInternal = Boolean.getBoolean("composestar.java.compiler.tryinternal");
+		if (System.getProperty("composestar.java.compiler.tryinternal") != null)
+		{
+			tryInternal = Boolean.getBoolean("composestar.java.compiler.tryinternal");
+		}
 		String s = resc.configuration().getSetting("internalCompiler");
 		if (s != null && s.length() > 0)
 		{
