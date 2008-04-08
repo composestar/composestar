@@ -1,6 +1,6 @@
 package BasicTests;
 
-import Composestar.RuntimeCore.FLIRT.Exception.*;
+import Composestar.RuntimeCore.FLIRT.Exception.ErrorFilterException;
 
 public class MainClass
 {

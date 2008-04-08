@@ -195,7 +195,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			String text = child.getText();
 			if (!remove.equals(text))
 			{
-				AST clone = factory.create(child);
+				// AST clone = factory.create(child);
+				AST clone = factory.dupTree(child);
 				result.addChild(clone);
 			}
 			child = child.getNextSibling();
@@ -412,6 +413,28 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			{
 				out("return " + getDefaultReturnValue(t) + ";");
 				newline();
+			}
+			else if (ast.getType() == CTOR_DEF)
+			{
+				AST ctorcall = getChild(methodBody, CTOR_CALL);
+				if (ctorcall == null)
+				{
+					ctorcall = getChild(methodBody, SUPER_CTOR_CALL);
+					if (ctorcall != null)
+					{
+						out("super(");
+					}
+				}
+				else
+				{
+					out("this(");
+				}
+				if (ctorcall != null)
+				{
+					visitChildren(getChild(ctorcall, ELIST), ", ");
+					out(");");
+					newline();
+				}
 			}
 			endBlock();
 			newline();
@@ -691,13 +714,32 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			case ANNOTATION: // added 1.5
 				out("@");
 				visit(getChild(ast, IDENT));
+				// will be either one of these two
 				visit(getChild(ast, ANNOTATION_INIT_VALUE));
+				visit(getChild(ast, ANNOTATION_INIT_LIST));
 				break;
 
 			case ANNOTATION_INIT_VALUE: // added 1.5
 				out("(");
 				visit(getChild(ast, EXPR));
-				visit(getChild(ast, STRING_LITERAL));
+				out(")");
+				newline();
+				break;
+
+			case ANNOTATION_INIT_LIST: // added 1.5
+				out("(");
+				AST value = ast.getFirstChild();
+				while (value != null)
+				{
+					visit(value.getFirstChild());
+					out(" = ");
+					visit(getChild(value, EXPR));
+					value = value.getNextSibling();
+					if (value != null)
+					{
+						out(", ");
+					}
+				}
 				out(")");
 				newline();
 				break;
@@ -828,7 +870,12 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				visit(getChild(ast, TYPE));
 				out(" ");
 				visit(getChild(ast, IDENT));
-				visit(assign);
+				if (assign != null)
+				{
+					// create a stub assignment
+					out(" = ");
+					out(getDefaultReturnValue(getChild(ast, TYPE).getFirstChild().getType()));
+				}
 				printSemi(parent);
 				if (parent != null && parent.getType() == OBJBLOCK)
 				{

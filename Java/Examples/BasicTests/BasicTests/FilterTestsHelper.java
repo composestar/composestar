@@ -1,6 +1,6 @@
 package BasicTests;
 
-import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage;
 
 public class FilterTestsHelper extends TestsBase
 {
