@@ -89,8 +89,7 @@ public class ClassWeaver
 		List<File> weavedClasses = new ArrayList<File>();
 		resources.put(JavaWeaver.WOVEN_CLASSES, weavedClasses);
 
-		// write applicationStart
-		writeApplicationStart();
+		String startobject = resources.configuration().getProject().getMainclass();
 
 		for (String typeName : p.getTypeMapping().getTypes())
 		{
@@ -106,6 +105,13 @@ public class ClassWeaver
 				// if (!p.getTypeMapping().getSource(typeName).isEmbedded())
 				// {
 				clazz.instrument(new MethodBodyTransformer(classpool, hd, resources.repository()));
+
+				if (startobject.equals(typeName))
+				{
+					// write applicationStart
+					writeApplicationStart(clazz);
+				}
+
 				clazz.writeFile(outputDir.toString());
 				weavedClasses.add(getOutputFile(outputDir, clazz));
 				// }
@@ -132,13 +138,11 @@ public class ClassWeaver
 	 * 
 	 * @throws ModuleException : e.g. when main method is not found.
 	 */
-	public void writeApplicationStart() throws ModuleException
+	public void writeApplicationStart(CtClass clazz) throws ModuleException
 	{
-		String startobject = resources.configuration().getProject().getMainclass();
 		String rundebuglevel = resources.configuration().getSetting("runDebugLevel");
 		try
 		{
-			CtClass clazz = classpool.get(startobject);
 			CtMethod mainmethod = clazz.getMethod("main", "([Ljava/lang/String;)V");
 			String src = "Composestar.RuntimeJava.FLIRT.JavaMessageHandlingFacility.handleJavaApplicationStart("
 					+ "\"repository.dat\"" + "," + rundebuglevel + ", " + clazz.getName() + ".class);";
