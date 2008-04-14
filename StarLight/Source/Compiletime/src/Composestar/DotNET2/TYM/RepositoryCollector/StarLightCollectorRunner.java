@@ -14,7 +14,9 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.xmlbeans.XmlException;
 
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.Exception.ModuleException;
@@ -288,11 +290,27 @@ public class StarLightCollectorRunner implements CTCommonModule
 			}
 
 			// Add type to repository as primitive concern
-			PrimitiveConcern pc = new PrimitiveConcern();
-			pc.setName(type.getFullName());
+			Concern pc = null;
+			Object o = resources.repository().getObjectByID(type.getFullName());
+			if (o instanceof CpsConcern)
+			{
+				pc = (Concern) o;
+				if (pc.getPlatformRepresentation() != null)
+				{
+					type.setParentConcern(pc);
+					logger.error(String.format("CpsConcern %s is already bound to a platform representation", pc
+							.getQualifiedName()));
+					continue;
+				}
+			}
+			if (pc == null)
+			{
+				pc = new PrimitiveConcern();
+				pc.setName(type.getFullName());
+				resources.repository().addObject(type.getFullName(), pc);
+			}
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
-			resources.repository().addObject(type.getFullName(), pc);
 
 			// logger.debug("Adding primitive concern '" + pc.getName() + "'");
 		}
@@ -329,11 +347,26 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 			// Add this attribute type to the repository as a primitive
 			// concern
-			PrimitiveConcern pc_attribute = new PrimitiveConcern();
-			pc_attribute.setName(attributeType.getFullName());
+			Concern pc_attribute = null;
+			Object o = resources.repository().getObjectByID(attributeType.getFullName());
+			if (o instanceof CpsConcern)
+			{
+				pc_attribute = (Concern) o;
+				if (pc_attribute.getPlatformRepresentation() != null)
+				{
+					attributeType.setParentConcern(pc_attribute);
+					logger.error(String.format("CpsConcern %s is already bound to a platform representation",
+							pc_attribute.getQualifiedName()));
+				}
+			}
+			if (pc_attribute == null)
+			{
+				pc_attribute = new PrimitiveConcern();
+				pc_attribute.setName(attributeType.getFullName());
+				resources.repository().addObject(attributeType.getFullName(), pc_attribute);
+			}
 			pc_attribute.setPlatformRepresentation(attributeType);
 			attributeType.setParentConcern(pc_attribute);
-			resources.repository().addObject(attributeType.getFullName(), pc_attribute);
 
 			// Add this attribute type to the list of added types
 			newAttributeTypes.put(attributeType.getFullName(), attributeType);

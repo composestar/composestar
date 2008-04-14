@@ -49,7 +49,9 @@ import weavec.cmodel.type.CType;
 import weavec.cmodel.type.FunctionType;
 import weavec.grammar.TranslationUnitResult;
 import Composestar.Core.Annotations.ResourceManager;
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -169,11 +171,27 @@ public class LangModelConverter implements CTCommonModule
 		logger.info("Phase 3: Creating primitive types");
 		for (Type type : register.getTypeMap().values())
 		{
-			PrimitiveConcern pc = new PrimitiveConcern();
-			pc.setName(type.getFullName());
+			Concern pc = null;
+			Object o = resources.repository().getObjectByID(type.getFullName());
+			if (o instanceof CpsConcern)
+			{
+				pc = (Concern) o;
+				if (pc.getPlatformRepresentation() != null)
+				{
+					type.setParentConcern(pc);
+					logger.error(String.format("CpsConcern %s is already bound to a platform representation", pc
+							.getQualifiedName()));
+					continue;
+				}
+			}
+			if (pc == null)
+			{
+				pc = new PrimitiveConcern();
+				pc.setName(type.getFullName());
+				resources.repository().addObject(type.getFullName(), pc);
+			}
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);
-			resources.repository().addObject(type.getFullName(), pc);
 		}
 		logger.info("Phase 4: Resolve call to other methods");
 		resolveCTOMs();

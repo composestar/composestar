@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
@@ -108,7 +109,11 @@ public class JavaCollectorRunner implements CollectorRunner
 				String className = "";
 				if (impl == null)
 				{
-					continue;
+					className = concern.getQualifiedName();
+					if (!register.hasType(className))
+					{
+						continue;
+					}
 				}
 				else if (impl instanceof Source)
 				{
@@ -165,6 +170,17 @@ public class JavaCollectorRunner implements CollectorRunner
 		// form of primitive concerns
 		for (Type type : register.getTypeMap().values())
 		{
+			if (dataStore.getObjectByID(type.getFullName()) != null)
+			{
+				Object o = dataStore.getObjectByID(type.getFullName());
+				logger.error(String.format("The repository already contains an entry with the name %s with type: %s",
+						type.getFullName(), o.getClass()));
+				if (o instanceof Concern)
+				{
+					type.setParentConcern((Concern) o);
+				}
+				continue;
+			}
 			PrimitiveConcern pc = new PrimitiveConcern();
 			pc.setName(type.getFullName());
 			pc.setPlatformRepresentation(type);
