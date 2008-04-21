@@ -198,15 +198,15 @@ namespace Composestar.StarLight.Weaving.Strategies
 				MethodDefinition method = CecilUtilities.ResolveMethod(target.FieldType,
 					filterAction.SubstitutionSelector, m_JpcTypes);
 
-                if (result == null)
+                if (method == null)
                 {
                     // try func(Object)
-                    result = CecilUtilities.ResolveMethod(target.FieldType, filterAction.SubstitutionSelector, m_ObjectTypes);
+                    method = CecilUtilities.ResolveMethod(target.FieldType, filterAction.SubstitutionSelector, m_ObjectTypes);
                 }
-                if (result == null)
+                if (method == null)
                 {
                     // try func()
-                    result = CecilUtilities.ResolveMethod(target.FieldType, filterAction.SubstitutionSelector, m_NoneTypes);
+                    method = CecilUtilities.ResolveMethod(target.FieldType, filterAction.SubstitutionSelector, m_NoneTypes);
                 }
 
 				if (method == null)
