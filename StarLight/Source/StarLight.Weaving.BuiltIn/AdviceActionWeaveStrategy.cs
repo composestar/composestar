@@ -153,7 +153,15 @@ namespace Composestar.StarLight.Weaving.Strategies
 			}
 
 			// Load the JoinPointObject as the parameter
-			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            if (methodToCall.Parameters.Count == 1)
+            {
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            }
+            else if (methodToCall.Parameters.Count != 0)
+            {
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                    Properties.Resources.AdviceMethodNotFound, filterAction.SubstitutionSelector, filterAction.SubstitutionTarget));
+            }
 
 			// We can safely emit a callvirt here. The JITter will make the right call.
 			visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodToCall));
