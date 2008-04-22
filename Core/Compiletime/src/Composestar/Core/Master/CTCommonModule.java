@@ -45,8 +45,36 @@ public interface CTCommonModule
 		Advising,
 	}
 
+	/**
+	 * Defines the return value of the run() command. Depending on this value
+	 * the task manager will either continue with the next tasks or completely
+	 * stop the compilation process.
+	 */
+	public enum ModuleReturnValue
+	{
+		/**
+		 * The module completed successfully
+		 */
+		Ok,
+		/**
+		 * The module encountered some non-fatal errors. Other modules that do
+		 * not depend on the consistency of data produced by this module can
+		 * still perform their work.
+		 */
+		Error,
+		/**
+		 * The module encountered a fatal error during its operation and the
+		 * whole process should terminate. This could also be triggered using a
+		 * ModuleException.
+		 */
+		Fatal
+	}
+
 	// TODO: implement
 	// Importance getImportance();
+
+	// TODO: implement
+	// String getModuleID();
 
 	/**
 	 * The run function of each module is called in the same order as the
@@ -57,5 +85,5 @@ public interface CTCommonModule
 	 * @throws Composestar.Core.Exception.ModuleException If a ModuleException
 	 *             is thrown the Master will stop its activity emidiately.
 	 */
-	void run(CommonResources resources) throws ModuleException;
+	/* ModuleReturnValue */void run(CommonResources resources) throws ModuleException;
 }

@@ -54,6 +54,7 @@ TR.event TD.eventtext {
 .number {
   text-align: right;
   padding-right: 0.5em;
+  white-space: nowrap;
 }
         ]]></style>
 			</head>
@@ -90,7 +91,7 @@ TR.event TD.eventtext {
 		<xsl:apply-templates select="event">
 			<xsl:sort data-type="number" select="@start" />
 		</xsl:apply-templates>
-		<xsl:apply-templates select="timer/timer">
+		<xsl:apply-templates select="timer">
 			<xsl:sort data-type="number" select="@creation" />
 		</xsl:apply-templates>
 	</xsl:template>

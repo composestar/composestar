@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://composestar.sourceforge.net/schema/TASMAN" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://composestar.sourceforge.net/schema/TASMAN">
+    <xsd:annotation>
+    	<xsd:documentation>
+    		Configuration file for the task manager module (TASMAN) which is responsible for the execution of the
+    		various modules.
+    	</xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType name="TaskCollection">
+    	<xsd:annotation>
+    		<xsd:documentation>Defines a collection of tasks</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:choice maxOccurs="unbounded" minOccurs="1">
+    		<xsd:group ref="TaskTypes"></xsd:group></xsd:choice>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ParallelTask">
+    	<xsd:annotation>
+    		<xsd:documentation>Tasks in this collection will be executed in parallel</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:complexContent>
+    		<xsd:extension base="TaskCollection">
+    			<xsd:attribute name="max" use="optional">
+    				<xsd:annotation>
+    					<xsd:documentation>
+    						The maximum number of parallel running tasks. Defaults to the number of child tasks.
+    					</xsd:documentation>
+    				</xsd:annotation>
+    				<xsd:simpleType>
+    					<xsd:restriction base="xsd:int">
+    						<xsd:whiteSpace value="collapse"></xsd:whiteSpace>
+    						<xsd:minInclusive value="0"></xsd:minInclusive>
+    					</xsd:restriction>
+    				</xsd:simpleType>
+    			</xsd:attribute>
+    			<xsd:attribute name="perprocessor" use="optional">
+    				<xsd:annotation>
+    					<xsd:documentation>
+    						The maximum number of tasks to be executed per available processor. This attribute will
+    						override the value of the max attribute.
+    					</xsd:documentation>
+    				</xsd:annotation>
+    				<xsd:simpleType>
+    					<xsd:restriction base="xsd:int">
+
+    						<xsd:minInclusive value="0"></xsd:minInclusive>
+
+    						<xsd:whiteSpace value="collapse"></xsd:whiteSpace>
+    					</xsd:restriction>
+    				</xsd:simpleType>
+    			</xsd:attribute>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:group name="TaskTypes">
+    	<xsd:sequence>
+    		<xsd:element name="sequential" type="TaskCollection"></xsd:element>
+    		<xsd:element name="parallel" type="ParallelTask"></xsd:element>
+    		<xsd:element name="module" type="ModuleTask"></xsd:element>
+    	</xsd:sequence>
+    </xsd:group>
+
+
+    <xsd:element name="tasks" type="TaskCollection"></xsd:element>
+
+    <xsd:complexType name="ModuleTask">
+    	<xsd:annotation>
+    		<xsd:documentation>A task that executes a specific module.</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:attribute name="class" type="xsd:string">
+    		<xsd:annotation>
+    			<xsd:documentation>The fully qualified name of the module to execute.</xsd:documentation>
+    		</xsd:annotation></xsd:attribute>
+    </xsd:complexType>
+</xsd:schema>

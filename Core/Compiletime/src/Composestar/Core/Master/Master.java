@@ -539,10 +539,9 @@ public abstract class Master
 	 */
 	public int run()
 	{
+		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, "Main process");
 		try
 		{
-			CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, "Main process");
-
 			preBuild();
 
 			// initialize INCRE
@@ -552,13 +551,14 @@ public abstract class Master
 			// execute enabled modules one by one
 			incre.runModules(resources);
 
+			// Manager manager = new Manager(resources);
+			// manager.runTasks();
+
 			postBuild();
 
 			// display total time elapsed
 			timer.stop();
 			logger.debug("Total time: " + timer.getLastEvent().getDuration() / 1000000 + " ms");
-
-			createTimerReport();
 
 			// display number of warnings
 			if (logMetrics.numWarnings() > 0 || logMetrics.numErrors() > 0 || logMetrics.numFatals() > 0)
@@ -575,6 +575,7 @@ public abstract class Master
 		}
 		catch (ModuleException e)
 		{
+			timer.stop();
 			CPSLogger mLogger = CPSLogger.getCPSLogger(e.getModule());
 			mLogger.error(e, (Exception) e);
 			StringWriter sw = new StringWriter();
@@ -584,11 +585,16 @@ public abstract class Master
 		}
 		catch (Exception e)
 		{
+			timer.stop();
 			logger.error("Internal compiler error: " + e, e);
 			StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			logger.debug(sw.toString());
 			return EFAIL;
+		}
+		finally
+		{
+			createTimerReport();
 		}
 		return 0;
 	}

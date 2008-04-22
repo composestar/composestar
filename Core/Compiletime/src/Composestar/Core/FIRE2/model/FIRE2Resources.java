@@ -103,7 +103,7 @@ public class FIRE2Resources implements ModuleResourceManager
 		return getPreprocessingResult(fmref.getRef());
 	}
 
-	public void addPreprocessingResult(String fmName, FirePreprocessingResult result)
+	public synchronized void addPreprocessingResult(String fmName, FirePreprocessingResult result)
 	{
 		if (fmName == null || fmName.trim().length() == 0)
 		{
@@ -119,7 +119,7 @@ public class FIRE2Resources implements ModuleResourceManager
 		}
 	}
 
-	public void addPreprocessingResult(FilterModule fm, FirePreprocessingResult result)
+	public synchronized void addPreprocessingResult(FilterModule fm, FirePreprocessingResult result)
 	{
 		if (fm == null)
 		{
@@ -128,7 +128,7 @@ public class FIRE2Resources implements ModuleResourceManager
 		addPreprocessingResult(fm.getQualifiedName(), result);
 	}
 
-	public void addPreprocessingResult(FilterModuleReference fmref, FirePreprocessingResult result)
+	public synchronized void addPreprocessingResult(FilterModuleReference fmref, FirePreprocessingResult result)
 	{
 		if (fmref == null)
 		{

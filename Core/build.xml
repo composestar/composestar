@@ -101,4 +101,14 @@
 		<ant target="test" dir="Compiletime" inheritRefs="true" />
 	</target>
 	
+	<target name="documentation">
+		<taskdef name="xnsdoc" classname="com.xnsdoc.Task"/>
+		<mkdir dir="doc" />
+		<xnsdoc out="doc" verbose="true">
+			<fileset dir="Compiletime">
+				<include name="**/*.xsd" />
+			</fileset>
+		</xnsdoc>
+	</target>
+	
 </project>

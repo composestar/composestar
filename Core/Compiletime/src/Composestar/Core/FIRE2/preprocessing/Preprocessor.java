@@ -31,6 +31,9 @@ import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Core.TASMAN.Manager;
+import Composestar.Core.TASMAN.ParallelTask;
+import Composestar.Core.TASMAN.Task;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
@@ -48,10 +51,6 @@ public class Preprocessor implements CTCommonModule
 	private RuleViewGrammar generateFlowGrammar;
 
 	private RuleViewGrammar runtimeGrammar;
-
-	private GrooveASTBuilder astBuilder;
-
-	private ExecutionModelExtractor executionModelExtractor;
 
 	private static final ExploreStrategy LINEAR_STRATEGY = new LinearStrategy();
 
@@ -82,16 +81,16 @@ public class Preprocessor implements CTCommonModule
 
 	private void initialize()
 	{
+		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, "Loading grammars");
 		loadGrammars();
-
-		astBuilder = new GrooveASTBuilder();
-		executionModelExtractor = new ExecutionModelExtractor();
+		timer.stop();
 	}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
 		fire2Resources = resources.getResourceManager(FIRE2Resources.class, true);
 		preprocess(resources.repository());
+		// preprocessMP(resources);
 	}
 
 	public void preprocess(DataStore ds)
@@ -113,13 +112,35 @@ public class Preprocessor implements CTCommonModule
 		logger.debug("FIRE Preprocessing done");
 	}
 
+	// FIXME: fire is not complete MP safe yet
+	public void preprocessMP(CommonResources resources)
+	{
+		Iterator<FilterModule> moduleIter = resources.repository().getAllInstancesOf(FilterModule.class);
+
+		logger.debug("Starting FIRE Preprocessing");
+
+		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+
+		ParallelTask ptask = new ParallelTask();
+		ptask.setPerProcessor(1);
+		while (moduleIter.hasNext())
+		{
+			FilterModule module = moduleIter.next();
+			ptask.addTask(new FirePreprocessTask(module));
+		}
+		ptask.execute(null, resources);
+
+		logger.debug("FIRE Preprocessing done");
+	}
+
 	private void preprocessModule(FilterModule module)
 	{
 		logger.debug("Preprocessing Filter Module: " + module.getQualifiedName());
 
 		// build AST:
-		Graph grooveAstIF = buildAst(module, true);
-		Graph grooveAstOF = buildAst(module, false);
+		GrooveASTBuilder astBuilder = new GrooveASTBuilder();
+		Graph grooveAstIF = buildAst(astBuilder, module, true);
+		Graph grooveAstOF = buildAst(astBuilder, module, false);
 
 		// generate flow model:
 		Graph grooveFlowModelIF = generateFlow(grooveAstIF);
@@ -134,8 +155,9 @@ public class Preprocessor implements CTCommonModule
 		GTS stateSpaceOF = execute(grooveFlowModelOF);
 
 		// extract statespace:
-		ExecutionModel executionModelIF = extractExecutionModel(stateSpaceIF, flowModelIF);
-		ExecutionModel executionModelOF = extractExecutionModel(stateSpaceOF, flowModelOF);
+		ExecutionModelExtractor executionModelExtractor = new ExecutionModelExtractor();
+		ExecutionModel executionModelIF = executionModelExtractor.extract(stateSpaceIF, flowModelIF);
+		ExecutionModel executionModelOF = executionModelExtractor.extract(stateSpaceOF, flowModelOF);
 
 		// store result:
 		FirePreprocessingResult result = new FirePreprocessingResult(flowModelIF, executionModelIF, flowModelOF,
@@ -184,7 +206,7 @@ public class Preprocessor implements CTCommonModule
 		}
 	}
 
-	private Graph buildAst(FilterModule module, boolean forInputFilters)
+	private Graph buildAst(GrooveASTBuilder astBuilder, FilterModule module, boolean forInputFilters)
 	{
 		Graph grooveAst = astBuilder.buildAST(module, forInputFilters);
 
@@ -301,9 +323,22 @@ public class Preprocessor implements CTCommonModule
 		return gts;
 	}
 
-	private ExecutionModel extractExecutionModel(GTS stateSpace, FlowModel flowModel)
+	class FirePreprocessTask extends Task
 	{
-		return executionModelExtractor.extract(stateSpace, flowModel);
-	}
+		protected FilterModule module;
 
+		public FirePreprocessTask(FilterModule forModule)
+		{
+			module = forModule;
+		}
+
+		@Override
+		public void execute(Manager manager, CommonResources resources) throws ModuleException
+		{
+			CPSTimer timer = CPSTimer.getTimer(MODULE_NAME + getProcessId());
+			timer.start(module.getOriginalQualifiedName());
+			preprocessModule(module);
+			timer.stop();
+		}
+	}
 }
