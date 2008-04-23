@@ -20,13 +20,13 @@ public class ModuleException extends Exception implements LocationProvider
 {
 	private static final long serialVersionUID = 28750835698180954L;
 
-	private String module;
+	protected String module;
 
-	private String errorLocationFilename;
+	protected String errorLocationFilename;
 
-	private int errorLocationLineNumber;
+	protected int errorLocationLineNumber;
 
-	private int errorLocationLinePosition;
+	protected int errorLocationLinePosition;
 
 	public ModuleException(String message, String inmodule)
 	{
@@ -100,12 +100,12 @@ public class ModuleException extends Exception implements LocationProvider
 
 	public String getErrorLocationFilename()
 	{
-		return errorLocationFilename;
+		return getFilename();
 	}
 
 	public int getErrorLocationLineNumber()
 	{
-		return errorLocationLineNumber;
+		return getLineNumber();
 	}
 
 	public String getFilename()

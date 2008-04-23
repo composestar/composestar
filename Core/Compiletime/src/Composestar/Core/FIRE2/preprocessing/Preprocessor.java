@@ -113,7 +113,7 @@ public class Preprocessor implements CTCommonModule
 	}
 
 	// FIXME: fire is not complete MP safe yet
-	public void preprocessMP(CommonResources resources)
+	public void preprocessMP(CommonResources resources) throws ModuleException
 	{
 		Iterator<FilterModule> moduleIter = resources.repository().getAllInstancesOf(FilterModule.class);
 

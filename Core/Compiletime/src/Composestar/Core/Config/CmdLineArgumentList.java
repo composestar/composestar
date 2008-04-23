@@ -93,7 +93,7 @@ public class CmdLineArgumentList extends CmdLineArgument
 		}
 	}
 
-	public String getDlimiter()
+	public String getDelimiter()
 	{
 		return delimiter;
 	}
@@ -121,7 +121,8 @@ public class CmdLineArgumentList extends CmdLineArgument
 			{
 				quote = "\"";
 			}
-			tolist.add(quote + StringUtils.join(argList, delimiter) + quote);
+			String delim = resolve(delimiter, prop);
+			tolist.add(quote + StringUtils.join(argList, delim) + quote);
 		}
 	}
 

@@ -120,7 +120,7 @@ public class Manager
 		switch (result)
 		{
 			case Fatal:
-				throw new ModuleException("Module execution was fatal"
+				throw new ModuleException("Module execution was fatal", MODULE_NAME
 				// , module.getModuleID()
 				);
 			case Error:

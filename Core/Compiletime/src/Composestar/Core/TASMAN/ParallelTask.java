@@ -24,6 +24,11 @@
 
 package Composestar.Core.TASMAN;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
@@ -82,7 +87,7 @@ public class ParallelTask extends TaskCollection
 	 * @see Composestar.Core.TASMAN.Task#execute()
 	 */
 	@Override
-	public void execute(Manager manager, CommonResources resources)
+	public void execute(Manager manager, CommonResources resources) throws ModuleException
 	{
 		updateMaxThreads();
 		logger.info(String.format("Executing %d tasks in %d parallel threads", tasks.size(), max));
@@ -157,7 +162,23 @@ public class ParallelTask extends TaskCollection
 
 		logger.debug(String.format("%d tasks executed", numTasks));
 
-		// TODO: process exceptions
+		List<ModuleException> exceptions = new ArrayList<ModuleException>();
+		for (RunnableTask rt : runtasks)
+		{
+			if (rt.getException() != null)
+			{
+				exceptions.add(rt.getException());
+			}
+		}
+
+		if (exceptions.size() == 1)
+		{
+			throw exceptions.get(0);
+		}
+		else if (exceptions.size() > 1)
+		{
+			throw new CompositeModuleException(exceptions);
+		}
 	}
 
 	protected void updateMaxThreads()
@@ -248,6 +269,65 @@ public class ParallelTask extends TaskCollection
 		public ModuleException getException()
 		{
 			return exception;
+		}
+	}
+
+	public static class CompositeModuleException extends ModuleException
+	{
+		private static final long serialVersionUID = 6994368745737178001L;
+
+		protected ModuleException[] exceptions;
+
+		public CompositeModuleException(List<ModuleException> exes)
+		{
+			this(exes.toArray(new ModuleException[exes.size()]));
+		}
+
+		public CompositeModuleException(ModuleException[] exes)
+		{
+			super("Multiple module exceptions", Manager.MODULE_NAME);
+			exceptions = exes;
+			processModuleExceptions();
+		}
+
+		public ModuleException[] getExceptions()
+		{
+			return exceptions;
+		}
+
+		protected void processModuleExceptions()
+		{
+			Set<String> moduleNames = new HashSet<String>();
+			Set<String> fileNames = new HashSet<String>();
+			for (ModuleException mex : exceptions)
+			{
+				moduleNames.add(mex.getModule());
+				fileNames.add(mex.getFilename());
+			}
+			if (moduleNames.size() == 1)
+			{
+				module = moduleNames.iterator().next();
+			}
+			if (fileNames.size() == 1)
+			{
+				errorLocationFilename = fileNames.iterator().next();
+			}
+
+		}
+
+		@Override
+		public String getMessage()
+		{
+			StringBuffer sb = new StringBuffer();
+			for (ModuleException mex : exceptions)
+			{
+				if (sb.length() > 0)
+				{
+					sb.append("\n");
+				}
+				sb.append(mex.getMessage());
+			}
+			return sb.toString();
 		}
 	}
 }

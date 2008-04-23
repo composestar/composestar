@@ -75,7 +75,13 @@ public class SourcesCmdLineArgumentList extends CmdLineArgumentList
 		prop.remove("SOURCE");
 		if (isMerge)
 		{
-			tolist.add(StringUtils.join(argList, delimiter));
+			String quote = "";
+			if (isUseQuote())
+			{
+				quote = "\"";
+			}
+			String delim = resolve(delimiter, prop);
+			tolist.add(quote + StringUtils.join(argList, delim) + quote);
 			merge = isMerge;
 		}
 	}

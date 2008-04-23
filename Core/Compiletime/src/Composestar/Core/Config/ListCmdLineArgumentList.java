@@ -119,7 +119,8 @@ public class ListCmdLineArgumentList extends CmdLineArgumentList
 			{
 				quote = "\"";
 			}
-			tolist.add(quote + StringUtils.join(argList, delimiter) + quote);
+			String delim = resolve(delimiter, prop);
+			tolist.add(quote + StringUtils.join(argList, delim) + quote);
 			merge = isMerge;
 		}
 	}
