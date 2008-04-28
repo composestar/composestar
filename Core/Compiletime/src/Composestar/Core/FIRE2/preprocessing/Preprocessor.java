@@ -81,9 +81,7 @@ public class Preprocessor implements CTCommonModule
 
 	private void initialize()
 	{
-		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, "Loading grammars");
 		loadGrammars();
-		timer.stop();
 	}
 
 	public void run(CommonResources resources) throws ModuleException
@@ -173,19 +171,23 @@ public class Preprocessor implements CTCommonModule
 
 		try
 		{
+			CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 			URL genUrl = Preprocessor.class.getResource(GENERATE_FLOW_GRAMMAR_PATH);
 			String fileName = genUrl.getFile().replaceAll("%20", " ");
 			logger.debug("Loading grammar: " + fileName);
 			if (fileName.indexOf('!') >= 0)
 			{
+				timer.start("Loading grammars from jar");
 				// load from jar:
 				JarGpsGrammar jarGpsLoader = new JarGpsGrammar();
 
 				generateFlowGrammar = (RuleViewGrammar) jarGpsLoader.unmarshal(GENERATE_FLOW_GRAMMAR_PATH);
 				runtimeGrammar = (RuleViewGrammar) jarGpsLoader.unmarshal(RUNTIME_GRAMMAR_PATH);
+				timer.stop();
 			}
 			else
 			{
+				timer.start("Loading grammars");
 				// load from directory:
 				GpsGrammar gpsLoader = new GpsGrammar(new LayedOutXml());
 
@@ -197,6 +199,8 @@ public class Preprocessor implements CTCommonModule
 				URL runUrl = this.getClass().getResource(RUNTIME_GRAMMAR_PATH);
 				runtimeGrammar = (RuleViewGrammar) gpsLoader
 						.unmarshal(new File(runUrl.getFile().replaceAll("%20", " ")));
+
+				timer.stop();
 			}
 		}
 		catch (Exception exc)
