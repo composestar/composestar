@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="../../../../../../ComposestarCORE/src/Composestar/Core/Config/Xml/ModuleInfo.xsd">
+<modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
 	<moduleinfo class="Composestar.CwC.TYM.Harvester.TypeHarvester" id="HARVESTER">
 		<name>Type Harvester</name>
 		<description>Feeds the preprocessed source files to the WeaveC CModel parser.</description>

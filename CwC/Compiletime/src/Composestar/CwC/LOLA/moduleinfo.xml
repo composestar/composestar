@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="../../../../../ComposestarCORE/src/Composestar/Core/Config/Xml/ModuleInfo.xsd">
+<modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
 	<moduleinfo extends="Composestar.Core.LOLA.LOLA" class="Composestar.CwC.LOLA.CwCLOLA" />
 </modules>

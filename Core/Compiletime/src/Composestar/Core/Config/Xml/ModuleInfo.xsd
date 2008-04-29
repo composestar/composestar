@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+<xs:schema version="1.0" targetNamespace="http://composestar.sourceforge.net/schema/ModuleInfo"
+	elementFormDefault="qualified" xmlns="http://composestar.sourceforge.net/schema/ModuleInfo"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:annotation>
 		<xs:documentation>
 			The XML Schema definition for ModuleInfo data. The ModuleInfo provides a generalized way to store and
@@ -51,7 +53,8 @@
 						extends this will completely replace the previous definition.
 					</xs:documentation>
 				</xs:annotation>
-			</xs:element>
+			</xs:element>
+
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="optional">
 			<xs:annotation>
@@ -95,8 +98,8 @@
 					<xs:documentation>Human readable name of the setting.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-            <xs:element name="description" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
-            <xs:element name="default" type="xs:string" maxOccurs="1" minOccurs="0">
+			<xs:element name="description" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="default" type="xs:string" maxOccurs="1" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Default value.</xs:documentation>
 				</xs:annotation>
@@ -107,14 +110,17 @@
 						Comma delimited list of allowed values in case the type is an enumerated type.
 					</xs:documentation>
 				</xs:annotation>
-			</xs:element>
+			</xs:element>
+
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required">
 			<xs:annotation>
 				<xs:documentation>The setting identifier.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="type" use="optional" type="xs:NMTOKEN">			<xs:annotation>
+		<xs:attribute name="type" use="optional" type="xs:NMTOKEN">
+
+			<xs:annotation>
 				<xs:documentation>
 					The type of the setting. Defaults to "string". Accepted values are: int, integer, bool, boolean,
 					string, float. Or a fully qualified class name of the type.

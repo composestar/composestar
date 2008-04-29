@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modules>
+<modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
 	<moduleinfo id="SEMTEX" class="Composestar.DotNET.SEMTEX.DotNETSemTexRunner">
 		<description>
 			This module reads the assemblies created by the weaver, creates a semantic meta model and extracts specific

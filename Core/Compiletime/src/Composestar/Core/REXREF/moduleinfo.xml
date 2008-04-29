@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modules>
+<modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
 	<moduleinfo id="REXREF" class="Composestar.Core.REXREF.Main">
 		<name>Resolve External References</name>
 		<description>

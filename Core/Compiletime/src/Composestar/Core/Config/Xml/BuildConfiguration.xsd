@@ -3,7 +3,10 @@
 	elementFormDefault="qualified" xmlns="http://composestar.sourceforge.net/schema/BuildConfiguration"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:secret="http://composestar.sourceforge.net/schema/SecretConfiguration">
 	<xsd:include schemaLocation="ComposestarConfigCommon.xsd"></xsd:include>
-	<xsd:import namespace="http://composestar.sourceforge.net/schema/SecretConfiguration" schemaLocation="../../CKRET/Config/Xml/SecretConfiguration.xsd"></xsd:import>
+	<xsd:import namespace="http://composestar.sourceforge.net/schema/SecretConfiguration" schemaLocation="../../CKRET/Config/Xml/SecretConfiguration.xsd">
+		<xsd:annotation>
+			<xsd:documentation></xsd:documentation>
+		</xsd:annotation></xsd:import>
 	<xsd:annotation>
 		<xsd:documentation>
 			The specification for the new BuildConfiguration for Compose*. The new build configuration only contains

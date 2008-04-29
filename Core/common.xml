@@ -489,8 +489,8 @@
 	</target>
 
 	<target name="validate_moduleinfo" depends="init" description="Validate the moduleinfo.xml files">
-		<schemavalidate noNamespaceFile="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/ModuleInfo.xsd">
-			<schema namespace="http://composestar.sf.net/ModuleInfo.xsd"
+		<schemavalidate>
+			<schema namespace="http://composestar.sourceforge.net/schema/ModuleInfo"
 				file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/ModuleInfo.xsd" />
 			<fileset dir="src">
 				<include name="**/moduleinfo.xml" />

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modules>
+<modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
 	<moduleinfo id="CONE-IS" class="Composestar.DotNET.CONE.DotNETWeaveFileGenerator">
 		<description>Generates the weaving specification file.</description>
 		<incre>

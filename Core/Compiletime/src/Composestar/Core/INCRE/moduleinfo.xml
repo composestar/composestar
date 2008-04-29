@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modules>
+<modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
 	<moduleinfo id="INCRE" class="Composestar.Core.INCRE.INCRE">
 		<name>Incremental Builder</name>
 		<description>
-			Facilitates incremental building of the project. It stores
-			the produced results of the incremental modules in it's
-			history database. Modules need to be designed to be
-			incremental.
+			Facilitates incremental building of the project. It stores the produced results of the incremental modules
+			in it's history database. Modules need to be designed to be incremental.
 		</description>
 		<settings>
 			<setting id="enabled" type="boolean">
@@ -20,11 +18,8 @@
 		</settings>
 	</moduleinfo>
 
-	<moduleinfo id="INCRESerializer"
-		class="Composestar.Core.INCRE.INCRESerializer">
-		<description>
-			Serializes the repository for incremental compilation.
-		</description>
+	<moduleinfo id="INCRESerializer" class="Composestar.Core.INCRE.INCRESerializer">
+		<description>Serializes the repository for incremental compilation.</description>
 		<settings>
 			<setting id="force" type="boolean">
 				<name>Force serialization even if INCRE is not enabled.</name>

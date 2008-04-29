@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="../../Config/Xml/ModuleInfo.xsd">
+<modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
 	<moduleinfo class="Composestar.CwC.INLINE.CodeGen.COGModule" id="INLINE.CodeGen">
 		<name>Code Generator</name>
 		<description>
