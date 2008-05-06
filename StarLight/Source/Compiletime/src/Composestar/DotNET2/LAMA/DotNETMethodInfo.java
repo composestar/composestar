@@ -105,10 +105,10 @@ public class DotNETMethodInfo extends MethodInfo
 			newSignature.append(signature.substring(0, index1));
 		}
 		int index2 = signature.indexOf('(');
-		if (!n.equals(Name))
+		if (!n.equals(name))
 		{
 			String oldName = signature.substring(index1, index2);
-			String newName = oldName.replace(Name, n);
+			String newName = oldName.replace(name, n);
 			newSignature.append(newName);
 		}
 		else

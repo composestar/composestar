@@ -45,10 +45,14 @@ public class Check implements CTCommonModule
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	/**
-	 * List of checker classes
+	 * List of checker classes to execute. To add a new checker simply add the
+	 * class to the static initialization code.
 	 */
 	private static Set<Class<? extends AbstractChecker>> checkerClasses;
 
+	/**
+	 * Instances of the checkers to execute.
+	 */
 	public Set<AbstractChecker> checkers;
 
 	static
@@ -68,12 +72,17 @@ public class Check implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		loadCheckers(resources);
+		loadCheckers();
 		runCheckers(resources);
 		checkers = null;
 	}
 
-	protected void loadCheckers(CommonResources resources)
+	/**
+	 * Instantiates the configured checkers.
+	 * 
+	 * @see #checkerClasses
+	 */
+	protected void loadCheckers()
 	{
 		checkers = new HashSet<AbstractChecker>();
 		for (Class<? extends AbstractChecker> chkclass : checkerClasses)
@@ -95,6 +104,11 @@ public class Check implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Execute all registered repository checkers.
+	 * 
+	 * @param resources
+	 */
 	protected void runCheckers(CommonResources resources)
 	{
 		for (AbstractChecker checker : checkers)

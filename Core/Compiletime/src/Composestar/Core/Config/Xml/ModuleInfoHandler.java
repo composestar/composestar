@@ -44,27 +44,53 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class ModuleInfoHandler extends CpsBaseHandler
 {
-	// public static final String NAMESPACE =
-	// "http://composestar.sourceforge.net/schema/ModuleInfo";
+	public static final String NAMESPACE = "http://composestar.sourceforge.net/schema/ModuleInfo";
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("ModuleInfo");
 
+	/**
+	 * Handling a module definition
+	 */
 	protected static final int STATE_MODULEINFO = 1;
 
+	/**
+	 * Handling the module name
+	 */
 	protected static final int STATE_NAME = 2;
 
+	/**
+	 * Handling the module description definition
+	 */
 	protected static final int STATE_DESC = 3;
 
+	/**
+	 * Processing the module settings
+	 */
 	protected static final int STATE_SETTINGS = 4;
 
+	/**
+	 * Processing the module dependencies
+	 */
 	protected static final int STATE_DEPENDS = 5;
 
+	/**
+	 * Processing an INCRE configuration
+	 */
 	protected static final int STATE_INCRE = 6;
 
+	/**
+	 * The resulting module definition
+	 */
 	protected ModuleInfo currentMi;
 
+	/**
+	 * The module settings XML handler
+	 */
 	protected ModuleSettingHandler moduleSetting;
 
+	/**
+	 * The INCRE configuration XML handler
+	 */
 	protected ModulesHandler increHandler;
 
 	/**
@@ -76,6 +102,9 @@ public class ModuleInfoHandler extends CpsBaseHandler
 		super(inReader, inParent);
 	}
 
+	/**
+	 * @return the defined module information
+	 */
 	public ModuleInfo getModuleInfo()
 	{
 		return currentMi;
@@ -112,6 +141,12 @@ public class ModuleInfoHandler extends CpsBaseHandler
 		return extMi;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
@@ -148,8 +183,14 @@ public class ModuleInfoHandler extends CpsBaseHandler
 				{
 					throw new SAXParseException("ModuleInfo must have either an ID or extend an other module", locator);
 				}
-				currentMi.setModuleClass(attributes.getValue("class"));
-
+				try
+				{
+					currentMi.setModuleClass(attributes.getValue("class"));
+				}
+				catch (ClassNotFoundException e)
+				{
+					logger.error(String.format("Module class not found: %s", attributes.getValue("class")), e);
+				}
 			}
 			else if (state == STATE_MODULEINFO && "name".equals(name))
 			{
@@ -202,6 +243,12 @@ public class ModuleInfoHandler extends CpsBaseHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{

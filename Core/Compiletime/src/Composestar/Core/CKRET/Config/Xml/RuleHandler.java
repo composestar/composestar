@@ -39,7 +39,7 @@ import Composestar.Core.Config.Xml.CpsBaseHandler;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 
 /**
- * Processes XML rule declarations
+ * Processes XML &lt;rule&gt; declarations in the SECRET configuration
  * 
  * @author Michiel Hendriks
  */
@@ -49,6 +49,9 @@ public class RuleHandler extends CpsBaseHandler
 
 	protected SECRETResources resources;
 
+	/**
+	 * The created conflict rule instance
+	 */
 	protected ConflictRule rule;
 
 	/**
@@ -62,6 +65,9 @@ public class RuleHandler extends CpsBaseHandler
 		resources = resc;
 	}
 
+	/**
+	 * @return the created rule instance
+	 */
 	public ConflictRule getRule()
 	{
 		return rule;

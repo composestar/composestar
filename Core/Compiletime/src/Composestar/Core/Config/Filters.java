@@ -42,10 +42,19 @@ public class Filters implements Serializable
 {
 	private static final long serialVersionUID = -6488920626356100535L;
 
+	/**
+	 * Custom filter instances
+	 */
 	protected Set<CustomFilter> customFilters;
 
+	/**
+	 * Configured filter types
+	 */
 	protected Map<String, FilterType> filterTypes;
 
+	/**
+	 * Configured filter actions
+	 */
 	protected Map<String, FilterAction> filterActions;
 
 	public Filters()
@@ -55,21 +64,35 @@ public class Filters implements Serializable
 		filterActions = new HashMap<String, FilterAction>();
 	}
 
+	/**
+	 * @return the custom filters
+	 */
 	public Set<CustomFilter> getCustomFilters()
 	{
 		return Collections.unmodifiableSet(customFilters);
 	}
 
+	/**
+	 * @return the filter types
+	 */
 	public Map<String, FilterType> getFilterTypes()
 	{
 		return Collections.unmodifiableMap(filterTypes);
 	}
 
+	/**
+	 * @return the filter actions
+	 */
 	public Map<String, FilterAction> getFilterActions()
 	{
 		return Collections.unmodifiableMap(filterActions);
 	}
 
+	/**
+	 * Add a custom filter
+	 * 
+	 * @param filter
+	 */
 	public void add(CustomFilter filter)
 	{
 		if (filter == null)
@@ -79,6 +102,11 @@ public class Filters implements Serializable
 		customFilters.add(filter);
 	}
 
+	/**
+	 * Add a filter type
+	 * 
+	 * @param filter
+	 */
 	public void add(FilterType filter)
 	{
 		if (filter == null)
@@ -92,6 +120,11 @@ public class Filters implements Serializable
 		filterTypes.put(filter.getName(), filter);
 	}
 
+	/**
+	 * Add a filter action
+	 * 
+	 * @param filter
+	 */
 	public void add(FilterAction filter)
 	{
 		if (filter == null)

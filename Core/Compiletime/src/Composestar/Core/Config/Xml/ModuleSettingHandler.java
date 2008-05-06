@@ -33,16 +33,30 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Config.ModuleSetting;
 
 /**
+ * The XML SAX handlers processing the module settings definitions
+ * 
  * @author Michiel Hendriks
  */
 public class ModuleSettingHandler extends CpsBaseHandler
 {
+	/**
+	 * Processing a &lt;setting&gt; element
+	 */
 	protected static final int STATE_SETTING = 1;
 
+	/**
+	 * Processing the name element
+	 */
 	protected static final int STATE_NAME = 2;
 
+	/**
+	 * Processing the default value
+	 */
 	protected static final int STATE_DEFAULT = 3;
 
+	/**
+	 * The result module setting
+	 */
 	protected ModuleSetting<?> ms;
 
 	/**
@@ -54,11 +68,21 @@ public class ModuleSettingHandler extends CpsBaseHandler
 		super(inReader, inParent);
 	}
 
+	/**
+	 * @return the defined module setting
+	 */
 	public ModuleSetting<?> getModuleSetting()
 	{
 		return ms;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
@@ -143,6 +167,12 @@ public class ModuleSettingHandler extends CpsBaseHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{

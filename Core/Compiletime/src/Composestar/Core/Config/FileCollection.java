@@ -84,6 +84,11 @@ public class FileCollection implements Serializable
 		return basedfiles;
 	}
 
+	/**
+	 * Add a new file
+	 * 
+	 * @param newFile
+	 */
 	public void addFile(String newFile)
 	{
 		if (newFile == null || newFile.trim().length() == 0)
@@ -93,6 +98,11 @@ public class FileCollection implements Serializable
 		files.add(new File(newFile));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

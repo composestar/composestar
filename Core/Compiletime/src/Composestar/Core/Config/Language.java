@@ -78,6 +78,9 @@ public class Language implements Serializable
 		extensions = new HashSet<String>();
 	}
 
+	/**
+	 * @return the name of the language
+	 */
 	public String getName()
 	{
 		return name;
@@ -98,6 +101,11 @@ public class Language implements Serializable
 		name = inName.trim();
 	}
 
+	/**
+	 * Add an extension that this language supports
+	 * 
+	 * @param ext
+	 */
 	public void addExtension(String ext)
 	{
 		if (ext == null || ext.trim().length() == 0)
@@ -112,6 +120,12 @@ public class Language implements Serializable
 		extensions.add(ext);
 	}
 
+	/**
+	 * Remove an extension
+	 * 
+	 * @param ext
+	 * @return true when it was removed
+	 */
 	public boolean removeExtension(String ext)
 	{
 		if (ext == null || ext.trim().length() == 0)
@@ -131,6 +145,11 @@ public class Language implements Serializable
 		return Collections.unmodifiableSet(extensions);
 	}
 
+	/**
+	 * Set the dummy generator class for this language
+	 * 
+	 * @param classname
+	 */
 	public void setDummyGenerator(String classname)
 	{
 		if (classname == null || classname.trim().length() == 0)
@@ -153,6 +172,11 @@ public class Language implements Serializable
 		return dummyGenerator;
 	}
 
+	/**
+	 * Set the compiler instance for this language
+	 * 
+	 * @param comp
+	 */
 	public void setCompiler(SourceCompiler comp)
 	{
 		if (comp == null)

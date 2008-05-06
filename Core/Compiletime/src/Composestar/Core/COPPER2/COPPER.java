@@ -62,12 +62,25 @@ public class COPPER implements CTCommonModule
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
+	/**
+	 * Number of parse errors
+	 */
 	protected int errorCnt;
 
+	/**
+	 * Map that contains the filter module ordering constraints. It is added to
+	 * the common resources.
+	 */
 	protected Map<String, SyntacticOrderingConstraint> orderingconstraints;
 
+	/**
+	 * Defined filter types
+	 */
 	protected FilterTypeMapping filterTypes;
 
+	/**
+	 * The filter factory to use
+	 */
 	protected DefaultFilterFactory filterFactory;
 
 	public COPPER()
@@ -117,6 +130,12 @@ public class COPPER implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Parse a single CPS file
+	 * 
+	 * @param file
+	 * @throws ModuleException
+	 */
 	protected void parseConcernFile(File file) throws ModuleException
 	{
 		// workaround for some ANTLRv3 debug output
@@ -191,6 +210,11 @@ public class COPPER implements CTCommonModule
 		}
 	}
 
+	/**
+	 * For debugging
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
 		// BasicConfigurator.configure();

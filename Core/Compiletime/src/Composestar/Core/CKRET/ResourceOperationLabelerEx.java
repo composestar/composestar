@@ -43,10 +43,12 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.util.regex.LabelSequence;
 import Composestar.Core.FIRE2.util.regex.Labeler;
+import Composestar.Core.FIRE2.util.regex.MatcherEx;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Improved resource operation labeler that can be configured
+ * Improved resource operation labeler that can be configured. This is used by
+ * {@link MatcherEx} to validate the execution model along the configured rules.
  * 
  * @author Michiel Hendriks
  */
@@ -123,6 +125,12 @@ public class ResourceOperationLabelerEx implements Labeler
 		}
 	}
 
+	/**
+	 * @param transition
+	 * @param gl the label to be checked
+	 * @return returns true if the current transition/start state contains the
+	 *         label.
+	 */
 	protected final boolean hasLabel(ExecutionTransition transition, GraphLabel gl)
 	{
 		switch (gl.getType())
@@ -258,10 +266,16 @@ public class ResourceOperationLabelerEx implements Labeler
 		currentMap = labelMapping.get(currentResource);
 	}
 
+	/**
+	 * A GraphLabel with a set prioroty. A high priority has a low number.
+	 */
 	class PrioGraphLabel extends GraphLabel implements Comparable<PrioGraphLabel>
 	{
 		private static final long serialVersionUID = 3315141462371399026L;
 
+		/**
+		 * The prioirity of this label.
+		 */
 		protected int priority;
 
 		public PrioGraphLabel(GraphLabel base, int inpriority)
@@ -270,6 +284,11 @@ public class ResourceOperationLabelerEx implements Labeler
 			priority = inpriority;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Comparable#compareTo(java.lang.Object)
+		 */
 		public int compareTo(PrioGraphLabel o)
 		{
 			int res = priority - o.priority;

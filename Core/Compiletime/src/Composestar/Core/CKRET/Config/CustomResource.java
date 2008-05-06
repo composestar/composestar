@@ -59,6 +59,11 @@ public class CustomResource extends Resource
 		setName(inname);
 	}
 
+	/**
+	 * Sets the name of the custom resource
+	 * 
+	 * @param inname must not be a predefined resource type
+	 */
 	private void setName(String inname)
 	{
 		if (ResourceType.parse(inname) != ResourceType.Custom)
@@ -68,6 +73,11 @@ public class CustomResource extends Resource
 		name = inname;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.CKRET.Config.Resource#getName()
+	 */
 	@Override
 	public String getName()
 	{

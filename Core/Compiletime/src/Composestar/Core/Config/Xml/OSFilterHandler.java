@@ -32,12 +32,20 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Config.OSFilter;
 
 /**
+ * Processes an OS filter definition
+ * 
  * @author Michiel Hendriks
  */
 public class OSFilterHandler extends CpsBaseHandler
 {
+	/**
+	 * Processing an &lt;osfilter&gt; element
+	 */
 	protected static final int STATE_OSFILTER = 1;
 
+	/**
+	 * The resulting OS filter definition
+	 */
 	protected OSFilter osfilter;
 
 	public OSFilterHandler(XMLReader inReader, DefaultHandler inParent)
@@ -45,11 +53,20 @@ public class OSFilterHandler extends CpsBaseHandler
 		super(inReader, inParent);
 	}
 
+	/**
+	 * @return the parsed osfilter
+	 */
 	public OSFilter getOSFilter()
 	{
 		return osfilter;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
@@ -68,6 +85,12 @@ public class OSFilterHandler extends CpsBaseHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{

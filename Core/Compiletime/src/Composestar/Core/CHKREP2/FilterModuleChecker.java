@@ -49,22 +49,44 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
- * Performs checks on all filter modules
+ * Performs checks on all filter modules. Warnings will be issued for unused
+ * internals, externals and conditions. When unknown internals, externals or
+ * conditions are used in the filter elements an error will be created.
  * 
  * @author Michiel Hendriks
  */
 public class FilterModuleChecker extends AbstractChecker
 {
+	/**
+	 * Contains a list of all defined externals in the current filter module
+	 */
 	protected Map<String, External> externals;
 
+	/**
+	 * Contains a list of all defined internals in the current filter module
+	 */
 	protected Map<String, Internal> internals;
 
+	/**
+	 * A list of all defined condition methods in the current filter module
+	 */
 	protected Map<String, Condition> conditions;
 
+	/**
+	 * A list of names of all externals used in the filter elements
+	 */
 	protected Set<String> usedExternals;
 
+	/**
+	 * A list of all names of the used internals in the filter elements of the
+	 * current filter module.
+	 */
 	protected Set<String> usedInternals;
 
+	/**
+	 * A list of the conditions that are used in the filter elements of the
+	 * current filter module.
+	 */
 	protected Set<String> usedConditions;
 
 	public FilterModuleChecker()
@@ -85,6 +107,12 @@ public class FilterModuleChecker extends AbstractChecker
 		}
 	}
 
+	/**
+	 * Performs internal/external/condition usage checks on the given filter
+	 * module.
+	 * 
+	 * @param fm the filter module to inspect
+	 */
 	protected void checkFilterModule(FilterModule fm)
 	{
 		logger.info("Checking filter module " + fm.getQualifiedName());
@@ -181,6 +209,12 @@ public class FilterModuleChecker extends AbstractChecker
 		}
 	}
 
+	/**
+	 * Performs checks on the given filter element. This method is called from
+	 * {@link #checkFilterModule(FilterModule)}
+	 * 
+	 * @param fe the filter element to validate.
+	 */
 	protected void checkFilterElement(FilterElement fe)
 	{
 		// check for conditions
@@ -216,6 +250,12 @@ public class FilterModuleChecker extends AbstractChecker
 		}
 	}
 
+	/**
+	 * Inspect the current condition expression for usage of registered
+	 * conditions.
+	 * 
+	 * @param expr the expression instance to inspect
+	 */
 	protected void checkConditionExpression(ConditionExpression expr)
 	{
 		if (expr instanceof ConditionVariable)

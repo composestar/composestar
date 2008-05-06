@@ -46,18 +46,35 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImp
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
- * Check the super imposition blocks for used selectors and filter modules
+ * Check the superimposition blocks for used selectors, filter modules and
+ * annotations. Warnings will be issued for unused selectors and conditions.
+ * Errors will be created for unknown selectors, conditions, filtermodules and
+ * annotations.
  * 
  * @author Michiel Hendriks
  */
 public class SIChecker extends AbstractChecker
 {
+	/**
+	 * Contains a mapping of all registered selectors in the current
+	 * superimposition block
+	 */
 	protected Map<String, SelectorDefinition> selectors;
 
+	/**
+	 * Contains a mapping of all registered conditions in the current
+	 * superimposition block
+	 */
 	protected Map<String, Condition> conditions;
 
+	/**
+	 * A list of all used selectors in the current superimposition block.
+	 */
 	protected Set<String> usedSelectors;
 
+	/**
+	 * A list of all used conditions in the current superimposition block.
+	 */
 	protected Set<String> usedConditions;
 
 	public SIChecker()
@@ -78,6 +95,13 @@ public class SIChecker extends AbstractChecker
 		}
 	}
 
+	/**
+	 * Performs checks on the current superimposition block.
+	 * 
+	 * @param si the superimposition block to inspect
+	 * @param repository the repository is used to resolve external filtermodule
+	 *            references and annotations
+	 */
 	protected void checkSuperImposition(SuperImposition si, DataStore repository)
 	{
 		logger.info(String.format("Checking %s", si.getQualifiedName()));
@@ -124,6 +148,14 @@ public class SIChecker extends AbstractChecker
 		}
 	}
 
+	/**
+	 * Check the filter module binding for usage of valid filter modules. This
+	 * method is called by
+	 * {@link #checkSuperImposition(SuperImposition, DataStore)}
+	 * 
+	 * @param fmb
+	 * @param repository
+	 */
 	protected void checkFilterModuleBinding(FilterModuleBinding fmb, DataStore repository)
 	{
 		if (fmb.getFilterModuleCondition() != null)
@@ -162,6 +194,14 @@ public class SIChecker extends AbstractChecker
 		}
 	}
 
+	/**
+	 * Checks the annotation superimposition to refer to valid selectors. The
+	 * annotation types are not checked. Their existance has already been
+	 * validated by LOLA during the superimposition.
+	 * 
+	 * @param ab
+	 * @param repository
+	 */
 	protected void checkAnnotationBinding(AnnotationBinding ab, DataStore repository)
 	{
 		String sel = ab.getSelector().getName();

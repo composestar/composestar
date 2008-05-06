@@ -34,6 +34,8 @@ import java.util.regex.Pattern;
 import Composestar.Utils.StringUtils;
 
 /**
+ * Create a argument list by splitting a given variable into a list
+ * 
  * @author Michiel Hendriks
  */
 public class ListCmdLineArgumentList extends CmdLineArgumentList
@@ -55,6 +57,13 @@ public class ListCmdLineArgumentList extends CmdLineArgumentList
 		super();
 	}
 
+	/**
+	 * The variable to use as source. This will be expanded according to the
+	 * same rules as normal values are expanded.
+	 * 
+	 * @see CmdLineArgument#resolve(String, Properties)
+	 * @param val
+	 */
 	public void setVarName(String val)
 	{
 		if (val == null || val.trim().length() == 0)
@@ -64,6 +73,11 @@ public class ListCmdLineArgumentList extends CmdLineArgumentList
 		varName = val;
 	}
 
+	/**
+	 * The split pattern
+	 * 
+	 * @param pat
+	 */
 	public void setSplit(String pat)
 	{
 		if (pat == null || pat.trim().length() == 0)
@@ -73,6 +87,13 @@ public class ListCmdLineArgumentList extends CmdLineArgumentList
 		split = Pattern.compile(pat);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.CmdLineArgumentList#addArgs(java.util.List,
+	 *      Composestar.Core.Config.Project, java.util.Set,
+	 *      java.util.Properties)
+	 */
 	@Override
 	public void addArgs(List<String> tolist, Project proj, Set<File> sources, Properties prop)
 	{

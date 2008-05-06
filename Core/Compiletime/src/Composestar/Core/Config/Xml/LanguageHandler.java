@@ -37,14 +37,29 @@ import Composestar.Core.Config.Language;
  */
 public class LanguageHandler extends CpsBaseHandler
 {
+	/**
+	 * Processing the &lt;language&gt; element
+	 */
 	protected static final int STATE_LANGUAGE = 1;
 
+	/**
+	 * Processing the &lt;extensions&gt; element
+	 */
 	protected static final int STATE_EXTENSIONS = 2;
 
+	/**
+	 * Processing the dummy generator element
+	 */
 	protected static final int STATE_DUMMY = 3;
 
+	/**
+	 * The language definition
+	 */
 	protected Language language;
 
+	/**
+	 * Handling for the source compiler elements
+	 */
 	protected CompilerHandler compilerHandler;
 
 	public LanguageHandler(XMLReader inReader, DefaultHandler inParent)
@@ -52,11 +67,20 @@ public class LanguageHandler extends CpsBaseHandler
 		super(inReader, inParent);
 	}
 
+	/**
+	 * @return the parsed language definition
+	 */
 	public Language getLanguage()
 	{
 		return language;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
@@ -100,6 +124,12 @@ public class LanguageHandler extends CpsBaseHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{

@@ -84,11 +84,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private boolean empty;
 
 	/**
-	 * The method(call) currently being inlined.
-	 */
-	private MethodInfo currentMethod;
-
-	/**
 	 * The current filterlabel.
 	 */
 	private int currentLabelId;
@@ -170,8 +165,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 
 		filterCode = new FilterCode();
-
-		currentMethod = method;
 
 		inlineBlock = new Block();
 		filterCode.setInstruction(inlineBlock);

@@ -10,14 +10,12 @@
 package Composestar.Core.COMP;
 
 /**
- * Simple internal Exception class for the SrcCompiler package.
+ * This exception is thrown by the language compilers when there was a problem
+ * during compilation.
  */
 public class CompilerException extends Exception
 {
 	private static final long serialVersionUID = 4728512274694103401L;
-
-	public CompilerException()
-	{}
 
 	/**
 	 * Ctor taking an error message.

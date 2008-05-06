@@ -24,16 +24,32 @@ public class Conflict implements Serializable
 {
 	private static final long serialVersionUID = -7017897791526259274L;
 
+	/**
+	 * The resource that contains a violation
+	 */
 	private Resource resource;
 
+	/**
+	 * The rule that was violated
+	 */
 	private ConflictRule rule;
 
 	// FIXME: implement this in a serializable way, extended transitions/states
 	// shouldn't not be serialized and are also not runtime safe.
+	/**
+	 * The trace of execution transitions in the execution model of the
+	 * concern+selector that lead to the violation of a rule
+	 */
 	private transient List<ExecutionTransition> trace;
 
+	/**
+	 * The used selector which resulted in a violation
+	 */
 	private String selector;
 
+	/**
+	 * The sequence of operations that lead to the violation
+	 */
 	private List<String> operations;
 
 	public void setResource(Resource inresource)
@@ -41,46 +57,79 @@ public class Conflict implements Serializable
 		resource = inresource;
 	}
 
+	/**
+	 * @see #resource
+	 */
 	public Resource getResource()
 	{
 		return resource;
 	}
 
+	/**
+	 * @param intrace the trace of the violation
+	 */
 	public void setTrace(List<ExecutionTransition> intrace)
 	{
 		trace = intrace;
 	}
 
+	/**
+	 * @see #trace
+	 */
 	public List<ExecutionTransition> getTrace()
 	{
 		return trace;
 	}
 
+	/**
+	 * @see #rule
+	 * @param inrule
+	 */
 	public void setRule(ConflictRule inrule)
 	{
 		rule = inrule;
 	}
 
+	/**
+	 * @see #rule
+	 * @return
+	 */
 	public ConflictRule getRule()
 	{
 		return rule;
 	}
 
+	/**
+	 * @see #selector
+	 * @param sel
+	 */
 	public void setSelector(String sel)
 	{
 		selector = sel;
 	}
 
+	/**
+	 * @see #selector
+	 * @return
+	 */
 	public String getSelector()
 	{
 		return selector;
 	}
 
+	/**
+	 * @see #operations
+	 * @param ops
+	 */
 	public void setOperations(List<String> ops)
 	{
 		operations = ops;
 	}
 
+	/**
+	 * @see #operations
+	 * @return
+	 */
 	public List<String> getOperations()
 	{
 		return operations;

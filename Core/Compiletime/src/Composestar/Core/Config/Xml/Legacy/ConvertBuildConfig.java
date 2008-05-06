@@ -45,10 +45,19 @@ public class ConvertBuildConfig
 {
 	static ConvertBuildConfig instance;
 
+	/**
+	 * Xslt factory
+	 */
 	protected TransformerFactory factory;
 
+	/**
+	 * Xslt transformer
+	 */
 	protected Transformer xform;
 
+	/**
+	 * @return an instance to the build configuration file translator
+	 */
 	public static ConvertBuildConfig getInstance()
 	{
 		if (instance == null)
@@ -61,6 +70,11 @@ public class ConvertBuildConfig
 	protected ConvertBuildConfig()
 	{}
 
+	/**
+	 * Get the transformer instance
+	 * 
+	 * @throws TransformerConfigurationException
+	 */
 	protected void getTransformer() throws TransformerConfigurationException
 	{
 		if (xform != null)

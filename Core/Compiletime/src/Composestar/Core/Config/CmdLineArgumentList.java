@@ -70,6 +70,9 @@ public class CmdLineArgumentList extends CmdLineArgument
 		merge = inMerge;
 	}
 
+	/**
+	 * @return true if this list should be merged to a single entry
+	 */
 	public boolean getMerge()
 	{
 		return merge;
@@ -93,11 +96,21 @@ public class CmdLineArgumentList extends CmdLineArgument
 		}
 	}
 
+	/**
+	 * @return the merging delimiter
+	 */
 	public String getDelimiter()
 	{
 		return delimiter;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.CmdLineArgument#addArgs(java.util.List,
+	 *      Composestar.Core.Config.Project, java.util.Set,
+	 *      java.util.Properties)
+	 */
 	@Override
 	public void addArgs(List<String> tolist, Project proj, Set<File> sources, Properties prop)
 	{
@@ -126,6 +139,11 @@ public class CmdLineArgumentList extends CmdLineArgument
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.CmdLineArgument#toString()
+	 */
 	@Override
 	public String toString()
 	{
@@ -141,11 +159,18 @@ public class CmdLineArgumentList extends CmdLineArgument
 		return sb.toString();
 	}
 
+	/**
+	 * @return true if the arguments should be quoted
+	 */
 	public boolean isUseQuote()
 	{
 		return useQuote;
 	}
 
+	/**
+	 * @see #useQuote
+	 * @param value
+	 */
 	public void setUseQuote(boolean value)
 	{
 		useQuote = value;

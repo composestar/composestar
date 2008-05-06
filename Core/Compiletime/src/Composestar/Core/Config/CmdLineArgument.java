@@ -33,6 +33,9 @@ public class CmdLineArgument implements Serializable
 	 */
 	protected static final Pattern PATTERN = Pattern.compile("([$@%])\\{([^:}]+(:([^}]+))?)\\}");
 
+	/**
+	 * If true all blackslashes should be converted to forward slashes
+	 */
 	protected boolean useUnixSlashes;
 
 	/**
@@ -137,17 +140,30 @@ public class CmdLineArgument implements Serializable
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		return value;
 	}
 
+	/**
+	 * @see #useUnixSlashes
+	 * @return
+	 */
 	public boolean isUseUnixSlashes()
 	{
 		return useUnixSlashes;
 	}
 
+	/**
+	 * @see #useUnixSlashes
+	 * @param value
+	 */
 	public void setUseUnixSlashes(boolean value)
 	{
 		useUnixSlashes = value;

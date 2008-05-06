@@ -31,13 +31,43 @@ import Composestar.Core.Config.SourceCompiler;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Resources.CommonResources;
 
+/**
+ * Defines the generic interface for all language compilers
+ */
 public interface LangCompiler
 {
+	/**
+	 * Will be called from {@link SourceCompiler} when an instance to this
+	 * implementor is requested by a module.
+	 * 
+	 * @param compilerConfig
+	 */
 	void setCompilerConfig(SourceCompiler compilerConfig);
 
+	/**
+	 * Must be called by a module that uses an implementation to set the current
+	 * commonresources
+	 * 
+	 * @param resc
+	 */
 	void setCommonResources(CommonResources resc);
 
-	void compileSources(Project p, Set<Source> sources) throws CompilerException, ModuleException;
+	/**
+	 * Compile the actual sources
+	 * 
+	 * @param p the project that has to be called
+	 * @param sources a set of sources that must be compiled by this compiler
+	 * @throws CompilerException
+	 * @throws ModuleException
+	 */
+	void compileSources(Project p, Set<Source> sources) throws CompilerException;
 
+	/**
+	 * Compile the created dummies
+	 * 
+	 * @param p the project that has to be called
+	 * @param sources a set of sources that must be compiled by this compiler
+	 * @throws CompilerException
+	 */
 	void compileDummies(Project p, Set<Source> sources) throws CompilerException;
 }

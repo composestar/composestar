@@ -18,6 +18,9 @@ import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
+ * Consistency reasoning engine. Finds incorrect filters constructions. These
+ * are mostly harmless.
+ * 
  * @author Arjan de Roo
  */
 public class Core implements CTCommonModule
@@ -29,11 +32,19 @@ public class Core implements CTCommonModule
 	@ResourceManager
 	private FIRE2Resources f2res;
 
+	/**
+	 * Conflict detection algorithm
+	 */
 	private CoreConflictDetector detector = new CoreConflictDetector();
 
 	public Core()
 	{}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
 		// f2res = resources.getResourceManager(FIRE2Resources.class);
@@ -52,6 +63,11 @@ public class Core implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Process a concern for consistency errors
+	 * 
+	 * @param concern
+	 */
 	private void findConflicts(Concern concern)
 	{
 		logger.debug("Checking concern: " + concern.getName() + " ...");
@@ -64,6 +80,11 @@ public class Core implements CTCommonModule
 		printConflicts(conflicts);
 	}
 
+	/**
+	 * Report the discovered conflicts
+	 * 
+	 * @param conflicts
+	 */
 	private void printConflicts(CoreConflict[] conflicts)
 	{
 		for (CoreConflict conflict : conflicts)

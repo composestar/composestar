@@ -39,6 +39,9 @@ public abstract class DefaultBuildConfigHandler extends CpsBaseHandler
 {
 	public static final String NAMESPACE = "http://composestar.sourceforge.net/schema/BuildConfiguration";
 
+	/**
+	 * The build configuration currently being processed
+	 */
 	protected BuildConfig config;
 
 	/**
@@ -55,11 +58,17 @@ public abstract class DefaultBuildConfigHandler extends CpsBaseHandler
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	public BuildConfig getBuildConfig()
 	{
 		return config;
 	}
 
+	/**
+	 * @param inConfig
+	 */
 	public void setBuildConfig(BuildConfig inConfig)
 	{
 		config = inConfig;

@@ -57,16 +57,34 @@ public class XmlConfiguration extends CpsBaseHandler
 
 	protected static final int STATE_SECRET = 1;
 
+	/**
+	 * Currently processing an analysis block. This block is completely ignored
+	 * for configuration
+	 */
 	protected static final int STATE_ANALYSIS = 2;
 
 	protected SECRETResources resources;
 
+	/**
+	 * Handler for the resource elements
+	 */
 	protected ResourceHandler resh;
 
+	/**
+	 * Handler for the rule elements
+	 */
 	protected RuleHandler ruleh;
 
+	/**
+	 * Handler for the action elements
+	 */
 	protected ActionHandler acth;
 
+	/**
+	 * Flags that identify which sections has included. There is a strict order
+	 * in which the elements should be passed. First resources, then rules, then
+	 * actions.
+	 */
 	protected boolean[] hadSection = new boolean[3];
 
 	/**
@@ -198,7 +216,10 @@ public class XmlConfiguration extends CpsBaseHandler
 		}
 		else
 		{
-			startUnknownElement(uri, localName, name, attributes);
+			if (state != STATE_ANALYSIS)
+			{
+				startUnknownElement(uri, localName, name, attributes);
+			}
 		}
 	}
 
@@ -222,7 +243,10 @@ public class XmlConfiguration extends CpsBaseHandler
 		}
 		else
 		{
-			endUnknownElement(uri, localName, name);
+			if (state != STATE_ANALYSIS)
+			{
+				endUnknownElement(uri, localName, name);
+			}
 		}
 	}
 }

@@ -49,6 +49,9 @@ import Composestar.Core.Config.Xml.BuildConfigHandler;
 import Composestar.Core.Config.Xml.DefaultBuildConfigHandler;
 
 /**
+ * Serializes a buildconfiguration structure to a parseable XML file.
+ * 
+ * @see BuildConfig
  * @author Michiel Hendriks
  */
 public class BuildConfigXmlWriter
@@ -60,6 +63,13 @@ public class BuildConfigXmlWriter
 	protected BuildConfigXmlWriter()
 	{}
 
+	/**
+	 * Write the given build configuration to the given stream
+	 * 
+	 * @param config
+	 * @param stream
+	 * @return
+	 */
 	public static final boolean write(BuildConfig config, OutputStream stream)
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -92,6 +102,14 @@ public class BuildConfigXmlWriter
 		return true;
 	}
 
+	/**
+	 * Write the given build config to the given XML document using parent as
+	 * the parent node
+	 * 
+	 * @param config
+	 * @param xmlDoc
+	 * @param parent
+	 */
 	public static final void write(BuildConfig config, Document xmlDoc, Node parent)
 	{
 		xmlDoc.appendChild(xmlDoc.createComment(String.format("Created by %s on %s", BuildConfigXmlWriter.class,
@@ -117,6 +135,13 @@ public class BuildConfigXmlWriter
 		}
 	}
 
+	/**
+	 * Write the project settings
+	 * 
+	 * @param config
+	 * @param xmlDoc
+	 * @param root
+	 */
 	protected static final void writeSettings(BuildConfig config, Document xmlDoc, Node root)
 	{
 		if (config.getSettings().size() == 0)
@@ -134,6 +159,13 @@ public class BuildConfigXmlWriter
 		}
 	}
 
+	/**
+	 * Write the project
+	 * 
+	 * @param config
+	 * @param xmlDoc
+	 * @param root
+	 */
 	protected static final void writeProject(BuildConfig config, Document xmlDoc, Node root)
 	{
 		Project p = config.getProject();
@@ -190,6 +222,13 @@ public class BuildConfigXmlWriter
 		// FIXME resources
 	}
 
+	/**
+	 * Write the filter definitions
+	 * 
+	 * @param config
+	 * @param xmlDoc
+	 * @param root
+	 */
 	protected static final void writeFilters(BuildConfig config, Document xmlDoc, Node root)
 	{
 	// FIXME not yet implemented

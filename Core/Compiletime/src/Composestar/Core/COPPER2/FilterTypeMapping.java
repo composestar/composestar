@@ -64,16 +64,28 @@ public class FilterTypeMapping
 		createFilterTypeMapping(ds);
 	}
 
+	/**
+	 * Get a filter type for a given filter name
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public FilterType getFilterType(String name)
 	{
 		return mapping.get(name.toLowerCase());
 	}
 
+	/**
+	 * @return all registered filter type names
+	 */
 	public Set<String> getFilterTypeNames()
 	{
 		return Collections.unmodifiableSet(mapping.keySet());
 	}
 
+	/**
+	 * @return all register filter types
+	 */
 	public Collection<FilterType> getFilterTypes()
 	{
 		return Collections.unmodifiableCollection(mapping.values());

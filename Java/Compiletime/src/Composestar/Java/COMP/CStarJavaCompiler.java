@@ -17,7 +17,6 @@ import Composestar.Core.Config.Dependency;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Config.SourceCompiler;
-import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Logging.CPSLogger;
@@ -72,7 +71,7 @@ public class CStarJavaCompiler implements LangCompiler
 		}
 	}
 
-	public void compileSources(Project p, Set<Source> sources) throws CompilerException, ModuleException
+	public void compileSources(Project p, Set<Source> sources) throws CompilerException
 	{
 		long time = System.currentTimeMillis();
 		// add the dummy jar to the classpath for expanded signatures
@@ -83,8 +82,8 @@ public class CStarJavaCompiler implements LangCompiler
 			File sourceOut = new File(p.getIntermediate(), "unwoven");
 			if (!sourceOut.exists() && !sourceOut.mkdirs())
 			{
-				throw new ModuleException(String.format("Unable to create source output directory: %s", sourceOut
-						.toString()), MODULE_NAME);
+				throw new CompilerException(String.format("Unable to create source output directory: %s", sourceOut
+						.toString()));
 			}
 			resources.put(SOURCE_OUT, sourceOut);
 

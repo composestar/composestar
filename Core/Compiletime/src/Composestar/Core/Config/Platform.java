@@ -81,11 +81,19 @@ public class Platform implements Serializable
 		resources = new HashSet<FileCollection>();
 	}
 
+	/**
+	 * @return the platform ID
+	 */
 	public String getId()
 	{
 		return id;
 	}
 
+	/**
+	 * Set the platform ID
+	 * 
+	 * @param newId
+	 */
 	protected void setId(String newId)
 	{
 		if (newId == null || newId.trim().length() == 0)
@@ -95,16 +103,29 @@ public class Platform implements Serializable
 		id = newId.trim();
 	}
 
+	/**
+	 * @return the OS filter, can be null
+	 */
 	public OSFilter getOSFilter()
 	{
 		return osfilter;
 	}
 
+	/**
+	 * Set an OS filter for this platform
+	 * 
+	 * @param filter
+	 */
 	public void setOSFilter(OSFilter filter)
 	{
 		osfilter = filter;
 	}
 
+	/**
+	 * Add a language to the current platform
+	 * 
+	 * @param lang
+	 */
 	public void addLanguage(Language lang)
 	{
 		if (lang == null)
@@ -124,16 +145,30 @@ public class Platform implements Serializable
 		languages.put(langName, lang);
 	}
 
+	/**
+	 * Get the language with the given name
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public Language getLanguage(String name)
 	{
 		return languages.get(name);
 	}
 
+	/**
+	 * @return the available languages
+	 */
 	public Collection<Language> getLanguages()
 	{
 		return Collections.unmodifiableCollection(languages.values());
 	}
 
+	/**
+	 * Add a platform resource
+	 * 
+	 * @param res
+	 */
 	public void addResource(FileCollection res)
 	{
 		if (res == null)
@@ -144,6 +179,11 @@ public class Platform implements Serializable
 		resourceFiles = null;
 	}
 
+	/**
+	 * Remove a resource
+	 * 
+	 * @param res
+	 */
 	public void removeResource(FileCollection res)
 	{
 		if (resources.remove(res))
@@ -152,6 +192,11 @@ public class Platform implements Serializable
 		}
 	}
 
+	/**
+	 * Add a set of file resources
+	 * 
+	 * @param res
+	 */
 	public void addResources(Set<FileCollection> res)
 	{
 		if (res == null)
@@ -171,7 +216,6 @@ public class Platform implements Serializable
 	 */
 	public Set<File> getResourceFiles(PathResolver resolver)
 	{
-		// TODO: add resolving
 		if (resourceFiles == null)
 		{
 			resourceFiles = new HashSet<File>();

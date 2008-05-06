@@ -91,6 +91,9 @@ public class Project implements Serializable
 	 */
 	protected String output = DEFAULT_OUTPUT;
 
+	/**
+	 * Resolved output path
+	 */
 	protected transient File outputPath;
 
 	/**
@@ -98,6 +101,9 @@ public class Project implements Serializable
 	 */
 	protected String intermediate = DEFAULT_INTERMEDIATE;
 
+	/**
+	 * Resolved intermediate path
+	 */
 	protected transient File intermediatePath;
 
 	/**
@@ -111,6 +117,9 @@ public class Project implements Serializable
 	 */
 	protected transient Set<File> concernFilesCache;
 
+	/**
+	 * Concerns that are disabled
+	 */
 	protected Set<File> disabledConcernFiles;
 
 	/**
@@ -158,11 +167,19 @@ public class Project implements Serializable
 		typeMapping = new TypeMapping();
 	}
 
+	/**
+	 * @return the project name
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * Set the project name
+	 * 
+	 * @param inName
+	 */
 	public void setName(String inName)
 	{
 		if (inName == null || inName.trim().length() == 0)
@@ -176,7 +193,7 @@ public class Project implements Serializable
 	 * Get the platform for this project. This might be null when no suitable
 	 * platform can be found.
 	 * 
-	 * @return
+	 * @return the platform instance
 	 */
 	public Platform getPlatform()
 	{
@@ -199,6 +216,11 @@ public class Project implements Serializable
 		return platformId;
 	}
 
+	/**
+	 * Set the platform id for this project
+	 * 
+	 * @param inPlatform
+	 */
 	public void setPlatform(String inPlatform)
 	{
 		if (inPlatform == null || inPlatform.trim().length() == 0)
@@ -222,6 +244,11 @@ public class Project implements Serializable
 		return base;
 	}
 
+	/**
+	 * Set the base path for the project
+	 * 
+	 * @param inBase
+	 */
 	public void setBase(String inBase)
 	{
 		if (inBase == null || inBase.trim().length() == 0)
@@ -231,6 +258,10 @@ public class Project implements Serializable
 		setBase(new File(inBase.trim()));
 	}
 
+	/**
+	 * @see #setBase(String)
+	 * @param inBase
+	 */
 	public void setBase(File inBase)
 	{
 		if (!inBase.isDirectory())
@@ -260,6 +291,11 @@ public class Project implements Serializable
 		return language;
 	}
 
+	/**
+	 * Set the default language for this project
+	 * 
+	 * @param inLanguage
+	 */
 	public void setLanguage(String inLanguage)
 	{
 		if (inLanguage == null || inLanguage.trim().length() == 0)
@@ -273,7 +309,7 @@ public class Project implements Serializable
 	 * Get the fully resolved path to the directory destined for the final
 	 * compiler output. Should only be used by the BACO module.
 	 * 
-	 * @return
+	 * @return the resolved output path
 	 */
 	public File getOutput()
 	{
@@ -294,6 +330,11 @@ public class Project implements Serializable
 		return output;
 	}
 
+	/**
+	 * Set the output directory (relative to the base)
+	 * 
+	 * @param inOutput
+	 */
 	public void setOutput(String inOutput)
 	{
 		if (inOutput == null || inOutput.trim().length() == 0)
@@ -322,11 +363,19 @@ public class Project implements Serializable
 		return intermediatePath;
 	}
 
+	/**
+	 * @return the configured unresolved intermediate directory
+	 */
 	public String getIntermediateRaw()
 	{
 		return intermediate;
 	}
 
+	/**
+	 * Set the directory for intermediate files (relative from the base path)
+	 * 
+	 * @param inIntermediate
+	 */
 	public void setIntermediate(String inIntermediate)
 	{
 		if (inIntermediate == null || inIntermediate.trim().length() == 0)
@@ -350,6 +399,11 @@ public class Project implements Serializable
 		return mainclass;
 	}
 
+	/**
+	 * Set the main class of the project
+	 * 
+	 * @param inMainclass
+	 */
 	public void setMainclass(String inMainclass)
 	{
 		if (inMainclass == null || inMainclass.trim().length() == 0)
@@ -359,11 +413,22 @@ public class Project implements Serializable
 		mainclass = inMainclass.trim();
 	}
 
+	/**
+	 * Add a concern to this project
+	 * 
+	 * @param inConcern
+	 */
 	public void addConcern(String inConcern)
 	{
 		addConcern(inConcern, true);
 	}
 
+	/**
+	 * Add a concern to this project
+	 * 
+	 * @param inConcern
+	 * @param isEnabled
+	 */
 	public void addConcern(String inConcern, boolean isEnabled)
 	{
 		if (inConcern == null)
@@ -378,11 +443,22 @@ public class Project implements Serializable
 		addConcern(new File(inConcern), isEnabled);
 	}
 
+	/**
+	 * Add a concern to this project
+	 * 
+	 * @param inConcern
+	 */
 	public void addConcern(File inConcern)
 	{
 		addConcern(inConcern, true);
 	}
 
+	/**
+	 * Add a concern to this project
+	 * 
+	 * @param inConcern
+	 * @param isEnabled
+	 */
 	public void addConcern(File inConcern, boolean isEnabled)
 	{
 		if (inConcern == null)
@@ -429,21 +505,35 @@ public class Project implements Serializable
 		return Collections.unmodifiableSet(concernFilesCache);
 	}
 
+	/**
+	 * @return a list of unresolved concern files
+	 */
 	public Set<File> getConcernFilesRaw()
 	{
 		return Collections.unmodifiableSet(concernFiles);
 	}
 
+	/**
+	 * @return a list of disabled concern files
+	 */
 	public Set<File> getDisabledConcernFiles()
 	{
 		return Collections.unmodifiableSet(disabledConcernFiles);
 	}
 
+	/**
+	 * @return a list of disabled concern files
+	 */
 	public Set<File> getDisabledConcernFilesRaw()
 	{
 		return Collections.unmodifiableSet(disabledConcernFiles);
 	}
 
+	/**
+	 * Add a new source file
+	 * 
+	 * @param source
+	 */
 	public void addSource(Source source)
 	{
 		if (source == null)
@@ -457,6 +547,12 @@ public class Project implements Serializable
 		}
 	}
 
+	/**
+	 * Remove a source file
+	 * 
+	 * @param source
+	 * @return
+	 */
 	public boolean removeSource(Source source)
 	{
 		if (sources.remove(source))
@@ -469,6 +565,11 @@ public class Project implements Serializable
 		return false;
 	}
 
+	/**
+	 * Add a set of source files
+	 * 
+	 * @param inSources
+	 */
 	public void addSources(Set<Source> inSources)
 	{
 		if (inSources == null)
@@ -561,6 +662,11 @@ public class Project implements Serializable
 		return Collections.unmodifiableSet(sources);
 	}
 
+	/**
+	 * Add a dependency to this project
+	 * 
+	 * @param dep
+	 */
 	public void addDependency(Dependency dep)
 	{
 		if (dep == null)
@@ -574,6 +680,11 @@ public class Project implements Serializable
 		}
 	}
 
+	/**
+	 * Remove a project dependency
+	 * 
+	 * @param dep
+	 */
 	public void removeDependency(Dependency dep)
 	{
 		if (dep == null)
@@ -587,6 +698,11 @@ public class Project implements Serializable
 		}
 	}
 
+	/**
+	 * Add a set of dependencies
+	 * 
+	 * @param deps
+	 */
 	public void addDependencies(Set<Dependency> deps)
 	{
 		if (deps == null)
@@ -638,6 +754,11 @@ public class Project implements Serializable
 		return Collections.unmodifiableSet(fileDependencies);
 	}
 
+	/**
+	 * Add a project resource
+	 * 
+	 * @param res
+	 */
 	public void addResource(FileCollection res)
 	{
 		if (res == null)
@@ -648,6 +769,11 @@ public class Project implements Serializable
 		resourceFiles = null;
 	}
 
+	/**
+	 * Remove a project resource
+	 * 
+	 * @param res
+	 */
 	public void removeResource(FileCollection res)
 	{
 		if (resources.remove(res))
@@ -656,6 +782,11 @@ public class Project implements Serializable
 		}
 	}
 
+	/**
+	 * Add a set of resources
+	 * 
+	 * @param res
+	 */
 	public void addResources(Set<FileCollection> res)
 	{
 		if (res == null)

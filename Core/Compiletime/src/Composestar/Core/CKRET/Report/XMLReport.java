@@ -76,8 +76,15 @@ public class XMLReport implements SECRETReport
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CKRET.MODULE_NAME + ".Report");
 
+	/**
+	 * The output filter
+	 */
 	protected File outputFile;
 
+	/**
+	 * Lookup table for conflict rules to generated identifiers. Used for
+	 * referrals.
+	 */
 	protected Map<ConflictRule, String> ruleIds;
 
 	/*
@@ -166,6 +173,13 @@ public class XMLReport implements SECRETReport
 		logger.info(String.format("Report generated in %s", outputFile));
 	}
 
+	/**
+	 * Write the root elements of the report
+	 * 
+	 * @param config
+	 * @param secretResources
+	 * @param xmlDoc
+	 */
 	protected void writeReport(BuildConfig config, SECRETResources secretResources, Document xmlDoc)
 	{
 		Element root = xmlDoc.createElement("secretreport");
@@ -181,6 +195,13 @@ public class XMLReport implements SECRETReport
 		xmlDoc.appendChild(root);
 	}
 
+	/**
+	 * Write the defined resources
+	 * 
+	 * @param secretResources
+	 * @param xmlDoc
+	 * @param root
+	 */
 	protected void writeResources(SECRETResources secretResources, Document xmlDoc, Element root)
 	{
 		for (Resource resource : secretResources.getResources())
@@ -197,6 +218,13 @@ public class XMLReport implements SECRETReport
 		}
 	}
 
+	/**
+	 * Write the defined actions
+	 * 
+	 * @param secretResources
+	 * @param xmlDoc
+	 * @param root
+	 */
 	protected void writeActions(SECRETResources secretResources, Document xmlDoc, Element root)
 	{
 		for (OperationSequence seq : secretResources.getOperationSequences())
@@ -231,6 +259,13 @@ public class XMLReport implements SECRETReport
 		}
 	}
 
+	/**
+	 * Write the defined rules
+	 * 
+	 * @param secretResources
+	 * @param xmlDoc
+	 * @param root
+	 */
 	protected void writeRules(SECRETResources secretResources, Document xmlDoc, Element root)
 	{
 		for (ConflictRule rule : secretResources.getRules())
@@ -255,6 +290,13 @@ public class XMLReport implements SECRETReport
 		}
 	}
 
+	/**
+	 * Write the created concern analysis to the report
+	 * 
+	 * @param secretResources
+	 * @param xmlDoc
+	 * @param root
+	 */
 	protected void writeAnalyses(SECRETResources secretResources, Document xmlDoc, Element root)
 	{
 		for (ConcernAnalysis ca : secretResources.getConcernAnalyses())

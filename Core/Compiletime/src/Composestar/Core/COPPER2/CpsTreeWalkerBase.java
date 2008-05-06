@@ -59,6 +59,9 @@ public class CpsTreeWalkerBase extends TreeParser
 	 */
 	protected int errorCnt;
 
+	/**
+	 * The map containing filter module ordering constraints.
+	 */
 	protected Map<String, SyntacticOrderingConstraint> orderingconstraints;
 
 	/**
@@ -77,31 +80,60 @@ public class CpsTreeWalkerBase extends TreeParser
 		super(input);
 	}
 
+	/**
+	 * Set the source file, used for error reporting.
+	 * 
+	 * @param srcfl
+	 */
 	public void setSourceFile(String srcfl)
 	{
 		sourceFile = srcfl;
 	}
 
+	/**
+	 * Sets the map that will received the filter module ordering constraints
+	 * 
+	 * @param oc
+	 */
 	public void setOrderingConstraints(Map<String, SyntacticOrderingConstraint> oc)
 	{
 		orderingconstraints = oc;
 	}
 
+	/**
+	 * Set the filter type map
+	 * 
+	 * @param ftm
+	 */
 	public void setFilterTypeMapping(FilterTypeMapping ftm)
 	{
 		filterTypes = ftm;
 	}
 
+	/**
+	 * Set the filter factory to use to create custom legacy filters
+	 * 
+	 * @param lft
+	 */
 	public void setFilterFactory(DefaultFilterFactory lft)
 	{
 		filterFactory = lft;
 	}
 
+	/**
+	 * @return the number of parse errors
+	 */
 	public int getErrorCnt()
 	{
 		return errorCnt;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.antlr.runtime.BaseRecognizer#displayRecognitionError(java.lang.String[],
+	 *      org.antlr.runtime.RecognitionException)
+	 */
 	@Override
 	public void displayRecognitionError(String[] tokenNames, RecognitionException e)
 	{
@@ -111,6 +143,11 @@ public class CpsTreeWalkerBase extends TreeParser
 		logger.error(new LogMessage(msg, sourceFile, e.line, e.charPositionInLine));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.antlr.runtime.BaseRecognizer#emitErrorMessage(java.lang.String)
+	 */
 	@Override
 	public void emitErrorMessage(String msg)
 	{
@@ -118,6 +155,12 @@ public class CpsTreeWalkerBase extends TreeParser
 		logger.error(msg);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.antlr.runtime.tree.TreeParser#getErrorMessage(org.antlr.runtime.RecognitionException,
+	 *      java.lang.String[])
+	 */
 	@Override
 	public String getErrorMessage(RecognitionException e, String[] tokenNames)
 	{

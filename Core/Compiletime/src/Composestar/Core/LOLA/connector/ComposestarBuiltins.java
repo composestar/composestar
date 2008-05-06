@@ -49,11 +49,11 @@ public class ComposestarBuiltins extends HashDict
 	// Public for convenience - should be readable by builtin-classes
 	protected transient UnitDictionary langUnits;
 
-	protected PredicateSelector currentSelector;
+	protected transient PredicateSelector currentSelector;
 
-	protected PredicateSelectorInterpreter psi;
+	protected transient PredicateSelectorInterpreter psi;
 
-	protected LanguageModel currentLangModel;
+	protected transient LanguageModel currentLangModel;
 
 	public ComposestarBuiltins(LanguageModel langModel, UnitDictionary dict, UnitRegister reg)
 	{

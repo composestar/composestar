@@ -57,6 +57,9 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 {
 	public static final String CURRENT_VERSION = "2.0";
 
+	/**
+	 * The version of the buildconfiguration file format
+	 */
 	protected String version;
 
 	/**
@@ -205,6 +208,12 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
@@ -230,6 +239,12 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
@@ -287,6 +302,11 @@ public class BuildConfigHandler extends DefaultBuildConfigHandler
 		}
 	}
 
+	/**
+	 * Just for testing
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
 		try

@@ -39,16 +39,27 @@ public class ConcernAnalysis implements Serializable
 		analysis = new ArrayList<FilterSetAnalysis>();
 	}
 
+	/**
+	 * @return the concern associated with this analysis
+	 */
 	public Concern getConcern()
 	{
 		return concern;
 	}
 
+	/**
+	 * @return the list of filter set analysis created for this concern
+	 */
 	public List<FilterSetAnalysis> getAnalysis()
 	{
 		return Collections.unmodifiableList(analysis);
 	}
 
+	/**
+	 * @return true when this concern contains a conflict in any of the filter
+	 *         set analysis
+	 * @see FilterSetAnalysis#hasConflicts()
+	 */
 	public boolean hasConflicts()
 	{
 		for (FilterSetAnalysis fsa : analysis)
@@ -83,9 +94,9 @@ public class ConcernAnalysis implements Serializable
 	/**
 	 * Analyse the given order. Returns true when there are no conflicts
 	 * 
-	 * @param order
-	 * @param isSelected
-	 * @return
+	 * @param order the filter module to use during the analysis
+	 * @param isSelected is this the selected filter module order
+	 * @return true when there was a conflict
 	 */
 	protected boolean analyseOrder(FilterModuleOrder order, boolean isSelected)
 	{

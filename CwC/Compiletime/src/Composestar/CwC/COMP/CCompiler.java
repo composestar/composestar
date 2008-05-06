@@ -40,7 +40,6 @@ import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Config.SourceCompiler;
-import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.FileUtils;
@@ -164,7 +163,7 @@ public class CCompiler implements LangCompiler
 	 * @see Composestar.Core.COMP.LangCompiler#compileSources(Composestar.Core.Config.Project,
 	 *      java.util.Set)
 	 */
-	public void compileSources(Project p, Set<Source> sources) throws CompilerException, ModuleException
+	public void compileSources(Project p, Set<Source> sources) throws CompilerException
 	{
 	// TODO Auto-generated method stub
 

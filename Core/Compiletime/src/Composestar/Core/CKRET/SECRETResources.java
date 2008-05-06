@@ -101,11 +101,17 @@ public class SECRETResources implements ModuleResourceManager
 		return CKRET.MODULE_NAME;
 	}
 
+	/**
+	 * @return the configured rules
+	 */
 	public Set<ConflictRule> getRules()
 	{
 		return Collections.unmodifiableSet(rules);
 	}
 
+	/**
+	 * @param rule the new rule to add
+	 */
 	public void addRule(ConflictRule rule)
 	{
 		if (rule == null)
@@ -115,6 +121,9 @@ public class SECRETResources implements ModuleResourceManager
 		rules.add(rule);
 	}
 
+	/**
+	 * @return the declared resources
+	 */
 	public Collection<Resource> getResources()
 	{
 		return Collections.unmodifiableCollection(resources.values());
@@ -151,6 +160,10 @@ public class SECRETResources implements ModuleResourceManager
 		}
 	}
 
+	/**
+	 * @param key the name of the resource
+	 * @return the resource with the given name, or null when it doesn't exist
+	 */
 	public Resource getResource(String key)
 	{
 		if (key == null)
@@ -160,6 +173,9 @@ public class SECRETResources implements ModuleResourceManager
 		return resources.get(key.toLowerCase());
 	}
 
+	/**
+	 * @param opesq the operation sequence to add
+	 */
 	public void addOperationSequence(OperationSequence opesq)
 	{
 		if (opesq == null)
@@ -169,26 +185,45 @@ public class SECRETResources implements ModuleResourceManager
 		opSequences.add(opesq);
 	}
 
+	/**
+	 * @return a sorted list of configured operation sequences
+	 */
 	public SortedSet<OperationSequence> getOperationSequences()
 	{
 		return Collections.unmodifiableSortedSet(opSequences);
 	}
 
+	/**
+	 * @param ca add a concern analysis
+	 */
 	public void addConcernAnalysis(ConcernAnalysis ca)
 	{
 		concernAnalyses.put(ca.getConcern().getQualifiedName(), ca);
 	}
 
+	/**
+	 * @return all concern analysis
+	 */
 	public Collection<ConcernAnalysis> getConcernAnalyses()
 	{
 		return Collections.unmodifiableCollection(concernAnalyses.values());
 	}
 
+	/**
+	 * @param fqn the fully qualified name of the concern
+	 * @return the concern analysis of the concern with the given name, or null
+	 *         if there was no analysis for that concern
+	 */
 	public ConcernAnalysis getConcernAnalysis(String fqn)
 	{
 		return concernAnalyses.get(fqn);
 	}
 
+	/**
+	 * @param ca
+	 * @return the concern analysis for the given concern, or null when there
+	 *         was no analysis available
+	 */
 	public ConcernAnalysis getConcernAnalysis(Concern ca)
 	{
 		if (ca == null)
@@ -208,16 +243,26 @@ public class SECRETResources implements ModuleResourceManager
 		labeler = value;
 	}
 
+	/**
+	 * @return the labeler that is used
+	 */
 	public Labeler getLabeler()
 	{
 		return labeler;
 	}
 
+	/**
+	 * @return FIRE2 resources
+	 */
 	public FIRE2Resources getFIRE2Resources()
 	{
 		return fire2Resources;
 	}
 
+	/**
+	 * @see #fire2Resources
+	 * @param res
+	 */
 	public void setFIRE2Resources(FIRE2Resources res)
 	{
 		fire2Resources = res;

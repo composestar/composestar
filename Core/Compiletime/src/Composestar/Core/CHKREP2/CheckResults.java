@@ -33,14 +33,24 @@ import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
 
 /**
+ * This class will contain the results of all checker instances. The results are
+ * divided in warnings and errors.
+ * 
  * @author Michiel Hendriks
  */
 public class CheckResults
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Check.MODULE_NAME);
 
+	/**
+	 * Harmless inconsistencies in the repository.
+	 */
 	protected List<LogMessage> warnings;
 
+	/**
+	 * Fatal inconsistencies in the repository. These need to be fixed for the
+	 * rest of the compilation process to be performed without errors.
+	 */
 	protected List<LogMessage> errors;
 
 	public CheckResults()
@@ -49,11 +59,17 @@ public class CheckResults
 		errors = new ArrayList<LogMessage>();
 	}
 
+	/**
+	 * @return the number of warnings
+	 */
 	public int numWarnings()
 	{
 		return warnings.size();
 	}
 
+	/**
+	 * @return the number of errors
+	 */
 	public int numErrors()
 	{
 		return errors.size();
@@ -62,8 +78,8 @@ public class CheckResults
 	/**
 	 * Add a warning
 	 * 
-	 * @param message
-	 * @param re
+	 * @param message description of the warning
+	 * @param re the repository element this warning refers to
 	 */
 	public void addWarning(String message, RepositoryEntity re)
 	{
@@ -72,6 +88,9 @@ public class CheckResults
 		warnings.add(entry);
 	}
 
+	/**
+	 * @return the list of warnings in this checker report
+	 */
 	public List<LogMessage> getWarnings()
 	{
 		return Collections.unmodifiableList(warnings);
@@ -80,8 +99,8 @@ public class CheckResults
 	/**
 	 * Add a new repository error
 	 * 
-	 * @param message
-	 * @param re
+	 * @param message a description of the error
+	 * @param re the repository element this error refers to
 	 */
 	public void addError(String message, RepositoryEntity re)
 	{
@@ -90,6 +109,9 @@ public class CheckResults
 		errors.add(entry);
 	}
 
+	/**
+	 * @return the list of errors in this report.
+	 */
 	public List<LogMessage> getErrors()
 	{
 		return Collections.unmodifiableList(errors);

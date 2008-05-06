@@ -51,8 +51,14 @@ public class OperationSequence implements Serializable
 	 */
 	protected int priority;
 
+	/**
+	 * Set of graph labels that are associated with this sequence.
+	 */
 	protected Set<GraphLabel> labels;
 
+	/**
+	 * A mapping of resources to a list of operations.
+	 */
 	protected Map<Resource, List<String>> operations;
 
 	public OperationSequence()
@@ -61,16 +67,27 @@ public class OperationSequence implements Serializable
 		operations = new HashMap<Resource, List<String>>();
 	}
 
+	/**
+	 * @param prio the priority of this operation sequence
+	 */
 	public void setPriority(int prio)
 	{
 		priority = prio;
 	}
 
+	/**
+	 * @return the priority
+	 */
 	public int getPriority()
 	{
 		return priority;
 	}
 
+	/**
+	 * Add a new label to this operation sequence
+	 * 
+	 * @param lbl
+	 */
 	public void addLabel(GraphLabel lbl)
 	{
 		if (lbl == null)
@@ -80,6 +97,12 @@ public class OperationSequence implements Serializable
 		labels.add(lbl);
 	}
 
+	/**
+	 * Add a new label by name and type
+	 * 
+	 * @param lbl
+	 * @param type must be either "node", "transition", "edge"
+	 */
 	public void addLabel(String lbl, String type)
 	{
 		if (type == null || type.trim().length() == 0)
@@ -106,11 +129,20 @@ public class OperationSequence implements Serializable
 		addLabel(new GraphLabel(lbl, lt));
 	}
 
+	/**
+	 * @return the set of graph labels
+	 */
 	public Set<GraphLabel> getLabels()
 	{
 		return Collections.unmodifiableSet(labels);
 	}
 
+	/**
+	 * Add a new operation sequence for a given resource
+	 * 
+	 * @param resource
+	 * @param opsequence
+	 */
 	public void addOperations(Resource resource, List<String> opsequence)
 	{
 		if (resource == null)
@@ -135,6 +167,11 @@ public class OperationSequence implements Serializable
 		lst.addAll(opsequence);
 	}
 
+	/**
+	 * @see #addOperations(Resource, List)
+	 * @param resource
+	 * @param opsequence
+	 */
 	public void addOperations(Resource resource, String[] opsequence)
 	{
 		addOperations(resource, Arrays.asList(opsequence));
@@ -156,6 +193,9 @@ public class OperationSequence implements Serializable
 		addOperations(resource, opsequence.trim().split(";"));
 	}
 
+	/**
+	 * @return the mapping of resources to operations
+	 */
 	public Map<Resource, List<String>> getOperations()
 	{
 		return Collections.unmodifiableMap(operations);
@@ -168,8 +208,14 @@ public class OperationSequence implements Serializable
 	{
 		private static final long serialVersionUID = -1471321128861061209L;
 
+		/**
+		 * The label name
+		 */
 		protected String label;
 
+		/**
+		 * the graph element this label is applied to
+		 */
 		protected LabelType type;
 
 		public GraphLabel(String inlabel, LabelType intype)
@@ -178,11 +224,17 @@ public class OperationSequence implements Serializable
 			type = intype;
 		}
 
+		/**
+		 * @return the label
+		 */
 		public String getLabel()
 		{
 			return label;
 		}
 
+		/**
+		 * @return the type
+		 */
 		public LabelType getType()
 		{
 			return type;
@@ -272,6 +324,13 @@ public class OperationSequence implements Serializable
 	 */
 	public enum LabelType
 	{
-		Transition, Node
+		/**
+		 * A edge or transition from one node to the other
+		 */
+		Transition,
+		/**
+		 * A node in the graph
+		 */
+		Node
 	}
 }

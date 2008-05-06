@@ -46,25 +46,56 @@ import Composestar.Core.Config.SourcesCmdLineArgumentList;
  */
 public class CompilerHandler extends CpsBaseHandler
 {
-	// note: states must be bit fields
+	/**
+	 * Handling a &lt;compiler&gt; element
+	 */
 	protected static final int STATE_COMPILER = 1;
 
+	/**
+	 * Handling a &lt;action&gt; element
+	 */
 	protected static final int STATE_ACTION = 2;
 
+	/**
+	 * Handling a &lt;arg&gt; element
+	 */
 	protected static final int STATE_ARG = 3;
 
+	/**
+	 * Handling an argument list element like &lt;dependencies&gt; or
+	 * &lt;sources&gt;
+	 */
 	protected static final int STATE_ARG_LIST = 4;
 
+	/**
+	 * Processing a &lt;rcfile&gt; element
+	 */
 	protected static final int STATE_RCFILE = 5;
 
+	/**
+	 * The resulting source compile definition
+	 */
 	protected SourceCompiler compiler;
 
+	/**
+	 * Temporary variable during action handling
+	 */
 	protected CompilerAction currentAction;
 
+	/**
+	 * Temporary variable used during a single argument handling
+	 */
 	protected CmdLineArgument currentArgument;
 
+	/**
+	 * A stack of command line argument lists. These can be nested so a list
+	 * must be kept.
+	 */
 	protected Stack<CmdLineArgumentList> argList;
 
+	/**
+	 * A state stack used during commandline argument handling.
+	 */
 	protected Stack<Integer> states;
 
 	public CompilerHandler(XMLReader inReader, DefaultHandler inParent)
@@ -73,11 +104,19 @@ public class CompilerHandler extends CpsBaseHandler
 		states = new Stack<Integer>();
 	}
 
+	/**
+	 * @return the source compiler definition
+	 */
 	public SourceCompiler getCompiler()
 	{
 		return compiler;
 	}
 
+	/**
+	 * Add a new parsing state to the stack
+	 * 
+	 * @param newState
+	 */
 	protected void pushState(int newState)
 	{
 		states.push(state);
@@ -112,6 +151,12 @@ public class CompilerHandler extends CpsBaseHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
@@ -200,6 +245,12 @@ public class CompilerHandler extends CpsBaseHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
@@ -240,9 +291,9 @@ public class CompilerHandler extends CpsBaseHandler
 		else if (state == STATE_RCFILE && "rcfile".equals(name))
 		{
 			popState( /*
-						 * STATE_ACTION | STATE_ARG_LIST | STATE_ARG_LIST |
-						 * STATE_RCFILE
-						 */);
+			 * STATE_ACTION | STATE_ARG_LIST | STATE_ARG_LIST |
+			 * STATE_RCFILE
+			 */);
 			argList.pop();
 		}
 		else

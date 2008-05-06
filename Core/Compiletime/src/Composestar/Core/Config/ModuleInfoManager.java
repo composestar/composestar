@@ -40,12 +40,33 @@ public class ModuleInfoManager
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("ModuleInfo");
 
-	private static ModuleInfoManager instance;
+	/**
+	 * One instance for the complete master thread.
+	 */
+	private static InheritableThreadLocal<ModuleInfoManager> instance = new InheritableThreadLocal<ModuleInfoManager>()
+	{
+		@Override
+		protected ModuleInfoManager initialValue()
+		{
+			return new ModuleInfoManager();
+		}
+	};
 
+	/**
+	 * Lookup using the classname
+	 */
 	protected Map<Class<?>, ModuleInfo> classCache;
 
+	/**
+	 * Lookup using momodule names. These could be replaced by different
+	 * ModuleInfo instances using the same ID.
+	 */
 	protected Map<String, ModuleInfo> idCache;
 
+	/**
+	 * The build configuration instance. It is used to initialize the module
+	 * settings according to the configuration file.
+	 */
 	protected BuildConfig buildConfig;
 
 	/**
@@ -55,11 +76,7 @@ public class ModuleInfoManager
 	 */
 	public static ModuleInfoManager getInstance()
 	{
-		if (instance == null)
-		{
-			instance = new ModuleInfoManager();
-		}
-		return instance;
+		return instance.get();
 	}
 
 	/**
@@ -94,6 +111,11 @@ public class ModuleInfoManager
 		}
 	}
 
+	/**
+	 * @see #load(InputSource)
+	 * @param source
+	 * @throws ConfigurationException
+	 */
 	public static void load(InputStream source) throws ConfigurationException
 	{
 		load(new InputSource(source));
@@ -132,6 +154,12 @@ public class ModuleInfoManager
 		return null;
 	}
 
+	/**
+	 * Return the moduleinfo instance using the module ID
+	 * 
+	 * @param moduleName
+	 * @return
+	 */
 	public static ModuleInfo get(String moduleName)
 	{
 		ModuleInfoManager mim = getInstance();
@@ -255,8 +283,14 @@ public class ModuleInfoManager
 	 */
 	static class ModuleInfosHandler extends CpsBaseHandler
 	{
+		/**
+		 * Reference to the manager for easier access
+		 */
 		protected ModuleInfoManager manager;
 
+		/**
+		 * ModuleInfo handler
+		 */
 		protected ModuleInfoHandler miHandler;
 
 		public ModuleInfosHandler(ModuleInfoManager inManager, XMLReader inReader)
@@ -266,10 +300,17 @@ public class ModuleInfoManager
 			reader = inReader;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+		 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+		 */
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
 		{
-			if (qName.equals("moduleinfo"))
+			super.startElement(uri, localName, qName, attributes);
+			if (currentName.equals("moduleinfo"))
 			{
 				miHandler = new ModuleInfoHandler(reader, this);
 				reader.setContentHandler(miHandler);
@@ -277,10 +318,17 @@ public class ModuleInfoManager
 			}
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+		 *      java.lang.String, java.lang.String)
+		 */
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException
 		{
-			if (qName.endsWith("moduleinfo"))
+			super.endElement(uri, localName, qName);
+			if (currentName.equals("moduleinfo"))
 			{
 				if (miHandler != null)
 				{

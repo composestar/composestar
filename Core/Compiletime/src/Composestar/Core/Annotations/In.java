@@ -36,7 +36,17 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface In
 {
+	/**
+	 * The identifier of the resource.
+	 * 
+	 * @return
+	 */
 	String value();
 
+	/**
+	 * If true it is required that this field is assigned a value.
+	 * 
+	 * @return
+	 */
 	boolean required() default true;
 }

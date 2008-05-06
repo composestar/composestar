@@ -19,6 +19,9 @@ import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.iterator.OrderedFlowNodeIterator;
 
+/**
+ * The hart of CORE which performs the actual consistency reasoning
+ */
 public class CoreConflictDetector
 {
 	private FlowNode currentFilterNode;

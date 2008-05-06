@@ -28,7 +28,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Base class for all repository checkers
+ * Base class for all repository checkers.
  * 
  * @author Michiel Hendriks
  */
@@ -36,6 +36,11 @@ public abstract class AbstractChecker
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Check.MODULE_NAME);
 
+	/**
+	 * This will contain the results of an executed check.
+	 * 
+	 * @see #getResults()
+	 */
 	protected CheckResults results;
 
 	public AbstractChecker()

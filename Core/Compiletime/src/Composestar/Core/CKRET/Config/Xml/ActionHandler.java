@@ -37,22 +37,44 @@ import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 
 /**
+ * Processes the &lt;action&gt; element in the SECRET configuration.
+ * 
  * @author Michiel Hendriks
  */
 public class ActionHandler extends CpsBaseHandler
 {
+	/**
+	 * Currently processing an action definition
+	 */
 	protected static final int STATE_ACTION = 1;
 
+	/**
+	 * Current processing a label
+	 */
 	protected static final int STATE_LABEL = 1;
 
+	/**
+	 * Processing an operation sequence.
+	 */
 	protected static final int STATE_SEQUENCE = 3;
 
 	protected SECRETResources resources;
 
+	/**
+	 * The newly created action
+	 */
 	protected OperationSequence action;
 
+	/**
+	 * Temporary storage for the label type which is stored in the attribute
+	 * list
+	 */
 	protected String currentLt;
 
+	/**
+	 * A reference to the resource that is used in the current operation
+	 * sequence definition.
+	 */
 	protected Resource currentResource;
 
 	/**
@@ -66,6 +88,9 @@ public class ActionHandler extends CpsBaseHandler
 		resources = resc;
 	}
 
+	/**
+	 * @return the created action instance
+	 */
 	public OperationSequence getAction()
 	{
 		return action;

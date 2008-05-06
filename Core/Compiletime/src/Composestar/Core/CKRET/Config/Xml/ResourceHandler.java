@@ -36,6 +36,8 @@ import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 
 /**
+ * Processes the &lt;resource&gt; element in the SECRET configuration.
+ * 
  * @author Michiel Hendriks
  */
 public class ResourceHandler extends CpsBaseHandler
@@ -44,8 +46,15 @@ public class ResourceHandler extends CpsBaseHandler
 
 	protected SECRETResources resources;
 
+	/**
+	 * The creates resource type
+	 */
 	protected Resource resc;
 
+	/**
+	 * Set to true when this resource instance replaces a previously defined
+	 * resource
+	 */
 	protected boolean replaceResc;
 
 	/**
@@ -59,11 +68,18 @@ public class ResourceHandler extends CpsBaseHandler
 		resources = sresc;
 	}
 
+	/**
+	 * @return get the newly created resource
+	 */
 	public Resource getRecource()
 	{
 		return resc;
 	}
 
+	/**
+	 * @return if true this resource should replace the previously defined
+	 *         resource
+	 */
 	public boolean replaceResource()
 	{
 		return replaceResc;

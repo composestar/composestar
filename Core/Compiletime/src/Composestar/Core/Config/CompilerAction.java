@@ -66,6 +66,11 @@ public class CompilerAction implements Serializable
 		args = new CmdLineArgumentList();
 	}
 
+	/**
+	 * Set the name of the compiler action
+	 * 
+	 * @param inName
+	 */
 	public void setName(String inName)
 	{
 		if (inName == null || inName.trim().length() == 0)
@@ -75,11 +80,17 @@ public class CompilerAction implements Serializable
 		name = inName.trim();
 	}
 
+	/**
+	 * @return the name of this action
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * @return the program to execute
+	 */
 	public String getExecutable()
 	{
 		return executable;
@@ -100,6 +111,11 @@ public class CompilerAction implements Serializable
 		executable = exec.trim();
 	}
 
+	/**
+	 * Add a new argument to the action
+	 * 
+	 * @param arg
+	 */
 	public void addArgument(CmdLineArgument arg)
 	{
 		args.addArgument(arg);

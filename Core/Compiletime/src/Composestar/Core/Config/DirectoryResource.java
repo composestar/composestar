@@ -102,6 +102,11 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		excludes = new HashSet<String>();
 	}
 
+	/**
+	 * Set the base path
+	 * 
+	 * @param newPath
+	 */
 	public void setPath(File newPath)
 	{
 		if (newPath == null)
@@ -121,6 +126,11 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		return path;
 	}
 
+	/**
+	 * Add an include directive
+	 * 
+	 * @param mask
+	 */
 	public void addInclude(String mask)
 	{
 		if (mask == null || mask.length() == 0)
@@ -134,6 +144,11 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		}
 	}
 
+	/**
+	 * Add an exclude directive
+	 * 
+	 * @param mask
+	 */
 	public void addExclude(String mask)
 	{
 		if (mask == null || mask.length() == 0)
@@ -147,6 +162,11 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		}
 	}
 
+	/**
+	 * Remove an include directive
+	 * 
+	 * @param mask
+	 */
 	public void removeInclude(String mask)
 	{
 		if (mask == null || mask.length() == 0)
@@ -160,6 +180,11 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		}
 	}
 
+	/**
+	 * Remove an exclude directive
+	 * 
+	 * @param mask
+	 */
 	public void removeExcludes(String mask)
 	{
 		if (mask == null || mask.length() == 0)
@@ -193,6 +218,11 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		return Collections.unmodifiableSet(excludes);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.FileCollection#addFile(java.lang.String)
+	 */
 	@Override
 	public void addFile(String newFile)
 	{
@@ -240,6 +270,11 @@ public class DirectoryResource extends FileCollection implements FileFilter
 		return cache;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.FileCollection#toString()
+	 */
 	@Override
 	public String toString()
 	{

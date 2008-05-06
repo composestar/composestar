@@ -47,7 +47,8 @@ import Composestar.Utils.Perf.CPSTimer;
 
 // FIXME: rename package to SECRET
 /**
- * SECRET
+ * SECRET performs semantic reasoning on the resource operations of the filters
+ * and their actions.
  */
 public class CKRET implements CTCommonModule
 {
@@ -57,13 +58,26 @@ public class CKRET implements CTCommonModule
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
+	/**
+	 * The mode secret should execute in.
+	 */
 	protected SECRETMode mode;
 
 	@ResourceManager
 	protected SECRETResources secretResources;
 
+	/**
+	 * The class that will be used to produce the report. If this value is
+	 * "true" then the {@link XMLReport} class will be used. This variable is
+	 * set through the project configuration.
+	 */
 	protected String reportClass;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
 		secretResources.setFIRE2Resources(resources.getResourceManager(FIRE2Resources.class));
@@ -124,6 +138,15 @@ public class CKRET implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Load the configuration for SECRET. This will extract resource, actions,
+	 * and rule definitions from XML configuration files and filter action
+	 * elements in the repository.
+	 * 
+	 * @param resources
+	 * @throws ConfigurationException
+	 * @see FilterAction#getResourceOperations()
+	 */
 	private void loadConfiguration(CommonResources resources) throws ConfigurationException
 	{
 		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
@@ -330,6 +353,12 @@ public class CKRET implements CTCommonModule
 		return result;
 	}
 
+	/**
+	 * Check the provided concern for conflicting paths.
+	 * 
+	 * @param concern
+	 * @throws ModuleException
+	 */
 	private void run(Concern concern) throws ModuleException
 	{
 		FilterModuleOrder singleOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);

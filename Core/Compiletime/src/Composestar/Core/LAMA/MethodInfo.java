@@ -27,7 +27,7 @@ import java.util.List;
 public abstract class MethodInfo extends ProgramElement
 {
 
-	public String Name;
+	public String name;
 
 	public String returnTypeString;
 
@@ -80,7 +80,7 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	public String getName()
 	{
-		return Name;
+		return name;
 	}
 
 	/**
@@ -88,7 +88,7 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	public void setName(String inName)
 	{
-		Name = inName;
+		name = inName;
 	}
 
 	/**
@@ -232,7 +232,6 @@ public abstract class MethodInfo extends ProgramElement
 
 	public abstract boolean isDeclaredHere();
 
-	
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer();
@@ -253,7 +252,7 @@ public abstract class MethodInfo extends ProgramElement
 			sb.append(parent.fullName);
 			sb.append(".");
 		}
-		sb.append(Name);
+		sb.append(name);
 		sb.append("(");
 		for (int i = 0; i < parameters.size(); i++)
 		{
@@ -269,19 +268,16 @@ public abstract class MethodInfo extends ProgramElement
 
 	// Stuff for LOLA
 
-	
 	public String getUnitName()
 	{
 		return getName();
 	}
 
-	
 	public String getUnitType()
 	{
 		return "Method";
 	}
 
-	
 	public boolean hasUnitAttribute(String attribute)
 	{
 		return getUnitAttributes().contains(attribute);
@@ -296,7 +292,7 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		Name = in.readUTF();
+		name = in.readUTF();
 		returnTypeString = in.readUTF();
 		parameters = (ArrayList) in.readObject();
 		parent = (Type) in.readObject();
@@ -312,7 +308,7 @@ public abstract class MethodInfo extends ProgramElement
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeUTF(Name);
+		out.writeUTF(name);
 		out.writeUTF(returnTypeString);
 		out.writeObject(parameters);
 		out.writeObject(parent);
@@ -323,7 +319,7 @@ public abstract class MethodInfo extends ProgramElement
 
 	public boolean checkEquals(MethodInfo method)
 	{
-		if (!method.Name.equals(Name))
+		if (!method.name.equals(name))
 		{
 			return false;
 		}

@@ -52,11 +52,17 @@ public class OutdatedFormatException extends SAXException
 		needVersion = need;
 	}
 
+	/**
+	 * @return the detected version
+	 */
 	public String getDetectedVersion()
 	{
 		return detectedVersion;
 	}
 
+	/**
+	 * @return the minimum required version
+	 */
 	public String getNeedVersion()
 	{
 		return needVersion;

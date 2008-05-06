@@ -58,16 +58,30 @@ public abstract class CpsParserBase extends Parser
 		super(input);
 	}
 
+	/**
+	 * @return the number of errors
+	 */
 	public int getErrorCnt()
 	{
 		return errorCnt;
 	}
 
+	/**
+	 * Set the source file name. Used for error reporting
+	 * 
+	 * @param srcfl
+	 */
 	public void setSourceFile(String srcfl)
 	{
 		sourceFile = srcfl;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.antlr.runtime.BaseRecognizer#displayRecognitionError(java.lang.String[],
+	 *      org.antlr.runtime.RecognitionException)
+	 */
 	@Override
 	public void displayRecognitionError(String[] tokenNames, RecognitionException e)
 	{
@@ -77,6 +91,11 @@ public abstract class CpsParserBase extends Parser
 		logger.error(new LogMessage(msg, sourceFile, e.line, e.charPositionInLine));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.antlr.runtime.BaseRecognizer#emitErrorMessage(java.lang.String)
+	 */
 	@Override
 	public void emitErrorMessage(String msg)
 	{
@@ -105,6 +124,13 @@ public abstract class CpsParserBase extends Parser
 		return result;
 	}
 
+	/**
+	 * Create a log entry
+	 * 
+	 * @param msg
+	 * @param t
+	 * @return
+	 */
 	protected LogMessage createLogMessage(String msg, Token t)
 	{
 		return new LogMessage(msg, sourceFile, t.getLine(), t.getCharPositionInLine());

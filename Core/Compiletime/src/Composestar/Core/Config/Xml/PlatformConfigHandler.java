@@ -48,7 +48,7 @@ import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Handles the <platforms> tag
+ * Handles the &gt;platforms&lt; tag
  * 
  * @author Michiel Hendriks
  */
@@ -58,10 +58,22 @@ public class PlatformConfigHandler extends CpsBaseHandler
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.Platform");
 
+	/**
+	 * Processing platforms
+	 */
 	protected static final int STATE_PLATFORMS = 1;
 
+	/**
+	 * The platform element XML handler
+	 */
 	protected PlatformHandler platformHandler;
 
+	/**
+	 * Parses an XML platform configuration
+	 * 
+	 * @param file
+	 * @throws ConfigurationException
+	 */
 	public static void loadPlatformConfig(File file) throws ConfigurationException
 	{
 		if (file == null)
@@ -90,11 +102,21 @@ public class PlatformConfigHandler extends CpsBaseHandler
 		}
 	}
 
+	/**
+	 * @see #loadPlatformConfig(File)
+	 * @param stream
+	 * @throws ConfigurationException
+	 */
 	public static void loadPlatformConfig(InputStream stream) throws ConfigurationException
 	{
 		loadPlatformConfig(new InputSource(stream));
 	}
 
+	/**
+	 * @see #loadPlatformConfig(File)
+	 * @param source
+	 * @throws ConfigurationException
+	 */
 	public static void loadPlatformConfig(InputSource source) throws ConfigurationException
 	{
 		try
@@ -128,6 +150,12 @@ public class PlatformConfigHandler extends CpsBaseHandler
 		super(inReader, inParent);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
@@ -151,6 +179,12 @@ public class PlatformConfigHandler extends CpsBaseHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
@@ -174,6 +208,11 @@ public class PlatformConfigHandler extends CpsBaseHandler
 		}
 	}
 
+	/**
+	 * Debug routine
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
 		try

@@ -39,24 +39,54 @@ import Composestar.Core.Config.Project;
  */
 public class ProjectHandler extends DefaultBuildConfigHandler
 {
+	/**
+	 * Processing a project element
+	 */
 	protected static final int STATE_PROJECT = 1;
 
+	/**
+	 * Processing the concerns
+	 */
 	protected static final int STATE_CONCERNS = 2;
 
+	/**
+	 * Processing source definition
+	 */
 	protected static final int STATE_SOURCES = 3;
 
+	/**
+	 * Processing the dependency elements
+	 */
 	protected static final int STATE_DEPENDENCIES = 4;
 
+	/**
+	 * Processing project resource elements
+	 */
 	protected static final int STATE_RESOURCES = 5;
 
+	/**
+	 * The resulting project definition
+	 */
 	protected Project project;
 
+	/**
+	 * SAX handler for the sources
+	 */
 	protected SourceTypeHandler sourceTypeHandler;
 
+	/**
+	 * SAX handler for the dependencies
+	 */
 	protected DependencyTypeHandler dependencyTypeHandler;
 
+	/**
+	 * SAX handler for the resources
+	 */
 	protected ResourceTypeHandler resourceTypeHandler;
 
+	/**
+	 * Temporary variable used during the concern processing.
+	 */
 	protected boolean concernEnabled;
 
 	/**
@@ -68,6 +98,12 @@ public class ProjectHandler extends DefaultBuildConfigHandler
 		super(inReader, inParent);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
@@ -108,6 +144,12 @@ public class ProjectHandler extends DefaultBuildConfigHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{

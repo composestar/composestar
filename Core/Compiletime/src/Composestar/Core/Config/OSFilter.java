@@ -54,11 +54,17 @@ public class OSFilter implements Serializable
 	 */
 	protected Pattern arch;
 
+	/**
+	 * Holds the various elements of the current OS
+	 */
 	protected transient String[] currentOs;
 
 	public OSFilter()
 	{}
 
+	/**
+	 * @return get the current OS
+	 */
 	protected String[] getCurrentOs()
 	{
 		if (currentOs == null)
@@ -71,6 +77,11 @@ public class OSFilter implements Serializable
 		return currentOs;
 	}
 
+	/**
+	 * set the pattern for the OS name
+	 * 
+	 * @param expr
+	 */
 	public void setName(String expr)
 	{
 		if (expr == null || expr.trim().length() == 0)
@@ -81,6 +92,11 @@ public class OSFilter implements Serializable
 		name = Pattern.compile(expr);
 	}
 
+	/**
+	 * Set the pattern for the architecture
+	 * 
+	 * @param expr
+	 */
 	public void setArch(String expr)
 	{
 		if (expr == null || expr.trim().length() == 0)
@@ -91,6 +107,11 @@ public class OSFilter implements Serializable
 		arch = Pattern.compile(expr);
 	}
 
+	/**
+	 * Set the pattern for the version
+	 * 
+	 * @param expr
+	 */
 	public void setVersion(String expr)
 	{
 		if (expr == null || expr.trim().length() == 0)
@@ -151,6 +172,11 @@ public class OSFilter implements Serializable
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

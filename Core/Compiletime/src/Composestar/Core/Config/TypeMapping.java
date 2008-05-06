@@ -53,6 +53,12 @@ public class TypeMapping implements Serializable
 		mapping = new HashMap<String, Source>();
 	}
 
+	/**
+	 * Add a mapping from type to source entry
+	 * 
+	 * @param type
+	 * @param source
+	 */
 	public void addType(String type, Source source)
 	{
 		if (type == null || type.trim().length() == 0)
@@ -66,11 +72,23 @@ public class TypeMapping implements Serializable
 		mapping.put(type.trim(), source);
 	}
 
+	/**
+	 * Remove a type association
+	 * 
+	 * @param type
+	 * @return
+	 */
 	public Source removeType(String type)
 	{
 		return mapping.remove(type);
 	}
 
+	/**
+	 * Remove all entries associated with the given source
+	 * 
+	 * @param source
+	 * @return
+	 */
 	public List<String> removeSource(Source source)
 	{
 		List<String> result = getTypes(source);

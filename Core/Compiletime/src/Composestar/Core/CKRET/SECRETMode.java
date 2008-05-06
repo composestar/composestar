@@ -23,7 +23,23 @@
  */
 package Composestar.Core.CKRET;
 
+/**
+ * The module SECRET performs its analysis in
+ */
 public enum SECRETMode
 {
-	Normal, Redundant, Progressive
+
+	/**
+	 * Only check the selected filter module
+	 */
+	Normal,
+	/**
+	 * Also check all other filter module orders
+	 */
+	Redundant,
+	/**
+	 * Like Redundant but this will also update the current filter module order
+	 * to the one that does not contain a conflict.
+	 */
+	Progressive
 }

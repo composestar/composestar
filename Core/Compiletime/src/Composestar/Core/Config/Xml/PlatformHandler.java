@@ -33,20 +33,40 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Config.Platform;
 
 /**
+ * SAX Handler for the platform element in a platform configuration
+ * 
  * @author Michiel Hendriks
  */
 public class PlatformHandler extends CpsBaseHandler
 {
+	/**
+	 * Handling a platform element
+	 */
 	protected static final int STATE_PLATFORM = 1;
 
+	/**
+	 * Handling a languages element
+	 */
 	protected static final int STATE_LANGUAGES = 2;
 
+	/**
+	 * OSFilter handler
+	 */
 	protected OSFilterHandler osfilterHandler;
 
+	/**
+	 * Language element handler
+	 */
 	protected LanguageHandler languageHandler;
 
+	/**
+	 * Resource type handler
+	 */
 	protected ResourceTypeHandler resourceHandler;
 
+	/**
+	 * The resulting platform definition
+	 */
 	protected Platform platform;
 
 	public PlatformHandler(XMLReader inReader, DefaultHandler inParent)
@@ -54,11 +74,20 @@ public class PlatformHandler extends CpsBaseHandler
 		super(inReader, inParent);
 	}
 
+	/**
+	 * @return the defined platform
+	 */
 	public Platform getPlatform()
 	{
 		return platform;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
@@ -114,6 +143,12 @@ public class PlatformHandler extends CpsBaseHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{

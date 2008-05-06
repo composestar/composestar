@@ -54,8 +54,14 @@ public class SourceTypeHandler extends CpsBaseHandler
 	 */
 	protected boolean supportMulti;
 
+	/**
+	 * The current source entry being processed
+	 */
 	protected Source currentSource;
 
+	/**
+	 * The resulting set of sources
+	 */
 	protected Set<Source> sources;
 
 	/**
@@ -84,11 +90,20 @@ public class SourceTypeHandler extends CpsBaseHandler
 		sources = new HashSet<Source>();
 	}
 
+	/**
+	 * @return the defined sources
+	 */
 	public Set<Source> getSources()
 	{
 		return sources;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
@@ -117,6 +132,12 @@ public class SourceTypeHandler extends CpsBaseHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{

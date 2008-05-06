@@ -152,7 +152,7 @@ public class AnnotationCollector implements CTCommonModule
 			List<MethodInfo> methods = type.getMethods();
 			for (MethodInfo method : methods)
 			{
-				if (method.Name.equals(methodName))
+				if (method.name.equals(methodName))
 				{
 					return method;
 				}

@@ -39,7 +39,8 @@ import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * A filter set analysis
+ * A filter set analysis for a given concern, filter module ordering and filter
+ * direction
  */
 public class FilterSetAnalysis implements Serializable
 {
@@ -48,12 +49,12 @@ public class FilterSetAnalysis implements Serializable
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(CKRET.MODULE_NAME);
 
 	/**
-	 * The concern who's filters are being analysed
+	 * The concern who's filters are being analyzed
 	 */
 	private Concern concern;
 
 	/**
-	 * Order used to analyse
+	 * Order used to analyze
 	 */
 	private FilterModuleOrder order;
 
@@ -90,6 +91,10 @@ public class FilterSetAnalysis implements Serializable
 		getFilterList();
 	}
 
+	/**
+	 * @see #filters
+	 * @return
+	 */
 	public List<Filter> getFilters()
 	{
 		return Collections.unmodifiableList(filters);
@@ -125,31 +130,53 @@ public class FilterSetAnalysis implements Serializable
 		return result;
 	}
 
+	/**
+	 * @return true if there is a conflict
+	 */
 	public boolean hasConflicts()
 	{
 		return conflicts.size() > 0;
 	}
 
+	/**
+	 * @return the associated concern
+	 */
 	public Concern getConcern()
 	{
 		return concern;
 	}
 
+	/**
+	 * @see #filterDirection
+	 * @return
+	 */
 	public FilterDirection getFilterDirection()
 	{
 		return filterDirection;
 	}
 
+	/**
+	 * @see #isSelectedOrder
+	 * @return
+	 */
 	public boolean isSelected()
 	{
 		return isSelectedOrder;
 	}
 
+	/**
+	 * @see #getOrder()
+	 * @return
+	 */
 	public FilterModuleOrder getOrder()
 	{
 		return order;
 	}
 
+	/**
+	 * Construct the list of filters in the order that they appear according to
+	 * the given ordering.
+	 */
 	@SuppressWarnings("unchecked")
 	protected void getFilterList()
 	{
@@ -176,7 +203,7 @@ public class FilterSetAnalysis implements Serializable
 	}
 
 	/**
-	 * Analyse the given concern and filter module order
+	 * Analyze the given concern and filter module order
 	 * 
 	 * @param resources
 	 */
@@ -210,6 +237,13 @@ public class FilterSetAnalysis implements Serializable
 		}
 	}
 
+	/**
+	 * Add a detected conflict to this analysis set
+	 * 
+	 * @param resource the resource that was being inspected
+	 * @param rule the rule that was being validated
+	 * @param trace the trace leading to the violation
+	 */
 	protected void addConflict(Resource resource, ConflictRule rule, MatchTrace trace)
 	{
 		Conflict conflict = new Conflict();

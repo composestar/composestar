@@ -27,6 +27,9 @@ public class ConflictRule implements Serializable
 	 */
 	public static final String PATTERN_NO_WRITE_WRITE_READ = "(write)(![write,read]*(write)![write,read]*)+(read)";
 
+	/**
+	 * The type of the conflict rule
+	 */
 	public enum RuleType
 	{
 		/**
@@ -83,11 +86,20 @@ public class ConflictRule implements Serializable
 		setMessage(inmessage);
 	}
 
+	/**
+	 * @see #pattern
+	 * @param patternString
+	 * @throws PatternParseException
+	 */
 	public void setPattern(String patternString) throws PatternParseException
 	{
 		pattern = RegularPattern.compile(patternString);
 	}
 
+	/**
+	 * @see #message
+	 * @param msg
+	 */
 	public void setMessage(String msg)
 	{
 		if (msg == null)
@@ -136,6 +148,11 @@ public class ConflictRule implements Serializable
 		return type;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

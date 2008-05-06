@@ -134,7 +134,7 @@ public class Main implements CTCommonModule
 			{
 				resolveReference((DeclaredObjectReference) o);
 			}
-			else if (o instanceof Reference)
+			else
 			{
 				hasErrors = true;
 				logger.error(String.format("Unhandled reference %s: %s", o.getClass().getName(), ((Reference) o)

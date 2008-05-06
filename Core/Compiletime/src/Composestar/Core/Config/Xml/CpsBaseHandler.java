@@ -51,10 +51,19 @@ public abstract class CpsBaseHandler extends DefaultHandler
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.XML");
 
+	/**
+	 * The current XMLReader instance
+	 */
 	protected XMLReader reader;
 
+	/**
+	 * Locator used for detailed parsing error reporting
+	 */
 	protected Locator locator;
 
+	/**
+	 * The parent handler that received handling when this handler is done
+	 */
 	protected DefaultHandler parent;
 
 	/**
@@ -146,6 +155,12 @@ public abstract class CpsBaseHandler extends DefaultHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
@@ -170,6 +185,11 @@ public abstract class CpsBaseHandler extends DefaultHandler
 		currentName = normalizeName(uri, localName, name);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.xml.sax.helpers.DefaultHandler#characters(char[], int, int)
+	 */
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException
 	{
@@ -205,6 +225,15 @@ public abstract class CpsBaseHandler extends DefaultHandler
 		}
 	}
 
+	/**
+	 * Handles an unknown start element
+	 * 
+	 * @param uri
+	 * @param localName
+	 * @param name
+	 * @param attributes
+	 * @throws SAXException
+	 */
 	public void startUnknownElement(String uri, String localName, String name, Attributes attributes)
 			throws SAXException
 	{
@@ -215,6 +244,14 @@ public abstract class CpsBaseHandler extends DefaultHandler
 		logger.warn(msg);
 	}
 
+	/**
+	 * Handles an unknown end element
+	 * 
+	 * @param uri
+	 * @param localName
+	 * @param name
+	 * @throws SAXException
+	 */
 	public void endUnknownElement(String uri, String localName, String name) throws SAXException
 	{
 		String msg = String.format(
@@ -224,6 +261,11 @@ public abstract class CpsBaseHandler extends DefaultHandler
 		logger.warn(msg);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.xml.sax.helpers.DefaultHandler#setDocumentLocator(org.xml.sax.Locator)
+	 */
 	@Override
 	public void setDocumentLocator(Locator loc)
 	{

@@ -11,6 +11,9 @@ package Composestar.Core.CONE;
 
 import Composestar.Core.Master.CTCommonModule;
 
+/**
+ * Repository serializer
+ */
 public abstract class CONE implements CTCommonModule
 {
 	/**

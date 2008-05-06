@@ -24,7 +24,7 @@
 package Composestar.Core.CKRET.Config;
 
 /**
- * The resource type
+ * The resource type.
  * 
  * @author Michiel Hendriks
  */
@@ -40,6 +40,11 @@ public enum ResourceType
 	 */
 	Wildcard
 	{
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
 		@Override
 		public String toString()
 		{
@@ -48,6 +53,11 @@ public enum ResourceType
 	},
 	Message
 	{
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
 		@Override
 		public String toString()
 		{
@@ -56,6 +66,11 @@ public enum ResourceType
 	},
 	Target
 	{
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
 		@Override
 		public String toString()
 		{
@@ -64,6 +79,11 @@ public enum ResourceType
 	},
 	Selector
 	{
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
 		@Override
 		public String toString()
 		{
@@ -72,6 +92,11 @@ public enum ResourceType
 	},
 	Return
 	{
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
 		@Override
 		public String toString()
 		{
@@ -80,6 +105,11 @@ public enum ResourceType
 	},
 	ArgumentList
 	{
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
 		@Override
 		public String toString()
 		{
@@ -88,6 +118,11 @@ public enum ResourceType
 	},
 	ArgumentEntry
 	{
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
 		@Override
 		public String toString()
 		{
@@ -110,6 +145,12 @@ public enum ResourceType
 		return this == Unknown || this == Wildcard;
 	}
 
+	/**
+	 * Parse a name to a resource type instance
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public static ResourceType parse(String value)
 	{
 		if (value == null || value.trim().length() == 0)
@@ -154,6 +195,15 @@ public enum ResourceType
 
 	private static Resource wildcardResource;
 
+	/**
+	 * Create a resource given the resource type
+	 * 
+	 * @param name the type of resource to create
+	 * @param allowWildcard if true then the wildcard resource can also be
+	 *            returned, otherwise an {@link IllegalArgumentException} is
+	 *            thrown when a meta resource is created
+	 * @return the created resource
+	 */
 	public static Resource createResource(String name, boolean allowWildcard)
 	{
 		ResourceType rt;

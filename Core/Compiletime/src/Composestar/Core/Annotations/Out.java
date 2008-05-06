@@ -36,5 +36,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Out
 {
+	/**
+	 * The identifier of the resource
+	 * 
+	 * @return
+	 */
 	String value();
 }

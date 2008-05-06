@@ -42,7 +42,22 @@ public class PlatformManager
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("Configuration.Platform.Manager");
 
-	protected static final PlatformManager INSTANCE = new PlatformManager();
+	/**
+	 * global instance, platforms never change, or shouldn't
+	 */
+	protected static PlatformManager instance;
+
+	/**
+	 * @return the platform manager
+	 */
+	public static PlatformManager getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new PlatformManager();
+		}
+		return instance;
+	}
 
 	/**
 	 * Contains a mapping from ide to platforms. Platforms are identified by
@@ -58,7 +73,7 @@ public class PlatformManager
 	public static final Set<Platform> getPlatforms()
 	{
 		Set<Platform> pfs = new HashSet<Platform>();
-		for (Set<Platform> platformSet : INSTANCE.platforms.values())
+		for (Set<Platform> platformSet : getInstance().platforms.values())
 		{
 			pfs.addAll(platformSet);
 		}
@@ -89,7 +104,7 @@ public class PlatformManager
 		{
 			throw new IllegalArgumentException("Platform id can not be null or empty.");
 		}
-		Set<Platform> set = INSTANCE.platforms.get(id);
+		Set<Platform> set = getInstance().platforms.get(id);
 		Platform result = null;
 		for (Platform platform : set)
 		{
@@ -125,11 +140,11 @@ public class PlatformManager
 		{
 			throw new IllegalArgumentException("Platform does not have a valid id");
 		}
-		Set<Platform> set = INSTANCE.platforms.get(id);
+		Set<Platform> set = getInstance().platforms.get(id);
 		if (set == null)
 		{
 			set = new HashSet<Platform>();
-			INSTANCE.platforms.put(id, set);
+			getInstance().platforms.put(id, set);
 		}
 		set.add(platform);
 	}

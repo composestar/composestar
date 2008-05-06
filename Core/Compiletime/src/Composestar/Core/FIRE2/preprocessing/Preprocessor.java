@@ -13,7 +13,6 @@ import groove.io.XmlException;
 import groove.lts.DefaultGraphState;
 import groove.lts.ExploreStrategy;
 import groove.lts.GTS;
-import groove.lts.explore.BarbedStrategy;
 import groove.lts.explore.FullStrategy;
 import groove.lts.explore.LinearStrategy;
 import groove.trans.view.RuleViewGrammar;
@@ -54,7 +53,8 @@ public class Preprocessor implements CTCommonModule
 
 	private static final ExploreStrategy LINEAR_STRATEGY = new LinearStrategy();
 
-	private static final ExploreStrategy BARBED_STRATEGY = new BarbedStrategy();
+	// private static final ExploreStrategy BARBED_STRATEGY = new
+	// BarbedStrategy();
 
 	private static final ExploreStrategy FULL_STRATEGY = new FullStrategy();
 
@@ -116,8 +116,6 @@ public class Preprocessor implements CTCommonModule
 		Iterator<FilterModule> moduleIter = resources.repository().getAllInstancesOf(FilterModule.class);
 
 		logger.debug("Starting FIRE Preprocessing");
-
-		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 
 		ParallelTask ptask = new ParallelTask();
 		ptask.setPerProcessor(1);
@@ -196,7 +194,7 @@ public class Preprocessor implements CTCommonModule
 
 				generateFlowGrammar = rvg;
 
-				URL runUrl = this.getClass().getResource(RUNTIME_GRAMMAR_PATH);
+				URL runUrl = Preprocessor.class.getClass().getResource(RUNTIME_GRAMMAR_PATH);
 				runtimeGrammar = (RuleViewGrammar) gpsLoader
 						.unmarshal(new File(runUrl.getFile().replaceAll("%20", " ")));
 

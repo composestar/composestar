@@ -33,6 +33,9 @@ public class ModuleSetting<T extends Serializable> implements Serializable
 	 */
 	protected String name;
 
+	/**
+	 * The class reference of the type of this setting. Used for enumerations.
+	 */
 	protected Class<T> type;
 
 	/**
@@ -52,16 +55,27 @@ public class ModuleSetting<T extends Serializable> implements Serializable
 		type = isType;
 	}
 
+	/**
+	 * @return the id
+	 */
 	public String getId()
 	{
 		return id;
 	}
 
+	/**
+	 * @return the human readable name
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * Set the human readable name
+	 * 
+	 * @param newName
+	 */
 	public void setName(String newName)
 	{
 		if (newName == null)
@@ -71,25 +85,39 @@ public class ModuleSetting<T extends Serializable> implements Serializable
 		name = newName;
 	}
 
+	/**
+	 * Set the default value
+	 * 
+	 * @param defVal
+	 */
 	public void setDefault(T defVal)
 	{
 		setValue(defVal);
 		defaultValue = value;
 	}
 
+	/**
+	 * Set the default value by parsing a string
+	 * 
+	 * @param defVal
+	 * @throws ConfigurationException
+	 */
 	public void setDefaultFromString(String defVal) throws ConfigurationException
 	{
 		setValueFromString(defVal);
 		defaultValue = value;
 	}
 
+	/**
+	 * @return the current value
+	 */
 	public T getValue()
 	{
 		return value;
 	}
 
 	/**
-	 * Sets the newvalue
+	 * Sets the new value
 	 * 
 	 * @param newValue
 	 * @throws ConfigurationException
@@ -120,7 +148,7 @@ public class ModuleSetting<T extends Serializable> implements Serializable
 
 	/**
 	 * Sets a new value. Strings will automatically be converted to the
-	 * appropiate type.
+	 * appropriate type.
 	 * 
 	 * @param newValue
 	 * @throws ConfigurationException
@@ -201,6 +229,9 @@ public class ModuleSetting<T extends Serializable> implements Serializable
 		}
 	}
 
+	/**
+	 * @return the default value
+	 */
 	public T getDefaultValue()
 	{
 		return defaultValue;

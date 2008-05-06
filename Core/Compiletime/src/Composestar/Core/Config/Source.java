@@ -76,6 +76,10 @@ public class Source implements Serializable
 	public Source()
 	{}
 
+	/**
+	 * @return the language for this source file. When null the project default
+	 *         should be used.
+	 */
 	public String getLanguage()
 	{
 		return language;
@@ -224,16 +228,29 @@ public class Source implements Serializable
 		stub = inStub;
 	}
 
+	/**
+	 * Set the location to the assembled file
+	 * 
+	 * @param asm
+	 */
 	public void setAssembly(File asm)
 	{
 		assembly = asm;
 	}
 
+	/**
+	 * @return the assembled location
+	 */
 	public File getAssembly()
 	{
 		return assembly;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

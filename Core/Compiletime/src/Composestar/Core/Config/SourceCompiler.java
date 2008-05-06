@@ -63,6 +63,11 @@ public class SourceCompiler implements Serializable
 		actions = new HashMap<String, CompilerAction>();
 	}
 
+	/**
+	 * Set the classname that manages compilation.
+	 * 
+	 * @param inClassname
+	 */
 	public void setClassname(String inClassname)
 	{
 		if (inClassname == null || inClassname.trim().length() == 0)
@@ -72,11 +77,20 @@ public class SourceCompiler implements Serializable
 		classname = inClassname.trim();
 	}
 
+	/**
+	 * @return the classname that managed compilation
+	 * @see #getCompiler()
+	 */
 	public String getClassname()
 	{
 		return classname;
 	}
 
+	/**
+	 * Add a compiler action
+	 * 
+	 * @param action
+	 */
 	public void addAction(CompilerAction action)
 	{
 		if (action == null)
@@ -91,6 +105,12 @@ public class SourceCompiler implements Serializable
 		actions.put(name, action);
 	}
 
+	/**
+	 * Get a compiler action by name
+	 * 
+	 * @param name
+	 * @return the requested compiler action or null
+	 */
 	public CompilerAction getAction(String name)
 	{
 		return actions.get(name);

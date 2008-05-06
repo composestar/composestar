@@ -44,12 +44,24 @@ import Composestar.Core.Config.FileCollection;
  */
 public class ResourceTypeHandler extends CpsBaseHandler
 {
+	/**
+	 * Handling multiple resource definitions
+	 */
 	protected static final int STATE_MULTI = 1;
 
+	/**
+	 * Processing a directory resource
+	 */
 	protected static final int STATE_DIR = 2;
 
+	/**
+	 * Processing an include directive
+	 */
 	protected static final int STATE_DIR_INCLUDE = 3;
 
+	/**
+	 * Processing an exclude directive
+	 */
 	protected static final int STATE_DIR_EXCLUDE = 4;
 
 	/**
@@ -62,10 +74,19 @@ public class ResourceTypeHandler extends CpsBaseHandler
 	 */
 	protected boolean supportMulti;
 
+	/**
+	 * The resulting resource definitions
+	 */
 	protected Set<FileCollection> resources;
 
+	/**
+	 * A file collection resource
+	 */
 	protected FileCollection fc;
 
+	/**
+	 * A directory resource
+	 */
 	protected DirectoryResource dr;
 
 	/**
@@ -94,11 +115,20 @@ public class ResourceTypeHandler extends CpsBaseHandler
 		resources = new HashSet<FileCollection>();
 	}
 
+	/**
+	 * @return the resource definitions
+	 */
 	public Set<FileCollection> getResources()
 	{
 		return resources;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
@@ -171,6 +201,12 @@ public class ResourceTypeHandler extends CpsBaseHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{

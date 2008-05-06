@@ -49,18 +49,21 @@ public class Annotation implements Serializable
 	public void register(Type annotationType, ProgramElement inTarget)
 	{
 		type = annotationType;
+		target = inTarget;
 		if (type != null)
 		{
 			setTypeName(type.getFullName());
+			type.addAnnotationInstance(this);
 		}
-		target = inTarget;
-		type.addAnnotationInstance(this);
 		inTarget.addAnnotation(this);
 	}
 
 	public void deregister()
 	{
-		type.removeAnnotationInstance(this);
+		if (type != null)
+		{
+			type.removeAnnotationInstance(this);
+		}
 		target.removeAnnotation(this);
 	}
 

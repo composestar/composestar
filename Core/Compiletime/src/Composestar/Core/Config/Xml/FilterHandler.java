@@ -40,20 +40,44 @@ import Composestar.Core.Config.Filters;
  */
 public class FilterHandler extends DefaultBuildConfigHandler
 {
+	/**
+	 * Processing a &lt;filters&gt; element
+	 */
 	protected static final int STATE_FILTERS = 1;
 
+	/**
+	 * Processing a custom filter element
+	 */
 	protected static final int STATE_CUSTOM_FILTER = 2;
 
+	/**
+	 * Processing a filter type element
+	 */
 	protected static final int STATE_FILTER_TYPE = 3;
 
+	/**
+	 * Processing a filter action element
+	 */
 	protected static final int STATE_FILTER_ACTION = 4;
 
+	/**
+	 * The filters to which the elements are added
+	 */
 	protected Filters filters;
 
+	/**
+	 * Temporary variable used during handling of custom filters
+	 */
 	protected CustomFilter currentCustomFilter;
 
+	/**
+	 * Temporary variable used during filter type handling
+	 */
 	protected FilterType currentFilterType;
 
+	/**
+	 * Temporary variable used during filter action handling.
+	 */
 	protected FilterAction currentFilterAction;
 
 	/**
@@ -65,6 +89,12 @@ public class FilterHandler extends DefaultBuildConfigHandler
 		super(inReader, inParent);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{
@@ -126,6 +156,12 @@ public class FilterHandler extends DefaultBuildConfigHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{

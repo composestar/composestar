@@ -34,5 +34,11 @@ import Composestar.Core.Resources.CommonResources;
  */
 public interface SECRETReport
 {
+	/**
+	 * Produce the report for the provided SECRET resources.
+	 * 
+	 * @param resources
+	 * @param secretResources
+	 */
 	void report(CommonResources resources, SECRETResources secretResources);
 }

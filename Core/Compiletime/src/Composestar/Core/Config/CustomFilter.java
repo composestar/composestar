@@ -49,6 +49,9 @@ public class CustomFilter implements Serializable
 	public CustomFilter()
 	{}
 
+	/**
+	 * @return the name of the custom filter
+	 */
 	public String getName()
 	{
 		return name;
@@ -70,6 +73,9 @@ public class CustomFilter implements Serializable
 		}
 	}
 
+	/**
+	 * @return the "library" string
+	 */
 	public String getLibrary()
 	{
 		return library;

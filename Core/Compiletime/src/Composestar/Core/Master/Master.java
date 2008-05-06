@@ -113,6 +113,8 @@ public abstract class Master
 		loggerSetup();
 		parser = new CmdLineParser();
 		initEvironment();
+		// make sure it's initialized
+		ModuleInfoManager.getInstance();
 	}
 
 	public Master(String[] args)

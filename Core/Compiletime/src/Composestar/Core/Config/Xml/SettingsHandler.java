@@ -36,6 +36,9 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SettingsHandler extends DefaultBuildConfigHandler
 {
+	/**
+	 * The id of the settings currently being processed
+	 */
 	protected String curSetting;
 
 	/**
@@ -47,6 +50,12 @@ public class SettingsHandler extends DefaultBuildConfigHandler
 		super(inReader, inParent);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#endElement(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException
 	{
@@ -68,6 +77,12 @@ public class SettingsHandler extends DefaultBuildConfigHandler
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Config.Xml.CpsBaseHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException
 	{

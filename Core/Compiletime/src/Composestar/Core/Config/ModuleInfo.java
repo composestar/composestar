@@ -99,11 +99,19 @@ public class ModuleInfo implements Serializable
 		}
 	}
 
+	/**
+	 * @return the module ID
+	 */
 	public String getId()
 	{
 		return id;
 	}
 
+	/**
+	 * Set the module ID
+	 * 
+	 * @param moduleId
+	 */
 	protected void setId(String moduleId)
 	{
 		if (moduleId == null || moduleId.trim().length() == 0)
@@ -113,11 +121,19 @@ public class ModuleInfo implements Serializable
 		id = moduleId.trim();
 	}
 
+	/**
+	 * @return the module class
+	 */
 	public Class<? extends CTCommonModule> getModuleClass()
 	{
 		return moduleClass;
 	}
 
+	/**
+	 * set the module class
+	 * 
+	 * @param cls
+	 */
 	public void setModuleClass(Class<? extends CTCommonModule> cls)
 	{
 		if (cls == null)
@@ -131,7 +147,15 @@ public class ModuleInfo implements Serializable
 		}
 	}
 
-	public void setModuleClass(String cls)
+	/**
+	 * Set the module class according to the provided string. The class must
+	 * implement {@link CTCommonModule}
+	 * 
+	 * @param cls
+	 * @throws IllegalArgumentException when the string is null or empty
+	 * @throws ClassNotFoundException
+	 */
+	public void setModuleClass(String cls) throws IllegalArgumentException, ClassNotFoundException
 	{
 		if (cls == null || cls.trim().length() == 0)
 		{
@@ -142,7 +166,7 @@ public class ModuleInfo implements Serializable
 			Class<?> clazz = Class.forName(cls.trim());
 			if (CTCommonModule.class.isAssignableFrom(clazz))
 			{
-				setModuleClass((Class<? extends CTCommonModule>) clazz);
+				setModuleClass(clazz.asSubclass(CTCommonModule.class));
 			}
 			else
 			{
@@ -155,11 +179,19 @@ public class ModuleInfo implements Serializable
 		}
 	}
 
+	/**
+	 * @return the human readable name of the class.
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * Set the human readable name
+	 * 
+	 * @param newName
+	 */
 	public void setName(String newName)
 	{
 		if (newName == null)
@@ -169,11 +201,21 @@ public class ModuleInfo implements Serializable
 		name = newName;
 	}
 
+	/**
+	 * Get a description of this module
+	 * 
+	 * @return
+	 */
 	public String getDescription()
 	{
 		return description;
 	}
 
+	/**
+	 * Set the module description
+	 * 
+	 * @param desc
+	 */
 	public void setDescription(String desc)
 	{
 		if (desc == null)
@@ -183,16 +225,32 @@ public class ModuleInfo implements Serializable
 		description = desc;
 	}
 
+	/**
+	 * Get the INCRE configuration
+	 * 
+	 * @return
+	 */
 	public INCREModule getIncreModule()
 	{
 		return increModule;
 	}
 
+	/**
+	 * Set the INCRE configuration
+	 * 
+	 * @param inModule
+	 */
 	public void setIncreModule(INCREModule inModule)
 	{
 		increModule = inModule;
 	}
 
+	/**
+	 * Add a dependency for this module
+	 * 
+	 * @param moduleId
+	 * @return
+	 */
 	public boolean addDepedency(String moduleId)
 	{
 		if (moduleId == null || moduleId.trim().length() == 0)
@@ -202,16 +260,33 @@ public class ModuleInfo implements Serializable
 		return dependson.add(moduleId);
 	}
 
+	/**
+	 * Remove a dependency
+	 * 
+	 * @param moduleId
+	 * @return
+	 */
 	public boolean removeDependency(String moduleId)
 	{
 		return dependson.remove(moduleId);
 	}
 
+	/**
+	 * Get all dependencies of this module
+	 * 
+	 * @return
+	 */
 	public Set<String> getDependencies()
 	{
 		return Collections.unmodifiableSet(dependson);
 	}
 
+	/**
+	 * Add a module setting
+	 * 
+	 * @param ms
+	 * @throws ConfigurationException
+	 */
 	public void addModuleSetting(ModuleSetting<?> ms) throws ConfigurationException
 	{
 		if (settings.containsKey(ms.getId()))
@@ -221,6 +296,14 @@ public class ModuleInfo implements Serializable
 		settings.put(ms.getId(), ms);
 	}
 
+	/**
+	 * Get the module setting with the given key.
+	 * 
+	 * @param <T>
+	 * @param key
+	 * @return
+	 * @throws ConfigurationException
+	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Serializable> ModuleSetting<T> getModuleSetting(String key) throws ConfigurationException
 	{
@@ -232,11 +315,19 @@ public class ModuleInfo implements Serializable
 		throw new ConfigurationException("Requested unknown module setting '" + key + "' for module '" + id + "'");
 	}
 
+	/**
+	 * @return all settings for this module
+	 */
 	public Iterator<ModuleSetting<?>> getSettings()
 	{
 		return settings.values().iterator();
 	}
 
+	/**
+	 * Remove a setting
+	 * 
+	 * @param key
+	 */
 	public void removeSetting(String key)
 	{
 		settings.remove(key);
@@ -253,27 +344,61 @@ public class ModuleInfo implements Serializable
 		}
 	}
 
+	/**
+	 * Set the value for a given setting
+	 * 
+	 * @param <T>
+	 * @param key
+	 * @param newValue
+	 * @throws ConfigurationException
+	 */
 	public <T extends Serializable> void setSettingValue(String key, T newValue) throws ConfigurationException
 	{
 		ModuleSetting<T> ms = getModuleSetting(key);
 		ms.setValue(newValue);
 	}
 
+	/**
+	 * @see #setSettingValue(String, Serializable)
+	 * @param key
+	 * @param newValue
+	 * @throws ConfigurationException
+	 */
 	public void setSettingValue(String key, int newValue) throws ConfigurationException
 	{
 		setSettingValue(key, Integer.valueOf(newValue));
 	}
 
+	/**
+	 * @see #setSettingValue(String, Serializable)
+	 * @param key
+	 * @param newValue
+	 * @throws ConfigurationException
+	 */
 	public void setSettingValue(String key, boolean newValue) throws ConfigurationException
 	{
 		setSettingValue(key, Boolean.valueOf(newValue));
 	}
 
+	/**
+	 * @see #setSettingValue(String, Serializable)
+	 * @param key
+	 * @param newValue
+	 * @throws ConfigurationException
+	 */
 	public void setSettingValue(String key, float newValue) throws ConfigurationException
 	{
 		setSettingValue(key, Float.valueOf(newValue));
 	}
 
+	/**
+	 * Get the value of a setting
+	 * 
+	 * @param <T>
+	 * @param key
+	 * @return
+	 * @throws ConfigurationException
+	 */
 	public <T extends Serializable> T getSetting(String key) throws ConfigurationException
 	{
 		ModuleSetting<T> ms;
@@ -281,6 +406,15 @@ public class ModuleInfo implements Serializable
 		return ms.getValue();
 	}
 
+	/**
+	 * Get the value of a setting, if it doesn't exist return the given default
+	 * value
+	 * 
+	 * @param <T>
+	 * @param key
+	 * @param defval the default value to return
+	 * @return
+	 */
 	public <T extends Serializable> T getSetting(String key, T defval)
 	{
 		try
@@ -341,18 +475,36 @@ public class ModuleInfo implements Serializable
 		return getSetting(key);
 	}
 
+	/**
+	 * @see #getSetting(String)
+	 * @param key
+	 * @return
+	 * @throws ConfigurationException
+	 */
 	public int getIntSetting(String key) throws ConfigurationException
 	{
 		Integer val = getSetting(key);
 		return val;
 	}
 
+	/**
+	 * @see #getSetting(String)
+	 * @param key
+	 * @return
+	 * @throws ConfigurationException
+	 */
 	public boolean getBooleanSetting(String key) throws ConfigurationException
 	{
 		Boolean val = getSetting(key);
 		return val;
 	}
 
+	/**
+	 * @see #getSetting(String)
+	 * @param key
+	 * @return
+	 * @throws ConfigurationException
+	 */
 	public float getFloatSetting(String key) throws ConfigurationException
 	{
 		Float val = getSetting(key);

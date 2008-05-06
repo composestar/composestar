@@ -26,7 +26,8 @@ import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Copies files to the output directory
+ * BACO is responsible for copying all files required to execute the compiled
+ * program to the output directory.
  */
 public abstract class BACO implements CTCommonModule
 {
@@ -46,6 +47,11 @@ public abstract class BACO implements CTCommonModule
 	public BACO()
 	{}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 */
 	public void run(CommonResources inResources) throws ModuleException
 	{
 		logger.debug("Copying files to output directory...");
@@ -64,7 +70,7 @@ public abstract class BACO implements CTCommonModule
 	}
 
 	/**
-	 * Copy platform files
+	 * Adds the platform specific runtime files to the list of files to copy.
 	 * 
 	 * @param filesToCopy
 	 */
@@ -89,6 +95,11 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Adds the compiled libraries/assemblies to the list of files to copy.
+	 * 
+	 * @param filesToCopy
+	 */
 	protected void addBuiltLibraries(Set<File> filesToCopy)
 	{
 		List<File> builtLibs = resources.get(BUILDLIBS_KEY);
@@ -101,6 +112,12 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Add the runtime files for the custom filters to the list of files to
+	 * copy.
+	 * 
+	 * @param filesToCopy
+	 */
 	protected void addCustomFilters(Set<File> filesToCopy)
 	{
 		for (CustomFilter cf : config.getFilters().getCustomFilters())
@@ -114,6 +131,11 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Add the project's dependencies to the list of files.
+	 * 
+	 * @param filesToCopy
+	 */
 	protected void addDependencies(Set<File> filesToCopy)
 	{
 		for (File file : config.getProject().getFilesDependencies())
@@ -126,6 +148,11 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Adds the saved repository file which is needed at runtime.
+	 * 
+	 * @param filesToCopy
+	 */
 	protected void addRepository(Set<File> filesToCopy)
 	{
 		File repository = resources.get(CONE.REPOSITORY_FILE_KEY);
@@ -136,7 +163,14 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
-	private void copyFiles(Set<File> filesToCopy, boolean fatal) throws ModuleException
+	/**
+	 * Perform the actual copying of the files
+	 * 
+	 * @param filesToCopy
+	 * @param fatal
+	 * @throws ModuleException
+	 */
+	protected void copyFiles(Set<File> filesToCopy, boolean fatal) throws ModuleException
 	{
 		// determine output dir:
 		File outputDir = config.getProject().getOutput();
@@ -155,6 +189,14 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Copies a single file to the destination directory.
+	 * 
+	 * @param outputDir
+	 * @param source
+	 * @param fatal
+	 * @throws ModuleException
+	 */
 	protected void copyFile(File outputDir, File source, boolean fatal) throws ModuleException
 	{
 		File dest = new File(outputDir, source.getName());
@@ -177,7 +219,21 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
+	/**
+	 * A validation of a dependency to see if it is really required to be copied
+	 * to the output directory. For example dependencies that are part of the
+	 * virtual machine should not be included in the final output.
+	 * 
+	 * @param dependency
+	 * @return
+	 */
 	protected abstract boolean isNeededDependency(File dependency);
 
+	/**
+	 * Retrieve the filename to the file that contains the custom filter.
+	 * 
+	 * @param filter
+	 * @return
+	 */
 	protected abstract File resolveCustomFilter(CustomFilter filter);
 }

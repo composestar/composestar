@@ -17,14 +17,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * A defined resource
+ * 
  * @author Michiel Hendriks
  */
 public class Resource implements Serializable
 {
 	private static final long serialVersionUID = -7687830358361188988L;
 
+	/**
+	 * The type of this resource
+	 */
 	protected ResourceType type;
 
+	/**
+	 * A set of defined operations
+	 */
 	protected Set<String> vocabulary;
 
 	protected Resource()
@@ -52,21 +60,33 @@ public class Resource implements Serializable
 		addVocabulary(Arrays.asList(vocab));
 	}
 
+	/**
+	 * @return the name of this resource
+	 */
 	public String getName()
 	{
 		return type.toString();
 	}
 
+	/**
+	 * @return the type of resource
+	 */
 	public ResourceType getType()
 	{
 		return type;
 	}
 
+	/**
+	 * @return the set of understood operations
+	 */
 	public Set<String> getVocabulary()
 	{
 		return Collections.unmodifiableSet(vocabulary);
 	}
 
+	/**
+	 * Clear the operation vocabulary
+	 */
 	public void clearVocabulary()
 	{
 		vocabulary.clear();
@@ -82,11 +102,21 @@ public class Resource implements Serializable
 		vocabulary.add(word);
 	}
 
+	/**
+	 * Add a set of operations to the vocabulary
+	 * 
+	 * @param words
+	 */
 	public void addVocabulary(Collection<String> words)
 	{
 		vocabulary.addAll(words);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
