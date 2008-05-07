@@ -47,21 +47,23 @@
 			
 			<merge dir="${composestar.path}\DotNET\Testing" pattern="TEST-*.xml" />
 			<merge dir="${composestar.path}\Java\Testing" pattern="TEST-*.xml" />
-			<merge dir="${composestar.path}\C\Testing" pattern="TEST-*.xml" />
+			<!--<merge dir="${composestar.path}\C\Testing" pattern="TEST-*.xml" />-->
 			
 			<merge file="${composestar.path}\Core\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\DotNET\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\StarLight\QualityAssurance\checkstyle-result.xml" />
 			<merge file="${composestar.path}\Java\qa\checkstyle-result.xml" />
-			<merge file="${composestar.path}\C\qa\checkstyle-result.xml" />
+			<!--<merge file="${composestar.path}\C\qa\checkstyle-result.xml" />-->
 			<merge file="${composestar.path}\CwC\qa\checkstyle-result.xml" />
 
 			<merge file="${composestar.path}\Core\qa\findbugs-result.xml" />
 			<merge file="${composestar.path}\DotNET\qa\findbugs-result.xml" />
 			<merge file="${composestar.path}\StarLight\QualityAssurance\findbugs-result.xml" />
 			<merge file="${composestar.path}\Java\qa\findbugs-result.xml" />
-			<merge file="${composestar.path}\C\qa\findbugs-result.xml" />
+			<!--<merge file="${composestar.path}\C\qa\findbugs-result.xml" />-->
 			<merge file="${composestar.path}\CwC\qa\findbugs-result.xml" />
+
+			<gzip every="1" unit="WEEK" />
 			
 			<!--<delete every="1" unit="MONTH" ignoreSuffix="false" />-->
 		</log>
@@ -73,13 +75,13 @@
 				reportsuccess="fixes" 
 				skipusers="true"
 				returnname="Continuous Integration Server"
-				returnaddress="pascal_durr@users.sourceforge.net"
+				returnaddress="elmuerte@users.sourceforge.net"
 			>
 				<always address="composestar-developers@lists.sourceforge.net" />
-				<always address="composestar-starlight@lists.sourceforge.net" />
 				
 				<parameter name="buildresultsurl" value="http://${cchost}:8080/buildresults/${project.name}" />
 				<parameter name="standalonehtml" value="1" />
+				<parameter name="revisionurl" value="http://composestar.svn.sourceforge.net/viewvc/composestar?view=rev&amp;revision=" />
 			</htmlemail>
 			<onsuccess>
 				<antpublisher 
@@ -120,12 +122,14 @@
 					dir="${composestar.path}/Java/qa"
 					dest="artifacts/${project.name}/"
 					subdirectory="qa_java"
-				/>
+					/>
+				<!--
 				<artifactspublisher
 					dir="${composestar.path}/C/qa"
 					dest="artifacts/${project.name}/"
 					subdirectory="qa_c"
-				/>
+					/>
+				-->
 				<artifactspublisher
 					dir="${composestar.path}/Starlight/QualityAssurance"
 					dest="artifacts/${project.name}/"
@@ -169,8 +173,8 @@
 
 
 	<modificationset>
-		<cvs localworkingcopy="C:\Groove\groove" property="groove.modified"/>
-		<cvs localworkingcopy="C:\Groove\release" property="groove.modified"/>
+		<svn localWorkingCopy="${groove.path}\groove" property="groove.modified"/>
+		<svn localWorkingCopy="${groove.path}\release" property="groove.modified"/>
 	</modificationset>
     
 	<!-- performs a build every night at 03:17 -->
@@ -184,7 +188,7 @@
 				 antWorkingDir="${groove.path}"
 				 usedebug="false" />
 				 
-			<ant time="0322" 
+			<ant time="0325" 
 				 target="default" 
 				 buildfile="${groove.path}\release\build-nightly.xml"
 				 uselogger="true" 
