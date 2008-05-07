@@ -47,6 +47,9 @@ public class FIRE2Resources implements ModuleResourceManager
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Preprocessor.MODULE_NAME);
 
+	/**
+	 * Mapping from filter module (fully qualified name) to preprocessing result
+	 */
 	protected Map<String, FirePreprocessingResult> ppResults;
 
 	public FIRE2Resources()
@@ -88,21 +91,45 @@ public class FIRE2Resources implements ModuleResourceManager
 		return new FireModel(this, concern, modules);
 	}
 
+	/**
+	 * Get the preprocessing result for the filter module with the given name
+	 * 
+	 * @param fmName
+	 * @return
+	 */
 	public FirePreprocessingResult getPreprocessingResult(String fmName)
 	{
 		return ppResults.get(fmName);
 	}
 
+	/**
+	 * Get the fire preprocessing result for this filter module
+	 * 
+	 * @param fm
+	 * @return
+	 */
 	public FirePreprocessingResult getPreprocessingResult(FilterModule fm)
 	{
 		return getPreprocessingResult(fm.getQualifiedName());
 	}
 
+	/**
+	 * Get the fire preprocessing result for this filter module
+	 * 
+	 * @param fmref
+	 * @return
+	 */
 	public FirePreprocessingResult getPreprocessingResult(FilterModuleReference fmref)
 	{
 		return getPreprocessingResult(fmref.getRef());
 	}
 
+	/**
+	 * Add a preprocessing result to the resources
+	 * 
+	 * @param fmName
+	 * @param result
+	 */
 	public synchronized void addPreprocessingResult(String fmName, FirePreprocessingResult result)
 	{
 		if (fmName == null || fmName.trim().length() == 0)
@@ -119,6 +146,12 @@ public class FIRE2Resources implements ModuleResourceManager
 		}
 	}
 
+	/**
+	 * Add a preprocessing result to the resources
+	 * 
+	 * @param fm
+	 * @param result
+	 */
 	public synchronized void addPreprocessingResult(FilterModule fm, FirePreprocessingResult result)
 	{
 		if (fm == null)
@@ -128,6 +161,12 @@ public class FIRE2Resources implements ModuleResourceManager
 		addPreprocessingResult(fm.getQualifiedName(), result);
 	}
 
+	/**
+	 * Add a preprocessing result to the resources
+	 * 
+	 * @param fmref
+	 * @param result
+	 */
 	public synchronized void addPreprocessingResult(FilterModuleReference fmref, FirePreprocessingResult result)
 	{
 		if (fmref == null)

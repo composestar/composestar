@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * The base flow model of the filters
+ * 
  * @author Arjan
  */
 public interface FlowModel extends Serializable

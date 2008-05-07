@@ -9,43 +9,103 @@
  */
 package Composestar.Core.FILTH.Core;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+/**
+ * A node in the constraint dependency graph. The root node of the graph does
+ * not contain an action element.
+ */
 public class Node
 {
-	private LinkedList<Edge> incomingEdges = new LinkedList<Edge>();
+	/**
+	 * Incoming edges
+	 */
+	private List<Edge> incomingEdges = new ArrayList<Edge>();
 
-	private LinkedList<Edge> outgoingEdges = new LinkedList<Edge>();
+	/**
+	 * Outgoing edges
+	 */
+	private List<Edge> outgoingEdges = new ArrayList<Edge>();
 
-	private Object element;
+	/**
+	 * Action associated with this node
+	 */
+	private Action action;
 
-	public Node(Object inelement)
+	public Node(Action nodeAction)
 	{
-		element = inelement;
+		action = nodeAction;
 	}
 
-	public Object getElement()
+	/**
+	 * @return the action associated with this node, the root node does not have
+	 *         an action.
+	 */
+	public Action getAction()
 	{
-		return element;
+		return action;
 	}
 
+	/**
+	 * Add a incoming edge edge to this node
+	 * 
+	 * @param e
+	 */
 	public void addIncomingEdge(Edge e)
 	{
 		incomingEdges.add(e);
 	}
 
+	/**
+	 * Add a new outgoing edge to this node
+	 * 
+	 * @param e
+	 */
 	public void addOutgoingEdge(Edge e)
 	{
 		outgoingEdges.add(e);
 	}
 
-	public LinkedList<Edge> getIncomingEdges()
+	/**
+	 * @return the incoming edges
+	 */
+	public List<Edge> getIncomingEdges()
 	{
-		return incomingEdges;
+		return Collections.unmodifiableList(incomingEdges);
 	}
 
-	public LinkedList<Edge> getOutgoingEdges()
+	/**
+	 * @return the outgoing edges
+	 */
+	public List<Edge> getOutgoingEdges()
 	{
-		return outgoingEdges;
+		return Collections.unmodifiableList(outgoingEdges);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		if (action instanceof Action)
+		{
+			sb.append("[Action] ");
+		}
+		if (action != null)
+		{
+			sb.append(action.toString());
+		}
+		else
+		{
+			sb.append("[root]");
+		}
+		return sb.toString();
+	}
+
 }

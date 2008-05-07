@@ -25,12 +25,24 @@ package Composestar.Core.FIRE2.util.regex;
 
 import java.io.Serializable;
 
+/**
+ * Base class for the patterns used by the FIRE regex engine
+ */
 public abstract class Pattern implements Serializable
 {
+	/**
+	 * The original string used to create the pattern
+	 */
 	protected String patternString;
 
+	/**
+	 * @return the final state in the automaton
+	 */
 	public abstract RegularState getEndState();
 
+	/**
+	 * @return the starting state
+	 */
 	public abstract RegularState getStartState();
 
 	public Pattern(String pattern)
@@ -38,12 +50,20 @@ public abstract class Pattern implements Serializable
 		patternString = pattern;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		return patternString;
 	}
 
+	/**
+	 * @return the pattern string
+	 */
 	public String getPatternString()
 	{
 		return patternString;

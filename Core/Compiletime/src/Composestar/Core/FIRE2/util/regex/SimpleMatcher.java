@@ -38,12 +38,24 @@ import java.util.Set;
  */
 public class SimpleMatcher
 {
+	/**
+	 * The pattern used for matching
+	 */
 	protected Pattern pattern;
 
+	/**
+	 * The input sequence
+	 */
 	protected Queue<String> words;
 
+	/**
+	 * States to visit
+	 */
 	protected Set<RegularState> states;
 
+	/**
+	 * Finished greedy
+	 */
 	protected boolean hasGreedyEnd;
 
 	public static final boolean matches(Pattern pattern, Queue<String> words)
@@ -79,6 +91,11 @@ public class SimpleMatcher
 		addState(pattern.getStartState());
 	}
 
+	/**
+	 * Resolve lambda transitions and add the states to the queue
+	 * 
+	 * @param state
+	 */
 	protected void addState(RegularState state)
 	{
 		if (states.contains(state))
@@ -97,6 +114,9 @@ public class SimpleMatcher
 		}
 	}
 
+	/**
+	 * @return true if the input matches
+	 */
 	protected boolean matches()
 	{
 		while (words.size() > 0 && !hasGreedyEnd)
@@ -114,6 +134,12 @@ public class SimpleMatcher
 		return hasGreedyEnd || words.size() == 0 && states.contains(pattern.getEndState());
 	}
 
+	/**
+	 * Traverse the automaton using the input word
+	 * 
+	 * @param word
+	 * @return the number of states left to process
+	 */
 	protected int traverseStates(String word)
 	{
 		Queue<RegularState> queue = new LinkedList<RegularState>(states);

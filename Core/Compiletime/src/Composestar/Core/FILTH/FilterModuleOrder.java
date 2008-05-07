@@ -36,8 +36,14 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 	 */
 	public static final String ALL_ORDERS_KEY = "FilterModuleOrders";
 
+	/**
+	 * The filter module using {@link FilterModuleSuperImposition} instances
+	 */
 	public Vector order;
 
+	/**
+	 * The old filter module order using qualified names
+	 */
 	public Vector orderQN;
 
 	public FilterModuleOrder()
@@ -65,7 +71,7 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 		{
 			FilterModuleSuperImposition fmsi = (FilterModuleSuperImposition) inOrder.get(i);
 			order.add(fmsi);
-			orderQN.addElement(fmsi.getFilterModule().getRef().getQualifiedName());
+			orderQN.add(fmsi.getFilterModule().getRef().getQualifiedName());
 		}
 	}
 
@@ -98,11 +104,21 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 		return order;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
 	public int hashCode()
 	{
 		return super.hashCode();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	public boolean equals(Object o)
 	{
 		if (!(o instanceof FilterModuleOrder))
@@ -114,6 +130,11 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 		return order.equals(other.order);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString()
 	{
 		StringBuffer retval = new StringBuffer();

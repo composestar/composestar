@@ -99,31 +99,53 @@ public class Trail implements Serializable
 		re = base.getRE();
 	}
 
+	/**
+	 * @return the owning breadcrumb
+	 */
 	public Breadcrumb getOwner()
 	{
 		return owner;
 	}
 
+	/**
+	 * @return the associated concern
+	 */
 	public Concern getSourceConcern()
 	{
 		return owner.getConcern();
 	}
 
+	/**
+	 * Set the condition that is responsible for this trail
+	 * 
+	 * @param inCondition
+	 */
 	public void setCondition(ConditionExpression inCondition)
 	{
 		condition = inCondition;
 	}
 
+	/**
+	 * @return the condition that caused this trail
+	 */
 	public ConditionExpression getCondition()
 	{
 		return condition;
 	}
 
+	/**
+	 * Sets the new message value when following this trail
+	 * 
+	 * @param inMessage
+	 */
 	public void setResultMessage(Message inMessage)
 	{
 		resultMessage = inMessage;
 	}
 
+	/**
+	 * @return the resulting message
+	 */
 	public Message getResultMessage()
 	{
 		return resultMessage;
@@ -144,22 +166,40 @@ public class Trail implements Serializable
 		return resultMessage;
 	}
 
+	/**
+	 * Set the concern this crumb points to
+	 * 
+	 * @param inConcern
+	 */
 	public void setTargetConcern(Concern inConcern)
 	{
 		targetConcern = inConcern;
 	}
 
+	/**
+	 * Get the destination concern
+	 * 
+	 * @return
+	 */
 	public Concern getTargetConcern()
 	{
 		return targetConcern;
 	}
 
+	/**
+	 * Sets the destination crumb
+	 * 
+	 * @param inCrumb
+	 */
 	public void setDestinationCrumb(Breadcrumb inCrumb)
 	{
 		destinationCrumb = inCrumb;
 		resolved = true;
 	}
 
+	/**
+	 * @return the destination crumb, can be null
+	 */
 	public Breadcrumb getDestinationCrumb()
 	{
 		return destinationCrumb;
@@ -173,26 +213,47 @@ public class Trail implements Serializable
 		return destinationCrumb == null && resolved;
 	}
 
+	/**
+	 * @return is true this trail is part of a recursive dispatch
+	 */
 	public boolean isRecursive()
 	{
 		return recursive;
 	}
 
+	/**
+	 * Sets the recursiveness of this trail
+	 * 
+	 * @param rec
+	 */
 	public void setRecursive(boolean rec)
 	{
 		recursive = rec;
 	}
 
+	/**
+	 * @return true if this crumb is resolved
+	 */
 	public boolean isResolved()
 	{
 		return resolved;
 	}
 
+	/**
+	 * Sets the associated repository entity. This is a FilterElement.
+	 * 
+	 * @param inRe
+	 */
 	public void setRE(RepositoryEntity inRe)
 	{
 		re = inRe;
 	}
 
+	/**
+	 * Get an associated repository entity
+	 * 
+	 * @return
+	 */
 	public RepositoryEntity getRE()
 	{
 		return re;

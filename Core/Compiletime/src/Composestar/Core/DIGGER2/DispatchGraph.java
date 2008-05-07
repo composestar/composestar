@@ -74,6 +74,9 @@ public class DispatchGraph implements Serializable
 		crumbs = new HashMap<Concern, ConcernCrumbs>();
 	}
 
+	/**
+	 * @return the breadcrumb/target resolver
+	 */
 	public Resolver getResolver()
 	{
 		if (resolver == null)
@@ -180,6 +183,13 @@ public class DispatchGraph implements Serializable
 		return result;
 	}
 
+	/**
+	 * Resolve a breadcrumb on the fly
+	 * 
+	 * @param concern
+	 * @param selector
+	 * @return
+	 */
 	protected Breadcrumb performAutoResolve(Concern concern, String selector)
 	{
 		// TODO: this doesn't work yet

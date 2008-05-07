@@ -11,11 +11,16 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
+ * Interface for execution models of filter sets of a concern.
+ * 
  * @author Arjan de Roo
  */
 public interface ExecutionModel extends Serializable
 {
 
+	/**
+	 * @return all entrance states
+	 */
 	Iterator<ExecutionState> getEntranceStates();
 
 	/**
@@ -35,6 +40,9 @@ public interface ExecutionModel extends Serializable
 	 */
 	Set<Message> getEntranceMessages();
 
+	/**
+	 * @param message
+	 * @return true if the message is an entrance message.
+	 */
 	boolean isEntranceMessage(Message message);
-
 }

@@ -15,34 +15,36 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
+/**
+ * Traverses the dependency graph to calculate all valid paths
+ */
 public class OrderTraverser
 {
-	public static LinkedList<Node> cloneLinkedList(LinkedList<Node> l)
-	{
-		LinkedList<Node> temp = new LinkedList<Node>();
-		for (Node aL : l)
-		{
-			temp.add(aL);
-		}
-		return temp;
-	}
-
+	/**
+	 * Calculate all valid paths through the dependency graph
+	 * 
+	 * @param g
+	 * @return
+	 */
 	public LinkedList<List<Node>> multiTraverse(Graph g)
 	{
-		LinkedList<Node> startingNodes = g.getNodes();
 		LinkedList<List<Node>> multiOrder = new LinkedList<List<Node>>();
-		LinkedList<Node> order = new LinkedList<Node>();
-
-		Node current = g.getRoot();
-		multiOrder.add(takeOnePath(current, startingNodes, order, multiOrder));
+		traverseAll(g.getRoot(), g.getNodes(), new LinkedList<Node>(), multiOrder);
 		return multiOrder;
-
 	}
 
-	private List<Node> takeOnePath(Node current, LinkedList<Node> nodes, LinkedList<Node> order,
-			LinkedList<List<Node>> multiOrder)
+	/**
+	 * Returns one valid path through the dependency graph
+	 * 
+	 * @param current
+	 * @param availableNodes
+	 * @param currentOrder
+	 * @param results
+	 * @return
+	 */
+	private void traverseAll(Node current, LinkedList<Node> availableNodes, LinkedList<Node> currentOrder,
+			LinkedList<List<Node>> results)
 	{
-
 		while (true)
 		{
 			// System.out.println("current --->"+current.getElement());
@@ -53,23 +55,24 @@ public class OrderTraverser
 			// System.out.println("\n<--- end --->");
 
 			/* adding the node to the generated order */
-			order.addLast(current);
+			currentOrder.addLast(current);
 			/* removing the current node from the list of available nodes */
-			nodes.remove(current);
+			availableNodes.remove(current);
 
 			/* when there is no node for expansion two situations are possible: */
 			/* when the set of available nodes is empty */
-			if (nodes.isEmpty())
+			if (availableNodes.isEmpty())
 			{
 				/* we reached every node, the final order is ready */
-				return order;
+				results.add(currentOrder);
+				return;
 			}
 
-			LinkedList<Node> candidates = selectCandidates(nodes, order);
+			LinkedList<Node> candidates = selectCandidates(availableNodes, currentOrder);
 
 			if (candidates == null)
 			{
-				exploreCycle(nodes, order);
+				exploreCycle(availableNodes, currentOrder);
 			}
 
 			// System.out.println("<--- candidates begin --->");
@@ -86,8 +89,7 @@ public class OrderTraverser
 				 */
 				current = candidates.getFirst();
 			}
-
-			if (candidates.size() > 1)
+			else if (candidates.size() > 1)
 			{
 				Iterator<Node> i = candidates.iterator();
 
@@ -97,34 +99,39 @@ public class OrderTraverser
 				 */
 				for (int c = 0; i.hasNext(); c++)
 				{
-					LinkedList<Node> newNodes = OrderTraverser.cloneLinkedList(nodes);
-					LinkedList<Node> newOrder = OrderTraverser.cloneLinkedList(order);
 					if (c == 0)
 					{
+						// follow the first inline
 						current = i.next();
 					}
 					else
 					{
-						multiOrder.add(takeOnePath(i.next(), newNodes, newOrder, multiOrder));
+						// recursive call for the rest
+						traverseAll(i.next(), new LinkedList<Node>(availableNodes), new LinkedList<Node>(currentOrder),
+								results);
 					}
 				}
 			}
-
 		}
-		// return null;
-
 	}
 
+	/**
+	 * Selects all nodes that have all incoming edges coming from the used node
+	 * set
+	 * 
+	 * @param available
+	 * @param used
+	 * @return
+	 */
 	private LinkedList<Node> selectCandidates(LinkedList<Node> available, LinkedList<Node> used)
 	{
 		LinkedList<Node> candidates = new LinkedList<Node>();
-		boolean pc;
 
 		/* Iterating through all the available nodes */
 		for (Node current : available)
 		{
 			/* Checking all the incoming edges of a node */
-			pc = true;
+			boolean pc = true;
 			for (Edge o : current.getIncomingEdges())
 			{
 				Node aParent = o.getLeft();
@@ -148,10 +155,6 @@ public class OrderTraverser
 		{
 			return null;
 		}
-		/*
-		 * if there are more possible candidates are available select one
-		 * randomly ~ non-determinism
-		 */
 		return candidates;
 	}
 
@@ -247,7 +250,7 @@ public class OrderTraverser
 		return candidates.get(new Random().nextInt(candidates.size()));
 	}
 
-	/* ====== algoruthm for finding cycles ======= */
+	/* ====== algorithm for finding cycles ======= */
 	private void exploreCycle(LinkedList<Node> available, LinkedList<Node> used)
 	{
 		// System.out.println("exploring a cycle: going back ");
@@ -360,7 +363,7 @@ public class OrderTraverser
 		{
 			for (Pair aPath : path)
 			{
-				if (aPath.getNode().getElement().equals(node.getElement()))
+				if (aPath.getNode().getAction().equals(node.getAction()))
 				{
 					return true;
 				}
@@ -378,7 +381,7 @@ public class OrderTraverser
 		{
 			// we don't extend the database with the edges to the root node and
 			// the node from which we come
-			if (!e.equals(exc) && !e.getLeft().getElement().equals("root"))
+			if (!e.equals(exc) && e.getLeft().getAction() != null)
 			/*
 			 * not the exception edge and the edges referring back to the root
 			 * node
@@ -399,7 +402,7 @@ public class OrderTraverser
 		{
 			Node n = aPath.getNode();
 			// System.out.print(n.getElement()+" ");
-			if (stopPair.getNode().getElement().equals(n.getElement()))
+			if (stopPair.getNode().getAction().equals(n.getAction()))
 			{
 				break;
 			}

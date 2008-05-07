@@ -81,6 +81,11 @@ public class CpsSemanticException extends RecognitionException
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Throwable#toString()
+	 */
 	@Override
 	public String toString()
 	{

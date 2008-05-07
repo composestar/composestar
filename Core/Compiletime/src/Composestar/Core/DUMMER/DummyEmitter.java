@@ -8,7 +8,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Resources.CommonResources;
 
 /**
- * Interface for dummy emitters.
+ * Interface for all dummy emitters
  */
 public interface DummyEmitter
 {
@@ -22,5 +22,8 @@ public interface DummyEmitter
 	 */
 	void createDummies(Project project, Set<Source> sources) throws ModuleException;
 
+	/**
+	 * @param resc
+	 */
 	void setCommonResources(CommonResources resc);
 }

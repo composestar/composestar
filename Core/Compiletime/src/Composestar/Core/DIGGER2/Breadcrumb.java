@@ -31,6 +31,9 @@ public class Breadcrumb implements Serializable
 {
 	private static final long serialVersionUID = -8442493609569837628L;
 
+	/**
+	 * Concern associated with this breadcrumb
+	 */
 	protected Concern concern;
 
 	/**
@@ -43,6 +46,9 @@ public class Breadcrumb implements Serializable
 	 */
 	protected FilterDirection filterPosition;
 
+	/**
+	 * Trailings leading to other crumbs
+	 */
 	protected List<Trail> trails;
 
 	/**
@@ -58,16 +64,25 @@ public class Breadcrumb implements Serializable
 		trails = new ArrayList<Trail>();
 	}
 
+	/**
+	 * @return the associated concern
+	 */
 	public Concern getConcern()
 	{
 		return concern;
 	}
 
+	/**
+	 * @return the associated message
+	 */
 	public Message getMessage()
 	{
 		return message;
 	}
 
+	/**
+	 * @return the filter direction
+	 */
 	public FilterDirection getFilterPosition()
 	{
 		return filterPosition;
@@ -106,6 +121,12 @@ public class Breadcrumb implements Serializable
 		return trail;
 	}
 
+	/**
+	 * Add a trail
+	 * 
+	 * @param base
+	 * @return
+	 */
 	public Trail addTrail(Trail base)
 	{
 		Trail trail = new Trail(this, base);
@@ -124,16 +145,27 @@ public class Breadcrumb implements Serializable
 		trails.remove(trail);
 	}
 
+	/**
+	 * @return the trails in this breadcrumb
+	 */
 	public Iterator<Trail> getTrails()
 	{
 		return trails.iterator();
 	}
 
+	/**
+	 * @return the number of trails
+	 */
 	public int numTrails()
 	{
 		return trails.size();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

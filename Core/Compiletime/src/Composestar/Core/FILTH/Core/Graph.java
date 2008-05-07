@@ -13,34 +13,61 @@ import java.util.LinkedList;
 
 public class Graph
 {
+	/**
+	 * The root node
+	 */
 	private Node root;
 
+	/**
+	 * Add nodes in this graph
+	 */
 	private LinkedList<Node> nodes = new LinkedList<Node>();
 
+	/**
+	 * All edges in this graph
+	 */
 	private LinkedList<Edge> edges = new LinkedList<Edge>();
 
-	public void setRoot(Node inroot)
+	public Graph()
 	{
-		root = inroot;
-		nodes.add(root);
+		this(new Node(null));
 	}
 
+	public Graph(Node rootNode)
+	{
+		root = rootNode;
+	}
+
+	/**
+	 * @return the root node
+	 */
 	public Node getRoot()
 	{
 		return root;
 	}
 
+	/**
+	 * @return all nodes
+	 */
 	public LinkedList<Node> getNodes()
 	{
 		return nodes;
 	}
 
+	/**
+	 * @return all edges
+	 */
 	public LinkedList<Edge> getEdges()
 	{
 		return edges;
 	}
 
-	// public void addNode(Node node){ nodes.add(node);}
+	/**
+	 * Add a new edge to this graph. It will also add the associated nodes to
+	 * the graph.
+	 * 
+	 * @param edge
+	 */
 	public void addEdge(Edge edge)
 	{
 		/* adding the edge to the graph */
@@ -54,6 +81,30 @@ public class Graph
 		{
 			nodes.add(edge.getRight());
 		}
+	}
+
+	/**
+	 * Find the node that has an action associated with the provided name
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public Node findNodeByName(String name)
+	{
+		for (Node current : getNodes())
+		{
+			/* the root element is only a string, we skip it */
+			if (current.getAction() == null)
+			{
+				continue;
+			}
+
+			if (((Action) current.getAction()).getName().equals(name))
+			{
+				return current;
+			}
+		}
+		return null;
 	}
 
 }

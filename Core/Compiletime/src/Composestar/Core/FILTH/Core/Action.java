@@ -9,14 +9,25 @@
  */
 package Composestar.Core.FILTH.Core;
 
-/**
- * @author nagyist
- */
 import java.util.LinkedList;
 
+import Composestar.Core.SANE.FilterModuleSuperImposition;
+
+/**
+ * Represents an superimposed filter module in the dependency graph
+ */
 public class Action implements Parameter
 {
+	/**
+	 * Identifier for this name, the fully qualified name of the superimposed
+	 * filter module
+	 */
 	private String name;
+
+	/**
+	 * The superimposed filtermodule
+	 */
+	private FilterModuleSuperImposition fmsi;
 
 	private Boolean rvalue;
 
@@ -37,6 +48,12 @@ public class Action implements Parameter
 		{
 			setExecutable(true);
 		}
+	}
+
+	public Action(FilterModuleSuperImposition infmsi, Boolean inrvalue, boolean inpresent)
+	{
+		this(infmsi.getFilterModule().getQualifiedName(), inrvalue, inpresent);
+		fmsi = infmsi;
 	}
 
 	public Boolean getReturnValue()
@@ -84,17 +101,34 @@ public class Action implements Parameter
 		return rules;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		return name;
 	}
 
+	/**
+	 * @return the action identifier
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * @return the associated filter module super imposition
+	 */
+	public FilterModuleSuperImposition getFilterModuleSuperImposition()
+	{
+		return fmsi;
+	}
+
+	@Deprecated
 	public static void insert(Action a, Graph g)
 	{
 		g.addEdge(new Edge("pre_soft", g.getRoot(), new Node(a)));
@@ -106,7 +140,7 @@ public class Action implements Parameter
 		for (Object o : g.getNodes())
 		{
 			current = (Node) o;
-			if (current.getElement().equals(a))
+			if (current.getAction() != null && current.getAction().equals(a))
 			{
 				return current;
 			}
@@ -114,6 +148,13 @@ public class Action implements Parameter
 		return null;
 	}
 
+	/**
+	 * @param inname
+	 * @param g
+	 * @return
+	 * @deprecated use {@link Graph#findNodeByName(String)}
+	 */
+	@Deprecated
 	public static Node lookupByName(String inname, Graph g)
 	{
 		Node current;
@@ -121,12 +162,12 @@ public class Action implements Parameter
 		{
 			current = (Node) o;
 			/* the root element is only a string, we skip it */
-			if (current.getElement() instanceof String)
+			if (current.getAction() == null)
 			{
 				continue;
 			}
 
-			if (((Action) current.getElement()).getName().equals(inname))
+			if (((Action) current.getAction()).getName().equals(inname))
 			{
 				return current;
 			}

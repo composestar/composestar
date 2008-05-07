@@ -13,6 +13,8 @@ package Composestar.Core.DIGGER2;
 import Composestar.Core.Exception.ModuleException;
 
 /**
+ * Save the dispatch graph
+ * 
  * @author Michiel Hendriks
  */
 public abstract class DispatchGraphExporter
@@ -24,5 +26,10 @@ public abstract class DispatchGraphExporter
 		graph = inGraph;
 	}
 
+	/**
+	 * Export the graph
+	 * 
+	 * @throws ModuleException
+	 */
 	public abstract void export() throws ModuleException;
 }

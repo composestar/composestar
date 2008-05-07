@@ -47,16 +47,32 @@ public class MatcherEx extends AbstractMatcher
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Preprocessor.MODULE_NAME + ".regex");
 
+	/**
+	 * The pattern used for matching
+	 */
 	private Pattern pattern;
 
+	/**
+	 * The execution model that is used as source
+	 */
 	private ExecutionModel model;
 
+	/**
+	 * The labeler instance that provides the labels for the execution nodes and
+	 * transitions
+	 */
 	private Labeler labeler;
 
+	/**
+	 * Visited states
+	 */
 	private Set<CombinedState> done;
 
 	// both Stack or Queue can be used, but a Stack often results in a earlier
 	// match
+	/**
+	 * States that have to be visited
+	 */
 	private Stack<CombinedState> todo;
 
 	public MatcherEx(Pattern inPattern, ExecutionModel inModel, Labeler inLabeler)
@@ -83,6 +99,11 @@ public class MatcherEx extends AbstractMatcher
 		return endStates.size() > 0;
 	}
 
+	/**
+	 * Process the model from a given execution state
+	 * 
+	 * @param startState
+	 */
 	private void processExecModel(ExecutionState startState)
 	{
 		logger.info("Processing exec module for " + startState.getMessage().toString() + " with pattern: "
@@ -142,6 +163,10 @@ public class MatcherEx extends AbstractMatcher
 		return false;
 	}
 
+	/**
+	 * @param state
+	 * @return true if this state is an final state
+	 */
 	private boolean isEndState(CombinedState state)
 	{
 		if (state.regularState.isGreedyEnd() || state.regularState.equals(pattern.getEndState())
@@ -153,6 +178,12 @@ public class MatcherEx extends AbstractMatcher
 		return false;
 	}
 
+	/**
+	 * Process the given state
+	 * 
+	 * @param state
+	 * @return true when an end has been reached
+	 */
 	private boolean processState(CombinedState state)
 	{
 		if (false && logger.isDebugEnabled())
@@ -215,6 +246,14 @@ public class MatcherEx extends AbstractMatcher
 		return false;
 	}
 
+	/**
+	 * Get the next available states in the pattern based on the current state
+	 * and labels
+	 * 
+	 * @param startState
+	 * @param sequence
+	 * @return
+	 */
 	private Set<RegularState> getNextStates(RegularState startState, LabelSequence sequence)
 	{
 		Queue<RegularState> states = new LinkedList<RegularState>();
@@ -248,6 +287,12 @@ public class MatcherEx extends AbstractMatcher
 		return new HashSet<RegularState>(states);
 	}
 
+	/**
+	 * Resolve lambda transitions
+	 * 
+	 * @param states
+	 * @param state
+	 */
 	protected void addState(Queue<RegularState> states, RegularState state)
 	{
 		if (states.contains(state))

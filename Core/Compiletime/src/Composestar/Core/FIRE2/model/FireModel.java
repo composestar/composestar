@@ -29,7 +29,13 @@ import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SIGN2.Sign;
 
 /**
+ * The generic FIRE model for a certain concern and filter module ordering. This
+ * class constructs and provides access to the execution and flow models.
+ * 
  * @author Arjan de Roo
+ * @see #getExecutionModel(Composestar.Core.FIRE2.model.FireModel.FilterDirection)
+ * @see #getFlowModel(Composestar.Core.FIRE2.model.FireModel.FilterDirection)
+ * @see #getDistinguishableSelectors(Composestar.Core.FIRE2.model.FireModel.FilterDirection)
  */
 public class FireModel
 {
@@ -134,6 +140,9 @@ public class FireModel
 	 */
 	private Map<FlowNode, ExtendedFlowNode> flowNodeMap;
 
+	/**
+	 * FlowNodes from the conditional filter module superimposition
+	 */
 	private ExtendedFlowNode[][] fmConditionFlowNodes;
 
 	/**
@@ -194,6 +203,12 @@ public class FireModel
 		return extendedFlowModels[filterPosition.getIndex()];
 	}
 
+	/**
+	 * Initializes the FireModel
+	 * 
+	 * @param modules
+	 * @param fire2Resources
+	 */
 	private void initialize(FilterModuleSuperImposition[] modules, FIRE2Resources fire2Resources)
 	{
 		filterModules = modules;
@@ -202,6 +217,12 @@ public class FireModel
 		createFlowModel();
 	}
 
+	/**
+	 * Initialize the base models which are the source for the instantiated flow
+	 * and execution models. The base models are per filter module.
+	 * 
+	 * @param fire2Resources
+	 */
 	private void initializeBaseModels(FIRE2Resources fire2Resources)
 	{
 		flowModels = new FlowModel[2][filterModules.length];
@@ -225,6 +246,9 @@ public class FireModel
 		}
 	}
 
+	/**
+	 * Create the instantiated flow model for this concern
+	 */
 	private void createFlowModel()
 	{
 		flowNodeMap = new HashMap<FlowNode, ExtendedFlowNode>();
@@ -243,6 +267,11 @@ public class FireModel
 		createFlowTransitions(OUTPUT_FILTERS);
 	}
 
+	/**
+	 * Create the flow model nodes for a given filter direction
+	 * 
+	 * @param filterLocation
+	 */
 	private void createFlowNodes(int filterLocation)
 	{
 		ExtendedFlowNode newStartNode = null;
@@ -305,6 +334,11 @@ public class FireModel
 		}
 	}
 
+	/**
+	 * Create the flow transitions for the given filter direction
+	 * 
+	 * @param filterLocation
+	 */
 	private void createFlowTransitions(int filterLocation)
 	{
 		for (int i = 0; i < filterModules.length; i++)
@@ -340,6 +374,12 @@ public class FireModel
 		}
 	}
 
+	/**
+	 * Get the outgoing transtions for the given execution state
+	 * 
+	 * @param state
+	 * @return
+	 */
 	private List<ExecutionTransition> getOutTransitions(ExtendedExecutionState state)
 	{
 		if (state.baseState != null && state.baseState.getFlowNode().containsName(FlowNode.END_NODE))
@@ -352,6 +392,10 @@ public class FireModel
 		}
 	}
 
+	/**
+	 * @param state
+	 * @return
+	 */
 	private List<ExecutionTransition> getOutTransitionsCurrentLayer(ExtendedExecutionState state)
 	{
 		if (state.baseState == null)
@@ -369,6 +413,10 @@ public class FireModel
 		}
 	}
 
+	/**
+	 * @param state
+	 * @return
+	 */
 	private List<ExecutionTransition> getOutTransitionsCurrentLayerNormal(ExtendedExecutionState state)
 	{
 		ExecutionState baseState = state.baseState;
@@ -384,6 +432,13 @@ public class FireModel
 		return outTransitions;
 	}
 
+	/**
+	 * Get the outgoing transitions for a execution state using signature
+	 * checking
+	 * 
+	 * @param state
+	 * @return
+	 */
 	private List<ExecutionTransition> getOutTransitionsCurrentLayerSignatureCheck(ExtendedExecutionState state)
 	{
 		ExecutionState baseState = state.baseState;
@@ -454,6 +509,10 @@ public class FireModel
 		return outTransitions;
 	}
 
+	/**
+	 * @param state
+	 * @return
+	 */
 	private List<ExecutionTransition> getOutTransitionsCurrentLayerFMCond(ExtendedExecutionState state)
 	{
 		List<ExecutionTransition> outTransitions = new ArrayList<ExecutionTransition>();
@@ -491,6 +550,13 @@ public class FireModel
 		return outTransitions;
 	}
 
+	/**
+	 * Get the end state for a given message
+	 * 
+	 * @param model
+	 * @param message
+	 * @return
+	 */
 	private ExecutionState getEndState(ExecutionModel model, Message message)
 	{
 		// Build end state set:
@@ -527,6 +593,10 @@ public class FireModel
 		return state;
 	}
 
+	/**
+	 * @param startState
+	 * @return
+	 */
 	private List<ExecutionTransition> getOutTransitionsCrossLayer(ExtendedExecutionState startState)
 	{
 		int layer = startState.layer;
@@ -549,12 +619,25 @@ public class FireModel
 		return result;
 	}
 
+	/**
+	 * @param lastState
+	 * @return
+	 */
 	private ExtendedExecutionState getStartStateNextLayer(ExtendedExecutionState lastState)
 	{
 		return getStartStateNextLayer(lastState.model, lastState.getMessage(), lastState.signatureCheck,
 				lastState.signatureCheckInfo, lastState.filterPosition, lastState.layer + 1);
 	}
 
+	/**
+	 * @param model
+	 * @param message
+	 * @param signatureCheck
+	 * @param signatureCheckInfo
+	 * @param filterPosition
+	 * @param nextLayer
+	 * @return
+	 */
 	private ExtendedExecutionState getStartStateNextLayer(ExtendedExecutionModel model, Message message,
 			int signatureCheck, MethodInfo signatureCheckInfo, int filterPosition, int nextLayer)
 	{
@@ -578,6 +661,18 @@ public class FireModel
 		}
 	}
 
+	/**
+	 * Performs signature checking for the given state and method. It results
+	 * that status of the method.
+	 * 
+	 * @param state
+	 * @param signatureCheck
+	 * @param methodInfo
+	 * @return
+	 * @see MethodWrapper#UNKNOWN
+	 * @see MethodWrapper#NOT_EXISTING
+	 * @see MethodWrapper#NOT_EXISTING
+	 */
 	private int signatureCheck(ExecutionState state, int signatureCheck, MethodInfo methodInfo)
 	{
 		// check for signaturematching:
@@ -741,6 +836,10 @@ public class FireModel
 		}
 	}
 
+	/**
+	 * @param baseTransition
+	 * @return
+	 */
 	private FlowTransition getExtendedFlowTransition(ExecutionTransition baseTransition)
 	{
 		ExecutionState startState = baseTransition.getStartState();
@@ -889,11 +988,13 @@ public class FireModel
 		return getDistinguishableSelectors(filterPosition.getIndex());
 	}
 
+	/**
+	 * An extended execution model. This model is based on a base execution
+	 * model and is an instantiation for a given concern and filter module
+	 * ordering
+	 */
 	private class ExtendedExecutionModel implements ExecutionModel
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 2790476607699047697L;
 
 		/**
@@ -903,6 +1004,9 @@ public class FireModel
 		 */
 		private int filterPosition;
 
+		/**
+		 * Mapping from entrance message to states
+		 */
 		private Map<Message, ExecutionState> entranceTable = new HashMap<Message, ExecutionState>();
 
 		private Map<ExtendedExecutionState, ExtendedExecutionState> stateCache = new HashMap<ExtendedExecutionState, ExtendedExecutionState>();
@@ -1015,11 +1119,21 @@ public class FireModel
 			fullModel = false;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.model.ExecutionModel#getEntranceMessages()
+		 */
 		public Set<Message> getEntranceMessages()
 		{
 			return Collections.unmodifiableSet(entranceTable.keySet());
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.model.ExecutionModel#getEntranceState(Composestar.Core.FIRE2.model.Message)
+		 */
 		public ExecutionState getEntranceState(Message message)
 		{
 			if (!fullModel || entranceTable.containsKey(message))
@@ -1046,33 +1160,68 @@ public class FireModel
 			return getEntranceStatesEx().iterator();
 		}
 
+		/**
+		 * @return the extrance states
+		 */
 		public Collection<ExecutionState> getEntranceStatesEx()
 		{
 			return Collections.unmodifiableCollection(entranceTable.values());
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.model.ExecutionModel#isEntranceMessage(Composestar.Core.FIRE2.model.Message)
+		 */
 		public boolean isEntranceMessage(Message message)
 		{
 			return entranceTable.containsKey(message);
 		}
 	}
 
+	/**
+	 * A transition in the exected execution model
+	 */
 	private class ExtendedExecutionState extends ExecutionState
 	{
 		private static final long serialVersionUID = -8073044026350947570L;
 
+		/**
+		 * The model this state is part of
+		 */
 		private ExtendedExecutionModel model;
 
+		/**
+		 * The state this state is based on
+		 */
 		private ExecutionState baseState;
 
+		/**
+		 * The signature check method
+		 * 
+		 * @see FireModel#STRICT_SIGNATURE_CHECK
+		 * @see FireModel#NO_SIGNATURE_CHECK
+		 * @see FireModel#LOOSE_SIGNATURE_CHECK
+		 */
 		private int signatureCheck;
 
+		/**
+		 * The method info used to check the signature with
+		 */
 		private MethodInfo signatureCheckInfo;
 
+		/**
+		 * The filter direction
+		 * 
+		 * @see FilterDirection
+		 */
 		private int filterPosition;
 
 		private int layer;
 
+		/**
+		 * The outgoing transitions
+		 */
 		private List<ExecutionTransition> outTransitions;
 
 		public ExtendedExecutionState(ExtendedExecutionModel model, ExecutionState baseState, Message message,
@@ -1129,6 +1278,11 @@ public class FireModel
 			this.layer = layer;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.model.ExecutionState#getOutTransitionsEx()
+		 */
 		@Override
 		public List<ExecutionTransition> getOutTransitionsEx()
 		{
@@ -1141,14 +1295,26 @@ public class FireModel
 		}
 	}
 
+	/**
+	 * A transition in the extended execution transition
+	 */
 	private class ExtendedExecutionTransition extends ExecutionTransition
 	{
 		private static final long serialVersionUID = -3865405947451006013L;
 
+		/**
+		 * The origin state
+		 */
 		private ExtendedExecutionState startState;
 
+		/**
+		 * The transition this transition is based on
+		 */
 		private ExecutionTransition baseTransition;
 
+		/**
+		 * The destination state
+		 */
 		private ExtendedExecutionState endState;
 
 		public ExtendedExecutionTransition(ExtendedExecutionState startState, ExtendedExecutionState endState,
@@ -1169,12 +1335,22 @@ public class FireModel
 			this.endState = endState;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.model.ExecutionTransition#getStartState()
+		 */
 		@Override
 		public ExecutionState getStartState()
 		{
 			return startState;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.model.ExecutionTransition#getEndState()
+		 */
 		@Override
 		public ExecutionState getEndState()
 		{
@@ -1182,11 +1358,11 @@ public class FireModel
 		}
 	}
 
+	/**
+	 * An instantiation of the base flow model for the selected concern
+	 */
 	private static class ExtendedFlowModel implements FlowModel
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 404106440986002390L;
 
 		/**
@@ -1241,6 +1417,11 @@ public class FireModel
 			return getNodesEx().iterator();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.model.FlowModel#getNodesEx()
+		 */
 		public List<FlowNode> getNodesEx()
 		{
 			return Collections.unmodifiableList(nodes);
@@ -1256,17 +1437,22 @@ public class FireModel
 			return getTransitionsEx().iterator();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.model.FlowModel#getTransitionsEx()
+		 */
 		public List<FlowTransition> getTransitionsEx()
 		{
 			return Collections.unmodifiableList(transitions);
 		}
 	}
 
+	/**
+	 * A node in the extended flow model
+	 */
 	private static class ExtendedFlowNode implements FlowNode
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -8744555097570198099L;
 
 		/**
@@ -1341,6 +1527,11 @@ public class FireModel
 			return getNamesEx().iterator();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.model.FlowNode#getNamesEx()
+		 */
 		public Set<String> getNamesEx()
 		{
 			if (baseNode == null)
@@ -1400,6 +1591,11 @@ public class FireModel
 			return getTransitionsEx().iterator();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.model.FlowNode#getTransitionsEx()
+		 */
 		public List<FlowTransition> getTransitionsEx()
 		{
 			return Collections.unmodifiableList(transitions);
@@ -1407,17 +1603,26 @@ public class FireModel
 
 	}
 
+	/**
+	 * A transition in the extended flow model
+	 */
 	private static class ExtendedFlowTransition implements FlowTransition
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 4920308529043611725L;
 
+		/**
+		 * The transition this extended transition is based on
+		 */
 		private FlowTransition baseTransition;
 
+		/**
+		 * The origin node
+		 */
 		private ExtendedFlowNode startNode;
 
+		/**
+		 * The destination node
+		 */
 		private ExtendedFlowNode endNode;
 
 		public ExtendedFlowTransition(ExtendedFlowNode startNode, ExtendedFlowNode endNode)

@@ -38,9 +38,19 @@ public final class DefaultInnerDispatchNames
 	// Fully Qualified Names of the subelements, it relies on how the
 	// getQualifiedName() method in ContextRepositoryEntity
 
+	/**
+	 * The fully qualified name of the filtermodule of the default inner
+	 * dispatch filter.
+	 */
 	public static final String FQN_FILTER_MODULE = CONCERN + "." + FILTER_MODULE + "!" + FILTER_MODULE_TOKEN;
 
+	/**
+	 * The fully qualified name of the default inner dispatch input filter
+	 */
 	public static final String FQN_INPUT_FILTER = FQN_FILTER_MODULE + "." + INPUT_FILTER;
 
+	/**
+	 * The fully qualified name of the default send output filter
+	 */
 	public static final String FQN_OUTER_FILTER = FQN_FILTER_MODULE + "." + OUTER_FILTER;
 }

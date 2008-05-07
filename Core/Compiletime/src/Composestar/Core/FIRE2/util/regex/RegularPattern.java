@@ -57,8 +57,18 @@ public final class RegularPattern extends Pattern
 {
 	private static final long serialVersionUID = -3870390515243330458L;
 
+	/**
+	 * The automaton that represents this pattern
+	 */
 	private RegularAutomaton automaton;
 
+	/**
+	 * Compile the pattern and return an instance of the RegularPattern
+	 * 
+	 * @param pattern
+	 * @return
+	 * @throws PatternParseException
+	 */
 	public static RegularPattern compile(String pattern) throws PatternParseException
 	{
 		return new RegularPattern(pattern);
@@ -92,11 +102,21 @@ public final class RegularPattern extends Pattern
 		return automaton.getEndState();
 	}
 
+	/**
+	 * The parser of the regular language
+	 */
 	private static final class Parser
 	{
 		private Parser()
 		{}
 
+		/**
+		 * Parses the language and returns a regular automaton
+		 * 
+		 * @param pattern
+		 * @return
+		 * @throws PatternParseException
+		 */
 		public static RegularAutomaton parse(String pattern) throws PatternParseException
 		{
 			if (pattern == null)
@@ -455,12 +475,22 @@ public final class RegularPattern extends Pattern
 	{
 		private static final long serialVersionUID = -5450856685894425275L;
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.util.regex.RegularState#addOutTransition(Composestar.Core.FIRE2.util.regex.RegularTransition)
+		 */
 		@Override
 		public void addOutTransition(RegularTransition transition)
 		{
 			throw new IllegalArgumentException("FinalRegularState can not contains transition");
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.FIRE2.util.regex.RegularState#removeOutTransition(Composestar.Core.FIRE2.util.regex.RegularTransition)
+		 */
 		@Override
 		public void removeOutTransition(RegularTransition transition)
 		{
@@ -476,12 +506,24 @@ public final class RegularPattern extends Pattern
 	 */
 	private static final class Lexer
 	{
+		/**
+		 * The input buffer
+		 */
 		private StringBuffer buffer;
 
+		/**
+		 * Buffer with tokens
+		 */
 		private List<Token> tokenBuffer;
 
+		/**
+		 * The current position in the token buffer
+		 */
 		private int tokenPos;
 
+		/**
+		 * The current position in the input buffer
+		 */
 		private int chrPos;
 
 		public Lexer(String pattern)
@@ -547,6 +589,9 @@ public final class RegularPattern extends Pattern
 			return tokenBuffer.get(i);
 		}
 
+		/**
+		 * Add a new token to the token buffer
+		 */
 		private void bufferToken()
 		{
 			if (chrPos >= buffer.length())
@@ -584,12 +629,27 @@ public final class RegularPattern extends Pattern
 		}
 
 		// flyweight
+		/**
+		 * Cached tokens
+		 */
 		private static Map<Character, Token> toks = new HashMap<Character, Token>();
 
+		/**
+		 * Eond of file token
+		 */
 		private static final Token EOF_TOKEN = new Token(Token.EOF, "<EOF>");
 
+		/**
+		 * Special NOT token
+		 */
 		private static final Token NOT_TOKEN = new Token(Token.NOT, "![");
 
+		/**
+		 * Convert a character to a token
+		 * 
+		 * @param c
+		 * @return
+		 */
 		private static Token mktok(char c)
 		{
 			Token r;
@@ -645,8 +705,14 @@ public final class RegularPattern extends Pattern
 
 		public static final int EXCL = 0x21; // !
 
+		/**
+		 * The token type
+		 */
 		public int type;
 
+		/**
+		 * Text representation of the token
+		 */
 		public String text;
 
 		public Token(int tokenType, String tokenText)

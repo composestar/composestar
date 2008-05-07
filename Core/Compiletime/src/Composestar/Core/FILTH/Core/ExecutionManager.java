@@ -39,7 +39,7 @@ public class ExecutionManager
 		while (!order.isEmpty())
 		{
 			currentNode = order.getFirst();
-			currentAction = (Action) currentNode.getElement();
+			currentAction = (Action) currentNode.getAction();
 
 			// get all of its rules and apply them
 			rules = currentAction.getRules();

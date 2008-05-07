@@ -13,7 +13,7 @@ package Composestar.Core.DIGGER2;
 import Composestar.Core.Exception.ModuleException;
 
 /**
- * Writes the graph to an XML file
+ * Writes the graph to an XML file.
  * 
  * @author Michiel Hendriks
  */

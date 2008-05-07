@@ -82,6 +82,9 @@ public class Message implements Serializable
 		return target;
 	}
 
+	/**
+	 * @return a the Inner target
+	 */
 	private static Target getInnerTarget()
 	{
 		Target target = new Target();
@@ -89,6 +92,9 @@ public class Message implements Serializable
 		return target;
 	}
 
+	/**
+	 * @return the Self target
+	 */
 	private static Target getSelfTarget()
 	{
 		Target target = new Target();
@@ -96,6 +102,9 @@ public class Message implements Serializable
 		return target;
 	}
 
+	/**
+	 * @return an undistinguishable target
+	 */
 	private static Target getUndistinguishableTarget()
 	{
 		Target target = new Target();
@@ -157,7 +166,9 @@ public class Message implements Serializable
 				|| checkEquals(target, Message.UNDISTINGUISHABLE_TARGET);
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -172,7 +183,9 @@ public class Message implements Serializable
 		return checkEquals(m.selector, selector) && checkEquals(m.target, target);
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -206,6 +219,11 @@ public class Message implements Serializable
 		return target1.getName().equals(target2.getName());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

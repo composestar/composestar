@@ -140,6 +140,9 @@ public interface FlowNode extends Serializable
 	@Deprecated
 	public Iterator<FlowTransition> getTransitions();
 
+	/**
+	 * @return the outgoing transitions
+	 */
 	public List<FlowTransition> getTransitionsEx();
 
 	/**
@@ -158,8 +161,15 @@ public interface FlowNode extends Serializable
 	@Deprecated
 	public Iterator<String> getNames();
 
+	/**
+	 * @return the names/labels of this node
+	 */
 	public Set<String> getNamesEx();
 
+	/**
+	 * @param name
+	 * @return true if this node that the given name/label
+	 */
 	public boolean containsName(String name);
 
 	/**

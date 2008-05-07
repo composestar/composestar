@@ -36,6 +36,9 @@ public class Resolver
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DIGGER.MODULE_NAME + ".Resolver");
 
+	/**
+	 * The dispatch graph this resolver is associated with
+	 */
 	protected DispatchGraph graph;
 
 	public Resolver(DispatchGraph inGraph)

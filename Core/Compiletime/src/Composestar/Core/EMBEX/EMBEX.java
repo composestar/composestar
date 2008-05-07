@@ -19,6 +19,7 @@ import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Class responsible for extracting embedded sources and storing them
+ * appropriate files
  */
 public class EMBEX implements CTCommonModule
 {

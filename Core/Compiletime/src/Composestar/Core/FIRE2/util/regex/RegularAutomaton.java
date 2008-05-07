@@ -26,12 +26,21 @@ package Composestar.Core.FIRE2.util.regex;
 
 import java.io.Serializable;
 
+/**
+ * The automaton of the regular pattern
+ */
 public class RegularAutomaton implements Serializable
 {
 	private static final long serialVersionUID = -5080084489074761193L;
 
+	/**
+	 * The starting state
+	 */
 	private RegularState startState;
 
+	/**
+	 * The final (accepting) state
+	 */
 	private RegularState endState;
 
 	public RegularAutomaton()
@@ -48,21 +57,37 @@ public class RegularAutomaton implements Serializable
 		endState = inEnd;
 	}
 
+	/**
+	 * Set the start state
+	 * 
+	 * @param newStartState
+	 */
 	public void setStartState(RegularState newStartState)
 	{
 		startState = newStartState;
 	}
 
+	/**
+	 * @return the starting state
+	 */
 	public RegularState getStartState()
 	{
 		return startState;
 	}
 
+	/**
+	 * Set the end state
+	 * 
+	 * @param newEndState
+	 */
 	public void setEndState(RegularState newEndState)
 	{
 		endState = newEndState;
 	}
 
+	/**
+	 * @return the end state
+	 */
 	public RegularState getEndState()
 	{
 		return endState;

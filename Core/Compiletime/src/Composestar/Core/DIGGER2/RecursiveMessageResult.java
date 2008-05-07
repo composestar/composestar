@@ -22,10 +22,13 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionE
 public class RecursiveMessageResult extends AbstractMessageResult
 {
 	/**
-	 * Number of variable conditions enocuntered in the trail
+	 * Number of variable conditions encounterd in the trail
 	 */
 	protected int vars;
 
+	/**
+	 * The trace of trails it took to encounter a recursive dispatch
+	 */
 	protected List<Trail> trace;
 
 	/**
@@ -48,6 +51,11 @@ public class RecursiveMessageResult extends AbstractMessageResult
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.DIGGER2.AbstractMessageResult#isValidResult()
+	 */
 	@Override
 	public boolean isValidResult()
 	{

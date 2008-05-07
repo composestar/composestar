@@ -42,8 +42,14 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
  */
 public abstract class AbstractMatcher
 {
+	/**
+	 * The final states found during the matching process
+	 */
 	protected Set<CombinedState> endStates;
 
+	/**
+	 * If true the matching was finished
+	 */
 	protected boolean matchDone = false;
 
 	protected AbstractMatcher()
@@ -93,8 +99,14 @@ public abstract class AbstractMatcher
 	 */
 	public static class MatchTrace
 	{
+		/**
+		 * The resource operations that were encountered
+		 */
 		private List<String> operations;
 
+		/**
+		 * The followed transitions
+		 */
 		private List<ExecutionTransition> transitions;
 
 		public MatchTrace(List<ExecutionTransition> transitions, List<String> operations)
@@ -103,25 +115,46 @@ public abstract class AbstractMatcher
 			this.operations = operations;
 		}
 
+		/**
+		 * @return the list of operations
+		 */
 		public List<String> getOperations()
 		{
 			return Collections.unmodifiableList(operations);
 		}
 
+		/**
+		 * @return the visited transitions
+		 */
 		public List<ExecutionTransition> getTransition()
 		{
 			return Collections.unmodifiableList(transitions);
 		}
 	}
 
+	/**
+	 * A combination of execution and regular state used during the NFA matching
+	 */
 	protected static class CombinedState
 	{
+		/**
+		 * The execution state
+		 */
 		public ExecutionState executionState;
 
+		/**
+		 * The regular state
+		 */
 		public RegularState regularState;
 
+		/**
+		 * The transition trace followed so far
+		 */
 		private TransitionTrace trace;
 
+		/**
+		 * Resource operations queued to be processed during the return flow
+		 */
 		protected List<String> returnOps;
 
 		public CombinedState(ExecutionState executionState, RegularState regularState)
@@ -148,6 +181,11 @@ public abstract class AbstractMatcher
 			setReturnOps(previousState.returnOps);
 		}
 
+		/**
+		 * Set the return flow operations
+		 * 
+		 * @param ops
+		 */
 		public void setReturnOps(List<String> ops)
 		{
 			if (ops == null)
@@ -166,6 +204,9 @@ public abstract class AbstractMatcher
 			}
 		}
 
+		/**
+		 * @return the operations performed on the message's return flow
+		 */
 		public List<String> getReturnOps()
 		{
 			if (returnOps == null)
@@ -175,6 +216,11 @@ public abstract class AbstractMatcher
 			return Collections.unmodifiableList(returnOps);
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -200,6 +246,11 @@ public abstract class AbstractMatcher
 			return executionState.equals(state.executionState) && regularState.equals(state.regularState);
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#hashCode()
+		 */
 		@Override
 		public int hashCode()
 		{
@@ -220,10 +271,19 @@ public abstract class AbstractMatcher
 	 */
 	protected static class TransitionTrace
 	{
+		/**
+		 * The previous transition
+		 */
 		public TransitionTrace heading;
 
+		/**
+		 * The last execution transition that is part of this trace element
+		 */
 		public ExecutionTransition last;
 
+		/**
+		 * A list of operations part of this trace
+		 */
 		public LabelSequence operations;
 
 		public TransitionTrace()
@@ -236,6 +296,9 @@ public abstract class AbstractMatcher
 			this.operations = operations;
 		}
 
+		/**
+		 * @return the list of operations
+		 */
 		public List<String> operationList()
 		{
 			List<String> v;
@@ -254,6 +317,11 @@ public abstract class AbstractMatcher
 			return v;
 		}
 
+		/**
+		 * convert the linked list to a normal list
+		 * 
+		 * @return
+		 */
 		public List<ExecutionTransition> toList()
 		{
 			if (heading == null)

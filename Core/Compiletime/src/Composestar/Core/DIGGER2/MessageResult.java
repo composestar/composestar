@@ -54,12 +54,20 @@ public class MessageResult extends AbstractMessageResult
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.DIGGER2.AbstractMessageResult#isValidResult()
+	 */
 	@Override
 	public boolean isValidResult()
 	{
 		return true;
 	}
 
+	/**
+	 * @return get the trail of the crumb to follow
+	 */
 	public Trail getTrail()
 	{
 		return trail;

@@ -30,7 +30,7 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * This Compose* module checks whether the used filter types can acutally be
+ * This Compose* module checks whether the used filter types can actually be
  * found!
  * 
  * @author pascal
@@ -60,6 +60,11 @@ public class FITER implements CTCommonModule
 	public FITER()
 	{}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
 		logger.info("Verifying Filter Types...");
@@ -72,6 +77,12 @@ public class FITER implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Retrieves the list of custom legacy filter types
+	 * 
+	 * @param resources
+	 * @return
+	 */
 	private List<LegacyCustomFilterType> getCustomFilterTypes(CommonResources resources)
 	{
 		List<LegacyCustomFilterType> customfilters = new ArrayList<LegacyCustomFilterType>();
@@ -86,6 +97,13 @@ public class FITER implements CTCommonModule
 		return customfilters;
 	}
 
+	/**
+	 * Resolve the custom filter types by checking if the type harvester found a
+	 * type with the correct name
+	 * 
+	 * @param customfilters
+	 * @throws ModuleException
+	 */
 	private void resolveCustomFilterTypes(List<LegacyCustomFilterType> customfilters) throws ModuleException
 	{
 		List<LegacyCustomFilterType> working = new ArrayList<LegacyCustomFilterType>(customfilters);
@@ -138,6 +156,12 @@ public class FITER implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Get all subclasses of a given type
+	 * 
+	 * @param filterType
+	 * @return
+	 */
 	private Set<ProgramElement> getChildsofClass(ProgramElement filterType)
 	{
 		Set<ProgramElement> total = new HashSet<ProgramElement>();
@@ -151,6 +175,13 @@ public class FITER implements CTCommonModule
 		return total;
 	}
 
+	/**
+	 * Harvest filter action information from the annotations of the filter
+	 * types.
+	 * 
+	 * @param ft
+	 * @param type
+	 */
 	private void harvestFilterActions(LegacyCustomFilterType ft, ProgramElement type)
 	{
 		List<Annotation> annots = (List<Annotation>) type.getAnnotations();

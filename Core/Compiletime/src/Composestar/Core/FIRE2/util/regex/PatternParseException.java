@@ -5,6 +5,8 @@
 package Composestar.Core.FIRE2.util.regex;
 
 /**
+ * Exception thrown when the pattern could not be parsed
+ * 
  * @author Arjan de Roo
  */
 public class PatternParseException extends Exception

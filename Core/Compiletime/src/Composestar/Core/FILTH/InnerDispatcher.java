@@ -57,6 +57,10 @@ public final class InnerDispatcher
 		return fmName.equals(DefaultInnerDispatchNames.FQN_FILTER_MODULE);
 	}
 
+	/**
+	 * @param fm
+	 * @return true if this filter module is the default filter module
+	 */
 	public static boolean isDefaultDispatch(FilterModule fm)
 	{
 		if (fm == null)
@@ -66,6 +70,10 @@ public final class InnerDispatcher
 		return (fm.getFlags() & ContextRepositoryEntity.FLAG_DEFAULT_FILTER) != 0;
 	}
 
+	/**
+	 * @param fmr
+	 * @return true if this is a reference to the default filter module
+	 */
 	public static boolean isDefaultDispatch(FilterModuleReference fmr)
 	{
 		if (fmr == null)
@@ -75,6 +83,13 @@ public final class InnerDispatcher
 		return isDefaultDispatch(fmr.getRef());
 	}
 
+	/**
+	 * Create the default inner dispatch filter module
+	 * 
+	 * @param ds
+	 * @param filterTypes
+	 * @return
+	 */
 	private static FilterModule createInnerDispatchFilterModule(DataStore ds, FilterTypeMapping filterTypes)
 	{
 		// create a conern
@@ -106,6 +121,16 @@ public final class InnerDispatcher
 		return fmInstance;
 	}
 
+	/**
+	 * Create the default inner dispatch filter definition
+	 * 
+	 * @param ds
+	 * @param filterTypes
+	 * @param cc
+	 * @param fm
+	 * @param name
+	 * @return
+	 */
 	private static FilterAST createInnerDispatchFilter(DataStore ds, FilterTypeMapping filterTypes, CpsConcern cc,
 			FilterModuleAST fm, String name)
 	{
@@ -176,6 +201,13 @@ public final class InnerDispatcher
 		return f;
 	}
 
+	/**
+	 * Create a reference to the default filter module
+	 * 
+	 * @param ds
+	 * @param filterTypes
+	 * @return
+	 */
 	public static FilterModuleReference createInnerDispatchReference(DataStore ds, FilterTypeMapping filterTypes)
 	{
 		FilterModule fm = InnerDispatcher.createInnerDispatchFilterModule(ds, filterTypes);

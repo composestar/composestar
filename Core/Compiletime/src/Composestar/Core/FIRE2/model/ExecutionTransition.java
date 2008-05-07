@@ -9,6 +9,8 @@ package Composestar.Core.FIRE2.model;
 import java.io.Serializable;
 
 /**
+ * A transition from one execution state to an other.
+ * 
  * @author Arjan de Roo
  */
 public abstract class ExecutionTransition implements Serializable
@@ -27,13 +29,6 @@ public abstract class ExecutionTransition implements Serializable
 	public static final String CONTINUE_ACTION_ACCEPT = "<ContinueAction-accept>";
 
 	public static final String CONTINUE_ACTION_REJECT = "<ContinueAction-reject>";
-
-	// No longer used
-	// public static final String CONTINUE_ACTION_GENERALIZATION =
-	// "ContinueAction";
-	// public static final String DISPATCH_ACTION = "<DispatchAction>";
-	// public static final String ERROR_ACTION = "<ErrorAction>";
-	// public static final String META_ACTION = "<MetaAction>";
 
 	public static final String FILTER = "<Filter>";
 

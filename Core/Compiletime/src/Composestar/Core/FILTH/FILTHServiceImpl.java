@@ -14,12 +14,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.FILTH.Core.Action;
+import Composestar.Core.FILTH.Core.Edge;
 import Composestar.Core.FILTH.Core.Graph;
 import Composestar.Core.FILTH.Core.Node;
 import Composestar.Core.FILTH.Core.OrderTraverser;
@@ -29,11 +29,20 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
+import Composestar.Utils.Logging.CPSLogger;
 
-public class FILTHServiceImpl extends FILTHService
+/**
+ * The actual implementation of FILTH
+ */
+public class FILTHServiceImpl
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(FILTH.MODULE_NAME);
+
 	protected FilterModuleReference defaultDispatch;
 
+	/**
+	 * The filter module ordering specification
+	 */
 	protected Map<String, SyntacticOrderingConstraint> orderSpec;
 
 	protected FILTHServiceImpl(CommonResources cr, FilterModuleReference deffmr) throws ConfigurationException
@@ -42,7 +51,12 @@ public class FILTHServiceImpl extends FILTHService
 		orderSpec = cr.get(FILTH.FILTER_ORDERING_SPEC);
 	}
 
-	@Override
+	/**
+	 * Get the selected filter module order for a given concern
+	 * 
+	 * @param c
+	 * @return
+	 */
 	public List<FilterModuleSuperImposition> getOrder(Concern c)
 	{
 		FilterModuleOrder fo = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
@@ -58,47 +72,41 @@ public class FILTHServiceImpl extends FILTHService
 		return fo.filterModuleSIList();
 	}
 
-	@Override
+	/**
+	 * Calculate a list of possible filter module orderings for the given
+	 * concern.
+	 * 
+	 * @param c
+	 * @return
+	 */
 	public List<List<FilterModuleSuperImposition>> getMultipleOrder(Concern c)
 	{
+		// will contain all orders
 		LinkedList<List<FilterModuleSuperImposition>> forders = new LinkedList<List<FilterModuleSuperImposition>>();
 
-		LinkedList<FilterModuleSuperImposition> modulrefs;
-
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 
-		modulrefs = processModules(c, g);
-
+		processModules(c, g);
 		processOrderingSpecifications(g);
 
 		OrderTraverser ot = new OrderTraverser();
 		LinkedList<List<Node>> orders = ot.multiTraverse(g);
 		for (List<Node> ord : orders)
 		{
-			Iterator<Node> i = ord.iterator();
-			/* skip the root */
-			i.next();
-			LinkedList<FilterModuleSuperImposition> anOrder = new LinkedList<FilterModuleSuperImposition>();
-			while (i.hasNext())
+			List<FilterModuleSuperImposition> anOrder = new LinkedList<FilterModuleSuperImposition>();
+			for (Node node : ord)
 			{
-				Action a = (Action) i.next().getElement();
-
-				for (FilterModuleSuperImposition fmsi : modulrefs)
+				if (node.getAction() != null)
 				{
-					// System.out.println("FILTH
-					// ordering>>>"+a+"::"+fr.getName() );
-					if (a.getName().equals(fmsi.getFilterModule().getQualifiedName()))
+					FilterModuleSuperImposition fmsi = node.getAction().getFilterModuleSuperImposition();
+					if (fmsi != null)
 					{
-						anOrder.addLast(fmsi);
-						break;
+						anOrder.add(fmsi);
 					}
-
 				}
-				// System.out.println(count++);
 			}
-			anOrder.addLast(new FilterModuleSuperImposition(defaultDispatch));
-			forders.addLast(anOrder);
+			anOrder.add(new FilterModuleSuperImposition(defaultDispatch));
+			forders.add(anOrder);
 		}
 
 		/* DEBUG info end */
@@ -123,14 +131,20 @@ public class FILTHServiceImpl extends FILTHService
 		return forders; // arrange this according to the output required!!
 	}
 
-	private LinkedList<FilterModuleSuperImposition> processModules(Concern c, Graph g)
+	/**
+	 * Create pre_soft constraints between the root node and all filter modules
+	 * superimposed on this concern.
+	 * 
+	 * @param c
+	 * @param g
+	 * @return
+	 */
+	private void processModules(Concern c, Graph g)
 	{
-		LinkedList<FilterModuleSuperImposition> modulerefs = new LinkedList<FilterModuleSuperImposition>();
-
 		/* get the superimposition from the repository */
 		SIinfo sinfo = (SIinfo) c.getDynObject(SIinfo.DATAMAP_KEY);
 		/* get the firt altnernative */
-		Vector<FilterModSIinfo> msalts = sinfo.getFilterModSIAlts();
+		List<FilterModSIinfo> msalts = sinfo.getFilterModSIAlts();
 
 		/* get the vector of the superimposed filtermodules */
 		FilterModSIinfo fmsi = msalts.get(0);
@@ -138,14 +152,17 @@ public class FILTHServiceImpl extends FILTHService
 		/* add the name of each filtermodule into the graph */
 		for (FilterModuleSuperImposition fms : (List<FilterModuleSuperImposition>) fmsi.getAll())
 		{
-			FilterModuleReference fr = fms.getFilterModule();
-			Action a = new Action(fr.getQualifiedName(), Boolean.TRUE, true);
-			Action.insert(a, g);
-			modulerefs.add(fms);
+			Action a = new Action(fms, Boolean.TRUE, true);
+			g.addEdge(new Edge("pre_soft", g.getRoot(), new Node(a)));
 		}
-		return modulerefs;
 	}
 
+	/**
+	 * Process the filter module ordering constraint specification as provided
+	 * from external sources (cps files).
+	 * 
+	 * @param g
+	 */
 	private void processOrderingSpecifications(Graph g)
 	{
 		if (orderSpec == null)
@@ -167,16 +184,23 @@ public class FILTHServiceImpl extends FILTHService
 		}
 	}
 
+	/**
+	 * Process a constraint rule
+	 * 
+	 * @param left
+	 * @param right
+	 * @param graph
+	 */
 	private void processRule(String left, String right, Graph graph)
 	{
 		Action l, r;
 		Node nl, nr;
 
-		nl = Action.lookupByName(left, graph);
+		nl = graph.findNodeByName(left);
 
 		if (nl != null)
 		{
-			l = (Action) nl.getElement();
+			l = (Action) nl.getAction();
 		}
 		else
 		{
@@ -188,10 +212,10 @@ public class FILTHServiceImpl extends FILTHService
 			l = null;
 		}
 
-		nr = Action.lookupByName(right, graph);
+		nr = graph.findNodeByName(right);
 		if (nr != null)
 		{
-			r = (Action) nr.getElement();
+			r = (Action) nr.getAction();
 		}
 		else
 		{

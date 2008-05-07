@@ -31,10 +31,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * A state in the regular automaton
+ */
 public class RegularState implements Serializable
 {
 	private static final long serialVersionUID = 2662274504980135336L;
 
+	/**
+	 * Counter used to give all states a unique ID
+	 */
 	private static int currentId;
 
 	/**
@@ -42,8 +48,14 @@ public class RegularState implements Serializable
 	 */
 	private String stateId;
 
+	/**
+	 * Outgoing transitions
+	 */
 	private List<RegularTransition> outTransitions;
 
+	/**
+	 * If true this state will accept everything
+	 */
 	private boolean greedyEnd;
 
 	public RegularState()
@@ -52,26 +64,45 @@ public class RegularState implements Serializable
 		outTransitions = new ArrayList<RegularTransition>();
 	}
 
+	/**
+	 * @return a new state name
+	 */
 	private static String getNewStateId()
 	{
 		return "s" + currentId++;
 	}
 
+	/**
+	 * @return the identifier of the state
+	 */
 	public String getStateId()
 	{
 		return stateId;
 	}
 
+	/**
+	 * Add a new transition
+	 * 
+	 * @param transition
+	 */
 	public void addOutTransition(RegularTransition transition)
 	{
 		outTransitions.add(transition);
 	}
 
+	/**
+	 * Remove the transition from this state
+	 * 
+	 * @param transition
+	 */
 	public void removeOutTransition(RegularTransition transition)
 	{
 		outTransitions.remove(transition);
 	}
 
+	/**
+	 * @return all outgoing transition
+	 */
 	public List<RegularTransition> getOutTransitions()
 	{
 		return Collections.unmodifiableList(outTransitions);
@@ -173,6 +204,11 @@ public class RegularState implements Serializable
 		return sb.toString();
 	}
 
+	/**
+	 * Find all states starting from this one
+	 * 
+	 * @param states
+	 */
 	private void getAllStats(Set<RegularState> states)
 	{
 		states.add(this);

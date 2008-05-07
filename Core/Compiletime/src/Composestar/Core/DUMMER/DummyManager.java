@@ -41,6 +41,11 @@ public class DummyManager implements CTCommonModule
 	public DummyManager()
 	{}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
 		resc = resources;
@@ -48,6 +53,11 @@ public class DummyManager implements CTCommonModule
 		createDummies();
 	}
 
+	/**
+	 * Create the dummies
+	 * 
+	 * @throws ModuleException
+	 */
 	private void createDummies() throws ModuleException
 	{
 		File dummyPath = new File(config.getProject().getIntermediate(), DUMMY_PATH);
@@ -59,6 +69,13 @@ public class DummyManager implements CTCommonModule
 		createProjectDummies(dummyPath, config.getProject());
 	}
 
+	/**
+	 * Create a dummy file for every source file in the project
+	 * 
+	 * @param dummyPath the target directory
+	 * @param project
+	 * @throws ModuleException
+	 */
 	private void createProjectDummies(File dummyPath, Project project) throws ModuleException
 	{
 		Map<String, Set<Source>> dummies = new HashMap<String, Set<Source>>();

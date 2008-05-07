@@ -29,6 +29,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A transition in the regular automaton
+ */
 public class RegularTransition implements Serializable
 {
 	private static final long serialVersionUID = -8405459283288345064L;
@@ -38,12 +41,24 @@ public class RegularTransition implements Serializable
 	 */
 	public static final String WILDCARD = "<ÿÿÿ>";
 
+	/**
+	 * The origin state
+	 */
 	private RegularState startState;
 
+	/**
+	 * The destination
+	 */
 	private RegularState endState;
 
+	/**
+	 * Labels associated with this state
+	 */
 	private Set<String> labels;
 
+	/**
+	 * Accept on the inverse of the labels
+	 */
 	private boolean negation;
 
 	public RegularTransition(RegularState mystart, RegularState myend)
@@ -53,6 +68,11 @@ public class RegularTransition implements Serializable
 		labels = new HashSet<String>();
 	}
 
+	/**
+	 * Set the starting state
+	 * 
+	 * @param newStart
+	 */
 	public void setStartState(RegularState newStart)
 	{
 		if (startState != null)
@@ -63,36 +83,66 @@ public class RegularTransition implements Serializable
 		startState.addOutTransition(this);
 	}
 
+	/**
+	 * Set the ending state
+	 * 
+	 * @param newEnd
+	 */
 	public void setEndState(RegularState newEnd)
 	{
 		endState = newEnd;
 	}
 
+	/**
+	 * Set the negation
+	 * 
+	 * @param value
+	 */
 	public void setNegation(boolean value)
 	{
 		negation = value;
 	}
 
+	/**
+	 * @return true if this is a negating transition
+	 */
 	public boolean isNegation()
 	{
 		return negation;
 	}
 
+	/**
+	 * Add a label
+	 * 
+	 * @param label
+	 */
 	public void addLabel(String label)
 	{
 		labels.add(label);
 	}
 
+	/**
+	 * Add a set of labels
+	 * 
+	 * @param label
+	 */
 	public void addLabels(Set<String> label)
 	{
 		labels.addAll(label);
 	}
 
+	/**
+	 * @return all labels
+	 */
 	public Set<String> getLabels()
 	{
 		return Collections.unmodifiableSet(labels);
 	}
 
+	/**
+	 * @param word
+	 * @return true if this transition accepts the input word
+	 */
 	public boolean match(String word)
 	{
 		if (labels.contains(WILDCARD))
@@ -111,21 +161,33 @@ public class RegularTransition implements Serializable
 		}
 	}
 
+	/**
+	 * @return true if this is a lambda transition
+	 */
 	public boolean isEmpty()
 	{
 		return labels.isEmpty();
 	}
 
+	/**
+	 * @return true if it accepts anything
+	 */
 	public boolean isWildcard()
 	{
 		return labels.contains(WILDCARD);
 	}
 
+	/**
+	 * @return the end state
+	 */
 	public RegularState getEndState()
 	{
 		return endState;
 	}
 
+	/**
+	 * @return the start state
+	 */
 	public RegularState getStartState()
 	{
 		return startState;

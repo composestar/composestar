@@ -24,18 +24,24 @@ public abstract class AbstractMessageResult
 	 */
 	protected Breadcrumb crumb;
 
+	/**
+	 * @return the associated breadcrumb
+	 */
 	public Breadcrumb getCrumb()
 	{
 		return crumb;
 	}
 
+	/**
+	 * @return the concern of the crumb
+	 */
 	public Concern getConcern()
 	{
 		return crumb.getConcern();
 	}
 
 	/**
-	 * @return true when it is a valid result, false if the result is errornous
+	 * @return true when it is a valid result, false if the result is erroneous
 	 */
 	public abstract boolean isValidResult();
 }

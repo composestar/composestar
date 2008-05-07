@@ -22,8 +22,8 @@ public abstract class Rule
 	{
 		left = inleft;
 		right = inright;
-		if (right instanceof Action) // the second arg. must be action
-		// always...
+		// the second arg. must be action always...
+		if (right instanceof Action)
 		{
 			((Action) right).addRule(this);
 		}

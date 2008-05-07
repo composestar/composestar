@@ -42,7 +42,6 @@ public class Run
 		Rule p2 = new SoftPreRule(m, u);
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(c, g);
 		Action.insert(p, g);
 		Action.insert(m, g);
@@ -76,7 +75,6 @@ public class Run
 		Rule p7 = new SoftPreRule(p, p);
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(c, g);
 		Action.insert(p, g);
 		Action.insert(m, g);
@@ -110,7 +108,6 @@ public class Run
 		// PreRule p2=new PreRule((Parameter)m, (Parameter)u);
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(c, g);
 		Action.insert(p, g);
 		Action.insert(m, g);
@@ -140,7 +137,6 @@ public class Run
 		Rule p1 = new IncludeRule(c, p);
 		Rule p2 = new IncludeRule(p, m);
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(c, g);
 		Action.insert(p, g);
 		Action.insert(m, g);
@@ -151,7 +147,7 @@ public class Run
 		LinkedList<Node> order = ot.traverse(g);
 		for (Object anOrder : order)
 		{
-			System.out.println(((Node) anOrder).getElement());
+			System.out.println(((Node) anOrder).getAction());
 		}
 	}
 
@@ -167,7 +163,6 @@ public class Run
 		// PreRule p2=new PreRule((Parameter)m, (Parameter)u);
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(a, g);
 		Action.insert(b, g);
 		Action.insert(c, g);
@@ -199,7 +194,6 @@ public class Run
 		// PreRule p2=new PreRule((Parameter)m, (Parameter)u);
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(a, g);
 		Action.insert(b, g);
 		Action.insert(c, g);
@@ -231,7 +225,6 @@ public class Run
 		// PreRule p2=new PreRule((Parameter)m, (Parameter)u);
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(a, g);
 		Action.insert(b, g);
 		Action.insert(c, g);
@@ -262,7 +255,6 @@ public class Run
 		// PreRule p2=new PreRule((Parameter)m, (Parameter)u);
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(a, g);
 		Action.insert(b, g);
 		Action.insert(c, g);
@@ -293,7 +285,6 @@ public class Run
 		Rule p2 = new SoftPreRule(m, u);
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(c, g);
 		Action.insert(p, g);
 		Action.insert(m, g);
@@ -322,7 +313,6 @@ public class Run
 		// Rule p2=new SoftPreRule((Parameter)m, (Parameter)u);
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(c, g);
 		Action.insert(p, g);
 		Action.insert(m, g);
@@ -352,7 +342,6 @@ public class Run
 		Rule p3 = new SoftPreRule(u, m); // cycle
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		Action.insert(c, g);
 		Action.insert(p, g);
 		Action.insert(m, g);
@@ -375,7 +364,6 @@ public class Run
 	{
 
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 		/* TODO: augment the active filtermodules in memory and in the graph */
 
 		/* process XML specification */
@@ -408,7 +396,6 @@ public class Run
 	public void test12()
 	{
 		Graph g = new Graph();
-		g.setRoot(new Node("root"));
 
 		Action a = new Action("a", Boolean.TRUE, true);
 		Action.insert(a, g);

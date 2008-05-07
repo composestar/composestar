@@ -19,7 +19,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.FIRE2.model.Message;
 
 /**
- * Stores the input and output crumbs
+ * Stores the input and output crumbs for a given concern.
  * 
  * @author Michiel Hendriks
  */
@@ -27,10 +27,19 @@ public class ConcernCrumbs implements Serializable
 {
 	private static final long serialVersionUID = -3745374019301536089L;
 
+	/**
+	 * The concern for this instance
+	 */
 	protected Concern concern;
 
+	/**
+	 * Mapping of selector to crumbs for input filters
+	 */
 	protected Map<String, Breadcrumb> inputCrumbs;
 
+	/**
+	 * Mapping of selector to crumbs for output filters
+	 */
 	protected Map<String, Breadcrumb> outputCrumbs;
 
 	public ConcernCrumbs(Concern inConcern)
@@ -40,6 +49,11 @@ public class ConcernCrumbs implements Serializable
 		outputCrumbs = new HashMap<String, Breadcrumb>();
 	}
 
+	/**
+	 * Add a breadcrumb
+	 * 
+	 * @param crumb
+	 */
 	public void addCrumb(Breadcrumb crumb)
 	{
 		switch (crumb.getFilterPosition())
@@ -52,6 +66,12 @@ public class ConcernCrumbs implements Serializable
 		}
 	}
 
+	/**
+	 * Get a breadcrumb for a given selector
+	 * 
+	 * @param selector
+	 * @return
+	 */
 	public Breadcrumb getInputCrumb(String selector)
 	{
 		if (inputCrumbs.containsKey(selector))
@@ -62,17 +82,27 @@ public class ConcernCrumbs implements Serializable
 		return inputCrumbs.get(Message.UNDISTINGUISHABLE_SELECTOR);
 	}
 
+	/**
+	 * @return the input crumbs
+	 */
 	public Iterator<Breadcrumb> getInputCrumbs()
 	{
 		return inputCrumbs.values().iterator();
 	}
 
+	/**
+	 * @param selector
+	 * @return the output crubs for the given selector
+	 */
 	public Breadcrumb getOutputCrumb(String selector)
 	{
 		// TODO:
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return the output crumbs
+	 */
 	public Iterator<Breadcrumb> getOutputCrumbs()
 	{
 		return outputCrumbs.values().iterator();

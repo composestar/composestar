@@ -36,10 +36,15 @@ public class FILTH implements CTCommonModule
 	public FILTH()
 	{}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
+	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
 		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
-		FILTHService filthservice = new FILTHServiceImpl(resources, InnerDispatcher.createInnerDispatchReference(
+		FILTHServiceImpl filthservice = new FILTHServiceImpl(resources, InnerDispatcher.createInnerDispatchReference(
 				resources.repository(), filterTypes));
 
 		Iterator<Concern> conIter = resources.repository().getAllInstancesOf(Concern.class);
