@@ -194,7 +194,7 @@ public class Preprocessor implements CTCommonModule
 
 				generateFlowGrammar = rvg;
 
-				URL runUrl = Preprocessor.class.getClass().getResource(RUNTIME_GRAMMAR_PATH);
+				URL runUrl = Preprocessor.class.getResource(RUNTIME_GRAMMAR_PATH);
 				runtimeGrammar = (RuleViewGrammar) gpsLoader
 						.unmarshal(new File(runUrl.getFile().replaceAll("%20", " ")));
 
