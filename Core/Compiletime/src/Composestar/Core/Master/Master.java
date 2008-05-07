@@ -49,6 +49,7 @@ import Composestar.Utils.Logging.Log4j.CPSPatternLayout;
 import Composestar.Utils.Logging.Log4j.CrucialLevel;
 import Composestar.Utils.Logging.Log4j.MetricAppender;
 import Composestar.Utils.Perf.CPSTimer;
+import Composestar.Utils.Perf.CPSTimerRepository;
 import Composestar.Utils.Perf.Report.CPSTimerReport;
 import Composestar.Utils.Perf.Report.CPSTimerTree;
 import Composestar.Utils.Perf.Report.XMLTimerReport;
@@ -115,6 +116,7 @@ public abstract class Master
 		initEvironment();
 		// make sure it's initialized
 		ModuleInfoManager.getInstance();
+		CPSTimerRepository.getGroupTimers();
 	}
 
 	public Master(String[] args)
@@ -645,7 +647,7 @@ public abstract class Master
 				return;
 			}
 			CPSTimerReport report = new XMLTimerReport(trOs, stOs, styleSheet);
-			report.generateReport(CPSTimerTree.constructTree(CPSTimer.getTimers()));
+			report.generateReport(CPSTimerTree.constructTree(CPSTimerRepository.getGroupTimers()));
 		}
 	}
 

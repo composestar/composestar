@@ -15,19 +15,31 @@ import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
- * @author Composer
+ * Keeps counters for the number of warning/error/fatal log entries
  */
 public class MetricAppender extends AppenderSkeleton
 {
+	/**
+	 * Fatal count
+	 */
 	protected int fatals;
 
+	/**
+	 * Error count
+	 */
 	protected int errors;
 
+	/**
+	 * Warning count
+	 */
 	protected int warnings;
 
 	public MetricAppender()
 	{}
 
+	/**
+	 * Reset the counters
+	 */
 	public void reset()
 	{
 		fatals = 0;
@@ -35,16 +47,25 @@ public class MetricAppender extends AppenderSkeleton
 		warnings = 0;
 	}
 
+	/**
+	 * @return the number of fatal log entries
+	 */
 	public int numFatals()
 	{
 		return fatals;
 	}
 
+	/**
+	 * @return the number of error log entries
+	 */
 	public int numErrors()
 	{
 		return errors;
 	}
 
+	/**
+	 * @return the number of warning log entries
+	 */
 	public int numWarnings()
 	{
 		return warnings;

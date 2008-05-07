@@ -9,6 +9,9 @@ package Composestar.Utils.Logging;
 
 public interface LocationProvider
 {
+	/**
+	 * @return the source filename
+	 */
 	String getFilename();
 
 	/**

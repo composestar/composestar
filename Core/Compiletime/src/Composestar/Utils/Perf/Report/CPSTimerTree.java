@@ -28,12 +28,13 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import Composestar.Utils.Perf.CPSTimer;
 
@@ -52,21 +53,22 @@ public class CPSTimerTree
 
 	protected String name;
 
-	protected CPSTimer myTimer;
+	protected Set<CPSTimer> myTimers;
 
 	protected CPSTimerTree(String myname)
 	{
 		name = myname;
 		children = new TreeSet<CPSTimerTree>(comp);
+		myTimers = new HashSet<CPSTimer>();
 	}
 
 	protected CPSTimerTree(String myname, CPSTimer forTimer)
 	{
 		this(myname);
-		myTimer = forTimer;
+		myTimers.add(forTimer);
 	}
 
-	public static CPSTimerTree constructTree(Map<String, CPSTimer> timers)
+	public static CPSTimerTree constructTree(Set<CPSTimer> timers)
 	{
 		//
 		// Node
@@ -77,11 +79,19 @@ public class CPSTimerTree
 		//		 
 		Queue<CPSTimerTree> proc = new LinkedList<CPSTimerTree>();
 		Map<String, CPSTimerTree> lookup = new HashMap<String, CPSTimerTree>();
-		for (Entry<String, CPSTimer> entry : timers.entrySet())
+		for (CPSTimer entry : timers)
 		{
-			CPSTimerTree item = new CPSTimerTree(entry.getKey(), entry.getValue());
-			proc.add(item);
-			lookup.put(entry.getKey(), item);
+			if (!lookup.containsKey(entry.getName()))
+			{
+				CPSTimerTree item = new CPSTimerTree(entry.getName(), entry);
+				proc.add(item);
+				lookup.put(entry.getName(), item);
+			}
+			else
+			{
+				CPSTimerTree item = lookup.get(entry.getName());
+				item.addTimer(entry);
+			}
 		}
 		while (proc.size() > 0)
 		{
@@ -111,11 +121,24 @@ public class CPSTimerTree
 		return lookup.get(""); // the root item
 	}
 
+	public void addTimer(CPSTimer timer)
+	{
+		myTimers.add(timer);
+	}
+
 	protected long getCreationTime()
 	{
-		if (myTimer != null)
+		long time = Long.MAX_VALUE;
+		for (CPSTimer timer : myTimers)
 		{
-			return myTimer.getCreationTime();
+			if (timer.getCreationTime() < time)
+			{
+				time = timer.getCreationTime();
+			}
+		}
+		if (time != Long.MAX_VALUE)
+		{
+			return time;
 		}
 		if (children.size() > 0)
 		{
@@ -140,9 +163,9 @@ public class CPSTimerTree
 	 * 
 	 * @return
 	 */
-	public CPSTimer getTimer()
+	public Set<CPSTimer> getTimers()
 	{
-		return myTimer;
+		return myTimers;
 	}
 
 	/**

@@ -25,16 +25,30 @@
 package Composestar.Utils.Perf;
 
 /**
+ * A CPSTimer event
+ * 
  * @author Michiel Hendriks
  */
 public class CPSTimerEvent
 {
+	/**
+	 * The message
+	 */
 	protected String message;
 
+	/**
+	 * Start time in nano seconds
+	 */
 	protected long startTime;
 
+	/**
+	 * Stop time in nano seconds
+	 */
 	protected long stopTime;
 
+	/**
+	 * Difference in memory usage (not very reliable)
+	 */
 	protected long memoryDelta;
 
 	public CPSTimerEvent(String eventMessage, long eventStart, long eventStop, long eventMemoryDelta)
@@ -46,6 +60,9 @@ public class CPSTimerEvent
 		// System.out.println(toString());
 	}
 
+	/**
+	 * @return the event message
+	 */
 	public String getMessage()
 	{
 		return message;
@@ -95,6 +112,11 @@ public class CPSTimerEvent
 		return memoryDelta;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

@@ -27,6 +27,9 @@ import java.util.Map;
  */
 public class RuntimeLoggerFactory implements ILoggerFactory
 {
+	/**
+	 * Map of logger name to ILogger instance
+	 */
 	private Map loggers = new HashMap();
 
 	private static Class loggerClass = RuntimeLogger.class;

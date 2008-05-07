@@ -174,6 +174,12 @@ public class CPSLogger extends Logger implements ILogger
 		super(name);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.apache.log4j.Category#forcedLog(java.lang.String,
+	 *      org.apache.log4j.Priority, java.lang.Object, java.lang.Throwable)
+	 */
 	@Override
 	protected void forcedLog(String fqcn, Priority level, Object message, Throwable t)
 	{

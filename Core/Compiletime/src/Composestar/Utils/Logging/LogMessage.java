@@ -34,10 +34,19 @@ public class LogMessage implements LocationProvider, Serializable
 	 */
 	protected RepositoryEntity repoEntity;
 
+	/**
+	 * The source filename
+	 */
 	protected String sourceFilename = "";
 
+	/**
+	 * Line in the source file
+	 */
 	protected int sourceLine;
 
+	/**
+	 * Position on the line
+	 */
 	protected int sourceLinePos;
 
 	public LogMessage(Object inMsg)
@@ -86,31 +95,57 @@ public class LogMessage implements LocationProvider, Serializable
 		this(inMsg, lp.getFilename(), lp.getLineNumber(), lp.getLinePosition());
 	}
 
+	/**
+	 * @return the message
+	 */
 	public Object getMessage()
 	{
 		return message;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Utils.Logging.LocationProvider#getFilename()
+	 */
 	public String getFilename()
 	{
 		return sourceFilename;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Utils.Logging.LocationProvider#getLineNumber()
+	 */
 	public int getLineNumber()
 	{
 		return sourceLine;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Utils.Logging.LocationProvider#getLinePosition()
+	 */
 	public int getLinePosition()
 	{
 		return sourceLinePos;
 	}
 
+	/**
+	 * @return the associated repository entity
+	 */
 	public RepositoryEntity getRepositoryEntity()
 	{
 		return repoEntity;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

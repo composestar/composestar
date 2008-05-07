@@ -24,5 +24,11 @@ package Composestar.Utils.Logging;
  */
 public interface ILoggerFactory
 {
+	/**
+	 * Create a ILogger instance with the given identifier
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public ILogger createLogger(String name);
 }

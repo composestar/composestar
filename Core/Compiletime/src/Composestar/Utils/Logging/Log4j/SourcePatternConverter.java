@@ -23,10 +23,19 @@ import Composestar.Utils.Logging.LocationProvider;
  */
 public class SourcePatternConverter extends PatternConverter
 {
+	/**
+	 * field for the file name
+	 */
 	public static final int FIELD_FILE = 0;
 
+	/**
+	 * Line number
+	 */
 	public static final int FIELD_LINE = 1;
 
+	/**
+	 * Line position number
+	 */
 	public static final int FIELD_LINEPOS = 2;
 
 	protected int sourceField;

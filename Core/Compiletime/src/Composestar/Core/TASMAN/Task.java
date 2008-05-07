@@ -34,20 +34,8 @@ import Composestar.Core.Resources.CommonResources;
  */
 public abstract class Task
 {
-	protected String processId = "";
-
 	public Task()
 	{}
 
 	public abstract void execute(Manager manager, CommonResources resources) throws ModuleException;
-
-	protected void setProcessId(String id)
-	{
-		processId = id;
-	}
-
-	protected String getProcessId()
-	{
-		return processId;
-	}
 }

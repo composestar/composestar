@@ -38,6 +38,9 @@ import java.util.Map;
  */
 public class CPSTimer
 {
+	/**
+	 * Maximum nesting depth of timers
+	 */
 	private static final int MAX_NESTING = 5;
 
 	/**
@@ -49,18 +52,39 @@ public class CPSTimer
 
 	protected static final CPSTimerRepository repository = new CPSTimerRepository();
 
+	/**
+	 * Creation time of this timer in nano seconds
+	 */
 	protected long creationTime;
 
+	/**
+	 * The name of the timer
+	 */
 	protected String name;
 
+	/**
+	 * Current timer messages
+	 */
 	protected String[] currentMessage = new String[MAX_NESTING];
 
+	/**
+	 * Current timer starts (for nested time)
+	 */
 	protected long[] currentStart = new long[MAX_NESTING];
 
+	/**
+	 * Current memory usage snapshot
+	 */
 	protected long[] currentMemory = new long[MAX_NESTING];
 
+	/**
+	 * Index in the timer stack
+	 */
 	protected int idx;
 
+	/**
+	 * finished timer events
+	 */
 	protected List<CPSTimerEvent> events;
 
 	/**
@@ -116,17 +140,6 @@ public class CPSTimer
 		return repository.getTimers();
 	}
 
-	/**
-	 * Return the timers for the given thread group
-	 * 
-	 * @param tg
-	 * @return
-	 */
-	public static Map<String, CPSTimer> getTimers(ThreadGroup tg)
-	{
-		return repository.getTimers(tg);
-	}
-
 	CPSTimer(String timerName)
 	{
 		creationTime = System.nanoTime();
@@ -144,6 +157,9 @@ public class CPSTimer
 		return name;
 	}
 
+	/**
+	 * @return the creation time
+	 */
 	public long getCreationTime()
 	{
 		return creationTime;
@@ -244,6 +260,11 @@ public class CPSTimer
 		currentStart[idx] = 0;
 	}
 
+	/**
+	 * Add a new timer event
+	 * 
+	 * @param event
+	 */
 	protected synchronized void addEvent(CPSTimerEvent event)
 	{
 		events.add(event);

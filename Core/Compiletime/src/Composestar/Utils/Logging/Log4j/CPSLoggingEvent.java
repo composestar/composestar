@@ -77,6 +77,11 @@ public class CPSLoggingEvent extends LoggingEvent implements LocationProvider
 		}
 	}
 
+	/**
+	 * Set the source filename
+	 * 
+	 * @param inname
+	 */
 	public void setFilename(String inname)
 	{
 		filename = inname;
@@ -90,6 +95,11 @@ public class CPSLoggingEvent extends LoggingEvent implements LocationProvider
 		return filename;
 	}
 
+	/**
+	 * Set the source line number
+	 * 
+	 * @param inval
+	 */
 	public void setLineNumber(int inval)
 	{
 		lineNumber = inval;
@@ -103,6 +113,11 @@ public class CPSLoggingEvent extends LoggingEvent implements LocationProvider
 		return lineNumber;
 	}
 
+	/**
+	 * Set the carret position
+	 * 
+	 * @param inval
+	 */
 	public void setLinePosition(int inval)
 	{
 		linePosition = inval;

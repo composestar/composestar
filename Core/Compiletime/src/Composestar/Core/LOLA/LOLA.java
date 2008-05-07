@@ -37,12 +37,9 @@ import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.OutputStreamRedirector;
 import Composestar.Utils.Perf.CPSTimer;
 
-/*
- * LOgic predicate LAnguage Facade/API 
- * 
- * Controls the prolog query engine and the language meta model
- * 
- * Created on Oct 26, 2004 by havingaw
+/**
+ * LOgic predicate LAnguage Facade/API Controls the prolog query engine and the
+ * language meta model
  */
 public abstract class LOLA implements CTCommonModule
 {
@@ -54,12 +51,24 @@ public abstract class LOLA implements CTCommonModule
 
 	protected DataStore dataStore;
 
+	/**
+	 * Contains the program element data of the base program
+	 */
 	protected UnitDictionary unitDict;
 
+	/**
+	 * All predicate selectors that will be resolved
+	 */
 	protected List<PredicateSelector> selectors;
 
+	/**
+	 * Contains relations between various program elements
+	 */
 	protected LanguageModel langModel;
 
+	/**
+	 * Handler of the Compose* builtin prolog statements
+	 */
 	protected ComposestarBuiltins composestarBuiltins;
 
 	/**

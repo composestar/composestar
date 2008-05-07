@@ -26,7 +26,9 @@ package Composestar.Utils.Perf;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Repository that keeps record of all timers.
@@ -35,16 +37,54 @@ import java.util.Map;
  */
 public class CPSTimerRepository
 {
-	protected Map<ThreadGroup, Map<String, CPSTimer>> timers;
-
-	public CPSTimerRepository()
+	protected static InheritableThreadLocal<Set<CPSTimer>> groupTimers = new InheritableThreadLocal<Set<CPSTimer>>()
 	{
-		timers = new HashMap<ThreadGroup, Map<String, CPSTimer>>();
+		@Override
+		protected Set<CPSTimer> initialValue()
+		{
+			return new HashSet<CPSTimer>();
+		}
+	};
+
+	protected ThreadLocal<Map<String, CPSTimer>> threadTimers;
+
+	/**
+	 * Initialize a new group for timers
+	 */
+	public static void newTimerGroup()
+	{
+		groupTimers.set(new HashSet<CPSTimer>());
 	}
 
+	/**
+	 * @return the group timers
+	 */
+	public static Set<CPSTimer> getGroupTimers()
+	{
+		return Collections.unmodifiableSet(groupTimers.get());
+	}
+
+	CPSTimerRepository()
+	{
+		threadTimers = new ThreadLocal<Map<String, CPSTimer>>()
+		{
+			@Override
+			protected Map<String, CPSTimer> initialValue()
+			{
+				return new HashMap<String, CPSTimer>();
+			}
+		};
+	}
+
+	/**
+	 * Get a timer with the given name, creates an instance when needed
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public CPSTimer getTimer(String name)
 	{
-		Map<String, CPSTimer> list = getThreadGroupTimers();
+		Map<String, CPSTimer> list = threadTimers.get();
 		CPSTimer timer = list.get(name);
 		if (timer == null)
 		{
@@ -54,50 +94,29 @@ public class CPSTimerRepository
 				list.put(name, timer);
 			}
 		}
+		if (timer != null)
+		{
+			synchronized (groupTimers)
+			{
+				groupTimers.get().add(timer);
+			}
+		}
 		return timer;
 	}
 
+	/**
+	 * @return all registered timers
+	 */
 	public Map<String, CPSTimer> getTimers()
 	{
-		return Collections.unmodifiableMap(getThreadGroupTimers());
+		return Collections.unmodifiableMap(threadTimers.get());
 	}
 
-	public Map<String, CPSTimer> getTimers(ThreadGroup tg)
-	{
-		Map<String, CPSTimer> list = timers.get(tg);
-		if (list != null)
-		{
-			return Collections.unmodifiableMap(list);
-		}
-		return Collections.emptyMap();
-	}
-
+	/**
+	 * Remove all registered timers
+	 */
 	public synchronized void clearTimers()
 	{
-		timers.remove(Thread.currentThread().getThreadGroup());
-	}
-
-	public synchronized void clearTimers(ThreadGroup tg)
-	{
-		timers.remove(tg);
-	}
-
-	public synchronized void clearAllTimers()
-	{
-		timers.clear();
-	}
-
-	protected Map<String, CPSTimer> getThreadGroupTimers()
-	{
-		Map<String, CPSTimer> list = timers.get(Thread.currentThread().getThreadGroup());
-		if (list == null)
-		{
-			synchronized (timers)
-			{
-				list = new HashMap<String, CPSTimer>();
-				timers.put(Thread.currentThread().getThreadGroup(), list);
-			}
-		}
-		return list;
+		threadTimers.get().clear();
 	}
 }

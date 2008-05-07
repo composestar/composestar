@@ -109,8 +109,8 @@ public class ParallelTask extends TaskCollection
 			for (int i = 0; i < max; i++)
 			{
 				running[i] = runtasks[threadCnt++];
-				running[i].task.setProcessId(getProcessId() + ".t" + i);
 				Thread t = new Thread(group, running[i]);
+				t.setName("Parallel" + i);
 				logger.debug(String.format("Starting thread %d", i));
 				t.start();
 			}
@@ -122,8 +122,8 @@ public class ParallelTask extends TaskCollection
 					if (running[i] == null || running[i].isDone())
 					{
 						running[i] = runtasks[threadCnt++];
-						running[i].setProcessId(getProcessId() + ".t" + i);
 						Thread t = new Thread(group, running[i]);
+						t.setName("parallel" + i);
 						logger.debug(String.format("Re-starting thread %d", i));
 						t.start();
 						continue startThreads;
@@ -231,14 +231,6 @@ public class ParallelTask extends TaskCollection
 			task = fortask;
 			resources = withResources;
 			manager = withManager;
-		}
-
-		public void setProcessId(String id)
-		{
-			if (task != null)
-			{
-				task.setProcessId(id);
-			}
 		}
 
 		public void run()

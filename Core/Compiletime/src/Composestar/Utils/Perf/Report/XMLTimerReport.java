@@ -142,10 +142,9 @@ public class XMLTimerReport implements CPSTimerReport
 		{
 			node.setAttribute("name", treeItem.getName());
 		}
-		if (treeItem.getTimer() != null)
+		node.setAttribute("creation", "" + treeItem.getCreationTime());
+		for (CPSTimer timer : treeItem.getTimers())
 		{
-			CPSTimer timer = treeItem.getTimer();
-			node.setAttribute("creation", "" + timer.getCreationTime());
 			for (CPSTimerEvent event : timer.getEvents())
 			{
 				Element eventNode = xmlDoc.createElement("event");

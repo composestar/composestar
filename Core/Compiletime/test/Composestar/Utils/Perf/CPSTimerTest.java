@@ -57,8 +57,8 @@ public class CPSTimerTest extends TestCase
 		CPSTimer.getTimer("Foo.Bar");
 		CPSTimer.getTimer("Foo.Bar.Quux.Baz");
 		CPSTimer.getTimer("One.Two.Three");
-		CPSTimerTree root = CPSTimerTree.constructTree(CPSTimer.getTimers());
-		root.getTimer(); // = null
+		CPSTimerTree root = CPSTimerTree.constructTree(CPSTimerRepository.getGroupTimers());
+		root.getTimers(); // = null
 	}
 
 	public void testThreads()

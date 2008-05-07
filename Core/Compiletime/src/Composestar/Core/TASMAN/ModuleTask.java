@@ -95,8 +95,8 @@ public class ModuleTask extends Task
 			}
 		}
 		resources.inject(module);
-		CPSTimer timer = CPSTimer.getTimer(Manager.MODULE_NAME + getProcessId(), "Executing module %s", module
-				.getClass());
+		CPSTimer timer = CPSTimer.getTimer(Manager.MODULE_NAME, "Executing module %s (thread: %s)", module.getClass(),
+				Thread.currentThread().getName());
 		try
 		{
 			// CTCommonModule.ModuleReturnValue result =
@@ -109,5 +109,4 @@ public class ModuleTask extends Task
 			resources.extract(module);
 		}
 	}
-
 }

@@ -10,8 +10,8 @@
 	<module class="Composestar.Core.REXREF.ParumREXREF" />
 	<module class="Composestar.Java.LOLA.JavaLOLA" />
 	<module class="Composestar.Core.REXREF.Main" />
+	<module class="Composestar.Core.FITER.FITER" />
 	<parallel perprocessor="1">
-		<module class="Composestar.Core.FITER.FITER" />
 		<module class="Composestar.Core.CHKREP2.Check" />
 	</parallel>
 	<module class="Composestar.Core.SANE.SANE" />

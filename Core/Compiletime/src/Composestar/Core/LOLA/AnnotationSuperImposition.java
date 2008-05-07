@@ -42,6 +42,10 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
+/**
+ * Performs calculation of the annotation superimposition and doing so it will
+ * evaluate the predicate selectors.
+ */
 public class AnnotationSuperImposition
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME);
@@ -54,6 +58,9 @@ public class AnnotationSuperImposition
 
 	private List<AnnotationAction> annotationActions;
 
+	/**
+	 * The Compose* prolog builtins
+	 */
 	private ComposestarBuiltins composestarBuiltins;
 
 	public AnnotationSuperImposition(DataStore ds, List<PredicateSelector> predSelectors)
@@ -64,6 +71,10 @@ public class AnnotationSuperImposition
 		annotationActions = new ArrayList<AnnotationAction>();
 	}
 
+	/**
+	 * @param builtins
+	 * @throws ModuleException
+	 */
 	public void run(ComposestarBuiltins builtins) throws ModuleException
 	{
 		composestarBuiltins = builtins;

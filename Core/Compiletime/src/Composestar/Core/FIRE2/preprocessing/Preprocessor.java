@@ -337,7 +337,7 @@ public class Preprocessor implements CTCommonModule
 		@Override
 		public void execute(Manager manager, CommonResources resources) throws ModuleException
 		{
-			CPSTimer timer = CPSTimer.getTimer(MODULE_NAME + getProcessId());
+			CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 			timer.start(module.getOriginalQualifiedName());
 			preprocessModule(module);
 			timer.stop();

@@ -30,14 +30,25 @@ import java.io.OutputStream;
 import org.apache.log4j.Level;
 
 /**
+ * Redirects a print stream to a CPSLogger
+ * 
  * @author Michiel Hendriks
  */
 public class OutputStreamRedirector extends OutputStream
 {
+	/**
+	 * The CPSLogger instance to use
+	 */
 	protected CPSLogger log;
 
+	/**
+	 * The log level to use
+	 */
 	protected Level lev;
 
+	/**
+	 * Used for buffer the output
+	 */
 	protected StringBuffer sb = new StringBuffer();
 
 	public OutputStreamRedirector(CPSLogger logger, Level level)
@@ -47,6 +58,11 @@ public class OutputStreamRedirector extends OutputStream
 		lev = level;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.io.OutputStream#write(int)
+	 */
 	@Override
 	public void write(int b) throws IOException
 	{
