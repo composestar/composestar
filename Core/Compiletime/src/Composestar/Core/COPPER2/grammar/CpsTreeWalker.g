@@ -13,6 +13,7 @@
  *				implementation block. Added graceful
  *				error recovery.
  * (2007-10-15) michielh	Added constraint processing.
+ * (2008-05-09) michielh	Added constraint processing for FILTH2
  */
 tree grammar CpsTreeWalker;
 
@@ -1220,31 +1221,23 @@ constraint [SuperImposition si]
 // throws CpsSemanticException
 	: ^(CONSTRAINT opr=IDENTIFIER lhs=concernFmRef[si] rhs=concernFmRef[si]
 	  {
-	  try {
-	  	if (!"pre".equalsIgnoreCase($opr.text))
-	  	{
-	  		throw new CpsSemanticException(String.format("Unknown filter module constraint type \"\%s\"", 
-	  			$opr.text), input, opr);
-	  	}
-	  			
-	  	// TODO: See part 2 of: http://www.mail-archive.com/composestar-developers@lists.sourceforge.net/msg00083.html
-	  	
-	  	SyntacticOrderingConstraint constraint = orderingconstraints.get(lhs);
-		if (constraint == null)
-		{
-			constraint = new SyntacticOrderingConstraint(lhs);
-			constraint.addRightFilterModule(rhs);
-			orderingconstraints.put(lhs, constraint);
+	    setLocInfo(constraintSpec.addDefinition($opr.text, lhs, rhs), $opr);
+	  
+	  	// legacy constraints
+	  	if ("pre".equalsIgnoreCase($opr.text))
+	  	{		 	
+	  		SyntacticOrderingConstraint constraint = orderingconstraints.get(lhs);
+			if (constraint == null)
+			{
+				constraint = new SyntacticOrderingConstraint(lhs);
+				constraint.addRightFilterModule(rhs);
+				orderingconstraints.put(lhs, constraint);
+			}
+			else
+			{
+				constraint.addRightFilterModule(rhs);
+			}
 		}
-		else
-		{
-			constraint.addRightFilterModule(rhs);
-		}
-	  }
-	  catch (RecognitionException re) {
-		reportError(re);
-		recover(input,re);
-	  }
 	  }
 	  )
 	;				

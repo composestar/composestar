@@ -35,6 +35,7 @@ import org.antlr.runtime.tree.TreeParser;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.Exception.CpsSemanticException;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
+import Composestar.Core.FILTH2.ConstraintSpecification;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
@@ -63,6 +64,11 @@ public class CpsTreeWalkerBase extends TreeParser
 	 * The map containing filter module ordering constraints.
 	 */
 	protected Map<String, SyntacticOrderingConstraint> orderingconstraints;
+
+	/**
+	 * The FILTH2 constraint specification
+	 */
+	protected ConstraintSpecification constraintSpec;
 
 	/**
 	 * Contains the filter type mapping which is used to retrieve the filtertype
@@ -198,5 +204,15 @@ public class CpsTreeWalkerBase extends TreeParser
 			re.setDescriptionLineNumber(t.getLine());
 			re.setDescriptionLinePosition(t.getCharPositionInLine());
 		}
+	}
+
+	/**
+	 * Set the constraint specification
+	 * 
+	 * @param constraintSpec
+	 */
+	public void setConstraintSpec(ConstraintSpecification value)
+	{
+		constraintSpec = value;
 	}
 }

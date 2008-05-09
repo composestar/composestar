@@ -48,7 +48,10 @@ public abstract class Constraint
 	{
 		lhs = left;
 		rhs = right;
-		lhs.addConstraint(this);
+		if (!(lhs instanceof PhantomAction))
+		{
+			lhs.addConstraint(this);
+		}
 	}
 
 	/**

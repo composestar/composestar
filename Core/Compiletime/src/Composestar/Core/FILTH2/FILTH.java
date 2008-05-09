@@ -41,8 +41,11 @@ import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.FILTH2.Model.Action;
 import Composestar.Core.FILTH2.Model.Constraint;
+import Composestar.Core.FILTH2.Model.ConstraintFactory;
 import Composestar.Core.FILTH2.Model.FilterModuleAction;
 import Composestar.Core.FILTH2.Model.OrderingConstraint;
+import Composestar.Core.FILTH2.Model.PhantomAction;
+import Composestar.Core.FILTH2.Model.ConstraintFactory.ConstraintCreationException;
 import Composestar.Core.FILTH2.Ordering.OrderGenerator;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
@@ -71,9 +74,13 @@ public class FILTH implements CTCommonModule
 
 	/**
 	 * Ordering specification
+	 * 
+	 * @Deprecated
 	 */
-	// TODO should be a generic constraint thing
+	@Deprecated
 	protected Map<String, SyntacticOrderingConstraint> orderSpec;
+
+	protected ConstraintSpecification constraintSpec;
 
 	public FILTH()
 	{}
@@ -89,6 +96,7 @@ public class FILTH implements CTCommonModule
 		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
 		defaultInnerDispatch = InnerDispatcher.createInnerDispatchReference(resources.repository(), filterTypes);
 		orderSpec = resources.get(SyntacticOrderingConstraint.FILTER_ORDERING_SPEC);
+		constraintSpec = resources.get(ConstraintSpecification.RESOURCE_KEY);
 
 		Iterator<Concern> conIter = resources.repository().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
@@ -124,7 +132,11 @@ public class FILTH implements CTCommonModule
 		}
 
 		// Add constraints
-		addOrderingConstraints(actions);
+		// addOrderingConstraints(actions);
+		if (constraintSpec != null)
+		{
+			loadConstraintSpecification(actions);
+		}
 
 		List<List<FilterModuleSuperImposition>> fmorders = new LinkedList<List<FilterModuleSuperImposition>>();
 
@@ -202,7 +214,9 @@ public class FILTH implements CTCommonModule
 	 * Add the ordering constraints from the "old" specification
 	 * 
 	 * @param actions
+	 * @deprecated
 	 */
+	@Deprecated
 	protected void addOrderingConstraints(Map<String, Action> actions)
 	{
 		if (orderSpec == null)
@@ -224,6 +238,36 @@ public class FILTH implements CTCommonModule
 					continue;
 				}
 				new OrderingConstraint(lhs, rhs);
+			}
+		}
+	}
+
+	/**
+	 * Add the constraint specifications to the action
+	 * 
+	 * @param actions
+	 */
+	protected void loadConstraintSpecification(Map<String, Action> actions)
+	{
+		for (ConstraintSpecification.ConstraintDefinition def : constraintSpec.getDefinitions())
+		{
+			String[] args = def.getArguments();
+			Action[] acts = new Action[args.length];
+			for (int i = 0; i < args.length; i++)
+			{
+				acts[i] = actions.get(args[i]);
+				if (acts[i] == null)
+				{
+					acts[i] = new PhantomAction(args[i]);
+				}
+			}
+			try
+			{
+				ConstraintFactory.createConstraint(def.getType(), acts);
+			}
+			catch (ConstraintCreationException e)
+			{
+				logger.error(e.getMessage(), def);
 			}
 		}
 	}

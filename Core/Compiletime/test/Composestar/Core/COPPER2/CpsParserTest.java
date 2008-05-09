@@ -41,6 +41,7 @@ import org.apache.log4j.BasicConfigurator;
 
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
+import Composestar.Core.FILTH2.ConstraintSpecification;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -134,6 +135,7 @@ public class CpsParserTest extends TestCase
 		CpsTreeWalker w = new CpsTreeWalker(nodes);
 		w.setSourceFile(file.toString());
 		w.setOrderingConstraints(new HashMap<String, SyntacticOrderingConstraint>());
+		w.setConstraintSpec(new ConstraintSpecification());
 		w.setFilterTypeMapping(new FilterTypeMapping());
 		DefaultFilterFactory fact = new DefaultFilterFactory(w.filterTypes, ds);
 		fact.setAllowLegacyCustomFilters(true);

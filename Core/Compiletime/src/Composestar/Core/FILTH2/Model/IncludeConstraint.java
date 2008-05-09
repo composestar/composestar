@@ -38,6 +38,11 @@ public class IncludeConstraint extends StructuralConstraint
 	public IncludeConstraint(Action left, Action right)
 	{
 		super(left, right);
+		if (!(rhs instanceof PhantomAction))
+		{
+			// because include requires both actions to be present
+			rhs.addConstraint(this);
+		}
 	}
 
 	/*

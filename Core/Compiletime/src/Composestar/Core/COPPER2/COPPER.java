@@ -41,6 +41,7 @@ import org.apache.log4j.Logger;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
+import Composestar.Core.FILTH2.ConstraintSpecification;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
@@ -71,6 +72,11 @@ public class COPPER implements CTCommonModule
 	 * the common resources.
 	 */
 	protected Map<String, SyntacticOrderingConstraint> orderingconstraints;
+
+	/**
+	 * The constraint specification for FILTH2
+	 */
+	protected ConstraintSpecification constraintSpec;
 
 	/**
 	 * Defined filter types
@@ -113,6 +119,9 @@ public class COPPER implements CTCommonModule
 
 		orderingconstraints = new HashMap<String, SyntacticOrderingConstraint>();
 		resources.put(SyntacticOrderingConstraint.FILTER_ORDERING_SPEC, orderingconstraints);
+
+		constraintSpec = new ConstraintSpecification();
+		resources.put(ConstraintSpecification.RESOURCE_KEY, constraintSpec);
 
 		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 		for (File file : resources.configuration().getProject().getConcernFiles())
@@ -182,6 +191,7 @@ public class COPPER implements CTCommonModule
 			CpsTreeWalker w = new CpsTreeWalker(nodes);
 			w.setSourceFile(file.toString());
 			w.setOrderingConstraints(orderingconstraints);
+			w.setConstraintSpec(constraintSpec);
 			w.setFilterTypeMapping(filterTypes);
 			w.setFilterFactory(filterFactory);
 			try
