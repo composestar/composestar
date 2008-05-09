@@ -46,7 +46,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-public class OrderGenerator
+public final class OrderGenerator
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(FILTH.MODULE_NAME);
 

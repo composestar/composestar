@@ -80,7 +80,12 @@ public class FILTH implements CTCommonModule
 	@Deprecated
 	protected Map<String, SyntacticOrderingConstraint> orderSpec;
 
+	/**
+	 * The constraint specification, created by COPPER
+	 */
 	protected ConstraintSpecification constraintSpec;
+
+	protected CPSTimer timer;
 
 	public FILTH()
 	{}
@@ -92,12 +97,13 @@ public class FILTH implements CTCommonModule
 	 */
 	public void run(CommonResources resources) throws ModuleException
 	{
-		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+		timer = CPSTimer.getTimer(MODULE_NAME);
 		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
 		defaultInnerDispatch = InnerDispatcher.createInnerDispatchReference(resources.repository(), filterTypes);
 		orderSpec = resources.get(SyntacticOrderingConstraint.FILTER_ORDERING_SPEC);
 		constraintSpec = resources.get(ConstraintSpecification.RESOURCE_KEY);
 
+		boolean allOK = true;
 		Iterator<Concern> conIter = resources.repository().getAllInstancesOf(Concern.class);
 		while (conIter.hasNext())
 		{
@@ -105,10 +111,15 @@ public class FILTH implements CTCommonModule
 			SIinfo si = (SIinfo) c.getDynObject(SIinfo.DATAMAP_KEY);
 			if (si != null)
 			{
-				timer.start(c.getUniqueID());
-				generateFilterModuleOrder(c, si);
+				timer.start(c.getQualifiedName());
+				allOK &= generateFilterModuleOrder(c, si);
 				timer.stop();
 			}
+		}
+		if (!allOK)
+		{
+			throw new ModuleException(String.format("One or more concerns did not have a valid filter module order."),
+					MODULE_NAME);
 		}
 	}
 
@@ -117,8 +128,9 @@ public class FILTH implements CTCommonModule
 	 * 
 	 * @param concern
 	 * @param si
+	 * @return true when a valid filter module order was selected
 	 */
-	protected void generateFilterModuleOrder(Concern concern, SIinfo sinfo)
+	protected boolean generateFilterModuleOrder(Concern concern, SIinfo sinfo)
 	{
 		Map<String, Action> actions = new HashMap<String, Action>();
 
@@ -140,7 +152,9 @@ public class FILTH implements CTCommonModule
 
 		List<List<FilterModuleSuperImposition>> fmorders = new LinkedList<List<FilterModuleSuperImposition>>();
 
+		timer.start("Creating orders for %s", concern.getQualifiedName());
 		Set<List<Action>> orders = OrderGenerator.generate(actions.values());
+		timer.stop();
 		// convert the ordered action lists to filter module ordering lists and
 		// validate the generated list to conform to the constraints
 		for (List<Action> order : orders)
@@ -207,7 +221,9 @@ public class FILTH implements CTCommonModule
 		else
 		{
 			logger.error(String.format("No valid filter module order for %s", concern.getQualifiedName()), concern);
+			return false;
 		}
+		return true;
 	}
 
 	/**
