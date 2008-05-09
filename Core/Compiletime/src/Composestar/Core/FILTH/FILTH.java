@@ -29,8 +29,6 @@ public class FILTH implements CTCommonModule
 {
 	public static final String MODULE_NAME = "FILTH";
 
-	public static final String FILTER_ORDERING_SPEC = "FILTER_ORDERING_SPEC";
-
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
 	public FILTH()

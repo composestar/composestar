@@ -37,7 +37,7 @@
 	<module fulltype="Composestar.Core.FITER.FITER" />
 	<module fulltype="Composestar.Core.CHKREP2.Check" />
 	<module fulltype="Composestar.Core.SANE.SANE" />
-	<module fulltype="Composestar.Core.FILTH.FILTH" />
+	<module fulltype="Composestar.Core.FILTH2.FILTH" />
 	<module fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" />
 	<module fulltype="Composestar.Core.CORE2.Core" />
 	<module fulltype="Composestar.Core.SIGN2.Sign" />

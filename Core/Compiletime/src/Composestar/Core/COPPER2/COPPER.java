@@ -40,7 +40,6 @@ import org.apache.log4j.Logger;
 
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.FILTH.FILTH;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataMap;
@@ -113,7 +112,7 @@ public class COPPER implements CTCommonModule
 		errorCnt = 0;
 
 		orderingconstraints = new HashMap<String, SyntacticOrderingConstraint>();
-		resources.put(FILTH.FILTER_ORDERING_SPEC, orderingconstraints);
+		resources.put(SyntacticOrderingConstraint.FILTER_ORDERING_SPEC, orderingconstraints);
 
 		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
 		for (File file : resources.configuration().getProject().getConcernFiles())

@@ -15,7 +15,7 @@
 		<module class="Composestar.Core.CHKREP2.Check" />
 	</parallel>
 	<module class="Composestar.Core.SANE.SANE" />
-	<module class="Composestar.Core.FILTH.FILTH" />
+	<module class="Composestar.Core.FILTH2.FILTH" />
 	<module class="Composestar.Core.FIRE2.preprocessing.Preprocessor" />
 	<module class="Composestar.Core.CORE2.Core" />
 	<module class="Composestar.Core.SIGN2.Sign" />

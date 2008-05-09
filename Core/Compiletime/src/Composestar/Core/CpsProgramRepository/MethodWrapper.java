@@ -81,7 +81,7 @@ public class MethodWrapper implements SerializableRepositoryEntity
 	}
 
 	/**
-	 * @param status the status to set
+	 * @param result the status to set
 	 */
 	public void setStatus(int inStatus)
 	{

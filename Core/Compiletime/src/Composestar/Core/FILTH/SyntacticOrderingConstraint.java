@@ -2,6 +2,8 @@ package Composestar.Core.FILTH;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class SyntacticOrderingConstraint implements Serializable
 	 */
 	private String left;
 
+	public static final String FILTER_ORDERING_SPEC = "FILTER_ORDERING_SPEC";
+
 	public SyntacticOrderingConstraint(String inLeft)
 	{
 		left = inLeft;
@@ -41,10 +45,19 @@ public class SyntacticOrderingConstraint implements Serializable
 
 	/**
 	 * @return the filter modules that should be on the right
+	 * @deprecated use {@link #getRightFilterModulesEx()}
 	 */
 	public Iterator<String> getRightFilterModules()
 	{
-		return postconstraints.iterator();
+		return getRightFilterModulesEx().iterator();
+	}
+
+	/**
+	 * @return the filter modules that should be on the right
+	 */
+	public Collection<String> getRightFilterModulesEx()
+	{
+		return Collections.unmodifiableCollection(postconstraints);
 	}
 
 	/**

@@ -48,7 +48,7 @@ public class FILTHServiceImpl
 	protected FILTHServiceImpl(CommonResources cr, FilterModuleReference deffmr) throws ConfigurationException
 	{
 		defaultDispatch = deffmr;
-		orderSpec = cr.get(FILTH.FILTER_ORDERING_SPEC);
+		orderSpec = cr.get(SyntacticOrderingConstraint.FILTER_ORDERING_SPEC);
 	}
 
 	/**

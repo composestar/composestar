@@ -38,5 +38,10 @@ concern ConditionalSuperImpositionTestsConcern in BasicTests
 			timingEnabled => csiClass <- FM4;
 			shouldLog => csiClass <- FM5;
 			shouldLogExt => csiClass <- FM6;
+		constraints
+			pre(FM5,FM3);
+			pre(FM5,FM6);
+			pre(FM6,FM3);
+			pre(FM3,FM4);
 	}
 }

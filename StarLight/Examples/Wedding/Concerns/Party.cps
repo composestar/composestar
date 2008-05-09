@@ -32,5 +32,7 @@ concern Party in Wedding
 			about <- Party;
 			party <- Catering;
 			party <- Band;
+		constraints
+			pre(Band,Catering);
 	}
 }
