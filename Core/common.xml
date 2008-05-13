@@ -525,6 +525,8 @@
 				</dirset>
 			</path>
 		</foreach>
+
+<!--
 		<xslt style="${build.core}/Development/PerformanceTest/performance.xslt" destdir="${basedir}/qa">
 			<include name="_performance_data/*.xml" />
 			<chainedmapper>
@@ -532,6 +534,7 @@
 				<globmapper from="*.xml" to="example_*.html" />
 			</chainedmapper>
 		</xslt>
+-->
 	</target>
 
 	<target name="-example_performance_proc">
