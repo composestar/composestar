@@ -60,6 +60,7 @@ TR.event TD.eventtext {
 			</head>
 			<body>
 				<h1>Compose* Timer Results</h1>
+				<p id="timestamp">Generated on <xsl:value-of select="timer/@timestamp" /></p>
 				<table>
 					<tr>
 						<th>Name / Message</th>

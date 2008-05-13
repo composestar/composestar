@@ -147,7 +147,9 @@ public class FILTH implements CTCommonModule
 		// addOrderingConstraints(actions);
 		if (constraintSpec != null)
 		{
+			timer.start("Loading specification for %s", concern.getQualifiedName());
 			loadConstraintSpecification(actions);
+			timer.stop();
 		}
 
 		List<List<FilterModuleSuperImposition>> fmorders = new LinkedList<List<FilterModuleSuperImposition>>();
@@ -157,6 +159,7 @@ public class FILTH implements CTCommonModule
 		timer.stop();
 		// convert the ordered action lists to filter module ordering lists and
 		// validate the generated list to conform to the constraints
+		timer.start("Convert orders for %s", concern.getQualifiedName());
 		for (List<Action> order : orders)
 		{
 			List<FilterModuleSuperImposition> fmorder = new ArrayList<FilterModuleSuperImposition>();
@@ -189,6 +192,7 @@ public class FILTH implements CTCommonModule
 				fmorders.add(fmorder);
 			}
 		}
+		timer.stop();
 
 		// add the filter module orders
 		concern.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY, fmorders);

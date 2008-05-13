@@ -409,6 +409,7 @@
 			<available file="${eclipse.home}${file.separator}.eclipseproduct" />
 		</condition>
 
+		<taskdef resource="net/sf/antcontrib/antlib.xml"/>
 	</target>
 
 	<!-- initialize and require eclipse -->
@@ -496,6 +497,50 @@
 				<include name="**/moduleinfo.xml" />
 			</fileset>
 		</schemavalidate>
+	</target>
+	
+	<target name="example_regression" depends="init" description="Create regression information from the examples">
+		<mkdir dir="_regression_data" />
+		<touch file="_regression_data/DO_NOT_DELETE" verbose="false" />
+		<tstamp>
+			<format property="regression.tstamp" pattern="yyyyMMddkkmmss" />
+		</tstamp>
+		<copy verbose="true" todir="_regression_data">
+			<fileset dir="Examples">
+				<include name="**/Analyses/TimerResults.xml" />
+			</fileset>
+			<chainedmapper>
+				<globmapper from="*/obj/Analyses/TimerResults.xml" to="*/TimerResults.xml" handledirsep="true"/>
+				<globmapper from="*.xml" to="*_${regression.tstamp}.xml" />
+			</chainedmapper>
+		</copy>
+		
+		<foreach target="-example_regression_proc" param="example.name" inheritall="true" inheritrefs="true">
+			<path>
+				<dirset dir="${basedir}">
+					<include name="_regression_data/**" />
+					<exclude name="." />
+				</dirset>				
+			</path>
+		</foreach>
+	</target>
+	
+	<target name="-example_regression_proc">
+		<concat destfile="${example.name}.xml">
+			<fileset dir="${example.name}">
+				<include name="TimerResults*.xml" />
+			</fileset>
+			<filterchain>
+				<tokenfilter>
+					<!-- remove existing processing instructions -->
+    			<replaceregex pattern="&lt;\?.*\?&gt;" replace="" flags="gi"/>
+				</tokenfilter>
+			</filterchain>
+			<header filtering="no">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+			&lt;?xml-stylesheet type="text/xml" href="regression.xslt"?&gt;
+			&lt;history&gt;</header>
+			<footer>&lt;/history&gt;</footer>
+		</concat>
 	</target>
 
 	<target name="report" depends="init" description="Report on the status of each platform">

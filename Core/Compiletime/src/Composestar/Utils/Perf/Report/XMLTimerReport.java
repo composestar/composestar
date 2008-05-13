@@ -27,6 +27,8 @@ package Composestar.Utils.Perf.Report;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -133,6 +135,7 @@ public class XMLTimerReport implements CPSTimerReport
 		if (parentNode == null)
 		{
 			xmlDoc.appendChild(node);
+			node.setAttribute("timestamp", (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz")).format(new Date()));
 		}
 		else
 		{
