@@ -5,7 +5,7 @@
 	<xsl:template match="/history">
 		<html>
 			<head>
-				<title>Compose* Regression Result</title>
+				<title>Compose* Performance History</title>
 				<style type="text/css"><![CDATA[
 BODY {
 	font-family: sans-serif;
