@@ -77,7 +77,8 @@
 		<available file="${build.starlight}${file.separator}build.xml" property="available.starlight" />
 		<available file="${build.java}${file.separator}build.xml" property="available.java" />
 		<available file="${build.c}${file.separator}build.xml" property="available.c" />
-		<available file="${build.cwc}${file.separator}Compiletime${file.separator}lib${file.separator}weavec.jar" property="available.cwc" />
+		<available file="${build.cwc}${file.separator}Compiletime${file.separator}lib${file.separator}weavec.jar"
+			property="available.cwc" />
 
 		<!-- set default values of ignore properties for all platforms -->
 		<property name="ignore.starlight" value="false" />
@@ -115,7 +116,7 @@
 				<isfalse value="${ignore.c}" />
 			</and>
 		</condition>
-		
+
 		<condition property="enabled.cwc" value="true">
 			<and>
 				<istrue value="${available.cwc}" />
@@ -315,7 +316,7 @@
 			<path refid="lib.core" />
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
 		</path>
-		
+
 		<path id="lib.cwc">
 			<path refid="lib.core" />
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}" />
@@ -409,7 +410,7 @@
 			<available file="${eclipse.home}${file.separator}.eclipseproduct" />
 		</condition>
 
-		<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+		<taskdef resource="net/sf/antcontrib/antlib.xml" />
 	</target>
 
 	<!-- initialize and require eclipse -->
@@ -474,7 +475,7 @@
 					<include name="**/*.cs" />
 					<include name="**/*.jsl" />
 					<include name="**/*.cps" />
-					
+
 					<include name="**/*.c" />
 					<include name="**/*.h" />
 
@@ -498,7 +499,7 @@
 			</fileset>
 		</schemavalidate>
 	</target>
-	
+
 	<target name="example_regression" depends="init" description="Create regression information from the examples">
 		<mkdir dir="_regression_data" />
 		<touch file="_regression_data/DO_NOT_DELETE" verbose="false" />
@@ -510,21 +511,28 @@
 				<include name="**/Analyses/TimerResults.xml" />
 			</fileset>
 			<chainedmapper>
-				<globmapper from="*/obj/Analyses/TimerResults.xml" to="*/TimerResults.xml" handledirsep="true"/>
+				<globmapper from="*/obj/Analyses/TimerResults.xml" to="*/TimerResults.xml" handledirsep="true" />
 				<globmapper from="*.xml" to="*_${regression.tstamp}.xml" />
 			</chainedmapper>
 		</copy>
-		
+
 		<foreach target="-example_regression_proc" param="example.name" inheritall="true" inheritrefs="true">
 			<path>
 				<dirset dir="${basedir}">
 					<include name="_regression_data/**" />
 					<exclude name="." />
-				</dirset>				
+				</dirset>
 			</path>
 		</foreach>
+		<xslt style="${build.core}/Development/RegressionTest/regression.xslt" destdir="${basedir}/qa">
+			<include name="_regression_data/*.xml" />
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.xml" to="example_*.html" />
+			</chainedmapper>
+		</xslt>
 	</target>
-	
+
 	<target name="-example_regression_proc">
 		<concat destfile="${example.name}.xml">
 			<fileset dir="${example.name}">
@@ -533,12 +541,10 @@
 			<filterchain>
 				<tokenfilter>
 					<!-- remove existing processing instructions -->
-    			<replaceregex pattern="&lt;\?.*\?&gt;" replace="" flags="gi"/>
+					<replaceregex pattern="&lt;\?.*\?&gt;" replace="" flags="gi" />
 				</tokenfilter>
 			</filterchain>
-			<header filtering="no">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-			&lt;?xml-stylesheet type="text/xml" href="regression.xslt"?&gt;
-			&lt;history&gt;</header>
+			<header filtering="no">&lt;history&gt;</header>
 			<footer>&lt;/history&gt;</footer>
 		</concat>
 	</target>
@@ -560,7 +566,7 @@
 		<condition property="status.c" value="enabled" else="disabled">
 			<isset property="enabled.c" />
 		</condition>
-		
+
 		<condition property="status.cwc" value="enabled" else="disabled">
 			<isset property="enabled.cwc" />
 		</condition>

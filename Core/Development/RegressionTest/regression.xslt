@@ -1,0 +1,207 @@
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<xsl:output method="html" indent="yes" />
+
+	<xsl:template match="/history">
+		<html>
+			<head>
+				<title>Compose* Regression Result</title>
+				<style type="text/css"><![CDATA[
+BODY {
+	font-family: sans-serif;
+	font-size: 1em;
+	color: windowtext;
+	background-color: ButtonFace;
+}
+
+BUTTON {
+	vertical-align: top;
+}
+
+TABLE.timeline {
+	border-collapse: collapse;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+TABLE.timeline TD {
+	padding: 0;
+	vertical-align: bottom;
+}
+
+DIV.entry {
+	width: 20px;
+	background-color: Highlight;
+	border: 1px outset Highlight;
+}
+
+DIV.module {
+	display: none;
+	background-color: Window;
+	padding: 0.5em;
+}
+
+DIV.event {
+	display: none;
+}
+
+H2 {
+	margin: 0;
+	padding: 0;
+}
+
+H1 {
+	margin-top: 0.5em;
+	padding: 0;
+}
+]]></style>
+			</head>
+			<body>
+
+				<xsl:call-template name="distinct_module">
+					<xsl:with-param name="nodes" select="//timer/@name" />
+				</xsl:call-template>
+
+			</body>
+		</html>
+	</xsl:template>
+
+
+	<xsl:template name="distinct_module">
+		<xsl:param name="nodes" select="/.." />
+		<xsl:param name="distinct" select="/.." />
+		<xsl:choose>
+			<xsl:when test="$nodes">
+				<xsl:call-template name="distinct_module">
+					<xsl:with-param name="distinct" select="$distinct | $nodes[1][not(. = $distinct)]" />
+					<xsl:with-param name="nodes" select="$nodes[position() > 1]" />
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="$distinct" mode="distinct_module">
+					<xsl:sort data-type="text" select="." />
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="node()|@*" mode="distinct_module">
+		<xsl:call-template name="module">
+			<xsl:with-param name="modulename">
+				<xsl:value-of select="." />
+			</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template name="module">
+		<xsl:param name="modulename" />
+
+		<xsl:variable name="id" select="concat('module', generate-id())" />
+
+		<h1>
+			<button
+				onclick="var elm = document.getElementById('{$id}'); elm.style.display = (elm.style.display == 'block')?'':'block';">
+				+
+			</button>
+			<xsl:text>
+			</xsl:text>
+			<xsl:value-of select="$modulename" />
+		</h1>
+
+		<div class="module" id="{$id}">
+			<xsl:call-template name="distinct_event">
+				<xsl:with-param name="nodes" select="//timer[@name=$modulename]/event/child::text()" />
+				<xsl:with-param name="modulename" select="$modulename" />
+			</xsl:call-template>
+		</div>
+	</xsl:template>
+
+	<xsl:template name="distinct_event">
+		<xsl:param name="nodes" select="/.." />
+		<xsl:param name="distinct" select="/.." />
+		<xsl:param name="modulename" />
+		<xsl:choose>
+			<xsl:when test="$nodes">
+				<xsl:call-template name="distinct_event">
+					<xsl:with-param name="distinct" select="$distinct | $nodes[1][not(. = $distinct)]" />
+					<xsl:with-param name="nodes" select="$nodes[position() > 1]" />
+					<xsl:with-param name="modulename" select="$modulename" />
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="$distinct" mode="distinct_event">
+					<xsl:sort data-type="text" select="." />
+					<xsl:with-param name="modulename" select="$modulename" />
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="node()|@*" mode="distinct_event">
+		<xsl:param name="modulename" />
+		<xsl:call-template name="event">
+			<xsl:with-param name="modulename" select="$modulename" />
+			<xsl:with-param name="eventdesc">
+				<xsl:value-of select="." />
+			</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template name="event">
+		<xsl:param name="modulename" />
+		<xsl:param name="eventdesc" />
+		<xsl:variable name="id" select="concat('event', generate-id())" />
+
+		<h2>
+			<button
+				onclick="var elm = document.getElementById('{$id}'); elm.style.display = (elm.style.display == 'block')?'':'block';">
+				+
+			</button>
+			<xsl:text>
+			</xsl:text>
+			<xsl:value-of select="$eventdesc" />
+		</h2>
+
+		<div class="event" id="{$id}">
+			<xsl:variable name="highest">
+				<xsl:for-each select="//timer[@name=$modulename]/event[text()=$eventdesc]/@duration">
+					<xsl:sort data-type="number" order="descending" />
+					<xsl:if test="position() = 1">
+						<xsl:value-of select="number(.)" />
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+
+			<table class="timeline">
+				<tr>
+					<xsl:for-each select="//timer[@name=$modulename]/event[text()=$eventdesc]">
+						<xsl:sort data-type="number" select="../@creation" />
+						<td>
+							<xsl:attribute name="title">
+							<xsl:value-of select="ancestor::timer/@timestamp" />
+							<xsl:text>; </xsl:text>
+							<xsl:value-of select="floor(@duration div 1000) div 1000" />
+							<xsl:text>ms; </xsl:text>
+							<xsl:value-of select="@duration" />
+						</xsl:attribute>
+							<xsl:element name="div">
+								<xsl:attribute name="class">
+								<xsl:text>entry</xsl:text>
+							</xsl:attribute>
+								<xsl:attribute name="style">
+								<xsl:text>height: </xsl:text>
+								<xsl:value-of select="@duration * 100 div $highest" />
+								<xsl:text>px;</xsl:text>
+							</xsl:attribute>
+								<xsl:text>&#32;</xsl:text>
+							</xsl:element>
+							<!-- <xsl:value-of select="@duration" /> -->
+						</td>
+					</xsl:for-each>
+				</tr>
+			</table>
+
+		</div>
+	</xsl:template>
+
+</xsl:stylesheet>

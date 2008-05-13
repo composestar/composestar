@@ -405,6 +405,7 @@
 	<target name="systemtest" description="Runs the system test">
 		<antcall target="systemtest_build" inheritRefs="true" />
 		<antcall target="systemtest_exec" inheritRefs="true" />
+		<antcall target="example_regression" inheritRefs="true" inheritAll="true" />
 	</target>
 
 	<target name="systemtest_build" depends="init_local">
@@ -422,7 +423,7 @@
 			<include name="DesignPatterns/Implementations/Proxy/*.sln" />
 			<include name="DesignPatterns/Implementations/Mediator/*.sln" />
 		</fileset>
-		
+
 		<fileset id="systemtest.customfilters" dir="${build.starlight}/Examples">
 			<include name="CustomFilters/*.sln" />
 			<include name="RuBCoDeTest/RuBCoDeTestFilters/*.sln" />
