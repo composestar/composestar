@@ -500,32 +500,33 @@
 		</schemavalidate>
 	</target>
 
-	<target name="example_regression" depends="init" description="Create regression information from the examples">
-		<mkdir dir="_regression_data" />
-		<touch file="_regression_data/DO_NOT_DELETE" verbose="false" />
+	<target name="example_performance" depends="init" description="Create performance information from the examples">
+		<mkdir dir="_performance_data" />
+		<touch file="_performance_data/DO_NOT_DELETE" verbose="false" />
 		<tstamp>
-			<format property="regression.tstamp" pattern="yyyyMMddkkmmss" />
+			<format property="performance.tstamp" pattern="yyyyMMddkkmmss" />
 		</tstamp>
-		<copy verbose="true" todir="_regression_data">
+		<copy verbose="true" todir="_performance_data">
 			<fileset dir="Examples">
 				<include name="**/Analyses/TimerResults.xml" />
 			</fileset>
 			<chainedmapper>
 				<globmapper from="*/obj/Analyses/TimerResults.xml" to="*/TimerResults.xml" handledirsep="true" />
-				<globmapper from="*.xml" to="*_${regression.tstamp}.xml" />
+				<globmapper from="*.xml" to="*_${performance.tstamp}.xml" />
+				<packagemapper from="*" to="*"/>
 			</chainedmapper>
 		</copy>
 
-		<foreach target="-example_regression_proc" param="example.name" inheritall="true" inheritrefs="true">
+		<foreach target="-example_performance_proc" param="example.name" inheritall="true" inheritrefs="true">
 			<path>
 				<dirset dir="${basedir}">
-					<include name="_regression_data/**" />
-					<exclude name="." />
+					<include name="_performance_data/**" />
+					<exclude name="_performance_data" />
 				</dirset>
 			</path>
 		</foreach>
-		<xslt style="${build.core}/Development/RegressionTest/regression.xslt" destdir="${basedir}/qa">
-			<include name="_regression_data/*.xml" />
+		<xslt style="${build.core}/Development/PerformanceTest/performance.xslt" destdir="${basedir}/qa">
+			<include name="_performance_data/*.xml" />
 			<chainedmapper>
 				<flattenmapper />
 				<globmapper from="*.xml" to="example_*.html" />
@@ -533,7 +534,8 @@
 		</xslt>
 	</target>
 
-	<target name="-example_regression_proc">
+	<target name="-example_performance_proc">
+	<echo>${example.name}</echo>
 		<concat destfile="${example.name}.xml">
 			<fileset dir="${example.name}">
 				<include name="TimerResults*.xml" />
