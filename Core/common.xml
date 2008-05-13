@@ -535,7 +535,6 @@
 	</target>
 
 	<target name="-example_performance_proc">
-	<echo>${example.name}</echo>
 		<concat destfile="${example.name}.xml">
 			<fileset dir="${example.name}">
 				<include name="TimerResults*.xml" />
