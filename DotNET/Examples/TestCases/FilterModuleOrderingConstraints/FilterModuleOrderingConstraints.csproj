@@ -96,13 +96,18 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
         </Build>
         <Files>
             <Include>
+                <File
+                    RelPath = "Dummy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "FilterModuleOrderingConstraints.cps"
                     BuildAction = "None"
@@ -116,6 +121,10 @@
                     RelPath = "Foo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "HighFMOrders.cps"
+                    BuildAction = "None"
                 />
                 <File
                     RelPath = "MainRunner.cs"

@@ -33,17 +33,17 @@ import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.COPPER2.FilterTypeMapping;
+import Composestar.Core.Config.ModuleInfo;
+import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
-import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.FILTH2.Model.Action;
 import Composestar.Core.FILTH2.Model.Constraint;
 import Composestar.Core.FILTH2.Model.ConstraintFactory;
-import Composestar.Core.FILTH2.Model.FilterModuleAction;
-import Composestar.Core.FILTH2.Model.OrderingConstraint;
 import Composestar.Core.FILTH2.Model.PhantomAction;
 import Composestar.Core.FILTH2.Model.ConstraintFactory.ConstraintCreationException;
 import Composestar.Core.FILTH2.Ordering.OrderGenerator;
@@ -73,19 +73,15 @@ public class FILTH implements CTCommonModule
 	protected FilterModuleReference defaultInnerDispatch;
 
 	/**
-	 * Ordering specification
-	 * 
-	 * @Deprecated
-	 */
-	@Deprecated
-	protected Map<String, SyntacticOrderingConstraint> orderSpec;
-
-	/**
 	 * The constraint specification, created by COPPER
 	 */
 	protected ConstraintSpecification constraintSpec;
 
 	protected CPSTimer timer;
+
+	protected int maxOrders;
+
+	protected Map<String, Action> actions;
 
 	public FILTH()
 	{}
@@ -100,8 +96,24 @@ public class FILTH implements CTCommonModule
 		timer = CPSTimer.getTimer(MODULE_NAME);
 		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
 		defaultInnerDispatch = InnerDispatcher.createInnerDispatchReference(resources.repository(), filterTypes);
-		orderSpec = resources.get(SyntacticOrderingConstraint.FILTER_ORDERING_SPEC);
 		constraintSpec = resources.get(ConstraintSpecification.RESOURCE_KEY);
+
+		ModuleInfo mi = ModuleInfoManager.get(FILTH.class);
+		// limit to 4 orders, should be enough to find a working order
+		maxOrders = mi.getSetting("max", 4);
+
+		timer.start("Creating actions");
+		Iterator<FilterModuleAST> fmIter = resources.repository().getAllInstancesOf(FilterModuleAST.class);
+		actions = new HashMap<String, Action>();
+		while (fmIter.hasNext())
+		{
+			FilterModuleAST fm = fmIter.next();
+			actions.put(fm.getQualifiedName(), new Action(fm.getQualifiedName()));
+		}
+		timer.stop();
+		timer.start("Loading constraint specification");
+		loadConstraintSpecification();
+		timer.stop();
 
 		boolean allOK = true;
 		Iterator<Concern> conIter = resources.repository().getAllInstancesOf(Concern.class);
@@ -132,31 +144,31 @@ public class FILTH implements CTCommonModule
 	 */
 	protected boolean generateFilterModuleOrder(Concern concern, SIinfo sinfo)
 	{
-		Map<String, Action> actions = new HashMap<String, Action>();
-
+		Map<Action, FilterModuleSuperImposition> concernActions = new HashMap<Action, FilterModuleSuperImposition>();
 		// Add filter modules as actions
 		List<FilterModSIinfo> msalts = sinfo.getFilterModSIAlts();
 		FilterModSIinfo fmsi = msalts.get(0);
 		for (FilterModuleSuperImposition fms : (List<FilterModuleSuperImposition>) fmsi.getAll())
 		{
-			Action action = new FilterModuleAction(fms);
-			actions.put(action.getName(), action);
-		}
-
-		// Add constraints
-		// addOrderingConstraints(actions);
-		if (constraintSpec != null)
-		{
-			timer.start("Loading specification for %s", concern.getQualifiedName());
-			loadConstraintSpecification(actions);
-			timer.stop();
+			Action act = actions.get(fms.getFilterModule().getQualifiedName());
+			if (act != null)
+			{
+				concernActions.put(act, fms);
+			}
+			else
+			{
+				logger.error(String.format("Unknown filter module %s in the order for %s", fms.getFilterModule()
+						.getQualifiedName(), concern.getQualifiedName()));
+				return false;
+			}
 		}
 
 		List<List<FilterModuleSuperImposition>> fmorders = new LinkedList<List<FilterModuleSuperImposition>>();
 
 		timer.start("Creating orders for %s", concern.getQualifiedName());
-		Set<List<Action>> orders = OrderGenerator.generate(actions.values());
+		Set<List<Action>> orders = OrderGenerator.generate(concernActions.keySet(), maxOrders);
 		timer.stop();
+
 		// convert the ordered action lists to filter module ordering lists and
 		// validate the generated list to conform to the constraints
 		timer.start("Convert orders for %s", concern.getQualifiedName());
@@ -179,9 +191,16 @@ public class FILTH implements CTCommonModule
 				{
 					break;
 				}
-				if (action instanceof FilterModuleAction)
+				FilterModuleSuperImposition fms = concernActions.get(action);
+				if (fms != null)
 				{
-					fmorder.add(((FilterModuleAction) action).getFMSI());
+					fmorder.add(fms);
+				}
+				else
+				{
+					logger.error(String.format("Unknown action %s in the order for %s", action.getName(), concern
+							.getQualifiedName()));
+					return false;
 				}
 			}
 
@@ -202,8 +221,8 @@ public class FILTH implements CTCommonModule
 
 			if (fmorders.size() > 1)
 			{
-				logger.warn(String.format("Multiple (%d) Filter Module orderings possible for concern %s", fmorders
-						.size(), concern.getQualifiedName()), concern);
+				logger.warn(String.format("Multiple Filter Module orderings possible for concern %s", concern
+						.getQualifiedName()), concern);
 			}
 
 			if (fmorders.get(0).size() > 2) // because of the default dispatch
@@ -231,55 +250,27 @@ public class FILTH implements CTCommonModule
 	}
 
 	/**
-	 * Add the ordering constraints from the "old" specification
-	 * 
-	 * @param actions
-	 * @deprecated
-	 */
-	@Deprecated
-	protected void addOrderingConstraints(Map<String, Action> actions)
-	{
-		if (orderSpec == null)
-		{
-			return;
-		}
-		for (SyntacticOrderingConstraint soc : orderSpec.values())
-		{
-			Action lhs = actions.get(soc.getLeft());
-			if (lhs == null)
-			{
-				continue;
-			}
-			for (String right : soc.getRightFilterModulesEx())
-			{
-				Action rhs = actions.get(right);
-				if (rhs == null)
-				{
-					continue;
-				}
-				new OrderingConstraint(lhs, rhs);
-			}
-		}
-	}
-
-	/**
 	 * Add the constraint specifications to the action
 	 * 
 	 * @param actions
 	 */
-	protected void loadConstraintSpecification(Map<String, Action> actions)
+	protected void loadConstraintSpecification()
 	{
+		List<Action> acts = new ArrayList<Action>();
 		for (ConstraintSpecification.ConstraintDefinition def : constraintSpec.getDefinitions())
 		{
 			String[] args = def.getArguments();
-			Action[] acts = new Action[args.length];
+			acts.clear();
 			for (int i = 0; i < args.length; i++)
 			{
-				acts[i] = actions.get(args[i]);
-				if (acts[i] == null)
+				Action act = actions.get(args[i]);
+				if (act == null)
 				{
-					acts[i] = new PhantomAction(args[i]);
+					act = new PhantomAction(args[i]);
+					actions.put(args[i], act);
 				}
+				acts.add(act);
+
 			}
 			try
 			{

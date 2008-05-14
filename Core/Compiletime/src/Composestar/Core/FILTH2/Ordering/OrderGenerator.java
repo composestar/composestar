@@ -58,14 +58,15 @@ public final class OrderGenerator
 	 * will only be validated according to the ordering constraints.
 	 * 
 	 * @param actions
+	 * @param maxOrders if >0 limit the maximum orders to this number
 	 * @return
 	 */
-	public static Set<List<Action>> generate(Collection<Action> actions)
+	public static Set<List<Action>> generate(Collection<Action> actions, int maxOrders)
 	{
 		OrderingNode rootNode = new OrderingNode();
 		Set<OrderingNode> nodes = createGraph(actions, rootNode);
 		Set<List<OrderingNode>> tmpResult = new HashSet<List<OrderingNode>>();
-		traverseAll(rootNode, new ArrayList<OrderingNode>(), nodes, tmpResult);
+		traverseAll(rootNode, new ArrayList<OrderingNode>(), nodes, tmpResult, maxOrders);
 
 		Set<List<Action>> result = new HashSet<List<Action>>();
 		for (List<OrderingNode> sorder : tmpResult)
@@ -124,9 +125,10 @@ public final class OrderGenerator
 	 * @param currentOrder
 	 * @param nodes
 	 * @param result
+	 * @param maxOrders
 	 */
 	protected static void traverseAll(OrderingNode current, List<OrderingNode> currentOrder, Set<OrderingNode> nodes,
-			Set<List<OrderingNode>> result)
+			Set<List<OrderingNode>> result, int maxOrders)
 	{
 		while (current != null && nodes.size() > 0)
 		{
@@ -151,7 +153,12 @@ public final class OrderGenerator
 				else
 				{
 					traverseAll(node, new ArrayList<OrderingNode>(currentOrder), new HashSet<OrderingNode>(nodes),
-							result);
+							result, maxOrders);
+				}
+				if (maxOrders > 0 && maxOrders <= result.size())
+				{
+					logger.info(String.format("Reached maximum allowed number of orders: %d", maxOrders));
+					return;
 				}
 			}
 		}

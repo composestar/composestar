@@ -24,12 +24,15 @@
 
 package Composestar.Core.FILTH2.Model;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Creates constraints
  * 
  * @author Michiel Hendriks
  */
-public class ConstraintFactory
+public final class ConstraintFactory
 {
 	private ConstraintFactory()
 	{}
@@ -46,50 +49,65 @@ public class ConstraintFactory
 	 */
 	public static Constraint createConstraint(String type, Action... arguments) throws ConstraintCreationException
 	{
+		return createConstraint(type, Arrays.asList(arguments));
+	}
+
+	/**
+	 * Create a new constraint with the given type.
+	 * 
+	 * @param type
+	 * @param arguments
+	 * @return
+	 * @throws ConstraintCreationException thrown when the constraint type could
+	 *             not be found or when the arguments for the constraint are
+	 *             incorrect.
+	 */
+	public static Constraint createConstraint(String type, List<Action> arguments) throws ConstraintCreationException
+	{
 		if (OrderingConstraint.NAME.equals(type))
 		{
-			if (arguments.length != 2)
+			if (arguments.size() != 2)
 			{
 				throw new ConstraintCreationException(String.format("pre constraint takes 2 arguments, received %d",
-						arguments.length));
+						arguments.size()));
 			}
-			return new OrderingConstraint(arguments[0], arguments[1]);
+			return new OrderingConstraint(arguments.get(0), arguments.get(1));
 		}
 		if (IncludeConstraint.NAME.equals(type))
 		{
-			if (arguments.length != 2)
+			if (arguments.size() != 2)
 			{
 				throw new ConstraintCreationException(String.format(
-						"include constraint takes 2 arguments, received %d", arguments.length));
+						"include constraint takes 2 arguments, received %d", arguments.size()));
 			}
-			return new IncludeConstraint(arguments[0], arguments[1]);
+			return new IncludeConstraint(arguments.get(0), arguments.get(1));
 		}
 		if (ExcludeConstraint.NAME.equals(type))
 		{
-			if (arguments.length != 2)
+			if (arguments.size() != 2)
 			{
 				throw new ConstraintCreationException(String.format(
-						"exclude constraint takes 2 arguments, received %d", arguments.length));
+						"exclude constraint takes 2 arguments, received %d", arguments.size()));
 			}
-			return new ExcludeConstraint(arguments[0], arguments[1]);
+			return new ExcludeConstraint(arguments.get(0), arguments.get(1));
 		}
 		if (CondConstraint.NAME.equals(type))
 		{
-			if (arguments.length != 2)
+			if (arguments.size() != 2)
 			{
 				throw new ConstraintCreationException(String.format("cond constraint takes 2 arguments, received %d",
-						arguments.length));
+						arguments.size()));
 			}
-			return new CondConstraint(arguments[0], arguments[1]);
+			return new CondConstraint(arguments.get(0), arguments.get(1));
 		}
 		if (SkipConstraint.NAME.equals(type))
 		{
-			if (arguments.length != 3)
+			if (arguments.size() != 3)
 			{
 				throw new ConstraintCreationException(String.format("skip constraint takes 3 arguments, received %d",
-						arguments.length));
+						arguments.size()));
 			}
-			return new SkipConstraint(arguments[0], arguments[1], arguments[2]);
+			return new SkipConstraint(arguments.get(0), arguments.get(1), arguments.get(2));
 		}
 		throw new ConstraintCreationException(String.format("Unknown constraint type: %s", type));
 	}

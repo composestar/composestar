@@ -24,7 +24,6 @@
 
 package Composestar.Core.FILTH2.Model;
 
-import java.util.List;
 
 /**
  * cond(X,Y), Y is only allowed if X is present and before Y.
@@ -49,29 +48,5 @@ public class CondConstraint extends ControlConstraint
 	public String getName()
 	{
 		return NAME;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List)
-	 */
-	@Override
-	public boolean isValidOrder(List<Action> order)
-	{
-		// constraint only says something over an existing rhs
-		int ridx = order.indexOf(rhs);
-		if (rhs instanceof PhantomAction || ridx == -1)
-		{
-			return true;
-		}
-		// if lhs is a phantom, then rhs may not be present
-		int lidx = order.indexOf(lhs);
-		if (lhs instanceof PhantomAction || lidx == -1)
-		{
-			return ridx == 1;
-		}
-		// lhs must be before rhs
-		return lidx < ridx;
 	}
 }

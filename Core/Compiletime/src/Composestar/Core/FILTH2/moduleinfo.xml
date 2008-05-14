@@ -7,7 +7,12 @@
 			however say anything about the order in which the filtermodules should be applied. The possible orderings
 			are constrained by the filter ordering specification.
 		</description>
-		<settings />
+		<settings>
+			<setting id="max" type="integer">
+				<name>Maximum Orders</name>
+				<default>4</default>
+			</setting>
+		</settings>
 		<incre>
 			<module enabled="true" summary=" Determining order of filter modules at shared join points... ">
 				<dependencies />

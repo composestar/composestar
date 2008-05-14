@@ -83,7 +83,7 @@ public class OrderTest extends TestCase
 	{
 		System.out.println("testPermutation");
 
-		Set<List<Action>> results = OrderGenerator.generate(actions);
+		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
 		assertEquals(factorial(actions.size()), results.size());
 		for (List<Action> singleResult : results)
 		{
@@ -97,7 +97,7 @@ public class OrderTest extends TestCase
 		System.out.println("testSingleConstraint");
 		System.out.println(new OrderingConstraint(actions.get(0), actions.get(1)));
 
-		Set<List<Action>> results = OrderGenerator.generate(actions);
+		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
 		assertEquals(factorial(actions.size()) / 2, results.size());
 		for (List<Action> singleResult : results)
 		{
@@ -112,7 +112,7 @@ public class OrderTest extends TestCase
 		System.out.println(new OrderingConstraint(actions.get(0), actions.get(1)));
 		System.out.println(new OrderingConstraint(actions.get(0), actions.get(2)));
 
-		Set<List<Action>> results = OrderGenerator.generate(actions);
+		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
 		assertEquals(factorial(actions.size()) / 3, results.size());
 		for (List<Action> singleResult : results)
 		{
@@ -128,7 +128,7 @@ public class OrderTest extends TestCase
 		System.out.println(new OrderingConstraint(actions.get(0), actions.get(2)));
 		System.out.println(new OrderingConstraint(actions.get(0), actions.get(3)));
 
-		Set<List<Action>> results = OrderGenerator.generate(actions);
+		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
 		assertEquals(factorial(actions.size()) / 4, results.size());
 		for (List<Action> singleResult : results)
 		{
@@ -144,7 +144,7 @@ public class OrderTest extends TestCase
 		System.out.println(new OrderingConstraint(actions.get(1), actions.get(2)));
 		System.out.println(new OrderingConstraint(actions.get(2), actions.get(3)));
 
-		Set<List<Action>> results = OrderGenerator.generate(actions);
+		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
 		assertEquals(1, results.size());
 		for (List<Action> singleResult : results)
 		{
@@ -159,7 +159,7 @@ public class OrderTest extends TestCase
 		System.out.println(new OrderingConstraint(actions.get(0), actions.get(1)));
 		System.out.println(new OrderingConstraint(actions.get(1), actions.get(0)));
 
-		Set<List<Action>> results = OrderGenerator.generate(actions);
+		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
 		assertEquals(0, results.size());
 		for (List<Action> singleResult : results)
 		{
@@ -175,7 +175,7 @@ public class OrderTest extends TestCase
 		System.out.println(new OrderingConstraint(actions.get(1), actions.get(2)));
 		System.out.println(new OrderingConstraint(actions.get(2), actions.get(0)));
 
-		Set<List<Action>> results = OrderGenerator.generate(actions);
+		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
 		assertEquals(0, results.size());
 		for (List<Action> singleResult : results)
 		{
@@ -189,7 +189,7 @@ public class OrderTest extends TestCase
 		System.out.println("testNoOrder3");
 		System.out.println(new OrderingConstraint(actions.get(0), actions.get(0)));
 
-		Set<List<Action>> results = OrderGenerator.generate(actions);
+		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
 		assertEquals(0, results.size());
 		for (List<Action> singleResult : results)
 		{
@@ -205,12 +205,26 @@ public class OrderTest extends TestCase
 		System.out.println(new OrderingConstraint(actions.get(2), new PhantomAction("Y")));
 		System.out.println(new OrderingConstraint(actions.get(3), new PhantomAction("Z")));
 
-		Set<List<Action>> results = OrderGenerator.generate(actions);
+		Set<List<Action>> results = OrderGenerator.generate(actions, -1);
 		assertEquals(factorial(actions.size()), results.size());
 		for (List<Action> singleResult : results)
 		{
 			assertEquals(actions.size(), singleResult.size());
 			System.out.println(singleResult);
 		}
+	}
+
+	public void testAstronomical()
+	{
+		actions.add(new Action("E"));
+		actions.add(new Action("F"));
+		actions.add(new Action("G"));
+		actions.add(new Action("H"));
+		actions.add(new Action("I"));
+		actions.add(new Action("J"));
+		OrderGenerator.generate(actions, 10);
+		OrderGenerator.generate(actions, 100);
+		OrderGenerator.generate(actions, 1000);
+		OrderGenerator.generate(actions, 10000);
 	}
 }
