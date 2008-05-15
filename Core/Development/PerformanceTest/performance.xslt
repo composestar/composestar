@@ -66,40 +66,18 @@ DD {
         </style>
       </head>
       <body>
-
-        <xsl:call-template name="distinct_module">
-          <xsl:with-param name="nodes" select="//timer/@name" />
-        </xsl:call-template>
+       
+        <xsl:for-each select="//timer[not(@name=preceding::timer/@name)]/@name">
+        	<xsl:sort data-type="text" select="." />
+    			<xsl:call-template name="module">
+      			<xsl:with-param name="modulename">
+        			<xsl:value-of select="." />
+      			</xsl:with-param>
+    			</xsl:call-template>
+    		</xsl:for-each>
 
       </body>
     </html>
-  </xsl:template>
-
-
-  <xsl:template name="distinct_module">
-    <xsl:param name="nodes" select="/.." />
-    <xsl:param name="distinct" select="/.." />
-    <xsl:choose>
-      <xsl:when test="$nodes">
-        <xsl:call-template name="distinct_module">
-          <xsl:with-param name="distinct" select="$distinct | $nodes[1][not(. = $distinct)]" />
-          <xsl:with-param name="nodes" select="$nodes[position() > 1]" />
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="$distinct" mode="distinct_module">
-          <xsl:sort data-type="text" select="." />
-        </xsl:apply-templates>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template match="node()|@*" mode="distinct_module">
-    <xsl:call-template name="module">
-      <xsl:with-param name="modulename">
-        <xsl:value-of select="." />
-      </xsl:with-param>
-    </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="module">
@@ -118,42 +96,16 @@ DD {
     </h1>
 
     <div class="module" id="{$id}">
-      <xsl:call-template name="distinct_event">
-        <xsl:with-param name="nodes" select="//timer[@name=$modulename]/event/child::text()" />
-        <xsl:with-param name="modulename" select="$modulename" />
-      </xsl:call-template>
+      <xsl:for-each select="//timer[@name=$modulename]/event[not(text()=preceding::event/text())]/child::text()">
+        	<xsl:sort data-type="text" select="." />
+    			<xsl:call-template name="event">
+      			<xsl:with-param name="modulename" select="$modulename" />
+      			<xsl:with-param name="eventdesc">
+        			<xsl:value-of select="." />
+      			</xsl:with-param>
+    			</xsl:call-template>
+    		</xsl:for-each>
     </div>
-  </xsl:template>
-
-  <xsl:template name="distinct_event">
-    <xsl:param name="nodes" select="/.." />
-    <xsl:param name="distinct" select="/.." />
-    <xsl:param name="modulename" />
-    <xsl:choose>
-      <xsl:when test="$nodes">
-        <xsl:call-template name="distinct_event">
-          <xsl:with-param name="distinct" select="$distinct | $nodes[1][not(. = $distinct)]" />
-          <xsl:with-param name="nodes" select="$nodes[position() > 1]" />
-          <xsl:with-param name="modulename" select="$modulename" />
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="$distinct" mode="distinct_event">
-          <xsl:sort data-type="text" select="." />
-          <xsl:with-param name="modulename" select="$modulename" />
-        </xsl:apply-templates>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template match="node()|@*" mode="distinct_event">
-    <xsl:param name="modulename" />
-    <xsl:call-template name="event">
-      <xsl:with-param name="modulename" select="$modulename" />
-      <xsl:with-param name="eventdesc">
-        <xsl:value-of select="." />
-      </xsl:with-param>
-    </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="event">

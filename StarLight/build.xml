@@ -405,7 +405,6 @@
 	<target name="systemtest" description="Runs the system test">
 		<antcall target="systemtest_build" inheritRefs="true" />
 		<antcall target="systemtest_exec" inheritRefs="true" />
-		<antcall target="example_performance" inheritRefs="true" inheritAll="true" />
 	</target>
 
 	<target name="systemtest_build" depends="init_local">

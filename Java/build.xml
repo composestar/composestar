@@ -34,7 +34,6 @@
 	
 	<target name="test" description="Execute system tests">
 		<ant target="test" dir="Testing" inheritRefs="true"/>
-		<antcall target="example_performance" inheritRefs="true" inheritAll="true" />
 	</target>
 	
 	<target name="install" description="Install the result" >

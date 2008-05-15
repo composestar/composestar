@@ -527,7 +527,7 @@
 			</path>
 		</foreach>
 
-		<!-- <antcall target="example_performance_xslt" inheritRefs="true" inheritAll="true" /> -->
+		<antcall target="example_performance_xslt" inheritRefs="true" inheritAll="true" />
 
 	</target>
 	
@@ -543,9 +543,16 @@
 
 	<target name="-example_performance_proc">
 		<concat destfile="${example.name}.xml">
-			<fileset dir="${example.name}">
-				<include name="TimerResults*.xml" />
-			</fileset>
+			<first count="50">
+				<sort>
+					<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+						<date xmlns="antlib:org.apache.tools.ant.types.resources.comparators"/>
+					</reverse>
+					<fileset dir="${example.name}">
+						<include name="TimerResults*.xml" />
+					</fileset>				
+				</sort>
+			</first>
 			<filterchain>
 				<tokenfilter>
 					<!-- remove existing processing instructions -->

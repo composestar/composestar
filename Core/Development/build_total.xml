@@ -159,7 +159,7 @@
 	</target>
 
 	<!-- QA tasks -->
-	<target name="qa" depends="findbugs,checkstyle,qa_starlight" description="Execute Quality Assurance tasks" />
+	<target name="qa" depends="findbugs,checkstyle,qa_starlight,qa_performance" description="Execute Quality Assurance tasks" />
 
 	<target name="qa_starlight" description="Execute Quality Assurance tasks">
 		<antcall target="fxcop_starlight" inheritRefs="true" />
@@ -242,6 +242,35 @@
 	
 	<target name="checkstyle_cwc" depends="init" if="enabled.cwc">
 		<ant target="checkstyle" dir="${build.cwc}" inheritRefs="true" />
+	</target>
+	
+	<!-- execute the findbugs tool -->
+	<target name="qa_performance" depends="init" description="Create example compilation performance reports">
+		<antcall target="qa_performance_dotnet" inheritRefs="true" />
+		<antcall target="qa_performance_starlight" inheritRefs="true" />
+		<antcall target="qa_performance_java" inheritRefs="true" />
+		<antcall target="qa_performance_c" inheritRefs="true" />
+		<antcall target="qa_performance_cwc" inheritRefs="true" />
+	</target>
+
+	<target name="qa_performance_dotnet" depends="init" if="enabled.dotnet">
+		<ant target="example_performance" dir="${build.dotnet}" inheritRefs="true" />
+	</target>
+
+	<target name="qa_performance_java" depends="init" if="enabled.java">
+		<ant target="example_performance" dir="${build.java}" inheritRefs="true" />
+	</target>
+
+	<target name="qa_performance_starlight" depends="init" if="enabled.starlight">
+		<ant target="example_performance" dir="${build.starlight}" inheritRefs="true" />
+	</target>
+
+	<target name="qa_performance_c" depends="init" if="enabled.c">
+		<ant target="example_performance" dir="${build.c}" inheritRefs="true" />
+	</target>
+	
+	<target name="qa_performance_cwc" depends="init" if="enabled.cwc">
+		<ant target="example_performance" dir="${build.cwc}" inheritRefs="true" />
 	</target>
 
 	<!-- documentation -->
