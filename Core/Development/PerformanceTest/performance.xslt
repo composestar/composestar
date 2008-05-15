@@ -189,8 +189,11 @@ DD {
           </xsl:if>
         </xsl:for-each>
       </xsl:variable>
-      <xsl:variable name="average">
-        <xsl:value-of select="sum(//timer[@name=$modulename]/event[text()=$eventdesc]/@duration) div count(//timer[@name=$modulename]/event[text()=$eventdesc]/@duration)" />
+      <xsl:variable name="total">
+        <xsl:value-of select="sum(//timer[@name=$modulename]/event[text()=$eventdesc]/@duration)" />
+      </xsl:variable>
+      <xsl:variable name="eventcount">
+        <xsl:value-of select="count(//timer[@name=$modulename]/event[text()=$eventdesc]/@duration)" />
       </xsl:variable>
 
       <table class="timeline">
@@ -233,7 +236,7 @@ DD {
         </dd>
         <dt>Average</dt>
         <dd>
-          <xsl:value-of select="floor($average div 1000) div 1000"/>ms
+          <xsl:value-of select="floor($total div $eventcount div 1000) div 1000"/>ms
         </dd>
       </dl>
 

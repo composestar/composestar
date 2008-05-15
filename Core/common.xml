@@ -527,14 +527,18 @@
 			</path>
 		</foreach>
 
-		<xslt style="${build.core}/Development/PerformanceTest/performance.xslt" destdir="${basedir}/qa">
+		<!-- <antcall target="example_performance_xslt" inheritRefs="true" inheritAll="true" /> -->
+
+	</target>
+	
+	<target name="example_performance_xslt">
+		<xslt style="${build.core}/Development/PerformanceTest/performance.xslt" destdir="${basedir}/qa" force="true">
 			<include name="_performance_data/*.xml" />
 			<chainedmapper>
 				<flattenmapper />
 				<globmapper from="*.xml" to="example_*.html" />
 			</chainedmapper>
 		</xslt>
-
 	</target>
 
 	<target name="-example_performance_proc">
