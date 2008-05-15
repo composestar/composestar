@@ -24,50 +24,27 @@
 
 package Composestar.Core.FILTH2.Model;
 
-import java.util.List;
-
 /**
- * cond(X,Y), Y is only allowed if X is present and before Y.
+ * Defines the execution result of an action
  * 
  * @author Michiel Hendriks
  */
-public class CondConstraint extends ControlConstraint
+public enum ExecutionResult
 {
-	public static final String NAME = "cond";
-
-	public CondConstraint(Action left, Action right)
-	{
-		super(left, right);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.Constraint#getName()
+	/**
+	 * Result is set to true
 	 */
-	@Override
-	public String getName()
-	{
-		return NAME;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List,
-	 *      Composestar.Core.FILTH2.Model.ExecutionManager)
+	TRUE,
+	/**
+	 * Result is set to false
 	 */
-	@Override
-	public boolean isValidOrder(List<Action> order, ExecutionManager exec)
-	{
-		if (exec != null)
-		{
-			if (exec.getResult(lhs) != ExecutionResult.TRUE)
-			{
-				exec.setExecutable(rhs, false);
-			}
-		}
-		// condition constraints never invalidate an order
-		return true;
-	}
+	FALSE,
+	/**
+	 * No result value has been set
+	 */
+	UNSET,
+	/**
+	 * This action has not be executed yet
+	 */
+	NOT_EXECUTED
 }

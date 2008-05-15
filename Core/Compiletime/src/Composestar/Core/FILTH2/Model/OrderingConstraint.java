@@ -58,20 +58,30 @@ public class OrderingConstraint extends Constraint
 	 * @see Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List)
 	 */
 	@Override
-	public boolean isValidOrder(List<Action> order)
+	public boolean isValidOrder(List<Action> order, ExecutionManager exec)
 	{
 		if (rhs instanceof PhantomAction)
 		{
 			// if the right side is a phantom action this constraint is always
-			// true
+			// true, this implies: ridx == -1
 			return true;
 		}
 		int lidx = order.indexOf(lhs);
 		int ridx = order.indexOf(rhs);
 		if (lidx == -1 || ridx == -1)
 		{
-			// if their action is present this constraint is also correct
+			// if either action is not present this constraint, is also correct
 			return true;
+		}
+		// at this point both actions are present in the order and their
+		// position must be validated
+		if (exec != null)
+		{
+			if (exec.getResult(lhs) == ExecutionResult.NOT_EXECUTED)
+			{
+				// lhs did not execute, therefor rhs may not execute either
+				exec.setExecutable(rhs, false);
+			}
 		}
 		return lidx < ridx;
 	}

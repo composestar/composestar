@@ -24,6 +24,8 @@
 
 package Composestar.Core.FILTH2.Model;
 
+import java.util.List;
+
 /**
  * skip(X,Y,Z) ... if X is present Y is excluded (exec result is set to Z)
  * 
@@ -33,9 +35,12 @@ public class SkipConstraint extends ControlConstraint
 {
 	public static final String NAME = "skip";
 
-	public SkipConstraint(Action left, Action right, Action x)
+	protected Action resultAction;
+
+	public SkipConstraint(Action left, Action right, Action result)
 	{
 		super(left, right);
+		resultAction = result;
 	}
 
 	/*
@@ -49,4 +54,50 @@ public class SkipConstraint extends ControlConstraint
 		return NAME;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List,
+	 *      Composestar.Core.FILTH2.Model.ExecutionManager)
+	 */
+	@Override
+	public boolean isValidOrder(List<Action> order, ExecutionManager exec)
+	{
+		if (exec != null)
+		{
+			if (exec.getResult(lhs) == ExecutionResult.TRUE)
+			{
+				exec.setExecutable(rhs, false);
+				ExecutionResult execres = exec.getResult(resultAction);
+				if (execres == ExecutionResult.NOT_EXECUTED)
+				{
+					// this should actually never happen
+					return false;
+				}
+				exec.setResult(rhs, execres);
+			}
+		}
+		// condition constraints never invalidate an order
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(getName());
+		sb.append("(");
+		sb.append(lhs.toString());
+		sb.append(", ");
+		sb.append(rhs.toString());
+		sb.append(", ");
+		sb.append(resultAction.toString());
+		sb.append(")");
+		return sb.toString();
+	}
 }

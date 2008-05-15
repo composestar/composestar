@@ -19,55 +19,48 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id$
+ * $Id: ExcludeConstraint.java 4192 2008-05-09 09:29:31Z elmuerte $
  */
-
 package Composestar.Core.FILTH2.Model;
 
-import java.util.List;
-
 /**
- * cond(X,Y), Y is only allowed if X is present and before Y.
+ * Defines the interface that keeps track of the execution and return value of
+ * actions
  * 
  * @author Michiel Hendriks
  */
-public class CondConstraint extends ControlConstraint
+public interface ExecutionManager
 {
-	public static final String NAME = "cond";
-
-	public CondConstraint(Action left, Action right)
-	{
-		super(left, right);
-	}
-
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Get the execution result of an action
 	 * 
-	 * @see Composestar.Core.FILTH2.Model.Constraint#getName()
+	 * @param action
+	 * @return
 	 */
-	@Override
-	public String getName()
-	{
-		return NAME;
-	}
+	ExecutionResult getResult(Action action);
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Set the execution result
 	 * 
-	 * @see Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List,
-	 *      Composestar.Core.FILTH2.Model.ExecutionManager)
+	 * @param action
+	 * @param result
 	 */
-	@Override
-	public boolean isValidOrder(List<Action> order, ExecutionManager exec)
-	{
-		if (exec != null)
-		{
-			if (exec.getResult(lhs) != ExecutionResult.TRUE)
-			{
-				exec.setExecutable(rhs, false);
-			}
-		}
-		// condition constraints never invalidate an order
-		return true;
-	}
+	void setResult(Action action, ExecutionResult result);
+
+	/**
+	 * Changes the executability of an action, called by cond() and skip()
+	 * 
+	 * @param action
+	 * @param value
+	 */
+	void setExecutable(Action action, boolean value);
+
+	/**
+	 * Returns true if an action is executable
+	 * 
+	 * @param action
+	 * @return
+	 */
+	boolean isExecutable(Action action);
+
 }

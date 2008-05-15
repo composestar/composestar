@@ -45,6 +45,7 @@ import Composestar.Core.FILTH2.Model.Action;
 import Composestar.Core.FILTH2.Model.Constraint;
 import Composestar.Core.FILTH2.Model.ConstraintFactory;
 import Composestar.Core.FILTH2.Model.PhantomAction;
+import Composestar.Core.FILTH2.Model.StructuralConstraint;
 import Composestar.Core.FILTH2.Model.ConstraintFactory.ConstraintCreationException;
 import Composestar.Core.FILTH2.Ordering.OrderGenerator;
 import Composestar.Core.Master.CTCommonModule;
@@ -178,10 +179,10 @@ public class FILTH implements CTCommonModule
 			boolean isValidOrder = true;
 			for (Action action : order)
 			{
-				// check if the order is valid
-				for (Constraint constraint : action.getConstraints())
+				// Check if structural constraints are met
+				for (Constraint constraint : action.getConstraints(StructuralConstraint.class))
 				{
-					if (!constraint.isValidOrder(order))
+					if (!constraint.isValidOrder(order, null))
 					{
 						isValidOrder = false;
 						break;

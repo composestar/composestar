@@ -35,7 +35,8 @@ import java.util.Map.Entry;
 
 import Composestar.Core.FILTH2.FILTH;
 import Composestar.Core.FILTH2.Model.Action;
-import Composestar.Core.FILTH2.Model.OrderingConstraint;
+import Composestar.Core.FILTH2.Model.Constraint;
+import Composestar.Core.FILTH2.Model.StructuralConstraint;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -106,8 +107,18 @@ public final class OrderGenerator
 		// create edges using the constraints
 		for (Entry<Action, OrderingNode> entry : lookup.entrySet())
 		{
-			for (OrderingConstraint constraint : entry.getKey().getConstraints(OrderingConstraint.class))
+			for (Constraint constraint : entry.getKey().getConstraints())
 			{
+				if (constraint instanceof StructuralConstraint)
+				{
+					// these don't dictate an order
+					// Ordering constraint and Control constraint do
+					continue;
+				}
+				if (entry.getKey() != constraint.getLeft())
+				{
+					continue;
+				}
 				OrderingNode dest = lookup.get(constraint.getRight());
 				if (dest != null)
 				{

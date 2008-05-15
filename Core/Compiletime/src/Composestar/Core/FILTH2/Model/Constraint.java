@@ -52,6 +52,10 @@ public abstract class Constraint
 		{
 			lhs.addConstraint(this);
 		}
+		if (!(rhs instanceof PhantomAction))
+		{
+			rhs.addConstraint(this);
+		}
 	}
 
 	/**
@@ -80,9 +84,12 @@ public abstract class Constraint
 	 * the provided order is legal according to this constraint.
 	 * 
 	 * @param order
+	 * @param exec The execution manager. This will be null in case of static
+	 *            analysis during compile time to validate the non-control
+	 *            constraints.
 	 * @return
 	 */
-	public boolean isValidOrder(List<Action> order)
+	public boolean isValidOrder(List<Action> order, ExecutionManager exec)
 	{
 		return true;
 	}

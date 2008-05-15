@@ -58,7 +58,7 @@ public class ExcludeConstraint extends StructuralConstraint
 	 * @see Composestar.Core.FILTH2.Model.Constraint#isValidOrder(java.util.List)
 	 */
 	@Override
-	public boolean isValidOrder(List<Action> order)
+	public boolean isValidOrder(List<Action> order, ExecutionManager exec)
 	{
 		// phantom actions are always ok
 		if (lhs instanceof PhantomAction)
