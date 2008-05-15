@@ -14,8 +14,8 @@
 	<description>The StarLight (.NET 2+) implementation of Compose*</description>
 
 	<target name="init_local" depends="init">
-		<property name="out.qa.starlight" value="QualityAssurance" />
-		<property name="out.fxcop.starlight" value="QualityAssurance" />
+		<property name="out.qa.starlight" value="qa" />
+		<property name="out.fxcop.starlight" value="qa" />
 		<property name="out.nunit" value="Source${file.separator}Tests${file.separator}TestResults" />
 
 		<property name="MSBuildTasks.dir" location="Source/VSIntegration/MSBuildTasks" />
