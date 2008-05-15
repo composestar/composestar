@@ -51,14 +51,14 @@
 			
 			<merge file="${composestar.path}\Core\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\DotNET\qa\checkstyle-result.xml" />
-			<merge file="${composestar.path}\StarLight\QualityAssurance\checkstyle-result.xml" />
+			<merge file="${composestar.path}\StarLight\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\Java\qa\checkstyle-result.xml" />
 			<!--<merge file="${composestar.path}\C\qa\checkstyle-result.xml" />-->
 			<merge file="${composestar.path}\CwC\qa\checkstyle-result.xml" />
 
 			<merge file="${composestar.path}\Core\qa\findbugs-result.xml" />
 			<merge file="${composestar.path}\DotNET\qa\findbugs-result.xml" />
-			<merge file="${composestar.path}\StarLight\QualityAssurance\findbugs-result.xml" />
+			<merge file="${composestar.path}\StarLight\qa\findbugs-result.xml" />
 			<merge file="${composestar.path}\Java\qa\findbugs-result.xml" />
 			<!--<merge file="${composestar.path}\C\qa\findbugs-result.xml" />-->
 			<merge file="${composestar.path}\CwC\qa\findbugs-result.xml" />
@@ -131,7 +131,7 @@
 					/>
 				-->
 				<artifactspublisher
-					dir="${composestar.path}/Starlight/QualityAssurance"
+					dir="${composestar.path}/Starlight/qa"
 					dest="artifacts/${project.name}/"
 					subdirectory="qa_starlight"
 				/>
@@ -174,7 +174,6 @@
 
 	<modificationset>
 		<svn localWorkingCopy="${groove.path}\groove" property="groove.modified"/>
-		<svn localWorkingCopy="${groove.path}\release" property="groove.modified"/>
 	</modificationset>
     
 	<!-- performs a build every night at 03:17 -->
