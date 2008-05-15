@@ -68,7 +68,7 @@ public class OrderingConstraint extends Constraint
 		}
 		int lidx = order.indexOf(lhs);
 		int ridx = order.indexOf(rhs);
-		if (lidx == -1 || lidx == -1)
+		if (lidx == -1 || ridx == -1)
 		{
 			// if their action is present this constraint is also correct
 			return true;
