@@ -48,6 +48,7 @@ import Composestar.Core.FILTH2.Model.PhantomAction;
 import Composestar.Core.FILTH2.Model.StructuralConstraint;
 import Composestar.Core.FILTH2.Model.ConstraintFactory.ConstraintCreationException;
 import Composestar.Core.FILTH2.Ordering.OrderGenerator;
+import Composestar.Core.FILTH2.Validation.StructuralValidation;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModSIinfo;
@@ -84,6 +85,8 @@ public class FILTH implements CTCommonModule
 
 	protected Map<String, Action> actions;
 
+	protected Map<Constraint, ConstraintDefinition> constraints;
+
 	public FILTH()
 	{}
 
@@ -113,6 +116,7 @@ public class FILTH implements CTCommonModule
 		}
 		timer.stop();
 		timer.start("Loading constraint specification");
+		constraints = new HashMap<Constraint, ConstraintDefinition>();
 		loadConstraintSpecification();
 		timer.stop();
 
@@ -131,6 +135,8 @@ public class FILTH implements CTCommonModule
 		}
 		if (!allOK)
 		{
+			StructuralValidation.isValid(constraints);
+			// TODO: perform order validation (i.e. Pre(a,b); Pre(b,a);)
 			throw new ModuleException(String.format("One or more concerns did not have a valid filter module order."),
 					MODULE_NAME);
 		}
@@ -184,6 +190,9 @@ public class FILTH implements CTCommonModule
 				{
 					if (!constraint.isValidOrder(order, null))
 					{
+						ConstraintDefinition def = constraints.get(constraint);
+						logger.warn(String.format("Constraint %s is not met in this selected order: %s",
+								def.toString(), order), def);
 						isValidOrder = false;
 						break;
 					}
@@ -258,24 +267,24 @@ public class FILTH implements CTCommonModule
 	protected void loadConstraintSpecification()
 	{
 		List<Action> acts = new ArrayList<Action>();
-		for (ConstraintSpecification.ConstraintDefinition def : constraintSpec.getDefinitions())
+		for (ConstraintDefinition def : constraintSpec.getDefinitions())
 		{
 			String[] args = def.getArguments();
 			acts.clear();
-			for (int i = 0; i < args.length; i++)
+			for (String element : args)
 			{
-				Action act = actions.get(args[i]);
+				Action act = actions.get(element);
 				if (act == null)
 				{
-					act = new PhantomAction(args[i]);
-					actions.put(args[i], act);
+					act = new PhantomAction(element);
+					actions.put(element, act);
 				}
 				acts.add(act);
 
 			}
 			try
 			{
-				ConstraintFactory.createConstraint(def.getType(), acts);
+				constraints.put(ConstraintFactory.createConstraint(def.getType(), acts), def);
 			}
 			catch (ConstraintCreationException e)
 			{

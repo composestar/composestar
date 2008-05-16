@@ -86,8 +86,8 @@ public class OrderingEdge
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((source == null) ? 0 : source.hashCode());
-		result = prime * result + ((target == null) ? 0 : target.hashCode());
+		result = prime * result + (source == null ? 0 : source.hashCode());
+		result = prime * result + (target == null ? 0 : target.hashCode());
 		return result;
 	}
 
@@ -99,20 +99,41 @@ public class OrderingEdge
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
 		final OrderingEdge other = (OrderingEdge) obj;
 		if (source == null)
 		{
-			if (other.source != null) return false;
+			if (other.source != null)
+			{
+				return false;
+			}
 		}
-		else if (!source.equals(other.source)) return false;
+		else if (!source.equals(other.source))
+		{
+			return false;
+		}
 		if (target == null)
 		{
-			if (other.target != null) return false;
+			if (other.target != null)
+			{
+				return false;
+			}
 		}
-		else if (!target.equals(other.target)) return false;
+		else if (!target.equals(other.target))
+		{
+			return false;
+		}
 		return true;
 	}
 }

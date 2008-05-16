@@ -79,7 +79,7 @@ public class OrderingConstraint extends Constraint
 		{
 			if (exec.getResult(lhs) == ExecutionResult.NOT_EXECUTED)
 			{
-				// lhs did not execute, therefor rhs may not execute either
+				// lhs did not execute, therefore rhs may not execute either
 				exec.setExecutable(rhs, false);
 			}
 		}
