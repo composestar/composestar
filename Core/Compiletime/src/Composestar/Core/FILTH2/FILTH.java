@@ -95,7 +95,7 @@ public class FILTH implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		timer = CPSTimer.getTimer(MODULE_NAME);
 		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
@@ -140,6 +140,7 @@ public class FILTH implements CTCommonModule
 			throw new ModuleException(String.format("One or more concerns did not have a valid filter module order."),
 					MODULE_NAME);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

@@ -38,7 +38,7 @@ public class EMBEX implements CTCommonModule
 	 * Iterates over cps concerns and calls saveToFile for embedded sources
 	 * found Creates directory for embedded sources
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		config = resources.configuration();
 		DataStore ds = resources.repository();
@@ -82,6 +82,8 @@ public class EMBEX implements CTCommonModule
 				}
 			}
 		}
+		// TODO return Error when code could not be extracted
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

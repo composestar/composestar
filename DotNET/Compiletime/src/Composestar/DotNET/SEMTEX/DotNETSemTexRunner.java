@@ -33,7 +33,7 @@ public class DotNETSemTexRunner implements CTCommonModule
 	/**
 	 * Calls the SemanticExtractor to generate the semtex.xml file
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		String exe = getExecutable(resources);
 		if (exe != null)
@@ -76,6 +76,7 @@ public class DotNETSemTexRunner implements CTCommonModule
 
 			logger.debug("SemTex Analyzer completed.");
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	private String getExecutable(CommonResources resources)

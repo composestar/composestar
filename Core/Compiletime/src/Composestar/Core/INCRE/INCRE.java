@@ -1037,7 +1037,7 @@ public final class INCRE implements CTCommonModule
 		}
 	}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		throw new UnsupportedOperationException("INCRE is not an actual CTCommonModule");
 	}

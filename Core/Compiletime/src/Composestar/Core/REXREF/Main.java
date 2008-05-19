@@ -73,7 +73,7 @@ public class Main implements CTCommonModule
 	 * 
 	 * @param resources Common resources supplied by Master
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		// DoResolve dr = new DoResolve();
 		// dr.go(DataStore.instance());
@@ -84,6 +84,7 @@ public class Main implements CTCommonModule
 		{
 			throw new ModuleException("There are unresolved references", MODULE_NAME);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	protected void resolveReferences()

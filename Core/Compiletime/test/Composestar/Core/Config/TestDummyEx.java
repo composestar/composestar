@@ -6,7 +6,8 @@ import Composestar.Core.Resources.CommonResources;
 
 public class TestDummyEx implements CTCommonModule
 {
-
-	public void run(CommonResources resources) throws ModuleException
-	{}
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
+	{
+		return ModuleReturnValue.Ok;
+	}
 }

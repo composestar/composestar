@@ -52,7 +52,7 @@ public class ILICIT implements WEAVER
 	public ILICIT()
 	{}
 
-	public void run(CommonResources inresources) throws ModuleException
+	public ModuleReturnValue run(CommonResources inresources) throws ModuleException
 	{
 		resources = inresources;
 		config = resources.configuration();
@@ -78,6 +78,7 @@ public class ILICIT implements WEAVER
 		{
 			logger.warn("No files to weave");
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

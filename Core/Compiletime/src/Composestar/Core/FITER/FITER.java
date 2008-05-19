@@ -65,7 +65,7 @@ public class FITER implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		logger.info("Verifying Filter Types...");
 		resc = resources;
@@ -75,6 +75,9 @@ public class FITER implements CTCommonModule
 		{
 			resolveCustomFilterTypes(customfilters);
 		}
+		// Return error when filters could not be resolved (instead of
+		// exception)
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

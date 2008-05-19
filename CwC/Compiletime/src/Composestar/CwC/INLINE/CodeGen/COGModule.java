@@ -54,7 +54,7 @@ public class COGModule implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		CodeGenerator<String> cg = new CCodeGenerator();
 		cg.register(new CDispatchActionCodeGen(inlinerResc));
@@ -63,5 +63,6 @@ public class COGModule implements CTCommonModule
 			Object result = cg.generate(entry.getValue(), entry.getKey(), inlinerResc.getMethodId(entry.getKey()));
 			logger.info(result);
 		}
+		return ModuleReturnValue.Ok;
 	}
 }

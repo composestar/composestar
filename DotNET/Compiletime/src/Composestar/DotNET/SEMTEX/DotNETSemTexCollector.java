@@ -30,7 +30,7 @@ public class DotNETSemTexCollector implements CTCommonModule
 	/*
 	 * Checks if the semtex.xml file is available and imports this file.
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		// Read the generated xml file and store the data in the repository
 		File semTexFile = new File(resources.configuration().getProject().getIntermediate(), "semtex.xml");
@@ -57,5 +57,6 @@ public class DotNETSemTexCollector implements CTCommonModule
 				throw new ModuleException(e.getMessage(), MODULE_NAME);
 			}
 		}
+		return ModuleReturnValue.Ok;
 	}
 }

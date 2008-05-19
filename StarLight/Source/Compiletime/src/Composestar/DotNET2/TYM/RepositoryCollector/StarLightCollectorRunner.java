@@ -78,7 +78,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 	protected Map<String, Type> typeMap;
 
-	public void run(CommonResources resc) throws ModuleException
+	public ModuleReturnValue run(CommonResources resc) throws ModuleException
 	{
 		resources = resc;
 		register = (UnitRegister) resources.get(UnitRegister.RESOURCE_KEY);
@@ -105,6 +105,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 		// resolve the MethodInfo reference in the calls within a method
 		resolveCallsToOtherMethods();
+
+		return ModuleReturnValue.Ok;
 	}
 
 	private void collectFilterTypesAndActions() throws ModuleException

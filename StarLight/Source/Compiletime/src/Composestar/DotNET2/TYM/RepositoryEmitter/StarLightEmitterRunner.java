@@ -87,7 +87,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		compressors = new HashMap<WeaveSpecification, FilterCodeCompressor>();
 	}
 
-	public void run(CommonResources resc) throws ModuleException
+	public ModuleReturnValue run(CommonResources resc) throws ModuleException
 	{
 		resources = resc;
 		dataStore = resc.repository();
@@ -103,6 +103,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 			exc.printStackTrace();
 			throw new ModuleException("NullPointerException in emitter", MODULE_NAME);
 		}
+
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

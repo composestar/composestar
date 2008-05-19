@@ -59,7 +59,7 @@ public class PreProcess implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		ModuleInfo mi = ModuleInfoManager.get(PreProcess.class);
 		Project proj = resources.configuration().getProject();
@@ -77,7 +77,7 @@ public class PreProcess implements CTCommonModule
 							ppdir.toString().length() + File.pathSeparator.length())));
 				}
 			}
-			return;
+			return ModuleReturnValue.Ok;
 		}
 		Language lang = proj.getPlatform().getLanguage(proj.getLanguage());
 		if (lang == null)
@@ -100,5 +100,6 @@ public class PreProcess implements CTCommonModule
 		{
 			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
 		}
+		return ModuleReturnValue.Ok;
 	}
 }

@@ -39,7 +39,7 @@ public class DotNETCollectorRunner implements CollectorRunner
 	public DotNETCollectorRunner()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		dataStore = resources.repository();
 		try
@@ -180,5 +180,6 @@ public class DotNETCollectorRunner implements CollectorRunner
 			type.setParentConcern(pc);
 			dataStore.addObject(type.getFullName(), pc);
 		}
+		return ModuleReturnValue.Ok;
 	}
 }

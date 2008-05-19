@@ -31,7 +31,7 @@ public class SANE implements CTCommonModule
 	public SANE()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		DataStore repository = resources.repository();
 		Iterator<CpsConcern> cpsConcernIter = repository.getAllInstancesOf(CpsConcern.class);
@@ -56,6 +56,7 @@ public class SANE implements CTCommonModule
 			// bindMethods(c);
 			// bindConditions(c);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

@@ -21,7 +21,7 @@ public class INCRESerializer implements CTCommonModule
 	public INCRESerializer()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		ModuleInfo increMi = ModuleInfoManager.get(INCRE.MODULE_NAME);
 		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
@@ -40,8 +40,13 @@ public class INCRESerializer implements CTCommonModule
 			catch (IOException e)
 			{
 				logger.error("Unable to save compile history. Received exception: " + e, e);
+				return ModuleReturnValue.Error;
 			}
-			timer.stop();
+			finally
+			{
+				timer.stop();
+			}
 		}
+		return ModuleReturnValue.Ok;
 	}
 }

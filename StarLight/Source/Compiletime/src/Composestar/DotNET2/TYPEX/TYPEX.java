@@ -33,7 +33,7 @@ public class TYPEX implements CTCommonModule
 	public TYPEX()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		concerns = resources.repository().getListOfAllInstances(Concern.class);
 		signaturesModified = resources.getBoolean("signaturesmodified");
@@ -41,7 +41,7 @@ public class TYPEX implements CTCommonModule
 		if (!signaturesModified)
 		{
 			logger.info("No need to transform assemblies");
-			return;
+			return ModuleReturnValue.Ok;
 		}
 
 		ExpandedTypeCollector te = new ExpandedTypeCollector();
@@ -53,5 +53,7 @@ public class TYPEX implements CTCommonModule
 		SourceExpander se = new SourceExpander(resources);
 		expandedSources = se.process(te.getExpandedSources());
 		resources.put("sources.expanded.files", expandedSources);
+
+		return ModuleReturnValue.Ok;
 	}
 }

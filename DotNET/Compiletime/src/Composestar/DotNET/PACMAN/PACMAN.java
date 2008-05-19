@@ -37,7 +37,7 @@ public class PACMAN implements CTCommonModule
 	 * delegates the generation procedure for the partial classes to the
 	 * PartialClassEmitter.
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		try
 		{
@@ -52,6 +52,7 @@ public class PACMAN implements CTCommonModule
 		{
 			throw new ModuleException("Unable to generate partial classes: " + e.getMessage(), MODULE_NAME);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	private void collectExpandedTypes(PartialClassEmitter pce)

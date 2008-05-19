@@ -109,14 +109,12 @@ public class ModelBuilder implements CTCommonModule
 	 * Creates the ModelBuilder.
 	 */
 	public ModelBuilder()
-	{
-
-	}
+	{}
 
 	/**
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		moduleinfo = ModuleInfoManager.get(MODULE_NAME);
 
@@ -130,6 +128,8 @@ public class ModelBuilder implements CTCommonModule
 		dataStore = resources.repository();
 		// f2res = resources.getResourceManager(FIRE2Resources.class);
 		startInliner();
+		// TODO return error when model building failed
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

@@ -284,7 +284,7 @@ public abstract class LOLA implements CTCommonModule
 	/**
 	 * Run this module.
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		/*
 		 * While this module runs, redirect stderr to stdout, so error messages
@@ -365,6 +365,8 @@ public abstract class LOLA implements CTCommonModule
 
 		/* Connect stderr to the original stream again */
 		// System.setErr(stderr);
+		// TODO return Error?
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

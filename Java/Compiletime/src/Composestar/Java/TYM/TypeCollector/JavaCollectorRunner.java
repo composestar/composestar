@@ -56,7 +56,7 @@ public class JavaCollectorRunner implements CollectorRunner
 	/**
 	 * Module starting point.
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		try
 		{
@@ -189,6 +189,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		}
 
 		register.resolveTypes(new JavaTypeResolver());
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

@@ -54,7 +54,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Sign implements CTCommonModule
 {
-	private static final String MODULE_NAME = "SIGN";
+	public static final String MODULE_NAME = "SIGN";
 
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
@@ -108,7 +108,7 @@ public class Sign implements CTCommonModule
 	/**
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources inresc) throws ModuleException
+	public ModuleReturnValue run(CommonResources inresc) throws ModuleException
 	{
 		try
 		{
@@ -127,7 +127,7 @@ public class Sign implements CTCommonModule
 			if (error)
 			{
 				logger.fatal("Sign encountered errors");
-				return;
+				return ModuleReturnValue.Error;
 			}
 
 			logger.debug("Final signatures");
@@ -140,7 +140,7 @@ public class Sign implements CTCommonModule
 			{
 				logger.fatal("Sign encountered errors");
 				cleanProbes();
-				return;
+				return ModuleReturnValue.Error;
 			}
 
 			logger.debug("Finishing");
@@ -153,7 +153,9 @@ public class Sign implements CTCommonModule
 		catch (Exception exc)
 		{
 			logger.error(exc, exc);
+			return ModuleReturnValue.Error;
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	protected void runLight(CommonResources resources) throws ModuleException

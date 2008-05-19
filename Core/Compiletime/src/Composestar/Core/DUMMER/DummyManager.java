@@ -46,11 +46,13 @@ public class DummyManager implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		resc = resources;
 		config = resources.configuration();
 		createDummies();
+		// TODO return error when dummies failed
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

@@ -70,11 +70,13 @@ public class Check implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		loadCheckers();
 		runCheckers(resources);
 		checkers = null;
+		// TODO return Error when checkers report errors
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

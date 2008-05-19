@@ -36,7 +36,7 @@ public class JavaHarvestRunner implements HarvestRunner
 	/**
 	 * Module run method.
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		List<URL> toBeHarvested = new ArrayList<URL>();
 		Set<Class<?>> classes = new HashSet<Class<?>>();
@@ -92,5 +92,6 @@ public class JavaHarvestRunner implements HarvestRunner
 		{
 			throw new ModuleException("Error while harvesting types: " + e.getMessage(), "HARVESTER");
 		}
+		return ModuleReturnValue.Ok;
 	}
 }

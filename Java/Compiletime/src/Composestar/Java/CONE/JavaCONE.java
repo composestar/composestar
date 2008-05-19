@@ -17,10 +17,11 @@ public class JavaCONE extends CONE
 	 * 
 	 * @see Composestar.Java.CONE.JavaRepositorySerializer
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		// Generate repository file
 		JavaRepositorySerializer rs = new JavaRepositorySerializer();
 		rs.run(resources);
+		return ModuleReturnValue.Ok;
 	}
 }

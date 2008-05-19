@@ -52,7 +52,7 @@ public abstract class BACO implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources inResources) throws ModuleException
+	public ModuleReturnValue run(CommonResources inResources) throws ModuleException
 	{
 		logger.debug("Copying files to output directory...");
 
@@ -67,6 +67,8 @@ public abstract class BACO implements CTCommonModule
 		addRepository(filesToCopy);
 
 		copyFiles(filesToCopy, false);
+
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

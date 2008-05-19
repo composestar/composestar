@@ -23,6 +23,8 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class AnnotationCollector implements CTCommonModule
 {
+	public static final String MODULE_NAME = "AnnotationCollector";
+
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger("AnnotationCollector");
 
 	protected DataStore ds;
@@ -30,7 +32,7 @@ public class AnnotationCollector implements CTCommonModule
 	/**
 	 * Module run method.
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		ds = resources.repository();
 		try
@@ -52,8 +54,9 @@ public class AnnotationCollector implements CTCommonModule
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException(e.getMessage(), "AnnotationCollector");
+			throw new ModuleException(e.getMessage(), MODULE_NAME);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

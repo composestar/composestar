@@ -27,7 +27,7 @@ public class DotNETHarvestRunner implements HarvestRunner
 	public DotNETHarvestRunner()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		File dummies = (File) resources.get(DotNETCompiler.DUMMY_ASSEMBLY);
 
@@ -82,6 +82,7 @@ public class DotNETHarvestRunner implements HarvestRunner
 		{
 			throw new ModuleException("TypeHarvester failed", MODULE_NAME);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	private String getExecutable(CommonResources resources) throws ModuleException

@@ -46,7 +46,7 @@ public class ParumREXREF extends Main
 	{}
 
 	@Override
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		ds = resources.repository();
 		resolveReferences();
@@ -54,6 +54,7 @@ public class ParumREXREF extends Main
 		{
 			throw new ModuleException("There are unresolved references", MODULE_NAME);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	@Override

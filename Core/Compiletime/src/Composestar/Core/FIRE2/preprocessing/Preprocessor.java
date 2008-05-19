@@ -84,11 +84,13 @@ public class Preprocessor implements CTCommonModule
 		loadGrammars();
 	}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		fire2Resources = resources.getResourceManager(FIRE2Resources.class, true);
 		preprocess(resources.repository());
 		// preprocessMP(resources);
+		// TODO return error if something failed
+		return ModuleReturnValue.Ok;
 	}
 
 	public void preprocess(DataStore ds)

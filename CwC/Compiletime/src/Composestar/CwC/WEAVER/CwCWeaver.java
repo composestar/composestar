@@ -173,7 +173,7 @@ public class CwCWeaver implements WEAVER
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resc) throws ModuleException
+	public ModuleReturnValue run(CommonResources resc) throws ModuleException
 	{
 		timer = CPSTimer.getTimer(MODULE_NAME);
 		resources = resc;
@@ -261,6 +261,8 @@ public class CwCWeaver implements WEAVER
 				continue;
 			}
 		}
+		// TODO return error when weaving failed somewhere
+		return ModuleReturnValue.Ok;
 	}
 
 	protected void cleanPreprocessorInfoChannel(PreprocessorInfoChannel ppic)

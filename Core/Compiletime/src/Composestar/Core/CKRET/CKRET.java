@@ -78,7 +78,7 @@ public class CKRET implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		secretResources.setFIRE2Resources(resources.getResourceManager(FIRE2Resources.class));
 		loadConfiguration(resources);
@@ -136,6 +136,7 @@ public class CKRET implements CTCommonModule
 				logger.warn(String.format("Unable to create report class %s", reportClass));
 			}
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

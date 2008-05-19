@@ -72,13 +72,14 @@ public class TypeHarvester implements HarvestRunner
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		initWeaveC();
 		for (Source src : resources.configuration().getProject().getSources())
 		{
 			harvest(src);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	protected void initWeaveC()

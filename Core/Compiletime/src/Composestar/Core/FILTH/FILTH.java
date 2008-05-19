@@ -39,7 +39,7 @@ public class FILTH implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
 		FILTHServiceImpl filthservice = new FILTHServiceImpl(resources, InnerDispatcher.createInnerDispatchReference(
@@ -85,5 +85,6 @@ public class FILTH implements CTCommonModule
 				}
 			}
 		}
+		return ModuleReturnValue.Ok;
 	}
 }

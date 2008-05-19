@@ -45,7 +45,7 @@ public class Core implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		// f2res = resources.getResourceManager(FIRE2Resources.class);
 		// Iterate over all concerns
@@ -61,6 +61,8 @@ public class Core implements CTCommonModule
 				findConflicts(concern);
 			}
 		}
+		// TODO return Error when conflicts are detected
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

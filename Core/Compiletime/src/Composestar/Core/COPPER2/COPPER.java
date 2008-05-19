@@ -96,7 +96,7 @@ public class COPPER implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
 		if (filterTypes == null)
@@ -136,6 +136,7 @@ public class COPPER implements CTCommonModule
 			throw new ModuleException(String.format("%d error(s) detected in the concern sources.", errorCnt),
 					MODULE_NAME);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

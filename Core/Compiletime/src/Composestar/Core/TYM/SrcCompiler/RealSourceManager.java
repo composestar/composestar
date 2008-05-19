@@ -42,7 +42,7 @@ public class RealSourceManager implements CTCommonModule
 	public RealSourceManager()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		// List compiledSources = new ArrayList();
 
@@ -91,6 +91,8 @@ public class RealSourceManager implements CTCommonModule
 
 		// TODO where is this used
 		// resources.add("CompiledSources", compiledSources);
+
+		return ModuleReturnValue.Ok;
 	}
 
 	// /**

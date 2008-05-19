@@ -94,7 +94,7 @@ public class DIGGER implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		// initialize
 		moduleInfo = ModuleInfoManager.get(DIGGER.class);
@@ -135,6 +135,7 @@ public class DIGGER implements CTCommonModule
 		// cleanup
 		graph.setAutoResolve(true);
 		allCrumbs.clear();
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

@@ -67,7 +67,7 @@ public class DotNETRepositorySerializer extends CONE
 	public DotNETRepositorySerializer()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		DataStore ds = resources.repository();
 
@@ -95,6 +95,7 @@ public class DotNETRepositorySerializer extends CONE
 		{
 			FileUtils.close(out);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	private void startElement(String name)

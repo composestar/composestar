@@ -68,7 +68,7 @@ public class JavaWeaver implements WEAVER
 	 * @see Composestar.Java.WEAVER.HookDictionary
 	 * @see Composestar.Java.WEAVER.ClassWeaver
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		hd = new HookDictionary();
 		ds = resources.repository();
@@ -85,7 +85,7 @@ public class JavaWeaver implements WEAVER
 		c.addClasspath((File) resources.get(CStarJavaCompiler.SOURCE_OUT));
 		// weave
 		c.weave(project);
-
+		return ModuleReturnValue.Ok;
 	}
 
 	public void createHookDictionary(CommonResources resources) throws ModuleException

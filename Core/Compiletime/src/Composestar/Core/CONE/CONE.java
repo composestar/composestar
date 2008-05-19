@@ -16,6 +16,8 @@ import Composestar.Core.Master.CTCommonModule;
  */
 public abstract class CONE implements CTCommonModule
 {
+	public static final String MODULE_NAME = "CONE";
+
 	/**
 	 * Key used to store the serialized repository in the CommonResources
 	 */

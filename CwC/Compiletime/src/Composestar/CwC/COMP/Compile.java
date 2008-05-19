@@ -35,19 +35,18 @@ import Composestar.Core.Resources.CommonResources;
  */
 public class Compile implements CTCommonModule
 {
-
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		ModuleInfo mi = ModuleInfoManager.get(Compile.class);
 		if (mi.getSetting("nocompile", true))
 		{
 			// logger.info("nocompile = true, skipping compiling");
-			return;
+			return ModuleReturnValue.Ok;
 		}
 		throw new ModuleException("Internal compiler for Compose*/CWC is not implemented", "COMP");
 	}

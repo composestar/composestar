@@ -99,9 +99,8 @@ public class ModuleTask extends Task
 				Thread.currentThread().getName());
 		try
 		{
-			// CTCommonModule.ModuleReturnValue result =
-			module.run(resources);
-			// manager.reportModuleResult(result, module);
+			CTCommonModule.ModuleReturnValue result = module.run(resources);
+			manager.reportModuleResult(result, module);
 		}
 		finally
 		{

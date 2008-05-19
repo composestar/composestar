@@ -37,7 +37,7 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 	public AttributeCollector()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		ds = resources.repository();
 		File xmlFile = new File(resources.configuration().getProject().getIntermediate(), "attributes.xml");
@@ -61,7 +61,7 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 		{
 			logger.warn("Attribute file not found: " + xmlFile);
 		}
-
+		return ModuleReturnValue.Ok;
 	}
 
 	public void startElement(String uri, String localName, String qName, Attributes attr) throws SAXException

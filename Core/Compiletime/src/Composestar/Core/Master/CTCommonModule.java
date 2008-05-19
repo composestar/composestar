@@ -53,19 +53,25 @@ public interface CTCommonModule
 	public enum ModuleReturnValue
 	{
 		/**
-		 * The module completed successfully
+		 * The module completed successfully.
 		 */
 		Ok,
 		/**
-		 * The module encountered some non-fatal errors. Other modules that do
-		 * not depend on the consistency of data produced by this module can
-		 * still perform their work.
+		 * This module encountered non-fatal errors during its operation.
+		 * However, this module's result is not sound, therefore depending
+		 * modules can not be executed. When a module returns this value all
+		 * modules that have a (transitive) dependency on this module will not
+		 * be executed, all other modules will still be executed.
 		 */
 		Error,
 		/**
-		 * The module encountered a fatal error during its operation and the
-		 * whole process should terminate. This could also be triggered using a
-		 * ModuleException.
+		 * The module encountered a fatal error. The whole compilation process
+		 * should be aborted. Throwing a ModuleException is identical to
+		 * returning a Fatal. After this module no new tasks will be executed.
+		 * Returning Fatal (or throwing a ModuleException) should be avoided as
+		 * much as possible, it should only be done when the module reaches an
+		 * unhandled state, not when the user input constains an error of some
+		 * sort.
 		 */
 		Fatal
 	}
@@ -73,7 +79,7 @@ public interface CTCommonModule
 	// TODO: implement
 	// Importance getImportance();
 
-	// TODO: implement
+	// TODO: change to annotation?
 	// String getModuleID();
 
 	/**
@@ -82,8 +88,9 @@ public interface CTCommonModule
 	 * 
 	 * @param resources The resources objects contains the common resources
 	 *            availabe e.g the Repository.
+	 * @return TODO
 	 * @throws Composestar.Core.Exception.ModuleException If a ModuleException
 	 *             is thrown the Master will stop its activity emidiately.
 	 */
-	/* ModuleReturnValue */void run(CommonResources resources) throws ModuleException;
+	ModuleReturnValue run(CommonResources resources) throws ModuleException;
 }

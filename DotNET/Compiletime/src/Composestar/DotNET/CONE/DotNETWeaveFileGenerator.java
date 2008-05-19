@@ -70,7 +70,7 @@ public class DotNETWeaveFileGenerator implements CTCommonModule
 	public DotNETWeaveFileGenerator()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		config = resources.configuration();
 		ds = resources.repository();
@@ -119,6 +119,7 @@ public class DotNETWeaveFileGenerator implements CTCommonModule
 		{
 			FileUtils.close(out);
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	private String getEntryAssembly()

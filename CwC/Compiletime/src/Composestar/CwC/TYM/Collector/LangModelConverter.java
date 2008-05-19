@@ -115,7 +115,7 @@ public class LangModelConverter implements CTCommonModule
 	 * 
 	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Resources.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		typeMapping = new HashMap<CType, CwCType>();
 		stringTypeMapping = new HashMap<String, CwCType>();
@@ -200,6 +200,7 @@ public class LangModelConverter implements CTCommonModule
 		{
 			logger.debug(String.format("Detected %d duplicate type declarations", duplicateTypeCtr));
 		}
+		return ModuleReturnValue.Ok;
 	}
 
 	/**

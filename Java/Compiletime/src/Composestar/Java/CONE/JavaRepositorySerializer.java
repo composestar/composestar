@@ -33,7 +33,7 @@ public class JavaRepositorySerializer extends CONE
 	 * @throws ModuleException : when an error occurs while serializing the
 	 *             repository.
 	 */
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		File repositoryFilename = new File(resources.configuration().getProject().getIntermediate(), "repository.dat");
 
@@ -83,5 +83,6 @@ public class JavaRepositorySerializer extends CONE
 			DataMap.setRtSerialization(false);
 			FileUtils.close(oos);
 		}
+		return ModuleReturnValue.Ok;
 	}
 }

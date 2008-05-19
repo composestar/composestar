@@ -25,7 +25,7 @@ public class ASTRA implements CTCommonModule
 	public ASTRA()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		// only run ASTRA when SIGN found ADDED or REMOVED methods
 		try
@@ -33,13 +33,13 @@ public class ASTRA implements CTCommonModule
 			if (!resources.getBoolean("signaturesmodified"))
 			{
 				logger.debug("No need to transform assemblies");
-				return;
+				return ModuleReturnValue.Ok;
 			}
 		}
 		catch (ResourceException e)
 		{
 			logger.info("No need to transform assemblies");
-			return;
+			return ModuleReturnValue.Ok;
 		}
 
 		ILCodeParser codeParser = new ILCodeParser();
@@ -61,5 +61,6 @@ public class ASTRA implements CTCommonModule
 		{
 			throw new ModuleException(e.getMessage(), MODULE_NAME);
 		}
+		return ModuleReturnValue.Ok;
 	}
 }

@@ -22,7 +22,7 @@ public class VERIFY implements CTCommonModule
 	public VERIFY()
 	{}
 
-	public void run(CommonResources resources) throws ModuleException
+	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		List<String> assemblies = new ArrayList<String>();
 		for (Source source : resources.configuration().getProject().getSources())
@@ -32,6 +32,7 @@ public class VERIFY implements CTCommonModule
 		}
 
 		verify(assemblies);
+		return ModuleReturnValue.Ok;
 	}
 
 	private void verify(List<String> assemblies) throws ModuleException

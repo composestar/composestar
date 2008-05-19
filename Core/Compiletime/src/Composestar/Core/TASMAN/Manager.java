@@ -124,6 +124,7 @@ public class Manager
 				// , module.getModuleID()
 				);
 			case Error:
+				// mark this module as failed in the dependency graph
 				break;
 			case Ok:
 			default:
