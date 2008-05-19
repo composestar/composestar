@@ -1,6 +1,13 @@
 #/bin/sh
-export ANT_HOME=./Development/Ant
-export JAVA_HOME=/usr/java
-export PATH=${PATH}:${ANT_HOME}/bin
-export ECLIPSE_HOME=/usr/local/eclipse
-java -cp Development/Ant/lib/ant-launcher.jar  org.apache.tools.ant.launch.Launcher -buildfile Development/build_total.xml $@
+CSTAR_CORE=`dirname $0`
+ANT_HOME=${CSTAR_CORE}/Development/Ant
+JAVA_HOME=/usr/java
+PATH=${PATH}:${ANT_HOME}/bin
+ARGS=$@
+if [ -z "${ARGS}" ]; then
+	ARGS="select"
+fi
+BUILDFILE="${CSTAR_CORE}/Development/build_total.xml"
+
+java -cp ${ANT_HOME}/lib/ant-launcher.jar  org.apache.tools.ant.launch.Launcher -buildfile ${BUILDFILE} $ARGS
+
