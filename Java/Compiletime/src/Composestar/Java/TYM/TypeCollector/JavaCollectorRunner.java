@@ -20,10 +20,11 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.Java.LAMA.JavaFieldInfo;
 import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Java.LAMA.JavaParameterInfo;
@@ -35,7 +36,7 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * Module that collects the types retrieved by the <code>HarvestRunner</code>.
  */
-public class JavaCollectorRunner implements CollectorRunner
+public class JavaCollectorRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);
 

@@ -3,17 +3,16 @@ package Composestar.Java.TYM.SignatureTransformer;
 import java.io.File;
 
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.TYM.SignatureTransformer.SignatureTransformer;
 import Composestar.Java.COMP.CStarJavaCompiler;
 
 /**
  * Starting point for the signature transformer module. This module transforms
  * the signatures of the compiled dummies.
  */
-public class JavaSignatureTransformer implements SignatureTransformer
+public class JavaSignatureTransformer implements CTCommonModule
 {
-
 	/**
 	 * Constructor.
 	 */

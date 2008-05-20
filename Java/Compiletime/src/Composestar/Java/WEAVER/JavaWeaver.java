@@ -16,12 +16,13 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledI
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
-import Composestar.Core.WEAVER.WEAVER;
 import Composestar.Java.COMP.CStarJavaCompiler;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -30,7 +31,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @see Composestar.Java.WEAVER.JavaWeaver#run(CommonResources)
  */
-public class JavaWeaver implements WEAVER
+public class JavaWeaver implements CTCommonModule
 {
 	/**
 	 * The Weaver output directory

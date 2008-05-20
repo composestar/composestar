@@ -43,9 +43,10 @@ import weavec.parser.AspectCParser;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
 import Composestar.CwC.TYM.WeaveCResources;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
@@ -61,7 +62,7 @@ import antlr.TokenStreamException;
  * 
  * @author Michiel Hendriks
  */
-public class TypeHarvester implements HarvestRunner
+public class TypeHarvester implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.HARVESTER);
 

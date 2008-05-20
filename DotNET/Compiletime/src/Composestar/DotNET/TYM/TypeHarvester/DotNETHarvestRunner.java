@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
 import Composestar.DotNET.BACO.DotNETBACO;
 import Composestar.DotNET.COMP.DotNETCompiler;
 import Composestar.Utils.CommandLineExecutor;
@@ -18,11 +20,9 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * This Module is responsible for running the .NET assembly harvester.
  */
-public class DotNETHarvestRunner implements HarvestRunner
+public class DotNETHarvestRunner implements CTCommonModule
 {
-	public static final String MODULE_NAME = "TYM";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.HARVESTER);
 
 	public DotNETHarvestRunner()
 	{}
@@ -33,7 +33,7 @@ public class DotNETHarvestRunner implements HarvestRunner
 
 		if (dummies == null)
 		{
-			throw new ModuleException("TYM TypeHarvester needs compiled dummies.", MODULE_NAME);
+			throw new ModuleException("TYM TypeHarvester needs compiled dummies.", ModuleNames.HARVESTER);
 		}
 
 		List<String> cmdItems = new ArrayList<String>();
@@ -69,18 +69,18 @@ public class DotNETHarvestRunner implements HarvestRunner
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+			throw new ModuleException(e.getMessage(), ModuleNames.HARVESTER, e);
 		}
 		catch (InterruptedException e)
 		{
-			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+			throw new ModuleException(e.getMessage(), ModuleNames.HARVESTER, e);
 		}
 
 		Debug.parseLog(cle.outputNormal());
 
 		if (result != 0)
 		{
-			throw new ModuleException("TypeHarvester failed", MODULE_NAME);
+			throw new ModuleException("TypeHarvester failed", ModuleNames.HARVESTER);
 		}
 		return ModuleReturnValue.Ok;
 	}
@@ -91,7 +91,7 @@ public class DotNETHarvestRunner implements HarvestRunner
 		if (exe == null)
 		{
 			throw new ModuleException("TypeHarvester not found on it's expected location: "
-					+ resources.getPathResolver().getResource("lib"), MODULE_NAME);
+					+ resources.getPathResolver().getResource("lib"), ModuleNames.HARVESTER);
 		}
 
 		return exe.getAbsolutePath();

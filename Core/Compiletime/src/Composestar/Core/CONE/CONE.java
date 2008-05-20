@@ -10,6 +10,8 @@
 package Composestar.Core.CONE;
 
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
+import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Repository serializer
@@ -20,4 +22,6 @@ public abstract class CONE implements CTCommonModule
 	 * Key used to store the serialized repository in the CommonResources
 	 */
 	public static final String REPOSITORY_FILE_KEY = "RepositoryFile";
+
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CONE);
 }

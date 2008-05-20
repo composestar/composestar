@@ -24,8 +24,6 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class JavaRepositorySerializer extends CONE
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CONE);
-
 	/**
 	 * run method.
 	 * 

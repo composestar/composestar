@@ -16,8 +16,6 @@ import Composestar.Utils.Logging.CPSLogger;
 
 public class JavaBACO extends BACO
 {
-	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.BACO);
-
 	@Override
 	protected void addRepository(Set<File> filesToCopy)
 	{

@@ -25,9 +25,10 @@ import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.WEAVER.WEAVER;
 import Composestar.DotNET.COMP.DotNETCompiler;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.FileUtils;
@@ -38,7 +39,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * Applies the changes as specified by CONE-IS to the assemblies in order to
  * impose the behavior defined in the concern specifications.
  */
-public class ILICIT implements WEAVER
+public class ILICIT implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WEAVER);
 
@@ -222,7 +223,8 @@ public class ILICIT implements WEAVER
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("Unable to create build file for the weaver: " + e.getMessage(), ModuleNames.WEAVER);
+			throw new ModuleException("Unable to create build file for the weaver: " + e.getMessage(),
+					ModuleNames.WEAVER);
 		}
 		finally
 		{

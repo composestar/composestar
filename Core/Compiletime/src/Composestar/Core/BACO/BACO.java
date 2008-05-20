@@ -32,7 +32,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public abstract class BACO implements CTCommonModule
 {
-	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.BACO);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.BACO);
 
 	/**
 	 * Resource key for the List&lt;File&gt; of build libraries

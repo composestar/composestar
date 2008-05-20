@@ -21,15 +21,16 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.UnitRegister;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.DotNET.LAMA.DotNETTypeResolver;
 import Composestar.Utils.Logging.CPSLogger;
 
-public class DotNETCollectorRunner implements CollectorRunner
+public class DotNETCollectorRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);
 

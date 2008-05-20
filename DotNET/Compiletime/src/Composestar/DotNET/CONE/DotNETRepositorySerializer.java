@@ -52,8 +52,6 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class DotNETRepositorySerializer extends CONE
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CONE);
-
 	private Map<Class, List<Field>> orderedFieldInfo;
 
 	private PrintWriter out = null;

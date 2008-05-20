@@ -78,9 +78,10 @@ import Composestar.Core.INLINE.lowlevel.InlinerResources;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
-import Composestar.Core.WEAVER.WEAVER;
 import Composestar.CwC.Filters.FilterLoader;
 import Composestar.CwC.INLINE.CodeGen.CCodeGenerator;
 import Composestar.CwC.INLINE.CodeGen.CDispatchActionCodeGen;
@@ -103,7 +104,7 @@ import antlr.TokenStreamException;
  * 
  * @author Michiel Hendriks
  */
-public class CwCWeaver implements WEAVER
+public class CwCWeaver implements CTCommonModule
 {
 	public static final String MODULE_NAME = "WEAVER";
 

@@ -16,16 +16,17 @@ import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.Resources.CommonResources;
-import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
 import Composestar.Java.COMP.CStarJavaCompiler;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
  * Module that harvest the classes from the compiled dummies.
  */
-public class JavaHarvestRunner implements HarvestRunner
+public class JavaHarvestRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.HARVESTER);
 
