@@ -25,6 +25,7 @@ import Composestar.Core.FILTH.Core.Node;
 import Composestar.Core.FILTH.Core.OrderTraverser;
 import Composestar.Core.FILTH.Core.Rule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
@@ -36,7 +37,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class FILTHServiceImpl
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(FILTH.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH);
 
 	protected FilterModuleReference defaultDispatch;
 

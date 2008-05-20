@@ -9,13 +9,14 @@ import Composestar.Core.BACO.BACO;
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Java.WEAVER.JavaWeaver;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
 public class JavaBACO extends BACO
 {
-	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.BACO);
 
 	@Override
 	protected void addRepository(Set<File> filesToCopy)
@@ -74,7 +75,7 @@ public class JavaBACO extends BACO
 			String msg = "Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage();
 			if (fatal)
 			{
-				throw new ModuleException(msg, MODULE_NAME);
+				throw new ModuleException(msg, ModuleNames.BACO);
 			}
 			else
 			{

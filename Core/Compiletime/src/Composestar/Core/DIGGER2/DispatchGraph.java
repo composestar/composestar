@@ -20,6 +20,7 @@ import java.util.Map;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -33,7 +34,7 @@ public class DispatchGraph implements Serializable
 {
 	private static final long serialVersionUID = -177580149534040349L;
 
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DIGGER.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.DIGGER);
 
 	public static final String REPOSITORY_KEY = "DispatchGraph";
 
@@ -145,11 +146,11 @@ public class DispatchGraph implements Serializable
 	{
 		if (concern == null)
 		{
-			throw new ModuleException("Called getInputCrumb without a valid concern instance", DIGGER.MODULE_NAME);
+			throw new ModuleException("Called getInputCrumb without a valid concern instance", ModuleNames.DIGGER);
 		}
 		if (selector == null)
 		{
-			throw new ModuleException("Called getInputCrumb without a valid selector", DIGGER.MODULE_NAME);
+			throw new ModuleException("Called getInputCrumb without a valid selector", ModuleNames.DIGGER);
 		}
 		return getInputCrumb(concern, selector.getName());
 	}
@@ -168,7 +169,7 @@ public class DispatchGraph implements Serializable
 	{
 		if (concern == null)
 		{
-			throw new ModuleException("Called getInputCrumb without a valid concern instance", DIGGER.MODULE_NAME);
+			throw new ModuleException("Called getInputCrumb without a valid concern instance", ModuleNames.DIGGER);
 		}
 		Breadcrumb result = null;
 		ConcernCrumbs concernCrumbs = crumbs.get(concern);

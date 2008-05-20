@@ -26,6 +26,7 @@ import Composestar.Core.LOLA.metamodel.ERelationType;
 import Composestar.Core.LOLA.metamodel.EUnitType;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -37,9 +38,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class FITER implements CTCommonModule
 {
-	public static final String MODULE_NAME = "FITER";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FITER);
 
 	protected static final String CUSTOM_FILER_CLASS = "Composestar.RuntimeCore.FLIRT.Filtertypes.CustomFilter";
 
@@ -155,7 +154,7 @@ public class FITER implements CTCommonModule
 
 		if (!result.isEmpty())
 		{
-			throw new ModuleException("Unable to resolve custom filter types", MODULE_NAME);
+			throw new ModuleException("Unable to resolve custom filter types", ModuleNames.FITER);
 		}
 	}
 

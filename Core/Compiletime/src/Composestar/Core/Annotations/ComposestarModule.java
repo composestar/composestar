@@ -1,7 +1,7 @@
 /*
  * This file is part of the Compose* project.
  * http://composestar.sourceforge.net
- * Copyright (C) 2007 University of Twente.
+ * Copyright (C) 2008 University of Twente.
  *
  * Compose* is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as 
@@ -22,48 +22,38 @@
  * $Id$
  */
 
-package Composestar.Core.CHKREP2;
+package Composestar.Core.Annotations;
 
-import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.Logging.CPSLogger;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Base class for all repository checkers.
+ * Annotation used to provide meta data for Compose* modules. In the future this
+ * annotation will be used to automatically generate the moduleinfo.xml files.
  * 
  * @author Michiel Hendriks
  */
-public abstract class AbstractChecker
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Inherited
+public @interface ComposestarModule
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CHKREP);
-
 	/**
-	 * This will contain the results of an executed check.
-	 * 
-	 * @see #getResults()
-	 */
-	protected CheckResults results;
-
-	public AbstractChecker()
-	{
-		results = new CheckResults();
-	}
-
-	/**
-	 * Will be called by the Check class when this module should perform it's
-	 * checks.
-	 * 
-	 * @param repository
-	 */
-	public abstract void performCheck(DataStore repository);
-
-	/**
-	 * Return the CheckResults instance.
+	 * The ID of this module
 	 * 
 	 * @return
 	 */
-	public CheckResults getResults()
-	{
-		return results;
-	}
+	String ID();
+
+	/**
+	 * IDs of modules this module depends on. Will be used for conditional
+	 * execution of this module depending on the result of the depending
+	 * modules.
+	 * 
+	 * @return
+	 */
+	String[] dependsOn() default {};
 }

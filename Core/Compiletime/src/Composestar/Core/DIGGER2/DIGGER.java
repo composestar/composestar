@@ -28,6 +28,7 @@ import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.Resources.CommonResources;
@@ -43,17 +44,12 @@ import Composestar.Utils.Perf.CPSTimer;
 public class DIGGER implements CTCommonModule
 {
 	/**
-	 * The identifier of this module.
-	 */
-	public static final String MODULE_NAME = "DIGGER";
-
-	/**
 	 * If set to true Fire2 execution graphs will be shown. Should only be used
 	 * for debugging of digger2
 	 */
 	private static final boolean SHOW_GRAPH = false;
 
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.DIGGER);
 
 	/**
 	 * The initial dispatch graph created by digger. This instance is added
@@ -84,7 +80,7 @@ public class DIGGER implements CTCommonModule
 	@ResourceManager
 	protected FIRE2Resources f2res;
 
-	protected CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+	protected CPSTimer timer = CPSTimer.getTimer(ModuleNames.DIGGER);
 
 	public DIGGER()
 	{}

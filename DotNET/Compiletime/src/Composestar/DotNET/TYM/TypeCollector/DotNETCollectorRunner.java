@@ -21,6 +21,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.UnitRegister;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
@@ -30,7 +31,7 @@ import Composestar.Utils.Logging.CPSLogger;
 
 public class DotNETCollectorRunner implements CollectorRunner
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);
 
 	private DataStore dataStore;
 
@@ -64,15 +65,15 @@ public class DotNETCollectorRunner implements CollectorRunner
 		}
 		catch (SAXException e)
 		{
-			throw new ModuleException("XML Parser exception: " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException("XML Parser exception: " + e.getMessage(), ModuleNames.COLLECTOR);
 		}
 		catch (ParserConfigurationException e)
 		{
-			throw new ModuleException("Parser Configuration exception: " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException("Parser Configuration exception: " + e.getMessage(), ModuleNames.COLLECTOR);
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("I/O exception while parsing types.xml: " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException("I/O exception while parsing types.xml: " + e.getMessage(), ModuleNames.COLLECTOR);
 		}
 
 		register.resolveTypes(new DotNETTypeResolver());
@@ -123,7 +124,7 @@ public class DotNETCollectorRunner implements CollectorRunner
 			{
 				throw new ModuleException(
 						"CollectorRunner: Can only handle concerns with source file implementations or direct class links.",
-						MODULE_NAME);
+						ModuleNames.COLLECTOR);
 			}
 
 			if (!concern.getQualifiedName().equals(className))
@@ -146,7 +147,7 @@ public class DotNETCollectorRunner implements CollectorRunner
 			if (!register.hasType(className))
 			{
 				throw new ModuleException("Implementation: " + className + " for concern: " + concern.getName()
-						+ " not found!", MODULE_NAME);
+						+ " not found!", ModuleNames.COLLECTOR);
 
 			}
 			logger.info("" + concern + " implements own type info");

@@ -13,6 +13,7 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
@@ -25,9 +26,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Core implements CTCommonModule
 {
-	public static final String MODULE_NAME = "CORE";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CORE);
 
 	@ResourceManager
 	private FIRE2Resources f2res;

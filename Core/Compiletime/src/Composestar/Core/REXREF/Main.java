@@ -43,6 +43,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
@@ -52,9 +53,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Main implements CTCommonModule
 {
-	public static final String MODULE_NAME = "REXREF";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Main.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.REXREF);
 
 	public static boolean debug = true; // display debugging information?
 
@@ -82,7 +81,7 @@ public class Main implements CTCommonModule
 		resolveReferences();
 		if (hasErrors)
 		{
-			throw new ModuleException("There are unresolved references", MODULE_NAME);
+			throw new ModuleException("There are unresolved references", ModuleNames.REXREF);
 		}
 		return ModuleReturnValue.Ok;
 	}

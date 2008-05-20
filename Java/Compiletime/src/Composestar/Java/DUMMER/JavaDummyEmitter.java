@@ -14,8 +14,8 @@ import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.DUMMER.DefaultEmitter;
 import Composestar.Core.DUMMER.DummyEmitter;
-import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 import antlr.ASTFactory;
@@ -31,7 +31,7 @@ import antlr.collections.AST;
  */
 public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, JavaTokenTypes
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DummyManager.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.DUMMER);
 
 	private StringBuilder dummy;
 

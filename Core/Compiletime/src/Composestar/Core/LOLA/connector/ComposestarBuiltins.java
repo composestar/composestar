@@ -27,11 +27,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSe
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
-import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.metamodel.CompositeRelationPredicate;
 import Composestar.Core.LOLA.metamodel.LanguageModel;
 import Composestar.Core.LOLA.metamodel.RelationPredicate;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -42,7 +42,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class ComposestarBuiltins extends HashDict
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME + ".ComposestarBuiltins");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA + ".ComposestarBuiltins");
 
 	private static final long serialVersionUID = 8404927622993344626L;
 

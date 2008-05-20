@@ -16,6 +16,7 @@ import Composestar.Core.COPPER2.FilterTypeMapping;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
@@ -27,9 +28,7 @@ import Composestar.Utils.Perf.CPSTimer;
  */
 public class FILTH implements CTCommonModule
 {
-	public static final String MODULE_NAME = "FILTH";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH);
 
 	public FILTH()
 	{}
@@ -56,7 +55,7 @@ public class FILTH implements CTCommonModule
 				List<List<FilterModuleSuperImposition>> list;
 
 				/* Calculate FilterModuleOrders */
-				CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, c.getUniqueID());
+				CPSTimer timer = CPSTimer.getTimer(ModuleNames.FILTH, c.getUniqueID());
 				list = filthservice.getMultipleOrder(c);
 				timer.stop();
 

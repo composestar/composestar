@@ -37,6 +37,7 @@ import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
@@ -60,9 +61,7 @@ import composestar.dotNET2.tym.entities.WeaveType;
 
 public class StarLightEmitterRunner implements CTCommonModule
 {
-	public static final String MODULE_NAME = "EMITTER";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WESPEM);
 
 	private DataStore dataStore;
 
@@ -101,7 +100,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		catch (NullPointerException exc)
 		{
 			exc.printStackTrace();
-			throw new ModuleException("NullPointerException in emitter", MODULE_NAME);
+			throw new ModuleException("NullPointerException in emitter", ModuleNames.WESPEM);
 		}
 
 		return ModuleReturnValue.Ok;
@@ -171,7 +170,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				}
 				catch (IOException e)
 				{
-					throw new ModuleException("IOException while writing weave spec '" + file + "'", MODULE_NAME);
+					throw new ModuleException("IOException while writing weave spec '" + file + "'", ModuleNames.WESPEM);
 				}
 				finally
 				{

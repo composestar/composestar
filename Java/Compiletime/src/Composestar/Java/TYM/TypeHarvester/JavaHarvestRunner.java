@@ -16,6 +16,7 @@ import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
 import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
 import Composestar.Java.COMP.CStarJavaCompiler;
@@ -26,7 +27,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class JavaHarvestRunner implements HarvestRunner
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.HARVESTER);
 
 	public static final String CLASS_MAP = "ClassMap";
 

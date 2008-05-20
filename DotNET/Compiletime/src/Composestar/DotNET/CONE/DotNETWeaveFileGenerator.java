@@ -37,6 +37,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
@@ -53,9 +54,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class DotNETWeaveFileGenerator implements CTCommonModule
 {
-	public final static String MODULE_NAME = "CONE-IS";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WESPEM);
 
 	private BuildConfig config;
 
@@ -80,7 +79,7 @@ public class DotNETWeaveFileGenerator implements CTCommonModule
 
 		logger.debug("Writing weave specifications to file '" + destination.getName() + "'...");
 
-		ModuleInfo mi = ModuleInfoManager.get(DotNETRepositorySerializer.MODULE_NAME);
+		ModuleInfo mi = ModuleInfoManager.get(ModuleNames.CONE);
 		if (mi.getBooleanSetting("compressed"))
 		{
 			repositoryFile = new File(config.getProject().getIntermediate(), "repository.xml.gz");
@@ -109,11 +108,11 @@ public class DotNETWeaveFileGenerator implements CTCommonModule
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("Unable to create weave specification file '" + destination + "'.", MODULE_NAME);
+			throw new ModuleException("Unable to create weave specification file '" + destination + "'.", ModuleNames.WESPEM);
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("Unhandled exception: " + e.getClass() + ": " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException("Unhandled exception: " + e.getClass() + ": " + e.getMessage(), ModuleNames.WESPEM);
 		}
 		finally
 		{

@@ -27,6 +27,7 @@ import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.DotNET2.LAMA.DotNETAttribute;
 import Composestar.DotNET2.LAMA.DotNETCallToOtherMethod;
@@ -60,9 +61,7 @@ import composestar.dotNET2.tym.entities.TypeElement;
 
 public class StarLightCollectorRunner implements CTCommonModule
 {
-	public static final String MODULE_NAME = "COLLECTOR";
-
-	private static CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	private static CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);
 
 	private boolean processBodies = false;
 
@@ -143,7 +142,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			if (acceptCallAction == null)
 			{
 				throw new ModuleException("AcceptCallAction '" + storedType.getAcceptCallAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+						+ "' not found for FilterType '" + storedType.getName() + "'.", ModuleNames.COLLECTOR);
 			}
 			filterType.setAcceptCallAction(acceptCallAction);
 
@@ -152,7 +151,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			if (rejectCallAction == null)
 			{
 				throw new ModuleException("RejectCallAction '" + storedType.getRejectCallAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+						+ "' not found for FilterType '" + storedType.getName() + "'.", ModuleNames.COLLECTOR);
 			}
 			filterType.setRejectCallAction(rejectCallAction);
 
@@ -161,7 +160,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			if (acceptReturnAction == null)
 			{
 				throw new ModuleException("AcceptReturnAction '" + storedType.getAcceptReturnAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+						+ "' not found for FilterType '" + storedType.getName() + "'.", ModuleNames.COLLECTOR);
 			}
 			filterType.setAcceptReturnAction(acceptReturnAction);
 
@@ -170,7 +169,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 			if (rejectReturnAction == null)
 			{
 				throw new ModuleException("RejectReturnAction '" + storedType.getRejectReturnAction()
-						+ "' not found for FilterType '" + storedType.getName() + "'.", MODULE_NAME);
+						+ "' not found for FilterType '" + storedType.getName() + "'.", ModuleNames.COLLECTOR);
 			}
 			filterType.setRejectReturnAction(rejectReturnAction);
 		}
@@ -181,7 +180,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 	private void collectAssemblies() throws ModuleException
 	{
-		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+		CPSTimer timer = CPSTimer.getTimer(ModuleNames.COLLECTOR);
 		for (AssemblyConfig ac : configContainer.getAssemblies().getAssemblyConfigList())
 		{
 			String assemblyName = ac.getName();
@@ -203,7 +202,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 		InputStream is = null;
 		try
 		{
-			CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, "XML deserialize");
+			CPSTimer timer = CPSTimer.getTimer(ModuleNames.COLLECTOR, "XML deserialize");
 
 			is = new FileInputStream(filename);
 			if (filename.endsWith(".gz"))
@@ -220,12 +219,12 @@ public class StarLightCollectorRunner implements CTCommonModule
 		catch (XmlException e)
 		{
 			throw new ModuleException(
-					"CollectorRunner: XmlException while parsing " + filename + ": " + e.getMessage(), MODULE_NAME);
+					"CollectorRunner: XmlException while parsing " + filename + ": " + e.getMessage(), ModuleNames.COLLECTOR);
 		}
 		catch (IOException e)
 		{
 			throw new ModuleException("CollectorRunner: IOException while parsing " + filename + ": " + e.getMessage(),
-					MODULE_NAME);
+					ModuleNames.COLLECTOR);
 		}
 		finally
 		{
@@ -443,7 +442,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 		if (te.getName() == null)
 		{
-			throw new ModuleException("Type must have a name attribute", MODULE_NAME);
+			throw new ModuleException("Type must have a name attribute", ModuleNames.COLLECTOR);
 		}
 
 		// see rev. 2806
@@ -530,7 +529,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 			if (name == null)
 			{
-				throw new ModuleException("Method must have a name attribute", MODULE_NAME);
+				throw new ModuleException("Method must have a name attribute", ModuleNames.COLLECTOR);
 			}
 
 			DotNETMethodInfo method = new DotNETMethodInfo();
@@ -581,7 +580,7 @@ public class StarLightCollectorRunner implements CTCommonModule
 
 			if (name == null)
 			{
-				throw new ModuleException("ParameterInfo must have a name attribute.", MODULE_NAME);
+				throw new ModuleException("ParameterInfo must have a name attribute.", ModuleNames.COLLECTOR);
 			}
 
 			DotNETParameterInfo parameter = new DotNETParameterInfo();

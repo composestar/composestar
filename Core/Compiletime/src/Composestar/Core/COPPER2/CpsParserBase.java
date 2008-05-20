@@ -30,6 +30,7 @@ import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.TreeAdaptor;
 
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
 
@@ -40,7 +41,7 @@ import Composestar.Utils.Logging.LogMessage;
  */
 public abstract class CpsParserBase extends Parser
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(COPPER.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COPPER);
 
 	/**
 	 * Used for error reporting

@@ -26,12 +26,12 @@ import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
-import Composestar.Core.LOLA.LOLA;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 public abstract class LanguageModel
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);
 
 	protected Map<String, LanguageUnitType> languageUnitTypes;
 

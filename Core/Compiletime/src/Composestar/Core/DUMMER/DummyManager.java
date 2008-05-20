@@ -15,6 +15,7 @@ import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
@@ -25,9 +26,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class DummyManager implements CTCommonModule
 {
-	public static final String MODULE_NAME = "DUMMER";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.DUMMER);
 
 	/**
 	 * The directory name for the stubs
@@ -66,7 +65,7 @@ public class DummyManager implements CTCommonModule
 		if (!dummyPath.exists() && !dummyPath.mkdirs())
 		{
 			throw new ModuleException(String.format("Unable to create directory: %s", dummyPath.toString()),
-					MODULE_NAME);
+					ModuleNames.DUMMER);
 		}
 		createProjectDummies(dummyPath, config.getProject());
 	}
@@ -94,7 +93,7 @@ public class DummyManager implements CTCommonModule
 			if (!target.getParentFile().exists() && !target.getParentFile().mkdirs())
 			{
 				throw new ModuleException(String.format("Unable to create parent directories for: %s", target
-						.toString()), MODULE_NAME);
+						.toString()), ModuleNames.DUMMER);
 			}
 			source.setStub(target);
 
@@ -117,7 +116,7 @@ public class DummyManager implements CTCommonModule
 			if (lang == null)
 			{
 				throw new ModuleException(String.format("No language called %s in platform %s", entry.getKey(), project
-						.getPlatform().getId()), MODULE_NAME);
+						.getPlatform().getId()), ModuleNames.DUMMER);
 			}
 
 			logger.info("Constructing dummies");
@@ -134,7 +133,7 @@ public class DummyManager implements CTCommonModule
 			}
 			catch (CompilerException e)
 			{
-				throw new ModuleException(String.format("Error compiling dummies: %s", e.getMessage()), MODULE_NAME);
+				throw new ModuleException(String.format("Error compiling dummies: %s", e.getMessage()), ModuleNames.DUMMER);
 			}
 		}
 	}

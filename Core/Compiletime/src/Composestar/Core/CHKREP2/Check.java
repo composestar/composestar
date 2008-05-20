@@ -29,6 +29,7 @@ import java.util.Set;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -40,9 +41,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Check implements CTCommonModule
 {
-	public static final String MODULE_NAME = "CHKREP";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CHKREP);
 
 	/**
 	 * List of checker classes to execute. To add a new checker simply add the

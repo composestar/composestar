@@ -24,6 +24,7 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -34,7 +35,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Resolver
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DIGGER.MODULE_NAME + ".Resolver");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.DIGGER + ".Resolver");
 
 	/**
 	 * The dispatch graph this resolver is associated with
@@ -277,10 +278,10 @@ public class Resolver
 			}
 			else
 			{
-				throw new ModuleException("Unresolved internal/external: " + targetString, DIGGER.MODULE_NAME);
+				throw new ModuleException("Unresolved internal/external: " + targetString, ModuleNames.DIGGER);
 			}
 		}
 		throw new ModuleException("Unresolved target: " + targetString + " in " + concern.getQualifiedName()
-				+ " filterPosition:" + filterPosition, DIGGER.MODULE_NAME);
+				+ " filterPosition:" + filterPosition, ModuleNames.DIGGER);
 	}
 }

@@ -46,7 +46,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
 
-import Composestar.Core.CKRET.CKRET;
 import Composestar.Core.CKRET.ConcernAnalysis;
 import Composestar.Core.CKRET.Conflict;
 import Composestar.Core.CKRET.FilterSetAnalysis;
@@ -61,6 +60,7 @@ import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
 import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.FileUtils;
@@ -74,7 +74,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class XMLReport implements SECRETReport
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CKRET.MODULE_NAME + ".Report");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SECRET + ".Report");
 
 	/**
 	 * The output filter

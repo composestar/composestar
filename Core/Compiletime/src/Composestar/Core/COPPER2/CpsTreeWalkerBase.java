@@ -36,6 +36,7 @@ import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.Exception.CpsSemanticException;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.FILTH2.ConstraintSpecification;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Logging.LogMessage;
@@ -47,7 +48,7 @@ import Composestar.Utils.Logging.LogMessage;
  */
 public class CpsTreeWalkerBase extends TreeParser
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(COPPER.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COPPER);
 
 	/**
 	 * Used for error reporting

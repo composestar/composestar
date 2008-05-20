@@ -7,5 +7,4 @@ import Composestar.Core.Master.CTCommonModule;
  */
 public interface HarvestRunner extends CTCommonModule
 {
-	public static final String MODULE_NAME = "HARVESTER";
 }

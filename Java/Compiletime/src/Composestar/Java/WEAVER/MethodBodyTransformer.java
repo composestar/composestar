@@ -22,6 +22,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Utils.Logging.CPSLogger;
@@ -35,7 +36,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class MethodBodyTransformer extends ExprEditor
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(JavaWeaver.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WEAVER);
 
 	private ClassPool classpool;
 

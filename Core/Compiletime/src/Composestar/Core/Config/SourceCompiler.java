@@ -29,8 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Composestar.Core.COMP.LangCompiler;
-import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 
 /**
  * Information about the compiler that is used to compile the associated
@@ -135,7 +135,7 @@ public class SourceCompiler implements Serializable
 			catch (Exception e)
 			{
 				throw new ModuleException("Error while instantiating LangCompiler: " + classname,
-						DummyManager.MODULE_NAME, e);
+						ModuleNames.DUMMER, e);
 			}
 		}
 		return compiler;

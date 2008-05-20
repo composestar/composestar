@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
-	<moduleinfo id="RECOMA" class="Composestar.Core.TYM.SrcCompiler.RealSourceManager">
+	<moduleinfo id="RECOMA" class="Composestar.Core.RECOMA.RealSourceManager">
 		<description>
 			Takes care of compiling the real user sources. Links with the dummies and takes care not to destroy them
 			during compilation.

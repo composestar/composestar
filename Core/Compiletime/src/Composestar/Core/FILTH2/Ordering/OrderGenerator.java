@@ -33,10 +33,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import Composestar.Core.FILTH2.FILTH;
 import Composestar.Core.FILTH2.Model.Action;
 import Composestar.Core.FILTH2.Model.Constraint;
 import Composestar.Core.FILTH2.Model.StructuralConstraint;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -49,7 +49,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public final class OrderGenerator
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(FILTH.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH);
 
 	private OrderGenerator()
 	{}

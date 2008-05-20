@@ -33,6 +33,7 @@ import java.util.Set;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.Filters.LegacyCustomFilterType;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -43,7 +44,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class FilterTypeMapping
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(COPPER.MODULE_NAME + ".FilterTypes");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COPPER + ".FilterTypes");
 
 	public static final String RESOURCE_KEY = "COPPER.FilterTypeMapping";
 

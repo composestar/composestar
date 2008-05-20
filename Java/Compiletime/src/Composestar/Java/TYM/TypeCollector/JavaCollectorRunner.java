@@ -20,6 +20,7 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
@@ -36,7 +37,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class JavaCollectorRunner implements CollectorRunner
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);
 
 	protected Map<String, Class<?>> pendingTypes;
 
@@ -90,7 +91,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException(e.getMessage(), MODULE_NAME);
+			throw new ModuleException(e.getMessage(), ModuleNames.COLLECTOR);
 		}
 
 		int count = 0;
@@ -135,7 +136,7 @@ public class JavaCollectorRunner implements CollectorRunner
 				{
 					throw new ModuleException(
 							"Can only handle concerns with source file implementations or direct class links.",
-							MODULE_NAME);
+							ModuleNames.COLLECTOR);
 				}
 
 				if (!concern.getQualifiedName().equals(className))
@@ -156,7 +157,7 @@ public class JavaCollectorRunner implements CollectorRunner
 				if (!register.hasType(className))
 				{
 					throw new ModuleException("Implementation: " + className + " for concern: " + concern.getName()
-							+ " not found!", MODULE_NAME);
+							+ " not found!", ModuleNames.COLLECTOR);
 				}
 				JavaType type = (JavaType) register.getType(className);
 				concern.setPlatformRepresentation(type);

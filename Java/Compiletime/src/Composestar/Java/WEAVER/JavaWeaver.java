@@ -16,6 +16,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledI
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
@@ -31,14 +32,12 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class JavaWeaver implements WEAVER
 {
-	public static final String MODULE_NAME = "WEAVER";
-
 	/**
 	 * The Weaver output directory
 	 */
 	public static final String WEAVE_PATH = "weaver";
 
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WEAVER);
 
 	/**
 	 * key used to store information in the resources.

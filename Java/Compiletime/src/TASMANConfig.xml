@@ -24,8 +24,8 @@
 		<module class="Composestar.Core.CKRET.CKRET" />
 		<sequential>
 			<module class="Composestar.Java.TYM.SignatureTransformer.JavaSignatureTransformer" />
-			<module class="Composestar.Core.TYM.SrcCompiler.RealSourceManager" />
-			<module class="Composestar.Java.CONE.JavaCONE" />
+			<module class="Composestar.Core.RECOMA.RealSourceManager" />
+			<module class="Composestar.Java.CONE.JavaRepositorySerializer" />
 			<module class="Composestar.Java.WEAVER.JavaWeaver" />
 			<module class="Composestar.Java.BACO.JavaBACO" />
 		</sequential>

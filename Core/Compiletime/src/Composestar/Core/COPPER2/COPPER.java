@@ -43,6 +43,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.FILTH2.ConstraintSpecification;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -58,9 +59,7 @@ import Composestar.Utils.Perf.CPSTimer;
  */
 public class COPPER implements CTCommonModule
 {
-	public static final String MODULE_NAME = "COPPER";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COPPER);
 
 	/**
 	 * Number of parse errors
@@ -123,7 +122,7 @@ public class COPPER implements CTCommonModule
 		constraintSpec = new ConstraintSpecification();
 		resources.put(ConstraintSpecification.RESOURCE_KEY, constraintSpec);
 
-		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+		CPSTimer timer = CPSTimer.getTimer(ModuleNames.COPPER);
 		for (File file : resources.configuration().getProject().getConcernFiles())
 		{
 			timer.start(file.toString());
@@ -134,7 +133,7 @@ public class COPPER implements CTCommonModule
 		if (errorCnt > 0)
 		{
 			throw new ModuleException(String.format("%d error(s) detected in the concern sources.", errorCnt),
-					MODULE_NAME);
+					ModuleNames.COPPER);
 		}
 		return ModuleReturnValue.Ok;
 	}
@@ -163,7 +162,7 @@ public class COPPER implements CTCommonModule
 			}
 			catch (IOException e1)
 			{
-				throw new ModuleException(e1.getMessage(), MODULE_NAME, e1);
+				throw new ModuleException(e1.getMessage(), ModuleNames.COPPER, e1);
 			}
 			CommonTokenStream tokens = new CommonTokenStream(lex);
 			CpsParser p = new CpsParser(tokens);
@@ -176,7 +175,7 @@ public class COPPER implements CTCommonModule
 			catch (RecognitionException e)
 			{
 				System.setErr(oldErr);
-				throw new ModuleException(e.getMessage(), MODULE_NAME, file.toString(), e.line, e);
+				throw new ModuleException(e.getMessage(), ModuleNames.COPPER, file.toString(), e.line, e);
 			}
 			localErrCnt += p.getErrorCnt();
 
@@ -202,7 +201,7 @@ public class COPPER implements CTCommonModule
 			catch (RecognitionException e)
 			{
 				System.setErr(oldErr);
-				throw new ModuleException(e.getMessage(), MODULE_NAME, file.toString(), e.line, e.charPositionInLine, e);
+				throw new ModuleException(e.getMessage(), ModuleNames.COPPER, file.toString(), e.line, e.charPositionInLine, e);
 			}
 			System.setErr(oldErr);
 

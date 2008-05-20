@@ -30,11 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import Composestar.Core.FILTH2.FILTH;
 import Composestar.Core.FILTH2.Model.Action;
 import Composestar.Core.FILTH2.Model.Constraint;
 import Composestar.Core.FILTH2.Model.ExecutionManager;
 import Composestar.Core.FILTH2.Model.ExecutionResult;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -42,7 +42,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Simulator implements ExecutionManager
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(FILTH.MODULE_NAME + ".Simulator");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH + ".Simulator");
 
 	/**
 	 * Contains the execution results for each action

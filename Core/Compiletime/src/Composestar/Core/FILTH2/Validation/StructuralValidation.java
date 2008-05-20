@@ -34,11 +34,11 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import Composestar.Core.FILTH2.ConstraintDefinition;
-import Composestar.Core.FILTH2.FILTH;
 import Composestar.Core.FILTH2.Model.Action;
 import Composestar.Core.FILTH2.Model.Constraint;
 import Composestar.Core.FILTH2.Model.ExcludeConstraint;
 import Composestar.Core.FILTH2.Model.IncludeConstraint;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -49,7 +49,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public final class StructuralValidation
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(FILTH.MODULE_NAME + ".Validation");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH + ".Validation");
 
 	private StructuralValidation()
 	{}

@@ -38,6 +38,7 @@ import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.util.regex.RegularState;
 import Composestar.Core.FIRE2.util.regex.RegularTransition;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
@@ -52,11 +53,9 @@ import Composestar.Utils.Perf.CPSTimer;
  */
 public class CKRET implements CTCommonModule
 {
-	public static final String MODULE_NAME = "SECRET";
-
 	public static final String CONFIG_NAME = "SECRETConfig.xml";
 
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SECRET);
 
 	/**
 	 * The mode secret should execute in.
@@ -92,7 +91,7 @@ public class CKRET implements CTCommonModule
 
 			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
 			{
-				CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, concern.getUniqueID());
+				CPSTimer timer = CPSTimer.getTimer(ModuleNames.SECRET, concern.getUniqueID());
 				run(concern);
 				timer.stop();
 			}
@@ -150,7 +149,7 @@ public class CKRET implements CTCommonModule
 	 */
 	private void loadConfiguration(CommonResources resources) throws ConfigurationException
 	{
-		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
+		ModuleInfo mi = ModuleInfoManager.get(ModuleNames.SECRET);
 		mode = mi.getSetting("mode", SECRETMode.Normal);
 		reportClass = mi.getSetting("reportGenerator", "");
 

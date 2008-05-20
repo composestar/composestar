@@ -7,12 +7,13 @@ import java.util.Set;
 
 import Composestar.Core.BACO.BACO;
 import Composestar.Core.Config.CustomFilter;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
 public class DotNETBACO extends BACO
 {
-	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.BACO);
 
 	// TODO: find a better spot for this
 	// FIXME: assumption about .NET installation

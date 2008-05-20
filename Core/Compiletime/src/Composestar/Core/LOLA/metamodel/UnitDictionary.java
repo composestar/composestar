@@ -16,7 +16,7 @@ import java.util.Set;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitResult;
-import Composestar.Core.LOLA.LOLA;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -28,7 +28,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class UnitDictionary
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);
 
 	public static final String REPOSITORY_KEY = "LOLA.UnitDictionary";
 
@@ -166,7 +166,7 @@ public class UnitDictionary
 		}
 		catch (ModelException e)
 		{
-			throw new ModuleException("Model error: " + e.getMessage(), LOLA.MODULE_NAME);
+			throw new ModuleException("Model error: " + e.getMessage(), ModuleNames.LOLA);
 		}
 	}
 

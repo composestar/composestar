@@ -47,8 +47,8 @@
 		incremental="false" summary="">
 		<dependencies></dependencies>
 	</module>
-	<module fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" />
-	<module name="CONE" fulltype="Composestar.Java.CONE.JavaCONE" enabled="true" incremental="false" summary="">
+	<module fulltype="Composestar.Core.RECOMA.RealSourceManager" />
+	<module name="CONE" fulltype="Composestar.Java.CONE.JavaRepositorySerializer" enabled="true" incremental="false" summary="">
 		<dependencies></dependencies>
 	</module>
 	<module name="WEAVER" fulltype="Composestar.Java.WEAVER.JavaWeaver" enabled="true" incremental="false"

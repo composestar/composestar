@@ -10,6 +10,7 @@ import java.util.Iterator;
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
@@ -23,9 +24,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class JavaRepositorySerializer extends CONE
 {
-	public static final String MODULE_NAME = "CONE";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CONE);
 
 	/**
 	 * run method.
@@ -68,15 +67,16 @@ public class JavaRepositorySerializer extends CONE
 		}
 		catch (StackOverflowError ex)
 		{
-			throw new ModuleException("Need more stack size to serialize repository: " + ex.toString(), MODULE_NAME);
+			throw new ModuleException("Need more stack size to serialize repository: " + ex.toString(),
+					ModuleNames.CONE);
 		}
 		catch (NotSerializableException e)
 		{
-			throw new ModuleException("Unserializable class encountered: " + e.toString(), MODULE_NAME);
+			throw new ModuleException("Unserializable class encountered: " + e.toString(), ModuleNames.CONE);
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("Error occured while serializing repository: " + e.toString(), MODULE_NAME);
+			throw new ModuleException("Error occured while serializing repository: " + e.toString(), ModuleNames.CONE);
 		}
 		finally
 		{

@@ -12,6 +12,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Implement
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.FileUtils;
@@ -23,11 +24,9 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class EMBEX implements CTCommonModule
 {
-	public static final String MODULE_NAME = "EMBEX";
-
 	public static final String EMBEDDED_PATH = "embedded";
 
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.EMBEX);
 
 	protected BuildConfig config;
 
@@ -47,7 +46,7 @@ public class EMBEX implements CTCommonModule
 		if (!embeddedDir.exists() && !embeddedDir.mkdirs())
 		{
 			throw new ModuleException(String.format("Unable to create directory for embedded sources: %s", embeddedDir
-					.toString()), MODULE_NAME);
+					.toString()), ModuleNames.EMBEX);
 		}
 
 		// iterate over all cps concerns
@@ -99,7 +98,7 @@ public class EMBEX implements CTCommonModule
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("Could not save embedded source: " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException("Could not save embedded source: " + e.getMessage(), ModuleNames.EMBEX);
 		}
 		finally
 		{

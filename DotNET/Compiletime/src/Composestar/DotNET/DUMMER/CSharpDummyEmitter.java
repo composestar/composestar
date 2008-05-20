@@ -12,15 +12,15 @@ import java.util.Set;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.DUMMER.DummyEmitter;
-import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.StreamGobbler;
 import Composestar.Utils.Logging.CPSLogger;
 
 public class CSharpDummyEmitter implements DummyEmitter
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(DummyManager.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.DUMMER);
 
 	protected Map<String, Source> srcmapping;
 
@@ -51,7 +51,7 @@ public class CSharpDummyEmitter implements DummyEmitter
 				}
 
 				throw new ModuleException("Error creating dummies: CSharpDummyGenerator failed.",
-						DummyManager.MODULE_NAME);
+						ModuleNames.DUMMER);
 			}
 
 			createTypeLocationMapping(project, sources, pr.stdout);

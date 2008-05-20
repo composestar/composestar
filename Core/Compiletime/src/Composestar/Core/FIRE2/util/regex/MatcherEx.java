@@ -35,7 +35,7 @@ import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FlowNode;
-import Composestar.Core.FIRE2.preprocessing.Preprocessor;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -45,7 +45,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class MatcherEx extends AbstractMatcher
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Preprocessor.MODULE_NAME + ".regex");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE + ".regex");
 
 	/**
 	 * The pattern used for matching

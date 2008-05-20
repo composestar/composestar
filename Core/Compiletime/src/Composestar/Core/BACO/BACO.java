@@ -20,6 +20,7 @@ import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.CustomFilter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.Resources.PathResolver;
 import Composestar.Utils.FileUtils;
@@ -31,9 +32,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public abstract class BACO implements CTCommonModule
 {
-	public static final String MODULE_NAME = "BACO";
-
-	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.BACO);
 
 	/**
 	 * Resource key for the List&lt;File&gt; of build libraries
@@ -181,7 +180,7 @@ public abstract class BACO implements CTCommonModule
 		// create the output dir if needed
 		if (!outputDir.exists() && !outputDir.mkdirs())
 		{
-			throw new ModuleException("Unable to create output directory: " + outputDir.toString(), MODULE_NAME);
+			throw new ModuleException("Unable to create output directory: " + outputDir.toString(), ModuleNames.BACO);
 		}
 
 		// start the actual copying
@@ -212,7 +211,7 @@ public abstract class BACO implements CTCommonModule
 			String msg = "Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage();
 			if (fatal)
 			{
-				throw new ModuleException(msg, MODULE_NAME);
+				throw new ModuleException(msg, ModuleNames.BACO);
 			}
 			else
 			{

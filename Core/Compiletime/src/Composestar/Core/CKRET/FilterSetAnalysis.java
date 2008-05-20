@@ -34,6 +34,7 @@ import Composestar.Core.FIRE2.util.regex.AbstractMatcher;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.MatcherEx;
 import Composestar.Core.FIRE2.util.regex.AbstractMatcher.MatchTrace;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Utils.Logging.CPSLogger;
@@ -46,7 +47,7 @@ public class FilterSetAnalysis implements Serializable
 {
 	private static final long serialVersionUID = 4029416472112802480L;
 
-	private static final CPSLogger logger = CPSLogger.getCPSLogger(CKRET.MODULE_NAME);
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SECRET);
 
 	/**
 	 * The concern who's filters are being analyzed

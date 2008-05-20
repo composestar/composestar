@@ -43,6 +43,7 @@ import weavec.parser.AspectCParser;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
 import Composestar.CwC.TYM.WeaveCResources;
@@ -62,7 +63,7 @@ import antlr.TokenStreamException;
  */
 public class TypeHarvester implements HarvestRunner
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.HARVESTER);
 
 	@ResourceManager
 	protected WeaveCResources weavecRes;
@@ -100,7 +101,7 @@ public class TypeHarvester implements HarvestRunner
 		String moduleName = FileUtils.removeExtension(source.getRawFile().toString());
 
 		logger.info(String.format("Harvesting from file %s", sourceFile));
-		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME, sourceFile.toString());
+		CPSTimer timer = CPSTimer.getTimer(ModuleNames.HARVESTER, sourceFile.toString());
 		try
 		{
 			try

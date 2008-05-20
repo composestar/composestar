@@ -33,6 +33,7 @@ import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
@@ -51,9 +52,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class DotNETRepositorySerializer extends CONE
 {
-	public static final String MODULE_NAME = "CONE-XML";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CONE);
 
 	private Map<Class, List<Field>> orderedFieldInfo;
 
@@ -71,7 +70,7 @@ public class DotNETRepositorySerializer extends CONE
 	{
 		DataStore ds = resources.repository();
 
-		ModuleInfo mi = ModuleInfoManager.get(DotNETRepositorySerializer.MODULE_NAME);
+		ModuleInfo mi = ModuleInfoManager.get(ModuleNames.CONE);
 		File destination = (File) resources.get(REPOSITORY_FILE_KEY);
 
 		logger.debug("Writing repository to file '" + destination.getName() + "'...");
@@ -89,7 +88,7 @@ public class DotNETRepositorySerializer extends CONE
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("Unable to open output file: " + destination.getAbsolutePath(), MODULE_NAME);
+			throw new ModuleException("Unable to open output file: " + destination.getAbsolutePath(), ModuleNames.CONE);
 		}
 		finally
 		{
@@ -297,7 +296,7 @@ public class DotNETRepositorySerializer extends CONE
 				}
 				catch (Exception ex)
 				{
-					throw new ModuleException(ex.getClass().getName() + ": " + ex.getMessage(), MODULE_NAME);
+					throw new ModuleException(ex.getClass().getName() + ": " + ex.getMessage(), ModuleNames.CONE);
 				}
 			}
 		}
@@ -366,9 +365,9 @@ public class DotNETRepositorySerializer extends CONE
 				int modifier = declaredField.getModifiers();
 
 				if (Modifier.isPublic(modifier) /*
-												 * &&
-												 * !Modifier.isTransient(modifier)
-												 */)
+				 * &&
+				 * !Modifier.isTransient(modifier)
+				 */)
 				{
 					fields.add(declaredField);
 				}

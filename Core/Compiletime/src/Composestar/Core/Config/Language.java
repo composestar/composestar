@@ -30,8 +30,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import Composestar.Core.DUMMER.DummyEmitter;
-import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 
 /**
  * Defines an accepted programming language/dialect for the current platform. A
@@ -217,7 +217,7 @@ public class Language implements Serializable
 			catch (Exception e)
 			{
 				throw new ModuleException("Error while instantiating DummyEmitter: " + dummyGenerator,
-						DummyManager.MODULE_NAME);
+						ModuleNames.DUMMER);
 			}
 		}
 		return dummyEmitter;

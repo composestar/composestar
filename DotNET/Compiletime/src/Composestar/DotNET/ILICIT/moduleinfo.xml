@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
-	<moduleinfo id="ILICIT" class="Composestar.DotNET.ILICIT.ILICIT">
+	<moduleinfo id="WEAVER" class="Composestar.DotNET.ILICIT.ILICIT">
 		<description>
 			Applies the changes as specified by CONE-IS to the assemblies in order to impose the behavior defined in the
 			concern specifications.

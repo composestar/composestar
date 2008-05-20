@@ -31,6 +31,7 @@ import Composestar.Core.LOLA.metamodel.LanguageModel;
 import Composestar.Core.LOLA.metamodel.ModelException;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
@@ -43,9 +44,7 @@ import Composestar.Utils.Perf.CPSTimer;
  */
 public abstract class LOLA implements CTCommonModule
 {
-	public static final String MODULE_NAME = "LOLA";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);
 
 	protected boolean initialized; // Initialize only once
 
@@ -102,7 +101,7 @@ public abstract class LOLA implements CTCommonModule
 		catch (ModelException e)
 		{
 			e.printStackTrace();
-			throw new ModuleException(e.getMessage(), MODULE_NAME);
+			throw new ModuleException(e.getMessage(), ModuleNames.LOLA);
 		}
 		return langmap;
 	}
@@ -131,12 +130,12 @@ public abstract class LOLA implements CTCommonModule
 		catch (ModelException e)
 		{
 			logger.error(e, e);
-			throw new ModuleException(e.getMessage(), MODULE_NAME);
+			throw new ModuleException(e.getMessage(), ModuleNames.LOLA);
 		}
 		catch (IOException e)
 		{
 			logger.error(e, e);
-			throw new ModuleException(e.getMessage(), MODULE_NAME);
+			throw new ModuleException(e.getMessage(), ModuleNames.LOLA);
 		}
 		return reader;
 	}
@@ -193,7 +192,7 @@ public abstract class LOLA implements CTCommonModule
 
 		if (!Init.run(new String[] {}))
 		{
-			throw new ModuleException("FATAL: Prolog interpreter could not be initialized!", MODULE_NAME);
+			throw new ModuleException("FATAL: Prolog interpreter could not be initialized!", ModuleNames.LOLA);
 		}
 	}
 
@@ -294,13 +293,13 @@ public abstract class LOLA implements CTCommonModule
 		 * PrintStream stderr = System.err; System.setErr(System.out);
 		 */
 
-		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+		CPSTimer timer = CPSTimer.getTimer(ModuleNames.LOLA);
 
 		Writer oldIOOutput = IO.output;
 		try
 		{
 			IO.output = new OutputStreamWriter(new OutputStreamRedirector(CPSLogger
-					.getCPSLogger(MODULE_NAME + ".Jinni"), Level.WARN));
+					.getCPSLogger(ModuleNames.LOLA + ".Jinni"), Level.WARN));
 
 			dataStore = resources.repository();
 

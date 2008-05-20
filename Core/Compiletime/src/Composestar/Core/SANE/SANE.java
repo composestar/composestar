@@ -14,6 +14,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.Selector
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
@@ -24,9 +25,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class SANE implements CTCommonModule
 {
-	private static final String MODULE_NAME = "SANE";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SANE);
 
 	public SANE()
 	{}
@@ -80,7 +79,7 @@ public class SANE implements CTCommonModule
 				Vector<Reference> selConcerns = (Vector<Reference>) sel.getDynObject(SelectorDefinition.INTREP_KEY);
 				if (selConcerns == null)
 				{
-					throw new ModuleException("Selector has not been interpreted!", MODULE_NAME);
+					throw new ModuleException("Selector has not been interpreted!", ModuleNames.SANE);
 				}
 
 				// iterate over all concerns in the selector;
@@ -94,20 +93,20 @@ public class SANE implements CTCommonModule
 							ProgramElement pe = ((ProgramElementReference) ref).getRef();
 							throw new ModuleException("Filtermodules can only be superimposed on concerns/classes. "
 									+ "Selector " + sel.getName() + " matched a " + pe.getUnitType() + " with name '"
-									+ pe.getUnitName() + "'.", MODULE_NAME, sel);
+									+ pe.getUnitName() + "'.", ModuleNames.SANE, sel);
 						}
 						else
 						{
 							throw new ModuleException("Selector " + sel.getName()
 									+ " matched an unexpected unit type. " + "Reference is of type " + ref.getClass()
-									+ ".", MODULE_NAME, sel);
+									+ ".", ModuleNames.SANE, sel);
 						}
 					}
 
 					Concern siConcern = ((ConcernReference) ref).getRef();
 					if (siConcern == null)
 					{
-						throw new ModuleException("Selector " + sel.getName() + " matched null.", MODULE_NAME, sel);
+						throw new ModuleException("Selector " + sel.getName() + " matched null.", ModuleNames.SANE, sel);
 					}
 					else
 					{

@@ -48,6 +48,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.ModuleResourceManager;
 
 /**
@@ -98,7 +99,7 @@ public class SECRETResources implements ModuleResourceManager
 	 */
 	public String getModuleName()
 	{
-		return CKRET.MODULE_NAME;
+		return ModuleNames.SECRET;
 	}
 
 	/**

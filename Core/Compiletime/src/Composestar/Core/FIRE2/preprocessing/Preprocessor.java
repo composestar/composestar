@@ -28,6 +28,7 @@ import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.TASMAN.Manager;
@@ -41,9 +42,7 @@ import Composestar.Utils.Perf.CPSTimer;
  */
 public class Preprocessor implements CTCommonModule
 {
-	public static final String MODULE_NAME = "FIRE";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE);
 
 	private LayedOutXml graphLoader;
 
@@ -99,7 +98,7 @@ public class Preprocessor implements CTCommonModule
 
 		logger.debug("Starting FIRE Preprocessing");
 
-		CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+		CPSTimer timer = CPSTimer.getTimer(ModuleNames.FIRE);
 
 		while (moduleIter.hasNext())
 		{
@@ -171,7 +170,7 @@ public class Preprocessor implements CTCommonModule
 
 		try
 		{
-			CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+			CPSTimer timer = CPSTimer.getTimer(ModuleNames.FIRE);
 			URL genUrl = Preprocessor.class.getResource(GENERATE_FLOW_GRAMMAR_PATH);
 			String fileName = genUrl.getFile().replaceAll("%20", " ");
 			logger.debug("Loading grammar: " + fileName);
@@ -339,7 +338,7 @@ public class Preprocessor implements CTCommonModule
 		@Override
 		public void execute(Manager manager, CommonResources resources) throws ModuleException
 		{
-			CPSTimer timer = CPSTimer.getTimer(MODULE_NAME);
+			CPSTimer timer = CPSTimer.getTimer(ModuleNames.FIRE);
 			timer.start(module.getOriginalQualifiedName());
 			preprocessModule(module);
 			timer.stop();

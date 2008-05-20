@@ -28,6 +28,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernRefere
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.SelectorReference;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -38,9 +39,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class ParumREXREF extends Main
 {
-	public static final String MODULE_NAME = "ParumREXREF";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Main.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.REXREF);
 
 	public ParumREXREF()
 	{}
@@ -52,7 +51,7 @@ public class ParumREXREF extends Main
 		resolveReferences();
 		if (hasErrors)
 		{
-			throw new ModuleException("There are unresolved references", MODULE_NAME);
+			throw new ModuleException("There are unresolved references", ModuleNames.PARUM_REXREF);
 		}
 		return ModuleReturnValue.Ok;
 	}

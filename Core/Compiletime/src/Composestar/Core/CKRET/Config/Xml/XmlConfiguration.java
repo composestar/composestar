@@ -38,10 +38,10 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.CKRET.CKRET;
 import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.Config.Xml.CpsBaseHandler;
 import Composestar.Core.Exception.ConfigurationException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -51,7 +51,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class XmlConfiguration extends CpsBaseHandler
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CKRET.MODULE_NAME + ".Config");
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SECRET + ".Config");
 
 	public static final String NAMESPACE = "http://composestar.sourceforge.net/schema/SecretConfiguration";
 

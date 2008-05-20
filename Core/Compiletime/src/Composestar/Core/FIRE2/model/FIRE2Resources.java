@@ -32,7 +32,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.preprocessing.FirePreprocessingResult;
-import Composestar.Core.FIRE2.preprocessing.Preprocessor;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.ModuleResourceManager;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -45,7 +45,7 @@ public class FIRE2Resources implements ModuleResourceManager
 {
 	private static final long serialVersionUID = 5781711810188304052L;
 
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Preprocessor.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE);
 
 	/**
 	 * Mapping from filter module (fully qualified name) to preprocessing result
@@ -64,7 +64,7 @@ public class FIRE2Resources implements ModuleResourceManager
 	 */
 	public String getModuleName()
 	{
-		return Preprocessor.MODULE_NAME;
+		return ModuleNames.FIRE;
 	}
 
 	/**

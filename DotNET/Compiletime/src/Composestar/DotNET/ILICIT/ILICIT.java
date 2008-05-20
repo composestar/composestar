@@ -25,6 +25,7 @@ import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.WEAVER.WEAVER;
 import Composestar.DotNET.COMP.DotNETCompiler;
@@ -39,11 +40,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class ILICIT implements WEAVER
 {
-	public static final String VERSION = "$Revision$";
-
-	public static final String MODULE_NAME = "ILICIT";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WEAVER);
 
 	protected Composestar.Core.Config.BuildConfig config;
 
@@ -106,7 +103,7 @@ public class ILICIT implements WEAVER
 			}
 			catch (IOException e)
 			{
-				throw new ModuleException("Unable to copy assembly: " + e.getMessage(), MODULE_NAME);
+				throw new ModuleException("Unable to copy assembly: " + e.getMessage(), ModuleNames.WEAVER);
 			}
 
 			File pdbFile = new File(FileUtils.replaceExtension(src.toString(), "pdb"));
@@ -120,7 +117,7 @@ public class ILICIT implements WEAVER
 				}
 				catch (IOException e)
 				{
-					throw new ModuleException("Unable to copy PDB: " + e.getMessage(), MODULE_NAME);
+					throw new ModuleException("Unable to copy PDB: " + e.getMessage(), ModuleNames.WEAVER);
 				}
 			}
 
@@ -141,7 +138,7 @@ public class ILICIT implements WEAVER
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("Unable to copy dummy: " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException("Unable to copy dummy: " + e.getMessage(), ModuleNames.WEAVER);
 		}
 	}
 
@@ -153,7 +150,7 @@ public class ILICIT implements WEAVER
 		cmdList.add("/nologo");
 
 		// verify libraries?
-		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
+		ModuleInfo mi = ModuleInfoManager.get(ModuleNames.WEAVER);
 		if (mi.getBooleanSetting("verifyAssemblies", false))
 		{
 			cmdList.add("/verify");
@@ -184,11 +181,11 @@ public class ILICIT implements WEAVER
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+			throw new ModuleException(e.getMessage(), ModuleNames.WEAVER, e);
 		}
 		catch (InterruptedException e)
 		{
-			throw new ModuleException(e.getMessage(), MODULE_NAME, e);
+			throw new ModuleException(e.getMessage(), ModuleNames.WEAVER, e);
 		}
 
 		File logFile = new File(basePath, "weavelog.txt");
@@ -197,7 +194,7 @@ public class ILICIT implements WEAVER
 		if (exitcode != 0)
 		{
 			String msg = getExitMessage(exitcode) + ". See weavelog.txt for more information.";
-			throw new ModuleException(msg, MODULE_NAME);
+			throw new ModuleException(msg, ModuleNames.WEAVER);
 		}
 	}
 
@@ -206,7 +203,7 @@ public class ILICIT implements WEAVER
 		File exe = resources.getPathResolver().getResource("bin/peweaver.exe");
 		if (exe == null)
 		{
-			throw new ModuleException("Unable to locate the executable bin/peweaver.exe", MODULE_NAME);
+			throw new ModuleException("Unable to locate the executable bin/peweaver.exe", ModuleNames.WEAVER);
 		}
 
 		return exe.getAbsolutePath();
@@ -225,7 +222,7 @@ public class ILICIT implements WEAVER
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("Unable to create build file for the weaver: " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException("Unable to create build file for the weaver: " + e.getMessage(), ModuleNames.WEAVER);
 		}
 		finally
 		{
@@ -243,7 +240,7 @@ public class ILICIT implements WEAVER
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("Unable to create PEWeaver logfile: " + e.getMessage(), MODULE_NAME);
+			throw new ModuleException("Unable to create PEWeaver logfile: " + e.getMessage(), ModuleNames.WEAVER);
 		}
 		finally
 		{

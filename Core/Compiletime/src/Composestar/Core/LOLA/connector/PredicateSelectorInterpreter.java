@@ -47,8 +47,8 @@ import Composestar.Core.INCRE.MethodNode;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
-import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.metamodel.ModelClashException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
@@ -57,7 +57,7 @@ import Composestar.Utils.Perf.CPSTimer;
  */
 public class PredicateSelectorInterpreter
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);
 
 	protected ComposestarBuiltins composestarBuiltins;
 
@@ -83,7 +83,7 @@ public class PredicateSelectorInterpreter
 	 */
 	protected void run() throws ModuleException
 	{
-		CPSTimer timer = CPSTimer.getTimer(LOLA.MODULE_NAME, currentSel.getQuery());
+		CPSTimer timer = CPSTimer.getTimer(ModuleNames.LOLA, currentSel.getQuery());
 
 		// tell ComposestarBuiltins that we are executing this selector
 		composestarBuiltins.setCurrentSelector(currentSel);

@@ -42,6 +42,7 @@ import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.Resources.CommonResources;
@@ -54,9 +55,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class Sign implements CTCommonModule
 {
-	public static final String MODULE_NAME = "SIGN";
-
-	private static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SIGN);
 
 	private static final String DISPATCH_FORMULA = "isDispatch";
 

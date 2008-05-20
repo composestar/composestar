@@ -10,6 +10,7 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 
 /**
@@ -53,7 +54,7 @@ public class ClassWeaver
 		}
 		catch (NotFoundException n)
 		{
-			throw new ModuleException("Classpath (" + classpath + ") not found.", JavaWeaver.MODULE_NAME);
+			throw new ModuleException("Classpath (" + classpath + ") not found.", ModuleNames.WEAVER);
 		}
 	}
 
@@ -128,7 +129,7 @@ public class ClassWeaver
 			{
 				e.printStackTrace();
 				throw new ModuleException("Error while instrumenting " + typeName + ": " + e.getMessage(),
-						JavaWeaver.MODULE_NAME);
+						ModuleNames.WEAVER);
 			}
 		}
 	}

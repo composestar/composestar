@@ -18,7 +18,7 @@
 	<module fulltype="Composestar.Core.SIGN2.Sign" />
 	<module fulltype="Composestar.Core.DIGGER2.DIGGER" />
 	<module fulltype="Composestar.DotNET.ASTRA.ASTRA" />
-	<module fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" />
+	<module fulltype="Composestar.Core.RECOMA.RealSourceManager" />
 	<module fulltype="Composestar.DotNET.CONE.DotNETWeaveFileGenerator" />
 	<module fulltype="Composestar.DotNET.ILICIT.ILICIT" />
 	<module fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexRunner" />

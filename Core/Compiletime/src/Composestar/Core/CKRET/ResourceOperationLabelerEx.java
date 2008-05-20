@@ -44,6 +44,7 @@ import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.util.regex.LabelSequence;
 import Composestar.Core.FIRE2.util.regex.Labeler;
 import Composestar.Core.FIRE2.util.regex.MatcherEx;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
@@ -54,7 +55,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class ResourceOperationLabelerEx implements Labeler
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CKRET.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SECRET);
 
 	/**
 	 * Empty sequence

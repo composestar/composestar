@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
-	<moduleinfo id="CONE-IS" class="Composestar.DotNET.CONE.DotNETWeaveFileGenerator">
+	<moduleinfo id="WESPEM" class="Composestar.DotNET.CONE.DotNETWeaveFileGenerator">
 		<description>Generates the weaving specification file.</description>
 		<incre>
 			<module enabled="true" incremental="false" summary="Generating weave specification file...">
@@ -9,7 +9,7 @@
 		</incre>
 	</moduleinfo>
 
-	<moduleinfo id="CONE-XML" class="Composestar.DotNET.CONE.DotNETRepositorySerializer">
+	<moduleinfo id="CONE" class="Composestar.DotNET.CONE.DotNETRepositorySerializer">
 		<description>Saves the whole repository to an XML so that it's available at runtime.</description>
 		<settings>
 			<setting id="compressed" type="boolean">

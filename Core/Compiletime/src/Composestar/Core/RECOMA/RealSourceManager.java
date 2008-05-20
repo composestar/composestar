@@ -8,7 +8,7 @@
  * $Id$
  */
 
-package Composestar.Core.TYM.SrcCompiler;
+package Composestar.Core.RECOMA;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +24,7 @@ import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -33,9 +34,7 @@ import Composestar.Utils.Logging.CPSLogger;
  */
 public class RealSourceManager implements CTCommonModule
 {
-	public static final String MODULE_NAME = "RECOMA";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.RECOMA);
 
 	protected BuildConfig config;
 
@@ -74,7 +73,7 @@ public class RealSourceManager implements CTCommonModule
 			if (lang == null)
 			{
 				throw new ModuleException(String.format("No language called %s in platform %s", entry.getKey(), project
-						.getPlatform().getId()), MODULE_NAME);
+						.getPlatform().getId()), ModuleNames.RECOMA);
 			}
 
 			LangCompiler comp = lang.getCompiler().getCompiler();
@@ -85,7 +84,7 @@ public class RealSourceManager implements CTCommonModule
 			}
 			catch (CompilerException e)
 			{
-				throw new ModuleException("Error compiling dummies: " + e.getMessage(), MODULE_NAME);
+				throw new ModuleException("Error compiling dummies: " + e.getMessage(), ModuleNames.RECOMA);
 			}
 		}
 

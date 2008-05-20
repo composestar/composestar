@@ -50,6 +50,7 @@ import Composestar.Core.FILTH2.Model.ConstraintFactory.ConstraintCreationExcepti
 import Composestar.Core.FILTH2.Ordering.OrderGenerator;
 import Composestar.Core.FILTH2.Validation.StructuralValidation;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
@@ -64,9 +65,7 @@ import Composestar.Utils.Perf.CPSTimer;
  */
 public class FILTH implements CTCommonModule
 {
-	public static final String MODULE_NAME = "FILTH";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH);
 
 	/**
 	 * The default inner dispatch filter module. Will be appended to all
@@ -97,7 +96,7 @@ public class FILTH implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		timer = CPSTimer.getTimer(MODULE_NAME);
+		timer = CPSTimer.getTimer(ModuleNames.FILTH);
 		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
 		defaultInnerDispatch = InnerDispatcher.createInnerDispatchReference(resources.repository(), filterTypes);
 		constraintSpec = resources.get(ConstraintSpecification.RESOURCE_KEY);
@@ -138,7 +137,7 @@ public class FILTH implements CTCommonModule
 			StructuralValidation.isValid(constraints);
 			// TODO: perform order validation (i.e. Pre(a,b); Pre(b,a);)
 			throw new ModuleException(String.format("One or more concerns did not have a valid filter module order."),
-					MODULE_NAME);
+					ModuleNames.FILTH);
 		}
 		return ModuleReturnValue.Ok;
 	}

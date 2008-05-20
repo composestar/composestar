@@ -16,8 +16,8 @@ import java.util.Stack;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.DUMMER.DummyEmitter;
-import Composestar.Core.DUMMER.DummyManager;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.FileUtils;
 import antlr.ASTFactory;
@@ -28,7 +28,7 @@ import antlr.collections.AST;
 
 public class JSharpDummyEmitter implements DummyEmitter, JSharpTokenTypes
 {
-	private final static String MODULE_NAME = DummyManager.MODULE_NAME;
+	private final static String MODULE_NAME = ModuleNames.DUMMER;
 
 	private final static int ALL = -1;
 

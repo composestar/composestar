@@ -38,6 +38,7 @@ import Composestar.Core.LAMA.Annotation;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LOLA.connector.ComposestarBuiltins;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
@@ -48,7 +49,7 @@ import Composestar.Utils.Perf.CPSTimer;
  */
 public class AnnotationSuperImposition
 {
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(LOLA.MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);
 
 	private DataStore dataStore;
 
@@ -79,7 +80,7 @@ public class AnnotationSuperImposition
 	{
 		composestarBuiltins = builtins;
 		logger.debug("Annotation superimposition dependency algorithm starts");
-		CPSTimer timer = CPSTimer.getTimer(LOLA.MODULE_NAME, "gatherDependencyAlgorithmInputs");
+		CPSTimer timer = CPSTimer.getTimer(ModuleNames.LOLA, "gatherDependencyAlgorithmInputs");
 		gatherDependencyAlgorithmInputs();
 		timer.stop();
 		timer.start("doDependencyAlgorithm");
@@ -127,7 +128,7 @@ public class AnnotationSuperImposition
 			// binding points to a non-existent selector
 			{
 				throw new ModuleException("Annotation binding points to non-existent selector: "
-						+ annotBind.getSelector().getQualifiedName(), LOLA.MODULE_NAME, annotBind.getSelector());
+						+ annotBind.getSelector().getQualifiedName(), ModuleNames.LOLA, annotBind.getSelector());
 			}
 
 			boolean foundSelector = false;
@@ -177,7 +178,7 @@ public class AnnotationSuperImposition
 			if (!foundSelector)
 			{
 				throw new ModuleException("Can bind annotations only to predicate selector statements: "
-						+ selDef.getQualifiedName(), LOLA.MODULE_NAME, selDef);
+						+ selDef.getQualifiedName(), ModuleNames.LOLA, selDef);
 			}
 		}
 	}
@@ -248,7 +249,7 @@ public class AnnotationSuperImposition
 							(selectors.get(errorLocation)).qname);
 					// At least one of the result sets shrunk, this is not
 					// allowed
-					throw new ModuleException(msg.toString(), LOLA.MODULE_NAME);
+					throw new ModuleException(msg.toString(), ModuleNames.LOLA);
 				}
 
 				if (!equalContents(tempState.selectorResults, myState.selectorResults))
@@ -289,7 +290,7 @@ public class AnnotationSuperImposition
 					throw new ModuleException(
 							"The annotation superimposition algorithm detected that there are different possible\n "
 									+ "orders of annotation superimposition. If you get this message, contact the Compose* developers",
-							LOLA.MODULE_NAME);
+							ModuleNames.LOLA);
 				}
 				else
 				{
@@ -392,7 +393,7 @@ public class AnnotationSuperImposition
 	{
 		if (res1.size() != res2.size())
 		{
-			throw new ModuleException("Internal error; selector resultsets differ in size", LOLA.MODULE_NAME);
+			throw new ModuleException("Internal error; selector resultsets differ in size", ModuleNames.LOLA);
 		}
 
 		for (int i = 0; i < res1.size(); i++)
@@ -420,7 +421,7 @@ public class AnnotationSuperImposition
 	{
 		if (res1.size() != res2.size())
 		{
-			throw new ModuleException("Internal error; selector resultsets differ in size", LOLA.MODULE_NAME);
+			throw new ModuleException("Internal error; selector resultsets differ in size", ModuleNames.LOLA);
 		}
 
 		for (int i = 0; i < res1.size(); i++)
