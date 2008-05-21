@@ -55,8 +55,16 @@ public class ParallelTask extends TaskCollection
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Manager.MODULE_NAME);
 
+	/**
+	 * Maximum of parallel processes to run
+	 */
 	protected int max = 0;
 
+	/**
+	 * Maximum number of processes to run per CPU. Overrides the max setting.
+	 * 
+	 * @see #max
+	 */
 	protected int perprocessor = 0;
 
 	protected Object semaphore = new Object();
@@ -182,6 +190,9 @@ public class ParallelTask extends TaskCollection
 		}
 	}
 
+	/**
+	 * Calculates the maximum number of threads to launch
+	 */
 	protected void updateMaxThreads()
 	{
 		if (perprocessor != 0)

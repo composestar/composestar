@@ -76,21 +76,16 @@ public interface CTCommonModule
 		Fatal
 	}
 
-	// TODO: implement
-	// Importance getImportance();
-
-	// TODO: change to annotation?
-	// String getModuleID();
-
 	/**
 	 * The run function of each module is called in the same order as the
 	 * modules where added to the Master.
 	 * 
 	 * @param resources The resources objects contains the common resources
 	 *            availabe e.g the Repository.
-	 * @return TODO
+	 * @return
 	 * @throws Composestar.Core.Exception.ModuleException If a ModuleException
 	 *             is thrown the Master will stop its activity emidiately.
+	 * @see ModuleReturnValue
 	 */
 	ModuleReturnValue run(CommonResources resources) throws ModuleException;
 }

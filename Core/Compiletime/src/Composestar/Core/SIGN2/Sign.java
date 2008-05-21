@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
@@ -53,6 +54,7 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * @author Arjan de Roo
  */
+@ComposestarModule(ID = ModuleNames.SIGN, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH })
 public class Sign implements CTCommonModule
 {
 	private static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SIGN);

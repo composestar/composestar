@@ -28,7 +28,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
+import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Config.ModuleInfo;
+import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
@@ -46,15 +51,46 @@ public class Manager
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
 
+	/**
+	 * The child tasks to execute in order
+	 */
 	protected SequentialTask tasks;
 
 	protected CommonResources resources;
 
+	/**
+	 * The results of modules that were executed
+	 */
+	protected Map<String, CTCommonModule.ModuleReturnValue> moduleResults;
+
+	/**
+	 * Defines which groups of modules should be executed.
+	 */
+	protected Map<CTCommonModule.Importance, Boolean> importance;
+
+	/**
+	 * If set to true modules will always be executed. TASMAN sets this to true
+	 * when a module was executed that did not have a module ID.
+	 */
+	protected boolean undeterministic;
+
 	public Manager(CommonResources inresources)
 	{
+		undeterministic = false;
 		resources = inresources;
+		moduleResults = new HashMap<String, CTCommonModule.ModuleReturnValue>();
+		importance = new HashMap<CTCommonModule.Importance, Boolean>();
+		importance.put(CTCommonModule.Importance.Required, true);
+		importance.put(CTCommonModule.Importance.Validation, true);
+		importance.put(CTCommonModule.Importance.Advising, true);
 	}
 
+	/**
+	 * Get the input stream that contains the TASMAN configuration
+	 * 
+	 * @return
+	 * @throws ModuleException
+	 */
 	protected InputStream getConfigFile() throws ModuleException
 	{
 		String filename = resources.configuration().getSetting(MODULE_NAME + ".config");
@@ -94,6 +130,11 @@ public class Manager
 				+ "' and failed loading the internal configuration.", MODULE_NAME);
 	}
 
+	/**
+	 * Load the configuration of TASMAN
+	 * 
+	 * @throws ModuleException
+	 */
 	public void loadConfig() throws ModuleException
 	{
 		tasks = TASMANConfig.loadConfig(getConfigFile());
@@ -114,20 +155,129 @@ public class Manager
 		tasks.execute(this, resources);
 	}
 
-	public synchronized void reportModuleResult(CTCommonModule.ModuleReturnValue result, CTCommonModule module)
-			throws ModuleException
+	/**
+	 * Get the ID of a module. Tries to get the ID from the ComposestarModule
+	 * annotation or the ModuleInformation.
+	 * 
+	 * @param moduleClass
+	 * @return
+	 */
+	public static String getModuleID(Class<? extends CTCommonModule> moduleClass)
 	{
-		switch (result)
+		ComposestarModule annot = moduleClass.getAnnotation(ComposestarModule.class);
+		if (annot != null)
 		{
-			case Fatal:
-				throw new ModuleException("Module execution was fatal", MODULE_NAME
-				// , module.getModuleID()
-				);
-			case Error:
-				// mark this module as failed in the dependency graph
-				break;
-			case Ok:
-			default:
+			return annot.ID();
 		}
+		else
+		{
+			logger.warn(String.format("The module class %s does not have a ComposestarModule annotation", moduleClass
+					.getName()));
+			// no annotation, try a different way
+			ModuleInfo mi = ModuleInfoManager.get(moduleClass);
+			if (mi != null)
+			{
+				return mi.getId();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Method to call to report the result of a module.
+	 * 
+	 * @param result
+	 * @param module
+	 * @throws ModuleException
+	 */
+	public synchronized void reportModuleResult(CTCommonModule.ModuleReturnValue result, CTCommonModule module,
+			boolean throwOnFatal) throws ModuleException
+	{
+		if (module == null)
+		{
+			return;
+		}
+		String moduleid = getModuleID(module.getClass());
+		if (moduleid == null)
+		{
+			// Panic! No module name
+			logger.warn(String.format("Module %s does not have an ID, switching to always execute modules", module
+					.getClass().getName()));
+			undeterministic = true;
+			moduleid = module.getClass().getName();
+		}
+		else
+		{
+			moduleResults.put(moduleid, result);
+		}
+		if (result == CTCommonModule.ModuleReturnValue.Fatal && throwOnFatal)
+		{
+			throw new ModuleException("Module execution was fatal", moduleid);
+		}
+	}
+
+	/**
+	 * Will return true when this module can execute. Execution of this module
+	 * depends on the execution result of its dependencies.
+	 * 
+	 * @param module
+	 * @return
+	 * @throws ModuleException
+	 */
+	public boolean canExecute(Class<? extends CTCommonModule> module) throws ModuleException
+	{
+		ComposestarModule annot = module.getAnnotation(ComposestarModule.class);
+		if (annot == null)
+		{
+			// no annotation, can not check it, always execute
+			return true;
+		}
+		if (!importance.get(annot.importance()))
+		{
+			return false || undeterministic;
+		}
+		for (String dep : annot.dependsOn())
+		{
+			if (ComposestarModule.DEPEND_ALL.equals(dep))
+			{
+				// check if everything executed
+				for (CTCommonModule.ModuleReturnValue res : moduleResults.values())
+				{
+					if (res != CTCommonModule.ModuleReturnValue.Ok)
+					{
+						// one failed
+						logger.info(String.format("Module %s depends on module %s which did not return Ok", annot.ID(),
+								dep));
+						return false || undeterministic;
+					}
+				}
+			}
+			else if (ComposestarModule.DEPEND_PREVIOUS.equals(dep))
+			{
+				// check previously executed module
+			}
+			else
+			{
+				synchronized (moduleResults)
+				{
+					// check dep tree
+					if (!moduleResults.containsKey(dep))
+					{
+						// not executed
+						logger.info(String.format("Module %s depends on module %s which was not executed", annot.ID(),
+								dep));
+						return false || undeterministic;
+					}
+					else if (moduleResults.get(dep) != CTCommonModule.ModuleReturnValue.Ok)
+					{
+						// no valid execution
+						logger.info(String.format("Module %s depends on module %s which did not return Ok", annot.ID(),
+								dep));
+						return false || undeterministic;
+					}
+				}
+			}
+		}
+		return true;
 	}
 }

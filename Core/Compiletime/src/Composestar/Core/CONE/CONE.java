@@ -9,6 +9,7 @@
  */
 package Composestar.Core.CONE;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
@@ -16,6 +17,7 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * Repository serializer
  */
+@ComposestarModule(ID = ModuleNames.CONE, dependsOn = { ComposestarModule.DEPEND_ALL })
 public abstract class CONE implements CTCommonModule
 {
 	/**

@@ -30,6 +30,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import Composestar.Core.Master.CTCommonModule;
+
 /**
  * Annotation used to provide meta data for Compose* modules. In the future this
  * annotation will be used to automatically generate the moduleinfo.xml files.
@@ -54,6 +56,27 @@ public @interface ComposestarModule
 	 * modules.
 	 * 
 	 * @return
+	 * @see #DEPEND_ALL
+	 * @see #DEPEND_PREVIOUS
 	 */
 	String[] dependsOn() default {};
+
+	/**
+	 * Defines the role of this module within the whole Compose* compiler chain.
+	 * It defaults to the Required level.
+	 * 
+	 * @return
+	 */
+	CTCommonModule.Importance importance() default CTCommonModule.Importance.Required;
+
+	/**
+	 * Depends on the proper execution of all previous modules. In case of
+	 * incremental compilation this means that this module will always execute.
+	 */
+	public static final String DEPEND_ALL = "*";
+
+	/**
+	 * It depends on the module that was executed before this module.
+	 */
+	public static final String DEPEND_PREVIOUS = "<";
 }

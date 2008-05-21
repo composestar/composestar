@@ -21,6 +21,7 @@ import tarau.jinni.Builtins;
 import tarau.jinni.DataBase;
 import tarau.jinni.IO;
 import tarau.jinni.Init;
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
@@ -42,6 +43,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * LOgic predicate LAnguage Facade/API Controls the prolog query engine and the
  * language meta model
  */
+@ComposestarModule(ID = ModuleNames.LOLA, dependsOn = { ModuleNames.COLLECTOR, ModuleNames.PARUM_REXREF })
 public abstract class LOLA implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.LOLA);
@@ -298,8 +300,8 @@ public abstract class LOLA implements CTCommonModule
 		Writer oldIOOutput = IO.output;
 		try
 		{
-			IO.output = new OutputStreamWriter(new OutputStreamRedirector(CPSLogger
-					.getCPSLogger(ModuleNames.LOLA + ".Jinni"), Level.WARN));
+			IO.output = new OutputStreamWriter(new OutputStreamRedirector(CPSLogger.getCPSLogger(ModuleNames.LOLA
+					+ ".Jinni"), Level.WARN));
 
 			dataStore = resources.repository();
 

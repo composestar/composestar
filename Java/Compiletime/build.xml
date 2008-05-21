@@ -82,6 +82,7 @@
 				<include name="**/moduleinfo.xml" />
 				<include name="Platforms.xml" />
 				<include name="INCREconfig.xml" />
+				<include name="TASMANConfig.xml" />
 			</fileset>
 		</copy>
 

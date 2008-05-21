@@ -3,6 +3,7 @@ package Composestar.Core.SANE;
 import java.util.Iterator;
 import java.util.Vector;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
@@ -23,6 +24,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * This is a Facade for the SANE module; this is the module that traverses all
  * the concerns in an application and resolves superimpositions.
  */
+@ComposestarModule(ID = ModuleNames.SANE, dependsOn = { ModuleNames.COPPER })
 public class SANE implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SANE);

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
@@ -29,6 +30,7 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.Master.CTCommonModule.Importance;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.Resources.CommonResources;
@@ -41,6 +43,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * 
  * @author Michiel Hendriks
  */
+@ComposestarModule(ID = ModuleNames.DIGGER, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH }, importance = Importance.Validation)
 public class DIGGER implements CTCommonModule
 {
 	/**

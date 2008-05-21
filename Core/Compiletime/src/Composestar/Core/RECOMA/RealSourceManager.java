@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.COMP.LangCompiler;
 import Composestar.Core.Config.BuildConfig;
@@ -32,6 +33,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * Takes care of compiling the real user sources. Links with the dummies and
  * takes care not to destroy them during compilation.
  */
+@ComposestarModule(ID = ModuleNames.RECOMA, dependsOn = { ComposestarModule.DEPEND_ALL })
 public class RealSourceManager implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.RECOMA);

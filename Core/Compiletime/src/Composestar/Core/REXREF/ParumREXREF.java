@@ -24,6 +24,7 @@
 
 package Composestar.Core.REXREF;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.SelectorReference;
@@ -37,6 +38,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
+@ComposestarModule(ID = ModuleNames.PARUM_REXREF, dependsOn = { ModuleNames.COPPER })
 public class ParumREXREF extends Main
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.REXREF);

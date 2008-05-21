@@ -38,6 +38,7 @@ import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.SyntacticOrderingConstraint;
@@ -57,6 +58,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * 
  * @author Michiel Hendriks
  */
+@ComposestarModule(ID = ModuleNames.COPPER)
 public class COPPER implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COPPER);
@@ -201,7 +203,8 @@ public class COPPER implements CTCommonModule
 			catch (RecognitionException e)
 			{
 				System.setErr(oldErr);
-				throw new ModuleException(e.getMessage(), ModuleNames.COPPER, file.toString(), e.line, e.charPositionInLine, e);
+				throw new ModuleException(e.getMessage(), ModuleNames.COPPER, file.toString(), e.line,
+						e.charPositionInLine, e);
 			}
 			System.setErr(oldErr);
 

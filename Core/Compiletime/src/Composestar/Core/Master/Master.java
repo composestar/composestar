@@ -551,7 +551,6 @@ public abstract class Master
 			// initialize INCRE
 			INCRE incre = new INCRE();
 			incre.init(resources);
-
 			// execute enabled modules one by one
 			incre.runModules(resources);
 

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FIRE2.model.ExecutionModel;
@@ -40,6 +41,7 @@ import Composestar.Utils.Perf.CPSTimer;
 /**
  * @author Arjan de Roo
  */
+@ComposestarModule(ID = ModuleNames.FIRE, dependsOn = { ModuleNames.COPPER })
 public class Preprocessor implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FIRE);

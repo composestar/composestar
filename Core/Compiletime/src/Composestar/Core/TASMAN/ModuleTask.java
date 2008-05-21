@@ -27,6 +27,7 @@ package Composestar.Core.TASMAN;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
+import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
 /**
@@ -36,8 +37,16 @@ import Composestar.Utils.Perf.CPSTimer;
  */
 public class ModuleTask extends Task
 {
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Manager.MODULE_NAME);
+
+	/**
+	 * The CTCommonModule implementation to instantiate and execute
+	 */
 	protected Class<? extends CTCommonModule> moduleClass;
 
+	/**
+	 * The module instance
+	 */
 	protected CTCommonModule module;
 
 	/**
@@ -48,6 +57,12 @@ public class ModuleTask extends Task
 		super();
 	}
 
+	/**
+	 * Set the module class
+	 * 
+	 * @param ftype
+	 * @throws ClassNotFoundException
+	 */
 	public void setModuleClass(String ftype) throws ClassNotFoundException
 	{
 		Class<?> mclass = Class.forName(ftype);
@@ -57,11 +72,19 @@ public class ModuleTask extends Task
 		}
 	}
 
+	/**
+	 * Set the module class
+	 * 
+	 * @param ftype
+	 */
 	public void setModuleClass(Class<? extends CTCommonModule> ftype)
 	{
 		moduleClass = ftype;
 	}
 
+	/**
+	 * @return the module class
+	 */
 	public Class<? extends CTCommonModule> getModuleClass()
 	{
 		return moduleClass;
@@ -79,6 +102,11 @@ public class ModuleTask extends Task
 		{
 			throw new ModuleException("Task has no module class assigned", Manager.MODULE_NAME);
 		}
+		if (!manager.canExecute(moduleClass))
+		{
+			logger.info(String.format("Skipping execution of %s (dependencies are not met)", moduleClass.getName()));
+			return;
+		}
 		if (module == null)
 		{
 			try
@@ -95,12 +123,22 @@ public class ModuleTask extends Task
 			}
 		}
 		resources.inject(module);
-		CPSTimer timer = CPSTimer.getTimer(Manager.MODULE_NAME, "Executing module %s (thread: %s)", module.getClass(),
-				Thread.currentThread().getName());
+		String mname = Manager.getModuleID(moduleClass);
+		if (mname == null)
+		{
+			mname = moduleClass.getName();
+		}
+		CPSTimer timer = CPSTimer.getTimer(Manager.MODULE_NAME, "Executing module %s (thread: %s)", mname, Thread
+				.currentThread().getName());
 		try
 		{
 			CTCommonModule.ModuleReturnValue result = module.run(resources);
-			manager.reportModuleResult(result, module);
+			manager.reportModuleResult(result, module, true);
+		}
+		catch (ModuleException e)
+		{
+			manager.reportModuleResult(CTCommonModule.ModuleReturnValue.Fatal, module, false);
+			throw e;
 		}
 		finally
 		{

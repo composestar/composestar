@@ -14,6 +14,7 @@ import Composestar.Core.FIRE2.model.FlowModel;
 /**
  * @author Arjan de Roo
  */
+
 public class FirePreprocessingResult implements Serializable
 {
 	private static final long serialVersionUID = 4193686682386435353L;

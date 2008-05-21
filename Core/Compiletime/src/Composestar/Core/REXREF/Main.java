@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
@@ -51,6 +52,7 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * Resolves references to objects in the repository
  */
+@ComposestarModule(ID = ModuleNames.REXREF, dependsOn = { ModuleNames.LOLA, ModuleNames.COPPER })
 public class Main implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.REXREF);

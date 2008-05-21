@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.CustomFilter;
@@ -30,6 +31,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * BACO is responsible for copying all files required to execute the compiled
  * program to the output directory.
  */
+@ComposestarModule(ID = ModuleNames.BACO, dependsOn = { ComposestarModule.DEPEND_ALL })
 public abstract class BACO implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.BACO);

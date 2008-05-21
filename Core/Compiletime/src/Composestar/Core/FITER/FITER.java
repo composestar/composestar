@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.COPPER2.FilterTypeMapping;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
@@ -27,6 +28,7 @@ import Composestar.Core.LOLA.metamodel.EUnitType;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
+import Composestar.Core.Master.CTCommonModule.Importance;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -36,6 +38,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author pascal
  */
+@ComposestarModule(ID = ModuleNames.FITER, dependsOn = { ModuleNames.LOLA }, importance = Importance.Validation)
 public class FITER implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FITER);

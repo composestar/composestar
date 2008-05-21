@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.COMP.LangCompiler;
 import Composestar.Core.Config.BuildConfig;
@@ -24,6 +25,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * Dummy manager module. This will set up the information for dummy generation
  * and then call the appropriate dummy emitters.
  */
+@ComposestarModule(ID = ModuleNames.DUMMER)
 public class DummyManager implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.DUMMER);
@@ -133,7 +135,8 @@ public class DummyManager implements CTCommonModule
 			}
 			catch (CompilerException e)
 			{
-				throw new ModuleException(String.format("Error compiling dummies: %s", e.getMessage()), ModuleNames.DUMMER);
+				throw new ModuleException(String.format("Error compiling dummies: %s", e.getMessage()),
+						ModuleNames.DUMMER);
 			}
 		}
 	}
