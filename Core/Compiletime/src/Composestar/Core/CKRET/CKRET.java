@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.OperationSequence;
@@ -61,9 +62,11 @@ public class CKRET implements CTCommonModule
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.SECRET);
 
 	/**
-	 * The mode secret should execute in.
+	 * The mode determines what filter module ordering should be validated by
+	 * SECRET.
 	 */
-	protected SECRETMode mode;
+	@ModuleSetting
+	protected SECRETMode mode = SECRETMode.Normal;
 
 	@ResourceManager
 	protected SECRETResources secretResources;
@@ -73,7 +76,8 @@ public class CKRET implements CTCommonModule
 	 * "true" then the {@link XMLReport} class will be used. This variable is
 	 * set through the project configuration.
 	 */
-	protected String reportClass;
+	@ModuleSetting(ID = "reportGenerator")
+	protected String reportClass = "true";
 
 	/*
 	 * (non-Javadoc)
@@ -153,8 +157,8 @@ public class CKRET implements CTCommonModule
 	private void loadConfiguration(CommonResources resources) throws ConfigurationException
 	{
 		ModuleInfo mi = ModuleInfoManager.get(ModuleNames.SECRET);
-		mode = mi.getSetting("mode", SECRETMode.Normal);
-		reportClass = mi.getSetting("reportGenerator", "");
+		// mode = mi.getSetting("mode", SECRETMode.Normal);
+		// reportClass = mi.getSetting("reportGenerator", "");
 
 		File configFile = null;
 		String cfgfile = mi.getSetting("baseconfig", "");

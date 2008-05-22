@@ -14,10 +14,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.In;
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.Out;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.Config.BuildConfig;
@@ -274,7 +278,7 @@ public class CommonResources implements Serializable
 
 	public void removeResourceManager(Class<? extends ModuleResourceManager> key)
 	{
-		resourceManagers.remove(key.getClass());
+		resourceManagers.remove(key);
 	}
 
 	public <T> T create(String key, Class<T> c)
@@ -341,6 +345,12 @@ public class CommonResources implements Serializable
 					}
 				}
 
+				ModuleSetting ms = field.getAnnotation(ModuleSetting.class);
+				if (ms != null)
+				{
+					assignSetting(object, field, ms);
+				}
+
 				In in = field.getAnnotation(In.class);
 				Out out = field.getAnnotation(Out.class);
 
@@ -382,6 +392,206 @@ public class CommonResources implements Serializable
 				}
 			}
 			c = c.getSuperclass();
+		}
+	}
+
+	/**
+	 * Assigns the values of settings in the configuration file to the fields
+	 * with ModuleSetting annotations.
+	 * 
+	 * @param subject
+	 * @param field
+	 * @param setting
+	 */
+	protected void assignSetting(Object subject, Field field, ModuleSetting setting)
+	{
+		// Construct the setting id
+		String settingId = setting.ID();
+		if (settingId.length() == 0)
+		{
+			settingId = field.getName();
+		}
+		if (settingId.indexOf('.') == -1)
+		{
+			// No explicit module defined, use the module ID of the subject
+			ComposestarModule cm = subject.getClass().getAnnotation(ComposestarModule.class);
+			if (cm != null)
+			{
+				settingId = cm.ID() + "." + settingId;
+			}
+			else
+			{
+				// TODO report an error/warning? and return?
+			}
+		}
+		if (settingId.indexOf('.') == 0)
+		{
+			// requesting root item
+			settingId = settingId.substring(1);
+		}
+		String value = config.getSetting(settingId);
+		if (value == null)
+		{
+			// has not been set, leave it as the default
+			return;
+		}
+		// Convert the string value
+		Object objectValue = null;
+		Class<?> valueType = field.getType();
+		if (valueType == String.class || (setting.setter().length() > 0 && setting.setterTakesString()))
+		{
+			objectValue = value;
+			valueType = String.class;
+		}
+		else if (valueType == Integer.class || valueType == int.class)
+		{
+			if (value.length() == 0)
+			{
+				return;
+			}
+			try
+			{
+				objectValue = Integer.valueOf(value);
+			}
+			catch (NumberFormatException e)
+			{
+				logger.error(String.format("The value of setting %s is not a valid integer: %s", settingId, value));
+				return;
+			}
+		}
+		else if (valueType == Float.class || valueType == float.class)
+		{
+			if (value.length() == 0)
+			{
+				return;
+			}
+			try
+			{
+				objectValue = Float.valueOf(value);
+			}
+			catch (NumberFormatException e)
+			{
+				logger.error(String.format("The value of setting %s is not a valid float: %s", settingId, value));
+				return;
+			}
+		}
+		else if (valueType == Double.class || valueType == double.class)
+		{
+			if (value.length() == 0)
+			{
+				return;
+			}
+			try
+			{
+				objectValue = Double.valueOf(value);
+			}
+			catch (NumberFormatException e)
+			{
+				logger.error(String.format("The value of setting %s is not a valid double: %s", settingId, value));
+				return;
+			}
+		}
+		else if (valueType == Long.class || valueType == long.class)
+		{
+			if (value.length() == 0)
+			{
+				return;
+			}
+			try
+			{
+				objectValue = Long.valueOf(value);
+			}
+			catch (NumberFormatException e)
+			{
+				logger.error(String.format("The value of setting %s is not a valid long: %s", settingId, value));
+				return;
+			}
+		}
+		else if (valueType == Boolean.class || valueType == boolean.class)
+		{
+			if (value.length() == 0)
+			{
+				return;
+			}
+			objectValue = Boolean.valueOf(value);
+		}
+		else if (Enum.class.isAssignableFrom(field.getType()))
+		{
+			if (value.length() == 0)
+			{
+				return;
+			}
+			try
+			{
+				Class<Enum> enumcls = (Class<Enum>) field.getType();
+				objectValue = (Enum) Enum.valueOf(enumcls, value);
+			}
+			catch (IllegalArgumentException e)
+			{
+				logger.error(String.format("The value '%s' of setting %s is not a valid enum value of type %s", value,
+						settingId, field.getType().getName()));
+				return;
+			}
+		}
+		else
+		{
+			logger.error(String.format("Settings field %s in class %s does not have a settable type %s.", field
+					.getName(), subject.getClass().getName(), field.getType()));
+			return;
+		}
+		// Assign the value
+		if (setting.setter().length() > 0)
+		{
+			// Delegate the setting to a setter
+			try
+			{
+				Method setter = subject.getClass().getMethod(setting.setter(), valueType);
+				setter.invoke(subject, objectValue);
+			}
+			catch (SecurityException e)
+			{
+				logger.error(String.format("Setter %s for settings field %s in class %s not public", setting.setter(),
+						field.getName(), subject.getClass().getName()));
+			}
+			catch (NoSuchMethodException e)
+			{
+				logger.error(String.format("Setter %s for settings field %s in class %s not found", setting.setter(),
+						field.getName(), subject.getClass().getName()));
+			}
+			catch (IllegalArgumentException e)
+			{
+				logger.error(String.format("Error calling setter %s for settings field %s in class %s", setting
+						.setter(), field.getName(), subject.getClass().getName()), e);
+			}
+			catch (IllegalAccessException e)
+			{
+				logger.error(String.format("Setter %s for settings field %s in class %s not public", setting.setter(),
+						field.getName(), subject.getClass().getName()));
+			}
+			catch (InvocationTargetException e)
+			{
+				logger.error(String.format("Error calling setter %s for settings field %s in class %s", setting
+						.setter(), field.getName(), subject.getClass().getName()), e);
+			}
+		}
+		else
+		{
+			// otherwise directly write the variable
+			try
+			{
+				field.setAccessible(true);
+				field.set(subject, objectValue);
+			}
+			catch (IllegalArgumentException e)
+			{
+				logger.error(String.format("Error setting settings field %s in class %s", setting.setter(), field
+						.getName(), subject.getClass().getName()), e);
+			}
+			catch (IllegalAccessException e)
+			{
+				logger.error(String.format("Error setting settings field %s in class %s", setting.setter(), field
+						.getName(), subject.getClass().getName()), e);
+			}
 		}
 	}
 

@@ -26,59 +26,57 @@ package Composestar.Core.Annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import Composestar.Core.Master.CTCommonModule;
-
 /**
- * Annotation used to provide meta data for Compose* modules. In the future this
- * annotation will be used to automatically generate the moduleinfo.xml files.
+ * Annotation to be used on fields of modules to automatically set some fields
+ * according to the module configuration. These annotations will also be used to
+ * construct the ModuleInfo.xml files. The JavaDoc item of a field will be used
+ * as the description for the configuration entry.
  * 
  * @author Michiel Hendriks
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Documented
-@Inherited
-public @interface ComposestarModule
+public @interface ModuleSetting
 {
 	/**
-	 * The ID of this module
+	 * The id of the setting, uses the field name when unset. Can be prefixed
+	 * with a module name to get a setting from that module. For example the
+	 * field "myVar" in the module "MyMOD" with no id value will read from the
+	 * configuration entry "MyMOD.myVar" if the id value is "configItem" it will
+	 * read from "MyMOD.configItem", if the id value is "OtherMOD.Config" then
+	 * it will read from that entry.
 	 * 
 	 * @return
 	 */
-	String ID();
+	String ID() default "";
 
 	/**
-	 * IDs of modules this module depends on. Will be used for conditional
-	 * execution of this module depending on the result of the depending
-	 * modules.
-	 * 
-	 * @return
-	 * @see #DEPEND_ALL
-	 * @see #DEPEND_PREVIOUS
-	 */
-	String[] dependsOn() default {};
-
-	/**
-	 * Defines the role of this module within the whole Compose* compiler chain.
-	 * It defaults to the Required level.
+	 * Human readable name for this setting. Will be used in the generation of
+	 * documentation.
 	 * 
 	 * @return
 	 */
-	CTCommonModule.Importance importance() default CTCommonModule.Importance.Required;
+	String name() default "";
 
 	/**
-	 * Depends on the proper execution of all previous modules. In case of
-	 * incremental compilation this means that this module will always execute.
+	 * The method to execute to set this field value. If this is an empty string
+	 * it will simply directly write the value. Otherwise it will call this
+	 * method with the configuration value, if present.
+	 * 
+	 * @return
 	 */
-	public static final String DEPEND_ALL = "*";
+	String setter() default "";
 
 	/**
-	 * It depends on the module that was executed before this module.
+	 * If this is set to true the string value is passed to the setter rather
+	 * than converting it to the type of the field
+	 * 
+	 * @return
 	 */
-	public static final String DEPEND_PREVIOUS = "<";
+	boolean setterTakesString() default false;
 }
