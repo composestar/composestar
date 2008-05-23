@@ -36,12 +36,12 @@ import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Xml.BuildConfigHandler;
 import Composestar.Core.Config.Xml.PlatformConfigHandler;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.Resources.PathResolver;
+import Composestar.Core.TASMAN.Manager;
 import Composestar.Utils.CmdLineParser;
 import Composestar.Utils.Version;
 import Composestar.Utils.Logging.CPSLogger;
@@ -548,14 +548,14 @@ public abstract class Master
 		{
 			preBuild();
 
-			// initialize INCRE
-			INCRE incre = new INCRE();
-			incre.init(resources);
-			// execute enabled modules one by one
-			incre.runModules(resources);
+			// // initialize INCRE
+			// INCRE incre = new INCRE();
+			// incre.init(resources);
+			// // execute enabled modules one by one
+			// incre.runModules(resources);
 
-			// Manager manager = new Manager(resources);
-			// manager.runTasks();
+			Manager manager = new Manager(resources);
+			manager.runTasks();
 
 			postBuild();
 

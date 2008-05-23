@@ -85,7 +85,7 @@
 		<copy todir="${out.dist}">
 			<fileset dir="src">
 				<include name="INCREconfig.xml" />
-				<include name="TASMANConfig" />
+				<include name="TASMANConfig.xml" />
 			</fileset>
 		</copy>
 		<antcall target="test_tasmanconfig" inheritRefs="true" />
@@ -164,7 +164,7 @@
 				<include name="**/moduleinfo.xml" />
 				<include name="Platforms.xml" />
 				<include name="INCREconfig.xml" />
-				<include name="TASMANConfig" />
+				<include name="TASMANConfig.xml" />
 			</fileset>
 		</copy>
 		<jar destfile="${out.jar.dotnet}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
