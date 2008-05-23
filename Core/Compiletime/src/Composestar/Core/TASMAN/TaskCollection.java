@@ -25,6 +25,7 @@
 package Composestar.Core.TASMAN;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,5 +51,13 @@ public abstract class TaskCollection extends Task
 	public void addTask(Task newtask)
 	{
 		tasks.add(newtask);
+	}
+
+	/**
+	 * @return the tasks in this collection
+	 */
+	public List<Task> getTasks()
+	{
+		return Collections.unmodifiableList(tasks);
 	}
 }

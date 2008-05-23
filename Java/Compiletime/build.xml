@@ -46,8 +46,10 @@
 	<target name="build" depends="init_local,antlr,compile_java,jar" description="build the Java compiletime">
 		<schemavalidate>
 			<schema namespace="http://composestar.sourceforge.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
+			<schema namespace="http://composestar.sourceforge.net/schema/TASMAN" file="${build.core}/Compiletime/src/Composestar/Core/TASMAN/Xml/TASMANConfig.xsd" />
 			<fileset dir="src">
 				<include name="Platforms.xml" />
+				<include name="TASMANConfig.xml" />
 			</fileset>
 		</schemavalidate>
 		<copy todir="${out.dist}${file.separator}lib">
@@ -63,6 +65,7 @@
 			</fileset>
 		</copy>
 		<antcall target="eclipse_manifest" inheritRefs="true" />
+		<antcall target="test_tasmanconfig" inheritRefs="true" />
 	</target>
 
 	<target name="antlr">
@@ -87,6 +90,18 @@
 		</copy>
 
 		<jar destfile="${out.jar.java}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
+	</target>
+
+	<target name="test_tasmanconfig" depends="init_local">
+		<java classname="Composestar.Core.TASMAN.VerifyConfig" failonerror="true">
+			<arg file="src/TASMANConfig.xml" />
+			<classpath>
+				<path refid="lib.java" />
+				<fileset dir="dist">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</java>
 	</target>
 
 	<target name="eclipse_manifest" depends="init_eclipse">

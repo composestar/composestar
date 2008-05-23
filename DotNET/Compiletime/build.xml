@@ -75,8 +75,10 @@
 	<target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet" description="Build the .NET Compiletime">
 		<schemavalidate>
 			<schema namespace="http://composestar.sourceforge.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
+			<schema namespace="http://composestar.sourceforge.net/schema/TASMAN" file="${build.core}/Compiletime/src/Composestar/Core/TASMAN/Xml/TASMANConfig.xsd" />
 			<fileset dir="src">
 				<include name="Platforms.xml" />
+				<include name="TASMANConfig.xml" />
 			</fileset>
 		</schemavalidate>
 		<!-- INCRE configurations -->
@@ -86,6 +88,7 @@
 				<include name="TASMANConfig" />
 			</fileset>
 		</copy>
+		<antcall target="test_tasmanconfig" inheritRefs="true" />
 	</target>
 
 	<target name="antlr">
@@ -165,6 +168,18 @@
 			</fileset>
 		</copy>
 		<jar destfile="${out.jar.dotnet}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
+	</target>
+
+	<target name="test_tasmanconfig" depends="init_local">
+		<java classname="Composestar.Core.TASMAN.VerifyConfig" failonerror="true">
+			<arg file="src/TASMANConfig.xml" />
+			<classpath>
+				<path refid="lib.dotnet" />
+				<fileset dir="dist">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</java>
 	</target>
 
 	<target name="install" depends="build" description="Install the .NET compiletime">

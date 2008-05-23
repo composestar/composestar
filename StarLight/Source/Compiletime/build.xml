@@ -56,7 +56,17 @@
 
 	<!-- build -->
 
-	<target name="build" depends="init_local,build_core,compile,jar" description="Build the StarLight compiletime" />
+	<target name="build" depends="init_local,build_core,compile,jar" description="Build the StarLight compiletime">
+		<schemavalidate>
+			<schema namespace="http://composestar.sourceforge.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
+			<schema namespace="http://composestar.sourceforge.net/schema/TASMAN" file="${build.core}/Compiletime/src/Composestar/Core/TASMAN/Xml/TASMANConfig.xsd" />
+			<fileset dir="src">
+				<include name="Platforms.xml" />
+				<include name="TASMANConfig.xml" />
+			</fileset>
+		</schemavalidate>
+		<antcall target="test_tasmanconfig" inheritRefs="true" />
+	</target>
 
 	<target name="build_core" depends="init" if="imply.core">
 		<ant target="build" dir="${build.core}/Compiletime" inheritRefs="true" />
@@ -111,6 +121,18 @@
 			</fileset>
 		</copy>
 		<jar destfile="${starlight.jar}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
+	</target>
+
+	<target name="test_tasmanconfig" depends="init_local">
+		<java classname="Composestar.Core.TASMAN.VerifyConfig" failonerror="true">
+			<arg file="src/TASMANConfig.xml" />
+			<classpath>
+				<path refid="lib.starlight" />
+				<fileset dir="dist">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</java>
 	</target>
 
 	<!-- deploy -->

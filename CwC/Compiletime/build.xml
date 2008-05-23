@@ -34,11 +34,14 @@
 	<target name="build" depends="init_local,compile,jar" description="build the C compiletime">
 		<schemavalidate>
 			<schema namespace="http://composestar.sourceforge.net/schema/PlatformConfiguration" file="${build.core}/Compiletime/src/Composestar/Core/Config/Xml/PlatformConfiguration.xsd" />
+			<schema namespace="http://composestar.sourceforge.net/schema/TASMAN" file="${build.core}/Compiletime/src/Composestar/Core/TASMAN/Xml/TASMANConfig.xsd" />
 			<fileset dir="src">
 				<include name="Platforms.xml" />
+				<include name="TASMANConfig.xml" />
 			</fileset>
 		</schemavalidate>
 		<copy file="lib/weavec.jar" todir="${out.dist}/lib" />
+		<antcall target="test_tasmanconfig" inheritRefs="true" />
 	</target>
 
 	<target name="compile" depends="init_local">
@@ -61,6 +64,18 @@
 	</target>
 
 	<target name="install" depends="build" description="Install the C compiletime">
+	</target>
+
+	<target name="test_tasmanconfig" depends="init_local">
+		<java classname="Composestar.Core.TASMAN.VerifyConfig" failonerror="true">
+			<arg file="src/TASMANConfig.xml" />
+			<classpath>
+				<path refid="lib.cwc" />
+				<fileset dir="dist">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</java>
 	</target>
 
 </project>
