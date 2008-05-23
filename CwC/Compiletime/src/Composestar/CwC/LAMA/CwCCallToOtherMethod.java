@@ -32,6 +32,11 @@ import antlr.collections.AST;
  */
 public class CwCCallToOtherMethod extends CallToOtherMethod
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7757781861461653392L;
+
 	protected AST astNode;
 
 	public CwCCallToOtherMethod()

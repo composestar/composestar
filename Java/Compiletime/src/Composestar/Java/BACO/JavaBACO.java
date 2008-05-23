@@ -12,7 +12,6 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Java.WEAVER.JavaWeaver;
 import Composestar.Utils.FileUtils;
-import Composestar.Utils.Logging.CPSLogger;
 
 public class JavaBACO extends BACO
 {

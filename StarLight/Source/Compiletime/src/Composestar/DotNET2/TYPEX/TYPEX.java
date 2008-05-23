@@ -16,6 +16,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * @author Marcus Klimstra
  * @deprecated
  */
+@Deprecated
 public class TYPEX implements CTCommonModule
 {
 	public static final String MODULE_NAME = "TYPEX";
