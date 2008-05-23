@@ -7,11 +7,8 @@
           <File Id='INCRECONFIG' Name='INCRcnfg.xml' LongName='INCREconfig.xml' DiskId='1'
             Source='../installed/INCREconfig.xml' Vital='yes'>
           </File>
-          <File Id='INCREcss' Name='INCRE.css' LongName='INCRE.css' DiskId='1'
-            Source='../installed/INCRE.css' Vital='yes'>
-          </File>
-          <File Id='FILTHxml' Name='FILTH.xml' LongName='FILTH.xml' DiskId='1'
-            Source='../installed/FILTH.xml' Vital='yes'>
+          <File Id='TASMANCONFIG' Name='TASMANcfg.xml' LongName='TASMANConfig.xml' DiskId='1'
+            Source='../installed/TASMANConfig.xml' Vital='yes'>
           </File>
           <File Id='IconProject' Name='project.ico' LongName='ComposeStarProject.ico' DiskId='1'
            Source='../installed/ComposeStarProject.ico' Vital='yes'>

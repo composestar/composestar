@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
@@ -21,6 +22,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel van Oudheusden
  */
+@ComposestarModule(ID = DotNETSemTexCollector.MODULE_NAME + "Collector")
 public class DotNETSemTexCollector implements CTCommonModule
 {
 	public static final String MODULE_NAME = "SEMTEX";

@@ -14,6 +14,7 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.xmlbeans.XmlException;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
@@ -59,6 +60,7 @@ import composestar.dotNET2.tym.entities.MethodElement;
 import composestar.dotNET2.tym.entities.ParameterElement;
 import composestar.dotNET2.tym.entities.TypeElement;
 
+@ComposestarModule(ID = ModuleNames.COLLECTOR)
 public class StarLightCollectorRunner implements CTCommonModule
 {
 	private static CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);
@@ -219,7 +221,8 @@ public class StarLightCollectorRunner implements CTCommonModule
 		catch (XmlException e)
 		{
 			throw new ModuleException(
-					"CollectorRunner: XmlException while parsing " + filename + ": " + e.getMessage(), ModuleNames.COLLECTOR);
+					"CollectorRunner: XmlException while parsing " + filename + ": " + e.getMessage(),
+					ModuleNames.COLLECTOR);
 		}
 		catch (IOException e)
 		{

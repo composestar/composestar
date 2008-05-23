@@ -39,6 +39,13 @@ import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
 /**
+ * FIRE predicts the result of an incoming messages considering a filter set.
+ * FIRE emulates each filter in the filter set and determines possible mappings
+ * between the messages and actions. These combinations, with internal states,
+ * are stored into the FIRE knowledge base. Providing a convenient interface,
+ * FIRE allows other modules querying (and updating) the Reasoning Engine.
+ * Modules that use FIRE are CORE, SECRET and SIGN.
+ * 
  * @author Arjan de Roo
  */
 @ComposestarModule(ID = ModuleNames.FIRE, dependsOn = { ModuleNames.COPPER })

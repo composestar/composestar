@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Config.Project;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
@@ -18,7 +19,6 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FILTH.InnerDispatcher;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
@@ -31,6 +31,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @see Composestar.Java.WEAVER.JavaWeaver#run(CommonResources)
  */
+@ComposestarModule(ID = ModuleNames.WEAVER, dependsOn = { ComposestarModule.DEPEND_ALL })
 public class JavaWeaver implements CTCommonModule
 {
 	/**

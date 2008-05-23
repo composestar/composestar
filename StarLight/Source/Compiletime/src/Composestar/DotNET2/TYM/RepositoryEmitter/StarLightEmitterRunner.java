@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CKRET.SECRETResources;
 import Composestar.Core.CKRET.Config.ConflictRule;
@@ -59,6 +60,7 @@ import composestar.dotNET2.tym.entities.WeaveSpecification;
 import composestar.dotNET2.tym.entities.WeaveSpecificationDocument;
 import composestar.dotNET2.tym.entities.WeaveType;
 
+@ComposestarModule(ID = ModuleNames.WESPEM, dependsOn = { ComposestarModule.DEPEND_ALL, ModuleNames.SIGN })
 public class StarLightEmitterRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WESPEM);

@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.Annotation;
@@ -22,10 +23,12 @@ import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
+@ComposestarModule(ID = AttributeCollector.MODULE_NAME, dependsOn = { ModuleNames.HARVESTER })
 public class AttributeCollector extends DefaultHandler implements CTCommonModule
 {
 	public static final String MODULE_NAME = "AttributeCollector";

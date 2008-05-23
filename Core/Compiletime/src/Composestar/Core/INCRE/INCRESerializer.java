@@ -3,6 +3,7 @@ package Composestar.Core.INCRE;
 import java.io.File;
 import java.io.IOException;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Exception.ModuleException;
@@ -12,6 +13,7 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
+@ComposestarModule(ID = INCRESerializer.MODULE_NAME, dependsOn = { ComposestarModule.DEPEND_ALL })
 public class INCRESerializer implements CTCommonModule
 {
 	public static final String MODULE_NAME = "INCRESerializer";

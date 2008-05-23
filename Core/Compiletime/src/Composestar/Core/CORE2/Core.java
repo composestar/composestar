@@ -21,8 +21,10 @@ import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Consistency reasoning engine. Finds incorrect filters constructions. These
- * are mostly harmless.
+ * CORE checks the filter sets, specified by the developer, for inconsistencies.
+ * Unreachable filters or actions, conditions with a contradiction or tautology,
+ * are examples of problems found by CORE. If a problem is found, the developer
+ * will be notified.
  * 
  * @author Arjan de Roo
  */

@@ -13,6 +13,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
@@ -23,13 +24,13 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.DotNET.LAMA.DotNETTypeResolver;
 import Composestar.Utils.Logging.CPSLogger;
 
+@ComposestarModule(ID = ModuleNames.COLLECTOR, dependsOn = { ModuleNames.HARVESTER })
 public class DotNETCollectorRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);

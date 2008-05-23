@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CONE.CONE;
 import Composestar.Core.Config.BuildConfig;
 import Composestar.Core.Config.ModuleInfo;
@@ -52,6 +53,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Sverre Boschman
  */
+@ComposestarModule(ID = ModuleNames.WESPEM, dependsOn = { ComposestarModule.DEPEND_ALL })
 public class DotNETWeaveFileGenerator implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WESPEM);
@@ -108,11 +110,13 @@ public class DotNETWeaveFileGenerator implements CTCommonModule
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("Unable to create weave specification file '" + destination + "'.", ModuleNames.WESPEM);
+			throw new ModuleException("Unable to create weave specification file '" + destination + "'.",
+					ModuleNames.WESPEM);
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("Unhandled exception: " + e.getClass() + ": " + e.getMessage(), ModuleNames.WESPEM);
+			throw new ModuleException("Unhandled exception: " + e.getClass() + ": " + e.getMessage(),
+					ModuleNames.WESPEM);
 		}
 		finally
 		{

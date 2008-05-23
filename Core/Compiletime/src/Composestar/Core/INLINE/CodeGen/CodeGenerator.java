@@ -32,12 +32,12 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CondLitera
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.FIRE2.model.FireModel.FilterDirection;
-import Composestar.Core.INLINE.lowlevel.ModelBuilder;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.INLINE.model.Visitor;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.Master.ModuleNames;
 
 /**
  * The generic interface for an INLINE code generator
@@ -46,7 +46,7 @@ import Composestar.Core.LAMA.MethodInfo;
  */
 public interface CodeGenerator<T> extends Visitor
 {
-	public static final String MODULE_NAME = ModelBuilder.MODULE_NAME + ".CodeGen";
+	public static final String MODULE_NAME = ModuleNames.INLINE + ".CodeGen";
 
 	/**
 	 * Generate code for the given filter code and method.

@@ -140,4 +140,9 @@ public final class ModuleNames
 	 * Weave specification emitter
 	 */
 	public static final String WESPEM = "WESPEM";
+
+	/**
+	 * Inline model builder
+	 */
+	public static final String INLINE = "INLINE";
 }

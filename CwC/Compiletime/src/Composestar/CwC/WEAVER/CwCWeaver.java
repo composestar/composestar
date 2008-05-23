@@ -64,9 +64,9 @@ import weavec.grammar.TranslationUnitResult;
 import weavec.parser.ACGrammarTokenTypes;
 import weavec.parser.AspectCLexer;
 import weavec.parser.AspectCParser;
+import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.Config.ModuleInfo;
-import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
@@ -79,7 +79,7 @@ import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.CwC.Filters.FilterLoader;
@@ -104,11 +104,10 @@ import antlr.TokenStreamException;
  * 
  * @author Michiel Hendriks
  */
+@ComposestarModule(ID = ModuleNames.WEAVER, dependsOn = { ModuleNames.INLINE })
 public class CwCWeaver implements CTCommonModule
 {
-	public static final String MODULE_NAME = "WEAVER";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WEAVER);
 
 	@ResourceManager
 	protected WeaveCResources weavecResc;
@@ -157,14 +156,16 @@ public class CwCWeaver implements CTCommonModule
 	protected Map<String, MethodInfo> methodLookup;
 
 	/**
-	 * If true, remove preprocessor directives from <built-in>
+	 * If true, remove preprocessor directives from &gt;built-in&lt;
 	 */
+	@ModuleSetting(ID = "undef", isAdvanced = true)
 	protected boolean ppRemoveBuiltins = true;
 
 	/**
 	 * If true, remove preprocessor directives from <command line>
 	 */
-	protected boolean ppRemoveCommandline;
+	@ModuleSetting(ID = "undef-cmdline", isAdvanced = true)
+	protected boolean ppRemoveCommandline = false;
 
 	public CwCWeaver()
 	{}
@@ -176,12 +177,8 @@ public class CwCWeaver implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resc) throws ModuleException
 	{
-		timer = CPSTimer.getTimer(MODULE_NAME);
+		timer = CPSTimer.getTimer(ModuleNames.WEAVER);
 		resources = resc;
-
-		ModuleInfo mi = ModuleInfoManager.get(MODULE_NAME);
-		ppRemoveBuiltins = mi.getSetting("undef", ppRemoveBuiltins);
-		ppRemoveCommandline = mi.getSetting("undef-cmdline", ppRemoveCommandline);
 
 		codeGen = new CCodeGenerator();
 		codeGen.register(new CDispatchActionCodeGen(inlinerRes));
@@ -206,7 +203,7 @@ public class CwCWeaver implements CTCommonModule
 		if (!outputDir.isDirectory() && !outputDir.mkdirs())
 		{
 			throw new ModuleException(String.format("Unable to create target directory for preprocessing: %s",
-					outputDir.toString()), MODULE_NAME);
+					outputDir.toString()), ModuleNames.WEAVER);
 		}
 
 		cshFile = FileUtils.relocateFile(currentProject.getBase(), new File("ComposeStar.h"), outputDir);
@@ -229,7 +226,7 @@ public class CwCWeaver implements CTCommonModule
 			if (!target.getParentFile().exists() && !target.getParentFile().mkdirs())
 			{
 				throw new ModuleException(String.format("Unable to create parent directories for: %s", target
-						.toString()), MODULE_NAME);
+						.toString()), ModuleNames.WEAVER);
 			}
 			FileWriter output;
 			try
@@ -357,7 +354,7 @@ public class CwCWeaver implements CTCommonModule
 		if (!cshFile.getParentFile().exists() && !cshFile.getParentFile().mkdirs())
 		{
 			throw new ModuleException(String.format("Unable to create parent directories for: %s", cshFile.toString()),
-					MODULE_NAME);
+					ModuleNames.WEAVER);
 		}
 
 		if (cshFile.exists())
@@ -376,7 +373,7 @@ public class CwCWeaver implements CTCommonModule
 		}
 		catch (FileNotFoundException e1)
 		{
-			throw new ModuleException(e1.toString(), MODULE_NAME, e1);
+			throw new ModuleException(e1.toString(), ModuleNames.WEAVER, e1);
 		}
 		try
 		{
@@ -384,7 +381,7 @@ public class CwCWeaver implements CTCommonModule
 		}
 		catch (IOException e1)
 		{
-			throw new ModuleException(e1.toString(), MODULE_NAME, e1);
+			throw new ModuleException(e1.toString(), ModuleNames.WEAVER, e1);
 		}
 
 	}
@@ -399,7 +396,7 @@ public class CwCWeaver implements CTCommonModule
 		if (!dest.getParentFile().exists() && !dest.getParentFile().mkdirs())
 		{
 			throw new ModuleException(String.format("Unable to create parent directories for: %s", dest.toString()),
-					MODULE_NAME);
+					ModuleNames.WEAVER);
 		}
 
 		if (dest.exists())
@@ -418,7 +415,7 @@ public class CwCWeaver implements CTCommonModule
 		}
 		catch (FileNotFoundException e1)
 		{
-			throw new ModuleException(e1.toString(), MODULE_NAME, e1);
+			throw new ModuleException(e1.toString(), ModuleNames.WEAVER, e1);
 		}
 		try
 		{
@@ -426,7 +423,7 @@ public class CwCWeaver implements CTCommonModule
 		}
 		catch (IOException e1)
 		{
-			throw new ModuleException(e1.toString(), MODULE_NAME, e1);
+			throw new ModuleException(e1.toString(), ModuleNames.WEAVER, e1);
 		}
 	}
 

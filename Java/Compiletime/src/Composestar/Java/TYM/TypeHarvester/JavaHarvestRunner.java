@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CKRET.CKRET;
 import Composestar.Core.CKRET.SECRETResources;
@@ -18,7 +19,6 @@ import Composestar.Core.Exception.ConfigurationException;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Java.COMP.CStarJavaCompiler;
 import Composestar.Utils.Logging.CPSLogger;
@@ -26,6 +26,7 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * Module that harvest the classes from the compiled dummies.
  */
+@ComposestarModule(ID = ModuleNames.HARVESTER, dependsOn = { ModuleNames.DUMMER })
 public class JavaHarvestRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.HARVESTER);

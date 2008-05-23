@@ -48,6 +48,7 @@ import weavec.cmodel.type.AnnotationType;
 import weavec.cmodel.type.CType;
 import weavec.cmodel.type.FunctionType;
 import weavec.grammar.TranslationUnitResult;
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
@@ -57,6 +58,7 @@ import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.CwC.LAMA.CwCAnnotation;
 import Composestar.CwC.LAMA.CwCAnnotationType;
@@ -76,11 +78,10 @@ import antlr.collections.AST;
  * 
  * @author Michiel Hendriks
  */
+@ComposestarModule(ID = ModuleNames.COLLECTOR, dependsOn = { ModuleNames.HARVESTER })
 public class LangModelConverter implements CTCommonModule
 {
-	public static final String MODULE_NAME = "Collector";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);
 
 	@ResourceManager
 	protected WeaveCResources weavecRes;

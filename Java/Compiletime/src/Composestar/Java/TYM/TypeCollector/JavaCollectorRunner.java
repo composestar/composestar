@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
@@ -22,7 +23,6 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Java.LAMA.JavaFieldInfo;
@@ -36,6 +36,7 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * Module that collects the types retrieved by the <code>HarvestRunner</code>.
  */
+@ComposestarModule(ID = ModuleNames.COLLECTOR, dependsOn = { ModuleNames.HARVESTER })
 public class JavaCollectorRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.COLLECTOR);

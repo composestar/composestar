@@ -26,10 +26,10 @@ package Composestar.CwC.COMP;
 
 import java.io.File;
 
+import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.Config.Language;
-import Composestar.Core.Config.ModuleInfo;
-import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Config.SourceCompiler;
@@ -39,10 +39,11 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Feed the C source files to the preprocessor
+ * Feed the C source files to the preprocessor.
  * 
  * @author Michiel Hendriks
  */
+@ComposestarModule(ID = PreProcess.MODULE_NAME)
 public class PreProcess implements CTCommonModule
 {
 	public static final String MODULE_NAME = "PreCOMP";
@@ -50,6 +51,13 @@ public class PreProcess implements CTCommonModule
 	public static final String PREPROCESSED_DIR = "preprocessed";
 
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+
+	/**
+	 * If true the input is considered to be preprocessed. Otherwise the input
+	 * code would first be fed to the preprocessor.
+	 */
+	@ModuleSetting(name = "PreProcessed input")
+	protected boolean preprocessed = true;
 
 	public PreProcess()
 	{}
@@ -61,9 +69,8 @@ public class PreProcess implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		ModuleInfo mi = ModuleInfoManager.get(PreProcess.class);
 		Project proj = resources.configuration().getProject();
-		if (mi.getSetting("preprocessed", false))
+		if (preprocessed)
 		{
 			logger.info("Already preprocessed, skipping " + MODULE_NAME);
 			File ppdir = new File(proj.getIntermediate(), PREPROCESSED_DIR);

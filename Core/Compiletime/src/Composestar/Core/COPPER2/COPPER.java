@@ -54,7 +54,10 @@ import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
 /**
- * CPS parser and repository constructor.
+ * COPPER parses the concern sources and produces the repository entries that
+ * will be used by other modules. During processing the so called syntactic
+ * sugar is applied that expands the repository entries to their complete form.
+ * Only the concern source syntax will be validated.
  * 
  * @author Michiel Hendriks
  */

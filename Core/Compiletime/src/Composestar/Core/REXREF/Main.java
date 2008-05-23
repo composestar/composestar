@@ -50,7 +50,9 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Resolves references to objects in the repository
+ * Concerns may have both internal and external references, e.g to a method or a
+ * condition represented by an object. REXREF traverses the repository and makes
+ * sure that all references are resolved.
  */
 @ComposestarModule(ID = ModuleNames.REXREF, dependsOn = { ModuleNames.LOLA, ModuleNames.COPPER })
 public class Main implements CTCommonModule

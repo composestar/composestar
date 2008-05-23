@@ -22,8 +22,9 @@ import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Dummy manager module. This will set up the information for dummy generation
- * and then call the appropriate dummy emitters.
+ * Creates dummies of the source files. A dummy source file only contains the
+ * declaration part of the methods and classes. The method bodies are omitted.
+ * This is a platform depended module.
  */
 @ComposestarModule(ID = ModuleNames.DUMMER)
 public class DummyManager implements CTCommonModule

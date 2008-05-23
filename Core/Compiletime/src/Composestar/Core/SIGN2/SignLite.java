@@ -4,6 +4,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
 
+@Deprecated
 public class SignLite implements CTCommonModule
 {
 	/**

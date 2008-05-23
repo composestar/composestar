@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules xmlns="http://composestar.sourceforge.net/schema/ModuleInfo">
 	<moduleinfo id="FITER" class="Composestar.Core.FITER.FITER">
-		<description>Checks whether the used filter types can acutally be found.</description>
+		<description>Checks whether the used filter types can actually be found.</description>
 		<incre>
 			<module enabled="true" incremental="false" summary="Verifying filter types...">
 				<dependencies></dependencies>

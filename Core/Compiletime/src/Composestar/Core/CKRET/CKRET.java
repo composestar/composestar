@@ -29,8 +29,6 @@ import Composestar.Core.CKRET.Config.ResourceType;
 import Composestar.Core.CKRET.Config.Xml.XmlConfiguration;
 import Composestar.Core.CKRET.Report.SECRETReport;
 import Composestar.Core.CKRET.Report.XMLReport;
-import Composestar.Core.Config.ModuleInfo;
-import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.Exception.ConfigurationException;
@@ -51,8 +49,24 @@ import Composestar.Utils.Perf.CPSTimer;
 
 // FIXME: rename package to SECRET
 /**
- * SECRET performs semantic reasoning on the resource operations of the filters
- * and their actions.
+ * If multiple filtermodules are imposed on the same joinpoint, certain
+ * conflicts may be introduced. The concern containing these filtermodules are
+ * often developed at different times and locations by different developers.
+ * These filtermodules may have unintended side effects which only effect other
+ * filtermodules. If these aspects are combined, semantic conflicts becomes
+ * apparent. SECRET aims to reason about these kind of semantic conflicts. It
+ * does a static analysis on the semantics of the filters and detects possible
+ * conflicts. The used model is, through the use of an XML input specification,
+ * completely user adaptable. In input specification, the accept- and
+ * reject-actions of filtertypes are specified. Every action is specified by a
+ * list of named operations on abstract resources. Also, patterns can be
+ * specified that specify the allowed sequence of operations on a resource. When
+ * SECRET analyzes a concern, it will fetch the selected filtermodule-order and
+ * generate all possible executions of the filterset. Every execution is a
+ * unique combination of accept- and rejectactions of the filters in the
+ * filterset. The operations of these actions are taken from the input
+ * specification and performed on the resources. Then the specified patterns are
+ * matches against the sequences of operations performed on the resources.
  */
 @ComposestarModule(ID = ModuleNames.SECRET, dependsOn = { ModuleNames.FIRE }, importance = Importance.Advising)
 public class CKRET implements CTCommonModule
@@ -72,12 +86,33 @@ public class CKRET implements CTCommonModule
 	protected SECRETResources secretResources;
 
 	/**
-	 * The class that will be used to produce the report. If this value is
-	 * "true" then the {@link XMLReport} class will be used. This variable is
-	 * set through the project configuration.
+	 * The base configuration file which contain all default configuration
+	 * directives. This is usually loaded from an global file and not a project
+	 * dependent file.
 	 */
-	@ModuleSetting(ID = "reportGenerator")
+	@ModuleSetting(ID = "baseconfig", name = "Base configuration", isAdvanced = true)
+	protected String baseConfig;
+
+	/**
+	 * Additional configuration directives which are loaded besides the base
+	 * configuration file.
+	 */
+	@ModuleSetting(ID = "config", name = "Configuration")
+	protected String userConfig;
+
+	/**
+	 * The class that will be used to produce the report. If this value is
+	 * "true" then the {@link XMLReport} class will be used.
+	 */
+	@ModuleSetting(ID = "reportGenerator", name = "Report generator", isAdvanced = true)
 	protected String reportClass = "true";
+
+	/**
+	 * If set to true the SECRET configuration will be validated to check if all
+	 * references resources are completely defined.
+	 */
+	@ModuleSetting(ID = "validate", name = "Configuration Validation")
+	protected boolean validateResources = true;
 
 	/*
 	 * (non-Javadoc)
@@ -156,18 +191,13 @@ public class CKRET implements CTCommonModule
 	 */
 	private void loadConfiguration(CommonResources resources) throws ConfigurationException
 	{
-		ModuleInfo mi = ModuleInfoManager.get(ModuleNames.SECRET);
-		// mode = mi.getSetting("mode", SECRETMode.Normal);
-		// reportClass = mi.getSetting("reportGenerator", "");
-
 		File configFile = null;
-		String cfgfile = mi.getSetting("baseconfig", "");
-		if (cfgfile != null && cfgfile.trim().length() > 0)
+		if (baseConfig != null && baseConfig.trim().length() > 0)
 		{
-			configFile = new File(cfgfile.trim());
+			configFile = new File(baseConfig.trim());
 			if (!configFile.isAbsolute())
 			{
-				configFile = new File(resources.configuration().getProject().getBase(), cfgfile.trim());
+				configFile = new File(resources.configuration().getProject().getBase(), baseConfig.trim());
 			}
 			if (!configFile.exists())
 			{
@@ -261,13 +291,12 @@ public class CKRET implements CTCommonModule
 
 		// load additional configuration directives
 		configFile = new File(resources.configuration().getProject().getBase(), CONFIG_NAME);
-		cfgfile = mi.getSetting("config", "");
-		if (cfgfile != null && cfgfile.trim().length() > 0)
+		if (userConfig != null && userConfig.trim().length() > 0)
 		{
-			configFile = new File(cfgfile.trim());
+			configFile = new File(userConfig.trim());
 			if (!configFile.isAbsolute())
 			{
-				configFile = new File(resources.configuration().getProject().getBase(), cfgfile.trim());
+				configFile = new File(resources.configuration().getProject().getBase(), userConfig.trim());
 			}
 		}
 		if (configFile != null && configFile.exists())
@@ -276,9 +305,9 @@ public class CKRET implements CTCommonModule
 			XmlConfiguration.loadBuildConfig(configFile, secretResources);
 		}
 
-		if (mi.getSetting("validate", true))
+		if (validateResources)
 		{
-			validateResources();
+			validateResourceDefinitions();
 		}
 	}
 
@@ -286,7 +315,7 @@ public class CKRET implements CTCommonModule
 	 * Validate the current SECRET resources. This will only produce log
 	 * warnings.
 	 */
-	private void validateResources()
+	private void validateResourceDefinitions()
 	{
 		for (Resource resc : secretResources.getResources())
 		{

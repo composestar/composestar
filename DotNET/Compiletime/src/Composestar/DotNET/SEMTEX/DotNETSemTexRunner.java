@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.BACO.BACO;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
@@ -21,6 +22,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel van Oudheusden
  */
+@ComposestarModule(ID = DotNETSemTexCollector.MODULE_NAME + "Runner")
 public class DotNETSemTexRunner implements CTCommonModule
 {
 	public static final String MODULE_NAME = "SEMTEX";

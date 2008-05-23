@@ -32,11 +32,10 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.COMP.LangCompiler;
 import Composestar.Core.Config.CompilerAction;
-import Composestar.Core.Config.ModuleInfo;
-import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Config.Project;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Config.SourceCompiler;
@@ -60,7 +59,11 @@ public class CCompiler implements LangCompiler
 
 	protected CommonResources resources;
 
-	protected ModuleInfo moduleInfo;
+	/**
+	 * Additional compiler arguments.
+	 */
+	@ModuleSetting(ID = MODULE_NAME + ".args", name = "Compiler arguments")
+	protected String args = "";
 
 	public void setCompilerConfig(SourceCompiler compilerConfig)
 	{
@@ -70,7 +73,8 @@ public class CCompiler implements LangCompiler
 	public void setCommonResources(CommonResources resc)
 	{
 		resources = resc;
-		moduleInfo = ModuleInfoManager.get(MODULE_NAME);
+		// to set the module settings
+		resources.inject(this);
 	}
 
 	/*
@@ -116,7 +120,6 @@ public class CCompiler implements LangCompiler
 			Properties prop = new Properties();
 			prop.put("OUT", target.toString());
 			prop.put("includedir", p.getBase().toString());
-			String args = moduleInfo.getSetting("args", "");
 			if (args != null && args.trim().length() > 0)
 			{
 				prop.put("args", args);

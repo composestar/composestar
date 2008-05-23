@@ -15,7 +15,7 @@ import Composestar.Core.Master.ModuleNames;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Repository serializer
+ * Repository serializer. Saves the data required by the runtime to a file.
  */
 @ComposestarModule(ID = ModuleNames.CONE, dependsOn = { ComposestarModule.DEPEND_ALL })
 public abstract class CONE implements CTCommonModule

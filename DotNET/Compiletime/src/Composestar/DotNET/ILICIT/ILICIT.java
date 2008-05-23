@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.BACO.BACO;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
@@ -27,7 +28,6 @@ import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.DotNET.COMP.DotNETCompiler;
 import Composestar.Utils.CommandLineExecutor;
@@ -39,6 +39,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * Applies the changes as specified by CONE-IS to the assemblies in order to
  * impose the behavior defined in the concern specifications.
  */
+@ComposestarModule(ID = ModuleNames.WEAVER, dependsOn = { ModuleNames.WESPEM })
 public class ILICIT implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.WEAVER);

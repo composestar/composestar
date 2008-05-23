@@ -5,14 +5,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Config.Source;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
+@ComposestarModule(ID = VERIFY.MODULE_NAME, dependsOn = { ModuleNames.WEAVER })
 public class VERIFY implements CTCommonModule
 {
 	public static final String MODULE_NAME = "VERIFY";

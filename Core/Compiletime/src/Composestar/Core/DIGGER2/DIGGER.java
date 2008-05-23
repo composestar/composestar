@@ -15,9 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
-import Composestar.Core.Config.ModuleInfo;
-import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
@@ -38,8 +37,9 @@ import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
 /**
- * DIspatch Grapg GEneratoR. Creates an initial dispatch graph using the
- * selected filter module ordering and performs various checks on it.
+ * DIspatch Grapg GEneratoR. Connects the execution graphs of the concerns with
+ * each other to create a fully connected graph of the program. Also checks for
+ * recursive filter definitions.
  * 
  * @author Michiel Hendriks
  */
@@ -62,18 +62,6 @@ public class DIGGER implements CTCommonModule
 	protected DispatchGraph graph;
 
 	/**
-	 * Reference to out ModuleInfo instance, used to retrieve configuration
-	 * settings.
-	 */
-	protected ModuleInfo moduleInfo;
-
-	/**
-	 * If zero no recursion check is performed, any other value is ignored, for
-	 * the time being.
-	 */
-	protected int recursionCheckDepth;
-
-	/**
 	 * Temporary list of all created breadcrumbs. This list will be empty when
 	 * DIGGER is done. It's used for faster access to all crumbs to perform
 	 * operations on.
@@ -82,6 +70,25 @@ public class DIGGER implements CTCommonModule
 
 	@ResourceManager
 	protected FIRE2Resources f2res;
+
+	/**
+	 * The mode to execute DIGGER in.
+	 */
+	@ModuleSetting(name = "Mode")
+	protected int mode = 1;
+
+	/**
+	 * Resolve all dispatch transitions to a complete graph
+	 */
+	@ModuleSetting(ID = "resolve", name = "Resolve Graph", isAdvanced = true)
+	protected boolean resolveCrumbs = true;
+
+	/**
+	 * Maximum depth in the recursion check algorithm. If set to 0 no recursion
+	 * check will be performed in the dispatch graph
+	 */
+	@ModuleSetting(ID = "recursionCheck", name = "Recursion Check Depth", isAdvanced = true)
+	protected int recursionCheckDepth = 5;
 
 	protected CPSTimer timer = CPSTimer.getTimer(ModuleNames.DIGGER);
 
@@ -96,8 +103,7 @@ public class DIGGER implements CTCommonModule
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
 		// initialize
-		moduleInfo = ModuleInfoManager.get(DIGGER.class);
-		graph = new DispatchGraph(moduleInfo.getIntSetting("mode"));
+		graph = new DispatchGraph(mode);
 		graph.setAutoResolve(false);
 		resources.put(DispatchGraph.REPOSITORY_KEY, graph);
 		allCrumbs = new ArrayList<Breadcrumb>();
@@ -109,11 +115,10 @@ public class DIGGER implements CTCommonModule
 		createBreadcrumbs(resources.repository());
 
 		// step 2: resolve and check the created crumbs
-		if (moduleInfo.getBooleanSetting("resolve"))
+		if (resolveCrumbs)
 		{
 			logger.info("Step 2: resolving breadcrumbs");
 			resolveBreadcrumbs();
-			recursionCheckDepth = moduleInfo.getIntSetting("recursionCheck");
 			if (recursionCheckDepth > 0)
 			{
 				logger.info("Step 2b: checking recursion");
@@ -122,14 +127,13 @@ public class DIGGER implements CTCommonModule
 		}
 
 		// step 3: export the generated data
-		if (moduleInfo.getBooleanSetting("exportXml"))
-		{
-			/*
-			 * logger.info("Step 2b: exporting result"); DispatchGraphExporter
-			 * exporter = new XMLDispatchGraphExporter(graph);
-			 * exporter.export();
-			 */
-		}
+		// if (exportXml)
+		// {
+		//
+		// logger.info("Step 2b: exporting result");
+		// DispatchGraphExporter exporter = new XMLDispatchGraphExporter(graph);
+		// exporter.export();
+		// }
 
 		// cleanup
 		graph.setAutoResolve(true);

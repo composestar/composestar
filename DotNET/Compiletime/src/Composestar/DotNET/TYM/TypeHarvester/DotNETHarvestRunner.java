@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.Master.CTCommonModule.ModuleReturnValue;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.DotNET.BACO.DotNETBACO;
 import Composestar.DotNET.COMP.DotNETCompiler;
@@ -20,6 +20,7 @@ import Composestar.Utils.Logging.CPSLogger;
 /**
  * This Module is responsible for running the .NET assembly harvester.
  */
+@ComposestarModule(ID = ModuleNames.HARVESTER)
 public class DotNETHarvestRunner implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.HARVESTER);

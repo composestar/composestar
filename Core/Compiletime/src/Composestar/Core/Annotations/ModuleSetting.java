@@ -38,6 +38,9 @@ import java.lang.annotation.Target;
  * 
  * @author Michiel Hendriks
  */
+/**
+ * @author mhendrik
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Documented
@@ -62,6 +65,15 @@ public @interface ModuleSetting
 	 * @return
 	 */
 	String name() default "";
+
+	/**
+	 * If set to true this is an advanced configuration entry that should not be
+	 * exposed to the end-user unless the advanced configuration options are
+	 * requested.
+	 * 
+	 * @return
+	 */
+	boolean isAdvanced() default false;
 
 	/**
 	 * The method to execute to set this field value. If this is an empty string

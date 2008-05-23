@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tasks xmlns="http://composestar.sourceforge.net/schema/TASMAN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://composestar.sourceforge.net/schema/TASMAN ../../ComposestarCORE/src/Composestar/Core/TASMAN/Xml/TASMANConfig.xsd ">
+	<module class="Composestar.DotNET2.TYM.RepositoryCollector.StarLightCollectorRunner" />
+	<module class="Composestar.Core.COPPER2.COPPER" />
+	<module class="Composestar.Core.REXREF.ParumREXREF" />
+	<module class="Composestar.DotNET2.LOLA.DotNETLOLA" />
+	<module class="Composestar.Core.REXREF.Main" />
+	<module class="Composestar.Core.CHKREP2.Check" />
+	<module class="Composestar.Core.SANE.SANE" />
+	<module class="Composestar.Core.FILTH2.FILTH" />
+	<module class="Composestar.Core.FIRE2.preprocessing.Preprocessor" />
+	<module class="Composestar.Core.CORE2.Core" />
+	<module class="Composestar.Core.SIGN2.Sign" />
+	<module class="Composestar.Core.CKRET.CKRET" />
+	<module class="Composestar.Core.INLINE.lowlevel.ModelBuilder" />
+	<module class="Composestar.DotNET2.TYM.RepositoryEmitter.StarLightEmitterRunner" />
+	<module class="Composestar.Core.INCRE.INCRESerializer" />
+</tasks>

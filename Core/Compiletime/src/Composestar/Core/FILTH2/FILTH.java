@@ -33,9 +33,8 @@ import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.COPPER2.FilterTypeMapping;
-import Composestar.Core.Config.ModuleInfo;
-import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
@@ -60,7 +59,10 @@ import Composestar.Utils.Logging.CPSLogger;
 import Composestar.Utils.Perf.CPSTimer;
 
 /**
- * Filter Composition &amp; Checking
+ * SANE produces information about where multiple filtermodules are imposed on
+ * the same point. It does not however say anything about the order in which the
+ * filtermodules should be applied. The possible orderings are constrained by
+ * the filter ordering specification.
  * 
  * @author Michiel Hendriks
  */
@@ -82,10 +84,22 @@ public class FILTH implements CTCommonModule
 
 	protected CPSTimer timer;
 
-	protected int maxOrders;
+	/**
+	 * The maximum number of orders to return. If set to a value below 1 all
+	 * orders will be returned, but this can result in a out of memory access.
+	 */
+	@ModuleSetting(ID = "max", name = "Maximum Orders", isAdvanced = true)
+	protected int maxOrders = 4;
 
+	/**
+	 * Mapping from action name to action. Used to find existing actions.
+	 */
 	protected Map<String, Action> actions;
 
+	/**
+	 * Mapping from constraint to its definition, used for error reporting on
+	 * the constraints.
+	 */
 	protected Map<Constraint, ConstraintDefinition> constraints;
 
 	public FILTH()
@@ -102,10 +116,6 @@ public class FILTH implements CTCommonModule
 		FilterTypeMapping filterTypes = resources.get(FilterTypeMapping.RESOURCE_KEY);
 		defaultInnerDispatch = InnerDispatcher.createInnerDispatchReference(resources.repository(), filterTypes);
 		constraintSpec = resources.get(ConstraintSpecification.RESOURCE_KEY);
-
-		ModuleInfo mi = ModuleInfoManager.get(FILTH.class);
-		// limit to 4 orders, should be enough to find a working order
-		maxOrders = mi.getSetting("max", 4);
 
 		timer.start("Creating actions");
 		Iterator<FilterModuleAST> fmIter = resources.repository().getAllInstancesOf(FilterModuleAST.class);

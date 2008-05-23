@@ -52,6 +52,10 @@ import Composestar.Utils.StringUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
+ * Composition filters may alter the signature of a concerns. SIGN computes the
+ * full signature for all concerns using FIRE an detects if there are filters
+ * leading to ambiguous signatures.
+ * 
  * @author Arjan de Roo
  */
 @ComposestarModule(ID = ModuleNames.SIGN, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH })

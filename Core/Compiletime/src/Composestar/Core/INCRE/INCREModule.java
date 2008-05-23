@@ -24,7 +24,7 @@ public class INCREModule implements Serializable
 
 	private String input;
 
-	private boolean enabled;
+	private boolean enabled = true;
 
 	private boolean incremental;
 
@@ -63,12 +63,20 @@ public class INCREModule implements Serializable
 		if (CTCommonModule.class.isAssignableFrom(mclass))
 		{
 			moduleClass = (Class<? extends CTCommonModule>) mclass;
+			if (moduleName == null)
+			{
+				moduleName = moduleClass.getName().substring(moduleClass.getName().lastIndexOf('.') + 1);
+			}
 		}
 	}
 
 	public void setModuleClass(Class<? extends CTCommonModule> ftype)
 	{
 		moduleClass = ftype;
+		if (moduleName == null)
+		{
+			moduleName = moduleClass.getName().substring(moduleClass.getName().lastIndexOf('.') + 1);
+		}
 	}
 
 	public void setInput(String className)

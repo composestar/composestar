@@ -9,11 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
 import Composestar.Core.CKRET.ConcernAnalysis;
 import Composestar.Core.CKRET.SECRETResources;
-import Composestar.Core.Config.ModuleInfo;
-import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
@@ -27,6 +27,7 @@ import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
@@ -37,11 +38,10 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Arjan
  */
+@ComposestarModule(ID = ModuleNames.INLINE, dependsOn = { ModuleNames.SIGN })
 public class ModelBuilder implements CTCommonModule
 {
-	public static final String MODULE_NAME = "INLINE";
-
-	protected static final CPSLogger logger = CPSLogger.getCPSLogger(MODULE_NAME);
+	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.INLINE);
 
 	/**
 	 * The LowLevelInliner used to translate an inputfilterset to code.
@@ -94,8 +94,6 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	private String currentSelector;
 
-	private ModuleInfo moduleinfo;
-
 	@ResourceManager
 	private FIRE2Resources f2res;
 
@@ -104,6 +102,13 @@ public class ModelBuilder implements CTCommonModule
 
 	@ResourceManager
 	private InlinerResources inlinerRes;
+
+	/**
+	 * Sets when resource operation book keeping will be added to the compiled
+	 * program in order to find conflicts in the resource operations.
+	 */
+	@ModuleSetting(ID = "bookkeeping", name = "Resource Operation Book Keeping", isAdvanced = true)
+	protected BookKeepingMode bkmode = BookKeepingMode.ConflictPaths;
 
 	/**
 	 * Creates the ModelBuilder.
@@ -116,10 +121,6 @@ public class ModelBuilder implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		moduleinfo = ModuleInfoManager.get(MODULE_NAME);
-
-		BookKeepingMode bkmode = moduleinfo.getSetting("bookkeeping", BookKeepingMode.Never);
-
 		inputFilterBuilderStrategy = new ModelBuilderStrategy(this, FilterDirection.Input, bkmode);
 		inputFilterInliner = new LowLevelInliner(inputFilterBuilderStrategy, resources);
 		outputFilterBuilderStrategy = new ModelBuilderStrategy(this, FilterDirection.Output, bkmode);

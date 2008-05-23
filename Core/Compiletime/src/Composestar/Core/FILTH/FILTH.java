@@ -12,6 +12,7 @@ package Composestar.Core.FILTH;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.COPPER2.FilterTypeMapping;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
@@ -26,6 +27,7 @@ import Composestar.Utils.Perf.CPSTimer;
 /**
  * Calculates orders of the superimposed filtermodules
  */
+@ComposestarModule(ID = ModuleNames.FILTH, dependsOn = { ModuleNames.COPPER })
 public class FILTH implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.FILTH);

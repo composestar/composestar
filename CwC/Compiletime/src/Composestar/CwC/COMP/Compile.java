@@ -24,17 +24,24 @@
 
 package Composestar.CwC.COMP;
 
-import Composestar.Core.Config.ModuleInfo;
-import Composestar.Core.Config.ModuleInfoManager;
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
 
 /**
+ * Calls the C Compiler. NOT IMPLEMENTED
+ * 
  * @author Michiel Hendriks
  */
 public class Compile implements CTCommonModule
 {
+	/**
+	 * Do not compile the input sources.
+	 */
+	@ModuleSetting(name = "Do not compile")
+	protected boolean nocompile = true;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -42,8 +49,7 @@ public class Compile implements CTCommonModule
 	 */
 	public ModuleReturnValue run(CommonResources resources) throws ModuleException
 	{
-		ModuleInfo mi = ModuleInfoManager.get(Compile.class);
-		if (mi.getSetting("nocompile", true))
+		if (nocompile)
 		{
 			// logger.info("nocompile = true, skipping compiling");
 			return ModuleReturnValue.Ok;

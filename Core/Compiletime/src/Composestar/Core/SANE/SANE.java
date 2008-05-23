@@ -21,8 +21,9 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * This is a Facade for the SANE module; this is the module that traverses all
- * the concerns in an application and resolves superimpositions.
+ * SANE calculates, for each input specification, the joinpoints where the
+ * filtermodules should be imposed. This information is attached to all the
+ * imposed objects or concerns.
  */
 @ComposestarModule(ID = ModuleNames.SANE, dependsOn = { ModuleNames.COPPER })
 public class SANE implements CTCommonModule

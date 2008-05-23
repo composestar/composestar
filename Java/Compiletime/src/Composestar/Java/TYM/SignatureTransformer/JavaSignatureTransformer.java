@@ -2,8 +2,10 @@ package Composestar.Java.TYM.SignatureTransformer;
 
 import java.io.File;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Java.COMP.CStarJavaCompiler;
 
@@ -11,6 +13,7 @@ import Composestar.Java.COMP.CStarJavaCompiler;
  * Starting point for the signature transformer module. This module transforms
  * the signatures of the compiled dummies.
  */
+@ComposestarModule(ID = "SITRA", dependsOn = { ModuleNames.SIGN })
 public class JavaSignatureTransformer implements CTCommonModule
 {
 	/**

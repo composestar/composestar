@@ -107,6 +107,7 @@
 				<include name="**/moduleinfo.xml" />
 				<include name="INCREconfig.xml" />
 				<include name="Platforms.xml" />
+				<include name="TASMANConfig.xml" />
 			</fileset>
 		</copy>
 		<jar destfile="${starlight.jar}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
@@ -122,6 +123,7 @@
 		</copy>
 		<copy todir="${starlight.installdir}">
 			<fileset file="src/INCREconfig.xml" />
+			<fileset file="src/TASMANConfig.xml" />
 		</copy>
 		<install_core todir="${starlight.installdir}" />
 	</target>

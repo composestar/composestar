@@ -33,8 +33,7 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * This Compose* module checks whether the used filter types can actually be
- * found!
+ * Checks whether the used filter types can actually be found.
  * 
  * @author pascal
  */

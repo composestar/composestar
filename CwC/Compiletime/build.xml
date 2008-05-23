@@ -52,6 +52,7 @@
 				<include name="**/*.pro" />
 				<include name="Composestar/CwC/WEAVER/ComposeStar.*" />
 				<include name="INCREconfig.xml" />
+				<include name="TASMANConfig.xml" />
 				<include name="Platforms.xml" />
 				<include name="log4j.properties" />
 			</fileset>

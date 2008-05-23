@@ -20,8 +20,8 @@ import Composestar.Utils.FileUtils;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Class responsible for extracting embedded sources and storing them
- * appropriate files
+ * Extracts the embedded sources from the concern sources and saves them to the
+ * disk for further use.
  */
 @ComposestarModule(ID = ModuleNames.EMBEX, dependsOn = { ModuleNames.COPPER })
 public class EMBEX implements CTCommonModule

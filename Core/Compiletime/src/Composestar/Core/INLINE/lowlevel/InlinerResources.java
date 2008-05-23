@@ -32,6 +32,7 @@ import java.util.Map;
 import Composestar.Core.INLINE.model.FilterCode;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.Resources.ModuleResourceManager;
 
 /**
@@ -85,7 +86,7 @@ public class InlinerResources implements ModuleResourceManager
 	 */
 	public String getModuleName()
 	{
-		return ModelBuilder.MODULE_NAME;
+		return ModuleNames.INLINE;
 	}
 
 	/**

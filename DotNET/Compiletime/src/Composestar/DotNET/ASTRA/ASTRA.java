@@ -3,9 +3,11 @@ package Composestar.DotNET.ASTRA;
 import java.io.File;
 import java.util.Iterator;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.Resources.ResourceException;
@@ -16,6 +18,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * ASTRA applies the signature changes determined by SIGN to the dummies
  * assembly.
  */
+@ComposestarModule(ID = ASTRA.MODULE_NAME, dependsOn = { ModuleNames.SIGN })
 public class ASTRA implements CTCommonModule
 {
 	public static final String MODULE_NAME = "ASTRA";

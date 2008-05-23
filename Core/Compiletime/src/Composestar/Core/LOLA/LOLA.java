@@ -40,8 +40,8 @@ import Composestar.Utils.Logging.OutputStreamRedirector;
 import Composestar.Utils.Perf.CPSTimer;
 
 /**
- * LOgic predicate LAnguage Facade/API Controls the prolog query engine and the
- * language meta model
+ * LOLA evaluates the superimposition selector statements in order to return the
+ * program elements the filter modules should be imposed upon.
  */
 @ComposestarModule(ID = ModuleNames.LOLA, dependsOn = { ModuleNames.COLLECTOR, ModuleNames.PARUM_REXREF })
 public abstract class LOLA implements CTCommonModule

@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Java.LAMA.JavaAnnotation;
@@ -19,8 +21,9 @@ import Composestar.Java.TYM.TypeHarvester.JavaHarvestRunner;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Collects the annotations retrieved by the <code>Harvester</code>.
+ * Collects the annotations retrieved by the Harvester.
  */
+@ComposestarModule(ID = AnnotationCollector.MODULE_NAME, dependsOn = { ModuleNames.HARVESTER })
 public class AnnotationCollector implements CTCommonModule
 {
 	public static final String MODULE_NAME = "AnnotationCollector";

@@ -36,12 +36,13 @@ import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
 /**
- * Entry point for CHKREP. It will load and execute the various repository
- * checkers.
+ * CHKREP performs various checks on the repository in order to aid the
+ * developer to write better code or catch certain runtime errors at compile
+ * time.
  * 
  * @author Michiel Hendriks
  */
-@ComposestarModule(ID = ModuleNames.CHKREP, dependsOn = { ModuleNames.COPPER }, importance = Importance.Advising)
+@ComposestarModule(ID = ModuleNames.CHKREP, dependsOn = { ModuleNames.COPPER }, importance = Importance.Validation)
 public class Check implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CHKREP);
