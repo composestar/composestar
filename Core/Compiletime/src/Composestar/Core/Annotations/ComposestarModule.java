@@ -24,14 +24,11 @@
 
 package Composestar.Core.Annotations;
 
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import Composestar.Core.Master.CTCommonModule;
 
 /**
  * Annotation used to provide meta data for Compose* modules. In the future this
@@ -41,10 +38,45 @@ import Composestar.Core.Master.CTCommonModule;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Documented
 @Inherited
 public @interface ComposestarModule
 {
+	/**
+	 * Defines the importance of this module. There are three levels of
+	 * importance, from high to low: Required, Validation, Advising. Using a
+	 * configuration option a collection of modules could be disabled.
+	 */
+	public enum Importance
+	{
+		/**
+		 * This module is absolutely vital for the compilation process.
+		 */
+		REQUIRED,
+		/**
+		 * This module will validate various parts during the compilation
+		 * process. Disabling this module could result in less instructive
+		 * errors at a later stage during compilation.
+		 */
+		VALIDATION,
+		/**
+		 * This module will analyze the resulting program for possible problems.
+		 * Disabling this module should have no influence in in the resulting
+		 * program (except that additional safety checks might not be included).
+		 */
+		ADVISING;
+	}
+
+	/**
+	 * Depends on the proper execution of all previous modules. In case of
+	 * incremental compilation this means that this module will always execute.
+	 */
+	public static final String DEPEND_ALL = "*";
+
+	/**
+	 * It depends on the module that was executed before this module.
+	 */
+	public static final String DEPEND_PREVIOUS = "<";
+
 	/**
 	 * The ID of this module
 	 * 
@@ -69,16 +101,6 @@ public @interface ComposestarModule
 	 * 
 	 * @return
 	 */
-	CTCommonModule.Importance importance() default CTCommonModule.Importance.Required;
+	Importance importancex() default Importance.REQUIRED;
 
-	/**
-	 * Depends on the proper execution of all previous modules. In case of
-	 * incremental compilation this means that this module will always execute.
-	 */
-	public static final String DEPEND_ALL = "*";
-
-	/**
-	 * It depends on the module that was executed before this module.
-	 */
-	public static final String DEPEND_PREVIOUS = "<";
 }

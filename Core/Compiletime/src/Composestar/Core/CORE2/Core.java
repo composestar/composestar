@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ResourceManager;
+import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
@@ -15,7 +16,6 @@ import Composestar.Core.FIRE2.model.FIRE2Resources;
 import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.Master.CTCommonModule.Importance;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Logging.CPSLogger;
@@ -28,7 +28,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Arjan de Roo
  */
-@ComposestarModule(ID = ModuleNames.CORE, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH }, importance = Importance.Validation)
+@ComposestarModule(ID = ModuleNames.CORE, dependsOn = { ModuleNames.FIRE, ModuleNames.FILTH }, importancex = Importance.VALIDATION)
 public class Core implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CORE);

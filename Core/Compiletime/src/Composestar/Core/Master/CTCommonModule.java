@@ -21,31 +21,6 @@ import Composestar.Core.Resources.CommonResources;
 public interface CTCommonModule
 {
 	/**
-	 * Defines the importance of this module. There are three levels of
-	 * importance, from high to low: Required, Validation, Advising. Using a
-	 * configuration option a collection of modules could be disabled.
-	 */
-	public enum Importance
-	{
-		/**
-		 * This module is absolutely vital for the compilation process.
-		 */
-		Required,
-		/**
-		 * This module will validate various parts during the compilation
-		 * process. Disabling this module could result in less instructive
-		 * errors at a later stage during compilation.
-		 */
-		Validation,
-		/**
-		 * This module will analyze the resulting program for possible problems.
-		 * Disabling this module should have no influence in in the resulting
-		 * program (except that additional safety checks might not be included).
-		 */
-		Advising,
-	}
-
-	/**
 	 * Defines the return value of the run() command. Depending on this value
 	 * the task manager will either continue with the next tasks or completely
 	 * stop the compilation process.

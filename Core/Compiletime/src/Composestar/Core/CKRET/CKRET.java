@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import Composestar.Core.Annotations.ComposestarModule;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.Annotations.ResourceManager;
+import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.CKRET.Config.ConflictRule;
 import Composestar.Core.CKRET.Config.OperationSequence;
 import Composestar.Core.CKRET.Config.Resource;
@@ -39,7 +40,6 @@ import Composestar.Core.FIRE2.util.regex.RegularState;
 import Composestar.Core.FIRE2.util.regex.RegularTransition;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.Master.CTCommonModule.Importance;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Core.SANE.FilterModuleSuperImposition;
 import Composestar.Core.SANE.SIinfo;
@@ -68,7 +68,7 @@ import Composestar.Utils.Perf.CPSTimer;
  * specification and performed on the resources. Then the specified patterns are
  * matches against the sequences of operations performed on the resources.
  */
-@ComposestarModule(ID = ModuleNames.SECRET, dependsOn = { ModuleNames.FIRE }, importance = Importance.Advising)
+@ComposestarModule(ID = ModuleNames.SECRET, dependsOn = { ModuleNames.FIRE }, importancex = Importance.ADVISING)
 public class CKRET implements CTCommonModule
 {
 	public static final String CONFIG_NAME = "SECRETConfig.xml";

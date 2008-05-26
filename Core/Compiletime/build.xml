@@ -77,8 +77,16 @@
 			<entry key="version.build" value="${version.build}" />
 			<entry key="version.compiledate" type="date" value="now" pattern="EEE, d MMM yyyy HH:mm:ss Z" />
 		</propertyfile>
+		
+		<!-- Call javac twice because of a bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6558580 -->
+		<!--<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" debug="${build.debug}" deprecation="${build.deprecation}">
+			<exclude name="**/AssemblyInfo.java" />
+			<compilerarg line="-proc:only" />
+		</javac>
+		-->
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java" />
+			<compilerarg line="-proc:none" />
 		</javac>
 	</target>
 

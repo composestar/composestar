@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.Config.ModuleInfo;
 import Composestar.Core.Config.ModuleInfoManager;
 import Composestar.Core.Exception.ModuleException;
@@ -66,7 +67,7 @@ public class Manager
 	/**
 	 * Defines which groups of modules should be executed.
 	 */
-	protected Map<CTCommonModule.Importance, Boolean> importance;
+	protected Map<Importance, Boolean> importance;
 
 	/**
 	 * If set to true modules will always be executed. TASMAN sets this to true
@@ -79,10 +80,10 @@ public class Manager
 		undeterministic = false;
 		resources = inresources;
 		moduleResults = new HashMap<String, CTCommonModule.ModuleReturnValue>();
-		importance = new HashMap<CTCommonModule.Importance, Boolean>();
-		importance.put(CTCommonModule.Importance.Required, true);
-		importance.put(CTCommonModule.Importance.Validation, true);
-		importance.put(CTCommonModule.Importance.Advising, true);
+		importance = new HashMap<Importance, Boolean>();
+		importance.put(Importance.REQUIRED, true);
+		importance.put(Importance.VALIDATION, true);
+		importance.put(Importance.ADVISING, true);
 	}
 
 	/**
@@ -232,7 +233,7 @@ public class Manager
 			// no annotation, can not check it, always execute
 			return true;
 		}
-		if (!importance.get(annot.importance()))
+		if (!importance.get(annot.importancex()))
 		{
 			return false || undeterministic;
 		}

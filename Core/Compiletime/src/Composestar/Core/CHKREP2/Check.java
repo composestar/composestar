@@ -28,10 +28,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import Composestar.Core.Annotations.ComposestarModule;
+import Composestar.Core.Annotations.ComposestarModule.Importance;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.ModuleNames;
-import Composestar.Core.Master.CTCommonModule.Importance;
 import Composestar.Core.Resources.CommonResources;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -42,7 +42,7 @@ import Composestar.Utils.Logging.CPSLogger;
  * 
  * @author Michiel Hendriks
  */
-@ComposestarModule(ID = ModuleNames.CHKREP, dependsOn = { ModuleNames.COPPER }, importance = Importance.Validation)
+@ComposestarModule(ID = ModuleNames.CHKREP, dependsOn = { ModuleNames.COPPER }, importancex = Importance.VALIDATION)
 public class Check implements CTCommonModule
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(ModuleNames.CHKREP);
