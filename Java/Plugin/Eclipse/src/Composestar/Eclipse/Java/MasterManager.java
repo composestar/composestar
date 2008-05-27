@@ -79,7 +79,7 @@ public class MasterManager
 			cp.addAll(ComposestarEclipsePluginPlugin.getJarClassPath(ComposestarEclipsePluginPlugin.getAbsolutePath(
 					IComposestarConstants.LIB_DIR + "ComposestarJava.jar", IComposestarJavaConstants.BUNDLE_ID)));
 
-			monitor.subTask("Resolving classpath (Eclipse Java Compiler)");
+			monitor.subTask("Resolving Eclipse Java compiler");
 			// this will register the eclipse java compiler as compiler service
 			cp.add(ComposestarEclipsePluginPlugin.getAbsolutePath("/", JavaCore.PLUGIN_ID));
 

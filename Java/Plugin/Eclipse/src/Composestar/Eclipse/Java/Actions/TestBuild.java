@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -11,7 +12,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
 import Composestar.Eclipse.Core.Debug;
-import Composestar.Eclipse.Java.MasterManager;
 
 public class TestBuild implements IPlatformRunnable
 {
@@ -26,8 +26,13 @@ public class TestBuild implements IPlatformRunnable
 			// disable debugging
 			Debug.instance().setEnabled(false);
 
+			IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
+			description.setAutoBuilding(false);
+			ResourcesPlugin.getWorkspace().setDescription(description);
+
 			// find project
 			IJavaProject jp = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaProject("" + args_[0]);
+
 			IProject[] projects = new IProject[1];
 			IProject project = jp.getProject();
 			projects[0] = project;
@@ -44,13 +49,10 @@ public class TestBuild implements IPlatformRunnable
 			Debug.instance().setFileLog(new File(project.getLocation().toFile(), "buildlog.txt"));
 
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
-
-			// log compile results
-			MasterManager m = MasterManager.getInstance();
+			// project.build(IncrementalProjectBuilder.FULL_BUILD, npm);
 
 			JavaBuildAction j = new JavaBuildAction();
 			j.setSelectedProjects(projects);
-
 			j.build();
 
 			Debug.instance().setFileLog(null);
@@ -61,6 +63,8 @@ public class TestBuild implements IPlatformRunnable
 		}
 		catch (Exception e)
 		{
+			System.err.println(e.getMessage());
+			e.printStackTrace();
 			return new Integer(2);
 		}
 

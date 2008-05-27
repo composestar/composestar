@@ -69,6 +69,7 @@ public class CStarJavaCompiler implements LangCompiler
 		{
 			tryInternal = Boolean.parseBoolean(s);
 		}
+		logger.debug(String.format("Try internal compiler = %s", tryInternal));
 	}
 
 	public void compileSources(Project p, Set<Source> sources) throws CompilerException

@@ -238,6 +238,6 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin
 			// Debug.instance().Log("result: " + lst);
 			jarClassPaths.put(jar, lst);
 		}
-		return jarClassPaths.get(jar);
+		return new ArrayList<String>(jarClassPaths.get(jar));
 	}
 }

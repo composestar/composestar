@@ -1,6 +1,7 @@
 package Composestar.Eclipse.Core;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
 import org.eclipse.swt.SWT;
@@ -239,7 +240,17 @@ public class Debug implements IComposestarConstants
 
 		if (path != null)
 		{
-			// logFile = new PrintStream(path);
+			try
+			{
+				if (path.exists())
+				{
+					path.delete();
+				}
+				logFile = new PrintStream(path);
+			}
+			catch (FileNotFoundException e)
+			{
+			}
 		}
 
 	}
