@@ -60,7 +60,7 @@ public class EclipseRunner
 
 	protected String workspace;
 
-	protected String[] additionalArgs = { "-clean" };
+	protected String[] additionalArgs = { "--launcher.suppressErrors", "-clean" };
 
 	protected long timeout;
 
