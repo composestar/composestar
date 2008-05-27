@@ -1,18 +1,12 @@
 package Composestar.Ant.Taskdefs.Java;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.DirSet;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Commandline.Argument;
-import org.apache.tools.ant.types.PatternSet.NameEntry;
 
 import Composestar.Ant.EclipseRunner;
 import Composestar.Ant.TestOutput;
@@ -170,7 +164,7 @@ public class CstarComp extends BaseTask
 	protected void compileProject(String projectName) throws BuildException
 	{
 		testOutput.beginTest(projectName);
-		
+
 		log("" + (cntCurrent * 100 / cntTotal) + "% - " + projectName, Project.MSG_INFO);
 		cntCurrent++;
 
@@ -183,39 +177,7 @@ public class CstarComp extends BaseTask
 			runner.setAppArgs(args);
 			runner.setWorkspace(workspace);
 			int err = runner.execute();
-			
-			/*
-			Java java = (Java) getProject().createTask("java");
-			java.init();
-			java.setDir(new File(eclipseHome));
-			java.setClassname(launcher);
 
-			// create arguments
-			Argument arg = java.createArg();
-			arg.setValue("-application");
-			arg = java.createArg();
-			arg.setValue(application);
-			arg = java.createArg();
-			arg.setValue(projectName);
-			arg = java.createArg();
-			arg.setValue("-data");
-			arg = java.createArg();
-			arg.setValue(workspace);
-			arg = java.createArg();
-			arg.setValue("-clean");
-
-			Path cpath = java.createClasspath();
-			FileSet startupJar = new FileSet();
-			startupJar.setDir(new File(eclipseHome));
-			NameEntry inc = startupJar.createInclude();
-			inc.setName("startup.jar");
-			cpath.addFileset(startupJar);
-
-			java.setFork(true);
-
-			int err = java.executeJava();
-			*/
-			
 			if (err != 0)
 			{
 				throw new Exception("Exit code is not zero: " + err

@@ -6,8 +6,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.Set;
 
+import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
 import Composestar.Core.COMP.CompilerException;
@@ -69,7 +71,16 @@ public class CStarJavaCompiler implements LangCompiler
 		{
 			tryInternal = Boolean.parseBoolean(s);
 		}
-		logger.debug(String.format("Try internal compiler = %s", tryInternal));
+	}
+
+	public static JavaCompiler getJavacService()
+	{
+		ServiceLoader<JavaCompiler> services = ServiceLoader.load(JavaCompiler.class);
+		for (JavaCompiler jc : services)
+		{
+			return jc;
+		}
+		return ToolProvider.getSystemJavaCompiler();
 	}
 
 	public void compileSources(Project p, Set<Source> sources) throws CompilerException
@@ -88,7 +99,13 @@ public class CStarJavaCompiler implements LangCompiler
 			}
 			resources.put(SOURCE_OUT, sourceOut);
 
-			if (tryInternal && ToolProvider.getSystemJavaCompiler() != null)
+			JavaCompiler javac = null;
+			if (tryInternal)
+			{
+				javac = getJavacService();
+			}
+
+			if (javac != null)
 			{
 				logger.info("Using the internal Java compiler service");
 				Set<File> files = new HashSet<File>();
@@ -97,7 +114,7 @@ public class CStarJavaCompiler implements LangCompiler
 					files.add(source.getFile());
 				}
 				InternalCompiler icomp = new InternalCompiler();
-				if (!icomp.compileSources(files, sourceOut, p.getFilesDependencies(), true))
+				if (!icomp.compileSources(javac, files, sourceOut, p.getFilesDependencies(), true))
 				{
 					throw new CompilerException("COMP reported errors during compilation.");
 				}
@@ -175,11 +192,16 @@ public class CStarJavaCompiler implements LangCompiler
 		}
 
 		long time = System.currentTimeMillis();
-		if (tryInternal && ToolProvider.getSystemJavaCompiler() != null)
+		JavaCompiler javac = null;
+		if (tryInternal)
+		{
+			javac = getJavacService();
+		}
+		if (javac != null)
 		{
 			logger.info("Using the internal Java compiler service");
 			InternalCompiler icomp = new InternalCompiler();
-			if (!icomp.compileSources(files, dummiesDir, p.getFilesDependencies(), false))
+			if (!icomp.compileSources(javac, files, dummiesDir, p.getFilesDependencies(), false))
 			{
 				throw new CompilerException("COMP reported errors during compilation.");
 			}

@@ -34,7 +34,6 @@ import java.util.Set;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 import javax.tools.JavaCompiler.CompilationTask;
 
 import Composestar.Core.COMP.CompilerException;
@@ -51,13 +50,20 @@ public class InternalCompiler
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CStarJavaCompiler.MODULE_NAME);
 
-	public boolean compileSources(Set<File> sources, File dest, Set<File> classpath, boolean separate)
-			throws CompilerException
+	public boolean compileSources(JavaCompiler javac, Set<File> sources, File dest, Set<File> classpath,
+			boolean separate) throws CompilerException
 	{
-		JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
 		StandardJavaFileManager fm = javac.getStandardFileManager(null, null, null);
 		List<String> options = new ArrayList<String>();
-		options.add("-implicit:none");
+		if (javac.getClass().getName().equals("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler"))
+		{
+			options.add("-target");
+			options.add("1.6");
+		}
+		else
+		{
+			options.add("-implicit:none");
+		}
 		// output dir
 		options.add("-d");
 		options.add(dest.toString());
