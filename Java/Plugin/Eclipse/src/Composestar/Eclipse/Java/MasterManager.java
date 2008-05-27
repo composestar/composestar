@@ -13,6 +13,7 @@ import org.eclipse.debug.core.IStreamListener;
 import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStreamMonitor;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMRunner;
@@ -48,21 +49,6 @@ public class MasterManager
 	 */
 	protected String mainClass = "Composestar.Java.MASTER.JavaMaster";
 
-	/**
-	 * The JVM options
-	 */
-	protected String[] jvmOptions = { "-Xmx128m" };
-
-	/**
-	 * If true the output is logged to a file.
-	 */
-	public boolean logOutput = false;
-
-	/**
-	 * The name of the logfile.
-	 */
-	public File logFile;
-
 	public MasterManager()
 	{}
 
@@ -79,6 +65,7 @@ public class MasterManager
 	{
 		try
 		{
+			Debug.instance().clear();
 			if (monitor == null)
 			{
 				monitor = new NullProgressMonitor();
@@ -92,14 +79,10 @@ public class MasterManager
 			cp.addAll(ComposestarEclipsePluginPlugin.getJarClassPath(ComposestarEclipsePluginPlugin.getAbsolutePath(
 					IComposestarConstants.LIB_DIR + "ComposestarJava.jar", IComposestarJavaConstants.BUNDLE_ID)));
 
-			// StringBuilder defaultCp = new StringBuilder();
-			// for (String cpEntry : cp)
-			// {
-			// defaultCp.append(cpEntry);
-			// defaultCp.append(File.pathSeparatorChar);
-			// }
-			//
-			// Debug.instance().Log("Classpath = " + defaultCp.toString());
+			monitor.subTask("Resolving classpath (Eclipse Java Compiler)");
+			// this will register the eclipse java compiler as compiler service
+			cp.add(ComposestarEclipsePluginPlugin.getAbsolutePath("/", JavaCore.PLUGIN_ID));
+
 			monitor.worked(1);
 
 			monitor.subTask("Setting up execution environment");
@@ -135,7 +118,8 @@ public class MasterManager
 			{
 				cp.add(libloc.getSystemLibraryPath().makeAbsolute().toFile().toString());
 			}
-			Debug.instance().Log(cp.toString());
+			Debug.instance().print("Classpath: " + cp.toString() + "\n", Debug.MSG_INFORMATION);
+
 			IVMRunner runner = vminstall.getVMRunner(ILaunchManager.RUN_MODE);
 			VMRunnerConfiguration runconfig = new VMRunnerConfiguration(mainClass, cp.toArray(new String[cp.size()]));
 			String[] args = { buildconfig.toString() };
@@ -164,40 +148,19 @@ public class MasterManager
 					Debug.instance().print(text, Debug.MSG_ERROR);
 				}
 			});
-			while (!launch.isTerminated())
+			while (!proc.isTerminated())
 			{
+				Thread.sleep(50);
+				if (monitor.isCanceled())
+				{
+					if (proc.canTerminate())
+					{
+						proc.terminate();
+					}
+				}
 			}
 			completed = proc.getExitValue() == 0;
 			monitor.done();
-
-			// List<String> cmdLine = new ArrayList<String>();
-			// cmdLine.add(vminstall.getInstallLocation() + File.separator +
-			// "bin" + File.separator + "java");
-			// cmdLine.addAll(Arrays.asList(jvmOptions));
-			// cmdLine.add("-cp");
-			// cmdLine.add(defaultCp.toString());
-			// cmdLine.add(mainClass);
-			// cmdLine.add(buildconfig.toString());
-			//
-			// PrintStream outStream = null;
-			// if (logOutput && logFile != null)
-			// {
-			// outStream = new PrintStream(logFile);
-			// }
-			// CommandLineExecutor cmdExec = new CommandLineExecutor(outStream);
-			// int result = cmdExec.exec(cmdLine.toArray(new
-			// String[cmdLine.size()]));
-			//
-			// if (result == 0)
-			// {
-			// completed = true;
-			// }
-			// else
-			// {
-			// Debug.instance().Log("Master run failure reported by process.
-			// Exit code is " + result,
-			// IComposestarConstants.MSG_ERROR);
-			// }
 		}
 		catch (Exception e)
 		{

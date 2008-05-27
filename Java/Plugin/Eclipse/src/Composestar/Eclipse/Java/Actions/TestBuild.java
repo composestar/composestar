@@ -40,18 +40,20 @@ public class TestBuild implements IPlatformRunnable
 				project.create(npm);
 			}
 			project.open(npm);
+
+			Debug.instance().setFileLog(new File(project.getLocation().toFile(), "buildlog.txt"));
+
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 			// log compile results
 			MasterManager m = MasterManager.getInstance();
-			m.logOutput = true;
-			m.logFile = new File(project.getLocation().toFile(), "buildlog.txt");
 
 			JavaBuildAction j = new JavaBuildAction();
 			j.setSelectedProjects(projects);
 
 			j.build();
 
+			Debug.instance().setFileLog(null);
 			if (!j.builtOk)
 			{
 				return new Integer(1);

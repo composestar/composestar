@@ -1,5 +1,6 @@
 package Composestar.Eclipse.Core;
 
+import java.io.File;
 import java.io.PrintStream;
 
 import org.eclipse.swt.SWT;
@@ -32,6 +33,8 @@ public class Debug implements IComposestarConstants
 	private PrintStream outputStream;
 
 	private PrintStream errorStream;
+
+	private PrintStream logFile;
 
 	private MessageConsoleStream errorMessageStream;
 
@@ -124,6 +127,10 @@ public class Debug implements IComposestarConstants
 					System.out.println(msg);
 					break;
 			}
+			if (logFile != null)
+			{
+				logFile.println(msg);
+			}
 		}
 	}
 
@@ -167,6 +174,10 @@ public class Debug implements IComposestarConstants
 				default:
 					System.out.print(msg);
 					break;
+			}
+			if (logFile != null)
+			{
+				logFile.print(msg);
 			}
 		}
 	}
@@ -216,5 +227,20 @@ public class Debug implements IComposestarConstants
 		{
 			return outputStream;
 		}
+	}
+
+	public void setFileLog(File path)
+	{
+		if (logFile != null)
+		{
+			logFile.close();
+			logFile = null;
+		}
+
+		if (path != null)
+		{
+			// logFile = new PrintStream(path);
+		}
+
 	}
 }
