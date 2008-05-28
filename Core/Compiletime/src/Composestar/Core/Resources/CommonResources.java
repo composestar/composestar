@@ -584,13 +584,13 @@ public class CommonResources implements Serializable
 			}
 			catch (IllegalArgumentException e)
 			{
-				logger.error(String.format("Error setting settings field %s in class %s", setting.setter(), field
-						.getName(), subject.getClass().getName()), e);
+				logger.error(String.format("Error setting settings field %s in class %s", field.getName(), subject
+						.getClass().getName()), e);
 			}
 			catch (IllegalAccessException e)
 			{
-				logger.error(String.format("Error setting settings field %s in class %s", setting.setter(), field
-						.getName(), subject.getClass().getName()), e);
+				logger.error(String.format("Error setting settings field %s in class %s", field.getName(), subject
+						.getClass().getName()), e);
 			}
 		}
 	}
