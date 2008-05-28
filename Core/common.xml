@@ -543,7 +543,7 @@
 
 	<target name="-example_performance_proc">
 		<concat destfile="${example.name}.xml">
-			<first count="50">
+			<first count="25">
 				<sort>
 					<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
 						<date xmlns="antlib:org.apache.tools.ant.types.resources.comparators"/>
