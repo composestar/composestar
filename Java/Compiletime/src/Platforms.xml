@@ -19,6 +19,10 @@
 							be stored in separate temp files that will be read by the compiler.
 							These temp files will be deleted when the VM shuts down. 
 						-->
+						<arg if="${SOURCE_MODE}">-source</arg>
+						<arg if="${SOURCE_MODE}">${SOURCE_MODE}</arg>
+						<arg if="${TARGET_MODE}">-target</arg>
+						<arg if="${TARGET_MODE}">${TARGET_MODE}</arg>
 						<rcfile prefix="@">
 							<arg>-cp</arg>
 							<deps merge="true" delimiter="@{path.separator}" useQuotes="true">

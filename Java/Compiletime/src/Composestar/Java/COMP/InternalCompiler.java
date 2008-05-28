@@ -36,6 +36,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.JavaCompiler.CompilationTask;
 
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Utils.Logging.CPSLogger;
 
@@ -50,6 +51,25 @@ public class InternalCompiler
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(CStarJavaCompiler.MODULE_NAME);
 
+	/**
+	 * Compiler compliance level. Used by eclipse to emulate a certain JDK
+	 * version. This has implications on the source and target levels
+	 */
+	@ModuleSetting(ID = "COMP.compliance")
+	protected String complianceLevel;
+
+	/**
+	 * Java source compatibility mode.
+	 */
+	@ModuleSetting(ID = "COMP.source")
+	protected String sourceMode;
+
+	/**
+	 * Target to create java byte code for.
+	 */
+	@ModuleSetting(ID = "COMP.target")
+	protected String targetMode;
+
 	public boolean compileSources(JavaCompiler javac, Set<File> sources, File dest, Set<File> classpath,
 			boolean separate) throws CompilerException
 	{
@@ -57,12 +77,25 @@ public class InternalCompiler
 		List<String> options = new ArrayList<String>();
 		if (javac.getClass().getName().equals("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler"))
 		{
-			options.add("-target");
-			options.add("1.6");
+			if (complianceLevel != null && complianceLevel.length() > 0)
+			{
+				options.add("-" + complianceLevel);
+			}
 		}
 		else
 		{
+
 			options.add("-implicit:none");
+		}
+		if (sourceMode != null && sourceMode.length() > 0)
+		{
+			options.add("-source");
+			options.add(sourceMode);
+		}
+		if (targetMode != null && targetMode.length() > 0)
+		{
+			options.add("-target");
+			options.add(targetMode);
 		}
 		// output dir
 		options.add("-d");

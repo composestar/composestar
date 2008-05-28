@@ -39,6 +39,12 @@ public class CmdLineArgument implements Serializable
 	protected boolean useUnixSlashes;
 
 	/**
+	 * This argument value is not included when this value resolved to an empty
+	 * string, "false" or "0"
+	 */
+	protected String ifTest;
+
+	/**
 	 * The argument template. Used for simple arguments.
 	 */
 	protected String value;
@@ -81,6 +87,14 @@ public class CmdLineArgument implements Serializable
 		if (value == null)
 		{
 			return;
+		}
+		if (ifTest != null)
+		{
+			String res = resolve(ifTest, prop);
+			if (res == null || "".equals(res) || "false".equals(res) || "0".equals(res))
+			{
+				return;
+			}
 		}
 		tolist.add(resolve(value, prop));
 	}
@@ -167,5 +181,21 @@ public class CmdLineArgument implements Serializable
 	public void setUseUnixSlashes(boolean value)
 	{
 		useUnixSlashes = value;
+	}
+
+	/**
+	 * @return the ifTest
+	 */
+	public String getIfTest()
+	{
+		return ifTest;
+	}
+
+	/**
+	 * @param ifTest the ifTest to set
+	 */
+	public void setIfTest(String testString)
+	{
+		ifTest = testString;
 	}
 }

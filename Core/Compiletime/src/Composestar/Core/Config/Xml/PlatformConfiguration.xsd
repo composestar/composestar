@@ -188,6 +188,13 @@
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
+				<xsd:attribute name="if" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>
+							Only include the value of this argument if the content in this atribute is not empty,
+							"false" or "0". Variables are escaped.
+						</xsd:documentation>
+					</xsd:annotation></xsd:attribute>
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>

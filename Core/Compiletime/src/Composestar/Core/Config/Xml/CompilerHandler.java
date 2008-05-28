@@ -195,6 +195,7 @@ public class CompilerHandler extends CpsBaseHandler
 			pushState(STATE_ARG);
 			currentArgument = new CmdLineArgument();
 			currentArgument.setUseUnixSlashes(Boolean.parseBoolean(attributes.getValue("useUnixSlashes")));
+			currentArgument.setIfTest(attributes.getValue("if"));
 		}
 		else if ((state == STATE_ACTION || state == STATE_RCFILE) && "sources".equals(name))
 		{
@@ -291,9 +292,9 @@ public class CompilerHandler extends CpsBaseHandler
 		else if (state == STATE_RCFILE && "rcfile".equals(name))
 		{
 			popState( /*
-			 * STATE_ACTION | STATE_ARG_LIST | STATE_ARG_LIST |
-			 * STATE_RCFILE
-			 */);
+						 * STATE_ACTION | STATE_ARG_LIST | STATE_ARG_LIST |
+						 * STATE_RCFILE
+						 */);
 			argList.pop();
 		}
 		else

@@ -25,6 +25,7 @@
 package Composestar.Eclipse.Java;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -79,8 +80,19 @@ public class JavaBuildConfigGenerator extends BuildConfigGenerator
 				curProject.setOutput(path.toString());
 			}
 
-			// Map opt = jproj.getOptions(true);
-			// org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+			Map opt = jproj.getOptions(true);
+			if (opt.containsKey(JavaCore.COMPILER_SOURCE))
+			{
+				config.addSetting("COMP.source", opt.get(JavaCore.COMPILER_SOURCE).toString());
+			}
+			if (opt.containsKey(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM))
+			{
+				config.addSetting("COMP.target", opt.get(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM).toString());
+			}
+			if (opt.containsKey(JavaCore.COMPILER_COMPLIANCE))
+			{
+				config.addSetting("COMP.compliance", opt.get(JavaCore.COMPILER_COMPLIANCE).toString());
+			}
 
 			addJavaSources(jproj);
 			addJavaDependencies(jproj);

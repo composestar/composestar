@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
+import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.COMP.LangCompiler;
 import Composestar.Core.Config.CompilerAction;
@@ -54,6 +55,18 @@ public class CStarJavaCompiler implements LangCompiler
 	 */
 	protected boolean tryInternal = true;
 
+	/**
+	 * Java source compatibility mode.
+	 */
+	@ModuleSetting(ID = "COMP.source")
+	protected String sourceMode;
+
+	/**
+	 * Target to create java byte code for.
+	 */
+	@ModuleSetting(ID = "COMP.target")
+	protected String targetMode;
+
 	public void setCompilerConfig(SourceCompiler compilerConfig)
 	{
 		compConfig = compilerConfig;
@@ -71,6 +84,7 @@ public class CStarJavaCompiler implements LangCompiler
 		{
 			tryInternal = Boolean.parseBoolean(s);
 		}
+		resources.inject(this);
 	}
 
 	public static JavaCompiler getJavacService()
@@ -114,6 +128,7 @@ public class CStarJavaCompiler implements LangCompiler
 					files.add(source.getFile());
 				}
 				InternalCompiler icomp = new InternalCompiler();
+				resources.inject(icomp);
 				if (!icomp.compileSources(javac, files, sourceOut, p.getFilesDependencies(), true))
 				{
 					throw new CompilerException("COMP reported errors during compilation.");
@@ -124,6 +139,14 @@ public class CStarJavaCompiler implements LangCompiler
 
 				Properties prop = new Properties();
 				prop.put("OUT", sourceOut.toString());
+				if (sourceMode != null)
+				{
+					prop.put("SOURCE_MODE", sourceMode);
+				}
+				if (targetMode != null)
+				{
+					prop.put("TARGET_MODE", targetMode);
+				}
 				CompilerAction action = compConfig.getAction("Compile");
 
 				// has to be executed for each source independently because of
@@ -201,6 +224,7 @@ public class CStarJavaCompiler implements LangCompiler
 		{
 			logger.info("Using the internal Java compiler service");
 			InternalCompiler icomp = new InternalCompiler();
+			resources.inject(icomp);
 			if (!icomp.compileSources(javac, files, dummiesDir, p.getFilesDependencies(), false))
 			{
 				throw new CompilerException("COMP reported errors during compilation.");
@@ -211,6 +235,14 @@ public class CStarJavaCompiler implements LangCompiler
 
 			Properties prop = new Properties();
 			prop.put("OUT", dummiesDir.toString());
+			if (sourceMode != null)
+			{
+				prop.put("SOURCE_MODE", sourceMode);
+			}
+			if (targetMode != null)
+			{
+				prop.put("TARGET_MODE", targetMode);
+			}
 			CompilerAction action = compConfig.getAction("Compile");
 			String[] cmdline = action.getCmdLine(p, files, prop);
 			logger.debug(Arrays.toString(cmdline));
