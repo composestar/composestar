@@ -151,7 +151,7 @@ DD {
       <table class="timeline">
         <tr>
           <xsl:for-each select="//timer[@name=$modulename]/event[text()=$eventdesc]">
-            <xsl:sort data-type="number" select="../@creation" />
+            <xsl:sort select="ancestor::timer/@timestamp" />
             <td>
               <xsl:attribute name="title">
                 <xsl:value-of select="ancestor::timer/@timestamp" />
