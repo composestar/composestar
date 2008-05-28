@@ -96,7 +96,7 @@ DD {
     </h1>
 
     <div class="module" id="{$id}">
-      <xsl:for-each select="//timer[@name=$modulename]/event[not(text()=preceding::event/text())]/child::text()">
+      <xsl:for-each select="//timer[@name=$modulename]/event[not(text()=preceding::event[parent::*[@name=$modulename]]/text())]/child::text()">
         	<xsl:sort data-type="text" select="." />
     			<xsl:call-template name="event">
       			<xsl:with-param name="modulename" select="$modulename" />
