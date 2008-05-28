@@ -21,6 +21,12 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.LibraryLocation;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
+import org.eclipse.osgi.baseadaptor.BaseData;
+import org.eclipse.osgi.baseadaptor.hooks.StorageHook;
+import org.eclipse.osgi.framework.adaptor.BundleData;
+import org.eclipse.osgi.framework.internal.core.AbstractBundle;
+import org.eclipse.osgi.internal.baseadaptor.BaseStorageHook;
+import org.osgi.framework.Bundle;
 
 import Composestar.Eclipse.Core.ComposestarEclipsePluginPlugin;
 import Composestar.Eclipse.Core.Debug;
@@ -84,9 +90,8 @@ public class MasterManager
 				monitor.subTask("Resolving Eclipse Java compiler");
 				// this will register the eclipse java compiler as compiler
 				// service
-				cp.add((new File(ComposestarEclipsePluginPlugin.getAbsolutePath("/", JavaCore.PLUGIN_ID))).toString());
-				cp.add((new File(ComposestarEclipsePluginPlugin.getAbsolutePath("/", "org.eclipse.jdt.compiler.tool")))
-						.toString());
+				cp.add(getBundlePath(JavaCore.PLUGIN_ID));
+				cp.add(getBundlePath("org.eclipse.jdt.compiler.tool"));
 			}
 
 			monitor.worked(1);
@@ -174,5 +179,44 @@ public class MasterManager
 					IComposestarConstants.MSG_ERROR);
 			completed = false;
 		}
+	}
+
+	/**
+	 * Get the location to a bundle, to be used in the classpath
+	 * 
+	 * @param bundleId
+	 * @return
+	 */
+	@SuppressWarnings("restriction")
+	protected String getBundlePath(String bundleId)
+	{
+		// first try an "unstable" but fast lookup
+		try
+		{
+			Bundle bndl = org.eclipse.core.runtime.Platform.getBundle(bundleId);
+			if (bndl instanceof AbstractBundle)
+			{
+				AbstractBundle abndl = (AbstractBundle) bndl;
+				BundleData bdata = abndl.getBundleData();
+				if (bdata instanceof BaseData)
+				{
+					BaseData bd = (BaseData) bdata;
+					StorageHook sh = bd.getStorageHook(BaseStorageHook.KEY);
+					if (sh instanceof BaseStorageHook)
+					{
+						BaseStorageHook bsh = (BaseStorageHook) sh;
+						if (bsh != null)
+						{
+							return (new File(bsh.getFileName())).getAbsolutePath();
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+		}
+		// this one always works, but it slow
+		return (new File(ComposestarEclipsePluginPlugin.getAbsolutePath("/", bundleId))).getAbsolutePath();
 	}
 }
