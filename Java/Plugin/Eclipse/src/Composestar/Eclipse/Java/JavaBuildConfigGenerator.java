@@ -79,6 +79,7 @@ public class JavaBuildConfigGenerator extends BuildConfigGenerator
 				path = path.removeFirstSegments(path.matchingFirstSegments(project.getFullPath()));
 				curProject.setOutput(path.toString());
 			}
+			curProject.setIntermediate(".composestar");
 
 			Map opt = jproj.getOptions(true);
 			if (opt.containsKey(JavaCore.COMPILER_SOURCE))

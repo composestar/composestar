@@ -178,5 +178,19 @@
           name="project">
     </scope>
  </extension>
+ <extension
+       point="org.eclipse.team.core.ignore">
+    <ignore
+          enabled="true"
+          pattern=".composestar">
+    </ignore>
+ </extension>
+ <extension
+       point="org.eclipse.ui.ide.resourceFilters">
+    <filter
+          pattern=".composestar"
+          selected="true">
+    </filter>
+ </extension>
    	
 </plugin>

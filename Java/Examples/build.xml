@@ -23,6 +23,7 @@
 				<include name="*/buildlog.txt" />
 				<include name="*/langmap.pro" />			
 				<include name="*/obj/**" />
+				<include name="*/.composestar/**" />
 			</FileSet>
 		</delete>
 	</target>

@@ -512,7 +512,10 @@
 				<include name="**/Analyses/TimerResults.xml" />
 			</fileset>
 			<chainedmapper>
-				<globmapper from="*/obj/Analyses/TimerResults.xml" to="*/TimerResults.xml" handledirsep="true" />
+				<compositemapper>
+					<globmapper from="*/obj/Analyses/TimerResults.xml" to="*/TimerResults.xml" handledirsep="true" />
+					<globmapper from="*/.composestar/Analyses/TimerResults.xml" to="*/TimerResults.xml" handledirsep="true" />
+				</compositemapper>
 				<globmapper from="*.xml" to="*_${performance.tstamp}.xml" />
 				<packagemapper from="*" to="*"/>
 			</chainedmapper>
