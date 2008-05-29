@@ -39,6 +39,9 @@ namespace Composestar.StarLight.CpsParser
             : base(input)
         { }
 
+        protected void warning(String msg, IToken t)
+        { }
+
         public String extractEmbeddedCode(ITreeAdaptor adapter)
         {
             IToken start = (IToken)input.LT(-1);
@@ -55,6 +58,16 @@ namespace Composestar.StarLight.CpsParser
 
             String result = input.ToString(start.TokenIndex + 1, stop.TokenIndex - 1);
             return result;
+        }
+
+        protected String inputToString(IToken start, IToken end)
+        {
+            return input.ToString(start, end);
+        }
+
+        protected Object adaptorCreate(ITreeAdaptor ta, int token, String text)
+        {
+            return ta.Create(token, text);
         }
     }
 }

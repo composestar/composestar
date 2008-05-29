@@ -25,6 +25,7 @@
  *				warning.
  * (2007-10-15) michielh	Constraints are no longer hardcoded
  * (2008-02-25) michielh	Added required check for ending } and EOF
+ * (2008-05-29) michielh	Made the grammar even more target neutral
  */
 grammar Cps;
 
@@ -372,7 +373,7 @@ messagePatternSet
 	// single target.selector alternative dropped per 2007-10-05 (MichielH+Lodewijk)
 	| targetSelector[1] 
 	  {
-	  	@Java@logger.warn(createLogMessage("Naked target.selector signature matching has been deprecated.", $start));
+	  	warning("Naked target.selector signature matching has been deprecated.", $start);
 	  }
 	-> ^(MATCHING_PART ^(SIGN targetSelector))
 	;	
@@ -506,8 +507,7 @@ selectorExprLegacy
  */	
 selectorExprPredicate
 	: id=IDENTIFIER '|' expr=allButRcurly RCURLY
-	@Java@-> ^(PREDICATE_SELECTOR $id { adaptor.create(PROLOG_EXPR, input.toString($expr.start, $expr.stop)) } )
-	@CSharp@-> ^(PREDICATE_SELECTOR $id { adaptor.Create(PROLOG_EXPR, input.ToString($expr.start, $expr.stop)) } )
+	-> ^(PREDICATE_SELECTOR $id { adaptorCreate(adaptor, PROLOG_EXPR, inputToString($expr.start, $expr.stop)) } )
 	;	
 
 /**

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Compose*/Core Eclipse Integration
-Bundle-SymbolicName: composestar.core.plugin
+Bundle-SymbolicName: composestar.core.plugin;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Localization: plugin
 Require-Bundle: composestar.core;visibility:=reexport,

@@ -6,22 +6,18 @@ Bundle-Version: 0.0.0
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.core.resources,
  org.eclipse.debug.ui,
  org.eclipse.jdt.core,
  org.eclipse.jdt.debug.ui,
  org.eclipse.jdt.ui,
  org.eclipse.ui.ide,
  composestar.core.plugin,
- composestar.java,
- org.eclipse.jdt.launching,
- org.eclipse.team.core
+ org.eclipse.jdt.launching
 Eclipse-LazyStart: true
 Eclipse-AutoStart: true
 Bundle-Vendor: University of Twente
 Import-Package: Composestar.Eclipse.Core,
  Composestar.Eclipse.Core.Actions,
- Composestar.Eclipse.Core.BuildConfiguration,
  Composestar.Eclipse.Core.UI,
  Composestar.Eclipse.Core.Utils
 Bundle-Activator: Composestar.Eclipse.Core.ComposestarEclipsePluginPlugin

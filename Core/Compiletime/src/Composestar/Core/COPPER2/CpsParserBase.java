@@ -126,14 +126,40 @@ public abstract class CpsParserBase extends Parser
 	}
 
 	/**
-	 * Create a log entry
+	 * Simple construction to avoid a target specific input.ToString vs
+	 * input.toString
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	protected String inputToString(Token start, Token end)
+	{
+		return input.toString(start, end);
+	}
+
+	/**
+	 * Another hack to create a target neutral grammar
+	 * 
+	 * @param ta
+	 * @param token
+	 * @param text
+	 * @return
+	 */
+	protected Object adaptorCreate(TreeAdaptor ta, int token, String text)
+	{
+		return ta.create(token, text);
+	}
+
+	/**
+	 * Issue a warning
 	 * 
 	 * @param msg
 	 * @param t
 	 * @return
 	 */
-	protected LogMessage createLogMessage(String msg, Token t)
+	protected void warning(String msg, Token t)
 	{
-		return new LogMessage(msg, sourceFile, t.getLine(), t.getCharPositionInLine());
+		logger.warn(new LogMessage(msg, sourceFile, t.getLine(), t.getCharPositionInLine()));
 	}
 }

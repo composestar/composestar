@@ -179,18 +179,12 @@
     </scope>
  </extension>
  <extension
-       point="org.eclipse.team.core.ignore">
-    <ignore
-          enabled="true"
-          pattern=".composestar">
-    </ignore>
- </extension>
- <extension
-       point="org.eclipse.ui.ide.resourceFilters">
-    <filter
-          pattern=".composestar"
-          selected="true">
-    </filter>
+       point="org.eclipse.ui.ide.projectNatureImages">
+    <image
+          icon="logo-8x8.png"
+          id="composestar.java.nature.image"
+          natureId="composestar.java.nature">
+    </image>
  </extension>
    	
 </plugin>

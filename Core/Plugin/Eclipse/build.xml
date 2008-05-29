@@ -10,35 +10,35 @@
 		</and>
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
-	
+
 	<description>Compose* Eclipse Plugin (Core)</description>
-	
-	<target name="init_local" depends="init_eclipse">		
-		<mkdir dir="${out.build}"/>
-		<mkdir dir="${out.dist}"/>		
+
+	<target name="init_local" depends="init_eclipse">
+		<mkdir dir="${out.build}" />
+		<mkdir dir="${out.dist}" />
 	</target>
-	
+
 	<!-- clean -->
 	<target name="clean" depends="init">
-		<delete dir="${out.build}"/>
-		<delete dir="${out.dist}"/>
+		<delete dir="${out.build}" />
+		<delete dir="${out.dist}" />
 	</target>
-	
-	<!-- build -->	
+
+	<!-- build -->
 	<target name="build" depends="init_local,compile,jar" description="compile the plugin core source">
 	</target>
-	
+
 	<!-- compile -->
 	<target name="compile" depends="init_local">
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.eclipse" debug="${build.debug}" deprecation="${build.deprecation}">
 		</javac>
 	</target>
-	
+
 	<!-- jar -->
 	<target name="jar" depends="compile">
-		<copy file="META-INF/MANIFEST.MF" tofile="${out.build}/META-INF/MANIFEST.MF"/>	 
+		<copy file="META-INF/MANIFEST.MF" tofile="${out.build}/META-INF/MANIFEST.MF" />
 		<manifest file="${out.build}/META-INF/MANIFEST.MF" mode="update">
-			<attribute name="Bundle-Version" value="${version.core}"/>
+			<attribute name="Bundle-Version" value="${version.core}" />
 		</manifest>
 		<jar destfile="${out.dist}/ComposestarEclipseCore.jar" manifest="${out.build}/META-INF/MANIFEST.MF">
 			<fileset dir="${out.build}" />
@@ -46,10 +46,15 @@
 		<copy todir="${out.dist}/META-INF">
 			<fileset dir="${out.build}/META-INF" />
 		</copy>
+		<copy todir="${out.dist}">
+			<fileset dir=".">
+				<include name="plugin.*" />
+			</fileset>
+		</copy>
 	</target>
-	
-	<!-- install -->	
-	<target name="install" depends="init_local,build" description="">	
+
+	<!-- install -->
+	<target name="install" depends="init_local,build" description="">
 		<copy todir="${eclipse.pluginsdir.core.plugin}">
 			<fileset dir="${out.dist}" />
 		</copy>
