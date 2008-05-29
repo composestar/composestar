@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Stack;
 import java.util.zip.GZIPInputStream;
 
@@ -74,7 +75,9 @@ public class TASMANConfig extends CpsBaseHandler
 
 	protected Stack<TaskCollection> taskStack;
 
-	public static SequentialTask loadConfig(File file) throws ConfigurationException
+	protected URL basePath;
+
+	public static SequentialTask loadConfig(File file, URL baseClassPath) throws ConfigurationException
 	{
 		if (file == null)
 		{
@@ -94,7 +97,7 @@ public class TASMANConfig extends CpsBaseHandler
 					throw new ConfigurationException("IOException: " + e.getMessage());
 				}
 			}
-			return loadConfig(is);
+			return loadConfig(is, baseClassPath);
 		}
 		catch (FileNotFoundException e)
 		{
@@ -102,12 +105,12 @@ public class TASMANConfig extends CpsBaseHandler
 		}
 	}
 
-	public static SequentialTask loadConfig(InputStream stream) throws ConfigurationException
+	public static SequentialTask loadConfig(InputStream stream, URL baseClassPath) throws ConfigurationException
 	{
-		return loadConfig(new InputSource(stream));
+		return loadConfig(new InputSource(stream), baseClassPath);
 	}
 
-	public static SequentialTask loadConfig(InputSource source) throws ConfigurationException
+	public static SequentialTask loadConfig(InputSource source, URL baseClassPath) throws ConfigurationException
 	{
 		try
 		{
@@ -115,6 +118,7 @@ public class TASMANConfig extends CpsBaseHandler
 			// factory.setNamespaceAware(true);
 			SAXParser parser = factory.newSAXParser();
 			TASMANConfig config = new TASMANConfig(parser.getXMLReader(), null);
+			config.basePath = baseClassPath;
 			parser.parse(source, config);
 			return (SequentialTask) config.taskStack.pop();
 		}
@@ -172,6 +176,7 @@ public class TASMANConfig extends CpsBaseHandler
 			ModuleTask mt = new ModuleTask();
 			try
 			{
+				mt.setClasspath(attributes.getValue("classpath"), basePath);
 				mt.setModuleClass(attributes.getValue("class"));
 				ModuleInfoManager.get(mt.getModuleClass());
 			}

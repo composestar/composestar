@@ -24,6 +24,12 @@
 
 package Composestar.Core.TASMAN;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
+
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Resources.CommonResources;
@@ -38,6 +44,16 @@ import Composestar.Utils.Perf.CPSTimer;
 public class ModuleTask extends Task
 {
 	protected static final CPSLogger logger = CPSLogger.getCPSLogger(Manager.MODULE_NAME);
+
+	/**
+	 * The classpath for this module
+	 */
+	protected String classpath;
+
+	/**
+	 * The base URL to use when resolving the classpath
+	 */
+	protected URL baseUrl;
 
 	/**
 	 * The CTCommonModule implementation to instantiate and execute
@@ -65,7 +81,28 @@ public class ModuleTask extends Task
 	 */
 	public void setModuleClass(String ftype) throws ClassNotFoundException
 	{
-		Class<?> mclass = Class.forName(ftype);
+		ClassLoader loader = getClass().getClassLoader();
+		if (classpath != null && classpath.length() > 0 && baseUrl != null)
+		{
+			String[] paths = classpath.split(":");
+			List<URL> urls = new ArrayList<URL>();
+			for (String path : paths)
+			{
+				try
+				{
+					urls.add(new URL(baseUrl, path));
+				}
+				catch (MalformedURLException e)
+				{
+					logger.error(e, e);
+				}
+			}
+			if (urls.size() > 0)
+			{
+				loader = URLClassLoader.newInstance(urls.toArray(new URL[urls.size()]), getClass().getClassLoader());
+			}
+		}
+		Class<?> mclass = Class.forName(ftype, true, loader);
 		if (CTCommonModule.class.isAssignableFrom(mclass))
 		{
 			moduleClass = mclass.asSubclass(CTCommonModule.class);
@@ -145,5 +182,14 @@ public class ModuleTask extends Task
 			timer.stop();
 			resources.extract(module);
 		}
+	}
+
+	/**
+	 * @param path the classpath to set
+	 */
+	public void setClasspath(String path, URL basepath)
+	{
+		classpath = path;
+		baseUrl = basepath;
 	}
 }

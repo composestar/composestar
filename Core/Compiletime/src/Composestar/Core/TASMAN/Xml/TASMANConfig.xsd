@@ -70,6 +70,14 @@
     	<xsd:attribute name="class" type="xsd:string">
     		<xsd:annotation>
     			<xsd:documentation>The fully qualified name of the module to execute.</xsd:documentation>
+    		</xsd:annotation>
+    	</xsd:attribute>
+    	<xsd:attribute name="classpath" type="xsd:string">
+    		<xsd:annotation>
+    			<xsd:documentation>
+    				Additional classpath to use for loading this module. Paths are always delimited with : and are
+    				considered relative to the platform package.
+    			</xsd:documentation>
     		</xsd:annotation></xsd:attribute>
     </xsd:complexType>
 </xsd:schema>

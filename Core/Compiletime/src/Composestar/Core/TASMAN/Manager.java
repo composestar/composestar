@@ -28,6 +28,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -138,7 +140,16 @@ public class Manager
 	 */
 	public void loadConfig() throws ModuleException
 	{
-		tasks = TASMANConfig.loadConfig(getConfigFile());
+		URL basePath = null;
+		try
+		{
+			basePath = resources.getPathResolver().getBase().toURI().toURL();
+		}
+		catch (MalformedURLException e)
+		{
+			logger.error(e, e);
+		}
+		tasks = TASMANConfig.loadConfig(getConfigFile(), basePath);
 	}
 
 	/**

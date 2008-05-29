@@ -63,7 +63,7 @@ public class VerifyConfig
 	{
 		try
 		{
-			return isValidTaskCollection(TASMANConfig.loadConfig(is), new HashSet<String>());
+			return isValidTaskCollection(TASMANConfig.loadConfig(is, null), new HashSet<String>());
 		}
 		catch (ConfigurationException e)
 		{
