@@ -50,8 +50,9 @@ public class AnnotationCollector implements CTCommonModule
 				}
 				catch (Throwable t)
 				{
-					logger.debug("Error while fetching annotations from type: " + c.getName() + " --> "
-							+ t.getMessage());
+					logger
+							.info("Error while fetching annotations from type: " + c.getName() + " --> "
+									+ t.getMessage());
 				}
 			}
 		}
@@ -94,12 +95,12 @@ public class AnnotationCollector implements CTCommonModule
 		Annotation[] annots = c.getAnnotations();
 		for (Annotation annotation : annots)
 		{
-			logger.info("Found annotation " + annotation.annotationType().getName() + "(on " + c.getName() + ")");
+			logger.debug("Found annotation " + annotation.annotationType().getName() + "(on " + c.getName() + ")");
 			JavaAnnotation annot = new JavaAnnotation();
 			Type annotType = getTypeLocation(annotation.annotationType().getName());
 			if (annotType != null)
 			{
-				logger.info("Registering: " + annotType.getName() + " to " + getTypeLocation(c.getName()).getName());
+				logger.debug("Registering: " + annotType.getName() + " to " + getTypeLocation(c.getName()).getName());
 				annot.register(annotType, getTypeLocation(c.getName()));
 			}
 			collectValues(annot, annotation);

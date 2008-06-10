@@ -30,6 +30,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
@@ -39,6 +41,7 @@ import javax.tools.JavaCompiler.CompilationTask;
 import Composestar.Core.Annotations.ModuleSetting;
 import Composestar.Core.COMP.CompilerException;
 import Composestar.Utils.Logging.CPSLogger;
+import Composestar.Utils.Logging.LogMessage;
 
 /**
  * Uses the internal compiler access exposed in Java 1.6. However, the
@@ -70,6 +73,8 @@ public class InternalCompiler
 	@ModuleSetting(ID = "COMP.target")
 	protected String targetMode;
 
+	protected boolean emacsLogEntries = false;
+
 	public boolean compileSources(JavaCompiler javac, Set<File> sources, File dest, Set<File> classpath,
 			boolean separate) throws CompilerException
 	{
@@ -81,6 +86,8 @@ public class InternalCompiler
 			{
 				options.add("-" + complianceLevel);
 			}
+			options.add("-Xemacs"); // better error messages
+			emacsLogEntries = true;
 		}
 		else
 		{
@@ -118,12 +125,12 @@ public class InternalCompiler
 		if (!separate)
 		{
 			Iterable<? extends JavaFileObject> fo = fm.getJavaFileObjectsFromFiles(sources);
-			CompilationTask task = javac.getTask(new IntErrOut(), fm, null, options, null, fo);
+			CompilationTask task = javac.getTask(new IntErrOut(emacsLogEntries), fm, null, options, null, fo);
 			return task.call();
 		}
 		else
 		{
-			Writer err = new IntErrOut();
+			Writer err = new IntErrOut(emacsLogEntries);
 			for (File file : sources)
 			{
 				Iterable<? extends JavaFileObject> fo = fm.getJavaFileObjects(file);
@@ -146,9 +153,12 @@ public class InternalCompiler
 	{
 		protected StringBuffer sb;
 
-		public IntErrOut()
+		protected boolean emacsLogEntries;
+
+		public IntErrOut(boolean emacsStyle)
 		{
 			sb = new StringBuffer();
+			emacsLogEntries = emacsStyle;
 		}
 
 		@Override
@@ -166,7 +176,46 @@ public class InternalCompiler
 			int nl = sb.indexOf("\n");
 			if (nl > -1)
 			{
-				logger.warn(sb.substring(0, nl).trim());
+				if (emacsLogEntries)
+				{
+					/*
+					 * /workspace/X.java:8: warning: The method...
+					 */
+					// String[] res = sb.substring(0, nl).trim().split(":", 4);
+					final Pattern pat = Pattern.compile("^(.*):([0-9]+): ([a-z]+): (.*)$", Pattern.CASE_INSENSITIVE);
+					Matcher match = pat.matcher(sb.substring(0, nl).trim());
+					if (!match.matches())
+					{
+						logger.debug(sb.substring(0, nl).trim());
+					}
+					else
+					{
+						int line = -1;
+						try
+						{
+							line = Integer.parseInt(match.group(2));
+						}
+						catch (NumberFormatException e)
+						{
+						}
+						if ("warning".equalsIgnoreCase(match.group(3)))
+						{
+							logger.warn(new LogMessage(match.group(4), match.group(1), line));
+						}
+						else if ("error".equalsIgnoreCase(match.group(3)))
+						{
+							logger.error(new LogMessage(match.group(4), match.group(1), line));
+						}
+						else
+						{
+							logger.info(new LogMessage(match.group(4), match.group(1), line));
+						}
+					}
+				}
+				else
+				{
+					logger.warn(sb.substring(0, nl).trim());
+				}
 				sb = new StringBuffer(sb.substring(nl + 1));
 			}
 		}

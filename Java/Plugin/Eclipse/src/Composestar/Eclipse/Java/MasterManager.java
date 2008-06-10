@@ -3,6 +3,9 @@ package Composestar.Eclipse.Java;
 import java.io.File;
 import java.util.List;
 
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
@@ -28,6 +31,7 @@ import org.eclipse.osgi.framework.internal.core.AbstractBundle;
 import org.eclipse.osgi.internal.baseadaptor.BaseStorageHook;
 import org.osgi.framework.Bundle;
 
+import Composestar.Eclipse.Core.CompileMarkers;
 import Composestar.Eclipse.Core.ComposestarEclipsePluginPlugin;
 import Composestar.Eclipse.Core.Debug;
 import Composestar.Eclipse.Core.IComposestarConstants;
@@ -67,11 +71,12 @@ public class MasterManager
 		return Instance;
 	}
 
-	public void run(File buildconfig, IProgressMonitor monitor)
+	public void run(IProject proj, File buildconfig, IProgressMonitor monitor)
 	{
+		Debug dbg = Debug.instance();
 		try
 		{
-			Debug.instance().clear();
+			dbg.clear();
 			if (monitor == null)
 			{
 				monitor = new NullProgressMonitor();
@@ -101,8 +106,7 @@ public class MasterManager
 					.getEnvironment(EXECUTION_ENV_ID);
 			if (exenv == null)
 			{
-				Debug.instance().Log(
-						String.format("Unable to find the %s Java execution environment.", EXECUTION_ENV_ID),
+				dbg.Log(String.format("Unable to find the %s Java execution environment.", EXECUTION_ENV_ID),
 						Debug.MSG_ERROR);
 				completed = false;
 				return;
@@ -119,9 +123,8 @@ public class MasterManager
 			}
 			if (vminstall == null)
 			{
-				Debug.instance().Log(
-						String.format("Unable to find a compatible Java execution environment for %s.",
-								EXECUTION_ENV_ID), Debug.MSG_ERROR);
+				dbg.Log(String.format("Unable to find a compatible Java execution environment for %s.",
+						EXECUTION_ENV_ID), Debug.MSG_ERROR);
 				completed = false;
 				return;
 			}
@@ -129,7 +132,7 @@ public class MasterManager
 			{
 				cp.add(libloc.getSystemLibraryPath().makeAbsolute().toFile().toString());
 			}
-			Debug.instance().print("Classpath: " + cp.toString() + "\n", Debug.MSG_INFORMATION);
+			dbg.print("Classpath: " + cp.toString() + "\n", Debug.MSG_INFORMATION);
 
 			IVMRunner runner = vminstall.getVMRunner(ILaunchManager.RUN_MODE);
 			VMRunnerConfiguration runconfig = new VMRunnerConfiguration(mainClass, cp.toArray(new String[cp.size()]));
@@ -142,16 +145,13 @@ public class MasterManager
 			monitor.worked(1);
 			monitor.subTask("Compiling");
 
+			proj.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+			CompileMarkers markers = new CompileMarkers(proj);
+
 			runner.run(runconfig, launch, monitor);
 			IProcess[] procs = launch.getProcesses();
 			IProcess proc = procs[0];
-			proc.getStreamsProxy().getOutputStreamMonitor().addListener(new IStreamListener()
-			{
-				public void streamAppended(String text, IStreamMonitor monitor)
-				{
-					Debug.instance().print(text, Debug.MSG_INFORMATION);
-				}
-			});
+			proc.getStreamsProxy().getOutputStreamMonitor().addListener(new OutputStreamListener(markers));
 			proc.getStreamsProxy().getErrorStreamMonitor().addListener(new IStreamListener()
 			{
 				public void streamAppended(String text, IStreamMonitor monitor)
@@ -175,8 +175,7 @@ public class MasterManager
 		}
 		catch (Exception e)
 		{
-			Debug.instance().Log("Master run failure reported: " + e.getCause().getMessage(),
-					IComposestarConstants.MSG_ERROR);
+			dbg.Log("Master run failure reported: " + e.getCause().getMessage(), IComposestarConstants.MSG_ERROR);
 			completed = false;
 		}
 	}
@@ -218,5 +217,26 @@ public class MasterManager
 		}
 		// this one always works, but it slow
 		return (new File(ComposestarEclipsePluginPlugin.getAbsolutePath("/", bundleId))).getAbsolutePath();
+	}
+
+	/**
+	 * @author mhendrik
+	 */
+	static class OutputStreamListener implements IStreamListener
+	{
+		int level = Debug.MSG_INFORMATION;
+
+		CompileMarkers markers;
+
+		public OutputStreamListener(CompileMarkers marks)
+		{
+			markers = marks;
+		}
+
+		public void streamAppended(String text, IStreamMonitor monitor)
+		{
+			Debug.instance().print(text, Debug.MSG_INFORMATION);
+			markers.append(text);
+		}
 	}
 }

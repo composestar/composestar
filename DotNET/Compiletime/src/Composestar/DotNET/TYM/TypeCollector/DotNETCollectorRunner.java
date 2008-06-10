@@ -178,6 +178,12 @@ public class DotNETCollectorRunner implements CTCommonModule
 				continue;
 			}
 			PrimitiveConcern pc = new PrimitiveConcern();
+			Composestar.Core.Config.Source typeSource = resources.configuration().getProject().getTypeMapping()
+					.getSource(type.getFullName());
+			if (typeSource != null)
+			{
+				pc.setDescriptionFileName(typeSource.getFile().toString());
+			}
 			pc.setName(type.getFullName());
 			pc.setPlatformRepresentation(type);
 			type.setParentConcern(pc);

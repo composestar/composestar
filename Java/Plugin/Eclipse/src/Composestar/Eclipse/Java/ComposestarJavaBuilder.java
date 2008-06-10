@@ -57,7 +57,7 @@ public class ComposestarJavaBuilder extends ComposestarBuilder
 	protected void callMaster(IProgressMonitor monitor, File buildConfigFile) throws CoreException
 	{
 		MasterManager m = MasterManager.getInstance();
-		m.run(buildConfigFile, monitor);
+		m.run(currentProject, buildConfigFile, monitor);
 		if (!m.completed)
 		{
 			throw new CoreException(new Status(IStatus.ERROR, pluginid, IResourceStatus.BUILD_FAILED, "Build failed",

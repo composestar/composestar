@@ -83,7 +83,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 		{
 			Debug.instance().Log("Invoking Master...");
 
-			m.run(buildConfigFile, null);
+			m.run(selectedProjects[0], buildConfigFile, null);
 			if (!m.completed)
 			{
 				builtOk = false;
