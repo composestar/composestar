@@ -18,6 +18,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizardFirstPage;
 import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizardSecondPage;
+import org.eclipse.jdt.ui.PreferenceConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 import Composestar.Eclipse.Java.CStarJavaRuntimeContainer;
 import Composestar.Eclipse.Java.IComposestarJavaConstants;
@@ -42,6 +44,9 @@ public class ComposestarProjectWizardSecondPageEx extends JavaProjectWizardSecon
 	public void init(IJavaProject jproject, IPath defaultOutputLocation, IClasspathEntry[] defaultEntries,
 			boolean defaultsOverrideExistingClasspath)
 	{
+		IPreferenceStore store = PreferenceConstants.getPreferenceStore();
+		// force this setting because we prefer it
+		store.setValue(PreferenceConstants.SRCBIN_FOLDERS_IN_NEWPROJ, true);
 		if (!fFirstPageEx.getDetect())
 		{
 			List<IClasspathEntry> cpEntries = new ArrayList<IClasspathEntry>(Arrays.asList(defaultEntries));

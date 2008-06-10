@@ -77,7 +77,15 @@ public class JavaBuildConfigGenerator extends BuildConfigGenerator
 			if (project.getFullPath().isPrefixOf(path))
 			{
 				path = path.removeFirstSegments(path.matchingFirstSegments(project.getFullPath()));
-				curProject.setOutput(path.toString());
+				if (path.toString().length() == 0)
+				{
+					// use current dir (an empty string will set it to default)
+					curProject.setOutput(".");
+				}
+				else
+				{
+					curProject.setOutput(path.toString());
+				}
 			}
 			curProject.setIntermediate(".composestar");
 
