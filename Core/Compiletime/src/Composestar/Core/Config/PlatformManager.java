@@ -45,7 +45,7 @@ public class PlatformManager
 	/**
 	 * global instance, platforms never change, or shouldn't
 	 */
-	protected static PlatformManager instance;
+	private static PlatformManager instance;
 
 	/**
 	 * @return the platform manager

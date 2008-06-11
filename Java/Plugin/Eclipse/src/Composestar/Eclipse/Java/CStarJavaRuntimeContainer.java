@@ -61,25 +61,22 @@ public class CStarJavaRuntimeContainer implements IClasspathContainer
 	 */
 	public String[] getClasspath()
 	{
-		String[] cp = new String[3];
-		// Compiletime Core
-		// TODO: shouldn't be needed
-		cp[0] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
-				+ "ComposestarCORE.jar"));
-
-		// Compiletime Java
-		// TODO: shouldn't be needed
-		cp[1] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
-				+ "ComposestarJava.jar", IComposestarJavaConstants.BUNDLE_ID));
+		String[] cp = new String[1];
+		// // Compiletime Core
+		// // TODO: shouldn't be needed
+		// cp[0] =
+		// FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
+		// + "ComposestarCORE.jar"));
+		//
+		// // Compiletime Java
+		// // TODO: shouldn't be needed
+		// cp[1] =
+		// FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
+		// + "ComposestarJava.jar", IComposestarJavaConstants.BUNDLE_ID));
 
 		// Runtime Java
-		cp[2] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
+		cp[0] = FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
 				+ "ComposestarRuntimeInterpreter.jar", IComposestarJavaConstants.BUNDLE_ID));
-
-		// // TODO: shouldn't be needed
-		// cp[3] =
-		// FileUtils.fixFilename(ComposestarEclipsePluginPlugin.getAbsolutePath(IComposestarConstants.LIB_DIR
-		// + "prolog.jar"));
 
 		return cp;
 	}

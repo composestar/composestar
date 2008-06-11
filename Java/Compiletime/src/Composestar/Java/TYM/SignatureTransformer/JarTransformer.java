@@ -89,7 +89,10 @@ public class JarTransformer
 		{
 			if (tempJar != null)
 			{
-				tempJar.delete(); // at least clean up temp
+				if (!tempJar.delete())
+				{
+					tempJar.deleteOnExit();
+				}
 			}
 			// stuff when things
 			// go wrong

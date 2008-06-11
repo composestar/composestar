@@ -111,7 +111,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("Error while creating AST: " + e.getMessage(), "DUMMER");
+			throw new ModuleException("Error while creating AST: " + e.getMessage(), ModuleNames.DUMMER);
 		}
 
 		// create dummy
@@ -120,14 +120,19 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		// emit dummy to file
 		try
 		{
-			source.getStub().getParentFile().mkdirs();
+			if (!source.getStub().getParentFile().exists() && !source.getStub().getParentFile().mkdirs())
+			{
+				throw new ModuleException(String.format("Unable to create directory %s", source.getStub()
+						.getParentFile()), ModuleNames.DUMMER);
+			}
 			BufferedWriter bw = new BufferedWriter(new FileWriter(source.getStub()));
 			bw.write(dummy.toString());
 			bw.close();
 		}
 		catch (IOException e)
 		{
-			throw new ModuleException("ERROR while trying to emit dummy source!:\n" + e.getMessage(), "DUMMER");
+			throw new ModuleException("ERROR while trying to emit dummy source!:\n" + e.getMessage(),
+					ModuleNames.DUMMER);
 		}
 
 	}

@@ -11,7 +11,7 @@ import Composestar.Core.Master.Master;
  */
 public class JavaMaster extends Master
 {
-	protected static final int[] MIN_JAVA_VERSION = { 1, 6 };
+	static final int[] MIN_JAVA_VERSION = { 1, 6 };
 
 	@Override
 	protected boolean loadConfiguration() throws Exception

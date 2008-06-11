@@ -39,11 +39,34 @@
 		</javac>
 	</target>
 	
-	<target name="jar">
+	<target name="jar" depends="init_local">
+		<!--
 		<jar destfile="${out.dist}/lib/ComposestarRuntimeInterpreter.jar">
 			<fileset dir="${build.core}/Runtime/${out.build}" /> 
 			<fileset dir="${out.build}" />
 		</jar>
+		-->
+		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" />
+    <jarjar jarfile="${out.dist}/lib/ComposestarRuntimeInterpreter.jar">
+    		<fileset dir="${build.core}/Runtime/${out.build}">
+    			<include name="**/*.class"/>
+				</fileset> 
+				<fileset dir="${out.build}" />
+        <zipfileset src="${build.core}/Compiletime/${out.jar.core}">
+        	<include name="**/*.class"/>
+        </zipfileset>
+        <zipfileset src="${build.java}/Compiletime/${out.jar.java}">
+        	<include name="**/*.class"/>
+        </zipfileset>
+        <keep pattern="Composestar.RuntimeCore.**" />
+        <keep pattern="Composestar.RuntimeJava.**" />
+        <keep pattern="Composestar.Core.CpsProgramRepository.**" />
+        <keep pattern="Composestar.Core.LAMA.**" />
+        <keep pattern="Composestar.Core.FILTH2.ConstraintDefinition" />
+        <keep pattern="Composestar.Core.SANE.*SIinfo" />
+        <keep pattern="Composestar.Core.SANE.SIinfo" />
+        <keep pattern="Composestar.Java.LAMA.**" />
+    </jarjar>
 	</target>
 		
 	<target name="install" depends="init_eclipse,build" description="install the java runtime">
