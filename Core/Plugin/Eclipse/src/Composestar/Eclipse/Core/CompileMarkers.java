@@ -139,6 +139,14 @@ public class CompileMarkers
 			{
 				line = Integer.parseInt(entries[3]);
 			}
+
+			if ("COMP".equals(entries[0]) && (sevr != IMarker.SEVERITY_ERROR) && filename != null
+					&& filename.contains(".composestar/dummies"))
+			{
+				// ignore compile warnings in the dummies
+				return;
+			}
+
 			createMarker(type, sevr, msg, filename, line, linepos);
 		}
 		catch (Exception e)

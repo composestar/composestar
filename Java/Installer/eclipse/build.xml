@@ -75,6 +75,11 @@
 		<zip destfile="${out.dist}/composestar.java_${version.java}.zip">
 			<fileset dir="${out.build}" />
 		</zip>
+		
+		<zip destfile="${out.dist}/eclipse_updatesite_java.zip">
+			<fileset dir="${out.dist}/www" />
+		</zip>
+		<delete dir="${out.dist}/www" />
 	</target>
 
 </project>
