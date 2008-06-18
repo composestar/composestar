@@ -617,6 +617,7 @@ namespace BuildConfiguration
 			if (NETSDKPath.Length > 0)
 				Settings.Paths.Add("EmbeddedSources",EmbeddedSourcesFolder ) ;
 
+			/*
 			String SECRETMode = ini.ReadString("Global Composestar configuration", "SECRETMode", "") ;
 			if (SECRETMode.Length > 0)
 			{
@@ -625,6 +626,7 @@ namespace BuildConfiguration
 				SecretModule.Elements.Add("mode", SECRETMode)  ;
 				Settings.SetModule(SecretModule); 
 			}
+			*/
 				
 			String RunDebugLevel = ini.ReadString("Common", "RunDebugLevel", "") ;
 			if (RunDebugLevel.Length > 0)
@@ -643,6 +645,7 @@ namespace BuildConfiguration
 				Settings.SetModule(IncreModule);
 			}
 
+			/*
 			String FilterModuleOrder = ini.ReadString("Global Composestar configuration", "FILTH_INPUT", "") ;
 			if (FilterModuleOrder.Length > 0)
 			{
@@ -651,6 +654,7 @@ namespace BuildConfiguration
 				filthModule.Elements.Add("input", FilterModuleOrder)  ;
 				Settings.SetModule(filthModule);
 			}
+			*/
 
 			String VerifyAssemblies = ini.ReadString("Common", "VerifyAssemblies", "") ;
 			if (VerifyAssemblies.Length > 0)

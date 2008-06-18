@@ -6,9 +6,9 @@ namespace ComposestarVSAddin
 	public enum SecretModes
 	{
 		NotSet = -1,
-		SelectedOrder = 0,
-		AllOrders = 1,
-		AllOrdersAndSelect = 2
+		Normal = 0,
+		Redundant = 1,
+		Progressive = 2
 	}
 
 }
