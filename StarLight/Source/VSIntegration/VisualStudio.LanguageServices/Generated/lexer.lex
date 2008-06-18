@@ -23,10 +23,12 @@
                     if (txt.Equals("constraints")) return (int)Tokens.KWCONSTRAINTS;
                     if (txt.Equals("concern")) return (int)Tokens.KWCONCERN;
                     if (txt.Equals("conditions")) return (int)Tokens.KWCONDITIONS;
+                    if (txt.Equals("cond")) return (int)Tokens.KWCOND;
                     break;
                 case 'e':
                     if (txt.Equals("externals")) return (int)Tokens.KWEXTERNALS;
                     if (txt.Equals("conditions")) return (int)Tokens.KWCONDITIONS;
+                    if (txt.Equals("exclude")) return (int)Tokens.KWEXCLUDE;
                     break;
                 case 'f':
                     if (txt.Equals("filtermodule")) return (int)Tokens.KWFILTERMODULE;
@@ -39,15 +41,15 @@
                     if (txt.Equals("internals")) return (int)Tokens.KWINTERNALS;
                     if (txt.Equals("inner")) return (int)Tokens.KWINNER;
                     if (txt.Equals("in")) return (int)Tokens.KWIN;
+                    if (txt.Equals("include")) return (int)Tokens.KWINCLUDE;
                     break;  
                 case 'p':
                     if (txt.Equals("pre")) return (int)Tokens.KWPRE;
-                    if (txt.Equals("prehard")) return (int)Tokens.KWPREHARD;
-                    if (txt.Equals("presoft")) return (int)Tokens.KWPRESOFT;
                     break; 
                 case 's':
                     if (txt.Equals("superimposition")) return (int)Tokens.KWSUPERIMPOSITION;
                     if (txt.Equals("selectors")) return (int)Tokens.KWSELECTORS;
+                    if (txt.Equals("skip")) return (int)Tokens.KWSKIP;
                     break;   
                 case 'o':
                     if (txt.Equals("outputfilters")) return (int)Tokens.KWOUTPUTFILTERS;

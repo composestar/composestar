@@ -111,8 +111,10 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 			ColorToken((int)Tokens.TRUE, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
 			ColorToken((int)Tokens.KWINNER, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
 			ColorToken((int)Tokens.KWPRE, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
-			ColorToken((int)Tokens.KWPREHARD, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
-			ColorToken((int)Tokens.KWPRESOFT, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
+			ColorToken((int)Tokens.KWINCLUDE, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
+			ColorToken((int)Tokens.KWEXCLUDE, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
+			ColorToken((int)Tokens.KWSKIP, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
+			ColorToken((int)Tokens.KWCOND, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
 			ColorToken((int)Tokens.KWIN, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
 			ColorToken((int)Tokens.KWSELECTORS, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.None);
 			ColorToken((int)Tokens.KWPROLOGFUN, TokenType.Keyword, TokenColor.Keyword, TokenTriggers.MethodTip & TokenTriggers.MemberSelect);

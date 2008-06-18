@@ -113,8 +113,10 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 			keywords.Add("annotations");
 			keywords.Add("constraints");
 			keywords.Add("pre");
-			keywords.Add("presoft");
-			keywords.Add("prehard");
+			keywords.Add("include");
+			keywords.Add("exclude");
+			keywords.Add("cond");
+			keywords.Add("skip");
 			keywords.Add("as");
 			keywords.Add("by");
 			keywords.Add("in");

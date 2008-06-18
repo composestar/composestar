@@ -62,7 +62,7 @@
 %token KWCONCERN KWFILTERMODULE KWSUPERIMPOSITION KWIMPLEMENTATION KWINTERNALS KWEXTERNALS KWCONDITIONS
 %token KWINPUTFILTERS KWOUTPUTFILTERS KWINNER FMLIST KWSELECTORS KWPROLOGFUN KWFILTERMODULES KWANNOTATIONS KWCONSTRAINTS
 %token KWIMPLEMENTATION KWIN KWBY KWAS
-%token KWPRE KWPRESOFT KWPREHARD
+%token KWPRE KWINCLUDE KWEXCLUDE KWCOND KWSKIP
 
 // %token ';' '(' ')' '{' '}' '=' 
 // %token '+' '-' '*' '/' '!' '&' '^'
@@ -246,6 +246,7 @@ ConditionDecls
 
 ConditionDecl
     : ConditionName COLON ConcernReference '(' ')' ';'
+    | ConditionName COLON ConcernReference ';'
     | ConditionName error { CallHdlr("Expected ':'", @2); }
     | ConditionName COLON error { CallHdlr("Expected condition reference.", @3); }
     | ConditionName COLON ConcernReference error { CallHdlr("Expected ()", @4); }
@@ -461,6 +462,15 @@ SuperImposition
     ;
 
 SuperImpositionContent
+    : Conditions
+    | SuperImpositionContent1
+    | Conditions SuperImpositionContent1
+    | Conditions SuperImpositionContent2
+    | Conditions SuperImpositionContent3
+    | Conditions SuperImpositionContent4
+    ;
+
+SuperImpositionContent1
     : SelectorDefinition
     | SelectorDefinition SuperImpositionContent2
     | SelectorDefinition SuperImpositionContent3
@@ -585,6 +595,7 @@ ListElems2
 
 CommonBindingPart
     : SelectorBinding LARROW
+    | IDENTIFIER TRUECON SelectorBinding LARROW
     ;
 
 SelectorBinding
@@ -654,7 +665,7 @@ ConstraintElementSeq
     ;
     
 ConstraintElement
-    : ConstraintCondition '(' FilterModuleReference COMMA FilterModuleReference ')' {Match(@2, @6);}
+    : ConstraintCondition '(' FilterModuleReference COMMA FilterModuleReference ')' ';' {Match(@2, @6);}
     | ConstraintCondition error { CallHdlr("Missing '('", @2); }
     | ConstraintCondition '('error { CallHdlr("Missing FilterModuleReference", @3); }
     | ConstraintCondition '('FilterModuleReference error { CallHdlr("Missing ','", @4); }
@@ -664,8 +675,10 @@ ConstraintElement
 
 ConstraintCondition
     : KWPRE
-    | KWPRESOFT
-    | KWPREHARD
+		| KWINCLUDE
+		| KWEXCLUDE
+		| KWCOND
+		| KWSKIP
     ;
 
 FilterModuleReference
