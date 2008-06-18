@@ -141,7 +141,7 @@ public class CompileMarkers
 			}
 
 			if ("COMP".equals(entries[0]) && (sevr != IMarker.SEVERITY_ERROR) && filename != null
-					&& filename.contains(".composestar/dummies"))
+					&& filename.replace("\\", "/").contains(".composestar/dummies"))
 			{
 				// ignore compile warnings in the dummies
 				return;
