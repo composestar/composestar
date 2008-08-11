@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -40,7 +39,6 @@ import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.BasicConfigurator;
 
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
-import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.FILTH2.ConstraintSpecification;
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.DataMapImpl;
@@ -134,7 +132,6 @@ public class CpsParserTest extends TestCase
 		nodes.setTokenStream(tokens);
 		CpsTreeWalker w = new CpsTreeWalker(nodes);
 		w.setSourceFile(file.toString());
-		w.setOrderingConstraints(new HashMap<String, SyntacticOrderingConstraint>());
 		w.setConstraintSpec(new ConstraintSpecification());
 		w.setFilterTypeMapping(new FilterTypeMapping());
 		DefaultFilterFactory fact = new DefaultFilterFactory(w.filterTypes, ds);

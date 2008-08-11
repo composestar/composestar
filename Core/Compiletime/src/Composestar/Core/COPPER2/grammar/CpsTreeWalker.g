@@ -57,7 +57,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.*;
 import Composestar.Core.CpsProgramRepository.Filters.*;
 import Composestar.Core.Exception.*;
-import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 
 import java.util.Vector;
 }
@@ -1222,22 +1221,6 @@ constraint [SuperImposition si]
 	: ^(CONSTRAINT opr=IDENTIFIER lhs=concernFmRef[si] rhs=concernFmRef[si]
 	  {
 	    setLocInfo(constraintSpec.addDefinition($opr.text, lhs, rhs), $opr);
-	  
-	  	// legacy constraints
-	  	if ("pre".equalsIgnoreCase($opr.text))
-	  	{		 	
-	  		SyntacticOrderingConstraint constraint = orderingconstraints.get(lhs);
-			if (constraint == null)
-			{
-				constraint = new SyntacticOrderingConstraint(lhs);
-				constraint.addRightFilterModule(rhs);
-				orderingconstraints.put(lhs, constraint);
-			}
-			else
-			{
-				constraint.addRightFilterModule(rhs);
-			}
-		}
 	  }
 	  )
 	;				

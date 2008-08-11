@@ -24,8 +24,6 @@
 
 package Composestar.Core.COPPER2;
 
-import java.util.Map;
-
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.Tree;
@@ -34,7 +32,6 @@ import org.antlr.runtime.tree.TreeParser;
 
 import Composestar.Core.CpsProgramRepository.Filters.DefaultFilterFactory;
 import Composestar.Core.Exception.CpsSemanticException;
-import Composestar.Core.FILTH.SyntacticOrderingConstraint;
 import Composestar.Core.FILTH2.ConstraintSpecification;
 import Composestar.Core.Master.ModuleNames;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
@@ -60,11 +57,6 @@ public class CpsTreeWalkerBase extends TreeParser
 	 * exception.
 	 */
 	protected int errorCnt;
-
-	/**
-	 * The map containing filter module ordering constraints.
-	 */
-	protected Map<String, SyntacticOrderingConstraint> orderingconstraints;
 
 	/**
 	 * The FILTH2 constraint specification
@@ -95,16 +87,6 @@ public class CpsTreeWalkerBase extends TreeParser
 	public void setSourceFile(String srcfl)
 	{
 		sourceFile = srcfl;
-	}
-
-	/**
-	 * Sets the map that will received the filter module ordering constraints
-	 * 
-	 * @param oc
-	 */
-	public void setOrderingConstraints(Map<String, SyntacticOrderingConstraint> oc)
-	{
-		orderingconstraints = oc;
 	}
 
 	/**
