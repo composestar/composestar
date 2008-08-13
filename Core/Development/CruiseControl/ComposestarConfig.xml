@@ -19,7 +19,7 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 		<property name="composestar.path" value="${${project.name}.path}" />
 		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
 		<plugin name="labelincrementer" classname="net.sourceforge.cruisecontrol.labelincrementers.SVNLabelIncrementer"/>
-		<labelincrementer labelprefix="build" separator="." />
+		<labelincrementer labelprefix="build" separator="." workingcopypath="${composestar.path}" />
 
 		<listeners>
 			<!-- used by the reporting interface -->
@@ -67,13 +67,17 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 				<antpublisher target="integration_publish" buildfile="${composestar.path}\Core\Development\build_total.xml"
 					uselogger="false" anthome="${composestar.ant}" antWorkingDir="${composestar.path}" usedebug="false" />
 				<!-- Installers -->
+				<!--
 				<artifactspublisher dir="${composestar.path}/Starlight/Setup/Releases" dest="artifacts/${project.name}/" />
 				<artifactspublisher dir="${composestar.path}/Java/Installer/eclipse/dist" dest="artifacts/${project.name}/" />
+				-->
 				<!-- QA -->
 				<artifactspublisher dir="${composestar.path}/Core/qa" dest="artifacts/${project.name}/" subdirectory="qa_core" />
+				<!--
 				<artifactspublisher dir="${composestar.path}/Java/qa" dest="artifacts/${project.name}/" subdirectory="qa_java" />
 				<artifactspublisher dir="${composestar.path}/Starlight/qa" dest="artifacts/${project.name}/" subdirectory="qa_starlight" />
 				<artifactspublisher dir="${composestar.path}/CwC/qa" dest="artifacts/${project.name}/" subdirectory="qa_cwc" />
+				-->
 				<!-- clean up old artifacts, e.a. -->
 				<antpublisher target="onsuccess" buildfile="${composestar.path}\Core\Development\CruiseControl\antextra.xml"
 					uselogger="false" anthome="${composestar.ant}" antWorkingDir="${composestar.path}" usedebug="false" />
