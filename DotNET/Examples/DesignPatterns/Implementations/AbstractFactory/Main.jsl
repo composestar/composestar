@@ -1,9 +1,0 @@
-package Composestar.Patterns.AbstractFactory;
-
-public class Main 
-{
-	public static void main(String[] args)
-	{
-		Display display = new Display(new ComponentFactory());	
-	}
-}

@@ -1,4 +1,0 @@
-Logging: [Hallo?]
-Encrypting: Hallo? to: \u???S
-Decrypting: \u???5 to: Hallo!
-Logging: [Hallo!]

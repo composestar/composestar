@@ -1,3 +1,0 @@
-.ctor
-f1
-Exception caught with message: Compose* error filter exception

@@ -1,4 +1,0 @@
-package Composestar.Patterns.AbstractFactory;
-
-/** @attribute Composestar.Patterns.AbstractFactory.Annotations.AbstractFactory() */
-public class ComponentFactory {}

@@ -1,1 +1,0 @@
-There is currently no Compose* implementation of the Singleton design pattern. At this time Compose* does not support introducing static methods or to filter on static methods. Because Singleton is implemented using static methods there is no alternative possible for an object-oriented version.

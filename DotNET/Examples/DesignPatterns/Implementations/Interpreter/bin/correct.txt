@@ -1,7 +1,0 @@
-Testing Expression: ((true & x) | (y & !x))
-The result for (x=false, y=false) is: false
-The result for (x=false, y=true) is: true
-The result for (x=true, y=false) is: true
-The result for (x=true, y=true) is: true
-Replacing y with !z where z = false
-The result for the replacement is: true

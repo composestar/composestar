@@ -1,6 +1,0 @@
-<modules>
-	<module name="CalculateFunctions" query="Func|isFunction(Func),isFunctionWithName(Func, Name), matchPattern(Name,'calc.*')">
-	</module>
-	<module name="StackFunctions" query="F|isFunction(F),isFunctionWithName(F, Name), matchPattern(Name,'ST_.*')">
-	</module>
-</modules>

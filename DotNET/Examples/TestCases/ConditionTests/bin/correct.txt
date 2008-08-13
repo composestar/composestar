@@ -1,5 +1,0 @@
-ConditionTests.ConditionClass.ctor()
-ConditionTests.ConditionClass.func1correct()
-ConditionTests.ConditionClass.func2correct()
-ConditionTests.ConditionClass.func3correct()
-ConditionTests.ConditionClass.func4correct()

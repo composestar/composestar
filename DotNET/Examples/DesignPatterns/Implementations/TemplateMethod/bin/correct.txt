@@ -1,7 +1,0 @@
-<Original>
-This Is The Original String To Be Processed
-<SimpleGenerator>
-This Is The Original String To Be Processed.
-<FancyGenerator>
-thIs Is thE OrIgInAl strIng tO bE prOcEssEd.
-(all consonants capitalized)
