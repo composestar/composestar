@@ -19,7 +19,7 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 		<property name="composestar.path" value="${${project.name}.path}" />
 		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
 		<plugin name="labelincrementer" classname="net.sourceforge.cruisecontrol.labelincrementers.SVNLabelIncrementer"/>
-		<labelincrementer labelprefix="build" separator="." workingcopypath="${composestar.path}" />
+		<labelincrementer workingcopypath="${composestar.path}" />
 
 		<listeners>
 			<!-- used by the reporting interface -->
