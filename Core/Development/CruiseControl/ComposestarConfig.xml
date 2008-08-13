@@ -13,10 +13,14 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 	-->
 	<!-- expose environment vars -->
 	<property environment="env" toupper="true" />
+
 	<project name="composestar.r2" buildafterfailed="false">
 		<!-- set this to the location of the composestar root -->
 		<property name="composestar.path" value="${${project.name}.path}" />
 		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
+		<plugin name="labelincrementer" classname="net.sourceforge.cruisecontrol.labelincrementers.SVNLabelIncrementer"/>
+		<labelincrementer labelprefix="build" separator="." />
+
 		<listeners>
 			<!-- used by the reporting interface -->
 			<currentbuildstatuslistener file="logs/${project.name}/status.txt" />
@@ -63,7 +67,6 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 				<antpublisher target="integration_publish" buildfile="${composestar.path}\Core\Development\build_total.xml"
 					uselogger="false" anthome="${composestar.ant}" antWorkingDir="${composestar.path}" usedebug="false" />
 				<!-- Installers -->
-				<artifactspublisher dir="${composestar.path}/DotNET/Installer/dist" dest="artifacts/${project.name}/" />
 				<artifactspublisher dir="${composestar.path}/Starlight/Setup/Releases" dest="artifacts/${project.name}/" />
 				<artifactspublisher dir="${composestar.path}/Java/Installer/eclipse/dist" dest="artifacts/${project.name}/" />
 				<!-- QA -->
