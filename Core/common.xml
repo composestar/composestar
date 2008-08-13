@@ -17,11 +17,16 @@
 		<!-- all properties can be overridden in this file -->
 		<property file="${build.core.init}/build.ini" />
 
-		<!-- build label, passed by CruiseControl as "build.<number>", could be used in the version numbers -->
+		<!-- The build label. This is passed by CruiseControl. Defaults to .0 (dev build). -->
 		<property name="label" value="build.0" />
 
-		<!-- just the build number -->
-		<cs:extractBuildNumber label="${label}" property="version.build" syntax="build.#" />
+		<!-- 
+			Extract just the build number from the label. The following formats are supported:
+			build.# 			(default build label of cruisecontrol)
+			svn.<svnversion> 	(the svnversion output)
+		-->
+		<cs:extractBuildNumber label="${label}" property="version.build" />
+		<echo level="verbose" message="Build number = ${version.build}" />
 
 		<!-- version numbers, used in installers e.a. Note: must be: [major].[minor].[release] -->
 		<property name="version.core" value="0.8.3" />

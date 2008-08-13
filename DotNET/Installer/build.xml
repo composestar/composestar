@@ -67,7 +67,7 @@
 		<!-- ARM -->
 		<delete file="${destdir.dni}/documentation/ARM.pdf" />
 		<svn>
-			<export srcUrl="https://composestar.svn.sourceforge.net/svnroot/composestar/documentation/ARM/ARM.pdf" destPath="${destdir.dni}/documentation/" />
+			<export srcUrl="https://composestar.svn.sourceforge.net/svnroot/composestar/documentation/ARM/ARM.pdf" destPath="${destdir.dni}/documentation/ARM.pdf" />
 		</svn>
 	</target>
 
