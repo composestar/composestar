@@ -1,230 +1,84 @@
+<!--
+
+!! IMPORTANT !!
+
+This configuration file is just for Compose*.
+It is included from the CruiseControl configuration file in the CruiseControl directory.
+
+-->
 <cruisecontrol>
-
 	<!-- location where cruise control is running, used for reporting -->
+	<!--
 	<property name="cchost" value="ewi650.cs.utwente.nl" />
-	
+	-->
 	<!-- expose environment vars -->
-	<property environment="env" toupper="true"/>
-
+	<property environment="env" toupper="true" />
 	<project name="composestar" buildafterfailed="false">
-		
 		<!-- set this to the location of the composestar root -->
-		<property name="composestar.path" value="c:\composestar" />
-		
+		<property name="composestar.path" value="${${project.name}.path}" />
 		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
-		
 		<listeners>
 			<!-- used by the reporting interface -->
-			<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+			<currentbuildstatuslistener file="logs/${project.name}/status.txt" />
 		</listeners>
-				
 		<bootstrappers>
 			<!-- update Ant and CruiseControl before doing anything else -->
 			<svnbootstrapper localWorkingCopy="${composestar.path}\Core\Development\Ant" />
 			<svnbootstrapper localWorkingCopy="${composestar.path}\Core\Development\CruiseControl" />
 		</bootstrappers>
-
 		<!-- wait 5 minutes after the last commit before continuing -->
-		<modificationset quietperiod="300">			
+		<modificationset quietperiod="300">
 			<!-- note: svn action needs svn commandline client in the path  -->
 			<svn LocalWorkingCopy="${composestar.path}" property="composestar.modified" />
 		</modificationset>
-		
 		<!-- waits 5 (default) minutes before trying another build (only if files have changed) -->
 		<schedule>
-			<ant 
-				target="integration" 
-				buildfile="${composestar.path}\Core\Development\build_total.xml" 
-				uselogger="true" 
-				anthome="${composestar.ant}" 
-				antWorkingDir="${composestar.path}" 
-				usedebug="false" 
-			/>
+			<ant target="integration" buildfile="${composestar.path}\Core\Development\build_total.xml"
+				uselogger="true" anthome="${composestar.ant}" antWorkingDir="${composestar.path}"
+				usedebug="false" />
 		</schedule>
-		
 		<log>
 			<merge file="${composestar.path}\Core\Compiletime\test\TESTS-TestSuites.xml" />
-			
 			<merge dir="${composestar.path}\DotNET\Testing" pattern="TEST-*.xml" />
 			<merge dir="${composestar.path}\Java\Testing" pattern="TEST-*.xml" />
-			<!--<merge dir="${composestar.path}\C\Testing" pattern="TEST-*.xml" />-->
-			
 			<merge file="${composestar.path}\Core\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\DotNET\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\StarLight\qa\checkstyle-result.xml" />
 			<merge file="${composestar.path}\Java\qa\checkstyle-result.xml" />
-			<!--<merge file="${composestar.path}\C\qa\checkstyle-result.xml" />-->
 			<merge file="${composestar.path}\CwC\qa\checkstyle-result.xml" />
-
 			<merge file="${composestar.path}\Core\qa\findbugs-result.xml" />
 			<merge file="${composestar.path}\DotNET\qa\findbugs-result.xml" />
 			<merge file="${composestar.path}\StarLight\qa\findbugs-result.xml" />
 			<merge file="${composestar.path}\Java\qa\findbugs-result.xml" />
-			<!--<merge file="${composestar.path}\C\qa\findbugs-result.xml" />-->
 			<merge file="${composestar.path}\CwC\qa\findbugs-result.xml" />
-
 			<gzip every="1" unit="WEEK" />
-			
-			<!--<delete every="1" unit="MONTH" ignoreSuffix="false" />-->
 		</log>
-		
 		<publishers>
-			<htmlemail buildresultsurl="http://${cchost}:8080/buildresults/${project.name}" 
-				xslfile="${composestar.path}\Core\Development\CruiseControl\buildresults.xslt" 
-				mailhost="smtp.utwente.nl" 
-				reportsuccess="fixes" 
-				skipusers="true"
-				returnname="Continuous Integration Server"
-				returnaddress="elmuerte@users.sourceforge.net"
-			>
+			<htmlemail buildresultsurl="http://${cchost}:8080/buildresults/${project.name}" xslfile="${composestar.path}\Core\Development\CruiseControl\buildresults.xslt"
+				mailhost="smtp.utwente.nl" reportsuccess="fixes" skipusers="true" returnname="Continuous Integration Server"
+				returnaddress="elmuerte@users.sourceforge.net">
 				<always address="composestar-developers@lists.sourceforge.net" />
-				
 				<parameter name="buildresultsurl" value="http://${cchost}:8080/buildresults/${project.name}" />
 				<parameter name="standalonehtml" value="1" />
 				<parameter name="revisionurl" value="http://composestar.svn.sourceforge.net/viewvc/composestar?view=rev&amp;revision=" />
 			</htmlemail>
 			<onsuccess>
-				<antpublisher 
-					target="integration_publish" 
-					buildfile="${composestar.path}\Core\Development\build_total.xml" 
-					uselogger="false" 
-					anthome="${composestar.ant}" 
-					antWorkingDir="${composestar.path}" 
-					usedebug="false" 
-				/>
-				
+				<antpublisher target="integration_publish" buildfile="${composestar.path}\Core\Development\build_total.xml"
+					uselogger="false" anthome="${composestar.ant}" antWorkingDir="${composestar.path}" usedebug="false" />
 				<!-- Installers -->
-				<artifactspublisher
-					dir="${composestar.path}/DotNET/Installer/dist"
-					dest="artifacts/${project.name}/"
-				/>
-				<artifactspublisher
-					dir="${composestar.path}/Starlight/Setup/Releases"
-					dest="artifacts/${project.name}/"
-				/>
-				<artifactspublisher
-					dir="${composestar.path}/Java/Installer/eclipse/dist"
-					dest="artifacts/${project.name}/"
-				/>
-				
+				<artifactspublisher dir="${composestar.path}/DotNET/Installer/dist" dest="artifacts/${project.name}/" />
+				<artifactspublisher dir="${composestar.path}/Starlight/Setup/Releases" dest="artifacts/${project.name}/" />
+				<artifactspublisher dir="${composestar.path}/Java/Installer/eclipse/dist" dest="artifacts/${project.name}/" />
 				<!-- QA -->
-				<artifactspublisher
-					dir="${composestar.path}/Core/qa"
-					dest="artifacts/${project.name}/"
-					subdirectory="qa_core"
-				/>
-				<artifactspublisher
-					dir="${composestar.path}/DotNET/qa"
-					dest="artifacts/${project.name}/"
-					subdirectory="qa_dotnet"
-				/>
-				<artifactspublisher
-					dir="${composestar.path}/Java/qa"
-					dest="artifacts/${project.name}/"
-					subdirectory="qa_java"
-					/>
-				<!--
-				<artifactspublisher
-					dir="${composestar.path}/C/qa"
-					dest="artifacts/${project.name}/"
-					subdirectory="qa_c"
-					/>
-				-->
-				<artifactspublisher
-					dir="${composestar.path}/Starlight/qa"
-					dest="artifacts/${project.name}/"
-					subdirectory="qa_starlight"
-				/>
-				<artifactspublisher
-					dir="${composestar.path}/CwC/qa"
-					dest="artifacts/${project.name}/"
-					subdirectory="qa_cwc"
-				/>
-					
-				<!-- clean up old artifacts, e.a. -->			
-				<antpublisher 
-					target="onsuccess" 
-					buildfile="${composestar.path}\Core\Development\CruiseControl\antextra.xml" 
-					uselogger="false" 
-					anthome="${composestar.ant}" 
-					antWorkingDir="${composestar.path}" 
-					usedebug="false" 
-				/>
+				<artifactspublisher dir="${composestar.path}/Core/qa" dest="artifacts/${project.name}/" subdirectory="qa_core" />
+				<artifactspublisher dir="${composestar.path}/DotNET/qa" dest="artifacts/${project.name}/" subdirectory="qa_dotnet" />
+				<artifactspublisher dir="${composestar.path}/Java/qa" dest="artifacts/${project.name}/" subdirectory="qa_java" />
+				<artifactspublisher dir="${composestar.path}/Starlight/qa" dest="artifacts/${project.name}/" subdirectory="qa_starlight" />
+				<artifactspublisher dir="${composestar.path}/CwC/qa" dest="artifacts/${project.name}/" subdirectory="qa_cwc" />
+				<!-- clean up old artifacts, e.a. -->
+				<antpublisher target="onsuccess" buildfile="${composestar.path}\Core\Development\CruiseControl\antextra.xml"
+					uselogger="false" anthome="${composestar.ant}" antWorkingDir="${composestar.path}" usedebug="false" />
 			</onsuccess>
 		</publishers>
-	
 	</project>
-	
-	
-	<!-- THE GROOVE PROJECT -->
-	
-	<project name="groove" buildafterfailed="false" requireModification="true">
-		
-	<!-- set this to the location of the groove root -->
-	<property name="groove.path" value="c:\Groove" />
-		
-    <!-- path to the ant install directory -->
-	<property name="groove.ant" value="${groove.path}\AntInstall\" />
-    
- 	<listeners>
-		<!-- used by the reporting interface -->
-		<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
-	</listeners>
-
-
-	<modificationset>
-		<svn localWorkingCopy="${groove.path}\groove" property="groove.modified"/>
-	</modificationset>
-    
-	<!-- performs a build every night at 03:17 -->
-	<schedule>
-			<ant time="0317"
-				 target="UpdateBuildFile"
-				 buildfile="${groove.path}\release\build-nightly.xml"
-				 uselogger="false" 
-				 usequiet="true" 
-				 anthome="${groove.ant}" 
-				 antWorkingDir="${groove.path}"
-				 usedebug="false" />
-				 
-			<ant time="0325" 
-				 target="default" 
-				 buildfile="${groove.path}\release\build-nightly.xml"
-				 uselogger="true" 
-				 usequiet="true" 
-				 anthome="${groove.ant}" 
-				 antWorkingDir="${groove.path}"
-				 usedebug="false" />
-	</schedule>
-	
-	
-	<log>
-		<merge file="${groove.path}\workdir\tests\test.log.xml" />
-		<gzip every="1" unit="WEEK" />
-		<delete every="1" unit="MONTH" ignoreSuffix="false" />	
-	</log>
-
-
-    <!-- Notifications -->
-	<publishers>
-		<!-- TODO : xslfile attr needed ?-->
-		<onfailure>
-			<email buildresultsurl="http://${cchost}:8080/buildresults/${project.name}"
-				   mailhost="smtp.utwente.nl"
-				   reportsuccess="never"
-				   returnname="Continuous Integration Server"
-                   returnaddress="bonevai@ewi.utwente.nl" >
-				<failure address="bonevai@ewi.utwente.nl" />
-				<map alias="rensink" address="rensink@cs.utwente.nl"></map>
-				<map alias="iovka" address="bonevai@ewi.utwente.nl"></map>
-				<map alias="kastenberg" address="h.kastenberg@cs.utwente.nl"></map>
-				<map alias="fladder" address="t.staijen@ewi.utwente.nl"></map>
-			</email>
-		</onfailure>
-      
-	</publishers>
-	
-</project>
-	
-	
 </cruisecontrol>
