@@ -22,31 +22,14 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2;
+package Composestar.Core.CpsRepository2.SuperImposition;
 
-import java.util.List;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
- * The base interface for all concern types. A concern is a root element in the
- * repository.
- * 
  * @author Michiel Hendriks
  */
-public interface Concern extends QualifiedRepositoryEntity
+public interface FilterModuleConstraint extends RepositoryEntity
 {
-	/**
-	 * @return The namespace of this concern. This is the part of the fually
-	 *         qualified name of a concern before the concern's name. Each
-	 *         segment of the namespace is divided by periods. Returns an empty
-	 *         string when the concern has no namespace.
-	 * @see #getNamespaceAsList()
-	 */
-	String getNamespace();
 
-	/**
-	 * @return The namespace of the concern in an ordered list. Returns an empty
-	 *         list when the concern has no namespace.
-	 * @see #getNamespace()
-	 */
-	List<String> getNamespaceAsList();
 }

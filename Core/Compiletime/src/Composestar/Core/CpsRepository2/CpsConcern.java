@@ -43,20 +43,72 @@ public interface CpsConcern extends Concern
 	Set<FilterModule> getFilterModules();
 
 	/**
+	 * Add a new filter module to this concern. The names of filter modules must
+	 * be unique, if there is already a filter module with the same name the new
+	 * filter module will not be added and false will be returned. When the
+	 * filter module is added setOwner(this) will be called on the filter module
+	 * instance.
+	 * 
+	 * @param newFm The filter module to add.
+	 * @return True when the filter module was added. False is returned when
+	 *         there was already a filter module with that name registered.
+	 * @throws IllegalArgumentException Thrown when the provided filter module
+	 *             is null.
+	 */
+	boolean addFilterModule(FilterModule newFm) throws IllegalArgumentException;
+
+	/**
+	 * Retrieves a filter module with a given name.
+	 * 
+	 * @param name The name of the filter module, this is not a fully qualified
+	 *            name.
+	 * @return The filter module instance or null when no filter module with
+	 *         that name could be found.
+	 */
+	FilterModule getFilterModule(String name);
+
+	/**
+	 * Remove a filter module from this concern
+	 * 
+	 * @param fm The filter module to remove
+	 * @return true if the filter module was removed or false when this filter
+	 *         module was not assigned to this concern.
+	 * @throws IllegalArgumentException Thrown when the provided filter module
+	 *             is null.
+	 * @see #removeFilterModule(String)
+	 */
+	boolean removeFilterModule(FilterModule fm) throws IllegalArgumentException;
+
+	/**
+	 * Remove a filter module with a given name.
+	 * 
+	 * @param fmName The name of the filter module to remove.
+	 * @return The filter module that was removed or null when no filter module
+	 *         with that name was found.
+	 * @see #getFilterModule(String)
+	 * @see #removeFilterModule(FilterModule)
+	 */
+	FilterModule removeFilterModule(String fmName);
+
+	/**
 	 * @return The superimposition information defined in this concern. When the
 	 *         concern does not have any superimposition null will be returned.
+	 * @see #setSuperImposition(SuperImposition)
 	 */
 	SuperImposition getSuperImposition();
 
 	/**
 	 * Set the superimposition for this concern. Previously associated
-	 * superimposition can be removed by passing null as the argument.
+	 * superimposition can be removed by passing null as the argument. This
+	 * method will call setOwner(this) on the provided superimposition instance.
 	 * 
 	 * @param si the superimposition instance to set
-	 * @throws IllegalArgumentException when the concern already has a
+	 * @throws IllegalStateException when the concern already has a
 	 *             superimposition set and the new value is not null. To
 	 *             overwrite the previous value it first has to be set to null.
+	 *             This exception is not thrown when the current value and new
+	 *             value are the same.
+	 * @see #getSuperImposition()
 	 */
-	// FIXME IllegalArgumentException is incorrect
-	void setSuperImposition(SuperImposition si) throws IllegalArgumentException;
+	void setSuperImposition(SuperImposition si) throws IllegalStateException;
 }
