@@ -378,7 +378,7 @@
 	<target name="all" depends="clean,install,test,qa" description="Recompile, install and test the whole system." />
 
 	<target name="integration">
-		<antcall target="svn-update-all" inheritRefs="true" />
+		<!--<antcall target="svn-update-all" inheritRefs="true" />-->
 		<antcall target="required" inheritRefs="true" />
 		<antcall target="qa" inheritRefs="true" />
 	</target>

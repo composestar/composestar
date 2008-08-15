@@ -14,32 +14,30 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 	<!-- expose environment vars -->
 	<property environment="env" toupper="true" />
 	<project name="composestar" buildafterfailed="false">
-		<!-- set this to the location of the composestar root -->
 		<property name="composestar.path" value="${${project.name}.path}" />
 		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
+
 		<plugin name="labelincrementer" classname="net.sourceforge.cruisecontrol.labelincrementers.SVNLabelIncrementer"/>
 		<labelincrementer workingcopypath="${composestar.path}" />
 
 		<listeners>
-			<!-- used by the reporting interface -->
 			<currentbuildstatuslistener file="logs/${project.name}/status.txt" />
 		</listeners>
+
 		<bootstrappers>
-			<!-- update Ant and CruiseControl before doing anything else -->
-			<svnbootstrapper localWorkingCopy="${composestar.path}\Core\Development\Ant" />
-			<svnbootstrapper localWorkingCopy="${composestar.path}\Core\Development\CruiseControl" />
+			<svnbootstrapper localWorkingCopy="${composestar.path}" />
 		</bootstrappers>
-		<!-- wait 5 minutes after the last commit before continuing -->
+
 		<modificationset quietperiod="300">
-			<!-- note: svn action needs svn commandline client in the path  -->
 			<svn LocalWorkingCopy="${composestar.path}" property="composestar.modified" />
 		</modificationset>
-		<!-- waits 5 (default) minutes before trying another build (only if files have changed) -->
+
 		<schedule>
 			<ant target="integration" buildfile="${composestar.path}\Core\Development\build_total.xml"
 				uselogger="true" anthome="${composestar.ant}" antWorkingDir="${composestar.path}"
 				usedebug="false" />
 		</schedule>
+
 		<log>
 			<merge file="${composestar.path}\Core\Compiletime\test\TESTS-TestSuites.xml" />
 			<merge dir="${composestar.path}\DotNET\Testing" pattern="TEST-*.xml" />
@@ -56,6 +54,7 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 			<merge file="${composestar.path}\CwC\qa\findbugs-result.xml" />
 			<gzip every="1" unit="WEEK" />
 		</log>
+
 		<publishers>
 			<htmlemail buildresultsurl="http://${cchost}:8080/buildresults/${project.name}" xslfile="${composestar.path}\Core\Development\CruiseControl\buildresults.xslt"
 				mailhost="smtp.utwente.nl" reportsuccess="fixes" skipusers="true" returnname="Continuous Integration Server"
