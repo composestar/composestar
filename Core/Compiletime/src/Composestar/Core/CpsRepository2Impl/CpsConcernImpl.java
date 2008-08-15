@@ -135,7 +135,7 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 		}
 		if (filterModules.containsValue(fm))
 		{
-			filterModules.values().remove(fm);
+			return filterModules.values().remove(fm);
 		}
 		return false;
 	}
