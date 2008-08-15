@@ -14,7 +14,7 @@ It is included from the CruiseControl configuration file in the CruiseControl di
 	<!-- expose environment vars -->
 	<property environment="env" toupper="true" />
 
-	<project name="composestar.r2" buildafterfailed="false">
+	<project name="composestar_r2" buildafterfailed="false">
 		<!-- set this to the location of the composestar root -->
 		<property name="composestar.path" value="${${project.name}.path}" />
 		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
