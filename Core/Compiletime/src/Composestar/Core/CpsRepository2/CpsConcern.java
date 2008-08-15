@@ -52,10 +52,10 @@ public interface CpsConcern extends Concern
 	 * @param newFm The filter module to add.
 	 * @return True when the filter module was added. False is returned when
 	 *         there was already a filter module with that name registered.
-	 * @throws IllegalArgumentException Thrown when the provided filter module
-	 *             is null.
+	 * @throws NullPointerException Thrown when the provided filter module is
+	 *             null.
 	 */
-	boolean addFilterModule(FilterModule newFm) throws IllegalArgumentException;
+	boolean addFilterModule(FilterModule newFm) throws NullPointerException;
 
 	/**
 	 * Retrieves a filter module with a given name.
@@ -73,11 +73,11 @@ public interface CpsConcern extends Concern
 	 * @param fm The filter module to remove
 	 * @return true if the filter module was removed or false when this filter
 	 *         module was not assigned to this concern.
-	 * @throws IllegalArgumentException Thrown when the provided filter module
-	 *             is null.
+	 * @throws NullPointerException Thrown when the provided filter module is
+	 *             null.
 	 * @see #removeFilterModule(String)
 	 */
-	boolean removeFilterModule(FilterModule fm) throws IllegalArgumentException;
+	boolean removeFilterModule(FilterModule fm) throws NullPointerException;
 
 	/**
 	 * Remove a filter module with a given name.

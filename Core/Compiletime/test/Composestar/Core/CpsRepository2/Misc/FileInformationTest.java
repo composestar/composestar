@@ -111,7 +111,7 @@ public class FileInformationTest extends TestCase
 			fi.update(null);
 			fail("No exception thrown");
 		}
-		catch (IllegalArgumentException e)
+		catch (NullPointerException e)
 		{
 		}
 	}

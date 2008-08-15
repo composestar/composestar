@@ -56,11 +56,10 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * 
 	 * @param newSel The selector to add.
 	 * @return True when the selector was added or false when it was not added.
-	 * @throws IllegalArgumentException Thrown when the provided selector is
-	 *             null
+	 * @throws NullPointerException Thrown when the provided selector is null
 	 * @see #addCondition(Condition)
 	 */
-	boolean addSelector(Selector newSel) throws IllegalArgumentException;
+	boolean addSelector(Selector newSel) throws NullPointerException;
 
 	/**
 	 * Remove the provided selector
@@ -68,10 +67,10 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * @param sel The selector to remove
 	 * @return True if the selector was removed, or false when this selector was
 	 *         not present.
-	 * @throws IllegalArgumentException Thrown when the selector was null.
+	 * @throws NullPointerException Thrown when the selector was null.
 	 * @see #removeSelector(String)
 	 */
-	boolean removeSelector(Selector sel) throws IllegalArgumentException;
+	boolean removeSelector(Selector sel) throws NullPointerException;
 
 	/**
 	 * Remove a selector by its name.
@@ -105,20 +104,20 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * module binding after is had been added.
 	 * 
 	 * @param fmb The filter module binding to add
-	 * @throws IllegalArgumentException Thrown when the provided filter module
+	 * @throws NullPointerException Thrown when the provided filter module
 	 *             binding is null
 	 */
-	void addFilterModuleBinding(FilterModuleBinding fmb) throws IllegalArgumentException;
+	void addFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException;
 
 	/**
 	 * Remove a previously added filter module binding
 	 * 
 	 * @param fmb The filter module binding to remove
 	 * @return True when the filter module binding was removed
-	 * @throws IllegalArgumentException Thrown when the provided filter module
+	 * @throws NullPointerException Thrown when the provided filter module
 	 *             binding is null
 	 */
-	boolean removeFilterModuleBinding(FilterModuleBinding fmb) throws IllegalArgumentException;
+	boolean removeFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException;
 
 	/**
 	 * @return The set of filter module bindings. An empty set is returned when
@@ -131,10 +130,9 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * added setOwner(this) is called.
 	 * 
 	 * @param ab The annotation binding to add
-	 * @throws IllegalArgumentException Thrown when the annotation binding is
-	 *             null
+	 * @throws NullPointerException Thrown when the annotation binding is null
 	 */
-	void addAnnotationBinding(AnnotationBinding ab) throws IllegalArgumentException;
+	void addAnnotationBinding(AnnotationBinding ab) throws NullPointerException;
 
 	/**
 	 * Removes an annotation binding.
@@ -142,9 +140,9 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * @param ab The annotation binding to remove
 	 * @return True when the binding was removed or false when it was not
 	 *         present
-	 * @throws IllegalArgumentException Thrown when the binding instance is null
+	 * @throws NullPointerException Thrown when the binding instance is null
 	 */
-	boolean removeAnnotationBinding(AnnotationBinding ab) throws IllegalArgumentException;
+	boolean removeAnnotationBinding(AnnotationBinding ab) throws NullPointerException;
 
 	/**
 	 * @return The set of annotation bindings, or an empty set when there are no
@@ -160,9 +158,9 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * been added setOwner(this) is called on the constaint instance.
 	 * 
 	 * @param fmc The constraint to add
-	 * @throws IllegalArgumentException Thrown when the constraint is null
+	 * @throws NullPointerException Thrown when the constraint is null
 	 */
-	void addFilterModuleConstraint(FilterModuleConstraint fmc) throws IllegalArgumentException;
+	void addFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException;
 
 	/**
 	 * Remove a filter module constraint.
@@ -170,9 +168,9 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * @param fmc The constaint to remove
 	 * @return True when the constraint was removed, or false when it was not
 	 *         found and thus not removed.
-	 * @throws IllegalArgumentException Thrown when the constraint is null
+	 * @throws NullPointerException Thrown when the constraint is null
 	 */
-	boolean removeFilterModuleConstraint(FilterModuleConstraint fmc) throws IllegalArgumentException;
+	boolean removeFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException;
 
 	/**
 	 * @return All registered filter module constraints in the superimposition
@@ -190,11 +188,10 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * @param cond The condition to add.
 	 * @return True when the condition was added or false when there was a
 	 *         naming collision.
-	 * @throws IllegalArgumentException Thrown when the provided condition is
-	 *             null
+	 * @throws NullPointerException Thrown when the provided condition is null
 	 * @see #addSelector(Selector)
 	 */
-	boolean addCondition(Condition cond) throws IllegalArgumentException;
+	boolean addCondition(Condition cond) throws NullPointerException;
 
 	/**
 	 * Remove a given condition from this superimposition. Removing a condition
@@ -203,10 +200,9 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * @param cond The condition to remove
 	 * @return True when the condition was removed or false when the condition
 	 *         was not found.
-	 * @throws IllegalArgumentException Thrown when the provided condition is
-	 *             null
+	 * @throws NullPointerException Thrown when the provided condition is null
 	 */
-	boolean removeCondition(Condition cond) throws IllegalArgumentException;
+	boolean removeCondition(Condition cond) throws NullPointerException;
 
 	/**
 	 * Remove a condition by it's name.

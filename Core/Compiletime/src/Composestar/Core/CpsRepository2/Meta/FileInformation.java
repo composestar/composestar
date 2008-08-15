@@ -68,13 +68,13 @@ public final class FileInformation implements Serializable
 	 * file and update the lastModified value.
 	 * 
 	 * @param file the file to update the information with
-	 * @throws IllegalArgumentException when file is null
+	 * @throws NullPointerException when file is null
 	 */
-	public void update(File file)
+	public void update(File file) throws NullPointerException
 	{
 		if (file == null)
 		{
-			throw new IllegalArgumentException("file can not be null");
+			throw new NullPointerException("file can not be null");
 		}
 		location = file;
 		lastModified = file.lastModified();

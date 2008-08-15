@@ -60,14 +60,13 @@ public final class SourceInformation implements Serializable
 	 * FileInformation instance.
 	 * 
 	 * @param file
-	 * @throws IllegalArgumentException when no file information instance was
-	 *             given.
+	 * @throws NullPointerException when no file information instance was given.
 	 */
-	public SourceInformation(FileInformation file)
+	public SourceInformation(FileInformation file) throws NullPointerException
 	{
 		if (file == null)
 		{
-			throw new IllegalArgumentException("A FileInformation instance is required");
+			throw new NullPointerException("A FileInformation instance is required");
 		}
 		fileInfo = file;
 	}
@@ -79,11 +78,11 @@ public final class SourceInformation implements Serializable
 	 * @throws IllegalArgumentException when no source information instance was
 	 *             given.
 	 */
-	public SourceInformation(SourceInformation srcInfo)
+	public SourceInformation(SourceInformation srcInfo) throws NullPointerException
 	{
 		if (srcInfo == null)
 		{
-			throw new IllegalArgumentException("A SourceInformation instance is required");
+			throw new NullPointerException("A SourceInformation instance is required");
 		}
 		fileInfo = srcInfo.fileInfo;
 		line = srcInfo.line;

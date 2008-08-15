@@ -52,13 +52,22 @@ public abstract class AbstractQualifiedRepositoryEntity extends AbstractReposito
 	/**
 	 * Creates an qualified repository entity
 	 * 
-	 * @param entityName
-	 * @throws IllegalArgumentException Throw when the entity name is null or
-	 *             empty
+	 * @param entityName the name of the entity
+	 * @throws IllegalArgumentException Throw when the entity name is empty
+	 * @throws NullPointerException Thrown when the name is null
 	 */
-	protected AbstractQualifiedRepositoryEntity(String entityName) throws IllegalArgumentException
+	protected AbstractQualifiedRepositoryEntity(String entityName) throws NullPointerException,
+			IllegalArgumentException
 	{
 		this();
+		if (entityName == null)
+		{
+			throw new NullPointerException("Name can not be null");
+		}
+		if (entityName.length() == 0)
+		{
+			throw new IllegalArgumentException("Name can not be empty");
+		}
 		name = entityName;
 	}
 
@@ -69,17 +78,27 @@ public abstract class AbstractQualifiedRepositoryEntity extends AbstractReposito
 	 */
 	public String getFullyQualifiedName()
 	{
-		StringBuilder sb = new StringBuilder(name);
-		RepositoryEntity o = getOwner();
-		while (o != null)
+		StringBuilder sb = new StringBuilder();
+		if (getOwner() instanceof QualifiedRepositoryEntity)
 		{
-			if (o instanceof QualifiedRepositoryEntity)
-			{
-				sb.insert(0, '.');
-				sb.insert(0, ((QualifiedRepositoryEntity) o).getName());
-			}
-			o = o.getOwner();
+			sb.append(((QualifiedRepositoryEntity) getOwner()).getFullyQualifiedName());
+			sb.append('.');
 		}
+		else
+		{
+			RepositoryEntity o = getOwner();
+			while (o != null)
+			{
+				if (o instanceof QualifiedRepositoryEntity)
+				{
+					sb.append(((QualifiedRepositoryEntity) getOwner()).getFullyQualifiedName());
+					sb.append('.');
+					break;
+				}
+				o = o.getOwner();
+			}
+		}
+		sb.append(getName());
 		return sb.toString();
 	}
 
@@ -93,4 +112,14 @@ public abstract class AbstractQualifiedRepositoryEntity extends AbstractReposito
 		return name;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "[" + super.toString() + "] " + getFullyQualifiedName();
+	}
 }

@@ -94,6 +94,25 @@ public class SourceInformationTest extends TestCase
 		assertFalse(si.equals(si2));
 		assertFalse(si2.equals(si));
 		assertNotSame(si.hashCode(), si2.hashCode());
+
+		try
+		{
+			si2 = null;
+			new SourceInformation(si2);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+		try
+		{
+			fi = null;
+			new SourceInformation(fi);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
 	}
 
 	/**

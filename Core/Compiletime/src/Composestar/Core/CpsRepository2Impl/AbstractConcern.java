@@ -1,0 +1,107 @@
+/*
+ * This file is part of the Compose* project.
+ * http://composestar.sourceforge.net
+ * Copyright (C) 2008 University of Twente.
+ *
+ * Compose* is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as 
+ * published by the Free Software Foundation; either version 2.1 of 
+ * the License, or (at your option) any later version.
+ *
+ * Compose* is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ *
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+ *
+ * $Id$
+ */
+
+package Composestar.Core.CpsRepository2Impl;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import Composestar.Core.CpsRepository2.Concern;
+
+/**
+ * Abstract implementation for the Concern interface
+ * 
+ * @author Michiel Hendriks
+ */
+public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity implements Concern
+{
+	/**
+	 * Contains the namespace with each segment as a separate entry
+	 */
+	protected List<String> namespace;
+
+	/**
+	 * Create a new concern concern
+	 * 
+	 * @param name The name of the concern
+	 * @param namespace The namespace (optional)
+	 * @throws IllegalArgumentException Throw when the entity name is empty
+	 * @throws NullPointerException Thrown when the name is null
+	 */
+	protected AbstractConcern(String name, List<String> namespace) throws NullPointerException,
+			IllegalArgumentException
+	{
+		super(name);
+		this.namespace = new ArrayList<String>();
+		if (namespace != null)
+		{
+			this.namespace.addAll(namespace);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.CpsRepository2.Concern#getNamespace()
+	 */
+	public String getNamespace()
+	{
+		StringBuilder ns = new StringBuilder();
+		for (String elm : namespace)
+		{
+			if (ns.length() > 0)
+			{
+				ns.append('.');
+			}
+			ns.append(elm);
+		}
+		return ns.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity#getFullyQualifiedName()
+	 */
+	@Override
+	public String getFullyQualifiedName()
+	{
+		if (namespace.isEmpty())
+		{
+			return getName();
+		}
+		return getNamespace() + "." + getName();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Composestar.Core.CpsRepository2.Concern#getNamespaceAsList()
+	 */
+	public List<String> getNamespaceAsList()
+	{
+		return Collections.unmodifiableList(namespace);
+	}
+}
