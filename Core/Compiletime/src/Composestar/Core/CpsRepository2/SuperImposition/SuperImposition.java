@@ -214,6 +214,13 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	Condition removeCondition(String name);
 
 	/**
+	 * @param name The name of the condition to return.
+	 * @return The condition with the given name, returns null when no such
+	 *         condition exists.
+	 */
+	Condition getCondition(String name);
+
+	/**
 	 * @return The set of registered conditions, or an empty set when no
 	 *         conditions where registered.
 	 */

@@ -176,7 +176,7 @@ public final class SourceInformation implements Serializable
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fileInfo == null) ? 0 : fileInfo.hashCode());
+		result = prime * result + (fileInfo == null ? 0 : fileInfo.hashCode());
 		result = prime * result + line;
 		result = prime * result + linePos;
 		return result;
@@ -190,17 +190,38 @@ public final class SourceInformation implements Serializable
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
 		final SourceInformation other = (SourceInformation) obj;
 		if (fileInfo == null)
 		{
-			if (other.fileInfo != null) return false;
+			if (other.fileInfo != null)
+			{
+				return false;
+			}
 		}
-		else if (!fileInfo.equals(other.fileInfo)) return false;
-		if (line != other.line) return false;
-		if (linePos != other.linePos) return false;
+		else if (!fileInfo.equals(other.fileInfo))
+		{
+			return false;
+		}
+		if (line != other.line)
+		{
+			return false;
+		}
+		if (linePos != other.linePos)
+		{
+			return false;
+		}
 		return true;
 	}
 

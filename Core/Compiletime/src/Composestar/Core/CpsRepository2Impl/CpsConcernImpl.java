@@ -95,6 +95,10 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 	 */
 	public FilterModule getFilterModule(String name)
 	{
+		if (name == null)
+		{
+			return null;
+		}
 		return filterModules.get(name);
 	}
 
@@ -128,11 +132,6 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 		if (fm == null)
 		{
 			throw new NullPointerException();
-		}
-		if (filterModules.get(fm.getName()) == fm)
-		{
-			filterModules.remove(fm.getName());
-			return true;
 		}
 		if (filterModules.containsValue(fm))
 		{
