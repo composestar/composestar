@@ -387,5 +387,15 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getCondition(java.lang.String)
+		 */
+		public Condition getCondition(String name)
+		{
+			return null;
+		}
+
 	}
 }
