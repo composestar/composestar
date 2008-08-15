@@ -135,7 +135,9 @@
 		</module>
 		<module	name="MissingSwitchDefault"/>
 		<module	name="ModifiedControlVariable"/>
-		<module	name="RedundantThrows" allowUnchecked="true"/>
+		<module	name="RedundantThrows">
+			<property name="allowUnchecked" value="true"/>
+		</module>
 		<module	name="SimplifyBooleanExpression">
 			<property name="severity" value="warning"/>
 		</module>
