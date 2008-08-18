@@ -19,7 +19,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: ExcludeConstraint.java 4192 2008-05-09 09:29:31Z elmuerte $
+ * $Id$
  */
 package Composestar.Core.FILTH2.Model;
 
