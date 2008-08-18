@@ -24,6 +24,7 @@
 
 package Composestar.Core.CpsRepository2Impl.SuperImposition;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -176,9 +177,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * 
 	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getAnnotationBindings()
 	 */
-	public Set<AnnotationBinding> getAnnotationBindings()
+	public Collection<AnnotationBinding> getAnnotationBindings()
 	{
-		return Collections.unmodifiableSet(annotationBindings);
+		return Collections.unmodifiableCollection(annotationBindings);
 	}
 
 	/*
@@ -200,9 +201,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * 
 	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getConditions()
 	 */
-	public Set<Condition> getConditions()
+	public Collection<Condition> getConditions()
 	{
-		return Collections.unmodifiableSet(new HashSet<Condition>(conditions.values()));
+		return Collections.unmodifiableCollection(conditions.values());
 	}
 
 	/*
@@ -210,9 +211,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * 
 	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getFilterModuleBindings()
 	 */
-	public Set<FilterModuleBinding> getFilterModuleBindings()
+	public Collection<FilterModuleBinding> getFilterModuleBindings()
 	{
-		return Collections.unmodifiableSet(filterModuleBindings);
+		return Collections.unmodifiableCollection(filterModuleBindings);
 	}
 
 	/*
@@ -220,9 +221,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * 
 	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getFilterModuleConstraints()
 	 */
-	public Set<FilterModuleConstraint> getFilterModuleConstraints()
+	public Collection<FilterModuleConstraint> getFilterModuleConstraints()
 	{
-		return Collections.unmodifiableSet(filterModuleConstraints);
+		return Collections.unmodifiableCollection(filterModuleConstraints);
 	}
 
 	/*
@@ -244,9 +245,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * 
 	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getSelectors()
 	 */
-	public Set<Selector> getSelectors()
+	public Collection<Selector> getSelectors()
 	{
-		return Collections.unmodifiableSet(new HashSet<Selector>(selectors.values()));
+		return Collections.unmodifiableCollection(selectors.values());
 	}
 
 	/*
@@ -304,6 +305,10 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 */
 	public boolean removeFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException
 	{
+		if (fmb == null)
+		{
+			throw new NullPointerException();
+		}
 		return filterModuleBindings.remove(fmb);
 	}
 
@@ -314,6 +319,10 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 */
 	public boolean removeFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
 	{
+		if (fmc == null)
+		{
+			throw new NullPointerException();
+		}
 		return filterModuleConstraints.remove(fmc);
 	}
 

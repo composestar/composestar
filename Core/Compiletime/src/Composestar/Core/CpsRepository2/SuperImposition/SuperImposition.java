@@ -24,7 +24,7 @@
 
 package Composestar.Core.CpsRepository2.SuperImposition;
 
-import java.util.Set;
+import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.CpsConcern;
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
@@ -94,10 +94,10 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 
 	/**
 	 * @return All registered selectors. If no selectors were defined an empty
-	 *         set will be returned.
+	 *         set will be returned. The returned collection is real only.
 	 * @see #getSelector(String)
 	 */
-	Set<Selector> getSelectors();
+	Collection<Selector> getSelectors();
 
 	/**
 	 * Add a filter module binding. setOwner(this) is called on the filter
@@ -121,9 +121,10 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 
 	/**
 	 * @return The set of filter module bindings. An empty set is returned when
-	 *         there are no filter module bindings.
+	 *         there are no filter module bindings. The returned collection is
+	 *         real only.
 	 */
-	Set<FilterModuleBinding> getFilterModuleBindings();
+	Collection<FilterModuleBinding> getFilterModuleBindings();
 
 	/**
 	 * Add a annotation binding to this instances. After the binding had been
@@ -146,9 +147,9 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 
 	/**
 	 * @return The set of annotation bindings, or an empty set when there are no
-	 *         annotation bindings.
+	 *         annotation bindings. The returned collection is real only.
 	 */
-	Set<AnnotationBinding> getAnnotationBindings();
+	Collection<AnnotationBinding> getAnnotationBindings();
 
 	/**
 	 * Add a new filter module constraint to this annotation. Filter module
@@ -175,9 +176,9 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	/**
 	 * @return All registered filter module constraints in the superimposition
 	 *         instance. Returns an empty set when no constraints where
-	 *         registered.
+	 *         registered. The returned collection is real only.
 	 */
-	Set<FilterModuleConstraint> getFilterModuleConstraints();
+	Collection<FilterModuleConstraint> getFilterModuleConstraints();
 
 	/**
 	 * Register a condition to this superimposition instance. Conditions should
@@ -222,7 +223,8 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 
 	/**
 	 * @return The set of registered conditions, or an empty set when no
-	 *         conditions where registered.
+	 *         conditions where registered. The returned collection is real
+	 *         only.
 	 */
-	Set<Condition> getConditions();
+	Collection<Condition> getConditions();
 }

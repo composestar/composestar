@@ -24,7 +24,7 @@
 
 package Composestar.Core.CpsRepository2;
 
-import java.util.Set;
+import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.SuperImposition.SuperImposition;
@@ -38,9 +38,10 @@ public interface CpsConcern extends Concern
 {
 	/**
 	 * @return All filter modules registered in this CpsConcern. If no filter
-	 *         modules exist in this concern an empty set is returned.
+	 *         modules exist in this concern an empty set is returned. The
+	 *         returned collection is read only.
 	 */
-	Set<FilterModule> getFilterModules();
+	Collection<FilterModule> getFilterModules();
 
 	/**
 	 * Add a new filter module to this concern. The names of filter modules must

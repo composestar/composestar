@@ -70,6 +70,14 @@ public abstract class AbstractConcernTestBase extends TestCase
 	{
 		List<String> s = Arrays.asList(exampleNS.split("\\."));
 		assertEquals(s, concern.getNamespaceAsList());
+		try
+		{
+			s.add("asdf");
+			fail();
+		}
+		catch (UnsupportedOperationException e)
+		{
+		}
 	}
 
 }

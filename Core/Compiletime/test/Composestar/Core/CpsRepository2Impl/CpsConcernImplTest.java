@@ -25,8 +25,8 @@
 package Composestar.Core.CpsRepository2Impl;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import Composestar.Core.CpsRepository2.CpsConcern;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
@@ -108,16 +108,26 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 	 */
 	public void testGetFilterModules()
 	{
+		assertNotNull(cpsconcern.getFilterModules());
 		cpsconcern.addFilterModule(fm1);
-		Set<FilterModule> fms = cpsconcern.getFilterModules();
+		Collection<FilterModule> fms = cpsconcern.getFilterModules();
+		assertNotNull(fms);
 		assertEquals(1, fms.size());
 		assertTrue(fms.contains(fm1));
 		cpsconcern.addFilterModule(fm2);
-		assertEquals(1, fms.size());
-		assertFalse(fms.contains(fm2));
+		assertEquals(2, fms.size());
+		assertTrue(fms.contains(fm2));
 		fms = cpsconcern.getFilterModules();
 		assertEquals(2, fms.size());
 		assertTrue(fms.contains(fm2));
+		try
+		{
+			fms.add(fm2);
+			fail();
+		}
+		catch (UnsupportedOperationException e)
+		{
+		}
 	}
 
 	/**
@@ -262,7 +272,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * 
 		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getAnnotationBindings()
 		 */
-		public Set<AnnotationBinding> getAnnotationBindings()
+		public Collection<AnnotationBinding> getAnnotationBindings()
 		{
 			return null;
 		}
@@ -272,7 +282,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * 
 		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getConditions()
 		 */
-		public Set<Condition> getConditions()
+		public Collection<Condition> getConditions()
 		{
 			return null;
 		}
@@ -282,7 +292,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * 
 		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getFilterModuleBindings()
 		 */
-		public Set<FilterModuleBinding> getFilterModuleBindings()
+		public Collection<FilterModuleBinding> getFilterModuleBindings()
 		{
 			return null;
 		}
@@ -292,7 +302,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * 
 		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getFilterModuleConstraints()
 		 */
-		public Set<FilterModuleConstraint> getFilterModuleConstraints()
+		public Collection<FilterModuleConstraint> getFilterModuleConstraints()
 		{
 			return null;
 		}
@@ -312,7 +322,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * 
 		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getSelectors()
 		 */
-		public Set<Selector> getSelectors()
+		public Collection<Selector> getSelectors()
 		{
 			return null;
 		}

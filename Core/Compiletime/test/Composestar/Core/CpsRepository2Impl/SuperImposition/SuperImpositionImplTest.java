@@ -22,32 +22,42 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2;
+package Composestar.Core.CpsRepository2Impl.SuperImposition;
 
-import java.util.List;
+import Composestar.Core.CpsRepository2.SuperImposition.Condition;
+import Composestar.Core.CpsRepository2.SuperImposition.Selector;
+import Composestar.Core.CpsRepository2.SuperImposition.SuperImpositionTestBase;
 
 /**
- * The base interface for all concern types. A concern is a root element in the
- * repository.
- * 
  * @author Michiel Hendriks
  */
-public interface Concern extends QualifiedRepositoryEntity
+public class SuperImpositionImplTest extends SuperImpositionTestBase
 {
-	/**
-	 * @return The namespace of this concern. This is the part of the fually
-	 *         qualified name of a concern before the concern's name. Each
-	 *         segment of the namespace is divided by periods. Returns an empty
-	 *         string when the concern has no namespace.
-	 * @see #getNamespaceAsList()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see junit.framework.TestCase#setUp()
 	 */
-	String getNamespace();
+	@Override
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		si = new SuperImpositionImpl();
+	}
 
 	/**
-	 * @return The namespace of the concern in an ordered list. Returns an empty
-	 *         list when the concern has no namespace. The returned list is read
-	 *         only.
-	 * @see #getNamespace()
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#isUniqueName(java.lang.String)}.
 	 */
-	List<String> getNamespaceAsList();
+	public void testIsUniqueName()
+	{
+		Selector s1 = new DummySel("test");
+		Condition c1 = new DummyCond("test");
+		assertTrue(si.addSelector(s1));
+		assertFalse(si.addCondition(c1));
+		assertTrue(si.removeSelector(s1));
+		assertTrue(si.addCondition(c1));
+	}
+
 }

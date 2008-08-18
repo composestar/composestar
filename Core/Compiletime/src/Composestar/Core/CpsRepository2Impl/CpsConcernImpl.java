@@ -24,12 +24,11 @@
 
 package Composestar.Core.CpsRepository2Impl;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import Composestar.Core.CpsRepository2.CpsConcern;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
@@ -107,9 +106,9 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 	 * 
 	 * @see Composestar.Core.CpsRepository2.CpsConcern#getFilterModules()
 	 */
-	public Set<FilterModule> getFilterModules()
+	public Collection<FilterModule> getFilterModules()
 	{
-		return Collections.unmodifiableSet(new HashSet<FilterModule>(filterModules.values()));
+		return Collections.unmodifiableCollection(filterModules.values());
 	}
 
 	/*
