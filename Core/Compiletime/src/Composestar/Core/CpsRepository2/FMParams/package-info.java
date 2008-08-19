@@ -19,27 +19,12 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id$
+ * $Id: Concern.java 4293 2008-08-18 09:41:07Z elmuerte $
  */
-
-package Composestar.Core.CpsRepository2.SuperImposition;
-
-import java.util.Collection;
-
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
-import Composestar.Core.LAMA.ProgramElement;
 
 /**
- * A selector makes a selection of program elements which can in turn be used by
- * annotation binding, or in filter module binding. The exact type of program
- * element in undefined, and should be validated where the selector is used.
- * 
- * @author Michiel Hendriks
+ * This package contains interfaces related to filter module parameters. These
+ * are partially shared between the filtermodules and superimposition.
  */
-public interface Selector extends QualifiedRepositoryEntity
-{
-	/**
-	 * @return The collection of program elements selected by this selector.
-	 */
-	Collection<ProgramElement> getSelection();
-}
+package Composestar.Core.CpsRepository2.FMParams;
+

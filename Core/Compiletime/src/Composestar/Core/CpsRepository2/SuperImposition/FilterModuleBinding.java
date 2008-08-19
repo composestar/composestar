@@ -24,7 +24,10 @@
 
 package Composestar.Core.CpsRepository2.SuperImposition;
 
+import java.util.List;
+
 import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.FMParams.ParameterValue;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
 /**
@@ -64,5 +67,31 @@ public interface FilterModuleBinding extends RepositoryEntity
 	 */
 	FilterModuleReference getFilterModuleReference();
 
-	// TODO: ... filter module parameter values
+	/**
+	 * Add a new parameter value to this binding. It will be added to the end of
+	 * the parameter list.
+	 * 
+	 * @param value The value to add
+	 * @throws NullPointerException Thrown when the value is null
+	 */
+	void addParameterValue(ParameterValue<?> value) throws NullPointerException;
+
+	/**
+	 * @return The list of parameter values in order of definition. If no values
+	 *         were assigned to this binding an empty list is returned. This
+	 *         list is read-only.
+	 */
+	List<ParameterValue<?>> getParameterValues();
+
+	/**
+	 * Replace the current list of parameter values with the data in the given
+	 * list. Changes made to the given list after calling this function will not
+	 * influence the value list of this binding. A shallow copy of the given
+	 * list is performed. To clear the current list of values, simply pass an
+	 * empty list.
+	 * 
+	 * @param list The list from which the values should be copied.
+	 * @throws NullPointerException Thrown when the given list is null.
+	 */
+	void setParameterValues(List<ParameterValue<?>> list) throws NullPointerException;
 }

@@ -24,13 +24,16 @@
 package Composestar.Core.CpsRepository2.SuperImposition;
 
 import java.util.Collection;
+import java.util.List;
 
 import junit.framework.TestCase;
+import Composestar.Core.CpsRepository2.FMParams.ParameterValue;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
+import Composestar.Core.LAMA.ProgramElement;
 
 /**
  * @author Michiel Hendriks
@@ -483,11 +486,35 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 		public void setSelector(Selector sel) throws NullPointerException
 		{}
+
+		public void addParameterValue(ParameterValue<?> value) throws NullPointerException
+		{}
+
+		public List<ParameterValue<?>> getParameterValues()
+		{
+			return null;
+		}
+
+		public void setParameterValues(List<ParameterValue<?>> list) throws NullPointerException
+		{}
 	}
 
 	protected static class DummyFMC extends AbstractRepositoryEntity implements FilterModuleConstraint
 	{
 		private static final long serialVersionUID = -7463428959390953212L;
+
+		public void addArgument(FilterModuleReference fmRef) throws NullPointerException
+		{}
+
+		public List<FilterModuleReference> getArguments()
+		{
+			return null;
+		}
+
+		public String getConstraintType()
+		{
+			return null;
+		}
 	}
 
 	protected static class DummySel extends AbstractQualifiedRepositoryEntity implements Selector
@@ -497,6 +524,11 @@ public abstract class SuperImpositionTestBase extends TestCase
 		public DummySel(String name)
 		{
 			super(name);
+		}
+
+		public Collection<ProgramElement> getSelection()
+		{
+			return null;
 		}
 	}
 

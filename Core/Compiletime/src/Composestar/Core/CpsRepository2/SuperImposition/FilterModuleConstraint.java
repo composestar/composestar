@@ -24,12 +24,39 @@
 
 package Composestar.Core.CpsRepository2.SuperImposition;
 
-import Composestar.Core.CpsRepository2.RepositoryEntity;
+import java.util.List;
 
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+
+// FIXME The skip and cond filter module constraint could have a reference to a
+// condition to provide conditional execution (discuss this with Lodewijk)
 /**
+ * This defines a filter module constraint. Filter module constraints are
+ * processed by the FLIRT module.
+ * 
  * @author Michiel Hendriks
  */
 public interface FilterModuleConstraint extends RepositoryEntity
 {
+	/**
+	 * @return The constraint type. This is one of the following values: pre,
+	 *         include, exclude, cond, skip. But others could also be possible.
+	 *         Check the FLIRT module for more information.
+	 */
+	String getConstraintType();
 
+	/**
+	 * Add an argument to this constraint
+	 * 
+	 * @param fmRef The reference to add.
+	 * @throws NullPointerException Thrown when the reference is null.
+	 */
+	void addArgument(FilterModuleReference fmRef) throws NullPointerException;
+
+	/**
+	 * @return The arguments for the given constraint. The type and number of
+	 *         the arguments depends on the constraint type.
+	 */
+	List<FilterModuleReference> getArguments();
 }
