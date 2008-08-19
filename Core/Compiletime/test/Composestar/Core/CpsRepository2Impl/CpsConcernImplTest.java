@@ -209,6 +209,27 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		{
 			super(name);
 		}
+
+		public FilterModule getReference()
+		{
+			return null;
+		}
+
+		public String getReferenceId()
+		{
+			return null;
+		}
+
+		public boolean isResolved()
+		{
+			return false;
+		}
+
+		public void setReference(FilterModule element)
+		{}
+
+		public void setReferenceId(String id) throws UnsupportedOperationException
+		{}
 	}
 
 	/**

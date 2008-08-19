@@ -26,6 +26,9 @@ package Composestar.Core.CpsRepository2.SuperImposition;
 import java.util.Collection;
 
 import junit.framework.TestCase;
+import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
@@ -433,11 +436,53 @@ public abstract class SuperImpositionTestBase extends TestCase
 	protected static class DummyAB extends AbstractRepositoryEntity implements AnnotationBinding
 	{
 		private static final long serialVersionUID = -5674700229605225217L;
+
+		public void addAnnotation(TypeReference annotationType) throws NullPointerException
+		{}
+
+		public Collection<TypeReference> getAnnotations()
+		{
+			return null;
+		}
+
+		public Selector getSelector()
+		{
+			return null;
+		}
+
+		public boolean removeAnnotation(TypeReference annotationType) throws NullPointerException
+		{
+			return false;
+		}
+
+		public TypeReference removeAnnotation(String referenceId)
+		{
+			return null;
+		}
+
+		public void setSelector(Selector sel) throws NullPointerException
+		{}
 	}
 
 	protected static class DummyFMB extends AbstractRepositoryEntity implements FilterModuleBinding
 	{
 		private static final long serialVersionUID = -3638960435963408117L;
+
+		public FilterModuleReference getFilterModuleReference()
+		{
+			return null;
+		}
+
+		public Selector getSelector()
+		{
+			return null;
+		}
+
+		public void setFilterModuleReference(FilterModuleReference fmRef) throws NullPointerException
+		{}
+
+		public void setSelector(Selector sel) throws NullPointerException
+		{}
 	}
 
 	protected static class DummyFMC extends AbstractRepositoryEntity implements FilterModuleConstraint
@@ -463,5 +508,13 @@ public abstract class SuperImpositionTestBase extends TestCase
 		{
 			super(name);
 		}
+
+		public MethodReference getMethodReference()
+		{
+			return null;
+		}
+
+		public void setMethodReference(MethodReference mref) throws NullPointerException
+		{}
 	}
 }

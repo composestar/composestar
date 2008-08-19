@@ -22,15 +22,15 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2.References;
 
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
-import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.LAMA.Type;
 
 /**
+ * An specialized reference to a LAMA Type element
+ * 
  * @author Michiel Hendriks
  */
-public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleReference
+public interface TypeReference extends Reference<Type>
 {
-
 }

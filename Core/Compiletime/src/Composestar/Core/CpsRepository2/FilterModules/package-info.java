@@ -19,18 +19,12 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id$
+ * $Id: Concern.java 4293 2008-08-18 09:41:07Z elmuerte $
  */
-
-package Composestar.Core.CpsRepository2.FilterModules;
-
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
-import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
 /**
- * @author Michiel Hendriks
+ * This package contains the interfaces for CPS language elements which exist
+ * within a filter module (filter modules included).
  */
-public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleReference
-{
+package Composestar.Core.CpsRepository2.FilterModules;
 
-}

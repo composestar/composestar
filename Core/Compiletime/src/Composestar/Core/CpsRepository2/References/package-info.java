@@ -19,18 +19,18 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id$
+ * $Id: Concern.java 4293 2008-08-18 09:41:07Z elmuerte $
  */
-
-package Composestar.Core.CpsRepository2.FilterModules;
-
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
-import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
 /**
- * @author Michiel Hendriks
+ * This package contains interfaces for external references. An external
+ * reference points to data which is alien to the CPS language. It depends on
+ * information retrieved or produced somewhere else within Compose*. All
+ * external references are soft-references, which means that they can loose the
+ * direct association with the data they are referring to during
+ * deserialization. References are commonly used in cases where information from
+ * the language model (LAMA) is used, or in case of soft-references to qualified
+ * CPS language elements like with references to filter modules.
  */
-public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleReference
-{
+package Composestar.Core.CpsRepository2.References;
 
-}

@@ -25,11 +25,29 @@
 package Composestar.Core.CpsRepository2.SuperImposition;
 
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
+import Composestar.Core.CpsRepository2.References.MethodReference;
 
 /**
+ * A condition used in the superimposition block. It is used for either
+ * conditional superimposition (as of 2008-08-19 not yet implemented) or
+ * conditional filter module execution (through the cond(..) constraint).
+ * 
  * @author Michiel Hendriks
  */
 public interface Condition extends QualifiedRepositoryEntity
 {
+	/**
+	 * @return The reference to the method which produces the boolean value for
+	 *         this condition.
+	 */
+	MethodReference getMethodReference();
 
+	/**
+	 * Sets the reference to a method that should be used to retrieve the
+	 * boolean value for this condition.
+	 * 
+	 * @param mref The reference to a method to use
+	 * @throws NullPointerException Thrown when the passed reference is null
+	 */
+	void setMethodReference(MethodReference mref) throws NullPointerException;
 }

@@ -19,18 +19,13 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id$
+ * $Id: Concern.java 4293 2008-08-18 09:41:07Z elmuerte $
  */
-
-package Composestar.Core.CpsRepository2.FilterModules;
-
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
-import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
 /**
- * @author Michiel Hendriks
+ * The Meta package contains classes used to store meta information used by most
+ * interfaces. These classes are not actual language elements, they just provide
+ * some additional information about the CPS language elements.
  */
-public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleReference
-{
+package Composestar.Core.CpsRepository2.Meta;
 
-}

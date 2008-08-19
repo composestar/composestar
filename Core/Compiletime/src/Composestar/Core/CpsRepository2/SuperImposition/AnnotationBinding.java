@@ -24,12 +24,64 @@
 
 package Composestar.Core.CpsRepository2.SuperImposition;
 
+import java.util.Collection;
+
 import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.References.TypeReference;
 
 /**
+ * This defined an annotation binding which binds annotations (full type given)
+ * to a set of program elements as selected by the selector.
+ * 
  * @author Michiel Hendriks
  */
 public interface AnnotationBinding extends RepositoryEntity
 {
+	/**
+	 * Sets the selector to which annotations should be bound
+	 * 
+	 * @param sel The selector to bind annotations to
+	 * @throws NullPointerException thrown when the given selector is null
+	 */
+	void setSelector(Selector sel) throws NullPointerException;
 
+	/**
+	 * @return The selector to which annotations should be bound.
+	 */
+	Selector getSelector();
+
+	/**
+	 * Adds a annotation to be superimposed. Annotations are only superimposed
+	 * once. Calling this method multiple times with the same annotation type
+	 * has no effect.
+	 * 
+	 * @param annotationType The annotation type to superimposed
+	 * @throws NullPointerException Thrown when the given type is null.
+	 */
+	void addAnnotation(TypeReference annotationType) throws NullPointerException;
+
+	/**
+	 * Removes an annotation type from the binding.
+	 * 
+	 * @param annotationType The annotation type to remove
+	 * @return True when the type was removed
+	 * @throws NullPointerException Thrown when the annotation type is null.
+	 */
+	boolean removeAnnotation(TypeReference annotationType) throws NullPointerException;
+
+	/**
+	 * Remove an annotation type by the reference id.
+	 * 
+	 * @param referenceId The id of the type reference to remove.
+	 * @return The annotation type removed, or null when no type with the given
+	 *         reference id was bound.
+	 */
+	TypeReference removeAnnotation(String referenceId);
+
+	/**
+	 * @return The collection of annotations which should be superimposed on the
+	 *         selector. If no annotations should be superimposed an empty
+	 *         collection is returned. The returned collection is read only.
+	 */
+	Collection<TypeReference> getAnnotations();
 }

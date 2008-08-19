@@ -25,11 +25,44 @@
 package Composestar.Core.CpsRepository2.SuperImposition;
 
 import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
 /**
+ * The interface defines the binding of filter modules to a selector. Each
+ * filter module binding contains a mapping from a single filter module to a
+ * single selector. The CPS language allows a list of filter modules to be bound
+ * to a selector, this has to be translated to a list of bindings.
+ * 
  * @author Michiel Hendriks
  */
 public interface FilterModuleBinding extends RepositoryEntity
 {
+	/**
+	 * Sets the selector to which annotations should be bound
+	 * 
+	 * @param sel The selector to bind annotations to
+	 * @throws NullPointerException thrown when the given selector is null
+	 */
+	void setSelector(Selector sel) throws NullPointerException;
 
+	/**
+	 * @return The selector to which annotations should be bound.
+	 */
+	Selector getSelector();
+
+	/**
+	 * Sets the reference to a filter module which should be bound to a
+	 * selector.
+	 * 
+	 * @param fmRef The filter module reference to use
+	 * @throws NullPointerException Thrown when the reference is null
+	 */
+	void setFilterModuleReference(FilterModuleReference fmRef) throws NullPointerException;
+
+	/**
+	 * @return The filter module reference
+	 */
+	FilterModuleReference getFilterModuleReference();
+
+	// TODO: ... filter module parameter values
 }
