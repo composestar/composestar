@@ -22,10 +22,13 @@
  * $Id$
  */
 
-/**
- * Version 2 of the CPS Language Repository. This package contains interfaces
- * for all elements of the CPS language. With a few exceptions this package
- * does not contain actual implementations, just the interface declarations.
- */
-package Composestar.Core.CpsRepository2;
+package Composestar.Core.CpsRepository2.FilterModules;
 
+
+/**
+ * @author Michiel Hendriks
+ */
+public interface Condition extends FilterModuleVariable
+{
+
+}

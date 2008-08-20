@@ -19,7 +19,7 @@
  *
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
  *
- * $Id: Concern.java 4293 2008-08-18 09:41:07Z elmuerte $
+ * $Id$
  */
 
 /**

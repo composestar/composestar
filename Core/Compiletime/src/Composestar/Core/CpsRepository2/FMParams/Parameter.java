@@ -22,10 +22,20 @@
  * $Id$
  */
 
-/**
- * Version 2 of the CPS Language Repository. This package contains interfaces
- * for all elements of the CPS language. With a few exceptions this package
- * does not contain actual implementations, just the interface declarations.
- */
-package Composestar.Core.CpsRepository2;
+package Composestar.Core.CpsRepository2.FMParams;
 
+import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
+
+/**
+ * A filter module parameter definition.
+ * 
+ * @author Michiel Hendriks
+ */
+public interface Parameter extends QualifiedRepositoryEntity
+{
+	/**
+	 * @return True if this is a parameter list which can contain zero or more
+	 *         values.
+	 */
+	boolean isParameterList();
+}

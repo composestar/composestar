@@ -29,7 +29,13 @@ import java.util.Collection;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.CpsConcern;
+import Composestar.Core.CpsRepository2.FMParams.Parameter;
+import Composestar.Core.CpsRepository2.FilterModules.External;
+import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
+import Composestar.Core.CpsRepository2.FilterModules.Internal;
+import Composestar.Core.CpsRepository2.Instantiatable.InstantiatableContext;
 import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding;
 import Composestar.Core.CpsRepository2.SuperImposition.Condition;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
@@ -230,6 +236,87 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 
 		public void setReferenceId(String id) throws UnsupportedOperationException
 		{}
+
+		public boolean addParameter(Parameter param) throws NullPointerException
+		{
+			return false;
+		}
+
+		public boolean addVariable(FilterModuleVariable var) throws NullPointerException
+		{
+			return false;
+		}
+
+		public Composestar.Core.CpsRepository2.FilterModules.Condition getCondition(String name)
+		{
+			return null;
+		}
+
+		public External getExternal(String name)
+		{
+			return null;
+		}
+
+		public FilterExpression getInputFilterExpression()
+		{
+			return null;
+		}
+
+		public Internal getInternal(String name)
+		{
+			return null;
+		}
+
+		public FilterExpression getOutputFilterExpression()
+		{
+			return null;
+		}
+
+		public Parameter getParameter(String name)
+		{
+			return null;
+		}
+
+		public List<Parameter> getParameters()
+		{
+			return null;
+		}
+
+		public FilterModuleVariable getVariable(String name)
+		{
+			return null;
+		}
+
+		public boolean hasParameters()
+		{
+			return false;
+		}
+
+		public boolean removeVariable(FilterModuleVariable var) throws NullPointerException
+		{
+			return false;
+		}
+
+		public FilterModuleVariable removeVariable(String name)
+		{
+			return null;
+		}
+
+		public void setInputFilterExpression(FilterExpression expr)
+		{}
+
+		public void setOutputFilterExpression(FilterExpression expr)
+		{}
+
+		public FilterModule newInstance(InstantiatableContext context)
+		{
+			return null;
+		}
+
+		public Collection<FilterModuleVariable> getVariables()
+		{
+			return null;
+		}
 	}
 
 	/**
