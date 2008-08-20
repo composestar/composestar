@@ -24,7 +24,7 @@
 
 package Composestar.Core.CpsRepository2Impl.SuperImposition;
 
-import Composestar.Core.CpsRepository2.SuperImposition.Condition;
+import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.Selector;
 import Composestar.Core.CpsRepository2.SuperImposition.SuperImpositionTestBase;
 
@@ -53,7 +53,7 @@ public class SuperImpositionImplTest extends SuperImpositionTestBase
 	public void testIsUniqueName()
 	{
 		Selector s1 = new DummySel("test");
-		Condition c1 = new DummyCond("test");
+		SICondition c1 = new DummyCond("test");
 		assertTrue(si.addSelector(s1));
 		assertFalse(si.addCondition(c1));
 		assertTrue(si.removeSelector(s1));

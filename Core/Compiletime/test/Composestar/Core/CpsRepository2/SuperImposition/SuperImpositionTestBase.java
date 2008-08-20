@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 import junit.framework.TestCase;
-import Composestar.Core.CpsRepository2.FMParams.ParameterValue;
+import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
@@ -50,7 +50,7 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	protected Selector sel1, sel2;
 
-	protected Condition con1, con2;
+	protected SICondition con1, con2;
 
 	@Override
 	protected void setUp() throws Exception
@@ -90,7 +90,7 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addCondition(Composestar.Core.CpsRepository2.SuperImposition.Condition)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)}.
 	 */
 	public void testAddCondition()
 	{
@@ -210,7 +210,7 @@ public abstract class SuperImpositionTestBase extends TestCase
 	 */
 	public void testGetConditions()
 	{
-		Collection<Condition> cons = si.getConditions();
+		Collection<SICondition> cons = si.getConditions();
 		assertNotNull(cons);
 		assertTrue(cons.isEmpty());
 		si.addCondition(con1);
@@ -330,7 +330,7 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeCondition(Composestar.Core.CpsRepository2.SuperImposition.Condition)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)}.
 	 */
 	public void testRemoveConditionCondition()
 	{
@@ -487,15 +487,15 @@ public abstract class SuperImpositionTestBase extends TestCase
 		public void setSelector(Selector sel) throws NullPointerException
 		{}
 
-		public void addParameterValue(ParameterValue<?> value) throws NullPointerException
+		public void addParameterValue(FMParameterValue<?> value) throws NullPointerException
 		{}
 
-		public List<ParameterValue<?>> getParameterValues()
+		public List<FMParameterValue<?>> getParameterValues()
 		{
 			return null;
 		}
 
-		public void setParameterValues(List<ParameterValue<?>> list) throws NullPointerException
+		public void setParameterValues(List<FMParameterValue<?>> list) throws NullPointerException
 		{}
 	}
 
@@ -532,7 +532,7 @@ public abstract class SuperImpositionTestBase extends TestCase
 		}
 	}
 
-	protected static class DummyCond extends AbstractQualifiedRepositoryEntity implements Condition
+	protected static class DummyCond extends AbstractQualifiedRepositoryEntity implements SICondition
 	{
 		private static final long serialVersionUID = 832788470295797104L;
 

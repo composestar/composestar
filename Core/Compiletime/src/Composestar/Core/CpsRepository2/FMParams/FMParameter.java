@@ -31,7 +31,7 @@ import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
  * 
  * @author Michiel Hendriks
  */
-public interface Parameter extends QualifiedRepositoryEntity
+public interface FMParameter extends QualifiedRepositoryEntity
 {
 	/**
 	 * @return True if this is a parameter list which can contain zero or more

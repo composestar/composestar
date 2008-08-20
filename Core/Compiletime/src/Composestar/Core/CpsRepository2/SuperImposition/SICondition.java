@@ -34,7 +34,7 @@ import Composestar.Core.CpsRepository2.References.MethodReference;
  * 
  * @author Michiel Hendriks
  */
-public interface Condition extends QualifiedRepositoryEntity
+public interface SICondition extends QualifiedRepositoryEntity
 {
 	/**
 	 * @return The reference to the method which produces the boolean value for

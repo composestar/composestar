@@ -42,7 +42,7 @@ import java.util.Collection;
  * 
  * @author Michiel Hendriks
  */
-public interface ParameterValue<T> extends Serializable
+public interface FMParameterValue<T> extends Serializable
 {
 	/**
 	 * @return The values assigned to this filter module parameter.

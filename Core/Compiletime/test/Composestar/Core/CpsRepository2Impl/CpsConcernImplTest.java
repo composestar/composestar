@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.CpsConcern;
-import Composestar.Core.CpsRepository2.FMParams.Parameter;
+import Composestar.Core.CpsRepository2.FMParams.FMParameter;
 import Composestar.Core.CpsRepository2.FilterModules.External;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
@@ -37,7 +37,7 @@ import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
 import Composestar.Core.CpsRepository2.FilterModules.Internal;
 import Composestar.Core.CpsRepository2.Instantiatable.InstantiatableContext;
 import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding;
-import Composestar.Core.CpsRepository2.SuperImposition.Condition;
+import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint;
 import Composestar.Core.CpsRepository2.SuperImposition.Selector;
@@ -237,7 +237,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		public void setReferenceId(String id) throws UnsupportedOperationException
 		{}
 
-		public boolean addParameter(Parameter param) throws NullPointerException
+		public boolean addParameter(FMParameter param) throws NullPointerException
 		{
 			return false;
 		}
@@ -272,12 +272,12 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 			return null;
 		}
 
-		public Parameter getParameter(String name)
+		public FMParameter getParameter(String name)
 		{
 			return null;
 		}
 
-		public List<Parameter> getParameters()
+		public List<FMParameter> getParameters()
 		{
 			return null;
 		}
@@ -344,7 +344,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * 
 		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addCondition(Composestar.Core.CpsRepository2.SuperImposition.Condition)
 		 */
-		public boolean addCondition(Condition cond) throws NullPointerException
+		public boolean addCondition(SICondition cond) throws NullPointerException
 		{
 			return false;
 		}
@@ -390,7 +390,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * 
 		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getConditions()
 		 */
-		public Collection<Condition> getConditions()
+		public Collection<SICondition> getConditions()
 		{
 			return null;
 		}
@@ -450,7 +450,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * 
 		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeCondition(Composestar.Core.CpsRepository2.SuperImposition.Condition)
 		 */
-		public boolean removeCondition(Condition cond) throws NullPointerException
+		public boolean removeCondition(SICondition cond) throws NullPointerException
 		{
 			return false;
 		}
@@ -460,7 +460,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * 
 		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeCondition(java.lang.String)
 		 */
-		public Condition removeCondition(String name)
+		public SICondition removeCondition(String name)
 		{
 			return null;
 		}
@@ -510,7 +510,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * 
 		 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getCondition(java.lang.String)
 		 */
-		public Condition getCondition(String name)
+		public SICondition getCondition(String name)
 		{
 			return null;
 		}

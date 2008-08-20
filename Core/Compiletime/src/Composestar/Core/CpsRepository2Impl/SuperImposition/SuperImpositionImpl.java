@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding;
-import Composestar.Core.CpsRepository2.SuperImposition.Condition;
+import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint;
 import Composestar.Core.CpsRepository2.SuperImposition.Selector;
@@ -57,7 +57,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * Conditions, these are used in filter module constraints of type cond(X,Y)
 	 * to provide conditional filter module execution
 	 */
-	protected Map<String, Condition> conditions;
+	protected Map<String, SICondition> conditions;
 
 	/**
 	 * Annotation bindings
@@ -84,7 +84,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 		filterModuleBindings = new HashSet<FilterModuleBinding>();
 		filterModuleConstraints = new HashSet<FilterModuleConstraint>();
 		selectors = new HashMap<String, Selector>();
-		conditions = new HashMap<String, Condition>();
+		conditions = new HashMap<String, SICondition>();
 	}
 
 	/*
@@ -107,7 +107,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * 
 	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addCondition(Composestar.Core.CpsRepository2.SuperImposition.Condition)
 	 */
-	public boolean addCondition(Condition cond) throws NullPointerException
+	public boolean addCondition(SICondition cond) throws NullPointerException
 	{
 		if (cond == null)
 		{
@@ -187,7 +187,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * 
 	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getCondition(java.lang.String)
 	 */
-	public Condition getCondition(String name)
+	public SICondition getCondition(String name)
 	{
 		if (name == null)
 		{
@@ -201,7 +201,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * 
 	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getConditions()
 	 */
-	public Collection<Condition> getConditions()
+	public Collection<SICondition> getConditions()
 	{
 		return Collections.unmodifiableCollection(conditions.values());
 	}
@@ -269,7 +269,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * 
 	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeCondition(Composestar.Core.CpsRepository2.SuperImposition.Condition)
 	 */
-	public boolean removeCondition(Condition cond) throws NullPointerException
+	public boolean removeCondition(SICondition cond) throws NullPointerException
 	{
 		if (cond == null)
 		{
@@ -287,13 +287,13 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * 
 	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeCondition(java.lang.String)
 	 */
-	public Condition removeCondition(String name)
+	public SICondition removeCondition(String name)
 	{
 		if (name == null)
 		{
 			return null;
 		}
-		Condition res = conditions.get(name);
+		SICondition res = conditions.get(name);
 		conditions.remove(name);
 		return res;
 	}

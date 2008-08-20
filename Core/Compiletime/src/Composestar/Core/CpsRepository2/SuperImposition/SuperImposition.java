@@ -57,7 +57,7 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * @param newSel The selector to add.
 	 * @return True when the selector was added or false when it was not added.
 	 * @throws NullPointerException Thrown when the provided selector is null
-	 * @see #addCondition(Condition)
+	 * @see #addCondition(SICondition)
 	 */
 	boolean addSelector(Selector newSel) throws NullPointerException;
 
@@ -192,7 +192,7 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * @throws NullPointerException Thrown when the provided condition is null
 	 * @see #addSelector(Selector)
 	 */
-	boolean addCondition(Condition cond) throws NullPointerException;
+	boolean addCondition(SICondition cond) throws NullPointerException;
 
 	/**
 	 * Remove a given condition from this superimposition. Removing a condition
@@ -203,7 +203,7 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 *         was not found.
 	 * @throws NullPointerException Thrown when the provided condition is null
 	 */
-	boolean removeCondition(Condition cond) throws NullPointerException;
+	boolean removeCondition(SICondition cond) throws NullPointerException;
 
 	/**
 	 * Remove a condition by it's name.
@@ -212,19 +212,19 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * @return The condition that was removed or null when no condition was
 	 *         removed.
 	 */
-	Condition removeCondition(String name);
+	SICondition removeCondition(String name);
 
 	/**
 	 * @param name The name of the condition to return.
 	 * @return The condition with the given name, returns null when no such
 	 *         condition exists.
 	 */
-	Condition getCondition(String name);
+	SICondition getCondition(String name);
 
 	/**
 	 * @return The set of registered conditions, or an empty set when no
 	 *         conditions where registered. The returned collection is real
 	 *         only.
 	 */
-	Collection<Condition> getConditions();
+	Collection<SICondition> getConditions();
 }

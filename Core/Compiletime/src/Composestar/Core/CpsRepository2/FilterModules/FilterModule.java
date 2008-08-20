@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.List;
 
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
-import Composestar.Core.CpsRepository2.FMParams.Parameter;
+import Composestar.Core.CpsRepository2.FMParams.FMParameter;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
@@ -58,13 +58,13 @@ public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleRef
 	 *         already was a parameter defined with that name.
 	 * @throws NullPointerException Thrown when the parameter is null.
 	 */
-	boolean addParameter(Parameter param) throws NullPointerException;
+	boolean addParameter(FMParameter param) throws NullPointerException;
 
 	/**
 	 * @return The list of filter module parameters. If this filter module has
 	 *         no parameters an empty list is returned. This list is read-only.
 	 */
-	List<Parameter> getParameters();
+	List<FMParameter> getParameters();
 
 	/**
 	 * Get a parameter by its name.
@@ -73,7 +73,7 @@ public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleRef
 	 * @return The parameter with the requested name or null when no parameter
 	 *         with that name exists.
 	 */
-	Parameter getParameter(String name);
+	FMParameter getParameter(String name);
 
 	/**
 	 * Add a new variable to this filter module. The name of the variable must
