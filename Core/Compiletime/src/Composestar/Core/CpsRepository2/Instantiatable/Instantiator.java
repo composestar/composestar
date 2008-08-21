@@ -22,20 +22,26 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2.Instantiatable;
 
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+import Composestar.Core.CpsRepository2.FilterModules.Condition;
+import Composestar.Core.CpsRepository2.FilterModules.External;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
+import Composestar.Core.CpsRepository2.FilterModules.Internal;
 
 /**
- * This interface defines a filter definition in either the input or output
- * filter expression.
+ * This is an implementation of the Visitor design pattern, this implements the
+ * visitor part of the pattern.
  * 
  * @author Michiel Hendriks
  */
-public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Instantiatable<Filter>
+public interface Instantiator
 {
-	// filter type
-	// filter arguments = assignment block (without filter prefix)
-	// filter element expression
+	FilterModule instantiate(FilterModule base);
+
+	Internal instantiate(Internal base);
+
+	External instantiate(External base);
+
+	Condition instantiate(Condition base);
 }

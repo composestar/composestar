@@ -22,12 +22,15 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.Instantiatable;
+package Composestar.Core.CpsRepository2.FilterElements;
+
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
+ * This interface should not be directly implemented.
+ * 
  * @author Michiel Hendriks
  */
-public interface InstantiatableContext
+public interface FilterElementExpression extends RepositoryEntity
 {
-
 }

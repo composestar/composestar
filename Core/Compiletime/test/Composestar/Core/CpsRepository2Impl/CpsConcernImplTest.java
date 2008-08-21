@@ -35,7 +35,7 @@ import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
 import Composestar.Core.CpsRepository2.FilterModules.Internal;
-import Composestar.Core.CpsRepository2.Instantiatable.InstantiatableContext;
+import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding;
 import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
@@ -308,7 +308,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		public void setOutputFilterExpression(FilterExpression expr)
 		{}
 
-		public FilterModule newInstance(InstantiatableContext context)
+		public FilterModule newInstance(Instantiator context)
 		{
 			return null;
 		}

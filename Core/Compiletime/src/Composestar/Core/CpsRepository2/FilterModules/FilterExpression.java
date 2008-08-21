@@ -27,6 +27,10 @@ package Composestar.Core.CpsRepository2.FilterModules;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
+ * The interface for all elements in the filter expression. This is used by the
+ * input and output filter definitions in the filter module. This interface
+ * should not be directly implemented.
+ * 
  * @author Michiel Hendriks
  */
 public interface FilterExpression extends RepositoryEntity

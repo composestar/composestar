@@ -25,9 +25,33 @@
 package Composestar.Core.CpsRepository2.Instantiatable;
 
 /**
+ * This is an implementation of the Visitor design pattern, this implements the
+ * visitable part of the pattern. All child elements of a filter module should
+ * implement this interface. The instantiatable interface is used to create new
+ * instances of filter modules where the filter module parameter values have
+ * been resolved. It is also used by the runtime to create runtime instances of
+ * filter modules for each concern instance.
+ * 
  * @author Michiel Hendriks
+ * @see Instantiator
  */
 public interface Instantiatable<T>
 {
-	T newInstance(InstantiatableContext context);
+	/**
+	 * This defines the "vists" method for the visitable interface. In most
+	 * cases implementing classes would simply containg the following
+	 * implementation for this method:
+	 * 
+	 * <pre>
+	 * {
+	 * 	return context.instantiate(this);
+	 * }
+	 * </pre>
+	 * 
+	 * @param instantiator The visitor which creates the actual instanses when
+	 *            needed.
+	 * @return The new instance according to the rules of the instantiator, or
+	 *         null when no new instance could be created.
+	 */
+	T newInstance(Instantiator instantiator);
 }

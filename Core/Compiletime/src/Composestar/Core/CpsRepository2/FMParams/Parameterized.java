@@ -22,20 +22,20 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
-
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+package Composestar.Core.CpsRepository2.FMParams;
 
 /**
- * This interface defines a filter definition in either the input or output
- * filter expression.
+ * Generic interface for all implementations that have a filter module parameter
+ * as value.
  * 
  * @author Michiel Hendriks
  */
-public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Instantiatable<Filter>
+public interface Parameterized
 {
-	// filter type
-	// filter arguments = assignment block (without filter prefix)
-	// filter element expression
+	/**
+	 * @return The filter module parameter which will contain the actual value
+	 *         for this instance. This should always return a FMParameter
+	 *         instance.
+	 */
+	FMParameter getFMParameter();
 }

@@ -24,11 +24,27 @@
 
 package Composestar.Core.CpsRepository2.FilterModules;
 
+import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+import Composestar.Core.CpsRepository2.References.MethodReference;
 
 /**
+ * A condition can be used in the matching expression.
+ * 
  * @author Michiel Hendriks
  */
-public interface Condition extends FilterModuleVariable
+public interface Condition extends FilterModuleVariable, Instantiatable<Condition>
 {
+	/**
+	 * @return Return the reference to the method which is called when this
+	 *         condition is encountered.
+	 */
+	MethodReference getMethodReference();
 
+	/**
+	 * Sets the method to associate with this condition.
+	 * 
+	 * @param mref A reference to the method to use.
+	 * @throws NullPointerException Thrown when the type reference is null.
+	 */
+	void setMethodReference(MethodReference mref) throws NullPointerException;
 }

@@ -22,20 +22,30 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2.References;
 
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+import Composestar.Core.CpsRepository2.InstanceContextProvider;
 
 /**
- * This interface defines a filter definition in either the input or output
- * filter expression.
+ * An method reference with a context. This can be used by Externals and
+ * Conditions when they refer to a method of an Internal or External.
+ * InstanceMethodReferences have a read-only type reference. The
+ * {@link MethodReference#getTypeReference()} should return the value of
+ * {@link InstanceContextProvider#getTypeReference()}.
  * 
  * @author Michiel Hendriks
  */
-public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Instantiatable<Filter>
+public interface InstanceMethodReference extends MethodReference
 {
-	// filter type
-	// filter arguments = assignment block (without filter prefix)
-	// filter element expression
+	/**
+	 * @return The context on which this method should be executed.
+	 */
+	InstanceContextProvider getContext();
+
+	/**
+	 * @param context The context to set. When null the current context is
+	 *            removed. In this case this instance will behave like a normal
+	 *            MethodReference.
+	 */
+	void setContext(InstanceContextProvider context);
 }

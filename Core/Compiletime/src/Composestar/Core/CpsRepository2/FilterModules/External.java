@@ -24,11 +24,41 @@
 
 package Composestar.Core.CpsRepository2.FilterModules;
 
+import Composestar.Core.CpsRepository2.InstanceContextProvider;
+import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.References.TypeReference;
 
 /**
+ * An external filter module variable. Externals are initialized using a
+ * references method.
+ * 
  * @author Michiel Hendriks
  */
-public interface External extends FilterModuleVariable
+public interface External extends FilterModuleVariable, InstanceContextProvider, Instantiatable<External>
 {
+	/**
+	 * Sets the reference to the type of the external. The references type
+	 * should have a default constructor.
+	 * 
+	 * @param tref The type of the external
+	 * @throws NullPointerException Thrown when the type reference is null.
+	 */
+	void setTypeReference(TypeReference tref) throws NullPointerException;
 
+	/**
+	 * @return Return the reference to the method which is used to initialize
+	 *         the external.
+	 */
+	MethodReference getMethodReference();
+
+	/**
+	 * Sets the initialization method. The initialization method is optional, if
+	 * no method reference is set the default constructor of the external is
+	 * called. In this case the external behaves identical to the internal.
+	 * 
+	 * @param mref The method reference to use as initialization method.
+	 * @throws NullPointerException Thrown when the type reference is null.
+	 */
+	void setMethodReference(MethodReference mref) throws NullPointerException;
 }

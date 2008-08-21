@@ -28,7 +28,9 @@ import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 
 /**
  * Generic interface for all local filter module variables. These include
- * internals, externals, and conditions.
+ * internals, externals, and conditions. This interface should not be directly
+ * implemented. It exists solely to provide a single entry point for Internals,
+ * Externals and Condition.
  * 
  * @author Michiel Hendriks
  */

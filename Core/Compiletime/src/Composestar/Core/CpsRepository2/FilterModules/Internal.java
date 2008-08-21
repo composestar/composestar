@@ -24,11 +24,24 @@
 
 package Composestar.Core.CpsRepository2.FilterModules;
 
+import Composestar.Core.CpsRepository2.InstanceContextProvider;
+import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+import Composestar.Core.CpsRepository2.References.TypeReference;
 
 /**
+ * This represents an internal for a filter module. An internal only has a name
+ * and a type reference.
+ * 
  * @author Michiel Hendriks
  */
-public interface Internal extends FilterModuleVariable
+public interface Internal extends FilterModuleVariable, InstanceContextProvider, Instantiatable<Internal>
 {
-
+	/**
+	 * Sets the reference to the type of the internal. The references type
+	 * should have a default constructor.
+	 * 
+	 * @param tref The type of this internal
+	 * @throws NullPointerException Thrown when the type reference is null.
+	 */
+	void setTypeReference(TypeReference tref) throws NullPointerException;
 }

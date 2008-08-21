@@ -24,18 +24,40 @@
 
 package Composestar.Core.CpsRepository2.FilterModules;
 
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
- * This interface defines a filter definition in either the input or output
- * filter expression.
+ * A filter operator which has a left hand side and right hand side.
  * 
  * @author Michiel Hendriks
  */
-public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Instantiatable<Filter>
+public interface BinaryFilterOperator extends FilterExpression, Instantiatable<BinaryFilterOperator>
 {
-	// filter type
-	// filter arguments = assignment block (without filter prefix)
-	// filter element expression
+	/**
+	 * @return The expression on the left hand side of this operator.
+	 */
+	FilterExpression getLHS();
+
+	/**
+	 * Set the expression on the left hand side of the operator. After the LHS
+	 * has been set setOwner(this) is called on the expression.
+	 * 
+	 * @param expr The expression.
+	 * @throws NullPointerException Thrown when the expression is null.
+	 */
+	void setLHS(FilterExpression expr) throws NullPointerException;
+
+	/**
+	 * @return The respression on the right hand side of this operator.
+	 */
+	FilterExpression getRHS();
+
+	/**
+	 * Set the expression on the right hand side of the operator. After the RHS
+	 * has been set setOwner(this) is called on the expression.
+	 * 
+	 * @param expr The expression.
+	 * @throws NullPointerException Thrown when the expression is null.
+	 */
+	void setRHS(FilterExpression expr) throws NullPointerException;
 }

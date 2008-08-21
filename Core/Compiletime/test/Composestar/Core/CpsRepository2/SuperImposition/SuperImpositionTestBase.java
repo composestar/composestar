@@ -546,7 +546,7 @@ public abstract class SuperImpositionTestBase extends TestCase
 			return null;
 		}
 
-		public void setMethodReference(MethodReference mref) throws NullPointerException
+		public void setMethodReference(MethodReference mref) throws NullPointerException, IllegalArgumentException
 		{}
 	}
 }

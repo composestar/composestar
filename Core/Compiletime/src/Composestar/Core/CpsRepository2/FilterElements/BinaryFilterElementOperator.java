@@ -22,20 +22,21 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2.FilterElements;
 
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
- * This interface defines a filter definition in either the input or output
- * filter expression.
- * 
  * @author Michiel Hendriks
  */
-public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Instantiatable<Filter>
+public interface BinaryFilterElementOperator extends FilterElementExpression,
+		Instantiatable<BinaryFilterElementOperator>
 {
-	// filter type
-	// filter arguments = assignment block (without filter prefix)
-	// filter element expression
+	FilterElementExpression getLHS();
+
+	void setLHS(FilterElementExpression expr) throws NullPointerException;
+
+	FilterElementExpression getRHS();
+
+	void setRHS(FilterElementExpression expr) throws NullPointerException;
 }

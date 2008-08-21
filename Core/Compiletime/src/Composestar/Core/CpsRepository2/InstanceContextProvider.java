@@ -22,20 +22,20 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2;
 
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+import Composestar.Core.CpsRepository2.References.TypeReference;
 
 /**
- * This interface defines a filter definition in either the input or output
- * filter expression.
+ * Implementing interfaces provide an instance context. This is used by the
+ * InstanceMethodReference for the execution context.
  * 
  * @author Michiel Hendriks
  */
-public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Instantiatable<Filter>
+public interface InstanceContextProvider extends QualifiedRepositoryEntity
 {
-	// filter type
-	// filter arguments = assignment block (without filter prefix)
-	// filter element expression
+	/**
+	 * @return Return the reference to the type of the instance.
+	 */
+	TypeReference getTypeReference();
 }

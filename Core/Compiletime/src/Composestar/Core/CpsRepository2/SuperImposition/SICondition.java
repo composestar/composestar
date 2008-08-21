@@ -44,10 +44,12 @@ public interface SICondition extends QualifiedRepositoryEntity
 
 	/**
 	 * Sets the reference to a method that should be used to retrieve the
-	 * boolean value for this condition.
+	 * boolean value for this condition. Only static methods can be used.
 	 * 
 	 * @param mref The reference to a method to use
 	 * @throws NullPointerException Thrown when the passed reference is null
+	 * @throws IllegalArgumentException Thrown when an InstanceMethodReference
+	 *             is passed as argument.
 	 */
-	void setMethodReference(MethodReference mref) throws NullPointerException;
+	void setMethodReference(MethodReference mref) throws NullPointerException, IllegalArgumentException;
 }
