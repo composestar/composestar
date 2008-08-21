@@ -27,6 +27,9 @@ package Composestar.Core.CpsRepository2.FilterElements;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
+ * The matching expression compare statement performs a compare operation on
+ * certain message properties.
+ * 
  * @author Michiel Hendriks
  */
 public interface MECompareStatement extends MatchingExpression, Instantiatable<MECompareStatement>

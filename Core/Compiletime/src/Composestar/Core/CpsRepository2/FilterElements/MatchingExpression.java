@@ -27,11 +27,11 @@ package Composestar.Core.CpsRepository2.FilterElements;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
- * This interface should not be directly implemented.
+ * The base for all elements in the matching expression. This interface should
+ * not be directly implemented.
  * 
  * @author Michiel Hendriks
  */
 public interface MatchingExpression extends RepositoryEntity
 {
-
 }

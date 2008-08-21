@@ -27,6 +27,8 @@ package Composestar.Core.CpsRepository2.FilterElements;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
+ * Implementers of this interface return a constant value, either true or false.
+ * 
  * @author Michiel Hendriks
  */
 public interface MELiteral extends MatchingExpression, Instantiatable<MELiteral>

@@ -27,10 +27,35 @@ package Composestar.Core.CpsRepository2.FilterElements;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
+ * A matching expression operator that takes two operands.
+ * 
  * @author Michiel Hendriks
  */
 public interface BinaryMEOperator extends MatchingExpression, Instantiatable<BinaryMEOperator>
 {
-	// LHS
-	// RHS
+	/**
+	 * @return The left hand side of the operator
+	 */
+	MatchingExpression getLHS();
+
+	/**
+	 * Sets the left hand side of the operator.
+	 * 
+	 * @param expr The expression
+	 * @throws NullPointerException Thrown when the expression is null.
+	 */
+	void setLHS(MatchingExpression expr) throws NullPointerException;
+
+	/**
+	 * @return The right hand side of the operator
+	 */
+	MatchingExpression getRHS();
+
+	/**
+	 * Sets the right hand side of the operator
+	 * 
+	 * @param expr The expression
+	 * @throws NullPointerException Thrown when the expression is null.
+	 */
+	void setRHS(MatchingExpression expr) throws NullPointerException;
 }

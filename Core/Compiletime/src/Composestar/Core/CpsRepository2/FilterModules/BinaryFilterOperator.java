@@ -48,7 +48,7 @@ public interface BinaryFilterOperator extends FilterExpression, Instantiatable<B
 	void setLHS(FilterExpression expr) throws NullPointerException;
 
 	/**
-	 * @return The respression on the right hand side of this operator.
+	 * @return The expression on the right hand side of this operator.
 	 */
 	FilterExpression getRHS();
 

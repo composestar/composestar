@@ -27,9 +27,22 @@ package Composestar.Core.CpsRepository2.FilterElements;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
+ * An matching expression operator that takes only a single operand.
+ * 
  * @author Michiel Hendriks
  */
 public interface UnaryMEOperator extends MatchingExpression, Instantiatable<UnaryMEOperator>
 {
-	// operand
+	/**
+	 * @return The expression affected by this operator.
+	 */
+	MatchingExpression getOperand();
+
+	/**
+	 * Set the expression this operator affects.
+	 * 
+	 * @param expr The expression
+	 * @throws NullPointerException Thrown when the expression is null.
+	 */
+	void setOperand(MatchingExpression expr) throws NullPointerException;
 }

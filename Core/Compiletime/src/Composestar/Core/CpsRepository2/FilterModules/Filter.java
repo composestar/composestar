@@ -24,7 +24,10 @@
 
 package Composestar.Core.CpsRepository2.FilterModules;
 
+import java.util.Collection;
+
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
+import Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
@@ -35,7 +38,55 @@ import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
  */
 public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Instantiatable<Filter>
 {
-	// filter type
-	// filter arguments = assignment block (without filter prefix)
-	// filter element expression
+	/**
+	 * @return The type of this filter
+	 */
+	// FIXME change to FilterType
+	Object getType();
+
+	/**
+	 * Sets the filter type. This is the filter which will be executed when this
+	 * filter matches the given message.
+	 * 
+	 * @param type The type of this filter definition.
+	 * @throws NullPointerException Thrown when the filter type is null.
+	 */
+	// FIXME change to FilterType
+	void setType(Object type) throws NullPointerException;
+
+	// FIXME change to ???
+	/**
+	 * Add a new filter argument. It will overwrite a previous argument with the
+	 * same name.
+	 * 
+	 * @param argument The argument to add.
+	 * @throws NullPointerException Thrown when the argument is null.
+	 */
+	void addArgument(Object argument) throws NullPointerException;
+
+	// FIXME change to ???
+	Object getArgument(String name);
+
+	// FIXME change to ???
+	boolean removeArgument(Object argument) throws NullPointerException;
+
+	// FIXME change to ???
+	Object removeArgument(String name);
+
+	// FIXME change to ???
+	Collection<Object> getArguments();
+
+	/**
+	 * @return The filter element expression. A filter should always have a
+	 *         filter element expression.
+	 */
+	FilterElementExpression getElementExpression();
+
+	/**
+	 * Set the filter element expression for this filter.
+	 * 
+	 * @param expr The filter element expression.
+	 * @throws NullPointerException Thrown when the expression is null.
+	 */
+	void setElementExpression(FilterElementExpression expr) throws NullPointerException;
 }

@@ -27,16 +27,36 @@ package Composestar.Core.CpsRepository2.FilterElements;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
+ * A filter element expression operator that takes two arguments.
+ * 
  * @author Michiel Hendriks
  */
 public interface BinaryFilterElementOperator extends FilterElementExpression,
 		Instantiatable<BinaryFilterElementOperator>
 {
+	/**
+	 * @return The left hand side of the operator
+	 */
 	FilterElementExpression getLHS();
 
+	/**
+	 * Sets the left hand side of the operator.
+	 * 
+	 * @param expr The expression
+	 * @throws NullPointerException Thrown when the expression is null.
+	 */
 	void setLHS(FilterElementExpression expr) throws NullPointerException;
 
+	/**
+	 * @return The right hand side of the operator
+	 */
 	FilterElementExpression getRHS();
 
+	/**
+	 * Sets the right hand side of the operator
+	 * 
+	 * @param expr The expression
+	 * @throws NullPointerException Thrown when the expression is null.
+	 */
 	void setRHS(FilterElementExpression expr) throws NullPointerException;
 }

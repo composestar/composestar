@@ -27,10 +27,25 @@ package Composestar.Core.CpsRepository2.FilterElements;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
+ * A filter element expression contains at least one FilterElement.
+ * 
  * @author Michiel Hendriks
  */
 public interface FilterElement extends FilterElementExpression, Instantiatable<FilterElement>
 {
-	// matching expression
-	// assignment part
+	/**
+	 * @return The matching expression for this filter element.
+	 */
+	MatchingExpression getMatchingExpression();
+
+	/**
+	 * Sets the matching expression for this filter element.
+	 * 
+	 * @param expr The matching expression.
+	 * @throws NullPointerException Thrown when the expression is null.
+	 */
+	void setMatchingExpression(MatchingExpression expr) throws NullPointerException;
+
+	// FIXME assignment part
+
 }

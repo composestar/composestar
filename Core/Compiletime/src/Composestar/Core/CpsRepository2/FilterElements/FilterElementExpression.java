@@ -27,7 +27,8 @@ package Composestar.Core.CpsRepository2.FilterElements;
 import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
- * This interface should not be directly implemented.
+ * Base interface for all elements that can be part of a filter element
+ * expression. This interface should not be directly implemented.
  * 
  * @author Michiel Hendriks
  */

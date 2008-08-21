@@ -24,12 +24,27 @@
 
 package Composestar.Core.CpsRepository2.FilterElements;
 
+import Composestar.Core.CpsRepository2.FilterModules.Condition;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
+ * This matching expression element uses the result of a condition defined in
+ * the filter module.
+ * 
  * @author Michiel Hendriks
  */
-public interface MEVariable extends MatchingExpression, Instantiatable<MEVariable>
+public interface MECondition extends MatchingExpression, Instantiatable<MECondition>
 {
-	// FilterModule.Condition
+	/**
+	 * Sets the filter module condition.
+	 * 
+	 * @param cond The condition to associate
+	 * @throws NullPointerException Thrown when the condition is null.
+	 */
+	void setCondition(Condition cond) throws NullPointerException;
+
+	/**
+	 * @return The associated condition
+	 */
+	Condition getCondition();
 }
