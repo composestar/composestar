@@ -51,7 +51,14 @@ public interface Instantiatable<T>
 	 * @param instantiator The visitor which creates the actual instanses when
 	 *            needed.
 	 * @return The new instance according to the rules of the instantiator, or
-	 *         null when no new instance could be created.
+	 *         null when no new instance could be created. Null should not be
+	 *         returned directly by the implementation, the null should only be
+	 *         returned if the context returned null. If the implementation
+	 *         should never be instantiated an UnsupportedOperationException
+	 *         exception should be thrown instead.
+	 * @throws UnsupportedOperationException In extreme exceptions an
+	 *             implementation may refuse to the instantiatable. In this case
+	 *             it should throw this exception.
 	 */
-	T newInstance(Instantiator instantiator);
+	T newInstance(Instantiator instantiator) throws UnsupportedOperationException;
 }

@@ -27,7 +27,10 @@ package Composestar.Core.CpsRepository2.FilterModules;
 import java.util.Collection;
 
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.FilterElements.CanonVariable;
 import Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression;
+import Composestar.Core.CpsRepository2.Filters.FilterType;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
@@ -41,8 +44,7 @@ public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Ins
 	/**
 	 * @return The type of this filter
 	 */
-	// FIXME change to FilterType
-	Object getType();
+	FilterType getType();
 
 	/**
 	 * Sets the filter type. This is the filter which will be executed when this
@@ -51,30 +53,45 @@ public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Ins
 	 * @param type The type of this filter definition.
 	 * @throws NullPointerException Thrown when the filter type is null.
 	 */
-	// FIXME change to FilterType
-	void setType(Object type) throws NullPointerException;
+	void setType(FilterType type) throws NullPointerException;
 
-	// FIXME change to ???
 	/**
 	 * Add a new filter argument. It will overwrite a previous argument with the
 	 * same name.
 	 * 
 	 * @param argument The argument to add.
+	 * @return The argument that was replaced by the current argument, or null
+	 *         of no argument was replaced.
 	 * @throws NullPointerException Thrown when the argument is null.
+	 * @throws IllegalArgumentException Thrown when the assignment assigns a
+	 *             non-filter variable.
 	 */
-	void addArgument(Object argument) throws NullPointerException;
+	CanonAssignment addArgument(CanonAssignment argument) throws NullPointerException, IllegalArgumentException;
 
-	// FIXME change to ???
-	Object getArgument(String name);
+	/**
+	 * Remove a filter argument
+	 * 
+	 * @param argument The argument to remove
+	 * @return True if the argument was removed.
+	 * @throws NullPointerException Thrown when the passed argument is null.
+	 */
+	boolean removeArgument(CanonAssignment argument) throws NullPointerException;
 
-	// FIXME change to ???
-	boolean removeArgument(Object argument) throws NullPointerException;
+	/**
+	 * Retrieves an argument by the name.
+	 * 
+	 * @param name The name of the argument to retrieve, the name does not have
+	 *            to be prefixed with {@link CanonVariable#FILTER_PREFIX}.
+	 * @return The argument with the given name, or null if no argument with
+	 *         that name could be found.
+	 */
+	CanonAssignment getArgument(String name);
 
-	// FIXME change to ???
-	Object removeArgument(String name);
-
-	// FIXME change to ???
-	Collection<Object> getArguments();
+	/**
+	 * @return The filter arguments. An empty collection is returned when there
+	 *         no arguments where defined. The collection is read-only.
+	 */
+	Collection<CanonAssignment> getArguments();
 
 	/**
 	 * @return The filter element expression. A filter should always have a

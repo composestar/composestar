@@ -24,8 +24,19 @@
 
 package Composestar.Core.CpsRepository2.Instantiatable;
 
+import Composestar.Core.CpsRepository2.FilterElements.BinaryFilterElementOperator;
+import Composestar.Core.CpsRepository2.FilterElements.BinaryMEOperator;
+import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
+import Composestar.Core.CpsRepository2.FilterElements.CanonValue;
+import Composestar.Core.CpsRepository2.FilterElements.FilterElement;
+import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
+import Composestar.Core.CpsRepository2.FilterElements.MECondition;
+import Composestar.Core.CpsRepository2.FilterElements.MELiteral;
+import Composestar.Core.CpsRepository2.FilterElements.UnaryMEOperator;
+import Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator;
 import Composestar.Core.CpsRepository2.FilterModules.Condition;
 import Composestar.Core.CpsRepository2.FilterModules.External;
+import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.FilterModules.Internal;
 
@@ -37,11 +48,33 @@ import Composestar.Core.CpsRepository2.FilterModules.Internal;
  */
 public interface Instantiator
 {
+	BinaryFilterElementOperator instantiate(BinaryFilterElementOperator base);
+
+	BinaryFilterOperator instantiate(BinaryFilterOperator base);
+
+	BinaryMEOperator instantiate(BinaryMEOperator base);
+
+	CanonAssignment instantiate(CanonAssignment base);
+
+	CanonValue instantiate(CanonValue base);
+
+	Condition instantiate(Condition base);
+
+	External instantiate(External base);
+
+	Filter instantiate(Filter base);
+
+	FilterElement instantiate(FilterElement base);
+
 	FilterModule instantiate(FilterModule base);
 
 	Internal instantiate(Internal base);
 
-	External instantiate(External base);
+	MECompareStatement instantiate(MECompareStatement base);
 
-	Condition instantiate(Condition base);
+	MECondition instantiate(MECondition base);
+
+	MELiteral instantiate(MELiteral base);
+
+	UnaryMEOperator instantiate(UnaryMEOperator base);
 }

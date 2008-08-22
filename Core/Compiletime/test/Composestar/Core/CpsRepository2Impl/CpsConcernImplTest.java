@@ -308,7 +308,7 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		public void setOutputFilterExpression(FilterExpression expr)
 		{}
 
-		public FilterModule newInstance(Instantiator context)
+		public FilterModule newInstance(Instantiator context) throws UnsupportedOperationException
 		{
 			return null;
 		}

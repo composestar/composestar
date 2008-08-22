@@ -22,44 +22,40 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.References;
+package Composestar.Core.CpsRepository2.Filters;
 
 import Composestar.Core.CpsRepository2.JoinPointContextArgument;
-import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
- * A reference to a LAMA MethodInfo. It also contains a reference to a LAMA
- * Type.
+ * The action of a filter type.
  * 
  * @author Michiel Hendriks
  */
-public interface MethodReference extends Reference<MethodInfo>
+public interface FilterAction extends RepositoryEntity
 {
-	/**
-	 * @return Return the reference to the type that contains the method to
-	 *         which this method reference refers to.
-	 */
-	TypeReference getTypeReference();
+	public enum FlowBehavior
+	{
+		CONTINUE, EXIT, RETURN
+	}
 
 	/**
-	 * Set the reference to the type that should contain the referred to method.
-	 * Calling this method will invalidate the resolved method reference.
-	 * 
-	 * @param tref
-	 * @throws NullPointerException Thrown when the type reference is null.
+	 * @return The name of the filter action
 	 */
-	void setTypeReference(TypeReference tref) throws NullPointerException;
+	String getName();
 
 	/**
-	 * @return The value of the desired join point context. This us used to
-	 *         resolve the method reference.
+	 * @return the flow behavior of the filter
 	 */
-	JoinPointContextArgument getJoinPointContextArgument();
+	FlowBehavior getFlowBehavior();
 
 	/**
-	 * Set the join point context argument value.
-	 * 
-	 * @param jpca
+	 * @return The type of join point context this filter action needs.
 	 */
-	void setJoinPointContextArgument(JoinPointContextArgument jpca);
+	JoinPointContextArgument needsJoinPointContext();
+
+	/**
+	 * @return The resource operation sequence of this filter action.
+	 */
+	String getResourceOperations();
 }

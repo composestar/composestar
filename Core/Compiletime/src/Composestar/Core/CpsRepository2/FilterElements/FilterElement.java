@@ -24,6 +24,8 @@
 
 package Composestar.Core.CpsRepository2.FilterElements;
 
+import java.util.Collection;
+
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
@@ -46,6 +48,40 @@ public interface FilterElement extends FilterElementExpression, Instantiatable<F
 	 */
 	void setMatchingExpression(MatchingExpression expr) throws NullPointerException;
 
-	// FIXME assignment part
+	/**
+	 * Add a new assignment to this filter element. Variables can only be
+	 * assigned a new value once in a assignment block. The last assignment made
+	 * will be the effective assignment.
+	 * 
+	 * @param ass The assignment to add.
+	 * @return The assignment that was replaced by the new assignment, or null
+	 *         if no previous assignment was replace.
+	 * @throws NullPointerException Thrown when the assignment is null.
+	 */
+	CanonAssignment addAssignment(CanonAssignment ass) throws NullPointerException;
+
+	/**
+	 * Remove the passed assignment from the assignment block.
+	 * 
+	 * @param ass The assignment to remove
+	 * @return True if the assignment was removed
+	 * @throws NullPointerException Thrown when the passed assignment is null.
+	 */
+	boolean removeAssignment(CanonAssignment ass) throws NullPointerException;
+
+	/**
+	 * Retrieves an assignment by the variable name.
+	 * 
+	 * @param name The name of the variable who's assignment to retrieve.
+	 * @return The assignment with the given variable, or null if no
+	 *         assignmentfor that variable could be found..
+	 */
+	CanonAssignment getArgument(String name);
+
+	/**
+	 * @return The assignments. If no assignments where defined an empty
+	 *         collection is returned. The collection is read-only.
+	 */
+	Collection<CanonAssignment> getAssignments();
 
 }
