@@ -36,42 +36,42 @@ public interface CanonVariable extends CanonValue
 	/**
 	 * The prefix for all message properties.
 	 */
-	public static final String MESSAGE_PREFIX = "message";
+	static final String MESSAGE_PREFIX = "message";
 
 	/**
 	 * The predefined message.target property name.
 	 */
-	public static final String TARGET = "target";
+	static final String TARGET = "target";
 
 	/**
 	 * The predefined message.selector property name.
 	 */
-	public static final String SELECTOR = "selector";
+	static final String SELECTOR = "selector";
 
 	/**
 	 * The predefined message.self property name.
 	 */
-	public static final String SELF = "self";
+	static final String SELF = "self";
 
 	/**
 	 * The predefined message.sender property name. (read-only)
 	 */
-	public static final String SENDER = "sender";
+	static final String SENDER = "sender";
 
 	/**
 	 * The predefined message.server property name.
 	 */
-	public static final String SERVER = "server";
+	static final String SERVER = "server";
 
 	/**
 	 * The predefined inner property name. (read-only)
 	 */
-	public static final String INNER = "inner";
+	static final String INNER = "inner";
 
 	/**
 	 * The prefix for filter properties.
 	 */
-	public static final String FILTER_PREFIX = "filter";
+	static final String FILTER_PREFIX = "filter";
 
 	/**
 	 * @return The full variable name. This is a concatenation of the base and

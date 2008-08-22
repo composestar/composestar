@@ -32,9 +32,9 @@ import java.util.Map;
 import java.util.Set;
 
 import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding;
-import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint;
+import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.Selector;
 import Composestar.Core.CpsRepository2.SuperImposition.SuperImposition;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
