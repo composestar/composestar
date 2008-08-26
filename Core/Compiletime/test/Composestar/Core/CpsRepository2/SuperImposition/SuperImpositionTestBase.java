@@ -503,10 +503,7 @@ public abstract class SuperImpositionTestBase extends TestCase
 	{
 		private static final long serialVersionUID = -7463428959390953212L;
 
-		public void addArgument(FilterModuleReference fmRef) throws NullPointerException
-		{}
-
-		public List<FilterModuleReference> getArguments()
+		public List<ConstraintValue> getArguments()
 		{
 			return null;
 		}
@@ -515,6 +512,9 @@ public abstract class SuperImpositionTestBase extends TestCase
 		{
 			return null;
 		}
+
+		public void setArguments(List<ConstraintValue> args) throws NullPointerException, IllegalArgumentException
+		{}
 	}
 
 	protected static class DummySel extends AbstractQualifiedRepositoryEntity implements Selector
