@@ -25,6 +25,11 @@
 package Composestar.Core.CpsRepository2.SuperImposition;
 
 /**
+ * A constraint value that uses a superimposition condition for its value. Only
+ * a few constraint types accept this value and only for a select places. It can
+ * be used to define conditional filter module execution. Only local (in this
+ * superimposition block) conditions can be references.
+ * 
  * @author Michiel Hendriks
  */
 public interface ConditionConstraintValue extends ConstraintValue

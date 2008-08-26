@@ -27,6 +27,10 @@ package Composestar.Core.CpsRepository2.SuperImposition;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
 /**
+ * A constraint value that references either a filter module in this concern or
+ * a filter module in an external concern. The linked reference needs to be
+ * resolved.
+ * 
  * @author Michiel Hendriks
  */
 public interface FilterModuleConstraintValue extends ConstraintValue

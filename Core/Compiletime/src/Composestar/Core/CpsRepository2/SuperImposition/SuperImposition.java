@@ -54,12 +54,12 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * Conditions are considered in the unqiueness test. When the selector is
 	 * added setOwner(this) is called on the newly added selector.
 	 * 
-	 * @param newSel The selector to add.
+	 * @param sel The selector to add.
 	 * @return True when the selector was added or false when it was not added.
 	 * @throws NullPointerException Thrown when the provided selector is null
 	 * @see #addCondition(SICondition)
 	 */
-	boolean addSelector(Selector newSel) throws NullPointerException;
+	boolean addSelector(Selector sel) throws NullPointerException;
 
 	/**
 	 * Remove the provided selector
@@ -75,22 +75,22 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	/**
 	 * Remove a selector by its name.
 	 * 
-	 * @param name The name of the selector to remove
+	 * @param selName The name of the selector to remove
 	 * @return The removed selector or null when no selector with the given name
 	 *         was found.
 	 * @see #removeSelector(Selector)
 	 */
-	Selector removeSelector(String name);
+	Selector removeSelector(String selName);
 
 	/**
 	 * Get a selector by its name (not the fully qualified name).
 	 * 
-	 * @param name The name of the selector
+	 * @param selName The name of the selector
 	 * @return the selector instance with the given name or null when no such
 	 *         selector exists
 	 * @see #getSelectors()
 	 */
-	Selector getSelector(String name);
+	Selector getSelector(String selName);
 
 	/**
 	 * @return All registered selectors. If no selectors were defined an empty
@@ -103,21 +103,21 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * Add a filter module binding. setOwner(this) is called on the filter
 	 * module binding after is had been added.
 	 * 
-	 * @param fmb The filter module binding to add
+	 * @param binding The filter module binding to add
 	 * @throws NullPointerException Thrown when the provided filter module
 	 *             binding is null
 	 */
-	void addFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException;
+	void addFilterModuleBinding(FilterModuleBinding binding) throws NullPointerException;
 
 	/**
 	 * Remove a previously added filter module binding
 	 * 
-	 * @param fmb The filter module binding to remove
+	 * @param binding The filter module binding to remove
 	 * @return True when the filter module binding was removed
 	 * @throws NullPointerException Thrown when the provided filter module
 	 *             binding is null
 	 */
-	boolean removeFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException;
+	boolean removeFilterModuleBinding(FilterModuleBinding binding) throws NullPointerException;
 
 	/**
 	 * @return The set of filter module bindings. An empty set is returned when
@@ -130,20 +130,20 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * Add a annotation binding to this instances. After the binding had been
 	 * added setOwner(this) is called.
 	 * 
-	 * @param ab The annotation binding to add
+	 * @param binding The annotation binding to add
 	 * @throws NullPointerException Thrown when the annotation binding is null
 	 */
-	void addAnnotationBinding(AnnotationBinding ab) throws NullPointerException;
+	void addAnnotationBinding(AnnotationBinding binding) throws NullPointerException;
 
 	/**
 	 * Removes an annotation binding.
 	 * 
-	 * @param ab The annotation binding to remove
+	 * @param binding The annotation binding to remove
 	 * @return True when the binding was removed or false when it was not
 	 *         present
 	 * @throws NullPointerException Thrown when the binding instance is null
 	 */
-	boolean removeAnnotationBinding(AnnotationBinding ab) throws NullPointerException;
+	boolean removeAnnotationBinding(AnnotationBinding binding) throws NullPointerException;
 
 	/**
 	 * @return The set of annotation bindings, or an empty set when there are no
@@ -158,20 +158,20 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * associations with superimposition conditions. After the constraint has
 	 * been added setOwner(this) is called on the constaint instance.
 	 * 
-	 * @param fmc The constraint to add
+	 * @param constraint The constraint to add
 	 * @throws NullPointerException Thrown when the constraint is null
 	 */
-	void addFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException;
+	void addFilterModuleConstraint(FilterModuleConstraint constraint) throws NullPointerException;
 
 	/**
 	 * Remove a filter module constraint.
 	 * 
-	 * @param fmc The constaint to remove
+	 * @param constraint The constaint to remove
 	 * @return True when the constraint was removed, or false when it was not
 	 *         found and thus not removed.
 	 * @throws NullPointerException Thrown when the constraint is null
 	 */
-	boolean removeFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException;
+	boolean removeFilterModuleConstraint(FilterModuleConstraint constraint) throws NullPointerException;
 
 	/**
 	 * @return All registered filter module constraints in the superimposition
@@ -186,40 +186,40 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * Selectors and Conditions are considered in the unqiueness test. After the
 	 * condition is added setOwner(this) is called on the condition.
 	 * 
-	 * @param cond The condition to add.
+	 * @param condition The condition to add.
 	 * @return True when the condition was added or false when there was a
 	 *         naming collision.
 	 * @throws NullPointerException Thrown when the provided condition is null
 	 * @see #addSelector(Selector)
 	 */
-	boolean addCondition(SICondition cond) throws NullPointerException;
+	boolean addCondition(SICondition condition) throws NullPointerException;
 
 	/**
 	 * Remove a given condition from this superimposition. Removing a condition
 	 * does not remove associations with the condition from other entities.
 	 * 
-	 * @param cond The condition to remove
+	 * @param condition The condition to remove
 	 * @return True when the condition was removed or false when the condition
 	 *         was not found.
 	 * @throws NullPointerException Thrown when the provided condition is null
 	 */
-	boolean removeCondition(SICondition cond) throws NullPointerException;
+	boolean removeCondition(SICondition condition) throws NullPointerException;
 
 	/**
 	 * Remove a condition by it's name.
 	 * 
-	 * @param name The name of the condition to remove
+	 * @param conditionName The name of the condition to remove
 	 * @return The condition that was removed or null when no condition was
 	 *         removed.
 	 */
-	SICondition removeCondition(String name);
+	SICondition removeCondition(String conditionName);
 
 	/**
-	 * @param name The name of the condition to return.
+	 * @param conditionName The name of the condition to return.
 	 * @return The condition with the given name, returns null when no such
 	 *         condition exists.
 	 */
-	SICondition getCondition(String name);
+	SICondition getCondition(String conditionName);
 
 	/**
 	 * @return The set of registered conditions, or an empty set when no

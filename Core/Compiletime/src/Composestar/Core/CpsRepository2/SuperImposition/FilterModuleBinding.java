@@ -57,24 +57,15 @@ public interface FilterModuleBinding extends RepositoryEntity
 	 * Sets the reference to a filter module which should be bound to a
 	 * selector.
 	 * 
-	 * @param fmRef The filter module reference to use
+	 * @param ref The filter module reference to use
 	 * @throws NullPointerException Thrown when the reference is null
 	 */
-	void setFilterModuleReference(FilterModuleReference fmRef) throws NullPointerException;
+	void setFilterModuleReference(FilterModuleReference ref) throws NullPointerException;
 
 	/**
 	 * @return The filter module reference
 	 */
 	FilterModuleReference getFilterModuleReference();
-
-	/**
-	 * Add a new parameter value to this binding. It will be added to the end of
-	 * the parameter list.
-	 * 
-	 * @param value The value to add
-	 * @throws NullPointerException Thrown when the value is null
-	 */
-	void addParameterValue(FMParameterValue<?> value) throws NullPointerException;
 
 	/**
 	 * @return The list of parameter values in order of definition. If no values

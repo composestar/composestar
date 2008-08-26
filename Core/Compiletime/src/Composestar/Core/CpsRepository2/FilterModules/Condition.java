@@ -43,8 +43,8 @@ public interface Condition extends FilterModuleVariable, Instantiatable<Conditio
 	/**
 	 * Sets the method to associate with this condition.
 	 * 
-	 * @param mref A reference to the method to use.
+	 * @param ref A reference to the method to use.
 	 * @throws NullPointerException Thrown when the type reference is null.
 	 */
-	void setMethodReference(MethodReference mref) throws NullPointerException;
+	void setMethodReference(MethodReference ref) throws NullPointerException;
 }

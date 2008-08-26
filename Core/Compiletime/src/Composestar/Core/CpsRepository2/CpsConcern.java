@@ -50,23 +50,23 @@ public interface CpsConcern extends Concern
 	 * filter module is added setOwner(this) will be called on the filter module
 	 * instance.
 	 * 
-	 * @param newFm The filter module to add.
+	 * @param fm The filter module to add.
 	 * @return True when the filter module was added. False is returned when
 	 *         there was already a filter module with that name registered.
 	 * @throws NullPointerException Thrown when the provided filter module is
 	 *             null.
 	 */
-	boolean addFilterModule(FilterModule newFm) throws NullPointerException;
+	boolean addFilterModule(FilterModule fm) throws NullPointerException;
 
 	/**
 	 * Retrieves a filter module with a given name.
 	 * 
-	 * @param name The name of the filter module, this is not a fully qualified
-	 *            name.
+	 * @param fmName The name of the filter module, this is not a fully
+	 *            qualified name.
 	 * @return The filter module instance or null when no filter module with
 	 *         that name could be found.
 	 */
-	FilterModule getFilterModule(String name);
+	FilterModule getFilterModule(String fmName);
 
 	/**
 	 * Remove a filter module from this concern

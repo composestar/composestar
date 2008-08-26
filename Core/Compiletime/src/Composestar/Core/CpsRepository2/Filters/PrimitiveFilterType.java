@@ -24,16 +24,37 @@
 
 package Composestar.Core.CpsRepository2.Filters;
 
-import Composestar.Core.CpsRepository2.RepositoryEntity;
 
 /**
- * Generic interface for all filter types, which includes the primitive filter
- * types and the filter modules which can be used as filter type.
+ * Defines the filter type.
  * 
  * @author Michiel Hendriks
  */
-public interface FilterType extends RepositoryEntity
+// FIXME reject action?
+public interface PrimitiveFilterType extends FilterType
 {
-	// throws something
-	// void isValidArgument(CanonAssignment arg);
+	/**
+	 * @return The name of this filter type.
+	 */
+	String getName();
+
+	/**
+	 * @return The filter action for the accept-call
+	 */
+	FilterAction getAcceptCallAction();
+
+	/**
+	 * @return The filter action for the reject-call
+	 */
+	FilterAction getRejectCallAction();
+
+	/**
+	 * @return The filter action for the accept-return
+	 */
+	FilterAction getAcceptReturnAction();
+
+	/**
+	 * @return The filter action for the reject-return
+	 */
+	FilterAction getRejectReturnAction();
 }

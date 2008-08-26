@@ -29,6 +29,7 @@ import java.util.List;
 
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2.FMParams.FMParameter;
+import Composestar.Core.CpsRepository2.Filters.FilterType;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
@@ -42,10 +43,12 @@ import Composestar.Core.CpsRepository2.References.FilterModuleReference;
  * 
  * @author Michiel Hendriks
  */
-public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleReference, Instantiatable<FilterModule>
+public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleReference, FilterType,
+		Instantiatable<FilterModule>
 {
 	/**
-	 * @return True if this filter module has filter module parameters.
+	 * @return True if this filter module has filter module parameters. This is
+	 *         always
 	 */
 	boolean hasParameters();
 
@@ -69,11 +72,11 @@ public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleRef
 	/**
 	 * Get a parameter by its name.
 	 * 
-	 * @param name The name of the requested parameter.
+	 * @param paramName The name of the requested parameter.
 	 * @return The parameter with the requested name or null when no parameter
 	 *         with that name exists.
 	 */
-	FMParameter getParameter(String name);
+	FMParameter getParameter(String paramName);
 
 	/**
 	 * Add a new variable to this filter module. The name of the variable must
@@ -83,7 +86,7 @@ public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleRef
 	 * 
 	 * @param var The internal to add.
 	 * @return True if the variable was added, or false when its name is not
-	 *         unqiue.
+	 *         unique.
 	 * @throws NullPointerException Thrown when the variable is null.
 	 */
 	boolean addVariable(FilterModuleVariable var) throws NullPointerException;
@@ -91,14 +94,14 @@ public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleRef
 	/**
 	 * Retrieves an variable by a name.
 	 * 
-	 * @param name The name of the requested variable
+	 * @param varName The name of the requested variable
 	 * @return The variable with the given name, or null if no variable was
 	 *         found.
 	 * @see #getInternal(String)
 	 * @see #getExternal(String)
 	 * @see #getCondition(String)
 	 */
-	FilterModuleVariable getVariable(String name);
+	FilterModuleVariable getVariable(String varName);
 
 	/**
 	 * @return A read-only list of all variables in this filter module.
@@ -112,34 +115,34 @@ public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleRef
 	 * Just like {@link #getVariable(String)}, except that it will only return
 	 * an Internal.
 	 * 
-	 * @param name The name of the internal
+	 * @param internalName The name of the internal
 	 * @return The internal instance or null when no internal with that name was
 	 *         found.
 	 * @see #getVariable(String)
 	 */
-	Internal getInternal(String name);
+	Internal getInternal(String internalName);
 
 	/**
 	 * Just like {@link #getVariable(String)}, except that it will only return
 	 * an External.
 	 * 
-	 * @param name The name of the external
+	 * @param externalName The name of the external
 	 * @return The external instance or null when no internal with that name was
 	 *         found.
 	 * @see #getVariable(String)
 	 */
-	External getExternal(String name);
+	External getExternal(String externalName);
 
 	/**
 	 * Just like {@link #getVariable(String)}, except that it will only return
 	 * an Condition.
 	 * 
-	 * @param name The name of the condition
+	 * @param conditionName The name of the condition
 	 * @return The condition instance or null when no internal with that name
 	 *         was found.
 	 * @see #getVariable(String)
 	 */
-	Condition getCondition(String name);
+	Condition getCondition(String conditionName);
 
 	/**
 	 * Removes the given variable from the filter module. This does not unset
@@ -155,10 +158,10 @@ public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleRef
 	/**
 	 * Removes a variable from the filter module by its name.
 	 * 
-	 * @param name The name of the variable to remove.
+	 * @param varName The name of the variable to remove.
 	 * @return The removed variable, or null if no variable was removed.
 	 */
-	FilterModuleVariable removeVariable(String name);
+	FilterModuleVariable removeVariable(String varName);
 
 	/**
 	 * Sets the input filter expression. setOwner(this) is called after the

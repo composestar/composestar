@@ -40,8 +40,8 @@ public interface Internal extends FilterModuleVariable, InstanceContextProvider,
 	 * Sets the reference to the type of the internal. The references type
 	 * should have a default constructor.
 	 * 
-	 * @param tref The type of this internal
+	 * @param ref The type of this internal
 	 * @throws NullPointerException Thrown when the type reference is null.
 	 */
-	void setTypeReference(TypeReference tref) throws NullPointerException;
+	void setTypeReference(TypeReference ref) throws NullPointerException;
 }

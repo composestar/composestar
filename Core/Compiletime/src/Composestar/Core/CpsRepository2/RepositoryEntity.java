@@ -36,7 +36,7 @@ import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 public interface RepositoryEntity extends Serializable
 {
 	/**
-	 * Assign source information with this entity
+	 * Assign source information with this entity.
 	 * 
 	 * @param srcInfo
 	 */
@@ -61,7 +61,7 @@ public interface RepositoryEntity extends Serializable
 	 * owner was set can be dangerous the previous owner could still reference
 	 * to this entity in its internal state.
 	 * 
-	 * @param newOwner
+	 * @param newOwner The new owner of this object.
 	 * @return the previous owner or null if the entity was not owned before.
 	 */
 	RepositoryEntity setOwner(RepositoryEntity newOwner);

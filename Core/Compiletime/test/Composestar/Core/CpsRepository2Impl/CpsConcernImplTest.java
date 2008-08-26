@@ -37,9 +37,9 @@ import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
 import Composestar.Core.CpsRepository2.FilterModules.Internal;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding;
-import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint;
+import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 import Composestar.Core.CpsRepository2.SuperImposition.Selector;
 import Composestar.Core.CpsRepository2.SuperImposition.SuperImposition;
 

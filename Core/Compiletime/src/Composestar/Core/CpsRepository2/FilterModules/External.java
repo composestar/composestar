@@ -41,10 +41,10 @@ public interface External extends FilterModuleVariable, InstanceContextProvider,
 	 * Sets the reference to the type of the external. The references type
 	 * should have a default constructor.
 	 * 
-	 * @param tref The type of the external
+	 * @param ref The type of the external
 	 * @throws NullPointerException Thrown when the type reference is null.
 	 */
-	void setTypeReference(TypeReference tref) throws NullPointerException;
+	void setTypeReference(TypeReference ref) throws NullPointerException;
 
 	/**
 	 * @return Return the reference to the method which is used to initialize
@@ -57,8 +57,8 @@ public interface External extends FilterModuleVariable, InstanceContextProvider,
 	 * no method reference is set the default constructor of the external is
 	 * called. In this case the external behaves identical to the internal.
 	 * 
-	 * @param mref The method reference to use as initialization method.
+	 * @param ref The method reference to use as initialization method.
 	 * @throws NullPointerException Thrown when the type reference is null.
 	 */
-	void setMethodReference(MethodReference mref) throws NullPointerException;
+	void setMethodReference(MethodReference ref) throws NullPointerException;
 }
