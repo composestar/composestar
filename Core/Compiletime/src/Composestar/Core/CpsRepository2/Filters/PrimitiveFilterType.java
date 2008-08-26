@@ -24,7 +24,6 @@
 
 package Composestar.Core.CpsRepository2.Filters;
 
-
 /**
  * Defines the filter type.
  * 
@@ -33,11 +32,6 @@ package Composestar.Core.CpsRepository2.Filters;
 // FIXME reject action?
 public interface PrimitiveFilterType extends FilterType
 {
-	/**
-	 * @return The name of this filter type.
-	 */
-	String getName();
-
 	/**
 	 * @return The filter action for the accept-call
 	 */

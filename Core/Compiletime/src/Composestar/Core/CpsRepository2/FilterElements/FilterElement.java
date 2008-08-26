@@ -53,30 +53,31 @@ public interface FilterElement extends FilterElementExpression, Instantiatable<F
 	 * assigned a new value once in a assignment block. The last assignment made
 	 * will be the effective assignment.
 	 * 
-	 * @param ass The assignment to add.
+	 * @param assignment The assignment to add.
 	 * @return The assignment that was replaced by the new assignment, or null
 	 *         if no previous assignment was replace.
 	 * @throws NullPointerException Thrown when the assignment is null.
 	 */
-	CanonAssignment addAssignment(CanonAssignment ass) throws NullPointerException;
+	CanonAssignment addAssignment(CanonAssignment assignment) throws NullPointerException;
 
 	/**
 	 * Remove the passed assignment from the assignment block.
 	 * 
-	 * @param ass The assignment to remove
+	 * @param assignment The assignment to remove
 	 * @return True if the assignment was removed
 	 * @throws NullPointerException Thrown when the passed assignment is null.
 	 */
-	boolean removeAssignment(CanonAssignment ass) throws NullPointerException;
+	boolean removeAssignment(CanonAssignment assignment) throws NullPointerException;
 
 	/**
 	 * Retrieves an assignment by the variable name.
 	 * 
-	 * @param name The name of the variable who's assignment to retrieve.
+	 * @param assignmentName The name of the variable who's assignment to
+	 *            retrieve.
 	 * @return The assignment with the given variable, or null if no
 	 *         assignmentfor that variable could be found..
 	 */
-	CanonAssignment getArgument(String name);
+	CanonAssignment getAssignment(String assignmentName);
 
 	/**
 	 * @return The assignments. If no assignments where defined an empty

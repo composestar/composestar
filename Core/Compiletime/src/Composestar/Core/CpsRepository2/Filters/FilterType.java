@@ -34,6 +34,12 @@ import Composestar.Core.CpsRepository2.RepositoryEntity;
  */
 public interface FilterType extends RepositoryEntity
 {
-	// throws something
-	// void isValidArgument(CanonAssignment arg);
+	/**
+	 * @return The full name of this filter type. For FilterModuleFilterTypes
+	 *         this name would be equal to the fully qualified name of the
+	 *         filter module.
+	 */
+	String getFilterName();
+
+	// void isValidArgument(CanonAssignment arg) throws something;
 }

@@ -34,6 +34,33 @@ import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
  */
 public interface MECompareStatement extends MatchingExpression, Instantiatable<MECompareStatement>
 {
-	// LHS -> canon variable
-	// RHS -> ...
+	/**
+	 * @return The variable which is being checked.
+	 */
+	CanonVariable getLHS();
+
+	/**
+	 * Set the variable on the left hand side
+	 * 
+	 * @param var The variable
+	 * @throws NullPointerException Thrown when the variable is null.
+	 */
+	void setLHS(CanonVariable var) throws NullPointerException;
+
+	/**
+	 * @return The value on the right hand side.
+	 */
+	CanonValue getRHS();
+
+	/**
+	 * Sets the value with which the variable on the left hand side is compared.
+	 * Before this function can be called the left hand side value must be set.
+	 * 
+	 * @param value The value
+	 * @throws NullPointerException Thrown when the value is null.
+	 * @throws IllegalArgumentException Thrown when the value type is not
+	 *             compatible with the variable of the left hand side.
+	 * @throws IllegalStateException Thrown when the left hand side was not set.
+	 */
+	void setRHS(CanonValue value) throws NullPointerException, IllegalArgumentException, IllegalStateException;
 }
