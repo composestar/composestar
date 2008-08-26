@@ -29,7 +29,6 @@ import java.util.List;
 
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
 import Composestar.Core.CpsRepository2.FMParams.FMParameter;
-import Composestar.Core.CpsRepository2.Filters.FilterType;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 
@@ -39,12 +38,12 @@ import Composestar.Core.CpsRepository2.References.FilterModuleReference;
  * module should implement the "Instantiatable" interface. A new instance of a
  * defined filter module is created when it has parameters and it is
  * superimposed. An instance is also created during in the runtime for every
- * concern that is instantiated.
+ * concern that is instantiated. A filter module can also be used as a filter
+ * type.
  * 
  * @author Michiel Hendriks
  */
-public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleReference, FilterType,
-		Instantiatable<FilterModule>
+public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleReference, Instantiatable<FilterModule>
 {
 	/**
 	 * @return True if this filter module has filter module parameters. This is
