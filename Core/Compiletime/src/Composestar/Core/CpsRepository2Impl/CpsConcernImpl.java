@@ -69,8 +69,9 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.CpsConcern#addFilterModule(Composestar.Core.CpsRepository2.FilterModules.FilterModule)
+	 * @see
+	 * Composestar.Core.CpsRepository2.CpsConcern#addFilterModule(Composestar
+	 * .Core.CpsRepository2.FilterModules.FilterModule)
 	 */
 	public boolean addFilterModule(FilterModule newFm) throws NullPointerException
 	{
@@ -89,8 +90,9 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.CpsConcern#getFilterModule(java.lang.String)
+	 * @see
+	 * Composestar.Core.CpsRepository2.CpsConcern#getFilterModule(java.lang.
+	 * String)
 	 */
 	public FilterModule getFilterModule(String name)
 	{
@@ -103,7 +105,6 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.CpsRepository2.CpsConcern#getFilterModules()
 	 */
 	public Collection<FilterModule> getFilterModules()
@@ -113,7 +114,6 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.CpsRepository2.CpsConcern#getSuperImposition()
 	 */
 	public SuperImposition getSuperImposition()
@@ -123,8 +123,9 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.CpsConcern#removeFilterModule(Composestar.Core.CpsRepository2.FilterModules.FilterModule)
+	 * @see
+	 * Composestar.Core.CpsRepository2.CpsConcern#removeFilterModule(Composestar
+	 * .Core.CpsRepository2.FilterModules.FilterModule)
 	 */
 	public boolean removeFilterModule(FilterModule fm) throws NullPointerException
 	{
@@ -141,8 +142,9 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.CpsConcern#removeFilterModule(java.lang.String)
+	 * @see
+	 * Composestar.Core.CpsRepository2.CpsConcern#removeFilterModule(java.lang
+	 * .String)
 	 */
 	public FilterModule removeFilterModule(String fmName)
 	{
@@ -157,8 +159,9 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.CpsConcern#setSuperImposition(Composestar.Core.CpsRepository2.SuperImposition.SuperImposition)
+	 * @see
+	 * Composestar.Core.CpsRepository2.CpsConcern#setSuperImposition(Composestar
+	 * .Core.CpsRepository2.SuperImposition.SuperImposition)
 	 */
 	public void setSuperImposition(SuperImposition si) throws IllegalStateException
 	{

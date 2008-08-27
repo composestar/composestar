@@ -37,6 +37,8 @@ import Composestar.Core.CpsRepository2.Concern;
  */
 public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity implements Concern
 {
+	private static final long serialVersionUID = -2296971433819721568L;
+
 	/**
 	 * Contains the namespace with each segment as a separate entry
 	 */
@@ -63,7 +65,6 @@ public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity 
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.CpsRepository2.Concern#getNamespace()
 	 */
 	public String getNamespace()
@@ -82,8 +83,9 @@ public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity 
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity#getFullyQualifiedName()
+	 * @see
+	 * Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity
+	 * #getFullyQualifiedName()
 	 */
 	@Override
 	public String getFullyQualifiedName()
@@ -97,7 +99,6 @@ public abstract class AbstractConcern extends AbstractQualifiedRepositoryEntity 
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.CpsRepository2.Concern#getNamespaceAsList()
 	 */
 	public List<String> getNamespaceAsList()

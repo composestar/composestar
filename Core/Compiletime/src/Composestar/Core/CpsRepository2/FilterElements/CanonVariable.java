@@ -87,9 +87,9 @@ public interface CanonVariable extends CanonValue
 	String getBaseName();
 
 	/**
-	 * @return The prefix of the variable name. This is either {{@link #MESSAGE_PREFIX},
-	 *         {@link #FILTER_PREFIX} or null (in case the name is
-	 *         {@link #INNER})
+	 * @return The prefix of the variable name. This is either {
+	 *         {@link #MESSAGE_PREFIX}, {@link #FILTER_PREFIX} or null (in case
+	 *         the name is {@link #INNER})
 	 */
 	String getPrefix();
 

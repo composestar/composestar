@@ -68,7 +68,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.util.HashSet#add(java.lang.Object)
 	 */
 	@Override
@@ -106,7 +105,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.util.HashSet#remove(java.lang.Object)
 	 */
 	@Override
@@ -126,7 +124,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.util.AbstractSet#removeAll(java.util.Collection)
 	 */
 	@Override
@@ -147,7 +144,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.util.AbstractCollection#retainAll(java.util.Collection)
 	 */
 	@Override
@@ -168,7 +164,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.util.HashSet#clear()
 	 */
 	@Override
@@ -180,7 +175,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.CpsRepository2.Repository#get(java.lang.String)
 	 */
 	public QualifiedRepositoryEntity get(String fqn)
@@ -206,9 +200,8 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.CpsRepository2.Repository#get(java.lang.String,
-	 *      java.lang.Class)
+	 * java.lang.Class)
 	 */
 	public <T extends QualifiedRepositoryEntity> T get(String fqn, Class<T> type)
 	{
@@ -222,7 +215,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.CpsRepository2.Repository#getAll(java.lang.Class)
 	 */
 	public <T extends RepositoryEntity> RepositoryIterator<T> getAll(Class<T> type)
@@ -232,8 +224,8 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.Repository#getAllAsSet(java.lang.Class)
+	 * @see
+	 * Composestar.Core.CpsRepository2.Repository#getAllAsSet(java.lang.Class)
 	 */
 	public <T extends RepositoryEntity> Set<T> getAllAsSet(Class<T> type)
 	{
@@ -281,7 +273,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.util.Iterator#hasNext()
 		 */
 		public boolean hasNext()
@@ -291,7 +282,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.util.Iterator#next()
 		 */
 		public T next()
@@ -307,7 +297,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.util.Iterator#remove()
 		 */
 		public void remove()
@@ -317,7 +306,6 @@ public class RepositoryImpl extends LinkedHashSet<RepositoryEntity> implements R
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Iterable#iterator()
 		 */
 		public Iterator<T> iterator()

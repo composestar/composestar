@@ -89,8 +89,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addAnnotationBinding(Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * addAnnotationBinding
+	 * (Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)
 	 */
 	public void addAnnotationBinding(AnnotationBinding ab) throws NullPointerException
 	{
@@ -104,8 +105,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addCondition(Composestar.Core.CpsRepository2.SuperImposition.Condition)
+	 * @see
+	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addCondition
+	 * (Composestar.Core.CpsRepository2.SuperImposition.Condition)
 	 */
 	public boolean addCondition(SICondition cond) throws NullPointerException
 	{
@@ -124,8 +126,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addFilterModuleBinding(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * addFilterModuleBinding
+	 * (Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)
 	 */
 	public void addFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException
 	{
@@ -139,8 +142,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addFilterModuleConstraint(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * addFilterModuleConstraint
+	 * (Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)
 	 */
 	public void addFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
 	{
@@ -154,8 +158,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)
+	 * @see
+	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#addSelector
+	 * (Composestar.Core.CpsRepository2.SuperImposition.Selector)
 	 */
 	public boolean addSelector(Selector newSel) throws NullPointerException
 	{
@@ -174,8 +179,8 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getAnnotationBindings()
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * getAnnotationBindings()
 	 */
 	public Collection<AnnotationBinding> getAnnotationBindings()
 	{
@@ -184,8 +189,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getCondition(java.lang.String)
+	 * @see
+	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getCondition
+	 * (java.lang.String)
 	 */
 	public SICondition getCondition(String name)
 	{
@@ -198,8 +204,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getConditions()
+	 * @see
+	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getConditions
+	 * ()
 	 */
 	public Collection<SICondition> getConditions()
 	{
@@ -208,8 +215,8 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getFilterModuleBindings()
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * getFilterModuleBindings()
 	 */
 	public Collection<FilterModuleBinding> getFilterModuleBindings()
 	{
@@ -218,8 +225,8 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getFilterModuleConstraints()
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * getFilterModuleConstraints()
 	 */
 	public Collection<FilterModuleConstraint> getFilterModuleConstraints()
 	{
@@ -228,8 +235,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getSelector(java.lang.String)
+	 * @see
+	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getSelector
+	 * (java.lang.String)
 	 */
 	public Selector getSelector(String name)
 	{
@@ -242,8 +250,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getSelectors()
+	 * @see
+	 * Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#getSelectors
+	 * ()
 	 */
 	public Collection<Selector> getSelectors()
 	{
@@ -252,8 +261,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeAnnotationBinding(Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * removeAnnotationBinding
+	 * (Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)
 	 */
 	public boolean removeAnnotationBinding(AnnotationBinding ab) throws NullPointerException
 	{
@@ -266,8 +276,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeCondition(Composestar.Core.CpsRepository2.SuperImposition.Condition)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * removeCondition
+	 * (Composestar.Core.CpsRepository2.SuperImposition.Condition)
 	 */
 	public boolean removeCondition(SICondition cond) throws NullPointerException
 	{
@@ -284,8 +295,8 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeCondition(java.lang.String)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * removeCondition(java.lang.String)
 	 */
 	public SICondition removeCondition(String name)
 	{
@@ -300,8 +311,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeFilterModuleBinding(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * removeFilterModuleBinding
+	 * (Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)
 	 */
 	public boolean removeFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException
 	{
@@ -314,8 +326,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeFilterModuleConstraint(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * removeFilterModuleConstraint
+	 * (Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)
 	 */
 	public boolean removeFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
 	{
@@ -328,8 +341,8 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * removeSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)
 	 */
 	public boolean removeSelector(Selector sel) throws NullPointerException
 	{
@@ -346,8 +359,8 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.SuperImposition.SuperImposition#removeSelector(java.lang.String)
+	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
+	 * removeSelector(java.lang.String)
 	 */
 	public Selector removeSelector(String name)
 	{

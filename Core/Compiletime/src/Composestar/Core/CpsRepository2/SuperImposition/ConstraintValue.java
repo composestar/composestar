@@ -24,7 +24,6 @@
 
 package Composestar.Core.CpsRepository2.SuperImposition;
 
-
 /**
  * Interface used for all values of a filter module constraint. This interface
  * is used to group the filter module reference and superimposition condition.

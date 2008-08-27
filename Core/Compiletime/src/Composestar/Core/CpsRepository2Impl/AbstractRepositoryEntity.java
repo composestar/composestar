@@ -34,6 +34,8 @@ import Composestar.Core.CpsRepository2.Meta.SourceInformation;
  */
 public abstract class AbstractRepositoryEntity implements RepositoryEntity
 {
+	private static final long serialVersionUID = 1231890128746682818L;
+
 	/**
 	 * Holds the owner variable
 	 */
@@ -52,7 +54,6 @@ public abstract class AbstractRepositoryEntity implements RepositoryEntity
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.CpsRepository2.RepositoryEntity#getOwner()
 	 */
 	public RepositoryEntity getOwner()
@@ -62,8 +63,8 @@ public abstract class AbstractRepositoryEntity implements RepositoryEntity
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.RepositoryEntity#getSourceInformation()
+	 * @see
+	 * Composestar.Core.CpsRepository2.RepositoryEntity#getSourceInformation()
 	 */
 	public SourceInformation getSourceInformation()
 	{
@@ -72,8 +73,9 @@ public abstract class AbstractRepositoryEntity implements RepositoryEntity
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.RepositoryEntity#setOwner(Composestar.Core.CpsRepository2.RepositoryEntity)
+	 * @see
+	 * Composestar.Core.CpsRepository2.RepositoryEntity#setOwner(Composestar
+	 * .Core.CpsRepository2.RepositoryEntity)
 	 */
 	public RepositoryEntity setOwner(RepositoryEntity newOwner)
 	{
@@ -84,8 +86,9 @@ public abstract class AbstractRepositoryEntity implements RepositoryEntity
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.RepositoryEntity#setSourceInformation(Composestar.Core.CpsRepository2.Meta.SourceInformation)
+	 * @see
+	 * Composestar.Core.CpsRepository2.RepositoryEntity#setSourceInformation
+	 * (Composestar.Core.CpsRepository2.Meta.SourceInformation)
 	 */
 	public void setSourceInformation(SourceInformation srcInfo)
 	{

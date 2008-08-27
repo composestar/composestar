@@ -33,6 +33,8 @@ import Composestar.Core.CpsRepository2.RepositoryEntity;
 public abstract class AbstractQualifiedRepositoryEntity extends AbstractRepositoryEntity implements
 		QualifiedRepositoryEntity
 {
+	private static final long serialVersionUID = -8746938052320269807L;
+
 	/**
 	 * The entity's name
 	 */
@@ -73,8 +75,8 @@ public abstract class AbstractQualifiedRepositoryEntity extends AbstractReposito
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see Composestar.Core.CpsRepository2.QualifiedRepositoryEntity#getFullyQualifiedName()
+	 * @seeComposestar.Core.CpsRepository2.QualifiedRepositoryEntity#
+	 * getFullyQualifiedName()
 	 */
 	public String getFullyQualifiedName()
 	{
@@ -104,7 +106,6 @@ public abstract class AbstractQualifiedRepositoryEntity extends AbstractReposito
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see Composestar.Core.CpsRepository2.QualifiedRepositoryEntity#getName()
 	 */
 	public String getName()
@@ -114,7 +115,6 @@ public abstract class AbstractQualifiedRepositoryEntity extends AbstractReposito
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
