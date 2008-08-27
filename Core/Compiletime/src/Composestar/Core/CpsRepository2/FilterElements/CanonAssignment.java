@@ -43,7 +43,8 @@ public interface CanonAssignment extends RepositoryEntity, Instantiatable<CanonA
 	CanonVariable getVariable();
 
 	/**
-	 * Sets the variable that is set in this assignment.
+	 * Sets the variable that is set in this assignment. setOwner(this) is
+	 * called on the expression after assigning.
 	 * 
 	 * @param var The variable
 	 * @throws NullPointerException Thrown when the variable is null
@@ -57,7 +58,9 @@ public interface CanonAssignment extends RepositoryEntity, Instantiatable<CanonA
 
 	/**
 	 * Set the value that the variable should get when the assignment is
-	 * executed.
+	 * executed. setOwner(this) is called on the expression after assigning.
+	 * Note: this does not perform the actual assignment, it just creates an
+	 * assignment association.
 	 * 
 	 * @param value The new value
 	 * @throws NullPointerException Thrown when the value is null

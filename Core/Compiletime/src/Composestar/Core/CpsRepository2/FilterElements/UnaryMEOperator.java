@@ -39,7 +39,8 @@ public interface UnaryMEOperator extends MatchingExpression, Instantiatable<Unar
 	MatchingExpression getOperand();
 
 	/**
-	 * Set the expression this operator affects.
+	 * Set the expression this operator affects. setOwner(this) is called on the
+	 * expression after assigning.
 	 * 
 	 * @param expr The expression
 	 * @throws NullPointerException Thrown when the expression is null.

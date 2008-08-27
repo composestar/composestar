@@ -40,7 +40,8 @@ public interface BinaryFilterElementOperator extends FilterElementExpression,
 	FilterElementExpression getLHS();
 
 	/**
-	 * Sets the left hand side of the operator.
+	 * Sets the left hand side of the operator. setOwner(this) is called on the
+	 * expression after assigning.
 	 * 
 	 * @param expr The expression
 	 * @throws NullPointerException Thrown when the expression is null.
@@ -53,7 +54,8 @@ public interface BinaryFilterElementOperator extends FilterElementExpression,
 	FilterElementExpression getRHS();
 
 	/**
-	 * Sets the right hand side of the operator
+	 * Sets the right hand side of the operator.setOwner(this) is called on the
+	 * expression after assigning.
 	 * 
 	 * @param expr The expression
 	 * @throws NullPointerException Thrown when the expression is null.

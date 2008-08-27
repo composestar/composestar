@@ -56,7 +56,7 @@ public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Ins
 
 	/**
 	 * Add a new filter argument. It will overwrite a previous argument with the
-	 * same name.
+	 * same name. setOwner(this) is called on the argument after adding.
 	 * 
 	 * @param argument The argument to add.
 	 * @return The argument that was replaced by the current argument, or null
@@ -100,7 +100,8 @@ public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Ins
 	FilterElementExpression getElementExpression();
 
 	/**
-	 * Set the filter element expression for this filter.
+	 * Set the filter element expression for this filter. setOwner(this) is
+	 * called on the expression after assigning.
 	 * 
 	 * @param expr The filter element expression.
 	 * @throws NullPointerException Thrown when the expression is null.

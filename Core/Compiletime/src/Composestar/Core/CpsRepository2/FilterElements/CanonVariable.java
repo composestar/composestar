@@ -102,7 +102,7 @@ public interface CanonVariable extends CanonValue
 	 *             different type that the current type. Values needs to be
 	 *             converted to the correct type.
 	 * @throws UnsupportedOperationException Thrown when this variable is
-	 *             read-only.
+	 *             read-only (rare case).
 	 */
 	// TODO add @see to the CanonTypeConverter thingy
 	void setValue(CanonValue newValue) throws NullPointerException, IllegalArgumentException,
@@ -110,7 +110,7 @@ public interface CanonVariable extends CanonValue
 
 	/**
 	 * Checks if the given value type is accepted as value for this variable. If
-	 * this returns false {@link #setValue(CanonValue)} throws an // *
+	 * this returns false {@link #setValue(CanonValue)} throws an
 	 * IllegalArgumentException when called with a value of this type.
 	 * 
 	 * @param valueType The value type

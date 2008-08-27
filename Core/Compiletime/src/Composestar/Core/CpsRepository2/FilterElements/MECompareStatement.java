@@ -40,7 +40,8 @@ public interface MECompareStatement extends MatchingExpression, Instantiatable<M
 	CanonVariable getLHS();
 
 	/**
-	 * Set the variable on the left hand side
+	 * Set the variable on the left hand side. setOwner(this) is called on the
+	 * variable after assigning.
 	 * 
 	 * @param var The variable
 	 * @throws NullPointerException Thrown when the variable is null.
@@ -55,6 +56,7 @@ public interface MECompareStatement extends MatchingExpression, Instantiatable<M
 	/**
 	 * Sets the value with which the variable on the left hand side is compared.
 	 * Before this function can be called the left hand side value must be set.
+	 * setOwner(this) is called on the value after assigning.
 	 * 
 	 * @param value The value
 	 * @throws NullPointerException Thrown when the value is null.

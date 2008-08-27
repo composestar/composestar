@@ -41,7 +41,8 @@ public interface FilterElement extends FilterElementExpression, Instantiatable<F
 	MatchingExpression getMatchingExpression();
 
 	/**
-	 * Sets the matching expression for this filter element.
+	 * Sets the matching expression for this filter element. setOwner(this) is
+	 * called on the expression after assigning.
 	 * 
 	 * @param expr The matching expression.
 	 * @throws NullPointerException Thrown when the expression is null.
@@ -51,7 +52,8 @@ public interface FilterElement extends FilterElementExpression, Instantiatable<F
 	/**
 	 * Add a new assignment to this filter element. Variables can only be
 	 * assigned a new value once in a assignment block. The last assignment made
-	 * will be the effective assignment.
+	 * will be the effective assignment. setOwner(this) is called on the
+	 * assignment after adding.
 	 * 
 	 * @param assignment The assignment to add.
 	 * @return The assignment that was replaced by the new assignment, or null
