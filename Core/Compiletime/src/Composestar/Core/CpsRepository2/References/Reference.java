@@ -50,15 +50,6 @@ public interface Reference<T> extends Serializable
 	String getReferenceId();
 
 	/**
-	 * Set/change the reference id. If the reference was previously resolved
-	 * setting the id will invalidate the previous resolved reference.
-	 * 
-	 * @param id The identifier of the element to which is referred.
-	 * @throws UnsupportedOperationException Thrown by so-called self-references
-	 */
-	void setReferenceId(String id) throws UnsupportedOperationException;
-
-	/**
 	 * @return The element to which this reference points to. The result is null
 	 *         when the reference has not be resolved, or when it could not be
 	 *         resolved because the referred to element does not exist.
@@ -77,9 +68,21 @@ public interface Reference<T> extends Serializable
 	void setReference(T element) throws UnsupportedOperationException;
 
 	/**
+	 * Unset the referenced element and reset the "isResolved" value.
+	 * 
+	 * @throws UnsupportedOperationException Thrown by self-references
+	 */
+	void dereference() throws UnsupportedOperationException;
+
+	/**
 	 * @return Returns true when {@link #getReference()} returns a valid result.
 	 *         This result could be null when the element was not found.
 	 *         Self-references always return true.
 	 */
 	boolean isResolved();
+
+	/**
+	 * @return True for self-references
+	 */
+	boolean isSelfReference();
 }

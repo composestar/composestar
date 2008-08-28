@@ -42,24 +42,8 @@ public interface MethodReference extends Reference<MethodInfo>
 	TypeReference getTypeReference();
 
 	/**
-	 * Set the reference to the type that should contain the referred to method.
-	 * Calling this method will invalidate the resolved method reference.
-	 * 
-	 * @param tref
-	 * @throws NullPointerException Thrown when the type reference is null.
-	 */
-	void setTypeReference(TypeReference tref) throws NullPointerException;
-
-	/**
 	 * @return The value of the desired join point context. This us used to
 	 *         resolve the method reference.
 	 */
 	JoinPointContextArgument getJoinPointContextArgument();
-
-	/**
-	 * Set the join point context argument value.
-	 * 
-	 * @param jpca
-	 */
-	void setJoinPointContextArgument(JoinPointContextArgument jpca);
 }

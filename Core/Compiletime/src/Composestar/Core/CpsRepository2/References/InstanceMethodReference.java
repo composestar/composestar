@@ -28,8 +28,7 @@ import Composestar.Core.CpsRepository2.InstanceContextProvider;
 
 /**
  * An method reference with a context. This can be used by Externals and
- * Conditions when they refer to a method of an Internal or External.
- * InstanceMethodReferences have a read-only type reference. The
+ * Conditions when they refer to a method of an Internal or External. The
  * {@link MethodReference#getTypeReference()} should return the value of
  * {@link InstanceContextProvider#getTypeReference()}.
  * 
@@ -41,11 +40,4 @@ public interface InstanceMethodReference extends MethodReference
 	 * @return The context on which this method should be executed.
 	 */
 	InstanceContextProvider getContext();
-
-	/**
-	 * @param context The context to set. When null the current context is
-	 *            removed. In this case this instance will behave like a normal
-	 *            MethodReference.
-	 */
-	void setContext(InstanceContextProvider context);
 }
