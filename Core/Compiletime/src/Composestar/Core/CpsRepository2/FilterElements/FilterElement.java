@@ -66,10 +66,10 @@ public interface FilterElement extends FilterElementExpression, Instantiatable<F
 	 * Remove the passed assignment from the assignment block.
 	 * 
 	 * @param assignment The assignment to remove
-	 * @return True if the assignment was removed
+	 * @return The removed assignment, or null if nothing was removed.
 	 * @throws NullPointerException Thrown when the passed assignment is null.
 	 */
-	boolean removeAssignment(CanonAssignment assignment) throws NullPointerException;
+	CanonAssignment removeAssignment(CanonAssignment assignment) throws NullPointerException;
 
 	/**
 	 * Retrieves an assignment by the variable name.

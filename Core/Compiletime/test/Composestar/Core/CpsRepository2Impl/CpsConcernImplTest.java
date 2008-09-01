@@ -158,9 +158,9 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 	public void testRemoveFilterModuleFilterModule()
 	{
 		cpsconcern.addFilterModule(fm1);
-		assertFalse(cpsconcern.removeFilterModule(fm2));
-		assertTrue(cpsconcern.removeFilterModule(fm1));
-		assertFalse(cpsconcern.removeFilterModule(fm1));
+		assertNull(cpsconcern.removeFilterModule(fm2));
+		assertSame(fm1, cpsconcern.removeFilterModule(fm1));
+		assertNull(cpsconcern.removeFilterModule(fm1));
 		try
 		{
 			fm1 = null;
@@ -307,9 +307,9 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 			return false;
 		}
 
-		public boolean removeVariable(FilterModuleVariable var) throws NullPointerException
+		public FilterModuleVariable removeVariable(FilterModuleVariable var) throws NullPointerException
 		{
-			return false;
+			return null;
 		}
 
 		public FilterModuleVariable removeVariable(String name)
@@ -461,9 +461,9 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * removeAnnotationBinding
 		 * (Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)
 		 */
-		public boolean removeAnnotationBinding(AnnotationBinding ab) throws NullPointerException
+		public AnnotationBinding removeAnnotationBinding(AnnotationBinding ab) throws NullPointerException
 		{
-			return false;
+			return null;
 		}
 
 		/*
@@ -472,9 +472,9 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * removeCondition
 		 * (Composestar.Core.CpsRepository2.SuperImposition.Condition)
 		 */
-		public boolean removeCondition(SICondition cond) throws NullPointerException
+		public SICondition removeCondition(SICondition cond) throws NullPointerException
 		{
-			return false;
+			return null;
 		}
 
 		/*
@@ -493,9 +493,9 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * removeFilterModuleBinding
 		 * (Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)
 		 */
-		public boolean removeFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException
+		public FilterModuleBinding removeFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException
 		{
-			return false;
+			return null;
 		}
 
 		/*
@@ -505,9 +505,10 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * (Composestar.Core.CpsRepository2.SuperImposition
 		 * .FilterModuleConstraint)
 		 */
-		public boolean removeFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
+		public FilterModuleConstraint removeFilterModuleConstraint(FilterModuleConstraint fmc)
+				throws NullPointerException
 		{
-			return false;
+			return null;
 		}
 
 		/*
@@ -516,9 +517,9 @@ public class CpsConcernImplTest extends AbstractConcernTestBase
 		 * removeSelector
 		 * (Composestar.Core.CpsRepository2.SuperImposition.Selector)
 		 */
-		public boolean removeSelector(Selector sel) throws NullPointerException
+		public Selector removeSelector(Selector sel) throws NullPointerException
 		{
-			return false;
+			return null;
 		}
 
 		/*

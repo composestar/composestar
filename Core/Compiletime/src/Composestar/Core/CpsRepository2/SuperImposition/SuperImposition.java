@@ -65,12 +65,11 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * Remove the provided selector
 	 * 
 	 * @param sel The selector to remove
-	 * @return True if the selector was removed, or false when this selector was
-	 *         not present.
+	 * @return The removed selector, or null if nothing was removed.
 	 * @throws NullPointerException Thrown when the selector was null.
 	 * @see #removeSelector(String)
 	 */
-	boolean removeSelector(Selector sel) throws NullPointerException;
+	Selector removeSelector(Selector sel) throws NullPointerException;
 
 	/**
 	 * Remove a selector by its name.
@@ -113,11 +112,12 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * Remove a previously added filter module binding
 	 * 
 	 * @param binding The filter module binding to remove
-	 * @return True when the filter module binding was removed
+	 * @return The removed filter module binding, or null if nothing was
+	 *         removed.
 	 * @throws NullPointerException Thrown when the provided filter module
 	 *             binding is null
 	 */
-	boolean removeFilterModuleBinding(FilterModuleBinding binding) throws NullPointerException;
+	FilterModuleBinding removeFilterModuleBinding(FilterModuleBinding binding) throws NullPointerException;
 
 	/**
 	 * @return The set of filter module bindings. An empty set is returned when
@@ -139,11 +139,10 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * Removes an annotation binding.
 	 * 
 	 * @param binding The annotation binding to remove
-	 * @return True when the binding was removed or false when it was not
-	 *         present
+	 * @return The removed annotation binding, or null if nothing was removed.
 	 * @throws NullPointerException Thrown when the binding instance is null
 	 */
-	boolean removeAnnotationBinding(AnnotationBinding binding) throws NullPointerException;
+	AnnotationBinding removeAnnotationBinding(AnnotationBinding binding) throws NullPointerException;
 
 	/**
 	 * @return The set of annotation bindings, or an empty set when there are no
@@ -167,11 +166,11 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * Remove a filter module constraint.
 	 * 
 	 * @param constraint The constaint to remove
-	 * @return True when the constraint was removed, or false when it was not
-	 *         found and thus not removed.
+	 * @return The removed filter module constraint, or null if nothing was
+	 *         removed.
 	 * @throws NullPointerException Thrown when the constraint is null
 	 */
-	boolean removeFilterModuleConstraint(FilterModuleConstraint constraint) throws NullPointerException;
+	FilterModuleConstraint removeFilterModuleConstraint(FilterModuleConstraint constraint) throws NullPointerException;
 
 	/**
 	 * @return All registered filter module constraints in the superimposition
@@ -199,11 +198,10 @@ public interface SuperImposition extends QualifiedRepositoryEntity
 	 * does not remove associations with the condition from other entities.
 	 * 
 	 * @param condition The condition to remove
-	 * @return True when the condition was removed or false when the condition
-	 *         was not found.
+	 * @return The removed condition, or null if nothing was removed.
 	 * @throws NullPointerException Thrown when the provided condition is null
 	 */
-	boolean removeCondition(SICondition condition) throws NullPointerException;
+	SICondition removeCondition(SICondition condition) throws NullPointerException;
 
 	/**
 	 * Remove a condition by it's name.

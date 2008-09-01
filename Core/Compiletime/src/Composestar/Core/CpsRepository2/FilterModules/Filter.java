@@ -71,10 +71,10 @@ public interface Filter extends QualifiedRepositoryEntity, FilterExpression, Ins
 	 * Remove a filter argument
 	 * 
 	 * @param argument The argument to remove
-	 * @return True if the argument was removed.
+	 * @return The removed argument, or null if nothing was removed.
 	 * @throws NullPointerException Thrown when the passed argument is null.
 	 */
-	boolean removeArgument(CanonAssignment argument) throws NullPointerException;
+	CanonAssignment removeArgument(CanonAssignment argument) throws NullPointerException;
 
 	/**
 	 * Retrieves an argument by the name.

@@ -265,13 +265,17 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * removeAnnotationBinding
 	 * (Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)
 	 */
-	public boolean removeAnnotationBinding(AnnotationBinding ab) throws NullPointerException
+	public AnnotationBinding removeAnnotationBinding(AnnotationBinding ab) throws NullPointerException
 	{
 		if (ab == null)
 		{
 			throw new NullPointerException();
 		}
-		return annotationBindings.remove(ab);
+		if (annotationBindings.remove(ab))
+		{
+			return ab;
+		}
+		return null;
 	}
 
 	/*
@@ -280,7 +284,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * removeCondition
 	 * (Composestar.Core.CpsRepository2.SuperImposition.Condition)
 	 */
-	public boolean removeCondition(SICondition cond) throws NullPointerException
+	public SICondition removeCondition(SICondition cond) throws NullPointerException
 	{
 		if (cond == null)
 		{
@@ -288,9 +292,12 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 		}
 		if (conditions.containsValue(cond))
 		{
-			return conditions.values().remove(cond);
+			if (conditions.values().remove(cond))
+			{
+				return cond;
+			}
 		}
-		return false;
+		return null;
 	}
 
 	/*
@@ -315,13 +322,17 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * removeFilterModuleBinding
 	 * (Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)
 	 */
-	public boolean removeFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException
+	public FilterModuleBinding removeFilterModuleBinding(FilterModuleBinding fmb) throws NullPointerException
 	{
 		if (fmb == null)
 		{
 			throw new NullPointerException();
 		}
-		return filterModuleBindings.remove(fmb);
+		if (filterModuleBindings.remove(fmb))
+		{
+			return fmb;
+		}
+		return null;
 	}
 
 	/*
@@ -330,13 +341,17 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * removeFilterModuleConstraint
 	 * (Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)
 	 */
-	public boolean removeFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
+	public FilterModuleConstraint removeFilterModuleConstraint(FilterModuleConstraint fmc) throws NullPointerException
 	{
 		if (fmc == null)
 		{
 			throw new NullPointerException();
 		}
-		return filterModuleConstraints.remove(fmc);
+		if (filterModuleConstraints.remove(fmc))
+		{
+			return fmc;
+		}
+		return null;
 	}
 
 	/*
@@ -344,7 +359,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 	 * @seeComposestar.Core.CpsRepository2.SuperImposition.SuperImposition#
 	 * removeSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)
 	 */
-	public boolean removeSelector(Selector sel) throws NullPointerException
+	public Selector removeSelector(Selector sel) throws NullPointerException
 	{
 		if (sel == null)
 		{
@@ -352,9 +367,12 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 		}
 		if (selectors.containsValue(sel))
 		{
-			return selectors.values().remove(sel);
+			if (selectors.values().remove(sel))
+			{
+				return sel;
+			}
 		}
-		return false;
+		return null;
 	}
 
 	/*

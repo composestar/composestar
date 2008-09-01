@@ -127,7 +127,7 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 	 * Composestar.Core.CpsRepository2.CpsConcern#removeFilterModule(Composestar
 	 * .Core.CpsRepository2.FilterModules.FilterModule)
 	 */
-	public boolean removeFilterModule(FilterModule fm) throws NullPointerException
+	public FilterModule removeFilterModule(FilterModule fm) throws NullPointerException
 	{
 		if (fm == null)
 		{
@@ -135,9 +135,12 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 		}
 		if (filterModules.containsValue(fm))
 		{
-			return filterModules.values().remove(fm);
+			if (filterModules.values().remove(fm))
+			{
+				return fm;
+			}
 		}
-		return false;
+		return null;
 	}
 
 	/*

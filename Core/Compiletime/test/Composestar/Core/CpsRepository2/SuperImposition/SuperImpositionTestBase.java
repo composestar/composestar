@@ -70,7 +70,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addAnnotationBinding(Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addAnnotationBinding(Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)}
+	 * .
 	 */
 	public void testAddAnnotationBinding()
 	{
@@ -90,7 +91,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)}
+	 * .
 	 */
 	public void testAddCondition()
 	{
@@ -110,7 +112,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addFilterModuleBinding(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addFilterModuleBinding(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)}
+	 * .
 	 */
 	public void testAddFilterModuleBinding()
 	{
@@ -130,7 +133,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addFilterModuleConstraint(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addFilterModuleConstraint(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)}
+	 * .
 	 */
 	public void testAddFilterModuleConstraint()
 	{
@@ -150,7 +154,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#addSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)}
+	 * .
 	 */
 	public void testAddSelector()
 	{
@@ -170,7 +175,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getAnnotationBindings()}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getAnnotationBindings()}
+	 * .
 	 */
 	public void testGetAnnotationBindings()
 	{
@@ -193,7 +199,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getCondition(java.lang.String)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getCondition(java.lang.String)}
+	 * .
 	 */
 	public void testGetCondition()
 	{
@@ -206,7 +213,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getConditions()}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getConditions()}
+	 * .
 	 */
 	public void testGetConditions()
 	{
@@ -229,7 +237,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getFilterModuleBindings()}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getFilterModuleBindings()}
+	 * .
 	 */
 	public void testGetFilterModuleBindings()
 	{
@@ -252,7 +261,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getFilterModuleConstraints()}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getFilterModuleConstraints()}
+	 * .
 	 */
 	public void testGetFilterModuleConstraints()
 	{
@@ -275,7 +285,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getSelector(java.lang.String)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getSelector(java.lang.String)}
+	 * .
 	 */
 	public void testGetSelector()
 	{
@@ -288,7 +299,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getSelectors()}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#getSelectors()}
+	 * .
 	 */
 	public void testGetSelectors()
 	{
@@ -311,13 +323,14 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeAnnotationBinding(Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeAnnotationBinding(Composestar.Core.CpsRepository2.SuperImposition.AnnotationBinding)}
+	 * .
 	 */
 	public void testRemoveAnnotationBinding()
 	{
-		assertFalse(si.removeAnnotationBinding(ab1));
+		assertNull(si.removeAnnotationBinding(ab1));
 		si.addAnnotationBinding(ab1);
-		assertTrue(si.removeAnnotationBinding(ab1));
+		assertSame(ab1, si.removeAnnotationBinding(ab1));
 		try
 		{
 			si.removeAnnotationBinding(null);
@@ -330,14 +343,15 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeCondition(Composestar.Core.CpsRepository2.SuperImposition.SICondition)}
+	 * .
 	 */
 	public void testRemoveConditionCondition()
 	{
-		assertFalse(si.removeCondition(con1));
+		assertNull(si.removeCondition(con1));
 		si.addCondition(con1);
-		assertTrue(si.removeCondition(con1));
-		assertFalse(si.removeCondition(con1));
+		assertSame(con1, si.removeCondition(con1));
+		assertNull(si.removeCondition(con1));
 		try
 		{
 			con1 = null;
@@ -351,7 +365,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeCondition(java.lang.String)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeCondition(java.lang.String)}
+	 * .
 	 */
 	public void testRemoveConditionString()
 	{
@@ -365,13 +380,14 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeFilterModuleBinding(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeFilterModuleBinding(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBinding)}
+	 * .
 	 */
 	public void testRemoveFilterModuleBinding()
 	{
-		assertFalse(si.removeFilterModuleBinding(fmb1));
+		assertNull(si.removeFilterModuleBinding(fmb1));
 		si.addFilterModuleBinding(fmb1);
-		assertTrue(si.removeFilterModuleBinding(fmb1));
+		assertSame(fmb1, si.removeFilterModuleBinding(fmb1));
 		try
 		{
 			si.removeFilterModuleBinding(null);
@@ -384,13 +400,14 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeFilterModuleConstraint(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeFilterModuleConstraint(Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraint)}
+	 * .
 	 */
 	public void testRemoveFilterModuleConstraint()
 	{
-		assertFalse(si.removeFilterModuleConstraint(fmc1));
+		assertNull(si.removeFilterModuleConstraint(fmc1));
 		si.addFilterModuleConstraint(fmc1);
-		assertTrue(si.removeFilterModuleConstraint(fmc1));
+		assertSame(fmc1, si.removeFilterModuleConstraint(fmc1));
 		try
 		{
 			si.removeFilterModuleConstraint(null);
@@ -403,14 +420,15 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeSelector(Composestar.Core.CpsRepository2.SuperImposition.Selector)}
+	 * .
 	 */
 	public void testRemoveSelectorSelector()
 	{
-		assertFalse(si.removeSelector(sel1));
+		assertNull(si.removeSelector(sel1));
 		si.addSelector(sel1);
-		assertTrue(si.removeSelector(sel1));
-		assertFalse(si.removeSelector(sel1));
+		assertSame(sel1, si.removeSelector(sel1));
+		assertNull(si.removeSelector(sel1));
 		try
 		{
 			sel1 = null;
@@ -424,7 +442,8 @@ public abstract class SuperImpositionTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeSelector(java.lang.String)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#removeSelector(java.lang.String)}
+	 * .
 	 */
 	public void testRemoveSelectorString()
 	{
@@ -453,9 +472,9 @@ public abstract class SuperImpositionTestBase extends TestCase
 			return null;
 		}
 
-		public boolean removeAnnotation(TypeReference annotationType) throws NullPointerException
+		public TypeReference removeAnnotation(TypeReference annotationType) throws NullPointerException
 		{
-			return false;
+			return null;
 		}
 
 		public TypeReference removeAnnotation(String referenceId)

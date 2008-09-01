@@ -148,11 +148,10 @@ public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleRef
 	 * the owner relation in the variable.
 	 * 
 	 * @param var The variable to remove.
-	 * @return True if the variable was removed, or false if the variable did
-	 *         not exist in this filter module.
+	 * @return The removed variable, or null if nothing was removed.
 	 * @throws NullPointerException Thrown when the variable is null.
 	 */
-	boolean removeVariable(FilterModuleVariable var) throws NullPointerException;
+	FilterModuleVariable removeVariable(FilterModuleVariable var) throws NullPointerException;
 
 	/**
 	 * Removes a variable from the filter module by its name.

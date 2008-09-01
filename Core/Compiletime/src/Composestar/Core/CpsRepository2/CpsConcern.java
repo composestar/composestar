@@ -72,13 +72,14 @@ public interface CpsConcern extends Concern
 	 * Remove a filter module from this concern
 	 * 
 	 * @param fm The filter module to remove
-	 * @return true if the filter module was removed or false when this filter
-	 *         module was not assigned to this concern.
+	 * @return The filter module that was removed (which should be the same
+	 *         instance as the provided filter module), or null if nothing was
+	 *         removed.
 	 * @throws NullPointerException Thrown when the provided filter module is
 	 *             null.
 	 * @see #removeFilterModule(String)
 	 */
-	boolean removeFilterModule(FilterModule fm) throws NullPointerException;
+	FilterModule removeFilterModule(FilterModule fm) throws NullPointerException;
 
 	/**
 	 * Remove a filter module with a given name.

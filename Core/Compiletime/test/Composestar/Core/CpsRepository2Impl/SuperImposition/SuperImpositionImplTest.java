@@ -36,7 +36,6 @@ public class SuperImpositionImplTest extends SuperImpositionTestBase
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
@@ -48,7 +47,8 @@ public class SuperImpositionImplTest extends SuperImpositionTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#isUniqueName(java.lang.String)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.SuperImposition.SuperImpositionImpl#isUniqueName(java.lang.String)}
+	 * .
 	 */
 	public void testIsUniqueName()
 	{
@@ -56,7 +56,7 @@ public class SuperImpositionImplTest extends SuperImpositionTestBase
 		SICondition c1 = new DummyCond("test");
 		assertTrue(si.addSelector(s1));
 		assertFalse(si.addCondition(c1));
-		assertTrue(si.removeSelector(s1));
+		assertSame(s1, si.removeSelector(s1));
 		assertTrue(si.addCondition(c1));
 	}
 

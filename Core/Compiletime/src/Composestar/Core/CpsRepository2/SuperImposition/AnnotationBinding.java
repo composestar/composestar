@@ -64,10 +64,11 @@ public interface AnnotationBinding extends RepositoryEntity
 	 * Removes an annotation type from the binding.
 	 * 
 	 * @param annotationType The annotation type to remove
-	 * @return True when the type was removed
+	 * @return Returns the annotation type when it was removed, or null when it
+	 *         was not found.
 	 * @throws NullPointerException Thrown when the annotation type is null.
 	 */
-	boolean removeAnnotation(TypeReference annotationType) throws NullPointerException;
+	TypeReference removeAnnotation(TypeReference annotationType) throws NullPointerException;
 
 	/**
 	 * Remove an annotation type by the reference id.
