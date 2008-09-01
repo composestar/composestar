@@ -81,9 +81,19 @@ public class ReferenceManager implements Serializable
 	 * 
 	 * @param refid The reference id.
 	 * @return The type reference
+	 * @throws IllegalArgumentException Thrown when the reference id is empty
+	 * @throws NullPointerException Thrown when the reference id is null
 	 */
-	public TypeReference getTypeReference(String refid)
+	public TypeReference getTypeReference(String refid) throws IllegalArgumentException, NullPointerException
 	{
+		if (refid == null)
+		{
+			throw new NullPointerException("Reference ID is null");
+		}
+		if (refid.isEmpty())
+		{
+			throw new IllegalArgumentException("Reference ID is empty");
+		}
 		if (!typeRefs.containsKey(refid))
 		{
 			TypeReference ref = new TypeReferenceImpl(refid);
@@ -108,8 +118,13 @@ public class ReferenceManager implements Serializable
 	 * @param typeRef The reference id of the type.
 	 * @param jpca The desired join point context argument of the method
 	 * @return The method reference
+	 * @throws NullPointerException Thrown when the type reference is null or
+	 *             when the reference id is null
+	 * @throws IllegalArgumentException Thrown when the reference id or type
+	 *             reference is empty
 	 */
 	public MethodReference getMethodReference(String refid, String typeRef, JoinPointContextArgument jpca)
+			throws NullPointerException, IllegalArgumentException
 	{
 		return getMethodReference(refid, getTypeReference(typeRef), jpca);
 	}
@@ -121,14 +136,24 @@ public class ReferenceManager implements Serializable
 	 * @param typeRef A type reference
 	 * @param The desired join point context argument of the method
 	 * @return The method reference
-	 * @throws NullPointerException Thrown when the type reference is null
+	 * @throws NullPointerException Thrown when the type reference is null or
+	 *             when the reference id is null
+	 * @throws IllegalArgumentException Thrown when the reference id is empty
 	 */
 	public MethodReference getMethodReference(String refid, TypeReference typeRef, JoinPointContextArgument jpca)
-			throws NullPointerException
+			throws NullPointerException, IllegalArgumentException
 	{
 		if (typeRef == null)
 		{
 			throw new NullPointerException("TypeReference is null");
+		}
+		if (refid == null)
+		{
+			throw new NullPointerException("Reference ID is null");
+		}
+		if (refid.isEmpty())
+		{
+			throw new IllegalArgumentException("Reference ID is empty");
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(typeRef.getReferenceId());
@@ -161,14 +186,24 @@ public class ReferenceManager implements Serializable
 	 * @param context A context
 	 * @param The desired join point context argument of the method
 	 * @return The method reference
-	 * @throws NullPointerException Thrown when the type reference is null
+	 * @throws NullPointerException Thrown when the context reference is null or
+	 *             when the reference id is null
+	 * @throws IllegalArgumentException Thrown when the reference id is null
 	 */
-	public InstanceMethodReference getMethodReference(String refid, InstanceContextProvider context,
-			JoinPointContextArgument jpca) throws NullPointerException
+	public InstanceMethodReference getInstanceMethodReference(String refid, InstanceContextProvider context,
+			JoinPointContextArgument jpca) throws NullPointerException, IllegalArgumentException
 	{
 		if (context == null)
 		{
 			throw new NullPointerException("InstanceContextProvider is null");
+		}
+		if (refid == null)
+		{
+			throw new NullPointerException("Reference ID is null");
+		}
+		if (refid.isEmpty())
+		{
+			throw new IllegalArgumentException("Reference ID is empty");
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(context.getFullyQualifiedName());
@@ -189,7 +224,7 @@ public class ReferenceManager implements Serializable
 	/**
 	 * @return Read-only list of all method references
 	 */
-	public Collection<InstanceMethodReference> getInstanceMethodReference()
+	public Collection<InstanceMethodReference> getInstanceMethodReferences()
 	{
 		return Collections.unmodifiableCollection(instMethodRefs.values());
 	}
@@ -200,9 +235,20 @@ public class ReferenceManager implements Serializable
 	 * 
 	 * @param refid The reference id.
 	 * @return The type reference
+	 * @throws IllegalArgumentException Thrown when the reference id is empty
+	 * @throws NullPointerException Thrown when the reference id is null
 	 */
-	public FilterModuleReference getFilterModuleReference(String refid)
+	public FilterModuleReference getFilterModuleReference(String refid) throws NullPointerException,
+			IllegalArgumentException
 	{
+		if (refid == null)
+		{
+			throw new NullPointerException("Reference ID is null");
+		}
+		if (refid.isEmpty())
+		{
+			throw new IllegalArgumentException("Reference ID is empty");
+		}
 		if (!fmRefs.containsKey(refid))
 		{
 			FilterModuleReference ref = new FilterModuleReferenceImpl(refid);

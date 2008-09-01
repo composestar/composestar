@@ -1,0 +1,302 @@
+package Composestar.Core.CpsRepository2Impl.Reference;
+
+import junit.framework.TestCase;
+import Composestar.Core.CpsRepository2.InstanceContextProvider;
+import Composestar.Core.CpsRepository2.JoinPointContextArgument;
+import Composestar.Core.CpsRepository2.RepositoryEntity;
+import Composestar.Core.CpsRepository2.Meta.SourceInformation;
+import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.References.InstanceMethodReference;
+import Composestar.Core.CpsRepository2.References.MethodReference;
+import Composestar.Core.CpsRepository2.References.TypeReference;
+
+public class ReferenceManagerTest extends TestCase
+{
+	protected ReferenceManager refman;
+
+	/*
+	 * (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	@Override
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		refman = new ReferenceManager();
+	}
+
+	public void testGetTypeReference()
+	{
+		assertNotNull(refman.getTypeReferences().size());
+		assertEquals(0, refman.getTypeReferences().size());
+		TypeReference ref = refman.getTypeReference("1.2.3.4");
+		assertNotNull(ref);
+		assertEquals("1.2.3.4", ref.getReferenceId());
+		TypeReference ref2 = refman.getTypeReference("1.2.3.4");
+		assertSame(ref, ref2);
+		assertEquals(1, refman.getTypeReferences().size());
+		refman.getTypeReference("1.2.3.5");
+		assertEquals(2, refman.getTypeReferences().size());
+		try
+		{
+			refman.getTypeReference("");
+			fail();
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+		try
+		{
+			refman.getTypeReference(null);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+	}
+
+	public void testGetMethodReferenceStringStringJoinPointContextArgument()
+	{
+		TypeReference tref = refman.getTypeReference("1.2.3.4");
+		MethodReference ref = refman.getMethodReference("5", tref.getReferenceId(), JoinPointContextArgument.FULL);
+		assertNotNull(ref);
+		assertEquals("5", ref.getReferenceId());
+		assertSame(tref, ref.getTypeReference());
+		assertEquals(JoinPointContextArgument.FULL, ref.getJoinPointContextArgument());
+		MethodReference ref2 = refman.getMethodReference("5", tref.getReferenceId(), JoinPointContextArgument.FULL);
+		assertSame(ref, ref2);
+		assertEquals(1, refman.getMethodReferences().size());
+		ref2 = refman.getMethodReference("5", tref.getReferenceId(), JoinPointContextArgument.UNUSED);
+		assertNotSame(ref, ref2);
+		assertEquals(2, refman.getMethodReferences().size());
+		ref2 = refman.getMethodReference("4", "1.2.3", JoinPointContextArgument.FULL);
+		assertNotSame(ref, ref2);
+		assertEquals(3, refman.getMethodReferences().size());
+		try
+		{
+			String s = null;
+			refman.getMethodReference("a", s, JoinPointContextArgument.FULL);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+		try
+		{
+			refman.getMethodReference(null, "1.2.3.4", JoinPointContextArgument.FULL);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+		try
+		{
+			refman.getMethodReference("", "1.2.3.4", JoinPointContextArgument.FULL);
+			fail();
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+		try
+		{
+			refman.getMethodReference("5", "", JoinPointContextArgument.FULL);
+			fail();
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+	}
+
+	public void testGetMethodReferenceStringTypeReferenceJoinPointContextArgument()
+	{
+		TypeReference tref = refman.getTypeReference("1.2.3.4");
+		MethodReference ref = refman.getMethodReference("5", tref, JoinPointContextArgument.FULL);
+		assertNotNull(ref);
+		assertEquals("5", ref.getReferenceId());
+		assertSame(tref, ref.getTypeReference());
+		assertEquals(JoinPointContextArgument.FULL, ref.getJoinPointContextArgument());
+		MethodReference ref2 = refman.getMethodReference("5", tref.getReferenceId(), JoinPointContextArgument.FULL);
+		assertSame(ref, ref2);
+		try
+		{
+			tref = null;
+			refman.getMethodReference("a", tref, JoinPointContextArgument.FULL);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+		try
+		{
+			refman.getMethodReference(null, refman.getTypeReference("1.2.3.4"), JoinPointContextArgument.FULL);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+		try
+		{
+			refman.getMethodReference("", refman.getTypeReference("1.2.3.4"), JoinPointContextArgument.FULL);
+			fail();
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+	}
+
+	public void testGetInstanceMethodReferenceStringInstanceContextProviderJoinPointContextArgument()
+	{
+		DummyCTX ctx = new DummyCTX(refman.getTypeReference("1.2.3.4"));
+		InstanceMethodReference ref = refman.getInstanceMethodReference("5", ctx, JoinPointContextArgument.FULL);
+		assertNotNull(ref);
+		assertEquals("5", ref.getReferenceId());
+		assertSame(ctx, ref.getContext());
+		assertEquals(JoinPointContextArgument.FULL, ref.getJoinPointContextArgument());
+		assertSame(ctx.getTypeReference(), ref.getTypeReference());
+		InstanceMethodReference ref2 = refman.getInstanceMethodReference("5", ctx, JoinPointContextArgument.FULL);
+		assertSame(ref, ref2);
+		assertEquals(1, refman.getInstanceMethodReferences().size());
+		ref2 = refman.getInstanceMethodReference("6", ctx, JoinPointContextArgument.FULL);
+		assertNotSame(ref, ref2);
+		assertEquals(2, refman.getInstanceMethodReferences().size());
+		try
+		{
+			refman.getInstanceMethodReference("a", null, JoinPointContextArgument.FULL);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+		try
+		{
+			refman.getInstanceMethodReference(null, ctx, JoinPointContextArgument.FULL);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+		try
+		{
+			refman.getInstanceMethodReference("", ctx, JoinPointContextArgument.FULL);
+			fail();
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+	}
+
+	public void testGetFilterModuleReference()
+	{
+		assertNotNull(refman.getFilterModuleReferences().size());
+		assertEquals(0, refman.getFilterModuleReferences().size());
+		FilterModuleReference ref = refman.getFilterModuleReference("1.2.3.4");
+		assertNotNull(ref);
+		assertEquals("1.2.3.4", ref.getReferenceId());
+		FilterModuleReference ref2 = refman.getFilterModuleReference("1.2.3.4");
+		assertSame(ref, ref2);
+		assertEquals(1, refman.getFilterModuleReferences().size());
+		refman.getFilterModuleReference("1.2.3.5");
+		assertEquals(2, refman.getFilterModuleReferences().size());
+		try
+		{
+			refman.getFilterModuleReference("");
+			fail();
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+		try
+		{
+			refman.getFilterModuleReference(null);
+			fail();
+		}
+		catch (NullPointerException e)
+		{
+		}
+		TypeReference tref = refman.getTypeReference("1.2.3.4");
+		assertNotSame(ref, tref);
+	}
+
+	class DummyCTX implements InstanceContextProvider
+	{
+		private static final long serialVersionUID = -8877241455449624479L;
+
+		TypeReference ref;
+
+		public DummyCTX(TypeReference tref)
+		{
+			ref = tref;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.InstanceContextProvider#getTypeReference
+		 * ()
+		 */
+		public TypeReference getTypeReference()
+		{
+			return ref;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.QualifiedRepositoryEntity#
+		 * getFullyQualifiedName()
+		 */
+		public String getFullyQualifiedName()
+		{
+			return getName();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.QualifiedRepositoryEntity#getName()
+		 */
+		public String getName()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see Composestar.Core.CpsRepository2.RepositoryEntity#getOwner()
+		 */
+		public RepositoryEntity getOwner()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.RepositoryEntity#getSourceInformation
+		 * ()
+		 */
+		public SourceInformation getSourceInformation()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.RepositoryEntity#setOwner(Composestar
+		 * .Core.CpsRepository2.RepositoryEntity)
+		 */
+		public RepositoryEntity setOwner(RepositoryEntity newOwner)
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.RepositoryEntity#setSourceInformation
+		 * (Composestar.Core.CpsRepository2.Meta.SourceInformation)
+		 */
+		public void setSourceInformation(SourceInformation srcInfo)
+		{}
+	}
+}
