@@ -24,26 +24,45 @@
 
 package Composestar.Core.CpsRepository2Impl.SuperImposition;
 
-import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBindingTestBase;
+import Composestar.Core.CpsRepository2.References.FilterModuleReference;
+import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraintValue;
 
 /**
+ * A filter module constraint that uses a filter module reference.
+ * 
  * @author Michiel Hendriks
  */
-public class AnnotationBindingImplTest extends AnnotationBindingTestBase
+public class FilterModuleConstraintValueImpl implements FilterModuleConstraintValue
 {
+	/**
+	 * A reference to a filter module.
+	 */
+	protected FilterModuleReference filterModuleReference;
+
+	/**
+	 * @param fmr The filter module reference
+	 * @throws NullPointerException Thrown when the filter module reference is
+	 *             null.
+	 */
+	public FilterModuleConstraintValueImpl(FilterModuleReference fmr) throws NullPointerException
+	{
+		super();
+		if (fmr == null)
+		{
+			throw new NullPointerException();
+		}
+		filterModuleReference = fmr;
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.SuperImposition.AnnotationBindingTestBase
-	 * #setUp()
+	 * Composestar.Core.CpsRepository2.SuperImposition.FilterModuleConstraintValue
+	 * #getFilterModuleReference()
 	 */
-	@Override
-	protected void setUp() throws Exception
+	public FilterModuleReference getFilterModuleReference()
 	{
-		super.setUp();
-		ab = new AnnotationBindingImpl();
-		re = ab;
+		return filterModuleReference;
 	}
 
 }

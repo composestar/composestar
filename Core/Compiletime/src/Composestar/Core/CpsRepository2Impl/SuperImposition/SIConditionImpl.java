@@ -32,7 +32,7 @@ import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 /**
  * Basic implementation of the SICondition interface
  * 
- * @author "Michiel Hendriks"
+ * @author Michiel Hendriks
  */
 public class SIConditionImpl extends AbstractQualifiedRepositoryEntity implements SICondition
 {

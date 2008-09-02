@@ -38,7 +38,7 @@ import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 /**
  * Basic implementation of the AnnotationBinding interface
  * 
- * @author "Michiel Hendriks"
+ * @author Michiel Hendriks
  */
 public class AnnotationBindingImpl extends AbstractRepositoryEntity implements AnnotationBinding
 {

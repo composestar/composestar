@@ -34,6 +34,7 @@ import Composestar.Core.CpsRepository2.RepositoryEntity;
  * 
  * @author Michiel Hendriks
  */
+// TODO this interface might need to be adjusted to blend in with FILTH
 public interface FilterModuleConstraint extends RepositoryEntity
 {
 	/**

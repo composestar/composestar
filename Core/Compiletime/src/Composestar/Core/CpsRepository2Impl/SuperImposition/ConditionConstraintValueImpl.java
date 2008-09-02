@@ -24,26 +24,44 @@
 
 package Composestar.Core.CpsRepository2Impl.SuperImposition;
 
-import Composestar.Core.CpsRepository2.SuperImposition.AnnotationBindingTestBase;
+import Composestar.Core.CpsRepository2.SuperImposition.ConditionConstraintValue;
+import Composestar.Core.CpsRepository2.SuperImposition.SICondition;
 
 /**
+ * A constraint value that use a condition defined in the superimposition block.
+ * 
  * @author Michiel Hendriks
  */
-public class AnnotationBindingImplTest extends AnnotationBindingTestBase
+public class ConditionConstraintValueImpl implements ConditionConstraintValue
 {
+	/**
+	 * The superimposition condition to use
+	 */
+	protected SICondition condition;
+
+	/**
+	 * @param cond
+	 * @throws NullPointerException Thrown when the condition is null
+	 */
+	public ConditionConstraintValueImpl(SICondition cond) throws NullPointerException
+	{
+		super();
+		if (cond == null)
+		{
+			throw new NullPointerException();
+		}
+		condition = cond;
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.SuperImposition.AnnotationBindingTestBase
-	 * #setUp()
+	 * Composestar.Core.CpsRepository2.SuperImposition.ConditionConstraintValue
+	 * #getCondition()
 	 */
-	@Override
-	protected void setUp() throws Exception
+	public SICondition getCondition()
 	{
-		super.setUp();
-		ab = new AnnotationBindingImpl();
-		re = ab;
+		return condition;
 	}
 
 }

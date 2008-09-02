@@ -31,7 +31,7 @@ import Composestar.Core.CpsRepository2.Meta.FileInformation;
 import Composestar.Core.CpsRepository2.Meta.SourceInformation;
 
 /**
- * @author "Michiel Hendriks"
+ * @author Michiel Hendriks
  */
 public abstract class RepositoryEntityTestBase extends TestCase
 {
@@ -69,7 +69,7 @@ public abstract class RepositoryEntityTestBase extends TestCase
 	}
 
 	/**
-	 * @author "Michiel Hendriks"
+	 * @author Michiel Hendriks
 	 */
 	protected class DummyRE implements RepositoryEntity
 	{

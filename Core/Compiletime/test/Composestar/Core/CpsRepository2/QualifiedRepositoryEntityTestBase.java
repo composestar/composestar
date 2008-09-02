@@ -25,7 +25,7 @@
 package Composestar.Core.CpsRepository2;
 
 /**
- * @author "Michiel Hendriks"
+ * @author Michiel Hendriks
  */
 public abstract class QualifiedRepositoryEntityTestBase extends RepositoryEntityTestBase
 {

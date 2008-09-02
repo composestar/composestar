@@ -33,7 +33,7 @@ import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.LAMA.MethodInfo;
 
 /**
- * @author "Michiel Hendriks"
+ * @author Michiel Hendriks
  */
 public class SIConditionTestBase extends QualifiedRepositoryEntityTestBase
 {
@@ -73,7 +73,7 @@ public class SIConditionTestBase extends QualifiedRepositoryEntityTestBase
 	}
 
 	/**
-	 * @author "Michiel Hendriks"
+	 * @author Michiel Hendriks
 	 */
 	public class DummyMR implements MethodReference
 	{
@@ -160,7 +160,7 @@ public class SIConditionTestBase extends QualifiedRepositoryEntityTestBase
 	}
 
 	/**
-	 * @author "Michiel Hendriks"
+	 * @author Michiel Hendriks
 	 */
 	public class DummyIMR extends DummyMR implements InstanceMethodReference
 	{

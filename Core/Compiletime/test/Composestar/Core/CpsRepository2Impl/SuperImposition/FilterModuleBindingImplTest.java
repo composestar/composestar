@@ -27,7 +27,7 @@ package Composestar.Core.CpsRepository2Impl.SuperImposition;
 import Composestar.Core.CpsRepository2.SuperImposition.FilterModuleBindingTestBase;
 
 /**
- * @author "Michiel Hendriks"
+ * @author Michiel Hendriks
  */
 public class FilterModuleBindingImplTest extends FilterModuleBindingTestBase
 {

@@ -33,7 +33,7 @@ import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
 
 /**
- * @author "Michiel Hendriks"
+ * @author Michiel Hendriks
  */
 public abstract class AnnotationBindingTestBase extends RepositoryEntityTestBase
 {
@@ -158,7 +158,7 @@ public abstract class AnnotationBindingTestBase extends RepositoryEntityTestBase
 	}
 
 	/**
-	 * @author "Michiel Hendriks"
+	 * @author Michiel Hendriks
 	 */
 	protected class DummySel extends AbstractQualifiedRepositoryEntity implements Selector
 	{
@@ -185,7 +185,7 @@ public abstract class AnnotationBindingTestBase extends RepositoryEntityTestBase
 	}
 
 	/**
-	 * @author "Michiel Hendriks"
+	 * @author Michiel Hendriks
 	 */
 	protected class DummyATR implements TypeReference
 	{

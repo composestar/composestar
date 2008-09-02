@@ -36,7 +36,7 @@ import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
 
 /**
- * @author "Michiel Hendriks"
+ * @author Michiel Hendriks
  */
 public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBase
 {
@@ -121,7 +121,7 @@ public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBa
 	}
 
 	/**
-	 * @author "Michiel Hendriks"
+	 * @author Michiel Hendriks
 	 */
 	protected class DummySel extends AbstractQualifiedRepositoryEntity implements Selector
 	{
@@ -148,7 +148,7 @@ public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBa
 	}
 
 	/**
-	 * @author "Michiel Hendriks"
+	 * @author Michiel Hendriks
 	 */
 	protected class DummyFMR implements FilterModuleReference
 	{
@@ -215,7 +215,7 @@ public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBa
 	}
 
 	/**
-	 * @author "Michiel Hendriks"
+	 * @author Michiel Hendriks
 	 */
 	protected class DummyFMPV implements FMParameterValue<Object>
 	{

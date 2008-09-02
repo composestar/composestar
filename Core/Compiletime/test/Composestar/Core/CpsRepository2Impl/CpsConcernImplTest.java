@@ -30,7 +30,7 @@ import java.util.List;
 import Composestar.Core.CpsRepository2.CpsConcernTestBase;
 
 /**
- * @author "Michiel Hendriks"
+ * @author Michiel Hendriks
  */
 public class CpsConcernImplTest extends CpsConcernTestBase
 {
