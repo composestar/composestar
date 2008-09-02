@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.TestCase;
+import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
@@ -38,7 +38,7 @@ import Composestar.Core.LAMA.ProgramElement;
 /**
  * @author "Michiel Hendriks"
  */
-public abstract class FilterModuleBindingTestBase extends TestCase
+public abstract class FilterModuleBindingTestBase extends RepositoryEntityTestBase
 {
 	protected FilterModuleBinding fmb;
 

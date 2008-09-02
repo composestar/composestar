@@ -26,7 +26,7 @@ package Composestar.Core.CpsRepository2.SuperImposition;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.TestCase;
+import Composestar.Core.CpsRepository2.QualifiedRepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.FMParams.FMParameterValue;
 import Composestar.Core.CpsRepository2.References.FilterModuleReference;
 import Composestar.Core.CpsRepository2.References.MethodReference;
@@ -38,7 +38,7 @@ import Composestar.Core.LAMA.ProgramElement;
 /**
  * @author Michiel Hendriks
  */
-public abstract class SuperImpositionTestBase extends TestCase
+public abstract class SuperImpositionTestBase extends QualifiedRepositoryEntityTestBase
 {
 	protected SuperImposition si;
 

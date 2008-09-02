@@ -43,6 +43,7 @@ public class AnnotationBindingImplTest extends AnnotationBindingTestBase
 	{
 		super.setUp();
 		ab = new AnnotationBindingImpl();
+		re = ab;
 	}
 
 }

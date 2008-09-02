@@ -43,6 +43,8 @@ public class SuperImpositionImplTest extends SuperImpositionTestBase
 	{
 		super.setUp();
 		si = new SuperImpositionImpl();
+		qre = si;
+		re = si;
 	}
 
 	/**

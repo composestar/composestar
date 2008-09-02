@@ -22,19 +22,17 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl;
+package Composestar.Core.CpsRepository2;
 
 import java.util.Arrays;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 /**
  * Tests for {@link Composestar.Core.CpsRepository2Impl.AbstractConcern}
  * 
  * @author Michiel Hendriks
  */
-public abstract class AbstractConcernTestBase extends TestCase
+public abstract class ConcernTestBase extends QualifiedRepositoryEntityTestBase
 {
 	protected static final String exampleNS = "composestar.example.namespace";
 
@@ -42,20 +40,24 @@ public abstract class AbstractConcernTestBase extends TestCase
 
 	protected static final String exampleFQN = exampleNS + "." + exampleName;
 
-	protected AbstractConcern concern;
+	protected Concern concern;
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.AbstractConcern#getFullyQualifiedName()}.
+	 * {@link Composestar.Core.CpsRepository2Impl.AbstractConcern#getFullyQualifiedName()}
+	 * .
 	 */
+	@Override
 	public void testGetFullyQualifiedName()
 	{
+		super.testGetFullyQualifiedName();
 		assertEquals(exampleFQN, concern.getFullyQualifiedName());
 	}
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.AbstractConcern#getNamespace()}.
+	 * {@link Composestar.Core.CpsRepository2Impl.AbstractConcern#getNamespace()}
+	 * .
 	 */
 	public void testGetNamespace()
 	{
@@ -64,7 +66,8 @@ public abstract class AbstractConcernTestBase extends TestCase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.AbstractConcern#getNamespaceAsList()}.
+	 * {@link Composestar.Core.CpsRepository2Impl.AbstractConcern#getNamespaceAsList()}
+	 * .
 	 */
 	public void testGetNamespaceAsList()
 	{

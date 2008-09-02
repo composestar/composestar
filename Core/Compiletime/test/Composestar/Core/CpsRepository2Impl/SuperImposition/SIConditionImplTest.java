@@ -22,17 +22,14 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl;
+package Composestar.Core.CpsRepository2Impl.SuperImposition;
 
-import java.util.Arrays;
-import java.util.List;
-
-import Composestar.Core.CpsRepository2.CpsConcernTestBase;
+import Composestar.Core.CpsRepository2.SuperImposition.SIConditionTestBase;
 
 /**
  * @author "Michiel Hendriks"
  */
-public class CpsConcernImplTest extends CpsConcernTestBase
+public class SIConditionImplTest extends SIConditionTestBase
 {
 	/*
 	 * (non-Javadoc)
@@ -42,11 +39,9 @@ public class CpsConcernImplTest extends CpsConcernTestBase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		List<String> ns = Arrays.asList(exampleNS.split("\\."));
-		CpsConcernImpl cpscrnimpl = new CpsConcernImpl(exampleName, ns);
-		cpsconcern = cpscrnimpl;
-		concern = cpscrnimpl;
-		qre = concern;
-		re = concern;
+		sic = new SIConditionImpl("foo");
+		qre = sic;
+		re = sic;
 	}
+
 }

@@ -22,31 +22,36 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl;
-
-import java.util.Arrays;
-import java.util.List;
-
-import Composestar.Core.CpsRepository2.CpsConcernTestBase;
+package Composestar.Core.CpsRepository2;
 
 /**
  * @author "Michiel Hendriks"
  */
-public class CpsConcernImplTest extends CpsConcernTestBase
+public abstract class QualifiedRepositoryEntityTestBase extends RepositoryEntityTestBase
 {
-	/*
-	 * (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
+	protected QualifiedRepositoryEntity qre;
+
+	/**
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2.QualifiedRepositoryEntity#getName()}
+	 * .
 	 */
-	@Override
-	protected void setUp() throws Exception
+	public void testGetName()
 	{
-		super.setUp();
-		List<String> ns = Arrays.asList(exampleNS.split("\\."));
-		CpsConcernImpl cpscrnimpl = new CpsConcernImpl(exampleName, ns);
-		cpsconcern = cpscrnimpl;
-		concern = cpscrnimpl;
-		qre = concern;
-		re = concern;
+		assertNotNull(qre.getName());
+		assertFalse(qre.getName().isEmpty());
 	}
+
+	/**
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2.QualifiedRepositoryEntity#getFullyQualifiedName()}
+	 * .
+	 */
+	public void testGetFullyQualifiedName()
+	{
+		assertNotNull(qre.getFullyQualifiedName());
+		assertFalse(qre.getFullyQualifiedName().isEmpty());
+		assertTrue(qre.getFullyQualifiedName().endsWith(qre.getName()));
+	}
+
 }

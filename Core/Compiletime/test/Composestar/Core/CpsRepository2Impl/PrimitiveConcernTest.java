@@ -28,15 +28,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import Composestar.Core.CpsRepository2.ConcernTestBase;
+
 /**
  * @author Michiel Hendriks
  */
-public class PrimitiveConcernTest extends AbstractConcernTestBase
+public class PrimitiveConcernTest extends ConcernTestBase
 {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
@@ -44,11 +45,14 @@ public class PrimitiveConcernTest extends AbstractConcernTestBase
 	{
 		super.setUp();
 		concern = new PrimitiveConcern(exampleFQN.split("\\."));
+		qre = concern;
+		re = concern;
 	}
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.PrimitiveConcern#PrimitiveConcern(java.lang.String[])}.
+	 * {@link Composestar.Core.CpsRepository2Impl.PrimitiveConcern#PrimitiveConcern(java.lang.String[])}
+	 * .
 	 */
 	public void testPrimitiveConcernStringArray()
 	{
@@ -66,7 +70,8 @@ public class PrimitiveConcernTest extends AbstractConcernTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.PrimitiveConcern#PrimitiveConcern(java.util.List)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.PrimitiveConcern#PrimitiveConcern(java.util.List)}
+	 * .
 	 */
 	public void testPrimitiveConcernListOfString()
 	{
@@ -94,7 +99,8 @@ public class PrimitiveConcernTest extends AbstractConcernTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2Impl.PrimitiveConcern#PrimitiveConcern(java.lang.String, java.util.List)}.
+	 * {@link Composestar.Core.CpsRepository2Impl.PrimitiveConcern#PrimitiveConcern(java.lang.String, java.util.List)}
+	 * .
 	 */
 	public void testPrimitiveConcernStringListOfString()
 	{

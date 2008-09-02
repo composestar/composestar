@@ -26,7 +26,7 @@ package Composestar.Core.CpsRepository2.SuperImposition;
 
 import java.util.Collection;
 
-import junit.framework.TestCase;
+import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.References.TypeReference;
 import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 import Composestar.Core.LAMA.ProgramElement;
@@ -35,7 +35,7 @@ import Composestar.Core.LAMA.Type;
 /**
  * @author "Michiel Hendriks"
  */
-public abstract class AnnotationBindingTestBase extends TestCase
+public abstract class AnnotationBindingTestBase extends RepositoryEntityTestBase
 {
 	protected AnnotationBinding ab;
 

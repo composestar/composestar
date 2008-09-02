@@ -40,6 +40,7 @@ public class FilterModuleBindingImplTest extends FilterModuleBindingTestBase
 	{
 		super.setUp();
 		fmb = new FilterModuleBindingImpl();
+		re = fmb;
 	}
 
 }
