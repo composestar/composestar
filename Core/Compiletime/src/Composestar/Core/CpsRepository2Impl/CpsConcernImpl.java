@@ -133,12 +133,9 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 		{
 			throw new NullPointerException();
 		}
-		if (filterModules.containsValue(fm))
+		if (filterModules.values().remove(fm))
 		{
-			if (filterModules.values().remove(fm))
-			{
-				return fm;
-			}
+			return fm;
 		}
 		return null;
 	}
@@ -151,13 +148,7 @@ public class CpsConcernImpl extends AbstractConcern implements CpsConcern
 	 */
 	public FilterModule removeFilterModule(String fmName)
 	{
-		if (filterModules.containsKey(fmName))
-		{
-			FilterModule res = filterModules.get(fmName);
-			filterModules.remove(fmName);
-			return res;
-		}
-		return null;
+		return filterModules.remove(fmName);
 	}
 
 	/*

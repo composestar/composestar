@@ -35,18 +35,32 @@ import Composestar.Core.CpsRepository2.SuperImposition.Selector;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
+ * Basic implementation of the filter module binding
+ * 
  * @author Michiel Hendriks
  */
 public class FilterModuleBindingImpl extends AbstractRepositoryEntity implements FilterModuleBinding
 {
 	private static final long serialVersionUID = -4692188251232501938L;
 
+	/**
+	 * The filter module reference
+	 */
 	protected FilterModuleReference filterModuleReference;
 
+	/**
+	 * The used selector
+	 */
 	protected Selector selector;
 
+	/**
+	 * List of parameter values
+	 */
 	protected List<FMParameterValue<?>> parameterValues;
 
+	/**
+	 * Create a new filter module binding
+	 */
 	public FilterModuleBindingImpl()
 	{
 		parameterValues = new ArrayList<FMParameterValue<?>>();

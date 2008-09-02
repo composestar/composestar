@@ -290,12 +290,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 		{
 			throw new NullPointerException();
 		}
-		if (conditions.containsValue(cond))
+		if (conditions.values().remove(cond))
 		{
-			if (conditions.values().remove(cond))
-			{
-				return cond;
-			}
+			return cond;
 		}
 		return null;
 	}
@@ -311,9 +308,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 		{
 			return null;
 		}
-		SICondition res = conditions.get(name);
-		conditions.remove(name);
-		return res;
+		return conditions.remove(name);
 	}
 
 	/*
@@ -365,12 +360,9 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 		{
 			throw new NullPointerException();
 		}
-		if (selectors.containsValue(sel))
+		if (selectors.values().remove(sel))
 		{
-			if (selectors.values().remove(sel))
-			{
-				return sel;
-			}
+			return sel;
 		}
 		return null;
 	}
@@ -386,9 +378,7 @@ public class SuperImpositionImpl extends AbstractQualifiedRepositoryEntity imple
 		{
 			return null;
 		}
-		Selector res = selectors.get(name);
-		selectors.remove(name);
-		return res;
+		return selectors.remove(name);
 	}
 
 	/**
