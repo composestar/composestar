@@ -34,8 +34,8 @@
 
 		<delete>
 			<fileset dir="test">
-				<include name="TEST-*.xml" />
-				<include name="TESTS-*.xml" />
+				<include name="**/TEST-*.xml" />
+				<include name="**/TESTS-*.xml" />
 			</fileset>
 		</delete>
 		
@@ -187,20 +187,21 @@
 	</target>
 
 	<target name="unittest" depends="compile_tests" description="Runs JUnit tests">
+		<mkdir dir="test/test-results" />
 		<junit printsummary="on" haltonfailure="on">
 			<classpath>
 				<path refid="lib.test" />
 				<pathelement path="test" />
 			</classpath>
 			<formatter type="xml" />
-			<batchtest todir="test">
+			<batchtest todir="test/test-results">
 				<fileset dir="test">
 					<include name="**/*Test.class" />
 				</fileset>
 			</batchtest>
 		</junit>
 		<junitreport todir="test">
-			<fileset dir="test">
+			<fileset dir="test/test-results">
 				<include name="TEST-*.xml" />
 			</fileset>
 			<report format="noframes" todir="test" />
