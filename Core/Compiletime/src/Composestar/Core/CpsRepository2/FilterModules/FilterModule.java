@@ -190,4 +190,50 @@ public interface FilterModule extends QualifiedRepositoryEntity, FilterModuleRef
 	 *         no output filter expression null is returned.
 	 */
 	FilterExpression getOutputFilterExpression();
+
+	/**
+	 * Register a predefined filter to this filter module. Predefined filters
+	 * can be referred to from filter expressions rather than explicitly
+	 * defining the filter within the expression. This allows filters
+	 * declarations to be reused within the input and output filters
+	 * expressions. After adding setOwner(this) is called on the filter.
+	 * 
+	 * @param filter The predefined filter to register
+	 * @return True if the filter was added. False if there already was a filter
+	 *         with the given name registered.
+	 * @throws NullPointerException Thrown when the filter is null.
+	 */
+	boolean addFilter(Filter filter) throws NullPointerException;
+
+	/**
+	 * Get a registered filter with the given name
+	 * 
+	 * @param filterName The name of the requested filter
+	 * @return The filter with the given name or null if no such filter existed.
+	 */
+	Filter getFilter(String filterName);
+
+	/**
+	 * Remove the filter from the registered filter list. This does not remove
+	 * the usage of this filter in the filter expression.
+	 * 
+	 * @param filter The filter to remove.
+	 * @return The removed filter or null if nothing was removed.
+	 * @throws NullPointerException Thrown when the filter was null
+	 */
+	Filter removeFilter(Filter filter) throws NullPointerException;
+
+	/**
+	 * Remove a filter by its name
+	 * 
+	 * @param filterName The name of the filter to remove
+	 * @return The removed filter or null if no filter was removed.
+	 */
+	Filter removeFilter(String filterName);
+
+	/**
+	 * @return Read-only collection of all registered filters. If no filters
+	 *         were registered an empty collection is returned.
+	 */
+	Collection<Filter> getFilters();
 }

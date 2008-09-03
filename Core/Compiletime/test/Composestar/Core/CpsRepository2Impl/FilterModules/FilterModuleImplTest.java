@@ -22,26 +22,27 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FMParams;
+package Composestar.Core.CpsRepository2Impl.FilterModules;
 
-import Composestar.Core.CpsRepository2.QualifiedRepositoryEntity;
+import Composestar.Core.CpsRepository2.FilterModules.FilterModuleTestBase;
 
 /**
- * A filter module parameter definition.
- * 
  * @author Michiel Hendriks
  */
-public interface FMParameter extends QualifiedRepositoryEntity
+public class FilterModuleImplTest extends FilterModuleTestBase
 {
-	/**
-	 * @return The name of the filter module parameter without the parameter
-	 *         prefix: '?' or '??'
-	 */
-	String getRawName();
 
-	/**
-	 * @return True if this is a parameter list which can contain zero or more
-	 *         values.
+	/*
+	 * (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
 	 */
-	boolean isParameterList();
+	@Override
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		fm = new FilterModuleImpl("fooFilterModule");
+		qre = fm;
+		re = fm;
+	}
+
 }

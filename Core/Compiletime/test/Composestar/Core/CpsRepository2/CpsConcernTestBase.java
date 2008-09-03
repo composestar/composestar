@@ -29,6 +29,7 @@ import java.util.List;
 
 import Composestar.Core.CpsRepository2.FMParams.FMParameter;
 import Composestar.Core.CpsRepository2.FilterModules.External;
+import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModule;
 import Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable;
@@ -217,113 +218,300 @@ public abstract class CpsConcernTestBase extends ConcernTestBase
 			super(name);
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.References.Reference#getReference()
+		 */
 		public FilterModule getReference()
 		{
 			return this;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.References.Reference#getReferenceId()
+		 */
 		public String getReferenceId()
 		{
 			return getFullyQualifiedName();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.References.Reference#isResolved()
+		 */
 		public boolean isResolved()
 		{
 			return true;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.References.Reference#setReference
+		 * (java.lang.Object)
+		 */
 		public void setReference(FilterModule element) throws UnsupportedOperationException
 		{
 			throw new UnsupportedOperationException();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.References.Reference#dereference()
+		 */
 		public void dereference() throws UnsupportedOperationException
 		{
 			throw new UnsupportedOperationException();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.References.Reference#isSelfReference
+		 * ()
+		 */
 		public boolean isSelfReference()
 		{
 			return true;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#addParameter
+		 * (Composestar.Core.CpsRepository2.FMParams.FMParameter)
+		 */
 		public boolean addParameter(FMParameter param) throws NullPointerException
 		{
 			return false;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#addVariable
+		 * (Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable)
+		 */
 		public boolean addVariable(FilterModuleVariable var) throws NullPointerException
 		{
 			return false;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getCondition
+		 * (java.lang.String)
+		 */
 		public Composestar.Core.CpsRepository2.FilterModules.Condition getCondition(String name)
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getExternal
+		 * (java.lang.String)
+		 */
 		public External getExternal(String name)
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.FilterModules.FilterModule#
+		 * getInputFilterExpression()
+		 */
 		public FilterExpression getInputFilterExpression()
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getInternal
+		 * (java.lang.String)
+		 */
 		public Internal getInternal(String name)
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.FilterModules.FilterModule#
+		 * getOutputFilterExpression()
+		 */
 		public FilterExpression getOutputFilterExpression()
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getParameter
+		 * (java.lang.String)
+		 */
 		public FMParameter getParameter(String name)
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getParameters
+		 * ()
+		 */
 		public List<FMParameter> getParameters()
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getVariable
+		 * (java.lang.String)
+		 */
 		public FilterModuleVariable getVariable(String name)
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#hasParameters
+		 * ()
+		 */
 		public boolean hasParameters()
 		{
 			return false;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#removeVariable
+		 * (Composestar.Core.CpsRepository2.FilterModules.FilterModuleVariable)
+		 */
 		public FilterModuleVariable removeVariable(FilterModuleVariable var) throws NullPointerException
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#removeVariable
+		 * (java.lang.String)
+		 */
 		public FilterModuleVariable removeVariable(String name)
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.FilterModules.FilterModule#
+		 * setInputFilterExpression
+		 * (Composestar.Core.CpsRepository2.FilterModules.FilterExpression)
+		 */
 		public void setInputFilterExpression(FilterExpression expr)
 		{}
 
+		/*
+		 * (non-Javadoc)
+		 * @seeComposestar.Core.CpsRepository2.FilterModules.FilterModule#
+		 * setOutputFilterExpression
+		 * (Composestar.Core.CpsRepository2.FilterModules.FilterExpression)
+		 */
 		public void setOutputFilterExpression(FilterExpression expr)
 		{}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.Instantiatable.Instantiatable#newInstance
+		 * (Composestar.Core.CpsRepository2.Instantiatable.Instantiator)
+		 */
 		public FilterModule newInstance(Instantiator context) throws UnsupportedOperationException
 		{
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getVariables
+		 * ()
+		 */
 		public Collection<FilterModuleVariable> getVariables()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#addFilter
+		 * (Composestar.Core.CpsRepository2.FilterModules.Filter)
+		 */
+		public boolean addFilter(Filter filter) throws NullPointerException
+		{
+			return false;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getFilter
+		 * (java.lang.String)
+		 */
+		public Filter getFilter(String filterName)
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#getFilters
+		 * ()
+		 */
+		public Collection<Filter> getFilters()
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#removeFilter
+		 * (Composestar.Core.CpsRepository2.FilterModules.Filter)
+		 */
+		public Filter removeFilter(Filter filter) throws NullPointerException
+		{
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * Composestar.Core.CpsRepository2.FilterModules.FilterModule#removeFilter
+		 * (java.lang.String)
+		 */
+		public Filter removeFilter(String filterName)
 		{
 			return null;
 		}
