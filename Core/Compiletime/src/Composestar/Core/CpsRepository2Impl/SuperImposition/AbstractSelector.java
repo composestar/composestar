@@ -26,6 +26,7 @@ package Composestar.Core.CpsRepository2Impl.SuperImposition;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import Composestar.Core.CpsRepository2.SuperImposition.Selector;
@@ -54,6 +55,7 @@ public abstract class AbstractSelector extends AbstractQualifiedRepositoryEntity
 	protected AbstractSelector(String entityName) throws NullPointerException, IllegalArgumentException
 	{
 		super(entityName);
+		selection = new HashSet<ProgramElement>();
 	}
 
 	/*
