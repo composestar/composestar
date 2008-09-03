@@ -58,7 +58,6 @@ public interface External extends FilterModuleVariable, InstanceContextProvider,
 	 * called. In this case the external behaves identical to the internal.
 	 * 
 	 * @param ref The method reference to use as initialization method.
-	 * @throws NullPointerException Thrown when the type reference is null.
 	 */
-	void setMethodReference(MethodReference ref) throws NullPointerException;
+	void setMethodReference(MethodReference ref);
 }
