@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2.FilterElements;
 
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
@@ -30,47 +30,24 @@ import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 /**
  * @author Michiel Hendriks
  */
-public abstract class BinaryFilterOperatorTestBase extends RepositoryEntityTestBase
+public abstract class UnaryMEOperatorTestBase extends RepositoryEntityTestBase
 {
-	protected BinaryFilterOperator bfo;
+	protected UnaryMEOperator meop;
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator#setLHS(Composestar.Core.CpsRepository2.FilterModules.FilterExpression)}
+	 * {@link Composestar.Core.CpsRepository2.FilterElements.UnaryMEOperator#setOperand(Composestar.Core.CpsRepository2.FilterElements.MatchingExpression)}
 	 * .
 	 */
-	public void testSetLHS()
+	public void testSetOperand()
 	{
-		FilterExpression fex = new DummyFEX();
-		assertNull(bfo.getLHS());
-		bfo.setLHS(fex);
-		assertSame(fex, bfo.getLHS());
-		assertSame(bfo, fex.getOwner());
+		MatchingExpression mex = new DummyMEX();
+		assertNull(meop.getOperand());
+		meop.setOperand(mex);
+		assertSame(mex, meop.getOperand());
 		try
 		{
-			bfo.setLHS(null);
-			fail();
-		}
-		catch (NullPointerException e)
-		{
-		}
-	}
-
-	/**
-	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator#setRHS(Composestar.Core.CpsRepository2.FilterModules.FilterExpression)}
-	 * .
-	 */
-	public void testSetRHS()
-	{
-		FilterExpression fex = new DummyFEX();
-		assertNull(bfo.getRHS());
-		bfo.setRHS(fex);
-		assertSame(fex, bfo.getRHS());
-		assertSame(bfo, fex.getOwner());
-		try
-		{
-			bfo.setRHS(null);
+			meop.setOperand(null);
 			fail();
 		}
 		catch (NullPointerException e)
@@ -81,8 +58,8 @@ public abstract class BinaryFilterOperatorTestBase extends RepositoryEntityTestB
 	/**
 	 * @author Michiel Hendriks
 	 */
-	protected class DummyFEX extends AbstractRepositoryEntity implements FilterExpression
+	protected class DummyMEX extends AbstractRepositoryEntity implements MatchingExpression
 	{
-		private static final long serialVersionUID = 1079445177143255673L;
+		private static final long serialVersionUID = -1051877554942568018L;
 	}
 }

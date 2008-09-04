@@ -35,7 +35,7 @@ import Composestar.Core.LAMA.MethodInfo;
 /**
  * @author Michiel Hendriks
  */
-public class SIConditionTestBase extends QualifiedRepositoryEntityTestBase
+public abstract class SIConditionTestBase extends QualifiedRepositoryEntityTestBase
 {
 	protected SICondition sic;
 

@@ -30,7 +30,7 @@ import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 /**
  * @author Michiel Hendriks
  */
-public class BinaryFilterElementOperatorTestBase extends RepositoryEntityTestBase
+public abstract class BinaryFilterElementOperatorTestBase extends RepositoryEntityTestBase
 {
 	protected BinaryFilterElementOperator bfeo;
 

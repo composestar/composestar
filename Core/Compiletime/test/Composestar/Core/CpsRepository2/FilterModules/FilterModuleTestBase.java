@@ -40,7 +40,7 @@ import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 /**
  * @author Michiel Hendriks
  */
-public class FilterModuleTestBase extends QualifiedRepositoryEntityTestBase
+public abstract class FilterModuleTestBase extends QualifiedRepositoryEntityTestBase
 {
 	protected FilterModule fm;
 
