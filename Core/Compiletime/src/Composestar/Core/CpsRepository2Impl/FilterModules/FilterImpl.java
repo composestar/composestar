@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl;
+package Composestar.Core.CpsRepository2Impl.FilterModules;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -35,6 +35,7 @@ import Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression;
 import Composestar.Core.CpsRepository2.FilterModules.Filter;
 import Composestar.Core.CpsRepository2.Filters.FilterType;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
+import Composestar.Core.CpsRepository2Impl.AbstractQualifiedRepositoryEntity;
 
 /**
  * Standard implementation of the filter interface

@@ -22,7 +22,7 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterModules;
+package Composestar.Core.CpsRepository2.FilterElements;
 
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
@@ -30,25 +30,25 @@ import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 /**
  * @author Michiel Hendriks
  */
-public class BinaryFilterOperatorTestBase extends RepositoryEntityTestBase
+public class BinaryFilterElementOperatorTestBase extends RepositoryEntityTestBase
 {
-	protected BinaryFilterOperator bfo;
+	protected BinaryFilterElementOperator bfeo;
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator#setLHS(Composestar.Core.CpsRepository2.FilterModules.FilterExpression)}
+	 * {@link Composestar.Core.CpsRepository2.FilterElements.BinaryFilterElementOperator#setLHS(Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression)}
 	 * .
 	 */
 	public void testSetLHS()
 	{
-		FilterExpression fex = new DummyFEX();
-		assertNull(bfo.getLHS());
-		bfo.setLHS(fex);
-		assertSame(fex, bfo.getLHS());
-		assertSame(bfo, fex.getOwner());
+		FilterElementExpression fex = new DummyFEX();
+		assertNull(bfeo.getLHS());
+		bfeo.setLHS(fex);
+		assertSame(fex, bfeo.getLHS());
+		assertSame(bfeo, fex.getOwner());
 		try
 		{
-			bfo.setLHS(null);
+			bfeo.setLHS(null);
 			fail();
 		}
 		catch (NullPointerException e)
@@ -58,19 +58,19 @@ public class BinaryFilterOperatorTestBase extends RepositoryEntityTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator#setRHS(Composestar.Core.CpsRepository2.FilterModules.FilterExpression)}
+	 * {@link Composestar.Core.CpsRepository2.FilterElements.BinaryFilterElementOperator#setRHS(Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression)}
 	 * .
 	 */
 	public void testSetRHS()
 	{
-		FilterExpression fex = new DummyFEX();
-		assertNull(bfo.getRHS());
-		bfo.setRHS(fex);
-		assertSame(fex, bfo.getRHS());
-		assertSame(bfo, fex.getOwner());
+		FilterElementExpression fex = new DummyFEX();
+		assertNull(bfeo.getRHS());
+		bfeo.setRHS(fex);
+		assertSame(fex, bfeo.getRHS());
+		assertSame(bfeo, fex.getOwner());
 		try
 		{
-			bfo.setRHS(null);
+			bfeo.setRHS(null);
 			fail();
 		}
 		catch (NullPointerException e)
@@ -81,7 +81,7 @@ public class BinaryFilterOperatorTestBase extends RepositoryEntityTestBase
 	/**
 	 * @author Michiel Hendriks
 	 */
-	protected class DummyFEX extends AbstractRepositoryEntity implements FilterExpression
+	protected class DummyFEX extends AbstractRepositoryEntity implements FilterElementExpression
 	{
 		private static final long serialVersionUID = 1079445177143255673L;
 	}

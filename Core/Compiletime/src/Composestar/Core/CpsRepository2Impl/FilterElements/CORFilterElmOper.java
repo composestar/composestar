@@ -22,33 +22,31 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2Impl.FilterModules;
+package Composestar.Core.CpsRepository2Impl.FilterElements;
 
-import Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator;
-import Composestar.Core.CpsRepository2.FilterModules.FilterExpression;
+import Composestar.Core.CpsRepository2.FilterElements.BinaryFilterElementOperator;
+import Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
 
 /**
- * A sequential filter operator. The expressions on both sides are executed in
- * order (first left, then right) until a filter initiates a return or exit in
- * the flow.
+ * Conditional OR operator. If the LHS matched, the RHS will not be checked.
  * 
  * @author Michiel Hendriks
  */
-public class SequentialFilterOper extends AbstractRepositoryEntity implements BinaryFilterOperator
+public class CORFilterElmOper extends AbstractRepositoryEntity implements BinaryFilterElementOperator
 {
-	private static final long serialVersionUID = -2619522777888618361L;
+	private static final long serialVersionUID = 2805344382913049175L;
 
 	/**
-	 * The expressions on either side
+	 * The associated filter element expressions
 	 */
-	protected FilterExpression lhs, rhs;
+	protected FilterElementExpression lhs, rhs;
 
 	/**
-	 * Create a new SequentialFilterOper
+	 * Create a new COR operator
 	 */
-	public SequentialFilterOper()
+	public CORFilterElmOper()
 	{
 		super();
 	}
@@ -56,10 +54,10 @@ public class SequentialFilterOper extends AbstractRepositoryEntity implements Bi
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator#getLHS
-	 * ()
+	 * Composestar.Core.CpsRepository2.FilterElements.BinaryFilterElementOperator
+	 * #getLHS()
 	 */
-	public FilterExpression getLHS()
+	public FilterElementExpression getLHS()
 	{
 		return lhs;
 	}
@@ -67,10 +65,10 @@ public class SequentialFilterOper extends AbstractRepositoryEntity implements Bi
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator#getRHS
-	 * ()
+	 * Composestar.Core.CpsRepository2.FilterElements.BinaryFilterElementOperator
+	 * #getRHS()
 	 */
-	public FilterExpression getRHS()
+	public FilterElementExpression getRHS()
 	{
 		return rhs;
 	}
@@ -78,10 +76,12 @@ public class SequentialFilterOper extends AbstractRepositoryEntity implements Bi
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator#setLHS
-	 * (Composestar.Core.CpsRepository2.FilterModules.FilterExpression)
+	 * Composestar.Core.CpsRepository2.FilterElements.BinaryFilterElementOperator
+	 * #
+	 * setLHS(Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression
+	 * )
 	 */
-	public void setLHS(FilterExpression expr) throws NullPointerException
+	public void setLHS(FilterElementExpression expr) throws NullPointerException
 	{
 		if (expr == null)
 		{
@@ -94,10 +94,12 @@ public class SequentialFilterOper extends AbstractRepositoryEntity implements Bi
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * Composestar.Core.CpsRepository2.FilterModules.BinaryFilterOperator#setRHS
-	 * (Composestar.Core.CpsRepository2.FilterModules.FilterExpression)
+	 * Composestar.Core.CpsRepository2.FilterElements.BinaryFilterElementOperator
+	 * #
+	 * setRHS(Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression
+	 * )
 	 */
-	public void setRHS(FilterExpression expr) throws NullPointerException
+	public void setRHS(FilterElementExpression expr) throws NullPointerException
 	{
 		if (expr == null)
 		{
@@ -113,8 +115,9 @@ public class SequentialFilterOper extends AbstractRepositoryEntity implements Bi
 	 * Composestar.Core.CpsRepository2.Instantiatable.Instantiatable#newInstance
 	 * (Composestar.Core.CpsRepository2.Instantiatable.Instantiator)
 	 */
-	public BinaryFilterOperator newInstance(Instantiator instantiator) throws UnsupportedOperationException
+	public BinaryFilterElementOperator newInstance(Instantiator instantiator) throws UnsupportedOperationException
 	{
 		return instantiator.instantiate(this);
 	}
+
 }
