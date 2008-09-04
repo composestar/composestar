@@ -26,11 +26,11 @@ package Composestar.Core.CpsRepository2.FilterModules;
 
 import java.util.Collection;
 
-import Composestar.Core.Config.FilterType;
 import Composestar.Core.CpsRepository2.QualifiedRepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.FMParams.FMParameter;
 import Composestar.Core.CpsRepository2.FilterElements.CanonAssignment;
 import Composestar.Core.CpsRepository2.FilterElements.FilterElementExpression;
+import Composestar.Core.CpsRepository2.Filters.FilterType;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2.References.MethodReference;
 import Composestar.Core.CpsRepository2.References.TypeReference;
