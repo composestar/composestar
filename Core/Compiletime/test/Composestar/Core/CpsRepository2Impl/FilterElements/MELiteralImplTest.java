@@ -22,19 +22,27 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterElements;
+package Composestar.Core.CpsRepository2Impl.FilterElements;
 
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+import Composestar.Core.CpsRepository2.FilterElements.MELiteralTestBase;
 
 /**
- * Implementers of this interface return a constant value, either true or false.
- * 
  * @author Michiel Hendriks
  */
-public interface MELiteral extends MatchingExpression, Instantiatable<MELiteral>
+public class MELiteralImplTest extends MELiteralTestBase
 {
-	/**
-	 * @return The literal's value
+
+	/*
+	 * (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
 	 */
-	boolean getLiteralValue();
+	@Override
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		melTrue = new MELiteralImpl(true);
+		melFalse = new MELiteralImpl(false);
+		re = melTrue;
+	}
+
 }

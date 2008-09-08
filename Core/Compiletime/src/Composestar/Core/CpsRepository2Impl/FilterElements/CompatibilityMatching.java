@@ -22,19 +22,21 @@
  * $Id$
  */
 
-package Composestar.Core.CpsRepository2.FilterElements;
-
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+package Composestar.Core.CpsRepository2Impl.FilterElements;
 
 /**
- * Implementers of this interface return a constant value, either true or false.
- * 
  * @author Michiel Hendriks
  */
-public interface MELiteral extends MatchingExpression, Instantiatable<MELiteral>
+public class CompatibilityMatching extends AbstractMECmpStmt
 {
+	private static final long serialVersionUID = 8408910753121585019L;
+
 	/**
-	 * @return The literal's value
+	 * 
 	 */
-	boolean getLiteralValue();
+	public CompatibilityMatching()
+	{
+		super();
+	}
+
 }

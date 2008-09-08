@@ -60,9 +60,6 @@ public interface MECompareStatement extends MatchingExpression, Instantiatable<M
 	 * 
 	 * @param value The value
 	 * @throws NullPointerException Thrown when the value is null.
-	 * @throws IllegalArgumentException Thrown when the value type is not
-	 *             compatible with the variable of the left hand side.
-	 * @throws IllegalStateException Thrown when the left hand side was not set.
 	 */
-	void setRHS(CanonValue value) throws NullPointerException, IllegalArgumentException, IllegalStateException;
+	void setRHS(CanonValue value) throws NullPointerException;
 }

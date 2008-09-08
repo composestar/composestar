@@ -32,33 +32,39 @@ package Composestar.Core.CpsRepository2.FilterElements;
 public enum CanonValueType
 {
 	/**
-	 * A literal value.
+	 * A literal value. {@link CanonValue#getValue()} returns a String
 	 */
 	LITERAL,
 	/**
 	 * A fully qualified name. This should be resolved to one of the other
-	 * types.
+	 * types. FQN's will be processed at a later stage and results a program
+	 * element value (or type/method). If it could not be resolved
 	 */
 	FQN,
 	/**
 	 * An object instance. Used for most standard message properties and
-	 * internals/externals
+	 * internals/externals. {@link CanonValue#getValue()} returns
+	 * InstanceContextProvider.
 	 */
 	OBJECT,
 	/**
-	 * A selector, only used by message.selector
+	 * A selector, only used by message.selector. {@link CanonValue#getValue()}
+	 * returns a Selector
 	 */
 	SELECTOR,
 	/**
-	 * A type program element
+	 * A type program element. {@link CanonValue#getValue()} returns a
+	 * TypeReference
 	 */
 	TYPE,
 	/**
 	 * A method program element. For example used for conditions.
+	 * {@link CanonValue#getValue()} returns a MethodReference
 	 */
 	METHOD,
 	/**
 	 * A different program element (no type or method).
+	 * {@link CanonValue#getValue()} returns a ProgramElement subtype.
 	 */
 	PROGRAM_ELEMENT,
 	/**

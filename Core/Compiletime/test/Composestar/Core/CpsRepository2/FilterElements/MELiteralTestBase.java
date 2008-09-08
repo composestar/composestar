@@ -24,17 +24,25 @@
 
 package Composestar.Core.CpsRepository2.FilterElements;
 
-import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
+import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 
 /**
- * Implementers of this interface return a constant value, either true or false.
- * 
  * @author Michiel Hendriks
  */
-public interface MELiteral extends MatchingExpression, Instantiatable<MELiteral>
+public class MELiteralTestBase extends RepositoryEntityTestBase
 {
+
+	protected MELiteral melTrue, melFalse;
+
 	/**
-	 * @return The literal's value
+	 * Test method for
+	 * {@link Composestar.Core.CpsRepository2.FilterElements.MELiteral#getLiteralValue()}
+	 * .
 	 */
-	boolean getLiteralValue();
+	public void testGetLiteralValue()
+	{
+		assertTrue(melTrue.getLiteralValue());
+		assertFalse(melFalse.getLiteralValue());
+	}
+
 }
