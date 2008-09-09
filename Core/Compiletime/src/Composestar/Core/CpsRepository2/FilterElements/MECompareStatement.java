@@ -24,6 +24,8 @@
 
 package Composestar.Core.CpsRepository2.FilterElements;
 
+import java.util.Collection;
+
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiatable;
 
 /**
@@ -49,17 +51,21 @@ public interface MECompareStatement extends MatchingExpression, Instantiatable<M
 	void setLHS(CanonVariable var) throws NullPointerException;
 
 	/**
-	 * @return The value on the right hand side.
+	 * @return The values on the right hand side. A compare statement is true if
+	 *         the left hand side matches any of the values on the right hand
+	 *         side.
 	 */
-	CanonValue getRHS();
+	Collection<CanonValue> getRHS();
 
 	/**
-	 * Sets the value with which the variable on the left hand side is compared.
-	 * Before this function can be called the left hand side value must be set.
-	 * setOwner(this) is called on the value after assigning.
+	 * Sets the values with which the variable on the left hand side is
+	 * compared. setOwner(this) is called on all values after assigning. This
+	 * will completely override the previous list of values. The values in the
+	 * collection are copied, to the local collection.
 	 * 
-	 * @param value The value
+	 * @param values The values to add
 	 * @throws NullPointerException Thrown when the value is null.
+	 * @throws IllegalArgumentException Thrown when the list is empty;
 	 */
-	void setRHS(CanonValue value) throws NullPointerException;
+	void setRHS(Collection<CanonValue> values) throws NullPointerException, IllegalArgumentException;
 }

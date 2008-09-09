@@ -24,6 +24,10 @@
 
 package Composestar.Core.CpsRepository2Impl.FilterElements;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+
 import Composestar.Core.CpsRepository2.FilterElements.CanonValue;
 import Composestar.Core.CpsRepository2.FilterElements.CanonVariable;
 import Composestar.Core.CpsRepository2.FilterElements.MECompareStatement;
@@ -47,7 +51,7 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	/**
 	 * The value to compare the variable with
 	 */
-	protected CanonValue rhs;
+	protected Collection<CanonValue> rhs;
 
 	/**
 	 * 
@@ -55,6 +59,7 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	protected AbstractMECmpStmt()
 	{
 		super();
+		rhs = new HashSet<CanonValue>();
 	}
 
 	/*
@@ -74,9 +79,9 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	 * Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#getRHS
 	 * ()
 	 */
-	public CanonValue getRHS()
+	public Collection<CanonValue> getRHS()
 	{
-		return rhs;
+		return Collections.unmodifiableCollection(rhs);
 	}
 
 	/*
@@ -99,16 +104,24 @@ public abstract class AbstractMECmpStmt extends AbstractRepositoryEntity impleme
 	 * (non-Javadoc)
 	 * @see
 	 * Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#setRHS
-	 * (Composestar.Core.CpsRepository2.FilterElements.CanonValue)
+	 * (java.util.Collection)
 	 */
-	public void setRHS(CanonValue value) throws NullPointerException
+	public void setRHS(Collection<CanonValue> values) throws NullPointerException, IllegalArgumentException
 	{
-		if (value == null)
+		if (values == null)
 		{
 			throw new NullPointerException();
 		}
-		rhs = value;
-		rhs.setOwner(this);
+		if (values.isEmpty())
+		{
+			throw new IllegalArgumentException();
+		}
+		rhs.clear();
+		for (CanonValue val : values)
+		{
+			rhs.add(val);
+			val.setOwner(this);
+		}
 	}
 
 	/*

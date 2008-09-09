@@ -24,6 +24,9 @@
 
 package Composestar.Core.CpsRepository2.FilterElements;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import Composestar.Core.CpsRepository2.RepositoryEntityTestBase;
 import Composestar.Core.CpsRepository2.Instantiatable.Instantiator;
 import Composestar.Core.CpsRepository2Impl.AbstractRepositoryEntity;
@@ -60,16 +63,21 @@ public class MECompareStatementTestBase extends RepositoryEntityTestBase
 
 	/**
 	 * Test method for
-	 * {@link Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#setRHS(Composestar.Core.CpsRepository2.FilterElements.CanonValue)}
+	 * {@link Composestar.Core.CpsRepository2.FilterElements.MECompareStatement#setRHS(Collection)}
 	 * .
 	 */
 	public void testSetRHS()
 	{
 		CanonValue cv = new DummyCV();
-		assertNull(mecs.getRHS());
-		mecs.setRHS(cv);
-		assertSame(cv, mecs.getRHS());
+		Collection<CanonValue> cvl = new ArrayList<CanonValue>();
+		cvl.add(cv);
+		assertNotNull(mecs.getRHS());
+		assertEquals(0, mecs.getRHS().size());
+		mecs.setRHS(cvl);
+		assertEquals(1, mecs.getRHS().size());
+		assertTrue(mecs.getRHS().contains(cv));
 		assertSame(mecs, cv.getOwner());
+		assertNotSame(cvl, mecs.getRHS());
 
 		try
 		{
@@ -77,6 +85,16 @@ public class MECompareStatementTestBase extends RepositoryEntityTestBase
 			fail();
 		}
 		catch (NullPointerException e)
+		{
+		}
+
+		try
+		{
+			cvl.clear();
+			mecs.setRHS(cvl);
+			fail();
+		}
+		catch (IllegalArgumentException e)
 		{
 		}
 	}
