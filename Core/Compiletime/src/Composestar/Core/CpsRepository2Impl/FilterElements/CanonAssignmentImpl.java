@@ -84,7 +84,7 @@ public class CanonAssignmentImpl extends AbstractRepositoryEntity implements Can
 	 * Composestar.Core.CpsRepository2.FilterElements.CanonAssignment#setCanonValue
 	 * (Composestar.Core.CpsRepository2.FilterElements.CanonValue)
 	 */
-	public void setCanonValue(CanonValue newValue) throws NullPointerException
+	public void setValue(CanonValue newValue) throws NullPointerException
 	{
 		if (newValue == null)
 		{

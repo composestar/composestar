@@ -65,5 +65,5 @@ public interface CanonAssignment extends RepositoryEntity, Instantiatable<CanonA
 	 * @param value The new value
 	 * @throws NullPointerException Thrown when the value is null
 	 */
-	void setCanonValue(CanonValue value) throws NullPointerException;
+	void setValue(CanonValue value) throws NullPointerException;
 }

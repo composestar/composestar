@@ -214,7 +214,7 @@ public abstract class FilterElementTestBase extends RepositoryEntityTestBase
 		 * setCanonValue
 		 * (Composestar.Core.CpsRepository2.FilterElements.CanonValue)
 		 */
-		public void setCanonValue(CanonValue value) throws NullPointerException
+		public void setValue(CanonValue value) throws NullPointerException
 		{}
 
 		/*
